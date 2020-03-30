@@ -12,14 +12,14 @@ import {
   styleUrls: ['./settings-container.component.scss']
 })
 export class SettingsContainerComponent {
-  @Output() close = new EventEmitter();
+  @Output() cancel = new EventEmitter();
 
   constructor(private element: ElementRef) {}
 
   @HostListener('document:click', ['$event'])
   click(event: MouseEvent) {
     if (!this.element.nativeElement.contains(event.target)) {
-      this.close.emit();
+      this.cancel.emit();
     }
   }
 }
