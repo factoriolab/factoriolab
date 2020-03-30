@@ -1,0 +1,13 @@
+@import 'values';
+
+:host {
+  background-color: $color-gray-2;
+  display: flex;
+  flex-grow: 1;
+  align-items: stretch;
+  z-index: 1;
+
+  > * {
+    flex-grow: 1;
+  }
+}

@@ -1,0 +1,65 @@
+<table *ngIf="steps && steps.length">
+  <thead>
+    <tr>
+      <th>
+        Items
+      </th>
+      <th>
+        Belts
+      </th>
+      <th>
+        Factories
+      </th>
+      <th>
+        Modules
+      </th>
+      <th>
+        Beacons
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let step of steps">
+      <td>
+        <div class="flex">
+          <div class="monospace">{{ step.items.toFraction(true) }}</div>
+          <lab-icon [iconId]="step.itemId" scale="true"></lab-icon>
+        </div>
+      </td>
+      <td *ngIf="step.belt">
+        <div class="flex">
+          <div class="monospace">{{ step.belts.toFraction(true) }}</div>
+          <lab-icon [iconId]="step.belt"></lab-icon>
+        </div>
+      </td>
+      <ng-container *ngIf="step.factory">
+        <td>
+          <div class="flex">
+            <div class="monospace">{{ step.factories.toFraction(true) }}</div>
+            <lab-icon [iconId]="step.factory"></lab-icon>
+          </div>
+        </td>
+        <ng-container *ngIf="step.modules">
+          <td>
+            <div class="flex">
+              <lab-icon
+                *ngFor="let mod of step.modules"
+                [iconId]="mod"
+              ></lab-icon>
+            </div>
+          </td>
+          <td>
+            <div class="flex" *ngIf="step.beacons">
+              <lab-icon [iconId]="step.beacons[0]"></lab-icon>
+              <input
+                type="number"
+                [value]="step.beacons[1]"
+                (blur)="beaconNumberChange(step.itemId, $event)"
+              />
+            </div>
+          </td>
+        </ng-container>
+      </ng-container>
+    </tr>
+  </tbody>
+</table>

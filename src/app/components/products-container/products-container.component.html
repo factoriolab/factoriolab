@@ -1,0 +1,18 @@
+<lab-products
+  [products]="products$ | async"
+  [categories]="categories$ | async"
+  [editProductId]="editProductId$ | async"
+  [categoryId]="categoryId$ | async"
+  [itemRows]="itemRows$ | async"
+  [itemEntities]="itemEntities$ | async"
+  (add)="add()"
+  (remove)="remove($event)"
+  (openEditProduct)="openEditProduct($event)"
+  (cancelEditProduct)="cancelEditProduct()"
+  (commitEditProduct)="commitEditProduct($event)"
+  (editRate)="editRate($event)"
+  (editType)="editType($event)"
+  (closePicker)="closePicker()"
+  (selectTab)="selectTab($event)"
+>
+</lab-products>

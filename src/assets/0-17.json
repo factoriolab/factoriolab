@@ -1,0 +1,3010 @@
+{
+  "items": [
+    {
+      "id": "wooden-chest",
+      "name": "Wooden Chest",
+      "stack": 50,
+      "category": "logistics",
+      "row": 1
+    },
+    {
+      "id": "iron-chest",
+      "name": "Iron Chest",
+      "stack": 50,
+      "category": "logistics",
+      "row": 1
+    },
+    {
+      "id": "steel-chest",
+      "name": "Steel Chest",
+      "stack": 50,
+      "category": "logistics",
+      "row": 1
+    },
+    {
+      "id": "storage-tank",
+      "name": "Storage Tank",
+      "stack": 50,
+      "category": "logistics",
+      "row": 1
+    },
+    {
+      "id": "transport-belt",
+      "name": "Transport Belt",
+      "stack": 100,
+      "category": "logistics",
+      "row": 2,
+      "belt": {
+        "speed": 15
+      }
+    },
+    {
+      "id": "fast-transport-belt",
+      "name": "Fast Transport Belt",
+      "stack": 100,
+      "category": "logistics",
+      "row": 2,
+      "belt": {
+        "speed": 30
+      }
+    },
+    {
+      "id": "express-transport-belt",
+      "name": "Express Transport Belt",
+      "stack": 100,
+      "category": "logistics",
+      "row": 2,
+      "belt": {
+        "speed": 45
+      }
+    },
+    {
+      "id": "underground-belt",
+      "name": "Underground Belt",
+      "stack": 50,
+      "category": "logistics",
+      "row": 2
+    },
+    {
+      "id": "fast-underground-belt",
+      "name": "Fast Underground Belt",
+      "stack": 50,
+      "category": "logistics",
+      "row": 2
+    },
+    {
+      "id": "express-underground-belt",
+      "name": "Express Underground Belt",
+      "stack": 50,
+      "category": "logistics",
+      "row": 2
+    },
+    {
+      "id": "splitter",
+      "name": "Splitter",
+      "stack": 50,
+      "category": "logistics",
+      "row": 2
+    },
+    {
+      "id": "fast-splitter",
+      "name": "Fast Splitter",
+      "stack": 50,
+      "category": "logistics",
+      "row": 2
+    },
+    {
+      "id": "express-splitter",
+      "name": "Express Splitter",
+      "stack": 50,
+      "category": "logistics",
+      "row": 2
+    },
+    {
+      "id": "burner-inserter",
+      "name": "Burner Inserter",
+      "stack": 50,
+      "category": "logistics",
+      "row": 3
+    },
+    {
+      "id": "inserter",
+      "name": "Inserter",
+      "stack": 50,
+      "category": "logistics",
+      "row": 3
+    },
+    {
+      "id": "long-handed-inserter",
+      "name": "Long Handed Inserter",
+      "stack": 50,
+      "category": "logistics",
+      "row": 3
+    },
+    {
+      "id": "fast-inserter",
+      "name": "Fast Inserter",
+      "stack": 50,
+      "category": "logistics",
+      "row": 3
+    },
+    {
+      "id": "filter-inserter",
+      "name": "Filter Inserter",
+      "stack": 50,
+      "category": "logistics",
+      "row": 3
+    },
+    {
+      "id": "stack-inserter",
+      "name": "Stack Inserter",
+      "stack": 50,
+      "category": "logistics",
+      "row": 3
+    },
+    {
+      "id": "stack-filter-inserter",
+      "name": "Stack Filter Inserter",
+      "stack": 50,
+      "category": "logistics",
+      "row": 3
+    },
+    {
+      "id": "small-electric-pole",
+      "name": "Small Electric Pole",
+      "stack": 50,
+      "category": "logistics",
+      "row": 4
+    },
+    {
+      "id": "medium-electric-pole",
+      "name": "Medium Electric Pole",
+      "stack": 50,
+      "category": "logistics",
+      "row": 4
+    },
+    {
+      "id": "big-electric-pole",
+      "name": "Big Electric Pole",
+      "stack": 50,
+      "category": "logistics",
+      "row": 4
+    },
+    {
+      "id": "substation",
+      "name": "Substation",
+      "stack": 50,
+      "category": "logistics",
+      "row": 4
+    },
+    {
+      "id": "pipe",
+      "name": "Pipe",
+      "stack": 100,
+      "category": "logistics",
+      "row": 4
+    },
+    {
+      "id": "pipe-to-ground",
+      "name": "Pipe to Ground",
+      "stack": 50,
+      "category": "logistics",
+      "row": 4
+    },
+    {
+      "id": "pump",
+      "name": "Pump",
+      "stack": 50,
+      "category": "logistics",
+      "row": 4
+    },
+    {
+      "id": "rail",
+      "name": "Rail",
+      "stack": 100,
+      "category": "logistics",
+      "row": 5
+    },
+    {
+      "id": "train-stop",
+      "name": "Train Stop",
+      "stack": 10,
+      "category": "logistics",
+      "row": 5
+    },
+    {
+      "id": "rail-signal",
+      "name": "Rail Signal",
+      "stack": 50,
+      "category": "logistics",
+      "row": 5
+    },
+    {
+      "id": "rail-chain-signal",
+      "name": "Rail Chain Signal",
+      "stack": 50,
+      "category": "logistics",
+      "row": 5
+    },
+    {
+      "id": "locomotive",
+      "name": "Locomotive",
+      "stack": 5,
+      "category": "logistics",
+      "row": 5
+    },
+    {
+      "id": "cargo-wagon",
+      "name": "Cargo Wagon",
+      "stack": 5,
+      "category": "logistics",
+      "row": 5
+    },
+    {
+      "id": "fluid-wagon",
+      "name": "Fluid Wagon",
+      "stack": 5,
+      "category": "logistics",
+      "row": 5
+    },
+    {
+      "id": "artillery-wagon",
+      "name": "Artillery Wagon",
+      "stack": 5,
+      "category": "logistics",
+      "row": 5
+    },
+    {
+      "id": "car",
+      "name": "Car",
+      "stack": 1,
+      "category": "logistics",
+      "row": 5
+    },
+    {
+      "id": "tank",
+      "name": "Tank",
+      "stack": 1,
+      "category": "logistics",
+      "row": 5
+    },
+    {
+      "id": "logistic-robot",
+      "name": "Logistic Robot",
+      "stack": 50,
+      "category": "logistics",
+      "row": 6
+    },
+    {
+      "id": "construction-robot",
+      "name": "Construction Robot",
+      "stack": 50,
+      "category": "logistics",
+      "row": 6
+    },
+    {
+      "id": "active-provider-chest",
+      "name": "Active Provider Chest",
+      "stack": 50,
+      "category": "logistics",
+      "row": 6
+    },
+    {
+      "id": "passive-provider-chest",
+      "name": "Passive Provider Chest",
+      "stack": 50,
+      "category": "logistics",
+      "row": 6
+    },
+    {
+      "id": "storage-chest",
+      "name": "Storage Chest",
+      "stack": 50,
+      "category": "logistics",
+      "row": 6
+    },
+    {
+      "id": "buffer-chest",
+      "name": "Buffer Chest",
+      "stack": 50,
+      "category": "logistics",
+      "row": 6
+    },
+    {
+      "id": "requester-chest",
+      "name": "Requester Chest",
+      "stack": 50,
+      "category": "logistics",
+      "row": 6
+    },
+    {
+      "id": "roboport",
+      "name": "Roboport",
+      "stack": 10,
+      "category": "logistics",
+      "row": 6
+    },
+    {
+      "id": "lamp",
+      "name": "Lamp",
+      "stack": 50,
+      "category": "logistics",
+      "row": 7
+    },
+    {
+      "id": "red-wire",
+      "name": "Red Wire",
+      "stack": 200,
+      "category": "logistics",
+      "row": 7
+    },
+    {
+      "id": "green-wire",
+      "name": "Green Wire",
+      "stack": 200,
+      "category": "logistics",
+      "row": 7
+    },
+    {
+      "id": "arithmetic-combinator",
+      "name": "Arithmetic Combinator",
+      "stack": 50,
+      "category": "logistics",
+      "row": 7
+    },
+    {
+      "id": "decider-combinator",
+      "name": "Decider Combinator",
+      "stack": 50,
+      "category": "logistics",
+      "row": 7
+    },
+    {
+      "id": "constant-combinator",
+      "name": "Constant Combinator",
+      "stack": 50,
+      "category": "logistics",
+      "row": 7
+    },
+    {
+      "id": "power-switch",
+      "name": "Power Switch",
+      "stack": 50,
+      "category": "logistics",
+      "row": 7
+    },
+    {
+      "id": "programmable-speaker",
+      "name": "Programmable Speaker",
+      "stack": 50,
+      "category": "logistics",
+      "row": 7
+    },
+    {
+      "id": "stone-brick",
+      "name": "Stone Brick",
+      "stack": 100,
+      "category": "logistics",
+      "row": 8
+    },
+    {
+      "id": "concrete",
+      "name": "Concrete",
+      "stack": 100,
+      "category": "logistics",
+      "row": 8
+    },
+    {
+      "id": "hazard-concrete",
+      "name": "Hazard Concrete",
+      "stack": 100,
+      "category": "logistics",
+      "row": 8
+    },
+    {
+      "id": "refined-concrete",
+      "name": "Refined Concrete",
+      "stack": 100,
+      "category": "logistics",
+      "row": 8
+    },
+    {
+      "id": "refined-hazard-concrete",
+      "name": "Refined Hazard Concrete",
+      "stack": 100,
+      "category": "logistics",
+      "row": 8
+    },
+    {
+      "id": "landfill",
+      "name": "Landfill",
+      "stack": 100,
+      "category": "logistics",
+      "row": 8
+    },
+    {
+      "id": "cliff-explosives",
+      "name": "Cliff Explosives",
+      "stack": 20,
+      "category": "logistics",
+      "row": 8
+    },
+    {
+      "id": "repair-pack",
+      "name": "Repair Pack",
+      "stack": 100,
+      "category": "production",
+      "row": 1
+    },
+    {
+      "id": "boiler",
+      "name": "Boiler",
+      "stack": 50,
+      "category": "production",
+      "row": 2,
+      "factory": {
+        "speed": 1,
+        "modules": 0,
+        "burner": 1800
+      }
+    },
+    {
+      "id": "steam-engine",
+      "name": "Steam Engine",
+      "stack": 10,
+      "category": "production",
+      "row": 2
+    },
+    {
+      "id": "steam-turbine",
+      "name": "Steam Turbine",
+      "stack": 10,
+      "category": "production",
+      "row": 2
+    },
+    {
+      "id": "solar-panel",
+      "name": "Solar Panel",
+      "stack": 50,
+      "category": "production",
+      "row": 2
+    },
+    {
+      "id": "accumulator",
+      "name": "Accumulator",
+      "stack": 10,
+      "category": "production",
+      "row": 2
+    },
+    {
+      "id": "nuclear-reactor",
+      "name": "Nuclear Reactor",
+      "stack": 10,
+      "category": "production",
+      "row": 2
+    },
+    {
+      "id": "heat-exchanger",
+      "name": "Heat Exchanger",
+      "stack": 50,
+      "category": "production",
+      "row": 2
+    },
+    {
+      "id": "heat-pipe",
+      "name": "Heat Pipe",
+      "stack": 50,
+      "category": "production",
+      "row": 2
+    },
+    {
+      "id": "burner-mining-drill",
+      "name": "Burner Mining Drill",
+      "stack": 50,
+      "category": "production",
+      "row": 3,
+      "factory": {
+        "speed": 0.25,
+        "modules": 0,
+        "burner": 150
+      }
+    },
+    {
+      "id": "electric-mining-drill",
+      "name": "Electric Mining Drill",
+      "stack": 50,
+      "category": "production",
+      "row": 3,
+      "factory": {
+        "speed": 0.5,
+        "modules": 3,
+        "electric": 90
+      }
+    },
+    {
+      "id": "offshore-pump",
+      "name": "Offshore Pump",
+      "stack": 20,
+      "category": "production",
+      "row": 3,
+      "factory": {
+        "speed": 1,
+        "modules": 0
+      }
+    },
+    {
+      "id": "pumpjack",
+      "name": "Pumpjack",
+      "stack": 20,
+      "category": "production",
+      "row": 3,
+      "factory": {
+        "speed": 0.5,
+        "modules": 2,
+        "burner": 90
+      }
+    },
+    {
+      "id": "stone-furnace",
+      "name": "Stone Furnace",
+      "stack": 50,
+      "category": "production",
+      "row": 4,
+      "factory": {
+        "speed": 1,
+        "modules": 0,
+        "burner": 90
+      }
+    },
+    {
+      "id": "steel-furnace",
+      "name": "Steel Furnace",
+      "stack": 50,
+      "category": "production",
+      "row": 4,
+      "factory": {
+        "speed": 2,
+        "modules": 0,
+        "burner": 90
+      }
+    },
+    {
+      "id": "electric-furnace",
+      "name": "Electric Furnace",
+      "stack": 50,
+      "category": "production",
+      "row": 4,
+      "factory": {
+        "speed": 2,
+        "modules": 2,
+        "electric": 180,
+        "drain": 6
+      }
+    },
+    {
+      "id": "assembling-machine-1",
+      "name": "Assembling Machine 1",
+      "stack": 50,
+      "category": "production",
+      "row": 5,
+      "factory": {
+        "speed": 0.5,
+        "modules": 0,
+        "electric": 75,
+        "drain": 2.5
+      }
+    },
+    {
+      "id": "assembling-machine-2",
+      "name": "Assembling Machine 2",
+      "stack": 50,
+      "category": "production",
+      "row": 5,
+      "factory": {
+        "speed": 0.75,
+        "modules": 2,
+        "electric": 150,
+        "drain": 5
+      }
+    },
+    {
+      "id": "assembling-machine-3",
+      "name": "Assembling Machine 3",
+      "stack": 50,
+      "category": "production",
+      "row": 5,
+      "factory": {
+        "speed": 1.25,
+        "modules": 4,
+        "electric": 375,
+        "drain": 12.5
+      }
+    },
+    {
+      "id": "oil-refinery",
+      "name": "Oil Refinery",
+      "stack": 10,
+      "category": "production",
+      "row": 5,
+      "factory": {
+        "speed": 1,
+        "modules": 3,
+        "electric": 420,
+        "drain": 14
+      }
+    },
+    {
+      "id": "chemical-plant",
+      "name": "Chemical Plant",
+      "stack": 10,
+      "category": "production",
+      "row": 5,
+      "factory": {
+        "speed": 1,
+        "modules": 3,
+        "electric": 210,
+        "drain": 7
+      }
+    },
+    {
+      "id": "centrifuge",
+      "name": "Centrifuge",
+      "stack": 50,
+      "category": "production",
+      "row": 5,
+      "factory": {
+        "speed": 1,
+        "modules": 2,
+        "electric": 350,
+        "drain": 11.6
+      }
+    },
+    {
+      "id": "lab",
+      "name": "Lab",
+      "stack": 10,
+      "category": "production",
+      "row": 5,
+      "factory": {
+        "speed": 1,
+        "modules": 2,
+        "electric": 60
+      }
+    },
+    {
+      "id": "beacon",
+      "name": "Beacon",
+      "stack": 10,
+      "category": "production",
+      "row": 6
+    },
+    {
+      "id": "speed-module",
+      "name": "Speed Module",
+      "stack": 50,
+      "category": "production",
+      "row": 6,
+      "module": {
+        "speed": 0.2,
+        "productivity": 0,
+        "energy": 0.5
+      }
+    },
+    {
+      "id": "speed-module-2",
+      "name": "Speed Module 2",
+      "stack": 50,
+      "category": "production",
+      "row": 6,
+      "module": {
+        "speed": 0.3,
+        "productivity": 0,
+        "energy": 0.6
+      }
+    },
+    {
+      "id": "speed-module-3",
+      "name": "Speed Module 3",
+      "stack": 50,
+      "category": "production",
+      "row": 6,
+      "module": {
+        "speed": 0.5,
+        "productivity": 0,
+        "energy": 0.7
+      }
+    },
+    {
+      "id": "efficiency-module",
+      "name": "Efficiency Module",
+      "stack": 50,
+      "category": "production",
+      "row": 6,
+      "module": {
+        "speed": 0,
+        "productivity": 0,
+        "energy": -0.3
+      }
+    },
+    {
+      "id": "efficiency-module-2",
+      "name": "Efficiency Module 2",
+      "stack": 50,
+      "category": "production",
+      "row": 6,
+      "module": {
+        "speed": 0,
+        "productivity": 0,
+        "energy": -0.4
+      }
+    },
+    {
+      "id": "efficiency-module-3",
+      "name": "Efficiency Module 3",
+      "stack": 50,
+      "category": "production",
+      "row": 6,
+      "module": {
+        "speed": 0,
+        "productivity": 0,
+        "energy": -0.5
+      }
+    },
+    {
+      "id": "productivity-module",
+      "name": "Productivity Module",
+      "stack": 50,
+      "category": "production",
+      "row": 6,
+      "module": {
+        "speed": -0.15,
+        "productivity": 0.04,
+        "energy": 0.4
+      }
+    },
+    {
+      "id": "productivity-module-2",
+      "name": "Productivity Module 2",
+      "stack": 50,
+      "category": "production",
+      "row": 6,
+      "module": {
+        "speed": -0.15,
+        "productivity": 0.06,
+        "energy": 0.6
+      }
+    },
+    {
+      "id": "productivity-module-3",
+      "name": "Productivity Module 3",
+      "stack": 50,
+      "category": "production",
+      "row": 6,
+      "module": {
+        "speed": -0.15,
+        "productivity": 0.1,
+        "energy": 0.8
+      }
+    },
+    {
+      "id": "wood",
+      "name": "Wood",
+      "stack": 100,
+      "category": "intermediate",
+      "row": 1,
+      "fuel": 2
+    },
+    {
+      "id": "coal",
+      "name": "Coal",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 1,
+      "fuel": 4
+    },
+    {
+      "id": "stone",
+      "name": "Stone",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 1
+    },
+    {
+      "id": "iron-ore",
+      "name": "Iron Ore",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 1
+    },
+    {
+      "id": "copper-ore",
+      "name": "Copper Ore",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 1
+    },
+    {
+      "id": "uranium-ore",
+      "name": "Uranium Ore",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 1
+    },
+    {
+      "id": "crude-oil",
+      "name": "Crude Oil",
+      "category": "intermediate",
+      "row": 1
+    },
+    {
+      "id": "heavy-oil",
+      "name": "Heavy Oil",
+      "category": "intermediate",
+      "row": 1
+    },
+    {
+      "id": "light-oil",
+      "name": "Light Oil",
+      "category": "intermediate",
+      "row": 1
+    },
+    {
+      "id": "lubricant",
+      "name": "Lubricant",
+      "category": "intermediate",
+      "row": 1
+    },
+    {
+      "id": "petroleum-gas",
+      "name": "Petroleum Gas",
+      "category": "intermediate",
+      "row": 2
+    },
+    {
+      "id": "sulfuric-acid",
+      "name": "Sulfuric Acid",
+      "category": "intermediate",
+      "row": 2
+    },
+    {
+      "id": "water",
+      "name": "Water",
+      "category": "intermediate",
+      "row": 2
+    },
+    {
+      "id": "steam",
+      "name": "Steam",
+      "category": "intermediate",
+      "row": 2
+    },
+    {
+      "id": "iron-plate",
+      "name": "Iron Plate",
+      "stack": 100,
+      "category": "intermediate",
+      "row": 3
+    },
+    {
+      "id": "copper-plate",
+      "name": "Copper Plate",
+      "stack": 100,
+      "category": "intermediate",
+      "row": 3
+    },
+    {
+      "id": "solid-fuel",
+      "name": "Solid Fuel",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 3,
+      "fuel": 12
+    },
+    {
+      "id": "steel-plate",
+      "name": "Steel Plate",
+      "stack": 100,
+      "category": "intermediate",
+      "row": 3
+    },
+    {
+      "id": "plastic-bar",
+      "name": "Plastic Bar",
+      "stack": 100,
+      "category": "intermediate",
+      "row": 3
+    },
+    {
+      "id": "sulfur",
+      "name": "Sulfur",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 3
+    },
+    {
+      "id": "battery",
+      "name": "Battery",
+      "stack": 200,
+      "category": "intermediate",
+      "row": 3
+    },
+    {
+      "id": "explosives",
+      "name": "Explosives",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 3
+    },
+    {
+      "id": "crude-oil-barrel",
+      "name": "Crude Oil Barrel",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 4
+    },
+    {
+      "id": "heavy-oil-barrel",
+      "name": "Heavy Oil Barrel",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 4
+    },
+    {
+      "id": "light-oil-barrel",
+      "name": "Light Oil Barrel",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 4
+    },
+    {
+      "id": "lubricant-barrel",
+      "name": "Lubricant Barrel",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 4
+    },
+    {
+      "id": "petroleum-gas-barrel",
+      "name": "Petroleum Gas Barrel",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 4
+    },
+    {
+      "id": "sulfuric-acid-barrel",
+      "name": "Sulfuric Acid Barrel",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 4
+    },
+    {
+      "id": "water-barrel",
+      "name": "Water Barrel",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 4
+    },
+    {
+      "id": "copper-cable",
+      "name": "Copper Cable",
+      "stack": 200,
+      "category": "intermediate",
+      "row": 5
+    },
+    {
+      "id": "iron-stick",
+      "name": "Iron Stick",
+      "stack": 100,
+      "category": "intermediate",
+      "row": 5
+    },
+    {
+      "id": "iron-gear-wheel",
+      "name": "Iron Gear Wheel",
+      "stack": 100,
+      "category": "intermediate",
+      "row": 5
+    },
+    {
+      "id": "empty-barrel",
+      "name": "Empty Barrel",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 5
+    },
+    {
+      "id": "electronic-circuit",
+      "name": "Electronic Circuit",
+      "stack": 200,
+      "category": "intermediate",
+      "row": 5
+    },
+    {
+      "id": "advanced-circuit",
+      "name": "Advanced Circuit",
+      "stack": 200,
+      "category": "intermediate",
+      "row": 5
+    },
+    {
+      "id": "processing-unit",
+      "name": "Processing Unit",
+      "stack": 200,
+      "category": "intermediate",
+      "row": 5
+    },
+    {
+      "id": "engine-unit",
+      "name": "Engine Unit",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 5
+    },
+    {
+      "id": "electric-engine-unit",
+      "name": "Electric Engine Unit",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 5
+    },
+    {
+      "id": "flying-robot-frame",
+      "name": "Flying Robot Frame",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 5
+    },
+    {
+      "id": "satellite",
+      "name": "Satellite",
+      "stack": 1,
+      "category": "intermediate",
+      "row": 5
+    },
+    {
+      "id": "rocket-part",
+      "name": "Rocket Part",
+      "stack": 5,
+      "category": "intermediate",
+      "row": 6
+    },
+    {
+      "id": "rocket-control-unit",
+      "name": "Rocket Control Unit",
+      "stack": 10,
+      "category": "intermediate",
+      "row": 6
+    },
+    {
+      "id": "low-density-structure",
+      "name": "Low Density Structure",
+      "stack": 10,
+      "category": "intermediate",
+      "row": 6
+    },
+    {
+      "id": "rocket-fuel",
+      "name": "Rocket Fuel",
+      "stack": 10,
+      "category": "intermediate",
+      "row": 6,
+      "fuel": 100
+    },
+    {
+      "id": "nuclear-fuel",
+      "name": "Nuclear Fuel",
+      "stack": 1,
+      "category": "intermediate",
+      "row": 6,
+      "fuel": 1210
+    },
+    {
+      "id": "uranium-235",
+      "name": "Uranium-235",
+      "stack": 100,
+      "category": "intermediate",
+      "row": 6
+    },
+    {
+      "id": "uranium-238",
+      "name": "Uranium-238",
+      "stack": 100,
+      "category": "intermediate",
+      "row": 6
+    },
+    {
+      "id": "uranium-fuel-cell",
+      "name": "Uranium Fuel Cell",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 6
+    },
+    {
+      "id": "used-up-uranium-fuel-cell",
+      "name": "Used Up Uranium Fuel Cell",
+      "stack": 50,
+      "category": "intermediate",
+      "row": 6
+    },
+    {
+      "id": "automation-science-pack",
+      "name": "Automation Science Pack",
+      "stack": 200,
+      "category": "intermediate",
+      "row": 7
+    },
+    {
+      "id": "logistic-science-pack",
+      "name": "Logistic Science Pack",
+      "stack": 200,
+      "category": "intermediate",
+      "row": 7
+    },
+    {
+      "id": "military-science-pack",
+      "name": "Military Science Pack",
+      "stack": 200,
+      "category": "intermediate",
+      "row": 7
+    },
+    {
+      "id": "chemical-science-pack",
+      "name": "Chemical Science Pack",
+      "stack": 200,
+      "category": "intermediate",
+      "row": 7
+    },
+    {
+      "id": "production-science-pack",
+      "name": "Production Science Pack",
+      "stack": 200,
+      "category": "intermediate",
+      "row": 7
+    },
+    {
+      "id": "utility-science-pack",
+      "name": "Utility Science Pack",
+      "stack": 200,
+      "category": "intermediate",
+      "row": 7
+    },
+    {
+      "id": "space-science-pack",
+      "name": "Space Science Pack",
+      "stack": 200,
+      "category": "intermediate",
+      "row": 7
+    },
+    {
+      "id": "pistol",
+      "name": "Pistol",
+      "stack": 5,
+      "category": "combat",
+      "row": 1
+    },
+    {
+      "id": "submachine-gun",
+      "name": "Submachine Gun",
+      "stack": 5,
+      "category": "combat",
+      "row": 1
+    },
+    {
+      "id": "shotgun",
+      "name": "Shotgun",
+      "stack": 5,
+      "category": "combat",
+      "row": 1
+    },
+    {
+      "id": "combat-shotgun",
+      "name": "Combat Shotgun",
+      "stack": 5,
+      "category": "combat",
+      "row": 1
+    },
+    {
+      "id": "rocket-launcher",
+      "name": "Rocket Launcher",
+      "stack": 5,
+      "category": "combat",
+      "row": 1
+    },
+    {
+      "id": "flamethrower",
+      "name": "Flamethrower",
+      "stack": 5,
+      "category": "combat",
+      "row": 1
+    },
+    {
+      "id": "land-mine",
+      "name": "Land Mine",
+      "stack": 100,
+      "category": "combat",
+      "row": 1
+    },
+    {
+      "id": "firearm-magazine",
+      "name": "Firearm Magazine",
+      "stack": 200,
+      "category": "combat",
+      "row": 2
+    },
+    {
+      "id": "piercing-rounds-magazine",
+      "name": "Piercing Rounds Magazine",
+      "stack": 200,
+      "category": "combat",
+      "row": 2
+    },
+    {
+      "id": "uranium-rounds-magazine",
+      "name": "Uranium Rounds Magazine",
+      "stack": 200,
+      "category": "combat",
+      "row": 2
+    },
+    {
+      "id": "shotgun-shells",
+      "name": "Shotgun Shells",
+      "stack": 200,
+      "category": "combat",
+      "row": 2
+    },
+    {
+      "id": "piercing-shotgun-shells",
+      "name": "Piercing Shotgun Shells",
+      "stack": 200,
+      "category": "combat",
+      "row": 2
+    },
+    {
+      "id": "cannon-shell",
+      "name": "Cannon Shell",
+      "stack": 200,
+      "category": "combat",
+      "row": 2
+    },
+    {
+      "id": "explosive-cannon-shell",
+      "name": "Explosive Cannon Shell",
+      "stack": 200,
+      "category": "combat",
+      "row": 2
+    },
+    {
+      "id": "uranium-cannon-shell",
+      "name": "Uranium Cannon Shell",
+      "stack": 200,
+      "category": "combat",
+      "row": 2
+    },
+    {
+      "id": "explosive-uranium-cannon-shell",
+      "name": "Explosive Uranium Cannon Shell",
+      "stack": 200,
+      "category": "combat",
+      "row": 2
+    },
+    {
+      "id": "artillery-shell",
+      "name": "Artillery Shell",
+      "stack": 1,
+      "category": "combat",
+      "row": 2
+    },
+    {
+      "id": "rocket",
+      "name": "Rocket",
+      "stack": 200,
+      "category": "combat",
+      "row": 2
+    },
+    {
+      "id": "explosive-rocket",
+      "name": "Explosive Rocket",
+      "stack": 200,
+      "category": "combat",
+      "row": 3
+    },
+    {
+      "id": "atomic-bomb",
+      "name": "Atomic Bomb",
+      "stack": 10,
+      "category": "combat",
+      "row": 3
+    },
+    {
+      "id": "flamethrower-ammo",
+      "name": "Flamethrower Ammo",
+      "stack": 100,
+      "category": "combat",
+      "row": 3
+    },
+    {
+      "id": "grenade",
+      "name": "Grenade",
+      "stack": 100,
+      "category": "combat",
+      "row": 4
+    },
+    {
+      "id": "cluster-grenade",
+      "name": "Cluster Grenade",
+      "stack": 100,
+      "category": "combat",
+      "row": 4
+    },
+    {
+      "id": "poison-capsule",
+      "name": "Poison Capsule",
+      "stack": 100,
+      "category": "combat",
+      "row": 4
+    },
+    {
+      "id": "slowdown-capsule",
+      "name": "Slowdown Capsule",
+      "stack": 100,
+      "category": "combat",
+      "row": 4
+    },
+    {
+      "id": "defender-capsule",
+      "name": "Defender Capsule",
+      "stack": 100,
+      "category": "combat",
+      "row": 4
+    },
+    {
+      "id": "distractor-capsule",
+      "name": "Distractor Capsule",
+      "stack": 100,
+      "category": "combat",
+      "row": 4
+    },
+    {
+      "id": "destroyer-capsule",
+      "name": "Destroyer Capsule",
+      "stack": 100,
+      "category": "combat",
+      "row": 4
+    },
+    {
+      "id": "discharge-defense-remote",
+      "name": "Discharge Defense Remote",
+      "stack": 1,
+      "category": "combat",
+      "row": 4
+    },
+    {
+      "id": "artillery-targeting-remote",
+      "name": "Artillery Targeting Remote",
+      "stack": 1,
+      "category": "combat",
+      "row": 4
+    },
+    {
+      "id": "light-armor",
+      "name": "Light Armor",
+      "stack": 1,
+      "category": "combat",
+      "row": 5
+    },
+    {
+      "id": "heavy-armor",
+      "name": "Heavy Armor",
+      "stack": 1,
+      "category": "combat",
+      "row": 5
+    },
+    {
+      "id": "modular-armor",
+      "name": "Modular Armor",
+      "stack": 1,
+      "category": "combat",
+      "row": 5
+    },
+    {
+      "id": "power-armor",
+      "name": "Power Armor",
+      "stack": 1,
+      "category": "combat",
+      "row": 5
+    },
+    {
+      "id": "power-armor-mk2",
+      "name": "Power Armor MK2",
+      "stack": 1,
+      "category": "combat",
+      "row": 5
+    },
+    {
+      "id": "portable-solar-panel",
+      "name": "Portable Solar Panel",
+      "stack": 20,
+      "category": "combat",
+      "row": 6
+    },
+    {
+      "id": "portable-fusion-reactor",
+      "name": "Portable Fusion Reactor",
+      "stack": 20,
+      "category": "combat",
+      "row": 6
+    },
+    {
+      "id": "energy-shield",
+      "name": "Energy Shield",
+      "stack": 20,
+      "category": "combat",
+      "row": 6
+    },
+    {
+      "id": "energy-shield-mk2",
+      "name": "Energy Shield MK2",
+      "stack": 20,
+      "category": "combat",
+      "row": 6
+    },
+    {
+      "id": "personal-battery",
+      "name": "Personal Battery",
+      "stack": 20,
+      "category": "combat",
+      "row": 6
+    },
+    {
+      "id": "personal-battery-mk2",
+      "name": "Personal Battery MK2",
+      "stack": 20,
+      "category": "combat",
+      "row": 6
+    },
+    {
+      "id": "personal-laser-defense",
+      "name": "Personal Laser Defense",
+      "stack": 20,
+      "category": "combat",
+      "row": 6
+    },
+    {
+      "id": "discharge-defense",
+      "name": "Discharge Defense",
+      "stack": 20,
+      "category": "combat",
+      "row": 6
+    },
+    {
+      "id": "belt-immunity-equipment",
+      "name": "Belt Immunity Equipment",
+      "stack": 20,
+      "category": "combat",
+      "row": 6
+    },
+    {
+      "id": "exoskeleton",
+      "name": "Exoskeleton",
+      "stack": 20,
+      "category": "combat",
+      "row": 6
+    },
+    {
+      "id": "personal-roboport",
+      "name": "Personal Roboport",
+      "stack": 20,
+      "category": "combat",
+      "row": 6
+    },
+    {
+      "id": "personal-roboport-mk2",
+      "name": "Personal Roboport MK2",
+      "stack": 20,
+      "category": "combat",
+      "row": 7
+    },
+    {
+      "id": "nightvision",
+      "name": "Nightvision",
+      "stack": 20,
+      "category": "combat",
+      "row": 7
+    },
+    {
+      "id": "wall",
+      "name": "Wall",
+      "stack": 100,
+      "category": "combat",
+      "row": 8
+    },
+    {
+      "id": "gate",
+      "name": "Gate",
+      "stack": 50,
+      "category": "combat",
+      "row": 8
+    },
+    {
+      "id": "gun-turret",
+      "name": "Gun Turret",
+      "stack": 50,
+      "category": "combat",
+      "row": 8
+    },
+    {
+      "id": "laser-turret",
+      "name": "Laser Turret",
+      "stack": 50,
+      "category": "combat",
+      "row": 8
+    },
+    {
+      "id": "flamethrower-turret",
+      "name": "Flamethrower Turret",
+      "stack": 50,
+      "category": "combat",
+      "row": 8
+    },
+    {
+      "id": "artillery-turret",
+      "name": "Artillery Turret",
+      "stack": 10,
+      "category": "combat",
+      "row": 8
+    },
+    {
+      "id": "radar",
+      "name": "Radar",
+      "stack": 50,
+      "category": "combat",
+      "row": 8
+    },
+    {
+      "id": "rocket-silo",
+      "name": "Rocket Silo",
+      "stack": 1,
+      "category": "combat",
+      "row": 8,
+      "factory": {
+        "speed": 1,
+        "modules": 4,
+        "electric": 4000
+      }
+    },
+    {
+      "id": "mining-productivity",
+      "name": "Mining Productivity",
+      "category": "research",
+      "row": 1
+    },
+    {
+      "id": "worker-robot-speed",
+      "name": "Worker Robot Speed",
+      "category": "research",
+      "row": 1
+    },
+    {
+      "id": "follower-robot-count",
+      "name": "Follower Robot Count",
+      "category": "research",
+      "row": 1
+    },
+    {
+      "id": "energy-weapons-damage",
+      "name": "Energy Weapons Damage",
+      "category": "research",
+      "row": 2
+    },
+    {
+      "id": "physical-projectile-damage",
+      "name": "Physical Projectile Damage",
+      "category": "research",
+      "row": 2
+    },
+    {
+      "id": "refined-flammables",
+      "name": "Refined Flammables",
+      "category": "research",
+      "row": 2
+    },
+    {
+      "id": "artillery-shell-range",
+      "name": "Artillery Shell Range",
+      "category": "research",
+      "row": 3
+    },
+    {
+      "id": "artillery-shell-shooting-speed",
+      "name": "Artillery Shell Shooting Speed",
+      "category": "research",
+      "row": 3
+    },
+    {
+      "id": "stronger-explosives",
+      "name": "Stronger Explosives",
+      "category": "research",
+      "row": 3
+    }
+  ],
+  "categories": [
+    {
+      "id": "logistics",
+      "name": "Logistics"
+    },
+    {
+      "id": "production",
+      "name": "Production"
+    },
+    {
+      "id": "intermediate",
+      "name": "Intermediate Products"
+    },
+    {
+      "id": "combat",
+      "name": "Combat"
+    },
+    {
+      "id": "research",
+      "name": "Infinite Research"
+    }
+  ],
+  "recipes": [
+    {
+      "id": "wooden-chest",
+      "time": 0.5,
+      "in": { "wood": 2 }
+    },
+    {
+      "id": "iron-chest",
+      "time": 0.5,
+      "in": { "iron-plate": 8 }
+    },
+    {
+      "id": "steel-chest",
+      "time": 0.5,
+      "in": { "steel-plate": 8 }
+    },
+    {
+      "id": "storage-tank",
+      "time": 3,
+      "in": { "iron-plate": 20, "steel-plate": 5 }
+    },
+    {
+      "id": "transport-belt",
+      "time": 0.5,
+      "in": { "iron-gear-wheel": 1, "iron-plate": 1 },
+      "out": { "transport-belt": 2 }
+    },
+    {
+      "id": "fast-transport-belt",
+      "time": 0.5,
+      "in": { "iron-gear-wheel": 5, "transport-belt": 1 }
+    },
+    {
+      "id": "express-transport-belt",
+      "time": 0.5,
+      "in": {
+        "fast-transport-belt": 1,
+        "iron-gear-wheel": 10,
+        "lubricant": 20
+      },
+      "in-expensive": {
+        "fast-transport-belt": 1,
+        "iron-gear-wheel": 20,
+        "lubricant": 20
+      },
+      "producers": ["assembling-machine-2", "assembling-machine-3"]
+    },
+    {
+      "id": "underground-belt",
+      "time": 1,
+      "in": { "iron-plate": 10, "transport-belt": 5 },
+      "out": { "underground-belt": 2 }
+    },
+    {
+      "id": "fast-underground-belt",
+      "time": 2,
+      "in": { "iron-gear-wheel": 40, "underground-belt": 2 },
+      "out": { "fast-underground-belt": 2 }
+    },
+    {
+      "id": "express-underground-belt",
+      "time": 2,
+      "in": {
+        "iron-gear-wheel": 80,
+        "fast-underground-belt": 2,
+        "lubricant": 40
+      },
+      "out": { "express-underground-belt": 2 },
+      "producers": ["assembling-machine-2", "assembling-machine-3"]
+    },
+    {
+      "id": "splitter",
+      "time": 1,
+      "in": { "electronic-circuit": 5, "iron-plate": 5, "transport-belt": 5 }
+    },
+    {
+      "id": "fast-splitter",
+      "time": 2,
+      "in": { "electronic-circuit": 10, "iron-gear-wheel": 10, "splitter": 1 }
+    },
+    {
+      "id": "express-splitter",
+      "time": 2,
+      "in": {
+        "advanced-circuit": 10,
+        "fast-splitter": 1,
+        "iron-gear-wheel": 10,
+        "lubricant": 80
+      },
+      "producers": ["assembling-machine-2", "assembling-machine-3"]
+    },
+    {
+      "id": "burner-inserter",
+      "time": 0.5,
+      "in": { "iron-gear-wheel": 1, "iron-plate": 1 }
+    },
+    {
+      "id": "inserter",
+      "time": 0.5,
+      "in": { "electronic-circuit": 1, "iron-gear-wheel": 1, "iron-plate": 1 }
+    },
+    {
+      "id": "long-handed-inserter",
+      "time": 0.5,
+      "in": { "inserter": 1, "iron-gear-wheel": 1, "iron-plate": 1 }
+    },
+    {
+      "id": "fast-inserter",
+      "time": 0.5,
+      "in": { "electronic-circuit": 2, "inserter": 1, "iron-plate": 2 }
+    },
+    {
+      "id": "filter-inserter",
+      "time": 0.5,
+      "in": { "electronic-circuit": 4, "fast-inserter": 1 }
+    },
+    {
+      "id": "stack-inserter",
+      "time": 0.5,
+      "in": {
+        "advanced-circuit": 1,
+        "electronic-circuit": 15,
+        "fast-inserter": 1,
+        "iron-gear-wheel": 15
+      }
+    },
+    {
+      "id": "stack-filter-inserter",
+      "time": 0.5,
+      "in": { "electronic-circuit": 5, "stack-inserter": 1 }
+    },
+    {
+      "id": "small-electric-pole",
+      "time": 0.5,
+      "in": { "copper-cable": 2, "wood": 1 },
+      "out": { "small-electric-pole": 2 }
+    },
+    {
+      "id": "medium-electric-pole",
+      "time": 0.5,
+      "in": { "copper-plate": 2, "iron-stick": 4, "steel-plate": 2 }
+    },
+    {
+      "id": "big-electric-pole",
+      "time": 0.5,
+      "in": { "copper-plate": 5, "iron-stick": 8, "steel-plate": 5 }
+    },
+    {
+      "id": "substation",
+      "time": 0.5,
+      "in": { "advanced-circuit": 5, "copper-plate": 5, "steel-plate": 10 }
+    },
+    {
+      "id": "pipe",
+      "time": 0.5,
+      "in": { "iron-plate": 2 },
+      "in-expensive": { "iron-plate": 2 }
+    },
+    {
+      "id": "pipe-to-ground",
+      "time": 0.5,
+      "in": { "iron-plate": 5, "pipe": 10 },
+      "out": { "pipe-to-ground": 2 }
+    },
+    {
+      "id": "pump",
+      "time": 2,
+      "in": { "engine-unit": 1, "pipe": 1, "steel-plate": 1 }
+    },
+    {
+      "id": "rail",
+      "time": 0.5,
+      "in": { "iron-stick": 1, "steel-plate": 1, "stone": 1 },
+      "out": { "rail": 2 }
+    },
+    {
+      "id": "train-stop",
+      "time": 0.5,
+      "in": {
+        "electronic-circuit": 5,
+        "iron-plate": 6,
+        "iron-stick": 6,
+        "steel-plate": 3
+      }
+    },
+    {
+      "id": "rail-signal",
+      "time": 0.5,
+      "in": { "electronic-circuit": 1, "iron-plate": 5 }
+    },
+    {
+      "id": "rail-chain-signal",
+      "time": 0.5,
+      "in": { "electronic-circuit": 1, "iron-plate": 5 }
+    },
+    {
+      "id": "locomotive",
+      "time": 4,
+      "in": { "electronic-circuit": 10, "engine-unit": 20, "steel-plate": 30 }
+    },
+    {
+      "id": "cargo-wagon",
+      "time": 1,
+      "in": { "iron-gear-wheel": 10, "iron-plate": 20, "steel-plate": 20 }
+    },
+    {
+      "id": "fluid-wagon",
+      "time": 1.5,
+      "in": {
+        "iron-gear-wheel": 10,
+        "pipe": 8,
+        "steel-plate": 16,
+        "storage-tank": 1
+      }
+    },
+    {
+      "id": "artillery-wagon",
+      "time": 4,
+      "in": {
+        "advanced-circuit": 20,
+        "engine-unit": 64,
+        "iron-gear-wheel": 10,
+        "pipe": 16,
+        "steel-plate": 40
+      }
+    },
+    {
+      "id": "car",
+      "time": 2,
+      "in": { "engine-unit": 8, "iron-plate": 20, "steel-plate": 5 }
+    },
+    {
+      "id": "tank",
+      "time": 5,
+      "in": {
+        "advanced-circuit": 10,
+        "engine-unit": 32,
+        "iron-gear-wheel": 15,
+        "steel-plate": 50
+      }
+    },
+    {
+      "id": "logistic-robot",
+      "time": 0.5,
+      "in": { "advanced-circuit": 2, "flying-robot-frame": 1 }
+    },
+    {
+      "id": "construction-robot",
+      "time": 0.5,
+      "in": { "electronic-circuit": 2, "flying-robot-frame": 1 }
+    },
+    {
+      "id": "active-provider-chest",
+      "time": 0.5,
+      "in": { "advanced-circuit": 1, "electronic-circuit": 3, "steel-chest": 1 }
+    },
+    {
+      "id": "passive-provider-chest",
+      "time": 0.5,
+      "in": { "advanced-circuit": 1, "electronic-circuit": 3, "steel-chest": 1 }
+    },
+    {
+      "id": "storage-chest",
+      "time": 0.5,
+      "in": { "advanced-circuit": 1, "electronic-circuit": 3, "steel-chest": 1 }
+    },
+    {
+      "id": "buffer-chest",
+      "time": 0.5,
+      "in": { "advanced-circuit": 1, "electronic-circuit": 3, "steel-chest": 1 }
+    },
+    {
+      "id": "requester-chest",
+      "time": 0.5,
+      "in": { "advanced-circuit": 1, "electronic-circuit": 3, "steel-chest": 1 }
+    },
+    {
+      "id": "roboport",
+      "time": 0.5,
+      "in": { "advanced-circuit": 45, "iron-gear-wheel": 45, "steel-plate": 45 }
+    },
+    {
+      "id": "lamp",
+      "time": 0.5,
+      "in": { "copper-cable": 3, "electronic-circuit": 1, "iron-plate": 1 }
+    },
+    {
+      "id": "red-wire",
+      "time": 0.5,
+      "in": { "copper-cable": 1, "electronic-circuit": 1 }
+    },
+    {
+      "id": "green-wire",
+      "time": 0.5,
+      "in": { "copper-cable": 1, "electronic-circuit": 1 }
+    },
+    {
+      "id": "arithmetic-combinator",
+      "time": 0.5,
+      "in": { "copper-cable": 5, "electronic-circuit": 5 }
+    },
+    {
+      "id": "decider-combinator",
+      "time": 0.5,
+      "in": { "copper-cable": 5, "electronic-circuit": 5 }
+    },
+    {
+      "id": "constant-combinator",
+      "time": 0.5,
+      "in": { "copper-cable": 5, "electronic-circuit": 2 }
+    },
+    {
+      "id": "power-switch",
+      "time": 2,
+      "in": { "copper-cable": 5, "electronic-circuit": 5, "iron-plate": 5 }
+    },
+    {
+      "id": "programmable-speaker",
+      "time": 2,
+      "in": {
+        "copper-cable": 5,
+        "electronic-circuit": 4,
+        "iron-plate": 3,
+        "iron-stick": 4
+      }
+    },
+    {
+      "id": "stone-brick",
+      "time": 3.2,
+      "in": { "stone": 2 },
+      "producers": ["stone-furnace", "steel-furnace", "electric-furnace"]
+    },
+    {
+      "id": "concrete",
+      "time": 10,
+      "in": { "iron-ore": 1, "stone-brick": 5, "water": 100 },
+      "out": { "concrete": 10 },
+      "producers": ["assembling-machine-2", "assembling-machine-3"]
+    },
+    {
+      "id": "hazard-concrete",
+      "time": 0.25,
+      "in": { "concrete": 10 },
+      "out": { "hazard-concrete": 10 }
+    },
+    {
+      "id": "refined-concrete",
+      "time": 15,
+      "in": { "concrete": 20, "iron-stick": 8, "steel-plate": 1, "water": 100 },
+      "out": { "refined-concrete": 10 },
+      "producers": ["assembling-machine-2", "assembling-machine-3"]
+    },
+    {
+      "id": "refined-hazard-concrete",
+      "time": 0.25,
+      "in": { "refined-concrete": 10 },
+      "out": { "refined-hazard-concrete": 10 }
+    },
+    {
+      "id": "landfill",
+      "time": 0.5,
+      "in": { "stone": 20 }
+    },
+    {
+      "id": "cliff-explosives",
+      "time": 8,
+      "in": { "empty-barrel": 1, "explosives": 10, "grenade": 1 }
+    },
+    {
+      "id": "repair-pack",
+      "time": 0.5,
+      "in": { "electronic-circuit": 2, "iron-gear-wheel": 2 }
+    },
+    {
+      "id": "boiler",
+      "time": 0.5,
+      "in": { "pipe": 4, "stone-furnace": 1 }
+    },
+    {
+      "id": "steam-engine",
+      "time": 0.5,
+      "in": { "iron-gear-wheel": 8, "iron-plate": 10, "pipe": 5 },
+      "in-expensive": { "iron-gear-wheel": 10, "iron-plate": 50, "pipe": 5 }
+    },
+    {
+      "id": "steam-turbine",
+      "time": 3,
+      "in": { "copper-plate": 50, "iron-gear-wheel": 50, "pipe": 20 }
+    },
+    {
+      "id": "solar-panel",
+      "time": 10,
+      "in": { "copper-plate": 5, "electronic-circuit": 15, "steel-plate": 5 }
+    },
+    {
+      "id": "accumulator",
+      "time": 10,
+      "in": { "battery": 5, "iron-plate": 2 }
+    },
+    {
+      "id": "nuclear-reactor",
+      "time": 8,
+      "in": {
+        "advanced-circuit": 500,
+        "concrete": 500,
+        "copper-plate": 500,
+        "steel-plate": 500
+      }
+    },
+    {
+      "id": "heat-exchanger",
+      "time": 3,
+      "in": { "copper-plate": 100, "pipe": 10, "steel-plate": 10 }
+    },
+    {
+      "id": "heat-pipe",
+      "time": 1,
+      "in": { "copper-plate": 20, "steel-plate": 10 }
+    },
+    {
+      "id": "burner-mining-drill",
+      "time": 2,
+      "time-expensive": 4,
+      "in": { "iron-gear-wheel": 3, "iron-plate": 3, "stone-furnace": 1 },
+      "in-expensive": {
+        "iron-gear-wheel": 6,
+        "iron-plate": 6,
+        "stone-furnace": 2
+      }
+    },
+    {
+      "id": "electric-mining-drill",
+      "time": 2,
+      "in": { "electronic-circuit": 3, "iron-gear-wheel": 5, "iron-plate": 10 },
+      "in-expensive": {
+        "electronic-circuit": 5,
+        "iron-gear-wheel": 10,
+        "iron-plate": 20
+      }
+    },
+    {
+      "id": "offshore-pump",
+      "time": 0.5,
+      "in": { "electronic-circuit": 2, "iron-gear-wheel": 1, "pipe": 1 }
+    },
+    {
+      "id": "pumpjack",
+      "time": 5,
+      "in": {
+        "electronic-circuit": 5,
+        "iron-gear-wheel": 10,
+        "pipe": 10,
+        "steel-plate": 5
+      }
+    },
+    {
+      "id": "stone-furnace",
+      "time": 0.5,
+      "in": { "stone": 5 }
+    },
+    {
+      "id": "steel-furnace",
+      "time": 3,
+      "in": { "steel-plate": 6, "stone-brick": 10 }
+    },
+    {
+      "id": "electric-furnace",
+      "time": 5,
+      "in": { "advanced-circuit": 5, "steel-plate": 10, "stone-brick": 10 }
+    },
+    {
+      "id": "assembling-machine-1",
+      "time": 0.5,
+      "in": { "electronic-circuit": 3, "iron-gear-wheel": 5, "iron-plate": 9 }
+    },
+    {
+      "id": "assembling-machine-2",
+      "time": 0.5,
+      "in": {
+        "assembling-machine-1": 1,
+        "electronic-circuit": 3,
+        "iron-gear-wheel": 5,
+        "steel-plate": 2
+      },
+      "in-expensive": {
+        "assembling-machine-1": 1,
+        "electronic-circuit": 5,
+        "iron-gear-wheel": 10,
+        "steel-plate": 5
+      }
+    },
+    {
+      "id": "assembling-machine-3",
+      "time": 0.5,
+      "in": { "assembling-machine-2": 2, "speed-module": 4 }
+    },
+    {
+      "id": "oil-refinery",
+      "time": 8,
+      "in": {
+        "electronic-circuit": 10,
+        "iron-gear-wheel": 10,
+        "pipe": 10,
+        "steel-plate": 15,
+        "stone-brick": 10
+      }
+    },
+    {
+      "id": "chemical-plant",
+      "time": 5,
+      "in": {
+        "electronic-circuit": 5,
+        "iron-gear-wheel": 5,
+        "pipe": 5,
+        "steel-plate": 5
+      }
+    },
+    {
+      "id": "centrifuge",
+      "time": 4,
+      "in": {
+        "advanced-circuit": 100,
+        "concrete": 100,
+        "iron-gear-wheel": 100,
+        "steel-plate": 50
+      }
+    },
+    {
+      "id": "lab",
+      "time": 2,
+      "in": {
+        "electronic-circuit": 10,
+        "iron-gear-wheel": 10,
+        "transport-belt": 4
+      }
+    },
+    {
+      "id": "beacon",
+      "time": 15,
+      "in": {
+        "advanced-circuit": 20,
+        "copper-cable": 10,
+        "electronic-circuit": 20,
+        "steel-plate": 10
+      }
+    },
+    {
+      "id": "speed-module",
+      "time": 15,
+      "in": { "advanced-circuit": 5, "electronic-circuit": 5 }
+    },
+    {
+      "id": "speed-module-2",
+      "time": 30,
+      "in": { "advanced-circuit": 5, "processing-unit": 5, "speed-module": 4 }
+    },
+    {
+      "id": "speed-module-3",
+      "time": 60,
+      "in": { "advanced-circuit": 5, "processing-unit": 5, "speed-module-2": 5 }
+    },
+    {
+      "id": "efficiency-module",
+      "time": 15,
+      "in": { "advanced-circuit": 5, "electronic-circuit": 5 }
+    },
+    {
+      "id": "efficiency-module-2",
+      "time": 30,
+      "in": {
+        "advanced-circuit": 5,
+        "processing-unit": 5,
+        "efficiency-module": 4
+      }
+    },
+    {
+      "id": "efficiency-module-3",
+      "time": 60,
+      "in": {
+        "advanced-circuit": 5,
+        "processing-unit": 5,
+        "efficiency-module-2": 5
+      }
+    },
+    {
+      "id": "productivity-module",
+      "time": 15,
+      "in": { "advanced-circuit": 5, "electronic-circuit": 5 }
+    },
+    {
+      "id": "productivity-module-2",
+      "time": 30,
+      "in": {
+        "advanced-circuit": 5,
+        "processing-unit": 5,
+        "productivity-module": 4
+      }
+    },
+    {
+      "id": "productivity-module-3",
+      "time": 60,
+      "in": {
+        "advanced-circuit": 5,
+        "processing-unit": 5,
+        "productivity-module-2": 5
+      }
+    },
+    {
+      "id": "coal",
+      "time": 1,
+      "producers": ["burner-mining-drill", "electric-mining-drill"]
+    },
+    {
+      "id": "stone",
+      "time": 1,
+      "producers": ["burner-mining-drill", "electric-mining-drill"]
+    },
+    {
+      "id": "iron-ore",
+      "time": 1,
+      "producers": ["burner-mining-drill", "electric-mining-drill"]
+    },
+    {
+      "id": "copper-ore",
+      "time": 1,
+      "producers": ["burner-mining-drill", "electric-mining-drill"]
+    },
+    {
+      "id": "coal",
+      "time": 1,
+      "producers": ["burner-mining-drill", "electric-mining-drill"]
+    },
+    {
+      "id": "uranium-ore",
+      "time": 2,
+      "producers": ["electric-mining-drill"]
+    },
+    {
+      "id": "lubricant",
+      "time": 1,
+      "in": { "heavy-oil": 10 },
+      "out": { "lubricant": 10 },
+      "producers": ["chemical-plant"]
+    },
+    {
+      "id": "sulfuric-acid",
+      "time": 1,
+      "in": { "iron-plate": 1, "sulfur": 5, "water": 100 },
+      "out": { "sulfuric-acid": 50 },
+      "producers": ["chemical-plant"]
+    },
+    {
+      "id": "water",
+      "time": 1,
+      "out": { "water": 1200 },
+      "producers": ["offshore-pump"]
+    },
+    {
+      "id": "iron-plate",
+      "time": 3.2,
+      "in": { "iron-ore": 1 },
+      "producers": ["stone-furnace", "steel-furnace", "electric-furnace"]
+    },
+    {
+      "id": "copper-plate",
+      "time": 3.2,
+      "in": { "copper-ore": 1 },
+      "producers": ["stone-furnace", "steel-furnace", "electric-furnace"]
+    },
+    {
+      "id": "steel-plate",
+      "time": 16,
+      "time-expensive": 32,
+      "in": { "iron-plate": 5 },
+      "in-expensive": { "iron-plate": 10 },
+      "producers": ["stone-furnace", "steel-furnace", "electric-furnace"]
+    },
+    {
+      "id": "plastic-bar",
+      "time": 1,
+      "in": { "coal": 1, "petroleum-gas": 20 },
+      "out": { "plastic-bar": 2 },
+      "producers": ["chemical-plant"]
+    },
+    {
+      "id": "sulfur",
+      "time": 1,
+      "in": { "petroleum-gas": 30, "water": 30 },
+      "out": { "sulfur": 2 },
+      "producers": ["chemical-plant"]
+    },
+    {
+      "id": "battery",
+      "time": 4,
+      "in": { "copper-plate": 1, "iron-plate": 1, "sulfuric-acid": 20 },
+      "producers": ["chemical-plant"]
+    },
+    {
+      "id": "explosives",
+      "time": 4,
+      "time-expensive": 5,
+      "in": { "coal": 1, "sulfur": 1, "water": 10 },
+      "in-expensive": { "coal": 2, "sulfur": 2, "water": 10 },
+      "out": { "explosives": 2 },
+      "producers": ["chemical-plant"]
+    },
+    {
+      "id": "copper-cable",
+      "time": 0.5,
+      "in": { "copper-plate": 1 },
+      "out": { "copper-cable": 2 }
+    },
+    {
+      "id": "iron-stick",
+      "time": 0.5,
+      "in": { "iron-plate": 1 },
+      "out": { "iron-stick": 2 }
+    },
+    {
+      "id": "iron-gear-wheel",
+      "time": 0.5,
+      "in": { "iron-plate": 2 },
+      "in-expensive": { "iron-plate": 4 }
+    },
+    {
+      "id": "empty-barrel",
+      "time": 1,
+      "in": { "steel-plate": 1 }
+    },
+    {
+      "id": "electronic-circuit",
+      "time": 0.5,
+      "in": { "copper-cable": 3, "iron-plate": 1 },
+      "in-expensive": { "copper-cable": 10, "iron-plate": 2 }
+    },
+    {
+      "id": "advanced-circuit",
+      "time": 6,
+      "in": { "copper-cable": 4, "electronic-circuit": 2, "plastic-bar": 2 },
+      "in-expensive": {
+        "copper-cable": 8,
+        "electronic-circuit": 2,
+        "plastic-bar": 4
+      }
+    },
+    {
+      "id": "processing-unit",
+      "time": 10,
+      "in": {
+        "advanced-circuit": 2,
+        "electronic-circuit": 20,
+        "sulfuric-acid": 5
+      },
+      "in-expensive": {
+        "advanced-circuit": 2,
+        "electronic-circuit": 20,
+        "sulfuric-acid": 10
+      },
+      "producers": ["assembling-machine-2", "assembling-machine-3"]
+    },
+    {
+      "id": "engine-unit",
+      "time": 10,
+      "in": { "iron-gear-wheel": 1, "pipe": 2, "steel-plate": 1 },
+      "producers": [
+        "assembling-machine-1",
+        "assembling-machine-2",
+        "assembling-machine-3"
+      ]
+    },
+    {
+      "id": "electric-engine-unit",
+      "time": 10,
+      "in": { "electronic-circuit": 2, "engine-unit": 1, "lubricant": 15 },
+      "producers": ["assembling-machine-2", "assembling-machine-3"]
+    },
+    {
+      "id": "flying-robot-frame",
+      "time": 20,
+      "in": {
+        "battery": 2,
+        "electric-engine-unit": 1,
+        "electronic-circuit": 3,
+        "steel-plate": 1
+      }
+    },
+    {
+      "id": "satellite",
+      "time": 5,
+      "in": {
+        "accumulator": 100,
+        "low-density-structure": 100,
+        "processing-unit": 100,
+        "radar": 5,
+        "rocket-fuel": 50,
+        "solar-panel": 100
+      }
+    },
+    {
+      "id": "rocket-part",
+      "time": 3,
+      "in": {
+        "low-density-structure": 10,
+        "rocket-control-unit": 10,
+        "rocket-fuel": 10
+      },
+      "producers": ["rocket-silo"]
+    },
+    {
+      "id": "rocket-control-unit",
+      "time": 30,
+      "in": { "processing-unit": 1, "speed-module": 1 }
+    },
+    {
+      "id": "low-density-structure",
+      "time": 20,
+      "in": { "copper-plate": 20, "plastic-bar": 5, "steel-plate": 2 },
+      "in-expensive": {
+        "copper-plate": 20,
+        "plastic-bar": 30,
+        "steel-plate": 2
+      }
+    },
+    {
+      "id": "rocket-fuel",
+      "time": 30,
+      "in": { "solid-fuel": 10 }
+    },
+    {
+      "id": "nuclear-fuel",
+      "time": 90,
+      "in": { "rocket-fuel": 1, "uranium-235": 1 },
+      "producers": ["centrifuge"]
+    },
+    {
+      "id": "uranium-fuel-cell",
+      "time": 10,
+      "in": { "iron-plate": 10, "uranium-235": 1, "uranium-238": 19 },
+      "out": { "uranium-fuel-cell": 10 }
+    },
+    {
+      "id": "automation-science-pack",
+      "time": 5,
+      "in": { "copper-plate": 1, "iron-gear-wheel": 1 }
+    },
+    {
+      "id": "logistic-science-pack",
+      "time": 6,
+      "in": { "inserter": 1, "transport-belt": 1 }
+    },
+    {
+      "id": "military-science-pack",
+      "time": 10,
+      "in": { "grenade": 1, "piercing-rounds-magazine": 1, "wall": 2 },
+      "out": { "military-science-pack": 2 }
+    },
+    {
+      "id": "chemical-science-pack",
+      "time": 24,
+      "in": { "advanced-circuit": 3, "engine-unit": 2, "solid-fuel": 1 },
+      "out": { "chemical-science-pack": 2 }
+    },
+    {
+      "id": "production-science-pack",
+      "time": 21,
+      "in": { "electric-furnace": 1, "productivity-module": 1, "rail": 30 },
+      "out": { "production-science-pack": 3 }
+    },
+    {
+      "id": "utility-science-pack",
+      "time": 21,
+      "in": {
+        "flying-robot-frame": 1,
+        "low-density-structure": 3,
+        "processing-unit": 2
+      },
+      "out": { "utility-science-pack": 3 }
+    },
+    {
+      "id": "space-science-pack",
+      "time": 41.25,
+      "in": { "rocket-part": 100, "satellite": 1 },
+      "out": { "space-science-pack": 1000 },
+      "producers": ["rocket-silo"]
+    },
+    {
+      "id": "pistol",
+      "time": 5,
+      "in": { "copper-plate": 5, "iron-plate": 5 }
+    },
+    {
+      "id": "submachine-gun",
+      "time": 10,
+      "in": { "copper-plate": 5, "iron-gear-wheel": 10, "iron-plate": 10 },
+      "in-expensive": {
+        "copper-plate": 20,
+        "iron-gear-wheel": 15,
+        "iron-plate": 30
+      }
+    },
+    {
+      "id": "shotgun",
+      "time": 10,
+      "in": {
+        "copper-plate": 10,
+        "iron-gear-wheel": 5,
+        "iron-plate": 15,
+        "wood": 5
+      }
+    },
+    {
+      "id": "combat-shotgun",
+      "time": 10,
+      "in": {
+        "copper-plate": 10,
+        "iron-gear-wheel": 5,
+        "steel-plate": 15,
+        "wood": 10
+      }
+    },
+    {
+      "id": "rocket-launcher",
+      "time": 10,
+      "in": { "electronic-circuit": 5, "iron-gear-wheel": 5, "iron-plate": 5 }
+    },
+    {
+      "id": "flamethrower",
+      "time": 10,
+      "in": { "iron-gear-wheel": 10, "steel-plate": 5 }
+    },
+    {
+      "id": "land-mine",
+      "time": 5,
+      "in": { "explosives": 2, "steel-plate": 1 },
+      "out": { "land-mine": 4 }
+    },
+    {
+      "id": "firearm-magazine",
+      "time": 1,
+      "in": { "iron-plate": 4 }
+    },
+    {
+      "id": "piercing-rounds-magazine",
+      "time": 3,
+      "in": { "copper-plate": 5, "firearm-magazine": 1, "steel-plate": 1 }
+    },
+    {
+      "id": "uranium-rounds-magazine",
+      "time": 10,
+      "in": { "piercing-rounds-magazine": 1, "uranium-238": 1 }
+    },
+    {
+      "id": "shotgun-shells",
+      "time": 3,
+      "in": { "copper-plate": 2, "iron-plate": 2 }
+    },
+    {
+      "id": "piercing-shotgun-shells",
+      "time": 8,
+      "in": { "copper-plate": 5, "shotgun-shells": 2, "steel-plate": 2 }
+    },
+    {
+      "id": "cannon-shell",
+      "time": 8,
+      "in": { "explosives": 1, "plastic-bar": 2, "steel-plate": 2 },
+      "in-expensive": { "explosives": 1, "plastic-bar": 4, "steel-plate": 4 }
+    },
+    {
+      "id": "explosive-cannon-shell",
+      "time": 8,
+      "in": { "explosives": 2, "plastic-bar": 2, "steel-plate": 2 },
+      "in-expensive": { "explosives": 2, "plastic-bar": 4, "steel-plate": 4 }
+    },
+    {
+      "id": "uranium-cannon-shell",
+      "time": 12,
+      "in": { "cannon-shell": 1, "uranium-238": 1 }
+    },
+    {
+      "id": "explosive-uranium-cannon-shell",
+      "time": 12,
+      "in": { "explosive-cannon-shell": 1, "uranium-238": 1 }
+    },
+    {
+      "id": "artillery-shell",
+      "time": 15,
+      "in": { "explosive-cannon-shell": 4, "explosives": 8, "radar": 1 }
+    },
+    {
+      "id": "rocket",
+      "time": 8,
+      "in": { "electronic-circuit": 1, "explosives": 1, "iron-plate": 2 }
+    },
+    {
+      "id": "explosive-rocket",
+      "time": 8,
+      "in": { "explosives": 2, "rocket": 1 }
+    },
+    {
+      "id": "atomic-bomb",
+      "time": 50,
+      "in": { "explosives": 10, "rocket-control-unit": 10, "uranium-235": 30 }
+    },
+    {
+      "id": "flamethrower-ammo",
+      "time": 6,
+      "in": { "heavy-oil": 50, "light-oil": 50, "steel-plate": 5 },
+      "producers": ["chemical-plant"]
+    },
+    {
+      "id": "grenade",
+      "time": 8,
+      "in": { "coal": 10, "iron-plate": 5 }
+    },
+    {
+      "id": "cluster-grenade",
+      "time": 8,
+      "in": { "explosives": 5, "grenade": 7, "steel-plate": 5 }
+    },
+    {
+      "id": "poison-capsule",
+      "time": 8,
+      "in": { "coal": 10, "electronic-circuit": 3, "steel-plate": 3 }
+    },
+    {
+      "id": "slowdown-capsule",
+      "time": 8,
+      "in": { "coal": 5, "electronic-circuit": 2, "steel-plate": 2 }
+    },
+    {
+      "id": "defender-capsule",
+      "time": 8,
+      "in": {
+        "flying-robot-frame": 1,
+        "iron-gear-wheel": 3,
+        "piercing-rounds-magazine": 1
+      }
+    },
+    {
+      "id": "distractor-capsule",
+      "time": 15,
+      "in": { "advanced-circuit": 3, "defender-capsule": 4 }
+    },
+    {
+      "id": "destroyer-capsule",
+      "time": 15,
+      "in": { "distractor-capsule": 4, "speed-module": 1 }
+    },
+    {
+      "id": "discharge-defense-remote",
+      "time": 0.5,
+      "in": { "electronic-circuit": 1 }
+    },
+    {
+      "id": "artillery-targeting-remote",
+      "time": 0.5,
+      "in": { "processing-unit": 1, "radar": 1 }
+    },
+    {
+      "id": "light-armor",
+      "time": 3,
+      "in": { "iron-plate": 40 }
+    },
+    {
+      "id": "heavy-armor",
+      "time": 8,
+      "in": { "copper-plate": 100, "steel-plate": 50 }
+    },
+    {
+      "id": "modular-armor",
+      "time": 15,
+      "in": { "advanced-circuit": 30, "steel-plate": 50 }
+    },
+    {
+      "id": "power-armor",
+      "time": 20,
+      "in": {
+        "electric-engine-unit": 20,
+        "processing-unit": 40,
+        "steel-plate": 40
+      }
+    },
+    {
+      "id": "power-armor-mk2",
+      "time": 25,
+      "in": {
+        "efficiency-module-2": 25,
+        "electric-engine-unit": 40,
+        "low-density-structure": 30,
+        "processing-unit": 60,
+        "speed-module-2": 25
+      }
+    },
+    {
+      "id": "portable-solar-panel",
+      "time": 10,
+      "in": { "advanced-circuit": 2, "solar-panel": 1, "steel-plate": 5 }
+    },
+    {
+      "id": "portable-fusion-reactor",
+      "time": 10,
+      "in": { "low-density-structure": 50, "processing-unit": 200 }
+    },
+    {
+      "id": "energy-shield",
+      "time": 10,
+      "in": { "advanced-circuit": 5, "steel-plate": 10 }
+    },
+    {
+      "id": "energy-shield-mk2",
+      "time": 10,
+      "in": {
+        "energy-shield": 10,
+        "low-density-structure": 5,
+        "processing-unit": 5
+      }
+    },
+    {
+      "id": "personal-battery",
+      "time": 10,
+      "in": { "battery": 5, "steel-plate": 10 }
+    },
+    {
+      "id": "personal-battery-mk2",
+      "time": 10,
+      "in": {
+        "personal-battery": 10,
+        "low-density-structure": 5,
+        "processing-unit": 15
+      }
+    },
+    {
+      "id": "personal-laser-defense",
+      "time": 10,
+      "in": {
+        "laser-turret": 5,
+        "low-density-structure": 5,
+        "processing-unit": 20
+      }
+    },
+    {
+      "id": "discharge-defense",
+      "time": 10,
+      "in": { "laser-turret": 10, "processing-unit": 5, "steel-plate": 20 }
+    },
+    {
+      "id": "belt-immunity-equipment",
+      "time": 10,
+      "in": { "advanced-circuit": 5, "steel-plate": 10 }
+    },
+    {
+      "id": "exoskeleton",
+      "time": 10,
+      "in": {
+        "electric-engine-unit": 30,
+        "processing-unit": 10,
+        "steel-plate": 20
+      }
+    },
+    {
+      "id": "personal-roboport",
+      "time": 10,
+      "in": {
+        "advanced-circuit": 10,
+        "battery": 45,
+        "iron-gear-wheel": 45,
+        "steel-plate": 20
+      }
+    },
+    {
+      "id": "personal-roboport-mk2",
+      "time": 20,
+      "in": {
+        "low-density-structure": 20,
+        "personal-roboport": 5,
+        "processing-unit": 100
+      }
+    },
+    {
+      "id": "nightvision",
+      "time": 10,
+      "in": { "advanced-circuit": 5, "steel-plate": 10 }
+    },
+    {
+      "id": "wall",
+      "time": 0.5,
+      "in": { "stone-brick": 5 }
+    },
+    {
+      "id": "gate",
+      "time": 0.5,
+      "in": { "electronic-circuit": 2, "steel-plate": 2, "wall": 1 }
+    },
+    {
+      "id": "gun-turret",
+      "time": 8,
+      "in": { "copper-plate": 10, "iron-gear-wheel": 10, "iron-plate": 20 }
+    },
+    {
+      "id": "laser-turret",
+      "time": 20,
+      "in": { "battery": 12, "electronic-circuit": 20, "steel-plate": 20 }
+    },
+    {
+      "id": "flamethrower-turret",
+      "time": 20,
+      "in": {
+        "engine-unit": 5,
+        "iron-gear-wheel": 15,
+        "pipe": 10,
+        "steel-plate": 30
+      }
+    },
+    {
+      "id": "artillery-turret",
+      "time": 40,
+      "in": {
+        "advanced-circuit": 20,
+        "concrete": 60,
+        "iron-gear-wheel": 40,
+        "steel-plate": 60
+      }
+    },
+    {
+      "id": "radar",
+      "time": 0.5,
+      "in": { "electronic-circuit": 5, "iron-gear-wheel": 5, "iron-plate": 10 }
+    },
+    {
+      "id": "rocket-silo",
+      "time": 30,
+      "in": {
+        "concrete": 1000,
+        "electric-engine-unit": 200,
+        "pipe": 200,
+        "processing-unit": 200,
+        "steel-plate": 1000
+      }
+    },
+    {
+      "id": "worker-robot-speed",
+      "time": 60,
+      "in": {
+        "automation-science-pack": 1,
+        "logistic-science-pack": 1,
+        "chemical-science-pack": 1,
+        "production-science-pack": 1,
+        "utility-science-pack": 1,
+        "space-science-pack": 1
+      },
+      "producers": ["lab"]
+    },
+    {
+      "id": "mining-productivity",
+      "time": 60,
+      "in": {
+        "automation-science-pack": 1,
+        "logistic-science-pack": 1,
+        "chemical-science-pack": 1,
+        "production-science-pack": 1,
+        "utility-science-pack": 1,
+        "space-science-pack": 1
+      },
+      "producers": ["lab"]
+    },
+    {
+      "id": "physical-projectile-damage",
+      "time": 60,
+      "in": {
+        "automation-science-pack": 1,
+        "logistic-science-pack": 1,
+        "chemical-science-pack": 1,
+        "military-science-pack": 1,
+        "utility-science-pack": 1,
+        "space-science-pack": 1
+      },
+      "producers": ["lab"]
+    },
+    {
+      "id": "stronger-explosives",
+      "time": 60,
+      "in": {
+        "automation-science-pack": 1,
+        "logistic-science-pack": 1,
+        "chemical-science-pack": 1,
+        "military-science-pack": 1,
+        "utility-science-pack": 1,
+        "space-science-pack": 1
+      },
+      "producers": ["lab"]
+    },
+    {
+      "id": "refined-flammables",
+      "time": 60,
+      "in": {
+        "automation-science-pack": 1,
+        "logistic-science-pack": 1,
+        "chemical-science-pack": 1,
+        "military-science-pack": 1,
+        "utility-science-pack": 1,
+        "space-science-pack": 1
+      },
+      "producers": ["lab"]
+    },
+    {
+      "id": "energy-weapons-damage",
+      "time": 60,
+      "in": {
+        "automation-science-pack": 1,
+        "logistic-science-pack": 1,
+        "chemical-science-pack": 1,
+        "military-science-pack": 1,
+        "utility-science-pack": 1,
+        "space-science-pack": 1
+      },
+      "producers": ["lab"]
+    },
+    {
+      "id": "artillery-shell-range",
+      "time": 60,
+      "in": {
+        "automation-science-pack": 1,
+        "logistic-science-pack": 1,
+        "chemical-science-pack": 1,
+        "military-science-pack": 1,
+        "utility-science-pack": 1,
+        "space-science-pack": 1
+      },
+      "producers": ["lab"]
+    },
+    {
+      "id": "artillery-shell-shooting-speed",
+      "time": 60,
+      "in": {
+        "automation-science-pack": 1,
+        "logistic-science-pack": 1,
+        "chemical-science-pack": 1,
+        "military-science-pack": 1,
+        "utility-science-pack": 1,
+        "space-science-pack": 1
+      },
+      "producers": ["lab"]
+    },
+    {
+      "id": "follower-robot-count",
+      "time": 60,
+      "in": {
+        "automation-science-pack": 1,
+        "logistic-science-pack": 1,
+        "chemical-science-pack": 1,
+        "military-science-pack": 1,
+        "production-science-pack": 1,
+        "utility-science-pack": 1,
+        "space-science-pack": 1
+      },
+      "producers": ["lab"]
+    }
+  ]
+}

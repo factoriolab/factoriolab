@@ -1,0 +1,25 @@
+:host {
+  display: grid;
+  grid-template:
+    ' header             header '
+    [settings-start] ' products           products '
+    ' steps              steps ' 1fr [settings-end]
+    / [settings-start] minmax(300px, 1fr) [settings-end] 3fr;
+  height: 100vh;
+}
+
+lab-header {
+  grid-area: header;
+}
+
+lab-products-container {
+  grid-area: products;
+}
+
+lab-steps-container {
+  grid-area: steps;
+}
+
+lab-settings-container {
+  grid-area: settings;
+}

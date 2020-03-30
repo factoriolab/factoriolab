@@ -1,0 +1,46 @@
+<button type="button" (click)="add.emit()">
+  <i class="material-icons">add</i>
+</button>
+<div>
+  <div class="product-row" *ngFor="let product of products">
+    <button type="button" (click)="remove.emit(product.id)">
+      <i class="material-icons">remove</i>
+    </button>
+    <div class="icon-container">
+      <div class="dropdown-container">
+        <lab-icon
+          [iconId]="product.itemId"
+          [title]="itemEntities[product.itemId].name"
+          (click)="clickEditProduct(product, $event)"
+          scale="true"
+        ></lab-icon>
+        <lab-picker
+          *ngIf="editProductId === product.id"
+          [categories]="categories"
+          [categoryId]="categoryId"
+          [itemRows]="itemRows"
+          [itemEntities]="itemEntities"
+          [itemId]="product.itemId"
+          (close)="closePicker.emit()"
+          (selectTab)="selectTab.emit($event)"
+          (selectItem)="selectItem(product.id, $event)"
+        ></lab-picker>
+      </div>
+    </div>
+    <input
+      type="number"
+      [value]="product.rate"
+      (change)="rateChange(product.id, $event)"
+    />
+    <select [value]="product.type" (change)="typeChange(product.id, $event)">
+      <option [value]="rateType.Items">Items</option>
+      <option [value]="rateType.Factories">Factories</option>
+      <option
+        [value]="rateType.Belts"
+        *ngIf="itemEntities[product.itemId].stack"
+        >Belts</option
+      >
+      <option [value]="rateType.Wagons">Wagons</option>
+    </select>
+  </div>
+</div>

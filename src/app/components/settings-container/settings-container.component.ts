@@ -1,0 +1,25 @@
+import {
+  Component,
+  HostListener,
+  ElementRef,
+  Output,
+  EventEmitter
+} from '@angular/core';
+
+@Component({
+  selector: 'lab-settings-container',
+  templateUrl: './settings-container.component.html',
+  styleUrls: ['./settings-container.component.scss']
+})
+export class SettingsContainerComponent {
+  @Output() close = new EventEmitter();
+
+  constructor(private element: ElementRef) {}
+
+  @HostListener('document:click', ['$event'])
+  click(event: MouseEvent) {
+    if (!this.element.nativeElement.contains(event.target)) {
+      this.close.emit();
+    }
+  }
+}
