@@ -1,0 +1,21 @@
+<div class="tabs">
+  <lab-icon
+    *ngFor="let category of categories"
+    [iconId]="category.id"
+    [title]="category.name"
+    [class.selected]="category.id === categoryId"
+    (click)="selectTab.emit(category.id)"
+  ></lab-icon>
+</div>
+<div class="tab">
+  <div class="row" *ngFor="let row of itemRows">
+    <div class="item" *ngFor="let id of row">
+      <lab-icon
+        [iconId]="id"
+        [title]="itemEntities[id].name"
+        [class.selected]="id === itemId"
+        (click)="clickItem(id)"
+      ></lab-icon>
+    </div>
+  </div>
+</div>

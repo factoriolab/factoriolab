@@ -1,0 +1,20 @@
+:host {
+  padding: 0 1rem;
+  display: block;
+}
+
+tr > * + * {
+  padding-left: 1rem;
+}
+
+td > div {
+  justify-content: flex-end;
+
+  > * + * {
+    margin-left: 0.5rem;
+  }
+}
+
+input {
+  width: 2rem;
+}

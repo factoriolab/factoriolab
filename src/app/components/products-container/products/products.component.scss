@@ -1,0 +1,48 @@
+@import 'values';
+
+:host {
+  display: flex;
+  align-items: flex-start;
+  padding: 0.5rem 1rem;
+
+  > button {
+    margin-top: 0.25rem;
+  }
+
+  > * + * {
+    margin-left: 0.5rem;
+  }
+}
+
+button {
+  padding: 0;
+  display: flex;
+}
+
+.icon-container {
+  height: 36px;
+  width: 36px;
+}
+
+.dropdown-container {
+  position: absolute;
+}
+
+lab-icon {
+  cursor: pointer;
+  padding: 0.125rem;
+  border-radius: 0.25rem;
+
+  &:hover {
+    background-color: $color-brand;
+  }
+}
+
+.product-row {
+  display: flex;
+  align-items: center;
+
+  > * + * {
+    margin-left: 0.25rem;
+  }
+}
