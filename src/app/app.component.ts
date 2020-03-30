@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import data from 'src/assets/0-17.json';
+import * as data from 'src/assets/0-17.json';
 import { State } from './store';
 import { LoadDatasetAction } from './store/dataset';
 
@@ -14,7 +14,7 @@ export class AppComponent {
   settingsOpen: boolean;
 
   constructor(private store: Store<State>) {
-    this.store.dispatch(new LoadDatasetAction(data));
+    this.store.dispatch(new LoadDatasetAction((data as any).default));
   }
 
   toggleSettings() {
