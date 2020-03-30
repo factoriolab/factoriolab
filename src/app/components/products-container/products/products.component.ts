@@ -23,7 +23,7 @@ export class ProductsComponent {
   @Output() commitEditProduct = new EventEmitter<[number, string, boolean]>();
   @Output() editRate = new EventEmitter<[number, Fraction]>();
   @Output() editType = new EventEmitter<[number, RateType]>();
-  @Output() closePicker = new EventEmitter();
+  @Output() cancelPicker = new EventEmitter();
   @Output() selectTab = new EventEmitter<string>();
 
   rateType = RateType;

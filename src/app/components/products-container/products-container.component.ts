@@ -74,7 +74,7 @@ export class ProductsContainerComponent implements OnInit {
     this.store.dispatch(new EditRateTypeAction(data));
   }
 
-  closePicker() {
+  cancelPicker() {
     this.store.dispatch(new CancelEditProductAction());
   }
 

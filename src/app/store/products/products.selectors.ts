@@ -21,25 +21,13 @@ const editProductId = (state: ProductsState) => state.editProductId;
 const categoryId = (state: ProductsState) => state.categoryId;
 
 /* First order selectors */
-export const getIds = compose(
-  ids,
-  productsState
-);
+export const getIds = compose(ids, productsState);
 
-export const getEntities = compose(
-  entities,
-  productsState
-);
+export const getEntities = compose(entities, productsState);
 
-export const getEditProductId = compose(
-  editProductId,
-  productsState
-);
+export const getEditProductId = compose(editProductId, productsState);
 
-export const getCategoryId = compose(
-  categoryId,
-  productsState
-);
+export const getCategoryId = compose(categoryId, productsState);
 
 /* High order selectors */
 export const getProducts = createSelector(
@@ -56,13 +44,15 @@ export const getItemRows = createSelector(
     const items = sItems
       .filter(p => p.category === sCategoryId)
       .sort((a, b) => a.row - b.row);
-    let index = items[0].row;
-    for (const item of items) {
-      if (item.row > index) {
-        rows.push([]);
-        index = item.row;
+    if (items.length) {
+      let index = items[0].row;
+      for (const item of items) {
+        if (item.row > index) {
+          rows.push([]);
+          index = item.row;
+        }
+        rows[rows.length - 1].push(item.id);
       }
-      rows[rows.length - 1].push(item.id);
     }
     return rows;
   }

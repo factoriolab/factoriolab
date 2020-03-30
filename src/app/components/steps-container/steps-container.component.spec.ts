@@ -1,5 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { StoreModule } from '@ngrx/store';
 
+import { reducers, metaReducers } from '../../store';
+import { IconComponent } from '../icon/icon.component';
+import { StepsComponent } from './steps/steps.component';
 import { StepsContainerComponent } from './steps-container.component';
 
 describe('StepsContainerComponent', () => {
@@ -8,9 +12,9 @@ describe('StepsContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StepsContainerComponent ]
-    })
-    .compileComponents();
+      imports: [StoreModule.forRoot(reducers, { metaReducers })],
+      declarations: [IconComponent, StepsComponent, StepsContainerComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

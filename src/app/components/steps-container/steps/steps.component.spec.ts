@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { IconComponent } from '../../icon/icon.component';
 import { StepsComponent } from './steps.component';
 
 describe('StepsComponent', () => {
@@ -8,9 +9,8 @@ describe('StepsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StepsComponent ]
-    })
-    .compileComponents();
+      declarations: [IconComponent, StepsComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

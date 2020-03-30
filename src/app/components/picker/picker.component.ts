@@ -20,7 +20,7 @@ export class PickerComponent {
   @Input() itemEntities: { [id: string]: Item };
   @Input() itemId: string;
 
-  @Output() close = new EventEmitter();
+  @Output() cancel = new EventEmitter();
   @Output() selectTab = new EventEmitter<string>();
   @Output() selectItem = new EventEmitter<string>();
 
@@ -29,7 +29,7 @@ export class PickerComponent {
   @HostListener('document:click', ['$event'])
   click(event: MouseEvent) {
     if (!this.element.nativeElement.contains(event.target)) {
-      this.close.emit();
+      this.cancel.emit();
     }
   }
 
@@ -37,7 +37,7 @@ export class PickerComponent {
     if (id !== this.itemId) {
       this.selectItem.emit(id);
     } else {
-      this.close.emit();
+      this.cancel.emit();
     }
   }
 }
