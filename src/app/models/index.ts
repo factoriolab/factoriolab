@@ -1,6 +1,7 @@
 export * from './category';
 export * from './dataset';
 export * from './display-rate';
+export * from './id';
 export * from './item';
 export * from './product';
 export * from './rate-type';

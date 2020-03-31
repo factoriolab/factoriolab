@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<testsuite name="Chrome 80.0.3987 (Windows 10.0.0)" package="" timestamp="2020-03-31T03:14:45" id="0" hostname="Crescent" tests="20" errors="0" failures="0" time="0.382">
+  <properties>
+    <property name="browser.fullName" value="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36"/>
+  </properties>
+  <testcase name="SettingsComponent should create" time="0.03" classname="Chrome_80_0_3987_(Windows_10_0_0).SettingsComponent"/>
+  <testcase name="StepsContainerComponent should create" time="0.043" classname="Chrome_80_0_3987_(Windows_10_0_0).StepsContainerComponent"/>
+  <testcase name="ProductsContainerComponent should create" time="0.03" classname="Chrome_80_0_3987_(Windows_10_0_0).ProductsContainerComponent"/>
+  <testcase name="SettingsContainerComponent should create" time="0.01" classname="Chrome_80_0_3987_(Windows_10_0_0).SettingsContainerComponent"/>
+  <testcase name="PickerComponent should select a new item" time="0.029" classname="Chrome_80_0_3987_(Windows_10_0_0).PickerComponent"/>
+  <testcase name="PickerComponent should create" time="0.012" classname="Chrome_80_0_3987_(Windows_10_0_0).PickerComponent"/>
+  <testcase name="PickerComponent should not cancel when clicked on" time="0.011" classname="Chrome_80_0_3987_(Windows_10_0_0).PickerComponent"/>
+  <testcase name="PickerComponent should cancel when clicked away" time="0.01" classname="Chrome_80_0_3987_(Windows_10_0_0).PickerComponent"/>
+  <testcase name="PickerComponent should cancel when the same item is selected" time="0.011" classname="Chrome_80_0_3987_(Windows_10_0_0).PickerComponent"/>
+  <testcase name="AppComponent should toggle settings open when clicked" time="0.054" classname="Chrome_80_0_3987_(Windows_10_0_0).AppComponent"/>
+  <testcase name="AppComponent should create the app" time="0.037" classname="Chrome_80_0_3987_(Windows_10_0_0).AppComponent"/>
+  <testcase name="AppComponent should load the dataset" time="0.008" classname="Chrome_80_0_3987_(Windows_10_0_0).AppComponent"/>
+  <testcase name="AppComponent should toggle settings closed when clicked away" time="0.036" classname="Chrome_80_0_3987_(Windows_10_0_0).AppComponent"/>
+  <testcase name="AppComponent should toggle settings open when clicked" time="0.032" classname="Chrome_80_0_3987_(Windows_10_0_0).AppComponent"/>
+  <testcase name="ProductsComponent should create" time="0.005" classname="Chrome_80_0_3987_(Windows_10_0_0).ProductsComponent"/>
+  <testcase name="IconComponent should create" time="0.004" classname="Chrome_80_0_3987_(Windows_10_0_0).IconComponent"/>
+  <testcase name="HeaderComponent should toggle the settings panel" time="0.006" classname="Chrome_80_0_3987_(Windows_10_0_0).HeaderComponent"/>
+  <testcase name="HeaderComponent should stop propagation when settings is clicked" time="0.005" classname="Chrome_80_0_3987_(Windows_10_0_0).HeaderComponent"/>
+  <testcase name="HeaderComponent should create" time="0.005" classname="Chrome_80_0_3987_(Windows_10_0_0).HeaderComponent"/>
+  <testcase name="StepsComponent should create" time="0.004" classname="Chrome_80_0_3987_(Windows_10_0_0).StepsComponent"/>
+  <system-out>
+    <![CDATA[
+]]>
+  </system-out>
+  <system-err/>
+</testsuite>
