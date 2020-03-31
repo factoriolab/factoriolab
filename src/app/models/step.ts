@@ -8,5 +8,5 @@ export interface Step {
   factory?: string;
   factories?: Fraction;
   modules?: string[];
-  beacons?: [string, Fraction];
+  beacons?: [string, number];
 }

@@ -10,7 +10,7 @@ import { TestUtility } from '~/utilities/test';
 @Component({
   selector: 'lab-test-picker',
   template: `
-    <div id=${Id.HeaderIcon}></div>
+    <div id=${Id.Away}></div>
     <lab-picker
       [categories]="categories"
       [categoryId]="categoryId"
@@ -29,7 +29,7 @@ class TestPickerComponent {
   categoryId: string = mocks.CategoryId;
   itemRows: string[][] = mocks.ItemRows;
   itemEntities: { [id: string]: Item } = mocks.ItemEntities;
-  itemId: string = mocks.ItemId1;
+  itemId: string = mocks.Item1.id;
   cancel() {}
   selectTab(data) {}
   selectItem(data) {}
@@ -57,7 +57,7 @@ describe('PickerComponent', () => {
 
   it('should cancel when clicked away', () => {
     spyOn(component, 'cancel');
-    TestUtility.clickId(fixture, Id.HeaderIcon);
+    TestUtility.clickId(fixture, Id.Away);
     expect(component.cancel).toHaveBeenCalled();
   });
 
@@ -71,7 +71,7 @@ describe('PickerComponent', () => {
     spyOn(component, 'selectItem');
     TestUtility.clickSelector(fixture, '.item lab-icon', 1);
     fixture.detectChanges();
-    expect(component.selectItem).toHaveBeenCalledWith(mocks.ItemId2);
+    expect(component.selectItem).toHaveBeenCalledWith(mocks.Item2.id);
   });
 
   it('should cancel when the same item is selected', () => {

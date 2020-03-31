@@ -4,17 +4,18 @@ import Fraction from 'fraction.js';
 
 export interface SettingsState {
   displayRate: DisplayRate;
-  precision: Fraction;
+  precision: number;
   belt: string;
   assembler: string;
   furnace: string;
   drill: string;
   module: [string, string];
-  beacons: [string, Fraction];
+  beacons: [string, number];
   oilRecipe: string;
   useCracking: boolean;
   fuel: string;
-  miningBonus: Fraction;
+  miningBonus: number;
+  flowRate: number;
 }
 
 export const initialSettingsState: SettingsState = {
@@ -25,11 +26,12 @@ export const initialSettingsState: SettingsState = {
   furnace: 'electric-furnace',
   drill: 'electric-mining-drill',
   module: ['productivity-module-3', 'speed-module-3'],
-  beacons: ['speed-module-3', new Fraction(0)],
+  beacons: ['speed-module-3', 0],
   oilRecipe: 'advanced-oil-processing',
   useCracking: true,
   fuel: 'coal',
-  miningBonus: new Fraction(0)
+  miningBonus: 0,
+  flowRate: 12000
 };
 
 export function settingsReducer(

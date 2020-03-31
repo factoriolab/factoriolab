@@ -79,7 +79,7 @@ export const getSteps = createSelector(
     for (const product of sProducts) {
       const item = sItemEntities[product.itemId];
       let rate = product.rate;
-      switch (product.type) {
+      switch (product.rateType) {
         case RateType.Items:
           rate = rate.div(sSettings.displayRate);
           break;
@@ -93,7 +93,11 @@ export const getSteps = createSelector(
           );
           break;
         case RateType.Belts:
-          rate = rate.mul(sItemEntities[sSettings.belt].belt.speed);
+          rate = rate.mul(
+            item.stack
+              ? sItemEntities[sSettings.belt].belt.speed
+              : sSettings.flowRate
+          );
           break;
         case RateType.Wagons:
           rate = rate

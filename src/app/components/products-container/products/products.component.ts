@@ -11,19 +11,18 @@ import { Product, RateType, Category, Item } from 'src/app/models';
 export class ProductsComponent {
   @Input() products: Product[];
   @Input() categories: Category[];
-  @Input() editProductId: number;
   @Input() categoryId: string;
   @Input() itemRows: string[][];
   @Input() itemEntities: { [id: string]: Item };
+  @Input() editProductId: number;
 
   @Output() add = new EventEmitter();
   @Output() remove = new EventEmitter<number>();
   @Output() openEditProduct = new EventEmitter<Product>();
   @Output() cancelEditProduct = new EventEmitter();
-  @Output() commitEditProduct = new EventEmitter<[number, string, boolean]>();
+  @Output() commitEditProduct = new EventEmitter<[number, string]>();
   @Output() editRate = new EventEmitter<[number, Fraction]>();
-  @Output() editType = new EventEmitter<[number, RateType]>();
-  @Output() cancelPicker = new EventEmitter();
+  @Output() editRateType = new EventEmitter<[number, RateType]>();
   @Output() selectTab = new EventEmitter<string>();
 
   rateType = RateType;
@@ -36,20 +35,20 @@ export class ProductsComponent {
   }
 
   selectItem(id: number, itemId: string) {
-    this.commitEditProduct.emit([id, itemId, !this.itemEntities[itemId].stack]);
+    this.commitEditProduct.emit([id, itemId]);
   }
 
   rateChange(id: number, event: any) {
     if (event.target.value) {
-      const value = event.target.value;
-      if (this.products.find(p => p.id === id).rate !== value) {
+      const value = new Fraction(event.target.value);
+      if (!this.products.find(p => p.id === id).rate.equals(value)) {
         this.editRate.emit([id, new Fraction(event.target.value)]);
       }
     }
   }
 
-  typeChange(id: number, event: any) {
+  rateTypeChange(id: number, event: any) {
     const val = parseInt(event.target.value as string, 10);
-    this.editType.emit([id, val]);
+    this.editRateType.emit([id, val]);
   }
 }

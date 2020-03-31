@@ -29,7 +29,7 @@ export function productsReducer(
         id: state.index,
         itemId: 'wooden-chest',
         rate: new Fraction(1),
-        type: RateType.Items
+        rateType: RateType.Items
       };
       return {
         ...state,
@@ -79,10 +79,7 @@ export function productsReducer(
               [id]: {
                 ...state.entities[id],
                 ...{
-                  itemId: action.payload[1],
-                  type: action.payload[2]
-                    ? RateType.Items
-                    : state.entities[id].type
+                  itemId: action.payload[1]
                 }
               }
             }
@@ -120,7 +117,7 @@ export function productsReducer(
               [id]: {
                 ...state.entities[id],
                 ...{
-                  type: action.payload[1]
+                  rateType: action.payload[1]
                 }
               }
             }
@@ -128,7 +125,7 @@ export function productsReducer(
         }
       };
     }
-    case ProductsActionType.USER_SELECT_ITEM_CATEGORY:
+    case ProductsActionType.SELECT_ITEM_CATEGORY:
     case ProductsActionType.EFFECT_SELECT_ITEM_CATEGORY: {
       return { ...state, ...{ categoryId: action.payload } };
     }

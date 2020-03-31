@@ -22,7 +22,7 @@
             [itemRows]="itemRows"
             [itemEntities]="itemEntities"
             [itemId]="product.itemId"
-            (cancel)="cancelPicker.emit()"
+            (cancel)="cancelEditProduct.emit()"
             (selectTab)="selectTab.emit($event)"
             (selectItem)="selectItem(product.id, $event)"
           ></lab-picker>
@@ -33,7 +33,10 @@
         [value]="product.rate"
         (change)="rateChange(product.id, $event)"
       />
-      <select [value]="product.type" (change)="typeChange(product.id, $event)">
+      <select
+        [value]="product.rateType"
+        (change)="rateTypeChange(product.id, $event)"
+      >
         <option [value]="rateType.Items">Items</option>
         <option [value]="rateType.Factories">Factories</option>
         <option

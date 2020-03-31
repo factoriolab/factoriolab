@@ -49,6 +49,15 @@ export class TestUtility {
     return this.select(this.getId(fixture, id), value);
   }
 
+  static selectSelector(
+    fixture: ComponentFixture<any>,
+    selector: string,
+    value: string,
+    index = 0
+  ) {
+    return this.select(this.getSelector(fixture, selector, index), value);
+  }
+
   static keyPressId(fixture: ComponentFixture<any>, id: Id, value: string) {
     return this.keyPress(this.getId(fixture, id), value);
   }
