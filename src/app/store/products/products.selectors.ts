@@ -92,7 +92,7 @@ export const getSteps = createSelector(
             sRecipeFactors[recipe.id]
           );
           break;
-        case RateType.Belts:
+        case RateType.Lanes:
           rate = rate.mul(
             item.stack
               ? sItemEntities[sSettings.belt].belt.speed

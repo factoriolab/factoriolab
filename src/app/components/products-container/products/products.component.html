@@ -34,16 +34,12 @@
         (change)="rateChange(product.id, $event)"
       />
       <select
-        [value]="product.rateType"
+        [ngModel]="product.rateType"
         (change)="rateTypeChange(product.id, $event)"
       >
         <option [value]="rateType.Items">Items</option>
         <option [value]="rateType.Factories">Factories</option>
-        <option
-          [value]="rateType.Belts"
-          *ngIf="itemEntities[product.itemId].stack"
-          >Belts</option
-        >
+        <option [value]="rateType.Lanes">Lanes</option>
         <option [value]="rateType.Wagons">Wagons</option>
       </select>
     </ng-container>

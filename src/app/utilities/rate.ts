@@ -50,7 +50,7 @@ export class Rate {
     step.items = step.items.add(rate);
     if (recipe) {
       step.belt = recipeSettings[recipe.id].belt;
-      step.belts = step.items.div(beltSpeed[step.belt]);
+      step.lanes = step.items.div(beltSpeed[step.belt]);
       const out = new Fraction(recipe.out ? recipe.out[id] : 1);
       step.factories = Rate.toFactories(
         step.items,
@@ -59,7 +59,8 @@ export class Rate {
         recipeFactors[recipe.id]
       );
       step.modules = recipeSettings[recipe.id].modules;
-      step.beacons = recipeSettings[recipe.id].beacons;
+      step.beaconType = recipeSettings[recipe.id].beaconType;
+      step.beaconCount = recipeSettings[recipe.id].beaconCount;
       for (const ingredient in recipe.in) {
         if (recipe.in[ingredient]) {
           Rate.addStepsFor(

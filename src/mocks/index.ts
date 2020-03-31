@@ -26,6 +26,6 @@ export const Product2: Product = {
   id: 1,
   itemId: Item2.id,
   rate: new Fraction(2),
-  rateType: RateType.Belts
+  rateType: RateType.Lanes
 };
 export const Products = [Product1, Product2];

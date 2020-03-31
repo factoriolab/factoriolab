@@ -10,7 +10,8 @@ export interface SettingsState {
   furnace: string;
   drill: string;
   module: [string, string];
-  beacons: [string, number];
+  beaconType: string;
+  beaconCount: number;
   oilRecipe: string;
   useCracking: boolean;
   fuel: string;
@@ -26,7 +27,8 @@ export const initialSettingsState: SettingsState = {
   furnace: 'electric-furnace',
   drill: 'electric-mining-drill',
   module: ['productivity-module-3', 'speed-module-3'],
-  beacons: ['speed-module-3', 0],
+  beaconType: 'speed-module-3',
+  beaconCount: 16,
   oilRecipe: 'advanced-oil-processing',
   useCracking: true,
   fuel: 'coal',

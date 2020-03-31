@@ -4,9 +4,10 @@ export interface Step {
   itemId: string;
   items: Fraction;
   belt?: string;
-  belts?: Fraction;
+  lanes?: Fraction;
   factory?: string;
   factories?: Fraction;
   modules?: string[];
-  beacons?: [string, number];
+  beaconType?: string;
+  beaconCount?: number;
 }

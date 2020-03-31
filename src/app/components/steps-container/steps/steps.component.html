@@ -5,7 +5,7 @@
         Items
       </th>
       <th>
-        Belts
+        Lanes
       </th>
       <th>
         Factories
@@ -28,7 +28,7 @@
       </td>
       <td *ngIf="step.belt">
         <div class="flex">
-          <div class="monospace">{{ step.belts.toFraction(true) }}</div>
+          <div class="monospace">{{ step.lanes.toFraction(true) }}</div>
           <lab-icon [iconId]="step.belt"></lab-icon>
         </div>
       </td>
@@ -49,12 +49,16 @@
             </div>
           </td>
           <td>
-            <div class="flex" *ngIf="step.beacons">
-              <lab-icon [iconId]="step.beacons[0]"></lab-icon>
+            <div class="flex">
+              <lab-icon
+                [iconId]="step.beaconType ? step.beaconType : 'module'"
+              ></lab-icon>
               <input
                 type="number"
-                [value]="step.beacons[1]"
-                (blur)="beaconNumberChange(step.itemId, $event)"
+                min="0"
+                max="24"
+                [value]="step.beaconCount"
+                (change)="beaconCountChange(step.itemId, $event)"
               />
             </div>
           </td>

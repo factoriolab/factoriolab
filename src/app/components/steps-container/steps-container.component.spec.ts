@@ -14,14 +14,14 @@ describe('StepsContainerComponent', () => {
     TestBed.configureTestingModule({
       imports: [StoreModule.forRoot(reducers, { metaReducers })],
       declarations: [IconComponent, StepsComponent, StepsContainerComponent]
-    }).compileComponents();
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(StepsContainerComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
   }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(StepsContainerComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

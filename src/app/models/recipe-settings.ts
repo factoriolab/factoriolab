@@ -5,5 +5,6 @@ export interface RecipeSettings {
   belt?: string;
   factory?: string;
   modules?: string[];
-  beacons?: [string, number];
+  beaconType?: string;
+  beaconCount?: number;
 }

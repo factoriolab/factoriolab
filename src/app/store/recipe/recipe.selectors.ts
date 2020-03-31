@@ -95,9 +95,14 @@ export const getRecipeSettings = createSelector(
         }
 
         // Beacons
-        if (!settings.beacons) {
-          if (sSettings.beacons) {
-            settings.beacons = { ...sSettings.beacons };
+        if (!settings.beaconType) {
+          if (sSettings.beaconType) {
+            settings.beaconType = sSettings.beaconType;
+          }
+        }
+        if (settings.beaconCount == null) {
+          if (sSettings.beaconCount != null) {
+            settings.beaconCount = sSettings.beaconCount;
           }
         }
       }
@@ -131,11 +136,11 @@ export const getRecipeFactors = createSelector(
             }
           }
         }
-        if (settings.beacons) {
-          const mod = sItemEntities[settings.beacons[0]].module;
-          speed = speed.add(new Fraction(mod.speed).mul(settings.beacons[1]));
+        if (settings.beaconType) {
+          const mod = sItemEntities[settings.beaconType].module;
+          speed = speed.add(new Fraction(mod.speed).mul(settings.beaconCount));
           prod = prod.add(
-            new Fraction(mod.productivity).mul(settings.beacons[1])
+            new Fraction(mod.productivity).mul(settings.beaconCount)
           );
         }
         values[recipeId][0] = values[recipeId][0].mul(speed);

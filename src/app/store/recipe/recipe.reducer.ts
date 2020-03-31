@@ -24,6 +24,20 @@ export function recipeReducer(
         return { ...state, ...{ [action.payload]: { ignore: true } } };
       }
     }
+    case RecipeActionType.EDIT_BEACON_TYPE: {
+      const id = action.payload[0];
+      return {
+        ...state,
+        ...{ [id]: { ...state[id], ...{ beaconType: action.payload[1] } } }
+      };
+    }
+    case RecipeActionType.EDIT_BEACONS_COUNT: {
+      const id = action.payload[0];
+      return {
+        ...state,
+        ...{ [id]: { ...state[id], ...{ beaconCount: action.payload[1] } } }
+      };
+    }
     default:
       return state;
   }

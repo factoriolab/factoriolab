@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { State } from 'src/app/store';
-import { Step } from 'src/app/models';
-import { getSteps } from 'src/app/store/products';
+import { State } from '~/store';
+import { EditBeaconCountAction } from '~/store/recipe';
+import { getSteps } from '~/store/products';
+import { Step } from '~/models';
 
 @Component({
   selector: 'lab-steps-container',
@@ -18,5 +19,9 @@ export class StepsContainerComponent implements OnInit {
 
   ngOnInit() {
     this.steps$ = this.store.select(getSteps);
+  }
+
+  editBeaconCount(data: [string, number]) {
+    this.store.dispatch(new EditBeaconCountAction(data));
   }
 }

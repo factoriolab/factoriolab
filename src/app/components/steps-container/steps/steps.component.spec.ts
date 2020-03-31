@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IconComponent } from '../../icon/icon.component';
+import { IconComponent } from '~/components/icon/icon.component';
 import { StepsComponent } from './steps.component';
 
 describe('StepsComponent', () => {
