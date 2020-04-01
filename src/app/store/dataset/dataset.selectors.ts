@@ -45,6 +45,34 @@ export const getRecipes = createSelector(
   (sRecipeIds, sRecipeEntities) => sRecipeIds.map(i => sRecipeEntities[i])
 );
 
+export const getCategoryItemRows = createSelector(
+  getCategoryIds,
+  getItems,
+  (sIds, sItems) => {
+    const map: { [id: string]: string[][] } = {};
+
+    for (const id of sIds) {
+      const rows: string[][] = [[]];
+      const items = sItems
+        .filter(p => p.category === id)
+        .sort((a, b) => a.row - b.row);
+      if (items.length) {
+        let index = items[0].row;
+        for (const item of items) {
+          if (item.row > index) {
+            rows.push([]);
+            index = item.row;
+          }
+          rows[rows.length - 1].push(item.id);
+        }
+      }
+      map[id] = rows;
+    }
+
+    return map;
+  }
+);
+
 export const getBeltIds = createSelector(
   getItemIds,
   getItemEntities,

@@ -9,12 +9,12 @@ import { Product, RateType, Category, Item } from '~/models';
   styleUrls: ['./products.component.scss']
 })
 export class ProductsComponent {
-  @Input() products: Product[];
   @Input() categories: Category[];
-  @Input() categoryId: string;
-  @Input() itemRows: string[][];
   @Input() itemEntities: { [id: string]: Item };
+  @Input() categoryItemRows: string[][];
+  @Input() products: Product[];
   @Input() editProductId: number;
+  @Input() categoryId: string;
 
   @Output() add = new EventEmitter();
   @Output() remove = new EventEmitter<number>();

@@ -56,6 +56,31 @@ describe('Dataset Selectors', () => {
     });
   });
 
+  describe('getCategoryItemRows', () => {
+    it('should handle an empty array', () => {
+      const result = selectors.getCategoryItemRows.projector([], []);
+      expect(Object.keys(result).length).toEqual(0);
+    });
+
+    it('should handle invalid category ids', () => {
+      const value = 'test';
+      const result = selectors.getCategoryItemRows.projector(
+        [value],
+        mocks.Data.items
+      );
+      expect(result[value][0].length).toEqual(0);
+    });
+
+    it('should return rows of items for the current category', () => {
+      const result = selectors.getCategoryItemRows.projector(
+        mocks.Data.categories.map(c => c.id),
+        mocks.Data.items
+      );
+      expect(result[mocks.CategoryId].length).toBeGreaterThan(0);
+      expect(result[mocks.CategoryId][0].length).toBeGreaterThan(0);
+    });
+  });
+
   describe('getBeltIds', () => {
     it('should handle an empty array', () => {
       const result = selectors.getBeltIds.projector([], {});

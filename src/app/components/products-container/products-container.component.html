@@ -1,10 +1,10 @@
 <lab-products
-  [products]="products$ | async"
   [categories]="categories$ | async"
-  [categoryId]="categoryId$ | async"
-  [itemRows]="itemRows$ | async"
   [itemEntities]="itemEntities$ | async"
+  [categoryItemRows]="categoryItemRows$ | async"
+  [products]="products$ | async"
   [editProductId]="editProductId$ | async"
+  [categoryId]="categoryId$ | async"
   (add)="add()"
   (remove)="remove($event)"
   (openEditProduct)="openEditProduct($event)"

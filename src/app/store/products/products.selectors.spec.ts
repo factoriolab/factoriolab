@@ -23,23 +23,6 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getItemRows', () => {
-    it('should handle an empty array', () => {
-      const result = selectors.getItemRows.projector(null, []);
-      expect(result.length).toEqual(1);
-      expect(result[0].length).toEqual(0);
-    });
-
-    it('should return rows of items for the current category', () => {
-      const result = selectors.getItemRows.projector(
-        state.categoryId,
-        mocks.Data.items
-      );
-      expect(result.length).toBeGreaterThan(0);
-      expect(result[0].length).toBeGreaterThan(0);
-    });
-  });
-
   describe('getSteps', () => {
     it('should handle null/empty values', () => {
       const result = selectors.getSteps.projector([], {}, {}, {}, {}, {}, {});
@@ -49,6 +32,7 @@ describe('Products Selectors', () => {
     it('should calculate steps', () => {
       spyOn(Rate, 'normalizeRate').and.returnValue(new Fraction(1));
       spyOn(Rate, 'addStepsFor');
+      spyOn(Rate, 'displayRate');
       selectors.getSteps.projector(
         mocks.Products,
         initialSettingsState,
@@ -60,6 +44,7 @@ describe('Products Selectors', () => {
       );
       expect(Rate.normalizeRate).toHaveBeenCalled();
       expect(Rate.addStepsFor).toHaveBeenCalled();
+      expect(Rate.displayRate).toHaveBeenCalled();
     });
   });
 });

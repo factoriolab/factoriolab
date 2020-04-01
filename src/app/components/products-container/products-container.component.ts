@@ -19,20 +19,20 @@ export class ProductsContainerComponent implements OnInit {
 
   categories$: Observable<Category[]>;
   itemEntities$: Observable<{ [id: string]: Item }>;
+  categoryItemRows$: Observable<{ [id: string]: string[][] }>;
   products$: Observable<Product[]>;
   editProductId$: Observable<number>;
   categoryId$: Observable<string>;
-  itemRows$: Observable<string[][]>;
 
   constructor(private store: Store<State>) {}
 
   ngOnInit() {
     this.categories$ = this.store.select(dataset.getCategories);
     this.itemEntities$ = this.store.select(dataset.getItemEntities);
+    this.categoryItemRows$ = this.store.select(dataset.getCategoryItemRows);
     this.products$ = this.store.select(products.getProducts);
     this.editProductId$ = this.store.select(products.getEditProductId);
     this.categoryId$ = this.store.select(products.getCategoryId);
-    this.itemRows$ = this.store.select(products.getItemRows);
     this.add();
   }
 

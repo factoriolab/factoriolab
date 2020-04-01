@@ -26,41 +26,47 @@
           <lab-icon [iconId]="step.itemId" scale="true"></lab-icon>
         </div>
       </td>
-      <td *ngIf="step.belt">
-        <div class="flex">
-          <div class="monospace">{{ step.lanes.toFraction(true) }}</div>
-          <lab-icon [iconId]="step.belt"></lab-icon>
-        </div>
-      </td>
-      <ng-container *ngIf="step.factory">
-        <td>
+      <ng-container *ngIf="step.settings">
+        <td *ngIf="step.settings.belt">
           <div class="flex">
-            <div class="monospace">{{ step.factories.toFraction(true) }}</div>
-            <lab-icon [iconId]="step.factory"></lab-icon>
+            <div class="monospace">{{ step.lanes.toFraction(true) }}</div>
+            <lab-icon [iconId]="step.settings.belt"></lab-icon>
           </div>
         </td>
-        <ng-container *ngIf="step.modules">
+        <ng-container *ngIf="step.settings.factory">
           <td>
             <div class="flex">
-              <lab-icon
-                *ngFor="let mod of step.modules"
-                [iconId]="mod"
-              ></lab-icon>
+              <div class="monospace">{{ step.factories.toFraction(true) }}</div>
+              <lab-icon [iconId]="step.settings.factory"></lab-icon>
             </div>
           </td>
-          <td>
-            <div class="flex">
-              <lab-icon
-                [iconId]="step.beaconType ? step.beaconType : 'module'"
-              ></lab-icon>
-              <input
-                type="number"
-                min="0"
-                [value]="step.beaconCount"
-                (change)="beaconCountChange(step.itemId, $event)"
-              />
-            </div>
-          </td>
+          <ng-container *ngIf="step.settings.modules">
+            <td>
+              <div class="flex">
+                <lab-icon
+                  *ngFor="let mod of step.settings.modules"
+                  [iconId]="mod"
+                ></lab-icon>
+              </div>
+            </td>
+            <td>
+              <div class="flex">
+                <lab-icon
+                  [iconId]="
+                    step.settings.beaconType
+                      ? step.settings.beaconType
+                      : 'module'
+                  "
+                ></lab-icon>
+                <input
+                  type="number"
+                  min="0"
+                  [value]="step.settings.beaconCount"
+                  (change)="beaconCountChange(step.itemId, $event)"
+                />
+              </div>
+            </td>
+          </ng-container>
         </ng-container>
       </ng-container>
     </tr>

@@ -13,16 +13,12 @@ export function recipeReducer(
 ): RecipeState {
   switch (action.type) {
     case RecipeActionType.IGNORE_RECIPE: {
-      if (state[action.payload]) {
-        return {
-          ...state,
-          ...{
-            [action.payload]: { ...state[action.payload], ...{ ignore: true } }
-          }
-        };
-      } else {
-        return { ...state, ...{ [action.payload]: { ignore: true } } };
-      }
+      return {
+        ...state,
+        ...{
+          [action.payload]: { ...state[action.payload], ...{ ignore: true } }
+        }
+      };
     }
     case RecipeActionType.EDIT_BEACON_TYPE: {
       const id = action.payload[0];

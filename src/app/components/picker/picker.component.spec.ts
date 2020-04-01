@@ -14,7 +14,7 @@ import { PickerComponent } from './picker.component';
     <lab-picker
       [categories]="categories"
       [categoryId]="categoryId"
-      [itemRows]="itemRows"
+      [categoryItemRows]="categoryItemRows"
       [itemEntities]="itemEntities"
       [itemId]="itemId"
       (cancel)="cancel()"
@@ -27,7 +27,7 @@ class TestPickerComponent {
   @ViewChild(PickerComponent) child: PickerComponent;
   categories: Category[] = mocks.Categories;
   categoryId: string = mocks.CategoryId;
-  itemRows: string[][] = mocks.ItemRows;
+  categoryItemRows: { [id: string]: string[][] } = mocks.CategoryItemRows;
   itemEntities: { [id: string]: Item } = mocks.ItemEntities;
   itemId: string = mocks.Item1.id;
   cancel() {}

@@ -18,9 +18,9 @@
           <lab-picker
             *ngIf="editProductId === product.id"
             [categories]="categories"
-            [categoryId]="categoryId"
-            [itemRows]="itemRows"
             [itemEntities]="itemEntities"
+            [categoryItemRows]="categoryItemRows"
+            [categoryId]="categoryId"
             [itemId]="product.itemId"
             (cancel)="cancelEditProduct.emit()"
             (selectTab)="selectTab.emit($event)"

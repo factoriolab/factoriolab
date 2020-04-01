@@ -80,9 +80,10 @@ export class Rate {
       step = {
         itemId: id,
         items: new Fraction(0),
-        factory: recipe ? recipeSettings[recipe.id].factory : null,
-        factories: new Fraction(0)
+        factories: new Fraction(0),
+        settings: recipe ? recipeSettings[recipe.id] : null
       };
+
       steps.push(step);
     }
 
@@ -91,11 +92,7 @@ export class Rate {
 
     if (recipe) {
       // Calculate recipe and ingredients
-      step.belt = recipeSettings[recipe.id].belt;
-      step.modules = recipeSettings[recipe.id].modules;
-      step.beaconType = recipeSettings[recipe.id].beaconType;
-      step.beaconCount = recipeSettings[recipe.id].beaconCount;
-      step.lanes = step.items.div(beltSpeed[step.belt]);
+      step.lanes = step.items.div(beltSpeed[step.settings.belt]);
 
       // Calculate number of outputs from recipe
       const out = new Fraction(recipe.out ? recipe.out[id] : 1);
@@ -127,5 +124,12 @@ export class Rate {
         }
       }
     }
+  }
+
+  public static displayRate(steps: Step[], displayRate: DisplayRate) {
+    for (const step of steps) {
+      step.items = step.items.mul(displayRate);
+    }
+    return steps;
   }
 }

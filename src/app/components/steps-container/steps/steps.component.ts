@@ -17,7 +17,9 @@ export class StepsComponent {
   beaconCountChange(id: string, event: any) {
     if (event.target.value) {
       const value = parseInt(event.target.value as string, 10);
-      if (this.steps.find(s => s.itemId === id).beaconCount !== value) {
+      if (
+        this.steps.find(s => s.itemId === id).settings.beaconCount !== value
+      ) {
         this.editBeaconCount.emit([id, value]);
       }
     }

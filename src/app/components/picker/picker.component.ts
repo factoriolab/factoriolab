@@ -16,9 +16,9 @@ import { Category, Item } from '~/models';
 })
 export class PickerComponent {
   @Input() categories: Category[];
-  @Input() categoryId: string;
-  @Input() itemRows: string[][];
   @Input() itemEntities: { [id: string]: Item };
+  @Input() categoryItemRows: string[][];
+  @Input() categoryId: string;
   @Input() itemId: string;
 
   @Output() cancel = new EventEmitter();

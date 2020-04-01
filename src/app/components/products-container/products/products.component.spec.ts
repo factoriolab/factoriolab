@@ -16,7 +16,7 @@ import { ProductsComponent } from './products.component';
       [products]="products"
       [categories]="categories"
       [categoryId]="categoryId"
-      [itemRows]="itemRows"
+      [categoryItemRows]="categoryItemRows"
       [itemEntities]="itemEntities"
       [editProductId]="editProductId"
       (add)="add()"
@@ -36,7 +36,7 @@ class TestProductsComponent {
   products: Product[] = mocks.Products;
   categories: Category[] = mocks.Categories;
   categoryId: string = mocks.CategoryId;
-  itemRows: string[][] = mocks.ItemRows;
+  categoryItemRows: { [id: string]: string[][] } = mocks.CategoryItemRows;
   itemEntities: { [id: string]: Item } = mocks.ItemEntities;
   editProductId: null;
   add() {}

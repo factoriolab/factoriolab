@@ -30,28 +30,6 @@ export const getProducts = createSelector(
   (sIds, sEntities) => sIds.map(i => sEntities[i])
 );
 
-export const getItemRows = createSelector(
-  getCategoryId,
-  dataset.getItems,
-  (sCategoryId, sItems) => {
-    const rows: string[][] = [[]];
-    const items = sItems
-      .filter(p => p.category === sCategoryId)
-      .sort((a, b) => a.row - b.row);
-    if (items.length) {
-      let index = items[0].row;
-      for (const item of items) {
-        if (item.row > index) {
-          rows.push([]);
-          index = item.row;
-        }
-        rows[rows.length - 1].push(item.id);
-      }
-    }
-    return rows;
-  }
-);
-
 export const getSteps = createSelector(
   getProducts,
   settings.getSettingsState,
@@ -95,10 +73,6 @@ export const getSteps = createSelector(
       );
     }
 
-    // Restore display rate
-    for (const step of steps) {
-      step.items = step.items.mul(sSettings.displayRate);
-    }
-    return steps;
+    return Rate.displayRate(steps, sSettings.displayRate);
   }
 );
