@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { Step, Item } from 'src/app/models';
+import { Step } from 'src/app/models';
 
 @Component({
   selector: 'lab-steps',
@@ -16,7 +16,7 @@ export class StepsComponent {
 
   beaconCountChange(id: string, event: any) {
     if (event.target.value) {
-      const value = event.target.value;
+      const value = parseInt(event.target.value as string, 10);
       if (this.steps.find(s => s.itemId === id).beaconCount !== value) {
         this.editBeaconCount.emit([id, value]);
       }

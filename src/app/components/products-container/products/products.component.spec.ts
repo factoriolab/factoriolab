@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import Fraction from 'fraction.js';
 
 import * as mocks from 'src/mocks';
@@ -54,6 +55,7 @@ describe('ProductsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [FormsModule],
       declarations: [IconComponent, ProductsComponent, TestProductsComponent]
     })
       .compileComponents()
@@ -117,7 +119,7 @@ describe('ProductsComponent', () => {
 
   it('should edit rate type of a product', () => {
     spyOn(component, 'editRateType');
-    TestUtility.selectSelector(fixture, 'select', '1');
+    TestUtility.selectSelector(fixture, 'select', '3');
     fixture.detectChanges();
     expect(component.editRateType).toHaveBeenCalledWith([
       mocks.Product1.id,

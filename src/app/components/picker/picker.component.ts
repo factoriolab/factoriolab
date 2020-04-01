@@ -6,7 +6,8 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
-import { Category, Item } from 'src/app/models';
+
+import { Category, Item } from '~/models';
 
 @Component({
   selector: 'lab-picker',

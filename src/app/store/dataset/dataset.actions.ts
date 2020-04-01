@@ -1,7 +1,8 @@
 import { Action } from '@ngrx/store';
+
 import { Dataset } from 'src/app/models';
 
-export enum DatasetActionType {
+export const enum DatasetActionType {
   LOAD = '[Dataset Json] Load'
 }
 

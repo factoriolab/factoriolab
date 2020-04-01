@@ -3,9 +3,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import * as mocks from 'src/mocks';
 import { Category, Item, Id } from '~/models';
+import { TestUtility } from '~/utilities/test';
 import { IconComponent } from '../icon/icon.component';
 import { PickerComponent } from './picker.component';
-import { TestUtility } from '~/utilities/test';
 
 @Component({
   selector: 'lab-test-picker',

@@ -1,4 +1,5 @@
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { StoreModule, Store } from '@ngrx/store';
 
 import * as data from 'src/assets/0-18.json';
@@ -23,7 +24,7 @@ describe('AppComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [StoreModule.forRoot(reducers, { metaReducers })],
+      imports: [FormsModule, StoreModule.forRoot(reducers, { metaReducers })],
       declarations: [
         IconComponent,
         HeaderComponent,

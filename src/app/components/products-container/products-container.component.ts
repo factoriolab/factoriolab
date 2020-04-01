@@ -4,7 +4,7 @@ import Fraction from 'fraction.js';
 import { Observable } from 'rxjs';
 
 import { State } from '~/store';
-import { getItemEntities, getCategories } from '~/store/dataset';
+import * as dataset from '~/store/dataset';
 import * as products from '~/store/products';
 import { Product, RateType, Category, Item } from '~/models';
 import { ProductsComponent } from './products/products.component';
@@ -17,22 +17,22 @@ import { ProductsComponent } from './products/products.component';
 export class ProductsContainerComponent implements OnInit {
   @ViewChild(ProductsComponent) child: ProductsComponent;
 
-  products$: Observable<Product[]>;
   categories$: Observable<Category[]>;
+  itemEntities$: Observable<{ [id: string]: Item }>;
+  products$: Observable<Product[]>;
   editProductId$: Observable<number>;
   categoryId$: Observable<string>;
   itemRows$: Observable<string[][]>;
-  itemEntities$: Observable<{ [id: string]: Item }>;
 
   constructor(private store: Store<State>) {}
 
   ngOnInit() {
+    this.categories$ = this.store.select(dataset.getCategories);
+    this.itemEntities$ = this.store.select(dataset.getItemEntities);
     this.products$ = this.store.select(products.getProducts);
-    this.categories$ = this.store.select(getCategories);
     this.editProductId$ = this.store.select(products.getEditProductId);
     this.categoryId$ = this.store.select(products.getCategoryId);
     this.itemRows$ = this.store.select(products.getItemRows);
-    this.itemEntities$ = this.store.select(getItemEntities);
     this.add();
   }
 

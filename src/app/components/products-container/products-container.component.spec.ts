@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { StoreModule, Store } from '@ngrx/store';
 import Fraction from 'fraction.js';
 
@@ -17,7 +18,7 @@ describe('ProductsContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [StoreModule.forRoot(reducers, { metaReducers })],
+      imports: [FormsModule, StoreModule.forRoot(reducers, { metaReducers })],
       declarations: [
         IconComponent,
         ProductsComponent,
@@ -28,8 +29,8 @@ describe('ProductsContainerComponent', () => {
       .then(() => {
         fixture = TestBed.createComponent(ProductsContainerComponent);
         component = fixture.componentInstance;
-        fixture.detectChanges();
         store = TestBed.inject(Store);
+        fixture.detectChanges();
       });
   }));
 

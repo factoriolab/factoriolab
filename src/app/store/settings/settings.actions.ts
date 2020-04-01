@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { DisplayRate } from 'src/app/models';
 
-export enum SettingsActionType {
+export const enum SettingsActionType {
   SET_DISPLAY_RATE = '[Settings Page] Set Display Rate',
   SET_BELT = '[Settings Page] Set Belt',
   SET_OIL_RECIPE = '[Settings Page] Set Oil Recipe',

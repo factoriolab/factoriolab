@@ -2277,11 +2277,6 @@
       "producers": ["burner-mining-drill", "electric-mining-drill"]
     },
     {
-      "id": "coal",
-      "time": 1,
-      "producers": ["burner-mining-drill", "electric-mining-drill"]
-    },
-    {
       "id": "uranium-ore",
       "time": 2,
       "producers": ["electric-mining-drill"]

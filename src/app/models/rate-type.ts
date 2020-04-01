@@ -1,6 +1,6 @@
 export enum RateType {
   Items,
-  Factories,
   Lanes,
-  Wagons
+  Wagons,
+  Factories
 }

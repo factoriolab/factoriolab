@@ -1,10 +1,12 @@
-import * as data from 'src/assets/0-18.json';
-import { Item, Product, RateType } from '~/models';
 import Fraction from 'fraction.js';
+
+import * as data from 'src/assets/0-18.json';
+import { Item, Product, RateType, Step, Dataset } from '~/models';
 
 let raw = data;
 raw = (data as any).default;
 
+export const Data: Dataset = raw;
 export const Categories = raw.categories;
 export const CategoryId = raw.categories[0].id;
 export const ItemRows = [
@@ -29,3 +31,24 @@ export const Product2: Product = {
   rateType: RateType.Lanes
 };
 export const Products = [Product1, Product2];
+export const Step1: Step = {
+  itemId: Item1.id,
+  items: Product1.rate,
+  belt: 'transport-belt',
+  lanes: new Fraction(0.5),
+  factory: 'assembling-machine-2',
+  factories: new Fraction(1),
+  modules: ['module', 'module'],
+  beaconCount: 0
+};
+export const Step2: Step = {
+  itemId: Item2.id,
+  items: Product2.rate,
+  belt: 'transport-belt',
+  lanes: new Fraction(1),
+  factory: 'assembling-machine-2',
+  factories: new Fraction(2),
+  modules: ['module', 'module'],
+  beaconCount: 0
+};
+export const Steps = [Step1, Step2];

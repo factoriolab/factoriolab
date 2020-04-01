@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-export enum RecipeActionType {
+export const enum RecipeActionType {
   IGNORE_RECIPE = '[Recipes Page] Ignore Recipe',
   EDIT_BEACON_TYPE = '[Recipes Page] Edit Beacon Type',
   EDIT_BEACONS_COUNT = '[Recipes Page] Edit Beacon Count'

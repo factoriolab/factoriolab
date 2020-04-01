@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output, Input } from '@angular/core';
 import Fraction from 'fraction.js';
 
-import { Product, RateType, Category, Item } from 'src/app/models';
+import { Product, RateType, Category, Item } from '~/models';
 
 @Component({
   selector: 'lab-products',

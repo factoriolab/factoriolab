@@ -1,5 +1,5 @@
+import { Item, Category, Recipe } from '~/models';
 import { DatasetAction, DatasetActionType } from './dataset.actions';
-import { Item, Category, Recipe } from 'src/app/models';
 
 export interface DatasetState {
   itemIds: string[];

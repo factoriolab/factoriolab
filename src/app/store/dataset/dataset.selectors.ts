@@ -1,7 +1,8 @@
 import { compose, createSelector } from '@ngrx/store';
+import Fraction from 'fraction.js';
+
 import { State } from '../';
 import { DatasetState } from './dataset.reducer';
-import Fraction from 'fraction.js';
 
 const datasetState = (state: State) => state.datasetState;
 const itemIds = (state: DatasetState) => state.itemIds;
@@ -12,35 +13,17 @@ const recipeIds = (state: DatasetState) => state.recipeIds;
 const recipeEntities = (state: DatasetState) => state.recipeEntities;
 
 /* First order selectors */
-export const getItemIds = compose(
-  itemIds,
-  datasetState
-);
+export const getItemIds = compose(itemIds, datasetState);
 
-export const getItemEntities = compose(
-  itemEntities,
-  datasetState
-);
+export const getItemEntities = compose(itemEntities, datasetState);
 
-export const getCategoryIds = compose(
-  categoryIds,
-  datasetState
-);
+export const getCategoryIds = compose(categoryIds, datasetState);
 
-export const getCategoryEntities = compose(
-  categoryEntities,
-  datasetState
-);
+export const getCategoryEntities = compose(categoryEntities, datasetState);
 
-export const getRecipeIds = compose(
-  recipeIds,
-  datasetState
-);
+export const getRecipeIds = compose(recipeIds, datasetState);
 
-export const getRecipeEntities = compose(
-  recipeEntities,
-  datasetState
-);
+export const getRecipeEntities = compose(recipeEntities, datasetState);
 
 /* High order selectors */
 export const getItems = createSelector(
