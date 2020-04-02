@@ -30,21 +30,22 @@ describe('Products Selectors', () => {
     });
 
     it('should calculate steps', () => {
-      spyOn(Rate, 'normalizeRate').and.returnValue(new Fraction(1));
-      spyOn(Rate, 'addStepsFor');
-      spyOn(Rate, 'displayRate');
-      selectors.getSteps.projector(
+      spyOn(Rate, 'normalizeRate').and.callThrough();
+      spyOn(Rate, 'addStepsFor').and.callThrough();
+      spyOn(Rate, 'displayRate').and.callThrough();
+      const result = selectors.getSteps.projector(
         mocks.Products,
         initialSettingsState,
-        {},
-        {},
-        {},
+        mocks.RecipeSettingsEntities,
+        mocks.RecipeFactors,
+        mocks.BeltSpeed,
         datasetState.itemEntities,
         datasetState.recipeEntities
       );
       expect(Rate.normalizeRate).toHaveBeenCalled();
       expect(Rate.addStepsFor).toHaveBeenCalled();
       expect(Rate.displayRate).toHaveBeenCalled();
+      expect(result.length).toBeGreaterThan(0);
     });
   });
 });

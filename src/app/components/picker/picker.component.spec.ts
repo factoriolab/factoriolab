@@ -2,7 +2,7 @@ import { ViewChild, Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import * as mocks from 'src/mocks';
-import { Category, Item, Id } from '~/models';
+import { Category, Item, Id, Entities } from '~/models';
 import { TestUtility } from '~/utilities/test';
 import { IconComponent } from '../icon/icon.component';
 import { PickerComponent } from './picker.component';
@@ -27,8 +27,8 @@ class TestPickerComponent {
   @ViewChild(PickerComponent) child: PickerComponent;
   categories: Category[] = mocks.Categories;
   categoryId: string = mocks.CategoryId;
-  categoryItemRows: { [id: string]: string[][] } = mocks.CategoryItemRows;
-  itemEntities: { [id: string]: Item } = mocks.ItemEntities;
+  categoryItemRows: Entities<string[][]> = mocks.CategoryItemRows;
+  itemEntities: Entities<Item> = mocks.ItemEntities;
   itemId: string = mocks.Item1.id;
   cancel() {}
   selectTab(data) {}

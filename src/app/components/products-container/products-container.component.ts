@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { State } from '~/store';
 import * as dataset from '~/store/dataset';
 import * as products from '~/store/products';
-import { Product, RateType, Category, Item } from '~/models';
+import { Product, RateType, Category, Item, Entities } from '~/models';
 import { ProductsComponent } from './products/products.component';
 
 @Component({
@@ -18,8 +18,8 @@ export class ProductsContainerComponent implements OnInit {
   @ViewChild(ProductsComponent) child: ProductsComponent;
 
   categories$: Observable<Category[]>;
-  itemEntities$: Observable<{ [id: string]: Item }>;
-  categoryItemRows$: Observable<{ [id: string]: string[][] }>;
+  itemEntities$: Observable<Entities<Item>>;
+  categoryItemRows$: Observable<Entities<string[][]>>;
   products$: Observable<Product[]>;
   editProductId$: Observable<number>;
   categoryId$: Observable<string>;

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output, Input } from '@angular/core';
 import Fraction from 'fraction.js';
 
-import { Product, RateType, Category, Item } from '~/models';
+import { Product, RateType, Category, Item, Entities } from '~/models';
 
 @Component({
   selector: 'lab-products',
@@ -10,7 +10,7 @@ import { Product, RateType, Category, Item } from '~/models';
 })
 export class ProductsComponent {
   @Input() categories: Category[];
-  @Input() itemEntities: { [id: string]: Item };
+  @Input() itemEntities: Entities<Item>;
   @Input() categoryItemRows: string[][];
   @Input() products: Product[];
   @Input() editProductId: number;

@@ -1,9 +1,7 @@
+import { Entities, RecipeSettings } from '~/models';
 import { RecipeAction, RecipeActionType } from './recipe.actions';
-import { RecipeSettings } from 'src/app/models';
 
-export interface RecipeState {
-  [id: string]: RecipeSettings;
-}
+export type RecipeState = Entities<RecipeSettings>;
 
 export const initialRecipeState: RecipeState = {};
 

@@ -7,7 +7,8 @@ import {
   RateType,
   Step,
   Dataset,
-  RecipeSettings
+  RecipeSettings,
+  Entities
 } from '~/models';
 
 let raw = data;
@@ -22,7 +23,7 @@ export const CategoryItemRows = {
     [raw.items[4].id, raw.items[5].id, raw.items[6].id]
   ]
 };
-export const ItemEntities = raw.items.reduce((e: { [id: string]: Item }, i) => {
+export const ItemEntities = raw.items.reduce((e: Entities<Item>, i) => {
   return { ...e, ...{ [i.id]: i } };
 }, {});
 export const Item1 = raw.items[0];
@@ -63,3 +64,12 @@ export const Step2: Step = {
   settings: Settings
 };
 export const Steps = [Step1, Step2];
+export const BeltSpeed: Entities<Fraction> = {
+  'transport-belt': new Fraction(15)
+};
+export const RecipeFactors: Entities<[Fraction, Fraction]> = {};
+export const RecipeSettingsEntities: Entities<RecipeSettings> = {};
+for (const item of Data.items) {
+  RecipeSettingsEntities[item.id] = Settings;
+  RecipeFactors[item.id] = [new Fraction(1), new Fraction(1)];
+}

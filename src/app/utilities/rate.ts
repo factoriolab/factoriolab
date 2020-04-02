@@ -1,6 +1,6 @@
 import Fraction from 'fraction.js';
 
-import { Step, Recipe, RateType, DisplayRate } from '../models';
+import { Step, Recipe, RateType, DisplayRate, Entities } from '../models';
 import { RecipeState } from '../store/recipe';
 
 const WAGON_STACKS = 40;
@@ -68,9 +68,9 @@ export class Rate {
     recipe: Recipe,
     steps: Step[],
     recipeSettings: RecipeState,
-    beltSpeed: { [id: string]: Fraction },
-    recipeFactors: { [id: string]: [Fraction, Fraction] },
-    recipes: { [id: string]: Recipe }
+    beltSpeed: Entities<Fraction>,
+    recipeFactors: Entities<[Fraction, Fraction]>,
+    recipes: Entities<Recipe>
   ) {
     // Find existing step for this item
     let step = steps.find(s => s.itemId === id);

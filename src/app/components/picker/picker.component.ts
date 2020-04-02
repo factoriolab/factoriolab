@@ -7,7 +7,7 @@ import {
   EventEmitter
 } from '@angular/core';
 
-import { Category, Item } from '~/models';
+import { Category, Item, Entities } from '~/models';
 
 @Component({
   selector: 'lab-picker',
@@ -16,7 +16,7 @@ import { Category, Item } from '~/models';
 })
 export class PickerComponent {
   @Input() categories: Category[];
-  @Input() itemEntities: { [id: string]: Item };
+  @Input() itemEntities: Entities<Item>;
   @Input() categoryItemRows: string[][];
   @Input() categoryId: string;
   @Input() itemId: string;

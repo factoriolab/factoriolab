@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import Fraction from 'fraction.js';
 
 import * as mocks from 'src/mocks';
-import { Category, Product, Item, RateType } from '~/models';
+import { Category, Product, Item, RateType, Entities } from '~/models';
 import { TestUtility } from '~/utilities/test';
 import { IconComponent } from '~/components/icon/icon.component';
 import { ProductsComponent } from './products.component';
@@ -13,12 +13,12 @@ import { ProductsComponent } from './products.component';
   selector: 'lab-test-products',
   template: `
     <lab-products
-      [products]="products"
       [categories]="categories"
-      [categoryId]="categoryId"
-      [categoryItemRows]="categoryItemRows"
       [itemEntities]="itemEntities"
+      [categoryItemRows]="categoryItemRows"
+      [products]="products"
       [editProductId]="editProductId"
+      [categoryId]="categoryId"
       (add)="add()"
       (remove)="remove($event)"
       (openEditProduct)="openEditProduct($event)"
@@ -33,12 +33,12 @@ import { ProductsComponent } from './products.component';
 })
 class TestProductsComponent {
   @ViewChild(ProductsComponent) child: ProductsComponent;
-  products: Product[] = mocks.Products;
   categories: Category[] = mocks.Categories;
-  categoryId: string = mocks.CategoryId;
-  categoryItemRows: { [id: string]: string[][] } = mocks.CategoryItemRows;
-  itemEntities: { [id: string]: Item } = mocks.ItemEntities;
+  itemEntities: Entities<Item> = mocks.ItemEntities;
+  categoryItemRows: Entities<string[][]> = mocks.CategoryItemRows;
+  products: Product[] = mocks.Products;
   editProductId: null;
+  categoryId: string = mocks.CategoryId;
   add() {}
   remove(data) {}
   openEditProduct(data) {}

@@ -1,6 +1,7 @@
 import { compose, createSelector } from '@ngrx/store';
 import Fraction from 'fraction.js';
 
+import { Entities } from '~/models';
 import { State } from '../';
 import { DatasetState } from './dataset.reducer';
 
@@ -49,7 +50,7 @@ export const getCategoryItemRows = createSelector(
   getCategoryIds,
   getItems,
   (sIds, sItems) => {
-    const map: { [id: string]: string[][] } = {};
+    const map: Entities<string[][]> = {};
 
     for (const id of sIds) {
       const rows: string[][] = [[]];
@@ -83,7 +84,7 @@ export const getBeltSpeed = createSelector(
   getBeltIds,
   getItemEntities,
   (sBeltIds, sItemEntities) => {
-    const value: { [id: string]: Fraction } = {};
+    const value: Entities<Fraction> = {};
     for (const id of sBeltIds) {
       value[id] = new Fraction(sItemEntities[id].belt.speed);
     }

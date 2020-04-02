@@ -1,6 +1,5 @@
 import { SettingsAction, SettingsActionType } from './settings.actions';
 import { DisplayRate } from 'src/app/models';
-import Fraction from 'fraction.js';
 
 export interface SettingsState {
   displayRate: DisplayRate;
@@ -9,7 +8,8 @@ export interface SettingsState {
   assembler: string;
   furnace: string;
   drill: string;
-  module: [string, string];
+  prodModule: string;
+  otherModule: string;
   beaconType: string;
   beaconCount: number;
   oilRecipe: string;
@@ -26,7 +26,8 @@ export const initialSettingsState: SettingsState = {
   assembler: 'assembling-machine-3',
   furnace: 'electric-furnace',
   drill: 'electric-mining-drill',
-  module: ['productivity-module-3', 'speed-module-3'],
+  prodModule: 'productivity-module-3',
+  otherModule: 'speed-module-3',
   beaconType: 'speed-module-3',
   beaconCount: 16,
   oilRecipe: 'advanced-oil-processing',
