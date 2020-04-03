@@ -1,7 +1,7 @@
 import { compose, createSelector } from '@ngrx/store';
 
 import { Step } from '~/models';
-import { Rate } from '~/utilities/rate';
+import { RateUtility } from '~/utilities/rate';
 import { State } from '../';
 import * as dataset from '../dataset';
 import * as recipe from '../recipe';
@@ -51,7 +51,7 @@ export const getSteps = createSelector(
     for (const product of sProducts) {
       const item = sItemEntities[product.itemId];
       const itemRecipe = sRecipeEntities[item.id];
-      const rate = Rate.normalizeRate(
+      const rate = RateUtility.normalizeRate(
         product.rate,
         product.rateType,
         sSettings.displayRate,
@@ -61,7 +61,7 @@ export const getSteps = createSelector(
         itemRecipe,
         sRecipeFactors[itemRecipe.id]
       );
-      Rate.addStepsFor(
+      RateUtility.addStepsFor(
         product.itemId,
         rate,
         sRecipeEntities[product.itemId],
@@ -73,6 +73,6 @@ export const getSteps = createSelector(
       );
     }
 
-    return Rate.displayRate(steps, sSettings.displayRate);
+    return RateUtility.displayRate(steps, sSettings.displayRate);
   }
 );

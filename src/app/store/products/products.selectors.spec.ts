@@ -1,5 +1,5 @@
 import * as mocks from 'src/mocks';
-import { Rate } from '~/utilities/rate';
+import { RateUtility } from '~/utilities/rate';
 import { initialSettingsState } from '../settings';
 import { state as datasetState } from '../dataset/dataset.reducer.spec';
 import * as actions from './products.actions';
@@ -28,9 +28,9 @@ describe('Products Selectors', () => {
     });
 
     it('should calculate steps', () => {
-      spyOn(Rate, 'normalizeRate').and.callThrough();
-      spyOn(Rate, 'addStepsFor').and.callThrough();
-      spyOn(Rate, 'displayRate').and.callThrough();
+      spyOn(RateUtility, 'normalizeRate').and.callThrough();
+      spyOn(RateUtility, 'addStepsFor').and.callThrough();
+      spyOn(RateUtility, 'displayRate').and.callThrough();
       const result = selectors.getSteps.projector(
         mocks.Products,
         initialSettingsState,
@@ -40,9 +40,9 @@ describe('Products Selectors', () => {
         datasetState.itemEntities,
         datasetState.recipeEntities
       );
-      expect(Rate.normalizeRate).toHaveBeenCalled();
-      expect(Rate.addStepsFor).toHaveBeenCalled();
-      expect(Rate.displayRate).toHaveBeenCalled();
+      expect(RateUtility.normalizeRate).toHaveBeenCalled();
+      expect(RateUtility.addStepsFor).toHaveBeenCalled();
+      expect(RateUtility.displayRate).toHaveBeenCalled();
       expect(result.length).toBeGreaterThan(0);
     });
   });

@@ -6,7 +6,7 @@ import { RecipeState } from '../store/recipe';
 const WAGON_STACKS = 40;
 const WAGON_FLUID = 25000;
 
-export class Rate {
+export class RateUtility {
   public static toFactories(
     rate: Fraction,
     time: Fraction,
@@ -14,8 +14,8 @@ export class Rate {
     factors: [Fraction, Fraction]
   ) {
     return rate
-      .div(quantity)
       .mul(time)
+      .div(quantity)
       .div(factors[0].mul(factors[1]));
   }
 
@@ -26,8 +26,8 @@ export class Rate {
     factors: [Fraction, Fraction]
   ) {
     return factories
-      .mul(quantity)
       .div(time)
+      .mul(quantity)
       .mul(factors[0].mul(factors[1]));
   }
 
@@ -98,7 +98,7 @@ export class Rate {
       const out = new Fraction(recipe.out ? recipe.out[id] : 1);
 
       // Calculate number of factories required
-      step.factories = Rate.toFactories(
+      step.factories = RateUtility.toFactories(
         step.items,
         new Fraction(recipe.time),
         out,
@@ -106,9 +106,9 @@ export class Rate {
       );
 
       // Recurse adding steps for ingredients
-      for (const ingredient in recipe.in) {
-        if (recipe.in[ingredient]) {
-          Rate.addStepsFor(
+      if (recipe.in) {
+        for (const ingredient of Object.keys(recipe.in)) {
+          RateUtility.addStepsFor(
             ingredient,
             rate
               .mul(recipe.in[ingredient])

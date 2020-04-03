@@ -8,7 +8,8 @@ import {
   Step,
   Dataset,
   RecipeSettings,
-  Entities
+  Entities,
+  Recipe
 } from '~/models';
 
 let raw = data;
@@ -25,6 +26,9 @@ export const CategoryItemRows = {
 };
 export const ItemEntities = raw.items.reduce((e: Entities<Item>, i) => {
   return { ...e, ...{ [i.id]: i } };
+}, {});
+export const RecipeEntities = raw.recipes.reduce((e: Entities<Recipe>, r) => {
+  return { ...e, ...{ [r.id]: r } };
 }, {});
 export const Item1 = raw.items[0];
 export const Item2 = raw.items[1];
