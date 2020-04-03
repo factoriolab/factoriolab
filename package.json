@@ -1,6 +1,11 @@
 {
   "name": "factorio-lab",
   "version": "0.0.0",
+  "private": true,
+  "author": {
+    "name": "Doug Broad",
+    "email": "dcbroad3@gmail.com"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -9,7 +14,6 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "~9.1.0",
     "@angular/common": "~9.1.0",
@@ -44,6 +48,7 @@
     "karma-coverage-istanbul-reporter": "~2.1.0",
     "karma-jasmine": "~3.0.1",
     "karma-jasmine-html-reporter": "^1.4.2",
+    "karma-junit-reporter": "^2.0.1",
     "ngrx-store-freeze": "~0.2.4",
     "protractor": "~5.4.3",
     "ts-node": "~8.3.0",

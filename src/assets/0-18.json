@@ -2277,11 +2277,6 @@
       "producers": ["burner-mining-drill", "electric-mining-drill"]
     },
     {
-      "id": "coal",
-      "time": 1,
-      "producers": ["burner-mining-drill", "electric-mining-drill"]
-    },
-    {
       "id": "uranium-ore",
       "time": 2,
       "producers": ["electric-mining-drill"]
@@ -2887,6 +2882,70 @@
         "processing-unit": 200,
         "steel-plate": 1000
       }
+    },
+    {
+      "id": "basic-oil-processing",
+      "time": 5,
+      "in": {
+        "crude-oil": 100
+      },
+      "out": {
+        "petroleum-gas": 45
+      },
+      "producers": ["oil-refinery"]
+    },
+    {
+      "id": "advanced-oil-processing",
+      "time": 5,
+      "in": {
+        "crude-oil": 100,
+        "water": 50
+      },
+      "out": {
+        "heavy-oil": 25,
+        "light-oil": 45,
+        "petroleum-gas": 55
+      },
+      "producers": ["oil-refinery"]
+    },
+    {
+      "id": "heavy-oil-cracking",
+      "time": 2,
+      "in": {
+        "heavy-oil": 40,
+        "water": 30
+      },
+      "out": {
+        "light-oil": 30
+      },
+      "producers": ["chemical-plant"]
+    },
+    {
+      "id": "light-oil-cracking",
+      "time": 2,
+      "in": {
+        "light-oil": 30,
+        "water": 30
+      },
+      "out": {
+        "petroleum-gas": 20
+      },
+      "producers": ["chemical-plant"]
+    },
+    {
+      "id": "coal-liquefaction",
+      "time": 5,
+      "in": {
+        "coal": 10,
+        "heavy-oil": 25,
+        "steam": 50
+      },
+      "out": {
+        "heavy-oil": 90,
+        "light-oil": 20,
+        "petroleum-gas": 10
+      },
+      "producers": ["oil-refinery"]
     },
     {
       "id": "worker-robot-speed",

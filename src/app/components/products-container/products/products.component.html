@@ -18,11 +18,11 @@
           <lab-picker
             *ngIf="editProductId === product.id"
             [categories]="categories"
-            [categoryId]="categoryId"
-            [itemRows]="itemRows"
             [itemEntities]="itemEntities"
+            [categoryItemRows]="categoryItemRows"
+            [categoryId]="categoryId"
             [itemId]="product.itemId"
-            (cancel)="cancelPicker.emit()"
+            (cancel)="cancelEditProduct.emit()"
             (selectTab)="selectTab.emit($event)"
             (selectItem)="selectItem(product.id, $event)"
           ></lab-picker>
@@ -33,15 +33,14 @@
         [value]="product.rate"
         (change)="rateChange(product.id, $event)"
       />
-      <select [value]="product.type" (change)="typeChange(product.id, $event)">
+      <select
+        [ngModel]="product.rateType"
+        (change)="rateTypeChange(product.id, $event)"
+      >
         <option [value]="rateType.Items">Items</option>
-        <option [value]="rateType.Factories">Factories</option>
-        <option
-          [value]="rateType.Belts"
-          *ngIf="itemEntities[product.itemId].stack"
-          >Belts</option
-        >
+        <option [value]="rateType.Lanes">Lanes</option>
         <option [value]="rateType.Wagons">Wagons</option>
+        <option [value]="rateType.Factories">Factories</option>
       </select>
     </ng-container>
   </div>

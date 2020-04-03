@@ -1,12 +1,10 @@
 import Fraction from 'fraction.js';
+import { RecipeSettings } from './recipe-settings';
 
 export interface Step {
   itemId: string;
   items: Fraction;
-  belt?: string;
-  belts?: Fraction;
-  factory?: string;
+  lanes?: Fraction;
   factories?: Fraction;
-  modules?: string[];
-  beacons?: [string, Fraction];
+  settings?: RecipeSettings;
 }

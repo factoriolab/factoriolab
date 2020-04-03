@@ -93,6 +93,7 @@
               "node_modules/material-design-icons/iconfont/material-icons.css",
               "src/styles.scss"
             ],
+            "codeCoverage": true,
             "stylePreprocessorOptions": {
               "includePaths": ["src/styles"]
             },

@@ -1,9 +1,9 @@
 import { Action } from '@ngrx/store';
 import Fraction from 'fraction.js';
 
-import { RateType, Product } from 'src/app/models';
+import { RateType, Product } from '~/models';
 
-export enum ProductsActionType {
+export const enum ProductsActionType {
   ADD = '[Products Page] Add',
   REMOVE = '[Products Page] Remove',
   OPEN_EDIT_PRODUCT = '[Products Page] Open Edit Product',
@@ -11,8 +11,8 @@ export enum ProductsActionType {
   COMMIT_EDIT_PRODUCT = '[Products Page] Commit Edit Product',
   EDIT_RATE = '[Products Page] Edit Rate',
   EDIT_RATE_TYPE = '[Products Page] Edit Rate Type',
-  USER_SELECT_ITEM_CATEGORY = '[Products Page] Select Item Category',
-  EFFECT_SELECT_ITEM_CATEGORY = '[Products Effect] Select Item Category'
+  SELECT_ITEM_CATEGORY = '[Products Page] Select Item Category',
+  SELECT_ITEM_CATEGORY_EFFECT = '[Products Effect] Select Item Category'
 }
 
 export class AddAction implements Action {
@@ -35,7 +35,7 @@ export class CancelEditProductAction implements Action {
 
 export class CommitEditProductAction implements Action {
   readonly type = ProductsActionType.COMMIT_EDIT_PRODUCT;
-  constructor(public payload: [number, string, boolean]) {}
+  constructor(public payload: [number, string]) {}
 }
 
 export class EditRateAction implements Action {
@@ -48,13 +48,13 @@ export class EditRateTypeAction implements Action {
   constructor(public payload: [number, RateType]) {}
 }
 
-export class UserSelectItemCategoryAction implements Action {
-  readonly type = ProductsActionType.USER_SELECT_ITEM_CATEGORY;
+export class SelectItemCategoryAction implements Action {
+  readonly type = ProductsActionType.SELECT_ITEM_CATEGORY;
   constructor(public payload: string) {}
 }
 
-export class EffectSelectItemCategoryAction implements Action {
-  readonly type = ProductsActionType.EFFECT_SELECT_ITEM_CATEGORY;
+export class SelectItemCategoryEffectAction implements Action {
+  readonly type = ProductsActionType.SELECT_ITEM_CATEGORY_EFFECT;
   constructor(public payload: string) {}
 }
 
@@ -66,5 +66,5 @@ export type ProductsAction =
   | CommitEditProductAction
   | EditRateAction
   | EditRateTypeAction
-  | UserSelectItemCategoryAction
-  | EffectSelectItemCategoryAction;
+  | SelectItemCategoryAction
+  | SelectItemCategoryEffectAction;

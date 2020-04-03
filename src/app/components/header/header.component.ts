@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 
+import { Id } from '~/models';
+
 @Component({
   selector: 'lab-header',
   templateUrl: './header.component.html',
@@ -7,6 +9,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class HeaderComponent {
   @Output() toggleSettings = new EventEmitter();
+
+  Id = Id;
 
   constructor() {}
 

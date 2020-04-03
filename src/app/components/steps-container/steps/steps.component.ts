@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { Step, Item } from 'src/app/models';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+import { Step } from 'src/app/models';
 
 @Component({
   selector: 'lab-steps',
@@ -9,11 +10,18 @@ import { Step, Item } from 'src/app/models';
 export class StepsComponent {
   @Input() steps: Step[];
 
+  @Output() editBeaconCount = new EventEmitter<[string, number]>();
+
   constructor() {}
 
-  beaconNumberChange(id: number, event: any) {
+  beaconCountChange(id: string, event: any) {
     if (event.target.value) {
-      const value = event.target.value;
+      const value = parseInt(event.target.value as string, 10);
+      if (
+        this.steps.find(s => s.itemId === id).settings.beaconCount !== value
+      ) {
+        this.editBeaconCount.emit([id, value]);
+      }
     }
   }
 }

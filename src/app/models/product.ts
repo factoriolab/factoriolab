@@ -6,5 +6,5 @@ export interface Product {
   id: number;
   itemId: string;
   rate: Fraction;
-  type: RateType;
+  rateType: RateType;
 }

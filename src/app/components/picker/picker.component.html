@@ -8,7 +8,7 @@
   ></lab-icon>
 </div>
 <div class="tab">
-  <div class="row" *ngFor="let row of itemRows">
+  <div class="row" *ngFor="let row of categoryItemRows[categoryId]">
     <div class="item" *ngFor="let id of row">
       <lab-icon
         [iconId]="id"

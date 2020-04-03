@@ -1,7 +1,9 @@
 import { compose, createSelector } from '@ngrx/store';
+import Fraction from 'fraction.js';
+
+import { Entities } from '~/models';
 import { State } from '../';
 import { DatasetState } from './dataset.reducer';
-import Fraction from 'fraction.js';
 
 const datasetState = (state: State) => state.datasetState;
 const itemIds = (state: DatasetState) => state.itemIds;
@@ -12,35 +14,17 @@ const recipeIds = (state: DatasetState) => state.recipeIds;
 const recipeEntities = (state: DatasetState) => state.recipeEntities;
 
 /* First order selectors */
-export const getItemIds = compose(
-  itemIds,
-  datasetState
-);
+export const getItemIds = compose(itemIds, datasetState);
 
-export const getItemEntities = compose(
-  itemEntities,
-  datasetState
-);
+export const getItemEntities = compose(itemEntities, datasetState);
 
-export const getCategoryIds = compose(
-  categoryIds,
-  datasetState
-);
+export const getCategoryIds = compose(categoryIds, datasetState);
 
-export const getCategoryEntities = compose(
-  categoryEntities,
-  datasetState
-);
+export const getCategoryEntities = compose(categoryEntities, datasetState);
 
-export const getRecipeIds = compose(
-  recipeIds,
-  datasetState
-);
+export const getRecipeIds = compose(recipeIds, datasetState);
 
-export const getRecipeEntities = compose(
-  recipeEntities,
-  datasetState
-);
+export const getRecipeEntities = compose(recipeEntities, datasetState);
 
 /* High order selectors */
 export const getItems = createSelector(
@@ -62,6 +46,34 @@ export const getRecipes = createSelector(
   (sRecipeIds, sRecipeEntities) => sRecipeIds.map(i => sRecipeEntities[i])
 );
 
+export const getCategoryItemRows = createSelector(
+  getCategoryIds,
+  getItems,
+  (sIds, sItems) => {
+    const map: Entities<string[][]> = {};
+
+    for (const id of sIds) {
+      const rows: string[][] = [[]];
+      const items = sItems
+        .filter(p => p.category === id)
+        .sort((a, b) => a.row - b.row);
+      if (items.length) {
+        let index = items[0].row;
+        for (const item of items) {
+          if (item.row > index) {
+            rows.push([]);
+            index = item.row;
+          }
+          rows[rows.length - 1].push(item.id);
+        }
+      }
+      map[id] = rows;
+    }
+
+    return map;
+  }
+);
+
 export const getBeltIds = createSelector(
   getItemIds,
   getItemEntities,
@@ -72,7 +84,7 @@ export const getBeltSpeed = createSelector(
   getBeltIds,
   getItemEntities,
   (sBeltIds, sItemEntities) => {
-    const value: { [id: string]: Fraction } = {};
+    const value: Entities<Fraction> = {};
     for (const id of sBeltIds) {
       value[id] = new Fraction(sItemEntities[id].belt.speed);
     }
