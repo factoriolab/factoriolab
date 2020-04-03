@@ -38,11 +38,9 @@ export class RecipeUtility {
     if (recipe.out) {
       // Recipe lists individual outputs, iterate them
       for (const out of Object.keys(recipe.out)) {
-        if (recipe.out[out]) {
-          const item = itemEntities[out];
-          if (categoryAllowProdModule.indexOf(item.category) !== -1) {
-            return true;
-          }
+        const item = itemEntities[out];
+        if (categoryAllowProdModule.indexOf(item.category) !== -1) {
+          return true;
         }
       }
     } else {
@@ -58,15 +56,14 @@ export class RecipeUtility {
   static defaultModules(
     recipe: Recipe,
     prodModule: string,
-    fallbackModule: string,
+    otherModule: string,
     count: number,
     itemEntities: Entities<Item>
   ) {
     // Determine whether prod modules are allowed
     const prodModuleAllowed = this.prodModuleAllowed(recipe, itemEntities);
     // Pick the default module to use
-    const module =
-      prodModuleAllowed && prodModule ? prodModule : fallbackModule;
+    const module = prodModuleAllowed && prodModule ? prodModule : otherModule;
     // Create the appropriate array of default modules
     const modules = [];
     for (let i = 0; i < count; i++) {
