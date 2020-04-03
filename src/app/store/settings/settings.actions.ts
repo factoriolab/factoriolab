@@ -8,28 +8,28 @@ export const enum SettingsActionType {
   SET_USE_CRACKING = '[Setting Page] Set Use Cracking'
 }
 
-export class EditDisplayRateAction implements Action {
+export class SetDisplayRateAction implements Action {
   readonly type = SettingsActionType.SET_DISPLAY_RATE;
   constructor(public payload: DisplayRate) {}
 }
 
-export class EditBeltAction implements Action {
+export class SetBeltAction implements Action {
   readonly type = SettingsActionType.SET_BELT;
   constructor(public payload: string) {}
 }
 
-export class EditOilProcessingRecipeAction implements Action {
+export class SetOilProcessingRecipeAction implements Action {
   readonly type = SettingsActionType.SET_OIL_RECIPE;
   constructor(public payload: string) {}
 }
 
-export class EditAllowCrackingAction implements Action {
+export class SetUseCrackingAction implements Action {
   readonly type = SettingsActionType.SET_USE_CRACKING;
   constructor(public payload: boolean) {}
 }
 
 export type SettingsAction =
-  | EditDisplayRateAction
-  | EditBeltAction
-  | EditOilProcessingRecipeAction
-  | EditAllowCrackingAction;
+  | SetDisplayRateAction
+  | SetBeltAction
+  | SetOilProcessingRecipeAction
+  | SetUseCrackingAction;

@@ -1,15 +1,17 @@
 import * as actions from './recipe.actions';
-import { recipeReducer } from './recipe.reducer';
-
-const id = 'test';
-const stringValue = 'value';
-const numberValue = 2;
-const state = recipeReducer(undefined, { type: 'Test' } as any);
+import { recipeReducer, initialRecipeState } from './recipe.reducer';
 
 describe('Recipe Reducer', () => {
+  const id = 'test';
+  const stringValue = 'value';
+  const numberValue = 2;
+
   describe('IGNORE_RECIPE', () => {
     it('should ignore a recipe', () => {
-      const result = recipeReducer(state, new actions.IgnoreRecipeAction(id));
+      const result = recipeReducer(
+        initialRecipeState,
+        new actions.IgnoreRecipeAction(id)
+      );
       expect(result[id].ignore).toEqual(true);
     });
   });
@@ -17,7 +19,7 @@ describe('Recipe Reducer', () => {
   describe('EDIT_BEACON_TYPE', () => {
     it('should edit the beacon type', () => {
       const result = recipeReducer(
-        state,
+        initialRecipeState,
         new actions.EditBeaconTypeAction([id, stringValue])
       );
       expect(result[id].beaconType).toEqual(stringValue);
@@ -27,7 +29,7 @@ describe('Recipe Reducer', () => {
   describe('EDIT_BEACONS_COUNT', () => {
     it('should edit the beacon count', () => {
       const result = recipeReducer(
-        state,
+        initialRecipeState,
         new actions.EditBeaconCountAction([id, numberValue])
       );
       expect(result[id].beaconCount).toEqual(numberValue);
@@ -35,6 +37,8 @@ describe('Recipe Reducer', () => {
   });
 
   it('should return default state', () => {
-    expect(recipeReducer(state, { type: 'Test' } as any)).toBe(state);
+    expect(recipeReducer(initialRecipeState, { type: 'Test' } as any)).toBe(
+      initialRecipeState
+    );
   });
 });

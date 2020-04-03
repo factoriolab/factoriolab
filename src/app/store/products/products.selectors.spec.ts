@@ -1,5 +1,3 @@
-import Fraction from 'fraction.js';
-
 import * as mocks from 'src/mocks';
 import { Rate } from '~/utilities/rate';
 import { initialSettingsState } from '../settings';

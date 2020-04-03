@@ -37,7 +37,7 @@ export const getRecipeSettings = createSelector(
       }
 
       const factoryItem = sItemEntities[settings.factory];
-      if (factoryItem.factory.modules) {
+      if (factoryItem?.factory?.modules) {
         // Modules
         if (!settings.modules) {
           settings.modules = RecipeUtility.defaultModules(
@@ -69,17 +69,15 @@ export const getRecipeFactors = createSelector(
   getItemEntities,
   (sRecipeSettings, sItemEntities) => {
     const values: Entities<[Fraction, Fraction]> = {};
-    for (const recipeId in sRecipeSettings) {
-      if (sRecipeSettings[recipeId]) {
-        const settings = sRecipeSettings[recipeId];
-        values[recipeId] = RecipeUtility.recipeFactors(
-          sItemEntities[settings.factory].factory.speed,
-          settings.modules,
-          settings.beaconType,
-          settings.beaconCount,
-          sItemEntities
-        );
-      }
+    for (const recipeId of Object.keys(sRecipeSettings)) {
+      const settings = sRecipeSettings[recipeId];
+      values[recipeId] = RecipeUtility.recipeFactors(
+        sItemEntities[settings.factory].factory.speed,
+        settings.modules,
+        settings.beaconType,
+        settings.beaconCount,
+        sItemEntities
+      );
     }
     return values;
   }
