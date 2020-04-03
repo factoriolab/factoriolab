@@ -21,6 +21,8 @@ export const reducers: ActionReducerMap<State> = {
   settingsState: settingsReducer
 };
 
+/* No need to test without storeFreeze, ignore that branch here. */
 export const metaReducers: MetaReducer<State>[] = !environment.production
   ? [storeFreeze]
-  : [];
+  : /* istanbul ignore next */
+    [];

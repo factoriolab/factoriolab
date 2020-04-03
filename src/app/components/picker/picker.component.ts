@@ -6,7 +6,8 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
-import { Category, Item } from 'src/app/models';
+
+import { Category, Item, Entities } from '~/models';
 
 @Component({
   selector: 'lab-picker',
@@ -15,9 +16,9 @@ import { Category, Item } from 'src/app/models';
 })
 export class PickerComponent {
   @Input() categories: Category[];
+  @Input() itemEntities: Entities<Item>;
+  @Input() categoryItemRows: string[][];
   @Input() categoryId: string;
-  @Input() itemRows: string[][];
-  @Input() itemEntities: { [id: string]: Item };
   @Input() itemId: string;
 
   @Output() cancel = new EventEmitter();

@@ -1,7 +1,7 @@
 import Fraction from 'fraction.js';
 
+import { Product, RateType } from '~/models';
 import { ProductsAction, ProductsActionType } from './products.actions';
-import { Product, RateType } from 'src/app/models';
 
 export interface ProductsState {
   ids: number[];
@@ -10,6 +10,13 @@ export interface ProductsState {
   editProductId: number;
   categoryId: string;
 }
+
+const defaultProduct: Product = {
+  id: 0,
+  itemId: 'wooden-chest',
+  rate: new Fraction(1),
+  rateType: RateType.Items
+};
 
 export const initialProductsState: ProductsState = {
   ids: [],
@@ -25,12 +32,7 @@ export function productsReducer(
 ): ProductsState {
   switch (action.type) {
     case ProductsActionType.ADD: {
-      const newOutput: Product = {
-        id: state.index,
-        itemId: 'wooden-chest',
-        rate: new Fraction(1),
-        type: RateType.Items
-      };
+      const newOutput = { ...defaultProduct, ...{ id: state.index } };
       return {
         ...state,
         ...{
@@ -79,10 +81,7 @@ export function productsReducer(
               [id]: {
                 ...state.entities[id],
                 ...{
-                  itemId: action.payload[1],
-                  type: action.payload[2]
-                    ? RateType.Items
-                    : state.entities[id].type
+                  itemId: action.payload[1]
                 }
               }
             }
@@ -120,7 +119,7 @@ export function productsReducer(
               [id]: {
                 ...state.entities[id],
                 ...{
-                  type: action.payload[1]
+                  rateType: action.payload[1]
                 }
               }
             }
@@ -128,8 +127,8 @@ export function productsReducer(
         }
       };
     }
-    case ProductsActionType.USER_SELECT_ITEM_CATEGORY:
-    case ProductsActionType.EFFECT_SELECT_ITEM_CATEGORY: {
+    case ProductsActionType.SELECT_ITEM_CATEGORY:
+    case ProductsActionType.SELECT_ITEM_CATEGORY_EFFECT: {
       return { ...state, ...{ categoryId: action.payload } };
     }
     default:

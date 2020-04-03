@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { State } from 'src/app/store';
-import { Step } from 'src/app/models';
-import { getSteps } from 'src/app/store/products';
+import { Step } from '~/models';
+import { State } from '~/store';
+import * as recipe from '~/store/recipe';
+import * as products from '~/store/products';
+import { StepsComponent } from './steps/steps.component';
 
 @Component({
   selector: 'lab-steps-container',
@@ -12,11 +14,17 @@ import { getSteps } from 'src/app/store/products';
   styleUrls: ['./steps-container.component.scss']
 })
 export class StepsContainerComponent implements OnInit {
+  @ViewChild(StepsComponent) child: StepsComponent;
+
   steps$: Observable<Step[]>;
 
   constructor(private store: Store<State>) {}
 
   ngOnInit() {
-    this.steps$ = this.store.select(getSteps);
+    this.steps$ = this.store.select(products.getSteps);
+  }
+
+  editBeaconCount(data: [string, number]) {
+    this.store.dispatch(new recipe.EditBeaconCountAction(data));
   }
 }

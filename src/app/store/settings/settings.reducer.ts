@@ -1,20 +1,22 @@
 import { SettingsAction, SettingsActionType } from './settings.actions';
 import { DisplayRate } from 'src/app/models';
-import Fraction from 'fraction.js';
 
 export interface SettingsState {
   displayRate: DisplayRate;
-  precision: Fraction;
+  precision: number;
   belt: string;
   assembler: string;
   furnace: string;
   drill: string;
-  module: [string, string];
-  beacons: [string, Fraction];
+  prodModule: string;
+  otherModule: string;
+  beaconType: string;
+  beaconCount: number;
   oilRecipe: string;
   useCracking: boolean;
   fuel: string;
-  miningBonus: Fraction;
+  miningBonus: number;
+  flowRate: number;
 }
 
 export const initialSettingsState: SettingsState = {
@@ -24,12 +26,15 @@ export const initialSettingsState: SettingsState = {
   assembler: 'assembling-machine-3',
   furnace: 'electric-furnace',
   drill: 'electric-mining-drill',
-  module: ['productivity-module-3', 'speed-module-3'],
-  beacons: ['speed-module-3', new Fraction(0)],
+  prodModule: 'productivity-module-3',
+  otherModule: 'speed-module-3',
+  beaconType: 'speed-module-3',
+  beaconCount: 16,
   oilRecipe: 'advanced-oil-processing',
   useCracking: true,
   fuel: 'coal',
-  miningBonus: new Fraction(0)
+  miningBonus: 0,
+  flowRate: 12000
 };
 
 export function settingsReducer(

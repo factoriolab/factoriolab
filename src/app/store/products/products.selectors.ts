@@ -1,18 +1,12 @@
 import { compose, createSelector } from '@ngrx/store';
 
-import { Step, RateType } from 'src/app/models';
-import { Rate } from 'src/app/utilities/rate';
+import { Step } from '~/models';
+import { RateUtility } from '~/utilities/rate';
 import { State } from '../';
-import {
-  getItemEntities,
-  getItems,
-  getBeltSpeed,
-  getRecipeEntities
-} from '../dataset';
-import { getRecipeSettings, getRecipeFactors } from '../recipe';
-import { getSettingsState } from '../settings';
+import * as dataset from '../dataset';
+import * as recipe from '../recipe';
+import * as settings from '../settings';
 import { ProductsState } from './products.reducer';
-import Fraction from 'fraction.js';
 
 const productsState = (state: State) => state.productsState;
 const ids = (state: ProductsState) => state.ids;
@@ -36,72 +30,38 @@ export const getProducts = createSelector(
   (sIds, sEntities) => sIds.map(i => sEntities[i])
 );
 
-export const getItemRows = createSelector(
-  getCategoryId,
-  getItems,
-  (sCategoryId, sItems) => {
-    const rows: string[][] = [[]];
-    const items = sItems
-      .filter(p => p.category === sCategoryId)
-      .sort((a, b) => a.row - b.row);
-    if (items.length) {
-      let index = items[0].row;
-      for (const item of items) {
-        if (item.row > index) {
-          rows.push([]);
-          index = item.row;
-        }
-        rows[rows.length - 1].push(item.id);
-      }
-    }
-    return rows;
-  }
-);
-
 export const getSteps = createSelector(
-  getSettingsState,
   getProducts,
-  getRecipeSettings,
-  getBeltSpeed,
-  getRecipeFactors,
-  getItemEntities,
-  getRecipeEntities,
+  settings.getSettingsState,
+  recipe.getRecipeSettings,
+  recipe.getRecipeFactors,
+  dataset.getBeltSpeed,
+  dataset.getItemEntities,
+  dataset.getRecipeEntities,
   (
-    sSettings,
     sProducts,
+    sSettings,
     sRecipeSettings,
-    sBeltSpeed,
     sRecipeFactors,
+    sBeltSpeed,
     sItemEntities,
     sRecipeEntities
   ) => {
     const steps: Step[] = [];
     for (const product of sProducts) {
       const item = sItemEntities[product.itemId];
-      let rate = product.rate;
-      switch (product.type) {
-        case RateType.Items:
-          rate = rate.div(sSettings.displayRate);
-          break;
-        case RateType.Factories:
-          const recipe = sRecipeEntities[item.id];
-          rate = Rate.toRate(
-            rate,
-            new Fraction(recipe.time),
-            new Fraction(recipe.out ? recipe.out[item.id] : 1),
-            sRecipeFactors[recipe.id]
-          );
-          break;
-        case RateType.Belts:
-          rate = rate.mul(sItemEntities[sSettings.belt].belt.speed);
-          break;
-        case RateType.Wagons:
-          rate = rate
-            .div(sSettings.displayRate)
-            .mul(item.stack ? item.stack * 40 : 25000);
-          break;
-      }
-      Rate.addStepsFor(
+      const itemRecipe = sRecipeEntities[item.id];
+      const rate = RateUtility.normalizeRate(
+        product.rate,
+        product.rateType,
+        sSettings.displayRate,
+        item.stack,
+        sItemEntities[sSettings.belt].belt.speed,
+        sSettings.flowRate,
+        itemRecipe,
+        sRecipeFactors[itemRecipe.id]
+      );
+      RateUtility.addStepsFor(
         product.itemId,
         rate,
         sRecipeEntities[product.itemId],
@@ -113,10 +73,6 @@ export const getSteps = createSelector(
       );
     }
 
-    // Restore display rate
-    for (const step of steps) {
-      step.items = step.items.mul(sSettings.displayRate);
-    }
-    return steps;
+    return RateUtility.displayRate(steps, sSettings.displayRate);
   }
 );
