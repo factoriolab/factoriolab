@@ -95,8 +95,7 @@ export class RecipeUtility {
     }
     if (beaconType && beaconCount > 0) {
       const module = itemEntities[beaconType].module;
-      speed = speed.add(new Fraction(module.speed).mul(beaconCount));
-      prod = prod.add(new Fraction(module.productivity).mul(beaconCount));
+      speed = speed.add(new Fraction(module.speed).div(2).mul(beaconCount));
     }
 
     return [new Fraction(factorySpeed).mul(speed), prod];

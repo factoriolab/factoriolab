@@ -47,7 +47,7 @@ export const Product2: Product = {
 export const Products = [Product1, Product2];
 export const Settings: RecipeSettings = {
   ignore: false,
-  belt: 'transport-belt',
+  lane: 'transport-belt',
   factory: 'assembling-machine-2',
   modules: ['module', 'module'],
   beaconType: 'module',

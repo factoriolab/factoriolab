@@ -21,9 +21,13 @@ export const getRecipeSettings = createSelector(
         ? { ...sState[recipe.id] }
         : { ignore: false };
 
-      // Belt
-      if (!settings.belt) {
-        settings.belt = sSettings.belt;
+      // Lane (Belt/Pipe)
+      if (!settings.lane) {
+        let item = sItemEntities[recipe.id];
+        if (!item) {
+          item = sItemEntities[Object.keys(recipe.out)[0]];
+        }
+        settings.lane = item.stack ? sSettings.belt : 'pipe';
       }
 
       // Factory

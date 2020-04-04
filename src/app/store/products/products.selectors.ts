@@ -35,7 +35,7 @@ export const getSteps = createSelector(
   settings.getSettingsState,
   recipe.getRecipeSettings,
   recipe.getRecipeFactors,
-  dataset.getBeltSpeed,
+  dataset.getLaneSpeed,
   dataset.getItemEntities,
   dataset.getRecipeEntities,
   (
@@ -43,7 +43,7 @@ export const getSteps = createSelector(
     sSettings,
     sRecipeSettings,
     sRecipeFactors,
-    sBeltSpeed,
+    sLaneSpeed,
     sItemEntities,
     sRecipeEntities
   ) => {
@@ -59,7 +59,7 @@ export const getSteps = createSelector(
         sItemEntities[sSettings.belt].belt.speed,
         sSettings.flowRate,
         itemRecipe,
-        sRecipeFactors[itemRecipe.id]
+        sRecipeFactors
       );
       RateUtility.addStepsFor(
         product.itemId,
@@ -67,11 +67,24 @@ export const getSteps = createSelector(
         sRecipeEntities[product.itemId],
         steps,
         sRecipeSettings,
-        sBeltSpeed,
+        sLaneSpeed,
         sRecipeFactors,
-        sRecipeEntities
+        sItemEntities,
+        sRecipeEntities,
+        sSettings
       );
     }
+
+    RateUtility.addOilSteps(
+      sRecipeEntities[sSettings.oilRecipe],
+      steps,
+      sRecipeSettings,
+      sLaneSpeed,
+      sRecipeFactors,
+      sItemEntities,
+      sRecipeEntities,
+      sSettings
+    );
 
     return RateUtility.displayRate(steps, sSettings.displayRate);
   }

@@ -1,7 +1,8 @@
 import Fraction from 'fraction.js';
 
-import { Step, Recipe, RateType, DisplayRate, Entities } from '../models';
-import { RecipeState } from '../store/recipe';
+import { Step, Recipe, RateType, DisplayRate, Entities, Item } from '~/models';
+import { SettingsState } from '~/store/settings';
+import { RecipeState } from '~/store/recipe';
 
 const WAGON_STACKS = 40;
 const WAGON_FLUID = 25000;
@@ -39,7 +40,7 @@ export class RateUtility {
     beltSpeed: number,
     flowRate: number,
     recipe: Recipe,
-    recipeFactors: [Fraction, Fraction]
+    recipeFactors: Entities<[Fraction, Fraction]>
   ) {
     switch (rateType) {
       case RateType.Items:
@@ -55,7 +56,7 @@ export class RateUtility {
           rate,
           new Fraction(recipe.time),
           new Fraction(recipe.out ? recipe.out[recipe.id] : 1),
-          recipeFactors
+          recipeFactors[recipe.id]
         );
       default:
         return rate;
@@ -68,20 +69,25 @@ export class RateUtility {
     recipe: Recipe,
     steps: Step[],
     recipeSettings: RecipeState,
-    beltSpeed: Entities<Fraction>,
+    laneSpeed: Entities<Fraction>,
     recipeFactors: Entities<[Fraction, Fraction]>,
-    recipes: Entities<Recipe>
+    itemEntities: Entities<Item>,
+    recipeEntities: Entities<Recipe>,
+    settings: SettingsState
   ) {
     // Find existing step for this item
     let step = steps.find(s => s.itemId === id);
 
     if (!step) {
       // No existing step found, create a new one
+      const item = itemEntities[id];
       step = {
         itemId: id,
         items: new Fraction(0),
         factories: new Fraction(0),
-        settings: recipe ? recipeSettings[recipe.id] : null
+        settings: recipe
+          ? recipeSettings[recipe.id]
+          : { lane: item.stack ? settings.belt : 'pipe' }
       };
 
       steps.push(step);
@@ -89,11 +95,9 @@ export class RateUtility {
 
     // Add items to the step
     step.items = step.items.add(rate);
+    step.lanes = step.items.div(laneSpeed[step.settings.lane]);
 
     if (recipe) {
-      // Calculate recipe and ingredients
-      step.lanes = step.items.div(beltSpeed[step.settings.belt]);
-
       // Calculate number of outputs from recipe
       const out = new Fraction(recipe.out ? recipe.out[id] : 1);
 
@@ -114,12 +118,14 @@ export class RateUtility {
               .mul(recipe.in[ingredient])
               .div(out)
               .div(recipeFactors[recipe.id][1]),
-            recipes[ingredient],
+            recipeEntities[ingredient],
             steps,
             recipeSettings,
-            beltSpeed,
+            laneSpeed,
             recipeFactors,
-            recipes
+            itemEntities,
+            recipeEntities,
+            settings
           );
         }
       }
@@ -131,5 +137,61 @@ export class RateUtility {
       step.items = step.items.mul(displayRate);
     }
     return steps;
+  }
+
+  public static addOilSteps(
+    recipe: Recipe,
+    steps: Step[],
+    recipeSettings: RecipeState,
+    laneSpeed: Entities<Fraction>,
+    recipeFactors: Entities<[Fraction, Fraction]>,
+    itemEntities: Entities<Item>,
+    recipeEntities: Entities<Recipe>,
+    settings: SettingsState
+  ) {
+    const outputs = Object.keys(recipe.out);
+    if (outputs.length === 1) {
+      // Using basic oil processing, use simple calculation
+      const step = steps.find(s => s.itemId === outputs[0]);
+
+      if (step) {
+        step.settings = recipeSettings[recipe.id];
+        step.settings.recipeId = recipe.id;
+
+        // Only calculate if oil processing output is found as a step
+        const out = new Fraction(recipe.out[step.itemId]);
+
+        // Calculate number of factories required
+        step.factories = RateUtility.toFactories(
+          step.items,
+          new Fraction(recipe.time),
+          out,
+          recipeFactors[recipe.id]
+        );
+
+        // Recurse adding steps for ingredients
+        if (recipe.in) {
+          for (const ingredient of Object.keys(recipe.in)) {
+            RateUtility.addStepsFor(
+              ingredient,
+              step.items
+                .mul(recipe.in[ingredient])
+                .div(out)
+                .div(recipeFactors[recipe.id][1]),
+              recipeEntities[ingredient],
+              steps,
+              recipeSettings,
+              laneSpeed,
+              recipeFactors,
+              itemEntities,
+              recipeEntities,
+              settings
+            );
+          }
+        }
+      }
+    } else {
+      return null;
+    }
   }
 }

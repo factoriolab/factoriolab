@@ -83,12 +83,12 @@ describe('Dataset Selectors', () => {
 
   describe('getBeltIds', () => {
     it('should handle an empty array', () => {
-      const result = selectors.getBeltIds.projector([], {});
+      const result = selectors.getLaneIds.projector([], {});
       expect(result.length).toEqual(0);
     });
 
     it('should return the array of belt ids', () => {
-      const result = selectors.getBeltIds.projector(
+      const result = selectors.getLaneIds.projector(
         state.itemIds,
         state.itemEntities
       );
@@ -98,13 +98,13 @@ describe('Dataset Selectors', () => {
 
   describe('getBeltSpeed', () => {
     it('should handle an empty array', () => {
-      const result = selectors.getBeltSpeed.projector([], {});
+      const result = selectors.getLaneSpeed.projector([], {});
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should return the map of belt speeds', () => {
       const beltId = 'transport-belt';
-      const result = selectors.getBeltSpeed.projector(
+      const result = selectors.getLaneSpeed.projector(
         [beltId],
         state.itemEntities
       );

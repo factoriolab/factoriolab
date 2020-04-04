@@ -3,6 +3,7 @@ import Fraction from 'fraction.js';
 
 import { Entities } from '~/models';
 import { State } from '../';
+import { getSettingsState } from '../settings';
 import { DatasetState } from './dataset.reducer';
 
 const datasetState = (state: State) => state.datasetState;
@@ -74,19 +75,27 @@ export const getCategoryItemRows = createSelector(
   }
 );
 
-export const getBeltIds = createSelector(
+export const getLaneIds = createSelector(
   getItemIds,
   getItemEntities,
-  (sItemIds, sItemEntities) => sItemIds.filter(i => sItemEntities[i].belt)
+  (sItemIds, sItemEntities) =>
+    sItemIds.filter(
+      i => sItemEntities[i].belt || sItemEntities[i].id === 'pipe'
+    )
 );
 
-export const getBeltSpeed = createSelector(
-  getBeltIds,
+export const getLaneSpeed = createSelector(
+  getLaneIds,
   getItemEntities,
-  (sBeltIds, sItemEntities) => {
+  getSettingsState,
+  (sLaneIds, sItemEntities, sSettings) => {
     const value: Entities<Fraction> = {};
-    for (const id of sBeltIds) {
-      value[id] = new Fraction(sItemEntities[id].belt.speed);
+    for (const id of sLaneIds) {
+      if (id === 'pipe') {
+        value[id] = new Fraction(sSettings.flowRate);
+      } else {
+        value[id] = new Fraction(sItemEntities[id].belt.speed);
+      }
     }
     return value;
   }

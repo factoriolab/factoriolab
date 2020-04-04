@@ -2470,7 +2470,7 @@
     {
       "id": "rocket-fuel",
       "time": 30,
-      "in": { "solid-fuel": 10 }
+      "in": { "light-oil": 10, "solid-fuel": 10 }
     },
     {
       "id": "nuclear-fuel",
@@ -2946,6 +2946,30 @@
         "petroleum-gas": 10
       },
       "producers": ["oil-refinery"]
+    },
+    {
+      "id": "solid-fuel-heavy",
+      "time": 2,
+      "in": {
+        "heavy-oil": 20
+      },
+      "out": { "solid-fuel": 1 }
+    },
+    {
+      "id": "solid-fuel-light",
+      "time": 2,
+      "in": {
+        "heavy-oil": 10
+      },
+      "out": { "solid-fuel": 1 }
+    },
+    {
+      "id": "solid-fuel-petroleum",
+      "time": 2,
+      "in": {
+        "heavy-oil": 20
+      },
+      "out": { "solid-fuel": 1 }
     },
     {
       "id": "worker-robot-speed",

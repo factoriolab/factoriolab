@@ -1,8 +1,9 @@
 export interface RecipeSettings {
   ignore?: boolean;
-  belt?: string;
+  lane?: string;
   factory?: string;
   modules?: string[];
   beaconType?: string;
   beaconCount?: number;
+  recipeId?: string;
 }

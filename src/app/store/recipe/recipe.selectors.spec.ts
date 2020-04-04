@@ -34,7 +34,7 @@ describe('Recipe Selectors', () => {
         mocks.ItemEntities,
         initialSettingsState
       );
-      expect(result[mocks.Item1.id].belt).toEqual(stringValue);
+      expect(result[mocks.Item1.id].lane).toEqual(stringValue);
     });
 
     it('should use factory override', () => {

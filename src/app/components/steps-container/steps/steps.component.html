@@ -27,16 +27,20 @@
         </div>
       </td>
       <ng-container *ngIf="step.settings">
-        <td *ngIf="step.settings.belt">
-          <div class="flex">
+        <td>
+          <div *ngIf="step.settings.lane" class="flex">
             <div class="monospace">{{ step.lanes.toFraction(true) }}</div>
-            <lab-icon [iconId]="step.settings.belt"></lab-icon>
+            <lab-icon [iconId]="step.settings.lane"></lab-icon>
           </div>
         </td>
         <ng-container *ngIf="step.settings.factory">
           <td>
             <div class="flex">
               <div class="monospace">{{ step.factories.toFraction(true) }}</div>
+              <ng-container *ngIf="step.settings.recipeId">
+                <lab-icon [iconId]="step.settings.recipeId"></lab-icon>
+                :
+              </ng-container>
               <lab-icon [iconId]="step.settings.factory"></lab-icon>
             </div>
           </td>
