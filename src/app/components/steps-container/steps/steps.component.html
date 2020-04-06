@@ -23,6 +23,9 @@
       <td>
         <div class="flex">
           <div class="monospace">{{ step.items.toFraction(true) }}</div>
+          <div *ngIf="step.surplus && step.surplus.n > 0" class="monospace">
+            (+{{ step.surplus.toFraction(true) }})
+          </div>
           <lab-icon [iconId]="step.itemId" scale="true"></lab-icon>
         </div>
       </td>

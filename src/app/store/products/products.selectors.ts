@@ -76,14 +76,12 @@ export const getSteps = createSelector(
     }
 
     RateUtility.addOilSteps(
-      sRecipeEntities[sSettings.oilRecipe],
+      sSettings.oilRecipe,
       steps,
       sRecipeSettings,
       sLaneSpeed,
       sRecipeFactors,
-      sItemEntities,
-      sRecipeEntities,
-      sSettings
+      sRecipeEntities
     );
 
     return RateUtility.displayRate(steps, sSettings.displayRate);

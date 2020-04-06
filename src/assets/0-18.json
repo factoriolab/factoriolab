@@ -2503,7 +2503,7 @@
     {
       "id": "chemical-science-pack",
       "time": 24,
-      "in": { "advanced-circuit": 3, "engine-unit": 2, "solid-fuel": 1 },
+      "in": { "advanced-circuit": 3, "engine-unit": 2, "sulfur": 1 },
       "out": { "chemical-science-pack": 2 }
     },
     {
@@ -2948,28 +2948,31 @@
       "producers": ["oil-refinery"]
     },
     {
-      "id": "solid-fuel-heavy",
+      "id": "solid-fuel-from-heavy-oil",
       "time": 2,
       "in": {
         "heavy-oil": 20
       },
-      "out": { "solid-fuel": 1 }
+      "out": { "solid-fuel": 1 },
+      "producers": ["chemical-plant"]
     },
     {
-      "id": "solid-fuel-light",
+      "id": "solid-fuel-from-light-oil",
       "time": 2,
       "in": {
-        "heavy-oil": 10
+        "light-oil": 10
       },
-      "out": { "solid-fuel": 1 }
+      "out": { "solid-fuel": 1 },
+      "producers": ["chemical-plant"]
     },
     {
-      "id": "solid-fuel-petroleum",
+      "id": "solid-fuel-from-petroleum-gas",
       "time": 2,
       "in": {
-        "heavy-oil": 20
+        "petroleum-gas": 20
       },
-      "out": { "solid-fuel": 1 }
+      "out": { "solid-fuel": 1 },
+      "producers": ["chemical-plant"]
     },
     {
       "id": "worker-robot-speed",
