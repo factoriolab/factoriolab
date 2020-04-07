@@ -26,16 +26,34 @@ export const initialSettingsState: SettingsState = {
   assembler: 'assembling-machine-3',
   furnace: 'electric-furnace',
   drill: 'electric-mining-drill',
-  prodModule: 'module',
-  otherModule: 'module',
-  beaconType: 'module',
-  beaconCount: 0,
+  prodModule: 'productivity-module-3',
+  otherModule: 'speed-module-3',
+  beaconType: 'speed-module-3',
+  beaconCount: 16,
   oilRecipe: 'advanced-oil-processing',
   useCracking: true,
   fuel: 'coal',
   miningBonus: 0,
-  flowRate: 12000
+  flowRate: 12000,
 };
+
+// export const initialSettingsState: SettingsState = {
+//   displayRate: DisplayRate.PerMinute,
+//   precision: null,
+//   belt: 'express-transport-belt',
+//   assembler: 'assembling-machine-3',
+//   furnace: 'electric-furnace',
+//   drill: 'electric-mining-drill',
+//   prodModule: 'module',
+//   otherModule: 'module',
+//   beaconType: 'module',
+//   beaconCount: 0,
+//   oilRecipe: 'advanced-oil-processing',
+//   useCracking: true,
+//   fuel: 'coal',
+//   miningBonus: 0,
+//   flowRate: 12000,
+// };
 
 export function settingsReducer(
   state: SettingsState = initialSettingsState,
@@ -45,13 +63,13 @@ export function settingsReducer(
     case SettingsActionType.SET_DISPLAY_RATE: {
       return {
         ...state,
-        ...{ displayRate: action.payload }
+        ...{ displayRate: action.payload },
       };
     }
     case SettingsActionType.SET_BELT: {
       return {
         ...state,
-        ...{ belt: action.payload }
+        ...{ belt: action.payload },
       };
     }
     case SettingsActionType.SET_OIL_RECIPE: {

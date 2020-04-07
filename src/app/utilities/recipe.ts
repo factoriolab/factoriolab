@@ -18,13 +18,13 @@ export class RecipeUtility {
     } else if (recipe.producers.length === 1) {
       // Only one producer specified for recipe, use it
       return recipe.producers[0];
-    } else if (recipe.producers.some(p => p === assembler)) {
+    } else if (recipe.producers.some((p) => p === assembler)) {
       // Found matching default assembler in producers, use it
       return assembler;
-    } else if (recipe.producers.some(p => p === furnace)) {
+    } else if (recipe.producers.some((p) => p === furnace)) {
       // Found matching default furnace in producers, use it
       return furnace;
-    } else if (recipe.producers.some(p => p === drill)) {
+    } else if (recipe.producers.some((p) => p === drill)) {
       // Found matching default drill in producers, use it
       return drill;
     } else {
@@ -35,6 +35,11 @@ export class RecipeUtility {
 
   /** Determines whether prod modules are allowed for a given recipe */
   static prodModuleAllowed(recipe: Recipe, itemEntities: Entities<Item>) {
+    if (recipe.id === 'satellite') {
+      // Breaks the rules, but this is not allowed
+      return false;
+    }
+
     if (recipe.out) {
       // Recipe lists individual outputs, iterate them
       for (const out of Object.keys(recipe.out)) {
@@ -93,7 +98,7 @@ export class RecipeUtility {
         }
       }
     }
-    if (beaconType && beaconCount > 0) {
+    if (beaconType && itemEntities[beaconType]?.module && beaconCount > 0) {
       const module = itemEntities[beaconType].module;
       speed = speed.add(new Fraction(module.speed).div(2).mul(beaconCount));
     }

@@ -11,24 +11,24 @@ enum OilProduct {
   Heavy = 'heavy-oil',
   Light = 'light-oil',
   Petrol = 'petroleum-gas',
-  Fuel = 'solid-fuel'
+  Fuel = 'solid-fuel',
 }
 
 enum OilRecipe {
   Basic = 'basic-oil-processing',
   Advanced = 'advanced-oil-processing',
-  Coal = 'coal-liquefaction'
+  Coal = 'coal-liquefaction',
 }
 
 enum Cracking {
   Heavy = 'heavy-oil-cracking',
-  Light = 'light-oil-cracking'
+  Light = 'light-oil-cracking',
 }
 
 export enum FuelRecipe {
   Heavy = 'solid-fuel-from-heavy-oil',
   Light = 'solid-fuel-from-light-oil',
-  Petrol = 'solid-fuel-from-petroleum-gas'
+  Petrol = 'solid-fuel-from-petroleum-gas',
 }
 
 export class RateUtility {
@@ -107,7 +107,7 @@ export class RateUtility {
     }
 
     // Find existing step for this item
-    let step = steps.find(s => s.itemId === id);
+    let step = steps.find((s) => s.itemId === id);
 
     if (!step) {
       // No existing step found, create a new one
@@ -118,7 +118,7 @@ export class RateUtility {
         factories: new Fraction(0),
         settings: recipe
           ? recipeSettings[recipe.id]
-          : { lane: item.stack ? settings.belt : 'pipe' }
+          : { lane: item.stack ? settings.belt : 'pipe' },
       };
 
       steps.push(step);
@@ -207,49 +207,92 @@ export class RateUtility {
     if (
       oilRecipeId === OilRecipe.Basic || // Already handled with basic recipes
       steps.every(
-        s =>
+        (s) =>
           ([
             OilProduct.Heavy,
             OilProduct.Light,
             OilProduct.Petrol,
-            OilProduct.Fuel
+            OilProduct.Fuel,
           ] as string[]).indexOf(s.itemId) === -1
       ) // No matching oil products found in steps
     ) {
       return steps;
     }
 
+    // Find Recipes
     const oilRecipe = recipeEntities[oilRecipeId];
-    const oilTime = new Fraction(oilRecipe.time);
     const hocRecipe = recipeEntities[Cracking.Heavy];
-    const hocTime = new Fraction(hocRecipe.time);
     const locRecipe = recipeEntities[Cracking.Light];
-    const heavyOut = new Fraction(oilRecipe.out[OilProduct.Heavy])
+    const ltfRecipe = recipeEntities[FuelRecipe.Light];
+    const ptfRecipe = recipeEntities[FuelRecipe.Petrol];
+
+    // Calculate factors
+    // Refinery
+    const oilHeavy = new Fraction(oilRecipe.out[OilProduct.Heavy])
       .mul(recipeFactors[oilRecipe.id][1])
-      .sub(oilRecipe.in[OilProduct.Heavy] ? oilRecipe.in[OilProduct.Heavy] : 0);
-    const lightOut = new Fraction(oilRecipe.out[OilProduct.Light]).mul(
-      recipeFactors[oilRecipe.id][1]
-    );
-    const heavyOutToLightOut = heavyOut
-      .mul(hocRecipe.out[OilProduct.Light])
-      .div(hocRecipe.in[OilProduct.Heavy])
-      .mul(recipeFactors[Cracking.Heavy][1]);
-    const heavyToLightOut = new Fraction(hocRecipe.out[OilProduct.Light]).mul(
-      recipeFactors[Cracking.Heavy][1]
-    );
-    const petrolOut = new Fraction(oilRecipe.out[OilProduct.Petrol]).mul(
-      recipeFactors[oilRecipe.id][1]
-    );
+      .sub(oilRecipe.in[OilProduct.Heavy] ? oilRecipe.in[OilProduct.Heavy] : 0)
+      .mul(recipeFactors[oilRecipe.id][0])
+      .div(oilRecipe.time);
+    const oilLight = new Fraction(oilRecipe.out[OilProduct.Light])
+      .mul(recipeFactors[oilRecipe.id][1])
+      .mul(recipeFactors[oilRecipe.id][0])
+      .div(oilRecipe.time);
+    const oilPetrol = new Fraction(oilRecipe.out[OilProduct.Petrol])
+      .mul(recipeFactors[oilRecipe.id][1])
+      .mul(recipeFactors[oilRecipe.id][0])
+      .div(oilRecipe.time);
+    // Heavy Oil Cracking
+    const hocHeavyIn = new Fraction(hocRecipe.in[OilProduct.Heavy])
+      .mul(recipeFactors[hocRecipe.id][0])
+      .div(hocRecipe.time);
+    const hocLight = new Fraction(hocRecipe.out[OilProduct.Light])
+      .mul(recipeFactors[hocRecipe.id][1])
+      .mul(recipeFactors[hocRecipe.id][0])
+      .div(hocRecipe.time);
+    const hocFactories = oilHeavy.div(hocHeavyIn);
+    const hocFactoriesLight = hocFactories.mul(hocLight);
+    // Light Oil Cracking
+    const maxLight = oilLight.add(hocFactoriesLight);
+    const locLightIn = new Fraction(locRecipe.in[OilProduct.Light])
+      .mul(recipeFactors[locRecipe.id][0])
+      .div(locRecipe.time);
+    const locPetrol = new Fraction(locRecipe.out[OilProduct.Petrol])
+      .mul(recipeFactors[locRecipe.id][1])
+      .mul(recipeFactors[locRecipe.id][0])
+      .div(locRecipe.time);
+    const locFactories = maxLight.div(locLightIn);
+    const locFactoriesPetrol = locFactories.mul(locPetrol);
+    const maxPetrol = oilPetrol.add(locFactoriesPetrol);
+    // Light to Fuel
+    const ltfLightIn = new Fraction(ltfRecipe.in[OilProduct.Light])
+      .mul(recipeFactors[ltfRecipe.id][0])
+      .div(ltfRecipe.time);
+    const ltfFuel = new Fraction(ltfRecipe.out[OilProduct.Fuel])
+      .mul(recipeFactors[ltfRecipe.id][1])
+      .mul(recipeFactors[ltfRecipe.id][0])
+      .div(ltfRecipe.time);
+    const ltfFactories = maxLight.div(ltfLightIn);
+    const ltfFactoriesFuel = ltfFactories.mul(ltfFuel);
+    // Petrol to Fuel
+    const ptfPetrolIn = new Fraction(ptfRecipe.in[OilProduct.Petrol])
+      .mul(recipeFactors[ptfRecipe.id][0])
+      .div(ptfRecipe.time);
+    const ptfFuel = new Fraction(ptfRecipe.out[OilProduct.Fuel])
+      .mul(recipeFactors[ptfRecipe.id][1])
+      .mul(recipeFactors[ptfRecipe.id][0])
+      .div(ptfRecipe.time);
+    const ptfFactories = oilPetrol.div(ptfPetrolIn);
+    const ptfFactoriesFuel = ptfFactories.mul(ptfFuel);
 
     // Find / Setup steps
-    let heavyStep = steps.find(s => s.itemId === OilProduct.Heavy);
-    let lightStep = steps.find(s => s.itemId === OilProduct.Light);
-    let petrolStep = steps.find(s => s.itemId === OilProduct.Petrol);
+    let heavyStep = steps.find((s) => s.itemId === OilProduct.Heavy);
+    let lightStep = steps.find((s) => s.itemId === OilProduct.Light);
+    let petrolStep = steps.find((s) => s.itemId === OilProduct.Petrol);
     if (!heavyStep) {
       heavyStep = {
         itemId: OilProduct.Heavy,
         items: new Fraction(0),
-        factories: new Fraction(0)
+        factories: new Fraction(0),
       };
 
       steps.push(heavyStep);
@@ -262,11 +305,11 @@ export class RateUtility {
         itemId: OilProduct.Light,
         items: new Fraction(0),
         factories: new Fraction(0),
-        surplus: new Fraction(0)
       };
 
       steps.push(lightStep);
     }
+    lightStep.surplus = new Fraction(0);
     lightStep.settings = recipeSettings[Cracking.Heavy];
     lightStep.settings.recipeId = Cracking.Heavy;
 
@@ -275,52 +318,39 @@ export class RateUtility {
         itemId: OilProduct.Petrol,
         items: new Fraction(0),
         factories: new Fraction(0),
-        surplus: new Fraction(0)
       };
 
       steps.push(petrolStep);
     }
+    petrolStep.surplus = new Fraction(0);
     petrolStep.settings = recipeSettings[Cracking.Light];
     petrolStep.settings.recipeId = Cracking.Light;
 
-    const fuelStep = steps.find(s => s.itemId === OilProduct.Fuel);
+    const fuelStep = steps.find((s) => s.itemId === OilProduct.Fuel);
 
     // Calculate number of refineries required for heavy, surplus light/petrol
     if (heavyStep.items.n > 0) {
       // Refineries required for heavy
-      const refineries = heavyStep.items
-        .mul(oilTime)
-        .div(heavyOut.mul(recipeFactors[oilRecipe.id][0]));
+      const refineries = heavyStep.items.div(oilHeavy);
       // Surplus light
-      lightStep.surplus = lightStep.surplus.add(
-        refineries
-          .div(oilTime)
-          .mul(lightOut.mul(recipeFactors[oilRecipe.id][0]))
-      );
+      lightStep.surplus = lightStep.surplus.add(refineries.mul(oilLight));
 
       heavyStep.factories = heavyStep.factories.add(refineries);
     }
 
     // Calculate number of refineries and heavy-to-light plants required for light, excess petrol
     if (lightStep.items.n > 0) {
-      if (lightStep.surplus > lightStep.items) {
+      if (lightStep.surplus >= lightStep.items) {
         // Already producing enough light oil, subtract from surplus
         lightStep.surplus = lightStep.surplus.sub(lightStep.items);
       } else {
         // Subtract any surplus from what is required
         const required = lightStep.items.sub(lightStep.surplus);
         lightStep.surplus = new Fraction(0);
-        const totalOutput = lightOut.add(heavyOutToLightOut);
         // Refineries required for light
-        const refineries = required
-          .mul(lightOut.div(totalOutput))
-          .mul(oilTime)
-          .div(lightOut.mul(recipeFactors[oilRecipe.id][0]));
+        const refineries = required.div(maxLight);
         // Heavy-to-light plants required for light
-        const hocPlants = required
-          .mul(heavyOutToLightOut.div(totalOutput))
-          .mul(hocTime)
-          .div(heavyToLightOut.mul(recipeFactors[Cracking.Heavy][0]));
+        const hocPlants = refineries.mul(hocFactories);
 
         heavyStep.factories = heavyStep.factories.add(refineries);
         lightStep.factories = lightStep.factories.add(hocPlants);
@@ -329,18 +359,87 @@ export class RateUtility {
 
     // Surplus petrol
     petrolStep.surplus = petrolStep.surplus.add(
-      heavyStep.factories
-        .div(oilTime)
-        .mul(petrolOut.mul(recipeFactors[oilRecipe.id][0]))
+      heavyStep.factories.mul(oilPetrol)
     );
 
-    // Save result
     // Calculate number of refineries and heavy-to-light plants required for light-to-fuel, excess petrol
-    // If more petrol required
-    //   Calculate number of refineries, heavy-to-light, and light-to-petrol plants required for petrol
-    // If there is excess petrol
-    //   Revert to saved result
-    //   Calculate number of refineries and heavy-to-light plants required for petrol, excess light
+    if (fuelStep && fuelStep.items.n > 0) {
+      let required = fuelStep.items.div(ltfFuel).mul(ltfLightIn);
+      if (lightStep.surplus >= required) {
+        // Already producing enough light oil, subtract from surplus
+        lightStep.surplus = lightStep.surplus.sub(required);
+        fuelStep.factories = fuelStep.items.div(ltfFuel);
+        fuelStep.settings = recipeSettings[FuelRecipe.Light];
+        fuelStep.settings.recipeId = ltfRecipe.id;
+      } else {
+        // Subtract any surplus from what is required
+        required = required.sub(lightStep.surplus);
+        // Refineries required for light
+        const refineries = required.div(maxLight);
+        // Heavy-to-light plants required for light
+        const hocPlants = refineries.mul(hocFactories);
+        // Surplus petrol
+        const petrolSurplus = petrolStep.surplus.add(refineries.mul(oilPetrol));
+
+        if (petrolSurplus < petrolStep.items) {
+          // Still need more petrol. Finalize this step and continue...
+          lightStep.surplus = new Fraction(0);
+          heavyStep.factories = heavyStep.factories.add(refineries);
+          lightStep.factories = lightStep.factories.add(hocPlants);
+          fuelStep.factories = fuelStep.items.div(ltfFuel);
+          fuelStep.settings = recipeSettings[ltfRecipe.id];
+          fuelStep.settings.recipeId = ltfRecipe.id;
+          petrolStep.surplus = petrolSurplus;
+        }
+      }
+    }
+
+    if (!fuelStep || fuelStep.items.n === 0 || fuelStep.factories.n > 0) {
+      // Fuel is satisfied, move on to petroleum
+      // Calculate number of refineries, heavy-to-light plants, and light-to-petrol plants required for petrol
+      if (petrolStep.items.n > 0) {
+        if (petrolStep.surplus >= petrolStep.items) {
+          // Already producing enough petroleum, subtract from surplus
+          petrolStep.surplus = petrolStep.surplus.sub(petrolStep.items);
+        } else {
+          // Subtract any surplus from what is required
+          const required = petrolStep.items.sub(petrolStep.surplus);
+          petrolStep.surplus = new Fraction(0);
+          // Refineries required for petrol
+          const refineries = required.div(maxPetrol);
+          // Heavy-to-light plants required for light
+          const hocPlants = refineries.mul(hocFactories);
+          // Light-to-Petrol plants required for petrol
+          const locPlants = refineries.mul(locFactories);
+
+          heavyStep.factories = heavyStep.factories.add(refineries);
+          lightStep.factories = lightStep.factories.add(hocPlants);
+          petrolStep.factories = petrolStep.factories.add(locPlants);
+        }
+      }
+    } else {
+      // Fuel was not satisfied above
+      // Calculate number of refineries and heavy-to-light plants required for petrol, excess light
+      if (petrolStep.items.n > 0) {
+        if (petrolStep.surplus >= petrolStep.items) {
+          // Already producing enough petroleum, subtract from surplus
+          petrolStep.surplus = petrolStep.surplus.sub(petrolStep.items);
+        } else {
+          // Subtract any surplus from what is required
+          const required = petrolStep.items.sub(petrolStep.surplus);
+          petrolStep.surplus = new Fraction(0);
+          // Refineries required for petrol, refinery output only
+          const refineries = required.div(oilPetrol);
+          // Heavy-to-light plants required for light
+          const hocPlants = refineries.mul(hocFactories);
+
+          heavyStep.factories = heavyStep.factories.add(refineries);
+          lightStep.factories = lightStep.factories.add(hocPlants);
+          lightStep.surplus = lightStep.surplus.add(refineries.mul(maxLight));
+        }
+      }
+    }
+
     //   Convert excess light to fuel using light-to-fuel
     //   Calculate number of refineries and heavy-to-light plants required for combined light-to-fuel/petrol-to-fuel
 

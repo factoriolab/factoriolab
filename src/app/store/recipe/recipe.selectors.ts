@@ -35,13 +35,13 @@ export const getRecipeSettings = createSelector(
         settings.factory = RecipeUtility.defaultFactory(
           recipe,
           sSettings.assembler,
-          sSettings.fuel,
+          sSettings.furnace,
           sSettings.drill
         );
       }
 
       const factoryItem = sItemEntities[settings.factory];
-      if (factoryItem?.factory?.modules) {
+      if (recipe.id !== 'space-science-pack' && factoryItem?.factory?.modules) {
         // Modules
         if (!settings.modules) {
           settings.modules = RecipeUtility.defaultModules(
