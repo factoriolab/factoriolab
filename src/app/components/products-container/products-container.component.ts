@@ -4,21 +4,20 @@ import Fraction from 'fraction.js';
 import { Observable } from 'rxjs';
 
 import { State } from '~/store';
-import * as dataset from '~/store/dataset';
-import * as products from '~/store/products';
-import { Product, RateType, Category, Item, Entities } from '~/models';
+import * as Dataset from '~/store/dataset';
+import * as Products from '~/store/products';
+import { Product, RateType, Entities } from '~/models';
 import { ProductsComponent } from './products/products.component';
 
 @Component({
   selector: 'lab-products-container',
   templateUrl: './products-container.component.html',
-  styleUrls: ['./products-container.component.scss']
+  styleUrls: ['./products-container.component.scss'],
 })
 export class ProductsContainerComponent implements OnInit {
   @ViewChild(ProductsComponent) child: ProductsComponent;
 
-  categories$: Observable<Category[]>;
-  itemEntities$: Observable<Entities<Item>>;
+  data$: Observable<Dataset.DatasetState>;
   categoryItemRows$: Observable<Entities<string[][]>>;
   products$: Observable<Product[]>;
   editProductId$: Observable<number>;
@@ -27,44 +26,43 @@ export class ProductsContainerComponent implements OnInit {
   constructor(private store: Store<State>) {}
 
   ngOnInit() {
-    this.categories$ = this.store.select(dataset.getCategories);
-    this.itemEntities$ = this.store.select(dataset.getItemEntities);
-    this.categoryItemRows$ = this.store.select(dataset.getCategoryItemRows);
-    this.products$ = this.store.select(products.getProducts);
-    this.editProductId$ = this.store.select(products.getEditProductId);
-    this.categoryId$ = this.store.select(products.getCategoryId);
+    this.data$ = this.store.select(Dataset.getDataset);
+    this.categoryItemRows$ = this.store.select(Dataset.getCategoryItemRows);
+    this.products$ = this.store.select(Products.getProducts);
+    this.editProductId$ = this.store.select(Products.getEditProductId);
+    this.categoryId$ = this.store.select(Products.getCategoryId);
     this.add();
   }
 
   add() {
-    this.store.dispatch(new products.AddAction());
+    this.store.dispatch(new Products.AddAction());
   }
 
   remove(id: number) {
-    this.store.dispatch(new products.RemoveAction(id));
+    this.store.dispatch(new Products.RemoveAction(id));
   }
 
   openEditProduct(product: Product) {
-    this.store.dispatch(new products.OpenEditProductAction(product));
+    this.store.dispatch(new Products.OpenEditProductAction(product));
   }
 
   cancelEditProduct() {
-    this.store.dispatch(new products.CancelEditProductAction());
+    this.store.dispatch(new Products.CancelEditProductAction());
   }
 
   commitEditProduct(data: [number, string]) {
-    this.store.dispatch(new products.CommitEditProductAction(data));
+    this.store.dispatch(new Products.CommitEditProductAction(data));
   }
 
   editRate(data: [number, Fraction]) {
-    this.store.dispatch(new products.EditRateAction(data));
+    this.store.dispatch(new Products.EditRateAction(data));
   }
 
   editRateType(data: [number, RateType]) {
-    this.store.dispatch(new products.EditRateTypeAction(data));
+    this.store.dispatch(new Products.EditRateTypeAction(data));
   }
 
   selectTab(id: string) {
-    this.store.dispatch(new products.SelectItemCategoryAction(id));
+    this.store.dispatch(new Products.SelectItemCategoryAction(id));
   }
 }

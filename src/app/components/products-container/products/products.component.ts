@@ -1,16 +1,16 @@
 import { Component, EventEmitter, Output, Input } from '@angular/core';
 import Fraction from 'fraction.js';
 
-import { Product, RateType, Category, Item, Entities } from '~/models';
+import { DatasetState } from '~/store/dataset';
+import { Product, RateType } from '~/models';
 
 @Component({
   selector: 'lab-products',
   templateUrl: './products.component.html',
-  styleUrls: ['./products.component.scss']
+  styleUrls: ['./products.component.scss'],
 })
 export class ProductsComponent {
-  @Input() categories: Category[];
-  @Input() itemEntities: Entities<Item>;
+  @Input() data: DatasetState;
   @Input() categoryItemRows: string[][];
   @Input() products: Product[];
   @Input() editProductId: number;
@@ -41,7 +41,7 @@ export class ProductsComponent {
   rateChange(id: number, event: any) {
     if (event.target.value) {
       const value = new Fraction(event.target.value);
-      if (!this.products.find(p => p.id === id).rate.equals(value)) {
+      if (!this.products.find((p) => p.id === id).rate.equals(value)) {
         this.editRate.emit([id, new Fraction(event.target.value)]);
       }
     }

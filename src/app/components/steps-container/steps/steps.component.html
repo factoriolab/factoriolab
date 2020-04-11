@@ -22,7 +22,9 @@
     <tr *ngFor="let step of steps">
       <td>
         <div class="flex">
-          <div class="monospace">{{ step.items.toFraction(true) }}</div>
+          <div *ngIf="step.items" class="monospace">
+            {{ step.items.toFraction(true) }}
+          </div>
           <div *ngIf="step.surplus && step.surplus.n > 0" class="monospace">
             (+{{ step.surplus.toFraction(true) }})
           </div>
@@ -31,7 +33,7 @@
       </td>
       <ng-container *ngIf="step.settings">
         <td>
-          <div *ngIf="step.settings.lane" class="flex">
+          <div *ngIf="step.settings.lane && step.lanes" class="flex">
             <div class="monospace">{{ step.lanes.toFraction(true) }}</div>
             <lab-icon [iconId]="step.settings.lane"></lab-icon>
           </div>

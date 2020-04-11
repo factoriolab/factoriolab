@@ -2,21 +2,27 @@ import { Item, Category, Recipe, Entities } from '~/models';
 import { DatasetAction, DatasetActionType } from './dataset.actions';
 
 export interface DatasetState {
+  items: Item[];
   itemIds: string[];
   itemEntities: Entities<Item>;
+  categories: Category[];
   categoryIds: string[];
   categoryEntities: Entities<Category>;
+  recipes: Recipe[];
   recipeIds: string[];
   recipeEntities: Entities<Recipe>;
 }
 
 export const initialDatasetState: DatasetState = {
+  items: [],
   itemIds: [],
   itemEntities: {},
+  categories: [],
   categoryIds: [],
   categoryEntities: {},
+  recipes: [],
   recipeIds: [],
-  recipeEntities: {}
+  recipeEntities: {},
 };
 
 export function datasetReducer(
@@ -26,24 +32,27 @@ export function datasetReducer(
   switch (action.type) {
     case DatasetActionType.LOAD: {
       return {
-        itemIds: action.payload.items.map(i => i.id),
+        items: action.payload.items,
+        itemIds: action.payload.items.map((i) => i.id),
         itemEntities: action.payload.items.reduce((e: Entities<Item>, i) => {
           return { ...e, ...{ [i.id]: i } };
         }, {}),
-        categoryIds: action.payload.categories.map(c => c.id),
+        categories: action.payload.categories,
+        categoryIds: action.payload.categories.map((c) => c.id),
         categoryEntities: action.payload.categories.reduce(
           (e: Entities<Category>, c) => {
             return { ...e, ...{ [c.id]: c } };
           },
           {}
         ),
-        recipeIds: action.payload.recipes.map(r => r.id),
+        recipes: action.payload.recipes,
+        recipeIds: action.payload.recipes.map((r) => r.id),
         recipeEntities: action.payload.recipes.reduce(
           (e: Entities<Recipe>, r) => {
             return { ...e, ...{ [r.id]: r } };
           },
           {}
-        )
+        ),
       };
     }
     default:

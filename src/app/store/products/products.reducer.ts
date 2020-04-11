@@ -1,11 +1,11 @@
 import Fraction from 'fraction.js';
 
-import { Product, RateType } from '~/models';
+import { Product, RateType, NEntities } from '~/models';
 import { ProductsAction, ProductsActionType } from './products.actions';
 
 export interface ProductsState {
   ids: number[];
-  entities: { [id: number]: Product };
+  entities: NEntities<Product>;
   index: number;
   editProductId: number;
   categoryId: string;
@@ -15,7 +15,7 @@ const defaultProduct: Product = {
   id: 0,
   itemId: 'wooden-chest',
   rate: new Fraction(1),
-  rateType: RateType.Items
+  rateType: RateType.Items,
 };
 
 export const initialProductsState: ProductsState = {
@@ -23,7 +23,7 @@ export const initialProductsState: ProductsState = {
   entities: {},
   index: 0,
   editProductId: null,
-  categoryId: 'logistics'
+  categoryId: 'logistics',
 };
 
 export function productsReducer(
@@ -38,8 +38,8 @@ export function productsReducer(
         ...{
           ids: [...state.ids, state.index],
           entities: { ...state.entities, ...{ [state.index]: newOutput } },
-          index: state.index + 1
-        }
+          index: state.index + 1,
+        },
       };
     }
     case ProductsActionType.REMOVE: {
@@ -48,25 +48,25 @@ export function productsReducer(
       return {
         ...state,
         ...{
-          ids: state.ids.filter(i => i !== action.payload),
-          entities: newEntities
-        }
+          ids: state.ids.filter((i) => i !== action.payload),
+          entities: newEntities,
+        },
       };
     }
     case ProductsActionType.OPEN_EDIT_PRODUCT: {
       return {
         ...state,
         ...{
-          editProductId: action.payload.id
-        }
+          editProductId: action.payload.id,
+        },
       };
     }
     case ProductsActionType.CANCEL_EDIT_PRODUCT: {
       return {
         ...state,
         ...{
-          editProductId: null
-        }
+          editProductId: null,
+        },
       };
     }
     case ProductsActionType.COMMIT_EDIT_PRODUCT: {
@@ -81,12 +81,12 @@ export function productsReducer(
               [id]: {
                 ...state.entities[id],
                 ...{
-                  itemId: action.payload[1]
-                }
-              }
-            }
-          }
-        }
+                  itemId: action.payload[1],
+                },
+              },
+            },
+          },
+        },
       };
     }
     case ProductsActionType.EDIT_RATE: {
@@ -100,12 +100,12 @@ export function productsReducer(
               [id]: {
                 ...state.entities[id],
                 ...{
-                  rate: action.payload[1]
-                }
-              }
-            }
-          }
-        }
+                  rate: action.payload[1],
+                },
+              },
+            },
+          },
+        },
       };
     }
     case ProductsActionType.EDIT_RATE_TYPE: {
@@ -119,12 +119,12 @@ export function productsReducer(
               [id]: {
                 ...state.entities[id],
                 ...{
-                  rateType: action.payload[1]
-                }
-              }
-            }
-          }
-        }
+                  rateType: action.payload[1],
+                },
+              },
+            },
+          },
+        },
       };
     }
     case ProductsActionType.SELECT_ITEM_CATEGORY:

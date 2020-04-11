@@ -1,89 +1,175 @@
 import { compose, createSelector } from '@ngrx/store';
+import Fraction from 'fraction.js';
 
-import { Step } from '~/models';
+import { Step, RateType, NEntities, WAGON_STACKS, WAGON_FLUID } from '~/models';
 import { RateUtility } from '~/utilities/rate';
+import * as Dataset from '../dataset';
+import * as Recipe from '../recipe';
+import * as Settings from '../settings';
 import { State } from '../';
-import * as dataset from '../dataset';
-import * as recipe from '../recipe';
-import * as settings from '../settings';
 import { ProductsState } from './products.reducer';
 
+/* Base selector functions */
 const productsState = (state: State) => state.productsState;
-const ids = (state: ProductsState) => state.ids;
-const entities = (state: ProductsState) => state.entities;
-const editProductId = (state: ProductsState) => state.editProductId;
-const categoryId = (state: ProductsState) => state.categoryId;
+const sIds = (state: ProductsState) => state.ids;
+const sEntities = (state: ProductsState) => state.entities;
+const sEditProductId = (state: ProductsState) => state.editProductId;
+const sCategoryId = (state: ProductsState) => state.categoryId;
 
-/* First order selectors */
-export const getIds = compose(ids, productsState);
+/* Simple selectors */
+export const getIds = compose(sIds, productsState);
+export const getEntities = compose(sEntities, productsState);
+export const getEditProductId = compose(sEditProductId, productsState);
+export const getCategoryId = compose(sCategoryId, productsState);
 
-export const getEntities = compose(entities, productsState);
-
-export const getEditProductId = compose(editProductId, productsState);
-
-export const getCategoryId = compose(categoryId, productsState);
-
-/* High order selectors */
+/* Complex selectors */
 export const getProducts = createSelector(
   getIds,
   getEntities,
-  (sIds, sEntities) => sIds.map(i => sEntities[i])
+  (ids, entities) => ids.map((i) => entities[i])
 );
 
-export const getSteps = createSelector(
+export const getProductsByItems = createSelector(
+  getIds,
+  getEntities,
+  (ids, entities) => ids.filter((i) => entities[i].rateType === RateType.Items)
+);
+
+export const getProductsByLanes = createSelector(
+  getIds,
+  getEntities,
+  (ids, entities) => ids.filter((i) => entities[i].rateType === RateType.Lanes)
+);
+
+export const getProductsByWagons = createSelector(
+  getIds,
+  getEntities,
+  (ids, entities) => ids.filter((i) => entities[i].rateType === RateType.Wagons)
+);
+
+export const getProductsByFactories = createSelector(
+  getIds,
+  getEntities,
+  (ids, entities) =>
+    ids.filter((i) => entities[i].rateType === RateType.Factories)
+);
+
+export const getNormalizedRatesByItems = createSelector(
+  getProductsByItems,
+  getEntities,
+  Settings.getDisplayRate,
+  (ids, entities, displayRate) => {
+    return ids.reduce((e: NEntities<Fraction>, i) => {
+      return { ...e, ...{ [i]: entities[i].rate.div(displayRate) } };
+    }, {});
+  }
+);
+
+export const getNormalizedRatesByLanes = createSelector(
+  getProductsByLanes,
+  getEntities,
+  Recipe.getRecipeSettings,
+  Dataset.getLaneSpeed,
+  (ids, entities, recipeSettings, laneSpeed) => {
+    return ids.reduce((e: NEntities<Fraction>, i) => {
+      const settings = recipeSettings[entities[i].itemId];
+      return {
+        ...e,
+        ...{ [i]: entities[i].rate.mul(laneSpeed[settings.lane]) },
+      };
+    }, {});
+  }
+);
+
+export const getNormalizedRatesByWagons = createSelector(
+  getProductsByWagons,
+  getEntities,
+  Settings.getDisplayRate,
+  Dataset.getDataset,
+  (ids, entities, displayRate, data) => {
+    return ids.reduce((e: NEntities<Fraction>, i) => {
+      const item = data.itemEntities[entities[i].itemId];
+      return {
+        ...e,
+        ...{
+          [i]: entities[i].rate
+            .div(displayRate)
+            .mul(item.stack ? item.stack * WAGON_STACKS : WAGON_FLUID),
+        },
+      };
+    }, {});
+  }
+);
+
+export const getNormalizedRatesByFactories = createSelector(
+  getProductsByFactories,
+  getEntities,
+  Recipe.getRecipeFactors,
+  Dataset.getDataset,
+  (ids, entities, factors, data) => {
+    return ids.reduce((e: NEntities<Fraction>, i) => {
+      const recipe = data.recipeEntities[entities[i].itemId];
+      const o = recipe.out ? recipe.out[recipe.id] : 1;
+      const f = factors[recipe.id];
+      // TODO: Handle products with no specific recipe here (oil, etc)
+      return {
+        ...e,
+        ...{
+          [i]: entities[i].rate
+            .div(recipe.time)
+            .mul(o)
+            .mul(f.speed)
+            .mul(f.prod),
+        },
+      };
+    }, {});
+  }
+);
+
+export const getNormalizedRates = createSelector(
+  getNormalizedRatesByItems,
+  getNormalizedRatesByLanes,
+  getNormalizedRatesByWagons,
+  getNormalizedRatesByFactories,
+  (byItems, byLanes, byWagons, byFactories) => {
+    return { ...byItems, ...byLanes, ...byWagons, ...byFactories };
+  }
+);
+
+export const getNormalizedSteps = createSelector(
   getProducts,
-  settings.getSettingsState,
-  recipe.getRecipeSettings,
-  recipe.getRecipeFactors,
-  dataset.getLaneSpeed,
-  dataset.getItemEntities,
-  dataset.getRecipeEntities,
-  (
-    sProducts,
-    sSettings,
-    sRecipeSettings,
-    sRecipeFactors,
-    sLaneSpeed,
-    sItemEntities,
-    sRecipeEntities
-  ) => {
+  getNormalizedRates,
+  Recipe.getRecipeSettings,
+  Recipe.getRecipeFactors,
+  Settings.getBelt,
+  Settings.getOilRecipe,
+  Dataset.getLaneSpeed,
+  Dataset.getDataset,
+  (products, rates, settings, factors, belt, oilRecipe, laneSpeed, data) => {
     const steps: Step[] = [];
-    for (const product of sProducts) {
-      const item = sItemEntities[product.itemId];
-      const itemRecipe = sRecipeEntities[item.id];
-      const rate = RateUtility.normalizeRate(
-        product.rate,
-        product.rateType,
-        sSettings.displayRate,
-        item.stack,
-        sItemEntities[sSettings.belt].belt.speed,
-        sSettings.flowRate,
-        itemRecipe,
-        sRecipeFactors
-      );
+    for (const product of products) {
       RateUtility.addStepsFor(
         product.itemId,
-        rate,
-        sRecipeEntities[product.itemId],
+        rates[product.id],
         steps,
-        sRecipeSettings,
-        sLaneSpeed,
-        sRecipeFactors,
-        sItemEntities,
-        sRecipeEntities,
-        sSettings
+        settings,
+        factors,
+        belt,
+        oilRecipe,
+        data
       );
     }
 
-    RateUtility.addOilSteps(
-      sSettings.oilRecipe,
-      steps,
-      sRecipeSettings,
-      sLaneSpeed,
-      sRecipeFactors,
-      sRecipeEntities
-    );
+    RateUtility.addOilSteps(oilRecipe, steps, settings, factors, data);
 
-    return RateUtility.displayRate(steps, sSettings.displayRate);
+    RateUtility.calculateLanes(steps, laneSpeed);
+
+    return steps;
   }
+);
+
+export const getSteps = createSelector(
+  getNormalizedSteps,
+  Settings.getDisplayRate,
+  (steps, displayRate) => RateUtility.displayRate(steps, displayRate)
 );

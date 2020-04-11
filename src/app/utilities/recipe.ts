@@ -84,7 +84,7 @@ export class RecipeUtility {
     beaconType: string,
     beaconCount: number,
     itemEntities: Entities<Item>
-  ): [Fraction, Fraction] {
+  ): { speed: Fraction; prod: Fraction } {
     let speed = new Fraction(1);
     let prod = new Fraction(1);
     if (modules && modules.length) {
@@ -103,6 +103,8 @@ export class RecipeUtility {
       speed = speed.add(new Fraction(module.speed).div(2).mul(beaconCount));
     }
 
-    return [new Fraction(factorySpeed).mul(speed), prod];
+    speed = speed.mul(factorySpeed);
+
+    return { speed, prod };
   }
 }

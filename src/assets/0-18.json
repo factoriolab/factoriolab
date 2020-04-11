@@ -2279,6 +2279,7 @@
     {
       "id": "uranium-ore",
       "time": 2,
+      "in": { "sulfuric-acid": 1 },
       "producers": ["electric-mining-drill"]
     },
     {
@@ -2973,6 +2974,30 @@
       },
       "out": { "solid-fuel": 1 },
       "producers": ["chemical-plant"]
+    },
+    {
+      "id": "uranium-processing",
+      "time": 12,
+      "in": {
+        "uranium-ore": 10
+      },
+      "out": {
+        "uranium-235": 0.007,
+        "uranium-238": 0.993
+      },
+      "producers": ["centrifuge"]
+    },
+    {
+      "id": "kovarex-enrichment-proces",
+      "time": 60,
+      "in": {
+        "uranium-235": 40,
+        "uranium-238": 5
+      },
+      "out": {
+        "uranium-235": 41,
+        "uranium-238": 2
+      }
     },
     {
       "id": "worker-robot-speed",

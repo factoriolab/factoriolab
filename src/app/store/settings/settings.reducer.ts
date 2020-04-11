@@ -1,5 +1,5 @@
+import { DisplayRate } from '~/models';
 import { SettingsAction, SettingsActionType } from './settings.actions';
-import { DisplayRate } from 'src/app/models';
 
 export interface SettingsState {
   displayRate: DisplayRate;
@@ -13,7 +13,6 @@ export interface SettingsState {
   beaconType: string;
   beaconCount: number;
   oilRecipe: string;
-  useCracking: boolean;
   fuel: string;
   miningBonus: number;
   flowRate: number;
@@ -31,7 +30,6 @@ export const initialSettingsState: SettingsState = {
   beaconType: 'speed-module-3',
   beaconCount: 16,
   oilRecipe: 'advanced-oil-processing',
-  useCracking: true,
   fuel: 'coal',
   miningBonus: 0,
   flowRate: 12000,
