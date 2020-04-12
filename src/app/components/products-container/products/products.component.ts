@@ -11,7 +11,6 @@ import { Product, RateType, CategoryId, ItemId } from '~/models';
 })
 export class ProductsComponent {
   @Input() data: DatasetState;
-  @Input() categoryItemRows: string[][];
   @Input() products: Product[];
   @Input() editProductId: number;
   @Input() categoryId: CategoryId;

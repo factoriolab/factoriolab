@@ -73,7 +73,7 @@ describe('Dataset Selectors', () => {
 
     it('should return rows of items for the current category', () => {
       const result = selectors.getCategoryItemRows.projector(
-        mocks.Data.categories.map(c => c.id),
+        mocks.Data.categories.map((c) => c.id),
         mocks.Data.items
       );
       expect(result[mocks.CategoryId].length).toBeGreaterThan(0);

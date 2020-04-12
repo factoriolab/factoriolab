@@ -9,43 +9,12 @@ import { State } from '../';
 export const getDataset = (state: State) => state.datasetState;
 
 /* Complex selectors */
-export const getCategoryItemRows = createSelector(getDataset, (data) => {
-  const map: Entities<string[][]> = {};
-
-  for (const id of data.categoryIds) {
-    const rows: string[][] = [[]];
-    const items = data.items
-      .filter((p) => p.category === id)
-      .sort((a, b) => a.row - b.row);
-    if (items.length) {
-      let index = items[0].row;
-      for (const item of items) {
-        if (item.row > index) {
-          rows.push([]);
-          index = item.row;
-        }
-        rows[rows.length - 1].push(item.id);
-      }
-    }
-    map[id] = rows;
-  }
-
-  return map;
-});
-
-export const getLaneIds = createSelector(getDataset, (data) =>
-  data.itemIds.filter(
-    (i) => data.itemEntities[i].belt || data.itemEntities[i].id === ItemId.Pipe
-  )
-);
-
 export const getLaneSpeed = createSelector(
   getDataset,
-  getLaneIds,
   Settings.getFlowRate,
-  (data, laneIds, flowRate) => {
+  (data, flowRate) => {
     const value: Entities<Fraction> = {};
-    for (const id of laneIds) {
+    for (const id of data.laneIds) {
       if (id === ItemId.Pipe) {
         value[id] = new Fraction(flowRate);
       } else {

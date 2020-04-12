@@ -92,6 +92,7 @@ export class RateUtility {
           .div(f.prod);
       }
     }
+    return steps;
   }
 
   public static calculateLanes(steps: Step[], laneSpeed: Entities<Fraction>) {
@@ -100,6 +101,7 @@ export class RateUtility {
         step.lanes = step.items.div(laneSpeed[step.settings.lane]);
       }
     }
+    return steps;
   }
 
   public static displayRate(steps: Step[], displayRate: DisplayRate) {

@@ -159,19 +159,35 @@ export const getNormalizedSteps = createSelector(
         data
       );
     }
-
-    RateUtility.calculateFactories(steps, factors, data);
-
-    RateUtility.addOilSteps(oilRecipe, steps, settings, factors, data);
-
-    RateUtility.calculateLanes(steps, laneSpeed);
-
     return steps;
   }
 );
 
-export const getSteps = createSelector(
+export const getNormalizedStepsWithFactories = createSelector(
   getNormalizedSteps,
+  Recipe.getRecipeFactors,
+  Dataset.getDataset,
+  (steps, factors, data) => RateUtility.calculateFactories(steps, factors, data)
+);
+
+export const getNormalizedStepsWithOil = createSelector(
+  getNormalizedStepsWithFactories,
+  Recipe.getRecipeSettings,
+  Recipe.getRecipeFactors,
+  Settings.getOilRecipe,
+  Dataset.getDataset,
+  (steps, settings, factors, oilRecipe, data) =>
+    RateUtility.addOilSteps(oilRecipe, steps, settings, factors, data)
+);
+
+export const getNormalizedStepsWithLanes = createSelector(
+  getNormalizedStepsWithOil,
+  Dataset.getLaneSpeed,
+  (steps, laneSpeed) => RateUtility.calculateLanes(steps, laneSpeed)
+);
+
+export const getSteps = createSelector(
+  getNormalizedStepsWithLanes,
   Settings.getDisplayRate,
   (steps, displayRate) => RateUtility.displayRate(steps, displayRate)
 );
