@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import Fraction from 'fraction.js';
 
-import { RecipeSettings, Entities } from '~/models';
+import { RecipeSettings, Entities, ItemId, RecipeId } from '~/models';
 import { RecipeUtility } from '~/utilities/recipe';
 import { getDataset } from '../dataset';
 import * as Settings from '../settings';
@@ -29,7 +29,7 @@ export const getRecipeSettings = createSelector(
         if (!item) {
           item = data.itemEntities[Object.keys(recipe.out)[0]];
         }
-        recipeSettings.lane = item.stack ? settings.belt : 'pipe';
+        recipeSettings.lane = item.stack ? settings.belt : ItemId.Pipe;
       }
 
       // Factory
@@ -43,7 +43,10 @@ export const getRecipeSettings = createSelector(
       }
 
       const factoryItem = data.itemEntities[recipeSettings.factory];
-      if (recipe.id !== 'space-science-pack' && factoryItem?.factory?.modules) {
+      if (
+        recipe.id !== RecipeId.SpaceSciencePack &&
+        factoryItem?.factory?.modules
+      ) {
         // Modules
         if (!recipeSettings.modules) {
           recipeSettings.modules = RecipeUtility.defaultModules(

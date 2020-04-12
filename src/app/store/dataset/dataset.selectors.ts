@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import Fraction from 'fraction.js';
 
-import { Entities } from '~/models';
+import { Entities, ItemId, RecipeId } from '~/models';
 import * as Settings from '../settings';
 import { State } from '../';
 
@@ -35,7 +35,7 @@ export const getCategoryItemRows = createSelector(getDataset, (data) => {
 
 export const getLaneIds = createSelector(getDataset, (data) =>
   data.itemIds.filter(
-    (i) => data.itemEntities[i].belt || data.itemEntities[i].id === 'pipe'
+    (i) => data.itemEntities[i].belt || data.itemEntities[i].id === ItemId.Pipe
   )
 );
 
@@ -62,10 +62,10 @@ export const getOilRecipes = createSelector(
   (data, oilRecipeId) => {
     return {
       heavy: data.recipeEntities[oilRecipeId],
-      light: data.recipeEntities['heavy-oil-cracking'],
-      petrol: data.recipeEntities['light-oil-cracking'],
-      fuelLight: data.recipeEntities['solid-fuel-from-light-oil'],
-      fuelPetrol: data.recipeEntities['solid-fuel-from-petroleum-gas'],
+      light: data.recipeEntities[RecipeId.HeavyOilCracking],
+      petrol: data.recipeEntities[RecipeId.LightOilCracking],
+      fuelLight: data.recipeEntities[RecipeId.SolidFuelFromLightOil],
+      fuelPetrol: data.recipeEntities[RecipeId.SolidFuelFromPetroleumGas],
     };
   }
 );

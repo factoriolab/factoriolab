@@ -1,7 +1,7 @@
-import { Recipe, Item, Entities } from '~/models';
+import { Recipe, Item, Entities, CategoryId, RecipeId } from '~/models';
 import Fraction from 'fraction.js';
 
-const categoryAllowProdModule = ['intermediate', 'research'];
+const categoryAllowProdModule = [CategoryId.Intermediate, CategoryId.Research];
 
 export class RecipeUtility {
   /** Determines what default factory to use for a given recipe based on settings */
@@ -35,7 +35,7 @@ export class RecipeUtility {
 
   /** Determines whether prod modules are allowed for a given recipe */
   static prodModuleAllowed(recipe: Recipe, itemEntities: Entities<Item>) {
-    if (recipe.id === 'satellite') {
+    if (recipe.id === RecipeId.Satellite) {
       // Breaks the rules, but this is not allowed
       return false;
     }

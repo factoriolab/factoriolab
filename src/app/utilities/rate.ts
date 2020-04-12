@@ -1,6 +1,6 @@
 import Fraction from 'fraction.js';
 
-import { Step, Recipe, DisplayRate, Entities } from '~/models';
+import { Step, Recipe, DisplayRate, Entities, ItemId } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { RecipeState } from '~/store/recipe';
 
@@ -86,7 +86,7 @@ export class RateUtility {
         factories: new Fraction(0),
         settings: recipe
           ? recipeSettings[recipe.id]
-          : { lane: item.stack ? belt : 'pipe' },
+          : { lane: item.stack ? belt : ItemId.Pipe },
       };
 
       steps.push(step);

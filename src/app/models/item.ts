@@ -1,28 +1,20 @@
+import { Belt } from './belt';
+import { CategoryId } from './category';
+import { Factory } from './factory';
+import { Module } from './module';
+
+export enum ItemId {
+  Pipe = 'pipe',
+  WoodenChest = 'wooden-chest',
+}
+
 export interface Item {
   id: string;
   name: string;
-  category: string;
+  category: CategoryId;
   row: number;
   stack?: number;
   belt?: Belt;
   factory?: Factory;
   module?: Module;
-}
-
-export interface Belt {
-  speed: number;
-}
-
-export interface Factory {
-  speed: number;
-  modules: number;
-  burner?: number;
-  electric?: number;
-  drain?: number;
-}
-
-export interface Module {
-  speed: number;
-  productivity: number;
-  energy: number;
 }
