@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import Fraction from 'fraction.js';
 
-import { Entities, ItemId, RecipeId } from '~/models';
+import { Entities, ItemId } from '~/models';
 import * as Settings from '../settings';
 import { State } from '../';
 
@@ -22,19 +22,5 @@ export const getLaneSpeed = createSelector(
       }
     }
     return value;
-  }
-);
-
-export const getOilRecipes = createSelector(
-  getDataset,
-  Settings.getOilRecipe,
-  (data, oilRecipeId) => {
-    return {
-      heavy: data.recipeEntities[oilRecipeId],
-      light: data.recipeEntities[RecipeId.HeavyOilCracking],
-      petrol: data.recipeEntities[RecipeId.LightOilCracking],
-      fuelLight: data.recipeEntities[RecipeId.SolidFuelFromLightOil],
-      fuelPetrol: data.recipeEntities[RecipeId.SolidFuelFromPetroleumGas],
-    };
   }
 );
