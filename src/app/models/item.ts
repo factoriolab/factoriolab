@@ -4,6 +4,7 @@ import { Factory } from './factory';
 import { Module } from './module';
 
 export enum ItemId {
+  AssemblingMachine2 = 'assembling-machine-2',
   AssemblingMachine3 = 'assembling-machine-3',
   Coal = 'coal',
   ElectricFurnace = 'electric-furnace',
@@ -11,11 +12,13 @@ export enum ItemId {
   ExpressTransportBelt = 'express-transport-belt',
   HeavyOil = 'heavy-oil',
   LightOil = 'light-oil',
+  Module = 'module',
   PetroleumGas = 'petroleum-gas',
   Pipe = 'pipe',
   ProductivityModule3 = 'productivity-module-3',
   SolidFuel = 'solid-fuel',
   SpeedModule3 = 'speed-module-3',
+  TransportBelt = 'transport-belt',
   Water = 'water',
   WoodenChest = 'wooden-chest',
 }
