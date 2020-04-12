@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { State } from '~/store';
 import * as Dataset from '~/store/dataset';
 import * as Products from '~/store/products';
-import { Product, RateType, Entities } from '~/models';
+import { Product, RateType, Entities, ItemId, CategoryId } from '~/models';
 import { ProductsComponent } from './products/products.component';
 
 @Component({
@@ -50,7 +50,7 @@ export class ProductsContainerComponent implements OnInit {
     this.store.dispatch(new Products.CancelEditProductAction());
   }
 
-  commitEditProduct(data: [number, string]) {
+  commitEditProduct(data: [number, ItemId]) {
     this.store.dispatch(new Products.CommitEditProductAction(data));
   }
 
@@ -62,7 +62,7 @@ export class ProductsContainerComponent implements OnInit {
     this.store.dispatch(new Products.EditRateTypeAction(data));
   }
 
-  selectTab(id: string) {
+  selectTab(id: CategoryId) {
     this.store.dispatch(new Products.SelectItemCategoryAction(id));
   }
 }

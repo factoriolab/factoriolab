@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output, Input } from '@angular/core';
 import Fraction from 'fraction.js';
 
 import { DatasetState } from '~/store/dataset';
-import { Product, RateType } from '~/models';
+import { Product, RateType, CategoryId, ItemId } from '~/models';
 
 @Component({
   selector: 'lab-products',
@@ -14,16 +14,16 @@ export class ProductsComponent {
   @Input() categoryItemRows: string[][];
   @Input() products: Product[];
   @Input() editProductId: number;
-  @Input() categoryId: string;
+  @Input() categoryId: CategoryId;
 
   @Output() add = new EventEmitter();
   @Output() remove = new EventEmitter<number>();
   @Output() openEditProduct = new EventEmitter<Product>();
   @Output() cancelEditProduct = new EventEmitter();
-  @Output() commitEditProduct = new EventEmitter<[number, string]>();
+  @Output() commitEditProduct = new EventEmitter<[number, ItemId]>();
   @Output() editRate = new EventEmitter<[number, Fraction]>();
   @Output() editRateType = new EventEmitter<[number, RateType]>();
-  @Output() selectTab = new EventEmitter<string>();
+  @Output() selectTab = new EventEmitter<CategoryId>();
 
   rateType = RateType;
 
@@ -34,7 +34,7 @@ export class ProductsComponent {
     event.stopPropagation();
   }
 
-  selectItem(id: number, itemId: string) {
+  selectItem(id: number, itemId: ItemId) {
     this.commitEditProduct.emit([id, itemId]);
   }
 

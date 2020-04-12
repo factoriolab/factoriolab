@@ -1,8 +1,10 @@
 import Fraction from 'fraction.js';
+
+import { ItemId } from './item';
 import { RecipeSettings } from './recipe-settings';
 
 export interface Step {
-  itemId: string;
+  itemId: ItemId;
   items: Fraction;
   surplus?: Fraction;
   lanes?: Fraction;

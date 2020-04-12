@@ -1,5 +1,6 @@
-import { Recipe, Item, Entities, CategoryId, RecipeId } from '~/models';
 import Fraction from 'fraction.js';
+
+import { Recipe, Item, Entities, CategoryId, RecipeId, ItemId } from '~/models';
 
 const categoryAllowProdModule = [CategoryId.Intermediate, CategoryId.Research];
 
@@ -7,9 +8,9 @@ export class RecipeUtility {
   /** Determines what default factory to use for a given recipe based on settings */
   static defaultFactory(
     recipe: Recipe,
-    assembler: string,
-    furnace: string,
-    drill: string
+    assembler: ItemId,
+    furnace: ItemId,
+    drill: ItemId
   ) {
     // No factory specified for step
     if (!recipe.producers) {
@@ -60,8 +61,8 @@ export class RecipeUtility {
   /** Determines default array of modules for a given recipe */
   static defaultModules(
     recipe: Recipe,
-    prodModule: string,
-    otherModule: string,
+    prodModule: ItemId,
+    otherModule: ItemId,
     count: number,
     itemEntities: Entities<Item>
   ) {
@@ -80,8 +81,8 @@ export class RecipeUtility {
   /** Determines tuple of speed and productivity factors on given recipe */
   static recipeFactors(
     factorySpeed: number,
-    modules: string[],
-    beaconType: string,
+    modules: ItemId[],
+    beaconType: ItemId,
     beaconCount: number,
     itemEntities: Entities<Item>
   ): { speed: Fraction; prod: Fraction } {

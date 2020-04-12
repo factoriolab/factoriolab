@@ -46,7 +46,7 @@ export const getLaneSpeed = createSelector(
   (data, laneIds, flowRate) => {
     const value: Entities<Fraction> = {};
     for (const id of laneIds) {
-      if (id === 'pipe') {
+      if (id === ItemId.Pipe) {
         value[id] = new Fraction(flowRate);
       } else {
         value[id] = new Fraction(data.itemEntities[id].belt.speed);

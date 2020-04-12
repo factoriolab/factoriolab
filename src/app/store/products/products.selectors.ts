@@ -160,6 +160,8 @@ export const getNormalizedSteps = createSelector(
       );
     }
 
+    RateUtility.calculateFactories(steps, factors, data);
+
     RateUtility.addOilSteps(oilRecipe, steps, settings, factors, data);
 
     RateUtility.calculateLanes(steps, laneSpeed);

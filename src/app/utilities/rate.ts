@@ -1,77 +1,25 @@
 import Fraction from 'fraction.js';
 
-import { Step, Recipe, DisplayRate, Entities, ItemId } from '~/models';
+import { Step, DisplayRate, Entities, ItemId, RecipeId } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { RecipeState } from '~/store/recipe';
 
-enum OilProduct {
-  Heavy = 'heavy-oil',
-  Light = 'light-oil',
-  Petrol = 'petroleum-gas',
-  Fuel = 'solid-fuel',
-}
-
-enum OilRecipe {
-  Basic = 'basic-oil-processing',
-  Advanced = 'advanced-oil-processing',
-  Coal = 'coal-liquefaction',
-}
-
-enum Cracking {
-  Heavy = 'heavy-oil-cracking',
-  Light = 'light-oil-cracking',
-}
-
-export enum FuelRecipe {
-  Heavy = 'solid-fuel-from-heavy-oil',
-  Light = 'solid-fuel-from-light-oil',
-  Petrol = 'solid-fuel-from-petroleum-gas',
-}
-
 export class RateUtility {
-  /**
-   * factories = rate * time
-   *             quantity * prod * speed
-   */
-  public static toFactories(
-    rate: Fraction,
-    time: Fraction,
-    quantity: Fraction,
-    factors: { speed: Fraction; prod: Fraction }
-  ) {
-    return rate.mul(time).div(quantity.mul(factors.speed).mul(factors.prod));
-  }
-
-  /**
-   * rate = factories * quantity * prod * speed
-   *        time
-   */
-  public static toRate(
-    factories: Fraction,
-    time: Fraction,
-    quantity: Fraction,
-    factors: { speed: Fraction; prod: Fraction }
-  ) {
-    return factories
-      .div(time)
-      .mul(quantity.mul(factors.speed).mul(factors.prod));
-  }
-
   public static addStepsFor(
-    id: string,
+    id: ItemId,
     rate: Fraction,
     steps: Step[],
-    recipeSettings: RecipeState,
-    recipeFactors: Entities<{ speed: Fraction; prod: Fraction }>,
-    belt: string,
-    oilRecipe: string,
+    settings: RecipeState,
+    factors: Entities<{ speed: Fraction; prod: Fraction }>,
+    belt: ItemId,
+    oilRecipe: RecipeId,
     data: DatasetState
   ) {
     let recipe = data.recipeEntities[id];
 
     if (!recipe) {
       // No recipe for this step, check for simple oil recipes
-      recipe = this.findBasicOilRecipe(id, oilRecipe, data.recipeEntities);
+      recipe = this.findBasicOilRecipe(id, oilRecipe, data);
     }
 
     // Find existing step for this item
@@ -85,7 +33,7 @@ export class RateUtility {
         items: new Fraction(0),
         factories: new Fraction(0),
         settings: recipe
-          ? recipeSettings[recipe.id]
+          ? settings[recipe.id]
           : { lane: item.stack ? belt : ItemId.Pipe },
       };
 
@@ -97,33 +45,24 @@ export class RateUtility {
 
     if (recipe) {
       // Mark complex recipes
-      if (recipe.id !== id) {
+      if ((recipe.id as string) !== id) {
         step.settings.recipeId = recipe.id;
       }
 
-      // Calculate number of outputs from recipe
-      const out = new Fraction(recipe.out ? recipe.out[id] : 1);
-
-      // Calculate number of factories required
-      step.factories = RateUtility.toFactories(
-        step.items,
-        new Fraction(recipe.time),
-        out,
-        recipeFactors[recipe.id]
-      );
-
       // Recurse adding steps for ingredients
       if (recipe.in) {
+        // Calculate number of outputs from recipe
+        const out = new Fraction(recipe.out ? recipe.out[id] : 1).mul(
+          factors[recipe.id].prod
+        );
+
         for (const ingredient of Object.keys(recipe.in)) {
           RateUtility.addStepsFor(
-            ingredient,
-            rate
-              .mul(recipe.in[ingredient])
-              .div(out)
-              .div(recipeFactors[recipe.id].prod),
+            ingredient as ItemId,
+            rate.mul(recipe.in[ingredient]).div(out),
             steps,
-            recipeSettings,
-            recipeFactors,
+            settings,
+            factors,
             belt,
             oilRecipe,
             data
@@ -133,9 +72,33 @@ export class RateUtility {
     }
   }
 
+  public static calculateFactories(
+    steps: Step[],
+    factors: Entities<{ speed: Fraction; prod: Fraction }>,
+    data: DatasetState
+  ) {
+    for (const step of steps) {
+      const recipeId = step.settings.recipeId
+        ? step.settings.recipeId
+        : step.itemId;
+      const recipe = data.recipeEntities[recipeId];
+      if (recipe) {
+        const o = new Fraction(recipe.out ? recipe.out[step.itemId] : 1);
+        const f = factors[recipe.id];
+        step.factories = step.items
+          .mul(recipe.time)
+          .div(o)
+          .div(f.speed)
+          .div(f.prod);
+      }
+    }
+  }
+
   public static calculateLanes(steps: Step[], laneSpeed: Entities<Fraction>) {
     for (const step of steps) {
-      step.lanes = step.items.div(laneSpeed[step.settings.lane]);
+      if (step.items) {
+        step.lanes = step.items.div(laneSpeed[step.settings.lane]);
+      }
     }
   }
 
@@ -152,39 +115,39 @@ export class RateUtility {
   }
 
   public static findBasicOilRecipe(
-    id: string,
-    oilRecipeId: string,
-    recipeEntities: Entities<Recipe>
+    id: ItemId,
+    oilRecipeId: RecipeId,
+    data: DatasetState
   ) {
-    if (oilRecipeId === OilRecipe.Basic) {
+    if (oilRecipeId === RecipeId.BasicOilProcessing) {
       // Using Basic Oil processing, use simple recipes
-      if (id === OilProduct.Petrol) {
+      if (id === ItemId.PetroleumGas) {
         // To produce petroleum gas, use oil recipe
-        return recipeEntities[oilRecipeId];
-      } else if (id === OilProduct.Fuel) {
+        return data.recipeEntities[oilRecipeId];
+      } else if (id === ItemId.SolidFuel) {
         // To produce solid fuel, use petroleum fuel recipe
-        return recipeEntities[FuelRecipe.Petrol];
+        return data.recipeEntities[RecipeId.SolidFuelFromPetroleumGas];
       }
     }
     return null;
   }
 
   public static addOilSteps(
-    oilRecipeId: string,
+    oilRecipeId: RecipeId,
     steps: Step[],
-    recipeSettings: RecipeState,
-    recipeFactors: Entities<{ speed: Fraction; prod: Fraction }>,
+    settings: RecipeState,
+    factors: Entities<{ speed: Fraction; prod: Fraction }>,
     data: DatasetState
   ) {
     if (
-      oilRecipeId === OilRecipe.Basic || // Already handled with basic recipes
+      oilRecipeId === RecipeId.BasicOilProcessing || // Already handled with basic recipes
       steps.every(
         (s) =>
           ([
-            OilProduct.Heavy,
-            OilProduct.Light,
-            OilProduct.Petrol,
-            OilProduct.Fuel,
+            ItemId.HeavyOil,
+            ItemId.LightOil,
+            ItemId.PetroleumGas,
+            ItemId.SolidFuel,
           ] as string[]).indexOf(s.itemId) === -1
       ) // No matching oil products found in steps
     ) {
@@ -193,82 +156,82 @@ export class RateUtility {
 
     // Find Recipes
     const oilRecipe = data.recipeEntities[oilRecipeId];
-    const hocRecipe = data.recipeEntities[Cracking.Heavy];
-    const locRecipe = data.recipeEntities[Cracking.Light];
-    const ltfRecipe = data.recipeEntities[FuelRecipe.Light];
-    const ptfRecipe = data.recipeEntities[FuelRecipe.Petrol];
+    const hocRecipe = data.recipeEntities[RecipeId.HeavyOilCracking];
+    const locRecipe = data.recipeEntities[RecipeId.LightOilCracking];
+    const ltfRecipe = data.recipeEntities[RecipeId.SolidFuelFromLightOil];
+    const ptfRecipe = data.recipeEntities[RecipeId.SolidFuelFromPetroleumGas];
 
     // Calculate factors
     // Refinery
-    const oilHeavy = new Fraction(oilRecipe.out[OilProduct.Heavy])
-      .mul(recipeFactors[oilRecipe.id].prod)
-      .sub(oilRecipe.in[OilProduct.Heavy] ? oilRecipe.in[OilProduct.Heavy] : 0)
+    const oilHeavy = new Fraction(oilRecipe.out[ItemId.HeavyOil])
+      .mul(factors[oilRecipe.id].prod)
+      .sub(oilRecipe.in[ItemId.HeavyOil] ? oilRecipe.in[ItemId.HeavyOil] : 0)
       .div(oilRecipe.time);
-    const oilLight = new Fraction(oilRecipe.out[OilProduct.Light])
-      .mul(recipeFactors[oilRecipe.id].prod)
+    const oilLight = new Fraction(oilRecipe.out[ItemId.LightOil])
+      .mul(factors[oilRecipe.id].prod)
       .div(oilRecipe.time);
-    const oilPetrol = new Fraction(oilRecipe.out[OilProduct.Petrol])
-      .mul(recipeFactors[oilRecipe.id].prod)
+    const oilPetrol = new Fraction(oilRecipe.out[ItemId.PetroleumGas])
+      .mul(factors[oilRecipe.id].prod)
       .div(oilRecipe.time);
     // Heavy Oil Cracking
-    const hocHeavyIn = new Fraction(hocRecipe.in[OilProduct.Heavy]).div(
+    const hocHeavyIn = new Fraction(hocRecipe.in[ItemId.HeavyOil]).div(
       hocRecipe.time
     );
-    const hocLight = new Fraction(hocRecipe.out[OilProduct.Light])
-      .mul(recipeFactors[hocRecipe.id].prod)
+    const hocLight = new Fraction(hocRecipe.out[ItemId.LightOil])
+      .mul(factors[hocRecipe.id].prod)
       .div(hocRecipe.time);
     const hocFactories = oilHeavy.div(hocHeavyIn);
     const hocFactoriesLight = hocFactories.mul(hocLight);
     // Light Oil Cracking
     const maxLight = oilLight.add(hocFactoriesLight);
-    const locLightIn = new Fraction(locRecipe.in[OilProduct.Light]).div(
+    const locLightIn = new Fraction(locRecipe.in[ItemId.LightOil]).div(
       locRecipe.time
     );
-    const locPetrol = new Fraction(locRecipe.out[OilProduct.Petrol])
-      .mul(recipeFactors[locRecipe.id].prod)
+    const locPetrol = new Fraction(locRecipe.out[ItemId.PetroleumGas])
+      .mul(factors[locRecipe.id].prod)
       .div(locRecipe.time);
     const locFactories = maxLight.div(locLightIn);
     const locFactoriesPetrol = locFactories.mul(locPetrol);
     const maxPetrol = oilPetrol.add(locFactoriesPetrol);
     // Light to Fuel
-    const ltfLightIn = new Fraction(ltfRecipe.in[OilProduct.Light]).div(
+    const ltfLightIn = new Fraction(ltfRecipe.in[ItemId.LightOil]).div(
       ltfRecipe.time
     );
-    const ltfFuel = new Fraction(ltfRecipe.out[OilProduct.Fuel])
-      .mul(recipeFactors[ltfRecipe.id].prod)
+    const ltfFuel = new Fraction(ltfRecipe.out[ItemId.SolidFuel])
+      .mul(factors[ltfRecipe.id].prod)
       .div(ltfRecipe.time);
     const ltfFactories = maxLight.div(ltfLightIn);
     const ltfFactoriesFuel = ltfFactories.mul(ltfFuel);
     // Petrol to Fuel
-    const ptfPetrolIn = new Fraction(ptfRecipe.in[OilProduct.Petrol]).div(
+    const ptfPetrolIn = new Fraction(ptfRecipe.in[ItemId.PetroleumGas]).div(
       ptfRecipe.time
     );
-    const ptfFuel = new Fraction(ptfRecipe.out[OilProduct.Fuel])
-      .mul(recipeFactors[ptfRecipe.id].prod)
+    const ptfFuel = new Fraction(ptfRecipe.out[ItemId.SolidFuel])
+      .mul(factors[ptfRecipe.id].prod)
       .div(ptfRecipe.time);
     const ptfFactories = oilPetrol.div(ptfPetrolIn);
     const ptfFactoriesFuel = ptfFactories.mul(ptfFuel);
     const maxFuel = ltfFactoriesFuel.add(ptfFactoriesFuel);
 
     // Find / Setup steps
-    let heavyStep = steps.find((s) => s.itemId === OilProduct.Heavy);
-    let lightStep = steps.find((s) => s.itemId === OilProduct.Light);
-    let petrolStep = steps.find((s) => s.itemId === OilProduct.Petrol);
+    let heavyStep = steps.find((s) => s.itemId === ItemId.HeavyOil);
+    let lightStep = steps.find((s) => s.itemId === ItemId.LightOil);
+    let petrolStep = steps.find((s) => s.itemId === ItemId.PetroleumGas);
     if (!heavyStep) {
       heavyStep = {
-        itemId: OilProduct.Heavy,
+        itemId: ItemId.HeavyOil,
         items: new Fraction(0),
         factories: new Fraction(0),
       };
 
       steps.push(heavyStep);
     }
-    heavyStep.settings = recipeSettings[oilRecipe.id];
+    heavyStep.settings = settings[oilRecipe.id];
     heavyStep.settings.recipeId = oilRecipe.id;
 
     if (!lightStep) {
       lightStep = {
-        itemId: OilProduct.Light,
+        itemId: ItemId.LightOil,
         items: new Fraction(0),
         factories: new Fraction(0),
       };
@@ -276,12 +239,12 @@ export class RateUtility {
       steps.push(lightStep);
     }
     lightStep.surplus = new Fraction(0);
-    lightStep.settings = recipeSettings[Cracking.Heavy];
-    lightStep.settings.recipeId = Cracking.Heavy;
+    lightStep.settings = settings[hocRecipe.id];
+    lightStep.settings.recipeId = hocRecipe.id;
 
     if (!petrolStep) {
       petrolStep = {
-        itemId: OilProduct.Petrol,
+        itemId: ItemId.PetroleumGas,
         items: new Fraction(0),
         factories: new Fraction(0),
       };
@@ -289,13 +252,13 @@ export class RateUtility {
       steps.push(petrolStep);
     }
     petrolStep.surplus = new Fraction(0);
-    petrolStep.settings = recipeSettings[Cracking.Light];
-    petrolStep.settings.recipeId = Cracking.Light;
+    petrolStep.settings = settings[locRecipe.id];
+    petrolStep.settings.recipeId = locRecipe.id;
 
-    const fuelStep = steps.find((s) => s.itemId === OilProduct.Fuel);
+    const fuelStep = steps.find((s) => s.itemId === ItemId.SolidFuel);
     if (fuelStep) {
-      fuelStep.settings = recipeSettings[FuelRecipe.Light];
-      fuelStep.settings.recipeId = FuelRecipe.Light;
+      fuelStep.settings = settings[ltfRecipe.id];
+      fuelStep.settings.recipeId = ltfRecipe.id;
     }
     let ptfStep: Step = null;
 
@@ -429,7 +392,7 @@ export class RateUtility {
             itemId: null,
             items: null,
             factories: new Fraction(0),
-            settings: recipeSettings[ptfRecipe.id],
+            settings: settings[ptfRecipe.id],
           };
           ptfStep.settings.recipeId = ptfRecipe.id;
           steps.push(ptfStep);
@@ -484,16 +447,16 @@ export class RateUtility {
 
     // Calculate refinery inputs
     for (const ingredient of Object.keys(oilRecipe.in)) {
-      if (ingredient !== OilProduct.Heavy) {
+      if (ingredient !== ItemId.HeavyOil) {
         this.addStepsFor(
-          ingredient,
+          ingredient as ItemId,
           heavyStep.items
             .mul(oilRecipe.in[ingredient])
-            .div(oilRecipe.out[OilProduct.Heavy])
-            .div(recipeFactors[oilRecipe.id].prod),
+            .div(oilRecipe.out[ItemId.HeavyOil])
+            .div(factors[oilRecipe.id].prod),
           steps,
-          recipeSettings,
-          recipeFactors,
+          settings,
+          factors,
           null, // Fluid, belt is irrelevant
           oilRecipeId,
           data
@@ -501,55 +464,50 @@ export class RateUtility {
       }
     }
     // Calculate loc inputs
-    const waterId = 'water';
     this.addStepsFor(
-      waterId,
+      ItemId.Water,
       lightStep.factories
         .mul(hocLight)
-        .mul(hocRecipe.in[waterId])
-        .div(hocRecipe.out[OilProduct.Light])
-        .div(recipeFactors[hocRecipe.id].prod),
+        .mul(hocRecipe.in[ItemId.Water])
+        .div(hocRecipe.out[ItemId.LightOil])
+        .div(factors[hocRecipe.id].prod),
       steps,
-      recipeSettings,
-      recipeFactors,
+      settings,
+      factors,
       null, // Fluid, belt is irrelevant
       oilRecipeId,
       data
     );
     // Calculate poc inputs
     this.addStepsFor(
-      waterId,
+      ItemId.Water,
       petrolStep.factories
         .mul(locPetrol)
-        .mul(locRecipe.in[waterId])
-        .div(locRecipe.out[OilProduct.Petrol])
-        .div(recipeFactors[locRecipe.id].prod),
+        .mul(locRecipe.in[ItemId.Water])
+        .div(locRecipe.out[ItemId.PetroleumGas])
+        .div(factors[locRecipe.id].prod),
       steps,
-      recipeSettings,
-      recipeFactors,
+      settings,
+      factors,
       null, // Fluid, belt is irrelevant
       oilRecipeId,
       data
     );
 
     // Scale out factories based on speed factors
-    heavyStep.factories = heavyStep.factories.div(
-      recipeFactors[oilRecipe.id].speed
-    );
-    lightStep.factories = lightStep.factories.div(
-      recipeFactors[hocRecipe.id].speed
-    );
+    heavyStep.factories = heavyStep.factories.div(factors[oilRecipe.id].speed);
+    lightStep.factories = lightStep.factories.div(factors[hocRecipe.id].speed);
     petrolStep.factories = petrolStep.factories.div(
-      recipeFactors[locRecipe.id].speed
+      factors[locRecipe.id].speed
     );
     if (fuelStep) {
       fuelStep.factories = fuelStep.factories.div(
-        recipeFactors[fuelStep.settings.recipeId].speed
+        factors[fuelStep.settings.recipeId].speed
       );
     }
     if (ptfStep) {
       ptfStep.factories = ptfStep.factories.div(
-        recipeFactors[ptfStep.settings.recipeId].speed
+        factors[ptfStep.settings.recipeId].speed
       );
     }
 

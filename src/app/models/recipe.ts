@@ -1,4 +1,9 @@
+import { ItemId } from './item';
+
 export enum RecipeId {
+  AdvancedOilProcessing = 'advanced-oil-processing',
+  BasicOilProcessing = 'basic-oil-processing',
+  CoalLiquefaction = 'coal-liquefaction',
   HeavyOilCracking = 'heavy-oil-cracking',
   LightOilCracking = 'light-oil-cracking',
   Satellite = 'satellite',
@@ -8,9 +13,9 @@ export enum RecipeId {
 }
 
 export interface Recipe {
-  id: string;
+  id: RecipeId;
   time: number;
   in?: { [key: string]: number };
   out?: { [key: string]: number };
-  producers?: string[];
+  producers?: ItemId[];
 }
