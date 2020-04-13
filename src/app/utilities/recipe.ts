@@ -1,6 +1,14 @@
 import Fraction from 'fraction.js';
 
-import { Recipe, Item, Entities, CategoryId, RecipeId, ItemId } from '~/models';
+import {
+  Recipe,
+  Item,
+  Entities,
+  CategoryId,
+  RecipeId,
+  ItemId,
+  Factors,
+} from '~/models';
 
 const categoryAllowProdModule = [CategoryId.Intermediate, CategoryId.Research];
 
@@ -85,7 +93,7 @@ export class RecipeUtility {
     beaconType: ItemId,
     beaconCount: number,
     itemEntities: Entities<Item>
-  ): { speed: Fraction; prod: Fraction } {
+  ): Factors {
     let speed = new Fraction(1);
     let prod = new Fraction(1);
     if (modules && modules.length) {

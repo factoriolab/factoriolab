@@ -4,6 +4,7 @@ export * from './constants';
 export * from './dataset';
 export * from './display-rate';
 export * from './entities';
+export * from './factors';
 export * from './factory';
 export * from './id';
 export * from './item';

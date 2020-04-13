@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import Fraction from 'fraction.js';
 
-import { RecipeSettings, Entities, ItemId, RecipeId } from '~/models';
+import { RecipeSettings, Entities, ItemId, RecipeId, Factors } from '~/models';
 import { RecipeUtility } from '~/utilities/recipe';
 import { getDataset } from '../dataset';
 import * as Settings from '../settings';
@@ -77,7 +77,7 @@ export const getRecipeFactors = createSelector(
   getRecipeSettings,
   getDataset,
   (recipeSettings, data) => {
-    const values: Entities<{ speed: Fraction; prod: Fraction }> = {};
+    const values: Entities<Factors> = {};
     for (const recipeId of Object.keys(recipeSettings)) {
       const settings = recipeSettings[recipeId];
       values[recipeId] = RecipeUtility.recipeFactors(

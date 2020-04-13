@@ -1,6 +1,13 @@
 import Fraction from 'fraction.js';
 
-import { Step, DisplayRate, Entities, ItemId, RecipeId } from '~/models';
+import {
+  Step,
+  DisplayRate,
+  Entities,
+  ItemId,
+  RecipeId,
+  Factors,
+} from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { RecipeState } from '~/store/recipe';
 
@@ -10,7 +17,7 @@ export class RateUtility {
     rate: Fraction,
     steps: Step[],
     settings: RecipeState,
-    factors: Entities<{ speed: Fraction; prod: Fraction }>,
+    factors: Entities<Factors>,
     belt: ItemId,
     oilRecipe: RecipeId,
     data: DatasetState
@@ -74,7 +81,7 @@ export class RateUtility {
 
   public static calculateFactories(
     steps: Step[],
-    factors: Entities<{ speed: Fraction; prod: Fraction }>,
+    factors: Entities<Factors>,
     data: DatasetState
   ) {
     for (const step of steps) {
