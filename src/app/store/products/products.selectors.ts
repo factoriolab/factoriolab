@@ -2,7 +2,7 @@ import { compose, createSelector } from '@ngrx/store';
 import Fraction from 'fraction.js';
 
 import { Step, RateType, NEntities, WAGON_STACKS, WAGON_FLUID } from '~/models';
-import { OilUtility, RateUtility } from '~/utilities';
+import { OilUtility, RateUtility, UraniumUtility } from '~/utilities';
 import * as Dataset from '../dataset';
 import * as Recipe from '../recipe';
 import * as Settings from '../settings';
@@ -162,8 +162,18 @@ export const getNormalizedSteps = createSelector(
   }
 );
 
-export const getNormalizedStepsWithOil = createSelector(
+export const getNormalizedStepsWithUranium = createSelector(
   getNormalizedSteps,
+  Recipe.getRecipeSettings,
+  Recipe.getRecipeFactors,
+  Settings.getBelt,
+  Dataset.getDataset,
+  (steps, settings, factors, belt, data) =>
+    UraniumUtility.addUraniumSteps(steps, settings, factors, belt, data)
+);
+
+export const getNormalizedStepsWithOil = createSelector(
+  getNormalizedStepsWithUranium,
   Recipe.getRecipeSettings,
   Recipe.getRecipeFactors,
   Settings.getBelt,

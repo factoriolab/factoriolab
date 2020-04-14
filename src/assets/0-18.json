@@ -2988,7 +2988,7 @@
       "producers": ["centrifuge"]
     },
     {
-      "id": "kovarex-enrichment-proces",
+      "id": "kovarex-enrichment-process",
       "time": 60,
       "in": {
         "uranium-235": 40,
@@ -2997,7 +2997,8 @@
       "out": {
         "uranium-235": 41,
         "uranium-238": 2
-      }
+      },
+      "producers": ["centrifuge"]
     },
     {
       "id": "worker-robot-speed",

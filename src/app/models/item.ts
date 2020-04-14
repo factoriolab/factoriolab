@@ -19,6 +19,9 @@ export enum ItemId {
   SolidFuel = 'solid-fuel',
   SpeedModule3 = 'speed-module-3',
   TransportBelt = 'transport-belt',
+  Uranium235 = 'uranium-235',
+  Uranium238 = 'uranium-238',
+  UraniumOre = 'uranium-ore',
   Water = 'water',
   WoodenChest = 'wooden-chest',
 }
