@@ -2,7 +2,7 @@ import { compose, createSelector } from '@ngrx/store';
 import Fraction from 'fraction.js';
 
 import { Step, RateType, NEntities, WAGON_STACKS, WAGON_FLUID } from '~/models';
-import { RateUtility } from '~/utilities/rate';
+import { OilUtility, RateUtility } from '~/utilities';
 import * as Dataset from '../dataset';
 import * as Recipe from '../recipe';
 import * as Settings from '../settings';
@@ -143,9 +143,8 @@ export const getNormalizedSteps = createSelector(
   Recipe.getRecipeFactors,
   Settings.getBelt,
   Settings.getOilRecipe,
-  Dataset.getLaneSpeed,
   Dataset.getDataset,
-  (products, rates, settings, factors, belt, oilRecipe, laneSpeed, data) => {
+  (products, rates, settings, factors, belt, oilRecipe, data) => {
     const steps: Step[] = [];
     for (const product of products) {
       RateUtility.addStepsFor(
@@ -163,21 +162,15 @@ export const getNormalizedSteps = createSelector(
   }
 );
 
-export const getNormalizedStepsWithFactories = createSelector(
-  getNormalizedSteps,
-  Recipe.getRecipeFactors,
-  Dataset.getDataset,
-  (steps, factors, data) => RateUtility.calculateFactories(steps, factors, data)
-);
-
 export const getNormalizedStepsWithOil = createSelector(
-  getNormalizedStepsWithFactories,
+  getNormalizedSteps,
   Recipe.getRecipeSettings,
   Recipe.getRecipeFactors,
+  Settings.getBelt,
   Settings.getOilRecipe,
   Dataset.getDataset,
-  (steps, settings, factors, oilRecipe, data) =>
-    RateUtility.addOilSteps(oilRecipe, steps, settings, factors, data)
+  (steps, settings, factors, belt, oilRecipe, data) =>
+    OilUtility.addOilSteps(oilRecipe, steps, settings, factors, belt, data)
 );
 
 export const getNormalizedStepsWithLanes = createSelector(

@@ -129,7 +129,7 @@ export class OilUtility {
         ItemId.PetroleumGas,
         ItemId.SolidFuel,
         oil.petrol,
-        ltf.output,
+        ltf.max,
         factors,
         data
       );
@@ -247,7 +247,6 @@ export class OilUtility {
 
   /** Try calculating number of refineries and heavy-to-light plants required for full light-to-fuel conversion, excess petrol */
   public static tryCalculateLightToFuel(step: OilSteps, matrix: OilMatrix) {
-    const savedStep = { ...step };
     if (step.fuel && step.fuel.items.n > 0) {
       let required = step.fuel.items
         .div(matrix.ltf.output)
@@ -256,33 +255,31 @@ export class OilUtility {
         // Already producing enough light oil, subtract from surplus
         step.light.surplus = step.light.surplus.sub(required);
         step.fuel.factories = step.fuel.items.div(matrix.ltf.output);
-        return step;
       } else {
         // Subtract any surplus from what is required
         required = required.sub(step.light.surplus);
-        step.light.surplus = new Fraction(0);
         // Refineries required for light
         const refineries = required.div(matrix.hoc.max);
         // Heavy-to-light plants required for light
         const hocPlants = refineries.mul(matrix.hoc.factories);
 
-        step.heavy.factories = step.heavy.factories.add(refineries);
-        step.light.factories = step.light.factories.add(hocPlants);
-        step.fuel.factories = step.fuel.items.div(matrix.ltf.output);
-
         // Surplus petrol
-        step.petrol.surplus = step.petrol.surplus.add(
+        const newPetrolSurplus = step.petrol.surplus.add(
           refineries.mul(matrix.oil.petrol)
         );
 
-        if (step.petrol.surplus < step.petrol.items) {
+        if (newPetrolSurplus < step.petrol.items) {
           // Still need more petrol. Finalize this step and continue...
-          return step;
+          step.light.surplus = new Fraction(0);
+          step.heavy.factories = step.heavy.factories.add(refineries);
+          step.light.factories = step.light.factories.add(hocPlants);
+          step.fuel.factories = step.fuel.items.div(matrix.ltf.output);
+          step.petrol.surplus = newPetrolSurplus;
         }
       }
     }
 
-    return savedStep;
+    return step;
   }
 
   /** Calculate number of refineries, heavy-to-light plants, and light-to-petrol plants required for petrol */
@@ -425,12 +422,92 @@ export class OilUtility {
     return step;
   }
 
+  /** Calculate inputs (crude, water, etc) */
+  public static calculateInputs(
+    step: OilSteps,
+    matrix: OilMatrix,
+    steps: Step[],
+    settings: RecipeState,
+    factors: Entities<Factors>,
+    belt: ItemId,
+    data: DatasetState
+  ) {
+    // Calculate refinery inputs
+    for (const ingredient of Object.keys(matrix.oil.recipe.in)) {
+      if (ingredient !== ItemId.HeavyOil) {
+        RateUtility.addStepsFor(
+          ingredient as ItemId,
+          step.heavy.items
+            .mul(matrix.oil.recipe.in[ingredient])
+            .div(matrix.oil.recipe.out[ItemId.HeavyOil])
+            .div(factors[matrix.oil.recipe.id].prod),
+          steps,
+          settings,
+          factors,
+          belt,
+          matrix.oil.recipe.id,
+          data
+        );
+      }
+    }
+
+    // Calculate cracking inputs
+    const hocWater = step.light.factories.mul(
+      matrix.hoc.recipe.in[ItemId.Water]
+    );
+    const locWater = step.petrol.factories.mul(
+      matrix.loc.recipe.in[ItemId.Water]
+    );
+    RateUtility.addStepsFor(
+      ItemId.Water,
+      hocWater.add(locWater),
+      steps,
+      settings,
+      factors,
+      belt,
+      matrix.oil.recipe.id,
+      data
+    );
+
+    return step;
+  }
+
+  /** Scale out factories based on speed factors */
+  public static calculateFactories(
+    step: OilSteps,
+    matrix: OilMatrix,
+    factors: Entities<Factors>
+  ) {
+    step.heavy.factories = step.heavy.factories
+      .mul(matrix.oil.recipe.time)
+      .div(factors[matrix.oil.recipe.id].speed);
+    step.light.factories = step.light.factories
+      .mul(matrix.hoc.recipe.time)
+      .div(factors[matrix.hoc.recipe.id].speed);
+    step.petrol.factories = step.petrol.factories
+      .mul(matrix.loc.recipe.time)
+      .div(factors[matrix.loc.recipe.id].speed);
+    if (step.fuel) {
+      step.fuel.factories = step.fuel.factories
+        .mul(matrix.ltf.recipe.time)
+        .div(factors[step.fuel.settings.recipeId].speed);
+    }
+    if (step.fuelPetrol) {
+      step.fuelPetrol.factories = step.fuelPetrol.factories
+        .mul(matrix.ptf.recipe.time)
+        .div(factors[step.fuelPetrol.settings.recipeId].speed);
+    }
+
+    return step;
+  }
+
   /** Calculate and add steps for required oil processing */
   public static addOilSteps(
     oilRecipeId: RecipeId,
     steps: Step[],
     settings: RecipeState,
     factors: Entities<Factors>,
+    belt: ItemId,
     data: DatasetState
   ) {
     if (
@@ -477,76 +554,16 @@ export class OilUtility {
     }
 
     step = this.calculateItems(step, matrix);
-
-    // Calculate refinery inputs
-    for (const ingredient of Object.keys(matrix.oil.recipe.in)) {
-      if (ingredient !== ItemId.HeavyOil) {
-        RateUtility.addStepsFor(
-          ingredient as ItemId,
-          step.heavy.items
-            .mul(matrix.oil.recipe.in[ingredient])
-            .div(matrix.oil.recipe.out[ItemId.HeavyOil])
-            .div(factors[matrix.oil.recipe.id].prod),
-          steps,
-          settings,
-          factors,
-          null, // Fluid, belt is irrelevant
-          oilRecipeId,
-          data
-        );
-      }
-    }
-    // Calculate loc inputs
-    RateUtility.addStepsFor(
-      ItemId.Water,
-      step.light.factories
-        .mul(matrix.hoc.output)
-        .mul(matrix.hoc.recipe.in[ItemId.Water])
-        .div(matrix.hoc.recipe.out[ItemId.LightOil])
-        .div(factors[matrix.hoc.recipe.id].prod),
+    step = this.calculateInputs(
+      step,
+      matrix,
       steps,
       settings,
       factors,
-      null, // Fluid, belt is irrelevant
-      oilRecipeId,
+      belt,
       data
     );
-    // Calculate poc inputs
-    RateUtility.addStepsFor(
-      ItemId.Water,
-      step.petrol.factories
-        .mul(matrix.loc.output)
-        .mul(matrix.loc.recipe.in[ItemId.Water])
-        .div(matrix.loc.recipe.out[ItemId.PetroleumGas])
-        .div(factors[matrix.loc.recipe.id].prod),
-      steps,
-      settings,
-      factors,
-      null, // Fluid, belt is irrelevant
-      oilRecipeId,
-      data
-    );
-
-    // Scale out factories based on speed factors
-    step.heavy.factories = step.heavy.factories
-      .mul(matrix.oil.recipe.time)
-      .div(factors[matrix.oil.recipe.id].speed);
-    step.light.factories = step.light.factories
-      .mul(matrix.hoc.recipe.time)
-      .div(factors[matrix.hoc.recipe.id].speed);
-    step.petrol.factories = step.petrol.factories
-      .mul(matrix.loc.recipe.time)
-      .div(factors[matrix.loc.recipe.id].speed);
-    if (step.fuel) {
-      step.fuel.factories = step.fuel.factories
-        .mul(matrix.ltf.recipe.time)
-        .div(factors[step.fuel.settings.recipeId].speed);
-    }
-    if (step.fuelPetrol) {
-      step.fuelPetrol.factories = step.fuelPetrol.factories
-        .mul(matrix.ptf.recipe.time)
-        .div(factors[step.fuelPetrol.settings.recipeId].speed);
-    }
+    step = this.calculateFactories(step, matrix, factors);
 
     return steps;
   }

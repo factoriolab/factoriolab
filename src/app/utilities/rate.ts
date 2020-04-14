@@ -56,13 +56,16 @@ export class RateUtility {
         step.settings.recipeId = recipe.id;
       }
 
+      const f = factors[recipe.id];
+
+      // Calculate number of outputs from recipe
+      const out = new Fraction(recipe.out ? recipe.out[id] : 1).mul(f.prod);
+
+      // Calculate factories
+      step.factories = step.items.mul(recipe.time).div(out).div(f.speed);
+
       // Recurse adding steps for ingredients
       if (recipe.in) {
-        // Calculate number of outputs from recipe
-        const out = new Fraction(recipe.out ? recipe.out[id] : 1).mul(
-          factors[recipe.id].prod
-        );
-
         for (const ingredient of Object.keys(recipe.in)) {
           RateUtility.addStepsFor(
             ingredient as ItemId,
@@ -77,29 +80,6 @@ export class RateUtility {
         }
       }
     }
-  }
-
-  public static calculateFactories(
-    steps: Step[],
-    factors: Entities<Factors>,
-    data: DatasetState
-  ) {
-    for (const step of steps) {
-      const recipeId = step.settings.recipeId
-        ? step.settings.recipeId
-        : step.itemId;
-      const recipe = data.recipeEntities[recipeId];
-      if (recipe) {
-        const o = new Fraction(recipe.out ? recipe.out[step.itemId] : 1);
-        const f = factors[recipe.id];
-        step.factories = step.items
-          .mul(recipe.time)
-          .div(o)
-          .div(f.speed)
-          .div(f.prod);
-      }
-    }
-    return steps;
   }
 
   public static calculateLanes(steps: Step[], laneSpeed: Entities<Fraction>) {
