@@ -18,56 +18,58 @@ export const getRecipeSettings = createSelector(
   Settings.settingsState,
   (state, data, settings) => {
     const value: Entities<RecipeSettings> = {};
-    for (const recipe of data.recipes) {
-      const recipeSettings: RecipeSettings = state[recipe.id]
-        ? { ...state[recipe.id] }
-        : { ignore: false };
+    if (data?.recipes?.length) {
+      for (const recipe of data.recipes) {
+        const recipeSettings: RecipeSettings = state[recipe.id]
+          ? { ...state[recipe.id] }
+          : { ignore: false };
 
-      // Lane (Belt/Pipe)
-      if (!recipeSettings.lane) {
-        let item = data.itemEntities[recipe.id];
-        if (!item) {
-          item = data.itemEntities[Object.keys(recipe.out)[0]];
+        // Lane (Belt/Pipe)
+        if (!recipeSettings.lane) {
+          let item = data.itemEntities[recipe.id];
+          if (!item) {
+            item = data.itemEntities[Object.keys(recipe.out)[0]];
+          }
+          recipeSettings.lane = item.stack ? settings.belt : ItemId.Pipe;
         }
-        recipeSettings.lane = item.stack ? settings.belt : ItemId.Pipe;
-      }
 
-      // Factory
-      if (!recipeSettings.factory) {
-        recipeSettings.factory = RecipeUtility.defaultFactory(
-          recipe,
-          settings.assembler,
-          settings.furnace,
-          settings.drill
-        );
-      }
-
-      const factoryItem = data.itemEntities[recipeSettings.factory];
-      if (
-        recipe.id !== RecipeId.SpaceSciencePack &&
-        factoryItem?.factory?.modules
-      ) {
-        // Modules
-        if (!recipeSettings.modules) {
-          recipeSettings.modules = RecipeUtility.defaultModules(
+        // Factory
+        if (!recipeSettings.factory) {
+          recipeSettings.factory = RecipeUtility.defaultFactory(
             recipe,
-            settings.prodModule,
-            settings.otherModule,
-            factoryItem.factory.modules,
-            data.itemEntities
+            settings.assembler,
+            settings.furnace,
+            settings.drill
           );
         }
 
-        // Beacons
-        if (!recipeSettings.beaconType) {
-          recipeSettings.beaconType = settings.beaconType;
-        }
-        if (recipeSettings.beaconCount == null) {
-          recipeSettings.beaconCount = settings.beaconCount;
-        }
-      }
+        const factoryItem = data.itemEntities[recipeSettings.factory];
+        if (
+          recipe.id !== RecipeId.SpaceSciencePack &&
+          factoryItem?.factory?.modules
+        ) {
+          // Modules
+          if (!recipeSettings.modules) {
+            recipeSettings.modules = RecipeUtility.defaultModules(
+              recipe,
+              settings.prodModule,
+              settings.otherModule,
+              factoryItem.factory.modules,
+              data.itemEntities
+            );
+          }
 
-      value[recipe.id] = recipeSettings;
+          // Beacons
+          if (!recipeSettings.beaconType) {
+            recipeSettings.beaconType = settings.beaconType;
+          }
+          if (recipeSettings.beaconCount == null) {
+            recipeSettings.beaconCount = settings.beaconCount;
+          }
+        }
+
+        value[recipe.id] = recipeSettings;
+      }
     }
     return value;
   }

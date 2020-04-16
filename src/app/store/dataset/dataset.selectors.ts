@@ -14,11 +14,13 @@ export const getLaneSpeed = createSelector(
   Settings.getFlowRate,
   (data, flowRate) => {
     const value: Entities<Fraction> = {};
-    for (const id of data.laneIds) {
-      if (id === ItemId.Pipe) {
-        value[id] = new Fraction(flowRate);
-      } else {
-        value[id] = new Fraction(data.itemEntities[id].belt.speed);
+    if (data.laneIds) {
+      for (const id of data.laneIds) {
+        if (id === ItemId.Pipe) {
+          value[id] = new Fraction(flowRate);
+        } else {
+          value[id] = new Fraction(data.itemEntities[id].belt.speed);
+        }
       }
     }
     return value;

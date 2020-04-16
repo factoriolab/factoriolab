@@ -55,9 +55,6 @@ export function settingsReducer(
     case SettingsActionType.SET_OIL_RECIPE: {
       return { ...state, ...{ oilRecipe: action.payload } };
     }
-    case SettingsActionType.SET_USE_CRACKING: {
-      return { ...state, ...{ useCracking: action.payload } };
-    }
     default:
       return state;
   }

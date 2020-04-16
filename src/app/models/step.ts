@@ -9,5 +9,5 @@ export interface Step {
   surplus?: Fraction;
   lanes?: Fraction;
   factories?: Fraction;
-  settings?: RecipeSettings;
+  settings: RecipeSettings;
 }

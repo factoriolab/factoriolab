@@ -42,15 +42,13 @@ export function datasetReducer(
         const items = action.payload.items
           .filter((p) => p.category === category.id)
           .sort((a, b) => a.row - b.row);
-        if (items.length) {
-          let index = items[0].row;
-          for (const item of items) {
-            if (item.row > index) {
-              rows.push([]);
-              index = item.row;
-            }
-            rows[rows.length - 1].push(item.id);
+        let index = items[0].row;
+        for (const item of items) {
+          if (item.row > index) {
+            rows.push([]);
+            index = item.row;
           }
+          rows[rows.length - 1].push(item.id);
         }
         categoryItemRows[category.id] = rows;
       }

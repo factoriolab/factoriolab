@@ -169,7 +169,7 @@ export const getNormalizedStepsWithUranium = createSelector(
   Settings.getBelt,
   Dataset.getDataset,
   (steps, settings, factors, belt, data) =>
-    UraniumUtility.addUraniumSteps(steps, settings, factors, belt, data)
+    UraniumUtility.addSteps(steps, settings, factors, belt, data)
 );
 
 export const getNormalizedStepsWithOil = createSelector(
@@ -180,7 +180,7 @@ export const getNormalizedStepsWithOil = createSelector(
   Settings.getOilRecipe,
   Dataset.getDataset,
   (steps, settings, factors, belt, oilRecipe, data) =>
-    OilUtility.addOilSteps(oilRecipe, steps, settings, factors, belt, data)
+    OilUtility.addSteps(oilRecipe, steps, settings, factors, belt, data)
 );
 
 export const getNormalizedStepsWithLanes = createSelector(

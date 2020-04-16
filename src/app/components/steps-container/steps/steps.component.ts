@@ -14,14 +14,17 @@ export class StepsComponent {
 
   constructor() {}
 
-  beaconCountChange(id: RecipeId, event: any) {
+  beaconCountChange(step: Step, event: any) {
     if (event.target.value) {
       const value = parseInt(event.target.value as string, 10);
+      const recipeId: RecipeId = step.settings.recipeId
+        ? step.settings.recipeId
+        : ((step.itemId as string) as RecipeId);
       if (
-        this.steps.find((s) => (s.itemId as string) === id).settings
+        this.steps.find((s) => s.itemId === step.itemId).settings
           .beaconCount !== value
       ) {
-        this.editBeaconCount.emit([id, value]);
+        this.editBeaconCount.emit([recipeId, value]);
       }
     }
   }

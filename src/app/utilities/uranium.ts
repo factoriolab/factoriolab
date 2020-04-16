@@ -75,7 +75,7 @@ export class UraniumUtility {
   }
 
   /** Find and calculate matrix for uranium recipes */
-  public static getUraniumMatrix(
+  public static getMatrix(
     factors: Entities<Factors>,
     data: DatasetState
   ): UraniumMatrix {
@@ -86,7 +86,7 @@ export class UraniumUtility {
   }
 
   /** Find or create a specific uranium step */
-  public static getUraniumStep(
+  public static getStep(
     itemId: ItemId,
     recipeId: RecipeId,
     steps: Step[],
@@ -98,30 +98,32 @@ export class UraniumUtility {
         itemId,
         items: new Fraction(0),
         factories: new Fraction(0),
+        settings: settings[recipeId],
       };
 
       steps.push(step);
+    } else {
+      step.settings = settings[recipeId];
     }
     step.surplus = new Fraction(0);
-    step.settings = settings[recipeId];
     step.settings.recipeId = recipeId;
 
     return step;
   }
 
   /** Find or create uranium steps */
-  public static getUraniumSteps(
+  public static getSteps(
     steps: Step[],
     matrix: UraniumMatrix,
     settings: RecipeState
   ): UraniumSteps {
-    const u238 = this.getUraniumStep(
+    const u238 = this.getStep(
       ItemId.Uranium238,
       matrix.prod.recipe.id,
       steps,
       settings
     );
-    const u235 = this.getUraniumStep(
+    const u235 = this.getStep(
       ItemId.Uranium235,
       matrix.conv.recipe.id,
       steps,
@@ -237,7 +239,7 @@ export class UraniumUtility {
   }
 
   /** Calculate and add steps for required uranium processing */
-  public static addUraniumSteps(
+  public static addSteps(
     steps: Step[],
     settings: RecipeState,
     factors: Entities<Factors>,
@@ -249,8 +251,8 @@ export class UraniumUtility {
       return steps;
     }
 
-    const matrix = this.getUraniumMatrix(factors, data);
-    let step = this.getUraniumSteps(steps, matrix, settings);
+    const matrix = this.getMatrix(factors, data);
+    let step = this.getSteps(steps, matrix, settings);
     step = this.calculateUranium238(step, matrix);
     step = this.calculateUranium235(step, matrix);
     step = this.calculateItems(step, matrix);

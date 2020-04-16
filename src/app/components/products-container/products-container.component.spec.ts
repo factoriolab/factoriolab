@@ -4,7 +4,7 @@ import { StoreModule, Store } from '@ngrx/store';
 import Fraction from 'fraction.js';
 
 import * as mocks from 'src/mocks';
-import { RateType } from '~/models';
+import { RateType, ItemId, CategoryId } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as products from '~/store/products';
 import { IconComponent } from '../icon/icon.component';
@@ -22,8 +22,8 @@ describe('ProductsContainerComponent', () => {
       declarations: [
         IconComponent,
         ProductsComponent,
-        ProductsContainerComponent
-      ]
+        ProductsContainerComponent,
+      ],
     })
       .compileComponents()
       .then(() => {
@@ -68,7 +68,7 @@ describe('ProductsContainerComponent', () => {
 
   it('should commit edit on a product', () => {
     spyOn(store, 'dispatch');
-    const data: [number, string] = [mocks.Product1.id, mocks.Item2.id];
+    const data: [number, ItemId] = [mocks.Product1.id, mocks.Item2.id];
     component.child.commitEditProduct.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new products.CommitEditProductAction(data)
@@ -95,7 +95,7 @@ describe('ProductsContainerComponent', () => {
 
   it('should select a new tab', () => {
     spyOn(store, 'dispatch');
-    const tab = 'test';
+    const tab = CategoryId.Logistics;
     component.child.selectTab.emit(tab);
     expect(store.dispatch).toHaveBeenCalledWith(
       new products.SelectItemCategoryAction(tab)

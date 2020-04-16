@@ -91,7 +91,7 @@ export class OilUtility {
   }
 
   /** Find and calculate matrix for oil recipes */
-  public static getOilMatrix(
+  public static getMatrix(
     oilRecipeId: RecipeId,
     includeFuel: boolean,
     factors: Entities<Factors>,
@@ -143,7 +143,7 @@ export class OilUtility {
   }
 
   /** Find or create a specific oil step */
-  public static getOilStep(
+  public static getStep(
     itemId: ItemId,
     recipeId: RecipeId,
     steps: Step[],
@@ -155,43 +155,45 @@ export class OilUtility {
         itemId,
         items: new Fraction(0),
         factories: new Fraction(0),
+        settings: settings[recipeId],
       };
 
       steps.push(step);
+    } else {
+      step.settings = settings[recipeId];
     }
     step.surplus = new Fraction(0);
-    step.settings = settings[recipeId];
     step.settings.recipeId = recipeId;
 
     return step;
   }
 
   /** Find or create oil steps */
-  public static getOilSteps(
+  public static getSteps(
     steps: Step[],
     matrix: OilMatrix,
     settings: RecipeState
   ): OilSteps {
-    const heavy = this.getOilStep(
+    const heavy = this.getStep(
       ItemId.HeavyOil,
       matrix.oil.recipe.id,
       steps,
       settings
     );
-    const light = this.getOilStep(
+    const light = this.getStep(
       ItemId.LightOil,
       matrix.hoc.recipe.id,
       steps,
       settings
     );
-    const petrol = this.getOilStep(
+    const petrol = this.getStep(
       ItemId.PetroleumGas,
       matrix.loc.recipe.id,
       steps,
       settings
     );
     if (matrix.ltf) {
-      const fuel = this.getOilStep(
+      const fuel = this.getStep(
         ItemId.SolidFuel,
         matrix.ltf.recipe.id,
         steps,
@@ -248,7 +250,10 @@ export class OilUtility {
   }
 
   /** Try calculating number of refineries and heavy-to-light plants required for full light-to-fuel conversion, excess petrol */
-  public static tryCalculateLightToFuel(step: OilSteps, matrix: OilMatrix): OilSteps {
+  public static tryCalculateLightToFuel(
+    step: OilSteps,
+    matrix: OilMatrix
+  ): OilSteps {
     if (step.fuel && step.fuel.items.n > 0) {
       let required = step.fuel.items
         .div(matrix.ltf.output)
@@ -285,7 +290,10 @@ export class OilUtility {
   }
 
   /** Calculate number of refineries, heavy-to-light plants, and light-to-petrol plants required for petrol */
-  public static calculatePetroleumGas(step: OilSteps, matrix: OilMatrix): OilSteps {
+  public static calculatePetroleumGas(
+    step: OilSteps,
+    matrix: OilMatrix
+  ): OilSteps {
     if (step.petrol.items.n > 0) {
       if (step.petrol.surplus >= step.petrol.items) {
         // Already producing enough petroleum, subtract from surplus
@@ -310,7 +318,10 @@ export class OilUtility {
   }
 
   /** Calculate number of refineries and heavy-to-light plants required for petrol, excess light */
-  public static calculateLightAndPetrol(step: OilSteps, matrix: OilMatrix): OilSteps {
+  public static calculateLightAndPetrol(
+    step: OilSteps,
+    matrix: OilMatrix
+  ): OilSteps {
     if (step.petrol.items.n > 0) {
       if (step.petrol.surplus >= step.petrol.items) {
         // Already producing enough petroleum, subtract from surplus
@@ -336,7 +347,10 @@ export class OilUtility {
   }
 
   /** Calculate conversion of surplus light oil to fuel */
-  public static calculateSurplusLightToFuel(step: OilSteps, matrix: OilMatrix): OilSteps {
+  public static calculateSurplusLightToFuel(
+    step: OilSteps,
+    matrix: OilMatrix
+  ): OilSteps {
     step.fuelRequired = step.fuel.items;
     const lightRequired = step.fuelRequired
       .div(matrix.ltf.output)
@@ -501,7 +515,7 @@ export class OilUtility {
   }
 
   /** Calculate and add steps for required oil processing */
-  public static addOilSteps(
+  public static addSteps(
     oilRecipeId: RecipeId,
     steps: Step[],
     settings: RecipeState,
@@ -519,8 +533,8 @@ export class OilUtility {
     const includeFuel = steps.some(
       (s) => s.itemId === ItemId.SolidFuel && s.items.n > 0
     );
-    const matrix = this.getOilMatrix(oilRecipeId, includeFuel, factors, data);
-    let step = this.getOilSteps(steps, matrix, settings);
+    const matrix = this.getMatrix(oilRecipeId, includeFuel, factors, data);
+    let step = this.getSteps(steps, matrix, settings);
     step = this.calculateHeavyOil(step, matrix);
     step = this.calculateLightOil(step, matrix);
     step = this.tryCalculateLightToFuel(step, matrix);

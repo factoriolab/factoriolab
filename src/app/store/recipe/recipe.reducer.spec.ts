@@ -1,18 +1,17 @@
+import * as mocks from 'src/mocks';
 import * as actions from './recipe.actions';
 import { recipeReducer, initialRecipeState } from './recipe.reducer';
 
 describe('Recipe Reducer', () => {
-  const id = 'test';
-  const stringValue = 'value';
   const numberValue = 2;
 
   describe('IGNORE_RECIPE', () => {
     it('should ignore a recipe', () => {
       const result = recipeReducer(
         initialRecipeState,
-        new actions.IgnoreRecipeAction(id)
+        new actions.IgnoreRecipeAction(mocks.Recipe1.id)
       );
-      expect(result[id].ignore).toEqual(true);
+      expect(result[mocks.Recipe1.id].ignore).toEqual(true);
     });
   });
 
@@ -20,9 +19,9 @@ describe('Recipe Reducer', () => {
     it('should edit the beacon type', () => {
       const result = recipeReducer(
         initialRecipeState,
-        new actions.EditBeaconTypeAction([id, stringValue])
+        new actions.EditBeaconTypeAction([mocks.Recipe1.id, mocks.Item1.id])
       );
-      expect(result[id].beaconType).toEqual(stringValue);
+      expect(result[mocks.Recipe1.id].beaconType).toEqual(mocks.Item1.id);
     });
   });
 
@@ -30,14 +29,14 @@ describe('Recipe Reducer', () => {
     it('should edit the beacon count', () => {
       const result = recipeReducer(
         initialRecipeState,
-        new actions.EditBeaconCountAction([id, numberValue])
+        new actions.EditBeaconCountAction([mocks.Recipe1.id, numberValue])
       );
-      expect(result[id].beaconCount).toEqual(numberValue);
+      expect(result[mocks.Recipe1.id].beaconCount).toEqual(numberValue);
     });
   });
 
   it('should return default state', () => {
-    expect(recipeReducer(initialRecipeState, { type: 'Test' } as any)).toBe(
+    expect(recipeReducer(undefined, { type: 'Test' } as any)).toBe(
       initialRecipeState
     );
   });
