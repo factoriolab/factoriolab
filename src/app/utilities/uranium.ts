@@ -186,6 +186,13 @@ export class UraniumUtility {
     step.u238.items = step.u238.factories.mul(matrix.prod.u238);
     step.u235.items = step.u238.factories.mul(matrix.prod.u235);
     // 2) From enrichment
+    /**
+     * Note: It seems as though the Kirk McDonald calculator calculates
+     * the number of items by multiplying recipe output by productivity,
+     * but this is incorrect. Productivity only affects the difference
+     * between input and output, so total items is actually:
+     * (difference * productivity) + input
+     */
     step.u235.items = step.u235.items.add(
       step.u235.factories.mul(
         matrix.conv.output.add(matrix.conv.recipe.in[ItemId.Uranium235])
