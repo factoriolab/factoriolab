@@ -1,27 +1,25 @@
 # Factorio Lab
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.7.
+![build](https://github.com/dcbroad3/factorio-lab/workflows/build/badge.svg)
 
-## Development server
+This project is intended to build on the features of the Kirk McDonald [Factorio Calculator](https://kirkmcdonald.github.io) ([GitHub](https://github.com/KirkMcDonald/kirkmcdonald.github.io)). It is built from the ground up using Angular, Redux, and Typescript.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Running locally
 
-## Code scaffolding
+To run this project locally:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+1. Install [NodeJS](https://nodejs.org/en/)
+1. Install Angular CLI, using `npm install -g @angular/cli`
+1. Build and serve the project, using `npm start`
+1. Open a browser at `http://localhost:4200`
 
-## Build
+The app will reload automatically if source code is changed.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## Running tests
 
-## Running unit tests
+To run the automated unit tests:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+1. Install NodeJs and Angular CLI as described above
+2. Build and run the tests, using `npm test`
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Currently, this project does not include any end-to-end tests, though the Angular CLI automatically includes a skeleton in the [e2e](./e2e) folder.
