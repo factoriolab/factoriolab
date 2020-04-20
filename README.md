@@ -1,5 +1,7 @@
 # Factorio Lab
 
+![build](https://github.com/dcbroad3/factorio-lab/workflows/build/badge.svg)
+
 This project is intended to build on the features of the Kirk McDonald [Factorio Calculator](https://kirkmcdonald.github.io) ([GitHub](https://github.com/KirkMcDonald/kirkmcdonald.github.io)). It is built from the ground up using Angular, Redux, and Typescript.
 
 ## Running locally
