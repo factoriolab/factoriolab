@@ -85,7 +85,7 @@ export const Step2: Step = {
   settings: Settings2,
 };
 export const Steps = [Step1, Step2];
-export const BeltSpeed: Entities<Fraction> = {
+export const LaneSpeed: Entities<Fraction> = {
   [ItemId.TransportBelt]: new Fraction(15),
 };
 export const Factors1: Factors = {
@@ -94,7 +94,7 @@ export const Factors1: Factors = {
 };
 export const RecipeFactors: Entities<Factors> = {};
 export const RecipeSettingsEntities: Entities<RecipeSettings> = {};
-for (const item of Data.items) {
-  RecipeSettingsEntities[item.id] = Settings1;
-  RecipeFactors[item.id] = Factors1;
+for (const recipe of Data.recipes) {
+  RecipeSettingsEntities[recipe.id] = { ...Settings1 };
+  RecipeFactors[recipe.id] = Factors1;
 }
