@@ -1,5 +1,4 @@
 import { createSelector } from '@ngrx/store';
-import Fraction from 'fraction.js';
 
 import { RecipeSettings, Entities, ItemId, RecipeId, Factors } from '~/models';
 import { RecipeUtility } from '~/utilities/recipe';
@@ -14,7 +13,6 @@ const recipeState = (state: State) => state.recipeState;
 export const getRecipeSettings = createSelector(
   recipeState,
   getDataset,
-  // TODO: Break this selector out so we don't select the entire settings state here
   Settings.settingsState,
   (state, data, settings) => {
     const value: Entities<RecipeSettings> = {};

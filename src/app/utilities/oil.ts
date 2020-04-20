@@ -57,8 +57,8 @@ export class OilUtility {
     return {
       recipe,
       heavy: new Fraction(recipe.out[ItemId.HeavyOil])
-        .mul(f.prod)
-        .sub(recipe.in[ItemId.HeavyOil] ? recipe.in[ItemId.HeavyOil] : 0),
+        .sub(recipe.in[ItemId.HeavyOil] ? recipe.in[ItemId.HeavyOil] : 0)
+        .mul(f.prod),
       light: new Fraction(recipe.out[ItemId.LightOil]).mul(f.prod),
       petrol: new Fraction(recipe.out[ItemId.PetroleumGas]).mul(f.prod),
     };

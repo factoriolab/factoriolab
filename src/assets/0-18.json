@@ -2885,6 +2885,13 @@
       }
     },
     {
+      "id": "steam",
+      "time": 1,
+      "in": { "water": 60 },
+      "out": { "steam": 60 },
+      "producers": ["boiler"]
+    },
+    {
       "id": "basic-oil-processing",
       "time": 5,
       "in": {

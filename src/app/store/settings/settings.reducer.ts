@@ -29,7 +29,7 @@ export const initialSettingsState: SettingsState = {
   otherModule: ItemId.SpeedModule3,
   beaconType: ItemId.SpeedModule3,
   beaconCount: 16,
-  oilRecipe: RecipeId.AdvancedOilProcessing,
+  oilRecipe: RecipeId.CoalLiquefaction,
   fuel: ItemId.Coal,
   miningBonus: 0,
   flowRate: 12000,

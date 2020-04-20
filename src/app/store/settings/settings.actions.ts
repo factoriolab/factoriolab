@@ -24,13 +24,7 @@ export class SetOilProcessingRecipeAction implements Action {
   constructor(public payload: RecipeId) {}
 }
 
-export class SetUseCrackingAction implements Action {
-  readonly type = SettingsActionType.SET_USE_CRACKING;
-  constructor(public payload: boolean) {}
-}
-
 export type SettingsAction =
   | SetDisplayRateAction
   | SetBeltAction
-  | SetOilProcessingRecipeAction
-  | SetUseCrackingAction;
+  | SetOilProcessingRecipeAction;
