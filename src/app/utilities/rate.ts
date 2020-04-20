@@ -84,14 +84,18 @@ export class RateUtility {
 
   public static calculateLanes(steps: Step[], laneSpeed: Entities<Fraction>) {
     for (const step of steps) {
-      step.lanes = step.items.div(laneSpeed[step.settings.lane]);
+      if (step.items) {
+        step.lanes = step.items.div(laneSpeed[step.settings.lane]);
+      }
     }
     return steps;
   }
 
   public static displayRate(steps: Step[], displayRate: DisplayRate) {
     for (const step of steps) {
-      step.items = step.items.mul(displayRate);
+      if (step.items) {
+        step.items = step.items.mul(displayRate);
+      }
       if (step.surplus) {
         step.surplus = step.surplus.mul(displayRate);
       }

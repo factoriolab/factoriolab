@@ -180,8 +180,21 @@ describe('RateUtility', () => {
   });
 
   describe('calculateLanes', () => {
+    it('should skip steps with no items', () => {
+      const steps: Step[] = [
+        {
+          itemId: mocks.Item1.id,
+          items: null,
+          lanes: null,
+          settings: { lane: ItemId.TransportBelt },
+        },
+      ];
+      RateUtility.calculateLanes(steps, mocks.LaneSpeed);
+      expect(steps[0].lanes).toBeNull();
+    });
+
     it('should calculate required lanes for steps', () => {
-      const steps = [
+      const steps: Step[] = [
         {
           itemId: mocks.Item1.id,
           items: mocks.LaneSpeed[ItemId.TransportBelt],
@@ -195,6 +208,19 @@ describe('RateUtility', () => {
   });
 
   describe('displayRate', () => {
+    it('should skip steps with no items', () => {
+      const steps: Step[] = [
+        {
+          itemId: mocks.Item1.id,
+          items: null,
+          lanes: null,
+          settings: { lane: ItemId.TransportBelt },
+        },
+      ];
+      RateUtility.displayRate(steps, 3 as any);
+      expect(steps[0].items).toBeNull();
+    });
+
     it('should apply the display rate to the given steps', () => {
       const result = RateUtility.displayRate(
         [{ items: new Fraction(2), surplus: new Fraction(3) }] as any,

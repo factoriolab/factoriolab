@@ -254,7 +254,7 @@ export class OilUtility {
     step: OilSteps,
     matrix: OilMatrix
   ): OilSteps {
-    if (step.fuel && step.fuel.items.n > 0) {
+    if (step.fuel?.items.n > 0) {
       let required = step.fuel.items
         .div(matrix.ltf.output)
         .mul(matrix.ltf.input);
@@ -386,6 +386,7 @@ export class OilUtility {
       // Already producing enough petrol, subtract from surplus
       step.petrol.surplus = step.petrol.surplus.sub(petrolRequired);
       step.fuelPetrol.factories = step.fuelRequired.div(matrix.ptf.output);
+      step.fuelRequired = new Fraction(0);
     } else {
       // Subtract any surplus
       const newFuelRequired = petrolRequired
@@ -434,6 +435,12 @@ export class OilUtility {
     step.petrol.items = step.petrol.items.add(
       step.petrol.factories.mul(matrix.loc.output)
     );
+    // 3) From heavy input to refineries, for coal liquefaction
+    if (matrix.oil.recipe.in[ItemId.HeavyOil] > 0) {
+      step.heavy.items = step.heavy.items.add(
+        step.heavy.factories.mul(matrix.oil.recipe.in[ItemId.HeavyOil])
+      );
+    }
 
     return step;
   }
@@ -503,12 +510,12 @@ export class OilUtility {
     if (step.fuel) {
       step.fuel.factories = step.fuel.factories
         .mul(matrix.ltf.recipe.time)
-        .div(factors[step.fuel.settings.recipeId].speed);
+        .div(factors[matrix.ltf.recipe.id].speed);
     }
     if (step.fuelPetrol) {
       step.fuelPetrol.factories = step.fuelPetrol.factories
         .mul(matrix.ptf.recipe.time)
-        .div(factors[step.fuelPetrol.settings.recipeId].speed);
+        .div(factors[matrix.ptf.recipe.id].speed);
     }
 
     return step;
@@ -543,26 +550,22 @@ export class OilUtility {
       // Fuel is satisfied, move on to petroleum
       step = this.calculatePetroleumGas(step, matrix);
     } else {
-      // Fuel was not satisfied above
+      // Fuel was not satisfied above, need to convert petrol to fuel
+      step.fuelPetrol = {
+        itemId: null,
+        items: null,
+        factories: new Fraction(0),
+        settings: settings[matrix.ptf.recipe.id],
+      };
+      step.fuelPetrol.settings.recipeId = matrix.ptf.recipe.id;
+      steps.push(step.fuelPetrol);
+
       step = this.calculateLightAndPetrol(step, matrix);
       step = this.calculateSurplusLightToFuel(step, matrix);
+      step = this.calculateSurplusPetrolToFuel(step, matrix);
 
       if (step.fuelRequired.n > 0) {
-        // Fuel still not satisfied, need to convert petrol to fuel
-        step.fuelPetrol = {
-          itemId: null,
-          items: null,
-          factories: new Fraction(0),
-          settings: settings[matrix.ptf.recipe.id],
-        };
-        step.fuelPetrol.settings.recipeId = matrix.ptf.recipe.id;
-        steps.push(step.fuelPetrol);
-
-        step = this.calculateSurplusPetrolToFuel(step, matrix);
-
-        if (step.fuelRequired.n > 0) {
-          step = this.calculateFuel(step, matrix);
-        }
+        step = this.calculateFuel(step, matrix);
       }
     }
 
