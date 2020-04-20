@@ -1,87 +1,47 @@
 import Fraction from 'fraction.js';
 
-import { Step, Recipe, RateType, DisplayRate, Entities } from '../models';
-import { RecipeState } from '../store/recipe';
-
-const WAGON_STACKS = 40;
-const WAGON_FLUID = 25000;
+import {
+  Step,
+  DisplayRate,
+  Entities,
+  ItemId,
+  RecipeId,
+  Factors,
+} from '~/models';
+import { DatasetState } from '~/store/dataset';
+import { RecipeState } from '~/store/recipe';
 
 export class RateUtility {
-  public static toFactories(
-    rate: Fraction,
-    time: Fraction,
-    quantity: Fraction,
-    factors: [Fraction, Fraction]
-  ) {
-    return rate
-      .mul(time)
-      .div(quantity)
-      .div(factors[0].mul(factors[1]));
-  }
-
-  public static toRate(
-    factories: Fraction,
-    time: Fraction,
-    quantity: Fraction,
-    factors: [Fraction, Fraction]
-  ) {
-    return factories
-      .div(time)
-      .mul(quantity)
-      .mul(factors[0].mul(factors[1]));
-  }
-
-  public static normalizeRate(
-    rate: Fraction,
-    rateType: RateType,
-    displayRate: DisplayRate,
-    stack: number,
-    beltSpeed: number,
-    flowRate: number,
-    recipe: Recipe,
-    recipeFactors: [Fraction, Fraction]
-  ) {
-    switch (rateType) {
-      case RateType.Items:
-        return rate.div(displayRate);
-      case RateType.Lanes:
-        return rate.mul(stack ? beltSpeed : flowRate);
-      case RateType.Wagons:
-        return rate
-          .div(displayRate)
-          .mul(stack ? stack * WAGON_STACKS : WAGON_FLUID);
-      case RateType.Factories:
-        return this.toRate(
-          rate,
-          new Fraction(recipe.time),
-          new Fraction(recipe.out ? recipe.out[recipe.id] : 1),
-          recipeFactors
-        );
-      default:
-        return rate;
-    }
-  }
-
   public static addStepsFor(
-    id: string,
+    id: ItemId,
     rate: Fraction,
-    recipe: Recipe,
     steps: Step[],
-    recipeSettings: RecipeState,
-    beltSpeed: Entities<Fraction>,
-    recipeFactors: Entities<[Fraction, Fraction]>,
-    recipes: Entities<Recipe>
+    settings: RecipeState,
+    factors: Entities<Factors>,
+    belt: ItemId,
+    oilRecipe: RecipeId,
+    data: DatasetState
   ) {
+    let recipe = data.recipeEntities[id];
+
+    if (!recipe) {
+      // No recipe for this step, check for simple oil recipes
+      recipe = this.findBasicOilRecipe(id, oilRecipe, data);
+    }
+
     // Find existing step for this item
-    let step = steps.find(s => s.itemId === id);
+    let step = steps.find((s) => s.itemId === id);
 
     if (!step) {
       // No existing step found, create a new one
+      const item = data.itemEntities[id];
       step = {
         itemId: id,
         items: new Fraction(0),
         factories: new Fraction(0),
-        settings: recipe ? recipeSettings[recipe.id] : null
+        settings: recipe
+          ? settings[recipe.id]
+          : { lane: item.stack ? belt : ItemId.Pipe },
       };
 
       steps.push(step);
@@ -91,45 +51,73 @@ export class RateUtility {
     step.items = step.items.add(rate);
 
     if (recipe) {
-      // Calculate recipe and ingredients
-      step.lanes = step.items.div(beltSpeed[step.settings.belt]);
+      // Mark complex recipes
+      if ((recipe.id as string) !== id) {
+        step.settings.recipeId = recipe.id;
+      }
+
+      const f = factors[recipe.id];
 
       // Calculate number of outputs from recipe
-      const out = new Fraction(recipe.out ? recipe.out[id] : 1);
+      const out = new Fraction(recipe.out ? recipe.out[id] : 1).mul(f.prod);
 
-      // Calculate number of factories required
-      step.factories = RateUtility.toFactories(
-        step.items,
-        new Fraction(recipe.time),
-        out,
-        recipeFactors[recipe.id]
-      );
+      // Calculate factories
+      step.factories = step.items.mul(recipe.time).div(out).div(f.speed);
 
       // Recurse adding steps for ingredients
       if (recipe.in) {
         for (const ingredient of Object.keys(recipe.in)) {
           RateUtility.addStepsFor(
-            ingredient,
-            rate
-              .mul(recipe.in[ingredient])
-              .div(out)
-              .div(recipeFactors[recipe.id][1]),
-            recipes[ingredient],
+            ingredient as ItemId,
+            rate.mul(recipe.in[ingredient]).div(out),
             steps,
-            recipeSettings,
-            beltSpeed,
-            recipeFactors,
-            recipes
+            settings,
+            factors,
+            belt,
+            oilRecipe,
+            data
           );
         }
       }
     }
   }
 
-  public static displayRate(steps: Step[], displayRate: DisplayRate) {
+  public static calculateLanes(steps: Step[], laneSpeed: Entities<Fraction>) {
     for (const step of steps) {
-      step.items = step.items.mul(displayRate);
+      if (step.items) {
+        step.lanes = step.items.div(laneSpeed[step.settings.lane]);
+      }
     }
     return steps;
+  }
+
+  public static displayRate(steps: Step[], displayRate: DisplayRate) {
+    for (const step of steps) {
+      if (step.items) {
+        step.items = step.items.mul(displayRate);
+      }
+      if (step.surplus) {
+        step.surplus = step.surplus.mul(displayRate);
+      }
+    }
+    return steps;
+  }
+
+  public static findBasicOilRecipe(
+    id: ItemId,
+    oilRecipeId: RecipeId,
+    data: DatasetState
+  ) {
+    if (oilRecipeId === RecipeId.BasicOilProcessing) {
+      // Using Basic Oil processing, use simple recipes
+      if (id === ItemId.PetroleumGas) {
+        // To produce petroleum gas, use oil recipe
+        return data.recipeEntities[oilRecipeId];
+      } else if (id === ItemId.SolidFuel) {
+        // To produce solid fuel, use petroleum fuel recipe
+        return data.recipeEntities[RecipeId.SolidFuelFromPetroleumGas];
+      }
+    }
+    return null;
   }
 }

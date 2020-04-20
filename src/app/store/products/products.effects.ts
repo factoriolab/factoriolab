@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { filter, switchMap, take, map } from 'rxjs/operators';
 
 import { State } from '../';
-import * as dataset from '../dataset';
+import * as Dataset from '../dataset';
 import * as actions from './products.actions';
 
 @Injectable()
@@ -13,13 +13,13 @@ export class ProductsEffects {
   selectItemCategory$ = this.actions$.pipe(
     ofType(actions.ProductsActionType.OPEN_EDIT_PRODUCT),
     switchMap((a: actions.OpenEditProductAction) =>
-      this.store.select(dataset.getItemEntities).pipe(
+      this.store.select(Dataset.getDataset).pipe(
         take(1),
-        filter(e => !!e),
+        filter((e) => !!e),
         map(
-          e =>
+          (e) =>
             new actions.SelectItemCategoryEffectAction(
-              e[a.payload.itemId].category
+              e.itemEntities[a.payload.itemId].category
             )
         )
       )

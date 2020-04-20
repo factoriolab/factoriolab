@@ -2,7 +2,8 @@ import { ViewChild, Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import * as mocks from 'src/mocks';
-import { Category, Item, Id, Entities } from '~/models';
+import { Item, Id, Entities } from '~/models';
+import { DatasetState } from '~/store/dataset';
 import { TestUtility } from '~/utilities/test';
 import { IconComponent } from '../icon/icon.component';
 import { PickerComponent } from './picker.component';
@@ -12,23 +13,19 @@ import { PickerComponent } from './picker.component';
   template: `
     <div id=${Id.Away}></div>
     <lab-picker
-      [categories]="categories"
+      [data]="data"
       [categoryId]="categoryId"
-      [categoryItemRows]="categoryItemRows"
-      [itemEntities]="itemEntities"
       [itemId]="itemId"
       (cancel)="cancel()"
       (selectTab)="selectTab($event)"
       (selectItem)="selectItem($event)"
     ></lab-picker>
-  `
+  `,
 })
 class TestPickerComponent {
   @ViewChild(PickerComponent) child: PickerComponent;
-  categories: Category[] = mocks.Categories;
+  data: DatasetState = mocks.Data;
   categoryId: string = mocks.CategoryId;
-  categoryItemRows: Entities<string[][]> = mocks.CategoryItemRows;
-  itemEntities: Entities<Item> = mocks.ItemEntities;
   itemId: string = mocks.Item1.id;
   cancel() {}
   selectTab(data) {}
@@ -41,7 +38,7 @@ describe('PickerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [IconComponent, PickerComponent, TestPickerComponent]
+      declarations: [IconComponent, PickerComponent, TestPickerComponent],
     })
       .compileComponents()
       .then(() => {

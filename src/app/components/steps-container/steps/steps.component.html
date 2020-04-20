@@ -22,21 +22,30 @@
     <tr *ngFor="let step of steps">
       <td>
         <div class="flex">
-          <div class="monospace">{{ step.items.toFraction(true) }}</div>
+          <div *ngIf="step.items" class="monospace">
+            {{ step.items.toFraction(true) }}
+          </div>
+          <div *ngIf="step.surplus && step.surplus.n > 0" class="monospace">
+            (+{{ step.surplus.toFraction(true) }})
+          </div>
           <lab-icon [iconId]="step.itemId" scale="true"></lab-icon>
         </div>
       </td>
       <ng-container *ngIf="step.settings">
-        <td *ngIf="step.settings.belt">
-          <div class="flex">
+        <td>
+          <div *ngIf="step.settings.lane && step.lanes" class="flex">
             <div class="monospace">{{ step.lanes.toFraction(true) }}</div>
-            <lab-icon [iconId]="step.settings.belt"></lab-icon>
+            <lab-icon [iconId]="step.settings.lane"></lab-icon>
           </div>
         </td>
         <ng-container *ngIf="step.settings.factory">
           <td>
             <div class="flex">
               <div class="monospace">{{ step.factories.toFraction(true) }}</div>
+              <ng-container *ngIf="step.settings.recipeId">
+                <lab-icon [iconId]="step.settings.recipeId"></lab-icon>
+                :
+              </ng-container>
               <lab-icon [iconId]="step.settings.factory"></lab-icon>
             </div>
           </td>
@@ -62,7 +71,7 @@
                   type="number"
                   min="0"
                   [value]="step.settings.beaconCount"
-                  (change)="beaconCountChange(step.itemId, $event)"
+                  (change)="beaconCountChange(step, $event)"
                 />
               </div>
             </td>

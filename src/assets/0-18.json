@@ -2279,6 +2279,7 @@
     {
       "id": "uranium-ore",
       "time": 2,
+      "in": { "sulfuric-acid": 1 },
       "producers": ["electric-mining-drill"]
     },
     {
@@ -2470,7 +2471,7 @@
     {
       "id": "rocket-fuel",
       "time": 30,
-      "in": { "solid-fuel": 10 }
+      "in": { "light-oil": 10, "solid-fuel": 10 }
     },
     {
       "id": "nuclear-fuel",
@@ -2503,7 +2504,7 @@
     {
       "id": "chemical-science-pack",
       "time": 24,
-      "in": { "advanced-circuit": 3, "engine-unit": 2, "solid-fuel": 1 },
+      "in": { "advanced-circuit": 3, "engine-unit": 2, "sulfur": 1 },
       "out": { "chemical-science-pack": 2 }
     },
     {
@@ -2884,6 +2885,13 @@
       }
     },
     {
+      "id": "steam",
+      "time": 1,
+      "in": { "water": 60 },
+      "out": { "steam": 60 },
+      "producers": ["boiler"]
+    },
+    {
       "id": "basic-oil-processing",
       "time": 5,
       "in": {
@@ -2946,6 +2954,58 @@
         "petroleum-gas": 10
       },
       "producers": ["oil-refinery"]
+    },
+    {
+      "id": "solid-fuel-from-heavy-oil",
+      "time": 2,
+      "in": {
+        "heavy-oil": 20
+      },
+      "out": { "solid-fuel": 1 },
+      "producers": ["chemical-plant"]
+    },
+    {
+      "id": "solid-fuel-from-light-oil",
+      "time": 2,
+      "in": {
+        "light-oil": 10
+      },
+      "out": { "solid-fuel": 1 },
+      "producers": ["chemical-plant"]
+    },
+    {
+      "id": "solid-fuel-from-petroleum-gas",
+      "time": 2,
+      "in": {
+        "petroleum-gas": 20
+      },
+      "out": { "solid-fuel": 1 },
+      "producers": ["chemical-plant"]
+    },
+    {
+      "id": "uranium-processing",
+      "time": 12,
+      "in": {
+        "uranium-ore": 10
+      },
+      "out": {
+        "uranium-235": 0.007,
+        "uranium-238": 0.993
+      },
+      "producers": ["centrifuge"]
+    },
+    {
+      "id": "kovarex-enrichment-process",
+      "time": 60,
+      "in": {
+        "uranium-235": 40,
+        "uranium-238": 5
+      },
+      "out": {
+        "uranium-235": 41,
+        "uranium-238": 2
+      },
+      "producers": ["centrifuge"]
     },
     {
       "id": "worker-robot-speed",

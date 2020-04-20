@@ -1,64 +1,73 @@
 import { createSelector } from '@ngrx/store';
-import Fraction from 'fraction.js';
 
-import { RecipeSettings, Entities } from '~/models';
+import { RecipeSettings, Entities, ItemId, RecipeId, Factors } from '~/models';
 import { RecipeUtility } from '~/utilities/recipe';
+import { getDataset } from '../dataset';
+import * as Settings from '../settings';
 import { State } from '../';
-import { getRecipes, getItemEntities } from '../dataset';
-import { getSettingsState } from '../settings';
 
+/* Base selector functions */
 const recipeState = (state: State) => state.recipeState;
 
+/* Complex selectors */
 export const getRecipeSettings = createSelector(
   recipeState,
-  getRecipes,
-  getItemEntities,
-  getSettingsState,
-  (sState, sRecipes, sItemEntities, sSettings) => {
+  getDataset,
+  Settings.settingsState,
+  (state, data, settings) => {
     const value: Entities<RecipeSettings> = {};
-    for (const recipe of sRecipes) {
-      const settings: RecipeSettings = sState[recipe.id]
-        ? { ...sState[recipe.id] }
-        : { ignore: false };
+    if (data?.recipes?.length) {
+      for (const recipe of data.recipes) {
+        const recipeSettings: RecipeSettings = state[recipe.id]
+          ? { ...state[recipe.id] }
+          : { ignore: false };
 
-      // Belt
-      if (!settings.belt) {
-        settings.belt = sSettings.belt;
-      }
+        // Lane (Belt/Pipe)
+        if (!recipeSettings.lane) {
+          let item = data.itemEntities[recipe.id];
+          if (!item) {
+            item = data.itemEntities[Object.keys(recipe.out)[0]];
+          }
+          recipeSettings.lane = item.stack ? settings.belt : ItemId.Pipe;
+        }
 
-      // Factory
-      if (!settings.factory) {
-        settings.factory = RecipeUtility.defaultFactory(
-          recipe,
-          sSettings.assembler,
-          sSettings.fuel,
-          sSettings.drill
-        );
-      }
-
-      const factoryItem = sItemEntities[settings.factory];
-      if (factoryItem?.factory?.modules) {
-        // Modules
-        if (!settings.modules) {
-          settings.modules = RecipeUtility.defaultModules(
+        // Factory
+        if (!recipeSettings.factory) {
+          recipeSettings.factory = RecipeUtility.defaultFactory(
             recipe,
-            sSettings.prodModule,
-            sSettings.otherModule,
-            factoryItem.factory.modules,
-            sItemEntities
+            settings.assembler,
+            settings.furnace,
+            settings.drill
           );
         }
 
-        // Beacons
-        if (!settings.beaconType) {
-          settings.beaconType = sSettings.beaconType;
-        }
-        if (settings.beaconCount == null) {
-          settings.beaconCount = sSettings.beaconCount;
-        }
-      }
+        const factoryItem = data.itemEntities[recipeSettings.factory];
+        if (
+          recipe.id !== RecipeId.SpaceSciencePack &&
+          factoryItem?.factory?.modules
+        ) {
+          // Modules
+          if (!recipeSettings.modules) {
+            recipeSettings.modules = RecipeUtility.defaultModules(
+              recipe,
+              settings.prodModule,
+              settings.otherModule,
+              factoryItem.factory.modules,
+              data.itemEntities
+            );
+          }
 
-      value[recipe.id] = settings;
+          // Beacons
+          if (!recipeSettings.beaconType) {
+            recipeSettings.beaconType = settings.beaconType;
+          }
+          if (recipeSettings.beaconCount == null) {
+            recipeSettings.beaconCount = settings.beaconCount;
+          }
+        }
+
+        value[recipe.id] = recipeSettings;
+      }
     }
     return value;
   }
@@ -66,17 +75,17 @@ export const getRecipeSettings = createSelector(
 
 export const getRecipeFactors = createSelector(
   getRecipeSettings,
-  getItemEntities,
-  (sRecipeSettings, sItemEntities) => {
-    const values: Entities<[Fraction, Fraction]> = {};
-    for (const recipeId of Object.keys(sRecipeSettings)) {
-      const settings = sRecipeSettings[recipeId];
+  getDataset,
+  (recipeSettings, data) => {
+    const values: Entities<Factors> = {};
+    for (const recipeId of Object.keys(recipeSettings)) {
+      const settings = recipeSettings[recipeId];
       values[recipeId] = RecipeUtility.recipeFactors(
-        sItemEntities[settings.factory].factory.speed,
+        data.itemEntities[settings.factory].factory.speed,
         settings.modules,
         settings.beaconType,
         settings.beaconCount,
-        sItemEntities
+        data.itemEntities
       );
     }
     return values;

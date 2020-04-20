@@ -47,7 +47,7 @@ describe('Products Reducer', () => {
         state,
         new actions.CommitEditProductAction([
           mocks.Product1.id,
-          mocks.Product2.itemId
+          mocks.Product2.itemId,
         ])
       );
       expect(result.editProductId).toBeNull();
@@ -81,12 +81,11 @@ describe('Products Reducer', () => {
 
   describe('SELECT_ITEM_CATEGORY', () => {
     it('should select a new category', () => {
-      const value = 'test';
       const result = productsReducer(
         state,
-        new actions.SelectItemCategoryAction(value)
+        new actions.SelectItemCategoryAction(mocks.CategoryId)
       );
-      expect(result.categoryId).toEqual(value);
+      expect(result.categoryId).toEqual(mocks.CategoryId);
     });
   });
 

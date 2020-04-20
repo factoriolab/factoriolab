@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import Fraction from 'fraction.js';
 
 import * as mocks from 'src/mocks';
-import { Category, Product, Item, RateType, Entities } from '~/models';
+import { Product, RateType } from '~/models';
+import { DatasetState } from '~/store/dataset';
 import { TestUtility } from '~/utilities/test';
 import { IconComponent } from '~/components/icon/icon.component';
 import { ProductsComponent } from './products.component';
@@ -13,9 +14,7 @@ import { ProductsComponent } from './products.component';
   selector: 'lab-test-products',
   template: `
     <lab-products
-      [categories]="categories"
-      [itemEntities]="itemEntities"
-      [categoryItemRows]="categoryItemRows"
+      [data]="data"
       [products]="products"
       [editProductId]="editProductId"
       [categoryId]="categoryId"
@@ -29,13 +28,11 @@ import { ProductsComponent } from './products.component';
       (selectTab)="selectTab($event)"
     >
     </lab-products>
-  `
+  `,
 })
 class TestProductsComponent {
   @ViewChild(ProductsComponent) child: ProductsComponent;
-  categories: Category[] = mocks.Categories;
-  itemEntities: Entities<Item> = mocks.ItemEntities;
-  categoryItemRows: Entities<string[][]> = mocks.CategoryItemRows;
+  data: DatasetState = mocks.Data;
   products: Product[] = mocks.Products;
   editProductId: null;
   categoryId: string = mocks.CategoryId;
@@ -56,7 +53,7 @@ describe('ProductsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule],
-      declarations: [IconComponent, ProductsComponent, TestProductsComponent]
+      declarations: [IconComponent, ProductsComponent, TestProductsComponent],
     })
       .compileComponents()
       .then(() => {
@@ -89,7 +86,7 @@ describe('ProductsComponent', () => {
     component.child.selectItem(mocks.Product1.id, mocks.Item2.id);
     expect(component.commitEditProduct).toHaveBeenCalledWith([
       mocks.Product1.id,
-      mocks.Item2.id
+      mocks.Item2.id,
     ]);
   });
 
@@ -99,7 +96,7 @@ describe('ProductsComponent', () => {
     fixture.detectChanges();
     expect(component.editRate).toHaveBeenCalledWith([
       mocks.Product1.id,
-      new Fraction(3)
+      new Fraction(3),
     ]);
   });
 
@@ -123,7 +120,7 @@ describe('ProductsComponent', () => {
     fixture.detectChanges();
     expect(component.editRateType).toHaveBeenCalledWith([
       mocks.Product1.id,
-      RateType.Factories
+      RateType.Factories,
     ]);
   });
 });

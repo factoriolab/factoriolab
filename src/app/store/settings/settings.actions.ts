@@ -1,11 +1,12 @@
 import { Action } from '@ngrx/store';
-import { DisplayRate } from 'src/app/models';
+
+import { DisplayRate, ItemId, RecipeId } from '~/models';
 
 export const enum SettingsActionType {
   SET_DISPLAY_RATE = '[Settings Page] Set Display Rate',
   SET_BELT = '[Settings Page] Set Belt',
   SET_OIL_RECIPE = '[Settings Page] Set Oil Recipe',
-  SET_USE_CRACKING = '[Setting Page] Set Use Cracking'
+  SET_USE_CRACKING = '[Setting Page] Set Use Cracking',
 }
 
 export class SetDisplayRateAction implements Action {
@@ -15,21 +16,15 @@ export class SetDisplayRateAction implements Action {
 
 export class SetBeltAction implements Action {
   readonly type = SettingsActionType.SET_BELT;
-  constructor(public payload: string) {}
+  constructor(public payload: ItemId) {}
 }
 
 export class SetOilProcessingRecipeAction implements Action {
   readonly type = SettingsActionType.SET_OIL_RECIPE;
-  constructor(public payload: string) {}
-}
-
-export class SetUseCrackingAction implements Action {
-  readonly type = SettingsActionType.SET_USE_CRACKING;
-  constructor(public payload: boolean) {}
+  constructor(public payload: RecipeId) {}
 }
 
 export type SettingsAction =
   | SetDisplayRateAction
   | SetBeltAction
-  | SetOilProcessingRecipeAction
-  | SetUseCrackingAction;
+  | SetOilProcessingRecipeAction;

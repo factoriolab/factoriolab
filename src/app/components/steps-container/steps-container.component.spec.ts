@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
 import * as mocks from 'src/mocks';
+import { RecipeId } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as recipe from '~/store/recipe';
 import { IconComponent } from '../icon/icon.component';
@@ -16,7 +17,7 @@ describe('StepsContainerComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [StoreModule.forRoot(reducers, { metaReducers })],
-      declarations: [IconComponent, StepsComponent, StepsContainerComponent]
+      declarations: [IconComponent, StepsComponent, StepsContainerComponent],
     })
       .compileComponents()
       .then(() => {
@@ -33,7 +34,7 @@ describe('StepsContainerComponent', () => {
 
   it('should edit beacon count', () => {
     spyOn(store, 'dispatch');
-    const data: [string, number] = [mocks.Item1.id, 24];
+    const data: [RecipeId, number] = [mocks.Recipe1.id, 24];
     component.child.editBeaconCount.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new recipe.EditBeaconCountAction(data)

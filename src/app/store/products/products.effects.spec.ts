@@ -16,8 +16,8 @@ describe('Products Effects', () => {
     TestBed.configureTestingModule({
       imports: [
         StoreModule.forRoot(reducers, { metaReducers }),
-        EffectsModule.forRoot([ProductsEffects])
-      ]
+        EffectsModule.forRoot([ProductsEffects]),
+      ],
     });
 
     store = TestBed.inject(Store);
@@ -26,16 +26,21 @@ describe('Products Effects', () => {
 
   describe('selectItemCategory$', () => {
     it('selects the category of the product opened to edit', fakeAsync(() => {
-      const value = 'test';
       spyOn(store, 'dispatch').and.callThrough();
       spyOn(store, 'select').and.returnValue(
-        of({ [mocks.Product1.itemId]: { category: value } })
+        of({
+          itemEntities: {
+            [mocks.Product1.itemId]: { category: mocks.CategoryId },
+          },
+        })
       );
       let effect;
-      effects.selectItemCategory$.subscribe(e => (effect = e));
+      effects.selectItemCategory$.subscribe((e) => (effect = e));
       store.dispatch(new actions.OpenEditProductAction(mocks.Product1));
       tick();
-      expect(effect).toEqual(new actions.SelectItemCategoryEffectAction(value));
+      expect(effect).toEqual(
+        new actions.SelectItemCategoryEffectAction(mocks.CategoryId)
+      );
     }));
   });
 });
