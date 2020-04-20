@@ -1,20 +1,19 @@
+import { DisplayRate, ItemId, RecipeId } from '~/models';
 import { SettingsAction, SettingsActionType } from './settings.actions';
-import { DisplayRate } from 'src/app/models';
 
 export interface SettingsState {
   displayRate: DisplayRate;
   precision: number;
-  belt: string;
-  assembler: string;
-  furnace: string;
-  drill: string;
-  prodModule: string;
-  otherModule: string;
-  beaconType: string;
+  belt: ItemId;
+  assembler: ItemId;
+  furnace: ItemId;
+  drill: ItemId;
+  prodModule: ItemId;
+  otherModule: ItemId;
+  beaconType: ItemId;
   beaconCount: number;
-  oilRecipe: string;
-  useCracking: boolean;
-  fuel: string;
+  oilRecipe: RecipeId;
+  fuel: ItemId;
   miningBonus: number;
   flowRate: number;
 }
@@ -22,19 +21,18 @@ export interface SettingsState {
 export const initialSettingsState: SettingsState = {
   displayRate: DisplayRate.PerMinute,
   precision: null,
-  belt: 'express-transport-belt',
-  assembler: 'assembling-machine-3',
-  furnace: 'electric-furnace',
-  drill: 'electric-mining-drill',
-  prodModule: 'productivity-module-3',
-  otherModule: 'speed-module-3',
-  beaconType: 'speed-module-3',
-  beaconCount: 16,
-  oilRecipe: 'advanced-oil-processing',
-  useCracking: true,
-  fuel: 'coal',
+  belt: ItemId.ExpressTransportBelt,
+  assembler: ItemId.AssemblingMachine3,
+  furnace: ItemId.ElectricFurnace,
+  drill: ItemId.ElectricMiningDrill,
+  prodModule: ItemId.Module,
+  otherModule: ItemId.Module,
+  beaconType: ItemId.Module,
+  beaconCount: 0,
+  oilRecipe: RecipeId.AdvancedOilProcessing,
+  fuel: ItemId.Coal,
   miningBonus: 0,
-  flowRate: 12000
+  flowRate: 12000,
 };
 
 export function settingsReducer(
@@ -45,20 +43,17 @@ export function settingsReducer(
     case SettingsActionType.SET_DISPLAY_RATE: {
       return {
         ...state,
-        ...{ displayRate: action.payload }
+        ...{ displayRate: action.payload },
       };
     }
     case SettingsActionType.SET_BELT: {
       return {
         ...state,
-        ...{ belt: action.payload }
+        ...{ belt: action.payload },
       };
     }
     case SettingsActionType.SET_OIL_RECIPE: {
       return { ...state, ...{ oilRecipe: action.payload } };
-    }
-    case SettingsActionType.SET_USE_CRACKING: {
-      return { ...state, ...{ useCracking: action.payload } };
     }
     default:
       return state;

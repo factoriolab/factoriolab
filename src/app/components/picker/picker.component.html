@@ -1,6 +1,6 @@
 <div class="tabs">
   <lab-icon
-    *ngFor="let category of categories"
+    *ngFor="let category of data.categories"
     [iconId]="category.id"
     [title]="category.name"
     [class.selected]="category.id === categoryId"
@@ -8,11 +8,11 @@
   ></lab-icon>
 </div>
 <div class="tab">
-  <div class="row" *ngFor="let row of categoryItemRows[categoryId]">
+  <div class="row" *ngFor="let row of data.categoryItemRows[categoryId]">
     <div class="item" *ngFor="let id of row">
       <lab-icon
         [iconId]="id"
-        [title]="itemEntities[id].name"
+        [title]="data.itemEntities[id].name"
         [class.selected]="id === itemId"
         (click)="clickItem(id)"
       ></lab-icon>

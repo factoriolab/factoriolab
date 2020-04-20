@@ -4,20 +4,18 @@ import {
   HostListener,
   Input,
   Output,
-  EventEmitter
+  EventEmitter,
 } from '@angular/core';
 
-import { Category, Item, Entities } from '~/models';
+import { DatasetState } from '~/store/dataset';
 
 @Component({
   selector: 'lab-picker',
   templateUrl: './picker.component.html',
-  styleUrls: ['./picker.component.scss']
+  styleUrls: ['./picker.component.scss'],
 })
 export class PickerComponent {
-  @Input() categories: Category[];
-  @Input() itemEntities: Entities<Item>;
-  @Input() categoryItemRows: string[][];
+  @Input() data: DatasetState;
   @Input() categoryId: string;
   @Input() itemId: string;
 

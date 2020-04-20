@@ -1,15 +1,24 @@
-import { Recipe, Item, Entities } from '~/models';
 import Fraction from 'fraction.js';
 
-const categoryAllowProdModule = ['intermediate', 'research'];
+import {
+  Recipe,
+  Item,
+  Entities,
+  CategoryId,
+  RecipeId,
+  ItemId,
+  Factors,
+} from '~/models';
+
+const categoryAllowProdModule = [CategoryId.Intermediate, CategoryId.Research];
 
 export class RecipeUtility {
   /** Determines what default factory to use for a given recipe based on settings */
   static defaultFactory(
     recipe: Recipe,
-    assembler: string,
-    furnace: string,
-    drill: string
+    assembler: ItemId,
+    furnace: ItemId,
+    drill: ItemId
   ) {
     // No factory specified for step
     if (!recipe.producers) {
@@ -18,13 +27,13 @@ export class RecipeUtility {
     } else if (recipe.producers.length === 1) {
       // Only one producer specified for recipe, use it
       return recipe.producers[0];
-    } else if (recipe.producers.some(p => p === assembler)) {
+    } else if (recipe.producers.some((p) => p === assembler)) {
       // Found matching default assembler in producers, use it
       return assembler;
-    } else if (recipe.producers.some(p => p === furnace)) {
+    } else if (recipe.producers.some((p) => p === furnace)) {
       // Found matching default furnace in producers, use it
       return furnace;
-    } else if (recipe.producers.some(p => p === drill)) {
+    } else if (recipe.producers.some((p) => p === drill)) {
       // Found matching default drill in producers, use it
       return drill;
     } else {
@@ -35,6 +44,11 @@ export class RecipeUtility {
 
   /** Determines whether prod modules are allowed for a given recipe */
   static prodModuleAllowed(recipe: Recipe, itemEntities: Entities<Item>) {
+    if (recipe.id === RecipeId.Satellite) {
+      // Breaks the rules, but this is not allowed
+      return false;
+    }
+
     if (recipe.out) {
       // Recipe lists individual outputs, iterate them
       for (const out of Object.keys(recipe.out)) {
@@ -55,8 +69,8 @@ export class RecipeUtility {
   /** Determines default array of modules for a given recipe */
   static defaultModules(
     recipe: Recipe,
-    prodModule: string,
-    otherModule: string,
+    prodModule: ItemId,
+    otherModule: ItemId,
     count: number,
     itemEntities: Entities<Item>
   ) {
@@ -75,11 +89,11 @@ export class RecipeUtility {
   /** Determines tuple of speed and productivity factors on given recipe */
   static recipeFactors(
     factorySpeed: number,
-    modules: string[],
-    beaconType: string,
+    modules: ItemId[],
+    beaconType: ItemId,
     beaconCount: number,
     itemEntities: Entities<Item>
-  ): [Fraction, Fraction] {
+  ): Factors {
     let speed = new Fraction(1);
     let prod = new Fraction(1);
     if (modules && modules.length) {
@@ -93,12 +107,13 @@ export class RecipeUtility {
         }
       }
     }
-    if (beaconType && beaconCount > 0) {
+    if (beaconType && itemEntities[beaconType]?.module && beaconCount > 0) {
       const module = itemEntities[beaconType].module;
-      speed = speed.add(new Fraction(module.speed).mul(beaconCount));
-      prod = prod.add(new Fraction(module.productivity).mul(beaconCount));
+      speed = speed.add(new Fraction(module.speed).div(2).mul(beaconCount));
     }
 
-    return [new Fraction(factorySpeed).mul(speed), prod];
+    speed = speed.mul(factorySpeed);
+
+    return { speed, prod };
   }
 }

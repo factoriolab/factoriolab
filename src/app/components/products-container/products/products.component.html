@@ -3,7 +3,7 @@
 </button>
 <div *ngIf="products && products.length">
   <div class="product-row" *ngFor="let product of products">
-    <ng-container *ngIf="product && itemEntities[product.itemId]">
+    <ng-container *ngIf="product && data.itemEntities[product.itemId]">
       <button type="button" (click)="remove.emit(product.id)">
         <i class="material-icons">remove</i>
       </button>
@@ -11,15 +11,13 @@
         <div class="dropdown-container">
           <lab-icon
             [iconId]="product.itemId"
-            [title]="itemEntities[product.itemId].name"
+            [title]="data.itemEntities[product.itemId].name"
             (click)="clickEditProduct(product, $event)"
             scale="true"
           ></lab-icon>
           <lab-picker
             *ngIf="editProductId === product.id"
-            [categories]="categories"
-            [itemEntities]="itemEntities"
-            [categoryItemRows]="categoryItemRows"
+            [data]="data"
             [categoryId]="categoryId"
             [itemId]="product.itemId"
             (cancel)="cancelEditProduct.emit()"
