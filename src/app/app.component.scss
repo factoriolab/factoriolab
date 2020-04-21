@@ -1,15 +1,19 @@
 :host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.body {
   display: grid;
   grid-template:
-    ' header             header '
     [settings-start] ' products           products '
     ' steps              steps ' 1fr [settings-end]
     / [settings-start] minmax(300px, 1fr) [settings-end] 3fr;
-  height: 100vh;
-}
-
-lab-header {
-  grid-area: header;
+  overflow: auto;
+  flex-grow: 1;
 }
 
 lab-products-container {
