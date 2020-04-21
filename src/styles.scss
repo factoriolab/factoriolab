@@ -1,4 +1,5 @@
 @import './styles/values';
+@import './styles/icons.scss';
 
 $font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 $font-family-monospace: 'Courier New', Courier, monospace;
@@ -8,6 +9,7 @@ body {
   background-color: $color-back;
   color: $color-font;
   font-family: $font-family;
+  overflow: hidden;
 }
 
 button,
