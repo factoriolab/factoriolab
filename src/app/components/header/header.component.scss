@@ -10,10 +10,24 @@
     padding: 0.5rem;
   }
 
-  :first-child {
+  .header-settings {
     background-color: $color-gray-1;
     cursor: pointer;
 
+    &:hover {
+      background-color: $color-brand;
+    }
+  }
+
+  .header-logo {
+    flex-grow: 1;
+  }
+
+  .header-github {
+    line-height: 0;
+  }
+  
+  .header-settings, .header-github {
     &:hover {
       background-color: $color-brand;
     }
