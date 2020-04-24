@@ -4,21 +4,12 @@ node_js:
 dist: trusty
 sudo: false
 
-addons:
-  apt:
-    sources:
-      - google-chrome
-    packages:
-      - google-chrome-stable
-
 cache:
   directories:
     - ./node_modules
 
 install:
   - npm install
-
-
 
 script:
   - ng lint
