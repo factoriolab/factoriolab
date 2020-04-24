@@ -6,11 +6,6 @@ sudo: false
 
 addons:
   chrome: stable
-  
-env:
-  global:
-    CODECOV_TOKEN=$CODECOV_TOKEN
-    GITHUB_TOKEN=$TRAVIS_DEPLOY_TOKEN
 
 before_script:
   - npm install
