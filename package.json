@@ -11,6 +11,7 @@
     "build": "ng build",
     "test": "ng test",
     "test-build": "ng test --no-watch --browsers=ChromeHeadless",
+    "codecov": "codecov",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },

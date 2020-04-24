@@ -6,6 +6,10 @@ sudo: false
 
 addons:
   chrome: stable
+  
+env:
+  global:
+    CODECOV_TOKEN=$CODECOV_TOKEN
 
 cache:
   directories:
@@ -19,6 +23,9 @@ stages:
     script: npm run lint
   - name: Test
     script: npm run test-build
+  - name: Codecov
+    if: branch = master
+    script: npm run codecov
   - name: Build
     if: branch = master
     script: npm run build -- --prod
