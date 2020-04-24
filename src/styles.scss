@@ -10,6 +10,11 @@ body {
   color: $color-font;
   font-family: $font-family;
   overflow: hidden;
+  box-sizing: border-box;
+
+  *,*:before,*:after {
+    box-sizing: border-box;
+  }
 }
 
 button,

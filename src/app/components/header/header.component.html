@@ -1,6 +1,14 @@
 <lab-icon
+  class="header-settings"
   [id]="Id.HeaderSettings"
   iconId="iron-gear-wheel"
   (click)="settingsClicked($event)"
 ></lab-icon>
-<lab-icon [id]="Id.HeaderIcon" iconId="lab"></lab-icon>
+<lab-icon
+  class="header-logo"
+  [id]="Id.HeaderIcon"
+  iconId="lab">
+</lab-icon>
+<a class="header-github" href="https://github.com/factoriolab/factorio-lab">
+  <img src="/assets/GitHub.png" alt="GitHub" title="GitHub">
+</a>
