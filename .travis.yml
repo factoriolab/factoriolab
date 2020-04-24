@@ -16,14 +16,12 @@ before_script:
 
 jobs:
   include:
-    - stage: lint
-      name: "Run Linting"
-      script: npm run lint
     - stage: test
       name: "Run Tests"
-      script: npm run test-build
-    - stage: codecov
-      name: "Upload Code Coverage"
+      script:
+        - npm run lint
+        - npm run test-build
+        - npm run codecov
     - stage: build
       name: "Build and Deploy"
       script: npm run build -- --prod
@@ -39,9 +37,6 @@ jobs:
           branch: master
 
 stages:
-  - lint
   - test
-  - name: codecov
-    if: branch = master
   - name: build
     if: branch = master
