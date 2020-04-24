@@ -11,31 +11,37 @@ env:
   global:
     CODECOV_TOKEN=$CODECOV_TOKEN
 
-cache:
-  directories:
-    - ./node_modules
-
 before_script:
   - npm install
 
+jobs:
+  include:
+    - stage: lint
+      name: "Run Linting"
+      script: npm run lint
+    - stage: test
+      name: "Run Tests"
+      script: npm run test-build
+    - stage: codecov
+      name: "Upload Code Coverage"
+    - stage: build
+      name: "Build and Deploy"
+      script: npm run build -- --prod
+      deploy:
+        provider: pages
+        skip_cleanup: true
+        github_token: $TRAVIS_DEPLOY_TOKEN
+        keep_history: true
+        local_dir: ./dist/factorio-lab
+        repo: factoriolab/factoriolab.github.io
+        target_branch: master
+        on:
+          branch: master
+
 stages:
-  - name: Lint
-    script: npm run lint
-  - name: Test
-    script: npm run test-build
-  - name: Codecov
+  - lint
+  - test
+  - name: codecov
     if: branch = master
-    script: npm run codecov
-  - name: Build
+  - name: build
     if: branch = master
-    script: npm run build -- --prod
-    deploy:
-      provider: pages
-      skip_cleanup: true
-      github_token: $TRAVIS_DEPLOY_TOKEN
-      keep_history: true
-      local_dir: ./dist/factorio-lab
-      repo: factoriolab/factoriolab.github.io
-      target_branch: master
-      on:
-        branch: master
