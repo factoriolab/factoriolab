@@ -1,4 +1,4 @@
-import { DisplayRate, ItemId, RecipeId } from '~/models';
+import { DisplayRate, ItemId, RecipeId, ResearchSpeed } from '~/models';
 import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
@@ -15,6 +15,7 @@ export interface SettingsState {
   oilRecipe: RecipeId;
   fuel: ItemId;
   miningBonus: number;
+  researchSpeed: ResearchSpeed;
   flowRate: number;
 }
 
@@ -32,6 +33,7 @@ export const initialSettingsState: SettingsState = {
   oilRecipe: RecipeId.AdvancedOilProcessing,
   fuel: ItemId.Coal,
   miningBonus: 0,
+  researchSpeed: ResearchSpeed.Speed6,
   flowRate: 12000,
 };
 

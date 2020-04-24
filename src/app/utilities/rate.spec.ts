@@ -2,7 +2,7 @@ import Fraction from 'fraction.js';
 
 import * as mocks from 'src/mocks';
 import { RateUtility } from './rate';
-import { Step, ItemId, RecipeId } from '~/models';
+import { Step, ItemId, RecipeId, CategoryId } from '~/models';
 
 describe('RateUtility', () => {
   describe('addStepsFor', () => {
@@ -109,6 +109,34 @@ describe('RateUtility', () => {
                   time: 1,
                   in: { 'iron-plate': 16 },
                   out: { 'iron-chest': 2 },
+                } as any,
+              },
+            },
+          },
+        }
+      );
+      expect(steps).toEqual(expected as any);
+    });
+
+    it('should handle research recipes', () => {
+      const steps: Step[] = [];
+      RateUtility.addStepsFor(
+        mocks.Item2.id,
+        new Fraction(30),
+        steps,
+        mocks.RecipeSettingsEntities,
+        mocks.RecipeFactors,
+        ItemId.TransportBelt,
+        RecipeId.BasicOilProcessing,
+        {
+          ...mocks.Data,
+          ...{
+            itemEntities: {
+              ...mocks.Data.itemEntities,
+              ...{
+                ['iron-chest']: {
+                  ...mocks.Data.itemEntities['iron-chest'],
+                  ...{ category: CategoryId.Research }
                 } as any,
               },
             },
