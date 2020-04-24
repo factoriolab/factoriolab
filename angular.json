@@ -134,13 +134,6 @@
               "devServerTarget": "factorio-lab:serve:production"
             }
           }
-        },
-        "deploy": {
-          "builder": "angular-cli-ghpages:deploy",
-          "options": {
-            "repo": "https://github.com/factoriolab/factoriolab.github.io.git",
-            "branch": "master"
-          }
         }
       }
     }
