@@ -10,6 +10,7 @@ addons:
 env:
   global:
     CODECOV_TOKEN=$CODECOV_TOKEN
+    GITHUB_TOKEN=$TRAVIS_DEPLOY_TOKEN
 
 before_script:
   - npm install
@@ -28,7 +29,7 @@ jobs:
       deploy:
         provider: pages
         skip_cleanup: true
-        github_token: $TRAVIS_DEPLOY_TOKEN
+        github_token: $GITHUB_TOKEN
         keep_history: true
         local_dir: ./dist/factorio-lab
         repo: factoriolab/factoriolab.github.io
