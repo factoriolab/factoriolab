@@ -11,10 +11,6 @@ cache:
   directories:
     - ./node_modules
 
-branches:
-  only:
-    -master
-
 before_script:
   - npm install
 
@@ -24,7 +20,7 @@ stages:
   - name: Test
     script: npm run test-build
   - name: Build
-    if: branch master
+    if: branch = master
     script: npm run build -- --prod
     deploy:
       provider: pages
