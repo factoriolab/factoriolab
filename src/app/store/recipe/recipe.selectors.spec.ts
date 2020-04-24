@@ -1,4 +1,5 @@
 import * as mocks from 'src/mocks';
+import { ResearchSpeed } from '~/models';
 import { initialSettingsState } from '../settings';
 import { initialRecipeState } from './recipe.reducer';
 import * as selectors from './recipe.selectors';
@@ -105,13 +106,14 @@ describe('Recipe Selectors', () => {
     );
 
     it('should handle null/empty values', () => {
-      const result = selectors.getRecipeFactors.projector({}, {});
+      const result = selectors.getRecipeFactors.projector({}, null, {});
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should return recipe speed/prod factors', () => {
       const result = selectors.getRecipeFactors.projector(
         recipeSettings,
+        ResearchSpeed.Speed0,
         mocks.Data
       );
       expect(Object.keys(result).length).toEqual(mocks.Data.recipes.length);

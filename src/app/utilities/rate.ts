@@ -7,6 +7,7 @@ import {
   ItemId,
   RecipeId,
   Factors,
+  CategoryId,
 } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { RecipeState } from '~/store/recipe';
@@ -59,7 +60,8 @@ export class RateUtility {
       const f = factors[recipe.id];
 
       // Calculate number of outputs from recipe
-      const out = new Fraction(recipe.out ? recipe.out[id] : 1).mul(f.prod);
+      const prod = data.itemEntities[id].category === CategoryId.Research ? new Fraction(1) : f.prod;
+      const out = new Fraction(recipe.out ? recipe.out[id] : 1).mul(prod);
 
       // Calculate factories
       step.factories = step.items.mul(recipe.time).div(out).div(f.speed);

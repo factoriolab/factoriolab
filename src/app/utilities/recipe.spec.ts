@@ -137,7 +137,7 @@ describe('RecipeUtility', () => {
   describe('recipeFactors', () => {
     it('should return a tuple of speed and productivity factors for passed modules', () => {
       const result = RecipeUtility.recipeFactors(
-        1,
+        new Fraction(1),
         [prodModule],
         speedModule,
         1,
@@ -150,7 +150,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should handle the empty module', () => {
-      const result = RecipeUtility.recipeFactors(1, [module], null, 0, {
+      const result = RecipeUtility.recipeFactors(new Fraction(1), [module], null, 0, {
         [module]: {},
       } as any);
       expect(result).toEqual({ speed: new Fraction(1), prod: new Fraction(1) });
@@ -158,7 +158,7 @@ describe('RecipeUtility', () => {
 
     it('should handle an invalid/unfound module', () => {
       const result = RecipeUtility.recipeFactors(
-        1,
+        new Fraction(1),
         [module],
         null,
         0,
@@ -168,12 +168,12 @@ describe('RecipeUtility', () => {
     });
 
     it('should handle an unfound beacon type', () => {
-      const result = RecipeUtility.recipeFactors(1, [], module, 1, {} as any);
+      const result = RecipeUtility.recipeFactors(new Fraction(1), [], module, 1, {} as any);
       expect(result).toEqual({ speed: new Fraction(1), prod: new Fraction(1) });
     });
 
     it('should handle no modules or beacons', () => {
-      const result = RecipeUtility.recipeFactors(1, [], null, 0, {} as any);
+      const result = RecipeUtility.recipeFactors(new Fraction(1), [], null, 0, {} as any);
       expect(result).toEqual({ speed: new Fraction(1), prod: new Fraction(1) });
     });
   });
