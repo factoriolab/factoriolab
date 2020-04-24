@@ -4,6 +4,9 @@ node_js:
 dist: trusty
 sudo: false
 
+addons:
+  chrome: stable
+
 cache:
   directories:
     - ./node_modules
@@ -12,21 +15,24 @@ branches:
   only:
     -master
 
-install:
+before_script:
   - npm install
 
-script:
-  - ng lint
-  - npm run test-build
-  - npm run build -- --prod
-
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $TRAVIS_DEPLOY_TOKEN
-  keep_history: true
-  local_dir: ./dist/factorio-lab
-  repo: factoriolab/factoriolab.github.io
-  target_branch: master
-  on:
-    branch: master
+stages:
+  - name: Lint
+    script: npm run lint
+  - name: Test
+    script: npm run test-build
+  - name: Build
+    if: branch master
+    script: npm run build -- --prod
+    deploy:
+      provider: pages
+      skip_cleanup: true
+      github_token: $TRAVIS_DEPLOY_TOKEN
+      keep_history: true
+      local_dir: ./dist/factorio-lab
+      repo: factoriolab/factoriolab.github.io
+      target_branch: master
+      on:
+        branch: master
