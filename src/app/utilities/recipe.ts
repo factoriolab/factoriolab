@@ -88,7 +88,7 @@ export class RecipeUtility {
 
   /** Determines tuple of speed and productivity factors on given recipe */
   static recipeFactors(
-    factorySpeed: number,
+    factorySpeed: Fraction,
     modules: ItemId[],
     beaconType: ItemId,
     beaconCount: number,
