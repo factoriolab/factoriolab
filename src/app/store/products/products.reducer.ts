@@ -1,5 +1,3 @@
-import Fraction from 'fraction.js';
-
 import { Product, RateType, NEntities, ItemId, CategoryId } from '~/models';
 import { ProductsAction, ProductsActionType } from './products.actions';
 
@@ -14,7 +12,7 @@ export interface ProductsState {
 const defaultProduct: Product = {
   id: 0,
   itemId: ItemId.WoodenChest,
-  rate: new Fraction(1),
+  rate: 1,
   rateType: RateType.Items,
 };
 

@@ -5,6 +5,7 @@ export interface DatasetState {
   items: Item[];
   itemIds: string[];
   itemEntities: Entities<Item>;
+  itemZ: Entities<number>;
   laneIds: ItemId[];
   categories: Category[];
   categoryIds: string[];
@@ -13,12 +14,14 @@ export interface DatasetState {
   recipes: Recipe[];
   recipeIds: string[];
   recipeEntities: Entities<Recipe>;
+  recipeZ: Entities<number>;
 }
 
 export const initialDatasetState: DatasetState = {
   items: [],
   itemIds: [],
   itemEntities: {},
+  itemZ: {},
   laneIds: [],
   categories: [],
   categoryIds: [],
@@ -27,6 +30,7 @@ export const initialDatasetState: DatasetState = {
   recipes: [],
   recipeIds: [],
   recipeEntities: {},
+  recipeZ: {},
 };
 
 export function datasetReducer(
@@ -59,6 +63,9 @@ export function datasetReducer(
         itemEntities: action.payload.items.reduce((e: Entities<Item>, i) => {
           return { ...e, ...{ [i.id]: i } };
         }, {}),
+        itemZ: action.payload.items.reduce((e: Entities<number>, i, z) => {
+          return { ...e, ...{ [i.id]: z } };
+        }, {}),
         laneIds: action.payload.items
           .filter((i) => i.belt || i.id === ItemId.Pipe)
           .map((i) => i.id),
@@ -79,6 +86,9 @@ export function datasetReducer(
           },
           {}
         ),
+        recipeZ: action.payload.recipes.reduce((e: Entities<number>, i, z) => {
+          return { ...e, ...{ [i.id]: z } };
+        }, {}),
       };
     }
     default:

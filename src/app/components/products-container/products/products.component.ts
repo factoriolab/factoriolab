@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Output, Input } from '@angular/core';
-import Fraction from 'fraction.js';
 
 import { DatasetState } from '~/store/dataset';
 import { Product, RateType, CategoryId, ItemId } from '~/models';
@@ -20,7 +19,7 @@ export class ProductsComponent {
   @Output() openEditProduct = new EventEmitter<Product>();
   @Output() cancelEditProduct = new EventEmitter();
   @Output() commitEditProduct = new EventEmitter<[number, ItemId]>();
-  @Output() editRate = new EventEmitter<[number, Fraction]>();
+  @Output() editRate = new EventEmitter<[number, number]>();
   @Output() editRateType = new EventEmitter<[number, RateType]>();
   @Output() selectTab = new EventEmitter<CategoryId>();
 
@@ -39,9 +38,9 @@ export class ProductsComponent {
 
   rateChange(id: number, event: any) {
     if (event.target.value) {
-      const value = new Fraction(event.target.value);
-      if (!this.products.find((p) => p.id === id).rate.equals(value)) {
-        this.editRate.emit([id, new Fraction(event.target.value)]);
+      const value = event.target.value;
+      if (this.products.find((p) => p.id === id).rate !== value) {
+        this.editRate.emit([id, value]);
       }
     }
   }

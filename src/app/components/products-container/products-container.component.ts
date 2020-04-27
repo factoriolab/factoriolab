@@ -52,7 +52,7 @@ export class ProductsContainerComponent implements OnInit {
     this.store.dispatch(new Products.CommitEditProductAction(data));
   }
 
-  editRate(data: [number, Fraction]) {
+  editRate(data: [number, number]) {
     this.store.dispatch(new Products.EditRateAction(data));
   }
 

@@ -40,7 +40,7 @@ export class CommitEditProductAction implements Action {
 
 export class EditRateAction implements Action {
   readonly type = ProductsActionType.EDIT_RATE;
-  constructor(public payload: [number, Fraction]) {}
+  constructor(public payload: [number, number]) {}
 }
 
 export class EditRateTypeAction implements Action {

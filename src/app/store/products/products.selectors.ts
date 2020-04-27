@@ -60,7 +60,10 @@ export const getNormalizedRatesByItems = createSelector(
   Settings.getDisplayRate,
   (ids, entities, displayRate) => {
     return ids.reduce((e: NEntities<Fraction>, i) => {
-      return { ...e, ...{ [i]: entities[i].rate.div(displayRate) } };
+      return {
+        ...e,
+        ...{ [i]: new Fraction(entities[i].rate).div(displayRate) },
+      };
     }, {});
   }
 );
@@ -75,7 +78,9 @@ export const getNormalizedRatesByLanes = createSelector(
       const settings = recipeSettings[entities[i].itemId];
       return {
         ...e,
-        ...{ [i]: entities[i].rate.mul(laneSpeed[settings.lane]) },
+        ...{
+          [i]: new Fraction(entities[i].rate).mul(laneSpeed[settings.lane]),
+        },
       };
     }, {});
   }
@@ -92,7 +97,7 @@ export const getNormalizedRatesByWagons = createSelector(
       return {
         ...e,
         ...{
-          [i]: entities[i].rate
+          [i]: new Fraction(entities[i].rate)
             .div(displayRate)
             .mul(item.stack ? item.stack * WAGON_STACKS : WAGON_FLUID),
         },
@@ -115,7 +120,7 @@ export const getNormalizedRatesByFactories = createSelector(
       return {
         ...e,
         ...{
-          [i]: entities[i].rate
+          [i]: new Fraction(entities[i].rate)
             .div(recipe.time)
             .mul(o)
             .mul(f.speed)

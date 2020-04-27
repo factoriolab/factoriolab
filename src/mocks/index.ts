@@ -27,25 +27,25 @@ export const Recipe1 = Data.recipes[0];
 export const Product1: Product = {
   id: 0,
   itemId: Item1.id,
-  rate: new Fraction(1),
+  rate: 1,
   rateType: RateType.Items,
 };
 export const Product2: Product = {
   id: 1,
   itemId: Item2.id,
-  rate: new Fraction(2),
+  rate: 2,
   rateType: RateType.Lanes,
 };
 export const Product3: Product = {
   id: 2,
   itemId: ItemId.PetroleumGas,
-  rate: new Fraction(3),
+  rate: 3,
   rateType: RateType.Wagons,
 };
 export const Product4: Product = {
   id: 3,
   itemId: ItemId.TransportBelt,
-  rate: new Fraction(4),
+  rate: 4,
   rateType: RateType.Factories,
 };
 export const Products = [Product1, Product2, Product3, Product4];
@@ -72,14 +72,14 @@ export const Settings2: RecipeSettings = {
 };
 export const Step1: Step = {
   itemId: Item1.id,
-  items: Product1.rate,
+  items: new Fraction(Product1.rate),
   lanes: new Fraction(0.5),
   factories: new Fraction(1),
   settings: Settings1,
 };
 export const Step2: Step = {
   itemId: Item2.id,
-  items: Product2.rate,
+  items: new Fraction(Product2.rate),
   lanes: new Fraction(1),
   factories: new Fraction(2),
   settings: Settings2,
