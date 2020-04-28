@@ -51,8 +51,8 @@ export class RouterService {
       zState += `&r=${recipes.join(',')}`;
     }
     const settings = this.zipSettings(state.settingsState, state.datasetState);
-    if (settings.length) {
-      zState += `&${settings.join('&')}`;
+    if (settings) {
+      zState += `&s=${settings}`;
     }
     console.log(zState);
     const zip = btoa(pako.deflate(zState, { to: 'string' }));
@@ -87,45 +87,31 @@ export class RouterService {
     });
   }
 
-  zipSettings(state: SettingsState, data: DatasetState): string[] {
+  zipSettings(state: SettingsState, data: DatasetState): string {
     const init = initialSettingsState;
-    const val = [];
+    if (state === init) {
+      return null;
+    }
     const dr = state.displayRate === init.displayRate ? '' : state.displayRate;
     const pr = state.precision === init.precision ? '' : state.precision;
     const tb = state.belt === init.belt ? '' : data.itemZ[state.belt];
-    const as =
+    const pa =
       state.assembler === init.assembler ? '' : data.itemZ[state.assembler];
-    const fu = state.furnace === init.furnace ? '' : data.itemZ[state.furnace];
-    if (state.drill !== init.drill) {
-      val.push(`dl=${data.itemZ[state.drill]}`);
-    }
-    if (state.prodModule !== init.prodModule) {
-      val.push(`pm=${moduleZ[state.prodModule]}`);
-    }
-    if (state.otherModule !== init.otherModule) {
-      val.push(`om=${moduleZ[state.otherModule]}`);
-    }
-    if (state.beaconType !== init.beaconType) {
-      val.push(`bt=${moduleZ[state.beaconType]}`);
-    }
-    if (state.beaconCount !== init.beaconCount) {
-      val.push(`bc=${state.beaconCount}`);
-    }
-    if (state.oilRecipe !== init.oilRecipe) {
-      val.push(`or=${data.recipeZ[state.oilRecipe]}`);
-    }
-    if (state.fuel !== init.fuel) {
-      val.push(`fl=${data.itemZ[state.fuel]}`);
-    }
-    if (state.miningBonus !== init.miningBonus) {
-      val.push(`mb=${state.miningBonus}`);
-    }
-    if (state.researchSpeed !== init.researchSpeed) {
-      val.push(`rs=${state.researchSpeed}`);
-    }
-    if (state.flowRate !== init.flowRate) {
-      val.push(`fr=${state.flowRate}`);
-    }
-    return val;
+    const pf = state.furnace === init.furnace ? '' : data.itemZ[state.furnace];
+    const pd = state.drill === init.drill ? '' : data.itemZ[state.drill];
+    const mp =
+      state.prodModule === init.prodModule ? '' : moduleZ[state.prodModule];
+    const mo =
+      state.otherModule === init.otherModule ? '' : moduleZ[state.otherModule];
+    const bt =
+      state.beaconType === init.beaconType ? '' : moduleZ[state.beaconType];
+    const bc = state.beaconCount === init.beaconCount ? '' : state.beaconType;
+    const or = state.oilRecipe === init.oilRecipe ? '' : state.oilRecipe;
+    const fl = state.fuel === init.fuel ? '' : data.itemZ[state.fuel];
+    const mb = state.miningBonus === init.miningBonus ? '' : state.miningBonus;
+    const rs =
+      state.researchSpeed === init.researchSpeed ? '' : state.researchSpeed;
+    const fr = state.flowRate === init.flowRate ? '' : state.flowRate;
+    return `${dr}:${pr}:${tb}:${pa}:${pf}:${pd}:${mp}:${mo}:${bt}:${bc}:${or}:${fl}:${mb}:${rs}:${fr}`;
   }
 }
