@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterEvent } from '@angular/router';
 import * as pako from 'pako';
 
 import { ItemId, Entities } from '~/models';
@@ -39,8 +39,10 @@ const moduleZ: Entities<ModuleId> = {
   providedIn: 'root',
 })
 export class RouterService {
+  zip: string;
+
   constructor(private router: Router) {
-    this.router.events.subscribe((e) => console.log(e));
+    this.router.events.subscribe(this.updateState);
   }
 
   updateUrl(state: State) {
@@ -55,8 +57,19 @@ export class RouterService {
       zState += `&s=${settings}`;
     }
     console.log(zState);
-    const zip = btoa(pako.deflate(zState, { to: 'string' }));
-    this.router.navigateByUrl(`#${zip}`);
+    this.zip = btoa(pako.deflate(zState, { to: 'string' }));
+    this.router.navigateByUrl(`#${this.zip}`);
+  }
+
+  updateState(e: RouterEvent) {
+    console.log(e);
+    const fragments = e.url.split('#');
+    const urlZip = fragments[fragments.length - 1];
+    if (this.zip !== urlZip) {
+      console.log('new value');
+    } else {
+      console.log('old value');
+    }
   }
 
   zipProducts(state: ProductsState, data: DatasetState): string[] {
