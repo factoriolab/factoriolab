@@ -90,21 +90,12 @@ export class RouterService {
   zipSettings(state: SettingsState, data: DatasetState): string[] {
     const init = initialSettingsState;
     const val = [];
-    if (state.displayRate !== init.displayRate) {
-      val.push(`dr=${state.displayRate}`);
-    }
-    if (state.precision !== init.precision) {
-      val.push(`pr=${state.precision}`);
-    }
-    if (state.belt !== init.belt) {
-      val.push(`tb=${data.itemZ[state.belt]}`);
-    }
-    if (state.assembler !== init.assembler) {
-      val.push(`ar=${data.itemZ[state.assembler]}`);
-    }
-    if (state.furnace !== init.furnace) {
-      val.push(`fc=${data.itemZ[state.furnace]}`);
-    }
+    const dr = state.displayRate === init.displayRate ? '' : state.displayRate;
+    const pr = state.precision === init.precision ? '' : state.precision;
+    const tb = state.belt === init.belt ? '' : data.itemZ[state.belt];
+    const as =
+      state.assembler === init.assembler ? '' : data.itemZ[state.assembler];
+    const fu = state.furnace === init.furnace ? '' : data.itemZ[state.furnace];
     if (state.drill !== init.drill) {
       val.push(`dl=${data.itemZ[state.drill]}`);
     }
