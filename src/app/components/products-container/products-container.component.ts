@@ -29,7 +29,6 @@ export class ProductsContainerComponent implements OnInit {
     this.products$ = this.store.select(Products.getProducts);
     this.editProductId$ = this.store.select(Products.getEditProductId);
     this.categoryId$ = this.store.select(Products.getCategoryId);
-    this.add();
   }
 
   add() {

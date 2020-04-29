@@ -199,3 +199,13 @@ export const getSteps = createSelector(
   Settings.getDisplayRate,
   (steps, displayRate) => RateUtility.displayRate(steps, displayRate)
 );
+
+export const getZipState = createSelector(
+  getProducts,
+  Recipe.recipeState,
+  Settings.settingsState,
+  Dataset.getDataset,
+  (products, recipe, settings, data) => {
+    return { products, recipe, settings, data };
+  }
+);

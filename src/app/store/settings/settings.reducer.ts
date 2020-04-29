@@ -42,6 +42,9 @@ export function settingsReducer(
   action: SettingsAction
 ): SettingsState {
   switch (action.type) {
+    case SettingsActionType.LOAD: {
+      return { ...state, ...action.payload };
+    }
     case SettingsActionType.SET_DISPLAY_RATE: {
       return {
         ...state,

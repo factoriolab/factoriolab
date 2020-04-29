@@ -1,9 +1,9 @@
 import { Action } from '@ngrx/store';
-import Fraction from 'fraction.js';
 
 import { RateType, Product, ItemId, CategoryId } from '~/models';
 
 export const enum ProductsActionType {
+  LOAD = '[Products Router] Load',
   ADD = '[Products Page] Add',
   REMOVE = '[Products Page] Remove',
   OPEN_EDIT_PRODUCT = '[Products Page] Open Edit Product',
@@ -13,6 +13,11 @@ export const enum ProductsActionType {
   EDIT_RATE_TYPE = '[Products Page] Edit Rate Type',
   SELECT_ITEM_CATEGORY = '[Products Page] Select Item Category',
   SELECT_ITEM_CATEGORY_EFFECT = '[Products Effect] Select Item Category',
+}
+
+export class LoadAction implements Action {
+  readonly type = ProductsActionType.LOAD;
+  constructor(public payload: Product[]) {}
 }
 
 export class AddAction implements Action {
@@ -59,6 +64,7 @@ export class SelectItemCategoryEffectAction implements Action {
 }
 
 export type ProductsAction =
+  | LoadAction
   | AddAction
   | RemoveAction
   | OpenEditProductAction

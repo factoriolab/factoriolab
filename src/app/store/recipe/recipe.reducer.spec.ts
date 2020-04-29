@@ -9,7 +9,7 @@ describe('Recipe Reducer', () => {
     it('should ignore a recipe', () => {
       const result = recipeReducer(
         initialRecipeState,
-        new actions.IgnoreRecipeAction(mocks.Recipe1.id)
+        new actions.IgnoreAction(mocks.Recipe1.id)
       );
       expect(result[mocks.Recipe1.id].ignore).toEqual(true);
     });

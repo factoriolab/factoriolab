@@ -1,10 +1,17 @@
 {
   "name": "factorio-lab",
-  "version": "0.0.1",
-  "author": {
-    "name": "Doug Broad",
-    "email": "dcbroad3@gmail.com"
+  "description": "Angular-based calculator for the game Factorio",
+  "version": "0.0.2",
+  "private": true,
+  "contributors": [
+    "Doug Broad (https://github.com/dcbroad3)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/factoriolab/factorio-lab.git"
   },
+  "homepage": "https://factoriolab.github.io",
+  "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

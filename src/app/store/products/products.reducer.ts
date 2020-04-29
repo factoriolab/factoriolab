@@ -17,9 +17,9 @@ const defaultProduct: Product = {
 };
 
 export const initialProductsState: ProductsState = {
-  ids: [],
-  entities: {},
-  index: 0,
+  ids: [0],
+  entities: { [0]: defaultProduct },
+  index: 1,
   editProductId: null,
   categoryId: CategoryId.Logistics,
 };
@@ -29,6 +29,14 @@ export function productsReducer(
   action: ProductsAction
 ): ProductsState {
   switch (action.type) {
+    case ProductsActionType.LOAD: {
+      const ids = action.payload.map((p) => p.id);
+      const index = Math.max(...ids) + 1;
+      const entities = action.payload.reduce((e: NEntities<Product>, i) => {
+        return { ...e, ...{ [i.id]: i } };
+      }, {});
+      return { ...state, ...{ ids, entities, index } };
+    }
     case ProductsActionType.ADD: {
       const newOutput = { ...defaultProduct, ...{ id: state.index } };
       return {
