@@ -176,8 +176,11 @@ export class RouterService {
         ignore: r[1] === '' ? undefined : r[1] === '1' ? true : false,
         lane: r[2] === '' ? undefined : data.itemI[r[2]],
         factory: r[3] === '' ? undefined : data.itemI[r[3]],
-        modules: r[4] === '' ? undefined : [],
-        beaconType: r[5] === '' ? undefined : moduleI[r[5]],
+        modules:
+          r[4] === ''
+            ? undefined
+            : r[4].split('.').map((m) => moduleI[Number(m)]),
+        beaconType: r[5] === '' ? undefined : moduleI[Number(r[5])],
         beaconCount: r[6] === '' ? undefined : Number(r[6]),
       };
     }
@@ -221,9 +224,9 @@ export class RouterService {
       assembler: s[3] === '' ? undefined : data.itemI[s[3]],
       furnace: s[4] === '' ? undefined : data.itemI[s[4]],
       drill: s[5] === '' ? undefined : data.itemI[s[5]],
-      prodModule: s[6] === '' ? undefined : moduleI[s[6]],
-      otherModule: s[7] === '' ? undefined : moduleI[s[7]],
-      beaconType: s[8] === '' ? undefined : moduleI[s[8]],
+      prodModule: s[6] === '' ? undefined : moduleI[Number(s[6])],
+      otherModule: s[7] === '' ? undefined : moduleI[Number(s[7])],
+      beaconType: s[8] === '' ? undefined : moduleI[Number(s[8])],
       beaconCount: s[9] === '' ? undefined : Number(s[9]),
       oilRecipe: s[10] === '' ? undefined : data.recipeI[s[10]],
       fuel: s[11] === '' ? undefined : data.itemI[s[11]],
