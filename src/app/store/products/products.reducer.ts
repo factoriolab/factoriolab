@@ -17,9 +17,9 @@ const defaultProduct: Product = {
 };
 
 export const initialProductsState: ProductsState = {
-  ids: [0],
-  entities: { [0]: defaultProduct },
-  index: 1,
+  ids: [],
+  entities: {},
+  index: 0,
   editProductId: null,
   categoryId: CategoryId.Logistics,
 };

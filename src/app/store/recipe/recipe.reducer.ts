@@ -13,7 +13,7 @@ export function recipeReducer(
     case RecipeActionType.LOAD: {
       return action.payload;
     }
-    case RecipeActionType.IGNORE_RECIPE: {
+    case RecipeActionType.IGNORE: {
       return {
         ...state,
         ...{

@@ -6,6 +6,7 @@ import { Module } from './module';
 export enum ItemId {
   AssemblingMachine2 = 'assembling-machine-2',
   AssemblingMachine3 = 'assembling-machine-3',
+  BurnerMiningDrill = 'burner-mining-drill',
   Coal = 'coal',
   EfficiencyModule1 = 'efficiency-module-1',
   EfficiencyModule2 = 'efficiency-module-2',
@@ -25,6 +26,8 @@ export enum ItemId {
   SpeedModule1 = 'speed-module-1',
   SpeedModule2 = 'speed-module-2',
   SpeedModule3 = 'speed-module-3',
+  SteelChest = 'steel-chest',
+  StoneFurnace = 'stone-furnace',
   TransportBelt = 'transport-belt',
   Uranium235 = 'uranium-235',
   Uranium238 = 'uranium-238',

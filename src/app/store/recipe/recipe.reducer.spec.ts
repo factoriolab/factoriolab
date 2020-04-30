@@ -5,7 +5,17 @@ import { recipeReducer, initialRecipeState } from './recipe.reducer';
 describe('Recipe Reducer', () => {
   const numberValue = 2;
 
-  describe('IGNORE_RECIPE', () => {
+  describe('LOAD', () => {
+    it('should load recipe settings', () => {
+      const result = recipeReducer(
+        undefined,
+        new actions.LoadAction(mocks.RecipeSettingsEntities)
+      );
+      expect(result).toEqual(mocks.RecipeSettingsEntities);
+    });
+  });
+
+  describe('IGNORE', () => {
     it('should ignore a recipe', () => {
       const result = recipeReducer(
         initialRecipeState,

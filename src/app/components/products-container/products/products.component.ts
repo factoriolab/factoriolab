@@ -38,7 +38,7 @@ export class ProductsComponent {
 
   rateChange(id: number, event: any) {
     if (event.target.value) {
-      const value = event.target.value;
+      const value = Number(event.target.value);
       if (this.products.find((p) => p.id === id).rate !== value) {
         this.editRate.emit([id, value]);
       }
@@ -46,7 +46,7 @@ export class ProductsComponent {
   }
 
   rateTypeChange(id: number, event: any) {
-    const val = parseInt(event.target.value as string, 10);
-    this.editRateType.emit([id, val]);
+    const value = Number(event.target.value);
+    this.editRateType.emit([id, value]);
   }
 }

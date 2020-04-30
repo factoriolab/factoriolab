@@ -11,6 +11,7 @@ export enum RecipeId {
   SolidFuelFromLightOil = 'solid-fuel-from-light-oil',
   SolidFuelFromPetroleumGas = 'solid-fuel-from-petroleum-gas',
   SpaceSciencePack = 'space-science-pack',
+  SteelChest = 'steel-chest',
   UraniumProcessing = 'uranium-processing',
 }
 

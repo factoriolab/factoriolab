@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import Fraction from 'fraction.js';
 import { Observable } from 'rxjs';
 
 import { State } from '~/store';

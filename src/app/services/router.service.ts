@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { take, filter } from 'rxjs/operators';
 import * as pako from 'pako';
 
-import { ItemId, Entities, Product, NEntities } from '~/models';
+import { ItemId, Entities, Product, NEntities, RecipeSettings } from '~/models';
 import { State } from '~/store';
 import { DatasetState, getDataset } from '~/store/dataset';
 import * as Products from '~/store/products';
@@ -43,11 +43,11 @@ const moduleI: NEntities<ItemId> = {
   [ModuleId.Speed2]: ItemId.SpeedModule2,
   [ModuleId.Speed3]: ItemId.SpeedModule3,
   [ModuleId.Prod1]: ItemId.ProductivityModule1,
-  [ModuleId.Prod1]: ItemId.ProductivityModule2,
-  [ModuleId.Prod1]: ItemId.ProductivityModule3,
+  [ModuleId.Prod2]: ItemId.ProductivityModule2,
+  [ModuleId.Prod3]: ItemId.ProductivityModule3,
   [ModuleId.Eff1]: ItemId.EfficiencyModule1,
-  [ModuleId.Eff1]: ItemId.EfficiencyModule2,
-  [ModuleId.Eff1]: ItemId.EfficiencyModule3,
+  [ModuleId.Eff2]: ItemId.EfficiencyModule2,
+  [ModuleId.Eff3]: ItemId.EfficiencyModule3,
 };
 
 @Injectable({
@@ -172,17 +172,26 @@ export class RouterService {
     const recipes: Recipes.RecipeState = {};
     for (const recipe of zRecipes) {
       const r = recipe.split(':');
-      recipes[data.recipeI[r[0]]] = {
-        ignore: r[1] === '' ? undefined : r[1] === '1' ? true : false,
-        lane: r[2] === '' ? undefined : data.itemI[r[2]],
-        factory: r[3] === '' ? undefined : data.itemI[r[3]],
-        modules:
-          r[4] === ''
-            ? undefined
-            : r[4].split('.').map((m) => moduleI[Number(m)]),
-        beaconType: r[5] === '' ? undefined : moduleI[Number(r[5])],
-        beaconCount: r[6] === '' ? undefined : Number(r[6]),
-      };
+      const u: RecipeSettings = {};
+      if (r[1] !== '') {
+        u.ignore = r[1] === '1' ? true : false;
+      }
+      if (r[2] !== '') {
+        u.lane = data.itemI[r[2]];
+      }
+      if (r[3] !== '') {
+        u.factory = data.itemI[r[3]];
+      }
+      if (r[4] !== '') {
+        u.modules = r[4].split('.').map((m) => moduleI[Number(m)]);
+      }
+      if (r[5] !== '') {
+        u.beaconType = moduleI[Number(r[5])];
+      }
+      if (r[6] !== '') {
+        u.beaconCount = Number(r[6]);
+      }
+      recipes[data.recipeI[r[0]]] = u;
     }
     this.store.dispatch(new Recipes.LoadAction(recipes));
   }
@@ -205,8 +214,9 @@ export class RouterService {
       state.otherModule === init.otherModule ? '' : moduleN[state.otherModule];
     const bt =
       state.beaconType === init.beaconType ? '' : moduleN[state.beaconType];
-    const bc = state.beaconCount === init.beaconCount ? '' : state.beaconType;
-    const or = state.oilRecipe === init.oilRecipe ? '' : state.oilRecipe;
+    const bc = state.beaconCount === init.beaconCount ? '' : state.beaconCount;
+    const or =
+      state.oilRecipe === init.oilRecipe ? '' : data.recipeN[state.oilRecipe];
     const fl = state.fuel === init.fuel ? '' : data.itemN[state.fuel];
     const mb = state.miningBonus === init.miningBonus ? '' : state.miningBonus;
     const rs =
@@ -217,23 +227,52 @@ export class RouterService {
 
   unzipSettings(zSettings: string, data: DatasetState) {
     const s = zSettings.split(':');
-    const settings: Settings.SettingsState = {
-      displayRate: s[0] === '' ? undefined : Number([s[0]]),
-      precision: s[1] === '' ? undefined : Number(s[1]),
-      belt: s[2] === '' ? undefined : data.itemI[s[2]],
-      assembler: s[3] === '' ? undefined : data.itemI[s[3]],
-      furnace: s[4] === '' ? undefined : data.itemI[s[4]],
-      drill: s[5] === '' ? undefined : data.itemI[s[5]],
-      prodModule: s[6] === '' ? undefined : moduleI[Number(s[6])],
-      otherModule: s[7] === '' ? undefined : moduleI[Number(s[7])],
-      beaconType: s[8] === '' ? undefined : moduleI[Number(s[8])],
-      beaconCount: s[9] === '' ? undefined : Number(s[9]),
-      oilRecipe: s[10] === '' ? undefined : data.recipeI[s[10]],
-      fuel: s[11] === '' ? undefined : data.itemI[s[11]],
-      miningBonus: s[12] === '' ? undefined : Number(s[12]),
-      researchSpeed: s[13] === '' ? undefined : Number(s[13]),
-      flowRate: s[14] === '' ? undefined : Number(s[14]),
-    };
+    const settings: Settings.SettingsState = {} as any;
+    if (s[0] !== '') {
+      settings.displayRate = Number(s[0]);
+    }
+    if (s[1] !== '') {
+      settings.precision = Number(s[1]);
+    }
+    if (s[2] !== '') {
+      settings.belt = data.itemI[s[2]];
+    }
+    if (s[3] !== '') {
+      settings.assembler = data.itemI[s[3]];
+    }
+    if (s[4] !== '') {
+      settings.furnace = data.itemI[s[4]];
+    }
+    if (s[5] !== '') {
+      settings.drill = data.itemI[s[5]];
+    }
+    if (s[6] !== '') {
+      settings.prodModule = moduleI[Number(s[6])];
+    }
+    if (s[7] !== '') {
+      settings.otherModule = moduleI[Number(s[7])];
+    }
+    if (s[8] !== '') {
+      settings.beaconType = moduleI[Number(s[8])];
+    }
+    if (s[9] !== '') {
+      settings.beaconCount = Number(s[9]);
+    }
+    if (s[10] !== '') {
+      settings.oilRecipe = data.recipeI[s[10]];
+    }
+    if (s[11] !== '') {
+      settings.fuel = data.itemI[s[11]];
+    }
+    if (s[12] !== '') {
+      settings.miningBonus = Number(s[12]);
+    }
+    if (s[13] !== '') {
+      settings.researchSpeed = Number(s[13]);
+    }
+    if (s[14] !== '') {
+      settings.flowRate = Number(s[14]);
+    }
     this.store.dispatch(new Settings.LoadAction(settings));
   }
 }
