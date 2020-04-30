@@ -60,7 +60,10 @@ export class RateUtility {
       const f = factors[recipe.id];
 
       // Calculate number of outputs from recipe
-      const prod = data.itemEntities[id].category === CategoryId.Research ? new Fraction(1) : f.prod;
+      const prod =
+        data.itemEntities[id].category === CategoryId.Research
+          ? new Fraction(1)
+          : f.prod;
       const out = new Fraction(recipe.out ? recipe.out[id] : 1).mul(prod);
 
       // Calculate factories

@@ -18,7 +18,7 @@ export const reducers: ActionReducerMap<State> = {
   datasetState: datasetReducer,
   productsState: productsReducer,
   recipeState: recipeReducer,
-  settingsState: settingsReducer
+  settingsState: settingsReducer,
 };
 
 /* No need to test without storeFreeze, ignore that branch here. */

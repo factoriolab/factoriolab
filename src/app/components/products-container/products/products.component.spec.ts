@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import Fraction from 'fraction.js';
 
 import * as mocks from 'src/mocks';
 import { Product, RateType } from '~/models';
@@ -94,10 +93,7 @@ describe('ProductsComponent', () => {
     spyOn(component, 'editRate');
     TestUtility.selectSelector(fixture, 'input', '3');
     fixture.detectChanges();
-    expect(component.editRate).toHaveBeenCalledWith([
-      mocks.Product1.id,
-      new Fraction(3),
-    ]);
+    expect(component.editRate).toHaveBeenCalledWith([mocks.Product1.id, 3]);
   });
 
   it('should not edit rate of a product on invalid event', () => {

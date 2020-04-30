@@ -1,6 +1,13 @@
 import { createSelector } from '@ngrx/store';
 
-import { RecipeSettings, Entities, ItemId, RecipeId, Factors, CategoryId } from '~/models';
+import {
+  RecipeSettings,
+  Entities,
+  ItemId,
+  RecipeId,
+  Factors,
+  CategoryId,
+} from '~/models';
 import { RecipeUtility } from '~/utilities/recipe';
 import { getDataset } from '../dataset';
 import * as Settings from '../settings';
@@ -8,7 +15,7 @@ import { State } from '../';
 import Fraction from 'fraction.js';
 
 /* Base selector functions */
-const recipeState = (state: State) => state.recipeState;
+export const recipeState = (state: State) => state.recipeState;
 
 /* Complex selectors */
 export const getRecipeSettings = createSelector(
@@ -82,7 +89,9 @@ export const getRecipeFactors = createSelector(
     const values: Entities<Factors> = {};
     for (const recipeId of Object.keys(recipeSettings)) {
       const settings = recipeSettings[recipeId];
-      let factorySpeed = new Fraction(data.itemEntities[settings.factory].factory.speed);
+      let factorySpeed = new Fraction(
+        data.itemEntities[settings.factory].factory.speed
+      );
       if (data.itemEntities[recipeId]?.category === CategoryId.Research) {
         factorySpeed = factorySpeed.mul(researchFactor);
       }

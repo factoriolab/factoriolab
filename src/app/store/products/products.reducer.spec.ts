@@ -1,5 +1,3 @@
-import Fraction from 'fraction.js';
-
 import * as mocks from 'src/mocks';
 import { RateType } from '~/models';
 import * as actions from './products.actions';
@@ -7,6 +5,20 @@ import { productsReducer } from './products.reducer';
 
 describe('Products Reducer', () => {
   const state = productsReducer(undefined, new actions.AddAction());
+
+  describe('LOAD', () => {
+    it('should load a list of products', () => {
+      const result = productsReducer(
+        undefined,
+        new actions.LoadAction(mocks.Products)
+      );
+      expect(result.ids.length).toEqual(mocks.Products.length);
+      expect(Object.keys(result.entities).length).toEqual(
+        mocks.Products.length
+      );
+      expect(result.index).toEqual(mocks.Products.length);
+    });
+  });
 
   describe('ADD', () => {
     it('should add a new product', () => {
@@ -59,7 +71,7 @@ describe('Products Reducer', () => {
 
   describe('EDIT_RATE', () => {
     it('should edit rate of a product', () => {
-      const value = new Fraction(3);
+      const value = 3;
       const result = productsReducer(
         state,
         new actions.EditRateAction([mocks.Product1.id, value])

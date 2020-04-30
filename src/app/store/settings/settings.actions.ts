@@ -1,12 +1,19 @@
 import { Action } from '@ngrx/store';
 
 import { DisplayRate, ItemId, RecipeId } from '~/models';
+import { SettingsState } from './settings.reducer';
 
 export const enum SettingsActionType {
+  LOAD = '[Settings Router] Load',
   SET_DISPLAY_RATE = '[Settings Page] Set Display Rate',
   SET_BELT = '[Settings Page] Set Belt',
   SET_OIL_RECIPE = '[Settings Page] Set Oil Recipe',
   SET_USE_CRACKING = '[Setting Page] Set Use Cracking',
+}
+
+export class LoadAction implements Action {
+  readonly type = SettingsActionType.LOAD;
+  constructor(public payload: SettingsState) {}
 }
 
 export class SetDisplayRateAction implements Action {
@@ -25,6 +32,7 @@ export class SetOilProcessingRecipeAction implements Action {
 }
 
 export type SettingsAction =
+  | LoadAction
   | SetDisplayRateAction
   | SetBeltAction
   | SetOilProcessingRecipeAction;

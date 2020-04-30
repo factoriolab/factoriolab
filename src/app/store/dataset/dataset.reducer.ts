@@ -1,10 +1,12 @@
-import { Item, Category, Recipe, Entities, ItemId } from '~/models';
+import { Item, Category, Recipe, Entities, ItemId, NEntities } from '~/models';
 import { DatasetAction, DatasetActionType } from './dataset.actions';
 
 export interface DatasetState {
   items: Item[];
   itemIds: string[];
   itemEntities: Entities<Item>;
+  itemN: Entities<number>;
+  itemI: NEntities<string>;
   laneIds: ItemId[];
   categories: Category[];
   categoryIds: string[];
@@ -13,12 +15,16 @@ export interface DatasetState {
   recipes: Recipe[];
   recipeIds: string[];
   recipeEntities: Entities<Recipe>;
+  recipeN: Entities<number>;
+  recipeI: NEntities<string>;
 }
 
 export const initialDatasetState: DatasetState = {
   items: [],
   itemIds: [],
   itemEntities: {},
+  itemN: {},
+  itemI: {},
   laneIds: [],
   categories: [],
   categoryIds: [],
@@ -27,6 +33,8 @@ export const initialDatasetState: DatasetState = {
   recipes: [],
   recipeIds: [],
   recipeEntities: {},
+  recipeN: {},
+  recipeI: {},
 };
 
 export function datasetReducer(
@@ -59,6 +67,12 @@ export function datasetReducer(
         itemEntities: action.payload.items.reduce((e: Entities<Item>, i) => {
           return { ...e, ...{ [i.id]: i } };
         }, {}),
+        itemN: action.payload.items.reduce((e: Entities<number>, i, z) => {
+          return { ...e, ...{ [i.id]: z } };
+        }, {}),
+        itemI: action.payload.items.reduce((e: NEntities<string>, i, z) => {
+          return { ...e, ...{ [z]: i.id } };
+        }, {}),
         laneIds: action.payload.items
           .filter((i) => i.belt || i.id === ItemId.Pipe)
           .map((i) => i.id),
@@ -79,6 +93,12 @@ export function datasetReducer(
           },
           {}
         ),
+        recipeN: action.payload.recipes.reduce((e: Entities<number>, i, z) => {
+          return { ...e, ...{ [i.id]: z } };
+        }, {}),
+        recipeI: action.payload.recipes.reduce((e: NEntities<string>, i, z) => {
+          return { ...e, ...{ [z]: i.id } };
+        }, {}),
       };
     }
     default:

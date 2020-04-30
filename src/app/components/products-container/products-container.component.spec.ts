@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { StoreModule, Store } from '@ngrx/store';
-import Fraction from 'fraction.js';
 
 import * as mocks from 'src/mocks';
 import { RateType, ItemId, CategoryId } from '~/models';
@@ -77,7 +76,7 @@ describe('ProductsContainerComponent', () => {
 
   it('should edit rate on a product', () => {
     spyOn(store, 'dispatch');
-    const data: [number, Fraction] = [mocks.Product1.id, new Fraction(2)];
+    const data: [number, number] = [mocks.Product1.id, 2];
     component.child.editRate.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new products.EditRateAction(data)

@@ -3,6 +3,16 @@ import * as actions from './settings.actions';
 import { settingsReducer, initialSettingsState } from './settings.reducer';
 
 describe('Settings Reducer', () => {
+  describe('LOAD', () => {
+    it('should load settings', () => {
+      const result = settingsReducer(
+        undefined,
+        new actions.LoadAction({ displayRate: DisplayRate.PerHour } as any)
+      );
+      expect(result.displayRate).toEqual(DisplayRate.PerHour);
+    });
+  });
+
   describe('SET_DISPLAY_RATE', () => {
     it('should set the display rate', () => {
       const value = DisplayRate.PerHour;
