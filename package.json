@@ -37,7 +37,7 @@
     "fraction.js": "~4.0.12",
     "material-design-icons": "~3.0.1",
     "pako": "^1.0.11",
-    "rxjs": "~6.5.4",
+    "rxjs": "~6.5.5",
     "tslib": "^1.11.1",
     "zone.js": "~0.10.2"
   },
