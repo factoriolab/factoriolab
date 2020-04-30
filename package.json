@@ -26,7 +26,7 @@
     "@angular/router": "~9.1.0",
     "@ngrx/effects": "~9.0.0",
     "@ngrx/store": "~9.0.0",
-    "@ngrx/store-devtools": "~9.0.0",
+    "@ngrx/store-devtools": "~9.1.0",
     "fraction.js": "~4.0.12",
     "material-design-icons": "~3.0.1",
     "rxjs": "~6.5.5",
