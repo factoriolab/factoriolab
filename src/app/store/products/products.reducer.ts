@@ -1,5 +1,3 @@
-import Fraction from 'fraction.js';
-
 import { Product, RateType, NEntities, ItemId, CategoryId } from '~/models';
 import { ProductsAction, ProductsActionType } from './products.actions';
 
@@ -14,7 +12,7 @@ export interface ProductsState {
 const defaultProduct: Product = {
   id: 0,
   itemId: ItemId.WoodenChest,
-  rate: new Fraction(1),
+  rate: 1,
   rateType: RateType.Items,
 };
 
@@ -31,6 +29,14 @@ export function productsReducer(
   action: ProductsAction
 ): ProductsState {
   switch (action.type) {
+    case ProductsActionType.LOAD: {
+      const ids = action.payload.map((p) => p.id);
+      const index = Math.max(...ids) + 1;
+      const entities = action.payload.reduce((e: NEntities<Product>, i) => {
+        return { ...e, ...{ [i.id]: i } };
+      }, {});
+      return { ...state, ...{ ids, entities, index } };
+    }
     case ProductsActionType.ADD: {
       const newOutput = { ...defaultProduct, ...{ id: state.index } };
       return {

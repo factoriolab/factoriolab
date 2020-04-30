@@ -1,10 +1,17 @@
 {
   "name": "factorio-lab",
-  "version": "0.0.1",
-  "author": {
-    "name": "Doug Broad",
-    "email": "dcbroad3@gmail.com"
+  "description": "Angular-based calculator for the game Factorio",
+  "version": "0.0.2",
+  "private": true,
+  "contributors": [
+    "Doug Broad (https://github.com/dcbroad3)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/factoriolab/factorio-lab.git"
   },
+  "homepage": "https://factoriolab.github.io",
+  "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -16,28 +23,29 @@
     "e2e": "ng e2e"
   },
   "dependencies": {
-    "@angular/animations": "~9.1.0",
-    "@angular/common": "~9.1.0",
-    "@angular/compiler": "~9.1.0",
-    "@angular/core": "~9.1.0",
-    "@angular/forms": "~9.1.0",
-    "@angular/platform-browser": "~9.1.0",
-    "@angular/platform-browser-dynamic": "~9.1.0",
-    "@angular/router": "~9.1.0",
-    "@ngrx/effects": "~9.0.0",
-    "@ngrx/store": "~9.0.0",
-    "@ngrx/store-devtools": "~9.0.0",
+    "@angular/animations": "~9.1.1",
+    "@angular/common": "~9.1.1",
+    "@angular/compiler": "~9.1.1",
+    "@angular/core": "~9.1.1",
+    "@angular/forms": "~9.1.1",
+    "@angular/platform-browser": "~9.1.1",
+    "@angular/platform-browser-dynamic": "~9.1.1",
+    "@angular/router": "~9.1.1",
+    "@ngrx/effects": "~9.1.0",
+    "@ngrx/store": "~9.1.0",
+    "@ngrx/store-devtools": "~9.1.0",
     "fraction.js": "~4.0.12",
     "material-design-icons": "~3.0.1",
+    "pako": "^1.0.11",
     "rxjs": "~6.5.5",
     "tslib": "^1.11.1",
-    "zone.js": "~0.10.2"
+    "zone.js": "~0.10.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.901.0",
-    "@angular/cli": "~9.1.0",
-    "@angular/compiler-cli": "~9.1.0",
-    "@angular/language-service": "~9.1.0",
+    "@angular-devkit/build-angular": "~0.901.4",
+    "@angular/cli": "^9.1.4",
+    "@angular/compiler-cli": "~9.1.4",
+    "@angular/language-service": "~9.1.4",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",

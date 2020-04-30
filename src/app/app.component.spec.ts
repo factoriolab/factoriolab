@@ -1,11 +1,19 @@
-import { TestBed, async, ComponentFixture } from '@angular/core/testing';
+import {
+  TestBed,
+  async,
+  ComponentFixture,
+  tick,
+  fakeAsync,
+} from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
-import * as data from 'src/assets/0-18.json';
 import { Id } from './models';
+import { RouterService } from './services/router.service';
 import { State, reducers, metaReducers } from './store';
-import { LoadDatasetAction } from './store/dataset';
+import { getDataset, DatasetState } from './store/dataset';
+import * as Products from './store/products';
 import { TestUtility } from './utilities/test';
 import { HeaderComponent } from './components/header/header.component';
 import { IconComponent } from './components/icon/icon.component';
@@ -21,10 +29,15 @@ describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
   let store: Store<State>;
+  let router: RouterService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, StoreModule.forRoot(reducers, { metaReducers })],
+      imports: [
+        FormsModule,
+        RouterTestingModule,
+        StoreModule.forRoot(reducers, { metaReducers }),
+      ],
       declarations: [
         IconComponent,
         HeaderComponent,
@@ -34,14 +47,15 @@ describe('AppComponent', () => {
         ProductsComponent,
         StepsContainerComponent,
         StepsComponent,
-        AppComponent
-      ]
+        AppComponent,
+      ],
     })
       .compileComponents()
       .then(() => {
         fixture = TestBed.createComponent(AppComponent);
         component = fixture.componentInstance;
         store = TestBed.inject(Store);
+        router = TestBed.inject(RouterService);
       });
   }));
 
@@ -50,12 +64,32 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load the dataset', () => {
-    spyOn(store, 'dispatch');
+  it('should load the dataset', fakeAsync(() => {
+    let dataset: DatasetState;
+    store.select(getDataset).subscribe((d) => (dataset = d));
+    tick();
+    expect(dataset.itemIds.length).toBeGreaterThan(0);
+  }));
+
+  it('should update the url', () => {
+    spyOn(router, 'updateUrl');
     fixture.detectChanges();
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new LoadDatasetAction((data as any).default)
-    );
+    expect(router.updateUrl).toHaveBeenCalled();
+  });
+
+  it('should add a product', fakeAsync(() => {
+    let ids: number[];
+    store.select(Products.getIds).subscribe((i) => (ids = i));
+    tick();
+    expect(ids.length).toBeGreaterThan(0);
+  }));
+
+  it('should not add a product if location includes a hash', () => {
+    location.hash = 'test';
+    spyOn(store, 'dispatch');
+    TestBed.createComponent(AppComponent);
+    expect(store.dispatch).not.toHaveBeenCalledWith(new Products.AddAction());
+    location.hash = '';
   });
 
   it('should toggle settings open when clicked', () => {

@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import Fraction from 'fraction.js';
 import { Observable } from 'rxjs';
 
 import { State } from '~/store';
@@ -29,7 +28,6 @@ export class ProductsContainerComponent implements OnInit {
     this.products$ = this.store.select(Products.getProducts);
     this.editProductId$ = this.store.select(Products.getEditProductId);
     this.categoryId$ = this.store.select(Products.getCategoryId);
-    this.add();
   }
 
   add() {
@@ -52,7 +50,7 @@ export class ProductsContainerComponent implements OnInit {
     this.store.dispatch(new Products.CommitEditProductAction(data));
   }
 
-  editRate(data: [number, Fraction]) {
+  editRate(data: [number, number]) {
     this.store.dispatch(new Products.EditRateAction(data));
   }
 
