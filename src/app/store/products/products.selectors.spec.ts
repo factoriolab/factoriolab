@@ -161,6 +161,7 @@ describe('Products Selectors', () => {
         [],
         {},
         {},
+        null,
         {}
       );
       expect(Object.keys(result).length).toEqual(0);
@@ -176,6 +177,7 @@ describe('Products Selectors', () => {
             speed: new Fraction(1),
           },
         },
+        null,
         mocks.Data
       );
       expect(result[mocks.Product1.id].n).toBeGreaterThan(0);
@@ -191,6 +193,7 @@ describe('Products Selectors', () => {
             speed: new Fraction(1),
           },
         },
+        null,
         mocks.Data
       );
       expect(result[mocks.Product4.id].n).toBeGreaterThan(0);

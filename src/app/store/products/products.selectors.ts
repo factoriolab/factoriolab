@@ -1,8 +1,23 @@
 import { compose, createSelector } from '@ngrx/store';
 import Fraction from 'fraction.js';
 
-import { Step, RateType, NEntities, WAGON_STACKS, WAGON_FLUID } from '~/models';
-import { OilUtility, RateUtility, UraniumUtility } from '~/utilities';
+import {
+  Step,
+  RateType,
+  NEntities,
+  WAGON_STACKS,
+  WAGON_FLUID,
+  ItemId,
+  RecipeId,
+  CategoryId,
+} from '~/models';
+import {
+  OilUtility,
+  RateUtility,
+  UraniumUtility,
+  OilMatrix,
+  UraniumMatrix,
+} from '~/utilities';
 import * as Dataset from '../dataset';
 import * as Recipe from '../recipe';
 import * as Settings from '../settings';
@@ -110,23 +125,70 @@ export const getNormalizedRatesByFactories = createSelector(
   getProductsByFactories,
   getEntities,
   Recipe.getRecipeFactors,
+  Settings.getOilRecipe,
   Dataset.getDataset,
-  (ids, entities, factors, data) => {
+  (ids, entities, factors, oilRecipe, data) => {
     return ids.reduce((e: NEntities<Fraction>, i) => {
-      const recipe = data.recipeEntities[entities[i].itemId];
-      const o = recipe.out ? recipe.out[recipe.id] : 1;
-      const f = factors[recipe.id];
-      // TODO: Handle products with no specific recipe here (oil, etc)
-      return {
-        ...e,
-        ...{
-          [i]: new Fraction(entities[i].rate)
-            .div(recipe.time)
-            .mul(o)
-            .mul(f.speed)
-            .mul(f.prod),
-        },
-      };
+      const itemId = entities[i].itemId;
+      const recipe = data.recipeEntities[itemId];
+      let oilMatrix: OilMatrix;
+      let oilFactor: Fraction;
+      let uraMatrix: UraniumMatrix;
+      let uraFactor: Fraction;
+      if (recipe) {
+        if (data.itemEntities[itemId].category === CategoryId.Research) {
+          const f = factors[recipe.id];
+          return {
+            ...e,
+            ...{
+              [i]: new Fraction(entities[i].rate).div(recipe.time).mul(f.speed),
+            },
+          };
+        } else {
+          const o = recipe.out ? recipe.out[recipe.id] : 1;
+          const f = factors[recipe.id];
+          return {
+            ...e,
+            ...{
+              [i]: new Fraction(entities[i].rate)
+                .div(recipe.time)
+                .mul(o)
+                .mul(f.speed)
+                .mul(f.prod),
+            },
+          };
+        }
+      } else if (OilUtility.OIL_ITEM.indexOf(itemId) !== -1) {
+        if (!oilMatrix) {
+          oilMatrix = OilUtility.getMatrix(oilRecipe, true, factors, data);
+          oilFactor = factors[oilRecipe].speed.div(oilMatrix.oil.recipe.time);
+        }
+        switch (itemId) {
+          case ItemId.HeavyOil:
+            return { ...e, ...{ [i]: oilMatrix.oil.heavy.mul(oilFactor) } };
+          case ItemId.LightOil:
+            return { ...e, ...{ [i]: oilMatrix.hoc.max.mul(oilFactor) } };
+          case ItemId.PetroleumGas:
+            return { ...e, ...{ [i]: oilMatrix.loc.max.mul(oilFactor) } };
+          case ItemId.SolidFuel:
+            return { ...e, ...{ [i]: oilMatrix.ptf.max.mul(oilFactor) } };
+        }
+      } else if (UraniumUtility.URANIUM_ITEM.indexOf(itemId) !== -1) {
+        if (!uraMatrix) {
+          uraMatrix = UraniumUtility.getMatrix(factors, data);
+          uraFactor = factors[RecipeId.UraniumProcessing].speed.div(
+            uraMatrix.prod.recipe.time
+          );
+        }
+        switch (itemId) {
+          case ItemId.Uranium238:
+            return { ...e, ...{ [i]: uraMatrix.prod.u238.mul(uraFactor) } };
+          case ItemId.Uranium235:
+            return { ...e, ...{ [i]: uraMatrix.conv.max.mul(uraFactor) } };
+        }
+      }
+      // No matching recipe found
+      return e;
     }, {});
   }
 );

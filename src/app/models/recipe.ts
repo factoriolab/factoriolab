@@ -7,6 +7,7 @@ export enum RecipeId {
   HeavyOilCracking = 'heavy-oil-cracking',
   KovarexEnrichmentProcess = 'kovarex-enrichment-process',
   LightOilCracking = 'light-oil-cracking',
+  RocketPart = 'rocket-part',
   Satellite = 'satellite',
   SolidFuelFromLightOil = 'solid-fuel-from-light-oil',
   SolidFuelFromPetroleumGas = 'solid-fuel-from-petroleum-gas',

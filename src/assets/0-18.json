@@ -2525,7 +2525,7 @@
     },
     {
       "id": "space-science-pack",
-      "time": 41.25,
+      "time": 40.33,
       "in": { "rocket-part": 100, "satellite": 1 },
       "out": { "space-science-pack": 1000 },
       "producers": ["rocket-silo"]

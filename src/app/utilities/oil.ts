@@ -5,7 +5,7 @@ import { DatasetState } from '~/store/dataset';
 import { RecipeState } from '~/store/recipe';
 import { RateUtility } from './rate';
 
-const OIL_ITEM = [
+export const OIL_ITEM = [
   ItemId.HeavyOil,
   ItemId.LightOil,
   ItemId.PetroleumGas,
@@ -27,7 +27,7 @@ interface ConversionData {
   max: Fraction;
 }
 
-interface OilMatrix {
+export interface OilMatrix {
   oil: ProductionData;
   hoc: ConversionData;
   loc: ConversionData;
@@ -45,8 +45,15 @@ interface OilSteps {
 }
 
 export class OilUtility {
+  static OIL_ITEM = [
+    ItemId.HeavyOil,
+    ItemId.LightOil,
+    ItemId.PetroleumGas,
+    ItemId.SolidFuel,
+  ];
+
   /** Calculate data for oil refinery recipe */
-  public static getProductionData(
+  static getProductionData(
     oilRecipeId: RecipeId,
     factors: Entities<Factors>,
     data: DatasetState
@@ -65,7 +72,7 @@ export class OilUtility {
   }
 
   /** Calculate data for oil conversion recipe */
-  public static getConversionData(
+  static getConversionData(
     recipeId: RecipeId,
     inputId: ItemId,
     outputId: ItemId,
@@ -91,7 +98,7 @@ export class OilUtility {
   }
 
   /** Find and calculate matrix for oil recipes */
-  public static getMatrix(
+  static getMatrix(
     oilRecipeId: RecipeId,
     includeFuel: boolean,
     factors: Entities<Factors>,
@@ -143,7 +150,7 @@ export class OilUtility {
   }
 
   /** Find or create a specific oil step */
-  public static getStep(
+  static getStep(
     itemId: ItemId,
     recipeId: RecipeId,
     steps: Step[],
@@ -169,7 +176,7 @@ export class OilUtility {
   }
 
   /** Find or create oil steps */
-  public static getSteps(
+  static getSteps(
     steps: Step[],
     matrix: OilMatrix,
     settings: RecipeState
@@ -207,7 +214,7 @@ export class OilUtility {
   }
 
   /** Calculate number of refineries required for heavy, surplus light */
-  public static calculateHeavyOil(step: OilSteps, matrix: OilMatrix): OilSteps {
+  static calculateHeavyOil(step: OilSteps, matrix: OilMatrix): OilSteps {
     if (step.heavy.items.n > 0) {
       // Refineries required for heavy
       const refineries = step.heavy.items.div(matrix.oil.heavy);
@@ -222,7 +229,7 @@ export class OilUtility {
   }
 
   /** Calculate number of refineries required for light, surplus petrol */
-  public static calculateLightOil(step: OilSteps, matrix: OilMatrix): OilSteps {
+  static calculateLightOil(step: OilSteps, matrix: OilMatrix): OilSteps {
     if (step.light.items.n > 0) {
       if (step.light.surplus >= step.light.items) {
         // Already producing enough light oil, subtract from surplus
@@ -250,10 +257,7 @@ export class OilUtility {
   }
 
   /** Try calculating number of refineries and heavy-to-light plants required for full light-to-fuel conversion, excess petrol */
-  public static tryCalculateLightToFuel(
-    step: OilSteps,
-    matrix: OilMatrix
-  ): OilSteps {
+  static tryCalculateLightToFuel(step: OilSteps, matrix: OilMatrix): OilSteps {
     if (step.fuel?.items.n > 0) {
       let required = step.fuel.items
         .div(matrix.ltf.output)
@@ -290,10 +294,7 @@ export class OilUtility {
   }
 
   /** Calculate number of refineries, heavy-to-light plants, and light-to-petrol plants required for petrol */
-  public static calculatePetroleumGas(
-    step: OilSteps,
-    matrix: OilMatrix
-  ): OilSteps {
+  static calculatePetroleumGas(step: OilSteps, matrix: OilMatrix): OilSteps {
     if (step.petrol.items.n > 0) {
       if (step.petrol.surplus >= step.petrol.items) {
         // Already producing enough petroleum, subtract from surplus
@@ -318,10 +319,7 @@ export class OilUtility {
   }
 
   /** Calculate number of refineries and heavy-to-light plants required for petrol, excess light */
-  public static calculateLightAndPetrol(
-    step: OilSteps,
-    matrix: OilMatrix
-  ): OilSteps {
+  static calculateLightAndPetrol(step: OilSteps, matrix: OilMatrix): OilSteps {
     if (step.petrol.items.n > 0) {
       if (step.petrol.surplus >= step.petrol.items) {
         // Already producing enough petroleum, subtract from surplus
@@ -347,7 +345,7 @@ export class OilUtility {
   }
 
   /** Calculate conversion of surplus light oil to fuel */
-  public static calculateSurplusLightToFuel(
+  static calculateSurplusLightToFuel(
     step: OilSteps,
     matrix: OilMatrix
   ): OilSteps {
@@ -375,7 +373,7 @@ export class OilUtility {
   }
 
   /** Calculate conversion of surplus petroleum gas to fuel */
-  public static calculateSurplusPetrolToFuel(
+  static calculateSurplusPetrolToFuel(
     step: OilSteps,
     matrix: OilMatrix
   ): OilSteps {
@@ -404,7 +402,7 @@ export class OilUtility {
   }
 
   /** Calculate number of refineries and heavy-to-light plants required for combined light-to-fuel/petrol-to-fuel */
-  public static calculateFuel(step: OilSteps, matrix: OilMatrix): OilSteps {
+  static calculateFuel(step: OilSteps, matrix: OilMatrix): OilSteps {
     // Refineries required for fuel
     const refineries = step.fuelRequired.div(matrix.ptf.max);
     // Heavy-to-light plants required for light
@@ -423,7 +421,7 @@ export class OilUtility {
   }
 
   /** Calculate number of items output via oil processes */
-  public static calculateItems(step: OilSteps, matrix: OilMatrix): OilSteps {
+  static calculateItems(step: OilSteps, matrix: OilMatrix): OilSteps {
     // 1) From refineries
     step.heavy.items = step.heavy.factories.mul(matrix.oil.heavy);
     step.light.items = step.heavy.factories.mul(matrix.oil.light);
@@ -446,7 +444,7 @@ export class OilUtility {
   }
 
   /** Calculate inputs (crude, water, etc) */
-  public static calculateInputs(
+  static calculateInputs(
     step: OilSteps,
     matrix: OilMatrix,
     steps: Step[],
@@ -493,7 +491,7 @@ export class OilUtility {
   }
 
   /** Scale out factories based on speed factors */
-  public static calculateFactories(
+  static calculateFactories(
     step: OilSteps,
     matrix: OilMatrix,
     factors: Entities<Factors>
@@ -522,7 +520,7 @@ export class OilUtility {
   }
 
   /** Calculate and add steps for required oil processing */
-  public static addSteps(
+  static addSteps(
     oilRecipeId: RecipeId,
     steps: Step[],
     settings: RecipeState,
