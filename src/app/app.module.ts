@@ -20,7 +20,6 @@ import { SettingsContainerComponent } from './components/settings-container/sett
 import { reducers, metaReducers } from './store';
 import { ProductsEffects } from './store/products';
 
-// Force merge
 @NgModule({
   declarations: [
     AppComponent,
