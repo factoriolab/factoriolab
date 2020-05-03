@@ -13,7 +13,9 @@ import { DatasetState } from '~/store/dataset';
 import { RecipeState } from '~/store/recipe';
 
 export class RateUtility {
-  public static addStepsFor(
+  static LAUNCH_TIME = new Fraction(2420, 60);
+
+  static addStepsFor(
     id: ItemId,
     rate: Fraction,
     steps: Step[],
@@ -24,6 +26,7 @@ export class RateUtility {
     data: DatasetState
   ) {
     let recipe = data.recipeEntities[id];
+    const categoryId = data.itemEntities[id].category;
 
     if (!recipe) {
       // No recipe for this step, check for simple oil recipes
@@ -49,7 +52,11 @@ export class RateUtility {
     }
 
     // Add items to the step
-    step.items = step.items.add(rate);
+    if (categoryId === CategoryId.Research) {
+      step.items = step.items.add(rate.mul(factors[recipe.id].prod));
+    } else {
+      step.items = step.items.add(rate);
+    }
 
     if (recipe) {
       // Mark complex recipes
@@ -67,7 +74,21 @@ export class RateUtility {
       const out = new Fraction(recipe.out ? recipe.out[id] : 1).mul(prod);
 
       // Calculate factories
-      step.factories = step.items.mul(recipe.time).div(out).div(f.speed);
+      if (id === ItemId.SpaceSciencePack) {
+        // Factories are for rocket parts, space science packs are a side effect
+        step.factories = null;
+      } else {
+        step.factories = step.items.mul(recipe.time).div(out).div(f.speed);
+        if (categoryId === CategoryId.Research) {
+          step.factories = step.factories.div(f.prod);
+        }
+        // Add # of factories to actually launch rockets
+        if (id === ItemId.RocketPart) {
+          step.factories = step.factories.add(
+            step.items.div(100).mul(this.LAUNCH_TIME)
+          );
+        }
+      }
 
       // Recurse adding steps for ingredients
       if (recipe.in) {
@@ -87,7 +108,7 @@ export class RateUtility {
     }
   }
 
-  public static calculateLanes(steps: Step[], laneSpeed: Entities<Fraction>) {
+  static calculateLanes(steps: Step[], laneSpeed: Entities<Fraction>) {
     for (const step of steps) {
       if (step.items) {
         step.lanes = step.items.div(laneSpeed[step.settings.lane]);
@@ -96,7 +117,7 @@ export class RateUtility {
     return steps;
   }
 
-  public static displayRate(steps: Step[], displayRate: DisplayRate) {
+  static displayRate(steps: Step[], displayRate: DisplayRate) {
     for (const step of steps) {
       if (step.items) {
         step.items = step.items.mul(displayRate);
@@ -108,7 +129,7 @@ export class RateUtility {
     return steps;
   }
 
-  public static findBasicOilRecipe(
+  static findBasicOilRecipe(
     id: ItemId,
     oilRecipeId: RecipeId,
     data: DatasetState

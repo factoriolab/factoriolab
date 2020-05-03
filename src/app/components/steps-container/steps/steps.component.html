@@ -40,8 +40,10 @@
         </td>
         <ng-container *ngIf="step.settings.factory">
           <td>
-            <div class="flex">
-              <div class="monospace">{{ step.factories.toFraction(true) }}</div>
+            <div class="flex" *ngIf="!step.factories || step.factories.n > 0">
+              <div *ngIf="step.factories" class="monospace">
+                {{ step.factories.toFraction(true) }}
+              </div>
               <ng-container *ngIf="step.settings.recipeId">
                 <lab-icon [iconId]="step.settings.recipeId"></lab-icon>
                 :
