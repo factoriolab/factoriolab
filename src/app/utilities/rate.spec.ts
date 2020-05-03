@@ -136,7 +136,7 @@ describe('RateUtility', () => {
               ...{
                 ['iron-chest']: {
                   ...mocks.Data.itemEntities['iron-chest'],
-                  ...{ category: CategoryId.Research }
+                  ...{ category: CategoryId.Research },
                 } as any,
               },
             },
@@ -180,6 +180,22 @@ describe('RateUtility', () => {
         mocks.Data
       );
       expect(steps[0].settings.recipeId).toEqual(RecipeId.BasicOilProcessing);
+    });
+
+    it('should properly calculate factories for space science pack/rocket parts', () => {
+      const steps: Step[] = [];
+      RateUtility.addStepsFor(
+        ItemId.SpaceSciencePack,
+        new Fraction(60),
+        steps,
+        mocks.RecipeSettingsEntities,
+        mocks.RecipeFactors,
+        ItemId.TransportBelt,
+        RecipeId.AdvancedOilProcessing,
+        mocks.Data
+      );
+      expect(steps[0].factories).toBe(null);
+      expect(steps[1].factories).toEqual(new Fraction(1021, 50));
     });
 
     it('should handle null recipe', () => {

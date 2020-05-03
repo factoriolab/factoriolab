@@ -5,8 +5,6 @@ import { DatasetState } from '~/store/dataset';
 import { RecipeState } from '~/store/recipe';
 import { RateUtility } from './rate';
 
-const URANIUM_ITEM = [ItemId.Uranium235, ItemId.Uranium238];
-
 interface ProductionData {
   recipe: Recipe;
   u238: Fraction;
@@ -21,7 +19,7 @@ interface ConversionData {
   max: Fraction;
 }
 
-interface UraniumMatrix {
+export interface UraniumMatrix {
   prod: ProductionData;
   conv: ConversionData;
 }
@@ -32,8 +30,10 @@ interface UraniumSteps {
 }
 
 export class UraniumUtility {
+  static URANIUM_ITEM = [ItemId.Uranium235, ItemId.Uranium238];
+
   /** Calculate data for uranium processing recipe */
-  public static getProductionData(
+  static getProductionData(
     factors: Entities<Factors>,
     data: DatasetState
   ): ProductionData {
@@ -48,7 +48,7 @@ export class UraniumUtility {
   }
 
   /** Calculate data for kovarex enrichment recipe */
-  public static getConversionData(
+  static getConversionData(
     consumes: Fraction,
     base: Fraction,
     factors: Entities<Factors>,
@@ -75,7 +75,7 @@ export class UraniumUtility {
   }
 
   /** Find and calculate matrix for uranium recipes */
-  public static getMatrix(
+  static getMatrix(
     factors: Entities<Factors>,
     data: DatasetState
   ): UraniumMatrix {
@@ -86,7 +86,7 @@ export class UraniumUtility {
   }
 
   /** Find or create a specific uranium step */
-  public static getStep(
+  static getStep(
     itemId: ItemId,
     recipeId: RecipeId,
     steps: Step[],
@@ -112,7 +112,7 @@ export class UraniumUtility {
   }
 
   /** Find or create uranium steps */
-  public static getSteps(
+  static getSteps(
     steps: Step[],
     matrix: UraniumMatrix,
     settings: RecipeState
@@ -134,7 +134,7 @@ export class UraniumUtility {
   }
 
   /** Calculate number of centrifuges required for u238, surplus u235 */
-  public static calculateUranium238(
+  static calculateUranium238(
     step: UraniumSteps,
     matrix: UraniumMatrix
   ): UraniumSteps {
@@ -152,7 +152,7 @@ export class UraniumUtility {
   }
 
   /** Calculate number of centrifuges and enrichment centrifuges required for u235 */
-  public static calculateUranium235(
+  static calculateUranium235(
     step: UraniumSteps,
     matrix: UraniumMatrix
   ): UraniumSteps {
@@ -178,7 +178,7 @@ export class UraniumUtility {
   }
 
   /** Calculate number of items output via uranium processes */
-  public static calculateItems(
+  static calculateItems(
     step: UraniumSteps,
     matrix: UraniumMatrix
   ): UraniumSteps {
@@ -206,7 +206,7 @@ export class UraniumUtility {
   }
 
   /** Calculate inputs (uranium ore)  */
-  public static calculateInputs(
+  static calculateInputs(
     step: UraniumSteps,
     matrix: UraniumMatrix,
     steps: Step[],
@@ -230,7 +230,7 @@ export class UraniumUtility {
   }
 
   /** Scale out factories based on speed factors */
-  public static calculateFactories(
+  static calculateFactories(
     step: UraniumSteps,
     matrix: UraniumMatrix,
     factors: Entities<Factors>
@@ -246,14 +246,14 @@ export class UraniumUtility {
   }
 
   /** Calculate and add steps for required uranium processing */
-  public static addSteps(
+  static addSteps(
     steps: Step[],
     settings: RecipeState,
     factors: Entities<Factors>,
     belt: ItemId,
     data: DatasetState
   ): Step[] {
-    if (steps.every((s) => URANIUM_ITEM.indexOf(s.itemId) === -1)) {
+    if (steps.every((s) => this.URANIUM_ITEM.indexOf(s.itemId) === -1)) {
       // No matching uranium products found in steps
       return steps;
     }
