@@ -16,19 +16,13 @@ describe('RecipeUtility', () => {
 
   describe('defaultFactory', () => {
     it('should handle no producers', () => {
-      const result = RecipeUtility.defaultFactory(
-        {} as any,
-        assembler2,
-        null,
-        null
-      );
+      const result = RecipeUtility.defaultFactory({} as any, assembler2, null);
       expect(result).toEqual(assembler2);
     });
 
     it('should handle one producer', () => {
       const result = RecipeUtility.defaultFactory(
         { producers: [assembler2] } as any,
-        null,
         null,
         null
       );
@@ -39,7 +33,6 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.defaultFactory(
         { producers: [assembler2, assembler3] } as any,
         assembler2,
-        null,
         null
       );
       expect(result).toEqual(assembler2);
@@ -49,17 +42,6 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.defaultFactory(
         { producers: [assembler2, assembler3] } as any,
         null,
-        assembler2,
-        null
-      );
-      expect(result).toEqual(assembler2);
-    });
-
-    it('should find the default drill', () => {
-      const result = RecipeUtility.defaultFactory(
-        { producers: [assembler2, assembler3] } as any,
-        null,
-        null,
         assembler2
       );
       expect(result).toEqual(assembler2);
@@ -68,7 +50,6 @@ describe('RecipeUtility', () => {
     it('should use the first producer if no match found', () => {
       const result = RecipeUtility.defaultFactory(
         { producers: [assembler2, assembler3] } as any,
-        null,
         null,
         null
       );
@@ -150,9 +131,15 @@ describe('RecipeUtility', () => {
     });
 
     it('should handle the empty module', () => {
-      const result = RecipeUtility.recipeFactors(new Fraction(1), [module], null, 0, {
-        [module]: {},
-      } as any);
+      const result = RecipeUtility.recipeFactors(
+        new Fraction(1),
+        [module],
+        null,
+        0,
+        {
+          [module]: {},
+        } as any
+      );
       expect(result).toEqual({ speed: new Fraction(1), prod: new Fraction(1) });
     });
 
@@ -168,12 +155,24 @@ describe('RecipeUtility', () => {
     });
 
     it('should handle an unfound beacon type', () => {
-      const result = RecipeUtility.recipeFactors(new Fraction(1), [], module, 1, {} as any);
+      const result = RecipeUtility.recipeFactors(
+        new Fraction(1),
+        [],
+        module,
+        1,
+        {} as any
+      );
       expect(result).toEqual({ speed: new Fraction(1), prod: new Fraction(1) });
     });
 
     it('should handle no modules or beacons', () => {
-      const result = RecipeUtility.recipeFactors(new Fraction(1), [], null, 0, {} as any);
+      const result = RecipeUtility.recipeFactors(
+        new Fraction(1),
+        [],
+        null,
+        0,
+        {} as any
+      );
       expect(result).toEqual({ speed: new Fraction(1), prod: new Fraction(1) });
     });
   });

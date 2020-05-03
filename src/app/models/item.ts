@@ -30,6 +30,7 @@ export enum ItemId {
   SpeedModule1 = 'speed-module-1',
   SpeedModule2 = 'speed-module-2',
   SpeedModule3 = 'speed-module-3',
+  Steam = 'steam',
   SteelChest = 'steel-chest',
   StoneFurnace = 'stone-furnace',
   TransportBelt = 'transport-belt',
@@ -49,4 +50,6 @@ export interface Item {
   belt?: Belt;
   factory?: Factory;
   module?: Module;
+  /** Fuel value in MJ */
+  fuel?: number;
 }
