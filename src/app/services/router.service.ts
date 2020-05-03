@@ -207,7 +207,6 @@ export class RouterService {
     const pa =
       state.assembler === init.assembler ? '' : data.itemN[state.assembler];
     const pf = state.furnace === init.furnace ? '' : data.itemN[state.furnace];
-    const pd = state.drill === init.drill ? '' : data.itemN[state.drill];
     const mp =
       state.prodModule === init.prodModule ? '' : moduleN[state.prodModule];
     const mo =
@@ -222,7 +221,7 @@ export class RouterService {
     const rs =
       state.researchSpeed === init.researchSpeed ? '' : state.researchSpeed;
     const fr = state.flowRate === init.flowRate ? '' : state.flowRate;
-    return `${dr}:${pr}:${tb}:${pa}:${pf}:${pd}:${mp}:${mo}:${bt}:${bc}:${or}:${fl}:${mb}:${rs}:${fr}`;
+    return `${dr}:${pr}:${tb}:${pa}:${pf}:${mp}:${mo}:${bt}:${bc}:${or}:${fl}:${mb}:${rs}:${fr}`;
   }
 
   unzipSettings(zSettings: string, data: DatasetState) {
@@ -244,33 +243,30 @@ export class RouterService {
       settings.furnace = data.itemI[s[4]];
     }
     if (s[5] !== '') {
-      settings.drill = data.itemI[s[5]];
-    }
-    if (s[6] !== '') {
       settings.prodModule = moduleI[Number(s[6])];
     }
-    if (s[7] !== '') {
+    if (s[6] !== '') {
       settings.otherModule = moduleI[Number(s[7])];
     }
-    if (s[8] !== '') {
+    if (s[7] !== '') {
       settings.beaconType = moduleI[Number(s[8])];
     }
-    if (s[9] !== '') {
+    if (s[8] !== '') {
       settings.beaconCount = Number(s[9]);
     }
-    if (s[10] !== '') {
+    if (s[9] !== '') {
       settings.oilRecipe = data.recipeI[s[10]];
     }
-    if (s[11] !== '') {
+    if (s[10] !== '') {
       settings.fuel = data.itemI[s[11]];
     }
-    if (s[12] !== '') {
+    if (s[11] !== '') {
       settings.miningBonus = Number(s[12]);
     }
-    if (s[13] !== '') {
+    if (s[12] !== '') {
       settings.researchSpeed = Number(s[13]);
     }
-    if (s[14] !== '') {
+    if (s[13] !== '') {
       settings.flowRate = Number(s[14]);
     }
     this.store.dispatch(new Settings.LoadAction(settings));

@@ -44,8 +44,7 @@ export const getRecipeSettings = createSelector(
           recipeSettings.factory = RecipeUtility.defaultFactory(
             recipe,
             settings.assembler,
-            settings.furnace,
-            settings.drill
+            settings.furnace
           );
         }
 

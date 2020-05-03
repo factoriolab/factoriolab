@@ -49,4 +49,6 @@ export interface Item {
   belt?: Belt;
   factory?: Factory;
   module?: Module;
+  /** Fuel value in MJ */
+  fuel?: number;
 }

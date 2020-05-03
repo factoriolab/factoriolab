@@ -7,7 +7,6 @@ export interface SettingsState {
   belt: ItemId;
   assembler: ItemId;
   furnace: ItemId;
-  drill: ItemId;
   prodModule: ItemId;
   otherModule: ItemId;
   beaconType: ItemId;
@@ -25,7 +24,6 @@ export const initialSettingsState: SettingsState = {
   belt: ItemId.ExpressTransportBelt,
   assembler: ItemId.AssemblingMachine3,
   furnace: ItemId.ElectricFurnace,
-  drill: ItemId.ElectricMiningDrill,
   prodModule: ItemId.ProductivityModule3,
   otherModule: ItemId.SpeedModule3,
   beaconType: ItemId.SpeedModule3,

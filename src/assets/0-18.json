@@ -2259,22 +2259,22 @@
     {
       "id": "coal",
       "time": 1,
-      "producers": ["burner-mining-drill", "electric-mining-drill"]
+      "producers": ["electric-mining-drill"]
     },
     {
       "id": "stone",
       "time": 1,
-      "producers": ["burner-mining-drill", "electric-mining-drill"]
+      "producers": ["electric-mining-drill"]
     },
     {
       "id": "iron-ore",
       "time": 1,
-      "producers": ["burner-mining-drill", "electric-mining-drill"]
+      "producers": ["electric-mining-drill"]
     },
     {
       "id": "copper-ore",
       "time": 1,
-      "producers": ["burner-mining-drill", "electric-mining-drill"]
+      "producers": ["electric-mining-drill"]
     },
     {
       "id": "uranium-ore",

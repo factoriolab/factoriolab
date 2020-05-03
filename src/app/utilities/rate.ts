@@ -22,6 +22,7 @@ export class RateUtility {
     settings: RecipeState,
     factors: Entities<Factors>,
     belt: ItemId,
+    fuel: ItemId,
     oilRecipe: RecipeId,
     data: DatasetState
   ) {
@@ -88,6 +89,25 @@ export class RateUtility {
             step.items.div(100).mul(this.LAUNCH_TIME)
           );
         }
+        // Add fuel required for factory
+        if (step.settings.factory) {
+          const factory = data.itemEntities[step.settings.factory].factory;
+          if (factory.burner) {
+            console.log('found burner');
+            const fuelItem = data.itemEntities[fuel];
+            RateUtility.addStepsFor(
+              fuel,
+              step.factories.mul(factory.burner).div(fuelItem.fuel).div(1000),
+              steps,
+              settings,
+              factors,
+              belt,
+              fuel,
+              oilRecipe,
+              data
+            );
+          }
+        }
       }
 
       // Recurse adding steps for ingredients
@@ -100,6 +120,7 @@ export class RateUtility {
             settings,
             factors,
             belt,
+            fuel,
             oilRecipe,
             data
           );
