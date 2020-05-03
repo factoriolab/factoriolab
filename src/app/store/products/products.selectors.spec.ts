@@ -1,8 +1,16 @@
 import Fraction from 'fraction.js';
 
 import * as mocks from 'src/mocks';
-import { DisplayRate } from '~/models';
+import {
+  DisplayRate,
+  ItemId,
+  RateType,
+  Product,
+  RecipeId,
+  NEntities,
+} from '~/models';
 import { RateUtility, UraniumUtility, OilUtility } from '~/utilities';
+import { initialSettingsState } from '../settings';
 import * as selectors from './products.selectors';
 
 describe('Products Selectors', () => {
@@ -167,6 +175,20 @@ describe('Products Selectors', () => {
       expect(Object.keys(result).length).toEqual(0);
     });
 
+    it('should handle no recipe found', () => {
+      const result = selectors.getNormalizedRatesByFactories.projector(
+        [mocks.Product1.id],
+        {
+          ...mocks.ProductEntities,
+          ...{ [mocks.Product1.id]: { itemId: 'test' } },
+        },
+        mocks.RecipeFactors,
+        null,
+        mocks.Data
+      );
+      expect(Object.keys(result).length).toEqual(0);
+    });
+
     it('should return the rate entities', () => {
       const result = selectors.getNormalizedRatesByFactories.projector(
         [mocks.Product1.id],
@@ -197,6 +219,89 @@ describe('Products Selectors', () => {
         mocks.Data
       );
       expect(result[mocks.Product4.id].n).toBeGreaterThan(0);
+    });
+
+    it('should handle research products', () => {
+      const product: Product = {
+        id: 0,
+        itemId: ItemId.MiningProductivity,
+        rate: 1,
+        rateType: RateType.Factories,
+      };
+      const result = selectors.getNormalizedRatesByFactories.projector(
+        [0],
+        { [0]: product },
+        mocks.RecipeFactors,
+        null,
+        mocks.Data
+      );
+      expect(result[0].n).toBeGreaterThan(0);
+    });
+
+    it('should handle oil products', () => {
+      const products: NEntities<Product> = {
+        [0]: {
+          id: 0,
+          itemId: ItemId.HeavyOil,
+          rate: 1,
+          rateType: RateType.Factories,
+        },
+        [1]: {
+          id: 1,
+          itemId: ItemId.LightOil,
+          rate: 1,
+          rateType: RateType.Factories,
+        },
+        [2]: {
+          id: 2,
+          itemId: ItemId.PetroleumGas,
+          rate: 1,
+          rateType: RateType.Factories,
+        },
+        [3]: {
+          id: 3,
+          itemId: ItemId.SolidFuel,
+          rate: 1,
+          rateType: RateType.Factories,
+        },
+      };
+      const result = selectors.getNormalizedRatesByFactories.projector(
+        Object.keys(products).map((k) => Number(k)),
+        products,
+        mocks.RecipeFactors,
+        RecipeId.AdvancedOilProcessing,
+        mocks.Data
+      );
+      expect(result[0].n).toBeGreaterThan(0);
+      expect(result[1].n).toBeGreaterThan(0);
+      expect(result[2].n).toBeGreaterThan(0);
+      expect(result[3].n).toBeGreaterThan(0);
+    });
+
+    it('should handle uranium products', () => {
+      const products: NEntities<Product> = {
+        [0]: {
+          id: 0,
+          itemId: ItemId.Uranium238,
+          rate: 1,
+          rateType: RateType.Factories,
+        },
+        [1]: {
+          id: 1,
+          itemId: ItemId.Uranium235,
+          rate: 1,
+          rateType: RateType.Factories,
+        },
+      };
+      const result = selectors.getNormalizedRatesByFactories.projector(
+        Object.keys(products).map((k) => Number(k)),
+        products,
+        mocks.RecipeFactors,
+        null,
+        mocks.Data
+      );
+      expect(result[0].n).toBeGreaterThan(0);
+      expect(result[1].n).toBeGreaterThan(0);
     });
   });
 
@@ -306,6 +411,25 @@ describe('Products Selectors', () => {
       spyOn(RateUtility, 'displayRate');
       selectors.getSteps.projector([], null);
       expect(RateUtility.displayRate).toHaveBeenCalled();
+    });
+  });
+
+  describe('getZipState', () => {
+    it('should put together the required state parts', () => {
+      const products = [mocks.Product1];
+      const recipe = mocks.RecipeSettingsEntities;
+      const settings = initialSettingsState;
+      const data = mocks.Data;
+      const result = selectors.getZipState.projector(
+        products,
+        recipe,
+        settings,
+        data
+      );
+      expect(result.products).toBe(products);
+      expect(result.recipe).toBe(recipe);
+      expect(result.settings).toBe(settings);
+      expect(result.data).toBe(data);
     });
   });
 });

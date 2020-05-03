@@ -17,6 +17,7 @@ export enum ItemId {
   HeavyOil = 'heavy-oil',
   Lab = 'lab',
   LightOil = 'light-oil',
+  MiningProductivity = 'mining-productivity',
   Module = 'module',
   PetroleumGas = 'petroleum-gas',
   Pipe = 'pipe',

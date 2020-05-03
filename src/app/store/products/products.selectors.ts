@@ -128,13 +128,13 @@ export const getNormalizedRatesByFactories = createSelector(
   Settings.getOilRecipe,
   Dataset.getDataset,
   (ids, entities, factors, oilRecipe, data) => {
+    let oilMatrix: OilMatrix;
+    let oilFactor: Fraction;
+    let uraMatrix: UraniumMatrix;
+    let uraFactor: Fraction;
     return ids.reduce((e: NEntities<Fraction>, i) => {
       const itemId = entities[i].itemId;
       const recipe = data.recipeEntities[itemId];
-      let oilMatrix: OilMatrix;
-      let oilFactor: Fraction;
-      let uraMatrix: UraniumMatrix;
-      let uraFactor: Fraction;
       if (recipe) {
         if (data.itemEntities[itemId].category === CategoryId.Research) {
           const f = factors[recipe.id];
