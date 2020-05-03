@@ -1,3 +1,20 @@
-<p>
-  settings works!
-</p>
+<table>
+  <tbody>
+    <tr>
+      <td>Precision:</td>
+      <td>
+        <div class="flex">
+          <input
+            type="number"
+            step="1"
+            [disabled]="settings.precision == null"
+          />
+          <div class="flex">
+            <input type="checkbox" [ngModel]="settings.precision == null" />
+            <div>Fractions</div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>

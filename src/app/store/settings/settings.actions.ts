@@ -6,6 +6,7 @@ import { SettingsState } from './settings.reducer';
 export const enum SettingsActionType {
   LOAD = '[Settings Router] Load',
   SET_DISPLAY_RATE = '[Settings Page] Set Display Rate',
+  SET_PRECISION = '[Settings Page] Set Precision',
   SET_BELT = '[Settings Page] Set Belt',
   SET_OIL_RECIPE = '[Settings Page] Set Oil Recipe',
   SET_USE_CRACKING = '[Setting Page] Set Use Cracking',
@@ -21,6 +22,11 @@ export class SetDisplayRateAction implements Action {
   constructor(public payload: DisplayRate) {}
 }
 
+export class SetPrecisionAction implements Action {
+  readonly type = SettingsActionType.SET_PRECISION;
+  constructor(public payload: number) {}
+}
+
 export class SetBeltAction implements Action {
   readonly type = SettingsActionType.SET_BELT;
   constructor(public payload: ItemId) {}
@@ -34,5 +40,6 @@ export class SetOilProcessingRecipeAction implements Action {
 export type SettingsAction =
   | LoadAction
   | SetDisplayRateAction
+  | SetPrecisionAction
   | SetBeltAction
   | SetOilProcessingRecipeAction;

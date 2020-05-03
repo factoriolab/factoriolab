@@ -12,7 +12,9 @@ body {
   overflow: hidden;
   box-sizing: border-box;
 
-  *,*:before,*:after {
+  *,
+  *:before,
+  *:after {
     box-sizing: border-box;
   }
 }
@@ -24,7 +26,7 @@ select {
   background-color: $color-gray-2;
   border-radius: 0.25rem;
 
-  &:hover {
+  &:not([disabled]):hover {
     border-color: $color-brand;
     color: $color-brand;
   }
@@ -47,7 +49,11 @@ input {
   border-radius: 0.25rem;
   padding: 0.25rem;
   font-family: $font-family;
-  width: 5rem;
+
+  &[type='number'],
+  &[type='text'] {
+    width: 5rem;
+  }
 
   &:invalid {
     border-color: $color-invalid;

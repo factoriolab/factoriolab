@@ -49,6 +49,12 @@ export function settingsReducer(
         ...{ displayRate: action.payload },
       };
     }
+    case SettingsActionType.SET_PRECISION: {
+      return {
+        ...state,
+        ...{ precision: action.payload },
+      };
+    }
     case SettingsActionType.SET_BELT: {
       return {
         ...state,

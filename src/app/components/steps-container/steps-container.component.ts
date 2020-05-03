@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 
 import { Step, RecipeId } from '~/models';
 import { State } from '~/store';
-import * as recipe from '~/store/recipe';
-import * as products from '~/store/products';
+import * as Recipe from '~/store/recipe';
+import * as Products from '~/store/products';
 import { StepsComponent } from './steps/steps.component';
 
 @Component({
@@ -21,10 +21,10 @@ export class StepsContainerComponent implements OnInit {
   constructor(private store: Store<State>) {}
 
   ngOnInit() {
-    this.steps$ = this.store.select(products.getSteps);
+    this.steps$ = this.store.select(Products.getSteps);
   }
 
   editBeaconCount(data: [RecipeId, number]) {
-    this.store.dispatch(new recipe.EditBeaconCountAction(data));
+    this.store.dispatch(new Recipe.EditBeaconCountAction(data));
   }
 }
