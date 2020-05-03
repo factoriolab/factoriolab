@@ -93,11 +93,12 @@ export class RateUtility {
         if (step.settings.factory) {
           const factory = data.itemEntities[step.settings.factory].factory;
           if (factory.burner) {
-            console.log('found burner');
-            const fuelItem = data.itemEntities[fuel];
             RateUtility.addStepsFor(
               fuel,
-              step.factories.mul(factory.burner).div(fuelItem.fuel).div(1000),
+              step.factories
+                .mul(factory.burner)
+                .div(data.itemEntities[fuel].fuel)
+                .div(1000),
               steps,
               settings,
               factors,

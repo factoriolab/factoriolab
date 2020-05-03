@@ -57,6 +57,7 @@ describe('RateUtility', () => {
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
         RecipeId.BasicOilProcessing,
         mocks.Data
       );
@@ -72,6 +73,7 @@ describe('RateUtility', () => {
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
         RecipeId.BasicOilProcessing,
         mocks.Data
       );
@@ -82,6 +84,7 @@ describe('RateUtility', () => {
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
         RecipeId.BasicOilProcessing,
         mocks.Data
       );
@@ -97,6 +100,7 @@ describe('RateUtility', () => {
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
         RecipeId.BasicOilProcessing,
         {
           ...mocks.Data,
@@ -127,6 +131,7 @@ describe('RateUtility', () => {
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
         RecipeId.BasicOilProcessing,
         {
           ...mocks.Data,
@@ -155,6 +160,7 @@ describe('RateUtility', () => {
         {},
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
         mocks.Data
       );
@@ -176,6 +182,7 @@ describe('RateUtility', () => {
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
         RecipeId.BasicOilProcessing,
         mocks.Data
       );
@@ -191,6 +198,7 @@ describe('RateUtility', () => {
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
         mocks.Data
       );
@@ -207,6 +215,7 @@ describe('RateUtility', () => {
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
         RecipeId.BasicOilProcessing,
         mocks.Data
       );
@@ -220,6 +229,24 @@ describe('RateUtility', () => {
           },
         },
       ]);
+    });
+
+    it('should add fuel consumption for burners', () => {
+      const steps: Step[] = [];
+      RateUtility.addStepsFor(
+        ItemId.Steam,
+        new Fraction(100),
+        steps,
+        mocks.RecipeSettingsInitial,
+        mocks.RecipeFactors,
+        ItemId.TransportBelt,
+        ItemId.Coal,
+        RecipeId.BasicOilProcessing,
+        mocks.Data
+      );
+      expect(steps[1].itemId).toEqual(ItemId.Coal);
+      expect(steps[1].items.n).toBeGreaterThan(0);
+      expect(steps[1].factories.n).toBeGreaterThan(0);
     });
   });
 

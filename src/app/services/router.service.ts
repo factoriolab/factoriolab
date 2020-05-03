@@ -243,31 +243,31 @@ export class RouterService {
       settings.furnace = data.itemI[s[4]];
     }
     if (s[5] !== '') {
-      settings.prodModule = moduleI[Number(s[6])];
+      settings.prodModule = moduleI[Number(s[5])];
     }
     if (s[6] !== '') {
-      settings.otherModule = moduleI[Number(s[7])];
+      settings.otherModule = moduleI[Number(s[6])];
     }
     if (s[7] !== '') {
-      settings.beaconType = moduleI[Number(s[8])];
+      settings.beaconType = moduleI[Number(s[7])];
     }
     if (s[8] !== '') {
-      settings.beaconCount = Number(s[9]);
+      settings.beaconCount = Number(s[8]);
     }
     if (s[9] !== '') {
-      settings.oilRecipe = data.recipeI[s[10]];
+      settings.oilRecipe = data.recipeI[s[9]];
     }
     if (s[10] !== '') {
-      settings.fuel = data.itemI[s[11]];
+      settings.fuel = data.itemI[s[10]];
     }
     if (s[11] !== '') {
-      settings.miningBonus = Number(s[12]);
+      settings.miningBonus = Number(s[11]);
     }
     if (s[12] !== '') {
-      settings.researchSpeed = Number(s[13]);
+      settings.researchSpeed = Number(s[12]);
     }
     if (s[13] !== '') {
-      settings.flowRate = Number(s[14]);
+      settings.flowRate = Number(s[13]);
     }
     this.store.dispatch(new Settings.LoadAction(settings));
   }

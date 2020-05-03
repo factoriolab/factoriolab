@@ -15,6 +15,8 @@ import {
   datasetReducer,
   LoadDatasetAction,
 } from '~/store/dataset';
+import { getRecipeSettings } from '~/store/recipe';
+import { initialSettingsState } from '~/store/settings';
 
 export const Data: DatasetState = datasetReducer(
   undefined,
@@ -98,3 +100,8 @@ for (const recipe of Data.recipes) {
   RecipeSettingsEntities[recipe.id] = { ...Settings1 };
   RecipeFactors[recipe.id] = Factors1;
 }
+export const RecipeSettingsInitial = getRecipeSettings.projector(
+  {},
+  Data,
+  initialSettingsState
+);
