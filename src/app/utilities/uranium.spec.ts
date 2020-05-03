@@ -163,6 +163,8 @@ describe('UraniumUtility', () => {
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
+        RecipeId.AdvancedOilProcessing,
         mocks.Data
       );
       expect(steps.length).toBeGreaterThan(0);
@@ -189,6 +191,8 @@ describe('UraniumUtility', () => {
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
+        RecipeId.AdvancedOilProcessing,
         mocks.Data
       );
       expect(steps.length).toEqual(0);
@@ -208,6 +212,8 @@ describe('UraniumUtility', () => {
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
+        RecipeId.AdvancedOilProcessing,
         mocks.Data
       );
       expect(steps.length).toBeGreaterThan(1);

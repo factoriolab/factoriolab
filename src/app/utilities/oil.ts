@@ -451,6 +451,7 @@ export class OilUtility {
     settings: RecipeState,
     factors: Entities<Factors>,
     belt: ItemId,
+    fuel: ItemId,
     data: DatasetState
   ): OilSteps {
     // Calculate refinery inputs
@@ -463,6 +464,7 @@ export class OilUtility {
           settings,
           factors,
           belt,
+          fuel,
           matrix.oil.recipe.id,
           data
         );
@@ -483,6 +485,7 @@ export class OilUtility {
       settings,
       factors,
       belt,
+      null,
       matrix.oil.recipe.id,
       data
     );
@@ -526,6 +529,7 @@ export class OilUtility {
     settings: RecipeState,
     factors: Entities<Factors>,
     belt: ItemId,
+    fuel: ItemId,
     data: DatasetState
   ): Step[] {
     if (
@@ -575,6 +579,7 @@ export class OilUtility {
       settings,
       factors,
       belt,
+      fuel,
       data
     );
     step = this.calculateFactories(step, matrix, factors);

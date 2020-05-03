@@ -19,7 +19,7 @@ import * as Settings from '~/store/settings';
 import { RouterService } from './router.service';
 
 const mockZipProducts = 'eJwrsDWyMrAyBAAHnAG1';
-const mockZipAll = 'eJwrsDWyMrAyVCsC0mBgoVZsa2xmYGCFAgC6ewkb';
+const mockZipAll = 'eJwrsDWyMrAyVCsC0mBgoVZsa2xmYGCFDACxYAjh';
 const mockZipExtra = 'eJwrsDWyMrAyVCsC0mBgoVZsa2xmYGCFAtRKbLNK87IBA4gLqg==';
 const mockProducts: Product[] = [
   {
@@ -58,7 +58,6 @@ const mockFullSettings: Settings.SettingsState = {
   belt: ItemId.TransportBelt,
   assembler: ItemId.AssemblingMachine2,
   furnace: ItemId.StoneFurnace,
-  drill: ItemId.BurnerMiningDrill,
   prodModule: ItemId.ProductivityModule1,
   otherModule: ItemId.EfficiencyModule1,
   beaconType: ItemId.SpeedModule1,
@@ -73,9 +72,9 @@ const mockZipFullSettings = `${DisplayRate.PerHour}:2:${
   mocks.Data.itemN[mockFullSettings.belt]
 }:${mocks.Data.itemN[mockFullSettings.assembler]}:${
   mocks.Data.itemN[mockFullSettings.furnace]
-}:${mocks.Data.itemN[mockFullSettings.drill]}:4:7:1:8:${
-  mocks.Data.recipeN[mockFullSettings.oilRecipe]
-}:${mocks.Data.itemN[mockFullSettings.fuel]}:10:0:1200`;
+}:4:7:1:8:${mocks.Data.recipeN[mockFullSettings.oilRecipe]}:${
+  mocks.Data.itemN[mockFullSettings.fuel]
+}:10:0:1200`;
 
 describe('RouterService', () => {
   let service: RouterService;
@@ -274,14 +273,14 @@ describe('RouterService', () => {
     it('should zip default settings', () => {
       const test = { ...Settings.initialSettingsState, ...{ test: true } };
       const result = service.zipSettings(test, mocks.Data);
-      expect(result).toEqual('::::::::::::::');
+      expect(result).toEqual(':::::::::::::');
     });
   });
 
   describe('unzipSettings', () => {
     it('should unzip the empty settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipSettings('::::::::::::::', mocks.Data);
+      service.unzipSettings(':::::::::::::', mocks.Data);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Settings.LoadAction({} as any)
       );

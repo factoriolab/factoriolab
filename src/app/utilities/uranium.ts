@@ -205,7 +205,7 @@ export class UraniumUtility {
     return step;
   }
 
-  /** Calculate inputs (uranium ore)  */
+  /** Calculate inputs (uranium ore) */
   static calculateInputs(
     step: UraniumSteps,
     matrix: UraniumMatrix,
@@ -213,6 +213,8 @@ export class UraniumUtility {
     settings: RecipeState,
     factors: Entities<Factors>,
     belt: ItemId,
+    fuel: ItemId,
+    oilRecipe: RecipeId,
     data: DatasetState
   ): UraniumSteps {
     RateUtility.addStepsFor(
@@ -222,7 +224,8 @@ export class UraniumUtility {
       settings,
       factors,
       belt,
-      null,
+      fuel,
+      oilRecipe,
       data
     );
 
@@ -251,6 +254,8 @@ export class UraniumUtility {
     settings: RecipeState,
     factors: Entities<Factors>,
     belt: ItemId,
+    fuel: ItemId,
+    oilRecipe: RecipeId,
     data: DatasetState
   ): Step[] {
     if (steps.every((s) => this.URANIUM_ITEM.indexOf(s.itemId) === -1)) {
@@ -270,6 +275,8 @@ export class UraniumUtility {
       settings,
       factors,
       belt,
+      fuel,
+      oilRecipe,
       data
     );
     step = this.calculateFactories(step, matrix, factors);

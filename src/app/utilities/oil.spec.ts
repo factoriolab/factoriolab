@@ -460,6 +460,7 @@ describe('OilUtility', () => {
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
         mocks.Data
       );
       expect(steps.length).toBeGreaterThan(0);
@@ -485,6 +486,7 @@ describe('OilUtility', () => {
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
         mocks.Data
       );
       expect(steps.length).toBeGreaterThan(0);
@@ -536,6 +538,7 @@ describe('OilUtility', () => {
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
         mocks.Data
       );
       expect(steps.length).toEqual(1);
@@ -549,6 +552,7 @@ describe('OilUtility', () => {
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
         mocks.Data
       );
       expect(steps.length).toEqual(0);
@@ -569,6 +573,7 @@ describe('OilUtility', () => {
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
         mocks.Data
       );
       expect(steps.length).toBeGreaterThan(1);
@@ -589,6 +594,7 @@ describe('OilUtility', () => {
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
         mocks.Data
       );
       expect(steps.length).toBeGreaterThan(1);
@@ -615,6 +621,7 @@ describe('OilUtility', () => {
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
         ItemId.TransportBelt,
+        ItemId.Coal,
         mocks.Data
       );
       expect(steps.length).toBeGreaterThan(1);

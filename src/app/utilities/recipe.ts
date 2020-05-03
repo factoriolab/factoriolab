@@ -14,12 +14,7 @@ const categoryAllowProdModule = [CategoryId.Intermediate, CategoryId.Research];
 
 export class RecipeUtility {
   /** Determines what default factory to use for a given recipe based on settings */
-  static defaultFactory(
-    recipe: Recipe,
-    assembler: ItemId,
-    furnace: ItemId,
-    drill: ItemId
-  ) {
+  static defaultFactory(recipe: Recipe, assembler: ItemId, furnace: ItemId) {
     // No factory specified for step
     if (!recipe.producers) {
       // No producers specified for recipe, assume default assembler
@@ -33,9 +28,6 @@ export class RecipeUtility {
     } else if (recipe.producers.some((p) => p === furnace)) {
       // Found matching default furnace in producers, use it
       return furnace;
-    } else if (recipe.producers.some((p) => p === drill)) {
-      // Found matching default drill in producers, use it
-      return drill;
     } else {
       // No matching default found in producers, use first possible producer
       return recipe.producers[0];
