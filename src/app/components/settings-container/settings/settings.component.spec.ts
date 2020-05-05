@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
 import { IconComponent } from '~/components/icon/icon.component';
-import { Id } from '~/models';
+import { Id, DisplayRate } from '~/models';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 import { TestUtility } from '~/utilities/test';
 import { SettingsComponent } from './settings.component';
@@ -13,6 +13,7 @@ import { SettingsComponent } from './settings.component';
   template: `
     <lab-settings
       [settings]="settings"
+      (setDisplayRate)="setDisplayRate($event)"
       (setItemPrecision)="setItemPrecision($event)"
       (setBeltPrecision)="setBeltPrecision($event)"
       (setFactoryPrecision)="setFactoryPrecision($event)"
@@ -23,6 +24,7 @@ import { SettingsComponent } from './settings.component';
 class TestSettingsComponent {
   @ViewChild(SettingsComponent) child: SettingsComponent;
   settings: SettingsState = initialSettingsState;
+  setDisplayRate(data) {}
   setItemPrecision(data) {}
   setBeltPrecision(data) {}
   setFactoryPrecision(data) {}
@@ -49,12 +51,24 @@ describe('SettingsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('Display Rate', () => {
+    it('should set the display rate', () => {
+      spyOn(component, 'setDisplayRate');
+      TestUtility.clickId(fixture, Id.SettingsDisplayRatePerSecond);
+      expect(component.setDisplayRate).toHaveBeenCalledWith(
+        DisplayRate.PerSecond
+      );
+    });
+  });
+
   describe('Precision', () => {
     describe('Item', () => {
       it('should set item precision to decimals', () => {
         spyOn(component, 'setItemPrecision');
         TestUtility.clickId(fixture, Id.SettingsPrecisionItemDecimals);
-        expect(component.setItemPrecision).toHaveBeenCalledWith(0);
+        expect(component.setItemPrecision).toHaveBeenCalledWith(
+          initialSettingsState.itemPrecision
+        );
       });
 
       it('should not set item precision on invalid event', () => {
@@ -83,7 +97,9 @@ describe('SettingsComponent', () => {
       it('should set belt precision to decimals', () => {
         spyOn(component, 'setBeltPrecision');
         TestUtility.clickId(fixture, Id.SettingsPrecisionBeltDecimals);
-        expect(component.setBeltPrecision).toHaveBeenCalledWith(0);
+        expect(component.setBeltPrecision).toHaveBeenCalledWith(
+          initialSettingsState.beltPrecision
+        );
       });
 
       it('should not set belt precision on invalid event', () => {
@@ -112,7 +128,9 @@ describe('SettingsComponent', () => {
       it('should set factory precision to decimals', () => {
         spyOn(component, 'setFactoryPrecision');
         TestUtility.clickId(fixture, Id.SettingsPrecisionFactoryDecimals);
-        expect(component.setFactoryPrecision).toHaveBeenCalledWith(0);
+        expect(component.setFactoryPrecision).toHaveBeenCalledWith(
+          initialSettingsState.factoryPrecision
+        );
       });
 
       it('should not set factory precision on invalid event', () => {

@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { SettingsState } from '~/store/settings';
+import { DisplayRate } from '~/models';
+import { SettingsState, initialSettingsState } from '~/store/settings';
 
 @Component({
   selector: 'lab-settings',
@@ -10,14 +11,21 @@ import { SettingsState } from '~/store/settings';
 export class SettingsComponent {
   @Input() settings: SettingsState;
 
+  @Output() setDisplayRate = new EventEmitter<DisplayRate>();
   @Output() setItemPrecision = new EventEmitter<number>();
   @Output() setBeltPrecision = new EventEmitter<number>();
   @Output() setFactoryPrecision = new EventEmitter<number>();
 
+  displayRate = DisplayRate;
+
   constructor() {}
 
+  displayRateChange(value: DisplayRate) {
+    this.setDisplayRate.emit(value);
+  }
+
   itemPrecisionDecimals() {
-    this.setItemPrecision.emit(0);
+    this.setItemPrecision.emit(initialSettingsState.itemPrecision);
   }
 
   itemPrecisionValue(event: any) {
@@ -31,7 +39,7 @@ export class SettingsComponent {
   }
 
   beltPrecisionDecimals() {
-    this.setBeltPrecision.emit(0);
+    this.setBeltPrecision.emit(initialSettingsState.beltPrecision);
   }
 
   beltPrecisionValue(event: any) {
@@ -45,7 +53,7 @@ export class SettingsComponent {
   }
 
   factoryPrecisionDecimals() {
-    this.setFactoryPrecision.emit(0);
+    this.setFactoryPrecision.emit(initialSettingsState.factoryPrecision);
   }
 
   factoryPrecisionValue(event: any) {

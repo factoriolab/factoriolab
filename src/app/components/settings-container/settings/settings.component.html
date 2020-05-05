@@ -1,3 +1,39 @@
+<div class="label">Display Rate</div>
+<div class="field">
+  <div class="flex">
+    <input
+      id="settings-display-persecond"
+      type="radio"
+      name="displayRate"
+      [value]="displayRate.PerSecond"
+      [ngModel]="settings.displayRate"
+      (change)="displayRateChange(displayRate.PerSecond)"
+    />
+    <label for="settings-display-persecond">#/second</label>
+  </div>
+  <div class="flex">
+    <input
+      id="settings-display-perminute"
+      type="radio"
+      name="displayRate"
+      [value]="displayRate.PerMinute"
+      [ngModel]="settings.displayRate"
+      (change)="displayRateChange(displayRate.PerMinute)"
+    />
+    <label for="settings-display-perminute">#/minute</label>
+  </div>
+  <div class="flex">
+    <input
+      id="settings-display-perhour"
+      type="radio"
+      name="displayRate"
+      [value]="displayRate.PerHour"
+      [ngModel]="settings.displayRate"
+      (change)="displayRateChange(displayRate.PerHour)"
+    />
+    <label for="settings-display-perhour">#/hour</label>
+  </div>
+</div>
 <div class="label">Precision</div>
 <div class="field">
   <lab-icon iconId="iron-plate"></lab-icon>
@@ -10,15 +46,18 @@
       [ngModel]="settings.itemPrecision == null"
       (change)="itemPrecisionDecimals()"
     />
-    <input
-      id="settings-precision-item-value"
-      type="number"
-      min="0"
-      step="1"
-      [disabled]="settings.itemPrecision == null"
-      [value]="settings.itemPrecision"
-      (change)="itemPrecisionValue($event)"
-    />
+    <label for="settings-precision-item-decimals">
+      <input
+        id="settings-precision-item-value"
+        type="number"
+        placeholder="Decimals"
+        min="0"
+        step="1"
+        [disabled]="settings.itemPrecision == null"
+        [value]="settings.itemPrecision"
+        (change)="itemPrecisionValue($event)"
+      />
+    </label>
   </div>
   <div class="flex">
     <input
@@ -29,7 +68,7 @@
       [ngModel]="settings.itemPrecision == null"
       (change)="itemPrecisionFractions()"
     />
-    <div>Fractions</div>
+    <label for="settings-precision-item-fractions">Fractions</label>
   </div>
 </div>
 <div class="field">
@@ -46,6 +85,7 @@
     <input
       id="settings-precision-belt-value"
       type="number"
+      placeholder="Decimals"
       min="0"
       step="1"
       [disabled]="settings.beltPrecision == null"
@@ -62,7 +102,7 @@
       [ngModel]="settings.beltPrecision == null"
       (change)="beltPrecisionFractions()"
     />
-    <div>Fractions</div>
+    <label for="settings-precision-belt-fractions">Fractions</label>
   </div>
 </div>
 <div class="field">
@@ -79,6 +119,7 @@
     <input
       id="settings-precision-factory-value"
       type="number"
+      placeholder="Decimals"
       min="0"
       step="1"
       [disabled]="settings.factoryPrecision == null"
@@ -95,6 +136,6 @@
       [ngModel]="settings.factoryPrecision == null"
       (change)="factoryPrecisionFractions()"
     />
-    <div>Fractions</div>
+    <label for="settings-precision-factory-fractions">Fractions</label>
   </div>
 </div>

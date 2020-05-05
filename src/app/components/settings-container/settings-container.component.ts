@@ -10,6 +10,7 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
+import { DisplayRate } from '~/models';
 import { State } from '~/store';
 import * as Settings from '~/store/settings';
 import { SettingsComponent } from './settings/settings.component';
@@ -37,6 +38,10 @@ export class SettingsContainerComponent implements OnInit {
     if (!this.element.nativeElement.contains(event.target)) {
       this.cancel.emit();
     }
+  }
+
+  setDisplayRate(value: DisplayRate) {
+    this.store.dispatch(new Settings.SetDisplayRateAction(value));
   }
 
   setItemPrecision(value: number) {
