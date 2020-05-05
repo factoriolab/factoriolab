@@ -203,12 +203,22 @@ export class RouterService {
     }
     const dr = state.displayRate === init.displayRate ? '' : state.displayRate;
     const ip =
-      state.itemPrecision === init.itemPrecision ? '' : state.itemPrecision;
+      state.itemPrecision === init.itemPrecision
+        ? ''
+        : state.itemPrecision == null
+        ? 'n'
+        : state.itemPrecision;
     const bp =
-      state.beltPrecision === init.beltPrecision ? '' : state.beltPrecision;
+      state.beltPrecision === init.beltPrecision
+        ? ''
+        : state.beltPrecision == null
+        ? 'n'
+        : state.beltPrecision;
     const fp =
       state.factoryPrecision === init.factoryPrecision
         ? ''
+        : state.factoryPrecision == null
+        ? 'n'
         : state.factoryPrecision;
     const tb = state.belt === init.belt ? '' : data.itemN[state.belt];
     const pa =
@@ -238,13 +248,13 @@ export class RouterService {
       settings.displayRate = Number(s[0]);
     }
     if (s[1] !== '') {
-      settings.itemPrecision = Number(s[1]);
+      settings.itemPrecision = s[1] === 'n' ? null : Number(s[1]);
     }
     if (s[2] !== '') {
-      settings.beltPrecision = Number(s[2]);
+      settings.beltPrecision = s[2] === 'n' ? null : Number(s[2]);
     }
     if (s[3] !== '') {
-      settings.factoryPrecision = Number(s[3]);
+      settings.factoryPrecision = s[3] === 'n' ? null : Number(s[3]);
     }
     if (s[4] !== '') {
       settings.belt = data.itemI[s[4]];
