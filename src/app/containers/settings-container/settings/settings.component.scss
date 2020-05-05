@@ -4,16 +4,14 @@
   background-color: $color-gray-1;
   z-index: 1;
   padding: 1rem;
-
-  > * {
-    flex-grow: 1;
-  }
+  flex-grow: 1;
 }
 
 .label {
   font-weight: bold;
   font-size: 0.75rem;
   padding: 0.5rem 0;
+  color: $color-brand;
 }
 
 .field {

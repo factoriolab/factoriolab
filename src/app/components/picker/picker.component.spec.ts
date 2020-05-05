@@ -2,7 +2,6 @@ import { ViewChild, Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import * as mocks from 'src/mocks';
-import { Item, Id, Entities } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { TestUtility } from '~/utilities/test';
 import { IconComponent } from '../icon/icon.component';
