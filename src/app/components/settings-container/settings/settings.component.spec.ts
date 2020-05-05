@@ -3,10 +3,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
 import { IconComponent } from '~/components/icon/icon.component';
-import { SettingsState, initialSettingsState } from '~/store/settings';
-import { SettingsComponent } from './settings.component';
-import { TestUtility } from '~/utilities/test';
 import { Id } from '~/models';
+import { SettingsState, initialSettingsState } from '~/store/settings';
+import { TestUtility } from '~/utilities/test';
+import { SettingsComponent } from './settings.component';
 
 @Component({
   selector: 'lab-test-settings',
