@@ -46,7 +46,7 @@ export class RateUtility {
         factories: new Fraction(0),
         settings: recipe
           ? settings[recipe.id]
-          : { lane: item.stack ? belt : ItemId.Pipe },
+          : { belt: item.stack ? belt : ItemId.Pipe },
       };
 
       steps.push(step);
@@ -130,10 +130,10 @@ export class RateUtility {
     }
   }
 
-  static calculateLanes(steps: Step[], laneSpeed: Entities<Fraction>) {
+  static calculateBelts(steps: Step[], beltSpeed: Entities<Fraction>) {
     for (const step of steps) {
       if (step.items) {
-        step.lanes = step.items.div(laneSpeed[step.settings.lane]);
+        step.belts = step.items.div(beltSpeed[step.settings.belt]);
       }
     }
     return steps;

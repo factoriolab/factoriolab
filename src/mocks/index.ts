@@ -36,7 +36,7 @@ export const Product2: Product = {
   id: 1,
   itemId: Item2.id,
   rate: 2,
-  rateType: RateType.Lanes,
+  rateType: RateType.Belts,
 };
 export const Product3: Product = {
   id: 2,
@@ -57,7 +57,7 @@ export const ProductEntities = Products.reduce((e: Entities<Product>, i) => {
 }, {});
 export const Settings1: RecipeSettings = {
   ignore: false,
-  lane: ItemId.TransportBelt,
+  belt: ItemId.TransportBelt,
   factory: ItemId.AssemblingMachine2,
   modules: [ItemId.Module, ItemId.Module],
   beaconType: ItemId.Module,
@@ -65,7 +65,7 @@ export const Settings1: RecipeSettings = {
 };
 export const Settings2: RecipeSettings = {
   ignore: false,
-  lane: ItemId.TransportBelt,
+  belt: ItemId.TransportBelt,
   factory: ItemId.AssemblingMachine2,
   modules: [ItemId.Module, ItemId.Module],
   beaconType: ItemId.Module,
@@ -75,19 +75,19 @@ export const Settings2: RecipeSettings = {
 export const Step1: Step = {
   itemId: Item1.id,
   items: new Fraction(Product1.rate),
-  lanes: new Fraction(0.5),
+  belts: new Fraction(0.5),
   factories: new Fraction(1),
   settings: Settings1,
 };
 export const Step2: Step = {
   itemId: Item2.id,
   items: new Fraction(Product2.rate),
-  lanes: new Fraction(1),
+  belts: new Fraction(1),
   factories: new Fraction(2),
   settings: Settings2,
 };
 export const Steps = [Step1, Step2];
-export const LaneSpeed: Entities<Fraction> = {
+export const BeltSpeed: Entities<Fraction> = {
   [ItemId.TransportBelt]: new Fraction(15),
 };
 export const Factors1: Factors = {

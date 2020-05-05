@@ -8,6 +8,6 @@ export interface Step {
   items: Fraction;
   settings: RecipeSettings;
   surplus?: Fraction;
-  lanes?: Fraction;
+  belts?: Fraction;
   factories?: Fraction;
 }

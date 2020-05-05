@@ -44,14 +44,14 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getProductsByLanes', () => {
+  describe('getProductsByBelts', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getProductsByLanes.projector([], {});
+      const result = selectors.getProductsByBelts.projector([], {});
       expect(result.length).toEqual(0);
     });
 
     it('should return the array of product ids', () => {
-      const result = selectors.getProductsByLanes.projector(
+      const result = selectors.getProductsByBelts.projector(
         mocks.ProductIds,
         mocks.ProductEntities
       );
@@ -109,9 +109,9 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getNormalizedRatesByLanes', () => {
+  describe('getNormalizedRatesByBelts', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getNormalizedRatesByLanes.projector(
+      const result = selectors.getNormalizedRatesByBelts.projector(
         [],
         {},
         {},
@@ -121,11 +121,11 @@ describe('Products Selectors', () => {
     });
 
     it('should return the rate entities', () => {
-      const result = selectors.getNormalizedRatesByLanes.projector(
+      const result = selectors.getNormalizedRatesByBelts.projector(
         [mocks.Product2.id],
         mocks.ProductEntities,
         { [mocks.Product2.itemId]: mocks.Settings1 },
-        { [mocks.Settings1.lane]: new Fraction(1) }
+        { [mocks.Settings1.belt]: new Fraction(1) }
       );
       expect(result[mocks.Product2.id].n).toBeGreaterThan(0);
     });
@@ -388,16 +388,16 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getNormalizedStepsWithLanes', () => {
+  describe('getNormalizedStepsWithBelts', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getNormalizedStepsWithLanes.projector([], {});
+      const result = selectors.getNormalizedStepsWithBelts.projector([], {});
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should calculate rates using utility method', () => {
-      spyOn(RateUtility, 'calculateLanes');
-      selectors.getNormalizedStepsWithLanes.projector([], {});
-      expect(RateUtility.calculateLanes).toHaveBeenCalled();
+      spyOn(RateUtility, 'calculateBelts');
+      selectors.getNormalizedStepsWithBelts.projector([], {});
+      expect(RateUtility.calculateBelts).toHaveBeenCalled();
     });
   });
 

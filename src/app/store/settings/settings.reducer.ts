@@ -3,7 +3,9 @@ import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
   displayRate: DisplayRate;
-  precision: number;
+  itemPrecision: number;
+  beltPrecision: number;
+  factoryPrecision: number;
   belt: ItemId;
   assembler: ItemId;
   furnace: ItemId;
@@ -20,7 +22,9 @@ export interface SettingsState {
 
 export const initialSettingsState: SettingsState = {
   displayRate: DisplayRate.PerMinute,
-  precision: null,
+  itemPrecision: 3,
+  beltPrecision: 1,
+  factoryPrecision: 1,
   belt: ItemId.ExpressTransportBelt,
   assembler: ItemId.AssemblingMachine3,
   furnace: ItemId.ElectricFurnace,
@@ -47,6 +51,24 @@ export function settingsReducer(
       return {
         ...state,
         ...{ displayRate: action.payload },
+      };
+    }
+    case SettingsActionType.SET_ITEM_PRECISION: {
+      return {
+        ...state,
+        ...{ itemPrecision: action.payload },
+      };
+    }
+    case SettingsActionType.SET_BELT_PRECISION: {
+      return {
+        ...state,
+        ...{ beltPrecision: action.payload },
+      };
+    }
+    case SettingsActionType.SET_FACTORY_PRECISION: {
+      return {
+        ...state,
+        ...{ factoryPrecision: action.payload },
       };
     }
     case SettingsActionType.SET_BELT: {

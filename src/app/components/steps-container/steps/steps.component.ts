@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import Fraction from 'fraction.js';
 
 import { Step, RecipeId } from 'src/app/models';
 
@@ -9,6 +10,9 @@ import { Step, RecipeId } from 'src/app/models';
 })
 export class StepsComponent {
   @Input() steps: Step[];
+  @Input() itemPrecision: number;
+  @Input() beltPrecision: number;
+  @Input() factoryPrecision: number;
 
   @Output() editBeaconCount = new EventEmitter<[RecipeId, number]>();
 
@@ -26,6 +30,16 @@ export class StepsComponent {
       ) {
         this.editBeaconCount.emit([recipeId, value]);
       }
+    }
+  }
+
+  rate(value: Fraction, precision: number) {
+    if (precision == null) {
+      return value.toFraction(true);
+    } else {
+      const decimal = value.valueOf();
+      const round = Math.pow(10, precision);
+      return Math.ceil(decimal * round) / round;
     }
   }
 }

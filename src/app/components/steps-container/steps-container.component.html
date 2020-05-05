@@ -1,2 +1,8 @@
-<lab-steps [steps]="steps$ | async" (editBeaconCount)="editBeaconCount($event)">
+<lab-steps
+  [steps]="steps$ | async"
+  [itemPrecision]="itemPrecision$ | async"
+  [beltPrecision]="beltPrecision$ | async"
+  [factoryPrecision]="factoryPrecision$ | async"
+  (editBeaconCount)="editBeaconCount($event)"
+>
 </lab-steps>
