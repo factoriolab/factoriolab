@@ -1,6 +1,9 @@
 export enum Id {
   HeaderSettings = 'header-settings',
   HeaderIcon = 'header-icon',
+  SettingsDisplayRatePerSecond = 'settings-display-persecond',
+  SettingsDisplayRatePerMinute = 'settings-display-perminute',
+  SettingsDisplayRatePerHour = 'settings-display-perhour',
   SettingsPrecisionBeltDecimals = 'settings-precision-belt-decimals',
   SettingsPrecisionBeltValue = 'settings-precision-belt-value',
   SettingsPrecisionBeltFractions = 'settings-precision-belt-fractions',

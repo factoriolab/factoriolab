@@ -1,5 +1,6 @@
 <lab-settings
   [settings]="settings$ | async"
+  (setDisplayRate)="setDisplayRate($event)"
   (setItemPrecision)="setItemPrecision($event)"
   (setBeltPrecision)="setBeltPrecision($event)"
   (setFactoryPrecision)="setFactoryPrecision($event)"

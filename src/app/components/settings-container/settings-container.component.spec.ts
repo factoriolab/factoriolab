@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { StoreModule, Store } from '@ngrx/store';
 
+import { DisplayRate } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as Settings from '~/store/settings';
 import { TestUtility } from '~/utilities/test';
@@ -46,6 +47,14 @@ describe('SettingsContainerComponent', () => {
     spyOn(component.cancel, 'emit');
     TestUtility.clickSelector(fixture, 'lab-settings');
     expect(component.cancel.emit).not.toHaveBeenCalled();
+  });
+
+  it('should set display rate', () => {
+    spyOn(store, 'dispatch');
+    component.child.setDisplayRate.emit(DisplayRate.PerSecond);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetDisplayRateAction(DisplayRate.PerSecond)
+    );
   });
 
   it('should set item precision', () => {
