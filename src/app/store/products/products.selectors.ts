@@ -50,10 +50,10 @@ export const getProductsByItems = createSelector(
   (ids, entities) => ids.filter((i) => entities[i].rateType === RateType.Items)
 );
 
-export const getProductsByLanes = createSelector(
+export const getProductsByBelts = createSelector(
   getIds,
   getEntities,
-  (ids, entities) => ids.filter((i) => entities[i].rateType === RateType.Lanes)
+  (ids, entities) => ids.filter((i) => entities[i].rateType === RateType.Belts)
 );
 
 export const getProductsByWagons = createSelector(
@@ -83,18 +83,18 @@ export const getNormalizedRatesByItems = createSelector(
   }
 );
 
-export const getNormalizedRatesByLanes = createSelector(
-  getProductsByLanes,
+export const getNormalizedRatesByBelts = createSelector(
+  getProductsByBelts,
   getEntities,
   Recipe.getRecipeSettings,
-  Dataset.getLaneSpeed,
-  (ids, entities, recipeSettings, laneSpeed) => {
+  Dataset.getBeltSpeed,
+  (ids, entities, recipeSettings, beltSpeed) => {
     return ids.reduce((e: NEntities<Fraction>, i) => {
       const settings = recipeSettings[entities[i].itemId];
       return {
         ...e,
         ...{
-          [i]: new Fraction(entities[i].rate).mul(laneSpeed[settings.lane]),
+          [i]: new Fraction(entities[i].rate).mul(beltSpeed[settings.belt]),
         },
       };
     }, {});
@@ -195,11 +195,11 @@ export const getNormalizedRatesByFactories = createSelector(
 
 export const getNormalizedRates = createSelector(
   getNormalizedRatesByItems,
-  getNormalizedRatesByLanes,
+  getNormalizedRatesByBelts,
   getNormalizedRatesByWagons,
   getNormalizedRatesByFactories,
-  (byItems, byLanes, byWagons, byFactories) => {
-    return { ...byItems, ...byLanes, ...byWagons, ...byFactories };
+  (byItems, byBelts, byWagons, byFactories) => {
+    return { ...byItems, ...byBelts, ...byWagons, ...byFactories };
   }
 );
 
@@ -263,14 +263,14 @@ export const getNormalizedStepsWithOil = createSelector(
     OilUtility.addSteps(oilRecipe, steps, settings, factors, belt, fuel, data)
 );
 
-export const getNormalizedStepsWithLanes = createSelector(
+export const getNormalizedStepsWithBelts = createSelector(
   getNormalizedStepsWithOil,
-  Dataset.getLaneSpeed,
-  (steps, laneSpeed) => RateUtility.calculateLanes(steps, laneSpeed)
+  Dataset.getBeltSpeed,
+  (steps, beltSpeed) => RateUtility.calculateBelts(steps, beltSpeed)
 );
 
 export const getSteps = createSelector(
-  getNormalizedStepsWithLanes,
+  getNormalizedStepsWithBelts,
   Settings.getDisplayRate,
   (steps, displayRate) => RateUtility.displayRate(steps, displayRate)
 );

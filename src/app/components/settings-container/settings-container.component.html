@@ -1,1 +1,7 @@
-<lab-settings></lab-settings>
+<lab-settings
+  [settings]="settings$ | async"
+  (setItemPrecision)="setItemPrecision($event)"
+  (setBeltPrecision)="setBeltPrecision($event)"
+  (setFactoryPrecision)="setFactoryPrecision($event)"
+>
+</lab-settings>

@@ -24,6 +24,36 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('SET_ITEM_PRECISION', () => {
+    it('should set the item precision', () => {
+      const result = settingsReducer(
+        initialSettingsState,
+        new actions.SetItemPrecisionAction(null)
+      );
+      expect(result.itemPrecision).toEqual(null);
+    });
+  });
+
+  describe('SET_BELT_PRECISION', () => {
+    it('should set the belt precision', () => {
+      const result = settingsReducer(
+        initialSettingsState,
+        new actions.SetBeltPrecisionAction(null)
+      );
+      expect(result.beltPrecision).toEqual(null);
+    });
+  });
+
+  describe('SET_FACTORY_PRECISION', () => {
+    it('should set the factory precision', () => {
+      const result = settingsReducer(
+        initialSettingsState,
+        new actions.SetFactoryPrecisionAction(null)
+      );
+      expect(result.factoryPrecision).toEqual(null);
+    });
+  });
+
   describe('SET_BELT', () => {
     it('should set the belt type', () => {
       const belt = ItemId.TransportBelt;

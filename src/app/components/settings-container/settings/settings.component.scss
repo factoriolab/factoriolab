@@ -2,12 +2,24 @@
 
 :host {
   background-color: $color-gray-1;
-  display: flex;
-  flex-grow: 1;
-  align-items: stretch;
   z-index: 1;
+  padding: 1rem;
 
   > * {
     flex-grow: 1;
+  }
+}
+
+.label {
+  font-weight: bold;
+  font-size: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.field {
+  display: flex;
+
+  > * + * {
+    margin-left: 0.5rem;
   }
 }

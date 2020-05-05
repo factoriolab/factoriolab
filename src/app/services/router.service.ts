@@ -155,7 +155,7 @@ export class RouterService {
       const settings = state[id];
       const i = data.recipeN[id];
       const ig = settings.ignore == null ? '' : settings.ignore ? 1 : 0;
-      const ln = settings.lane == null ? '' : data.itemN[settings.lane];
+      const bl = settings.belt == null ? '' : data.itemN[settings.belt];
       const fc = settings.factory == null ? '' : data.itemN[settings.factory];
       const md =
         settings.modules == null
@@ -164,7 +164,7 @@ export class RouterService {
       const bt =
         settings.beaconType == null ? '' : moduleN[settings.beaconType];
       const bc = settings.beaconCount == null ? '' : settings.beaconCount;
-      return `${i}:${ig}:${ln}:${fc}:${md}:${bt}:${bc}`;
+      return `${i}:${ig}:${bl}:${fc}:${md}:${bt}:${bc}`;
     });
   }
 
@@ -177,7 +177,7 @@ export class RouterService {
         u.ignore = r[1] === '1' ? true : false;
       }
       if (r[2] !== '') {
-        u.lane = data.itemI[r[2]];
+        u.belt = data.itemI[r[2]];
       }
       if (r[3] !== '') {
         u.factory = data.itemI[r[3]];
@@ -202,7 +202,14 @@ export class RouterService {
       return null;
     }
     const dr = state.displayRate === init.displayRate ? '' : state.displayRate;
-    const pr = state.precision === init.precision ? '' : state.precision;
+    const ip =
+      state.itemPrecision === init.itemPrecision ? '' : state.itemPrecision;
+    const bp =
+      state.beltPrecision === init.beltPrecision ? '' : state.beltPrecision;
+    const fp =
+      state.factoryPrecision === init.factoryPrecision
+        ? ''
+        : state.factoryPrecision;
     const tb = state.belt === init.belt ? '' : data.itemN[state.belt];
     const pa =
       state.assembler === init.assembler ? '' : data.itemN[state.assembler];
@@ -221,7 +228,7 @@ export class RouterService {
     const rs =
       state.researchSpeed === init.researchSpeed ? '' : state.researchSpeed;
     const fr = state.flowRate === init.flowRate ? '' : state.flowRate;
-    return `${dr}:${pr}:${tb}:${pa}:${pf}:${mp}:${mo}:${bt}:${bc}:${or}:${fl}:${mb}:${rs}:${fr}`;
+    return `${dr}:${ip}:${bp}:${fp}:${tb}:${pa}:${pf}:${mp}:${mo}:${bt}:${bc}:${or}:${fl}:${mb}:${rs}:${fr}`;
   }
 
   unzipSettings(zSettings: string, data: DatasetState) {
@@ -231,43 +238,49 @@ export class RouterService {
       settings.displayRate = Number(s[0]);
     }
     if (s[1] !== '') {
-      settings.precision = Number(s[1]);
+      settings.itemPrecision = Number(s[1]);
     }
     if (s[2] !== '') {
-      settings.belt = data.itemI[s[2]];
+      settings.beltPrecision = Number(s[2]);
     }
     if (s[3] !== '') {
-      settings.assembler = data.itemI[s[3]];
+      settings.factoryPrecision = Number(s[3]);
     }
     if (s[4] !== '') {
-      settings.furnace = data.itemI[s[4]];
+      settings.belt = data.itemI[s[4]];
     }
     if (s[5] !== '') {
-      settings.prodModule = moduleI[Number(s[5])];
+      settings.assembler = data.itemI[s[5]];
     }
     if (s[6] !== '') {
-      settings.otherModule = moduleI[Number(s[6])];
+      settings.furnace = data.itemI[s[6]];
     }
     if (s[7] !== '') {
-      settings.beaconType = moduleI[Number(s[7])];
+      settings.prodModule = moduleI[Number(s[7])];
     }
     if (s[8] !== '') {
-      settings.beaconCount = Number(s[8]);
+      settings.otherModule = moduleI[Number(s[8])];
     }
     if (s[9] !== '') {
-      settings.oilRecipe = data.recipeI[s[9]];
+      settings.beaconType = moduleI[Number(s[9])];
     }
     if (s[10] !== '') {
-      settings.fuel = data.itemI[s[10]];
+      settings.beaconCount = Number(s[10]);
     }
     if (s[11] !== '') {
-      settings.miningBonus = Number(s[11]);
+      settings.oilRecipe = data.recipeI[s[11]];
     }
     if (s[12] !== '') {
-      settings.researchSpeed = Number(s[12]);
+      settings.fuel = data.itemI[s[12]];
     }
     if (s[13] !== '') {
-      settings.flowRate = Number(s[13]);
+      settings.miningBonus = Number(s[13]);
+    }
+    if (s[14] !== '') {
+      settings.researchSpeed = Number(s[14]);
+    }
+    if (s[15] !== '') {
+      settings.flowRate = Number(s[15]);
     }
     this.store.dispatch(new Settings.LoadAction(settings));
   }

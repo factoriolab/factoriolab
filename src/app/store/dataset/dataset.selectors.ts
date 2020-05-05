@@ -9,13 +9,13 @@ import { State } from '../';
 export const getDataset = (state: State) => state.datasetState;
 
 /* Complex selectors */
-export const getLaneSpeed = createSelector(
+export const getBeltSpeed = createSelector(
   getDataset,
   Settings.getFlowRate,
   (data, flowRate) => {
     const value: Entities<Fraction> = {};
-    if (data.laneIds) {
-      for (const id of data.laneIds) {
+    if (data.beltIds) {
+      for (const id of data.beltIds) {
         if (id === ItemId.Pipe) {
           value[id] = new Fraction(flowRate);
         } else {
