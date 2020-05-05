@@ -11,7 +11,6 @@ import { PickerComponent } from './picker.component';
 @Component({
   selector: 'lab-test-picker',
   template: `
-    <div id=${Id.Away}></div>
     <lab-picker
       [data]="data"
       [categoryId]="categoryId"
@@ -54,7 +53,7 @@ describe('PickerComponent', () => {
 
   it('should cancel when clicked away', () => {
     spyOn(component, 'cancel');
-    TestUtility.clickId(fixture, Id.Away);
+    document.body.click();
     expect(component.cancel).toHaveBeenCalled();
   });
 

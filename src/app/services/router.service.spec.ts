@@ -19,7 +19,7 @@ import * as Settings from '~/store/settings';
 import { RouterService } from './router.service';
 
 const mockZipProducts = 'eJwrsDWyMrAyBAAHnAG1';
-const mockZipAll = 'eJwrsDWyMrAyVCsC0mBgoVZsa2xmYGCFDACxYAjh';
+const mockZipAll = 'eJwrsDWyMrAyVCsC0mBgoVZsa2xmYGCFCgDD0AlV';
 const mockZipExtra = 'eJwrsDWyMrAyVCsC0mBgoVZsa2xmYGCFAtRKbLNK87IBA4gLqg==';
 const mockProducts: Product[] = [
   {
@@ -55,7 +55,7 @@ const mockSettings: Settings.SettingsState = {
 const mockFullSettings: Settings.SettingsState = {
   displayRate: DisplayRate.PerHour,
   itemPrecision: 2,
-  beltPrecision: 1,
+  beltPrecision: 4,
   factoryPrecision: 0,
   belt: ItemId.TransportBelt,
   assembler: ItemId.AssemblingMachine2,
@@ -70,7 +70,7 @@ const mockFullSettings: Settings.SettingsState = {
   researchSpeed: ResearchSpeed.Speed0,
   flowRate: 1200,
 };
-const mockZipFullSettings = `${DisplayRate.PerHour}:2:${
+const mockZipFullSettings = `${DisplayRate.PerHour}:2:4:0:${
   mocks.Data.itemN[mockFullSettings.belt]
 }:${mocks.Data.itemN[mockFullSettings.assembler]}:${
   mocks.Data.itemN[mockFullSettings.furnace]
@@ -275,14 +275,14 @@ describe('RouterService', () => {
     it('should zip default settings', () => {
       const test = { ...Settings.initialSettingsState, ...{ test: true } };
       const result = service.zipSettings(test, mocks.Data);
-      expect(result).toEqual(':::::::::::::');
+      expect(result).toEqual(':::::::::::::::');
     });
   });
 
   describe('unzipSettings', () => {
     it('should unzip the empty settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipSettings(':::::::::::::', mocks.Data);
+      service.unzipSettings(':::::::::::::::', mocks.Data);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Settings.LoadAction({} as any)
       );

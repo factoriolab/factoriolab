@@ -5,7 +5,7 @@ import { StoreModule, Store } from '@ngrx/store';
 import * as mocks from 'src/mocks';
 import { RateType, ItemId, CategoryId } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
-import * as products from '~/store/products';
+import * as Products from '~/store/products';
 import { IconComponent } from '../icon/icon.component';
 import { ProductsComponent } from './products/products.component';
 import { ProductsContainerComponent } from './products-container.component';
@@ -40,20 +40,20 @@ describe('ProductsContainerComponent', () => {
   it('should add a product', () => {
     spyOn(store, 'dispatch');
     component.child.add.emit();
-    expect(store.dispatch).toHaveBeenCalledWith(new products.AddAction());
+    expect(store.dispatch).toHaveBeenCalledWith(new Products.AddAction());
   });
 
   it('should remove a product', () => {
     spyOn(store, 'dispatch');
     component.child.remove.emit(0);
-    expect(store.dispatch).toHaveBeenCalledWith(new products.RemoveAction(0));
+    expect(store.dispatch).toHaveBeenCalledWith(new Products.RemoveAction(0));
   });
 
   it('should open edit on a product', () => {
     spyOn(store, 'dispatch');
     component.child.openEditProduct.emit(mocks.Product1);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new products.OpenEditProductAction(mocks.Product1)
+      new Products.OpenEditProductAction(mocks.Product1)
     );
   });
 
@@ -61,7 +61,7 @@ describe('ProductsContainerComponent', () => {
     spyOn(store, 'dispatch');
     component.child.cancelEditProduct.emit();
     expect(store.dispatch).toHaveBeenCalledWith(
-      new products.CancelEditProductAction()
+      new Products.CancelEditProductAction()
     );
   });
 
@@ -70,7 +70,7 @@ describe('ProductsContainerComponent', () => {
     const data: [number, ItemId] = [mocks.Product1.id, mocks.Item2.id];
     component.child.commitEditProduct.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new products.CommitEditProductAction(data)
+      new Products.CommitEditProductAction(data)
     );
   });
 
@@ -79,7 +79,7 @@ describe('ProductsContainerComponent', () => {
     const data: [number, number] = [mocks.Product1.id, 2];
     component.child.editRate.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new products.EditRateAction(data)
+      new Products.EditRateAction(data)
     );
   });
 
@@ -88,7 +88,7 @@ describe('ProductsContainerComponent', () => {
     const data: [number, RateType] = [mocks.Product1.id, RateType.Wagons];
     component.child.editRateType.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new products.EditRateTypeAction(data)
+      new Products.EditRateTypeAction(data)
     );
   });
 
@@ -97,7 +97,7 @@ describe('ProductsContainerComponent', () => {
     const tab = CategoryId.Logistics;
     component.child.selectTab.emit(tab);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new products.SelectItemCategoryAction(tab)
+      new Products.SelectItemCategoryAction(tab)
     );
   });
 });

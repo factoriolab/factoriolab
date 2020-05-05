@@ -5,12 +5,14 @@ import {
   Output,
   EventEmitter,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { State } from '~/store';
 import * as Settings from '~/store/settings';
+import { SettingsComponent } from './settings/settings.component';
 
 @Component({
   selector: 'lab-settings-container',
@@ -18,6 +20,8 @@ import * as Settings from '~/store/settings';
   styleUrls: ['./settings-container.component.scss'],
 })
 export class SettingsContainerComponent implements OnInit {
+  @ViewChild(SettingsComponent) child: SettingsComponent;
+
   @Output() cancel = new EventEmitter();
 
   settings$: Observable<Settings.SettingsState>;

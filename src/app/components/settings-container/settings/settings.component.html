@@ -3,6 +3,7 @@
   <lab-icon iconId="iron-plate"></lab-icon>
   <div class="flex">
     <input
+      id="settings-precision-item-decimals"
       type="radio"
       name="itemPrecision"
       [value]="false"
@@ -10,6 +11,7 @@
       (change)="itemPrecisionDecimals()"
     />
     <input
+      id="settings-precision-item-value"
       type="number"
       min="0"
       step="1"
@@ -20,6 +22,7 @@
   </div>
   <div class="flex">
     <input
+      id="settings-precision-item-fractions"
       type="radio"
       name="itemPrecision"
       [value]="true"
@@ -33,6 +36,7 @@
   <lab-icon iconId="transport-belt"></lab-icon>
   <div class="flex">
     <input
+      id="settings-precision-belt-decimals"
       type="radio"
       name="beltPrecision"
       [value]="false"
@@ -40,6 +44,7 @@
       (change)="beltPrecisionDecimals()"
     />
     <input
+      id="settings-precision-belt-value"
       type="number"
       min="0"
       step="1"
@@ -50,6 +55,7 @@
   </div>
   <div class="flex">
     <input
+      id="settings-precision-belt-fractions"
       type="radio"
       name="beltPrecision"
       [value]="true"
@@ -63,6 +69,7 @@
   <lab-icon iconId="assembling-machine-1"></lab-icon>
   <div class="flex">
     <input
+      id="settings-precision-factory-decimals"
       type="radio"
       name="factoryPrecision"
       [value]="false"
@@ -70,6 +77,7 @@
       (change)="factoryPrecisionDecimals()"
     />
     <input
+      id="settings-precision-factory-value"
       type="number"
       min="0"
       step="1"
@@ -80,6 +88,7 @@
   </div>
   <div class="flex">
     <input
+      id="settings-precision-factory-fractions"
       type="radio"
       name="factoryPrecision"
       [value]="true"
