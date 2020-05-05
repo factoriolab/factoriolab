@@ -55,6 +55,10 @@ input {
     width: 5rem;
   }
 
+  &[type='radio'] {
+    margin: 0.25rem;
+  }
+
   &:invalid {
     border-color: $color-invalid;
   }

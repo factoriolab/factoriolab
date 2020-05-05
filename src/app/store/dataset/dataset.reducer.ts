@@ -7,7 +7,7 @@ export interface DatasetState {
   itemEntities: Entities<Item>;
   itemN: Entities<number>;
   itemI: NEntities<string>;
-  laneIds: ItemId[];
+  beltIds: ItemId[];
   categories: Category[];
   categoryIds: string[];
   categoryEntities: Entities<Category>;
@@ -25,7 +25,7 @@ export const initialDatasetState: DatasetState = {
   itemEntities: {},
   itemN: {},
   itemI: {},
-  laneIds: [],
+  beltIds: [],
   categories: [],
   categoryIds: [],
   categoryEntities: {},
@@ -73,7 +73,7 @@ export function datasetReducer(
         itemI: action.payload.items.reduce((e: NEntities<string>, i, z) => {
           return { ...e, ...{ [z]: i.id } };
         }, {}),
-        laneIds: action.payload.items
+        beltIds: action.payload.items
           .filter((i) => i.belt || i.id === ItemId.Pipe)
           .map((i) => i.id),
         categories: action.payload.categories,

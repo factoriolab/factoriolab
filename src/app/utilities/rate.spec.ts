@@ -13,7 +13,7 @@ describe('RateUtility', () => {
         factories: new Fraction(15),
         settings: {
           ignore: false,
-          lane: 'transport-belt',
+          belt: 'transport-belt',
           factory: 'assembling-machine-2',
           modules: ['module', 'module'],
           beaconType: 'module',
@@ -26,7 +26,7 @@ describe('RateUtility', () => {
         factories: new Fraction(768),
         settings: {
           ignore: false,
-          lane: 'transport-belt',
+          belt: 'transport-belt',
           factory: 'assembling-machine-2',
           modules: ['module', 'module'],
           beaconType: 'module',
@@ -39,7 +39,7 @@ describe('RateUtility', () => {
         factories: new Fraction(240),
         settings: {
           ignore: false,
-          lane: 'transport-belt',
+          belt: 'transport-belt',
           factory: 'assembling-machine-2',
           modules: ['module', 'module'],
           beaconType: 'module',
@@ -151,7 +151,7 @@ describe('RateUtility', () => {
       expect(steps).toEqual(expected as any);
     });
 
-    it('should properly set default lane for fluids', () => {
+    it('should properly set default belt for fluids', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
         ItemId.PetroleumGas,
@@ -164,7 +164,7 @@ describe('RateUtility', () => {
         RecipeId.AdvancedOilProcessing,
         mocks.Data
       );
-      expect(steps[0].settings.lane).toEqual(ItemId.Pipe);
+      expect(steps[0].settings.belt).toEqual(ItemId.Pipe);
     });
 
     it('should properly mark recipe for oil products when using basic oil processing', () => {
@@ -225,7 +225,7 @@ describe('RateUtility', () => {
           items: new Fraction(30),
           factories: new Fraction(0),
           settings: {
-            lane: ItemId.TransportBelt,
+            belt: ItemId.TransportBelt,
           },
         },
       ]);
@@ -250,31 +250,31 @@ describe('RateUtility', () => {
     });
   });
 
-  describe('calculateLanes', () => {
+  describe('calculateBelts', () => {
     it('should skip steps with no items', () => {
       const steps: Step[] = [
         {
           itemId: mocks.Item1.id,
           items: null,
-          lanes: null,
-          settings: { lane: ItemId.TransportBelt },
+          belts: null,
+          settings: { belt: ItemId.TransportBelt },
         },
       ];
-      RateUtility.calculateLanes(steps, mocks.LaneSpeed);
-      expect(steps[0].lanes).toBeNull();
+      RateUtility.calculateBelts(steps, mocks.BeltSpeed);
+      expect(steps[0].belts).toBeNull();
     });
 
-    it('should calculate required lanes for steps', () => {
+    it('should calculate required belts for steps', () => {
       const steps: Step[] = [
         {
           itemId: mocks.Item1.id,
-          items: mocks.LaneSpeed[ItemId.TransportBelt],
-          lanes: new Fraction(0),
-          settings: { lane: ItemId.TransportBelt },
+          items: mocks.BeltSpeed[ItemId.TransportBelt],
+          belts: new Fraction(0),
+          settings: { belt: ItemId.TransportBelt },
         },
       ];
-      RateUtility.calculateLanes(steps, mocks.LaneSpeed);
-      expect(steps[0].lanes).toEqual(new Fraction(1));
+      RateUtility.calculateBelts(steps, mocks.BeltSpeed);
+      expect(steps[0].belts).toEqual(new Fraction(1));
     });
   });
 
@@ -284,8 +284,8 @@ describe('RateUtility', () => {
         {
           itemId: mocks.Item1.id,
           items: null,
-          lanes: null,
-          settings: { lane: ItemId.TransportBelt },
+          belts: null,
+          settings: { belt: ItemId.TransportBelt },
         },
       ];
       RateUtility.displayRate(steps, 3 as any);

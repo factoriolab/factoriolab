@@ -1,20 +1,91 @@
-<table>
-  <tbody>
-    <tr>
-      <td>Precision:</td>
-      <td>
-        <div class="flex">
-          <input
-            type="number"
-            step="1"
-            [disabled]="settings.precision == null"
-          />
-          <div class="flex">
-            <input type="checkbox" [ngModel]="settings.precision == null" />
-            <div>Fractions</div>
-          </div>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div class="label">Precision</div>
+<div class="field">
+  <lab-icon iconId="iron-plate"></lab-icon>
+  <div class="flex">
+    <input
+      type="radio"
+      name="itemPrecision"
+      [value]="false"
+      [ngModel]="settings.itemPrecision == null"
+      (change)="itemPrecisionDecimals()"
+    />
+    <input
+      type="number"
+      min="0"
+      step="1"
+      [disabled]="settings.itemPrecision == null"
+      [value]="settings.itemPrecision"
+      (change)="itemPrecisionValue($event)"
+    />
+  </div>
+  <div class="flex">
+    <input
+      type="radio"
+      name="itemPrecision"
+      [value]="true"
+      [ngModel]="settings.itemPrecision == null"
+      (change)="itemPrecisionFractions()"
+    />
+    <div>Fractions</div>
+  </div>
+</div>
+<div class="field">
+  <lab-icon iconId="transport-belt"></lab-icon>
+  <div class="flex">
+    <input
+      type="radio"
+      name="beltPrecision"
+      [value]="false"
+      [ngModel]="settings.beltPrecision == null"
+      (change)="beltPrecisionDecimals()"
+    />
+    <input
+      type="number"
+      min="0"
+      step="1"
+      [disabled]="settings.beltPrecision == null"
+      [value]="settings.beltPrecision"
+      (change)="beltPrecisionValue($event)"
+    />
+  </div>
+  <div class="flex">
+    <input
+      type="radio"
+      name="beltPrecision"
+      [value]="true"
+      [ngModel]="settings.beltPrecision == null"
+      (change)="beltPrecisionFractions()"
+    />
+    <div>Fractions</div>
+  </div>
+</div>
+<div class="field">
+  <lab-icon iconId="assembling-machine-1"></lab-icon>
+  <div class="flex">
+    <input
+      type="radio"
+      name="factoryPrecision"
+      [value]="false"
+      [ngModel]="settings.factoryPrecision == null"
+      (change)="factoryPrecisionDecimals()"
+    />
+    <input
+      type="number"
+      min="0"
+      step="1"
+      [disabled]="settings.factoryPrecision == null"
+      [value]="settings.factoryPrecision"
+      (change)="factoryPrecisionValue($event)"
+    />
+  </div>
+  <div class="flex">
+    <input
+      type="radio"
+      name="factoryPrecision"
+      [value]="true"
+      [ngModel]="settings.factoryPrecision == null"
+      (change)="factoryPrecisionFractions()"
+    />
+    <div>Fractions</div>
+  </div>
+</div>

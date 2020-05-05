@@ -35,14 +35,14 @@ describe('Recipe Selectors', () => {
     it('should use belt override', () => {
       const state = {
         ...initialRecipeState,
-        ...{ [mocks.Item1.id]: { lane: stringValue } },
+        ...{ [mocks.Item1.id]: { belt: stringValue } },
       };
       const result = selectors.getRecipeSettings.projector(
         state,
         mocks.Data,
         initialSettingsState
       );
-      expect(result[mocks.Item1.id].lane).toEqual(stringValue);
+      expect(result[mocks.Item1.id].belt).toEqual(stringValue);
     });
 
     it('should use factory override', () => {

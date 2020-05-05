@@ -34,4 +34,16 @@ export class SettingsContainerComponent implements OnInit {
       this.cancel.emit();
     }
   }
+
+  setItemPrecision(value: number) {
+    this.store.dispatch(new Settings.SetItemPrecisionAction(value));
+  }
+
+  setBeltPrecision(value: number) {
+    this.store.dispatch(new Settings.SetBeltPrecisionAction(value));
+  }
+
+  setFactoryPrecision(value: number) {
+    this.store.dispatch(new Settings.SetFactoryPrecisionAction(value));
+  }
 }

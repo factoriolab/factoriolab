@@ -5,7 +5,7 @@
         Items
       </th>
       <th>
-        Lanes
+        Belts
       </th>
       <th>
         Factories
@@ -23,26 +23,26 @@
       <td>
         <div class="flex">
           <div *ngIf="step.items" class="monospace">
-            {{ step.items.toFraction(true) }}
+            {{ rate(step.items, itemPrecision) }}
           </div>
           <div *ngIf="step.surplus && step.surplus.n > 0" class="monospace">
-            (+{{ step.surplus.toFraction(true) }})
+            (+{{ rate(step.surplus, itemPrecision) }})
           </div>
           <lab-icon [iconId]="step.itemId" scale="true"></lab-icon>
         </div>
       </td>
       <ng-container *ngIf="step.settings">
         <td>
-          <div *ngIf="step.settings.lane && step.lanes" class="flex">
-            <div class="monospace">{{ step.lanes.toFraction(true) }}</div>
-            <lab-icon [iconId]="step.settings.lane"></lab-icon>
+          <div *ngIf="step.settings.belt && step.belts" class="flex">
+            <div class="monospace">{{ rate(step.belts, beltPrecision) }}</div>
+            <lab-icon [iconId]="step.settings.belt"></lab-icon>
           </div>
         </td>
         <ng-container *ngIf="step.settings.factory">
           <td>
             <div class="flex" *ngIf="!step.factories || step.factories.n > 0">
               <div *ngIf="step.factories" class="monospace">
-                {{ step.factories.toFraction(true) }}
+                {{ rate(step.factories, factoryPrecision) }}
               </div>
               <ng-container *ngIf="step.settings.recipeId">
                 <lab-icon [iconId]="step.settings.recipeId"></lab-icon>

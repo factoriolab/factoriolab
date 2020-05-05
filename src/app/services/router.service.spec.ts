@@ -36,7 +36,7 @@ const mockRecipeSettings: Recipe.RecipeState = {
 const mockFullRecipeSettings: Recipe.RecipeState = {
   [RecipeId.SteelChest]: {
     ignore: true,
-    lane: ItemId.TransportBelt,
+    belt: ItemId.TransportBelt,
     factory: ItemId.AssemblingMachine3,
     modules: [ItemId.Module],
     beaconType: ItemId.Module,
@@ -54,7 +54,9 @@ const mockSettings: Settings.SettingsState = {
 };
 const mockFullSettings: Settings.SettingsState = {
   displayRate: DisplayRate.PerHour,
-  precision: 2,
+  itemPrecision: 2,
+  beltPrecision: 1,
+  factoryPrecision: 0,
   belt: ItemId.TransportBelt,
   assembler: ItemId.AssemblingMachine2,
   furnace: ItemId.StoneFurnace,

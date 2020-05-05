@@ -3,7 +3,7 @@ import { RecipeId } from './recipe';
 
 export interface RecipeSettings {
   ignore?: boolean;
-  lane?: ItemId;
+  belt?: ItemId;
   factory?: ItemId;
   modules?: ItemId[];
   beaconType?: ItemId;
