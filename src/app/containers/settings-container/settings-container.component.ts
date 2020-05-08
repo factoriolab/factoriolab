@@ -29,6 +29,8 @@ export class SettingsContainerComponent implements OnInit {
   data$: Observable<Dataset.DatasetState>;
   settings$: Observable<Settings.SettingsState>;
 
+  opening = true;
+
   constructor(private element: ElementRef, private store: Store<State>) {}
 
   ngOnInit() {
@@ -38,7 +40,9 @@ export class SettingsContainerComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   click(event: MouseEvent) {
-    if (!this.element.nativeElement.contains(event.target)) {
+    if (this.opening) {
+      this.opening = false;
+    } else if (!this.element.nativeElement.contains(event.target)) {
       this.cancel.emit();
     }
   }
@@ -59,7 +63,15 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetFactoryPrecisionAction(value));
   }
 
+  setBelt(value: ItemId) {
+    this.store.dispatch(new Settings.SetBeltAction(value));
+  }
+
   setAssembler(value: ItemId) {
     this.store.dispatch(new Settings.SetAssemblerAction(value));
+  }
+
+  setFurnace(value: ItemId) {
+    this.store.dispatch(new Settings.SetFurnaceAction(value));
   }
 }

@@ -1059,7 +1059,7 @@
       "name": "Satellite",
       "stack": 1,
       "category": "intermediate",
-      "row": 5
+      "row": 6
     },
     {
       "id": "rocket-part",
@@ -1299,7 +1299,7 @@
       "name": "Rocket",
       "stack": 200,
       "category": "combat",
-      "row": 2
+      "row": 3
     },
     {
       "id": "explosive-rocket",
@@ -1495,7 +1495,7 @@
       "name": "Personal Roboport",
       "stack": 20,
       "category": "combat",
-      "row": 6
+      "row": 7
     },
     {
       "id": "personal-roboport-mk2",

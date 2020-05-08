@@ -7,7 +7,7 @@
       name="displayRate"
       [value]="displayRate.PerSecond"
       [ngModel]="settings.displayRate"
-      (change)="displayRateChange(displayRate.PerSecond)"
+      (change)="setDisplayRate.emit(displayRate.PerSecond)"
     />
     <label for="settings-display-persecond">#/second</label>
   </div>
@@ -18,7 +18,7 @@
       name="displayRate"
       [value]="displayRate.PerMinute"
       [ngModel]="settings.displayRate"
-      (change)="displayRateChange(displayRate.PerMinute)"
+      (change)="setDisplayRate.emit(displayRate.PerMinute)"
     />
     <label for="settings-display-perminute">#/minute</label>
   </div>
@@ -29,7 +29,7 @@
       name="displayRate"
       [value]="displayRate.PerHour"
       [ngModel]="settings.displayRate"
-      (change)="displayRateChange(displayRate.PerHour)"
+      (change)="setDisplayRate.emit(displayRate.PerHour)"
     />
     <label for="settings-display-perhour">#/hour</label>
   </div>
@@ -139,13 +139,29 @@
     <label for="settings-precision-factory-fractions">Fractions</label>
   </div>
 </div>
-<div class="label">Assembler</div>
+<div class="label">Factory</div>
 <div class="field">
   <div class="relative">
     <lab-icon
       class="clickable"
+      [iconId]="settings.belt"
+      (click)="clickSelect(open.Belt, $event)"
+    ></lab-icon>
+    <lab-select
+      *ngIf="openSelect === open.Belt"
+      [data]="data"
+      [options]="[beltOptions]"
+      [selectedId]="settings.belt"
+      (cancel)="openSelect = open.None"
+      (selectId)="selectBelt($event)"
+    >
+    </lab-select>
+  </div>
+  <div class="relative">
+    <lab-icon
+      class="clickable"
       [iconId]="settings.assembler"
-      (click)="openAssembler($event)"
+      (click)="clickSelect(open.Assembler, $event)"
     ></lab-icon>
     <lab-select
       *ngIf="openSelect === open.Assembler"
@@ -157,6 +173,20 @@
     >
     </lab-select>
   </div>
+  <div class="relative">
+    <lab-icon
+      class="clickable"
+      [iconId]="settings.furnace"
+      (click)="clickSelect(open.Furnace, $event)"
+    ></lab-icon>
+    <lab-select
+      *ngIf="openSelect === open.Furnace"
+      [data]="data"
+      [options]="[furnaceOptions]"
+      [selectedId]="settings.furnace"
+      (cancel)="openSelect = open.None"
+      (selectId)="selectFurnace($event)"
+    >
+    </lab-select>
+  </div>
 </div>
-<div class="label">Furnace</div>
-<div class="field"></div>

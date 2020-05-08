@@ -83,6 +83,12 @@ export function settingsReducer(
         ...{ assembler: action.payload },
       };
     }
+    case SettingsActionType.SET_FURNACE: {
+      return {
+        ...state,
+        ...{ furnace: action.payload },
+      };
+    }
     case SettingsActionType.SET_OIL_RECIPE: {
       return { ...state, ...{ oilRecipe: action.payload } };
     }

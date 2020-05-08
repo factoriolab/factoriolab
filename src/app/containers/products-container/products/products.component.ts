@@ -27,11 +27,11 @@ export class ProductsComponent {
   clickEditProduct(product: Product, event: MouseEvent) {
     this.editProductId = product.id;
     this.categoryId = this.data.itemEntities[product.itemId].category;
-    event.stopPropagation();
   }
 
   selectItem(id: number, itemId: ItemId) {
     this.editProduct.emit([id, itemId]);
+    this.editProductId = null;
   }
 
   rateChange(id: number, event: any) {

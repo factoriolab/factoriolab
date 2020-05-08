@@ -6,7 +6,9 @@ import { SettingsState, initialSettingsState } from '~/store/settings';
 
 enum OpenSelect {
   None,
+  Belt,
   Assembler,
+  Furnace,
 }
 
 @Component({
@@ -22,22 +24,30 @@ export class SettingsComponent {
   @Output() setItemPrecision = new EventEmitter<number>();
   @Output() setBeltPrecision = new EventEmitter<number>();
   @Output() setFactoryPrecision = new EventEmitter<number>();
+  @Output() setBelt = new EventEmitter<ItemId>();
   @Output() setAssembler = new EventEmitter<ItemId>();
+  @Output() setFurnace = new EventEmitter<ItemId>();
 
   openSelect = OpenSelect.None;
+  beltOptions = [
+    ItemId.TransportBelt,
+    ItemId.FastTransportBelt,
+    ItemId.ExpressTransportBelt,
+  ];
   assemblerOptions = [
     ItemId.AssemblingMachine1,
     ItemId.AssemblingMachine2,
     ItemId.AssemblingMachine3,
   ];
+  furnaceOptions = [
+    ItemId.StoneFurnace,
+    ItemId.SteelFurnace,
+    ItemId.ElectricFurnace,
+  ];
   displayRate = DisplayRate;
   open = OpenSelect;
 
   constructor() {}
-
-  displayRateChange(value: DisplayRate) {
-    this.setDisplayRate.emit(value);
-  }
 
   itemPrecisionDecimals() {
     this.setItemPrecision.emit(initialSettingsState.itemPrecision);
@@ -69,13 +79,23 @@ export class SettingsComponent {
     }
   }
 
-  openAssembler(event: MouseEvent) {
-    this.openSelect = OpenSelect.Assembler;
+  clickSelect(value: OpenSelect, event: MouseEvent) {
+    this.openSelect = value;
     event.stopPropagation();
+  }
+
+  selectBelt(value: ItemId) {
+    this.openSelect = OpenSelect.None;
+    this.setBelt.emit(value);
   }
 
   selectAssembler(value: ItemId) {
     this.openSelect = OpenSelect.None;
     this.setAssembler.emit(value);
+  }
+
+  selectFurnace(value: ItemId) {
+    this.openSelect = OpenSelect.None;
+    this.setFurnace.emit(value);
   }
 }
