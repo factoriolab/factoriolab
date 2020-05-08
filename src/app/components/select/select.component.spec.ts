@@ -25,9 +25,7 @@ import { TestUtility } from '~/utilities/test';
 class TestSelectComponent {
   @ViewChild(SelectComponent) child: SelectComponent;
   data: DatasetState = mocks.Data;
-  options: string[][] = [
-    [ItemId.AssemblingMachine1, ItemId.AssemblingMachine2],
-  ];
+  options: string[] = [ItemId.AssemblingMachine1, ItemId.AssemblingMachine2];
   selectedId = ItemId.AssemblingMachine1;
   selectType = SelectType.Item;
   cancel() {}

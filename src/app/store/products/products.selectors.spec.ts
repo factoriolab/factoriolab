@@ -115,6 +115,7 @@ describe('Products Selectors', () => {
         [],
         {},
         {},
+        null,
         {}
       );
       expect(Object.keys(result).length).toEqual(0);
@@ -125,9 +126,117 @@ describe('Products Selectors', () => {
         [mocks.Product2.id],
         mocks.ProductEntities,
         { [mocks.Product2.itemId]: mocks.Settings1 },
+        RecipeId.BasicOilProcessing,
         { [mocks.Settings1.belt]: new Fraction(1) }
       );
       expect(result[mocks.Product2.id].n).toBeGreaterThan(0);
+    });
+
+    it('should calculate rate for oil products', () => {
+      const products: { [key: number]: Product } = {
+        [0]: {
+          id: 0,
+          itemId: ItemId.HeavyOil,
+          rate: 1,
+          rateType: RateType.Belts,
+        },
+        [1]: {
+          id: 1,
+          itemId: ItemId.LightOil,
+          rate: 1,
+          rateType: RateType.Belts,
+        },
+        [2]: {
+          id: 2,
+          itemId: ItemId.PetroleumGas,
+          rate: 1,
+          rateType: RateType.Belts,
+        },
+      };
+      const result = selectors.getNormalizedRatesByBelts.projector(
+        Object.keys(products),
+        products,
+        {},
+        null,
+        { [ItemId.Pipe]: new Fraction(1) }
+      );
+      expect(result[0].n).toBeGreaterThan(0);
+      expect(result[1].n).toBeGreaterThan(0);
+      expect(result[2].n).toBeGreaterThan(0);
+    });
+
+    it('should calculate rate for solid fuel by basic processing', () => {
+      const belt = ItemId.TransportBelt;
+      const products: { [key: number]: Product } = {
+        [0]: {
+          id: 0,
+          itemId: ItemId.SolidFuel,
+          rate: 1,
+          rateType: RateType.Belts,
+        },
+      };
+      const result = selectors.getNormalizedRatesByBelts.projector(
+        [0],
+        products,
+        {
+          [RecipeId.SolidFuelFromPetroleumGas]: { belt },
+        },
+        RecipeId.BasicOilProcessing,
+        { [belt]: new Fraction(1) }
+      );
+      expect(result[0].n).toBeGreaterThan(0);
+    });
+
+    it('should calculate rate for solid fuel by advanced processing', () => {
+      const belt = ItemId.TransportBelt;
+      const products: { [key: number]: Product } = {
+        [0]: {
+          id: 0,
+          itemId: ItemId.SolidFuel,
+          rate: 1,
+          rateType: RateType.Belts,
+        },
+      };
+      const result = selectors.getNormalizedRatesByBelts.projector(
+        [0],
+        products,
+        {
+          [RecipeId.SolidFuelFromLightOil]: { belt },
+        },
+        RecipeId.AdvancedOilProcessing,
+        { [belt]: new Fraction(1) }
+      );
+      expect(result[0].n).toBeGreaterThan(0);
+    });
+
+    it('should calculate rate for uranium products', () => {
+      const belt = ItemId.TransportBelt;
+      const products: { [key: number]: Product } = {
+        [0]: {
+          id: 0,
+          itemId: ItemId.Uranium238,
+          rate: 1,
+          rateType: RateType.Belts,
+        },
+        [1]: {
+          id: 1,
+          itemId: ItemId.Uranium235,
+          rate: 1,
+          rateType: RateType.Belts,
+        },
+      };
+      const result = selectors.getNormalizedRatesByBelts.projector(
+        Object.keys(products),
+        products,
+        {
+          [RecipeId.UraniumProcessing]: { belt },
+          [RecipeId.KovarexEnrichmentProcess]: { belt },
+        },
+        null,
+        { [belt]: new Fraction(1) }
+      );
+      expect(result[0].n).toBeGreaterThan(0);
+      expect(result[1].n).toBeGreaterThan(0);
     });
   });
 

@@ -6,7 +6,7 @@ export interface RecipeSettings {
   belt?: ItemId;
   factory?: ItemId;
   modules?: ItemId[];
-  beaconType?: ItemId;
+  beaconModule?: ItemId;
   beaconCount?: number;
   recipeId?: RecipeId;
 }

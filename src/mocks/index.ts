@@ -60,7 +60,7 @@ export const Settings1: RecipeSettings = {
   belt: ItemId.TransportBelt,
   factory: ItemId.AssemblingMachine2,
   modules: [ItemId.Module, ItemId.Module],
-  beaconType: ItemId.Module,
+  beaconModule: ItemId.Module,
   beaconCount: 0,
 };
 export const Settings2: RecipeSettings = {
@@ -68,7 +68,7 @@ export const Settings2: RecipeSettings = {
   belt: ItemId.TransportBelt,
   factory: ItemId.AssemblingMachine2,
   modules: [ItemId.Module, ItemId.Module],
-  beaconType: ItemId.Module,
+  beaconModule: ItemId.Module,
   beaconCount: 0,
   recipeId: Recipe1.id,
 };

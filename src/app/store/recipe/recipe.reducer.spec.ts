@@ -29,9 +29,9 @@ describe('Recipe Reducer', () => {
     it('should edit the beacon type', () => {
       const result = recipeReducer(
         initialRecipeState,
-        new actions.EditBeaconTypeAction([mocks.Recipe1.id, mocks.Item1.id])
+        new actions.EditBeaconModuleAction([mocks.Recipe1.id, mocks.Item1.id])
       );
-      expect(result[mocks.Recipe1.id].beaconType).toEqual(mocks.Item1.id);
+      expect(result[mocks.Recipe1.id].beaconModule).toEqual(mocks.Item1.id);
     });
   });
 

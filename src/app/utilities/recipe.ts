@@ -62,14 +62,17 @@ export class RecipeUtility {
   static defaultModules(
     recipe: Recipe,
     prodModule: ItemId,
-    otherModule: ItemId,
+    speedModule: ItemId,
     count: number,
     itemEntities: Entities<Item>
   ) {
     // Determine whether prod modules are allowed
     const prodModuleAllowed = this.prodModuleAllowed(recipe, itemEntities);
     // Pick the default module to use
-    const module = prodModuleAllowed && prodModule ? prodModule : otherModule;
+    const module =
+      prodModuleAllowed && prodModule !== ItemId.Module
+        ? prodModule
+        : speedModule;
     // Create the appropriate array of default modules
     const modules = [];
     for (let i = 0; i < count; i++) {
@@ -82,7 +85,7 @@ export class RecipeUtility {
   static recipeFactors(
     factorySpeed: Fraction,
     modules: ItemId[],
-    beaconType: ItemId,
+    beaconModule: ItemId,
     beaconCount: number,
     itemEntities: Entities<Item>
   ): Factors {
@@ -99,8 +102,8 @@ export class RecipeUtility {
         }
       }
     }
-    if (beaconType && itemEntities[beaconType]?.module && beaconCount > 0) {
-      const module = itemEntities[beaconType].module;
+    if (beaconModule && itemEntities[beaconModule]?.module && beaconCount > 0) {
+      const module = itemEntities[beaconModule].module;
       speed = speed.add(new Fraction(module.speed).div(2).mul(beaconCount));
     }
 
