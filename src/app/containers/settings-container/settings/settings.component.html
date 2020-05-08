@@ -7,7 +7,7 @@
       name="displayRate"
       [value]="displayRate.PerSecond"
       [ngModel]="settings.displayRate"
-      (change)="displayRateChange(displayRate.PerSecond)"
+      (change)="setDisplayRate.emit(displayRate.PerSecond)"
     />
     <label for="settings-display-persecond">#/second</label>
   </div>
@@ -18,7 +18,7 @@
       name="displayRate"
       [value]="displayRate.PerMinute"
       [ngModel]="settings.displayRate"
-      (change)="displayRateChange(displayRate.PerMinute)"
+      (change)="setDisplayRate.emit(displayRate.PerMinute)"
     />
     <label for="settings-display-perminute">#/minute</label>
   </div>
@@ -29,7 +29,7 @@
       name="displayRate"
       [value]="displayRate.PerHour"
       [ngModel]="settings.displayRate"
-      (change)="displayRateChange(displayRate.PerHour)"
+      (change)="setDisplayRate.emit(displayRate.PerHour)"
     />
     <label for="settings-display-perhour">#/hour</label>
   </div>
@@ -66,7 +66,7 @@
       name="itemPrecision"
       [value]="true"
       [ngModel]="settings.itemPrecision == null"
-      (change)="itemPrecisionFractions()"
+      (change)="setItemPrecision.emit(null)"
     />
     <label for="settings-precision-item-fractions">Fractions</label>
   </div>
@@ -100,7 +100,7 @@
       name="beltPrecision"
       [value]="true"
       [ngModel]="settings.beltPrecision == null"
-      (change)="beltPrecisionFractions()"
+      (change)="setBeltPrecision.emit(null)"
     />
     <label for="settings-precision-belt-fractions">Fractions</label>
   </div>
@@ -134,8 +134,59 @@
       name="factoryPrecision"
       [value]="true"
       [ngModel]="settings.factoryPrecision == null"
-      (change)="factoryPrecisionFractions()"
+      (change)="setFactoryPrecision.emit(null)"
     />
     <label for="settings-precision-factory-fractions">Fractions</label>
+  </div>
+</div>
+<div class="label">Factory</div>
+<div class="field">
+  <div class="relative">
+    <lab-icon
+      class="clickable"
+      [iconId]="settings.belt"
+      (click)="openSelect = select.Belt"
+    ></lab-icon>
+    <lab-select
+      *ngIf="openSelect === select.Belt"
+      [data]="data"
+      [options]="[beltOptions]"
+      [selectedId]="settings.belt"
+      (cancel)="openSelect = select.None"
+      (selectId)="setBelt.emit($event)"
+    >
+    </lab-select>
+  </div>
+  <div class="relative">
+    <lab-icon
+      class="clickable"
+      [iconId]="settings.assembler"
+      (click)="openSelect = select.Assembler"
+    ></lab-icon>
+    <lab-select
+      *ngIf="openSelect === select.Assembler"
+      [data]="data"
+      [options]="[assemblerOptions]"
+      [selectedId]="settings.assembler"
+      (cancel)="openSelect = select.None"
+      (selectId)="setAssembler.emit($event)"
+    >
+    </lab-select>
+  </div>
+  <div class="relative">
+    <lab-icon
+      class="clickable"
+      [iconId]="settings.furnace"
+      (click)="openSelect = select.Furnace"
+    ></lab-icon>
+    <lab-select
+      *ngIf="openSelect === select.Furnace"
+      [data]="data"
+      [options]="[furnaceOptions]"
+      [selectedId]="settings.furnace"
+      (cancel)="openSelect = select.None"
+      (selectId)="setFurnace.emit($event)"
+    >
+    </lab-select>
   </div>
 </div>

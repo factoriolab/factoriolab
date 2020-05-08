@@ -28,14 +28,10 @@ import { ProductsState } from './products.reducer';
 const productsState = (state: State) => state.productsState;
 const sIds = (state: ProductsState) => state.ids;
 const sEntities = (state: ProductsState) => state.entities;
-const sEditProductId = (state: ProductsState) => state.editProductId;
-const sCategoryId = (state: ProductsState) => state.categoryId;
 
 /* Simple selectors */
 export const getIds = compose(sIds, productsState);
 export const getEntities = compose(sEntities, productsState);
-export const getEditProductId = compose(sEditProductId, productsState);
-export const getCategoryId = compose(sCategoryId, productsState);
 
 /* Complex selectors */
 export const getProducts = createSelector(

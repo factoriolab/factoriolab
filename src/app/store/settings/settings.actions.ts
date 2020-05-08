@@ -10,8 +10,9 @@ export const enum SettingsActionType {
   SET_BELT_PRECISION = '[Settings Page] Set Belt Precision',
   SET_FACTORY_PRECISION = '[Settings Page] Set Factory Precision',
   SET_BELT = '[Settings Page] Set Belt',
+  SET_ASSEMBLER = '[Settings Page] Set Assembler',
+  SET_FURNACE = '[Settings Page] Set Furnace',
   SET_OIL_RECIPE = '[Settings Page] Set Oil Recipe',
-  SET_USE_CRACKING = '[Setting Page] Set Use Cracking',
 }
 
 export class LoadAction implements Action {
@@ -44,6 +45,16 @@ export class SetBeltAction implements Action {
   constructor(public payload: ItemId) {}
 }
 
+export class SetAssemblerAction implements Action {
+  readonly type = SettingsActionType.SET_ASSEMBLER;
+  constructor(public payload: ItemId) {}
+}
+
+export class SetFurnaceAction implements Action {
+  readonly type = SettingsActionType.SET_FURNACE;
+  constructor(public payload: ItemId) {}
+}
+
 export class SetOilProcessingRecipeAction implements Action {
   readonly type = SettingsActionType.SET_OIL_RECIPE;
   constructor(public payload: RecipeId) {}
@@ -56,4 +67,6 @@ export type SettingsAction =
   | SetBeltPrecisionAction
   | SetFactoryPrecisionAction
   | SetBeltAction
+  | SetAssemblerAction
+  | SetFurnaceAction
   | SetOilProcessingRecipeAction;

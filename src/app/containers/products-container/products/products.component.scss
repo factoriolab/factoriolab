@@ -28,16 +28,6 @@ button {
   position: relative;
 }
 
-lab-icon {
-  cursor: pointer;
-  padding: 0.125rem;
-  border-radius: 0.25rem;
-
-  &:hover {
-    background-color: $color-brand;
-  }
-}
-
 .product-row {
   display: flex;
   align-items: center;

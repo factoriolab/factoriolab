@@ -5,8 +5,6 @@ export interface ProductsState {
   ids: number[];
   entities: NEntities<Product>;
   index: number;
-  editProductId: number;
-  categoryId: string;
 }
 
 const defaultProduct: Product = {
@@ -20,8 +18,6 @@ export const initialProductsState: ProductsState = {
   ids: [],
   entities: {},
   index: 0,
-  editProductId: null,
-  categoryId: CategoryId.Logistics,
 };
 
 export function productsReducer(
@@ -59,23 +55,7 @@ export function productsReducer(
         },
       };
     }
-    case ProductsActionType.OPEN_EDIT_PRODUCT: {
-      return {
-        ...state,
-        ...{
-          editProductId: action.payload.id,
-        },
-      };
-    }
-    case ProductsActionType.CANCEL_EDIT_PRODUCT: {
-      return {
-        ...state,
-        ...{
-          editProductId: null,
-        },
-      };
-    }
-    case ProductsActionType.COMMIT_EDIT_PRODUCT: {
+    case ProductsActionType.EDIT_PRODUCT: {
       const id = action.payload[0];
       return {
         ...state,
@@ -132,10 +112,6 @@ export function productsReducer(
           },
         },
       };
-    }
-    case ProductsActionType.SELECT_ITEM_CATEGORY:
-    case ProductsActionType.SELECT_ITEM_CATEGORY_EFFECT: {
-      return { ...state, ...{ categoryId: action.payload } };
     }
     default:
       return state;

@@ -1,8 +1,12 @@
 <lab-settings
+  [data]="data$ | async"
   [settings]="settings$ | async"
   (setDisplayRate)="setDisplayRate($event)"
   (setItemPrecision)="setItemPrecision($event)"
   (setBeltPrecision)="setBeltPrecision($event)"
   (setFactoryPrecision)="setFactoryPrecision($event)"
+  (setBelt)="setBelt($event)"
+  (setAssembler)="setAssembler($event)"
+  (setFurnace)="setFurnace($event)"
 >
 </lab-settings>
