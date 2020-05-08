@@ -85,12 +85,9 @@ export class SettingsComponent {
   select = OpenSelect;
   itemId = ItemId;
   selectType = SelectType;
+  initial = initialSettingsState;
 
   constructor() {}
-
-  itemPrecisionDecimals() {
-    this.setItemPrecision.emit(initialSettingsState.itemPrecision);
-  }
 
   emitNumber(emitter: EventEmitter<number>, event: any) {
     if (event.target.value) {
@@ -98,40 +95,4 @@ export class SettingsComponent {
       emitter.emit(value);
     }
   }
-
-  // itemPrecisionValue(event: any) {
-  //   if (event.target.value) {
-  //     const value = Math.round(Number(event.target.value));
-  //     this.setItemPrecision.emit(value);
-  //   }
-  // }
-
-  beltPrecisionDecimals() {
-    this.setBeltPrecision.emit(initialSettingsState.beltPrecision);
-  }
-
-  // beltPrecisionValue(event: any) {
-  //   if (event.target.value) {
-  //     const value = Math.round(Number(event.target.value));
-  //     this.setBeltPrecision.emit(value);
-  //   }
-  // }
-
-  factoryPrecisionDecimals() {
-    this.setFactoryPrecision.emit(initialSettingsState.factoryPrecision);
-  }
-
-  // factoryPrecisionValue(event: any) {
-  //   if (event.target.value) {
-  //     const value = Math.round(Number(event.target.value));
-  //     this.setFactoryPrecision.emit(value);
-  //   }
-  // }
-
-  // beaconCountValue(event: any) {
-  //   if (event.target.value) {
-  //     const value = Math.round(Number(event.target.value));
-  //     this.setBeaconCount.emit(value);
-  //   }
-  // }
 }

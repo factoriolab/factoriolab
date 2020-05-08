@@ -61,8 +61,8 @@ const mockFullSettings: Settings.SettingsState = {
   assembler: ItemId.AssemblingMachine2,
   furnace: ItemId.StoneFurnace,
   prodModule: ItemId.ProductivityModule,
-  speedModule: ItemId.EfficiencyModule,
-  beaconModule: ItemId.SpeedModule,
+  speedModule: ItemId.SpeedModule,
+  beaconModule: ItemId.SpeedModule2,
   beaconCount: 8,
   oilRecipe: RecipeId.BasicOilProcessing,
   fuel: ItemId.SolidFuel,
@@ -74,7 +74,7 @@ const mockZipFullSettings = `${DisplayRate.PerHour}:2:4:0:${
   mocks.Data.itemN[mockFullSettings.belt]
 }:${mocks.Data.itemN[mockFullSettings.assembler]}:${
   mocks.Data.itemN[mockFullSettings.furnace]
-}:4:7:1:8:${mocks.Data.recipeN[mockFullSettings.oilRecipe]}:${
+}:4:1:2:8:${mocks.Data.recipeN[mockFullSettings.oilRecipe]}:${
   mocks.Data.itemN[mockFullSettings.fuel]
 }:10:0:1200`;
 const mockNullSettings = {
@@ -85,7 +85,7 @@ const mockZipNullSettings = `${DisplayRate.PerHour}:n:n:n:${
   mocks.Data.itemN[mockFullSettings.belt]
 }:${mocks.Data.itemN[mockFullSettings.assembler]}:${
   mocks.Data.itemN[mockFullSettings.furnace]
-}:4:7:1:8:${mocks.Data.recipeN[mockFullSettings.oilRecipe]}:${
+}:4:1:2:8:${mocks.Data.recipeN[mockFullSettings.oilRecipe]}:${
   mocks.Data.itemN[mockFullSettings.fuel]
 }:10:0:1200`;
 

@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { StoreModule, Store } from '@ngrx/store';
 
 import { IconComponent } from '~/components';
-import { DisplayRate, ItemId } from '~/models';
+import { DisplayRate, ItemId, RecipeId } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as Settings from '~/store/settings';
 import { TestUtility } from '~/utilities/test';
@@ -53,57 +53,118 @@ describe('SettingsContainerComponent', () => {
 
   it('should set display rate', () => {
     spyOn(store, 'dispatch');
-    component.child.setDisplayRate.emit(DisplayRate.PerSecond);
+    const value = DisplayRate.PerSecond;
+    component.child.setDisplayRate.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetDisplayRateAction(DisplayRate.PerSecond)
+      new Settings.SetDisplayRateAction(value)
     );
   });
 
   it('should set item precision', () => {
     spyOn(store, 'dispatch');
-    component.child.setItemPrecision.emit(0);
+    const value = 0;
+    component.child.setItemPrecision.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetItemPrecisionAction(0)
+      new Settings.SetItemPrecisionAction(value)
     );
   });
 
   it('should set belt precision', () => {
     spyOn(store, 'dispatch');
-    component.child.setBeltPrecision.emit(0);
+    const value = 0;
+    component.child.setBeltPrecision.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetBeltPrecisionAction(0)
+      new Settings.SetBeltPrecisionAction(value)
     );
   });
 
   it('should set factory precision', () => {
     spyOn(store, 'dispatch');
-    component.child.setFactoryPrecision.emit(0);
+    const value = 0;
+    component.child.setFactoryPrecision.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetFactoryPrecisionAction(0)
+      new Settings.SetFactoryPrecisionAction(value)
     );
   });
 
   it('should set the default belt', () => {
     spyOn(store, 'dispatch');
-    component.child.setBelt.emit(ItemId.TransportBelt);
+    const value = ItemId.TransportBelt;
+    component.child.setBelt.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetBeltAction(ItemId.TransportBelt)
+      new Settings.SetBeltAction(value)
     );
   });
 
   it('should set the default assembler', () => {
     spyOn(store, 'dispatch');
-    component.child.setAssembler.emit(ItemId.AssemblingMachine1);
+    const value = ItemId.AssemblingMachine1;
+    component.child.setAssembler.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetAssemblerAction(ItemId.AssemblingMachine1)
+      new Settings.SetAssemblerAction(value)
     );
   });
 
   it('should set the default furnace', () => {
     spyOn(store, 'dispatch');
-    component.child.setFurnace.emit(ItemId.StoneFurnace);
+    const value = ItemId.StoneFurnace;
+    component.child.setFurnace.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetFurnaceAction(ItemId.StoneFurnace)
+      new Settings.SetFurnaceAction(value)
+    );
+  });
+
+  it('should set the oil recipe', () => {
+    spyOn(store, 'dispatch');
+    const value = RecipeId.BasicOilProcessing;
+    component.child.setOilRecipe.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetOilRecipeAction(value)
+    );
+  });
+
+  it('should set the fuel', () => {
+    spyOn(store, 'dispatch');
+    const value = ItemId.Wood;
+    component.child.setFuel.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetFuelAction(value)
+    );
+  });
+
+  it('should set the default prod module', () => {
+    spyOn(store, 'dispatch');
+    const value = ItemId.ProductivityModule;
+    component.child.setProdModule.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetProdModuleAction(value)
+    );
+  });
+
+  it('should set the default speed module', () => {
+    spyOn(store, 'dispatch');
+    const value = ItemId.SpeedModule;
+    component.child.setSpeedModule.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetSpeedModuleAction(value)
+    );
+  });
+
+  it('should set the default beacon module', () => {
+    spyOn(store, 'dispatch');
+    const value = ItemId.SpeedModule;
+    component.child.setBeaconModule.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetBeaconModuleAction(value)
+    );
+  });
+
+  it('should set the default beacon module count', () => {
+    spyOn(store, 'dispatch');
+    const value = 2;
+    component.child.setBeaconCount.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetBeaconCountAction(value)
     );
   });
 });

@@ -44,7 +44,7 @@
       name="itemPrecision"
       [value]="false"
       [ngModel]="settings.itemPrecision == null"
-      (change)="itemPrecisionDecimals()"
+      (change)="setItemPrecision.emit(initial.itemPrecision)"
     />
     <label for="settings-precision-item-decimals">
       <input
@@ -80,7 +80,7 @@
       name="beltPrecision"
       [value]="false"
       [ngModel]="settings.beltPrecision == null"
-      (change)="beltPrecisionDecimals()"
+      (change)="setBeltPrecision.emit(initial.beltPrecision)"
     />
     <input
       id="settings-precision-belt-value"
@@ -114,7 +114,7 @@
       name="factoryPrecision"
       [value]="false"
       [ngModel]="settings.factoryPrecision == null"
-      (change)="factoryPrecisionDecimals()"
+      (change)="setFactoryPrecision.emit(initial.factoryPrecision)"
     />
     <input
       id="settings-precision-factory-value"
