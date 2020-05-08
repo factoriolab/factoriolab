@@ -10,8 +10,9 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { DisplayRate } from '~/models';
+import { DisplayRate, ItemId } from '~/models';
 import { State } from '~/store';
+import * as Dataset from '~/store/dataset';
 import * as Settings from '~/store/settings';
 import { SettingsComponent } from './settings/settings.component';
 
@@ -25,11 +26,13 @@ export class SettingsContainerComponent implements OnInit {
 
   @Output() cancel = new EventEmitter();
 
+  data$: Observable<Dataset.DatasetState>;
   settings$: Observable<Settings.SettingsState>;
 
   constructor(private element: ElementRef, private store: Store<State>) {}
 
   ngOnInit() {
+    this.data$ = this.store.select(Dataset.getDataset);
     this.settings$ = this.store.select(Settings.settingsState);
   }
 
@@ -54,5 +57,9 @@ export class SettingsContainerComponent implements OnInit {
 
   setFactoryPrecision(value: number) {
     this.store.dispatch(new Settings.SetFactoryPrecisionAction(value));
+  }
+
+  setAssembler(value: ItemId) {
+    this.store.dispatch(new Settings.SetAssemblerAction(value));
   }
 }

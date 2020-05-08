@@ -64,6 +64,16 @@ input {
   }
 }
 
+.clickable {
+  cursor: pointer;
+  padding: 0.125rem;
+  border-radius: 0.25rem;
+
+  &:hover {
+    background-color: $color-brand;
+  }
+}
+
 .monospace {
   font-family: $font-family-monospace;
   font-size: 0.875rem;
@@ -72,4 +82,8 @@ input {
 .flex {
   display: flex;
   align-items: center;
+}
+
+.relative {
+  position: relative;
 }

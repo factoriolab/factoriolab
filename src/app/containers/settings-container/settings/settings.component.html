@@ -66,7 +66,7 @@
       name="itemPrecision"
       [value]="true"
       [ngModel]="settings.itemPrecision == null"
-      (change)="itemPrecisionFractions()"
+      (change)="setItemPrecision.emit(null)"
     />
     <label for="settings-precision-item-fractions">Fractions</label>
   </div>
@@ -100,7 +100,7 @@
       name="beltPrecision"
       [value]="true"
       [ngModel]="settings.beltPrecision == null"
-      (change)="beltPrecisionFractions()"
+      (change)="setBeltPrecision.emit(null)"
     />
     <label for="settings-precision-belt-fractions">Fractions</label>
   </div>
@@ -134,17 +134,29 @@
       name="factoryPrecision"
       [value]="true"
       [ngModel]="settings.factoryPrecision == null"
-      (change)="factoryPrecisionFractions()"
+      (change)="setFactoryPrecision.emit(null)"
     />
     <label for="settings-precision-factory-fractions">Fractions</label>
   </div>
 </div>
 <div class="label">Assembler</div>
 <div class="field">
-  <lab-icon
-    [iconId]="settings.assembler"
-    (click)="clickEditAssembler()"
-  ></lab-icon>
+  <div class="relative">
+    <lab-icon
+      class="clickable"
+      [iconId]="settings.assembler"
+      (click)="openAssembler($event)"
+    ></lab-icon>
+    <lab-select
+      *ngIf="openSelect === open.Assembler"
+      [data]="data"
+      [options]="[assemblerOptions]"
+      [selectedId]="settings.assembler"
+      (cancel)="openSelect = open.None"
+      (selectId)="selectAssembler($event)"
+    >
+    </lab-select>
+  </div>
 </div>
 <div class="label">Furnace</div>
 <div class="field"></div>

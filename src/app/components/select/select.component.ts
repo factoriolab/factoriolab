@@ -23,7 +23,7 @@ export class SelectComponent {
   @Input() data: DatasetState;
   @Input() options: string[][];
   @Input() selectedId: string;
-  @Input() selectType: SelectType;
+  @Input() selectType = SelectType.Item;
 
   @Output() cancel = new EventEmitter();
   @Output() selectId = new EventEmitter<string>();
@@ -39,11 +39,12 @@ export class SelectComponent {
     }
   }
 
-  clickId(id: string) {
+  clickId(id: string, event: MouseEvent) {
     if (id !== this.selectedId) {
       this.selectId.emit(id);
     } else {
       this.cancel.emit();
     }
+    event.stopPropagation();
   }
 }

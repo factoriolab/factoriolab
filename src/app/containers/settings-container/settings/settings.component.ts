@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { DisplayRate } from '~/models';
+import { DisplayRate, ItemId } from '~/models';
+import { DatasetState } from '~/store/dataset';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
 enum OpenSelect {
@@ -14,16 +15,23 @@ enum OpenSelect {
   styleUrls: ['./settings.component.scss'],
 })
 export class SettingsComponent {
+  @Input() data: DatasetState;
   @Input() settings: SettingsState;
 
   @Output() setDisplayRate = new EventEmitter<DisplayRate>();
   @Output() setItemPrecision = new EventEmitter<number>();
   @Output() setBeltPrecision = new EventEmitter<number>();
   @Output() setFactoryPrecision = new EventEmitter<number>();
+  @Output() setAssembler = new EventEmitter<ItemId>();
 
-  open = OpenSelect.None;
+  openSelect = OpenSelect.None;
+  assemblerOptions = [
+    ItemId.AssemblingMachine1,
+    ItemId.AssemblingMachine2,
+    ItemId.AssemblingMachine3,
+  ];
   displayRate = DisplayRate;
-  openSelect = OpenSelect;
+  open = OpenSelect;
 
   constructor() {}
 
@@ -41,10 +49,6 @@ export class SettingsComponent {
     }
   }
 
-  itemPrecisionFractions() {
-    this.setItemPrecision.emit(null);
-  }
-
   beltPrecisionDecimals() {
     this.setBeltPrecision.emit(initialSettingsState.beltPrecision);
   }
@@ -53,10 +57,6 @@ export class SettingsComponent {
     if (event.target.value) {
       this.setBeltPrecision.emit(Number(event.target.value));
     }
-  }
-
-  beltPrecisionFractions() {
-    this.setBeltPrecision.emit(null);
   }
 
   factoryPrecisionDecimals() {
@@ -69,9 +69,13 @@ export class SettingsComponent {
     }
   }
 
-  factoryPrecisionFractions() {
-    this.setFactoryPrecision.emit(null);
+  openAssembler(event: MouseEvent) {
+    this.openSelect = OpenSelect.Assembler;
+    event.stopPropagation();
   }
 
-  clickEditAssembler() {}
+  selectAssembler(value: ItemId) {
+    this.openSelect = OpenSelect.None;
+    this.setAssembler.emit(value);
+  }
 }

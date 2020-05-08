@@ -4,6 +4,7 @@ import { Factory } from './factory';
 import { Module } from './module';
 
 export enum ItemId {
+  AssemblingMachine1 = 'assembling-machine-1',
   AssemblingMachine2 = 'assembling-machine-2',
   AssemblingMachine3 = 'assembling-machine-3',
   BurnerMiningDrill = 'burner-mining-drill',
