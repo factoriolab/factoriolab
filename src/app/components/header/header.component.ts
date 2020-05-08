@@ -13,8 +13,4 @@ export class HeaderComponent {
   Id = Id;
 
   constructor() {}
-
-  settingsClicked(event: MouseEvent) {
-    this.toggleSettings.emit();
-  }
 }

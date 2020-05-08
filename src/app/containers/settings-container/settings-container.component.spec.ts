@@ -39,12 +39,14 @@ describe('SettingsContainerComponent', () => {
 
   it('should cancel when clicked away', () => {
     spyOn(component.cancel, 'emit');
+    component.opening = false;
     document.body.click();
     expect(component.cancel.emit).toHaveBeenCalled();
   });
 
   it('should not cancel when clicked on', () => {
     spyOn(component.cancel, 'emit');
+    component.opening = false;
     TestUtility.clickSelector(fixture, 'lab-settings');
     expect(component.cancel.emit).not.toHaveBeenCalled();
   });

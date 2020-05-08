@@ -15,13 +15,9 @@ import { ProductsComponent } from './products.component';
     <lab-products
       [data]="data"
       [products]="products"
-      [editProductId]="editProductId"
-      [categoryId]="categoryId"
       (add)="add()"
       (remove)="remove($event)"
-      (openEditProduct)="openEditProduct($event)"
-      (cancelEditProduct)="cancelEditProduct()"
-      (commitEditProduct)="commitEditProduct($event)"
+      (editProduct)="editProduct($event)"
       (editRate)="editRate($event)"
       (editRateType)="editRateType($event)"
       (selectTab)="selectTab($event)"
@@ -33,13 +29,9 @@ class TestProductsComponent {
   @ViewChild(ProductsComponent) child: ProductsComponent;
   data: DatasetState = mocks.Data;
   products: Product[] = mocks.Products;
-  editProductId: null;
-  categoryId: string = mocks.CategoryId;
   add() {}
   remove(data) {}
-  openEditProduct(data) {}
-  cancelEditProduct() {}
-  commitEditProduct(data) {}
+  editProduct(data) {}
   editRate(data) {}
   editRateType(data) {}
   selectTab(data) {}
@@ -66,24 +58,10 @@ describe('ProductsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should open edit on a product', () => {
-    spyOn(component, 'openEditProduct');
-    TestUtility.clickSelector(fixture, '.dropdown-container lab-icon', 0);
-    fixture.detectChanges();
-    expect(component.openEditProduct).toHaveBeenCalledWith(mocks.Product1);
-  });
-
-  it('should stop propagation when product is clicked', () => {
-    const testEvent: any = { stopPropagation: () => {} };
-    spyOn(testEvent, 'stopPropagation');
-    component.child.clickEditProduct(mocks.Product1, testEvent);
-    expect(testEvent.stopPropagation).toHaveBeenCalled();
-  });
-
   it('should select an item', () => {
-    spyOn(component, 'commitEditProduct');
+    spyOn(component, 'editProduct');
     component.child.selectItem(mocks.Product1.id, mocks.Item2.id);
-    expect(component.commitEditProduct).toHaveBeenCalledWith([
+    expect(component.editProduct).toHaveBeenCalledWith([
       mocks.Product1.id,
       mocks.Item2.id,
     ]);

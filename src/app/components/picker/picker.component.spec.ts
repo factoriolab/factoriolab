@@ -52,12 +52,14 @@ describe('PickerComponent', () => {
 
   it('should cancel when clicked away', () => {
     spyOn(component, 'cancel');
+    component.child.opening = false;
     document.body.click();
     expect(component.cancel).toHaveBeenCalled();
   });
 
   it('should not cancel when clicked on', () => {
     spyOn(component, 'cancel');
+    component.child.opening = false;
     TestUtility.clickSelector(fixture, 'lab-picker');
     expect(component.cancel).not.toHaveBeenCalled();
   });

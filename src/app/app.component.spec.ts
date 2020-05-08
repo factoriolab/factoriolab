@@ -15,14 +15,15 @@ import { State, reducers, metaReducers } from './store';
 import { getDataset, DatasetState } from './store/dataset';
 import * as Products from './store/products';
 import { TestUtility } from './utilities/test';
-import { HeaderComponent } from './components/header/header.component';
-import { IconComponent } from './components/icon/icon.component';
-import { SettingsContainerComponent } from './components/settings-container/settings-container.component';
-import { SettingsComponent } from './components/settings-container/settings/settings.component';
-import { ProductsContainerComponent } from './components/products-container/products-container.component';
-import { ProductsComponent } from './components/products-container/products/products.component';
-import { StepsContainerComponent } from './components/steps-container/steps-container.component';
-import { StepsComponent } from './components/steps-container/steps/steps.component';
+import { HeaderComponent, IconComponent } from './components';
+import {
+  SettingsContainerComponent,
+  SettingsComponent,
+  ProductsContainerComponent,
+  ProductsComponent,
+  StepsContainerComponent,
+  StepsComponent,
+} from './containers';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
@@ -109,7 +110,9 @@ describe('AppComponent', () => {
   it('should toggle settings closed when clicked away', () => {
     component.settingsOpen = true;
     fixture.detectChanges();
-    TestUtility.clickId(fixture, Id.HeaderIcon);
+    // First click sets `opening` to `false`
+    document.body.click();
+    document.body.click();
     expect(component.settingsOpen).toBe(false);
   });
 });
