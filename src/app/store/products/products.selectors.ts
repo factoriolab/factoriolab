@@ -83,14 +83,46 @@ export const getNormalizedRatesByBelts = createSelector(
   getProductsByBelts,
   getEntities,
   Recipe.getRecipeSettings,
+  Settings.getOilRecipe,
   Dataset.getBeltSpeed,
-  (ids, entities, recipeSettings, beltSpeed) => {
+  (ids, entities, recipeSettings, oilRecipe, beltSpeed) => {
     return ids.reduce((e: NEntities<Fraction>, i) => {
-      const settings = recipeSettings[entities[i].itemId];
+      const itemId = entities[i].itemId;
+      let belt: ItemId;
+      switch (itemId) {
+        case ItemId.HeavyOil:
+        case ItemId.LightOil:
+        case ItemId.PetroleumGas:
+          belt = ItemId.Pipe;
+          break;
+        case ItemId.SolidFuel: {
+          const recipeId =
+            oilRecipe === RecipeId.BasicOilProcessing
+              ? RecipeId.SolidFuelFromPetroleumGas
+              : RecipeId.SolidFuelFromLightOil;
+          belt = recipeSettings[recipeId].belt;
+          break;
+        }
+        case ItemId.Uranium238: {
+          const recipeId = RecipeId.UraniumProcessing;
+          belt = recipeSettings[recipeId].belt;
+          break;
+        }
+        case ItemId.Uranium235: {
+          const recipeId = RecipeId.KovarexEnrichmentProcess;
+          belt = recipeSettings[recipeId].belt;
+          break;
+        }
+        default: {
+          const recipeId = itemId as any;
+          belt = recipeSettings[recipeId].belt;
+          break;
+        }
+      }
       return {
         ...e,
         ...{
-          [i]: new Fraction(entities[i].rate).mul(beltSpeed[settings.belt]),
+          [i]: new Fraction(entities[i].rate).mul(beltSpeed[belt]),
         },
       };
     }, {});

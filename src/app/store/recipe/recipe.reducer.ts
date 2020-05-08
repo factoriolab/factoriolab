@@ -21,11 +21,11 @@ export function recipeReducer(
         },
       };
     }
-    case RecipeActionType.EDIT_BEACON_TYPE: {
+    case RecipeActionType.EDIT_BEACON_MODULE: {
       const id = action.payload[0];
       return {
         ...state,
-        ...{ [id]: { ...state[id], ...{ beaconType: action.payload[1] } } },
+        ...{ [id]: { ...state[id], ...{ beaconModule: action.payload[1] } } },
       };
     }
     case RecipeActionType.EDIT_BEACONS_COUNT: {

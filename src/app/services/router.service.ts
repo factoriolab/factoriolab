@@ -19,35 +19,26 @@ enum ModuleId {
   Prod1,
   Prod2,
   Prod3,
-  Eff1,
-  Eff2,
-  Eff3,
 }
 
 const moduleN: Entities<ModuleId> = {
   [ItemId.Module]: ModuleId.None,
-  [ItemId.SpeedModule1]: ModuleId.Speed1,
+  [ItemId.SpeedModule]: ModuleId.Speed1,
   [ItemId.SpeedModule2]: ModuleId.Speed2,
   [ItemId.SpeedModule3]: ModuleId.Speed3,
-  [ItemId.ProductivityModule1]: ModuleId.Prod1,
+  [ItemId.ProductivityModule]: ModuleId.Prod1,
   [ItemId.ProductivityModule2]: ModuleId.Prod2,
   [ItemId.ProductivityModule3]: ModuleId.Prod3,
-  [ItemId.EfficiencyModule1]: ModuleId.Eff1,
-  [ItemId.EfficiencyModule2]: ModuleId.Eff2,
-  [ItemId.EfficiencyModule3]: ModuleId.Eff3,
 };
 
 const moduleI: NEntities<ItemId> = {
   [ModuleId.None]: ItemId.Module,
-  [ModuleId.Speed1]: ItemId.SpeedModule1,
+  [ModuleId.Speed1]: ItemId.SpeedModule,
   [ModuleId.Speed2]: ItemId.SpeedModule2,
   [ModuleId.Speed3]: ItemId.SpeedModule3,
-  [ModuleId.Prod1]: ItemId.ProductivityModule1,
+  [ModuleId.Prod1]: ItemId.ProductivityModule,
   [ModuleId.Prod2]: ItemId.ProductivityModule2,
   [ModuleId.Prod3]: ItemId.ProductivityModule3,
-  [ModuleId.Eff1]: ItemId.EfficiencyModule1,
-  [ModuleId.Eff2]: ItemId.EfficiencyModule2,
-  [ModuleId.Eff3]: ItemId.EfficiencyModule3,
 };
 
 @Injectable({
@@ -162,7 +153,7 @@ export class RouterService {
           ? ''
           : settings.modules.map((m) => moduleN[m]).join('.');
       const bt =
-        settings.beaconType == null ? '' : moduleN[settings.beaconType];
+        settings.beaconModule == null ? '' : moduleN[settings.beaconModule];
       const bc = settings.beaconCount == null ? '' : settings.beaconCount;
       return `${i}:${ig}:${bl}:${fc}:${md}:${bt}:${bc}`;
     });
@@ -186,7 +177,7 @@ export class RouterService {
         u.modules = r[4].split('.').map((m) => moduleI[Number(m)]);
       }
       if (r[5] !== '') {
-        u.beaconType = moduleI[Number(r[5])];
+        u.beaconModule = moduleI[Number(r[5])];
       }
       if (r[6] !== '') {
         u.beaconCount = Number(r[6]);
@@ -226,10 +217,12 @@ export class RouterService {
     const pf = state.furnace === init.furnace ? '' : data.itemN[state.furnace];
     const mp =
       state.prodModule === init.prodModule ? '' : moduleN[state.prodModule];
-    const mo =
-      state.otherModule === init.otherModule ? '' : moduleN[state.otherModule];
-    const bt =
-      state.beaconType === init.beaconType ? '' : moduleN[state.beaconType];
+    const ms =
+      state.speedModule === init.speedModule ? '' : moduleN[state.speedModule];
+    const bm =
+      state.beaconModule === init.beaconModule
+        ? ''
+        : moduleN[state.beaconModule];
     const bc = state.beaconCount === init.beaconCount ? '' : state.beaconCount;
     const or =
       state.oilRecipe === init.oilRecipe ? '' : data.recipeN[state.oilRecipe];
@@ -238,7 +231,7 @@ export class RouterService {
     const rs =
       state.researchSpeed === init.researchSpeed ? '' : state.researchSpeed;
     const fr = state.flowRate === init.flowRate ? '' : state.flowRate;
-    return `${dr}:${ip}:${bp}:${fp}:${tb}:${pa}:${pf}:${mp}:${mo}:${bt}:${bc}:${or}:${fl}:${mb}:${rs}:${fr}`;
+    return `${dr}:${ip}:${bp}:${fp}:${tb}:${pa}:${pf}:${mp}:${ms}:${bm}:${bc}:${or}:${fl}:${mb}:${rs}:${fr}`;
   }
 
   unzipSettings(zSettings: string, data: DatasetState) {
@@ -269,10 +262,10 @@ export class RouterService {
       settings.prodModule = moduleI[Number(s[7])];
     }
     if (s[8] !== '') {
-      settings.otherModule = moduleI[Number(s[8])];
+      settings.speedModule = moduleI[Number(s[8])];
     }
     if (s[9] !== '') {
-      settings.beaconType = moduleI[Number(s[9])];
+      settings.beaconModule = moduleI[Number(s[9])];
     }
     if (s[10] !== '') {
       settings.beaconCount = Number(s[10]);

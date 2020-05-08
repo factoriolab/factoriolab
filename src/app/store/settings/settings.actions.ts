@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { DisplayRate, ItemId, RecipeId } from '~/models';
+import { DisplayRate, ItemId, RecipeId, ResearchSpeed } from '~/models';
 import { SettingsState } from './settings.reducer';
 
 export const enum SettingsActionType {
@@ -12,7 +12,15 @@ export const enum SettingsActionType {
   SET_BELT = '[Settings Page] Set Belt',
   SET_ASSEMBLER = '[Settings Page] Set Assembler',
   SET_FURNACE = '[Settings Page] Set Furnace',
+  SET_PROD_MODULE = '[Settings Page] Set Prod Module',
+  SET_SPEED_MODULE = '[Settings Page] Set Speed Module',
+  SET_BEACON_MODULE = '[Settings Page] Set Beacon Module',
+  SET_BEACON_COUNT = '[Settings Page] Set Beacon Count',
   SET_OIL_RECIPE = '[Settings Page] Set Oil Recipe',
+  SET_FUEL = '[Settings Page] Set Fuel',
+  SET_MINING_BONUS = '[Settings Page] Set Mining Bonus',
+  SET_RESEARCH_SPEED = '[Settings Page] Set Research Speed',
+  SET_FLOW_RATE = '[Settings Page] Set Flow Rate',
 }
 
 export class LoadAction implements Action {
@@ -55,9 +63,49 @@ export class SetFurnaceAction implements Action {
   constructor(public payload: ItemId) {}
 }
 
-export class SetOilProcessingRecipeAction implements Action {
+export class SetProdModuleAction implements Action {
+  readonly type = SettingsActionType.SET_PROD_MODULE;
+  constructor(public payload: ItemId) {}
+}
+
+export class SetSpeedModuleAction implements Action {
+  readonly type = SettingsActionType.SET_SPEED_MODULE;
+  constructor(public payload: ItemId) {}
+}
+
+export class SetBeaconModuleAction implements Action {
+  readonly type = SettingsActionType.SET_BEACON_MODULE;
+  constructor(public payload: ItemId) {}
+}
+
+export class SetBeaconCountAction implements Action {
+  readonly type = SettingsActionType.SET_BEACON_COUNT;
+  constructor(public payload: number) {}
+}
+
+export class SetOilRecipeAction implements Action {
   readonly type = SettingsActionType.SET_OIL_RECIPE;
   constructor(public payload: RecipeId) {}
+}
+
+export class SetFuelAction implements Action {
+  readonly type = SettingsActionType.SET_FUEL;
+  constructor(public payload: ItemId) {}
+}
+
+export class SetMiningBonusAction implements Action {
+  readonly type = SettingsActionType.SET_MINING_BONUS;
+  constructor(public payload: number) {}
+}
+
+export class SetResearchSpeedAction implements Action {
+  readonly type = SettingsActionType.SET_RESEARCH_SPEED;
+  constructor(public payload: ResearchSpeed) {}
+}
+
+export class SetFlowRateAction implements Action {
+  readonly type = SettingsActionType.SET_FLOW_RATE;
+  constructor(public payload: number) {}
 }
 
 export type SettingsAction =
@@ -69,4 +117,12 @@ export type SettingsAction =
   | SetBeltAction
   | SetAssemblerAction
   | SetFurnaceAction
-  | SetOilProcessingRecipeAction;
+  | SetProdModuleAction
+  | SetSpeedModuleAction
+  | SetBeaconModuleAction
+  | SetBeaconCountAction
+  | SetOilRecipeAction
+  | SetFuelAction
+  | SetMiningBonusAction
+  | SetResearchSpeedAction
+  | SetFlowRateAction;

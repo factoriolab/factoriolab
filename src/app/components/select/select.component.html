@@ -1,20 +1,18 @@
-<div class="row" *ngFor="let row of options">
-  <div class="obj" *ngFor="let id of row">
-    <lab-icon
-      class="clickable"
-      *ngIf="selectType === type.Item"
-      [iconId]="id"
-      [title]="data.itemEntities[id].name"
-      [class.selected]="id === selectedId"
-      (click)="clickId(id, $event)"
-    ></lab-icon>
-    <lab-icon
-      class="clickable"
-      *ngIf="selectType === type.Recipe"
-      [iconId]="id"
-      [title]="data.recipeEntities[id].name"
-      [class.selected]="id === selectedId"
-      (click)="clickId(id, $event)"
-    ></lab-icon>
-  </div>
-</div>
+<ng-container *ngFor="let id of options">
+  <lab-icon
+    class="clickable"
+    *ngIf="selectType === type.Item"
+    [iconId]="id"
+    [title]="data.itemEntities[id] ? data.itemEntities[id].name : null"
+    [class.selected]="id === selectedId"
+    (click)="clickId(id, $event)"
+  ></lab-icon>
+  <lab-icon
+    class="clickable"
+    *ngIf="selectType === type.Recipe"
+    [iconId]="id"
+    [title]="data.recipeEntities[id].name"
+    [class.selected]="id === selectedId"
+    (click)="clickId(id, $event)"
+  ></lab-icon>
+</ng-container>

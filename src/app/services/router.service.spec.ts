@@ -39,7 +39,7 @@ const mockFullRecipeSettings: Recipe.RecipeState = {
     belt: ItemId.TransportBelt,
     factory: ItemId.AssemblingMachine3,
     modules: [ItemId.Module],
-    beaconType: ItemId.Module,
+    beaconModule: ItemId.Module,
     beaconCount: 1,
   },
 };
@@ -60,9 +60,9 @@ const mockFullSettings: Settings.SettingsState = {
   belt: ItemId.TransportBelt,
   assembler: ItemId.AssemblingMachine2,
   furnace: ItemId.StoneFurnace,
-  prodModule: ItemId.ProductivityModule1,
-  otherModule: ItemId.EfficiencyModule1,
-  beaconType: ItemId.SpeedModule1,
+  prodModule: ItemId.ProductivityModule,
+  speedModule: ItemId.SpeedModule,
+  beaconModule: ItemId.SpeedModule2,
   beaconCount: 8,
   oilRecipe: RecipeId.BasicOilProcessing,
   fuel: ItemId.SolidFuel,
@@ -74,7 +74,7 @@ const mockZipFullSettings = `${DisplayRate.PerHour}:2:4:0:${
   mocks.Data.itemN[mockFullSettings.belt]
 }:${mocks.Data.itemN[mockFullSettings.assembler]}:${
   mocks.Data.itemN[mockFullSettings.furnace]
-}:4:7:1:8:${mocks.Data.recipeN[mockFullSettings.oilRecipe]}:${
+}:4:1:2:8:${mocks.Data.recipeN[mockFullSettings.oilRecipe]}:${
   mocks.Data.itemN[mockFullSettings.fuel]
 }:10:0:1200`;
 const mockNullSettings = {
@@ -85,7 +85,7 @@ const mockZipNullSettings = `${DisplayRate.PerHour}:n:n:n:${
   mocks.Data.itemN[mockFullSettings.belt]
 }:${mocks.Data.itemN[mockFullSettings.assembler]}:${
   mocks.Data.itemN[mockFullSettings.furnace]
-}:4:7:1:8:${mocks.Data.recipeN[mockFullSettings.oilRecipe]}:${
+}:4:1:2:8:${mocks.Data.recipeN[mockFullSettings.oilRecipe]}:${
   mocks.Data.itemN[mockFullSettings.fuel]
 }:10:0:1200`;
 

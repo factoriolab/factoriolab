@@ -44,7 +44,7 @@
       name="itemPrecision"
       [value]="false"
       [ngModel]="settings.itemPrecision == null"
-      (change)="itemPrecisionDecimals()"
+      (change)="setItemPrecision.emit(initial.itemPrecision)"
     />
     <label for="settings-precision-item-decimals">
       <input
@@ -55,7 +55,7 @@
         step="1"
         [disabled]="settings.itemPrecision == null"
         [value]="settings.itemPrecision"
-        (change)="itemPrecisionValue($event)"
+        (change)="emitNumber(setItemPrecision, $event)"
       />
     </label>
   </div>
@@ -80,7 +80,7 @@
       name="beltPrecision"
       [value]="false"
       [ngModel]="settings.beltPrecision == null"
-      (change)="beltPrecisionDecimals()"
+      (change)="setBeltPrecision.emit(initial.beltPrecision)"
     />
     <input
       id="settings-precision-belt-value"
@@ -90,7 +90,7 @@
       step="1"
       [disabled]="settings.beltPrecision == null"
       [value]="settings.beltPrecision"
-      (change)="beltPrecisionValue($event)"
+      (change)="emitNumber(setBeltPrecision, $event)"
     />
   </div>
   <div class="flex">
@@ -114,7 +114,7 @@
       name="factoryPrecision"
       [value]="false"
       [ngModel]="settings.factoryPrecision == null"
-      (change)="factoryPrecisionDecimals()"
+      (change)="setFactoryPrecision.emit(initial.factoryPrecision)"
     />
     <input
       id="settings-precision-factory-value"
@@ -124,7 +124,7 @@
       step="1"
       [disabled]="settings.factoryPrecision == null"
       [value]="settings.factoryPrecision"
-      (change)="factoryPrecisionValue($event)"
+      (change)="emitNumber(setFactoryPrecision, $event)"
     />
   </div>
   <div class="flex">
@@ -150,7 +150,7 @@
     <lab-select
       *ngIf="openSelect === select.Belt"
       [data]="data"
-      [options]="[beltOptions]"
+      [options]="beltOptions"
       [selectedId]="settings.belt"
       (cancel)="openSelect = select.None"
       (selectId)="setBelt.emit($event)"
@@ -166,7 +166,7 @@
     <lab-select
       *ngIf="openSelect === select.Assembler"
       [data]="data"
-      [options]="[assemblerOptions]"
+      [options]="assemblerOptions"
       [selectedId]="settings.assembler"
       (cancel)="openSelect = select.None"
       (selectId)="setAssembler.emit($event)"
@@ -182,11 +182,105 @@
     <lab-select
       *ngIf="openSelect === select.Furnace"
       [data]="data"
-      [options]="[furnaceOptions]"
+      [options]="furnaceOptions"
       [selectedId]="settings.furnace"
       (cancel)="openSelect = select.None"
       (selectId)="setFurnace.emit($event)"
     >
     </lab-select>
   </div>
+  <div class="relative">
+    <lab-icon
+      class="clickable"
+      [iconId]="settings.oilRecipe"
+      (click)="openSelect = select.OilRecipe"
+    ></lab-icon>
+    <lab-select
+      *ngIf="openSelect === select.OilRecipe"
+      [data]="data"
+      [options]="oilRecipeOptions"
+      [selectedId]="settings.oilRecipe"
+      [selectType]="selectType.Recipe"
+      (cancel)="openSelect = select.None"
+      (selectId)="setOilRecipe.emit($event)"
+    >
+    </lab-select>
+  </div>
+  <div class="relative">
+    <lab-icon
+      class="clickable"
+      [iconId]="settings.fuel"
+      (click)="openSelect = select.Fuel"
+    ></lab-icon>
+    <lab-select
+      *ngIf="openSelect === select.Fuel"
+      [data]="data"
+      [options]="fuelOptions"
+      [selectedId]="settings.fuel"
+      (cancel)="openSelect = select.None"
+      (selectId)="setFuel.emit($event)"
+    >
+    </lab-select>
+  </div>
+</div>
+<div class="label">Modules</div>
+<div class="field">
+  <div class="relative">
+    <lab-icon
+      class="clickable"
+      [iconId]="settings.prodModule"
+      (click)="openSelect = select.ProdModule"
+    ></lab-icon>
+    <lab-select
+      *ngIf="openSelect === select.ProdModule"
+      [data]="data"
+      [options]="prodModuleOptions"
+      [selectedId]="settings.prodModule"
+      (cancel)="openSelect = select.None"
+      (selectId)="setProdModule.emit($event)"
+    >
+    </lab-select>
+  </div>
+  <div class="relative">
+    <lab-icon
+      class="clickable"
+      [iconId]="settings.speedModule"
+      (click)="openSelect = select.SpeedModule"
+    ></lab-icon>
+    <lab-select
+      *ngIf="openSelect === select.SpeedModule"
+      [data]="data"
+      [options]="speedModuleOptions"
+      [selectedId]="settings.speedModule"
+      (cancel)="openSelect = select.None"
+      (selectId)="setSpeedModule.emit($event)"
+    >
+    </lab-select>
+  </div>
+  <lab-icon [iconId]="itemId.Beacon"></lab-icon>
+  <div class="relative">
+    <lab-icon
+      class="clickable"
+      [iconId]="settings.beaconModule"
+      (click)="openSelect = select.BeaconModule"
+    ></lab-icon>
+    <lab-select
+      *ngIf="openSelect === select.BeaconModule"
+      [data]="data"
+      [options]="speedModuleOptions"
+      [selectedId]="settings.beaconModule"
+      (cancel)="openSelect = select.None"
+      (selectId)="setBeaconModule.emit($event)"
+    >
+    </lab-select>
+  </div>
+  <input
+    id="settings-beacon-count"
+    type="number"
+    placeholder="Beacons"
+    min="0"
+    step="1"
+    [value]="settings.beaconCount"
+    (change)="emitNumber(setBeaconCount, $event)"
+  />
 </div>
