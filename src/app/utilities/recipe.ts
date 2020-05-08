@@ -69,7 +69,10 @@ export class RecipeUtility {
     // Determine whether prod modules are allowed
     const prodModuleAllowed = this.prodModuleAllowed(recipe, itemEntities);
     // Pick the default module to use
-    const module = prodModuleAllowed && prodModule ? prodModule : otherModule;
+    const module =
+      prodModuleAllowed && prodModule !== ItemId.Module
+        ? prodModule
+        : otherModule;
     // Create the appropriate array of default modules
     const modules = [];
     for (let i = 0; i < count; i++) {

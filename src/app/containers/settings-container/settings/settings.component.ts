@@ -9,6 +9,8 @@ enum OpenSelect {
   Belt,
   Assembler,
   Furnace,
+  ProdModule,
+  OtherModule,
 }
 
 @Component({
@@ -27,6 +29,8 @@ export class SettingsComponent {
   @Output() setBelt = new EventEmitter<ItemId>();
   @Output() setAssembler = new EventEmitter<ItemId>();
   @Output() setFurnace = new EventEmitter<ItemId>();
+  @Output() setProdModule = new EventEmitter<ItemId>();
+  @Output() setOtherModule = new EventEmitter<ItemId>();
 
   openSelect = OpenSelect.None;
   beltOptions = [
@@ -43,6 +47,23 @@ export class SettingsComponent {
     ItemId.StoneFurnace,
     ItemId.SteelFurnace,
     ItemId.ElectricFurnace,
+  ];
+  prodModuleOptions = [
+    [ItemId.Module],
+    [
+      ItemId.ProductivityModule,
+      ItemId.ProductivityModule2,
+      ItemId.ProductivityModule3,
+    ],
+  ];
+  otherModuleOptions = [
+    [ItemId.Module],
+    [ItemId.SpeedModule, ItemId.SpeedModule2, ItemId.SpeedModule3],
+    [
+      ItemId.EfficiencyModule,
+      ItemId.EfficiencyModule2,
+      ItemId.EfficiencyModule3,
+    ],
   ];
   displayRate = DisplayRate;
   select = OpenSelect;

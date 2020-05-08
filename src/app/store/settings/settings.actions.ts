@@ -12,6 +12,8 @@ export const enum SettingsActionType {
   SET_BELT = '[Settings Page] Set Belt',
   SET_ASSEMBLER = '[Settings Page] Set Assembler',
   SET_FURNACE = '[Settings Page] Set Furnace',
+  SET_PROD_MODULE = '[Settings Page] Set Prod Module',
+  SET_OTHER_MODULE = '[Settings Page] Set Other Module',
   SET_OIL_RECIPE = '[Settings Page] Set Oil Recipe',
 }
 
@@ -55,6 +57,16 @@ export class SetFurnaceAction implements Action {
   constructor(public payload: ItemId) {}
 }
 
+export class SetProdModule implements Action {
+  readonly type = SettingsActionType.SET_PROD_MODULE;
+  constructor(public payload: ItemId) {}
+}
+
+export class SetOtherModule implements Action {
+  readonly type = SettingsActionType.SET_OTHER_MODULE;
+  constructor(public payload: ItemId) {}
+}
+
 export class SetOilProcessingRecipeAction implements Action {
   readonly type = SettingsActionType.SET_OIL_RECIPE;
   constructor(public payload: RecipeId) {}
@@ -69,4 +81,6 @@ export type SettingsAction =
   | SetBeltAction
   | SetAssemblerAction
   | SetFurnaceAction
+  | SetProdModule
+  | SetOtherModule
   | SetOilProcessingRecipeAction;

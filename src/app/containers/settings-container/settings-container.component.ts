@@ -74,4 +74,12 @@ export class SettingsContainerComponent implements OnInit {
   setFurnace(value: ItemId) {
     this.store.dispatch(new Settings.SetFurnaceAction(value));
   }
+
+  setProdModule(value: ItemId) {
+    this.store.dispatch(new Settings.SetProdModule(value));
+  }
+
+  setOtherModule(value: ItemId) {
+    this.store.dispatch(new Settings.SetOtherModule(value));
+  }
 }

@@ -190,3 +190,42 @@
     </lab-select>
   </div>
 </div>
+<div class="label">Modules</div>
+<div class="flex">
+  <div class="relative">
+    <lab-icon
+      class="clickable"
+      [iconId]="settings.prodModule"
+      (click)="openSelect = select.ProdModule"
+    ></lab-icon>
+    <lab-select
+      *ngIf="openSelect === select.ProdModule"
+      [data]="data"
+      [options]="prodModuleOptions"
+      [selectedId]="settings.prodModule"
+      (cancel)="openSelect = select.None"
+      (selectId)="setProdModule.emit($event)"
+    >
+    </lab-select>
+  </div>
+  <div class="sublabel">Productivity</div>
+</div>
+<div class="flex">
+  <div class="relative">
+    <lab-icon
+      class="clickable"
+      [iconId]="settings.otherModule"
+      (click)="openSelect = select.OtherModule"
+    ></lab-icon>
+    <lab-select
+      *ngIf="openSelect === select.OtherModule"
+      [data]="data"
+      [options]="otherModuleOptions"
+      [selectedId]="settings.otherModule"
+      (cancel)="openSelect = select.None"
+      (selectId)="setOtherModule.emit($event)"
+    >
+    </lab-select>
+  </div>
+  <div class="sublabel">Other</div>
+</div>

@@ -4,7 +4,7 @@
       class="clickable"
       *ngIf="selectType === type.Item"
       [iconId]="id"
-      [title]="data.itemEntities[id].name"
+      [title]="data.itemEntities[id] ? data.itemEntities[id].name : null"
       [class.selected]="id === selectedId"
       (click)="clickId(id, $event)"
     ></lab-icon>

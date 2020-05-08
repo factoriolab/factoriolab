@@ -89,6 +89,18 @@ export function settingsReducer(
         ...{ furnace: action.payload },
       };
     }
+    case SettingsActionType.SET_PROD_MODULE: {
+      return {
+        ...state,
+        ...{ prodModule: action.payload },
+      };
+    }
+    case SettingsActionType.SET_OTHER_MODULE: {
+      return {
+        ...state,
+        ...{ otherModule: action.payload },
+      };
+    }
     case SettingsActionType.SET_OIL_RECIPE: {
       return { ...state, ...{ oilRecipe: action.payload } };
     }

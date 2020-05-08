@@ -26,26 +26,26 @@ enum ModuleId {
 
 const moduleN: Entities<ModuleId> = {
   [ItemId.Module]: ModuleId.None,
-  [ItemId.SpeedModule1]: ModuleId.Speed1,
+  [ItemId.SpeedModule]: ModuleId.Speed1,
   [ItemId.SpeedModule2]: ModuleId.Speed2,
   [ItemId.SpeedModule3]: ModuleId.Speed3,
-  [ItemId.ProductivityModule1]: ModuleId.Prod1,
+  [ItemId.ProductivityModule]: ModuleId.Prod1,
   [ItemId.ProductivityModule2]: ModuleId.Prod2,
   [ItemId.ProductivityModule3]: ModuleId.Prod3,
-  [ItemId.EfficiencyModule1]: ModuleId.Eff1,
+  [ItemId.EfficiencyModule]: ModuleId.Eff1,
   [ItemId.EfficiencyModule2]: ModuleId.Eff2,
   [ItemId.EfficiencyModule3]: ModuleId.Eff3,
 };
 
 const moduleI: NEntities<ItemId> = {
   [ModuleId.None]: ItemId.Module,
-  [ModuleId.Speed1]: ItemId.SpeedModule1,
+  [ModuleId.Speed1]: ItemId.SpeedModule,
   [ModuleId.Speed2]: ItemId.SpeedModule2,
   [ModuleId.Speed3]: ItemId.SpeedModule3,
-  [ModuleId.Prod1]: ItemId.ProductivityModule1,
+  [ModuleId.Prod1]: ItemId.ProductivityModule,
   [ModuleId.Prod2]: ItemId.ProductivityModule2,
   [ModuleId.Prod3]: ItemId.ProductivityModule3,
-  [ModuleId.Eff1]: ItemId.EfficiencyModule1,
+  [ModuleId.Eff1]: ItemId.EfficiencyModule,
   [ModuleId.Eff2]: ItemId.EfficiencyModule2,
   [ModuleId.Eff3]: ItemId.EfficiencyModule3,
 };
