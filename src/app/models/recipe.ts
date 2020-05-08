@@ -18,6 +18,7 @@ export enum RecipeId {
 
 export interface Recipe {
   id: RecipeId;
+  name: string;
   time: number;
   in?: { [key: string]: number };
   out?: { [key: string]: number };

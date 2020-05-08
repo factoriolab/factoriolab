@@ -4,6 +4,7 @@ import { Factory } from './factory';
 import { Module } from './module';
 
 export enum ItemId {
+  AssemblingMachine1 = 'assembling-machine-1',
   AssemblingMachine2 = 'assembling-machine-2',
   AssemblingMachine3 = 'assembling-machine-3',
   BurnerMiningDrill = 'burner-mining-drill',
@@ -14,6 +15,7 @@ export enum ItemId {
   ElectricFurnace = 'electric-furnace',
   ElectricMiningDrill = 'electric-mining-drill',
   ExpressTransportBelt = 'express-transport-belt',
+  FastTransportBelt = 'fast-transport-belt',
   HeavyOil = 'heavy-oil',
   Lab = 'lab',
   LightOil = 'light-oil',
@@ -32,6 +34,7 @@ export enum ItemId {
   SpeedModule3 = 'speed-module-3',
   Steam = 'steam',
   SteelChest = 'steel-chest',
+  SteelFurnace = 'steel-furnace',
   StoneFurnace = 'stone-furnace',
   TransportBelt = 'transport-belt',
   Uranium235 = 'uranium-235',

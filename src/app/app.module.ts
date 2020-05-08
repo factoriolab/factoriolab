@@ -1,33 +1,37 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
-import { HeaderComponent } from './components/header/header.component';
-import { ProductsComponent } from './components/products-container/products/products.component';
-import { IconComponent } from './components/icon/icon.component';
-import { PickerComponent } from './components/picker/picker.component';
-import { ProductsContainerComponent } from './components/products-container/products-container.component';
-import { StepsContainerComponent } from './components/steps-container/steps-container.component';
-import { StepsComponent } from './components/steps-container/steps/steps.component';
-import { SettingsComponent } from './components/settings-container/settings/settings.component';
-import { SettingsContainerComponent } from './components/settings-container/settings-container.component';
+import {
+  HeaderComponent,
+  IconComponent,
+  PickerComponent,
+  SelectComponent,
+} from './components';
+import {
+  ProductsComponent,
+  ProductsContainerComponent,
+  StepsComponent,
+  StepsContainerComponent,
+  SettingsComponent,
+  SettingsContainerComponent,
+} from './containers';
 import { reducers, metaReducers } from './store';
-import { ProductsEffects } from './store/products';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    ProductsComponent,
     IconComponent,
     PickerComponent,
+    SelectComponent,
     ProductsContainerComponent,
+    ProductsComponent,
     StepsContainerComponent,
     StepsComponent,
     SettingsComponent,
@@ -42,7 +46,6 @@ import { ProductsEffects } from './store/products';
     StoreDevtoolsModule.instrument({
       logOnly: environment.production,
     }),
-    EffectsModule.forRoot([ProductsEffects]),
   ],
   providers: [],
   bootstrap: [AppComponent],

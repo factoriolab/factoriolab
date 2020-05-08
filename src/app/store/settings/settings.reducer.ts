@@ -77,6 +77,18 @@ export function settingsReducer(
         ...{ belt: action.payload },
       };
     }
+    case SettingsActionType.SET_ASSEMBLER: {
+      return {
+        ...state,
+        ...{ assembler: action.payload },
+      };
+    }
+    case SettingsActionType.SET_FURNACE: {
+      return {
+        ...state,
+        ...{ furnace: action.payload },
+      };
+    }
     case SettingsActionType.SET_OIL_RECIPE: {
       return { ...state, ...{ oilRecipe: action.payload } };
     }

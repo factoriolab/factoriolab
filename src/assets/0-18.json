@@ -1059,7 +1059,7 @@
       "name": "Satellite",
       "stack": 1,
       "category": "intermediate",
-      "row": 5
+      "row": 6
     },
     {
       "id": "rocket-part",
@@ -1299,7 +1299,7 @@
       "name": "Rocket",
       "stack": 200,
       "category": "combat",
-      "row": 2
+      "row": 3
     },
     {
       "id": "explosive-rocket",
@@ -1495,7 +1495,7 @@
       "name": "Personal Roboport",
       "stack": 20,
       "category": "combat",
-      "row": 6
+      "row": 7
     },
     {
       "id": "personal-roboport-mk2",
@@ -2893,6 +2893,7 @@
     },
     {
       "id": "basic-oil-processing",
+      "name": "Basic Oil Processing",
       "time": 5,
       "in": {
         "crude-oil": 100
@@ -2904,6 +2905,7 @@
     },
     {
       "id": "advanced-oil-processing",
+      "name": "Advanced Oil Processing",
       "time": 5,
       "in": {
         "crude-oil": 100,
@@ -2918,6 +2920,7 @@
     },
     {
       "id": "heavy-oil-cracking",
+      "name": "Heavy Oil Cracking",
       "time": 2,
       "in": {
         "heavy-oil": 40,
@@ -2930,6 +2933,7 @@
     },
     {
       "id": "light-oil-cracking",
+      "name": "Light Oil Cracking",
       "time": 2,
       "in": {
         "light-oil": 30,
@@ -2942,6 +2946,7 @@
     },
     {
       "id": "coal-liquefaction",
+      "name": "Coal Liquefaction",
       "time": 5,
       "in": {
         "coal": 10,
@@ -2957,6 +2962,7 @@
     },
     {
       "id": "solid-fuel-from-heavy-oil",
+      "name": "Solid Fuel from Heavy Oil",
       "time": 2,
       "in": {
         "heavy-oil": 20
@@ -2966,6 +2972,7 @@
     },
     {
       "id": "solid-fuel-from-light-oil",
+      "name": "Solid Fuel from Light Oil",
       "time": 2,
       "in": {
         "light-oil": 10
@@ -2975,6 +2982,7 @@
     },
     {
       "id": "solid-fuel-from-petroleum-gas",
+      "name": "Solid Fuel from Petroleum Gas",
       "time": 2,
       "in": {
         "petroleum-gas": 20
@@ -2984,6 +2992,7 @@
     },
     {
       "id": "uranium-processing",
+      "name": "Uranium Processing",
       "time": 12,
       "in": {
         "uranium-ore": 10
@@ -2996,6 +3005,7 @@
     },
     {
       "id": "kovarex-enrichment-process",
+      "name": "Kovarex Enrichment Process",
       "time": 60,
       "in": {
         "uranium-235": 40,

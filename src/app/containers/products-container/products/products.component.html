@@ -10,6 +10,7 @@
       <div class="icon-container">
         <div class="dropdown-container">
           <lab-icon
+            class="clickable"
             [iconId]="product.itemId"
             [title]="data.itemEntities[product.itemId].name"
             (click)="clickEditProduct(product, $event)"
@@ -20,8 +21,8 @@
             [data]="data"
             [categoryId]="categoryId"
             [itemId]="product.itemId"
-            (cancel)="cancelEditProduct.emit()"
-            (selectTab)="selectTab.emit($event)"
+            (cancel)="editProductId = null"
+            (selectTab)="categoryId = $event"
             (selectItem)="selectItem(product.id, $event)"
           ></lab-picker>
         </div>

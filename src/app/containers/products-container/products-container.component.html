@@ -1,0 +1,10 @@
+<lab-products
+  [data]="data$ | async"
+  [products]="products$ | async"
+  (add)="add()"
+  (remove)="remove($event)"
+  (editProduct)="editProduct($event)"
+  (editRate)="editRate($event)"
+  (editRateType)="editRateType($event)"
+>
+</lab-products>

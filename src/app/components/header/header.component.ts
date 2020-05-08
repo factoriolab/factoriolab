@@ -5,7 +5,7 @@ import { Id } from '~/models';
 @Component({
   selector: 'lab-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
   @Output() toggleSettings = new EventEmitter();
@@ -13,9 +13,4 @@ export class HeaderComponent {
   Id = Id;
 
   constructor() {}
-
-  settingsClicked(event: MouseEvent) {
-    this.toggleSettings.emit();
-    event.stopPropagation();
-  }
 }

@@ -8,9 +8,7 @@ import { HeaderComponent } from './header.component';
 
 @Component({
   selector: 'lab-test-header',
-  template: `
-    <lab-header (toggleSettings)="toggleSettings()"></lab-header>
-  `
+  template: ` <lab-header (toggleSettings)="toggleSettings()"></lab-header> `,
 })
 class TestHeaderComponent {
   @ViewChild(HeaderComponent) child: HeaderComponent;
@@ -23,7 +21,7 @@ describe('HeaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [IconComponent, HeaderComponent, TestHeaderComponent]
+      declarations: [IconComponent, HeaderComponent, TestHeaderComponent],
     })
       .compileComponents()
       .then(() => {
@@ -41,12 +39,5 @@ describe('HeaderComponent', () => {
     spyOn(component, 'toggleSettings');
     TestUtility.clickId(fixture, Id.HeaderSettings);
     expect(component.toggleSettings).toHaveBeenCalled();
-  });
-
-  it('should stop propagation when settings is clicked', () => {
-    const testEvent: any = { stopPropagation: () => {} };
-    spyOn(testEvent, 'stopPropagation');
-    component.child.settingsClicked(testEvent);
-    expect(testEvent.stopPropagation).toHaveBeenCalled();
   });
 });

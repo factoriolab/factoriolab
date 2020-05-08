@@ -55,13 +55,35 @@ describe('Settings Reducer', () => {
   });
 
   describe('SET_BELT', () => {
-    it('should set the belt type', () => {
+    it('should set the default belt', () => {
       const belt = ItemId.TransportBelt;
       const result = settingsReducer(
         initialSettingsState,
         new actions.SetBeltAction(belt)
       );
       expect(result.belt).toEqual(belt);
+    });
+  });
+
+  describe('SET_ASSEMBLER', () => {
+    it('should set the default assembler', () => {
+      const assembler = ItemId.AssemblingMachine1;
+      const result = settingsReducer(
+        initialSettingsState,
+        new actions.SetAssemblerAction(assembler)
+      );
+      expect(result.assembler).toEqual(assembler);
+    });
+  });
+
+  describe('SET_FURNACE', () => {
+    it('should set the default furnace', () => {
+      const furnace = ItemId.StoneFurnace;
+      const result = settingsReducer(
+        initialSettingsState,
+        new actions.SetFurnaceAction(furnace)
+      );
+      expect(result.furnace).toEqual(furnace);
     });
   });
 
