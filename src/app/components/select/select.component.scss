@@ -11,12 +11,9 @@
   z-index: 10;
   padding: 0.25rem;
   margin: -1px;
+  display: flex;
 }
 
-.row {
-  display: flex;
-
-  lab-icon.selected {
-    background-color: $color-gray-0;
-  }
+lab-icon.selected {
+  background-color: $color-gray-0;
 }

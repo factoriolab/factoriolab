@@ -58,15 +58,15 @@ export const getRecipeSettings = createSelector(
             recipeSettings.modules = RecipeUtility.defaultModules(
               recipe,
               settings.prodModule,
-              settings.otherModule,
+              settings.speedModule,
               factoryItem.factory.modules,
               data.itemEntities
             );
           }
 
           // Beacons
-          if (!recipeSettings.beaconType) {
-            recipeSettings.beaconType = settings.beaconType;
+          if (!recipeSettings.beaconModule) {
+            recipeSettings.beaconModule = settings.beaconModule;
           }
           if (recipeSettings.beaconCount == null) {
             recipeSettings.beaconCount = settings.beaconCount;
@@ -97,7 +97,7 @@ export const getRecipeFactors = createSelector(
       values[recipeId] = RecipeUtility.recipeFactors(
         factorySpeed,
         settings.modules,
-        settings.beaconType,
+        settings.beaconModule,
         settings.beaconCount,
         data.itemEntities
       );

@@ -6,7 +6,7 @@ import { RecipeState } from './recipe.reducer';
 export const enum RecipeActionType {
   LOAD = '[Recipes Router] Load',
   IGNORE = '[Recipes Page] Ignore Recipe',
-  EDIT_BEACON_TYPE = '[Recipes Page] Edit Beacon Type',
+  EDIT_BEACON_MODULE = '[Recipes Page] Edit Beacon Module',
   EDIT_BEACONS_COUNT = '[Recipes Page] Edit Beacon Count',
 }
 
@@ -20,8 +20,8 @@ export class IgnoreAction implements Action {
   constructor(public payload: RecipeId) {}
 }
 
-export class EditBeaconTypeAction implements Action {
-  readonly type = RecipeActionType.EDIT_BEACON_TYPE;
+export class EditBeaconModuleAction implements Action {
+  readonly type = RecipeActionType.EDIT_BEACON_MODULE;
   constructor(public payload: [RecipeId, ItemId]) {}
 }
 
@@ -33,5 +33,5 @@ export class EditBeaconCountAction implements Action {
 export type RecipeAction =
   | LoadAction
   | IgnoreAction
-  | EditBeaconTypeAction
+  | EditBeaconModuleAction
   | EditBeaconCountAction;

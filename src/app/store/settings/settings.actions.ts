@@ -13,7 +13,9 @@ export const enum SettingsActionType {
   SET_ASSEMBLER = '[Settings Page] Set Assembler',
   SET_FURNACE = '[Settings Page] Set Furnace',
   SET_PROD_MODULE = '[Settings Page] Set Prod Module',
-  SET_OTHER_MODULE = '[Settings Page] Set Other Module',
+  SET_SPEED_MODULE = '[Settings Page] Set Speed Module',
+  SET_BEACON_MODULE = '[Settings Page] Set Beacon Module',
+  SET_BEACON_COUNT = '[Settings Page] Set Beacon Count',
   SET_OIL_RECIPE = '[Settings Page] Set Oil Recipe',
 }
 
@@ -57,14 +59,24 @@ export class SetFurnaceAction implements Action {
   constructor(public payload: ItemId) {}
 }
 
-export class SetProdModule implements Action {
+export class SetProdModuleAction implements Action {
   readonly type = SettingsActionType.SET_PROD_MODULE;
   constructor(public payload: ItemId) {}
 }
 
-export class SetOtherModule implements Action {
-  readonly type = SettingsActionType.SET_OTHER_MODULE;
+export class SetSpeedModuleAction implements Action {
+  readonly type = SettingsActionType.SET_SPEED_MODULE;
   constructor(public payload: ItemId) {}
+}
+
+export class SetBeaconModuleAction implements Action {
+  readonly type = SettingsActionType.SET_BEACON_MODULE;
+  constructor(public payload: ItemId) {}
+}
+
+export class SetBeaconCountAction implements Action {
+  readonly type = SettingsActionType.SET_BEACON_COUNT;
+  constructor(public payload: number) {}
 }
 
 export class SetOilProcessingRecipeAction implements Action {
@@ -81,6 +93,8 @@ export type SettingsAction =
   | SetBeltAction
   | SetAssemblerAction
   | SetFurnaceAction
-  | SetProdModule
-  | SetOtherModule
+  | SetProdModuleAction
+  | SetSpeedModuleAction
+  | SetBeaconModuleAction
+  | SetBeaconCountAction
   | SetOilProcessingRecipeAction;

@@ -76,10 +76,18 @@ export class SettingsContainerComponent implements OnInit {
   }
 
   setProdModule(value: ItemId) {
-    this.store.dispatch(new Settings.SetProdModule(value));
+    this.store.dispatch(new Settings.SetProdModuleAction(value));
   }
 
-  setOtherModule(value: ItemId) {
-    this.store.dispatch(new Settings.SetOtherModule(value));
+  setSpeedModule(value: ItemId) {
+    this.store.dispatch(new Settings.SetSpeedModuleAction(value));
+  }
+
+  setBeaconModule(value: ItemId) {
+    this.store.dispatch(new Settings.SetBeaconModuleAction(value));
+  }
+
+  setBeaconCount(value: number) {
+    this.store.dispatch(new Settings.SetBeaconCountAction(value));
   }
 }

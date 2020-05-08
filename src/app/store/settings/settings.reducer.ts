@@ -10,8 +10,8 @@ export interface SettingsState {
   assembler: ItemId;
   furnace: ItemId;
   prodModule: ItemId;
-  otherModule: ItemId;
-  beaconType: ItemId;
+  speedModule: ItemId;
+  beaconModule: ItemId;
   beaconCount: number;
   oilRecipe: RecipeId;
   fuel: ItemId;
@@ -29,8 +29,8 @@ export const initialSettingsState: SettingsState = {
   assembler: ItemId.AssemblingMachine3,
   furnace: ItemId.ElectricFurnace,
   prodModule: ItemId.ProductivityModule3,
-  otherModule: ItemId.SpeedModule3,
-  beaconType: ItemId.SpeedModule3,
+  speedModule: ItemId.SpeedModule3,
+  beaconModule: ItemId.SpeedModule3,
   beaconCount: 16,
   oilRecipe: RecipeId.AdvancedOilProcessing,
   fuel: ItemId.Coal,
@@ -95,10 +95,22 @@ export function settingsReducer(
         ...{ prodModule: action.payload },
       };
     }
-    case SettingsActionType.SET_OTHER_MODULE: {
+    case SettingsActionType.SET_SPEED_MODULE: {
       return {
         ...state,
-        ...{ otherModule: action.payload },
+        ...{ speedModule: action.payload },
+      };
+    }
+    case SettingsActionType.SET_BEACON_MODULE: {
+      return {
+        ...state,
+        ...{ beaconModule: action.payload },
+      };
+    }
+    case SettingsActionType.SET_BEACON_COUNT: {
+      return {
+        ...state,
+        ...{ beaconCount: action.payload },
       };
     }
     case SettingsActionType.SET_OIL_RECIPE: {

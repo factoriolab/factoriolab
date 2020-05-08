@@ -7,6 +7,7 @@ export enum ItemId {
   AssemblingMachine1 = 'assembling-machine-1',
   AssemblingMachine2 = 'assembling-machine-2',
   AssemblingMachine3 = 'assembling-machine-3',
+  Beacon = 'beacon',
   BurnerMiningDrill = 'burner-mining-drill',
   Coal = 'coal',
   EfficiencyModule = 'efficiency-module',

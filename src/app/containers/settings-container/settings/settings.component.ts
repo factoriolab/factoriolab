@@ -9,8 +9,11 @@ enum OpenSelect {
   Belt,
   Assembler,
   Furnace,
+  Fuel,
+  OilRecipe,
   ProdModule,
-  OtherModule,
+  SpeedModule,
+  BeaconModule,
 }
 
 @Component({
@@ -30,7 +33,9 @@ export class SettingsComponent {
   @Output() setAssembler = new EventEmitter<ItemId>();
   @Output() setFurnace = new EventEmitter<ItemId>();
   @Output() setProdModule = new EventEmitter<ItemId>();
-  @Output() setOtherModule = new EventEmitter<ItemId>();
+  @Output() setSpeedModule = new EventEmitter<ItemId>();
+  @Output() setBeaconModule = new EventEmitter<ItemId>();
+  @Output() setBeaconCount = new EventEmitter<number>();
 
   openSelect = OpenSelect.None;
   beltOptions = [
@@ -49,24 +54,21 @@ export class SettingsComponent {
     ItemId.ElectricFurnace,
   ];
   prodModuleOptions = [
-    [ItemId.Module],
-    [
-      ItemId.ProductivityModule,
-      ItemId.ProductivityModule2,
-      ItemId.ProductivityModule3,
-    ],
+    ItemId.Module,
+    ItemId.ProductivityModule,
+    ItemId.ProductivityModule2,
+    ItemId.ProductivityModule3,
   ];
-  otherModuleOptions = [
-    [ItemId.Module],
-    [ItemId.SpeedModule, ItemId.SpeedModule2, ItemId.SpeedModule3],
-    [
-      ItemId.EfficiencyModule,
-      ItemId.EfficiencyModule2,
-      ItemId.EfficiencyModule3,
-    ],
+  speedModuleOptions = [
+    ItemId.Module,
+    ItemId.SpeedModule,
+    ItemId.SpeedModule2,
+    ItemId.SpeedModule3,
   ];
+
   displayRate = DisplayRate;
   select = OpenSelect;
+  itemId = ItemId;
 
   constructor() {}
 
@@ -74,29 +76,46 @@ export class SettingsComponent {
     this.setItemPrecision.emit(initialSettingsState.itemPrecision);
   }
 
-  itemPrecisionValue(event: any) {
+  emitNumber(emitter: EventEmitter<number>, event: any) {
     if (event.target.value) {
-      this.setItemPrecision.emit(Number(event.target.value));
+      const value = Math.round(Number(event.target.value));
+      emitter.emit(value);
     }
   }
+
+  // itemPrecisionValue(event: any) {
+  //   if (event.target.value) {
+  //     const value = Math.round(Number(event.target.value));
+  //     this.setItemPrecision.emit(value);
+  //   }
+  // }
 
   beltPrecisionDecimals() {
     this.setBeltPrecision.emit(initialSettingsState.beltPrecision);
   }
 
-  beltPrecisionValue(event: any) {
-    if (event.target.value) {
-      this.setBeltPrecision.emit(Number(event.target.value));
-    }
-  }
+  // beltPrecisionValue(event: any) {
+  //   if (event.target.value) {
+  //     const value = Math.round(Number(event.target.value));
+  //     this.setBeltPrecision.emit(value);
+  //   }
+  // }
 
   factoryPrecisionDecimals() {
     this.setFactoryPrecision.emit(initialSettingsState.factoryPrecision);
   }
 
-  factoryPrecisionValue(event: any) {
-    if (event.target.value) {
-      this.setFactoryPrecision.emit(Number(event.target.value));
-    }
-  }
+  // factoryPrecisionValue(event: any) {
+  //   if (event.target.value) {
+  //     const value = Math.round(Number(event.target.value));
+  //     this.setFactoryPrecision.emit(value);
+  //   }
+  // }
+
+  // beaconCountValue(event: any) {
+  //   if (event.target.value) {
+  //     const value = Math.round(Number(event.target.value));
+  //     this.setBeaconCount.emit(value);
+  //   }
+  // }
 }
