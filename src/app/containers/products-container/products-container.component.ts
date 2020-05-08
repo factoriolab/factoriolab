@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { State } from '~/store';
 import * as Dataset from '~/store/dataset';
 import * as Products from '~/store/products';
-import { Product, RateType, ItemId, CategoryId } from '~/models';
+import { Product, RateType, ItemId } from '~/models';
 import { ProductsComponent } from './products/products.component';
 
 @Component({
@@ -18,16 +18,12 @@ export class ProductsContainerComponent implements OnInit {
 
   data$: Observable<Dataset.DatasetState>;
   products$: Observable<Product[]>;
-  editProductId$: Observable<number>;
-  categoryId$: Observable<string>;
 
   constructor(private store: Store<State>) {}
 
   ngOnInit() {
     this.data$ = this.store.select(Dataset.getDataset);
     this.products$ = this.store.select(Products.getProducts);
-    this.editProductId$ = this.store.select(Products.getEditProductId);
-    this.categoryId$ = this.store.select(Products.getCategoryId);
   }
 
   add() {
@@ -38,16 +34,8 @@ export class ProductsContainerComponent implements OnInit {
     this.store.dispatch(new Products.RemoveAction(id));
   }
 
-  openEditProduct(product: Product) {
-    this.store.dispatch(new Products.OpenEditProductAction(product));
-  }
-
-  cancelEditProduct() {
-    this.store.dispatch(new Products.CancelEditProductAction());
-  }
-
-  commitEditProduct(data: [number, ItemId]) {
-    this.store.dispatch(new Products.CommitEditProductAction(data));
+  editProduct(data: [number, ItemId]) {
+    this.store.dispatch(new Products.EditProductAction(data));
   }
 
   editRate(data: [number, number]) {
@@ -56,9 +44,5 @@ export class ProductsContainerComponent implements OnInit {
 
   editRateType(data: [number, RateType]) {
     this.store.dispatch(new Products.EditRateTypeAction(data));
-  }
-
-  selectTab(id: CategoryId) {
-    this.store.dispatch(new Products.SelectItemCategoryAction(id));
   }
 }

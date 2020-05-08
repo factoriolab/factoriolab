@@ -1,1 +1,18 @@
-<p>select works!</p>
+<div class="row" *ngFor="let row of options">
+  <div class="obj" *ngFor="let id of row">
+    <lab-icon
+      *ngIf="selectType === type.Item"
+      [iconId]="id"
+      [title]="data.itemEntities[id].name"
+      [class.selected]="id === selectedId"
+      (click)="clickId(id)"
+    ></lab-icon>
+    <lab-icon
+      *ngIf="selectType === type.Recipe"
+      [iconId]="id"
+      [title]="data.recipeEntities[id].name"
+      [class.selected]="id === selectedId"
+      (click)="clickId(id)"
+    ></lab-icon>
+  </div>
+</div>

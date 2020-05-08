@@ -1,15 +1,49 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ElementRef,
+  HostListener,
+} from '@angular/core';
+
+import { DatasetState } from '~/store/dataset';
+
+export enum SelectType {
+  Item,
+  Recipe,
+}
 
 @Component({
   selector: 'lab-select',
   templateUrl: './select.component.html',
-  styleUrls: ['./select.component.scss']
+  styleUrls: ['./select.component.scss'],
 })
-export class SelectComponent implements OnInit {
+export class SelectComponent {
+  @Input() data: DatasetState;
+  @Input() options: string[][];
+  @Input() selectedId: string;
+  @Input() selectType: SelectType;
 
-  constructor() { }
+  @Output() cancel = new EventEmitter();
+  @Output() selectId = new EventEmitter<string>();
 
-  ngOnInit(): void {
+  type = SelectType;
+
+  constructor(private element: ElementRef) {}
+
+  @HostListener('document:click', ['$event'])
+  click(event: MouseEvent) {
+    if (!this.element.nativeElement.contains(event.target)) {
+      this.cancel.emit();
+    }
   }
 
+  clickId(id: string) {
+    if (id !== this.selectedId) {
+      this.selectId.emit(id);
+    } else {
+      this.cancel.emit();
+    }
+  }
 }

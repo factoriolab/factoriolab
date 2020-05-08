@@ -11,29 +11,27 @@ import { Product, RateType, CategoryId, ItemId } from '~/models';
 export class ProductsComponent {
   @Input() data: DatasetState;
   @Input() products: Product[];
-  @Input() editProductId: number;
-  @Input() categoryId: CategoryId;
 
   @Output() add = new EventEmitter();
   @Output() remove = new EventEmitter<number>();
-  @Output() openEditProduct = new EventEmitter<Product>();
-  @Output() cancelEditProduct = new EventEmitter();
-  @Output() commitEditProduct = new EventEmitter<[number, ItemId]>();
+  @Output() editProduct = new EventEmitter<[number, ItemId]>();
   @Output() editRate = new EventEmitter<[number, number]>();
   @Output() editRateType = new EventEmitter<[number, RateType]>();
-  @Output() selectTab = new EventEmitter<CategoryId>();
 
+  editProductId: number;
+  categoryId: CategoryId;
   rateType = RateType;
 
   constructor() {}
 
   clickEditProduct(product: Product, event: MouseEvent) {
-    this.openEditProduct.emit(product);
+    this.editProductId = product.id;
+    this.categoryId = this.data.itemEntities[product.itemId].category;
     event.stopPropagation();
   }
 
   selectItem(id: number, itemId: ItemId) {
-    this.commitEditProduct.emit([id, itemId]);
+    this.editProduct.emit([id, itemId]);
   }
 
   rateChange(id: number, event: any) {

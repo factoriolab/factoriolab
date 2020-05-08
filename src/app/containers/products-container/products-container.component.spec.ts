@@ -49,28 +49,12 @@ describe('ProductsContainerComponent', () => {
     expect(store.dispatch).toHaveBeenCalledWith(new Products.RemoveAction(0));
   });
 
-  it('should open edit on a product', () => {
-    spyOn(store, 'dispatch');
-    component.child.openEditProduct.emit(mocks.Product1);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.OpenEditProductAction(mocks.Product1)
-    );
-  });
-
-  it('should cancel edit on a product', () => {
-    spyOn(store, 'dispatch');
-    component.child.cancelEditProduct.emit();
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.CancelEditProductAction()
-    );
-  });
-
   it('should commit edit on a product', () => {
     spyOn(store, 'dispatch');
     const data: [number, ItemId] = [mocks.Product1.id, mocks.Item2.id];
-    component.child.commitEditProduct.emit(data);
+    component.child.editProduct.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.CommitEditProductAction(data)
+      new Products.EditProductAction(data)
     );
   });
 
@@ -89,15 +73,6 @@ describe('ProductsContainerComponent', () => {
     component.child.editRateType.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Products.EditRateTypeAction(data)
-    );
-  });
-
-  it('should select a new tab', () => {
-    spyOn(store, 'dispatch');
-    const tab = CategoryId.Logistics;
-    component.child.selectTab.emit(tab);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.SelectItemCategoryAction(tab)
     );
   });
 });

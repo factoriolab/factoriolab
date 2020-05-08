@@ -1,0 +1,29 @@
+@import 'values';
+
+:host {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: $color-gray-2;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.row {
+  display: flex;
+
+  lab-icon {
+    padding: 0.125rem;
+    cursor: pointer;
+    border-radius: 0.25rem;
+
+    &.selected {
+      background-color: $color-gray-0;
+    }
+
+    &:hover {
+      background-color: $color-brand;
+    }
+  }
+}

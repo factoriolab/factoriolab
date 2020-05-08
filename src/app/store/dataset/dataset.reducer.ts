@@ -61,12 +61,30 @@ export function datasetReducer(
         categoryItemRows[category.id] = rows;
       }
 
+      const itemEntities = action.payload.items.reduce(
+        (e: Entities<Item>, i) => {
+          return { ...e, ...{ [i.id]: i } };
+        },
+        {}
+      );
+
+      // Fill in missing recipe names
+      const recipes: Recipe[] = [];
+      for (const recipe of action.payload.recipes) {
+        if (!recipe.name) {
+          recipes.push({
+            ...recipe,
+            ...{ name: itemEntities[recipe.id].name },
+          });
+        } else {
+          recipes.push(recipe);
+        }
+      }
+
       return {
         items: action.payload.items,
         itemIds: action.payload.items.map((i) => i.id),
-        itemEntities: action.payload.items.reduce((e: Entities<Item>, i) => {
-          return { ...e, ...{ [i.id]: i } };
-        }, {}),
+        itemEntities,
         itemN: action.payload.items.reduce((e: Entities<number>, i, z) => {
           return { ...e, ...{ [i.id]: z } };
         }, {}),

@@ -20,8 +20,8 @@
             [data]="data"
             [categoryId]="categoryId"
             [itemId]="product.itemId"
-            (cancel)="cancelEditProduct.emit()"
-            (selectTab)="selectTab.emit($event)"
+            (cancel)="editProductId = null"
+            (selectTab)="categoryId = $event"
             (selectItem)="selectItem(product.id, $event)"
           ></lab-picker>
         </div>

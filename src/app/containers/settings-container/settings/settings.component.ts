@@ -3,6 +3,11 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { DisplayRate } from '~/models';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
+enum OpenSelect {
+  None,
+  Assembler,
+}
+
 @Component({
   selector: 'lab-settings',
   templateUrl: './settings.component.html',
@@ -16,7 +21,9 @@ export class SettingsComponent {
   @Output() setBeltPrecision = new EventEmitter<number>();
   @Output() setFactoryPrecision = new EventEmitter<number>();
 
+  open = OpenSelect.None;
   displayRate = DisplayRate;
+  openSelect = OpenSelect;
 
   constructor() {}
 
@@ -65,4 +72,6 @@ export class SettingsComponent {
   factoryPrecisionFractions() {
     this.setFactoryPrecision.emit(null);
   }
+
+  clickEditAssembler() {}
 }

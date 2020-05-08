@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
@@ -23,7 +22,6 @@ import {
   SettingsContainerComponent,
 } from './containers';
 import { reducers, metaReducers } from './store';
-import { ProductsEffects } from './store/products';
 
 @NgModule({
   declarations: [
@@ -48,7 +46,6 @@ import { ProductsEffects } from './store/products';
     StoreDevtoolsModule.instrument({
       logOnly: environment.production,
     }),
-    EffectsModule.forRoot([ProductsEffects]),
   ],
   providers: [],
   bootstrap: [AppComponent],

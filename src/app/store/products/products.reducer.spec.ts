@@ -33,36 +33,15 @@ describe('Products Reducer', () => {
     });
   });
 
-  describe('OPEN_EDIT_PRODUCT', () => {
-    it('should open edit on a product', () => {
-      const result = productsReducer(
-        state,
-        new actions.OpenEditProductAction(mocks.Product1)
-      );
-      expect(result.editProductId).toEqual(mocks.Product1.id);
-    });
-  });
-
-  describe('CANCEL_EDIT_PRODUCT', () => {
-    it('should cancel edit on a product', () => {
-      const result = productsReducer(
-        { ...state, ...{ editProductId: mocks.Product1.id } },
-        new actions.CancelEditProductAction()
-      );
-      expect(result.editProductId).toBeNull();
-    });
-  });
-
-  describe('COMMIT_EDIT_PRODUCT', () => {
+  describe('EDIT_PRODUCT', () => {
     it('should commit edit on a product', () => {
       const result = productsReducer(
         state,
-        new actions.CommitEditProductAction([
+        new actions.EditProductAction([
           mocks.Product1.id,
           mocks.Product2.itemId,
         ])
       );
-      expect(result.editProductId).toBeNull();
       expect(result.entities[mocks.Product1.id].itemId).toEqual(
         mocks.Product2.itemId
       );
@@ -88,16 +67,6 @@ describe('Products Reducer', () => {
         new actions.EditRateTypeAction([mocks.Product1.id, value])
       );
       expect(result.entities[mocks.Product1.id].rateType).toEqual(value);
-    });
-  });
-
-  describe('SELECT_ITEM_CATEGORY', () => {
-    it('should select a new category', () => {
-      const result = productsReducer(
-        state,
-        new actions.SelectItemCategoryAction(mocks.CategoryId)
-      );
-      expect(result.categoryId).toEqual(mocks.CategoryId);
     });
   });
 

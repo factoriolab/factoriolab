@@ -6,13 +6,9 @@ export const enum ProductsActionType {
   LOAD = '[Products Router] Load',
   ADD = '[Products Page] Add',
   REMOVE = '[Products Page] Remove',
-  OPEN_EDIT_PRODUCT = '[Products Page] Open Edit Product',
-  CANCEL_EDIT_PRODUCT = '[Products Page] Cancel Edit Product',
-  COMMIT_EDIT_PRODUCT = '[Products Page] Commit Edit Product',
+  EDIT_PRODUCT = '[Products Page] Edit Product',
   EDIT_RATE = '[Products Page] Edit Rate',
   EDIT_RATE_TYPE = '[Products Page] Edit Rate Type',
-  SELECT_ITEM_CATEGORY = '[Products Page] Select Item Category',
-  SELECT_ITEM_CATEGORY_EFFECT = '[Products Effect] Select Item Category',
 }
 
 export class LoadAction implements Action {
@@ -29,17 +25,8 @@ export class RemoveAction implements Action {
   constructor(public payload: number) {}
 }
 
-export class OpenEditProductAction implements Action {
-  readonly type = ProductsActionType.OPEN_EDIT_PRODUCT;
-  constructor(public payload: Product) {}
-}
-
-export class CancelEditProductAction implements Action {
-  readonly type = ProductsActionType.CANCEL_EDIT_PRODUCT;
-}
-
-export class CommitEditProductAction implements Action {
-  readonly type = ProductsActionType.COMMIT_EDIT_PRODUCT;
+export class EditProductAction implements Action {
+  readonly type = ProductsActionType.EDIT_PRODUCT;
   constructor(public payload: [number, ItemId]) {}
 }
 
@@ -53,24 +40,10 @@ export class EditRateTypeAction implements Action {
   constructor(public payload: [number, RateType]) {}
 }
 
-export class SelectItemCategoryAction implements Action {
-  readonly type = ProductsActionType.SELECT_ITEM_CATEGORY;
-  constructor(public payload: CategoryId) {}
-}
-
-export class SelectItemCategoryEffectAction implements Action {
-  readonly type = ProductsActionType.SELECT_ITEM_CATEGORY_EFFECT;
-  constructor(public payload: CategoryId) {}
-}
-
 export type ProductsAction =
   | LoadAction
   | AddAction
   | RemoveAction
-  | OpenEditProductAction
-  | CancelEditProductAction
-  | CommitEditProductAction
+  | EditProductAction
   | EditRateAction
-  | EditRateTypeAction
-  | SelectItemCategoryAction
-  | SelectItemCategoryEffectAction;
+  | EditRateTypeAction;
