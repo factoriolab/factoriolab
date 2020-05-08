@@ -145,15 +145,15 @@
     <lab-icon
       class="clickable"
       [iconId]="settings.belt"
-      (click)="clickSelect(open.Belt, $event)"
+      (click)="openSelect = select.Belt"
     ></lab-icon>
     <lab-select
-      *ngIf="openSelect === open.Belt"
+      *ngIf="openSelect === select.Belt"
       [data]="data"
       [options]="[beltOptions]"
       [selectedId]="settings.belt"
-      (cancel)="openSelect = open.None"
-      (selectId)="selectBelt($event)"
+      (cancel)="openSelect = select.None"
+      (selectId)="setBelt.emit($event)"
     >
     </lab-select>
   </div>
@@ -161,15 +161,15 @@
     <lab-icon
       class="clickable"
       [iconId]="settings.assembler"
-      (click)="clickSelect(open.Assembler, $event)"
+      (click)="openSelect = select.Assembler"
     ></lab-icon>
     <lab-select
-      *ngIf="openSelect === open.Assembler"
+      *ngIf="openSelect === select.Assembler"
       [data]="data"
       [options]="[assemblerOptions]"
       [selectedId]="settings.assembler"
-      (cancel)="openSelect = open.None"
-      (selectId)="selectAssembler($event)"
+      (cancel)="openSelect = select.None"
+      (selectId)="setAssembler.emit($event)"
     >
     </lab-select>
   </div>
@@ -177,15 +177,15 @@
     <lab-icon
       class="clickable"
       [iconId]="settings.furnace"
-      (click)="clickSelect(open.Furnace, $event)"
+      (click)="openSelect = select.Furnace"
     ></lab-icon>
     <lab-select
-      *ngIf="openSelect === open.Furnace"
+      *ngIf="openSelect === select.Furnace"
       [data]="data"
       [options]="[furnaceOptions]"
       [selectedId]="settings.furnace"
-      (cancel)="openSelect = open.None"
-      (selectId)="selectFurnace($event)"
+      (cancel)="openSelect = select.None"
+      (selectId)="setFurnace.emit($event)"
     >
     </lab-select>
   </div>

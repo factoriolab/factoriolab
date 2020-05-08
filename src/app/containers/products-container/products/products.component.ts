@@ -24,7 +24,7 @@ export class ProductsComponent {
 
   constructor() {}
 
-  clickEditProduct(product: Product, event: MouseEvent) {
+  clickEditProduct(product: Product) {
     this.editProductId = product.id;
     this.categoryId = this.data.itemEntities[product.itemId].category;
   }

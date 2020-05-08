@@ -45,7 +45,7 @@ export class SettingsComponent {
     ItemId.ElectricFurnace,
   ];
   displayRate = DisplayRate;
-  open = OpenSelect;
+  select = OpenSelect;
 
   constructor() {}
 
@@ -77,25 +77,5 @@ export class SettingsComponent {
     if (event.target.value) {
       this.setFactoryPrecision.emit(Number(event.target.value));
     }
-  }
-
-  clickSelect(value: OpenSelect, event: MouseEvent) {
-    this.openSelect = value;
-    event.stopPropagation();
-  }
-
-  selectBelt(value: ItemId) {
-    this.openSelect = OpenSelect.None;
-    this.setBelt.emit(value);
-  }
-
-  selectAssembler(value: ItemId) {
-    this.openSelect = OpenSelect.None;
-    this.setAssembler.emit(value);
-  }
-
-  selectFurnace(value: ItemId) {
-    this.openSelect = OpenSelect.None;
-    this.setFurnace.emit(value);
   }
 }

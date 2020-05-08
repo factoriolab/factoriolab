@@ -3,8 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
 import * as mocks from 'src/mocks';
-import { IconComponent } from '~/components';
-import { Product, RateType } from '~/models';
+import { IconComponent, PickerComponent } from '~/components';
+import { Product, RateType, CategoryId } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { TestUtility } from '~/utilities/test';
 import { ProductsComponent } from './products.component';
@@ -44,7 +44,12 @@ describe('ProductsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule],
-      declarations: [IconComponent, ProductsComponent, TestProductsComponent],
+      declarations: [
+        IconComponent,
+        PickerComponent,
+        ProductsComponent,
+        TestProductsComponent,
+      ],
     })
       .compileComponents()
       .then(() => {
@@ -56,6 +61,13 @@ describe('ProductsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should open edit on a product', () => {
+    TestUtility.clickSelector(fixture, '.dropdown-container lab-icon', 0);
+    fixture.detectChanges();
+    expect(component.child.editProductId).toEqual(0);
+    expect(component.child.categoryId).toEqual(CategoryId.Logistics);
   });
 
   it('should select an item', () => {

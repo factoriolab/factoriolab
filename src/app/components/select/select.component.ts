@@ -30,11 +30,15 @@ export class SelectComponent {
 
   type = SelectType;
 
+  opening = true;
+
   constructor(private element: ElementRef) {}
 
   @HostListener('document:click', ['$event'])
   click(event: MouseEvent) {
-    if (!this.element.nativeElement.contains(event.target)) {
+    if (this.opening) {
+      this.opening = false;
+    } else if (!this.element.nativeElement.contains(event.target)) {
       this.cancel.emit();
     }
   }
@@ -42,9 +46,8 @@ export class SelectComponent {
   clickId(id: string, event: MouseEvent) {
     if (id !== this.selectedId) {
       this.selectId.emit(id);
-    } else {
-      this.cancel.emit();
     }
+    this.cancel.emit();
     event.stopPropagation();
   }
 }
