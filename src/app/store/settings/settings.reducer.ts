@@ -48,73 +48,52 @@ export function settingsReducer(
       return { ...state, ...action.payload };
     }
     case SettingsActionType.SET_DISPLAY_RATE: {
-      return {
-        ...state,
-        ...{ displayRate: action.payload },
-      };
+      return { ...state, ...{ displayRate: action.payload } };
     }
     case SettingsActionType.SET_ITEM_PRECISION: {
-      return {
-        ...state,
-        ...{ itemPrecision: action.payload },
-      };
+      return { ...state, ...{ itemPrecision: action.payload } };
     }
     case SettingsActionType.SET_BELT_PRECISION: {
-      return {
-        ...state,
-        ...{ beltPrecision: action.payload },
-      };
+      return { ...state, ...{ beltPrecision: action.payload } };
     }
     case SettingsActionType.SET_FACTORY_PRECISION: {
-      return {
-        ...state,
-        ...{ factoryPrecision: action.payload },
-      };
+      return { ...state, ...{ factoryPrecision: action.payload } };
     }
     case SettingsActionType.SET_BELT: {
-      return {
-        ...state,
-        ...{ belt: action.payload },
-      };
+      return { ...state, ...{ belt: action.payload } };
     }
     case SettingsActionType.SET_ASSEMBLER: {
-      return {
-        ...state,
-        ...{ assembler: action.payload },
-      };
+      return { ...state, ...{ assembler: action.payload } };
     }
     case SettingsActionType.SET_FURNACE: {
-      return {
-        ...state,
-        ...{ furnace: action.payload },
-      };
+      return { ...state, ...{ furnace: action.payload } };
     }
     case SettingsActionType.SET_PROD_MODULE: {
-      return {
-        ...state,
-        ...{ prodModule: action.payload },
-      };
+      return { ...state, ...{ prodModule: action.payload } };
     }
     case SettingsActionType.SET_SPEED_MODULE: {
-      return {
-        ...state,
-        ...{ speedModule: action.payload },
-      };
+      return { ...state, ...{ speedModule: action.payload } };
     }
     case SettingsActionType.SET_BEACON_MODULE: {
-      return {
-        ...state,
-        ...{ beaconModule: action.payload },
-      };
+      return { ...state, ...{ beaconModule: action.payload } };
     }
     case SettingsActionType.SET_BEACON_COUNT: {
-      return {
-        ...state,
-        ...{ beaconCount: action.payload },
-      };
+      return { ...state, ...{ beaconCount: action.payload } };
     }
     case SettingsActionType.SET_OIL_RECIPE: {
       return { ...state, ...{ oilRecipe: action.payload } };
+    }
+    case SettingsActionType.SET_FUEL: {
+      return { ...state, ...{ fuel: action.payload } };
+    }
+    case SettingsActionType.SET_MINING_BONUS: {
+      return { ...state, ...{ miningBonus: action.payload } };
+    }
+    case SettingsActionType.SET_RESEARCH_SPEED: {
+      return { ...state, ...{ researchSpeed: action.payload } };
+    }
+    case SettingsActionType.SET_FLOW_RATE: {
+      return { ...state, ...{ flowRate: action.payload } };
     }
     default:
       return state;

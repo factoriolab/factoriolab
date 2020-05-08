@@ -92,7 +92,7 @@ describe('Settings Reducer', () => {
       const recipe = RecipeId.BasicOilProcessing;
       const result = settingsReducer(
         initialSettingsState,
-        new actions.SetOilProcessingRecipeAction(recipe)
+        new actions.SetOilRecipeAction(recipe)
       );
       expect(result.oilRecipe).toEqual(recipe);
     });

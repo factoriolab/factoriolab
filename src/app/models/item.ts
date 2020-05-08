@@ -22,11 +22,13 @@ export enum ItemId {
   LightOil = 'light-oil',
   MiningProductivity = 'mining-productivity',
   Module = 'module',
+  NuclearFuel = 'nuclear-fuel',
   PetroleumGas = 'petroleum-gas',
   Pipe = 'pipe',
   ProductivityModule = 'productivity-module',
   ProductivityModule2 = 'productivity-module-2',
   ProductivityModule3 = 'productivity-module-3',
+  RocketFuel = 'rocket-fuel',
   RocketPart = 'rocket-part',
   SolidFuel = 'solid-fuel',
   SpaceSciencePack = 'space-science-pack',
@@ -42,6 +44,7 @@ export enum ItemId {
   Uranium238 = 'uranium-238',
   UraniumOre = 'uranium-ore',
   Water = 'water',
+  Wood = 'wood',
   WoodenChest = 'wooden-chest',
 }
 

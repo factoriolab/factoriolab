@@ -189,6 +189,39 @@
     >
     </lab-select>
   </div>
+  <div class="relative">
+    <lab-icon
+      class="clickable"
+      [iconId]="settings.oilRecipe"
+      (click)="openSelect = select.OilRecipe"
+    ></lab-icon>
+    <lab-select
+      *ngIf="openSelect === select.OilRecipe"
+      [data]="data"
+      [options]="oilRecipeOptions"
+      [selectedId]="settings.oilRecipe"
+      [selectType]="selectType.Recipe"
+      (cancel)="openSelect = select.None"
+      (selectId)="setOilRecipe.emit($event)"
+    >
+    </lab-select>
+  </div>
+  <div class="relative">
+    <lab-icon
+      class="clickable"
+      [iconId]="settings.fuel"
+      (click)="openSelect = select.Fuel"
+    ></lab-icon>
+    <lab-select
+      *ngIf="openSelect === select.Fuel"
+      [data]="data"
+      [options]="fuelOptions"
+      [selectedId]="settings.fuel"
+      (cancel)="openSelect = select.None"
+      (selectId)="setFuel.emit($event)"
+    >
+    </lab-select>
+  </div>
 </div>
 <div class="label">Modules</div>
 <div class="field">

@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { DisplayRate, ItemId } from '~/models';
+import { SelectType } from '~/components';
+import { DisplayRate, ItemId, RecipeId } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
@@ -9,8 +10,8 @@ enum OpenSelect {
   Belt,
   Assembler,
   Furnace,
-  Fuel,
   OilRecipe,
+  Fuel,
   ProdModule,
   SpeedModule,
   BeaconModule,
@@ -32,6 +33,8 @@ export class SettingsComponent {
   @Output() setBelt = new EventEmitter<ItemId>();
   @Output() setAssembler = new EventEmitter<ItemId>();
   @Output() setFurnace = new EventEmitter<ItemId>();
+  @Output() setOilRecipe = new EventEmitter<RecipeId>();
+  @Output() setFuel = new EventEmitter<ItemId>();
   @Output() setProdModule = new EventEmitter<ItemId>();
   @Output() setSpeedModule = new EventEmitter<ItemId>();
   @Output() setBeaconModule = new EventEmitter<ItemId>();
@@ -53,6 +56,18 @@ export class SettingsComponent {
     ItemId.SteelFurnace,
     ItemId.ElectricFurnace,
   ];
+  fuelOptions = [
+    ItemId.Wood,
+    ItemId.Coal,
+    ItemId.SolidFuel,
+    ItemId.RocketFuel,
+    ItemId.NuclearFuel,
+  ];
+  oilRecipeOptions = [
+    RecipeId.BasicOilProcessing,
+    RecipeId.AdvancedOilProcessing,
+    RecipeId.CoalLiquefaction,
+  ];
   prodModuleOptions = [
     ItemId.Module,
     ItemId.ProductivityModule,
@@ -69,6 +84,7 @@ export class SettingsComponent {
   displayRate = DisplayRate;
   select = OpenSelect;
   itemId = ItemId;
+  selectType = SelectType;
 
   constructor() {}
 
