@@ -1,7 +1,7 @@
 <lab-header (toggleSettings)="toggleSettings()"></lab-header>
-<div class="body">
+<lab-settings-container *ngIf="settingsOpen" (cancel)="toggleSettings()">
+</lab-settings-container>
+<main>
   <lab-products-container></lab-products-container>
   <lab-steps-container></lab-steps-container>
-  <lab-settings-container *ngIf="settingsOpen" (cancel)="toggleSettings()">
-  </lab-settings-container>
-</div>
+</main>

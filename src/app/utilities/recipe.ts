@@ -84,6 +84,7 @@ export class RecipeUtility {
   /** Determines tuple of speed and productivity factors on given recipe */
   static recipeFactors(
     factorySpeed: Fraction,
+    factoryProd: Fraction,
     modules: ItemId[],
     beaconModule: ItemId,
     beaconCount: number,
@@ -108,6 +109,7 @@ export class RecipeUtility {
     }
 
     speed = speed.mul(factorySpeed);
+    prod = prod.add(factoryProd);
 
     return { speed, prod };
   }

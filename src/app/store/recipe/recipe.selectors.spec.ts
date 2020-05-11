@@ -106,13 +106,14 @@ describe('Recipe Selectors', () => {
     );
 
     it('should handle null/empty values', () => {
-      const result = selectors.getRecipeFactors.projector({}, null, {});
+      const result = selectors.getRecipeFactors.projector({}, null, null, {});
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should return recipe speed/prod factors', () => {
       const result = selectors.getRecipeFactors.projector(
         recipeSettings,
+        0,
         ResearchSpeed.Speed0,
         mocks.Data
       );
