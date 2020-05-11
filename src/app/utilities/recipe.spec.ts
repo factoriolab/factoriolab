@@ -119,6 +119,7 @@ describe('RecipeUtility', () => {
     it('should return a tuple of speed and productivity factors for passed modules', () => {
       const result = RecipeUtility.recipeFactors(
         new Fraction(1),
+        new Fraction(0),
         [prodModule],
         speedModule,
         1,
@@ -133,6 +134,7 @@ describe('RecipeUtility', () => {
     it('should handle the empty module', () => {
       const result = RecipeUtility.recipeFactors(
         new Fraction(1),
+        new Fraction(0),
         [module],
         null,
         0,
@@ -146,6 +148,7 @@ describe('RecipeUtility', () => {
     it('should handle an invalid/unfound module', () => {
       const result = RecipeUtility.recipeFactors(
         new Fraction(1),
+        new Fraction(0),
         [module],
         null,
         0,
@@ -157,6 +160,7 @@ describe('RecipeUtility', () => {
     it('should handle an unfound beacon type', () => {
       const result = RecipeUtility.recipeFactors(
         new Fraction(1),
+        new Fraction(0),
         [],
         module,
         1,
@@ -168,6 +172,7 @@ describe('RecipeUtility', () => {
     it('should handle no modules or beacons', () => {
       const result = RecipeUtility.recipeFactors(
         new Fraction(1),
+        new Fraction(0),
         [],
         null,
         0,

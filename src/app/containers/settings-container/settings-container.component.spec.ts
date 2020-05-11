@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { StoreModule, Store } from '@ngrx/store';
 
 import { IconComponent } from '~/components';
-import { DisplayRate, ItemId, RecipeId } from '~/models';
+import { DisplayRate, ItemId, RecipeId, ResearchSpeed } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as Settings from '~/store/settings';
 import { TestUtility } from '~/utilities/test';
@@ -132,6 +132,15 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
+  it('should set the flow rate', () => {
+    spyOn(store, 'dispatch');
+    const value = 1000;
+    component.child.setFlowRate.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetFlowRateAction(value)
+    );
+  });
+
   it('should set the default prod module', () => {
     spyOn(store, 'dispatch');
     const value = ItemId.ProductivityModule;
@@ -165,6 +174,24 @@ describe('SettingsContainerComponent', () => {
     component.child.setBeaconCount.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetBeaconCountAction(value)
+    );
+  });
+
+  it('should set the mining productivity bonus', () => {
+    spyOn(store, 'dispatch');
+    const value = 10;
+    component.child.setMiningBonus.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetMiningBonusAction(value)
+    );
+  });
+
+  it('should set the research speed bonus', () => {
+    spyOn(store, 'dispatch');
+    const value = ResearchSpeed.Speed3;
+    component.child.setResearchSpeed.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetResearchSpeedAction(value)
     );
   });
 });
