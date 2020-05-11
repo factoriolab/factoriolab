@@ -1,29 +1,23 @@
 :host {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template:
+    'header header'
+    [settings-start] ' main           main ' 1fr [settings-end]
+    / [settings-start] minmax(300px, 1fr) [settings-end] 3fr;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
 }
 
-.body {
-  display: grid;
-  grid-template:
-    [settings-start] ' products           products '
-    ' steps              steps ' 1fr [settings-end]
-    / [settings-start] minmax(300px, 1fr) [settings-end] 3fr;
-  overflow: auto;
-  flex-grow: 1;
-}
-
-lab-products-container {
-  grid-area: products;
-}
-
-lab-steps-container {
-  grid-area: steps;
+lab-header {
+  grid-area: header;
 }
 
 lab-settings-container {
   grid-area: settings;
+}
+
+main {
+  grid-area: main;
+  overflow: auto;
 }

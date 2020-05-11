@@ -10,7 +10,7 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { DisplayRate, ItemId, RecipeId } from '~/models';
+import { DisplayRate, ItemId, RecipeId, ResearchSpeed } from '~/models';
 import { State } from '~/store';
 import * as Dataset from '~/store/dataset';
 import * as Settings from '~/store/settings';
@@ -83,6 +83,10 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetFuelAction(value));
   }
 
+  setFlowRate(value: number) {
+    this.store.dispatch(new Settings.SetFlowRateAction(value));
+  }
+
   setProdModule(value: ItemId) {
     this.store.dispatch(new Settings.SetProdModuleAction(value));
   }
@@ -97,5 +101,13 @@ export class SettingsContainerComponent implements OnInit {
 
   setBeaconCount(value: number) {
     this.store.dispatch(new Settings.SetBeaconCountAction(value));
+  }
+
+  setMiningBonus(value: number) {
+    this.store.dispatch(new Settings.SetMiningBonusAction(value));
+  }
+
+  setResearchSpeed(value: ResearchSpeed) {
+    this.store.dispatch(new Settings.SetResearchSpeedAction(value));
   }
 }

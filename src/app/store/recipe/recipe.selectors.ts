@@ -82,9 +82,10 @@ export const getRecipeSettings = createSelector(
 
 export const getRecipeFactors = createSelector(
   getRecipeSettings,
+  Settings.getMiningBonus,
   Settings.getResearchFactor,
   getDataset,
-  (recipeSettings, researchFactor, data) => {
+  (recipeSettings, miningBonus, researchFactor, data) => {
     const values: Entities<Factors> = {};
     for (const recipeId of Object.keys(recipeSettings)) {
       const settings = recipeSettings[recipeId];
@@ -96,6 +97,9 @@ export const getRecipeFactors = createSelector(
       }
       values[recipeId] = RecipeUtility.recipeFactors(
         factorySpeed,
+        settings.factory === ItemId.ElectricMiningDrill
+          ? new Fraction(miningBonus).div(100)
+          : new Fraction(0),
         settings.modules,
         settings.beaconModule,
         settings.beaconCount,

@@ -223,6 +223,21 @@
     </lab-select>
   </div>
 </div>
+<div class="field">
+  <lab-icon [iconId]="itemId.Pipe"></lab-icon>
+  <input
+    type="number"
+    placeholder="Max Flow Rate"
+    min="0"
+    step="1"
+    [value]="settings.flowRate"
+    (change)="emitNumber(setFlowRate, $event)"
+  />
+  <div>#/sec</div>
+  <a href="https://wiki.factorio.com/Fluid_system#Pipelines" target="_blank"
+    >(Wiki)</a
+  >
+</div>
 <div class="label">Modules</div>
 <div class="field">
   <div class="relative">
@@ -275,7 +290,6 @@
     </lab-select>
   </div>
   <input
-    id="settings-beacon-count"
     type="number"
     placeholder="Beacons"
     min="0"
@@ -283,4 +297,35 @@
     [value]="settings.beaconCount"
     (change)="emitNumber(setBeaconCount, $event)"
   />
+</div>
+<div class="label">Bonuses</div>
+<div class="field">
+  <lab-icon [iconId]="itemId.MiningProductivity" [scale]="true"></lab-icon>
+  <div class="field">
+    +
+    <input
+      type="number"
+      placeholder="Mining Productivity Bonus"
+      min="0"
+      step="10"
+      [value]="settings.miningBonus"
+      (change)="emitNumber(setMiningBonus, $event)"
+    />
+    %
+  </div>
+</div>
+<div class="field">
+  <lab-icon [iconId]="itemId.Lab" [scale]="true"></lab-icon>
+  <select
+    [ngModel]="settings.researchSpeed"
+    (change)="emitNumber(setResearchSpeed, $event)"
+  >
+    <option [value]="researchSpeed.Speed0">No Research Bonus</option>
+    <option [value]="researchSpeed.Speed1">Research Speed 1</option>
+    <option [value]="researchSpeed.Speed2">Research Speed 2</option>
+    <option [value]="researchSpeed.Speed3">Research Speed 3</option>
+    <option [value]="researchSpeed.Speed4">Research Speed 4</option>
+    <option [value]="researchSpeed.Speed5">Research Speed 5</option>
+    <option [value]="researchSpeed.Speed6">Research Speed 6</option>
+  </select>
 </div>

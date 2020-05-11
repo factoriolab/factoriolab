@@ -13,6 +13,7 @@ const sFactoryPrecision = (state: SettingsState) => state.factoryPrecision;
 const sBelt = (state: SettingsState) => state.belt;
 const sOilRecipe = (state: SettingsState) => state.oilRecipe;
 const sFuel = (state: SettingsState) => state.fuel;
+const sMiningBonus = (state: SettingsState) => state.miningBonus;
 const sResearchSpeed = (state: SettingsState) => state.researchSpeed;
 const sFlowRate = (state: SettingsState) => state.flowRate;
 
@@ -24,6 +25,7 @@ export const getFactoryPrecision = compose(sFactoryPrecision, settingsState);
 export const getBelt = compose(sBelt, settingsState);
 export const getOilRecipe = compose(sOilRecipe, settingsState);
 export const getFuel = compose(sFuel, settingsState);
+export const getMiningBonus = compose(sMiningBonus, settingsState);
 export const getResearchSpeed = compose(sResearchSpeed, settingsState);
 export const getFlowRate = compose(sFlowRate, settingsState);
 
