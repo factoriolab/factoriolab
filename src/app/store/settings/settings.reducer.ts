@@ -9,12 +9,12 @@ export interface SettingsState {
   belt: ItemId;
   assembler: ItemId;
   furnace: ItemId;
+  oilRecipe: RecipeId;
+  fuel: ItemId;
   prodModule: ItemId;
   speedModule: ItemId;
   beaconModule: ItemId;
   beaconCount: number;
-  oilRecipe: RecipeId;
-  fuel: ItemId;
   miningBonus: number;
   researchSpeed: ResearchSpeed;
   flowRate: number;
@@ -28,15 +28,15 @@ export const initialSettingsState: SettingsState = {
   belt: ItemId.ExpressTransportBelt,
   assembler: ItemId.AssemblingMachine3,
   furnace: ItemId.ElectricFurnace,
+  oilRecipe: RecipeId.AdvancedOilProcessing,
+  fuel: ItemId.Coal,
   prodModule: ItemId.ProductivityModule3,
   speedModule: ItemId.SpeedModule3,
   beaconModule: ItemId.SpeedModule3,
   beaconCount: 16,
-  oilRecipe: RecipeId.AdvancedOilProcessing,
-  fuel: ItemId.Coal,
   miningBonus: 0,
   researchSpeed: ResearchSpeed.Speed6,
-  flowRate: 12000,
+  flowRate: 1500,
 };
 
 export function settingsReducer(
@@ -68,6 +68,12 @@ export function settingsReducer(
     case SettingsActionType.SET_FURNACE: {
       return { ...state, ...{ furnace: action.payload } };
     }
+    case SettingsActionType.SET_OIL_RECIPE: {
+      return { ...state, ...{ oilRecipe: action.payload } };
+    }
+    case SettingsActionType.SET_FUEL: {
+      return { ...state, ...{ fuel: action.payload } };
+    }
     case SettingsActionType.SET_PROD_MODULE: {
       return { ...state, ...{ prodModule: action.payload } };
     }
@@ -79,12 +85,6 @@ export function settingsReducer(
     }
     case SettingsActionType.SET_BEACON_COUNT: {
       return { ...state, ...{ beaconCount: action.payload } };
-    }
-    case SettingsActionType.SET_OIL_RECIPE: {
-      return { ...state, ...{ oilRecipe: action.payload } };
-    }
-    case SettingsActionType.SET_FUEL: {
-      return { ...state, ...{ fuel: action.payload } };
     }
     case SettingsActionType.SET_MINING_BONUS: {
       return { ...state, ...{ miningBonus: action.payload } };

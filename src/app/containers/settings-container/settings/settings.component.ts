@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { SelectType } from '~/components';
-import { DisplayRate, ItemId, RecipeId } from '~/models';
+import { DisplayRate, ItemId, RecipeId, ResearchSpeed } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
@@ -35,10 +35,13 @@ export class SettingsComponent {
   @Output() setFurnace = new EventEmitter<ItemId>();
   @Output() setOilRecipe = new EventEmitter<RecipeId>();
   @Output() setFuel = new EventEmitter<ItemId>();
+  @Output() setFlowRate = new EventEmitter<number>();
   @Output() setProdModule = new EventEmitter<ItemId>();
   @Output() setSpeedModule = new EventEmitter<ItemId>();
   @Output() setBeaconModule = new EventEmitter<ItemId>();
   @Output() setBeaconCount = new EventEmitter<number>();
+  @Output() setMiningBonus = new EventEmitter<number>();
+  @Output() setResearchSpeed = new EventEmitter<ResearchSpeed>();
 
   openSelect = OpenSelect.None;
   beltOptions = [
@@ -82,6 +85,7 @@ export class SettingsComponent {
   ];
 
   displayRate = DisplayRate;
+  researchSpeed = ResearchSpeed;
   select = OpenSelect;
   itemId = ItemId;
   selectType = SelectType;
