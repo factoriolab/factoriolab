@@ -21,7 +21,7 @@ export enum SelectType {
 })
 export class SelectComponent {
   @Input() data: DatasetState;
-  @Input() options: string[];
+  @Input() options: string[][];
   @Input() selectedId: string;
   @Input() selectType = SelectType.Item;
 

@@ -8,5 +8,4 @@ export interface RecipeSettings {
   modules?: ItemId[];
   beaconModule?: ItemId;
   beaconCount?: number;
-  recipeId?: RecipeId;
 }

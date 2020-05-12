@@ -35,17 +35,7 @@
 .row {
   display: flex;
 
-  lab-icon {
-    padding: 0.125rem;
-    cursor: pointer;
-    border-radius: 0.25rem;
-
-    &.selected {
-      background-color: $color-gray-0;
-    }
-
-    &:hover {
-      background-color: $color-brand;
-    }
+  lab-icon.selected {
+    background-color: $color-gray-0;
   }
 }

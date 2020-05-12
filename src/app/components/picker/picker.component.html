@@ -11,6 +11,7 @@
   <div class="row" *ngFor="let row of data.categoryItemRows[categoryId]">
     <div class="item" *ngFor="let id of row">
       <lab-icon
+        class="clickable"
         [iconId]="id"
         [title]="data.itemEntities[id].name"
         [class.selected]="id === itemId"

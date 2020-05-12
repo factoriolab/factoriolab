@@ -96,6 +96,7 @@ export class UraniumUtility {
     if (!step) {
       step = {
         itemId,
+        recipeId,
         items: new Fraction(0),
         factories: new Fraction(0),
         settings: settings[recipeId],
@@ -104,9 +105,9 @@ export class UraniumUtility {
       steps.push(step);
     } else {
       step.settings = settings[recipeId];
+      step.recipeId = recipeId;
     }
     step.surplus = new Fraction(0);
-    step.settings.recipeId = recipeId;
 
     return step;
   }

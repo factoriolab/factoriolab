@@ -98,6 +98,7 @@ describe('OilUtility', () => {
       const steps: Step[] = [
         {
           itemId: ItemId.HeavyOil,
+          recipeId: null,
           items: new Fraction(1),
           settings: {},
         },
@@ -109,7 +110,7 @@ describe('OilUtility', () => {
         mocks.RecipeSettingsEntities
       );
       expect(result.surplus).toEqual(new Fraction(0));
-      expect(result.settings.recipeId).toEqual(RecipeId.AdvancedOilProcessing);
+      expect(result.recipeId).toEqual(RecipeId.AdvancedOilProcessing);
     });
 
     it('should create a step', () => {
@@ -122,7 +123,7 @@ describe('OilUtility', () => {
       );
       expect(steps.length).toEqual(1);
       expect(result.surplus).toEqual(new Fraction(0));
-      expect(result.settings.recipeId).toEqual(RecipeId.AdvancedOilProcessing);
+      expect(result.recipeId).toEqual(RecipeId.AdvancedOilProcessing);
     });
   });
 
@@ -528,6 +529,7 @@ describe('OilUtility', () => {
       const steps: Step[] = [
         {
           itemId: ItemId.PetroleumGas,
+          recipeId: null,
           items: new Fraction(1),
           settings: {},
         },
@@ -562,6 +564,7 @@ describe('OilUtility', () => {
       const steps: Step[] = [
         {
           itemId: ItemId.PetroleumGas,
+          recipeId: null,
           items: new Fraction(1),
           factories: new Fraction(0),
           settings: {},
@@ -583,6 +586,7 @@ describe('OilUtility', () => {
       const steps: Step[] = [
         {
           itemId: ItemId.SolidFuel,
+          recipeId: null,
           items: new Fraction(1),
           factories: new Fraction(0),
           settings: {},
@@ -604,12 +608,14 @@ describe('OilUtility', () => {
       const steps: Step[] = [
         {
           itemId: ItemId.SolidFuel,
+          recipeId: null,
           items: new Fraction(20),
           factories: new Fraction(0),
           settings: {},
         },
         {
           itemId: ItemId.HeavyOil,
+          recipeId: null,
           items: new Fraction(100),
           factories: new Fraction(0),
           settings: {},
