@@ -64,49 +64,28 @@ describe('ProductsComponent', () => {
   });
 
   it('should open edit on a product', () => {
-    TestUtility.clickSelector(fixture, '.dropdown-container lab-icon', 0);
+    TestUtility.clickSelector(fixture, '.relative lab-icon', 0);
     fixture.detectChanges();
     expect(component.child.editProductId).toEqual(0);
     expect(component.child.categoryId).toEqual(CategoryId.Logistics);
   });
 
-  it('should select an item', () => {
-    spyOn(component, 'editProduct');
-    component.child.selectItem(mocks.Product1.id, mocks.Item2.id);
-    expect(component.editProduct).toHaveBeenCalledWith([
-      mocks.Product1.id,
-      mocks.Item2.id,
-    ]);
-  });
-
-  it('should edit rate of a product', () => {
+  it('should emit numeric values', () => {
     spyOn(component, 'editRate');
     TestUtility.selectSelector(fixture, 'input', '3');
     fixture.detectChanges();
     expect(component.editRate).toHaveBeenCalledWith([mocks.Product1.id, 3]);
   });
 
-  it('should not edit rate of a product on invalid event', () => {
+  it('should ignore invalid numeric values', () => {
     spyOn(component, 'editRate');
     const event = { target: {} };
-    component.child.rateChange(mocks.Product1.id, event);
-    expect(component.editRate).not.toHaveBeenCalled();
-  });
-
-  it('should not edit rate of a product if unchanged', () => {
-    spyOn(component, 'editRate');
-    TestUtility.selectSelector(fixture, 'input', '1');
-    fixture.detectChanges();
-    expect(component.editRate).not.toHaveBeenCalled();
-  });
-
-  it('should edit rate type of a product', () => {
-    spyOn(component, 'editRateType');
-    TestUtility.selectSelector(fixture, 'select', '3');
-    fixture.detectChanges();
-    expect(component.editRateType).toHaveBeenCalledWith([
+    component.child.emitNumber(
+      component.child.editRate,
       mocks.Product1.id,
-      RateType.Factories,
-    ]);
+      event as any
+    );
+    fixture.detectChanges();
+    expect(component.editRate).not.toHaveBeenCalled();
   });
 });

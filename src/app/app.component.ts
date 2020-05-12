@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import * as data from 'src/assets/0-18.json';
+import { ItemId } from './models';
 import { RouterService } from './services/router.service';
 import { State } from './store';
 import { LoadDatasetAction } from './store/dataset';
@@ -18,7 +19,7 @@ export class AppComponent implements OnInit {
   constructor(private router: RouterService, private store: Store<State>) {
     this.store.dispatch(new LoadDatasetAction((data as any).default));
     if (!location.hash) {
-      this.store.dispatch(new AddAction());
+      this.store.dispatch(new AddAction(ItemId.WoodenChest));
     }
   }
 

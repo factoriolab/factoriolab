@@ -1,6 +1,17 @@
-<button type="button" (click)="add.emit()">
-  <i class="material-icons">add</i>
-</button>
+<div class="add-button relative">
+  <button type="button" (click)="adding = true">
+    <i class="material-icons">add</i>
+  </button>
+  <lab-picker
+    *ngIf="adding"
+    [data]="data"
+    [categoryId]="categoryId"
+    [itemId]="itemId.WoodenChest"
+    (cancel)="adding = false"
+    (selectTab)="categoryId = $event"
+    (selectItem)="add.emit($event)"
+  ></lab-picker>
+</div>
 <div *ngIf="products && products.length">
   <div class="product-row" *ngFor="let product of products">
     <ng-container *ngIf="product && data.itemEntities[product.itemId]">
@@ -8,7 +19,7 @@
         <i class="material-icons">remove</i>
       </button>
       <div class="icon-container">
-        <div class="dropdown-container">
+        <div class="relative">
           <lab-icon
             class="clickable"
             [iconId]="product.itemId"
@@ -23,7 +34,7 @@
             [itemId]="product.itemId"
             (cancel)="editProductId = null"
             (selectTab)="categoryId = $event"
-            (selectItem)="selectItem(product.id, $event)"
+            (selectItem)="editProduct.emit([product.id, $event])"
           ></lab-picker>
         </div>
       </div>
@@ -31,11 +42,11 @@
         type="number"
         min="0"
         [value]="product.rate"
-        (change)="rateChange(product.id, $event)"
+        (change)="emitNumber(editRate, product.id, $event)"
       />
       <select
         [ngModel]="product.rateType"
-        (change)="rateTypeChange(product.id, $event)"
+        (change)="emitNumber(editRateType, product.id, $event)"
       >
         <option [value]="rateType.Items">Items</option>
         <option [value]="rateType.Belts">Belts</option>

@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
-import { Id } from './models';
+import { Id, ItemId } from './models';
 import { RouterService } from './services/router.service';
 import { State, reducers, metaReducers } from './store';
 import { datasetState, DatasetState } from './store/dataset';
@@ -89,7 +89,9 @@ describe('AppComponent', () => {
     location.hash = 'test';
     spyOn(store, 'dispatch');
     TestBed.createComponent(AppComponent);
-    expect(store.dispatch).not.toHaveBeenCalledWith(new Products.AddAction());
+    expect(store.dispatch).not.toHaveBeenCalledWith(
+      new Products.AddAction(ItemId.WoodenChest)
+    );
     location.hash = '';
   });
 

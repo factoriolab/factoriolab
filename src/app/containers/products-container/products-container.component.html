@@ -1,7 +1,7 @@
 <lab-products
   [data]="data$ | async"
   [products]="products$ | async"
-  (add)="add()"
+  (add)="add($event)"
   (remove)="remove($event)"
   (editProduct)="editProduct($event)"
   (editRate)="editRate($event)"

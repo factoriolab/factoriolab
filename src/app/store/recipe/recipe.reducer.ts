@@ -14,12 +14,29 @@ export function recipeReducer(
       return action.payload;
     }
     case RecipeActionType.IGNORE: {
-      return {
+      let newState = {
         ...state,
         ...{
-          [action.payload]: { ...state[action.payload], ...{ ignore: true } },
+          [action.payload]: {
+            ...state[action.payload],
+            ...{
+              ignore: state[action.payload]
+                ? !state[action.payload].ignore
+                : true,
+            },
+          },
         },
       };
+      if (
+        newState[action.payload].ignore === false &&
+        Object.keys(newState[action.payload]).length === 1
+      ) {
+        // Delete key if ignore = false is only setting
+        newState = { ...state };
+        delete newState[action.payload];
+        return newState;
+      }
+      return newState;
     }
     case RecipeActionType.EDIT_FACTORY_MODULE: {
       const id = action.payload[0];

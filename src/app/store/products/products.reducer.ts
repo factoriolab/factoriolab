@@ -34,7 +34,10 @@ export function productsReducer(
       return { ...state, ...{ ids, entities, index } };
     }
     case ProductsActionType.ADD: {
-      const newOutput = { ...defaultProduct, ...{ id: state.index } };
+      const newOutput = {
+        ...defaultProduct,
+        ...{ id: state.index, itemId: action.payload },
+      };
       return {
         ...state,
         ...{
