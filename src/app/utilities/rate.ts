@@ -42,6 +42,7 @@ export class RateUtility {
       const item = data.itemEntities[id];
       step = {
         itemId: id,
+        recipeId: id as any,
         items: new Fraction(0),
         factories: new Fraction(0),
         settings: recipe
@@ -62,7 +63,7 @@ export class RateUtility {
     if (recipe) {
       // Mark complex recipes
       if ((recipe.id as string) !== id) {
-        step.settings.recipeId = recipe.id;
+        step.recipeId = recipe.id;
       }
 
       const f = factors[recipe.id];

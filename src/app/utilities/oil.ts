@@ -160,6 +160,7 @@ export class OilUtility {
     if (!step) {
       step = {
         itemId,
+        recipeId,
         items: new Fraction(0),
         factories: new Fraction(0),
         settings: settings[recipeId],
@@ -168,9 +169,9 @@ export class OilUtility {
       steps.push(step);
     } else {
       step.settings = settings[recipeId];
+      step.recipeId = recipeId;
     }
     step.surplus = new Fraction(0);
-    step.settings.recipeId = recipeId;
 
     return step;
   }
@@ -555,11 +556,11 @@ export class OilUtility {
       // Fuel was not satisfied above, need to convert petrol to fuel
       step.fuelPetrol = {
         itemId: null,
+        recipeId: matrix.ptf.recipe.id,
         items: null,
         factories: new Fraction(0),
         settings: settings[matrix.ptf.recipe.id],
       };
-      step.fuelPetrol.settings.recipeId = matrix.ptf.recipe.id;
       steps.push(step.fuelPetrol);
 
       step = this.calculateLightAndPetrol(step, matrix);

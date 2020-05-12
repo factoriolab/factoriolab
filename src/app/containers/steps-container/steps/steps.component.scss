@@ -1,3 +1,5 @@
+@import 'values';
+
 :host {
   padding: 0 1rem;
   display: block;
@@ -9,6 +11,21 @@ tr > * + * {
 
 td > div {
   justify-content: flex-end;
+
+  &.mod {
+    justify-content: flex-start;
+
+    &.prod {
+      > :first-child {
+        border: 1px solid $color-font;
+        border-radius: 0.25rem;
+      }
+
+      > * + * {
+        margin-left: 0;
+      }
+    }
+  }
 
   > * + * {
     margin-left: 0.5rem;

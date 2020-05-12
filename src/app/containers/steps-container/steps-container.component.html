@@ -1,8 +1,14 @@
 <lab-steps
+  [data]="data$ | async"
+  [recipe]="recipe$ | async"
   [steps]="steps$ | async"
   [itemPrecision]="itemPrecision$ | async"
   [beltPrecision]="beltPrecision$ | async"
   [factoryPrecision]="factoryPrecision$ | async"
+  (ignoreStep)="ignoreStep($event)"
+  (editFactoryModule)="editFactoryModule($event)"
+  (editBeaconModule)="editBeaconModule($event)"
   (editBeaconCount)="editBeaconCount($event)"
+  (resetStep)="resetStep($event)"
 >
 </lab-steps>
