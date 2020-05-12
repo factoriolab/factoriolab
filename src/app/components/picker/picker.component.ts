@@ -7,6 +7,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 
+import { CategoryId, ItemId } from '~/models';
 import { DatasetState } from '~/store/dataset';
 
 @Component({
@@ -16,12 +17,12 @@ import { DatasetState } from '~/store/dataset';
 })
 export class PickerComponent {
   @Input() data: DatasetState;
-  @Input() categoryId: string;
-  @Input() itemId: string;
+  @Input() categoryId: CategoryId;
+  @Input() itemId: ItemId;
 
   @Output() cancel = new EventEmitter();
-  @Output() selectTab = new EventEmitter<string>();
-  @Output() selectItem = new EventEmitter<string>();
+  @Output() selectTab = new EventEmitter<CategoryId>();
+  @Output() selectItem = new EventEmitter<ItemId>();
 
   opening = true;
 
@@ -36,11 +37,8 @@ export class PickerComponent {
     }
   }
 
-  clickItem(id: string) {
-    if (id !== this.itemId) {
-      this.selectItem.emit(id);
-    } else {
-      this.cancel.emit();
-    }
+  clickItem(id: ItemId) {
+    this.selectItem.emit(id);
+    this.cancel.emit();
   }
 }

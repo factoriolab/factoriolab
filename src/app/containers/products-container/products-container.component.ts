@@ -26,8 +26,8 @@ export class ProductsContainerComponent implements OnInit {
     this.products$ = this.store.select(Products.getProducts);
   }
 
-  add() {
-    this.store.dispatch(new Products.AddAction());
+  add(value: ItemId) {
+    this.store.dispatch(new Products.AddAction(value));
   }
 
   remove(id: number) {

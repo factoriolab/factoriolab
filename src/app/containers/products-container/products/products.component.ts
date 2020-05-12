@@ -12,14 +12,16 @@ export class ProductsComponent {
   @Input() data: DatasetState;
   @Input() products: Product[];
 
-  @Output() add = new EventEmitter();
+  @Output() add = new EventEmitter<ItemId>();
   @Output() remove = new EventEmitter<number>();
   @Output() editProduct = new EventEmitter<[number, ItemId]>();
   @Output() editRate = new EventEmitter<[number, number]>();
   @Output() editRateType = new EventEmitter<[number, RateType]>();
 
+  adding: boolean;
   editProductId: number;
-  categoryId: CategoryId;
+  categoryId = CategoryId.Logistics;
+  itemId = ItemId;
   rateType = RateType;
 
   constructor() {}
@@ -29,9 +31,11 @@ export class ProductsComponent {
     this.categoryId = this.data.itemEntities[product.itemId].category;
   }
 
-  selectItem(id: number, itemId: ItemId) {
-    this.editProduct.emit([id, itemId]);
-    this.editProductId = null;
+  emitNumber(emitter: EventEmitter<[number, number]>, id: number, event: any) {
+    if (event.target.value) {
+      const value = Math.round(Number(event.target.value));
+      emitter.emit([id, value]);
+    }
   }
 
   rateChange(id: number, event: any) {
