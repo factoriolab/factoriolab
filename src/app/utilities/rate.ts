@@ -91,7 +91,11 @@ export class RateUtility {
           );
         }
         // Add fuel required for factory
-        if (step.settings.factory && step.items.n > 0) {
+        if (
+          step.settings.factory &&
+          step.items.n > 0 &&
+          !step.settings.ignore
+        ) {
           const factory = data.itemEntities[step.settings.factory].factory;
           if (factory.burner) {
             RateUtility.addStepsFor(
@@ -113,7 +117,7 @@ export class RateUtility {
       }
 
       // Recurse adding steps for ingredients
-      if (recipe.in && step.items.n > 0) {
+      if (recipe.in && step.items.n > 0 && !step.settings.ignore) {
         for (const ingredient of Object.keys(recipe.in)) {
           RateUtility.addStepsFor(
             ingredient as ItemId,

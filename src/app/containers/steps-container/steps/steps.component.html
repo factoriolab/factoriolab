@@ -28,96 +28,109 @@
           <div *ngIf="step.surplus && step.surplus.n > 0" class="monospace">
             (+{{ rate(step.surplus, itemPrecision) }})
           </div>
-          <lab-icon [iconId]="step.itemId" scale="true"></lab-icon>
+          <lab-icon
+            *ngIf="data.recipeEntities[step.recipeId]?.in"
+            class="clickable"
+            [iconId]="step.itemId"
+            [class.ignored]="
+              step.settings.ignore || recipe[step.itemId]?.ignore
+            "
+            scale="true"
+            (click)="ignoreStep.emit(step.recipeId)"
+          ></lab-icon>
+          <lab-icon
+            *ngIf="!data.recipeEntities[step.recipeId]?.in"
+            class="not-clickable"
+            [iconId]="step.itemId"
+            scale="true"
+          ></lab-icon>
         </div>
       </td>
-      <ng-container *ngIf="step.settings">
-        <td>
+      <td>
+        <ng-container *ngIf="step.settings">
           <div *ngIf="step.settings.belt && step.belts" class="flex">
             <div class="monospace">{{ rate(step.belts, beltPrecision) }}</div>
             <lab-icon [iconId]="step.settings.belt"></lab-icon>
           </div>
-        </td>
-        <ng-container *ngIf="step.settings.factory">
-          <td>
-            <div class="flex" *ngIf="!step.factories || step.factories.n > 0">
-              <div *ngIf="step.factories" class="monospace">
-                {{ rate(step.factories, factoryPrecision) }}
-              </div>
-              <ng-container *ngIf="step.recipeId !== step.itemId">
-                <lab-icon [iconId]="step.recipeId"></lab-icon>
-                :
-              </ng-container>
-              <lab-icon [iconId]="step.settings.factory"></lab-icon>
-            </div>
-          </td>
-          <ng-container *ngIf="step.settings.modules">
-            <td>
-              <div class="flex mod factory">
-                <div
-                  class="relative"
-                  *ngFor="let mod of step.settings.modules; index as i"
-                >
-                  <lab-icon
-                    class="steps-edit-factory-module clickable"
-                    [iconId]="mod"
-                    (click)="
-                      edit = { step: step, type: editType.Module, index: i }
-                    "
-                  ></lab-icon>
-                  <lab-select
-                    *ngIf="
-                      edit &&
-                      edit.step === step &&
-                      edit.type === editType.Module &&
-                      edit.index === i
-                    "
-                    [data]="data"
-                    [options]="
-                      prodAllowed(step) ? allModuleOptions : speedModuleOptions
-                    "
-                    [selectedId]="mod"
-                    (cancel)="edit = null"
-                    (selectId)="factoryModuleChange(step, $event, i)"
-                  >
-                  </lab-select>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div class="flex mod">
-                <div class="relative">
-                  <lab-icon
-                    class="clickable"
-                    [iconId]="step.settings.beaconModule"
-                    (click)="edit = { step: step, type: editType.Beacon }"
-                  ></lab-icon>
-                  <lab-select
-                    *ngIf="
-                      edit &&
-                      edit.step === step &&
-                      edit.type === editType.Beacon
-                    "
-                    [data]="data"
-                    [options]="speedModuleOptions"
-                    [selectedId]="step.settings.beaconModule"
-                    (cancel)="edit = null"
-                    (selectId)="editBeaconModule.emit([step.recipeId, $event])"
-                  >
-                  </lab-select>
-                </div>
-                <input
-                  *ngIf="step.settings.beaconModule !== itemId.Module"
-                  type="number"
-                  min="0"
-                  [value]="step.settings.beaconCount"
-                  (change)="beaconCountChange(step, $event)"
-                />
-              </div>
-            </td>
-          </ng-container>
         </ng-container>
-      </ng-container>
+      </td>
+      <td>
+        <ng-container *ngIf="step.settings?.factory">
+          <div class="flex" *ngIf="!step.factories || step.factories.n > 0">
+            <div *ngIf="step.factories" class="monospace">
+              {{ rate(step.factories, factoryPrecision) }}
+            </div>
+            <ng-container *ngIf="step.recipeId !== step.itemId">
+              <lab-icon [iconId]="step.recipeId"></lab-icon>
+              :
+            </ng-container>
+            <lab-icon [iconId]="step.settings.factory"></lab-icon>
+          </div>
+        </ng-container>
+      </td>
+      <td>
+        <ng-container *ngIf="step.settings?.modules">
+          <div class="flex mod factory">
+            <div
+              class="relative"
+              *ngFor="let mod of step.settings.modules; index as i"
+            >
+              <lab-icon
+                class="steps-edit-factory-module clickable"
+                [iconId]="mod"
+                (click)="edit = { step: step, type: editType.Module, index: i }"
+              ></lab-icon>
+              <lab-select
+                *ngIf="
+                  edit &&
+                  edit.step === step &&
+                  edit.type === editType.Module &&
+                  edit.index === i
+                "
+                [data]="data"
+                [options]="
+                  prodAllowed(step) ? allModuleOptions : speedModuleOptions
+                "
+                [selectedId]="mod"
+                (cancel)="edit = null"
+                (selectId)="factoryModuleChange(step, $event, i)"
+              >
+              </lab-select>
+            </div>
+          </div>
+        </ng-container>
+      </td>
+      <td>
+        <ng-container *ngIf="step.settings?.modules">
+          <div class="flex mod">
+            <div class="relative">
+              <lab-icon
+                class="clickable"
+                [iconId]="step.settings.beaconModule"
+                (click)="edit = { step: step, type: editType.Beacon }"
+              ></lab-icon>
+              <lab-select
+                *ngIf="
+                  edit && edit.step === step && edit.type === editType.Beacon
+                "
+                [data]="data"
+                [options]="speedModuleOptions"
+                [selectedId]="step.settings.beaconModule"
+                (cancel)="edit = null"
+                (selectId)="editBeaconModule.emit([step.recipeId, $event])"
+              >
+              </lab-select>
+            </div>
+            <input
+              *ngIf="step.settings.beaconModule !== itemId.Module"
+              type="number"
+              min="0"
+              [value]="step.settings.beaconCount"
+              (change)="beaconCountChange(step, $event)"
+            />
+          </div>
+        </ng-container>
+      </td>
       <td>
         <i
           *ngIf="recipe[step.recipeId]"

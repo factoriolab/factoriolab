@@ -139,7 +139,7 @@ export class UraniumUtility {
     step: UraniumSteps,
     matrix: UraniumMatrix
   ): UraniumSteps {
-    if (step.u238.items.n > 0) {
+    if (step.u238.items.n > 0 && !step.u238.settings.ignore) {
       // Centrifuges required for u238
       const centrifuges = step.u238.items.div(matrix.prod.u238);
 
@@ -157,7 +157,7 @@ export class UraniumUtility {
     step: UraniumSteps,
     matrix: UraniumMatrix
   ): UraniumSteps {
-    if (step.u235.items.n > 0) {
+    if (step.u235.items.n > 0 && !step.u235.settings.ignore) {
       if (step.u235.surplus >= step.u235.items) {
         // Already producing enough u235, subtract from surplus
         step.u235.surplus = step.u235.surplus.sub(step.u235.items);
@@ -265,7 +265,18 @@ export class UraniumUtility {
     }
 
     const matrix = this.getMatrix(factors, data);
+
+    const oldSteps = [...steps];
     let step = this.getSteps(steps, matrix, settings);
+    if (
+      oldSteps.every(
+        (s) => this.URANIUM_ITEM.indexOf(s.itemId) === -1 || s.settings.ignore
+      )
+    ) {
+      // Uranium products are currently ignored
+      return oldSteps;
+    }
+
     step = this.calculateUranium238(step, matrix);
     step = this.calculateUranium235(step, matrix);
     step = this.calculateItems(step, matrix);
