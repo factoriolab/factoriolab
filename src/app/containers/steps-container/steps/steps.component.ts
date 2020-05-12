@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import Fraction from 'fraction.js';
 
-import { Step, RecipeId, ItemId } from '~/models';
+import { Step, RecipeId, ItemId, CategoryId } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { RecipeState } from '~/store/recipe';
 import { RecipeUtility } from '~/utilities';
@@ -59,6 +59,7 @@ export class StepsComponent {
 
   editType = StepEditType;
   itemId = ItemId;
+  categoryId = CategoryId;
 
   constructor() {}
 
