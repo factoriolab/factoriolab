@@ -32,6 +32,7 @@ export class StepsComponent {
   @Input() beltPrecision: number;
   @Input() factoryPrecision: number;
 
+  @Output() ignoreStep = new EventEmitter<RecipeId>();
   @Output() editFactoryModule = new EventEmitter<[RecipeId, ItemId[]]>();
   @Output() editBeaconModule = new EventEmitter<[RecipeId, ItemId]>();
   @Output() editBeaconCount = new EventEmitter<[RecipeId, number]>();
@@ -71,10 +72,6 @@ export class StepsComponent {
     }
   }
 
-  setEdit(step: Step, type: StepEditType, index: number = null) {
-    this.edit = { step, type, index };
-  }
-
   prodAllowed(step: Step) {
     return RecipeUtility.prodModuleAllowed(
       this.data.recipeEntities[step.recipeId],
@@ -99,10 +96,6 @@ export class StepsComponent {
       ];
       this.editFactoryModule.emit([step.recipeId, modules]);
     }
-  }
-
-  beaconModuleChange(step: Step, value: ItemId) {
-    this.editBeaconModule.emit([step.recipeId, value]);
   }
 
   beaconCountChange(step: Step, event: any) {

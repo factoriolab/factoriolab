@@ -53,15 +53,17 @@
           </td>
           <ng-container *ngIf="step.settings.modules">
             <td>
-              <div class="flex mod prod">
+              <div class="flex mod factory">
                 <div
                   class="relative"
                   *ngFor="let mod of step.settings.modules; index as i"
                 >
                   <lab-icon
-                    class="clickable"
+                    class="steps-edit-factory-module clickable"
                     [iconId]="mod"
-                    (click)="setEdit(step, editType.Module, i)"
+                    (click)="
+                      edit = { step: step, type: editType.Module, index: i }
+                    "
                   ></lab-icon>
                   <lab-select
                     *ngIf="
@@ -88,7 +90,7 @@
                   <lab-icon
                     class="clickable"
                     [iconId]="step.settings.beaconModule"
-                    (click)="setEdit(step, editType.Beacon)"
+                    (click)="edit = { step: step, type: editType.Beacon }"
                   ></lab-icon>
                   <lab-select
                     *ngIf="
@@ -100,7 +102,7 @@
                     [options]="speedModuleOptions"
                     [selectedId]="step.settings.beaconModule"
                     (cancel)="edit = null"
-                    (selectId)="beaconModuleChange(step, $event)"
+                    (selectId)="editBeaconModule.emit([step.recipeId, $event])"
                   >
                   </lab-select>
                 </div>

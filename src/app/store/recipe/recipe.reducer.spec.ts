@@ -25,8 +25,21 @@ describe('Recipe Reducer', () => {
     });
   });
 
-  describe('EDIT_BEACON_TYPE', () => {
-    it('should edit the beacon type', () => {
+  describe('EDIT_FACTORY_MODULE', () => {
+    it('should edit the factory module', () => {
+      const result = recipeReducer(
+        initialRecipeState,
+        new actions.EditFactoryModuleAction([
+          mocks.Recipe1.id,
+          [mocks.Item1.id],
+        ])
+      );
+      expect(result[mocks.Recipe1.id].modules).toEqual([mocks.Item1.id]);
+    });
+  });
+
+  describe('EDIT_BEACON_MODULE', () => {
+    it('should edit the beacon module', () => {
       const result = recipeReducer(
         initialRecipeState,
         new actions.EditBeaconModuleAction([mocks.Recipe1.id, mocks.Item1.id])
@@ -42,6 +55,16 @@ describe('Recipe Reducer', () => {
         new actions.EditBeaconCountAction([mocks.Recipe1.id, numberValue])
       );
       expect(result[mocks.Recipe1.id].beaconCount).toEqual(numberValue);
+    });
+  });
+
+  describe('RESET', () => {
+    it('should reset a recipe', () => {
+      const result = recipeReducer(
+        initialRecipeState,
+        new actions.ResetAction(mocks.Recipe1.id)
+      );
+      expect(result[mocks.Recipe1.id]).toBeUndefined();
     });
   });
 

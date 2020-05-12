@@ -60,7 +60,7 @@ export const Settings1: RecipeSettings = {
   belt: ItemId.TransportBelt,
   factory: ItemId.AssemblingMachine2,
   modules: [ItemId.Module, ItemId.Module],
-  beaconModule: ItemId.Module,
+  beaconModule: ItemId.SpeedModule,
   beaconCount: 0,
 };
 export const Settings2: RecipeSettings = {
@@ -70,10 +70,10 @@ export const Settings2: RecipeSettings = {
   modules: [ItemId.Module, ItemId.Module],
   beaconModule: ItemId.Module,
   beaconCount: 0,
-  recipeId: Recipe1.id,
 };
 export const Step1: Step = {
   itemId: Item1.id,
+  recipeId: Item1.id as any,
   items: new Fraction(Product1.rate),
   belts: new Fraction(0.5),
   factories: new Fraction(1),
@@ -81,6 +81,7 @@ export const Step1: Step = {
 };
 export const Step2: Step = {
   itemId: Item2.id,
+  recipeId: Item2.id as any,
   items: new Fraction(Product2.rate),
   belts: new Fraction(1),
   factories: new Fraction(2),

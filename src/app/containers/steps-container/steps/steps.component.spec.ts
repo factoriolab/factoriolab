@@ -2,22 +2,46 @@ import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import * as mocks from 'src/mocks';
-import { IconComponent } from '~/components';
-import { Step } from '~/models';
+import { IconComponent, SelectComponent } from '~/components';
+import { Step, ItemId } from '~/models';
+import { DatasetState } from '~/store/dataset';
+import { RecipeState } from '~/store/recipe';
 import { TestUtility } from '~/utilities/test';
 import { StepsComponent } from './steps.component';
+import { RecipeUtility } from '~/utilities';
 
 @Component({
   selector: 'lab-test-steps',
   template: `
-    <lab-steps [steps]="steps" (editBeaconCount)="editBeaconCount($event)">
+    <lab-steps
+      [data]="data"
+      [recipe]="recipe"
+      [steps]="steps"
+      [itemPrecision]="itemPrecision"
+      [beltPrecision]="beltPrecision"
+      [factoryPrecision]="factoryPrecision"
+      (ignoreStep)="ignoreStep($event)"
+      (editFactoryModule)="editFactoryModule($event)"
+      (editBeaconModule)="editBeaconModule($event)"
+      (editBeaconCount)="editBeaconCount($event)"
+      (resetStep)="resetStep($event)"
+    >
     </lab-steps>
   `,
 })
 class TestStepsComponent {
   @ViewChild(StepsComponent) child: StepsComponent;
+  data: DatasetState = mocks.Data;
+  recipe: RecipeState = mocks.RecipeSettingsInitial;
   steps: Step[] = mocks.Steps;
+  itemPrecision = null;
+  beltPrecision = 0;
+  factoryPrecision = 1;
+  ignoreStep(data) {}
+  editFactoryModule(data) {}
+  editBeaconModule(data) {}
   editBeaconCount(data) {}
+  resetStep(data) {}
 }
 
 describe('StepsComponent', () => {
@@ -26,7 +50,12 @@ describe('StepsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [IconComponent, StepsComponent, TestStepsComponent],
+      declarations: [
+        IconComponent,
+        SelectComponent,
+        StepsComponent,
+        TestStepsComponent,
+      ],
     })
       .compileComponents()
       .then(() => {
@@ -40,22 +69,36 @@ describe('StepsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should edit a specific factory module', () => {
+    spyOn(component, 'editFactoryModule');
+    TestUtility.clickSelector(fixture, '.steps-edit-factory-module', 1);
+    fixture.detectChanges();
+    TestUtility.clickSelector(fixture, 'lab-select lab-icon', 1);
+    fixture.detectChanges();
+    expect(component.editFactoryModule).toHaveBeenCalledWith([
+      mocks.Step1.itemId,
+      [ItemId.Module, ItemId.SpeedModule],
+    ]);
+  });
+
+  it('should edit all factory modules', () => {
+    spyOn(component, 'editFactoryModule');
+    TestUtility.clickSelector(fixture, '.steps-edit-factory-module', 0);
+    fixture.detectChanges();
+    TestUtility.clickSelector(fixture, 'lab-select lab-icon', 1);
+    fixture.detectChanges();
+    expect(component.editFactoryModule).toHaveBeenCalledWith([
+      mocks.Step1.itemId,
+      [ItemId.SpeedModule, ItemId.SpeedModule],
+    ]);
+  });
+
   it('should edit beacon count', () => {
     spyOn(component, 'editBeaconCount');
     TestUtility.selectSelector(fixture, 'input', '24');
     fixture.detectChanges();
     expect(component.editBeaconCount).toHaveBeenCalledWith([
       mocks.Step1.itemId,
-      24,
-    ]);
-  });
-
-  it('should handle steps that specify a recipe', () => {
-    spyOn(component, 'editBeaconCount');
-    TestUtility.selectSelector(fixture, 'input', '24', 1);
-    fixture.detectChanges();
-    expect(component.editBeaconCount).toHaveBeenCalledWith([
-      mocks.Step2.settings.recipeId,
       24,
     ]);
   });
@@ -72,5 +115,14 @@ describe('StepsComponent', () => {
     TestUtility.selectSelector(fixture, 'input', '0');
     fixture.detectChanges();
     expect(component.editBeaconCount).not.toHaveBeenCalled();
+  });
+
+  describe('prodAllowed', () => {
+    it('should look up whether prod is allowed for a step', () => {
+      spyOn(RecipeUtility, 'prodModuleAllowed').and.callThrough();
+      const result = component.child.prodAllowed(mocks.Steps[0]);
+      expect(RecipeUtility.prodModuleAllowed).toHaveBeenCalled();
+      expect(result).toEqual(false);
+    });
   });
 });

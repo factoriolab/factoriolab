@@ -9,6 +9,7 @@ describe('RateUtility', () => {
     const expected = [
       {
         itemId: 'iron-chest',
+        recipeId: 'iron-chest',
         items: new Fraction(30),
         factories: new Fraction(15),
         settings: {
@@ -16,12 +17,13 @@ describe('RateUtility', () => {
           belt: 'transport-belt',
           factory: 'assembling-machine-2',
           modules: ['module', 'module'],
-          beaconModule: 'module',
+          beaconModule: 'speed-module',
           beaconCount: 0,
         },
       },
       {
         itemId: 'iron-plate',
+        recipeId: 'iron-plate',
         items: new Fraction(240),
         factories: new Fraction(768),
         settings: {
@@ -29,12 +31,13 @@ describe('RateUtility', () => {
           belt: 'transport-belt',
           factory: 'assembling-machine-2',
           modules: ['module', 'module'],
-          beaconModule: 'module',
+          beaconModule: 'speed-module',
           beaconCount: 0,
         },
       },
       {
         itemId: 'iron-ore',
+        recipeId: 'iron-ore',
         items: new Fraction(240),
         factories: new Fraction(240),
         settings: {
@@ -42,7 +45,7 @@ describe('RateUtility', () => {
           belt: 'transport-belt',
           factory: 'assembling-machine-2',
           modules: ['module', 'module'],
-          beaconModule: 'module',
+          beaconModule: 'speed-module',
           beaconCount: 0,
         },
       },
@@ -171,6 +174,7 @@ describe('RateUtility', () => {
       const steps: Step[] = [
         {
           itemId: ItemId.PetroleumGas,
+          recipeId: null,
           items: new Fraction(30),
           settings: {},
         },
@@ -186,7 +190,7 @@ describe('RateUtility', () => {
         RecipeId.BasicOilProcessing,
         mocks.Data
       );
-      expect(steps[0].settings.recipeId).toEqual(RecipeId.BasicOilProcessing);
+      expect(steps[0].recipeId).toEqual(RecipeId.BasicOilProcessing);
     });
 
     it('should properly calculate factories for space science pack/rocket parts', () => {
@@ -222,6 +226,7 @@ describe('RateUtility', () => {
       expect(steps).toEqual([
         {
           itemId: ItemId.Uranium235,
+          recipeId: ItemId.Uranium235 as any,
           items: new Fraction(30),
           factories: new Fraction(0),
           settings: {
@@ -255,6 +260,7 @@ describe('RateUtility', () => {
       const steps: Step[] = [
         {
           itemId: mocks.Item1.id,
+          recipeId: null,
           items: null,
           belts: null,
           settings: { belt: ItemId.TransportBelt },
@@ -268,6 +274,7 @@ describe('RateUtility', () => {
       const steps: Step[] = [
         {
           itemId: mocks.Item1.id,
+          recipeId: null,
           items: mocks.BeltSpeed[ItemId.TransportBelt],
           belts: new Fraction(0),
           settings: { belt: ItemId.TransportBelt },
@@ -283,6 +290,7 @@ describe('RateUtility', () => {
       const steps: Step[] = [
         {
           itemId: mocks.Item1.id,
+          recipeId: null,
           items: null,
           belts: null,
           settings: { belt: ItemId.TransportBelt },
