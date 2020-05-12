@@ -96,12 +96,14 @@ export class RouterService {
                 this.unzipping = true;
                 for (const p of params) {
                   const s = p.split('=');
-                  if (s[0] === 'p') {
-                    this.unzipProducts(s[1].split(','), data);
-                  } else if (s[0] === 'r') {
-                    this.unzipRecipes(s[1].split(','), data);
-                  } else if (s[0] === 's') {
-                    this.unzipSettings(s[1], data);
+                  if (s[1]) {
+                    if (s[0] === 'p') {
+                      this.unzipProducts(s[1].split(','), data);
+                    } else if (s[0] === 'r') {
+                      this.unzipRecipes(s[1].split(','), data);
+                    } else if (s[0] === 's') {
+                      this.unzipSettings(s[1], data);
+                    }
                   }
                 }
               });

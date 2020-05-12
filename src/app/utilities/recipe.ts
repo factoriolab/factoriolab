@@ -8,9 +8,40 @@ import {
   RecipeId,
   ItemId,
   Factors,
+  Step,
 } from '~/models';
 
 const categoryAllowProdModule = [CategoryId.Intermediate, CategoryId.Research];
+const order: (ItemId | RecipeId)[] = [
+  ItemId.MiningProductivity,
+  ItemId.WorkerRobotSpeed,
+  ItemId.FollowerRobotCount,
+  ItemId.EnergyWeaponsDamage,
+  ItemId.PhysicalProjectileDamage,
+  ItemId.RefinedFlammables,
+  ItemId.ArtilleryShellRange,
+  ItemId.ArtilleryShellShootingSpeed,
+  ItemId.StrongerExplosives,
+  ItemId.None,
+  ItemId.SteelPlate,
+  ItemId.CopperPlate,
+  ItemId.IronPlate,
+  ItemId.StoneBrick,
+  ItemId.UraniumOre,
+  ItemId.CopperOre,
+  ItemId.IronOre,
+  ItemId.Stone,
+  ItemId.Coal,
+  ItemId.Wood,
+  ItemId.RocketFuel,
+  RecipeId.SolidFuelFromLightOil,
+  RecipeId.SolidFuelFromPetroleumGas,
+  ItemId.PetroleumGas,
+  ItemId.LightOil,
+  ItemId.HeavyOil,
+  ItemId.CrudeOil,
+  ItemId.Water,
+];
 
 export class RecipeUtility {
   /** Determines what default factory to use for a given recipe based on settings */
@@ -112,5 +143,22 @@ export class RecipeUtility {
     prod = prod.add(factoryProd);
 
     return { speed, prod };
+  }
+
+  static sort(steps: Step[]) {
+    return steps.sort((a, b) => this.getOrder(a) - this.getOrder(b));
+  }
+
+  static getOrder(step: Step) {
+    const itemIndex = order.indexOf(step.itemId);
+    if (itemIndex !== -1) {
+      return itemIndex;
+    } else {
+      const recipeIndex = order.indexOf(step.recipeId);
+      if (recipeIndex !== -1) {
+        return recipeIndex;
+      }
+    }
+    return order.indexOf(ItemId.None);
   }
 }
