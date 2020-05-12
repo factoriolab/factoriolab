@@ -37,18 +37,4 @@ export class ProductsComponent {
       emitter.emit([id, value]);
     }
   }
-
-  rateChange(id: number, event: any) {
-    if (event.target.value) {
-      const value = Number(event.target.value);
-      if (this.products.find((p) => p.id === id).rate !== value) {
-        this.editRate.emit([id, value]);
-      }
-    }
-  }
-
-  rateTypeChange(id: number, event: any) {
-    const value = Number(event.target.value);
-    this.editRateType.emit([id, value]);
-  }
 }

@@ -1,10 +1,13 @@
 import * as mocks from 'src/mocks';
-import { RateType } from '~/models';
+import { RateType, ItemId } from '~/models';
 import * as actions from './products.actions';
 import { productsReducer } from './products.reducer';
 
 describe('Products Reducer', () => {
-  const state = productsReducer(undefined, new actions.AddAction());
+  const state = productsReducer(
+    undefined,
+    new actions.AddAction(ItemId.WoodenChest)
+  );
 
   describe('LOAD', () => {
     it('should load a list of products', () => {

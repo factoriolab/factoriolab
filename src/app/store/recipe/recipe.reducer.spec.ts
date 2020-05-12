@@ -23,6 +23,18 @@ describe('Recipe Reducer', () => {
       );
       expect(result[mocks.Recipe1.id].ignore).toEqual(true);
     });
+
+    it('should delete key if ignore = false is the only modification', () => {
+      let result = recipeReducer(
+        initialRecipeState,
+        new actions.IgnoreAction(mocks.Recipe1.id)
+      );
+      result = recipeReducer(
+        result,
+        new actions.IgnoreAction(mocks.Recipe1.id)
+      );
+      expect(result[mocks.Recipe1.id]).toBeUndefined();
+    });
   });
 
   describe('EDIT_FACTORY_MODULE', () => {

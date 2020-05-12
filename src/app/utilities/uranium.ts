@@ -266,15 +266,15 @@ export class UraniumUtility {
 
     const matrix = this.getMatrix(factors, data);
 
-    const oldSteps = [...steps];
-    let step = this.getSteps(steps, matrix, settings);
+    const newSteps = [...steps];
+    let step = this.getSteps(newSteps, matrix, settings);
     if (
-      oldSteps.every(
+      steps.every(
         (s) => this.URANIUM_ITEM.indexOf(s.itemId) === -1 || s.settings.ignore
       )
     ) {
       // Uranium products are currently ignored
-      return oldSteps;
+      return steps;
     }
 
     step = this.calculateUranium238(step, matrix);
@@ -283,7 +283,7 @@ export class UraniumUtility {
     step = this.calculateInputs(
       step,
       matrix,
-      steps,
+      newSteps,
       settings,
       factors,
       belt,
@@ -293,6 +293,6 @@ export class UraniumUtility {
     );
     step = this.calculateFactories(step, matrix, factors);
 
-    return steps;
+    return newSteps;
   }
 }

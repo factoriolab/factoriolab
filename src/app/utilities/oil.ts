@@ -259,7 +259,7 @@ export class OilUtility {
 
   /** Try calculating number of refineries and heavy-to-light plants required for full light-to-fuel conversion, excess petrol */
   static tryCalculateLightToFuel(step: OilSteps, matrix: OilMatrix): OilSteps {
-    if (step.fuel?.items.n > 0 && !step.fuel?.settings.ignore) {
+    if (step.fuel?.items.n > 0 && !step.fuel.settings.ignore) {
       let required = step.fuel.items
         .div(matrix.ltf.output)
         .mul(matrix.ltf.input);
@@ -547,15 +547,13 @@ export class OilUtility {
     );
     const matrix = this.getMatrix(oilRecipeId, includeFuel, factors, data);
 
-    const oldSteps = [...steps];
-    let step = this.getSteps(steps, matrix, settings);
+    const newSteps = [...steps];
+    let step = this.getSteps(newSteps, matrix, settings);
     if (
-      oldSteps.every(
-        (s) => OIL_ITEM.indexOf(s.itemId) === -1 || s.settings.ignore
-      )
+      steps.every((s) => OIL_ITEM.indexOf(s.itemId) === -1 || s.settings.ignore)
     ) {
       // Oil products are currently ignored
-      return oldSteps;
+      return steps;
     }
 
     step = this.calculateHeavyOil(step, matrix);
@@ -598,6 +596,6 @@ export class OilUtility {
     );
     step = this.calculateFactories(step, matrix, factors);
 
-    return steps;
+    return newSteps;
   }
 }
