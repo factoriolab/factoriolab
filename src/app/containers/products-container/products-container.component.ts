@@ -22,7 +22,7 @@ export class ProductsContainerComponent implements OnInit {
   constructor(private store: Store<State>) {}
 
   ngOnInit() {
-    this.data$ = this.store.select(Dataset.getDataset);
+    this.data$ = this.store.select(Dataset.datasetState);
     this.products$ = this.store.select(Products.getProducts);
   }
 

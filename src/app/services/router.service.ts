@@ -6,7 +6,7 @@ import * as pako from 'pako';
 
 import { ItemId, Entities, Product, NEntities, RecipeSettings } from '~/models';
 import { State } from '~/store';
-import { DatasetState, getDataset } from '~/store/dataset';
+import { DatasetState, datasetState } from '~/store/dataset';
 import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipe';
 import * as Settings from '~/store/settings';
@@ -87,7 +87,7 @@ export class RouterService {
             const state: string = pako.inflate(atob(urlZip), { to: 'string' });
             const params = state.split('&');
             this.store
-              .select(getDataset)
+              .select(datasetState)
               .pipe(
                 filter((d) => !!d),
                 take(1)

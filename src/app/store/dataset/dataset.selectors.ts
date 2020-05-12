@@ -6,11 +6,11 @@ import * as Settings from '../settings';
 import { State } from '../';
 
 /* Base selector functions */
-export const getDataset = (state: State) => state.datasetState;
+export const datasetState = (state: State) => state.datasetState;
 
 /* Complex selectors */
 export const getBeltSpeed = createSelector(
-  getDataset,
+  datasetState,
   Settings.getFlowRate,
   (data, flowRate) => {
     const value: Entities<Fraction> = {};

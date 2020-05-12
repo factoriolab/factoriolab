@@ -49,6 +49,7 @@ describe('UraniumUtility', () => {
       const steps: Step[] = [
         {
           itemId: ItemId.Uranium238,
+          recipeId: null,
           items: new Fraction(1),
           settings: {},
         },
@@ -60,7 +61,7 @@ describe('UraniumUtility', () => {
         mocks.RecipeSettingsEntities
       );
       expect(result.surplus).toEqual(new Fraction(0));
-      expect(result.settings.recipeId).toEqual(RecipeId.UraniumProcessing);
+      expect(result.recipeId).toEqual(RecipeId.UraniumProcessing);
     });
 
     it('should create a step', () => {
@@ -73,7 +74,7 @@ describe('UraniumUtility', () => {
       );
       expect(steps.length).toEqual(1);
       expect(result.surplus).toEqual(new Fraction(0));
-      expect(result.settings.recipeId).toEqual(RecipeId.UraniumProcessing);
+      expect(result.recipeId).toEqual(RecipeId.UraniumProcessing);
     });
   });
 
@@ -202,6 +203,7 @@ describe('UraniumUtility', () => {
       const steps: Step[] = [
         {
           itemId: ItemId.Uranium235,
+          recipeId: null,
           items: new Fraction(1),
           factories: new Fraction(0),
           settings: {},

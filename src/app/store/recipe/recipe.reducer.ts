@@ -21,6 +21,13 @@ export function recipeReducer(
         },
       };
     }
+    case RecipeActionType.EDIT_FACTORY_MODULE: {
+      const id = action.payload[0];
+      return {
+        ...state,
+        ...{ [id]: { ...state[id], ...{ modules: action.payload[1] } } },
+      };
+    }
     case RecipeActionType.EDIT_BEACON_MODULE: {
       const id = action.payload[0];
       return {
@@ -34,6 +41,11 @@ export function recipeReducer(
         ...state,
         ...{ [id]: { ...state[id], ...{ beaconCount: action.payload[1] } } },
       };
+    }
+    case RecipeActionType.RESET: {
+      const newState = { ...state };
+      delete newState[action.payload];
+      return newState;
     }
     default:
       return state;

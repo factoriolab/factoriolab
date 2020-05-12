@@ -12,7 +12,7 @@ import { StoreModule, Store } from '@ngrx/store';
 import { Id } from './models';
 import { RouterService } from './services/router.service';
 import { State, reducers, metaReducers } from './store';
-import { getDataset, DatasetState } from './store/dataset';
+import { datasetState, DatasetState } from './store/dataset';
 import * as Products from './store/products';
 import { TestUtility } from './utilities/test';
 import { HeaderComponent, IconComponent } from './components';
@@ -67,7 +67,7 @@ describe('AppComponent', () => {
 
   it('should load the dataset', fakeAsync(() => {
     let dataset: DatasetState;
-    store.select(getDataset).subscribe((d) => (dataset = d));
+    store.select(datasetState).subscribe((d) => (dataset = d));
     tick();
     expect(dataset.itemIds.length).toBeGreaterThan(0);
   }));
