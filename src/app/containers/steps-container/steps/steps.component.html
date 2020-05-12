@@ -48,7 +48,14 @@
       </td>
       <td>
         <ng-container *ngIf="step.settings">
-          <div *ngIf="step.settings.belt && step.belts" class="flex">
+          <div
+            *ngIf="
+              step.settings.belt &&
+              step.belts &&
+              data.itemEntities[step.itemId].category !== categoryId.Research
+            "
+            class="flex"
+          >
             <div class="monospace">{{ rate(step.belts, beltPrecision) }}</div>
             <lab-icon [iconId]="step.settings.belt"></lab-icon>
           </div>

@@ -36,7 +36,10 @@ export const getRecipeSettings = createSelector(
           if (!item) {
             item = data.itemEntities[Object.keys(recipe.out)[0]];
           }
-          recipeSettings.belt = item.stack ? settings.belt : ItemId.Pipe;
+          recipeSettings.belt =
+            item.stack || item.category === CategoryId.Research
+              ? settings.belt
+              : ItemId.Pipe;
         }
 
         // Factory
