@@ -2,6 +2,7 @@ import Fraction from 'fraction.js';
 
 import * as mocks from 'src/mocks';
 import { ItemId, RecipeId, Step } from '~/models';
+import * as Recipe from '~/store/recipe';
 import { UraniumUtility } from './uranium';
 
 /** These tests check basic functionality, not specific math results. */
@@ -94,14 +95,20 @@ describe('UraniumUtility', () => {
 
   describe('calculateUranium238', () => {
     it('should skip if no u238 required', () => {
-      const step: any = { u238: { items: new Fraction(0), factories: null } };
+      const step: any = {
+        u238: { items: new Fraction(0), factories: null },
+      };
       UraniumUtility.calculateUranium238(step, matrix);
       expect(step.u238.factories).toBeNull();
     });
 
     it('should calculate for required u238', () => {
       const step: any = {
-        u238: { items: new Fraction(1), factories: new Fraction(0) },
+        u238: {
+          items: new Fraction(1),
+          factories: new Fraction(0),
+          settings: {},
+        },
         u235: { surplus: new Fraction(0) },
       };
       UraniumUtility.calculateUranium238(step, matrix);
@@ -112,14 +119,20 @@ describe('UraniumUtility', () => {
 
   describe('calculateUranium235', () => {
     it('should skip if no u235 required', () => {
-      const step: any = { u235: { items: new Fraction(0), factories: null } };
+      const step: any = {
+        u235: { items: new Fraction(0), factories: null },
+      };
       UraniumUtility.calculateUranium235(step, matrix);
       expect(step.u235.factories).toBeNull();
     });
 
     it('should subtract from surplus if sufficient', () => {
       const step: any = {
-        u235: { items: new Fraction(1), surplus: new Fraction(2) },
+        u235: {
+          items: new Fraction(1),
+          surplus: new Fraction(2),
+          settings: {},
+        },
       };
       UraniumUtility.calculateUranium235(step, matrix);
       expect(step.u235.surplus).toEqual(new Fraction(1));
@@ -132,6 +145,7 @@ describe('UraniumUtility', () => {
           items: new Fraction(2),
           surplus: new Fraction(1),
           factories: new Fraction(0),
+          settings: {},
         },
       };
       UraniumUtility.calculateUranium235(step, matrix);
@@ -187,7 +201,7 @@ describe('UraniumUtility', () => {
   describe('addSteps', () => {
     it('should do nothing if no uranium products are found', () => {
       const steps = [];
-      UraniumUtility.addSteps(
+      const result = UraniumUtility.addSteps(
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
@@ -196,7 +210,33 @@ describe('UraniumUtility', () => {
         RecipeId.AdvancedOilProcessing,
         mocks.Data
       );
-      expect(steps.length).toEqual(0);
+      expect(result.length).toEqual(0);
+    });
+
+    it('should do nothing if uranium products are ignored', () => {
+      const steps: Step[] = [
+        {
+          itemId: ItemId.Uranium235,
+          recipeId: null,
+          items: new Fraction(1),
+          factories: new Fraction(0),
+          settings: {},
+        },
+      ];
+      const settings = Recipe.recipeReducer(
+        mocks.RecipeSettingsEntities,
+        new Recipe.IgnoreAction(RecipeId.KovarexEnrichmentProcess)
+      );
+      const result = UraniumUtility.addSteps(
+        steps,
+        settings,
+        mocks.RecipeFactors,
+        ItemId.TransportBelt,
+        ItemId.Coal,
+        RecipeId.AdvancedOilProcessing,
+        mocks.Data
+      );
+      expect(result.length).toEqual(1);
     });
 
     it('should calculate steps for uranium products', () => {
@@ -209,7 +249,7 @@ describe('UraniumUtility', () => {
           settings: {},
         },
       ];
-      UraniumUtility.addSteps(
+      const result = UraniumUtility.addSteps(
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
@@ -218,7 +258,7 @@ describe('UraniumUtility', () => {
         RecipeId.AdvancedOilProcessing,
         mocks.Data
       );
-      expect(steps.length).toBeGreaterThan(1);
+      expect(result.length).toBeGreaterThan(1);
     });
   });
 });

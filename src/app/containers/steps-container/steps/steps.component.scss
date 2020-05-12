@@ -17,7 +17,7 @@ td > div {
 
     &.factory {
       > :first-child {
-        border: 1px solid $color-font;
+        border: 1px solid $color-gray-1;
         border-radius: 0.25rem;
       }
 
@@ -34,4 +34,12 @@ td > div {
 
 input {
   width: 3rem;
+}
+
+.ignored {
+  opacity: 0.25;
+}
+
+.not-clickable {
+  padding: 0.125rem;
 }

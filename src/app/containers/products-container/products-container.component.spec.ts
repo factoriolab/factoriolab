@@ -39,8 +39,10 @@ describe('ProductsContainerComponent', () => {
 
   it('should add a product', () => {
     spyOn(store, 'dispatch');
-    component.child.add.emit();
-    expect(store.dispatch).toHaveBeenCalledWith(new Products.AddAction());
+    component.child.add.emit(ItemId.WoodenChest);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Products.AddAction(ItemId.WoodenChest)
+    );
   });
 
   it('should remove a product', () => {

@@ -18,6 +18,7 @@ export class LoadAction implements Action {
 
 export class AddAction implements Action {
   readonly type = ProductsActionType.ADD;
+  constructor(public payload: ItemId) {}
 }
 
 export class RemoveAction implements Action {

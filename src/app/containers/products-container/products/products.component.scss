@@ -5,7 +5,7 @@
   align-items: flex-start;
   padding: 0.5rem 1rem;
 
-  > button {
+  > .add-button {
     margin-top: 0.25rem;
   }
 
@@ -22,10 +22,6 @@ button {
 .icon-container {
   height: 36px;
   width: 36px;
-}
-
-.dropdown-container {
-  position: relative;
 }
 
 .product-row {
