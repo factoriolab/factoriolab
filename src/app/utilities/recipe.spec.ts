@@ -181,4 +181,31 @@ describe('RecipeUtility', () => {
       expect(result).toEqual({ speed: new Fraction(1), prod: new Fraction(1) });
     });
   });
+
+  describe('sort', () => {
+    it('should sort steps', () => {
+      const a: any = { itemId: ItemId.Water };
+      const b: any = { recipeId: RecipeId.SolidFuelFromLightOil };
+      const result = RecipeUtility.sort([a, b]);
+      expect(result).toEqual([b, a]);
+    });
+  });
+
+  describe('sortOrder', () => {
+    it('should sort items and recipes', () => {
+      const a: any = { itemId: ItemId.Water };
+      const b: any = { recipeId: RecipeId.SolidFuelFromLightOil };
+      const aOrder = RecipeUtility.sortOrder(a);
+      const bOrder = RecipeUtility.sortOrder(b);
+      expect(aOrder).toBeGreaterThan(bOrder);
+    });
+
+    it('should leave unspecified steps unsorted', () => {
+      const a: any = { itemId: ItemId.AssemblingMachine1 };
+      const b: any = { itemId: ItemId.AssemblingMachine2 };
+      const aOrder = RecipeUtility.sortOrder(a);
+      const bOrder = RecipeUtility.sortOrder(b);
+      expect(aOrder).toEqual(bOrder);
+    });
+  });
 });

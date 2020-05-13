@@ -572,7 +572,7 @@ export class OilUtility {
         factories: new Fraction(0),
         settings: settings[matrix.ptf.recipe.id],
       };
-      steps.push(step.fuelPetrol);
+      newSteps.push(step.fuelPetrol);
 
       step = this.calculateLightAndPetrol(step, matrix);
       step = this.calculateSurplusLightToFuel(step, matrix);
@@ -587,7 +587,7 @@ export class OilUtility {
     step = this.calculateInputs(
       step,
       matrix,
-      steps,
+      newSteps,
       settings,
       factors,
       belt,
