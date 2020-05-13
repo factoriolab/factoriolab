@@ -9,7 +9,12 @@ import {
   RecipeId,
   NEntities,
 } from '~/models';
-import { RateUtility, UraniumUtility, OilUtility } from '~/utilities';
+import {
+  RateUtility,
+  UraniumUtility,
+  OilUtility,
+  RecipeUtility,
+} from '~/utilities';
 import { initialSettingsState } from '../settings';
 import * as selectors from './products.selectors';
 
@@ -510,16 +515,29 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getSteps', () => {
+  describe('getDisplayRateSteps', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getSteps.projector([], null);
+      const result = selectors.getDisplayRateSteps.projector([], null);
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should calculate rates using utility method', () => {
       spyOn(RateUtility, 'displayRate');
-      selectors.getSteps.projector([], null);
+      selectors.getDisplayRateSteps.projector([], null);
       expect(RateUtility.displayRate).toHaveBeenCalled();
+    });
+  });
+
+  describe('getSteps', () => {
+    it('should handle empty/null values', () => {
+      const result = selectors.getSteps.projector([]);
+      expect(Object.keys(result).length).toEqual(0);
+    });
+
+    it('should calculate rates using utility method', () => {
+      spyOn(RecipeUtility, 'sort');
+      selectors.getSteps.projector([]);
+      expect(RecipeUtility.sort).toHaveBeenCalled();
     });
   });
 

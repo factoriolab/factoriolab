@@ -17,6 +17,7 @@ import {
   UraniumUtility,
   OilMatrix,
   UraniumMatrix,
+  RecipeUtility,
 } from '~/utilities';
 import * as Dataset from '../dataset';
 import * as Recipe from '../recipe';
@@ -297,10 +298,14 @@ export const getNormalizedStepsWithBelts = createSelector(
   (steps, beltSpeed) => RateUtility.calculateBelts(steps, beltSpeed)
 );
 
-export const getSteps = createSelector(
+export const getDisplayRateSteps = createSelector(
   getNormalizedStepsWithBelts,
   Settings.getDisplayRate,
   (steps, displayRate) => RateUtility.displayRate(steps, displayRate)
+);
+
+export const getSteps = createSelector(getDisplayRateSteps, (steps) =>
+  RecipeUtility.sort(steps)
 );
 
 export const getZipState = createSelector(
