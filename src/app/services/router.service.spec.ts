@@ -18,6 +18,7 @@ import * as Recipe from '~/store/recipe';
 import * as Settings from '~/store/settings';
 import { RouterService } from './router.service';
 
+const mockZipEmpty = 'eJwrsAUAAR8Arg==';
 const mockZipProducts = 'eJwrsDWyMrAyBAAHnAG1';
 const mockZipAll = 'eJwrsDWyMrAyVCsC0mBgoVZsa2xmYGCFCgDD0AlV';
 const mockZipExtra = 'eJwrsDWyMrAyVCsC0mBgoVZsa2xmYGCFAtRKbLNK87IBA4gLqg==';
@@ -190,6 +191,17 @@ describe('RouterService', () => {
       expect(service.unzipProducts).toHaveBeenCalled();
       expect(service.unzipRecipes).toHaveBeenCalled();
       expect(service.unzipSettings).toHaveBeenCalled();
+    });
+
+    it('should skip empty values', () => {
+      spyOn(service, 'unzipProducts');
+      spyOn(service, 'unzipRecipes');
+      spyOn(service, 'unzipSettings');
+      const url = `/#${mockZipEmpty}`;
+      (router.events as any).next(new NavigationEnd(2, url, url));
+      expect(service.unzipProducts).not.toHaveBeenCalled();
+      expect(service.unzipRecipes).not.toHaveBeenCalled();
+      expect(service.unzipSettings).not.toHaveBeenCalled();
     });
   });
 

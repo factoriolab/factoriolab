@@ -13,6 +13,7 @@ import {
 
 const categoryAllowProdModule = [CategoryId.Intermediate, CategoryId.Research];
 const order: (ItemId | RecipeId)[] = [
+  // Research products
   ItemId.MiningProductivity,
   ItemId.WorkerRobotSpeed,
   ItemId.FollowerRobotCount,
@@ -22,20 +23,25 @@ const order: (ItemId | RecipeId)[] = [
   ItemId.ArtilleryShellRange,
   ItemId.ArtilleryShellShootingSpeed,
   ItemId.StrongerExplosives,
+  // All other items/recipes
   ItemId.None,
+  // Smelting / Furnaces
   ItemId.SteelPlate,
   ItemId.CopperPlate,
   ItemId.IronPlate,
   ItemId.StoneBrick,
+  // Mining drills / raw materials
   ItemId.UraniumOre,
   ItemId.CopperOre,
   ItemId.IronOre,
   ItemId.Stone,
   ItemId.Coal,
   ItemId.Wood,
+  // Pure oil recipes
   ItemId.RocketFuel,
   RecipeId.SolidFuelFromLightOil,
   RecipeId.SolidFuelFromPetroleumGas,
+  ItemId.Lubricant,
   ItemId.PetroleumGas,
   ItemId.LightOil,
   ItemId.HeavyOil,
@@ -145,11 +151,13 @@ export class RecipeUtility {
     return { speed, prod };
   }
 
+  /** Sorts steps based on items / recipes */
   static sort(steps: Step[]) {
-    return steps.sort((a, b) => this.getOrder(a) - this.getOrder(b));
+    return steps.sort((a, b) => this.sortOrder(a) - this.sortOrder(b));
   }
 
-  static getOrder(step: Step) {
+  /** Gets sort order for a specific step */
+  static sortOrder(step: Step) {
     const itemIndex = order.indexOf(step.itemId);
     if (itemIndex !== -1) {
       return itemIndex;
