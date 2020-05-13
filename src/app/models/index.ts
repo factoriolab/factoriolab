@@ -9,6 +9,7 @@ export * from './factory';
 export * from './id';
 export * from './item';
 export * from './module';
+export * from './options';
 export * from './product';
 export * from './rate-type';
 export * from './recipe';

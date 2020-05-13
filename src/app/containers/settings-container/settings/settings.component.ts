@@ -1,7 +1,13 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { SelectType } from '~/components';
-import { DisplayRate, ItemId, RecipeId, ResearchSpeed } from '~/models';
+import {
+  DisplayRate,
+  ItemId,
+  RecipeId,
+  ResearchSpeed,
+  OptionsType,
+} from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
@@ -44,51 +50,14 @@ export class SettingsComponent {
   @Output() setResearchSpeed = new EventEmitter<ResearchSpeed>();
 
   openSelect = OpenSelect.None;
-  beltOptions = [
-    ItemId.TransportBelt,
-    ItemId.FastTransportBelt,
-    ItemId.ExpressTransportBelt,
-  ];
-  assemblerOptions = [
-    ItemId.AssemblingMachine1,
-    ItemId.AssemblingMachine2,
-    ItemId.AssemblingMachine3,
-  ];
-  furnaceOptions = [
-    ItemId.StoneFurnace,
-    ItemId.SteelFurnace,
-    ItemId.ElectricFurnace,
-  ];
-  fuelOptions = [
-    ItemId.Wood,
-    ItemId.Coal,
-    ItemId.SolidFuel,
-    ItemId.RocketFuel,
-    ItemId.NuclearFuel,
-  ];
-  oilRecipeOptions = [
-    RecipeId.BasicOilProcessing,
-    RecipeId.AdvancedOilProcessing,
-    RecipeId.CoalLiquefaction,
-  ];
-  prodModuleOptions = [
-    ItemId.Module,
-    ItemId.ProductivityModule,
-    ItemId.ProductivityModule2,
-    ItemId.ProductivityModule3,
-  ];
-  speedModuleOptions = [
-    ItemId.Module,
-    ItemId.SpeedModule,
-    ItemId.SpeedModule2,
-    ItemId.SpeedModule3,
-  ];
 
   displayRate = DisplayRate;
-  researchSpeed = ResearchSpeed;
-  select = OpenSelect;
   itemId = ItemId;
+  select = OpenSelect;
+  optionsType = OptionsType;
+  researchSpeed = ResearchSpeed;
   selectType = SelectType;
+
   initial = initialSettingsState;
 
   constructor() {}

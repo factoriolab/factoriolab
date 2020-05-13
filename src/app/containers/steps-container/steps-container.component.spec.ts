@@ -42,27 +42,27 @@ describe('StepsContainerComponent', () => {
   it('should edit factory module', () => {
     spyOn(store, 'dispatch');
     const data: [RecipeId, ItemId[]] = [mocks.Recipe1.id, [ItemId.SpeedModule]];
-    component.child.editFactoryModule.emit(data);
+    component.child.setModules.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new recipe.EditFactoryModuleAction(data)
+      new recipe.SetModulesAction(data)
     );
   });
 
   it('should edit beacon module', () => {
     spyOn(store, 'dispatch');
     const data: [RecipeId, ItemId] = [mocks.Recipe1.id, ItemId.SpeedModule];
-    component.child.editBeaconModule.emit(data);
+    component.child.setBeaconModule.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new recipe.EditBeaconModuleAction(data)
+      new recipe.SetBeaconModuleAction(data)
     );
   });
 
   it('should edit beacon count', () => {
     spyOn(store, 'dispatch');
     const data: [RecipeId, number] = [mocks.Recipe1.id, 24];
-    component.child.editBeaconCount.emit(data);
+    component.child.setBeaconCount.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new recipe.EditBeaconCountAction(data)
+      new recipe.SetBeaconCountAction(data)
     );
   });
 

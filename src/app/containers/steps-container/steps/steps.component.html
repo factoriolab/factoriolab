@@ -57,7 +57,39 @@
             class="flex"
           >
             <div class="monospace">{{ rate(step.belts, beltPrecision) }}</div>
-            <lab-icon [iconId]="step.settings.belt"></lab-icon>
+            <ng-container
+              *ngIf="
+                options[optionsType.Belt][0].indexOf(step.settings.belt) === -1;
+                then beltDefault;
+                else beltPicker
+              "
+            ></ng-container>
+            <ng-template #beltDefault>
+              <lab-icon
+                class="not-clickable"
+                [iconId]="step.settings.belt"
+              ></lab-icon>
+            </ng-template>
+            <ng-template #beltPicker>
+              <div class="relative">
+                <lab-icon
+                  class="clickable"
+                  [iconId]="step.settings.belt"
+                  (click)="edit = { step: step, type: editType.Belt }"
+                ></lab-icon>
+                <lab-select
+                  *ngIf="
+                    edit && edit.step === step && edit.type === editType.Belt
+                  "
+                  [data]="data"
+                  [selectedId]="step.settings.belt"
+                  [optionsType]="optionsType.Belt"
+                  (cancel)="edit = null"
+                  (selectId)="setBelt.emit([step.recipeId, $event])"
+                >
+                </lab-select>
+              </div>
+            </ng-template>
           </div>
         </ng-container>
       </td>
@@ -71,7 +103,51 @@
               <lab-icon [iconId]="step.recipeId"></lab-icon>
               :
             </ng-container>
-            <lab-icon [iconId]="step.settings.factory"></lab-icon>
+            <ng-container
+              *ngIf="
+                options[optionsType.Assembler][0].indexOf(
+                  step.settings.factory
+                ) === -1 &&
+                  options[optionsType.Furnace][0].indexOf(
+                    step.settings.factory
+                  ) === -1;
+                then factoryDefault;
+                else factoryPicker
+              "
+            >
+            </ng-container>
+            <ng-template #factoryDefault>
+              <lab-icon
+                class="not-clickable"
+                [iconId]="step.settings.factory"
+              ></lab-icon>
+            </ng-template>
+            <ng-template #factoryPicker>
+              <div class="relative">
+                <lab-icon
+                  class="clickable"
+                  [iconId]="step.settings.factory"
+                  (click)="edit = { step: step, type: editType.Factory }"
+                ></lab-icon>
+                <lab-select
+                  *ngIf="
+                    edit && edit.step === step && edit.type === editType.Factory
+                  "
+                  [data]="data"
+                  [selectedId]="step.settings.factory"
+                  [optionsType]="
+                    options[optionsType.Assembler][0].indexOf(
+                      step.settings.factory
+                    ) !== -1
+                      ? optionsType.Assembler
+                      : optionsType.Furnace
+                  "
+                  (cancel)="edit = null"
+                  (selectId)="setFactory.emit([step.recipeId, $event])"
+                >
+                </lab-select>
+              </div>
+            </ng-template>
           </div>
         </ng-container>
       </td>
@@ -95,10 +171,12 @@
                   edit.index === i
                 "
                 [data]="data"
-                [options]="
-                  prodAllowed(step) ? allModuleOptions : speedModuleOptions
-                "
                 [selectedId]="mod"
+                [optionsType]="
+                  prodAllowed(step)
+                    ? optionsType.AllModule
+                    : optionsType.SpeedModule
+                "
                 (cancel)="edit = null"
                 (selectId)="factoryModuleChange(step, $event, i)"
               >
@@ -121,10 +199,10 @@
                   edit && edit.step === step && edit.type === editType.Beacon
                 "
                 [data]="data"
-                [options]="speedModuleOptions"
                 [selectedId]="step.settings.beaconModule"
+                [optionsType]="optionsType.SpeedModule"
                 (cancel)="edit = null"
-                (selectId)="editBeaconModule.emit([step.recipeId, $event])"
+                (selectId)="setBeaconModule.emit([step.recipeId, $event])"
               >
               </lab-select>
             </div>
