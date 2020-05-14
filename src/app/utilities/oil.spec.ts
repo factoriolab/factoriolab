@@ -518,7 +518,6 @@ describe('OilUtility', () => {
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         mocks.Data
       );
@@ -544,7 +543,6 @@ describe('OilUtility', () => {
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         mocks.Data
       );
@@ -597,7 +595,6 @@ describe('OilUtility', () => {
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         mocks.Data
       );
@@ -611,7 +608,6 @@ describe('OilUtility', () => {
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         mocks.Data
       );
@@ -637,7 +633,6 @@ describe('OilUtility', () => {
         steps,
         settings,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         mocks.Data
       );
@@ -659,7 +654,6 @@ describe('OilUtility', () => {
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         mocks.Data
       );
@@ -681,7 +675,6 @@ describe('OilUtility', () => {
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         mocks.Data
       );
@@ -710,7 +703,6 @@ describe('OilUtility', () => {
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         mocks.Data
       );

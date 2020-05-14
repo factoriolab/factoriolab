@@ -453,7 +453,6 @@ export class OilUtility {
     steps: Step[],
     settings: RecipeState,
     factors: Entities<Factors>,
-    belt: ItemId,
     fuel: ItemId,
     data: DatasetState
   ): OilSteps {
@@ -466,7 +465,6 @@ export class OilUtility {
           steps,
           settings,
           factors,
-          belt,
           fuel,
           matrix.oil.recipe.id,
           data
@@ -487,7 +485,6 @@ export class OilUtility {
       steps,
       settings,
       factors,
-      belt,
       null,
       matrix.oil.recipe.id,
       data
@@ -531,7 +528,6 @@ export class OilUtility {
     steps: Step[],
     settings: RecipeState,
     factors: Entities<Factors>,
-    belt: ItemId,
     fuel: ItemId,
     data: DatasetState
   ): Step[] {
@@ -590,7 +586,6 @@ export class OilUtility {
       newSteps,
       settings,
       factors,
-      belt,
       fuel,
       data
     );

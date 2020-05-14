@@ -177,7 +177,6 @@ describe('UraniumUtility', () => {
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
         mocks.Data
@@ -205,7 +204,6 @@ describe('UraniumUtility', () => {
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
         mocks.Data
@@ -231,7 +229,6 @@ describe('UraniumUtility', () => {
         steps,
         settings,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
         mocks.Data
@@ -253,7 +250,6 @@ describe('UraniumUtility', () => {
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
         mocks.Data
