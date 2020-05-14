@@ -21,7 +21,6 @@ export class RateUtility {
     steps: Step[],
     settings: RecipeState,
     factors: Entities<Factors>,
-    belt: ItemId,
     fuel: ItemId,
     oilRecipe: RecipeId,
     data: DatasetState
@@ -47,7 +46,7 @@ export class RateUtility {
         factories: new Fraction(0),
         settings: recipe
           ? settings[recipe.id]
-          : { belt: item.stack ? belt : ItemId.Pipe },
+          : { belt: item.stack ? null : ItemId.Pipe },
       };
 
       steps.push(step);
@@ -107,7 +106,6 @@ export class RateUtility {
               steps,
               settings,
               factors,
-              belt,
               fuel,
               oilRecipe,
               data
@@ -125,7 +123,6 @@ export class RateUtility {
             steps,
             settings,
             factors,
-            belt,
             fuel,
             oilRecipe,
             data
@@ -137,7 +134,7 @@ export class RateUtility {
 
   static calculateBelts(steps: Step[], beltSpeed: Entities<Fraction>) {
     for (const step of steps) {
-      if (step.items) {
+      if (step.items && step.settings.belt) {
         step.belts = step.items.div(beltSpeed[step.settings.belt]);
       }
     }

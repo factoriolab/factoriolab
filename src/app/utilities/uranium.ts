@@ -213,7 +213,6 @@ export class UraniumUtility {
     steps: Step[],
     settings: RecipeState,
     factors: Entities<Factors>,
-    belt: ItemId,
     fuel: ItemId,
     oilRecipe: RecipeId,
     data: DatasetState
@@ -224,7 +223,6 @@ export class UraniumUtility {
       steps,
       settings,
       factors,
-      belt,
       fuel,
       oilRecipe,
       data
@@ -254,7 +252,6 @@ export class UraniumUtility {
     steps: Step[],
     settings: RecipeState,
     factors: Entities<Factors>,
-    belt: ItemId,
     fuel: ItemId,
     oilRecipe: RecipeId,
     data: DatasetState
@@ -286,7 +283,6 @@ export class UraniumUtility {
       newSteps,
       settings,
       factors,
-      belt,
       fuel,
       oilRecipe,
       data
