@@ -16,6 +16,8 @@
       <th>
         Beacons
       </th>
+      <!-- Reset / Link -->
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -217,6 +219,9 @@
         </ng-container>
       </td>
       <td>
+        <a [href]="router.stepHref(step, data)" target="_blank">
+          <i class="clickable material-icons">open_in_new</i>
+        </a>
         <i
           *ngIf="recipe[step.recipeId]"
           class="clickable material-icons"

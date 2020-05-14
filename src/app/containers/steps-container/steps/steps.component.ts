@@ -9,6 +9,7 @@ import {
   OptionsType,
   options,
 } from '~/models';
+import { RouterService } from '~/services/router.service';
 import { DatasetState } from '~/store/dataset';
 import { RecipeState } from '~/store/recipe';
 import { RecipeUtility } from '~/utilities';
@@ -56,7 +57,7 @@ export class StepsComponent {
 
   options = options;
 
-  constructor() {}
+  constructor(public router: RouterService) {}
 
   rate(value: Fraction, precision: number) {
     if (precision == null) {
