@@ -217,6 +217,9 @@ export class RouterService {
     const pa =
       state.assembler === init.assembler ? '' : data.itemN[state.assembler];
     const pf = state.furnace === init.furnace ? '' : data.itemN[state.furnace];
+    const or =
+      state.oilRecipe === init.oilRecipe ? '' : data.recipeN[state.oilRecipe];
+    const fl = state.fuel === init.fuel ? '' : data.itemN[state.fuel];
     const mp =
       state.prodModule === init.prodModule ? '' : moduleN[state.prodModule];
     const ms =
@@ -226,14 +229,13 @@ export class RouterService {
         ? ''
         : moduleN[state.beaconModule];
     const bc = state.beaconCount === init.beaconCount ? '' : state.beaconCount;
-    const or =
-      state.oilRecipe === init.oilRecipe ? '' : data.recipeN[state.oilRecipe];
-    const fl = state.fuel === init.fuel ? '' : data.itemN[state.fuel];
+    const dm =
+      state.drillModule === init.drillModule ? '' : Number(state.drillModule);
     const mb = state.miningBonus === init.miningBonus ? '' : state.miningBonus;
     const rs =
       state.researchSpeed === init.researchSpeed ? '' : state.researchSpeed;
     const fr = state.flowRate === init.flowRate ? '' : state.flowRate;
-    return `${dr}:${ip}:${bp}:${fp}:${tb}:${pa}:${pf}:${mp}:${ms}:${bm}:${bc}:${or}:${fl}:${mb}:${rs}:${fr}`;
+    return `${dr}:${ip}:${bp}:${fp}:${tb}:${pa}:${pf}:${or}:${fl}:${mp}:${ms}:${bm}:${bc}:${dm}:${mb}:${rs}:${fr}`;
   }
 
   unzipSettings(zSettings: string, data: DatasetState) {
@@ -261,31 +263,34 @@ export class RouterService {
       settings.furnace = data.itemI[s[6]];
     }
     if (s[7] !== '') {
-      settings.prodModule = moduleI[Number(s[7])];
+      settings.oilRecipe = data.recipeI[s[7]];
     }
     if (s[8] !== '') {
-      settings.speedModule = moduleI[Number(s[8])];
+      settings.fuel = data.itemI[s[8]];
     }
     if (s[9] !== '') {
-      settings.beaconModule = moduleI[Number(s[9])];
+      settings.prodModule = moduleI[Number(s[9])];
     }
     if (s[10] !== '') {
-      settings.beaconCount = Number(s[10]);
+      settings.speedModule = moduleI[Number(s[10])];
     }
     if (s[11] !== '') {
-      settings.oilRecipe = data.recipeI[s[11]];
+      settings.beaconModule = moduleI[Number(s[11])];
     }
     if (s[12] !== '') {
-      settings.fuel = data.itemI[s[12]];
+      settings.beaconCount = Number(s[12]);
     }
     if (s[13] !== '') {
-      settings.miningBonus = Number(s[13]);
+      settings.drillModule = s[13] === '1';
     }
     if (s[14] !== '') {
-      settings.researchSpeed = Number(s[14]);
+      settings.miningBonus = Number(s[14]);
     }
     if (s[15] !== '') {
-      settings.flowRate = Number(s[15]);
+      settings.researchSpeed = Number(s[15]);
+    }
+    if (s[16] !== '') {
+      settings.flowRate = Number(s[16]);
     }
     this.store.dispatch(new Settings.LoadAction(settings));
   }

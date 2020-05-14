@@ -153,6 +153,17 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('SET_DRILL_MODULE', () => {
+    it('should set the drill module state', () => {
+      const value = true;
+      const result = settingsReducer(
+        initialSettingsState,
+        new actions.SetDrillModuleAction(value)
+      );
+      expect(result.drillModule).toEqual(value);
+    });
+  });
+
   describe('SET_MINING_BONUS', () => {
     it('should set the mining bonus', () => {
       const value = 10;

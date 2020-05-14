@@ -56,20 +56,36 @@ export const getRecipeSettings = createSelector(
           recipe.id !== RecipeId.SpaceSciencePack &&
           factoryItem?.factory?.modules
         ) {
+          const drillSkipDefaults =
+            !settings.drillModule &&
+            factoryItem.id === ItemId.ElectricMiningDrill;
+
           // Modules
           if (!recipeSettings.modules) {
-            recipeSettings.modules = RecipeUtility.defaultModules(
-              recipe,
-              settings.prodModule,
-              settings.speedModule,
-              factoryItem.factory.modules,
-              data.itemEntities
-            );
+            if (drillSkipDefaults) {
+              recipeSettings.modules = [];
+              const count = factoryItem.factory.modules;
+              for (let i = 0; i < count; i++) {
+                recipeSettings.modules.push(ItemId.Module);
+              }
+            } else {
+              recipeSettings.modules = RecipeUtility.defaultModules(
+                recipe,
+                settings.prodModule,
+                settings.speedModule,
+                factoryItem.factory.modules,
+                data.itemEntities
+              );
+            }
           }
 
           // Beacons
           if (!recipeSettings.beaconModule) {
-            recipeSettings.beaconModule = settings.beaconModule;
+            if (drillSkipDefaults) {
+              recipeSettings.beaconModule = ItemId.Module;
+            } else {
+              recipeSettings.beaconModule = settings.beaconModule;
+            }
           }
           if (recipeSettings.beaconCount == null) {
             recipeSettings.beaconCount = settings.beaconCount;
