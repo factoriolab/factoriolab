@@ -4,7 +4,15 @@ import { Store } from '@ngrx/store';
 import { take, filter } from 'rxjs/operators';
 import * as pako from 'pako';
 
-import { ItemId, Entities, Product, NEntities, RecipeSettings } from '~/models';
+import {
+  ItemId,
+  Entities,
+  Product,
+  NEntities,
+  RecipeSettings,
+  Step,
+  RateType,
+} from '~/models';
 import { State } from '~/store';
 import { DatasetState, datasetState } from '~/store/dataset';
 import * as Products from '~/store/products';
@@ -48,6 +56,7 @@ export class RouterService {
   loaded: boolean;
   unzipping: boolean;
   zip: string;
+  zipPartial: string;
 
   constructor(private router: Router, private store: Store<State>) {
     this.router.events.subscribe((e) => this.updateState(e));
@@ -61,20 +70,37 @@ export class RouterService {
   ) {
     if (this.loaded && !this.unzipping) {
       const zProducts = this.zipProducts(products, data);
-      let zState = `p=${zProducts.join(',')}`;
+      const zState = `p=${zProducts.join(',')}`;
+      this.zipPartial = '';
       const zRecipes = this.zipRecipes(recipes, data);
       if (zRecipes.length) {
-        zState += `&r=${zRecipes.join(',')}`;
+        this.zipPartial += `&r=${zRecipes.join(',')}`;
       }
       const zSettings = this.zipSettings(settings, data);
       if (zSettings) {
-        zState += `&s=${zSettings}`;
+        this.zipPartial += `&s=${zSettings}`;
       }
-      this.zip = btoa(pako.deflate(zState, { to: 'string' }));
+      this.zip = btoa(pako.deflate(zState + this.zipPartial, { to: 'string' }));
       this.router.navigateByUrl(`#${this.zip}`);
     } else {
       this.loaded = true;
     }
+  }
+
+  stepHref(step: Step, data: DatasetState) {
+    const products: Product[] = [
+      {
+        id: 0,
+        itemId: step.itemId,
+        rate: step.items.valueOf(),
+        rateType: RateType.Items,
+      },
+    ];
+    const zProducts = this.zipProducts(products, data);
+    const zState = `p=${zProducts.join(',')}`;
+    return `/#${btoa(
+      pako.deflate(zState + this.zipPartial, { to: 'string' })
+    )}`;
   }
 
   updateState(e: Event) {
@@ -100,8 +126,10 @@ export class RouterService {
                     if (s[0] === 'p') {
                       this.unzipProducts(s[1].split(','), data);
                     } else if (s[0] === 'r') {
+                      this.zipPartial = `&r=${s[1]}`;
                       this.unzipRecipes(s[1].split(','), data);
                     } else if (s[0] === 's') {
+                      this.zipPartial += `&r=${s[1]}`;
                       this.unzipSettings(s[1], data);
                     }
                   }

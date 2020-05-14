@@ -1,14 +1,18 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { StoreModule } from '@ngrx/store';
 
 import * as mocks from 'src/mocks';
 import { IconComponent, SelectComponent } from '~/components';
 import { Step, ItemId } from '~/models';
+import { RouterService } from '~/services/router.service';
+import { reducers, metaReducers } from '~/store';
 import { DatasetState } from '~/store/dataset';
 import { RecipeState } from '~/store/recipe';
+import { RecipeUtility } from '~/utilities';
 import { TestUtility } from '~/utilities/test';
 import { StepsComponent } from './steps.component';
-import { RecipeUtility } from '~/utilities';
 
 @Component({
   selector: 'lab-test-steps',
@@ -60,6 +64,11 @@ describe('StepsComponent', () => {
         StepsComponent,
         TestStepsComponent,
       ],
+      imports: [
+        RouterTestingModule,
+        StoreModule.forRoot(reducers, { metaReducers }),
+      ],
+      providers: [RouterService],
     })
       .compileComponents()
       .then(() => {

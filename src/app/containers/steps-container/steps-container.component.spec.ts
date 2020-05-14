@@ -1,9 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
 import * as mocks from 'src/mocks';
 import { IconComponent } from '~/components';
 import { RecipeId, ItemId } from '~/models';
+import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers, State } from '~/store';
 import * as recipe from '~/store/recipe';
 import { StepsComponent } from './steps/steps.component';
@@ -16,8 +18,12 @@ describe('StepsContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [StoreModule.forRoot(reducers, { metaReducers })],
       declarations: [IconComponent, StepsComponent, StepsContainerComponent],
+      imports: [
+        RouterTestingModule,
+        StoreModule.forRoot(reducers, { metaReducers }),
+      ],
+      providers: [RouterService],
     })
       .compileComponents()
       .then(() => {
