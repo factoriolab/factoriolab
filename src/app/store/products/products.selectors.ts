@@ -237,11 +237,10 @@ export const getNormalizedSteps = createSelector(
   getNormalizedRates,
   Recipe.getRecipeSettings,
   Recipe.getRecipeFactors,
-  Settings.getBelt,
   Settings.getFuel,
   Settings.getOilRecipe,
   Dataset.datasetState,
-  (products, rates, settings, factors, belt, fuel, oilRecipe, data) => {
+  (products, rates, settings, factors, fuel, oilRecipe, data) => {
     const steps: Step[] = [];
     for (const product of products) {
       RateUtility.addStepsFor(
@@ -250,7 +249,6 @@ export const getNormalizedSteps = createSelector(
         steps,
         settings,
         factors,
-        belt,
         fuel,
         oilRecipe,
         data
@@ -264,32 +262,22 @@ export const getNormalizedStepsWithUranium = createSelector(
   getNormalizedSteps,
   Recipe.getRecipeSettings,
   Recipe.getRecipeFactors,
-  Settings.getBelt,
   Settings.getFuel,
   Settings.getOilRecipe,
   Dataset.datasetState,
-  (steps, settings, factors, belt, fuel, oilRecipe, data) =>
-    UraniumUtility.addSteps(
-      steps,
-      settings,
-      factors,
-      belt,
-      fuel,
-      oilRecipe,
-      data
-    )
+  (steps, settings, factors, fuel, oilRecipe, data) =>
+    UraniumUtility.addSteps(steps, settings, factors, fuel, oilRecipe, data)
 );
 
 export const getNormalizedStepsWithOil = createSelector(
   getNormalizedStepsWithUranium,
   Recipe.getRecipeSettings,
   Recipe.getRecipeFactors,
-  Settings.getBelt,
   Settings.getFuel,
   Settings.getOilRecipe,
   Dataset.datasetState,
-  (steps, settings, factors, belt, fuel, oilRecipe, data) =>
-    OilUtility.addSteps(oilRecipe, steps, settings, factors, belt, fuel, data)
+  (steps, settings, factors, fuel, oilRecipe, data) =>
+    OilUtility.addSteps(oilRecipe, steps, settings, factors, fuel, data)
 );
 
 export const getNormalizedStepsWithBelts = createSelector(

@@ -59,7 +59,6 @@ describe('RateUtility', () => {
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
         mocks.Data
@@ -75,7 +74,6 @@ describe('RateUtility', () => {
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
         mocks.Data
@@ -86,7 +84,6 @@ describe('RateUtility', () => {
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
         mocks.Data
@@ -102,7 +99,6 @@ describe('RateUtility', () => {
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
         {
@@ -133,7 +129,6 @@ describe('RateUtility', () => {
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
         {
@@ -162,7 +157,6 @@ describe('RateUtility', () => {
         steps,
         {},
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
         mocks.Data
@@ -185,7 +179,6 @@ describe('RateUtility', () => {
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
         mocks.Data
@@ -201,7 +194,6 @@ describe('RateUtility', () => {
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
         mocks.Data
@@ -218,7 +210,6 @@ describe('RateUtility', () => {
         steps,
         mocks.RecipeSettingsEntities,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
         mocks.Data
@@ -229,9 +220,7 @@ describe('RateUtility', () => {
           recipeId: ItemId.Uranium235 as any,
           items: new Fraction(30),
           factories: new Fraction(0),
-          settings: {
-            belt: ItemId.TransportBelt,
-          },
+          settings: { belt: null },
         },
       ]);
     });
@@ -244,7 +233,6 @@ describe('RateUtility', () => {
         steps,
         mocks.RecipeSettingsInitial,
         mocks.RecipeFactors,
-        ItemId.TransportBelt,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
         mocks.Data

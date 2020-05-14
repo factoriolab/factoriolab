@@ -41,6 +41,7 @@
       <input
         type="number"
         min="0"
+        step="any"
         [value]="product.rate"
         (change)="emitNumber(editRate, product.id, $event)"
       />

@@ -33,7 +33,7 @@ export class ProductsComponent {
 
   emitNumber(emitter: EventEmitter<[number, number]>, id: number, event: any) {
     if (event.target.value) {
-      const value = Math.round(Number(event.target.value));
+      const value = Number(event.target.value);
       emitter.emit([id, value]);
     }
   }
