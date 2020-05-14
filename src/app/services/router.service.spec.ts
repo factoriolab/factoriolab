@@ -22,6 +22,8 @@ const mockZipEmpty = 'eJwrsAUAAR8Arg==';
 const mockZipProducts = 'eJwrsDWyMrAyBAAHnAG1';
 const mockZipAll = 'eJwrsDWyMrAyVCsC0mBgoVZsa2xmYGCFBgDNXwmP';
 const mockZipExtra = 'eJwrsDWyMrAyVCsC0mBgoVZsa2xmYGCFAtRKbLNK87IBA4gLqg==';
+const mockZipLink =
+  'eJwlykEKgEAMQ9HbuE46Yjsf5k6i9werbgJ5ybmE8HatwOxk8cO9xiERbXo9yYFrYs3u7qU6/b1DegBfjA/s';
 const mockProducts: Product[] = [
   {
     id: 0,
@@ -153,6 +155,20 @@ describe('RouterService', () => {
         mocks.Data
       );
       expect(router.navigateByUrl).toHaveBeenCalledWith(`#${mockZipAll}`);
+    });
+  });
+
+  describe('stepHref', () => {
+    it('should generate a url for a step', () => {
+      spyOn(router, 'navigateByUrl');
+      service.updateUrl(
+        mockProducts,
+        mockFullRecipeSettings,
+        mockFullSettings,
+        mocks.Data
+      );
+      const href = service.stepHref(mocks.Step1, mocks.Data);
+      expect(href).toEqual(`/#${mockZipLink}`);
     });
   });
 
