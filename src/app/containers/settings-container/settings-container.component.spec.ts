@@ -177,6 +177,15 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
+  it('should set the drill module state', () => {
+    spyOn(store, 'dispatch');
+    const value = true;
+    component.child.setDrillModule.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetDrillModuleAction(value)
+    );
+  });
+
   it('should set the mining productivity bonus', () => {
     spyOn(store, 'dispatch');
     const value = 10;

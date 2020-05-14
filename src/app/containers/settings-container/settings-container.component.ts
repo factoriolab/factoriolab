@@ -103,6 +103,10 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetBeaconCountAction(value));
   }
 
+  setDrillModule(value: boolean) {
+    this.store.dispatch(new Settings.SetDrillModuleAction(value));
+  }
+
   setMiningBonus(value: number) {
     this.store.dispatch(new Settings.SetMiningBonusAction(value));
   }

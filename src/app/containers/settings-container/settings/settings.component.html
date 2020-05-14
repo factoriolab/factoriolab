@@ -298,6 +298,17 @@
     (change)="emitNumber(setBeaconCount, $event)"
   />
 </div>
+<div class="field">
+  <div
+    class="flex clickable"
+    (click)="setDrillModule.emit(!settings.drillModule)"
+  >
+    <lab-icon [iconId]="itemId.MiningProductivity" [scale]="true"></lab-icon>
+    <lab-icon
+      [iconId]="settings.drillModule ? itemId.SpeedModule3 : itemId.Module"
+    ></lab-icon>
+  </div>
+</div>
 <div class="label">Bonuses</div>
 <div class="field">
   <lab-icon [iconId]="itemId.MiningProductivity" [scale]="true"></lab-icon>

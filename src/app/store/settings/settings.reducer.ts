@@ -15,6 +15,7 @@ export interface SettingsState {
   speedModule: ItemId;
   beaconModule: ItemId;
   beaconCount: number;
+  drillModule: boolean;
   miningBonus: number;
   researchSpeed: ResearchSpeed;
   flowRate: number;
@@ -33,6 +34,7 @@ export const initialSettingsState: SettingsState = {
   prodModule: ItemId.ProductivityModule3,
   speedModule: ItemId.SpeedModule3,
   beaconModule: ItemId.SpeedModule3,
+  drillModule: false,
   beaconCount: 16,
   miningBonus: 0,
   researchSpeed: ResearchSpeed.Speed6,
@@ -85,6 +87,9 @@ export function settingsReducer(
     }
     case SettingsActionType.SET_BEACON_COUNT: {
       return { ...state, ...{ beaconCount: action.payload } };
+    }
+    case SettingsActionType.SET_DRILL_MODULE: {
+      return { ...state, ...{ drillModule: action.payload } };
     }
     case SettingsActionType.SET_MINING_BONUS: {
       return { ...state, ...{ miningBonus: action.payload } };

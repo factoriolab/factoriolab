@@ -46,6 +46,7 @@ export class SettingsComponent {
   @Output() setSpeedModule = new EventEmitter<ItemId>();
   @Output() setBeaconModule = new EventEmitter<ItemId>();
   @Output() setBeaconCount = new EventEmitter<number>();
+  @Output() setDrillModule = new EventEmitter<boolean>();
   @Output() setMiningBonus = new EventEmitter<number>();
   @Output() setResearchSpeed = new EventEmitter<ResearchSpeed>();
 
