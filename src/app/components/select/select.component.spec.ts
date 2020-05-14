@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import * as mocks from 'src/mocks';
-import { ItemId } from '~/models';
+import { ItemId, OptionsType } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { IconComponent } from '../icon/icon.component';
 import { SelectComponent, SelectType } from './select.component';
@@ -13,8 +13,8 @@ import { TestUtility } from '~/utilities/test';
   template: `
     <lab-select
       [data]="data"
-      [options]="options"
       [selectedId]="selectedId"
+      [optionsType]="optionsType"
       [selectType]="selectType"
       (cancel)="cancel()"
       (selectId)="selectId($event)"
@@ -25,10 +25,8 @@ import { TestUtility } from '~/utilities/test';
 class TestSelectComponent {
   @ViewChild(SelectComponent) child: SelectComponent;
   data: DatasetState = mocks.Data;
-  options: string[][] = [
-    [ItemId.AssemblingMachine1, ItemId.AssemblingMachine2],
-  ];
   selectedId = ItemId.AssemblingMachine1;
+  optionsType = OptionsType.Assembler;
   selectType = SelectType.Item;
   cancel() {}
   selectId(data) {}

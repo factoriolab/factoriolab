@@ -39,7 +39,23 @@ describe('StepsContainerComponent', () => {
     expect(store.dispatch).toHaveBeenCalledWith(new recipe.IgnoreAction(data));
   });
 
-  it('should edit factory module', () => {
+  it('should set belt', () => {
+    spyOn(store, 'dispatch');
+    const data: [RecipeId, ItemId] = [mocks.Recipe1.id, ItemId.TransportBelt];
+    component.child.setBelt.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(new recipe.SetBeltAction(data));
+  });
+
+  it('should set factory', () => {
+    spyOn(store, 'dispatch');
+    const data: [RecipeId, ItemId] = [mocks.Recipe1.id, ItemId.StoneFurnace];
+    component.child.setFactory.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new recipe.SetFactoryAction(data)
+    );
+  });
+
+  it('should set modules', () => {
     spyOn(store, 'dispatch');
     const data: [RecipeId, ItemId[]] = [mocks.Recipe1.id, [ItemId.SpeedModule]];
     component.child.setModules.emit(data);
@@ -48,7 +64,7 @@ describe('StepsContainerComponent', () => {
     );
   });
 
-  it('should edit beacon module', () => {
+  it('should set beacon module', () => {
     spyOn(store, 'dispatch');
     const data: [RecipeId, ItemId] = [mocks.Recipe1.id, ItemId.SpeedModule];
     component.child.setBeaconModule.emit(data);
@@ -57,7 +73,7 @@ describe('StepsContainerComponent', () => {
     );
   });
 
-  it('should edit beacon count', () => {
+  it('should set beacon count', () => {
     spyOn(store, 'dispatch');
     const data: [RecipeId, number] = [mocks.Recipe1.id, 24];
     component.child.setBeaconCount.emit(data);
