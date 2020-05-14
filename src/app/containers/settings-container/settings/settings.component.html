@@ -9,7 +9,7 @@
       [ngModel]="settings.displayRate"
       (change)="setDisplayRate.emit(displayRate.PerSecond)"
     />
-    <label for="settings-display-persecond">#/second</label>
+    <label for="settings-display-persecond">#/sec</label>
   </div>
   <div class="flex">
     <input
@@ -20,7 +20,7 @@
       [ngModel]="settings.displayRate"
       (change)="setDisplayRate.emit(displayRate.PerMinute)"
     />
-    <label for="settings-display-perminute">#/minute</label>
+    <label for="settings-display-perminute">#/min</label>
   </div>
   <div class="flex">
     <input
@@ -31,7 +31,7 @@
       [ngModel]="settings.displayRate"
       (change)="setDisplayRate.emit(displayRate.PerHour)"
     />
-    <label for="settings-display-perhour">#/hour</label>
+    <label for="settings-display-perhour">#/hr</label>
   </div>
 </div>
 <div class="label">Precision</div>
@@ -50,7 +50,7 @@
       <input
         id="settings-precision-item-value"
         type="number"
-        placeholder="Decimals"
+        placeholder="0.334"
         min="0"
         step="1"
         [disabled]="settings.itemPrecision == null"
@@ -68,7 +68,7 @@
       [ngModel]="settings.itemPrecision == null"
       (change)="setItemPrecision.emit(null)"
     />
-    <label for="settings-precision-item-fractions">Fractions</label>
+    <label for="settings-precision-item-fractions">⅓</label>
   </div>
 </div>
 <div class="field">
@@ -85,7 +85,7 @@
     <input
       id="settings-precision-belt-value"
       type="number"
-      placeholder="Decimals"
+      placeholder="0.4"
       min="0"
       step="1"
       [disabled]="settings.beltPrecision == null"
@@ -102,7 +102,7 @@
       [ngModel]="settings.beltPrecision == null"
       (change)="setBeltPrecision.emit(null)"
     />
-    <label for="settings-precision-belt-fractions">Fractions</label>
+    <label for="settings-precision-belt-fractions">⅓</label>
   </div>
 </div>
 <div class="field">
@@ -119,7 +119,7 @@
     <input
       id="settings-precision-factory-value"
       type="number"
-      placeholder="Decimals"
+      placeholder="0.4"
       min="0"
       step="1"
       [disabled]="settings.factoryPrecision == null"
@@ -136,7 +136,7 @@
       [ngModel]="settings.factoryPrecision == null"
       (change)="setFactoryPrecision.emit(null)"
     />
-    <label for="settings-precision-factory-fractions">Fractions</label>
+    <label for="settings-precision-factory-fractions">⅓</label>
   </div>
 </div>
 <div class="label">Factory</div>
