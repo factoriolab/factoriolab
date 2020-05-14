@@ -18,6 +18,7 @@ export const enum SettingsActionType {
   SET_BEACON_COUNT = '[Settings Page] Set Beacon Count',
   SET_OIL_RECIPE = '[Settings Page] Set Oil Recipe',
   SET_FUEL = '[Settings Page] Set Fuel',
+  SET_DRILL_MODULE = '[Settings Page] Set Drill Module',
   SET_MINING_BONUS = '[Settings Page] Set Mining Bonus',
   SET_RESEARCH_SPEED = '[Settings Page] Set Research Speed',
   SET_FLOW_RATE = '[Settings Page] Set Flow Rate',
@@ -93,6 +94,11 @@ export class SetFuelAction implements Action {
   constructor(public payload: ItemId) {}
 }
 
+export class SetDrillModuleAction implements Action {
+  readonly type = SettingsActionType.SET_DRILL_MODULE;
+  constructor(public payload: boolean) {}
+}
+
 export class SetMiningBonusAction implements Action {
   readonly type = SettingsActionType.SET_MINING_BONUS;
   constructor(public payload: number) {}
@@ -117,12 +123,13 @@ export type SettingsAction =
   | SetBeltAction
   | SetAssemblerAction
   | SetFurnaceAction
+  | SetOilRecipeAction
+  | SetFuelAction
   | SetProdModuleAction
   | SetSpeedModuleAction
   | SetBeaconModuleAction
   | SetBeaconCountAction
-  | SetOilRecipeAction
-  | SetFuelAction
+  | SetDrillModuleAction
   | SetMiningBonusAction
   | SetResearchSpeedAction
   | SetFlowRateAction;
