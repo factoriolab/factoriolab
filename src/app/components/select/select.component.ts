@@ -7,6 +7,7 @@ import {
   HostListener,
 } from '@angular/core';
 
+import { OptionsType, options } from '~/models';
 import { DatasetState } from '~/store/dataset';
 
 export enum SelectType {
@@ -21,13 +22,14 @@ export enum SelectType {
 })
 export class SelectComponent {
   @Input() data: DatasetState;
-  @Input() options: string[][];
   @Input() selectedId: string;
+  @Input() optionsType: OptionsType;
   @Input() selectType = SelectType.Item;
 
   @Output() cancel = new EventEmitter();
   @Output() selectId = new EventEmitter<string>();
 
+  options = options;
   type = SelectType;
 
   opening = true;

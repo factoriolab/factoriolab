@@ -1,7 +1,14 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import Fraction from 'fraction.js';
 
-import { Step, RecipeId, ItemId, CategoryId } from '~/models';
+import {
+  Step,
+  RecipeId,
+  ItemId,
+  CategoryId,
+  OptionsType,
+  options,
+} from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { RecipeState } from '~/store/recipe';
 import { RecipeUtility } from '~/utilities';
@@ -33,33 +40,21 @@ export class StepsComponent {
   @Input() factoryPrecision: number;
 
   @Output() ignoreStep = new EventEmitter<RecipeId>();
-  @Output() editFactoryModule = new EventEmitter<[RecipeId, ItemId[]]>();
-  @Output() editBeaconModule = new EventEmitter<[RecipeId, ItemId]>();
-  @Output() editBeaconCount = new EventEmitter<[RecipeId, number]>();
+  @Output() setBelt = new EventEmitter<[RecipeId, ItemId]>();
+  @Output() setFactory = new EventEmitter<[RecipeId, ItemId]>();
+  @Output() setModules = new EventEmitter<[RecipeId, ItemId[]]>();
+  @Output() setBeaconModule = new EventEmitter<[RecipeId, ItemId]>();
+  @Output() setBeaconCount = new EventEmitter<[RecipeId, number]>();
   @Output() resetStep = new EventEmitter<RecipeId>();
 
   edit: StepEdit;
-  allModuleOptions = [
-    [ItemId.Module],
-    [ItemId.SpeedModule, ItemId.SpeedModule2, ItemId.SpeedModule3],
-    [
-      ItemId.ProductivityModule,
-      ItemId.ProductivityModule2,
-      ItemId.ProductivityModule3,
-    ],
-  ];
-  speedModuleOptions = [
-    [
-      ItemId.Module,
-      ItemId.SpeedModule,
-      ItemId.SpeedModule2,
-      ItemId.SpeedModule3,
-    ],
-  ];
 
+  categoryId = CategoryId;
   editType = StepEditType;
   itemId = ItemId;
-  categoryId = CategoryId;
+  optionsType = OptionsType;
+
+  options = options;
 
   constructor() {}
 
@@ -87,7 +82,7 @@ export class StepsComponent {
       for (const m of step.settings.modules) {
         modules.push(value);
       }
-      this.editFactoryModule.emit([step.recipeId, modules]);
+      this.setModules.emit([step.recipeId, modules]);
     } else {
       // Edit individual module
       const modules = [
@@ -95,7 +90,7 @@ export class StepsComponent {
         value,
         ...step.settings.modules.slice(index + 1),
       ];
-      this.editFactoryModule.emit([step.recipeId, modules]);
+      this.setModules.emit([step.recipeId, modules]);
     }
   }
 
@@ -106,7 +101,7 @@ export class StepsComponent {
         this.steps.find((s) => s.itemId === step.itemId).settings
           .beaconCount !== value
       ) {
-        this.editBeaconCount.emit([step.recipeId, value]);
+        this.setBeaconCount.emit([step.recipeId, value]);
       }
     }
   }

@@ -40,16 +40,24 @@ export class StepsContainerComponent implements OnInit {
     this.store.dispatch(new Recipe.IgnoreAction(value));
   }
 
-  editFactoryModule(data: [RecipeId, ItemId[]]) {
-    this.store.dispatch(new Recipe.EditFactoryModuleAction(data));
+  setBelt(data: [RecipeId, ItemId]) {
+    this.store.dispatch(new Recipe.SetBeltAction(data));
   }
 
-  editBeaconModule(data: [RecipeId, ItemId]) {
-    this.store.dispatch(new Recipe.EditBeaconModuleAction(data));
+  setFactory(data: [RecipeId, ItemId]) {
+    this.store.dispatch(new Recipe.SetFactoryAction(data));
   }
 
-  editBeaconCount(data: [RecipeId, number]) {
-    this.store.dispatch(new Recipe.EditBeaconCountAction(data));
+  setModules(data: [RecipeId, ItemId[]]) {
+    this.store.dispatch(new Recipe.SetModulesAction(data));
+  }
+
+  setBeaconModule(data: [RecipeId, ItemId]) {
+    this.store.dispatch(new Recipe.SetBeaconModuleAction(data));
+  }
+
+  setBeaconCount(data: [RecipeId, number]) {
+    this.store.dispatch(new Recipe.SetBeaconCountAction(data));
   }
 
   resetStep(value: RecipeId) {

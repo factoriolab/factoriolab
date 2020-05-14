@@ -38,21 +38,35 @@ export function recipeReducer(
       }
       return newState;
     }
-    case RecipeActionType.EDIT_FACTORY_MODULE: {
+    case RecipeActionType.SET_BELT: {
+      const id = action.payload[0];
+      return {
+        ...state,
+        ...{ [id]: { ...state[id], ...{ belt: action.payload[1] } } },
+      };
+    }
+    case RecipeActionType.SET_FACTORY: {
+      const id = action.payload[0];
+      return {
+        ...state,
+        ...{ [id]: { ...state[id], ...{ factory: action.payload[1] } } },
+      };
+    }
+    case RecipeActionType.SET_MODULES: {
       const id = action.payload[0];
       return {
         ...state,
         ...{ [id]: { ...state[id], ...{ modules: action.payload[1] } } },
       };
     }
-    case RecipeActionType.EDIT_BEACON_MODULE: {
+    case RecipeActionType.SET_BEACON_MODULE: {
       const id = action.payload[0];
       return {
         ...state,
         ...{ [id]: { ...state[id], ...{ beaconModule: action.payload[1] } } },
       };
     }
-    case RecipeActionType.EDIT_BEACONS_COUNT: {
+    case RecipeActionType.SET_BEACONS_COUNT: {
       const id = action.payload[0];
       return {
         ...state,

@@ -21,9 +21,11 @@ import { RecipeUtility } from '~/utilities';
       [beltPrecision]="beltPrecision"
       [factoryPrecision]="factoryPrecision"
       (ignoreStep)="ignoreStep($event)"
-      (editFactoryModule)="editFactoryModule($event)"
-      (editBeaconModule)="editBeaconModule($event)"
-      (editBeaconCount)="editBeaconCount($event)"
+      (setBelt)="setBelt($event)"
+      (setFactory)="setFactory($event)"
+      (setModules)="setModules($event)"
+      (setBeaconModule)="setBeaconModule($event)"
+      (setBeaconCount)="setBeaconCount($event)"
       (resetStep)="resetStep($event)"
     >
     </lab-steps>
@@ -38,9 +40,11 @@ class TestStepsComponent {
   beltPrecision = 0;
   factoryPrecision = 1;
   ignoreStep(data) {}
-  editFactoryModule(data) {}
-  editBeaconModule(data) {}
-  editBeaconCount(data) {}
+  setBelt(data) {}
+  setFactory(data) {}
+  setModules(data) {}
+  setBeaconModule(data) {}
+  setBeaconCount(data) {}
   resetStep(data) {}
 }
 
@@ -69,52 +73,52 @@ describe('StepsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should edit a specific factory module', () => {
-    spyOn(component, 'editFactoryModule');
+  it('should set a specific factory module', () => {
+    spyOn(component, 'setModules');
     TestUtility.clickSelector(fixture, '.steps-edit-factory-module', 1);
     fixture.detectChanges();
     TestUtility.clickSelector(fixture, 'lab-select lab-icon', 1);
     fixture.detectChanges();
-    expect(component.editFactoryModule).toHaveBeenCalledWith([
+    expect(component.setModules).toHaveBeenCalledWith([
       mocks.Step1.itemId,
       [ItemId.Module, ItemId.SpeedModule],
     ]);
   });
 
-  it('should edit all factory modules', () => {
-    spyOn(component, 'editFactoryModule');
+  it('should set all factory modules', () => {
+    spyOn(component, 'setModules');
     TestUtility.clickSelector(fixture, '.steps-edit-factory-module', 0);
     fixture.detectChanges();
     TestUtility.clickSelector(fixture, 'lab-select lab-icon', 1);
     fixture.detectChanges();
-    expect(component.editFactoryModule).toHaveBeenCalledWith([
+    expect(component.setModules).toHaveBeenCalledWith([
       mocks.Step1.itemId,
       [ItemId.SpeedModule, ItemId.SpeedModule],
     ]);
   });
 
-  it('should edit beacon count', () => {
-    spyOn(component, 'editBeaconCount');
+  it('should set beacon count', () => {
+    spyOn(component, 'setBeaconCount');
     TestUtility.selectSelector(fixture, 'input', '24');
     fixture.detectChanges();
-    expect(component.editBeaconCount).toHaveBeenCalledWith([
+    expect(component.setBeaconCount).toHaveBeenCalledWith([
       mocks.Step1.itemId,
       24,
     ]);
   });
 
-  it('should not edit beacon count on invalid event', () => {
-    spyOn(component, 'editBeaconCount');
+  it('should not set beacon count on invalid event', () => {
+    spyOn(component, 'setBeaconCount');
     const event = { target: {} };
     component.child.beaconCountChange(mocks.Step1.itemId as any, event);
-    expect(component.editBeaconCount).not.toHaveBeenCalled();
+    expect(component.setBeaconCount).not.toHaveBeenCalled();
   });
 
-  it('should not edit beacon count if unchanged', () => {
-    spyOn(component, 'editBeaconCount');
+  it('should not set beacon count if unchanged', () => {
+    spyOn(component, 'setBeaconCount');
     TestUtility.selectSelector(fixture, 'input', '0');
     fixture.detectChanges();
-    expect(component.editBeaconCount).not.toHaveBeenCalled();
+    expect(component.setBeaconCount).not.toHaveBeenCalled();
   });
 
   describe('prodAllowed', () => {
