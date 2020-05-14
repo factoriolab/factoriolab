@@ -37,34 +37,51 @@ describe('Recipe Reducer', () => {
     });
   });
 
-  describe('EDIT_FACTORY_MODULE', () => {
-    it('should edit the factory module', () => {
+  describe('SET_BELT', () => {
+    it('should set the belt', () => {
       const result = recipeReducer(
         initialRecipeState,
-        new actions.EditFactoryModuleAction([
-          mocks.Recipe1.id,
-          [mocks.Item1.id],
-        ])
+        new actions.SetBeltAction([mocks.Recipe1.id, mocks.Item1.id])
+      );
+      expect(result[mocks.Recipe1.id].belt).toEqual(mocks.Item1.id);
+    });
+  });
+
+  describe('SET_FACTORY', () => {
+    it('should set the factory', () => {
+      const result = recipeReducer(
+        initialRecipeState,
+        new actions.SetFactoryAction([mocks.Recipe1.id, mocks.Item1.id])
+      );
+      expect(result[mocks.Recipe1.id].factory).toEqual(mocks.Item1.id);
+    });
+  });
+
+  describe('SET_MODULES', () => {
+    it('should set the modules', () => {
+      const result = recipeReducer(
+        initialRecipeState,
+        new actions.SetModulesAction([mocks.Recipe1.id, [mocks.Item1.id]])
       );
       expect(result[mocks.Recipe1.id].modules).toEqual([mocks.Item1.id]);
     });
   });
 
-  describe('EDIT_BEACON_MODULE', () => {
-    it('should edit the beacon module', () => {
+  describe('SET_BEACON_MODULE', () => {
+    it('should set the beacon module', () => {
       const result = recipeReducer(
         initialRecipeState,
-        new actions.EditBeaconModuleAction([mocks.Recipe1.id, mocks.Item1.id])
+        new actions.SetBeaconModuleAction([mocks.Recipe1.id, mocks.Item1.id])
       );
       expect(result[mocks.Recipe1.id].beaconModule).toEqual(mocks.Item1.id);
     });
   });
 
-  describe('EDIT_BEACONS_COUNT', () => {
-    it('should edit the beacon count', () => {
+  describe('SET_BEACONS_COUNT', () => {
+    it('should set the beacon count', () => {
       const result = recipeReducer(
         initialRecipeState,
-        new actions.EditBeaconCountAction([mocks.Recipe1.id, numberValue])
+        new actions.SetBeaconCountAction([mocks.Recipe1.id, numberValue])
       );
       expect(result[mocks.Recipe1.id].beaconCount).toEqual(numberValue);
     });
