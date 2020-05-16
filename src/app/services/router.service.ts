@@ -56,7 +56,7 @@ export class RouterService {
   loaded: boolean;
   unzipping: boolean;
   zip: string;
-  zipPartial: string;
+  zipPartial = '';
 
   constructor(private router: Router, private store: Store<State>) {
     this.router.events.subscribe((e) => this.updateState(e));
