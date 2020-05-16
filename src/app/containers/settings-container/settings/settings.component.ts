@@ -52,12 +52,12 @@ export class SettingsComponent {
 
   openSelect = OpenSelect.None;
 
-  displayRate = DisplayRate;
-  itemId = ItemId;
-  select = OpenSelect;
-  optionsType = OptionsType;
-  researchSpeed = ResearchSpeed;
-  selectType = SelectType;
+  DisplayRate = DisplayRate;
+  ItemId = ItemId;
+  OpenSelect = OpenSelect;
+  OptionsType = OptionsType;
+  ResearchSpeed = ResearchSpeed;
+  SelectType = SelectType;
 
   initial = initialSettingsState;
 
