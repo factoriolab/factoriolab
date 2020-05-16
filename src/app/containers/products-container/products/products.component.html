@@ -1,5 +1,5 @@
 <div class="add-button relative">
-  <button type="button" (click)="adding = true">
+  <button type="button" title="Add Product" (click)="adding = true">
     <i class="material-icons">add</i>
   </button>
   <lab-picker
@@ -15,15 +15,19 @@
 <div *ngIf="products && products.length">
   <div class="product-row" *ngFor="let product of products">
     <ng-container *ngIf="product && data.itemEntities[product.itemId]">
-      <button type="button" (click)="remove.emit(product.id)">
+      <button
+        type="button"
+        title="Remove Product"
+        (click)="remove.emit(product.id)"
+      >
         <i class="material-icons">remove</i>
       </button>
       <div class="icon-container">
         <div class="relative">
           <lab-icon
             class="clickable"
+            title="Change Product"
             [iconId]="product.itemId"
-            [title]="data.itemEntities[product.itemId].name"
             (click)="clickEditProduct(product)"
             scale="true"
           ></lab-icon>
@@ -42,10 +46,12 @@
         type="number"
         min="0"
         step="any"
+        title="Set Output Rate"
         [value]="product.rate"
         (change)="emitNumber(editRate, product.id, $event)"
       />
       <select
+        title="Set Rate Type"
         [ngModel]="product.rateType"
         (change)="emitNumber(editRateType, product.id, $event)"
       >

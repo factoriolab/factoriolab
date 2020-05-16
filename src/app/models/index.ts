@@ -7,6 +7,7 @@ export * from './entities';
 export * from './factors';
 export * from './factory';
 export * from './id';
+export * from './id-type';
 export * from './item';
 export * from './module';
 export * from './options';

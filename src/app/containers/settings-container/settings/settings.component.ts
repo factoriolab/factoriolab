@@ -1,12 +1,12 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { SelectType } from '~/components';
 import {
   DisplayRate,
   ItemId,
   RecipeId,
   ResearchSpeed,
   OptionsType,
+  IdType,
 } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { SettingsState, initialSettingsState } from '~/store/settings';
@@ -57,7 +57,7 @@ export class SettingsComponent {
   OpenSelect = OpenSelect;
   OptionsType = OptionsType;
   ResearchSpeed = ResearchSpeed;
-  SelectType = SelectType;
+  SelectType = IdType;
 
   initial = initialSettingsState;
 

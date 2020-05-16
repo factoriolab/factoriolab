@@ -7,13 +7,8 @@ import {
   HostListener,
 } from '@angular/core';
 
-import { OptionsType, options } from '~/models';
+import { OptionsType, IdType, options } from '~/models';
 import { DatasetState } from '~/store/dataset';
-
-export enum SelectType {
-  Item,
-  Recipe,
-}
 
 @Component({
   selector: 'lab-select',
@@ -24,14 +19,14 @@ export class SelectComponent {
   @Input() data: DatasetState;
   @Input() selectedId: string;
   @Input() optionsType: OptionsType;
-  @Input() selectType = SelectType.Item;
+  @Input() selectType = IdType.Item;
 
   @Output() cancel = new EventEmitter();
   @Output() selectId = new EventEmitter<string>();
 
   options = options;
 
-  SelectType = SelectType;
+  IdType = IdType;
 
   opening = true;
 

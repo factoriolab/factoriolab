@@ -1,9 +1,60 @@
+@import 'values';
+
 :host {
   display: flex;
   user-select: none;
+  position: relative;
+
+  &:hover .tooltip {
+    visibility: visible;
+
+    &:hover {
+      visibility: hidden;
+    }
+  }
 }
 
 img {
   background-repeat: no-repeat;
   background-image: url(/assets/0-18.png);
+}
+
+.tooltip {
+  visibility: hidden;
+  position: absolute;
+  background-color: $color-gray-1;
+  border-radius: 0.25rem;
+  border: 1px solid $color-brand;
+  padding: 0.5rem;
+  user-select: none;
+  cursor: default;
+
+  left: 0;
+  top: calc(100% + 0.25rem);
+  z-index: 1;
+
+  .title {
+    white-space: nowrap;
+  }
+
+  .flex {
+    > * + * {
+      margin-left: 0.5rem;
+    }
+  }
+
+  > * + * {
+    margin-top: 0.25rem;
+  }
+}
+
+.icon-text {
+  position: absolute;
+  bottom: 0.125rem;
+  right: 0.125rem;
+  color: $color-white;
+  font-weight: bold;
+  text-shadow: 0px 1px 1px #000, 0px -1px 1px #000, 1px 0px 1px #000,
+    -1px 0px 1px #000;
+  pointer-events: none;
 }

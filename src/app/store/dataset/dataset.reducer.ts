@@ -103,18 +103,15 @@ export function datasetReducer(
           {}
         ),
         categoryItemRows,
-        recipes: action.payload.recipes,
-        recipeIds: action.payload.recipes.map((r) => r.id),
-        recipeEntities: action.payload.recipes.reduce(
-          (e: Entities<Recipe>, r) => {
-            return { ...e, ...{ [r.id]: r } };
-          },
-          {}
-        ),
-        recipeN: action.payload.recipes.reduce((e: Entities<number>, i, z) => {
+        recipes,
+        recipeIds: recipes.map((r) => r.id),
+        recipeEntities: recipes.reduce((e: Entities<Recipe>, r) => {
+          return { ...e, ...{ [r.id]: r } };
+        }, {}),
+        recipeN: recipes.reduce((e: Entities<number>, i, z) => {
           return { ...e, ...{ [i.id]: z } };
         }, {}),
-        recipeI: action.payload.recipes.reduce((e: NEntities<string>, i, z) => {
+        recipeI: recipes.reduce((e: NEntities<string>, i, z) => {
           return { ...e, ...{ [z]: i.id } };
         }, {}),
       };

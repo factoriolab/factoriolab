@@ -141,86 +141,96 @@
 </div>
 <div class="label">Factory</div>
 <div class="field">
-  <div class="relative">
-    <lab-icon
-      class="clickable"
-      [iconId]="settings.belt"
-      (click)="openSelect = OpenSelect.Belt"
-    ></lab-icon>
-    <lab-select
-      *ngIf="openSelect === OpenSelect.Belt"
-      [data]="data"
-      [selectedId]="settings.belt"
-      [optionsType]="OptionsType.Belt"
-      (cancel)="openSelect = OpenSelect.None"
-      (selectId)="setBelt.emit($event)"
-    >
-    </lab-select>
+  <div class="select-container">
+    <div>
+      <lab-icon
+        class="clickable"
+        [iconId]="settings.belt"
+        (click)="openSelect = OpenSelect.Belt"
+      ></lab-icon>
+      <lab-select
+        *ngIf="openSelect === OpenSelect.Belt"
+        [data]="data"
+        [selectedId]="settings.belt"
+        [optionsType]="OptionsType.Belt"
+        (cancel)="openSelect = OpenSelect.None"
+        (selectId)="setBelt.emit($event)"
+      >
+      </lab-select>
+    </div>
   </div>
-  <div class="relative">
-    <lab-icon
-      class="clickable"
-      [iconId]="settings.assembler"
-      (click)="openSelect = OpenSelect.Assembler"
-    ></lab-icon>
-    <lab-select
-      *ngIf="openSelect === OpenSelect.Assembler"
-      [data]="data"
-      [selectedId]="settings.assembler"
-      [optionsType]="OptionsType.Assembler"
-      (cancel)="openSelect = OpenSelect.None"
-      (selectId)="setAssembler.emit($event)"
-    >
-    </lab-select>
+  <div class="select-container">
+    <div>
+      <lab-icon
+        class="clickable"
+        [iconId]="settings.assembler"
+        (click)="openSelect = OpenSelect.Assembler"
+      ></lab-icon>
+      <lab-select
+        *ngIf="openSelect === OpenSelect.Assembler"
+        [data]="data"
+        [selectedId]="settings.assembler"
+        [optionsType]="OptionsType.Assembler"
+        (cancel)="openSelect = OpenSelect.None"
+        (selectId)="setAssembler.emit($event)"
+      >
+      </lab-select>
+    </div>
   </div>
-  <div class="relative">
-    <lab-icon
-      class="clickable"
-      [iconId]="settings.furnace"
-      (click)="openSelect = OpenSelect.Furnace"
-    ></lab-icon>
-    <lab-select
-      *ngIf="openSelect === OpenSelect.Furnace"
-      [data]="data"
-      [selectedId]="settings.furnace"
-      [optionsType]="OptionsType.Furnace"
-      (cancel)="openSelect = OpenSelect.None"
-      (selectId)="setFurnace.emit($event)"
-    >
-    </lab-select>
+  <div class="select-container">
+    <div>
+      <lab-icon
+        class="clickable"
+        [iconId]="settings.furnace"
+        (click)="openSelect = OpenSelect.Furnace"
+      ></lab-icon>
+      <lab-select
+        *ngIf="openSelect === OpenSelect.Furnace"
+        [data]="data"
+        [selectedId]="settings.furnace"
+        [optionsType]="OptionsType.Furnace"
+        (cancel)="openSelect = OpenSelect.None"
+        (selectId)="setFurnace.emit($event)"
+      >
+      </lab-select>
+    </div>
   </div>
-  <div class="relative">
-    <lab-icon
-      class="clickable"
-      [iconId]="settings.oilRecipe"
-      (click)="openSelect = OpenSelect.OilRecipe"
-    ></lab-icon>
-    <lab-select
-      *ngIf="openSelect === OpenSelect.OilRecipe"
-      [data]="data"
-      [selectedId]="settings.oilRecipe"
-      [optionsType]="OptionsType.OilRecipe"
-      [selectType]="SelectType.Recipe"
-      (cancel)="openSelect = OpenSelect.None"
-      (selectId)="setOilRecipe.emit($event)"
-    >
-    </lab-select>
+  <div class="select-container">
+    <div>
+      <lab-icon
+        class="clickable"
+        [iconId]="settings.oilRecipe"
+        (click)="openSelect = OpenSelect.OilRecipe"
+      ></lab-icon>
+      <lab-select
+        *ngIf="openSelect === OpenSelect.OilRecipe"
+        [data]="data"
+        [selectedId]="settings.oilRecipe"
+        [optionsType]="OptionsType.OilRecipe"
+        [selectType]="SelectType.Recipe"
+        (cancel)="openSelect = OpenSelect.None"
+        (selectId)="setOilRecipe.emit($event)"
+      >
+      </lab-select>
+    </div>
   </div>
-  <div class="relative">
-    <lab-icon
-      class="clickable"
-      [iconId]="settings.fuel"
-      (click)="openSelect = OpenSelect.Fuel"
-    ></lab-icon>
-    <lab-select
-      *ngIf="openSelect === OpenSelect.Fuel"
-      [data]="data"
-      [optionsType]="OptionsType.Fuel"
-      [selectedId]="settings.fuel"
-      (cancel)="openSelect = OpenSelect.None"
-      (selectId)="setFuel.emit($event)"
-    >
-    </lab-select>
+  <div class="select-container">
+    <div>
+      <lab-icon
+        class="clickable"
+        [iconId]="settings.fuel"
+        (click)="openSelect = OpenSelect.Fuel"
+      ></lab-icon>
+      <lab-select
+        *ngIf="openSelect === OpenSelect.Fuel"
+        [data]="data"
+        [optionsType]="OptionsType.Fuel"
+        [selectedId]="settings.fuel"
+        (cancel)="openSelect = OpenSelect.None"
+        (selectId)="setFuel.emit($event)"
+      >
+      </lab-select>
+    </div>
   </div>
 </div>
 <div class="field">
@@ -240,54 +250,60 @@
 </div>
 <div class="label">Modules</div>
 <div class="field">
-  <div class="relative">
-    <lab-icon
-      class="clickable"
-      [iconId]="settings.prodModule"
-      (click)="openSelect = OpenSelect.ProdModule"
-    ></lab-icon>
-    <lab-select
-      *ngIf="openSelect === OpenSelect.ProdModule"
-      [data]="data"
-      [selectedId]="settings.prodModule"
-      [optionsType]="OptionsType.ProdModule"
-      (cancel)="openSelect = OpenSelect.None"
-      (selectId)="setProdModule.emit($event)"
-    >
-    </lab-select>
+  <div class="select-container">
+    <div>
+      <lab-icon
+        class="clickable"
+        [iconId]="settings.prodModule"
+        (click)="openSelect = OpenSelect.ProdModule"
+      ></lab-icon>
+      <lab-select
+        *ngIf="openSelect === OpenSelect.ProdModule"
+        [data]="data"
+        [selectedId]="settings.prodModule"
+        [optionsType]="OptionsType.ProdModule"
+        (cancel)="openSelect = OpenSelect.None"
+        (selectId)="setProdModule.emit($event)"
+      >
+      </lab-select>
+    </div>
   </div>
-  <div class="relative">
-    <lab-icon
-      class="clickable"
-      [iconId]="settings.speedModule"
-      (click)="openSelect = OpenSelect.SpeedModule"
-    ></lab-icon>
-    <lab-select
-      *ngIf="openSelect === OpenSelect.SpeedModule"
-      [data]="data"
-      [selectedId]="settings.speedModule"
-      [optionsType]="OptionsType.SpeedModule"
-      (cancel)="openSelect = OpenSelect.None"
-      (selectId)="setSpeedModule.emit($event)"
-    >
-    </lab-select>
+  <div class="select-container">
+    <div>
+      <lab-icon
+        class="clickable"
+        [iconId]="settings.speedModule"
+        (click)="openSelect = OpenSelect.SpeedModule"
+      ></lab-icon>
+      <lab-select
+        *ngIf="openSelect === OpenSelect.SpeedModule"
+        [data]="data"
+        [selectedId]="settings.speedModule"
+        [optionsType]="OptionsType.SpeedModule"
+        (cancel)="openSelect = OpenSelect.None"
+        (selectId)="setSpeedModule.emit($event)"
+      >
+      </lab-select>
+    </div>
   </div>
   <lab-icon [iconId]="ItemId.Beacon"></lab-icon>
-  <div class="relative">
-    <lab-icon
-      class="clickable"
-      [iconId]="settings.beaconModule"
-      (click)="openSelect = OpenSelect.BeaconModule"
-    ></lab-icon>
-    <lab-select
-      *ngIf="openSelect === OpenSelect.BeaconModule"
-      [data]="data"
-      [selectedId]="settings.beaconModule"
-      [optionsType]="OptionsType.SpeedModule"
-      (cancel)="openSelect = OpenSelect.None"
-      (selectId)="setBeaconModule.emit($event)"
-    >
-    </lab-select>
+  <div class="select-container">
+    <div>
+      <lab-icon
+        class="clickable"
+        [iconId]="settings.beaconModule"
+        (click)="openSelect = OpenSelect.BeaconModule"
+      ></lab-icon>
+      <lab-select
+        *ngIf="openSelect === OpenSelect.BeaconModule"
+        [data]="data"
+        [selectedId]="settings.beaconModule"
+        [optionsType]="OptionsType.SpeedModule"
+        (cancel)="openSelect = OpenSelect.None"
+        (selectId)="setBeaconModule.emit($event)"
+      >
+      </lab-select>
+    </div>
   </div>
   <input
     type="number"
