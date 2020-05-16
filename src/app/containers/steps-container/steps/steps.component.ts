@@ -8,6 +8,7 @@ import {
   CategoryId,
   OptionsType,
   options,
+  DisplayRate,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { DatasetState } from '~/store/dataset';
@@ -36,6 +37,7 @@ export class StepsComponent {
   @Input() data: DatasetState;
   @Input() recipe: RecipeState;
   @Input() steps: Step[];
+  @Input() displayRate: DisplayRate;
   @Input() itemPrecision: number;
   @Input() beltPrecision: number;
   @Input() factoryPrecision: number;
@@ -50,10 +52,11 @@ export class StepsComponent {
 
   edit: StepEdit;
 
-  categoryId = CategoryId;
-  editType = StepEditType;
-  itemId = ItemId;
-  optionsType = OptionsType;
+  CategoryId = CategoryId;
+  DisplayRate = DisplayRate;
+  StepEditType = StepEditType;
+  ItemId = ItemId;
+  OptionsType = OptionsType;
 
   options = options;
 

@@ -2,7 +2,13 @@
   <thead>
     <tr>
       <th>
-        Items
+        Items/{{
+          displayRate === DisplayRate.PerHour
+            ? 'h'
+            : displayRate === DisplayRate.PerMinute
+            ? 'm'
+            : 's'
+        }}
       </th>
       <th>
         Belts
@@ -54,14 +60,14 @@
             *ngIf="
               step.settings.belt &&
               step.belts &&
-              data.itemEntities[step.itemId].category !== categoryId.Research
+              data.itemEntities[step.itemId].category !== CategoryId.Research
             "
             class="flex"
           >
             <div class="monospace">{{ rate(step.belts, beltPrecision) }}</div>
             <ng-container
               *ngIf="
-                options[optionsType.Belt][0].indexOf(step.settings.belt) === -1;
+                options[OptionsType.Belt][0].indexOf(step.settings.belt) === -1;
                 then beltDefault;
                 else beltPicker
               "
@@ -77,15 +83,17 @@
                 <lab-icon
                   class="clickable"
                   [iconId]="step.settings.belt"
-                  (click)="edit = { step: step, type: editType.Belt }"
+                  (click)="edit = { step: step, type: StepEditType.Belt }"
                 ></lab-icon>
                 <lab-select
                   *ngIf="
-                    edit && edit.step === step && edit.type === editType.Belt
+                    edit &&
+                    edit.step === step &&
+                    edit.type === StepEditType.Belt
                   "
                   [data]="data"
                   [selectedId]="step.settings.belt"
-                  [optionsType]="optionsType.Belt"
+                  [optionsType]="OptionsType.Belt"
                   (cancel)="edit = null"
                   (selectId)="setBelt.emit([step.recipeId, $event])"
                 >
@@ -107,10 +115,10 @@
             </ng-container>
             <ng-container
               *ngIf="
-                options[optionsType.Assembler][0].indexOf(
+                options[OptionsType.Assembler][0].indexOf(
                   step.settings.factory
                 ) === -1 &&
-                  options[optionsType.Furnace][0].indexOf(
+                  options[OptionsType.Furnace][0].indexOf(
                     step.settings.factory
                   ) === -1;
                 then factoryDefault;
@@ -129,20 +137,22 @@
                 <lab-icon
                   class="clickable"
                   [iconId]="step.settings.factory"
-                  (click)="edit = { step: step, type: editType.Factory }"
+                  (click)="edit = { step: step, type: StepEditType.Factory }"
                 ></lab-icon>
                 <lab-select
                   *ngIf="
-                    edit && edit.step === step && edit.type === editType.Factory
+                    edit &&
+                    edit.step === step &&
+                    edit.type === StepEditType.Factory
                   "
                   [data]="data"
                   [selectedId]="step.settings.factory"
                   [optionsType]="
-                    options[optionsType.Assembler][0].indexOf(
+                    options[OptionsType.Assembler][0].indexOf(
                       step.settings.factory
                     ) !== -1
-                      ? optionsType.Assembler
-                      : optionsType.Furnace
+                      ? OptionsType.Assembler
+                      : OptionsType.Furnace
                   "
                   (cancel)="edit = null"
                   (selectId)="setFactory.emit([step.recipeId, $event])"
@@ -163,21 +173,23 @@
               <lab-icon
                 class="steps-edit-factory-module clickable"
                 [iconId]="mod"
-                (click)="edit = { step: step, type: editType.Module, index: i }"
+                (click)="
+                  edit = { step: step, type: StepEditType.Module, index: i }
+                "
               ></lab-icon>
               <lab-select
                 *ngIf="
                   edit &&
                   edit.step === step &&
-                  edit.type === editType.Module &&
+                  edit.type === StepEditType.Module &&
                   edit.index === i
                 "
                 [data]="data"
                 [selectedId]="mod"
                 [optionsType]="
                   prodAllowed(step)
-                    ? optionsType.AllModule
-                    : optionsType.SpeedModule
+                    ? OptionsType.AllModule
+                    : OptionsType.SpeedModule
                 "
                 (cancel)="edit = null"
                 (selectId)="factoryModuleChange(step, $event, i)"
@@ -194,22 +206,24 @@
               <lab-icon
                 class="clickable"
                 [iconId]="step.settings.beaconModule"
-                (click)="edit = { step: step, type: editType.Beacon }"
+                (click)="edit = { step: step, type: StepEditType.Beacon }"
               ></lab-icon>
               <lab-select
                 *ngIf="
-                  edit && edit.step === step && edit.type === editType.Beacon
+                  edit &&
+                  edit.step === step &&
+                  edit.type === StepEditType.Beacon
                 "
                 [data]="data"
                 [selectedId]="step.settings.beaconModule"
-                [optionsType]="optionsType.SpeedModule"
+                [optionsType]="OptionsType.SpeedModule"
                 (cancel)="edit = null"
                 (selectId)="setBeaconModule.emit([step.recipeId, $event])"
               >
               </lab-select>
             </div>
             <input
-              *ngIf="step.settings.beaconModule !== itemId.Module"
+              *ngIf="step.settings.beaconModule !== ItemId.Module"
               type="number"
               min="0"
               [value]="step.settings.beaconCount"

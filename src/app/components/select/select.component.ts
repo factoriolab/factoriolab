@@ -30,7 +30,8 @@ export class SelectComponent {
   @Output() selectId = new EventEmitter<string>();
 
   options = options;
-  type = SelectType;
+
+  SelectType = SelectType;
 
   opening = true;
 

@@ -5,9 +5,9 @@
       id="settings-display-persecond"
       type="radio"
       name="displayRate"
-      [value]="displayRate.PerSecond"
+      [value]="DisplayRate.PerSecond"
       [ngModel]="settings.displayRate"
-      (change)="setDisplayRate.emit(displayRate.PerSecond)"
+      (change)="setDisplayRate.emit(DisplayRate.PerSecond)"
     />
     <label for="settings-display-persecond">#/sec</label>
   </div>
@@ -16,9 +16,9 @@
       id="settings-display-perminute"
       type="radio"
       name="displayRate"
-      [value]="displayRate.PerMinute"
+      [value]="DisplayRate.PerMinute"
       [ngModel]="settings.displayRate"
-      (change)="setDisplayRate.emit(displayRate.PerMinute)"
+      (change)="setDisplayRate.emit(DisplayRate.PerMinute)"
     />
     <label for="settings-display-perminute">#/min</label>
   </div>
@@ -27,9 +27,9 @@
       id="settings-display-perhour"
       type="radio"
       name="displayRate"
-      [value]="displayRate.PerHour"
+      [value]="DisplayRate.PerHour"
       [ngModel]="settings.displayRate"
-      (change)="setDisplayRate.emit(displayRate.PerHour)"
+      (change)="setDisplayRate.emit(DisplayRate.PerHour)"
     />
     <label for="settings-display-perhour">#/hr</label>
   </div>
@@ -145,14 +145,14 @@
     <lab-icon
       class="clickable"
       [iconId]="settings.belt"
-      (click)="openSelect = select.Belt"
+      (click)="openSelect = OpenSelect.Belt"
     ></lab-icon>
     <lab-select
-      *ngIf="openSelect === select.Belt"
+      *ngIf="openSelect === OpenSelect.Belt"
       [data]="data"
       [selectedId]="settings.belt"
-      [optionsType]="optionsType.Belt"
-      (cancel)="openSelect = select.None"
+      [optionsType]="OptionsType.Belt"
+      (cancel)="openSelect = OpenSelect.None"
       (selectId)="setBelt.emit($event)"
     >
     </lab-select>
@@ -161,14 +161,14 @@
     <lab-icon
       class="clickable"
       [iconId]="settings.assembler"
-      (click)="openSelect = select.Assembler"
+      (click)="openSelect = OpenSelect.Assembler"
     ></lab-icon>
     <lab-select
-      *ngIf="openSelect === select.Assembler"
+      *ngIf="openSelect === OpenSelect.Assembler"
       [data]="data"
       [selectedId]="settings.assembler"
-      [optionsType]="optionsType.Assembler"
-      (cancel)="openSelect = select.None"
+      [optionsType]="OptionsType.Assembler"
+      (cancel)="openSelect = OpenSelect.None"
       (selectId)="setAssembler.emit($event)"
     >
     </lab-select>
@@ -177,14 +177,14 @@
     <lab-icon
       class="clickable"
       [iconId]="settings.furnace"
-      (click)="openSelect = select.Furnace"
+      (click)="openSelect = OpenSelect.Furnace"
     ></lab-icon>
     <lab-select
-      *ngIf="openSelect === select.Furnace"
+      *ngIf="openSelect === OpenSelect.Furnace"
       [data]="data"
       [selectedId]="settings.furnace"
-      [optionsType]="optionsType.Furnace"
-      (cancel)="openSelect = select.None"
+      [optionsType]="OptionsType.Furnace"
+      (cancel)="openSelect = OpenSelect.None"
       (selectId)="setFurnace.emit($event)"
     >
     </lab-select>
@@ -193,15 +193,15 @@
     <lab-icon
       class="clickable"
       [iconId]="settings.oilRecipe"
-      (click)="openSelect = select.OilRecipe"
+      (click)="openSelect = OpenSelect.OilRecipe"
     ></lab-icon>
     <lab-select
-      *ngIf="openSelect === select.OilRecipe"
+      *ngIf="openSelect === OpenSelect.OilRecipe"
       [data]="data"
       [selectedId]="settings.oilRecipe"
-      [optionsType]="optionsType.OilRecipe"
-      [selectType]="selectType.Recipe"
-      (cancel)="openSelect = select.None"
+      [optionsType]="OptionsType.OilRecipe"
+      [selectType]="SelectType.Recipe"
+      (cancel)="openSelect = OpenSelect.None"
       (selectId)="setOilRecipe.emit($event)"
     >
     </lab-select>
@@ -210,21 +210,21 @@
     <lab-icon
       class="clickable"
       [iconId]="settings.fuel"
-      (click)="openSelect = select.Fuel"
+      (click)="openSelect = OpenSelect.Fuel"
     ></lab-icon>
     <lab-select
-      *ngIf="openSelect === select.Fuel"
+      *ngIf="openSelect === OpenSelect.Fuel"
       [data]="data"
-      [optionsType]="optionsType.Fuel"
+      [optionsType]="OptionsType.Fuel"
       [selectedId]="settings.fuel"
-      (cancel)="openSelect = select.None"
+      (cancel)="openSelect = OpenSelect.None"
       (selectId)="setFuel.emit($event)"
     >
     </lab-select>
   </div>
 </div>
 <div class="field">
-  <lab-icon [iconId]="itemId.Pipe"></lab-icon>
+  <lab-icon [iconId]="ItemId.Pipe"></lab-icon>
   <input
     type="number"
     placeholder="Max Flow Rate"
@@ -244,14 +244,14 @@
     <lab-icon
       class="clickable"
       [iconId]="settings.prodModule"
-      (click)="openSelect = select.ProdModule"
+      (click)="openSelect = OpenSelect.ProdModule"
     ></lab-icon>
     <lab-select
-      *ngIf="openSelect === select.ProdModule"
+      *ngIf="openSelect === OpenSelect.ProdModule"
       [data]="data"
       [selectedId]="settings.prodModule"
-      [optionsType]="optionsType.ProdModule"
-      (cancel)="openSelect = select.None"
+      [optionsType]="OptionsType.ProdModule"
+      (cancel)="openSelect = OpenSelect.None"
       (selectId)="setProdModule.emit($event)"
     >
     </lab-select>
@@ -260,31 +260,31 @@
     <lab-icon
       class="clickable"
       [iconId]="settings.speedModule"
-      (click)="openSelect = select.SpeedModule"
+      (click)="openSelect = OpenSelect.SpeedModule"
     ></lab-icon>
     <lab-select
-      *ngIf="openSelect === select.SpeedModule"
+      *ngIf="openSelect === OpenSelect.SpeedModule"
       [data]="data"
       [selectedId]="settings.speedModule"
-      [optionsType]="optionsType.SpeedModule"
-      (cancel)="openSelect = select.None"
+      [optionsType]="OptionsType.SpeedModule"
+      (cancel)="openSelect = OpenSelect.None"
       (selectId)="setSpeedModule.emit($event)"
     >
     </lab-select>
   </div>
-  <lab-icon [iconId]="itemId.Beacon"></lab-icon>
+  <lab-icon [iconId]="ItemId.Beacon"></lab-icon>
   <div class="relative">
     <lab-icon
       class="clickable"
       [iconId]="settings.beaconModule"
-      (click)="openSelect = select.BeaconModule"
+      (click)="openSelect = OpenSelect.BeaconModule"
     ></lab-icon>
     <lab-select
-      *ngIf="openSelect === select.BeaconModule"
+      *ngIf="openSelect === OpenSelect.BeaconModule"
       [data]="data"
       [selectedId]="settings.beaconModule"
-      [optionsType]="optionsType.SpeedModule"
-      (cancel)="openSelect = select.None"
+      [optionsType]="OptionsType.SpeedModule"
+      (cancel)="openSelect = OpenSelect.None"
       (selectId)="setBeaconModule.emit($event)"
     >
     </lab-select>
@@ -303,15 +303,15 @@
     class="flex clickable"
     (click)="setDrillModule.emit(!settings.drillModule)"
   >
-    <lab-icon [iconId]="itemId.MiningProductivity" [scale]="true"></lab-icon>
+    <lab-icon [iconId]="ItemId.MiningProductivity" [scale]="true"></lab-icon>
     <lab-icon
-      [iconId]="settings.drillModule ? itemId.SpeedModule3 : itemId.Module"
+      [iconId]="settings.drillModule ? ItemId.SpeedModule3 : ItemId.Module"
     ></lab-icon>
   </div>
 </div>
 <div class="label">Bonuses</div>
 <div class="field">
-  <lab-icon [iconId]="itemId.MiningProductivity" [scale]="true"></lab-icon>
+  <lab-icon [iconId]="ItemId.MiningProductivity" [scale]="true"></lab-icon>
   <div class="field">
     +
     <input
@@ -326,17 +326,17 @@
   </div>
 </div>
 <div class="field">
-  <lab-icon [iconId]="itemId.Lab" [scale]="true"></lab-icon>
+  <lab-icon [iconId]="ItemId.Lab" [scale]="true"></lab-icon>
   <select
     [ngModel]="settings.researchSpeed"
     (change)="emitNumber(setResearchSpeed, $event)"
   >
-    <option [value]="researchSpeed.Speed0">No Research Bonus</option>
-    <option [value]="researchSpeed.Speed1">Research Speed 1</option>
-    <option [value]="researchSpeed.Speed2">Research Speed 2</option>
-    <option [value]="researchSpeed.Speed3">Research Speed 3</option>
-    <option [value]="researchSpeed.Speed4">Research Speed 4</option>
-    <option [value]="researchSpeed.Speed5">Research Speed 5</option>
-    <option [value]="researchSpeed.Speed6">Research Speed 6</option>
+    <option [value]="ResearchSpeed.Speed0">No Research Bonus</option>
+    <option [value]="ResearchSpeed.Speed1">Research Speed 1</option>
+    <option [value]="ResearchSpeed.Speed2">Research Speed 2</option>
+    <option [value]="ResearchSpeed.Speed3">Research Speed 3</option>
+    <option [value]="ResearchSpeed.Speed4">Research Speed 4</option>
+    <option [value]="ResearchSpeed.Speed5">Research Speed 5</option>
+    <option [value]="ResearchSpeed.Speed6">Research Speed 6</option>
   </select>
 </div>

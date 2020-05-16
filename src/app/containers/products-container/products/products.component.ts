@@ -21,8 +21,9 @@ export class ProductsComponent {
   adding: boolean;
   editProductId: number;
   categoryId = CategoryId.Logistics;
-  itemId = ItemId;
-  rateType = RateType;
+
+  ItemId = ItemId;
+  RateType = RateType;
 
   constructor() {}
 

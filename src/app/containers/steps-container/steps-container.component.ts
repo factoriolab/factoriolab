@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { Step, RecipeId, ItemId } from '~/models';
+import { Step, RecipeId, ItemId, DisplayRate } from '~/models';
 import { State } from '~/store';
 import * as Dataset from '~/store/dataset';
 import * as Recipe from '~/store/recipe';
@@ -21,6 +21,7 @@ export class StepsContainerComponent implements OnInit {
   data$: Observable<Dataset.DatasetState>;
   recipe$: Observable<Recipe.RecipeState>;
   steps$: Observable<Step[]>;
+  displayRate$: Observable<DisplayRate>;
   itemPrecision$: Observable<number>;
   beltPrecision$: Observable<number>;
   factoryPrecision$: Observable<number>;
@@ -31,6 +32,7 @@ export class StepsContainerComponent implements OnInit {
     this.data$ = this.store.select(Dataset.datasetState);
     this.recipe$ = this.store.select(Recipe.recipeState);
     this.steps$ = this.store.select(Products.getSteps);
+    this.displayRate$ = this.store.select(Settings.getDisplayRate);
     this.itemPrecision$ = this.store.select(Settings.getItemPrecision);
     this.beltPrecision$ = this.store.select(Settings.getBeltPrecision);
     this.factoryPrecision$ = this.store.select(Settings.getFactoryPrecision);

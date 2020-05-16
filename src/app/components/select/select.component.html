@@ -2,7 +2,7 @@
   <ng-container *ngFor="let id of row">
     <lab-icon
       class="clickable"
-      *ngIf="selectType === type.Item"
+      *ngIf="selectType === SelectType.Item"
       [iconId]="id"
       [title]="data.itemEntities[id] ? data.itemEntities[id].name : null"
       [class.selected]="id === selectedId"
@@ -10,7 +10,7 @@
     ></lab-icon>
     <lab-icon
       class="clickable"
-      *ngIf="selectType === type.Recipe"
+      *ngIf="selectType === SelectType.Recipe"
       [iconId]="id"
       [title]="data.recipeEntities[id].name"
       [class.selected]="id === selectedId"
