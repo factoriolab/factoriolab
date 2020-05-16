@@ -6,7 +6,7 @@
     *ngIf="adding"
     [data]="data"
     [categoryId]="categoryId"
-    [itemId]="itemId.WoodenChest"
+    [itemId]="ItemId.WoodenChest"
     (cancel)="adding = false"
     (selectTab)="categoryId = $event"
     (selectItem)="add.emit($event)"
@@ -49,10 +49,10 @@
         [ngModel]="product.rateType"
         (change)="emitNumber(editRateType, product.id, $event)"
       >
-        <option [value]="rateType.Items">Items</option>
-        <option [value]="rateType.Belts">Belts</option>
-        <option [value]="rateType.Wagons">Wagons</option>
-        <option [value]="rateType.Factories">Factories</option>
+        <option [value]="RateType.Items">Items</option>
+        <option [value]="RateType.Belts">Belts</option>
+        <option [value]="RateType.Wagons">Wagons</option>
+        <option [value]="RateType.Factories">Factories</option>
       </select>
     </ng-container>
   </div>
