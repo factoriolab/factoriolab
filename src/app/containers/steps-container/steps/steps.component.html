@@ -39,10 +39,13 @@
           <lab-icon
             *ngIf="data.recipeEntities[step.recipeId]?.in"
             class="clickable"
+            title="Click to ignore"
             [iconId]="step.itemId"
             [class.ignored]="
               step.settings.ignore || recipe[step.itemId]?.ignore
             "
+            [tooltip]="data.itemEntities[step.itemId]?.name"
+            [recipe]="data.recipeEntities[step.itemId]"
             scale="true"
             (click)="ignoreStep.emit(step.recipeId)"
           ></lab-icon>
@@ -50,6 +53,7 @@
             *ngIf="!data.recipeEntities[step.recipeId]?.in"
             class="not-clickable"
             [iconId]="step.itemId"
+            [tooltip]="data.itemEntities[step.itemId]?.name"
             scale="true"
           ></lab-icon>
         </div>
@@ -76,13 +80,20 @@
               <lab-icon
                 class="not-clickable"
                 [iconId]="step.settings.belt"
+                [tooltip]="data.itemEntities[step.settings.belt].name"
+                [item]="data.itemEntities[step.settings.belt]"
+                [displayRate]="displayRate"
               ></lab-icon>
             </ng-template>
             <ng-template #beltPicker>
               <div class="relative">
                 <lab-icon
                   class="clickable"
+                  title="Click to change belt"
                   [iconId]="step.settings.belt"
+                  [tooltip]="data.itemEntities[step.settings.belt].name"
+                  [item]="data.itemEntities[step.settings.belt]"
+                  [displayRate]="displayRate"
                   (click)="edit = { step: step, type: StepEditType.Belt }"
                 ></lab-icon>
                 <lab-select
@@ -94,6 +105,7 @@
                   [data]="data"
                   [selectedId]="step.settings.belt"
                   [optionsType]="OptionsType.Belt"
+                  [displayRate]="displayRate"
                   (cancel)="edit = null"
                   (selectId)="setBelt.emit([step.recipeId, $event])"
                 >
@@ -110,7 +122,11 @@
               {{ rate(step.factories, factoryPrecision) }}
             </div>
             <ng-container *ngIf="step.recipeId !== step.itemId">
-              <lab-icon [iconId]="step.recipeId"></lab-icon>
+              <lab-icon
+                [iconId]="step.recipeId"
+                [tooltip]="data.recipeEntities[step.recipeId].name"
+                [recipe]="data.recipeEntities[step.recipeId]"
+              ></lab-icon>
               :
             </ng-container>
             <ng-container
@@ -130,13 +146,18 @@
               <lab-icon
                 class="not-clickable"
                 [iconId]="step.settings.factory"
+                [tooltip]="data.itemEntities[step.settings.factory].name"
+                [item]="data.itemEntities[step.settings.factory]"
               ></lab-icon>
             </ng-template>
             <ng-template #factoryPicker>
               <div class="relative">
                 <lab-icon
                   class="clickable"
+                  title="Click to change factory"
                   [iconId]="step.settings.factory"
+                  [tooltip]="data.itemEntities[step.settings.factory].name"
+                  [item]="data.itemEntities[step.settings.factory]"
                   (click)="edit = { step: step, type: StepEditType.Factory }"
                 ></lab-icon>
                 <lab-select
@@ -172,7 +193,10 @@
             >
               <lab-icon
                 class="steps-edit-factory-module clickable"
+                title="Click to change module"
                 [iconId]="mod"
+                [tooltip]="data.itemEntities[mod]?.name"
+                [item]="data.itemEntities[mod]"
                 (click)="
                   edit = { step: step, type: StepEditType.Module, index: i }
                 "
@@ -205,7 +229,10 @@
             <div class="relative">
               <lab-icon
                 class="clickable"
+                title="Click to change beacon module"
                 [iconId]="step.settings.beaconModule"
+                [tooltip]="data.itemEntities[step.settings.beaconModule]?.name"
+                [item]="data.itemEntities[step.settings.beaconModule]"
                 (click)="edit = { step: step, type: StepEditType.Beacon }"
               ></lab-icon>
               <lab-select
@@ -224,6 +251,7 @@
             </div>
             <input
               *ngIf="step.settings.beaconModule !== ItemId.Module"
+              title="Enter number of beacon modules"
               type="number"
               min="0"
               [value]="step.settings.beaconCount"
@@ -233,11 +261,17 @@
         </ng-container>
       </td>
       <td>
-        <a [href]="router.stepHref(step, data)" target="_blank">
+        <a
+          *ngIf="step.items"
+          title="Click to open this step in a new tab"
+          [href]="router.stepHref(step, data)"
+          target="_blank"
+        >
           <i class="clickable material-icons">open_in_new</i>
         </a>
         <i
           *ngIf="recipe[step.recipeId]"
+          title="Undo modifications to this step"
           class="clickable material-icons"
           (click)="resetStep.emit(step.recipeId)"
           >undo</i

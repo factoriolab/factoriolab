@@ -1,4 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -14,6 +19,7 @@ import { StepsComponent } from './steps/steps.component';
   selector: 'lab-steps-container',
   templateUrl: './steps-container.component.html',
   styleUrls: ['./steps-container.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepsContainerComponent implements OnInit {
   @ViewChild(StepsComponent) child: StepsComponent;

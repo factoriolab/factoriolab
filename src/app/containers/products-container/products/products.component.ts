@@ -1,4 +1,10 @@
-import { Component, EventEmitter, Output, Input } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  Input,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { DatasetState } from '~/store/dataset';
 import { Product, RateType, CategoryId, ItemId } from '~/models';
@@ -7,6 +13,7 @@ import { Product, RateType, CategoryId, ItemId } from '~/models';
   selector: 'lab-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsComponent {
   @Input() data: DatasetState;

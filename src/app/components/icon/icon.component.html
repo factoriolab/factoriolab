@@ -1,8 +1,10 @@
 <img src="/assets/transparent.gif" [ngClass]="iconId" [class.scale]="scale" />
 <div *ngIf="text" class="icon-text">{{ text }}</div>
 <div *ngIf="recipe || item || tooltip" class="tooltip">
-  <div class="title" *ngIf="tooltip">{{ tooltip }}</div>
-  <div *ngIf="recipe" class="flex recipe">
+  <div *ngIf="tooltip" class="title nowrap">
+    {{ tooltip }}
+  </div>
+  <div *ngIf="recipe" class="flex">
     <lab-icon iconId="time" [text]="recipe.time"></lab-icon>
     <ng-container *ngFor="let ingredient of recipe.in | keyvalue">
       <lab-icon
@@ -27,5 +29,29 @@
       [text]="1"
       scale="true"
     ></lab-icon>
+  </div>
+  <div *ngIf="item?.belt" class="nowrap">
+    {{ item.belt.speed * displayRate }}
+    {{
+      displayRate === DisplayRate.PerSecond
+        ? 'Items/s'
+        : displayRate === DisplayRate.PerMinute
+        ? 'Items/m'
+        : 'Items/h'
+    }}
+  </div>
+  <div *ngIf="item?.factory">
+    <div class="nowrap">Crafting Speed: {{ item.factory.speed }}</div>
+    <div class="nowrap">Modules: {{ item.factory.modules }}</div>
+  </div>
+  <div *ngIf="item?.fuel" class="nowrap">{{ item.fuel }} MJ</div>
+  <div *ngIf="item?.module">
+    <div *ngIf="item.module.speed" class="nowrap">
+      Speed: {{ item.module.speed > 0 ? '+' : ''
+      }}{{ item.module.speed * 100 }}%
+    </div>
+    <div *ngIf="item.module.productivity" class="nowrap">
+      Productivity: +{{ item.module.productivity * 100 }}%
+    </div>
   </div>
 </div>

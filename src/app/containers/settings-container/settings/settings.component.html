@@ -3,6 +3,7 @@
   <div class="flex">
     <input
       id="settings-display-persecond"
+      title="Display rates per second"
       type="radio"
       name="displayRate"
       [value]="DisplayRate.PerSecond"
@@ -14,6 +15,7 @@
   <div class="flex">
     <input
       id="settings-display-perminute"
+      title="Display rates per minute"
       type="radio"
       name="displayRate"
       [value]="DisplayRate.PerMinute"
@@ -25,6 +27,7 @@
   <div class="flex">
     <input
       id="settings-display-perhour"
+      title="Display rates per hour"
       type="radio"
       name="displayRate"
       [value]="DisplayRate.PerHour"
@@ -36,10 +39,11 @@
 </div>
 <div class="label">Precision</div>
 <div class="field">
-  <lab-icon iconId="iron-plate"></lab-icon>
+  <lab-icon iconId="iron-plate" tooltip="Items Precision"></lab-icon>
   <div class="flex">
     <input
       id="settings-precision-item-decimals"
+      title="Use decimal precision"
       type="radio"
       name="itemPrecision"
       [value]="false"
@@ -49,6 +53,7 @@
     <label for="settings-precision-item-decimals">
       <input
         id="settings-precision-item-value"
+        title="Set decimal precision"
         type="number"
         placeholder="0.334"
         min="0"
@@ -62,20 +67,24 @@
   <div class="flex">
     <input
       id="settings-precision-item-fractions"
+      title="Use fractions"
       type="radio"
       name="itemPrecision"
       [value]="true"
       [ngModel]="settings.itemPrecision == null"
       (change)="setItemPrecision.emit(null)"
     />
-    <label for="settings-precision-item-fractions">⅓</label>
+    <label for="settings-precision-item-fractions" title="Use fractions"
+      >⅓</label
+    >
   </div>
 </div>
 <div class="field">
-  <lab-icon iconId="transport-belt"></lab-icon>
+  <lab-icon iconId="transport-belt" tooltip="Belts Precision"></lab-icon>
   <div class="flex">
     <input
       id="settings-precision-belt-decimals"
+      title="Use decimal precision"
       type="radio"
       name="beltPrecision"
       [value]="false"
@@ -84,6 +93,7 @@
     />
     <input
       id="settings-precision-belt-value"
+      title="Set decimal precision"
       type="number"
       placeholder="0.4"
       min="0"
@@ -96,20 +106,27 @@
   <div class="flex">
     <input
       id="settings-precision-belt-fractions"
+      title="Use fractions"
       type="radio"
       name="beltPrecision"
       [value]="true"
       [ngModel]="settings.beltPrecision == null"
       (change)="setBeltPrecision.emit(null)"
     />
-    <label for="settings-precision-belt-fractions">⅓</label>
+    <label for="settings-precision-belt-fractions" title="Use fractions"
+      >⅓</label
+    >
   </div>
 </div>
 <div class="field">
-  <lab-icon iconId="assembling-machine-1"></lab-icon>
+  <lab-icon
+    iconId="assembling-machine-1"
+    tooltip="Factories Precision"
+  ></lab-icon>
   <div class="flex">
     <input
       id="settings-precision-factory-decimals"
+      title="Use decimal precision"
       type="radio"
       name="factoryPrecision"
       [value]="false"
@@ -118,6 +135,7 @@
     />
     <input
       id="settings-precision-factory-value"
+      title="Set decimal precision"
       type="number"
       placeholder="0.4"
       min="0"
@@ -130,13 +148,16 @@
   <div class="flex">
     <input
       id="settings-precision-factory-fractions"
+      title="Use fractions"
       type="radio"
       name="factoryPrecision"
       [value]="true"
       [ngModel]="settings.factoryPrecision == null"
       (change)="setFactoryPrecision.emit(null)"
     />
-    <label for="settings-precision-factory-fractions">⅓</label>
+    <label for="settings-precision-factory-fractions" title="Use fractions"
+      >⅓</label
+    >
   </div>
 </div>
 <div class="label">Factory</div>
@@ -145,6 +166,7 @@
     <div>
       <lab-icon
         class="clickable"
+        tooltip="Choose default belt"
         [iconId]="settings.belt"
         (click)="openSelect = OpenSelect.Belt"
       ></lab-icon>
@@ -153,6 +175,7 @@
         [data]="data"
         [selectedId]="settings.belt"
         [optionsType]="OptionsType.Belt"
+        [displayRate]="settings.displayRate"
         (cancel)="openSelect = OpenSelect.None"
         (selectId)="setBelt.emit($event)"
       >
@@ -163,6 +186,7 @@
     <div>
       <lab-icon
         class="clickable"
+        tooltip="Choose default assembler"
         [iconId]="settings.assembler"
         (click)="openSelect = OpenSelect.Assembler"
       ></lab-icon>
@@ -181,6 +205,7 @@
     <div>
       <lab-icon
         class="clickable"
+        tooltip="Choose default furnace"
         [iconId]="settings.furnace"
         (click)="openSelect = OpenSelect.Furnace"
       ></lab-icon>
@@ -199,6 +224,7 @@
     <div>
       <lab-icon
         class="clickable"
+        tooltip="Choose oil recipe"
         [iconId]="settings.oilRecipe"
         (click)="openSelect = OpenSelect.OilRecipe"
       ></lab-icon>
@@ -218,6 +244,7 @@
     <div>
       <lab-icon
         class="clickable"
+        tooltip="Choose fuel"
         [iconId]="settings.fuel"
         (click)="openSelect = OpenSelect.Fuel"
       ></lab-icon>
@@ -234,19 +261,22 @@
   </div>
 </div>
 <div class="field">
-  <lab-icon [iconId]="ItemId.Pipe"></lab-icon>
+  <lab-icon [iconId]="ItemId.Pipe" tooltip="Pipe flow rate"></lab-icon>
   <input
     type="number"
-    placeholder="Max Flow Rate"
+    title="Enter pipe flow rate"
+    placeholder="1500"
     min="0"
     step="1"
     [value]="settings.flowRate"
     (change)="emitNumber(setFlowRate, $event)"
   />
-  <div>#/sec</div>
-  <a href="https://wiki.factorio.com/Fluid_system#Pipelines" target="_blank"
-    >(Wiki)</a
-  >
+  <div>
+    #/sec
+    <a href="https://wiki.factorio.com/Fluid_system#Pipelines" target="_blank"
+      >Wiki</a
+    >
+  </div>
 </div>
 <div class="label">Modules</div>
 <div class="field">
@@ -254,6 +284,7 @@
     <div>
       <lab-icon
         class="clickable"
+        tooltip="Choose default productivity module"
         [iconId]="settings.prodModule"
         (click)="openSelect = OpenSelect.ProdModule"
       ></lab-icon>
@@ -272,6 +303,7 @@
     <div>
       <lab-icon
         class="clickable"
+        tooltip="Choose default speed module"
         [iconId]="settings.speedModule"
         (click)="openSelect = OpenSelect.SpeedModule"
       ></lab-icon>
@@ -291,6 +323,7 @@
     <div>
       <lab-icon
         class="clickable"
+        tooltip="Choose default beacon module"
         [iconId]="settings.beaconModule"
         (click)="openSelect = OpenSelect.BeaconModule"
       ></lab-icon>
@@ -307,7 +340,8 @@
   </div>
   <input
     type="number"
-    placeholder="Beacons"
+    title="Enter default number of beacon modules"
+    placeholder="# Modules"
     min="0"
     step="1"
     [value]="settings.beaconCount"
@@ -319,20 +353,30 @@
     class="flex clickable"
     (click)="setDrillModule.emit(!settings.drillModule)"
   >
-    <lab-icon [iconId]="ItemId.MiningProductivity" [scale]="true"></lab-icon>
+    <lab-icon
+      [iconId]="ItemId.MiningProductivity"
+      tooltip="Toggle drill modules"
+      [scale]="true"
+    ></lab-icon>
     <lab-icon
       [iconId]="settings.drillModule ? ItemId.SpeedModule3 : ItemId.Module"
+      tooltip="Toggle drill modules"
     ></lab-icon>
   </div>
 </div>
 <div class="label">Bonuses</div>
 <div class="field">
-  <lab-icon [iconId]="ItemId.MiningProductivity" [scale]="true"></lab-icon>
+  <lab-icon
+    [iconId]="ItemId.MiningProductivity"
+    tooltip="Mining Productivity Bonus"
+    [scale]="true"
+  ></lab-icon>
   <div class="field">
     +
     <input
       type="number"
-      placeholder="Mining Productivity Bonus"
+      title="Enter mining productivity bonus"
+      placeholder="Mining Productivity"
       min="0"
       step="10"
       [value]="settings.miningBonus"
@@ -342,8 +386,13 @@
   </div>
 </div>
 <div class="field">
-  <lab-icon [iconId]="ItemId.Lab" [scale]="true"></lab-icon>
+  <lab-icon
+    [iconId]="ItemId.Lab"
+    tooltip="Research Speed Bonus"
+    [scale]="true"
+  ></lab-icon>
   <select
+    title="Select research speed bonus level"
     [ngModel]="settings.researchSpeed"
     (change)="emitNumber(setResearchSpeed, $event)"
   >

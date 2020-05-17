@@ -5,6 +5,8 @@
       *ngIf="selectType === IdType.Item"
       [iconId]="id"
       [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"
+      [item]="data.itemEntities[id]"
+      [displayRate]="displayRate"
       [class.selected]="id === selectedId"
       (click)="clickId(id, $event)"
     ></lab-icon>
@@ -13,6 +15,7 @@
       *ngIf="selectType === IdType.Recipe"
       [iconId]="id"
       [tooltip]="data.recipeEntities[id].name"
+      [recipe]="data.recipeEntities[id]"
       [class.selected]="id === selectedId"
       (click)="clickId(id, $event)"
     ></lab-icon>

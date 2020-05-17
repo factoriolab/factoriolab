@@ -4,6 +4,7 @@
   display: flex;
   user-select: none;
   position: relative;
+  font-weight: normal;
 
   &:hover .tooltip {
     visibility: visible;
@@ -34,6 +35,10 @@ img {
   z-index: 1;
 
   .title {
+    font-weight: bold;
+  }
+
+  .nowrap {
     white-space: nowrap;
   }
 

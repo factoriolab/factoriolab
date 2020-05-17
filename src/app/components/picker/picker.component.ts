@@ -5,6 +5,7 @@ import {
   Input,
   Output,
   EventEmitter,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 
 import { CategoryId, ItemId } from '~/models';
@@ -14,6 +15,7 @@ import { DatasetState } from '~/store/dataset';
   selector: 'lab-picker',
   templateUrl: './picker.component.html',
   styleUrls: ['./picker.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PickerComponent {
   @Input() data: DatasetState;

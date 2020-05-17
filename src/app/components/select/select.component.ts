@@ -5,21 +5,24 @@ import {
   EventEmitter,
   ElementRef,
   HostListener,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { OptionsType, IdType, options } from '~/models';
+import { OptionsType, IdType, options, DisplayRate } from '~/models';
 import { DatasetState } from '~/store/dataset';
 
 @Component({
   selector: 'lab-select',
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectComponent {
   @Input() data: DatasetState;
   @Input() selectedId: string;
   @Input() optionsType: OptionsType;
   @Input() selectType = IdType.Item;
+  @Input() displayRate: DisplayRate;
 
   @Output() cancel = new EventEmitter();
   @Output() selectId = new EventEmitter<string>();
