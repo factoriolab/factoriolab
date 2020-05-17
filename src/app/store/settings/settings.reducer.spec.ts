@@ -1,5 +1,5 @@
 import { DisplayRate, ItemId, RecipeId, ResearchSpeed } from '~/models';
-import * as actions from './settings.actions';
+import * as Actions from './settings.actions';
 import { settingsReducer, initialSettingsState } from './settings.reducer';
 
 describe('Settings Reducer', () => {
@@ -7,7 +7,7 @@ describe('Settings Reducer', () => {
     it('should load settings', () => {
       const result = settingsReducer(
         undefined,
-        new actions.LoadAction({ displayRate: DisplayRate.PerHour } as any)
+        new Actions.LoadAction({ displayRate: DisplayRate.PerHour } as any)
       );
       expect(result.displayRate).toEqual(DisplayRate.PerHour);
     });
@@ -18,7 +18,7 @@ describe('Settings Reducer', () => {
       const value = DisplayRate.PerHour;
       const result = settingsReducer(
         initialSettingsState,
-        new actions.SetDisplayRateAction(value)
+        new Actions.SetDisplayRateAction(value)
       );
       expect(result.displayRate).toEqual(value);
     });
@@ -28,7 +28,7 @@ describe('Settings Reducer', () => {
     it('should set the item precision', () => {
       const result = settingsReducer(
         initialSettingsState,
-        new actions.SetItemPrecisionAction(null)
+        new Actions.SetItemPrecisionAction(null)
       );
       expect(result.itemPrecision).toEqual(null);
     });
@@ -38,7 +38,7 @@ describe('Settings Reducer', () => {
     it('should set the belt precision', () => {
       const result = settingsReducer(
         initialSettingsState,
-        new actions.SetBeltPrecisionAction(null)
+        new Actions.SetBeltPrecisionAction(null)
       );
       expect(result.beltPrecision).toEqual(null);
     });
@@ -48,7 +48,7 @@ describe('Settings Reducer', () => {
     it('should set the factory precision', () => {
       const result = settingsReducer(
         initialSettingsState,
-        new actions.SetFactoryPrecisionAction(null)
+        new Actions.SetFactoryPrecisionAction(null)
       );
       expect(result.factoryPrecision).toEqual(null);
     });
@@ -59,7 +59,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.TransportBelt;
       const result = settingsReducer(
         initialSettingsState,
-        new actions.SetBeltAction(value)
+        new Actions.SetBeltAction(value)
       );
       expect(result.belt).toEqual(value);
     });
@@ -70,7 +70,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.AssemblingMachine1;
       const result = settingsReducer(
         initialSettingsState,
-        new actions.SetAssemblerAction(value)
+        new Actions.SetAssemblerAction(value)
       );
       expect(result.assembler).toEqual(value);
     });
@@ -81,7 +81,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.StoneFurnace;
       const result = settingsReducer(
         initialSettingsState,
-        new actions.SetFurnaceAction(value)
+        new Actions.SetFurnaceAction(value)
       );
       expect(result.furnace).toEqual(value);
     });
@@ -92,7 +92,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.ProductivityModule;
       const result = settingsReducer(
         initialSettingsState,
-        new actions.SetProdModuleAction(value)
+        new Actions.SetProdModuleAction(value)
       );
       expect(result.prodModule).toEqual(value);
     });
@@ -103,7 +103,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.SpeedModule;
       const result = settingsReducer(
         initialSettingsState,
-        new actions.SetSpeedModuleAction(value)
+        new Actions.SetSpeedModuleAction(value)
       );
       expect(result.speedModule).toEqual(value);
     });
@@ -114,7 +114,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.SpeedModule;
       const result = settingsReducer(
         initialSettingsState,
-        new actions.SetBeaconModuleAction(value)
+        new Actions.SetBeaconModuleAction(value)
       );
       expect(result.beaconModule).toEqual(value);
     });
@@ -125,7 +125,7 @@ describe('Settings Reducer', () => {
       const value = 2;
       const result = settingsReducer(
         initialSettingsState,
-        new actions.SetBeaconCountAction(value)
+        new Actions.SetBeaconCountAction(value)
       );
       expect(result.beaconCount).toEqual(value);
     });
@@ -136,7 +136,7 @@ describe('Settings Reducer', () => {
       const value = RecipeId.BasicOilProcessing;
       const result = settingsReducer(
         initialSettingsState,
-        new actions.SetOilRecipeAction(value)
+        new Actions.SetOilRecipeAction(value)
       );
       expect(result.oilRecipe).toEqual(value);
     });
@@ -147,7 +147,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.Wood;
       const result = settingsReducer(
         initialSettingsState,
-        new actions.SetFuelAction(value)
+        new Actions.SetFuelAction(value)
       );
       expect(result.fuel).toEqual(value);
     });
@@ -158,7 +158,7 @@ describe('Settings Reducer', () => {
       const value = true;
       const result = settingsReducer(
         initialSettingsState,
-        new actions.SetDrillModuleAction(value)
+        new Actions.SetDrillModuleAction(value)
       );
       expect(result.drillModule).toEqual(value);
     });
@@ -169,7 +169,7 @@ describe('Settings Reducer', () => {
       const value = 10;
       const result = settingsReducer(
         initialSettingsState,
-        new actions.SetMiningBonusAction(value)
+        new Actions.SetMiningBonusAction(value)
       );
       expect(result.miningBonus).toEqual(value);
     });
@@ -180,7 +180,7 @@ describe('Settings Reducer', () => {
       const value = ResearchSpeed.Speed1;
       const result = settingsReducer(
         initialSettingsState,
-        new actions.SetResearchSpeedAction(value)
+        new Actions.SetResearchSpeedAction(value)
       );
       expect(result.researchSpeed).toEqual(value);
     });
@@ -191,7 +191,7 @@ describe('Settings Reducer', () => {
       const value = 6000;
       const result = settingsReducer(
         initialSettingsState,
-        new actions.SetFlowRateAction(value)
+        new Actions.SetFlowRateAction(value)
       );
       expect(result.flowRate).toEqual(value);
     });

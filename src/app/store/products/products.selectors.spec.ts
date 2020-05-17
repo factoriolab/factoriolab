@@ -1,6 +1,6 @@
 import Fraction from 'fraction.js';
 
-import * as mocks from 'src/mocks';
+import * as Mocks from 'src/mocks';
 import {
   DisplayRate,
   ItemId,
@@ -16,34 +16,34 @@ import {
   RecipeUtility,
 } from '~/utilities';
 import { initialSettingsState } from '../settings';
-import * as selectors from './products.selectors';
+import * as Selectors from './products.selectors';
 
 describe('Products Selectors', () => {
   describe('getProducts', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getProducts.projector([], {});
+      const result = Selectors.getProducts.projector([], {});
       expect(result.length).toEqual(0);
     });
 
     it('should return the array of product ids', () => {
-      const result = selectors.getProducts.projector(
-        mocks.ProductIds,
-        mocks.ProductEntities
+      const result = Selectors.getProducts.projector(
+        Mocks.ProductIds,
+        Mocks.ProductEntities
       );
-      expect(result.length).toEqual(mocks.ProductIds.length);
+      expect(result.length).toEqual(Mocks.ProductIds.length);
     });
   });
 
   describe('getProductsByItems', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getProductsByItems.projector([], {});
+      const result = Selectors.getProductsByItems.projector([], {});
       expect(result.length).toEqual(0);
     });
 
     it('should return the array of product ids', () => {
-      const result = selectors.getProductsByItems.projector(
-        mocks.ProductIds,
-        mocks.ProductEntities
+      const result = Selectors.getProductsByItems.projector(
+        Mocks.ProductIds,
+        Mocks.ProductEntities
       );
       expect(result.length).toEqual(1);
     });
@@ -51,14 +51,14 @@ describe('Products Selectors', () => {
 
   describe('getProductsByBelts', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getProductsByBelts.projector([], {});
+      const result = Selectors.getProductsByBelts.projector([], {});
       expect(result.length).toEqual(0);
     });
 
     it('should return the array of product ids', () => {
-      const result = selectors.getProductsByBelts.projector(
-        mocks.ProductIds,
-        mocks.ProductEntities
+      const result = Selectors.getProductsByBelts.projector(
+        Mocks.ProductIds,
+        Mocks.ProductEntities
       );
       expect(result.length).toEqual(1);
     });
@@ -66,14 +66,14 @@ describe('Products Selectors', () => {
 
   describe('getProductsByWagons', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getProductsByWagons.projector([], {});
+      const result = Selectors.getProductsByWagons.projector([], {});
       expect(result.length).toEqual(0);
     });
 
     it('should return the array of product ids', () => {
-      const result = selectors.getProductsByWagons.projector(
-        mocks.ProductIds,
-        mocks.ProductEntities
+      const result = Selectors.getProductsByWagons.projector(
+        Mocks.ProductIds,
+        Mocks.ProductEntities
       );
       expect(result.length).toEqual(1);
     });
@@ -81,14 +81,14 @@ describe('Products Selectors', () => {
 
   describe('getProductsByFactories', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getProductsByFactories.projector([], {});
+      const result = Selectors.getProductsByFactories.projector([], {});
       expect(result.length).toEqual(0);
     });
 
     it('should return the array of product ids', () => {
-      const result = selectors.getProductsByFactories.projector(
-        mocks.ProductIds,
-        mocks.ProductEntities
+      const result = Selectors.getProductsByFactories.projector(
+        Mocks.ProductIds,
+        Mocks.ProductEntities
       );
       expect(result.length).toEqual(1);
     });
@@ -96,7 +96,7 @@ describe('Products Selectors', () => {
 
   describe('getNormalizedRatesByItems', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getNormalizedRatesByItems.projector(
+      const result = Selectors.getNormalizedRatesByItems.projector(
         [],
         {},
         null
@@ -105,18 +105,18 @@ describe('Products Selectors', () => {
     });
 
     it('should return the rate entities', () => {
-      const result = selectors.getNormalizedRatesByItems.projector(
-        [mocks.Product1.id],
-        mocks.ProductEntities,
+      const result = Selectors.getNormalizedRatesByItems.projector(
+        [Mocks.Product1.id],
+        Mocks.ProductEntities,
         DisplayRate.PerHour
       );
-      expect(result[mocks.Product1.id].n).toBeGreaterThan(0);
+      expect(result[Mocks.Product1.id].n).toBeGreaterThan(0);
     });
   });
 
   describe('getNormalizedRatesByBelts', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getNormalizedRatesByBelts.projector(
+      const result = Selectors.getNormalizedRatesByBelts.projector(
         [],
         {},
         {},
@@ -127,14 +127,14 @@ describe('Products Selectors', () => {
     });
 
     it('should return the rate entities', () => {
-      const result = selectors.getNormalizedRatesByBelts.projector(
-        [mocks.Product2.id],
-        mocks.ProductEntities,
-        { [mocks.Product2.itemId]: mocks.Settings1 },
+      const result = Selectors.getNormalizedRatesByBelts.projector(
+        [Mocks.Product2.id],
+        Mocks.ProductEntities,
+        { [Mocks.Product2.itemId]: Mocks.Settings1 },
         RecipeId.BasicOilProcessing,
-        { [mocks.Settings1.belt]: new Fraction(1) }
+        { [Mocks.Settings1.belt]: new Fraction(1) }
       );
-      expect(result[mocks.Product2.id].n).toBeGreaterThan(0);
+      expect(result[Mocks.Product2.id].n).toBeGreaterThan(0);
     });
 
     it('should calculate rate for oil products', () => {
@@ -158,7 +158,7 @@ describe('Products Selectors', () => {
           rateType: RateType.Belts,
         },
       };
-      const result = selectors.getNormalizedRatesByBelts.projector(
+      const result = Selectors.getNormalizedRatesByBelts.projector(
         Object.keys(products),
         products,
         {},
@@ -180,7 +180,7 @@ describe('Products Selectors', () => {
           rateType: RateType.Belts,
         },
       };
-      const result = selectors.getNormalizedRatesByBelts.projector(
+      const result = Selectors.getNormalizedRatesByBelts.projector(
         [0],
         products,
         {
@@ -202,7 +202,7 @@ describe('Products Selectors', () => {
           rateType: RateType.Belts,
         },
       };
-      const result = selectors.getNormalizedRatesByBelts.projector(
+      const result = Selectors.getNormalizedRatesByBelts.projector(
         [0],
         products,
         {
@@ -230,7 +230,7 @@ describe('Products Selectors', () => {
           rateType: RateType.Belts,
         },
       };
-      const result = selectors.getNormalizedRatesByBelts.projector(
+      const result = Selectors.getNormalizedRatesByBelts.projector(
         Object.keys(products),
         products,
         {
@@ -247,7 +247,7 @@ describe('Products Selectors', () => {
 
   describe('getNormalizedRatesByWagons', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getNormalizedRatesByWagons.projector(
+      const result = Selectors.getNormalizedRatesByWagons.projector(
         [],
         {},
         null,
@@ -257,29 +257,29 @@ describe('Products Selectors', () => {
     });
 
     it('should return the rate entities', () => {
-      const result = selectors.getNormalizedRatesByWagons.projector(
-        [mocks.Product2.id],
-        mocks.ProductEntities,
+      const result = Selectors.getNormalizedRatesByWagons.projector(
+        [Mocks.Product2.id],
+        Mocks.ProductEntities,
         DisplayRate.PerHour,
-        mocks.Data
+        Mocks.Data
       );
-      expect(result[mocks.Product2.id].n).toBeGreaterThan(0);
+      expect(result[Mocks.Product2.id].n).toBeGreaterThan(0);
     });
 
     it('should return the rate entities for fluids', () => {
-      const result = selectors.getNormalizedRatesByWagons.projector(
-        [mocks.Product3.id],
-        mocks.ProductEntities,
+      const result = Selectors.getNormalizedRatesByWagons.projector(
+        [Mocks.Product3.id],
+        Mocks.ProductEntities,
         DisplayRate.PerHour,
-        mocks.Data
+        Mocks.Data
       );
-      expect(result[mocks.Product3.id].n).toBeGreaterThan(0);
+      expect(result[Mocks.Product3.id].n).toBeGreaterThan(0);
     });
   });
 
   describe('getNormalizedRatesByFactories', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getNormalizedRatesByFactories.projector(
+      const result = Selectors.getNormalizedRatesByFactories.projector(
         [],
         {},
         {},
@@ -290,49 +290,49 @@ describe('Products Selectors', () => {
     });
 
     it('should handle no recipe found', () => {
-      const result = selectors.getNormalizedRatesByFactories.projector(
-        [mocks.Product1.id],
+      const result = Selectors.getNormalizedRatesByFactories.projector(
+        [Mocks.Product1.id],
         {
-          ...mocks.ProductEntities,
-          ...{ [mocks.Product1.id]: { itemId: 'test' } },
+          ...Mocks.ProductEntities,
+          ...{ [Mocks.Product1.id]: { itemId: 'test' } },
         },
-        mocks.RecipeFactors,
+        Mocks.RecipeFactors,
         null,
-        mocks.Data
+        Mocks.Data
       );
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should return the rate entities', () => {
-      const result = selectors.getNormalizedRatesByFactories.projector(
-        [mocks.Product1.id],
-        mocks.ProductEntities,
+      const result = Selectors.getNormalizedRatesByFactories.projector(
+        [Mocks.Product1.id],
+        Mocks.ProductEntities,
         {
-          [mocks.Product1.itemId]: {
+          [Mocks.Product1.itemId]: {
             prod: new Fraction(1),
             speed: new Fraction(1),
           },
         },
         null,
-        mocks.Data
+        Mocks.Data
       );
-      expect(result[mocks.Product1.id].n).toBeGreaterThan(0);
+      expect(result[Mocks.Product1.id].n).toBeGreaterThan(0);
     });
 
     it('should return the rate entities for recipe with specific outputs', () => {
-      const result = selectors.getNormalizedRatesByFactories.projector(
-        [mocks.Product4.id],
-        mocks.ProductEntities,
+      const result = Selectors.getNormalizedRatesByFactories.projector(
+        [Mocks.Product4.id],
+        Mocks.ProductEntities,
         {
-          [mocks.Product4.itemId]: {
+          [Mocks.Product4.itemId]: {
             prod: new Fraction(1),
             speed: new Fraction(1),
           },
         },
         null,
-        mocks.Data
+        Mocks.Data
       );
-      expect(result[mocks.Product4.id].n).toBeGreaterThan(0);
+      expect(result[Mocks.Product4.id].n).toBeGreaterThan(0);
     });
 
     it('should handle research products', () => {
@@ -342,12 +342,12 @@ describe('Products Selectors', () => {
         rate: 1,
         rateType: RateType.Factories,
       };
-      const result = selectors.getNormalizedRatesByFactories.projector(
+      const result = Selectors.getNormalizedRatesByFactories.projector(
         [0],
         { [0]: product },
-        mocks.RecipeFactors,
+        Mocks.RecipeFactors,
         null,
-        mocks.Data
+        Mocks.Data
       );
       expect(result[0].n).toBeGreaterThan(0);
     });
@@ -379,12 +379,12 @@ describe('Products Selectors', () => {
           rateType: RateType.Factories,
         },
       };
-      const result = selectors.getNormalizedRatesByFactories.projector(
+      const result = Selectors.getNormalizedRatesByFactories.projector(
         Object.keys(products).map((k) => Number(k)),
         products,
-        mocks.RecipeFactors,
+        Mocks.RecipeFactors,
         RecipeId.AdvancedOilProcessing,
-        mocks.Data
+        Mocks.Data
       );
       expect(result[0].n).toBeGreaterThan(0);
       expect(result[1].n).toBeGreaterThan(0);
@@ -407,12 +407,12 @@ describe('Products Selectors', () => {
           rateType: RateType.Factories,
         },
       };
-      const result = selectors.getNormalizedRatesByFactories.projector(
+      const result = Selectors.getNormalizedRatesByFactories.projector(
         Object.keys(products).map((k) => Number(k)),
         products,
-        mocks.RecipeFactors,
+        Mocks.RecipeFactors,
         null,
-        mocks.Data
+        Mocks.Data
       );
       expect(result[0].n).toBeGreaterThan(0);
       expect(result[1].n).toBeGreaterThan(0);
@@ -421,14 +421,14 @@ describe('Products Selectors', () => {
 
   describe('getNormalizedRates', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getNormalizedRates.projector({}, {}, {}, {});
+      const result = Selectors.getNormalizedRates.projector({}, {}, {}, {});
       expect(Object.keys(result).length).toEqual(0);
     });
   });
 
   describe('getNormalizedSteps', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getNormalizedSteps.projector(
+      const result = Selectors.getNormalizedSteps.projector(
         [],
         {},
         {},
@@ -442,9 +442,9 @@ describe('Products Selectors', () => {
 
     it('should calculate rates using utility method', () => {
       spyOn(RateUtility, 'addStepsFor');
-      selectors.getNormalizedSteps.projector(
-        [mocks.Product1],
-        { [mocks.Product1.id]: new Fraction(1) },
+      Selectors.getNormalizedSteps.projector(
+        [Mocks.Product1],
+        { [Mocks.Product1.id]: new Fraction(1) },
         {},
         {},
         null,
@@ -457,7 +457,7 @@ describe('Products Selectors', () => {
 
   describe('getNormalizedStepsWithUranium', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getNormalizedStepsWithUranium.projector(
+      const result = Selectors.getNormalizedStepsWithUranium.projector(
         [],
         {},
         {},
@@ -470,7 +470,7 @@ describe('Products Selectors', () => {
 
     it('should calculate rates using utility method', () => {
       spyOn(UraniumUtility, 'addSteps');
-      selectors.getNormalizedStepsWithUranium.projector(
+      Selectors.getNormalizedStepsWithUranium.projector(
         [],
         {},
         {},
@@ -484,7 +484,7 @@ describe('Products Selectors', () => {
 
   describe('getNormalizedStepsWithOil', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getNormalizedStepsWithOil.projector(
+      const result = Selectors.getNormalizedStepsWithOil.projector(
         [],
         {},
         {},
@@ -497,57 +497,57 @@ describe('Products Selectors', () => {
 
     it('should calculate rates using utility method', () => {
       spyOn(OilUtility, 'addSteps');
-      selectors.getNormalizedStepsWithOil.projector([], {}, {}, null, null, {});
+      Selectors.getNormalizedStepsWithOil.projector([], {}, {}, null, null, {});
       expect(OilUtility.addSteps).toHaveBeenCalled();
     });
   });
 
   describe('getNormalizedStepsWithBelts', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getNormalizedStepsWithBelts.projector([], {});
+      const result = Selectors.getNormalizedStepsWithBelts.projector([], {});
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should calculate rates using utility method', () => {
       spyOn(RateUtility, 'calculateBelts');
-      selectors.getNormalizedStepsWithBelts.projector([], {});
+      Selectors.getNormalizedStepsWithBelts.projector([], {});
       expect(RateUtility.calculateBelts).toHaveBeenCalled();
     });
   });
 
   describe('getDisplayRateSteps', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getDisplayRateSteps.projector([], null);
+      const result = Selectors.getDisplayRateSteps.projector([], null);
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should calculate rates using utility method', () => {
       spyOn(RateUtility, 'displayRate');
-      selectors.getDisplayRateSteps.projector([], null);
+      Selectors.getDisplayRateSteps.projector([], null);
       expect(RateUtility.displayRate).toHaveBeenCalled();
     });
   });
 
   describe('getSteps', () => {
     it('should handle empty/null values', () => {
-      const result = selectors.getSteps.projector([]);
+      const result = Selectors.getSteps.projector([]);
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should calculate rates using utility method', () => {
       spyOn(RecipeUtility, 'sort');
-      selectors.getSteps.projector([]);
+      Selectors.getSteps.projector([]);
       expect(RecipeUtility.sort).toHaveBeenCalled();
     });
   });
 
   describe('getZipState', () => {
     it('should put together the required state parts', () => {
-      const products = [mocks.Product1];
-      const recipe = mocks.RecipeSettingsEntities;
+      const products = [Mocks.Product1];
+      const recipe = Mocks.RecipeSettingsEntities;
       const settings = initialSettingsState;
-      const data = mocks.Data;
-      const result = selectors.getZipState.projector(
+      const data = Mocks.Data;
+      const result = Selectors.getZipState.projector(
         products,
         recipe,
         settings,

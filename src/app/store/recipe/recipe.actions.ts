@@ -6,12 +6,17 @@ import { RecipeState } from './recipe.reducer';
 export const enum RecipeActionType {
   LOAD = '[Recipes Router] Load',
   IGNORE = '[Recipes Page] Ignore Recipe',
-  RESET = '[Recipes Page] Reset Recipe',
   SET_BELT = '[Recipes Page] Set Belt',
   SET_FACTORY = '[Recipes Page] Set Factory',
   SET_MODULES = '[Recipes Page] Set Modules',
   SET_BEACON_MODULE = '[Recipes Page] Set Beacon Module',
   SET_BEACONS_COUNT = '[Recipes Page] Set Beacon Count',
+  RESET = '[Recipes Page] Reset Recipe',
+  RESET_IGNORE = '[Recipes Page] Reset Ignore',
+  RESET_BELT = '[Recipes Page] Reset Belt',
+  RESET_FACTORY = '[Recipes Page] Reset Factory',
+  RESET_MODULES = '[Recipes Page] Reset Modules',
+  RESET_BEACONS = '[Recipes Page] Reset Beacons',
 }
 
 export class LoadAction implements Action {
@@ -54,6 +59,26 @@ export class ResetAction implements Action {
   constructor(public payload: RecipeId) {}
 }
 
+export class ResetIgnoreAction implements Action {
+  readonly type = RecipeActionType.RESET_IGNORE;
+}
+
+export class ResetBeltAction implements Action {
+  readonly type = RecipeActionType.RESET_BELT;
+}
+
+export class ResetFactoryAction implements Action {
+  readonly type = RecipeActionType.RESET_FACTORY;
+}
+
+export class ResetModulesAction implements Action {
+  readonly type = RecipeActionType.RESET_MODULES;
+}
+
+export class ResetBeaconsAction implements Action {
+  readonly type = RecipeActionType.RESET_BEACONS;
+}
+
 export type RecipeAction =
   | LoadAction
   | IgnoreAction
@@ -62,4 +87,9 @@ export type RecipeAction =
   | SetModulesAction
   | SetBeaconModuleAction
   | SetBeaconCountAction
-  | ResetAction;
+  | ResetAction
+  | ResetIgnoreAction
+  | ResetBeltAction
+  | ResetFactoryAction
+  | ResetModulesAction
+  | ResetBeaconsAction;

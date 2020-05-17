@@ -26,6 +26,11 @@ export class StepsContainerComponent implements OnInit {
 
   data$: Observable<Dataset.DatasetState>;
   recipe$: Observable<Recipe.RecipeState>;
+  modifiedIgnore$: Observable<boolean>;
+  modifiedBelt$: Observable<boolean>;
+  modifiedFactory$: Observable<boolean>;
+  modifiedModules$: Observable<boolean>;
+  modifiedBeacons$: Observable<boolean>;
   steps$: Observable<Step[]>;
   displayRate$: Observable<DisplayRate>;
   itemPrecision$: Observable<number>;
@@ -37,6 +42,11 @@ export class StepsContainerComponent implements OnInit {
   ngOnInit() {
     this.data$ = this.store.select(Dataset.datasetState);
     this.recipe$ = this.store.select(Recipe.recipeState);
+    this.modifiedIgnore$ = this.store.select(Recipe.getContainsIgnore);
+    this.modifiedBelt$ = this.store.select(Recipe.getContainsBelt);
+    this.modifiedFactory$ = this.store.select(Recipe.getContainsFactory);
+    this.modifiedModules$ = this.store.select(Recipe.getContainsModules);
+    this.modifiedBeacons$ = this.store.select(Recipe.getContainsBeacons);
     this.steps$ = this.store.select(Products.getSteps);
     this.displayRate$ = this.store.select(Settings.getDisplayRate);
     this.itemPrecision$ = this.store.select(Settings.getItemPrecision);
@@ -70,5 +80,25 @@ export class StepsContainerComponent implements OnInit {
 
   resetStep(value: RecipeId) {
     this.store.dispatch(new Recipe.ResetAction(value));
+  }
+
+  resetIgnore() {
+    this.store.dispatch(new Recipe.ResetIgnoreAction());
+  }
+
+  resetBelt() {
+    this.store.dispatch(new Recipe.ResetBeltAction());
+  }
+
+  resetFactory() {
+    this.store.dispatch(new Recipe.ResetFactoryAction());
+  }
+
+  resetModules() {
+    this.store.dispatch(new Recipe.ResetModulesAction());
+  }
+
+  resetBeacons() {
+    this.store.dispatch(new Recipe.ResetBeaconsAction());
   }
 }

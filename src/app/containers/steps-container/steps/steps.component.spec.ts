@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 
-import * as mocks from 'src/mocks';
+import * as Mocks from 'src/mocks';
 import { IconComponent, SelectComponent } from '~/components';
 import { Step, ItemId } from '~/models';
 import { RouterService } from '~/services/router.service';
@@ -37,9 +37,9 @@ import { StepsComponent } from './steps.component';
 })
 class TestStepsComponent {
   @ViewChild(StepsComponent) child: StepsComponent;
-  data: DatasetState = mocks.Data;
-  recipe: RecipeState = mocks.RecipeSettingsInitial;
-  steps: Step[] = mocks.Steps;
+  data: DatasetState = Mocks.Data;
+  recipe: RecipeState = Mocks.RecipeSettingsInitial;
+  steps: Step[] = Mocks.Steps;
   itemPrecision = null;
   beltPrecision = 0;
   factoryPrecision = 1;
@@ -89,7 +89,7 @@ describe('StepsComponent', () => {
     TestUtility.clickSelector(fixture, 'lab-select lab-icon', 1);
     fixture.detectChanges();
     expect(component.setModules).toHaveBeenCalledWith([
-      mocks.Step1.itemId,
+      Mocks.Step1.itemId,
       [ItemId.Module, ItemId.SpeedModule],
     ]);
   });
@@ -101,7 +101,7 @@ describe('StepsComponent', () => {
     TestUtility.clickSelector(fixture, 'lab-select lab-icon', 1);
     fixture.detectChanges();
     expect(component.setModules).toHaveBeenCalledWith([
-      mocks.Step1.itemId,
+      Mocks.Step1.itemId,
       [ItemId.SpeedModule, ItemId.SpeedModule],
     ]);
   });
@@ -111,7 +111,7 @@ describe('StepsComponent', () => {
     TestUtility.selectSelector(fixture, 'input', '24');
     fixture.detectChanges();
     expect(component.setBeaconCount).toHaveBeenCalledWith([
-      mocks.Step1.itemId,
+      Mocks.Step1.itemId,
       24,
     ]);
   });
@@ -119,7 +119,7 @@ describe('StepsComponent', () => {
   it('should not set beacon count on invalid event', () => {
     spyOn(component, 'setBeaconCount');
     const event = { target: {} };
-    component.child.beaconCountChange(mocks.Step1.itemId as any, event);
+    component.child.beaconCountChange(Mocks.Step1.itemId as any, event);
     expect(component.setBeaconCount).not.toHaveBeenCalled();
   });
 
@@ -133,7 +133,7 @@ describe('StepsComponent', () => {
   describe('prodAllowed', () => {
     it('should look up whether prod is allowed for a step', () => {
       spyOn(RecipeUtility, 'prodModuleAllowed').and.callThrough();
-      const result = component.child.prodAllowed(mocks.Steps[0]);
+      const result = component.child.prodAllowed(Mocks.Steps[0]);
       expect(RecipeUtility.prodModuleAllowed).toHaveBeenCalled();
       expect(result).toEqual(false);
     });

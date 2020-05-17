@@ -1,4 +1,5 @@
 import { Entities, RecipeSettings } from '~/models';
+import { RecipeUtility } from '~/utilities';
 import { RecipeAction, RecipeActionType } from './recipe.actions';
 
 export type RecipeState = Entities<RecipeSettings>;
@@ -77,6 +78,24 @@ export function recipeReducer(
       const newState = { ...state };
       delete newState[action.payload];
       return newState;
+    }
+    case RecipeActionType.RESET_IGNORE: {
+      return RecipeUtility.resetField(state, 'ignore');
+    }
+    case RecipeActionType.RESET_BELT: {
+      return RecipeUtility.resetField(state, 'belt');
+    }
+    case RecipeActionType.RESET_FACTORY: {
+      return RecipeUtility.resetField(state, 'factory');
+    }
+    case RecipeActionType.RESET_MODULES: {
+      return RecipeUtility.resetField(state, 'modules');
+    }
+    case RecipeActionType.RESET_BEACONS: {
+      return RecipeUtility.resetField(
+        RecipeUtility.resetField(state, 'beaconModule'),
+        'beaconCount'
+      );
     }
     default:
       return state;

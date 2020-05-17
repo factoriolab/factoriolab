@@ -48,6 +48,11 @@ export class StepsComponent {
   @Input() itemPrecision: number;
   @Input() beltPrecision: number;
   @Input() factoryPrecision: number;
+  @Input() modifiedIgnore: boolean;
+  @Input() modifiedBelt: boolean;
+  @Input() modifiedFactory: boolean;
+  @Input() modifiedModules: boolean;
+  @Input() modifiedBeacons: boolean;
 
   @Output() ignoreStep = new EventEmitter<RecipeId>();
   @Output() setBelt = new EventEmitter<[RecipeId, ItemId]>();
@@ -56,6 +61,11 @@ export class StepsComponent {
   @Output() setBeaconModule = new EventEmitter<[RecipeId, ItemId]>();
   @Output() setBeaconCount = new EventEmitter<[RecipeId, number]>();
   @Output() resetStep = new EventEmitter<RecipeId>();
+  @Output() resetIgnore = new EventEmitter();
+  @Output() resetBelt = new EventEmitter();
+  @Output() resetFactory = new EventEmitter();
+  @Output() resetModules = new EventEmitter();
+  @Output() resetBeacons = new EventEmitter();
 
   edit: StepEdit;
 

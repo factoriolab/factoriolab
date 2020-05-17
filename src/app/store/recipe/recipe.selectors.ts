@@ -128,3 +128,21 @@ export const getRecipeFactors = createSelector(
     return values;
   }
 );
+
+export const getContainsIgnore = createSelector(recipeState, (state) =>
+  Object.keys(state).some((id) => state[id].ignore != null)
+);
+export const getContainsBelt = createSelector(recipeState, (state) =>
+  Object.keys(state).some((id) => state[id].belt)
+);
+export const getContainsFactory = createSelector(recipeState, (state) =>
+  Object.keys(state).some((id) => state[id].factory)
+);
+export const getContainsModules = createSelector(recipeState, (state) =>
+  Object.keys(state).some((id) => state[id].modules)
+);
+export const getContainsBeacons = createSelector(recipeState, (state) =>
+  Object.keys(state).some(
+    (id) => state[id].beaconModule || state[id].beaconCount != null
+  )
+);

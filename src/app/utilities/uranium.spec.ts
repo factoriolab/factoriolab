@@ -1,19 +1,19 @@
 import Fraction from 'fraction.js';
 
-import * as mocks from 'src/mocks';
+import * as Mocks from 'src/mocks';
 import { ItemId, RecipeId, Step } from '~/models';
 import * as Recipe from '~/store/recipe';
 import { UraniumUtility } from './uranium';
 
 /** These tests check basic functionality, not specific math results. */
 describe('UraniumUtility', () => {
-  const matrix = UraniumUtility.getMatrix(mocks.RecipeFactors, mocks.Data);
+  const matrix = UraniumUtility.getMatrix(Mocks.RecipeFactors, Mocks.Data);
 
   describe('getProductionData', () => {
     it('should return uranium processing info', () => {
       const result = UraniumUtility.getProductionData(
-        mocks.RecipeFactors,
-        mocks.Data
+        Mocks.RecipeFactors,
+        Mocks.Data
       );
       expect(result.recipe).toBeTruthy();
       expect(result.u238.n).toBeGreaterThan(0);
@@ -26,8 +26,8 @@ describe('UraniumUtility', () => {
       const result = UraniumUtility.getConversionData(
         new Fraction(1),
         new Fraction(1),
-        mocks.RecipeFactors,
-        mocks.Data
+        Mocks.RecipeFactors,
+        Mocks.Data
       );
       expect(result.recipe).toBeTruthy();
       expect(result.input.n).toBeGreaterThan(0);
@@ -39,7 +39,7 @@ describe('UraniumUtility', () => {
 
   describe('getMatrix', () => {
     it('should return a matrix of processing info', () => {
-      const result = UraniumUtility.getMatrix(mocks.RecipeFactors, mocks.Data);
+      const result = UraniumUtility.getMatrix(Mocks.RecipeFactors, Mocks.Data);
       expect(result.prod).toBeTruthy();
       expect(result.conv).toBeTruthy();
     });
@@ -59,7 +59,7 @@ describe('UraniumUtility', () => {
         ItemId.Uranium238,
         RecipeId.UraniumProcessing,
         steps,
-        mocks.RecipeSettingsEntities
+        Mocks.RecipeSettingsEntities
       );
       expect(result.surplus).toEqual(new Fraction(0));
       expect(result.recipeId).toEqual(RecipeId.UraniumProcessing);
@@ -71,7 +71,7 @@ describe('UraniumUtility', () => {
         ItemId.Uranium238,
         RecipeId.UraniumProcessing,
         steps,
-        mocks.RecipeSettingsEntities
+        Mocks.RecipeSettingsEntities
       );
       expect(steps.length).toEqual(1);
       expect(result.surplus).toEqual(new Fraction(0));
@@ -85,7 +85,7 @@ describe('UraniumUtility', () => {
       const result = UraniumUtility.getSteps(
         steps,
         matrix,
-        mocks.RecipeSettingsEntities
+        Mocks.RecipeSettingsEntities
       );
       expect(steps.length).toEqual(2);
       expect(result.u235).toBeTruthy();
@@ -175,11 +175,11 @@ describe('UraniumUtility', () => {
         step,
         matrix,
         steps,
-        mocks.RecipeSettingsEntities,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
-        mocks.Data
+        Mocks.Data
       );
       expect(steps.length).toBeGreaterThan(0);
     });
@@ -191,7 +191,7 @@ describe('UraniumUtility', () => {
         u238: { factories: new Fraction(1) },
         u235: { factories: new Fraction(1) },
       };
-      UraniumUtility.calculateFactories(step, matrix, mocks.RecipeFactors);
+      UraniumUtility.calculateFactories(step, matrix, Mocks.RecipeFactors);
       expect(step.u238.factories.n).toBeGreaterThan(0);
       expect(step.u235.factories.n).toBeGreaterThan(0);
     });
@@ -202,11 +202,11 @@ describe('UraniumUtility', () => {
       const steps = [];
       const result = UraniumUtility.addSteps(
         steps,
-        mocks.RecipeSettingsEntities,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
-        mocks.Data
+        Mocks.Data
       );
       expect(result.length).toEqual(0);
     });
@@ -222,16 +222,16 @@ describe('UraniumUtility', () => {
         },
       ];
       const settings = Recipe.recipeReducer(
-        mocks.RecipeSettingsEntities,
+        Mocks.RecipeSettingsEntities,
         new Recipe.IgnoreAction(RecipeId.KovarexEnrichmentProcess)
       );
       const result = UraniumUtility.addSteps(
         steps,
         settings,
-        mocks.RecipeFactors,
+        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
-        mocks.Data
+        Mocks.Data
       );
       expect(result.length).toEqual(1);
     });
@@ -248,11 +248,11 @@ describe('UraniumUtility', () => {
       ];
       const result = UraniumUtility.addSteps(
         steps,
-        mocks.RecipeSettingsEntities,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
-        mocks.Data
+        Mocks.Data
       );
       expect(result.length).toBeGreaterThan(1);
     });
