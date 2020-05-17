@@ -1,6 +1,6 @@
 import Fraction from 'fraction.js';
 
-import * as mocks from 'src/mocks';
+import * as Mocks from 'src/mocks';
 import { RecipeId, ItemId, Step } from '~/models';
 import * as Recipe from '~/store/recipe';
 import { OilUtility } from './oil';
@@ -10,16 +10,16 @@ describe('OilUtility', () => {
   const matrix = OilUtility.getMatrix(
     RecipeId.AdvancedOilProcessing,
     true,
-    mocks.RecipeFactors,
-    mocks.Data
+    Mocks.RecipeFactors,
+    Mocks.Data
   );
 
   describe('getProductionData', () => {
     it('should return oil processing info', () => {
       const result = OilUtility.getProductionData(
         RecipeId.AdvancedOilProcessing,
-        mocks.RecipeFactors,
-        mocks.Data
+        Mocks.RecipeFactors,
+        Mocks.Data
       );
       expect(result.recipe).toBeTruthy();
       expect(result.heavy.n).toBeGreaterThan(0);
@@ -30,15 +30,15 @@ describe('OilUtility', () => {
     it('should account for heavy input to coal liquefaction', () => {
       const result = OilUtility.getProductionData(
         RecipeId.CoalLiquefaction,
-        mocks.RecipeFactors,
-        mocks.Data
+        Mocks.RecipeFactors,
+        Mocks.Data
       );
       expect(result.recipe).toBeTruthy();
       expect(result.heavy.n).toBeGreaterThan(0);
       expect(result.light.n).toBeGreaterThan(0);
       expect(result.petrol.n).toBeGreaterThan(0);
       expect(result.heavy).toBeLessThan(
-        mocks.Data.recipeEntities[RecipeId.CoalLiquefaction].out[
+        Mocks.Data.recipeEntities[RecipeId.CoalLiquefaction].out[
           ItemId.HeavyOil
         ]
       );
@@ -53,8 +53,8 @@ describe('OilUtility', () => {
         ItemId.LightOil,
         new Fraction(1),
         new Fraction(1),
-        mocks.RecipeFactors,
-        mocks.Data
+        Mocks.RecipeFactors,
+        Mocks.Data
       );
       expect(result.recipe).toBeTruthy();
       expect(result.input.n).toBeGreaterThan(0);
@@ -69,8 +69,8 @@ describe('OilUtility', () => {
       const result = OilUtility.getMatrix(
         RecipeId.AdvancedOilProcessing,
         true,
-        mocks.RecipeFactors,
-        mocks.Data
+        Mocks.RecipeFactors,
+        Mocks.Data
       );
       expect(result.oil).toBeTruthy();
       expect(result.hoc).toBeTruthy();
@@ -83,8 +83,8 @@ describe('OilUtility', () => {
       const result = OilUtility.getMatrix(
         RecipeId.AdvancedOilProcessing,
         false,
-        mocks.RecipeFactors,
-        mocks.Data
+        Mocks.RecipeFactors,
+        Mocks.Data
       );
       expect(result.oil).toBeTruthy();
       expect(result.hoc).toBeTruthy();
@@ -108,7 +108,7 @@ describe('OilUtility', () => {
         ItemId.HeavyOil,
         RecipeId.AdvancedOilProcessing,
         steps,
-        mocks.RecipeSettingsEntities
+        Mocks.RecipeSettingsEntities
       );
       expect(result.surplus).toEqual(new Fraction(0));
       expect(result.recipeId).toEqual(RecipeId.AdvancedOilProcessing);
@@ -120,7 +120,7 @@ describe('OilUtility', () => {
         ItemId.HeavyOil,
         RecipeId.AdvancedOilProcessing,
         steps,
-        mocks.RecipeSettingsEntities
+        Mocks.RecipeSettingsEntities
       );
       expect(steps.length).toEqual(1);
       expect(result.surplus).toEqual(new Fraction(0));
@@ -134,7 +134,7 @@ describe('OilUtility', () => {
       const result = OilUtility.getSteps(
         steps,
         matrix,
-        mocks.RecipeSettingsEntities
+        Mocks.RecipeSettingsEntities
       );
       expect(steps.length).toEqual(4);
       expect(result.heavy).toBeTruthy();
@@ -148,13 +148,13 @@ describe('OilUtility', () => {
       const noFuelMatrix = OilUtility.getMatrix(
         RecipeId.AdvancedOilProcessing,
         false,
-        mocks.RecipeFactors,
-        mocks.Data
+        Mocks.RecipeFactors,
+        Mocks.Data
       );
       const result = OilUtility.getSteps(
         steps,
         noFuelMatrix,
-        mocks.RecipeSettingsEntities
+        Mocks.RecipeSettingsEntities
       );
       expect(steps.length).toEqual(3);
       expect(result.heavy).toBeTruthy();
@@ -489,8 +489,8 @@ describe('OilUtility', () => {
       const coalMatrix = OilUtility.getMatrix(
         RecipeId.CoalLiquefaction,
         false,
-        mocks.RecipeFactors,
-        mocks.Data
+        Mocks.RecipeFactors,
+        Mocks.Data
       );
       const step: any = {
         heavy: { items: new Fraction(1), factories: new Fraction(1) },
@@ -516,10 +516,10 @@ describe('OilUtility', () => {
         step,
         matrix,
         steps,
-        mocks.RecipeSettingsEntities,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
         ItemId.Coal,
-        mocks.Data
+        Mocks.Data
       );
       expect(steps.length).toBeGreaterThan(0);
     });
@@ -528,8 +528,8 @@ describe('OilUtility', () => {
       const coalMatrix = OilUtility.getMatrix(
         RecipeId.CoalLiquefaction,
         false,
-        mocks.RecipeFactors,
-        mocks.Data
+        Mocks.RecipeFactors,
+        Mocks.Data
       );
       const step: any = {
         heavy: { factories: new Fraction(1) },
@@ -541,10 +541,10 @@ describe('OilUtility', () => {
         step,
         coalMatrix,
         steps,
-        mocks.RecipeSettingsEntities,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
         ItemId.Coal,
-        mocks.Data
+        Mocks.Data
       );
       expect(steps.length).toBeGreaterThan(0);
     });
@@ -557,7 +557,7 @@ describe('OilUtility', () => {
         light: { factories: new Fraction(1) },
         petrol: { factories: new Fraction(1) },
       };
-      OilUtility.calculateFactories(step, matrix, mocks.RecipeFactors);
+      OilUtility.calculateFactories(step, matrix, Mocks.RecipeFactors);
       expect(step.heavy.factories.n).toBeGreaterThan(1);
       expect(step.light.factories.n).toBeGreaterThan(1);
       expect(step.petrol.factories.n).toBeGreaterThan(1);
@@ -571,7 +571,7 @@ describe('OilUtility', () => {
         fuel: { factories: new Fraction(1) },
         fuelPetrol: { factories: new Fraction(1) },
       };
-      OilUtility.calculateFactories(step, matrix, mocks.RecipeFactors);
+      OilUtility.calculateFactories(step, matrix, Mocks.RecipeFactors);
       expect(step.heavy.factories.n).toBeGreaterThan(1);
       expect(step.light.factories.n).toBeGreaterThan(1);
       expect(step.petrol.factories.n).toBeGreaterThan(1);
@@ -593,10 +593,10 @@ describe('OilUtility', () => {
       const result = OilUtility.addSteps(
         RecipeId.BasicOilProcessing,
         steps,
-        mocks.RecipeSettingsEntities,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
         ItemId.Coal,
-        mocks.Data
+        Mocks.Data
       );
       expect(result.length).toEqual(1);
     });
@@ -606,10 +606,10 @@ describe('OilUtility', () => {
       const result = OilUtility.addSteps(
         RecipeId.AdvancedOilProcessing,
         steps,
-        mocks.RecipeSettingsEntities,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
         ItemId.Coal,
-        mocks.Data
+        Mocks.Data
       );
       expect(result.length).toEqual(0);
     });
@@ -625,16 +625,16 @@ describe('OilUtility', () => {
         },
       ];
       const settings = Recipe.recipeReducer(
-        mocks.RecipeSettingsEntities,
+        Mocks.RecipeSettingsEntities,
         new Recipe.IgnoreAction(RecipeId.LightOilCracking)
       );
       const result = OilUtility.addSteps(
         RecipeId.AdvancedOilProcessing,
         steps,
         settings,
-        mocks.RecipeFactors,
+        Mocks.RecipeFactors,
         ItemId.Coal,
-        mocks.Data
+        Mocks.Data
       );
       expect(result.length).toEqual(1);
     });
@@ -652,10 +652,10 @@ describe('OilUtility', () => {
       const result = OilUtility.addSteps(
         RecipeId.AdvancedOilProcessing,
         steps,
-        mocks.RecipeSettingsEntities,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
         ItemId.Coal,
-        mocks.Data
+        Mocks.Data
       );
       expect(result.length).toBeGreaterThan(1);
     });
@@ -673,10 +673,10 @@ describe('OilUtility', () => {
       const result = OilUtility.addSteps(
         RecipeId.AdvancedOilProcessing,
         steps,
-        mocks.RecipeSettingsEntities,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
         ItemId.Coal,
-        mocks.Data
+        Mocks.Data
       );
       expect(result.length).toBeGreaterThan(1);
     });
@@ -701,10 +701,10 @@ describe('OilUtility', () => {
       const result = OilUtility.addSteps(
         RecipeId.AdvancedOilProcessing,
         steps,
-        mocks.RecipeSettingsEntities,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
         ItemId.Coal,
-        mocks.Data
+        Mocks.Data
       );
       expect(result.length).toBeGreaterThan(1);
     });

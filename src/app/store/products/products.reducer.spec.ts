@@ -1,25 +1,25 @@
-import * as mocks from 'src/mocks';
+import * as Mocks from 'src/mocks';
 import { RateType, ItemId } from '~/models';
-import * as actions from './products.actions';
+import * as Actions from './products.actions';
 import { productsReducer } from './products.reducer';
 
 describe('Products Reducer', () => {
   const state = productsReducer(
     undefined,
-    new actions.AddAction(ItemId.WoodenChest)
+    new Actions.AddAction(ItemId.WoodenChest)
   );
 
   describe('LOAD', () => {
     it('should load a list of products', () => {
       const result = productsReducer(
         undefined,
-        new actions.LoadAction(mocks.Products)
+        new Actions.LoadAction(Mocks.Products)
       );
-      expect(result.ids.length).toEqual(mocks.Products.length);
+      expect(result.ids.length).toEqual(Mocks.Products.length);
       expect(Object.keys(result.entities).length).toEqual(
-        mocks.Products.length
+        Mocks.Products.length
       );
-      expect(result.index).toEqual(mocks.Products.length);
+      expect(result.index).toEqual(Mocks.Products.length);
     });
   });
 
@@ -31,7 +31,7 @@ describe('Products Reducer', () => {
 
   describe('REMOVE', () => {
     it('should remove a product', () => {
-      const result = productsReducer(state, new actions.RemoveAction(0));
+      const result = productsReducer(state, new Actions.RemoveAction(0));
       expect(result.ids.length).toEqual(0);
     });
   });
@@ -40,13 +40,13 @@ describe('Products Reducer', () => {
     it('should commit edit on a product', () => {
       const result = productsReducer(
         state,
-        new actions.EditProductAction([
-          mocks.Product1.id,
-          mocks.Product2.itemId,
+        new Actions.EditProductAction([
+          Mocks.Product1.id,
+          Mocks.Product2.itemId,
         ])
       );
-      expect(result.entities[mocks.Product1.id].itemId).toEqual(
-        mocks.Product2.itemId
+      expect(result.entities[Mocks.Product1.id].itemId).toEqual(
+        Mocks.Product2.itemId
       );
     });
   });
@@ -56,9 +56,9 @@ describe('Products Reducer', () => {
       const value = 3;
       const result = productsReducer(
         state,
-        new actions.EditRateAction([mocks.Product1.id, value])
+        new Actions.EditRateAction([Mocks.Product1.id, value])
       );
-      expect(result.entities[mocks.Product1.id].rate).toEqual(value);
+      expect(result.entities[Mocks.Product1.id].rate).toEqual(value);
     });
   });
 
@@ -67,9 +67,9 @@ describe('Products Reducer', () => {
       const value = RateType.Wagons;
       const result = productsReducer(
         state,
-        new actions.EditRateTypeAction([mocks.Product1.id, value])
+        new Actions.EditRateTypeAction([Mocks.Product1.id, value])
       );
-      expect(result.entities[mocks.Product1.id].rateType).toEqual(value);
+      expect(result.entities[Mocks.Product1.id].rateType).toEqual(value);
     });
   });
 

@@ -2,25 +2,70 @@
   <thead>
     <tr>
       <th>
-        Items/{{
-          displayRate === DisplayRate.PerHour
-            ? 'h'
-            : displayRate === DisplayRate.PerMinute
-            ? 'm'
-            : 's'
-        }}
+        <div>
+          Items/{{
+            displayRate === DisplayRate.PerHour
+              ? 'h'
+              : displayRate === DisplayRate.PerMinute
+              ? 'm'
+              : 's'
+          }}
+          <i
+            *ngIf="modifiedIgnore"
+            title="Undo all ignored steps"
+            class="clickable material-icons"
+            (click)="resetIgnore.emit()"
+            >undo</i
+          >
+        </div>
       </th>
       <th>
-        Belts
+        <div>
+          Belts
+          <i
+            *ngIf="modifiedBelt"
+            title="Undo all belt modifications"
+            class="clickable material-icons"
+            (click)="resetBelt.emit()"
+            >undo</i
+          >
+        </div>
       </th>
       <th>
-        Factories
+        <div>
+          Factories
+          <i
+            *ngIf="modifiedFactory"
+            title="Undo all factory modifications"
+            class="clickable material-icons"
+            (click)="resetFactory.emit()"
+            >undo</i
+          >
+        </div>
       </th>
       <th>
-        Modules
+        <div>
+          Modules
+          <i
+            *ngIf="modifiedModules"
+            title="Undo all module modifications"
+            class="clickable material-icons"
+            (click)="resetModules.emit()"
+            >undo</i
+          >
+        </div>
       </th>
       <th>
-        Beacons
+        <div>
+          Beacons
+          <i
+            *ngIf="modifiedBeacons"
+            title="Undo all beacon modifications"
+            class="clickable material-icons"
+            (click)="resetBeacons.emit()"
+            >undo</i
+          >
+        </div>
       </th>
       <!-- Reset / Link -->
       <th></th>

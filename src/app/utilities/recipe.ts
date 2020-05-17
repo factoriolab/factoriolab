@@ -10,6 +10,7 @@ import {
   Factors,
   Step,
 } from '~/models';
+import { RecipeState } from '~/store/recipe';
 
 const categoryAllowProdModule = [CategoryId.Intermediate, CategoryId.Research];
 const order: (ItemId | RecipeId)[] = [
@@ -168,5 +169,23 @@ export class RecipeUtility {
       }
     }
     return order.indexOf(ItemId.None);
+  }
+
+  /** Resets a passed field of the recipe state */
+  static resetField(state: RecipeState, field: string) {
+    // Spread into new state
+    const newState = { ...state };
+    for (const id of Object.keys(newState).filter(
+      (i) => newState[i][field] != null
+    )) {
+      if (Object.keys(newState[id]).length === 1) {
+        delete newState[id];
+      } else {
+        // Spread into new recipe settings state
+        newState[id] = { ...newState[id] };
+        delete newState[id][field];
+      }
+    }
+    return newState;
   }
 }

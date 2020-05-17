@@ -9,6 +9,16 @@ tr > * + * {
   padding-left: 1rem;
 }
 
+th > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > * {
+    margin-left: 0.5rem;
+  }
+}
+
 td > div {
   justify-content: flex-end;
 

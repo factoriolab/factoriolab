@@ -2,12 +2,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
-import * as mocks from 'src/mocks';
+import * as Mocks from 'src/mocks';
 import { IconComponent } from '~/components';
 import { RecipeId, ItemId } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers, State } from '~/store';
-import * as recipe from '~/store/recipe';
+import * as Recipe from '~/store/recipe';
 import { StepsComponent } from './steps/steps.component';
 import { StepsContainerComponent } from './steps-container.component';
 
@@ -40,58 +40,94 @@ describe('StepsContainerComponent', () => {
 
   it('should ignore a recipe', () => {
     spyOn(store, 'dispatch');
-    const data = mocks.Recipe1.id;
+    const data = Mocks.Recipe1.id;
     component.child.ignoreStep.emit(data);
-    expect(store.dispatch).toHaveBeenCalledWith(new recipe.IgnoreAction(data));
+    expect(store.dispatch).toHaveBeenCalledWith(new Recipe.IgnoreAction(data));
   });
 
   it('should set belt', () => {
     spyOn(store, 'dispatch');
-    const data: [RecipeId, ItemId] = [mocks.Recipe1.id, ItemId.TransportBelt];
+    const data: [RecipeId, ItemId] = [Mocks.Recipe1.id, ItemId.TransportBelt];
     component.child.setBelt.emit(data);
-    expect(store.dispatch).toHaveBeenCalledWith(new recipe.SetBeltAction(data));
+    expect(store.dispatch).toHaveBeenCalledWith(new Recipe.SetBeltAction(data));
   });
 
   it('should set factory', () => {
     spyOn(store, 'dispatch');
-    const data: [RecipeId, ItemId] = [mocks.Recipe1.id, ItemId.StoneFurnace];
+    const data: [RecipeId, ItemId] = [Mocks.Recipe1.id, ItemId.StoneFurnace];
     component.child.setFactory.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new recipe.SetFactoryAction(data)
+      new Recipe.SetFactoryAction(data)
     );
   });
 
   it('should set modules', () => {
     spyOn(store, 'dispatch');
-    const data: [RecipeId, ItemId[]] = [mocks.Recipe1.id, [ItemId.SpeedModule]];
+    const data: [RecipeId, ItemId[]] = [Mocks.Recipe1.id, [ItemId.SpeedModule]];
     component.child.setModules.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new recipe.SetModulesAction(data)
+      new Recipe.SetModulesAction(data)
     );
   });
 
   it('should set beacon module', () => {
     spyOn(store, 'dispatch');
-    const data: [RecipeId, ItemId] = [mocks.Recipe1.id, ItemId.SpeedModule];
+    const data: [RecipeId, ItemId] = [Mocks.Recipe1.id, ItemId.SpeedModule];
     component.child.setBeaconModule.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new recipe.SetBeaconModuleAction(data)
+      new Recipe.SetBeaconModuleAction(data)
     );
   });
 
   it('should set beacon count', () => {
     spyOn(store, 'dispatch');
-    const data: [RecipeId, number] = [mocks.Recipe1.id, 24];
+    const data: [RecipeId, number] = [Mocks.Recipe1.id, 24];
     component.child.setBeaconCount.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new recipe.SetBeaconCountAction(data)
+      new Recipe.SetBeaconCountAction(data)
     );
   });
 
   it('should reset step to default', () => {
     spyOn(store, 'dispatch');
-    const data = mocks.Recipe1.id;
+    const data = Mocks.Recipe1.id;
     component.child.resetStep.emit(data);
-    expect(store.dispatch).toHaveBeenCalledWith(new recipe.ResetAction(data));
+    expect(store.dispatch).toHaveBeenCalledWith(new Recipe.ResetAction(data));
+  });
+
+  it('should reset ignore modifications', () => {
+    spyOn(store, 'dispatch');
+    component.child.resetIgnore.emit();
+    expect(store.dispatch).toHaveBeenCalledWith(new Recipe.ResetIgnoreAction());
+  });
+
+  it('should reset belt modifications', () => {
+    spyOn(store, 'dispatch');
+    component.child.resetBelt.emit();
+    expect(store.dispatch).toHaveBeenCalledWith(new Recipe.ResetBeltAction());
+  });
+
+  it('should reset factory modifications', () => {
+    spyOn(store, 'dispatch');
+    component.child.resetFactory.emit();
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Recipe.ResetFactoryAction()
+    );
+  });
+
+  it('should reset module modifications', () => {
+    spyOn(store, 'dispatch');
+    component.child.resetModules.emit();
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Recipe.ResetModulesAction()
+    );
+  });
+
+  it('should reset beacon modifications', () => {
+    spyOn(store, 'dispatch');
+    component.child.resetBeacons.emit();
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Recipe.ResetBeaconsAction()
+    );
   });
 });
