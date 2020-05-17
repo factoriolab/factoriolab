@@ -1,12 +1,18 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
-import { SelectType } from '~/components';
 import {
   DisplayRate,
   ItemId,
   RecipeId,
   ResearchSpeed,
   OptionsType,
+  IdType,
 } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { SettingsState, initialSettingsState } from '~/store/settings';
@@ -27,6 +33,7 @@ enum OpenSelect {
   selector: 'lab-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent {
   @Input() data: DatasetState;
@@ -57,7 +64,7 @@ export class SettingsComponent {
   OpenSelect = OpenSelect;
   OptionsType = OptionsType;
   ResearchSpeed = ResearchSpeed;
-  SelectType = SelectType;
+  SelectType = IdType;
 
   initial = initialSettingsState;
 

@@ -2,17 +2,20 @@
   <ng-container *ngFor="let id of row">
     <lab-icon
       class="clickable"
-      *ngIf="selectType === SelectType.Item"
+      *ngIf="selectType === IdType.Item"
       [iconId]="id"
-      [title]="data.itemEntities[id] ? data.itemEntities[id].name : null"
+      [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"
+      [item]="data.itemEntities[id]"
+      [displayRate]="displayRate"
       [class.selected]="id === selectedId"
       (click)="clickId(id, $event)"
     ></lab-icon>
     <lab-icon
       class="clickable"
-      *ngIf="selectType === SelectType.Recipe"
+      *ngIf="selectType === IdType.Recipe"
       [iconId]="id"
-      [title]="data.recipeEntities[id].name"
+      [tooltip]="data.recipeEntities[id].name"
+      [recipe]="data.recipeEntities[id]"
       [class.selected]="id === selectedId"
       (click)="clickId(id, $event)"
     ></lab-icon>

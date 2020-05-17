@@ -6,6 +6,7 @@ import {
   EventEmitter,
   OnInit,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -20,6 +21,7 @@ import { SettingsComponent } from './settings/settings.component';
   selector: 'lab-settings-container',
   templateUrl: './settings-container.component.html',
   styleUrls: ['./settings-container.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsContainerComponent implements OnInit {
   @ViewChild(SettingsComponent) child: SettingsComponent;

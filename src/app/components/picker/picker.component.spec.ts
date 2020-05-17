@@ -66,7 +66,7 @@ describe('PickerComponent', () => {
 
   it('should select a new item', () => {
     spyOn(component, 'selectItem');
-    TestUtility.clickSelector(fixture, '.item lab-icon', 1);
+    TestUtility.clickSelector(fixture, '.item > lab-icon', 1);
     fixture.detectChanges();
     expect(component.selectItem).toHaveBeenCalledWith(mocks.Item2.id);
   });

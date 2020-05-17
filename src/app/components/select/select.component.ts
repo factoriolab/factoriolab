@@ -5,33 +5,31 @@ import {
   EventEmitter,
   ElementRef,
   HostListener,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { OptionsType, options } from '~/models';
+import { OptionsType, IdType, options, DisplayRate } from '~/models';
 import { DatasetState } from '~/store/dataset';
-
-export enum SelectType {
-  Item,
-  Recipe,
-}
 
 @Component({
   selector: 'lab-select',
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectComponent {
   @Input() data: DatasetState;
   @Input() selectedId: string;
   @Input() optionsType: OptionsType;
-  @Input() selectType = SelectType.Item;
+  @Input() selectType = IdType.Item;
+  @Input() displayRate: DisplayRate;
 
   @Output() cancel = new EventEmitter();
   @Output() selectId = new EventEmitter<string>();
 
   options = options;
 
-  SelectType = SelectType;
+  IdType = IdType;
 
   opening = true;
 

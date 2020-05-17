@@ -5,6 +5,7 @@
   z-index: 1;
   padding: 1rem;
   flex-grow: 1;
+  overflow-y: auto;
 }
 
 .label {
@@ -29,4 +30,13 @@ lab-icon {
 
 a {
   color: $color-brand;
+}
+
+.select-container {
+  width: 2.25rem;
+  height: 2.25rem;
+
+  > * {
+    position: absolute;
+  }
 }

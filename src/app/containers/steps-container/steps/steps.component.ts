@@ -1,4 +1,10 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import Fraction from 'fraction.js';
 
 import {
@@ -32,6 +38,7 @@ interface StepEdit {
   selector: 'lab-steps',
   templateUrl: './steps.component.html',
   styleUrls: ['./steps.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepsComponent {
   @Input() data: DatasetState;
