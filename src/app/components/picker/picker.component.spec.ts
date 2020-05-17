@@ -1,7 +1,7 @@
 import { ViewChild, Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import * as mocks from 'src/mocks';
+import * as Mocks from 'src/mocks';
 import { DatasetState } from '~/store/dataset';
 import { TestUtility } from '~/utilities/test';
 import { IconComponent } from '../icon/icon.component';
@@ -22,9 +22,9 @@ import { PickerComponent } from './picker.component';
 })
 class TestPickerComponent {
   @ViewChild(PickerComponent) child: PickerComponent;
-  data: DatasetState = mocks.Data;
-  categoryId: string = mocks.CategoryId;
-  itemId: string = mocks.Item1.id;
+  data: DatasetState = Mocks.Data;
+  categoryId: string = Mocks.CategoryId;
+  itemId: string = Mocks.Item1.id;
   cancel() {}
   selectTab(data) {}
   selectItem(data) {}
@@ -68,7 +68,7 @@ describe('PickerComponent', () => {
     spyOn(component, 'selectItem');
     TestUtility.clickSelector(fixture, '.item > lab-icon', 1);
     fixture.detectChanges();
-    expect(component.selectItem).toHaveBeenCalledWith(mocks.Item2.id);
+    expect(component.selectItem).toHaveBeenCalledWith(Mocks.Item2.id);
   });
 
   it('should cancel when the same item is selected', () => {

@@ -2,9 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
-import * as mocks from 'src/mocks';
+import * as Mocks from 'src/mocks';
 import { IconComponent, PickerComponent } from '~/components';
-import { Product, RateType, CategoryId } from '~/models';
+import { Product, CategoryId } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { TestUtility } from '~/utilities/test';
 import { ProductsComponent } from './products.component';
@@ -27,8 +27,8 @@ import { ProductsComponent } from './products.component';
 })
 class TestProductsComponent {
   @ViewChild(ProductsComponent) child: ProductsComponent;
-  data: DatasetState = mocks.Data;
-  products: Product[] = mocks.Products;
+  data: DatasetState = Mocks.Data;
+  products: Product[] = Mocks.Products;
   add() {}
   remove(data) {}
   editProduct(data) {}
@@ -74,7 +74,7 @@ describe('ProductsComponent', () => {
     spyOn(component, 'editRate');
     TestUtility.selectSelector(fixture, 'input', '3');
     fixture.detectChanges();
-    expect(component.editRate).toHaveBeenCalledWith([mocks.Product1.id, 3]);
+    expect(component.editRate).toHaveBeenCalledWith([Mocks.Product1.id, 3]);
   });
 
   it('should ignore invalid numeric values', () => {
@@ -82,7 +82,7 @@ describe('ProductsComponent', () => {
     const event = { target: {} };
     component.child.emitNumber(
       component.child.editRate,
-      mocks.Product1.id,
+      Mocks.Product1.id,
       event as any
     );
     fixture.detectChanges();

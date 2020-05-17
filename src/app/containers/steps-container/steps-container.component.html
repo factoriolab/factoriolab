@@ -6,6 +6,11 @@
   [itemPrecision]="itemPrecision$ | async"
   [beltPrecision]="beltPrecision$ | async"
   [factoryPrecision]="factoryPrecision$ | async"
+  [modifiedIgnore]="modifiedIgnore$ | async"
+  [modifiedBelt]="modifiedBelt$ | async"
+  [modifiedFactory]="modifiedFactory$ | async"
+  [modifiedModules]="modifiedModules$ | async"
+  [modifiedBeacons]="modifiedBeacons$ | async"
   (ignoreStep)="ignoreStep($event)"
   (setBelt)="setBelt($event)"
   (setFactory)="setFactory($event)"
@@ -13,5 +18,10 @@
   (setBeaconModule)="setBeaconModule($event)"
   (setBeaconCount)="setBeaconCount($event)"
   (resetStep)="resetStep($event)"
+  (resetIgnore)="resetIgnore()"
+  (resetBelt)="resetBelt()"
+  (resetFactory)="resetFactory()"
+  (resetModules)="resetModules()"
+  (resetBeacons)="resetBeacons()"
 >
 </lab-steps>

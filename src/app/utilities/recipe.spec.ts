@@ -1,6 +1,6 @@
 import Fraction from 'fraction.js';
 
-import * as mocks from 'src/mocks';
+import * as Mocks from 'src/mocks';
 import { RecipeUtility } from './recipe';
 import { ItemId, CategoryId, RecipeId } from '~/models';
 
@@ -61,7 +61,7 @@ describe('RecipeUtility', () => {
     it('should not allow for the satellite recipe', () => {
       const result = RecipeUtility.prodModuleAllowed(
         { id: RecipeId.Satellite } as any,
-        mocks.Data.itemEntities
+        Mocks.Data.itemEntities
       );
       expect(result).toEqual(false);
     });
@@ -206,6 +206,24 @@ describe('RecipeUtility', () => {
       const aOrder = RecipeUtility.sortOrder(a);
       const bOrder = RecipeUtility.sortOrder(b);
       expect(aOrder).toEqual(bOrder);
+    });
+  });
+
+  describe('resetField', () => {
+    it('should reset changes to a field', () => {
+      const result = RecipeUtility.resetField(
+        { [Mocks.Item1.id]: { ignore: true, belt: ItemId.TransportBelt } },
+        'ignore'
+      );
+      expect(result[Mocks.Item1.id]).toEqual({ belt: ItemId.TransportBelt });
+    });
+
+    it('should delete a recipe if no modifications remain', () => {
+      const result = RecipeUtility.resetField(
+        { [Mocks.Item1.id]: { ignore: true } },
+        'ignore'
+      );
+      expect(result[Mocks.Item1.id]).toBeUndefined();
     });
   });
 });

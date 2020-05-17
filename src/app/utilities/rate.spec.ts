@@ -1,6 +1,6 @@
 import Fraction from 'fraction.js';
 
-import * as mocks from 'src/mocks';
+import * as Mocks from 'src/mocks';
 import { RateUtility } from './rate';
 import { Step, ItemId, RecipeId, CategoryId } from '~/models';
 
@@ -54,14 +54,14 @@ describe('RateUtility', () => {
     it('should recursively calculate required steps', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
-        mocks.Item2.id,
+        Mocks.Item2.id,
         new Fraction(30),
         steps,
-        mocks.RecipeSettingsEntities,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
-        mocks.Data
+        Mocks.Data
       );
       expect(steps as any).toEqual(expected as any);
     });
@@ -69,24 +69,24 @@ describe('RateUtility', () => {
     it('should handle repeated products', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
-        mocks.Item2.id,
+        Mocks.Item2.id,
         new Fraction(15),
         steps,
-        mocks.RecipeSettingsEntities,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
-        mocks.Data
+        Mocks.Data
       );
       RateUtility.addStepsFor(
-        mocks.Item2.id,
+        Mocks.Item2.id,
         new Fraction(15),
         steps,
-        mocks.RecipeSettingsEntities,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
-        mocks.Data
+        Mocks.Data
       );
       expect(steps).toEqual(expected as any);
     });
@@ -94,18 +94,18 @@ describe('RateUtility', () => {
     it('should handle recipes with specific outputs', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
-        mocks.Item2.id,
+        Mocks.Item2.id,
         new Fraction(30),
         steps,
-        mocks.RecipeSettingsEntities,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
         {
-          ...mocks.Data,
+          ...Mocks.Data,
           ...{
             recipeEntities: {
-              ...mocks.Data.recipeEntities,
+              ...Mocks.Data.recipeEntities,
               ...{
                 ['iron-chest']: {
                   id: 'iron-chest',
@@ -124,21 +124,21 @@ describe('RateUtility', () => {
     it('should handle research recipes', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
-        mocks.Item2.id,
+        Mocks.Item2.id,
         new Fraction(30),
         steps,
-        mocks.RecipeSettingsEntities,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
         {
-          ...mocks.Data,
+          ...Mocks.Data,
           ...{
             itemEntities: {
-              ...mocks.Data.itemEntities,
+              ...Mocks.Data.itemEntities,
               ...{
                 ['iron-chest']: {
-                  ...mocks.Data.itemEntities['iron-chest'],
+                  ...Mocks.Data.itemEntities['iron-chest'],
                   ...{ category: CategoryId.Research },
                 } as any,
               },
@@ -156,10 +156,10 @@ describe('RateUtility', () => {
         new Fraction(30),
         steps,
         {},
-        mocks.RecipeFactors,
+        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
-        mocks.Data
+        Mocks.Data
       );
       expect(steps[0].settings.belt).toEqual(ItemId.Pipe);
     });
@@ -177,11 +177,11 @@ describe('RateUtility', () => {
         ItemId.PetroleumGas,
         new Fraction(30),
         steps,
-        mocks.RecipeSettingsEntities,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
-        mocks.Data
+        Mocks.Data
       );
       expect(steps[0].recipeId).toEqual(RecipeId.BasicOilProcessing);
     });
@@ -192,11 +192,11 @@ describe('RateUtility', () => {
         ItemId.SpaceSciencePack,
         new Fraction(60),
         steps,
-        mocks.RecipeSettingsEntities,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
-        mocks.Data
+        Mocks.Data
       );
       expect(steps[0].factories).toBe(null);
       expect(steps[1].factories).toEqual(new Fraction(1021, 50));
@@ -208,11 +208,11 @@ describe('RateUtility', () => {
         ItemId.Uranium235,
         new Fraction(30),
         steps,
-        mocks.RecipeSettingsEntities,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
-        mocks.Data
+        Mocks.Data
       );
       expect(steps).toEqual([
         {
@@ -231,11 +231,11 @@ describe('RateUtility', () => {
         ItemId.Steam,
         new Fraction(100),
         steps,
-        mocks.RecipeSettingsInitial,
-        mocks.RecipeFactors,
+        Mocks.RecipeSettingsInitial,
+        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
-        mocks.Data
+        Mocks.Data
       );
       expect(steps[1].itemId).toEqual(ItemId.Coal);
       expect(steps[1].items.n).toBeGreaterThan(0);
@@ -247,28 +247,28 @@ describe('RateUtility', () => {
     it('should skip steps with no items', () => {
       const steps: Step[] = [
         {
-          itemId: mocks.Item1.id,
+          itemId: Mocks.Item1.id,
           recipeId: null,
           items: null,
           belts: null,
           settings: { belt: ItemId.TransportBelt },
         },
       ];
-      RateUtility.calculateBelts(steps, mocks.BeltSpeed);
+      RateUtility.calculateBelts(steps, Mocks.BeltSpeed);
       expect(steps[0].belts).toBeNull();
     });
 
     it('should calculate required belts for steps', () => {
       const steps: Step[] = [
         {
-          itemId: mocks.Item1.id,
+          itemId: Mocks.Item1.id,
           recipeId: null,
-          items: mocks.BeltSpeed[ItemId.TransportBelt],
+          items: Mocks.BeltSpeed[ItemId.TransportBelt],
           belts: new Fraction(0),
           settings: { belt: ItemId.TransportBelt },
         },
       ];
-      RateUtility.calculateBelts(steps, mocks.BeltSpeed);
+      RateUtility.calculateBelts(steps, Mocks.BeltSpeed);
       expect(steps[0].belts).toEqual(new Fraction(1));
     });
   });
@@ -277,7 +277,7 @@ describe('RateUtility', () => {
     it('should skip steps with no items', () => {
       const steps: Step[] = [
         {
-          itemId: mocks.Item1.id,
+          itemId: Mocks.Item1.id,
           recipeId: null,
           items: null,
           belts: null,
@@ -312,7 +312,7 @@ describe('RateUtility', () => {
       const result = RateUtility.findBasicOilRecipe(
         ItemId.PetroleumGas,
         RecipeId.AdvancedOilProcessing,
-        mocks.Data
+        Mocks.Data
       );
       expect(result).toBeNull();
     });
@@ -321,7 +321,7 @@ describe('RateUtility', () => {
       const result = RateUtility.findBasicOilRecipe(
         ItemId.HeavyOil,
         RecipeId.BasicOilProcessing,
-        mocks.Data
+        Mocks.Data
       );
       expect(result).toBeNull();
     });
@@ -330,7 +330,7 @@ describe('RateUtility', () => {
       const result = RateUtility.findBasicOilRecipe(
         ItemId.PetroleumGas,
         RecipeId.BasicOilProcessing,
-        mocks.Data
+        Mocks.Data
       );
       expect(result.id).toEqual(RecipeId.BasicOilProcessing);
     });
@@ -339,7 +339,7 @@ describe('RateUtility', () => {
       const result = RateUtility.findBasicOilRecipe(
         ItemId.SolidFuel,
         RecipeId.BasicOilProcessing,
-        mocks.Data
+        Mocks.Data
       );
       expect(result.id).toEqual(RecipeId.SolidFuelFromPetroleumGas);
     });

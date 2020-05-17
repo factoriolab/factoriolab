@@ -1,5 +1,6 @@
-import * as mocks from 'src/mocks';
-import * as actions from './recipe.actions';
+import * as Mocks from 'src/mocks';
+import { RecipeUtility } from '~/utilities';
+import * as Actions from './recipe.actions';
 import { recipeReducer, initialRecipeState } from './recipe.reducer';
 
 describe('Recipe Reducer', () => {
@@ -9,9 +10,9 @@ describe('Recipe Reducer', () => {
     it('should load recipe settings', () => {
       const result = recipeReducer(
         undefined,
-        new actions.LoadAction(mocks.RecipeSettingsEntities)
+        new Actions.LoadAction(Mocks.RecipeSettingsEntities)
       );
-      expect(result).toEqual(mocks.RecipeSettingsEntities);
+      expect(result).toEqual(Mocks.RecipeSettingsEntities);
     });
   });
 
@@ -19,21 +20,21 @@ describe('Recipe Reducer', () => {
     it('should ignore a recipe', () => {
       const result = recipeReducer(
         initialRecipeState,
-        new actions.IgnoreAction(mocks.Recipe1.id)
+        new Actions.IgnoreAction(Mocks.Recipe1.id)
       );
-      expect(result[mocks.Recipe1.id].ignore).toEqual(true);
+      expect(result[Mocks.Recipe1.id].ignore).toEqual(true);
     });
 
     it('should delete key if ignore = false is the only modification', () => {
       let result = recipeReducer(
         initialRecipeState,
-        new actions.IgnoreAction(mocks.Recipe1.id)
+        new Actions.IgnoreAction(Mocks.Recipe1.id)
       );
       result = recipeReducer(
         result,
-        new actions.IgnoreAction(mocks.Recipe1.id)
+        new Actions.IgnoreAction(Mocks.Recipe1.id)
       );
-      expect(result[mocks.Recipe1.id]).toBeUndefined();
+      expect(result[Mocks.Recipe1.id]).toBeUndefined();
     });
   });
 
@@ -41,9 +42,9 @@ describe('Recipe Reducer', () => {
     it('should set the belt', () => {
       const result = recipeReducer(
         initialRecipeState,
-        new actions.SetBeltAction([mocks.Recipe1.id, mocks.Item1.id])
+        new Actions.SetBeltAction([Mocks.Recipe1.id, Mocks.Item1.id])
       );
-      expect(result[mocks.Recipe1.id].belt).toEqual(mocks.Item1.id);
+      expect(result[Mocks.Recipe1.id].belt).toEqual(Mocks.Item1.id);
     });
   });
 
@@ -51,9 +52,9 @@ describe('Recipe Reducer', () => {
     it('should set the factory', () => {
       const result = recipeReducer(
         initialRecipeState,
-        new actions.SetFactoryAction([mocks.Recipe1.id, mocks.Item1.id])
+        new Actions.SetFactoryAction([Mocks.Recipe1.id, Mocks.Item1.id])
       );
-      expect(result[mocks.Recipe1.id].factory).toEqual(mocks.Item1.id);
+      expect(result[Mocks.Recipe1.id].factory).toEqual(Mocks.Item1.id);
     });
   });
 
@@ -61,9 +62,9 @@ describe('Recipe Reducer', () => {
     it('should set the modules', () => {
       const result = recipeReducer(
         initialRecipeState,
-        new actions.SetModulesAction([mocks.Recipe1.id, [mocks.Item1.id]])
+        new Actions.SetModulesAction([Mocks.Recipe1.id, [Mocks.Item1.id]])
       );
-      expect(result[mocks.Recipe1.id].modules).toEqual([mocks.Item1.id]);
+      expect(result[Mocks.Recipe1.id].modules).toEqual([Mocks.Item1.id]);
     });
   });
 
@@ -71,9 +72,9 @@ describe('Recipe Reducer', () => {
     it('should set the beacon module', () => {
       const result = recipeReducer(
         initialRecipeState,
-        new actions.SetBeaconModuleAction([mocks.Recipe1.id, mocks.Item1.id])
+        new Actions.SetBeaconModuleAction([Mocks.Recipe1.id, Mocks.Item1.id])
       );
-      expect(result[mocks.Recipe1.id].beaconModule).toEqual(mocks.Item1.id);
+      expect(result[Mocks.Recipe1.id].beaconModule).toEqual(Mocks.Item1.id);
     });
   });
 
@@ -81,9 +82,9 @@ describe('Recipe Reducer', () => {
     it('should set the beacon count', () => {
       const result = recipeReducer(
         initialRecipeState,
-        new actions.SetBeaconCountAction([mocks.Recipe1.id, numberValue])
+        new Actions.SetBeaconCountAction([Mocks.Recipe1.id, numberValue])
       );
-      expect(result[mocks.Recipe1.id].beaconCount).toEqual(numberValue);
+      expect(result[Mocks.Recipe1.id].beaconCount).toEqual(numberValue);
     });
   });
 
@@ -91,9 +92,56 @@ describe('Recipe Reducer', () => {
     it('should reset a recipe', () => {
       const result = recipeReducer(
         initialRecipeState,
-        new actions.ResetAction(mocks.Recipe1.id)
+        new Actions.ResetAction(Mocks.Recipe1.id)
       );
-      expect(result[mocks.Recipe1.id]).toBeUndefined();
+      expect(result[Mocks.Recipe1.id]).toBeUndefined();
+    });
+  });
+
+  describe('RESET_IGNORE', () => {
+    it('should call resetField', () => {
+      spyOn(RecipeUtility, 'resetField');
+      recipeReducer(null, new Actions.ResetIgnoreAction());
+      expect(RecipeUtility.resetField).toHaveBeenCalledWith(null, 'ignore');
+    });
+  });
+
+  describe('RESET_BELT', () => {
+    it('should call resetField', () => {
+      spyOn(RecipeUtility, 'resetField');
+      recipeReducer(null, new Actions.ResetBeltAction());
+      expect(RecipeUtility.resetField).toHaveBeenCalledWith(null, 'belt');
+    });
+  });
+
+  describe('RESET_FACTORY', () => {
+    it('should call resetField', () => {
+      spyOn(RecipeUtility, 'resetField');
+      recipeReducer(null, new Actions.ResetFactoryAction());
+      expect(RecipeUtility.resetField).toHaveBeenCalledWith(null, 'factory');
+    });
+  });
+
+  describe('RESET_MODULES', () => {
+    it('should call resetField', () => {
+      spyOn(RecipeUtility, 'resetField');
+      recipeReducer(null, new Actions.ResetModulesAction());
+      expect(RecipeUtility.resetField).toHaveBeenCalledWith(null, 'modules');
+    });
+  });
+
+  describe('RESET_BEACONS', () => {
+    it('should call resetField', () => {
+      spyOn(RecipeUtility, 'resetField');
+      recipeReducer(null, new Actions.ResetBeaconsAction());
+      expect(RecipeUtility.resetField).toHaveBeenCalledWith(
+        null,
+        'beaconModule'
+      );
+      expect(RecipeUtility.resetField).toHaveBeenCalledWith(
+        undefined,
+        'beaconCount'
+      );
     });
   });
 
