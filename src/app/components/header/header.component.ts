@@ -1,4 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { Id } from '~/models';
 
@@ -6,6 +11,7 @@ import { Id } from '~/models';
   selector: 'lab-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
   @Output() toggleSettings = new EventEmitter();

@@ -11,6 +11,7 @@
   }
 
   .header-settings {
+    margin-left: 1px;
     background-color: $color-gray-1;
     cursor: pointer;
 
@@ -26,8 +27,9 @@
   .header-github {
     line-height: 0;
   }
-  
-  .header-settings, .header-github {
+
+  .header-settings,
+  .header-github {
     &:hover {
       background-color: $color-brand;
     }

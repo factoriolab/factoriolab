@@ -2,7 +2,7 @@
   <lab-icon
     *ngFor="let category of data.categories"
     [iconId]="category.id"
-    [title]="category.name"
+    [tooltip]="category.name"
     [class.selected]="category.id === categoryId"
     (click)="selectTab.emit(category.id)"
   ></lab-icon>
@@ -13,7 +13,8 @@
       <lab-icon
         class="clickable"
         [iconId]="id"
-        [title]="data.itemEntities[id].name"
+        [tooltip]="data.itemEntities[id].name"
+        [recipe]="data.recipeEntities[id]"
         [class.selected]="id === itemId"
         (click)="clickItem(id)"
       ></lab-icon>
