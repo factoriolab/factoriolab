@@ -1,7 +1,7 @@
 import * as Mocks from 'src/mocks';
+import { RecipeUtility } from '~/utilities';
 import * as Actions from './recipe.actions';
 import { recipeReducer, initialRecipeState } from './recipe.reducer';
-import { RecipeUtility } from '~/utilities';
 
 describe('Recipe Reducer', () => {
   const numberValue = 2;
