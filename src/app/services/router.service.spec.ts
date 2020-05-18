@@ -73,6 +73,7 @@ const mockFullSettings: Settings.SettingsState = {
   miningBonus: 10,
   researchSpeed: ResearchSpeed.Speed0,
   flowRate: 1200,
+  expensive: true,
 };
 const mockZipFullSettings = `${DisplayRate.PerHour}:2:4:0:${
   Mocks.Data.itemN[mockFullSettings.belt]
@@ -80,7 +81,7 @@ const mockZipFullSettings = `${DisplayRate.PerHour}:2:4:0:${
   Mocks.Data.itemN[mockFullSettings.furnace]
 }:${Mocks.Data.recipeN[mockFullSettings.oilRecipe]}:${
   Mocks.Data.itemN[mockFullSettings.fuel]
-}:4:1:2:8:1:10:0:1200`;
+}:4:1:2:8:1:10:0:1200:1`;
 const mockNullSettings = {
   ...mockFullSettings,
   ...{ itemPrecision: null, beltPrecision: null, factoryPrecision: null },
@@ -91,7 +92,7 @@ const mockZipNullSettings = `${DisplayRate.PerHour}:n:n:n:${
   Mocks.Data.itemN[mockFullSettings.furnace]
 }:${Mocks.Data.recipeN[mockFullSettings.oilRecipe]}:${
   Mocks.Data.itemN[mockFullSettings.fuel]
-}:4:1:2:8:1:10:0:1200`;
+}:4:1:2:8:1:10:0:1200:0`;
 
 describe('RouterService', () => {
   let service: RouterService;

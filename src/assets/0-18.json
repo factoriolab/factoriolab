@@ -1689,10 +1689,12 @@
         "iron-gear-wheel": 10,
         "lubricant": 20
       },
-      "in-expensive": {
-        "fast-transport-belt": 1,
-        "iron-gear-wheel": 20,
-        "lubricant": 20
+      "expensive": {
+        "in": {
+          "fast-transport-belt": 1,
+          "iron-gear-wheel": 20,
+          "lubricant": 20
+        }
       },
       "producers": ["assembling-machine-2", "assembling-machine-3"]
     },
@@ -1804,8 +1806,8 @@
     {
       "id": "pipe",
       "time": 0.5,
-      "in": { "iron-plate": 2 },
-      "in-expensive": { "iron-plate": 2 }
+      "in": { "iron-plate": 1 },
+      "expensive": { "in": { "iron-plate": 2 } }
     },
     {
       "id": "pipe-to-ground",
@@ -2031,7 +2033,9 @@
       "id": "steam-engine",
       "time": 0.5,
       "in": { "iron-gear-wheel": 8, "iron-plate": 10, "pipe": 5 },
-      "in-expensive": { "iron-gear-wheel": 10, "iron-plate": 50, "pipe": 5 }
+      "expensive": {
+        "in": { "iron-gear-wheel": 10, "iron-plate": 50, "pipe": 5 }
+      }
     },
     {
       "id": "steam-turbine",
@@ -2071,22 +2075,26 @@
     {
       "id": "burner-mining-drill",
       "time": 2,
-      "time-expensive": 4,
       "in": { "iron-gear-wheel": 3, "iron-plate": 3, "stone-furnace": 1 },
-      "in-expensive": {
-        "iron-gear-wheel": 6,
-        "iron-plate": 6,
-        "stone-furnace": 2
+      "expensive": {
+        "time": 4,
+        "in": {
+          "iron-gear-wheel": 6,
+          "iron-plate": 6,
+          "stone-furnace": 2
+        }
       }
     },
     {
       "id": "electric-mining-drill",
       "time": 2,
       "in": { "electronic-circuit": 3, "iron-gear-wheel": 5, "iron-plate": 10 },
-      "in-expensive": {
-        "electronic-circuit": 5,
-        "iron-gear-wheel": 10,
-        "iron-plate": 20
+      "expensive": {
+        "in": {
+          "electronic-circuit": 5,
+          "iron-gear-wheel": 10,
+          "iron-plate": 20
+        }
       }
     },
     {
@@ -2133,11 +2141,13 @@
         "iron-gear-wheel": 5,
         "steel-plate": 2
       },
-      "in-expensive": {
-        "assembling-machine-1": 1,
-        "electronic-circuit": 5,
-        "iron-gear-wheel": 10,
-        "steel-plate": 5
+      "expensive": {
+        "in": {
+          "assembling-machine-1": 1,
+          "electronic-circuit": 5,
+          "iron-gear-wheel": 10,
+          "steel-plate": 5
+        }
       }
     },
     {
@@ -2317,9 +2327,8 @@
     {
       "id": "steel-plate",
       "time": 16,
-      "time-expensive": 32,
       "in": { "iron-plate": 5 },
-      "in-expensive": { "iron-plate": 10 },
+      "expensive": { "time": 32, "in": { "iron-plate": 10 } },
       "producers": ["stone-furnace", "steel-furnace", "electric-furnace"]
     },
     {
@@ -2345,10 +2354,12 @@
     {
       "id": "explosives",
       "time": 4,
-      "time-expensive": 5,
       "in": { "coal": 1, "sulfur": 1, "water": 10 },
-      "in-expensive": { "coal": 2, "sulfur": 2, "water": 10 },
       "out": { "explosives": 2 },
+      "expensive": {
+        "time": 5,
+        "in": { "coal": 2, "sulfur": 2, "water": 10 }
+      },
       "producers": ["chemical-plant"]
     },
     {
@@ -2367,7 +2378,7 @@
       "id": "iron-gear-wheel",
       "time": 0.5,
       "in": { "iron-plate": 2 },
-      "in-expensive": { "iron-plate": 4 }
+      "expensive": { "in": { "iron-plate": 4 } }
     },
     {
       "id": "empty-barrel",
@@ -2378,16 +2389,18 @@
       "id": "electronic-circuit",
       "time": 0.5,
       "in": { "copper-cable": 3, "iron-plate": 1 },
-      "in-expensive": { "copper-cable": 10, "iron-plate": 2 }
+      "expensive": { "in": { "copper-cable": 10, "iron-plate": 2 } }
     },
     {
       "id": "advanced-circuit",
       "time": 6,
       "in": { "copper-cable": 4, "electronic-circuit": 2, "plastic-bar": 2 },
-      "in-expensive": {
-        "copper-cable": 8,
-        "electronic-circuit": 2,
-        "plastic-bar": 4
+      "expensive": {
+        "in": {
+          "copper-cable": 8,
+          "electronic-circuit": 2,
+          "plastic-bar": 4
+        }
       }
     },
     {
@@ -2398,10 +2411,12 @@
         "electronic-circuit": 20,
         "sulfuric-acid": 5
       },
-      "in-expensive": {
-        "advanced-circuit": 2,
-        "electronic-circuit": 20,
-        "sulfuric-acid": 10
+      "expensive": {
+        "in": {
+          "advanced-circuit": 2,
+          "electronic-circuit": 20,
+          "sulfuric-acid": 10
+        }
       },
       "producers": ["assembling-machine-2", "assembling-machine-3"]
     },
@@ -2462,10 +2477,12 @@
       "id": "low-density-structure",
       "time": 20,
       "in": { "copper-plate": 20, "plastic-bar": 5, "steel-plate": 2 },
-      "in-expensive": {
-        "copper-plate": 20,
-        "plastic-bar": 30,
-        "steel-plate": 2
+      "expensive": {
+        "in": {
+          "copper-plate": 20,
+          "plastic-bar": 30,
+          "steel-plate": 2
+        }
       }
     },
     {
@@ -2539,10 +2556,12 @@
       "id": "submachine-gun",
       "time": 10,
       "in": { "copper-plate": 5, "iron-gear-wheel": 10, "iron-plate": 10 },
-      "in-expensive": {
-        "copper-plate": 20,
-        "iron-gear-wheel": 15,
-        "iron-plate": 30
+      "expensive": {
+        "in": {
+          "copper-plate": 20,
+          "iron-gear-wheel": 15,
+          "iron-plate": 30
+        }
       }
     },
     {
@@ -2610,13 +2629,17 @@
       "id": "cannon-shell",
       "time": 8,
       "in": { "explosives": 1, "plastic-bar": 2, "steel-plate": 2 },
-      "in-expensive": { "explosives": 1, "plastic-bar": 4, "steel-plate": 4 }
+      "expensive": {
+        "in": { "explosives": 1, "plastic-bar": 4, "steel-plate": 4 }
+      }
     },
     {
       "id": "explosive-cannon-shell",
       "time": 8,
       "in": { "explosives": 2, "plastic-bar": 2, "steel-plate": 2 },
-      "in-expensive": { "explosives": 2, "plastic-bar": 4, "steel-plate": 4 }
+      "expensive": {
+        "in": { "explosives": 2, "plastic-bar": 4, "steel-plate": 4 }
+      }
     },
     {
       "id": "uranium-cannon-shell",

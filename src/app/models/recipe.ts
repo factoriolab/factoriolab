@@ -22,5 +22,9 @@ export interface Recipe {
   time: number;
   in?: { [key: string]: number };
   out?: { [key: string]: number };
+  expensive?: {
+    time?: number;
+    in?: { [key: string]: number };
+  };
   producers?: ItemId[];
 }

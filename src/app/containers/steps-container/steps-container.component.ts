@@ -40,7 +40,7 @@ export class StepsContainerComponent implements OnInit {
   constructor(private store: Store<State>) {}
 
   ngOnInit() {
-    this.data$ = this.store.select(Dataset.datasetState);
+    this.data$ = this.store.select(Dataset.getDatasetState);
     this.recipe$ = this.store.select(Recipe.recipeState);
     this.modifiedIgnore$ = this.store.select(Recipe.getContainsIgnore);
     this.modifiedBelt$ = this.store.select(Recipe.getContainsBelt);

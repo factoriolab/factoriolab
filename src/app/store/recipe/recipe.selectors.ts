@@ -9,7 +9,7 @@ import {
   CategoryId,
 } from '~/models';
 import { RecipeUtility } from '~/utilities/recipe';
-import { datasetState } from '../dataset';
+import * as Dataset from '../dataset';
 import * as Settings from '../settings';
 import { State } from '../';
 import Fraction from 'fraction.js';
@@ -20,7 +20,7 @@ export const recipeState = (state: State) => state.recipeState;
 /* Complex selectors */
 export const getRecipeSettings = createSelector(
   recipeState,
-  datasetState,
+  Dataset.getDatasetState,
   Settings.settingsState,
   (state, data, settings) => {
     const value: Entities<RecipeSettings> = {};
@@ -103,7 +103,7 @@ export const getRecipeFactors = createSelector(
   getRecipeSettings,
   Settings.getMiningBonus,
   Settings.getResearchFactor,
-  datasetState,
+  Dataset.getDatasetState,
   (recipeSettings, miningBonus, researchFactor, data) => {
     const values: Entities<Factors> = {};
     for (const recipeId of Object.keys(recipeSettings)) {
