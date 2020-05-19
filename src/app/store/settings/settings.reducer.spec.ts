@@ -154,7 +154,7 @@ describe('Settings Reducer', () => {
   });
 
   describe('SET_DRILL_MODULE', () => {
-    it('should set the drill module state', () => {
+    it('should set the drill module flag', () => {
       const value = true;
       const result = settingsReducer(
         initialSettingsState,
@@ -194,6 +194,17 @@ describe('Settings Reducer', () => {
         new Actions.SetFlowRateAction(value)
       );
       expect(result.flowRate).toEqual(value);
+    });
+  });
+
+  describe('SET_EXPENSIVE', () => {
+    it('should set expensive flag', () => {
+      const value = true;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetExpensiveAction(value)
+      );
+      expect(result.expensive).toEqual(value);
     });
   });
 

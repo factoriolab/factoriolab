@@ -1,19 +1,21 @@
 <div class="label">Recipes</div>
 <div class="field">
-  <input
-    id="settings-expensive"
-    title="Use expensive recipes"
-    type="checkbox"
-    [ngModel]="settings.expensive"
-    (change)="setExpensive.emit($event.target.checked)"
-  />
-  <label for="settings-expensive" title="Use expensive recipes"
-    >Expensive</label
-  >
+  <div class="flex clickable option">
+    <input
+      id="settings-expensive"
+      title="Use expensive recipes"
+      type="checkbox"
+      [ngModel]="settings.expensive"
+      (change)="setExpensive.emit($event.target.checked)"
+    />
+    <label for="settings-expensive" title="Use expensive recipes"
+      >Expensive</label
+    >
+  </div>
 </div>
 <div class="label">Display Rate</div>
 <div class="field">
-  <div class="flex">
+  <div class="flex clickable option">
     <input
       id="settings-display-persecond"
       title="Display rates per second"
@@ -27,7 +29,7 @@
       >#/sec</label
     >
   </div>
-  <div class="flex">
+  <div class="flex clickable option">
     <input
       id="settings-display-perminute"
       title="Display rates per minute"
@@ -41,7 +43,7 @@
       >#/min</label
     >
   </div>
-  <div class="flex">
+  <div class="flex clickable option">
     <input
       id="settings-display-perhour"
       title="Display rates per hour"
