@@ -12,7 +12,7 @@ label {
   user-select: none;
 }
 
-.clickable.option {
+.option {
   > * {
     cursor: pointer;
   }
@@ -23,7 +23,7 @@ label {
 
   &:hover {
     > * {
-      color: $color-black;
+      color: $color-brand;
     }
   }
 }
