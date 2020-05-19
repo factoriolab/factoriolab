@@ -22,6 +22,7 @@ export const enum SettingsActionType {
   SET_MINING_BONUS = '[Settings Page] Set Mining Bonus',
   SET_RESEARCH_SPEED = '[Settings Page] Set Research Speed',
   SET_FLOW_RATE = '[Settings Page] Set Flow Rate',
+  SET_EXPENSIVE = '[Settings Page] Set Expensive',
 }
 
 export class LoadAction implements Action {
@@ -114,6 +115,11 @@ export class SetFlowRateAction implements Action {
   constructor(public payload: number) {}
 }
 
+export class SetExpensiveAction implements Action {
+  readonly type = SettingsActionType.SET_EXPENSIVE;
+  constructor(public payload: boolean) {}
+}
+
 export type SettingsAction =
   | LoadAction
   | SetDisplayRateAction
@@ -132,4 +138,5 @@ export type SettingsAction =
   | SetDrillModuleAction
   | SetMiningBonusAction
   | SetResearchSpeedAction
-  | SetFlowRateAction;
+  | SetFlowRateAction
+  | SetExpensiveAction;

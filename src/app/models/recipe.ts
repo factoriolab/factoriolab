@@ -4,6 +4,7 @@ export enum RecipeId {
   AdvancedOilProcessing = 'advanced-oil-processing',
   BasicOilProcessing = 'basic-oil-processing',
   CoalLiquefaction = 'coal-liquefaction',
+  ElectronicCircuit = 'electronic-circuit',
   HeavyOilCracking = 'heavy-oil-cracking',
   KovarexEnrichmentProcess = 'kovarex-enrichment-process',
   LightOilCracking = 'light-oil-cracking',
@@ -22,5 +23,9 @@ export interface Recipe {
   time: number;
   in?: { [key: string]: number };
   out?: { [key: string]: number };
+  expensive?: {
+    time?: number;
+    in?: { [key: string]: number };
+  };
   producers?: ItemId[];
 }

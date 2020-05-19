@@ -20,10 +20,10 @@ import { RouterService } from './router.service';
 
 const mockZipEmpty = 'eJwrsAUAAR8Arg==';
 const mockZipProducts = 'eJwrsDWyMrAyBAAHnAG1';
-const mockZipAll = 'eJwrsDWyMrAyVCsC0mBgoVZsa2xmYGCFBgDNXwmP';
+const mockZipAll = 'eJwrsDWyMrAyVCsC0mBgoVZsa2xmYGCFDgDXKAnJ';
 const mockZipExtra = 'eJwrsDWyMrAyVCsC0mBgoVZsa2xmYGCFAtRKbLNK87IBA4gLqg==';
 const mockZipLink =
-  'eJwlykEKgEAMQ9HbuE46Yjsf5k6i9werbgJ5ybmE8HatwOxk8cO9xiERbXo9yYFrYs3u7qU6/b1DegBfjA/s';
+  'eJwlikEKgEAMA3/jOekuthvonxb9Pxj1EsjM7IYgHleHqKks/eDucQIKM7w8lUOsJWL506a8/OpwyQeACRBX';
 const mockProducts: Product[] = [
   {
     id: 0,
@@ -73,6 +73,7 @@ const mockFullSettings: Settings.SettingsState = {
   miningBonus: 10,
   researchSpeed: ResearchSpeed.Speed0,
   flowRate: 1200,
+  expensive: true,
 };
 const mockZipFullSettings = `${DisplayRate.PerHour}:2:4:0:${
   Mocks.Data.itemN[mockFullSettings.belt]
@@ -80,7 +81,7 @@ const mockZipFullSettings = `${DisplayRate.PerHour}:2:4:0:${
   Mocks.Data.itemN[mockFullSettings.furnace]
 }:${Mocks.Data.recipeN[mockFullSettings.oilRecipe]}:${
   Mocks.Data.itemN[mockFullSettings.fuel]
-}:4:1:2:8:1:10:0:1200`;
+}:4:1:2:8:1:10:0:1200:1`;
 const mockNullSettings = {
   ...mockFullSettings,
   ...{ itemPrecision: null, beltPrecision: null, factoryPrecision: null },
@@ -91,7 +92,7 @@ const mockZipNullSettings = `${DisplayRate.PerHour}:n:n:n:${
   Mocks.Data.itemN[mockFullSettings.furnace]
 }:${Mocks.Data.recipeN[mockFullSettings.oilRecipe]}:${
   Mocks.Data.itemN[mockFullSettings.fuel]
-}:4:1:2:8:1:10:0:1200`;
+}:4:1:2:8:1:10:0:1200:1`;
 
 describe('RouterService', () => {
   let service: RouterService;
@@ -320,14 +321,14 @@ describe('RouterService', () => {
     it('should zip default settings', () => {
       const test = { ...Settings.initialSettingsState, ...{ test: true } };
       const result = service.zipSettings(test, Mocks.Data);
-      expect(result).toEqual('::::::::::::::::');
+      expect(result).toEqual(':::::::::::::::::');
     });
   });
 
   describe('unzipSettings', () => {
     it('should unzip the empty settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipSettings('::::::::::::::::', Mocks.Data);
+      service.unzipSettings(':::::::::::::::::', Mocks.Data);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Settings.LoadAction({} as any)
       );

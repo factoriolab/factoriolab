@@ -36,7 +36,7 @@ export class SettingsContainerComponent implements OnInit {
   constructor(private element: ElementRef, private store: Store<State>) {}
 
   ngOnInit() {
-    this.data$ = this.store.select(Dataset.datasetState);
+    this.data$ = this.store.select(Dataset.getDatasetState);
     this.settings$ = this.store.select(Settings.settingsState);
   }
 
@@ -115,5 +115,9 @@ export class SettingsContainerComponent implements OnInit {
 
   setResearchSpeed(value: ResearchSpeed) {
     this.store.dispatch(new Settings.SetResearchSpeedAction(value));
+  }
+
+  setExpensive(value: boolean) {
+    this.store.dispatch(new Settings.SetExpensiveAction(value));
   }
 }

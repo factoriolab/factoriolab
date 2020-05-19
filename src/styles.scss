@@ -55,8 +55,9 @@ input {
     width: 5rem;
   }
 
-  &[type='radio'] {
-    margin: 0.25rem;
+  &[type='radio'],
+  &[type='checkbox'] {
+    margin: 0;
   }
 
   &:invalid {

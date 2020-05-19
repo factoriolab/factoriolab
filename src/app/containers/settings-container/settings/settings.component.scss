@@ -8,6 +8,26 @@
   overflow-y: auto;
 }
 
+label {
+  user-select: none;
+}
+
+.clickable.option {
+  > * {
+    cursor: pointer;
+  }
+
+  > * + * {
+    padding-left: 0.25rem;
+  }
+
+  &:hover {
+    > * {
+      color: $color-black;
+    }
+  }
+}
+
 .label {
   font-weight: bold;
   font-size: 0.75rem;

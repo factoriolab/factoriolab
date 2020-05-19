@@ -56,6 +56,7 @@ export class SettingsComponent {
   @Output() setDrillModule = new EventEmitter<boolean>();
   @Output() setMiningBonus = new EventEmitter<number>();
   @Output() setResearchSpeed = new EventEmitter<ResearchSpeed>();
+  @Output() setExpensive = new EventEmitter<boolean>();
 
   openSelect = OpenSelect.None;
 
