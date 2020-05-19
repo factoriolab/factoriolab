@@ -1,14 +1,39 @@
 import { createSelector } from '@ngrx/store';
 import Fraction from 'fraction.js';
 
-import { Entities, ItemId } from '~/models';
+import { Entities, ItemId, Recipe } from '~/models';
 import * as Settings from '../settings';
 import { State } from '../';
 
 /* Base selector functions */
-export const datasetState = (state: State) => state.datasetState;
+const datasetState = (state: State) => state.datasetState;
 
 /* Complex selectors */
+export const getDatasetState = createSelector(
+  datasetState,
+  Settings.getExpensive,
+  (data, expensive) => {
+    if (expensive) {
+      const newData = { ...data };
+      const recipes: Recipe[] = [];
+      for (const recipe of data.recipes) {
+        if (recipe.expensive) {
+          recipes.push({ ...recipe, ...recipe.expensive });
+        } else {
+          recipes.push(recipe);
+        }
+      }
+      newData.recipes = recipes;
+      newData.recipeEntities = recipes.reduce((e: Entities<Recipe>, r) => {
+        return { ...e, ...{ [r.id]: r } };
+      }, {});
+      return newData;
+    } else {
+      return data;
+    }
+  }
+);
+
 export const getBeltSpeed = createSelector(
   datasetState,
   Settings.getFlowRate,

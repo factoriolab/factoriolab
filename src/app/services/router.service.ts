@@ -14,7 +14,7 @@ import {
   RateType,
 } from '~/models';
 import { State } from '~/store';
-import { DatasetState, datasetState } from '~/store/dataset';
+import { DatasetState, getDatasetState } from '~/store/dataset';
 import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipe';
 import * as Settings from '~/store/settings';
@@ -113,7 +113,7 @@ export class RouterService {
             const state: string = pako.inflate(atob(urlZip), { to: 'string' });
             const params = state.split('&');
             this.store
-              .select(datasetState)
+              .select(getDatasetState)
               .pipe(
                 filter((d) => !!d),
                 take(1)
@@ -263,7 +263,9 @@ export class RouterService {
     const rs =
       state.researchSpeed === init.researchSpeed ? '' : state.researchSpeed;
     const fr = state.flowRate === init.flowRate ? '' : state.flowRate;
-    return `${dr}:${ip}:${bp}:${fp}:${tb}:${pa}:${pf}:${or}:${fl}:${mp}:${ms}:${bm}:${bc}:${dm}:${mb}:${rs}:${fr}`;
+    const ex =
+      state.expensive === init.expensive ? '' : Number(state.expensive);
+    return `${dr}:${ip}:${bp}:${fp}:${tb}:${pa}:${pf}:${or}:${fl}:${mp}:${ms}:${bm}:${bc}:${dm}:${mb}:${rs}:${fr}:${ex}`;
   }
 
   unzipSettings(zSettings: string, data: DatasetState) {
@@ -319,6 +321,9 @@ export class RouterService {
     }
     if (s[16] !== '') {
       settings.flowRate = Number(s[16]);
+    }
+    if (s[17] !== '') {
+      settings.expensive = s[17] === '1';
     }
     this.store.dispatch(new Settings.LoadAction(settings));
   }

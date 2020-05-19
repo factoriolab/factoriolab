@@ -134,7 +134,7 @@ export const getNormalizedRatesByWagons = createSelector(
   getProductsByWagons,
   getEntities,
   Settings.getDisplayRate,
-  Dataset.datasetState,
+  Dataset.getDatasetState,
   (ids, entities, displayRate, data) => {
     return ids.reduce((e: NEntities<Fraction>, i) => {
       const item = data.itemEntities[entities[i].itemId];
@@ -155,7 +155,7 @@ export const getNormalizedRatesByFactories = createSelector(
   getEntities,
   Recipe.getRecipeFactors,
   Settings.getOilRecipe,
-  Dataset.datasetState,
+  Dataset.getDatasetState,
   (ids, entities, factors, oilRecipe, data) => {
     let oilMatrix: OilMatrix;
     let oilFactor: Fraction;
@@ -239,7 +239,7 @@ export const getNormalizedSteps = createSelector(
   Recipe.getRecipeFactors,
   Settings.getFuel,
   Settings.getOilRecipe,
-  Dataset.datasetState,
+  Dataset.getDatasetState,
   (products, rates, settings, factors, fuel, oilRecipe, data) => {
     const steps: Step[] = [];
     for (const product of products) {
@@ -264,7 +264,7 @@ export const getNormalizedStepsWithUranium = createSelector(
   Recipe.getRecipeFactors,
   Settings.getFuel,
   Settings.getOilRecipe,
-  Dataset.datasetState,
+  Dataset.getDatasetState,
   (steps, settings, factors, fuel, oilRecipe, data) =>
     UraniumUtility.addSteps(steps, settings, factors, fuel, oilRecipe, data)
 );
@@ -275,7 +275,7 @@ export const getNormalizedStepsWithOil = createSelector(
   Recipe.getRecipeFactors,
   Settings.getFuel,
   Settings.getOilRecipe,
-  Dataset.datasetState,
+  Dataset.getDatasetState,
   (steps, settings, factors, fuel, oilRecipe, data) =>
     OilUtility.addSteps(oilRecipe, steps, settings, factors, fuel, data)
 );
@@ -300,7 +300,7 @@ export const getZipState = createSelector(
   getProducts,
   Recipe.recipeState,
   Settings.settingsState,
-  Dataset.datasetState,
+  Dataset.getDatasetState,
   (products, recipe, settings, data) => {
     return { products, recipe, settings, data };
   }

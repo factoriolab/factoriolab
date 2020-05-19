@@ -19,6 +19,7 @@ export interface SettingsState {
   miningBonus: number;
   researchSpeed: ResearchSpeed;
   flowRate: number;
+  expensive: boolean;
 }
 
 export const initialSettingsState: SettingsState = {
@@ -39,6 +40,7 @@ export const initialSettingsState: SettingsState = {
   miningBonus: 0,
   researchSpeed: ResearchSpeed.Speed6,
   flowRate: 1500,
+  expensive: false,
 };
 
 export function settingsReducer(
@@ -99,6 +101,9 @@ export function settingsReducer(
     }
     case SettingsActionType.SET_FLOW_RATE: {
       return { ...state, ...{ flowRate: action.payload } };
+    }
+    case SettingsActionType.SET_EXPENSIVE: {
+      return { ...state, ...{ expensive: action.payload } };
     }
     default:
       return state;

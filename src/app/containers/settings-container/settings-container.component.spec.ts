@@ -177,7 +177,7 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
-  it('should set the drill module state', () => {
+  it('should set the drill module flag', () => {
     spyOn(store, 'dispatch');
     const value = true;
     component.child.setDrillModule.emit(value);
@@ -201,6 +201,15 @@ describe('SettingsContainerComponent', () => {
     component.child.setResearchSpeed.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetResearchSpeedAction(value)
+    );
+  });
+
+  it('should set the expensive flag', () => {
+    spyOn(store, 'dispatch');
+    const value = true;
+    component.child.setExpensive.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetExpensiveAction(value)
     );
   });
 });

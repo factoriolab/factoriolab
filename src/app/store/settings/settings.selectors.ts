@@ -15,6 +15,7 @@ const sFuel = (state: SettingsState) => state.fuel;
 const sMiningBonus = (state: SettingsState) => state.miningBonus;
 const sResearchSpeed = (state: SettingsState) => state.researchSpeed;
 const sFlowRate = (state: SettingsState) => state.flowRate;
+const sExpensive = (state: SettingsState) => state.expensive;
 
 /* Simple selectors */
 export const getDisplayRate = compose(sDisplayRate, settingsState);
@@ -26,6 +27,7 @@ export const getFuel = compose(sFuel, settingsState);
 export const getMiningBonus = compose(sMiningBonus, settingsState);
 export const getResearchSpeed = compose(sResearchSpeed, settingsState);
 export const getFlowRate = compose(sFlowRate, settingsState);
+export const getExpensive = compose(sExpensive, settingsState);
 
 /* Complex selectors */
 export const getResearchFactor = createSelector(getResearchSpeed, (speed) =>
