@@ -8,6 +8,7 @@ import {
   RecipeId,
   Factors,
   CategoryId,
+  Node,
 } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { RecipeState } from '~/store/recipe';
@@ -16,7 +17,7 @@ export class RateUtility {
   static LAUNCH_TIME = new Fraction(2420, 60);
 
   static addStepsFor(
-    id: ItemId,
+    itemId: ItemId,
     rate: Fraction,
     steps: Step[],
     settings: RecipeState,
@@ -25,23 +26,23 @@ export class RateUtility {
     oilRecipe: RecipeId,
     data: DatasetState
   ) {
-    let recipe = data.recipeEntities[id];
-    const categoryId = data.itemEntities[id].category;
+    let recipe = data.recipeEntities[itemId];
+    const categoryId = data.itemEntities[itemId].category;
 
     if (!recipe) {
       // No recipe for this step, check for simple oil recipes
-      recipe = this.findBasicOilRecipe(id, oilRecipe, data);
+      recipe = this.findBasicOilRecipe(itemId, oilRecipe, data);
     }
 
     // Find existing step for this item
-    let step = steps.find((s) => s.itemId === id);
+    let step = steps.find((s) => s.itemId === itemId);
 
     if (!step) {
       // No existing step found, create a new one
-      const item = data.itemEntities[id];
+      const item = data.itemEntities[itemId];
       step = {
-        itemId: id,
-        recipeId: id as any,
+        itemId,
+        recipeId: itemId as any,
         items: new Fraction(0),
         factories: new Fraction(0),
         settings: recipe
@@ -61,7 +62,7 @@ export class RateUtility {
 
     if (recipe) {
       // Mark complex recipes
-      if ((recipe.id as string) !== id) {
+      if ((recipe.id as string) !== itemId) {
         step.recipeId = recipe.id;
       }
 
@@ -69,13 +70,13 @@ export class RateUtility {
 
       // Calculate number of outputs from recipe
       const prod =
-        data.itemEntities[id].category === CategoryId.Research
+        data.itemEntities[itemId].category === CategoryId.Research
           ? new Fraction(1)
           : f.prod;
-      const out = new Fraction(recipe.out ? recipe.out[id] : 1).mul(prod);
+      const out = new Fraction(recipe.out ? recipe.out[itemId] : 1).mul(prod);
 
       // Calculate factories
-      if (id === ItemId.SpaceSciencePack) {
+      if (itemId === ItemId.SpaceSciencePack) {
         // Factories are for rocket parts, space science packs are a side effect
         step.factories = null;
       } else {
@@ -84,7 +85,7 @@ export class RateUtility {
           step.factories = step.factories.div(f.prod);
         }
         // Add # of factories to actually launch rockets
-        if (id === ItemId.RocketPart) {
+        if (itemId === ItemId.RocketPart) {
           step.factories = step.factories.add(
             step.items.div(100).mul(this.LAUNCH_TIME)
           );
@@ -121,6 +122,120 @@ export class RateUtility {
             ingredient as ItemId,
             rate.mul(recipe.in[ingredient]).div(out),
             steps,
+            settings,
+            factors,
+            fuel,
+            oilRecipe,
+            data
+          );
+        }
+      }
+    }
+  }
+
+  static addNodesFor(
+    id: number,
+    parent: Node,
+    itemId: ItemId,
+    rate: Fraction,
+    settings: RecipeState,
+    factors: Entities<Factors>,
+    fuel: ItemId,
+    oilRecipe: RecipeId,
+    data: DatasetState
+  ) {
+    let recipe = data.recipeEntities[itemId];
+    const categoryId = data.itemEntities[itemId].category;
+
+    if (!recipe) {
+      // No recipe for this step, check for simple oil recipes
+      recipe = this.findBasicOilRecipe(itemId, oilRecipe, data);
+    }
+
+    const item = data.itemEntities[itemId];
+    const node: Node = {
+      id: id++,
+      itemId,
+      recipeId: itemId as any,
+      items:
+        categoryId === CategoryId.Research
+          ? rate.mul(factors[recipe.id].prod)
+          : rate,
+      factories: new Fraction(0),
+      settings: recipe
+        ? settings[recipe.id]
+        : { belt: item.stack ? null : ItemId.Pipe },
+    };
+
+    if (!parent.children) {
+      parent.children = [];
+    }
+    parent.children.push(node);
+
+    if (recipe) {
+      // Mark complex recipes
+      if ((recipe.id as string) !== itemId) {
+        node.recipeId = recipe.id;
+      }
+
+      const f = factors[recipe.id];
+
+      // Calculate number of outputs from recipe
+      const prod =
+        data.itemEntities[itemId].category === CategoryId.Research
+          ? new Fraction(1)
+          : f.prod;
+      const out = new Fraction(recipe.out ? recipe.out[itemId] : 1).mul(prod);
+
+      // Calculate factories
+      if (itemId === ItemId.SpaceSciencePack) {
+        // Factories are for rocket parts, space science packs are a side effect
+        node.factories = null;
+      } else {
+        node.factories = node.items.mul(recipe.time).div(out).div(f.speed);
+        if (categoryId === CategoryId.Research) {
+          node.factories = node.factories.div(f.prod);
+        }
+        // Add # of factories to actually launch rockets
+        if (itemId === ItemId.RocketPart) {
+          node.factories = node.factories.add(
+            node.items.div(100).mul(this.LAUNCH_TIME)
+          );
+        }
+        // Add fuel required for factory
+        if (
+          node.settings.factory &&
+          node.items.n > 0 &&
+          !node.settings.ignore
+        ) {
+          const factory = data.itemEntities[node.settings.factory].factory;
+          if (factory.burner) {
+            RateUtility.addNodesFor(
+              id,
+              node,
+              fuel,
+              node.factories
+                .mul(factory.burner)
+                .div(data.itemEntities[fuel].fuel)
+                .div(1000),
+              settings,
+              factors,
+              fuel,
+              oilRecipe,
+              data
+            );
+          }
+        }
+      }
+
+      // Recurse adding nodes for ingredients
+      if (recipe.in && node.items.n > 0 && !node.settings.ignore) {
+        for (const ingredient of Object.keys(recipe.in)) {
+          RateUtility.addNodesFor(
+            id,
+            node,
+            ingredient as ItemId,
+            rate.mul(recipe.in[ingredient]).div(out),
             settings,
             factors,
             fuel,

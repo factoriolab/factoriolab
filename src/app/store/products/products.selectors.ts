@@ -258,6 +258,33 @@ export const getNormalizedSteps = createSelector(
   }
 );
 
+export const getNodes = createSelector(
+  getProducts,
+  getNormalizedRates,
+  Recipe.getRecipeSettings,
+  Recipe.getRecipeFactors,
+  Settings.getFuel,
+  Settings.getOilRecipe,
+  Dataset.getDatasetState,
+  (products, rates, settings, factors, fuel, oilRecipe, data) => {
+    const root: any = { children: [] };
+    for (const product of products) {
+      RateUtility.addNodesFor(
+        0,
+        root,
+        product.itemId,
+        rates[product.id],
+        settings,
+        factors,
+        fuel,
+        oilRecipe,
+        data
+      );
+    }
+    return root;
+  }
+);
+
 export const getNormalizedStepsWithUranium = createSelector(
   getNormalizedSteps,
   Recipe.getRecipeSettings,

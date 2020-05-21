@@ -1,3 +1,5 @@
+@import 'values';
+
 :host {
   display: grid;
   grid-template:
@@ -21,4 +23,30 @@ lab-settings-container {
 main {
   grid-area: main;
   overflow: auto;
+}
+
+ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding-left: calc(3rem + 1px);
+
+  > * {
+    padding: 0.5rem;
+    border-radius: 0 0 0.25rem 0.25rem;
+    user-select: none;
+
+    &.active {
+      background-color: $color-gray-2;
+    }
+
+    &:not(.active) {
+      color: $color-brand;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $color-gray-1;
+      }
+    }
+  }
 }

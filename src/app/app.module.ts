@@ -8,32 +8,23 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
 import {
-  HeaderComponent,
-  IconComponent,
-  PickerComponent,
-  SelectComponent,
-} from './components';
-import {
   ProductsComponent,
   ProductsContainerComponent,
-  StepsComponent,
-  StepsContainerComponent,
   SettingsComponent,
   SettingsContainerComponent,
-} from './containers';
+  HeaderComponent,
+  PickerComponent,
+  SharedModule,
+} from './components';
 import { reducers, metaReducers } from './store';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    IconComponent,
     PickerComponent,
-    SelectComponent,
     ProductsContainerComponent,
     ProductsComponent,
-    StepsContainerComponent,
-    StepsComponent,
     SettingsComponent,
     SettingsContainerComponent,
   ],
@@ -42,6 +33,7 @@ import { reducers, metaReducers } from './store';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    SharedModule,
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreDevtoolsModule.instrument({
       logOnly: environment.production,

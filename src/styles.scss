@@ -88,3 +88,12 @@ input {
 .relative {
   position: relative;
 }
+
+textPath {
+  fill: $color-font;
+}
+
+path.arc {
+  stroke: $color-brand;
+  fill: $color-gray-2;
+}

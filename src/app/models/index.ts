@@ -10,6 +10,7 @@ export * from './id';
 export * from './id-type';
 export * from './item';
 export * from './module';
+export * from './node';
 export * from './options';
 export * from './product';
 export * from './rate-type';

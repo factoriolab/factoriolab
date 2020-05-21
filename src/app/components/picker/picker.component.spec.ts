@@ -4,7 +4,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import * as Mocks from 'src/mocks';
 import { DatasetState } from '~/store/dataset';
 import { TestUtility } from '~/utilities/test';
-import { IconComponent } from '../icon/icon.component';
+import { IconComponent } from '../shared/icon/icon.component';
 import { PickerComponent } from './picker.component';
 
 @Component({
