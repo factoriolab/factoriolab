@@ -96,7 +96,7 @@
           ></lab-icon>
           <lab-icon
             *ngIf="!data.recipeEntities[step.recipeId]?.in"
-            class="not-clickable"
+            class="clickable-size"
             [iconId]="step.itemId"
             [tooltip]="data.itemEntities[step.itemId]?.name"
             scale="true"
@@ -123,7 +123,7 @@
             ></ng-container>
             <ng-template #beltDefault>
               <lab-icon
-                class="not-clickable"
+                class="clickable-size"
                 [iconId]="step.settings.belt"
                 [tooltip]="data.itemEntities[step.settings.belt].name"
                 [item]="data.itemEntities[step.settings.belt]"
@@ -189,7 +189,7 @@
             </ng-container>
             <ng-template #factoryDefault>
               <lab-icon
-                class="not-clickable"
+                class="clickable-size"
                 [iconId]="step.settings.factory"
                 [tooltip]="data.itemEntities[step.settings.factory].name"
                 [item]="data.itemEntities[step.settings.factory]"

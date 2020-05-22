@@ -1,0 +1,775 @@
+img.icon {
+  background-repeat: no-repeat;
+  background-image: url(/assets/0.18/icons.png);
+  width: 32px;
+  height: 32px;
+
+  &.logistics,
+  &.production,
+  &.intermediate,
+  &.combat,
+  &.research,
+  &.mining-productivity,
+  &.worker-robot-speed,
+  &.follower-robot-count,
+  &.energy-weapons-damage,
+  &.physical-projectile-damage,
+  &.refined-flammables,
+  &.artillery-shell-range,
+  &.artillery-shell-shooting-speed,
+  &.stronger-explosives {
+    width: 64px;
+    height: 64px;
+
+    &.scale {
+      transform: scale(0.5);
+      transform-origin: 0 0;
+      margin: 0 calc(-64px * 0.5) calc(-64px * 0.5) 0;
+    }
+  }
+
+  &.accumulator {
+    background-position: -160px -608px;
+  }
+  &.active-provider-chest {
+    background-position: -192px -608px;
+  }
+  &.advanced-circuit {
+    background-position: -0px -640px;
+  }
+  &.advanced-oil-processing {
+    background-position: -96px -640px;
+  }
+  &.arithmetic-combinator {
+    background-position: -32px -640px;
+  }
+  &.artillery-shell {
+    background-position: -64px -640px;
+  }
+  &.artillery-shell-range {
+    background-position: -128px -928px;
+  }
+  &.artillery-shell-shooting-speed {
+    background-position: -64px -928px;
+  }
+  &.artillery-targeting-remote {
+    background-position: -224px -608px;
+  }
+  &.artillery-turret {
+    background-position: -128px -608px;
+  }
+  &.artillery-wagon {
+    background-position: -192px -576px;
+  }
+  &.assembling-machine-1 {
+    background-position: -0px -608px;
+  }
+  &.assembling-machine-2 {
+    background-position: -96px -608px;
+  }
+  &.assembling-machine-3 {
+    background-position: -32px -608px;
+  }
+  &.atomic-bomb {
+    background-position: -64px -608px;
+  }
+  &.automation-science-pack {
+    background-position: -128px -640px;
+  }
+  &.basic-oil-processing {
+    background-position: -224px -640px;
+  }
+  &.battery {
+    background-position: -160px -672px;
+  }
+  &.beacon {
+    background-position: -192px -672px;
+  }
+  &.belt-immunity-equipment {
+    background-position: -0px -704px;
+  }
+  &.big-electric-pole {
+    background-position: -96px -704px;
+  }
+  &.boiler {
+    background-position: -32px -704px;
+  }
+  &.buffer-chest {
+    background-position: -64px -704px;
+  }
+  &.burner-inserter {
+    background-position: -224px -672px;
+  }
+  &.burner-mining-drill {
+    background-position: -128px -672px;
+  }
+  &.cannon-shell {
+    background-position: -160px -640px;
+  }
+  &.car {
+    background-position: -192px -640px;
+  }
+  &.cargo-wagon {
+    background-position: -0px -672px;
+  }
+  &.centrifuge {
+    background-position: -96px -672px;
+  }
+  &.chemical-plant {
+    background-position: -32px -672px;
+  }
+  &.chemical-science-pack {
+    background-position: -64px -672px;
+  }
+  &.cliff-explosives {
+    background-position: -224px -576px;
+  }
+  &.cluster-grenade {
+    background-position: -160px -576px;
+  }
+  &.coal {
+    background-position: -0px -512px;
+  }
+  &.coal-liquefaction {
+    background-position: -224px -480px;
+  }
+  &.combat {
+    background-position: -192px -1056px;
+  }
+  &.combat-shotgun {
+    background-position: -64px -512px;
+  }
+  &.concrete {
+    background-position: -160px -512px;
+  }
+  &.constant-combinator {
+    background-position: -96px -512px;
+  }
+  &.construction-robot {
+    background-position: -128px -512px;
+  }
+  &.copper-cable {
+    background-position: -32px -512px;
+  }
+  &.copper-ore {
+    background-position: -192px -480px;
+  }
+  &.copper-plate {
+    background-position: -0px -480px;
+  }
+  &.crude-oil {
+    background-position: -160px -480px;
+  }
+  &.crude-oil-barrel {
+    background-position: -64px -480px;
+  }
+  &.decider-combinator {
+    background-position: -96px -480px;
+  }
+  &.defender-capsule {
+    background-position: -128px -480px;
+  }
+  &.destroyer-capsule {
+    background-position: -192px -512px;
+  }
+  &.discharge-defense {
+    background-position: -192px -544px;
+  }
+  &.discharge-defense-remote {
+    background-position: -0px -544px;
+  }
+  &.distractor-capsule {
+    background-position: -224px -544px;
+  }
+  &.efficiency-module {
+    background-position: -64px -576px;
+  }
+  &.efficiency-module-2 {
+    background-position: -32px -576px;
+  }
+  &.efficiency-module-3 {
+    background-position: -128px -576px;
+  }
+  &.electric-engine-unit {
+    background-position: -96px -576px;
+  }
+  &.electric-furnace {
+    background-position: -0px -576px;
+  }
+  &.electric-mining-drill {
+    background-position: -160px -544px;
+  }
+  &.electronic-circuit {
+    background-position: -224px -512px;
+  }
+  &.empty-barrel {
+    background-position: -32px -544px;
+  }
+  &.empty-crude-oil-barrel {
+    background-position: -128px -544px;
+  }
+  &.empty-heavy-oil-barrel {
+    background-position: -128px -704px;
+  }
+  &.empty-light-oil-barrel {
+    background-position: -96px -544px;
+  }
+  &.empty-lubricant-barrel {
+    background-position: -32px -480px;
+  }
+  &.empty-petroleum-gas-barrel {
+    background-position: -32px -768px;
+  }
+  &.empty-sulfuric-acid-barrel {
+    background-position: -96px -896px;
+  }
+  &.empty-water-barrel {
+    background-position: -96px -832px;
+  }
+  &.energy-shield {
+    background-position: -192px -832px;
+  }
+  &.energy-shield-mk2 {
+    background-position: -224px -832px;
+  }
+  &.energy-weapons-damage {
+    background-position: -0px -1120px;
+  }
+  &.engine-unit {
+    background-position: -0px -864px;
+  }
+  &.exoskeleton {
+    background-position: -64px -864px;
+  }
+  &.explosive-cannon-shell {
+    background-position: -160px -864px;
+  }
+  &.explosive-rocket {
+    background-position: -96px -864px;
+  }
+  &.explosive-uranium-cannon-shell {
+    background-position: -128px -864px;
+  }
+  &.explosives {
+    background-position: -32px -864px;
+  }
+  &.express-splitter {
+    background-position: -64px -832px;
+  }
+  &.express-transport-belt {
+    background-position: -128px -832px;
+  }
+  &.express-underground-belt {
+    background-position: -192px -864px;
+  }
+  &.fast-inserter {
+    background-position: -160px -832px;
+  }
+  &.fast-splitter {
+    background-position: -0px -896px;
+  }
+  &.fast-transport-belt {
+    background-position: -160px -896px;
+  }
+  &.fast-underground-belt {
+    background-position: -224px -896px;
+  }
+  &.fill-crude-oil-barrel {
+    background-position: -192px -896px;
+  }
+  &.fill-heavy-oil-barrel {
+    background-position: -0px -928px;
+  }
+  &.fill-light-oil-barrel {
+    background-position: -32px -928px;
+  }
+  &.fill-lubricant-barrel {
+    background-position: -128px -896px;
+  }
+  &.fill-petroleum-gas-barrel {
+    background-position: -224px -864px;
+  }
+  &.fill-sulfuric-acid-barrel {
+    background-position: -32px -896px;
+  }
+  &.fill-water-barrel {
+    background-position: -64px -896px;
+  }
+  &.filter-inserter {
+    background-position: -192px -704px;
+  }
+  &.firearm-magazine {
+    background-position: -128px -736px;
+  }
+  &.flamethrower {
+    background-position: -224px -736px;
+  }
+  &.flamethrower-ammo {
+    background-position: -192px -736px;
+  }
+  &.flamethrower-turret {
+    background-position: -32px -832px;
+  }
+  &.fluid-wagon {
+    background-position: -0px -768px;
+  }
+  &.flying-robot-frame {
+    background-position: -160px -736px;
+  }
+  &.follower-robot-count {
+    background-position: -64px -1056px;
+  }
+  &.gate {
+    background-position: -96px -736px;
+  }
+  &.green-wire {
+    background-position: -160px -704px;
+  }
+  &.grenade {
+    background-position: -224px -704px;
+  }
+  &.gun-turret {
+    background-position: -64px -736px;
+  }
+  &.hazard-concrete {
+    background-position: -0px -736px;
+  }
+  &.heat-exchanger {
+    background-position: -32px -736px;
+  }
+  &.heat-pipe {
+    background-position: -64px -768px;
+  }
+  &.heavy-armor {
+    background-position: -128px -768px;
+  }
+  &.heavy-oil {
+    background-position: -160px -800px;
+  }
+  &.heavy-oil-barrel {
+    background-position: -64px -800px;
+  }
+  &.heavy-oil-cracking {
+    background-position: -96px -800px;
+  }
+  &.inserter {
+    background-position: -0px -832px;
+  }
+  &.intermediate {
+    background-position: -64px -1120px;
+  }
+  &.iron-chest {
+    background-position: -192px -800px;
+  }
+  &.iron-gear-wheel {
+    background-position: -224px -800px;
+  }
+  &.iron-ore {
+    background-position: -128px -800px;
+  }
+  &.iron-plate {
+    background-position: -32px -800px;
+  }
+  &.iron-stick {
+    background-position: -96px -768px;
+  }
+  &.kovarex-enrichment-process {
+    background-position: -160px -768px;
+  }
+  &.lab {
+    background-position: -0px -800px;
+  }
+  &.lamp {
+    background-position: -192px -768px;
+  }
+  &.land-mine {
+    background-position: -224px -768px;
+  }
+  &.landfill {
+    background-position: -64px -544px;
+  }
+  &.laser-turret {
+    background-position: -32px -0px;
+  }
+  &.light-armor {
+    background-position: -160px -128px;
+  }
+  &.light-oil {
+    background-position: -224px -448px;
+  }
+  &.light-oil-barrel {
+    background-position: -192px -128px;
+  }
+  &.light-oil-cracking {
+    background-position: -0px -160px;
+  }
+  &.locomotive {
+    background-position: -96px -160px;
+  }
+  &.logistic-robot {
+    background-position: -32px -160px;
+  }
+  &.logistic-science-pack {
+    background-position: -64px -160px;
+  }
+  &.logistics {
+    background-position: -128px -1120px;
+  }
+  &.long-handed-inserter {
+    background-position: -224px -128px;
+  }
+  &.low-density-structure {
+    background-position: -128px -128px;
+  }
+  &.lubricant {
+    background-position: -0px -128px;
+  }
+  &.lubricant-barrel {
+    background-position: -192px -96px;
+  }
+  &.medium-electric-pole {
+    background-position: -96px -128px;
+  }
+  &.military-science-pack {
+    background-position: -32px -128px;
+  }
+  &.mining-productivity {
+    background-position: -64px -992px;
+  }
+  &.modular-armor {
+    background-position: -64px -128px;
+  }
+  &.module {
+    background-position: -128px -160px;
+  }
+  &.nightvision {
+    background-position: -192px -160px;
+  }
+  &.nuclear-fuel {
+    background-position: -160px -192px;
+  }
+  &.nuclear-fuel-reprocessing {
+    background-position: -128px -192px;
+  }
+  &.nuclear-reactor {
+    background-position: -224px -192px;
+  }
+  &.offshore-pump {
+    background-position: -64px -224px;
+  }
+  &.oil-refinery {
+    background-position: -0px -224px;
+  }
+  &.passive-provider-chest {
+    background-position: -32px -224px;
+  }
+  &.personal-battery {
+    background-position: -96px -192px;
+  }
+  &.personal-battery-mk2 {
+    background-position: -192px -192px;
+  }
+  &.personal-laser-defense {
+    background-position: -160px -160px;
+  }
+  &.personal-roboport {
+    background-position: -64px -192px;
+  }
+  &.personal-roboport-mk2 {
+    background-position: -224px -160px;
+  }
+  &.petroleum-gas {
+    background-position: -32px -192px;
+  }
+  &.petroleum-gas-barrel {
+    background-position: -0px -192px;
+  }
+  &.physical-projectile-damage {
+    background-position: -0px -1056px;
+  }
+  &.piercing-rounds-magazine {
+    background-position: -224px -96px;
+  }
+  &.piercing-shotgun-shells {
+    background-position: -160px -96px;
+  }
+  &.pipe {
+    background-position: -0px -32px;
+  }
+  &.pipe-to-ground {
+    background-position: -224px -0px;
+  }
+  &.pistol {
+    background-position: -64px -32px;
+  }
+  &.plastic-bar {
+    background-position: -160px -32px;
+  }
+  &.player {
+    background-position: -96px -32px;
+  }
+  &.poison-capsule {
+    background-position: -128px -32px;
+  }
+  &.portable-fusion-reactor {
+    background-position: -32px -32px;
+  }
+  &.portable-solar-panel {
+    background-position: -192px -0px;
+  }
+  &.power-armor {
+    background-position: -64px -0px;
+  }
+  &.power-armor-mk2 {
+    background-position: -0px -0px;
+  }
+  &.power-switch {
+    background-position: -160px -0px;
+  }
+  &.processing-unit {
+    background-position: -96px -0px;
+  }
+  &.production {
+    background-position: -128px -1056px;
+  }
+  &.production-science-pack {
+    background-position: -128px -0px;
+  }
+  &.productivity-module {
+    background-position: -192px -64px;
+  }
+  &.productivity-module-2 {
+    background-position: -192px -32px;
+  }
+  &.productivity-module-3 {
+    background-position: -0px -64px;
+  }
+  &.programmable-speaker {
+    background-position: -224px -64px;
+  }
+  &.pump {
+    background-position: -32px -96px;
+  }
+  &.pumpjack {
+    background-position: -128px -96px;
+  }
+  &.radar {
+    background-position: -64px -96px;
+  }
+  &.rail {
+    background-position: -160px -64px;
+  }
+  &.rail-chain-signal {
+    background-position: -96px -96px;
+  }
+  &.rail-signal {
+    background-position: -0px -96px;
+  }
+  &.raw-fish {
+    background-position: -224px -32px;
+  }
+  &.red-wire {
+    background-position: -32px -64px;
+  }
+  &.refined-concrete {
+    background-position: -128px -64px;
+  }
+  &.refined-flammables {
+    background-position: -192px -928px;
+  }
+  &.refined-hazard-concrete {
+    background-position: -64px -64px;
+  }
+  &.repair-pack {
+    background-position: -96px -64px;
+  }
+  &.requester-chest {
+    background-position: -96px -224px;
+  }
+  &.research {
+    background-position: -128px -992px;
+  }
+  &.roboport {
+    background-position: -160px -224px;
+  }
+  &.rocket {
+    background-position: -192px -384px;
+  }
+  &.rocket-control-unit {
+    background-position: -32px -384px;
+  }
+  &.rocket-fuel {
+    background-position: -64px -384px;
+  }
+  &.rocket-launcher {
+    background-position: -128px -384px;
+  }
+  &.rocket-part {
+    background-position: -224px -384px;
+  }
+  &.rocket-silo {
+    background-position: -160px -384px;
+  }
+  &.satellite {
+    background-position: -96px -384px;
+  }
+  &.shotgun {
+    background-position: -64px -352px;
+  }
+  &.shotgun-shells {
+    background-position: -0px -384px;
+  }
+  &.slowdown-capsule {
+    background-position: -128px -352px;
+  }
+  &.small-electric-pole {
+    background-position: -224px -352px;
+  }
+  &.solar-panel {
+    background-position: -160px -352px;
+  }
+  &.solid-fuel {
+    background-position: -0px -448px;
+  }
+  &.solid-fuel-from-heavy-oil {
+    background-position: -192px -352px;
+  }
+  &.solid-fuel-from-light-oil {
+    background-position: -0px -416px;
+  }
+  &.solid-fuel-from-petroleum-gas {
+    background-position: -64px -416px;
+  }
+  &.space-science-pack {
+    background-position: -32px -448px;
+  }
+  &.speed-module {
+    background-position: -128px -448px;
+  }
+  &.speed-module-2 {
+    background-position: -96px -448px;
+  }
+  &.speed-module-3 {
+    background-position: -192px -448px;
+  }
+  &.splitter {
+    background-position: -160px -448px;
+  }
+  &.stack-filter-inserter {
+    background-position: -64px -448px;
+  }
+  &.stack-inserter {
+    background-position: -224px -416px;
+  }
+  &.steam {
+    background-position: -192px -416px;
+  }
+  &.steam-engine {
+    background-position: -32px -416px;
+  }
+  &.steam-turbine {
+    background-position: -96px -416px;
+  }
+  &.steel-chest {
+    background-position: -128px -416px;
+  }
+  &.steel-furnace {
+    background-position: -160px -416px;
+  }
+  &.steel-plate {
+    background-position: -96px -352px;
+  }
+  &.stone {
+    background-position: -128px -256px;
+  }
+  &.stone-brick {
+    background-position: -32px -352px;
+  }
+  &.stone-furnace {
+    background-position: -96px -256px;
+  }
+  &.storage-chest {
+    background-position: -192px -256px;
+  }
+  &.storage-tank {
+    background-position: -32px -288px;
+  }
+  &.stronger-explosives {
+    background-position: -192px -992px;
+  }
+  &.submachine-gun {
+    background-position: -224px -256px;
+  }
+  &.substation {
+    background-position: -0px -288px;
+  }
+  &.sulfur {
+    background-position: -160px -256px;
+  }
+  &.sulfuric-acid {
+    background-position: -128px -224px;
+  }
+  &.sulfuric-acid-barrel {
+    background-position: -64px -256px;
+  }
+  &.tank {
+    background-position: -192px -224px;
+  }
+  &.time {
+    background-position: -32px -256px;
+  }
+  &.train-stop {
+    background-position: -224px -224px;
+  }
+  &.transport-belt {
+    background-position: -0px -256px;
+  }
+  &.underground-belt {
+    background-position: -64px -288px;
+  }
+  &.uranium-235 {
+    background-position: -128px -288px;
+  }
+  &.uranium-238 {
+    background-position: -64px -320px;
+  }
+  &.uranium-cannon-shell {
+    background-position: -96px -320px;
+  }
+  &.uranium-fuel-cell {
+    background-position: -160px -320px;
+  }
+  &.uranium-ore {
+    background-position: -0px -352px;
+  }
+  &.uranium-processing {
+    background-position: -192px -320px;
+  }
+  &.uranium-rounds-magazine {
+    background-position: -224px -320px;
+  }
+  &.used-up-uranium-fuel-cell {
+    background-position: -128px -320px;
+  }
+  &.utility-science-pack {
+    background-position: -32px -320px;
+  }
+  &.wall {
+    background-position: -96px -288px;
+  }
+  &.water {
+    background-position: -0px -320px;
+  }
+  &.water-barrel {
+    background-position: -160px -288px;
+  }
+  &.wood {
+    background-position: -192px -288px;
+  }
+  &.wooden-chest {
+    background-position: -224px -288px;
+  }
+  &.worker-robot-speed {
+    background-position: -0px -992px;
+  }
+}

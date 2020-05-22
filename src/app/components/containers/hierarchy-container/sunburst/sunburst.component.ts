@@ -140,22 +140,20 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
     return this._diameter;
   }
 
-  /** Use this input to select the data object with this id  */
-  @Input()
-  set selected(id: string) {
-    if (id && this.nodeIdMap) {
-      console.log('input select');
-      this.click(this.nodeIdMap[id]);
-    }
-  }
-
   /** Emits the currently selected data object  */
   @Output()
-  selectNode: EventEmitter<any> = new EventEmitter<any>();
+  setNode: EventEmitter<any> = new EventEmitter<any>();
 
   /** Emits the path (array of data objects) to the currently selected data object  */
   @Output()
-  path: EventEmitter<any[]> = new EventEmitter<any[]>(true);
+  setPath: EventEmitter<any[]> = new EventEmitter<any[]>(true);
+
+  /** Use this to select the data object with this id  */
+  public selectNode(id: string) {
+    if (id && this.nodeIdMap) {
+      this.click(this.nodeIdMap[id]);
+    }
+  }
 
   private get radius() {
     return this.diameter / 2 - this.padding * 2;
@@ -635,7 +633,7 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
       })
       .attr('startOffset', (d) => this.startOffset(d))
       .style('text-anchor', 'middle')
-      .attr('xlink:href', (d, i) => `${location.href}#${this.id}-hiddenArc${i}`)
+      .attr('href', (d, i) => `#${this.id}-hiddenArc${i}`)
       .text((d) => d.data[this.textField]);
     text
       .each((d, i) => {
@@ -648,7 +646,8 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
     } else if (oldId && this.nodeIdMap[rootId]) {
       this.click(this.nodeIdMap[rootId]);
     } else {
-      this.path.emit([]);
+      this.click(this.nodeIdMap[rootId]);
+      // this.path.emit([]);
     }
   }
 
@@ -676,15 +675,14 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
     this.nodeId = dId;
 
     // Emit component events
-    console.log('emit');
-    this.selectNode.emit(d.data); // Emit selected node
+    this.setNode.emit(d.data); // Emit selected node
     const path = [d.data];
     let p = d;
     while (p.parent) {
       path.unshift(p.parent.data);
       p = p.parent;
     }
-    this.path.emit(path); // Emit selected path
+    this.setPath.emit(path); // Emit selected path
 
     // Set up interpolations to new selected item
     const xd = interpolate(this.x.domain(), [d.x0, d.x1]);

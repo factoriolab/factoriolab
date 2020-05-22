@@ -81,7 +81,7 @@ export class RouterService {
         this.zipPartial += `&s=${zSettings}`;
       }
       this.zip = btoa(pako.deflate(zState + this.zipPartial, { to: 'string' }));
-      this.router.navigateByUrl(`#${this.zip}`);
+      this.router.navigateByUrl(`${this.router.url.split('#')[0]}#${this.zip}`);
     } else {
       this.loaded = true;
     }

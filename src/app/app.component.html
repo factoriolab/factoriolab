@@ -3,8 +3,16 @@
 </lab-settings-container>
 <main>
   <ul role="navigation">
-    <li routerLink="/list" routerLinkActive="active">List</li>
-    <li routerLink="/hierarchy" routerLinkActive="active">Hierarchy</li>
+    <li routerLink="/list" routerLinkActive="active" [fragment]="router.zip">
+      List
+    </li>
+    <li
+      routerLink="/hierarchy"
+      routerLinkActive="active"
+      [fragment]="router.zip"
+    >
+      Hierarchy
+    </li>
   </ul>
   <lab-products-container></lab-products-container>
   <router-outlet></router-outlet>

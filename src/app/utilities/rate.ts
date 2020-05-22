@@ -154,7 +154,8 @@ export class RateUtility {
 
     const item = data.itemEntities[itemId];
     const node: Node = {
-      id: id++,
+      id,
+      name: data.itemEntities[itemId].name,
       itemId,
       recipeId: itemId as any,
       items:
@@ -210,8 +211,8 @@ export class RateUtility {
         ) {
           const factory = data.itemEntities[node.settings.factory].factory;
           if (factory.burner) {
-            RateUtility.addNodesFor(
-              id,
+            id = RateUtility.addNodesFor(
+              ++id,
               node,
               fuel,
               node.factories
@@ -231,8 +232,8 @@ export class RateUtility {
       // Recurse adding nodes for ingredients
       if (recipe.in && node.items.n > 0 && !node.settings.ignore) {
         for (const ingredient of Object.keys(recipe.in)) {
-          RateUtility.addNodesFor(
-            id,
+          id = RateUtility.addNodesFor(
+            ++id,
             node,
             ingredient as ItemId,
             rate.mul(recipe.in[ingredient]).div(out),
@@ -245,6 +246,7 @@ export class RateUtility {
         }
       }
     }
+    return id;
   }
 
   static calculateBelts(steps: Step[], beltSpeed: Entities<Fraction>) {

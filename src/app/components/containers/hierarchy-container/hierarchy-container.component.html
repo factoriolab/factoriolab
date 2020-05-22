@@ -1,7 +1,30 @@
-<p>hierarchy-container works!</p>
+<div class="breadcrumb-container flex">
+  <div
+    class="clickable-size"
+    [class.clickable]="selected?.id !== 0"
+    (click)="child.selectNode('0')"
+  >
+    Root
+  </div>
+  <ng-container *ngFor="let node of path">
+    <div>></div>
+    <div
+      class="clickable-size"
+      [class.clickable]="selected?.id !== node.id"
+      (click)="child.selectNode(node.id)"
+    >
+      {{ node.name }}
+    </div>
+  </ng-container>
+</div>
 <lab-sunburst
   id="hierarchy-sunburst"
   [data]="nodes$ | async"
-  textField="itemId"
+  textField="name"
+  (setNode)="selected = $event"
+  (setPath)="path = $event.splice(1)"
 >
 </lab-sunburst>
+<div *ngIf="selected">
+  {{ selected.name }}
+</div>

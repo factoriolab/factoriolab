@@ -267,10 +267,11 @@ export const getNodes = createSelector(
   Settings.getOilRecipe,
   Dataset.getDatasetState,
   (products, rates, settings, factors, fuel, oilRecipe, data) => {
-    const root: any = { children: [] };
+    let id = 0;
+    const root: any = { id, children: [] };
     for (const product of products) {
-      RateUtility.addNodesFor(
-        0,
+      id = RateUtility.addNodesFor(
+        ++id,
         root,
         product.itemId,
         rates[product.id],
