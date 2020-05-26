@@ -14,8 +14,13 @@ import {
   SettingsComponent,
   SettingsContainerComponent,
   HeaderComponent,
+  IconComponent,
   PickerComponent,
-  SharedModule,
+  SelectComponent,
+  ListContainerComponent,
+  ListComponent,
+  HierarchyContainerComponent,
+  SunburstComponent,
 } from './components';
 import { reducers, metaReducers } from './store';
 
@@ -23,7 +28,13 @@ import { reducers, metaReducers } from './store';
   declarations: [
     AppComponent,
     HeaderComponent,
+    IconComponent,
     PickerComponent,
+    SelectComponent,
+    ListContainerComponent,
+    ListComponent,
+    HierarchyContainerComponent,
+    SunburstComponent,
     ProductsContainerComponent,
     ProductsComponent,
     SettingsComponent,
@@ -34,7 +45,6 @@ import { reducers, metaReducers } from './store';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    SharedModule,
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreDevtoolsModule.instrument({
       logOnly: environment.production,

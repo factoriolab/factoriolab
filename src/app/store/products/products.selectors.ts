@@ -258,7 +258,7 @@ export const getNormalizedSteps = createSelector(
   }
 );
 
-export const getNodes = createSelector(
+export const getNormalizedNodes = createSelector(
   getProducts,
   getNormalizedRates,
   Recipe.getRecipeSettings,
@@ -267,11 +267,11 @@ export const getNodes = createSelector(
   Settings.getOilRecipe,
   Dataset.getDatasetState,
   (products, rates, settings, factors, fuel, oilRecipe, data) => {
-    let id = 0;
+    const id = 'root';
     const root: any = { id, children: [] };
     for (const product of products) {
-      id = RateUtility.addNodesFor(
-        ++id,
+      RateUtility.addNodesFor(
+        id,
         root,
         product.itemId,
         rates[product.id],
@@ -314,14 +314,40 @@ export const getNormalizedStepsWithBelts = createSelector(
   (steps, beltSpeed) => RateUtility.calculateBelts(steps, beltSpeed)
 );
 
+export const getNormalizedNodesWithBelts = createSelector(
+  getNormalizedNodes,
+  Dataset.getBeltSpeed,
+  (nodes, beltSpeed) => RateUtility.calculateNodeBelts(nodes, beltSpeed)
+);
+
 export const getDisplayRateSteps = createSelector(
   getNormalizedStepsWithBelts,
   Settings.getDisplayRate,
   (steps, displayRate) => RateUtility.displayRate(steps, displayRate)
 );
 
+export const getRawNodes = createSelector(
+  getNormalizedNodesWithBelts,
+  Settings.getDisplayRate,
+  (nodes, displayRate) => RateUtility.nodeDisplayRate(nodes, displayRate)
+);
+
+export const getNodes = createSelector(getRawNodes, (nodes) =>
+  RecipeUtility.sortNode(nodes)
+);
+
 export const getSteps = createSelector(getDisplayRateSteps, (steps) =>
   RecipeUtility.sort(steps)
+);
+
+export const getRawInverseNodes = createSelector(getRawNodes, (nodes) => {
+  const id = 'root';
+  const root: any = { id, children: [] };
+  return RateUtility.inverseNodes(nodes, root);
+});
+
+export const getInverseNodes = createSelector(getRawInverseNodes, (nodes) =>
+  RecipeUtility.sortNode(nodes)
 );
 
 export const getZipState = createSelector(

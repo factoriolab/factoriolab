@@ -9,9 +9,13 @@ import { Observable } from 'rxjs';
 
 import { Node } from '~/models';
 import { State } from '~/store';
-import * as Dataset from '~/store/dataset';
 import * as Products from '~/store/products';
 import { SunburstComponent } from './sunburst/sunburst.component';
+
+enum HierarchyView {
+  Production,
+  Consumption,
+}
 
 @Component({
   selector: 'lab-hierarchy-container',
@@ -22,16 +26,41 @@ import { SunburstComponent } from './sunburst/sunburst.component';
 export class HierarchyContainerComponent implements OnInit {
   @ViewChild(SunburstComponent) child: SunburstComponent;
 
-  data$: Observable<Dataset.DatasetState>;
   nodes$: Observable<Node>;
+  inverseNodes$: Observable<Node>;
 
   path: Node[] = [];
   selected: Node;
+  view: HierarchyView = HierarchyView.Production;
+
+  HierarchyView = HierarchyView;
+
+  get root$() {
+    if (this.view === HierarchyView.Production) {
+      return this.nodes$;
+    } else {
+      return this.inverseNodes$;
+    }
+  }
+
+  get steps() {
+    if (this.selected) {
+      if (this.selected.id === 'root') {
+        return this.selected.children;
+      } else if (this.selected.children) {
+        return [this.selected, ...this.selected.children];
+      } else {
+        return [this.selected];
+      }
+    }
+
+    return [];
+  }
 
   constructor(private store: Store<State>) {}
 
   ngOnInit(): void {
-    this.data$ = this.store.select(Dataset.getDatasetState);
     this.nodes$ = this.store.select(Products.getNodes);
+    this.inverseNodes$ = this.store.select(Products.getInverseNodes);
   }
 }

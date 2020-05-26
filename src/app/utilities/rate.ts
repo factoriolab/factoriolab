@@ -134,7 +134,7 @@ export class RateUtility {
   }
 
   static addNodesFor(
-    id: number,
+    parentId: string,
     parent: Node,
     itemId: ItemId,
     rate: Fraction,
@@ -154,7 +154,7 @@ export class RateUtility {
 
     const item = data.itemEntities[itemId];
     const node: Node = {
-      id,
+      id: `${parentId}:${itemId}`,
       name: data.itemEntities[itemId].name,
       itemId,
       recipeId: itemId as any,
@@ -211,8 +211,8 @@ export class RateUtility {
         ) {
           const factory = data.itemEntities[node.settings.factory].factory;
           if (factory.burner) {
-            id = RateUtility.addNodesFor(
-              ++id,
+            RateUtility.addNodesFor(
+              node.id,
               node,
               fuel,
               node.factories
@@ -232,8 +232,8 @@ export class RateUtility {
       // Recurse adding nodes for ingredients
       if (recipe.in && node.items.n > 0 && !node.settings.ignore) {
         for (const ingredient of Object.keys(recipe.in)) {
-          id = RateUtility.addNodesFor(
-            ++id,
+          RateUtility.addNodesFor(
+            node.id,
             node,
             ingredient as ItemId,
             rate.mul(recipe.in[ingredient]).div(out),
@@ -246,7 +246,29 @@ export class RateUtility {
         }
       }
     }
-    return id;
+  }
+
+  static inverseNodes(node: Node, result: Node) {
+    if (node.children) {
+      for (const child of node.children) {
+        this.inverseNodes(child, result);
+      }
+    } else {
+      const rootNode = result.children.find((c) => c.id === node.itemId);
+      if (rootNode) {
+        rootNode.items = rootNode.items.add(node.items);
+        rootNode.factories = rootNode.factories.add(node.factories);
+      } else {
+        result.children.push({
+          ...node,
+          ...{
+            id: node.itemId,
+            children: undefined,
+          },
+        });
+      }
+    }
+    return result;
   }
 
   static calculateBelts(steps: Step[], beltSpeed: Entities<Fraction>) {
@@ -256,6 +278,18 @@ export class RateUtility {
       }
     }
     return steps;
+  }
+
+  static calculateNodeBelts(node: Node, beltSpeed: Entities<Fraction>) {
+    if (node.items && node.settings.belt) {
+      node.belts = node.items.div(beltSpeed[node.settings.belt]);
+    }
+    if (node.children) {
+      for (const child of node.children) {
+        this.calculateNodeBelts(child, beltSpeed);
+      }
+    }
+    return node;
   }
 
   static displayRate(steps: Step[], displayRate: DisplayRate) {
@@ -268,6 +302,21 @@ export class RateUtility {
       }
     }
     return steps;
+  }
+
+  static nodeDisplayRate(node: Node, displayRate: DisplayRate) {
+    if (node.items) {
+      node.items = node.items.mul(displayRate);
+    }
+    if (node.surplus) {
+      node.surplus = node.surplus.mul(displayRate);
+    }
+    if (node.children) {
+      for (const child of node.children) {
+        this.nodeDisplayRate(child, displayRate);
+      }
+    }
+    return node;
   }
 
   static findBasicOilRecipe(

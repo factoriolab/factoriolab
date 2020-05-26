@@ -1,20 +1,19 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import {
+  ListContainerComponent,
+  HierarchyContainerComponent,
+} from './components';
+
 const routes: Routes = [
   {
     path: 'list',
-    loadChildren: () =>
-      import(
-        './components/containers/list-container/list-container.module'
-      ).then((m) => m.ListContainerModule),
+    component: ListContainerComponent,
   },
   {
     path: 'hierarchy',
-    loadChildren: () =>
-      import(
-        './components/containers/hierarchy-container/hierarchy-container.module'
-      ).then((m) => m.HierarchyContainerModule),
+    component: HierarchyContainerComponent,
   },
   {
     path: '**',

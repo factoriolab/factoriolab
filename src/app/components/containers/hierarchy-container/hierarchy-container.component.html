@@ -1,3 +1,29 @@
+<div class="radio">
+  <input
+    id="hierarchy-production"
+    title="Production Hierarchy"
+    type="radio"
+    name="hierarchyView"
+    [value]="HierarchyView.Production"
+    [ngModel]="view"
+    (change)="view = HierarchyView.Production"
+  />
+  <label for="hierarchy-production" title="Production Hierarchy"
+    >Production</label
+  >
+  <input
+    id="hierarchy-consumption"
+    title="Consumption Hierarchy"
+    type="radio"
+    name="hierarchyView"
+    [value]="HierarchyView.Consumption"
+    [ngModel]="view"
+    (change)="view = HierarchyView.Consumption"
+  />
+  <label for="hierarchy-consumption" title="Consumption Hierarchy"
+    >Consumption</label
+  >
+</div>
 <div class="breadcrumb-container flex">
   <div
     class="clickable-size"
@@ -19,12 +45,10 @@
 </div>
 <lab-sunburst
   id="hierarchy-sunburst"
-  [data]="nodes$ | async"
+  [data]="root$ | async"
   textField="name"
   (setNode)="selected = $event"
   (setPath)="path = $event.splice(1)"
 >
 </lab-sunburst>
-<div *ngIf="selected">
-  {{ selected.name }}
-</div>
+<lab-list-container *ngIf="selected" [steps]="steps"></lab-list-container>

@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Id } from '~/models';
 import { TestUtility } from '~/utilities/test';
-import { IconComponent } from '../shared/icon/icon.component';
+import { IconComponent } from '../icon/icon.component';
 import { HeaderComponent } from './header.component';
 
 @Component({

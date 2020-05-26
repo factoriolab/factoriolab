@@ -4,7 +4,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 
 import * as Mocks from 'src/mocks';
-import { IconComponent, SelectComponent } from '~/components';
 import { Step, ItemId } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers } from '~/store';
@@ -12,6 +11,8 @@ import { DatasetState } from '~/store/dataset';
 import { RecipeState } from '~/store/recipe';
 import { RecipeUtility } from '~/utilities';
 import { TestUtility } from '~/utilities/test';
+import { IconComponent } from '../../../icon/icon.component';
+import { SelectComponent } from '../../../select/select.component';
 import { ListComponent } from './list.component';
 
 @Component({

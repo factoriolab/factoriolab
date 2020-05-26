@@ -9,6 +9,7 @@ import {
   ItemId,
   Factors,
   Step,
+  Node,
 } from '~/models';
 import { RecipeState } from '~/store/recipe';
 
@@ -155,6 +156,18 @@ export class RecipeUtility {
   /** Sorts steps based on items / recipes */
   static sort(steps: Step[]) {
     return steps.sort((a, b) => this.sortOrder(a) - this.sortOrder(b));
+  }
+
+  static sortNode(node: Node) {
+    if (node.children) {
+      node.children = node.children.sort(
+        (a, b) => this.sortOrder(a) - this.sortOrder(b)
+      );
+      for (const child of node.children) {
+        this.sortNode(child);
+      }
+    }
+    return node;
   }
 
   /** Gets sort order for a specific step */

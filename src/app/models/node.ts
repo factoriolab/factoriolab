@@ -1,7 +1,7 @@
 import { Step } from './step';
 
 export interface Node extends Step {
-  id: number;
+  id: string;
   name: string;
-  children?: Step[];
+  children?: Node[];
 }

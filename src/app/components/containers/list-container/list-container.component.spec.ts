@@ -3,12 +3,10 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
 import * as Mocks from 'src/mocks';
-import { IconComponent } from '~/components';
 import { RecipeId, ItemId } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers, State } from '~/store';
 import * as Recipe from '~/store/recipe';
-import { ListComponent } from './list/list.component';
 import { ListContainerComponent } from './list-container.component';
 
 describe('ListContainerComponent', () => {
@@ -18,7 +16,7 @@ describe('ListContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [IconComponent, ListComponent, ListContainerComponent],
+      declarations: [ListContainerComponent],
       imports: [
         RouterTestingModule,
         StoreModule.forRoot(reducers, { metaReducers }),

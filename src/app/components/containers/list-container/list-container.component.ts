@@ -3,6 +3,7 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectionStrategy,
+  Input,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -24,6 +25,8 @@ import { ListComponent } from './list/list.component';
 export class ListContainerComponent implements OnInit {
   @ViewChild(ListComponent) child: ListComponent;
 
+  @Input() steps: Step[];
+
   data$: Observable<Dataset.DatasetState>;
   recipe$: Observable<Recipe.RecipeState>;
   modifiedIgnore$: Observable<boolean>;
@@ -40,6 +43,9 @@ export class ListContainerComponent implements OnInit {
   constructor(private store: Store<State>) {}
 
   ngOnInit() {
+    if (!this.steps) {
+      this.steps$ = this.store.select(Products.getSteps);
+    }
     this.data$ = this.store.select(Dataset.getDatasetState);
     this.recipe$ = this.store.select(Recipe.recipeState);
     this.modifiedIgnore$ = this.store.select(Recipe.getContainsIgnore);
@@ -47,7 +53,6 @@ export class ListContainerComponent implements OnInit {
     this.modifiedFactory$ = this.store.select(Recipe.getContainsFactory);
     this.modifiedModules$ = this.store.select(Recipe.getContainsModules);
     this.modifiedBeacons$ = this.store.select(Recipe.getContainsBeacons);
-    this.steps$ = this.store.select(Products.getSteps);
     this.displayRate$ = this.store.select(Settings.getDisplayRate);
     this.itemPrecision$ = this.store.select(Settings.getItemPrecision);
     this.beltPrecision$ = this.store.select(Settings.getBeltPrecision);
