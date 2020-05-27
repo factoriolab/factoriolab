@@ -244,6 +244,7 @@ export const getNormalizedSteps = createSelector(
     const steps: Step[] = [];
     for (const product of products) {
       RateUtility.addStepsFor(
+        null,
         product.itemId,
         rates[product.id],
         steps,
@@ -338,16 +339,6 @@ export const getNodes = createSelector(getRawNodes, (nodes) =>
 
 export const getSteps = createSelector(getDisplayRateSteps, (steps) =>
   RecipeUtility.sort(steps)
-);
-
-export const getRawInverseNodes = createSelector(getRawNodes, (nodes) => {
-  const id = 'root';
-  const root: any = { id, children: [] };
-  return RateUtility.inverseNodes(nodes, root);
-});
-
-export const getInverseNodes = createSelector(getRawInverseNodes, (nodes) =>
-  RecipeUtility.sortNode(nodes)
 );
 
 export const getZipState = createSelector(

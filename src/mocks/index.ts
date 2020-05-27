@@ -1,6 +1,6 @@
 import Fraction from 'fraction.js';
 
-import * as data from 'src/assets/0-18.json';
+import * as data from 'src/assets/0.18/data.json';
 import {
   Product,
   RateType,

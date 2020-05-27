@@ -1,31 +1,16 @@
 import {
-  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
   Input,
-  OnInit,
   Output,
 } from '@angular/core';
-import {
-  Arc,
-  arc,
-  hierarchy,
-  HierarchyNode,
-  HierarchyRectangularNode,
-  interpolate,
-  partition,
-  ScaleLinear,
-  scaleLinear,
-  ScalePower,
-  scalePow,
-  select,
-  selectAll,
-  Selection,
-} from 'd3';
-import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import * as d3 from 'd3';
+
+import { Node } from '~/models';
+
+type HierarchyRectangularNode = d3.HierarchyRectangularNode<Node>;
 
 @Component({
   selector: 'lab-sunburst',
@@ -33,120 +18,50 @@ import { debounceTime } from 'rxjs/operators';
   styleUrls: ['./sunburst.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SunburstComponent implements OnInit, AfterViewChecked {
+export class SunburstComponent {
   static testing = false;
 
-  private _elementWasNull = true;
-  private _context: CanvasRenderingContext2D;
-  private _browserIsIE: boolean;
-  private _ua = window.navigator.userAgent;
-
-  private parentNativeElement: HTMLElement;
-  private svg: Selection<any, {}, null, undefined>;
-  private nodeId: string;
-  private nodeMap: { [key: number]: HierarchyRectangularNode<any> };
-  private clipMap: { [key: number]: number };
-  private nodeIdMap: { [key: string]: HierarchyRectangularNode<any> };
-  private id: string;
-  private x: ScaleLinear<number, number>;
-  private y: ScalePower<number, number>;
-  private arc: Arc<any, HierarchyRectangularNode<any>>;
-  private textArc: Arc<any, HierarchyRectangularNode<any>>;
-  private rebuild$ = new Subject();
-
-  /** (Default: 600) Duration of transitions in milliseconds */
-  @Input()
-  transition = SunburstComponent.testing ? 0 : /* istanbul ignore next */ 600;
-  /** (Default: 100) Debounce time before rebuilding sunburst, in milliseconds */
-  @Input()
-  rebuildDebounce = SunburstComponent.testing
-    ? 0
-    : /* istanbul ignore next */ 100;
-  /** (Default: 91) Angle past which text will be flipped upside down. (Mirrored behavior on left side) */
-  @Input()
-  flipAngle = 91;
-  /** (Default: 3) Padding around text in path label, in px */
-  @Input()
+  parentNativeElement: HTMLElement;
+  svg: d3.Selection<any, {}, null, undefined>;
+  nodeId: string;
+  nodeMap: { [key: number]: HierarchyRectangularNode };
+  clipMap: { [key: number]: number };
+  nodeIdMap: { [key: string]: HierarchyRectangularNode };
+  id: string;
+  x: d3.ScaleLinear<number, number>;
+  y: d3.ScalePower<number, number>;
+  arc: d3.Arc<any, HierarchyRectangularNode>;
+  textArc: d3.Arc<any, HierarchyRectangularNode>;
+  power = 0.75;
   padding = 3;
-  /** (Default: 3) Minimum number of characters to display in path label */
-  @Input()
   minTextLength = 3;
-  /** (Default: 10) Minimum path length before any text will be displayed, in px */
-  @Input()
   minPathLength = 10;
+  transition = 600;
 
-  /** (Default: 'id') Name of field to use for ids (Not required; if no ID is found sunburst will generate ids) */
+  _data: Node;
   @Input()
-  idField = 'id';
-  /** (Default: 'name') Name of field to use for label text */
-  @Input()
-  textField = 'name';
-  /** (Default: 'class') Name of field to use for arc class (Optional) */
-  @Input()
-  classField = 'class';
-  /** (Default: 'color') Name of field to use for arc background color (Optional) */
-  @Input()
-  colorField = 'color';
-  /** (Default: 'foreColor') Name of field to use for arc foreground color (Optional) */
-  @Input()
-  foreColorField = 'foreColor';
-  /** (Default: 'children') Name of field to use for children */
-  @Input()
-  childrenField = 'children';
-
-  private _data;
-  /**
-   * Data to display in sunburst,
-   * e.g. { id: 'id', name: 'name', children: [ { id: 'id2', name: 'child' } ] }
-   */
-  @Input()
-  set data(data: any) {
+  set data(data: Node) {
     this._data = data;
-    this.rebuild$.next();
+    this.rebuildChart();
   }
   get data() {
     return this._data;
   }
 
-  private _power = 0.75;
-  /**
-   * (Default: 0.75) The power to use in sunburst. This affects the sizing of different levels of the sunburst,
-   * e.g. at 1, all levels of the sunburst will have equal size.
-   */
-  @Input()
-  set power(power: number) {
-    if (this._power !== power) {
-      this._power = power;
-      this.rebuild$.next();
-    }
-  }
-  get power() {
-    return this._power;
-  }
-
-  private _diameter = 600;
-  /**
-   * (Default: 600) Diameter of the sunburst in px. Sunburst will be automatically rebuilt if this changes,
-   * recommend using debounce if connected to a resizable element.
-   */
+  _diameter = 600;
   @Input()
   set diameter(diameter: number) {
     if (this._diameter !== diameter) {
       this._diameter = diameter;
-      this.rebuild$.next();
+      this.rebuildChart();
     }
   }
   get diameter() {
     return this._diameter;
   }
 
-  /** Emits the currently selected data object  */
-  @Output()
-  setNode: EventEmitter<any> = new EventEmitter<any>();
-
-  /** Emits the path (array of data objects) to the currently selected data object  */
-  @Output()
-  setPath: EventEmitter<any[]> = new EventEmitter<any[]>(true);
+  @Output() setNode = new EventEmitter<Node>();
+  @Output() setPath = new EventEmitter<Node[]>(true);
 
   /** Use this to select the data object with this id  */
   public selectNode(id: string) {
@@ -155,161 +70,54 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  private get radius() {
+  get radius() {
     return this.diameter / 2 - this.padding * 2;
-  }
-
-  /**
-   * Detect whether current browser is IE/Edge
-   * Need to use alternative method for getComputedTextLength if so
-   */
-  private get browserIsIE() {
-    if (this._browserIsIE !== undefined) {
-      return this._browserIsIE;
-    }
-
-    const msie = this._ua.indexOf('MSIE ');
-    if (msie > 0) {
-      // IE 10 or older => return version number
-      this._browserIsIE = !!parseInt(
-        this._ua.substring(msie + 5, this._ua.indexOf('.', msie)),
-        10
-      );
-      return this._browserIsIE;
-    }
-
-    const trident = this._ua.indexOf('Trident/');
-    if (trident > 0) {
-      // IE 11 => return version number
-      const rv = this._ua.indexOf('rv:');
-      this._browserIsIE = !!parseInt(
-        this._ua.substring(rv + 3, this._ua.indexOf('.', rv)),
-        10
-      );
-      return this._browserIsIE;
-    }
-
-    const edge = this._ua.indexOf('Edge/');
-    if (edge > 0) {
-      // Edge (IE 12+) => return version number
-      this._browserIsIE = !!parseInt(
-        this._ua.substring(edge + 5, this._ua.indexOf('.', edge)),
-        10
-      );
-      return this._browserIsIE;
-    }
-
-    // other browser
-    this._browserIsIE = false;
-    return this._browserIsIE;
   }
 
   constructor(element: ElementRef) {
     this.parentNativeElement = element.nativeElement;
     this.id = this.parentNativeElement.id;
-    this.x = scaleLinear().range([0, 2 * Math.PI]);
-    this.y = scalePow().exponent(this.power).range([0, this.radius]);
+    this.x = d3.scaleLinear().range([0, 2 * Math.PI]);
+    this.y = d3.scalePow().exponent(this.power).range([0, this.radius]);
   }
 
-  ngOnInit() {
-    this.rebuild$
-      .pipe(debounceTime(this.rebuildDebounce))
-      .subscribe(() => this.rebuildChart());
-  }
-
-  ngAfterViewChecked() {
-    this.checkElementVisibility();
-  }
-
-  // Check whether parent element is visible
-  // If parent element becomes visible, rebuild the chart
-  private checkElementVisibility() {
-    if (this.parentNativeElement.offsetParent !== null) {
-      if (this._elementWasNull) {
-        this.rebuild$.next();
-        this._elementWasNull = false;
-      }
-    } else {
-      this._elementWasNull = true;
-    }
-  }
-
-  private calculateTextWidth(element: SVGTextPathElement) {
-    if (this.browserIsIE === false) {
-      // In Chrome/Firefox, we can trust getComputedTextLength
-      return element.getComputedTextLength();
-    } else {
-      // In IE/Edge, getComputedTextLength is wrong, so use measureText as a fallback,
-      // it's not as accurate as getComputedTextLength in Chrome/Firefox but works OK.
-      if (!this._context) {
-        this._context = document.createElement('canvas').getContext('2d');
-      }
-      const style = window.getComputedStyle(element, null);
-      this._context.font = `${style.fontStyle} ${style.fontVariant} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
-      return this._context.measureText(element.textContent).width;
-    }
-  }
-
-  // Get the ID for the passed node
-  private idFor(d: HierarchyRectangularNode<any>): string {
-    // If an id field is specified, use that.
-    if (this.idField) {
-      return `${d.data[this.idField]}`;
-    }
-    // Otherwise, use the number we've assigned.
-    for (const id of Object.keys(this.nodeMap)) {
-      if (this.nodeMap[id] === d) {
-        return `${id}`;
-      }
-    }
-    // Node was not found, return null.
-    return null;
-  }
-
-  // Return whether the first passed node is a parent of the second passed node
-  private isParentOf(p: HierarchyNode<any>, c: HierarchyNode<any>) {
+  /** Return whether the first passed node is a parent of the second passed node */
+  isParentOf(p: d3.HierarchyNode<Node>, c: d3.HierarchyNode<Node>) {
     if (p === c) {
       return true;
     }
-    if (p[this.childrenField]) {
-      return p[this.childrenField].some((d) => {
+    if (p.children) {
+      return p.children.some((d) => {
         return this.isParentOf(d, c);
       });
     }
     return false;
   }
 
-  // Return whether the passed node should have its text flipped upside down
-  private flip(d: HierarchyRectangularNode<any>) {
+  /** Return whether the passed node should have its text flipped upside down */
+  flip(d: HierarchyRectangularNode) {
     const myx = this.x((d.x0 + d.x1) / 2);
-    return (
-      myx > (this.flipAngle * Math.PI) / 180 &&
-      myx < ((360 - this.flipAngle) * Math.PI) / 180
-    );
+    return myx > (91 * Math.PI) / 180 && myx < ((360 - 91) * Math.PI) / 180;
   }
 
-  // Get the length of the hidden arc for the given node
-  private pathLength(d: HierarchyRectangularNode<any>) {
+  /** Get the length of the hidden arc for the given node */
+  pathLength(d: HierarchyRectangularNode) {
     const dx = this.x(d.x1) - this.x(d.x0);
     return (this.y(d.y0) * dx + this.y(d.y1) * dx) / 2;
   }
 
-  // Check whether the passed textPath is too long for the passed path length
-  // Accounts for padding on both sides of text as well
-  private isTooLong(textPath: SVGTextPathElement, path: number) {
-    /* Very difficult to reproduce, but this can sometimes be null */
-    /* istanbul ignore if */
+  /** Check whether the passed textPath is too long for the passed path length */
+  isTooLong(textPath: SVGTextPathElement, path: number) {
     if (!textPath) {
       return true;
     }
-    const textLength = this.calculateTextWidth(textPath);
-    return path - this.padding * 2 <= textLength;
+    return path - this.padding * 2 <= textPath.getComputedTextLength();
   }
 
-  // Determine whether text is too long for the given arc
-  private isTextTooLong(i: number) {
+  /** Determine whether text is too long for the given arc */
+  isTextTooLong(i: number) {
     const d = this.nodeMap[i];
-    const text: string = d.data[this.textField];
+    const text = d.data.name;
     const min =
       text && text.length
         ? Math.min(text.length, this.minTextLength)
@@ -326,15 +134,10 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
     const textPath: SVGTextPathElement = document.getElementById(
       `${this.id}-labelPath${i}`
     ) as any;
-    // Save off old text to be restored later
     const oldText = svgTextPath.text();
     // Try min length
-    // The transition will handle actually removing characters, at this point we are only
-    // interested in whether this text will be hidden at the end of the transition
     svgTextPath.text(`${text.substr(0, min)}...`);
     let bIsTooLong = this.isTooLong(textPath, pathLength);
-    /* Edge case that sometimes short text will fit when adding ellipses makes it too long */
-    /* istanbul ignore next */
     if (bIsTooLong && text.length) {
       // Test whether full text fits (ellipses take up space too)
       svgTextPath.text(text);
@@ -344,11 +147,10 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
     return bIsTooLong;
   }
 
-  // Sets up a function to set the overflow for the given index
-  // This can improve efficiency slightly during transitions
-  private getSetTextOverflowFn(i: number) {
+  /** Creates a function to set overflow for given index */
+  getSetTextOverflowFn(i: number) {
     const d = this.nodeMap[i];
-    const text: string = d.data[this.textField];
+    const text = d.data.name;
     const min =
       text && text.length
         ? Math.min(text.length, this.minTextLength)
@@ -402,10 +204,7 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
       let lower = bIsTooLong ? min : init;
       let upper = bIsTooLong ? init : text.length;
       while (true) {
-        /* Can't replicate this issue easily. Ignore for code coverage. */
-        /* istanbul ignore if */
         if (lower === upper) {
-          // Sometimes browser calculates width with ellipsis as shorter for some reason
           // If we get stuck like this, just clip to 0 and break out
           svgTextPath.text('');
           this.clipMap[i] = text.length;
@@ -430,41 +229,41 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
     };
   }
 
-  // Get proper offset (orientation/flip) for node - 25% = up, 75% = down
-  private startOffset(d: HierarchyRectangularNode<any>) {
+  /** Get proper offset (orientation/flip) for node - 25% = up, 75% = down */
+  startOffset(d: HierarchyRectangularNode) {
     return this.flip(d) ? '75%' : '25%';
   }
 
-  // Rebuild the chart with new data/size settings
   rebuildChart() {
-    this.y = scalePow().exponent(this.power).range([0, this.radius]);
     if (this.svg) {
-      select(`#${this.id}-svg`).remove();
+      d3.select(`#${this.id}-svg`).remove();
     }
     this.createChart();
   }
 
-  // Build and display the sunburst control
   createChart() {
     if (!this.data) {
       return;
     }
 
     // Declare partition and arcs
-    const part = partition<any>();
-    this.arc = arc<HierarchyRectangularNode<any>>()
+    const part = d3.partition<Node>();
+    this.arc = d3
+      .arc<HierarchyRectangularNode>()
       .startAngle((d) => Math.max(0, Math.min(2 * Math.PI, this.x(d.x0))))
       .endAngle((d) => Math.max(0, Math.min(2 * Math.PI, this.x(d.x1))))
       .innerRadius((d) => Math.max(0, this.y(d.y0)))
       .outerRadius((d) => Math.max(0, this.y(d.y1)));
-    this.textArc = arc<HierarchyRectangularNode<any>>()
+    this.textArc = d3
+      .arc<HierarchyRectangularNode>()
       .startAngle((d) => Math.max(0, Math.min(2 * Math.PI, this.x(d.x0))))
       .endAngle((d) => Math.max(0, Math.min(2 * Math.PI, this.x(d.x1))))
       .innerRadius((d) => Math.max(0, (this.y(d.y0) + this.y(d.y1)) / 2))
       .outerRadius((d) => Math.max(0, (this.y(d.y0) + this.y(d.y1)) / 2));
 
     // Create SVG
-    this.svg = select(this.parentNativeElement)
+    this.svg = d3
+      .select(this.parentNativeElement)
       .append('svg')
       .attr('id', `${this.id}-svg`)
       .attr('width', this.diameter)
@@ -476,8 +275,8 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
       );
 
     // Set up hierarchy & counts
-    const root = hierarchy(this.data, (d) => d[this.childrenField]);
-    root.sum((d) => (d[this.childrenField] ? 0 : 1));
+    const root = d3.hierarchy(this.data, (d) => d.children);
+    root.sum((d) => (d.children ? 0 : 1));
 
     // Get sunburst paths
     const sunburst = this.svg
@@ -485,13 +284,13 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
       .data(part(root).descendants())
       .enter();
 
+    const oldId = this.nodeId;
     this.nodeMap = {};
     this.nodeIdMap = {};
     this.clipMap = {};
-    const oldId = this.nodeId;
+    this.nodeId = null;
     let rootId: string;
     let newId: string;
-    this.nodeId = null;
     // Append main arcs with fills
     const arcs = sunburst
       .append('path')
@@ -500,7 +299,7 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
         this.nodeMap[i] = d;
         this.clipMap[i] = 0;
         // Map out IDs, see if old selected ID still exists and reselect it if so.
-        const dId = this.idFor(d);
+        const dId = d.data.id;
         this.nodeIdMap[dId] = d;
         if (dId === oldId) {
           newId = dId;
@@ -509,85 +308,19 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
           rootId = dId;
         }
       })
-      .attr('class', (d) => {
-        return d.data[this.classField]
-          ? `arc ${d.data[this.classField]}`
-          : 'arc';
-      })
-      .attr('style', (d) => {
-        return d.data[this.colorField]
-          ? `fill: ${d.data[this.colorField]}`
-          : null;
-      })
+      .attr('class', (d) => 'arc')
       .attr('cursor', (d) => (d.depth === 0 ? 'default' : 'pointer'))
       .attr('id', (d, i) => `${this.id}-arc${i}`)
-      .on('click', (d) => this.click(d))
-      .on('mouseover', (d, i) => {
-        // Set 'hover' class on all elements on mouse enter
-        // 'hover' class can be leveraged by css to change styles
-        select(document.getElementById(`${this.id}-arc${i}`)).attr(
-          'class',
-          d.data[this.classField]
-            ? `arc hover ${d.data[this.classField]}`
-            : 'arc hover'
-        );
-        select(document.getElementById(`${this.id}-hiddenArc${i}`)).attr(
-          'class',
-          d.data[this.classField]
-            ? `hiddenArc hover ${d.data[this.classField]}`
-            : 'hiddenArc hover'
-        );
-        select(document.getElementById(`${this.id}-labelText${i}`)).attr(
-          'class',
-          d.data[this.classField]
-            ? `labelText hover ${d.data[this.classField]}`
-            : 'labelText hover'
-        );
-        select(document.getElementById(`${this.id}-labelPath${i}`)).attr(
-          'class',
-          d.data[this.classField]
-            ? `labelPath hover ${d.data[this.classField]}`
-            : 'labelPath hover'
-        );
-      })
-      .on('mouseleave', (d, i) => {
-        // Remove 'hover' class from all elements on mouse leave
-        select(document.getElementById(`${this.id}-arc${i}`)).attr(
-          'class',
-          d.data[this.classField] ? `arc ${d.data[this.classField]}` : 'arc'
-        );
-        select(document.getElementById(`${this.id}-hiddenArc${i}`)).attr(
-          'class',
-          d.data[this.classField]
-            ? `hiddenArc ${d.data[this.classField]}`
-            : 'hiddenArc'
-        );
-        select(document.getElementById(`${this.id}-labelText${i}`)).attr(
-          'class',
-          d.data[this.classField]
-            ? `labelText ${d.data[this.classField]}`
-            : 'labelText'
-        );
-        select(document.getElementById(`${this.id}-labelPath${i}`)).attr(
-          'class',
-          d.data[this.classField]
-            ? `labelPath ${d.data[this.classField]}`
-            : 'labelPath'
-        );
-      });
+      .on('click', (d) => this.click(d));
 
     // Append hover title
-    arcs.append('title').text((d, i) => d.data[this.textField]);
+    arcs.append('title').text((d, i) => d.data.name);
 
     // Append hidden arcs for labels
     sunburst
       .append('path')
       .attr('d', (d) => this.textArc(d))
-      .attr('class', (d) => {
-        return d.data[this.classField]
-          ? `hiddenArc ${d.data[this.classField]}`
-          : 'hiddenArc';
-      })
+      .attr('class', (d) => 'hiddenArc')
       .attr('id', (d, i) => `${this.id}-hiddenArc${i}`)
       .style('display', 'none');
 
@@ -595,20 +328,11 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
     let offset: number;
     const text = sunburst
       .append('text')
-      .attr('class', (d) => {
-        return d.data[this.classField]
-          ? `labelText ${d.data[this.classField]}`
-          : 'labelText';
-      })
+      .attr('class', (d) => 'labelText')
       .attr('id', (d, i) => `${this.id}-labelText${i}`)
       .attr('dy', (d, i) => {
         if (!offset) {
-          // Just calculate this once...
-          // Note: For some reason this seems to look best when dividing by three, rather than dividing by two
-          // as you would intuitively assume. Honestly, I'm not sure why, presumably the text renders smaller.
           const labelText = document.getElementById(`${this.id}-labelText${i}`);
-          /* Covers edge case that it can't find the label text. Ignore for code coverage */
-          /* istanbul ignore else */
           if (labelText) {
             offset =
               parseFloat(window.getComputedStyle(labelText).fontSize) / 3;
@@ -618,23 +342,14 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
       })
       .attr('cursor', (d) => (d.depth === 0 ? 'default' : 'pointer'))
       .style('pointer-events', 'none');
-    const path = text
+    text
       .append('textPath')
       .attr('id', (d, i) => `${this.id}-labelPath${i}`)
-      .attr('class', (d) => {
-        return d.data[this.classField]
-          ? `labelPath ${d.data[this.classField]}`
-          : 'labelPath';
-      })
-      .attr('style', (d) => {
-        return d.data[this.foreColorField]
-          ? `fill: ${d.data[this.foreColorField]}`
-          : null;
-      })
+      .attr('class', (d) => 'labelPath')
       .attr('startOffset', (d) => this.startOffset(d))
       .style('text-anchor', 'middle')
       .attr('href', (d, i) => `#${this.id}-hiddenArc${i}`)
-      .text((d) => d.data[this.textField]);
+      .text((d) => d.data.name);
     text
       .each((d, i) => {
         this.getSetTextOverflowFn(i)();
@@ -643,21 +358,18 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
 
     if (newId && this.nodeIdMap[newId]) {
       this.click(this.nodeIdMap[newId]);
-    } else if (oldId && this.nodeIdMap[rootId]) {
-      this.click(this.nodeIdMap[rootId]);
     } else {
       this.click(this.nodeIdMap[rootId]);
-      // this.path.emit([]);
     }
   }
 
-  // Select the passed node
-  click(d: HierarchyRectangularNode<any>) {
+  /** Select the passed node */
+  click(d: HierarchyRectangularNode) {
     // Ignore if the passed node is null
     if (!d) {
       return;
     }
-    const dId = this.idFor(d);
+    const dId = d.data.id;
     if (dId == null) {
       return;
     }
@@ -667,7 +379,6 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
         return;
       }
       // This non-root node is already selected. Select the root node instead.
-      // This will reset the sunburst, essentially 'unselecting' the selected node.
       this.click(this.nodeMap[0]);
       return;
     }
@@ -685,14 +396,14 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
     this.setPath.emit(path); // Emit selected path
 
     // Set up interpolations to new selected item
-    const xd = interpolate(this.x.domain(), [d.x0, d.x1]);
-    const yd = interpolate(this.y.domain(), [d.y0, 1]);
-    const yr = interpolate(this.y.range(), [d.y0 ? 20 : 0, this.radius]);
+    const xd = d3.interpolate(this.x.domain(), [d.x0, d.x1]);
+    const yd = d3.interpolate(this.y.domain(), [d.y0, 1]);
+    const yr = d3.interpolate(this.y.range(), [d.y0 ? 20 : 0, this.radius]);
 
     // Mock up transition to new selected item (1 = after transition)
     this.x.domain(xd(1));
     this.y.domain(yd(1)).range(yr(1));
-    selectAll('path.hiddenArc').attr('d', (e: HierarchyRectangularNode<any>) =>
+    d3.selectAll('path.hiddenArc').attr('d', (e: HierarchyRectangularNode) =>
       this.textArc(e)
     );
 
@@ -706,7 +417,7 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
     // Reset back to original scale so transition can occur (0 = before transition)
     this.x.domain(xd(0));
     this.y.domain(yd(0)).range(yr(0));
-    selectAll('path.hiddenArc').attr('d', (e: HierarchyRectangularNode<any>) =>
+    d3.selectAll('path.hiddenArc').attr('d', (e: HierarchyRectangularNode) =>
       this.textArc(e)
     );
 
@@ -724,41 +435,39 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
     // Transition arcs
     pathTransition
       .selectAll('path.arc')
-      .attrTween('d', (e: HierarchyRectangularNode<any>) => () => this.arc(e));
+      .attrTween('d', (e: HierarchyRectangularNode) => () => this.arc(e));
     pathTransition
       .selectAll('path.hiddenArc')
-      .attrTween('d', (e: HierarchyRectangularNode<any>) => () =>
-        this.textArc(e)
-      );
+      .attrTween('d', (e: HierarchyRectangularNode) => () => this.textArc(e));
 
     // Set up arc pointers (depth 0 should only have pointer when it is not the selected node)
     this.svg
       .selectAll('path.arc')
-      .attr('cursor', (e: HierarchyRectangularNode<any>) => {
+      .attr('cursor', (e: HierarchyRectangularNode) => {
         return d.depth === 0 && e.depth === 0 ? 'default' : 'pointer';
       });
 
     // Set up pointers and initial visibility for labels
     this.svg
       .selectAll('text')
-      .style('visibility', (e: HierarchyRectangularNode<any>, j) => {
+      .style('visibility', (e: HierarchyRectangularNode, j) => {
         return this.isParentOf(d, e) && !hideMap[j]
           ? null
-          : select(document.getElementById(`${this.id}-labelText${j}`)).style(
-              'visibility'
-            );
+          : d3
+              .select(document.getElementById(`${this.id}-labelText${j}`))
+              .style('visibility');
       })
-      .attr('cursor', (e: HierarchyRectangularNode<any>) => {
+      .attr('cursor', (e: HierarchyRectangularNode) => {
         return d.depth === 0 && e.depth === 0 ? 'default' : 'pointer';
       })
       // Set up transition for labels
       .transition()
       .duration(this.transition)
-      .style('fill-opacity', (e: HierarchyRectangularNode<any>, j) => {
+      .style('fill-opacity', (e: HierarchyRectangularNode, j) => {
         return this.isParentOf(d, e) && !hideMap[j] ? 1 : 1e-6;
       })
-      .on('end', (e: HierarchyRectangularNode<any>, j) => {
-        select(document.getElementById(`${this.id}-labelText${j}`)).style(
+      .on('end', (e: HierarchyRectangularNode, j) => {
+        d3.select(document.getElementById(`${this.id}-labelText${j}`)).style(
           'visibility',
           this.isParentOf(d, e) && !hideMap[j] ? null : 'hidden'
         );
@@ -769,7 +478,7 @@ export class SunburstComponent implements OnInit, AfterViewChecked {
       .selectAll('textPath')
       .transition()
       .duration(this.transition)
-      .attrTween('startOffset', (e: HierarchyRectangularNode<any>) => {
+      .attrTween('startOffset', (e: HierarchyRectangularNode) => {
         return () => this.startOffset(e);
       })
       .tween('text', (e, j) => {

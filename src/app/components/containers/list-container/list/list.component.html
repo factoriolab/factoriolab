@@ -1,6 +1,8 @@
 <table *ngIf="steps && steps.length">
   <thead>
     <tr>
+      <!-- Expand -->
+      <th></th>
       <th>
         <div>
           Items/{{
@@ -72,256 +74,366 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let step of steps">
-      <td>
-        <div class="flex">
-          <div *ngIf="step.items" class="monospace">
-            {{ rate(step.items, itemPrecision) }}
-          </div>
-          <div *ngIf="step.surplus && step.surplus.n > 0" class="monospace">
-            (+{{ rate(step.surplus, itemPrecision) }})
-          </div>
-          <lab-icon
-            *ngIf="data.recipeEntities[step.recipeId]?.in"
-            class="clickable"
-            title="Click to ignore"
-            [iconId]="step.itemId"
-            [class.ignored]="
-              step.settings.ignore || recipe[step.itemId]?.ignore
-            "
-            [tooltip]="data.itemEntities[step.itemId]?.name"
-            [recipe]="data.recipeEntities[step.itemId]"
-            scale="true"
-            (click)="ignoreStep.emit(step.recipeId)"
-          ></lab-icon>
-          <lab-icon
-            *ngIf="!data.recipeEntities[step.recipeId]?.in"
-            class="clickable-size"
-            [iconId]="step.itemId"
-            [tooltip]="data.itemEntities[step.itemId]?.name"
-            scale="true"
-          ></lab-icon>
-        </div>
-      </td>
-      <td>
-        <ng-container *ngIf="step.settings">
-          <div
-            *ngIf="
-              step.settings.belt &&
-              step.belts &&
-              data.itemEntities[step.itemId].category !== CategoryId.Research
-            "
-            class="flex"
+    <ng-container *ngFor="let step of steps">
+      <tr>
+        <td>
+          <i
+            *ngIf="step.parents && !expanded[step.itemId]"
+            class="clickable material-icons"
+            title="Click to show consumption"
+            (click)="expanded[step.itemId] = true"
+            >expand_more</i
           >
-            <div class="monospace">{{ rate(step.belts, beltPrecision) }}</div>
-            <ng-container
-              *ngIf="
-                options[OptionsType.Belt][0].indexOf(step.settings.belt) === -1;
-                then beltDefault;
-                else beltPicker
+          <i
+            *ngIf="step.parents && expanded[step.itemId]"
+            class="clickable material-icons"
+            title="Click to hide consumption"
+            (click)="expanded[step.itemId] = false"
+            >expand_less</i
+          >
+        </td>
+        <td>
+          <div class="flex">
+            <div *ngIf="step.items" class="monospace">
+              {{ rate(step.items, itemPrecision) }}
+            </div>
+            <div *ngIf="step.surplus && step.surplus.n > 0" class="monospace">
+              (+{{ rate(step.surplus, itemPrecision) }})
+            </div>
+            <lab-icon
+              *ngIf="data.recipeEntities[step.recipeId]?.in"
+              class="clickable"
+              title="Click to ignore"
+              [iconId]="step.itemId"
+              [class.ignored]="
+                step.settings.ignore || recipe[step.itemId]?.ignore
               "
-            ></ng-container>
-            <ng-template #beltDefault>
-              <lab-icon
-                class="clickable-size"
-                [iconId]="step.settings.belt"
-                [tooltip]="data.itemEntities[step.settings.belt].name"
-                [item]="data.itemEntities[step.settings.belt]"
-                [displayRate]="displayRate"
-              ></lab-icon>
-            </ng-template>
-            <ng-template #beltPicker>
-              <div class="relative">
+              [tooltip]="data.itemEntities[step.itemId]?.name"
+              [recipe]="data.recipeEntities[step.itemId]"
+              scale="true"
+              (click)="ignoreStep.emit(step.recipeId)"
+            ></lab-icon>
+            <lab-icon
+              *ngIf="!data.recipeEntities[step.recipeId]?.in"
+              class="clickable-size"
+              [iconId]="step.itemId"
+              [tooltip]="data.itemEntities[step.itemId]?.name"
+              scale="true"
+            ></lab-icon>
+          </div>
+        </td>
+        <td>
+          <ng-container *ngIf="step.settings">
+            <div
+              *ngIf="
+                step.settings.belt &&
+                step.belts &&
+                data.itemEntities[step.itemId].category !== CategoryId.Research
+              "
+              class="flex"
+            >
+              <div class="monospace">{{ rate(step.belts, beltPrecision) }}</div>
+              <ng-container
+                *ngIf="
+                  options[OptionsType.Belt][0].indexOf(step.settings.belt) ===
+                    -1;
+                  then beltDefault;
+                  else beltPicker
+                "
+              ></ng-container>
+              <ng-template #beltDefault>
                 <lab-icon
-                  class="clickable"
-                  title="Click to change belt"
+                  class="clickable-size"
                   [iconId]="step.settings.belt"
                   [tooltip]="data.itemEntities[step.settings.belt].name"
                   [item]="data.itemEntities[step.settings.belt]"
                   [displayRate]="displayRate"
-                  (click)="edit = { step: step, type: StepEditType.Belt }"
                 ></lab-icon>
-                <lab-select
-                  *ngIf="
-                    edit &&
-                    edit.step === step &&
-                    edit.type === StepEditType.Belt
-                  "
-                  [data]="data"
-                  [selectedId]="step.settings.belt"
-                  [optionsType]="OptionsType.Belt"
-                  [displayRate]="displayRate"
-                  (cancel)="edit = null"
-                  (selectId)="setBelt.emit([step.recipeId, $event])"
-                >
-                </lab-select>
-              </div>
-            </ng-template>
-          </div>
-        </ng-container>
-      </td>
-      <td>
-        <ng-container *ngIf="step.settings?.factory">
-          <div class="flex" *ngIf="!step.factories || step.factories.n > 0">
-            <div *ngIf="step.factories" class="monospace">
-              {{ rate(step.factories, factoryPrecision) }}
+              </ng-template>
+              <ng-template #beltPicker>
+                <div class="relative">
+                  <lab-icon
+                    class="clickable"
+                    title="Click to change belt"
+                    [iconId]="step.settings.belt"
+                    [tooltip]="data.itemEntities[step.settings.belt].name"
+                    [item]="data.itemEntities[step.settings.belt]"
+                    [displayRate]="displayRate"
+                    (click)="edit = { step: step, type: StepEditType.Belt }"
+                  ></lab-icon>
+                  <lab-select
+                    *ngIf="
+                      edit &&
+                      edit.step === step &&
+                      edit.type === StepEditType.Belt
+                    "
+                    [data]="data"
+                    [selectedId]="step.settings.belt"
+                    [optionsType]="OptionsType.Belt"
+                    [displayRate]="displayRate"
+                    (cancel)="edit = null"
+                    (selectId)="setBelt.emit([step.recipeId, $event])"
+                  >
+                  </lab-select>
+                </div>
+              </ng-template>
             </div>
-            <ng-container *ngIf="step.recipeId !== step.itemId">
-              <lab-icon
-                [iconId]="step.recipeId"
-                [tooltip]="data.recipeEntities[step.recipeId].name"
-                [recipe]="data.recipeEntities[step.recipeId]"
-              ></lab-icon>
-              :
-            </ng-container>
-            <ng-container
-              *ngIf="
-                options[OptionsType.Assembler][0].indexOf(
-                  step.settings.factory
-                ) === -1 &&
-                  options[OptionsType.Furnace][0].indexOf(
-                    step.settings.factory
-                  ) === -1;
-                then factoryDefault;
-                else factoryPicker
-              "
-            >
-            </ng-container>
-            <ng-template #factoryDefault>
-              <lab-icon
-                class="clickable-size"
-                [iconId]="step.settings.factory"
-                [tooltip]="data.itemEntities[step.settings.factory].name"
-                [item]="data.itemEntities[step.settings.factory]"
-              ></lab-icon>
-            </ng-template>
-            <ng-template #factoryPicker>
-              <div class="relative">
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="step.settings?.factory">
+            <div class="flex" *ngIf="!step.factories || step.factories.n > 0">
+              <div *ngIf="step.factories" class="monospace">
+                {{ rate(step.factories, factoryPrecision) }}
+              </div>
+              <ng-container *ngIf="step.recipeId !== step.itemId">
                 <lab-icon
-                  class="clickable"
-                  title="Click to change factory"
+                  [iconId]="step.recipeId"
+                  [tooltip]="data.recipeEntities[step.recipeId].name"
+                  [recipe]="data.recipeEntities[step.recipeId]"
+                ></lab-icon>
+                :
+              </ng-container>
+              <ng-container
+                *ngIf="
+                  options[OptionsType.Assembler][0].indexOf(
+                    step.settings.factory
+                  ) === -1 &&
+                    options[OptionsType.Furnace][0].indexOf(
+                      step.settings.factory
+                    ) === -1;
+                  then factoryDefault;
+                  else factoryPicker
+                "
+              >
+              </ng-container>
+              <ng-template #factoryDefault>
+                <lab-icon
+                  class="clickable-size"
                   [iconId]="step.settings.factory"
                   [tooltip]="data.itemEntities[step.settings.factory].name"
                   [item]="data.itemEntities[step.settings.factory]"
-                  (click)="edit = { step: step, type: StepEditType.Factory }"
+                ></lab-icon>
+              </ng-template>
+              <ng-template #factoryPicker>
+                <div class="relative">
+                  <lab-icon
+                    class="clickable"
+                    title="Click to change factory"
+                    [iconId]="step.settings.factory"
+                    [tooltip]="data.itemEntities[step.settings.factory].name"
+                    [item]="data.itemEntities[step.settings.factory]"
+                    (click)="edit = { step: step, type: StepEditType.Factory }"
+                  ></lab-icon>
+                  <lab-select
+                    *ngIf="
+                      edit &&
+                      edit.step === step &&
+                      edit.type === StepEditType.Factory
+                    "
+                    [data]="data"
+                    [selectedId]="step.settings.factory"
+                    [optionsType]="
+                      options[OptionsType.Assembler][0].indexOf(
+                        step.settings.factory
+                      ) !== -1
+                        ? OptionsType.Assembler
+                        : OptionsType.Furnace
+                    "
+                    (cancel)="edit = null"
+                    (selectId)="setFactory.emit([step.recipeId, $event])"
+                  >
+                  </lab-select>
+                </div>
+              </ng-template>
+            </div>
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="step.settings?.modules">
+            <div class="flex mod factory">
+              <div
+                class="relative"
+                *ngFor="let mod of step.settings.modules; index as i"
+              >
+                <lab-icon
+                  class="list-edit-factory-module clickable"
+                  title="Click to change module"
+                  [iconId]="mod"
+                  [tooltip]="data.itemEntities[mod]?.name"
+                  [item]="data.itemEntities[mod]"
+                  (click)="
+                    edit = { step: step, type: StepEditType.Module, index: i }
+                  "
                 ></lab-icon>
                 <lab-select
                   *ngIf="
                     edit &&
                     edit.step === step &&
-                    edit.type === StepEditType.Factory
+                    edit.type === StepEditType.Module &&
+                    edit.index === i
                   "
                   [data]="data"
-                  [selectedId]="step.settings.factory"
+                  [selectedId]="mod"
                   [optionsType]="
-                    options[OptionsType.Assembler][0].indexOf(
-                      step.settings.factory
-                    ) !== -1
-                      ? OptionsType.Assembler
-                      : OptionsType.Furnace
+                    prodAllowed(step)
+                      ? OptionsType.AllModule
+                      : OptionsType.SpeedModule
                   "
                   (cancel)="edit = null"
-                  (selectId)="setFactory.emit([step.recipeId, $event])"
+                  (selectId)="factoryModuleChange(step, $event, i)"
                 >
                 </lab-select>
               </div>
-            </ng-template>
-          </div>
-        </ng-container>
-      </td>
-      <td>
-        <ng-container *ngIf="step.settings?.modules">
-          <div class="flex mod factory">
-            <div
-              class="relative"
-              *ngFor="let mod of step.settings.modules; index as i"
-            >
-              <lab-icon
-                class="list-edit-factory-module clickable"
-                title="Click to change module"
-                [iconId]="mod"
-                [tooltip]="data.itemEntities[mod]?.name"
-                [item]="data.itemEntities[mod]"
-                (click)="
-                  edit = { step: step, type: StepEditType.Module, index: i }
-                "
-              ></lab-icon>
-              <lab-select
-                *ngIf="
-                  edit &&
-                  edit.step === step &&
-                  edit.type === StepEditType.Module &&
-                  edit.index === i
-                "
-                [data]="data"
-                [selectedId]="mod"
-                [optionsType]="
-                  prodAllowed(step)
-                    ? OptionsType.AllModule
-                    : OptionsType.SpeedModule
-                "
-                (cancel)="edit = null"
-                (selectId)="factoryModuleChange(step, $event, i)"
-              >
-              </lab-select>
             </div>
-          </div>
-        </ng-container>
-      </td>
-      <td>
-        <ng-container *ngIf="step.settings?.modules">
-          <div class="flex mod">
-            <div class="relative">
-              <lab-icon
-                class="clickable"
-                title="Click to change beacon module"
-                [iconId]="step.settings.beaconModule"
-                [tooltip]="data.itemEntities[step.settings.beaconModule]?.name"
-                [item]="data.itemEntities[step.settings.beaconModule]"
-                (click)="edit = { step: step, type: StepEditType.Beacon }"
-              ></lab-icon>
-              <lab-select
-                *ngIf="
-                  edit &&
-                  edit.step === step &&
-                  edit.type === StepEditType.Beacon
-                "
-                [data]="data"
-                [selectedId]="step.settings.beaconModule"
-                [optionsType]="OptionsType.SpeedModule"
-                (cancel)="edit = null"
-                (selectId)="setBeaconModule.emit([step.recipeId, $event])"
-              >
-              </lab-select>
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="step.settings?.modules">
+            <div class="flex mod">
+              <div class="relative">
+                <lab-icon
+                  class="clickable"
+                  title="Click to change beacon module"
+                  [iconId]="step.settings.beaconModule"
+                  [tooltip]="
+                    data.itemEntities[step.settings.beaconModule]?.name
+                  "
+                  [item]="data.itemEntities[step.settings.beaconModule]"
+                  (click)="edit = { step: step, type: StepEditType.Beacon }"
+                ></lab-icon>
+                <lab-select
+                  *ngIf="
+                    edit &&
+                    edit.step === step &&
+                    edit.type === StepEditType.Beacon
+                  "
+                  [data]="data"
+                  [selectedId]="step.settings.beaconModule"
+                  [optionsType]="OptionsType.SpeedModule"
+                  (cancel)="edit = null"
+                  (selectId)="setBeaconModule.emit([step.recipeId, $event])"
+                >
+                </lab-select>
+              </div>
+              <input
+                *ngIf="step.settings.beaconModule !== ItemId.Module"
+                title="Enter number of beacon modules"
+                type="number"
+                min="0"
+                [value]="step.settings.beaconCount"
+                (change)="beaconCountChange(step, $event)"
+              />
             </div>
-            <input
-              *ngIf="step.settings.beaconModule !== ItemId.Module"
-              title="Enter number of beacon modules"
-              type="number"
-              min="0"
-              [value]="step.settings.beaconCount"
-              (change)="beaconCountChange(step, $event)"
-            />
-          </div>
-        </ng-container>
-      </td>
-      <td>
-        <a
-          *ngIf="step.items"
-          title="Click to open this step in a new tab"
-          [href]="router.stepHref(step, data)"
-          target="_blank"
+          </ng-container>
+        </td>
+        <td>
+          <a
+            *ngIf="step.items"
+            title="Click to open this step in a new tab"
+            [href]="router.stepHref(step, data)"
+            target="_blank"
+          >
+            <i class="clickable material-icons">open_in_new</i>
+          </a>
+          <i
+            *ngIf="recipe[step.recipeId]"
+            title="Undo modifications to this step"
+            class="clickable material-icons"
+            (click)="resetStep.emit(step.recipeId)"
+            >undo</i
+          >
+        </td>
+      </tr>
+      <ng-container *ngIf="step.parents && expanded[step.itemId]">
+        <tr
+          *ngFor="
+            let parent of step.parents | keyvalue;
+            first as isFirst;
+            last as isLast
+          "
+          class="details"
+          [class.first]="isFirst"
+          [class.last]="isLast"
         >
-          <i class="clickable material-icons">open_in_new</i>
-        </a>
-        <i
-          *ngIf="recipe[step.recipeId]"
-          title="Undo modifications to this step"
-          class="clickable material-icons"
-          (click)="resetStep.emit(step.recipeId)"
-          >undo</i
-        >
-      </td>
-    </tr>
+          <td></td>
+          <td>
+            <div class="flex">
+              <div *ngIf="step.items" class="monospace">
+                {{ rate(step.items.mul(parent.value), itemPrecision) }}
+              </div>
+              <lab-icon
+                class="clickable-size"
+                [iconId]="step.itemId"
+                [tooltip]="data.itemEntities[step.itemId]?.name"
+                [recipe]="data.recipeEntities[step.itemId]"
+                scale="true"
+              >
+              </lab-icon>
+            </div>
+          </td>
+          <td>
+            <ng-container *ngIf="step.settings">
+              <div
+                *ngIf="
+                  step.settings.belt &&
+                  step.belts &&
+                  data.itemEntities[step.itemId].category !==
+                    CategoryId.Research
+                "
+                class="flex"
+              >
+                <div class="monospace">
+                  {{ rate(step.belts.mul(parent.value), beltPrecision) }}
+                </div>
+                <lab-icon
+                  class="clickable-size"
+                  [iconId]="step.settings.belt"
+                  [tooltip]="data.itemEntities[step.settings.belt].name"
+                  [item]="data.itemEntities[step.settings.belt]"
+                  [displayRate]="displayRate"
+                ></lab-icon>
+              </div>
+            </ng-container>
+          </td>
+          <td>
+            <ng-container *ngIf="step.settings?.factory">
+              <div class="flex" *ngIf="!step.factories || step.factories.n > 0">
+                <div *ngIf="step.factories" class="monospace">
+                  {{ rate(step.factories.mul(parent.value), factoryPrecision) }}
+                </div>
+                <ng-container *ngIf="step.recipeId !== step.itemId">
+                  <lab-icon
+                    [iconId]="step.recipeId"
+                    [tooltip]="data.recipeEntities[step.recipeId].name"
+                    [recipe]="data.recipeEntities[step.recipeId]"
+                  ></lab-icon>
+                  :
+                </ng-container>
+                <lab-icon
+                  class="clickable-size"
+                  [iconId]="step.settings.factory"
+                  [tooltip]="data.itemEntities[step.settings.factory].name"
+                  [item]="data.itemEntities[step.settings.factory]"
+                ></lab-icon>
+              </div>
+            </ng-container>
+          </td>
+          <td>
+            <div class="flex">
+              <div class="monospace">{{ rate(parent.value.mul(100), 0) }}%</div>
+              <i class="material-icons">arrow_forward</i>
+              <lab-icon
+                class="clickable-size"
+                [iconId]="parent.key"
+                [tooltip]="data.itemEntities[parent.key]?.name"
+                [recipe]="data.recipeEntities[parent.key]"
+                scale="true"
+              ></lab-icon>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+    </ng-container>
   </tbody>
 </table>

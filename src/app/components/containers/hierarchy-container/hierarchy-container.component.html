@@ -1,34 +1,9 @@
-<div class="radio">
-  <input
-    id="hierarchy-production"
-    title="Production Hierarchy"
-    type="radio"
-    name="hierarchyView"
-    [value]="HierarchyView.Production"
-    [ngModel]="view"
-    (change)="view = HierarchyView.Production"
-  />
-  <label for="hierarchy-production" title="Production Hierarchy"
-    >Production</label
-  >
-  <input
-    id="hierarchy-consumption"
-    title="Consumption Hierarchy"
-    type="radio"
-    name="hierarchyView"
-    [value]="HierarchyView.Consumption"
-    [ngModel]="view"
-    (change)="view = HierarchyView.Consumption"
-  />
-  <label for="hierarchy-consumption" title="Consumption Hierarchy"
-    >Consumption</label
-  >
-</div>
 <div class="breadcrumb-container flex">
   <div
     class="clickable-size"
-    [class.clickable]="selected?.id !== 0"
-    (click)="child.selectNode('0')"
+    [class.clickable]="selected?.id !== 'root'"
+    [title]="selected?.id !== 'root' ? 'Click to return to root' : ''"
+    (click)="child.selectNode('root')"
   >
     Root
   </div>
@@ -37,6 +12,7 @@
     <div
       class="clickable-size"
       [class.clickable]="selected?.id !== node.id"
+      [title]="selected?.id !== node.id ? 'Click to focus on this node' : ''"
       (click)="child.selectNode(node.id)"
     >
       {{ node.name }}
@@ -45,7 +21,7 @@
 </div>
 <lab-sunburst
   id="hierarchy-sunburst"
-  [data]="root$ | async"
+  [data]="nodes$ | async"
   textField="name"
   (setNode)="selected = $event"
   (setPath)="path = $event.splice(1)"

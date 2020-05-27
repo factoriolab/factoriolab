@@ -73,6 +73,10 @@ input {
 
   &:hover {
     background-color: $color-brand;
+
+    &.material-icons {
+      color: $color-black;
+    }
   }
 }
 

@@ -218,6 +218,7 @@ export class UraniumUtility {
     data: DatasetState
   ): UraniumSteps {
     RateUtility.addStepsFor(
+      null,
       ItemId.UraniumOre,
       step.u238.factories.mul(matrix.prod.recipe.in[ItemId.UraniumOre]),
       steps,

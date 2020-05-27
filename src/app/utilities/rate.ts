@@ -17,6 +17,7 @@ export class RateUtility {
   static LAUNCH_TIME = new Fraction(2420, 60);
 
   static addStepsFor(
+    parentId: ItemId,
     itemId: ItemId,
     rate: Fraction,
     steps: Step[],
@@ -58,6 +59,16 @@ export class RateUtility {
       step.items = step.items.add(rate.mul(factors[recipe.id].prod));
     } else {
       step.items = step.items.add(rate);
+      if (parentId) {
+        if (!step.parents) {
+          step.parents = {};
+        }
+        if (step.parents[parentId]) {
+          step.parents[parentId] = step.parents[parentId].add(rate);
+        } else {
+          step.parents[parentId] = rate;
+        }
+      }
     }
 
     if (recipe) {
@@ -99,6 +110,7 @@ export class RateUtility {
           const factory = data.itemEntities[step.settings.factory].factory;
           if (factory.burner) {
             RateUtility.addStepsFor(
+              itemId,
               fuel,
               step.factories
                 .mul(factory.burner)
@@ -119,6 +131,7 @@ export class RateUtility {
       if (recipe.in && step.items.n > 0 && !step.settings.ignore) {
         for (const ingredient of Object.keys(recipe.in)) {
           RateUtility.addStepsFor(
+            itemId,
             ingredient as ItemId,
             rate.mul(recipe.in[ingredient]).div(out),
             steps,
@@ -248,29 +261,6 @@ export class RateUtility {
     }
   }
 
-  static inverseNodes(node: Node, result: Node) {
-    if (node.children) {
-      for (const child of node.children) {
-        this.inverseNodes(child, result);
-      }
-    } else {
-      const rootNode = result.children.find((c) => c.id === node.itemId);
-      if (rootNode) {
-        rootNode.items = rootNode.items.add(node.items);
-        rootNode.factories = rootNode.factories.add(node.factories);
-      } else {
-        result.children.push({
-          ...node,
-          ...{
-            id: node.itemId,
-            children: undefined,
-          },
-        });
-      }
-    }
-    return result;
-  }
-
   static calculateBelts(steps: Step[], beltSpeed: Entities<Fraction>) {
     for (const step of steps) {
       if (step.items && step.settings.belt) {
@@ -295,6 +285,11 @@ export class RateUtility {
   static displayRate(steps: Step[], displayRate: DisplayRate) {
     for (const step of steps) {
       if (step.items) {
+        if (step.parents) {
+          for (const key of Object.keys(step.parents)) {
+            step.parents[key] = step.parents[key].div(step.items);
+          }
+        }
         step.items = step.items.mul(displayRate);
       }
       if (step.surplus) {

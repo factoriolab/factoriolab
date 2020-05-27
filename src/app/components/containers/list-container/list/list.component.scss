@@ -5,8 +5,42 @@
   display: block;
 }
 
+table {
+  border-spacing: 0;
+}
+
 tr > * + * {
   padding-left: 1rem;
+}
+
+tr.details {
+  &.first {
+    > :nth-child(2) {
+      border-top-left-radius: 0.5rem;
+    }
+
+    > :last-child {
+      border-top-right-radius: 0.5rem;
+    }
+  }
+
+  &.last {
+    > :nth-child(2) {
+      border-bottom-left-radius: 0.5rem;
+    }
+
+    > :last-child {
+      border-bottom-right-radius: 0.5rem;
+    }
+  }
+
+  > :not(:first-child) {
+    background-color: $color-gray-1;
+
+    &:last-child {
+      padding-right: 0.5rem;
+    }
+  }
 }
 
 th > div {

@@ -12,11 +12,6 @@ import { State } from '~/store';
 import * as Products from '~/store/products';
 import { SunburstComponent } from './sunburst/sunburst.component';
 
-enum HierarchyView {
-  Production,
-  Consumption,
-}
-
 @Component({
   selector: 'lab-hierarchy-container',
   templateUrl: './hierarchy-container.component.html',
@@ -31,17 +26,6 @@ export class HierarchyContainerComponent implements OnInit {
 
   path: Node[] = [];
   selected: Node;
-  view: HierarchyView = HierarchyView.Production;
-
-  HierarchyView = HierarchyView;
-
-  get root$() {
-    if (this.view === HierarchyView.Production) {
-      return this.nodes$;
-    } else {
-      return this.inverseNodes$;
-    }
-  }
 
   get steps() {
     if (this.selected) {
@@ -61,6 +45,5 @@ export class HierarchyContainerComponent implements OnInit {
 
   ngOnInit(): void {
     this.nodes$ = this.store.select(Products.getNodes);
-    this.inverseNodes$ = this.store.select(Products.getInverseNodes);
   }
 }

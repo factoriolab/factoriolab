@@ -15,6 +15,7 @@ import {
   OptionsType,
   options,
   DisplayRate,
+  Entities,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { DatasetState } from '~/store/dataset';
@@ -68,6 +69,7 @@ export class ListComponent {
   @Output() resetBeacons = new EventEmitter();
 
   edit: StepEdit;
+  expanded: Entities<boolean> = {};
 
   CategoryId = CategoryId;
   DisplayRate = DisplayRate;
