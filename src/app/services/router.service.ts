@@ -134,6 +134,7 @@ export class RouterService {
                     }
                   }
                 }
+                this.zip = urlZip;
               });
           }
         }
