@@ -22,7 +22,6 @@
 <lab-sunburst
   id="hierarchy-sunburst"
   [data]="nodes$ | async"
-  textField="name"
   (setNode)="selected = $event"
   (setPath)="path = $event.splice(1)"
 >

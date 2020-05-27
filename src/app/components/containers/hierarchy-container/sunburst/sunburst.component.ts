@@ -19,7 +19,7 @@ type HierarchyRectangularNode = d3.HierarchyRectangularNode<Node>;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SunburstComponent {
-  static testing = false;
+  static transition = 600;
 
   parentNativeElement: HTMLElement;
   svg: d3.Selection<any, {}, null, undefined>;
@@ -36,7 +36,6 @@ export class SunburstComponent {
   padding = 3;
   minTextLength = 3;
   minPathLength = 10;
-  transition = 600;
 
   _data: Node;
   @Input()
@@ -424,7 +423,7 @@ export class SunburstComponent {
     // Set up transition
     const pathTransition = this.svg
       .transition()
-      .duration(this.transition)
+      .duration(SunburstComponent.transition)
       .tween('scale', () => {
         return (t) => {
           this.x.domain(xd(t));
@@ -462,7 +461,7 @@ export class SunburstComponent {
       })
       // Set up transition for labels
       .transition()
-      .duration(this.transition)
+      .duration(SunburstComponent.transition)
       .style('fill-opacity', (e: HierarchyRectangularNode, j) => {
         return this.isParentOf(d, e) && !hideMap[j] ? 1 : 1e-6;
       })
@@ -477,7 +476,7 @@ export class SunburstComponent {
     this.svg
       .selectAll('textPath')
       .transition()
-      .duration(this.transition)
+      .duration(SunburstComponent.transition)
       .attrTween('startOffset', (e: HierarchyRectangularNode) => {
         return () => this.startOffset(e);
       })

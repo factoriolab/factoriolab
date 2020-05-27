@@ -7,6 +7,7 @@ import { RecipeId, ItemId } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers, State } from '~/store';
 import * as Recipe from '~/store/recipe';
+import { ListComponent } from './list/list.component';
 import { ListContainerComponent } from './list-container.component';
 
 describe('ListContainerComponent', () => {
@@ -16,7 +17,7 @@ describe('ListContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ListContainerComponent],
+      declarations: [ListComponent, ListContainerComponent],
       imports: [
         RouterTestingModule,
         StoreModule.forRoot(reducers, { metaReducers }),

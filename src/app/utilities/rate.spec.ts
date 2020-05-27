@@ -34,6 +34,7 @@ describe('RateUtility', () => {
           beaconModule: 'speed-module',
           beaconCount: 0,
         },
+        parents: { 'iron-chest': new Fraction(240) },
       },
       {
         itemId: 'iron-ore',
@@ -48,12 +49,14 @@ describe('RateUtility', () => {
           beaconModule: 'speed-module',
           beaconCount: 0,
         },
+        parents: { 'iron-plate': new Fraction(240) },
       },
     ];
 
     it('should recursively calculate required steps', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
+        null,
         Mocks.Item2.id,
         new Fraction(30),
         steps,
@@ -69,6 +72,7 @@ describe('RateUtility', () => {
     it('should handle repeated products', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
+        null,
         Mocks.Item2.id,
         new Fraction(15),
         steps,
@@ -79,6 +83,7 @@ describe('RateUtility', () => {
         Mocks.Data
       );
       RateUtility.addStepsFor(
+        null,
         Mocks.Item2.id,
         new Fraction(15),
         steps,
@@ -94,6 +99,7 @@ describe('RateUtility', () => {
     it('should handle recipes with specific outputs', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
+        null,
         Mocks.Item2.id,
         new Fraction(30),
         steps,
@@ -124,6 +130,7 @@ describe('RateUtility', () => {
     it('should handle research recipes', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
+        null,
         Mocks.Item2.id,
         new Fraction(30),
         steps,
@@ -152,6 +159,7 @@ describe('RateUtility', () => {
     it('should properly set default belt for fluids', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
+        null,
         ItemId.PetroleumGas,
         new Fraction(30),
         steps,
@@ -174,6 +182,7 @@ describe('RateUtility', () => {
         },
       ];
       RateUtility.addStepsFor(
+        null,
         ItemId.PetroleumGas,
         new Fraction(30),
         steps,
@@ -189,6 +198,7 @@ describe('RateUtility', () => {
     it('should properly calculate factories for space science pack/rocket parts', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
+        null,
         ItemId.SpaceSciencePack,
         new Fraction(60),
         steps,
@@ -205,6 +215,7 @@ describe('RateUtility', () => {
     it('should handle null recipe', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
+        null,
         ItemId.Uranium235,
         new Fraction(30),
         steps,
@@ -228,6 +239,7 @@ describe('RateUtility', () => {
     it('should add fuel consumption for burners', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
+        null,
         ItemId.Steam,
         new Fraction(100),
         steps,

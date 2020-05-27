@@ -144,7 +144,7 @@ describe('RouterService', () => {
         Settings.initialSettingsState,
         Mocks.Data
       );
-      expect(router.navigateByUrl).toHaveBeenCalledWith(`#${mockZipProducts}`);
+      expect(router.navigateByUrl).toHaveBeenCalledWith(`/#${mockZipProducts}`);
     });
 
     it('should update url with all', () => {
@@ -155,7 +155,7 @@ describe('RouterService', () => {
         mockSettings,
         Mocks.Data
       );
-      expect(router.navigateByUrl).toHaveBeenCalledWith(`#${mockZipAll}`);
+      expect(router.navigateByUrl).toHaveBeenCalledWith(`/#${mockZipAll}`);
     });
   });
 
