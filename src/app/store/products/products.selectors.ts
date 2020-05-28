@@ -268,11 +268,9 @@ export const getNormalizedNodes = createSelector(
   Settings.getOilRecipe,
   Dataset.getDatasetState,
   (products, rates, settings, factors, fuel, oilRecipe, data) => {
-    const id = 'root';
-    const root: any = { id, children: [] };
+    const root: any = { id: 'root', children: [] };
     for (const product of products) {
       RateUtility.addNodesFor(
-        id,
         root,
         product.itemId,
         rates[product.id],

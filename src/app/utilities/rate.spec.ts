@@ -2,7 +2,7 @@ import Fraction from 'fraction.js';
 
 import * as Mocks from 'src/mocks';
 import { RateUtility } from './rate';
-import { Step, ItemId, RecipeId, CategoryId } from '~/models';
+import { Step, ItemId, RecipeId, CategoryId, Node } from '~/models';
 
 describe('RateUtility', () => {
   describe('addStepsFor', () => {
@@ -255,6 +255,250 @@ describe('RateUtility', () => {
     });
   });
 
+  describe('addNodesFor', () => {
+    const expected: any = {
+      id: 'root',
+      children: [
+        {
+          id: 'root:iron-chest',
+          name: 'Iron Chest',
+          itemId: 'iron-chest',
+          recipeId: 'iron-chest',
+          items: new Fraction(30),
+          factories: new Fraction(15),
+          settings: {
+            ignore: false,
+            belt: 'transport-belt',
+            factory: 'assembling-machine-2',
+            modules: ['module', 'module'],
+            beaconModule: 'speed-module',
+            beaconCount: 0,
+          },
+          children: [
+            {
+              id: 'root:iron-chest:iron-plate',
+              name: 'Iron Plate',
+              itemId: 'iron-plate',
+              recipeId: 'iron-plate',
+              items: new Fraction(240),
+              factories: new Fraction(768),
+              settings: {
+                ignore: false,
+                belt: 'transport-belt',
+                factory: 'assembling-machine-2',
+                modules: ['module', 'module'],
+                beaconModule: 'speed-module',
+                beaconCount: 0,
+              },
+              children: [
+                {
+                  id: 'root:iron-chest:iron-plate:iron-ore',
+                  name: 'Iron Ore',
+                  itemId: 'iron-ore',
+                  recipeId: 'iron-ore',
+                  items: new Fraction(240),
+                  factories: new Fraction(240),
+                  settings: {
+                    ignore: false,
+                    belt: 'transport-belt',
+                    factory: 'assembling-machine-2',
+                    modules: ['module', 'module'],
+                    beaconModule: 'speed-module',
+                    beaconCount: 0,
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+
+    it('should recursively calculate required nodes', () => {
+      const root: any = { id: 'root', children: [] };
+      RateUtility.addNodesFor(
+        root,
+        Mocks.Item2.id,
+        new Fraction(30),
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
+        ItemId.Coal,
+        RecipeId.BasicOilProcessing,
+        Mocks.Data
+      );
+      expect(root).toEqual(expected);
+    });
+
+    it('should handle recipes with specific outputs', () => {
+      const root: any = { id: 'root', children: [] };
+      RateUtility.addNodesFor(
+        root,
+        Mocks.Item2.id,
+        new Fraction(30),
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
+        ItemId.Coal,
+        RecipeId.BasicOilProcessing,
+        {
+          ...Mocks.Data,
+          ...{
+            recipeEntities: {
+              ...Mocks.Data.recipeEntities,
+              ...{
+                ['iron-chest']: {
+                  id: 'iron-chest',
+                  time: 1,
+                  in: { 'iron-plate': 16 },
+                  out: { 'iron-chest': 2 },
+                } as any,
+              },
+            },
+          },
+        }
+      );
+      expect(root).toEqual(expected);
+    });
+
+    it('should handle research recipes', () => {
+      const root: any = { id: 'root', children: [] };
+      RateUtility.addNodesFor(
+        root,
+        Mocks.Item2.id,
+        new Fraction(30),
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
+        ItemId.Coal,
+        RecipeId.BasicOilProcessing,
+        {
+          ...Mocks.Data,
+          ...{
+            itemEntities: {
+              ...Mocks.Data.itemEntities,
+              ...{
+                ['iron-chest']: {
+                  ...Mocks.Data.itemEntities['iron-chest'],
+                  ...{ category: CategoryId.Research },
+                } as any,
+              },
+            },
+          },
+        }
+      );
+      expect(root).toEqual(expected);
+    });
+
+    it('should properly set default belt for fluids', () => {
+      const root: any = { id: 'root', children: [] };
+      RateUtility.addNodesFor(
+        root,
+        ItemId.PetroleumGas,
+        new Fraction(30),
+        {},
+        Mocks.RecipeFactors,
+        ItemId.Coal,
+        RecipeId.AdvancedOilProcessing,
+        Mocks.Data
+      );
+      expect(root.children[0].settings.belt).toEqual(ItemId.Pipe);
+    });
+
+    it('should properly mark recipe for oil products when using basic oil processing', () => {
+      const root: any = { id: 'root', children: [] };
+      RateUtility.addNodesFor(
+        root,
+        ItemId.PetroleumGas,
+        new Fraction(30),
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
+        ItemId.Coal,
+        RecipeId.BasicOilProcessing,
+        Mocks.Data
+      );
+      expect(root.children[0].recipeId).toEqual(RecipeId.BasicOilProcessing);
+    });
+
+    it('should properly calculate factories for space science pack/rocket parts', () => {
+      const root: any = { id: 'root', children: [] };
+      RateUtility.addNodesFor(
+        root,
+        ItemId.SpaceSciencePack,
+        new Fraction(60),
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
+        ItemId.Coal,
+        RecipeId.AdvancedOilProcessing,
+        Mocks.Data
+      );
+      expect(root.children[0].factories).toBe(null);
+      expect(root.children[0].children[0].factories).toEqual(
+        new Fraction(1021, 50)
+      );
+    });
+
+    it('should handle null recipe', () => {
+      const root: any = { id: 'root', children: [] };
+      RateUtility.addNodesFor(
+        root,
+        ItemId.Uranium235,
+        new Fraction(30),
+        Mocks.RecipeSettingsEntities,
+        Mocks.RecipeFactors,
+        ItemId.Coal,
+        RecipeId.BasicOilProcessing,
+        Mocks.Data
+      );
+      expect(root.children[0]).toEqual({
+        id: 'root:uranium-235',
+        name: 'Uranium-235',
+        itemId: ItemId.Uranium235,
+        recipeId: ItemId.Uranium235 as any,
+        items: new Fraction(30),
+        factories: new Fraction(0),
+        settings: { belt: null },
+      });
+    });
+
+    it('should add fuel consumption for burners', () => {
+      const root: any = { id: 'root', children: [] };
+      RateUtility.addNodesFor(
+        root,
+        ItemId.Steam,
+        new Fraction(100),
+        Mocks.RecipeSettingsInitial,
+        Mocks.RecipeFactors,
+        ItemId.Coal,
+        RecipeId.BasicOilProcessing,
+        Mocks.Data
+      );
+      expect(root.children[0].children[0].itemId).toEqual(ItemId.Coal);
+      expect(root.children[0].children[0].items.n).toBeGreaterThan(0);
+      expect(root.children[0].children[0].factories.n).toBeGreaterThan(0);
+    });
+
+    it('should handle ignored steps', () => {
+      const root: any = { id: 'root', children: [] };
+      RateUtility.addNodesFor(
+        root,
+        ItemId.WoodenChest,
+        new Fraction(100),
+        {
+          ...Mocks.RecipeSettingsInitial,
+          ...{
+            [ItemId.WoodenChest]: {
+              ...Mocks.RecipeSettingsInitial[ItemId.WoodenChest],
+              ...{ ignore: true },
+            },
+          },
+        } as any,
+        Mocks.RecipeFactors,
+        ItemId.Coal,
+        RecipeId.BasicOilProcessing,
+        Mocks.Data
+      );
+      expect(root.children[0].children).toBeUndefined();
+    });
+  });
+
   describe('calculateBelts', () => {
     it('should skip steps with no items', () => {
       const steps: Step[] = [
@@ -282,6 +526,48 @@ describe('RateUtility', () => {
       ];
       RateUtility.calculateBelts(steps, Mocks.BeltSpeed);
       expect(steps[0].belts).toEqual(new Fraction(1));
+    });
+  });
+
+  describe('calculateNodeBelts', () => {
+    it('should skip nodes with no items', () => {
+      const node: Node = {
+        id: 'test',
+        name: 'test',
+        itemId: Mocks.Item1.id,
+        recipeId: null,
+        items: null,
+        belts: null,
+        settings: { belt: ItemId.TransportBelt },
+      };
+      RateUtility.calculateNodeBelts(node, Mocks.BeltSpeed);
+      expect(node.belts).toBeNull();
+    });
+
+    it('should calculate required belts for nodes', () => {
+      const node: Node = {
+        id: 'test',
+        name: 'test',
+        itemId: Mocks.Item1.id,
+        recipeId: null,
+        items: Mocks.BeltSpeed[ItemId.TransportBelt],
+        belts: null,
+        settings: { belt: ItemId.TransportBelt },
+        children: [
+          {
+            id: 'test2',
+            name: 'test2',
+            itemId: Mocks.Item1.id,
+            recipeId: null,
+            items: Mocks.BeltSpeed[ItemId.TransportBelt],
+            belts: null,
+            settings: { belt: ItemId.TransportBelt },
+          },
+        ],
+      };
+      RateUtility.calculateNodeBelts(node, Mocks.BeltSpeed);
+      expect(node.belts).toEqual(new Fraction(1));
+      expect(node.children[0].belts).toEqual(new Fraction(1));
     });
   });
 
@@ -316,6 +602,75 @@ describe('RateUtility', () => {
       );
       expect(result[0].items).toEqual(new Fraction(6));
       expect(result[0].surplus).toBeFalsy();
+    });
+
+    it('should calculate parent percentages', () => {
+      const result = RateUtility.displayRate(
+        [{ items: new Fraction(2), parents: { id: new Fraction(1) } }] as any,
+        3 as any
+      );
+      expect(result[0].parents.id).toEqual(new Fraction(0.5));
+    });
+  });
+
+  describe('nodeDisplayRate', () => {
+    it('should skip nodes with no items', () => {
+      const node: Node = {
+        id: 'test',
+        name: 'test',
+        itemId: Mocks.Item1.id,
+        recipeId: null,
+        items: null,
+        belts: null,
+        settings: { belt: ItemId.TransportBelt },
+      };
+      RateUtility.nodeDisplayRate(node, 3 as any);
+      expect(node.items).toBeNull();
+    });
+
+    it('should apply the display rate to the given nodes', () => {
+      const node: Node = {
+        id: 'test',
+        name: 'test',
+        itemId: Mocks.Item1.id,
+        recipeId: null,
+        items: new Fraction(2),
+        surplus: new Fraction(3),
+        belts: null,
+        settings: { belt: ItemId.TransportBelt },
+        children: [
+          {
+            id: 'test2',
+            name: 'test2',
+            itemId: Mocks.Item1.id,
+            recipeId: null,
+            items: new Fraction(2),
+            surplus: new Fraction(3),
+            belts: null,
+            settings: { belt: ItemId.TransportBelt },
+          },
+        ],
+      };
+      RateUtility.nodeDisplayRate(node, 3 as any);
+      expect(node.items).toEqual(new Fraction(6));
+      expect(node.surplus).toEqual(new Fraction(9));
+      expect(node.children[0].items).toEqual(new Fraction(6));
+      expect(node.children[0].surplus).toEqual(new Fraction(9));
+    });
+
+    it('should apply the display rate to the given steps with no surplus', () => {
+      const node: Node = {
+        id: 'test',
+        name: 'test',
+        itemId: Mocks.Item1.id,
+        recipeId: null,
+        items: new Fraction(2),
+        belts: null,
+        settings: { belt: ItemId.TransportBelt },
+      };
+      RateUtility.nodeDisplayRate(node, 3 as any);
+      expect(node.items).toEqual(new Fraction(6));
+      expect(node.surplus).toBeFalsy();
     });
   });
 

@@ -147,7 +147,6 @@ export class RateUtility {
   }
 
   static addNodesFor(
-    parentId: string,
     parent: Node,
     itemId: ItemId,
     rate: Fraction,
@@ -167,7 +166,7 @@ export class RateUtility {
 
     const item = data.itemEntities[itemId];
     const node: Node = {
-      id: `${parentId}:${itemId}`,
+      id: `${parent.id}:${itemId}`,
       name: data.itemEntities[itemId].name,
       itemId,
       recipeId: itemId as any,
@@ -225,7 +224,6 @@ export class RateUtility {
           const factory = data.itemEntities[node.settings.factory].factory;
           if (factory.burner) {
             RateUtility.addNodesFor(
-              node.id,
               node,
               fuel,
               node.factories
@@ -246,7 +244,6 @@ export class RateUtility {
       if (recipe.in && node.items.n > 0 && !node.settings.ignore) {
         for (const ingredient of Object.keys(recipe.in)) {
           RateUtility.addNodesFor(
-            node.id,
             node,
             ingredient as ItemId,
             rate.mul(recipe.in[ingredient]).div(out),

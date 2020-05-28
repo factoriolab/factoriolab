@@ -455,6 +455,35 @@ describe('Products Selectors', () => {
     });
   });
 
+  describe('getNormalizedNodes', () => {
+    it('should handle empty/null values', () => {
+      const result = Selectors.getNormalizedNodes.projector(
+        [],
+        {},
+        {},
+        {},
+        null,
+        null,
+        {}
+      );
+      expect(result).toEqual({ id: 'root', children: [] } as any);
+    });
+
+    it('should calculate rates using utility method', () => {
+      spyOn(RateUtility, 'addNodesFor');
+      Selectors.getNormalizedNodes.projector(
+        [Mocks.Product1],
+        { [Mocks.Product1.id]: new Fraction(1) },
+        {},
+        {},
+        null,
+        null,
+        {}
+      );
+      expect(RateUtility.addNodesFor).toHaveBeenCalled();
+    });
+  });
+
   describe('getNormalizedStepsWithUranium', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getNormalizedStepsWithUranium.projector(
@@ -515,6 +544,14 @@ describe('Products Selectors', () => {
     });
   });
 
+  describe('getNormalizedNodesWithBelts', () => {
+    it('should calculate rates using utility method', () => {
+      spyOn(RateUtility, 'calculateNodeBelts');
+      Selectors.getNormalizedNodesWithBelts.projector({}, {});
+      expect(RateUtility.calculateNodeBelts).toHaveBeenCalled();
+    });
+  });
+
   describe('getDisplayRateSteps', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getDisplayRateSteps.projector([], null);
@@ -528,13 +565,29 @@ describe('Products Selectors', () => {
     });
   });
 
+  describe('getRawNodes', () => {
+    it('should calculate rates using utility method', () => {
+      spyOn(RateUtility, 'nodeDisplayRate');
+      Selectors.getRawNodes.projector({}, null);
+      expect(RateUtility.nodeDisplayRate).toHaveBeenCalled();
+    });
+  });
+
+  describe('getNodes', () => {
+    it('should sort using utility method', () => {
+      spyOn(RecipeUtility, 'sortNode');
+      Selectors.getNodes.projector({}, null);
+      expect(RecipeUtility.sortNode).toHaveBeenCalled();
+    });
+  });
+
   describe('getSteps', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getSteps.projector([]);
       expect(Object.keys(result).length).toEqual(0);
     });
 
-    it('should calculate rates using utility method', () => {
+    it('should sort using utility method', () => {
       spyOn(RecipeUtility, 'sort');
       Selectors.getSteps.projector([]);
       expect(RecipeUtility.sort).toHaveBeenCalled();
