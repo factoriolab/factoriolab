@@ -1,10 +1,28 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-const routes: Routes = [];
+import {
+  ListContainerComponent,
+  HierarchyContainerComponent,
+} from './components';
+
+const routes: Routes = [
+  {
+    path: 'list',
+    component: ListContainerComponent,
+  },
+  {
+    path: 'hierarchy',
+    component: HierarchyContainerComponent,
+  },
+  {
+    path: '**',
+    redirectTo: 'list',
+  },
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

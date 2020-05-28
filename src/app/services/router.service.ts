@@ -81,7 +81,7 @@ export class RouterService {
         this.zipPartial += `&s=${zSettings}`;
       }
       this.zip = btoa(pako.deflate(zState + this.zipPartial, { to: 'string' }));
-      this.router.navigateByUrl(`#${this.zip}`);
+      this.router.navigateByUrl(`${this.router.url.split('#')[0]}#${this.zip}`);
     } else {
       this.loaded = true;
     }
@@ -98,9 +98,7 @@ export class RouterService {
     ];
     const zProducts = this.zipProducts(products, data);
     const zState = `p=${zProducts.join(',')}`;
-    return `/#${btoa(
-      pako.deflate(zState + this.zipPartial, { to: 'string' })
-    )}`;
+    return `#${btoa(pako.deflate(zState + this.zipPartial, { to: 'string' }))}`;
   }
 
   updateState(e: Event) {
@@ -134,6 +132,7 @@ export class RouterService {
                     }
                   }
                 }
+                this.zip = urlZip;
               });
           }
         }

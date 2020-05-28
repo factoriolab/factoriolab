@@ -191,6 +191,22 @@ describe('RecipeUtility', () => {
     });
   });
 
+  describe('sortNode', () => {
+    it('should skip nodes with no children', () => {
+      const node = { id: 'id' } as any;
+      RecipeUtility.sortNode(node);
+      expect(node.children).toBeUndefined();
+    });
+
+    it('should sort child nodes', () => {
+      const a: any = { itemId: ItemId.Water };
+      const b: any = { recipeId: RecipeId.SolidFuelFromLightOil };
+      const node = { id: 'id', children: [a, b] } as any;
+      RecipeUtility.sortNode(node);
+      expect(node.children).toEqual([b, a]);
+    });
+  });
+
   describe('sortOrder', () => {
     it('should sort items and recipes', () => {
       const a: any = { itemId: ItemId.Water };

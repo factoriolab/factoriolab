@@ -1,0 +1,29 @@
+<div class="breadcrumb-container flex">
+  <div
+    class="clickable-size"
+    [class.clickable]="selected?.id !== 'root'"
+    [title]="selected?.id !== 'root' ? 'Click to return to root' : ''"
+    (click)="child.selectNode('root')"
+  >
+    Root
+  </div>
+  <ng-container *ngFor="let node of path">
+    <div>></div>
+    <div
+      class="clickable-size"
+      [class.clickable]="selected?.id !== node.id"
+      [title]="selected?.id !== node.id ? 'Click to focus on this node' : ''"
+      (click)="child.selectNode(node.id)"
+    >
+      {{ node.name }}
+    </div>
+  </ng-container>
+</div>
+<lab-sunburst
+  id="hierarchy-sunburst"
+  [data]="nodes$ | async"
+  (setNode)="selected = $event"
+  (setPath)="path = $event.splice(1)"
+>
+</lab-sunburst>
+<lab-list-container *ngIf="selected" [steps]="steps"></lab-list-container>

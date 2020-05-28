@@ -1,6 +1,6 @@
-name: build
+name: staging
 on:
-  push:
+  pull_request:
     branches: [master]
 jobs:
   build:
@@ -12,12 +12,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run build
-        run: npm run build -- --prod
+        run: npm run build -- --configuration staging
+      - name: Copy index to 404
+        run: cp dist/index.html dist/404.html
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@3.4.8
         with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          REPOSITORY_NAME: factoriolab/factoriolab.github.io
+          REPOSITORY_NAME: factoriolab/staging
           BRANCH: master
-          FOLDER: dist/factorio-lab
+          FOLDER: dist
           CLEAN: true
