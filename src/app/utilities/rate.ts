@@ -130,10 +130,15 @@ export class RateUtility {
       // Recurse adding steps for ingredients
       if (recipe.in && step.items.n > 0 && !step.settings.ignore) {
         for (const ingredient of Object.keys(recipe.in)) {
+          const ingredientRate = rate.mul(recipe.in[ingredient]).div(out);
+          if (!step.inputs) {
+            step.inputs = {};
+          }
+          step.inputs[ingredient] = rate;
           RateUtility.addStepsFor(
             itemId,
             ingredient as ItemId,
-            rate.mul(recipe.in[ingredient]).div(out),
+            ingredientRate,
             steps,
             settings,
             factors,
@@ -280,6 +285,14 @@ export class RateUtility {
   }
 
   static displayRate(steps: Step[], displayRate: DisplayRate) {
+    for (const step of steps) {
+      if (step.inputs) {
+        for (const key of Object.keys(step.inputs)) {
+          const inputStep = steps.find((s) => s.itemId === key);
+          step.inputs[key] = step.inputs[key].div(inputStep.items);
+        }
+      }
+    }
     for (const step of steps) {
       if (step.items) {
         if (step.parents) {

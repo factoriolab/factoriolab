@@ -345,6 +345,53 @@
           >
         </td>
       </tr>
+      <ng-container *ngIf="step.inputs && expanded[step.itemId]">
+        <tr
+          *ngFor="
+            let input of step.inputs | keyvalue;
+            first as isFirst;
+            last as isLast
+          "
+          class="details"
+          [class.first]="isFirst"
+          [class.last]="isLast"
+        >
+          <td></td>
+          <td>
+            <div class="flex">
+              <div class="monospace">
+                {{ 0 }}
+              </div>
+              <lab-icon
+                class="clickable-size"
+                [iconId]="input.key"
+                [tooltip]="data.itemEntities[input.key]?.name"
+                [recipe]="data.recipeEntities[input.key]"
+                scale="true"
+              >
+              </lab-icon>
+            </div>
+          </td>
+          <td></td>
+          <td></td>
+          <td>
+            <div class="flex">
+              <div class="monospace">{{ rate(input.value.mul(100), 0) }}%</div>
+              <i class="material-icons">arrow_forward</i>
+              <lab-icon
+                class="clickable-size"
+                [iconId]="step.itemId"
+                [tooltip]="data.itemEntities[step.itemId]?.name"
+                [recipe]="data.recipeEntities[step.itemId]"
+                scale="true"
+              ></lab-icon>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+        </tr>
+      </ng-container>
       <ng-container *ngIf="step.parents && expanded[step.itemId]">
         <tr
           *ngFor="
