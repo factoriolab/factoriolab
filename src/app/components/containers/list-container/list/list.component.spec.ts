@@ -131,6 +131,13 @@ describe('ListComponent', () => {
     expect(component.setBeaconCount).not.toHaveBeenCalled();
   });
 
+  describe('findStep', () => {
+    it('should find the step with the passed item id', () => {
+      const result = component.child.findStep(Mocks.Steps[0].itemId);
+      expect(result).toEqual(Mocks.Steps[0]);
+    });
+  });
+
   describe('prodAllowed', () => {
     it('should look up whether prod is allowed for a step', () => {
       spyOn(RecipeUtility, 'prodModuleAllowed').and.callThrough();
