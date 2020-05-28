@@ -13,6 +13,8 @@ jobs:
         run: npm ci
       - name: Run build
         run: npm run build -- --prod
+      - name: Copy index to 404
+        run: cp dist/index.html dist/404.html
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@3.4.8
         with:
