@@ -98,9 +98,7 @@ export class RouterService {
     ];
     const zProducts = this.zipProducts(products, data);
     const zState = `p=${zProducts.join(',')}`;
-    return `/#${btoa(
-      pako.deflate(zState + this.zipPartial, { to: 'string' })
-    )}`;
+    return `#${btoa(pako.deflate(zState + this.zipPartial, { to: 'string' }))}`;
   }
 
   updateState(e: Event) {

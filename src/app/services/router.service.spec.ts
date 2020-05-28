@@ -169,7 +169,7 @@ describe('RouterService', () => {
         Mocks.Data
       );
       const href = service.stepHref(Mocks.Step1, Mocks.Data);
-      expect(href).toEqual(`/#${mockZipLink}`);
+      expect(href).toEqual(`#${mockZipLink}`);
     });
   });
 
