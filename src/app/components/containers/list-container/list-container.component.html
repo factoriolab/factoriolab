@@ -1,7 +1,7 @@
-<lab-steps
+<lab-list
   [data]="data$ | async"
   [recipe]="recipe$ | async"
-  [steps]="steps$ | async"
+  [steps]="steps ? steps : (steps$ | async)"
   [displayRate]="displayRate$ | async"
   [itemPrecision]="itemPrecision$ | async"
   [beltPrecision]="beltPrecision$ | async"
@@ -24,4 +24,4 @@
   (resetModules)="resetModules()"
   (resetBeacons)="resetBeacons()"
 >
-</lab-steps>
+</lab-list>

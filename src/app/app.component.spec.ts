@@ -15,15 +15,16 @@ import { State, reducers, metaReducers } from './store';
 import { getDatasetState, DatasetState } from './store/dataset';
 import * as Products from './store/products';
 import { TestUtility } from './utilities/test';
-import { HeaderComponent, IconComponent } from './components';
 import {
+  HeaderComponent,
+  IconComponent,
   SettingsContainerComponent,
   SettingsComponent,
   ProductsContainerComponent,
   ProductsComponent,
-  StepsContainerComponent,
-  StepsComponent,
-} from './containers';
+  ListContainerComponent,
+  ListComponent,
+} from './components';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
@@ -46,8 +47,8 @@ describe('AppComponent', () => {
         SettingsComponent,
         ProductsContainerComponent,
         ProductsComponent,
-        StepsContainerComponent,
-        StepsComponent,
+        ListContainerComponent,
+        ListComponent,
         AppComponent,
       ],
     })

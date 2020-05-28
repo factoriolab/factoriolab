@@ -3157,6 +3157,48 @@
         "space-science-pack": 1
       },
       "producers": ["lab"]
+    },
+    {
+      "id": "crude-oil-barrel",
+      "time": 0.2,
+      "in": { "empty-barrel": 1, "crude-oil": 50 },
+      "producers": ["assembling-machine-2", "assembling-machine-3"]
+    },
+    {
+      "id": "heavy-oil-barrel",
+      "time": 0.2,
+      "in": { "empty-barrel": 1, "heavy-oil": 50 },
+      "producers": ["assembling-machine-2", "assembling-machine-3"]
+    },
+    {
+      "id": "light-oil-barrel",
+      "time": 0.2,
+      "in": { "empty-barrel": 1, "light-oil": 50 },
+      "producers": ["assembling-machine-2", "assembling-machine-3"]
+    },
+    {
+      "id": "lubricant-barrel",
+      "time": 0.2,
+      "in": { "empty-barrel": 1, "lubricant": 50 },
+      "producers": ["assembling-machine-2", "assembling-machine-3"]
+    },
+    {
+      "id": "petroleum-gas-barrel",
+      "time": 0.2,
+      "in": { "empty-barrel": 1, "petroleum-gas": 50 },
+      "producers": ["assembling-machine-2", "assembling-machine-3"]
+    },
+    {
+      "id": "sulfuric-acid-barrel",
+      "time": 0.2,
+      "in": { "empty-barrel": 1, "sulfuric-acid": 50 },
+      "producers": ["assembling-machine-2", "assembling-machine-3"]
+    },
+    {
+      "id": "water-barrel",
+      "time": 0.2,
+      "in": { "empty-barrel": 1, "water": 50 },
+      "producers": ["assembling-machine-2", "assembling-machine-3"]
     }
   ]
 }

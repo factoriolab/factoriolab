@@ -1,4 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+
 import { Recipe, Item, DisplayRate } from '~/models';
 
 @Component({

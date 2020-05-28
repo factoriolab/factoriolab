@@ -1,4 +1,9 @@
-<img src="/assets/transparent.gif" [ngClass]="iconId" [class.scale]="scale" />
+<img
+  src="assets/transparent.gif"
+  class="icon"
+  [ngClass]="iconId"
+  [class.scale]="scale"
+/>
 <div *ngIf="text" class="icon-text">{{ text }}</div>
 <div *ngIf="recipe || item || tooltip" class="tooltip">
   <div *ngIf="tooltip" class="title nowrap">
@@ -13,7 +18,7 @@
         scale="true"
       ></lab-icon>
     </ng-container>
-    →
+    <i class="material-icons">arrow_forward</i>
     <ng-container *ngIf="recipe.out">
       <ng-container *ngFor="let output of recipe.out | keyvalue" class="flex">
         <lab-icon

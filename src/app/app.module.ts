@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { APP_BASE_HREF } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
@@ -8,19 +9,19 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
 import {
+  ProductsComponent,
+  ProductsContainerComponent,
+  SettingsComponent,
+  SettingsContainerComponent,
   HeaderComponent,
   IconComponent,
   PickerComponent,
   SelectComponent,
+  ListContainerComponent,
+  ListComponent,
+  HierarchyContainerComponent,
+  SunburstComponent,
 } from './components';
-import {
-  ProductsComponent,
-  ProductsContainerComponent,
-  StepsComponent,
-  StepsContainerComponent,
-  SettingsComponent,
-  SettingsContainerComponent,
-} from './containers';
 import { reducers, metaReducers } from './store';
 
 @NgModule({
@@ -30,10 +31,12 @@ import { reducers, metaReducers } from './store';
     IconComponent,
     PickerComponent,
     SelectComponent,
+    ListContainerComponent,
+    ListComponent,
+    HierarchyContainerComponent,
+    SunburstComponent,
     ProductsContainerComponent,
     ProductsComponent,
-    StepsContainerComponent,
-    StepsComponent,
     SettingsComponent,
     SettingsContainerComponent,
   ],
@@ -47,7 +50,7 @@ import { reducers, metaReducers } from './store';
       logOnly: environment.production,
     }),
   ],
-  providers: [],
+  providers: [{ provide: APP_BASE_HREF, useValue: environment.baseHref }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -460,6 +460,7 @@ export class OilUtility {
     for (const ingredient of Object.keys(matrix.oil.recipe.in)) {
       if (ingredient !== ItemId.HeavyOil) {
         RateUtility.addStepsFor(
+          null,
           ingredient as ItemId,
           step.heavy.factories.mul(matrix.oil.recipe.in[ingredient]),
           steps,
@@ -480,6 +481,7 @@ export class OilUtility {
       matrix.loc.recipe.in[ItemId.Water]
     );
     RateUtility.addStepsFor(
+      null,
       ItemId.Water,
       hocWater.add(locWater),
       steps,

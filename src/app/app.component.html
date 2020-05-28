@@ -2,6 +2,18 @@
 <lab-settings-container *ngIf="settingsOpen" (cancel)="toggleSettings()">
 </lab-settings-container>
 <main>
+  <ul role="navigation">
+    <li routerLink="/list" routerLinkActive="active" [fragment]="router.zip">
+      List
+    </li>
+    <li
+      routerLink="/hierarchy"
+      routerLinkActive="active"
+      [fragment]="router.zip"
+    >
+      Hierarchy
+    </li>
+  </ul>
   <lab-products-container></lab-products-container>
-  <lab-steps-container></lab-steps-container>
+  <router-outlet></router-outlet>
 </main>
