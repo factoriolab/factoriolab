@@ -60,7 +60,7 @@ export class SunburstComponent {
   }
 
   @Output() setNode = new EventEmitter<Node>();
-  @Output() setPath = new EventEmitter<Node[]>(true);
+  @Output() setPath = new EventEmitter<Node[]>();
 
   /** Use this to select the data object with this id  */
   public selectNode(id: string) {
@@ -198,34 +198,54 @@ export class SunburstComponent {
         this.clipMap[i] = 0;
         return;
       }
-      // Use a binary search style algorithm to find the perfect text length to fit in the path
-      const init = text.length - this.clipMap[i];
-      let lower = bIsTooLong ? min : init;
-      let upper = bIsTooLong ? init : text.length;
-      while (true) {
-        if (lower === upper) {
-          // If we get stuck like this, just clip to 0 and break out
-          svgTextPath.text('');
-          this.clipMap[i] = text.length;
+      this.binarySearch(
+        i,
+        bIsTooLong,
+        min,
+        text,
+        svgTextPath,
+        textPath,
+        pathLength
+      );
+    };
+  }
+
+  /** Binary search for optimal text length */
+  binarySearch(
+    i: number,
+    bIsTooLong: boolean,
+    min: number,
+    text: string,
+    svgTextPath: d3.Selection<d3.BaseType, {}, null, undefined>,
+    textPath: SVGTextPathElement,
+    pathLength: number
+  ) {
+    const init = text.length - this.clipMap[i];
+    let lower = bIsTooLong ? min : init;
+    let upper = bIsTooLong ? init : text.length;
+    while (true) {
+      if (lower === upper) {
+        // If we get stuck like this, just clip to 0 and break out
+        svgTextPath.text('');
+        this.clipMap[i] = text.length;
+        return;
+      }
+      const add = Math.round((upper - lower) / 2);
+      const mid = lower + add;
+      svgTextPath.text(`${text.substr(0, mid)}...`);
+      bIsTooLong = this.isTooLong(textPath, pathLength);
+      if (bIsTooLong) {
+        if (add === 1) {
+          const clip = text.length - mid + 1;
+          this.clipMap[i] = clip;
+          svgTextPath.text(`${text.substr(0, text.length - clip)}...`);
           return;
         }
-        const add = Math.round((upper - lower) / 2);
-        const mid = lower + add;
-        svgTextPath.text(`${text.substr(0, mid)}...`);
-        bIsTooLong = this.isTooLong(textPath, pathLength);
-        if (bIsTooLong) {
-          if (add === 1) {
-            const clip = text.length - mid + 1;
-            this.clipMap[i] = clip;
-            svgTextPath.text(`${text.substr(0, text.length - clip)}...`);
-            return;
-          }
-          upper = mid;
-        } else {
-          lower = mid;
-        }
+        upper = mid;
+      } else {
+        lower = mid;
       }
-    };
+    }
   }
 
   /** Get proper offset (orientation/flip) for node - 25% = up, 75% = down */
@@ -332,10 +352,7 @@ export class SunburstComponent {
       .attr('dy', (d, i) => {
         if (!offset) {
           const labelText = document.getElementById(`${this.id}-labelText${i}`);
-          if (labelText) {
-            offset =
-              parseFloat(window.getComputedStyle(labelText).fontSize) / 3;
-          }
+          offset = parseFloat(window.getComputedStyle(labelText).fontSize) / 3;
         }
         return offset;
       })
@@ -381,7 +398,6 @@ export class SunburstComponent {
       this.click(this.nodeMap[0]);
       return;
     }
-
     this.nodeId = dId;
 
     // Emit component events

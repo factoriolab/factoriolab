@@ -92,7 +92,7 @@ export const Steps = [Step1, Step2];
 export const Node1: Node = { ...Step1, ...{ id: 'id1', name: 'name1' } };
 export const Node2: Node = {
   ...Step1,
-  ...{ id: 'id2', name: 'name2', children: [Node1] },
+  ...{ id: 'id2', name: Array(1000).join('X'), children: [Node1] },
 };
 export const Node3 = { ...Step1, ...{ id: 'id3', name: 'name3' } };
 export const Root: Node = { id: 'root', children: [Node2, Node3] } as any;
