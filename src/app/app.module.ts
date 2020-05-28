@@ -50,7 +50,7 @@ import { reducers, metaReducers } from './store';
       logOnly: environment.production,
     }),
   ],
-  providers: [{ provide: APP_BASE_HREF, useValue: '/' }],
+  providers: [{ provide: APP_BASE_HREF, useValue: environment.baseHref }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
