@@ -21,5 +21,5 @@ jobs:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           REPOSITORY_NAME: factoriolab/staging
           BRANCH: master
-          FOLDER: dist/factorio-lab
+          FOLDER: dist
           CLEAN: true

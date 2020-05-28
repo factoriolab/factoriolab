@@ -19,5 +19,5 @@ jobs:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           REPOSITORY_NAME: factoriolab/factoriolab.github.io
           BRANCH: master
-          FOLDER: dist/factorio-lab
+          FOLDER: dist
           CLEAN: true
