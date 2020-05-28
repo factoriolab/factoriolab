@@ -103,7 +103,11 @@
             <lab-icon
               *ngIf="data.recipeEntities[step.recipeId]?.in"
               class="clickable"
-              title="Click to ignore"
+              [title]="
+                step.settings.ignore || recipe[step.itemId]?.ignore
+                  ? 'Click to include'
+                  : 'Click to ignore'
+              "
               [iconId]="step.itemId"
               [class.ignored]="
                 step.settings.ignore || recipe[step.itemId]?.ignore
@@ -345,52 +349,125 @@
           >
         </td>
       </tr>
-      <ng-container *ngIf="step.inputs && expanded[step.itemId]">
-        <tr
+      <ng-container *ngIf="step.recipeId && expanded[step.itemId]">
+        <ng-container
           *ngFor="
-            let input of step.inputs | keyvalue;
+            let input of data.recipeEntities[step.recipeId].in | keyvalue;
             first as isFirst;
             last as isLast
           "
-          class="details"
-          [class.first]="isFirst"
-          [class.last]="isLast"
         >
-          <td></td>
-          <td>
-            <div class="flex">
-              <div class="monospace">
-                {{ 0 }}
-              </div>
-              <lab-icon
-                class="clickable-size"
-                [iconId]="input.key"
-                [tooltip]="data.itemEntities[input.key]?.name"
-                [recipe]="data.recipeEntities[input.key]"
-                scale="true"
-              >
-              </lab-icon>
-            </div>
-          </td>
-          <td></td>
-          <td></td>
-          <td>
-            <div class="flex">
-              <div class="monospace">{{ rate(input.value.mul(100), 0) }}%</div>
-              <i class="material-icons">arrow_forward</i>
-              <lab-icon
-                class="clickable-size"
-                [iconId]="step.itemId"
-                [tooltip]="data.itemEntities[step.itemId]?.name"
-                [recipe]="data.recipeEntities[step.itemId]"
-                scale="true"
-              ></lab-icon>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-        </tr>
+          <ng-container *ngIf="findStep(input.key) as inStep">
+            <tr
+              *ngIf="inStep.parents && inStep.parents[step.itemId]"
+              class="details"
+              [class.first]="isFirst"
+              [class.last]="isLast"
+            >
+              <td></td>
+              <td>
+                <div class="flex">
+                  <div *ngIf="inStep.items" class="monospace">
+                    {{
+                      rate(
+                        inStep.items.mul(inStep.parents[step.itemId]),
+                        itemPrecision
+                      )
+                    }}
+                  </div>
+                  <lab-icon
+                    class="clickable-size"
+                    [iconId]="input.key"
+                    [tooltip]="data.itemEntities[input.key]?.name"
+                    [recipe]="data.recipeEntities[input.key]"
+                    scale="true"
+                  >
+                  </lab-icon>
+                </div>
+              </td>
+              <td>
+                <ng-container *ngIf="step.settings">
+                  <div
+                    *ngIf="
+                      inStep.settings.belt &&
+                      inStep.belts &&
+                      data.itemEntities[inStep.itemId].category !==
+                        CategoryId.Research
+                    "
+                    class="flex"
+                  >
+                    <div class="monospace">
+                      {{
+                        rate(
+                          inStep.belts.mul(inStep.parents[step.itemId]),
+                          beltPrecision
+                        )
+                      }}
+                    </div>
+                    <lab-icon
+                      class="clickable-size"
+                      [iconId]="inStep.settings.belt"
+                      [tooltip]="data.itemEntities[inStep.settings.belt].name"
+                      [item]="data.itemEntities[inStep.settings.belt]"
+                      [displayRate]="displayRate"
+                    ></lab-icon>
+                  </div>
+                </ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="inStep.settings?.factory">
+                  <div
+                    class="flex"
+                    *ngIf="!inStep.factories || inStep.factories.n > 0"
+                  >
+                    <div *ngIf="inStep.factories" class="monospace">
+                      {{
+                        rate(
+                          inStep.factories.mul(inStep.parents[step.itemId]),
+                          factoryPrecision
+                        )
+                      }}
+                    </div>
+                    <ng-container *ngIf="inStep.recipeId !== inStep.itemId">
+                      <lab-icon
+                        [iconId]="inStep.recipeId"
+                        [tooltip]="data.recipeEntities[inStep.recipeId].name"
+                        [recipe]="data.recipeEntities[inStep.recipeId]"
+                      ></lab-icon>
+                      :
+                    </ng-container>
+                    <lab-icon
+                      class="clickable-size"
+                      [iconId]="inStep.settings.factory"
+                      [tooltip]="
+                        data.itemEntities[inStep.settings.factory].name
+                      "
+                      [item]="data.itemEntities[inStep.settings.factory]"
+                    ></lab-icon>
+                  </div>
+                </ng-container>
+              </td>
+              <td>
+                <div class="flex">
+                  <div class="monospace">
+                    {{ rate(inStep.parents[step.itemId].mul(100), 0) }}%
+                  </div>
+                  <i class="material-icons">arrow_forward</i>
+                  <lab-icon
+                    class="clickable-size"
+                    [iconId]="step.itemId"
+                    [tooltip]="data.itemEntities[step.itemId]?.name"
+                    [recipe]="data.recipeEntities[step.itemId]"
+                    scale="true"
+                  ></lab-icon>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+          </ng-container>
+        </ng-container>
       </ng-container>
       <ng-container *ngIf="step.parents && expanded[step.itemId]">
         <tr
@@ -479,6 +556,9 @@
               ></lab-icon>
             </div>
           </td>
+        </tr>
+        <tr>
+          <td></td>
         </tr>
       </ng-container>
     </ng-container>

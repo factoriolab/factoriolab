@@ -14,5 +14,4 @@ export interface Step {
   belts?: Fraction;
   factories?: Fraction;
   parents?: Entities<Fraction>;
-  inputs?: Entities<Fraction>;
 }

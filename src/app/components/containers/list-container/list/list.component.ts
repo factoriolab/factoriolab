@@ -81,6 +81,10 @@ export class ListComponent {
 
   constructor(public router: RouterService) {}
 
+  findStep(id: ItemId) {
+    return this.steps.find((s) => s.itemId === id);
+  }
+
   rate(value: Fraction, precision: number) {
     if (precision == null) {
       return value.toFraction(true);

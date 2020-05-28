@@ -117,3 +117,9 @@ g {
     }
   }
 }
+
+.ignored {
+  > img {
+    opacity: 0.25;
+  }
+}
