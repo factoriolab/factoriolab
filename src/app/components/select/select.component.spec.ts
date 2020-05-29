@@ -82,8 +82,10 @@ describe('SelectComponent', () => {
 
   it('should select a new id', () => {
     spyOn(component, 'selectId');
+    spyOn(component, 'cancel');
     TestUtility.clickSelector(fixture, 'lab-icon', 1);
     fixture.detectChanges();
     expect(component.selectId).toHaveBeenCalledWith(ItemId.AssemblingMachine2);
+    expect(component.cancel).toHaveBeenCalled();
   });
 });
