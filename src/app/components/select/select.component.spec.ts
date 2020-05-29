@@ -59,6 +59,13 @@ describe('SelectComponent', () => {
     expect(component.child.opening).toEqual(false);
   });
 
+  it('should cancel', () => {
+    spyOn(component, 'cancel');
+    TestUtility.clickSelector(fixture, 'i', 0);
+    fixture.detectChanges();
+    expect(component.cancel).toHaveBeenCalled();
+  });
+
   it('should cancel when clicked away', () => {
     spyOn(component, 'cancel');
     component.child.opening = false;

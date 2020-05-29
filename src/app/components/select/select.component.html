@@ -1,10 +1,22 @@
 <div class="flex" *ngFor="let row of options[optionsType]">
+  <i
+    class="clickable material-icons"
+    title="Cancel"
+    (click)="clickCancel($event)"
+    >close</i
+  >
   <ng-container *ngFor="let id of row">
     <lab-icon
       class="clickable"
       *ngIf="selectType === IdType.Item"
       [iconId]="id"
-      [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"
+      [tooltip]="
+        data.itemEntities[id]
+          ? data.itemEntities[id].name
+          : id === ItemId.Module
+          ? 'No Module'
+          : null
+      "
       [item]="data.itemEntities[id]"
       [displayRate]="displayRate"
       [class.selected]="id === selectedId"
