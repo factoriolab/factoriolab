@@ -8,6 +8,7 @@
       [item]="data.itemEntities[id]"
       [displayRate]="displayRate"
       [class.selected]="id === selectedId"
+      [data]="data"
       (click)="clickId(id, $event)"
     ></lab-icon>
     <lab-icon
@@ -17,6 +18,7 @@
       [tooltip]="data.recipeEntities[id].name"
       [recipe]="data.recipeEntities[id]"
       [class.selected]="id === selectedId"
+      [data]="data"
       (click)="clickId(id, $event)"
     ></lab-icon>
   </ng-container>

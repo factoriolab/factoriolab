@@ -2,11 +2,17 @@
   class="header-settings"
   title="Settings"
   [id]="Id.HeaderSettings"
+  [data]="data"
   tooltip="Settings"
   iconId="iron-gear-wheel"
   (click)="toggleSettings.emit()"
 ></lab-icon>
-<lab-icon class="header-logo" [id]="Id.HeaderIcon" iconId="lab"> </lab-icon>
+<lab-icon
+  class="header-logo"
+  [id]="Id.HeaderIcon"
+  iconId="lab"
+  [data]="data"
+></lab-icon>
 <a class="header-github" href="https://github.com/factoriolab/factorio-lab">
   <img src="assets/GitHub.png" alt="GitHub" title="GitHub" />
 </a>

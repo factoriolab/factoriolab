@@ -4,6 +4,7 @@
     [iconId]="category.id"
     [tooltip]="category.name"
     [class.selected]="category.id === categoryId"
+    [data]="data"
     (click)="selectTab.emit(category.id)"
   ></lab-icon>
 </div>
@@ -16,6 +17,7 @@
         [tooltip]="data.itemEntities[id].name"
         [recipe]="data.recipeEntities[id]"
         [class.selected]="id === itemId"
+        [data]="data"
         (click)="clickItem(id)"
       ></lab-icon>
     </div>

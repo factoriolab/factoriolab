@@ -36,8 +36,8 @@ enum OpenSelect {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent {
-  @Input() data: DatasetState;
   @Input() settings: SettingsState;
+  @Input() data: DatasetState;
 
   @Output() setDisplayRate = new EventEmitter<DisplayRate>();
   @Output() setItemPrecision = new EventEmitter<number>();
