@@ -7,12 +7,8 @@
   iconId="iron-gear-wheel"
   (click)="toggleSettings.emit()"
 ></lab-icon>
-<lab-icon
-  class="header-logo"
-  [id]="Id.HeaderIcon"
-  iconId="lab"
-  [data]="data"
-></lab-icon>
+<img [id]="Id.HeaderIcon" title="Factorio Lab" src="assets/logo.png" />
+<div class="header-spacer"></div>
 <a class="header-github" href="https://github.com/factoriolab/factorio-lab">
   <img src="assets/GitHub.png" alt="GitHub" title="GitHub" />
 </a>

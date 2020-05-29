@@ -6,13 +6,19 @@
 </lab-settings-container>
 <main>
   <ul role="navigation">
-    <li routerLink="/list" routerLinkActive="active" [fragment]="router.zip">
+    <li
+      routerLink="/list"
+      routerLinkActive="active"
+      [fragment]="router.zip"
+      title="View as list of steps"
+    >
       List
     </li>
     <li
       routerLink="/hierarchy"
       routerLinkActive="active"
       [fragment]="router.zip"
+      title="View as sunburst hierarchy"
     >
       Hierarchy
     </li>

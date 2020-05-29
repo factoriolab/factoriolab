@@ -72,6 +72,12 @@ describe('SettingsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should watch the scroll position', () => {
+    const scrollTop = 10;
+    component.child.scroll({ target: { scrollTop } } as any);
+    expect(component.child.scrollTop).toEqual(scrollTop);
+  });
+
   it('should emit numeric settings', () => {
     spyOn(component, 'setItemPrecision');
     TestUtility.selectId(fixture, Id.SettingsPrecisionItemValue, '3');

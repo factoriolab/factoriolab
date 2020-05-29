@@ -8,7 +8,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { OptionsType, IdType, options, DisplayRate } from '~/models';
+import { OptionsType, IdType, options, DisplayRate, ItemId } from '~/models';
 import { DatasetState } from '~/store/dataset';
 
 @Component({
@@ -30,6 +30,7 @@ export class SelectComponent {
   options = options;
 
   IdType = IdType;
+  ItemId = ItemId;
 
   opening = true;
 
@@ -45,9 +46,11 @@ export class SelectComponent {
   }
 
   clickId(id: string, event: MouseEvent) {
-    if (id !== this.selectedId) {
-      this.selectId.emit(id);
-    }
+    this.selectId.emit(id);
+    event.stopPropagation();
+  }
+
+  clickCancel(event: MouseEvent) {
     this.cancel.emit();
     event.stopPropagation();
   }

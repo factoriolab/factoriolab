@@ -4,6 +4,7 @@ import {
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
+  HostListener,
 } from '@angular/core';
 
 import {
@@ -59,6 +60,7 @@ export class SettingsComponent {
   @Output() setExpensive = new EventEmitter<boolean>();
 
   openSelect = OpenSelect.None;
+  scrollTop = 0;
 
   DisplayRate = DisplayRate;
   ItemId = ItemId;
@@ -68,6 +70,11 @@ export class SettingsComponent {
   SelectType = IdType;
 
   initial = initialSettingsState;
+
+  @HostListener('scroll', ['$event'])
+  scroll(event: Event) {
+    this.scrollTop = (event.target as HTMLElement).scrollTop;
+  }
 
   constructor() {}
 
