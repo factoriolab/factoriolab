@@ -1,5 +1,6 @@
-<div class="flex" *ngFor="let row of options[optionsType]">
+<div class="flex" *ngFor="let row of options[optionsType]; first as isFirst">
   <i
+    *ngIf="isFirst"
     class="clickable material-icons"
     title="Cancel"
     (click)="clickCancel($event)"

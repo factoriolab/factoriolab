@@ -46,10 +46,7 @@ export class SelectComponent {
   }
 
   clickId(id: string, event: MouseEvent) {
-    if (id !== this.selectedId) {
-      this.selectId.emit(id);
-    }
-    this.cancel.emit();
+    this.selectId.emit(id);
     event.stopPropagation();
   }
 

@@ -359,7 +359,13 @@
           >
         </td>
       </tr>
-      <ng-container *ngIf="step.recipeId && expanded[step.itemId]">
+      <ng-container
+        *ngIf="
+          step.recipeId &&
+          data.recipeEntities[step.recipeId] &&
+          expanded[step.itemId]
+        "
+      >
         <ng-container
           *ngFor="
             let input of data.recipeEntities[step.recipeId].in | keyvalue;
