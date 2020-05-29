@@ -1,9 +1,11 @@
-import { Item } from './item';
 import { Category } from './category';
+import { Icon } from './icon';
+import { Item } from './item';
 import { Recipe } from './recipe';
 
 export interface Dataset {
-  items: Item[];
   categories: Category[];
+  icons: Icon[];
+  items: Item[];
   recipes: Recipe[];
 }

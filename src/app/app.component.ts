@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 import * as data from 'src/assets/0.18/data.json';
 import { ItemId } from './models';
 import { RouterService } from './services/router.service';
 import { State } from './store';
-import { LoadDatasetAction } from './store/dataset';
+import {
+  LoadDatasetAction,
+  DatasetState,
+  getDatasetState,
+} from './store/dataset';
 import { getZipState, AddAction } from './store/products';
 
 @Component({
@@ -16,6 +21,8 @@ import { getZipState, AddAction } from './store/products';
 export class AppComponent implements OnInit {
   settingsOpen: boolean;
 
+  data$: Observable<DatasetState>;
+
   constructor(public router: RouterService, private store: Store<State>) {
     this.store.dispatch(new LoadDatasetAction((data as any).default));
     if (!location.hash) {
@@ -24,6 +31,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.data$ = this.store.select(getDatasetState);
     this.store.select(getZipState).subscribe((s) => {
       this.router.updateUrl(s.products, s.recipe, s.settings, s.data);
     });

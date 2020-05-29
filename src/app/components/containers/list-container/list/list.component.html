@@ -114,6 +114,7 @@
               "
               [tooltip]="data.itemEntities[step.itemId]?.name"
               [recipe]="data.recipeEntities[step.itemId]"
+              [data]="data"
               scale="true"
               (click)="ignoreStep.emit(step.recipeId)"
             ></lab-icon>
@@ -122,6 +123,7 @@
               class="clickable-size"
               [iconId]="step.itemId"
               [tooltip]="data.itemEntities[step.itemId]?.name"
+              [data]="data"
               scale="true"
             ></lab-icon>
           </div>
@@ -152,6 +154,7 @@
                   [tooltip]="data.itemEntities[step.settings.belt].name"
                   [item]="data.itemEntities[step.settings.belt]"
                   [displayRate]="displayRate"
+                  [data]="data"
                 ></lab-icon>
               </ng-template>
               <ng-template #beltPicker>
@@ -163,6 +166,7 @@
                     [tooltip]="data.itemEntities[step.settings.belt].name"
                     [item]="data.itemEntities[step.settings.belt]"
                     [displayRate]="displayRate"
+                    [data]="data"
                     (click)="edit = { step: step, type: StepEditType.Belt }"
                   ></lab-icon>
                   <lab-select
@@ -195,6 +199,7 @@
                   [iconId]="step.recipeId"
                   [tooltip]="data.recipeEntities[step.recipeId].name"
                   [recipe]="data.recipeEntities[step.recipeId]"
+                  [data]="data"
                 ></lab-icon>
                 :
               </ng-container>
@@ -217,6 +222,7 @@
                   [iconId]="step.settings.factory"
                   [tooltip]="data.itemEntities[step.settings.factory].name"
                   [item]="data.itemEntities[step.settings.factory]"
+                  [data]="data"
                 ></lab-icon>
               </ng-template>
               <ng-template #factoryPicker>
@@ -227,6 +233,7 @@
                     [iconId]="step.settings.factory"
                     [tooltip]="data.itemEntities[step.settings.factory].name"
                     [item]="data.itemEntities[step.settings.factory]"
+                    [data]="data"
                     (click)="edit = { step: step, type: StepEditType.Factory }"
                   ></lab-icon>
                   <lab-select
@@ -266,6 +273,7 @@
                   [iconId]="mod"
                   [tooltip]="data.itemEntities[mod]?.name"
                   [item]="data.itemEntities[mod]"
+                  [data]="data"
                   (click)="
                     edit = { step: step, type: StepEditType.Module, index: i }
                   "
@@ -284,6 +292,7 @@
                       ? OptionsType.AllModule
                       : OptionsType.SpeedModule
                   "
+                  [data]="data"
                   (cancel)="edit = null"
                   (selectId)="factoryModuleChange(step, $event, i)"
                 >
@@ -304,6 +313,7 @@
                     data.itemEntities[step.settings.beaconModule]?.name
                   "
                   [item]="data.itemEntities[step.settings.beaconModule]"
+                  [data]="data"
                   (click)="edit = { step: step, type: StepEditType.Beacon }"
                 ></lab-icon>
                 <lab-select
@@ -380,6 +390,7 @@
                     [iconId]="input.key"
                     [tooltip]="data.itemEntities[input.key]?.name"
                     [recipe]="data.recipeEntities[input.key]"
+                    [data]="data"
                     scale="true"
                   >
                   </lab-icon>
@@ -410,6 +421,7 @@
                       [tooltip]="data.itemEntities[inStep.settings.belt].name"
                       [item]="data.itemEntities[inStep.settings.belt]"
                       [displayRate]="displayRate"
+                      [data]="data"
                     ></lab-icon>
                   </div>
                 </ng-container>
@@ -433,6 +445,7 @@
                         [iconId]="inStep.recipeId"
                         [tooltip]="data.recipeEntities[inStep.recipeId].name"
                         [recipe]="data.recipeEntities[inStep.recipeId]"
+                        [data]="data"
                       ></lab-icon>
                       :
                     </ng-container>
@@ -443,6 +456,7 @@
                         data.itemEntities[inStep.settings.factory].name
                       "
                       [item]="data.itemEntities[inStep.settings.factory]"
+                      [data]="data"
                     ></lab-icon>
                   </div>
                 </ng-container>
@@ -458,6 +472,7 @@
                     [iconId]="step.itemId"
                     [tooltip]="data.itemEntities[step.itemId]?.name"
                     [recipe]="data.recipeEntities[step.itemId]"
+                    [data]="data"
                     scale="true"
                   ></lab-icon>
                 </div>
@@ -491,6 +506,7 @@
                 [iconId]="step.itemId"
                 [tooltip]="data.itemEntities[step.itemId]?.name"
                 [recipe]="data.recipeEntities[step.itemId]"
+                [data]="data"
                 scale="true"
               >
               </lab-icon>
@@ -516,6 +532,7 @@
                   [tooltip]="data.itemEntities[step.settings.belt].name"
                   [item]="data.itemEntities[step.settings.belt]"
                   [displayRate]="displayRate"
+                  [data]="data"
                 ></lab-icon>
               </div>
             </ng-container>
@@ -531,6 +548,7 @@
                     [iconId]="step.recipeId"
                     [tooltip]="data.recipeEntities[step.recipeId].name"
                     [recipe]="data.recipeEntities[step.recipeId]"
+                    [data]="data"
                   ></lab-icon>
                   :
                 </ng-container>
@@ -539,6 +557,7 @@
                   [iconId]="step.settings.factory"
                   [tooltip]="data.itemEntities[step.settings.factory].name"
                   [item]="data.itemEntities[step.settings.factory]"
+                  [data]="data"
                 ></lab-icon>
               </div>
             </ng-container>
@@ -552,6 +571,7 @@
                 [iconId]="parent.key"
                 [tooltip]="data.itemEntities[parent.key]?.name"
                 [recipe]="data.recipeEntities[parent.key]"
+                [data]="data"
                 scale="true"
               ></lab-icon>
             </div>

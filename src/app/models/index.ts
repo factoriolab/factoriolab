@@ -6,6 +6,7 @@ export * from './display-rate';
 export * from './entities';
 export * from './factors';
 export * from './factory';
+export * from './icon';
 export * from './id';
 export * from './id-type';
 export * from './item';

@@ -1,17 +1,21 @@
 import { Item, Category, Recipe, Entities, ItemId, NEntities } from '~/models';
 import { DatasetAction, DatasetActionType } from './dataset.actions';
+import { Icon } from '~/models/icon';
 
 export interface DatasetState {
+  categories: Category[];
+  categoryIds: string[];
+  categoryEntities: Entities<Category>;
+  categoryItemRows: Entities<string[][]>;
+  icons: Icon[];
+  iconIds: string[];
+  iconEntities: Entities<Icon>;
   items: Item[];
   itemIds: string[];
   itemEntities: Entities<Item>;
   itemN: Entities<number>;
   itemI: NEntities<string>;
   beltIds: ItemId[];
-  categories: Category[];
-  categoryIds: string[];
-  categoryEntities: Entities<Category>;
-  categoryItemRows: Entities<string[][]>;
   recipes: Recipe[];
   recipeIds: string[];
   recipeEntities: Entities<Recipe>;
@@ -20,16 +24,19 @@ export interface DatasetState {
 }
 
 export const initialDatasetState: DatasetState = {
+  categories: [],
+  categoryIds: [],
+  categoryEntities: {},
+  categoryItemRows: {},
+  icons: [],
+  iconIds: [],
+  iconEntities: {},
   items: [],
   itemIds: [],
   itemEntities: {},
   itemN: {},
   itemI: {},
   beltIds: [],
-  categories: [],
-  categoryIds: [],
-  categoryEntities: {},
-  categoryItemRows: {},
   recipes: [],
   recipeIds: [],
   recipeEntities: {},
@@ -82,6 +89,20 @@ export function datasetReducer(
       }
 
       return {
+        categories: action.payload.categories,
+        categoryIds: action.payload.categories.map((c) => c.id),
+        categoryEntities: action.payload.categories.reduce(
+          (e: Entities<Category>, c) => {
+            return { ...e, ...{ [c.id]: c } };
+          },
+          {}
+        ),
+        categoryItemRows,
+        icons: action.payload.icons,
+        iconIds: action.payload.icons.map((i) => i.id),
+        iconEntities: action.payload.icons.reduce((e: Entities<Icon>, c) => {
+          return { ...e, ...{ [c.id]: c } };
+        }, {}),
         items: action.payload.items,
         itemIds: action.payload.items.map((i) => i.id),
         itemEntities,
@@ -94,15 +115,6 @@ export function datasetReducer(
         beltIds: action.payload.items
           .filter((i) => i.belt || i.id === ItemId.Pipe)
           .map((i) => i.id),
-        categories: action.payload.categories,
-        categoryIds: action.payload.categories.map((c) => c.id),
-        categoryEntities: action.payload.categories.reduce(
-          (e: Entities<Category>, c) => {
-            return { ...e, ...{ [c.id]: c } };
-          },
-          {}
-        ),
-        categoryItemRows,
         recipes,
         recipeIds: recipes.map((r) => r.id),
         recipeEntities: recipes.reduce((e: Entities<Recipe>, r) => {
