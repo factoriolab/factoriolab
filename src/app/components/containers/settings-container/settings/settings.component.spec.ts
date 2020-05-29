@@ -2,8 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
+import * as Mocks from 'src/mocks';
 import { IconComponent } from '~/components';
-import { Id, DisplayRate } from '~/models';
+import { Id } from '~/models';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 import { TestUtility } from '~/utilities/test';
 import { SettingsComponent } from './settings.component';
@@ -12,8 +13,8 @@ import { SettingsComponent } from './settings.component';
   selector: 'lab-test-settings',
   template: `
     <lab-settings
-      [data]="data"
       [settings]="settings"
+      [data]="data"
       (setDisplayRate)="setDisplayRate($event)"
       (setItemPrecision)="setItemPrecision($event)"
       (setBeltPrecision)="setBeltPrecision($event)"
@@ -34,6 +35,7 @@ import { SettingsComponent } from './settings.component';
 class TestSettingsComponent {
   @ViewChild(SettingsComponent) child: SettingsComponent;
   settings: SettingsState = initialSettingsState;
+  data = Mocks.Data;
   setDisplayRate(data) {}
   setItemPrecision(data) {}
   setBeltPrecision(data) {}
