@@ -3,6 +3,7 @@
   src="assets/transparent.gif"
   class="icon"
   [style.background-position]="icon.position"
+  [style.background-image]="icon.file ? 'url(' + icon.file + ')' : ''"
   [ngClass]="icon.size ? 'size-' + icon.size : ''"
   [class.scale]="scale"
 />

@@ -80,6 +80,20 @@ img.icon {
       margin: 0 calc(-64px * 0.5) calc(-64px * 0.5) 0;
     }
   }
+
+  &.size-128 {
+    height: 128px;
+    width: 128px;
+    transform: scale(0.5);
+    transform-origin: 0 0;
+    margin: 0 calc(-128px * 0.5) calc(-128px * 0.5) 0;
+
+    &.scale {
+      transform: scale(0.25);
+      transform-origin: 0 0;
+      margin: 0 calc(-128px * 0.75) calc(-128px * 0.75) 0;
+    }
+  }
 }
 
 .clickable {
