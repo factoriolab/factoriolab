@@ -60,7 +60,11 @@
 </div>
 <div class="label">Precision</div>
 <div class="field">
-  <lab-icon iconId="iron-plate" tooltip="Items Precision"></lab-icon>
+  <lab-icon
+    iconId="iron-plate"
+    tooltip="Items Precision"
+    [data]="data"
+  ></lab-icon>
   <div class="flex">
     <input
       id="settings-precision-item-decimals"
@@ -101,7 +105,11 @@
   </div>
 </div>
 <div class="field">
-  <lab-icon iconId="transport-belt" tooltip="Belts Precision"></lab-icon>
+  <lab-icon
+    iconId="transport-belt"
+    tooltip="Belts Precision"
+    [data]="data"
+  ></lab-icon>
   <div class="flex">
     <input
       id="settings-precision-belt-decimals"
@@ -141,6 +149,7 @@
 </div>
 <div class="field">
   <lab-icon
+    [data]="data"
     iconId="assembling-machine-1"
     tooltip="Factories Precision"
   ></lab-icon>
@@ -189,6 +198,7 @@
         class="clickable"
         tooltip="Choose default belt"
         [iconId]="settings.belt"
+        [data]="data"
         (click)="openSelect = OpenSelect.Belt"
       ></lab-icon>
       <lab-select
@@ -197,6 +207,7 @@
         [selectedId]="settings.belt"
         [optionsType]="OptionsType.Belt"
         [displayRate]="settings.displayRate"
+        [data]="data"
         (cancel)="openSelect = OpenSelect.None"
         (selectId)="setBelt.emit($event)"
       >
@@ -209,6 +220,7 @@
         class="clickable"
         tooltip="Choose default assembler"
         [iconId]="settings.assembler"
+        [data]="data"
         (click)="openSelect = OpenSelect.Assembler"
       ></lab-icon>
       <lab-select
@@ -228,6 +240,7 @@
         class="clickable"
         tooltip="Choose default furnace"
         [iconId]="settings.furnace"
+        [data]="data"
         (click)="openSelect = OpenSelect.Furnace"
       ></lab-icon>
       <lab-select
@@ -247,6 +260,7 @@
         class="clickable"
         tooltip="Choose oil recipe"
         [iconId]="settings.oilRecipe"
+        [data]="data"
         (click)="openSelect = OpenSelect.OilRecipe"
       ></lab-icon>
       <lab-select
@@ -267,6 +281,7 @@
         class="clickable"
         tooltip="Choose fuel"
         [iconId]="settings.fuel"
+        [data]="data"
         (click)="openSelect = OpenSelect.Fuel"
       ></lab-icon>
       <lab-select
@@ -282,7 +297,11 @@
   </div>
 </div>
 <div class="field">
-  <lab-icon [iconId]="ItemId.Pipe" tooltip="Pipe flow rate"></lab-icon>
+  <lab-icon
+    [iconId]="ItemId.Pipe"
+    tooltip="Pipe flow rate"
+    [data]="data"
+  ></lab-icon>
   <input
     type="number"
     title="Enter pipe flow rate"
@@ -307,6 +326,7 @@
         class="clickable"
         tooltip="Choose default productivity module"
         [iconId]="settings.prodModule"
+        [data]="data"
         (click)="openSelect = OpenSelect.ProdModule"
       ></lab-icon>
       <lab-select
@@ -326,6 +346,7 @@
         class="clickable"
         tooltip="Choose default speed module"
         [iconId]="settings.speedModule"
+        [data]="data"
         (click)="openSelect = OpenSelect.SpeedModule"
       ></lab-icon>
       <lab-select
@@ -339,13 +360,14 @@
       </lab-select>
     </div>
   </div>
-  <lab-icon [iconId]="ItemId.Beacon"></lab-icon>
+  <lab-icon [iconId]="ItemId.Beacon" [data]="data"></lab-icon>
   <div class="select-container">
     <div>
       <lab-icon
         class="clickable"
         tooltip="Choose default beacon module"
         [iconId]="settings.beaconModule"
+        [data]="data"
         (click)="openSelect = OpenSelect.BeaconModule"
       ></lab-icon>
       <lab-select
@@ -376,11 +398,13 @@
   >
     <lab-icon
       [iconId]="ItemId.MiningProductivity"
+      [data]="data"
       tooltip="Toggle drill modules"
       [scale]="true"
     ></lab-icon>
     <lab-icon
       [iconId]="settings.drillModule ? ItemId.SpeedModule3 : ItemId.Module"
+      [data]="data"
       tooltip="Toggle drill modules"
     ></lab-icon>
   </div>
@@ -389,6 +413,7 @@
 <div class="field">
   <lab-icon
     [iconId]="ItemId.MiningProductivity"
+    [data]="data"
     tooltip="Mining Productivity Bonus"
     [scale]="true"
   ></lab-icon>
@@ -409,6 +434,7 @@
 <div class="field">
   <lab-icon
     [iconId]="ItemId.Lab"
+    [data]="data"
     tooltip="Research Speed Bonus"
     [scale]="true"
   ></lab-icon>

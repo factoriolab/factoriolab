@@ -1,4 +1,7 @@
-<lab-header (toggleSettings)="toggleSettings()"></lab-header>
+<lab-header
+  [data]="data$ | async"
+  (toggleSettings)="toggleSettings()"
+></lab-header>
 <lab-settings-container *ngIf="settingsOpen" (cancel)="toggleSettings()">
 </lab-settings-container>
 <main>

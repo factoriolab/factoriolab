@@ -1,7 +1,10 @@
 <img
+  *ngIf="data.iconEntities[iconId] as icon"
   src="assets/transparent.gif"
   class="icon"
-  [ngClass]="iconId"
+  [style.background-position]="icon.position"
+  [style.background-image]="icon.file ? 'url(' + icon.file + ')' : ''"
+  [ngClass]="icon.size ? 'size-' + icon.size : ''"
   [class.scale]="scale"
 />
 <div *ngIf="text" class="icon-text">{{ text }}</div>
@@ -10,11 +13,12 @@
     {{ tooltip }}
   </div>
   <div *ngIf="recipe" class="flex">
-    <lab-icon iconId="time" [text]="recipe.time"></lab-icon>
+    <lab-icon iconId="time" [text]="recipe.time" [data]="data"></lab-icon>
     <ng-container *ngFor="let ingredient of recipe.in | keyvalue">
       <lab-icon
         [iconId]="ingredient.key"
         [text]="ingredient.value"
+        [data]="data"
         scale="true"
       ></lab-icon>
     </ng-container>
@@ -24,6 +28,7 @@
         <lab-icon
           [iconId]="output.key"
           [text]="output.value"
+          [data]="data"
           scale="true"
         ></lab-icon>
       </ng-container>
@@ -32,6 +37,7 @@
       *ngIf="!recipe.out"
       [iconId]="iconId"
       [text]="1"
+      [data]="data"
       scale="true"
     ></lab-icon>
   </div>

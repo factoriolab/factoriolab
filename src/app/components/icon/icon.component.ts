@@ -1,6 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
-import { Recipe, Item, DisplayRate } from '~/models';
+import { Recipe, Item, DisplayRate, Icon, RecipeId, ItemId } from '~/models';
+import { DatasetState } from '~/store/dataset';
 
 @Component({
   selector: 'lab-icon',
@@ -9,9 +10,10 @@ import { Recipe, Item, DisplayRate } from '~/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconComponent {
-  @Input() iconId: string;
+  @Input() iconId: ItemId | RecipeId;
   @Input() scale: boolean;
   @Input() text: string;
+  @Input() data: DatasetState;
 
   @Input() tooltip: string;
   @Input() recipe: Recipe;
