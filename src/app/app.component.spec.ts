@@ -9,11 +9,12 @@ import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
-import { Id, ItemId } from './models';
+import { Id, ItemId, Theme } from './models';
 import { RouterService } from './services/router.service';
 import { State, reducers, metaReducers } from './store';
 import { getDatasetState, DatasetState } from './store/dataset';
 import * as Products from './store/products';
+import * as Settings from './store/settings';
 import { TestUtility } from './utilities/test';
 import {
   HeaderComponent,
@@ -117,5 +118,13 @@ describe('AppComponent', () => {
     document.body.click();
     document.body.click();
     expect(component.settingsOpen).toBe(false);
+  });
+
+  it('should update theme when theme changed', () => {
+    TestBed.createComponent(AppComponent);
+    store.dispatch(new Settings.SetTheme(Theme.LightMode));
+    fixture.detectChanges();
+
+    expect(document.body.className).toBe(Theme.LightMode);
   });
 });

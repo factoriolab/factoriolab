@@ -28,6 +28,7 @@ import { SettingsComponent } from './settings.component';
       (setSpeedModule)="setSpeedModule($event)"
       (setBeaconModule)="setBeaconModule($event)"
       (setBeaconCount)="setBeaconCount($event)"
+      (setTheme)="setTheme($event)"
     >
     </lab-settings>
   `,
@@ -49,6 +50,7 @@ class TestSettingsComponent {
   setSpeedModule(data) {}
   setBeaconModule(data) {}
   setBeaconCount(data) {}
+  setTheme(data) {}
 }
 
 describe('SettingsComponent', () => {
