@@ -42,7 +42,6 @@ export const initialSettingsState: SettingsState = {
   researchSpeed: ResearchSpeed.Speed6,
   flowRate: 1500,
   expensive: false,
-  theme: Theme.DarkMode,
 };
 
 export function settingsReducer(

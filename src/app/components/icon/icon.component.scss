@@ -56,3 +56,7 @@
     -1px 0px 1px #000;
   pointer-events: none;
 }
+
+.module {
+  filter: var(--module-icon-filter);
+}

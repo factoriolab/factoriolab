@@ -121,7 +121,6 @@ describe('AppComponent', () => {
   });
 
   it('should update theme when theme changed', () => {
-    TestBed.createComponent(AppComponent);
     store.dispatch(new Settings.SetTheme(Theme.LightMode));
     fixture.detectChanges();
 

@@ -1,7 +1,7 @@
 $color-white: #fff;
 $color-gray-0: #bbb;
 $color-gray-1: #333;
-$color-gray-2: #2A2A2A;
+$color-gray-2: #2a2a2a;
 $color-black: #000;
 
 $color-brand: #ff7200;
@@ -9,7 +9,8 @@ $color-back: #171717;
 $color-font: #c8c8c8;
 $color-invalid: #ff0000;
 
-:root, .dark-mode {
+:root,
+.dark-mode {
   --color-white: #{$color-white};
   --color-gray-0: #{$color-gray-0};
   --color-gray-1: #{$color-gray-1};
@@ -23,14 +24,16 @@ $color-invalid: #ff0000;
 }
 
 @mixin light-mode {
-    --color-white: #{invert($color-white)};
-    --color-gray-0: #{invert($color-gray-0)};
-    --color-gray-1: #d5d5d5;
-    --color-gray-2: #e8e8e8;
-    --color-black: #{invert($color-black)};
+  --color-white: #{invert($color-white)};
+  --color-gray-0: #{invert($color-gray-0)};
+  --color-gray-1: #d5d5d5;
+  --color-gray-2: #e8e8e8;
+  --color-black: #{invert($color-black)};
 
-    --color-back: #fff;
-    --color-font: #{invert($color-font)};
+  --color-back: #fff;
+  --color-font: #{invert($color-font)};
+
+  --module-icon-filter: invert(100%);
 }
 
 .light-mode {

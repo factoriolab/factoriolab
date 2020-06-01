@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { Component, OnInit, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -13,7 +14,6 @@ import {
 } from './store/dataset';
 import * as Settings from '~/store/settings';
 import { getZipState, AddAction } from './store/products';
-import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'lab-root',
@@ -25,7 +25,11 @@ export class AppComponent implements OnInit {
 
   data$: Observable<DatasetState>;
 
-  constructor(public router: RouterService, private store: Store<State>, @Inject(DOCUMENT) private document: Document) {
+  constructor(
+    public router: RouterService,
+    private store: Store<State>,
+    @Inject(DOCUMENT) private document: Document
+  ) {
     this.store.dispatch(new LoadDatasetAction((data as any).default));
     if (!location.hash) {
       this.store.dispatch(new AddAction(ItemId.WoodenChest));

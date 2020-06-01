@@ -455,6 +455,7 @@
 <div class="label">Theme</div>
 <div class="field">
   <select
+    id="settings-theme-select"
     title="Choose Factorio Lab theme"
     [ngModel]="settings.theme"
     (change)="emitAny(setTheme, $event)"
