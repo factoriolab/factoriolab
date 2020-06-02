@@ -1,7 +1,5 @@
-@import 'values';
-
 :host {
-  background-color: $color-gray-1;
+  background-color: var(--color-gray-1);
   z-index: 1;
   padding: 1rem;
   flex-grow: 1;
@@ -23,7 +21,7 @@ label {
 
   &:hover {
     > * {
-      color: $color-brand;
+      color: var(--color-brand);
     }
   }
 }
@@ -32,7 +30,7 @@ label {
   font-weight: bold;
   font-size: 0.75rem;
   padding: 0.5rem 0;
-  color: $color-brand;
+  color: var(--color-brand);
 }
 
 lab-icon {
@@ -49,7 +47,7 @@ lab-icon {
 }
 
 a {
-  color: $color-brand;
+  color: var(--color-brand);
 }
 
 .select-container {

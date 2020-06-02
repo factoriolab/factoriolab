@@ -5,8 +5,8 @@ $font-family-monospace: 'Courier New', Courier, monospace;
 
 body {
   margin: 0;
-  background-color: $color-back;
-  color: $color-font;
+  background-color: var(--color-back);
+  color: var(--color-font);
   font-family: $font-family;
   overflow: hidden;
   box-sizing: border-box;
@@ -21,25 +21,25 @@ body {
 button,
 input,
 select {
-  color: $color-font;
-  background-color: $color-gray-2;
+  color: var(--color-font);
+  background-color: var(--color-gray-2);
   border-radius: 0.25rem;
 
   &:not([disabled]):hover {
-    border-color: $color-brand;
-    color: $color-brand;
+    border-color: var(--color-brand);
+    color: var(--color-brand);
   }
 }
 
 button {
-  border-color: $color-font;
+  border-color: var(--color-font);
   cursor: pointer;
   user-select: none;
 
   &:focus,
   &:active {
     outline: none;
-    border-color: $color-brand;
+    border-color: var(--color-brand);
   }
 }
 
@@ -60,7 +60,7 @@ input {
   }
 
   &:invalid {
-    border-color: $color-invalid;
+    border-color: var(--color-invalid);
   }
 }
 
@@ -103,10 +103,10 @@ img.icon {
   user-select: none;
 
   &:hover {
-    background-color: $color-brand;
+    background-color: var(--color-brand);
 
     &.material-icons {
-      color: $color-black;
+      color: var(--color-black);
     }
   }
 }
@@ -131,20 +131,20 @@ img.icon {
 }
 
 textPath {
-  fill: $color-font;
+  fill: var(--color-font);
 }
 
 g {
   path.arc {
-    stroke: $color-brand;
-    fill: $color-gray-2;
+    stroke: var(--color-brand);
+    fill: var(--color-gray-2);
 
     &:hover {
-      fill: $color-gray-1;
+      fill: var(--color-gray-1);
     }
 
     &:first-child {
-      fill: $color-back;
+      fill: var(--color-back);
     }
   }
 }

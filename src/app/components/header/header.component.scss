@@ -1,7 +1,5 @@
-@import 'values';
-
 :host {
-  background-color: $color-gray-2;
+  background-color: var(--color-gray-2);
   font-weight: bold;
   display: flex;
   align-items: center;
@@ -12,11 +10,11 @@
 
   .header-settings {
     margin-left: 1px;
-    background-color: $color-gray-1;
+    background-color: var(--color-gray-1);
     cursor: pointer;
 
     &:hover {
-      background-color: $color-brand;
+      background-color: var(--color-brand);
     }
   }
 
@@ -31,7 +29,7 @@
   .header-settings,
   .header-github {
     &:hover {
-      background-color: $color-brand;
+      background-color: var(--color-brand);
     }
   }
 }

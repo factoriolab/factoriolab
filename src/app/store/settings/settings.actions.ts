@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { DisplayRate, ItemId, RecipeId, ResearchSpeed } from '~/models';
+import { DisplayRate, ItemId, RecipeId, ResearchSpeed, Theme } from '~/models';
 import { SettingsState } from './settings.reducer';
 
 export const enum SettingsActionType {
@@ -23,6 +23,7 @@ export const enum SettingsActionType {
   SET_RESEARCH_SPEED = '[Settings Page] Set Research Speed',
   SET_FLOW_RATE = '[Settings Page] Set Flow Rate',
   SET_EXPENSIVE = '[Settings Page] Set Expensive',
+  SET_THEME = '[Settings Page] Set Theme',
 }
 
 export class LoadAction implements Action {
@@ -120,6 +121,11 @@ export class SetExpensiveAction implements Action {
   constructor(public payload: boolean) {}
 }
 
+export class SetTheme implements Action {
+  readonly type = SettingsActionType.SET_THEME;
+  constructor(public payload: Theme) {}
+}
+
 export type SettingsAction =
   | LoadAction
   | SetDisplayRateAction
@@ -139,4 +145,5 @@ export type SettingsAction =
   | SetMiningBonusAction
   | SetResearchSpeedAction
   | SetFlowRateAction
-  | SetExpensiveAction;
+  | SetExpensiveAction
+  | SetTheme;

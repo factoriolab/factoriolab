@@ -1,11 +1,9 @@
-@import 'values';
-
 :host {
   position: absolute;
   left: 0;
   top: 0;
-  background-color: $color-gray-2;
-  border: 1px solid $color-brand;
+  background-color: var(--color-gray-2);
+  border: 1px solid var(--color-brand);
   border-radius: 0.25rem;
   z-index: 10;
 }
@@ -14,7 +12,7 @@
   display: flex;
 
   .selected {
-    background-color: $color-gray-1;
+    background-color: var(--color-gray-1);
   }
 
   > * {
@@ -22,19 +20,19 @@
     padding: 0.25rem;
 
     &:hover {
-      background-color: $color-brand;
+      background-color: var(--color-brand);
     }
   }
 }
 
 .tab {
-  background-color: $color-gray-1;
+  background-color: var(--color-gray-1);
 }
 
 .row {
   display: flex;
 
   lab-icon.selected {
-    background-color: $color-gray-0;
+    background-color: var(--color-gray-0);
   }
 }

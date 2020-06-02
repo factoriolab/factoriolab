@@ -452,3 +452,15 @@
     <option [value]="ResearchSpeed.Speed6">Research Speed 6</option>
   </select>
 </div>
+<div class="label">Theme</div>
+<div class="field">
+  <select
+    id="settings-theme-select"
+    title="Choose Factorio Lab theme"
+    [ngModel]="settings.theme"
+    (change)="emitAny(setTheme, $event)"
+  >
+    <option [value]="Theme.DarkMode">Dark Mode</option>
+    <option [value]="Theme.LightMode">Light Mode</option>
+  </select>
+</div>

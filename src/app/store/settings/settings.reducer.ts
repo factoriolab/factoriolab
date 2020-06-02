@@ -1,4 +1,4 @@
-import { DisplayRate, ItemId, RecipeId, ResearchSpeed } from '~/models';
+import { DisplayRate, ItemId, RecipeId, ResearchSpeed, Theme } from '~/models';
 import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
@@ -20,6 +20,7 @@ export interface SettingsState {
   researchSpeed: ResearchSpeed;
   flowRate: number;
   expensive: boolean;
+  theme?: Theme;
 }
 
 export const initialSettingsState: SettingsState = {
@@ -41,6 +42,7 @@ export const initialSettingsState: SettingsState = {
   researchSpeed: ResearchSpeed.Speed6,
   flowRate: 1500,
   expensive: false,
+  theme: Theme.DarkMode,
 };
 
 export function settingsReducer(
@@ -104,6 +106,9 @@ export function settingsReducer(
     }
     case SettingsActionType.SET_EXPENSIVE: {
       return { ...state, ...{ expensive: action.payload } };
+    }
+    case SettingsActionType.SET_THEME: {
+      return { ...state, ...{ theme: action.payload } };
     }
     default:
       return state;

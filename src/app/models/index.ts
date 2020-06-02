@@ -19,3 +19,4 @@ export * from './recipe';
 export * from './recipe-settings';
 export * from './research-speed';
 export * from './step';
+export * from './theme';

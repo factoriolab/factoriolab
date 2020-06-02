@@ -1,5 +1,3 @@
-@import 'values';
-
 :host {
   display: grid;
   grid-template:
@@ -37,15 +35,15 @@ ul {
     user-select: none;
 
     &.active {
-      background-color: $color-gray-2;
+      background-color: var(--color-gray-2);
     }
 
     &:not(.active) {
-      color: $color-brand;
+      color: var(--color-brand);
       cursor: pointer;
 
       &:hover {
-        background-color: $color-gray-1;
+        background-color: var(--color-gray-1);
       }
     }
   }

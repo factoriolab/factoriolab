@@ -14,6 +14,7 @@ import {
   ResearchSpeed,
   OptionsType,
   IdType,
+  Theme,
 } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { SettingsState, initialSettingsState } from '~/store/settings';
@@ -58,6 +59,7 @@ export class SettingsComponent {
   @Output() setMiningBonus = new EventEmitter<number>();
   @Output() setResearchSpeed = new EventEmitter<ResearchSpeed>();
   @Output() setExpensive = new EventEmitter<boolean>();
+  @Output() setTheme = new EventEmitter<Theme>();
 
   openSelect = OpenSelect.None;
   scrollTop = 0;
@@ -68,6 +70,7 @@ export class SettingsComponent {
   OptionsType = OptionsType;
   ResearchSpeed = ResearchSpeed;
   SelectType = IdType;
+  Theme = Theme;
 
   initial = initialSettingsState;
 
@@ -82,6 +85,12 @@ export class SettingsComponent {
     if (event.target.value) {
       const value = Math.round(Number(event.target.value));
       emitter.emit(value);
+    }
+  }
+
+  emitAny(emitter: EventEmitter<any>, event: any) {
+    if (event.target.value) {
+      emitter.emit(event.target.value);
     }
   }
 }
