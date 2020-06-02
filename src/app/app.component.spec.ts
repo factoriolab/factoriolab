@@ -27,6 +27,7 @@ import {
   ListComponent,
 } from './components';
 import { AppComponent } from './app.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -37,6 +38,7 @@ describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        NoopAnimationsModule,
         FormsModule,
         RouterTestingModule,
         StoreModule.forRoot(reducers, { metaReducers }),
@@ -104,26 +106,9 @@ describe('AppComponent', () => {
     expect(component.settingsOpen).toBe(true);
   });
 
-  it('should toggle settings open when clicked', () => {
-    component.settingsOpen = false;
-    fixture.detectChanges();
-    TestUtility.clickId(fixture, Id.HeaderSettings);
-    expect(component.settingsOpen).toBe(true);
-  });
-
-  it('should toggle settings closed when clicked away', () => {
-    component.settingsOpen = true;
-    fixture.detectChanges();
-    // First click sets `opening` to `false`
-    document.body.click();
-    document.body.click();
-    expect(component.settingsOpen).toBe(false);
-  });
-
   it('should update theme when theme changed', () => {
     store.dispatch(new Settings.SetTheme(Theme.LightMode));
     fixture.detectChanges();
-
     expect(document.body.className).toBe(Theme.LightMode);
   });
 });

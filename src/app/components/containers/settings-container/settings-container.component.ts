@@ -40,15 +40,19 @@ export class SettingsContainerComponent implements OnInit {
     this.settings$ = this.store.select(Settings.settingsState);
   }
 
+  isInOverlayMode() {
+    return window
+      .getComputedStyle(this.element.nativeElement as HTMLElement)
+      .marginRight.startsWith('-');
+  }
+
   @HostListener('document:click', ['$event'])
   click(event: MouseEvent) {
     if (this.opening) {
       this.opening = false;
     } else if (
       !this.element.nativeElement.contains(event.target) &&
-      window
-        .getComputedStyle(this.element.nativeElement as HTMLElement)
-        .marginRight.startsWith('-')
+      this.isInOverlayMode()
     ) {
       this.cancel.emit();
     }
