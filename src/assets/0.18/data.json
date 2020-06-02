@@ -2701,9 +2701,9 @@
       "id": "defender-capsule",
       "time": 8,
       "in": {
-        "flying-robot-frame": 1,
+        "electronic-circuit": 3,
         "iron-gear-wheel": 3,
-        "piercing-rounds-magazine": 1
+        "piercing-rounds-magazine": 3
       }
     },
     {
