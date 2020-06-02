@@ -9,7 +9,6 @@ $color-back: #171717;
 $color-font: #c8c8c8;
 $color-invalid: #ff0000;
 
-:root,
 .dark-mode {
   --color-white: #{$color-white};
   --color-gray-0: #{$color-gray-0};
@@ -21,27 +20,21 @@ $color-invalid: #ff0000;
   --color-back: #{$color-back};
   --color-font: #{$color-font};
   --color-invalid: #{$color-invalid};
+
+  --module-icon-filter: none;
 }
 
-@mixin light-mode {
+.light-mode {
   --color-white: #{invert($color-white)};
   --color-gray-0: #{invert($color-gray-0)};
   --color-gray-1: #d5d5d5;
   --color-gray-2: #e8e8e8;
   --color-black: #{invert($color-black)};
 
+  --color-brand: #{$color-brand};
   --color-back: #fff;
   --color-font: #{invert($color-font)};
+  --color-invalid: #{$color-invalid};
 
   --module-icon-filter: invert(100%);
-}
-
-.light-mode {
-  @include light-mode();
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    @include light-mode();
-  }
 }
