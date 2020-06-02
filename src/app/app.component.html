@@ -2,27 +2,36 @@
   [data]="data$ | async"
   (toggleSettings)="toggleSettings()"
 ></lab-header>
-<lab-settings-container *ngIf="settingsOpen" (cancel)="toggleSettings()">
-</lab-settings-container>
 <main>
-  <ul role="navigation">
-    <li
-      routerLink="/list"
-      routerLinkActive="active"
-      [fragment]="router.zip"
-      title="View as list of steps"
-    >
-      List
-    </li>
-    <li
-      routerLink="/hierarchy"
-      routerLinkActive="active"
-      [fragment]="router.zip"
-      title="View as sunburst hierarchy"
-    >
-      Hierarchy
-    </li>
-  </ul>
-  <lab-products-container></lab-products-container>
-  <router-outlet></router-outlet>
+  <lab-settings-container
+    *ngIf="settingsOpen"
+    @slideInOut
+    (cancel)="toggleSettings()"
+  >
+  </lab-settings-container>
+  <div class="view">
+    <ul role="navigation">
+      <li (click)="toggleSettings()">
+        Settings
+      </li>
+      <li
+        routerLink="/list"
+        routerLinkActive="active"
+        [fragment]="router.zip"
+        title="View as list of steps"
+      >
+        List
+      </li>
+      <li
+        routerLink="/hierarchy"
+        routerLinkActive="active"
+        [fragment]="router.zip"
+        title="View as sunburst hierarchy"
+      >
+        Hierarchy
+      </li>
+    </ul>
+    <lab-products-container></lab-products-container>
+    <router-outlet></router-outlet>
+  </div>
 </main>
