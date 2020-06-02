@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import * as Mocks from 'src/mocks';
 import { IconComponent } from '~/components';
-import { Id } from '~/models';
+import { Id, Theme } from '~/models';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 import { TestUtility } from '~/utilities/test';
 import { SettingsComponent } from './settings.component';
@@ -28,6 +28,7 @@ import { SettingsComponent } from './settings.component';
       (setSpeedModule)="setSpeedModule($event)"
       (setBeaconModule)="setBeaconModule($event)"
       (setBeaconCount)="setBeaconCount($event)"
+      (setTheme)="setTheme($event)"
     >
     </lab-settings>
   `,
@@ -49,6 +50,7 @@ class TestSettingsComponent {
   setSpeedModule(data) {}
   setBeaconModule(data) {}
   setBeaconCount(data) {}
+  setTheme(data) {}
 }
 
 describe('SettingsComponent', () => {
@@ -91,5 +93,20 @@ describe('SettingsComponent', () => {
     component.child.emitNumber(component.child.setItemPrecision, event as any);
     fixture.detectChanges();
     expect(component.setItemPrecision).not.toHaveBeenCalled();
+  });
+
+  it('should emit other truthy settings', () => {
+    spyOn(component, 'setTheme');
+    TestUtility.selectId(fixture, Id.SettingsThemeSelect, Theme.LightMode);
+    fixture.detectChanges();
+    expect(component.setTheme).toHaveBeenCalledWith(Theme.LightMode);
+  });
+
+  it('should ignore falsy event values', () => {
+    spyOn(component, 'setTheme');
+    const event = { target: {} };
+    component.child.emitAny(component.child.setTheme, event as any);
+    fixture.detectChanges();
+    expect(component.setTheme).not.toHaveBeenCalled();
   });
 });

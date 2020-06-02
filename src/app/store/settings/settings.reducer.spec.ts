@@ -54,6 +54,16 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('SET_THEME', () => {
+    it('should set the theme', () => {
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetTheme(null)
+      );
+      expect(result.theme).toEqual(null);
+    });
+  });
+
   describe('SET_BELT', () => {
     it('should set the default belt', () => {
       const value = ItemId.TransportBelt;

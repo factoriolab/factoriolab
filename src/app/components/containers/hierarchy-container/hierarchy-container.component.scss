@@ -1,5 +1,3 @@
-@import 'values';
-
 .radio {
   padding: 1rem;
 
@@ -22,5 +20,5 @@
 }
 
 .clickable:hover {
-  color: $color-black;
+  color: var(--color-black);
 }

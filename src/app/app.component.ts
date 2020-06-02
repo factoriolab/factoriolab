@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -11,6 +12,7 @@ import {
   DatasetState,
   getDatasetState,
 } from './store/dataset';
+import * as Settings from '~/store/settings';
 import { getZipState, AddAction } from './store/products';
 
 @Component({
@@ -23,7 +25,11 @@ export class AppComponent implements OnInit {
 
   data$: Observable<DatasetState>;
 
-  constructor(public router: RouterService, private store: Store<State>) {
+  constructor(
+    public router: RouterService,
+    private store: Store<State>,
+    @Inject(DOCUMENT) private document: Document
+  ) {
     this.store.dispatch(new LoadDatasetAction((data as any).default));
     if (!location.hash) {
       this.store.dispatch(new AddAction(ItemId.WoodenChest));
@@ -32,6 +38,9 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.data$ = this.store.select(getDatasetState);
+    this.store.select(Settings.getTheme).subscribe((s) => {
+      this.document.body.className = s;
+    });
     this.store.select(getZipState).subscribe((s) => {
       this.router.updateUrl(s.products, s.recipe, s.settings, s.data);
     });

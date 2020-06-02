@@ -11,7 +11,7 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { DisplayRate, ItemId, RecipeId, ResearchSpeed } from '~/models';
+import { DisplayRate, ItemId, RecipeId, ResearchSpeed, Theme } from '~/models';
 import { State } from '~/store';
 import * as Dataset from '~/store/dataset';
 import * as Settings from '~/store/settings';
@@ -119,5 +119,9 @@ export class SettingsContainerComponent implements OnInit {
 
   setExpensive(value: boolean) {
     this.store.dispatch(new Settings.SetExpensiveAction(value));
+  }
+
+  setTheme(value: Theme) {
+    this.store.dispatch(new Settings.SetTheme(value));
   }
 }

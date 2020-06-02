@@ -1,11 +1,9 @@
-@import 'values';
-
 :host {
   position: absolute;
   left: -0.25rem;
   top: -0.25rem;
-  background-color: $color-gray-2;
-  border: 1px solid $color-brand;
+  background-color: var(--color-gray-2);
+  border: 1px solid var(--color-brand);
   border-radius: 0.25rem;
   z-index: 10;
   padding: 0.25rem;
@@ -17,5 +15,5 @@
 }
 
 lab-icon.selected {
-  background-color: $color-gray-0;
+  background-color: var(--color-gray-0);
 }

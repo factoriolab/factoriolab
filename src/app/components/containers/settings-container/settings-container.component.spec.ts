@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { StoreModule, Store } from '@ngrx/store';
 
 import { IconComponent } from '~/components';
-import { DisplayRate, ItemId, RecipeId, ResearchSpeed } from '~/models';
+import { DisplayRate, ItemId, RecipeId, ResearchSpeed, Theme } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as Settings from '~/store/settings';
 import { TestUtility } from '~/utilities/test';
@@ -84,6 +84,15 @@ describe('SettingsContainerComponent', () => {
     component.child.setFactoryPrecision.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetFactoryPrecisionAction(value)
+    );
+  });
+
+  it('should set theme', () => {
+    spyOn(store, 'dispatch');
+    const value = Theme.DarkMode;
+    component.child.setTheme.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetTheme(value)
     );
   });
 
