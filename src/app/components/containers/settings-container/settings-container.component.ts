@@ -44,7 +44,12 @@ export class SettingsContainerComponent implements OnInit {
   click(event: MouseEvent) {
     if (this.opening) {
       this.opening = false;
-    } else if (!this.element.nativeElement.contains(event.target)) {
+    } else if (
+      !this.element.nativeElement.contains(event.target) &&
+      window
+        .getComputedStyle(this.element.nativeElement as HTMLElement)
+        .marginRight.startsWith('-')
+    ) {
       this.cancel.emit();
     }
   }
