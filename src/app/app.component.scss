@@ -1,33 +1,27 @@
 :host {
-  display: grid;
-  grid-template:
-    'header header'
-    [settings-start] ' main           main ' 1fr [settings-end]
-    / [settings-start] 300px [settings-end] 3fr;
+  display: flex;
+  flex-direction: column;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
 }
 
-lab-header {
-  grid-area: header;
-}
-
-lab-settings-container {
-  grid-area: settings;
-  overflow: hidden;
-}
-
 main {
-  grid-area: main;
+  display: flex;
   overflow: auto;
+  flex-grow: 1;
+}
+
+.view {
+  display: flex;
+  flex-direction: column;
 }
 
 ul {
   display: flex;
   list-style: none;
   margin: 0;
-  padding-left: calc(3rem + 1px);
+  padding-left: 0;
 
   > * {
     padding: 0.5rem;
@@ -46,5 +40,11 @@ ul {
         background-color: var(--color-gray-1);
       }
     }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  lab-settings-container {
+    margin-right: -18rem;
   }
 }

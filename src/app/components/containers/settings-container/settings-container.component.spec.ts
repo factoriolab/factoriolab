@@ -37,11 +37,32 @@ describe('SettingsContainerComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should cancel when clicked away', () => {
+  it('should determine whether in overlay mode', () => {
+    const value = component.isInOverlayMode();
+    expect(value).toBeFalse();
+  });
+
+  it('should set opening to false on first click', () => {
     spyOn(component.cancel, 'emit');
+    document.body.click();
+    expect(component.opening).toBeFalse();
+    expect(component.cancel.emit).not.toHaveBeenCalled();
+  });
+
+  it('should cancel when clicked away in overlay mode', () => {
+    spyOn(component.cancel, 'emit');
+    spyOn(component, 'isInOverlayMode').and.returnValue(true);
     component.opening = false;
     document.body.click();
     expect(component.cancel.emit).toHaveBeenCalled();
+  });
+
+  it('should not cancel when clicked away in wide screen mode', () => {
+    spyOn(component.cancel, 'emit');
+    spyOn(component, 'isInOverlayMode').and.returnValue(false);
+    component.opening = false;
+    document.body.click();
+    expect(component.cancel.emit).not.toHaveBeenCalled();
   });
 
   it('should not cancel when clicked on', () => {
@@ -91,9 +112,7 @@ describe('SettingsContainerComponent', () => {
     spyOn(store, 'dispatch');
     const value = Theme.DarkMode;
     component.child.setTheme.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetTheme(value)
-    );
+    expect(store.dispatch).toHaveBeenCalledWith(new Settings.SetTheme(value));
   });
 
   it('should set the default belt', () => {

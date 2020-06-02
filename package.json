@@ -1,7 +1,7 @@
 {
   "name": "factorio-lab",
   "description": "Angular-based calculator for the game Factorio",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "private": true,
   "contributors": [
     "Doug Broad (https://github.com/dcbroad3)"
@@ -42,7 +42,7 @@
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.901.6",
+    "@angular-devkit/build-angular": "^0.901.7",
     "@angular/cli": "^9.1.6",
     "@angular/compiler-cli": "~9.1.7",
     "@angular/language-service": "~9.1.7",
