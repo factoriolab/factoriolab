@@ -13,7 +13,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run build
-        run: npm run build -- --configuration staging
+        run: npm run build -- -c=staging
       - name: Copy index to 404
         run: cp dist/index.html dist/404.html
       - name: Deploy to GitHub Pages

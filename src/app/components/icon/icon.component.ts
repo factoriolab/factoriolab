@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
-import { Recipe, Item, DisplayRate, Icon, RecipeId, ItemId } from '~/models';
+import { Recipe, Item, DisplayRate, RecipeId, ItemId } from '~/models';
 import { DatasetState } from '~/store/dataset';
 
 @Component({

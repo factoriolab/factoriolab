@@ -1,17 +1,16 @@
-import Fraction from 'fraction.js';
-
+import { ItemId } from './data/item';
+import { RecipeId } from './data/recipe';
 import { Entities } from './entities';
-import { ItemId } from './item';
-import { RecipeId } from './recipe';
+import { Rational } from './rational';
 import { RecipeSettings } from './recipe-settings';
 
 export interface Step {
   itemId: ItemId;
   recipeId: RecipeId;
-  items: Fraction;
+  items: Rational;
   settings: RecipeSettings;
-  surplus?: Fraction;
-  belts?: Fraction;
-  factories?: Fraction;
-  parents?: Entities<Fraction>;
+  surplus?: Rational;
+  belts?: Rational;
+  factories?: Rational;
+  parents?: Entities<Rational>;
 }

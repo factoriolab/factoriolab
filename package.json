@@ -1,7 +1,7 @@
 {
   "name": "factorio-lab",
   "description": "Angular-based calculator for the game Factorio",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "private": true,
   "contributors": [
     "Doug Broad (https://github.com/dcbroad3)"
@@ -19,6 +19,8 @@
     "test": "ng test",
     "test-build": "ng test --no-watch --browsers=ChromeHeadless",
     "codecov": "codecov",
+    "analyze:build": "ng build --statsJson=true",
+    "analyze": "webpack-bundle-analyzer dist/stats-es2015.json",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
@@ -34,7 +36,6 @@
     "@ngrx/store": "^9.1.2",
     "@ngrx/store-devtools": "^9.1.2",
     "d3": "^5.16.0",
-    "fraction.js": "~4.0.12",
     "material-design-icons": "~3.0.1",
     "pako": "^1.0.11",
     "rxjs": "~6.5.5",
@@ -64,6 +65,7 @@
     "protractor": "^7.0.0",
     "ts-node": "~8.3.0",
     "tslint": "^6.1.2",
-    "typescript": "~3.8.3"
+    "typescript": "~3.8.3",
+    "webpack-bundle-analyzer": "^3.8.0"
   }
 }

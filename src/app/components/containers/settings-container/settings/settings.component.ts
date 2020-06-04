@@ -88,7 +88,7 @@ export class SettingsComponent {
     }
   }
 
-  emitAny(emitter: EventEmitter<any>, event: any) {
+  emitString(emitter: EventEmitter<string>, event: any) {
     if (event.target.value) {
       emitter.emit(event.target.value);
     }

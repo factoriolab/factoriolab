@@ -1,45 +1,49 @@
-import Fraction from 'fraction.js';
-
 import * as Mocks from 'src/mocks';
-import { ItemId, RecipeId, Step } from '~/models';
+import { ItemId, RecipeId, Step, Rational } from '~/models';
 import * as Recipe from '~/store/recipe';
 import { UraniumUtility } from './uranium';
 
 /** These tests check basic functionality, not specific math results. */
 describe('UraniumUtility', () => {
-  const matrix = UraniumUtility.getMatrix(Mocks.RecipeFactors, Mocks.Data);
+  const matrix = UraniumUtility.getMatrix(
+    Mocks.RecipeFactors,
+    Mocks.RationalData
+  );
 
   describe('getProductionData', () => {
     it('should return uranium processing info', () => {
       const result = UraniumUtility.getProductionData(
         Mocks.RecipeFactors,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(result.recipe).toBeTruthy();
-      expect(result.u238.n).toBeGreaterThan(0);
-      expect(result.u235.n).toBeGreaterThan(0);
+      expect(result.u238.nonzero()).toBeTrue();
+      expect(result.u235.nonzero()).toBeTrue();
     });
   });
 
   describe('getConversionData', () => {
     it('should return kovarex processing info', () => {
       const result = UraniumUtility.getConversionData(
-        new Fraction(1),
-        new Fraction(1),
+        Rational.one,
+        Rational.one,
         Mocks.RecipeFactors,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(result.recipe).toBeTruthy();
-      expect(result.input.n).toBeGreaterThan(0);
-      expect(result.output.n).toBeGreaterThan(0);
-      expect(result.factories.n).toBeGreaterThan(0);
-      expect(result.max.n).toBeGreaterThan(0);
+      expect(result.input.nonzero()).toBeTrue();
+      expect(result.output.nonzero()).toBeTrue();
+      expect(result.factories.nonzero()).toBeTrue();
+      expect(result.max.nonzero()).toBeTrue();
     });
   });
 
   describe('getMatrix', () => {
     it('should return a matrix of processing info', () => {
-      const result = UraniumUtility.getMatrix(Mocks.RecipeFactors, Mocks.Data);
+      const result = UraniumUtility.getMatrix(
+        Mocks.RecipeFactors,
+        Mocks.RationalData
+      );
       expect(result.prod).toBeTruthy();
       expect(result.conv).toBeTruthy();
     });
@@ -51,7 +55,7 @@ describe('UraniumUtility', () => {
         {
           itemId: ItemId.Uranium238,
           recipeId: null,
-          items: new Fraction(1),
+          items: Rational.one,
           settings: {},
         },
       ];
@@ -61,7 +65,7 @@ describe('UraniumUtility', () => {
         steps,
         Mocks.RecipeSettingsEntities
       );
-      expect(result.surplus).toEqual(new Fraction(0));
+      expect(result.surplus.eq(Rational.zero)).toBeTrue();
       expect(result.recipeId).toEqual(RecipeId.UraniumProcessing);
     });
 
@@ -74,7 +78,7 @@ describe('UraniumUtility', () => {
         Mocks.RecipeSettingsEntities
       );
       expect(steps.length).toEqual(1);
-      expect(result.surplus).toEqual(new Fraction(0));
+      expect(result.surplus.eq(Rational.zero)).toBeTrue();
       expect(result.recipeId).toEqual(RecipeId.UraniumProcessing);
     });
   });
@@ -96,7 +100,7 @@ describe('UraniumUtility', () => {
   describe('calculateUranium238', () => {
     it('should skip if no u238 required', () => {
       const step: any = {
-        u238: { items: new Fraction(0), factories: null },
+        u238: { items: Rational.zero, factories: null },
       };
       UraniumUtility.calculateUranium238(step, matrix);
       expect(step.u238.factories).toBeNull();
@@ -105,22 +109,22 @@ describe('UraniumUtility', () => {
     it('should calculate for required u238', () => {
       const step: any = {
         u238: {
-          items: new Fraction(1),
-          factories: new Fraction(0),
+          items: Rational.one,
+          factories: Rational.zero,
           settings: {},
         },
-        u235: { surplus: new Fraction(0) },
+        u235: { surplus: Rational.zero },
       };
       UraniumUtility.calculateUranium238(step, matrix);
-      expect(step.u235.surplus.n).toBeGreaterThan(0);
-      expect(step.u238.factories.n).toBeGreaterThan(0);
+      expect(step.u235.surplus.nonzero()).toBeTrue();
+      expect(step.u238.factories.nonzero()).toBeTrue();
     });
   });
 
   describe('calculateUranium235', () => {
     it('should skip if no u235 required', () => {
       const step: any = {
-        u235: { items: new Fraction(0), factories: null },
+        u235: { items: Rational.zero, factories: null },
       };
       UraniumUtility.calculateUranium235(step, matrix);
       expect(step.u235.factories).toBeNull();
@@ -129,47 +133,47 @@ describe('UraniumUtility', () => {
     it('should subtract from surplus if sufficient', () => {
       const step: any = {
         u235: {
-          items: new Fraction(1),
-          surplus: new Fraction(2),
+          items: Rational.one,
+          surplus: Rational.two,
           settings: {},
         },
       };
       UraniumUtility.calculateUranium235(step, matrix);
-      expect(step.u235.surplus).toEqual(new Fraction(1));
+      expect(step.u235.surplus).toEqual(Rational.one);
     });
 
     it('should calculate for required u235', () => {
       const step: any = {
-        u238: { factories: new Fraction(0) },
+        u238: { factories: Rational.zero },
         u235: {
-          items: new Fraction(2),
-          surplus: new Fraction(1),
-          factories: new Fraction(0),
+          items: Rational.two,
+          surplus: Rational.one,
+          factories: Rational.zero,
           settings: {},
         },
       };
       UraniumUtility.calculateUranium235(step, matrix);
-      expect(step.u235.surplus).toEqual(new Fraction(0));
-      expect(step.u238.factories.n).toBeGreaterThan(0);
-      expect(step.u235.factories.n).toBeGreaterThan(0);
+      expect(step.u235.surplus).toEqual(Rational.zero);
+      expect(step.u238.factories.nonzero()).toBeTrue();
+      expect(step.u235.factories.nonzero()).toBeTrue();
     });
   });
 
   describe('calculateItems', () => {
     it('should calculate total items from factories', () => {
       const step: any = {
-        u238: { items: new Fraction(0), factories: new Fraction(1) },
-        u235: { items: new Fraction(0), factories: new Fraction(1) },
+        u238: { items: Rational.zero, factories: Rational.one },
+        u235: { items: Rational.zero, factories: Rational.one },
       };
       UraniumUtility.calculateItems(step, matrix);
-      expect(step.u238.items.n).toBeGreaterThan(0);
-      expect(step.u235.items.n).toBeGreaterThan(0);
+      expect(step.u238.items.nonzero()).toBeTrue();
+      expect(step.u235.items.nonzero()).toBeTrue();
     });
   });
 
   describe('calculateInputs', () => {
     it('should calculate inputs for required factories', () => {
-      const step: any = { u238: { factories: new Fraction(1) } };
+      const step: any = { u238: { factories: Rational.one } };
       const steps = [];
       UraniumUtility.calculateInputs(
         step,
@@ -179,7 +183,7 @@ describe('UraniumUtility', () => {
         Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(steps.length).toBeGreaterThan(0);
     });
@@ -188,12 +192,12 @@ describe('UraniumUtility', () => {
   describe('calculateFactories', () => {
     it('should calculate factories based on speed factors', () => {
       const step: any = {
-        u238: { factories: new Fraction(1) },
-        u235: { factories: new Fraction(1) },
+        u238: { factories: Rational.one },
+        u235: { factories: Rational.one },
       };
       UraniumUtility.calculateFactories(step, matrix, Mocks.RecipeFactors);
-      expect(step.u238.factories.n).toBeGreaterThan(0);
-      expect(step.u235.factories.n).toBeGreaterThan(0);
+      expect(step.u238.factories.nonzero()).toBeTrue();
+      expect(step.u235.factories.nonzero()).toBeTrue();
     });
   });
 
@@ -206,7 +210,7 @@ describe('UraniumUtility', () => {
         Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(result.length).toEqual(0);
     });
@@ -216,8 +220,8 @@ describe('UraniumUtility', () => {
         {
           itemId: ItemId.Uranium235,
           recipeId: null,
-          items: new Fraction(1),
-          factories: new Fraction(0),
+          items: Rational.one,
+          factories: Rational.zero,
           settings: {},
         },
       ];
@@ -231,7 +235,7 @@ describe('UraniumUtility', () => {
         Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(result.length).toEqual(1);
     });
@@ -241,8 +245,8 @@ describe('UraniumUtility', () => {
         {
           itemId: ItemId.Uranium235,
           recipeId: null,
-          items: new Fraction(1),
-          factories: new Fraction(0),
+          items: Rational.one,
+          factories: Rational.zero,
           settings: {},
         },
       ];
@@ -252,7 +256,7 @@ describe('UraniumUtility', () => {
         Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(result.length).toBeGreaterThan(1);
     });

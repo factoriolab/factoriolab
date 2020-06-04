@@ -7,12 +7,13 @@ import {
   RecipeId,
   Factors,
   CategoryId,
+  Rational,
+  RationalRecipeSettings,
 } from '~/models';
 import { RecipeUtility } from '~/utilities/recipe';
 import * as Dataset from '../dataset';
 import * as Settings from '../settings';
 import { State } from '../';
-import Fraction from 'fraction.js';
 
 /* Base selector functions */
 export const recipeState = (state: State) => state.recipeState;
@@ -24,8 +25,8 @@ export const getRecipeSettings = createSelector(
   Settings.settingsState,
   (state, data, settings) => {
     const value: Entities<RecipeSettings> = {};
-    if (data?.recipes?.length) {
-      for (const recipe of data.recipes) {
+    if (data?.recipeIds?.length) {
+      for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
         const recipeSettings: RecipeSettings = state[recipe.id]
           ? { ...state[recipe.id] }
           : { ignore: false };
@@ -99,30 +100,40 @@ export const getRecipeSettings = createSelector(
   }
 );
 
-export const getRecipeFactors = createSelector(
+export const getRationalRecipeSettings = createSelector(
   getRecipeSettings,
-  Settings.getMiningBonus,
+  (recipeSettings) =>
+    Object.keys(recipeSettings).reduce(
+      (e: Entities<RationalRecipeSettings>, i) => ({
+        ...e,
+        ...{ [i]: new RationalRecipeSettings(recipeSettings[i]) },
+      }),
+      {}
+    )
+);
+
+export const getRecipeFactors = createSelector(
+  getRationalRecipeSettings,
+  Settings.getRationalMiningBonus,
   Settings.getResearchFactor,
-  Dataset.getDatasetState,
+  Dataset.getRationalDataset,
   (recipeSettings, miningBonus, researchFactor, data) => {
     const values: Entities<Factors> = {};
     for (const recipeId of Object.keys(recipeSettings)) {
       const settings = recipeSettings[recipeId];
-      let factorySpeed = new Fraction(
-        data.itemEntities[settings.factory].factory.speed
-      );
+      let factorySpeed = data.itemR[settings.factory].factory.speed;
       if (data.itemEntities[recipeId]?.category === CategoryId.Research) {
         factorySpeed = factorySpeed.mul(researchFactor);
       }
       values[recipeId] = RecipeUtility.recipeFactors(
         factorySpeed,
         settings.factory === ItemId.ElectricMiningDrill
-          ? new Fraction(miningBonus).div(100)
-          : new Fraction(0),
+          ? miningBonus.div(Rational.hundred)
+          : Rational.zero,
         settings.modules,
         settings.beaconModule,
         settings.beaconCount,
-        data.itemEntities
+        data.itemR
       );
     }
     return values;

@@ -97,7 +97,10 @@
             <div *ngIf="step.items" class="monospace">
               {{ rate(step.items, itemPrecision) }}
             </div>
-            <div *ngIf="step.surplus && step.surplus.n > 0" class="monospace">
+            <div
+              *ngIf="step.surplus && step.surplus.nonzero()"
+              class="monospace"
+            >
               (+{{ rate(step.surplus, itemPrecision) }})
             </div>
             <lab-icon
@@ -190,7 +193,10 @@
         </td>
         <td>
           <ng-container *ngIf="step.settings?.factory">
-            <div class="flex" *ngIf="!step.factories || step.factories.n > 0">
+            <div
+              class="flex"
+              *ngIf="!step.factories || step.factories.nonzero()"
+            >
               <div *ngIf="step.factories" class="monospace">
                 {{ rate(step.factories, factoryPrecision) }}
               </div>
@@ -436,7 +442,7 @@
                 <ng-container *ngIf="inStep.settings?.factory">
                   <div
                     class="flex"
-                    *ngIf="!inStep.factories || inStep.factories.n > 0"
+                    *ngIf="!inStep.factories || inStep.factories.nonzero()"
                   >
                     <div *ngIf="inStep.factories" class="monospace">
                       {{
@@ -545,7 +551,10 @@
           </td>
           <td>
             <ng-container *ngIf="step.settings?.factory">
-              <div class="flex" *ngIf="!step.factories || step.factories.n > 0">
+              <div
+                class="flex"
+                *ngIf="!step.factories || step.factories.nonzero()"
+              >
                 <div *ngIf="step.factories" class="monospace">
                   {{ rate(step.factories.mul(parent.value), factoryPrecision) }}
                 </div>
