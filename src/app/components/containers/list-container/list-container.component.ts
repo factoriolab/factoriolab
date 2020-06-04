@@ -8,7 +8,7 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { Step, RecipeId, ItemId, DisplayRate, Rational } from '~/models';
+import { Step, RecipeId, ItemId, DisplayRate } from '~/models';
 import { State } from '~/store';
 import * as Dataset from '~/store/dataset';
 import * as Recipe from '~/store/recipe';
