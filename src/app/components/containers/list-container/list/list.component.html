@@ -476,7 +476,12 @@
               <td>
                 <div class="flex">
                   <div class="monospace">
-                    {{ rate(inStep.parents[step.itemId].mul(100), 0) }}%
+                    {{
+                      rate(
+                        inStep.parents[step.itemId].mul(Rational.hundred),
+                        0
+                      )
+                    }}%
                   </div>
                   <i class="material-icons">arrow_forward</i>
                   <lab-icon
@@ -579,7 +584,9 @@
           </td>
           <td>
             <div class="flex">
-              <div class="monospace">{{ rate(parent.value.mul(100), 0) }}%</div>
+              <div class="monospace">
+                {{ rate(parent.value.mul(Rational.hundred), 0) }}%
+              </div>
               <i class="material-icons">arrow_forward</i>
               <lab-icon
                 class="clickable-size"
