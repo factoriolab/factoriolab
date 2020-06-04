@@ -1,4 +1,11 @@
-import { DisplayRate, ItemId, RecipeId, ResearchSpeed, Theme } from '~/models';
+import {
+  DisplayRate,
+  ItemId,
+  RecipeId,
+  ResearchSpeed,
+  Theme,
+  LocalStorageKey,
+} from '~/models';
 import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
@@ -23,6 +30,8 @@ export interface SettingsState {
   theme?: Theme;
 }
 
+const loadTheme = localStorage.getItem(LocalStorageKey.Theme);
+
 export const initialSettingsState: SettingsState = {
   displayRate: DisplayRate.PerMinute,
   itemPrecision: 3,
@@ -42,7 +51,7 @@ export const initialSettingsState: SettingsState = {
   researchSpeed: ResearchSpeed.Speed6,
   flowRate: 1500,
   expensive: false,
-  theme: Theme.DarkMode,
+  theme: loadTheme ? (loadTheme as Theme) : Theme.DarkMode,
 };
 
 export function settingsReducer(
@@ -108,6 +117,7 @@ export function settingsReducer(
       return { ...state, ...{ expensive: action.payload } };
     }
     case SettingsActionType.SET_THEME: {
+      localStorage.setItem(LocalStorageKey.Theme, action.payload);
       return { ...state, ...{ theme: action.payload } };
     }
     default:
