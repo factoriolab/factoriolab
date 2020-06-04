@@ -15,10 +15,6 @@ import {
 
 describe('Settings Reducer', () => {
   describe('loadTheme', () => {
-    afterEach(() => {
-      localStorage.removeItem(LocalStorageKey.Theme);
-    });
-
     it('should load theme from local storage', () => {
       localStorage.setItem(LocalStorageKey.Theme, Theme.LightMode);
       const result = loadTheme();
@@ -26,6 +22,7 @@ describe('Settings Reducer', () => {
     });
 
     it('should load DarkMode if not found in local storage', () => {
+      localStorage.removeItem(LocalStorageKey.Theme);
       const result = loadTheme();
       expect(result).toEqual(Theme.DarkMode);
     });
