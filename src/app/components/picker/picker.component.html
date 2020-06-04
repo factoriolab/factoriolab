@@ -1,12 +1,14 @@
 <div class="tabs">
-  <lab-icon
-    *ngFor="let category of data.categoryEntities | keyvalue"
-    [iconId]="category.key"
-    [tooltip]="category.value.name"
-    [class.selected]="category.key === categoryId"
-    [data]="data"
-    (click)="selectTab.emit(category.key)"
-  ></lab-icon>
+  <ng-container *ngFor="let id of data.categoryIds">
+    <lab-icon
+      *ngIf="data.categoryEntities[id] as category"
+      [iconId]="id"
+      [tooltip]="category.name"
+      [class.selected]="id === categoryId"
+      [data]="data"
+      (click)="selectTab.emit(id)"
+    ></lab-icon>
+  </ng-container>
 </div>
 <div class="tab">
   <div class="row" *ngFor="let row of data.categoryItemRows[categoryId]">

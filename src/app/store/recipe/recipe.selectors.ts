@@ -75,7 +75,7 @@ export const getRecipeSettings = createSelector(
                 settings.prodModule,
                 settings.speedModule,
                 factoryItem.factory.modules,
-                data.itemEntities
+                data
               );
             }
           }
