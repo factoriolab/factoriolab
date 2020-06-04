@@ -12,7 +12,7 @@ describe('RationalFactory', () => {
         drain: 5,
       });
       expect(result.speed).toEqual(Rational.one);
-      expect(result.modules).toEqual(Rational.two);
+      expect(result.modules).toEqual(2);
       expect(result.burner).toEqual(new Rational(BigInt(3)));
       expect(result.electric).toEqual(new Rational(BigInt(4)));
       expect(result.drain).toEqual(new Rational(BigInt(5)));
@@ -24,7 +24,7 @@ describe('RationalFactory', () => {
         modules: 2,
       });
       expect(result.speed).toEqual(Rational.one);
-      expect(result.modules).toEqual(Rational.two);
+      expect(result.modules).toEqual(2);
       expect(result.burner).toBeUndefined();
       expect(result.electric).toBeUndefined();
       expect(result.drain).toBeUndefined();

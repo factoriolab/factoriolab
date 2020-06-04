@@ -1,11 +1,4 @@
-import {
-  DisplayRate,
-  ItemId,
-  RecipeId,
-  ResearchSpeed,
-  Theme,
-  Rational,
-} from '~/models';
+import { DisplayRate, ItemId, RecipeId, ResearchSpeed, Theme } from '~/models';
 import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {

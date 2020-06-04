@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { RecipeId, ItemId, Rational } from '~/models';
+import { RecipeId, ItemId } from '~/models';
 import { RecipeState } from './recipe.reducer';
 
 export const enum RecipeActionType {
