@@ -1,5 +1,5 @@
 import * as Mocks from 'src/mocks';
-import { ResearchSpeed, ItemId } from '~/models';
+import { ItemId, Rational } from '~/models';
 import { initialSettingsState } from '../settings';
 import { initialRecipeState } from './recipe.reducer';
 import * as Selectors from './recipe.selectors';
@@ -29,7 +29,7 @@ describe('Recipe Selectors', () => {
         Mocks.Data,
         initialSettingsState
       );
-      expect(Object.keys(result).length).toEqual(Mocks.Data.recipes.length);
+      expect(Object.keys(result).length).toEqual(Mocks.Data.recipeIds.length);
     });
 
     it('should use belt override', () => {
@@ -99,10 +99,12 @@ describe('Recipe Selectors', () => {
   });
 
   describe('getRecipeFactors', () => {
-    const recipeSettings = Selectors.getRecipeSettings.projector(
-      initialRecipeState,
-      Mocks.Data,
-      initialSettingsState
+    const recipeSettings = Selectors.getRationalRecipeSettings.projector(
+      Selectors.getRecipeSettings.projector(
+        initialRecipeState,
+        Mocks.Data,
+        initialSettingsState
+      )
     );
 
     it('should handle null/empty values', () => {
@@ -113,11 +115,11 @@ describe('Recipe Selectors', () => {
     it('should return recipe speed/prod factors', () => {
       const result = Selectors.getRecipeFactors.projector(
         recipeSettings,
-        0,
-        ResearchSpeed.Speed0,
-        Mocks.Data
+        Rational.zero,
+        Rational.zero,
+        Mocks.RationalData
       );
-      expect(Object.keys(result).length).toEqual(Mocks.Data.recipes.length);
+      expect(Object.keys(result).length).toEqual(Mocks.Data.recipeIds.length);
     });
   });
 

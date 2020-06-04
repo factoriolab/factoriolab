@@ -5,7 +5,6 @@ import {
   EventEmitter,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import Fraction from 'fraction.js';
 
 import {
   Step,
@@ -16,6 +15,7 @@ import {
   options,
   DisplayRate,
   Entities,
+  Rational,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { DatasetState } from '~/store/dataset';
@@ -85,13 +85,11 @@ export class ListComponent {
     return this.steps.find((s) => s.itemId === id);
   }
 
-  rate(value: Fraction, precision: number) {
+  rate(value: Rational, precision: number) {
     if (precision == null) {
-      return value.toFraction(true);
+      return value.toFraction();
     } else {
-      const decimal = value.valueOf();
-      const round = Math.pow(10, precision);
-      return Math.ceil(decimal * round) / round;
+      return value.toPrecision(precision);
     }
   }
 

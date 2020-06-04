@@ -458,7 +458,7 @@
     id="settings-theme-select"
     title="Choose Factorio Lab theme"
     [ngModel]="settings.theme"
-    (change)="emitAny(setTheme, $event)"
+    (change)="emitString(setTheme, $event)"
   >
     <option [value]="Theme.DarkMode">Dark Mode</option>
     <option [value]="Theme.LightMode">Light Mode</option>

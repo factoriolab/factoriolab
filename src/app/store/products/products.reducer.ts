@@ -1,4 +1,4 @@
-import { Product, RateType, NEntities, ItemId, CategoryId } from '~/models';
+import { Product, RateType, NEntities, ItemId } from '~/models';
 import { ProductsAction, ProductsActionType } from './products.actions';
 
 export interface ProductsState {

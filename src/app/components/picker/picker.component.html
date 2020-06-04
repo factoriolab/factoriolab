@@ -1,11 +1,11 @@
 <div class="tabs">
   <lab-icon
-    *ngFor="let category of data.categories"
-    [iconId]="category.id"
-    [tooltip]="category.name"
-    [class.selected]="category.id === categoryId"
+    *ngFor="let category of data.categoryEntities | keyvalue"
+    [iconId]="category.key"
+    [tooltip]="category.value.name"
+    [class.selected]="category.key === categoryId"
     [data]="data"
-    (click)="selectTab.emit(category.id)"
+    (click)="selectTab.emit(category.key)"
   ></lab-icon>
 </div>
 <div class="tab">

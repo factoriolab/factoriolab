@@ -1,9 +1,16 @@
 import { createSelector } from '@ngrx/store';
-import Fraction from 'fraction.js';
 
-import { Entities, ItemId, Recipe } from '~/models';
+import {
+  Entities,
+  ItemId,
+  Recipe,
+  Rational,
+  RationalItem,
+  RationalRecipe,
+} from '~/models';
 import * as Settings from '../settings';
 import { State } from '../';
+import { RationalDataset } from './dataset.reducer';
 
 /* Base selector functions */
 const datasetState = (state: State) => state.datasetState;
@@ -16,17 +23,19 @@ export const getDatasetState = createSelector(
     if (expensive) {
       const newData = { ...data };
       const recipes: Recipe[] = [];
-      for (const recipe of data.recipes) {
+      for (const recipe of data.recipeIds.map(
+        (id) => data.recipeEntities[id]
+      )) {
         if (recipe.expensive) {
           recipes.push({ ...recipe, ...recipe.expensive });
         } else {
           recipes.push(recipe);
         }
       }
-      newData.recipes = recipes;
-      newData.recipeEntities = recipes.reduce((e: Entities<Recipe>, r) => {
-        return { ...e, ...{ [r.id]: r } };
-      }, {});
+      newData.recipeEntities = recipes.reduce(
+        (e: Entities<Recipe>, r) => ({ ...e, ...{ [r.id]: r } }),
+        {}
+      );
       return newData;
     } else {
       return data;
@@ -34,17 +43,40 @@ export const getDatasetState = createSelector(
   }
 );
 
+export const getRationalDataset = createSelector(getDatasetState, (data) => {
+  const state: RationalDataset = {
+    ...data,
+    ...{
+      itemR: data.itemIds.reduce(
+        (e: Entities<RationalItem>, i) => ({
+          ...e,
+          ...{ [i]: new RationalItem(data.itemEntities[i]) },
+        }),
+        {}
+      ),
+      recipeR: data.recipeIds.reduce(
+        (e: Entities<RationalRecipe>, i) => ({
+          ...e,
+          ...{ [i]: new RationalRecipe(data.recipeEntities[i]) },
+        }),
+        {}
+      ),
+    },
+  };
+  return state;
+});
+
 export const getBeltSpeed = createSelector(
-  datasetState,
-  Settings.getFlowRate,
+  getRationalDataset,
+  Settings.getRationalFlowRate,
   (data, flowRate) => {
-    const value: Entities<Fraction> = {};
+    const value: Entities<Rational> = {};
     if (data.beltIds) {
       for (const id of data.beltIds) {
         if (id === ItemId.Pipe) {
-          value[id] = new Fraction(flowRate);
+          value[id] = flowRate;
         } else {
-          value[id] = new Fraction(data.itemEntities[id].belt.speed);
+          value[id] = data.itemR[id].belt.speed;
         }
       }
     }

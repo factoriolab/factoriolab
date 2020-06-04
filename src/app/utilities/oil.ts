@@ -1,7 +1,13 @@
-import Fraction from 'fraction.js';
-
-import { RecipeId, Step, Entities, ItemId, Recipe, Factors } from '~/models';
-import { DatasetState } from '~/store/dataset';
+import {
+  RecipeId,
+  Step,
+  Entities,
+  ItemId,
+  Factors,
+  Rational,
+  RationalRecipe,
+} from '~/models';
+import { RationalDataset } from '~/store/dataset';
 import { RecipeState } from '~/store/recipe';
 import { RateUtility } from './rate';
 
@@ -13,18 +19,18 @@ export const OIL_ITEM = [
 ];
 
 interface ProductionData {
-  recipe: Recipe;
-  heavy: Fraction;
-  light: Fraction;
-  petrol: Fraction;
+  recipe: RationalRecipe;
+  heavy: Rational;
+  light: Rational;
+  petrol: Rational;
 }
 
 interface ConversionData {
-  recipe: Recipe;
-  input: Fraction;
-  output: Fraction;
-  factories: Fraction;
-  max: Fraction;
+  recipe: RationalRecipe;
+  input: Rational;
+  output: Rational;
+  factories: Rational;
+  max: Rational;
 }
 
 export interface OilMatrix {
@@ -41,7 +47,7 @@ interface OilSteps {
   petrol: Step;
   fuel?: Step;
   fuelPetrol?: Step;
-  fuelRequired?: Fraction;
+  fuelRequired?: Rational;
 }
 
 export class OilUtility {
@@ -56,18 +62,22 @@ export class OilUtility {
   static getProductionData(
     oilRecipeId: RecipeId,
     factors: Entities<Factors>,
-    data: DatasetState
+    data: RationalDataset
   ): ProductionData {
-    const recipe = data.recipeEntities[oilRecipeId];
+    const recipe = data.recipeR[oilRecipeId];
     const f = factors[oilRecipeId];
 
     return {
       recipe,
-      heavy: new Fraction(recipe.out[ItemId.HeavyOil])
-        .sub(recipe.in[ItemId.HeavyOil] ? recipe.in[ItemId.HeavyOil] : 0)
+      heavy: recipe.out[ItemId.HeavyOil]
+        .sub(
+          recipe.in[ItemId.HeavyOil]
+            ? recipe.in[ItemId.HeavyOil]
+            : Rational.zero
+        )
         .mul(f.prod),
-      light: new Fraction(recipe.out[ItemId.LightOil]).mul(f.prod),
-      petrol: new Fraction(recipe.out[ItemId.PetroleumGas]).mul(f.prod),
+      light: recipe.out[ItemId.LightOil].mul(f.prod),
+      petrol: recipe.out[ItemId.PetroleumGas].mul(f.prod),
     };
   }
 
@@ -76,15 +86,15 @@ export class OilUtility {
     recipeId: RecipeId,
     inputId: ItemId,
     outputId: ItemId,
-    consumes: Fraction,
-    base: Fraction,
+    consumes: Rational,
+    base: Rational,
     factors: Entities<Factors>,
-    data: DatasetState
+    data: RationalDataset
   ): ConversionData {
-    const recipe = data.recipeEntities[recipeId];
+    const recipe = data.recipeR[recipeId];
     const f = factors[recipeId];
-    const input = new Fraction(recipe.in[inputId]);
-    const output = new Fraction(recipe.out[outputId]).mul(f.prod);
+    const input = recipe.in[inputId];
+    const output = recipe.out[outputId].mul(f.prod);
     const factories = consumes.div(input);
     const max = base.add(factories.mul(output));
 
@@ -102,7 +112,7 @@ export class OilUtility {
     oilRecipeId: RecipeId,
     includeFuel: boolean,
     factors: Entities<Factors>,
-    data: DatasetState
+    data: RationalDataset
   ): OilMatrix {
     const oil = this.getProductionData(oilRecipeId, factors, data);
     const hoc = this.getConversionData(
@@ -129,7 +139,7 @@ export class OilUtility {
         ItemId.LightOil,
         ItemId.SolidFuel,
         hoc.max,
-        new Fraction(0),
+        Rational.zero,
         factors,
         data
       );
@@ -161,8 +171,8 @@ export class OilUtility {
       step = {
         itemId,
         recipeId,
-        items: new Fraction(0),
-        factories: new Fraction(0),
+        items: Rational.zero,
+        factories: Rational.zero,
         settings: settings[recipeId],
       };
 
@@ -171,7 +181,7 @@ export class OilUtility {
       step.settings = settings[recipeId];
       step.recipeId = recipeId;
     }
-    step.surplus = new Fraction(0);
+    step.surplus = Rational.zero;
 
     return step;
   }
@@ -216,7 +226,7 @@ export class OilUtility {
 
   /** Calculate number of refineries required for heavy, surplus light */
   static calculateHeavyOil(step: OilSteps, matrix: OilMatrix): OilSteps {
-    if (step.heavy.items.n > 0 && !step.heavy.settings.ignore) {
+    if (step.heavy.items.nonzero() && !step.heavy.settings.ignore) {
       // Refineries required for heavy
       const refineries = step.heavy.items.div(matrix.oil.heavy);
 
@@ -231,14 +241,14 @@ export class OilUtility {
 
   /** Calculate number of refineries required for light, surplus petrol */
   static calculateLightOil(step: OilSteps, matrix: OilMatrix): OilSteps {
-    if (step.light.items.n > 0 && !step.light.settings.ignore) {
-      if (step.light.surplus >= step.light.items) {
+    if (step.light.items.nonzero() && !step.light.settings.ignore) {
+      if (step.light.surplus.gte(step.light.items)) {
         // Already producing enough light oil, subtract from surplus
         step.light.surplus = step.light.surplus.sub(step.light.items);
       } else {
         // Subtract any surplus from what is required
         const required = step.light.items.sub(step.light.surplus);
-        step.light.surplus = new Fraction(0);
+        step.light.surplus = Rational.zero;
         // Refineries required for light
         const refineries = required.div(matrix.hoc.max);
         // Heavy-to-light plants required for light
@@ -259,11 +269,11 @@ export class OilUtility {
 
   /** Try calculating number of refineries and heavy-to-light plants required for full light-to-fuel conversion, excess petrol */
   static tryCalculateLightToFuel(step: OilSteps, matrix: OilMatrix): OilSteps {
-    if (step.fuel?.items.n > 0 && !step.fuel.settings.ignore) {
+    if (step.fuel?.items.nonzero() && !step.fuel.settings.ignore) {
       let required = step.fuel.items
         .div(matrix.ltf.output)
         .mul(matrix.ltf.input);
-      if (step.light.surplus >= required) {
+      if (step.light.surplus.gte(required)) {
         // Already producing enough light oil, subtract from surplus
         step.light.surplus = step.light.surplus.sub(required);
         step.fuel.factories = step.fuel.items.div(matrix.ltf.output);
@@ -280,9 +290,9 @@ export class OilUtility {
           refineries.mul(matrix.oil.petrol)
         );
 
-        if (newPetrolSurplus < step.petrol.items) {
+        if (newPetrolSurplus.lt(step.petrol.items)) {
           // Still need more petrol. Finalize this step and continue...
-          step.light.surplus = new Fraction(0);
+          step.light.surplus = Rational.zero;
           step.heavy.factories = step.heavy.factories.add(refineries);
           step.light.factories = step.light.factories.add(hocPlants);
           step.fuel.factories = step.fuel.items.div(matrix.ltf.output);
@@ -296,14 +306,14 @@ export class OilUtility {
 
   /** Calculate number of refineries, heavy-to-light plants, and light-to-petrol plants required for petrol */
   static calculatePetroleumGas(step: OilSteps, matrix: OilMatrix): OilSteps {
-    if (step.petrol.items.n > 0 && !step.petrol.settings.ignore) {
-      if (step.petrol.surplus >= step.petrol.items) {
+    if (step.petrol.items.nonzero() && !step.petrol.settings.ignore) {
+      if (step.petrol.surplus.gte(step.petrol.items)) {
         // Already producing enough petroleum, subtract from surplus
         step.petrol.surplus = step.petrol.surplus.sub(step.petrol.items);
       } else {
         // Subtract any surplus from what is required
         const required = step.petrol.items.sub(step.petrol.surplus);
-        step.petrol.surplus = new Fraction(0);
+        step.petrol.surplus = Rational.zero;
         // Refineries required for petrol
         const refineries = required.div(matrix.loc.max);
         // Heavy-to-light plants required for light
@@ -321,14 +331,14 @@ export class OilUtility {
 
   /** Calculate number of refineries and heavy-to-light plants required for petrol, excess light */
   static calculateLightAndPetrol(step: OilSteps, matrix: OilMatrix): OilSteps {
-    if (step.petrol.items.n > 0 && !step.petrol.settings.ignore) {
-      if (step.petrol.surplus >= step.petrol.items) {
+    if (step.petrol.items.nonzero() && !step.petrol.settings.ignore) {
+      if (step.petrol.surplus.gte(step.petrol.items)) {
         // Already producing enough petroleum, subtract from surplus
         step.petrol.surplus = step.petrol.surplus.sub(step.petrol.items);
       } else {
         // Subtract any surplus from what is required
         const required = step.petrol.items.sub(step.petrol.surplus);
-        step.petrol.surplus = new Fraction(0);
+        step.petrol.surplus = Rational.zero;
         // Refineries required for petrol, refinery output only
         const refineries = required.div(matrix.oil.petrol);
         // Heavy-to-light plants required for light
@@ -351,12 +361,12 @@ export class OilUtility {
     matrix: OilMatrix
   ): OilSteps {
     step.fuelRequired = step.fuel.settings.ignore
-      ? new Fraction(0)
+      ? Rational.zero
       : step.fuel.items;
     const lightRequired = step.fuelRequired
       .div(matrix.ltf.output)
       .mul(matrix.ltf.input);
-    if (step.light.surplus >= lightRequired) {
+    if (step.light.surplus.gte(lightRequired)) {
       // Already producing enough light oil, subtract from surplus
       step.light.surplus = step.light.surplus.sub(lightRequired);
       step.fuel.factories = step.fuelRequired.div(matrix.ltf.output);
@@ -366,7 +376,7 @@ export class OilUtility {
         .sub(step.light.surplus)
         .mul(matrix.ltf.output)
         .div(matrix.ltf.input);
-      step.light.surplus = new Fraction(0);
+      step.light.surplus = Rational.zero;
       step.fuel.factories = step.fuelRequired
         .sub(newFuelRequired)
         .div(matrix.ltf.output);
@@ -383,18 +393,18 @@ export class OilUtility {
     const petrolRequired = step.fuelRequired
       .div(matrix.ptf.output)
       .mul(matrix.ptf.input);
-    if (step.petrol.surplus >= petrolRequired) {
+    if (step.petrol.surplus.gte(petrolRequired)) {
       // Already producing enough petrol, subtract from surplus
       step.petrol.surplus = step.petrol.surplus.sub(petrolRequired);
       step.fuelPetrol.factories = step.fuelRequired.div(matrix.ptf.output);
-      step.fuelRequired = new Fraction(0);
+      step.fuelRequired = Rational.zero;
     } else {
       // Subtract any surplus
       const newFuelRequired = petrolRequired
         .sub(step.petrol.surplus)
         .mul(matrix.ptf.output)
         .div(matrix.ptf.input);
-      step.petrol.surplus = new Fraction(0);
+      step.petrol.surplus = Rational.zero;
       step.fuelPetrol.factories = step.fuelRequired
         .sub(newFuelRequired)
         .div(matrix.ptf.output);
@@ -437,7 +447,7 @@ export class OilUtility {
       step.petrol.factories.mul(matrix.loc.output)
     );
     // 3) From heavy input to refineries, for coal liquefaction
-    if (matrix.oil.recipe.in[ItemId.HeavyOil] > 0) {
+    if (matrix.oil.recipe.in[ItemId.HeavyOil]?.nonzero()) {
       step.heavy.items = step.heavy.items.add(
         step.heavy.factories.mul(matrix.oil.recipe.in[ItemId.HeavyOil])
       );
@@ -454,7 +464,7 @@ export class OilUtility {
     settings: RecipeState,
     factors: Entities<Factors>,
     fuel: ItemId,
-    data: DatasetState
+    data: RationalDataset
   ): OilSteps {
     // Calculate refinery inputs
     for (const ingredient of Object.keys(matrix.oil.recipe.in)) {
@@ -531,7 +541,7 @@ export class OilUtility {
     settings: RecipeState,
     factors: Entities<Factors>,
     fuel: ItemId,
-    data: DatasetState
+    data: RationalDataset
   ): Step[] {
     if (
       oilRecipeId === RecipeId.BasicOilProcessing || // Already handled with basic recipes
@@ -541,7 +551,7 @@ export class OilUtility {
     }
 
     const includeFuel = steps.some(
-      (s) => s.itemId === ItemId.SolidFuel && s.items.n > 0
+      (s) => s.itemId === ItemId.SolidFuel && s.items.nonzero()
     );
     const matrix = this.getMatrix(oilRecipeId, includeFuel, factors, data);
 
@@ -558,7 +568,7 @@ export class OilUtility {
     step = this.calculateLightOil(step, matrix);
     step = this.tryCalculateLightToFuel(step, matrix);
 
-    if (!includeFuel || step.fuel.factories.n > 0) {
+    if (!includeFuel || step.fuel.factories.nonzero()) {
       // Fuel is satisfied, move on to petroleum
       step = this.calculatePetroleumGas(step, matrix);
     } else {
@@ -567,7 +577,7 @@ export class OilUtility {
         itemId: null,
         recipeId: matrix.ptf.recipe.id,
         items: null,
-        factories: new Fraction(0),
+        factories: Rational.zero,
         settings: settings[matrix.ptf.recipe.id],
       };
       newSteps.push(step.fuelPetrol);
@@ -576,7 +586,7 @@ export class OilUtility {
       step = this.calculateSurplusLightToFuel(step, matrix);
       step = this.calculateSurplusPetrolToFuel(step, matrix);
 
-      if (step.fuelRequired.n > 0) {
+      if (step.fuelRequired.nonzero()) {
         step = this.calculateFuel(step, matrix);
       }
     }

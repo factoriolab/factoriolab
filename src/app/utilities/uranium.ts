@@ -1,22 +1,28 @@
-import Fraction from 'fraction.js';
-
-import { ItemId, Recipe, Step, RecipeId, Entities, Factors } from '~/models';
-import { DatasetState } from '~/store/dataset';
+import {
+  ItemId,
+  Step,
+  RecipeId,
+  Entities,
+  Factors,
+  Rational,
+  RationalRecipe,
+} from '~/models';
+import { RationalDataset } from '~/store/dataset';
 import { RecipeState } from '~/store/recipe';
 import { RateUtility } from './rate';
 
 interface ProductionData {
-  recipe: Recipe;
-  u238: Fraction;
-  u235: Fraction;
+  recipe: RationalRecipe;
+  u238: Rational;
+  u235: Rational;
 }
 
 interface ConversionData {
-  recipe: Recipe;
-  input: Fraction;
-  output: Fraction;
-  factories: Fraction;
-  max: Fraction;
+  recipe: RationalRecipe;
+  input: Rational;
+  output: Rational;
+  factories: Rational;
+  max: Rational;
 }
 
 export interface UraniumMatrix {
@@ -35,31 +41,31 @@ export class UraniumUtility {
   /** Calculate data for uranium processing recipe */
   static getProductionData(
     factors: Entities<Factors>,
-    data: DatasetState
+    data: RationalDataset
   ): ProductionData {
-    const recipe = data.recipeEntities[RecipeId.UraniumProcessing];
+    const recipe = data.recipeR[RecipeId.UraniumProcessing];
     const f = factors[RecipeId.UraniumProcessing];
 
     return {
       recipe,
-      u238: new Fraction(recipe.out[ItemId.Uranium238]).mul(f.prod),
-      u235: new Fraction(recipe.out[ItemId.Uranium235]).mul(f.prod),
+      u238: recipe.out[ItemId.Uranium238].mul(f.prod),
+      u235: recipe.out[ItemId.Uranium235].mul(f.prod),
     };
   }
 
   /** Calculate data for kovarex enrichment recipe */
   static getConversionData(
-    consumes: Fraction,
-    base: Fraction,
+    consumes: Rational,
+    base: Rational,
     factors: Entities<Factors>,
-    data: DatasetState
+    data: RationalDataset
   ): ConversionData {
-    const recipe = data.recipeEntities[RecipeId.KovarexEnrichmentProcess];
+    const recipe = data.recipeR[RecipeId.KovarexEnrichmentProcess];
     const f = factors[RecipeId.KovarexEnrichmentProcess];
-    const input = new Fraction(recipe.in[ItemId.Uranium238]).sub(
+    const input = recipe.in[ItemId.Uranium238].sub(
       recipe.out[ItemId.Uranium238]
     );
-    const output = new Fraction(recipe.out[ItemId.Uranium235])
+    const output = recipe.out[ItemId.Uranium235]
       .sub(recipe.in[ItemId.Uranium235])
       .mul(f.prod);
     const factories = consumes.div(input);
@@ -77,7 +83,7 @@ export class UraniumUtility {
   /** Find and calculate matrix for uranium recipes */
   static getMatrix(
     factors: Entities<Factors>,
-    data: DatasetState
+    data: RationalDataset
   ): UraniumMatrix {
     const prod = this.getProductionData(factors, data);
     const conv = this.getConversionData(prod.u238, prod.u235, factors, data);
@@ -97,8 +103,8 @@ export class UraniumUtility {
       step = {
         itemId,
         recipeId,
-        items: new Fraction(0),
-        factories: new Fraction(0),
+        items: Rational.zero,
+        factories: Rational.zero,
         settings: settings[recipeId],
       };
 
@@ -107,7 +113,7 @@ export class UraniumUtility {
       step.settings = settings[recipeId];
       step.recipeId = recipeId;
     }
-    step.surplus = new Fraction(0);
+    step.surplus = Rational.zero;
 
     return step;
   }
@@ -139,7 +145,7 @@ export class UraniumUtility {
     step: UraniumSteps,
     matrix: UraniumMatrix
   ): UraniumSteps {
-    if (step.u238.items.n > 0 && !step.u238.settings.ignore) {
+    if (step.u238.items.nonzero() && !step.u238.settings.ignore) {
       // Centrifuges required for u238
       const centrifuges = step.u238.items.div(matrix.prod.u238);
 
@@ -157,14 +163,14 @@ export class UraniumUtility {
     step: UraniumSteps,
     matrix: UraniumMatrix
   ): UraniumSteps {
-    if (step.u235.items.n > 0 && !step.u235.settings.ignore) {
-      if (step.u235.surplus >= step.u235.items) {
+    if (step.u235.items.nonzero() && !step.u235.settings.ignore) {
+      if (step.u235.surplus.gte(step.u235.items)) {
         // Already producing enough u235, subtract from surplus
         step.u235.surplus = step.u235.surplus.sub(step.u235.items);
       } else {
         // Subtract any surplus from what is required
         const required = step.u235.items.sub(step.u235.surplus);
-        step.u235.surplus = new Fraction(0);
+        step.u235.surplus = Rational.zero;
         // Centrifuges required for u235
         const centrifuges = required.div(matrix.conv.max);
         // Enrichment centrifuges required for u235
@@ -215,7 +221,7 @@ export class UraniumUtility {
     factors: Entities<Factors>,
     fuel: ItemId,
     oilRecipe: RecipeId,
-    data: DatasetState
+    data: RationalDataset
   ): UraniumSteps {
     RateUtility.addStepsFor(
       null,
@@ -255,7 +261,7 @@ export class UraniumUtility {
     factors: Entities<Factors>,
     fuel: ItemId,
     oilRecipe: RecipeId,
-    data: DatasetState
+    data: RationalDataset
   ): Step[] {
     if (steps.every((s) => this.URANIUM_ITEM.indexOf(s.itemId) === -1)) {
       // No matching uranium products found in steps

@@ -1,7 +1,5 @@
-import Fraction from 'fraction.js';
-
 import * as Mocks from 'src/mocks';
-import { RecipeId, ItemId, Step } from '~/models';
+import { RecipeId, ItemId, Step, Rational } from '~/models';
 import * as Recipe from '~/store/recipe';
 import { OilUtility } from './oil';
 
@@ -11,7 +9,7 @@ describe('OilUtility', () => {
     RecipeId.AdvancedOilProcessing,
     true,
     Mocks.RecipeFactors,
-    Mocks.Data
+    Mocks.RationalData
   );
 
   describe('getProductionData', () => {
@@ -19,29 +17,31 @@ describe('OilUtility', () => {
       const result = OilUtility.getProductionData(
         RecipeId.AdvancedOilProcessing,
         Mocks.RecipeFactors,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(result.recipe).toBeTruthy();
-      expect(result.heavy.n).toBeGreaterThan(0);
-      expect(result.light.n).toBeGreaterThan(0);
-      expect(result.petrol.n).toBeGreaterThan(0);
+      expect(result.heavy.nonzero()).toBeTrue();
+      expect(result.light.nonzero()).toBeTrue();
+      expect(result.petrol.nonzero()).toBeTrue();
     });
 
     it('should account for heavy input to coal liquefaction', () => {
       const result = OilUtility.getProductionData(
         RecipeId.CoalLiquefaction,
         Mocks.RecipeFactors,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(result.recipe).toBeTruthy();
-      expect(result.heavy.n).toBeGreaterThan(0);
-      expect(result.light.n).toBeGreaterThan(0);
-      expect(result.petrol.n).toBeGreaterThan(0);
-      expect(result.heavy).toBeLessThan(
-        Mocks.Data.recipeEntities[RecipeId.CoalLiquefaction].out[
-          ItemId.HeavyOil
-        ]
-      );
+      expect(result.heavy.nonzero()).toBeTrue();
+      expect(result.light.nonzero()).toBeTrue();
+      expect(result.petrol.nonzero()).toBeTrue();
+      expect(
+        result.heavy.lt(
+          Mocks.RationalData.recipeR[RecipeId.CoalLiquefaction].out[
+            ItemId.HeavyOil
+          ]
+        )
+      ).toBeTrue();
     });
   });
 
@@ -51,16 +51,16 @@ describe('OilUtility', () => {
         RecipeId.HeavyOilCracking,
         ItemId.HeavyOil,
         ItemId.LightOil,
-        new Fraction(1),
-        new Fraction(1),
+        Rational.one,
+        Rational.one,
         Mocks.RecipeFactors,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(result.recipe).toBeTruthy();
-      expect(result.input.n).toBeGreaterThan(0);
-      expect(result.output.n).toBeGreaterThan(0);
-      expect(result.factories.n).toBeGreaterThan(0);
-      expect(result.max.n).toBeGreaterThan(0);
+      expect(result.input.nonzero()).toBeTrue();
+      expect(result.output.nonzero()).toBeTrue();
+      expect(result.factories.nonzero()).toBeTrue();
+      expect(result.max.nonzero()).toBeTrue();
     });
   });
 
@@ -70,7 +70,7 @@ describe('OilUtility', () => {
         RecipeId.AdvancedOilProcessing,
         true,
         Mocks.RecipeFactors,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(result.oil).toBeTruthy();
       expect(result.hoc).toBeTruthy();
@@ -84,7 +84,7 @@ describe('OilUtility', () => {
         RecipeId.AdvancedOilProcessing,
         false,
         Mocks.RecipeFactors,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(result.oil).toBeTruthy();
       expect(result.hoc).toBeTruthy();
@@ -100,7 +100,7 @@ describe('OilUtility', () => {
         {
           itemId: ItemId.HeavyOil,
           recipeId: null,
-          items: new Fraction(1),
+          items: Rational.one,
           settings: {},
         },
       ];
@@ -110,7 +110,7 @@ describe('OilUtility', () => {
         steps,
         Mocks.RecipeSettingsEntities
       );
-      expect(result.surplus).toEqual(new Fraction(0));
+      expect(result.surplus).toEqual(Rational.zero);
       expect(result.recipeId).toEqual(RecipeId.AdvancedOilProcessing);
     });
 
@@ -123,7 +123,7 @@ describe('OilUtility', () => {
         Mocks.RecipeSettingsEntities
       );
       expect(steps.length).toEqual(1);
-      expect(result.surplus).toEqual(new Fraction(0));
+      expect(result.surplus).toEqual(Rational.zero);
       expect(result.recipeId).toEqual(RecipeId.AdvancedOilProcessing);
     });
   });
@@ -149,7 +149,7 @@ describe('OilUtility', () => {
         RecipeId.AdvancedOilProcessing,
         false,
         Mocks.RecipeFactors,
-        Mocks.Data
+        Mocks.RationalData
       );
       const result = OilUtility.getSteps(
         steps,
@@ -167,7 +167,7 @@ describe('OilUtility', () => {
   describe('calculateHeavyOil', () => {
     it('should skip if no heavy required', () => {
       const step: any = {
-        heavy: { items: new Fraction(0), factories: null },
+        heavy: { items: Rational.zero, factories: null },
       };
       OilUtility.calculateHeavyOil(step, matrix);
       expect(step.heavy.factories).toBeNull();
@@ -176,60 +176,60 @@ describe('OilUtility', () => {
     it('should calculate for required heavy', () => {
       const step: any = {
         heavy: {
-          items: new Fraction(1),
-          factories: new Fraction(0),
+          items: Rational.one,
+          factories: Rational.zero,
           settings: {},
         },
-        light: { surplus: new Fraction(0) },
+        light: { surplus: Rational.zero },
       };
       OilUtility.calculateHeavyOil(step, matrix);
-      expect(step.light.surplus.n).toBeGreaterThan(0);
-      expect(step.heavy.factories.n).toBeGreaterThan(0);
+      expect(step.light.surplus.nonzero()).toBeTrue();
+      expect(step.heavy.factories.nonzero()).toBeTrue();
     });
   });
 
   describe('calculateLightOil', () => {
     it('should only calculate petrol surplus if no light required', () => {
       const step: any = {
-        heavy: { factories: new Fraction(1) },
-        light: { items: new Fraction(0), factories: null },
-        petrol: { surplus: new Fraction(0) },
+        heavy: { factories: Rational.one },
+        light: { items: Rational.zero, factories: null },
+        petrol: { surplus: Rational.zero },
       };
       OilUtility.calculateLightOil(step, matrix);
       expect(step.light.factories).toBeNull();
-      expect(step.petrol.surplus.n).toBeGreaterThan(0);
+      expect(step.petrol.surplus.nonzero()).toBeTrue();
     });
 
     it('should subtract from surplus if sufficient', () => {
       const step: any = {
-        heavy: { factories: new Fraction(0) },
+        heavy: { factories: Rational.zero },
         light: {
-          items: new Fraction(1),
-          surplus: new Fraction(2),
+          items: Rational.one,
+          surplus: Rational.two,
           settings: {},
         },
-        petrol: { surplus: new Fraction(0) },
+        petrol: { surplus: Rational.zero },
       };
       OilUtility.calculateLightOil(step, matrix);
-      expect(step.light.surplus).toEqual(new Fraction(1));
+      expect(step.light.surplus).toEqual(Rational.one);
     });
 
     it('should calculate for required light', () => {
       const step: any = {
-        heavy: { factories: new Fraction(0) },
+        heavy: { factories: Rational.zero },
         light: {
-          items: new Fraction(2),
-          surplus: new Fraction(1),
-          factories: new Fraction(0),
+          items: Rational.two,
+          surplus: Rational.one,
+          factories: Rational.zero,
           settings: {},
         },
-        petrol: { surplus: new Fraction(0) },
+        petrol: { surplus: Rational.zero },
       };
       OilUtility.calculateLightOil(step, matrix);
-      expect(step.light.surplus).toEqual(new Fraction(0));
-      expect(step.heavy.factories.n).toBeGreaterThan(0);
-      expect(step.light.factories.n).toBeGreaterThan(0);
-      expect(step.petrol.surplus.n).toBeGreaterThan(0);
+      expect(step.light.surplus).toEqual(Rational.zero);
+      expect(step.heavy.factories.nonzero()).toBeTrue();
+      expect(step.light.factories.nonzero()).toBeTrue();
+      expect(step.petrol.surplus.nonzero()).toBeTrue();
     });
   });
 
@@ -241,58 +241,58 @@ describe('OilUtility', () => {
     });
 
     it('should skip if no fuel required', () => {
-      const step: any = { fuel: { items: new Fraction(0), factories: null } };
+      const step: any = { fuel: { items: Rational.zero, factories: null } };
       OilUtility.tryCalculateLightToFuel(step, matrix);
       expect(step.fuel.factories).toBeNull();
     });
 
     it('should subtract from surplus if sufficient', () => {
       const step: any = {
-        light: { surplus: new Fraction(20) },
+        light: { surplus: new Rational(BigInt(20)) },
         fuel: {
-          items: new Fraction(1),
-          factories: new Fraction(0),
+          items: Rational.one,
+          factories: Rational.zero,
           settings: {},
         },
       };
       OilUtility.tryCalculateLightToFuel(step, matrix);
-      expect(step.light.surplus).toEqual(new Fraction(10));
-      expect(step.fuel.factories.n).toBeGreaterThan(0);
+      expect(step.light.surplus).toEqual(new Rational(BigInt(10)));
+      expect(step.fuel.factories.nonzero()).toBeTrue();
     });
 
     it('should skip if excess petrol is produced', () => {
       const step: any = {
-        light: { surplus: new Fraction(10) },
+        light: { surplus: new Rational(BigInt(10)) },
         fuel: {
-          items: new Fraction(2),
-          factories: new Fraction(0),
+          items: Rational.two,
+          factories: Rational.zero,
           settings: {},
         },
-        petrol: { surplus: new Fraction(0) },
+        petrol: { items: Rational.zero, surplus: Rational.zero },
       };
       OilUtility.tryCalculateLightToFuel(step, matrix);
-      expect(step.light.surplus).toEqual(new Fraction(10));
-      expect(step.fuel.factories).toEqual(new Fraction(0));
-      expect(step.petrol.surplus).toEqual(new Fraction(0));
+      expect(step.light.surplus).toEqual(new Rational(BigInt(10)));
+      expect(step.fuel.factories).toEqual(Rational.zero);
+      expect(step.petrol.surplus).toEqual(Rational.zero);
     });
 
     it('should calculate for required fuel', () => {
       const step: any = {
-        heavy: { factories: new Fraction(0) },
-        light: { surplus: new Fraction(10), factories: new Fraction(0) },
+        heavy: { factories: Rational.zero },
+        light: { surplus: new Rational(BigInt(10)), factories: Rational.zero },
         fuel: {
-          items: new Fraction(2),
-          factories: new Fraction(0),
+          items: Rational.two,
+          factories: Rational.zero,
           settings: {},
         },
-        petrol: { items: new Fraction(1000), surplus: new Fraction(0) },
+        petrol: { items: new Rational(BigInt(1000)), surplus: Rational.zero },
       };
       OilUtility.tryCalculateLightToFuel(step, matrix);
-      expect(step.light.surplus).toEqual(new Fraction(0));
-      expect(step.heavy.factories.n).toBeGreaterThan(0);
-      expect(step.light.factories.n).toBeGreaterThan(0);
-      expect(step.fuel.factories.n).toBeGreaterThan(0);
-      expect(step.petrol.surplus.n).not.toEqual(new Fraction(1000));
+      expect(step.light.surplus).toEqual(Rational.zero);
+      expect(step.heavy.factories.nonzero()).toBeTrue();
+      expect(step.light.factories.nonzero()).toBeTrue();
+      expect(step.fuel.factories.nonzero()).toBeTrue();
+      expect(step.petrol.surplus.eq(new Rational(BigInt(1000)))).toBeFalse();
     });
   });
 
@@ -300,7 +300,7 @@ describe('OilUtility', () => {
     it('should skip if no petrol is required', () => {
       const step: any = {
         heavy: { factories: null },
-        petrol: { items: new Fraction(0) },
+        petrol: { items: Rational.zero },
       };
       OilUtility.calculatePetroleumGas(step, matrix);
       expect(step.heavy.factories).toBeNull();
@@ -309,31 +309,31 @@ describe('OilUtility', () => {
     it('should subtract from surplus if sufficient', () => {
       const step: any = {
         petrol: {
-          items: new Fraction(1),
-          surplus: new Fraction(2),
+          items: Rational.one,
+          surplus: Rational.two,
           settings: {},
         },
       };
       OilUtility.calculatePetroleumGas(step, matrix);
-      expect(step.petrol.surplus).toEqual(new Fraction(1));
+      expect(step.petrol.surplus).toEqual(Rational.one);
     });
 
     it('should calculate for required petrol', () => {
       const step: any = {
-        heavy: { factories: new Fraction(0) },
-        light: { factories: new Fraction(0) },
+        heavy: { factories: Rational.zero },
+        light: { factories: Rational.zero },
         petrol: {
-          items: new Fraction(2),
-          surplus: new Fraction(1),
-          factories: new Fraction(0),
+          items: Rational.two,
+          surplus: Rational.one,
+          factories: Rational.zero,
           settings: {},
         },
       };
       OilUtility.calculatePetroleumGas(step, matrix);
-      expect(step.petrol.surplus).toEqual(new Fraction(0));
-      expect(step.heavy.factories.n).toBeGreaterThan(0);
-      expect(step.light.factories.n).toBeGreaterThan(0);
-      expect(step.petrol.factories.n).toBeGreaterThan(0);
+      expect(step.petrol.surplus).toEqual(Rational.zero);
+      expect(step.heavy.factories.nonzero()).toBeTrue();
+      expect(step.light.factories.nonzero()).toBeTrue();
+      expect(step.petrol.factories.nonzero()).toBeTrue();
     });
   });
 
@@ -341,7 +341,7 @@ describe('OilUtility', () => {
     it('should skip if no petrol is required', () => {
       const step: any = {
         heavy: { factories: null },
-        petrol: { items: new Fraction(0) },
+        petrol: { items: Rational.zero },
       };
       OilUtility.calculateLightAndPetrol(step, matrix);
       expect(step.heavy.factories).toBeNull();
@@ -350,139 +350,139 @@ describe('OilUtility', () => {
     it('should subtract from surplus if sufficient', () => {
       const step: any = {
         petrol: {
-          items: new Fraction(1),
-          surplus: new Fraction(2),
+          items: Rational.one,
+          surplus: Rational.two,
           settings: {},
         },
       };
       OilUtility.calculateLightAndPetrol(step, matrix);
-      expect(step.petrol.surplus).toEqual(new Fraction(1));
+      expect(step.petrol.surplus).toEqual(Rational.one);
     });
 
     it('should calculate for required petrol', () => {
       const step: any = {
-        heavy: { factories: new Fraction(0) },
-        light: { factories: new Fraction(0), surplus: new Fraction(0) },
+        heavy: { factories: Rational.zero },
+        light: { factories: Rational.zero, surplus: Rational.zero },
         petrol: {
-          items: new Fraction(2),
-          surplus: new Fraction(1),
-          factories: new Fraction(0),
+          items: Rational.two,
+          surplus: Rational.one,
+          factories: Rational.zero,
           settings: {},
         },
       };
       OilUtility.calculateLightAndPetrol(step, matrix);
-      expect(step.petrol.surplus).toEqual(new Fraction(0));
-      expect(step.heavy.factories.n).toBeGreaterThan(0);
-      expect(step.light.factories.n).toBeGreaterThan(0);
-      expect(step.light.surplus.n).toBeGreaterThan(0);
-      expect(step.petrol.factories).toEqual(new Fraction(0));
+      expect(step.petrol.surplus).toEqual(Rational.zero);
+      expect(step.heavy.factories.nonzero()).toBeTrue();
+      expect(step.light.factories.nonzero()).toBeTrue();
+      expect(step.light.surplus.nonzero()).toBeTrue();
+      expect(step.petrol.factories).toEqual(Rational.zero);
     });
   });
 
   describe('calculateSurplusLightToFuel', () => {
     it('should handle ignored fuel step', () => {
       const step: any = {
-        fuelRequired: new Fraction(0),
-        light: { surplus: new Fraction(20) },
+        fuelRequired: Rational.zero,
+        light: { surplus: new Rational(BigInt(20)) },
         fuel: {
-          items: new Fraction(1),
-          factories: new Fraction(0),
+          items: Rational.one,
+          factories: Rational.zero,
           settings: { ignore: true },
         },
       };
       OilUtility.calculateSurplusLightToFuel(step, matrix);
-      expect(step.light.surplus).toEqual(new Fraction(20));
-      expect(step.fuel.factories).toEqual(new Fraction(0));
-      expect(step.fuelRequired).toEqual(new Fraction(0));
+      expect(step.light.surplus).toEqual(new Rational(BigInt(20)));
+      expect(step.fuel.factories).toEqual(Rational.zero);
+      expect(step.fuelRequired).toEqual(Rational.zero);
     });
 
     it('should subtract from surplus if sufficient', () => {
       const step: any = {
-        fuelRequired: new Fraction(0),
-        light: { surplus: new Fraction(20) },
+        fuelRequired: Rational.zero,
+        light: { surplus: new Rational(BigInt(20)) },
         fuel: {
-          items: new Fraction(1),
-          factories: new Fraction(0),
+          items: Rational.one,
+          factories: Rational.zero,
           settings: {},
         },
       };
       OilUtility.calculateSurplusLightToFuel(step, matrix);
-      expect(step.light.surplus).toEqual(new Fraction(10));
-      expect(step.fuel.factories.n).toBeGreaterThan(0);
-      expect(step.fuelRequired.n).toBeGreaterThan(0);
+      expect(step.light.surplus).toEqual(new Rational(BigInt(10)));
+      expect(step.fuel.factories.nonzero()).toBeTrue();
+      expect(step.fuelRequired.nonzero()).toBeTrue();
     });
 
     it('should calculate for required fuel', () => {
       const step: any = {
-        fuelRequired: new Fraction(0),
-        light: { surplus: new Fraction(10) },
+        fuelRequired: Rational.zero,
+        light: { surplus: new Rational(BigInt(10)) },
         fuel: {
-          items: new Fraction(2),
-          factories: new Fraction(0),
+          items: Rational.two,
+          factories: Rational.zero,
           settings: {},
         },
       };
       OilUtility.calculateSurplusLightToFuel(step, matrix);
-      expect(step.light.surplus).toEqual(new Fraction(0));
-      expect(step.fuel.factories.n).toBeGreaterThan(0);
-      expect(step.fuelRequired.n).toBeGreaterThan(0);
+      expect(step.light.surplus).toEqual(Rational.zero);
+      expect(step.fuel.factories.nonzero()).toBeTrue();
+      expect(step.fuelRequired.nonzero()).toBeTrue();
     });
   });
 
   describe('calculateSurplusPetrolToFuel', () => {
     it('should subtract from surplus if sufficient', () => {
       const step: any = {
-        fuelRequired: new Fraction(1),
-        petrol: { surplus: new Fraction(40) },
-        fuelPetrol: { factories: new Fraction(0) },
+        fuelRequired: Rational.one,
+        petrol: { surplus: new Rational(BigInt(40)) },
+        fuelPetrol: { factories: Rational.zero },
       };
       OilUtility.calculateSurplusPetrolToFuel(step, matrix);
-      expect(step.petrol.surplus).toEqual(new Fraction(20));
-      expect(step.fuelPetrol.factories.n).toBeGreaterThan(0);
-      expect(step.fuelRequired).toEqual(new Fraction(0));
+      expect(step.petrol.surplus).toEqual(new Rational(BigInt(20)));
+      expect(step.fuelPetrol.factories.nonzero()).toBeTrue();
+      expect(step.fuelRequired).toEqual(Rational.zero);
     });
 
     it('should calculate for required fuel', () => {
       const step: any = {
-        fuelRequired: new Fraction(2),
-        petrol: { surplus: new Fraction(20) },
-        fuelPetrol: { factories: new Fraction(0) },
+        fuelRequired: Rational.two,
+        petrol: { surplus: new Rational(BigInt(20)) },
+        fuelPetrol: { factories: Rational.zero },
       };
       OilUtility.calculateSurplusPetrolToFuel(step, matrix);
-      expect(step.petrol.surplus).toEqual(new Fraction(0));
-      expect(step.fuelPetrol.factories.n).toBeGreaterThan(0);
-      expect(step.fuelRequired.n).toBeGreaterThan(0);
+      expect(step.petrol.surplus).toEqual(Rational.zero);
+      expect(step.fuelPetrol.factories.nonzero()).toBeTrue();
+      expect(step.fuelRequired.nonzero()).toBeTrue();
     });
   });
 
   describe('calculateFuel', () => {
     it('should calculate for required fuel', () => {
       const step: any = {
-        fuelRequired: new Fraction(1),
-        heavy: { factories: new Fraction(0) },
-        light: { factories: new Fraction(0) },
-        fuel: { factories: new Fraction(0) },
-        fuelPetrol: { factories: new Fraction(0) },
+        fuelRequired: Rational.one,
+        heavy: { factories: Rational.zero },
+        light: { factories: Rational.zero },
+        fuel: { factories: Rational.zero },
+        fuelPetrol: { factories: Rational.zero },
       };
       OilUtility.calculateFuel(step, matrix);
-      expect(step.heavy.factories.n).toBeGreaterThan(0);
-      expect(step.light.factories.n).toBeGreaterThan(0);
-      expect(step.fuel.factories.n).toBeGreaterThan(0);
-      expect(step.fuelPetrol.factories.n).toBeGreaterThan(0);
+      expect(step.heavy.factories.nonzero()).toBeTrue();
+      expect(step.light.factories.nonzero()).toBeTrue();
+      expect(step.fuel.factories.nonzero()).toBeTrue();
+      expect(step.fuelPetrol.factories.nonzero()).toBeTrue();
     });
   });
 
   describe('calculateItems', () => {
     it('should calculate total items from factories', () => {
       const step: any = {
-        heavy: { items: new Fraction(1), factories: new Fraction(1) },
-        light: { items: new Fraction(1), factories: new Fraction(1) },
-        petrol: { items: new Fraction(1), factories: new Fraction(1) },
+        heavy: { items: Rational.one, factories: Rational.one },
+        light: { items: Rational.one, factories: Rational.one },
+        petrol: { items: Rational.one, factories: Rational.one },
       };
       OilUtility.calculateItems(step, matrix);
-      expect(step.heavy.items.n).toBeGreaterThan(0);
-      expect(step.light.items.n).toBeGreaterThan(0);
-      expect(step.petrol.items.n).toBeGreaterThan(0);
+      expect(step.heavy.items.nonzero()).toBeTrue();
+      expect(step.light.items.nonzero()).toBeTrue();
+      expect(step.petrol.items.nonzero()).toBeTrue();
     });
 
     it('should handle coal liquefaction heavy input', () => {
@@ -490,26 +490,26 @@ describe('OilUtility', () => {
         RecipeId.CoalLiquefaction,
         false,
         Mocks.RecipeFactors,
-        Mocks.Data
+        Mocks.RationalData
       );
       const step: any = {
-        heavy: { items: new Fraction(1), factories: new Fraction(1) },
-        light: { items: new Fraction(1), factories: new Fraction(1) },
-        petrol: { items: new Fraction(1), factories: new Fraction(1) },
+        heavy: { items: Rational.one, factories: Rational.one },
+        light: { items: Rational.one, factories: Rational.one },
+        petrol: { items: Rational.one, factories: Rational.one },
       };
       OilUtility.calculateItems(step, coalMatrix);
-      expect(step.heavy.items.n).toBeGreaterThan(0);
-      expect(step.light.items.n).toBeGreaterThan(0);
-      expect(step.petrol.items.n).toBeGreaterThan(0);
+      expect(step.heavy.items.nonzero()).toBeTrue();
+      expect(step.light.items.nonzero()).toBeTrue();
+      expect(step.petrol.items.nonzero()).toBeTrue();
     });
   });
 
   describe('calculateInputs', () => {
     it('should calculate inputs for required factories', () => {
       const step: any = {
-        heavy: { factories: new Fraction(1) },
-        light: { factories: new Fraction(1) },
-        petrol: { factories: new Fraction(1) },
+        heavy: { factories: Rational.one },
+        light: { factories: Rational.one },
+        petrol: { factories: Rational.one },
       };
       const steps = [];
       OilUtility.calculateInputs(
@@ -519,7 +519,7 @@ describe('OilUtility', () => {
         Mocks.RecipeSettingsEntities,
         Mocks.RecipeFactors,
         ItemId.Coal,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(steps.length).toBeGreaterThan(0);
     });
@@ -529,12 +529,12 @@ describe('OilUtility', () => {
         RecipeId.CoalLiquefaction,
         false,
         Mocks.RecipeFactors,
-        Mocks.Data
+        Mocks.RationalData
       );
       const step: any = {
-        heavy: { factories: new Fraction(1) },
-        light: { factories: new Fraction(1) },
-        petrol: { factories: new Fraction(1) },
+        heavy: { factories: Rational.one },
+        light: { factories: Rational.one },
+        petrol: { factories: Rational.one },
       };
       const steps = [];
       OilUtility.calculateInputs(
@@ -544,7 +544,7 @@ describe('OilUtility', () => {
         Mocks.RecipeSettingsEntities,
         Mocks.RecipeFactors,
         ItemId.Coal,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(steps.length).toBeGreaterThan(0);
     });
@@ -553,30 +553,30 @@ describe('OilUtility', () => {
   describe('calculateFactories', () => {
     it('should calculate factories based on speed factors', () => {
       const step: any = {
-        heavy: { factories: new Fraction(1) },
-        light: { factories: new Fraction(1) },
-        petrol: { factories: new Fraction(1) },
+        heavy: { factories: Rational.one },
+        light: { factories: Rational.one },
+        petrol: { factories: Rational.one },
       };
       OilUtility.calculateFactories(step, matrix, Mocks.RecipeFactors);
-      expect(step.heavy.factories.n).toBeGreaterThan(1);
-      expect(step.light.factories.n).toBeGreaterThan(1);
-      expect(step.petrol.factories.n).toBeGreaterThan(1);
+      expect(step.heavy.factories.gt(Rational.one)).toBeTrue();
+      expect(step.light.factories.gt(Rational.one)).toBeTrue();
+      expect(step.petrol.factories.gt(Rational.one)).toBeTrue();
     });
 
     it('should calculate factories based on speed factors with fuel products', () => {
       const step: any = {
-        heavy: { factories: new Fraction(1) },
-        light: { factories: new Fraction(1) },
-        petrol: { factories: new Fraction(1) },
-        fuel: { factories: new Fraction(1) },
-        fuelPetrol: { factories: new Fraction(1) },
+        heavy: { factories: Rational.one },
+        light: { factories: Rational.one },
+        petrol: { factories: Rational.one },
+        fuel: { factories: Rational.one },
+        fuelPetrol: { factories: Rational.one },
       };
       OilUtility.calculateFactories(step, matrix, Mocks.RecipeFactors);
-      expect(step.heavy.factories.n).toBeGreaterThan(1);
-      expect(step.light.factories.n).toBeGreaterThan(1);
-      expect(step.petrol.factories.n).toBeGreaterThan(1);
-      expect(step.fuel.factories.n).toBeGreaterThan(1);
-      expect(step.fuelPetrol.factories.n).toBeGreaterThan(1);
+      expect(step.heavy.factories.gt(Rational.one)).toBeTrue();
+      expect(step.light.factories.gt(Rational.one)).toBeTrue();
+      expect(step.petrol.factories.gt(Rational.one)).toBeTrue();
+      expect(step.fuel.factories.gt(Rational.one)).toBeTrue();
+      expect(step.fuelPetrol.factories.gt(Rational.one)).toBeTrue();
     });
   });
 
@@ -586,7 +586,7 @@ describe('OilUtility', () => {
         {
           itemId: ItemId.PetroleumGas,
           recipeId: null,
-          items: new Fraction(1),
+          items: Rational.one,
           settings: {},
         },
       ];
@@ -596,7 +596,7 @@ describe('OilUtility', () => {
         Mocks.RecipeSettingsEntities,
         Mocks.RecipeFactors,
         ItemId.Coal,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(result.length).toEqual(1);
     });
@@ -609,7 +609,7 @@ describe('OilUtility', () => {
         Mocks.RecipeSettingsEntities,
         Mocks.RecipeFactors,
         ItemId.Coal,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(result.length).toEqual(0);
     });
@@ -619,8 +619,8 @@ describe('OilUtility', () => {
         {
           itemId: ItemId.PetroleumGas,
           recipeId: null,
-          items: new Fraction(1),
-          factories: new Fraction(0),
+          items: Rational.one,
+          factories: Rational.zero,
           settings: {},
         },
       ];
@@ -634,7 +634,7 @@ describe('OilUtility', () => {
         settings,
         Mocks.RecipeFactors,
         ItemId.Coal,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(result.length).toEqual(1);
     });
@@ -644,8 +644,8 @@ describe('OilUtility', () => {
         {
           itemId: ItemId.PetroleumGas,
           recipeId: null,
-          items: new Fraction(1),
-          factories: new Fraction(0),
+          items: Rational.one,
+          factories: Rational.zero,
           settings: {},
         },
       ];
@@ -655,7 +655,7 @@ describe('OilUtility', () => {
         Mocks.RecipeSettingsEntities,
         Mocks.RecipeFactors,
         ItemId.Coal,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(result.length).toBeGreaterThan(1);
     });
@@ -665,8 +665,8 @@ describe('OilUtility', () => {
         {
           itemId: ItemId.SolidFuel,
           recipeId: null,
-          items: new Fraction(1),
-          factories: new Fraction(0),
+          items: Rational.one,
+          factories: Rational.zero,
           settings: {},
         },
       ];
@@ -676,7 +676,7 @@ describe('OilUtility', () => {
         Mocks.RecipeSettingsEntities,
         Mocks.RecipeFactors,
         ItemId.Coal,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(result.length).toBeGreaterThan(1);
     });
@@ -686,15 +686,15 @@ describe('OilUtility', () => {
         {
           itemId: ItemId.SolidFuel,
           recipeId: null,
-          items: new Fraction(20),
-          factories: new Fraction(0),
+          items: new Rational(BigInt(20)),
+          factories: Rational.zero,
           settings: {},
         },
         {
           itemId: ItemId.HeavyOil,
           recipeId: null,
-          items: new Fraction(100),
-          factories: new Fraction(0),
+          items: new Rational(BigInt(100)),
+          factories: Rational.zero,
           settings: {},
         },
       ];
@@ -704,7 +704,7 @@ describe('OilUtility', () => {
         Mocks.RecipeSettingsEntities,
         Mocks.RecipeFactors,
         ItemId.Coal,
-        Mocks.Data
+        Mocks.RationalData
       );
       expect(result.length).toBeGreaterThan(1);
     });
