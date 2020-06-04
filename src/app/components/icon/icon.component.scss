@@ -52,8 +52,8 @@
   right: 0.125rem;
   color: var(--color-white);
   font-weight: bold;
-  text-shadow: 0px 1px 1px #000, 0px -1px 1px #000, 1px 0px 1px #000,
-    -1px 0px 1px #000;
+  text-shadow: 0px 1px 1px var(--color-black), 0px -1px 1px var(--color-black),
+    1px 0px 1px var(--color-black), -1px 0px 1px var(--color-black);
   pointer-events: none;
 }
 

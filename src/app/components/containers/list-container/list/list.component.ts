@@ -95,9 +95,10 @@ export class ListComponent {
   }
 
   prodAllowed(step: Step) {
-    return RecipeUtility.prodModuleAllowed(
-      this.data.recipeEntities[step.recipeId],
-      this.data.itemEntities
+    return RecipeUtility.moduleAllowed(
+      ItemId.ProductivityModule,
+      step.recipeId,
+      this.data
     );
   }
 

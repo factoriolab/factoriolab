@@ -686,8 +686,7 @@
       "row": 6,
       "module": {
         "speed": 0.2,
-        "productivity": 0,
-        "energy": 0.5
+        "consumption": 0.5
       }
     },
     {
@@ -698,8 +697,7 @@
       "row": 6,
       "module": {
         "speed": 0.3,
-        "productivity": 0,
-        "energy": 0.6
+        "consumption": 0.6
       }
     },
     {
@@ -710,44 +708,37 @@
       "row": 6,
       "module": {
         "speed": 0.5,
-        "productivity": 0,
-        "energy": 0.7
+        "consumption": 0.7
       }
     },
     {
-      "id": "efficiency-module",
+      "id": "effectivity-module",
       "name": "Efficiency Module",
       "stack": 50,
       "category": "production",
       "row": 6,
       "module": {
-        "speed": 0,
-        "productivity": 0,
-        "energy": -0.3
+        "consumption": -0.3
       }
     },
     {
-      "id": "efficiency-module-2",
+      "id": "effectivity-module-2",
       "name": "Efficiency Module 2",
       "stack": 50,
       "category": "production",
       "row": 6,
       "module": {
-        "speed": 0,
-        "productivity": 0,
-        "energy": -0.4
+        "consumption": -0.4
       }
     },
     {
-      "id": "efficiency-module-3",
+      "id": "effectivity-module-3",
       "name": "Efficiency Module 3",
       "stack": 50,
       "category": "production",
       "row": 6,
       "module": {
-        "speed": 0,
-        "productivity": 0,
-        "energy": -0.5
+        "consumption": -0.5
       }
     },
     {
@@ -757,9 +748,11 @@
       "category": "production",
       "row": 6,
       "module": {
-        "speed": -0.15,
         "productivity": 0.04,
-        "energy": 0.4
+        "consumption": 0.4,
+        "pollution": 0.05,
+        "speed": -0.15,
+        "limitation": "productivity-module"
       }
     },
     {
@@ -769,9 +762,11 @@
       "category": "production",
       "row": 6,
       "module": {
-        "speed": -0.15,
         "productivity": 0.06,
-        "energy": 0.6
+        "consumption": 0.6,
+        "pollution": 0.07,
+        "speed": -0.15,
+        "limitation": "productivity-module"
       }
     },
     {
@@ -781,9 +776,11 @@
       "category": "production",
       "row": 6,
       "module": {
-        "speed": -0.15,
         "productivity": 0.1,
-        "energy": 0.8
+        "consumption": 0.8,
+        "pollution": 0.1,
+        "speed": -0.15,
+        "limitation": "productivity-module"
       }
     },
     {
@@ -2221,26 +2218,26 @@
       "in": { "advanced-circuit": 5, "processing-unit": 5, "speed-module-2": 5 }
     },
     {
-      "id": "efficiency-module",
+      "id": "effectivity-module",
       "time": 15,
       "in": { "advanced-circuit": 5, "electronic-circuit": 5 }
     },
     {
-      "id": "efficiency-module-2",
+      "id": "effectivity-module-2",
       "time": 30,
       "in": {
         "advanced-circuit": 5,
         "processing-unit": 5,
-        "efficiency-module": 4
+        "effectivity-module": 4
       }
     },
     {
-      "id": "efficiency-module-3",
+      "id": "effectivity-module-3",
       "time": 60,
       "in": {
         "advanced-circuit": 5,
         "processing-unit": 5,
-        "efficiency-module-2": 5
+        "effectivity-module-2": 5
       }
     },
     {
@@ -2754,7 +2751,7 @@
       "id": "power-armor-mk2",
       "time": 25,
       "in": {
-        "efficiency-module-2": 25,
+        "effectivity-module-2": 25,
         "electric-engine-unit": 40,
         "low-density-structure": 30,
         "processing-unit": 60,
@@ -3257,9 +3254,9 @@
     { "id": "discharge-defense", "position": "-192px -160px" },
     { "id": "discharge-defense-remote", "position": "-160px -160px" },
     { "id": "distractor-capsule", "position": "-224px -160px" },
-    { "id": "efficiency-module", "position": "-64px -192px" },
-    { "id": "efficiency-module-2", "position": "-0px -192px" },
-    { "id": "efficiency-module-3", "position": "-32px -192px" },
+    { "id": "effectivity-module", "position": "-64px -192px" },
+    { "id": "effectivity-module-2", "position": "-0px -192px" },
+    { "id": "effectivity-module-3", "position": "-32px -192px" },
     { "id": "electric-engine-unit", "position": "-96px -192px" },
     { "id": "electric-furnace", "position": "-128px -192px" },
     { "id": "electric-mining-drill", "position": "-160px -192px" },
@@ -3440,5 +3437,59 @@
     { "id": "wood", "position": "-192px -832px" },
     { "id": "wooden-chest", "position": "-224px -832px" },
     { "id": "worker-robot-speed", "size": 64, "position": "-64px -1056px" }
-  ]
+  ],
+  "limitations": {
+    "productivity-module": [
+      "sulfuric-acid",
+      "basic-oil-processing",
+      "advanced-oil-processing",
+      "coal-liquefaction",
+      "heavy-oil-cracking",
+      "light-oil-cracking",
+      "solid-fuel-from-light-oil",
+      "solid-fuel-from-heavy-oil",
+      "solid-fuel-from-petroleum-gas",
+      "lubricant",
+      "iron-plate",
+      "copper-plate",
+      "steel-plate",
+      "stone-brick",
+      "sulfur",
+      "plastic-bar",
+      "empty-barrel",
+      "uranium-processing",
+      "copper-cable",
+      "iron-stick",
+      "iron-gear-wheel",
+      "electronic-circuit",
+      "advanced-circuit",
+      "processing-unit",
+      "engine-unit",
+      "electric-engine-unit",
+      "uranium-fuel-cell",
+      "explosives",
+      "battery",
+      "flying-robot-frame",
+      "low-density-structure",
+      "rocket-fuel",
+      "rocket-control-unit",
+      "rocket-part",
+      "automation-science-pack",
+      "logistic-science-pack",
+      "chemical-science-pack",
+      "military-science-pack",
+      "production-science-pack",
+      "utility-science-pack",
+      "kovarex-enrichment-process",
+      "mining-productivity",
+      "worker-robot-speed",
+      "follower-robot-count",
+      "energy-weapons-damage",
+      "physical-projectile-damage",
+      "refined-flammables",
+      "artillery-shell-range",
+      "artillery-shell-shooting-speed",
+      "stronger-explosives"
+    ]
+  }
 }

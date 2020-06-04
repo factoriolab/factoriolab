@@ -8,6 +8,7 @@ import {
   NEntities,
   RationalItem,
   RationalRecipe,
+  RecipeId,
 } from '~/models';
 import { DatasetAction, DatasetActionType } from './dataset.actions';
 
@@ -26,6 +27,7 @@ export interface DatasetState {
   recipeEntities: Entities<Recipe>;
   recipeN: Entities<number>;
   recipeI: NEntities<string>;
+  limitations: Entities<RecipeId[]>;
 }
 
 export interface RationalDataset extends DatasetState {
@@ -48,6 +50,7 @@ export const initialDatasetState: DatasetState = {
   recipeEntities: {},
   recipeN: {},
   recipeI: {},
+  limitations: {},
 };
 
 export function datasetReducer(
@@ -130,6 +133,7 @@ export function datasetReducer(
           (e: NEntities<string>, i, z) => ({ ...e, ...{ [z]: i.id } }),
           {}
         ),
+        limitations: action.payload.limitations,
       };
     }
     default:

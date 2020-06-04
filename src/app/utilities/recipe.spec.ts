@@ -9,6 +9,7 @@ describe('RecipeUtility', () => {
   const item1 = ItemId.WoodenChest;
 
   const module = ItemId.Module;
+  const effModule = ItemId.EfficiencyModule;
   const prodModule = ItemId.ProductivityModule3;
   const speedModule = ItemId.SpeedModule3;
 
@@ -55,59 +56,54 @@ describe('RecipeUtility', () => {
     });
   });
 
-  describe('prodModuleAllowed', () => {
-    it('should not allow for the satellite recipe', () => {
-      const result = RecipeUtility.prodModuleAllowed(
-        { id: RecipeId.Satellite } as any,
-        Mocks.Data.itemEntities
-      );
-      expect(result).toEqual(false);
-    });
-
-    it('should allow if there is an intermediate output', () => {
-      const result = RecipeUtility.prodModuleAllowed(
-        { out: { [item1]: 1 } } as any,
-        { [item1]: { category: CategoryId.Intermediate } } as any
+  describe('moduleAllowed', () => {
+    it('should handle modules with no limitation', () => {
+      const result = RecipeUtility.moduleAllowed(
+        ItemId.EfficiencyModule,
+        RecipeId.AdvancedOilProcessing,
+        Mocks.Data
       );
       expect(result).toEqual(true);
     });
 
-    it('should not allow if there is not an intermediate output', () => {
-      const result = RecipeUtility.prodModuleAllowed(
-        { out: { [item1]: 1 } } as any,
-        { [item1]: { category: CategoryId.Logistics } } as any
-      );
-      expect(result).toEqual(false);
-    });
-
-    it('should allow if the recipe is for an intermediate with default output', () => {
-      const result = RecipeUtility.prodModuleAllowed(
-        { id: item1 } as any,
-        { [item1]: { category: CategoryId.Intermediate } } as any
+    it('should allow if there is a match on limitation', () => {
+      const result = RecipeUtility.moduleAllowed(
+        ItemId.ProductivityModule,
+        RecipeId.AdvancedOilProcessing,
+        Mocks.Data
       );
       expect(result).toEqual(true);
+    });
+
+    it('should not allow if there is not a match on limitation', () => {
+      const result = RecipeUtility.moduleAllowed(
+        ItemId.ProductivityModule,
+        RecipeId.Satellite,
+        Mocks.Data
+      );
+      expect(result).toEqual(false);
     });
   });
 
   describe('defaultModules', () => {
     it('should use the prod module if allowed', () => {
       const result = RecipeUtility.defaultModules(
-        { id: item1 } as any,
+        { id: RecipeId.AdvancedOilProcessing } as any,
         prodModule,
         speedModule,
         1,
-        { [item1]: { category: CategoryId.Intermediate } } as any
+        Mocks.Data
       );
       expect(result).toEqual([prodModule]);
     });
 
     it('should use the other module if prod not allowed', () => {
       const result = RecipeUtility.defaultModules(
-        { id: item1 } as any,
+        { id: RecipeId.Satellite } as any,
         prodModule,
         speedModule,
         1,
-        { [item1]: { category: CategoryId.Logistics } } as any
+        Mocks.Data
       );
       expect(result).toEqual([speedModule]);
     });
@@ -182,6 +178,38 @@ describe('RecipeUtility', () => {
         null,
         Rational.zero,
         {} as any
+      );
+      expect(result).toEqual({ speed: Rational.one, prod: Rational.one });
+    });
+
+    it('should handle a module with no speed/prod effect', () => {
+      const result = RecipeUtility.recipeFactors(
+        Rational.one,
+        Rational.zero,
+        [effModule],
+        null,
+        Rational.zero,
+        {
+          [effModule]: {
+            module: { consumption: Rational.one },
+          },
+        } as any
+      );
+      expect(result).toEqual({ speed: Rational.one, prod: Rational.one });
+    });
+
+    it('should handle a beacon with no speed effect', () => {
+      const result = RecipeUtility.recipeFactors(
+        Rational.one,
+        Rational.zero,
+        [],
+        effModule,
+        Rational.one,
+        {
+          [effModule]: {
+            module: { consumption: Rational.one },
+          },
+        } as any
       );
       expect(result).toEqual({ speed: Rational.one, prod: Rational.one });
     });

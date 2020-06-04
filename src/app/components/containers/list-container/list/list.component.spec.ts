@@ -140,9 +140,9 @@ describe('ListComponent', () => {
 
   describe('prodAllowed', () => {
     it('should look up whether prod is allowed for a step', () => {
-      spyOn(RecipeUtility, 'prodModuleAllowed').and.callThrough();
+      spyOn(RecipeUtility, 'moduleAllowed').and.callThrough();
       const result = component.child.prodAllowed(Mocks.Steps[0]);
-      expect(RecipeUtility.prodModuleAllowed).toHaveBeenCalled();
+      expect(RecipeUtility.moduleAllowed).toHaveBeenCalled();
       expect(result).toEqual(false);
     });
   });
