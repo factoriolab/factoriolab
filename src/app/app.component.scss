@@ -8,13 +8,16 @@
 
 main {
   display: flex;
-  overflow: auto;
+  overflow: hidden;
   flex-grow: 1;
 }
 
 .view {
+  background-color: var(--color-back);
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
+  overflow: auto;
 }
 
 ul {
