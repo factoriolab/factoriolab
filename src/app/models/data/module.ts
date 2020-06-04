@@ -1,19 +1,35 @@
 import { Rational } from '../rational';
 
 export interface Module {
-  speed: number;
-  productivity: number;
-  energy: number;
+  speed?: number;
+  productivity?: number;
+  consumption?: number;
+  pollution?: number;
+  limitation?: string;
 }
 
 export class RationalModule {
-  speed: Rational;
-  productivity: Rational;
-  energy: Rational;
+  speed?: Rational;
+  productivity?: Rational;
+  consumption?: Rational;
+  pollution?: Rational;
+  limitation?: string;
 
   constructor(data: Module) {
-    this.speed = Rational.fromNumber(data.speed);
-    this.productivity = Rational.fromNumber(data.productivity);
-    this.energy = Rational.fromNumber(data.energy);
+    if (data.speed) {
+      this.speed = Rational.fromNumber(data.speed);
+    }
+    if (data.productivity) {
+      this.productivity = Rational.fromNumber(data.productivity);
+    }
+    if (data.consumption) {
+      this.consumption = Rational.fromNumber(data.consumption);
+    }
+    if (data.pollution) {
+      this.pollution = Rational.fromNumber(data.pollution);
+    }
+    if (data.limitation) {
+      this.limitation = data.limitation;
+    }
   }
 }

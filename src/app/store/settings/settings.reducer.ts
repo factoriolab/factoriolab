@@ -30,7 +30,10 @@ export interface SettingsState {
   theme?: Theme;
 }
 
-const loadTheme = localStorage.getItem(LocalStorageKey.Theme);
+export const loadTheme = () => {
+  const lsTheme = localStorage.getItem(LocalStorageKey.Theme);
+  return lsTheme ? (lsTheme as Theme) : Theme.DarkMode;
+};
 
 export const initialSettingsState: SettingsState = {
   displayRate: DisplayRate.PerMinute,
@@ -51,7 +54,7 @@ export const initialSettingsState: SettingsState = {
   researchSpeed: ResearchSpeed.Speed6,
   flowRate: 1500,
   expensive: false,
-  theme: loadTheme ? (loadTheme as Theme) : Theme.DarkMode,
+  theme: loadTheme(),
 };
 
 export function settingsReducer(

@@ -11,6 +11,7 @@ import {
   Rational,
   RationalItem,
 } from '~/models';
+import { DatasetState } from '~/store/dataset';
 import { RecipeState } from '~/store/recipe';
 
 const categoryAllowProdModule = [CategoryId.Intermediate, CategoryId.Research];
@@ -74,27 +75,19 @@ export class RecipeUtility {
   }
 
   /** Determines whether prod modules are allowed for a given recipe */
-  static prodModuleAllowed(recipe: Recipe, itemEntities: Entities<Item>) {
-    if (recipe.id === RecipeId.Satellite) {
-      // Breaks the rules, but this is not allowed
-      return false;
+  static moduleAllowed(
+    moduleId: ItemId,
+    recipeId: RecipeId,
+    data: DatasetState
+  ) {
+    const module = data.itemEntities[moduleId];
+    if (module.module.limitation) {
+      return data.limitations[module.module.limitation].some(
+        (l) => l === recipeId
+      );
     }
 
-    if (recipe.out) {
-      // Recipe lists individual outputs, iterate them
-      for (const out of Object.keys(recipe.out)) {
-        const item = itemEntities[out];
-        if (categoryAllowProdModule.indexOf(item.category) !== -1) {
-          return true;
-        }
-      }
-    } else {
-      // Recipe lists no outputs, find item by recipe id
-      const item = itemEntities[recipe.id];
-      return categoryAllowProdModule.indexOf(item.category) !== -1;
-    }
-
-    return false;
+    return true;
   }
 
   /** Determines default array of modules for a given recipe */
@@ -103,10 +96,14 @@ export class RecipeUtility {
     prodModule: ItemId,
     speedModule: ItemId,
     count: number,
-    itemEntities: Entities<Item>
+    data: DatasetState
   ) {
     // Determine whether prod modules are allowed
-    const prodModuleAllowed = this.prodModuleAllowed(recipe, itemEntities);
+    const prodModuleAllowed = this.moduleAllowed(
+      ItemId.ProductivityModule,
+      recipe.id,
+      data
+    );
     // Pick the default module to use
     const module =
       prodModuleAllowed && prodModule !== ItemId.Module
@@ -136,8 +133,12 @@ export class RecipeUtility {
         if (itemEntities[id]) {
           const module = itemEntities[id].module;
           if (module) {
-            speed = speed.add(module.speed);
-            prod = prod.add(module.productivity);
+            if (module.speed) {
+              speed = speed.add(module.speed);
+            }
+            if (module.productivity) {
+              prod = prod.add(module.productivity);
+            }
           }
         }
       }
@@ -148,7 +149,9 @@ export class RecipeUtility {
       beaconCount.nonzero()
     ) {
       const module = itemEntities[beaconModule].module;
-      speed = speed.add(module.speed.div(Rational.two).mul(beaconCount));
+      if (module.speed) {
+        speed = speed.add(module.speed.div(Rational.two).mul(beaconCount));
+      }
     }
 
     speed = speed.mul(factorySpeed);

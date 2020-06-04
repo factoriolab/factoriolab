@@ -21,7 +21,7 @@ describe('RationalItem', () => {
         module: {
           speed: 1,
           productivity: 1,
-          energy: 1,
+          consumption: 1,
         },
         fuel: 2,
       });
@@ -35,7 +35,7 @@ describe('RationalItem', () => {
       expect(result.factory.modules).toEqual(0);
       expect(result.module.speed).toEqual(Rational.one);
       expect(result.module.productivity).toEqual(Rational.one);
-      expect(result.module.energy).toEqual(Rational.one);
+      expect(result.module.consumption).toEqual(Rational.one);
       expect(result.fuel).toEqual(Rational.two);
     });
 

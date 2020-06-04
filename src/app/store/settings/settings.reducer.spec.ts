@@ -1,8 +1,36 @@
-import { DisplayRate, ItemId, RecipeId, ResearchSpeed } from '~/models';
+import {
+  DisplayRate,
+  ItemId,
+  RecipeId,
+  ResearchSpeed,
+  LocalStorageKey,
+  Theme,
+} from '~/models';
 import * as Actions from './settings.actions';
-import { settingsReducer, initialSettingsState } from './settings.reducer';
+import {
+  settingsReducer,
+  initialSettingsState,
+  loadTheme,
+} from './settings.reducer';
 
 describe('Settings Reducer', () => {
+  describe('loadTheme', () => {
+    afterEach(() => {
+      localStorage.removeItem(LocalStorageKey.Theme);
+    });
+
+    it('should load theme from local storage', () => {
+      localStorage.setItem(LocalStorageKey.Theme, Theme.LightMode);
+      const result = loadTheme();
+      expect(result).toEqual(Theme.LightMode);
+    });
+
+    it('should load DarkMode if not found in local storage', () => {
+      const result = loadTheme();
+      expect(result).toEqual(Theme.DarkMode);
+    });
+  });
+
   describe('LOAD', () => {
     it('should load settings', () => {
       const result = settingsReducer(
