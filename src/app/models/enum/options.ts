@@ -1,5 +1,5 @@
-import { ItemId } from './item';
-import { RecipeId } from './recipe';
+import { ItemId } from '../data/item';
+import { RecipeId } from '../data/recipe';
 
 export enum OptionsType {
   Belt,

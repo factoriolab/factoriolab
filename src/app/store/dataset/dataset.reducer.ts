@@ -3,13 +3,13 @@ import {
   Category,
   Recipe,
   Entities,
+  Icon,
   ItemId,
   NEntities,
   RationalItem,
   RationalRecipe,
 } from '~/models';
 import { DatasetAction, DatasetActionType } from './dataset.actions';
-import { Icon } from '~/models/icon';
 
 export interface DatasetState {
   categoryIds: string[];
