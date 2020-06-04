@@ -76,6 +76,7 @@ export class ListComponent {
   StepEditType = StepEditType;
   ItemId = ItemId;
   OptionsType = OptionsType;
+  Rational = Rational;
 
   options = options;
 
