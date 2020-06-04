@@ -1,6 +1,13 @@
 import { Action } from '@ngrx/store';
 
-import { DisplayRate, ItemId, RecipeId, ResearchSpeed, Theme } from '~/models';
+import {
+  DisplayRate,
+  ItemId,
+  RecipeId,
+  ResearchSpeed,
+  Theme,
+  Rational,
+} from '~/models';
 import { SettingsState } from './settings.reducer';
 
 export const enum SettingsActionType {

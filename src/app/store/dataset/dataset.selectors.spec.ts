@@ -1,7 +1,5 @@
-import Fraction from 'fraction.js';
-
 import * as Mocks from 'src/mocks';
-import { ItemId, RecipeId } from '~/models';
+import { ItemId, RecipeId, Rational } from '~/models';
 import * as Selectors from './dataset.selectors';
 
 describe('Dataset Selectors', () => {
@@ -32,12 +30,15 @@ describe('Dataset Selectors', () => {
 
     it('should return the map of belt speeds', () => {
       const beltId = 'transport-belt';
-      const flowRate = 2000;
-      const result = Selectors.getBeltSpeed.projector(Mocks.Data, flowRate);
-      expect(result[beltId]).toEqual(
-        new Fraction(Mocks.Data.itemEntities[beltId].belt.speed)
+      const flowRate = new Rational(BigInt(2000));
+      const result = Selectors.getBeltSpeed.projector(
+        Mocks.RationalData,
+        flowRate
       );
-      expect(result[ItemId.Pipe]).toEqual(new Fraction(flowRate));
+      expect(result[beltId]).toEqual(
+        Mocks.RationalData.itemR[beltId].belt.speed
+      );
+      expect(result[ItemId.Pipe]).toEqual(flowRate);
     });
   });
 });

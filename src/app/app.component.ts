@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import * as data from 'src/assets/0.18/data.json';
-import { ItemId } from './models';
+import { ItemId, Rational } from './models';
 import { RouterService } from './services/router.service';
 import { State } from './store';
 import {

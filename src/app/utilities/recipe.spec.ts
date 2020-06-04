@@ -1,8 +1,6 @@
-import Fraction from 'fraction.js';
-
 import * as Mocks from 'src/mocks';
 import { RecipeUtility } from './recipe';
-import { ItemId, CategoryId, RecipeId } from '~/models';
+import { ItemId, CategoryId, RecipeId, Rational } from '~/models';
 
 describe('RecipeUtility', () => {
   const assembler2 = ItemId.AssemblingMachine2;
@@ -118,67 +116,74 @@ describe('RecipeUtility', () => {
   describe('recipeFactors', () => {
     it('should return a tuple of speed and productivity factors for passed modules', () => {
       const result = RecipeUtility.recipeFactors(
-        new Fraction(1),
-        new Fraction(0),
+        Rational.one,
+        Rational.zero,
         [prodModule],
         speedModule,
-        1,
+        Rational.one,
         {
-          [prodModule]: { module: { productivity: 2 } },
-          [speedModule]: { module: { speed: 2 } },
+          [prodModule]: {
+            module: { speed: Rational.zero, productivity: Rational.two },
+          },
+          [speedModule]: {
+            module: { speed: Rational.two, productivity: Rational.zero },
+          },
         } as any
       );
-      expect(result).toEqual({ speed: new Fraction(2), prod: new Fraction(3) });
+      expect(result).toEqual({
+        speed: Rational.two,
+        prod: new Rational(BigInt(3)),
+      });
     });
 
     it('should handle the empty module', () => {
       const result = RecipeUtility.recipeFactors(
-        new Fraction(1),
-        new Fraction(0),
+        Rational.one,
+        Rational.zero,
         [module],
         null,
-        0,
+        Rational.zero,
         {
           [module]: {},
         } as any
       );
-      expect(result).toEqual({ speed: new Fraction(1), prod: new Fraction(1) });
+      expect(result).toEqual({ speed: Rational.one, prod: Rational.one });
     });
 
     it('should handle an invalid/unfound module', () => {
       const result = RecipeUtility.recipeFactors(
-        new Fraction(1),
-        new Fraction(0),
+        Rational.one,
+        Rational.zero,
         [module],
         null,
-        0,
+        Rational.zero,
         {} as any
       );
-      expect(result).toEqual({ speed: new Fraction(1), prod: new Fraction(1) });
+      expect(result).toEqual({ speed: Rational.one, prod: Rational.one });
     });
 
     it('should handle an unfound beacon type', () => {
       const result = RecipeUtility.recipeFactors(
-        new Fraction(1),
-        new Fraction(0),
+        Rational.one,
+        Rational.zero,
         [],
         module,
-        1,
+        Rational.one,
         {} as any
       );
-      expect(result).toEqual({ speed: new Fraction(1), prod: new Fraction(1) });
+      expect(result).toEqual({ speed: Rational.one, prod: Rational.one });
     });
 
     it('should handle no modules or beacons', () => {
       const result = RecipeUtility.recipeFactors(
-        new Fraction(1),
-        new Fraction(0),
+        Rational.one,
+        Rational.zero,
         [],
         null,
-        0,
+        Rational.zero,
         {} as any
       );
-      expect(result).toEqual({ speed: new Fraction(1), prod: new Fraction(1) });
+      expect(result).toEqual({ speed: Rational.one, prod: Rational.one });
     });
   });
 

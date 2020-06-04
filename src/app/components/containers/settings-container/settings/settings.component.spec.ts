@@ -105,7 +105,7 @@ describe('SettingsComponent', () => {
   it('should ignore falsy event values', () => {
     spyOn(component, 'setTheme');
     const event = { target: {} };
-    component.child.emitAny(component.child.setTheme, event as any);
+    component.child.emitString(component.child.setTheme, event as any);
     fixture.detectChanges();
     expect(component.setTheme).not.toHaveBeenCalled();
   });

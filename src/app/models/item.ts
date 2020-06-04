@@ -1,7 +1,8 @@
-import { Belt } from './belt';
+import { Belt, RationalBelt } from './belt';
 import { CategoryId } from './category';
-import { Factory } from './factory';
-import { Module } from './module';
+import { Factory, RationalFactory } from './factory';
+import { Module, RationalModule } from './module';
+import { Rational } from './rational';
 
 export enum ItemId {
   None = 'None',
@@ -77,4 +78,39 @@ export interface Item {
   module?: Module;
   /** Fuel value in MJ */
   fuel?: number;
+}
+
+export class RationalItem {
+  id: ItemId;
+  name: string;
+  category: CategoryId;
+  row: number;
+  stack?: Rational;
+  belt?: RationalBelt;
+  factory?: RationalFactory;
+  module?: RationalModule;
+  /** Fuel value in MJ */
+  fuel?: Rational;
+
+  constructor(data: Item) {
+    this.id = data.id;
+    this.name = data.name;
+    this.category = data.category;
+    this.row = Math.round(data.row);
+    if (data.stack) {
+      this.stack = Rational.fromNumber(data.stack);
+    }
+    if (data.belt) {
+      this.belt = new RationalBelt(data.belt);
+    }
+    if (data.factory) {
+      this.factory = new RationalFactory(data.factory);
+    }
+    if (data.module) {
+      this.module = new RationalModule(data.module);
+    }
+    if (data.fuel) {
+      this.fuel = Rational.fromNumber(data.fuel);
+    }
+  }
 }

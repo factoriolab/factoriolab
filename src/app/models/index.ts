@@ -15,6 +15,7 @@ export * from './node';
 export * from './options';
 export * from './product';
 export * from './rate-type';
+export * from './rational';
 export * from './recipe';
 export * from './recipe-settings';
 export * from './research-speed';

@@ -11,7 +11,14 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { DisplayRate, ItemId, RecipeId, ResearchSpeed, Theme } from '~/models';
+import {
+  DisplayRate,
+  ItemId,
+  RecipeId,
+  ResearchSpeed,
+  Theme,
+  Rational,
+} from '~/models';
 import { State } from '~/store';
 import * as Dataset from '~/store/dataset';
 import * as Settings from '~/store/settings';

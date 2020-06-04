@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { RateType, Product, ItemId, CategoryId } from '~/models';
+import { RateType, Product, ItemId, CategoryId, Rational } from '~/models';
 
 export const enum ProductsActionType {
   LOAD = '[Products Router] Load',

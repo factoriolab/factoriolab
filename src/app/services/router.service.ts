@@ -12,6 +12,7 @@ import {
   RecipeSettings,
   Step,
   RateType,
+  Rational,
 } from '~/models';
 import { State } from '~/store';
 import { DatasetState, getDatasetState } from '~/store/dataset';
@@ -92,7 +93,7 @@ export class RouterService {
       {
         id: 0,
         itemId: step.itemId,
-        rate: step.items.valueOf(),
+        rate: step.items.toNumber(),
         rateType: RateType.Items,
       },
     ];

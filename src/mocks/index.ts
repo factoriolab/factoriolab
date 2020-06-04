@@ -1,5 +1,3 @@
-import Fraction from 'fraction.js';
-
 import * as data from 'src/assets/0.18/data.json';
 import {
   Product,
@@ -10,23 +8,30 @@ import {
   ItemId,
   Factors,
   Node,
+  Rational,
+  Dataset,
+  RationalProduct,
 } from '~/models';
 import {
   DatasetState,
   datasetReducer,
   LoadDatasetAction,
+  getRationalDataset,
 } from '~/store/dataset';
+import { getProductsBy } from '~/store/products';
 import { getRecipeSettings } from '~/store/recipe';
 import { initialSettingsState } from '~/store/settings';
 
+export const Raw: Dataset = (data as any).default;
 export const Data: DatasetState = datasetReducer(
   undefined,
-  new LoadDatasetAction((data as any).default)
+  new LoadDatasetAction(Raw)
 );
-export const CategoryId = Data.categories[0].id;
-export const Item1 = Data.items[0];
-export const Item2 = Data.items[1];
-export const Recipe1 = Data.recipes[0];
+export const RationalData = getRationalDataset.projector(Data);
+export const CategoryId = Data.categoryEntities[Data.categoryIds[0]].id;
+export const Item1 = Data.itemEntities[Data.itemIds[0]];
+export const Item2 = Data.itemEntities[Data.itemIds[1]];
+export const Recipe1 = Data.recipeEntities[Data.recipeIds[0]];
 export const Product1: Product = {
   id: 0,
   itemId: Item1.id,
@@ -52,10 +57,9 @@ export const Product4: Product = {
   rateType: RateType.Factories,
 };
 export const Products = [Product1, Product2, Product3, Product4];
+export const RationalProducts = Products.map((p) => new RationalProduct(p));
 export const ProductIds = Products.map((p) => p.id);
-export const ProductEntities = Products.reduce((e: Entities<Product>, i) => {
-  return { ...e, ...{ [i.id]: i } };
-}, {});
+export const ProductEntities = getProductsBy.projector(RationalProducts);
 export const Settings1: RecipeSettings = {
   ignore: false,
   belt: ItemId.TransportBelt,
@@ -75,17 +79,17 @@ export const Settings2: RecipeSettings = {
 export const Step1: Step = {
   itemId: Item1.id,
   recipeId: Item1.id as any,
-  items: new Fraction(Product1.rate),
-  belts: new Fraction(0.5),
-  factories: new Fraction(1),
+  items: Rational.fromNumber(Product1.rate),
+  belts: Rational.fromNumber(0.5),
+  factories: Rational.one,
   settings: Settings1,
 };
 export const Step2: Step = {
   itemId: Item2.id,
   recipeId: Item2.id as any,
-  items: new Fraction(Product2.rate),
-  belts: new Fraction(1),
-  factories: new Fraction(2),
+  items: Rational.fromNumber(Product2.rate),
+  belts: Rational.one,
+  factories: Rational.two,
   settings: Settings2,
 };
 export const Steps = [Step1, Step2];
@@ -96,16 +100,16 @@ export const Node2: Node = {
 };
 export const Node3 = { ...Step1, ...{ id: 'id3', name: 'name3' } };
 export const Root: Node = { id: 'root', children: [Node2, Node3] } as any;
-export const BeltSpeed: Entities<Fraction> = {
-  [ItemId.TransportBelt]: new Fraction(15),
+export const BeltSpeed: Entities<Rational> = {
+  [ItemId.TransportBelt]: new Rational(BigInt(15)),
 };
 export const Factors1: Factors = {
-  speed: new Fraction(1),
-  prod: new Fraction(1),
+  speed: Rational.one,
+  prod: Rational.one,
 };
 export const RecipeFactors: Entities<Factors> = {};
 export const RecipeSettingsEntities: Entities<RecipeSettings> = {};
-for (const recipe of Data.recipes) {
+for (const recipe of Data.recipeIds.map((i) => Data.recipeEntities[i])) {
   RecipeSettingsEntities[recipe.id] = { ...Settings1 };
   RecipeFactors[recipe.id] = Factors1;
 }

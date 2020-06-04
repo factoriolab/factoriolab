@@ -1,43 +1,49 @@
-import { Item, Category, Recipe, Entities, ItemId, NEntities } from '~/models';
+import {
+  Item,
+  Category,
+  Recipe,
+  Entities,
+  ItemId,
+  NEntities,
+  RationalItem,
+  RationalRecipe,
+} from '~/models';
 import { DatasetAction, DatasetActionType } from './dataset.actions';
 import { Icon } from '~/models/icon';
 
 export interface DatasetState {
-  categories: Category[];
   categoryIds: string[];
   categoryEntities: Entities<Category>;
   categoryItemRows: Entities<string[][]>;
-  icons: Icon[];
   iconIds: string[];
   iconEntities: Entities<Icon>;
-  items: Item[];
   itemIds: string[];
   itemEntities: Entities<Item>;
   itemN: Entities<number>;
   itemI: NEntities<string>;
   beltIds: ItemId[];
-  recipes: Recipe[];
   recipeIds: string[];
   recipeEntities: Entities<Recipe>;
   recipeN: Entities<number>;
   recipeI: NEntities<string>;
 }
 
+export interface RationalDataset extends DatasetState {
+  itemR: Entities<RationalItem>;
+  recipeR: Entities<RationalRecipe>;
+}
+
 export const initialDatasetState: DatasetState = {
-  categories: [],
   categoryIds: [],
   categoryEntities: {},
   categoryItemRows: {},
-  icons: [],
   iconIds: [],
   iconEntities: {},
-  items: [],
   itemIds: [],
   itemEntities: {},
   itemN: {},
   itemI: {},
   beltIds: [],
-  recipes: [],
   recipeIds: [],
   recipeEntities: {},
   recipeN: {},
@@ -54,11 +60,11 @@ export function datasetReducer(
 
       for (const category of action.payload.categories) {
         const rows: string[][] = [[]];
-        const items = action.payload.items
+        const rowItems = action.payload.items
           .filter((p) => p.category === category.id)
           .sort((a, b) => a.row - b.row);
-        let index = items[0].row;
-        for (const item of items) {
+        let index = rowItems[0].row;
+        for (const item of rowItems) {
           if (item.row > index) {
             rows.push([]);
             index = item.row;
@@ -69,9 +75,7 @@ export function datasetReducer(
       }
 
       const itemEntities = action.payload.items.reduce(
-        (e: Entities<Item>, i) => {
-          return { ...e, ...{ [i.id]: i } };
-        },
+        (e: Entities<Item>, i) => ({ ...e, ...{ [i.id]: i } }),
         {}
       );
 
@@ -89,43 +93,43 @@ export function datasetReducer(
       }
 
       return {
-        categories: action.payload.categories,
         categoryIds: action.payload.categories.map((c) => c.id),
         categoryEntities: action.payload.categories.reduce(
-          (e: Entities<Category>, c) => {
-            return { ...e, ...{ [c.id]: c } };
-          },
+          (e: Entities<Category>, c) => ({ ...e, ...{ [c.id]: c } }),
           {}
         ),
         categoryItemRows,
-        icons: action.payload.icons,
         iconIds: action.payload.icons.map((i) => i.id),
-        iconEntities: action.payload.icons.reduce((e: Entities<Icon>, c) => {
-          return { ...e, ...{ [c.id]: c } };
-        }, {}),
-        items: action.payload.items,
+        iconEntities: action.payload.icons.reduce(
+          (e: Entities<Icon>, c) => ({ ...e, ...{ [c.id]: c } }),
+          {}
+        ),
         itemIds: action.payload.items.map((i) => i.id),
         itemEntities,
-        itemN: action.payload.items.reduce((e: Entities<number>, i, z) => {
-          return { ...e, ...{ [i.id]: z } };
-        }, {}),
-        itemI: action.payload.items.reduce((e: NEntities<string>, i, z) => {
-          return { ...e, ...{ [z]: i.id } };
-        }, {}),
+        itemN: action.payload.items.reduce(
+          (e: Entities<number>, i, z) => ({ ...e, ...{ [i.id]: z } }),
+          {}
+        ),
+        itemI: action.payload.items.reduce(
+          (e: NEntities<string>, i, z) => ({ ...e, ...{ [z]: i.id } }),
+          {}
+        ),
         beltIds: action.payload.items
           .filter((i) => i.belt || i.id === ItemId.Pipe)
           .map((i) => i.id),
-        recipes,
         recipeIds: recipes.map((r) => r.id),
-        recipeEntities: recipes.reduce((e: Entities<Recipe>, r) => {
-          return { ...e, ...{ [r.id]: r } };
-        }, {}),
-        recipeN: recipes.reduce((e: Entities<number>, i, z) => {
-          return { ...e, ...{ [i.id]: z } };
-        }, {}),
-        recipeI: recipes.reduce((e: NEntities<string>, i, z) => {
-          return { ...e, ...{ [z]: i.id } };
-        }, {}),
+        recipeEntities: recipes.reduce(
+          (e: Entities<Recipe>, r) => ({ ...e, ...{ [r.id]: r } }),
+          {}
+        ),
+        recipeN: recipes.reduce(
+          (e: Entities<number>, i, z) => ({ ...e, ...{ [i.id]: z } }),
+          {}
+        ),
+        recipeI: recipes.reduce(
+          (e: NEntities<string>, i, z) => ({ ...e, ...{ [z]: i.id } }),
+          {}
+        ),
       };
     }
     default:

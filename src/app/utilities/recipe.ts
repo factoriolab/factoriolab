@@ -1,5 +1,3 @@
-import Fraction from 'fraction.js';
-
 import {
   Recipe,
   Item,
@@ -10,6 +8,8 @@ import {
   Factors,
   Step,
   Node,
+  Rational,
+  RationalItem,
 } from '~/models';
 import { RecipeState } from '~/store/recipe';
 
@@ -122,15 +122,15 @@ export class RecipeUtility {
 
   /** Determines tuple of speed and productivity factors on given recipe */
   static recipeFactors(
-    factorySpeed: Fraction,
-    factoryProd: Fraction,
+    factorySpeed: Rational,
+    factoryProd: Rational,
     modules: ItemId[],
     beaconModule: ItemId,
-    beaconCount: number,
-    itemEntities: Entities<Item>
+    beaconCount: Rational,
+    itemEntities: Entities<RationalItem>
   ): Factors {
-    let speed = new Fraction(1);
-    let prod = new Fraction(1);
+    let speed = Rational.one;
+    let prod = Rational.one;
     if (modules && modules.length) {
       for (const id of modules) {
         if (itemEntities[id]) {
@@ -142,9 +142,13 @@ export class RecipeUtility {
         }
       }
     }
-    if (beaconModule && itemEntities[beaconModule]?.module && beaconCount > 0) {
+    if (
+      beaconModule &&
+      itemEntities[beaconModule]?.module &&
+      beaconCount.nonzero()
+    ) {
       const module = itemEntities[beaconModule].module;
-      speed = speed.add(new Fraction(module.speed).div(2).mul(beaconCount));
+      speed = speed.add(module.speed.div(Rational.two).mul(beaconCount));
     }
 
     speed = speed.mul(factorySpeed);

@@ -1,5 +1,3 @@
-import Fraction from 'fraction.js';
-
 import {
   Step,
   DisplayRate,
@@ -9,26 +7,29 @@ import {
   Factors,
   CategoryId,
   Node,
+  Rational,
+  DisplayRateVal,
 } from '~/models';
-import { DatasetState } from '~/store/dataset';
+import { RationalDataset } from '~/store/dataset';
 import { RecipeState } from '~/store/recipe';
 
 export class RateUtility {
-  static LAUNCH_TIME = new Fraction(2420, 60);
+  static LAUNCH_TIME = new Rational(BigInt(2420), BigInt(60));
+  static ONE_THOUSAND = new Rational(BigInt(1000));
 
   static addStepsFor(
     parentId: ItemId,
     itemId: ItemId,
-    rate: Fraction,
+    rate: Rational,
     steps: Step[],
     settings: RecipeState,
     factors: Entities<Factors>,
     fuel: ItemId,
     oilRecipe: RecipeId,
-    data: DatasetState
+    data: RationalDataset
   ) {
-    let recipe = data.recipeEntities[itemId];
-    const categoryId = data.itemEntities[itemId].category;
+    let recipe = data.recipeR[itemId];
+    const item = data.itemR[itemId];
 
     if (!recipe) {
       // No recipe for this step, check for simple oil recipes
@@ -40,12 +41,11 @@ export class RateUtility {
 
     if (!step) {
       // No existing step found, create a new one
-      const item = data.itemEntities[itemId];
       step = {
         itemId,
         recipeId: itemId as any,
-        items: new Fraction(0),
-        factories: new Fraction(0),
+        items: Rational.zero,
+        factories: Rational.zero,
         settings: recipe
           ? settings[recipe.id]
           : { belt: item.stack ? null : ItemId.Pipe },
@@ -55,7 +55,7 @@ export class RateUtility {
     }
 
     // Add items to the step
-    if (categoryId === CategoryId.Research) {
+    if (item.category === CategoryId.Research) {
       step.items = step.items.add(rate.mul(factors[recipe.id].prod));
     } else {
       step.items = step.items.add(rate);
@@ -81,10 +81,8 @@ export class RateUtility {
 
       // Calculate number of outputs from recipe
       const prod =
-        data.itemEntities[itemId].category === CategoryId.Research
-          ? new Fraction(1)
-          : f.prod;
-      const out = new Fraction(recipe.out ? recipe.out[itemId] : 1).mul(prod);
+        item.category === CategoryId.Research ? Rational.one : f.prod;
+      const out = (recipe.out ? recipe.out[itemId] : Rational.one).mul(prod);
 
       // Calculate factories
       if (itemId === ItemId.SpaceSciencePack) {
@@ -92,30 +90,30 @@ export class RateUtility {
         step.factories = null;
       } else {
         step.factories = step.items.mul(recipe.time).div(out).div(f.speed);
-        if (categoryId === CategoryId.Research) {
+        if (item.category === CategoryId.Research) {
           step.factories = step.factories.div(f.prod);
         }
         // Add # of factories to actually launch rockets
         if (itemId === ItemId.RocketPart) {
           step.factories = step.factories.add(
-            step.items.div(100).mul(this.LAUNCH_TIME)
+            step.items.div(Rational.hundred).mul(this.LAUNCH_TIME)
           );
         }
         // Add fuel required for factory
         if (
           step.settings.factory &&
-          step.items.n > 0 &&
+          step.items.nonzero() &&
           !step.settings.ignore
         ) {
-          const factory = data.itemEntities[step.settings.factory].factory;
+          const factory = data.itemR[step.settings.factory].factory;
           if (factory.burner) {
             RateUtility.addStepsFor(
               itemId,
               fuel,
               step.factories
                 .mul(factory.burner)
-                .div(data.itemEntities[fuel].fuel)
-                .div(1000),
+                .div(data.itemR[fuel].fuel)
+                .div(this.ONE_THOUSAND),
               steps,
               settings,
               factors,
@@ -128,7 +126,7 @@ export class RateUtility {
       }
 
       // Recurse adding steps for ingredients
-      if (recipe.in && step.items.n > 0 && !step.settings.ignore) {
+      if (recipe.in && step.items.nonzero() && !step.settings.ignore) {
         for (const ingredient of Object.keys(recipe.in)) {
           const ingredientRate = rate.mul(recipe.in[ingredient]).div(out);
           RateUtility.addStepsFor(
@@ -150,32 +148,31 @@ export class RateUtility {
   static addNodesFor(
     parent: Node,
     itemId: ItemId,
-    rate: Fraction,
+    rate: Rational,
     settings: RecipeState,
     factors: Entities<Factors>,
     fuel: ItemId,
     oilRecipe: RecipeId,
-    data: DatasetState
+    data: RationalDataset
   ) {
-    let recipe = data.recipeEntities[itemId];
-    const categoryId = data.itemEntities[itemId].category;
+    let recipe = data.recipeR[itemId];
+    const item = data.itemR[itemId];
 
     if (!recipe) {
       // No recipe for this step, check for simple oil recipes
       recipe = this.findBasicOilRecipe(itemId, oilRecipe, data);
     }
 
-    const item = data.itemEntities[itemId];
     const node: Node = {
       id: `${parent.id}:${itemId}`,
       name: data.itemEntities[itemId].name,
       itemId,
       recipeId: itemId as any,
       items:
-        categoryId === CategoryId.Research
+        item.category === CategoryId.Research
           ? rate.mul(factors[recipe.id].prod)
           : rate,
-      factories: new Fraction(0),
+      factories: Rational.zero,
       settings: recipe
         ? settings[recipe.id]
         : { belt: item.stack ? null : ItemId.Pipe },
@@ -196,10 +193,8 @@ export class RateUtility {
 
       // Calculate number of outputs from recipe
       const prod =
-        data.itemEntities[itemId].category === CategoryId.Research
-          ? new Fraction(1)
-          : f.prod;
-      const out = new Fraction(recipe.out ? recipe.out[itemId] : 1).mul(prod);
+        item.category === CategoryId.Research ? Rational.one : f.prod;
+      const out = (recipe.out ? recipe.out[itemId] : Rational.one).mul(prod);
 
       // Calculate factories
       if (itemId === ItemId.SpaceSciencePack) {
@@ -207,30 +202,30 @@ export class RateUtility {
         node.factories = null;
       } else {
         node.factories = node.items.mul(recipe.time).div(out).div(f.speed);
-        if (categoryId === CategoryId.Research) {
+        if (item.category === CategoryId.Research) {
           node.factories = node.factories.div(f.prod);
         }
         // Add # of factories to actually launch rockets
         if (itemId === ItemId.RocketPart) {
           node.factories = node.factories.add(
-            node.items.div(100).mul(this.LAUNCH_TIME)
+            node.items.div(Rational.hundred).mul(this.LAUNCH_TIME)
           );
         }
         // Add fuel required for factory
         if (
           node.settings.factory &&
-          node.items.n > 0 &&
+          node.items.nonzero() &&
           !node.settings.ignore
         ) {
-          const factory = data.itemEntities[node.settings.factory].factory;
+          const factory = data.itemR[node.settings.factory].factory;
           if (factory.burner) {
             RateUtility.addNodesFor(
               node,
               fuel,
               node.factories
                 .mul(factory.burner)
-                .div(data.itemEntities[fuel].fuel)
-                .div(1000),
+                .div(data.itemR[fuel].fuel)
+                .div(this.ONE_THOUSAND),
               settings,
               factors,
               fuel,
@@ -242,7 +237,7 @@ export class RateUtility {
       }
 
       // Recurse adding nodes for ingredients
-      if (recipe.in && node.items.n > 0 && !node.settings.ignore) {
+      if (recipe.in && node.items.nonzero() && !node.settings.ignore) {
         for (const ingredient of Object.keys(recipe.in)) {
           RateUtility.addNodesFor(
             node,
@@ -259,7 +254,7 @@ export class RateUtility {
     }
   }
 
-  static calculateBelts(steps: Step[], beltSpeed: Entities<Fraction>) {
+  static calculateBelts(steps: Step[], beltSpeed: Entities<Rational>) {
     for (const step of steps) {
       if (step.items && step.settings.belt) {
         step.belts = step.items.div(beltSpeed[step.settings.belt]);
@@ -268,7 +263,7 @@ export class RateUtility {
     return steps;
   }
 
-  static calculateNodeBelts(node: Node, beltSpeed: Entities<Fraction>) {
+  static calculateNodeBelts(node: Node, beltSpeed: Entities<Rational>) {
     if (node.items && node.settings.belt) {
       node.belts = node.items.div(beltSpeed[node.settings.belt]);
     }
@@ -281,6 +276,7 @@ export class RateUtility {
   }
 
   static displayRate(steps: Step[], displayRate: DisplayRate) {
+    const displayRateVal = DisplayRateVal[displayRate];
     for (const step of steps) {
       if (step.items) {
         if (step.parents) {
@@ -288,21 +284,22 @@ export class RateUtility {
             step.parents[key] = step.parents[key].div(step.items);
           }
         }
-        step.items = step.items.mul(displayRate);
+        step.items = step.items.mul(displayRateVal);
       }
       if (step.surplus) {
-        step.surplus = step.surplus.mul(displayRate);
+        step.surplus = step.surplus.mul(displayRateVal);
       }
     }
     return steps;
   }
 
   static nodeDisplayRate(node: Node, displayRate: DisplayRate) {
+    const displayRateVal = DisplayRateVal[displayRate];
     if (node.items) {
-      node.items = node.items.mul(displayRate);
+      node.items = node.items.mul(displayRateVal);
     }
     if (node.surplus) {
-      node.surplus = node.surplus.mul(displayRate);
+      node.surplus = node.surplus.mul(displayRateVal);
     }
     if (node.children) {
       for (const child of node.children) {
@@ -315,16 +312,16 @@ export class RateUtility {
   static findBasicOilRecipe(
     id: ItemId,
     oilRecipeId: RecipeId,
-    data: DatasetState
+    data: RationalDataset
   ) {
     if (oilRecipeId === RecipeId.BasicOilProcessing) {
       // Using Basic Oil processing, use simple recipes
       if (id === ItemId.PetroleumGas) {
         // To produce petroleum gas, use oil recipe
-        return data.recipeEntities[oilRecipeId];
+        return data.recipeR[oilRecipeId];
       } else if (id === ItemId.SolidFuel) {
         // To produce solid fuel, use petroleum fuel recipe
-        return data.recipeEntities[RecipeId.SolidFuelFromPetroleumGas];
+        return data.recipeR[RecipeId.SolidFuelFromPetroleumGas];
       }
     }
     return null;

@@ -1,8 +1,8 @@
 import { compose, createSelector } from '@ngrx/store';
-import Fraction from 'fraction.js';
 
 import { State } from '../';
 import { SettingsState } from './settings.reducer';
+import { ResearchSpeedFactor, Rational } from '~/models';
 
 /* Base selector functions */
 export const settingsState = (state: State) => state.settingsState;
@@ -32,7 +32,13 @@ export const getExpensive = compose(sExpensive, settingsState);
 export const getTheme = compose(sTheme, settingsState);
 
 /* Complex selectors */
-export const getResearchFactor = createSelector(getResearchSpeed, (speed) =>
-  new Fraction(100 + speed).div(100)
+export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
+  Rational.fromNumber(bonus)
 );
-
+export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
+  Rational.fromNumber(rate)
+);
+export const getResearchFactor = createSelector(
+  getResearchSpeed,
+  (speed) => ResearchSpeedFactor[speed]
+);

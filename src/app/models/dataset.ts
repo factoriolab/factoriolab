@@ -1,6 +1,7 @@
 import { Category } from './category';
+import { Entities, NEntities } from './entities';
 import { Icon } from './icon';
-import { Item } from './item';
+import { Item, ItemId } from './item';
 import { Recipe } from './recipe';
 
 export interface Dataset {

@@ -1,6 +1,6 @@
-import Fraction from 'fraction.js';
+import { Rational } from './rational';
 
 export interface Factors {
-  speed: Fraction;
-  prod: Fraction;
+  speed: Rational;
+  prod: Rational;
 }

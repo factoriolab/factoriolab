@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 
 import { DatasetState } from '~/store/dataset';
-import { Product, RateType, CategoryId, ItemId } from '~/models';
+import { Product, RateType, CategoryId, ItemId, Rational } from '~/models';
 
 @Component({
   selector: 'lab-products',
