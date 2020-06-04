@@ -1,5 +1,5 @@
-import { ItemId } from './item';
-import { RateType } from './rate-type';
+import { ItemId } from './data/item';
+import { RateType } from './enum/rate-type';
 import { Rational } from './rational';
 
 export interface Product {

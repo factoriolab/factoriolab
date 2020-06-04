@@ -1,4 +1,4 @@
-import { ItemId } from './item';
+import { ItemId } from './data/item';
 import { Rational } from './rational';
 
 export interface RecipeSettings {

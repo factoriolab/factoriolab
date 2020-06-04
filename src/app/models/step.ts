@@ -1,7 +1,7 @@
+import { ItemId } from './data/item';
+import { RecipeId } from './data/recipe';
 import { Entities } from './entities';
-import { ItemId } from './item';
 import { Rational } from './rational';
-import { RecipeId } from './recipe';
 import { RecipeSettings } from './recipe-settings';
 
 export interface Step {
