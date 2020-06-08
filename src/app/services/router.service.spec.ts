@@ -14,7 +14,7 @@ import {
 } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as Products from '~/store/products';
-import * as Recipe from '~/store/recipe';
+import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 import { RouterService } from './router.service';
 
@@ -32,11 +32,11 @@ const mockProducts: Product[] = [
     rateType: RateType.Items,
   },
 ];
-const mockZipProduct = `${Mocks.Data.itemN[ItemId.SteelChest]}:0:1`;
-const mockRecipeSettings: Recipe.RecipeState = {
+const mockZipProduct = `${ItemId.SteelChest}:0:1`;
+const mockRecipeSettings: Recipes.RecipesState = {
   [RecipeId.SteelChest]: { beaconCount: 8 },
 };
-const mockFullRecipeSettings: Recipe.RecipeState = {
+const mockFullRecipeSettings: Recipes.RecipesState = {
   [RecipeId.SteelChest]: {
     ignore: true,
     belt: ItemId.TransportBelt,
@@ -275,7 +275,7 @@ describe('RouterService', () => {
         Mocks.Data
       );
       expect(store.dispatch).toHaveBeenCalledWith(
-        new Recipe.LoadAction({ [RecipeId.SteelChest]: {} })
+        new Recipes.LoadAction({ [RecipeId.SteelChest]: {} })
       );
     });
 
@@ -283,7 +283,7 @@ describe('RouterService', () => {
       spyOn(store, 'dispatch');
       service.unzipRecipes([mockZipFullRecipeSettings], Mocks.Data);
       expect(store.dispatch).toHaveBeenCalledWith(
-        new Recipe.LoadAction(mockFullRecipeSettings)
+        new Recipes.LoadAction(mockFullRecipeSettings)
       );
     });
 
@@ -294,7 +294,7 @@ describe('RouterService', () => {
         Mocks.Data
       );
       expect(store.dispatch).toHaveBeenCalledWith(
-        new Recipe.LoadAction({ [RecipeId.SteelChest]: { ignore: false } })
+        new Recipes.LoadAction({ [RecipeId.SteelChest]: { ignore: false } })
       );
     });
   });

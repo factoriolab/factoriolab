@@ -6,7 +6,6 @@ import {
   RecipeSettings,
   Entities,
   ItemId,
-  Factors,
   Node,
   Rational,
   Dataset,
@@ -19,7 +18,7 @@ import {
   getRationalDataset,
 } from '~/store/dataset';
 import { getProductsBy } from '~/store/products';
-import { getRecipeSettings } from '~/store/recipe';
+import { getRecipeSettings } from '~/store/recipes';
 import { initialSettingsState } from '~/store/settings';
 
 export const Raw: Dataset = (data as any).default;
@@ -82,7 +81,7 @@ export const Step1: Step = {
   items: Rational.fromNumber(Product1.rate),
   belts: Rational.fromNumber(0.5),
   factories: Rational.one,
-  settings: Settings1,
+  recipeSettings: Settings1,
 };
 export const Step2: Step = {
   itemId: Item2.id,
@@ -90,7 +89,7 @@ export const Step2: Step = {
   items: Rational.fromNumber(Product2.rate),
   belts: Rational.one,
   factories: Rational.two,
-  settings: Settings2,
+  recipeSettings: Settings2,
 };
 export const Steps = [Step1, Step2];
 export const Node1: Node = { ...Step1, ...{ id: 'id1', name: 'name1' } };

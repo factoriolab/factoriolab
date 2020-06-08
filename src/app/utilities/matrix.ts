@@ -9,19 +9,21 @@ import {
   ItemId,
   Rational,
 } from '~/models';
-import { RationalDataset } from '~/store/dataset';
 import { RateUtility } from './rate';
-import { RecipeState } from '~/store/recipe';
+import { RationalDataset } from '~/store/dataset';
+import { ItemsState } from '~/store/items';
+import { RecipesState } from '~/store/recipes';
 
 export class MatrixUtility {
   static solveMatricesFor(
     steps: Step[],
-    settings: RecipeState,
+    itemSettings: ItemsState,
+    recipeSettings: RecipesState,
     fuel: ItemId,
     oilRecipe: RecipeId,
     data: RationalDataset
   ) {
-    if (!steps.some((s) => !s.recipeId && !s.settings.ignore)) {
+    if (!steps.some((s) => !s.recipeId && !itemSettings[s.itemId].ignore)) {
       return steps;
     }
 
@@ -32,7 +34,7 @@ export class MatrixUtility {
     const solver = new kiwi.Solver();
 
     for (const step of steps) {
-      if (!step.recipeId && !step.settings.ignore) {
+      if (!step.recipeId && !itemSettings[step.itemId].ignore) {
         console.log(step.itemId);
         // Find recipes with this output
         const recipeMatches = data.recipeIds
@@ -81,11 +83,14 @@ export class MatrixUtility {
 
     console.log(recipes);
 
+    const matrix = 0;
+
     const items: Entities<RationalItem> = {};
     const recipeVar: Entities<kiwi.Variable> = {};
     const outputs: ItemId[] = [];
+    const recipeIds = Object.keys(recipes);
     console.log('iterate recipes');
-    for (const r of Object.keys(recipes)) {
+    for (const r of recipeIds) {
       console.log(r);
       const variable = new kiwi.Variable();
       solver.addEditVariable(variable, kiwi.Strength.weak);
@@ -99,7 +104,9 @@ export class MatrixUtility {
       }
       for (const outId of Object.keys(recipe.out)) {
         items[outId] = data.itemR[outId];
-        outputs.push(outId as ItemId);
+        if (!outputs.some((o) => o === outId)) {
+          outputs.push(outId as ItemId);
+        }
       }
       recipeVar[r] = variable;
     }
@@ -120,7 +127,7 @@ export class MatrixUtility {
         console.log(`need ${value[i]} ${i}`);
         expr = expr.minus(value[i]);
       }
-      for (const r of Object.keys(recipes)) {
+      for (const r of recipeIds) {
         const recipe = data.recipeR[r];
         const rVar = recipeVar[r];
         if (recipe.in) {
@@ -164,7 +171,7 @@ export class MatrixUtility {
     solver.addEditVariable(cost, kiwi.Strength.weak);
 
     let factoryExpr = new kiwi.Expression(tax);
-    for (const r of Object.keys(recipes)) {
+    for (const r of recipeIds) {
       factoryExpr = factoryExpr.minus(recipeVar[r]);
       console.log(`factoryExpr: ${r}`);
     }
@@ -182,6 +189,8 @@ export class MatrixUtility {
     solver.addConstraint(new kiwi.Constraint(factoryExpr, kiwi.Operator.Eq));
     solver.addConstraint(new kiwi.Constraint(costExpr, kiwi.Operator.Eq));
 
+    solver.suggestValue(cost, 0);
+
     solver.updateVariables();
 
     console.log(tax.value());
@@ -195,29 +204,72 @@ export class MatrixUtility {
       console.log(`${r}: ${recipeVar[r].value()}`);
     }
 
+    console.log('outputs:');
+    console.log(recipeVar);
+    console.log(Object.keys(recipeVar));
+    const usedRecipeIds = Object.keys(recipeVar).filter((r) => {
+      console.log(r);
+      return recipeVar[r].value() > 0;
+    });
+    const mappedRecipeIds = [];
     for (const i of outputs) {
-      const step = steps.find((s) => s.itemId === i);
+      const surplusVal = surplusVar[i].value();
+      let itemOutput = Rational.zero;
+      for (const r of Object.keys(recipeVar)) {
+        if (data.recipeR[r].out[i]) {
+          const test = data.recipeR[r].out[i];
+          itemOutput = itemOutput.add(
+            data.recipeR[r].out[i].mul(
+              Rational.fromNumber(recipeVar[r].value())
+            )
+          );
+        }
+      }
+      let step = steps.find((s) => s.itemId === i);
+      const matches = usedRecipeIds.filter(
+        (r) => !mappedRecipeIds.some((m) => m === r) && data.recipeR[r].out[i]
+      );
+      const recipeId = matches.length ? matches[0] : null;
       if (step) {
         console.log(`found ${i}`);
+        console.log(`${i}: ${step.items.toNumber()}: ${itemOutput.toNumber()}`);
+        step.items = itemOutput;
       } else {
-        const itemId = i as ItemId;
-        const recipeId =
-          itemId === ItemId.PetroleumGas
-            ? RecipeId.LightOilCracking
-            : itemId === ItemId.LightOil
-            ? RecipeId.HeavyOilCracking
-            : itemId === ItemId.HeavyOil
-            ? oilRecipe
-            : RecipeId.SolidFuelFromLightOil;
-        steps.push({
+        step = {
           itemId: i,
-          recipeId,
-          items: Rational.zero,
-          settings: settings[recipeId],
-        });
-        console.log(i);
-        console.log(settings[i]);
+          items: itemOutput,
+          matrix,
+        };
+        steps.push(step);
       }
+      if (recipeId) {
+        console.log(
+          `Recipe for ${i}: ${recipeId}: ${recipeVar[recipeId].value()}`
+        );
+        step.recipeId = recipeId as RecipeId;
+        step.factories = Rational.fromNumber(recipeVar[recipeId].value()).mul(
+          data.recipeR[recipeId].time
+        );
+        mappedRecipeIds.push(recipeId);
+      }
+      if (surplusVal > 0) {
+        step.surplus = Rational.fromNumber(surplusVal);
+      }
+    }
+
+    for (const r of usedRecipeIds.filter(
+      (i) => !mappedRecipeIds.some((m) => m === i)
+    )) {
+      console.log(r);
+      steps.push({
+        itemId: null,
+        items: null,
+        recipeId: r as RecipeId,
+        factories: Rational.fromNumber(recipeVar[r].value()).mul(
+          data.recipeR[r].time
+        ),
+        matrix,
+      });
     }
 
     console.log('inputs:');
@@ -232,7 +284,8 @@ export class MatrixUtility {
         i as ItemId,
         rational,
         steps,
-        settings,
+        itemSettings,
+        recipeSettings,
         fuel,
         oilRecipe,
         data

@@ -7,9 +7,9 @@ import {
   Rational,
   RationalRecipe,
   RationalRecipeSettings,
+  CategoryId,
 } from '~/models';
 import { DatasetState, RationalDataset } from '~/store/dataset';
-import { RecipeState } from '~/store/recipe';
 
 const order: (ItemId | RecipeId)[] = [
   // Research products
@@ -179,6 +179,11 @@ export class RecipeUtility {
     recipe.time = recipe.time.div(speed);
     for (const outId of Object.keys(recipe.out)) {
       recipe.out[outId] = recipe.out[outId].mul(prod);
+
+      // Log prod for research products
+      if (data.itemR[outId].category === CategoryId.Research) {
+        recipe.adjustProd = prod;
+      }
     }
 
     return recipe;
@@ -216,7 +221,7 @@ export class RecipeUtility {
   }
 
   /** Resets a passed field of the recipe state */
-  static resetField(state: RecipeState, field: string) {
+  static resetField<T>(state: T, field: string): T {
     // Spread into new state
     const newState = { ...state };
     for (const id of Object.keys(newState).filter(

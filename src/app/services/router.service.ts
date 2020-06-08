@@ -5,50 +5,20 @@ import { take, filter } from 'rxjs/operators';
 import * as pako from 'pako';
 
 import {
-  ItemId,
-  Entities,
   Product,
-  NEntities,
   RecipeSettings,
   Step,
   RateType,
-  Rational,
+  ItemId,
+  ItemSettings,
+  RecipeId,
 } from '~/models';
 import { State } from '~/store';
 import { DatasetState, getDatasetState } from '~/store/dataset';
 import * as Products from '~/store/products';
-import * as Recipes from '~/store/recipe';
+import * as Items from '~/store/items';
+import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
-
-enum ModuleId {
-  None,
-  Speed1,
-  Speed2,
-  Speed3,
-  Prod1,
-  Prod2,
-  Prod3,
-}
-
-const moduleN: Entities<ModuleId> = {
-  [ItemId.Module]: ModuleId.None,
-  [ItemId.SpeedModule]: ModuleId.Speed1,
-  [ItemId.SpeedModule2]: ModuleId.Speed2,
-  [ItemId.SpeedModule3]: ModuleId.Speed3,
-  [ItemId.ProductivityModule]: ModuleId.Prod1,
-  [ItemId.ProductivityModule2]: ModuleId.Prod2,
-  [ItemId.ProductivityModule3]: ModuleId.Prod3,
-};
-
-const moduleI: NEntities<ItemId> = {
-  [ModuleId.None]: ItemId.Module,
-  [ModuleId.Speed1]: ItemId.SpeedModule,
-  [ModuleId.Speed2]: ItemId.SpeedModule2,
-  [ModuleId.Speed3]: ItemId.SpeedModule3,
-  [ModuleId.Prod1]: ItemId.ProductivityModule,
-  [ModuleId.Prod2]: ItemId.ProductivityModule2,
-  [ModuleId.Prod3]: ItemId.ProductivityModule3,
-};
 
 @Injectable({
   providedIn: 'root',
@@ -65,7 +35,8 @@ export class RouterService {
 
   updateUrl(
     products: Product[],
-    recipes: Recipes.RecipeState,
+    items: Items.ItemsState,
+    recipes: Recipes.RecipesState,
     settings: Settings.SettingsState,
     data: DatasetState
   ) {
@@ -73,6 +44,10 @@ export class RouterService {
       const zProducts = this.zipProducts(products, data);
       const zState = `p=${zProducts.join(',')}`;
       this.zipPartial = '';
+      const zItems = this.zipItems(items, data);
+      if (zItems.length) {
+        this.zipPartial += `&i=${zItems.join(',')}`;
+      }
       const zRecipes = this.zipRecipes(recipes, data);
       if (zRecipes.length) {
         this.zipPartial += `&r=${zRecipes.join(',')}`;
@@ -124,11 +99,14 @@ export class RouterService {
                   if (s[1]) {
                     if (s[0] === 'p') {
                       this.unzipProducts(s[1].split(','), data);
+                    } else if (s[0] === 'i') {
+                      this.zipPartial = `&i=${s[1]}`;
+                      this.unzipItems(s[1].split(','), data);
                     } else if (s[0] === 'r') {
                       this.zipPartial = `&r=${s[1]}`;
                       this.unzipRecipes(s[1].split(','), data);
                     } else if (s[0] === 's') {
-                      this.zipPartial += `&r=${s[1]}`;
+                      this.zipPartial += `&s=${s[1]}`;
                       this.unzipSettings(s[1], data);
                     }
                   }
@@ -148,7 +126,7 @@ export class RouterService {
 
   zipProducts(products: Product[], data: DatasetState): string[] {
     return products.map((product) => {
-      const i = data.itemN[product.itemId];
+      const i = product.itemId;
       const t = product.rateType;
       const r = product.rate;
       return `${i}:${t}:${r}`;
@@ -162,7 +140,7 @@ export class RouterService {
       const p = product.split(':');
       products.push({
         id: n,
-        itemId: data.itemI[p[0]],
+        itemId: p[0] as ItemId,
         rateType: Number(p[1]),
         rate: Number(p[2]),
       });
@@ -171,48 +149,62 @@ export class RouterService {
     this.store.dispatch(new Products.LoadAction(products));
   }
 
-  zipRecipes(state: Recipes.RecipeState, data: DatasetState): string[] {
+  zipItems(state: Items.ItemsState, data: DatasetState): string[] {
     return Object.keys(state).map((id) => {
       const settings = state[id];
-      const i = data.recipeN[id];
+      const i = id;
       const ig = settings.ignore == null ? '' : settings.ignore ? 1 : 0;
-      const bl = settings.belt == null ? '' : data.itemN[settings.belt];
-      const fc = settings.factory == null ? '' : data.itemN[settings.factory];
-      const md =
-        settings.modules == null
-          ? ''
-          : settings.modules.map((m) => moduleN[m]).join('.');
-      const bt =
-        settings.beaconModule == null ? '' : moduleN[settings.beaconModule];
-      const bc = settings.beaconCount == null ? '' : settings.beaconCount;
-      return `${i}:${ig}:${bl}:${fc}:${md}:${bt}:${bc}`;
+      const bl = settings.belt == null ? '' : settings.belt;
+      return `${i}:${ig}:${bl}`;
     });
   }
 
-  unzipRecipes(zRecipes: string[], data: DatasetState) {
-    const recipes: Recipes.RecipeState = {};
-    for (const recipe of zRecipes) {
+  unzipItems(zItems: string[], data: DatasetState) {
+    const items: Items.ItemsState = {};
+    for (const recipe of zItems) {
       const r = recipe.split(':');
-      const u: RecipeSettings = {};
+      const u: ItemSettings = {};
       if (r[1] !== '') {
         u.ignore = r[1] === '1' ? true : false;
       }
       if (r[2] !== '') {
-        u.belt = data.itemI[r[2]];
+        u.belt = r[2] as ItemId;
+      }
+      items[r[0]] = u;
+    }
+    this.store.dispatch(new Items.LoadAction(items));
+  }
+
+  zipRecipes(state: Recipes.RecipesState, data: DatasetState): string[] {
+    return Object.keys(state).map((id) => {
+      const settings = state[id];
+      const i = id;
+      const fc = settings.factory == null ? '' : settings.factory;
+      const md = settings.modules == null ? '' : settings.modules.join('.');
+      const bt = settings.beaconModule == null ? '' : settings.beaconModule;
+      const bc = settings.beaconCount == null ? '' : settings.beaconCount;
+      return `${i}:${fc}:${md}:${bt}:${bc}`;
+    });
+  }
+
+  unzipRecipes(zRecipes: string[], data: DatasetState) {
+    const recipes: Recipes.RecipesState = {};
+    for (const recipe of zRecipes) {
+      const r = recipe.split(':');
+      const u: RecipeSettings = {};
+      if (r[1] !== '') {
+        u.factory = r[1] as ItemId;
+      }
+      if (r[2] !== '') {
+        u.modules = r[2].split('.').map((m) => m as ItemId);
       }
       if (r[3] !== '') {
-        u.factory = data.itemI[r[3]];
+        u.beaconModule = r[3] as ItemId;
       }
       if (r[4] !== '') {
-        u.modules = r[4].split('.').map((m) => moduleI[Number(m)]);
+        u.beaconCount = Number(r[4]);
       }
-      if (r[5] !== '') {
-        u.beaconModule = moduleI[Number(r[5])];
-      }
-      if (r[6] !== '') {
-        u.beaconCount = Number(r[6]);
-      }
-      recipes[data.recipeI[r[0]]] = u;
+      recipes[r[0]] = u;
     }
     this.store.dispatch(new Recipes.LoadAction(recipes));
   }
@@ -241,21 +233,15 @@ export class RouterService {
         : state.factoryPrecision == null
         ? 'n'
         : state.factoryPrecision;
-    const tb = state.belt === init.belt ? '' : data.itemN[state.belt];
-    const pa =
-      state.assembler === init.assembler ? '' : data.itemN[state.assembler];
-    const pf = state.furnace === init.furnace ? '' : data.itemN[state.furnace];
-    const or =
-      state.oilRecipe === init.oilRecipe ? '' : data.recipeN[state.oilRecipe];
-    const fl = state.fuel === init.fuel ? '' : data.itemN[state.fuel];
-    const mp =
-      state.prodModule === init.prodModule ? '' : moduleN[state.prodModule];
-    const ms =
-      state.speedModule === init.speedModule ? '' : moduleN[state.speedModule];
+    const tb = state.belt === init.belt ? '' : state.belt;
+    const pa = state.assembler === init.assembler ? '' : state.assembler;
+    const pf = state.furnace === init.furnace ? '' : state.furnace;
+    const or = state.oilRecipe === init.oilRecipe ? '' : state.oilRecipe;
+    const fl = state.fuel === init.fuel ? '' : state.fuel;
+    const mp = state.prodModule === init.prodModule ? '' : state.prodModule;
+    const ms = state.speedModule === init.speedModule ? '' : state.speedModule;
     const bm =
-      state.beaconModule === init.beaconModule
-        ? ''
-        : moduleN[state.beaconModule];
+      state.beaconModule === init.beaconModule ? '' : state.beaconModule;
     const bc = state.beaconCount === init.beaconCount ? '' : state.beaconCount;
     const dm =
       state.drillModule === init.drillModule ? '' : Number(state.drillModule);
@@ -284,28 +270,28 @@ export class RouterService {
       settings.factoryPrecision = s[3] === 'n' ? null : Number(s[3]);
     }
     if (s[4] !== '') {
-      settings.belt = data.itemI[s[4]];
+      settings.belt = s[4] as ItemId;
     }
     if (s[5] !== '') {
-      settings.assembler = data.itemI[s[5]];
+      settings.assembler = s[5] as ItemId;
     }
     if (s[6] !== '') {
-      settings.furnace = data.itemI[s[6]];
+      settings.furnace = s[6] as ItemId;
     }
     if (s[7] !== '') {
-      settings.oilRecipe = data.recipeI[s[7]];
+      settings.oilRecipe = s[7] as RecipeId;
     }
     if (s[8] !== '') {
-      settings.fuel = data.itemI[s[8]];
+      settings.fuel = s[8] as ItemId;
     }
     if (s[9] !== '') {
-      settings.prodModule = moduleI[Number(s[9])];
+      settings.prodModule = s[9] as ItemId;
     }
     if (s[10] !== '') {
-      settings.speedModule = moduleI[Number(s[10])];
+      settings.speedModule = s[10] as ItemId;
     }
     if (s[11] !== '') {
-      settings.beaconModule = moduleI[Number(s[11])];
+      settings.beaconModule = s[11] as ItemId;
     }
     if (s[12] !== '') {
       settings.beaconCount = Number(s[12]);

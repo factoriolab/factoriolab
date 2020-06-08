@@ -8,7 +8,7 @@ import { Step, ItemId } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers } from '~/store';
 import { DatasetState } from '~/store/dataset';
-import { RecipeState } from '~/store/recipe';
+import { RecipesState } from '~/store/recipes';
 import { RecipeUtility } from '~/utilities';
 import { TestUtility } from '~/utilities/test';
 import { IconComponent } from '../../../icon/icon.component';
@@ -39,7 +39,7 @@ import { ListComponent } from './list.component';
 class TestListComponent {
   @ViewChild(ListComponent) child: ListComponent;
   data: DatasetState = Mocks.Data;
-  recipe: RecipeState = Mocks.RecipeSettingsInitial;
+  recipe: RecipesState = Mocks.RecipeSettingsInitial;
   steps: Step[] = Mocks.Steps;
   itemPrecision = null;
   beltPrecision = 0;

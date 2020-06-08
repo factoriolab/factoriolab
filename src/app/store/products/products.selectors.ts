@@ -14,7 +14,8 @@ import {
 } from '~/models';
 import { RateUtility, RecipeUtility, MatrixUtility } from '~/utilities';
 import * as Dataset from '../dataset';
-import * as Recipe from '../recipe';
+import * as Items from '../items';
+import * as Recipes from '../recipes';
 import * as Settings from '../settings';
 import { State } from '../';
 import { ProductsState } from './products.reducer';
@@ -65,10 +66,10 @@ export const getNormalizedRatesByItems = createSelector(
 
 export const getNormalizedRatesByBelts = createSelector(
   getProductsBy,
-  Recipe.getRecipeSettings,
+  Items.getItemSettings,
   Settings.getOilRecipe,
   Dataset.getBeltSpeed,
-  (products, recipeSettings, oilRecipe, beltSpeed) => {
+  (products, itemSettings, oilRecipe, beltSpeed) => {
     return products[RateType.Belts]?.reduce((e: NEntities<Rational>, p) => {
       let belt: ItemId;
       switch (p.itemId) {
@@ -82,22 +83,22 @@ export const getNormalizedRatesByBelts = createSelector(
             oilRecipe === RecipeId.BasicOilProcessing
               ? RecipeId.SolidFuelFromPetroleumGas
               : RecipeId.SolidFuelFromLightOil;
-          belt = recipeSettings[recipeId].belt;
+          belt = itemSettings[recipeId].belt;
           break;
         }
         case ItemId.Uranium238: {
           const recipeId = RecipeId.UraniumProcessing;
-          belt = recipeSettings[recipeId].belt;
+          belt = itemSettings[recipeId].belt;
           break;
         }
         case ItemId.Uranium235: {
           const recipeId = RecipeId.KovarexEnrichmentProcess;
-          belt = recipeSettings[recipeId].belt;
+          belt = itemSettings[recipeId].belt;
           break;
         }
         default: {
           const recipeId = p.itemId as any;
-          belt = recipeSettings[recipeId].belt;
+          belt = itemSettings[recipeId].belt;
           break;
         }
       }
@@ -132,7 +133,7 @@ export const getNormalizedRatesByWagons = createSelector(
 
 export const getNormalizedRatesByFactories = createSelector(
   getProductsBy,
-  Recipe.getAdjustedDataset,
+  Recipes.getAdjustedDataset,
   (products, data) => {
     return products[RateType.Factories]?.reduce((e: NEntities<Rational>, p) => {
       const recipe = data.recipeR[p.itemId];
@@ -163,11 +164,12 @@ export const getNormalizedRates = createSelector(
 export const getNormalizedSteps = createSelector(
   getProducts,
   getNormalizedRates,
-  Recipe.getRecipeSettings,
-  Recipe.getAdjustedDataset,
+  Items.getItemSettings,
+  Recipes.getRecipeSettings,
+  Recipes.getAdjustedDataset,
   Settings.getFuel,
   Settings.getOilRecipe,
-  (products, rates, settings, data, fuel, oilRecipe) => {
+  (products, rates, itemSettings, recipeSettings, data, fuel, oilRecipe) => {
     const steps: Step[] = [];
     for (const product of products) {
       RateUtility.addStepsFor(
@@ -175,7 +177,8 @@ export const getNormalizedSteps = createSelector(
         product.itemId,
         rates[product.id],
         steps,
-        settings,
+        itemSettings,
+        recipeSettings,
         fuel,
         oilRecipe,
         data
@@ -188,18 +191,20 @@ export const getNormalizedSteps = createSelector(
 export const getNormalizedNodes = createSelector(
   getProducts,
   getNormalizedRates,
-  Recipe.getRecipeSettings,
-  Recipe.getAdjustedDataset,
+  Items.getItemSettings,
+  Recipes.getRecipeSettings,
+  Recipes.getAdjustedDataset,
   Settings.getFuel,
   Settings.getOilRecipe,
-  (products, rates, settings, data, fuel, oilRecipe) => {
+  (products, rates, itemSettings, recipeSettings, data, fuel, oilRecipe) => {
     const root: any = { id: 'root', children: [] };
     for (const product of products) {
       RateUtility.addNodesFor(
         root,
         product.itemId,
         rates[product.id],
-        settings,
+        itemSettings,
+        recipeSettings,
         fuel,
         oilRecipe,
         data
@@ -211,24 +216,36 @@ export const getNormalizedNodes = createSelector(
 
 export const getNormalizedStepsWithMatrices = createSelector(
   getNormalizedSteps,
-  Recipe.getRecipeSettings,
-  Recipe.getAdjustedDataset,
+  Items.getItemSettings,
+  Recipes.getRecipeSettings,
+  Recipes.getAdjustedDataset,
   Settings.getFuel,
   Settings.getOilRecipe,
-  (steps, settings, data, fuel, oilRecipe) =>
-    MatrixUtility.solveMatricesFor(steps, settings, fuel, oilRecipe, data)
+  (steps, itemSettings, recipeSettings, data, fuel, oilRecipe) =>
+    MatrixUtility.solveMatricesFor(
+      steps,
+      itemSettings,
+      recipeSettings,
+      fuel,
+      oilRecipe,
+      data
+    )
 );
 
 export const getNormalizedStepsWithBelts = createSelector(
   getNormalizedStepsWithMatrices,
+  Items.getItemSettings,
   Dataset.getBeltSpeed,
-  (steps, beltSpeed) => RateUtility.calculateBelts(steps, beltSpeed)
+  (steps, itemSettings, beltSpeed) =>
+    RateUtility.calculateBelts(steps, itemSettings, beltSpeed)
 );
 
 export const getNormalizedNodesWithBelts = createSelector(
   getNormalizedNodes,
+  Items.getItemSettings,
   Dataset.getBeltSpeed,
-  (nodes, beltSpeed) => RateUtility.calculateNodeBelts(nodes, beltSpeed)
+  (nodes, itemSettings, beltSpeed) =>
+    RateUtility.calculateNodeBelts(nodes, itemSettings, beltSpeed)
 );
 
 export const getDisplayRateSteps = createSelector(
@@ -253,10 +270,11 @@ export const getSteps = createSelector(getDisplayRateSteps, (steps) =>
 
 export const getZipState = createSelector(
   getProducts,
-  Recipe.recipeState,
+  Items.itemsState,
+  Recipes.recipesState,
   Settings.settingsState,
   Dataset.getDatasetState,
-  (products, recipe, settings, data) => {
-    return { products, recipe, settings, data };
+  (products, items, recipes, settings, data) => {
+    return { products, items, recipes, settings, data };
   }
 );

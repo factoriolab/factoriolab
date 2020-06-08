@@ -37,6 +37,7 @@ export class RationalRecipe {
   id: RecipeId;
   name: string;
   time: Rational;
+  adjustProd?: Rational;
   in?: Entities<Rational>;
   out?: Entities<Rational>;
   expensive?: {

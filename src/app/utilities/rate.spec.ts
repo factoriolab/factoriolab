@@ -175,7 +175,7 @@ describe('RateUtility', () => {
         RecipeId.AdvancedOilProcessing,
         Mocks.RationalData
       );
-      expect(steps[0].settings.belt).toEqual(ItemId.Pipe);
+      expect(steps[0].recipeSettings.belt).toEqual(ItemId.Pipe);
     });
 
     it('should properly mark recipe for oil products when using basic oil processing', () => {
@@ -184,7 +184,7 @@ describe('RateUtility', () => {
           itemId: ItemId.PetroleumGas,
           recipeId: null,
           items: new Rational(BigInt(30)),
-          settings: {},
+          recipeSettings: {},
         },
       ];
       RateUtility.addStepsFor(
@@ -239,7 +239,7 @@ describe('RateUtility', () => {
           recipeId: ItemId.Uranium235 as any,
           items: new Rational(BigInt(30)),
           factories: Rational.zero,
-          settings: { belt: null },
+          recipeSettings: { belt: null },
         },
       ]);
     });
@@ -515,7 +515,7 @@ describe('RateUtility', () => {
           recipeId: null,
           items: null,
           belts: null,
-          settings: { belt: ItemId.TransportBelt },
+          recipeSettings: { belt: ItemId.TransportBelt },
         },
       ];
       RateUtility.calculateBelts(steps, Mocks.BeltSpeed);
@@ -529,7 +529,7 @@ describe('RateUtility', () => {
           recipeId: null,
           items: Mocks.BeltSpeed[ItemId.TransportBelt],
           belts: Rational.zero,
-          settings: { belt: ItemId.TransportBelt },
+          recipeSettings: { belt: ItemId.TransportBelt },
         },
       ];
       RateUtility.calculateBelts(steps, Mocks.BeltSpeed);
@@ -546,7 +546,7 @@ describe('RateUtility', () => {
         recipeId: null,
         items: null,
         belts: null,
-        settings: { belt: ItemId.TransportBelt },
+        recipeSettings: { belt: ItemId.TransportBelt },
       };
       RateUtility.calculateNodeBelts(node, Mocks.BeltSpeed);
       expect(node.belts).toBeNull();
@@ -560,7 +560,7 @@ describe('RateUtility', () => {
         recipeId: null,
         items: Mocks.BeltSpeed[ItemId.TransportBelt],
         belts: null,
-        settings: { belt: ItemId.TransportBelt },
+        recipeSettings: { belt: ItemId.TransportBelt },
         children: [
           {
             id: 'test2',
@@ -569,7 +569,7 @@ describe('RateUtility', () => {
             recipeId: null,
             items: Mocks.BeltSpeed[ItemId.TransportBelt],
             belts: null,
-            settings: { belt: ItemId.TransportBelt },
+            recipeSettings: { belt: ItemId.TransportBelt },
           },
         ],
       };
@@ -587,7 +587,7 @@ describe('RateUtility', () => {
           recipeId: null,
           items: null,
           belts: null,
-          settings: { belt: ItemId.TransportBelt },
+          recipeSettings: { belt: ItemId.TransportBelt },
         },
       ];
       RateUtility.displayRate(steps, 3 as any);
@@ -630,7 +630,7 @@ describe('RateUtility', () => {
         recipeId: null,
         items: null,
         belts: null,
-        settings: { belt: ItemId.TransportBelt },
+        recipeSettings: { belt: ItemId.TransportBelt },
       };
       RateUtility.nodeDisplayRate(node, DisplayRate.PerMinute);
       expect(node.items).toBeNull();
@@ -645,7 +645,7 @@ describe('RateUtility', () => {
         items: Rational.two,
         surplus: new Rational(BigInt(3)),
         belts: null,
-        settings: { belt: ItemId.TransportBelt },
+        recipeSettings: { belt: ItemId.TransportBelt },
         children: [
           {
             id: 'test2',
@@ -655,7 +655,7 @@ describe('RateUtility', () => {
             items: Rational.two,
             surplus: new Rational(BigInt(3)),
             belts: null,
-            settings: { belt: ItemId.TransportBelt },
+            recipeSettings: { belt: ItemId.TransportBelt },
           },
         ],
       };
@@ -674,7 +674,7 @@ describe('RateUtility', () => {
         recipeId: null,
         items: Rational.two,
         belts: null,
-        settings: { belt: ItemId.TransportBelt },
+        recipeSettings: { belt: ItemId.TransportBelt },
       };
       RateUtility.nodeDisplayRate(node, DisplayRate.PerMinute);
       expect(node.items).toEqual(new Rational(BigInt(120)));

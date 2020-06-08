@@ -10,7 +10,8 @@ import {
   DisplayRateVal,
 } from '~/models';
 import { RationalDataset } from '~/store/dataset';
-import { RecipeState } from '~/store/recipe';
+import { ItemsState } from '~/store/items';
+import { RecipesState } from '~/store/recipes';
 
 export class RateUtility {
   static LAUNCH_TIME = new Rational(BigInt(2420), BigInt(60));
@@ -21,7 +22,8 @@ export class RateUtility {
     itemId: ItemId,
     rate: Rational,
     steps: Step[],
-    settings: RecipeState,
+    itemSettings: ItemsState,
+    recipeSettings: RecipesState,
     fuel: ItemId,
     oilRecipe: RecipeId,
     data: RationalDataset
@@ -44,16 +46,19 @@ export class RateUtility {
         recipeId: recipe ? recipe.id : null,
         items: Rational.zero,
         factories: Rational.zero,
-        settings: recipe
-          ? settings[recipe.id]
-          : { belt: item.stack ? null : ItemId.Pipe },
       };
 
       steps.push(step);
     }
 
+    // Adjust for consumption instead of production if desired
+    if (recipe?.adjustProd) {
+      rate = rate.mul(recipe.adjustProd);
+    }
+
     // Add items to the step
     step.items = step.items.add(rate);
+
     if (parentId) {
       if (!step.parents) {
         step.parents = {};
@@ -86,11 +91,12 @@ export class RateUtility {
         }
         // Add fuel required for factory
         if (
-          step.settings.factory &&
+          recipeSettings[step.recipeId].factory &&
           step.items.nonzero() &&
-          !step.settings.ignore
+          !itemSettings[step.itemId].ignore
         ) {
-          const factory = data.itemR[step.settings.factory].factory;
+          const factory =
+            data.itemR[recipeSettings[step.recipeId].factory].factory;
           if (factory.burner) {
             RateUtility.addStepsFor(
               itemId,
@@ -100,7 +106,8 @@ export class RateUtility {
                 .div(data.itemR[fuel].fuel)
                 .div(this.ONE_THOUSAND),
               steps,
-              settings,
+              itemSettings,
+              recipeSettings,
               fuel,
               oilRecipe,
               data
@@ -110,7 +117,11 @@ export class RateUtility {
       }
 
       // Recurse adding steps for ingredients
-      if (recipe.in && step.items.nonzero() && !step.settings.ignore) {
+      if (
+        recipe.in &&
+        step.items.nonzero() &&
+        !itemSettings[step.itemId].ignore
+      ) {
         for (const ingredient of Object.keys(recipe.in)) {
           const ingredientRate = rate.mul(recipe.in[ingredient]).div(out);
           RateUtility.addStepsFor(
@@ -118,7 +129,8 @@ export class RateUtility {
             ingredient as ItemId,
             ingredientRate,
             steps,
-            settings,
+            itemSettings,
+            recipeSettings,
             fuel,
             oilRecipe,
             data
@@ -132,7 +144,8 @@ export class RateUtility {
     parent: Node,
     itemId: ItemId,
     rate: Rational,
-    settings: RecipeState,
+    itemSettings: ItemsState,
+    recipeSettings: RecipesState,
     fuel: ItemId,
     oilRecipe: RecipeId,
     data: RationalDataset
@@ -152,9 +165,6 @@ export class RateUtility {
       recipeId: itemId as any,
       items: rate,
       factories: Rational.zero,
-      settings: recipe
-        ? settings[recipe.id]
-        : { belt: item.stack ? null : ItemId.Pipe },
     };
 
     if (!parent.children) {
@@ -188,11 +198,12 @@ export class RateUtility {
         }
         // Add fuel required for factory
         if (
-          node.settings.factory &&
+          recipeSettings[node.recipeId].factory &&
           node.items.nonzero() &&
-          !node.settings.ignore
+          !itemSettings[node.itemId].ignore
         ) {
-          const factory = data.itemR[node.settings.factory].factory;
+          const factory =
+            data.itemR[recipeSettings[node.recipeId].factory].factory;
           if (factory.burner) {
             RateUtility.addNodesFor(
               node,
@@ -201,7 +212,8 @@ export class RateUtility {
                 .mul(factory.burner)
                 .div(data.itemR[fuel].fuel)
                 .div(this.ONE_THOUSAND),
-              settings,
+              itemSettings,
+              recipeSettings,
               fuel,
               oilRecipe,
               data
@@ -211,13 +223,18 @@ export class RateUtility {
       }
 
       // Recurse adding nodes for ingredients
-      if (recipe.in && node.items.nonzero() && !node.settings.ignore) {
+      if (
+        recipe.in &&
+        node.items.nonzero() &&
+        !itemSettings[node.itemId].ignore
+      ) {
         for (const ingredient of Object.keys(recipe.in)) {
           RateUtility.addNodesFor(
             node,
             ingredient as ItemId,
             rate.mul(recipe.in[ingredient]).div(out),
-            settings,
+            itemSettings,
+            recipeSettings,
             fuel,
             oilRecipe,
             data
@@ -227,22 +244,32 @@ export class RateUtility {
     }
   }
 
-  static calculateBelts(steps: Step[], beltSpeed: Entities<Rational>) {
+  static calculateBelts(
+    steps: Step[],
+    itemSettings: ItemsState,
+    beltSpeed: Entities<Rational>
+  ) {
     for (const step of steps) {
-      if (step.items && step.settings.belt) {
-        step.belts = step.items.div(beltSpeed[step.settings.belt]);
+      const belt = itemSettings[step.itemId]?.belt;
+      if (step.items && belt) {
+        step.belts = step.items.div(beltSpeed[belt]);
       }
     }
     return steps;
   }
 
-  static calculateNodeBelts(node: Node, beltSpeed: Entities<Rational>) {
-    if (node.items && node.settings.belt) {
-      node.belts = node.items.div(beltSpeed[node.settings.belt]);
+  static calculateNodeBelts(
+    node: Node,
+    itemSettings: ItemsState,
+    beltSpeed: Entities<Rational>
+  ) {
+    const belt = itemSettings[node.itemId]?.belt;
+    if (node.items && belt) {
+      node.belts = node.items.div(beltSpeed[belt]);
     }
     if (node.children) {
       for (const child of node.children) {
-        this.calculateNodeBelts(child, beltSpeed);
+        this.calculateNodeBelts(child, itemSettings, beltSpeed);
       }
     }
     return node;
