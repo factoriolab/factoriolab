@@ -11,6 +11,7 @@ To run this project locally:
 
 1. Install [NodeJS](https://nodejs.org/en/)
 1. Install Angular CLI, using `npm install -g @angular/cli`
+1. Install dependencies, using `npm ci`
 1. Build and serve the project, using `npm start`
 1. Open a browser at `http://localhost:4200`
 
