@@ -12,6 +12,7 @@ export enum RecipeId {
   LightOilCracking = 'light-oil-cracking',
   RocketPart = 'rocket-part',
   Satellite = 'satellite',
+  SolidFuelFromHeavyOil = 'solid-fuel-from-heavy-oil',
   SolidFuelFromLightOil = 'solid-fuel-from-light-oil',
   SolidFuelFromPetroleumGas = 'solid-fuel-from-petroleum-gas',
   SpaceSciencePack = 'space-science-pack',

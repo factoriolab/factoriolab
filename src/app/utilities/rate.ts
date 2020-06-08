@@ -4,7 +4,6 @@ import {
   Entities,
   ItemId,
   RecipeId,
-  Factors,
   CategoryId,
   Node,
   Rational,
@@ -23,7 +22,6 @@ export class RateUtility {
     rate: Rational,
     steps: Step[],
     settings: RecipeState,
-    factors: Entities<Factors>,
     fuel: ItemId,
     oilRecipe: RecipeId,
     data: RationalDataset
@@ -43,7 +41,7 @@ export class RateUtility {
       // No existing step found, create a new one
       step = {
         itemId,
-        recipeId: itemId as any,
+        recipeId: recipe ? recipe.id : null,
         items: Rational.zero,
         factories: Rational.zero,
         settings: recipe
@@ -55,43 +53,30 @@ export class RateUtility {
     }
 
     // Add items to the step
-    if (item.category === CategoryId.Research) {
-      step.items = step.items.add(rate.mul(factors[recipe.id].prod));
-    } else {
-      step.items = step.items.add(rate);
-      if (parentId) {
-        if (!step.parents) {
-          step.parents = {};
-        }
-        if (step.parents[parentId]) {
-          step.parents[parentId] = step.parents[parentId].add(rate);
-        } else {
-          step.parents[parentId] = rate;
-        }
+    step.items = step.items.add(rate);
+    if (parentId) {
+      if (!step.parents) {
+        step.parents = {};
+      }
+      if (step.parents[parentId]) {
+        step.parents[parentId] = step.parents[parentId].add(rate);
+      } else {
+        step.parents[parentId] = rate;
       }
     }
 
     if (recipe) {
-      // Mark complex recipes
-      if ((recipe.id as string) !== itemId) {
-        step.recipeId = recipe.id;
-      }
-
-      const f = factors[recipe.id];
-
       // Calculate number of outputs from recipe
-      const prod =
-        item.category === CategoryId.Research ? Rational.one : f.prod;
-      const out = (recipe.out ? recipe.out[itemId] : Rational.one).mul(prod);
+      const out = recipe.out[itemId];
 
       // Calculate factories
       if (itemId === ItemId.SpaceSciencePack) {
         // Factories are for rocket parts, space science packs are a side effect
         step.factories = null;
       } else {
-        step.factories = step.items.mul(recipe.time).div(out).div(f.speed);
+        step.factories = step.items.mul(recipe.time).div(out);
         if (item.category === CategoryId.Research) {
-          step.factories = step.factories.div(f.prod);
+          step.factories = step.factories;
         }
         // Add # of factories to actually launch rockets
         if (itemId === ItemId.RocketPart) {
@@ -116,7 +101,6 @@ export class RateUtility {
                 .div(this.ONE_THOUSAND),
               steps,
               settings,
-              factors,
               fuel,
               oilRecipe,
               data
@@ -135,7 +119,6 @@ export class RateUtility {
             ingredientRate,
             steps,
             settings,
-            factors,
             fuel,
             oilRecipe,
             data
@@ -150,7 +133,6 @@ export class RateUtility {
     itemId: ItemId,
     rate: Rational,
     settings: RecipeState,
-    factors: Entities<Factors>,
     fuel: ItemId,
     oilRecipe: RecipeId,
     data: RationalDataset
@@ -168,10 +150,7 @@ export class RateUtility {
       name: data.itemEntities[itemId].name,
       itemId,
       recipeId: itemId as any,
-      items:
-        item.category === CategoryId.Research
-          ? rate.mul(factors[recipe.id].prod)
-          : rate,
+      items: rate,
       factories: Rational.zero,
       settings: recipe
         ? settings[recipe.id]
@@ -189,21 +168,17 @@ export class RateUtility {
         node.recipeId = recipe.id;
       }
 
-      const f = factors[recipe.id];
-
       // Calculate number of outputs from recipe
-      const prod =
-        item.category === CategoryId.Research ? Rational.one : f.prod;
-      const out = (recipe.out ? recipe.out[itemId] : Rational.one).mul(prod);
+      const out = recipe.out[itemId];
 
       // Calculate factories
       if (itemId === ItemId.SpaceSciencePack) {
         // Factories are for rocket parts, space science packs are a side effect
         node.factories = null;
       } else {
-        node.factories = node.items.mul(recipe.time).div(out).div(f.speed);
+        node.factories = node.items.mul(recipe.time).div(out);
         if (item.category === CategoryId.Research) {
-          node.factories = node.factories.div(f.prod);
+          node.factories = node.factories;
         }
         // Add # of factories to actually launch rockets
         if (itemId === ItemId.RocketPart) {
@@ -227,7 +202,6 @@ export class RateUtility {
                 .div(data.itemR[fuel].fuel)
                 .div(this.ONE_THOUSAND),
               settings,
-              factors,
               fuel,
               oilRecipe,
               data
@@ -244,7 +218,6 @@ export class RateUtility {
             ingredient as ItemId,
             rate.mul(recipe.in[ingredient]).div(out),
             settings,
-            factors,
             fuel,
             oilRecipe,
             data

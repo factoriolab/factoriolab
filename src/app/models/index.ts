@@ -2,7 +2,6 @@ export * from './data';
 export * from './enum';
 export * from './constants';
 export * from './entities';
-export * from './factors';
 export * from './node';
 export * from './product';
 export * from './rational';

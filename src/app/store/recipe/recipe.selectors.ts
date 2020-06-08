@@ -5,10 +5,9 @@ import {
   Entities,
   ItemId,
   RecipeId,
-  Factors,
   CategoryId,
-  Rational,
   RationalRecipeSettings,
+  RationalRecipe,
 } from '~/models';
 import { RecipeUtility } from '~/utilities/recipe';
 import * as Dataset from '../dataset';
@@ -112,32 +111,31 @@ export const getRationalRecipeSettings = createSelector(
     )
 );
 
-export const getRecipeFactors = createSelector(
+export const getAdjustedDataset = createSelector(
   getRationalRecipeSettings,
   Settings.getRationalMiningBonus,
   Settings.getResearchFactor,
   Dataset.getRationalDataset,
-  (recipeSettings, miningBonus, researchFactor, data) => {
-    const values: Entities<Factors> = {};
-    for (const recipeId of Object.keys(recipeSettings)) {
-      const settings = recipeSettings[recipeId];
-      let factorySpeed = data.itemR[settings.factory].factory.speed;
-      if (data.itemEntities[recipeId]?.category === CategoryId.Research) {
-        factorySpeed = factorySpeed.mul(researchFactor);
-      }
-      values[recipeId] = RecipeUtility.recipeFactors(
-        factorySpeed,
-        settings.factory === ItemId.ElectricMiningDrill
-          ? miningBonus.div(Rational.hundred)
-          : Rational.zero,
-        settings.modules,
-        settings.beaconModule,
-        settings.beaconCount,
-        data.itemR
-      );
-    }
-    return values;
-  }
+  (recipeSettings, miningBonus, researchFactor, data) => ({
+    ...data,
+    ...{
+      recipeR: Object.keys(recipeSettings).reduce(
+        (e: Entities<RationalRecipe>, i) => ({
+          ...e,
+          ...{
+            [i]: RecipeUtility.adjustRecipe(
+              i as RecipeId,
+              miningBonus,
+              researchFactor,
+              recipeSettings[i],
+              data
+            ),
+          },
+        }),
+        {}
+      ),
+    },
+  })
 );
 
 export const getContainsIgnore = createSelector(recipeState, (state) =>

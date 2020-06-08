@@ -1,20 +1,16 @@
 import {
   Recipe,
-  Item,
-  Entities,
-  CategoryId,
   RecipeId,
   ItemId,
-  Factors,
   Step,
   Node,
   Rational,
-  RationalItem,
+  RationalRecipe,
+  RationalRecipeSettings,
 } from '~/models';
-import { DatasetState } from '~/store/dataset';
+import { DatasetState, RationalDataset } from '~/store/dataset';
 import { RecipeState } from '~/store/recipe';
 
-const categoryAllowProdModule = [CategoryId.Intermediate, CategoryId.Research];
 const order: (ItemId | RecipeId)[] = [
   // Research products
   ItemId.MiningProductivity,
@@ -117,21 +113,42 @@ export class RecipeUtility {
     return modules;
   }
 
-  /** Determines tuple of speed and productivity factors on given recipe */
-  static recipeFactors(
-    factorySpeed: Rational,
-    factoryProd: Rational,
-    modules: ItemId[],
-    beaconModule: ItemId,
-    beaconCount: Rational,
-    itemEntities: Entities<RationalItem>
-  ): Factors {
+  static adjustRecipe(
+    recipeId: RecipeId,
+    miningBonus: Rational,
+    researchFactor: Rational,
+    settings: RationalRecipeSettings,
+    data: RationalDataset
+  ) {
+    const recipe = new RationalRecipe(data.recipeEntities[recipeId]);
+
+    if (!recipe.out) {
+      // Add implied outputs
+      recipe.out = { [recipeId]: Rational.one };
+    }
+
+    // Adjust for factory speed
+    recipe.time = recipe.time.div(data.itemR[settings.factory].factory.speed);
+
+    if (settings.factory === ItemId.Lab) {
+      // Adjust for research factor
+      recipe.time = recipe.time.div(researchFactor);
+    }
+
+    // Calculate factors
     let speed = Rational.one;
     let prod = Rational.one;
-    if (modules && modules.length) {
-      for (const id of modules) {
-        if (itemEntities[id]) {
-          const module = itemEntities[id].module;
+
+    if (settings.factory === ItemId.ElectricMiningDrill) {
+      // Adjust for mining bonus
+      prod = prod.add(miningBonus);
+    }
+
+    // Modules
+    if (settings.modules && settings.modules.length) {
+      for (const id of settings.modules) {
+        if (data.itemEntities[id]) {
+          const module = data.itemR[id].module;
           if (module) {
             if (module.speed) {
               speed = speed.add(module.speed);
@@ -143,21 +160,28 @@ export class RecipeUtility {
         }
       }
     }
+
+    // Beacons
     if (
-      beaconModule &&
-      itemEntities[beaconModule]?.module &&
-      beaconCount.nonzero()
+      settings.beaconModule &&
+      data.itemR[settings.beaconModule]?.module &&
+      settings.beaconCount.nonzero()
     ) {
-      const module = itemEntities[beaconModule].module;
+      const module = data.itemR[settings.beaconModule].module;
       if (module.speed) {
-        speed = speed.add(module.speed.div(Rational.two).mul(beaconCount));
+        speed = speed.add(
+          module.speed.div(Rational.two).mul(settings.beaconCount)
+        );
       }
     }
 
-    speed = speed.mul(factorySpeed);
-    prod = prod.add(factoryProd);
+    // Calculate module/beacon effects
+    recipe.time = recipe.time.div(speed);
+    for (const outId of Object.keys(recipe.out)) {
+      recipe.out[outId] = recipe.out[outId].mul(prod);
+    }
 
-    return { speed, prod };
+    return recipe;
   }
 
   /** Sorts steps based on items / recipes */
