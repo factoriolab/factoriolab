@@ -11,5 +11,4 @@ export interface Step {
   factories?: Rational;
   recipeId?: RecipeId;
   parents?: Entities<Rational>;
-  matrix?: number;
 }

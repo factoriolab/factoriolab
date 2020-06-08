@@ -40,6 +40,7 @@ const order: (ItemId | RecipeId)[] = [
   ItemId.RocketFuel,
   RecipeId.SolidFuelFromLightOil,
   RecipeId.SolidFuelFromPetroleumGas,
+  RecipeId.SolidFuelFromHeavyOil,
   ItemId.Lubricant,
   ItemId.PetroleumGas,
   ItemId.LightOil,
@@ -178,7 +179,18 @@ export class RecipeUtility {
     // Calculate module/beacon effects
     recipe.time = recipe.time.div(speed);
     for (const outId of Object.keys(recipe.out)) {
-      recipe.out[outId] = recipe.out[outId].mul(prod);
+      if (recipe.in && recipe.in[outId]) {
+        // Recipe takes output as input, prod only applies to difference
+        if (recipe.in[outId].lt(recipe.out[outId])) {
+          // Only matters when output > input
+          // (Does not apply to U-238 in Kovarex)
+          recipe.out[outId] = recipe.in[outId].add(
+            recipe.out[outId].sub(recipe.in[outId]).mul(prod)
+          );
+        }
+      } else {
+        recipe.out[outId] = recipe.out[outId].mul(prod);
+      }
 
       // Log prod for research products
       if (data.itemR[outId].category === CategoryId.Research) {
