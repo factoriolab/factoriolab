@@ -1,5 +1,3 @@
-import * as kiwi from 'kiwi.js';
-
 import {
   Step,
   Entities,
@@ -9,10 +7,18 @@ import {
   ItemId,
   Rational,
 } from '~/models';
-import { RateUtility } from './rate';
 import { RationalDataset } from '~/store/dataset';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
+import { RateUtility } from './rate';
+import {
+  Solver,
+  Variable,
+  Expression,
+  Constraint,
+  Strength,
+  Operator,
+} from './cassowary';
 
 export class MatrixUtility {
   static solveMatricesFor(
@@ -30,7 +36,7 @@ export class MatrixUtility {
 
     let recipes: Entities<RationalRecipe> = {};
     const value: Entities<number> = {};
-    const solver = new kiwi.Solver();
+    const solver = new Solver();
 
     for (const step of steps) {
       if (!step.recipeId && !itemSettings[step.itemId].ignore) {
@@ -84,14 +90,14 @@ export class MatrixUtility {
     }
 
     const items: Entities<RationalItem> = {};
-    const recipeVar: Entities<kiwi.Variable> = {};
+    const recipeVar: Entities<Variable> = {};
     const outputs: ItemId[] = [];
     const recipeIds = Object.keys(recipes);
     for (const r of recipeIds) {
-      const variable = new kiwi.Variable();
-      solver.addEditVariable(variable, kiwi.Strength.weak);
+      const variable = new Variable();
+      solver.addEditVariable(variable, Strength.weak);
       solver.addConstraint(
-        new kiwi.Constraint(new kiwi.Expression(variable), kiwi.Operator.Ge)
+        new Constraint(new Expression(variable), Operator.Ge)
       );
 
       const recipe = data.recipeR[r];
@@ -107,16 +113,16 @@ export class MatrixUtility {
       recipeVar[r] = variable;
     }
 
-    const surplusVar: Entities<kiwi.Variable> = {};
-    const inputVar: Entities<kiwi.Variable> = {};
+    const surplusVar: Entities<Variable> = {};
+    const inputVar: Entities<Variable> = {};
     for (const i of Object.keys(items)) {
-      const surplus = new kiwi.Variable();
-      solver.addEditVariable(surplus, kiwi.Strength.weak);
+      const surplus = new Variable();
+      solver.addEditVariable(surplus, Strength.weak);
       solver.addConstraint(
-        new kiwi.Constraint(new kiwi.Expression(surplus), kiwi.Operator.Ge)
+        new Constraint(new Expression(surplus), Operator.Ge)
       );
 
-      let expr = new kiwi.Expression([-1, surplus]);
+      let expr = new Expression([-1, surplus]);
       if (value[i]) {
         expr = expr.minus(value[i]);
       }
@@ -126,7 +132,7 @@ export class MatrixUtility {
         if (recipe.in) {
           for (const inId of Object.keys(recipe.in).filter((id) => i === id)) {
             expr = expr.minus(
-              new kiwi.Expression([recipe.in[inId].toNumber(), rVar])
+              new Expression([recipe.in[inId].toNumber(), rVar])
             );
           }
         }
@@ -135,7 +141,7 @@ export class MatrixUtility {
             (id) => i === id
           )) {
             expr = expr.plus(
-              new kiwi.Expression([recipe.out[outId].toNumber(), rVar])
+              new Expression([recipe.out[outId].toNumber(), rVar])
             );
           }
         }
@@ -143,37 +149,37 @@ export class MatrixUtility {
 
       if (!outputs.some((o) => o === i)) {
         // Input only
-        const inVariable = new kiwi.Variable();
-        solver.addEditVariable(inVariable, kiwi.Strength.weak);
-        expr = expr.plus(new kiwi.Expression(inVariable));
+        const inVariable = new Variable();
+        solver.addEditVariable(inVariable, Strength.weak);
+        expr = expr.plus(new Expression(inVariable));
         inputVar[i] = inVariable;
       }
 
-      solver.addConstraint(new kiwi.Constraint(expr, kiwi.Operator.Eq));
+      solver.addConstraint(new Constraint(expr, Operator.Eq));
       surplusVar[i] = surplus;
     }
 
     // Add tax/cost
-    const tax = new kiwi.Variable();
-    const cost = new kiwi.Variable();
-    solver.addEditVariable(tax, kiwi.Strength.weak);
-    solver.addEditVariable(cost, kiwi.Strength.weak);
+    const tax = new Variable();
+    const cost = new Variable();
+    solver.addEditVariable(tax, Strength.weak);
+    solver.addEditVariable(cost, Strength.weak);
 
-    let factoryExpr = new kiwi.Expression(tax);
+    let factoryExpr = new Expression(tax);
     for (const r of recipeIds) {
       factoryExpr = factoryExpr.minus(recipeVar[r]);
     }
-    let costExpr = new kiwi.Expression(cost);
+    let costExpr = new Expression(cost);
     for (const i of Object.keys(inputVar)) {
       if (data.recipeR[i]) {
-        costExpr = costExpr.minus(new kiwi.Expression([100, inputVar[i]]));
+        costExpr = costExpr.minus(new Expression([100, inputVar[i]]));
       } else {
-        costExpr = costExpr.minus(new kiwi.Expression([100000, inputVar[i]]));
+        costExpr = costExpr.minus(new Expression([100000, inputVar[i]]));
       }
     }
 
-    solver.addConstraint(new kiwi.Constraint(factoryExpr, kiwi.Operator.Eq));
-    solver.addConstraint(new kiwi.Constraint(costExpr, kiwi.Operator.Eq));
+    solver.addConstraint(new Constraint(factoryExpr, Operator.Eq));
+    solver.addConstraint(new Constraint(costExpr, Operator.Eq));
 
     solver.suggestValue(cost, 0);
 
