@@ -1,4 +1,4 @@
-import { Rational } from '../rational';
+import { Rational } from '../math/rational';
 
 export interface Module {
   speed?: number;

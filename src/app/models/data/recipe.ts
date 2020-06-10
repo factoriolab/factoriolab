@@ -1,4 +1,4 @@
-import { Rational } from '../rational';
+import { Rational } from '../math/rational';
 import { Entities } from '../entities';
 import { ItemId } from './item';
 

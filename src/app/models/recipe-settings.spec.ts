@@ -1,5 +1,5 @@
 import { ItemId } from './data/item';
-import { Rational } from './rational';
+import { Rational } from './math/rational';
 import { RationalRecipeSettings } from './recipe-settings';
 
 describe('RationalRecipeSettings', () => {

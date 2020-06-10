@@ -1,4 +1,4 @@
-import { Rational } from '../rational';
+import { Rational } from '../math/rational';
 import { RationalBelt } from './belt';
 
 describe('RationalBelt', () => {

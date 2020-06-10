@@ -1,5 +1,5 @@
 import { ItemId } from './data/item';
-import { Rational } from './rational';
+import { Rational } from './math/rational';
 
 export interface RecipeSettings {
   factory?: ItemId;

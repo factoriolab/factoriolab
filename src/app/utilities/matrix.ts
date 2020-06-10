@@ -6,19 +6,17 @@ import {
   RationalItem,
   ItemId,
   Rational,
-} from '~/models';
-import { RationalDataset } from '~/store/dataset';
-import { ItemsState } from '~/store/items';
-import { RecipesState } from '~/store/recipes';
-import { RateUtility } from './rate';
-import {
   Solver,
   Variable,
   Expression,
   Constraint,
   Strength,
   Operator,
-} from './cassowary';
+} from '~/models';
+import { RationalDataset } from '~/store/dataset';
+import { ItemsState } from '~/store/items';
+import { RecipesState } from '~/store/recipes';
+import { RateUtility } from './rate';
 
 export class MatrixUtility {
   static solveMatricesFor(
@@ -28,14 +26,14 @@ export class MatrixUtility {
     fuel: ItemId,
     oilRecipe: RecipeId,
     data: RationalDataset,
-    previous: Entities<number> = {}
+    previous: Entities<Rational> = {}
   ) {
     if (!steps.some((s) => !s.recipeId && !itemSettings[s.itemId].ignore)) {
       return steps;
     }
 
     let recipes: Entities<RationalRecipe> = {};
-    const value: Entities<number> = {};
+    const value: Entities<Rational> = {};
     const solver = new Solver();
 
     for (const step of steps) {
@@ -45,7 +43,7 @@ export class MatrixUtility {
           .map((r) => data.recipeR[r])
           .filter((r) => r.out && r.out[step.itemId]);
         if (recipeMatches.length > 0) {
-          value[step.itemId] = step.items.toNumber();
+          value[step.itemId] = step.items;
           for (const recipe of recipeMatches) {
             recipes[recipe.id] = recipe;
 
@@ -67,7 +65,9 @@ export class MatrixUtility {
       return steps;
     }
 
-    if (Object.keys(value).every((v) => value[v] === previous[v])) {
+    if (
+      Object.keys(value).every((v) => previous[v] && value[v].eq(previous[v]))
+    ) {
       // No new matrix steps
       return steps;
     }
@@ -122,7 +122,7 @@ export class MatrixUtility {
         new Constraint(new Expression(surplus), Operator.Ge)
       );
 
-      let expr = new Expression([-1, surplus]);
+      let expr = new Expression([Rational.minusOne, surplus]);
       if (value[i]) {
         expr = expr.minus(value[i]);
       }
@@ -131,18 +131,14 @@ export class MatrixUtility {
         const rVar = recipeVar[r];
         if (recipe.in) {
           for (const inId of Object.keys(recipe.in).filter((id) => i === id)) {
-            expr = expr.minus(
-              new Expression([recipe.in[inId].toNumber(), rVar])
-            );
+            expr = expr.minus(new Expression([recipe.in[inId], rVar]));
           }
         }
         if (recipe.out) {
           for (const outId of Object.keys(recipe.out).filter(
             (id) => i === id
           )) {
-            expr = expr.plus(
-              new Expression([recipe.out[outId].toNumber(), rVar])
-            );
+            expr = expr.plus(new Expression([recipe.out[outId], rVar]));
           }
         }
       }
@@ -172,21 +168,25 @@ export class MatrixUtility {
     let costExpr = new Expression(cost);
     for (const i of Object.keys(inputVar)) {
       if (data.recipeR[i]) {
-        costExpr = costExpr.minus(new Expression([100, inputVar[i]]));
+        costExpr = costExpr.minus(
+          new Expression([Rational.hundred, inputVar[i]])
+        );
       } else {
-        costExpr = costExpr.minus(new Expression([100000, inputVar[i]]));
+        costExpr = costExpr.minus(
+          new Expression([Rational.thousand, inputVar[i]])
+        );
       }
     }
 
     solver.addConstraint(new Constraint(factoryExpr, Operator.Eq));
     solver.addConstraint(new Constraint(costExpr, Operator.Eq));
 
-    solver.suggestValue(cost, 0);
+    solver.suggestValue(cost, Rational.zero);
 
     solver.updateVariables();
 
     const usedRecipeIds = Object.keys(recipeVar).filter((r) => {
-      return recipeVar[r].value() > 0;
+      return recipeVar[r].value().gt(Rational.zero);
     });
     const mappedRecipeIds = [];
     for (const i of outputs) {
@@ -196,9 +196,7 @@ export class MatrixUtility {
         if (data.recipeR[r].out[i]) {
           const test = data.recipeR[r].out[i];
           itemOutput = itemOutput.add(
-            data.recipeR[r].out[i].mul(
-              Rational.fromNumber(recipeVar[r].value())
-            )
+            data.recipeR[r].out[i].mul(recipeVar[r].value())
           );
         }
       }
@@ -218,13 +216,13 @@ export class MatrixUtility {
       }
       if (recipeId) {
         step.recipeId = recipeId as RecipeId;
-        step.factories = Rational.fromNumber(recipeVar[recipeId].value()).mul(
-          data.recipeR[recipeId].time
-        );
+        step.factories = recipeVar[recipeId]
+          .value()
+          .mul(data.recipeR[recipeId].time);
         mappedRecipeIds.push(recipeId);
       }
-      if (surplusVal > 0) {
-        step.surplus = Rational.fromNumber(surplusVal);
+      if (surplusVal.gt(Rational.zero)) {
+        step.surplus = surplusVal;
       }
     }
 
@@ -235,21 +233,16 @@ export class MatrixUtility {
         itemId: null,
         items: null,
         recipeId: r as RecipeId,
-        factories: Rational.fromNumber(recipeVar[r].value()).mul(
-          data.recipeR[r].time
-        ),
+        factories: recipeVar[r].value().mul(data.recipeR[r].time),
       });
     }
 
     for (const i of Object.keys(inputVar)) {
-      const itemVal = -inputVar[i].value();
-
       // Item has simple recipe, calculate inputs
-      const rational = Rational.fromNumber(-1 * itemVal);
       RateUtility.addStepsFor(
         null,
         i as ItemId,
-        rational,
+        inputVar[i].value(),
         steps,
         itemSettings,
         recipeSettings,

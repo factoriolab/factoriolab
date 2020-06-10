@@ -1,7 +1,7 @@
 import { ItemId } from './data/item';
 import { RateType } from './enum/rate-type';
 import { RationalProduct } from './product';
-import { Rational } from './rational';
+import { Rational } from './math/rational';
 
 describe('RationalProduct', () => {
   describe('constructor', () => {
