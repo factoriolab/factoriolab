@@ -783,10 +783,6 @@ class Row {
    */
   constructor(constant: Rational = Rational.zero) {
     this._constant = constant;
-    console.log(this._constant);
-    if (this._constant.q === BigInt(0)) {
-      console.log('bad bad');
-    }
   }
 
   /**

@@ -35,6 +35,7 @@ export enum ItemId {
   MiningProductivity = 'mining-productivity',
   Module = 'module',
   NuclearFuel = 'nuclear-fuel',
+  OffshorePump = 'offshore-pump',
   PetroleumGas = 'petroleum-gas',
   PhysicalProjectileDamage = 'physical-projectile-damage',
   Pipe = 'pipe',

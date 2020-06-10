@@ -25,10 +25,14 @@ export class MatrixUtility {
     recipeSettings: RecipesState,
     fuel: ItemId,
     oilRecipe: RecipeId,
-    data: RationalDataset,
-    previous: Entities<Rational> = {}
+    data: RationalDataset
   ) {
-    if (!steps.some((s) => !s.recipeId && !itemSettings[s.itemId].ignore)) {
+    if (
+      !steps.some(
+        (s) =>
+          s.recipeId !== (s.itemId as string) && !itemSettings[s.itemId].ignore
+      )
+    ) {
       return steps;
     }
 
@@ -36,57 +40,55 @@ export class MatrixUtility {
     const value: Entities<Rational> = {};
     const solver = new Solver();
 
+    const disabled: Entities<boolean> =
+      oilRecipe === RecipeId.BasicOilProcessing
+        ? {
+            [RecipeId.AdvancedOilProcessing]: true,
+            [RecipeId.CoalLiquefaction]: true,
+            [RecipeId.SolidFuelFromLightOil]: true,
+            [RecipeId.SolidFuelFromHeavyOil]: true,
+          }
+        : oilRecipe === RecipeId.AdvancedOilProcessing
+        ? {
+            [RecipeId.BasicOilProcessing]: true,
+            [RecipeId.CoalLiquefaction]: true,
+          }
+        : oilRecipe === RecipeId.CoalLiquefaction
+        ? {
+            [RecipeId.BasicOilProcessing]: true,
+            [RecipeId.AdvancedOilProcessing]: true,
+          }
+        : {};
+
     for (const step of steps) {
-      if (!step.recipeId && !itemSettings[step.itemId].ignore) {
+      if (
+        step.recipeId !== (step.itemId as string) &&
+        !itemSettings[step.itemId].ignore
+      ) {
         // Find recipes with this output
         const recipeMatches = data.recipeIds
           .map((r) => data.recipeR[r])
-          .filter((r) => r.out && r.out[step.itemId]);
+          .filter((r) => !disabled[r.id] && r.out && r.out[step.itemId]);
         if (recipeMatches.length > 0) {
           value[step.itemId] = step.items;
           for (const recipe of recipeMatches) {
-            recipes[recipe.id] = recipe;
-
-            // Check inputs for more matrices
-            for (const inId of Object.keys(recipe.in)) {
-              recipes = this.findComplexRecipesRecursively(
-                inId as ItemId,
-                recipes,
-                data
-              );
-            }
+            recipes = this.parseRecipeRecursively(
+              recipe,
+              recipes,
+              disabled,
+              data
+            );
           }
         }
       }
     }
 
-    if (Object.keys(value).length === 0) {
+    if (
+      Object.keys(value).length === 0 ||
+      Object.keys(value).every((v) => value[v].isZero())
+    ) {
       // No matrix steps found
       return steps;
-    }
-
-    if (
-      Object.keys(value).every((v) => previous[v] && value[v].eq(previous[v]))
-    ) {
-      // No new matrix steps
-      return steps;
-    }
-
-    switch (oilRecipe) {
-      case RecipeId.BasicOilProcessing:
-        delete recipes[RecipeId.AdvancedOilProcessing];
-        delete recipes[RecipeId.CoalLiquefaction];
-        delete recipes[RecipeId.SolidFuelFromLightOil];
-        delete recipes[RecipeId.SolidFuelFromHeavyOil];
-        break;
-      case RecipeId.AdvancedOilProcessing:
-        delete recipes[RecipeId.BasicOilProcessing];
-        delete recipes[RecipeId.CoalLiquefaction];
-        break;
-      case RecipeId.CoalLiquefaction:
-        delete recipes[RecipeId.BasicOilProcessing];
-        delete recipes[RecipeId.AdvancedOilProcessing];
-        break;
     }
 
     const items: Entities<RationalItem> = {};
@@ -101,8 +103,10 @@ export class MatrixUtility {
       );
 
       const recipe = data.recipeR[r];
-      for (const inId of Object.keys(recipe.in)) {
-        items[inId] = data.itemR[inId];
+      if (recipe.in) {
+        for (const inId of Object.keys(recipe.in)) {
+          items[inId] = data.itemR[inId];
+        }
       }
       for (const outId of Object.keys(recipe.out)) {
         items[outId] = data.itemR[outId];
@@ -168,9 +172,15 @@ export class MatrixUtility {
     let costExpr = new Expression(cost);
     for (const i of Object.keys(inputVar)) {
       if (data.recipeR[i]) {
-        costExpr = costExpr.minus(
-          new Expression([Rational.hundred, inputVar[i]])
-        );
+        if (data.recipeR[i].producers[0] === ItemId.OffshorePump) {
+          costExpr = costExpr.minus(
+            new Expression([Rational.hundred, inputVar[i]])
+          );
+        } else {
+          costExpr = costExpr.minus(
+            new Expression([new Rational(BigInt(10000)), inputVar[i]])
+          );
+        }
       } else {
         costExpr = costExpr.minus(
           new Expression([Rational.thousand, inputVar[i]])
@@ -200,29 +210,32 @@ export class MatrixUtility {
           );
         }
       }
-      let step = steps.find((s) => s.itemId === i);
-      const matches = usedRecipeIds.filter(
-        (r) => !mappedRecipeIds.some((m) => m === r) && data.recipeR[r].out[i]
-      );
-      const recipeId = matches.length ? matches[0] : null;
-      if (step) {
-        step.items = itemOutput;
-      } else {
-        step = {
-          itemId: i,
-          items: itemOutput,
-        };
-        steps.push(step);
-      }
-      if (recipeId) {
-        step.recipeId = recipeId as RecipeId;
-        step.factories = recipeVar[recipeId]
-          .value()
-          .mul(data.recipeR[recipeId].time);
-        mappedRecipeIds.push(recipeId);
-      }
-      if (surplusVal.gt(Rational.zero)) {
-        step.surplus = surplusVal;
+      if (itemOutput.gt(Rational.zero)) {
+        let step = steps.find((s) => s.itemId === i);
+        const matches = usedRecipeIds.filter(
+          (r) => !mappedRecipeIds.some((m) => m === r) && data.recipeR[r].out[i]
+        );
+        const recipeId = matches.length ? matches[0] : null;
+        if (step) {
+          step.items = itemOutput;
+        } else {
+          step = {
+            itemId: i,
+            items: itemOutput,
+          };
+          steps.push(step);
+        }
+        if (recipeId) {
+          step.recipeId = recipeId as RecipeId;
+          step.factories = recipeVar[recipeId]
+            .value()
+            .mul(data.recipeR[recipeId].time);
+          mappedRecipeIds.push(recipeId);
+        }
+        if (surplusVal.gt(Rational.zero)) {
+          step.surplus = surplusVal;
+          step.items = step.items.sub(surplusVal);
+        }
       }
     }
 
@@ -237,7 +250,9 @@ export class MatrixUtility {
       });
     }
 
-    for (const i of Object.keys(inputVar)) {
+    for (const i of Object.keys(inputVar).filter((id) =>
+      inputVar[id].value().nonzero()
+    )) {
       // Item has simple recipe, calculate inputs
       RateUtility.addStepsFor(
         null,
@@ -252,47 +267,54 @@ export class MatrixUtility {
       );
     }
 
-    steps = this.solveMatricesFor(
-      steps,
-      itemSettings,
-      recipeSettings,
-      fuel,
-      oilRecipe,
-      data,
-      value
-    );
-
     return steps;
   }
 
-  static findComplexRecipesRecursively(
+  static findRecipesRecursively(
     itemId: ItemId,
     recipes: Entities<RationalRecipe>,
+    disabled: Entities<boolean>,
     data: RationalDataset
   ) {
-    if (data.recipeR[itemId]) {
-      // Simple recipe
-      return recipes;
+    const simpleRecipe = data.recipeR[itemId];
+    if (simpleRecipe) {
+      if (!disabled[simpleRecipe.id]) {
+        recipes = this.parseRecipeRecursively(
+          data.recipeR[itemId],
+          recipes,
+          disabled,
+          data
+        );
+      }
+    } else {
+      // Find complex recipes
+      const recipeMatches = data.recipeIds
+        .map((r) => data.recipeR[r])
+        .filter((r) => !disabled[r.id] && r.out && r.out[itemId]);
+
+      for (const recipe of recipeMatches) {
+        recipes = this.parseRecipeRecursively(recipe, recipes, disabled, data);
+      }
     }
 
-    // Find recipes with this output that haven't been processed yet
-    const recipeMatches = data.recipeIds
-      .map((r) => data.recipeR[r])
-      .filter(
-        (r) =>
-          r.out &&
-          r.out[itemId] &&
-          !Object.keys(recipes).some((x) => x === r.id)
-      );
+    return recipes;
+  }
 
-    for (const recipe of recipeMatches) {
+  static parseRecipeRecursively(
+    recipe: RationalRecipe,
+    recipes: Entities<RationalRecipe>,
+    disabled: Entities<boolean>,
+    data: RationalDataset
+  ) {
+    if (!recipes[recipe.id] && recipe.in) {
       recipes[recipe.id] = recipe;
 
-      // Check inputs for more matrices
-      for (const inId of Object.keys(recipe.in)) {
-        recipes = this.findComplexRecipesRecursively(
-          inId as ItemId,
+      // Recurse recipe ingredients
+      for (const id of Object.keys(recipe.in)) {
+        recipes = this.findRecipesRecursively(
+          id as ItemId,
           recipes,
+          disabled,
           data
         );
       }

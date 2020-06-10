@@ -131,9 +131,5 @@ export class Rational {
     }
     this.p = p;
     this.q = q;
-
-    if (this.q === BigInt(0)) {
-      console.log('first bad bad');
-    }
   }
 }
