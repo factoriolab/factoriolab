@@ -104,7 +104,6 @@
               (+{{ rate(step.surplus, itemPrecision) }})
             </div>
             <lab-icon
-              *ngIf="data.recipeEntities[step.recipeId]?.in"
               class="clickable"
               [title]="
                 itemSettings[step.itemId].ignore
@@ -117,15 +116,7 @@
               [recipe]="data.recipeEntities[step.itemId]"
               [data]="data"
               scale="true"
-              (click)="ignoreStep.emit(step.recipeId)"
-            ></lab-icon>
-            <lab-icon
-              *ngIf="!data.recipeEntities[step.recipeId]?.in"
-              class="clickable-size"
-              [iconId]="step.itemId"
-              [tooltip]="data.itemEntities[step.itemId]?.name"
-              [data]="data"
-              scale="true"
+              (click)="ignoreStep.emit(step.itemId)"
             ></lab-icon>
           </div>
         </td>
@@ -179,7 +170,7 @@
                     [optionsType]="OptionsType.Belt"
                     [displayRate]="displayRate"
                     (cancel)="edit = null"
-                    (selectId)="setBelt.emit([step.recipeId, $event])"
+                    (selectId)="setBelt.emit([step.itemId, $event])"
                   >
                   </lab-select>
                 </div>

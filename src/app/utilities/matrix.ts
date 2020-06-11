@@ -76,6 +76,7 @@ export class MatrixUtility {
               recipe,
               recipes,
               disabled,
+              itemSettings,
               data
             );
           }
@@ -217,7 +218,11 @@ export class MatrixUtility {
         );
         const recipeId = matches.length ? matches[0] : null;
         if (step) {
-          step.items = itemOutput;
+          if (value[i]) {
+            step.items = itemOutput;
+          } else {
+            step.items = step.items.add(itemOutput);
+          }
         } else {
           step = {
             itemId: i,
@@ -274,6 +279,7 @@ export class MatrixUtility {
     itemId: ItemId,
     recipes: Entities<RationalRecipe>,
     disabled: Entities<boolean>,
+    itemSettings: ItemsState,
     data: RationalDataset
   ) {
     const simpleRecipe = data.recipeR[itemId];
@@ -283,6 +289,7 @@ export class MatrixUtility {
           data.recipeR[itemId],
           recipes,
           disabled,
+          itemSettings,
           data
         );
       }
@@ -293,7 +300,13 @@ export class MatrixUtility {
         .filter((r) => !disabled[r.id] && r.out && r.out[itemId]);
 
       for (const recipe of recipeMatches) {
-        recipes = this.parseRecipeRecursively(recipe, recipes, disabled, data);
+        recipes = this.parseRecipeRecursively(
+          recipe,
+          recipes,
+          disabled,
+          itemSettings,
+          data
+        );
       }
     }
 
@@ -304,17 +317,21 @@ export class MatrixUtility {
     recipe: RationalRecipe,
     recipes: Entities<RationalRecipe>,
     disabled: Entities<boolean>,
+    itemSettings: ItemsState,
     data: RationalDataset
   ) {
     if (!recipes[recipe.id] && recipe.in) {
       recipes[recipe.id] = recipe;
 
       // Recurse recipe ingredients
-      for (const id of Object.keys(recipe.in)) {
+      for (const id of Object.keys(recipe.in).filter(
+        (i) => !itemSettings[i].ignore
+      )) {
         recipes = this.findRecipesRecursively(
           id as ItemId,
           recipes,
           disabled,
+          itemSettings,
           data
         );
       }

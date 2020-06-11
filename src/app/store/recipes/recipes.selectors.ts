@@ -102,8 +102,9 @@ export const getAdjustedDataset = createSelector(
   getRationalRecipeSettings,
   Settings.getRationalMiningBonus,
   Settings.getResearchFactor,
+  Settings.getFuel,
   Dataset.getRationalDataset,
-  (recipeSettings, miningBonus, researchFactor, data) => ({
+  (recipeSettings, miningBonus, researchFactor, fuel, data) => ({
     ...data,
     ...{
       recipeR: Object.keys(recipeSettings).reduce(
@@ -114,6 +115,7 @@ export const getAdjustedDataset = createSelector(
               i as RecipeId,
               miningBonus,
               researchFactor,
+              fuel,
               recipeSettings[i],
               data
             ),

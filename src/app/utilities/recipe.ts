@@ -38,6 +38,7 @@ const order: (ItemId | RecipeId)[] = [
   ItemId.Wood,
   // Pure oil recipes
   ItemId.RocketFuel,
+  ItemId.SolidFuel,
   RecipeId.SolidFuelFromLightOil,
   RecipeId.SolidFuelFromPetroleumGas,
   RecipeId.SolidFuelFromHeavyOil,
@@ -118,6 +119,7 @@ export class RecipeUtility {
     recipeId: RecipeId,
     miningBonus: Rational,
     researchFactor: Rational,
+    fuelId: ItemId,
     settings: RationalRecipeSettings,
     data: RationalDataset
   ) {
@@ -195,6 +197,22 @@ export class RecipeUtility {
       // Log prod for research products
       if (data.itemR[outId].category === CategoryId.Research) {
         recipe.adjustProd = prod;
+      }
+    }
+
+    // Calculate burner fuel inputs
+    if (settings.factory) {
+      const factory = data.itemR[settings.factory].factory;
+      if (factory.burner) {
+        const fuel = data.itemR[fuelId];
+
+        if (!recipe.in[fuelId]) {
+          recipe.in[fuelId] = Rational.zero;
+        }
+
+        recipe.in[fuelId] = recipe.in[fuelId].add(
+          recipe.time.mul(factory.burner).div(fuel.fuel).div(Rational.thousand)
+        );
       }
     }
 

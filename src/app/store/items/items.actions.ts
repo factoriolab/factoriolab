@@ -5,9 +5,9 @@ import { ItemsState } from './items.reducer';
 
 export const enum ItemsActionType {
   LOAD = '[Items Router] Load',
-  IGNORE = '[Items Page] Ignore Recipe',
+  IGNORE = '[Items Page] Ignore Item',
   SET_BELT = '[Items Page] Set Belt',
-  RESET = '[Items Page] Reset Recipe',
+  RESET = '[Items Page] Reset Item',
   RESET_IGNORE = '[Items Page] Reset Ignore',
   RESET_BELT = '[Items Page] Reset Belt',
 }

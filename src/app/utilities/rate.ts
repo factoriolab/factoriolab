@@ -15,7 +15,6 @@ import { RecipesState } from '~/store/recipes';
 
 export class RateUtility {
   static LAUNCH_TIME = new Rational(BigInt(2420), BigInt(60));
-  static ONE_THOUSAND = new Rational(BigInt(1000));
 
   static addStepsFor(
     parentId: ItemId,
@@ -88,31 +87,6 @@ export class RateUtility {
           step.factories = step.factories.add(
             step.items.div(Rational.hundred).mul(this.LAUNCH_TIME)
           );
-        }
-        // Add fuel required for factory
-        if (
-          recipeSettings[step.recipeId].factory &&
-          step.items.nonzero() &&
-          !itemSettings[step.itemId].ignore
-        ) {
-          const factory =
-            data.itemR[recipeSettings[step.recipeId].factory].factory;
-          if (factory.burner) {
-            RateUtility.addStepsFor(
-              itemId,
-              fuel,
-              step.factories
-                .mul(factory.burner)
-                .div(data.itemR[fuel].fuel)
-                .div(this.ONE_THOUSAND),
-              steps,
-              itemSettings,
-              recipeSettings,
-              fuel,
-              oilRecipe,
-              data
-            );
-          }
         }
       }
 
@@ -195,30 +169,6 @@ export class RateUtility {
           node.factories = node.factories.add(
             node.items.div(Rational.hundred).mul(this.LAUNCH_TIME)
           );
-        }
-        // Add fuel required for factory
-        if (
-          recipeSettings[node.recipeId].factory &&
-          node.items.nonzero() &&
-          !itemSettings[node.itemId].ignore
-        ) {
-          const factory =
-            data.itemR[recipeSettings[node.recipeId].factory].factory;
-          if (factory.burner) {
-            RateUtility.addNodesFor(
-              node,
-              fuel,
-              node.factories
-                .mul(factory.burner)
-                .div(data.itemR[fuel].fuel)
-                .div(this.ONE_THOUSAND),
-              itemSettings,
-              recipeSettings,
-              fuel,
-              oilRecipe,
-              data
-            );
-          }
         }
       }
 
