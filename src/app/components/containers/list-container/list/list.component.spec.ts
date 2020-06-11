@@ -14,24 +14,32 @@ import { TestUtility } from '~/utilities/test';
 import { IconComponent } from '../../../icon/icon.component';
 import { SelectComponent } from '../../../select/select.component';
 import { ListComponent } from './list.component';
+import { ItemsState } from '~/store/items';
 
 @Component({
   selector: 'lab-test-list',
   template: `
     <lab-list
       [data]="data"
-      [recipe]="recipe"
+      [itemSettings]="itemSettings"
+      [recipeSettings]="recipeSettings"
+      [recipeRaw]="recipeRaw"
       [steps]="steps"
       [itemPrecision]="itemPrecision"
       [beltPrecision]="beltPrecision"
       [factoryPrecision]="factoryPrecision"
-      (ignoreStep)="ignoreStep($event)"
+      (ignoreItem)="ignoreItem($event)"
       (setBelt)="setBelt($event)"
       (setFactory)="setFactory($event)"
       (setModules)="setModules($event)"
       (setBeaconModule)="setBeaconModule($event)"
       (setBeaconCount)="setBeaconCount($event)"
-      (resetStep)="resetStep($event)"
+      (resetItem)="resetItem($event)"
+      (resetIgnore)="resetIgnore()"
+      (resetBelt)="resetBelt()"
+      (resetFactory)="resetFactory()"
+      (resetModules)="resetModules()"
+      (resetBeacons)="resetBeacons()"
     >
     </lab-list>
   `,
@@ -39,18 +47,26 @@ import { ListComponent } from './list.component';
 class TestListComponent {
   @ViewChild(ListComponent) child: ListComponent;
   data: DatasetState = Mocks.Data;
-  recipe: RecipesState = Mocks.RecipeSettingsInitial;
+  itemSettings: ItemsState = Mocks.ItemSettingsInitial;
+  recipeSettings: RecipesState = Mocks.RecipeSettingsInitial;
+  recipeRaw: RecipesState = Mocks.RecipeSettingsEntities;
   steps: Step[] = Mocks.Steps;
   itemPrecision = null;
   beltPrecision = 0;
   factoryPrecision = 1;
-  ignoreStep(data) {}
+  ignoreItem(data) {}
   setBelt(data) {}
   setFactory(data) {}
   setModules(data) {}
   setBeaconModule(data) {}
   setBeaconCount(data) {}
-  resetStep(data) {}
+  resetItem(data) {}
+  resetRecipe(data) {}
+  resetIgnore() {}
+  resetBelt() {}
+  resetFactory() {}
+  resetModules() {}
+  resetBeacons() {}
 }
 
 describe('ListComponent', () => {
@@ -91,7 +107,12 @@ describe('ListComponent', () => {
     fixture.detectChanges();
     expect(component.setModules).toHaveBeenCalledWith([
       Mocks.Step1.itemId,
-      [ItemId.Module, ItemId.SpeedModule],
+      [
+        ItemId.SpeedModule3,
+        ItemId.SpeedModule,
+        ItemId.SpeedModule3,
+        ItemId.SpeedModule3,
+      ],
     ]);
   });
 
@@ -103,7 +124,12 @@ describe('ListComponent', () => {
     fixture.detectChanges();
     expect(component.setModules).toHaveBeenCalledWith([
       Mocks.Step1.itemId,
-      [ItemId.SpeedModule, ItemId.SpeedModule],
+      [
+        ItemId.SpeedModule,
+        ItemId.SpeedModule,
+        ItemId.SpeedModule,
+        ItemId.SpeedModule,
+      ],
     ]);
   });
 
@@ -126,7 +152,7 @@ describe('ListComponent', () => {
 
   it('should not set beacon count if unchanged', () => {
     spyOn(component, 'setBeaconCount');
-    TestUtility.selectSelector(fixture, 'input', '0');
+    TestUtility.selectSelector(fixture, 'input', '16');
     fixture.detectChanges();
     expect(component.setBeaconCount).not.toHaveBeenCalled();
   });

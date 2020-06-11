@@ -4,10 +4,10 @@ import { RecipesAction, RecipesActionType } from './recipes.actions';
 
 export type RecipesState = Entities<RecipeSettings>;
 
-export const initialRecipeState: RecipesState = {};
+export const initialRecipesState: RecipesState = {};
 
-export function recipeReducer(
-  state: RecipesState = initialRecipeState,
+export function recipesReducer(
+  state: RecipesState = initialRecipesState,
   action: RecipesAction
 ): RecipesState {
   switch (action.type) {

@@ -58,7 +58,7 @@ export class ListComponent {
   @Input() modifiedModules: boolean;
   @Input() modifiedBeacons: boolean;
 
-  @Output() ignoreStep = new EventEmitter<ItemId>();
+  @Output() ignoreItem = new EventEmitter<ItemId>();
   @Output() setBelt = new EventEmitter<[ItemId, ItemId]>();
   @Output() setFactory = new EventEmitter<[RecipeId, ItemId]>();
   @Output() setModules = new EventEmitter<[RecipeId, ItemId[]]>();

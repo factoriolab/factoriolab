@@ -10,6 +10,7 @@ import {
   Rational,
   Dataset,
   RationalProduct,
+  ItemSettings,
 } from '~/models';
 import {
   DatasetState,
@@ -18,8 +19,13 @@ import {
   getRationalDataset,
 } from '~/store/dataset';
 import { getProductsBy } from '~/store/products';
-import { getRecipeSettings } from '~/store/recipes';
+import {
+  getRecipeSettings,
+  getAdjustedDataset,
+  getRationalRecipeSettings,
+} from '~/store/recipes';
 import { initialSettingsState } from '~/store/settings';
+import { getItemSettings } from '~/store/items';
 
 export const Raw: Dataset = (data as any).default;
 export const Data: DatasetState = datasetReducer(
@@ -59,17 +65,17 @@ export const Products = [Product1, Product2, Product3, Product4];
 export const RationalProducts = Products.map((p) => new RationalProduct(p));
 export const ProductIds = Products.map((p) => p.id);
 export const ProductEntities = getProductsBy.projector(RationalProducts);
-export const Settings1: RecipeSettings = {
+export const ItemSettings1: ItemSettings = {
   ignore: false,
   belt: ItemId.TransportBelt,
+};
+export const RecipeSettings1: RecipeSettings = {
   factory: ItemId.AssemblingMachine2,
   modules: [ItemId.Module, ItemId.Module],
   beaconModule: ItemId.SpeedModule,
   beaconCount: 0,
 };
-export const Settings2: RecipeSettings = {
-  ignore: false,
-  belt: ItemId.TransportBelt,
+export const RecipeSettings2: RecipeSettings = {
   factory: ItemId.AssemblingMachine2,
   modules: [ItemId.Module, ItemId.Module],
   beaconModule: ItemId.Module,
@@ -81,7 +87,6 @@ export const Step1: Step = {
   items: Rational.fromNumber(Product1.rate),
   belts: Rational.fromNumber(0.5),
   factories: Rational.one,
-  recipeSettings: Settings1,
 };
 export const Step2: Step = {
   itemId: Item2.id,
@@ -89,7 +94,6 @@ export const Step2: Step = {
   items: Rational.fromNumber(Product2.rate),
   belts: Rational.one,
   factories: Rational.two,
-  recipeSettings: Settings2,
 };
 export const Steps = [Step1, Step2];
 export const Node1: Node = { ...Step1, ...{ id: 'id1', name: 'name1' } };
@@ -102,18 +106,31 @@ export const Root: Node = { id: 'root', children: [Node2, Node3] } as any;
 export const BeltSpeed: Entities<Rational> = {
   [ItemId.TransportBelt]: new Rational(BigInt(15)),
 };
-export const Factors1: Factors = {
-  speed: Rational.one,
-  prod: Rational.one,
-};
-export const RecipeFactors: Entities<Factors> = {};
+export const ItemSettingsEntities: Entities<ItemSettings> = {};
+for (const item of Data.itemIds.map((i) => Data.itemEntities[i])) {
+  ItemSettingsEntities[item.id] = { ...ItemSettings1 };
+}
 export const RecipeSettingsEntities: Entities<RecipeSettings> = {};
 for (const recipe of Data.recipeIds.map((i) => Data.recipeEntities[i])) {
-  RecipeSettingsEntities[recipe.id] = { ...Settings1 };
-  RecipeFactors[recipe.id] = Factors1;
+  RecipeSettingsEntities[recipe.id] = { ...RecipeSettings1 };
 }
+export const ItemSettingsInitial = getItemSettings.projector(
+  {},
+  Data,
+  initialSettingsState
+);
 export const RecipeSettingsInitial = getRecipeSettings.projector(
   {},
   Data,
   initialSettingsState
+);
+export const RationalRecipeSettings = getRationalRecipeSettings.projector(
+  RecipeSettingsEntities
+);
+export const AdjustedData = getAdjustedDataset.projector(
+  RationalRecipeSettings,
+  Rational.zero,
+  Rational.zero,
+  ItemId.Coal,
+  RationalData
 );

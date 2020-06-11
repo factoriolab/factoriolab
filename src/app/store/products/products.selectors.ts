@@ -146,6 +146,7 @@ export const getNormalizedRatesByFactories = createSelector(
         };
       }
       // No matching recipe found
+      // TODO: Block this option for complex products
       return e;
     }, {});
   }

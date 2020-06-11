@@ -109,112 +109,6 @@ describe('RecipeUtility', () => {
     });
   });
 
-  describe('recipeFactors', () => {
-    it('should return a tuple of speed and productivity factors for passed modules', () => {
-      const result = RecipeUtility.recipeFactors(
-        Rational.one,
-        Rational.zero,
-        [prodModule],
-        speedModule,
-        Rational.one,
-        {
-          [prodModule]: {
-            module: { speed: Rational.zero, productivity: Rational.two },
-          },
-          [speedModule]: {
-            module: { speed: Rational.two, productivity: Rational.zero },
-          },
-        } as any
-      );
-      expect(result).toEqual({
-        speed: Rational.two,
-        prod: new Rational(BigInt(3)),
-      });
-    });
-
-    it('should handle the empty module', () => {
-      const result = RecipeUtility.recipeFactors(
-        Rational.one,
-        Rational.zero,
-        [module],
-        null,
-        Rational.zero,
-        {
-          [module]: {},
-        } as any
-      );
-      expect(result).toEqual({ speed: Rational.one, prod: Rational.one });
-    });
-
-    it('should handle an invalid/unfound module', () => {
-      const result = RecipeUtility.recipeFactors(
-        Rational.one,
-        Rational.zero,
-        [module],
-        null,
-        Rational.zero,
-        {} as any
-      );
-      expect(result).toEqual({ speed: Rational.one, prod: Rational.one });
-    });
-
-    it('should handle an unfound beacon type', () => {
-      const result = RecipeUtility.recipeFactors(
-        Rational.one,
-        Rational.zero,
-        [],
-        module,
-        Rational.one,
-        {} as any
-      );
-      expect(result).toEqual({ speed: Rational.one, prod: Rational.one });
-    });
-
-    it('should handle no modules or beacons', () => {
-      const result = RecipeUtility.recipeFactors(
-        Rational.one,
-        Rational.zero,
-        [],
-        null,
-        Rational.zero,
-        {} as any
-      );
-      expect(result).toEqual({ speed: Rational.one, prod: Rational.one });
-    });
-
-    it('should handle a module with no speed/prod effect', () => {
-      const result = RecipeUtility.recipeFactors(
-        Rational.one,
-        Rational.zero,
-        [effModule],
-        null,
-        Rational.zero,
-        {
-          [effModule]: {
-            module: { consumption: Rational.one },
-          },
-        } as any
-      );
-      expect(result).toEqual({ speed: Rational.one, prod: Rational.one });
-    });
-
-    it('should handle a beacon with no speed effect', () => {
-      const result = RecipeUtility.recipeFactors(
-        Rational.one,
-        Rational.zero,
-        [],
-        effModule,
-        Rational.one,
-        {
-          [effModule]: {
-            module: { consumption: Rational.one },
-          },
-        } as any
-      );
-      expect(result).toEqual({ speed: Rational.one, prod: Rational.one });
-    });
-  });
-
   describe('sort', () => {
     it('should sort steps', () => {
       const a: any = { itemId: ItemId.Water };
@@ -264,7 +158,9 @@ describe('RecipeUtility', () => {
         { [Mocks.Item1.id]: { ignore: true, belt: ItemId.TransportBelt } },
         'ignore'
       );
-      expect(result[Mocks.Item1.id]).toEqual({ belt: ItemId.TransportBelt });
+      expect(result[Mocks.Item1.id]).toEqual({
+        belt: ItemId.TransportBelt,
+      } as any);
     });
 
     it('should delete a recipe if no modifications remain', () => {

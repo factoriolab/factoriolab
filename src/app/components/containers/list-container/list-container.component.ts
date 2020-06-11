@@ -64,7 +64,7 @@ export class ListContainerComponent implements OnInit {
     this.factoryPrecision$ = this.store.select(Settings.getFactoryPrecision);
   }
 
-  ignoreStep(value: ItemId) {
+  ignoreItem(value: ItemId) {
     this.store.dispatch(new Items.IgnoreAction(value));
   }
 

@@ -3,9 +3,9 @@ import { storeFreeze } from 'ngrx-store-freeze';
 
 import { environment } from 'src/environments/environment';
 import { DatasetState, datasetReducer } from './dataset';
-import { ItemsState, itemReducer } from './items';
+import { ItemsState, itemsReducer } from './items';
 import { ProductsState, productsReducer } from './products';
-import { RecipesState, recipeReducer } from './recipes';
+import { RecipesState, recipesReducer } from './recipes';
 import { SettingsState, settingsReducer } from './settings';
 
 export interface State {
@@ -19,8 +19,8 @@ export interface State {
 export const reducers: ActionReducerMap<State> = {
   datasetState: datasetReducer,
   productsState: productsReducer,
-  itemState: itemReducer,
-  recipeState: recipeReducer,
+  itemState: itemsReducer,
+  recipeState: recipesReducer,
   settingsState: settingsReducer,
 };
 

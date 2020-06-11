@@ -4,10 +4,10 @@ import { ItemsAction, ItemsActionType } from './items.actions';
 
 export type ItemsState = Entities<ItemSettings>;
 
-export const initialRecipeState: ItemsState = {};
+export const initialItemsState: ItemsState = {};
 
-export function itemReducer(
-  state: ItemsState = initialRecipeState,
+export function itemsReducer(
+  state: ItemsState = initialItemsState,
   action: ItemsAction
 ): ItemsState {
   switch (action.type) {
