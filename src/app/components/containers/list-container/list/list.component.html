@@ -132,7 +132,7 @@
               <div class="monospace">{{ rate(step.belts, beltPrecision) }}</div>
               <ng-container
                 *ngIf="
-                  options[OptionsType.Belt][0].indexOf(belt) === -1;
+                  options.Belt[0].indexOf(belt) === -1;
                   then beltDefault;
                   else beltPicker
                 "
@@ -167,7 +167,7 @@
                     "
                     [data]="data"
                     [selectedId]="belt"
-                    [optionsType]="OptionsType.Belt"
+                    [options]="options.Belt"
                     [displayRate]="displayRate"
                     (cancel)="edit = null"
                     (selectId)="setBelt.emit([step.itemId, $event])"
@@ -199,53 +199,54 @@
                 :
               </ng-container>
               <ng-container
-                *ngIf="
-                  options[OptionsType.Assembler][0].indexOf(factory) === -1 &&
-                    options[OptionsType.Furnace][0].indexOf(factory) === -1;
-                  then factoryDefault;
-                  else factoryPicker
-                "
+                *ngIf="data.recipeEntities[step.recipeId] as recipe"
               >
-              </ng-container>
-              <ng-template #factoryDefault>
-                <lab-icon
-                  class="clickable-size"
-                  [iconId]="factory"
-                  [tooltip]="data.itemEntities[factory].name"
-                  [item]="data.itemEntities[factory]"
-                  [data]="data"
-                ></lab-icon>
-              </ng-template>
-              <ng-template #factoryPicker>
-                <div class="relative">
+                <ng-container
+                  *ngIf="
+                    recipe.producers && recipe.producers.length > 1;
+                    then factoryPicker;
+                    else factoryDefault
+                  "
+                >
+                </ng-container>
+                <ng-template #factoryDefault>
                   <lab-icon
-                    class="clickable"
-                    title="Click to change factory"
+                    class="clickable-size"
                     [iconId]="factory"
                     [tooltip]="data.itemEntities[factory].name"
                     [item]="data.itemEntities[factory]"
                     [data]="data"
-                    (click)="edit = { step: step, type: StepEditType.Factory }"
                   ></lab-icon>
-                  <lab-select
-                    *ngIf="
-                      edit &&
-                      edit.step === step &&
-                      edit.type === StepEditType.Factory
-                    "
-                    [data]="data"
-                    [selectedId]="factory"
-                    [optionsType]="
-                      options[OptionsType.Assembler][0].indexOf(factory) !== -1
-                        ? OptionsType.Assembler
-                        : OptionsType.Furnace
-                    "
-                    (cancel)="edit = null"
-                    (selectId)="setFactory.emit([step.recipeId, $event])"
-                  >
-                  </lab-select>
-                </div>
-              </ng-template>
+                </ng-template>
+                <ng-template #factoryPicker>
+                  <div class="relative">
+                    <lab-icon
+                      class="clickable"
+                      title="Click to change factory"
+                      [iconId]="factory"
+                      [tooltip]="data.itemEntities[factory].name"
+                      [item]="data.itemEntities[factory]"
+                      [data]="data"
+                      (click)="
+                        edit = { step: step, type: StepEditType.Factory }
+                      "
+                    ></lab-icon>
+                    <lab-select
+                      *ngIf="
+                        edit &&
+                        edit.step === step &&
+                        edit.type === StepEditType.Factory
+                      "
+                      [data]="data"
+                      [selectedId]="factory"
+                      [options]="[recipe.producers]"
+                      (cancel)="edit = null"
+                      (selectId)="setFactory.emit([step.recipeId, $event])"
+                    >
+                    </lab-select>
+                  </div>
+                </ng-template>
+              </ng-container>
             </div>
           </ng-container>
         </td>
@@ -275,10 +276,8 @@
                   "
                   [data]="data"
                   [selectedId]="mod"
-                  [optionsType]="
-                    prodAllowed(step)
-                      ? OptionsType.AllModule
-                      : OptionsType.SpeedModule
+                  [options]="
+                    prodAllowed(step) ? options.AllModule : options.SpeedModule
                   "
                   [data]="data"
                   (cancel)="edit = null"
@@ -312,7 +311,7 @@
                   "
                   [data]="data"
                   [selectedId]="module"
-                  [optionsType]="OptionsType.SpeedModule"
+                  [options]="options.SpeedModule"
                   (cancel)="edit = null"
                   (selectId)="setBeaconModule.emit([step.recipeId, $event])"
                 >

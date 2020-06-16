@@ -1,36 +1,23 @@
 import { ItemId } from '../data/item';
 import { RecipeId } from '../data/recipe';
 
-export enum OptionsType {
-  Belt,
-  Assembler,
-  Furnace,
-  Fuel,
-  OilRecipe,
-  ProdModule,
-  SpeedModule,
-  AllModule,
-}
-
-export const options: { [key: number]: string[][] } = {
-  [OptionsType.Belt]: [
+export const options = {
+  Belt: [
     [
       ItemId.TransportBelt,
       ItemId.FastTransportBelt,
       ItemId.ExpressTransportBelt,
     ],
   ],
-  [OptionsType.Assembler]: [
+  Assembler: [
     [
       ItemId.AssemblingMachine1,
       ItemId.AssemblingMachine2,
       ItemId.AssemblingMachine3,
     ],
   ],
-  [OptionsType.Furnace]: [
-    [ItemId.StoneFurnace, ItemId.SteelFurnace, ItemId.ElectricFurnace],
-  ],
-  [OptionsType.Fuel]: [
+  Furnace: [[ItemId.StoneFurnace, ItemId.SteelFurnace, ItemId.ElectricFurnace]],
+  Fuel: [
     [
       ItemId.Wood,
       ItemId.Coal,
@@ -39,14 +26,14 @@ export const options: { [key: number]: string[][] } = {
       ItemId.NuclearFuel,
     ],
   ],
-  [OptionsType.OilRecipe]: [
+  OilRecipe: [
     [
       RecipeId.BasicOilProcessing,
       RecipeId.AdvancedOilProcessing,
       RecipeId.CoalLiquefaction,
     ],
   ],
-  [OptionsType.ProdModule]: [
+  ProdModule: [
     [
       ItemId.Module,
       ItemId.ProductivityModule,
@@ -54,7 +41,7 @@ export const options: { [key: number]: string[][] } = {
       ItemId.ProductivityModule3,
     ],
   ],
-  [OptionsType.SpeedModule]: [
+  SpeedModule: [
     [
       ItemId.Module,
       ItemId.SpeedModule,
@@ -62,7 +49,7 @@ export const options: { [key: number]: string[][] } = {
       ItemId.SpeedModule3,
     ],
   ],
-  [OptionsType.AllModule]: [
+  AllModule: [
     [ItemId.Module],
     [ItemId.SpeedModule, ItemId.SpeedModule2, ItemId.SpeedModule3],
     [

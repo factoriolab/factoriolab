@@ -47,6 +47,8 @@ export class MatrixUtility {
             [RecipeId.CoalLiquefaction]: true,
             [RecipeId.SolidFuelFromLightOil]: true,
             [RecipeId.SolidFuelFromHeavyOil]: true,
+            [RecipeId.HeavyOilCracking]: true,
+            [RecipeId.LightOilCracking]: true,
           }
         : oilRecipe === RecipeId.AdvancedOilProcessing
         ? {

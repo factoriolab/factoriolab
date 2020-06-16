@@ -12,9 +12,9 @@ import {
   ItemId,
   RecipeId,
   ResearchSpeed,
-  OptionsType,
   IdType,
   Theme,
+  options,
 } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { SettingsState, initialSettingsState } from '~/store/settings';
@@ -67,12 +67,12 @@ export class SettingsComponent {
   DisplayRate = DisplayRate;
   ItemId = ItemId;
   OpenSelect = OpenSelect;
-  OptionsType = OptionsType;
   ResearchSpeed = ResearchSpeed;
   SelectType = IdType;
   Theme = Theme;
 
   initial = initialSettingsState;
+  options = options;
 
   @HostListener('scroll', ['$event'])
   scroll(event: Event) {

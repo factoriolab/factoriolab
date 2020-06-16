@@ -11,7 +11,6 @@ import {
   RecipeId,
   ItemId,
   CategoryId,
-  OptionsType,
   options,
   DisplayRate,
   Entities,
@@ -79,7 +78,6 @@ export class ListComponent {
   DisplayRate = DisplayRate;
   StepEditType = StepEditType;
   ItemId = ItemId;
-  OptionsType = OptionsType;
   Rational = Rational;
 
   options = options;
