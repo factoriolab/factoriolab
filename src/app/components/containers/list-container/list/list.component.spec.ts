@@ -35,6 +35,7 @@ import { ItemsState } from '~/store/items';
       (setBeaconModule)="setBeaconModule($event)"
       (setBeaconCount)="setBeaconCount($event)"
       (resetItem)="resetItem($event)"
+      (resetRecipe)="resetRecipe($event)"
       (resetIgnore)="resetIgnore()"
       (resetBelt)="resetBelt()"
       (resetFactory)="resetFactory()"
@@ -155,6 +156,15 @@ describe('ListComponent', () => {
     TestUtility.selectSelector(fixture, 'input', '16');
     fixture.detectChanges();
     expect(component.setBeaconCount).not.toHaveBeenCalled();
+  });
+
+  it('should reset a step', () => {
+    spyOn(component, 'resetItem');
+    spyOn(component, 'resetRecipe');
+    TestUtility.clickSelector(fixture, '.list-step-reset', 0);
+    fixture.detectChanges();
+    expect(component.resetItem).toHaveBeenCalled();
+    expect(component.resetRecipe).toHaveBeenCalled();
   });
 
   describe('findStep', () => {
