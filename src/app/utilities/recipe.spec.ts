@@ -108,6 +108,7 @@ describe('RecipeUtility', () => {
     it('should adjust a standard recipe', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
       settings.modules = null;
+      settings.beaconModule = ItemId.Module;
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         Rational.zero,

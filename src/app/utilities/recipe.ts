@@ -165,7 +165,7 @@ export class RecipeUtility {
     // Beacons
     if (
       settings.beaconModule &&
-      data.itemR[settings.beaconModule].module &&
+      data.itemR[settings.beaconModule]?.module &&
       settings.beaconCount.nonzero()
     ) {
       const module = data.itemR[settings.beaconModule].module;
