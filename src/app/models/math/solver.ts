@@ -16,6 +16,14 @@ export class Solver {
   private _artificial: Row = null;
   private _idTick = 0;
 
+  get constraints() {
+    return this._cnMap.array;
+  }
+
+  get variables() {
+    return this._editMap.array;
+  }
+
   /**
    * Add a constraint to the solver.
    *

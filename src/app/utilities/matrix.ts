@@ -27,7 +27,7 @@ export class MatrixUtility {
     oilRecipe: RecipeId,
     data: RationalDataset
   ) {
-    const matrix = new Matrix(
+    const matrix = new MatrixSolver(
       steps,
       itemSettings,
       recipeSettings,
@@ -52,7 +52,7 @@ export class MatrixUtility {
   }
 }
 
-class Matrix {
+export class MatrixSolver {
   steps: Step[];
   itemSettings: ItemsState;
   recipeSettings: RecipesState;
@@ -163,12 +163,8 @@ class Matrix {
             expr = expr.minus(new Expression([recipe.in[inId], rVar]));
           }
         }
-        if (recipe.out) {
-          for (const outId of Object.keys(recipe.out).filter(
-            (id) => i === id
-          )) {
-            expr = expr.plus(new Expression([recipe.out[outId], rVar]));
-          }
+        for (const outId of Object.keys(recipe.out).filter((id) => i === id)) {
+          expr = expr.plus(new Expression([recipe.out[outId], rVar]));
         }
       }
 
