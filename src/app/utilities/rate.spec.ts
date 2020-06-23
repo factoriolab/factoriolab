@@ -338,6 +338,23 @@ describe('RateUtility', () => {
   });
 
   describe('calculateBelts', () => {
+    it('should skip steps with no settings', () => {
+      const steps: Step[] = [
+        {
+          itemId: null,
+          recipeId: null,
+          items: null,
+          belts: null,
+        },
+      ];
+      RateUtility.calculateBelts(
+        steps,
+        Mocks.ItemSettingsEntities,
+        Mocks.BeltSpeed
+      );
+      expect(steps[0].belts).toBeNull();
+    });
+
     it('should skip steps with no items', () => {
       const steps: Step[] = [
         {
