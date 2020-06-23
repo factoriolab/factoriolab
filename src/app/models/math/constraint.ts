@@ -33,48 +33,35 @@ export class Constraint {
   constructor(
     expression: Expression | Variable,
     operator: Operator,
-    rhs?: Expression | Variable | Rational,
     strength: Rational = Strength.required
   ) {
     this._operator = operator;
     this._strength = Strength.clip(strength);
-    if (rhs === undefined && expression instanceof Expression) {
+    if (expression instanceof Expression) {
       this._expression = expression;
     } else {
-      const tempExpression = new Expression(expression);
-      this._expression = tempExpression.minus(rhs);
+      this._expression = new Expression(expression);
     }
   }
 
   /** Returns the unique id number of the constraint. */
-  public id(): number {
+  public get id(): number {
     return this._id;
   }
 
   /** Returns the expression of the constraint. */
-  public expression(): Expression {
+  public get expression(): Expression {
     return this._expression;
   }
 
   /** Returns the relational operator of the constraint. */
-  public op(): Operator {
+  public get op(): Operator {
     return this._operator;
   }
 
   /** Returns the strength of the constraint. */
-  public strength(): Rational {
+  public get strength(): Rational {
     return this._strength;
-  }
-
-  public toString(): string {
-    return (
-      this._expression.toString() +
-      ' ' +
-      ['<=', '>=', '='][this._operator] +
-      ' 0 (' +
-      this._strength.toString() +
-      ')'
-    );
   }
 }
 

@@ -17,25 +17,6 @@ export class Solver {
   private _idTick = 0;
 
   /**
-   * Creates and add a constraint to the solver.
-   *
-   * @param lhs Left hand side of the expression
-   * @param operator Operator
-   * @param rhs Right hand side of the expression
-   * @param strength Strength
-   */
-  public createConstraint(
-    lhs: Expression | Variable,
-    operator: Operator,
-    rhs: Expression | Variable | Rational,
-    strength: Rational = Strength.required
-  ): Constraint {
-    const cn = new Constraint(lhs, operator, rhs, strength);
-    this.addConstraint(cn);
-    return cn;
-  }
-
-  /**
    * Add a constraint to the solver.
    *
    * @param constraint Constraint to add to the solver
@@ -153,7 +134,7 @@ export class Solver {
       throw new Error('bad required strength');
     }
     const expr = new Expression(variable);
-    const cn = new Constraint(expr, Operator.Eq, undefined, strength);
+    const cn = new Constraint(expr, Operator.Eq, strength);
     this.addConstraint(cn);
     const tag = this._cnMap.find(cn).second;
     const info = { tag, constraint: cn, constant: Rational.zero };
@@ -279,7 +260,7 @@ export class Solver {
    * Returns the created Row and the tag for tracking the constraint.
    */
   private _createRow(constraint: Constraint): IRowCreation {
-    const expr = constraint.expression();
+    const expr = constraint.expression;
     const row = new Row(expr.constant());
 
     // Substitute the current basic variables into the row.
@@ -299,13 +280,13 @@ export class Solver {
 
     // Add the necessary slack, error, and dummy variables.
     const objective = this._objective;
-    const strength = constraint.strength();
+    const strength = constraint.strength;
     const tag = { marker: INVALID_SYMBOL, other: INVALID_SYMBOL };
-    switch (constraint.op()) {
+    switch (constraint.op) {
       case Operator.Le:
       case Operator.Ge: {
         const coeff =
-          constraint.op() === Operator.Le ? Rational.one : Rational.minusOne;
+          constraint.op === Operator.Le ? Rational.one : Rational.minusOne;
         const slack = this._makeSymbol(SymbolType.Slack);
         tag.marker = slack;
         row.insertSymbol(slack, coeff);
@@ -644,10 +625,10 @@ export class Solver {
   /** Remove the effects of a constraint on the objective function. */
   private _removeConstraintEffects(cn: Constraint, tag: ITag): void {
     if (tag.marker.type() === SymbolType.Error) {
-      this._removeMarkerEffects(tag.marker, cn.strength());
+      this._removeMarkerEffects(tag.marker, cn.strength);
     }
     if (tag.other.type() === SymbolType.Error) {
-      this._removeMarkerEffects(tag.other, cn.strength());
+      this._removeMarkerEffects(tag.other, cn.strength);
     }
   }
 
@@ -758,7 +739,7 @@ class SolverSymbol {
   /**
    * Returns the unique id number of the symbol.
    */
-  public id(): number {
+  public get id(): number {
     return this._id;
   }
 

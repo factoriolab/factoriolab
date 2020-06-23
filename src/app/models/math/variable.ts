@@ -15,7 +15,7 @@ export class Variable {
   }
 
   /** Returns the unique id number of the variable. */
-  public id(): number {
+  public get id(): number {
     return this._id;
   }
 
