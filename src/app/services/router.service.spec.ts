@@ -23,7 +23,8 @@ const mockZipEmpty = 'eJwrsAUAAR8Arg==';
 const mockZipProducts = 'eJwrsC0uSU3N0U3OSC0usTKwMgQAOToF5A==';
 const mockZipAll =
   'eJwrsC0uSU3N0U3OSC0usTKwMlTLRBGxKilKzCsuyC8q0U1KzSlRK0KVtbKyUCu2NTYzMLBCBwCbEh0V';
-const mockZipExtra = 'eJwrsDWyMrAyVCsC0mBgoVZsa2xmYGCFAtRKbLNK87IBA4gLqg==';
+const mockZipExtra =
+  'eJwrsM0sys/TTc5ILS6xMrAyVMtEFrAqKUrMKy7ILyrRTUrNKVErQpHMzU8pzUnVw0ZZWakV21qhA0O1EtsSoFYAroYoTw==';
 const mockZipLink =
   'eJxtT9sKwjAM/Zu9FdpNRAL7mK6NLtA1pckU/94I82Hg0yEnh3Np84s5Y3VpRVHwEAaaRRHLwQTQHqs07uoWLDr00zuK4LYUqg+3xbRSRTfBxnkv+IMwyDxdvYcRLhZwtvtnMIIoG973XmNCWKJQckzFtc4JRUwMwoWySbCAsXlPSk/StztCpSHmf4e532xU8N+to7UKH9njXOc=';
 const mockProducts: Product[] = [
@@ -41,6 +42,7 @@ const mockItemSettings: Items.ItemsState = {
 const mockFullItemSettings: Items.ItemsState = {
   [ItemId.SteelChest]: { ignore: true, belt: ItemId.TransportBelt },
 };
+const mockZipFullItemSettings = `${ItemId.SteelChest}:1:${ItemId.TransportBelt}`;
 const mockRecipeSettings: Recipes.RecipesState = {
   [RecipeId.SteelChest]: { beaconCount: 8 },
 };
@@ -195,22 +197,26 @@ describe('RouterService', () => {
 
     it('should upzip the hash', () => {
       spyOn(service, 'unzipProducts');
+      spyOn(service, 'unzipItems');
       spyOn(service, 'unzipRecipes');
       spyOn(service, 'unzipSettings');
       const url = `/#${mockZipExtra}`;
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.unzipProducts).toHaveBeenCalled();
+      expect(service.unzipItems).toHaveBeenCalled();
       expect(service.unzipRecipes).toHaveBeenCalled();
       expect(service.unzipSettings).toHaveBeenCalled();
     });
 
     it('should skip empty values', () => {
       spyOn(service, 'unzipProducts');
+      spyOn(service, 'unzipItems');
       spyOn(service, 'unzipRecipes');
       spyOn(service, 'unzipSettings');
       const url = `/#${mockZipEmpty}`;
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.unzipProducts).not.toHaveBeenCalled();
+      expect(service.unzipItems).not.toHaveBeenCalled();
       expect(service.unzipRecipes).not.toHaveBeenCalled();
       expect(service.unzipSettings).not.toHaveBeenCalled();
     });
@@ -229,6 +235,52 @@ describe('RouterService', () => {
       service.unzipProducts([mockZipProduct], Mocks.Data);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Products.LoadAction(mockProducts)
+      );
+    });
+  });
+
+  describe('zipItems', () => {
+    it('should zip empty item settings', () => {
+      const result = service.zipItems({ [ItemId.SteelChest]: {} }, Mocks.Data);
+      expect(result).toEqual([`${ItemId.SteelChest}::`]);
+    });
+
+    it('should zip full item settings', () => {
+      const result = service.zipItems(mockFullItemSettings, Mocks.Data);
+      expect(result).toEqual([mockZipFullItemSettings]);
+    });
+
+    it('should zip false ignore value', () => {
+      const result = service.zipItems(
+        { [ItemId.SteelChest]: { ignore: false } },
+        Mocks.Data
+      );
+      expect(result).toEqual([`${ItemId.SteelChest}:0:`]);
+    });
+  });
+
+  describe('unzipItems', () => {
+    it('should unzip the empty item settings', () => {
+      spyOn(store, 'dispatch');
+      service.unzipItems([`${ItemId.SteelChest}::`], Mocks.Data);
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new Items.LoadAction({ [ItemId.SteelChest]: {} })
+      );
+    });
+
+    it('should unzip the full item settings', () => {
+      spyOn(store, 'dispatch');
+      service.unzipItems([mockZipFullItemSettings], Mocks.Data);
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new Items.LoadAction(mockFullItemSettings)
+      );
+    });
+
+    it('should unzip false ignore value', () => {
+      spyOn(store, 'dispatch');
+      service.unzipItems([`${ItemId.SteelChest}:0:`], Mocks.Data);
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new Items.LoadAction({ [ItemId.SteelChest]: { ignore: false } })
       );
     });
   });

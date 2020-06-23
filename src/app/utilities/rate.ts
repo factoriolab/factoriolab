@@ -200,7 +200,7 @@ export class RateUtility {
     beltSpeed: Entities<Rational>
   ) {
     for (const step of steps) {
-      const belt = itemSettings[step.itemId]?.belt;
+      const belt = itemSettings[step.itemId].belt;
       if (step.items && belt) {
         step.belts = step.items.div(beltSpeed[belt]);
       }

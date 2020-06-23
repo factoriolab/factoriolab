@@ -126,6 +126,36 @@ describe('RateUtility', () => {
       );
     });
 
+    it('should adjust for consumption instead of production for research recipes', () => {
+      const steps: Step[] = [];
+      const data = {
+        ...Mocks.AdjustedData,
+        ...{
+          recipeR: {
+            ...Mocks.AdjustedData.recipeR,
+            ...{
+              [Mocks.Item2.id]: {
+                ...Mocks.AdjustedData.recipeR[Mocks.Item2.id],
+                ...{ adjustProd: Rational.one },
+              },
+            },
+          },
+        },
+      };
+      RateUtility.addStepsFor(
+        null,
+        Mocks.Item2.id,
+        new Rational(BigInt(30)),
+        steps,
+        Mocks.ItemSettingsEntities,
+        Mocks.RecipeSettingsEntities,
+        ItemId.Coal,
+        RecipeId.BasicOilProcessing,
+        data
+      );
+      expect(steps as any).toEqual(expected as any);
+    });
+
     it('should handle null recipe', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(

@@ -152,13 +152,11 @@ export class RecipeUtility {
       for (const id of settings.modules) {
         if (data.itemEntities[id]) {
           const module = data.itemR[id].module;
-          if (module) {
-            if (module.speed) {
-              speed = speed.add(module.speed);
-            }
-            if (module.productivity) {
-              prod = prod.add(module.productivity);
-            }
+          if (module.speed) {
+            speed = speed.add(module.speed);
+          }
+          if (module.productivity) {
+            prod = prod.add(module.productivity);
           }
         }
       }
@@ -167,7 +165,7 @@ export class RecipeUtility {
     // Beacons
     if (
       settings.beaconModule &&
-      data.itemR[settings.beaconModule]?.module &&
+      data.itemR[settings.beaconModule].module &&
       settings.beaconCount.nonzero()
     ) {
       const module = data.itemR[settings.beaconModule].module;
@@ -201,19 +199,17 @@ export class RecipeUtility {
     }
 
     // Calculate burner fuel inputs
-    if (settings.factory) {
-      const factory = data.itemR[settings.factory].factory;
-      if (factory.burner) {
-        const fuel = data.itemR[fuelId];
+    const factory = data.itemR[settings.factory].factory;
+    if (factory.burner) {
+      const fuel = data.itemR[fuelId];
 
-        if (!recipe.in[fuelId]) {
-          recipe.in[fuelId] = Rational.zero;
-        }
-
-        recipe.in[fuelId] = recipe.in[fuelId].add(
-          recipe.time.mul(factory.burner).div(fuel.fuel).div(Rational.thousand)
-        );
+      if (!recipe.in[fuelId]) {
+        recipe.in[fuelId] = Rational.zero;
       }
+
+      recipe.in[fuelId] = recipe.in[fuelId].add(
+        recipe.time.mul(factory.burner).div(fuel.fuel).div(Rational.thousand)
+      );
     }
 
     return recipe;
