@@ -35,16 +35,6 @@ export class Expression {
     return this._constant;
   }
 
-  /** Returns the computed value of the expression. */
-  public value(): Rational {
-    let result = this._constant;
-    for (let i = 0, n = this._terms.size(); i < n; i++) {
-      const pair = this._terms.itemAt(i);
-      result = result.add(pair.first.value().mul(pair.second));
-    }
-    return result;
-  }
-
   /**
    * Creates a new Expression by adding a rational, variable or expression to the expression.
    *
@@ -64,23 +54,6 @@ export class Expression {
       this,
       value instanceof Rational ? value.inverse() : [Rational.minusOne, value]
     );
-  }
-
-  /**
-   * Creates a new Expression by multiplying with a rational.
-   *
-   * @param coefficient Coefficient to multiply with.
-   */
-  public multiply(coefficient: Rational): Expression {
-    return new Expression([coefficient, this]);
-  }
-
-  /** Creates a new Expression by dividing with a rational.
-   *
-   * @param coefficient Coefficient to divide by.
-   */
-  public divide(coefficient: Rational): Expression {
-    return new Expression([Rational.one.div(coefficient), this]);
   }
 
   public isConstant(): boolean {

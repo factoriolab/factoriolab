@@ -216,7 +216,7 @@ describe('MatrixSolver', () => {
 
   describe('parseSolutionRecipes', () => {
     it('should map used recipe ids', () => {
-      matrix.recipeVar[RecipeId.IronOre] = { value: () => Rational.one } as any;
+      matrix.recipeVar[RecipeId.IronOre] = { value: Rational.one } as any;
       matrix.parseSolutionRecipes();
       expect(matrix.usedRecipeIds).toEqual([RecipeId.IronOre]);
     });
@@ -267,7 +267,7 @@ describe('MatrixSolver', () => {
       ];
       matrix.mappedRecipeIds = [RecipeId.BasicOilProcessing];
       matrix.recipeVar[RecipeId.AdvancedOilProcessing] = {
-        value: () => Rational.one,
+        value: Rational.one,
       } as any;
       matrix.parseSolutionSteps();
       expect(matrix.steps[1]).toEqual({
@@ -282,7 +282,7 @@ describe('MatrixSolver', () => {
   describe('parseSolutionInputs', () => {
     it('should add steps for solution inputs', () => {
       spyOn(RateUtility, 'addStepsFor');
-      matrix.inputVar[ItemId.IronOre] = { value: () => Rational.one } as any;
+      matrix.inputVar[ItemId.IronOre] = { value: Rational.one } as any;
       matrix.parseSolutionInputs();
       expect(RateUtility.addStepsFor).toHaveBeenCalledTimes(1);
     });

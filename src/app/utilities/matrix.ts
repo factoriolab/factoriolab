@@ -217,19 +217,19 @@ export class MatrixSolver {
 
   parseSolutionRecipes() {
     this.usedRecipeIds = Object.keys(this.recipeVar).filter((r) => {
-      return this.recipeVar[r].value().gt(Rational.zero);
+      return this.recipeVar[r].value.gt(Rational.zero);
     }) as RecipeId[];
   }
 
   parseSolutionOutputs() {
     for (const i of this.outputs) {
-      const surplusVal = this.surplusVar[i].value();
+      const surplusVal = this.surplusVar[i].value;
       let itemOutput = Rational.zero;
       for (const r of Object.keys(this.recipeVar)) {
         if (this.data.recipeR[r].out[i]) {
           const test = this.data.recipeR[r].out[i];
           itemOutput = itemOutput.add(
-            this.data.recipeR[r].out[i].mul(this.recipeVar[r].value())
+            this.data.recipeR[r].out[i].mul(this.recipeVar[r].value)
           );
         }
       }
@@ -256,9 +256,9 @@ export class MatrixSolver {
         }
         if (recipeId) {
           step.recipeId = recipeId as RecipeId;
-          step.factories = this.recipeVar[recipeId]
-            .value()
-            .mul(this.data.recipeR[recipeId].time);
+          step.factories = this.recipeVar[recipeId].value.mul(
+            this.data.recipeR[recipeId].time
+          );
           this.mappedRecipeIds.push(recipeId);
         }
         if (surplusVal.gt(Rational.zero)) {
@@ -277,20 +277,20 @@ export class MatrixSolver {
         itemId: null,
         items: null,
         recipeId: r as RecipeId,
-        factories: this.recipeVar[r].value().mul(this.data.recipeR[r].time),
+        factories: this.recipeVar[r].value.mul(this.data.recipeR[r].time),
       });
     }
   }
 
   parseSolutionInputs() {
     for (const i of Object.keys(this.inputVar).filter((id) =>
-      this.inputVar[id].value().nonzero()
+      this.inputVar[id].value.nonzero()
     )) {
       // Item has simple recipe, calculate inputs
       RateUtility.addStepsFor(
         null,
         i as ItemId,
-        this.inputVar[i].value(),
+        this.inputVar[i].value,
         this.steps,
         this.itemSettings,
         this.recipeSettings,

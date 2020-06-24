@@ -167,9 +167,9 @@ export class Solver {
       const pair = vars.itemAt(i);
       const rowPair = rows.find(pair.second);
       if (rowPair !== undefined) {
-        pair.first.setValue(rowPair.second.constant());
+        pair.first.value = rowPair.second.constant();
       } else {
-        pair.first.setValue(Rational.zero);
+        pair.first.value = Rational.zero;
       }
     }
   }
