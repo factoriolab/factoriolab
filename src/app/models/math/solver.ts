@@ -82,51 +82,6 @@ export class Solver {
   }
 
   /**
-   * Remove a constraint from the solver.
-   *
-   * @param constraint Constraint to remove from the solver
-   */
-  public removeConstraint(constraint: Constraint): void {
-    const cnPair = this._cnMap.erase(constraint);
-    if (cnPair === undefined) {
-      throw new Error('unknown constraint');
-    }
-
-    // Remove the error effects from the objective function
-    // *before* pivoting, or substitutions into the objective
-    // will lead to incorrect solver results.
-    this._removeConstraintEffects(constraint, cnPair.second);
-
-    // If the marker is basic, simply drop the row. Otherwise,
-    // pivot the marker into the basis and then drop the row.
-    const marker = cnPair.second.marker;
-    let rowPair = this._rowMap.erase(marker);
-    if (rowPair === undefined) {
-      const leaving = this._getMarkerLeavingSymbol(marker);
-      if (leaving.type() === SymbolType.Invalid) {
-        throw new Error('failed to find leaving row');
-      }
-      rowPair = this._rowMap.erase(leaving);
-      rowPair.second.solveForEx(leaving, marker);
-      this._substitute(marker, rowPair.second);
-    }
-
-    // Optimizing after each constraint is removed ensures that the
-    // solver remains consistent. It makes the solver api easier to
-    // use at a small tradeoff for speed.
-    this._optimize(this._objective);
-  }
-
-  /**
-   * Test whether the solver contains the constraint.
-   *
-   * @param constraint Constraint to test for
-   */
-  public hasConstraint(constraint: Constraint): boolean {
-    return this._cnMap.contains(constraint);
-  }
-
-  /**
    * Add an edit variable to the solver.
    *
    * @param variable Edit variable to add to the solver
@@ -147,28 +102,6 @@ export class Solver {
     const tag = this._cnMap.find(cn).second;
     const info = { tag, constraint: cn, constant: Rational.zero };
     this._editMap.insert(variable, info);
-  }
-
-  /**
-   * Remove an edit variable from the solver.
-   *
-   * @param variable Edit variable to remove from the solver
-   */
-  public removeEditVariable(variable: Variable): void {
-    const editPair = this._editMap.erase(variable);
-    if (editPair === undefined) {
-      throw new Error('unknown edit variable');
-    }
-    this.removeConstraint(editPair.second.constraint);
-  }
-
-  /**
-   * Test whether the solver contains the edit variable.
-   *
-   * @param variable Edit variable to test for
-   */
-  public hasEditVariable(variable: Variable): boolean {
-    return this._editMap.contains(variable);
   }
 
   /**
