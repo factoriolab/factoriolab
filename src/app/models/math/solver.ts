@@ -32,7 +32,7 @@ export class Solver {
   public addConstraint(constraint: Constraint): void {
     const cnPair = this._cnMap.find(constraint);
     if (cnPair !== undefined) {
-      throw new Error('duplicate constraint');
+      throw new Error('Duplicate constraint');
     }
 
     // Creating a row causes symbols to be reserved for the variables
@@ -52,9 +52,9 @@ export class Solver {
     // this represents redundant constraints and the new dummy
     // marker can enter the basis. If the constant is non-zero,
     // then it represents an unsatisfiable constraint.
-    if (subject.type() === SymbolType.Invalid && row.allDummies()) {
+    if (subject.type === SymbolType.Invalid && row.allDummies()) {
       if (row.constant().nonzero()) {
-        throw new Error('unsatisfiable constraint');
+        throw new Error('Unsatisfiable constraint');
       } else {
         subject = tag.marker;
       }
@@ -63,9 +63,9 @@ export class Solver {
     // If an entering symbol still isn't found, then the row must
     // be added using an artificial variable. If that fails, then
     // the row represents an unsatisfiable constraint.
-    if (subject.type() === SymbolType.Invalid) {
+    if (subject.type === SymbolType.Invalid) {
       if (!this._addWithArtificialVariable(row)) {
-        throw new Error('unsatisfiable constraint');
+        throw new Error('Unsatisfiable constraint');
       }
     } else {
       row.solveFor(subject);
@@ -151,7 +151,7 @@ export class Solver {
       if (
         coeff.nonzero() &&
         row.add(delta.mul(coeff)).lt(Rational.zero) &&
-        rowPair2.first.type() !== SymbolType.External
+        rowPair2.first.type !== SymbolType.External
       ) {
         this._infeasibleRows.push(rowPair2.first);
       }
@@ -284,17 +284,17 @@ export class Solver {
     const cells = row.cells();
     for (let i = 0, n = cells.size(); i < n; ++i) {
       const pair = cells.itemAt(i);
-      if (pair.first.type() === SymbolType.External) {
+      if (pair.first.type === SymbolType.External) {
         return pair.first;
       }
     }
-    let type = tag.marker.type();
+    let type = tag.marker.type;
     if (type === SymbolType.Slack || type === SymbolType.Error) {
       if (row.coefficientFor(tag.marker).lt(Rational.zero)) {
         return tag.marker;
       }
     }
-    type = tag.other.type();
+    type = tag.other.type;
     if (type === SymbolType.Slack || type === SymbolType.Error) {
       if (row.coefficientFor(tag.other).lt(Rational.zero)) {
         return tag.other;
@@ -329,7 +329,7 @@ export class Solver {
         return success;
       }
       const entering = this._anyPivotableSymbol(basicRow);
-      if (entering.type() === SymbolType.Invalid) {
+      if (entering.type === SymbolType.Invalid) {
         return false; // unsatisfiable (will this ever happen?)
       }
       basicRow.solveForEx(art, entering);
@@ -359,7 +359,7 @@ export class Solver {
       pair.second.substitute(symbol, row);
       if (
         pair.second.constant().lt(Rational.zero) &&
-        pair.first.type() !== SymbolType.External
+        pair.first.type !== SymbolType.External
       ) {
         this._infeasibleRows.push(pair.first);
       }
@@ -379,11 +379,11 @@ export class Solver {
   private _optimize(objective: Row): void {
     while (true) {
       const entering = this._getEnteringSymbol(objective);
-      if (entering.type() === SymbolType.Invalid) {
+      if (entering.type === SymbolType.Invalid) {
         return;
       }
       const leaving = this._getLeavingSymbol(entering);
-      if (leaving.type() === SymbolType.Invalid) {
+      if (leaving.type === SymbolType.Invalid) {
         throw new Error('the objective is unbounded');
       }
       // pivot the entering symbol into the basis
@@ -410,7 +410,7 @@ export class Solver {
       const pair = rows.find(leaving);
       if (pair !== undefined && pair.second.constant().lt(Rational.zero)) {
         const entering = this._getDualEnteringSymbol(pair.second);
-        if (entering.type() === SymbolType.Invalid) {
+        if (entering.type === SymbolType.Invalid) {
           throw new Error('dual optimize failed');
         }
         // pivot the entering symbol into the basis
@@ -436,7 +436,7 @@ export class Solver {
     for (let i = 0, n = cells.size(); i < n; ++i) {
       const pair = cells.itemAt(i);
       const symbol = pair.first;
-      if (pair.second.lt(Rational.zero) && symbol.type() !== SymbolType.Dummy) {
+      if (pair.second.lt(Rational.zero) && symbol.type !== SymbolType.Dummy) {
         return symbol;
       }
     }
@@ -460,7 +460,7 @@ export class Solver {
       const pair = cells.itemAt(i);
       const symbol = pair.first;
       const c = pair.second;
-      if (c.gt(Rational.zero) && symbol.type() !== SymbolType.Dummy) {
+      if (c.gt(Rational.zero) && symbol.type !== SymbolType.Dummy) {
         const coeff = this._objective.coefficientFor(symbol);
         const r = coeff.div(c);
         if (r.lt(ratio)) {
@@ -487,7 +487,7 @@ export class Solver {
     for (let i = 0, n = rows.size(); i < n; ++i) {
       const pair = rows.itemAt(i);
       const symbol = pair.first;
-      if (symbol.type() !== SymbolType.External) {
+      if (symbol.type !== SymbolType.External) {
         const row = pair.second;
         const temp = row.coefficientFor(entering);
         if (temp.lt(Rational.zero)) {
@@ -503,87 +503,6 @@ export class Solver {
   }
 
   /**
-   * Compute the leaving symbol for a marker variable.
-   *
-   * This method will return a symbol corresponding to a basic row
-   * which holds the given marker variable. The row will be chosen
-   * according to the following precedence:
-   *
-   * 1) The row with a restricted basic varible and a negative coefficient
-   *    for the marker with the smallest ratio of -constant / coefficient.
-   *
-   * 2) The row with a restricted basic variable and the smallest ratio
-   *    of constant / coefficient.
-   *
-   * 3) The last unrestricted row which contains the marker.
-   *
-   * If the marker does not exist in any row, an invalid symbol will be
-   * returned. This indicates an internal solver error since the marker
-   * *should* exist somewhere in the tableau.
-   */
-  private _getMarkerLeavingSymbol(marker: SolverSymbol): SolverSymbol {
-    const dmax = Rational.fromNumber(Number.MAX_VALUE);
-    let r1 = dmax;
-    let r2 = dmax;
-    const invalid = INVALID_SYMBOL;
-    let first = invalid;
-    let second = invalid;
-    let third = invalid;
-    const rows = this._rowMap;
-    for (let i = 0, n = rows.size(); i < n; ++i) {
-      const pair = rows.itemAt(i);
-      const row = pair.second;
-      const c = row.coefficientFor(marker);
-      if (c.isZero()) {
-        continue;
-      }
-      const symbol = pair.first;
-      if (symbol.type() === SymbolType.External) {
-        third = symbol;
-      } else if (c.lt(Rational.zero)) {
-        const r = row.constant().inverse().div(c);
-        if (r.lt(r1)) {
-          r1 = r;
-          first = symbol;
-        }
-      } else {
-        const r = row.constant().div(c);
-        if (r.lt(r2)) {
-          r2 = r;
-          second = symbol;
-        }
-      }
-    }
-    if (first !== invalid) {
-      return first;
-    }
-    if (second !== invalid) {
-      return second;
-    }
-    return third;
-  }
-
-  /** Remove the effects of a constraint on the objective function. */
-  private _removeConstraintEffects(cn: Constraint, tag: ITag): void {
-    if (tag.marker.type() === SymbolType.Error) {
-      this._removeMarkerEffects(tag.marker, cn.strength);
-    }
-    if (tag.other.type() === SymbolType.Error) {
-      this._removeMarkerEffects(tag.other, cn.strength);
-    }
-  }
-
-  /** Remove the effects of an error marker on the objective function. */
-  private _removeMarkerEffects(marker: SolverSymbol, strength: Rational): void {
-    const pair = this._rowMap.find(marker);
-    if (pair !== undefined) {
-      this._objective.insertRow(pair.second, strength.inverse());
-    } else {
-      this._objective.insertSymbol(marker, strength.inverse());
-    }
-  }
-
-  /**
    * Get the first Slack or Error symbol in the row.
    *
    * If no such symbol is present, an invalid symbol will be returned.
@@ -593,7 +512,7 @@ export class Solver {
     const cells = row.cells();
     for (let i = 0, n = cells.size(); i < n; ++i) {
       const pair = cells.itemAt(i);
-      const type = pair.first.type();
+      const type = pair.first.type;
       if (type === SymbolType.Slack || type === SymbolType.Error) {
         return pair.first;
       }
@@ -687,7 +606,7 @@ class SolverSymbol {
   /**
    * Returns the type of the symbol.
    */
-  public type(): SymbolType {
+  public get type(): SymbolType {
     return this._type;
   }
 }
@@ -735,7 +654,7 @@ class Row {
     const cells = this._cellMap;
     for (let i = 0, n = cells.size(); i < n; ++i) {
       const pair = cells.itemAt(i);
-      if (pair.first.type() !== SymbolType.Dummy) {
+      if (pair.first.type !== SymbolType.Dummy) {
         return false;
       }
     }
