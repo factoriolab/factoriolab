@@ -202,10 +202,10 @@ export class Solver {
    */
   private _createRow(constraint: Constraint): IRowCreation {
     const expr = constraint.expression;
-    const row = new Row(expr.constant());
+    const row = new Row(expr.constant);
 
     // Substitute the current basic variables into the row.
-    const terms = expr.terms();
+    const terms = expr.terms;
     for (let i = 0, n = terms.size(); i < n; ++i) {
       const termPair = terms.itemAt(i);
       if (termPair.second.nonzero()) {

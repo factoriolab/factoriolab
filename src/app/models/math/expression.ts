@@ -26,12 +26,12 @@ export class Expression {
   }
 
   /** Returns the mapping of terms in the expression. This *must* be treated as const. */
-  public terms(): IMap<Variable, Rational> {
+  public get terms(): IMap<Variable, Rational> {
     return this._terms;
   }
 
   /** Returns the constant of the expression. */
-  public constant(): Rational {
+  public get constant(): Rational {
     return this._constant;
   }
 
@@ -59,22 +59,6 @@ export class Expression {
   public isConstant(): boolean {
     return this._terms.size() === 0;
   }
-
-  public toString(): string {
-    let result = this._terms.array
-      .map((pair) => {
-        return pair.second + '*' + pair.first.toString();
-      })
-      .join(' + ');
-
-    if (!this.isConstant() && this._constant.nonzero()) {
-      result += ' + ';
-    }
-
-    result += this._constant;
-
-    return result;
-  }
 }
 
 /** An internal interface for the argument parse results. */
@@ -96,8 +80,8 @@ function parseArgs(args: IArguments): IParseResult {
       const termDefault = terms.setDefault(item, factory);
       termDefault.second = termDefault.second.add(Rational.one);
     } else if (item instanceof Expression) {
-      constant = constant.add(item.constant());
-      const terms2 = item.terms();
+      constant = constant.add(item.constant);
+      const terms2 = item.terms;
       for (let j = 0, k = terms2.size(); j < k; j++) {
         const termPair = terms2.itemAt(j);
         const termDefault = terms.setDefault(termPair.first, factory);
@@ -105,19 +89,19 @@ function parseArgs(args: IArguments): IParseResult {
       }
     } else if (item instanceof Array) {
       if (item.length !== 2) {
-        throw new Error('array must have length 2');
+        throw new Error('Array must have length 2');
       }
       const value: Rational = item[0];
       const value2 = item[1];
       if (!(value instanceof Rational)) {
-        throw new Error('array item 0 must be a Rational');
+        throw new Error('Array item 0 must be a Rational');
       }
       if (value2 instanceof Variable) {
         const termDefault = terms.setDefault(value2, factory);
         termDefault.second = termDefault.second.add(value);
       } else if (value2 instanceof Expression) {
-        constant = constant.add(value2.constant().mul(value));
-        const terms2 = value2.terms();
+        constant = constant.add(value2.constant.mul(value));
+        const terms2 = value2.terms;
         for (let j = 0, k = terms2.size(); j < k; j++) {
           const termPair = terms2.itemAt(j);
           const termDefault = terms.setDefault(termPair.first, factory);
@@ -126,10 +110,10 @@ function parseArgs(args: IArguments): IParseResult {
           );
         }
       } else {
-        throw new Error('array item 1 must be a variable or expression');
+        throw new Error('Array item 1 must be a Variable or Expression');
       }
     } else {
-      throw new Error('invalid Expression argument: ' + item);
+      throw new Error('Invalid Expression argument: ' + item);
     }
   }
   return { terms, constant };
