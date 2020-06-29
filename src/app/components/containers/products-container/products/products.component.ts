@@ -39,6 +39,18 @@ export class ProductsComponent {
     this.categoryId = this.data.itemEntities[product.itemId].category;
   }
 
+  commitEditProduct(product: Product, itemId: ItemId) {
+    if (
+      product.rateType === RateType.Factories &&
+      !this.data.recipeEntities[itemId]
+    ) {
+      // Reset rate type to items
+      this.editRateType.emit([product.id, RateType.Items]);
+    }
+
+    this.editProduct.emit([product.id, itemId]);
+  }
+
   emitNumber(emitter: EventEmitter<[number, number]>, id: number, event: any) {
     if (event.target.value) {
       const value = Number(event.target.value);
