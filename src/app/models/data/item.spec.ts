@@ -1,4 +1,4 @@
-import { Rational } from '../math/rational';
+import { Rational } from '../rational';
 import { RationalItem, ItemId } from './item';
 import { CategoryId } from './category';
 

@@ -1,4 +1,4 @@
-import { Rational } from '../math/rational';
+import { Rational } from '../rational';
 import { RationalModule } from './module';
 
 describe('RationalModule', () => {

@@ -1,4 +1,4 @@
-import { Rational } from '../math/rational';
+import { Rational } from '../rational';
 import { Belt, RationalBelt } from './belt';
 import { CategoryId } from './category';
 import { Factory, RationalFactory } from './factory';
