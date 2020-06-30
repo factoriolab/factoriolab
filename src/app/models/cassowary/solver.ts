@@ -1,10 +1,4 @@
-/**
- * Original source: https://github.com/IjzerenHein/kiwi.js/blob/master/src/solver.ts
- * It is outside of the scope of this project to test this file.
- * If issues/bugs are found in this file, they should likely be forwarded on to the kiwi.js GitHub project, at:
- * https://github.com/IjzerenHein/kiwi.js/issues
- */
-/* istanbul ignore file */
+/** Original source: https://github.com/IjzerenHein/kiwi.js/blob/master/src/solver.ts */
 
 import { Rational } from '../rational';
 import { Constraint, Operator } from './constraint';
@@ -26,6 +20,10 @@ export class Solver {
 
   get constraints() {
     return this._cnMap.array;
+  }
+
+  get rows() {
+    return this._rowMap.array;
   }
 
   get variables() {
@@ -289,7 +287,7 @@ export class Solver {
    * If a subject cannot be found, an invalid symbol will be returned.
    */
   private _chooseSubject(row: Row, tag: ITag): SolverSymbol {
-    const cells = row.cells();
+    const cells = row.cells;
     for (let i = 0, n = cells.size(); i < n; ++i) {
       const pair = cells.itemAt(i);
       if (pair.first.type === SymbolType.External) {
@@ -392,7 +390,7 @@ export class Solver {
       }
       const leaving = this._getLeavingSymbol(entering);
       if (leaving.type === SymbolType.Invalid) {
-        throw new Error('the objective is unbounded');
+        throw new Error('The objective is unbounded');
       }
       // pivot the entering symbol into the basis
       const row = this._rowMap.erase(leaving).second;
@@ -419,7 +417,7 @@ export class Solver {
       if (pair !== undefined && pair.second.constant.lt(Rational.zero)) {
         const entering = this._getDualEnteringSymbol(pair.second);
         if (entering.type === SymbolType.Invalid) {
-          throw new Error('dual optimize failed');
+          throw new Error('Dual optimize failed');
         }
         // pivot the entering symbol into the basis
         const row = pair.second;
@@ -440,7 +438,7 @@ export class Solver {
    * invalid symbol is returned.
    */
   private _getEnteringSymbol(objective: Row): SolverSymbol {
-    const cells = objective.cells();
+    const cells = objective.cells;
     for (let i = 0, n = cells.size(); i < n; ++i) {
       const pair = cells.itemAt(i);
       const symbol = pair.first;
@@ -463,7 +461,7 @@ export class Solver {
   private _getDualEnteringSymbol(row: Row): SolverSymbol {
     let ratio = Rational.fromNumber(Number.MAX_VALUE);
     let entering = INVALID_SYMBOL;
-    const cells = row.cells();
+    const cells = row.cells;
     for (let i = 0, n = cells.size(); i < n; ++i) {
       const pair = cells.itemAt(i);
       const symbol = pair.first;
@@ -517,7 +515,7 @@ export class Solver {
    *
    */
   private _anyPivotableSymbol(row: Row): SolverSymbol {
-    const cells = row.cells();
+    const cells = row.cells;
     for (let i = 0, n = cells.size(); i < n; ++i) {
       const pair = cells.itemAt(i);
       const type = pair.first.type;
@@ -637,7 +635,7 @@ class Row {
   /**
    * Returns the mapping of symbols to coefficients.
    */
-  public cells(): IMap<SolverSymbol, Rational> {
+  public get cells(): IMap<SolverSymbol, Rational> {
     return this._cellMap;
   }
 
@@ -714,7 +712,7 @@ class Row {
    * cell with a resulting coefficient of zero will be removed
    * from the row.
    */
-  public insertRow(other: Row, coefficient: Rational = Rational.one): void {
+  public insertRow(other: Row, coefficient: Rational): void {
     this._constant = this._constant.add(other._constant.mul(coefficient));
     const cells = other._cellMap;
     for (let i = 0, n = cells.size(); i < n; ++i) {
