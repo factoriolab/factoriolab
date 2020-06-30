@@ -33,7 +33,7 @@ export const getTheme = compose(sTheme, settingsState);
 
 /* Complex selectors */
 export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
-  Rational.fromNumber(bonus)
+  Rational.fromNumber(bonus).div(Rational.hundred)
 );
 export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
   Rational.fromNumber(rate)

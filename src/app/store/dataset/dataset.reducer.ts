@@ -5,7 +5,6 @@ import {
   Entities,
   Icon,
   ItemId,
-  NEntities,
   RationalItem,
   RationalRecipe,
   RecipeId,
@@ -20,13 +19,9 @@ export interface DatasetState {
   iconEntities: Entities<Icon>;
   itemIds: string[];
   itemEntities: Entities<Item>;
-  itemN: Entities<number>;
-  itemI: NEntities<string>;
   beltIds: ItemId[];
   recipeIds: string[];
   recipeEntities: Entities<Recipe>;
-  recipeN: Entities<number>;
-  recipeI: NEntities<string>;
   limitations: Entities<RecipeId[]>;
 }
 
@@ -43,13 +38,9 @@ export const initialDatasetState: DatasetState = {
   iconEntities: {},
   itemIds: [],
   itemEntities: {},
-  itemN: {},
-  itemI: {},
   beltIds: [],
   recipeIds: [],
   recipeEntities: {},
-  recipeN: {},
-  recipeI: {},
   limitations: {},
 };
 
@@ -109,28 +100,12 @@ export function datasetReducer(
         ),
         itemIds: action.payload.items.map((i) => i.id),
         itemEntities,
-        itemN: action.payload.items.reduce(
-          (e: Entities<number>, i, z) => ({ ...e, ...{ [i.id]: z } }),
-          {}
-        ),
-        itemI: action.payload.items.reduce(
-          (e: NEntities<string>, i, z) => ({ ...e, ...{ [z]: i.id } }),
-          {}
-        ),
         beltIds: action.payload.items
           .filter((i) => i.belt || i.id === ItemId.Pipe)
           .map((i) => i.id),
         recipeIds: recipes.map((r) => r.id),
         recipeEntities: recipes.reduce(
           (e: Entities<Recipe>, r) => ({ ...e, ...{ [r.id]: r } }),
-          {}
-        ),
-        recipeN: recipes.reduce(
-          (e: Entities<number>, i, z) => ({ ...e, ...{ [i.id]: z } }),
-          {}
-        ),
-        recipeI: recipes.reduce(
-          (e: NEntities<string>, i, z) => ({ ...e, ...{ [z]: i.id } }),
           {}
         ),
         limitations: action.payload.limitations,

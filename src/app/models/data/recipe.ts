@@ -6,12 +6,17 @@ export enum RecipeId {
   AdvancedOilProcessing = 'advanced-oil-processing',
   BasicOilProcessing = 'basic-oil-processing',
   CoalLiquefaction = 'coal-liquefaction',
+  CopperCable = 'copper-cable',
   ElectronicCircuit = 'electronic-circuit',
   HeavyOilCracking = 'heavy-oil-cracking',
+  IronOre = 'iron-ore',
   KovarexEnrichmentProcess = 'kovarex-enrichment-process',
   LightOilCracking = 'light-oil-cracking',
+  MiningProductivity = 'mining-productivity',
+  PlasticBar = 'plastic-bar',
   RocketPart = 'rocket-part',
   Satellite = 'satellite',
+  SolidFuelFromHeavyOil = 'solid-fuel-from-heavy-oil',
   SolidFuelFromLightOil = 'solid-fuel-from-light-oil',
   SolidFuelFromPetroleumGas = 'solid-fuel-from-petroleum-gas',
   SpaceSciencePack = 'space-science-pack',
@@ -36,6 +41,7 @@ export class RationalRecipe {
   id: RecipeId;
   name: string;
   time: Rational;
+  adjustProd?: Rational;
   in?: Entities<Rational>;
   out?: Entities<Rational>;
   expensive?: {

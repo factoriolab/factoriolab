@@ -114,7 +114,7 @@ describe('SunburstComponent', () => {
     });
   });
 
-  describe('getSetOverflowFn', () => {
+  describe('getSetTextOverflowFn', () => {
     it('should clip completely if path has no length', () => {
       spyOn(component.child, 'pathLength').and.returnValue(0);
       const fn = component.child.getSetTextOverflowFn(1);

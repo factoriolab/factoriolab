@@ -26,13 +26,45 @@ describe('Rational', () => {
         );
       });
     });
+
+    describe('min', () => {
+      it('should return the minimum of two Rationals', () => {
+        expect(Rational.min(Rational.zero, Rational.one)).toEqual(
+          Rational.zero
+        );
+        expect(Rational.min(Rational.one, Rational.zero)).toEqual(
+          Rational.zero
+        );
+      });
+    });
+
+    describe('max', () => {
+      it('should return the maximum of two Rationals', () => {
+        expect(Rational.max(Rational.zero, Rational.one)).toEqual(Rational.one);
+        expect(Rational.max(Rational.one, Rational.zero)).toEqual(Rational.one);
+      });
+    });
   });
 
   describe('Class', () => {
+    describe('isZero', () => {
+      it('should determine whether Rational is zero', () => {
+        expect(Rational.zero.isZero()).toBeTrue();
+        expect(Rational.one.isZero()).toBeFalse();
+      });
+    });
+
     describe('nonzero', () => {
       it('should determine whether Rational is nonzero', () => {
         expect(Rational.zero.nonzero()).toBeFalse();
         expect(Rational.one.nonzero()).toBeTrue();
+      });
+    });
+
+    describe('inverse', () => {
+      it('should inverse a number', () => {
+        expect(Rational.zero.inverse()).toEqual(Rational.zero);
+        expect(Rational.one.inverse()).toEqual(Rational.minusOne);
       });
     });
 

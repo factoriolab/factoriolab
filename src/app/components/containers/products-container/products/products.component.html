@@ -39,7 +39,7 @@
             [itemId]="product.itemId"
             (cancel)="editProductId = null"
             (selectTab)="categoryId = $event"
-            (selectItem)="editProduct.emit([product.id, $event])"
+            (selectItem)="commitEditProduct(product, $event)"
           ></lab-picker>
         </div>
       </div>
@@ -59,7 +59,11 @@
         <option [value]="RateType.Items">Items</option>
         <option [value]="RateType.Belts">Belts</option>
         <option [value]="RateType.Wagons">Wagons</option>
-        <option [value]="RateType.Factories">Factories</option>
+        <option
+          [value]="RateType.Factories"
+          *ngIf="data.recipeEntities[product.itemId]"
+          >Factories</option
+        >
       </select>
     </ng-container>
   </div>

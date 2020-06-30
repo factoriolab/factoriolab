@@ -4,26 +4,25 @@ import {
   Entities,
   ItemId,
   RecipeId,
-  Factors,
   CategoryId,
   Node,
   Rational,
   DisplayRateVal,
 } from '~/models';
 import { RationalDataset } from '~/store/dataset';
-import { RecipeState } from '~/store/recipe';
+import { ItemsState } from '~/store/items';
+import { RecipesState } from '~/store/recipes';
 
 export class RateUtility {
   static LAUNCH_TIME = new Rational(BigInt(2420), BigInt(60));
-  static ONE_THOUSAND = new Rational(BigInt(1000));
 
   static addStepsFor(
     parentId: ItemId,
     itemId: ItemId,
     rate: Rational,
     steps: Step[],
-    settings: RecipeState,
-    factors: Entities<Factors>,
+    itemSettings: ItemsState,
+    recipeSettings: RecipesState,
     fuel: ItemId,
     oilRecipe: RecipeId,
     data: RationalDataset
@@ -43,55 +42,45 @@ export class RateUtility {
       // No existing step found, create a new one
       step = {
         itemId,
-        recipeId: itemId as any,
+        recipeId: recipe ? recipe.id : null,
         items: Rational.zero,
         factories: Rational.zero,
-        settings: recipe
-          ? settings[recipe.id]
-          : { belt: item.stack ? null : ItemId.Pipe },
       };
 
       steps.push(step);
     }
 
+    // Adjust for consumption instead of production if desired
+    if (recipe?.adjustProd) {
+      rate = rate.mul(recipe.adjustProd);
+    }
+
     // Add items to the step
-    if (item.category === CategoryId.Research) {
-      step.items = step.items.add(rate.mul(factors[recipe.id].prod));
-    } else {
-      step.items = step.items.add(rate);
-      if (parentId) {
-        if (!step.parents) {
-          step.parents = {};
-        }
-        if (step.parents[parentId]) {
-          step.parents[parentId] = step.parents[parentId].add(rate);
-        } else {
-          step.parents[parentId] = rate;
-        }
+    step.items = step.items.add(rate);
+
+    if (parentId) {
+      if (!step.parents) {
+        step.parents = {};
+      }
+      if (step.parents[parentId]) {
+        step.parents[parentId] = step.parents[parentId].add(rate);
+      } else {
+        step.parents[parentId] = rate;
       }
     }
 
     if (recipe) {
-      // Mark complex recipes
-      if ((recipe.id as string) !== itemId) {
-        step.recipeId = recipe.id;
-      }
-
-      const f = factors[recipe.id];
-
       // Calculate number of outputs from recipe
-      const prod =
-        item.category === CategoryId.Research ? Rational.one : f.prod;
-      const out = (recipe.out ? recipe.out[itemId] : Rational.one).mul(prod);
+      const out = recipe.out[itemId];
 
       // Calculate factories
       if (itemId === ItemId.SpaceSciencePack) {
         // Factories are for rocket parts, space science packs are a side effect
         step.factories = null;
       } else {
-        step.factories = step.items.mul(recipe.time).div(out).div(f.speed);
+        step.factories = step.items.mul(recipe.time).div(out);
         if (item.category === CategoryId.Research) {
-          step.factories = step.factories.div(f.prod);
+          step.factories = step.factories;
         }
         // Add # of factories to actually launch rockets
         if (itemId === ItemId.RocketPart) {
@@ -99,34 +88,14 @@ export class RateUtility {
             step.items.div(Rational.hundred).mul(this.LAUNCH_TIME)
           );
         }
-        // Add fuel required for factory
-        if (
-          step.settings.factory &&
-          step.items.nonzero() &&
-          !step.settings.ignore
-        ) {
-          const factory = data.itemR[step.settings.factory].factory;
-          if (factory.burner) {
-            RateUtility.addStepsFor(
-              itemId,
-              fuel,
-              step.factories
-                .mul(factory.burner)
-                .div(data.itemR[fuel].fuel)
-                .div(this.ONE_THOUSAND),
-              steps,
-              settings,
-              factors,
-              fuel,
-              oilRecipe,
-              data
-            );
-          }
-        }
       }
 
       // Recurse adding steps for ingredients
-      if (recipe.in && step.items.nonzero() && !step.settings.ignore) {
+      if (
+        recipe.in &&
+        step.items.nonzero() &&
+        !itemSettings[step.itemId].ignore
+      ) {
         for (const ingredient of Object.keys(recipe.in)) {
           const ingredientRate = rate.mul(recipe.in[ingredient]).div(out);
           RateUtility.addStepsFor(
@@ -134,8 +103,8 @@ export class RateUtility {
             ingredient as ItemId,
             ingredientRate,
             steps,
-            settings,
-            factors,
+            itemSettings,
+            recipeSettings,
             fuel,
             oilRecipe,
             data
@@ -149,8 +118,8 @@ export class RateUtility {
     parent: Node,
     itemId: ItemId,
     rate: Rational,
-    settings: RecipeState,
-    factors: Entities<Factors>,
+    itemSettings: ItemsState,
+    recipeSettings: RecipesState,
     fuel: ItemId,
     oilRecipe: RecipeId,
     data: RationalDataset
@@ -168,14 +137,8 @@ export class RateUtility {
       name: data.itemEntities[itemId].name,
       itemId,
       recipeId: itemId as any,
-      items:
-        item.category === CategoryId.Research
-          ? rate.mul(factors[recipe.id].prod)
-          : rate,
+      items: rate,
       factories: Rational.zero,
-      settings: recipe
-        ? settings[recipe.id]
-        : { belt: item.stack ? null : ItemId.Pipe },
     };
 
     if (!parent.children) {
@@ -189,21 +152,17 @@ export class RateUtility {
         node.recipeId = recipe.id;
       }
 
-      const f = factors[recipe.id];
-
       // Calculate number of outputs from recipe
-      const prod =
-        item.category === CategoryId.Research ? Rational.one : f.prod;
-      const out = (recipe.out ? recipe.out[itemId] : Rational.one).mul(prod);
+      const out = recipe.out[itemId];
 
       // Calculate factories
       if (itemId === ItemId.SpaceSciencePack) {
         // Factories are for rocket parts, space science packs are a side effect
         node.factories = null;
       } else {
-        node.factories = node.items.mul(recipe.time).div(out).div(f.speed);
+        node.factories = node.items.mul(recipe.time).div(out);
         if (item.category === CategoryId.Research) {
-          node.factories = node.factories.div(f.prod);
+          node.factories = node.factories;
         }
         // Add # of factories to actually launch rockets
         if (itemId === ItemId.RocketPart) {
@@ -211,40 +170,21 @@ export class RateUtility {
             node.items.div(Rational.hundred).mul(this.LAUNCH_TIME)
           );
         }
-        // Add fuel required for factory
-        if (
-          node.settings.factory &&
-          node.items.nonzero() &&
-          !node.settings.ignore
-        ) {
-          const factory = data.itemR[node.settings.factory].factory;
-          if (factory.burner) {
-            RateUtility.addNodesFor(
-              node,
-              fuel,
-              node.factories
-                .mul(factory.burner)
-                .div(data.itemR[fuel].fuel)
-                .div(this.ONE_THOUSAND),
-              settings,
-              factors,
-              fuel,
-              oilRecipe,
-              data
-            );
-          }
-        }
       }
 
       // Recurse adding nodes for ingredients
-      if (recipe.in && node.items.nonzero() && !node.settings.ignore) {
+      if (
+        recipe.in &&
+        node.items.nonzero() &&
+        !itemSettings[node.itemId].ignore
+      ) {
         for (const ingredient of Object.keys(recipe.in)) {
           RateUtility.addNodesFor(
             node,
             ingredient as ItemId,
             rate.mul(recipe.in[ingredient]).div(out),
-            settings,
-            factors,
+            itemSettings,
+            recipeSettings,
             fuel,
             oilRecipe,
             data
@@ -254,22 +194,32 @@ export class RateUtility {
     }
   }
 
-  static calculateBelts(steps: Step[], beltSpeed: Entities<Rational>) {
+  static calculateBelts(
+    steps: Step[],
+    itemSettings: ItemsState,
+    beltSpeed: Entities<Rational>
+  ) {
     for (const step of steps) {
-      if (step.items && step.settings.belt) {
-        step.belts = step.items.div(beltSpeed[step.settings.belt]);
+      const belt = itemSettings[step.itemId]?.belt;
+      if (step.items && belt) {
+        step.belts = step.items.div(beltSpeed[belt]);
       }
     }
     return steps;
   }
 
-  static calculateNodeBelts(node: Node, beltSpeed: Entities<Rational>) {
-    if (node.items && node.settings.belt) {
-      node.belts = node.items.div(beltSpeed[node.settings.belt]);
+  static calculateNodeBelts(
+    node: Node,
+    itemSettings: ItemsState,
+    beltSpeed: Entities<Rational>
+  ) {
+    const belt = itemSettings[node.itemId]?.belt;
+    if (node.items && belt) {
+      node.belts = node.items.div(beltSpeed[belt]);
     }
     if (node.children) {
       for (const child of node.children) {
-        this.calculateNodeBelts(child, beltSpeed);
+        this.calculateNodeBelts(child, itemSettings, beltSpeed);
       }
     }
     return node;

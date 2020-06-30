@@ -11,7 +11,6 @@ import {
   RecipeId,
   ItemId,
   CategoryId,
-  OptionsType,
   options,
   DisplayRate,
   Entities,
@@ -19,7 +18,8 @@ import {
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { DatasetState } from '~/store/dataset';
-import { RecipeState } from '~/store/recipe';
+import { ItemsState } from '~/store/items';
+import { RecipesState } from '~/store/recipes';
 import { RecipeUtility } from '~/utilities';
 
 enum StepEditType {
@@ -43,7 +43,9 @@ interface StepEdit {
 })
 export class ListComponent {
   @Input() data: DatasetState;
-  @Input() recipe: RecipeState;
+  @Input() itemSettings: ItemsState;
+  @Input() recipeSettings: RecipesState;
+  @Input() recipeRaw: RecipesState;
   @Input() steps: Step[];
   @Input() displayRate: DisplayRate;
   @Input() itemPrecision: number;
@@ -55,13 +57,14 @@ export class ListComponent {
   @Input() modifiedModules: boolean;
   @Input() modifiedBeacons: boolean;
 
-  @Output() ignoreStep = new EventEmitter<RecipeId>();
-  @Output() setBelt = new EventEmitter<[RecipeId, ItemId]>();
+  @Output() ignoreItem = new EventEmitter<ItemId>();
+  @Output() setBelt = new EventEmitter<[ItemId, ItemId]>();
   @Output() setFactory = new EventEmitter<[RecipeId, ItemId]>();
   @Output() setModules = new EventEmitter<[RecipeId, ItemId[]]>();
   @Output() setBeaconModule = new EventEmitter<[RecipeId, ItemId]>();
   @Output() setBeaconCount = new EventEmitter<[RecipeId, number]>();
-  @Output() resetStep = new EventEmitter<RecipeId>();
+  @Output() resetItem = new EventEmitter<ItemId>();
+  @Output() resetRecipe = new EventEmitter<RecipeId>();
   @Output() resetIgnore = new EventEmitter();
   @Output() resetBelt = new EventEmitter();
   @Output() resetFactory = new EventEmitter();
@@ -75,7 +78,6 @@ export class ListComponent {
   DisplayRate = DisplayRate;
   StepEditType = StepEditType;
   ItemId = ItemId;
-  OptionsType = OptionsType;
   Rational = Rational;
 
   options = options;
@@ -106,16 +108,16 @@ export class ListComponent {
     if (index === 0) {
       // Copy to all
       const modules = [];
-      for (const m of step.settings.modules) {
+      for (const m of this.recipeSettings[step.recipeId].modules) {
         modules.push(value);
       }
       this.setModules.emit([step.recipeId, modules]);
     } else {
       // Edit individual module
       const modules = [
-        ...step.settings.modules.slice(0, index),
+        ...this.recipeSettings[step.recipeId].modules.slice(0, index),
         value,
-        ...step.settings.modules.slice(index + 1),
+        ...this.recipeSettings[step.recipeId].modules.slice(index + 1),
       ];
       this.setModules.emit([step.recipeId, modules]);
     }
@@ -125,11 +127,17 @@ export class ListComponent {
     if (event.target.value) {
       const value = Math.round(Number(event.target.value));
       if (
-        this.steps.find((s) => s.itemId === step.itemId).settings
-          .beaconCount !== value
+        this.recipeSettings[
+          this.steps.find((s) => s.itemId === step.itemId).itemId
+        ].beaconCount !== value
       ) {
         this.setBeaconCount.emit([step.recipeId, value]);
       }
     }
+  }
+
+  resetStep(step: Step) {
+    this.resetItem.emit(step.itemId);
+    this.resetRecipe.emit(step.recipeId);
   }
 }

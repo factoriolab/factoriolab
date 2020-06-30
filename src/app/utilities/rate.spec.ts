@@ -17,44 +17,20 @@ describe('RateUtility', () => {
         itemId: 'iron-chest',
         recipeId: 'iron-chest',
         items: new Rational(BigInt(30)),
-        factories: new Rational(BigInt(15)),
-        settings: {
-          ignore: false,
-          belt: 'transport-belt',
-          factory: 'assembling-machine-2',
-          modules: ['module', 'module'],
-          beaconModule: 'speed-module',
-          beaconCount: 0,
-        },
+        factories: new Rational(BigInt(20)),
       },
       {
         itemId: 'iron-plate',
         recipeId: 'iron-plate',
         items: new Rational(BigInt(240)),
-        factories: new Rational(BigInt(768)),
-        settings: {
-          ignore: false,
-          belt: 'transport-belt',
-          factory: 'assembling-machine-2',
-          modules: ['module', 'module'],
-          beaconModule: 'speed-module',
-          beaconCount: 0,
-        },
+        factories: new Rational(BigInt(1024)),
         parents: { 'iron-chest': new Rational(BigInt(240)) },
       },
       {
         itemId: 'iron-ore',
         recipeId: 'iron-ore',
         items: new Rational(BigInt(240)),
-        factories: new Rational(BigInt(240)),
-        settings: {
-          ignore: false,
-          belt: 'transport-belt',
-          factory: 'assembling-machine-2',
-          modules: ['module', 'module'],
-          beaconModule: 'speed-module',
-          beaconCount: 0,
-        },
+        factories: new Rational(BigInt(320)),
         parents: { 'iron-plate': new Rational(BigInt(240)) },
       },
     ];
@@ -66,11 +42,11 @@ describe('RateUtility', () => {
         Mocks.Item2.id,
         new Rational(BigInt(30)),
         steps,
+        Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
-        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
-        Mocks.RationalData
+        Mocks.AdjustedData
       );
       expect(steps as any).toEqual(expected as any);
     });
@@ -82,53 +58,22 @@ describe('RateUtility', () => {
         Mocks.Item2.id,
         new Rational(BigInt(15)),
         steps,
+        Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
-        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
-        Mocks.RationalData
+        Mocks.AdjustedData
       );
       RateUtility.addStepsFor(
         null,
         Mocks.Item2.id,
         new Rational(BigInt(15)),
         steps,
+        Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
-        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
-        Mocks.RationalData
-      );
-      expect(steps).toEqual(expected as any);
-    });
-
-    it('should handle recipes with specific outputs', () => {
-      const steps: Step[] = [];
-      RateUtility.addStepsFor(
-        null,
-        Mocks.Item2.id,
-        new Rational(BigInt(30)),
-        steps,
-        Mocks.RecipeSettingsEntities,
-        Mocks.RecipeFactors,
-        ItemId.Coal,
-        RecipeId.BasicOilProcessing,
-        {
-          ...Mocks.RationalData,
-          ...{
-            recipeR: {
-              ...Mocks.RationalData.recipeR,
-              ...{
-                ['iron-chest']: {
-                  id: 'iron-chest',
-                  time: Rational.one,
-                  in: { 'iron-plate': new Rational(BigInt(16)) },
-                  out: { 'iron-chest': Rational.two },
-                } as any,
-              },
-            },
-          },
-        }
+        Mocks.AdjustedData
       );
       expect(steps).toEqual(expected as any);
     });
@@ -140,18 +85,18 @@ describe('RateUtility', () => {
         Mocks.Item2.id,
         new Rational(BigInt(30)),
         steps,
+        Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
-        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
         {
-          ...Mocks.RationalData,
+          ...Mocks.AdjustedData,
           ...{
             itemR: {
-              ...Mocks.RationalData.itemR,
+              ...Mocks.AdjustedData.itemR,
               ...{
                 ['iron-chest']: {
-                  ...Mocks.RationalData.itemR['iron-chest'],
+                  ...Mocks.AdjustedData.itemR['iron-chest'],
                   ...{ category: CategoryId.Research },
                 } as any,
               },
@@ -162,45 +107,6 @@ describe('RateUtility', () => {
       expect(steps).toEqual(expected as any);
     });
 
-    it('should properly set default belt for fluids', () => {
-      const steps: Step[] = [];
-      RateUtility.addStepsFor(
-        null,
-        ItemId.PetroleumGas,
-        new Rational(BigInt(30)),
-        steps,
-        {},
-        Mocks.RecipeFactors,
-        ItemId.Coal,
-        RecipeId.AdvancedOilProcessing,
-        Mocks.RationalData
-      );
-      expect(steps[0].settings.belt).toEqual(ItemId.Pipe);
-    });
-
-    it('should properly mark recipe for oil products when using basic oil processing', () => {
-      const steps: Step[] = [
-        {
-          itemId: ItemId.PetroleumGas,
-          recipeId: null,
-          items: new Rational(BigInt(30)),
-          settings: {},
-        },
-      ];
-      RateUtility.addStepsFor(
-        null,
-        ItemId.PetroleumGas,
-        new Rational(BigInt(30)),
-        steps,
-        Mocks.RecipeSettingsEntities,
-        Mocks.RecipeFactors,
-        ItemId.Coal,
-        RecipeId.BasicOilProcessing,
-        Mocks.RationalData
-      );
-      expect(steps[0].recipeId).toEqual(RecipeId.BasicOilProcessing);
-    });
-
     it('should properly calculate factories for space science pack/rocket parts', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
@@ -208,16 +114,46 @@ describe('RateUtility', () => {
         ItemId.SpaceSciencePack,
         new Rational(BigInt(60)),
         steps,
+        Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
-        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
-        Mocks.RationalData
+        Mocks.AdjustedData
       );
       expect(steps[0].factories).toBe(null);
       expect(steps[1].factories).toEqual(
-        new Rational(BigInt(1021), BigInt(50))
+        new Rational(BigInt(1321), BigInt(50))
       );
+    });
+
+    it('should adjust for consumption instead of production for research recipes', () => {
+      const steps: Step[] = [];
+      const data = {
+        ...Mocks.AdjustedData,
+        ...{
+          recipeR: {
+            ...Mocks.AdjustedData.recipeR,
+            ...{
+              [Mocks.Item2.id]: {
+                ...Mocks.AdjustedData.recipeR[Mocks.Item2.id],
+                ...{ adjustProd: Rational.one },
+              },
+            },
+          },
+        },
+      };
+      RateUtility.addStepsFor(
+        null,
+        Mocks.Item2.id,
+        new Rational(BigInt(30)),
+        steps,
+        Mocks.ItemSettingsEntities,
+        Mocks.RecipeSettingsEntities,
+        ItemId.Coal,
+        RecipeId.BasicOilProcessing,
+        data
+      );
+      expect(steps as any).toEqual(expected as any);
     });
 
     it('should handle null recipe', () => {
@@ -227,39 +163,20 @@ describe('RateUtility', () => {
         ItemId.Uranium235,
         new Rational(BigInt(30)),
         steps,
+        Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
-        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
-        Mocks.RationalData
+        Mocks.AdjustedData
       );
       expect(steps).toEqual([
         {
           itemId: ItemId.Uranium235,
-          recipeId: ItemId.Uranium235 as any,
+          recipeId: null,
           items: new Rational(BigInt(30)),
           factories: Rational.zero,
-          settings: { belt: null },
         },
       ]);
-    });
-
-    it('should add fuel consumption for burners', () => {
-      const steps: Step[] = [];
-      RateUtility.addStepsFor(
-        null,
-        ItemId.Steam,
-        new Rational(BigInt(100)),
-        steps,
-        Mocks.RecipeSettingsInitial,
-        Mocks.RecipeFactors,
-        ItemId.Coal,
-        RecipeId.BasicOilProcessing,
-        Mocks.RationalData
-      );
-      expect(steps[1].itemId).toEqual(ItemId.Coal);
-      expect(steps[1].items.nonzero()).toBeTrue();
-      expect(steps[1].factories.nonzero()).toBeTrue();
     });
   });
 
@@ -273,15 +190,7 @@ describe('RateUtility', () => {
           itemId: 'iron-chest',
           recipeId: 'iron-chest',
           items: new Rational(BigInt(30)),
-          factories: new Rational(BigInt(15)),
-          settings: {
-            ignore: false,
-            belt: 'transport-belt',
-            factory: 'assembling-machine-2',
-            modules: ['module', 'module'],
-            beaconModule: 'speed-module',
-            beaconCount: 0,
-          },
+          factories: new Rational(BigInt(20)),
           children: [
             {
               id: 'root:iron-chest:iron-plate',
@@ -289,15 +198,7 @@ describe('RateUtility', () => {
               itemId: 'iron-plate',
               recipeId: 'iron-plate',
               items: new Rational(BigInt(240)),
-              factories: new Rational(BigInt(768)),
-              settings: {
-                ignore: false,
-                belt: 'transport-belt',
-                factory: 'assembling-machine-2',
-                modules: ['module', 'module'],
-                beaconModule: 'speed-module',
-                beaconCount: 0,
-              },
+              factories: new Rational(BigInt(1024)),
               children: [
                 {
                   id: 'root:iron-chest:iron-plate:iron-ore',
@@ -305,15 +206,7 @@ describe('RateUtility', () => {
                   itemId: 'iron-ore',
                   recipeId: 'iron-ore',
                   items: new Rational(BigInt(240)),
-                  factories: new Rational(BigInt(240)),
-                  settings: {
-                    ignore: false,
-                    belt: 'transport-belt',
-                    factory: 'assembling-machine-2',
-                    modules: ['module', 'module'],
-                    beaconModule: 'speed-module',
-                    beaconCount: 0,
-                  },
+                  factories: new Rational(BigInt(320)),
                 },
               ],
             },
@@ -328,41 +221,11 @@ describe('RateUtility', () => {
         root,
         Mocks.Item2.id,
         new Rational(BigInt(30)),
+        Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
-        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
-        Mocks.RationalData
-      );
-      expect(root).toEqual(expected);
-    });
-
-    it('should handle recipes with specific outputs', () => {
-      const root: any = { id: 'root', children: [] };
-      RateUtility.addNodesFor(
-        root,
-        Mocks.Item2.id,
-        new Rational(BigInt(30)),
-        Mocks.RecipeSettingsEntities,
-        Mocks.RecipeFactors,
-        ItemId.Coal,
-        RecipeId.BasicOilProcessing,
-        {
-          ...Mocks.RationalData,
-          ...{
-            recipeR: {
-              ...Mocks.RationalData.recipeR,
-              ...{
-                ['iron-chest']: {
-                  id: 'iron-chest',
-                  time: Rational.one,
-                  in: { 'iron-plate': new Rational(BigInt(16)) },
-                  out: { 'iron-chest': Rational.two },
-                } as any,
-              },
-            },
-          },
-        }
+        Mocks.AdjustedData
       );
       expect(root).toEqual(expected);
     });
@@ -373,18 +236,18 @@ describe('RateUtility', () => {
         root,
         Mocks.Item2.id,
         new Rational(BigInt(30)),
+        Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
-        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
         {
-          ...Mocks.RationalData,
+          ...Mocks.AdjustedData,
           ...{
             itemR: {
-              ...Mocks.RationalData.itemR,
+              ...Mocks.AdjustedData.itemR,
               ...{
                 ['iron-chest']: {
-                  ...Mocks.RationalData.itemR['iron-chest'],
+                  ...Mocks.AdjustedData.itemR['iron-chest'],
                   ...{ category: CategoryId.Research },
                 } as any,
               },
@@ -395,32 +258,17 @@ describe('RateUtility', () => {
       expect(root).toEqual(expected);
     });
 
-    it('should properly set default belt for fluids', () => {
-      const root: any = { id: 'root', children: [] };
-      RateUtility.addNodesFor(
-        root,
-        ItemId.PetroleumGas,
-        new Rational(BigInt(30)),
-        {},
-        Mocks.RecipeFactors,
-        ItemId.Coal,
-        RecipeId.AdvancedOilProcessing,
-        Mocks.RationalData
-      );
-      expect(root.children[0].settings.belt).toEqual(ItemId.Pipe);
-    });
-
     it('should properly mark recipe for oil products when using basic oil processing', () => {
       const root: any = { id: 'root', children: [] };
       RateUtility.addNodesFor(
         root,
         ItemId.PetroleumGas,
         new Rational(BigInt(30)),
+        Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
-        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
-        Mocks.RationalData
+        Mocks.AdjustedData
       );
       expect(root.children[0].recipeId).toEqual(RecipeId.BasicOilProcessing);
     });
@@ -431,15 +279,15 @@ describe('RateUtility', () => {
         root,
         ItemId.SpaceSciencePack,
         new Rational(BigInt(60)),
+        Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
-        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.AdvancedOilProcessing,
-        Mocks.RationalData
+        Mocks.AdjustedData
       );
       expect(root.children[0].factories).toBe(null);
       expect(root.children[0].children[0].factories).toEqual(
-        new Rational(BigInt(1021), BigInt(50))
+        new Rational(BigInt(1321), BigInt(50))
       );
     });
 
@@ -449,11 +297,11 @@ describe('RateUtility', () => {
         root,
         ItemId.Uranium235,
         new Rational(BigInt(30)),
+        Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
-        Mocks.RecipeFactors,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
-        Mocks.RationalData
+        Mocks.AdjustedData
       );
       expect(root.children[0]).toEqual({
         id: 'root:uranium-235',
@@ -462,25 +310,7 @@ describe('RateUtility', () => {
         recipeId: ItemId.Uranium235 as any,
         items: new Rational(BigInt(30)),
         factories: Rational.zero,
-        settings: { belt: null },
       });
-    });
-
-    it('should add fuel consumption for burners', () => {
-      const root: any = { id: 'root', children: [] };
-      RateUtility.addNodesFor(
-        root,
-        ItemId.Steam,
-        Rational.hundred,
-        Mocks.RecipeSettingsInitial,
-        Mocks.RecipeFactors,
-        ItemId.Coal,
-        RecipeId.BasicOilProcessing,
-        Mocks.RationalData
-      );
-      expect(root.children[0].children[0].itemId).toEqual(ItemId.Coal);
-      expect(root.children[0].children[0].items.nonzero()).toBeTrue();
-      expect(root.children[0].children[0].factories.nonzero()).toBeTrue();
     });
 
     it('should handle ignored steps', () => {
@@ -490,24 +320,41 @@ describe('RateUtility', () => {
         ItemId.WoodenChest,
         Rational.hundred,
         {
-          ...Mocks.RecipeSettingsInitial,
+          ...Mocks.ItemSettingsInitial,
           ...{
             [ItemId.WoodenChest]: {
-              ...Mocks.RecipeSettingsInitial[ItemId.WoodenChest],
+              ...Mocks.ItemSettingsInitial[ItemId.WoodenChest],
               ...{ ignore: true },
             },
           },
         } as any,
-        Mocks.RecipeFactors,
+        Mocks.RecipeSettingsEntities,
         ItemId.Coal,
         RecipeId.BasicOilProcessing,
-        Mocks.RationalData
+        Mocks.AdjustedData
       );
       expect(root.children[0].children).toBeUndefined();
     });
   });
 
   describe('calculateBelts', () => {
+    it('should skip steps with no settings', () => {
+      const steps: Step[] = [
+        {
+          itemId: null,
+          recipeId: null,
+          items: null,
+          belts: null,
+        },
+      ];
+      RateUtility.calculateBelts(
+        steps,
+        Mocks.ItemSettingsEntities,
+        Mocks.BeltSpeed
+      );
+      expect(steps[0].belts).toBeNull();
+    });
+
     it('should skip steps with no items', () => {
       const steps: Step[] = [
         {
@@ -515,10 +362,13 @@ describe('RateUtility', () => {
           recipeId: null,
           items: null,
           belts: null,
-          settings: { belt: ItemId.TransportBelt },
         },
       ];
-      RateUtility.calculateBelts(steps, Mocks.BeltSpeed);
+      RateUtility.calculateBelts(
+        steps,
+        Mocks.ItemSettingsEntities,
+        Mocks.BeltSpeed
+      );
       expect(steps[0].belts).toBeNull();
     });
 
@@ -529,10 +379,13 @@ describe('RateUtility', () => {
           recipeId: null,
           items: Mocks.BeltSpeed[ItemId.TransportBelt],
           belts: Rational.zero,
-          settings: { belt: ItemId.TransportBelt },
         },
       ];
-      RateUtility.calculateBelts(steps, Mocks.BeltSpeed);
+      RateUtility.calculateBelts(
+        steps,
+        Mocks.ItemSettingsEntities,
+        Mocks.BeltSpeed
+      );
       expect(steps[0].belts).toEqual(Rational.one);
     });
   });
@@ -546,9 +399,12 @@ describe('RateUtility', () => {
         recipeId: null,
         items: null,
         belts: null,
-        settings: { belt: ItemId.TransportBelt },
       };
-      RateUtility.calculateNodeBelts(node, Mocks.BeltSpeed);
+      RateUtility.calculateNodeBelts(
+        node,
+        Mocks.ItemSettingsEntities,
+        Mocks.BeltSpeed
+      );
       expect(node.belts).toBeNull();
     });
 
@@ -560,7 +416,6 @@ describe('RateUtility', () => {
         recipeId: null,
         items: Mocks.BeltSpeed[ItemId.TransportBelt],
         belts: null,
-        settings: { belt: ItemId.TransportBelt },
         children: [
           {
             id: 'test2',
@@ -569,11 +424,14 @@ describe('RateUtility', () => {
             recipeId: null,
             items: Mocks.BeltSpeed[ItemId.TransportBelt],
             belts: null,
-            settings: { belt: ItemId.TransportBelt },
           },
         ],
       };
-      RateUtility.calculateNodeBelts(node, Mocks.BeltSpeed);
+      RateUtility.calculateNodeBelts(
+        node,
+        Mocks.ItemSettingsEntities,
+        Mocks.BeltSpeed
+      );
       expect(node.belts).toEqual(Rational.one);
       expect(node.children[0].belts).toEqual(Rational.one);
     });
@@ -587,7 +445,6 @@ describe('RateUtility', () => {
           recipeId: null,
           items: null,
           belts: null,
-          settings: { belt: ItemId.TransportBelt },
         },
       ];
       RateUtility.displayRate(steps, 3 as any);
@@ -630,7 +487,6 @@ describe('RateUtility', () => {
         recipeId: null,
         items: null,
         belts: null,
-        settings: { belt: ItemId.TransportBelt },
       };
       RateUtility.nodeDisplayRate(node, DisplayRate.PerMinute);
       expect(node.items).toBeNull();
@@ -645,7 +501,6 @@ describe('RateUtility', () => {
         items: Rational.two,
         surplus: new Rational(BigInt(3)),
         belts: null,
-        settings: { belt: ItemId.TransportBelt },
         children: [
           {
             id: 'test2',
@@ -655,7 +510,6 @@ describe('RateUtility', () => {
             items: Rational.two,
             surplus: new Rational(BigInt(3)),
             belts: null,
-            settings: { belt: ItemId.TransportBelt },
           },
         ],
       };
@@ -674,7 +528,6 @@ describe('RateUtility', () => {
         recipeId: null,
         items: Rational.two,
         belts: null,
-        settings: { belt: ItemId.TransportBelt },
       };
       RateUtility.nodeDisplayRate(node, DisplayRate.PerMinute);
       expect(node.items).toEqual(new Rational(BigInt(120)));
@@ -687,7 +540,7 @@ describe('RateUtility', () => {
       const result = RateUtility.findBasicOilRecipe(
         ItemId.PetroleumGas,
         RecipeId.AdvancedOilProcessing,
-        Mocks.RationalData
+        Mocks.AdjustedData
       );
       expect(result).toBeNull();
     });
@@ -696,7 +549,7 @@ describe('RateUtility', () => {
       const result = RateUtility.findBasicOilRecipe(
         ItemId.HeavyOil,
         RecipeId.BasicOilProcessing,
-        Mocks.RationalData
+        Mocks.AdjustedData
       );
       expect(result).toBeNull();
     });
@@ -705,7 +558,7 @@ describe('RateUtility', () => {
       const result = RateUtility.findBasicOilRecipe(
         ItemId.PetroleumGas,
         RecipeId.BasicOilProcessing,
-        Mocks.RationalData
+        Mocks.AdjustedData
       );
       expect(result.id).toEqual(RecipeId.BasicOilProcessing);
     });
@@ -714,7 +567,7 @@ describe('RateUtility', () => {
       const result = RateUtility.findBasicOilRecipe(
         ItemId.SolidFuel,
         RecipeId.BasicOilProcessing,
-        Mocks.RationalData
+        Mocks.AdjustedData
       );
       expect(result.id).toEqual(RecipeId.SolidFuelFromPetroleumGas);
     });

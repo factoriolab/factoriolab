@@ -205,7 +205,7 @@
         *ngIf="openSelect === OpenSelect.Belt"
         [data]="data"
         [selectedId]="settings.belt"
-        [optionsType]="OptionsType.Belt"
+        [options]="options.Belt"
         [displayRate]="settings.displayRate"
         [data]="data"
         (cancel)="openSelect = OpenSelect.None"
@@ -227,7 +227,7 @@
         *ngIf="openSelect === OpenSelect.Assembler"
         [data]="data"
         [selectedId]="settings.assembler"
-        [optionsType]="OptionsType.Assembler"
+        [options]="options.Assembler"
         (cancel)="openSelect = OpenSelect.None"
         (selectId)="setAssembler.emit($event)"
       >
@@ -247,7 +247,7 @@
         *ngIf="openSelect === OpenSelect.Furnace"
         [data]="data"
         [selectedId]="settings.furnace"
-        [optionsType]="OptionsType.Furnace"
+        [options]="options.Furnace"
         (cancel)="openSelect = OpenSelect.None"
         (selectId)="setFurnace.emit($event)"
       >
@@ -267,7 +267,7 @@
         *ngIf="openSelect === OpenSelect.OilRecipe"
         [data]="data"
         [selectedId]="settings.oilRecipe"
-        [optionsType]="OptionsType.OilRecipe"
+        [options]="options.OilRecipe"
         [selectType]="SelectType.Recipe"
         (cancel)="openSelect = OpenSelect.None"
         (selectId)="setOilRecipe.emit($event)"
@@ -287,7 +287,7 @@
       <lab-select
         *ngIf="openSelect === OpenSelect.Fuel"
         [data]="data"
-        [optionsType]="OptionsType.Fuel"
+        [options]="options.Fuel"
         [selectedId]="settings.fuel"
         (cancel)="openSelect = OpenSelect.None"
         (selectId)="setFuel.emit($event)"
@@ -333,7 +333,7 @@
         *ngIf="openSelect === OpenSelect.ProdModule"
         [data]="data"
         [selectedId]="settings.prodModule"
-        [optionsType]="OptionsType.ProdModule"
+        [options]="options.ProdModule"
         (cancel)="openSelect = OpenSelect.None"
         (selectId)="setProdModule.emit($event)"
       >
@@ -353,7 +353,7 @@
         *ngIf="openSelect === OpenSelect.SpeedModule"
         [data]="data"
         [selectedId]="settings.speedModule"
-        [optionsType]="OptionsType.SpeedModule"
+        [options]="options.SpeedModule"
         (cancel)="openSelect = OpenSelect.None"
         (selectId)="setSpeedModule.emit($event)"
       >
@@ -374,7 +374,7 @@
         *ngIf="openSelect === OpenSelect.BeaconModule"
         [data]="data"
         [selectedId]="settings.beaconModule"
-        [optionsType]="OptionsType.SpeedModule"
+        [options]="options.SpeedModule"
         (cancel)="openSelect = OpenSelect.None"
         (selectId)="setBeaconModule.emit($event)"
       >
