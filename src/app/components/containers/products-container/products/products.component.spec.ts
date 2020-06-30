@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import * as Mocks from 'src/mocks';
 import { IconComponent, PickerComponent } from '~/components';
-import { Product, CategoryId } from '~/models';
+import { Product, CategoryId, ItemId, RateType } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { TestUtility } from '~/utilities/test';
 import { ProductsComponent } from './products.component';
@@ -68,6 +68,29 @@ describe('ProductsComponent', () => {
     fixture.detectChanges();
     expect(component.child.editProductId).toEqual(0);
     expect(component.child.categoryId).toEqual(CategoryId.Logistics);
+  });
+
+  it('should commit an edit product', () => {
+    spyOn(component, 'editProduct');
+    component.child.commitEditProduct(Mocks.Product1, ItemId.Coal);
+    expect(component.editProduct).toHaveBeenCalledWith([
+      Mocks.Product1.id,
+      ItemId.Coal,
+    ]);
+  });
+
+  it('should reset the rate type on committing a product that has no simple recipe', () => {
+    spyOn(component, 'editRateType');
+    spyOn(component, 'editProduct');
+    component.child.commitEditProduct(Mocks.Product4, ItemId.CrudeOil);
+    expect(component.editRateType).toHaveBeenCalledWith([
+      Mocks.Product4.id,
+      RateType.Items,
+    ]);
+    expect(component.editProduct).toHaveBeenCalledWith([
+      Mocks.Product4.id,
+      ItemId.CrudeOil,
+    ]);
   });
 
   it('should emit numeric values', () => {

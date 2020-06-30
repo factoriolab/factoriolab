@@ -8,7 +8,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { OptionsType, IdType, options, DisplayRate, ItemId } from '~/models';
+import { IdType, DisplayRate, ItemId } from '~/models';
 import { DatasetState } from '~/store/dataset';
 
 @Component({
@@ -20,14 +20,12 @@ import { DatasetState } from '~/store/dataset';
 export class SelectComponent {
   @Input() data: DatasetState;
   @Input() selectedId: string;
-  @Input() optionsType: OptionsType;
+  @Input() options: string[][];
   @Input() selectType = IdType.Item;
   @Input() displayRate: DisplayRate;
 
   @Output() cancel = new EventEmitter();
   @Output() selectId = new EventEmitter<string>();
-
-  options = options;
 
   IdType = IdType;
   ItemId = ItemId;

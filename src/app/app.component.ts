@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
       this.document.body.className = s;
     });
     this.store.select(getZipState).subscribe((s) => {
-      this.router.updateUrl(s.products, s.recipe, s.settings, s.data);
+      this.router.updateUrl(s.products, s.items, s.recipes, s.settings, s.data);
     });
   }
 

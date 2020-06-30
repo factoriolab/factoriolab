@@ -4,15 +4,15 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 
 import * as Mocks from 'src/mocks';
+import { IconComponent, SelectComponent } from '~/components';
 import { Step, ItemId } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers } from '~/store';
 import { DatasetState } from '~/store/dataset';
-import { RecipeState } from '~/store/recipe';
+import { ItemsState } from '~/store/items';
+import { RecipesState } from '~/store/recipes';
 import { RecipeUtility } from '~/utilities';
 import { TestUtility } from '~/utilities/test';
-import { IconComponent } from '../../../icon/icon.component';
-import { SelectComponent } from '../../../select/select.component';
 import { ListComponent } from './list.component';
 
 @Component({
@@ -20,18 +20,26 @@ import { ListComponent } from './list.component';
   template: `
     <lab-list
       [data]="data"
-      [recipe]="recipe"
+      [itemSettings]="itemSettings"
+      [recipeSettings]="recipeSettings"
+      [recipeRaw]="recipeRaw"
       [steps]="steps"
       [itemPrecision]="itemPrecision"
       [beltPrecision]="beltPrecision"
       [factoryPrecision]="factoryPrecision"
-      (ignoreStep)="ignoreStep($event)"
+      (ignoreItem)="ignoreItem($event)"
       (setBelt)="setBelt($event)"
       (setFactory)="setFactory($event)"
       (setModules)="setModules($event)"
       (setBeaconModule)="setBeaconModule($event)"
       (setBeaconCount)="setBeaconCount($event)"
-      (resetStep)="resetStep($event)"
+      (resetItem)="resetItem($event)"
+      (resetRecipe)="resetRecipe($event)"
+      (resetIgnore)="resetIgnore()"
+      (resetBelt)="resetBelt()"
+      (resetFactory)="resetFactory()"
+      (resetModules)="resetModules()"
+      (resetBeacons)="resetBeacons()"
     >
     </lab-list>
   `,
@@ -39,18 +47,26 @@ import { ListComponent } from './list.component';
 class TestListComponent {
   @ViewChild(ListComponent) child: ListComponent;
   data: DatasetState = Mocks.Data;
-  recipe: RecipeState = Mocks.RecipeSettingsInitial;
+  itemSettings: ItemsState = Mocks.ItemSettingsInitial;
+  recipeSettings: RecipesState = Mocks.RecipeSettingsInitial;
+  recipeRaw: RecipesState = Mocks.RecipeSettingsEntities;
   steps: Step[] = Mocks.Steps;
   itemPrecision = null;
   beltPrecision = 0;
   factoryPrecision = 1;
-  ignoreStep(data) {}
+  ignoreItem(data) {}
   setBelt(data) {}
   setFactory(data) {}
   setModules(data) {}
   setBeaconModule(data) {}
   setBeaconCount(data) {}
-  resetStep(data) {}
+  resetItem(data) {}
+  resetRecipe(data) {}
+  resetIgnore() {}
+  resetBelt() {}
+  resetFactory() {}
+  resetModules() {}
+  resetBeacons() {}
 }
 
 describe('ListComponent', () => {
@@ -91,7 +107,12 @@ describe('ListComponent', () => {
     fixture.detectChanges();
     expect(component.setModules).toHaveBeenCalledWith([
       Mocks.Step1.itemId,
-      [ItemId.Module, ItemId.SpeedModule],
+      [
+        ItemId.SpeedModule3,
+        ItemId.SpeedModule,
+        ItemId.SpeedModule3,
+        ItemId.SpeedModule3,
+      ],
     ]);
   });
 
@@ -103,7 +124,12 @@ describe('ListComponent', () => {
     fixture.detectChanges();
     expect(component.setModules).toHaveBeenCalledWith([
       Mocks.Step1.itemId,
-      [ItemId.SpeedModule, ItemId.SpeedModule],
+      [
+        ItemId.SpeedModule,
+        ItemId.SpeedModule,
+        ItemId.SpeedModule,
+        ItemId.SpeedModule,
+      ],
     ]);
   });
 
@@ -126,9 +152,18 @@ describe('ListComponent', () => {
 
   it('should not set beacon count if unchanged', () => {
     spyOn(component, 'setBeaconCount');
-    TestUtility.selectSelector(fixture, 'input', '0');
+    TestUtility.selectSelector(fixture, 'input', '16');
     fixture.detectChanges();
     expect(component.setBeaconCount).not.toHaveBeenCalled();
+  });
+
+  it('should reset a step', () => {
+    spyOn(component, 'resetItem');
+    spyOn(component, 'resetRecipe');
+    TestUtility.clickSelector(fixture, '.list-step-reset', 0);
+    fixture.detectChanges();
+    expect(component.resetItem).toHaveBeenCalled();
+    expect(component.resetRecipe).toHaveBeenCalled();
   });
 
   describe('findStep', () => {

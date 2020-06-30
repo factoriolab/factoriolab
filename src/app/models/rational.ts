@@ -1,9 +1,11 @@
 export class Rational {
   static _floatPrecision = 100000;
   static zero = new Rational(BigInt(0));
+  static minusOne = new Rational(BigInt(-1));
   static one = new Rational(BigInt(1));
   static two = new Rational(BigInt(2));
   static hundred = new Rational(BigInt(100));
+  static thousand = new Rational(BigInt(1000));
 
   p: bigint;
   q: bigint;
@@ -34,8 +36,24 @@ export class Rational {
     );
   }
 
+  static min(x: Rational, y: Rational) {
+    return x.lt(y) ? x : y;
+  }
+
+  static max(x: Rational, y: Rational) {
+    return x.gt(y) ? x : y;
+  }
+
+  isZero() {
+    return this.p === BigInt(0);
+  }
+
   nonzero() {
     return this.p !== BigInt(0);
+  }
+
+  inverse() {
+    return this.mul(Rational.minusOne);
   }
 
   lt(x: Rational) {

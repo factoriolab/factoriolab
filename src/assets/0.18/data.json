@@ -2485,7 +2485,8 @@
     {
       "id": "rocket-fuel",
       "time": 30,
-      "in": { "light-oil": 10, "solid-fuel": 10 }
+      "in": { "light-oil": 10, "solid-fuel": 10 },
+      "producers": ["assembling-machine-2", "assembling-machine-3"]
     },
     {
       "id": "nuclear-fuel",
