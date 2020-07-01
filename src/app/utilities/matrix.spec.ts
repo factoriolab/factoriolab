@@ -297,7 +297,7 @@ describe('MatrixSolver', () => {
     it('should handle basic oil processing', () => {
       matrix.oilRecipe = RecipeId.BasicOilProcessing;
       matrix.calculateRecipes();
-      expect(Object.keys(matrix.disabled).length).toEqual(6);
+      expect(Object.keys(matrix.disabledRecipes).length).toEqual(6);
       expect(matrix.steps).toEqual([
         {
           itemId: ItemId.SteelChest,
@@ -312,7 +312,7 @@ describe('MatrixSolver', () => {
     it('should handle advanced oil processing', () => {
       matrix.oilRecipe = RecipeId.AdvancedOilProcessing;
       matrix.calculateRecipes();
-      expect(Object.keys(matrix.disabled).length).toEqual(2);
+      expect(Object.keys(matrix.disabledRecipes).length).toEqual(2);
       expect(matrix.steps).toEqual([
         {
           itemId: ItemId.SteelChest,
@@ -327,7 +327,7 @@ describe('MatrixSolver', () => {
     it('should handle coal liquefaction', () => {
       matrix.oilRecipe = RecipeId.CoalLiquefaction;
       matrix.calculateRecipes();
-      expect(Object.keys(matrix.disabled).length).toEqual(2);
+      expect(Object.keys(matrix.disabledRecipes).length).toEqual(2);
       expect(matrix.steps).toEqual([
         {
           itemId: ItemId.SteelChest,
@@ -342,7 +342,7 @@ describe('MatrixSolver', () => {
     it('should handle unknown oil recipe', () => {
       matrix.oilRecipe = RecipeId.SteelChest;
       matrix.calculateRecipes();
-      expect(Object.keys(matrix.disabled).length).toEqual(0);
+      expect(Object.keys(matrix.disabledRecipes).length).toEqual(0);
       expect(matrix.steps).toEqual([
         {
           itemId: ItemId.SteelChest,
@@ -368,13 +368,13 @@ describe('MatrixSolver', () => {
     });
 
     it('should ignore disabled simple recipe', () => {
-      matrix.disabled[RecipeId.SteelChest] = true;
+      matrix.disabledRecipes[RecipeId.SteelChest] = true;
       matrix.findRecipesRecursively(ItemId.SteelChest);
       expect(matrix.parseRecipeRecursively).not.toHaveBeenCalled();
     });
 
     it('should parse complex recipes', () => {
-      matrix.disabled[RecipeId.KovarexEnrichmentProcess] = true;
+      matrix.disabledRecipes[RecipeId.KovarexEnrichmentProcess] = true;
       matrix.findRecipesRecursively(ItemId.Uranium238);
       expect(matrix.parseRecipeRecursively).toHaveBeenCalledWith(
         Mocks.AdjustedData.recipeR[RecipeId.UraniumProcessing]

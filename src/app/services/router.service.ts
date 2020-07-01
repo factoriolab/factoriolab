@@ -236,7 +236,9 @@ export class RouterService {
     const tb = state.belt === init.belt ? '' : state.belt;
     const pa = state.assembler === init.assembler ? '' : state.assembler;
     const pf = state.furnace === init.furnace ? '' : state.furnace;
-    const or = state.oilRecipe === init.oilRecipe ? '' : state.oilRecipe;
+    const di = this.arraysEqual(state.disabledRecipes, init.disabledRecipes)
+      ? ''
+      : state.disabledRecipes.join('.');
     const fl = state.fuel === init.fuel ? '' : state.fuel;
     const mp = state.prodModule === init.prodModule ? '' : state.prodModule;
     const ms = state.speedModule === init.speedModule ? '' : state.speedModule;
@@ -251,7 +253,7 @@ export class RouterService {
     const fr = state.flowRate === init.flowRate ? '' : state.flowRate;
     const ex =
       state.expensive === init.expensive ? '' : Number(state.expensive);
-    return `${dr}:${ip}:${bp}:${fp}:${tb}:${pa}:${pf}:${or}:${fl}:${mp}:${ms}:${bm}:${bc}:${dm}:${mb}:${rs}:${fr}:${ex}`;
+    return `${dr}:${ip}:${bp}:${fp}:${tb}:${pa}:${pf}:${di}:${fl}:${mp}:${ms}:${bm}:${bc}:${dm}:${mb}:${rs}:${fr}:${ex}`;
   }
 
   unzipSettings(zSettings: string, data: DatasetState) {
@@ -279,7 +281,7 @@ export class RouterService {
       settings.furnace = s[6] as ItemId;
     }
     if (s[7] !== '') {
-      settings.oilRecipe = s[7] as RecipeId;
+      settings.disabledRecipes = s[7].split('.').map((m) => m as RecipeId);
     }
     if (s[8] !== '') {
       settings.fuel = s[8] as ItemId;
@@ -312,5 +314,9 @@ export class RouterService {
       settings.expensive = s[17] === '1';
     }
     this.store.dispatch(new Settings.LoadAction(settings));
+  }
+
+  arraysEqual<T>(a: T[], b: T[]) {
+    return a.length === b.length && a.every((v, i) => v === b[i]);
   }
 }

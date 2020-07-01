@@ -22,6 +22,7 @@ import {
   ListComponent,
   HierarchyContainerComponent,
   SunburstComponent,
+  ToggleComponent,
 } from './components';
 import { reducers, metaReducers } from './store';
 
@@ -32,6 +33,7 @@ import { reducers, metaReducers } from './store';
     IconComponent,
     PickerComponent,
     SelectComponent,
+    ToggleComponent,
     ListContainerComponent,
     ListComponent,
     HierarchyContainerComponent,

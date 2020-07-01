@@ -10,6 +10,8 @@ export const enum SettingsActionType {
   SET_BELT_PRECISION = '[Settings Page] Set Belt Precision',
   SET_FACTORY_PRECISION = '[Settings Page] Set Factory Precision',
   SET_BELT = '[Settings Page] Set Belt',
+  DISABLE_RECIPE = '[Settings Page] Disable Recipe',
+  ENABLE_RECIPE = '[Settings Page] Enable Recipe',
   SET_ASSEMBLER = '[Settings Page] Set Assembler',
   SET_FURNACE = '[Settings Page] Set Furnace',
   SET_PROD_MODULE = '[Settings Page] Set Prod Module',
@@ -66,6 +68,16 @@ export class SetFurnaceAction implements Action {
   constructor(public payload: ItemId) {}
 }
 
+export class DisableRecipe implements Action {
+  readonly type = SettingsActionType.DISABLE_RECIPE;
+  constructor(public payload: RecipeId) {}
+}
+
+export class EnableRecipe implements Action {
+  readonly type = SettingsActionType.ENABLE_RECIPE;
+  constructor(public payload: RecipeId) {}
+}
+
 export class SetProdModuleAction implements Action {
   readonly type = SettingsActionType.SET_PROD_MODULE;
   constructor(public payload: ItemId) {}
@@ -84,11 +96,6 @@ export class SetBeaconModuleAction implements Action {
 export class SetBeaconCountAction implements Action {
   readonly type = SettingsActionType.SET_BEACON_COUNT;
   constructor(public payload: number) {}
-}
-
-export class SetOilRecipeAction implements Action {
-  readonly type = SettingsActionType.SET_OIL_RECIPE;
-  constructor(public payload: RecipeId) {}
 }
 
 export class SetFuelAction implements Action {
@@ -135,7 +142,8 @@ export type SettingsAction =
   | SetBeltAction
   | SetAssemblerAction
   | SetFurnaceAction
-  | SetOilRecipeAction
+  | DisableRecipe
+  | EnableRecipe
   | SetFuelAction
   | SetProdModuleAction
   | SetSpeedModuleAction

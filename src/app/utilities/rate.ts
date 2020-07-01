@@ -24,16 +24,10 @@ export class RateUtility {
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
     fuel: ItemId,
-    oilRecipe: RecipeId,
     data: RationalDataset
   ) {
-    let recipe = data.recipeR[itemId];
+    const recipe = data.recipeR[itemId];
     const item = data.itemR[itemId];
-
-    if (!recipe) {
-      // No recipe for this step, check for simple oil recipes
-      recipe = this.findBasicOilRecipe(itemId, oilRecipe, data);
-    }
 
     // Find existing step for this item
     let step = steps.find((s) => s.itemId === itemId);
@@ -106,7 +100,6 @@ export class RateUtility {
             itemSettings,
             recipeSettings,
             fuel,
-            oilRecipe,
             data
           );
         }
@@ -121,16 +114,10 @@ export class RateUtility {
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
     fuel: ItemId,
-    oilRecipe: RecipeId,
     data: RationalDataset
   ) {
-    let recipe = data.recipeR[itemId];
+    const recipe = data.recipeR[itemId];
     const item = data.itemR[itemId];
-
-    if (!recipe) {
-      // No recipe for this step, check for simple oil recipes
-      recipe = this.findBasicOilRecipe(itemId, oilRecipe, data);
-    }
 
     const node: Node = {
       id: `${parent.id}:${itemId}`,
@@ -186,7 +173,6 @@ export class RateUtility {
             itemSettings,
             recipeSettings,
             fuel,
-            oilRecipe,
             data
           );
         }
@@ -257,23 +243,5 @@ export class RateUtility {
       }
     }
     return node;
-  }
-
-  static findBasicOilRecipe(
-    id: ItemId,
-    oilRecipeId: RecipeId,
-    data: RationalDataset
-  ) {
-    if (oilRecipeId === RecipeId.BasicOilProcessing) {
-      // Using Basic Oil processing, use simple recipes
-      if (id === ItemId.PetroleumGas) {
-        // To produce petroleum gas, use oil recipe
-        return data.recipeR[oilRecipeId];
-      } else if (id === ItemId.SolidFuel) {
-        // To produce solid fuel, use petroleum fuel recipe
-        return data.recipeR[RecipeId.SolidFuelFromPetroleumGas];
-      }
-    }
-    return null;
   }
 }

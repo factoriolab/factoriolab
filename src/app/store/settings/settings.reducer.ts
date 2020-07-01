@@ -16,7 +16,7 @@ export interface SettingsState {
   belt: ItemId;
   assembler: ItemId;
   furnace: ItemId;
-  oilRecipe: RecipeId;
+  disabledRecipes: RecipeId[];
   fuel: ItemId;
   prodModule: ItemId;
   speedModule: ItemId;
@@ -43,7 +43,11 @@ export const initialSettingsState: SettingsState = {
   belt: ItemId.ExpressTransportBelt,
   assembler: ItemId.AssemblingMachine3,
   furnace: ItemId.ElectricFurnace,
-  oilRecipe: RecipeId.AdvancedOilProcessing,
+  disabledRecipes: [
+    RecipeId.BasicOilProcessing,
+    RecipeId.CoalLiquefaction,
+    RecipeId.SolidFuelFromHeavyOil,
+  ],
   fuel: ItemId.Coal,
   prodModule: ItemId.ProductivityModule3,
   speedModule: ItemId.SpeedModule3,
@@ -86,8 +90,23 @@ export function settingsReducer(
     case SettingsActionType.SET_FURNACE: {
       return { ...state, ...{ furnace: action.payload } };
     }
-    case SettingsActionType.SET_OIL_RECIPE: {
-      return { ...state, ...{ oilRecipe: action.payload } };
+    case SettingsActionType.DISABLE_RECIPE: {
+      return {
+        ...state,
+        ...{
+          disabledRecipes: [...state.disabledRecipes, action.payload].sort(),
+        },
+      };
+    }
+    case SettingsActionType.ENABLE_RECIPE: {
+      return {
+        ...state,
+        ...{
+          disabledRecipes: state.disabledRecipes
+            .filter((r) => r !== action.payload)
+            .sort(),
+        },
+      };
     }
     case SettingsActionType.SET_FUEL: {
       return { ...state, ...{ fuel: action.payload } };
