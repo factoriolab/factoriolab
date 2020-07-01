@@ -183,7 +183,7 @@ export const getNormalizedStepsWithMatrices = createSelector(
   Items.getItemSettings,
   Recipes.getRecipeSettings,
   Recipes.getAdjustedDataset,
-  Settings.getDisabledRecipes,
+  Settings.getRecipeDisabled,
   Settings.getFuel,
   (steps, itemSettings, recipeSettings, data, disabledRecipes, fuel) =>
     MatrixUtility.solveMatricesFor(
