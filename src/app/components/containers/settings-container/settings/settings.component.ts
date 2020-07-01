@@ -21,10 +21,10 @@ import { SettingsState, initialSettingsState } from '~/store/settings';
 
 enum OpenSelect {
   None,
+  DisabledRecipes,
   Belt,
   Assembler,
   Furnace,
-  OilRecipe,
   Fuel,
   ProdModule,
   SpeedModule,
@@ -48,7 +48,8 @@ export class SettingsComponent {
   @Output() setBelt = new EventEmitter<ItemId>();
   @Output() setAssembler = new EventEmitter<ItemId>();
   @Output() setFurnace = new EventEmitter<ItemId>();
-  @Output() setOilRecipe = new EventEmitter<RecipeId>();
+  @Output() disableRecipe = new EventEmitter<RecipeId>();
+  @Output() enableRecipe = new EventEmitter<RecipeId>();
   @Output() setFuel = new EventEmitter<ItemId>();
   @Output() setFlowRate = new EventEmitter<number>();
   @Output() setProdModule = new EventEmitter<ItemId>();

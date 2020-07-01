@@ -3,8 +3,6 @@ import {
   DisplayRate,
   ItemId,
   RateType,
-  RecipeId,
-  NEntities,
   Rational,
   RationalProduct,
 } from '~/models';
@@ -65,12 +63,7 @@ describe('Products Selectors', () => {
 
   describe('getNormalizedRatesByBelts', () => {
     it('should handle empty/null values', () => {
-      const result = Selectors.getNormalizedRatesByBelts.projector(
-        {},
-        {},
-        null,
-        {}
-      );
+      const result = Selectors.getNormalizedRatesByBelts.projector({}, {}, {});
       expect(result).toBeUndefined();
     });
 
@@ -78,121 +71,9 @@ describe('Products Selectors', () => {
       const result = Selectors.getNormalizedRatesByBelts.projector(
         Mocks.ProductEntities,
         { [Mocks.Product2.itemId]: Mocks.ItemSettings1 },
-        RecipeId.BasicOilProcessing,
         { [Mocks.ItemSettings1.belt]: Rational.one }
       );
       expect(result[Mocks.Product2.id].nonzero()).toBeTrue();
-    });
-
-    it('should calculate rate for oil products', () => {
-      const products: NEntities<RationalProduct[]> = {
-        [RateType.Belts]: [
-          {
-            id: 0,
-            itemId: ItemId.HeavyOil,
-            rate: Rational.one,
-            rateType: RateType.Belts,
-          },
-          {
-            id: 1,
-            itemId: ItemId.LightOil,
-            rate: Rational.one,
-            rateType: RateType.Belts,
-          },
-          {
-            id: 2,
-            itemId: ItemId.PetroleumGas,
-            rate: Rational.one,
-            rateType: RateType.Belts,
-          },
-        ],
-      };
-      const result = Selectors.getNormalizedRatesByBelts.projector(
-        products,
-        {},
-        null,
-        { [ItemId.Pipe]: Rational.one }
-      );
-      expect(result[0].nonzero()).toBeTrue();
-      expect(result[1].nonzero()).toBeTrue();
-      expect(result[2].nonzero()).toBeTrue();
-    });
-
-    it('should calculate rate for solid fuel by basic processing', () => {
-      const belt = ItemId.TransportBelt;
-      const products: NEntities<RationalProduct[]> = {
-        [RateType.Belts]: [
-          {
-            id: 0,
-            itemId: ItemId.SolidFuel,
-            rate: Rational.one,
-            rateType: RateType.Belts,
-          },
-        ],
-      };
-      const result = Selectors.getNormalizedRatesByBelts.projector(
-        products,
-        {
-          [RecipeId.SolidFuelFromPetroleumGas]: { belt },
-        },
-        RecipeId.BasicOilProcessing,
-        { [belt]: Rational.one }
-      );
-      expect(result[0].nonzero()).toBeTrue();
-    });
-
-    it('should calculate rate for solid fuel by advanced processing', () => {
-      const belt = ItemId.TransportBelt;
-      const products: NEntities<RationalProduct[]> = {
-        [RateType.Belts]: [
-          {
-            id: 0,
-            itemId: ItemId.SolidFuel,
-            rate: Rational.one,
-            rateType: RateType.Belts,
-          },
-        ],
-      };
-      const result = Selectors.getNormalizedRatesByBelts.projector(
-        products,
-        {
-          [RecipeId.SolidFuelFromLightOil]: { belt },
-        },
-        RecipeId.AdvancedOilProcessing,
-        { [belt]: Rational.one }
-      );
-      expect(result[0].nonzero()).toBeTrue();
-    });
-
-    it('should calculate rate for uranium products', () => {
-      const belt = ItemId.TransportBelt;
-      const products: NEntities<RationalProduct[]> = {
-        [RateType.Belts]: [
-          {
-            id: 0,
-            itemId: ItemId.Uranium238,
-            rate: Rational.one,
-            rateType: RateType.Belts,
-          },
-          {
-            id: 1,
-            itemId: ItemId.Uranium235,
-            rate: Rational.one,
-            rateType: RateType.Belts,
-          },
-        ],
-      };
-      const result = Selectors.getNormalizedRatesByBelts.projector(
-        products,
-        {
-          [RecipeId.UraniumProcessing]: { belt },
-          [RecipeId.KovarexEnrichmentProcess]: { belt },
-        },
-        null,
-        { [belt]: Rational.one }
-      );
-      expect(result[0].nonzero()).toBeTrue();
-      expect(result[1].nonzero()).toBeTrue();
     });
   });
 

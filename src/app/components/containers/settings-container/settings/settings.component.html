@@ -1,16 +1,38 @@
 <div class="label">Recipes</div>
 <div class="field">
-  <div class="flex option">
-    <input
+  <div class="flex option" (click)="setExpensive.emit(!settings.expensive)">
+    <div
       id="settings-expensive"
       title="Use expensive recipes"
-      type="checkbox"
-      [ngModel]="settings.expensive"
-      (change)="setExpensive.emit($event.target.checked)"
-    />
+      class="material-icons"
+    >
+      {{ settings.expensive ? 'check_box' : 'check_box_outline_blank' }}
+    </div>
     <label for="settings-expensive" title="Use expensive recipes"
       >Expensive</label
     >
+  </div>
+</div>
+<div class="field">
+  <div class="select-container">
+    <div [style.marginTop.px]="-scrollTop">
+      <lab-icon
+        class="clickable"
+        tooltip="Disabled Recipes"
+        iconId="advanced-oil-processing"
+        [data]="data"
+        (click)="openSelect = OpenSelect.DisabledRecipes"
+      ></lab-icon>
+      <lab-toggle
+        *ngIf="openSelect === OpenSelect.DisabledRecipes"
+        [data]="data"
+        [recipeDisabled]="settings.recipeDisabled"
+        (cancel)="openSelect = OpenSelect.None"
+        (enableRecipe)="enableRecipe.emit($event)"
+        (disableRecipe)="disableRecipe.emit($event)"
+      >
+      </lab-toggle>
+    </div>
   </div>
 </div>
 <div class="label">Display Rate</div>
@@ -250,27 +272,6 @@
         [options]="options.Furnace"
         (cancel)="openSelect = OpenSelect.None"
         (selectId)="setFurnace.emit($event)"
-      >
-      </lab-select>
-    </div>
-  </div>
-  <div class="select-container">
-    <div [style.marginTop.px]="-scrollTop">
-      <lab-icon
-        class="clickable"
-        tooltip="Choose oil recipe"
-        [iconId]="settings.oilRecipe"
-        [data]="data"
-        (click)="openSelect = OpenSelect.OilRecipe"
-      ></lab-icon>
-      <lab-select
-        *ngIf="openSelect === OpenSelect.OilRecipe"
-        [data]="data"
-        [selectedId]="settings.oilRecipe"
-        [options]="options.OilRecipe"
-        [selectType]="SelectType.Recipe"
-        (cancel)="openSelect = OpenSelect.None"
-        (selectId)="setOilRecipe.emit($event)"
       >
       </lab-select>
     </div>

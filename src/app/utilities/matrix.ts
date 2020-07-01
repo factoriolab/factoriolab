@@ -23,16 +23,16 @@ export class MatrixUtility {
     steps: Step[],
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
+    recipeDisabled: Entities<boolean>,
     fuel: ItemId,
-    oilRecipe: RecipeId,
     data: RationalDataset
   ) {
     const matrix = new MatrixSolver(
       steps,
       itemSettings,
       recipeSettings,
+      recipeDisabled,
       fuel,
-      oilRecipe,
       data
     );
     if (matrix.simpleStepsOnly) {
@@ -56,11 +56,10 @@ export class MatrixSolver {
   steps: Step[];
   itemSettings: ItemsState;
   recipeSettings: RecipesState;
+  recipeDisabled: Entities<boolean>;
   fuel: ItemId;
-  oilRecipe: RecipeId;
   data: RationalDataset;
 
-  disabled: Entities<boolean> = {};
   value: Entities<Rational> = {};
   recipes: Entities<RationalRecipe> = {};
   recipeIds: RecipeId[] = [];
@@ -79,15 +78,15 @@ export class MatrixSolver {
     steps: Step[],
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
+    recipeDisabled: Entities<boolean>,
     fuel: ItemId,
-    oilRecipe: RecipeId,
     data: RationalDataset
   ) {
     this.steps = steps;
     this.itemSettings = itemSettings;
     this.recipeSettings = recipeSettings;
+    this.recipeDisabled = recipeDisabled;
     this.fuel = fuel;
-    this.oilRecipe = oilRecipe;
     this.data = data;
   }
 
@@ -295,35 +294,12 @@ export class MatrixSolver {
         this.itemSettings,
         this.recipeSettings,
         this.fuel,
-        this.oilRecipe,
         this.data
       );
     }
   }
 
   calculateRecipes() {
-    this.disabled =
-      this.oilRecipe === RecipeId.BasicOilProcessing
-        ? {
-            [RecipeId.AdvancedOilProcessing]: true,
-            [RecipeId.CoalLiquefaction]: true,
-            [RecipeId.SolidFuelFromLightOil]: true,
-            [RecipeId.SolidFuelFromHeavyOil]: true,
-            [RecipeId.HeavyOilCracking]: true,
-            [RecipeId.LightOilCracking]: true,
-          }
-        : this.oilRecipe === RecipeId.AdvancedOilProcessing
-        ? {
-            [RecipeId.BasicOilProcessing]: true,
-            [RecipeId.CoalLiquefaction]: true,
-          }
-        : this.oilRecipe === RecipeId.CoalLiquefaction
-        ? {
-            [RecipeId.BasicOilProcessing]: true,
-            [RecipeId.AdvancedOilProcessing]: true,
-          }
-        : {};
-
     for (const step of this.steps) {
       if (
         step.recipeId !== (step.itemId as string) &&
@@ -332,7 +308,9 @@ export class MatrixSolver {
         // Find recipes with this output
         const recipeMatches = this.data.recipeIds
           .map((r) => this.data.recipeR[r])
-          .filter((r) => !this.disabled[r.id] && r.out && r.out[step.itemId]);
+          .filter(
+            (r) => !this.recipeDisabled[r.id] && r.out && r.out[step.itemId]
+          );
         if (recipeMatches.length > 0) {
           this.value[step.itemId] = step.items;
           for (const recipe of recipeMatches) {
@@ -348,14 +326,14 @@ export class MatrixSolver {
   findRecipesRecursively(itemId: ItemId) {
     const simpleRecipe = this.data.recipeR[itemId];
     if (simpleRecipe) {
-      if (!this.disabled[simpleRecipe.id]) {
+      if (!this.recipeDisabled[simpleRecipe.id]) {
         this.parseRecipeRecursively(this.data.recipeR[itemId]);
       }
     } else {
       // Find complex recipes
       const recipeMatches = this.data.recipeIds
         .map((r) => this.data.recipeR[r])
-        .filter((r) => !this.disabled[r.id] && r.out && r.out[itemId]);
+        .filter((r) => !this.recipeDisabled[r.id] && r.out && r.out[itemId]);
 
       for (const recipe of recipeMatches) {
         this.parseRecipeRecursively(recipe);

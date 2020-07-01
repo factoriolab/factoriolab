@@ -66,12 +66,12 @@ const mockFullSettings: Settings.SettingsState = {
   factoryPrecision: 0,
   belt: ItemId.TransportBelt,
   assembler: ItemId.AssemblingMachine2,
+  recipeDisabled: { [RecipeId.BasicOilProcessing]: true },
   furnace: ItemId.StoneFurnace,
   prodModule: ItemId.ProductivityModule,
   speedModule: ItemId.SpeedModule,
   beaconModule: ItemId.SpeedModule2,
   beaconCount: 8,
-  oilRecipe: RecipeId.BasicOilProcessing,
   fuel: ItemId.SolidFuel,
   drillModule: true,
   miningBonus: 10,
@@ -79,12 +79,12 @@ const mockFullSettings: Settings.SettingsState = {
   flowRate: 1200,
   expensive: true,
 };
-const mockZipFullSettings = `${DisplayRate.PerHour}:2:4:0:${mockFullSettings.belt}:${mockFullSettings.assembler}:${mockFullSettings.furnace}:${mockFullSettings.oilRecipe}:${mockFullSettings.fuel}:${mockFullSettings.prodModule}:${mockFullSettings.speedModule}:${mockFullSettings.beaconModule}:8:1:10:0:1200:1`;
+const mockZipFullSettings = `${DisplayRate.PerHour}:2:4:0:${mockFullSettings.belt}:${mockFullSettings.assembler}:${mockFullSettings.furnace}:${RecipeId.BasicOilProcessing}:${mockFullSettings.fuel}:${mockFullSettings.prodModule}:${mockFullSettings.speedModule}:${mockFullSettings.beaconModule}:8:1:10:0:1200:1`;
 const mockNullSettings = {
   ...mockFullSettings,
   ...{ itemPrecision: null, beltPrecision: null, factoryPrecision: null },
 };
-const mockZipNullSettings = `${DisplayRate.PerHour}:n:n:n:${mockFullSettings.belt}:${mockFullSettings.assembler}:${mockFullSettings.furnace}:${mockFullSettings.oilRecipe}:${mockFullSettings.fuel}:${mockFullSettings.prodModule}:${mockFullSettings.speedModule}:${mockFullSettings.beaconModule}:8:1:10:0:1200:1`;
+const mockZipNullSettings = `${DisplayRate.PerHour}:n:n:n:${mockFullSettings.belt}:${mockFullSettings.assembler}:${mockFullSettings.furnace}:${RecipeId.BasicOilProcessing}:${mockFullSettings.fuel}:${mockFullSettings.prodModule}:${mockFullSettings.speedModule}:${mockFullSettings.beaconModule}:8:1:10:0:1200:1`;
 
 describe('RouterService', () => {
   let service: RouterService;
