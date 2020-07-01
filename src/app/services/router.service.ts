@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Router, Event, NavigationEnd } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { take, filter } from 'rxjs/operators';
-import { isEqual } from 'lodash';
+import * as eql from 'deep-eql';
 import { deflate, inflate } from 'pako';
+import { take, filter } from 'rxjs/operators';
 
 import {
   Product,
@@ -212,7 +212,7 @@ export class RouterService {
 
   zipSettings(state: Settings.SettingsState, data: DatasetState): string {
     const init = Settings.initialSettingsState;
-    if (isEqual(state, init)) {
+    if (eql(state, init)) {
       return null;
     }
     const dr = state.displayRate === init.displayRate ? '' : state.displayRate;
@@ -237,7 +237,7 @@ export class RouterService {
     const tb = state.belt === init.belt ? '' : state.belt;
     const pa = state.assembler === init.assembler ? '' : state.assembler;
     const pf = state.furnace === init.furnace ? '' : state.furnace;
-    const di = isEqual(state.recipeDisabled, init.recipeDisabled)
+    const di = eql(state.recipeDisabled, init.recipeDisabled)
       ? ''
       : Object.keys(state.recipeDisabled).join('.');
     const fl = state.fuel === init.fuel ? '' : state.fuel;
