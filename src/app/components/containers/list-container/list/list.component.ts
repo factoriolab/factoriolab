@@ -128,7 +128,7 @@ export class ListComponent {
       const value = Math.round(Number(event.target.value));
       if (
         this.recipeSettings[
-          this.steps.find((s) => s.itemId === step.itemId).itemId
+          this.steps.find((s) => s.recipeId === step.recipeId).recipeId
         ].beaconCount !== value
       ) {
         this.setBeaconCount.emit([step.recipeId, value]);
