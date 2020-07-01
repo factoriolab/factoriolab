@@ -1,7 +1,7 @@
 export enum CategoryId {
   Logistics = 'logistics',
   Production = 'production',
-  Intermediate = 'intermediate',
+  Intermediate = 'intermediate-products',
   Combat = 'combat',
   Research = 'research',
 }
