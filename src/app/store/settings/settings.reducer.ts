@@ -5,6 +5,7 @@ import {
   ResearchSpeed,
   Theme,
   LocalStorageKey,
+  Entities,
 } from '~/models';
 import { SettingsAction, SettingsActionType } from './settings.actions';
 
@@ -16,7 +17,7 @@ export interface SettingsState {
   belt: ItemId;
   assembler: ItemId;
   furnace: ItemId;
-  oilRecipe: RecipeId;
+  recipeDisabled: Entities<boolean>;
   fuel: ItemId;
   prodModule: ItemId;
   speedModule: ItemId;
@@ -43,7 +44,11 @@ export const initialSettingsState: SettingsState = {
   belt: ItemId.ExpressTransportBelt,
   assembler: ItemId.AssemblingMachine3,
   furnace: ItemId.ElectricFurnace,
-  oilRecipe: RecipeId.AdvancedOilProcessing,
+  recipeDisabled: {
+    [RecipeId.BasicOilProcessing]: true,
+    [RecipeId.CoalLiquefaction]: true,
+    [RecipeId.SolidFuelFromHeavyOil]: true,
+  },
   fuel: ItemId.Coal,
   prodModule: ItemId.ProductivityModule3,
   speedModule: ItemId.SpeedModule3,
@@ -86,8 +91,21 @@ export function settingsReducer(
     case SettingsActionType.SET_FURNACE: {
       return { ...state, ...{ furnace: action.payload } };
     }
-    case SettingsActionType.SET_OIL_RECIPE: {
-      return { ...state, ...{ oilRecipe: action.payload } };
+    case SettingsActionType.DISABLE_RECIPE: {
+      return {
+        ...state,
+        ...{
+          recipeDisabled: {
+            ...state.recipeDisabled,
+            ...{ [action.payload]: true },
+          },
+        },
+      };
+    }
+    case SettingsActionType.ENABLE_RECIPE: {
+      const newDisabled = { ...state.recipeDisabled };
+      delete newDisabled[action.payload];
+      return { ...state, ...{ recipeDisabled: newDisabled } };
     }
     case SettingsActionType.SET_FUEL: {
       return { ...state, ...{ fuel: action.payload } };

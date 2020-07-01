@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Router, Event, NavigationEnd } from '@angular/router';
 import { Store } from '@ngrx/store';
+import * as eql from 'deep-eql';
+import { deflate, inflate } from 'pako';
 import { take, filter } from 'rxjs/operators';
-import * as pako from 'pako';
 
 import {
   Product,
@@ -11,7 +12,7 @@ import {
   RateType,
   ItemId,
   ItemSettings,
-  RecipeId,
+  Entities,
 } from '~/models';
 import { State } from '~/store';
 import { DatasetState, getDatasetState } from '~/store/dataset';
@@ -56,7 +57,7 @@ export class RouterService {
       if (zSettings) {
         this.zipPartial += `&s=${zSettings}`;
       }
-      this.zip = btoa(pako.deflate(zState + this.zipPartial, { to: 'string' }));
+      this.zip = btoa(deflate(zState + this.zipPartial, { to: 'string' }));
       this.router.navigateByUrl(`${this.router.url.split('#')[0]}#${this.zip}`);
     } else {
       this.loaded = true;
@@ -74,7 +75,7 @@ export class RouterService {
     ];
     const zProducts = this.zipProducts(products, data);
     const zState = `p=${zProducts.join(',')}`;
-    return `#${btoa(pako.deflate(zState + this.zipPartial, { to: 'string' }))}`;
+    return `#${btoa(deflate(zState + this.zipPartial, { to: 'string' }))}`;
   }
 
   updateState(e: Event) {
@@ -84,7 +85,7 @@ export class RouterService {
         if (fragments.length > 1) {
           const urlZip = fragments[fragments.length - 1];
           if (this.zip !== urlZip) {
-            const state: string = pako.inflate(atob(urlZip), { to: 'string' });
+            const state: string = inflate(atob(urlZip), { to: 'string' });
             const params = state.split('&');
             this.store
               .select(getDatasetState)
@@ -211,7 +212,7 @@ export class RouterService {
 
   zipSettings(state: Settings.SettingsState, data: DatasetState): string {
     const init = Settings.initialSettingsState;
-    if (state === init) {
+    if (eql(state, init)) {
       return null;
     }
     const dr = state.displayRate === init.displayRate ? '' : state.displayRate;
@@ -236,7 +237,9 @@ export class RouterService {
     const tb = state.belt === init.belt ? '' : state.belt;
     const pa = state.assembler === init.assembler ? '' : state.assembler;
     const pf = state.furnace === init.furnace ? '' : state.furnace;
-    const or = state.oilRecipe === init.oilRecipe ? '' : state.oilRecipe;
+    const di = eql(state.recipeDisabled, init.recipeDisabled)
+      ? ''
+      : Object.keys(state.recipeDisabled).join('.');
     const fl = state.fuel === init.fuel ? '' : state.fuel;
     const mp = state.prodModule === init.prodModule ? '' : state.prodModule;
     const ms = state.speedModule === init.speedModule ? '' : state.speedModule;
@@ -251,7 +254,7 @@ export class RouterService {
     const fr = state.flowRate === init.flowRate ? '' : state.flowRate;
     const ex =
       state.expensive === init.expensive ? '' : Number(state.expensive);
-    return `${dr}:${ip}:${bp}:${fp}:${tb}:${pa}:${pf}:${or}:${fl}:${mp}:${ms}:${bm}:${bc}:${dm}:${mb}:${rs}:${fr}:${ex}`;
+    return `${dr}:${ip}:${bp}:${fp}:${tb}:${pa}:${pf}:${di}:${fl}:${mp}:${ms}:${bm}:${bc}:${dm}:${mb}:${rs}:${fr}:${ex}`;
   }
 
   unzipSettings(zSettings: string, data: DatasetState) {
@@ -279,7 +282,9 @@ export class RouterService {
       settings.furnace = s[6] as ItemId;
     }
     if (s[7] !== '') {
-      settings.oilRecipe = s[7] as RecipeId;
+      settings.recipeDisabled = s[7]
+        .split('.')
+        .reduce((e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }), {});
     }
     if (s[8] !== '') {
       settings.fuel = s[8] as ItemId;

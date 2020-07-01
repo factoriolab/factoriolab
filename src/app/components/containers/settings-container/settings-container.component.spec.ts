@@ -142,12 +142,21 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
-  it('should set the oil recipe', () => {
+  it('should disable a recipe', () => {
     spyOn(store, 'dispatch');
     const value = RecipeId.BasicOilProcessing;
-    component.child.setOilRecipe.emit(value);
+    component.child.disableRecipe.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetOilRecipeAction(value)
+      new Settings.DisableRecipe(value)
+    );
+  });
+
+  it('should enable a recipe', () => {
+    spyOn(store, 'dispatch');
+    const value = RecipeId.BasicOilProcessing;
+    component.child.enableRecipe.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.EnableRecipe(value)
     );
   });
 

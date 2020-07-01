@@ -86,8 +86,12 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetFurnaceAction(value));
   }
 
-  setOilRecipe(value: RecipeId) {
-    this.store.dispatch(new Settings.SetOilRecipeAction(value));
+  disableRecipe(value: RecipeId) {
+    this.store.dispatch(new Settings.DisableRecipe(value));
+  }
+
+  enableRecipe(value: RecipeId) {
+    this.store.dispatch(new Settings.EnableRecipe(value));
   }
 
   setFuel(value: ItemId) {

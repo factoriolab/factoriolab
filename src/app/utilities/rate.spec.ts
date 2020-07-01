@@ -3,7 +3,6 @@ import { RateUtility } from './rate';
 import {
   Step,
   ItemId,
-  RecipeId,
   CategoryId,
   Node,
   Rational,
@@ -45,7 +44,6 @@ describe('RateUtility', () => {
         Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
         ItemId.Coal,
-        RecipeId.BasicOilProcessing,
         Mocks.AdjustedData
       );
       expect(steps as any).toEqual(expected as any);
@@ -61,7 +59,6 @@ describe('RateUtility', () => {
         Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
         ItemId.Coal,
-        RecipeId.BasicOilProcessing,
         Mocks.AdjustedData
       );
       RateUtility.addStepsFor(
@@ -72,7 +69,6 @@ describe('RateUtility', () => {
         Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
         ItemId.Coal,
-        RecipeId.BasicOilProcessing,
         Mocks.AdjustedData
       );
       expect(steps).toEqual(expected as any);
@@ -88,7 +84,6 @@ describe('RateUtility', () => {
         Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
         ItemId.Coal,
-        RecipeId.BasicOilProcessing,
         {
           ...Mocks.AdjustedData,
           ...{
@@ -117,7 +112,6 @@ describe('RateUtility', () => {
         Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
         ItemId.Coal,
-        RecipeId.AdvancedOilProcessing,
         Mocks.AdjustedData
       );
       expect(steps[0].factories).toBe(null);
@@ -150,7 +144,6 @@ describe('RateUtility', () => {
         Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
         ItemId.Coal,
-        RecipeId.BasicOilProcessing,
         data
       );
       expect(steps as any).toEqual(expected as any);
@@ -166,7 +159,6 @@ describe('RateUtility', () => {
         Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
         ItemId.Coal,
-        RecipeId.BasicOilProcessing,
         Mocks.AdjustedData
       );
       expect(steps).toEqual([
@@ -224,7 +216,6 @@ describe('RateUtility', () => {
         Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
         ItemId.Coal,
-        RecipeId.BasicOilProcessing,
         Mocks.AdjustedData
       );
       expect(root).toEqual(expected);
@@ -239,7 +230,6 @@ describe('RateUtility', () => {
         Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
         ItemId.Coal,
-        RecipeId.BasicOilProcessing,
         {
           ...Mocks.AdjustedData,
           ...{
@@ -258,21 +248,6 @@ describe('RateUtility', () => {
       expect(root).toEqual(expected);
     });
 
-    it('should properly mark recipe for oil products when using basic oil processing', () => {
-      const root: any = { id: 'root', children: [] };
-      RateUtility.addNodesFor(
-        root,
-        ItemId.PetroleumGas,
-        new Rational(BigInt(30)),
-        Mocks.ItemSettingsEntities,
-        Mocks.RecipeSettingsEntities,
-        ItemId.Coal,
-        RecipeId.BasicOilProcessing,
-        Mocks.AdjustedData
-      );
-      expect(root.children[0].recipeId).toEqual(RecipeId.BasicOilProcessing);
-    });
-
     it('should properly calculate factories for space science pack/rocket parts', () => {
       const root: any = { id: 'root', children: [] };
       RateUtility.addNodesFor(
@@ -282,7 +257,6 @@ describe('RateUtility', () => {
         Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
         ItemId.Coal,
-        RecipeId.AdvancedOilProcessing,
         Mocks.AdjustedData
       );
       expect(root.children[0].factories).toBe(null);
@@ -300,7 +274,6 @@ describe('RateUtility', () => {
         Mocks.ItemSettingsEntities,
         Mocks.RecipeSettingsEntities,
         ItemId.Coal,
-        RecipeId.BasicOilProcessing,
         Mocks.AdjustedData
       );
       expect(root.children[0]).toEqual({
@@ -330,7 +303,6 @@ describe('RateUtility', () => {
         } as any,
         Mocks.RecipeSettingsEntities,
         ItemId.Coal,
-        RecipeId.BasicOilProcessing,
         Mocks.AdjustedData
       );
       expect(root.children[0].children).toBeUndefined();
@@ -532,44 +504,6 @@ describe('RateUtility', () => {
       RateUtility.nodeDisplayRate(node, DisplayRate.PerMinute);
       expect(node.items).toEqual(new Rational(BigInt(120)));
       expect(node.surplus).toBeFalsy();
-    });
-  });
-
-  describe('findBasicOilRecipe', () => {
-    it('should return null if not using basic oil processing', () => {
-      const result = RateUtility.findBasicOilRecipe(
-        ItemId.PetroleumGas,
-        RecipeId.AdvancedOilProcessing,
-        Mocks.AdjustedData
-      );
-      expect(result).toBeNull();
-    });
-
-    it('should return null for non supported products', () => {
-      const result = RateUtility.findBasicOilRecipe(
-        ItemId.HeavyOil,
-        RecipeId.BasicOilProcessing,
-        Mocks.AdjustedData
-      );
-      expect(result).toBeNull();
-    });
-
-    it('should return basic oil processing for petroleum gas', () => {
-      const result = RateUtility.findBasicOilRecipe(
-        ItemId.PetroleumGas,
-        RecipeId.BasicOilProcessing,
-        Mocks.AdjustedData
-      );
-      expect(result.id).toEqual(RecipeId.BasicOilProcessing);
-    });
-
-    it('should return solid fuel from petroleum for solid fuel', () => {
-      const result = RateUtility.findBasicOilRecipe(
-        ItemId.SolidFuel,
-        RecipeId.BasicOilProcessing,
-        Mocks.AdjustedData
-      );
-      expect(result.id).toEqual(RecipeId.SolidFuelFromPetroleumGas);
     });
   });
 });
