@@ -1,73 +1,26 @@
 import {
   Recipe,
-  RecipeId,
-  ItemId,
-  Step,
-  Node,
   Rational,
   RationalRecipe,
   RationalRecipeSettings,
-  CategoryId,
 } from '~/models';
 import { DatasetState, RationalDataset } from '~/store/dataset';
 
-const order: (string | ItemId | RecipeId)[] = [
-  // Research products
-  ItemId.MiningProductivity,
-  ItemId.WorkerRobotSpeed,
-  ItemId.FollowerRobotCount,
-  ItemId.EnergyWeaponsDamage,
-  ItemId.PhysicalProjectileDamage,
-  ItemId.RefinedFlammables,
-  ItemId.ArtilleryShellRange,
-  ItemId.ArtilleryShellShootingSpeed,
-  ItemId.StrongerExplosives,
-  // All other items/recipes
-  ItemId.None,
-  // Smelting / Furnaces
-  ItemId.SteelPlate,
-  ItemId.CopperPlate,
-  ItemId.IronPlate,
-  ItemId.StoneBrick,
-  // Mining drills / raw materials
-  ItemId.UraniumOre,
-  ItemId.CopperOre,
-  ItemId.IronOre,
-  ItemId.Stone,
-  ItemId.Coal,
-  ItemId.Wood,
-  // Pure oil recipes
-  ItemId.RocketFuel,
-  ItemId.SolidFuel,
-  RecipeId.SolidFuelFromLightOil,
-  RecipeId.SolidFuelFromPetroleumGas,
-  RecipeId.SolidFuelFromHeavyOil,
-  ItemId.Lubricant,
-  ItemId.PetroleumGas,
-  ItemId.LightOil,
-  ItemId.HeavyOil,
-  ItemId.CrudeOil,
-  ItemId.Water,
-];
-
 export class RecipeUtility {
   /** Determines what default factory to use for a given recipe based on settings */
-  static defaultFactory(recipe: Recipe, assembler: ItemId, furnace: ItemId) {
+  static defaultFactory(recipe: Recipe, factoryRank: string[]) {
     // No factory specified for step
-    if (!recipe.producers) {
-      // No producers specified for recipe, assume default assembler
-      return assembler;
-    } else if (recipe.producers.length === 1) {
+    if (recipe.producers.length === 1) {
       // Only one producer specified for recipe, use it
       return recipe.producers[0];
-    } else if (recipe.producers.some((p) => p === assembler)) {
-      // Found matching default assembler in producers, use it
-      return assembler;
-    } else if (recipe.producers.some((p) => p === furnace)) {
-      // Found matching default furnace in producers, use it
-      return furnace;
     } else {
-      // No matching default found in producers, use first possible producer
+      for (const f of factoryRank) {
+        if (recipe.producers.indexOf(f) !== -1) {
+          // Return first matching factory in rank list
+          return f;
+        }
+      }
+      // No matching factory found in producers, use first possible producer
       return recipe.producers[0];
     }
   }
@@ -87,22 +40,18 @@ export class RecipeUtility {
   /** Determines default array of modules for a given recipe */
   static defaultModules(
     recipe: Recipe,
-    prodModule: string,
-    speedModule: string,
+    moduleRank: string[],
     count: number,
     data: DatasetState
   ) {
-    // Determine whether prod modules are allowed
-    const prodModuleAllowed = this.moduleAllowed(
-      ItemId.ProductivityModule,
-      recipe.id,
-      data
-    );
-    // Pick the default module to use
-    const module =
-      prodModuleAllowed && prodModule !== ItemId.Module
-        ? prodModule
-        : speedModule;
+    let module = 'module';
+    // Find matching module in rank list
+    for (const m of moduleRank) {
+      if (this.moduleAllowed(m, recipe.id, data)) {
+        module = m;
+        break;
+      }
+    }
     // Create the appropriate array of default modules
     const modules = [];
     for (let i = 0; i < count; i++) {
@@ -112,7 +61,7 @@ export class RecipeUtility {
   }
 
   static adjustRecipe(
-    recipeId: RecipeId,
+    recipeId: string,
     miningBonus: Rational,
     researchFactor: Rational,
     fuelId: string,
@@ -120,6 +69,7 @@ export class RecipeUtility {
     data: RationalDataset
   ) {
     const recipe = new RationalRecipe(data.recipeEntities[recipeId]);
+    const factory = data.itemR[settings.factory].factory;
 
     if (!recipe.out) {
       // Add implied outputs
@@ -127,9 +77,9 @@ export class RecipeUtility {
     }
 
     // Adjust for factory speed
-    recipe.time = recipe.time.div(data.itemR[settings.factory].factory.speed);
+    recipe.time = recipe.time.div(factory.speed);
 
-    if (settings.factory === ItemId.Lab) {
+    if (factory.research) {
       // Adjust for research factor
       recipe.time = recipe.time.div(researchFactor);
     }
@@ -138,7 +88,7 @@ export class RecipeUtility {
     let speed = Rational.one;
     let prod = Rational.one;
 
-    if (settings.factory === ItemId.ElectricMiningDrill) {
+    if (factory.mining) {
       // Adjust for mining bonus
       prod = prod.add(miningBonus);
     }
@@ -189,13 +139,12 @@ export class RecipeUtility {
       }
 
       // Log prod for research products
-      if (data.itemR[outId].category === CategoryId.Research) {
+      if (factory.research) {
         recipe.adjustProd = prod;
       }
     }
 
     // Calculate burner fuel inputs
-    const factory = data.itemR[settings.factory].factory;
     if (factory.burner) {
       const fuel = data.itemR[fuelId];
 
@@ -209,37 +158,6 @@ export class RecipeUtility {
     }
 
     return recipe;
-  }
-
-  /** Sorts steps based on items / recipes */
-  static sort(steps: Step[]) {
-    return steps.sort((a, b) => this.sortOrder(a) - this.sortOrder(b));
-  }
-
-  static sortNode(node: Node) {
-    if (node.children) {
-      node.children = node.children.sort(
-        (a, b) => this.sortOrder(a) - this.sortOrder(b)
-      );
-      for (const child of node.children) {
-        this.sortNode(child);
-      }
-    }
-    return node;
-  }
-
-  /** Gets sort order for a specific step */
-  static sortOrder(step: Step) {
-    const itemIndex = order.indexOf(step.itemId);
-    if (itemIndex !== -1) {
-      return itemIndex;
-    } else {
-      const recipeIndex = order.indexOf(step.recipeId);
-      if (recipeIndex !== -1) {
-        return recipeIndex;
-      }
-    }
-    return order.indexOf(ItemId.None);
   }
 
   /** Resets a passed field of the recipe state */

@@ -70,7 +70,8 @@ export class RateUtility {
         step.factories = null;
       } else {
         step.factories = step.items.mul(recipe.time).div(out);
-        if (item.category === 'research') {
+        const factory = data.itemR[recipeSettings[recipe.id].factory].factory;
+        if (factory.research) {
           step.factories = step.factories;
         }
         // Add # of factories to actually launch rockets
@@ -140,7 +141,8 @@ export class RateUtility {
         node.factories = null;
       } else {
         node.factories = node.items.mul(recipe.time).div(out);
-        if (item.category === 'research') {
+        const factory = data.itemR[recipeSettings[recipe.id].factory].factory;
+        if (factory.research) {
           node.factories = node.factories;
         }
         // Add # of factories to actually launch rockets

@@ -127,7 +127,7 @@ describe('Settings Reducer', () => {
       const value = RecipeId.AdvancedOilProcessing;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.DisableRecipe(value)
+        new Actions.DisableRecipeAction(value)
       );
       expect(result.recipeDisabled[value]).toBeTrue();
     });
@@ -138,7 +138,7 @@ describe('Settings Reducer', () => {
       const value = RecipeId.BasicOilProcessing;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.EnableRecipe(value)
+        new Actions.EnableRecipeAction(value)
       );
       expect(result.recipeDisabled[value]).toBeUndefined();
     });

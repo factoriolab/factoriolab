@@ -240,46 +240,6 @@
     <div [style.marginTop.px]="-scrollTop">
       <lab-icon
         class="clickable"
-        tooltip="Choose default assembler"
-        [iconId]="settings.assembler"
-        [data]="data"
-        (click)="openSelect = OpenSelect.Assembler"
-      ></lab-icon>
-      <lab-select
-        *ngIf="openSelect === OpenSelect.Assembler"
-        [data]="data"
-        [selectedId]="settings.assembler"
-        [options]="options.Assembler"
-        (cancel)="openSelect = OpenSelect.None"
-        (selectId)="setAssembler.emit($event)"
-      >
-      </lab-select>
-    </div>
-  </div>
-  <div class="select-container">
-    <div [style.marginTop.px]="-scrollTop">
-      <lab-icon
-        class="clickable"
-        tooltip="Choose default furnace"
-        [iconId]="settings.furnace"
-        [data]="data"
-        (click)="openSelect = OpenSelect.Furnace"
-      ></lab-icon>
-      <lab-select
-        *ngIf="openSelect === OpenSelect.Furnace"
-        [data]="data"
-        [selectedId]="settings.furnace"
-        [options]="options.Furnace"
-        (cancel)="openSelect = OpenSelect.None"
-        (selectId)="setFurnace.emit($event)"
-      >
-      </lab-select>
-    </div>
-  </div>
-  <div class="select-container">
-    <div [style.marginTop.px]="-scrollTop">
-      <lab-icon
-        class="clickable"
         tooltip="Choose fuel"
         [iconId]="settings.fuel"
         [data]="data"
@@ -321,46 +281,6 @@
 </div>
 <div class="label">Modules</div>
 <div class="field">
-  <div class="select-container">
-    <div [style.marginTop.px]="-scrollTop">
-      <lab-icon
-        class="clickable"
-        tooltip="Choose default productivity module"
-        [iconId]="settings.prodModule"
-        [data]="data"
-        (click)="openSelect = OpenSelect.ProdModule"
-      ></lab-icon>
-      <lab-select
-        *ngIf="openSelect === OpenSelect.ProdModule"
-        [data]="data"
-        [selectedId]="settings.prodModule"
-        [options]="options.ProdModule"
-        (cancel)="openSelect = OpenSelect.None"
-        (selectId)="setProdModule.emit($event)"
-      >
-      </lab-select>
-    </div>
-  </div>
-  <div class="select-container">
-    <div [style.marginTop.px]="-scrollTop">
-      <lab-icon
-        class="clickable"
-        tooltip="Choose default speed module"
-        [iconId]="settings.speedModule"
-        [data]="data"
-        (click)="openSelect = OpenSelect.SpeedModule"
-      ></lab-icon>
-      <lab-select
-        *ngIf="openSelect === OpenSelect.SpeedModule"
-        [data]="data"
-        [selectedId]="settings.speedModule"
-        [options]="options.SpeedModule"
-        (cancel)="openSelect = OpenSelect.None"
-        (selectId)="setSpeedModule.emit($event)"
-      >
-      </lab-select>
-    </div>
-  </div>
   <lab-icon [iconId]="ItemId.Beacon" [data]="data"></lab-icon>
   <div class="select-container">
     <div [style.marginTop.px]="-scrollTop">

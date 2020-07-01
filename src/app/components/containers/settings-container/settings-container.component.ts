@@ -11,7 +11,7 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { DisplayRate, ResearchSpeed, Theme } from '~/models';
+import { DisplayRate, ResearchSpeed, Theme, IdPayload } from '~/models';
 import { State } from '~/store';
 import * as Dataset from '~/store/dataset';
 import * as Settings from '~/store/settings';
@@ -78,36 +78,24 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetBeltAction(value));
   }
 
-  setAssembler(value: string) {
-    this.store.dispatch(new Settings.SetAssemblerAction(value));
-  }
-
-  setFurnace(value: string) {
-    this.store.dispatch(new Settings.SetFurnaceAction(value));
-  }
-
-  disableRecipe(value: string) {
-    this.store.dispatch(new Settings.DisableRecipe(value));
-  }
-
-  enableRecipe(value: string) {
-    this.store.dispatch(new Settings.EnableRecipe(value));
-  }
-
   setFuel(value: string) {
     this.store.dispatch(new Settings.SetFuelAction(value));
   }
 
-  setFlowRate(value: number) {
-    this.store.dispatch(new Settings.SetFlowRateAction(value));
+  disableRecipe(value: string) {
+    this.store.dispatch(new Settings.DisableRecipeAction(value));
   }
 
-  setProdModule(value: string) {
-    this.store.dispatch(new Settings.SetProdModuleAction(value));
+  enableRecipe(value: string) {
+    this.store.dispatch(new Settings.EnableRecipeAction(value));
   }
 
-  setSpeedModule(value: string) {
-    this.store.dispatch(new Settings.SetSpeedModuleAction(value));
+  setFactoryRank(value: IdPayload<number>) {
+    this.store.dispatch(new Settings.SetFactoryRankAction(value));
+  }
+
+  setModuleRank(value: IdPayload<number>) {
+    this.store.dispatch(new Settings.SetModuleRankAction(value));
   }
 
   setBeaconModule(value: string) {
@@ -128,6 +116,10 @@ export class SettingsContainerComponent implements OnInit {
 
   setResearchSpeed(value: ResearchSpeed) {
     this.store.dispatch(new Settings.SetResearchSpeedAction(value));
+  }
+
+  setFlowRate(value: number) {
+    this.store.dispatch(new Settings.SetFlowRateAction(value));
   }
 
   setExpensive(value: boolean) {

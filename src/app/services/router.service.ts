@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, Event, NavigationEnd } from '@angular/router';
 import { Store } from '@ngrx/store';
-import * as eql from 'deep-eql';
 import { deflate, inflate } from 'pako';
 import { take, filter } from 'rxjs/operators';
 
@@ -211,9 +210,6 @@ export class RouterService {
 
   zipSettings(state: Settings.SettingsState, data: DatasetState): string {
     const init = Settings.initialSettingsState;
-    if (eql(state, init)) {
-      return null;
-    }
     const dr = state.displayRate === init.displayRate ? '' : state.displayRate;
     const ip =
       state.itemPrecision === init.itemPrecision
@@ -234,14 +230,10 @@ export class RouterService {
         ? 'n'
         : state.factoryPrecision;
     const tb = state.belt === init.belt ? '' : state.belt;
-    const pa = state.assembler === init.assembler ? '' : state.assembler;
-    const pf = state.furnace === init.furnace ? '' : state.furnace;
-    const di = eql(state.recipeDisabled, init.recipeDisabled)
-      ? ''
-      : Object.keys(state.recipeDisabled).join('.');
     const fl = state.fuel === init.fuel ? '' : state.fuel;
-    const mp = state.prodModule === init.prodModule ? '' : state.prodModule;
-    const ms = state.speedModule === init.speedModule ? '' : state.speedModule;
+    const di = Object.keys(state.recipeDisabled).join('.');
+    const fr = state.factoryRank.join('.');
+    const mr = state.moduleRank.join('.');
     const bm =
       state.beaconModule === init.beaconModule ? '' : state.beaconModule;
     const bc = state.beaconCount === init.beaconCount ? '' : state.beaconCount;
@@ -250,10 +242,10 @@ export class RouterService {
     const mb = state.miningBonus === init.miningBonus ? '' : state.miningBonus;
     const rs =
       state.researchSpeed === init.researchSpeed ? '' : state.researchSpeed;
-    const fr = state.flowRate === init.flowRate ? '' : state.flowRate;
+    const fw = state.flowRate === init.flowRate ? '' : state.flowRate;
     const ex =
       state.expensive === init.expensive ? '' : Number(state.expensive);
-    return `${dr}:${ip}:${bp}:${fp}:${tb}:${pa}:${pf}:${di}:${fl}:${mp}:${ms}:${bm}:${bc}:${dm}:${mb}:${rs}:${fr}:${ex}`;
+    return `${dr}:${ip}:${bp}:${fp}:${tb}:${fl}:${di}:${fr}:${mr}:${bm}:${bc}:${dm}:${mb}:${rs}:${fw}:${ex}`;
   }
 
   unzipSettings(zSettings: string, data: DatasetState) {
@@ -275,45 +267,39 @@ export class RouterService {
       settings.belt = s[4];
     }
     if (s[5] !== '') {
-      settings.assembler = s[5];
+      settings.fuel = s[5];
     }
     if (s[6] !== '') {
-      settings.furnace = s[6];
-    }
-    if (s[7] !== '') {
-      settings.recipeDisabled = s[7]
+      settings.recipeDisabled = s[6]
         .split('.')
         .reduce((e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }), {});
     }
+    if (s[7] !== '') {
+      settings.factoryRank = s[7].split('.');
+    }
     if (s[8] !== '') {
-      settings.fuel = s[8];
+      settings.moduleRank = s[8].split('.');
     }
     if (s[9] !== '') {
-      settings.prodModule = s[9];
+      settings.beaconModule = s[9];
     }
     if (s[10] !== '') {
-      settings.speedModule = s[10];
+      settings.beaconCount = Number(s[10]);
     }
     if (s[11] !== '') {
-      settings.beaconModule = s[11];
+      settings.drillModule = s[11] === '1';
     }
     if (s[12] !== '') {
-      settings.beaconCount = Number(s[12]);
+      settings.miningBonus = Number(s[12]);
     }
     if (s[13] !== '') {
-      settings.drillModule = s[13] === '1';
+      settings.researchSpeed = Number(s[13]);
     }
     if (s[14] !== '') {
-      settings.miningBonus = Number(s[14]);
+      settings.flowRate = Number(s[14]);
     }
     if (s[15] !== '') {
-      settings.researchSpeed = Number(s[15]);
-    }
-    if (s[16] !== '') {
-      settings.flowRate = Number(s[16]);
-    }
-    if (s[17] !== '') {
-      settings.expensive = s[17] === '1';
+      settings.expensive = s[15] === '1';
     }
     this.store.dispatch(new Settings.LoadAction(settings));
   }

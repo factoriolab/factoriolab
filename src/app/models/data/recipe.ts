@@ -33,7 +33,7 @@ export interface Recipe {
     time?: number;
     in?: Entities<number>;
   };
-  producers?: string[];
+  producers: string[];
 }
 
 export class RationalRecipe {

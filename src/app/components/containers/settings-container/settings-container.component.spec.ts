@@ -147,7 +147,7 @@ describe('SettingsContainerComponent', () => {
     const value = RecipeId.BasicOilProcessing;
     component.child.disableRecipe.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.DisableRecipe(value)
+      new Settings.DisableRecipeAction(value)
     );
   });
 
@@ -156,7 +156,7 @@ describe('SettingsContainerComponent', () => {
     const value = RecipeId.BasicOilProcessing;
     component.child.enableRecipe.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.EnableRecipe(value)
+      new Settings.EnableRecipeAction(value)
     );
   });
 

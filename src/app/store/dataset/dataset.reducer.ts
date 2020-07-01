@@ -4,10 +4,8 @@ import {
   Recipe,
   Entities,
   Icon,
-  ItemId,
   RationalItem,
   RationalRecipe,
-  RecipeId,
 } from '~/models';
 import { DatasetAction, DatasetActionType } from './dataset.actions';
 
@@ -19,10 +17,10 @@ export interface DatasetState {
   iconEntities: Entities<Icon>;
   itemIds: string[];
   itemEntities: Entities<Item>;
-  beltIds: ItemId[];
+  beltIds: string[];
   recipeIds: string[];
   recipeEntities: Entities<Recipe>;
-  limitations: Entities<RecipeId[]>;
+  limitations: Entities<string[]>;
 }
 
 export interface RationalDataset extends DatasetState {
@@ -101,7 +99,7 @@ export function datasetReducer(
         itemIds: action.payload.items.map((i) => i.id),
         itemEntities,
         beltIds: action.payload.items
-          .filter((i) => i.belt || i.id === ItemId.Pipe)
+          .filter((i) => i.belt || i.id === 'pipe')
           .map((i) => i.id),
         recipeIds: recipes.map((r) => r.id),
         recipeEntities: recipes.reduce(

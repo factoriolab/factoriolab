@@ -7,6 +7,8 @@ export interface Factory {
   burner?: number;
   electric?: number;
   drain?: number;
+  mining?: boolean;
+  research?: boolean;
 }
 
 export class RationalFactory {
@@ -16,6 +18,8 @@ export class RationalFactory {
   burner?: Rational;
   electric?: Rational;
   drain?: Rational;
+  mining?: boolean;
+  research?: boolean;
 
   constructor(data: Factory) {
     this.speed = Rational.fromNumber(data.speed);
@@ -28,6 +32,12 @@ export class RationalFactory {
     }
     if (data.drain) {
       this.drain = Rational.fromNumber(data.drain);
+    }
+    if (data.mining) {
+      this.mining = data.mining;
+    }
+    if (data.research) {
+      this.research = data.research;
     }
   }
 }

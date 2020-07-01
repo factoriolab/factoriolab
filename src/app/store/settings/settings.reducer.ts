@@ -1,12 +1,11 @@
 import {
   DisplayRate,
-  ItemId,
-  RecipeId,
   ResearchSpeed,
   Theme,
   LocalStorageKey,
   Entities,
 } from '~/models';
+import { DatasetActionType, LoadDatasetAction } from '../dataset';
 import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
@@ -15,12 +14,10 @@ export interface SettingsState {
   beltPrecision: number;
   factoryPrecision: number;
   belt: string;
-  assembler: string;
-  furnace: string;
-  recipeDisabled: Entities<boolean>;
   fuel: string;
-  prodModule: string;
-  speedModule: string;
+  recipeDisabled: Entities<boolean>;
+  factoryRank: string[];
+  moduleRank: string[];
   beaconModule: string;
   beaconCount: number;
   drillModule: boolean;
@@ -31,30 +28,19 @@ export interface SettingsState {
   theme?: Theme;
 }
 
-export const loadTheme = () => {
-  const lsTheme = localStorage.getItem(LocalStorageKey.Theme);
-  return lsTheme ? (lsTheme as Theme) : Theme.DarkMode;
-};
-
 export const initialSettingsState: SettingsState = {
   displayRate: DisplayRate.PerMinute,
   itemPrecision: 3,
   beltPrecision: 1,
   factoryPrecision: 1,
-  belt: ItemId.ExpressTransportBelt,
-  assembler: ItemId.AssemblingMachine3,
-  furnace: ItemId.ElectricFurnace,
-  recipeDisabled: {
-    [RecipeId.BasicOilProcessing]: true,
-    [RecipeId.CoalLiquefaction]: true,
-    [RecipeId.SolidFuelFromHeavyOil]: true,
-  },
-  fuel: ItemId.Coal,
-  prodModule: ItemId.ProductivityModule3,
-  speedModule: ItemId.SpeedModule3,
-  beaconModule: ItemId.SpeedModule3,
-  drillModule: false,
+  belt: null,
+  fuel: null,
+  recipeDisabled: {},
+  factoryRank: [],
+  moduleRank: [],
+  beaconModule: null,
   beaconCount: 16,
+  drillModule: false,
   miningBonus: 0,
   researchSpeed: ResearchSpeed.Speed6,
   flowRate: 1500,
@@ -64,9 +50,26 @@ export const initialSettingsState: SettingsState = {
 
 export function settingsReducer(
   state: SettingsState = initialSettingsState,
-  action: SettingsAction
+  action: SettingsAction | LoadDatasetAction
 ): SettingsState {
   switch (action.type) {
+    case DatasetActionType.LOAD: {
+      const defaults = action.payload.defaults;
+      return {
+        ...state,
+        ...{
+          belt: defaults.belt,
+          fuel: defaults.fuel,
+          recipeDisabled: defaults.disabledRecipes.reduce(
+            (e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }),
+            {}
+          ),
+          factoryRank: defaults.factoryRank,
+          moduleRank: defaults.moduleRank,
+          beaconModule: defaults.beaconModule,
+        },
+      };
+    }
     case SettingsActionType.LOAD: {
       return { ...state, ...action.payload };
     }
@@ -85,11 +88,8 @@ export function settingsReducer(
     case SettingsActionType.SET_BELT: {
       return { ...state, ...{ belt: action.payload } };
     }
-    case SettingsActionType.SET_ASSEMBLER: {
-      return { ...state, ...{ assembler: action.payload } };
-    }
-    case SettingsActionType.SET_FURNACE: {
-      return { ...state, ...{ furnace: action.payload } };
+    case SettingsActionType.SET_FUEL: {
+      return { ...state, ...{ fuel: action.payload } };
     }
     case SettingsActionType.DISABLE_RECIPE: {
       return {
@@ -107,14 +107,29 @@ export function settingsReducer(
       delete newDisabled[action.payload];
       return { ...state, ...{ recipeDisabled: newDisabled } };
     }
-    case SettingsActionType.SET_FUEL: {
-      return { ...state, ...{ fuel: action.payload } };
+    case SettingsActionType.SET_FACTORY_RANK: {
+      return {
+        ...state,
+        ...{
+          factoryRank: updateRank(
+            state.factoryRank,
+            action.payload.id,
+            action.payload.value
+          ),
+        },
+      };
     }
-    case SettingsActionType.SET_PROD_MODULE: {
-      return { ...state, ...{ prodModule: action.payload } };
-    }
-    case SettingsActionType.SET_SPEED_MODULE: {
-      return { ...state, ...{ speedModule: action.payload } };
+    case SettingsActionType.SET_MODULE_RANK: {
+      return {
+        ...state,
+        ...{
+          moduleRank: updateRank(
+            state.moduleRank,
+            action.payload.id,
+            action.payload.value
+          ),
+        },
+      };
     }
     case SettingsActionType.SET_BEACON_MODULE: {
       return { ...state, ...{ beaconModule: action.payload } };
@@ -143,5 +158,29 @@ export function settingsReducer(
     }
     default:
       return state;
+  }
+}
+
+export function loadTheme() {
+  const lsTheme = localStorage.getItem(LocalStorageKey.Theme);
+  return lsTheme ? (lsTheme as Theme) : Theme.DarkMode;
+}
+
+export function updateRank(array: string[], item: string, rank: number) {
+  if (rank === -1) {
+    // Removing item
+    return array.filter((i) => i !== item);
+  } else {
+    const index = array.indexOf(item);
+    const result = [...array];
+    if (index === -1) {
+      // Adding item
+      result.splice(rank, 0, item);
+    } else {
+      // Moving item
+      result.splice(rank, 0, result.splice(index, 1)[0]);
+    }
+
+    return result;
   }
 }
