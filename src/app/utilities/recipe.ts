@@ -11,7 +11,7 @@ import {
 } from '~/models';
 import { DatasetState, RationalDataset } from '~/store/dataset';
 
-const order: (ItemId | RecipeId)[] = [
+const order: (string | ItemId | RecipeId)[] = [
   // Research products
   ItemId.MiningProductivity,
   ItemId.WorkerRobotSpeed,
@@ -73,11 +73,7 @@ export class RecipeUtility {
   }
 
   /** Determines whether prod modules are allowed for a given recipe */
-  static moduleAllowed(
-    moduleId: ItemId,
-    recipeId: RecipeId,
-    data: DatasetState
-  ) {
+  static moduleAllowed(moduleId: string, recipeId: string, data: DatasetState) {
     const module = data.itemEntities[moduleId];
     if (module.module.limitation) {
       return data.limitations[module.module.limitation].some(
@@ -91,8 +87,8 @@ export class RecipeUtility {
   /** Determines default array of modules for a given recipe */
   static defaultModules(
     recipe: Recipe,
-    prodModule: ItemId,
-    speedModule: ItemId,
+    prodModule: string,
+    speedModule: string,
     count: number,
     data: DatasetState
   ) {
@@ -119,7 +115,7 @@ export class RecipeUtility {
     recipeId: RecipeId,
     miningBonus: Rational,
     researchFactor: Rational,
-    fuelId: ItemId,
+    fuelId: string,
     settings: RationalRecipeSettings,
     data: RationalDataset
   ) {

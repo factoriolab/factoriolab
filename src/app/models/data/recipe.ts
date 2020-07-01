@@ -1,6 +1,5 @@
 import { Rational } from '../rational';
 import { Entities } from '../entities';
-import { ItemId } from './item';
 
 export enum RecipeId {
   AdvancedOilProcessing = 'advanced-oil-processing',
@@ -34,7 +33,7 @@ export interface Recipe {
     time?: number;
     in?: Entities<number>;
   };
-  producers?: ItemId[];
+  producers?: string[];
 }
 
 export class RationalRecipe {
@@ -48,7 +47,7 @@ export class RationalRecipe {
     time?: Rational;
     in?: Entities<Rational>;
   };
-  producers?: ItemId[];
+  producers?: string[];
 
   constructor(data: Recipe) {
     this.id = data.id;

@@ -1,5 +1,4 @@
 import { ItemId } from '../data/item';
-import { RecipeId } from '../data/recipe';
 
 export const options = {
   Belt: [
@@ -24,13 +23,6 @@ export const options = {
       ItemId.SolidFuel,
       ItemId.RocketFuel,
       ItemId.NuclearFuel,
-    ],
-  ],
-  OilRecipe: [
-    [
-      RecipeId.BasicOilProcessing,
-      RecipeId.AdvancedOilProcessing,
-      RecipeId.CoalLiquefaction,
     ],
   ],
   ProdModule: [

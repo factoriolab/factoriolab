@@ -10,7 +10,6 @@ import {
   RecipeSettings,
   Step,
   RateType,
-  ItemId,
   ItemSettings,
   Entities,
 } from '~/models';
@@ -67,7 +66,7 @@ export class RouterService {
   stepHref(step: Step, data: DatasetState) {
     const products: Product[] = [
       {
-        id: 0,
+        id: '0',
         itemId: step.itemId,
         rate: step.items.toNumber(),
         rateType: RateType.Items,
@@ -140,8 +139,8 @@ export class RouterService {
     for (const product of zProducts) {
       const p = product.split(':');
       products.push({
-        id: n,
-        itemId: p[0] as ItemId,
+        id: n.toString(),
+        itemId: p[0],
         rateType: Number(p[1]),
         rate: Number(p[2]),
       });
@@ -169,7 +168,7 @@ export class RouterService {
         u.ignore = r[1] === '1' ? true : false;
       }
       if (r[2] !== '') {
-        u.belt = r[2] as ItemId;
+        u.belt = r[2];
       }
       items[r[0]] = u;
     }
@@ -194,13 +193,13 @@ export class RouterService {
       const r = recipe.split(':');
       const u: RecipeSettings = {};
       if (r[1] !== '') {
-        u.factory = r[1] as ItemId;
+        u.factory = r[1];
       }
       if (r[2] !== '') {
-        u.modules = r[2].split('.').map((m) => m as ItemId);
+        u.modules = r[2].split('.');
       }
       if (r[3] !== '') {
-        u.beaconModule = r[3] as ItemId;
+        u.beaconModule = r[3];
       }
       if (r[4] !== '') {
         u.beaconCount = Number(r[4]);
@@ -273,13 +272,13 @@ export class RouterService {
       settings.factoryPrecision = s[3] === 'n' ? null : Number(s[3]);
     }
     if (s[4] !== '') {
-      settings.belt = s[4] as ItemId;
+      settings.belt = s[4];
     }
     if (s[5] !== '') {
-      settings.assembler = s[5] as ItemId;
+      settings.assembler = s[5];
     }
     if (s[6] !== '') {
-      settings.furnace = s[6] as ItemId;
+      settings.furnace = s[6];
     }
     if (s[7] !== '') {
       settings.recipeDisabled = s[7]
@@ -287,16 +286,16 @@ export class RouterService {
         .reduce((e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }), {});
     }
     if (s[8] !== '') {
-      settings.fuel = s[8] as ItemId;
+      settings.fuel = s[8];
     }
     if (s[9] !== '') {
-      settings.prodModule = s[9] as ItemId;
+      settings.prodModule = s[9];
     }
     if (s[10] !== '') {
-      settings.speedModule = s[10] as ItemId;
+      settings.speedModule = s[10];
     }
     if (s[11] !== '') {
-      settings.beaconModule = s[11] as ItemId;
+      settings.beaconModule = s[11];
     }
     if (s[12] !== '') {
       settings.beaconCount = Number(s[12]);

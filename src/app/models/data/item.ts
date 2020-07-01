@@ -1,6 +1,5 @@
 import { Rational } from '../rational';
 import { Belt, RationalBelt } from './belt';
-import { CategoryId } from './category';
 import { Factory, RationalFactory } from './factory';
 import { Module, RationalModule } from './module';
 
@@ -70,9 +69,9 @@ export enum ItemId {
 }
 
 export interface Item {
-  id: ItemId;
+  id: string;
   name: string;
-  category: CategoryId;
+  category: string;
   row: number;
   stack?: number;
   belt?: Belt;
@@ -83,9 +82,9 @@ export interface Item {
 }
 
 export class RationalItem {
-  id: ItemId;
+  id: string;
   name: string;
-  category: CategoryId;
+  category: string;
   row: number;
   stack?: Rational;
   belt?: RationalBelt;

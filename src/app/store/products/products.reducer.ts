@@ -1,15 +1,15 @@
-import { Product, RateType, NEntities, ItemId } from '~/models';
+import { Product, RateType, Entities } from '~/models';
 import { ProductsAction, ProductsActionType } from './products.actions';
 
 export interface ProductsState {
-  ids: number[];
-  entities: NEntities<Product>;
+  ids: string[];
+  entities: Entities<Product>;
   index: number;
 }
 
 const defaultProduct: Product = {
-  id: 0,
-  itemId: ItemId.WoodenChest,
+  id: '0',
+  itemId: null,
   rate: 1,
   rateType: RateType.Items,
 };
@@ -27,8 +27,8 @@ export function productsReducer(
   switch (action.type) {
     case ProductsActionType.LOAD: {
       const ids = action.payload.map((p) => p.id);
-      const index = Math.max(...ids) + 1;
-      const entities = action.payload.reduce((e: NEntities<Product>, i) => {
+      const index = Math.max(...ids.map((p) => Number(p))) + 1;
+      const entities = action.payload.reduce((e: Entities<Product>, i) => {
         return { ...e, ...{ [i.id]: i } };
       }, {});
       return { ...state, ...{ ids, entities, index } };
@@ -36,12 +36,12 @@ export function productsReducer(
     case ProductsActionType.ADD: {
       const newOutput = {
         ...defaultProduct,
-        ...{ id: state.index, itemId: action.payload },
+        ...{ id: state.index.toString(), itemId: action.payload },
       };
       return {
         ...state,
         ...{
-          ids: [...state.ids, state.index],
+          ids: [...state.ids, state.index.toString()],
           entities: { ...state.entities, ...{ [state.index]: newOutput } },
           index: state.index + 1,
         },

@@ -1,17 +1,16 @@
-import { ItemId } from './data/item';
 import { Rational } from './rational';
 
 export interface RecipeSettings {
-  factory?: ItemId;
-  modules?: ItemId[];
-  beaconModule?: ItemId;
+  factory?: string;
+  modules?: string[];
+  beaconModule?: string;
   beaconCount?: number;
 }
 
 export class RationalRecipeSettings {
-  factory?: ItemId;
-  modules?: ItemId[];
-  beaconModule?: ItemId;
+  factory?: string;
+  modules?: string[];
+  beaconModule?: string;
   beaconCount?: Rational;
 
   constructor(data: RecipeSettings) {

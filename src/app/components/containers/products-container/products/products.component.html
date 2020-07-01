@@ -6,7 +6,7 @@
     *ngIf="adding"
     [data]="data"
     [categoryId]="categoryId"
-    [itemId]="ItemId.WoodenChest"
+    [itemId]="data.itemIds[0]"
     (cancel)="adding = false"
     (selectTab)="categoryId = $event"
     (selectItem)="add.emit($event)"

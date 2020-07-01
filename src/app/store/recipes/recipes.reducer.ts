@@ -15,31 +15,33 @@ export function recipesReducer(
       return action.payload;
     }
     case RecipesActionType.SET_FACTORY: {
-      const id = action.payload[0];
+      const id = action.payload.id;
       return {
         ...state,
-        ...{ [id]: { ...state[id], ...{ factory: action.payload[1] } } },
+        ...{ [id]: { ...state[id], ...{ factory: action.payload.value } } },
       };
     }
     case RecipesActionType.SET_MODULES: {
-      const id = action.payload[0];
+      const id = action.payload.id;
       return {
         ...state,
-        ...{ [id]: { ...state[id], ...{ modules: action.payload[1] } } },
+        ...{ [id]: { ...state[id], ...{ modules: action.payload.value } } },
       };
     }
     case RecipesActionType.SET_BEACON_MODULE: {
-      const id = action.payload[0];
+      const id = action.payload.id;
       return {
         ...state,
-        ...{ [id]: { ...state[id], ...{ beaconModule: action.payload[1] } } },
+        ...{
+          [id]: { ...state[id], ...{ beaconModule: action.payload.value } },
+        },
       };
     }
     case RecipesActionType.SET_BEACONS_COUNT: {
-      const id = action.payload[0];
+      const id = action.payload.id;
       return {
         ...state,
-        ...{ [id]: { ...state[id], ...{ beaconCount: action.payload[1] } } },
+        ...{ [id]: { ...state[id], ...{ beaconCount: action.payload.value } } },
       };
     }
     case RecipesActionType.RESET: {

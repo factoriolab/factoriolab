@@ -2,9 +2,7 @@ import {
   Step,
   Entities,
   RationalRecipe,
-  RecipeId,
   RationalItem,
-  ItemId,
   Rational,
   Solver,
   Variable,
@@ -24,7 +22,7 @@ export class MatrixUtility {
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
     recipeDisabled: Entities<boolean>,
-    fuel: ItemId,
+    fuel: string,
     data: RationalDataset
   ) {
     const matrix = new MatrixSolver(
@@ -57,18 +55,18 @@ export class MatrixSolver {
   itemSettings: ItemsState;
   recipeSettings: RecipesState;
   recipeDisabled: Entities<boolean>;
-  fuel: ItemId;
+  fuel: string;
   data: RationalDataset;
 
   value: Entities<Rational> = {};
   recipes: Entities<RationalRecipe> = {};
-  recipeIds: RecipeId[] = [];
-  usedRecipeIds: RecipeId[] = [];
-  mappedRecipeIds: RecipeId[] = [];
+  recipeIds: string[] = [];
+  usedRecipeIds: string[] = [];
+  mappedRecipeIds: string[] = [];
   recipeVar: Entities<Variable> = {};
   items: Entities<RationalItem> = {};
-  itemIds: ItemId[] = [];
-  outputs: ItemId[] = [];
+  itemIds: string[] = [];
+  outputs: string[] = [];
   surplusVar: Entities<Variable> = {};
   inputVar: Entities<Variable> = {};
 
@@ -79,7 +77,7 @@ export class MatrixSolver {
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
     recipeDisabled: Entities<boolean>,
-    fuel: ItemId,
+    fuel: string,
     data: RationalDataset
   ) {
     this.steps = steps;
@@ -92,9 +90,7 @@ export class MatrixSolver {
 
   get simpleStepsOnly() {
     return !this.steps.some(
-      (s) =>
-        s.recipeId !== (s.itemId as string) &&
-        !this.itemSettings[s.itemId].ignore
+      (s) => s.recipeId !== s.itemId && !this.itemSettings[s.itemId].ignore
     );
   }
 
@@ -133,13 +129,13 @@ export class MatrixSolver {
       for (const outId of Object.keys(recipe.out)) {
         this.items[outId] = this.data.itemR[outId];
         if (!this.outputs.some((o) => o === outId)) {
-          this.outputs.push(outId as ItemId);
+          this.outputs.push(outId);
         }
       }
       this.recipeVar[r] = variable;
     }
 
-    this.itemIds = Object.keys(this.items) as ItemId[];
+    this.itemIds = Object.keys(this.items);
   }
 
   parseItems() {
@@ -193,7 +189,7 @@ export class MatrixSolver {
     let costExpr = new Expression(cost);
     for (const i of Object.keys(this.inputVar)) {
       if (this.data.recipeR[i]) {
-        if (this.data.recipeR[i].producers[0] === ItemId.OffshorePump) {
+        if (i === 'water') {
           costExpr = costExpr.minus(
             new Expression([Rational.hundred, this.inputVar[i]])
           );
@@ -217,7 +213,7 @@ export class MatrixSolver {
   parseSolutionRecipes() {
     this.usedRecipeIds = Object.keys(this.recipeVar).filter((r) => {
       return this.recipeVar[r].value.gt(Rational.zero);
-    }) as RecipeId[];
+    });
   }
 
   parseSolutionOutputs() {
@@ -254,7 +250,7 @@ export class MatrixSolver {
           this.steps.push(step);
         }
         if (recipeId) {
-          step.recipeId = recipeId as RecipeId;
+          step.recipeId = recipeId;
           step.factories = this.recipeVar[recipeId].value.mul(
             this.data.recipeR[recipeId].time
           );
@@ -275,7 +271,7 @@ export class MatrixSolver {
       this.steps.push({
         itemId: null,
         items: null,
-        recipeId: r as RecipeId,
+        recipeId: r,
         factories: this.recipeVar[r].value.mul(this.data.recipeR[r].time),
       });
     }
@@ -288,7 +284,7 @@ export class MatrixSolver {
       // Item has simple recipe, calculate inputs
       RateUtility.addStepsFor(
         null,
-        i as ItemId,
+        i,
         this.inputVar[i].value,
         this.steps,
         this.itemSettings,
@@ -320,10 +316,10 @@ export class MatrixSolver {
       }
     }
 
-    this.recipeIds = Object.keys(this.recipes) as RecipeId[];
+    this.recipeIds = Object.keys(this.recipes);
   }
 
-  findRecipesRecursively(itemId: ItemId) {
+  findRecipesRecursively(itemId: string) {
     const simpleRecipe = this.data.recipeR[itemId];
     if (simpleRecipe) {
       if (!this.recipeDisabled[simpleRecipe.id]) {
@@ -349,7 +345,7 @@ export class MatrixSolver {
       for (const id of Object.keys(recipe.in).filter(
         (i) => !this.itemSettings[i].ignore
       )) {
-        this.findRecipesRecursively(id as ItemId);
+        this.findRecipesRecursively(id);
       }
     }
   }

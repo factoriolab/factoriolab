@@ -8,13 +8,13 @@ import {
 
 import {
   Step,
-  RecipeId,
   ItemId,
   CategoryId,
   options,
   DisplayRate,
   Entities,
   Rational,
+  IdPayload,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { DatasetState } from '~/store/dataset';
@@ -57,14 +57,14 @@ export class ListComponent {
   @Input() modifiedModules: boolean;
   @Input() modifiedBeacons: boolean;
 
-  @Output() ignoreItem = new EventEmitter<ItemId>();
-  @Output() setBelt = new EventEmitter<[ItemId, ItemId]>();
-  @Output() setFactory = new EventEmitter<[RecipeId, ItemId]>();
-  @Output() setModules = new EventEmitter<[RecipeId, ItemId[]]>();
-  @Output() setBeaconModule = new EventEmitter<[RecipeId, ItemId]>();
-  @Output() setBeaconCount = new EventEmitter<[RecipeId, number]>();
-  @Output() resetItem = new EventEmitter<ItemId>();
-  @Output() resetRecipe = new EventEmitter<RecipeId>();
+  @Output() ignoreItem = new EventEmitter<string>();
+  @Output() setBelt = new EventEmitter<IdPayload<string>>();
+  @Output() setFactory = new EventEmitter<IdPayload<string>>();
+  @Output() setModules = new EventEmitter<IdPayload<string[]>>();
+  @Output() setBeaconModule = new EventEmitter<IdPayload<string>>();
+  @Output() setBeaconCount = new EventEmitter<IdPayload<number>>();
+  @Output() resetItem = new EventEmitter<string>();
+  @Output() resetRecipe = new EventEmitter<string>();
   @Output() resetIgnore = new EventEmitter();
   @Output() resetBelt = new EventEmitter();
   @Output() resetFactory = new EventEmitter();
@@ -77,14 +77,13 @@ export class ListComponent {
   CategoryId = CategoryId;
   DisplayRate = DisplayRate;
   StepEditType = StepEditType;
-  ItemId = ItemId;
   Rational = Rational;
 
   options = options;
 
   constructor(public router: RouterService) {}
 
-  findStep(id: ItemId) {
+  findStep(id: string) {
     return this.steps.find((s) => s.itemId === id);
   }
 
@@ -104,14 +103,14 @@ export class ListComponent {
     );
   }
 
-  factoryModuleChange(step: Step, value: ItemId, index: number) {
+  factoryModuleChange(step: Step, value: string, index: number) {
     if (index === 0) {
       // Copy to all
       const modules = [];
       for (const m of this.recipeSettings[step.recipeId].modules) {
         modules.push(value);
       }
-      this.setModules.emit([step.recipeId, modules]);
+      this.setModules.emit({ id: step.recipeId, value: modules });
     } else {
       // Edit individual module
       const modules = [
@@ -119,7 +118,7 @@ export class ListComponent {
         value,
         ...this.recipeSettings[step.recipeId].modules.slice(index + 1),
       ];
-      this.setModules.emit([step.recipeId, modules]);
+      this.setModules.emit({ id: step.recipeId, value: modules });
     }
   }
 
@@ -131,7 +130,7 @@ export class ListComponent {
           this.steps.find((s) => s.itemId === step.itemId).itemId
         ].beaconCount !== value
       ) {
-        this.setBeaconCount.emit([step.recipeId, value]);
+        this.setBeaconCount.emit({ id: step.recipeId, value });
       }
     }
   }

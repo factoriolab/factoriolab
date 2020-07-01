@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { DisplayRate, ItemId, RecipeId, ResearchSpeed, Theme } from '~/models';
+import { DisplayRate, ResearchSpeed, Theme } from '~/models';
 import { SettingsState } from './settings.reducer';
 
 export const enum SettingsActionType {
@@ -55,42 +55,42 @@ export class SetFactoryPrecisionAction implements Action {
 
 export class SetBeltAction implements Action {
   readonly type = SettingsActionType.SET_BELT;
-  constructor(public payload: ItemId) {}
+  constructor(public payload: string) {}
 }
 
 export class SetAssemblerAction implements Action {
   readonly type = SettingsActionType.SET_ASSEMBLER;
-  constructor(public payload: ItemId) {}
+  constructor(public payload: string) {}
 }
 
 export class SetFurnaceAction implements Action {
   readonly type = SettingsActionType.SET_FURNACE;
-  constructor(public payload: ItemId) {}
+  constructor(public payload: string) {}
 }
 
 export class DisableRecipe implements Action {
   readonly type = SettingsActionType.DISABLE_RECIPE;
-  constructor(public payload: RecipeId) {}
+  constructor(public payload: string) {}
 }
 
 export class EnableRecipe implements Action {
   readonly type = SettingsActionType.ENABLE_RECIPE;
-  constructor(public payload: RecipeId) {}
+  constructor(public payload: string) {}
 }
 
 export class SetProdModuleAction implements Action {
   readonly type = SettingsActionType.SET_PROD_MODULE;
-  constructor(public payload: ItemId) {}
+  constructor(public payload: string) {}
 }
 
 export class SetSpeedModuleAction implements Action {
   readonly type = SettingsActionType.SET_SPEED_MODULE;
-  constructor(public payload: ItemId) {}
+  constructor(public payload: string) {}
 }
 
 export class SetBeaconModuleAction implements Action {
   readonly type = SettingsActionType.SET_BEACON_MODULE;
-  constructor(public payload: ItemId) {}
+  constructor(public payload: string) {}
 }
 
 export class SetBeaconCountAction implements Action {
@@ -100,7 +100,7 @@ export class SetBeaconCountAction implements Action {
 
 export class SetFuelAction implements Action {
   readonly type = SettingsActionType.SET_FUEL;
-  constructor(public payload: ItemId) {}
+  constructor(public payload: string) {}
 }
 
 export class SetDrillModuleAction implements Action {

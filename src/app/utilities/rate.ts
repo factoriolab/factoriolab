@@ -2,8 +2,6 @@ import {
   Step,
   DisplayRate,
   Entities,
-  ItemId,
-  CategoryId,
   Node,
   Rational,
   DisplayRateVal,
@@ -16,13 +14,13 @@ export class RateUtility {
   static LAUNCH_TIME = new Rational(BigInt(2420), BigInt(60));
 
   static addStepsFor(
-    parentId: ItemId,
-    itemId: ItemId,
+    parentId: string,
+    itemId: string,
     rate: Rational,
     steps: Step[],
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
-    fuel: ItemId,
+    fuel: string,
     data: RationalDataset
   ) {
     const recipe = data.recipeR[itemId];
@@ -67,16 +65,16 @@ export class RateUtility {
       const out = recipe.out[itemId];
 
       // Calculate factories
-      if (itemId === ItemId.SpaceSciencePack) {
+      if (itemId === 'space-science-pack') {
         // Factories are for rocket parts, space science packs are a side effect
         step.factories = null;
       } else {
         step.factories = step.items.mul(recipe.time).div(out);
-        if (item.category === CategoryId.Research) {
+        if (item.category === 'research') {
           step.factories = step.factories;
         }
         // Add # of factories to actually launch rockets
-        if (itemId === ItemId.RocketPart) {
+        if (itemId === 'rocket-part') {
           step.factories = step.factories.add(
             step.items.div(Rational.hundred).mul(this.LAUNCH_TIME)
           );
@@ -93,7 +91,7 @@ export class RateUtility {
           const ingredientRate = rate.mul(recipe.in[ingredient]).div(out);
           RateUtility.addStepsFor(
             itemId,
-            ingredient as ItemId,
+            ingredient,
             ingredientRate,
             steps,
             itemSettings,
@@ -108,11 +106,11 @@ export class RateUtility {
 
   static addNodesFor(
     parent: Node,
-    itemId: ItemId,
+    itemId: string,
     rate: Rational,
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
-    fuel: ItemId,
+    fuel: string,
     data: RationalDataset
   ) {
     const recipe = data.recipeR[itemId];
@@ -137,16 +135,16 @@ export class RateUtility {
       const out = recipe.out[itemId];
 
       // Calculate factories
-      if (itemId === ItemId.SpaceSciencePack) {
+      if (itemId === 'space-science-pack') {
         // Factories are for rocket parts, space science packs are a side effect
         node.factories = null;
       } else {
         node.factories = node.items.mul(recipe.time).div(out);
-        if (item.category === CategoryId.Research) {
+        if (item.category === 'research') {
           node.factories = node.factories;
         }
         // Add # of factories to actually launch rockets
-        if (itemId === ItemId.RocketPart) {
+        if (itemId === 'rocket-part') {
           node.factories = node.factories.add(
             node.items.div(Rational.hundred).mul(this.LAUNCH_TIME)
           );
@@ -162,7 +160,7 @@ export class RateUtility {
         for (const ingredient of Object.keys(recipe.in)) {
           RateUtility.addNodesFor(
             node,
-            ingredient as ItemId,
+            ingredient,
             rate.mul(recipe.in[ingredient]).div(out),
             itemSettings,
             recipeSettings,

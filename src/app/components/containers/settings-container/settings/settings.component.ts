@@ -10,7 +10,6 @@ import {
 import {
   DisplayRate,
   ItemId,
-  RecipeId,
   ResearchSpeed,
   IdType,
   Theme,
@@ -45,16 +44,16 @@ export class SettingsComponent {
   @Output() setItemPrecision = new EventEmitter<number>();
   @Output() setBeltPrecision = new EventEmitter<number>();
   @Output() setFactoryPrecision = new EventEmitter<number>();
-  @Output() setBelt = new EventEmitter<ItemId>();
-  @Output() setAssembler = new EventEmitter<ItemId>();
-  @Output() setFurnace = new EventEmitter<ItemId>();
-  @Output() disableRecipe = new EventEmitter<RecipeId>();
-  @Output() enableRecipe = new EventEmitter<RecipeId>();
-  @Output() setFuel = new EventEmitter<ItemId>();
+  @Output() setBelt = new EventEmitter<string>();
+  @Output() setAssembler = new EventEmitter<string>();
+  @Output() setFurnace = new EventEmitter<string>();
+  @Output() disableRecipe = new EventEmitter<string>();
+  @Output() enableRecipe = new EventEmitter<string>();
+  @Output() setFuel = new EventEmitter<string>();
   @Output() setFlowRate = new EventEmitter<number>();
-  @Output() setProdModule = new EventEmitter<ItemId>();
-  @Output() setSpeedModule = new EventEmitter<ItemId>();
-  @Output() setBeaconModule = new EventEmitter<ItemId>();
+  @Output() setProdModule = new EventEmitter<string>();
+  @Output() setSpeedModule = new EventEmitter<string>();
+  @Output() setBeaconModule = new EventEmitter<string>();
   @Output() setBeaconCount = new EventEmitter<number>();
   @Output() setDrillModule = new EventEmitter<boolean>();
   @Output() setMiningBonus = new EventEmitter<number>();
