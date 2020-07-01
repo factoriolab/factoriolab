@@ -1,4 +1,26 @@
 {
+  "categories": [
+    {
+      "id": "logistics",
+      "name": "Logistics"
+    },
+    {
+      "id": "production",
+      "name": "Production"
+    },
+    {
+      "id": "intermediate-products",
+      "name": "Intermediate Products"
+    },
+    {
+      "id": "combat",
+      "name": "Combat"
+    },
+    {
+      "id": "research",
+      "name": "Infinite Research"
+    }
+  ],
   "items": [
     {
       "id": "wooden-chest",
@@ -283,35 +305,35 @@
       "row": 6
     },
     {
-      "id": "active-provider-chest",
+      "id": "logistics-chest-active-provider",
       "name": "Active Provider Chest",
       "stack": 50,
       "category": "logistics",
       "row": 6
     },
     {
-      "id": "passive-provider-chest",
+      "id": "logistics-chest-passive-provider",
       "name": "Passive Provider Chest",
       "stack": 50,
       "category": "logistics",
       "row": 6
     },
     {
-      "id": "storage-chest",
+      "id": "logistics-chest-storage",
       "name": "Storage Chest",
       "stack": 50,
       "category": "logistics",
       "row": 6
     },
     {
-      "id": "buffer-chest",
+      "id": "logistics-chest-buffer",
       "name": "Buffer Chest",
       "stack": 50,
       "category": "logistics",
       "row": 6
     },
     {
-      "id": "requester-chest",
+      "id": "logistics-chest-requester",
       "name": "Requester Chest",
       "stack": 50,
       "category": "logistics",
@@ -325,7 +347,7 @@
       "row": 6
     },
     {
-      "id": "lamp",
+      "id": "small-lamp",
       "name": "Lamp",
       "stack": 50,
       "category": "logistics",
@@ -787,7 +809,7 @@
       "id": "wood",
       "name": "Wood",
       "stack": 100,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 1,
       "fuel": 2
     },
@@ -795,7 +817,7 @@
       "id": "coal",
       "name": "Coal",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 1,
       "fuel": 4
     },
@@ -803,97 +825,97 @@
       "id": "stone",
       "name": "Stone",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 1
     },
     {
       "id": "iron-ore",
       "name": "Iron Ore",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 1
     },
     {
       "id": "copper-ore",
       "name": "Copper Ore",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 1
     },
     {
       "id": "uranium-ore",
       "name": "Uranium Ore",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 1
     },
     {
       "id": "crude-oil",
       "name": "Crude Oil",
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 1
     },
     {
       "id": "heavy-oil",
       "name": "Heavy Oil",
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 1
     },
     {
       "id": "light-oil",
       "name": "Light Oil",
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 1
     },
     {
       "id": "lubricant",
       "name": "Lubricant",
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 1
     },
     {
       "id": "petroleum-gas",
       "name": "Petroleum Gas",
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 2
     },
     {
       "id": "sulfuric-acid",
       "name": "Sulfuric Acid",
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 2
     },
     {
       "id": "water",
       "name": "Water",
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 2
     },
     {
       "id": "steam",
       "name": "Steam",
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 2
     },
     {
       "id": "iron-plate",
       "name": "Iron Plate",
       "stack": 100,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 3
     },
     {
       "id": "copper-plate",
       "name": "Copper Plate",
       "stack": 100,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 3
     },
     {
       "id": "solid-fuel",
       "name": "Solid Fuel",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 3,
       "fuel": 12
     },
@@ -901,189 +923,189 @@
       "id": "steel-plate",
       "name": "Steel Plate",
       "stack": 100,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 3
     },
     {
       "id": "plastic-bar",
       "name": "Plastic Bar",
       "stack": 100,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 3
     },
     {
       "id": "sulfur",
       "name": "Sulfur",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 3
     },
     {
       "id": "battery",
       "name": "Battery",
       "stack": 200,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 3
     },
     {
       "id": "explosives",
       "name": "Explosives",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 3
     },
     {
       "id": "crude-oil-barrel",
       "name": "Crude Oil Barrel",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 4
     },
     {
       "id": "heavy-oil-barrel",
       "name": "Heavy Oil Barrel",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 4
     },
     {
       "id": "light-oil-barrel",
       "name": "Light Oil Barrel",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 4
     },
     {
       "id": "lubricant-barrel",
       "name": "Lubricant Barrel",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 4
     },
     {
       "id": "petroleum-gas-barrel",
       "name": "Petroleum Gas Barrel",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 4
     },
     {
       "id": "sulfuric-acid-barrel",
       "name": "Sulfuric Acid Barrel",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 4
     },
     {
       "id": "water-barrel",
       "name": "Water Barrel",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 4
     },
     {
       "id": "copper-cable",
       "name": "Copper Cable",
       "stack": 200,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 5
     },
     {
       "id": "iron-stick",
       "name": "Iron Stick",
       "stack": 100,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 5
     },
     {
       "id": "iron-gear-wheel",
       "name": "Iron Gear Wheel",
       "stack": 100,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 5
     },
     {
       "id": "empty-barrel",
       "name": "Empty Barrel",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 5
     },
     {
       "id": "electronic-circuit",
       "name": "Electronic Circuit",
       "stack": 200,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 5
     },
     {
       "id": "advanced-circuit",
       "name": "Advanced Circuit",
       "stack": 200,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 5
     },
     {
       "id": "processing-unit",
       "name": "Processing Unit",
       "stack": 200,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 5
     },
     {
       "id": "engine-unit",
       "name": "Engine Unit",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 5
     },
     {
       "id": "electric-engine-unit",
       "name": "Electric Engine Unit",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 5
     },
     {
       "id": "flying-robot-frame",
       "name": "Flying Robot Frame",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 5
     },
     {
       "id": "satellite",
       "name": "Satellite",
       "stack": 1,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 6
     },
     {
       "id": "rocket-part",
       "name": "Rocket Part",
       "stack": 5,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 6
     },
     {
       "id": "rocket-control-unit",
       "name": "Rocket Control Unit",
       "stack": 10,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 6
     },
     {
       "id": "low-density-structure",
       "name": "Low Density Structure",
       "stack": 10,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 6
     },
     {
       "id": "rocket-fuel",
       "name": "Rocket Fuel",
       "stack": 10,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 6,
       "fuel": 100
     },
@@ -1091,7 +1113,7 @@
       "id": "nuclear-fuel",
       "name": "Nuclear Fuel",
       "stack": 1,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 6,
       "fuel": 1210
     },
@@ -1099,77 +1121,77 @@
       "id": "uranium-235",
       "name": "Uranium-235",
       "stack": 100,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 6
     },
     {
       "id": "uranium-238",
       "name": "Uranium-238",
       "stack": 100,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 6
     },
     {
       "id": "uranium-fuel-cell",
       "name": "Uranium Fuel Cell",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 6
     },
     {
       "id": "used-up-uranium-fuel-cell",
       "name": "Used Up Uranium Fuel Cell",
       "stack": 50,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 6
     },
     {
       "id": "automation-science-pack",
       "name": "Automation Science Pack",
       "stack": 200,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 7
     },
     {
       "id": "logistic-science-pack",
       "name": "Logistic Science Pack",
       "stack": 200,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 7
     },
     {
       "id": "military-science-pack",
       "name": "Military Science Pack",
       "stack": 200,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 7
     },
     {
       "id": "chemical-science-pack",
       "name": "Chemical Science Pack",
       "stack": 200,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 7
     },
     {
       "id": "production-science-pack",
       "name": "Production Science Pack",
       "stack": 200,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 7
     },
     {
       "id": "utility-science-pack",
       "name": "Utility Science Pack",
       "stack": 200,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 7
     },
     {
       "id": "space-science-pack",
       "name": "Space Science Pack",
       "stack": 200,
-      "category": "intermediate",
+      "category": "intermediate-products",
       "row": 7
     },
     {
@@ -1418,56 +1440,56 @@
       "row": 5
     },
     {
-      "id": "portable-solar-panel",
+      "id": "solar-panel-equipment",
       "name": "Portable Solar Panel",
       "stack": 20,
       "category": "combat",
       "row": 6
     },
     {
-      "id": "portable-fusion-reactor",
+      "id": "fusion-reactor-equipment",
       "name": "Portable Fusion Reactor",
       "stack": 20,
       "category": "combat",
       "row": 6
     },
     {
-      "id": "energy-shield",
+      "id": "energy-shield-equipment",
       "name": "Energy Shield",
       "stack": 20,
       "category": "combat",
       "row": 6
     },
     {
-      "id": "energy-shield-mk2",
+      "id": "energy-shield-mk2-equipment",
       "name": "Energy Shield MK2",
       "stack": 20,
       "category": "combat",
       "row": 6
     },
     {
-      "id": "personal-battery",
+      "id": "battery-equipment",
       "name": "Personal Battery",
       "stack": 20,
       "category": "combat",
       "row": 6
     },
     {
-      "id": "personal-battery-mk2",
+      "id": "battery-mk2-equipment",
       "name": "Personal Battery MK2",
       "stack": 20,
       "category": "combat",
       "row": 6
     },
     {
-      "id": "personal-laser-defense",
+      "id": "personal-laser-defense-equipment",
       "name": "Personal Laser Defense",
       "stack": 20,
       "category": "combat",
       "row": 6
     },
     {
-      "id": "discharge-defense",
+      "id": "discharge-defense-equipment",
       "name": "Discharge Defense",
       "stack": 20,
       "category": "combat",
@@ -1481,35 +1503,35 @@
       "row": 6
     },
     {
-      "id": "exoskeleton",
+      "id": "exoskeleton-equipment",
       "name": "Exoskeleton",
       "stack": 20,
       "category": "combat",
       "row": 6
     },
     {
-      "id": "personal-roboport",
+      "id": "personal-roboport-equipment",
       "name": "Personal Roboport",
       "stack": 20,
       "category": "combat",
       "row": 7
     },
     {
-      "id": "personal-roboport-mk2",
+      "id": "personal-roboport-mk2-equipment",
       "name": "Personal Roboport MK2",
       "stack": 20,
       "category": "combat",
       "row": 7
     },
     {
-      "id": "nightvision",
+      "id": "night-vision-equipment",
       "name": "Nightvision",
       "stack": 20,
       "category": "combat",
       "row": 7
     },
     {
-      "id": "wall",
+      "id": "stone-wall",
       "name": "Wall",
       "stack": 100,
       "category": "combat",
@@ -1622,28 +1644,6 @@
       "name": "Stronger Explosives",
       "category": "research",
       "row": 3
-    }
-  ],
-  "categories": [
-    {
-      "id": "logistics",
-      "name": "Logistics"
-    },
-    {
-      "id": "production",
-      "name": "Production"
-    },
-    {
-      "id": "intermediate",
-      "name": "Intermediate Products"
-    },
-    {
-      "id": "combat",
-      "name": "Combat"
-    },
-    {
-      "id": "research",
-      "name": "Infinite Research"
     }
   ],
   "recipes": [
@@ -3299,7 +3299,7 @@
     { "id": "heavy-oil-barrel", "position": "-192px -320px" },
     { "id": "heavy-oil-cracking", "position": "-224px -320px" },
     { "id": "inserter", "position": "-32px -352px" },
-    { "id": "intermediate", "size": 64, "position": "-64px -928px" },
+    { "id": "intermediate-products", "size": 64, "position": "-64px -928px" },
     { "id": "iron-chest", "position": "-64px -352px" },
     { "id": "iron-gear-wheel", "position": "-96px -352px" },
     { "id": "iron-ore", "position": "-128px -352px" },
