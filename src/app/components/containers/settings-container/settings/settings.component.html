@@ -26,7 +26,7 @@
       <lab-toggle
         *ngIf="openSelect === OpenSelect.DisabledRecipes"
         [data]="data"
-        [disabledRecipes]="settings.disabledRecipes"
+        [recipeDisabled]="settings.recipeDisabled"
         (cancel)="openSelect = OpenSelect.None"
         (enableRecipe)="enableRecipe.emit($event)"
         (disableRecipe)="disableRecipe.emit($event)"

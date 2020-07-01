@@ -3,7 +3,6 @@ import {
   DisplayRate,
   Entities,
   ItemId,
-  RecipeId,
   CategoryId,
   Node,
   Rational,
@@ -134,11 +133,6 @@ export class RateUtility {
     parent.children.push(node);
 
     if (recipe) {
-      // Mark complex recipes
-      if ((recipe.id as string) !== itemId) {
-        node.recipeId = recipe.id;
-      }
-
       // Calculate number of outputs from recipe
       const out = recipe.out[itemId];
 

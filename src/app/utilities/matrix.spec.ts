@@ -1,7 +1,8 @@
 import * as Mocks from 'src/mocks';
 import { Step, ItemId, Rational, RecipeId } from '~/models';
-import { MatrixUtility, MatrixSolver } from './matrix';
+import { initialSettingsState } from '~/store/settings';
 import { RateUtility } from './rate';
+import { MatrixUtility, MatrixSolver } from './matrix';
 
 describe('MatrixUtility', () => {
   describe('solveMatricesFor', () => {
@@ -17,8 +18,8 @@ describe('MatrixUtility', () => {
         steps,
         Mocks.ItemSettingsInitial,
         Mocks.RecipeSettingsInitial,
+        {},
         ItemId.Coal,
-        RecipeId.BasicOilProcessing,
         Mocks.AdjustedData
       );
       expect(steps[0].factories).toBeFalsy();
@@ -27,7 +28,7 @@ describe('MatrixUtility', () => {
     it('should return if no matrix recipes are found', () => {
       const steps: Step[] = [
         {
-          itemId: ItemId.HeavyOil,
+          itemId: ItemId.Uranium235,
           items: Rational.one,
         },
       ];
@@ -35,8 +36,11 @@ describe('MatrixUtility', () => {
         steps,
         Mocks.ItemSettingsInitial,
         Mocks.RecipeSettingsInitial,
+        {
+          [RecipeId.KovarexEnrichmentProcess]: true,
+          [RecipeId.UraniumProcessing]: true,
+        },
         ItemId.Coal,
-        RecipeId.BasicOilProcessing,
         Mocks.AdjustedData
       );
       expect(steps[0].factories).toBeFalsy();
@@ -53,8 +57,8 @@ describe('MatrixUtility', () => {
         steps,
         Mocks.ItemSettingsInitial,
         Mocks.RecipeSettingsInitial,
+        {},
         ItemId.Coal,
-        RecipeId.BasicOilProcessing,
         Mocks.AdjustedData
       );
       expect(steps[0].factories).toBeTruthy();
@@ -77,8 +81,8 @@ describe('MatrixSolver', () => {
       steps,
       Mocks.ItemSettingsInitial,
       Mocks.RecipeSettingsInitial,
+      {},
       ItemId.Coal,
-      RecipeId.BasicOilProcessing,
       Mocks.AdjustedData
     );
   });
@@ -226,7 +230,7 @@ describe('MatrixSolver', () => {
     it('should parse outputs from solver', () => {
       matrix.steps[0].itemId = ItemId.HeavyOil;
       matrix.steps[0].recipeId = null;
-      matrix.oilRecipe = RecipeId.AdvancedOilProcessing;
+      matrix.recipeDisabled = initialSettingsState.recipeDisabled;
       matrix.calculateRecipes();
       // Add dummy recipe with no inputs
       matrix.recipeIds.push(RecipeId.IronOre);
@@ -294,55 +298,10 @@ describe('MatrixSolver', () => {
       matrix.steps.push({ itemId: ItemId.LightOil, items: Rational.one });
     });
 
-    it('should handle basic oil processing', () => {
-      matrix.oilRecipe = RecipeId.BasicOilProcessing;
+    it('should calculate recipes to use', () => {
+      matrix.recipeDisabled = initialSettingsState.recipeDisabled;
       matrix.calculateRecipes();
-      expect(Object.keys(matrix.disabledRecipes).length).toEqual(6);
-      expect(matrix.steps).toEqual([
-        {
-          itemId: ItemId.SteelChest,
-          items: Rational.one,
-          recipeId: RecipeId.SteelChest,
-        },
-        { itemId: ItemId.PetroleumGas, items: Rational.one },
-        { itemId: ItemId.LightOil, items: Rational.one },
-      ]);
-    });
-
-    it('should handle advanced oil processing', () => {
-      matrix.oilRecipe = RecipeId.AdvancedOilProcessing;
-      matrix.calculateRecipes();
-      expect(Object.keys(matrix.disabledRecipes).length).toEqual(2);
-      expect(matrix.steps).toEqual([
-        {
-          itemId: ItemId.SteelChest,
-          items: Rational.one,
-          recipeId: RecipeId.SteelChest,
-        },
-        { itemId: ItemId.PetroleumGas, items: Rational.one },
-        { itemId: ItemId.LightOil, items: Rational.one },
-      ]);
-    });
-
-    it('should handle coal liquefaction', () => {
-      matrix.oilRecipe = RecipeId.CoalLiquefaction;
-      matrix.calculateRecipes();
-      expect(Object.keys(matrix.disabledRecipes).length).toEqual(2);
-      expect(matrix.steps).toEqual([
-        {
-          itemId: ItemId.SteelChest,
-          items: Rational.one,
-          recipeId: RecipeId.SteelChest,
-        },
-        { itemId: ItemId.PetroleumGas, items: Rational.one },
-        { itemId: ItemId.LightOil, items: Rational.one },
-      ]);
-    });
-
-    it('should handle unknown oil recipe', () => {
-      matrix.oilRecipe = RecipeId.SteelChest;
-      matrix.calculateRecipes();
-      expect(Object.keys(matrix.disabledRecipes).length).toEqual(0);
+      expect(Object.keys(matrix.recipeDisabled).length).toEqual(3);
       expect(matrix.steps).toEqual([
         {
           itemId: ItemId.SteelChest,
@@ -368,13 +327,13 @@ describe('MatrixSolver', () => {
     });
 
     it('should ignore disabled simple recipe', () => {
-      matrix.disabledRecipes[RecipeId.SteelChest] = true;
+      matrix.recipeDisabled[RecipeId.SteelChest] = true;
       matrix.findRecipesRecursively(ItemId.SteelChest);
       expect(matrix.parseRecipeRecursively).not.toHaveBeenCalled();
     });
 
     it('should parse complex recipes', () => {
-      matrix.disabledRecipes[RecipeId.KovarexEnrichmentProcess] = true;
+      matrix.recipeDisabled[RecipeId.KovarexEnrichmentProcess] = true;
       matrix.findRecipesRecursively(ItemId.Uranium238);
       expect(matrix.parseRecipeRecursively).toHaveBeenCalledWith(
         Mocks.AdjustedData.recipeR[RecipeId.UraniumProcessing]

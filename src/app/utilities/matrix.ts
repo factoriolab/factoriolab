@@ -23,7 +23,7 @@ export class MatrixUtility {
     steps: Step[],
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
-    disabledRecipes: RecipeId[],
+    recipeDisabled: Entities<boolean>,
     fuel: ItemId,
     data: RationalDataset
   ) {
@@ -31,7 +31,7 @@ export class MatrixUtility {
       steps,
       itemSettings,
       recipeSettings,
-      disabledRecipes,
+      recipeDisabled,
       fuel,
       data
     );
@@ -56,7 +56,7 @@ export class MatrixSolver {
   steps: Step[];
   itemSettings: ItemsState;
   recipeSettings: RecipesState;
-  disabledRecipes: RecipeId[];
+  recipeDisabled: Entities<boolean>;
   fuel: ItemId;
   data: RationalDataset;
 
@@ -78,14 +78,14 @@ export class MatrixSolver {
     steps: Step[],
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
-    disabledRecipes: RecipeId[],
+    recipeDisabled: Entities<boolean>,
     fuel: ItemId,
     data: RationalDataset
   ) {
     this.steps = steps;
     this.itemSettings = itemSettings;
     this.recipeSettings = recipeSettings;
-    this.disabledRecipes = disabledRecipes;
+    this.recipeDisabled = recipeDisabled;
     this.fuel = fuel;
     this.data = data;
   }
@@ -309,10 +309,7 @@ export class MatrixSolver {
         const recipeMatches = this.data.recipeIds
           .map((r) => this.data.recipeR[r])
           .filter(
-            (r) =>
-              this.disabledRecipes.indexOf(r.id) === -1 &&
-              r.out &&
-              r.out[step.itemId]
+            (r) => !this.recipeDisabled[r.id] && r.out && r.out[step.itemId]
           );
         if (recipeMatches.length > 0) {
           this.value[step.itemId] = step.items;
@@ -329,17 +326,14 @@ export class MatrixSolver {
   findRecipesRecursively(itemId: ItemId) {
     const simpleRecipe = this.data.recipeR[itemId];
     if (simpleRecipe) {
-      if (this.disabledRecipes.indexOf(simpleRecipe.id) === -1) {
+      if (!this.recipeDisabled[simpleRecipe.id]) {
         this.parseRecipeRecursively(this.data.recipeR[itemId]);
       }
     } else {
       // Find complex recipes
       const recipeMatches = this.data.recipeIds
         .map((r) => this.data.recipeR[r])
-        .filter(
-          (r) =>
-            this.disabledRecipes.indexOf(r.id) === -1 && r.out && r.out[itemId]
-        );
+        .filter((r) => !this.recipeDisabled[r.id] && r.out && r.out[itemId]);
 
       for (const recipe of recipeMatches) {
         this.parseRecipeRecursively(recipe);

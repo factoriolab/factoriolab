@@ -122,6 +122,28 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('DISABLE_RECIPE', () => {
+    it('should disable a recipe', () => {
+      const value = RecipeId.AdvancedOilProcessing;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.DisableRecipe(value)
+      );
+      expect(result.recipeDisabled[value]).toBeTrue();
+    });
+  });
+
+  describe('ENABLE_RECIPE', () => {
+    it('should enable a recipe', () => {
+      const value = RecipeId.BasicOilProcessing;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.EnableRecipe(value)
+      );
+      expect(result.recipeDisabled[value]).toBeUndefined();
+    });
+  });
+
   describe('SET_PROD_MODULE', () => {
     it('should set the default prod module', () => {
       const value = ItemId.ProductivityModule;
@@ -163,17 +185,6 @@ describe('Settings Reducer', () => {
         new Actions.SetBeaconCountAction(value)
       );
       expect(result.beaconCount).toEqual(value);
-    });
-  });
-
-  describe('SET_OIL_RECIPE', () => {
-    it('should set the oil recipe', () => {
-      const value = RecipeId.BasicOilProcessing;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetOilRecipeAction(value)
-      );
-      expect(result.oilRecipe).toEqual(value);
     });
   });
 

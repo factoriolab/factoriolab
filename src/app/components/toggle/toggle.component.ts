@@ -8,7 +8,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { RecipeId } from '~/models';
+import { RecipeId, Entities } from '~/models';
 import { DatasetState } from '~/store/dataset';
 
 @Component({
@@ -19,7 +19,7 @@ import { DatasetState } from '~/store/dataset';
 })
 export class ToggleComponent {
   @Input() data: DatasetState;
-  @Input() disabledRecipes: RecipeId[];
+  @Input() recipeDisabled: Entities<boolean>;
 
   @Output() cancel = new EventEmitter();
   @Output() enableRecipe = new EventEmitter<RecipeId>();
@@ -42,21 +42,12 @@ export class ToggleComponent {
     }
   }
 
-  isDisabled(id: RecipeId) {
-    return this.disabledRecipes.indexOf(id) !== -1;
-  }
-
   clickId(id: RecipeId, event: MouseEvent) {
-    if (this.isDisabled(id)) {
+    if (this.recipeDisabled[id]) {
       this.enableRecipe.emit(id);
     } else {
       this.disableRecipe.emit(id);
     }
-    event.stopPropagation();
-  }
-
-  clickCancel(event: MouseEvent) {
-    this.cancel.emit();
     event.stopPropagation();
   }
 }

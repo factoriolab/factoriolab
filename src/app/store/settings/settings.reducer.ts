@@ -5,6 +5,7 @@ import {
   ResearchSpeed,
   Theme,
   LocalStorageKey,
+  Entities,
 } from '~/models';
 import { SettingsAction, SettingsActionType } from './settings.actions';
 
@@ -16,7 +17,7 @@ export interface SettingsState {
   belt: ItemId;
   assembler: ItemId;
   furnace: ItemId;
-  disabledRecipes: RecipeId[];
+  recipeDisabled: Entities<boolean>;
   fuel: ItemId;
   prodModule: ItemId;
   speedModule: ItemId;
@@ -43,11 +44,11 @@ export const initialSettingsState: SettingsState = {
   belt: ItemId.ExpressTransportBelt,
   assembler: ItemId.AssemblingMachine3,
   furnace: ItemId.ElectricFurnace,
-  disabledRecipes: [
-    RecipeId.BasicOilProcessing,
-    RecipeId.CoalLiquefaction,
-    RecipeId.SolidFuelFromHeavyOil,
-  ],
+  recipeDisabled: {
+    [RecipeId.BasicOilProcessing]: true,
+    [RecipeId.CoalLiquefaction]: true,
+    [RecipeId.SolidFuelFromHeavyOil]: true,
+  },
   fuel: ItemId.Coal,
   prodModule: ItemId.ProductivityModule3,
   speedModule: ItemId.SpeedModule3,
@@ -94,19 +95,17 @@ export function settingsReducer(
       return {
         ...state,
         ...{
-          disabledRecipes: [...state.disabledRecipes, action.payload].sort(),
+          recipeDisabled: {
+            ...state.recipeDisabled,
+            ...{ [action.payload]: true },
+          },
         },
       };
     }
     case SettingsActionType.ENABLE_RECIPE: {
-      return {
-        ...state,
-        ...{
-          disabledRecipes: state.disabledRecipes
-            .filter((r) => r !== action.payload)
-            .sort(),
-        },
-      };
+      const newDisabled = { ...state.recipeDisabled };
+      delete newDisabled[action.payload];
+      return { ...state, ...{ recipeDisabled: newDisabled } };
     }
     case SettingsActionType.SET_FUEL: {
       return { ...state, ...{ fuel: action.payload } };

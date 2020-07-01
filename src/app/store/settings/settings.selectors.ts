@@ -10,7 +10,7 @@ const sDisplayRate = (state: SettingsState) => state.displayRate;
 const sItemPrecision = (state: SettingsState) => state.itemPrecision;
 const sBeltPrecision = (state: SettingsState) => state.beltPrecision;
 const sFactoryPrecision = (state: SettingsState) => state.factoryPrecision;
-const sDisabledRecipes = (state: SettingsState) => state.disabledRecipes;
+const sDisabledRecipes = (state: SettingsState) => state.recipeDisabled;
 const sFuel = (state: SettingsState) => state.fuel;
 const sMiningBonus = (state: SettingsState) => state.miningBonus;
 const sResearchSpeed = (state: SettingsState) => state.researchSpeed;
