@@ -1900,27 +1900,27 @@
       "in": { "electronic-circuit": 2, "flying-robot-frame": 1 }
     },
     {
-      "id": "active-provider-chest",
+      "id": "logistics-chest-active-provider",
       "time": 0.5,
       "in": { "advanced-circuit": 1, "electronic-circuit": 3, "steel-chest": 1 }
     },
     {
-      "id": "passive-provider-chest",
+      "id": "logistics-chest-passive-provider",
       "time": 0.5,
       "in": { "advanced-circuit": 1, "electronic-circuit": 3, "steel-chest": 1 }
     },
     {
-      "id": "storage-chest",
+      "id": "logistics-chest-storage",
       "time": 0.5,
       "in": { "advanced-circuit": 1, "electronic-circuit": 3, "steel-chest": 1 }
     },
     {
-      "id": "buffer-chest",
+      "id": "logistics-chest-buffer",
       "time": 0.5,
       "in": { "advanced-circuit": 1, "electronic-circuit": 3, "steel-chest": 1 }
     },
     {
-      "id": "requester-chest",
+      "id": "logistics-chest-requester",
       "time": 0.5,
       "in": { "advanced-circuit": 1, "electronic-circuit": 3, "steel-chest": 1 }
     },
@@ -1930,7 +1930,7 @@
       "in": { "advanced-circuit": 45, "iron-gear-wheel": 45, "steel-plate": 45 }
     },
     {
-      "id": "lamp",
+      "id": "small-lamp",
       "time": 0.5,
       "in": { "copper-cable": 3, "electronic-circuit": 1, "iron-plate": 1 }
     },
@@ -2760,22 +2760,22 @@
       }
     },
     {
-      "id": "portable-solar-panel",
+      "id": "solar-panel-equipment",
       "time": 10,
       "in": { "advanced-circuit": 2, "solar-panel": 1, "steel-plate": 5 }
     },
     {
-      "id": "portable-fusion-reactor",
+      "id": "fusion-reactor-equipment",
       "time": 10,
       "in": { "low-density-structure": 50, "processing-unit": 200 }
     },
     {
-      "id": "energy-shield",
+      "id": "energy-shield-equipment",
       "time": 10,
       "in": { "advanced-circuit": 5, "steel-plate": 10 }
     },
     {
-      "id": "energy-shield-mk2",
+      "id": "energy-shield-mk2-equipment",
       "time": 10,
       "in": {
         "energy-shield": 10,
@@ -2784,12 +2784,12 @@
       }
     },
     {
-      "id": "personal-battery",
+      "id": "battery-equipment",
       "time": 10,
       "in": { "battery": 5, "steel-plate": 10 }
     },
     {
-      "id": "personal-battery-mk2",
+      "id": "battery-mk2-equipment",
       "time": 10,
       "in": {
         "personal-battery": 10,
@@ -2798,7 +2798,7 @@
       }
     },
     {
-      "id": "personal-laser-defense",
+      "id": "personal-laser-defense-equipment",
       "time": 10,
       "in": {
         "laser-turret": 5,
@@ -2807,7 +2807,7 @@
       }
     },
     {
-      "id": "discharge-defense",
+      "id": "discharge-defense-equipment",
       "time": 10,
       "in": { "laser-turret": 10, "processing-unit": 5, "steel-plate": 20 }
     },
@@ -2817,7 +2817,7 @@
       "in": { "advanced-circuit": 5, "steel-plate": 10 }
     },
     {
-      "id": "exoskeleton",
+      "id": "exoskeleton-equipment",
       "time": 10,
       "in": {
         "electric-engine-unit": 30,
@@ -2826,7 +2826,7 @@
       }
     },
     {
-      "id": "personal-roboport",
+      "id": "personal-roboport-equipment",
       "time": 10,
       "in": {
         "advanced-circuit": 10,
@@ -2836,7 +2836,7 @@
       }
     },
     {
-      "id": "personal-roboport-mk2",
+      "id": "personal-roboport-mk2-equipment",
       "time": 20,
       "in": {
         "low-density-structure": 20,
@@ -2845,12 +2845,12 @@
       }
     },
     {
-      "id": "nightvision",
+      "id": "night-vision-equipment",
       "time": 10,
       "in": { "advanced-circuit": 5, "steel-plate": 10 }
     },
     {
-      "id": "wall",
+      "id": "stone-wall",
       "time": 0.5,
       "in": { "stone-brick": 5 }
     },
