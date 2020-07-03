@@ -18,13 +18,13 @@
     <div [style.marginTop.px]="-scrollTop">
       <lab-icon
         class="clickable"
-        tooltip="Disabled Recipes"
+        tooltip="Enabled Recipes"
         iconId="advanced-oil-processing"
         [data]="data"
-        (click)="openSelect = OpenSelect.DisabledRecipes"
+        (click)="openSelect = OpenSelect.EnabledRecipes"
       ></lab-icon>
       <lab-toggle
-        *ngIf="openSelect === OpenSelect.DisabledRecipes"
+        *ngIf="openSelect === OpenSelect.EnabledRecipes"
         [data]="data"
         [recipeDisabled]="settings.recipeDisabled"
         (cancel)="openSelect = OpenSelect.None"

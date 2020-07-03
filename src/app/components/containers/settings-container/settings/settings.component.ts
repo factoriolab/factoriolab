@@ -14,13 +14,14 @@ import {
   IdType,
   Theme,
   options,
+  IdPayload,
 } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
 enum OpenSelect {
   None,
-  DisabledRecipes,
+  EnabledRecipes,
   Belt,
   Assembler,
   Furnace,
@@ -45,19 +46,17 @@ export class SettingsComponent {
   @Output() setBeltPrecision = new EventEmitter<number>();
   @Output() setFactoryPrecision = new EventEmitter<number>();
   @Output() setBelt = new EventEmitter<string>();
-  @Output() setAssembler = new EventEmitter<string>();
-  @Output() setFurnace = new EventEmitter<string>();
+  @Output() setFuel = new EventEmitter<string>();
   @Output() disableRecipe = new EventEmitter<string>();
   @Output() enableRecipe = new EventEmitter<string>();
-  @Output() setFuel = new EventEmitter<string>();
-  @Output() setFlowRate = new EventEmitter<number>();
-  @Output() setProdModule = new EventEmitter<string>();
-  @Output() setSpeedModule = new EventEmitter<string>();
+  @Output() setFactoryRank = new EventEmitter<IdPayload<number>>();
+  @Output() setModuleRank = new EventEmitter<IdPayload<number>>();
   @Output() setBeaconModule = new EventEmitter<string>();
   @Output() setBeaconCount = new EventEmitter<number>();
   @Output() setDrillModule = new EventEmitter<boolean>();
   @Output() setMiningBonus = new EventEmitter<number>();
   @Output() setResearchSpeed = new EventEmitter<ResearchSpeed>();
+  @Output() setFlowRate = new EventEmitter<number>();
   @Output() setExpensive = new EventEmitter<boolean>();
   @Output() setTheme = new EventEmitter<Theme>();
 

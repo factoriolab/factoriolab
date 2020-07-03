@@ -170,7 +170,9 @@
                     [options]="options.Belt"
                     [displayRate]="displayRate"
                     (cancel)="edit = null"
-                    (selectId)="setBelt.emit([step.itemId, $event])"
+                    (selectId)="
+                      setBelt.emit({ id: step.itemId, value: $event })
+                    "
                   >
                   </lab-select>
                 </div>
@@ -241,7 +243,9 @@
                       [selectedId]="factory"
                       [options]="[recipe.producers]"
                       (cancel)="edit = null"
-                      (selectId)="setFactory.emit([step.recipeId, $event])"
+                      (selectId)="
+                        setFactory.emit({ id: step.recipeId, value: $event })
+                      "
                     >
                     </lab-select>
                   </div>
@@ -313,7 +317,9 @@
                   [selectedId]="module"
                   [options]="options.SpeedModule"
                   (cancel)="edit = null"
-                  (selectId)="setBeaconModule.emit([step.recipeId, $event])"
+                  (selectId)="
+                    setBeaconModule.emit({ id: step.recipeId, value: $event })
+                  "
                 >
                 </lab-select>
               </div>
@@ -535,7 +541,7 @@
           </td>
           <td>
             <ng-container
-              *ngIf="recipeSettings[step.recipeId].factory as factory"
+              *ngIf="recipeSettings[step.recipeId]?.factory as factory"
             >
               <div
                 class="flex"

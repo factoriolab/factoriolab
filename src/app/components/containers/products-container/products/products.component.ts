@@ -50,10 +50,10 @@ export class ProductsComponent {
     this.editProduct.emit({ id: product.id, value: itemId });
   }
 
-  emitNumber(emitter: EventEmitter<[number, number]>, id: number, event: any) {
+  emitNumber(emitter: EventEmitter<IdPayload<number>>, id: string, event: any) {
     if (event.target.value) {
       const value = Number(event.target.value);
-      emitter.emit([id, value]);
+      emitter.emit({ id, value });
     }
   }
 }
