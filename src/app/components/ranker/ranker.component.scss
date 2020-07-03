@@ -8,18 +8,18 @@
   z-index: 10;
   padding: 0.25rem;
   margin: -1px;
-  display: flex;
+  width: 12rem;
+}
+
+.flex {
   flex-wrap: wrap;
+  font-size: small;
 }
 
-.clickable.material-icons {
-  padding: 0.375rem;
+.title {
+  color: var(--color-brand);
 }
 
-.clickable.module {
-  margin-right: 2rem;
-}
-
-lab-icon.selected {
-  background-color: var(--color-gray-0);
+.info {
+  font-size: x-small;
 }

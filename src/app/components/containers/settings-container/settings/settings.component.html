@@ -1,19 +1,5 @@
 <div class="label">Recipes</div>
 <div class="field">
-  <div class="flex option" (click)="setExpensive.emit(!settings.expensive)">
-    <div
-      id="settings-expensive"
-      title="Use expensive recipes"
-      class="material-icons"
-    >
-      {{ settings.expensive ? 'check_box' : 'check_box_outline_blank' }}
-    </div>
-    <label for="settings-expensive" title="Use expensive recipes"
-      >Expensive</label
-    >
-  </div>
-</div>
-<div class="field">
   <div class="select-container">
     <div [style.marginTop.px]="-scrollTop">
       <lab-icon
@@ -33,6 +19,18 @@
       >
       </lab-toggle>
     </div>
+  </div>
+  <div class="flex option" (click)="setExpensive.emit(!settings.expensive)">
+    <div
+      id="settings-expensive"
+      title="Use expensive recipes"
+      class="material-icons"
+    >
+      {{ settings.expensive ? 'check_box' : 'check_box_outline_blank' }}
+    </div>
+    <label for="settings-expensive" title="Use expensive recipes"
+      >Expensive</label
+    >
   </div>
 </div>
 <div class="label">Display Rate</div>
@@ -218,6 +216,31 @@
     <div [style.marginTop.px]="-scrollTop">
       <lab-icon
         class="clickable"
+        tooltip="Factory Preferences"
+        [iconId]="
+          settings.factoryRank.length
+            ? settings.factoryRank[0]
+            : 'assembling-machine-1'
+        "
+        [data]="data"
+        (click)="openSelect = OpenSelect.Factory"
+      ></lab-icon>
+      <lab-ranker
+        *ngIf="openSelect === OpenSelect.Factory"
+        [data]="data"
+        [rank]="settings.factoryRank"
+        [options]="data.factoryIds"
+        (cancel)="openSelect = OpenSelect.None"
+        (preferItem)="preferFactory.emit($event)"
+        (dropItem)="dropFactory.emit($event)"
+      >
+      </lab-ranker>
+    </div>
+  </div>
+  <div class="select-container">
+    <div [style.marginTop.px]="-scrollTop">
+      <lab-icon
+        class="clickable"
         tooltip="Choose default belt"
         [iconId]="settings.belt"
         [data]="data"
@@ -227,7 +250,7 @@
         *ngIf="openSelect === OpenSelect.Belt"
         [data]="data"
         [selectedId]="settings.belt"
-        [options]="options.Belt"
+        [options]="data.beltIds"
         [displayRate]="settings.displayRate"
         [data]="data"
         (cancel)="openSelect = OpenSelect.None"
@@ -248,7 +271,7 @@
       <lab-select
         *ngIf="openSelect === OpenSelect.Fuel"
         [data]="data"
-        [options]="options.Fuel"
+        [options]="data.fuelIds"
         [selectedId]="settings.fuel"
         (cancel)="openSelect = OpenSelect.None"
         (selectId)="setFuel.emit($event)"
@@ -281,6 +304,29 @@
 </div>
 <div class="label">Modules</div>
 <div class="field">
+  <div class="select-container">
+    <div [style.marginTop.px]="-scrollTop">
+      <lab-icon
+        class="clickable"
+        tooltip="Module Preferences"
+        [iconId]="
+          settings.moduleRank.length ? settings.moduleRank[0] : 'speed-module'
+        "
+        [data]="data"
+        (click)="openSelect = OpenSelect.Module"
+      ></lab-icon>
+      <lab-ranker
+        *ngIf="openSelect === OpenSelect.Module"
+        [data]="data"
+        [rank]="settings.moduleRank"
+        [options]="data.moduleIds"
+        (cancel)="openSelect = OpenSelect.None"
+        (preferItem)="preferModule.emit($event)"
+        (dropItem)="dropModule.emit($event)"
+      >
+      </lab-ranker>
+    </div>
+  </div>
   <lab-icon [iconId]="ItemId.Beacon" [data]="data"></lab-icon>
   <div class="select-container">
     <div [style.marginTop.px]="-scrollTop">
@@ -295,7 +341,8 @@
         *ngIf="openSelect === OpenSelect.BeaconModule"
         [data]="data"
         [selectedId]="settings.beaconModule"
-        [options]="options.SpeedModule"
+        [options]="data.beaconModuleIds"
+        includeEmptyModule="true"
         (cancel)="openSelect = OpenSelect.None"
         (selectId)="setBeaconModule.emit($event)"
       >

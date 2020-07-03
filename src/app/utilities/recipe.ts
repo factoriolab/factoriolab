@@ -25,18 +25,6 @@ export class RecipeUtility {
     }
   }
 
-  /** Determines whether prod modules are allowed for a given recipe */
-  static moduleAllowed(moduleId: string, recipeId: string, data: DatasetState) {
-    const module = data.itemEntities[moduleId];
-    if (module.module.limitation) {
-      return data.limitations[module.module.limitation].some(
-        (l) => l === recipeId
-      );
-    }
-
-    return true;
-  }
-
   /** Determines default array of modules for a given recipe */
   static defaultModules(
     recipe: Recipe,
@@ -47,7 +35,7 @@ export class RecipeUtility {
     let module = 'module';
     // Find matching module in rank list
     for (const m of moduleRank) {
-      if (this.moduleAllowed(m, recipe.id, data)) {
+      if (data.recipeModuleIds[recipe.id].indexOf(m) !== -1) {
         module = m;
         break;
       }
@@ -147,6 +135,10 @@ export class RecipeUtility {
     // Calculate burner fuel inputs
     if (factory.burner) {
       const fuel = data.itemR[fuelId];
+
+      if (!recipe.in) {
+        recipe.in = {};
+      }
 
       if (!recipe.in[fuelId]) {
         recipe.in[fuelId] = Rational.zero;

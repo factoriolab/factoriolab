@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { DisplayRate, ResearchSpeed, Theme, IdPayload } from '~/models';
+import { DisplayRate, ResearchSpeed, Theme } from '~/models';
 import { SettingsState } from './settings.reducer';
 
 export const enum SettingsActionType {
@@ -13,8 +13,10 @@ export const enum SettingsActionType {
   SET_FUEL = '[Settings Page] Set Fuel',
   DISABLE_RECIPE = '[Settings Page] Disable Recipe',
   ENABLE_RECIPE = '[Settings Page] Enable Recipe',
-  SET_FACTORY_RANK = '[Settings Page] Set Factory Rank',
-  SET_MODULE_RANK = '[Settings Page] Set Module Rank',
+  PREFER_FACTORY = '[Settings Page] Prefer Factory',
+  DROP_FACTORY = '[Settings Page] Drop Factory',
+  PREFER_MODULE = '[Settings Page] Prefer Module',
+  DROP_MODULE = '[Settings Page] Drop Module',
   SET_BEACON_MODULE = '[Settings Page] Set Beacon Module',
   SET_BEACON_COUNT = '[Settings Page] Set Beacon Count',
   SET_DRILL_MODULE = '[Settings Page] Set Drill Module',
@@ -70,14 +72,24 @@ export class EnableRecipeAction implements Action {
   constructor(public payload: string) {}
 }
 
-export class SetFactoryRankAction implements Action {
-  readonly type = SettingsActionType.SET_FACTORY_RANK;
-  constructor(public payload: IdPayload<number>) {}
+export class PreferFactoryAction implements Action {
+  readonly type = SettingsActionType.PREFER_FACTORY;
+  constructor(public payload: string) {}
 }
 
-export class SetModuleRankAction implements Action {
-  readonly type = SettingsActionType.SET_MODULE_RANK;
-  constructor(public payload: IdPayload<number>) {}
+export class DropFactoryAction implements Action {
+  readonly type = SettingsActionType.DROP_FACTORY;
+  constructor(public payload: string) {}
+}
+
+export class PreferModuleAction implements Action {
+  readonly type = SettingsActionType.PREFER_MODULE;
+  constructor(public payload: string) {}
+}
+
+export class DropModuleAction implements Action {
+  readonly type = SettingsActionType.DROP_MODULE;
+  constructor(public payload: string) {}
 }
 
 export class SetBeaconModuleAction implements Action {
@@ -130,8 +142,10 @@ export type SettingsAction =
   | SetFuelAction
   | DisableRecipeAction
   | EnableRecipeAction
-  | SetFactoryRankAction
-  | SetModuleRankAction
+  | PreferFactoryAction
+  | DropFactoryAction
+  | PreferModuleAction
+  | DropModuleAction
   | SetBeaconModuleAction
   | SetBeaconCountAction
   | SetDrillModuleAction

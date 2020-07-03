@@ -90,12 +90,20 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.EnableRecipeAction(value));
   }
 
-  setFactoryRank(value: IdPayload<number>) {
-    this.store.dispatch(new Settings.SetFactoryRankAction(value));
+  preferFactory(value: string) {
+    this.store.dispatch(new Settings.PreferFactoryAction(value));
   }
 
-  setModuleRank(value: IdPayload<number>) {
-    this.store.dispatch(new Settings.SetModuleRankAction(value));
+  dropFactory(value: string) {
+    this.store.dispatch(new Settings.DropFactoryAction(value));
+  }
+
+  preferModule(value: string) {
+    this.store.dispatch(new Settings.PreferModuleAction(value));
+  }
+
+  dropModule(value: string) {
+    this.store.dispatch(new Settings.DropModuleAction(value));
   }
 
   setBeaconModule(value: string) {

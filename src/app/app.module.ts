@@ -23,6 +23,7 @@ import {
   HierarchyContainerComponent,
   SunburstComponent,
   ToggleComponent,
+  RankerComponent,
 } from './components';
 import { reducers, metaReducers } from './store';
 
@@ -32,6 +33,7 @@ import { reducers, metaReducers } from './store';
     HeaderComponent,
     IconComponent,
     PickerComponent,
+    RankerComponent,
     SelectComponent,
     ToggleComponent,
     ListContainerComponent,

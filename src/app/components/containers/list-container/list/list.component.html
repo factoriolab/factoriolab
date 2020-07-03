@@ -125,14 +125,14 @@
             <div
               *ngIf="
                 step.belts &&
-                data.itemEntities[step.itemId].category !== CategoryId.Research
+                data.itemEntities[step.itemId].category !== 'research'
               "
               class="flex"
             >
               <div class="monospace">{{ rate(step.belts, beltPrecision) }}</div>
               <ng-container
                 *ngIf="
-                  options.Belt[0].indexOf(belt) === -1;
+                  data.beltIds.indexOf(belt) === -1;
                   then beltDefault;
                   else beltPicker
                 "
@@ -167,7 +167,7 @@
                     "
                     [data]="data"
                     [selectedId]="belt"
-                    [options]="options.Belt"
+                    [options]="data.beltIds"
                     [displayRate]="displayRate"
                     (cancel)="edit = null"
                     (selectId)="
@@ -241,7 +241,7 @@
                       "
                       [data]="data"
                       [selectedId]="factory"
-                      [options]="[recipe.producers]"
+                      [options]="recipe.producers"
                       (cancel)="edit = null"
                       (selectId)="
                         setFactory.emit({ id: step.recipeId, value: $event })
@@ -280,9 +280,8 @@
                   "
                   [data]="data"
                   [selectedId]="mod"
-                  [options]="
-                    prodAllowed(step) ? options.AllModule : options.SpeedModule
-                  "
+                  [options]="data.recipeModuleIds[step.recipeId]"
+                  includeEmptyModule="true"
                   [data]="data"
                   (cancel)="edit = null"
                   (selectId)="factoryModuleChange(step, $event, i)"
@@ -315,7 +314,8 @@
                   "
                   [data]="data"
                   [selectedId]="module"
-                  [options]="options.SpeedModule"
+                  [options]="data.beaconModuleIds"
+                  includeEmptyModule="true"
                   (cancel)="edit = null"
                   (selectId)="
                     setBeaconModule.emit({ id: step.recipeId, value: $event })
@@ -400,8 +400,7 @@
                   <div
                     *ngIf="
                       inStep.belts &&
-                      data.itemEntities[inStep.itemId].category !==
-                        CategoryId.Research
+                      data.itemEntities[inStep.itemId].category !== 'research'
                     "
                     class="flex"
                   >
@@ -520,8 +519,7 @@
               <div
                 *ngIf="
                   step.belts &&
-                  data.itemEntities[step.itemId].category !==
-                    CategoryId.Research
+                  data.itemEntities[step.itemId].category !== 'research'
                 "
                 class="flex"
               >

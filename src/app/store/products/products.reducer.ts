@@ -59,7 +59,7 @@ export function productsReducer(
       };
     }
     case ProductsActionType.EDIT_PRODUCT: {
-      const id = action.payload[0];
+      const id = action.payload.id;
       return {
         ...state,
         ...{
@@ -70,7 +70,7 @@ export function productsReducer(
               [id]: {
                 ...state.entities[id],
                 ...{
-                  itemId: action.payload[1],
+                  itemId: action.payload.value,
                 },
               },
             },
@@ -79,7 +79,7 @@ export function productsReducer(
       };
     }
     case ProductsActionType.EDIT_RATE: {
-      const id = action.payload[0];
+      const id = action.payload.id;
       return {
         ...state,
         ...{
@@ -89,7 +89,7 @@ export function productsReducer(
               [id]: {
                 ...state.entities[id],
                 ...{
-                  rate: action.payload[1],
+                  rate: action.payload.value,
                 },
               },
             },
@@ -98,7 +98,7 @@ export function productsReducer(
       };
     }
     case ProductsActionType.EDIT_RATE_TYPE: {
-      const id = action.payload[0];
+      const id = action.payload.id;
       return {
         ...state,
         ...{
@@ -108,7 +108,7 @@ export function productsReducer(
               [id]: {
                 ...state.entities[id],
                 ...{
-                  rateType: action.payload[1],
+                  rateType: action.payload.value,
                 },
               },
             },

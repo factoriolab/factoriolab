@@ -107,28 +107,30 @@ export function settingsReducer(
       delete newDisabled[action.payload];
       return { ...state, ...{ recipeDisabled: newDisabled } };
     }
-    case SettingsActionType.SET_FACTORY_RANK: {
+    case SettingsActionType.PREFER_FACTORY: {
+      return {
+        ...state,
+        ...{ factoryRank: [...state.factoryRank, action.payload] },
+      };
+    }
+    case SettingsActionType.DROP_FACTORY: {
       return {
         ...state,
         ...{
-          factoryRank: updateRank(
-            state.factoryRank,
-            action.payload.id,
-            action.payload.value
-          ),
+          factoryRank: state.factoryRank.filter((r) => r !== action.payload),
         },
       };
     }
-    case SettingsActionType.SET_MODULE_RANK: {
+    case SettingsActionType.PREFER_MODULE: {
       return {
         ...state,
-        ...{
-          moduleRank: updateRank(
-            state.moduleRank,
-            action.payload.id,
-            action.payload.value
-          ),
-        },
+        ...{ moduleRank: [...state.moduleRank, action.payload] },
+      };
+    }
+    case SettingsActionType.DROP_MODULE: {
+      return {
+        ...state,
+        ...{ moduleRank: state.moduleRank.filter((r) => r !== action.payload) },
       };
     }
     case SettingsActionType.SET_BEACON_MODULE: {
@@ -164,23 +166,4 @@ export function settingsReducer(
 export function loadTheme() {
   const lsTheme = localStorage.getItem(LocalStorageKey.Theme);
   return lsTheme ? (lsTheme as Theme) : Theme.DarkMode;
-}
-
-export function updateRank(array: string[], item: string, rank: number) {
-  if (rank === -1) {
-    // Removing item
-    return array.filter((i) => i !== item);
-  } else {
-    const index = array.indexOf(item);
-    const result = [...array];
-    if (index === -1) {
-      // Adding item
-      result.splice(rank, 0, item);
-    } else {
-      // Moving item
-      result.splice(rank, 0, result.splice(index, 1)[0]);
-    }
-
-    return result;
-  }
 }

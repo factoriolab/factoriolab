@@ -6,21 +6,11 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import {
-  Step,
-  ItemId,
-  CategoryId,
-  options,
-  DisplayRate,
-  Entities,
-  Rational,
-  IdPayload,
-} from '~/models';
+import { Step, DisplayRate, Entities, Rational, IdPayload } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { DatasetState } from '~/store/dataset';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
-import { RecipeUtility } from '~/utilities';
 
 enum StepEditType {
   Belt,
@@ -74,12 +64,9 @@ export class ListComponent {
   edit: StepEdit;
   expanded: Entities<boolean> = {};
 
-  CategoryId = CategoryId;
   DisplayRate = DisplayRate;
   StepEditType = StepEditType;
   Rational = Rational;
-
-  options = options;
 
   constructor(public router: RouterService) {}
 
@@ -93,14 +80,6 @@ export class ListComponent {
     } else {
       return value.toPrecision(precision);
     }
-  }
-
-  prodAllowed(step: Step) {
-    return RecipeUtility.moduleAllowed(
-      ItemId.ProductivityModule,
-      step.recipeId,
-      this.data
-    );
   }
 
   factoryModuleChange(step: Step, value: string, index: number) {

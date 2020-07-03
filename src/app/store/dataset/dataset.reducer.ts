@@ -16,10 +16,15 @@ export interface DatasetState {
   iconIds: string[];
   iconEntities: Entities<Icon>;
   itemIds: string[];
+  fuelIds: string[];
+  factoryIds: string[];
+  moduleIds: string[];
+  beaconModuleIds: string[];
   itemEntities: Entities<Item>;
   beltIds: string[];
   recipeIds: string[];
   recipeEntities: Entities<Recipe>;
+  recipeModuleIds: Entities<string[]>;
   limitations: Entities<string[]>;
 }
 
@@ -37,8 +42,13 @@ export const initialDatasetState: DatasetState = {
   itemIds: [],
   itemEntities: {},
   beltIds: [],
+  fuelIds: [],
+  factoryIds: [],
+  moduleIds: [],
+  beaconModuleIds: [],
   recipeIds: [],
   recipeEntities: {},
+  recipeModuleIds: {},
   limitations: {},
 };
 
@@ -84,6 +94,8 @@ export function datasetReducer(
         }
       }
 
+      const modules = action.payload.items.filter((i) => i.module);
+
       return {
         categoryIds: action.payload.categories.map((c) => c.id),
         categoryEntities: action.payload.categories.reduce(
@@ -98,12 +110,35 @@ export function datasetReducer(
         ),
         itemIds: action.payload.items.map((i) => i.id),
         itemEntities,
-        beltIds: action.payload.items
-          .filter((i) => i.belt || i.id === 'pipe')
+        beltIds: action.payload.items.filter((i) => i.belt).map((i) => i.id),
+        fuelIds: action.payload.items.filter((i) => i.fuel).map((i) => i.id),
+        factoryIds: action.payload.items
+          .filter((i) => i.factory)
+          .map((i) => i.id),
+        moduleIds: modules.map((i) => i.id),
+        beaconModuleIds: modules
+          .filter((i) => !i.module.productivity)
           .map((i) => i.id),
         recipeIds: recipes.map((r) => r.id),
         recipeEntities: recipes.reduce(
           (e: Entities<Recipe>, r) => ({ ...e, ...{ [r.id]: r } }),
+          {}
+        ),
+        recipeModuleIds: recipes.reduce(
+          (e: Entities<string[]>, r) => ({
+            ...e,
+            ...{
+              [r.id]: modules
+                .filter(
+                  (m) =>
+                    !m.module.limitation ||
+                    action.payload.limitations[m.module.limitation].some(
+                      (l) => l === r.id
+                    )
+                )
+                .map((m) => m.id),
+            },
+          }),
           {}
         ),
         limitations: action.payload.limitations,

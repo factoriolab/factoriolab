@@ -7,15 +7,7 @@ import {
   HostListener,
 } from '@angular/core';
 
-import {
-  DisplayRate,
-  ItemId,
-  ResearchSpeed,
-  IdType,
-  Theme,
-  options,
-  IdPayload,
-} from '~/models';
+import { DisplayRate, ItemId, ResearchSpeed, IdType, Theme } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
@@ -23,11 +15,9 @@ enum OpenSelect {
   None,
   EnabledRecipes,
   Belt,
-  Assembler,
-  Furnace,
   Fuel,
-  ProdModule,
-  SpeedModule,
+  Factory,
+  Module,
   BeaconModule,
 }
 
@@ -49,8 +39,10 @@ export class SettingsComponent {
   @Output() setFuel = new EventEmitter<string>();
   @Output() disableRecipe = new EventEmitter<string>();
   @Output() enableRecipe = new EventEmitter<string>();
-  @Output() setFactoryRank = new EventEmitter<IdPayload<number>>();
-  @Output() setModuleRank = new EventEmitter<IdPayload<number>>();
+  @Output() preferFactory = new EventEmitter<string>();
+  @Output() dropFactory = new EventEmitter<string>();
+  @Output() preferModule = new EventEmitter<string>();
+  @Output() dropModule = new EventEmitter<string>();
   @Output() setBeaconModule = new EventEmitter<string>();
   @Output() setBeaconCount = new EventEmitter<number>();
   @Output() setDrillModule = new EventEmitter<boolean>();
@@ -71,14 +63,13 @@ export class SettingsComponent {
   Theme = Theme;
 
   initial = initialSettingsState;
-  options = options;
+
+  constructor() {}
 
   @HostListener('scroll', ['$event'])
   scroll(event: Event) {
     this.scrollTop = (event.target as HTMLElement).scrollTop;
   }
-
-  constructor() {}
 
   emitNumber(emitter: EventEmitter<number>, event: any) {
     if (event.target.value) {
