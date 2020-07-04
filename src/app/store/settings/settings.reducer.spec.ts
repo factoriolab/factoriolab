@@ -1,11 +1,5 @@
-import {
-  DisplayRate,
-  ItemId,
-  RecipeId,
-  ResearchSpeed,
-  LocalStorageKey,
-  Theme,
-} from '~/models';
+import { ItemId, RecipeId } from 'src/tests';
+import { DisplayRate, ResearchSpeed, LocalStorageKey, Theme } from '~/models';
 import * as Actions from './settings.actions';
 import {
   settingsReducer,
@@ -100,28 +94,6 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_ASSEMBLER', () => {
-    it('should set the default assembler', () => {
-      const value = ItemId.AssemblingMachine1;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetAssemblerAction(value)
-      );
-      expect(result.assembler).toEqual(value);
-    });
-  });
-
-  describe('SET_FURNACE', () => {
-    it('should set the default furnace', () => {
-      const value = ItemId.StoneFurnace;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetFurnaceAction(value)
-      );
-      expect(result.furnace).toEqual(value);
-    });
-  });
-
   describe('DISABLE_RECIPE', () => {
     it('should disable a recipe', () => {
       const value = RecipeId.AdvancedOilProcessing;
@@ -141,28 +113,6 @@ describe('Settings Reducer', () => {
         new Actions.EnableRecipeAction(value)
       );
       expect(result.recipeDisabled[value]).toBeUndefined();
-    });
-  });
-
-  describe('SET_PROD_MODULE', () => {
-    it('should set the default prod module', () => {
-      const value = ItemId.ProductivityModule;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetProdModuleAction(value)
-      );
-      expect(result.prodModule).toEqual(value);
-    });
-  });
-
-  describe('SET_SPEED_MODULE', () => {
-    it('should set the default speed module', () => {
-      const value = ItemId.SpeedModule;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetSpeedModuleAction(value)
-      );
-      expect(result.speedModule).toEqual(value);
     });
   });
 

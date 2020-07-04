@@ -3,16 +3,14 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 
-import * as Mocks from 'src/mocks';
+import { Mocks, TestUtility, ItemId } from 'src/tests';
 import { IconComponent, SelectComponent } from '~/components';
-import { Step, ItemId } from '~/models';
+import { Step } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers } from '~/store';
 import { DatasetState } from '~/store/dataset';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
-import { RecipeUtility } from '~/utilities';
-import { TestUtility } from '~/utilities/test';
 import { ListComponent } from './list.component';
 
 @Component({
@@ -170,15 +168,6 @@ describe('ListComponent', () => {
     it('should find the step with the passed item id', () => {
       const result = component.child.findStep(Mocks.Steps[0].itemId);
       expect(result).toEqual(Mocks.Steps[0]);
-    });
-  });
-
-  describe('prodAllowed', () => {
-    it('should look up whether prod is allowed for a step', () => {
-      spyOn(RecipeUtility, 'moduleAllowed').and.callThrough();
-      const result = component.child.prodAllowed(Mocks.Steps[0]);
-      expect(RecipeUtility.moduleAllowed).toHaveBeenCalled();
-      expect(result).toEqual(false);
     });
   });
 });

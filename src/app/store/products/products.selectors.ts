@@ -10,7 +10,7 @@ import {
   DisplayRateVal,
   RationalProduct,
 } from '~/models';
-import { RateUtility, RecipeUtility, MatrixUtility } from '~/utilities';
+import { RateUtility, MatrixUtility } from '~/utilities';
 import * as Dataset from '../dataset';
 import * as Items from '../items';
 import * as Recipes from '../recipes';

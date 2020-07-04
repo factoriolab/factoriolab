@@ -1,9 +1,7 @@
 import { ViewChild, Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import * as Mocks from 'src/mocks';
-import { Id } from '~/models';
-import { TestUtility } from '~/utilities/test';
+import { Mocks, TestUtility, ElementId } from 'src/tests';
 import { IconComponent } from '../icon/icon.component';
 import { HeaderComponent } from './header.component';
 
@@ -41,7 +39,7 @@ describe('HeaderComponent', () => {
 
   it('should toggle the settings panel', () => {
     spyOn(component, 'toggleSettings');
-    TestUtility.clickId(fixture, Id.HeaderSettings);
+    TestUtility.clickId(fixture, ElementId.HeaderSettings);
     expect(component.toggleSettings).toHaveBeenCalled();
   });
 });

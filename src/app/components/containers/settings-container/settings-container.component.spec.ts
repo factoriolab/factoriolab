@@ -2,11 +2,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { StoreModule, Store } from '@ngrx/store';
 
+import { TestUtility, ItemId, RecipeId } from 'src/tests';
 import { IconComponent } from '~/components';
-import { DisplayRate, ItemId, RecipeId, ResearchSpeed, Theme } from '~/models';
+import { DisplayRate, ResearchSpeed, Theme } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as Settings from '~/store/settings';
-import { TestUtility } from '~/utilities/test';
 import { SettingsComponent } from './settings/settings.component';
 import { SettingsContainerComponent } from './settings-container.component';
 
@@ -124,24 +124,6 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
-  it('should set the default assembler', () => {
-    spyOn(store, 'dispatch');
-    const value = ItemId.AssemblingMachine1;
-    component.child.setAssembler.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetAssemblerAction(value)
-    );
-  });
-
-  it('should set the default furnace', () => {
-    spyOn(store, 'dispatch');
-    const value = ItemId.StoneFurnace;
-    component.child.setFurnace.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetFurnaceAction(value)
-    );
-  });
-
   it('should disable a recipe', () => {
     spyOn(store, 'dispatch');
     const value = RecipeId.BasicOilProcessing;
@@ -175,24 +157,6 @@ describe('SettingsContainerComponent', () => {
     component.child.setFlowRate.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetFlowRateAction(value)
-    );
-  });
-
-  it('should set the default prod module', () => {
-    spyOn(store, 'dispatch');
-    const value = ItemId.ProductivityModule;
-    component.child.setProdModule.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetProdModuleAction(value)
-    );
-  });
-
-  it('should set the default speed module', () => {
-    spyOn(store, 'dispatch');
-    const value = ItemId.SpeedModule;
-    component.child.setSpeedModule.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetSpeedModuleAction(value)
     );
   });
 

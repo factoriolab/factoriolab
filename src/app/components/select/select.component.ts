@@ -9,7 +9,7 @@ import {
   HostBinding,
 } from '@angular/core';
 
-import { IdType, DisplayRate, ItemId } from '~/models';
+import { IdType, DisplayRate } from '~/models';
 import { DatasetState } from '~/store/dataset';
 
 @Component({
@@ -30,7 +30,6 @@ export class SelectComponent {
   @Output() selectId = new EventEmitter<string>();
 
   IdType = IdType;
-  ItemId = ItemId;
 
   opening = true;
 

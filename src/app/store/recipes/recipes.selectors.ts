@@ -6,7 +6,7 @@ import {
   RationalRecipeSettings,
   RationalRecipe,
 } from '~/models';
-import { RecipeUtility } from '~/utilities/recipe';
+import { RecipeUtility } from '~/utilities/recipe.utility';
 import * as Dataset from '../dataset';
 import * as Settings from '../settings';
 import { State } from '..';

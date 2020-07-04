@@ -1,5 +1,5 @@
-import * as Mocks from 'src/mocks';
-import { ItemId, RecipeId, Rational } from '~/models';
+import { Mocks, ItemId, RecipeId } from 'src/tests';
+import { Rational } from '~/models';
 import * as Selectors from './dataset.selectors';
 
 describe('Dataset Selectors', () => {

@@ -7,7 +7,7 @@ import {
   HostListener,
 } from '@angular/core';
 
-import { DisplayRate, ItemId, ResearchSpeed, IdType, Theme } from '~/models';
+import { DisplayRate, ResearchSpeed, IdType, Theme } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
@@ -56,7 +56,6 @@ export class SettingsComponent {
   scrollTop = 0;
 
   DisplayRate = DisplayRate;
-  ItemId = ItemId;
   OpenSelect = OpenSelect;
   ResearchSpeed = ResearchSpeed;
   SelectType = IdType;

@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import { Entities, ItemSettings } from '~/models';
+import { Entities, ItemSettings, PIPE_ID } from '~/models';
 import * as Dataset from '../dataset';
 import * as Settings from '../settings';
 import { State } from '..';
@@ -23,7 +23,7 @@ export const getItemSettings = createSelector(
 
         // Belt (or Pipe)
         if (!itemSettings.belt) {
-          itemSettings.belt = item.stack ? settings.belt : 'pipe';
+          itemSettings.belt = item.stack ? settings.belt : PIPE_ID;
         }
 
         value[item.id] = itemSettings;

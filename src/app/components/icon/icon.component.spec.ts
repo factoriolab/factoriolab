@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import * as Mocks from 'src/mocks';
+import { Mocks } from 'src/tests';
 import { DisplayRate } from '~/models';
 import { IconComponent } from './icon.component';
 

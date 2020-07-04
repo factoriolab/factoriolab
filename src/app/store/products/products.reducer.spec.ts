@@ -1,5 +1,5 @@
-import * as Mocks from 'src/mocks';
-import { RateType, ItemId } from '~/models';
+import { Mocks, ItemId } from 'src/tests';
+import { RateType } from '~/models';
 import * as Actions from './products.actions';
 import { productsReducer } from './products.reducer';
 
@@ -31,7 +31,7 @@ describe('Products Reducer', () => {
 
   describe('REMOVE', () => {
     it('should remove a product', () => {
-      const result = productsReducer(state, new Actions.RemoveAction(0));
+      const result = productsReducer(state, new Actions.RemoveAction('0'));
       expect(result.ids.length).toEqual(0);
     });
   });
@@ -40,10 +40,10 @@ describe('Products Reducer', () => {
     it('should commit edit on a product', () => {
       const result = productsReducer(
         state,
-        new Actions.EditProductAction([
-          Mocks.Product1.id,
-          Mocks.Product2.itemId,
-        ])
+        new Actions.EditProductAction({
+          id: Mocks.Product1.id,
+          value: Mocks.Product2.itemId,
+        })
       );
       expect(result.entities[Mocks.Product1.id].itemId).toEqual(
         Mocks.Product2.itemId
@@ -56,7 +56,7 @@ describe('Products Reducer', () => {
       const value = 3;
       const result = productsReducer(
         state,
-        new Actions.EditRateAction([Mocks.Product1.id, value])
+        new Actions.EditRateAction({ id: Mocks.Product1.id, value })
       );
       expect(result.entities[Mocks.Product1.id].rate).toEqual(value);
     });
@@ -67,7 +67,7 @@ describe('Products Reducer', () => {
       const value = RateType.Wagons;
       const result = productsReducer(
         state,
-        new Actions.EditRateTypeAction([Mocks.Product1.id, value])
+        new Actions.EditRateTypeAction({ id: Mocks.Product1.id, value })
       );
       expect(result.entities[Mocks.Product1.id].rateType).toEqual(value);
     });

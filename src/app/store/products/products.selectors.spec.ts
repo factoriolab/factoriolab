@@ -1,12 +1,6 @@
-import * as Mocks from 'src/mocks';
-import {
-  DisplayRate,
-  ItemId,
-  RateType,
-  Rational,
-  RationalProduct,
-} from '~/models';
-import { RateUtility, RecipeUtility } from '~/utilities';
+import { Mocks, ItemId } from 'src/tests';
+import { DisplayRate, RateType, Rational, RationalProduct } from '~/models';
+import { RateUtility } from '~/utilities';
 import { initialSettingsState } from '../settings';
 import * as Selectors from './products.selectors';
 
@@ -135,7 +129,7 @@ describe('Products Selectors', () => {
 
     it('should handle research products', () => {
       const product: RationalProduct = {
-        id: 0,
+        id: '0',
         itemId: ItemId.MiningProductivity,
         rate: Rational.one,
         rateType: RateType.Factories,
@@ -234,45 +228,24 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getDisplayRateSteps', () => {
+  describe('getSteps', () => {
     it('should handle empty/null values', () => {
-      const result = Selectors.getDisplayRateSteps.projector([], null);
+      const result = Selectors.getSteps.projector([], null);
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should calculate rates using utility method', () => {
       spyOn(RateUtility, 'displayRate');
-      Selectors.getDisplayRateSteps.projector([], null);
+      Selectors.getSteps.projector([], null);
       expect(RateUtility.displayRate).toHaveBeenCalled();
     });
   });
 
-  describe('getRawNodes', () => {
+  describe('getNodes', () => {
     it('should calculate rates using utility method', () => {
       spyOn(RateUtility, 'nodeDisplayRate');
-      Selectors.getRawNodes.projector({}, null);
-      expect(RateUtility.nodeDisplayRate).toHaveBeenCalled();
-    });
-  });
-
-  describe('getNodes', () => {
-    it('should sort using utility method', () => {
-      spyOn(RecipeUtility, 'sortNode');
       Selectors.getNodes.projector({}, null);
-      expect(RecipeUtility.sortNode).toHaveBeenCalled();
-    });
-  });
-
-  describe('getSteps', () => {
-    it('should handle empty/null values', () => {
-      const result = Selectors.getSteps.projector([]);
-      expect(Object.keys(result).length).toEqual(0);
-    });
-
-    it('should sort using utility method', () => {
-      spyOn(RecipeUtility, 'sort');
-      Selectors.getSteps.projector([]);
-      expect(RecipeUtility.sort).toHaveBeenCalled();
+      expect(RateUtility.nodeDisplayRate).toHaveBeenCalled();
     });
   });
 

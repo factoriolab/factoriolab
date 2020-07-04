@@ -1,5 +1,4 @@
-import * as Mocks from 'src/mocks';
-import { ItemId } from '~/models';
+import { Mocks, ItemId } from 'src/tests';
 import { initialSettingsState } from '../settings';
 import { initialRecipesState } from './recipes.reducer';
 import * as Selectors from './recipes.selectors';

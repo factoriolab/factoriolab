@@ -125,7 +125,9 @@
             <div
               *ngIf="
                 step.belts &&
-                data.itemEntities[step.itemId].category !== 'research'
+                (!step.recipeId ||
+                  !data.itemEntities[recipeSettings[step.recipeId].factory]
+                    .factory.research)
               "
               class="flex"
             >
@@ -400,7 +402,10 @@
                   <div
                     *ngIf="
                       inStep.belts &&
-                      data.itemEntities[inStep.itemId].category !== 'research'
+                      (!inStep.recipeId ||
+                        !data.itemEntities[
+                          recipeSettings[inStep.recipeId].factory
+                        ].factory.research)
                     "
                     class="flex"
                   >
@@ -519,7 +524,9 @@
               <div
                 *ngIf="
                   step.belts &&
-                  data.itemEntities[step.itemId].category !== 'research'
+                  (!step.recipeId ||
+                    !data.itemEntities[recipeSettings[step.recipeId].factory]
+                      .factory.research)
                 "
                 class="flex"
               >

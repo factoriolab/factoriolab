@@ -281,11 +281,7 @@
   </div>
 </div>
 <div class="field">
-  <lab-icon
-    [iconId]="ItemId.Pipe"
-    tooltip="Pipe flow rate"
-    [data]="data"
-  ></lab-icon>
+  <lab-icon iconId="pipe" tooltip="Pipe flow rate" [data]="data"></lab-icon>
   <input
     type="number"
     title="Enter pipe flow rate"
@@ -327,7 +323,7 @@
       </lab-ranker>
     </div>
   </div>
-  <lab-icon [iconId]="ItemId.Beacon" [data]="data"></lab-icon>
+  <lab-icon iconId="beacon" [data]="data"></lab-icon>
   <div class="select-container">
     <div [style.marginTop.px]="-scrollTop">
       <lab-icon
@@ -365,13 +361,13 @@
     (click)="setDrillModule.emit(!settings.drillModule)"
   >
     <lab-icon
-      [iconId]="ItemId.MiningProductivity"
+      iconId="mining-productivity"
       [data]="data"
       tooltip="Toggle drill modules"
       [scale]="true"
     ></lab-icon>
     <lab-icon
-      [iconId]="settings.drillModule ? ItemId.SpeedModule3 : ItemId.Module"
+      [iconId]="settings.drillModule ? 'speed-module-3' : 'module'"
       [data]="data"
       tooltip="Toggle drill modules"
     ></lab-icon>
@@ -380,7 +376,7 @@
 <div class="label">Bonuses</div>
 <div class="field">
   <lab-icon
-    [iconId]="ItemId.MiningProductivity"
+    iconId="mining-productivity"
     [data]="data"
     tooltip="Mining Productivity Bonus"
     [scale]="true"
@@ -401,7 +397,7 @@
 </div>
 <div class="field">
   <lab-icon
-    [iconId]="ItemId.Lab"
+    iconId="lab"
     [data]="data"
     tooltip="Research Speed Bonus"
     [scale]="true"

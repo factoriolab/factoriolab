@@ -2,9 +2,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { StoreModule, Store } from '@ngrx/store';
 
-import * as Mocks from 'src/mocks';
+import { Mocks, ItemId } from 'src/tests';
 import { IconComponent } from '~/components';
-import { RateType, ItemId } from '~/models';
+import { RateType } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as Products from '~/store/products';
 import { ProductsComponent } from './products/products.component';
@@ -48,12 +48,12 @@ describe('ProductsContainerComponent', () => {
   it('should remove a product', () => {
     spyOn(store, 'dispatch');
     component.child.remove.emit(0);
-    expect(store.dispatch).toHaveBeenCalledWith(new Products.RemoveAction(0));
+    expect(store.dispatch).toHaveBeenCalledWith(new Products.RemoveAction('0'));
   });
 
   it('should commit edit on a product', () => {
     spyOn(store, 'dispatch');
-    const data: [number, ItemId] = [Mocks.Product1.id, Mocks.Item2.id];
+    const data = { id: Mocks.Product1.id, value: Mocks.Item2.id };
     component.child.editProduct.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Products.EditProductAction(data)
@@ -62,7 +62,7 @@ describe('ProductsContainerComponent', () => {
 
   it('should edit rate on a product', () => {
     spyOn(store, 'dispatch');
-    const data: [number, number] = [Mocks.Product1.id, 2];
+    const data = { id: Mocks.Product1.id, value: 2 };
     component.child.editRate.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Products.EditRateAction(data)
@@ -71,7 +71,7 @@ describe('ProductsContainerComponent', () => {
 
   it('should edit rate type on a product', () => {
     spyOn(store, 'dispatch');
-    const data: [number, RateType] = [Mocks.Product1.id, RateType.Wagons];
+    const data = { id: Mocks.Product1.id, value: RateType.Wagons };
     component.child.editRateType.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Products.EditRateTypeAction(data)

@@ -6,6 +6,7 @@ import {
   Rational,
   RationalItem,
   RationalRecipe,
+  PIPE_ID,
 } from '~/models';
 import * as Settings from '../settings';
 import { State } from '../';
@@ -69,7 +70,7 @@ export const getBeltSpeed = createSelector(
   getRationalDataset,
   Settings.getRationalFlowRate,
   (data, flowRate) => {
-    const value: Entities<Rational> = { pipe: flowRate };
+    const value: Entities<Rational> = { [PIPE_ID]: flowRate };
     if (data.beltIds) {
       for (const id of data.beltIds) {
         value[id] = data.itemR[id].belt.speed;
