@@ -87,10 +87,23 @@ export function datasetReducer(
       const recipes: Recipe[] = [];
       for (const recipe of action.payload.recipes) {
         if (!recipe.name) {
-          recipes.push({
-            ...recipe,
-            ...{ name: itemEntities[recipe.id].name },
-          });
+          if (itemEntities[recipe.id]) {
+            recipes.push({
+              ...recipe,
+              ...{ name: itemEntities[recipe.id].name },
+            });
+          } else {
+            // No item or name found, convert id to name
+            const words = recipe.id.split('-').filter((w) => w);
+            const caps = words.map(
+              (w) => w.charAt(0).toUpperCase() + w.slice(1)
+            );
+            const name = caps.join(' ');
+            recipes.push({
+              ...recipe,
+              ...{ name },
+            });
+          }
         } else {
           recipes.push(recipe);
         }
