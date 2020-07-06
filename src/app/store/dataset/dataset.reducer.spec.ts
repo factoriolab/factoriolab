@@ -1,4 +1,4 @@
-import { Mocks } from 'src/tests';
+import { Mocks, RecipeId } from 'src/tests';
 import * as Actions from './dataset.actions';
 import { datasetReducer } from './dataset.reducer';
 
@@ -25,6 +25,12 @@ describe('Dataset Reducer', () => {
       const count = Mocks.Data.recipeIds.length;
       expect(state.recipeIds.length).toBe(count);
       expect(Object.keys(state.recipeEntities).length).toBe(count);
+    });
+
+    it('should fill in missing recipe names', () => {
+      expect(state.recipeEntities[RecipeId.FillWaterBarrel].name).toEqual(
+        'Fill Water Barrel'
+      );
     });
   });
 

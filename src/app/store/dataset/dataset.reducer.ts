@@ -21,6 +21,7 @@ export interface DatasetState {
   moduleIds: string[];
   beaconModuleIds: string[];
   itemEntities: Entities<Item>;
+  itemRecipeIds: Entities<string>;
   beltIds: string[];
   recipeIds: string[];
   recipeEntities: Entities<Recipe>;
@@ -41,6 +42,7 @@ export const initialDatasetState: DatasetState = {
   iconEntities: {},
   itemIds: [],
   itemEntities: {},
+  itemRecipeIds: {},
   beltIds: [],
   fuelIds: [],
   factoryIds: [],
@@ -85,10 +87,23 @@ export function datasetReducer(
       const recipes: Recipe[] = [];
       for (const recipe of action.payload.recipes) {
         if (!recipe.name) {
-          recipes.push({
-            ...recipe,
-            ...{ name: itemEntities[recipe.id].name },
-          });
+          if (itemEntities[recipe.id]) {
+            recipes.push({
+              ...recipe,
+              ...{ name: itemEntities[recipe.id].name },
+            });
+          } else {
+            // No item or name found, convert id to name
+            const words = recipe.id.split('-').filter((w) => w);
+            const caps = words.map(
+              (w) => w.charAt(0).toUpperCase() + w.slice(1)
+            );
+            const name = caps.join(' ');
+            recipes.push({
+              ...recipe,
+              ...{ name },
+            });
+          }
         } else {
           recipes.push(recipe);
         }
@@ -110,6 +125,19 @@ export function datasetReducer(
         ),
         itemIds: action.payload.items.map((i) => i.id),
         itemEntities,
+        itemRecipeIds: action.payload.items.reduce((e: Entities<string>, i) => {
+          const exact = action.payload.recipes.find((r) => r.id === i.id);
+          if (exact) {
+            return { ...e, ...{ [i.id]: i.id } };
+          }
+          const matches = action.payload.recipes.filter(
+            (r) => r.out && r.out[i.id]
+          );
+          if (matches.length === 1) {
+            return { ...e, ...{ [i.id]: matches[0].id } };
+          }
+          return e;
+        }, {}),
         beltIds: action.payload.items.filter((i) => i.belt).map((i) => i.id),
         fuelIds: action.payload.items.filter((i) => i.fuel).map((i) => i.id),
         factoryIds: action.payload.items

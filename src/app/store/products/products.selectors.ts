@@ -43,7 +43,9 @@ export const getProductsBy = createSelector(getRationalProducts, (products) =>
     if (!e[p.rateType]) {
       e[p.rateType] = [];
     }
-    return { ...e, ...{ [p.rateType]: [...e[p.rateType], p] } };
+    return { ...e, ...{ [p.rateType]: [...e[p.rateType], p] } } as Entities<
+      RationalProduct[]
+    >;
   }, {})
 );
 
@@ -103,7 +105,7 @@ export const getNormalizedRatesByFactories = createSelector(
   Recipes.getAdjustedDataset,
   (products, data) => {
     return products[RateType.Factories]?.reduce((e: Entities<Rational>, p) => {
-      const recipe = data.recipeR[p.itemId];
+      const recipe = data.recipeR[data.itemRecipeIds[p.itemId]];
       if (recipe) {
         return {
           ...e,
@@ -112,8 +114,7 @@ export const getNormalizedRatesByFactories = createSelector(
           },
         };
       }
-      // No matching recipe found
-      // TODO: Block this option for complex products
+      // No matching recipe found, this case should be blocked by UI
       return e;
     }, {});
   }

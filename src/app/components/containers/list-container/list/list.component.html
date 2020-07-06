@@ -113,7 +113,7 @@
               [iconId]="step.itemId"
               [class.ignored]="itemSettings[step.itemId].ignore"
               [tooltip]="data.itemEntities[step.itemId]?.name"
-              [recipe]="data.recipeEntities[step.itemId]"
+              [recipe]="data.recipeEntities[step.recipeId]"
               [data]="data"
               scale="true"
               (click)="ignoreItem.emit(step.itemId)"
@@ -390,7 +390,9 @@
                     class="clickable-size"
                     [iconId]="input.key"
                     [tooltip]="data.itemEntities[input.key]?.name"
-                    [recipe]="data.recipeEntities[input.key]"
+                    [recipe]="
+                      data.recipeEntities[data.itemRecipeIds[input.key]]
+                    "
                     [data]="data"
                     scale="true"
                   >
@@ -478,7 +480,7 @@
                     class="clickable-size"
                     [iconId]="step.itemId"
                     [tooltip]="data.itemEntities[step.itemId]?.name"
-                    [recipe]="data.recipeEntities[step.itemId]"
+                    [recipe]="data.recipeEntities[step.recipeId]"
                     [data]="data"
                     scale="true"
                   ></lab-icon>
@@ -512,7 +514,7 @@
                 class="clickable-size"
                 [iconId]="step.itemId"
                 [tooltip]="data.itemEntities[step.itemId]?.name"
-                [recipe]="data.recipeEntities[step.itemId]"
+                [recipe]="data.recipeEntities[step.recipeId]"
                 [data]="data"
                 scale="true"
               >
@@ -584,7 +586,7 @@
                 class="clickable-size"
                 [iconId]="parent.key"
                 [tooltip]="data.itemEntities[parent.key]?.name"
-                [recipe]="data.recipeEntities[parent.key]"
+                [recipe]="data.recipeEntities[data.itemRecipeIds[parent.key]]"
                 [data]="data"
                 scale="true"
               ></lab-icon>
