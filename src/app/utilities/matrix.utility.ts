@@ -188,7 +188,7 @@ export class MatrixSolver {
     }
     let costExpr = new Expression(cost);
     for (const i of Object.keys(this.inputVar)) {
-      if (this.data.recipeR[i]) {
+      if (this.data.itemRecipeIds[i]) {
         if (i === 'water') {
           costExpr = costExpr.minus(
             new Expression([Rational.hundred, this.inputVar[i]])
@@ -320,10 +320,10 @@ export class MatrixSolver {
   }
 
   findRecipesRecursively(itemId: string) {
-    const simpleRecipe = this.data.recipeR[itemId];
+    const simpleRecipe = this.data.recipeR[this.data.itemRecipeIds[itemId]];
     if (simpleRecipe) {
       if (!this.recipeDisabled[simpleRecipe.id]) {
-        this.parseRecipeRecursively(this.data.recipeR[itemId]);
+        this.parseRecipeRecursively(simpleRecipe);
       }
     } else {
       // Find complex recipes

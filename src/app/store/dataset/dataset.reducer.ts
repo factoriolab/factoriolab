@@ -21,6 +21,7 @@ export interface DatasetState {
   moduleIds: string[];
   beaconModuleIds: string[];
   itemEntities: Entities<Item>;
+  itemRecipeIds: Entities<string>;
   beltIds: string[];
   recipeIds: string[];
   recipeEntities: Entities<Recipe>;
@@ -41,6 +42,7 @@ export const initialDatasetState: DatasetState = {
   iconEntities: {},
   itemIds: [],
   itemEntities: {},
+  itemRecipeIds: {},
   beltIds: [],
   fuelIds: [],
   factoryIds: [],
@@ -110,6 +112,19 @@ export function datasetReducer(
         ),
         itemIds: action.payload.items.map((i) => i.id),
         itemEntities,
+        itemRecipeIds: action.payload.items.reduce((e: Entities<string>, i) => {
+          const exact = action.payload.recipes.find((r) => r.id === i.id);
+          if (exact) {
+            return { ...e, ...{ [i.id]: i.id } };
+          }
+          const matches = action.payload.recipes.filter(
+            (r) => r.out && r.out[i.id]
+          );
+          if (matches.length === 1) {
+            return { ...e, ...{ [i.id]: matches[0].id } };
+          }
+          return e;
+        }, {}),
         beltIds: action.payload.items.filter((i) => i.belt).map((i) => i.id),
         fuelIds: action.payload.items.filter((i) => i.fuel).map((i) => i.id),
         factoryIds: action.payload.items

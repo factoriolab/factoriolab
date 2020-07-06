@@ -17,7 +17,7 @@
         class="clickable"
         [iconId]="id"
         [tooltip]="data.itemEntities[id].name"
-        [recipe]="data.recipeEntities[id]"
+        [recipe]="data.recipeEntities[data.itemRecipeIds[id]]"
         [class.selected]="id === itemId"
         [data]="data"
         (click)="clickItem(id)"
