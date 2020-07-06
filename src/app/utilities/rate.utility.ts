@@ -25,7 +25,7 @@ export class RateUtility {
     fuel: string,
     data: RationalDataset
   ) {
-    const recipe = data.recipeR[itemId];
+    const recipe = data.recipeR[data.itemRecipeIds[itemId]];
 
     // Find existing step for this item
     let step = steps.find((s) => s.itemId === itemId);
@@ -111,7 +111,7 @@ export class RateUtility {
     fuel: string,
     data: RationalDataset
   ) {
-    const recipe = data.recipeR[itemId];
+    const recipe = data.recipeR[data.itemRecipeIds[itemId]];
 
     const node: Node = {
       id: `${parent.id}:${itemId}`,

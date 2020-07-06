@@ -61,7 +61,7 @@
         <option [value]="RateType.Wagons">Wagons</option>
         <option
           [value]="RateType.Factories"
-          *ngIf="data.recipeEntities[product.itemId]"
+          *ngIf="data.itemRecipeIds[product.itemId]"
           >Factories</option
         >
       </select>

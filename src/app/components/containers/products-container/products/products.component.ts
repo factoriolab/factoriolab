@@ -41,7 +41,7 @@ export class ProductsComponent {
   commitEditProduct(product: Product, itemId: string) {
     if (
       product.rateType === RateType.Factories &&
-      !this.data.recipeEntities[itemId]
+      !this.data.itemRecipeIds[itemId]
     ) {
       // Reset rate type to items
       this.editRateType.emit({ id: product.id, value: RateType.Items });
