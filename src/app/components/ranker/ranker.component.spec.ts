@@ -1,34 +1,33 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Mocks, TestUtility, RecipeId } from 'src/tests';
-import { Entities } from '~/models';
+import { Mocks, TestUtility } from 'src/tests';
 import { DatasetState } from '~/store/dataset';
-import { initialSettingsState } from '~/store/settings';
 import { IconComponent } from '../icon/icon.component';
 import { RankerComponent } from './ranker.component';
 
 @Component({
   selector: 'lab-test-ranker',
   template: `
-    <lab-toggle
+    <lab-ranker
       [data]="data"
-      [recipeDisabled]="recipeDisabled"
+      [rank]="rank"
+      [options]="options"
       (cancel)="cancel()"
-      (enableRecipe)="enableRecipe($event)"
-      (disableRecipe)="disableRecipe($event)"
+      (preferItem)="preferItem($event)"
+      (dropItem)="dropItem($event)"
     >
-    </lab-toggle>
+    </lab-ranker>
   `,
 })
 class TestRankerComponent {
   @ViewChild(RankerComponent) child: RankerComponent;
   data: DatasetState = Mocks.Data;
-  recipeDisabled: Entities<boolean> = initialSettingsState.recipeDisabled;
+  rank = [];
+  options = [];
   cancel() {}
-  enableRecipe(data) {}
-  disableRecipe(data) {}
-  selectId(data) {}
+  preferItem(data) {}
+  dropItem(data) {}
 }
 
 describe('RankerComponent', () => {
@@ -68,29 +67,7 @@ describe('RankerComponent', () => {
   it('should not cancel when clicked on', () => {
     spyOn(component, 'cancel');
     component.child.opening = false;
-    TestUtility.clickSelector(fixture, 'lab-toggle');
-    expect(component.cancel).not.toHaveBeenCalled();
-  });
-
-  it('should enable a recipe', () => {
-    spyOn(component, 'enableRecipe');
-    spyOn(component, 'cancel');
-    component.child.opening = false;
-    TestUtility.clickSelector(fixture, 'lab-icon.clickable', 0);
-    expect(component.enableRecipe).toHaveBeenCalledWith(
-      RecipeId.BasicOilProcessing
-    );
-    expect(component.cancel).not.toHaveBeenCalled();
-  });
-
-  it('should disable a recipe', () => {
-    spyOn(component, 'disableRecipe');
-    spyOn(component, 'cancel');
-    component.child.opening = false;
-    TestUtility.clickSelector(fixture, 'lab-icon.clickable', 1);
-    expect(component.disableRecipe).toHaveBeenCalledWith(
-      RecipeId.AdvancedOilProcessing
-    );
+    TestUtility.clickSelector(fixture, 'lab-ranker');
     expect(component.cancel).not.toHaveBeenCalled();
   });
 });

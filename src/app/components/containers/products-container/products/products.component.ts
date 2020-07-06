@@ -20,7 +20,7 @@ export class ProductsComponent {
   @Input() products: Product[];
 
   @Output() add = new EventEmitter<string>();
-  @Output() remove = new EventEmitter<number>();
+  @Output() remove = new EventEmitter<string>();
   @Output() editProduct = new EventEmitter<IdPayload<string>>();
   @Output() editRate = new EventEmitter<IdPayload<number>>();
   @Output() editRateType = new EventEmitter<IdPayload<RateType>>();

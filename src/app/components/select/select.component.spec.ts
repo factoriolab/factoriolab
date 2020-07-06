@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Mocks, TestUtility, ItemId } from 'src/tests';
-import { IdType } from '~/models';
+import { IdType, DisplayRate } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { IconComponent } from '../icon/icon.component';
 import { SelectComponent } from './select.component';
@@ -15,6 +15,8 @@ import { SelectComponent } from './select.component';
       [selectedId]="selectedId"
       [options]="options"
       [selectType]="selectType"
+      [displayRate]="displayRate"
+      [includeEmptyModule]="includeEmptyModule"
       (cancel)="cancel()"
       (selectId)="selectId($event)"
     >
@@ -25,7 +27,14 @@ class TestSelectComponent {
   @ViewChild(SelectComponent) child: SelectComponent;
   data: DatasetState = Mocks.Data;
   selectedId = ItemId.AssemblingMachine1;
+  options = [
+    ItemId.AssemblingMachine1,
+    ItemId.AssemblingMachine2,
+    ItemId.AssemblingMachine3,
+  ];
   selectType = IdType.Item;
+  displayRate = DisplayRate.PerMinute;
+  includeEmptyModule = false;
   cancel() {}
   selectId(data) {}
 }

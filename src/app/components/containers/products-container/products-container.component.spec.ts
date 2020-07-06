@@ -47,8 +47,11 @@ describe('ProductsContainerComponent', () => {
 
   it('should remove a product', () => {
     spyOn(store, 'dispatch');
-    component.child.remove.emit(0);
-    expect(store.dispatch).toHaveBeenCalledWith(new Products.RemoveAction('0'));
+    const data = '0';
+    component.child.remove.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Products.RemoveAction(data)
+    );
   });
 
   it('should commit edit on a product', () => {

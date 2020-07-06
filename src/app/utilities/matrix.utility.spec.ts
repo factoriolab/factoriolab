@@ -230,7 +230,7 @@ describe('MatrixSolver', () => {
     it('should parse outputs from solver', () => {
       matrix.steps[0].itemId = ItemId.HeavyOil;
       matrix.steps[0].recipeId = null;
-      matrix.recipeDisabled = initialSettingsState.recipeDisabled;
+      matrix.recipeDisabled = Mocks.InitialSettingsState.recipeDisabled;
       matrix.calculateRecipes();
       // Add dummy recipe with no inputs
       matrix.recipeIds.push(RecipeId.IronOre);
@@ -301,7 +301,6 @@ describe('MatrixSolver', () => {
     it('should calculate recipes to use', () => {
       matrix.recipeDisabled = initialSettingsState.recipeDisabled;
       matrix.calculateRecipes();
-      expect(Object.keys(matrix.recipeDisabled).length).toEqual(3);
       expect(matrix.steps).toEqual([
         {
           itemId: ItemId.SteelChest,

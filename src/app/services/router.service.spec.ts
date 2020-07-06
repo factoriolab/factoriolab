@@ -13,13 +13,13 @@ import * as Settings from '~/store/settings';
 import { RouterService } from './router.service';
 
 const mockZipEmpty = 'eJwrsAUAAR8Arg==';
-const mockZipProducts = 'eJwrsC0uSU3N0U3OSC0usTKwMgQAOToF5A==';
+const mockZipProducts = 'eJwrsC0uSU3N0U3OSC0usTKwMlQrtrVCBQDMkQog';
 const mockZipAll =
-  'eJwrsC0uSU3N0U3OSC0usTKwMlTLRBGxKilKzCsuyC8q0U1KzSlRK0KVtbKyUCu2NTYzMLBCBwCbEh0V';
+  'eJwrsC0uSU3N0U3OSC0usTKwMlTLRBGxKilKzCsuyC8q0U1KzSlRK0KVtbKyUCu2NTYzMLBCBQBhIhyh';
 const mockZipExtra =
   'eJwrsM0sys/TTc5ILS6xMrAyVMtEFrAqKUrMKy7ILyrRTUrNKVErQpHMzU8pzUnVw0ZZWakV21qhA0O1EtsSoFYAroYoTw==';
 const mockZipLink =
-  'eJxtT9sKwjAM/Zu9FdpNRAL7mK6NLtA1pckU/94I82Hg0yEnh3Np84s5Y3VpRVHwEAaaRRHLwQTQHqs07uoWLDr00zuK4LYUqg+3xbRSRTfBxnkv+IMwyDxdvYcRLhZwtvtnMIIoG973XmNCWKJQckzFtc4JRUwMwoWySbCAsXlPSk/StztCpSHmf4e532xU8N+to7UKH9njXOc=';
+  'eJxtj+EKwjAMhN9m/yJtJyKBPUzXZq7QNaVpFd/eihMc+Ou4JNyXy9OD2VMCt5JUVKiHMEklivtEYy02SeZSYaZYh3JYWxHa5hjSDTbr1pAIRtzYt0hf0YNM40UpNHjugGMcCsfgYWkUcbYSHHCIkAs7Eump/wDmJJW7Lq0k6wj7tW+uhnuoT/hAT5KJ/G7w14DBay+l1bur6V/pF9njXM8=';
 const mockProducts: Product[] = [
   {
     id: '0',
@@ -310,14 +310,6 @@ describe('RouterService', () => {
   });
 
   describe('zipSettings', () => {
-    it('should skip zipping initial settings', () => {
-      const result = service.zipSettings(
-        Settings.initialSettingsState,
-        Mocks.Data
-      );
-      expect(result).toEqual(null);
-    });
-
     it('should zip full settings', () => {
       const result = service.zipSettings(mockFullSettings, Mocks.Data);
       expect(result).toEqual(mockZipFullSettings);
@@ -331,14 +323,14 @@ describe('RouterService', () => {
     it('should zip default settings', () => {
       const test = { ...Settings.initialSettingsState, ...{ test: true } };
       const result = service.zipSettings(test, Mocks.Data);
-      expect(result).toEqual(':::::::::::::::::');
+      expect(result).toEqual(':::::::::::::::');
     });
   });
 
   describe('unzipSettings', () => {
     it('should unzip the empty settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipSettings(':::::::::::::::::', Mocks.Data);
+      service.unzipSettings(':::::::::::::::', Mocks.Data);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Settings.LoadAction({} as any)
       );

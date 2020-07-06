@@ -25,7 +25,7 @@ describe('Dataset Selectors', () => {
   describe('getBeltSpeed', () => {
     it('should handle null/empty inputs', () => {
       const result = Selectors.getBeltSpeed.projector({}, null);
-      expect(Object.keys(result).length).toEqual(0);
+      expect(Object.keys(result).length).toEqual(1); // Always includes pipe
     });
 
     it('should return the map of belt speeds', () => {

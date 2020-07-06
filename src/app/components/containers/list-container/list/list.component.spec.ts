@@ -5,7 +5,7 @@ import { StoreModule } from '@ngrx/store';
 
 import { Mocks, TestUtility, ItemId } from 'src/tests';
 import { IconComponent, SelectComponent } from '~/components';
-import { Step } from '~/models';
+import { Step, DisplayRate } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers } from '~/store';
 import { DatasetState } from '~/store/dataset';
@@ -22,9 +22,15 @@ import { ListComponent } from './list.component';
       [recipeSettings]="recipeSettings"
       [recipeRaw]="recipeRaw"
       [steps]="steps"
+      [displayRate]="displayRate"
       [itemPrecision]="itemPrecision"
       [beltPrecision]="beltPrecision"
       [factoryPrecision]="factoryPrecision"
+      [modifiedIgnore]="modifiedIgnore"
+      [modifiedBelt]="modifiedBelt"
+      [modifiedFactory]="modifiedFactory"
+      [modifiedModules]="modifiedModules"
+      [modifiedBeacons]="modifiedBeacons"
       (ignoreItem)="ignoreItem($event)"
       (setBelt)="setBelt($event)"
       (setFactory)="setFactory($event)"
@@ -49,9 +55,15 @@ class TestListComponent {
   recipeSettings: RecipesState = Mocks.RecipeSettingsInitial;
   recipeRaw: RecipesState = Mocks.RecipeSettingsEntities;
   steps: Step[] = Mocks.Steps;
+  displayRate = DisplayRate.PerMinute;
   itemPrecision = null;
   beltPrecision = 0;
   factoryPrecision = 1;
+  modifiedIgnore = false;
+  modifiedBelt = false;
+  modifiedFactory = false;
+  modifiedModules = false;
+  modifiedBeacons = false;
   ignoreItem(data) {}
   setBelt(data) {}
   setFactory(data) {}
@@ -103,15 +115,15 @@ describe('ListComponent', () => {
     fixture.detectChanges();
     TestUtility.clickSelector(fixture, 'lab-select lab-icon', 1);
     fixture.detectChanges();
-    expect(component.setModules).toHaveBeenCalledWith([
-      Mocks.Step1.itemId,
-      [
+    expect(component.setModules).toHaveBeenCalledWith({
+      id: Mocks.Step1.itemId,
+      value: [
         ItemId.SpeedModule3,
         ItemId.SpeedModule,
         ItemId.SpeedModule3,
         ItemId.SpeedModule3,
       ],
-    ]);
+    });
   });
 
   it('should set all factory modules', () => {
@@ -120,25 +132,25 @@ describe('ListComponent', () => {
     fixture.detectChanges();
     TestUtility.clickSelector(fixture, 'lab-select lab-icon', 1);
     fixture.detectChanges();
-    expect(component.setModules).toHaveBeenCalledWith([
-      Mocks.Step1.itemId,
-      [
+    expect(component.setModules).toHaveBeenCalledWith({
+      id: Mocks.Step1.itemId,
+      value: [
         ItemId.SpeedModule,
         ItemId.SpeedModule,
         ItemId.SpeedModule,
         ItemId.SpeedModule,
       ],
-    ]);
+    });
   });
 
   it('should set beacon count', () => {
     spyOn(component, 'setBeaconCount');
     TestUtility.selectSelector(fixture, 'input', '24');
     fixture.detectChanges();
-    expect(component.setBeaconCount).toHaveBeenCalledWith([
-      Mocks.Step1.itemId,
-      24,
-    ]);
+    expect(component.setBeaconCount).toHaveBeenCalledWith({
+      id: Mocks.Step1.itemId,
+      value: 24,
+    });
   });
 
   it('should not set beacon count on invalid event', () => {

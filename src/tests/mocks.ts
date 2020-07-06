@@ -23,7 +23,7 @@ import {
   getAdjustedDataset,
   getRationalRecipeSettings,
 } from '~/store/recipes';
-import { initialSettingsState } from '~/store/settings';
+import { settingsReducer } from '~/store/settings';
 import { getItemSettings } from '~/store/items';
 import { ItemId } from './item-id';
 
@@ -114,15 +114,19 @@ export const RecipeSettingsEntities: Entities<RecipeSettings> = {};
 for (const recipe of Data.recipeIds.map((i) => Data.recipeEntities[i])) {
   RecipeSettingsEntities[recipe.id] = { ...RecipeSettings1 };
 }
+export const InitialSettingsState = settingsReducer(
+  undefined,
+  new LoadDatasetAction(Raw)
+);
 export const ItemSettingsInitial = getItemSettings.projector(
   {},
   Data,
-  initialSettingsState
+  InitialSettingsState
 );
 export const RecipeSettingsInitial = getRecipeSettings.projector(
   {},
   Data,
-  initialSettingsState
+  InitialSettingsState
 );
 export const RationalRecipeSettings = getRationalRecipeSettings.projector(
   RecipeSettingsEntities
