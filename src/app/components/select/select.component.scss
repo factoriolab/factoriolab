@@ -8,10 +8,16 @@
   z-index: 10;
   padding: 0.25rem;
   margin: -1px;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .clickable.material-icons {
   padding: 0.375rem;
+}
+
+.clickable.module {
+  margin-right: 2rem;
 }
 
 lab-icon.selected {

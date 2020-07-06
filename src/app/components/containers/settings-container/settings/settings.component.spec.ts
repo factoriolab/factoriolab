@@ -2,11 +2,10 @@ import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
-import * as Mocks from 'src/mocks';
+import { Mocks, TestUtility, ElementId } from 'src/tests';
 import { IconComponent } from '~/components';
-import { Id, Theme } from '~/models';
+import { Theme } from '~/models';
 import { SettingsState, initialSettingsState } from '~/store/settings';
-import { TestUtility } from '~/utilities/test';
 import { SettingsComponent } from './settings.component';
 
 @Component({
@@ -82,7 +81,7 @@ describe('SettingsComponent', () => {
 
   it('should emit numeric settings', () => {
     spyOn(component, 'setItemPrecision');
-    TestUtility.selectId(fixture, Id.SettingsPrecisionItemValue, '3');
+    TestUtility.selectId(fixture, ElementId.SettingsPrecisionItemValue, '3');
     fixture.detectChanges();
     expect(component.setItemPrecision).toHaveBeenCalledWith(3);
   });
@@ -97,7 +96,11 @@ describe('SettingsComponent', () => {
 
   it('should emit other truthy settings', () => {
     spyOn(component, 'setTheme');
-    TestUtility.selectId(fixture, Id.SettingsThemeSelect, Theme.LightMode);
+    TestUtility.selectId(
+      fixture,
+      ElementId.SettingsThemeSelect,
+      Theme.LightMode
+    );
     fixture.detectChanges();
     expect(component.setTheme).toHaveBeenCalledWith(Theme.LightMode);
   });

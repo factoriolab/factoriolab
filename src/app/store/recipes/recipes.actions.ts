@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 
-import { RecipeId, ItemId } from '~/models';
 import { RecipesState } from './recipes.reducer';
+import { IdPayload } from '~/models';
 
 export const enum RecipesActionType {
   LOAD = '[Recipes Router] Load',
@@ -22,27 +22,27 @@ export class LoadAction implements Action {
 
 export class SetFactoryAction implements Action {
   readonly type = RecipesActionType.SET_FACTORY;
-  constructor(public payload: [RecipeId, ItemId]) {}
+  constructor(public payload: IdPayload<string>) {}
 }
 
 export class SetModulesAction implements Action {
   readonly type = RecipesActionType.SET_MODULES;
-  constructor(public payload: [RecipeId, ItemId[]]) {}
+  constructor(public payload: IdPayload<string[]>) {}
 }
 
 export class SetBeaconModuleAction implements Action {
   readonly type = RecipesActionType.SET_BEACON_MODULE;
-  constructor(public payload: [RecipeId, ItemId]) {}
+  constructor(public payload: IdPayload<string>) {}
 }
 
 export class SetBeaconCountAction implements Action {
   readonly type = RecipesActionType.SET_BEACONS_COUNT;
-  constructor(public payload: [RecipeId, number]) {}
+  constructor(public payload: IdPayload<number>) {}
 }
 
 export class ResetAction implements Action {
   readonly type = RecipesActionType.RESET;
-  constructor(public payload: RecipeId) {}
+  constructor(public payload: string) {}
 }
 
 export class ResetFactoryAction implements Action {

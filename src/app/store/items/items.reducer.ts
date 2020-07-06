@@ -40,10 +40,10 @@ export function itemsReducer(
       return newState;
     }
     case ItemsActionType.SET_BELT: {
-      const id = action.payload[0];
+      const id = action.payload.id;
       return {
         ...state,
-        ...{ [id]: { ...state[id], ...{ belt: action.payload[1] } } },
+        ...{ [id]: { ...state[id], ...{ belt: action.payload.value } } },
       };
     }
     case ItemsActionType.RESET: {

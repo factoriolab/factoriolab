@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { RateType, Product, ItemId } from '~/models';
+import { RateType, Product, IdPayload } from '~/models';
 
 export const enum ProductsActionType {
   LOAD = '[Products Router] Load',
@@ -18,27 +18,27 @@ export class LoadAction implements Action {
 
 export class AddAction implements Action {
   readonly type = ProductsActionType.ADD;
-  constructor(public payload: ItemId) {}
+  constructor(public payload: string) {}
 }
 
 export class RemoveAction implements Action {
   readonly type = ProductsActionType.REMOVE;
-  constructor(public payload: number) {}
+  constructor(public payload: string) {}
 }
 
 export class EditProductAction implements Action {
   readonly type = ProductsActionType.EDIT_PRODUCT;
-  constructor(public payload: [number, ItemId]) {}
+  constructor(public payload: IdPayload<string>) {}
 }
 
 export class EditRateAction implements Action {
   readonly type = ProductsActionType.EDIT_RATE;
-  constructor(public payload: [number, number]) {}
+  constructor(public payload: IdPayload<number>) {}
 }
 
 export class EditRateTypeAction implements Action {
   readonly type = ProductsActionType.EDIT_RATE_TYPE;
-  constructor(public payload: [number, RateType]) {}
+  constructor(public payload: IdPayload<RateType>) {}
 }
 
 export type ProductsAction =

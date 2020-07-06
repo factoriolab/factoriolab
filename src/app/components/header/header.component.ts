@@ -6,7 +6,6 @@ import {
   Input,
 } from '@angular/core';
 
-import { Id } from '~/models';
 import { DatasetState } from '~/store/dataset';
 
 @Component({
@@ -18,8 +17,6 @@ import { DatasetState } from '~/store/dataset';
 export class HeaderComponent {
   @Input() data: DatasetState;
   @Output() toggleSettings = new EventEmitter();
-
-  Id = Id;
 
   constructor() {}
 }

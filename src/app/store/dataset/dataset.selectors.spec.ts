@@ -1,5 +1,5 @@
-import * as Mocks from 'src/mocks';
-import { ItemId, RecipeId, Rational } from '~/models';
+import { Mocks, ItemId, RecipeId } from 'src/tests';
+import { Rational } from '~/models';
 import * as Selectors from './dataset.selectors';
 
 describe('Dataset Selectors', () => {
@@ -25,7 +25,7 @@ describe('Dataset Selectors', () => {
   describe('getBeltSpeed', () => {
     it('should handle null/empty inputs', () => {
       const result = Selectors.getBeltSpeed.projector({}, null);
-      expect(Object.keys(result).length).toEqual(0);
+      expect(Object.keys(result).length).toEqual(1); // Always includes pipe
     });
 
     it('should return the map of belt speeds', () => {

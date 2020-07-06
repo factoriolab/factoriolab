@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { State } from '~/store';
 import * as Dataset from '~/store/dataset';
 import * as Products from '~/store/products';
-import { Product, RateType, ItemId } from '~/models';
+import { Product, RateType, IdPayload } from '~/models';
 import { ProductsComponent } from './products/products.component';
 
 @Component({
@@ -32,23 +32,23 @@ export class ProductsContainerComponent implements OnInit {
     this.products$ = this.store.select(Products.getProducts);
   }
 
-  add(value: ItemId) {
+  add(value: string) {
     this.store.dispatch(new Products.AddAction(value));
   }
 
-  remove(id: number) {
+  remove(id: string) {
     this.store.dispatch(new Products.RemoveAction(id));
   }
 
-  editProduct(data: [number, ItemId]) {
+  editProduct(data: IdPayload<string>) {
     this.store.dispatch(new Products.EditProductAction(data));
   }
 
-  editRate(data: [number, number]) {
+  editRate(data: IdPayload<number>) {
     this.store.dispatch(new Products.EditRateAction(data));
   }
 
-  editRateType(data: [number, RateType]) {
+  editRateType(data: IdPayload<RateType>) {
     this.store.dispatch(new Products.EditRateTypeAction(data));
   }
 }

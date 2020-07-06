@@ -1,31 +1,8 @@
 import { Rational } from '../rational';
 import { Entities } from '../entities';
-import { ItemId } from './item';
-
-export enum RecipeId {
-  AdvancedOilProcessing = 'advanced-oil-processing',
-  BasicOilProcessing = 'basic-oil-processing',
-  CoalLiquefaction = 'coal-liquefaction',
-  CopperCable = 'copper-cable',
-  ElectronicCircuit = 'electronic-circuit',
-  HeavyOilCracking = 'heavy-oil-cracking',
-  IronOre = 'iron-ore',
-  KovarexEnrichmentProcess = 'kovarex-enrichment-process',
-  LightOilCracking = 'light-oil-cracking',
-  MiningProductivity = 'mining-productivity',
-  PlasticBar = 'plastic-bar',
-  RocketPart = 'rocket-part',
-  Satellite = 'satellite',
-  SolidFuelFromHeavyOil = 'solid-fuel-from-heavy-oil',
-  SolidFuelFromLightOil = 'solid-fuel-from-light-oil',
-  SolidFuelFromPetroleumGas = 'solid-fuel-from-petroleum-gas',
-  SpaceSciencePack = 'space-science-pack',
-  SteelChest = 'steel-chest',
-  UraniumProcessing = 'uranium-processing',
-}
 
 export interface Recipe {
-  id: RecipeId;
+  id: string;
   name: string;
   time: number;
   in?: Entities<number>;
@@ -34,11 +11,11 @@ export interface Recipe {
     time?: number;
     in?: Entities<number>;
   };
-  producers?: ItemId[];
+  producers: string[];
 }
 
 export class RationalRecipe {
-  id: RecipeId;
+  id: string;
   name: string;
   time: Rational;
   adjustProd?: Rational;
@@ -48,7 +25,7 @@ export class RationalRecipe {
     time?: Rational;
     in?: Entities<Rational>;
   };
-  producers?: ItemId[];
+  producers?: string[];
 
   constructor(data: Recipe) {
     this.id = data.id;

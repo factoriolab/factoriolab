@@ -2,11 +2,10 @@ import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
-import * as Mocks from 'src/mocks';
+import { Mocks, TestUtility, ItemId } from 'src/tests';
 import { IconComponent, PickerComponent } from '~/components';
-import { Product, CategoryId, ItemId, RateType } from '~/models';
+import { Product, CategoryId, RateType } from '~/models';
 import { DatasetState } from '~/store/dataset';
-import { TestUtility } from '~/utilities/test';
 import { ProductsComponent } from './products.component';
 
 @Component({
@@ -66,38 +65,41 @@ describe('ProductsComponent', () => {
   it('should open edit on a product', () => {
     TestUtility.clickSelector(fixture, '.relative lab-icon', 0);
     fixture.detectChanges();
-    expect(component.child.editProductId).toEqual(0);
+    expect(component.child.editProductId).toEqual('0');
     expect(component.child.categoryId).toEqual(CategoryId.Logistics);
   });
 
   it('should commit an edit product', () => {
     spyOn(component, 'editProduct');
     component.child.commitEditProduct(Mocks.Product1, ItemId.Coal);
-    expect(component.editProduct).toHaveBeenCalledWith([
-      Mocks.Product1.id,
-      ItemId.Coal,
-    ]);
+    expect(component.editProduct).toHaveBeenCalledWith({
+      id: Mocks.Product1.id,
+      value: ItemId.Coal,
+    });
   });
 
   it('should reset the rate type on committing a product that has no simple recipe', () => {
     spyOn(component, 'editRateType');
     spyOn(component, 'editProduct');
     component.child.commitEditProduct(Mocks.Product4, ItemId.CrudeOil);
-    expect(component.editRateType).toHaveBeenCalledWith([
-      Mocks.Product4.id,
-      RateType.Items,
-    ]);
-    expect(component.editProduct).toHaveBeenCalledWith([
-      Mocks.Product4.id,
-      ItemId.CrudeOil,
-    ]);
+    expect(component.editRateType).toHaveBeenCalledWith({
+      id: Mocks.Product4.id,
+      value: RateType.Items,
+    });
+    expect(component.editProduct).toHaveBeenCalledWith({
+      id: Mocks.Product4.id,
+      value: ItemId.CrudeOil,
+    });
   });
 
   it('should emit numeric values', () => {
     spyOn(component, 'editRate');
     TestUtility.selectSelector(fixture, 'input', '3');
     fixture.detectChanges();
-    expect(component.editRate).toHaveBeenCalledWith([Mocks.Product1.id, 3]);
+    expect(component.editRate).toHaveBeenCalledWith({
+      id: Mocks.Product1.id,
+      value: 3,
+    });
   });
 
   it('should ignore invalid numeric values', () => {

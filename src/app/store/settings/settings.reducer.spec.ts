@@ -1,11 +1,6 @@
-import {
-  DisplayRate,
-  ItemId,
-  RecipeId,
-  ResearchSpeed,
-  LocalStorageKey,
-  Theme,
-} from '~/models';
+import { ItemId, RecipeId, Mocks } from 'src/tests';
+import { DisplayRate, ResearchSpeed, LocalStorageKey, Theme } from '~/models';
+import * as Dataset from '../dataset';
 import * as Actions from './settings.actions';
 import {
   settingsReducer,
@@ -14,17 +9,18 @@ import {
 } from './settings.reducer';
 
 describe('Settings Reducer', () => {
-  describe('loadTheme', () => {
-    it('should load theme from local storage', () => {
-      localStorage.setItem(LocalStorageKey.Theme, Theme.LightMode);
-      const result = loadTheme();
-      expect(result).toEqual(Theme.LightMode);
-    });
-
-    it('should load DarkMode if not found in local storage', () => {
-      localStorage.removeItem(LocalStorageKey.Theme);
-      const result = loadTheme();
-      expect(result).toEqual(Theme.DarkMode);
+  describe('Dataset LOAD', () => {
+    it('should load settings from dataset', () => {
+      const result = settingsReducer(
+        undefined,
+        new Dataset.LoadDatasetAction(Mocks.Raw)
+      );
+      expect(result.belt).toBeTruthy();
+      expect(result.fuel).toBeTruthy();
+      expect(Object.keys(result.recipeDisabled).length).toBeGreaterThan(0);
+      expect(result.factoryRank.length).toBeGreaterThan(0);
+      expect(result.moduleRank.length).toBeGreaterThan(0);
+      expect(result.beaconModule).toBeTruthy();
     });
   });
 
@@ -79,16 +75,6 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_THEME', () => {
-    it('should set the theme', () => {
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetTheme(null)
-      );
-      expect(result.theme).toEqual(null);
-    });
-  });
-
   describe('SET_BELT', () => {
     it('should set the default belt', () => {
       const value = ItemId.TransportBelt;
@@ -100,25 +86,14 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_ASSEMBLER', () => {
-    it('should set the default assembler', () => {
-      const value = ItemId.AssemblingMachine1;
+  describe('SET_FUEL', () => {
+    it('should set the fuel', () => {
+      const value = ItemId.Wood;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetAssemblerAction(value)
+        new Actions.SetFuelAction(value)
       );
-      expect(result.assembler).toEqual(value);
-    });
-  });
-
-  describe('SET_FURNACE', () => {
-    it('should set the default furnace', () => {
-      const value = ItemId.StoneFurnace;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetFurnaceAction(value)
-      );
-      expect(result.furnace).toEqual(value);
+      expect(result.fuel).toEqual(value);
     });
   });
 
@@ -127,7 +102,7 @@ describe('Settings Reducer', () => {
       const value = RecipeId.AdvancedOilProcessing;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.DisableRecipe(value)
+        new Actions.DisableRecipeAction(value)
       );
       expect(result.recipeDisabled[value]).toBeTrue();
     });
@@ -138,31 +113,53 @@ describe('Settings Reducer', () => {
       const value = RecipeId.BasicOilProcessing;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.EnableRecipe(value)
+        new Actions.EnableRecipeAction(value)
       );
       expect(result.recipeDisabled[value]).toBeUndefined();
     });
   });
 
-  describe('SET_PROD_MODULE', () => {
-    it('should set the default prod module', () => {
-      const value = ItemId.ProductivityModule;
+  describe('PREFER_FACTORY', () => {
+    it('should add a factory to the rank list', () => {
+      const value = ItemId.AssemblingMachine1;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetProdModuleAction(value)
+        new Actions.PreferFactoryAction(value)
       );
-      expect(result.prodModule).toEqual(value);
+      expect(result.factoryRank).toEqual([value]);
     });
   });
 
-  describe('SET_SPEED_MODULE', () => {
-    it('should set the default speed module', () => {
+  describe('DROP_FACTORY', () => {
+    it('should remove a factory from the rank list', () => {
+      const value = ItemId.AssemblingMachine1;
+      const result = settingsReducer(
+        { ...initialSettingsState, ...{ factoryRank: [value] } },
+        new Actions.DropFactoryAction(value)
+      );
+      expect(result.factoryRank).toEqual([]);
+    });
+  });
+
+  describe('PREFER_MODULE', () => {
+    it('should add a module to the rank list', () => {
       const value = ItemId.SpeedModule;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetSpeedModuleAction(value)
+        new Actions.PreferModuleAction(value)
       );
-      expect(result.speedModule).toEqual(value);
+      expect(result.moduleRank).toEqual([value]);
+    });
+  });
+
+  describe('DROP_MODULE', () => {
+    it('should remove a module from the rank list', () => {
+      const value = ItemId.SpeedModule;
+      const result = settingsReducer(
+        { ...initialSettingsState, ...{ moduleRank: [value] } },
+        new Actions.DropModuleAction(value)
+      );
+      expect(result.moduleRank).toEqual([]);
     });
   });
 
@@ -185,17 +182,6 @@ describe('Settings Reducer', () => {
         new Actions.SetBeaconCountAction(value)
       );
       expect(result.beaconCount).toEqual(value);
-    });
-  });
-
-  describe('SET_FUEL', () => {
-    it('should set the fuel', () => {
-      const value = ItemId.Wood;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetFuelAction(value)
-      );
-      expect(result.fuel).toEqual(value);
     });
   });
 
@@ -254,9 +240,33 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('SET_THEME', () => {
+    it('should set the theme', () => {
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetTheme(null)
+      );
+      expect(result.theme).toEqual(null);
+    });
+  });
+
   it('should return default state', () => {
     expect(settingsReducer(undefined, { type: 'Test' } as any)).toBe(
       initialSettingsState
     );
+  });
+
+  describe('loadTheme', () => {
+    it('should load theme from local storage', () => {
+      localStorage.setItem(LocalStorageKey.Theme, Theme.LightMode);
+      const result = loadTheme();
+      expect(result).toEqual(Theme.LightMode);
+    });
+
+    it('should load DarkMode if not found in local storage', () => {
+      localStorage.removeItem(LocalStorageKey.Theme);
+      const result = loadTheme();
+      expect(result).toEqual(Theme.DarkMode);
+    });
   });
 });

@@ -1,4 +1,4 @@
-import { ItemId } from './data/item';
+import { ItemId } from 'src/tests';
 import { Rational } from './rational';
 import { RationalRecipeSettings } from './recipe-settings';
 

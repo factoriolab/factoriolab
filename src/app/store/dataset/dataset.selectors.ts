@@ -2,11 +2,11 @@ import { createSelector } from '@ngrx/store';
 
 import {
   Entities,
-  ItemId,
   Recipe,
   Rational,
   RationalItem,
   RationalRecipe,
+  PIPE_ID,
 } from '~/models';
 import * as Settings from '../settings';
 import { State } from '../';
@@ -70,14 +70,10 @@ export const getBeltSpeed = createSelector(
   getRationalDataset,
   Settings.getRationalFlowRate,
   (data, flowRate) => {
-    const value: Entities<Rational> = {};
+    const value: Entities<Rational> = { [PIPE_ID]: flowRate };
     if (data.beltIds) {
       for (const id of data.beltIds) {
-        if (id === ItemId.Pipe) {
-          value[id] = flowRate;
-        } else {
-          value[id] = data.itemR[id].belt.speed;
-        }
+        value[id] = data.itemR[id].belt.speed;
       }
     }
     return value;

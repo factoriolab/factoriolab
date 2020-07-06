@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 
 import { DatasetState } from '~/store/dataset';
-import { Product, RateType, CategoryId, ItemId } from '~/models';
+import { Product, RateType, IdPayload } from '~/models';
 
 @Component({
   selector: 'lab-products',
@@ -19,17 +19,16 @@ export class ProductsComponent {
   @Input() data: DatasetState;
   @Input() products: Product[];
 
-  @Output() add = new EventEmitter<ItemId>();
-  @Output() remove = new EventEmitter<number>();
-  @Output() editProduct = new EventEmitter<[number, ItemId]>();
-  @Output() editRate = new EventEmitter<[number, number]>();
-  @Output() editRateType = new EventEmitter<[number, RateType]>();
+  @Output() add = new EventEmitter<string>();
+  @Output() remove = new EventEmitter<string>();
+  @Output() editProduct = new EventEmitter<IdPayload<string>>();
+  @Output() editRate = new EventEmitter<IdPayload<number>>();
+  @Output() editRateType = new EventEmitter<IdPayload<RateType>>();
 
   adding: boolean;
-  editProductId: number;
-  categoryId = CategoryId.Logistics;
+  editProductId: string;
+  categoryId: string;
 
-  ItemId = ItemId;
   RateType = RateType;
 
   constructor() {}
@@ -39,22 +38,22 @@ export class ProductsComponent {
     this.categoryId = this.data.itemEntities[product.itemId].category;
   }
 
-  commitEditProduct(product: Product, itemId: ItemId) {
+  commitEditProduct(product: Product, itemId: string) {
     if (
       product.rateType === RateType.Factories &&
       !this.data.recipeEntities[itemId]
     ) {
       // Reset rate type to items
-      this.editRateType.emit([product.id, RateType.Items]);
+      this.editRateType.emit({ id: product.id, value: RateType.Items });
     }
 
-    this.editProduct.emit([product.id, itemId]);
+    this.editProduct.emit({ id: product.id, value: itemId });
   }
 
-  emitNumber(emitter: EventEmitter<[number, number]>, id: number, event: any) {
+  emitNumber(emitter: EventEmitter<IdPayload<number>>, id: string, event: any) {
     if (event.target.value) {
       const value = Number(event.target.value);
-      emitter.emit([id, value]);
+      emitter.emit({ id, value });
     }
   }
 }

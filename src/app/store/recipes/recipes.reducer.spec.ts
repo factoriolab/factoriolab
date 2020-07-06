@@ -1,4 +1,4 @@
-import * as Mocks from 'src/mocks';
+import { Mocks } from 'src/tests';
 import { RecipeUtility } from '~/utilities';
 import * as Actions from './recipes.actions';
 import { recipesReducer, initialRecipesState } from './recipes.reducer';
@@ -20,7 +20,10 @@ describe('Recipes Reducer', () => {
     it('should set the factory', () => {
       const result = recipesReducer(
         initialRecipesState,
-        new Actions.SetFactoryAction([Mocks.Recipe1.id, Mocks.Item1.id])
+        new Actions.SetFactoryAction({
+          id: Mocks.Recipe1.id,
+          value: Mocks.Item1.id,
+        })
       );
       expect(result[Mocks.Recipe1.id].factory).toEqual(Mocks.Item1.id);
     });
@@ -30,7 +33,10 @@ describe('Recipes Reducer', () => {
     it('should set the modules', () => {
       const result = recipesReducer(
         initialRecipesState,
-        new Actions.SetModulesAction([Mocks.Recipe1.id, [Mocks.Item1.id]])
+        new Actions.SetModulesAction({
+          id: Mocks.Recipe1.id,
+          value: [Mocks.Item1.id],
+        })
       );
       expect(result[Mocks.Recipe1.id].modules).toEqual([Mocks.Item1.id]);
     });
@@ -40,7 +46,10 @@ describe('Recipes Reducer', () => {
     it('should set the beacon module', () => {
       const result = recipesReducer(
         initialRecipesState,
-        new Actions.SetBeaconModuleAction([Mocks.Recipe1.id, Mocks.Item1.id])
+        new Actions.SetBeaconModuleAction({
+          id: Mocks.Recipe1.id,
+          value: Mocks.Item1.id,
+        })
       );
       expect(result[Mocks.Recipe1.id].beaconModule).toEqual(Mocks.Item1.id);
     });
@@ -50,7 +59,10 @@ describe('Recipes Reducer', () => {
     it('should set the beacon count', () => {
       const result = recipesReducer(
         initialRecipesState,
-        new Actions.SetBeaconCountAction([Mocks.Recipe1.id, numberValue])
+        new Actions.SetBeaconCountAction({
+          id: Mocks.Recipe1.id,
+          value: numberValue,
+        })
       );
       expect(result[Mocks.Recipe1.id].beaconCount).toEqual(numberValue);
     });

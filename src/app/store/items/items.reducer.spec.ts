@@ -1,4 +1,4 @@
-import * as Mocks from 'src/mocks';
+import { Mocks } from 'src/tests';
 import { RecipeUtility } from '~/utilities';
 import * as Actions from './items.actions';
 import { itemsReducer, initialItemsState } from './items.reducer';
@@ -39,7 +39,7 @@ describe('Items Reducer', () => {
     it('should set the belt', () => {
       const result = itemsReducer(
         initialItemsState,
-        new Actions.SetBeltAction([Mocks.Item1.id, Mocks.Item1.id])
+        new Actions.SetBeltAction({ id: Mocks.Item1.id, value: Mocks.Item1.id })
       );
       expect(result[Mocks.Recipe1.id].belt).toEqual(Mocks.Item1.id);
     });

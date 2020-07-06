@@ -1,17 +1,16 @@
-import { ItemId } from './data/item';
 import { RateType } from './enum/rate-type';
 import { Rational } from './rational';
 
 export interface Product {
-  id: number;
-  itemId: ItemId;
+  id: string;
+  itemId: string;
   rate: number;
   rateType: RateType;
 }
 
 export class RationalProduct {
-  id: number;
-  itemId: ItemId;
+  id: string;
+  itemId: string;
   rate: Rational;
   rateType: RateType;
 

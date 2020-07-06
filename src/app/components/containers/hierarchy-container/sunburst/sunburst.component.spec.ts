@@ -1,9 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import * as Mocks from 'src/mocks';
+import { Mocks, TestUtility } from 'src/tests';
 import { SunburstComponent } from './sunburst.component';
-import { TestUtility } from '~/utilities/test';
 
 @Component({
   selector: 'lab-test-sunburst',

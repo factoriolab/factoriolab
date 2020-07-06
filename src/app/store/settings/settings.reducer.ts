@@ -1,12 +1,11 @@
 import {
   DisplayRate,
-  ItemId,
-  RecipeId,
   ResearchSpeed,
   Theme,
   LocalStorageKey,
   Entities,
 } from '~/models';
+import { DatasetActionType, LoadDatasetAction } from '../dataset';
 import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
@@ -14,14 +13,12 @@ export interface SettingsState {
   itemPrecision: number;
   beltPrecision: number;
   factoryPrecision: number;
-  belt: ItemId;
-  assembler: ItemId;
-  furnace: ItemId;
+  belt: string;
+  fuel: string;
   recipeDisabled: Entities<boolean>;
-  fuel: ItemId;
-  prodModule: ItemId;
-  speedModule: ItemId;
-  beaconModule: ItemId;
+  factoryRank: string[];
+  moduleRank: string[];
+  beaconModule: string;
   beaconCount: number;
   drillModule: boolean;
   miningBonus: number;
@@ -31,30 +28,19 @@ export interface SettingsState {
   theme?: Theme;
 }
 
-export const loadTheme = () => {
-  const lsTheme = localStorage.getItem(LocalStorageKey.Theme);
-  return lsTheme ? (lsTheme as Theme) : Theme.DarkMode;
-};
-
 export const initialSettingsState: SettingsState = {
   displayRate: DisplayRate.PerMinute,
   itemPrecision: 3,
   beltPrecision: 1,
   factoryPrecision: 1,
-  belt: ItemId.ExpressTransportBelt,
-  assembler: ItemId.AssemblingMachine3,
-  furnace: ItemId.ElectricFurnace,
-  recipeDisabled: {
-    [RecipeId.BasicOilProcessing]: true,
-    [RecipeId.CoalLiquefaction]: true,
-    [RecipeId.SolidFuelFromHeavyOil]: true,
-  },
-  fuel: ItemId.Coal,
-  prodModule: ItemId.ProductivityModule3,
-  speedModule: ItemId.SpeedModule3,
-  beaconModule: ItemId.SpeedModule3,
-  drillModule: false,
+  belt: null,
+  fuel: null,
+  recipeDisabled: {},
+  factoryRank: [],
+  moduleRank: [],
+  beaconModule: null,
   beaconCount: 16,
+  drillModule: false,
   miningBonus: 0,
   researchSpeed: ResearchSpeed.Speed6,
   flowRate: 1500,
@@ -64,9 +50,26 @@ export const initialSettingsState: SettingsState = {
 
 export function settingsReducer(
   state: SettingsState = initialSettingsState,
-  action: SettingsAction
+  action: SettingsAction | LoadDatasetAction
 ): SettingsState {
   switch (action.type) {
+    case DatasetActionType.LOAD: {
+      const defaults = action.payload.defaults;
+      return {
+        ...state,
+        ...{
+          belt: defaults.belt,
+          fuel: defaults.fuel,
+          recipeDisabled: defaults.disabledRecipes.reduce(
+            (e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }),
+            {}
+          ),
+          factoryRank: defaults.factoryRank,
+          moduleRank: defaults.moduleRank,
+          beaconModule: defaults.beaconModule,
+        },
+      };
+    }
     case SettingsActionType.LOAD: {
       return { ...state, ...action.payload };
     }
@@ -85,11 +88,8 @@ export function settingsReducer(
     case SettingsActionType.SET_BELT: {
       return { ...state, ...{ belt: action.payload } };
     }
-    case SettingsActionType.SET_ASSEMBLER: {
-      return { ...state, ...{ assembler: action.payload } };
-    }
-    case SettingsActionType.SET_FURNACE: {
-      return { ...state, ...{ furnace: action.payload } };
+    case SettingsActionType.SET_FUEL: {
+      return { ...state, ...{ fuel: action.payload } };
     }
     case SettingsActionType.DISABLE_RECIPE: {
       return {
@@ -107,14 +107,31 @@ export function settingsReducer(
       delete newDisabled[action.payload];
       return { ...state, ...{ recipeDisabled: newDisabled } };
     }
-    case SettingsActionType.SET_FUEL: {
-      return { ...state, ...{ fuel: action.payload } };
+    case SettingsActionType.PREFER_FACTORY: {
+      return {
+        ...state,
+        ...{ factoryRank: [...state.factoryRank, action.payload] },
+      };
     }
-    case SettingsActionType.SET_PROD_MODULE: {
-      return { ...state, ...{ prodModule: action.payload } };
+    case SettingsActionType.DROP_FACTORY: {
+      return {
+        ...state,
+        ...{
+          factoryRank: state.factoryRank.filter((r) => r !== action.payload),
+        },
+      };
     }
-    case SettingsActionType.SET_SPEED_MODULE: {
-      return { ...state, ...{ speedModule: action.payload } };
+    case SettingsActionType.PREFER_MODULE: {
+      return {
+        ...state,
+        ...{ moduleRank: [...state.moduleRank, action.payload] },
+      };
+    }
+    case SettingsActionType.DROP_MODULE: {
+      return {
+        ...state,
+        ...{ moduleRank: state.moduleRank.filter((r) => r !== action.payload) },
+      };
     }
     case SettingsActionType.SET_BEACON_MODULE: {
       return { ...state, ...{ beaconModule: action.payload } };
@@ -144,4 +161,9 @@ export function settingsReducer(
     default:
       return state;
   }
+}
+
+export function loadTheme() {
+  const lsTheme = localStorage.getItem(LocalStorageKey.Theme);
+  return lsTheme ? (lsTheme as Theme) : Theme.DarkMode;
 }

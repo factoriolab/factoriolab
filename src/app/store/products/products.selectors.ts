@@ -3,14 +3,14 @@ import { compose, createSelector } from '@ngrx/store';
 import {
   Step,
   RateType,
-  NEntities,
+  Entities,
   WAGON_STACKS,
   WAGON_FLUID,
   Rational,
   DisplayRateVal,
   RationalProduct,
 } from '~/models';
-import { RateUtility, RecipeUtility, MatrixUtility } from '~/utilities';
+import { RateUtility, MatrixUtility } from '~/utilities';
 import * as Dataset from '../dataset';
 import * as Items from '../items';
 import * as Recipes from '../recipes';
@@ -39,7 +39,7 @@ export const getRationalProducts = createSelector(getProducts, (products) =>
 );
 
 export const getProductsBy = createSelector(getRationalProducts, (products) =>
-  products.reduce((e: NEntities<RationalProduct[]>, p) => {
+  products.reduce((e: Entities<RationalProduct[]>, p) => {
     if (!e[p.rateType]) {
       e[p.rateType] = [];
     }
@@ -51,7 +51,7 @@ export const getNormalizedRatesByItems = createSelector(
   getProductsBy,
   Settings.getDisplayRate,
   (products, displayRate) => {
-    return products[RateType.Items]?.reduce((e: NEntities<Rational>, p) => {
+    return products[RateType.Items]?.reduce((e: Entities<Rational>, p) => {
       return {
         ...e,
         ...{
@@ -68,7 +68,7 @@ export const getNormalizedRatesByBelts = createSelector(
   Dataset.getBeltSpeed,
   (products, itemSettings, beltSpeed) => {
     return products[RateType.Belts]?.reduce(
-      (e: NEntities<Rational>, p) => ({
+      (e: Entities<Rational>, p) => ({
         ...e,
         ...{
           [p.id]: p.rate.mul(beltSpeed[itemSettings[p.itemId].belt]),
@@ -84,7 +84,7 @@ export const getNormalizedRatesByWagons = createSelector(
   Settings.getDisplayRate,
   Dataset.getRationalDataset,
   (products, displayRate, data) => {
-    return products[RateType.Wagons]?.reduce((e: NEntities<Rational>, p) => {
+    return products[RateType.Wagons]?.reduce((e: Entities<Rational>, p) => {
       const item = data.itemR[p.itemId];
       return {
         ...e,
@@ -102,7 +102,7 @@ export const getNormalizedRatesByFactories = createSelector(
   getProductsBy,
   Recipes.getAdjustedDataset,
   (products, data) => {
-    return products[RateType.Factories]?.reduce((e: NEntities<Rational>, p) => {
+    return products[RateType.Factories]?.reduce((e: Entities<Rational>, p) => {
       const recipe = data.recipeR[p.itemId];
       if (recipe) {
         return {
@@ -212,24 +212,16 @@ export const getNormalizedNodesWithBelts = createSelector(
     RateUtility.calculateNodeBelts(nodes, itemSettings, beltSpeed)
 );
 
-export const getDisplayRateSteps = createSelector(
+export const getSteps = createSelector(
   getNormalizedStepsWithBelts,
   Settings.getDisplayRate,
   (steps, displayRate) => RateUtility.displayRate(steps, displayRate)
 );
 
-export const getRawNodes = createSelector(
+export const getNodes = createSelector(
   getNormalizedNodesWithBelts,
   Settings.getDisplayRate,
   (nodes, displayRate) => RateUtility.nodeDisplayRate(nodes, displayRate)
-);
-
-export const getNodes = createSelector(getRawNodes, (nodes) =>
-  RecipeUtility.sortNode(nodes)
-);
-
-export const getSteps = createSelector(getDisplayRateSteps, (steps) =>
-  RecipeUtility.sort(steps)
 );
 
 export const getZipState = createSelector(

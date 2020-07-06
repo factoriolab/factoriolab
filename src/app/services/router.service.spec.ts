@@ -3,15 +3,8 @@ import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
-import * as Mocks from 'src/mocks';
-import {
-  ItemId,
-  RateType,
-  Product,
-  DisplayRate,
-  RecipeId,
-  ResearchSpeed,
-} from '~/models';
+import { Mocks, ItemId, RecipeId } from 'src/tests';
+import { RateType, Product, DisplayRate, ResearchSpeed } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as Products from '~/store/products';
 import * as Items from '~/store/items';
@@ -20,16 +13,16 @@ import * as Settings from '~/store/settings';
 import { RouterService } from './router.service';
 
 const mockZipEmpty = 'eJwrsAUAAR8Arg==';
-const mockZipProducts = 'eJwrsC0uSU3N0U3OSC0usTKwMgQAOToF5A==';
+const mockZipProducts = 'eJwrsC0uSU3N0U3OSC0usTKwMlQrtrVCBQDMkQog';
 const mockZipAll =
-  'eJwrsC0uSU3N0U3OSC0usTKwMlTLRBGxKilKzCsuyC8q0U1KzSlRK0KVtbKyUCu2NTYzMLBCBwCbEh0V';
+  'eJwrsC0uSU3N0U3OSC0usTKwMlTLRBGxKilKzCsuyC8q0U1KzSlRK0KVtbKyUCu2NTYzMLBCBQBhIhyh';
 const mockZipExtra =
   'eJwrsM0sys/TTc5ILS6xMrAyVMtEFrAqKUrMKy7ILyrRTUrNKVErQpHMzU8pzUnVw0ZZWakV21qhA0O1EtsSoFYAroYoTw==';
 const mockZipLink =
-  'eJxtT9sKwjAM/Zu9FdpNRAL7mK6NLtA1pckU/94I82Hg0yEnh3Np84s5Y3VpRVHwEAaaRRHLwQTQHqs07uoWLDr00zuK4LYUqg+3xbRSRTfBxnkv+IMwyDxdvYcRLhZwtvtnMIIoG973XmNCWKJQckzFtc4JRUwMwoWySbCAsXlPSk/StztCpSHmf4e532xU8N+to7UKH9njXOc=';
+  'eJxtj+EKwjAMhN9m/yJtJyKBPUzXZq7QNaVpFd/eihMc+Ou4JNyXy9OD2VMCt5JUVKiHMEklivtEYy02SeZSYaZYh3JYWxHa5hjSDTbr1pAIRtzYt0hf0YNM40UpNHjugGMcCsfgYWkUcbYSHHCIkAs7Eump/wDmJJW7Lq0k6wj7tW+uhnuoT/hAT5KJ/G7w14DBay+l1bur6V/pF9njXM8=';
 const mockProducts: Product[] = [
   {
-    id: 0,
+    id: '0',
     itemId: ItemId.SteelChest,
     rate: 1,
     rateType: RateType.Items,
@@ -65,26 +58,24 @@ const mockFullSettings: Settings.SettingsState = {
   beltPrecision: 4,
   factoryPrecision: 0,
   belt: ItemId.TransportBelt,
-  assembler: ItemId.AssemblingMachine2,
+  fuel: ItemId.SolidFuel,
   recipeDisabled: { [RecipeId.BasicOilProcessing]: true },
-  furnace: ItemId.StoneFurnace,
-  prodModule: ItemId.ProductivityModule,
-  speedModule: ItemId.SpeedModule,
+  factoryRank: [ItemId.AssemblingMachine2, ItemId.StoneFurnace],
+  moduleRank: [ItemId.ProductivityModule, ItemId.SpeedModule],
   beaconModule: ItemId.SpeedModule2,
   beaconCount: 8,
-  fuel: ItemId.SolidFuel,
   drillModule: true,
   miningBonus: 10,
   researchSpeed: ResearchSpeed.Speed0,
   flowRate: 1200,
   expensive: true,
 };
-const mockZipFullSettings = `${DisplayRate.PerHour}:2:4:0:${mockFullSettings.belt}:${mockFullSettings.assembler}:${mockFullSettings.furnace}:${RecipeId.BasicOilProcessing}:${mockFullSettings.fuel}:${mockFullSettings.prodModule}:${mockFullSettings.speedModule}:${mockFullSettings.beaconModule}:8:1:10:0:1200:1`;
+const mockZipFullSettings = `${DisplayRate.PerHour}:2:4:0:${mockFullSettings.belt}:${mockFullSettings.fuel}:${RecipeId.BasicOilProcessing}:${ItemId.AssemblingMachine2}.${ItemId.StoneFurnace}:${ItemId.ProductivityModule}.${ItemId.SpeedModule}:${mockFullSettings.beaconModule}:8:1:10:0:1200:1`;
 const mockNullSettings = {
   ...mockFullSettings,
   ...{ itemPrecision: null, beltPrecision: null, factoryPrecision: null },
 };
-const mockZipNullSettings = `${DisplayRate.PerHour}:n:n:n:${mockFullSettings.belt}:${mockFullSettings.assembler}:${mockFullSettings.furnace}:${RecipeId.BasicOilProcessing}:${mockFullSettings.fuel}:${mockFullSettings.prodModule}:${mockFullSettings.speedModule}:${mockFullSettings.beaconModule}:8:1:10:0:1200:1`;
+const mockZipNullSettings = `${DisplayRate.PerHour}:n:n:n:${mockFullSettings.belt}:${mockFullSettings.fuel}:${RecipeId.BasicOilProcessing}:${ItemId.AssemblingMachine2}.${ItemId.StoneFurnace}:${ItemId.ProductivityModule}.${ItemId.SpeedModule}:${mockFullSettings.beaconModule}:8:1:10:0:1200:1`;
 
 describe('RouterService', () => {
   let service: RouterService;
@@ -319,14 +310,6 @@ describe('RouterService', () => {
   });
 
   describe('zipSettings', () => {
-    it('should skip zipping initial settings', () => {
-      const result = service.zipSettings(
-        Settings.initialSettingsState,
-        Mocks.Data
-      );
-      expect(result).toEqual(null);
-    });
-
     it('should zip full settings', () => {
       const result = service.zipSettings(mockFullSettings, Mocks.Data);
       expect(result).toEqual(mockZipFullSettings);
@@ -340,14 +323,14 @@ describe('RouterService', () => {
     it('should zip default settings', () => {
       const test = { ...Settings.initialSettingsState, ...{ test: true } };
       const result = service.zipSettings(test, Mocks.Data);
-      expect(result).toEqual(':::::::::::::::::');
+      expect(result).toEqual(':::::::::::::::');
     });
   });
 
   describe('unzipSettings', () => {
     it('should unzip the empty settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipSettings(':::::::::::::::::', Mocks.Data);
+      service.unzipSettings(':::::::::::::::', Mocks.Data);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Settings.LoadAction({} as any)
       );

@@ -125,14 +125,16 @@
             <div
               *ngIf="
                 step.belts &&
-                data.itemEntities[step.itemId].category !== CategoryId.Research
+                (!step.recipeId ||
+                  !data.itemEntities[recipeSettings[step.recipeId].factory]
+                    .factory.research)
               "
               class="flex"
             >
               <div class="monospace">{{ rate(step.belts, beltPrecision) }}</div>
               <ng-container
                 *ngIf="
-                  options.Belt[0].indexOf(belt) === -1;
+                  data.beltIds.indexOf(belt) === -1;
                   then beltDefault;
                   else beltPicker
                 "
@@ -167,10 +169,12 @@
                     "
                     [data]="data"
                     [selectedId]="belt"
-                    [options]="options.Belt"
+                    [options]="data.beltIds"
                     [displayRate]="displayRate"
                     (cancel)="edit = null"
-                    (selectId)="setBelt.emit([step.itemId, $event])"
+                    (selectId)="
+                      setBelt.emit({ id: step.itemId, value: $event })
+                    "
                   >
                   </lab-select>
                 </div>
@@ -239,9 +243,11 @@
                       "
                       [data]="data"
                       [selectedId]="factory"
-                      [options]="[recipe.producers]"
+                      [options]="recipe.producers"
                       (cancel)="edit = null"
-                      (selectId)="setFactory.emit([step.recipeId, $event])"
+                      (selectId)="
+                        setFactory.emit({ id: step.recipeId, value: $event })
+                      "
                     >
                     </lab-select>
                   </div>
@@ -276,9 +282,8 @@
                   "
                   [data]="data"
                   [selectedId]="mod"
-                  [options]="
-                    prodAllowed(step) ? options.AllModule : options.SpeedModule
-                  "
+                  [options]="data.recipeModuleIds[step.recipeId]"
+                  includeEmptyModule="true"
                   [data]="data"
                   (cancel)="edit = null"
                   (selectId)="factoryModuleChange(step, $event, i)"
@@ -311,14 +316,17 @@
                   "
                   [data]="data"
                   [selectedId]="module"
-                  [options]="options.SpeedModule"
+                  [options]="data.beaconModuleIds"
+                  includeEmptyModule="true"
                   (cancel)="edit = null"
-                  (selectId)="setBeaconModule.emit([step.recipeId, $event])"
+                  (selectId)="
+                    setBeaconModule.emit({ id: step.recipeId, value: $event })
+                  "
                 >
                 </lab-select>
               </div>
               <input
-                *ngIf="module !== ItemId.Module"
+                *ngIf="module !== 'module'"
                 title="Enter number of beacon modules"
                 type="number"
                 min="0"
@@ -394,8 +402,10 @@
                   <div
                     *ngIf="
                       inStep.belts &&
-                      data.itemEntities[inStep.itemId].category !==
-                        CategoryId.Research
+                      (!inStep.recipeId ||
+                        !data.itemEntities[
+                          recipeSettings[inStep.recipeId].factory
+                        ].factory.research)
                     "
                     class="flex"
                   >
@@ -514,8 +524,9 @@
               <div
                 *ngIf="
                   step.belts &&
-                  data.itemEntities[step.itemId].category !==
-                    CategoryId.Research
+                  (!step.recipeId ||
+                    !data.itemEntities[recipeSettings[step.recipeId].factory]
+                      .factory.research)
                 "
                 class="flex"
               >
@@ -535,7 +546,7 @@
           </td>
           <td>
             <ng-container
-              *ngIf="recipeSettings[step.recipeId].factory as factory"
+              *ngIf="recipeSettings[step.recipeId]?.factory as factory"
             >
               <div
                 class="flex"

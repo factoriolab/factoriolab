@@ -5,7 +5,6 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import * as data from 'src/assets/0.18/data.json';
-import { ItemId } from './models';
 import { RouterService } from './services/router.service';
 import { State } from './store';
 import {
@@ -48,7 +47,7 @@ export class AppComponent implements OnInit {
   ) {
     this.store.dispatch(new LoadDatasetAction((data as any).default));
     if (!location.hash) {
-      this.store.dispatch(new AddAction(ItemId.WoodenChest));
+      this.store.dispatch(new AddAction(data.items[0].id));
     }
   }
 
