@@ -8,7 +8,6 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { CategoryId, ItemId } from '~/models';
 import { DatasetState } from '~/store/dataset';
 
 @Component({
@@ -19,12 +18,12 @@ import { DatasetState } from '~/store/dataset';
 })
 export class PickerComponent {
   @Input() data: DatasetState;
-  @Input() categoryId: CategoryId;
-  @Input() itemId: ItemId;
+  @Input() categoryId: string;
+  @Input() itemId: string;
 
   @Output() cancel = new EventEmitter();
-  @Output() selectTab = new EventEmitter<CategoryId>();
-  @Output() selectItem = new EventEmitter<ItemId>();
+  @Output() selectTab = new EventEmitter<string>();
+  @Output() selectItem = new EventEmitter<string>();
 
   opening = true;
 
@@ -39,7 +38,7 @@ export class PickerComponent {
     }
   }
 
-  clickItem(id: ItemId) {
+  clickItem(id: string) {
     this.selectItem.emit(id);
     this.cancel.emit();
   }

@@ -1,3 +1,3 @@
-export * from './matrix';
-export * from './rate';
-export * from './recipe';
+export * from './matrix.utility';
+export * from './rate.utility';
+export * from './recipe.utility';

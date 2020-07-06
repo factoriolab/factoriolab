@@ -8,7 +8,7 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { Step, RecipeId, ItemId, DisplayRate } from '~/models';
+import { Step, DisplayRate, IdPayload } from '~/models';
 import { State } from '~/store';
 import * as Dataset from '~/store/dataset';
 import * as Items from '~/store/items';
@@ -64,35 +64,35 @@ export class ListContainerComponent implements OnInit {
     this.factoryPrecision$ = this.store.select(Settings.getFactoryPrecision);
   }
 
-  ignoreItem(value: ItemId) {
+  ignoreItem(value: string) {
     this.store.dispatch(new Items.IgnoreAction(value));
   }
 
-  setBelt(data: [ItemId, ItemId]) {
+  setBelt(data: IdPayload<string>) {
     this.store.dispatch(new Items.SetBeltAction(data));
   }
 
-  setFactory(data: [RecipeId, ItemId]) {
+  setFactory(data: IdPayload<string>) {
     this.store.dispatch(new Recipes.SetFactoryAction(data));
   }
 
-  setModules(data: [RecipeId, ItemId[]]) {
+  setModules(data: IdPayload<string[]>) {
     this.store.dispatch(new Recipes.SetModulesAction(data));
   }
 
-  setBeaconModule(data: [RecipeId, ItemId]) {
+  setBeaconModule(data: IdPayload<string>) {
     this.store.dispatch(new Recipes.SetBeaconModuleAction(data));
   }
 
-  setBeaconCount(data: [RecipeId, number]) {
+  setBeaconCount(data: IdPayload<number>) {
     this.store.dispatch(new Recipes.SetBeaconCountAction(data));
   }
 
-  resetItem(value: ItemId) {
+  resetItem(value: string) {
     this.store.dispatch(new Items.ResetAction(value));
   }
 
-  resetRecipe(value: RecipeId) {
+  resetRecipe(value: string) {
     this.store.dispatch(new Recipes.ResetAction(value));
   }
 

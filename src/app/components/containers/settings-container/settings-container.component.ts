@@ -11,7 +11,7 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { DisplayRate, ItemId, RecipeId, ResearchSpeed, Theme } from '~/models';
+import { DisplayRate, ResearchSpeed, Theme, IdPayload } from '~/models';
 import { State } from '~/store';
 import * as Dataset from '~/store/dataset';
 import * as Settings from '~/store/settings';
@@ -74,43 +74,39 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetFactoryPrecisionAction(value));
   }
 
-  setBelt(value: ItemId) {
+  setBelt(value: string) {
     this.store.dispatch(new Settings.SetBeltAction(value));
   }
 
-  setAssembler(value: ItemId) {
-    this.store.dispatch(new Settings.SetAssemblerAction(value));
-  }
-
-  setFurnace(value: ItemId) {
-    this.store.dispatch(new Settings.SetFurnaceAction(value));
-  }
-
-  disableRecipe(value: RecipeId) {
-    this.store.dispatch(new Settings.DisableRecipe(value));
-  }
-
-  enableRecipe(value: RecipeId) {
-    this.store.dispatch(new Settings.EnableRecipe(value));
-  }
-
-  setFuel(value: ItemId) {
+  setFuel(value: string) {
     this.store.dispatch(new Settings.SetFuelAction(value));
   }
 
-  setFlowRate(value: number) {
-    this.store.dispatch(new Settings.SetFlowRateAction(value));
+  disableRecipe(value: string) {
+    this.store.dispatch(new Settings.DisableRecipeAction(value));
   }
 
-  setProdModule(value: ItemId) {
-    this.store.dispatch(new Settings.SetProdModuleAction(value));
+  enableRecipe(value: string) {
+    this.store.dispatch(new Settings.EnableRecipeAction(value));
   }
 
-  setSpeedModule(value: ItemId) {
-    this.store.dispatch(new Settings.SetSpeedModuleAction(value));
+  preferFactory(value: string) {
+    this.store.dispatch(new Settings.PreferFactoryAction(value));
   }
 
-  setBeaconModule(value: ItemId) {
+  dropFactory(value: string) {
+    this.store.dispatch(new Settings.DropFactoryAction(value));
+  }
+
+  preferModule(value: string) {
+    this.store.dispatch(new Settings.PreferModuleAction(value));
+  }
+
+  dropModule(value: string) {
+    this.store.dispatch(new Settings.DropModuleAction(value));
+  }
+
+  setBeaconModule(value: string) {
     this.store.dispatch(new Settings.SetBeaconModuleAction(value));
   }
 
@@ -128,6 +124,10 @@ export class SettingsContainerComponent implements OnInit {
 
   setResearchSpeed(value: ResearchSpeed) {
     this.store.dispatch(new Settings.SetResearchSpeedAction(value));
+  }
+
+  setFlowRate(value: number) {
+    this.store.dispatch(new Settings.SetFlowRateAction(value));
   }
 
   setExpensive(value: boolean) {

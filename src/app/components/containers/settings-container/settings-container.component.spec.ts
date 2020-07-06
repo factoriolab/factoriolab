@@ -2,11 +2,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { StoreModule, Store } from '@ngrx/store';
 
+import { TestUtility, ItemId, RecipeId } from 'src/tests';
 import { IconComponent } from '~/components';
-import { DisplayRate, ItemId, RecipeId, ResearchSpeed, Theme } from '~/models';
+import { DisplayRate, ResearchSpeed, Theme } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as Settings from '~/store/settings';
-import { TestUtility } from '~/utilities/test';
 import { SettingsComponent } from './settings/settings.component';
 import { SettingsContainerComponent } from './settings-container.component';
 
@@ -108,55 +108,12 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
-  it('should set theme', () => {
-    spyOn(store, 'dispatch');
-    const value = Theme.DarkMode;
-    component.child.setTheme.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(new Settings.SetTheme(value));
-  });
-
   it('should set the default belt', () => {
     spyOn(store, 'dispatch');
     const value = ItemId.TransportBelt;
     component.child.setBelt.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetBeltAction(value)
-    );
-  });
-
-  it('should set the default assembler', () => {
-    spyOn(store, 'dispatch');
-    const value = ItemId.AssemblingMachine1;
-    component.child.setAssembler.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetAssemblerAction(value)
-    );
-  });
-
-  it('should set the default furnace', () => {
-    spyOn(store, 'dispatch');
-    const value = ItemId.StoneFurnace;
-    component.child.setFurnace.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetFurnaceAction(value)
-    );
-  });
-
-  it('should disable a recipe', () => {
-    spyOn(store, 'dispatch');
-    const value = RecipeId.BasicOilProcessing;
-    component.child.disableRecipe.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.DisableRecipe(value)
-    );
-  });
-
-  it('should enable a recipe', () => {
-    spyOn(store, 'dispatch');
-    const value = RecipeId.BasicOilProcessing;
-    component.child.enableRecipe.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.EnableRecipe(value)
     );
   });
 
@@ -169,30 +126,57 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
-  it('should set the flow rate', () => {
+  it('should disable a recipe', () => {
     spyOn(store, 'dispatch');
-    const value = 1000;
-    component.child.setFlowRate.emit(value);
+    const value = RecipeId.BasicOilProcessing;
+    component.child.disableRecipe.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetFlowRateAction(value)
+      new Settings.DisableRecipeAction(value)
     );
   });
 
-  it('should set the default prod module', () => {
+  it('should enable a recipe', () => {
     spyOn(store, 'dispatch');
-    const value = ItemId.ProductivityModule;
-    component.child.setProdModule.emit(value);
+    const value = RecipeId.BasicOilProcessing;
+    component.child.enableRecipe.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetProdModuleAction(value)
+      new Settings.EnableRecipeAction(value)
     );
   });
 
-  it('should set the default speed module', () => {
+  it('should prefer a factory', () => {
+    spyOn(store, 'dispatch');
+    const value = ItemId.AssemblingMachine1;
+    component.child.preferFactory.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.PreferFactoryAction(value)
+    );
+  });
+
+  it('should drop a factory', () => {
+    spyOn(store, 'dispatch');
+    const value = ItemId.AssemblingMachine1;
+    component.child.dropFactory.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.DropFactoryAction(value)
+    );
+  });
+
+  it('should prefer a module', () => {
     spyOn(store, 'dispatch');
     const value = ItemId.SpeedModule;
-    component.child.setSpeedModule.emit(value);
+    component.child.preferModule.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetSpeedModuleAction(value)
+      new Settings.PreferModuleAction(value)
+    );
+  });
+
+  it('should drop a module', () => {
+    spyOn(store, 'dispatch');
+    const value = ItemId.SpeedModule;
+    component.child.dropModule.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.DropModuleAction(value)
     );
   });
 
@@ -241,6 +225,15 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
+  it('should set the flow rate', () => {
+    spyOn(store, 'dispatch');
+    const value = 1000;
+    component.child.setFlowRate.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetFlowRateAction(value)
+    );
+  });
+
   it('should set the expensive flag', () => {
     spyOn(store, 'dispatch');
     const value = true;
@@ -248,5 +241,12 @@ describe('SettingsContainerComponent', () => {
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetExpensiveAction(value)
     );
+  });
+
+  it('should set theme', () => {
+    spyOn(store, 'dispatch');
+    const value = Theme.DarkMode;
+    component.child.setTheme.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(new Settings.SetTheme(value));
   });
 });

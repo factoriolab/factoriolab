@@ -9,13 +9,13 @@ import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
-import { Id, ItemId, Theme } from './models';
+import { TestUtility, ElementId, ItemId } from 'src/tests';
+import { Theme } from './models';
 import { RouterService } from './services/router.service';
 import { State, reducers, metaReducers } from './store';
 import { getDatasetState, DatasetState } from './store/dataset';
 import * as Products from './store/products';
 import * as Settings from './store/settings';
-import { TestUtility } from './utilities/test';
 import {
   HeaderComponent,
   IconComponent,
@@ -83,7 +83,7 @@ describe('AppComponent', () => {
   });
 
   it('should add a product', fakeAsync(() => {
-    let ids: number[];
+    let ids: string[];
     store.select(Products.getIds).subscribe((i) => (ids = i));
     tick();
     expect(ids.length).toBeGreaterThan(0);
@@ -102,7 +102,7 @@ describe('AppComponent', () => {
   it('should toggle settings open when clicked', () => {
     component.settingsOpen = false;
     fixture.detectChanges();
-    TestUtility.clickId(fixture, Id.HeaderSettings);
+    TestUtility.clickId(fixture, ElementId.HeaderSettings);
     expect(component.settingsOpen).toBe(true);
   });
 

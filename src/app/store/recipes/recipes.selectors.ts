@@ -3,12 +3,10 @@ import { createSelector } from '@ngrx/store';
 import {
   RecipeSettings,
   Entities,
-  ItemId,
-  RecipeId,
   RationalRecipeSettings,
   RationalRecipe,
 } from '~/models';
-import { RecipeUtility } from '~/utilities/recipe';
+import { RecipeUtility } from '~/utilities/recipe.utility';
 import * as Dataset from '../dataset';
 import * as Settings from '../settings';
 import { State } from '..';
@@ -33,19 +31,17 @@ export const getRecipeSettings = createSelector(
         if (!recipeSettings.factory) {
           recipeSettings.factory = RecipeUtility.defaultFactory(
             recipe,
-            settings.assembler,
-            settings.furnace
+            settings.factoryRank
           );
         }
 
         const factoryItem = data.itemEntities[recipeSettings.factory];
         if (
-          recipe.id !== RecipeId.SpaceSciencePack &&
+          recipe.id !== 'space-science-pack' &&
           factoryItem?.factory?.modules
         ) {
           const drillSkipDefaults =
-            !settings.drillModule &&
-            factoryItem.id === ItemId.ElectricMiningDrill;
+            !settings.drillModule && factoryItem.factory.mining;
 
           // Modules
           if (!recipeSettings.modules) {
@@ -53,13 +49,12 @@ export const getRecipeSettings = createSelector(
               recipeSettings.modules = [];
               const count = factoryItem.factory.modules;
               for (let i = 0; i < count; i++) {
-                recipeSettings.modules.push(ItemId.Module);
+                recipeSettings.modules.push('module');
               }
             } else {
               recipeSettings.modules = RecipeUtility.defaultModules(
                 recipe,
-                settings.prodModule,
-                settings.speedModule,
+                settings.moduleRank,
                 factoryItem.factory.modules,
                 data
               );
@@ -69,7 +64,7 @@ export const getRecipeSettings = createSelector(
           // Beacons
           if (!recipeSettings.beaconModule) {
             if (drillSkipDefaults) {
-              recipeSettings.beaconModule = ItemId.Module;
+              recipeSettings.beaconModule = 'module';
             } else {
               recipeSettings.beaconModule = settings.beaconModule;
             }
@@ -112,7 +107,7 @@ export const getAdjustedDataset = createSelector(
           ...e,
           ...{
             [i]: RecipeUtility.adjustRecipe(
-              i as RecipeId,
+              i,
               miningBonus,
               researchFactor,
               fuel,

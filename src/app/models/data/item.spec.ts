@@ -1,5 +1,6 @@
+import { ItemId } from 'src/tests';
 import { Rational } from '../rational';
-import { RationalItem, ItemId } from './item';
+import { RationalItem } from './item';
 import { CategoryId } from './category';
 
 describe('RationalItem', () => {

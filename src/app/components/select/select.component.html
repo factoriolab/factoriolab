@@ -1,38 +1,36 @@
-<div class="flex" *ngFor="let row of options; first as isFirst">
-  <i
-    *ngIf="isFirst"
-    class="clickable material-icons"
-    title="Cancel"
-    (click)="clickCancel($event)"
-    >close</i
-  >
-  <ng-container *ngFor="let id of row">
-    <lab-icon
-      class="clickable"
-      *ngIf="selectType === IdType.Item"
-      [iconId]="id"
-      [tooltip]="
-        data.itemEntities[id]
-          ? data.itemEntities[id].name
-          : id === ItemId.Module
-          ? 'No Module'
-          : null
-      "
-      [item]="data.itemEntities[id]"
-      [displayRate]="displayRate"
-      [class.selected]="id === selectedId"
-      [data]="data"
-      (click)="clickId(id, $event)"
-    ></lab-icon>
-    <lab-icon
-      class="clickable"
-      *ngIf="selectType === IdType.Recipe"
-      [iconId]="id"
-      [tooltip]="data.recipeEntities[id].name"
-      [recipe]="data.recipeEntities[id]"
-      [class.selected]="id === selectedId"
-      [data]="data"
-      (click)="clickId(id, $event)"
-    ></lab-icon>
-  </ng-container>
-</div>
+<i class="clickable material-icons" title="Cancel" (click)="clickCancel($event)"
+  >close</i
+>
+<lab-icon
+  *ngIf="includeEmptyModule"
+  class="clickable module"
+  iconId="module"
+  tooltip="No Module"
+  [class.selected]="selectedId === 'module'"
+  [data]="data"
+  (click)="clickId('module', $event)"
+>
+</lab-icon>
+<ng-container *ngFor="let id of options">
+  <lab-icon
+    class="clickable"
+    *ngIf="selectType === IdType.Item"
+    [iconId]="id"
+    [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"
+    [item]="data.itemEntities[id]"
+    [displayRate]="displayRate"
+    [class.selected]="id === selectedId"
+    [data]="data"
+    (click)="clickId(id, $event)"
+  ></lab-icon>
+  <lab-icon
+    class="clickable"
+    *ngIf="selectType === IdType.Recipe"
+    [iconId]="id"
+    [tooltip]="data.recipeEntities[id].name"
+    [recipe]="data.recipeEntities[id]"
+    [class.selected]="id === selectedId"
+    [data]="data"
+    (click)="clickId(id, $event)"
+  ></lab-icon>
+</ng-container>

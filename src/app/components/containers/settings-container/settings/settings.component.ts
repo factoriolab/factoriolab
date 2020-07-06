@@ -7,27 +7,17 @@ import {
   HostListener,
 } from '@angular/core';
 
-import {
-  DisplayRate,
-  ItemId,
-  RecipeId,
-  ResearchSpeed,
-  IdType,
-  Theme,
-  options,
-} from '~/models';
+import { DisplayRate, ResearchSpeed, IdType, Theme } from '~/models';
 import { DatasetState } from '~/store/dataset';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
 enum OpenSelect {
   None,
-  DisabledRecipes,
+  EnabledRecipes,
   Belt,
-  Assembler,
-  Furnace,
   Fuel,
-  ProdModule,
-  SpeedModule,
+  Factory,
+  Module,
   BeaconModule,
 }
 
@@ -45,20 +35,20 @@ export class SettingsComponent {
   @Output() setItemPrecision = new EventEmitter<number>();
   @Output() setBeltPrecision = new EventEmitter<number>();
   @Output() setFactoryPrecision = new EventEmitter<number>();
-  @Output() setBelt = new EventEmitter<ItemId>();
-  @Output() setAssembler = new EventEmitter<ItemId>();
-  @Output() setFurnace = new EventEmitter<ItemId>();
-  @Output() disableRecipe = new EventEmitter<RecipeId>();
-  @Output() enableRecipe = new EventEmitter<RecipeId>();
-  @Output() setFuel = new EventEmitter<ItemId>();
-  @Output() setFlowRate = new EventEmitter<number>();
-  @Output() setProdModule = new EventEmitter<ItemId>();
-  @Output() setSpeedModule = new EventEmitter<ItemId>();
-  @Output() setBeaconModule = new EventEmitter<ItemId>();
+  @Output() setBelt = new EventEmitter<string>();
+  @Output() setFuel = new EventEmitter<string>();
+  @Output() disableRecipe = new EventEmitter<string>();
+  @Output() enableRecipe = new EventEmitter<string>();
+  @Output() preferFactory = new EventEmitter<string>();
+  @Output() dropFactory = new EventEmitter<string>();
+  @Output() preferModule = new EventEmitter<string>();
+  @Output() dropModule = new EventEmitter<string>();
+  @Output() setBeaconModule = new EventEmitter<string>();
   @Output() setBeaconCount = new EventEmitter<number>();
   @Output() setDrillModule = new EventEmitter<boolean>();
   @Output() setMiningBonus = new EventEmitter<number>();
   @Output() setResearchSpeed = new EventEmitter<ResearchSpeed>();
+  @Output() setFlowRate = new EventEmitter<number>();
   @Output() setExpensive = new EventEmitter<boolean>();
   @Output() setTheme = new EventEmitter<Theme>();
 
@@ -66,21 +56,19 @@ export class SettingsComponent {
   scrollTop = 0;
 
   DisplayRate = DisplayRate;
-  ItemId = ItemId;
   OpenSelect = OpenSelect;
   ResearchSpeed = ResearchSpeed;
   SelectType = IdType;
   Theme = Theme;
 
   initial = initialSettingsState;
-  options = options;
+
+  constructor() {}
 
   @HostListener('scroll', ['$event'])
   scroll(event: Event) {
     this.scrollTop = (event.target as HTMLElement).scrollTop;
   }
-
-  constructor() {}
 
   emitNumber(emitter: EventEmitter<number>, event: any) {
     if (event.target.value) {

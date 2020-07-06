@@ -1,6 +1,6 @@
+import { ItemId, RecipeId } from 'src/tests';
 import { Rational } from '../rational';
-import { ItemId } from './item';
-import { RationalRecipe, RecipeId } from './recipe';
+import { RationalRecipe } from './recipe';
 
 describe('RationalRecipe', () => {
   describe('constructor', () => {
@@ -41,15 +41,16 @@ describe('RationalRecipe', () => {
         expensive: {
           time: 2,
         },
+        producers: [ItemId.AssemblingMachine1],
       });
       expect(result.id).toEqual(RecipeId.AdvancedOilProcessing);
       expect(result.name).toEqual('name');
       expect(result.time).toEqual(Rational.one);
+      expect(result.producers).toEqual([ItemId.AssemblingMachine1]);
       expect(result.in).toBeUndefined();
       expect(result.out).toBeUndefined();
       expect(result.expensive.time).toEqual(Rational.two);
       expect(result.expensive.in).toBeUndefined();
-      expect(result.producers).toBeUndefined();
     });
 
     it('should ignore undefined fields', () => {
@@ -57,14 +58,15 @@ describe('RationalRecipe', () => {
         id: RecipeId.AdvancedOilProcessing,
         name: 'name',
         time: 1,
+        producers: [ItemId.AssemblingMachine1],
       });
       expect(result.id).toEqual(RecipeId.AdvancedOilProcessing);
       expect(result.name).toEqual('name');
       expect(result.time).toEqual(Rational.one);
+      expect(result.producers).toEqual([ItemId.AssemblingMachine1]);
       expect(result.in).toBeUndefined();
       expect(result.out).toBeUndefined();
       expect(result.expensive).toBeUndefined();
-      expect(result.producers).toBeUndefined();
     });
   });
 });

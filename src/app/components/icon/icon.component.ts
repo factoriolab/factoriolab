@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
-import { Recipe, Item, DisplayRate, RecipeId, ItemId } from '~/models';
+import { Recipe, Item, DisplayRate } from '~/models';
 import { DatasetState } from '~/store/dataset';
 
 @Component({
@@ -10,7 +10,7 @@ import { DatasetState } from '~/store/dataset';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconComponent {
-  @Input() iconId: ItemId | RecipeId;
+  @Input() iconId: string;
   @Input() scale: boolean;
   @Input() text: string;
   @Input() data: DatasetState;

@@ -1,6 +1,4 @@
-import * as Mocks from 'src/mocks';
-import { ItemId } from '~/models';
-import { initialSettingsState } from '../settings';
+import { Mocks, ItemId } from 'src/tests';
 import { initialRecipesState } from './recipes.reducer';
 import * as Selectors from './recipes.selectors';
 
@@ -27,7 +25,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipeSettings.projector(
         initialRecipesState,
         Mocks.Data,
-        initialSettingsState
+        Mocks.InitialSettingsState
       );
       expect(Object.keys(result).length).toEqual(Mocks.Data.recipeIds.length);
     });
@@ -40,7 +38,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipeSettings.projector(
         state,
         Mocks.Data,
-        initialSettingsState
+        Mocks.InitialSettingsState
       );
       expect(result[Mocks.Item1.id].factory).toEqual(stringValue);
     });
@@ -53,7 +51,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipeSettings.projector(
         state,
         Mocks.Data,
-        initialSettingsState
+        Mocks.InitialSettingsState
       );
       expect(result[Mocks.Item1.id].modules as string[]).toEqual([stringValue]);
     });
@@ -66,7 +64,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipeSettings.projector(
         state,
         Mocks.Data,
-        initialSettingsState
+        Mocks.InitialSettingsState
       );
       expect(result[Mocks.Item1.id].beaconModule).toEqual(stringValue);
     });
@@ -79,7 +77,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipeSettings.projector(
         state,
         Mocks.Data,
-        initialSettingsState
+        Mocks.InitialSettingsState
       );
       expect(result[Mocks.Item1.id].beaconCount).toEqual(numberValue);
     });
