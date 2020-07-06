@@ -9,7 +9,6 @@ import { DatasetState, RationalDataset } from '~/store/dataset';
 export class RecipeUtility {
   /** Determines what default factory to use for a given recipe based on settings */
   static defaultFactory(recipe: Recipe, factoryRank: string[]) {
-    // No factory specified for step
     if (recipe.producers.length === 1) {
       // Only one producer specified for recipe, use it
       return recipe.producers[0];

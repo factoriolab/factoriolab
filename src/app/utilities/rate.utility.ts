@@ -26,7 +26,6 @@ export class RateUtility {
     data: RationalDataset
   ) {
     const recipe = data.recipeR[itemId];
-    const item = data.itemR[itemId];
 
     // Find existing step for this item
     let step = steps.find((s) => s.itemId === itemId);
@@ -72,10 +71,6 @@ export class RateUtility {
         step.factories = null;
       } else {
         step.factories = step.items.mul(recipe.time).div(out);
-        const factory = data.itemR[recipeSettings[recipe.id].factory].factory;
-        if (factory.research) {
-          step.factories = step.factories;
-        }
         // Add # of factories to actually launch rockets
         if (itemId === ROCKET_PART_ID) {
           step.factories = step.factories.add(
@@ -117,7 +112,6 @@ export class RateUtility {
     data: RationalDataset
   ) {
     const recipe = data.recipeR[itemId];
-    const item = data.itemR[itemId];
 
     const node: Node = {
       id: `${parent.id}:${itemId}`,
@@ -143,10 +137,6 @@ export class RateUtility {
         node.factories = null;
       } else {
         node.factories = node.items.mul(recipe.time).div(out);
-        const factory = data.itemR[recipeSettings[recipe.id].factory].factory;
-        if (factory.research) {
-          node.factories = node.factories;
-        }
         // Add # of factories to actually launch rockets
         if (itemId === ROCKET_PART_ID) {
           node.factories = node.factories.add(

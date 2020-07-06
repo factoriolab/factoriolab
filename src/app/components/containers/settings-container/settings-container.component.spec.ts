@@ -108,19 +108,21 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
-  it('should set theme', () => {
-    spyOn(store, 'dispatch');
-    const value = Theme.DarkMode;
-    component.child.setTheme.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(new Settings.SetTheme(value));
-  });
-
   it('should set the default belt', () => {
     spyOn(store, 'dispatch');
     const value = ItemId.TransportBelt;
     component.child.setBelt.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetBeltAction(value)
+    );
+  });
+
+  it('should set the fuel', () => {
+    spyOn(store, 'dispatch');
+    const value = ItemId.Wood;
+    component.child.setFuel.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetFuelAction(value)
     );
   });
 
@@ -142,21 +144,39 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
-  it('should set the fuel', () => {
+  it('should prefer a factory', () => {
     spyOn(store, 'dispatch');
-    const value = ItemId.Wood;
-    component.child.setFuel.emit(value);
+    const value = ItemId.AssemblingMachine1;
+    component.child.preferFactory.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetFuelAction(value)
+      new Settings.PreferFactoryAction(value)
     );
   });
 
-  it('should set the flow rate', () => {
+  it('should drop a factory', () => {
     spyOn(store, 'dispatch');
-    const value = 1000;
-    component.child.setFlowRate.emit(value);
+    const value = ItemId.AssemblingMachine1;
+    component.child.dropFactory.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetFlowRateAction(value)
+      new Settings.DropFactoryAction(value)
+    );
+  });
+
+  it('should prefer a module', () => {
+    spyOn(store, 'dispatch');
+    const value = ItemId.SpeedModule;
+    component.child.preferModule.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.PreferModuleAction(value)
+    );
+  });
+
+  it('should drop a module', () => {
+    spyOn(store, 'dispatch');
+    const value = ItemId.SpeedModule;
+    component.child.dropModule.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.DropModuleAction(value)
     );
   });
 
@@ -205,6 +225,15 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
+  it('should set the flow rate', () => {
+    spyOn(store, 'dispatch');
+    const value = 1000;
+    component.child.setFlowRate.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetFlowRateAction(value)
+    );
+  });
+
   it('should set the expensive flag', () => {
     spyOn(store, 'dispatch');
     const value = true;
@@ -212,5 +241,12 @@ describe('SettingsContainerComponent', () => {
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetExpensiveAction(value)
     );
+  });
+
+  it('should set theme', () => {
+    spyOn(store, 'dispatch');
+    const value = Theme.DarkMode;
+    component.child.setTheme.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(new Settings.SetTheme(value));
   });
 });

@@ -27,10 +27,6 @@ export class RankerComponent {
 
   opening = true;
 
-  get complexRecipes() {
-    return this.data.recipeIds.filter((r) => !this.data.itemEntities[r]);
-  }
-
   constructor(private element: ElementRef) {}
 
   @HostListener('document:click', ['$event'])

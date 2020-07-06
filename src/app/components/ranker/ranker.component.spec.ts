@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Mocks, TestUtility } from 'src/tests';
+import { Mocks, TestUtility, ItemId } from 'src/tests';
 import { DatasetState } from '~/store/dataset';
 import { IconComponent } from '../icon/icon.component';
 import { RankerComponent } from './ranker.component';
@@ -23,8 +23,8 @@ import { RankerComponent } from './ranker.component';
 class TestRankerComponent {
   @ViewChild(RankerComponent) child: RankerComponent;
   data: DatasetState = Mocks.Data;
-  rank = [];
-  options = [];
+  rank = [ItemId.AssemblingMachine1];
+  options = [ItemId.AssemblingMachine2];
   cancel() {}
   preferItem(data) {}
   dropItem(data) {}
@@ -69,5 +69,21 @@ describe('RankerComponent', () => {
     component.child.opening = false;
     TestUtility.clickSelector(fixture, 'lab-ranker');
     expect(component.cancel).not.toHaveBeenCalled();
+  });
+
+  it('should prefer an item', () => {
+    spyOn(component, 'preferItem');
+    component.child.opening = false;
+    TestUtility.clickSelector(fixture, 'lab-icon', 1);
+    expect(component.preferItem).toHaveBeenCalledWith(
+      ItemId.AssemblingMachine2
+    );
+  });
+
+  it('should drop an item', () => {
+    spyOn(component, 'dropItem');
+    component.child.opening = false;
+    TestUtility.clickSelector(fixture, 'lab-icon', 0);
+    expect(component.dropItem).toHaveBeenCalledWith(ItemId.AssemblingMachine1);
   });
 });

@@ -1,16 +1,45 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import { RecipeUtility } from './recipe.utility';
 import { Rational, RationalRecipe } from '~/models';
+import { RecipeUtility } from './recipe.utility';
 
 describe('RecipeUtility', () => {
-  const assembler2 = ItemId.AssemblingMachine2;
-  const assembler3 = ItemId.AssemblingMachine3;
-  const prodModule = ItemId.ProductivityModule3;
-  const speedModule = ItemId.SpeedModule3;
+  describe('defaultFactory', () => {
+    it('should pick the first producer if list only contains one', () => {
+      const result = RecipeUtility.defaultFactory(
+        Mocks.Data.recipeEntities[RecipeId.AdvancedOilProcessing],
+        []
+      );
+      expect(result).toEqual(ItemId.OilRefinery);
+    });
 
-  describe('defaultFactory', () => {});
+    it('should pick the first match from rank', () => {
+      const result = RecipeUtility.defaultFactory(
+        Mocks.Data.recipeEntities[RecipeId.SteelChest],
+        [ItemId.AssemblingMachine2, ItemId.AssemblingMachine3]
+      );
+      expect(result).toEqual(ItemId.AssemblingMachine2);
+    });
 
-  describe('defaultModules', () => {});
+    it('should pick the first producer if no match is found', () => {
+      const result = RecipeUtility.defaultFactory(
+        Mocks.Data.recipeEntities[RecipeId.SteelChest],
+        [ItemId.SteelFurnace]
+      );
+      expect(result).toEqual(ItemId.AssemblingMachine1);
+    });
+  });
+
+  describe('defaultModules', () => {
+    it('should fill in modules list for factory', () => {
+      const result = RecipeUtility.defaultModules(
+        Mocks.Data.recipeEntities[RecipeId.SteelChest],
+        [ItemId.ProductivityModule, ItemId.SpeedModule],
+        1,
+        Mocks.Data
+      );
+      expect(result).toEqual([ItemId.SpeedModule]);
+    });
+  });
 
   describe('adjustRecipe', () => {
     it('should adjust a standard recipe', () => {
@@ -140,10 +169,10 @@ describe('RecipeUtility', () => {
     });
 
     it('should handle burner fuel inputs', () => {
-      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
-      settings.factory = ItemId.SteelFurnace;
+      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.IronOre] };
+      settings.factory = ItemId.BurnerMiningDrill;
       const result = RecipeUtility.adjustRecipe(
-        RecipeId.SteelChest,
+        RecipeId.IronOre,
         Rational.zero,
         Rational.zero,
         ItemId.Coal,
@@ -151,13 +180,13 @@ describe('RecipeUtility', () => {
         Mocks.RationalData
       );
       const expected = new RationalRecipe(
-        Mocks.Data.recipeEntities[RecipeId.SteelChest]
+        Mocks.Data.recipeEntities[RecipeId.IronOre]
       );
-      expected.in[ItemId.Coal] = new Rational(BigInt(9), BigInt(1600));
+      expected.in = { [ItemId.Coal]: new Rational(BigInt(3), BigInt(20)) };
       expected.out = {
-        [ItemId.SteelChest]: Rational.one,
+        [ItemId.IronOre]: Rational.one,
       };
-      expected.time = new Rational(BigInt(1), BigInt(4));
+      expected.time = new Rational(BigInt(4));
       expect(result).toEqual(expected);
     });
 
