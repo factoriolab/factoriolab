@@ -36,8 +36,8 @@ select {
 }
 
 button {
-  background-color: var(--color-gray-2);
-  box-shadow: 1px 3px 2px 0px var(--color-black);
+  background: linear-gradient(var(--color-gray-1), var(--color-gray-2));
+  border-color: var(--color-back);
   cursor: pointer;
   user-select: none;
 
