@@ -1,5 +1,6 @@
 import {
   Step,
+  Dataset,
   DisplayRate,
   Entities,
   Node,
@@ -8,7 +9,6 @@ import {
   ROCKET_PART_ID,
   SPACE_SCIENCE_ID,
 } from '~/models';
-import { RationalDataset } from '~/store/dataset';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
 
@@ -23,7 +23,7 @@ export class RateUtility {
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
     fuel: string,
-    data: RationalDataset
+    data: Dataset
   ) {
     const recipe = data.recipeR[data.itemRecipeIds[itemId]];
 
@@ -109,7 +109,7 @@ export class RateUtility {
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
     fuel: string,
-    data: RationalDataset
+    data: Dataset
   ) {
     const recipe = data.recipeR[data.itemRecipeIds[itemId]];
 

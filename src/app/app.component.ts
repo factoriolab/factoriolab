@@ -4,16 +4,13 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import * as data from 'src/assets/0.18/data.json';
+import { data } from 'src/data';
+import { Dataset } from './models';
 import { RouterService } from './services/router.service';
 import { State } from './store';
-import {
-  LoadDatasetAction,
-  DatasetState,
-  getDatasetState,
-} from './store/dataset';
-import * as Settings from '~/store/settings';
+import { LoadDataAction } from './store/datasets';
 import { getZipState, AddAction } from './store/products';
+import * as Settings from './store/settings';
 
 @Component({
   selector: 'lab-root',
@@ -38,26 +35,33 @@ import { getZipState, AddAction } from './store/products';
 export class AppComponent implements OnInit {
   settingsOpen: boolean;
 
-  data$: Observable<DatasetState>;
+  data$: Observable<Dataset>;
 
   constructor(
     public router: RouterService,
     private store: Store<State>,
     @Inject(DOCUMENT) private document: Document
   ) {
-    this.store.dispatch(new LoadDatasetAction((data as any).default));
+    this.store.dispatch(new LoadDataAction(data));
+    this.store.dispatch(new Settings.SetBaseAction(data[0]));
     if (!location.hash) {
-      this.store.dispatch(new AddAction(data.items[0].id));
+      this.store.dispatch(new AddAction(data[0].items[0].id));
     }
   }
 
   ngOnInit() {
-    this.data$ = this.store.select(getDatasetState);
+    this.data$ = this.store.select(Settings.getDataset);
     this.store.select(Settings.getTheme).subscribe((s) => {
       this.document.body.className = s;
     });
     this.store.select(getZipState).subscribe((s) => {
-      this.router.updateUrl(s.products, s.items, s.recipes, s.settings, s.data);
+      this.router.updateUrl(
+        s.products,
+        s.items,
+        s.recipes,
+        s.settings,
+        s.defaults
+      );
     });
   }
 

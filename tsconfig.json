@@ -13,7 +13,8 @@
     "target": "es2015",
     "lib": ["es2018", "dom", "ES2020.BigInt"],
     "paths": { "~/*": ["src/app/*"] },
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

@@ -7,7 +7,6 @@ import {
   RationalRecipe,
 } from '~/models';
 import { RecipeUtility } from '~/utilities/recipe.utility';
-import * as Dataset from '../dataset';
 import * as Settings from '../settings';
 import { State } from '..';
 
@@ -17,9 +16,9 @@ export const recipesState = (state: State) => state.recipeState;
 /* Complex selectors */
 export const getRecipeSettings = createSelector(
   recipesState,
-  Dataset.getDatasetState,
   Settings.settingsState,
-  (state, data, settings) => {
+  Settings.getDataset,
+  (state, settings, data) => {
     const value: Entities<RecipeSettings> = {};
     if (data?.recipeIds?.length) {
       for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
@@ -98,8 +97,8 @@ export const getAdjustedDataset = createSelector(
   Settings.getRationalMiningBonus,
   Settings.getResearchFactor,
   Settings.getFuel,
-  Dataset.getRationalDataset,
-  (recipeSettings, miningBonus, researchFactor, fuel, data) => ({
+  Settings.getDataset,
+  (recipeSettings, miningBonus, researchSpeed, fuel, data) => ({
     ...data,
     ...{
       recipeR: Object.keys(recipeSettings).reduce(
@@ -109,7 +108,7 @@ export const getAdjustedDataset = createSelector(
             [i]: RecipeUtility.adjustRecipe(
               i,
               miningBonus,
-              researchFactor,
+              researchSpeed,
               fuel,
               recipeSettings[i],
               data

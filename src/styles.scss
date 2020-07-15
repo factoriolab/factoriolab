@@ -66,7 +66,6 @@ input {
 
 img.icon {
   background-repeat: no-repeat;
-  background-image: url(assets/0.18/icons.png);
   height: 32px;
   width: 32px;
 
@@ -153,4 +152,8 @@ g {
   > img {
     opacity: 0.25;
   }
+}
+
+.header {
+  color: var(--color-brand);
 }

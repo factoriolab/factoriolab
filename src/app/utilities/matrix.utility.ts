@@ -1,5 +1,6 @@
 import {
   Step,
+  Dataset,
   Entities,
   RationalRecipe,
   RationalItem,
@@ -11,7 +12,6 @@ import {
   Strength,
   Operator,
 } from '~/models';
-import { RationalDataset } from '~/store/dataset';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
 import { RateUtility } from './rate.utility';
@@ -23,7 +23,7 @@ export class MatrixUtility {
     recipeSettings: RecipesState,
     recipeDisabled: Entities<boolean>,
     fuel: string,
-    data: RationalDataset
+    data: Dataset
   ) {
     const matrix = new MatrixSolver(
       steps,
@@ -56,7 +56,7 @@ export class MatrixSolver {
   recipeSettings: RecipesState;
   recipeDisabled: Entities<boolean>;
   fuel: string;
-  data: RationalDataset;
+  data: Dataset;
 
   value: Entities<Rational> = {};
   recipes: Entities<RationalRecipe> = {};
@@ -78,7 +78,7 @@ export class MatrixSolver {
     recipeSettings: RecipesState,
     recipeDisabled: Entities<boolean>,
     fuel: string,
-    data: RationalDataset
+    data: Dataset
   ) {
     this.steps = steps;
     this.itemSettings = itemSettings;

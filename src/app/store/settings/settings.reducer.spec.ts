@@ -13,7 +13,7 @@ describe('Settings Reducer', () => {
     it('should load settings from dataset', () => {
       const result = settingsReducer(
         undefined,
-        new Dataset.LoadDatasetAction(Mocks.Raw)
+        new Dataset.LoadDataAction(Mocks.Raw)
       );
       expect(result.belt).toBeTruthy();
       expect(result.fuel).toBeTruthy();

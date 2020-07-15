@@ -6,9 +6,15 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { Step, DisplayRate, Entities, Rational, IdPayload } from '~/models';
+import {
+  Step,
+  DisplayRate,
+  Entities,
+  Rational,
+  IdPayload,
+  Dataset,
+} from '~/models';
 import { RouterService } from '~/services/router.service';
-import { DatasetState } from '~/store/dataset';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
 
@@ -32,7 +38,7 @@ interface StepEdit {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListComponent {
-  @Input() data: DatasetState;
+  @Input() data: Dataset;
   @Input() itemSettings: ItemsState;
   @Input() recipeSettings: RecipesState;
   @Input() recipeRaw: RecipesState;

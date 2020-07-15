@@ -1,10 +1,13 @@
-<lab-icon
-  *ngFor="let id of complexRecipes"
-  class="clickable"
-  [class.ignored]="recipeDisabled[id]"
-  [iconId]="id"
-  [tooltip]="data.recipeEntities[id].name"
-  [recipe]="data.recipeEntities[id]"
-  [data]="data"
-  (click)="clickId(id, $event)"
-></lab-icon>
+<div class="header">Select Recipes</div>
+<div class="flex">
+  <lab-icon
+    *ngFor="let id of complexRecipes"
+    class="clickable"
+    [class.ignored]="recipeDisabled[id]"
+    [iconId]="id"
+    [tooltip]="data.recipeEntities[id].name"
+    [recipe]="data.recipeEntities[id]"
+    [data]="data"
+    (click)="clickId(id, $event)"
+  ></lab-icon>
+</div>

@@ -1,16 +1,47 @@
 <div class="label">Recipes</div>
 <div class="field">
-  <div class="select-container">
+  <select
+    title="Select base game version"
+    [ngModel]="settings.baseDatasetId"
+    (change)="setBaseDataset.emit(base[$event])"
+  >
+    <option *ngFor="let b of base | keyvalue" [value]="b.key">{{
+      b.value.name
+    }}</option>
+  </select>
+  <div>Base Recipe Set</div>
+</div>
+<div class="field">
+  <div class="select-container button">
     <div [style.marginTop.px]="-scrollTop">
-      <lab-icon
-        class="clickable"
-        tooltip="Enabled Recipes"
-        iconId="advanced-oil-processing"
-        [data]="data"
-        (click)="openSelect = OpenSelect.EnabledRecipes"
-      ></lab-icon>
+      <button (click)="openSelect = OpenSelect.Mods">
+        {{ settings.modDatasetIds.length }} Mod Set{{
+          settings.modDatasetIds.length === 1 ? '' : 's'
+        }}
+        Enabled
+      </button>
+      <lab-multiselect
+        *ngIf="openSelect === OpenSelect.Mods"
+        [enabledIds]="settings.modDatasetIds"
+        [options]="mods"
+        (cancel)="openSelect = OpenSelect.None"
+        (enableMod)="enableMod.emit($event)"
+        (disableMod)="disableMod.emit($event)"
+      ></lab-multiselect>
+    </div>
+  </div>
+</div>
+<div class="field">
+  <div class="select-container button">
+    <div [style.marginTop.px]="-scrollTop">
+      <button (click)="openSelect = OpenSelect.DisabledRecipes">
+        {{ recipeDisabledCount }} Recipe{{
+          recipeDisabledCount === 1 ? '' : 's'
+        }}
+        Disabled
+      </button>
       <lab-toggle
-        *ngIf="openSelect === OpenSelect.EnabledRecipes"
+        *ngIf="openSelect === OpenSelect.DisabledRecipes"
         [data]="data"
         [recipeDisabled]="settings.recipeDisabled"
         (cancel)="openSelect = OpenSelect.None"
@@ -20,6 +51,8 @@
       </lab-toggle>
     </div>
   </div>
+</div>
+<div class="field">
   <div class="flex option" (click)="setExpensive.emit(!settings.expensive)">
     <div
       id="settings-expensive"
@@ -361,7 +394,7 @@
     (click)="setDrillModule.emit(!settings.drillModule)"
   >
     <lab-icon
-      iconId="mining-productivity"
+      iconId="electric-mining-drill"
       [data]="data"
       tooltip="Toggle drill modules"
       [scale]="true"
@@ -376,7 +409,7 @@
 <div class="label">Bonuses</div>
 <div class="field">
   <lab-icon
-    iconId="mining-productivity"
+    iconId="electric-mining-drill"
     [data]="data"
     tooltip="Mining Productivity Bonus"
     [scale]="true"

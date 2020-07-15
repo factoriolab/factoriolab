@@ -1,4 +1,4 @@
-import * as data from 'src/assets/0.18/data.json';
+import * as data from 'src/data/0.18/data.json';
 import {
   Product,
   RateType,
@@ -7,16 +7,15 @@ import {
   Entities,
   Node,
   Rational,
-  Dataset,
+  ModData,
   RationalProduct,
   ItemSettings,
 } from '~/models';
 import {
-  DatasetState,
-  datasetReducer,
-  LoadDatasetAction,
-  getRationalDataset,
-} from '~/store/dataset';
+  DatasetsState,
+  datasetsReducer,
+  LoadDataAction,
+} from '~/store/datasets';
 import { getProductsBy } from '~/store/products';
 import {
   getRecipeSettings,
@@ -27,10 +26,10 @@ import { settingsReducer } from '~/store/settings';
 import { getItemSettings } from '~/store/items';
 import { ItemId } from './item-id';
 
-export const Raw: Dataset = (data as any).default;
-export const Data: DatasetState = datasetReducer(
+export const Raw: ModData = (data as any).default;
+export const Data: DatasetsState = datasetsReducer(
   undefined,
-  new LoadDatasetAction(Raw)
+  new LoadDataAction(Raw)
 );
 export const RationalData = getRationalDataset.projector(Data);
 export const CategoryId = Data.categoryEntities[Data.categoryIds[0]].id;
@@ -116,7 +115,7 @@ for (const recipe of Data.recipeIds.map((i) => Data.recipeEntities[i])) {
 }
 export const InitialSettingsState = settingsReducer(
   undefined,
-  new LoadDatasetAction(Raw)
+  new LoadDataAction(Raw)
 );
 export const ItemSettingsInitial = getItemSettings.projector(
   {},

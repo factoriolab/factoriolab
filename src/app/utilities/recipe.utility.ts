@@ -3,8 +3,8 @@ import {
   Rational,
   RationalRecipe,
   RationalRecipeSettings,
+  Dataset,
 } from '~/models';
-import { DatasetState, RationalDataset } from '~/store/dataset';
 
 export class RecipeUtility {
   /** Determines what default factory to use for a given recipe based on settings */
@@ -29,7 +29,7 @@ export class RecipeUtility {
     recipe: Recipe,
     moduleRank: string[],
     count: number,
-    data: DatasetState
+    data: Dataset
   ) {
     let module = 'module';
     // Find matching module in rank list
@@ -53,7 +53,7 @@ export class RecipeUtility {
     researchFactor: Rational,
     fuelId: string,
     settings: RationalRecipeSettings,
-    data: RationalDataset
+    data: Dataset
   ) {
     const recipe = new RationalRecipe(data.recipeEntities[recipeId]);
     const factory = data.itemR[settings.factory].factory;

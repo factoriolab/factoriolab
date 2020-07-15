@@ -6,7 +6,7 @@ import {
   Input,
 } from '@angular/core';
 
-import { DatasetState } from '~/store/dataset';
+import { Dataset } from '~/models';
 
 @Component({
   selector: 'lab-header',
@@ -15,7 +15,7 @@ import { DatasetState } from '~/store/dataset';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
-  @Input() data: DatasetState;
+  @Input() data: Dataset;
   @Output() toggleSettings = new EventEmitter();
 
   constructor() {}

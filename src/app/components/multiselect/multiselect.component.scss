@@ -8,22 +8,16 @@
   z-index: 10;
   padding: 0.5rem;
   margin: -1px;
-  width: 12.375rem;
 
   > * + * {
     margin-top: 0.5rem;
-
-    &.info {
-      margin-top: 0.25rem;
-    }
   }
 }
 
-.flex {
-  flex-wrap: wrap;
-  font-size: small;
+.clickable > * {
+  white-space: nowrap;
 }
 
-.info {
-  font-size: x-small;
+.clickable:hover {
+  color: var(--color-black);
 }

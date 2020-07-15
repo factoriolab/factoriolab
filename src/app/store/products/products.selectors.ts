@@ -11,7 +11,6 @@ import {
   RationalProduct,
 } from '~/models';
 import { RateUtility, MatrixUtility } from '~/utilities';
-import * as Dataset from '../dataset';
 import * as Items from '../items';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
@@ -67,7 +66,7 @@ export const getNormalizedRatesByItems = createSelector(
 export const getNormalizedRatesByBelts = createSelector(
   getProductsBy,
   Items.getItemSettings,
-  Dataset.getBeltSpeed,
+  Settings.getBeltSpeed,
   (products, itemSettings, beltSpeed) => {
     return products[RateType.Belts]?.reduce(
       (e: Entities<Rational>, p) => ({
@@ -84,7 +83,7 @@ export const getNormalizedRatesByBelts = createSelector(
 export const getNormalizedRatesByWagons = createSelector(
   getProductsBy,
   Settings.getDisplayRate,
-  Dataset.getRationalDataset,
+  Settings.getDataset,
   (products, displayRate, data) => {
     return products[RateType.Wagons]?.reduce((e: Entities<Rational>, p) => {
       const item = data.itemR[p.itemId];
@@ -200,7 +199,7 @@ export const getNormalizedStepsWithMatrices = createSelector(
 export const getNormalizedStepsWithBelts = createSelector(
   getNormalizedStepsWithMatrices,
   Items.getItemSettings,
-  Dataset.getBeltSpeed,
+  Settings.getBeltSpeed,
   (steps, itemSettings, beltSpeed) =>
     RateUtility.calculateBelts(steps, itemSettings, beltSpeed)
 );
@@ -208,7 +207,7 @@ export const getNormalizedStepsWithBelts = createSelector(
 export const getNormalizedNodesWithBelts = createSelector(
   getNormalizedNodes,
   Items.getItemSettings,
-  Dataset.getBeltSpeed,
+  Settings.getBeltSpeed,
   (nodes, itemSettings, beltSpeed) =>
     RateUtility.calculateNodeBelts(nodes, itemSettings, beltSpeed)
 );
@@ -230,8 +229,8 @@ export const getZipState = createSelector(
   Items.itemsState,
   Recipes.recipesState,
   Settings.settingsState,
-  Dataset.getDatasetState,
-  (products, items, recipes, settings, data) => {
-    return { products, items, recipes, settings, data };
+  Settings.getDefaults,
+  (products, items, recipes, settings, defaults) => {
+    return { products, items, recipes, settings, defaults };
   }
 );

@@ -41,6 +41,7 @@ lab-icon {
 .field {
   display: flex;
   align-items: center;
+  min-height: 2rem;
 
   > * + * {
     margin-left: 0.5rem;
@@ -54,6 +55,11 @@ a {
 .select-container {
   width: 2.25rem;
   height: 2.25rem;
+
+  &.button {
+    width: 10rem;
+    height: 1.25em;
+  }
 
   > * {
     position: absolute;
