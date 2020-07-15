@@ -2,8 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Mocks, TestUtility, RecipeId } from 'src/tests';
-import { Entities } from '~/models';
-import { DatasetState } from '~/store/dataset';
+import { Entities, Dataset } from '~/models';
 import { IconComponent } from '../icon/icon.component';
 import { ToggleComponent } from './toggle.component';
 
@@ -22,7 +21,7 @@ import { ToggleComponent } from './toggle.component';
 })
 class TestToggleComponent {
   @ViewChild(ToggleComponent) child: ToggleComponent;
-  data: DatasetState = Mocks.Data;
+  data: Dataset = Mocks.Data;
   recipeDisabled: Entities<boolean> = Mocks.InitialSettingsState.recipeDisabled;
   cancel() {}
   enableRecipe(data) {}

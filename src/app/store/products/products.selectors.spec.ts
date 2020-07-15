@@ -85,7 +85,7 @@ describe('Products Selectors', () => {
       const result = Selectors.getNormalizedRatesByWagons.projector(
         Mocks.ProductEntities,
         DisplayRate.PerHour,
-        Mocks.RationalData
+        Mocks.Data
       );
       expect(result[Mocks.Product3.id].nonzero()).toBeTrue();
     });
@@ -96,7 +96,7 @@ describe('Products Selectors', () => {
           [RateType.Wagons]: [Mocks.RationalProducts[0]],
         },
         DisplayRate.PerHour,
-        Mocks.RationalData
+        Mocks.Data
       );
       expect(result[Mocks.Product1.id].nonzero()).toBeTrue();
     });
@@ -114,7 +114,7 @@ describe('Products Selectors', () => {
           ...Mocks.ProductEntities,
           ...{ [Mocks.Product4.id]: [{ itemId: 'test' }] },
         },
-        Mocks.RationalData
+        Mocks.Data
       );
       expect(Object.keys(result).length).toEqual(0);
     });
@@ -122,7 +122,7 @@ describe('Products Selectors', () => {
     it('should return the rate entities', () => {
       const result = Selectors.getNormalizedRatesByFactories.projector(
         Mocks.ProductEntities,
-        Mocks.RationalData
+        Mocks.Data
       );
       expect(result[Mocks.Product4.id].nonzero()).toBeTrue();
     });
@@ -256,18 +256,19 @@ describe('Products Selectors', () => {
       const recipes = Mocks.RecipeSettingsEntities;
       const settings = initialSettingsState;
       const data = Mocks.Data;
+      const defaults = Mocks.Defaults;
       const result = Selectors.getZipState.projector(
         products,
         items,
         recipes,
         settings,
-        data
+        defaults
       );
       expect(result.products).toBe(products);
       expect(result.items).toBe(items);
       expect(result.recipes).toBe(recipes);
       expect(result.settings).toBe(settings);
-      expect(result.data).toBe(data);
+      expect(result.defaults).toBe(defaults);
     });
   });
 });

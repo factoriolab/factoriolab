@@ -2,10 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
-import { Mocks, TestUtility, ItemId } from 'src/tests';
+import { Mocks, TestUtility, CategoryId, ItemId } from 'src/tests';
 import { IconComponent, PickerComponent } from '~/components';
-import { Product, CategoryId, RateType } from '~/models';
-import { DatasetState } from '~/store/dataset';
+import { Product, RateType, Dataset } from '~/models';
 import { ProductsComponent } from './products.component';
 
 @Component({
@@ -26,7 +25,7 @@ import { ProductsComponent } from './products.component';
 })
 class TestProductsComponent {
   @ViewChild(ProductsComponent) child: ProductsComponent;
-  data: DatasetState = Mocks.Data;
+  data: Dataset = Mocks.Data;
   products: Product[] = Mocks.Products;
   add() {}
   remove(data) {}

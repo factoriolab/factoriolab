@@ -1,4 +1,4 @@
-import * as data from 'src/data/0.18/data.json';
+import { data } from 'src/data';
 import {
   Product,
   RateType,
@@ -7,7 +7,6 @@ import {
   Entities,
   Node,
   Rational,
-  ModData,
   RationalProduct,
   ItemSettings,
 } from '~/models';
@@ -22,17 +21,22 @@ import {
   getAdjustedDataset,
   getRationalRecipeSettings,
 } from '~/store/recipes';
-import { settingsReducer } from '~/store/settings';
+import {
+  settingsReducer,
+  getNormalDataset,
+  SetBaseAction,
+} from '~/store/settings';
 import { getItemSettings } from '~/store/items';
 import { ItemId } from './item-id';
 
-export const Raw: ModData = (data as any).default;
-export const Data: DatasetsState = datasetsReducer(
+export const Raw = data;
+export const DataState: DatasetsState = datasetsReducer(
   undefined,
-  new LoadDataAction(Raw)
+  new LoadDataAction(data)
 );
-export const RationalData = getRationalDataset.projector(Data);
-export const CategoryId = Data.categoryEntities[Data.categoryIds[0]].id;
+export const Data = getNormalDataset.projector(data[0], [data[1]]);
+export const Defaults = data[0].defaults;
+export const CategoryId = Data.categoryIds[0];
 export const Item1 = Data.itemEntities[Data.itemIds[0]];
 export const Item2 = Data.itemEntities[Data.itemIds[1]];
 export const Recipe1 = Data.recipeEntities[Data.recipeIds[0]];
@@ -115,17 +119,17 @@ for (const recipe of Data.recipeIds.map((i) => Data.recipeEntities[i])) {
 }
 export const InitialSettingsState = settingsReducer(
   undefined,
-  new LoadDataAction(Raw)
+  new SetBaseAction(data[0])
 );
 export const ItemSettingsInitial = getItemSettings.projector(
   {},
   Data,
-  InitialSettingsState
+  ItemId.TransportBelt
 );
 export const RecipeSettingsInitial = getRecipeSettings.projector(
   {},
-  Data,
-  InitialSettingsState
+  InitialSettingsState,
+  Data
 );
 export const RationalRecipeSettings = getRationalRecipeSettings.projector(
   RecipeSettingsEntities
@@ -135,5 +139,5 @@ export const AdjustedData = getAdjustedDataset.projector(
   Rational.zero,
   Rational.zero,
   ItemId.Coal,
-  RationalData
+  Data
 );

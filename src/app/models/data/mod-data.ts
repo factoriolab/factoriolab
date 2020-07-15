@@ -17,3 +17,16 @@ export interface ModData {
   limitations: Entities<string[]>;
   defaults?: Defaults;
 }
+
+export const EmptyMod: ModData = {
+  base: true,
+  id: null,
+  name: null,
+  sprite: null,
+  categories: [],
+  icons: [],
+  items: [],
+  recipes: [],
+  limitations: {},
+  defaults: null,
+};

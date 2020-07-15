@@ -1,6 +1,6 @@
-import { Mocks, ItemId } from 'src/tests';
+import { Mocks, CategoryId, ItemId } from 'src/tests';
 import { RateUtility } from './rate.utility';
-import { Step, CategoryId, Node, Rational, DisplayRate } from '~/models';
+import { Step, Node, Rational, DisplayRate } from '~/models';
 
 describe('RateUtility', () => {
   describe('addStepsFor', () => {

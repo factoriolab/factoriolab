@@ -53,6 +53,8 @@ const mockSettings: Settings.SettingsState = {
   ...{ displayRate: DisplayRate.PerHour },
 };
 const mockFullSettings: Settings.SettingsState = {
+  baseDatasetId: '0.17',
+  modDatasetIds: [],
   displayRate: DisplayRate.PerHour,
   itemPrecision: 2,
   beltPrecision: 4,
@@ -126,7 +128,7 @@ describe('RouterService', () => {
         {},
         {},
         Settings.initialSettingsState,
-        Mocks.Data
+        Mocks.Defaults
       );
       expect(router.navigateByUrl).toHaveBeenCalledWith(`/#${mockZipProducts}`);
     });
@@ -138,7 +140,7 @@ describe('RouterService', () => {
         mockItemSettings,
         mockRecipeSettings,
         mockSettings,
-        Mocks.Data
+        Mocks.Defaults
       );
       expect(router.navigateByUrl).toHaveBeenCalledWith(`/#${mockZipAll}`);
     });
@@ -152,9 +154,9 @@ describe('RouterService', () => {
         mockFullItemSettings,
         mockFullRecipeSettings,
         mockFullSettings,
-        Mocks.Data
+        Mocks.Defaults
       );
-      const href = service.stepHref(Mocks.Step1, Mocks.Data);
+      const href = service.stepHref(Mocks.Step1);
       expect(href).toEqual(`#${mockZipLink}`);
     });
   });
@@ -215,7 +217,7 @@ describe('RouterService', () => {
 
   describe('zipProducts', () => {
     it('should zip the products', () => {
-      const result = service.zipProducts(mockProducts, Mocks.Data);
+      const result = service.zipProducts(mockProducts);
       expect(result).toEqual([mockZipProduct]);
     });
   });
@@ -223,7 +225,7 @@ describe('RouterService', () => {
   describe('unzipProducts', () => {
     it('should unzip the products', () => {
       spyOn(store, 'dispatch');
-      service.unzipProducts([mockZipProduct], Mocks.Data);
+      service.unzipProducts([mockZipProduct]);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Products.LoadAction(mockProducts)
       );
@@ -232,20 +234,19 @@ describe('RouterService', () => {
 
   describe('zipItems', () => {
     it('should zip empty item settings', () => {
-      const result = service.zipItems({ [ItemId.SteelChest]: {} }, Mocks.Data);
+      const result = service.zipItems({ [ItemId.SteelChest]: {} });
       expect(result).toEqual([`${ItemId.SteelChest}::`]);
     });
 
     it('should zip full item settings', () => {
-      const result = service.zipItems(mockFullItemSettings, Mocks.Data);
+      const result = service.zipItems(mockFullItemSettings);
       expect(result).toEqual([mockZipFullItemSettings]);
     });
 
     it('should zip false ignore value', () => {
-      const result = service.zipItems(
-        { [ItemId.SteelChest]: { ignore: false } },
-        Mocks.Data
-      );
+      const result = service.zipItems({
+        [ItemId.SteelChest]: { ignore: false },
+      });
       expect(result).toEqual([`${ItemId.SteelChest}:0:`]);
     });
   });
@@ -253,7 +254,7 @@ describe('RouterService', () => {
   describe('unzipItems', () => {
     it('should unzip the empty item settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipItems([`${ItemId.SteelChest}::`], Mocks.Data);
+      service.unzipItems([`${ItemId.SteelChest}::`]);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Items.LoadAction({ [ItemId.SteelChest]: {} })
       );
@@ -261,7 +262,7 @@ describe('RouterService', () => {
 
     it('should unzip the full item settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipItems([mockZipFullItemSettings], Mocks.Data);
+      service.unzipItems([mockZipFullItemSettings]);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Items.LoadAction(mockFullItemSettings)
       );
@@ -269,7 +270,7 @@ describe('RouterService', () => {
 
     it('should unzip false ignore value', () => {
       spyOn(store, 'dispatch');
-      service.unzipItems([`${ItemId.SteelChest}:0:`], Mocks.Data);
+      service.unzipItems([`${ItemId.SteelChest}:0:`]);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Items.LoadAction({ [ItemId.SteelChest]: { ignore: false } })
       );
@@ -278,15 +279,12 @@ describe('RouterService', () => {
 
   describe('zipRecipes', () => {
     it('should zip empty recipe settings', () => {
-      const result = service.zipRecipes(
-        { [RecipeId.SteelChest]: {} },
-        Mocks.Data
-      );
+      const result = service.zipRecipes({ [RecipeId.SteelChest]: {} });
       expect(result).toEqual([`${RecipeId.SteelChest}::::`]);
     });
 
     it('should zip full recipe settings', () => {
-      const result = service.zipRecipes(mockFullRecipeSettings, Mocks.Data);
+      const result = service.zipRecipes(mockFullRecipeSettings);
       expect(result).toEqual([mockZipFullRecipeSettings]);
     });
   });
@@ -294,7 +292,7 @@ describe('RouterService', () => {
   describe('unzipRecipes', () => {
     it('should unzip the empty recipe settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipRecipes([`${RecipeId.SteelChest}::::`], Mocks.Data);
+      service.unzipRecipes([`${RecipeId.SteelChest}::::`]);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Recipes.LoadAction({ [RecipeId.SteelChest]: {} })
       );
@@ -302,7 +300,7 @@ describe('RouterService', () => {
 
     it('should unzip the full recipe settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipRecipes([mockZipFullRecipeSettings], Mocks.Data);
+      service.unzipRecipes([mockZipFullRecipeSettings]);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Recipes.LoadAction(mockFullRecipeSettings)
       );
@@ -311,18 +309,18 @@ describe('RouterService', () => {
 
   describe('zipSettings', () => {
     it('should zip full settings', () => {
-      const result = service.zipSettings(mockFullSettings, Mocks.Data);
+      const result = service.zipSettings(mockFullSettings, Mocks.Defaults);
       expect(result).toEqual(mockZipFullSettings);
     });
 
     it('should zip settings with null values', () => {
-      const result = service.zipSettings(mockNullSettings, Mocks.Data);
+      const result = service.zipSettings(mockNullSettings, Mocks.Defaults);
       expect(result).toEqual(mockZipNullSettings);
     });
 
     it('should zip default settings', () => {
       const test = { ...Settings.initialSettingsState, ...{ test: true } };
-      const result = service.zipSettings(test, Mocks.Data);
+      const result = service.zipSettings(test, Mocks.Defaults);
       expect(result).toEqual(':::::::::::::::');
     });
   });
@@ -330,7 +328,7 @@ describe('RouterService', () => {
   describe('unzipSettings', () => {
     it('should unzip the empty settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipSettings(':::::::::::::::', Mocks.Data);
+      service.unzipSettings(':::::::::::::::');
       expect(store.dispatch).toHaveBeenCalledWith(
         new Settings.LoadAction({} as any)
       );
@@ -338,7 +336,7 @@ describe('RouterService', () => {
 
     it('should unzip the null settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipSettings(mockZipNullSettings, Mocks.Data);
+      service.unzipSettings(mockZipNullSettings);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Settings.LoadAction(mockNullSettings)
       );
@@ -346,7 +344,7 @@ describe('RouterService', () => {
 
     it('should unzip the full settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipSettings(mockZipFullSettings, Mocks.Data);
+      service.unzipSettings(mockZipFullSettings);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Settings.LoadAction(mockFullSettings)
       );

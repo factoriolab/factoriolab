@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Mocks, TestUtility, ItemId } from 'src/tests';
-import { DatasetState } from '~/store/dataset';
+import { Dataset } from '~/models';
 import { IconComponent } from '../icon/icon.component';
 import { RankerComponent } from './ranker.component';
 
@@ -22,7 +22,7 @@ import { RankerComponent } from './ranker.component';
 })
 class TestRankerComponent {
   @ViewChild(RankerComponent) child: RankerComponent;
-  data: DatasetState = Mocks.Data;
+  data: Dataset = Mocks.Data;
   rank = [ItemId.AssemblingMachine1];
   options = [ItemId.AssemblingMachine2];
   cancel() {}

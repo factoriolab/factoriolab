@@ -9,6 +9,7 @@ import {
   RationalItem,
   RationalRecipe,
   Dataset,
+  EmptyMod,
 } from '~/models';
 import { State } from '../';
 import { getBaseEntities, getModEntities } from '../datasets';
@@ -72,13 +73,13 @@ export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
 export const getBase = createSelector(
   getBaseDatasetId,
   getBaseEntities,
-  (id, entities) => entities[id]
+  (id, entities) => (id && entities[id]) || EmptyMod
 );
 
 export const getMods = createSelector(
   getModDatasetIds,
   getModEntities,
-  (ids, entities) => ids.map((i) => entities[i])
+  (ids, entities) => ids.filter((i) => entities[i]).map((i) => entities[i])
 );
 
 export const getDefaults = createSelector(getBase, (base) => base.defaults);

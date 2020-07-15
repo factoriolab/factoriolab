@@ -1,4 +1,4 @@
-import { Mocks, RecipeId } from 'src/tests';
+import { Mocks } from 'src/tests';
 import * as Actions from './datasets.actions';
 import { datasetsReducer } from './datasets.reducer';
 
@@ -9,29 +9,7 @@ export const state = datasetsReducer(
 
 describe('Dataset Reducer', () => {
   describe('LOAD', () => {
-    it('should load items', () => {
-      const count = Mocks.Data.itemIds.length;
-      expect(state.itemIds.length).toBe(count);
-      expect(Object.keys(state.itemEntities).length).toBe(count);
-    });
-
-    it('should load categories', () => {
-      const count = Mocks.Data.categoryIds.length;
-      expect(state.categoryIds.length).toBe(count);
-      expect(Object.keys(state.categoryEntities).length).toBe(count);
-    });
-
-    it('should load recipes', () => {
-      const count = Mocks.Data.recipeIds.length;
-      expect(state.recipeIds.length).toBe(count);
-      expect(Object.keys(state.recipeEntities).length).toBe(count);
-    });
-
-    it('should fill in missing recipe names', () => {
-      expect(state.recipeEntities[RecipeId.FillWaterBarrel].name).toEqual(
-        'Fill Water Barrel'
-      );
-    });
+    it('should load mod data', () => {});
   });
 
   it('should return default state', () => {
