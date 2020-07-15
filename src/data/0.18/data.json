@@ -3954,7 +3954,7 @@
     { "id": "heavy-oil-barrel", "position": "-96px -672px" },
     { "id": "heavy-oil-cracking", "position": "-0px -704px" },
     { "id": "inserter", "position": "-64px -704px" },
-    { "id": "intermediate", "size": 64, "position": "-64px -1728px" },
+    { "id": "intermediate-products", "size": 64, "position": "-64px -1728px" },
     { "id": "iron-chest", "position": "-96px -704px" },
     { "id": "iron-gear-wheel", "position": "-0px -736px" },
     { "id": "iron-ore", "position": "-32px -736px" },
