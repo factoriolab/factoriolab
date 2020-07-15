@@ -23,7 +23,11 @@ input,
 select {
   color: var(--color-font);
   background-color: var(--color-gray-2);
+  border: 1px solid transparent;
   border-radius: 0.25rem;
+  font-family: $font-family;
+  padding: 0.25rem;
+  height: 1.625rem;
 
   &:not([disabled]):hover {
     border-color: var(--color-brand);
@@ -32,7 +36,8 @@ select {
 }
 
 button {
-  border-color: var(--color-font);
+  background-color: var(--color-gray-2);
+  box-shadow: 1px 3px 2px 0px var(--color-black);
   cursor: pointer;
   user-select: none;
 
@@ -41,14 +46,13 @@ button {
     outline: none;
     border-color: var(--color-brand);
   }
+
+  &:not([disabled]):hover {
+    background-color: var(--color-gray-1);
+  }
 }
 
 input {
-  border: 1px solid transparent;
-  border-radius: 0.25rem;
-  padding: 0.25rem;
-  font-family: $font-family;
-
   &[type='number'],
   &[type='text'] {
     width: 5rem;
