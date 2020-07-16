@@ -18,12 +18,12 @@ import * as Items from '~/store/items';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 
-const NULL = 'n';
-const EMPTY = '[]';
-const ARRAYSEP = '.';
-const FIELDSEP = ':';
-const TRUE = '1';
-const FALSE = '0';
+export const NULL = 'n';
+export const EMPTY = '[]';
+export const ARRAYSEP = '.';
+export const FIELDSEP = ':';
+export const TRUE = '1';
+export const FALSE = '0';
 
 @Injectable({
   providedIn: 'root',
@@ -346,7 +346,7 @@ export class RouterService {
   }
 
   zipTruthyNum(value: number) {
-    return value == null ? '' : value;
+    return value == null ? '' : value.toString();
   }
 
   zipTruthyBool(value: boolean) {
@@ -354,7 +354,7 @@ export class RouterService {
   }
 
   zipTruthyArray(value: string[]) {
-    return value == null ? '' : value.join(ARRAYSEP);
+    return value == null ? '' : value.length ? value.join(ARRAYSEP) : EMPTY;
   }
 
   zipDiff(value: string, init: string) {
@@ -370,14 +370,14 @@ export class RouterService {
   }
 
   zipDiffArray(value: string[], init: string[]) {
-    const zVal = value.sort().join(ARRAYSEP);
-    const zInit = init.sort().join(ARRAYSEP);
+    const zVal = [...value].sort().join(ARRAYSEP);
+    const zInit = [...init].sort().join(ARRAYSEP);
     return zVal === zInit ? '' : zVal ? zVal : EMPTY;
   }
 
   zipDiffRank(value: string[], init: string[]) {
-    const zVal = value.join(ARRAYSEP);
-    const zInit = init.join(ARRAYSEP);
+    const zVal = [...value].join(ARRAYSEP);
+    const zInit = [...init].join(ARRAYSEP);
     return zVal === zInit ? '' : zVal ? zVal : EMPTY;
   }
 

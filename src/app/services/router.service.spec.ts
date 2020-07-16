@@ -10,7 +10,15 @@ import * as Products from '~/store/products';
 import * as Items from '~/store/items';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
-import { RouterService } from './router.service';
+import {
+  RouterService,
+  FIELDSEP,
+  ARRAYSEP,
+  EMPTY,
+  NULL,
+  TRUE,
+  FALSE,
+} from './router.service';
 
 const mockZipEmpty = 'eJwrsAUAAR8Arg==';
 const mockZipProducts = 'eJwrsC0uSU3N0U3OSC0usTKwMgQAOToF5A==';
@@ -28,14 +36,18 @@ const mockProducts: Product[] = [
     rateType: RateType.Items,
   },
 ];
-const mockZipProduct = `${ItemId.SteelChest}:0:1`;
+const mockZipProduct = [ItemId.SteelChest, '0', '1'].join(FIELDSEP);
 const mockItemSettings: Items.ItemsState = {
   [ItemId.SteelChest]: { belt: ItemId.TransportBelt },
 };
 const mockFullItemSettings: Items.ItemsState = {
   [ItemId.SteelChest]: { ignore: true, belt: ItemId.TransportBelt },
 };
-const mockZipFullItemSettings = `${ItemId.SteelChest}:1:${ItemId.TransportBelt}`;
+const mockZipFullItemSettings = [
+  ItemId.SteelChest,
+  '1',
+  ItemId.TransportBelt,
+].join(FIELDSEP);
 const mockRecipeSettings: Recipes.RecipesState = {
   [RecipeId.SteelChest]: { beaconCount: 8 },
 };
@@ -47,7 +59,13 @@ const mockFullRecipeSettings: Recipes.RecipesState = {
     beaconCount: 1,
   },
 };
-const mockZipFullRecipeSettings = `${RecipeId.SteelChest}:${ItemId.AssemblingMachine3}:${ItemId.Module}:${ItemId.Module}:1`;
+const mockZipFullRecipeSettings = [
+  RecipeId.SteelChest,
+  ItemId.AssemblingMachine3,
+  ItemId.Module,
+  ItemId.Module,
+  '1',
+].join(FIELDSEP);
 const mockSettings: Settings.SettingsState = {
   ...Mocks.InitialSettingsState,
   ...{ displayRate: DisplayRate.PerHour },
@@ -72,12 +90,50 @@ const mockFullSettings: Settings.SettingsState = {
   flowRate: 1200,
   expensive: true,
 };
-const mockZipFullSettings = `0.17:[]:${DisplayRate.PerHour}:2:4:0:${mockFullSettings.belt}:${mockFullSettings.fuel}:${RecipeId.BasicOilProcessing}:${ItemId.AssemblingMachine2}.${ItemId.StoneFurnace}:${ItemId.ProductivityModule}.${ItemId.SpeedModule}:${mockFullSettings.beaconModule}:8:1:10:0:1200:1`;
+const mockZipFullSettings = [
+  '0.17',
+  EMPTY,
+  DisplayRate.PerHour,
+  '2',
+  '4',
+  '0',
+  mockFullSettings.belt,
+  mockFullSettings.fuel,
+  RecipeId.BasicOilProcessing,
+  [ItemId.AssemblingMachine2, ItemId.StoneFurnace].join(ARRAYSEP),
+  [ItemId.ProductivityModule, ItemId.SpeedModule].join(ARRAYSEP),
+  mockFullSettings.beaconModule,
+  '8',
+  '1',
+  '10',
+  '0',
+  '1200',
+  '1',
+].join(FIELDSEP);
 const mockNullSettings = {
   ...mockFullSettings,
   ...{ itemPrecision: null, beltPrecision: null, factoryPrecision: null },
 };
-const mockZipNullSettings = `0.17:[]:${DisplayRate.PerHour}:n:n:n:${mockFullSettings.belt}:${mockFullSettings.fuel}:${RecipeId.BasicOilProcessing}:${ItemId.AssemblingMachine2}.${ItemId.StoneFurnace}:${ItemId.ProductivityModule}.${ItemId.SpeedModule}:${mockFullSettings.beaconModule}:8:1:10:0:1200:1`;
+const mockZipNullSettings = [
+  '0.17',
+  EMPTY,
+  DisplayRate.PerHour,
+  NULL,
+  NULL,
+  NULL,
+  mockFullSettings.belt,
+  mockFullSettings.fuel,
+  RecipeId.BasicOilProcessing,
+  [ItemId.AssemblingMachine2, ItemId.StoneFurnace].join(ARRAYSEP),
+  [ItemId.ProductivityModule, ItemId.SpeedModule].join(ARRAYSEP),
+  mockFullSettings.beaconModule,
+  '8',
+  '1',
+  '10',
+  '0',
+  '1200',
+  '1',
+].join(FIELDSEP);
 
 describe('RouterService', () => {
   let service: RouterService;
@@ -348,6 +404,190 @@ describe('RouterService', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         new Settings.LoadAction(mockFullSettings)
       );
+    });
+  });
+
+  describe('zipTruthy', () => {
+    it('should handle falsy', () => {
+      expect(service.zipTruthy(null)).toEqual('');
+    });
+
+    it('should handle truthy', () => {
+      expect(service.zipTruthy('a')).toEqual('a');
+    });
+  });
+
+  describe('zipTruthyNum', () => {
+    it('should handle falsy', () => {
+      expect(service.zipTruthyNum(null)).toEqual('');
+    });
+
+    it('should handle truthy', () => {
+      expect(service.zipTruthyNum(1)).toEqual('1');
+    });
+  });
+
+  describe('zipTruthyBool', () => {
+    it('should handle falsy', () => {
+      expect(service.zipTruthyBool(null)).toEqual('');
+    });
+
+    it('should handle false', () => {
+      expect(service.zipTruthyBool(false)).toEqual(FALSE);
+    });
+
+    it('should handle true', () => {
+      expect(service.zipTruthyBool(true)).toEqual(TRUE);
+    });
+  });
+
+  describe('zipTruthyArray', () => {
+    it('should handle falsy', () => {
+      expect(service.zipTruthyArray(null)).toEqual('');
+    });
+
+    it('should handle empty', () => {
+      expect(service.zipTruthyArray([])).toEqual(EMPTY);
+    });
+
+    it('should handle truthy', () => {
+      expect(service.zipTruthyArray(['a'])).toEqual('a');
+    });
+  });
+
+  describe('zipDiff', () => {
+    it('should handle default', () => {
+      expect(service.zipDiff('a', 'a')).toEqual('');
+    });
+
+    it('should handle falsy', () => {
+      expect(service.zipDiff(null, 'a')).toEqual(NULL);
+    });
+
+    it('should handle truthy', () => {
+      expect(service.zipDiff('a', 'b')).toEqual('a');
+    });
+  });
+
+  describe('zipDiffNum', () => {
+    it('should handle default', () => {
+      expect(service.zipDiffNum(0, 0)).toEqual('');
+    });
+
+    it('should handle falsy', () => {
+      expect(service.zipDiffNum(null, 0)).toEqual(NULL);
+    });
+
+    it('should handle truthy', () => {
+      expect(service.zipDiffNum(0, 1)).toEqual('0');
+    });
+  });
+
+  describe('zipDiffBool', () => {
+    it('should handle default', () => {
+      expect(service.zipDiffBool(false, false)).toEqual('');
+    });
+
+    it('should handle falsy', () => {
+      expect(service.zipDiffBool(null, false)).toEqual(NULL);
+    });
+
+    it('should handle truthy', () => {
+      expect(service.zipDiffBool(false, true)).toEqual(FALSE);
+    });
+  });
+
+  describe('zipDiffArray', () => {
+    it('should handle default', () => {
+      expect(service.zipDiffArray(['a', 'b'], ['b', 'a'])).toEqual('');
+    });
+
+    it('should handle empty', () => {
+      expect(service.zipDiffArray([], ['a'])).toEqual(EMPTY);
+    });
+
+    it('should handle truthy', () => {
+      expect(service.zipDiffArray(['b', 'a'], ['a', 'c'])).toEqual('a.b');
+    });
+  });
+
+  describe('zipDiffRank', () => {
+    it('should handle default', () => {
+      expect(service.zipDiffRank(['a', 'b'], ['a', 'b'])).toEqual('');
+    });
+
+    it('should honor order', () => {
+      expect(service.zipDiffRank(['a', 'b'], ['b', 'a'])).toEqual('a.b');
+    });
+
+    it('should handle empty', () => {
+      expect(service.zipDiffRank([], ['a'])).toEqual(EMPTY);
+    });
+
+    it('should handle truthy', () => {
+      expect(service.zipDiffRank(['a', 'b'], ['a', 'c'])).toEqual('a.b');
+    });
+  });
+
+  describe('parseString', () => {
+    it('should parse null', () => {
+      expect(service.parseString(NULL)).toBeNull();
+    });
+
+    it('should parse value', () => {
+      expect(service.parseString('a')).toEqual('a');
+    });
+  });
+
+  describe('parseBool', () => {
+    it('should parse null', () => {
+      expect(service.parseBool(NULL)).toBeNull();
+    });
+
+    it('should parse false', () => {
+      expect(service.parseBool(FALSE)).toBeFalse();
+    });
+
+    it('should parse true', () => {
+      expect(service.parseBool(TRUE)).toBeTrue();
+    });
+  });
+
+  describe('parseNumber', () => {
+    it('should parse null', () => {
+      expect(service.parseNumber(NULL)).toBeNull();
+    });
+
+    it('should parse value', () => {
+      expect(service.parseNumber('1')).toEqual(1);
+    });
+  });
+
+  describe('parseArray', () => {
+    it('should parse null', () => {
+      expect(service.parseArray(NULL)).toBeNull();
+    });
+
+    it('should parse empty', () => {
+      expect(service.parseArray(EMPTY)).toEqual([]);
+    });
+
+    it('should parse value', () => {
+      expect(service.parseArray('a.b')).toEqual(['a', 'b']);
+    });
+  });
+
+  describe('parseBoolEntities', () => {
+    it('should parse null', () => {
+      expect(service.parseBoolEntities(NULL)).toBeNull();
+    });
+
+    it('should parse empty', () => {
+      expect(service.parseBoolEntities(EMPTY)).toEqual({});
+    });
+
+    it('should parse value', () => {
+      expect(service.parseBoolEntities('a.b')).toEqual({ a: true, b: true });
     });
   });
 });
