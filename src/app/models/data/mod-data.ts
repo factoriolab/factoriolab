@@ -7,6 +7,7 @@ import { Recipe } from './recipe';
 
 export interface ModData {
   base: boolean;
+  /** Do not use the colon (:) character in ID */
   id: string;
   name: string;
   sprite: string;

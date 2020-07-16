@@ -13,13 +13,13 @@ import * as Settings from '~/store/settings';
 import { RouterService } from './router.service';
 
 const mockZipEmpty = 'eJwrsAUAAR8Arg==';
-const mockZipProducts = 'eJwrsC0uSU3N0U3OSC0usTKwMlQrtrVCBQDMkQog';
+const mockZipProducts = 'eJwrsC0uSU3N0U3OSC0usTKwMgQAOToF5A==';
 const mockZipAll =
-  'eJwrsC0uSU3N0U3OSC0usTKwMlTLRBGxKilKzCsuyC8q0U1KzSlRK0KVtbKyUCu2NTYzMLBCBQBhIhyh';
+  'eJwrsC0uSU3N0U3OSC0usTKwMlTLRBGxKilKzCsuyC8q0U1KzSlRK0KVtbKyUCu2tbIyNjMwsEIFAJtQHRU=';
 const mockZipExtra =
   'eJwrsM0sys/TTc5ILS6xMrAyVMtEFrAqKUrMKy7ILyrRTUrNKVErQpHMzU8pzUnVw0ZZWakV21qhA0O1EtsSoFYAroYoTw==';
 const mockZipLink =
-  'eJxtj+EKwjAMhN9m/yJtJyKBPUzXZq7QNaVpFd/eihMc+Ou4JNyXy9OD2VMCt5JUVKiHMEklivtEYy02SeZSYaZYh3JYWxHa5hjSDTbr1pAIRtzYt0hf0YNM40UpNHjugGMcCsfgYWkUcbYSHHCIkAs7Eump/wDmJJW7Lq0k6wj7tW+uhnuoT/hAT5KJ/G7w14DBay+l1bur6V/pF9njXM8=';
+  'eJxtj9EKwjAMRf9mbxltJyqBfYn40LWZK3RtaVrFv7fiBAc+XW4S7slN4yNGSwHMQlxQoOzcyIXIbxOJJevAKeYCE/nS5d1aM9M6eRdusGqzuEAw4Bpt9fQV2fEoennCyxWHoxCo8NBA+1jk6J2FuZLHSbMzEJ2HlKMh5pb+D6R6LrHpXHPQhrBd22qKu7vyhA+850RkN4O/BhSeWzkp3p1V+0q+AD5gXsE=';
 const mockProducts: Product[] = [
   {
     id: '0',
@@ -49,7 +49,7 @@ const mockFullRecipeSettings: Recipes.RecipesState = {
 };
 const mockZipFullRecipeSettings = `${RecipeId.SteelChest}:${ItemId.AssemblingMachine3}:${ItemId.Module}:${ItemId.Module}:1`;
 const mockSettings: Settings.SettingsState = {
-  ...Settings.initialSettingsState,
+  ...Mocks.InitialSettingsState,
   ...{ displayRate: DisplayRate.PerHour },
 };
 const mockFullSettings: Settings.SettingsState = {
@@ -72,12 +72,12 @@ const mockFullSettings: Settings.SettingsState = {
   flowRate: 1200,
   expensive: true,
 };
-const mockZipFullSettings = `${DisplayRate.PerHour}:2:4:0:${mockFullSettings.belt}:${mockFullSettings.fuel}:${RecipeId.BasicOilProcessing}:${ItemId.AssemblingMachine2}.${ItemId.StoneFurnace}:${ItemId.ProductivityModule}.${ItemId.SpeedModule}:${mockFullSettings.beaconModule}:8:1:10:0:1200:1`;
+const mockZipFullSettings = `0.17:[]:${DisplayRate.PerHour}:2:4:0:${mockFullSettings.belt}:${mockFullSettings.fuel}:${RecipeId.BasicOilProcessing}:${ItemId.AssemblingMachine2}.${ItemId.StoneFurnace}:${ItemId.ProductivityModule}.${ItemId.SpeedModule}:${mockFullSettings.beaconModule}:8:1:10:0:1200:1`;
 const mockNullSettings = {
   ...mockFullSettings,
   ...{ itemPrecision: null, beltPrecision: null, factoryPrecision: null },
 };
-const mockZipNullSettings = `${DisplayRate.PerHour}:n:n:n:${mockFullSettings.belt}:${mockFullSettings.fuel}:${RecipeId.BasicOilProcessing}:${ItemId.AssemblingMachine2}.${ItemId.StoneFurnace}:${ItemId.ProductivityModule}.${ItemId.SpeedModule}:${mockFullSettings.beaconModule}:8:1:10:0:1200:1`;
+const mockZipNullSettings = `0.17:[]:${DisplayRate.PerHour}:n:n:n:${mockFullSettings.belt}:${mockFullSettings.fuel}:${RecipeId.BasicOilProcessing}:${ItemId.AssemblingMachine2}.${ItemId.StoneFurnace}:${ItemId.ProductivityModule}.${ItemId.SpeedModule}:${mockFullSettings.beaconModule}:8:1:10:0:1200:1`;
 
 describe('RouterService', () => {
   let service: RouterService;
@@ -127,7 +127,7 @@ describe('RouterService', () => {
         mockProducts,
         {},
         {},
-        Settings.initialSettingsState,
+        Mocks.InitialSettingsState,
         Mocks.Defaults
       );
       expect(router.navigateByUrl).toHaveBeenCalledWith(`/#${mockZipProducts}`);
@@ -319,16 +319,16 @@ describe('RouterService', () => {
     });
 
     it('should zip default settings', () => {
-      const test = { ...Settings.initialSettingsState, ...{ test: true } };
+      const test = { ...Mocks.InitialSettingsState, ...{ test: true } };
       const result = service.zipSettings(test, Mocks.Defaults);
-      expect(result).toEqual(':::::::::::::::');
+      expect(result).toEqual('');
     });
   });
 
   describe('unzipSettings', () => {
     it('should unzip the empty settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipSettings(':::::::::::::::');
+      service.unzipSettings(':::::::::::::::::');
       expect(store.dispatch).toHaveBeenCalledWith(
         new Settings.LoadAction({} as any)
       );

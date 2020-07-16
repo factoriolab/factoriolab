@@ -18,6 +18,13 @@ import * as Items from '~/store/items';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 
+const NULL = 'n';
+const EMPTY = '[]';
+const ARRAYSEP = '.';
+const FIELDSEP = ':';
+const TRUE = '1';
+const FALSE = '0';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -54,6 +61,7 @@ export class RouterService {
       if (zSettings.length) {
         this.zipPartial += `&s=${zSettings}`;
       }
+      console.log(zState + this.zipPartial);
       this.zip = btoa(deflate(zState + this.zipPartial, { to: 'string' }));
       this.router.navigateByUrl(`${this.router.url.split('#')[0]}#${this.zip}`);
     } else {
@@ -127,7 +135,7 @@ export class RouterService {
     const products: Product[] = [];
     let n = 0;
     for (const product of zProducts) {
-      const p = product.split(':');
+      const p = product.split(FIELDSEP);
       products.push({
         id: n.toString(),
         itemId: p[0],
@@ -143,22 +151,25 @@ export class RouterService {
     return Object.keys(state).map((id) => {
       const settings = state[id];
       const i = id;
-      const ig = settings.ignore == null ? '' : settings.ignore ? 1 : 0;
-      const bl = settings.belt == null ? '' : settings.belt;
-      return `${i}:${ig}:${bl}`;
+      const ig = this.zipTruthyBool(settings.ignore);
+      const bl = this.zipTruthy(settings.belt);
+      return [i, ig, bl].join(FIELDSEP);
     });
   }
 
   unzipItems(zItems: string[]) {
     const items: Items.ItemsState = {};
     for (const recipe of zItems) {
-      const r = recipe.split(':');
+      const r = recipe.split(FIELDSEP);
       const u: ItemSettings = {};
-      if (r[1] !== '') {
-        u.ignore = r[1] === '1' ? true : false;
+      let i = 1;
+      let v = r[i++];
+      if (v !== '') {
+        u.ignore = this.parseBool(v);
       }
-      if (r[2] !== '') {
-        u.belt = r[2];
+      v = r[i++];
+      if (v !== '') {
+        u.belt = this.parseString(v);
       }
       items[r[0]] = u;
     }
@@ -169,30 +180,36 @@ export class RouterService {
     return Object.keys(state).map((id) => {
       const settings = state[id];
       const i = id;
-      const fc = settings.factory == null ? '' : settings.factory;
-      const md = settings.modules == null ? '' : settings.modules.join('.');
-      const bt = settings.beaconModule == null ? '' : settings.beaconModule;
-      const bc = settings.beaconCount == null ? '' : settings.beaconCount;
-      return `${i}:${fc}:${md}:${bt}:${bc}`;
+      const fc = this.zipTruthy(settings.factory);
+      const md = this.zipTruthyArray(settings.modules);
+      const bt = this.zipTruthy(settings.beaconModule);
+      const bc = this.zipTruthyNum(settings.beaconCount);
+      return [i, fc, md, bt, bc].join(FIELDSEP);
     });
   }
 
   unzipRecipes(zRecipes: string[]) {
     const recipes: Recipes.RecipesState = {};
     for (const recipe of zRecipes) {
-      const r = recipe.split(':');
+      const r = recipe.split(FIELDSEP);
       const u: RecipeSettings = {};
-      if (r[1] !== '') {
-        u.factory = r[1];
+      let i = 1;
+      let v = '';
+      v = r[i++];
+      if (v !== '') {
+        u.factory = this.parseString(v);
       }
-      if (r[2] !== '') {
-        u.modules = r[2].split('.');
+      v = r[i++];
+      if (v !== '') {
+        u.modules = this.parseArray(v);
       }
-      if (r[3] !== '') {
-        u.beaconModule = r[3];
+      v = r[i++];
+      if (v !== '') {
+        u.beaconModule = this.parseString(v);
       }
-      if (r[4] !== '') {
-        u.beaconCount = Number(r[4]);
+      v = r[i++];
+      if (v !== '') {
+        u.beaconCount = this.parseNumber(v);
       }
       recipes[r[0]] = u;
     }
@@ -201,121 +218,196 @@ export class RouterService {
 
   zipSettings(state: Settings.SettingsState, defaults: Defaults): string {
     const init = Settings.initialSettingsState;
-    const bd =
-      state.baseDatasetId === init.baseDatasetId ? '' : state.baseDatasetId;
-    const _defaultMD = [...init.modDatasetIds].sort().join('.');
-    const _currentMD = [...state.modDatasetIds].sort().join('.');
-    const md = _defaultMD === _currentMD ? '' : _currentMD ? _currentMD : '[]';
-    const dr = state.displayRate === init.displayRate ? '' : state.displayRate;
-    const ip =
-      state.itemPrecision === init.itemPrecision
-        ? ''
-        : state.itemPrecision == null
-        ? 'n'
-        : state.itemPrecision;
-    const bp =
-      state.beltPrecision === init.beltPrecision
-        ? ''
-        : state.beltPrecision == null
-        ? 'n'
-        : state.beltPrecision;
-    const fp =
-      state.factoryPrecision === init.factoryPrecision
-        ? ''
-        : state.factoryPrecision == null
-        ? 'n'
-        : state.factoryPrecision;
-    const tb = state.belt === defaults.belt ? '' : state.belt;
-    const fl = state.fuel === defaults.fuel ? '' : state.fuel;
-    const _defaultDI = [...defaults.disabledRecipes].sort().join('.');
-    const _currentDI = Object.keys(state.recipeDisabled).sort().join('.');
-    const di = _defaultDI === _currentDI ? '' : _currentDI ? _currentDI : '[]';
-    const _defaultFR = defaults.factoryRank.join('.');
-    const _currentFR = state.factoryRank.join('.');
-    const fr = _defaultFR === _currentFR ? '' : _currentFR ? _currentFR : '[]';
-    const _defaultMR = defaults.moduleRank.join('.');
-    const _currentMR = state.moduleRank.join('.');
-    const mr = _defaultMR === _currentMR ? '' : _currentMR ? _currentMR : '[]';
-    const bm =
-      state.beaconModule === defaults.beaconModule ? '' : state.beaconModule;
-    const bc = state.beaconCount === init.beaconCount ? '' : state.beaconCount;
-    const dm =
-      state.drillModule === init.drillModule ? '' : Number(state.drillModule);
-    const mb = state.miningBonus === init.miningBonus ? '' : state.miningBonus;
-    const rs =
-      state.researchSpeed === init.researchSpeed ? '' : state.researchSpeed;
-    const fw = state.flowRate === init.flowRate ? '' : state.flowRate;
-    const ex =
-      state.expensive === init.expensive ? '' : Number(state.expensive);
-    const value = `${bd}${md}${dr}:${ip}:${bp}:${fp}:${tb}:${fl}:${di}:${fr}:${mr}:${bm}:${bc}:${dm}:${mb}:${rs}:${fw}:${ex}`;
+    const bd = this.zipDiff(state.baseDatasetId, init.baseDatasetId);
+    const md = this.zipDiffArray(state.modDatasetIds, init.modDatasetIds);
+    const dr = this.zipDiffNum(state.displayRate, init.displayRate);
+    const ip = this.zipDiffNum(state.itemPrecision, init.itemPrecision);
+    const bp = this.zipDiffNum(state.beltPrecision, init.beltPrecision);
+    const fp = this.zipDiffNum(state.factoryPrecision, init.factoryPrecision);
+    const tb = this.zipDiff(state.belt, defaults.belt);
+    const fl = this.zipDiff(state.fuel, defaults.fuel);
+    const di = this.zipDiffArray(
+      Object.keys(state.recipeDisabled),
+      defaults.disabledRecipes
+    );
+    const fr = this.zipDiffRank(state.factoryRank, defaults.factoryRank);
+    const mr = this.zipDiffRank(state.moduleRank, defaults.moduleRank);
+    const bm = this.zipDiff(state.beaconModule, defaults.beaconModule);
+    const bc = this.zipDiffNum(state.beaconCount, init.beaconCount);
+    const dm = this.zipDiffBool(state.drillModule, init.drillModule);
+    const mb = this.zipDiffNum(state.miningBonus, init.miningBonus);
+    const rs = this.zipDiffNum(state.researchSpeed, init.researchSpeed);
+    const fw = this.zipDiffNum(state.flowRate, init.flowRate);
+    const ex = this.zipDiffBool(state.expensive, init.expensive);
+    const value = [
+      bd,
+      md,
+      dr,
+      ip,
+      bp,
+      fp,
+      tb,
+      fl,
+      di,
+      fr,
+      mr,
+      bm,
+      bc,
+      dm,
+      mb,
+      rs,
+      fw,
+      ex,
+    ].join(FIELDSEP);
     return /^[:]+$/.test(value) ? '' : value;
   }
 
   unzipSettings(zSettings: string) {
-    const s = zSettings.split(':');
+    const s = zSettings.split(FIELDSEP);
     const settings: Settings.SettingsState = {} as any;
-    if (s[0] !== '') {
-      settings.baseDatasetId = s[0];
+    let i = 0;
+    let v = '';
+    v = s[i++];
+    if (v !== '') {
+      settings.baseDatasetId = v;
     }
-    if (s[1] !== '') {
-      settings.modDatasetIds = s[1] === '[]' ? [] : s[1].split('.');
+    v = s[i++];
+    if (v !== '') {
+      settings.modDatasetIds = this.parseArray(v);
     }
-    if (s[2] !== '') {
-      settings.displayRate = Number(s[0]);
+    v = s[i++];
+    if (v !== '') {
+      settings.displayRate = this.parseNumber(v);
     }
-    if (s[3] !== '') {
-      settings.itemPrecision = s[3] === 'n' ? null : Number(s[3]);
+    v = s[i++];
+    if (v !== '') {
+      settings.itemPrecision = this.parseNumber(v);
     }
-    if (s[4] !== '') {
-      settings.beltPrecision = s[4] === 'n' ? null : Number(s[4]);
+    v = s[i++];
+    if (v !== '') {
+      settings.beltPrecision = this.parseNumber(v);
     }
-    if (s[5] !== '') {
-      settings.factoryPrecision = s[5] === 'n' ? null : Number(s[5]);
+    v = s[i++];
+    if (v !== '') {
+      settings.factoryPrecision = this.parseNumber(v);
     }
-    if (s[6] !== '') {
-      settings.belt = s[6];
+    v = s[i++];
+    if (v !== '') {
+      settings.belt = this.parseString(v);
     }
-    if (s[7] !== '') {
-      settings.fuel = s[7];
+    v = s[i++];
+    if (v !== '') {
+      settings.fuel = this.parseString(v);
     }
-    if (s[8] !== '') {
-      settings.recipeDisabled =
-        s[8] === '[]'
-          ? {}
-          : s[8]
-              .split('.')
-              .reduce(
-                (e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }),
-                {}
-              );
+    v = s[i++];
+    if (v !== '') {
+      settings.recipeDisabled = this.parseBoolEntities(v);
     }
-    if (s[9] !== '') {
-      settings.factoryRank = s[9] === '[]' ? [] : s[9].split('.');
+    v = s[i++];
+    if (v !== '') {
+      settings.factoryRank = this.parseArray(v);
     }
-    if (s[10] !== '') {
-      settings.moduleRank = s[10] === '[]' ? [] : s[10].split('.');
+    v = s[i++];
+    if (v !== '') {
+      settings.moduleRank = this.parseArray(v);
     }
-    if (s[11] !== '') {
-      settings.beaconModule = s[11];
+    v = s[i++];
+    if (v !== '') {
+      settings.beaconModule = this.parseString(v);
     }
-    if (s[12] !== '') {
-      settings.beaconCount = Number(s[12]);
+    v = s[i++];
+    if (v !== '') {
+      settings.beaconCount = this.parseNumber(v);
     }
-    if (s[13] !== '') {
-      settings.drillModule = s[13] === '1';
+    v = s[i++];
+    if (v !== '') {
+      settings.drillModule = this.parseBool(v);
     }
-    if (s[14] !== '') {
-      settings.miningBonus = Number(s[14]);
+    v = s[i++];
+    if (v !== '') {
+      settings.miningBonus = this.parseNumber(v);
     }
-    if (s[15] !== '') {
-      settings.researchSpeed = Number(s[15]);
+    v = s[i++];
+    if (v !== '') {
+      settings.researchSpeed = this.parseNumber(v);
     }
-    if (s[16] !== '') {
-      settings.flowRate = Number(s[16]);
+    v = s[i++];
+    if (v !== '') {
+      settings.flowRate = this.parseNumber(v);
     }
-    if (s[17] !== '') {
-      settings.expensive = s[17] === '1';
+    v = s[i++];
+    if (v !== '') {
+      settings.expensive = this.parseBool(v);
     }
     this.store.dispatch(new Settings.LoadAction(settings));
+  }
+
+  zipTruthy(value: string) {
+    return value == null ? '' : value;
+  }
+
+  zipTruthyNum(value: number) {
+    return value == null ? '' : value;
+  }
+
+  zipTruthyBool(value: boolean) {
+    return value == null ? '' : value ? TRUE : FALSE;
+  }
+
+  zipTruthyArray(value: string[]) {
+    return value == null ? '' : value.join(ARRAYSEP);
+  }
+
+  zipDiff(value: string, init: string) {
+    return value === init ? '' : value == null ? NULL : value;
+  }
+
+  zipDiffNum(value: number, init: number) {
+    return value === init ? '' : value == null ? NULL : value.toString();
+  }
+
+  zipDiffBool(value: boolean, init: boolean) {
+    return value === init ? '' : value == null ? NULL : value ? TRUE : FALSE;
+  }
+
+  zipDiffArray(value: string[], init: string[]) {
+    const zVal = value.sort().join(ARRAYSEP);
+    const zInit = init.sort().join(ARRAYSEP);
+    return zVal === zInit ? '' : zVal ? zVal : EMPTY;
+  }
+
+  zipDiffRank(value: string[], init: string[]) {
+    const zVal = value.join(ARRAYSEP);
+    const zInit = init.join(ARRAYSEP);
+    return zVal === zInit ? '' : zVal ? zVal : EMPTY;
+  }
+
+  parseString(value: string) {
+    return value === NULL ? null : value;
+  }
+
+  parseBool(value: string) {
+    return value === NULL ? null : value === TRUE;
+  }
+
+  parseNumber(value: string) {
+    return value === NULL ? null : Number(value);
+  }
+
+  parseArray(value: string) {
+    return value === NULL ? null : value === EMPTY ? [] : value.split(ARRAYSEP);
+  }
+
+  parseBoolEntities(value: string) {
+    return value === NULL
+      ? null
+      : value === EMPTY
+      ? {}
+      : value
+          .split(ARRAYSEP)
+          .reduce(
+            (e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }),
+            {}
+          );
   }
 }
