@@ -1,8 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Mocks, TestUtility, RecipeId } from 'src/tests';
-import { Entities, Dataset } from '~/models';
+import { Mocks, TestUtility } from 'src/tests';
 import { IconComponent } from '../icon/icon.component';
 import { MultiselectComponent } from './multiselect.component';
 
@@ -10,23 +9,22 @@ import { MultiselectComponent } from './multiselect.component';
   selector: 'lab-test-multiselect',
   template: `
     <lab-multiselect
-      [data]="data"
-      [recipeDisabled]="recipeDisabled"
+      [enabledIds]="enabledIds"
+      [options]="options"
       (cancel)="cancel()"
-      (enableRecipe)="enableRecipe($event)"
-      (disableRecipe)="disableRecipe($event)"
+      (enableMod)="enableMod($event)"
+      (disableMod)="disableMod($event)"
     >
     </lab-multiselect>
   `,
 })
 class TestMultiselectComponent {
   @ViewChild(MultiselectComponent) child: MultiselectComponent;
-  data: Dataset = Mocks.Data;
-  recipeDisabled: Entities<boolean> = Mocks.InitialSettingsState.recipeDisabled;
+  enabledIds = [];
+  options = Mocks.DataState.modIds.map((i) => Mocks.DataState.modEntities[i]);
   cancel() {}
-  enableRecipe(data) {}
-  disableRecipe(data) {}
-  selectId(data) {}
+  enableMod(data) {}
+  disableMod(data) {}
 }
 
 describe('MultiselectComponent', () => {
@@ -70,28 +68,28 @@ describe('MultiselectComponent', () => {
   it('should not cancel when clicked on', () => {
     spyOn(component, 'cancel');
     component.child.opening = false;
-    TestUtility.clickSelector(fixture, 'lab-toggle');
+    TestUtility.clickSelector(fixture, '.header');
     expect(component.cancel).not.toHaveBeenCalled();
   });
 
-  it('should enable a recipe', () => {
-    spyOn(component, 'enableRecipe');
+  it('should enable a mod', () => {
+    spyOn(component, 'enableMod');
     spyOn(component, 'cancel');
     component.child.opening = false;
-    TestUtility.clickSelector(fixture, 'lab-icon.clickable', 0);
-    expect(component.enableRecipe).toHaveBeenCalledWith(
-      RecipeId.BasicOilProcessing
-    );
+    TestUtility.clickSelector(fixture, '.clickable', 0);
+    expect(component.enableMod).toHaveBeenCalledWith(Mocks.DataState.modIds[0]);
     expect(component.cancel).not.toHaveBeenCalled();
   });
 
-  it('should disable a recipe', () => {
-    spyOn(component, 'disableRecipe');
+  it('should disable a mod', () => {
+    component.enabledIds = [Mocks.DataState.modIds[0]];
+    fixture.detectChanges();
+    spyOn(component, 'disableMod');
     spyOn(component, 'cancel');
     component.child.opening = false;
-    TestUtility.clickSelector(fixture, 'lab-icon.clickable', 1);
-    expect(component.disableRecipe).toHaveBeenCalledWith(
-      RecipeId.AdvancedOilProcessing
+    TestUtility.clickSelector(fixture, '.clickable', 0);
+    expect(component.disableMod).toHaveBeenCalledWith(
+      Mocks.DataState.modIds[0]
     );
     expect(component.cancel).not.toHaveBeenCalled();
   });

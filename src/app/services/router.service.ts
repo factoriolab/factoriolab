@@ -61,7 +61,6 @@ export class RouterService {
       if (zSettings.length) {
         this.zipPartial += `&s=${zSettings}`;
       }
-      console.log(zState + this.zipPartial);
       this.zip = btoa(deflate(zState + this.zipPartial, { to: 'string' }));
       this.router.navigateByUrl(`${this.router.url.split('#')[0]}#${this.zip}`);
     } else {

@@ -15,8 +15,8 @@ describe('Recipes Selectors', () => {
     it('should handle empty recipes', () => {
       const result = Selectors.getRecipeSettings.projector(
         {},
-        { recipes: [] },
-        {}
+        {},
+        { recipeIds: [] }
       );
       expect(Object.keys(result).length).toEqual(0);
     });
@@ -24,8 +24,8 @@ describe('Recipes Selectors', () => {
     it('should return the recipe settings', () => {
       const result = Selectors.getRecipeSettings.projector(
         initialRecipesState,
-        Mocks.Data,
-        Mocks.InitialSettingsState
+        Mocks.InitialSettingsState,
+        Mocks.Data
       );
       expect(Object.keys(result).length).toEqual(Mocks.Data.recipeIds.length);
     });
@@ -37,8 +37,8 @@ describe('Recipes Selectors', () => {
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
-        Mocks.Data,
-        Mocks.InitialSettingsState
+        Mocks.InitialSettingsState,
+        Mocks.Data
       );
       expect(result[Mocks.Item1.id].factory).toEqual(stringValue);
     });
@@ -50,8 +50,8 @@ describe('Recipes Selectors', () => {
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
-        Mocks.Data,
-        Mocks.InitialSettingsState
+        Mocks.InitialSettingsState,
+        Mocks.Data
       );
       expect(result[Mocks.Item1.id].modules as string[]).toEqual([stringValue]);
     });
@@ -63,8 +63,8 @@ describe('Recipes Selectors', () => {
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
-        Mocks.Data,
-        Mocks.InitialSettingsState
+        Mocks.InitialSettingsState,
+        Mocks.Data
       );
       expect(result[Mocks.Item1.id].beaconModule).toEqual(stringValue);
     });
@@ -76,8 +76,8 @@ describe('Recipes Selectors', () => {
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
-        Mocks.Data,
-        Mocks.InitialSettingsState
+        Mocks.InitialSettingsState,
+        Mocks.Data
       );
       expect(result[Mocks.Item1.id].beaconCount).toEqual(numberValue);
     });

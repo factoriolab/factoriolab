@@ -26,7 +26,6 @@ class TestToggleComponent {
   cancel() {}
   enableRecipe(data) {}
   disableRecipe(data) {}
-  selectId(data) {}
 }
 
 describe('ToggleComponent', () => {
