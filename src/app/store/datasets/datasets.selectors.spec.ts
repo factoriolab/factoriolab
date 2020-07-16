@@ -1,5 +1,5 @@
-import * as Selectors from './datasets.selectors';
 import { Mocks } from 'src/tests';
+import * as Selectors from './datasets.selectors';
 
 describe('Dataset Selectors', () => {
   describe('getMods', () => {

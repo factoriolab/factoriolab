@@ -8,14 +8,26 @@ describe('Recipes Selectors', () => {
 
   describe('getRecipeSettings', () => {
     it('should handle null/empty values', () => {
-      const result = Selectors.getRecipeSettings.projector({}, null, {});
+      const result = Selectors.getRecipeSettings.projector(
+        {},
+        [],
+        [],
+        null,
+        null,
+        null,
+        {}
+      );
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should handle empty recipes', () => {
       const result = Selectors.getRecipeSettings.projector(
         {},
-        {},
+        [],
+        [],
+        null,
+        null,
+        null,
         { recipeIds: [] }
       );
       expect(Object.keys(result).length).toEqual(0);
@@ -24,7 +36,11 @@ describe('Recipes Selectors', () => {
     it('should return the recipe settings', () => {
       const result = Selectors.getRecipeSettings.projector(
         initialRecipesState,
-        Mocks.InitialSettingsState,
+        Mocks.InitialSettingsState.factoryRank,
+        Mocks.InitialSettingsState.moduleRank,
+        Mocks.InitialSettingsState.beaconModule,
+        Mocks.InitialSettingsState.beaconCount,
+        Mocks.InitialSettingsState.drillModule,
         Mocks.Data
       );
       expect(Object.keys(result).length).toEqual(Mocks.Data.recipeIds.length);
@@ -37,7 +53,11 @@ describe('Recipes Selectors', () => {
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
-        Mocks.InitialSettingsState,
+        Mocks.InitialSettingsState.factoryRank,
+        Mocks.InitialSettingsState.moduleRank,
+        Mocks.InitialSettingsState.beaconModule,
+        Mocks.InitialSettingsState.beaconCount,
+        Mocks.InitialSettingsState.drillModule,
         Mocks.Data
       );
       expect(result[Mocks.Item1.id].factory).toEqual(stringValue);
@@ -50,7 +70,11 @@ describe('Recipes Selectors', () => {
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
-        Mocks.InitialSettingsState,
+        Mocks.InitialSettingsState.factoryRank,
+        Mocks.InitialSettingsState.moduleRank,
+        Mocks.InitialSettingsState.beaconModule,
+        Mocks.InitialSettingsState.beaconCount,
+        Mocks.InitialSettingsState.drillModule,
         Mocks.Data
       );
       expect(result[Mocks.Item1.id].modules as string[]).toEqual([stringValue]);
@@ -63,7 +87,11 @@ describe('Recipes Selectors', () => {
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
-        Mocks.InitialSettingsState,
+        Mocks.InitialSettingsState.factoryRank,
+        Mocks.InitialSettingsState.moduleRank,
+        Mocks.InitialSettingsState.beaconModule,
+        Mocks.InitialSettingsState.beaconCount,
+        Mocks.InitialSettingsState.drillModule,
         Mocks.Data
       );
       expect(result[Mocks.Item1.id].beaconModule).toEqual(stringValue);
@@ -76,7 +104,11 @@ describe('Recipes Selectors', () => {
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
-        Mocks.InitialSettingsState,
+        Mocks.InitialSettingsState.factoryRank,
+        Mocks.InitialSettingsState.moduleRank,
+        Mocks.InitialSettingsState.beaconModule,
+        Mocks.InitialSettingsState.beaconCount,
+        Mocks.InitialSettingsState.drillModule,
         Mocks.Data
       );
       expect(result[Mocks.Item1.id].beaconCount).toEqual(numberValue);

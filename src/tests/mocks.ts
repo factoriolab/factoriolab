@@ -128,7 +128,11 @@ export const ItemSettingsInitial = getItemSettings.projector(
 );
 export const RecipeSettingsInitial = getRecipeSettings.projector(
   {},
-  InitialSettingsState,
+  InitialSettingsState.factoryRank,
+  InitialSettingsState.moduleRank,
+  InitialSettingsState.beaconModule,
+  InitialSettingsState.beaconCount,
+  InitialSettingsState.drillModule,
   Data
 );
 export const RationalRecipeSettings = getRationalRecipeSettings.projector(

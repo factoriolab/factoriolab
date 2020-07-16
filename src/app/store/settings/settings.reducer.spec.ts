@@ -1,4 +1,4 @@
-import { ItemId, RecipeId } from 'src/tests';
+import { ItemId, RecipeId, Mocks } from 'src/tests';
 import { DisplayRate, ResearchSpeed, LocalStorageKey, Theme } from '~/models';
 import * as Actions from './settings.actions';
 import {
@@ -15,6 +15,45 @@ describe('Settings Reducer', () => {
         new Actions.LoadAction({ displayRate: DisplayRate.PerHour } as any)
       );
       expect(result.displayRate).toEqual(DisplayRate.PerHour);
+    });
+  });
+
+  describe('SET_BASE', () => {
+    it('should set the base dataset id and defaults', () => {
+      const mod = Mocks.DataState.baseEntities[Mocks.DataState.baseIds[0]];
+      const result = settingsReducer(undefined, new Actions.SetBaseAction(mod));
+      expect(result.baseDatasetId).toEqual(mod.id);
+      expect(result.belt).toEqual(mod.defaults.belt);
+      expect(result.fuel).toEqual(mod.defaults.fuel);
+      expect(Object.keys(result.recipeDisabled)).toEqual(
+        mod.defaults.disabledRecipes
+      );
+      expect(result.factoryRank).toEqual(mod.defaults.factoryRank);
+      expect(result.moduleRank).toEqual(mod.defaults.moduleRank);
+      expect(result.beaconModule).toEqual(mod.defaults.beaconModule);
+    });
+  });
+
+  describe('ENABLE_MOD', () => {
+    it('should enable a mod', () => {
+      const result = settingsReducer(
+        undefined,
+        new Actions.EnableModAction('test')
+      );
+      expect(result.modDatasetIds).toEqual([
+        ...initialSettingsState.modDatasetIds,
+        'test',
+      ]);
+    });
+  });
+
+  describe('DISABLE_MOD', () => {
+    it('should disable a mod', () => {
+      const result = settingsReducer(
+        undefined,
+        new Actions.DisableModAction(initialSettingsState.modDatasetIds[0])
+      );
+      expect(result.modDatasetIds).toEqual([]);
     });
   });
 

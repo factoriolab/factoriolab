@@ -16,9 +16,21 @@ export const recipesState = (state: State) => state.recipeState;
 /* Complex selectors */
 export const getRecipeSettings = createSelector(
   recipesState,
-  Settings.settingsState,
+  Settings.getFactoryRank,
+  Settings.getModuleRank,
+  Settings.getBeaconModule,
+  Settings.getBeaconCount,
+  Settings.getDrillModule,
   Settings.getDataset,
-  (state, settings, data) => {
+  (
+    state,
+    factoryRank,
+    moduleRank,
+    beaconModule,
+    beaconCount,
+    drillModule,
+    data
+  ) => {
     const value: Entities<RecipeSettings> = {};
     if (data?.recipeIds?.length) {
       for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
@@ -30,7 +42,7 @@ export const getRecipeSettings = createSelector(
         if (!recipeSettings.factory) {
           recipeSettings.factory = RecipeUtility.defaultFactory(
             recipe,
-            settings.factoryRank
+            factoryRank
           );
         }
 
@@ -39,8 +51,7 @@ export const getRecipeSettings = createSelector(
           recipe.id !== 'space-science-pack' &&
           factoryItem?.factory?.modules
         ) {
-          const drillSkipDefaults =
-            !settings.drillModule && factoryItem.factory.mining;
+          const drillSkipDefaults = !drillModule && factoryItem.factory.mining;
 
           // Modules
           if (!recipeSettings.modules) {
@@ -53,7 +64,7 @@ export const getRecipeSettings = createSelector(
             } else {
               recipeSettings.modules = RecipeUtility.defaultModules(
                 recipe,
-                settings.moduleRank,
+                moduleRank,
                 factoryItem.factory.modules,
                 data
               );
@@ -65,11 +76,11 @@ export const getRecipeSettings = createSelector(
             if (drillSkipDefaults) {
               recipeSettings.beaconModule = 'module';
             } else {
-              recipeSettings.beaconModule = settings.beaconModule;
+              recipeSettings.beaconModule = beaconModule;
             }
           }
           if (recipeSettings.beaconCount == null) {
-            recipeSettings.beaconCount = settings.beaconCount;
+            recipeSettings.beaconCount = beaconCount;
           }
         }
 
