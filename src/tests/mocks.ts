@@ -34,6 +34,8 @@ export const DataState: DatasetsState = datasetsReducer(
   undefined,
   new LoadDataAction(data)
 );
+export const Base = data[0];
+export const Mods = [data[1]];
 export const Data = getNormalDataset.projector(data[0], [data[1]]);
 export const Defaults = data[0].defaults;
 export const CategoryId = Data.categoryIds[0];

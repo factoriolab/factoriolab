@@ -15,7 +15,7 @@ describe('Recipes Selectors', () => {
         null,
         null,
         null,
-        {}
+        null
       );
       expect(Object.keys(result).length).toEqual(0);
     });

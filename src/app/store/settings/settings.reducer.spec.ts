@@ -20,7 +20,7 @@ describe('Settings Reducer', () => {
 
   describe('SET_BASE', () => {
     it('should set the base dataset id and defaults', () => {
-      const mod = Mocks.DataState.baseEntities[Mocks.DataState.baseIds[0]];
+      const mod = Mocks.Base;
       const result = settingsReducer(undefined, new Actions.SetBaseAction(mod));
       expect(result.baseDatasetId).toEqual(mod.id);
       expect(result.belt).toEqual(mod.defaults.belt);

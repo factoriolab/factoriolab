@@ -9,9 +9,8 @@ describe('Dataset Selectors', () => {
     });
 
     it('should map ids to entities', () => {
-      const mod = Mocks.DataState.modEntities[Mocks.DataState.modIds[0]];
-      const result = Selectors.getMods.projector(['a'], { a: mod });
-      expect(result).toEqual([mod]);
+      const result = Selectors.getMods.projector(['a'], { a: Mocks.Base });
+      expect(result).toEqual([Mocks.Base]);
     });
   });
 });

@@ -61,6 +61,17 @@ describe('ProductsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should set the default category id', () => {
+    expect(component.child.categoryId).toEqual(component.data.categoryIds[0]);
+  });
+
+  it('should not reset the category id', () => {
+    const value = 'test';
+    component.child.categoryId = value;
+    component.child.data = null;
+    expect(component.child.categoryId).toEqual(value);
+  });
+
   it('should open edit on a product', () => {
     TestUtility.clickSelector(fixture, '.relative lab-icon', 0);
     fixture.detectChanges();
