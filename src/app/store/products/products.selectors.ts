@@ -109,7 +109,10 @@ export const getNormalizedRatesByFactories = createSelector(
         return {
           ...e,
           ...{
-            [p.id]: p.rate.div(recipe.time).mul(recipe.out[p.itemId]),
+            [p.id]: p.rate
+              .div(recipe.time)
+              .mul(recipe.out[p.itemId])
+              .div(recipe.adjustProd || Rational.one),
           },
         };
       }
