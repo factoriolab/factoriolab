@@ -6,7 +6,6 @@ import { Item } from './item';
 import { Recipe } from './recipe';
 
 export interface ModData {
-  base: boolean;
   /** Do not use the colon (:) character in ID */
   id: string;
   name: string;
@@ -20,7 +19,6 @@ export interface ModData {
 }
 
 export const EmptyMod: ModData = {
-  base: true,
   id: null,
   name: null,
   sprite: null,

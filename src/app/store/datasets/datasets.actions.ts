@@ -1,14 +1,14 @@
 import { Action } from '@ngrx/store';
 
-import { ModData } from 'src/app/models';
+import { AppData } from 'src/app/models';
 
 export const enum DatasetsActionType {
-  LOAD = '[Dataset Json] Load',
+  LOAD = '[Dataset Json] Load App Data',
 }
 
 export class LoadDataAction implements Action {
   readonly type = DatasetsActionType.LOAD;
-  constructor(public payload: ModData[]) {}
+  constructor(public payload: AppData) {}
 }
 
 export type DatasetsAction = LoadDataAction;

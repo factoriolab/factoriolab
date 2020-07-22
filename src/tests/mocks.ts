@@ -34,10 +34,13 @@ export const DataState: DatasetsState = datasetsReducer(
   undefined,
   new LoadDataAction(data)
 );
-export const Base = data[0];
-export const Mods = [data[1]];
-export const Data = getNormalDataset.projector(data[0], [data[1]]);
-export const Defaults = data[0].defaults;
+export const Base = data.base[0];
+export const Mods = [data.mods[0]];
+export const Data = getNormalDataset.projector(data.app, [
+  data.base[0],
+  data.mods[0],
+]);
+export const Defaults = data.base[0].defaults;
 export const CategoryId = Data.categoryIds[0];
 export const Item1 = Data.itemEntities[Data.itemIds[0]];
 export const Item2 = Data.itemEntities[Data.itemIds[1]];
@@ -121,7 +124,7 @@ for (const recipe of Data.recipeIds.map((i) => Data.recipeEntities[i])) {
 }
 export const InitialSettingsState = settingsReducer(
   undefined,
-  new SetBaseAction(data[0])
+  new SetBaseAction(data.base[0])
 );
 export const ItemSettingsInitial = getItemSettings.projector(
   {},

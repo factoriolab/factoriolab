@@ -2,6 +2,7 @@ import { Entities, ModData } from '~/models';
 import { DatasetsAction, DatasetsActionType } from './datasets.actions';
 
 export interface DatasetsState {
+  app: ModData;
   baseIds: string[];
   baseEntities: Entities<ModData>;
   modIds: string[];
@@ -9,6 +10,7 @@ export interface DatasetsState {
 }
 
 export const initialDatasetsState: DatasetsState = {
+  app: null,
   baseIds: [],
   baseEntities: {},
   modIds: [],
@@ -21,18 +23,17 @@ export function datasetsReducer(
 ): DatasetsState {
   switch (action.type) {
     case DatasetsActionType.LOAD: {
-      const base = action.payload.filter((m) => m.base);
-      const mods = action.payload.filter((m) => !m.base);
       return {
         ...state,
         ...{
-          baseIds: base.map((m) => m.id),
-          baseEntities: base.reduce(
+          app: action.payload.app,
+          baseIds: action.payload.base.map((m) => m.id),
+          baseEntities: action.payload.base.reduce(
             (e: Entities<ModData>, m) => ({ ...e, ...{ [m.id]: m } }),
             {}
           ),
-          modIds: mods.map((m) => m.id),
-          modEntities: mods.reduce(
+          modIds: action.payload.mods.map((m) => m.id),
+          modEntities: action.payload.mods.reduce(
             (e: Entities<ModData>, m) => ({ ...e, ...{ [m.id]: m } }),
             {}
           ),

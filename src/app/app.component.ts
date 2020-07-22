@@ -43,9 +43,9 @@ export class AppComponent implements OnInit {
     @Inject(DOCUMENT) private document: Document
   ) {
     this.store.dispatch(new LoadDataAction(data));
-    this.store.dispatch(new Settings.SetBaseAction(data[0]));
+    this.store.dispatch(new Settings.SetBaseAction(data.base[0]));
     if (!location.hash) {
-      this.store.dispatch(new AddAction(data[0].items[0].id));
+      this.store.dispatch(new AddAction(data.base[0].items[0].id));
     }
   }
 

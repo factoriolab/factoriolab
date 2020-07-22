@@ -12,7 +12,7 @@ import {
   EmptyMod,
 } from '~/models';
 import { State } from '../';
-import { getBaseEntities, getModEntities } from '../datasets';
+import * as Datasets from '../datasets';
 import { SettingsState } from './settings.reducer';
 
 /* Base selector functions */
@@ -74,21 +74,26 @@ export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
 
 export const getBase = createSelector(
   getBaseDatasetId,
-  getBaseEntities,
+  Datasets.getBaseEntities,
   (id, entities) => (id && entities[id]) || EmptyMod
 );
 
 export const getMods = createSelector(
   getModDatasetIds,
-  getModEntities,
+  Datasets.getModEntities,
   (ids, entities) => ids.filter((i) => entities[i]).map((i) => entities[i])
 );
+
+export const getDatasets = createSelector(getBase, getMods, (base, mods) => [
+  base,
+  ...mods,
+]);
 
 export const getDefaults = createSelector(getBase, (base) => base.defaults);
 
 export const getNormalDataset = createSelector(
-  getBase,
-  getMods,
+  Datasets.getAppData,
+  getDatasets,
   (base, mods) => {
     // Map out entities with mods
     const categoryEntities = getEntities(
