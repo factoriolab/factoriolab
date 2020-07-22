@@ -11,7 +11,7 @@ import { Recipe, Item, DisplayRate, Dataset } from '~/models';
 export class IconComponent {
   @Input() data: Dataset;
   @Input() iconId: string;
-  @Input() scale: boolean;
+  @Input() scale = true;
   @Input() text: string;
 
   @Input() tooltip: string;

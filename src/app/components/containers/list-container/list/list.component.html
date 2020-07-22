@@ -115,7 +115,6 @@
               [tooltip]="data.itemEntities[step.itemId]?.name"
               [recipe]="data.recipeEntities[step.recipeId]"
               [data]="data"
-              scale="true"
               (click)="ignoreItem.emit(step.itemId)"
             ></lab-icon>
           </div>
@@ -394,7 +393,6 @@
                       data.recipeEntities[data.itemRecipeIds[input.key]]
                     "
                     [data]="data"
-                    scale="true"
                   >
                   </lab-icon>
                 </div>
@@ -482,7 +480,6 @@
                     [tooltip]="data.itemEntities[step.itemId]?.name"
                     [recipe]="data.recipeEntities[step.recipeId]"
                     [data]="data"
-                    scale="true"
                   ></lab-icon>
                 </div>
               </td>
@@ -516,7 +513,6 @@
                 [tooltip]="data.itemEntities[step.itemId]?.name"
                 [recipe]="data.recipeEntities[step.recipeId]"
                 [data]="data"
-                scale="true"
               >
               </lab-icon>
             </div>
@@ -588,7 +584,6 @@
                 [tooltip]="data.itemEntities[parent.key]?.name"
                 [recipe]="data.recipeEntities[data.itemRecipeIds[parent.key]]"
                 [data]="data"
-                scale="true"
               ></lab-icon>
             </div>
           </td>
