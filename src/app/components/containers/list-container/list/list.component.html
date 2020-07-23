@@ -430,7 +430,10 @@
               </td>
               <td>
                 <ng-container
-                  *ngIf="recipeSettings[inStep.recipeId].factory as factory"
+                  *ngIf="
+                    inStep.recipeId &&
+                    recipeSettings[inStep.recipeId].factory as factory
+                  "
                 >
                   <div
                     class="flex"
