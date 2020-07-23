@@ -16,15 +16,15 @@ export class RateUtility {
   static LAUNCH_TIME = new Rational(BigInt(2420), BigInt(60));
 
   static addStepsFor(
-    depth: number,
-    parentId: string,
     itemId: string,
     rate: Rational,
     steps: Step[],
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
     fuel: string,
-    data: Dataset
+    data: Dataset,
+    depth: number = 0,
+    parentId: string = null
   ) {
     const recipe = data.recipeR[data.itemRecipeIds[itemId]];
 
@@ -93,15 +93,15 @@ export class RateUtility {
         for (const ingredient of Object.keys(recipe.in)) {
           const ingredientRate = rate.mul(recipe.in[ingredient]).div(out);
           RateUtility.addStepsFor(
-            inDepth,
-            itemId,
             ingredient,
             ingredientRate,
             steps,
             itemSettings,
             recipeSettings,
             fuel,
-            data
+            data,
+            inDepth,
+            itemId,
           );
         }
       }
@@ -120,7 +120,6 @@ export class RateUtility {
     const recipe = data.recipeR[data.itemRecipeIds[itemId]];
 
     const node: Node = {
-      depth: null,
       id: `${parent.id}:${itemId}`,
       name: data.itemEntities[itemId].name,
       itemId,

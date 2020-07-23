@@ -90,6 +90,7 @@ export const RecipeSettings2: RecipeSettings = {
   beaconCount: 0,
 };
 export const Step1: Step = {
+  depth: 0,
   itemId: Item1.id,
   recipeId: Item1.id as any,
   items: Rational.fromNumber(Product1.rate),
@@ -97,6 +98,7 @@ export const Step1: Step = {
   factories: Rational.one,
 };
 export const Step2: Step = {
+  depth: 0,
   itemId: Item2.id,
   recipeId: Item2.id as any,
   items: Rational.fromNumber(Product2.rate),

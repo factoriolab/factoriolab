@@ -143,8 +143,6 @@ export const getNormalizedSteps = createSelector(
     const steps: Step[] = [];
     for (const product of products) {
       RateUtility.addStepsFor(
-        0,
-        null,
         product.itemId,
         rates[product.id],
         steps,

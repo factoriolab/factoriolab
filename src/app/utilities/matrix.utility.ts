@@ -58,6 +58,7 @@ export class MatrixSolver {
   fuel: string;
   data: Dataset;
 
+  depth: number;
   value: Entities<Rational> = {};
   recipes: Entities<RationalRecipe> = {};
   recipeIds: string[] = [];
@@ -69,7 +70,6 @@ export class MatrixSolver {
   outputs: string[] = [];
   surplusVar: Entities<Variable> = {};
   inputVar: Entities<Variable> = {};
-  depth: number;
 
   solver = new Solver();
 
@@ -87,11 +87,14 @@ export class MatrixSolver {
     this.recipeDisabled = recipeDisabled;
     this.fuel = fuel;
     this.data = data;
+    this.depth = Math.max(...this.steps.map((s) => s.depth)) + 1;
   }
 
   get simpleStepsOnly() {
     return !this.steps.some(
-      (s) => s.recipeId !== this.data.itemRecipeIds[s.itemId] && !this.itemSettings[s.itemId].ignore
+      (s) =>
+        (!s.recipeId || s.recipeId !== this.data.itemRecipeIds[s.itemId]) &&
+        !this.itemSettings[s.itemId].ignore
     );
   }
 
@@ -107,7 +110,6 @@ export class MatrixSolver {
     this.parseItems();
     this.parseCost();
     this.solver.updateVariables();
-    this.depth = Math.max(...this.steps.map(s => s.depth)) + 1;
     this.parseSolutionRecipes();
     this.parseSolutionOutputs();
     this.parseSolutionSteps();
@@ -288,15 +290,14 @@ export class MatrixSolver {
     )) {
       // Item has simple recipe, calculate inputs
       RateUtility.addStepsFor(
-        this.depth + 2,
-        null,
         i,
         this.inputVar[i].value,
         this.steps,
         this.itemSettings,
         this.recipeSettings,
         this.fuel,
-        this.data
+        this.data,
+        this.depth + 2
       );
     }
   }
@@ -304,7 +305,8 @@ export class MatrixSolver {
   calculateRecipes() {
     for (const step of this.steps) {
       if (
-        step.recipeId !== this.data.itemRecipeIds[step.itemId] &&
+        (!step.recipeId ||
+          step.recipeId !== this.data.itemRecipeIds[step.itemId]) &&
         !this.itemSettings[step.itemId].ignore
       ) {
         // Find recipes with this output

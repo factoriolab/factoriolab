@@ -9,6 +9,7 @@ describe('MatrixUtility', () => {
     it('should return if only simple steps are found', () => {
       const steps: Step[] = [
         {
+          depth: 0,
           itemId: ItemId.SteelChest,
           items: Rational.one,
           recipeId: RecipeId.SteelChest,
@@ -28,6 +29,7 @@ describe('MatrixUtility', () => {
     it('should return if no matrix recipes are found', () => {
       const steps: Step[] = [
         {
+          depth: 0,
           itemId: ItemId.Uranium235,
           items: Rational.one,
         },
@@ -49,6 +51,7 @@ describe('MatrixUtility', () => {
     it('should solve a matrix', () => {
       const steps: Step[] = [
         {
+          depth: 0,
           itemId: ItemId.PetroleumGas,
           items: Rational.one,
         },
@@ -72,6 +75,7 @@ describe('MatrixSolver', () => {
   beforeEach(() => {
     const steps: Step[] = [
       {
+        depth: 0,
         itemId: ItemId.SteelChest,
         items: Rational.one,
         recipeId: RecipeId.SteelChest,
@@ -239,22 +243,29 @@ describe('MatrixSolver', () => {
       matrix.parseCost();
       matrix.solver.updateVariables();
       // Simulate an output that has already been calculated
-      matrix.steps.push({ itemId: ItemId.LightOil, items: Rational.zero });
+      matrix.steps.push({
+        depth: 0,
+        itemId: ItemId.LightOil,
+        items: Rational.zero,
+      });
       matrix.parseSolutionRecipes();
       matrix.parseSolutionOutputs();
       expect(matrix.steps).toEqual([
         {
+          depth: 1,
           itemId: ItemId.HeavyOil,
           items: Rational.one,
           recipeId: RecipeId.AdvancedOilProcessing,
           factories: new Rational(BigInt(4), BigInt(15)),
         },
         {
+          depth: 1,
           itemId: ItemId.LightOil,
           items: Rational.zero,
           surplus: new Rational(BigInt(9), BigInt(5)),
         },
         {
+          depth: 1,
           itemId: ItemId.PetroleumGas,
           items: Rational.zero,
           surplus: new Rational(BigInt(11), BigInt(5)),
@@ -275,6 +286,7 @@ describe('MatrixSolver', () => {
       } as any;
       matrix.parseSolutionSteps();
       expect(matrix.steps[1]).toEqual({
+        depth: 2,
         itemId: null,
         items: null,
         recipeId: RecipeId.AdvancedOilProcessing,
@@ -294,8 +306,16 @@ describe('MatrixSolver', () => {
 
   describe('calculateRecipes', () => {
     beforeEach(() => {
-      matrix.steps.push({ itemId: ItemId.PetroleumGas, items: Rational.one });
-      matrix.steps.push({ itemId: ItemId.LightOil, items: Rational.one });
+      matrix.steps.push({
+        depth: 0,
+        itemId: ItemId.PetroleumGas,
+        items: Rational.one,
+      });
+      matrix.steps.push({
+        depth: 0,
+        itemId: ItemId.LightOil,
+        items: Rational.one,
+      });
     });
 
     it('should calculate recipes to use', () => {
@@ -303,12 +323,13 @@ describe('MatrixSolver', () => {
       matrix.calculateRecipes();
       expect(matrix.steps).toEqual([
         {
+          depth: 0,
           itemId: ItemId.SteelChest,
           items: Rational.one,
           recipeId: RecipeId.SteelChest,
         },
-        { itemId: ItemId.PetroleumGas, items: Rational.one },
-        { itemId: ItemId.LightOil, items: Rational.one },
+        { depth: 0, itemId: ItemId.PetroleumGas, items: Rational.one },
+        { depth: 0, itemId: ItemId.LightOil, items: Rational.one },
       ]);
     });
   });
@@ -333,6 +354,7 @@ describe('MatrixSolver', () => {
 
     it('should parse complex recipes', () => {
       matrix.recipeDisabled[RecipeId.KovarexEnrichmentProcess] = true;
+      matrix.recipeDisabled[RecipeId.NuclearFuelReprocessing] = true;
       matrix.findRecipesRecursively(ItemId.Uranium238);
       expect(matrix.parseRecipeRecursively).toHaveBeenCalledWith(
         Mocks.AdjustedData.recipeR[RecipeId.UraniumProcessing]

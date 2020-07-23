@@ -8,6 +8,7 @@ export enum RecipeId {
   IronOre = 'iron-ore',
   KovarexEnrichmentProcess = 'kovarex-enrichment-process',
   MiningProductivity = 'mining-productivity',
+  NuclearFuelReprocessing = 'nuclear-fuel-reprocessing',
   PlasticBar = 'plastic-bar',
   Satellite = 'satellite',
   SolidFuelFromLightOil = 'solid-fuel-from-light-oil',

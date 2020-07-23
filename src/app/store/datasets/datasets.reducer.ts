@@ -1,4 +1,4 @@
-import { Entities, ModData } from '~/models';
+import { Entities, ModData, EmptyMod } from '~/models';
 import { DatasetsAction, DatasetsActionType } from './datasets.actions';
 
 export interface DatasetsState {
@@ -10,7 +10,7 @@ export interface DatasetsState {
 }
 
 export const initialDatasetsState: DatasetsState = {
-  app: null,
+  app: EmptyMod,
   baseIds: [],
   baseEntities: {},
   modIds: [],
