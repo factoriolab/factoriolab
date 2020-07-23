@@ -3,7 +3,7 @@
   <select
     title="Select base game version"
     [ngModel]="settings.baseDatasetId"
-    (change)="setBaseDataset.emit(base[$event])"
+    (change)="setBaseDataset.emit(base[$event.target.value])"
   >
     <option *ngFor="let b of base | keyvalue" [value]="b.key">{{
       b.value.name
