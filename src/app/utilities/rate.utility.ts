@@ -16,6 +16,7 @@ export class RateUtility {
   static LAUNCH_TIME = new Rational(BigInt(2420), BigInt(60));
 
   static addStepsFor(
+    depth: number,
     parentId: string,
     itemId: string,
     rate: Rational,
@@ -30,9 +31,12 @@ export class RateUtility {
     // Find existing step for this item
     let step = steps.find((s) => s.itemId === itemId);
 
-    if (!step) {
+    if (step) {
+      step.depth = Math.max(step.depth, depth);
+    } else {
       // No existing step found, create a new one
       step = {
+        depth,
         itemId,
         recipeId: recipe ? recipe.id : null,
         items: Rational.zero,
@@ -85,9 +89,11 @@ export class RateUtility {
         step.items.nonzero() &&
         !itemSettings[step.itemId].ignore
       ) {
+        const inDepth = depth + 1;
         for (const ingredient of Object.keys(recipe.in)) {
           const ingredientRate = rate.mul(recipe.in[ingredient]).div(out);
           RateUtility.addStepsFor(
+            inDepth,
             itemId,
             ingredient,
             ingredientRate,
@@ -114,6 +120,7 @@ export class RateUtility {
     const recipe = data.recipeR[data.itemRecipeIds[itemId]];
 
     const node: Node = {
+      depth: null,
       id: `${parent.id}:${itemId}`,
       name: data.itemEntities[itemId].name,
       itemId,

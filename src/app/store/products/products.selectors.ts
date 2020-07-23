@@ -143,6 +143,7 @@ export const getNormalizedSteps = createSelector(
     const steps: Step[] = [];
     for (const product of products) {
       RateUtility.addStepsFor(
+        0,
         null,
         product.itemId,
         rates[product.id],
@@ -196,7 +197,7 @@ export const getNormalizedStepsWithMatrices = createSelector(
       disabledRecipes,
       fuel,
       data
-    )
+    ).sort((a, b) => a.depth - b.depth)
 );
 
 export const getNormalizedStepsWithBelts = createSelector(

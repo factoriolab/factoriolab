@@ -69,6 +69,7 @@ export class MatrixSolver {
   outputs: string[] = [];
   surplusVar: Entities<Variable> = {};
   inputVar: Entities<Variable> = {};
+  depth: number;
 
   solver = new Solver();
 
@@ -90,7 +91,7 @@ export class MatrixSolver {
 
   get simpleStepsOnly() {
     return !this.steps.some(
-      (s) => s.recipeId !== s.itemId && !this.itemSettings[s.itemId].ignore
+      (s) => s.recipeId !== this.data.itemRecipeIds[s.itemId] && !this.itemSettings[s.itemId].ignore
     );
   }
 
@@ -106,6 +107,7 @@ export class MatrixSolver {
     this.parseItems();
     this.parseCost();
     this.solver.updateVariables();
+    this.depth = Math.max(...this.steps.map(s => s.depth)) + 1;
     this.parseSolutionRecipes();
     this.parseSolutionOutputs();
     this.parseSolutionSteps();
@@ -237,6 +239,7 @@ export class MatrixSolver {
         );
         const recipeId = matches.length ? matches[0] : null;
         if (step) {
+          step.depth = this.depth;
           if (this.value[i]) {
             step.items = itemOutput;
           } else {
@@ -244,6 +247,7 @@ export class MatrixSolver {
           }
         } else {
           step = {
+            depth: this.depth,
             itemId: i,
             items: itemOutput,
           };
@@ -269,6 +273,7 @@ export class MatrixSolver {
       (i) => !this.mappedRecipeIds.some((m) => m === i)
     )) {
       this.steps.push({
+        depth: this.depth + 1,
         itemId: null,
         items: null,
         recipeId: r,
@@ -283,6 +288,7 @@ export class MatrixSolver {
     )) {
       // Item has simple recipe, calculate inputs
       RateUtility.addStepsFor(
+        this.depth + 2,
         null,
         i,
         this.inputVar[i].value,
@@ -298,7 +304,7 @@ export class MatrixSolver {
   calculateRecipes() {
     for (const step of this.steps) {
       if (
-        step.recipeId !== (step.itemId as string) &&
+        step.recipeId !== this.data.itemRecipeIds[step.itemId] &&
         !this.itemSettings[step.itemId].ignore
       ) {
         // Find recipes with this output

@@ -4,6 +4,7 @@ import { Rational } from './rational';
 export interface Step {
   itemId: string;
   items: Rational;
+  depth: number;
   surplus?: Rational;
   belts?: Rational;
   factories?: Rational;
