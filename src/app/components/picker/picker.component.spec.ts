@@ -2,7 +2,7 @@ import { ViewChild, Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Mocks, TestUtility } from 'src/tests';
-import { DatasetState } from '~/store/dataset';
+import { Dataset } from '~/models';
 import { IconComponent } from '../icon/icon.component';
 import { PickerComponent } from './picker.component';
 
@@ -21,7 +21,7 @@ import { PickerComponent } from './picker.component';
 })
 class TestPickerComponent {
   @ViewChild(PickerComponent) child: PickerComponent;
-  data: DatasetState = Mocks.Data;
+  data: Dataset = Mocks.Data;
   categoryId: string = Mocks.CategoryId;
   itemId: string = Mocks.Item1.id;
   cancel() {}

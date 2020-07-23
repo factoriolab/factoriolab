@@ -115,7 +115,6 @@
               [tooltip]="data.itemEntities[step.itemId]?.name"
               [recipe]="data.recipeEntities[step.recipeId]"
               [data]="data"
-              scale="true"
               (click)="ignoreItem.emit(step.itemId)"
             ></lab-icon>
           </div>
@@ -340,7 +339,7 @@
           <a
             *ngIf="step.items"
             title="Click to open this step in a new tab"
-            [href]="router.stepHref(step, data)"
+            [href]="router.stepHref(step)"
             target="_blank"
           >
             <i class="clickable material-icons">open_in_new</i>
@@ -394,7 +393,6 @@
                       data.recipeEntities[data.itemRecipeIds[input.key]]
                     "
                     [data]="data"
-                    scale="true"
                   >
                   </lab-icon>
                 </div>
@@ -432,7 +430,10 @@
               </td>
               <td>
                 <ng-container
-                  *ngIf="recipeSettings[inStep.recipeId].factory as factory"
+                  *ngIf="
+                    inStep.recipeId &&
+                    recipeSettings[inStep.recipeId].factory as factory
+                  "
                 >
                   <div
                     class="flex"
@@ -482,7 +483,6 @@
                     [tooltip]="data.itemEntities[step.itemId]?.name"
                     [recipe]="data.recipeEntities[step.recipeId]"
                     [data]="data"
-                    scale="true"
                   ></lab-icon>
                 </div>
               </td>
@@ -516,7 +516,6 @@
                 [tooltip]="data.itemEntities[step.itemId]?.name"
                 [recipe]="data.recipeEntities[step.recipeId]"
                 [data]="data"
-                scale="true"
               >
               </lab-icon>
             </div>
@@ -588,7 +587,6 @@
                 [tooltip]="data.itemEntities[parent.key]?.name"
                 [recipe]="data.recipeEntities[data.itemRecipeIds[parent.key]]"
                 [data]="data"
-                scale="true"
               ></lab-icon>
             </div>
           </td>

@@ -11,9 +11,16 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { DisplayRate, ResearchSpeed, Theme, IdPayload } from '~/models';
+import {
+  DisplayRate,
+  ResearchSpeed,
+  Theme,
+  Dataset,
+  ModData,
+  Entities,
+} from '~/models';
 import { State } from '~/store';
-import * as Dataset from '~/store/dataset';
+import { getBaseEntities, getMods } from '~/store/datasets';
 import * as Settings from '~/store/settings';
 import { SettingsComponent } from './settings/settings.component';
 
@@ -28,7 +35,9 @@ export class SettingsContainerComponent implements OnInit {
 
   @Output() cancel = new EventEmitter();
 
-  data$: Observable<Dataset.DatasetState>;
+  data$: Observable<Dataset>;
+  base$: Observable<Entities<ModData>>;
+  mods$: Observable<ModData[]>;
   settings$: Observable<Settings.SettingsState>;
 
   opening = true;
@@ -36,7 +45,9 @@ export class SettingsContainerComponent implements OnInit {
   constructor(private element: ElementRef, private store: Store<State>) {}
 
   ngOnInit() {
-    this.data$ = this.store.select(Dataset.getDatasetState);
+    this.data$ = this.store.select(Settings.getDataset);
+    this.base$ = this.store.select(getBaseEntities);
+    this.mods$ = this.store.select(getMods);
     this.settings$ = this.store.select(Settings.settingsState);
   }
 
@@ -56,6 +67,18 @@ export class SettingsContainerComponent implements OnInit {
     ) {
       this.cancel.emit();
     }
+  }
+
+  setBaseDataset(value: ModData) {
+    this.store.dispatch(new Settings.SetBaseAction(value));
+  }
+
+  enableMod(value: string) {
+    this.store.dispatch(new Settings.EnableModAction(value));
+  }
+
+  disableMod(value: string) {
+    this.store.dispatch(new Settings.DisableModAction(value));
   }
 
   setDisplayRate(value: DisplayRate) {

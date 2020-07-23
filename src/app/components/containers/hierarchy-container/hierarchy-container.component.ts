@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 
 import { Node } from '~/models';
 import { State } from '~/store';
-import * as Products from '~/store/products';
+import { getNodes } from '~/store/products';
 import { SunburstComponent } from './sunburst/sunburst.component';
 
 @Component({
@@ -44,6 +44,6 @@ export class HierarchyContainerComponent implements OnInit {
   constructor(private store: Store<State>) {}
 
   ngOnInit(): void {
-    this.nodes$ = this.store.select(Products.getNodes);
+    this.nodes$ = this.store.select(getNodes);
   }
 }

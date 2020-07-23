@@ -8,8 +8,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { Entities } from '~/models';
-import { DatasetState } from '~/store/dataset';
+import { Entities, Dataset } from '~/models';
 
 @Component({
   selector: 'lab-toggle',
@@ -18,7 +17,19 @@ import { DatasetState } from '~/store/dataset';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToggleComponent {
-  @Input() data: DatasetState;
+  _data: Dataset;
+  @Input() set data(value: Dataset) {
+    this._data = value;
+    const simpleRecipes = Object.keys(value.itemRecipeIds).map(
+      (i) => value.itemRecipeIds[i]
+    );
+    this.complexRecipes = value.recipeIds.filter(
+      (r) => simpleRecipes.indexOf(r) === -1
+    );
+  }
+  get data() {
+    return this._data;
+  }
   @Input() recipeDisabled: Entities<boolean>;
 
   @Output() cancel = new EventEmitter();
@@ -26,10 +37,7 @@ export class ToggleComponent {
   @Output() disableRecipe = new EventEmitter<string>();
 
   opening = true;
-
-  get complexRecipes() {
-    return this.data.recipeIds.filter((r) => !this.data.itemEntities[r]);
-  }
+  complexRecipes: string[] = [];
 
   constructor(private element: ElementRef) {}
 

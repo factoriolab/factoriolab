@@ -10,10 +10,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
 import { TestUtility, ElementId, ItemId } from 'src/tests';
-import { Theme } from './models';
+import { Theme, Dataset } from './models';
 import { RouterService } from './services/router.service';
 import { State, reducers, metaReducers } from './store';
-import { getDatasetState, DatasetState } from './store/dataset';
 import * as Products from './store/products';
 import * as Settings from './store/settings';
 import {
@@ -70,8 +69,8 @@ describe('AppComponent', () => {
   });
 
   it('should load the dataset', fakeAsync(() => {
-    let dataset: DatasetState;
-    store.select(getDatasetState).subscribe((d) => (dataset = d));
+    let dataset: Dataset;
+    store.select(Settings.getDataset).subscribe((d) => (dataset = d));
     tick();
     expect(dataset.itemIds.length).toBeGreaterThan(0);
   }));

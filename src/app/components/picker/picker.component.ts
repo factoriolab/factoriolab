@@ -8,7 +8,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { DatasetState } from '~/store/dataset';
+import { Dataset } from '~/models';
 
 @Component({
   selector: 'lab-picker',
@@ -17,7 +17,7 @@ import { DatasetState } from '~/store/dataset';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PickerComponent {
-  @Input() data: DatasetState;
+  @Input() data: Dataset;
   @Input() categoryId: string;
   @Input() itemId: string;
 

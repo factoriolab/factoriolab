@@ -1,7 +1,6 @@
-import { ItemId } from 'src/tests';
+import { CategoryId, ItemId } from 'src/tests';
 import { Rational } from '../rational';
 import { RationalItem } from './item';
-import { CategoryId } from './category';
 
 describe('RationalItem', () => {
   describe('constructor', () => {

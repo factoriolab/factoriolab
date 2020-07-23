@@ -2,8 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Mocks, TestUtility, ItemId } from 'src/tests';
-import { IdType, DisplayRate } from '~/models';
-import { DatasetState } from '~/store/dataset';
+import { IdType, DisplayRate, Dataset } from '~/models';
 import { IconComponent } from '../icon/icon.component';
 import { SelectComponent } from './select.component';
 
@@ -25,7 +24,7 @@ import { SelectComponent } from './select.component';
 })
 class TestSelectComponent {
   @ViewChild(SelectComponent) child: SelectComponent;
-  data: DatasetState = Mocks.Data;
+  data: Dataset = Mocks.Data;
   selectedId = ItemId.AssemblingMachine1;
   options = [
     ItemId.AssemblingMachine1,

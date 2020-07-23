@@ -2,6 +2,7 @@
   <ng-container *ngFor="let id of data.categoryIds">
     <lab-icon
       *ngIf="data.categoryEntities[id] as category"
+      [scale]="false"
       [iconId]="id"
       [tooltip]="category.name"
       [class.selected]="id === categoryId"

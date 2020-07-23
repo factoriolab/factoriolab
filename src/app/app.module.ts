@@ -24,6 +24,7 @@ import {
   SunburstComponent,
   ToggleComponent,
   RankerComponent,
+  MultiselectComponent,
 } from './components';
 import { reducers, metaReducers } from './store';
 
@@ -32,6 +33,7 @@ import { reducers, metaReducers } from './store';
     AppComponent,
     HeaderComponent,
     IconComponent,
+    MultiselectComponent,
     PickerComponent,
     RankerComponent,
     SelectComponent,

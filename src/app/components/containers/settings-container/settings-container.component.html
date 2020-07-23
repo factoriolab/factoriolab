@@ -1,6 +1,11 @@
 <lab-settings
   [data]="data$ | async"
+  [base]="base$ | async"
+  [mods]="mods$ | async"
   [settings]="settings$ | async"
+  (setBaseDataset)="setBaseDataset($event)"
+  (enableMod)="enableMod($event)"
+  (disableMod)="disableMod($event)"
   (setDisplayRate)="setDisplayRate($event)"
   (setItemPrecision)="setItemPrecision($event)"
   (setBeltPrecision)="setBeltPrecision($event)"

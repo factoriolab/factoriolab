@@ -1,17 +1,19 @@
-import { Mocks, ItemId } from 'src/tests';
+import { Mocks, CategoryId, ItemId } from 'src/tests';
 import { RateUtility } from './rate.utility';
-import { Step, CategoryId, Node, Rational, DisplayRate } from '~/models';
+import { Step, Node, Rational, DisplayRate } from '~/models';
 
 describe('RateUtility', () => {
   describe('addStepsFor', () => {
     const expected = [
       {
+        depth: 0,
         itemId: 'iron-chest',
         recipeId: 'iron-chest',
         items: new Rational(BigInt(30)),
         factories: new Rational(BigInt(20)),
       },
       {
+        depth: 1,
         itemId: 'iron-plate',
         recipeId: 'iron-plate',
         items: new Rational(BigInt(240)),
@@ -19,6 +21,7 @@ describe('RateUtility', () => {
         parents: { 'iron-chest': new Rational(BigInt(240)) },
       },
       {
+        depth: 2,
         itemId: 'iron-ore',
         recipeId: 'iron-ore',
         items: new Rational(BigInt(240)),
@@ -30,7 +33,6 @@ describe('RateUtility', () => {
     it('should recursively calculate required steps', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
-        null,
         Mocks.Item2.id,
         new Rational(BigInt(30)),
         steps,
@@ -45,7 +47,6 @@ describe('RateUtility', () => {
     it('should handle repeated products', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
-        null,
         Mocks.Item2.id,
         new Rational(BigInt(15)),
         steps,
@@ -55,7 +56,6 @@ describe('RateUtility', () => {
         Mocks.AdjustedData
       );
       RateUtility.addStepsFor(
-        null,
         Mocks.Item2.id,
         new Rational(BigInt(15)),
         steps,
@@ -70,7 +70,6 @@ describe('RateUtility', () => {
     it('should handle research recipes', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
-        null,
         Mocks.Item2.id,
         new Rational(BigInt(30)),
         steps,
@@ -98,7 +97,6 @@ describe('RateUtility', () => {
     it('should properly calculate factories for space science pack/rocket parts', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
-        null,
         ItemId.SpaceSciencePack,
         new Rational(BigInt(60)),
         steps,
@@ -130,7 +128,6 @@ describe('RateUtility', () => {
         },
       };
       RateUtility.addStepsFor(
-        null,
         Mocks.Item2.id,
         new Rational(BigInt(30)),
         steps,
@@ -145,7 +142,6 @@ describe('RateUtility', () => {
     it('should handle null recipe', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
-        null,
         ItemId.Uranium235,
         new Rational(BigInt(30)),
         steps,
@@ -156,6 +152,7 @@ describe('RateUtility', () => {
       );
       expect(steps).toEqual([
         {
+          depth: 0,
           itemId: ItemId.Uranium235,
           recipeId: null,
           items: new Rational(BigInt(30)),
@@ -171,7 +168,7 @@ describe('RateUtility', () => {
       children: [
         {
           id: 'root:iron-chest',
-          name: 'Iron Chest',
+          name: 'Iron chest',
           itemId: 'iron-chest',
           recipeId: 'iron-chest',
           items: new Rational(BigInt(30)),
@@ -179,7 +176,7 @@ describe('RateUtility', () => {
           children: [
             {
               id: 'root:iron-chest:iron-plate',
-              name: 'Iron Plate',
+              name: 'Iron plate',
               itemId: 'iron-plate',
               recipeId: 'iron-plate',
               items: new Rational(BigInt(240)),
@@ -187,7 +184,7 @@ describe('RateUtility', () => {
               children: [
                 {
                   id: 'root:iron-chest:iron-plate:iron-ore',
-                  name: 'Iron Ore',
+                  name: 'Iron ore',
                   itemId: 'iron-ore',
                   recipeId: 'iron-ore',
                   items: new Rational(BigInt(240)),
@@ -306,6 +303,7 @@ describe('RateUtility', () => {
     it('should skip steps with no settings', () => {
       const steps: Step[] = [
         {
+          depth: 0,
           itemId: null,
           recipeId: null,
           items: null,
@@ -323,6 +321,7 @@ describe('RateUtility', () => {
     it('should skip steps with no items', () => {
       const steps: Step[] = [
         {
+          depth: 0,
           itemId: Mocks.Item1.id,
           recipeId: null,
           items: null,
@@ -340,6 +339,7 @@ describe('RateUtility', () => {
     it('should calculate required belts for steps', () => {
       const steps: Step[] = [
         {
+          depth: 0,
           itemId: Mocks.Item1.id,
           recipeId: null,
           items: Mocks.BeltSpeed[ItemId.TransportBelt],
@@ -406,6 +406,7 @@ describe('RateUtility', () => {
     it('should skip steps with no items', () => {
       const steps: Step[] = [
         {
+          depth: 0,
           itemId: Mocks.Item1.id,
           recipeId: null,
           items: null,

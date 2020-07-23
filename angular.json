@@ -23,7 +23,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": ["src/favicon.ico", "src/assets", "src/data"],
             "styles": [
               "node_modules/material-design-icons/iconfont/material-icons.css",
               "src/styles.scss"
@@ -116,7 +116,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": ["src/favicon.ico", "src/assets", "src/data"],
             "styles": [
               "node_modules/material-design-icons/iconfont/material-icons.css",
               "src/styles.scss"

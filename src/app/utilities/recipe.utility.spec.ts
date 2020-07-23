@@ -52,7 +52,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         ItemId.Coal,
         settings,
-        Mocks.RationalData
+        Mocks.Data
       );
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.SteelChest]
@@ -69,7 +69,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         ItemId.Coal,
         Mocks.RationalRecipeSettings[RecipeId.CopperCable],
-        Mocks.RationalData
+        Mocks.Data
       );
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.CopperCable]
@@ -89,7 +89,7 @@ describe('RecipeUtility', () => {
         Rational.two,
         ItemId.Coal,
         settings,
-        Mocks.RationalData
+        Mocks.Data
       );
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.MiningProductivity]
@@ -109,7 +109,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         ItemId.Coal,
         settings,
-        Mocks.RationalData
+        Mocks.Data
       );
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.IronOre]
@@ -134,7 +134,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         ItemId.Coal,
         settings,
-        Mocks.RationalData
+        Mocks.Data
       );
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.SteelChest]
@@ -156,7 +156,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         ItemId.Coal,
         settings,
-        Mocks.RationalData
+        Mocks.Data
       );
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.SteelChest]
@@ -177,7 +177,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         ItemId.Coal,
         settings,
-        Mocks.RationalData
+        Mocks.Data
       );
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.IronOre]
@@ -199,7 +199,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         ItemId.Coal,
         settings,
-        Mocks.RationalData
+        Mocks.Data
       );
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.PlasticBar]

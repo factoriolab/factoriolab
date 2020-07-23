@@ -1,7 +1,7 @@
 import { Entities } from './entities';
 import { Rational } from './rational';
 
-export interface Step {
+interface StepBase {
   itemId: string;
   items: Rational;
   surplus?: Rational;
@@ -9,4 +9,14 @@ export interface Step {
   factories?: Rational;
   recipeId?: string;
   parents?: Entities<Rational>;
+}
+
+export interface Step extends StepBase {
+  depth: number;
+}
+
+export interface Node extends StepBase {
+  id: string;
+  name: string;
+  children?: Node[];
 }

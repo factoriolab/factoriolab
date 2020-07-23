@@ -17,7 +17,7 @@ label {
   }
 
   > * + * {
-    padding-left: 0.25rem;
+    margin-left: 0.25rem;
   }
 
   &:hover {
@@ -41,6 +41,7 @@ lab-icon {
 .field {
   display: flex;
   align-items: center;
+  min-height: 2rem;
 
   > * + * {
     margin-left: 0.5rem;
@@ -55,7 +56,16 @@ a {
   width: 2.25rem;
   height: 2.25rem;
 
+  &.button {
+    width: 10rem;
+    height: 1.625rem;
+  }
+
   > * {
     position: absolute;
   }
+}
+
+input[type='radio'] + * {
+  margin-left: 0.25rem;
 }

@@ -3,7 +3,7 @@ import { Entities } from '../entities';
 
 export interface Recipe {
   id: string;
-  name: string;
+  name?: string;
   time: number;
   in?: Entities<number>;
   out?: Entities<number>;
