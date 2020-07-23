@@ -115,7 +115,7 @@
 <div class="field">
   <lab-icon
     iconId="iron-plate"
-    tooltip="Items Precision"
+    tooltip="Items precision"
     [data]="data"
   ></lab-icon>
   <div class="flex">
@@ -160,7 +160,7 @@
 <div class="field">
   <lab-icon
     iconId="transport-belt"
-    tooltip="Belts Precision"
+    tooltip="Belts precision"
     [data]="data"
   ></lab-icon>
   <div class="flex">
@@ -204,7 +204,7 @@
   <lab-icon
     [data]="data"
     iconId="assembling-machine-1"
-    tooltip="Factories Precision"
+    tooltip="Factories precision"
   ></lab-icon>
   <div class="flex">
     <input
@@ -249,7 +249,7 @@
     <div [style.marginTop.px]="-scrollTop">
       <lab-icon
         class="clickable"
-        tooltip="Factory Preferences"
+        tooltip="Factory preferences"
         [iconId]="
           settings.factoryRank.length
             ? settings.factoryRank[0]
@@ -337,7 +337,7 @@
     <div [style.marginTop.px]="-scrollTop">
       <lab-icon
         class="clickable"
-        tooltip="Module Preferences"
+        tooltip="Module preferences"
         [iconId]="
           settings.moduleRank.length ? settings.moduleRank[0] : 'module'
         "
@@ -411,7 +411,7 @@
   <lab-icon
     iconId="electric-mining-drill"
     [data]="data"
-    tooltip="Mining Productivity Bonus"
+    tooltip="Mining productivity bonus"
     [scale]="true"
   ></lab-icon>
   <div class="field">
@@ -419,7 +419,7 @@
     <input
       type="number"
       title="Enter mining productivity bonus"
-      placeholder="Mining Productivity"
+      placeholder="Mining productivity"
       min="0"
       step="10"
       [value]="settings.miningBonus"
@@ -432,7 +432,7 @@
   <lab-icon
     iconId="lab"
     [data]="data"
-    tooltip="Research Speed Bonus"
+    tooltip="Research speed bonus"
     [scale]="true"
   ></lab-icon>
   <select
@@ -453,7 +453,7 @@
 <div class="field">
   <select
     id="settings-theme-select"
-    title="Choose Factorio Lab theme"
+    title="Choose color theme"
     [ngModel]="settings.theme"
     (change)="emitString(setTheme, $event)"
   >

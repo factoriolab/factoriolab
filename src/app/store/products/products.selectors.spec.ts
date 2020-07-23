@@ -1,6 +1,6 @@
 import { Mocks, ItemId } from 'src/tests';
 import { DisplayRate, RateType, Rational, RationalProduct } from '~/models';
-import { RateUtility } from '~/utilities';
+import { RateUtility, MatrixUtility } from '~/utilities';
 import { initialSettingsState } from '../settings';
 import * as Selectors from './products.selectors';
 
@@ -204,6 +204,49 @@ describe('Products Selectors', () => {
         {}
       );
       expect(RateUtility.addNodesFor).toHaveBeenCalled();
+    });
+  });
+
+  describe('getNormalizedStepsWithMatrices', () => {
+    it('should handle empty/null values', () => {
+      const result = Selectors.getNormalizedStepsWithMatrices.projector(
+        [],
+        {},
+        {},
+        {},
+        {},
+        null
+      );
+      expect(Object.keys(result).length).toEqual(0);
+    });
+
+    it('should calculate rates using utility method', () => {
+      spyOn(MatrixUtility, 'solveMatricesFor').and.returnValue([]);
+      Selectors.getNormalizedStepsWithMatrices.projector(
+        [Mocks.Step1],
+        {},
+        {},
+        {},
+        {},
+        null
+      );
+      expect(MatrixUtility.solveMatricesFor).toHaveBeenCalled();
+    });
+
+    it('should sort steps by depth', () => {
+      spyOn(MatrixUtility, 'solveMatricesFor').and.returnValue([
+        Mocks.Step2,
+        Mocks.Step1,
+      ]);
+      const result = Selectors.getNormalizedStepsWithMatrices.projector(
+        [],
+        {},
+        {},
+        {},
+        {},
+        null
+      );
+      expect(result).toEqual([Mocks.Step1, Mocks.Step2]);
     });
   });
 

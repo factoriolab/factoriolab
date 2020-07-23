@@ -98,7 +98,7 @@ export const Step1: Step = {
   factories: Rational.one,
 };
 export const Step2: Step = {
-  depth: 0,
+  depth: 1,
   itemId: Item2.id,
   recipeId: Item2.id as any,
   items: Rational.fromNumber(Product2.rate),

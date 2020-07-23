@@ -188,19 +188,16 @@ export const getNormalDataset = createSelector(
 
     // Fill in missing recipe names
     for (const id of recipeIds) {
-      if (!recipeEntities[id].name) {
-        if (itemEntities[id]) {
-          recipeEntities[id] = {
-            ...recipeEntities[id],
-            ...{ name: itemEntities[id].name },
-          };
-        } else {
-          // No item or name found, convert id to name
-          const words = recipeEntities[id].id.split('-').filter((w) => w);
-          const caps = words.map((w) => w.charAt(0).toUpperCase() + w.slice(1));
-          const name = caps.join(' ');
-          recipeEntities[id] = { ...recipeEntities[id], ...{ name } };
-        }
+      if (itemEntities[id]) {
+        recipeEntities[id] = {
+          ...recipeEntities[id],
+          ...{ name: itemEntities[id].name },
+        };
+      } else {
+        // No item found, convert id to name
+        const cap = id.charAt(0).toUpperCase() + id.slice(1);
+        const name = cap.replace(/-/g, ' ');
+        recipeEntities[id] = { ...recipeEntities[id], ...{ name } };
       }
     }
 
