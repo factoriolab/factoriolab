@@ -6,7 +6,7 @@
   padding: 0.5rem 1rem;
 
   > .add-button {
-    margin-top: 0.25rem;
+    margin-top: 0.125rem;
   }
 
   > * + * {
@@ -15,8 +15,11 @@
 }
 
 button {
+  height: 2rem;
+  width: 2rem;
   padding: 0;
   display: flex;
+  justify-content: center;
 }
 
 .icon-container {
@@ -31,4 +34,8 @@ button {
   > * + * {
     margin-left: 0.25rem;
   }
+}
+
+.material-icons {
+  line-height: 1.875rem;
 }

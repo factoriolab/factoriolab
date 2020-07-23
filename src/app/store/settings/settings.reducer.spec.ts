@@ -1,6 +1,5 @@
 import { ItemId, RecipeId, Mocks } from 'src/tests';
 import { DisplayRate, ResearchSpeed, LocalStorageKey, Theme } from '~/models';
-import * as Dataset from '../dataset';
 import * as Actions from './settings.actions';
 import {
   settingsReducer,
@@ -9,21 +8,6 @@ import {
 } from './settings.reducer';
 
 describe('Settings Reducer', () => {
-  describe('Dataset LOAD', () => {
-    it('should load settings from dataset', () => {
-      const result = settingsReducer(
-        undefined,
-        new Dataset.LoadDatasetAction(Mocks.Raw)
-      );
-      expect(result.belt).toBeTruthy();
-      expect(result.fuel).toBeTruthy();
-      expect(Object.keys(result.recipeDisabled).length).toBeGreaterThan(0);
-      expect(result.factoryRank.length).toBeGreaterThan(0);
-      expect(result.moduleRank.length).toBeGreaterThan(0);
-      expect(result.beaconModule).toBeTruthy();
-    });
-  });
-
   describe('LOAD', () => {
     it('should load settings', () => {
       const result = settingsReducer(
@@ -31,6 +15,45 @@ describe('Settings Reducer', () => {
         new Actions.LoadAction({ displayRate: DisplayRate.PerHour } as any)
       );
       expect(result.displayRate).toEqual(DisplayRate.PerHour);
+    });
+  });
+
+  describe('SET_BASE', () => {
+    it('should set the base dataset id and defaults', () => {
+      const mod = Mocks.Base;
+      const result = settingsReducer(undefined, new Actions.SetBaseAction(mod));
+      expect(result.baseDatasetId).toEqual(mod.id);
+      expect(result.belt).toEqual(mod.defaults.belt);
+      expect(result.fuel).toEqual(mod.defaults.fuel);
+      expect(Object.keys(result.recipeDisabled)).toEqual(
+        mod.defaults.disabledRecipes
+      );
+      expect(result.factoryRank).toEqual(mod.defaults.factoryRank);
+      expect(result.moduleRank).toEqual(mod.defaults.moduleRank);
+      expect(result.beaconModule).toEqual(mod.defaults.beaconModule);
+    });
+  });
+
+  describe('ENABLE_MOD', () => {
+    it('should enable a mod', () => {
+      const result = settingsReducer(
+        undefined,
+        new Actions.EnableModAction('test')
+      );
+      expect(result.modDatasetIds).toEqual([
+        ...initialSettingsState.modDatasetIds,
+        'test',
+      ]);
+    });
+  });
+
+  describe('DISABLE_MOD', () => {
+    it('should disable a mod', () => {
+      const result = settingsReducer(
+        undefined,
+        new Actions.DisableModAction(initialSettingsState.modDatasetIds[0])
+      );
+      expect(result.modDatasetIds).toEqual([]);
     });
   });
 

@@ -1,4 +1,4 @@
-import * as data from 'src/assets/0.18/data.json';
+import { data } from 'src/data';
 import {
   Product,
   RateType,
@@ -7,33 +7,41 @@ import {
   Entities,
   Node,
   Rational,
-  Dataset,
   RationalProduct,
   ItemSettings,
 } from '~/models';
 import {
-  DatasetState,
-  datasetReducer,
-  LoadDatasetAction,
-  getRationalDataset,
-} from '~/store/dataset';
+  DatasetsState,
+  datasetsReducer,
+  LoadDataAction,
+} from '~/store/datasets';
 import { getProductsBy } from '~/store/products';
 import {
   getRecipeSettings,
   getAdjustedDataset,
   getRationalRecipeSettings,
 } from '~/store/recipes';
-import { settingsReducer } from '~/store/settings';
+import {
+  settingsReducer,
+  getNormalDataset,
+  SetBaseAction,
+} from '~/store/settings';
 import { getItemSettings } from '~/store/items';
 import { ItemId } from './item-id';
 
-export const Raw: Dataset = (data as any).default;
-export const Data: DatasetState = datasetReducer(
+export const Raw = data;
+export const DataState: DatasetsState = datasetsReducer(
   undefined,
-  new LoadDatasetAction(Raw)
+  new LoadDataAction(data)
 );
-export const RationalData = getRationalDataset.projector(Data);
-export const CategoryId = Data.categoryEntities[Data.categoryIds[0]].id;
+export const Base = data.base[0];
+export const Mods = [data.mods[0]];
+export const Data = getNormalDataset.projector(data.app, [
+  data.base[0],
+  data.mods[0],
+]);
+export const Defaults = data.base[0].defaults;
+export const CategoryId = Data.categoryIds[0];
 export const Item1 = Data.itemEntities[Data.itemIds[0]];
 export const Item2 = Data.itemEntities[Data.itemIds[1]];
 export const Recipe1 = Data.recipeEntities[Data.recipeIds[0]];
@@ -82,6 +90,7 @@ export const RecipeSettings2: RecipeSettings = {
   beaconCount: 0,
 };
 export const Step1: Step = {
+  depth: 0,
   itemId: Item1.id,
   recipeId: Item1.id as any,
   items: Rational.fromNumber(Product1.rate),
@@ -89,6 +98,7 @@ export const Step1: Step = {
   factories: Rational.one,
 };
 export const Step2: Step = {
+  depth: 1,
   itemId: Item2.id,
   recipeId: Item2.id as any,
   items: Rational.fromNumber(Product2.rate),
@@ -116,17 +126,21 @@ for (const recipe of Data.recipeIds.map((i) => Data.recipeEntities[i])) {
 }
 export const InitialSettingsState = settingsReducer(
   undefined,
-  new LoadDatasetAction(Raw)
+  new SetBaseAction(data.base[0])
 );
 export const ItemSettingsInitial = getItemSettings.projector(
   {},
   Data,
-  InitialSettingsState
+  ItemId.TransportBelt
 );
 export const RecipeSettingsInitial = getRecipeSettings.projector(
   {},
-  Data,
-  InitialSettingsState
+  InitialSettingsState.factoryRank,
+  InitialSettingsState.moduleRank,
+  InitialSettingsState.beaconModule,
+  InitialSettingsState.beaconCount,
+  InitialSettingsState.drillModule,
+  Data
 );
 export const RationalRecipeSettings = getRationalRecipeSettings.projector(
   RecipeSettingsEntities
@@ -136,5 +150,5 @@ export const AdjustedData = getAdjustedDataset.projector(
   Rational.zero,
   Rational.zero,
   ItemId.Coal,
-  RationalData
+  Data
 );

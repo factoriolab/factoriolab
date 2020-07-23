@@ -22,14 +22,14 @@
     flex-grow: 1;
   }
 
-  .header-github {
-    line-height: 0;
-  }
-
   .header-settings,
   .header-github {
     &:hover {
       background-color: var(--color-brand);
     }
   }
+}
+
+a {
+  line-height: 0;
 }

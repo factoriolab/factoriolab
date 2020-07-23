@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { StoreModule, Store } from '@ngrx/store';
 
-import { TestUtility, ItemId, RecipeId } from 'src/tests';
+import { TestUtility, ItemId, RecipeId, Mocks } from 'src/tests';
 import { IconComponent } from '~/components';
 import { DisplayRate, ResearchSpeed, Theme } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
@@ -70,6 +70,33 @@ describe('SettingsContainerComponent', () => {
     component.opening = false;
     TestUtility.clickSelector(fixture, 'lab-settings');
     expect(component.cancel.emit).not.toHaveBeenCalled();
+  });
+
+  it('should set the base dataset', () => {
+    spyOn(store, 'dispatch');
+    const value = Mocks.Base;
+    component.child.setBaseDataset.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetBaseAction(value)
+    );
+  });
+
+  it('should enable a mod', () => {
+    spyOn(store, 'dispatch');
+    const value = 'test';
+    component.child.enableMod.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.EnableModAction(value)
+    );
+  });
+
+  it('should disable a mod', () => {
+    spyOn(store, 'dispatch');
+    const value = 'test';
+    component.child.disableMod.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.DisableModAction(value)
+    );
   });
 
   it('should set display rate', () => {

@@ -7,13 +7,21 @@ import {
   HostListener,
 } from '@angular/core';
 
-import { DisplayRate, ResearchSpeed, IdType, Theme } from '~/models';
-import { DatasetState } from '~/store/dataset';
+import {
+  DisplayRate,
+  ResearchSpeed,
+  IdType,
+  Theme,
+  Dataset,
+  ModData,
+  Entities,
+} from '~/models';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
 enum OpenSelect {
   None,
-  EnabledRecipes,
+  Mods,
+  DisabledRecipes,
   Belt,
   Fuel,
   Factory,
@@ -28,9 +36,14 @@ enum OpenSelect {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent {
+  @Input() data: Dataset;
+  @Input() base: Entities<ModData>;
+  @Input() mods: ModData[];
   @Input() settings: SettingsState;
-  @Input() data: DatasetState;
 
+  @Output() setBaseDataset = new EventEmitter<ModData>();
+  @Output() enableMod = new EventEmitter<string>();
+  @Output() disableMod = new EventEmitter<string>();
   @Output() setDisplayRate = new EventEmitter<DisplayRate>();
   @Output() setItemPrecision = new EventEmitter<number>();
   @Output() setBeltPrecision = new EventEmitter<number>();
@@ -62,6 +75,10 @@ export class SettingsComponent {
   Theme = Theme;
 
   initial = initialSettingsState;
+
+  get recipeDisabledCount() {
+    return Object.keys(this.settings.recipeDisabled).length;
+  }
 
   constructor() {}
 

@@ -10,16 +10,24 @@ import * as Products from '~/store/products';
 import * as Items from '~/store/items';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
-import { RouterService } from './router.service';
+import {
+  RouterService,
+  FIELDSEP,
+  ARRAYSEP,
+  EMPTY,
+  NULL,
+  TRUE,
+  FALSE,
+} from './router.service';
 
 const mockZipEmpty = 'eJwrsAUAAR8Arg==';
-const mockZipProducts = 'eJwrsC0uSU3N0U3OSC0usTKwMlQrtrVCBQDMkQog';
+const mockZipProducts = 'eJwrsC0uSU3N0U3OSC0usTKwMgQAOToF5A==';
 const mockZipAll =
-  'eJwrsC0uSU3N0U3OSC0usTKwMlTLRBGxKilKzCsuyC8q0U1KzSlRK0KVtbKyUCu2NTYzMLBCBQBhIhyh';
+  'eJwrsC0uSU3N0U3OSC0usTKwMlTLRBGxKilKzCsuyC8q0U1KzSlRK0KVtbKyUCu2tbIyNjMwsEIFAJtQHRU=';
 const mockZipExtra =
   'eJwrsM0sys/TTc5ILS6xMrAyVMtEFrAqKUrMKy7ILyrRTUrNKVErQpHMzU8pzUnVw0ZZWakV21qhA0O1EtsSoFYAroYoTw==';
 const mockZipLink =
-  'eJxtj+EKwjAMhN9m/yJtJyKBPUzXZq7QNaVpFd/eihMc+Ou4JNyXy9OD2VMCt5JUVKiHMEklivtEYy02SeZSYaZYh3JYWxHa5hjSDTbr1pAIRtzYt0hf0YNM40UpNHjugGMcCsfgYWkUcbYSHHCIkAs7Eump/wDmJJW7Lq0k6wj7tW+uhnuoT/hAT5KJ/G7w14DBay+l1bur6V/pF9njXM8=';
+  'eJxtj9EKwjAMRf9mbxltJyqBfYn40LWZK3RtaVrFv7fiBAc+XW4S7slN4yNGSwHMQlxQoOzcyIXIbxOJJevAKeYCE/nS5d1aM9M6eRdusGqzuEAw4Bpt9fQV2fEoennCyxWHoxCo8NBA+1jk6J2FuZLHSbMzEJ2HlKMh5pb+D6R6LrHpXHPQhrBd22qKu7vyhA+850RkN4O/BhSeWzkp3p1V+0q+AD5gXsE=';
 const mockProducts: Product[] = [
   {
     id: '0',
@@ -28,14 +36,18 @@ const mockProducts: Product[] = [
     rateType: RateType.Items,
   },
 ];
-const mockZipProduct = `${ItemId.SteelChest}:0:1`;
+const mockZipProduct = [ItemId.SteelChest, '0', '1'].join(FIELDSEP);
 const mockItemSettings: Items.ItemsState = {
   [ItemId.SteelChest]: { belt: ItemId.TransportBelt },
 };
 const mockFullItemSettings: Items.ItemsState = {
   [ItemId.SteelChest]: { ignore: true, belt: ItemId.TransportBelt },
 };
-const mockZipFullItemSettings = `${ItemId.SteelChest}:1:${ItemId.TransportBelt}`;
+const mockZipFullItemSettings = [
+  ItemId.SteelChest,
+  '1',
+  ItemId.TransportBelt,
+].join(FIELDSEP);
 const mockRecipeSettings: Recipes.RecipesState = {
   [RecipeId.SteelChest]: { beaconCount: 8 },
 };
@@ -47,12 +59,20 @@ const mockFullRecipeSettings: Recipes.RecipesState = {
     beaconCount: 1,
   },
 };
-const mockZipFullRecipeSettings = `${RecipeId.SteelChest}:${ItemId.AssemblingMachine3}:${ItemId.Module}:${ItemId.Module}:1`;
+const mockZipFullRecipeSettings = [
+  RecipeId.SteelChest,
+  ItemId.AssemblingMachine3,
+  ItemId.Module,
+  ItemId.Module,
+  '1',
+].join(FIELDSEP);
 const mockSettings: Settings.SettingsState = {
-  ...Settings.initialSettingsState,
+  ...Mocks.InitialSettingsState,
   ...{ displayRate: DisplayRate.PerHour },
 };
 const mockFullSettings: Settings.SettingsState = {
+  baseDatasetId: '0.17',
+  modDatasetIds: [],
   displayRate: DisplayRate.PerHour,
   itemPrecision: 2,
   beltPrecision: 4,
@@ -70,12 +90,50 @@ const mockFullSettings: Settings.SettingsState = {
   flowRate: 1200,
   expensive: true,
 };
-const mockZipFullSettings = `${DisplayRate.PerHour}:2:4:0:${mockFullSettings.belt}:${mockFullSettings.fuel}:${RecipeId.BasicOilProcessing}:${ItemId.AssemblingMachine2}.${ItemId.StoneFurnace}:${ItemId.ProductivityModule}.${ItemId.SpeedModule}:${mockFullSettings.beaconModule}:8:1:10:0:1200:1`;
+const mockZipFullSettings = [
+  '0.17',
+  EMPTY,
+  DisplayRate.PerHour,
+  '2',
+  '4',
+  '0',
+  mockFullSettings.belt,
+  mockFullSettings.fuel,
+  RecipeId.BasicOilProcessing,
+  [ItemId.AssemblingMachine2, ItemId.StoneFurnace].join(ARRAYSEP),
+  [ItemId.ProductivityModule, ItemId.SpeedModule].join(ARRAYSEP),
+  mockFullSettings.beaconModule,
+  '8',
+  '1',
+  '10',
+  '0',
+  '1200',
+  '1',
+].join(FIELDSEP);
 const mockNullSettings = {
   ...mockFullSettings,
   ...{ itemPrecision: null, beltPrecision: null, factoryPrecision: null },
 };
-const mockZipNullSettings = `${DisplayRate.PerHour}:n:n:n:${mockFullSettings.belt}:${mockFullSettings.fuel}:${RecipeId.BasicOilProcessing}:${ItemId.AssemblingMachine2}.${ItemId.StoneFurnace}:${ItemId.ProductivityModule}.${ItemId.SpeedModule}:${mockFullSettings.beaconModule}:8:1:10:0:1200:1`;
+const mockZipNullSettings = [
+  '0.17',
+  EMPTY,
+  DisplayRate.PerHour,
+  NULL,
+  NULL,
+  NULL,
+  mockFullSettings.belt,
+  mockFullSettings.fuel,
+  RecipeId.BasicOilProcessing,
+  [ItemId.AssemblingMachine2, ItemId.StoneFurnace].join(ARRAYSEP),
+  [ItemId.ProductivityModule, ItemId.SpeedModule].join(ARRAYSEP),
+  mockFullSettings.beaconModule,
+  '8',
+  '1',
+  '10',
+  '0',
+  '1200',
+  '1',
+].join(FIELDSEP);
 
 describe('RouterService', () => {
   let service: RouterService;
@@ -125,8 +183,8 @@ describe('RouterService', () => {
         mockProducts,
         {},
         {},
-        Settings.initialSettingsState,
-        Mocks.Data
+        Mocks.InitialSettingsState,
+        Mocks.Defaults
       );
       expect(router.navigateByUrl).toHaveBeenCalledWith(`/#${mockZipProducts}`);
     });
@@ -138,7 +196,7 @@ describe('RouterService', () => {
         mockItemSettings,
         mockRecipeSettings,
         mockSettings,
-        Mocks.Data
+        Mocks.Defaults
       );
       expect(router.navigateByUrl).toHaveBeenCalledWith(`/#${mockZipAll}`);
     });
@@ -152,9 +210,9 @@ describe('RouterService', () => {
         mockFullItemSettings,
         mockFullRecipeSettings,
         mockFullSettings,
-        Mocks.Data
+        Mocks.Defaults
       );
-      const href = service.stepHref(Mocks.Step1, Mocks.Data);
+      const href = service.stepHref(Mocks.Step1);
       expect(href).toEqual(`#${mockZipLink}`);
     });
   });
@@ -215,7 +273,7 @@ describe('RouterService', () => {
 
   describe('zipProducts', () => {
     it('should zip the products', () => {
-      const result = service.zipProducts(mockProducts, Mocks.Data);
+      const result = service.zipProducts(mockProducts);
       expect(result).toEqual([mockZipProduct]);
     });
   });
@@ -223,7 +281,7 @@ describe('RouterService', () => {
   describe('unzipProducts', () => {
     it('should unzip the products', () => {
       spyOn(store, 'dispatch');
-      service.unzipProducts([mockZipProduct], Mocks.Data);
+      service.unzipProducts([mockZipProduct]);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Products.LoadAction(mockProducts)
       );
@@ -232,20 +290,19 @@ describe('RouterService', () => {
 
   describe('zipItems', () => {
     it('should zip empty item settings', () => {
-      const result = service.zipItems({ [ItemId.SteelChest]: {} }, Mocks.Data);
+      const result = service.zipItems({ [ItemId.SteelChest]: {} });
       expect(result).toEqual([`${ItemId.SteelChest}::`]);
     });
 
     it('should zip full item settings', () => {
-      const result = service.zipItems(mockFullItemSettings, Mocks.Data);
+      const result = service.zipItems(mockFullItemSettings);
       expect(result).toEqual([mockZipFullItemSettings]);
     });
 
     it('should zip false ignore value', () => {
-      const result = service.zipItems(
-        { [ItemId.SteelChest]: { ignore: false } },
-        Mocks.Data
-      );
+      const result = service.zipItems({
+        [ItemId.SteelChest]: { ignore: false },
+      });
       expect(result).toEqual([`${ItemId.SteelChest}:0:`]);
     });
   });
@@ -253,7 +310,7 @@ describe('RouterService', () => {
   describe('unzipItems', () => {
     it('should unzip the empty item settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipItems([`${ItemId.SteelChest}::`], Mocks.Data);
+      service.unzipItems([`${ItemId.SteelChest}::`]);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Items.LoadAction({ [ItemId.SteelChest]: {} })
       );
@@ -261,7 +318,7 @@ describe('RouterService', () => {
 
     it('should unzip the full item settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipItems([mockZipFullItemSettings], Mocks.Data);
+      service.unzipItems([mockZipFullItemSettings]);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Items.LoadAction(mockFullItemSettings)
       );
@@ -269,7 +326,7 @@ describe('RouterService', () => {
 
     it('should unzip false ignore value', () => {
       spyOn(store, 'dispatch');
-      service.unzipItems([`${ItemId.SteelChest}:0:`], Mocks.Data);
+      service.unzipItems([`${ItemId.SteelChest}:0:`]);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Items.LoadAction({ [ItemId.SteelChest]: { ignore: false } })
       );
@@ -278,15 +335,12 @@ describe('RouterService', () => {
 
   describe('zipRecipes', () => {
     it('should zip empty recipe settings', () => {
-      const result = service.zipRecipes(
-        { [RecipeId.SteelChest]: {} },
-        Mocks.Data
-      );
+      const result = service.zipRecipes({ [RecipeId.SteelChest]: {} });
       expect(result).toEqual([`${RecipeId.SteelChest}::::`]);
     });
 
     it('should zip full recipe settings', () => {
-      const result = service.zipRecipes(mockFullRecipeSettings, Mocks.Data);
+      const result = service.zipRecipes(mockFullRecipeSettings);
       expect(result).toEqual([mockZipFullRecipeSettings]);
     });
   });
@@ -294,7 +348,7 @@ describe('RouterService', () => {
   describe('unzipRecipes', () => {
     it('should unzip the empty recipe settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipRecipes([`${RecipeId.SteelChest}::::`], Mocks.Data);
+      service.unzipRecipes([`${RecipeId.SteelChest}::::`]);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Recipes.LoadAction({ [RecipeId.SteelChest]: {} })
       );
@@ -302,7 +356,7 @@ describe('RouterService', () => {
 
     it('should unzip the full recipe settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipRecipes([mockZipFullRecipeSettings], Mocks.Data);
+      service.unzipRecipes([mockZipFullRecipeSettings]);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Recipes.LoadAction(mockFullRecipeSettings)
       );
@@ -311,26 +365,26 @@ describe('RouterService', () => {
 
   describe('zipSettings', () => {
     it('should zip full settings', () => {
-      const result = service.zipSettings(mockFullSettings, Mocks.Data);
+      const result = service.zipSettings(mockFullSettings, Mocks.Defaults);
       expect(result).toEqual(mockZipFullSettings);
     });
 
     it('should zip settings with null values', () => {
-      const result = service.zipSettings(mockNullSettings, Mocks.Data);
+      const result = service.zipSettings(mockNullSettings, Mocks.Defaults);
       expect(result).toEqual(mockZipNullSettings);
     });
 
     it('should zip default settings', () => {
-      const test = { ...Settings.initialSettingsState, ...{ test: true } };
-      const result = service.zipSettings(test, Mocks.Data);
-      expect(result).toEqual(':::::::::::::::');
+      const test = { ...Mocks.InitialSettingsState, ...{ test: true } };
+      const result = service.zipSettings(test, Mocks.Defaults);
+      expect(result).toEqual('');
     });
   });
 
   describe('unzipSettings', () => {
     it('should unzip the empty settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipSettings(':::::::::::::::', Mocks.Data);
+      service.unzipSettings(':::::::::::::::::');
       expect(store.dispatch).toHaveBeenCalledWith(
         new Settings.LoadAction({} as any)
       );
@@ -338,7 +392,7 @@ describe('RouterService', () => {
 
     it('should unzip the null settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipSettings(mockZipNullSettings, Mocks.Data);
+      service.unzipSettings(mockZipNullSettings);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Settings.LoadAction(mockNullSettings)
       );
@@ -346,10 +400,194 @@ describe('RouterService', () => {
 
     it('should unzip the full settings', () => {
       spyOn(store, 'dispatch');
-      service.unzipSettings(mockZipFullSettings, Mocks.Data);
+      service.unzipSettings(mockZipFullSettings);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Settings.LoadAction(mockFullSettings)
       );
+    });
+  });
+
+  describe('zipTruthy', () => {
+    it('should handle falsy', () => {
+      expect(service.zipTruthy(null)).toEqual('');
+    });
+
+    it('should handle truthy', () => {
+      expect(service.zipTruthy('a')).toEqual('a');
+    });
+  });
+
+  describe('zipTruthyNum', () => {
+    it('should handle falsy', () => {
+      expect(service.zipTruthyNum(null)).toEqual('');
+    });
+
+    it('should handle truthy', () => {
+      expect(service.zipTruthyNum(1)).toEqual('1');
+    });
+  });
+
+  describe('zipTruthyBool', () => {
+    it('should handle falsy', () => {
+      expect(service.zipTruthyBool(null)).toEqual('');
+    });
+
+    it('should handle false', () => {
+      expect(service.zipTruthyBool(false)).toEqual(FALSE);
+    });
+
+    it('should handle true', () => {
+      expect(service.zipTruthyBool(true)).toEqual(TRUE);
+    });
+  });
+
+  describe('zipTruthyArray', () => {
+    it('should handle falsy', () => {
+      expect(service.zipTruthyArray(null)).toEqual('');
+    });
+
+    it('should handle empty', () => {
+      expect(service.zipTruthyArray([])).toEqual(EMPTY);
+    });
+
+    it('should handle truthy', () => {
+      expect(service.zipTruthyArray(['a'])).toEqual('a');
+    });
+  });
+
+  describe('zipDiff', () => {
+    it('should handle default', () => {
+      expect(service.zipDiff('a', 'a')).toEqual('');
+    });
+
+    it('should handle falsy', () => {
+      expect(service.zipDiff(null, 'a')).toEqual(NULL);
+    });
+
+    it('should handle truthy', () => {
+      expect(service.zipDiff('a', 'b')).toEqual('a');
+    });
+  });
+
+  describe('zipDiffNum', () => {
+    it('should handle default', () => {
+      expect(service.zipDiffNum(0, 0)).toEqual('');
+    });
+
+    it('should handle falsy', () => {
+      expect(service.zipDiffNum(null, 0)).toEqual(NULL);
+    });
+
+    it('should handle truthy', () => {
+      expect(service.zipDiffNum(0, 1)).toEqual('0');
+    });
+  });
+
+  describe('zipDiffBool', () => {
+    it('should handle default', () => {
+      expect(service.zipDiffBool(false, false)).toEqual('');
+    });
+
+    it('should handle falsy', () => {
+      expect(service.zipDiffBool(null, false)).toEqual(NULL);
+    });
+
+    it('should handle truthy', () => {
+      expect(service.zipDiffBool(false, true)).toEqual(FALSE);
+    });
+  });
+
+  describe('zipDiffArray', () => {
+    it('should handle default', () => {
+      expect(service.zipDiffArray(['a', 'b'], ['b', 'a'])).toEqual('');
+    });
+
+    it('should handle empty', () => {
+      expect(service.zipDiffArray([], ['a'])).toEqual(EMPTY);
+    });
+
+    it('should handle truthy', () => {
+      expect(service.zipDiffArray(['b', 'a'], ['a', 'c'])).toEqual('a.b');
+    });
+  });
+
+  describe('zipDiffRank', () => {
+    it('should handle default', () => {
+      expect(service.zipDiffRank(['a', 'b'], ['a', 'b'])).toEqual('');
+    });
+
+    it('should honor order', () => {
+      expect(service.zipDiffRank(['a', 'b'], ['b', 'a'])).toEqual('a.b');
+    });
+
+    it('should handle empty', () => {
+      expect(service.zipDiffRank([], ['a'])).toEqual(EMPTY);
+    });
+
+    it('should handle truthy', () => {
+      expect(service.zipDiffRank(['a', 'b'], ['a', 'c'])).toEqual('a.b');
+    });
+  });
+
+  describe('parseString', () => {
+    it('should parse null', () => {
+      expect(service.parseString(NULL)).toBeNull();
+    });
+
+    it('should parse value', () => {
+      expect(service.parseString('a')).toEqual('a');
+    });
+  });
+
+  describe('parseBool', () => {
+    it('should parse null', () => {
+      expect(service.parseBool(NULL)).toBeNull();
+    });
+
+    it('should parse false', () => {
+      expect(service.parseBool(FALSE)).toBeFalse();
+    });
+
+    it('should parse true', () => {
+      expect(service.parseBool(TRUE)).toBeTrue();
+    });
+  });
+
+  describe('parseNumber', () => {
+    it('should parse null', () => {
+      expect(service.parseNumber(NULL)).toBeNull();
+    });
+
+    it('should parse value', () => {
+      expect(service.parseNumber('1')).toEqual(1);
+    });
+  });
+
+  describe('parseArray', () => {
+    it('should parse null', () => {
+      expect(service.parseArray(NULL)).toBeNull();
+    });
+
+    it('should parse empty', () => {
+      expect(service.parseArray(EMPTY)).toEqual([]);
+    });
+
+    it('should parse value', () => {
+      expect(service.parseArray('a.b')).toEqual(['a', 'b']);
+    });
+  });
+
+  describe('parseBoolEntities', () => {
+    it('should parse null', () => {
+      expect(service.parseBoolEntities(NULL)).toBeNull();
+    });
+
+    it('should parse empty', () => {
+      expect(service.parseBoolEntities(EMPTY)).toEqual({});
+    });
+
+    it('should parse value', () => {
+      expect(service.parseBoolEntities('a.b')).toEqual({ a: true, b: true });
     });
   });
 });

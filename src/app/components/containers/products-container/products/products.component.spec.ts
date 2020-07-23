@@ -2,10 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
-import { Mocks, TestUtility, ItemId } from 'src/tests';
+import { Mocks, TestUtility, CategoryId, ItemId } from 'src/tests';
 import { IconComponent, PickerComponent } from '~/components';
-import { Product, CategoryId, RateType } from '~/models';
-import { DatasetState } from '~/store/dataset';
+import { Product, RateType, Dataset } from '~/models';
 import { ProductsComponent } from './products.component';
 
 @Component({
@@ -26,7 +25,7 @@ import { ProductsComponent } from './products.component';
 })
 class TestProductsComponent {
   @ViewChild(ProductsComponent) child: ProductsComponent;
-  data: DatasetState = Mocks.Data;
+  data: Dataset = Mocks.Data;
   products: Product[] = Mocks.Products;
   add() {}
   remove(data) {}
@@ -60,6 +59,17 @@ describe('ProductsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should set the default category id', () => {
+    expect(component.child.categoryId).toEqual(component.data.categoryIds[0]);
+  });
+
+  it('should not reset the category id', () => {
+    const value = 'test';
+    component.child.categoryId = value;
+    component.child.data = null;
+    expect(component.child.categoryId).toEqual(value);
   });
 
   it('should open edit on a product', () => {

@@ -8,12 +8,11 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { Step, DisplayRate, IdPayload } from '~/models';
+import { Step, DisplayRate, IdPayload, Dataset } from '~/models';
 import { State } from '~/store';
-import * as Dataset from '~/store/dataset';
 import * as Items from '~/store/items';
 import * as Recipes from '~/store/recipes';
-import * as Products from '~/store/products';
+import { getSteps } from '~/store/products';
 import * as Settings from '~/store/settings';
 import { ListComponent } from './list/list.component';
 
@@ -28,7 +27,7 @@ export class ListContainerComponent implements OnInit {
 
   @Input() steps: Step[];
 
-  data$: Observable<Dataset.DatasetState>;
+  data$: Observable<Dataset>;
   itemSettings$: Observable<Items.ItemsState>;
   recipeSettings$: Observable<Recipes.RecipesState>;
   recipeRaw$: Observable<Recipes.RecipesState>;
@@ -47,9 +46,9 @@ export class ListContainerComponent implements OnInit {
 
   ngOnInit() {
     if (!this.steps) {
-      this.steps$ = this.store.select(Products.getSteps);
+      this.steps$ = this.store.select(getSteps);
     }
-    this.data$ = this.store.select(Dataset.getDatasetState);
+    this.data$ = this.store.select(Settings.getDataset);
     this.itemSettings$ = this.store.select(Items.getItemSettings);
     this.recipeSettings$ = this.store.select(Recipes.getRecipeSettings);
     this.recipeRaw$ = this.store.select(Recipes.recipesState);

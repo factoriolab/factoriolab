@@ -1,5 +1,6 @@
 import {
   Step,
+  Dataset,
   DisplayRate,
   Entities,
   Node,
@@ -8,7 +9,6 @@ import {
   ROCKET_PART_ID,
   SPACE_SCIENCE_ID,
 } from '~/models';
-import { RationalDataset } from '~/store/dataset';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
 
@@ -16,23 +16,27 @@ export class RateUtility {
   static LAUNCH_TIME = new Rational(BigInt(2420), BigInt(60));
 
   static addStepsFor(
-    parentId: string,
     itemId: string,
     rate: Rational,
     steps: Step[],
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
     fuel: string,
-    data: RationalDataset
+    data: Dataset,
+    depth: number = 0,
+    parentId: string = null
   ) {
     const recipe = data.recipeR[data.itemRecipeIds[itemId]];
 
     // Find existing step for this item
     let step = steps.find((s) => s.itemId === itemId);
 
-    if (!step) {
+    if (step) {
+      step.depth = Math.max(step.depth, depth);
+    } else {
       // No existing step found, create a new one
       step = {
+        depth,
         itemId,
         recipeId: recipe ? recipe.id : null,
         items: Rational.zero,
@@ -85,17 +89,19 @@ export class RateUtility {
         step.items.nonzero() &&
         !itemSettings[step.itemId].ignore
       ) {
+        const inDepth = depth + 1;
         for (const ingredient of Object.keys(recipe.in)) {
           const ingredientRate = rate.mul(recipe.in[ingredient]).div(out);
           RateUtility.addStepsFor(
-            itemId,
             ingredient,
             ingredientRate,
             steps,
             itemSettings,
             recipeSettings,
             fuel,
-            data
+            data,
+            inDepth,
+            itemId,
           );
         }
       }
@@ -109,7 +115,7 @@ export class RateUtility {
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
     fuel: string,
-    data: RationalDataset
+    data: Dataset
   ) {
     const recipe = data.recipeR[data.itemRecipeIds[itemId]];
 

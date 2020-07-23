@@ -5,10 +5,11 @@ import {
   LocalStorageKey,
   Entities,
 } from '~/models';
-import { DatasetActionType, LoadDatasetAction } from '../dataset';
 import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
+  baseDatasetId: string;
+  modDatasetIds: string[];
   displayRate: DisplayRate;
   itemPrecision: number;
   beltPrecision: number;
@@ -29,6 +30,8 @@ export interface SettingsState {
 }
 
 export const initialSettingsState: SettingsState = {
+  baseDatasetId: '0.18',
+  modDatasetIds: ['research'],
   displayRate: DisplayRate.PerMinute,
   itemPrecision: 3,
   beltPrecision: 1,
@@ -50,28 +53,45 @@ export const initialSettingsState: SettingsState = {
 
 export function settingsReducer(
   state: SettingsState = initialSettingsState,
-  action: SettingsAction | LoadDatasetAction
+  action: SettingsAction
 ): SettingsState {
   switch (action.type) {
-    case DatasetActionType.LOAD: {
-      const defaults = action.payload.defaults;
+    case SettingsActionType.LOAD: {
+      return { ...state, ...action.payload };
+    }
+    case SettingsActionType.SET_BASE: {
       return {
         ...state,
         ...{
-          belt: defaults.belt,
-          fuel: defaults.fuel,
-          recipeDisabled: defaults.disabledRecipes.reduce(
+          baseDatasetId: action.payload.id,
+          // Apply defaults for new base dataset
+          belt: action.payload.defaults.belt,
+          fuel: action.payload.defaults.fuel,
+          recipeDisabled: action.payload.defaults.disabledRecipes.reduce(
             (e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }),
             {}
           ),
-          factoryRank: defaults.factoryRank,
-          moduleRank: defaults.moduleRank,
-          beaconModule: defaults.beaconModule,
+          factoryRank: [...action.payload.defaults.factoryRank],
+          moduleRank: [...action.payload.defaults.moduleRank],
+          beaconModule: action.payload.defaults.beaconModule,
         },
       };
     }
-    case SettingsActionType.LOAD: {
-      return { ...state, ...action.payload };
+    case SettingsActionType.ENABLE_MOD: {
+      return {
+        ...state,
+        ...{ modDatasetIds: [...state.modDatasetIds, action.payload] },
+      };
+    }
+    case SettingsActionType.DISABLE_MOD: {
+      return {
+        ...state,
+        ...{
+          modDatasetIds: state.modDatasetIds.filter(
+            (i) => i !== action.payload
+          ),
+        },
+      };
     }
     case SettingsActionType.SET_DISPLAY_RATE: {
       return { ...state, ...{ displayRate: action.payload } };

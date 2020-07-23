@@ -6,8 +6,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { DatasetState } from '~/store/dataset';
-import { Product, RateType, IdPayload } from '~/models';
+import { Product, RateType, IdPayload, Dataset } from '~/models';
 
 @Component({
   selector: 'lab-products',
@@ -16,7 +15,16 @@ import { Product, RateType, IdPayload } from '~/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsComponent {
-  @Input() data: DatasetState;
+  _data: Dataset;
+  @Input() set data(value: Dataset) {
+    this._data = value;
+    if (!this.categoryId) {
+      this.categoryId = value.categoryIds[0];
+    }
+  }
+  get data() {
+    return this._data;
+  }
   @Input() products: Product[];
 
   @Output() add = new EventEmitter<string>();

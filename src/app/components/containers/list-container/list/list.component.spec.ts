@@ -5,10 +5,9 @@ import { StoreModule } from '@ngrx/store';
 
 import { Mocks, TestUtility, ItemId } from 'src/tests';
 import { IconComponent, SelectComponent } from '~/components';
-import { Step, DisplayRate } from '~/models';
+import { Step, DisplayRate, Dataset } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers } from '~/store';
-import { DatasetState } from '~/store/dataset';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
 import { ListComponent } from './list.component';
@@ -50,7 +49,7 @@ import { ListComponent } from './list.component';
 })
 class TestListComponent {
   @ViewChild(ListComponent) child: ListComponent;
-  data: DatasetState = Mocks.Data;
+  data: Dataset = Mocks.Data;
   itemSettings: ItemsState = Mocks.ItemSettingsInitial;
   recipeSettings: RecipesState = Mocks.RecipeSettingsInitial;
   recipeRaw: RecipesState = Mocks.RecipeSettingsEntities;

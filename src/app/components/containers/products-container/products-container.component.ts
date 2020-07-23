@@ -7,10 +7,10 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
+import { Product, RateType, IdPayload, Dataset } from '~/models';
 import { State } from '~/store';
-import * as Dataset from '~/store/dataset';
 import * as Products from '~/store/products';
-import { Product, RateType, IdPayload } from '~/models';
+import { getDataset } from '~/store/settings';
 import { ProductsComponent } from './products/products.component';
 
 @Component({
@@ -22,13 +22,13 @@ import { ProductsComponent } from './products/products.component';
 export class ProductsContainerComponent implements OnInit {
   @ViewChild(ProductsComponent) child: ProductsComponent;
 
-  data$: Observable<Dataset.DatasetState>;
+  data$: Observable<Dataset>;
   products$: Observable<Product[]>;
 
   constructor(private store: Store<State>) {}
 
   ngOnInit() {
-    this.data$ = this.store.select(Dataset.getDatasetState);
+    this.data$ = this.store.select(getDataset);
     this.products$ = this.store.select(Products.getProducts);
   }
 

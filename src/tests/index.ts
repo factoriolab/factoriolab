@@ -1,5 +1,6 @@
 import * as Mocks from './mocks';
 export { Mocks };
+export * from './category-id';
 export * from './element-id';
 export * from './item-id';
 export * from './recipe-id';

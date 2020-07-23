@@ -1,10 +1,14 @@
 import { Action } from '@ngrx/store';
 
-import { DisplayRate, ResearchSpeed, Theme } from '~/models';
+import { DisplayRate, ResearchSpeed, Theme, ModData } from '~/models';
 import { SettingsState } from './settings.reducer';
 
 export const enum SettingsActionType {
   LOAD = '[Settings Router] Load',
+  SET_BASE = '[Settings Page] Set Base',
+  ENABLE_MOD = '[Settings Page] Enable Mod',
+  DISABLE_MOD = '[Settings Page] Disable Mod',
+  SET_DEFAULTS = '[Settings Page] Set Defaults',
   SET_DISPLAY_RATE = '[Settings Page] Set Display Rate',
   SET_ITEM_PRECISION = '[Settings Page] Set Item Precision',
   SET_BELT_PRECISION = '[Settings Page] Set Belt Precision',
@@ -30,6 +34,21 @@ export const enum SettingsActionType {
 export class LoadAction implements Action {
   readonly type = SettingsActionType.LOAD;
   constructor(public payload: SettingsState) {}
+}
+
+export class SetBaseAction implements Action {
+  readonly type = SettingsActionType.SET_BASE;
+  constructor(public payload: ModData) {}
+}
+
+export class EnableModAction implements Action {
+  readonly type = SettingsActionType.ENABLE_MOD;
+  constructor(public payload: string) {}
+}
+
+export class DisableModAction implements Action {
+  readonly type = SettingsActionType.DISABLE_MOD;
+  constructor(public payload: string) {}
 }
 
 export class SetDisplayRateAction implements Action {
@@ -134,6 +153,9 @@ export class SetTheme implements Action {
 
 export type SettingsAction =
   | LoadAction
+  | SetBaseAction
+  | EnableModAction
+  | DisableModAction
   | SetDisplayRateAction
   | SetItemPrecisionAction
   | SetBeltPrecisionAction

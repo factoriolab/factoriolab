@@ -1,6 +1,6 @@
 import { Mocks, ItemId } from 'src/tests';
 import { DisplayRate, RateType, Rational, RationalProduct } from '~/models';
-import { RateUtility } from '~/utilities';
+import { RateUtility, MatrixUtility } from '~/utilities';
 import { initialSettingsState } from '../settings';
 import * as Selectors from './products.selectors';
 
@@ -85,7 +85,7 @@ describe('Products Selectors', () => {
       const result = Selectors.getNormalizedRatesByWagons.projector(
         Mocks.ProductEntities,
         DisplayRate.PerHour,
-        Mocks.RationalData
+        Mocks.Data
       );
       expect(result[Mocks.Product3.id].nonzero()).toBeTrue();
     });
@@ -96,7 +96,7 @@ describe('Products Selectors', () => {
           [RateType.Wagons]: [Mocks.RationalProducts[0]],
         },
         DisplayRate.PerHour,
-        Mocks.RationalData
+        Mocks.Data
       );
       expect(result[Mocks.Product1.id].nonzero()).toBeTrue();
     });
@@ -114,7 +114,7 @@ describe('Products Selectors', () => {
           ...Mocks.ProductEntities,
           ...{ [Mocks.Product4.id]: [{ itemId: 'test' }] },
         },
-        Mocks.RationalData
+        Mocks.Data
       );
       expect(Object.keys(result).length).toEqual(0);
     });
@@ -122,7 +122,7 @@ describe('Products Selectors', () => {
     it('should return the rate entities', () => {
       const result = Selectors.getNormalizedRatesByFactories.projector(
         Mocks.ProductEntities,
-        Mocks.RationalData
+        Mocks.Data
       );
       expect(result[Mocks.Product4.id].nonzero()).toBeTrue();
     });
@@ -207,6 +207,49 @@ describe('Products Selectors', () => {
     });
   });
 
+  describe('getNormalizedStepsWithMatrices', () => {
+    it('should handle empty/null values', () => {
+      const result = Selectors.getNormalizedStepsWithMatrices.projector(
+        [],
+        {},
+        {},
+        {},
+        {},
+        null
+      );
+      expect(Object.keys(result).length).toEqual(0);
+    });
+
+    it('should calculate rates using utility method', () => {
+      spyOn(MatrixUtility, 'solveMatricesFor').and.returnValue([]);
+      Selectors.getNormalizedStepsWithMatrices.projector(
+        [Mocks.Step1],
+        {},
+        {},
+        {},
+        {},
+        null
+      );
+      expect(MatrixUtility.solveMatricesFor).toHaveBeenCalled();
+    });
+
+    it('should sort steps by depth', () => {
+      spyOn(MatrixUtility, 'solveMatricesFor').and.returnValue([
+        Mocks.Step2,
+        Mocks.Step1,
+      ]);
+      const result = Selectors.getNormalizedStepsWithMatrices.projector(
+        [],
+        {},
+        {},
+        {},
+        {},
+        null
+      );
+      expect(result).toEqual([Mocks.Step1, Mocks.Step2]);
+    });
+  });
+
   describe('getNormalizedStepsWithBelts', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getNormalizedStepsWithBelts.projector([], {});
@@ -256,18 +299,19 @@ describe('Products Selectors', () => {
       const recipes = Mocks.RecipeSettingsEntities;
       const settings = initialSettingsState;
       const data = Mocks.Data;
+      const defaults = Mocks.Defaults;
       const result = Selectors.getZipState.projector(
         products,
         items,
         recipes,
         settings,
-        data
+        defaults
       );
       expect(result.products).toBe(products);
       expect(result.items).toBe(items);
       expect(result.recipes).toBe(recipes);
       expect(result.settings).toBe(settings);
-      expect(result.data).toBe(data);
+      expect(result.defaults).toBe(defaults);
     });
   });
 });

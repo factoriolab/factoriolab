@@ -9,8 +9,7 @@ import {
   HostBinding,
 } from '@angular/core';
 
-import { IdType, DisplayRate } from '~/models';
-import { DatasetState } from '~/store/dataset';
+import { IdType, DisplayRate, Dataset } from '~/models';
 
 @Component({
   selector: 'lab-select',
@@ -19,7 +18,7 @@ import { DatasetState } from '~/store/dataset';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectComponent {
-  @Input() data: DatasetState;
+  @Input() data: Dataset;
   @Input() selectedId: string;
   @Input() options: string[];
   @Input() selectType = IdType.Item;
