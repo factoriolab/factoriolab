@@ -722,17 +722,17 @@
       "size": 64
     },
     {
-      "id": "science-pack-1",
+      "id": "automation-science-pack",
       "position": "-768px -512px",
       "size": 64
     },
     {
-      "id": "science-pack-2",
+      "id": "logistic-science-pack",
       "position": "-832px -512px",
       "size": 64
     },
     {
-      "id": "science-pack-3",
+      "id": "chemical-science-pack",
       "position": "-896px -512px",
       "size": 64
     },
@@ -747,7 +747,7 @@
       "size": 64
     },
     {
-      "id": "high-tech-science-pack",
+      "id": "utility-science-pack",
       "position": "-64px -576px",
       "size": 64
     },
@@ -2328,21 +2328,21 @@
     },
     {
       "category": "intermediate-products",
-      "id": "science-pack-1",
+      "id": "automation-science-pack",
       "name": "Science pack 1",
       "row": 7,
       "stack": 200
     },
     {
       "category": "intermediate-products",
-      "id": "science-pack-2",
+      "id": "logistic-science-pack",
       "name": "Science pack 2",
       "row": 7,
       "stack": 200
     },
     {
       "category": "intermediate-products",
-      "id": "science-pack-3",
+      "id": "chemical-science-pack",
       "name": "Science pack 3",
       "row": 7,
       "stack": 200
@@ -2363,7 +2363,7 @@
     },
     {
       "category": "intermediate-products",
-      "id": "high-tech-science-pack",
+      "id": "utility-science-pack",
       "name": "High tech science pack",
       "row": 7,
       "stack": 200
@@ -4730,7 +4730,7 @@
       "time": 50
     },
     {
-      "id": "science-pack-1",
+      "id": "automation-science-pack",
       "in": {
         "copper-plate": 1,
         "iron-gear-wheel": 1
@@ -4743,7 +4743,7 @@
       "time": 5
     },
     {
-      "id": "science-pack-2",
+      "id": "logistic-science-pack",
       "in": {
         "inserter": 1,
         "transport-belt": 1
@@ -4756,7 +4756,7 @@
       "time": 6
     },
     {
-      "id": "science-pack-3",
+      "id": "chemical-science-pack",
       "in": {
         "advanced-circuit": 1,
         "electric-mining-drill": 1,
@@ -4803,7 +4803,7 @@
       "time": 14
     },
     {
-      "id": "high-tech-science-pack",
+      "id": "utility-science-pack",
       "in": {
         "battery": 1,
         "copper-cable": 30,
@@ -4811,7 +4811,7 @@
         "speed-module": 1
       },
       "out": {
-        "high-tech-science-pack": 2
+        "utility-science-pack": 2
       },
       "producers": [
         "assembling-machine-1",
@@ -5682,12 +5682,12 @@
       "rocket-fuel",
       "rocket-control-unit",
       "rocket-part",
-      "science-pack-1",
-      "science-pack-2",
-      "science-pack-3",
+      "automation-science-pack",
+      "logistic-science-pack",
+      "chemical-science-pack",
       "military-science-pack",
       "production-science-pack",
-      "high-tech-science-pack"
+      "utility-science-pack"
     ]
   },
   "defaults": {
