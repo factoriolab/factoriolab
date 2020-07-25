@@ -36,7 +36,7 @@ describe('IconComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [IconComponent],
+      declarations: [IconComponent, TestIconComponent],
     })
       .compileComponents()
       .then(() => {
@@ -48,5 +48,19 @@ describe('IconComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should handle mouseenter', () => {
+    fixture.detectChanges();
+    component.child.hover = false;
+    component.child.mouseenter();
+    expect(component.child.hover).toBeTrue();
+  });
+
+  it('should handle mouseleave', () => {
+    fixture.detectChanges();
+    component.child.hover = true;
+    component.child.mouseleave();
+    expect(component.child.hover).toBeFalse();
   });
 });
