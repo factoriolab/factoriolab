@@ -369,7 +369,7 @@
         >
           <ng-container *ngIf="findStep(input.key) as inStep">
             <tr
-              *ngIf="inStep.parents && inStep.parents[step.itemId]"
+              *ngIf="inStep.parents && inStep.parents[step.recipeId]"
               class="details"
               [class.first]="isFirst"
               [class.last]="isLast"
@@ -380,7 +380,7 @@
                   <div *ngIf="inStep.items" class="monospace">
                     {{
                       rate(
-                        inStep.items.mul(inStep.parents[step.itemId]),
+                        inStep.items.mul(inStep.parents[step.recipeId]),
                         itemPrecision
                       )
                     }}
@@ -412,7 +412,7 @@
                     <div class="monospace">
                       {{
                         rate(
-                          inStep.belts.mul(inStep.parents[step.itemId]),
+                          inStep.belts.mul(inStep.parents[step.recipeId]),
                           beltPrecision
                         )
                       }}
@@ -442,7 +442,7 @@
                     <div *ngIf="inStep.factories" class="monospace">
                       {{
                         rate(
-                          inStep.factories.mul(inStep.parents[step.itemId]),
+                          inStep.factories.mul(inStep.parents[step.recipeId]),
                           factoryPrecision
                         )
                       }}
@@ -471,7 +471,7 @@
                   <div class="monospace">
                     {{
                       rate(
-                        inStep.parents[step.itemId].mul(Rational.hundred),
+                        inStep.parents[step.recipeId].mul(Rational.hundred),
                         0
                       )
                     }}%
@@ -479,8 +479,8 @@
                   <i class="material-icons">arrow_forward</i>
                   <lab-icon
                     class="clickable-size"
-                    [iconId]="step.itemId"
-                    [tooltip]="data.itemEntities[step.itemId]?.name"
+                    [iconId]="step.recipeId"
+                    [tooltip]="data.recipeEntities[step.recipeId]?.name"
                     [recipe]="data.recipeEntities[step.recipeId]"
                     [data]="data"
                   ></lab-icon>

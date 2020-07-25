@@ -114,6 +114,7 @@ export class MatrixSolver {
     this.parseSolutionOutputs();
     this.parseSolutionSteps();
     this.parseSolutionInputs();
+    this.parseSolutionParents();
   }
 
   parseRecipes() {
@@ -224,9 +225,8 @@ export class MatrixSolver {
     for (const i of this.outputs) {
       const surplusVal = this.surplusVar[i].value;
       let itemOutput = Rational.zero;
-      for (const r of Object.keys(this.recipeVar)) {
+      for (const r of this.usedRecipeIds) {
         if (this.data.recipeR[r].out[i]) {
-          const test = this.data.recipeR[r].out[i];
           itemOutput = itemOutput.add(
             this.data.recipeR[r].out[i].mul(this.recipeVar[r].value)
           );
@@ -299,6 +299,20 @@ export class MatrixSolver {
         this.data,
         this.depth + 2
       );
+    }
+  }
+
+  parseSolutionParents() {
+    for (const r of this.usedRecipeIds) {
+      const recipe = this.data.recipeR[r];
+      if (recipe.in) {
+        const factories = this.recipeVar[r].value;
+        for (const i of Object.keys(recipe.in)) {
+          const step = this.steps.find((s) => s.itemId === i);
+          const value = recipe.in[i].mul(factories);
+          RateUtility.addParentValue(step, r, value);
+        }
+      }
     }
   }
 

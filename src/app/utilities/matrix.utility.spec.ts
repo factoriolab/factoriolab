@@ -304,6 +304,24 @@ describe('MatrixSolver', () => {
     });
   });
 
+  describe('parseSolutionParents', () => {
+    it('should handle recipes with no inputs', () => {
+      spyOn(RateUtility, 'addParentValue');
+      matrix.usedRecipeIds = [RecipeId.IronOre];
+      matrix.parseSolutionParents();
+      expect(RateUtility.addParentValue).not.toHaveBeenCalled();
+    });
+
+    it('should add parent values to steps', () => {
+      spyOn(RateUtility, 'addParentValue');
+      matrix.usedRecipeIds = [RecipeId.CopperCable];
+      matrix.recipeVar[RecipeId.CopperCable] = { value: Rational.one } as any;
+      matrix.steps = [{ itemId: ItemId.CopperPlate }] as any;
+      matrix.parseSolutionParents();
+      expect(RateUtility.addParentValue).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('calculateRecipes', () => {
     beforeEach(() => {
       matrix.steps.push({
