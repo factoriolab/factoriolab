@@ -3,24 +3,47 @@
   "name": "Infinite Research",
   "sprite": "data/Research/icons.png",
   "categories": [{ "id": "research", "name": "Infinite Research" }],
+  "icons": [
+    { "id": "artillery-shell-range", "size": 64, "position": "-0px -0px" },
+    {
+      "id": "artillery-shell-shooting-speed",
+      "size": 64,
+      "position": "-64px -0px"
+    },
+    { "id": "energy-weapons-damage", "size": 64, "position": "-128px -0px" },
+    { "id": "follower-robot-count", "size": 64, "position": "-192px -0px" },
+    { "id": "mining-productivity", "size": 64, "position": "-256px -0px" },
+    {
+      "id": "physical-projectile-damage",
+      "size": 64,
+      "position": "-320px -0px"
+    },
+    { "id": "refined-flammables", "size": 64, "position": "-384px -0px" },
+    { "id": "research", "size": 64, "position": "-448px -0px" },
+    { "id": "stronger-explosives", "size": 64, "position": "-512px -0px" },
+    { "id": "worker-robot-speed", "size": 64, "position": "-576px -0px" }
+  ],
   "items": [
     {
       "id": "mining-productivity",
       "name": "Mining Productivity",
       "category": "research",
-      "row": 1
+      "row": 1,
+      "stack": 200
     },
     {
       "id": "worker-robot-speed",
       "name": "Worker Robot Speed",
       "category": "research",
-      "row": 1
+      "row": 1,
+      "stack": 200
     },
     {
       "id": "follower-robot-count",
       "name": "Follower Robot Count",
       "category": "research",
-      "row": 1
+      "row": 1,
+      "stack": 200
     },
     {
       "id": "energy-weapons-damage",
@@ -32,31 +55,36 @@
       "id": "physical-projectile-damage",
       "name": "Physical Projectile Damage",
       "category": "research",
-      "row": 2
+      "row": 2,
+      "stack": 200
     },
     {
       "id": "refined-flammables",
       "name": "Refined Flammables",
       "category": "research",
-      "row": 2
+      "row": 2,
+      "stack": 200
     },
     {
       "id": "artillery-shell-range",
       "name": "Artillery Shell Range",
       "category": "research",
-      "row": 3
+      "row": 3,
+      "stack": 200
     },
     {
       "id": "artillery-shell-shooting-speed",
       "name": "Artillery Shell Shooting Speed",
       "category": "research",
-      "row": 3
+      "row": 3,
+      "stack": 200
     },
     {
       "id": "stronger-explosives",
       "name": "Stronger Explosives",
       "category": "research",
-      "row": 3
+      "row": 3,
+      "stack": 200
     }
   ],
   "recipes": [
@@ -178,26 +206,6 @@
       },
       "producers": ["lab"]
     }
-  ],
-  "icons": [
-    { "id": "artillery-shell-range", "size": 64, "position": "-0px -0px" },
-    {
-      "id": "artillery-shell-shooting-speed",
-      "size": 64,
-      "position": "-64px -0px"
-    },
-    { "id": "energy-weapons-damage", "size": 64, "position": "-128px -0px" },
-    { "id": "follower-robot-count", "size": 64, "position": "-192px -0px" },
-    { "id": "mining-productivity", "size": 64, "position": "-256px -0px" },
-    {
-      "id": "physical-projectile-damage",
-      "size": 64,
-      "position": "-320px -0px"
-    },
-    { "id": "refined-flammables", "size": 64, "position": "-384px -0px" },
-    { "id": "research", "size": 64, "position": "-448px -0px" },
-    { "id": "stronger-explosives", "size": 64, "position": "-512px -0px" },
-    { "id": "worker-robot-speed", "size": 64, "position": "-576px -0px" }
   ],
   "limitations": {
     "productivity-module": [

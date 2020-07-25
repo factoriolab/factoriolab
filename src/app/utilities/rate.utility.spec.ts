@@ -162,6 +162,29 @@ describe('RateUtility', () => {
     });
   });
 
+  describe('addParentValue', () => {
+    it('should handle null parent', () => {
+      const step = { ...Mocks.Step1 };
+      RateUtility.addParentValue(step, null, null);
+      expect(step).toEqual(Mocks.Step1);
+    });
+
+    it('should add parents field to step', () => {
+      const step = { ...Mocks.Step1 };
+      RateUtility.addParentValue(step, ItemId.Coal, Rational.one);
+      expect(step.parents).toEqual({ [ItemId.Coal]: Rational.one });
+    });
+
+    it('should add to existing parents object', () => {
+      const step = {
+        ...Mocks.Step1,
+        ...{ parents: { [ItemId.Coal]: Rational.zero } },
+      };
+      RateUtility.addParentValue(step, ItemId.Coal, Rational.one);
+      expect(step.parents).toEqual({ [ItemId.Coal]: Rational.one });
+    });
+  });
+
   describe('addNodesFor', () => {
     const expected: any = {
       id: 'root',
