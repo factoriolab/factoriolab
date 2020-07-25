@@ -54,16 +54,7 @@ export class RateUtility {
     // Add items to the step
     step.items = step.items.add(rate);
 
-    if (parentId) {
-      if (!step.parents) {
-        step.parents = {};
-      }
-      if (step.parents[parentId]) {
-        step.parents[parentId] = step.parents[parentId].add(rate);
-      } else {
-        step.parents[parentId] = rate;
-      }
-    }
+    this.addParentValue(step, parentId, rate);
 
     if (recipe) {
       // Calculate number of outputs from recipe
@@ -101,9 +92,22 @@ export class RateUtility {
             fuel,
             data,
             inDepth,
-            itemId,
+            itemId
           );
         }
+      }
+    }
+  }
+
+  static addParentValue(step: Step, parentId: string, rate: Rational) {
+    if (parentId) {
+      if (!step.parents) {
+        step.parents = {};
+      }
+      if (step.parents[parentId]) {
+        step.parents[parentId] = step.parents[parentId].add(rate);
+      } else {
+        step.parents[parentId] = rate;
       }
     }
   }

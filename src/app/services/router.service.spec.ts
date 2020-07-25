@@ -21,13 +21,13 @@ import {
 } from './router.service';
 
 const mockZipEmpty = 'eJwrsAUAAR8Arg==';
-const mockZipProducts = 'eJwrsC0uSU3N0U3OSC0usTKwMgQAOToF5A==';
+const mockZipProducts = 'p=steel-chest:1';
 const mockZipAll =
-  'eJwrsC0uSU3N0U3OSC0usTKwMlTLRBGxKilKzCsuyC8q0U1KzSlRK0KVtbKyUCu2tbIyNjMwsEIFAJtQHRU=';
+  'eJwrsC0uSU3N0U3OSC0usTJUy0ThW5UUJeYVF+QXlegmpeaUqBWhylpZWagV21pZGZsZGFihAgBxgByr';
 const mockZipExtra =
   'eJwrsM0sys/TTc5ILS6xMrAyVMtEFrAqKUrMKy7ILyrRTUrNKVErQpHMzU8pzUnVw0ZZWakV21qhA0O1EtsSoFYAroYoTw==';
 const mockZipLink =
-  'eJxtj9EKwjAMRf9mbxltJyqBfYn40LWZK3RtaVrFv7fiBAc+XW4S7slN4yNGSwHMQlxQoOzcyIXIbxOJJevAKeYCE/nS5d1aM9M6eRdusGqzuEAw4Bpt9fQV2fEoennCyxWHoxCo8NBA+1jk6J2FuZLHSbMzEJ2HlKMh5pb+D6R6LrHpXHPQhrBd22qKu7vyhA+850RkN4O/BhSeWzkp3p1V+0q+AD5gXsE=';
+  'eJxtj90KwjAMhd9mdxltFZXAnkS86NrMFbp2NKni21vQgYpXh4+E87MO95w9JXAzsaDuwsBCFDdGKTbxmovASFG68nW2zLSMMaQrLNbNIRHscMm+RtpEdzyoXh/xfMHdQSk0uEf1Y4ucY/AwVYo4Wg4OcoiwluyIubn/CzI9S2461ZKsI2zfvjoJtyAPeIX3vBL5N+AngMFTG6dVq6JNa6WfysNeVw==';
 const mockProducts: Product[] = [
   {
     id: '0',
@@ -36,7 +36,16 @@ const mockProducts: Product[] = [
     rateType: RateType.Items,
   },
 ];
-const mockZipProduct = [ItemId.SteelChest, '0', '1'].join(FIELDSEP);
+const mockProductsBelts: Product[] = [
+  {
+    id: '0',
+    itemId: ItemId.SteelChest,
+    rate: 1,
+    rateType: RateType.Belts,
+  },
+];
+const mockZipProduct = [ItemId.SteelChest, '1'].join(FIELDSEP);
+const mockZipProductBelts = [ItemId.SteelChest, '1', '1'].join(FIELDSEP);
 const mockItemSettings: Items.ItemsState = {
   [ItemId.SteelChest]: { belt: ItemId.TransportBelt },
 };
@@ -198,7 +207,7 @@ describe('RouterService', () => {
         mockSettings,
         Mocks.Defaults
       );
-      expect(router.navigateByUrl).toHaveBeenCalledWith(`/#${mockZipAll}`);
+      expect(router.navigateByUrl).toHaveBeenCalledWith(`/#z=${mockZipAll}`);
     });
   });
 
@@ -213,7 +222,21 @@ describe('RouterService', () => {
         Mocks.Defaults
       );
       const href = service.stepHref(Mocks.Step1);
-      expect(href).toEqual(`#${mockZipLink}`);
+      expect(href).toEqual(`#z=${mockZipLink}`);
+    });
+  });
+
+  describe('getHash', () => {
+    it('should preseve a small state', () => {
+      const result = service.getHash(mockZipProducts);
+      expect(result).toEqual(mockZipProducts);
+    });
+
+    it('should zip a large state', () => {
+      const result = service.getHash(
+        `p=${mockZipProduct}&i=${mockZipFullItemSettings}&r=${mockZipFullRecipeSettings}&s=${mockZipFullSettings}`
+      );
+      expect(result.startsWith('z=')).toBeTrue();
     });
   });
 
@@ -238,9 +261,9 @@ describe('RouterService', () => {
       expect(store.select).not.toHaveBeenCalled();
     });
 
-    it('should log error on bad url', () => {
+    it('should log error on bad zipped url', () => {
       spyOn(console, 'error');
-      (router.events as any).next(new NavigationEnd(2, '/#test', '/#test'));
+      (router.events as any).next(new NavigationEnd(2, '/#z=test', '/#z=test'));
       expect(console.error).toHaveBeenCalledTimes(2);
     });
 
@@ -249,7 +272,7 @@ describe('RouterService', () => {
       spyOn(service, 'unzipItems');
       spyOn(service, 'unzipRecipes');
       spyOn(service, 'unzipSettings');
-      const url = `/#${mockZipExtra}`;
+      const url = `/#z=${mockZipExtra}`;
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.unzipProducts).toHaveBeenCalled();
       expect(service.unzipItems).toHaveBeenCalled();
@@ -272,18 +295,31 @@ describe('RouterService', () => {
   });
 
   describe('zipProducts', () => {
-    it('should zip the products', () => {
+    it('should zip products by items', () => {
       const result = service.zipProducts(mockProducts);
       expect(result).toEqual([mockZipProduct]);
+    });
+
+    it('should zip products by other rates', () => {
+      const result = service.zipProducts(mockProductsBelts);
+      expect(result).toEqual([mockZipProductBelts]);
     });
   });
 
   describe('unzipProducts', () => {
-    it('should unzip the products', () => {
+    it('should unzip the products by items', () => {
       spyOn(store, 'dispatch');
       service.unzipProducts([mockZipProduct]);
       expect(store.dispatch).toHaveBeenCalledWith(
         new Products.LoadAction(mockProducts)
+      );
+    });
+
+    it('should unzip the products by other rates', () => {
+      spyOn(store, 'dispatch');
+      service.unzipProducts([mockZipProductBelts]);
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new Products.LoadAction(mockProductsBelts)
       );
     });
   });
