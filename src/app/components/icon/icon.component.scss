@@ -3,18 +3,9 @@
   user-select: none;
   position: relative;
   font-weight: normal;
-
-  &:hover .tooltip {
-    visibility: visible;
-
-    &:hover {
-      visibility: hidden;
-    }
-  }
 }
 
 .tooltip {
-  visibility: hidden;
   position: absolute;
   background-color: var(--color-gray-1);
   border-radius: 0.25rem;

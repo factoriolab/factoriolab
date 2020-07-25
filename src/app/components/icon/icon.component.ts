@@ -19,7 +19,17 @@ export class IconComponent {
   @Input() item: Item;
   @Input() displayRate: DisplayRate;
 
+  hover = false;
+
   DisplayRate = DisplayRate;
 
   constructor() {}
+
+  mouseenter() {
+    this.hover = true;
+  }
+
+  mouseleave() {
+    this.hover = false;
+  }
 }
