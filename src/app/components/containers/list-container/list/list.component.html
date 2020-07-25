@@ -74,7 +74,7 @@
     </tr>
   </thead>
   <tbody>
-    <ng-container *ngFor="let step of steps">
+    <ng-container *ngFor="let step of steps; trackBy: trackBy">
       <tr>
         <td>
           <i

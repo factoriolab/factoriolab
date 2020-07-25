@@ -6,9 +6,11 @@
   [style.background-image]="icon.file ? 'url(' + icon.file + ')' : ''"
   [ngClass]="iconId + (icon.size ? ' size-' + icon.size : '')"
   [class.scale]="scale"
+  (mouseenter)="mouseenter()"
+  (mouseleave)="mouseleave()"
 />
 <div *ngIf="text" class="icon-text">{{ text }}</div>
-<div *ngIf="recipe || item || tooltip" class="tooltip">
+<div *ngIf="hover && (recipe || item || tooltip)" class="tooltip">
   <div *ngIf="tooltip" class="title nowrap">
     {{ tooltip }}
   </div>

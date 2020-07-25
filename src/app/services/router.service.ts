@@ -13,8 +13,8 @@ import {
   Defaults,
 } from '~/models';
 import { State } from '~/store';
-import * as Products from '~/store/products';
 import * as Items from '~/store/items';
+import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 
@@ -61,6 +61,7 @@ export class RouterService {
       if (zSettings.length) {
         this.zipPartial += `&s=${zSettings}`;
       }
+
       this.zip = btoa(deflate(zState + this.zipPartial, { to: 'string' }));
       this.router.navigateByUrl(`${this.router.url.split('#')[0]}#${this.zip}`);
     } else {
