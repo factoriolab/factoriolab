@@ -19,7 +19,7 @@ import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 
 export const NULL = 'n';
-export const EMPTY = '[]';
+export const EMPTY = 'e';
 export const ARRAYSEP = '.';
 export const FIELDSEP = ':';
 export const TRUE = '1';

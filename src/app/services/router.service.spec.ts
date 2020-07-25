@@ -27,7 +27,7 @@ const mockZipAll =
 const mockZipExtra =
   'eJwrsM0sys/TTc5ILS6xMrAyVMtEFrAqKUrMKy7ILyrRTUrNKVErQpHMzU8pzUnVw0ZZWakV21qhA0O1EtsSoFYAroYoTw==';
 const mockZipLink =
-  'eJxtj90KwjAMhd9mdxltFZXAnkS86NrMFbp2NKni21vQgYpXh4+E87MO95w9JXAzsaDuwsBCFDdGKTbxmovASFG68nW2zLSMMaQrLNbNIRHscMm+RtpEdzyoXh/xfMHdQSk0uEf1Y4ucY/AwVYo4Wg4OcoiwluyIubn/CzI9S2461ZKsI2zfvjoJtyAPeIX3vBL5N+AngMFTG6dVq6JNa6WfysNeVw==';
+  'eJxtj90KwjAMhd9mdxltFZXAHqZrM1fo2tKkim9vQQcqXh0+Es5Pme45e0rgVmJBPYSJhSjujFJt4pKrwExRhvp1tsy0zTGkK2zWrSERHHDLvkXaRQ88qVGfkfBwUgoNHlH9uCLnGDwsjSLOloODHCKUmh0xd/N/OWZkyV2XVpN1hP3bNyfhFuQBr+yRC5F/A34CGLz0bVr1Ktr0VvoJcPpeBA==';
 const mockProducts: Product[] = [
   {
     id: '0',
