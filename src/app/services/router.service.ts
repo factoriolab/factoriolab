@@ -62,7 +62,7 @@ export class RouterService {
         this.zipPartial += `&s=${zSettings}`;
       }
 
-      this.zip = btoa(deflate(zState + this.zipPartial, { to: 'string' }));
+      this.zip = this.getHash(zState);
       this.router.navigateByUrl(`${this.router.url.split('#')[0]}#${this.zip}`);
     } else {
       this.loaded = true;
@@ -79,8 +79,13 @@ export class RouterService {
       },
     ];
     const zProducts = this.zipProducts(products);
-    const zState = `p=${zProducts.join(',')}`;
-    return `#${btoa(deflate(zState + this.zipPartial, { to: 'string' }))}`;
+    return '#' + this.getHash(`p=${zProducts.join(',')}`);
+  }
+
+  getHash(zProducts: string) {
+    const unzipped = zProducts + this.zipPartial;
+    const zipped = `z=${btoa(deflate(unzipped, { to: 'string' }))}`;
+    return unzipped.length < zipped.length ? unzipped : zipped;
   }
 
   updateState(e: Event) {
@@ -90,7 +95,9 @@ export class RouterService {
         if (fragments.length > 1) {
           const urlZip = fragments[fragments.length - 1];
           if (this.zip !== urlZip) {
-            const state: string = inflate(atob(urlZip), { to: 'string' });
+            const state = urlZip.startsWith('z=')
+              ? inflate(atob(urlZip.substr(2)), { to: 'string' })
+              : urlZip;
             const params = state.split('&');
             this.unzipping = true;
             for (const p of params) {
@@ -125,9 +132,14 @@ export class RouterService {
   zipProducts(products: Product[]): string[] {
     return products.map((product) => {
       const i = product.itemId;
-      const t = product.rateType;
       const r = product.rate;
-      return `${i}:${t}:${r}`;
+
+      if (product.rateType === RateType.Items) {
+        return `${i}:${r}`;
+      } else {
+        const t = product.rateType;
+        return `${i}:${r}:${t}`;
+      }
     });
   }
 
@@ -139,8 +151,8 @@ export class RouterService {
       products.push({
         id: n.toString(),
         itemId: p[0],
-        rateType: Number(p[1]),
-        rate: Number(p[2]),
+        rate: Number(p[1]),
+        rateType: p.length > 2 ? Number(p[2]) : RateType.Items,
       });
       n++;
     }

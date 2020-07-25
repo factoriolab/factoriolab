@@ -93,6 +93,7 @@ export class MatrixSolver {
   get simpleStepsOnly() {
     return !this.steps.some(
       (s) =>
+        s.itemId &&
         (!s.recipeId || s.recipeId !== this.data.itemRecipeIds[s.itemId]) &&
         !this.itemSettings[s.itemId].ignore
     );
@@ -317,7 +318,7 @@ export class MatrixSolver {
   }
 
   calculateRecipes() {
-    for (const step of this.steps) {
+    for (const step of this.steps.filter((s) => s.itemId)) {
       if (
         (!step.recipeId ||
           step.recipeId !== this.data.itemRecipeIds[step.itemId]) &&
