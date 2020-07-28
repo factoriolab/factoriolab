@@ -77,7 +77,7 @@ export class ListComponent {
   constructor(public router: RouterService) {}
 
   trackBy(step: Step) {
-    return step.itemId;
+    return `${step.itemId}.${step.recipeId}`;
   }
 
   findStep(id: string) {
