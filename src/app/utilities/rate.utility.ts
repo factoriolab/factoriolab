@@ -197,7 +197,9 @@ export class RateUtility {
     beltSpeed: Entities<Rational>
   ) {
     node = { ...node };
-    node.children = node.children.map((n) => ({ ...n }));
+    if (node.children) {
+      node.children = node.children.map((n) => ({ ...n }));
+    }
     const belt = itemSettings[node.itemId]?.belt;
     if (node.items && belt) {
       node.belts = node.items.div(beltSpeed[belt]);

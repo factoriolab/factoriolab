@@ -162,15 +162,17 @@ export const getNormalDataset = createSelector(
       const rowItems = items
         .filter((i) => i.category === id)
         .sort((a, b) => a.row - b.row);
-      let index = rowItems[0].row;
-      for (const item of rowItems) {
-        if (item.row > index) {
-          rows.push([]);
-          index = item.row;
+      if (rowItems.length) {
+        let index = rowItems[0].row;
+        for (const item of rowItems) {
+          if (item.row > index) {
+            rows.push([]);
+            index = item.row;
+          }
+          rows[rows.length - 1].push(item.id);
         }
-        rows[rows.length - 1].push(item.id);
+        categoryItemRows[id] = rows;
       }
-      categoryItemRows[id] = rows;
     }
 
     // Calculate item simple recipes
