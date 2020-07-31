@@ -2698,7 +2698,6 @@
       "size": 64.0
     }
   ],
-  "id": "krastorio2",
   "items": [
     {
       "category": "logistics",
@@ -6460,7 +6459,6 @@
       "singularity-tech-card"
     ]
   },
-  "name": "Krastorio 2",
   "recipes": [
     {
       "id": "wooden-chest",
@@ -13591,8 +13589,8 @@
       "time": 40.33
     }
   ],
-  "sprite": "data/Krastorio2/icons.png",
   "defaults": {
+    "modIds": [],
     "belt": "express-transport-belt",
     "fuel": "coal",
     "disabledRecipes": [
