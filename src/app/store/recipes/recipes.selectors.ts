@@ -11,7 +11,7 @@ import * as Settings from '../settings';
 import { State } from '..';
 
 /* Base selector functions */
-export const recipesState = (state: State) => state.recipeState;
+export const recipesState = (state: State) => state.recipesState;
 
 /* Complex selectors */
 export const getRecipeSettings = createSelector(

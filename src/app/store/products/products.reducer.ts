@@ -1,4 +1,5 @@
 import { Product, RateType, Entities } from '~/models';
+import { AppLoadAction, AppActionType } from '../app.actions';
 import { ProductsAction, ProductsActionType } from './products.actions';
 
 export interface ProductsState {
@@ -22,16 +23,16 @@ export const initialProductsState: ProductsState = {
 
 export function productsReducer(
   state: ProductsState = initialProductsState,
-  action: ProductsAction
+  action: ProductsAction | AppLoadAction
 ): ProductsState {
   switch (action.type) {
-    case ProductsActionType.LOAD: {
-      const ids = action.payload.map((p) => p.id);
-      const index = Math.max(...ids.map((p) => Number(p))) + 1;
-      const entities = action.payload.reduce((e: Entities<Product>, i) => {
-        return { ...e, ...{ [i.id]: i } };
-      }, {});
-      return { ...state, ...{ ids, entities, index } };
+    case AppActionType.LOAD: {
+      return action.payload.productsState
+        ? action.payload.productsState
+        : state;
+    }
+    case ProductsActionType.RESET: {
+      return initialProductsState;
     }
     case ProductsActionType.ADD: {
       const newOutput = {

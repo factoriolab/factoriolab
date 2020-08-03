@@ -1,5 +1,6 @@
 import { Entities, RecipeSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
+import { AppLoadAction, AppActionType } from '../app.actions';
 import { RecipesAction, RecipesActionType } from './recipes.actions';
 
 export type RecipesState = Entities<RecipeSettings>;
@@ -8,11 +9,11 @@ export const initialRecipesState: RecipesState = {};
 
 export function recipesReducer(
   state: RecipesState = initialRecipesState,
-  action: RecipesAction
+  action: RecipesAction | AppLoadAction
 ): RecipesState {
   switch (action.type) {
-    case RecipesActionType.LOAD: {
-      return action.payload;
+    case AppActionType.LOAD: {
+      return action.payload.recipesState ? action.payload.recipesState : state;
     }
     case RecipesActionType.SET_FACTORY: {
       const id = action.payload.id;

@@ -13,7 +13,7 @@ import {
 import {
   DatasetsState,
   datasetsReducer,
-  LoadDataAction,
+  LoadAppAction,
 } from '~/store/datasets';
 import { getProductsBy } from '~/store/products';
 import {
@@ -32,7 +32,7 @@ import { ItemId } from './item-id';
 export const Raw = data;
 export const DataState: DatasetsState = datasetsReducer(
   undefined,
-  new LoadDataAction(data)
+  new LoadAppAction(data)
 );
 export const Base = data.base[0];
 export const Mods = [data.mods[0]];

@@ -1,10 +1,8 @@
 import { Action } from '@ngrx/store';
 
-import { RecipesState } from './recipes.reducer';
 import { IdPayload } from '~/models';
 
 export const enum RecipesActionType {
-  LOAD = '[Recipes Router] Load',
   SET_FACTORY = '[Recipes Page] Set Factory',
   SET_MODULES = '[Recipes Page] Set Modules',
   SET_BEACON_MODULE = '[Recipes Page] Set Beacon Module',
@@ -13,11 +11,6 @@ export const enum RecipesActionType {
   RESET_FACTORY = '[Recipes Page] Reset Factory',
   RESET_MODULES = '[Recipes Page] Reset Modules',
   RESET_BEACONS = '[Recipes Page] Reset Beacons',
-}
-
-export class LoadAction implements Action {
-  readonly type = RecipesActionType.LOAD;
-  constructor(public payload: RecipesState) {}
 }
 
 export class SetFactoryAction implements Action {
@@ -58,7 +51,6 @@ export class ResetBeaconsAction implements Action {
 }
 
 export type RecipesAction =
-  | LoadAction
   | SetFactoryAction
   | SetModulesAction
   | SetBeaconModuleAction

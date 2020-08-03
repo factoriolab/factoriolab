@@ -1173,7 +1173,6 @@
       "size": 64
     }
   ],
-  "id": "0.16",
   "items": [
     {
       "category": "logistics",
@@ -2822,7 +2821,6 @@
       "high-tech-science-pack"
     ]
   },
-  "name": "0.16.51",
   "recipes": [
     {
       "id": "wooden-chest",
@@ -5694,8 +5692,8 @@
       "time": 40.33
     }
   ],
-  "sprite": "data/0.16/icons.png",
   "defaults": {
+    "modIds": ["research"],
     "belt": "express-transport-belt",
     "fuel": "coal",
     "disabledRecipes": [

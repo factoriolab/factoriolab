@@ -5,7 +5,7 @@ import * as Settings from '../settings';
 import { State } from '..';
 
 /* Base selector functions */
-export const itemsState = (state: State) => state.itemState;
+export const itemsState = (state: State) => state.itemsState;
 
 /* Complex selectors */
 export const getItemSettings = createSelector(

@@ -1,9 +1,9 @@
 import { Action } from '@ngrx/store';
 
-import { RateType, Product, IdPayload } from '~/models';
+import { RateType, IdPayload } from '~/models';
 
 export const enum ProductsActionType {
-  LOAD = '[Products Router] Load',
+  RESET = '[Products Page] Reset',
   ADD = '[Products Page] Add',
   REMOVE = '[Products Page] Remove',
   EDIT_PRODUCT = '[Products Page] Edit Product',
@@ -11,9 +11,9 @@ export const enum ProductsActionType {
   EDIT_RATE_TYPE = '[Products Page] Edit Rate Type',
 }
 
-export class LoadAction implements Action {
-  readonly type = ProductsActionType.LOAD;
-  constructor(public payload: Product[]) {}
+export class ResetAction implements Action {
+  readonly type = ProductsActionType.RESET;
+  constructor() {}
 }
 
 export class AddAction implements Action {
@@ -42,7 +42,7 @@ export class EditRateTypeAction implements Action {
 }
 
 export type ProductsAction =
-  | LoadAction
+  | ResetAction
   | AddAction
   | RemoveAction
   | EditProductAction

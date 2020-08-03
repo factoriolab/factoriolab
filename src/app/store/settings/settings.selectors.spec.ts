@@ -42,17 +42,17 @@ describe('Settings Selectors', () => {
     it('should map to mod entities', () => {
       const result = Selectors.getMods.projector(
         Mocks.DataState.modIds,
-        Mocks.DataState.modEntities
+        Mocks.DataState.dataEntities
       );
       expect(result).toEqual(
-        Mocks.DataState.modIds.map((i) => Mocks.DataState.modEntities[i])
+        Mocks.DataState.modIds.map((i) => Mocks.DataState.dataEntities[i])
       );
     });
 
     it('should filter out invalid mods', () => {
       const result = Selectors.getMods.projector(
         ['test'],
-        Mocks.DataState.modEntities
+        Mocks.DataState.dataEntities
       );
       expect(result).toEqual([]);
     });

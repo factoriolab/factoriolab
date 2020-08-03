@@ -6,6 +6,7 @@ import {
   Entities,
 } from '~/models';
 import { SettingsAction, SettingsActionType } from './settings.actions';
+import { AppLoadAction, AppActionType } from '../app.actions';
 
 export interface SettingsState {
   baseDatasetId: string;
@@ -31,7 +32,7 @@ export interface SettingsState {
 
 export const initialSettingsState: SettingsState = {
   baseDatasetId: '0.18',
-  modDatasetIds: ['research'],
+  modDatasetIds: [],
   displayRate: DisplayRate.PerMinute,
   itemPrecision: 3,
   beltPrecision: 1,
@@ -53,27 +54,36 @@ export const initialSettingsState: SettingsState = {
 
 export function settingsReducer(
   state: SettingsState = initialSettingsState,
-  action: SettingsAction
+  action: SettingsAction | AppLoadAction
 ): SettingsState {
   switch (action.type) {
-    case SettingsActionType.LOAD: {
-      return { ...state, ...action.payload };
+    case AppActionType.LOAD: {
+      return action.payload.settingsState
+        ? { ...state, ...action.payload.settingsState }
+        : state;
     }
     case SettingsActionType.SET_BASE: {
       return {
         ...state,
         ...{
-          baseDatasetId: action.payload.id,
-          // Apply defaults for new base dataset
-          belt: action.payload.defaults.belt,
-          fuel: action.payload.defaults.fuel,
-          recipeDisabled: action.payload.defaults.disabledRecipes.reduce(
+          baseDatasetId: action.payload,
+        },
+      };
+    }
+    case SettingsActionType.SET_DEFAULTS: {
+      return {
+        ...state,
+        ...{
+          modDatasetIds: action.payload.modIds,
+          belt: action.payload.belt,
+          fuel: action.payload.fuel,
+          recipeDisabled: action.payload.disabledRecipes.reduce(
             (e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }),
             {}
           ),
-          factoryRank: [...action.payload.defaults.factoryRank],
-          moduleRank: [...action.payload.defaults.moduleRank],
-          beaconModule: action.payload.defaults.beaconModule,
+          factoryRank: action.payload.factoryRank,
+          moduleRank: action.payload.moduleRank,
+          beaconModule: action.payload.beaconModule,
         },
       };
     }

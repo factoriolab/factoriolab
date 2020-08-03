@@ -30,7 +30,9 @@ export const getEntities = compose(sEntities, productsState);
 export const getProducts = createSelector(
   getIds,
   getEntities,
-  (ids, entities) => ids.map((i) => entities[i])
+  Settings.getNormalDataset,
+  (ids, entities, data) =>
+    ids.map((i) => entities[i]).filter((p) => data.itemEntities[p.itemId])
 );
 
 export const getRationalProducts = createSelector(getProducts, (products) =>

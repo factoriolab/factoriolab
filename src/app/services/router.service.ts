@@ -13,6 +13,7 @@ import {
   Defaults,
 } from '~/models';
 import { State } from '~/store';
+import { AppLoadAction } from '~/store/app.actions';
 import * as Items from '~/store/items';
 import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipes';
@@ -29,7 +30,6 @@ export const FALSE = '0';
   providedIn: 'root',
 })
 export class RouterService {
-  loaded: boolean;
   unzipping: boolean;
   zip: string;
   zipPartial = '';
@@ -45,7 +45,7 @@ export class RouterService {
     settings: Settings.SettingsState,
     defaults: Defaults
   ) {
-    if (this.loaded && !this.unzipping) {
+    if (!this.unzipping) {
       const zProducts = this.zipProducts(products);
       const zState = `p=${zProducts.join(',')}`;
       this.zipPartial = '';
@@ -61,11 +61,9 @@ export class RouterService {
       if (zSettings.length) {
         this.zipPartial += `&s=${zSettings}`;
       }
-
       this.zip = this.getHash(zState);
+      console.log('routing...');
       this.router.navigateByUrl(`${this.router.url.split('#')[0]}#${this.zip}`);
-    } else {
-      this.loaded = true;
     }
   }
 
@@ -95,29 +93,31 @@ export class RouterService {
         if (fragments.length > 1) {
           const urlZip = fragments[fragments.length - 1];
           if (this.zip !== urlZip) {
-            const state = urlZip.startsWith('z=')
+            const zState = urlZip.startsWith('z=')
               ? inflate(atob(urlZip.substr(2)), { to: 'string' })
               : urlZip;
-            const params = state.split('&');
+            const params = zState.split('&');
             this.unzipping = true;
+            const state: State = {} as any;
             for (const p of params) {
               const s = p.split('=');
               if (s[1]) {
                 if (s[0] === 'p') {
-                  this.unzipProducts(s[1].split(','));
+                  state.productsState = this.unzipProducts(s[1].split(','));
                 } else if (s[0] === 'i') {
                   this.zipPartial = `&i=${s[1]}`;
-                  this.unzipItems(s[1].split(','));
+                  state.itemsState = this.unzipItems(s[1].split(','));
                 } else if (s[0] === 'r') {
                   this.zipPartial = `&r=${s[1]}`;
-                  this.unzipRecipes(s[1].split(','));
+                  state.recipesState = this.unzipRecipes(s[1].split(','));
                 } else if (s[0] === 's') {
                   this.zipPartial += `&s=${s[1]}`;
-                  this.unzipSettings(s[1]);
+                  state.settingsState = this.unzipSettings(s[1]);
                 }
               }
             }
             this.zip = urlZip;
+            this.store.dispatch(new AppLoadAction(state));
           }
         }
       }
@@ -143,20 +143,23 @@ export class RouterService {
     });
   }
 
-  unzipProducts(zProducts: string[]) {
-    const products: Product[] = [];
-    let n = 0;
+  unzipProducts(zProducts: string[]): Products.ProductsState {
+    const ids: string[] = [];
+    const entities: Entities<Product> = {};
+    let index = 0;
     for (const product of zProducts) {
       const p = product.split(FIELDSEP);
-      products.push({
-        id: n.toString(),
+      const id = index.toString();
+      ids.push(id);
+      entities[id] = {
+        id,
         itemId: p[0],
         rate: Number(p[1]),
         rateType: p.length > 2 ? Number(p[2]) : RateType.Items,
-      });
-      n++;
+      };
+      index++;
     }
-    this.store.dispatch(new Products.LoadAction(products));
+    return { ids, index, entities };
   }
 
   zipItems(state: Items.ItemsState): string[] {
@@ -185,7 +188,7 @@ export class RouterService {
       }
       items[r[0]] = u;
     }
-    this.store.dispatch(new Items.LoadAction(items));
+    return items;
   }
 
   zipRecipes(state: Recipes.RecipesState): string[] {
@@ -225,13 +228,13 @@ export class RouterService {
       }
       recipes[r[0]] = u;
     }
-    this.store.dispatch(new Recipes.LoadAction(recipes));
+    return recipes;
   }
 
   zipSettings(state: Settings.SettingsState, defaults: Defaults): string {
     const init = Settings.initialSettingsState;
     const bd = this.zipDiff(state.baseDatasetId, init.baseDatasetId);
-    const md = this.zipDiffArray(state.modDatasetIds, init.modDatasetIds);
+    const md = this.zipDiffArray(state.modDatasetIds, defaults.modIds);
     const dr = this.zipDiffNum(state.displayRate, init.displayRate);
     const ip = this.zipDiffNum(state.itemPrecision, init.itemPrecision);
     const bp = this.zipDiffNum(state.beltPrecision, init.beltPrecision);
@@ -351,7 +354,7 @@ export class RouterService {
     if (v !== '') {
       settings.expensive = this.parseBool(v);
     }
-    this.store.dispatch(new Settings.LoadAction(settings));
+    return settings;
   }
 
   zipTruthy(value: string) {

@@ -3,15 +3,13 @@
   <select
     title="Select base game version"
     [ngModel]="settings.baseDatasetId"
-    (change)="setBaseDataset.emit(base[$event.target.value])"
+    (change)="setBaseDataset.emit($event.target.value)"
   >
-    <option *ngFor="let b of base | keyvalue" [value]="b.key">{{
-      b.value.name
-    }}</option>
+    <option *ngFor="let b of base" [value]="b.id">{{ b.name }}</option>
   </select>
   <div>Base Recipe Set</div>
 </div>
-<div class="field">
+<div class="field" *ngIf="mods.length">
   <div class="select-container button">
     <div [style.marginTop.px]="-scrollTop">
       <button (click)="openSelect = OpenSelect.Mods">

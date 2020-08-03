@@ -9,7 +9,7 @@ import {
   RationalItem,
   RationalRecipe,
   Dataset,
-  EmptyMod,
+  Mod,
 } from '~/models';
 import { State } from '../';
 import * as Datasets from '../datasets';
@@ -72,50 +72,80 @@ export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
   Rational.fromNumber(rate)
 );
 
+export const getAvailableMods = createSelector(
+  getBaseDatasetId,
+  Datasets.getModSets,
+  (id, mods) =>
+    mods.filter(
+      (m) => !m.compatibleIds || m.compatibleIds.some((i) => i === id)
+    )
+);
+
 export const getBase = createSelector(
   getBaseDatasetId,
   Datasets.getBaseEntities,
-  (id, entities) => (id && entities[id]) || EmptyMod
+  Datasets.getDataEntities,
+  (id, info, data) => {
+    if (info[id] && data[id]) {
+      const mod: Mod = { ...info[id], ...data[id] };
+      return mod;
+    }
+    return null;
+  }
 );
 
 export const getMods = createSelector(
   getModDatasetIds,
   Datasets.getModEntities,
-  (ids, entities) => ids.filter((i) => entities[i]).map((i) => entities[i])
+  Datasets.getDataEntities,
+  (ids, info, data) =>
+    ids
+      .filter((i) => info[i] && data[i])
+      .map((i) => {
+        const mod: Mod = { ...info[i], ...data[i] };
+        return mod;
+      })
 );
 
-export const getDatasets = createSelector(getBase, getMods, (base, mods) => [
-  base,
-  ...mods,
-]);
+export const getDatasets = createSelector(getBase, getMods, (base, mods) =>
+  base ? [base, ...mods] : []
+);
 
-export const getDefaults = createSelector(getBase, (base) => base.defaults);
+export const getDefaults = createSelector(getBase, (base) =>
+  base ? base.defaults : null
+);
 
 export const getNormalDataset = createSelector(
   Datasets.getAppData,
   getDatasets,
-  (base, mods) => {
+  (app, mods) => {
     // Map out entities with mods
     const categoryEntities = getEntities(
-      base.categories,
+      app.categories,
       mods.map((m) => m.categories)
     );
     const iconEntities = getEntities(
-      base.icons.map((i) => ({ ...i, ...{ file: i.file || base.sprite } })),
+      app.icons.map((i) => ({
+        ...i,
+        ...{ file: i.file || `data/${app.id}/icons.png` },
+      })),
       mods.map((m) =>
-        m.icons.map((i) => ({ ...i, ...{ file: i.file || m.sprite } }))
+        m.icons.map((i) => ({
+          ...i,
+          ...{ file: i.file || `data/${m.id}/icons.png` },
+        }))
       )
     );
     const itemEntities = getEntities(
-      base.items,
+      app.items,
       mods.map((m) => m.items)
     );
     const recipeEntities = getEntities(
-      base.recipes,
+      app.recipes,
       mods.map((m) => m.recipes)
     );
     const limitations = getArrayEntities(
-      base.limitations,
+      app.limitations,
       mods.map((m) => m.limitations)
     );
 

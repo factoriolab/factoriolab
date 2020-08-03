@@ -1163,7 +1163,6 @@
       "size": 64
     }
   ],
-  "id": "0.17",
   "items": [
     {
       "category": "logistics",
@@ -2795,7 +2794,6 @@
       "kovarex-enrichment-process"
     ]
   },
-  "name": "0.17.79",
   "recipes": [
     {
       "id": "wooden-chest",
@@ -5651,8 +5649,8 @@
       "time": 40.33
     }
   ],
-  "sprite": "data/0.17/icons.png",
   "defaults": {
+    "modIds": ["research"],
     "belt": "express-transport-belt",
     "fuel": "coal",
     "disabledRecipes": [

@@ -1,5 +1,6 @@
 import { Entities, ItemSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
+import { AppLoadAction, AppActionType } from '../app.actions';
 import { ItemsAction, ItemsActionType } from './items.actions';
 
 export type ItemsState = Entities<ItemSettings>;
@@ -8,11 +9,11 @@ export const initialItemsState: ItemsState = {};
 
 export function itemsReducer(
   state: ItemsState = initialItemsState,
-  action: ItemsAction
+  action: ItemsAction | AppLoadAction
 ): ItemsState {
   switch (action.type) {
-    case ItemsActionType.LOAD: {
-      return action.payload;
+    case AppActionType.LOAD: {
+      return action.payload.itemsState ? action.payload.itemsState : state;
     }
     case ItemsActionType.IGNORE: {
       let newState = {

@@ -4,7 +4,7 @@ import { datasetsReducer } from './datasets.reducer';
 
 export const state = datasetsReducer(
   undefined,
-  new Actions.LoadDataAction(Mocks.Raw)
+  new Actions.LoadAppAction(Mocks.Raw)
 );
 
 describe('Dataset Reducer', () => {
@@ -15,7 +15,7 @@ describe('Dataset Reducer', () => {
         state.baseIds.length
       );
       expect(state.modIds.length).toBeGreaterThan(0);
-      expect(Object.keys(state.modEntities).length).toEqual(
+      expect(Object.keys(state.dataEntities).length).toEqual(
         state.modIds.length
       );
     });

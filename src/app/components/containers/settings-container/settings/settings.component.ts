@@ -13,8 +13,7 @@ import {
   IdType,
   Theme,
   Dataset,
-  ModData,
-  Entities,
+  ModInfo,
 } from '~/models';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
@@ -37,11 +36,11 @@ enum OpenSelect {
 })
 export class SettingsComponent {
   @Input() data: Dataset;
-  @Input() base: Entities<ModData>;
-  @Input() mods: ModData[];
+  @Input() base: ModInfo[];
+  @Input() mods: ModInfo[];
   @Input() settings: SettingsState;
 
-  @Output() setBaseDataset = new EventEmitter<ModData>();
+  @Output() setBaseDataset = new EventEmitter<string>();
   @Output() enableMod = new EventEmitter<string>();
   @Output() disableMod = new EventEmitter<string>();
   @Output() setDisplayRate = new EventEmitter<DisplayRate>();

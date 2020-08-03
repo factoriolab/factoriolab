@@ -21,7 +21,7 @@ import { MultiselectComponent } from './multiselect.component';
 class TestMultiselectComponent {
   @ViewChild(MultiselectComponent) child: MultiselectComponent;
   enabledIds = [];
-  options = Mocks.DataState.modIds.map((i) => Mocks.DataState.modEntities[i]);
+  options = Mocks.DataState.modIds.map((i) => Mocks.DataState.dataEntities[i]);
   cancel() {}
   enableMod(data) {}
   disableMod(data) {}

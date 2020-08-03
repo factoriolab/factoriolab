@@ -1,14 +1,12 @@
 import { Action } from '@ngrx/store';
 
-import { DisplayRate, ResearchSpeed, Theme, ModData } from '~/models';
-import { SettingsState } from './settings.reducer';
+import { DisplayRate, ResearchSpeed, Theme, Defaults } from '~/models';
 
 export const enum SettingsActionType {
-  LOAD = '[Settings Router] Load',
   SET_BASE = '[Settings Page] Set Base',
+  SET_DEFAULTS = '[Settings Page] Set Defaults',
   ENABLE_MOD = '[Settings Page] Enable Mod',
   DISABLE_MOD = '[Settings Page] Disable Mod',
-  SET_DEFAULTS = '[Settings Page] Set Defaults',
   SET_DISPLAY_RATE = '[Settings Page] Set Display Rate',
   SET_ITEM_PRECISION = '[Settings Page] Set Item Precision',
   SET_BELT_PRECISION = '[Settings Page] Set Belt Precision',
@@ -31,14 +29,14 @@ export const enum SettingsActionType {
   SET_THEME = '[Settings Page] Set Theme',
 }
 
-export class LoadAction implements Action {
-  readonly type = SettingsActionType.LOAD;
-  constructor(public payload: SettingsState) {}
-}
-
 export class SetBaseAction implements Action {
   readonly type = SettingsActionType.SET_BASE;
-  constructor(public payload: ModData) {}
+  constructor(public payload: string) {}
+}
+
+export class SetDefaultsAction implements Action {
+  readonly type = SettingsActionType.SET_DEFAULTS;
+  constructor(public payload: Defaults) {}
 }
 
 export class EnableModAction implements Action {
@@ -152,8 +150,8 @@ export class SetTheme implements Action {
 }
 
 export type SettingsAction =
-  | LoadAction
   | SetBaseAction
+  | SetDefaultsAction
   | EnableModAction
   | DisableModAction
   | SetDisplayRateAction
