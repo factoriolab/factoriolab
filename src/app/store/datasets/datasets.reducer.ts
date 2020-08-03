@@ -17,7 +17,6 @@ export function datasetsReducer(
 ): DatasetsState {
   switch (action.type) {
     case DatasetsActionType.LOAD_MOD: {
-      console.log('load mod');
       return {
         ...state,
         ...{

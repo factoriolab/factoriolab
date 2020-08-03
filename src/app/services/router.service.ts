@@ -62,7 +62,6 @@ export class RouterService {
         this.zipPartial += `&s=${zSettings}`;
       }
       this.zip = this.getHash(zState);
-      console.log('routing...');
       this.router.navigateByUrl(`${this.router.url.split('#')[0]}#${this.zip}`);
     }
   }
