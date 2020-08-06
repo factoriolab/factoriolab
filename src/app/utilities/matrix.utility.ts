@@ -49,7 +49,7 @@ export class MatrixUtility {
       matrix.solve();
       return matrix.steps;
     } catch (e) {
-      console.error('Failed to solve matrix.');
+      console.error('Matrix: Failed to solve, returning incomplete steps');
       console.error(e);
       return steps;
     }
@@ -161,17 +161,69 @@ export class MatrixSolver {
 
   parseRecipeRecursively(recipe: RationalRecipe) {
     if (!this.recipes[recipe.id]) {
-      this.recipes[recipe.id] = recipe;
+      const circular = this.checkForCircularRecipes(recipe);
+      if (!circular) {
+        this.recipes[recipe.id] = recipe;
 
-      if (recipe.in) {
-        // Recurse recipe ingredients
-        for (const id of Object.keys(recipe.in).filter(
-          (i) => !this.itemSettings[i].ignore
-        )) {
-          this.findRecipesRecursively(id);
+        if (recipe.in) {
+          // Recurse recipe ingredients
+          for (const id of Object.keys(recipe.in).filter(
+            (i) => !this.itemSettings[i].ignore
+          )) {
+            this.findRecipesRecursively(id);
+          }
+        }
+      } else {
+        console.warn(
+          `Matrix: Ignoring recipe '${recipe.id}' due to detected circular recipes.`
+        );
+      }
+    }
+  }
+
+  /** Before adding this recipe, need to make sure it doesn't result in a circular loop */
+  checkForCircularRecipes(recipe: RationalRecipe) {
+    if (recipe.in) {
+      const outputs = Object.keys(recipe.out);
+      for (const id of Object.keys(recipe.in)) {
+        // Need to check whether there are any loops where these inputs are outputs
+        for (const loop of Object.keys(this.recipes)
+          .map((r) => this.recipes[r])
+          .filter((r) => r.in && r.out[id])) {
+          // Found a recipe that outputs this input, look for connection between these recipes
+          if (this.checkForCircularRecursively(outputs, loop)) {
+            return true; // Found a circular loop
+          }
         }
       }
     }
+    return false;
+  }
+
+  /** Recursively check recipe inputs looking for a circular loop, return true if found */
+  checkForCircularRecursively(
+    outputs: string[],
+    recipe: RationalRecipe,
+    checked: string[] = []
+  ) {
+    if (outputs.some((o) => recipe.in[o])) {
+      return true; // Found a complete circular loop in recipes
+    }
+    for (const id of Object.keys(recipe.in)) {
+      for (const loop of Object.keys(this.recipes)
+        .map((r) => this.recipes[r])
+        .filter((r) => r.in && r.out[id] && !checked.some((c) => c === r.id))) {
+        if (
+          this.checkForCircularRecursively(outputs, loop, [
+            ...checked,
+            recipe.id,
+          ])
+        ) {
+          return true; // Some sub-recipe found a loop, return the result
+        }
+      }
+    }
+    return false; // No loop found
   }
 
   solve() {
@@ -187,8 +239,6 @@ export class MatrixSolver {
   }
 
   parseRecipes() {
-    console.log(this.recipeIds.length);
-    console.log(this.recipeIds.join(', '));
     for (const r of this.recipeIds) {
       const variable = new Variable();
       this.solver.addEditVariable(variable, Strength.weak);
