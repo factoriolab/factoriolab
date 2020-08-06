@@ -36,14 +36,15 @@ export class DatasetsEffects {
             a.payload.settingsState?.modDatasetIds || value.defaults.modIds
           )
         ),
-        switchMap((value) =>
-          a.payload.productsState
-            ? [new LoadModAction({ id, value })]
-            : [
-                new LoadModAction({ id, value }),
-                new AddAction(value.items[0].id),
-              ]
-        )
+        tap((value) => {
+          if (!a.payload.productsState) {
+            this.router.unzipping = true;
+            this.store.dispatch(new ResetAction());
+            this.store.dispatch(new AddAction(value.items[0].id));
+            this.router.unzipping = false;
+          }
+        }),
+        map((value) => new LoadModAction({ id, value }))
       );
     })
   );
@@ -68,9 +69,7 @@ export class DatasetsEffects {
   loadModsForBase(modIds: string[]) {
     for (const id of modIds.filter((m) => !this.cache[m])) {
       this.requestData(id).subscribe((value) => {
-        this.router.unzipping = true;
         this.store.dispatch(new LoadModAction({ id, value }));
-        this.router.unzipping = false;
       });
     }
   }

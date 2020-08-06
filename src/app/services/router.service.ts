@@ -38,13 +38,15 @@ export class RouterService {
   }
 
   updateUrl(
-    products: Product[],
+    products: Products.ProductsState,
     items: Items.ItemsState,
     recipes: Recipes.RecipesState,
     settings: Settings.SettingsState
   ) {
     if (!this.unzipping) {
-      const zProducts = this.zipProducts(products);
+      const zProducts = this.zipProducts(
+        products.ids.map((i) => products.entities[i])
+      );
       const zState = `p=${zProducts.join(',')}`;
       this.zipPartial = '';
       const zItems = this.zipItems(items);
@@ -113,7 +115,9 @@ export class RouterService {
               }
             }
             this.zip = urlZip;
+            this.unzipping = true;
             this.store.dispatch(new AppLoadAction(state));
+            this.unzipping = false;
           }
         }
       }

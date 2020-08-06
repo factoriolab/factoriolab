@@ -229,7 +229,7 @@ export const getNodes = createSelector(
 );
 
 export const getZipState = createSelector(
-  getProducts,
+  productsState,
   Items.itemsState,
   Recipes.recipesState,
   Settings.settingsState,
