@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Effect, Actions, ofType } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
-import { of, forkJoin } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { EMPTY } from 'rxjs';
 import { switchMap, map, tap } from 'rxjs/operators';
 
 import { ModData, Entities } from '~/models';
+import { RouterService } from '~/services/router.service';
 import { State } from '..';
 import { AppActionType, AppLoadAction } from '../app.actions';
 import { AddAction, ResetAction } from '../products';
@@ -29,18 +30,20 @@ export class DatasetsEffects {
       const id =
         a.payload.settingsState?.baseDatasetId ||
         Settings.initialSettingsState.baseDatasetId;
-      return this.http.get(`data/${id}/data.json`).pipe(
-        map((response) => response as ModData),
-        switchMap((value) => {
-          const actions: Action[] = [
-            new Settings.SetDefaultsAction(value.defaults),
-            new LoadModAction({ id, value }),
-          ];
-          if (!a.payload.productsState) {
-            actions.push(new AddAction(value.items[0].id));
-          }
-          return actions;
-        })
+      return this.requestData(id).pipe(
+        tap((value) =>
+          this.loadModsForBase(
+            a.payload.settingsState?.modDatasetIds || value.defaults.modIds
+          )
+        ),
+        switchMap((value) =>
+          a.payload.productsState
+            ? [new LoadModAction({ id, value })]
+            : [
+                new LoadModAction({ id, value }),
+                new AddAction(value.items[0].id),
+              ]
+        )
       );
     })
   );
@@ -50,12 +53,11 @@ export class DatasetsEffects {
     ofType(Settings.SettingsActionType.SET_BASE),
     switchMap((a: Settings.SetBaseAction) =>
       this.cache[a.payload]
-        ? of(new Settings.SetDefaultsAction(this.cache[a.payload].defaults))
-        : this.http.get(`data/${a.payload}/data.json`).pipe(
-            map((response) => response as ModData),
+        ? EMPTY
+        : this.requestData(a.payload).pipe(
+            tap((value) => this.loadModsForBase(value.defaults.modIds)),
             switchMap((value) => [
               new ResetAction(),
-              new Settings.SetDefaultsAction(value.defaults),
               new LoadModAction({ id: a.payload, value }),
               new AddAction(value.items[0].id),
             ])
@@ -63,38 +65,37 @@ export class DatasetsEffects {
     )
   );
 
-  @Effect()
-  setDefaults$ = this.actions$.pipe(
-    ofType(Settings.SettingsActionType.SET_DEFAULTS),
-    switchMap((a: Settings.SetDefaultsAction) =>
-      forkJoin(
-        a.payload.modIds
-          .filter((id) => !this.cache[id])
-          .map((id) =>
-            this.http.get(`data/${id}/data.json`).pipe(
-              map((response) => response as ModData),
-              map((value) => new LoadModAction({ id, value }))
-            )
-          )
-      ).pipe(switchMap((d) => d))
-    )
-  );
+  loadModsForBase(modIds: string[]) {
+    for (const id of modIds.filter((m) => !this.cache[m])) {
+      this.requestData(id).subscribe((value) => {
+        this.router.unzipping = true;
+        this.store.dispatch(new LoadModAction({ id, value }));
+        this.router.unzipping = false;
+      });
+    }
+  }
+
+  requestData(id: string) {
+    return this.http
+      .get(`data/${id}/data.json`)
+      .pipe(map((response) => response as ModData));
+  }
 
   constructor(
     private actions$: Actions,
     private http: HttpClient,
-    private store: Store<State>
+    private store: Store<State>,
+    private router: RouterService
   ) {
     if (!location.hash) {
       const id = Settings.initialSettingsState.baseDatasetId;
-      this.http
-        .get(`data/${id}/data.json`)
-        .pipe(map((response) => response as ModData))
-        .subscribe((value) => {
-          this.store.dispatch(new Settings.SetDefaultsAction(value.defaults));
-          this.store.dispatch(new LoadModAction({ id, value }));
-          this.store.dispatch(new AddAction(value.items[0].id));
-        });
+      this.requestData(id).subscribe((value) => {
+        this.router.unzipping = true;
+        this.store.dispatch(new LoadModAction({ id, value }));
+        this.store.dispatch(new AddAction(value.items[0].id));
+        this.loadModsForBase(value.defaults.modIds);
+        this.router.unzipping = false;
+      });
     }
   }
 }

@@ -11,12 +11,13 @@ import {
   DisplayRate,
   Entities,
   Rational,
-  IdPayload,
   Dataset,
+  DefaultIdPayload,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
+import { RecipeUtility } from '~/utilities';
 
 enum StepEditType {
   Belt,
@@ -43,6 +44,11 @@ export class ListComponent {
   @Input() recipeSettings: RecipesState;
   @Input() recipeRaw: RecipesState;
   @Input() steps: Step[];
+  @Input() belt: string;
+  @Input() factoryRank: string[];
+  @Input() moduleRank: string[];
+  @Input() beaconModule: string;
+  @Input() beaconCount: number;
   @Input() displayRate: DisplayRate;
   @Input() itemPrecision: number;
   @Input() beltPrecision: number;
@@ -54,11 +60,11 @@ export class ListComponent {
   @Input() modifiedBeacons: boolean;
 
   @Output() ignoreItem = new EventEmitter<string>();
-  @Output() setBelt = new EventEmitter<IdPayload<string>>();
-  @Output() setFactory = new EventEmitter<IdPayload<string>>();
-  @Output() setModules = new EventEmitter<IdPayload<string[]>>();
-  @Output() setBeaconModule = new EventEmitter<IdPayload<string>>();
-  @Output() setBeaconCount = new EventEmitter<IdPayload<number>>();
+  @Output() setBelt = new EventEmitter<DefaultIdPayload>();
+  @Output() setFactory = new EventEmitter<DefaultIdPayload>();
+  @Output() setModules = new EventEmitter<DefaultIdPayload<string[]>>();
+  @Output() setBeaconModule = new EventEmitter<DefaultIdPayload>();
+  @Output() setBeaconCount = new EventEmitter<DefaultIdPayload<number>>();
   @Output() resetItem = new EventEmitter<string>();
   @Output() resetRecipe = new EventEmitter<string>();
   @Output() resetIgnore = new EventEmitter();
@@ -92,14 +98,33 @@ export class ListComponent {
     }
   }
 
+  factoryChange(step: Step, value: string) {
+    const def = RecipeUtility.bestMatch(
+      this.data.recipeEntities[step.recipeId].producers,
+      this.factoryRank
+    );
+    const event = {
+      id: step.recipeId,
+      value,
+      default: def,
+    };
+    this.setFactory.emit(event);
+  }
+
   factoryModuleChange(step: Step, value: string, index: number) {
+    const count = this.recipeSettings[step.recipeId].modules.length;
+    const def = RecipeUtility.defaultModules(
+      [...this.data.recipeModuleIds[step.recipeId], 'module'],
+      this.moduleRank,
+      count
+    );
     if (index === 0) {
       // Copy to all
       const modules = [];
-      for (const m of this.recipeSettings[step.recipeId].modules) {
+      for (let i = 0; i < count; i++) {
         modules.push(value);
       }
-      this.setModules.emit({ id: step.recipeId, value: modules });
+      this.setModules.emit({ id: step.recipeId, value: modules, default: def });
     } else {
       // Edit individual module
       const modules = [
@@ -107,7 +132,7 @@ export class ListComponent {
         value,
         ...this.recipeSettings[step.recipeId].modules.slice(index + 1),
       ];
-      this.setModules.emit({ id: step.recipeId, value: modules });
+      this.setModules.emit({ id: step.recipeId, value: modules, default: def });
     }
   }
 
@@ -119,7 +144,11 @@ export class ListComponent {
           this.steps.find((s) => s.recipeId === step.recipeId).recipeId
         ].beaconCount !== value
       ) {
-        this.setBeaconCount.emit({ id: step.recipeId, value });
+        this.setBeaconCount.emit({
+          id: step.recipeId,
+          value,
+          default: this.beaconCount,
+        });
       }
     }
   }

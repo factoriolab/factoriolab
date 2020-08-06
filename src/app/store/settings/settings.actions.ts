@@ -1,16 +1,17 @@
 import { Action } from '@ngrx/store';
 
-import { DisplayRate, ResearchSpeed, Theme, Defaults } from '~/models';
+import {
+  DisplayRate,
+  ResearchSpeed,
+  Theme,
+  DefaultPayload,
+  DefaultTogglePayload,
+} from '~/models';
 
 export const enum SettingsActionType {
   SET_BASE = '[Settings Page] Set Base',
-  SET_DEFAULTS = '[Settings Page] Set Defaults',
   ENABLE_MOD = '[Settings Page] Enable Mod',
   DISABLE_MOD = '[Settings Page] Disable Mod',
-  SET_DISPLAY_RATE = '[Settings Page] Set Display Rate',
-  SET_ITEM_PRECISION = '[Settings Page] Set Item Precision',
-  SET_BELT_PRECISION = '[Settings Page] Set Belt Precision',
-  SET_FACTORY_PRECISION = '[Settings Page] Set Factory Precision',
   SET_BELT = '[Settings Page] Set Belt',
   SET_FUEL = '[Settings Page] Set Fuel',
   DISABLE_RECIPE = '[Settings Page] Disable Recipe',
@@ -20,6 +21,10 @@ export const enum SettingsActionType {
   PREFER_MODULE = '[Settings Page] Prefer Module',
   DROP_MODULE = '[Settings Page] Drop Module',
   SET_BEACON_MODULE = '[Settings Page] Set Beacon Module',
+  SET_DISPLAY_RATE = '[Settings Page] Set Display Rate',
+  SET_ITEM_PRECISION = '[Settings Page] Set Item Precision',
+  SET_BELT_PRECISION = '[Settings Page] Set Belt Precision',
+  SET_FACTORY_PRECISION = '[Settings Page] Set Factory Precision',
   SET_BEACON_COUNT = '[Settings Page] Set Beacon Count',
   SET_DRILL_MODULE = '[Settings Page] Set Drill Module',
   SET_MINING_BONUS = '[Settings Page] Set Mining Bonus',
@@ -34,19 +39,59 @@ export class SetBaseAction implements Action {
   constructor(public payload: string) {}
 }
 
-export class SetDefaultsAction implements Action {
-  readonly type = SettingsActionType.SET_DEFAULTS;
-  constructor(public payload: Defaults) {}
-}
-
 export class EnableModAction implements Action {
   readonly type = SettingsActionType.ENABLE_MOD;
-  constructor(public payload: string) {}
+  constructor(public payload: DefaultTogglePayload) {}
 }
 
 export class DisableModAction implements Action {
   readonly type = SettingsActionType.DISABLE_MOD;
-  constructor(public payload: string) {}
+  constructor(public payload: DefaultTogglePayload) {}
+}
+
+export class SetBeltAction implements Action {
+  readonly type = SettingsActionType.SET_BELT;
+  constructor(public payload: DefaultPayload) {}
+}
+
+export class SetFuelAction implements Action {
+  readonly type = SettingsActionType.SET_FUEL;
+  constructor(public payload: DefaultPayload) {}
+}
+
+export class DisableRecipeAction implements Action {
+  readonly type = SettingsActionType.DISABLE_RECIPE;
+  constructor(public payload: DefaultTogglePayload) {}
+}
+
+export class EnableRecipeAction implements Action {
+  readonly type = SettingsActionType.ENABLE_RECIPE;
+  constructor(public payload: DefaultTogglePayload) {}
+}
+
+export class PreferFactoryAction implements Action {
+  readonly type = SettingsActionType.PREFER_FACTORY;
+  constructor(public payload: DefaultTogglePayload) {}
+}
+
+export class DropFactoryAction implements Action {
+  readonly type = SettingsActionType.DROP_FACTORY;
+  constructor(public payload: DefaultTogglePayload) {}
+}
+
+export class PreferModuleAction implements Action {
+  readonly type = SettingsActionType.PREFER_MODULE;
+  constructor(public payload: DefaultTogglePayload) {}
+}
+
+export class DropModuleAction implements Action {
+  readonly type = SettingsActionType.DROP_MODULE;
+  constructor(public payload: DefaultTogglePayload) {}
+}
+
+export class SetBeaconModuleAction implements Action {
+  readonly type = SettingsActionType.SET_BEACON_MODULE;
+  constructor(public payload: DefaultPayload) {}
 }
 
 export class SetDisplayRateAction implements Action {
@@ -67,51 +112,6 @@ export class SetBeltPrecisionAction implements Action {
 export class SetFactoryPrecisionAction implements Action {
   readonly type = SettingsActionType.SET_FACTORY_PRECISION;
   constructor(public payload: number) {}
-}
-
-export class SetBeltAction implements Action {
-  readonly type = SettingsActionType.SET_BELT;
-  constructor(public payload: string) {}
-}
-
-export class SetFuelAction implements Action {
-  readonly type = SettingsActionType.SET_FUEL;
-  constructor(public payload: string) {}
-}
-
-export class DisableRecipeAction implements Action {
-  readonly type = SettingsActionType.DISABLE_RECIPE;
-  constructor(public payload: string) {}
-}
-
-export class EnableRecipeAction implements Action {
-  readonly type = SettingsActionType.ENABLE_RECIPE;
-  constructor(public payload: string) {}
-}
-
-export class PreferFactoryAction implements Action {
-  readonly type = SettingsActionType.PREFER_FACTORY;
-  constructor(public payload: string) {}
-}
-
-export class DropFactoryAction implements Action {
-  readonly type = SettingsActionType.DROP_FACTORY;
-  constructor(public payload: string) {}
-}
-
-export class PreferModuleAction implements Action {
-  readonly type = SettingsActionType.PREFER_MODULE;
-  constructor(public payload: string) {}
-}
-
-export class DropModuleAction implements Action {
-  readonly type = SettingsActionType.DROP_MODULE;
-  constructor(public payload: string) {}
-}
-
-export class SetBeaconModuleAction implements Action {
-  readonly type = SettingsActionType.SET_BEACON_MODULE;
-  constructor(public payload: string) {}
 }
 
 export class SetBeaconCountAction implements Action {
@@ -151,13 +151,8 @@ export class SetTheme implements Action {
 
 export type SettingsAction =
   | SetBaseAction
-  | SetDefaultsAction
   | EnableModAction
   | DisableModAction
-  | SetDisplayRateAction
-  | SetItemPrecisionAction
-  | SetBeltPrecisionAction
-  | SetFactoryPrecisionAction
   | SetBeltAction
   | SetFuelAction
   | DisableRecipeAction
@@ -167,6 +162,10 @@ export type SettingsAction =
   | PreferModuleAction
   | DropModuleAction
   | SetBeaconModuleAction
+  | SetDisplayRateAction
+  | SetItemPrecisionAction
+  | SetBeltPrecisionAction
+  | SetFactoryPrecisionAction
   | SetBeaconCountAction
   | SetDrillModuleAction
   | SetMiningBonusAction

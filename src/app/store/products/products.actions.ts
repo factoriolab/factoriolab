@@ -28,7 +28,7 @@ export class RemoveAction implements Action {
 
 export class EditProductAction implements Action {
   readonly type = ProductsActionType.EDIT_PRODUCT;
-  constructor(public payload: IdPayload<string>) {}
+  constructor(public payload: IdPayload) {}
 }
 
 export class EditRateAction implements Action {

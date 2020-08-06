@@ -3,7 +3,7 @@ import { DOCUMENT } from '@angular/common';
 import { Component, OnInit, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { skip } from 'rxjs/operators';
 
 import { Dataset } from './models';
 import { RouterService } from './services/router.service';
@@ -49,15 +49,9 @@ export class AppComponent implements OnInit {
     });
     this.store
       .select(getZipState)
-      .pipe(filter((s) => !!s.defaults))
+      .pipe(skip(1))
       .subscribe((s) => {
-        this.router.updateUrl(
-          s.products,
-          s.items,
-          s.recipes,
-          s.settings,
-          s.defaults
-        );
+        this.router.updateUrl(s.products, s.items, s.recipes, s.settings);
       });
   }
 

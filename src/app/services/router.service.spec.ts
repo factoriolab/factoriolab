@@ -88,7 +88,7 @@ const mockFullSettings: Settings.SettingsState = {
   factoryPrecision: 0,
   belt: ItemId.TransportBelt,
   fuel: ItemId.SolidFuel,
-  recipeDisabled: { [RecipeId.BasicOilProcessing]: true },
+  disabledRecipes: { [RecipeId.BasicOilProcessing]: true },
   factoryRank: [ItemId.AssemblingMachine2, ItemId.StoneFurnace],
   moduleRank: [ItemId.ProductivityModule, ItemId.SpeedModule],
   beaconModule: ItemId.SpeedModule2,
@@ -610,20 +610,6 @@ describe('RouterService', () => {
 
     it('should parse value', () => {
       expect(service.parseArray('a.b')).toEqual(['a', 'b']);
-    });
-  });
-
-  describe('parseBoolEntities', () => {
-    it('should parse null', () => {
-      expect(service.parseBoolEntities(NULL)).toBeNull();
-    });
-
-    it('should parse empty', () => {
-      expect(service.parseBoolEntities(EMPTY)).toEqual({});
-    });
-
-    it('should parse value', () => {
-      expect(service.parseBoolEntities('a.b')).toEqual({ a: true, b: true });
     });
   });
 });

@@ -21,7 +21,7 @@ export class MatrixUtility {
     steps: Step[],
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
-    recipeDisabled: Entities<boolean>,
+    disabledRecipes: string[],
     fuel: string,
     data: Dataset
   ) {
@@ -30,7 +30,7 @@ export class MatrixUtility {
       steps,
       itemSettings,
       recipeSettings,
-      recipeDisabled,
+      disabledRecipes,
       fuel,
       data
     );
@@ -78,14 +78,17 @@ export class MatrixSolver {
     steps: Step[],
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
-    recipeDisabled: Entities<boolean>,
+    disabledRecipes: string[],
     fuel: string,
     data: Dataset
   ) {
     this.steps = steps;
     this.itemSettings = itemSettings;
     this.recipeSettings = recipeSettings;
-    this.recipeDisabled = recipeDisabled;
+    this.recipeDisabled = disabledRecipes.reduce(
+      (e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }),
+      {}
+    );
     this.fuel = fuel;
     this.data = data;
     this.depth = Math.max(...this.steps.map((s) => s.depth)) + 1;

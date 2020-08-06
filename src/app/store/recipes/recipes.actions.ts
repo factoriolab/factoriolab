@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { IdPayload } from '~/models';
+import { DefaultIdPayload, IdPayload } from '~/models';
 
 export const enum RecipesActionType {
   SET_FACTORY = '[Recipes Page] Set Factory',
@@ -15,22 +15,22 @@ export const enum RecipesActionType {
 
 export class SetFactoryAction implements Action {
   readonly type = RecipesActionType.SET_FACTORY;
-  constructor(public payload: IdPayload<string>) {}
+  constructor(public payload: DefaultIdPayload) {}
 }
 
 export class SetModulesAction implements Action {
   readonly type = RecipesActionType.SET_MODULES;
-  constructor(public payload: IdPayload<string[]>) {}
+  constructor(public payload: DefaultIdPayload<string[]>) {}
 }
 
 export class SetBeaconModuleAction implements Action {
   readonly type = RecipesActionType.SET_BEACON_MODULE;
-  constructor(public payload: IdPayload<string>) {}
+  constructor(public payload: DefaultIdPayload) {}
 }
 
 export class SetBeaconCountAction implements Action {
   readonly type = RecipesActionType.SET_BEACONS_COUNT;
-  constructor(public payload: IdPayload<number>) {}
+  constructor(public payload: DefaultIdPayload<number>) {}
 }
 
 export class ResetAction implements Action {

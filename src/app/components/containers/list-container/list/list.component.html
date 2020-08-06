@@ -172,7 +172,11 @@
                     [displayRate]="displayRate"
                     (cancel)="edit = null"
                     (selectId)="
-                      setBelt.emit({ id: step.itemId, value: $event })
+                      setBelt.emit({
+                        id: step.itemId,
+                        value: $event,
+                        default: belt
+                      })
                     "
                   >
                   </lab-select>
@@ -244,9 +248,7 @@
                       [selectedId]="factory"
                       [options]="recipe.producers"
                       (cancel)="edit = null"
-                      (selectId)="
-                        setFactory.emit({ id: step.recipeId, value: $event })
-                      "
+                      (selectId)="factoryChange(step, $event)"
                     >
                     </lab-select>
                   </div>
@@ -319,7 +321,11 @@
                   includeEmptyModule="true"
                   (cancel)="edit = null"
                   (selectId)="
-                    setBeaconModule.emit({ id: step.recipeId, value: $event })
+                    setBeaconModule.emit({
+                      id: step.recipeId,
+                      value: $event,
+                      default: beaconModule
+                    })
                   "
                 >
                 </lab-select>

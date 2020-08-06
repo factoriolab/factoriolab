@@ -14,6 +14,8 @@ import {
   Theme,
   Dataset,
   ModInfo,
+  DefaultTogglePayload,
+  DefaultPayload,
 } from '~/models';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
@@ -41,21 +43,21 @@ export class SettingsComponent {
   @Input() settings: SettingsState;
 
   @Output() setBaseDataset = new EventEmitter<string>();
-  @Output() enableMod = new EventEmitter<string>();
-  @Output() disableMod = new EventEmitter<string>();
+  @Output() enableMod = new EventEmitter<DefaultTogglePayload>();
+  @Output() disableMod = new EventEmitter<DefaultTogglePayload>();
+  @Output() setBelt = new EventEmitter<DefaultPayload>();
+  @Output() setFuel = new EventEmitter<DefaultPayload>();
+  @Output() disableRecipe = new EventEmitter<DefaultTogglePayload>();
+  @Output() enableRecipe = new EventEmitter<DefaultTogglePayload>();
+  @Output() preferFactory = new EventEmitter<DefaultTogglePayload>();
+  @Output() dropFactory = new EventEmitter<DefaultTogglePayload>();
+  @Output() preferModule = new EventEmitter<DefaultTogglePayload>();
+  @Output() dropModule = new EventEmitter<DefaultTogglePayload>();
+  @Output() setBeaconModule = new EventEmitter<DefaultPayload>();
   @Output() setDisplayRate = new EventEmitter<DisplayRate>();
   @Output() setItemPrecision = new EventEmitter<number>();
   @Output() setBeltPrecision = new EventEmitter<number>();
   @Output() setFactoryPrecision = new EventEmitter<number>();
-  @Output() setBelt = new EventEmitter<string>();
-  @Output() setFuel = new EventEmitter<string>();
-  @Output() disableRecipe = new EventEmitter<string>();
-  @Output() enableRecipe = new EventEmitter<string>();
-  @Output() preferFactory = new EventEmitter<string>();
-  @Output() dropFactory = new EventEmitter<string>();
-  @Output() preferModule = new EventEmitter<string>();
-  @Output() dropModule = new EventEmitter<string>();
-  @Output() setBeaconModule = new EventEmitter<string>();
   @Output() setBeaconCount = new EventEmitter<number>();
   @Output() setDrillModule = new EventEmitter<boolean>();
   @Output() setMiningBonus = new EventEmitter<number>();
@@ -65,7 +67,6 @@ export class SettingsComponent {
   @Output() setTheme = new EventEmitter<Theme>();
 
   openSelect = OpenSelect.None;
-  scrollTop = 0;
 
   DisplayRate = DisplayRate;
   OpenSelect = OpenSelect;
@@ -75,16 +76,10 @@ export class SettingsComponent {
 
   initial = initialSettingsState;
 
-  get recipeDisabledCount() {
-    return Object.keys(this.settings.recipeDisabled).length;
-  }
-
   constructor() {}
 
-  @HostListener('scroll', ['$event'])
-  scroll(event: Event) {
-    this.scrollTop = (event.target as HTMLElement).scrollTop;
-  }
+  /** Forces change detector to update on scroll */
+  @HostListener('scroll', ['$event']) scroll() {}
 
   emitNumber(emitter: EventEmitter<number>, event: any) {
     if (event.target.value) {

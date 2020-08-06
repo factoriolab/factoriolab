@@ -25,7 +25,7 @@ describe('Settings Reducer', () => {
       expect(result.baseDatasetId).toEqual(mod.id);
       expect(result.belt).toEqual(mod.defaults.belt);
       expect(result.fuel).toEqual(mod.defaults.fuel);
-      expect(Object.keys(result.recipeDisabled)).toEqual(
+      expect(Object.keys(result.disabledRecipes)).toEqual(
         mod.defaults.disabledRecipes
       );
       expect(result.factoryRank).toEqual(mod.defaults.factoryRank);
@@ -127,7 +127,7 @@ describe('Settings Reducer', () => {
         initialSettingsState,
         new Actions.DisableRecipeAction(value)
       );
-      expect(result.recipeDisabled[value]).toBeTrue();
+      expect(result.disabledRecipes[value]).toBeTrue();
     });
   });
 
@@ -138,7 +138,7 @@ describe('Settings Reducer', () => {
         initialSettingsState,
         new Actions.EnableRecipeAction(value)
       );
-      expect(result.recipeDisabled[value]).toBeUndefined();
+      expect(result.disabledRecipes[value]).toBeUndefined();
     });
   });
 

@@ -22,7 +22,8 @@ import { ToggleComponent } from './toggle.component';
 class TestToggleComponent {
   @ViewChild(ToggleComponent) child: ToggleComponent;
   data: Dataset = Mocks.Data;
-  recipeDisabled: Entities<boolean> = Mocks.InitialSettingsState.recipeDisabled;
+  recipeDisabled: Entities<boolean> =
+    Mocks.InitialSettingsState.disabledRecipes;
   cancel() {}
   enableRecipe(data) {}
   disableRecipe(data) {}

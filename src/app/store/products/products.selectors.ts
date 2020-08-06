@@ -187,7 +187,7 @@ export const getNormalizedStepsWithMatrices = createSelector(
   Items.getItemSettings,
   Recipes.getRecipeSettings,
   Recipes.getAdjustedDataset,
-  Settings.getRecipeDisabled,
+  Settings.getDisabledRecipes,
   Settings.getFuel,
   (steps, itemSettings, recipeSettings, data, disabledRecipes, fuel) =>
     MatrixUtility.solveMatricesFor(
@@ -233,8 +233,7 @@ export const getZipState = createSelector(
   Items.itemsState,
   Recipes.recipesState,
   Settings.settingsState,
-  Settings.getDefaults,
-  (products, items, recipes, settings, defaults) => {
-    return { products, items, recipes, settings, defaults };
+  (products, items, recipes, settings) => {
+    return { products, items, recipes, settings };
   }
 );

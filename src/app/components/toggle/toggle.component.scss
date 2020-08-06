@@ -1,20 +1,22 @@
 :host {
   position: absolute;
-  left: 1px;
-  top: 1px;
   background-color: var(--color-gray-2);
   border: 1px solid var(--color-brand);
   border-radius: 0.25rem;
   z-index: 10;
-  padding: 0.5rem;
   margin: -1px;
-  width: 12.375rem;
+  width: 16rem;
 
   > * + * {
     margin-top: 0.5rem;
   }
 }
 
+.header {
+  padding: 0.5rem 0.5rem 0;
+}
+
 .flex {
   flex-wrap: wrap;
+  padding: 0 1px 0.5rem;
 }

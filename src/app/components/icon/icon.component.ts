@@ -1,4 +1,9 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  Input,
+  ChangeDetectionStrategy,
+  ElementRef,
+} from '@angular/core';
 
 import { Recipe, Item, DisplayRate, Dataset } from '~/models';
 
@@ -23,7 +28,11 @@ export class IconComponent {
 
   DisplayRate = DisplayRate;
 
-  constructor() {}
+  get element(): HTMLElement {
+    return this.elementRef.nativeElement;
+  }
+
+  constructor(private elementRef: ElementRef) {}
 
   mouseenter() {
     this.hover = true;

@@ -18,17 +18,10 @@ import { SettingsState } from './settings.reducer';
 /* Base selector functions */
 export const settingsState = (state: State) => state.settingsState;
 const sBaseDatasetId = (state: SettingsState) => state.baseDatasetId;
-const sModDatasetIds = (state: SettingsState) => state.modDatasetIds;
 const sDisplayRate = (state: SettingsState) => state.displayRate;
 const sItemPrecision = (state: SettingsState) => state.itemPrecision;
 const sBeltPrecision = (state: SettingsState) => state.beltPrecision;
 const sFactoryPrecision = (state: SettingsState) => state.factoryPrecision;
-const sBelt = (state: SettingsState) => state.belt;
-const sFuel = (state: SettingsState) => state.fuel;
-const sRecipeDisabled = (state: SettingsState) => state.recipeDisabled;
-const sFactoryRank = (state: SettingsState) => state.factoryRank;
-const sModuleRank = (state: SettingsState) => state.moduleRank;
-const sBeaconModule = (state: SettingsState) => state.beaconModule;
 const sBeaconCount = (state: SettingsState) => state.beaconCount;
 const sDrillModule = (state: SettingsState) => state.drillModule;
 const sMiningBonus = (state: SettingsState) => state.miningBonus;
@@ -39,17 +32,10 @@ const sTheme = (state: SettingsState) => state.theme;
 
 /* Simple selectors */
 export const getBaseDatasetId = compose(sBaseDatasetId, settingsState);
-export const getModDatasetIds = compose(sModDatasetIds, settingsState);
 export const getDisplayRate = compose(sDisplayRate, settingsState);
 export const getItemPrecision = compose(sItemPrecision, settingsState);
 export const getBeltPrecision = compose(sBeltPrecision, settingsState);
 export const getFactoryPrecision = compose(sFactoryPrecision, settingsState);
-export const getBelt = compose(sBelt, settingsState);
-export const getFuel = compose(sFuel, settingsState);
-export const getRecipeDisabled = compose(sRecipeDisabled, settingsState);
-export const getFactoryRank = compose(sFactoryRank, settingsState);
-export const getModuleRank = compose(sModuleRank, settingsState);
-export const getBeaconModule = compose(sBeaconModule, settingsState);
 export const getBeaconCount = compose(sBeaconCount, settingsState);
 export const getDrillModule = compose(sDrillModule, settingsState);
 export const getMiningBonus = compose(sMiningBonus, settingsState);
@@ -59,6 +45,57 @@ export const getExpensive = compose(sExpensive, settingsState);
 export const getTheme = compose(sTheme, settingsState);
 
 /* Complex selectors */
+export const getBase = createSelector(
+  getBaseDatasetId,
+  Datasets.getBaseEntities,
+  (id, data) => data[id]
+);
+
+export const getDefaults = createSelector(
+  getBase,
+  (base) => base && base.defaults
+);
+
+export const getSettings = createSelector(
+  settingsState,
+  getDefaults,
+  (s, d) => ({
+    ...s,
+    ...{
+      modDatasetIds: s.modDatasetIds || d?.modIds || [],
+      belt: s.belt || d?.belt,
+      fuel: s.fuel || d?.fuel,
+      disabledRecipes: s.disabledRecipes || d?.disabledRecipes || [],
+      factoryRank: s.factoryRank || d?.factoryRank || [],
+      moduleRank: s.moduleRank || d?.moduleRank || [],
+      beaconModule: s.beaconModule || d?.beaconModule,
+    },
+  })
+);
+
+export const getModDatasetIds = createSelector(
+  getSettings,
+  (s) => s.modDatasetIds
+);
+
+export const getBelt = createSelector(getSettings, (s) => s.belt);
+
+export const getFuel = createSelector(getSettings, (s) => s.fuel);
+
+export const getDisabledRecipes = createSelector(
+  getSettings,
+  (s) => s.disabledRecipes
+);
+
+export const getFactoryRank = createSelector(getSettings, (s) => s.factoryRank);
+
+export const getModuleRank = createSelector(getSettings, (s) => s.moduleRank);
+
+export const getBeaconModule = createSelector(
+  getSettings,
+  (s) => s.beaconModule
+);
+
 export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
   Rational.fromNumber(bonus).div(Rational.hundred)
 );
@@ -81,19 +118,6 @@ export const getAvailableMods = createSelector(
     )
 );
 
-export const getBase = createSelector(
-  getBaseDatasetId,
-  Datasets.getBaseEntities,
-  Datasets.getDataEntities,
-  (id, info, data) => {
-    if (info[id] && data[id]) {
-      const mod: Mod = { ...info[id], ...data[id] };
-      return mod;
-    }
-    return null;
-  }
-);
-
 export const getMods = createSelector(
   getModDatasetIds,
   Datasets.getModEntities,
@@ -111,14 +135,11 @@ export const getDatasets = createSelector(getBase, getMods, (base, mods) =>
   base ? [base, ...mods] : []
 );
 
-export const getDefaults = createSelector(getBase, (base) =>
-  base ? base.defaults : null
-);
-
 export const getNormalDataset = createSelector(
   Datasets.getAppData,
   getDatasets,
-  (app, mods) => {
+  getDefaults,
+  (app, mods, defaults) => {
     // Map out entities with mods
     const categoryEntities = getEntities(
       app.categories,
@@ -270,6 +291,7 @@ export const getNormalDataset = createSelector(
       recipeR,
       recipeModuleIds,
       limitations,
+      defaults,
     };
     return dataset;
   }

@@ -1,26 +1,21 @@
-import {
-  DisplayRate,
-  ResearchSpeed,
-  Theme,
-  LocalStorageKey,
-  Entities,
-} from '~/models';
+import { DisplayRate, ResearchSpeed, Theme, LocalStorageKey } from '~/models';
+import { StoreUtility } from '~/utilities';
 import { SettingsAction, SettingsActionType } from './settings.actions';
 import { AppLoadAction, AppActionType } from '../app.actions';
 
 export interface SettingsState {
   baseDatasetId: string;
   modDatasetIds: string[];
+  belt: string;
+  fuel: string;
+  disabledRecipes: string[];
+  factoryRank: string[];
+  moduleRank: string[];
+  beaconModule: string;
   displayRate: DisplayRate;
   itemPrecision: number;
   beltPrecision: number;
   factoryPrecision: number;
-  belt: string;
-  fuel: string;
-  recipeDisabled: Entities<boolean>;
-  factoryRank: string[];
-  moduleRank: string[];
-  beaconModule: string;
   beaconCount: number;
   drillModule: boolean;
   miningBonus: number;
@@ -32,17 +27,17 @@ export interface SettingsState {
 
 export const initialSettingsState: SettingsState = {
   baseDatasetId: '0.18',
-  modDatasetIds: [],
+  modDatasetIds: null,
+  belt: null,
+  fuel: null,
+  disabledRecipes: null,
+  factoryRank: null,
+  moduleRank: null,
+  beaconModule: null,
   displayRate: DisplayRate.PerMinute,
   itemPrecision: 3,
   beltPrecision: 1,
   factoryPrecision: 1,
-  belt: null,
-  fuel: null,
-  recipeDisabled: {},
-  factoryRank: [],
-  moduleRank: [],
-  beaconModule: null,
   beaconCount: 16,
   drillModule: false,
   miningBonus: 0,
@@ -67,40 +62,114 @@ export function settingsReducer(
         ...state,
         ...{
           baseDatasetId: action.payload,
-        },
-      };
-    }
-    case SettingsActionType.SET_DEFAULTS: {
-      return {
-        ...state,
-        ...{
-          modDatasetIds: action.payload.modIds,
-          belt: action.payload.belt,
-          fuel: action.payload.fuel,
-          recipeDisabled: action.payload.disabledRecipes.reduce(
-            (e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }),
-            {}
-          ),
-          factoryRank: action.payload.factoryRank,
-          moduleRank: action.payload.moduleRank,
-          beaconModule: action.payload.beaconModule,
+          modDatasetIds: null,
+          belt: null,
+          fuel: null,
+          disabledRecipes: null,
+          factoryRank: null,
+          moduleRank: null,
+          beaconModule: null,
         },
       };
     }
     case SettingsActionType.ENABLE_MOD: {
       return {
         ...state,
-        ...{ modDatasetIds: [...state.modDatasetIds, action.payload] },
+        ...{
+          modDatasetIds: StoreUtility.tryAddId(
+            state.modDatasetIds,
+            action.payload
+          ),
+        },
       };
     }
     case SettingsActionType.DISABLE_MOD: {
       return {
         ...state,
         ...{
-          modDatasetIds: state.modDatasetIds.filter(
-            (i) => i !== action.payload
+          modDatasetIds: StoreUtility.tryRemoveId(
+            state.modDatasetIds,
+            action.payload
           ),
         },
+      };
+    }
+    case SettingsActionType.SET_BELT: {
+      return {
+        ...state,
+        ...{ belt: StoreUtility.compareValue(action.payload) },
+      };
+    }
+    case SettingsActionType.SET_FUEL: {
+      return {
+        ...state,
+        ...{ fuel: StoreUtility.compareValue(action.payload) },
+      };
+    }
+    case SettingsActionType.DISABLE_RECIPE: {
+      return {
+        ...state,
+        ...{
+          disabledRecipes: StoreUtility.tryAddId(
+            state.disabledRecipes,
+            action.payload
+          ),
+        },
+      };
+    }
+    case SettingsActionType.ENABLE_RECIPE: {
+      return {
+        ...state,
+        ...{
+          disabledRecipes: StoreUtility.tryRemoveId(
+            state.disabledRecipes,
+            action.payload
+          ),
+        },
+      };
+    }
+    case SettingsActionType.PREFER_FACTORY: {
+      return {
+        ...state,
+        ...{
+          factoryRank: StoreUtility.tryAddId(state.factoryRank, action.payload),
+        },
+      };
+    }
+    case SettingsActionType.DROP_FACTORY: {
+      return {
+        ...state,
+        ...{
+          factoryRank: StoreUtility.tryRemoveId(
+            state.factoryRank,
+            action.payload
+          ),
+        },
+      };
+    }
+    case SettingsActionType.PREFER_MODULE: {
+      return {
+        ...state,
+        ...{
+          moduleRank: StoreUtility.tryAddId(state.moduleRank, action.payload),
+        },
+      };
+    }
+    case SettingsActionType.DROP_MODULE: {
+      return {
+        ...state,
+        ...{
+          moduleRank: StoreUtility.tryRemoveId(
+            state.moduleRank,
+            action.payload
+          ),
+        },
+      };
+    }
+    case SettingsActionType.SET_BEACON_MODULE: {
+      return {
+        ...state,
+        ...{ beaconModule: StoreUtility.compareValue(action.payload) },
       };
     }
     case SettingsActionType.SET_DISPLAY_RATE: {
@@ -114,57 +183,6 @@ export function settingsReducer(
     }
     case SettingsActionType.SET_FACTORY_PRECISION: {
       return { ...state, ...{ factoryPrecision: action.payload } };
-    }
-    case SettingsActionType.SET_BELT: {
-      return { ...state, ...{ belt: action.payload } };
-    }
-    case SettingsActionType.SET_FUEL: {
-      return { ...state, ...{ fuel: action.payload } };
-    }
-    case SettingsActionType.DISABLE_RECIPE: {
-      return {
-        ...state,
-        ...{
-          recipeDisabled: {
-            ...state.recipeDisabled,
-            ...{ [action.payload]: true },
-          },
-        },
-      };
-    }
-    case SettingsActionType.ENABLE_RECIPE: {
-      const newDisabled = { ...state.recipeDisabled };
-      delete newDisabled[action.payload];
-      return { ...state, ...{ recipeDisabled: newDisabled } };
-    }
-    case SettingsActionType.PREFER_FACTORY: {
-      return {
-        ...state,
-        ...{ factoryRank: [...state.factoryRank, action.payload] },
-      };
-    }
-    case SettingsActionType.DROP_FACTORY: {
-      return {
-        ...state,
-        ...{
-          factoryRank: state.factoryRank.filter((r) => r !== action.payload),
-        },
-      };
-    }
-    case SettingsActionType.PREFER_MODULE: {
-      return {
-        ...state,
-        ...{ moduleRank: [...state.moduleRank, action.payload] },
-      };
-    }
-    case SettingsActionType.DROP_MODULE: {
-      return {
-        ...state,
-        ...{ moduleRank: state.moduleRank.filter((r) => r !== action.payload) },
-      };
-    }
-    case SettingsActionType.SET_BEACON_MODULE: {
-      return { ...state, ...{ beaconModule: action.payload } };
     }
     case SettingsActionType.SET_BEACON_COUNT: {
       return { ...state, ...{ beaconCount: action.payload } };

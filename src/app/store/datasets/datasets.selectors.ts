@@ -1,6 +1,6 @@
 import { compose, createSelector } from '@ngrx/store';
 
-import { Entities, ModInfo } from '~/models';
+import { Entities, Mod } from '~/models';
 import { State } from '..';
 import { DatasetsState } from './datasets.reducer';
 
@@ -18,10 +18,28 @@ export const getModSets = compose(sModSets, datasetsState);
 export const getDataEntities = compose(sDataEntities, datasetsState);
 
 /* Complex selectors */
-export const getBaseEntities = createSelector(getBaseSets, (base) =>
-  base.reduce((e: Entities<ModInfo>, b) => ({ ...e, ...{ [b.id]: b } }), {})
+export const getBaseEntities = createSelector(
+  getBaseSets,
+  getDataEntities,
+  (base, entities): Entities<Mod> =>
+    base.reduce(
+      (e: Entities<Mod>, b) => ({
+        ...e,
+        ...{ [b.id]: entities[b.id] ? { ...b, ...entities[b.id] } : null },
+      }),
+      {}
+    )
 );
 
-export const getModEntities = createSelector(getModSets, (mod) =>
-  mod.reduce((e: Entities<ModInfo>, m) => ({ ...e, ...{ [m.id]: m } }), {})
+export const getModEntities = createSelector(
+  getModSets,
+  getDataEntities,
+  (mod, entities): Entities<Mod> =>
+    mod.reduce(
+      (e: Entities<Mod>, m) => ({
+        ...e,
+        ...{ [m.id]: entities[m.id] ? { ...m, ...entities[m.id] } : null },
+      }),
+      {}
+    )
 );

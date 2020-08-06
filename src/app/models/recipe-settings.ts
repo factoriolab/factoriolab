@@ -1,5 +1,12 @@
 import { Rational } from './rational';
 
+export enum RecipeSettingsField {
+  Factory = 'factory',
+  Modules = 'modules',
+  BeaconModule = 'beaconModule',
+  BeaconCount = 'beaconCount',
+}
+
 export interface RecipeSettings {
   factory?: string;
   modules?: string[];

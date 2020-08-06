@@ -11,7 +11,15 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { DisplayRate, ResearchSpeed, Theme, Dataset, ModInfo } from '~/models';
+import {
+  DisplayRate,
+  ResearchSpeed,
+  Theme,
+  Dataset,
+  ModInfo,
+  DefaultTogglePayload,
+  DefaultPayload,
+} from '~/models';
 import { State } from '~/store';
 import { getBaseSets } from '~/store/datasets';
 import * as Settings from '~/store/settings';
@@ -41,7 +49,7 @@ export class SettingsContainerComponent implements OnInit {
     this.data$ = this.store.select(Settings.getDataset);
     this.base$ = this.store.select(getBaseSets);
     this.mods$ = this.store.select(Settings.getAvailableMods);
-    this.settings$ = this.store.select(Settings.settingsState);
+    this.settings$ = this.store.select(Settings.getSettings);
   }
 
   isInOverlayMode() {
@@ -66,12 +74,48 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetBaseAction(value));
   }
 
-  enableMod(value: string) {
+  enableMod(value: DefaultTogglePayload) {
     this.store.dispatch(new Settings.EnableModAction(value));
   }
 
-  disableMod(value: string) {
+  disableMod(value: DefaultTogglePayload) {
     this.store.dispatch(new Settings.DisableModAction(value));
+  }
+
+  setBelt(value: DefaultPayload) {
+    this.store.dispatch(new Settings.SetBeltAction(value));
+  }
+
+  setFuel(value: DefaultPayload) {
+    this.store.dispatch(new Settings.SetFuelAction(value));
+  }
+
+  disableRecipe(value: DefaultTogglePayload) {
+    this.store.dispatch(new Settings.DisableRecipeAction(value));
+  }
+
+  enableRecipe(value: DefaultTogglePayload) {
+    this.store.dispatch(new Settings.EnableRecipeAction(value));
+  }
+
+  preferFactory(value: DefaultTogglePayload) {
+    this.store.dispatch(new Settings.PreferFactoryAction(value));
+  }
+
+  dropFactory(value: DefaultTogglePayload) {
+    this.store.dispatch(new Settings.DropFactoryAction(value));
+  }
+
+  preferModule(value: DefaultTogglePayload) {
+    this.store.dispatch(new Settings.PreferModuleAction(value));
+  }
+
+  dropModule(value: DefaultTogglePayload) {
+    this.store.dispatch(new Settings.DropModuleAction(value));
+  }
+
+  setBeaconModule(value: DefaultPayload) {
+    this.store.dispatch(new Settings.SetBeaconModuleAction(value));
   }
 
   setDisplayRate(value: DisplayRate) {
@@ -88,42 +132,6 @@ export class SettingsContainerComponent implements OnInit {
 
   setFactoryPrecision(value: number) {
     this.store.dispatch(new Settings.SetFactoryPrecisionAction(value));
-  }
-
-  setBelt(value: string) {
-    this.store.dispatch(new Settings.SetBeltAction(value));
-  }
-
-  setFuel(value: string) {
-    this.store.dispatch(new Settings.SetFuelAction(value));
-  }
-
-  disableRecipe(value: string) {
-    this.store.dispatch(new Settings.DisableRecipeAction(value));
-  }
-
-  enableRecipe(value: string) {
-    this.store.dispatch(new Settings.EnableRecipeAction(value));
-  }
-
-  preferFactory(value: string) {
-    this.store.dispatch(new Settings.PreferFactoryAction(value));
-  }
-
-  dropFactory(value: string) {
-    this.store.dispatch(new Settings.DropFactoryAction(value));
-  }
-
-  preferModule(value: string) {
-    this.store.dispatch(new Settings.PreferModuleAction(value));
-  }
-
-  dropModule(value: string) {
-    this.store.dispatch(new Settings.DropModuleAction(value));
-  }
-
-  setBeaconModule(value: string) {
-    this.store.dispatch(new Settings.SetBeaconModuleAction(value));
   }
 
   setBeaconCount(value: number) {

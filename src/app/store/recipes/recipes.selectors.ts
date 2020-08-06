@@ -40,8 +40,8 @@ export const getRecipeSettings = createSelector(
 
         // Factory
         if (!recipeSettings.factory) {
-          recipeSettings.factory = RecipeUtility.defaultFactory(
-            recipe,
+          recipeSettings.factory = RecipeUtility.bestMatch(
+            recipe.producers,
             factoryRank
           );
         }
@@ -63,10 +63,9 @@ export const getRecipeSettings = createSelector(
               }
             } else {
               recipeSettings.modules = RecipeUtility.defaultModules(
-                recipe,
+                data.recipeModuleIds[recipe.id],
                 moduleRank,
-                factoryItem.factory.modules,
-                data
+                factoryItem.factory.modules
               );
             }
           }
