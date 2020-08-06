@@ -113,7 +113,7 @@
               [iconId]="step.itemId"
               [class.ignored]="itemSettings[step.itemId].ignore"
               [tooltip]="data.itemEntities[step.itemId]?.name"
-              [recipe]="data.recipeEntities[step.recipeId]"
+              [recipe]="data.recipeEntities[data.itemRecipeIds[step.itemId]]"
               [data]="data"
               (click)="ignoreItem.emit(step.itemId)"
             ></lab-icon>
@@ -193,10 +193,20 @@
               class="flex"
               *ngIf="!step.factories || step.factories.nonzero()"
             >
-              <div *ngIf="step.factories" class="monospace">
-                {{ rate(step.factories, factoryPrecision) }}
-              </div>
-              <ng-container *ngIf="step.recipeId !== step.itemId">
+              <ng-container *ngIf="step.factories">
+                <div *ngIf="factory !== 'pumpjack'" class="monospace">
+                  {{ rate(step.factories, factoryPrecision) }}
+                </div>
+                <div *ngIf="factory === 'pumpjack'" class="monospace">
+                  {{
+                    rate(
+                      step.factories.mul(Rational.hundred),
+                      factoryPrecision
+                    )
+                  }}%
+                </div>
+              </ng-container>
+              <ng-container *ngIf="step.recipeId !== data.itemRecipeIds[step.itemId]">
                 <lab-icon
                   [iconId]="step.recipeId"
                   [tooltip]="data.recipeEntities[step.recipeId].name"

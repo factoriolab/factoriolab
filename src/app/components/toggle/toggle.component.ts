@@ -26,7 +26,7 @@ export class ToggleComponent {
     );
     this.complexRecipes = value.recipeIds.filter(
       (r) => simpleRecipes.indexOf(r) === -1
-    );
+    ).sort();
   }
   get data() {
     return this._data;

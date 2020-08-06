@@ -228,13 +228,20 @@ export const getNormalDataset = createSelector(
 
     // Calculate item simple recipes
     const itemRecipeIds = itemIds.reduce((e: Entities<string>, i) => {
-      const exact = recipeIds.find((r) => r === i);
-      if (exact) {
-        return { ...e, ...{ [i]: i } };
+      const exact = recipes.find((r) => r.id === i);
+      if (exact && !exact.in) {
+        // Exact match has no inputs, so use it
+        return { ...e, ...{ [i]: exact.id } };
       }
-      const matches = recipes.filter((r) => r.out && r.out[i]);
+      const matches = recipes.filter((r) => r.id === i || (r.out && r.out[i]));
       if (matches.length === 1) {
+        // Only one recipe produces this item, so use it
         return { ...e, ...{ [i]: matches[0].id } };
+      }
+      const noIn = matches.find((r) => !r.in);
+      if (noIn) {
+        // One matching recipe requires no inputs, so use it
+        return { ...e, ...{ [i]: noIn.id } };
       }
       return e;
     }, {});
