@@ -1,5 +1,6 @@
 import { Mocks } from 'src/tests';
-import { RecipeUtility } from '~/utilities';
+import { StoreUtility } from '~/utilities';
+import { AppLoadAction } from '../app.actions';
 import * as Actions from './items.actions';
 import { itemsReducer, initialItemsState } from './items.reducer';
 
@@ -10,7 +11,7 @@ describe('Items Reducer', () => {
     it('should load item settings', () => {
       const result = itemsReducer(
         undefined,
-        new Actions.LoadAction(Mocks.ItemSettingsEntities)
+        new AppLoadAction({ itemsState: Mocks.ItemSettingsEntities } as any)
       );
       expect(result).toEqual(Mocks.ItemSettingsEntities);
     });
@@ -39,7 +40,11 @@ describe('Items Reducer', () => {
     it('should set the belt', () => {
       const result = itemsReducer(
         initialItemsState,
-        new Actions.SetBeltAction({ id: Mocks.Item1.id, value: Mocks.Item1.id })
+        new Actions.SetBeltAction({
+          id: Mocks.Item1.id,
+          value: Mocks.Item1.id,
+          default: null,
+        })
       );
       expect(result[Mocks.Recipe1.id].belt).toEqual(Mocks.Item1.id);
     });
@@ -57,17 +62,17 @@ describe('Items Reducer', () => {
 
   describe('RESET_IGNORE', () => {
     it('should call resetField', () => {
-      spyOn(RecipeUtility, 'resetField');
+      spyOn(StoreUtility, 'resetField');
       itemsReducer(null, new Actions.ResetIgnoreAction());
-      expect(RecipeUtility.resetField).toHaveBeenCalledWith(null, 'ignore');
+      expect(StoreUtility.resetField).toHaveBeenCalledWith(null, 'ignore');
     });
   });
 
   describe('RESET_BELT', () => {
     it('should call resetField', () => {
-      spyOn(RecipeUtility, 'resetField');
+      spyOn(StoreUtility, 'resetField');
       itemsReducer(null, new Actions.ResetBeltAction());
-      expect(RecipeUtility.resetField).toHaveBeenCalledWith(null, 'belt');
+      expect(StoreUtility.resetField).toHaveBeenCalledWith(null, 'belt');
     });
   });
 

@@ -2,8 +2,8 @@
 <div class="field">
   <select
     title="Select base game version"
-    [ngModel]="settings.baseDatasetId"
-    (change)="setBaseDataset.emit($event.target.value)"
+    [ngModel]="settings.baseId"
+    (change)="setBase.emit($event.target.value)"
   >
     <option *ngFor="let b of base" [value]="b.id">{{ b.name }}</option>
   </select>
@@ -11,14 +11,14 @@
 </div>
 <div class="field" *ngIf="mods.length">
   <button #btnMods (click)="openSelect = OpenSelect.Mods">
-    {{ settings.modDatasetIds.length }} Mod Set{{
-      settings.modDatasetIds.length === 1 ? '' : 's'
+    {{ settings.modIds.length }} Mod Set{{
+      settings.modIds.length === 1 ? '' : 's'
     }}
     Enabled
   </button>
   <lab-multiselect
     *ngIf="openSelect === OpenSelect.Mods"
-    [enabledIds]="settings.modDatasetIds"
+    [enabledIds]="settings.modIds"
     [options]="mods"
     [default]="data.defaults.modIds"
     [parent]="btnMods"

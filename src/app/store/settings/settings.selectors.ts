@@ -17,7 +17,7 @@ import { SettingsState } from './settings.reducer';
 
 /* Base selector functions */
 export const settingsState = (state: State) => state.settingsState;
-const sBaseDatasetId = (state: SettingsState) => state.baseDatasetId;
+const sBaseDatasetId = (state: SettingsState) => state.baseId;
 const sDisplayRate = (state: SettingsState) => state.displayRate;
 const sItemPrecision = (state: SettingsState) => state.itemPrecision;
 const sBeltPrecision = (state: SettingsState) => state.beltPrecision;
@@ -62,7 +62,7 @@ export const getSettings = createSelector(
   (s, d) => ({
     ...s,
     ...{
-      modDatasetIds: s.modDatasetIds || d?.modIds || [],
+      modIds: s.modIds || d?.modIds || [],
       belt: s.belt || d?.belt,
       fuel: s.fuel || d?.fuel,
       disabledRecipes: s.disabledRecipes || d?.disabledRecipes || [],
@@ -73,10 +73,7 @@ export const getSettings = createSelector(
   })
 );
 
-export const getModDatasetIds = createSelector(
-  getSettings,
-  (s) => s.modDatasetIds
-);
+export const getModIds = createSelector(getSettings, (s) => s.modIds);
 
 export const getBelt = createSelector(getSettings, (s) => s.belt);
 
@@ -119,16 +116,9 @@ export const getAvailableMods = createSelector(
 );
 
 export const getMods = createSelector(
-  getModDatasetIds,
+  getModIds,
   Datasets.getModEntities,
-  Datasets.getDataEntities,
-  (ids, info, data) =>
-    ids
-      .filter((i) => info[i] && data[i])
-      .map((i) => {
-        const mod: Mod = { ...info[i], ...data[i] };
-        return mod;
-      })
+  (ids, data) => ids.filter((i) => data[i]).map((i) => data[i])
 );
 
 export const getDatasets = createSelector(getBase, getMods, (base, mods) =>

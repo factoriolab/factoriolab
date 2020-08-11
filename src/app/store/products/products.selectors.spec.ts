@@ -7,14 +7,15 @@ import * as Selectors from './products.selectors';
 describe('Products Selectors', () => {
   describe('getProducts', () => {
     it('should handle empty/null values', () => {
-      const result = Selectors.getProducts.projector([], {});
+      const result = Selectors.getProducts.projector([], {}, {});
       expect(result.length).toEqual(0);
     });
 
     it('should return the array of products', () => {
       const result = Selectors.getProducts.projector(
-        Mocks.ProductIds,
-        Mocks.ProductEntities
+        Mocks.ProductsState1.ids,
+        Mocks.ProductsState1.entities,
+        Mocks.Data
       );
       expect(result.length).toEqual(Mocks.ProductIds.length);
     });
@@ -214,7 +215,7 @@ describe('Products Selectors', () => {
         {},
         {},
         {},
-        {},
+        [],
         null
       );
       expect(Object.keys(result).length).toEqual(0);
@@ -227,7 +228,7 @@ describe('Products Selectors', () => {
         {},
         {},
         {},
-        {},
+        [],
         null
       );
       expect(MatrixUtility.solveMatricesFor).toHaveBeenCalled();
@@ -294,24 +295,20 @@ describe('Products Selectors', () => {
 
   describe('getZipState', () => {
     it('should put together the required state parts', () => {
-      const products = [Mocks.Product1];
+      const products = Mocks.ProductsState1;
       const items = Mocks.ItemSettingsEntities;
       const recipes = Mocks.RecipeSettingsEntities;
       const settings = initialSettingsState;
-      const data = Mocks.Data;
-      const defaults = Mocks.Defaults;
       const result = Selectors.getZipState.projector(
         products,
         items,
         recipes,
-        settings,
-        defaults
+        settings
       );
       expect(result.products).toBe(products);
       expect(result.items).toBe(items);
       expect(result.recipes).toBe(recipes);
       expect(result.settings).toBe(settings);
-      expect(result.defaults).toBe(defaults);
     });
   });
 });

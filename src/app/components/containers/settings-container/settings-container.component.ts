@@ -70,7 +70,7 @@ export class SettingsContainerComponent implements OnInit {
     }
   }
 
-  setBaseDataset(value: string) {
+  setBase(value: string) {
     this.store.dispatch(new Settings.SetBaseAction(value));
   }
 

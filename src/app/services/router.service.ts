@@ -231,8 +231,8 @@ export class RouterService {
 
   zipSettings(state: Settings.SettingsState): string {
     const init = Settings.initialSettingsState;
-    const bd = this.zipDiff(state.baseDatasetId, init.baseDatasetId);
-    const md = this.zipDiffArray(state.modDatasetIds, init.modDatasetIds);
+    const bd = this.zipDiff(state.baseId, init.baseId);
+    const md = this.zipDiffArray(state.modIds, init.modIds);
     const dr = this.zipDiffNum(state.displayRate, init.displayRate);
     const ip = this.zipDiffNum(state.itemPrecision, init.itemPrecision);
     const bp = this.zipDiffNum(state.beltPrecision, init.beltPrecision);
@@ -279,11 +279,11 @@ export class RouterService {
     let v = '';
     v = s[i++];
     if (v !== '') {
-      settings.baseDatasetId = v;
+      settings.baseId = v;
     }
     v = s[i++];
     if (v !== '') {
-      settings.modDatasetIds = this.parseArray(v);
+      settings.modIds = this.parseArray(v);
     }
     v = s[i++];
     if (v !== '') {

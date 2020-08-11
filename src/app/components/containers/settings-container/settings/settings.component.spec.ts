@@ -5,28 +5,38 @@ import { FormsModule } from '@angular/forms';
 import { Mocks, TestUtility, ElementId } from 'src/tests';
 import { IconComponent } from '~/components';
 import { Theme } from '~/models';
-import { SettingsState, initialSettingsState } from '~/store/settings';
 import { SettingsComponent } from './settings.component';
 
 @Component({
   selector: 'lab-test-settings',
   template: `
     <lab-settings
-      [settings]="settings"
       [data]="data"
+      [base]="base"
+      [mods]="mods"
+      [settings]="settings"
+      (setBase)="setBase($event)"
+      (enableMod)="enableMod($event)"
+      (disableMod)="disableMod($event)"
+      (setBelt)="setBelt($event)"
+      (setFuel)="setFuel($event)"
+      (disableRecipe)="disableRecipe($event)"
+      (enableRecipe)="enableRecipe($event)"
+      (preferFactory)="preferFactory($event)"
+      (dropFactory)="dropFactory($event)"
+      (preferModule)="preferModule($event)"
+      (dropModule)="dropModule($event)"
+      (setBeaconModule)="setBeaconModule($event)"
       (setDisplayRate)="setDisplayRate($event)"
       (setItemPrecision)="setItemPrecision($event)"
       (setBeltPrecision)="setBeltPrecision($event)"
       (setFactoryPrecision)="setFactoryPrecision($event)"
-      (setBelt)="setBelt($event)"
-      (setAssembler)="setAssembler($event)"
-      (setFurnace)="setFurnace($event)"
-      (setOilRecipe)="setOilRecipe($event)"
-      (setFuel)="setFuel($event)"
-      (setProdModule)="setProdModule($event)"
-      (setSpeedModule)="setSpeedModule($event)"
-      (setBeaconModule)="setBeaconModule($event)"
       (setBeaconCount)="setBeaconCount($event)"
+      (setDrillModule)="setDrillModule($event)"
+      (setMiningBonus)="setMiningBonus($event)"
+      (setResearchSpeed)="setResearchSpeed($event)"
+      (setFlowRate)="setFlowRate($event)"
+      (setExpensive)="setExpensive($event)"
       (setTheme)="setTheme($event)"
     >
     </lab-settings>
@@ -34,21 +44,32 @@ import { SettingsComponent } from './settings.component';
 })
 class TestSettingsComponent {
   @ViewChild(SettingsComponent) child: SettingsComponent;
-  settings: SettingsState = initialSettingsState;
   data = Mocks.Data;
+  base = Mocks.Raw.base;
+  mods = Mocks.Raw.mods;
+  settings = Mocks.SettingsState1;
+  setBase(data) {}
+  enableMod(data) {}
+  disableMod(data) {}
+  setBelt(data) {}
+  setFuel(data) {}
+  disableRecipe(data) {}
+  enableRecipe(data) {}
+  preferFactory(data) {}
+  dropFactory(data) {}
+  preferModule(data) {}
+  dropModule(data) {}
+  setBeaconModule(data) {}
   setDisplayRate(data) {}
   setItemPrecision(data) {}
   setBeltPrecision(data) {}
   setFactoryPrecision(data) {}
-  setBelt(data) {}
-  setAssembler(data) {}
-  setFurnace(data) {}
-  setOilRecipe(data) {}
-  setFuel(data) {}
-  setProdModule(data) {}
-  setSpeedModule(data) {}
-  setBeaconModule(data) {}
   setBeaconCount(data) {}
+  setDrillModule(data) {}
+  setMiningBonus(data) {}
+  setResearchSpeed(data) {}
+  setFlowRate(data) {}
+  setExpensive(data) {}
   setTheme(data) {}
 }
 
@@ -71,12 +92,6 @@ describe('SettingsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should watch the scroll position', () => {
-    const scrollTop = 10;
-    component.child.scroll({ target: { scrollTop } } as any);
-    expect(component.child.scrollTop).toEqual(scrollTop);
   });
 
   it('should emit numeric settings', () => {

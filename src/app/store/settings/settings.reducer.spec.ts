@@ -1,5 +1,6 @@
 import { ItemId, RecipeId, Mocks } from 'src/tests';
 import { DisplayRate, ResearchSpeed, LocalStorageKey, Theme } from '~/models';
+import { AppLoadAction } from '../app.actions';
 import * as Actions from './settings.actions';
 import {
   settingsReducer,
@@ -12,7 +13,9 @@ describe('Settings Reducer', () => {
     it('should load settings', () => {
       const result = settingsReducer(
         undefined,
-        new Actions.LoadAction({ displayRate: DisplayRate.PerHour } as any)
+        new AppLoadAction({
+          settingsState: { displayRate: DisplayRate.PerHour },
+        } as any)
       );
       expect(result.displayRate).toEqual(DisplayRate.PerHour);
     });
@@ -20,40 +23,37 @@ describe('Settings Reducer', () => {
 
   describe('SET_BASE', () => {
     it('should set the base dataset id and defaults', () => {
-      const mod = Mocks.Base;
-      const result = settingsReducer(undefined, new Actions.SetBaseAction(mod));
-      expect(result.baseDatasetId).toEqual(mod.id);
-      expect(result.belt).toEqual(mod.defaults.belt);
-      expect(result.fuel).toEqual(mod.defaults.fuel);
-      expect(Object.keys(result.disabledRecipes)).toEqual(
-        mod.defaults.disabledRecipes
-      );
-      expect(result.factoryRank).toEqual(mod.defaults.factoryRank);
-      expect(result.moduleRank).toEqual(mod.defaults.moduleRank);
-      expect(result.beaconModule).toEqual(mod.defaults.beaconModule);
+      const id = Mocks.BaseInfo.id;
+      const result = settingsReducer(undefined, new Actions.SetBaseAction(id));
+      expect(result.baseId).toEqual(id);
+      expect(result.belt).toBeNull();
+      expect(result.fuel).toBeNull();
+      expect(result.disabledRecipes).toBeNull();
+      expect(result.factoryRank).toBeNull();
+      expect(result.moduleRank).toBeNull();
+      expect(result.beaconModule).toBeNull();
     });
   });
 
   describe('ENABLE_MOD', () => {
     it('should enable a mod', () => {
+      const id = 'test';
       const result = settingsReducer(
         undefined,
-        new Actions.EnableModAction('test')
+        new Actions.EnableModAction({ id, default: [] })
       );
-      expect(result.modDatasetIds).toEqual([
-        ...initialSettingsState.modDatasetIds,
-        'test',
-      ]);
+      expect(result.modIds).toEqual([id]);
     });
   });
 
   describe('DISABLE_MOD', () => {
     it('should disable a mod', () => {
+      const id = 'test';
       const result = settingsReducer(
-        undefined,
-        new Actions.DisableModAction(initialSettingsState.modDatasetIds[0])
+        { modIds: [id] } as any,
+        new Actions.DisableModAction({ id, default: [] })
       );
-      expect(result.modDatasetIds).toEqual([]);
+      expect(result.modIds).toBeNull();
     });
   });
 
@@ -103,7 +103,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.TransportBelt;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetBeltAction(value)
+        new Actions.SetBeltAction({ value, default: null })
       );
       expect(result.belt).toEqual(value);
     });
@@ -114,7 +114,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.Wood;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetFuelAction(value)
+        new Actions.SetFuelAction({ value, default: null })
       );
       expect(result.fuel).toEqual(value);
     });
@@ -122,67 +122,67 @@ describe('Settings Reducer', () => {
 
   describe('DISABLE_RECIPE', () => {
     it('should disable a recipe', () => {
-      const value = RecipeId.AdvancedOilProcessing;
+      const id = RecipeId.AdvancedOilProcessing;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.DisableRecipeAction(value)
+        new Actions.DisableRecipeAction({ id, default: [] })
       );
-      expect(result.disabledRecipes[value]).toBeTrue();
+      expect(result.disabledRecipes).toEqual([id]);
     });
   });
 
   describe('ENABLE_RECIPE', () => {
     it('should enable a recipe', () => {
-      const value = RecipeId.BasicOilProcessing;
+      const id = RecipeId.BasicOilProcessing;
       const result = settingsReducer(
-        initialSettingsState,
-        new Actions.EnableRecipeAction(value)
+        { disabledRecipes: [id] } as any,
+        new Actions.EnableRecipeAction({ id, default: [] })
       );
-      expect(result.disabledRecipes[value]).toBeUndefined();
+      expect(result.disabledRecipes).toBeNull();
     });
   });
 
   describe('PREFER_FACTORY', () => {
     it('should add a factory to the rank list', () => {
-      const value = ItemId.AssemblingMachine1;
+      const id = ItemId.AssemblingMachine1;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.PreferFactoryAction(value)
+        new Actions.PreferFactoryAction({ id, default: [] })
       );
-      expect(result.factoryRank).toEqual([value]);
+      expect(result.factoryRank).toEqual([id]);
     });
   });
 
   describe('DROP_FACTORY', () => {
     it('should remove a factory from the rank list', () => {
-      const value = ItemId.AssemblingMachine1;
+      const id = ItemId.AssemblingMachine1;
       const result = settingsReducer(
-        { ...initialSettingsState, ...{ factoryRank: [value] } },
-        new Actions.DropFactoryAction(value)
+        { ...initialSettingsState, ...{ factoryRank: [id] } },
+        new Actions.DropFactoryAction({ id, default: [] })
       );
-      expect(result.factoryRank).toEqual([]);
+      expect(result.factoryRank).toBeNull();
     });
   });
 
   describe('PREFER_MODULE', () => {
     it('should add a module to the rank list', () => {
-      const value = ItemId.SpeedModule;
+      const id = ItemId.SpeedModule;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.PreferModuleAction(value)
+        new Actions.PreferModuleAction({ id, default: [] })
       );
-      expect(result.moduleRank).toEqual([value]);
+      expect(result.moduleRank).toEqual([id]);
     });
   });
 
   describe('DROP_MODULE', () => {
     it('should remove a module from the rank list', () => {
-      const value = ItemId.SpeedModule;
+      const id = ItemId.SpeedModule;
       const result = settingsReducer(
-        { ...initialSettingsState, ...{ moduleRank: [value] } },
-        new Actions.DropModuleAction(value)
+        { ...initialSettingsState, ...{ moduleRank: [id] } },
+        new Actions.DropModuleAction({ id, default: [] })
       );
-      expect(result.moduleRank).toEqual([]);
+      expect(result.moduleRank).toBeNull();
     });
   });
 
@@ -191,7 +191,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.SpeedModule;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetBeaconModuleAction(value)
+        new Actions.SetBeaconModuleAction({ value, default: null })
       );
       expect(result.beaconModule).toEqual(value);
     });

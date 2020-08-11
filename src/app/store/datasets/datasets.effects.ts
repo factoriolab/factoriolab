@@ -28,12 +28,11 @@ export class DatasetsEffects {
     ofType(AppActionType.LOAD),
     switchMap((a: AppLoadAction) => {
       const id =
-        a.payload.settingsState?.baseDatasetId ||
-        Settings.initialSettingsState.baseDatasetId;
+        a.payload.settingsState?.baseId || Settings.initialSettingsState.baseId;
       return this.requestData(id).pipe(
         tap((value) =>
           this.loadModsForBase(
-            a.payload.settingsState?.modDatasetIds || value.defaults.modIds
+            a.payload.settingsState?.modIds || value.defaults.modIds
           )
         ),
         tap((value) => {
@@ -87,7 +86,7 @@ export class DatasetsEffects {
     private router: RouterService
   ) {
     if (!location.hash) {
-      const id = Settings.initialSettingsState.baseDatasetId;
+      const id = Settings.initialSettingsState.baseId;
       this.requestData(id).subscribe((value) => {
         this.router.unzipping = true;
         this.store.dispatch(new LoadModAction({ id, value }));

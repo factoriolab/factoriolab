@@ -197,17 +197,14 @@ export class RateUtility {
     beltSpeed: Entities<Rational>
   ) {
     node = { ...node };
-    if (node.children) {
-      node.children = node.children.map((n) => ({ ...n }));
-    }
     const belt = itemSettings[node.itemId]?.belt;
     if (node.items && belt) {
       node.belts = node.items.div(beltSpeed[belt]);
     }
     if (node.children) {
-      for (const child of node.children) {
-        this.calculateNodeBelts(child, itemSettings, beltSpeed);
-      }
+      node.children = node.children.map((n) =>
+        this.calculateNodeBelts(n, itemSettings, beltSpeed)
+      );
     }
     return node;
   }

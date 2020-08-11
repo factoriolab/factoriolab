@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Mocks, TestUtility, ItemId } from 'src/tests';
@@ -13,6 +13,8 @@ import { RankerComponent } from './ranker.component';
       [data]="data"
       [rank]="rank"
       [options]="options"
+      [default]="default"
+      [parent]="element.nativeElement"
       (cancel)="cancel()"
       (preferItem)="preferItem($event)"
       (dropItem)="dropItem($event)"
@@ -25,9 +27,12 @@ class TestRankerComponent {
   data: Dataset = Mocks.Data;
   rank = [ItemId.AssemblingMachine1];
   options = [ItemId.AssemblingMachine2];
+  default = [];
   cancel() {}
   preferItem(data) {}
   dropItem(data) {}
+
+  constructor(public element: ElementRef) {}
 }
 
 describe('RankerComponent', () => {
@@ -75,15 +80,19 @@ describe('RankerComponent', () => {
     spyOn(component, 'preferItem');
     component.child.opening = false;
     TestUtility.clickSelector(fixture, 'lab-icon', 1);
-    expect(component.preferItem).toHaveBeenCalledWith(
-      ItemId.AssemblingMachine2
-    );
+    expect(component.preferItem).toHaveBeenCalledWith({
+      id: ItemId.AssemblingMachine2,
+      default: [],
+    });
   });
 
   it('should drop an item', () => {
     spyOn(component, 'dropItem');
     component.child.opening = false;
     TestUtility.clickSelector(fixture, 'lab-icon', 0);
-    expect(component.dropItem).toHaveBeenCalledWith(ItemId.AssemblingMachine1);
+    expect(component.dropItem).toHaveBeenCalledWith({
+      id: ItemId.AssemblingMachine1,
+      default: [],
+    });
   });
 });

@@ -32,6 +32,7 @@ export enum ItemId {
   TransportBelt = 'transport-belt',
   Uranium235 = 'uranium-235',
   Uranium238 = 'uranium-238',
+  Water = 'water',
   Wood = 'wood',
   WoodenChest = 'wooden-chest',
 }

@@ -42,7 +42,7 @@ export class SettingsComponent {
   @Input() mods: ModInfo[];
   @Input() settings: SettingsState;
 
-  @Output() setBaseDataset = new EventEmitter<string>();
+  @Output() setBase = new EventEmitter<string>();
   @Output() enableMod = new EventEmitter<DefaultTogglePayload>();
   @Output() disableMod = new EventEmitter<DefaultTogglePayload>();
   @Output() setBelt = new EventEmitter<DefaultPayload>();

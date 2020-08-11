@@ -1,6 +1,5 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import { Step, Rational } from '~/models';
-import { initialSettingsState } from '~/store/settings';
+import { Step, Rational, Entities } from '~/models';
 import { RateUtility } from './rate.utility';
 import { MatrixUtility, MatrixSolver } from './matrix.utility';
 
@@ -19,7 +18,7 @@ describe('MatrixUtility', () => {
         steps,
         Mocks.ItemSettingsInitial,
         Mocks.RecipeSettingsInitial,
-        {},
+        [],
         ItemId.Coal,
         Mocks.AdjustedData
       );
@@ -38,10 +37,7 @@ describe('MatrixUtility', () => {
         steps,
         Mocks.ItemSettingsInitial,
         Mocks.RecipeSettingsInitial,
-        {
-          [RecipeId.KovarexEnrichmentProcess]: true,
-          [RecipeId.UraniumProcessing]: true,
-        },
+        [RecipeId.KovarexEnrichmentProcess, RecipeId.UraniumProcessing],
         ItemId.Coal,
         Mocks.AdjustedData
       );
@@ -60,7 +56,7 @@ describe('MatrixUtility', () => {
         steps,
         Mocks.ItemSettingsInitial,
         Mocks.RecipeSettingsInitial,
-        {},
+        [],
         ItemId.Coal,
         Mocks.AdjustedData
       );
@@ -85,7 +81,7 @@ describe('MatrixSolver', () => {
       steps,
       Mocks.ItemSettingsInitial,
       Mocks.RecipeSettingsInitial,
-      {},
+      [],
       ItemId.Coal,
       Mocks.AdjustedData
     );
@@ -125,7 +121,10 @@ describe('MatrixSolver', () => {
     });
 
     it('should calculate recipes to use', () => {
-      matrix.recipeDisabled = initialSettingsState.disabledRecipes;
+      matrix.recipeDisabled = Mocks.SettingsState1.disabledRecipes.reduce(
+        (e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }),
+        {}
+      );
       matrix.calculateRecipes();
       expect(matrix.steps).toEqual([
         {
@@ -180,13 +179,6 @@ describe('MatrixSolver', () => {
       matrix.parseRecipeRecursively(recipe);
       expect(matrix.findRecipesRecursively).not.toHaveBeenCalled();
       expect(Object.keys(matrix.recipes).length).toEqual(1);
-    });
-
-    it('should ignore recipes with no inputs', () => {
-      const recipe = Mocks.AdjustedData.recipeR[RecipeId.IronOre];
-      matrix.parseRecipeRecursively(recipe);
-      expect(matrix.findRecipesRecursively).not.toHaveBeenCalled();
-      expect(Object.keys(matrix.recipes).length).toEqual(0);
     });
 
     it('should parse through recipe inputs', () => {
@@ -323,7 +315,10 @@ describe('MatrixSolver', () => {
     it('should parse outputs from solver', () => {
       matrix.steps[0].itemId = ItemId.HeavyOil;
       matrix.steps[0].recipeId = null;
-      matrix.recipeDisabled = Mocks.InitialSettingsState.disabledRecipes;
+      matrix.recipeDisabled = Mocks.SettingsState1.disabledRecipes.reduce(
+        (e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }),
+        {}
+      );
       matrix.calculateRecipes();
       // Add dummy recipe with no inputs
       matrix.recipeIds.push(RecipeId.IronOre);
@@ -358,6 +353,20 @@ describe('MatrixSolver', () => {
           itemId: ItemId.PetroleumGas,
           items: Rational.zero,
           surplus: new Rational(BigInt(11), BigInt(5)),
+        },
+        {
+          depth: 1,
+          itemId: ItemId.CrudeOil,
+          recipeId: RecipeId.CrudeOil,
+          items: new Rational(BigInt(4)),
+          factories: new Rational(BigInt(8), BigInt(15)),
+        },
+        {
+          depth: 1,
+          itemId: ItemId.Water,
+          recipeId: RecipeId.Water,
+          items: Rational.two,
+          factories: new Rational(BigInt(8), BigInt(3)),
         },
       ]);
     });

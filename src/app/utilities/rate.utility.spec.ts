@@ -333,12 +333,12 @@ describe('RateUtility', () => {
           belts: null,
         },
       ];
-      RateUtility.calculateBelts(
+      const result = RateUtility.calculateBelts(
         steps,
         Mocks.ItemSettingsEntities,
         Mocks.BeltSpeed
       );
-      expect(steps[0].belts).toBeNull();
+      expect(result[0].belts).toBeNull();
     });
 
     it('should skip steps with no items', () => {
@@ -351,12 +351,12 @@ describe('RateUtility', () => {
           belts: null,
         },
       ];
-      RateUtility.calculateBelts(
+      const result = RateUtility.calculateBelts(
         steps,
         Mocks.ItemSettingsEntities,
         Mocks.BeltSpeed
       );
-      expect(steps[0].belts).toBeNull();
+      expect(result[0].belts).toBeNull();
     });
 
     it('should calculate required belts for steps', () => {
@@ -369,12 +369,12 @@ describe('RateUtility', () => {
           belts: Rational.zero,
         },
       ];
-      RateUtility.calculateBelts(
+      const result = RateUtility.calculateBelts(
         steps,
         Mocks.ItemSettingsEntities,
         Mocks.BeltSpeed
       );
-      expect(steps[0].belts).toEqual(Rational.one);
+      expect(result[0].belts).toEqual(Rational.one);
     });
   });
 
@@ -388,12 +388,12 @@ describe('RateUtility', () => {
         items: null,
         belts: null,
       };
-      RateUtility.calculateNodeBelts(
+      const result = RateUtility.calculateNodeBelts(
         node,
         Mocks.ItemSettingsEntities,
         Mocks.BeltSpeed
       );
-      expect(node.belts).toBeNull();
+      expect(result.belts).toBeNull();
     });
 
     it('should calculate required belts for nodes', () => {
@@ -415,13 +415,13 @@ describe('RateUtility', () => {
           },
         ],
       };
-      RateUtility.calculateNodeBelts(
+      const result = RateUtility.calculateNodeBelts(
         node,
         Mocks.ItemSettingsEntities,
         Mocks.BeltSpeed
       );
-      expect(node.belts).toEqual(Rational.one);
-      expect(node.children[0].belts).toEqual(Rational.one);
+      expect(result.belts).toEqual(Rational.one);
+      expect(result.children[0].belts).toEqual(Rational.one);
     });
   });
 

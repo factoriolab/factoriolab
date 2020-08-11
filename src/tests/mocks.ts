@@ -1,4 +1,6 @@
 import { data } from 'src/data';
+import base from 'src/data/0.18/data.json';
+import mod from 'src/data/research/data.json';
 import {
   Product,
   RateType,
@@ -9,38 +11,32 @@ import {
   Rational,
   RationalProduct,
   ItemSettings,
+  Mod,
 } from '~/models';
-import {
-  DatasetsState,
-  datasetsReducer,
-  LoadAppAction,
-} from '~/store/datasets';
-import { getProductsBy } from '~/store/products';
+import { initialDatasetsState } from '~/store/datasets';
+import { getProductsBy, ProductsState } from '~/store/products';
 import {
   getRecipeSettings,
   getAdjustedDataset,
   getRationalRecipeSettings,
 } from '~/store/recipes';
-import {
-  settingsReducer,
-  getNormalDataset,
-  SetBaseAction,
-} from '~/store/settings';
+import { getNormalDataset, initialSettingsState } from '~/store/settings';
 import { getItemSettings } from '~/store/items';
 import { ItemId } from './item-id';
 
 export const Raw = data;
-export const DataState: DatasetsState = datasetsReducer(
-  undefined,
-  new LoadAppAction(data)
+export const DataState = initialDatasetsState;
+export const BaseInfo = data.base[0];
+export const BaseData = base;
+export const Base: Mod = { ...BaseInfo, ...BaseData };
+export const Mod1: Mod = { ...data.mods[0], ...mod };
+export const ModInfo = [data.mods[0]];
+export const Data = getNormalDataset.projector(
+  data.app,
+  [Base, Mod1],
+  Base.defaults
 );
-export const Base = data.base[0];
-export const Mods = [data.mods[0]];
-export const Data = getNormalDataset.projector(data.app, [
-  data.base[0],
-  data.mods[0],
-]);
-export const Defaults = data.base[0].defaults;
+export const Defaults = base.defaults;
 export const CategoryId = Data.categoryIds[0];
 export const Item1 = Data.itemEntities[Data.itemIds[0]];
 export const Item2 = Data.itemEntities[Data.itemIds[1]];
@@ -70,6 +66,14 @@ export const Product4: Product = {
   rateType: RateType.Factories,
 };
 export const Products = [Product1, Product2, Product3, Product4];
+export const ProductsState1: ProductsState = {
+  ids: Products.map((p) => p.id),
+  entities: Products.reduce(
+    (e: Entities<Product>, p) => ({ ...e, ...{ [p.id]: p } }),
+    {}
+  ),
+  index: Products.length + 1,
+};
 export const RationalProducts = Products.map((p) => new RationalProduct(p));
 export const ProductIds = Products.map((p) => p.id);
 export const ProductEntities = getProductsBy.projector(RationalProducts);
@@ -124,10 +128,8 @@ export const RecipeSettingsEntities: Entities<RecipeSettings> = {};
 for (const recipe of Data.recipeIds.map((i) => Data.recipeEntities[i])) {
   RecipeSettingsEntities[recipe.id] = { ...RecipeSettings1 };
 }
-export const InitialSettingsState = settingsReducer(
-  undefined,
-  new SetBaseAction(data.base[0])
-);
+export const InitialSettingsState = initialSettingsState;
+export const SettingsState1 = { ...initialSettingsState, ...Defaults };
 export const ItemSettingsInitial = getItemSettings.projector(
   {},
   Data,
@@ -135,9 +137,9 @@ export const ItemSettingsInitial = getItemSettings.projector(
 );
 export const RecipeSettingsInitial = getRecipeSettings.projector(
   {},
-  InitialSettingsState.factoryRank,
-  InitialSettingsState.moduleRank,
-  InitialSettingsState.beaconModule,
+  Defaults.factoryRank,
+  Defaults.moduleRank,
+  Defaults.beaconModule,
   InitialSettingsState.beaconCount,
   InitialSettingsState.drillModule,
   Data

@@ -4,8 +4,8 @@ import { SettingsAction, SettingsActionType } from './settings.actions';
 import { AppLoadAction, AppActionType } from '../app.actions';
 
 export interface SettingsState {
-  baseDatasetId: string;
-  modDatasetIds: string[];
+  baseId: string;
+  modIds: string[];
   belt: string;
   fuel: string;
   disabledRecipes: string[];
@@ -26,8 +26,8 @@ export interface SettingsState {
 }
 
 export const initialSettingsState: SettingsState = {
-  baseDatasetId: '0.18',
-  modDatasetIds: null,
+  baseId: '0.18',
+  modIds: null,
   belt: null,
   fuel: null,
   disabledRecipes: null,
@@ -61,8 +61,8 @@ export function settingsReducer(
       return {
         ...state,
         ...{
-          baseDatasetId: action.payload,
-          modDatasetIds: null,
+          baseId: action.payload,
+          modIds: null,
           belt: null,
           fuel: null,
           disabledRecipes: null,
@@ -76,10 +76,7 @@ export function settingsReducer(
       return {
         ...state,
         ...{
-          modDatasetIds: StoreUtility.tryAddId(
-            state.modDatasetIds,
-            action.payload
-          ),
+          modIds: StoreUtility.tryAddId(state.modIds, action.payload),
         },
       };
     }
@@ -87,10 +84,7 @@ export function settingsReducer(
       return {
         ...state,
         ...{
-          modDatasetIds: StoreUtility.tryRemoveId(
-            state.modDatasetIds,
-            action.payload
-          ),
+          modIds: StoreUtility.tryRemoveId(state.modIds, action.payload),
         },
       };
     }
