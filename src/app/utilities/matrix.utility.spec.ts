@@ -14,7 +14,7 @@ describe('MatrixUtility', () => {
           recipeId: RecipeId.SteelChest,
         },
       ];
-      MatrixUtility.solveMatricesFor(
+      const result = MatrixUtility.solveMatricesFor(
         steps,
         Mocks.ItemSettingsInitial,
         Mocks.RecipeSettingsInitial,
@@ -22,7 +22,7 @@ describe('MatrixUtility', () => {
         ItemId.Coal,
         Mocks.AdjustedData
       );
-      expect(steps[0].factories).toBeFalsy();
+      expect(result[0].factories).toBeFalsy();
     });
 
     it('should return if no matrix recipes are found', () => {
@@ -33,7 +33,7 @@ describe('MatrixUtility', () => {
           items: Rational.one,
         },
       ];
-      MatrixUtility.solveMatricesFor(
+      const result = MatrixUtility.solveMatricesFor(
         steps,
         Mocks.ItemSettingsInitial,
         Mocks.RecipeSettingsInitial,
@@ -41,7 +41,7 @@ describe('MatrixUtility', () => {
         ItemId.Coal,
         Mocks.AdjustedData
       );
-      expect(steps[0].factories).toBeFalsy();
+      expect(result[0].factories).toBeFalsy();
     });
 
     it('should solve a matrix', () => {
@@ -52,7 +52,7 @@ describe('MatrixUtility', () => {
           items: Rational.one,
         },
       ];
-      MatrixUtility.solveMatricesFor(
+      const result = MatrixUtility.solveMatricesFor(
         steps,
         Mocks.ItemSettingsInitial,
         Mocks.RecipeSettingsInitial,
@@ -60,7 +60,7 @@ describe('MatrixUtility', () => {
         ItemId.Coal,
         Mocks.AdjustedData
       );
-      expect(steps[0].factories).toBeTruthy();
+      expect(result[0].factories).toBeTruthy();
     });
   });
 });

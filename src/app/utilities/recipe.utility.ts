@@ -25,7 +25,7 @@ export class RecipeUtility {
     moduleRank: string[],
     count: number
   ) {
-    const module = this.bestMatch([...allowedModules, 'module'], moduleRank);
+    const module = this.bestMatch(['module', ...allowedModules], moduleRank);
 
     // Create the appropriate array of default modules
     const modules = [];
