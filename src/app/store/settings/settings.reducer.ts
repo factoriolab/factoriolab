@@ -26,7 +26,7 @@ export interface SettingsState {
 }
 
 export const initialSettingsState: SettingsState = {
-  baseId: '0.18',
+  baseId: '1.0',
   modIds: null,
   belt: null,
   fuel: null,
