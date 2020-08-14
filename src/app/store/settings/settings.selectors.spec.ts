@@ -215,6 +215,114 @@ describe('Settings Selectors', () => {
       );
       expect(Object.keys(result.limitations).length).toBeGreaterThan(0);
     });
+
+    it('should handle empty categories', () => {
+      const data = {
+        ...Mocks.Raw.app,
+        ...{ categories: [{ id: 'test', name: 'test' }] },
+      };
+      const result = Selectors.getNormalDataset.projector(
+        data,
+        [Mocks.Base, Mocks.Mod1],
+        Mocks.Defaults
+      );
+      expect(result.categoryIds.length).toBeGreaterThan(0);
+      expect(Object.keys(result.categoryEntities).length).toEqual(
+        result.categoryIds.length
+      );
+      expect(Object.keys(result.categoryItemRows).length).toEqual(
+        result.categoryIds.length - 1
+      );
+      expect(result.iconIds.length).toBeGreaterThan(0);
+      expect(Object.keys(result.iconEntities).length).toEqual(
+        result.iconIds.length
+      );
+      expect(result.itemIds.length).toBeGreaterThan(0);
+      expect(result.beltIds.length).toBeGreaterThan(0);
+      expect(result.fuelIds.length).toBeGreaterThan(0);
+      expect(result.factoryIds.length).toBeGreaterThan(0);
+      expect(result.moduleIds.length).toBeGreaterThan(0);
+      expect(result.beaconModuleIds.length).toBeGreaterThan(0);
+      expect(Object.keys(result.itemEntities).length).toEqual(
+        result.itemIds.length
+      );
+      expect(Object.keys(result.itemR).length).toEqual(result.itemIds.length);
+      expect(Object.keys(result.itemRecipeIds).length).toBeGreaterThan(0);
+      expect(Object.keys(result.itemRecipeIds).length).toBeLessThan(
+        result.itemIds.length
+      );
+      expect(result.recipeIds.length).toBeGreaterThan(0);
+      expect(Object.keys(result.recipeEntities).length).toEqual(
+        result.recipeIds.length
+      );
+      expect(Object.keys(result.recipeR).length).toEqual(
+        result.recipeIds.length
+      );
+      expect(Object.keys(result.recipeModuleIds).length).toEqual(
+        result.recipeIds.length
+      );
+      expect(Object.keys(result.limitations).length).toBeGreaterThan(0);
+    });
+
+    it('should find item recipe with no inputs', () => {
+      const data = {
+        ...Mocks.Raw.app,
+        ...{
+          recipes: [
+            {
+              id: 'test',
+              time: 1,
+              out: {
+                [ItemId.WoodenChest]: 1,
+              },
+              producers: [ItemId.AssemblingMachine1],
+            },
+          ],
+        },
+      };
+      const result = Selectors.getNormalDataset.projector(
+        data,
+        [Mocks.Base, Mocks.Mod1],
+        Mocks.Defaults
+      );
+      expect(result.categoryIds.length).toBeGreaterThan(0);
+      expect(Object.keys(result.categoryEntities).length).toEqual(
+        result.categoryIds.length
+      );
+      expect(Object.keys(result.categoryItemRows).length).toEqual(
+        result.categoryIds.length
+      );
+      expect(result.iconIds.length).toBeGreaterThan(0);
+      expect(Object.keys(result.iconEntities).length).toEqual(
+        result.iconIds.length
+      );
+      expect(result.itemIds.length).toBeGreaterThan(0);
+      expect(result.beltIds.length).toBeGreaterThan(0);
+      expect(result.fuelIds.length).toBeGreaterThan(0);
+      expect(result.factoryIds.length).toBeGreaterThan(0);
+      expect(result.moduleIds.length).toBeGreaterThan(0);
+      expect(result.beaconModuleIds.length).toBeGreaterThan(0);
+      expect(Object.keys(result.itemEntities).length).toEqual(
+        result.itemIds.length
+      );
+      expect(Object.keys(result.itemR).length).toEqual(result.itemIds.length);
+      expect(Object.keys(result.itemRecipeIds).length).toBeGreaterThan(0);
+      expect(Object.keys(result.itemRecipeIds).length).toBeLessThan(
+        result.itemIds.length
+      );
+      expect(result.recipeIds.length).toBeGreaterThan(0);
+      expect(Object.keys(result.recipeEntities).length).toEqual(
+        result.recipeIds.length
+      );
+      expect(Object.keys(result.recipeR).length).toEqual(
+        result.recipeIds.length
+      );
+      expect(Object.keys(result.recipeModuleIds).length).toEqual(
+        result.recipeIds.length
+      );
+      expect(Object.keys(result.limitations).length).toBeGreaterThan(0);
+      expect(result.itemRecipeIds[ItemId.WoodenChest]).toEqual('test');
+    });
   });
 
   describe('getDataset', () => {

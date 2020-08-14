@@ -3,7 +3,7 @@ import { Action } from '@ngrx/store';
 import { RateType, IdPayload } from '~/models';
 
 export const enum ProductsActionType {
-  RESET = '[Products Page] Reset',
+  RESET = '[Products Effect] Reset',
   ADD = '[Products Page] Add',
   REMOVE = '[Products Page] Remove',
   EDIT_PRODUCT = '[Products Page] Edit Product',
@@ -13,7 +13,7 @@ export const enum ProductsActionType {
 
 export class ResetAction implements Action {
   readonly type = ProductsActionType.RESET;
-  constructor() {}
+  constructor(public payload: string) {}
 }
 
 export class AddAction implements Action {

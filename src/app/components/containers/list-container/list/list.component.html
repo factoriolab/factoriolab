@@ -206,7 +206,9 @@
                   }}%
                 </div>
               </ng-container>
-              <ng-container *ngIf="step.recipeId !== data.itemRecipeIds[step.itemId]">
+              <ng-container
+                *ngIf="step.recipeId !== data.itemRecipeIds[step.itemId]"
+              >
                 <lab-icon
                   [iconId]="step.recipeId"
                   [tooltip]="data.recipeEntities[step.recipeId].name"
@@ -238,7 +240,7 @@
                 <ng-template #factoryPicker>
                   <div class="relative">
                     <lab-icon
-                      class="clickable"
+                      class="list-edit-factory clickable"
                       title="Click to change factory"
                       [iconId]="factory"
                       [tooltip]="data.itemEntities[factory].name"

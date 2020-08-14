@@ -29,7 +29,8 @@ export const DataState = initialDatasetsState;
 export const BaseInfo = data.base[0];
 export const BaseData = base;
 export const Base: Mod = { ...BaseInfo, ...BaseData };
-export const Mod1: Mod = { ...data.mods[0], ...mod };
+export const ModData1 = mod;
+export const Mod1: Mod = { ...data.mods[0], ...ModData1 };
 export const ModInfo = [data.mods[0]];
 export const Data = getNormalDataset.projector(
   data.app,

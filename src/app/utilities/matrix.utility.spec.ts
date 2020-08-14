@@ -63,6 +63,28 @@ describe('MatrixUtility', () => {
       expect(result[0].factories).toBeTruthy();
     });
   });
+
+  describe('solveTryCatch', () => {
+    it('should return the matrix steps', () => {
+      const matrix = { solve: () => {}, steps: [] } as any;
+      spyOn(matrix, 'solve');
+      const result = MatrixUtility.solveTryCatch(null, matrix);
+      expect(matrix.solve).toHaveBeenCalled();
+      expect(result).toEqual([]);
+    });
+
+    it('should handle an error', () => {
+      const matrix = {
+        solve: () => {
+          throw new Error('test');
+        },
+      } as any;
+      spyOn(console, 'error');
+      const result = MatrixUtility.solveTryCatch([], matrix);
+      expect(console.error).toHaveBeenCalledTimes(2);
+      expect(result).toEqual([]);
+    });
+  });
 });
 
 describe('MatrixSolver', () => {
@@ -189,6 +211,76 @@ describe('MatrixSolver', () => {
       );
       expect(Object.keys(matrix.recipes).length).toEqual(1);
     });
+
+    it('should exit if it finds a circular reference', () => {
+      spyOn(console, 'warn');
+      spyOn(matrix, 'checkForCircularRecipes').and.returnValue(true);
+      matrix.parseRecipeRecursively(
+        Mocks.AdjustedData.recipeR[RecipeId.BasicOilProcessing]
+      );
+      expect(Object.keys(matrix.recipes).length).toEqual(0);
+      expect(console.warn).toHaveBeenCalled();
+    });
+  });
+
+  describe('checkForCircularRecipes', () => {
+    it('should skip if no inputs', () => {
+      const result = matrix.checkForCircularRecipes({} as any);
+      expect(result).toBeFalse();
+    });
+
+    it('should handle no loop found', () => {
+      const result = matrix.checkForCircularRecipes(
+        Mocks.AdjustedData.recipeR[RecipeId.BasicOilProcessing]
+      );
+      expect(result).toBeFalse();
+    });
+
+    it('should handle circular loop found', () => {
+      spyOn(matrix, 'checkForCircularRecursively').and.returnValue(true);
+      const id = 'test';
+      matrix.recipes = {
+        [id]: { in: {}, out: { [ItemId.CrudeOil]: 1 } } as any,
+      };
+      const result = matrix.checkForCircularRecipes(
+        Mocks.AdjustedData.recipeR[RecipeId.BasicOilProcessing]
+      );
+      expect(result).toBeTrue();
+    });
+  });
+
+  describe('checkForCircularRecursively', () => {
+    it('should return false if no loop is found', () => {
+      const id = 'test';
+      const result = matrix.checkForCircularRecursively([], {
+        in: { [id]: 1 },
+      } as any);
+      expect(result).toBeFalse();
+    });
+
+    it('should find a circular loop', () => {
+      const id = 'test';
+      const result = matrix.checkForCircularRecursively([id], {
+        in: { [id]: 1 },
+      } as any);
+      expect(result).toBeTrue();
+    });
+
+    it('should return a circular reference from a child', () => {
+      const id = 'test';
+      matrix.recipes = {
+        [id]: {
+          id,
+          in: { [ItemId.Coal]: 1 },
+          out: { [ItemId.CrudeOil]: 1 },
+        } as any,
+      };
+      const result = matrix.checkForCircularRecursively(
+        [ItemId.Coal],
+        Mocks.AdjustedData.recipeR[RecipeId.BasicOilProcessing]
+      );
+      expect(result).toBeTrue();
+    });
   });
 
   describe('solve', () => {
@@ -295,11 +387,12 @@ describe('MatrixSolver', () => {
     it('should handle inputs', () => {
       matrix.recipeIds.push(RecipeId.AdvancedOilProcessing);
       matrix.recipeIds.push(RecipeId.CoalLiquefaction);
+      matrix.recipeIds.push(RecipeId.WoodenChest);
       matrix.parseRecipes();
       matrix.parseItems();
       matrix.parseCost();
-      expect(matrix.solver.variables.length).toEqual(15);
-      expect(matrix.solver.constraints.length).toEqual(33);
+      expect(matrix.solver.variables.length).toEqual(19);
+      expect(matrix.solver.constraints.length).toEqual(42);
     });
   });
 

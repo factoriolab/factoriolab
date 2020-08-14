@@ -26,7 +26,7 @@ const mockZipProducts = 'p=steel-chest:1';
 const mockZipAll =
   'eJwrsC0uSU3N0U3OSC0usTJUy0ThW5UUJeYVF+QXlegmpeaUqBWhylpZWagV21pZGZsZGFihAgBxgByr';
 const mockZipExtra =
-  'eJwrsC0uSU3N0U3OSC0usTJUy0ThW5UUJeYVF+QXlegmpeaUqBWhylpZWagV21pZGZsZGFihAgBxgByr';
+  'eJwrsC0uSU3N0U3OSC0usTJUy0ThW5UUJeYVF+QXlegmpeaUqBWhylpZWagV21pZGZsZGFihArVU2xKgGgBDLh8z';
 const mockZipLink =
   'eJxtj90KwjAMhd9mdxltFZXAHqZrM1fo2tKkim9vQQcqXh0+Es5Pme45e0rgVmJBPYSJhSjujFJt4pKrwExRhvp1tsy0zTGkK2zWrSERHHDLvkXaRQ88qVGfkfBwUgoNHlH9uCLnGDwsjSLOloODHCKUmh0xd/N/OWZkyV2XVpN1hP3bNyfhFuQBr+yRC5F/A34CGLz0bVr1Ktr0VvoJcPpeBA==';
 const mockProducts: Product[] = [
@@ -500,6 +500,10 @@ describe('RouterService', () => {
       expect(service.zipDiffArray(['a', 'b'], ['b', 'a'])).toEqual('');
     });
 
+    it('should handle both empty', () => {
+      expect(service.zipDiffArray([], [])).toEqual('');
+    });
+
     it('should handle empty', () => {
       expect(service.zipDiffArray([], ['a'])).toEqual(EMPTY);
     });
@@ -516,6 +520,10 @@ describe('RouterService', () => {
 
     it('should honor order', () => {
       expect(service.zipDiffRank(['a', 'b'], ['b', 'a'])).toEqual('a.b');
+    });
+
+    it('should handle both empty', () => {
+      expect(service.zipDiffRank([], [])).toEqual('');
     });
 
     it('should handle empty', () => {

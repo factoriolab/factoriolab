@@ -56,6 +56,20 @@ describe('MultiselectComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should set top based on parent', () => {
+    component.child.parent = { getBoundingClientRect: () => ({ y: 0 }) } as any;
+    expect(component.child.top).toEqual(1);
+    component.child.parent = null;
+    expect(component.child.top).toEqual(1);
+  });
+
+  it('should set left based on parent', () => {
+    component.child.parent = { getBoundingClientRect: () => ({ x: 0 }) } as any;
+    expect(component.child.left).toEqual(-8);
+    component.child.parent = null;
+    expect(component.child.left).toEqual(1);
+  });
+
   it('should set opening to false on first click event', () => {
     spyOn(component, 'cancel');
     document.body.click();

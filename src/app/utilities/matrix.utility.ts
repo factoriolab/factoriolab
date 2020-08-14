@@ -45,6 +45,10 @@ export class MatrixUtility {
       return steps;
     }
 
+    return this.solveTryCatch(steps, matrix);
+  }
+
+  static solveTryCatch(steps: Step[], matrix: MatrixSolver) {
     try {
       matrix.solve();
       return matrix.steps;

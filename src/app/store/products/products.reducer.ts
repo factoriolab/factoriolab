@@ -8,13 +8,6 @@ export interface ProductsState {
   index: number;
 }
 
-const defaultProduct: Product = {
-  id: '0',
-  itemId: null,
-  rate: 1,
-  rateType: RateType.Items,
-};
-
 export const initialProductsState: ProductsState = {
   ids: [],
   entities: {},
@@ -32,18 +25,36 @@ export function productsReducer(
         : state;
     }
     case ProductsActionType.RESET: {
-      return initialProductsState;
+      const id = '0';
+      return {
+        ids: [id],
+        entities: {
+          [id]: {
+            id,
+            itemId: action.payload,
+            rate: 1,
+            rateType: RateType.Items,
+          },
+        },
+        index: 1,
+      };
     }
     case ProductsActionType.ADD: {
-      const newOutput = {
-        ...defaultProduct,
-        ...{ id: state.index.toString(), itemId: action.payload },
-      };
       return {
         ...state,
         ...{
           ids: [...state.ids, state.index.toString()],
-          entities: { ...state.entities, ...{ [state.index]: newOutput } },
+          entities: {
+            ...state.entities,
+            ...{
+              [state.index]: {
+                id: state.index.toString(),
+                itemId: action.payload,
+                rate: 1,
+                rateType: RateType.Items,
+              },
+            },
+          },
           index: state.index + 1,
         },
       };

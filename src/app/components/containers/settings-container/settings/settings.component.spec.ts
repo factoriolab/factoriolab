@@ -94,6 +94,13 @@ describe('SettingsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should detect changes on scroll', () => {
+    const ref = 'ref';
+    spyOn(component.child[ref], 'detectChanges');
+    component.child.scroll();
+    expect(component.child[ref].detectChanges).toHaveBeenCalled();
+  });
+
   it('should emit numeric settings', () => {
     spyOn(component, 'setItemPrecision');
     TestUtility.selectId(fixture, ElementId.SettingsPrecisionItemValue, '3');

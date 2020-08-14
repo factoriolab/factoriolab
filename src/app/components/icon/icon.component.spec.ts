@@ -50,6 +50,10 @@ describe('IconComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should return the native element', () => {
+    expect(component.child.element).toBeTruthy();
+  });
+
   it('should handle mouseenter', () => {
     fixture.detectChanges();
     component.child.hover = false;

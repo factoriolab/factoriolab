@@ -16,4 +16,5 @@ export enum RecipeId {
   SteelChest = 'steel-chest',
   UraniumProcessing = 'uranium-processing',
   Water = 'water',
+  WoodenChest = 'wooden-chest',
 }

@@ -116,6 +116,19 @@ describe('ListComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should set a factory', () => {
+    spyOn(component, 'setFactory');
+    TestUtility.clickSelector(fixture, '.list-edit-factory', 0);
+    fixture.detectChanges();
+    TestUtility.clickSelector(fixture, 'lab-select lab-icon', 0);
+    fixture.detectChanges();
+    expect(component.setFactory).toHaveBeenCalledWith({
+      id: Mocks.Step1.itemId,
+      value: ItemId.AssemblingMachine1,
+      default: ItemId.AssemblingMachine1,
+    });
+  });
+
   it('should set a specific factory module', () => {
     spyOn(component, 'setModules');
     TestUtility.clickSelector(fixture, '.list-edit-factory-module', 1);

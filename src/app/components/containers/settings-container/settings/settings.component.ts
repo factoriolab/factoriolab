@@ -5,6 +5,7 @@ import {
   EventEmitter,
   ChangeDetectionStrategy,
   HostListener,
+  ChangeDetectorRef,
 } from '@angular/core';
 
 import {
@@ -76,10 +77,12 @@ export class SettingsComponent {
 
   initial = initialSettingsState;
 
-  constructor() {}
+  constructor(private ref: ChangeDetectorRef) {}
 
   /** Forces change detector to update on scroll */
-  @HostListener('scroll', ['$event']) scroll() {}
+  @HostListener('scroll', ['$event']) scroll() {
+    this.ref.detectChanges();
+  }
 
   emitNumber(emitter: EventEmitter<number>, event: any) {
     if (event.target.value) {

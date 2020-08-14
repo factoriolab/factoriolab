@@ -2,14 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { EMPTY } from 'rxjs';
 import { switchMap, map, tap } from 'rxjs/operators';
 
 import { ModData, Entities } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { State } from '..';
 import { AppActionType, AppLoadAction } from '../app.actions';
-import { AddAction, ResetAction } from '../products';
+import { ResetAction } from '../products';
 import * as Settings from '../settings';
 import { LoadModAction, DatasetsActionType } from './datasets.actions';
 
@@ -38,8 +37,7 @@ export class DatasetsEffects {
         tap((value) => {
           if (!a.payload.productsState) {
             this.router.unzipping = true;
-            this.store.dispatch(new ResetAction());
-            this.store.dispatch(new AddAction(value.items[0].id));
+            this.store.dispatch(new ResetAction(value.items[0].id));
             this.router.unzipping = false;
           }
         }),
@@ -53,13 +51,12 @@ export class DatasetsEffects {
     ofType(Settings.SettingsActionType.SET_BASE),
     switchMap((a: Settings.SetBaseAction) =>
       this.cache[a.payload]
-        ? EMPTY
+        ? [new ResetAction(this.cache[a.payload].items[0].id)]
         : this.requestData(a.payload).pipe(
             tap((value) => this.loadModsForBase(value.defaults.modIds)),
             switchMap((value) => [
-              new ResetAction(),
+              new ResetAction(value.items[0].id),
               new LoadModAction({ id: a.payload, value }),
-              new AddAction(value.items[0].id),
             ])
           )
     )
@@ -89,9 +86,9 @@ export class DatasetsEffects {
       const id = Settings.initialSettingsState.baseId;
       this.requestData(id).subscribe((value) => {
         this.router.unzipping = true;
-        this.store.dispatch(new LoadModAction({ id, value }));
-        this.store.dispatch(new AddAction(value.items[0].id));
         this.loadModsForBase(value.defaults.modIds);
+        this.store.dispatch(new ResetAction(value.items[0].id));
+        this.store.dispatch(new LoadModAction({ id, value }));
         this.router.unzipping = false;
       });
     }
