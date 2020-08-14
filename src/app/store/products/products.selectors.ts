@@ -30,7 +30,9 @@ export const getEntities = compose(sEntities, productsState);
 export const getProducts = createSelector(
   getIds,
   getEntities,
-  (ids, entities) => ids.map((i) => entities[i])
+  Settings.getNormalDataset,
+  (ids, entities, data) =>
+    ids.map((i) => entities[i]).filter((p) => data.itemEntities[p.itemId])
 );
 
 export const getRationalProducts = createSelector(getProducts, (products) =>
@@ -185,7 +187,7 @@ export const getNormalizedStepsWithMatrices = createSelector(
   Items.getItemSettings,
   Recipes.getRecipeSettings,
   Recipes.getAdjustedDataset,
-  Settings.getRecipeDisabled,
+  Settings.getDisabledRecipes,
   Settings.getFuel,
   (steps, itemSettings, recipeSettings, data, disabledRecipes, fuel) =>
     MatrixUtility.solveMatricesFor(
@@ -227,12 +229,11 @@ export const getNodes = createSelector(
 );
 
 export const getZipState = createSelector(
-  getProducts,
+  productsState,
   Items.itemsState,
   Recipes.recipesState,
   Settings.settingsState,
-  Settings.getDefaults,
-  (products, items, recipes, settings, defaults) => {
-    return { products, items, recipes, settings, defaults };
+  (products, items, recipes, settings) => {
+    return { products, items, recipes, settings };
   }
 );

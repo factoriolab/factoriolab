@@ -1,4 +1,5 @@
 import { Product, RateType, Entities } from '~/models';
+import { AppLoadAction, AppActionType } from '../app.actions';
 import { ProductsAction, ProductsActionType } from './products.actions';
 
 export interface ProductsState {
@@ -6,13 +7,6 @@ export interface ProductsState {
   entities: Entities<Product>;
   index: number;
 }
-
-const defaultProduct: Product = {
-  id: '0',
-  itemId: null,
-  rate: 1,
-  rateType: RateType.Items,
-};
 
 export const initialProductsState: ProductsState = {
   ids: [],
@@ -22,27 +16,45 @@ export const initialProductsState: ProductsState = {
 
 export function productsReducer(
   state: ProductsState = initialProductsState,
-  action: ProductsAction
+  action: ProductsAction | AppLoadAction
 ): ProductsState {
   switch (action.type) {
-    case ProductsActionType.LOAD: {
-      const ids = action.payload.map((p) => p.id);
-      const index = Math.max(...ids.map((p) => Number(p))) + 1;
-      const entities = action.payload.reduce((e: Entities<Product>, i) => {
-        return { ...e, ...{ [i.id]: i } };
-      }, {});
-      return { ...state, ...{ ids, entities, index } };
+    case AppActionType.LOAD: {
+      return action.payload.productsState
+        ? action.payload.productsState
+        : state;
+    }
+    case ProductsActionType.RESET: {
+      const id = '0';
+      return {
+        ids: [id],
+        entities: {
+          [id]: {
+            id,
+            itemId: action.payload,
+            rate: 1,
+            rateType: RateType.Items,
+          },
+        },
+        index: 1,
+      };
     }
     case ProductsActionType.ADD: {
-      const newOutput = {
-        ...defaultProduct,
-        ...{ id: state.index.toString(), itemId: action.payload },
-      };
       return {
         ...state,
         ...{
           ids: [...state.ids, state.index.toString()],
-          entities: { ...state.entities, ...{ [state.index]: newOutput } },
+          entities: {
+            ...state.entities,
+            ...{
+              [state.index]: {
+                id: state.index.toString(),
+                itemId: action.payload,
+                rate: 1,
+                rateType: RateType.Items,
+              },
+            },
+          },
           index: state.index + 1,
         },
       };

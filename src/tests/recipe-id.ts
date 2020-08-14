@@ -3,6 +3,7 @@ export enum RecipeId {
   BasicOilProcessing = 'basic-oil-processing',
   CoalLiquefaction = 'coal-liquefaction',
   CopperCable = 'copper-cable',
+  CrudeOil = 'crude-oil',
   ElectronicCircuit = 'electronic-circuit',
   FillWaterBarrel = 'fill-water-barrel',
   IronOre = 'iron-ore',
@@ -14,4 +15,6 @@ export enum RecipeId {
   SolidFuelFromLightOil = 'solid-fuel-from-light-oil',
   SteelChest = 'steel-chest',
   UraniumProcessing = 'uranium-processing',
+  Water = 'water',
+  WoodenChest = 'wooden-chest',
 }

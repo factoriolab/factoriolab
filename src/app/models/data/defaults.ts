@@ -1,4 +1,5 @@
 export interface Defaults {
+  modIds: string[];
   belt: string;
   fuel: string;
   disabledRecipes: string[];

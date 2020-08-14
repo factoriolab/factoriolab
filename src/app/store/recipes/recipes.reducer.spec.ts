@@ -1,5 +1,6 @@
 import { Mocks } from 'src/tests';
-import { RecipeUtility } from '~/utilities';
+import { StoreUtility } from '~/utilities';
+import { AppLoadAction } from '../app.actions';
 import * as Actions from './recipes.actions';
 import { recipesReducer, initialRecipesState } from './recipes.reducer';
 
@@ -10,7 +11,7 @@ describe('Recipes Reducer', () => {
     it('should load recipe settings', () => {
       const result = recipesReducer(
         undefined,
-        new Actions.LoadAction(Mocks.RecipeSettingsEntities)
+        new AppLoadAction({ recipesState: Mocks.RecipeSettingsEntities } as any)
       );
       expect(result).toEqual(Mocks.RecipeSettingsEntities);
     });
@@ -23,6 +24,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetFactoryAction({
           id: Mocks.Recipe1.id,
           value: Mocks.Item1.id,
+          default: null,
         })
       );
       expect(result[Mocks.Recipe1.id].factory).toEqual(Mocks.Item1.id);
@@ -36,6 +38,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetModulesAction({
           id: Mocks.Recipe1.id,
           value: [Mocks.Item1.id],
+          default: null,
         })
       );
       expect(result[Mocks.Recipe1.id].modules).toEqual([Mocks.Item1.id]);
@@ -49,6 +52,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetBeaconModuleAction({
           id: Mocks.Recipe1.id,
           value: Mocks.Item1.id,
+          default: null,
         })
       );
       expect(result[Mocks.Recipe1.id].beaconModule).toEqual(Mocks.Item1.id);
@@ -62,6 +66,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetBeaconCountAction({
           id: Mocks.Recipe1.id,
           value: numberValue,
+          default: null,
         })
       );
       expect(result[Mocks.Recipe1.id].beaconCount).toEqual(numberValue);
@@ -80,29 +85,29 @@ describe('Recipes Reducer', () => {
 
   describe('RESET_FACTORY', () => {
     it('should call resetField', () => {
-      spyOn(RecipeUtility, 'resetField');
+      spyOn(StoreUtility, 'resetField');
       recipesReducer(null, new Actions.ResetFactoryAction());
-      expect(RecipeUtility.resetField).toHaveBeenCalledWith(null, 'factory');
+      expect(StoreUtility.resetField).toHaveBeenCalledWith(null, 'factory');
     });
   });
 
   describe('RESET_MODULES', () => {
     it('should call resetField', () => {
-      spyOn(RecipeUtility, 'resetField');
+      spyOn(StoreUtility, 'resetField');
       recipesReducer(null, new Actions.ResetModulesAction());
-      expect(RecipeUtility.resetField).toHaveBeenCalledWith(null, 'modules');
+      expect(StoreUtility.resetField).toHaveBeenCalledWith(null, 'modules');
     });
   });
 
   describe('RESET_BEACONS', () => {
     it('should call resetField', () => {
-      spyOn(RecipeUtility, 'resetField');
+      spyOn(StoreUtility, 'resetField');
       recipesReducer(null, new Actions.ResetBeaconsAction());
-      expect(RecipeUtility.resetField).toHaveBeenCalledWith(
+      expect(StoreUtility.resetField).toHaveBeenCalledWith(
         null,
         'beaconModule'
       );
-      expect(RecipeUtility.resetField).toHaveBeenCalledWith(
+      expect(StoreUtility.resetField).toHaveBeenCalledWith(
         undefined,
         'beaconCount'
       );

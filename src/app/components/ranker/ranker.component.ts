@@ -6,9 +6,10 @@ import {
   ElementRef,
   HostListener,
   ChangeDetectionStrategy,
+  HostBinding,
 } from '@angular/core';
 
-import { Dataset } from '~/models';
+import { Dataset, DefaultTogglePayload } from '~/models';
 
 @Component({
   selector: 'lab-ranker',
@@ -20,12 +21,22 @@ export class RankerComponent {
   @Input() data: Dataset;
   @Input() rank: string[];
   @Input() options: string[];
+  @Input() default: string[];
+  @Input() parent: HTMLElement;
 
   @Output() cancel = new EventEmitter();
-  @Output() preferItem = new EventEmitter<string>();
-  @Output() dropItem = new EventEmitter<string>();
+  @Output() preferItem = new EventEmitter<DefaultTogglePayload>();
+  @Output() dropItem = new EventEmitter<DefaultTogglePayload>();
 
   opening = true;
+
+  @HostBinding('style.top.px') get top() {
+    return this.parent ? this.parent.getBoundingClientRect().y - 4 : -4;
+  }
+
+  @HostBinding('style.left.px') get left() {
+    return this.parent ? this.parent.getBoundingClientRect().x - 14 : -4;
+  }
 
   constructor(private element: ElementRef) {}
 
@@ -39,12 +50,12 @@ export class RankerComponent {
   }
 
   clickPrefer(id: string, event: MouseEvent) {
-    this.preferItem.emit(id);
+    this.preferItem.emit({ id, default: this.default });
     event.stopPropagation();
   }
 
   clickDrop(id: string, event: MouseEvent) {
-    this.dropItem.emit(id);
+    this.dropItem.emit({ id, default: this.default });
     event.stopPropagation();
   }
 }

@@ -1,5 +1,4 @@
 import {
-  Recipe,
   Rational,
   RationalRecipe,
   RationalRecipeSettings,
@@ -7,38 +6,27 @@ import {
 } from '~/models';
 
 export class RecipeUtility {
-  /** Determines what default factory to use for a given recipe based on settings */
-  static defaultFactory(recipe: Recipe, factoryRank: string[]) {
-    if (recipe.producers.length === 1) {
-      // Only one producer specified for recipe, use it
-      return recipe.producers[0];
-    } else {
-      for (const f of factoryRank) {
-        if (recipe.producers.indexOf(f) !== -1) {
-          // Return first matching factory in rank list
-          return f;
+  /** Determines what option to use based on preferred rank */
+  static bestMatch(options: string[], rank: string[]) {
+    if (options.length > 1) {
+      for (const r of rank) {
+        if (options.indexOf(r) !== -1) {
+          // Return first matching option in rank list
+          return r;
         }
       }
-      // No matching factory found in producers, use first possible producer
-      return recipe.producers[0];
     }
+    return options[0];
   }
 
   /** Determines default array of modules for a given recipe */
   static defaultModules(
-    recipe: Recipe,
+    allowedModules: string[],
     moduleRank: string[],
-    count: number,
-    data: Dataset
+    count: number
   ) {
-    let module = 'module';
-    // Find matching module in rank list
-    for (const m of moduleRank) {
-      if (data.recipeModuleIds[recipe.id].indexOf(m) !== -1) {
-        module = m;
-        break;
-      }
-    }
+    const module = this.bestMatch(['module', ...allowedModules], moduleRank);
+
     // Create the appropriate array of default modules
     const modules = [];
     for (let i = 0; i < count; i++) {
@@ -149,23 +137,5 @@ export class RecipeUtility {
     }
 
     return recipe;
-  }
-
-  /** Resets a passed field of the recipe state */
-  static resetField<T>(state: T, field: string): T {
-    // Spread into new state
-    const newState = { ...state };
-    for (const id of Object.keys(newState).filter(
-      (i) => newState[i][field] != null
-    )) {
-      if (Object.keys(newState[id]).length === 1) {
-        delete newState[id];
-      } else {
-        // Spread into new recipe settings state
-        newState[id] = { ...newState[id] };
-        delete newState[id][field];
-      }
-    }
-    return newState;
   }
 }

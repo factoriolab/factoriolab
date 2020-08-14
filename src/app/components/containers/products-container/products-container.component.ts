@@ -40,7 +40,7 @@ export class ProductsContainerComponent implements OnInit {
     this.store.dispatch(new Products.RemoveAction(id));
   }
 
-  editProduct(data: IdPayload<string>) {
+  editProduct(data: IdPayload) {
     this.store.dispatch(new Products.EditProductAction(data));
   }
 

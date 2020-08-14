@@ -6,9 +6,10 @@ import {
   ElementRef,
   HostListener,
   ChangeDetectionStrategy,
+  HostBinding,
 } from '@angular/core';
 
-import { Entities, Dataset } from '~/models';
+import { Dataset, DefaultTogglePayload } from '~/models';
 
 @Component({
   selector: 'lab-toggle',
@@ -25,19 +26,29 @@ export class ToggleComponent {
     );
     this.complexRecipes = value.recipeIds.filter(
       (r) => simpleRecipes.indexOf(r) === -1
-    );
+    ).sort();
   }
   get data() {
     return this._data;
   }
-  @Input() recipeDisabled: Entities<boolean>;
+  @Input() disabledRecipes: string[];
+  @Input() default: string[];
+  @Input() parent: HTMLElement;
 
   @Output() cancel = new EventEmitter();
-  @Output() enableRecipe = new EventEmitter<string>();
-  @Output() disableRecipe = new EventEmitter<string>();
+  @Output() enableRecipe = new EventEmitter<DefaultTogglePayload>();
+  @Output() disableRecipe = new EventEmitter<DefaultTogglePayload>();
 
   opening = true;
   complexRecipes: string[] = [];
+
+  @HostBinding('style.top.px') get top() {
+    return this.parent ? this.parent.getBoundingClientRect().y + 1 : 1;
+  }
+
+  @HostBinding('style.left.px') get left() {
+    return this.parent ? this.parent.getBoundingClientRect().x - 8 : 1;
+  }
 
   constructor(private element: ElementRef) {}
 
@@ -50,11 +61,15 @@ export class ToggleComponent {
     }
   }
 
+  isDisabled(id: string) {
+    return this.disabledRecipes.some((r) => r === id);
+  }
+
   clickId(id: string, event: MouseEvent) {
-    if (this.recipeDisabled[id]) {
-      this.enableRecipe.emit(id);
+    if (this.isDisabled(id)) {
+      this.enableRecipe.emit({ id, default: this.default });
     } else {
-      this.disableRecipe.emit(id);
+      this.disableRecipe.emit({ id, default: this.default });
     }
     event.stopPropagation();
   }

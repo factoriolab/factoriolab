@@ -3,39 +3,29 @@ import { Rational, RationalRecipe } from '~/models';
 import { RecipeUtility } from './recipe.utility';
 
 describe('RecipeUtility', () => {
-  describe('defaultFactory', () => {
-    it('should pick the first producer if list only contains one', () => {
-      const result = RecipeUtility.defaultFactory(
-        Mocks.Data.recipeEntities[RecipeId.AdvancedOilProcessing],
-        []
-      );
-      expect(result).toEqual(ItemId.OilRefinery);
+  describe('bestMatch', () => {
+    it('should pick the first option if list only contains one', () => {
+      const value = 'value';
+      const result = RecipeUtility.bestMatch([value], []);
+      expect(result).toEqual(value);
     });
 
     it('should pick the first match from rank', () => {
-      const result = RecipeUtility.defaultFactory(
-        Mocks.Data.recipeEntities[RecipeId.SteelChest],
-        [ItemId.AssemblingMachine2, ItemId.AssemblingMachine3]
+      const value = 'value';
+      const result = RecipeUtility.bestMatch(
+        ['test1', value],
+        ['test2', value]
       );
-      expect(result).toEqual(ItemId.AssemblingMachine2);
-    });
-
-    it('should pick the first producer if no match is found', () => {
-      const result = RecipeUtility.defaultFactory(
-        Mocks.Data.recipeEntities[RecipeId.SteelChest],
-        [ItemId.SteelFurnace]
-      );
-      expect(result).toEqual(ItemId.AssemblingMachine1);
+      expect(result).toEqual(value);
     });
   });
 
   describe('defaultModules', () => {
     it('should fill in modules list for factory', () => {
       const result = RecipeUtility.defaultModules(
-        Mocks.Data.recipeEntities[RecipeId.SteelChest],
+        [ItemId.SpeedModule],
         [ItemId.ProductivityModule, ItemId.SpeedModule],
-        1,
-        Mocks.Data
+        1
       );
       expect(result).toEqual([ItemId.SpeedModule]);
     });
@@ -210,26 +200,6 @@ describe('RecipeUtility', () => {
       };
       expected.time = new Rational(BigInt(1), BigInt(2));
       expect(result).toEqual(expected);
-    });
-  });
-
-  describe('resetField', () => {
-    it('should reset changes to a field', () => {
-      const result = RecipeUtility.resetField(
-        { [Mocks.Item1.id]: { ignore: true, belt: ItemId.TransportBelt } },
-        'ignore'
-      );
-      expect(result[Mocks.Item1.id]).toEqual({
-        belt: ItemId.TransportBelt,
-      } as any);
-    });
-
-    it('should delete a recipe if no modifications remain', () => {
-      const result = RecipeUtility.resetField(
-        { [Mocks.Item1.id]: { ignore: true } },
-        'ignore'
-      );
-      expect(result[Mocks.Item1.id]).toBeUndefined();
     });
   });
 });

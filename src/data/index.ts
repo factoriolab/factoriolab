@@ -1,12 +1,20 @@
 import { AppData } from '~/models';
 import app from './app/data.json';
-import base016 from './0.16/data.json';
-import base017 from './0.17/data.json';
-import base018 from './0.18/data.json';
-import research from './Research/data.json';
 
+export { app };
 export const data: AppData = {
   app,
-  base: [base018, base017, base016],
-  mods: [research],
+  base: [
+    { id: '0.18', name: '0.18.36' },
+    { id: '0.17', name: '0.17.79' },
+    { id: '0.16', name: '0.16.51' },
+    { id: 'krastorio2', name: 'Krastorio 2' },
+  ],
+  mods: [
+    {
+      id: 'research',
+      name: 'Infinite Research',
+      compatibleIds: ['0.18', '0.17', '0.16'],
+    },
+  ],
 };

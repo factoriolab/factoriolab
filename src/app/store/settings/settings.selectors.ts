@@ -9,7 +9,7 @@ import {
   RationalItem,
   RationalRecipe,
   Dataset,
-  EmptyMod,
+  Mod,
 } from '~/models';
 import { State } from '../';
 import * as Datasets from '../datasets';
@@ -17,18 +17,11 @@ import { SettingsState } from './settings.reducer';
 
 /* Base selector functions */
 export const settingsState = (state: State) => state.settingsState;
-const sBaseDatasetId = (state: SettingsState) => state.baseDatasetId;
-const sModDatasetIds = (state: SettingsState) => state.modDatasetIds;
+const sBaseDatasetId = (state: SettingsState) => state.baseId;
 const sDisplayRate = (state: SettingsState) => state.displayRate;
 const sItemPrecision = (state: SettingsState) => state.itemPrecision;
 const sBeltPrecision = (state: SettingsState) => state.beltPrecision;
 const sFactoryPrecision = (state: SettingsState) => state.factoryPrecision;
-const sBelt = (state: SettingsState) => state.belt;
-const sFuel = (state: SettingsState) => state.fuel;
-const sRecipeDisabled = (state: SettingsState) => state.recipeDisabled;
-const sFactoryRank = (state: SettingsState) => state.factoryRank;
-const sModuleRank = (state: SettingsState) => state.moduleRank;
-const sBeaconModule = (state: SettingsState) => state.beaconModule;
 const sBeaconCount = (state: SettingsState) => state.beaconCount;
 const sDrillModule = (state: SettingsState) => state.drillModule;
 const sMiningBonus = (state: SettingsState) => state.miningBonus;
@@ -39,17 +32,10 @@ const sTheme = (state: SettingsState) => state.theme;
 
 /* Simple selectors */
 export const getBaseDatasetId = compose(sBaseDatasetId, settingsState);
-export const getModDatasetIds = compose(sModDatasetIds, settingsState);
 export const getDisplayRate = compose(sDisplayRate, settingsState);
 export const getItemPrecision = compose(sItemPrecision, settingsState);
 export const getBeltPrecision = compose(sBeltPrecision, settingsState);
 export const getFactoryPrecision = compose(sFactoryPrecision, settingsState);
-export const getBelt = compose(sBelt, settingsState);
-export const getFuel = compose(sFuel, settingsState);
-export const getRecipeDisabled = compose(sRecipeDisabled, settingsState);
-export const getFactoryRank = compose(sFactoryRank, settingsState);
-export const getModuleRank = compose(sModuleRank, settingsState);
-export const getBeaconModule = compose(sBeaconModule, settingsState);
 export const getBeaconCount = compose(sBeaconCount, settingsState);
 export const getDrillModule = compose(sDrillModule, settingsState);
 export const getMiningBonus = compose(sMiningBonus, settingsState);
@@ -59,6 +45,54 @@ export const getExpensive = compose(sExpensive, settingsState);
 export const getTheme = compose(sTheme, settingsState);
 
 /* Complex selectors */
+export const getBase = createSelector(
+  getBaseDatasetId,
+  Datasets.getBaseEntities,
+  (id, data) => data[id]
+);
+
+export const getDefaults = createSelector(
+  getBase,
+  (base) => base && base.defaults
+);
+
+export const getSettings = createSelector(
+  settingsState,
+  getDefaults,
+  (s, d) => ({
+    ...s,
+    ...{
+      modIds: s.modIds || d?.modIds || [],
+      belt: s.belt || d?.belt,
+      fuel: s.fuel || d?.fuel,
+      disabledRecipes: s.disabledRecipes || d?.disabledRecipes || [],
+      factoryRank: s.factoryRank || d?.factoryRank || [],
+      moduleRank: s.moduleRank || d?.moduleRank || [],
+      beaconModule: s.beaconModule || d?.beaconModule,
+    },
+  })
+);
+
+export const getModIds = createSelector(getSettings, (s) => s.modIds);
+
+export const getBelt = createSelector(getSettings, (s) => s.belt);
+
+export const getFuel = createSelector(getSettings, (s) => s.fuel);
+
+export const getDisabledRecipes = createSelector(
+  getSettings,
+  (s) => s.disabledRecipes
+);
+
+export const getFactoryRank = createSelector(getSettings, (s) => s.factoryRank);
+
+export const getModuleRank = createSelector(getSettings, (s) => s.moduleRank);
+
+export const getBeaconModule = createSelector(
+  getSettings,
+  (s) => s.beaconModule
+);
+
 export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
   Rational.fromNumber(bonus).div(Rational.hundred)
 );
@@ -72,50 +106,57 @@ export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
   Rational.fromNumber(rate)
 );
 
-export const getBase = createSelector(
+export const getAvailableMods = createSelector(
   getBaseDatasetId,
-  Datasets.getBaseEntities,
-  (id, entities) => (id && entities[id]) || EmptyMod
+  Datasets.getModSets,
+  (id, mods) =>
+    mods.filter(
+      (m) => !m.compatibleIds || m.compatibleIds.some((i) => i === id)
+    )
 );
 
 export const getMods = createSelector(
-  getModDatasetIds,
+  getModIds,
   Datasets.getModEntities,
-  (ids, entities) => ids.filter((i) => entities[i]).map((i) => entities[i])
+  (ids, data) => ids.filter((i) => data[i]).map((i) => data[i])
 );
 
-export const getDatasets = createSelector(getBase, getMods, (base, mods) => [
-  base,
-  ...mods,
-]);
-
-export const getDefaults = createSelector(getBase, (base) => base.defaults);
+export const getDatasets = createSelector(getBase, getMods, (base, mods) =>
+  base ? [base, ...mods] : []
+);
 
 export const getNormalDataset = createSelector(
   Datasets.getAppData,
   getDatasets,
-  (base, mods) => {
+  getDefaults,
+  (app, mods, defaults) => {
     // Map out entities with mods
     const categoryEntities = getEntities(
-      base.categories,
+      app.categories,
       mods.map((m) => m.categories)
     );
     const iconEntities = getEntities(
-      base.icons.map((i) => ({ ...i, ...{ file: i.file || base.sprite } })),
+      app.icons.map((i) => ({
+        ...i,
+        ...{ file: i.file || `data/${app.id}/icons.png` },
+      })),
       mods.map((m) =>
-        m.icons.map((i) => ({ ...i, ...{ file: i.file || m.sprite } }))
+        m.icons.map((i) => ({
+          ...i,
+          ...{ file: i.file || `data/${m.id}/icons.png` },
+        }))
       )
     );
     const itemEntities = getEntities(
-      base.items,
+      app.items,
       mods.map((m) => m.items)
     );
     const recipeEntities = getEntities(
-      base.recipes,
+      app.recipes,
       mods.map((m) => m.recipes)
     );
     const limitations = getArrayEntities(
-      base.limitations,
+      app.limitations,
       mods.map((m) => m.limitations)
     );
 
@@ -162,26 +203,35 @@ export const getNormalDataset = createSelector(
       const rowItems = items
         .filter((i) => i.category === id)
         .sort((a, b) => a.row - b.row);
-      let index = rowItems[0].row;
-      for (const item of rowItems) {
-        if (item.row > index) {
-          rows.push([]);
-          index = item.row;
+      if (rowItems.length) {
+        let index = rowItems[0].row;
+        for (const item of rowItems) {
+          if (item.row > index) {
+            rows.push([]);
+            index = item.row;
+          }
+          rows[rows.length - 1].push(item.id);
         }
-        rows[rows.length - 1].push(item.id);
+        categoryItemRows[id] = rows;
       }
-      categoryItemRows[id] = rows;
     }
 
     // Calculate item simple recipes
     const itemRecipeIds = itemIds.reduce((e: Entities<string>, i) => {
-      const exact = recipeIds.find((r) => r === i);
-      if (exact) {
-        return { ...e, ...{ [i]: i } };
+      const exact = recipes.find((r) => r.id === i);
+      if (exact && !exact.in) {
+        // Exact match has no inputs, so use it
+        return { ...e, ...{ [i]: exact.id } };
       }
-      const matches = recipes.filter((r) => r.out && r.out[i]);
+      const matches = recipes.filter((r) => r.id === i || (r.out && r.out[i]));
       if (matches.length === 1) {
+        // Only one recipe produces this item, so use it
         return { ...e, ...{ [i]: matches[0].id } };
+      }
+      const noIn = matches.find((r) => !r.in);
+      if (noIn) {
+        // One matching recipe requires no inputs, so use it
+        return { ...e, ...{ [i]: noIn.id } };
       }
       return e;
     }, {});
@@ -238,6 +288,7 @@ export const getNormalDataset = createSelector(
       recipeR,
       recipeModuleIds,
       limitations,
+      defaults,
     };
     return dataset;
   }

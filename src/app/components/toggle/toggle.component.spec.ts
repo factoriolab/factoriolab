@@ -1,8 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Mocks, TestUtility, RecipeId } from 'src/tests';
-import { Entities, Dataset } from '~/models';
 import { IconComponent } from '../icon/icon.component';
 import { ToggleComponent } from './toggle.component';
 
@@ -11,7 +10,9 @@ import { ToggleComponent } from './toggle.component';
   template: `
     <lab-toggle
       [data]="data"
-      [recipeDisabled]="recipeDisabled"
+      [disabledRecipes]="disabledRecipes"
+      [default]="default"
+      [parent]="element.nativeElement"
       (cancel)="cancel()"
       (enableRecipe)="enableRecipe($event)"
       (disableRecipe)="disableRecipe($event)"
@@ -21,11 +22,14 @@ import { ToggleComponent } from './toggle.component';
 })
 class TestToggleComponent {
   @ViewChild(ToggleComponent) child: ToggleComponent;
-  data: Dataset = Mocks.Data;
-  recipeDisabled: Entities<boolean> = Mocks.InitialSettingsState.recipeDisabled;
+  data = Mocks.Data;
+  disabledRecipes = Mocks.SettingsState1.disabledRecipes;
+  default = [];
   cancel() {}
   enableRecipe(data) {}
   disableRecipe(data) {}
+
+  constructor(public element: ElementRef) {}
 }
 
 describe('ToggleComponent', () => {
@@ -46,6 +50,20 @@ describe('ToggleComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should set top based on parent', () => {
+    component.child.parent = { getBoundingClientRect: () => ({ y: 0 }) } as any;
+    expect(component.child.top).toEqual(1);
+    component.child.parent = null;
+    expect(component.child.top).toEqual(1);
+  });
+
+  it('should set left based on parent', () => {
+    component.child.parent = { getBoundingClientRect: () => ({ x: 0 }) } as any;
+    expect(component.child.left).toEqual(-8);
+    component.child.parent = null;
+    expect(component.child.left).toEqual(1);
   });
 
   it('should set opening to false on first click event', () => {
@@ -73,10 +91,11 @@ describe('ToggleComponent', () => {
     spyOn(component, 'enableRecipe');
     spyOn(component, 'cancel');
     component.child.opening = false;
-    TestUtility.clickSelector(fixture, 'lab-icon.clickable', 0);
-    expect(component.enableRecipe).toHaveBeenCalledWith(
-      RecipeId.BasicOilProcessing
-    );
+    TestUtility.clickSelector(fixture, 'lab-icon.clickable', 1);
+    expect(component.enableRecipe).toHaveBeenCalledWith({
+      id: RecipeId.BasicOilProcessing,
+      default: [],
+    });
     expect(component.cancel).not.toHaveBeenCalled();
   });
 
@@ -84,10 +103,11 @@ describe('ToggleComponent', () => {
     spyOn(component, 'disableRecipe');
     spyOn(component, 'cancel');
     component.child.opening = false;
-    TestUtility.clickSelector(fixture, 'lab-icon.clickable', 1);
-    expect(component.disableRecipe).toHaveBeenCalledWith(
-      RecipeId.AdvancedOilProcessing
-    );
+    TestUtility.clickSelector(fixture, 'lab-icon.clickable', 0);
+    expect(component.disableRecipe).toHaveBeenCalledWith({
+      id: RecipeId.AdvancedOilProcessing,
+      default: [],
+    });
     expect(component.cancel).not.toHaveBeenCalled();
   });
 });
