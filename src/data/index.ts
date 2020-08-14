@@ -5,6 +5,7 @@ export { app };
 export const data: AppData = {
   app,
   base: [
+    { id: '1.0', name: '1.0.0' },
     { id: '0.18', name: '0.18.36' },
     { id: '0.17', name: '0.17.79' },
     { id: '0.16', name: '0.16.51' },
@@ -14,7 +15,7 @@ export const data: AppData = {
     {
       id: 'research',
       name: 'Infinite Research',
-      compatibleIds: ['0.18', '0.17', '0.16'],
+      compatibleIds: ['1.0', '0.18', '0.17', '0.16'],
     },
   ],
 };
