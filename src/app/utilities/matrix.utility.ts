@@ -21,15 +21,16 @@ export class MatrixUtility {
     steps: Step[],
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
-    recipeDisabled: Entities<boolean>,
+    disabledRecipes: string[],
     fuel: string,
     data: Dataset
   ) {
+    steps = steps.map((s) => ({ ...s }));
     const matrix = new MatrixSolver(
       steps,
       itemSettings,
       recipeSettings,
-      recipeDisabled,
+      disabledRecipes,
       fuel,
       data
     );
@@ -44,9 +45,18 @@ export class MatrixUtility {
       return steps;
     }
 
-    matrix.solve();
+    return this.solveTryCatch(steps, matrix);
+  }
 
-    return matrix.steps;
+  static solveTryCatch(steps: Step[], matrix: MatrixSolver) {
+    try {
+      matrix.solve();
+      return matrix.steps;
+    } catch (e) {
+      console.error('Matrix: Failed to solve, returning incomplete steps');
+      console.error(e);
+      return steps;
+    }
   }
 }
 
@@ -77,14 +87,17 @@ export class MatrixSolver {
     steps: Step[],
     itemSettings: ItemsState,
     recipeSettings: RecipesState,
-    recipeDisabled: Entities<boolean>,
+    disabledRecipes: string[],
     fuel: string,
     data: Dataset
   ) {
     this.steps = steps;
     this.itemSettings = itemSettings;
     this.recipeSettings = recipeSettings;
-    this.recipeDisabled = recipeDisabled;
+    this.recipeDisabled = disabledRecipes.reduce(
+      (e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }),
+      {}
+    );
     this.fuel = fuel;
     this.data = data;
     this.depth = Math.max(...this.steps.map((s) => s.depth)) + 1;
@@ -104,6 +117,117 @@ export class MatrixSolver {
       Object.keys(this.value).length === 0 ||
       Object.keys(this.value).every((v) => this.value[v].isZero())
     );
+  }
+
+  calculateRecipes() {
+    for (const step of this.steps.filter((s) => s.itemId)) {
+      if (
+        (!step.recipeId ||
+          step.recipeId !== this.data.itemRecipeIds[step.itemId]) &&
+        !this.itemSettings[step.itemId].ignore
+      ) {
+        // Find recipes with this output
+        const recipeMatches = this.data.recipeIds
+          .map((r) => this.data.recipeR[r])
+          .filter(
+            (r) => !this.recipeDisabled[r.id] && r.out && r.out[step.itemId]
+          );
+        if (recipeMatches.length > 0) {
+          this.value[step.itemId] = step.items;
+          for (const recipe of recipeMatches) {
+            this.parseRecipeRecursively(recipe);
+          }
+        }
+      }
+    }
+
+    this.recipeIds = Object.keys(this.recipes);
+  }
+
+  findRecipesRecursively(itemId: string) {
+    const simpleRecipeId = this.data.itemRecipeIds[itemId];
+    if (simpleRecipeId) {
+      const simpleRecipe = this.data.recipeR[simpleRecipeId];
+      if (!this.recipeDisabled[simpleRecipe.id]) {
+        this.parseRecipeRecursively(simpleRecipe);
+      }
+    } else {
+      // Find complex recipes
+      const recipeMatches = this.data.recipeIds
+        .map((r) => this.data.recipeR[r])
+        .filter((r) => !this.recipeDisabled[r.id] && r.out && r.out[itemId]);
+
+      for (const recipe of recipeMatches) {
+        this.parseRecipeRecursively(recipe);
+      }
+    }
+  }
+
+  parseRecipeRecursively(recipe: RationalRecipe) {
+    if (!this.recipes[recipe.id]) {
+      const circular = this.checkForCircularRecipes(recipe);
+      if (!circular) {
+        this.recipes[recipe.id] = recipe;
+
+        if (recipe.in) {
+          // Recurse recipe ingredients
+          for (const id of Object.keys(recipe.in).filter(
+            (i) => !this.itemSettings[i].ignore
+          )) {
+            this.findRecipesRecursively(id);
+          }
+        }
+      } else {
+        console.warn(
+          `Matrix: Ignoring recipe '${recipe.id}' due to detected circular recipes.`
+        );
+      }
+    }
+  }
+
+  /** Before adding this recipe, need to make sure it doesn't result in a circular loop */
+  checkForCircularRecipes(recipe: RationalRecipe) {
+    if (recipe.in) {
+      const outputs = Object.keys(recipe.out);
+      for (const id of Object.keys(recipe.in)) {
+        // Need to check whether there are any loops where these inputs are outputs
+        for (const loop of Object.keys(this.recipes)
+          .map((r) => this.recipes[r])
+          .filter((r) => r.in && r.out[id])) {
+          // Found a recipe that outputs this input, look for connection between these recipes
+          if (this.checkForCircularRecursively(outputs, loop)) {
+            return true; // Found a circular loop
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  /** Recursively check recipe inputs looking for a circular loop, return true if found */
+  checkForCircularRecursively(
+    outputs: string[],
+    recipe: RationalRecipe,
+    checked: string[] = []
+  ) {
+    if (outputs.some((o) => recipe.in[o])) {
+      return true; // Found a complete circular loop in recipes
+    }
+    for (const id of Object.keys(recipe.in)) {
+      for (const loop of Object.keys(this.recipes)
+        .map((r) => this.recipes[r])
+        .filter((r) => r.in && r.out[id] && !checked.some((c) => c === r.id))) {
+        if (
+          this.checkForCircularRecursively(outputs, loop, [
+            ...checked,
+            recipe.id,
+          ])
+        ) {
+          return true; // Some sub-recipe found a loop, return the result
+        }
+      }
+    }
+    return false; // No loop found
   }
 
   solve() {
@@ -159,13 +283,11 @@ export class MatrixSolver {
       for (const r of this.recipeIds) {
         const recipe = this.data.recipeR[r];
         const rVar = this.recipeVar[r];
-        if (recipe.in) {
-          for (const inId of Object.keys(recipe.in).filter((id) => i === id)) {
-            expr = expr.minus(new Expression([recipe.in[inId], rVar]));
-          }
+        if (recipe.in && recipe.in[i]) {
+          expr = expr.minus(new Expression([recipe.in[i], rVar]));
         }
-        for (const outId of Object.keys(recipe.out).filter((id) => i === id)) {
-          expr = expr.plus(new Expression([recipe.out[outId], rVar]));
+        if (recipe.out[i]) {
+          expr = expr.plus(new Expression([recipe.out[i], rVar]));
         }
       }
 
@@ -313,62 +435,6 @@ export class MatrixSolver {
           const value = recipe.in[i].mul(factories);
           RateUtility.addParentValue(step, r, value);
         }
-      }
-    }
-  }
-
-  calculateRecipes() {
-    for (const step of this.steps.filter((s) => s.itemId)) {
-      if (
-        (!step.recipeId ||
-          step.recipeId !== this.data.itemRecipeIds[step.itemId]) &&
-        !this.itemSettings[step.itemId].ignore
-      ) {
-        // Find recipes with this output
-        const recipeMatches = this.data.recipeIds
-          .map((r) => this.data.recipeR[r])
-          .filter(
-            (r) => !this.recipeDisabled[r.id] && r.out && r.out[step.itemId]
-          );
-        if (recipeMatches.length > 0) {
-          this.value[step.itemId] = step.items;
-          for (const recipe of recipeMatches) {
-            this.parseRecipeRecursively(recipe);
-          }
-        }
-      }
-    }
-
-    this.recipeIds = Object.keys(this.recipes);
-  }
-
-  findRecipesRecursively(itemId: string) {
-    const simpleRecipe = this.data.recipeR[this.data.itemRecipeIds[itemId]];
-    if (simpleRecipe) {
-      if (!this.recipeDisabled[simpleRecipe.id]) {
-        this.parseRecipeRecursively(simpleRecipe);
-      }
-    } else {
-      // Find complex recipes
-      const recipeMatches = this.data.recipeIds
-        .map((r) => this.data.recipeR[r])
-        .filter((r) => !this.recipeDisabled[r.id] && r.out && r.out[itemId]);
-
-      for (const recipe of recipeMatches) {
-        this.parseRecipeRecursively(recipe);
-      }
-    }
-  }
-
-  parseRecipeRecursively(recipe: RationalRecipe) {
-    if (!this.recipes[recipe.id] && recipe.in) {
-      this.recipes[recipe.id] = recipe;
-
-      // Recurse recipe ingredients
-      for (const id of Object.keys(recipe.in).filter(
-        (i) => !this.itemSettings[i].ignore
-      )) {
-        this.findRecipesRecursively(id);
       }
     }
   }

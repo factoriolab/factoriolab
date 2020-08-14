@@ -1,7 +1,8 @@
 import { Mocks, ItemId } from 'src/tests';
 import { RateType } from '~/models';
+import { AppLoadAction } from '../app.actions';
 import * as Actions from './products.actions';
-import { productsReducer } from './products.reducer';
+import { productsReducer, ProductsState } from './products.reducer';
 
 describe('Products Reducer', () => {
   const state = productsReducer(
@@ -11,15 +12,16 @@ describe('Products Reducer', () => {
 
   describe('LOAD', () => {
     it('should load a list of products', () => {
+      const productsState: ProductsState = {
+        ids: ['id'],
+        entities: { id: Mocks.Product1 },
+        index: 1,
+      };
       const result = productsReducer(
         undefined,
-        new Actions.LoadAction(Mocks.Products)
+        new AppLoadAction({ productsState } as any)
       );
-      expect(result.ids.length).toEqual(Mocks.Products.length);
-      expect(Object.keys(result.entities).length).toEqual(
-        Mocks.Products.length
-      );
-      expect(result.index).toEqual(Mocks.Products.length);
+      expect(result).toEqual(productsState);
     });
   });
 

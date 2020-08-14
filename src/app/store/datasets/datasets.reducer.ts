@@ -1,20 +1,14 @@
-import { Entities, ModData, EmptyMod } from '~/models';
+import { data } from 'src/data';
+import { Entities, ModData, AppData } from '~/models';
 import { DatasetsAction, DatasetsActionType } from './datasets.actions';
 
-export interface DatasetsState {
-  app: ModData;
-  baseIds: string[];
-  baseEntities: Entities<ModData>;
-  modIds: string[];
-  modEntities: Entities<ModData>;
+export interface DatasetsState extends AppData {
+  dataEntities: Entities<ModData>;
 }
 
 export const initialDatasetsState: DatasetsState = {
-  app: EmptyMod,
-  baseIds: [],
-  baseEntities: {},
-  modIds: [],
-  modEntities: {},
+  ...data,
+  dataEntities: {},
 };
 
 export function datasetsReducer(
@@ -22,21 +16,14 @@ export function datasetsReducer(
   action: DatasetsAction
 ): DatasetsState {
   switch (action.type) {
-    case DatasetsActionType.LOAD: {
+    case DatasetsActionType.LOAD_MOD: {
       return {
         ...state,
         ...{
-          app: action.payload.app,
-          baseIds: action.payload.base.map((m) => m.id),
-          baseEntities: action.payload.base.reduce(
-            (e: Entities<ModData>, m) => ({ ...e, ...{ [m.id]: m } }),
-            {}
-          ),
-          modIds: action.payload.mods.map((m) => m.id),
-          modEntities: action.payload.mods.reduce(
-            (e: Entities<ModData>, m) => ({ ...e, ...{ [m.id]: m } }),
-            {}
-          ),
+          dataEntities: {
+            ...state.dataEntities,
+            ...{ [action.payload.id]: action.payload.value },
+          },
         },
       };
     }

@@ -52,20 +52,6 @@ a {
   color: var(--color-brand);
 }
 
-.select-container {
-  width: 2.25rem;
-  height: 2.25rem;
-
-  &.button {
-    width: 10rem;
-    height: 1.625rem;
-  }
-
-  > * {
-    position: absolute;
-  }
-}
-
 input[type='radio'] + * {
   margin-left: 0.25rem;
 }

@@ -11,16 +11,16 @@ import { SettingsState, settingsReducer } from './settings';
 export interface State {
   datasetsState: DatasetsState;
   productsState: ProductsState;
-  itemState: ItemsState;
-  recipeState: RecipesState;
+  itemsState: ItemsState;
+  recipesState: RecipesState;
   settingsState: SettingsState;
 }
 
 export const reducers: ActionReducerMap<State> = {
   datasetsState: datasetsReducer,
   productsState: productsReducer,
-  itemState: itemsReducer,
-  recipeState: recipesReducer,
+  itemsState: itemsReducer,
+  recipesState: recipesReducer,
   settingsState: settingsReducer,
 };
 

@@ -24,6 +24,7 @@ export class SelectComponent {
   @Input() selectType = IdType.Item;
   @Input() displayRate: DisplayRate;
   @Input() includeEmptyModule: boolean;
+  @Input() parent: HTMLElement;
 
   @Output() cancel = new EventEmitter();
   @Output() selectId = new EventEmitter<string>();
@@ -31,6 +32,14 @@ export class SelectComponent {
   IdType = IdType;
 
   opening = true;
+
+  @HostBinding('style.top.px') get top() {
+    return this.parent ? this.parent.getBoundingClientRect().y - 4 : -4;
+  }
+
+  @HostBinding('style.left.px') get left() {
+    return this.parent ? this.parent.getBoundingClientRect().x - 13 : -4;
+  }
 
   constructor(private element: ElementRef) {}
 

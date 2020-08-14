@@ -18,7 +18,6 @@ import { ProductsComponent } from './products.component';
       (editProduct)="editProduct($event)"
       (editRate)="editRate($event)"
       (editRateType)="editRateType($event)"
-      (selectTab)="selectTab($event)"
     >
     </lab-products>
   `,
@@ -32,7 +31,6 @@ class TestProductsComponent {
   editProduct(data) {}
   editRate(data) {}
   editRateType(data) {}
-  selectTab(data) {}
 }
 
 describe('ProductsComponent', () => {
@@ -91,14 +89,14 @@ describe('ProductsComponent', () => {
   it('should reset the rate type on committing a product that has no simple recipe', () => {
     spyOn(component, 'editRateType');
     spyOn(component, 'editProduct');
-    component.child.commitEditProduct(Mocks.Product4, ItemId.CrudeOil);
+    component.child.commitEditProduct(Mocks.Product4, ItemId.PetroleumGas);
     expect(component.editRateType).toHaveBeenCalledWith({
       id: Mocks.Product4.id,
       value: RateType.Items,
     });
     expect(component.editProduct).toHaveBeenCalledWith({
       id: Mocks.Product4.id,
-      value: ItemId.CrudeOil,
+      value: ItemId.PetroleumGas,
     });
   });
 

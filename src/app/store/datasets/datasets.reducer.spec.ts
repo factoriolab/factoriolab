@@ -1,23 +1,18 @@
 import { Mocks } from 'src/tests';
 import * as Actions from './datasets.actions';
-import { datasetsReducer } from './datasets.reducer';
+import { datasetsReducer, initialDatasetsState } from './datasets.reducer';
 
-export const state = datasetsReducer(
-  undefined,
-  new Actions.LoadDataAction(Mocks.Raw)
-);
+export const state = initialDatasetsState;
 
 describe('Dataset Reducer', () => {
   describe('LOAD', () => {
     it('should load mod data', () => {
-      expect(state.baseIds.length).toBeGreaterThan(0);
-      expect(Object.keys(state.baseEntities).length).toEqual(
-        state.baseIds.length
+      const id = 'id';
+      const result = datasetsReducer(
+        state,
+        new Actions.LoadModAction({ id, value: Mocks.BaseData })
       );
-      expect(state.modIds.length).toBeGreaterThan(0);
-      expect(Object.keys(state.modEntities).length).toEqual(
-        state.modIds.length
-      );
+      expect(result.dataEntities[id]).toEqual(Mocks.BaseData);
     });
   });
 

@@ -2,55 +2,49 @@
 <div class="field">
   <select
     title="Select base game version"
-    [ngModel]="settings.baseDatasetId"
-    (change)="setBaseDataset.emit(base[$event.target.value])"
+    [ngModel]="settings.baseId"
+    (change)="setBase.emit($event.target.value)"
   >
-    <option *ngFor="let b of base | keyvalue" [value]="b.key">{{
-      b.value.name
-    }}</option>
+    <option *ngFor="let b of base" [value]="b.id">{{ b.name }}</option>
   </select>
   <div>Base Recipe Set</div>
 </div>
-<div class="field">
-  <div class="select-container button">
-    <div [style.marginTop.px]="-scrollTop">
-      <button (click)="openSelect = OpenSelect.Mods">
-        {{ settings.modDatasetIds.length }} Mod Set{{
-          settings.modDatasetIds.length === 1 ? '' : 's'
-        }}
-        Enabled
-      </button>
-      <lab-multiselect
-        *ngIf="openSelect === OpenSelect.Mods"
-        [enabledIds]="settings.modDatasetIds"
-        [options]="mods"
-        (cancel)="openSelect = OpenSelect.None"
-        (enableMod)="enableMod.emit($event)"
-        (disableMod)="disableMod.emit($event)"
-      ></lab-multiselect>
-    </div>
-  </div>
+<div class="field" *ngIf="mods.length">
+  <button #btnMods (click)="openSelect = OpenSelect.Mods">
+    {{ settings.modIds.length }} Mod Set{{
+      settings.modIds.length === 1 ? '' : 's'
+    }}
+    Enabled
+  </button>
+  <lab-multiselect
+    *ngIf="openSelect === OpenSelect.Mods"
+    [enabledIds]="settings.modIds"
+    [options]="mods"
+    [default]="data.defaults.modIds"
+    [parent]="btnMods"
+    (cancel)="openSelect = OpenSelect.None"
+    (enableMod)="enableMod.emit($event)"
+    (disableMod)="disableMod.emit($event)"
+  ></lab-multiselect>
 </div>
 <div class="field">
-  <div class="select-container button">
-    <div [style.marginTop.px]="-scrollTop">
-      <button (click)="openSelect = OpenSelect.DisabledRecipes">
-        {{ recipeDisabledCount }} Recipe{{
-          recipeDisabledCount === 1 ? '' : 's'
-        }}
-        Disabled
-      </button>
-      <lab-toggle
-        *ngIf="openSelect === OpenSelect.DisabledRecipes"
-        [data]="data"
-        [recipeDisabled]="settings.recipeDisabled"
-        (cancel)="openSelect = OpenSelect.None"
-        (enableRecipe)="enableRecipe.emit($event)"
-        (disableRecipe)="disableRecipe.emit($event)"
-      >
-      </lab-toggle>
-    </div>
-  </div>
+  <button #btnRecipes (click)="openSelect = OpenSelect.DisabledRecipes">
+    {{ settings.disabledRecipes.length }} Recipe{{
+      settings.disabledRecipes.length === 1 ? '' : 's'
+    }}
+    Disabled
+  </button>
+  <lab-toggle
+    *ngIf="openSelect === OpenSelect.DisabledRecipes"
+    [data]="data"
+    [disabledRecipes]="settings.disabledRecipes"
+    [default]="data.defaults.disabledRecipes"
+    [parent]="btnRecipes"
+    (cancel)="openSelect = OpenSelect.None"
+    (enableRecipe)="enableRecipe.emit($event)"
+    (disableRecipe)="disableRecipe.emit($event)"
+  >
+  </lab-toggle>
 </div>
 <div class="field">
   <div class="flex option" (click)="setExpensive.emit(!settings.expensive)">
@@ -245,73 +239,68 @@
 </div>
 <div class="label">Factory</div>
 <div class="field">
-  <div class="select-container">
-    <div [style.marginTop.px]="-scrollTop">
-      <lab-icon
-        class="clickable"
-        tooltip="Factory preferences"
-        [iconId]="
-          settings.factoryRank.length
-            ? settings.factoryRank[0]
-            : 'assembling-machine-1'
-        "
-        [data]="data"
-        (click)="openSelect = OpenSelect.Factory"
-      ></lab-icon>
-      <lab-ranker
-        *ngIf="openSelect === OpenSelect.Factory"
-        [data]="data"
-        [rank]="settings.factoryRank"
-        [options]="data.factoryIds"
-        (cancel)="openSelect = OpenSelect.None"
-        (preferItem)="preferFactory.emit($event)"
-        (dropItem)="dropFactory.emit($event)"
-      >
-      </lab-ranker>
-    </div>
-  </div>
-  <div class="select-container">
-    <div [style.marginTop.px]="-scrollTop">
-      <lab-icon
-        class="clickable"
-        tooltip="Choose default belt"
-        [iconId]="settings.belt"
-        [data]="data"
-        (click)="openSelect = OpenSelect.Belt"
-      ></lab-icon>
-      <lab-select
-        *ngIf="openSelect === OpenSelect.Belt"
-        [data]="data"
-        [selectedId]="settings.belt"
-        [options]="data.beltIds"
-        [displayRate]="settings.displayRate"
-        [data]="data"
-        (cancel)="openSelect = OpenSelect.None"
-        (selectId)="setBelt.emit($event)"
-      >
-      </lab-select>
-    </div>
-  </div>
-  <div class="select-container">
-    <div [style.marginTop.px]="-scrollTop">
-      <lab-icon
-        class="clickable"
-        tooltip="Choose fuel"
-        [iconId]="settings.fuel"
-        [data]="data"
-        (click)="openSelect = OpenSelect.Fuel"
-      ></lab-icon>
-      <lab-select
-        *ngIf="openSelect === OpenSelect.Fuel"
-        [data]="data"
-        [options]="data.fuelIds"
-        [selectedId]="settings.fuel"
-        (cancel)="openSelect = OpenSelect.None"
-        (selectId)="setFuel.emit($event)"
-      >
-      </lab-select>
-    </div>
-  </div>
+  <lab-icon
+    #btnFactory
+    class="clickable"
+    tooltip="Factory preferences"
+    [iconId]="
+      settings.factoryRank.length
+        ? settings.factoryRank[0]
+        : 'assembling-machine-1'
+    "
+    [data]="data"
+    (click)="openSelect = OpenSelect.Factory"
+  ></lab-icon>
+  <lab-ranker
+    *ngIf="openSelect === OpenSelect.Factory"
+    [data]="data"
+    [rank]="settings.factoryRank"
+    [options]="data.factoryIds"
+    [default]="data.defaults.factoryRank"
+    [parent]="btnFactory.element"
+    (cancel)="openSelect = OpenSelect.None"
+    (preferItem)="preferFactory.emit($event)"
+    (dropItem)="dropFactory.emit($event)"
+  >
+  </lab-ranker>
+  <lab-icon
+    #btnBelt
+    class="clickable"
+    tooltip="Choose default belt"
+    [iconId]="settings.belt"
+    [data]="data"
+    (click)="openSelect = OpenSelect.Belt"
+  ></lab-icon>
+  <lab-select
+    *ngIf="openSelect === OpenSelect.Belt"
+    [data]="data"
+    [selectedId]="settings.belt"
+    [options]="data.beltIds"
+    [displayRate]="settings.displayRate"
+    [data]="data"
+    [parent]="btnBelt.element"
+    (cancel)="openSelect = OpenSelect.None"
+    (selectId)="setBelt.emit({ value: $event, default: data.defaults.belt })"
+  >
+  </lab-select>
+  <lab-icon
+    #btnFuel
+    class="clickable"
+    tooltip="Choose fuel"
+    [iconId]="settings.fuel"
+    [data]="data"
+    (click)="openSelect = OpenSelect.Fuel"
+  ></lab-icon>
+  <lab-select
+    *ngIf="openSelect === OpenSelect.Fuel"
+    [data]="data"
+    [options]="data.fuelIds"
+    [selectedId]="settings.fuel"
+    [parent]="btnFuel.element"
+    (cancel)="openSelect = OpenSelect.None"
+    (selectId)="setFuel.emit({ value: $event, default: data.defaults.fuel })"
+  >
+  </lab-select>
 </div>
 <div class="field">
   <lab-icon iconId="pipe" tooltip="Pipe flow rate" [data]="data"></lab-icon>
@@ -333,51 +322,51 @@
 </div>
 <div class="label">Modules</div>
 <div class="field">
-  <div class="select-container">
-    <div [style.marginTop.px]="-scrollTop">
-      <lab-icon
-        class="clickable"
-        tooltip="Module preferences"
-        [iconId]="
-          settings.moduleRank.length ? settings.moduleRank[0] : 'module'
-        "
-        [data]="data"
-        (click)="openSelect = OpenSelect.Module"
-      ></lab-icon>
-      <lab-ranker
-        *ngIf="openSelect === OpenSelect.Module"
-        [data]="data"
-        [rank]="settings.moduleRank"
-        [options]="data.moduleIds"
-        (cancel)="openSelect = OpenSelect.None"
-        (preferItem)="preferModule.emit($event)"
-        (dropItem)="dropModule.emit($event)"
-      >
-      </lab-ranker>
-    </div>
-  </div>
+  <lab-icon
+    #btnModule
+    class="clickable"
+    tooltip="Module preferences"
+    [iconId]="settings.moduleRank.length ? settings.moduleRank[0] : 'module'"
+    [data]="data"
+    (click)="openSelect = OpenSelect.Module"
+  ></lab-icon>
+  <lab-ranker
+    *ngIf="openSelect === OpenSelect.Module"
+    [data]="data"
+    [rank]="settings.moduleRank"
+    [options]="data.moduleIds"
+    [default]="data.defaults.moduleRank"
+    [parent]="btnModule.element"
+    (cancel)="openSelect = OpenSelect.None"
+    (preferItem)="preferModule.emit($event)"
+    (dropItem)="dropModule.emit($event)"
+  >
+  </lab-ranker>
   <lab-icon iconId="beacon" [data]="data"></lab-icon>
-  <div class="select-container">
-    <div [style.marginTop.px]="-scrollTop">
-      <lab-icon
-        class="clickable"
-        tooltip="Choose default beacon module"
-        [iconId]="settings.beaconModule"
-        [data]="data"
-        (click)="openSelect = OpenSelect.BeaconModule"
-      ></lab-icon>
-      <lab-select
-        *ngIf="openSelect === OpenSelect.BeaconModule"
-        [data]="data"
-        [selectedId]="settings.beaconModule"
-        [options]="data.beaconModuleIds"
-        includeEmptyModule="true"
-        (cancel)="openSelect = OpenSelect.None"
-        (selectId)="setBeaconModule.emit($event)"
-      >
-      </lab-select>
-    </div>
-  </div>
+  <lab-icon
+    #btnBeaconModule
+    class="clickable"
+    tooltip="Beacon module"
+    [iconId]="settings.beaconModule"
+    [data]="data"
+    (click)="openSelect = OpenSelect.BeaconModule"
+  ></lab-icon>
+  <lab-select
+    *ngIf="openSelect === OpenSelect.BeaconModule"
+    [data]="data"
+    [selectedId]="settings.beaconModule"
+    [options]="data.beaconModuleIds"
+    [parent]="btnBeaconModule.element"
+    includeEmptyModule="true"
+    (cancel)="openSelect = OpenSelect.None"
+    (selectId)="
+      setBeaconModule.emit({
+        value: $event,
+        default: data.defaults.beaconModule
+      })
+    "
+  >
+  </lab-select>
   <input
     type="number"
     title="Enter default number of beacon modules"

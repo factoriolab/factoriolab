@@ -113,7 +113,7 @@
               [iconId]="step.itemId"
               [class.ignored]="itemSettings[step.itemId].ignore"
               [tooltip]="data.itemEntities[step.itemId]?.name"
-              [recipe]="data.recipeEntities[step.recipeId]"
+              [recipe]="data.recipeEntities[data.itemRecipeIds[step.itemId]]"
               [data]="data"
               (click)="ignoreItem.emit(step.itemId)"
             ></lab-icon>
@@ -172,7 +172,11 @@
                     [displayRate]="displayRate"
                     (cancel)="edit = null"
                     (selectId)="
-                      setBelt.emit({ id: step.itemId, value: $event })
+                      setBelt.emit({
+                        id: step.itemId,
+                        value: $event,
+                        default: belt
+                      })
                     "
                   >
                   </lab-select>
@@ -189,10 +193,22 @@
               class="flex"
               *ngIf="!step.factories || step.factories.nonzero()"
             >
-              <div *ngIf="step.factories" class="monospace">
-                {{ rate(step.factories, factoryPrecision) }}
-              </div>
-              <ng-container *ngIf="step.recipeId !== step.itemId">
+              <ng-container *ngIf="step.factories">
+                <div *ngIf="factory !== 'pumpjack'" class="monospace">
+                  {{ rate(step.factories, factoryPrecision) }}
+                </div>
+                <div *ngIf="factory === 'pumpjack'" class="monospace">
+                  {{
+                    rate(
+                      step.factories.mul(Rational.hundred),
+                      factoryPrecision
+                    )
+                  }}%
+                </div>
+              </ng-container>
+              <ng-container
+                *ngIf="step.recipeId !== data.itemRecipeIds[step.itemId]"
+              >
                 <lab-icon
                   [iconId]="step.recipeId"
                   [tooltip]="data.recipeEntities[step.recipeId].name"
@@ -224,7 +240,7 @@
                 <ng-template #factoryPicker>
                   <div class="relative">
                     <lab-icon
-                      class="clickable"
+                      class="list-edit-factory clickable"
                       title="Click to change factory"
                       [iconId]="factory"
                       [tooltip]="data.itemEntities[factory].name"
@@ -244,9 +260,7 @@
                       [selectedId]="factory"
                       [options]="recipe.producers"
                       (cancel)="edit = null"
-                      (selectId)="
-                        setFactory.emit({ id: step.recipeId, value: $event })
-                      "
+                      (selectId)="factoryChange(step, $event)"
                     >
                     </lab-select>
                   </div>
@@ -319,7 +333,11 @@
                   includeEmptyModule="true"
                   (cancel)="edit = null"
                   (selectId)="
-                    setBeaconModule.emit({ id: step.recipeId, value: $event })
+                    setBeaconModule.emit({
+                      id: step.recipeId,
+                      value: $event,
+                      default: beaconModule
+                    })
                   "
                 >
                 </lab-select>

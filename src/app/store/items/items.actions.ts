@@ -1,20 +1,13 @@
 import { Action } from '@ngrx/store';
 
-import { ItemsState } from './items.reducer';
-import { IdPayload } from '~/models';
+import { DefaultIdPayload } from '~/models';
 
 export const enum ItemsActionType {
-  LOAD = '[Items Router] Load',
   IGNORE = '[Items Page] Ignore Item',
   SET_BELT = '[Items Page] Set Belt',
   RESET = '[Items Page] Reset Item',
   RESET_IGNORE = '[Items Page] Reset Ignore',
   RESET_BELT = '[Items Page] Reset Belt',
-}
-
-export class LoadAction implements Action {
-  readonly type = ItemsActionType.LOAD;
-  constructor(public payload: ItemsState) {}
 }
 
 export class IgnoreAction implements Action {
@@ -24,7 +17,7 @@ export class IgnoreAction implements Action {
 
 export class SetBeltAction implements Action {
   readonly type = ItemsActionType.SET_BELT;
-  constructor(public payload: IdPayload<string>) {}
+  constructor(public payload: DefaultIdPayload) {}
 }
 
 export class ResetAction implements Action {
@@ -41,7 +34,6 @@ export class ResetBeltAction implements Action {
 }
 
 export type ItemsAction =
-  | LoadAction
   | IgnoreAction
   | SetBeltAction
   | ResetAction

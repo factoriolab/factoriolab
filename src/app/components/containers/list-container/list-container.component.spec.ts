@@ -3,6 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
 import { Mocks, ItemId } from 'src/tests';
+import { DefaultIdPayload } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers, State } from '~/store';
 import * as Items from '~/store/items';
@@ -46,14 +47,22 @@ describe('ListContainerComponent', () => {
 
   it('should set belt', () => {
     spyOn(store, 'dispatch');
-    const data = { id: Mocks.Item1.id, value: ItemId.TransportBelt };
+    const data: DefaultIdPayload = {
+      id: Mocks.Item1.id,
+      value: ItemId.TransportBelt,
+      default: ItemId.TransportBelt,
+    };
     component.child.setBelt.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(new Items.SetBeltAction(data));
   });
 
   it('should set factory', () => {
     spyOn(store, 'dispatch');
-    const data = { id: Mocks.Recipe1.id, value: ItemId.StoneFurnace };
+    const data: DefaultIdPayload = {
+      id: Mocks.Recipe1.id,
+      value: ItemId.StoneFurnace,
+      default: ItemId.StoneFurnace,
+    };
     component.child.setFactory.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Recipes.SetFactoryAction(data)
@@ -62,7 +71,11 @@ describe('ListContainerComponent', () => {
 
   it('should set modules', () => {
     spyOn(store, 'dispatch');
-    const data = { id: Mocks.Recipe1.id, value: [ItemId.SpeedModule] };
+    const data: DefaultIdPayload<string[]> = {
+      id: Mocks.Recipe1.id,
+      value: [ItemId.SpeedModule],
+      default: [],
+    };
     component.child.setModules.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Recipes.SetModulesAction(data)
@@ -71,7 +84,11 @@ describe('ListContainerComponent', () => {
 
   it('should set beacon module', () => {
     spyOn(store, 'dispatch');
-    const data = { id: Mocks.Recipe1.id, value: ItemId.SpeedModule };
+    const data: DefaultIdPayload = {
+      id: Mocks.Recipe1.id,
+      value: ItemId.SpeedModule,
+      default: ItemId.SpeedModule,
+    };
     component.child.setBeaconModule.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Recipes.SetBeaconModuleAction(data)
@@ -80,7 +97,11 @@ describe('ListContainerComponent', () => {
 
   it('should set beacon count', () => {
     spyOn(store, 'dispatch');
-    const data = { id: Mocks.Recipe1.id, value: 24 };
+    const data: DefaultIdPayload<number> = {
+      id: Mocks.Recipe1.id,
+      value: 24,
+      default: 16,
+    };
     component.child.setBeaconCount.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Recipes.SetBeaconCountAction(data)

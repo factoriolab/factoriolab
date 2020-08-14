@@ -3,7 +3,7 @@
   <lab-icon
     *ngFor="let id of complexRecipes"
     class="clickable"
-    [class.ignored]="recipeDisabled[id]"
+    [class.ignored]="isDisabled(id)"
     [iconId]="id"
     [tooltip]="data.recipeEntities[id].name"
     [recipe]="data.recipeEntities[id]"

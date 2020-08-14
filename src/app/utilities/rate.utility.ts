@@ -181,6 +181,7 @@ export class RateUtility {
     itemSettings: ItemsState,
     beltSpeed: Entities<Rational>
   ) {
+    steps = steps.map((s) => ({ ...s }));
     for (const step of steps) {
       const belt = itemSettings[step.itemId]?.belt;
       if (step.items && belt) {
@@ -195,19 +196,21 @@ export class RateUtility {
     itemSettings: ItemsState,
     beltSpeed: Entities<Rational>
   ) {
+    node = { ...node };
     const belt = itemSettings[node.itemId]?.belt;
     if (node.items && belt) {
       node.belts = node.items.div(beltSpeed[belt]);
     }
     if (node.children) {
-      for (const child of node.children) {
-        this.calculateNodeBelts(child, itemSettings, beltSpeed);
-      }
+      node.children = node.children.map((n) =>
+        this.calculateNodeBelts(n, itemSettings, beltSpeed)
+      );
     }
     return node;
   }
 
   static displayRate(steps: Step[], displayRate: DisplayRate) {
+    steps = steps.map((s) => ({ ...s }));
     const displayRateVal = DisplayRateVal[displayRate];
     for (const step of steps) {
       if (step.items) {

@@ -1,19 +1,14 @@
-import {
-  TestBed,
-  async,
-  ComponentFixture,
-  tick,
-  fakeAsync,
-} from '@angular/core/testing';
+import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
-import { TestUtility, ElementId, ItemId } from 'src/tests';
-import { Theme, Dataset } from './models';
+import { TestUtility, ElementId, Mocks } from 'src/tests';
+import { Theme } from './models';
 import { RouterService } from './services/router.service';
 import { State, reducers, metaReducers } from './store';
-import * as Products from './store/products';
+import { AddAction } from './store/products';
 import * as Settings from './store/settings';
 import {
   HeaderComponent,
@@ -26,7 +21,6 @@ import {
   ListComponent,
 } from './components';
 import { AppComponent } from './app.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -68,34 +62,12 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load the dataset', fakeAsync(() => {
-    let dataset: Dataset;
-    store.select(Settings.getDataset).subscribe((d) => (dataset = d));
-    tick();
-    expect(dataset.itemIds.length).toBeGreaterThan(0);
-  }));
-
   it('should update the url', () => {
     spyOn(router, 'updateUrl');
     fixture.detectChanges();
+    store.dispatch(new AddAction(Mocks.Base.items[0].id));
+    fixture.detectChanges();
     expect(router.updateUrl).toHaveBeenCalled();
-  });
-
-  it('should add a product', fakeAsync(() => {
-    let ids: string[];
-    store.select(Products.getIds).subscribe((i) => (ids = i));
-    tick();
-    expect(ids.length).toBeGreaterThan(0);
-  }));
-
-  it('should not add a product if location includes a hash', () => {
-    location.hash = 'test';
-    spyOn(store, 'dispatch');
-    TestBed.createComponent(AppComponent);
-    expect(store.dispatch).not.toHaveBeenCalledWith(
-      new Products.AddAction(ItemId.WoodenChest)
-    );
-    location.hash = '';
   });
 
   it('should toggle settings open when clicked', () => {

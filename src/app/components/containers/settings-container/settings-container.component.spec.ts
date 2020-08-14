@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { StoreModule, Store } from '@ngrx/store';
 
-import { TestUtility, ItemId, RecipeId, Mocks } from 'src/tests';
+import { TestUtility, ItemId, RecipeId } from 'src/tests';
 import { IconComponent } from '~/components';
 import { DisplayRate, ResearchSpeed, Theme } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
@@ -74,8 +74,8 @@ describe('SettingsContainerComponent', () => {
 
   it('should set the base dataset', () => {
     spyOn(store, 'dispatch');
-    const value = Mocks.Base;
-    component.child.setBaseDataset.emit(value);
+    const value = 'base';
+    component.child.setBase.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetBaseAction(value)
     );
@@ -83,7 +83,7 @@ describe('SettingsContainerComponent', () => {
 
   it('should enable a mod', () => {
     spyOn(store, 'dispatch');
-    const value = 'test';
+    const value = { id: 'test', default: [] };
     component.child.enableMod.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.EnableModAction(value)
@@ -92,10 +92,94 @@ describe('SettingsContainerComponent', () => {
 
   it('should disable a mod', () => {
     spyOn(store, 'dispatch');
-    const value = 'test';
+    const value = { id: 'test', default: [] };
     component.child.disableMod.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.DisableModAction(value)
+    );
+  });
+
+  it('should set the default belt', () => {
+    spyOn(store, 'dispatch');
+    const value = {
+      value: ItemId.TransportBelt,
+      default: ItemId.TransportBelt,
+    };
+    component.child.setBelt.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetBeltAction(value)
+    );
+  });
+
+  it('should set the fuel', () => {
+    spyOn(store, 'dispatch');
+    const value = { value: ItemId.Wood, default: ItemId.Wood };
+    component.child.setFuel.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetFuelAction(value)
+    );
+  });
+
+  it('should disable a recipe', () => {
+    spyOn(store, 'dispatch');
+    const value = { id: RecipeId.BasicOilProcessing, default: [] };
+    component.child.disableRecipe.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.DisableRecipeAction(value)
+    );
+  });
+
+  it('should enable a recipe', () => {
+    spyOn(store, 'dispatch');
+    const value = { id: RecipeId.BasicOilProcessing, default: [] };
+    component.child.enableRecipe.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.EnableRecipeAction(value)
+    );
+  });
+
+  it('should prefer a factory', () => {
+    spyOn(store, 'dispatch');
+    const value = { id: ItemId.AssemblingMachine1, default: [] };
+    component.child.preferFactory.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.PreferFactoryAction(value)
+    );
+  });
+
+  it('should drop a factory', () => {
+    spyOn(store, 'dispatch');
+    const value = { id: ItemId.AssemblingMachine1, default: [] };
+    component.child.dropFactory.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.DropFactoryAction(value)
+    );
+  });
+
+  it('should prefer a module', () => {
+    spyOn(store, 'dispatch');
+    const value = { id: ItemId.SpeedModule, default: [] };
+    component.child.preferModule.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.PreferModuleAction(value)
+    );
+  });
+
+  it('should drop a module', () => {
+    spyOn(store, 'dispatch');
+    const value = { id: ItemId.SpeedModule, default: [] };
+    component.child.dropModule.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.DropModuleAction(value)
+    );
+  });
+
+  it('should set the default beacon module', () => {
+    spyOn(store, 'dispatch');
+    const value = { value: ItemId.SpeedModule, default: ItemId.SpeedModule };
+    component.child.setBeaconModule.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetBeaconModuleAction(value)
     );
   });
 
@@ -132,87 +216,6 @@ describe('SettingsContainerComponent', () => {
     component.child.setFactoryPrecision.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetFactoryPrecisionAction(value)
-    );
-  });
-
-  it('should set the default belt', () => {
-    spyOn(store, 'dispatch');
-    const value = ItemId.TransportBelt;
-    component.child.setBelt.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetBeltAction(value)
-    );
-  });
-
-  it('should set the fuel', () => {
-    spyOn(store, 'dispatch');
-    const value = ItemId.Wood;
-    component.child.setFuel.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetFuelAction(value)
-    );
-  });
-
-  it('should disable a recipe', () => {
-    spyOn(store, 'dispatch');
-    const value = RecipeId.BasicOilProcessing;
-    component.child.disableRecipe.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.DisableRecipeAction(value)
-    );
-  });
-
-  it('should enable a recipe', () => {
-    spyOn(store, 'dispatch');
-    const value = RecipeId.BasicOilProcessing;
-    component.child.enableRecipe.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.EnableRecipeAction(value)
-    );
-  });
-
-  it('should prefer a factory', () => {
-    spyOn(store, 'dispatch');
-    const value = ItemId.AssemblingMachine1;
-    component.child.preferFactory.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.PreferFactoryAction(value)
-    );
-  });
-
-  it('should drop a factory', () => {
-    spyOn(store, 'dispatch');
-    const value = ItemId.AssemblingMachine1;
-    component.child.dropFactory.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.DropFactoryAction(value)
-    );
-  });
-
-  it('should prefer a module', () => {
-    spyOn(store, 'dispatch');
-    const value = ItemId.SpeedModule;
-    component.child.preferModule.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.PreferModuleAction(value)
-    );
-  });
-
-  it('should drop a module', () => {
-    spyOn(store, 'dispatch');
-    const value = ItemId.SpeedModule;
-    component.child.dropModule.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.DropModuleAction(value)
-    );
-  });
-
-  it('should set the default beacon module', () => {
-    spyOn(store, 'dispatch');
-    const value = ItemId.SpeedModule;
-    component.child.setBeaconModule.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetBeaconModuleAction(value)
     );
   });
 

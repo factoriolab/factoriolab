@@ -6,10 +6,6 @@ import { Item } from './item';
 import { Recipe } from './recipe';
 
 export interface ModData {
-  /** Do not use the colon (:) character in ID */
-  id: string;
-  name: string;
-  sprite: string;
   categories: Category[];
   icons: Icon[];
   items: Item[];
@@ -17,15 +13,3 @@ export interface ModData {
   limitations: Entities<string[]>;
   defaults?: Defaults;
 }
-
-export const EmptyMod: ModData = {
-  id: null,
-  name: null,
-  sprite: null,
-  categories: [],
-  icons: [],
-  items: [],
-  recipes: [],
-  limitations: {},
-  defaults: null,
-};

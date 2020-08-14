@@ -5,11 +5,9 @@ import { StoreModule } from '@ngrx/store';
 
 import { Mocks, TestUtility, ItemId } from 'src/tests';
 import { IconComponent, SelectComponent } from '~/components';
-import { Step, DisplayRate, Dataset } from '~/models';
+import { DisplayRate } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers } from '~/store';
-import { ItemsState } from '~/store/items';
-import { RecipesState } from '~/store/recipes';
 import { ListComponent } from './list.component';
 
 @Component({
@@ -21,6 +19,11 @@ import { ListComponent } from './list.component';
       [recipeSettings]="recipeSettings"
       [recipeRaw]="recipeRaw"
       [steps]="steps"
+      [belt]="belt"
+      [factoryRank]="factoryRank"
+      [moduleRank]="moduleRank"
+      [beaconModule]="beaconModule"
+      [beaconCount]="beaconCount"
       [displayRate]="displayRate"
       [itemPrecision]="itemPrecision"
       [beltPrecision]="beltPrecision"
@@ -49,11 +52,16 @@ import { ListComponent } from './list.component';
 })
 class TestListComponent {
   @ViewChild(ListComponent) child: ListComponent;
-  data: Dataset = Mocks.Data;
-  itemSettings: ItemsState = Mocks.ItemSettingsInitial;
-  recipeSettings: RecipesState = Mocks.RecipeSettingsInitial;
-  recipeRaw: RecipesState = Mocks.RecipeSettingsEntities;
-  steps: Step[] = Mocks.Steps;
+  data = Mocks.Data;
+  itemSettings = Mocks.ItemSettingsInitial;
+  recipeSettings = Mocks.RecipeSettingsInitial;
+  recipeRaw = Mocks.RecipeSettingsEntities;
+  steps = Mocks.Steps;
+  belt = ItemId.TransportBelt;
+  factoryRank = [];
+  moduleRank = [];
+  beaconModule = ItemId.SpeedModule;
+  beaconCount = 0;
   displayRate = DisplayRate.PerMinute;
   itemPrecision = null;
   beltPrecision = 0;
@@ -108,6 +116,19 @@ describe('ListComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should set a factory', () => {
+    spyOn(component, 'setFactory');
+    TestUtility.clickSelector(fixture, '.list-edit-factory', 0);
+    fixture.detectChanges();
+    TestUtility.clickSelector(fixture, 'lab-select lab-icon', 0);
+    fixture.detectChanges();
+    expect(component.setFactory).toHaveBeenCalledWith({
+      id: Mocks.Step1.itemId,
+      value: ItemId.AssemblingMachine1,
+      default: ItemId.AssemblingMachine1,
+    });
+  });
+
   it('should set a specific factory module', () => {
     spyOn(component, 'setModules');
     TestUtility.clickSelector(fixture, '.list-edit-factory-module', 1);
@@ -122,6 +143,7 @@ describe('ListComponent', () => {
         ItemId.SpeedModule3,
         ItemId.SpeedModule3,
       ],
+      default: [ItemId.Module, ItemId.Module, ItemId.Module, ItemId.Module],
     });
   });
 
@@ -139,6 +161,7 @@ describe('ListComponent', () => {
         ItemId.SpeedModule,
         ItemId.SpeedModule,
       ],
+      default: [ItemId.Module, ItemId.Module, ItemId.Module, ItemId.Module],
     });
   });
 
@@ -149,6 +172,7 @@ describe('ListComponent', () => {
     expect(component.setBeaconCount).toHaveBeenCalledWith({
       id: Mocks.Step1.itemId,
       value: 24,
+      default: 0,
     });
   });
 
