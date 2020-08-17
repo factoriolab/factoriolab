@@ -23,8 +23,8 @@
     [options]="mods"
     [parent]="btnMods"
     (cancel)="openSelect = OpenSelect.None"
-    (enableId)="enableModId($event)"
-    (disableId)="disableModId($event)"
+    (enableId)="enableMod.emit({ id: $event, default: data.defaults.modIds })"
+    (disableId)="disableMod.emit({ id: $event, default: data.defaults.modIds })"
   ></lab-multiselect>
 </div>
 <div class="field">

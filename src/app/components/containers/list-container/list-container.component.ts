@@ -36,11 +36,12 @@ export class ListContainerComponent implements OnInit {
   factoryRank$: Observable<string[]>;
   moduleRank$: Observable<string[]>;
   beaconModule$: Observable<string>;
-  beaconCount$: Observable<number>;
   displayRate$: Observable<DisplayRate>;
   itemPrecision$: Observable<number>;
   beltPrecision$: Observable<number>;
   factoryPrecision$: Observable<number>;
+  beaconCount$: Observable<number>;
+  drillModule$: Observable<boolean>;
   columns$: Observable<string[]>;
   modifiedIgnore$: Observable<boolean>;
   modifiedBelt$: Observable<boolean>;
@@ -62,11 +63,12 @@ export class ListContainerComponent implements OnInit {
     this.factoryRank$ = this.store.select(Settings.getFactoryRank);
     this.moduleRank$ = this.store.select(Settings.getModuleRank);
     this.beaconModule$ = this.store.select(Settings.getBeaconModule);
-    this.beaconCount$ = this.store.select(Settings.getBeaconCount);
     this.displayRate$ = this.store.select(Settings.getDisplayRate);
     this.itemPrecision$ = this.store.select(Settings.getItemPrecision);
     this.beltPrecision$ = this.store.select(Settings.getBeltPrecision);
     this.factoryPrecision$ = this.store.select(Settings.getFactoryPrecision);
+    this.beaconCount$ = this.store.select(Settings.getBeaconCount);
+    this.drillModule$ = this.store.select(Settings.getDrillModule);
     this.columns$ = this.store.select(Settings.getColumns);
     this.modifiedIgnore$ = this.store.select(Items.getContainsIgnore);
     this.modifiedBelt$ = this.store.select(Items.getContainsBelt);

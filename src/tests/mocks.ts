@@ -102,6 +102,8 @@ export const Step1: Step = {
   items: Rational.fromNumber(Product1.rate),
   belts: Rational.fromNumber(0.5),
   factories: Rational.one,
+  consumption: Rational.one,
+  pollution: Rational.one,
 };
 export const Step2: Step = {
   depth: 1,
@@ -110,6 +112,8 @@ export const Step2: Step = {
   items: Rational.fromNumber(Product2.rate),
   belts: Rational.one,
   factories: Rational.two,
+  consumption: Rational.zero,
+  pollution: Rational.zero,
 };
 export const Steps = [Step1, Step2];
 export const Node1: Node = { ...Step1, ...{ id: 'id1', name: 'name1' } };

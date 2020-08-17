@@ -58,12 +58,7 @@ export class ListComponent {
   @Input() factoryPrecision: number;
   @Input() beaconCount: number;
   @Input() drillModule: boolean;
-  private _columns: string[];
-  get columns() {
-    return this._columns;
-  }
   @Input() set columns(value: string[]) {
-    this._columns = value;
     this.show = value.reduce(
       (e: Entities<boolean>, c) => ({ ...e, ...{ [c]: true } }),
       {}
@@ -145,23 +140,18 @@ export class ListComponent {
     if (precision == null) {
       return value.toFraction();
     } else {
-      return value.toPrecision(precision);
+      return value.toPrecision(precision).toString();
     }
   }
 
   power(value: Rational) {
     if (value.lt(Rational.thousand)) {
-      if (this.factoryPrecision == null) {
-        return `${value.toFraction()} kW`;
-      } else {
-        return `${value.toPrecision(1)} kW`;
-      }
+      return `${this.rate(value, this.factoryPrecision)} kW`;
     } else {
-      if (this.factoryPrecision == null) {
-        return `${value.div(Rational.thousand).toFraction()} MW`;
-      } else {
-        return `${value.div(Rational.thousand).toPrecision(1)} MW`;
-      }
+      return `${this.rate(
+        value.div(Rational.thousand),
+        this.factoryPrecision
+      )} MW`;
     }
   }
 

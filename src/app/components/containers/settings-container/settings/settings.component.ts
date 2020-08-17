@@ -98,12 +98,4 @@ export class SettingsComponent {
       emitter.emit(event.target.value);
     }
   }
-
-  enableModId(value: string) {
-    this.enableMod.emit({ id: value, default: this.data.defaults.modIds });
-  }
-
-  disableModId(value: string) {
-    this.disableMod.emit({ id: value, default: this.data.defaults.modIds });
-  }
 }
