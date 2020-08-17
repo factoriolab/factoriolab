@@ -27,6 +27,7 @@ const sMiningBonus = (state: SettingsState) => state.miningBonus;
 const sResearchSpeed = (state: SettingsState) => state.researchSpeed;
 const sFlowRate = (state: SettingsState) => state.flowRate;
 const sExpensive = (state: SettingsState) => state.expensive;
+const sColumns = (state: SettingsState) => state.columns;
 const sTheme = (state: SettingsState) => state.theme;
 
 /* Simple selectors */
@@ -41,6 +42,7 @@ export const getMiningBonus = compose(sMiningBonus, settingsState);
 export const getResearchSpeed = compose(sResearchSpeed, settingsState);
 export const getFlowRate = compose(sFlowRate, settingsState);
 export const getExpensive = compose(sExpensive, settingsState);
+export const getColumns = compose(sColumns, settingsState);
 export const getTheme = compose(sTheme, settingsState);
 
 /* Complex selectors */

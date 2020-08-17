@@ -9,25 +9,25 @@ import { MultiselectComponent } from './multiselect.component';
   selector: 'lab-test-multiselect',
   template: `
     <lab-multiselect
+      [header]="header"
       [enabledIds]="enabledIds"
       [options]="options"
-      [default]="default"
       [parent]="element.nativeElement"
       (cancel)="cancel()"
-      (enableMod)="enableMod($event)"
-      (disableMod)="disableMod($event)"
+      (enableId)="enableId($event)"
+      (disableId)="disableId($event)"
     >
     </lab-multiselect>
   `,
 })
 class TestMultiselectComponent {
   @ViewChild(MultiselectComponent) child: MultiselectComponent;
+  header = 'Header';
   enabledIds = [];
   options = Mocks.Raw.mods;
-  default = [];
   cancel() {}
-  enableMod(data) {}
-  disableMod(data) {}
+  enableId(data) {}
+  disableId(data) {}
 
   constructor(public element: ElementRef) {}
 }
@@ -91,29 +91,23 @@ describe('MultiselectComponent', () => {
     expect(component.cancel).not.toHaveBeenCalled();
   });
 
-  it('should enable a mod', () => {
-    spyOn(component, 'enableMod');
+  it('should enable an item', () => {
+    spyOn(component, 'enableId');
     spyOn(component, 'cancel');
     component.child.opening = false;
     TestUtility.clickSelector(fixture, '.clickable', 0);
-    expect(component.enableMod).toHaveBeenCalledWith({
-      id: Mocks.Raw.mods[0].id,
-      default: [],
-    });
+    expect(component.enableId).toHaveBeenCalledWith(Mocks.Raw.mods[0].id);
     expect(component.cancel).not.toHaveBeenCalled();
   });
 
-  it('should disable a mod', () => {
+  it('should disable an item', () => {
     component.enabledIds = [Mocks.Raw.mods[0].id];
     fixture.detectChanges();
-    spyOn(component, 'disableMod');
+    spyOn(component, 'disableId');
     spyOn(component, 'cancel');
     component.child.opening = false;
     TestUtility.clickSelector(fixture, '.clickable', 0);
-    expect(component.disableMod).toHaveBeenCalledWith({
-      id: Mocks.Raw.mods[0].id,
-      default: [],
-    });
+    expect(component.disableId).toHaveBeenCalledWith(Mocks.Raw.mods[0].id);
     expect(component.cancel).not.toHaveBeenCalled();
   });
 });

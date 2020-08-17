@@ -5,7 +5,7 @@ import { StoreModule } from '@ngrx/store';
 
 import { Mocks, TestUtility, ItemId } from 'src/tests';
 import { IconComponent, SelectComponent } from '~/components';
-import { DisplayRate } from '~/models';
+import { DisplayRate, AllColumns } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers } from '~/store';
 import { ListComponent } from './list.component';
@@ -28,6 +28,7 @@ import { ListComponent } from './list.component';
       [itemPrecision]="itemPrecision"
       [beltPrecision]="beltPrecision"
       [factoryPrecision]="factoryPrecision"
+      [columns]="columns"
       [modifiedIgnore]="modifiedIgnore"
       [modifiedBelt]="modifiedBelt"
       [modifiedFactory]="modifiedFactory"
@@ -39,6 +40,8 @@ import { ListComponent } from './list.component';
       (setModules)="setModules($event)"
       (setBeaconModule)="setBeaconModule($event)"
       (setBeaconCount)="setBeaconCount($event)"
+      (showColumn)="showColumn($event)"
+      (hideColumn)="hideColumn($event)"
       (resetItem)="resetItem($event)"
       (resetRecipe)="resetRecipe($event)"
       (resetIgnore)="resetIgnore()"
@@ -66,6 +69,7 @@ class TestListComponent {
   itemPrecision = null;
   beltPrecision = 0;
   factoryPrecision = 1;
+  columns = AllColumns;
   modifiedIgnore = false;
   modifiedBelt = false;
   modifiedFactory = false;
@@ -77,6 +81,8 @@ class TestListComponent {
   setModules(data) {}
   setBeaconModule(data) {}
   setBeaconCount(data) {}
+  showColumn(data) {}
+  hideColumn(data) {}
   resetItem(data) {}
   resetRecipe(data) {}
   resetIgnore() {}

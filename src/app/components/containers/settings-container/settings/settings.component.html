@@ -18,13 +18,13 @@
   </button>
   <lab-multiselect
     *ngIf="openSelect === OpenSelect.Mods"
+    [header]="'Select Mod Sets'"
     [enabledIds]="settings.modIds"
     [options]="mods"
-    [default]="data.defaults.modIds"
     [parent]="btnMods"
     (cancel)="openSelect = OpenSelect.None"
-    (enableMod)="enableMod.emit($event)"
-    (disableMod)="disableMod.emit($event)"
+    (enableId)="enableModId($event)"
+    (disableId)="disableModId($event)"
   ></lab-multiselect>
 </div>
 <div class="field">

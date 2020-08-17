@@ -14,22 +14,25 @@ import {
   Dataset,
   DefaultIdPayload,
   MODULE_ID,
+  Column,
+  ColumnsAsOptions,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
 import { RecipeUtility } from '~/utilities';
 
-enum StepEditType {
+enum ListEditType {
+  Columns,
   Belt,
   Factory,
   Module,
   Beacon,
 }
 
-interface StepEdit {
+interface ListEdit {
   step: Step;
-  type: StepEditType;
+  type: ListEditType;
   index?: number;
 }
 
@@ -55,6 +58,17 @@ export class ListComponent {
   @Input() factoryPrecision: number;
   @Input() beaconCount: number;
   @Input() drillModule: boolean;
+  private _columns: string[];
+  get columns() {
+    return this._columns;
+  }
+  @Input() set columns(value: string[]) {
+    this._columns = value;
+    this.show = value.reduce(
+      (e: Entities<boolean>, c) => ({ ...e, ...{ [c]: true } }),
+      {}
+    );
+  }
   @Input() modifiedIgnore: boolean;
   @Input() modifiedBelt: boolean;
   @Input() modifiedFactory: boolean;
@@ -67,6 +81,8 @@ export class ListComponent {
   @Output() setModules = new EventEmitter<DefaultIdPayload<string[]>>();
   @Output() setBeaconModule = new EventEmitter<DefaultIdPayload>();
   @Output() setBeaconCount = new EventEmitter<DefaultIdPayload<number>>();
+  @Output() hideColumn = new EventEmitter<string>();
+  @Output() showColumn = new EventEmitter<string>();
   @Output() resetItem = new EventEmitter<string>();
   @Output() resetRecipe = new EventEmitter<string>();
   @Output() resetIgnore = new EventEmitter();
@@ -75,13 +91,16 @@ export class ListComponent {
   @Output() resetModules = new EventEmitter();
   @Output() resetBeacons = new EventEmitter();
 
-  edit: StepEdit;
+  edit: ListEdit;
   expanded: Entities<boolean> = {};
+  show: Entities<boolean> = {};
 
+  Column = Column;
   DisplayRate = DisplayRate;
-  StepEditType = StepEditType;
+  StepEditType = ListEditType;
   Rational = Rational;
   MODULE_ID = MODULE_ID;
+  ColumnsAsOptions = ColumnsAsOptions;
 
   get rateLabel() {
     switch (this.displayRate) {

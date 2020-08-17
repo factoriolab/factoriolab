@@ -11,8 +11,8 @@ import { Observable } from 'rxjs';
 import { Step, DisplayRate, Dataset, DefaultIdPayload } from '~/models';
 import { State } from '~/store';
 import * as Items from '~/store/items';
-import * as Recipes from '~/store/recipes';
 import { getSteps } from '~/store/products';
+import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 import { ListComponent } from './list/list.component';
 
@@ -41,6 +41,7 @@ export class ListContainerComponent implements OnInit {
   itemPrecision$: Observable<number>;
   beltPrecision$: Observable<number>;
   factoryPrecision$: Observable<number>;
+  columns$: Observable<string[]>;
   modifiedIgnore$: Observable<boolean>;
   modifiedBelt$: Observable<boolean>;
   modifiedFactory$: Observable<boolean>;
@@ -66,6 +67,7 @@ export class ListContainerComponent implements OnInit {
     this.itemPrecision$ = this.store.select(Settings.getItemPrecision);
     this.beltPrecision$ = this.store.select(Settings.getBeltPrecision);
     this.factoryPrecision$ = this.store.select(Settings.getFactoryPrecision);
+    this.columns$ = this.store.select(Settings.getColumns);
     this.modifiedIgnore$ = this.store.select(Items.getContainsIgnore);
     this.modifiedBelt$ = this.store.select(Items.getContainsBelt);
     this.modifiedFactory$ = this.store.select(Recipes.getContainsFactory);
@@ -95,6 +97,14 @@ export class ListContainerComponent implements OnInit {
 
   setBeaconCount(data: DefaultIdPayload<number>) {
     this.store.dispatch(new Recipes.SetBeaconCountAction(data));
+  }
+
+  showColumn(value: string) {
+    this.store.dispatch(new Settings.ShowColumnAction(value));
+  }
+
+  hideColumn(value: string) {
+    this.store.dispatch(new Settings.HideColumnAction(value));
   }
 
   resetItem(value: string) {
