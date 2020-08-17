@@ -13,6 +13,7 @@ import {
   Rational,
   Dataset,
   DefaultIdPayload,
+  MODULE_ID,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { ItemsState } from '~/store/items';
@@ -48,11 +49,12 @@ export class ListComponent {
   @Input() factoryRank: string[];
   @Input() moduleRank: string[];
   @Input() beaconModule: string;
-  @Input() beaconCount: number;
   @Input() displayRate: DisplayRate;
   @Input() itemPrecision: number;
   @Input() beltPrecision: number;
   @Input() factoryPrecision: number;
+  @Input() beaconCount: number;
+  @Input() drillModule: boolean;
   @Input() modifiedIgnore: boolean;
   @Input() modifiedBelt: boolean;
   @Input() modifiedFactory: boolean;
@@ -79,6 +81,36 @@ export class ListComponent {
   DisplayRate = DisplayRate;
   StepEditType = StepEditType;
   Rational = Rational;
+  MODULE_ID = MODULE_ID;
+
+  get rateLabel() {
+    switch (this.displayRate) {
+      case DisplayRate.PerHour:
+        return '/h';
+      case DisplayRate.PerMinute:
+        return '/m';
+      case DisplayRate.PerSecond:
+        return '/s';
+      default:
+        return '';
+    }
+  }
+
+  get totalPower() {
+    let value = Rational.zero;
+    for (const step of this.steps.filter((s) => s.consumption)) {
+      value = value.add(step.consumption);
+    }
+    return this.power(value);
+  }
+
+  get totalPollution() {
+    let value = Rational.zero;
+    for (const step of this.steps.filter((s) => s.pollution)) {
+      value = value.add(step.pollution);
+    }
+    return this.rate(value, this.factoryPrecision);
+  }
 
   constructor(public router: RouterService) {}
 
@@ -98,6 +130,30 @@ export class ListComponent {
     }
   }
 
+  power(value: Rational) {
+    if (value.lt(Rational.thousand)) {
+      if (this.factoryPrecision == null) {
+        return `${value.toFraction()} kW`;
+      } else {
+        return `${value.toPrecision(1)} kW`;
+      }
+    } else {
+      if (this.factoryPrecision == null) {
+        return `${value.div(Rational.thousand).toFraction()} MW`;
+      } else {
+        return `${value.div(Rational.thousand).toPrecision(1)} MW`;
+      }
+    }
+  }
+
+  miningIgnoreModule(step: Step) {
+    if (!this.drillModule && this.recipeSettings[step.recipeId]?.factory) {
+      return this.data.itemR[this.recipeSettings[step.recipeId].factory].factory
+        .mining;
+    }
+    return false;
+  }
+
   factoryChange(step: Step, value: string) {
     const def = RecipeUtility.bestMatch(
       this.data.recipeEntities[step.recipeId].producers,
@@ -113,11 +169,10 @@ export class ListComponent {
 
   factoryModuleChange(step: Step, value: string, index: number) {
     const count = this.recipeSettings[step.recipeId].modules.length;
-    const def = RecipeUtility.defaultModules(
-      [...this.data.recipeModuleIds[step.recipeId], 'module'],
-      this.moduleRank,
-      count
-    );
+    const options = this.miningIgnoreModule(step)
+      ? [MODULE_ID]
+      : [...this.data.recipeModuleIds[step.recipeId], MODULE_ID];
+    const def = RecipeUtility.defaultModules(options, this.moduleRank, count);
     if (index === 0) {
       // Copy to all
       const modules = [];
@@ -134,6 +189,17 @@ export class ListComponent {
       ];
       this.setModules.emit({ id: step.recipeId, value: modules, default: def });
     }
+  }
+
+  beaconModuleChange(step: Step, value: string) {
+    const defaultModule = this.miningIgnoreModule(step)
+      ? MODULE_ID
+      : this.beaconModule;
+    this.setBeaconModule.emit({
+      id: step.recipeId,
+      value,
+      default: defaultModule,
+    });
   }
 
   beaconCountChange(step: Step, event: any) {

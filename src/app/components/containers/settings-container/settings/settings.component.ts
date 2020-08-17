@@ -17,6 +17,7 @@ import {
   ModInfo,
   DefaultTogglePayload,
   DefaultPayload,
+  MODULE_ID,
 } from '~/models';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
@@ -74,6 +75,7 @@ export class SettingsComponent {
   ResearchSpeed = ResearchSpeed;
   SelectType = IdType;
   Theme = Theme;
+  MODULE_ID = MODULE_ID;
 
   initial = initialSettingsState;
 

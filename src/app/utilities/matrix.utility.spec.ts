@@ -434,6 +434,8 @@ describe('MatrixSolver', () => {
           items: Rational.one,
           recipeId: RecipeId.AdvancedOilProcessing,
           factories: new Rational(BigInt(4), BigInt(15)),
+          consumption: new Rational(BigInt(124), BigInt(3)),
+          pollution: new Rational(BigInt(4), BigInt(5)),
         },
         {
           depth: 1,
@@ -453,6 +455,8 @@ describe('MatrixSolver', () => {
           recipeId: RecipeId.CrudeOil,
           items: new Rational(BigInt(4)),
           factories: new Rational(BigInt(8), BigInt(15)),
+          consumption: new Rational(BigInt(248), BigInt(3)),
+          pollution: new Rational(BigInt(8), BigInt(5)),
         },
         {
           depth: 1,
@@ -460,6 +464,8 @@ describe('MatrixSolver', () => {
           recipeId: RecipeId.Water,
           items: Rational.two,
           factories: new Rational(BigInt(8), BigInt(3)),
+          consumption: new Rational(BigInt(1240), BigInt(3)),
+          pollution: new Rational(BigInt(8)),
         },
       ]);
     });

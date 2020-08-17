@@ -11,6 +11,7 @@ import {
   Constraint,
   Strength,
   Operator,
+  WATER_ID,
 } from '~/models';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
@@ -312,25 +313,17 @@ export class MatrixSolver {
 
     let factoryExpr = new Expression(tax);
     for (const r of this.recipeIds) {
-      factoryExpr = factoryExpr.minus(this.recipeVar[r]);
+      if (r === WATER_ID) {
+        factoryExpr = factoryExpr.minus(this.recipeVar[r]);
+      } else {
+        factoryExpr = factoryExpr.minus(
+          new Expression([Rational.hundred, this.recipeVar[r]])
+        );
+      }
     }
     let costExpr = new Expression(cost);
     for (const i of Object.keys(this.inputVar)) {
-      if (this.data.itemRecipeIds[i]) {
-        if (i === 'water') {
-          costExpr = costExpr.minus(
-            new Expression([Rational.hundred, this.inputVar[i]])
-          );
-        } else {
-          costExpr = costExpr.minus(
-            new Expression([new Rational(BigInt(10000)), this.inputVar[i]])
-          );
-        }
-      } else {
-        costExpr = costExpr.minus(
-          new Expression([Rational.thousand, this.inputVar[i]])
-        );
-      }
+      costExpr = costExpr.minus(this.inputVar[i]);
     }
 
     this.solver.addConstraint(new Constraint(factoryExpr, Operator.Eq));
@@ -383,6 +376,17 @@ export class MatrixSolver {
           step.factories = this.recipeVar[recipeId].value.mul(
             this.data.recipeR[recipeId].time
           );
+          if (step.factories.gt(Rational.zero)) {
+            const recipe = this.data.recipeR[recipeId];
+            // Calculate power
+            if (recipe.consumption?.nonzero()) {
+              step.consumption = step.factories.mul(recipe.consumption);
+            }
+            // Calculate pollution
+            if (recipe.pollution) {
+              step.pollution = step.factories.mul(recipe.pollution);
+            }
+          }
           this.mappedRecipeIds.push(recipeId);
         }
         if (surplusVal.gt(Rational.zero)) {

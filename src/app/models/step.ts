@@ -7,6 +7,8 @@ interface StepBase {
   surplus?: Rational;
   belts?: Rational;
   factories?: Rational;
+  consumption?: Rational;
+  pollution?: Rational;
   recipeId?: string;
   parents?: Entities<Rational>;
 }

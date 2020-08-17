@@ -9,7 +9,6 @@ import {
   RationalItem,
   RationalRecipe,
   Dataset,
-  Mod,
 } from '~/models';
 import { State } from '../';
 import * as Datasets from '../datasets';
@@ -252,21 +251,23 @@ export const getNormalDataset = createSelector(
     }
 
     // Calculate allowed modules for recipes
-    const recipeModuleIds = recipes.reduce(
-      (e: Entities<string[]>, r) => ({
+    const recipeModuleIds = recipes.reduce((e: Entities<string[]>, r) => {
+      const isMining = r.producers.every((p) => itemEntities[p].factory.mining);
+      return {
         ...e,
         ...{
           [r.id]: modules
             .filter(
               (m) =>
                 !m.module.limitation ||
-                limitations[m.module.limitation].some((l) => l === r.id)
+                limitations[m.module.limitation].some((l) => l === r.id) ||
+                // Manual override for raw mining recipes
+                (m.module.limitation === 'productivity-module' && isMining)
             )
             .map((m) => m.id),
         },
-      }),
-      {}
-    );
+      };
+    }, {});
 
     const dataset: Dataset = {
       categoryIds,

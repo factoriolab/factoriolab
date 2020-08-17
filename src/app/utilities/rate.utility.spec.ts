@@ -11,6 +11,8 @@ describe('RateUtility', () => {
         recipeId: 'iron-chest',
         items: new Rational(BigInt(30)),
         factories: new Rational(BigInt(20)),
+        consumption: new Rational(BigInt(3100)),
+        pollution: new Rational(BigInt(60)),
       },
       {
         depth: 1,
@@ -18,6 +20,8 @@ describe('RateUtility', () => {
         recipeId: 'iron-plate',
         items: new Rational(BigInt(240)),
         factories: new Rational(BigInt(1024)),
+        consumption: new Rational(BigInt(158720)),
+        pollution: new Rational(BigInt(3072)),
         parents: { 'iron-chest': new Rational(BigInt(240)) },
       },
       {
@@ -26,6 +30,8 @@ describe('RateUtility', () => {
         recipeId: 'iron-ore',
         items: new Rational(BigInt(240)),
         factories: new Rational(BigInt(320)),
+        consumption: new Rational(BigInt(49600)),
+        pollution: new Rational(BigInt(960)),
         parents: { 'iron-plate': new Rational(BigInt(240)) },
       },
     ];
@@ -196,6 +202,8 @@ describe('RateUtility', () => {
           recipeId: 'iron-chest',
           items: new Rational(BigInt(30)),
           factories: new Rational(BigInt(20)),
+          consumption: new Rational(BigInt(3100)),
+          pollution: new Rational(BigInt(60)),
           children: [
             {
               id: 'root:iron-chest:iron-plate',
@@ -204,6 +212,8 @@ describe('RateUtility', () => {
               recipeId: 'iron-plate',
               items: new Rational(BigInt(240)),
               factories: new Rational(BigInt(1024)),
+              consumption: new Rational(BigInt(158720)),
+              pollution: new Rational(BigInt(3072)),
               children: [
                 {
                   id: 'root:iron-chest:iron-plate:iron-ore',
@@ -212,6 +222,8 @@ describe('RateUtility', () => {
                   recipeId: 'iron-ore',
                   items: new Rational(BigInt(240)),
                   factories: new Rational(BigInt(320)),
+                  consumption: new Rational(BigInt(49600)),
+                  pollution: new Rational(BigInt(960)),
                 },
               ],
             },

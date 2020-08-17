@@ -74,6 +74,17 @@ export class RateUtility {
         }
       }
 
+      if (step.factories && step.factories.gt(Rational.zero)) {
+        // Calculate power
+        if (recipe.consumption.nonzero()) {
+          step.consumption = step.factories.mul(recipe.consumption);
+        }
+        // Calculate pollution
+        if (recipe.pollution) {
+          step.pollution = step.factories.mul(recipe.pollution);
+        }
+      }
+
       // Recurse adding steps for ingredients
       if (
         recipe.in &&
@@ -128,7 +139,7 @@ export class RateUtility {
       name: data.itemEntities[itemId].name,
       itemId,
       recipeId: itemId as any,
-      items: rate,
+      items: recipe?.adjustProd ? rate.mul(recipe.adjustProd) : rate,
       factories: Rational.zero,
     };
 
@@ -152,6 +163,17 @@ export class RateUtility {
           node.factories = node.factories.add(
             node.items.div(Rational.hundred).mul(this.LAUNCH_TIME)
           );
+        }
+      }
+
+      if (node.factories && node.factories.gt(Rational.zero)) {
+        // Calculate power
+        if (recipe.consumption?.nonzero()) {
+          node.consumption = node.factories.mul(recipe.consumption);
+        }
+        // Calculate pollution
+        if (recipe.pollution) {
+          node.pollution = node.factories.mul(recipe.pollution);
         }
       }
 

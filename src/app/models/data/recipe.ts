@@ -26,6 +26,8 @@ export class RationalRecipe {
     in?: Entities<Rational>;
   };
   producers?: string[];
+  consumption?: Rational;
+  pollution?: Rational;
 
   constructor(data: Recipe) {
     this.id = data.id;

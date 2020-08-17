@@ -1,5 +1,5 @@
 import { data } from 'src/data';
-import base from 'src/data/0.18/data.json';
+import base from 'src/data/1.0/data.json';
 import mod from 'src/data/research/data.json';
 import {
   Product,
@@ -12,6 +12,7 @@ import {
   RationalProduct,
   ItemSettings,
   Mod,
+  DisplayRate,
 } from '~/models';
 import { initialDatasetsState } from '~/store/datasets';
 import { getProductsBy, ProductsState } from '~/store/products';
@@ -150,8 +151,9 @@ export const RationalRecipeSettings = getRationalRecipeSettings.projector(
 );
 export const AdjustedData = getAdjustedDataset.projector(
   RationalRecipeSettings,
-  Rational.zero,
-  Rational.zero,
   ItemId.Coal,
+  DisplayRate.PerMinute,
+  Rational.zero,
+  Rational.zero,
   Data
 );

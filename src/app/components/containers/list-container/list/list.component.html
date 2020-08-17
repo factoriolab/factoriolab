@@ -5,13 +5,7 @@
       <th></th>
       <th>
         <div>
-          Items/{{
-            displayRate === DisplayRate.PerHour
-              ? 'h'
-              : displayRate === DisplayRate.PerMinute
-              ? 'm'
-              : 's'
-          }}
+          Items{{ rateLabel }}
           <i
             *ngIf="modifiedIgnore"
             title="Undo all ignored steps"
@@ -68,6 +62,10 @@
             >undo</i
           >
         </div>
+      </th>
+      <th><div>Power</div></th>
+      <th>
+        <div>Pollution{{ rateLabel }}</div>
       </th>
       <!-- Reset / Link -->
       <th></th>
@@ -332,24 +330,32 @@
                   [options]="data.beaconModuleIds"
                   includeEmptyModule="true"
                   (cancel)="edit = null"
-                  (selectId)="
-                    setBeaconModule.emit({
-                      id: step.recipeId,
-                      value: $event,
-                      default: beaconModule
-                    })
-                  "
+                  (selectId)="beaconModuleChange(step, $event)"
                 >
                 </lab-select>
               </div>
               <input
-                *ngIf="module !== 'module'"
+                *ngIf="module !== MODULE_ID"
                 title="Enter number of beacon modules"
                 type="number"
                 min="0"
                 [value]="recipeSettings[step.recipeId].beaconCount"
                 (change)="beaconCountChange(step, $event)"
               />
+            </div>
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="step.consumption?.nonzero()">
+            <div class="monospace">
+              {{ power(step.consumption) }}
+            </div>
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="step.pollution?.nonzero()">
+            <div class="monospace">
+              {{ rate(step.pollution, factoryPrecision) }}
             </div>
           </ng-container>
         </td>
@@ -614,5 +620,14 @@
         </tr>
       </ng-container>
     </ng-container>
+    <tr class="monospace">
+      <td colspan="6" class="summary-label">Total:</td>
+      <td>
+        {{ totalPower }}
+      </td>
+      <td>
+        {{ totalPollution }}
+      </td>
+    </tr>
   </tbody>
 </table>

@@ -326,7 +326,7 @@
     #btnModule
     class="clickable"
     tooltip="Module preferences"
-    [iconId]="settings.moduleRank.length ? settings.moduleRank[0] : 'module'"
+    [iconId]="settings.moduleRank.length ? settings.moduleRank[0] : MODULE_ID"
     [data]="data"
     (click)="openSelect = OpenSelect.Module"
   ></lab-icon>
@@ -389,7 +389,7 @@
       [scale]="true"
     ></lab-icon>
     <lab-icon
-      [iconId]="settings.drillModule ? 'speed-module-3' : 'module'"
+      [iconId]="settings.drillModule ? 'speed-module-3' : MODULE_ID"
       [data]="data"
       tooltip="Toggle drill modules"
     ></lab-icon>

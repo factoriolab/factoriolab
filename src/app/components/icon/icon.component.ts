@@ -5,7 +5,7 @@ import {
   ElementRef,
 } from '@angular/core';
 
-import { Recipe, Item, DisplayRate, Dataset } from '~/models';
+import { Recipe, Item, DisplayRate, Dataset, Rational } from '~/models';
 
 @Component({
   selector: 'lab-icon',
@@ -33,6 +33,19 @@ export class IconComponent {
   }
 
   constructor(private elementRef: ElementRef) {}
+
+  toBonusPercent(value: number) {
+    const rational = Rational.fromNumber(value)
+      .mul(Rational.hundred)
+      .toNumber();
+    if (value > 0) {
+      return `+${rational}%`;
+    } else if (value < 0) {
+      return `${rational}%`;
+    } else {
+      return null;
+    }
+  }
 
   mouseenter() {
     this.hover = true;
