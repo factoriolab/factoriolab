@@ -79,7 +79,7 @@ export class RecipeUtility {
     // Modules
     if (settings.modules && settings.modules.length) {
       for (const id of settings.modules) {
-        if (data.itemEntities[id]) {
+        if (data.itemR[id]) {
           const module = data.itemR[id].module;
           if (module.speed) {
             speed = speed.add(module.speed);

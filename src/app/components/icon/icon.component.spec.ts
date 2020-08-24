@@ -50,21 +50,23 @@ describe('IconComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should return the native element', () => {
-    expect(component.child.element).toBeTruthy();
+  describe('element', () => {
+    it('should return the native element', () => {
+      expect(component.child.element).toBeTruthy();
+    });
   });
 
-  it('should handle mouseenter', () => {
-    fixture.detectChanges();
-    component.child.hover = false;
-    component.child.mouseenter();
-    expect(component.child.hover).toBeTrue();
-  });
+  describe('toBonusPercent', () => {
+    it('should handle positive percentage bonus', () => {
+      expect(component.child.toBonusPercent(0.1)).toEqual('+10%');
+    });
 
-  it('should handle mouseleave', () => {
-    fixture.detectChanges();
-    component.child.hover = true;
-    component.child.mouseleave();
-    expect(component.child.hover).toBeFalse();
+    it('should handle negative percentage bonus', () => {
+      expect(component.child.toBonusPercent(-0.1)).toEqual('-10%');
+    });
+
+    it('should handle zero percentage bonus', () => {
+      expect(component.child.toBonusPercent(0)).toBeNull();
+    });
   });
 });

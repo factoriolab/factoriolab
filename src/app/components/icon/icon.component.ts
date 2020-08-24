@@ -46,12 +46,4 @@ export class IconComponent {
       return null;
     }
   }
-
-  mouseenter() {
-    this.hover = true;
-  }
-
-  mouseleave() {
-    this.hover = false;
-  }
 }

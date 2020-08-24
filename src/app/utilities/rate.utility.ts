@@ -1,5 +1,6 @@
 import {
   Step,
+  StepBase,
   Dataset,
   DisplayRate,
   Entities,
@@ -8,6 +9,7 @@ import {
   DisplayRateVal,
   ROCKET_PART_ID,
   SPACE_SCIENCE_ID,
+  RationalRecipe,
 } from '~/models';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
@@ -74,16 +76,7 @@ export class RateUtility {
         }
       }
 
-      if (step.factories && step.factories.gt(Rational.zero)) {
-        // Calculate power
-        if (recipe.consumption.nonzero()) {
-          step.consumption = step.factories.mul(recipe.consumption);
-        }
-        // Calculate pollution
-        if (recipe.pollution) {
-          step.pollution = step.factories.mul(recipe.pollution);
-        }
-      }
+      this.adjustConsumptionPollution(step, recipe);
 
       // Recurse adding steps for ingredients
       if (
@@ -166,16 +159,7 @@ export class RateUtility {
         }
       }
 
-      if (node.factories && node.factories.gt(Rational.zero)) {
-        // Calculate power
-        if (recipe.consumption?.nonzero()) {
-          node.consumption = node.factories.mul(recipe.consumption);
-        }
-        // Calculate pollution
-        if (recipe.pollution) {
-          node.pollution = node.factories.mul(recipe.pollution);
-        }
-      }
+      this.adjustConsumptionPollution(node, recipe);
 
       // Recurse adding nodes for ingredients
       if (
@@ -194,6 +178,19 @@ export class RateUtility {
             data
           );
         }
+      }
+    }
+  }
+
+  static adjustConsumptionPollution(step: StepBase, recipe: RationalRecipe) {
+    if (step.factories?.nonzero()) {
+      // Calculate power
+      if (recipe.consumption?.nonzero()) {
+        step.consumption = step.factories.mul(recipe.consumption);
+      }
+      // Calculate pollution
+      if (recipe.pollution?.nonzero()) {
+        step.pollution = step.factories.mul(recipe.pollution);
       }
     }
   }

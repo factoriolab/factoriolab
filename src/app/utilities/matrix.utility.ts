@@ -333,7 +333,7 @@ export class MatrixSolver {
 
   parseSolutionRecipes() {
     this.usedRecipeIds = Object.keys(this.recipeVar).filter((r) => {
-      return this.recipeVar[r].value.gt(Rational.zero);
+      return this.recipeVar[r].value.nonzero();
     });
   }
 
@@ -348,7 +348,7 @@ export class MatrixSolver {
           );
         }
       }
-      if (itemOutput.gt(Rational.zero)) {
+      if (itemOutput.nonzero()) {
         let step = this.steps.find((s) => s.itemId === i);
         const matches = this.usedRecipeIds.filter(
           (r) =>
@@ -376,20 +376,11 @@ export class MatrixSolver {
           step.factories = this.recipeVar[recipeId].value.mul(
             this.data.recipeR[recipeId].time
           );
-          if (step.factories.gt(Rational.zero)) {
-            const recipe = this.data.recipeR[recipeId];
-            // Calculate power
-            if (recipe.consumption?.nonzero()) {
-              step.consumption = step.factories.mul(recipe.consumption);
-            }
-            // Calculate pollution
-            if (recipe.pollution) {
-              step.pollution = step.factories.mul(recipe.pollution);
-            }
-          }
+          const recipe = this.data.recipeR[recipeId];
+          RateUtility.adjustConsumptionPollution(step, recipe);
           this.mappedRecipeIds.push(recipeId);
         }
-        if (surplusVal.gt(Rational.zero)) {
+        if (surplusVal.nonzero()) {
           step.surplus = surplusVal;
           step.items = step.items.sub(surplusVal);
         }

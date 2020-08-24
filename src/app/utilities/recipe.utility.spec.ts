@@ -130,6 +130,36 @@ describe('RecipeUtility', () => {
       ];
       settings.beaconModule = ItemId.SpeedModule;
       settings.beaconCount = Rational.two;
+      const data = {
+        ...Mocks.Data,
+        ...{
+          itemR: {
+            ...Mocks.Data.itemR,
+            ...{
+              // To verify all factors work in beacons
+              [ItemId.SpeedModule]: {
+                ...Mocks.Data.itemR[ItemId.SpeedModule],
+                ...{
+                  module: {
+                    ...Mocks.Data.itemR[ItemId.SpeedModule].module,
+                    ...{ productivity: Rational.one, pollution: Rational.one },
+                  },
+                },
+              },
+              // To verify null consumption works
+              [ItemId.ProductivityModule]: {
+                ...Mocks.Data.itemR[ItemId.ProductivityModule],
+                ...{
+                  module: {
+                    ...Mocks.Data.itemR[ItemId.ProductivityModule].module,
+                    ...{ consumption: null },
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Coal,
@@ -137,24 +167,74 @@ describe('RecipeUtility', () => {
         Rational.zero,
         Rational.zero,
         settings,
-        Mocks.Data
+        data
       );
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.SteelChest]
       );
       expected.out = {
-        [ItemId.SteelChest]: new Rational(BigInt(26), BigInt(25)),
+        [ItemId.SteelChest]: new Rational(BigInt(76), BigInt(25)),
       };
       expected.time = new Rational(BigInt(8), BigInt(15));
-      expected.consumption = new Rational(BigInt(320));
-      expected.pollution = new Rational(BigInt(1323), BigInt(200));
+      expected.consumption = new Rational(BigInt(260));
+      expected.pollution = new Rational(BigInt(3111), BigInt(200));
       expect(result).toEqual(expected);
     });
 
-    it('should handle beacon with no speed effect', () => {
+    it('should handle beacon with no effect', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
       settings.beaconModule = ItemId.EfficiencyModule;
       settings.beaconCount = Rational.two;
+      const data = {
+        ...Mocks.Data,
+        ...{
+          itemR: {
+            ...Mocks.Data.itemR,
+            ...{
+              // To verify all factors work in beacons
+              [ItemId.EfficiencyModule]: {
+                ...Mocks.Data.itemR[ItemId.EfficiencyModule],
+                ...{
+                  module: {
+                    ...Mocks.Data.itemR[ItemId.EfficiencyModule].module,
+                    ...{ consumption: null },
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.SteelChest,
+        ItemId.Coal,
+        DisplayRate.PerMinute,
+        Rational.zero,
+        Rational.zero,
+        settings,
+        data
+      );
+      const expected = new RationalRecipe(
+        Mocks.Data.recipeEntities[RecipeId.SteelChest]
+      );
+      expected.out = {
+        [ItemId.SteelChest]: Rational.one,
+      };
+      expected.time = new Rational(BigInt(2), BigInt(3));
+      expected.consumption = new Rational(BigInt(155));
+      expected.pollution = new Rational(BigInt(3));
+      expect(result).toEqual(expected);
+    });
+
+    it('should use minimum 20% consumption', () => {
+      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
+      settings.modules = [
+        ItemId.EfficiencyModule3,
+        ItemId.EfficiencyModule3,
+        ItemId.EfficiencyModule3,
+      ];
+      settings.beaconModule = ItemId.Module;
+      settings.beaconCount = Rational.zero;
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Coal,
@@ -171,8 +251,8 @@ describe('RecipeUtility', () => {
         [ItemId.SteelChest]: Rational.one,
       };
       expected.time = new Rational(BigInt(2), BigInt(3));
-      expected.consumption = new Rational(BigInt(110));
-      expected.pollution = new Rational(BigInt(21), BigInt(10));
+      expected.consumption = new Rational(BigInt(35));
+      expected.pollution = new Rational(BigInt(3), BigInt(5));
       expect(result).toEqual(expected);
     });
 

@@ -8,6 +8,7 @@ export enum ItemId {
   CopperPlate = 'copper-plate',
   CrudeOil = 'crude-oil',
   EfficiencyModule = 'effectivity-module',
+  EfficiencyModule3 = 'effectivity-module-3',
   ElectricMiningDrill = 'electric-mining-drill',
   HeavyOil = 'heavy-oil',
   IronOre = 'iron-ore',

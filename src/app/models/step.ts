@@ -1,7 +1,7 @@
 import { Entities } from './entities';
 import { Rational } from './rational';
 
-interface StepBase {
+export interface StepBase {
   itemId: string;
   items: Rational;
   surplus?: Rational;
