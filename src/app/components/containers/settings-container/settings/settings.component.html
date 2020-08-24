@@ -7,7 +7,7 @@
   >
     <option *ngFor="let b of base" [value]="b.id">{{ b.name }}</option>
   </select>
-  <div>Base Recipe Set</div>
+  <div>Recipe Set</div>
 </div>
 <div class="field" *ngIf="mods.length">
   <button #btnMods (click)="openSelect = OpenSelect.Mods">
