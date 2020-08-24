@@ -2,9 +2,8 @@
   <thead>
     <tr>
       <!-- Expand -->
-      <th>
+      <th class="relative">
         <i
-          #btnColumns
           title="Select columns"
           class="clickable material-icons"
           (click)="edit = { step: null, type: StepEditType.Columns }"
@@ -15,7 +14,6 @@
           [header]="'Select Columns'"
           [enabledIds]="columns"
           [options]="ColumnsAsOptions"
-          [parent]="btnColumns"
           (cancel)="edit = null"
           (enableId)="showColumn.emit($event)"
           (disableId)="hideColumn.emit($event)"
