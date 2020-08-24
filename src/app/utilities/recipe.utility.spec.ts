@@ -1,5 +1,5 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import { Rational, RationalRecipe } from '~/models';
+import { Rational, RationalRecipe, DisplayRate } from '~/models';
 import { RecipeUtility } from './recipe.utility';
 
 describe('RecipeUtility', () => {
@@ -38,9 +38,10 @@ describe('RecipeUtility', () => {
       settings.beaconModule = ItemId.Module;
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
-        Rational.zero,
-        Rational.zero,
         ItemId.Coal,
+        DisplayRate.PerMinute,
+        Rational.zero,
+        Rational.zero,
         settings,
         Mocks.Data
       );
@@ -49,15 +50,18 @@ describe('RecipeUtility', () => {
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
       expected.time = new Rational(BigInt(2), BigInt(3));
+      expected.consumption = new Rational(BigInt(155));
+      expected.pollution = new Rational(BigInt(3));
       expect(result).toEqual(expected);
     });
 
     it('should handle recipes with declared outputs', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.CopperCable,
-        Rational.zero,
-        Rational.zero,
         ItemId.Coal,
+        DisplayRate.PerMinute,
+        Rational.zero,
+        Rational.zero,
         Mocks.RationalRecipeSettings[RecipeId.CopperCable],
         Mocks.Data
       );
@@ -65,6 +69,8 @@ describe('RecipeUtility', () => {
         Mocks.Data.recipeEntities[RecipeId.CopperCable]
       );
       expected.time = new Rational(BigInt(2), BigInt(3));
+      expected.consumption = new Rational(BigInt(155));
+      expected.pollution = new Rational(BigInt(3));
       expect(result).toEqual(expected);
     });
 
@@ -75,9 +81,10 @@ describe('RecipeUtility', () => {
       settings.factory = ItemId.Lab;
       const result = RecipeUtility.adjustRecipe(
         RecipeId.MiningProductivity,
+        ItemId.Coal,
+        DisplayRate.PerMinute,
         Rational.zero,
         Rational.two,
-        ItemId.Coal,
         settings,
         Mocks.Data
       );
@@ -87,6 +94,8 @@ describe('RecipeUtility', () => {
       expected.out = { [ItemId.MiningProductivity]: Rational.one };
       expected.time = new Rational(BigInt(30));
       expected.adjustProd = Rational.one;
+      expected.consumption = new Rational(BigInt(62));
+      expected.pollution = Rational.zero;
       expect(result).toEqual(expected);
     });
 
@@ -95,9 +104,10 @@ describe('RecipeUtility', () => {
       settings.factory = ItemId.ElectricMiningDrill;
       const result = RecipeUtility.adjustRecipe(
         RecipeId.IronOre,
+        ItemId.Coal,
+        DisplayRate.PerMinute,
         Rational.two,
         Rational.zero,
-        ItemId.Coal,
         settings,
         Mocks.Data
       );
@@ -106,6 +116,8 @@ describe('RecipeUtility', () => {
       );
       expected.out = { [ItemId.IronOre]: new Rational(BigInt(3)) };
       expected.time = Rational.two;
+      expected.consumption = new Rational(BigInt(90));
+      expected.pollution = new Rational(BigInt(10));
       expect(result).toEqual(expected);
     });
 
@@ -118,33 +130,117 @@ describe('RecipeUtility', () => {
       ];
       settings.beaconModule = ItemId.SpeedModule;
       settings.beaconCount = Rational.two;
+      const data = {
+        ...Mocks.Data,
+        ...{
+          itemR: {
+            ...Mocks.Data.itemR,
+            ...{
+              // To verify all factors work in beacons
+              [ItemId.SpeedModule]: {
+                ...Mocks.Data.itemR[ItemId.SpeedModule],
+                ...{
+                  module: {
+                    ...Mocks.Data.itemR[ItemId.SpeedModule].module,
+                    ...{ productivity: Rational.one, pollution: Rational.one },
+                  },
+                },
+              },
+              // To verify null consumption works
+              [ItemId.ProductivityModule]: {
+                ...Mocks.Data.itemR[ItemId.ProductivityModule],
+                ...{
+                  module: {
+                    ...Mocks.Data.itemR[ItemId.ProductivityModule].module,
+                    ...{ consumption: null },
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
-        Rational.zero,
-        Rational.zero,
         ItemId.Coal,
+        DisplayRate.PerMinute,
+        Rational.zero,
+        Rational.zero,
         settings,
-        Mocks.Data
+        data
       );
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.SteelChest]
       );
       expected.out = {
-        [ItemId.SteelChest]: new Rational(BigInt(26), BigInt(25)),
+        [ItemId.SteelChest]: new Rational(BigInt(76), BigInt(25)),
       };
       expected.time = new Rational(BigInt(8), BigInt(15));
+      expected.consumption = new Rational(BigInt(260));
+      expected.pollution = new Rational(BigInt(3111), BigInt(200));
       expect(result).toEqual(expected);
     });
 
-    it('should handle beacon with no speed effect', () => {
+    it('should handle beacon with no effect', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
       settings.beaconModule = ItemId.EfficiencyModule;
       settings.beaconCount = Rational.two;
+      const data = {
+        ...Mocks.Data,
+        ...{
+          itemR: {
+            ...Mocks.Data.itemR,
+            ...{
+              // To verify all factors work in beacons
+              [ItemId.EfficiencyModule]: {
+                ...Mocks.Data.itemR[ItemId.EfficiencyModule],
+                ...{
+                  module: {
+                    ...Mocks.Data.itemR[ItemId.EfficiencyModule].module,
+                    ...{ consumption: null },
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
-        Rational.zero,
-        Rational.zero,
         ItemId.Coal,
+        DisplayRate.PerMinute,
+        Rational.zero,
+        Rational.zero,
+        settings,
+        data
+      );
+      const expected = new RationalRecipe(
+        Mocks.Data.recipeEntities[RecipeId.SteelChest]
+      );
+      expected.out = {
+        [ItemId.SteelChest]: Rational.one,
+      };
+      expected.time = new Rational(BigInt(2), BigInt(3));
+      expected.consumption = new Rational(BigInt(155));
+      expected.pollution = new Rational(BigInt(3));
+      expect(result).toEqual(expected);
+    });
+
+    it('should use minimum 20% consumption', () => {
+      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
+      settings.modules = [
+        ItemId.EfficiencyModule3,
+        ItemId.EfficiencyModule3,
+        ItemId.EfficiencyModule3,
+      ];
+      settings.beaconModule = ItemId.Module;
+      settings.beaconCount = Rational.zero;
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.SteelChest,
+        ItemId.Coal,
+        DisplayRate.PerMinute,
+        Rational.zero,
+        Rational.zero,
         settings,
         Mocks.Data
       );
@@ -155,6 +251,8 @@ describe('RecipeUtility', () => {
         [ItemId.SteelChest]: Rational.one,
       };
       expected.time = new Rational(BigInt(2), BigInt(3));
+      expected.consumption = new Rational(BigInt(35));
+      expected.pollution = new Rational(BigInt(3), BigInt(5));
       expect(result).toEqual(expected);
     });
 
@@ -163,9 +261,10 @@ describe('RecipeUtility', () => {
       settings.factory = ItemId.BurnerMiningDrill;
       const result = RecipeUtility.adjustRecipe(
         RecipeId.IronOre,
-        Rational.zero,
-        Rational.zero,
         ItemId.Coal,
+        DisplayRate.PerMinute,
+        Rational.zero,
+        Rational.zero,
         settings,
         Mocks.Data
       );
@@ -177,6 +276,8 @@ describe('RecipeUtility', () => {
         [ItemId.IronOre]: Rational.one,
       };
       expected.time = new Rational(BigInt(4));
+      expected.consumption = Rational.zero;
+      expected.pollution = new Rational(BigInt(12));
       expect(result).toEqual(expected);
     });
 
@@ -185,9 +286,10 @@ describe('RecipeUtility', () => {
       settings.factory = ItemId.SteelFurnace;
       const result = RecipeUtility.adjustRecipe(
         RecipeId.PlasticBar,
-        Rational.zero,
-        Rational.zero,
         ItemId.Coal,
+        DisplayRate.PerMinute,
+        Rational.zero,
+        Rational.zero,
         settings,
         Mocks.Data
       );
@@ -199,6 +301,8 @@ describe('RecipeUtility', () => {
         [ItemId.PlasticBar]: Rational.two,
       };
       expected.time = new Rational(BigInt(1), BigInt(2));
+      expected.consumption = Rational.zero;
+      expected.pollution = new Rational(BigInt(4));
       expect(result).toEqual(expected);
     });
   });

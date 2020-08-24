@@ -51,3 +51,12 @@
 .module {
   filter: var(--module-icon-filter);
 }
+
+td {
+  white-space: nowrap;
+
+  + td {
+    padding-left: 0.5rem;
+    text-align: right;
+  }
+}

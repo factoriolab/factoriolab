@@ -1,12 +1,14 @@
 import { Entities } from './entities';
 import { Rational } from './rational';
 
-interface StepBase {
+export interface StepBase {
   itemId: string;
   items: Rational;
   surplus?: Rational;
   belts?: Rational;
   factories?: Rational;
+  consumption?: Rational;
+  pollution?: Rational;
   recipeId?: string;
   parents?: Entities<Rational>;
 }

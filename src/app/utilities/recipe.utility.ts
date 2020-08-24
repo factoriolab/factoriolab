@@ -3,9 +3,14 @@ import {
   RationalRecipe,
   RationalRecipeSettings,
   Dataset,
+  MODULE_ID,
+  DisplayRate,
+  DisplayRateVal,
 } from '~/models';
 
 export class RecipeUtility {
+  static MIN_CONSUMPTION = new Rational(BigInt(1), BigInt(5));
+
   /** Determines what option to use based on preferred rank */
   static bestMatch(options: string[], rank: string[]) {
     if (options.length > 1) {
@@ -25,7 +30,7 @@ export class RecipeUtility {
     moduleRank: string[],
     count: number
   ) {
-    const module = this.bestMatch(['module', ...allowedModules], moduleRank);
+    const module = this.bestMatch([MODULE_ID, ...allowedModules], moduleRank);
 
     // Create the appropriate array of default modules
     const modules = [];
@@ -37,9 +42,10 @@ export class RecipeUtility {
 
   static adjustRecipe(
     recipeId: string,
+    fuelId: string,
+    displayRate: DisplayRate,
     miningBonus: Rational,
     researchFactor: Rational,
-    fuelId: string,
     settings: RationalRecipeSettings,
     data: Dataset
   ) {
@@ -62,6 +68,8 @@ export class RecipeUtility {
     // Calculate factors
     let speed = Rational.one;
     let prod = Rational.one;
+    let consumption = Rational.one;
+    let pollution = Rational.one;
 
     if (factory.mining) {
       // Adjust for mining bonus
@@ -71,13 +79,19 @@ export class RecipeUtility {
     // Modules
     if (settings.modules && settings.modules.length) {
       for (const id of settings.modules) {
-        if (data.itemEntities[id]) {
+        if (data.itemR[id]) {
           const module = data.itemR[id].module;
           if (module.speed) {
             speed = speed.add(module.speed);
           }
           if (module.productivity) {
             prod = prod.add(module.productivity);
+          }
+          if (module.consumption) {
+            consumption = consumption.add(module.consumption);
+          }
+          if (module.pollution) {
+            pollution = pollution.add(module.pollution);
           }
         }
       }
@@ -90,15 +104,26 @@ export class RecipeUtility {
       settings.beaconCount.nonzero()
     ) {
       const module = data.itemR[settings.beaconModule].module;
+      const factor = settings.beaconCount.div(Rational.two);
       if (module.speed) {
-        speed = speed.add(
-          module.speed.div(Rational.two).mul(settings.beaconCount)
-        );
+        speed = speed.add(module.speed.mul(factor));
+      }
+      if (module.productivity) {
+        prod = prod.add(module.productivity.mul(factor));
+      }
+      if (module.consumption) {
+        consumption = consumption.add(module.consumption.mul(factor));
+      }
+      if (module.pollution) {
+        pollution = pollution.add(module.pollution.mul(factor));
       }
     }
 
     // Calculate module/beacon effects
+    // Speed
     recipe.time = recipe.time.div(speed);
+
+    // Productivity
     for (const outId of Object.keys(recipe.out)) {
       if (recipe.in && recipe.in[outId]) {
         // Recipe takes output as input, prod only applies to difference
@@ -118,6 +143,25 @@ export class RecipeUtility {
         recipe.adjustProd = prod;
       }
     }
+
+    // Power
+    // Minimum value is 20%
+    if (consumption.lt(this.MIN_CONSUMPTION)) {
+      consumption = this.MIN_CONSUMPTION;
+    }
+    recipe.consumption = factory.drain ? factory.drain : Rational.zero;
+    recipe.consumption = recipe.consumption.add(
+      factory.electric ? factory.electric.mul(consumption) : Rational.zero
+    );
+
+    // Pollution
+    // Original value is in units per minute
+    const pollDrFactor = DisplayRateVal[displayRate].div(
+      Rational.fromNumber(60)
+    );
+    recipe.pollution = factory.pollution
+      ? factory.pollution.mul(pollDrFactor).mul(pollution).mul(consumption)
+      : Rational.zero;
 
     // Calculate burner fuel inputs
     if (factory.burner) {

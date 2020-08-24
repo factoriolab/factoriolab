@@ -1,5 +1,5 @@
 import { data } from 'src/data';
-import base from 'src/data/0.18/data.json';
+import base from 'src/data/1.0/data.json';
 import mod from 'src/data/research/data.json';
 import {
   Product,
@@ -12,6 +12,7 @@ import {
   RationalProduct,
   ItemSettings,
   Mod,
+  DisplayRate,
 } from '~/models';
 import { initialDatasetsState } from '~/store/datasets';
 import { getProductsBy, ProductsState } from '~/store/products';
@@ -101,6 +102,8 @@ export const Step1: Step = {
   items: Rational.fromNumber(Product1.rate),
   belts: Rational.fromNumber(0.5),
   factories: Rational.one,
+  consumption: Rational.one,
+  pollution: Rational.one,
 };
 export const Step2: Step = {
   depth: 1,
@@ -109,6 +112,8 @@ export const Step2: Step = {
   items: Rational.fromNumber(Product2.rate),
   belts: Rational.one,
   factories: Rational.two,
+  consumption: Rational.zero,
+  pollution: Rational.zero,
 };
 export const Steps = [Step1, Step2];
 export const Node1: Node = { ...Step1, ...{ id: 'id1', name: 'name1' } };
@@ -150,8 +155,9 @@ export const RationalRecipeSettings = getRationalRecipeSettings.projector(
 );
 export const AdjustedData = getAdjustedDataset.projector(
   RationalRecipeSettings,
-  Rational.zero,
-  Rational.zero,
   ItemId.Coal,
+  DisplayRate.PerMinute,
+  Rational.zero,
+  Rational.zero,
   Data
 );

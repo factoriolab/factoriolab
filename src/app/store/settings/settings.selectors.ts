@@ -9,7 +9,6 @@ import {
   RationalItem,
   RationalRecipe,
   Dataset,
-  Mod,
 } from '~/models';
 import { State } from '../';
 import * as Datasets from '../datasets';
@@ -28,6 +27,7 @@ const sMiningBonus = (state: SettingsState) => state.miningBonus;
 const sResearchSpeed = (state: SettingsState) => state.researchSpeed;
 const sFlowRate = (state: SettingsState) => state.flowRate;
 const sExpensive = (state: SettingsState) => state.expensive;
+const sColumns = (state: SettingsState) => state.columns;
 const sTheme = (state: SettingsState) => state.theme;
 
 /* Simple selectors */
@@ -42,6 +42,7 @@ export const getMiningBonus = compose(sMiningBonus, settingsState);
 export const getResearchSpeed = compose(sResearchSpeed, settingsState);
 export const getFlowRate = compose(sFlowRate, settingsState);
 export const getExpensive = compose(sExpensive, settingsState);
+export const getColumns = compose(sColumns, settingsState);
 export const getTheme = compose(sTheme, settingsState);
 
 /* Complex selectors */
@@ -252,21 +253,23 @@ export const getNormalDataset = createSelector(
     }
 
     // Calculate allowed modules for recipes
-    const recipeModuleIds = recipes.reduce(
-      (e: Entities<string[]>, r) => ({
+    const recipeModuleIds = recipes.reduce((e: Entities<string[]>, r) => {
+      const isMining = r.producers.every((p) => itemEntities[p].factory.mining);
+      return {
         ...e,
         ...{
           [r.id]: modules
             .filter(
               (m) =>
                 !m.module.limitation ||
-                limitations[m.module.limitation].some((l) => l === r.id)
+                limitations[m.module.limitation].some((l) => l === r.id) ||
+                // Manual override for raw mining recipes
+                (m.module.limitation === 'productivity-module' && isMining)
             )
             .map((m) => m.id),
         },
-      }),
-      {}
-    );
+      };
+    }, {});
 
     const dataset: Dataset = {
       categoryIds,

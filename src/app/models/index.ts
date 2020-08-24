@@ -4,6 +4,7 @@ export * from './data';
 export * from './enum';
 export * from './constants';
 export * from './entities';
+export * from './id-name';
 export * from './item-settings';
 export * from './mod';
 export * from './payload';
