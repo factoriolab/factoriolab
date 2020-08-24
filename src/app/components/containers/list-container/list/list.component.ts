@@ -58,7 +58,12 @@ export class ListComponent {
   @Input() factoryPrecision: number;
   @Input() beaconCount: number;
   @Input() drillModule: boolean;
+  _columns: string[];
+  get columns() {
+    return this._columns;
+  }
   @Input() set columns(value: string[]) {
+    this._columns = value;
     this.show = value.reduce(
       (e: Entities<boolean>, c) => ({ ...e, ...{ [c]: true } }),
       {}

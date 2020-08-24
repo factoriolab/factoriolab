@@ -124,6 +124,18 @@ describe('ListComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('columns', () => {
+    it('should get the list', () => {
+      expect(component.child.columns).toEqual(AllColumns);
+    });
+
+    it('should set the the show entities', () => {
+      for (const c of AllColumns) {
+        expect(component.child.show[c]).toBeTrue();
+      }
+    });
+  });
+
   describe('rateLabel', () => {
     it('should handle per hour', () => {
       component.displayRate = DisplayRate.PerHour;
