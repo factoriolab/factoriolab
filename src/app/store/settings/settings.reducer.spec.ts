@@ -1,15 +1,31 @@
 import { ItemId, RecipeId, Mocks } from 'src/tests';
-import { DisplayRate, ResearchSpeed, LocalStorageKey, Theme } from '~/models';
+import {
+  DisplayRate,
+  ResearchSpeed,
+  LocalStorageKey,
+  Theme,
+  Column,
+  AllColumns,
+} from '~/models';
 import { AppLoadAction } from '../app.actions';
 import * as Actions from './settings.actions';
 import {
   settingsReducer,
   initialSettingsState,
   loadTheme,
+  loadColumns,
 } from './settings.reducer';
 
 describe('Settings Reducer', () => {
   describe('LOAD', () => {
+    it('should return state if settings state is not included', () => {
+      const result = settingsReducer(
+        initialSettingsState,
+        new AppLoadAction({} as any)
+      );
+      expect(result).toEqual(initialSettingsState);
+    });
+
     it('should load settings', () => {
       const result = settingsReducer(
         undefined,
@@ -263,6 +279,28 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('HIDE_COLUMN', () => {
+    it('should remove a column from the list', () => {
+      const value = Column.Beacons;
+      const result = settingsReducer(
+        { columns: [value] } as any,
+        new Actions.HideColumnAction(value)
+      );
+      expect(result.columns).toEqual([]);
+    });
+  });
+
+  describe('SHOW_COLUMN', () => {
+    it('should add a column to the list', () => {
+      const value = Column.Beacons;
+      const result = settingsReducer(
+        { columns: [] } as any,
+        new Actions.ShowColumnAction(value)
+      );
+      expect(result.columns).toEqual([value]);
+    });
+  });
+
   describe('SET_THEME', () => {
     it('should set the theme', () => {
       const result = settingsReducer(
@@ -277,6 +315,21 @@ describe('Settings Reducer', () => {
     expect(settingsReducer(undefined, { type: 'Test' } as any)).toBe(
       initialSettingsState
     );
+  });
+
+  describe('loadColumns', () => {
+    it('should load columns from local storage', () => {
+      const value = Column.Beacons;
+      localStorage.setItem(LocalStorageKey.Columns, value);
+      const result = loadColumns();
+      expect(result).toEqual([value]);
+    });
+
+    it('should load all columns if not found in local storage', () => {
+      localStorage.removeItem(LocalStorageKey.Columns);
+      const result = loadColumns();
+      expect(result).toEqual(AllColumns);
+    });
   });
 
   describe('loadTheme', () => {

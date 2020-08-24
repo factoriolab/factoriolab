@@ -2,16 +2,26 @@
   <thead>
     <tr>
       <!-- Expand -->
-      <th></th>
+      <th class="relative">
+        <i
+          title="Select columns"
+          class="clickable material-icons"
+          (click)="edit = { step: null, type: StepEditType.Columns }"
+          >visibility</i
+        >
+        <lab-multiselect
+          *ngIf="edit?.type === StepEditType.Columns"
+          [header]="'Select Columns'"
+          [enabledIds]="columns"
+          [options]="ColumnsAsOptions"
+          (cancel)="edit = null"
+          (enableId)="showColumn.emit($event)"
+          (disableId)="hideColumn.emit($event)"
+        ></lab-multiselect>
+      </th>
       <th>
         <div>
-          Items/{{
-            displayRate === DisplayRate.PerHour
-              ? 'h'
-              : displayRate === DisplayRate.PerMinute
-              ? 'm'
-              : 's'
-          }}
+          Items{{ rateLabel }}
           <i
             *ngIf="modifiedIgnore"
             title="Undo all ignored steps"
@@ -21,7 +31,7 @@
           >
         </div>
       </th>
-      <th>
+      <th *ngIf="show[Column.Belts]">
         <div>
           Belts
           <i
@@ -33,7 +43,7 @@
           >
         </div>
       </th>
-      <th>
+      <th *ngIf="show[Column.Factories]">
         <div>
           Factories
           <i
@@ -45,7 +55,7 @@
           >
         </div>
       </th>
-      <th>
+      <th *ngIf="show[Column.Modules]">
         <div>
           Modules
           <i
@@ -57,7 +67,7 @@
           >
         </div>
       </th>
-      <th>
+      <th *ngIf="show[Column.Beacons]">
         <div>
           Beacons
           <i
@@ -68,6 +78,10 @@
             >undo</i
           >
         </div>
+      </th>
+      <th *ngIf="show[Column.Power]"><div>Power</div></th>
+      <th *ngIf="show[Column.Pollution]">
+        <div>Pollution{{ rateLabel }}</div>
       </th>
       <!-- Reset / Link -->
       <th></th>
@@ -119,7 +133,7 @@
             ></lab-icon>
           </div>
         </td>
-        <td>
+        <td *ngIf="show[Column.Belts]">
           <ng-container *ngIf="itemSettings[step.itemId]?.belt as belt">
             <div
               *ngIf="
@@ -185,7 +199,7 @@
             </div>
           </ng-container>
         </td>
-        <td>
+        <td *ngIf="show[Column.Factories]">
           <ng-container
             *ngIf="recipeSettings[step.recipeId]?.factory as factory"
           >
@@ -269,7 +283,7 @@
             </div>
           </ng-container>
         </td>
-        <td>
+        <td *ngIf="show[Column.Modules]">
           <ng-container
             *ngIf="recipeSettings[step.recipeId]?.modules as modules"
           >
@@ -306,14 +320,14 @@
             </div>
           </ng-container>
         </td>
-        <td>
+        <td *ngIf="show[Column.Beacons]">
           <ng-container
             *ngIf="recipeSettings[step.recipeId]?.beaconModule as module"
           >
             <div class="flex mod">
               <div class="relative">
                 <lab-icon
-                  class="clickable"
+                  class="list-edit-beacon-module clickable"
                   title="Click to change beacon module"
                   [iconId]="module"
                   [tooltip]="data.itemEntities[module]?.name"
@@ -332,18 +346,12 @@
                   [options]="data.beaconModuleIds"
                   includeEmptyModule="true"
                   (cancel)="edit = null"
-                  (selectId)="
-                    setBeaconModule.emit({
-                      id: step.recipeId,
-                      value: $event,
-                      default: beaconModule
-                    })
-                  "
+                  (selectId)="beaconModuleChange(step, $event)"
                 >
                 </lab-select>
               </div>
               <input
-                *ngIf="module !== 'module'"
+                *ngIf="module !== MODULE_ID"
                 title="Enter number of beacon modules"
                 type="number"
                 min="0"
@@ -353,7 +361,21 @@
             </div>
           </ng-container>
         </td>
-        <td>
+        <td *ngIf="show[Column.Power]">
+          <ng-container *ngIf="step.consumption?.nonzero()">
+            <div class="monospace">
+              {{ power(step.consumption) }}
+            </div>
+          </ng-container>
+        </td>
+        <td *ngIf="show[Column.Pollution]">
+          <ng-container *ngIf="step.pollution?.nonzero()">
+            <div class="monospace">
+              {{ rate(step.pollution, factoryPrecision) }}
+            </div>
+          </ng-container>
+        </td>
+        <td *ngIf="show[Column.Link]">
           <a
             *ngIf="step.items"
             title="Click to open this step in a new tab"
@@ -415,7 +437,7 @@
                   </lab-icon>
                 </div>
               </td>
-              <td>
+              <td *ngIf="show[Column.Belts]">
                 <ng-container *ngIf="itemSettings[inStep.itemId].belt as belt">
                   <div
                     *ngIf="
@@ -446,7 +468,7 @@
                   </div>
                 </ng-container>
               </td>
-              <td>
+              <td *ngIf="show[Column.Factories]">
                 <ng-container
                   *ngIf="
                     inStep.recipeId &&
@@ -538,7 +560,7 @@
               </lab-icon>
             </div>
           </td>
-          <td>
+          <td *ngIf="show[Column.Belts]">
             <ng-container *ngIf="itemSettings[step.itemId].belt as belt">
               <div
                 *ngIf="
@@ -563,7 +585,7 @@
               </div>
             </ng-container>
           </td>
-          <td>
+          <td *ngIf="show[Column.Factories]">
             <ng-container
               *ngIf="recipeSettings[step.recipeId]?.factory as factory"
             >
@@ -614,5 +636,14 @@
         </tr>
       </ng-container>
     </ng-container>
+    <tr class="monospace" *ngIf="show[Column.Power] || show[Column.Pollution]">
+      <td colspan="6" class="summary-label">Total:</td>
+      <td *ngIf="show[Column.Power]">
+        {{ totalPower }}
+      </td>
+      <td *ngIf="show[Column.Pollution]">
+        {{ totalPollution }}
+      </td>
+    </tr>
   </tbody>
 </table>

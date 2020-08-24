@@ -5,8 +5,12 @@ export interface Factory {
   modules: number;
   /** Fuel consumption in kW */
   burner?: number;
+  /** Energy consumption in kW */
   electric?: number;
+  /** Drain in kW */
   drain?: number;
+  /** Pollution in #/m */
+  pollution?: number;
   mining?: boolean;
   research?: boolean;
 }
@@ -18,6 +22,7 @@ export class RationalFactory {
   burner?: Rational;
   electric?: Rational;
   drain?: Rational;
+  pollution?: Rational;
   mining?: boolean;
   research?: boolean;
 
@@ -32,6 +37,9 @@ export class RationalFactory {
     }
     if (data.drain) {
       this.drain = Rational.fromNumber(data.drain);
+    }
+    if (data.pollution) {
+      this.pollution = Rational.fromNumber(data.pollution);
     }
     if (data.mining) {
       this.mining = data.mining;

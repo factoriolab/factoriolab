@@ -9,7 +9,7 @@ import {
   HostBinding,
 } from '@angular/core';
 
-import { Entities, DefaultTogglePayload, ModInfo } from '~/models';
+import { Entities, IdName } from '~/models';
 
 @Component({
   selector: 'lab-multiselect',
@@ -18,22 +18,22 @@ import { Entities, DefaultTogglePayload, ModInfo } from '~/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultiselectComponent {
+  @Input() header: string;
   @Input() set enabledIds(value: string[]) {
-    this.modEnabled = value.reduce(
+    this.idEnabled = value.reduce(
       (e: Entities<boolean>, m) => ({ ...e, ...{ [m]: true } }),
       {}
     );
   }
-  @Input() options: ModInfo[];
-  @Input() default: string[];
+  @Input() options: IdName[];
   @Input() parent: HTMLElement;
 
   @Output() cancel = new EventEmitter();
-  @Output() enableMod = new EventEmitter<DefaultTogglePayload>();
-  @Output() disableMod = new EventEmitter<DefaultTogglePayload>();
+  @Output() enableId = new EventEmitter<string>();
+  @Output() disableId = new EventEmitter<string>();
 
   opening = true;
-  modEnabled: Entities<boolean> = {};
+  idEnabled: Entities<boolean> = {};
 
   @HostBinding('style.top.px') get top() {
     return this.parent ? this.parent.getBoundingClientRect().y + 1 : 1;
@@ -55,10 +55,10 @@ export class MultiselectComponent {
   }
 
   clickId(id: string, event: MouseEvent) {
-    if (this.modEnabled[id]) {
-      this.disableMod.emit({ id, default: this.default });
+    if (this.idEnabled[id]) {
+      this.disableId.emit(id);
     } else {
-      this.enableMod.emit({ id, default: this.default });
+      this.enableId.emit(id);
     }
     event.stopPropagation();
   }

@@ -1,11 +1,11 @@
-<div class="header">Select Mod Sets</div>
+<div class="header">{{ header }}</div>
 <div
   class="flex clickable"
-  *ngFor="let mod of options"
-  (click)="clickId(mod.id, $event)"
+  *ngFor="let opt of options"
+  (click)="clickId(opt.id, $event)"
 >
   <div class="material-icons">
-    {{ modEnabled[mod.id] ? 'check_box' : 'check_box_outline_blank' }}
+    {{ idEnabled[opt.id] ? 'check_box' : 'check_box_outline_blank' }}
   </div>
-  <div>{{ mod.name }}</div>
+  <div>{{ opt.name }}</div>
 </div>

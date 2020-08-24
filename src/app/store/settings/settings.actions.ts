@@ -31,6 +31,8 @@ export const enum SettingsActionType {
   SET_RESEARCH_SPEED = '[Settings Page] Set Research Speed',
   SET_FLOW_RATE = '[Settings Page] Set Flow Rate',
   SET_EXPENSIVE = '[Settings Page] Set Expensive',
+  HIDE_COLUMN = '[Settings Page] Hide Column',
+  SHOW_COLUMN = '[Settings Page] Show Column',
   SET_THEME = '[Settings Page] Set Theme',
 }
 
@@ -144,6 +146,16 @@ export class SetExpensiveAction implements Action {
   constructor(public payload: boolean) {}
 }
 
+export class HideColumnAction implements Action {
+  readonly type = SettingsActionType.HIDE_COLUMN;
+  constructor(public payload: string) {}
+}
+
+export class ShowColumnAction implements Action {
+  readonly type = SettingsActionType.SHOW_COLUMN;
+  constructor(public payload: string) {}
+}
+
 export class SetTheme implements Action {
   readonly type = SettingsActionType.SET_THEME;
   constructor(public payload: Theme) {}
@@ -172,4 +184,6 @@ export type SettingsAction =
   | SetResearchSpeedAction
   | SetFlowRateAction
   | SetExpensiveAction
+  | HideColumnAction
+  | ShowColumnAction
   | SetTheme;

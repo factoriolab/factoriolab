@@ -11,6 +11,8 @@ describe('RateUtility', () => {
         recipeId: 'iron-chest',
         items: new Rational(BigInt(30)),
         factories: new Rational(BigInt(20)),
+        consumption: new Rational(BigInt(3100)),
+        pollution: new Rational(BigInt(60)),
       },
       {
         depth: 1,
@@ -18,6 +20,8 @@ describe('RateUtility', () => {
         recipeId: 'iron-plate',
         items: new Rational(BigInt(240)),
         factories: new Rational(BigInt(1024)),
+        consumption: new Rational(BigInt(158720)),
+        pollution: new Rational(BigInt(3072)),
         parents: { 'iron-chest': new Rational(BigInt(240)) },
       },
       {
@@ -26,6 +30,8 @@ describe('RateUtility', () => {
         recipeId: 'iron-ore',
         items: new Rational(BigInt(240)),
         factories: new Rational(BigInt(320)),
+        consumption: new Rational(BigInt(49600)),
+        pollution: new Rational(BigInt(960)),
         parents: { 'iron-plate': new Rational(BigInt(240)) },
       },
     ];
@@ -196,6 +202,8 @@ describe('RateUtility', () => {
           recipeId: 'iron-chest',
           items: new Rational(BigInt(30)),
           factories: new Rational(BigInt(20)),
+          consumption: new Rational(BigInt(3100)),
+          pollution: new Rational(BigInt(60)),
           children: [
             {
               id: 'root:iron-chest:iron-plate',
@@ -204,6 +212,8 @@ describe('RateUtility', () => {
               recipeId: 'iron-plate',
               items: new Rational(BigInt(240)),
               factories: new Rational(BigInt(1024)),
+              consumption: new Rational(BigInt(158720)),
+              pollution: new Rational(BigInt(3072)),
               children: [
                 {
                   id: 'root:iron-chest:iron-plate:iron-ore',
@@ -212,6 +222,8 @@ describe('RateUtility', () => {
                   recipeId: 'iron-ore',
                   items: new Rational(BigInt(240)),
                   factories: new Rational(BigInt(320)),
+                  consumption: new Rational(BigInt(49600)),
+                  pollution: new Rational(BigInt(960)),
                 },
               ],
             },
@@ -278,6 +290,34 @@ describe('RateUtility', () => {
       );
     });
 
+    it('should adjust for consumption instead of production for research recipes', () => {
+      const root: any = { id: 'root', children: [] };
+      const data = {
+        ...Mocks.AdjustedData,
+        ...{
+          recipeR: {
+            ...Mocks.AdjustedData.recipeR,
+            ...{
+              [Mocks.Item2.id]: {
+                ...Mocks.AdjustedData.recipeR[Mocks.Item2.id],
+                ...{ adjustProd: Rational.one },
+              },
+            },
+          },
+        },
+      };
+      RateUtility.addNodesFor(
+        root,
+        Mocks.Item2.id,
+        new Rational(BigInt(30)),
+        Mocks.ItemSettingsEntities,
+        Mocks.RecipeSettingsEntities,
+        ItemId.Coal,
+        data
+      );
+      expect(root).toEqual(expected);
+    });
+
     it('should handle null recipe', () => {
       const root: any = { id: 'root', children: [] };
       RateUtility.addNodesFor(
@@ -319,6 +359,37 @@ describe('RateUtility', () => {
         Mocks.AdjustedData
       );
       expect(root.children[0].children).toBeUndefined();
+    });
+  });
+
+  describe('adjustConsumptionPollution', () => {
+    it('should handle no factories', () => {
+      const step: any = { factories: null };
+      const result = { ...step };
+      RateUtility.adjustConsumptionPollution(result, null);
+      expect(result).toEqual(step);
+    });
+
+    it('should handle null consumption/pollution', () => {
+      const step: any = { factories: Rational.one };
+      const result = { ...step };
+      const recipe: any = { consumption: null, pollution: null };
+      RateUtility.adjustConsumptionPollution(result, recipe);
+      expect(result).toEqual(step);
+    });
+
+    it('should calculate consumption/pollution', () => {
+      const step: any = { factories: Rational.two };
+      const recipe: any = {
+        consumption: new Rational(BigInt(3)),
+        pollution: new Rational(BigInt(4)),
+      };
+      RateUtility.adjustConsumptionPollution(step, recipe);
+      expect(step).toEqual({
+        factories: Rational.two,
+        consumption: new Rational(BigInt(6)),
+        pollution: new Rational(BigInt(8)),
+      });
     });
   });
 

@@ -103,10 +103,18 @@ describe('MatrixSolver', () => {
       steps,
       Mocks.ItemSettingsInitial,
       Mocks.RecipeSettingsInitial,
-      [],
+      [RecipeId.FillWaterBarrel],
       ItemId.Coal,
       Mocks.AdjustedData
     );
+  });
+
+  describe('constructor', () => {
+    it('should set up recipeDisabled map from disabledRecipes array', () => {
+      expect(matrix.recipeDisabled).toEqual({
+        [RecipeId.FillWaterBarrel]: true,
+      });
+    });
   });
 
   describe('simpleStepsOnly', () => {
@@ -129,7 +137,7 @@ describe('MatrixSolver', () => {
   });
 
   describe('calculateRecipes', () => {
-    beforeEach(() => {
+    it('should calculate recipes to use', () => {
       matrix.steps.push({
         depth: 0,
         itemId: ItemId.PetroleumGas,
@@ -140,9 +148,6 @@ describe('MatrixSolver', () => {
         itemId: ItemId.LightOil,
         items: Rational.one,
       });
-    });
-
-    it('should calculate recipes to use', () => {
       matrix.recipeDisabled = Mocks.SettingsState1.disabledRecipes.reduce(
         (e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }),
         {}
@@ -157,6 +162,24 @@ describe('MatrixSolver', () => {
         },
         { depth: 0, itemId: ItemId.PetroleumGas, items: Rational.one },
         { depth: 0, itemId: ItemId.LightOil, items: Rational.one },
+      ]);
+    });
+
+    it('should handle no recipe found', () => {
+      matrix.steps = [
+        {
+          depth: 0,
+          itemId: ItemId.Wood,
+          items: Rational.one,
+        },
+      ];
+      matrix.calculateRecipes();
+      expect(matrix.steps).toEqual([
+        {
+          depth: 0,
+          itemId: ItemId.Wood,
+          items: Rational.one,
+        },
       ]);
     });
   });
@@ -434,6 +457,8 @@ describe('MatrixSolver', () => {
           items: Rational.one,
           recipeId: RecipeId.AdvancedOilProcessing,
           factories: new Rational(BigInt(4), BigInt(15)),
+          consumption: new Rational(BigInt(124), BigInt(3)),
+          pollution: new Rational(BigInt(4), BigInt(5)),
         },
         {
           depth: 1,
@@ -453,6 +478,8 @@ describe('MatrixSolver', () => {
           recipeId: RecipeId.CrudeOil,
           items: new Rational(BigInt(4)),
           factories: new Rational(BigInt(8), BigInt(15)),
+          consumption: new Rational(BigInt(248), BigInt(3)),
+          pollution: new Rational(BigInt(8), BigInt(5)),
         },
         {
           depth: 1,
@@ -460,6 +487,8 @@ describe('MatrixSolver', () => {
           recipeId: RecipeId.Water,
           items: Rational.two,
           factories: new Rational(BigInt(8), BigInt(3)),
+          consumption: new Rational(BigInt(1240), BigInt(3)),
+          pollution: new Rational(BigInt(8)),
         },
       ]);
     });

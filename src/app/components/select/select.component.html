@@ -6,9 +6,9 @@
   class="clickable module"
   iconId="module"
   tooltip="No Module"
-  [class.selected]="selectedId === 'module'"
+  [class.selected]="selectedId === MODULE_ID"
   [data]="data"
-  (click)="clickId('module', $event)"
+  (click)="clickId(MODULE_ID, $event)"
 >
 </lab-icon>
 <ng-container *ngFor="let id of options">

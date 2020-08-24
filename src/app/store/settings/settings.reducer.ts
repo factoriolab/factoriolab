@@ -1,7 +1,13 @@
-import { DisplayRate, ResearchSpeed, Theme, LocalStorageKey } from '~/models';
+import {
+  DisplayRate,
+  ResearchSpeed,
+  Theme,
+  LocalStorageKey,
+  AllColumns,
+} from '~/models';
 import { StoreUtility } from '~/utilities';
-import { SettingsAction, SettingsActionType } from './settings.actions';
 import { AppLoadAction, AppActionType } from '../app.actions';
+import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
   baseId: string;
@@ -22,6 +28,7 @@ export interface SettingsState {
   researchSpeed: ResearchSpeed;
   flowRate: number;
   expensive: boolean;
+  columns?: string[];
   theme?: Theme;
 }
 
@@ -44,6 +51,7 @@ export const initialSettingsState: SettingsState = {
   researchSpeed: ResearchSpeed.Speed6,
   flowRate: 1500,
   expensive: false,
+  columns: loadColumns(),
   theme: loadTheme(),
 };
 
@@ -196,6 +204,16 @@ export function settingsReducer(
     case SettingsActionType.SET_EXPENSIVE: {
       return { ...state, ...{ expensive: action.payload } };
     }
+    case SettingsActionType.HIDE_COLUMN: {
+      const result = state.columns.filter((c) => c !== action.payload);
+      localStorage.setItem(LocalStorageKey.Columns, result.join(','));
+      return { ...state, ...{ columns: result } };
+    }
+    case SettingsActionType.SHOW_COLUMN: {
+      const result = [...state.columns, action.payload];
+      localStorage.setItem(LocalStorageKey.Columns, result.join(','));
+      return { ...state, ...{ columns: result } };
+    }
     case SettingsActionType.SET_THEME: {
       localStorage.setItem(LocalStorageKey.Theme, action.payload);
       return { ...state, ...{ theme: action.payload } };
@@ -203,6 +221,11 @@ export function settingsReducer(
     default:
       return state;
   }
+}
+
+export function loadColumns() {
+  const lsColumns = localStorage.getItem(LocalStorageKey.Columns);
+  return lsColumns ? lsColumns.split(',') : AllColumns;
 }
 
 export function loadTheme() {

@@ -8,6 +8,7 @@ import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers, State } from '~/store';
 import * as Items from '~/store/items';
 import * as Recipes from '~/store/recipes';
+import { ShowColumnAction, HideColumnAction } from '~/store/settings';
 import { ListComponent } from './list/list.component';
 import { ListContainerComponent } from './list-container.component';
 
@@ -106,6 +107,20 @@ describe('ListContainerComponent', () => {
     expect(store.dispatch).toHaveBeenCalledWith(
       new Recipes.SetBeaconCountAction(data)
     );
+  });
+
+  it('should show a column', () => {
+    spyOn(store, 'dispatch');
+    const data = 'id';
+    component.child.showColumn.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(new ShowColumnAction(data));
+  });
+
+  it('should hide a column', () => {
+    spyOn(store, 'dispatch');
+    const data = 'id';
+    component.child.hideColumn.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(new HideColumnAction(data));
   });
 
   it('should reset item to default', () => {

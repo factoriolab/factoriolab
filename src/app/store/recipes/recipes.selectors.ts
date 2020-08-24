@@ -5,6 +5,8 @@ import {
   Entities,
   RationalRecipeSettings,
   RationalRecipe,
+  SPACE_SCIENCE_ID,
+  MODULE_ID,
 } from '~/models';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 import * as Settings from '../settings';
@@ -47,10 +49,7 @@ export const getRecipeSettings = createSelector(
         }
 
         const factoryItem = data.itemEntities[recipeSettings.factory];
-        if (
-          recipe.id !== 'space-science-pack' &&
-          factoryItem?.factory?.modules
-        ) {
+        if (recipe.id !== SPACE_SCIENCE_ID && factoryItem?.factory?.modules) {
           const drillSkipDefaults = !drillModule && factoryItem.factory.mining;
 
           // Modules
@@ -59,7 +58,7 @@ export const getRecipeSettings = createSelector(
               recipeSettings.modules = [];
               const count = factoryItem.factory.modules;
               for (let i = 0; i < count; i++) {
-                recipeSettings.modules.push('module');
+                recipeSettings.modules.push(MODULE_ID);
               }
             } else {
               recipeSettings.modules = RecipeUtility.defaultModules(
@@ -73,7 +72,7 @@ export const getRecipeSettings = createSelector(
           // Beacons
           if (!recipeSettings.beaconModule) {
             if (drillSkipDefaults) {
-              recipeSettings.beaconModule = 'module';
+              recipeSettings.beaconModule = MODULE_ID;
             } else {
               recipeSettings.beaconModule = beaconModule;
             }
@@ -104,11 +103,12 @@ export const getRationalRecipeSettings = createSelector(
 
 export const getAdjustedDataset = createSelector(
   getRationalRecipeSettings,
+  Settings.getFuel,
+  Settings.getDisplayRate,
   Settings.getRationalMiningBonus,
   Settings.getResearchFactor,
-  Settings.getFuel,
   Settings.getDataset,
-  (recipeSettings, miningBonus, researchSpeed, fuel, data) => ({
+  (recipeSettings, fuel, displayRate, miningBonus, researchSpeed, data) => ({
     ...data,
     ...{
       recipeR: Object.keys(recipeSettings).reduce(
@@ -117,9 +117,10 @@ export const getAdjustedDataset = createSelector(
           ...{
             [i]: RecipeUtility.adjustRecipe(
               i,
+              fuel,
+              displayRate,
               miningBonus,
               researchSpeed,
-              fuel,
               recipeSettings[i],
               data
             ),
