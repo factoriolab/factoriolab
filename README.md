@@ -5,7 +5,11 @@
 This is the repository for the [Factorio Lab](https://factoriolab.github.io) project, a tool for calculating resource and factory requirements for the game [Factorio](https://factorio.com).  
 This project is intended to build on the features of the Kirk McDonald [Factorio Calculator](https://kirkmcdonald.github.io) ([GitHub](https://github.com/KirkMcDonald/kirkmcdonald.github.io)). It is built from the ground up using Angular, Redux, and Typescript.
 
-For instructions on how to use this tool, please see the [Wiki](https://github.com/factoriolab/factorio-lab/wiki).
+**For instructions on how to use this tool,** check out the [wiki](https://github.com/factoriolab/factorio-lab/wiki).
+
+**To submit suggestions or issues,** please check out the [issues page](https://github.com/factoriolab/factorio-lab/issues).
+
+**If you love Factorio Lab,** consider supporting it by [buying me a ☕](https://www.buymeacoffee.com/dcbroad3)!
 
 ## Running locally
 

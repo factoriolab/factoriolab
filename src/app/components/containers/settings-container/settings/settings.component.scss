@@ -55,3 +55,14 @@ a {
 input[type='radio'] + * {
   margin-left: 0.25rem;
 }
+
+.footer {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.75rem;
+
+  .material-icons {
+    font-size: 1.25rem;
+  }
+}
