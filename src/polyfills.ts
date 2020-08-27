@@ -60,3 +60,8 @@ import 'zone.js/dist/zone'; // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+import bigInt from 'big-integer';
+if (typeof BigInt === 'undefined') {
+  window.BigInt = bigInt as any;
+}
