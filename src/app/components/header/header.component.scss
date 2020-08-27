@@ -11,24 +11,26 @@
 
   .header-settings {
     margin-left: 1px;
-    background-color: var(--color-gray-1);
     cursor: pointer;
-
-    &:hover {
-      background-color: var(--color-brand);
-    }
   }
 
   .header-spacer {
     flex-grow: 1;
+    padding: 0;
   }
 
   .header-settings,
-  .header-github {
+  .header-logo {
+    background-color: var(--color-gray-1);
+
     &:hover {
       background-color: var(--color-brand);
     }
   }
+}
+
+img {
+  height: 2rem;
 }
 
 a {
