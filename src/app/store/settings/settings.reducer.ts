@@ -30,6 +30,7 @@ export interface SettingsState {
   expensive: boolean;
   columns?: string[];
   theme?: Theme;
+  showHeader?: boolean;
 }
 
 export const initialSettingsState: SettingsState = {
@@ -53,6 +54,7 @@ export const initialSettingsState: SettingsState = {
   expensive: false,
   columns: loadColumns(),
   theme: loadTheme(),
+  showHeader: loadShowHeader(),
 };
 
 export function settingsReducer(
@@ -218,6 +220,14 @@ export function settingsReducer(
       localStorage.setItem(LocalStorageKey.Theme, action.payload);
       return { ...state, ...{ theme: action.payload } };
     }
+    case SettingsActionType.SHOW_HEADER: {
+      localStorage.removeItem(LocalStorageKey.ShowHeader);
+      return { ...state, ...{ showHeader: true } };
+    }
+    case SettingsActionType.HIDE_HEADER: {
+      localStorage.setItem(LocalStorageKey.ShowHeader, '0');
+      return { ...state, ...{ showHeader: false } };
+    }
     default:
       return state;
   }
@@ -231,4 +241,9 @@ export function loadColumns() {
 export function loadTheme() {
   const lsTheme = localStorage.getItem(LocalStorageKey.Theme);
   return lsTheme ? (lsTheme as Theme) : Theme.DarkMode;
+}
+
+export function loadShowHeader() {
+  const lsShowHeader = localStorage.getItem(LocalStorageKey.ShowHeader);
+  return lsShowHeader !== '0';
 }

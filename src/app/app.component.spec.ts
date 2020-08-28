@@ -78,7 +78,7 @@ describe('AppComponent', () => {
   });
 
   it('should update theme when theme changed', () => {
-    store.dispatch(new Settings.SetTheme(Theme.LightMode));
+    store.dispatch(new Settings.SetThemeAction(Theme.LightMode));
     fixture.detectChanges();
     expect(document.body.className).toBe(Theme.LightMode);
   });
