@@ -41,7 +41,7 @@
     "material-design-icons": "~3.0.1",
     "pako": "^1.0.11",
     "rxjs": "~6.6.2",
-    "tslib": "^2.0.0",
+    "tslib": "^2.0.1",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
