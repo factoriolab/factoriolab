@@ -10,12 +10,16 @@
   <img id="header-icon" title="Factorio Lab" src="assets/logo.png" />
 </a>
 <div class="header-spacer"></div>
-<div class="header-button header-icon" (click)="menuOpen = !menuOpen">
+<div
+  id="header-menu-toggle"
+  class="header-button"
+  (click)="menuOpen = !menuOpen"
+>
   <i #menuBtn class="material-icons">menu</i>
 </div>
 <ul class="header-menu" *ngIf="menuOpen" @slideInOut>
   <li>
-    <a (click)="hideHeader.emit()"
+    <a id="header-hide" (click)="hideHeader.emit()"
       ><i class="material-icons">expand_less</i>Hide the header
     </a>
   </li>

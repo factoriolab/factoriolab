@@ -34,6 +34,7 @@
       <li class="spacer"></li>
       <li
         *ngIf="(showHeader$ | async) === false"
+        id="app-show-header"
         class="expand"
         title="Show header"
         (click)="showHeader()"
