@@ -277,6 +277,8 @@ describe('SettingsContainerComponent', () => {
     spyOn(store, 'dispatch');
     const value = Theme.DarkMode;
     component.child.setTheme.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(new Settings.SetTheme(value));
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetThemeAction(value)
+    );
   });
 });

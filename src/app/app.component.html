@@ -1,19 +1,20 @@
 <lab-header
+  *ngIf="showHeader$ | async"
+  @slideUpDown
   [data]="data$ | async"
   (toggleSettings)="toggleSettings()"
+  (hideHeader)="hideHeader()"
 ></lab-header>
 <main>
   <lab-settings-container
     *ngIf="settingsOpen"
-    @slideInOut
+    @slideLeftRight
     (cancel)="toggleSettings()"
   >
   </lab-settings-container>
   <div class="view">
     <ul role="navigation">
-      <li (click)="toggleSettings()">
-        Settings
-      </li>
+      <li (click)="toggleSettings()">Settings</li>
       <li
         routerLink="/list"
         routerLinkActive="active"
@@ -29,6 +30,16 @@
         title="View as sunburst hierarchy"
       >
         Hierarchy
+      </li>
+      <li class="spacer"></li>
+      <li
+        *ngIf="(showHeader$ | async) === false"
+        id="app-show-header"
+        class="expand"
+        title="Show header"
+        (click)="showHeader()"
+      >
+        <i class="material-icons">expand_more</i>
       </li>
     </ul>
     <lab-products-container></lab-products-container>
