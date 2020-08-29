@@ -159,6 +159,6 @@ export class SettingsContainerComponent implements OnInit {
   }
 
   setTheme(value: Theme) {
-    this.store.dispatch(new Settings.SetTheme(value));
+    this.store.dispatch(new Settings.SetThemeAction(value));
   }
 }

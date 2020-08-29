@@ -34,6 +34,8 @@ export const enum SettingsActionType {
   HIDE_COLUMN = '[Settings Page] Hide Column',
   SHOW_COLUMN = '[Settings Page] Show Column',
   SET_THEME = '[Settings Page] Set Theme',
+  SHOW_HEADER = '[Settings Page] Show Header',
+  HIDE_HEADER = '[Settings Page] Hide Header',
 }
 
 export class SetBaseAction implements Action {
@@ -156,9 +158,17 @@ export class ShowColumnAction implements Action {
   constructor(public payload: string) {}
 }
 
-export class SetTheme implements Action {
+export class SetThemeAction implements Action {
   readonly type = SettingsActionType.SET_THEME;
   constructor(public payload: Theme) {}
+}
+
+export class ShowHeaderAction implements Action {
+  readonly type = SettingsActionType.SHOW_HEADER;
+}
+
+export class HideHeaderAction implements Action {
+  readonly type = SettingsActionType.HIDE_HEADER;
 }
 
 export type SettingsAction =
@@ -186,4 +196,6 @@ export type SettingsAction =
   | SetExpensiveAction
   | HideColumnAction
   | ShowColumnAction
-  | SetTheme;
+  | SetThemeAction
+  | HideHeaderAction
+  | ShowHeaderAction;

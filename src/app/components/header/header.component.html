@@ -1,9 +1,8 @@
 <lab-icon
-  class="header-settings"
+  class="header-button"
   title="Settings"
   id="header-settings"
   [data]="data"
-  tooltip="Settings"
   iconId="iron-gear-wheel"
   (click)="toggleSettings.emit()"
 ></lab-icon>
@@ -11,10 +10,37 @@
   <img id="header-icon" title="Factorio Lab" src="assets/logo.png" />
 </a>
 <div class="header-spacer"></div>
-<a
-  class="header-logo"
-  target="_blank"
-  href="https://github.com/factoriolab/factorio-lab"
+<div
+  id="header-menu-toggle"
+  class="header-button"
+  (click)="menuOpen = !menuOpen"
 >
-  <img src="assets/GitHub.png" alt="GitHub" title="View source in GitHub" />
-</a>
+  <i #menuBtn class="material-icons">menu</i>
+</div>
+<ul class="header-menu" *ngIf="menuOpen" @slideInOut>
+  <li>
+    <a id="header-hide" (click)="hideHeader.emit()"
+      ><i class="material-icons">expand_less</i>Hide the header
+    </a>
+  </li>
+  <li>
+    <a target="_blank" href="https://github.com/factoriolab/factorio-lab/wiki"
+      ><i class="material-icons">help</i>How do I use this?</a
+    >
+  </li>
+  <li>
+    <a target="_blank" href="https://github.com/factoriolab/factorio-lab/issues"
+      ><i class="material-icons">feedback</i>Submit feedback</a
+    >
+  </li>
+  <li>
+    <a target="_blank" href="https://github.com/factoriolab/factorio-lab"
+      ><i class="material-icons">code</i>View source code</a
+    >
+  </li>
+  <li>
+    <a target="_blank" href="https://www.buymeacoffee.com/dcbroad3"
+      ><i class="material-icons">favorite</i>Buy me a ☕?</a
+    >
+  </li>
+</ul>

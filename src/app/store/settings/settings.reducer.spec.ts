@@ -305,7 +305,7 @@ describe('Settings Reducer', () => {
     it('should set the theme', () => {
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetTheme(null)
+        new Actions.SetThemeAction(null)
       );
       expect(result.theme).toEqual(null);
     });

@@ -9,14 +9,24 @@ import { Dataset } from './models';
 import { RouterService } from './services/router.service';
 import { State } from './store';
 import { getZipState } from './store/products';
-import { getDataset, getTheme } from './store/settings';
+import * as Settings from './store/settings';
 
 @Component({
   selector: 'lab-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   animations: [
-    trigger('slideInOut', [
+    trigger('slideUpDown', [
+      transition(':enter', [
+        style({ marginTop: '-3rem' }),
+        animate('300ms ease', style({ marginTop: '0' })),
+      ]),
+      transition(':leave', [
+        style({ marginTop: '0' }),
+        animate('300ms ease', style({ marginTop: '-3rem' })),
+      ]),
+    ]),
+    trigger('slideLeftRight', [
       transition(':enter', [
         style({ marginLeft: '-18rem', marginRight: '0' }),
         animate('300ms ease', style({ marginLeft: '0', marginRight: '*' })),
@@ -35,6 +45,7 @@ export class AppComponent implements OnInit {
   settingsOpen: boolean;
 
   data$: Observable<Dataset>;
+  showHeader$: Observable<boolean>;
 
   constructor(
     public router: RouterService,
@@ -43,8 +54,9 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.data$ = this.store.select(getDataset);
-    this.store.select(getTheme).subscribe((s) => {
+    this.data$ = this.store.select(Settings.getDataset);
+    this.showHeader$ = this.store.select(Settings.getShowHeader);
+    this.store.select(Settings.getTheme).subscribe((s) => {
       this.document.body.className = s;
     });
     this.store
@@ -57,5 +69,13 @@ export class AppComponent implements OnInit {
 
   toggleSettings() {
     this.settingsOpen = !this.settingsOpen;
+  }
+
+  showHeader() {
+    this.store.dispatch(new Settings.ShowHeaderAction());
+  }
+
+  hideHeader() {
+    this.store.dispatch(new Settings.HideHeaderAction());
   }
 }
