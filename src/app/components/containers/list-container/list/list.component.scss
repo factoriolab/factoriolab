@@ -9,6 +9,10 @@ table {
 
 tr > * + * {
   padding-left: 1rem;
+
+  &.split-column {
+    padding-left: 0;
+  }
 }
 
 tr.details {
