@@ -68,6 +68,19 @@ export class ListComponent {
       (e: Entities<boolean>, c) => ({ ...e, ...{ [c]: true } }),
       {}
     );
+    this.totalSpan = 2;
+    if (this.columns.indexOf(Column.Belts) !== -1) {
+      this.totalSpan++;
+    }
+    if (this.columns.indexOf(Column.Factories) !== -1) {
+      this.totalSpan += 2;
+    }
+    if (this.columns.indexOf(Column.Modules) !== -1) {
+      this.totalSpan++;
+    }
+    if (this.columns.indexOf(Column.Beacons) !== -1) {
+      this.totalSpan++;
+    }
   }
   @Input() modifiedIgnore: boolean;
   @Input() modifiedBelt: boolean;
@@ -94,6 +107,7 @@ export class ListComponent {
   edit: ListEdit;
   expanded: Entities<boolean> = {};
   show: Entities<boolean> = {};
+  totalSpan = 2;
 
   Column = Column;
   DisplayRate = DisplayRate;
@@ -101,6 +115,12 @@ export class ListComponent {
   Rational = Rational;
   MODULE_ID = MODULE_ID;
   ColumnsAsOptions = ColumnsAsOptions;
+  ColumnsLeftOfPower = [
+    Column.Belts,
+    Column.Factories,
+    Column.Modules,
+    Column.Beacons,
+  ];
 
   get rateLabel() {
     switch (this.displayRate) {
@@ -145,7 +165,19 @@ export class ListComponent {
     if (precision == null) {
       return value.toFraction();
     } else {
-      return value.toPrecision(precision).toString();
+      const result = value.toPrecision(precision).toString();
+      if (precision > 0) {
+        const split = result.split('.');
+        if (split.length > 1) {
+          if (split[1].length < precision) {
+            const spaces = precision - split[1].length;
+            return result + ' '.repeat(spaces);
+          }
+        } else {
+          return result + ' '.repeat(precision + 1);
+        }
+      }
+      return result;
     }
   }
 
