@@ -49,6 +49,13 @@ export class RouterService {
       );
       const zState = `p=${zProducts.join(',')}`;
       this.zipPartial = '';
+      const zPreset = this.zipDiffNum(
+        settings.preset,
+        Settings.initialSettingsState.preset
+      );
+      if (zPreset.length) {
+        this.zipPartial += `&b=${zPreset}`;
+      }
       const zItems = this.zipItems(items);
       if (zItems.length) {
         this.zipPartial += `&i=${zItems.join(',')}`;
@@ -102,6 +109,12 @@ export class RouterService {
               if (s[1]) {
                 if (s[0] === 'p') {
                   state.productsState = this.unzipProducts(s[1].split(','));
+                } else if (s[0] === 'b') {
+                  this.zipPartial += `&b=${s[1]}`;
+                  state.settingsState = {
+                    ...state.settingsState,
+                    ...{ preset: this.parseNumber(s[1]) },
+                  };
                 } else if (s[0] === 'i') {
                   this.zipPartial = `&i=${s[1]}`;
                   state.itemsState = this.unzipItems(s[1].split(','));
@@ -110,7 +123,10 @@ export class RouterService {
                   state.recipesState = this.unzipRecipes(s[1].split(','));
                 } else if (s[0] === 's') {
                   this.zipPartial += `&s=${s[1]}`;
-                  state.settingsState = this.unzipSettings(s[1]);
+                  state.settingsState = {
+                    ...state.settingsState,
+                    ...this.unzipSettings(s[1]),
+                  };
                 }
               }
             }

@@ -1,6 +1,6 @@
 import { Entities } from '../entities';
+import { Defaults } from '../defaults';
 import { Category } from './category';
-import { Defaults } from './defaults';
 import { Icon } from './icon';
 import { Item, RationalItem } from './item';
 import { Recipe, RationalRecipe } from './recipe';

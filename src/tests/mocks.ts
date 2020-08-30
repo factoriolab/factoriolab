@@ -13,6 +13,7 @@ import {
   ItemSettings,
   Mod,
   DisplayRate,
+  Preset,
 } from '~/models';
 import { initialDatasetsState } from '~/store/datasets';
 import { getProductsBy, ProductsState } from '~/store/products';
@@ -21,7 +22,11 @@ import {
   getAdjustedDataset,
   getRationalRecipeSettings,
 } from '~/store/recipes';
-import { getNormalDataset, initialSettingsState } from '~/store/settings';
+import {
+  getNormalDataset,
+  initialSettingsState,
+  getDefaults,
+} from '~/store/settings';
 import { getItemSettings } from '~/store/items';
 import { ItemId } from './item-id';
 
@@ -38,7 +43,7 @@ export const Data = getNormalDataset.projector(
   [Base, Mod1],
   Base.defaults
 );
-export const Defaults = base.defaults;
+export const Defaults = getDefaults.projector(Preset.Beacon16, base);
 export const CategoryId = Data.categoryIds[0];
 export const Item1 = Data.itemEntities[Data.itemIds[0]];
 export const Item2 = Data.itemEntities[Data.itemIds[1]];
@@ -146,7 +151,7 @@ export const RecipeSettingsInitial = getRecipeSettings.projector(
   Defaults.factoryRank,
   Defaults.moduleRank,
   Defaults.beaconModule,
-  InitialSettingsState.beaconCount,
+  Defaults.beaconCount,
   InitialSettingsState.drillModule,
   Data
 );
