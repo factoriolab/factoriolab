@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { skip } from 'rxjs/operators';
 
-import { Dataset } from './models';
+import { Dataset, LocalStorageKey } from './models';
 import { RouterService } from './services/router.service';
 import { State } from './store';
 import { getZipState } from './store/products';
@@ -65,6 +65,9 @@ export class AppComponent implements OnInit {
       .subscribe((s) => {
         this.router.updateUrl(s.products, s.items, s.recipes, s.settings);
       });
+    this.store.select(Settings.settingsState).subscribe((s) => {
+      localStorage.setItem(LocalStorageKey.Settings, JSON.stringify(s));
+    });
   }
 
   toggleSettings() {

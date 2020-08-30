@@ -55,13 +55,15 @@ export const initialSettingsState: SettingsState = {
   researchSpeed: ResearchSpeed.Speed6,
   flowRate: 1500,
   expensive: false,
-  columns: loadColumns(),
-  theme: loadTheme(),
-  showHeader: loadShowHeader(),
+  columns: AllColumns,
+  theme: Theme.DarkMode,
+  showHeader: true,
 };
 
+export const storedSettingsState: SettingsState = loadSettings();
+
 export function settingsReducer(
-  state: SettingsState = initialSettingsState,
+  state: SettingsState = storedSettingsState,
   action: SettingsAction | AppLoadAction
 ): SettingsState {
   switch (action.type) {
@@ -214,24 +216,19 @@ export function settingsReducer(
     }
     case SettingsActionType.HIDE_COLUMN: {
       const result = state.columns.filter((c) => c !== action.payload);
-      localStorage.setItem(LocalStorageKey.Columns, result.join(','));
       return { ...state, ...{ columns: result } };
     }
     case SettingsActionType.SHOW_COLUMN: {
       const result = [...state.columns, action.payload];
-      localStorage.setItem(LocalStorageKey.Columns, result.join(','));
       return { ...state, ...{ columns: result } };
     }
     case SettingsActionType.SET_THEME: {
-      localStorage.setItem(LocalStorageKey.Theme, action.payload);
       return { ...state, ...{ theme: action.payload } };
     }
     case SettingsActionType.SHOW_HEADER: {
-      localStorage.removeItem(LocalStorageKey.ShowHeader);
       return { ...state, ...{ showHeader: true } };
     }
     case SettingsActionType.HIDE_HEADER: {
-      localStorage.setItem(LocalStorageKey.ShowHeader, '0');
       return { ...state, ...{ showHeader: false } };
     }
     default:
@@ -239,17 +236,26 @@ export function settingsReducer(
   }
 }
 
-export function loadColumns() {
-  const lsColumns = localStorage.getItem(LocalStorageKey.Columns);
-  return lsColumns ? lsColumns.split(',') : AllColumns;
-}
-
-export function loadTheme() {
-  const lsTheme = localStorage.getItem(LocalStorageKey.Theme);
-  return lsTheme ? (lsTheme as Theme) : Theme.DarkMode;
-}
-
-export function loadShowHeader() {
-  const lsShowHeader = localStorage.getItem(LocalStorageKey.ShowHeader);
-  return lsShowHeader !== '0';
+export function loadSettings() {
+  const lsSettings = localStorage.getItem(LocalStorageKey.Settings);
+  if (lsSettings) {
+    if (location.hash) {
+      // Only keep columns, theme, and showHeader
+      const stored = JSON.parse(lsSettings);
+      return {
+        ...initialSettingsState,
+        ...{
+          columns: stored.columns,
+          theme: stored.theme,
+          showHeader: stored.showHeader,
+        },
+      };
+    } else {
+      // Load full saved settings
+      return JSON.parse(lsSettings);
+    }
+  } else {
+    // Use initial settings
+    return initialSettingsState;
+  }
 }

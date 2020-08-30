@@ -96,7 +96,7 @@ const mockSettings: Settings.SettingsState = {
   ...Mocks.InitialSettingsState,
   ...{ displayRate: DisplayRate.PerHour },
 };
-const mockFullSettings: Settings.SettingsState = {
+export const mockFullSettings: Settings.SettingsState = {
   baseId: '0.17',
   modIds: [],
   displayRate: DisplayRate.PerHour,

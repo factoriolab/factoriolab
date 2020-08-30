@@ -3,18 +3,17 @@ import {
   DisplayRate,
   ResearchSpeed,
   LocalStorageKey,
-  Theme,
   Column,
-  AllColumns,
   Preset,
+  Theme,
 } from '~/models';
+import { mockFullSettings } from '~/services/router.service.spec';
 import { AppLoadAction } from '../app.actions';
 import * as Actions from './settings.actions';
 import {
   settingsReducer,
   initialSettingsState,
-  loadTheme,
-  loadColumns,
+  loadSettings,
 } from './settings.reducer';
 
 describe('Settings Reducer', () => {
@@ -329,32 +328,34 @@ describe('Settings Reducer', () => {
     );
   });
 
-  describe('loadColumns', () => {
-    it('should load columns from local storage', () => {
-      const value = Column.Beacons;
-      localStorage.setItem(LocalStorageKey.Columns, value);
-      const result = loadColumns();
-      expect(result).toEqual([value]);
+  describe('loadSettings', () => {
+    afterEach(() => {
+      localStorage.removeItem(LocalStorageKey.Settings);
+      location.hash = '';
     });
 
-    it('should load all columns if not found in local storage', () => {
-      localStorage.removeItem(LocalStorageKey.Columns);
-      const result = loadColumns();
-      expect(result).toEqual(AllColumns);
-    });
-  });
-
-  describe('loadTheme', () => {
-    it('should load theme from local storage', () => {
-      localStorage.setItem(LocalStorageKey.Theme, Theme.LightMode);
-      const result = loadTheme();
-      expect(result).toEqual(Theme.LightMode);
+    it('should only preserve columns theme and showHeader if hash is present', () => {
+      const preserved = {
+        theme: Theme.LightMode,
+        columns: [],
+        showHeader: false,
+      };
+      const total = { ...mockFullSettings, ...preserved };
+      localStorage.setItem(LocalStorageKey.Settings, JSON.stringify(total));
+      location.hash = 'test';
+      expect(loadSettings()).toEqual({ ...initialSettingsState, ...preserved });
     });
 
-    it('should load DarkMode if not found in local storage', () => {
-      localStorage.removeItem(LocalStorageKey.Theme);
-      const result = loadTheme();
-      expect(result).toEqual(Theme.DarkMode);
+    it('should preserve all settings if no hash is present', () => {
+      localStorage.setItem(
+        LocalStorageKey.Settings,
+        JSON.stringify(mockFullSettings)
+      );
+      expect(loadSettings()).toEqual(mockFullSettings);
+    });
+
+    it('should use initial settings if no stored settings', () => {
+      expect(loadSettings()).toEqual(initialSettingsState);
     });
   });
 });

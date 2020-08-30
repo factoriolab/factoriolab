@@ -58,8 +58,7 @@ describe('AppComponent', () => {
   }));
 
   afterEach(() => {
-    localStorage.removeItem(LocalStorageKey.Theme);
-    localStorage.removeItem(LocalStorageKey.ShowHeader);
+    localStorage.removeItem(LocalStorageKey.Settings);
   });
 
   it('should create the app', () => {
