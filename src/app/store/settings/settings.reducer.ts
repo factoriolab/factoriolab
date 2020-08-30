@@ -4,6 +4,7 @@ import {
   Theme,
   LocalStorageKey,
   AllColumns,
+  Preset,
 } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { AppLoadAction, AppActionType } from '../app.actions';
@@ -12,6 +13,7 @@ import { SettingsAction, SettingsActionType } from './settings.actions';
 export interface SettingsState {
   baseId: string;
   modIds: string[];
+  preset: Preset;
   belt: string;
   fuel: string;
   disabledRecipes: string[];
@@ -36,6 +38,7 @@ export interface SettingsState {
 export const initialSettingsState: SettingsState = {
   baseId: '1.0',
   modIds: null,
+  preset: Preset.Minimum,
   belt: null,
   fuel: null,
   disabledRecipes: null,
@@ -46,7 +49,7 @@ export const initialSettingsState: SettingsState = {
   itemPrecision: 3,
   beltPrecision: 1,
   factoryPrecision: 1,
-  beaconCount: 16,
+  beaconCount: null,
   drillModule: false,
   miningBonus: 0,
   researchSpeed: ResearchSpeed.Speed6,

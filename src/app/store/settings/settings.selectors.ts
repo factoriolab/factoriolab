@@ -9,6 +9,8 @@ import {
   RationalItem,
   RationalRecipe,
   Dataset,
+  Preset,
+  MODULE_ID,
 } from '~/models';
 import { State } from '../';
 import * as Datasets from '../datasets';
@@ -21,7 +23,6 @@ const sDisplayRate = (state: SettingsState) => state.displayRate;
 const sItemPrecision = (state: SettingsState) => state.itemPrecision;
 const sBeltPrecision = (state: SettingsState) => state.beltPrecision;
 const sFactoryPrecision = (state: SettingsState) => state.factoryPrecision;
-const sBeaconCount = (state: SettingsState) => state.beaconCount;
 const sDrillModule = (state: SettingsState) => state.drillModule;
 const sMiningBonus = (state: SettingsState) => state.miningBonus;
 const sResearchSpeed = (state: SettingsState) => state.researchSpeed;
@@ -37,7 +38,6 @@ export const getDisplayRate = compose(sDisplayRate, settingsState);
 export const getItemPrecision = compose(sItemPrecision, settingsState);
 export const getBeltPrecision = compose(sBeltPrecision, settingsState);
 export const getFactoryPrecision = compose(sFactoryPrecision, settingsState);
-export const getBeaconCount = compose(sBeaconCount, settingsState);
 export const getDrillModule = compose(sDrillModule, settingsState);
 export const getMiningBonus = compose(sMiningBonus, settingsState);
 export const getResearchSpeed = compose(sResearchSpeed, settingsState);
@@ -66,12 +66,28 @@ export const getSettings = createSelector(
     ...s,
     ...{
       modIds: s.modIds || d?.modIds || [],
-      belt: s.belt || d?.belt,
+      belt: s.belt || s.preset === Preset.Minimum ? d?.minBelt : d?.maxBelt,
       fuel: s.fuel || d?.fuel,
       disabledRecipes: s.disabledRecipes || d?.disabledRecipes || [],
-      factoryRank: s.factoryRank || d?.factoryRank || [],
-      moduleRank: s.moduleRank || d?.moduleRank || [],
-      beaconModule: s.beaconModule || d?.beaconModule,
+      factoryRank:
+        s.factoryRank ||
+        (s.preset === Preset.Minimum ? d?.minFactoryRank : d?.maxFactoryRank) ||
+        [],
+      moduleRank:
+        s.moduleRank ||
+        (s.preset === Preset.Minimum ? [] : d?.moduleRank) ||
+        [],
+      beaconModule:
+        s.beaconModule ||
+        (s.preset < Preset.Beacon16 ? MODULE_ID : d?.beaconModule),
+      beaconCount:
+        s.beaconCount != null
+          ? s.beaconCount
+          : s.preset < Preset.Beacon16
+          ? 0
+          : s.preset < Preset.Beacon24
+          ? 16
+          : 24,
     },
   })
 );
@@ -95,6 +111,8 @@ export const getBeaconModule = createSelector(
   getSettings,
   (s) => s.beaconModule
 );
+
+export const getBeaconCount = createSelector(getSettings, (s) => s.beaconCount);
 
 export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
   Rational.fromNumber(bonus).div(Rational.hundred)
