@@ -6,6 +6,7 @@ import {
   Theme,
   Column,
   AllColumns,
+  Preset,
 } from '~/models';
 import { AppLoadAction } from '../app.actions';
 import * as Actions from './settings.actions';
@@ -34,6 +35,17 @@ describe('Settings Reducer', () => {
         } as any)
       );
       expect(result.displayRate).toEqual(DisplayRate.PerHour);
+    });
+  });
+
+  describe('SET_PRESET', () => {
+    it('should set the preset', () => {
+      const value = Preset.Modules;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetPresetAction(value)
+      );
+      expect(result.preset).toEqual(value);
     });
   });
 

@@ -1,11 +1,10 @@
 export interface Defaults {
   modIds: string[];
-  minBelt: string;
-  maxBelt: string;
+  belt: string;
   fuel: string;
   disabledRecipes: string[];
-  minFactoryRank: string[];
-  maxFactoryRank: string[];
+  factoryRank: string[];
   moduleRank: string[];
   beaconModule: string;
+  beaconCount: number;
 }

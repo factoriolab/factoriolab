@@ -11,6 +11,7 @@ import {
   Dataset,
   Preset,
   MODULE_ID,
+  Defaults,
 } from '~/models';
 import { State } from '../';
 import * as Datasets from '../datasets';
@@ -18,6 +19,7 @@ import { SettingsState } from './settings.reducer';
 
 /* Base selector functions */
 export const settingsState = (state: State) => state.settingsState;
+const sPreset = (state: SettingsState) => state.preset;
 const sBaseDatasetId = (state: SettingsState) => state.baseId;
 const sDisplayRate = (state: SettingsState) => state.displayRate;
 const sItemPrecision = (state: SettingsState) => state.itemPrecision;
@@ -33,6 +35,7 @@ const sTheme = (state: SettingsState) => state.theme;
 const sShowHeader = (state: SettingsState) => state.showHeader;
 
 /* Simple selectors */
+export const getPreset = compose(sPreset, settingsState);
 export const getBaseDatasetId = compose(sBaseDatasetId, settingsState);
 export const getDisplayRate = compose(sDisplayRate, settingsState);
 export const getItemPrecision = compose(sItemPrecision, settingsState);
@@ -55,8 +58,27 @@ export const getBase = createSelector(
 );
 
 export const getDefaults = createSelector(
+  getPreset,
   getBase,
-  (base) => base && base.defaults
+  (preset, base) => {
+    if (base) {
+      const m = base.defaults;
+      const defaults: Defaults = {
+        modIds: m.modIds,
+        belt: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
+        fuel: m.fuel,
+        disabledRecipes: m.disabledRecipes,
+        factoryRank:
+          preset === Preset.Minimum ? m.minFactoryRank : m.maxFactoryRank,
+        moduleRank: preset === Preset.Minimum ? [] : m.moduleRank,
+        beaconModule: preset < Preset.Beacon16 ? MODULE_ID : m.beaconModule,
+        beaconCount:
+          preset < Preset.Beacon16 ? 0 : preset < Preset.Beacon24 ? 16 : 24,
+      };
+      return defaults;
+    }
+    return null;
+  }
 );
 
 export const getSettings = createSelector(
@@ -66,28 +88,13 @@ export const getSettings = createSelector(
     ...s,
     ...{
       modIds: s.modIds || d?.modIds || [],
-      belt: s.belt || s.preset === Preset.Minimum ? d?.minBelt : d?.maxBelt,
+      belt: s.belt || d?.belt,
       fuel: s.fuel || d?.fuel,
       disabledRecipes: s.disabledRecipes || d?.disabledRecipes || [],
-      factoryRank:
-        s.factoryRank ||
-        (s.preset === Preset.Minimum ? d?.minFactoryRank : d?.maxFactoryRank) ||
-        [],
-      moduleRank:
-        s.moduleRank ||
-        (s.preset === Preset.Minimum ? [] : d?.moduleRank) ||
-        [],
-      beaconModule:
-        s.beaconModule ||
-        (s.preset < Preset.Beacon16 ? MODULE_ID : d?.beaconModule),
-      beaconCount:
-        s.beaconCount != null
-          ? s.beaconCount
-          : s.preset < Preset.Beacon16
-          ? 0
-          : s.preset < Preset.Beacon24
-          ? 16
-          : 24,
+      factoryRank: s.factoryRank || d?.factoryRank || [],
+      moduleRank: s.moduleRank || d?.moduleRank || [],
+      beaconModule: s.beaconModule || d?.beaconModule,
+      beaconCount: s.beaconCount != null ? s.beaconCount : d?.beaconCount,
     },
   })
 );

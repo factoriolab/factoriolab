@@ -11,9 +11,9 @@ import { AppLoadAction, AppActionType } from '../app.actions';
 import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
+  preset: Preset;
   baseId: string;
   modIds: string[];
-  preset: Preset;
   belt: string;
   fuel: string;
   disabledRecipes: string[];
@@ -36,9 +36,9 @@ export interface SettingsState {
 }
 
 export const initialSettingsState: SettingsState = {
+  preset: Preset.Minimum,
   baseId: '1.0',
   modIds: null,
-  preset: Preset.Minimum,
   belt: null,
   fuel: null,
   disabledRecipes: null,
@@ -69,6 +69,9 @@ export function settingsReducer(
       return action.payload.settingsState
         ? { ...state, ...action.payload.settingsState }
         : state;
+    }
+    case SettingsActionType.SET_PRESET: {
+      return { ...state, ...{ preset: action.payload } };
     }
     case SettingsActionType.SET_BASE: {
       return {

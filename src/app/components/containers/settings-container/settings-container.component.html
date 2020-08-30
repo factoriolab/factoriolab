@@ -3,6 +3,7 @@
   [base]="base$ | async"
   [mods]="mods$ | async"
   [settings]="settings$ | async"
+  (setPreset)="setPreset($event)"
   (setBase)="setBase($event)"
   (enableMod)="enableMod($event)"
   (disableMod)="disableMod($event)"

@@ -1,3 +1,32 @@
+<div class="label">Preset</div>
+<div class="field">
+  <select
+    title="Select preset settings"
+    [ngModel]="settings.preset"
+    (change)="emitNumber(setPreset, $event)"
+  >
+    <option
+      label="Minimum"
+      title="Minimum belt and assembler, and no modules or beacons"
+      [value]="Preset.Minimum"
+    ></option>
+    <option
+      label="Modules"
+      title="Best belt and assembler with modules in factories, but no beacons"
+      [value]="Preset.Modules"
+    ></option>
+    <option
+      label="8 Beacons"
+      title="Best belt and assembler with modules in factories and 8 beacons per factory"
+      [value]="Preset.Beacon16"
+    ></option>
+    <option
+      label="12 Beacons"
+      title="Best belt and assembler with modules in factories and 12 beacons per factory"
+      [value]="Preset.Beacon24"
+    ></option>
+  </select>
+</div>
 <div class="label">Recipes</div>
 <div class="field">
   <select
@@ -5,7 +34,7 @@
     [ngModel]="settings.baseId"
     (change)="setBase.emit($event.target.value)"
   >
-    <option *ngFor="let b of base" [value]="b.id">{{ b.name }}</option>
+    <option *ngFor="let b of base" [value]="b.id" [label]="b.name"></option>
   </select>
   <div>Recipe Set</div>
 </div>
@@ -429,13 +458,13 @@
     [ngModel]="settings.researchSpeed"
     (change)="emitNumber(setResearchSpeed, $event)"
   >
-    <option [value]="ResearchSpeed.Speed0">No Research Bonus</option>
-    <option [value]="ResearchSpeed.Speed1">Research Speed 1</option>
-    <option [value]="ResearchSpeed.Speed2">Research Speed 2</option>
-    <option [value]="ResearchSpeed.Speed3">Research Speed 3</option>
-    <option [value]="ResearchSpeed.Speed4">Research Speed 4</option>
-    <option [value]="ResearchSpeed.Speed5">Research Speed 5</option>
-    <option [value]="ResearchSpeed.Speed6">Research Speed 6</option>
+    <option label="No Research Bonus" [value]="ResearchSpeed.Speed0"></option>
+    <option label="Research Speed 1" [value]="ResearchSpeed.Speed1"></option>
+    <option label="Research Speed 2" [value]="ResearchSpeed.Speed2"></option>
+    <option label="Research Speed 3" [value]="ResearchSpeed.Speed3"></option>
+    <option label="Research Speed 4" [value]="ResearchSpeed.Speed4"></option>
+    <option label="Research Speed 5" [value]="ResearchSpeed.Speed5"></option>
+    <option label="Research Speed 6" [value]="ResearchSpeed.Speed6"></option>
   </select>
 </div>
 <div class="label">Theme</div>
@@ -446,7 +475,7 @@
     [ngModel]="settings.theme"
     (change)="emitString(setTheme, $event)"
   >
-    <option [value]="Theme.DarkMode">Dark Mode</option>
-    <option [value]="Theme.LightMode">Light Mode</option>
+    <option label="Dark Mode" [value]="Theme.DarkMode"></option>
+    <option label="Light Mode" [value]="Theme.LightMode"></option>
   </select>
 </div>
