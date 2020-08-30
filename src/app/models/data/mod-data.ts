@@ -1,5 +1,5 @@
 import { Category } from './category';
-import { Defaults } from './defaults';
+import { ModDefaults } from './mod-defaults';
 import { Entities } from '../entities';
 import { Icon } from './icon';
 import { Item } from './item';
@@ -11,5 +11,5 @@ export interface ModData {
   items: Item[];
   recipes: Recipe[];
   limitations: Entities<string[]>;
-  defaults?: Defaults;
+  defaults?: ModDefaults;
 }

@@ -18,6 +18,7 @@ import {
   DefaultTogglePayload,
   DefaultPayload,
   MODULE_ID,
+  Preset,
 } from '~/models';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
@@ -44,6 +45,7 @@ export class SettingsComponent {
   @Input() mods: ModInfo[];
   @Input() settings: SettingsState;
 
+  @Output() setPreset = new EventEmitter<Preset>();
   @Output() setBase = new EventEmitter<string>();
   @Output() enableMod = new EventEmitter<DefaultTogglePayload>();
   @Output() disableMod = new EventEmitter<DefaultTogglePayload>();
@@ -75,6 +77,7 @@ export class SettingsComponent {
   ResearchSpeed = ResearchSpeed;
   SelectType = IdType;
   Theme = Theme;
+  Preset = Preset;
   MODULE_ID = MODULE_ID;
 
   initial = initialSettingsState;

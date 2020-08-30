@@ -4,7 +4,7 @@ import { StoreModule, Store } from '@ngrx/store';
 
 import { TestUtility, ItemId, RecipeId } from 'src/tests';
 import { IconComponent } from '~/components';
-import { DisplayRate, ResearchSpeed, Theme } from '~/models';
+import { DisplayRate, ResearchSpeed, Theme, Preset } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as Settings from '~/store/settings';
 import { SettingsComponent } from './settings/settings.component';
@@ -70,6 +70,15 @@ describe('SettingsContainerComponent', () => {
     component.opening = false;
     TestUtility.clickSelector(fixture, 'lab-settings');
     expect(component.cancel.emit).not.toHaveBeenCalled();
+  });
+
+  it('should set the preset', () => {
+    spyOn(store, 'dispatch');
+    const value = Preset.Modules;
+    component.child.setPreset.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetPresetAction(value)
+    );
   });
 
   it('should set the base dataset', () => {

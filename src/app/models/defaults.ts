@@ -6,4 +6,5 @@ export interface Defaults {
   factoryRank: string[];
   moduleRank: string[];
   beaconModule: string;
+  beaconCount: number;
 }

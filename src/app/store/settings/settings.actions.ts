@@ -6,9 +6,11 @@ import {
   Theme,
   DefaultPayload,
   DefaultTogglePayload,
+  Preset,
 } from '~/models';
 
 export const enum SettingsActionType {
+  SET_PRESET = '[Settings Page] Set Preset',
   SET_BASE = '[Settings Page] Set Base',
   ENABLE_MOD = '[Settings Page] Enable Mod',
   DISABLE_MOD = '[Settings Page] Disable Mod',
@@ -36,6 +38,11 @@ export const enum SettingsActionType {
   SET_THEME = '[Settings Page] Set Theme',
   SHOW_HEADER = '[Settings Page] Show Header',
   HIDE_HEADER = '[Settings Page] Hide Header',
+}
+
+export class SetPresetAction implements Action {
+  readonly type = SettingsActionType.SET_PRESET;
+  constructor(public payload: Preset) {}
 }
 
 export class SetBaseAction implements Action {
@@ -172,6 +179,7 @@ export class HideHeaderAction implements Action {
 }
 
 export type SettingsAction =
+  | SetPresetAction
   | SetBaseAction
   | EnableModAction
   | DisableModAction

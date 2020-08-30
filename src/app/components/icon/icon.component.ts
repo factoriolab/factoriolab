@@ -34,10 +34,14 @@ export class IconComponent {
 
   constructor(private elementRef: ElementRef) {}
 
+  round(value: number) {
+    return Number(value.toFixed(2));
+  }
+
   toBonusPercent(value: number) {
-    const rational = Rational.fromNumber(value)
-      .mul(Rational.hundred)
-      .toNumber();
+    const rational = this.round(
+      Rational.fromNumber(value).mul(Rational.hundred).toNumber()
+    );
     if (value > 0) {
       return `+${rational}%`;
     } else if (value < 0) {

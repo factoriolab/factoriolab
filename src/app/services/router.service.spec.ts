@@ -4,7 +4,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import { RateType, Product, DisplayRate, ResearchSpeed } from '~/models';
+import {
+  RateType,
+  Product,
+  DisplayRate,
+  ResearchSpeed,
+  Preset,
+} from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import { AppLoadAction } from '~/store/app.actions';
 import * as Products from '~/store/products';
@@ -26,9 +32,9 @@ const mockZipProducts = 'p=steel-chest:1';
 const mockZipAll =
   'eJwrsC0uSU3N0U3OSC0usTJUy0ThW5UUJeYVF+QXlegmpeaUqBWhylpZWagV21pZGZsZGFihAgBxgByr';
 const mockZipExtra =
-  'eJwrsC0uSU3N0U3OSC0usTJUy0ThW5UUJeYVF+QXlegmpeaUqBWhylpZWagV21pZGZsZGFihArVU2xKgGgBDLh8z';
+  'eJwrsC0uSU3N0U3OSC0usTJUS7I1VMtEEbMqKUrMKy7ILyrRTUrNKVErQpW1srJQK7a1sjI2MzCwQgVqqbYlQDUAqF8gKQ==';
 const mockZipLink =
-  'eJxtj90KwjAMhd9mdxltFZXAHqZrM1fo2tKkim9vQQcqXh0+Es5Pme45e0rgVmJBPYSJhSjujFJt4pKrwExRhvp1tsy0zTGkK2zWrSERHHDLvkXaRQ88qVGfkfBwUgoNHlH9uCLnGDwsjSLOloODHCKUmh0xd/N/OWZkyV2XVpN1hP3bNyfhFuQBr+yRC5F/A34CGLz0bVr1Ktr0VvoJcPpeBA==';
+  'eJxtT+0KAiEQfBv/7aEWFQs+jKd7neCpuFr09gl1UNGvYWaX+SjmnrOnBG4lbqjEbJIIhhtR3DVs1SYuuTaYKTZRv86WmbY5hnSFzbo1JIIDbtn3SDsowUZO6oyEh5OUqPGI8scVOcfgYekUcbYcHOQQodTsiHmY/8vRE7c8cOk1WUc4vn13LdxCe8Are+JC5N8EPwlovIxtSo4qSo9W6gm0u183';
 const mockProducts: Product[] = [
   {
     id: '0',
@@ -90,7 +96,7 @@ const mockSettings: Settings.SettingsState = {
   ...Mocks.InitialSettingsState,
   ...{ displayRate: DisplayRate.PerHour },
 };
-const mockFullSettings: Settings.SettingsState = {
+export const mockFullSettings: Settings.SettingsState = {
   baseId: '0.17',
   modIds: [],
   displayRate: DisplayRate.PerHour,
@@ -109,7 +115,7 @@ const mockFullSettings: Settings.SettingsState = {
   researchSpeed: ResearchSpeed.Speed0,
   flowRate: 1200,
   expensive: true,
-};
+} as any;
 const mockZipFullSettings = [
   '0.17',
   EMPTY,
@@ -272,7 +278,7 @@ describe('RouterService', () => {
           productsState: mockProductsState,
           itemsState: mockItemSettings,
           recipesState: mockRecipeSettings,
-          settingsState: { displayRate: 3600 },
+          settingsState: { preset: Preset.Modules, displayRate: 3600 },
         } as any)
       );
     });

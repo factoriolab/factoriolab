@@ -65,7 +65,7 @@ export class StoreUtility {
     return newState;
   }
 
-  static compareValue(payload: DefaultPayload) {
+  static compareValue<T>(payload: DefaultPayload<T>) {
     return payload.value === payload.default ? null : payload.value;
   }
 
