@@ -147,7 +147,7 @@ export class MatrixSolver {
 
   findRecipesRecursively(itemId: string) {
     const simpleRecipeId = this.data.itemRecipeIds[itemId];
-    if (simpleRecipeId) {
+    if (simpleRecipeId && !this.recipeDisabled[simpleRecipeId]) {
       const simpleRecipe = this.data.recipeR[simpleRecipeId];
       if (!this.recipeDisabled[simpleRecipe.id]) {
         this.parseRecipeRecursively(simpleRecipe);
@@ -165,7 +165,7 @@ export class MatrixSolver {
   }
 
   parseRecipeRecursively(recipe: RationalRecipe) {
-    if (!this.recipes[recipe.id]) {
+    if (!this.recipes[recipe.id] && !this.recipeDisabled[recipe.id]) {
       const circular = this.checkForCircularRecipes(recipe);
       if (!circular) {
         this.recipes[recipe.id] = recipe;
@@ -179,6 +179,7 @@ export class MatrixSolver {
           }
         }
       } else {
+        this.recipeDisabled[recipe.id] = true;
         console.warn(
           `Matrix: Ignoring recipe '${recipe.id}' due to detected circular recipes.`
         );
