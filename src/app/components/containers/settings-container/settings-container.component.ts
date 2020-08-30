@@ -19,6 +19,7 @@ import {
   ModInfo,
   DefaultTogglePayload,
   DefaultPayload,
+  Preset,
 } from '~/models';
 import { State } from '~/store';
 import { getBaseSets } from '~/store/datasets';
@@ -68,6 +69,10 @@ export class SettingsContainerComponent implements OnInit {
     ) {
       this.cancel.emit();
     }
+  }
+
+  setPreset(value: Preset) {
+    this.store.dispatch(new Settings.SetPresetAction(value));
   }
 
   setBase(value: string) {

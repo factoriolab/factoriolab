@@ -1,5 +1,5 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import { Rational, ResearchSpeed } from '~/models';
+import { Rational, ResearchSpeed, Preset, MODULE_ID } from '~/models';
 import * as Selectors from './settings.selectors';
 
 describe('Settings Selectors', () => {
@@ -14,13 +14,44 @@ describe('Settings Selectors', () => {
 
   describe('getDefaults', () => {
     it('should handle null base data', () => {
-      const result = Selectors.getDefaults.projector(null);
+      const result = Selectors.getDefaults.projector(null, null);
       expect(result).toBeNull();
     });
 
+    it('should use minimum values', () => {
+      const result = Selectors.getDefaults.projector(
+        Preset.Minimum,
+        Mocks.Base
+      );
+      expect(result.belt).toEqual(Mocks.Base.defaults.minBelt);
+      expect(result.factoryRank).toEqual(Mocks.Base.defaults.minFactoryRank);
+      expect(result.moduleRank).toEqual([]);
+      expect(result.beaconModule).toEqual(MODULE_ID);
+      expect(result.beaconCount).toEqual(0);
+    });
+
+    it('should use 16 beacons', () => {
+      const result = Selectors.getDefaults.projector(
+        Preset.Beacon16,
+        Mocks.Base
+      );
+      expect(result.beaconCount).toEqual(16);
+    });
+
+    it('should use 24 beacons', () => {
+      const result = Selectors.getDefaults.projector(
+        Preset.Beacon24,
+        Mocks.Base
+      );
+      expect(result.beaconCount).toEqual(24);
+    });
+
     it('should get the defaults from the current base mod', () => {
-      const result = Selectors.getDefaults.projector(Mocks.Base);
-      expect(result).toEqual(Mocks.Base.defaults);
+      const result = Selectors.getDefaults.projector(
+        Preset.Beacon16,
+        Mocks.Base
+      );
+      expect(result).toEqual(Mocks.Defaults);
     });
   });
 
@@ -34,6 +65,7 @@ describe('Settings Selectors', () => {
         factoryRank: 'factoryRank',
         moduleRank: 'moduleRank',
         beaconModule: 'beaconModule',
+        beaconCount: 'beaconCount',
       };
       const result = Selectors.getSettings.projector(
         value,
@@ -44,11 +76,8 @@ describe('Settings Selectors', () => {
 
     it('should use defaults', () => {
       const value = Mocks.InitialSettingsState;
-      const result = Selectors.getSettings.projector(
-        value,
-        Mocks.Base.defaults
-      );
-      expect(result).toEqual({ ...value, ...Mocks.Base.defaults });
+      const result = Selectors.getSettings.projector(value, Mocks.Defaults);
+      expect(result).toEqual({ ...value, ...Mocks.Defaults });
     });
   });
 
