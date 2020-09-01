@@ -83,7 +83,7 @@ export class DatasetsEffects {
     private router: RouterService
   ) {
     if (!location.hash) {
-      const id = Settings.initialSettingsState.baseId;
+      const id = Settings.storedSettingsState.baseId;
       this.requestData(id).subscribe((value) => {
         this.router.unzipping = true;
         this.loadModsForBase(value.defaults.modIds);
