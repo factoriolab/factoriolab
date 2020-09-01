@@ -663,8 +663,8 @@
               <lab-icon
                 class="clickable-size"
                 [iconId]="parent.key"
-                [tooltip]="data.itemEntities[parent.key]?.name"
-                [recipe]="data.recipeEntities[data.itemRecipeIds[parent.key]]"
+                [tooltip]="data.recipeEntities[parent.key]?.name"
+                [recipe]="data.recipeEntities[parent.key]"
                 [data]="data"
               ></lab-icon>
             </div>

@@ -5,7 +5,9 @@
   border-radius: 0.25rem;
   z-index: 10;
   margin: -1px;
-  width: 16rem;
+  max-width: 25rem;
+  max-height: 25rem;
+  overflow-y: auto;
 
   > * + * {
     margin-top: 0.5rem;
