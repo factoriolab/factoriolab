@@ -147,11 +147,8 @@ export class MatrixSolver {
 
   findRecipesRecursively(itemId: string) {
     const simpleRecipeId = this.data.itemRecipeIds[itemId];
-    if (simpleRecipeId && !this.recipeDisabled[simpleRecipeId]) {
-      const simpleRecipe = this.data.recipeR[simpleRecipeId];
-      if (!this.recipeDisabled[simpleRecipe.id]) {
-        this.parseRecipeRecursively(simpleRecipe);
-      }
+    if (simpleRecipeId) {
+      this.parseRecipeRecursively(this.data.recipeR[simpleRecipeId]);
     } else {
       // Find complex recipes
       const recipeMatches = this.data.recipeIds

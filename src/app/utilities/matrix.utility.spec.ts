@@ -196,12 +196,6 @@ describe('MatrixSolver', () => {
       );
     });
 
-    it('should ignore disabled simple recipe', () => {
-      matrix.recipeDisabled[RecipeId.SteelChest] = true;
-      matrix.findRecipesRecursively(ItemId.SteelChest);
-      expect(matrix.parseRecipeRecursively).not.toHaveBeenCalled();
-    });
-
     it('should parse complex recipes', () => {
       matrix.recipeDisabled[RecipeId.KovarexEnrichmentProcess] = true;
       matrix.recipeDisabled[RecipeId.NuclearFuelReprocessing] = true;
