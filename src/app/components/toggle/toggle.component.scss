@@ -7,18 +7,20 @@
   margin: -1px;
   max-width: 25rem;
   max-height: 25rem;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
 
   > * + * {
     margin-top: 0.5rem;
   }
 }
 
-.header {
-  padding: 0.5rem 0.5rem 0;
-}
-
 .flex {
   flex-wrap: wrap;
-  padding: 0 1px 0.5rem;
+  overflow-y: auto;
+}
+
+lab-icon {
+  position: static;
 }

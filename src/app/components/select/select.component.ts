@@ -42,12 +42,12 @@ export class SelectComponent {
     return this.parent ? this.parent.getBoundingClientRect().x - 13 : -4;
   }
 
-  constructor(private element: ElementRef) {}
-
   @HostBinding('style.width.rem')
   get width() {
-    return this.options.length < 4 ? 9.625 : 7.375;
+    return Math.ceil(Math.sqrt(this.options.length)) * 2.25 + 1.25;
   }
+
+  constructor(private element: ElementRef) {}
 
   @HostListener('document:click', ['$event'])
   click(event: MouseEvent) {

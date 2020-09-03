@@ -10,6 +10,8 @@
 
 .tabs {
   display: flex;
+  max-width: 27rem;
+  overflow-x: auto;
 
   .selected {
     background-color: var(--color-gray-1);
@@ -27,6 +29,8 @@
 
 .tab {
   background-color: var(--color-gray-1);
+  max-height: 27rem;
+  overflow-y: auto;
 }
 
 .row {
@@ -35,4 +39,8 @@
   lab-icon.selected {
     background-color: var(--color-gray-0);
   }
+}
+
+lab-icon {
+  position: static;
 }

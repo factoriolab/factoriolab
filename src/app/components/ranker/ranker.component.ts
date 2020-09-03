@@ -38,6 +38,10 @@ export class RankerComponent {
     return this.parent ? this.parent.getBoundingClientRect().x - 14 : -4;
   }
 
+  @HostBinding('style.width.rem') get width() {
+    return Math.ceil(Math.sqrt(this.options.length)) * 2.25 + 1.25;
+  }
+
   constructor(private element: ElementRef) {}
 
   @HostListener('document:click', ['$event'])

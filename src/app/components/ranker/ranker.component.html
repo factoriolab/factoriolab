@@ -1,28 +1,32 @@
-<div class="header">Preferred</div>
-<div class="info">Click to remove from preferred list</div>
-<div class="flex">
-  <lab-icon
-    *ngFor="let id of rank"
-    class="clickable"
-    [iconId]="id"
-    [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"
-    [item]="data.itemEntities[id]"
-    [data]="data"
-    (click)="clickDrop(id, $event)"
-  ></lab-icon>
-</div>
-<div class="header">Not Preferred</div>
-<div class="info">Click to add to preferred list</div>
-<div class="flex">
-  <ng-container *ngFor="let id of options">
+<div #scrollContainer class="scroll">
+  <div class="header">Preferred</div>
+  <div class="info">Click to remove from preferred list</div>
+  <div class="flex">
     <lab-icon
-      *ngIf="rank.indexOf(id) === -1"
+      *ngFor="let id of rank"
       class="clickable"
+      [data]="data"
       [iconId]="id"
+      [scrollTop]="scrollContainer.scrollTop"
       [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"
       [item]="data.itemEntities[id]"
-      [data]="data"
-      (click)="clickPrefer(id, $event)"
+      (click)="clickDrop(id, $event)"
     ></lab-icon>
-  </ng-container>
+  </div>
+  <div class="header">Not Preferred</div>
+  <div class="info">Click to add to preferred list</div>
+  <div class="flex">
+    <ng-container *ngFor="let id of options">
+      <lab-icon
+        *ngIf="rank.indexOf(id) === -1"
+        class="clickable"
+        [data]="data"
+        [iconId]="id"
+        [scrollTop]="scrollContainer.scrollTop"
+        [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"
+        [item]="data.itemEntities[id]"
+        (click)="clickPrefer(id, $event)"
+      ></lab-icon>
+    </ng-container>
+  </div>
 </div>

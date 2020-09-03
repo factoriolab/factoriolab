@@ -16,23 +16,43 @@ import { Recipe, Item, DisplayRate, Dataset, Rational } from '~/models';
 export class IconComponent {
   @Input() data: Dataset;
   @Input() iconId: string;
-  @Input() scale = true;
+  _scale = true;
+  get scale() {
+    return this._scale;
+  }
+  @Input() set scale(value: boolean) {
+    this._scale = value;
+    this.setTooltipMargin();
+  }
   @Input() text: string;
-
+  _scrollTop = 0;
+  get scrollTop() {
+    return this._scrollTop;
+  }
+  @Input() set scrollTop(value: number) {
+    this._scrollTop = value;
+    this.setTooltipMargin();
+  }
+  @Input() scrollLeft: number;
   @Input() tooltip: string;
   @Input() recipe: Recipe;
   @Input() item: Item;
   @Input() displayRate: DisplayRate;
 
   hover = false;
+  tooltipMarginTop = 40;
 
   DisplayRate = DisplayRate;
 
   get element(): HTMLElement {
-    return this.elementRef.nativeElement;
+    return this.ref.nativeElement;
   }
 
-  constructor(private elementRef: ElementRef) {}
+  constructor(private ref: ElementRef) {}
+
+  setTooltipMargin() {
+    this.tooltipMarginTop = (this.scale ? 40 : 72) - this.scrollTop;
+  }
 
   round(value: number) {
     return Number(value.toFixed(2));
