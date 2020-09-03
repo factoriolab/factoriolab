@@ -1,5 +1,5 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import { Step, Rational, Entities } from '~/models';
+import { Step, Rational, toBoolEntities } from '~/models';
 import { RateUtility } from './rate.utility';
 import { MatrixUtility, MatrixSolver } from './matrix.utility';
 
@@ -148,9 +148,8 @@ describe('MatrixSolver', () => {
         itemId: ItemId.LightOil,
         items: Rational.one,
       });
-      matrix.recipeDisabled = Mocks.SettingsState1.disabledRecipes.reduce(
-        (e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }),
-        {}
+      matrix.recipeDisabled = toBoolEntities(
+        Mocks.SettingsState1.disabledRecipes
       );
       matrix.calculateRecipes();
       expect(matrix.steps).toEqual([
@@ -425,9 +424,8 @@ describe('MatrixSolver', () => {
     it('should parse outputs from solver', () => {
       matrix.steps[0].itemId = ItemId.HeavyOil;
       matrix.steps[0].recipeId = null;
-      matrix.recipeDisabled = Mocks.SettingsState1.disabledRecipes.reduce(
-        (e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }),
-        {}
+      matrix.recipeDisabled = toBoolEntities(
+        Mocks.SettingsState1.disabledRecipes
       );
       matrix.calculateRecipes();
       // Add dummy recipe with no inputs

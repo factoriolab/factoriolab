@@ -1,5 +1,8 @@
+import { memoize } from './memoize';
+
+const FLOAT_PRECISION = 100000;
+
 export class Rational {
-  static _floatPrecision = 100000;
   static zero = new Rational(BigInt(0));
   static minusOne = new Rational(BigInt(-1));
   static one = new Rational(BigInt(1));
@@ -10,6 +13,7 @@ export class Rational {
   p: bigint;
   q: bigint;
 
+  @memoize()
   static gcd(x: bigint, y: bigint) {
     x = Rational.abs(x);
     y = Rational.abs(y);
@@ -21,18 +25,20 @@ export class Rational {
     return x;
   }
 
+  @memoize()
   static abs(x: bigint) {
     return x < BigInt(0) ? x * BigInt(-1) : x;
   }
 
+  @memoize()
   static fromNumber(x: number) {
     if (Number.isInteger(x)) {
       return new Rational(BigInt(x), BigInt(1));
     }
 
     return new Rational(
-      BigInt(Math.round(x * this._floatPrecision)),
-      BigInt(this._floatPrecision)
+      BigInt(Math.round(x * FLOAT_PRECISION)),
+      BigInt(FLOAT_PRECISION)
     );
   }
 

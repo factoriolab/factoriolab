@@ -93,10 +93,10 @@ export const getRationalRecipeSettings = createSelector(
   getRecipeSettings,
   (recipeSettings) =>
     Object.keys(recipeSettings).reduce(
-      (e: Entities<RationalRecipeSettings>, i) => ({
-        ...e,
-        ...{ [i]: new RationalRecipeSettings(recipeSettings[i]) },
-      }),
+      (e: Entities<RationalRecipeSettings>, i) => {
+        e[i] = new RationalRecipeSettings(recipeSettings[i]);
+        return e;
+      },
       {}
     )
 );
@@ -112,20 +112,18 @@ export const getAdjustedDataset = createSelector(
     ...data,
     ...{
       recipeR: Object.keys(recipeSettings).reduce(
-        (e: Entities<RationalRecipe>, i) => ({
-          ...e,
-          ...{
-            [i]: RecipeUtility.adjustRecipe(
-              i,
-              fuel,
-              displayRate,
-              miningBonus,
-              researchSpeed,
-              recipeSettings[i],
-              data
-            ),
-          },
-        }),
+        (e: Entities<RationalRecipe>, i) => {
+          e[i] = RecipeUtility.adjustRecipe(
+            i,
+            fuel,
+            displayRate,
+            miningBonus,
+            researchSpeed,
+            recipeSettings[i],
+            data
+          );
+          return e;
+        },
         {}
       ),
     },

@@ -12,6 +12,7 @@ import {
   Strength,
   Operator,
   WATER_ID,
+  toBoolEntities,
 } from '~/models';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
@@ -95,10 +96,7 @@ export class MatrixSolver {
     this.steps = steps;
     this.itemSettings = itemSettings;
     this.recipeSettings = recipeSettings;
-    this.recipeDisabled = disabledRecipes.reduce(
-      (e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }),
-      {}
-    );
+    this.recipeDisabled = toBoolEntities(disabledRecipes);
     this.fuel = fuel;
     this.data = data;
     this.depth = Math.max(...this.steps.map((s) => s.depth)) + 1;

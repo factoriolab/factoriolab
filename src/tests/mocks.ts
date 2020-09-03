@@ -14,6 +14,7 @@ import {
   Mod,
   DisplayRate,
   Preset,
+  toEntities,
 } from '~/models';
 import { initialDatasetsState } from '~/store/datasets';
 import { getProductsBy, ProductsState } from '~/store/products';
@@ -75,10 +76,7 @@ export const Product4: Product = {
 export const Products = [Product1, Product2, Product3, Product4];
 export const ProductsState1: ProductsState = {
   ids: Products.map((p) => p.id),
-  entities: Products.reduce(
-    (e: Entities<Product>, p) => ({ ...e, ...{ [p.id]: p } }),
-    {}
-  ),
+  entities: toEntities(Products),
   index: Products.length + 1,
 };
 export const RationalProducts = Products.map((p) => new RationalProduct(p));

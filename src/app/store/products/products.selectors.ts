@@ -44,9 +44,8 @@ export const getProductsBy = createSelector(getRationalProducts, (products) =>
     if (!e[p.rateType]) {
       e[p.rateType] = [];
     }
-    return { ...e, ...{ [p.rateType]: [...e[p.rateType], p] } } as Entities<
-      RationalProduct[]
-    >;
+    e[p.rateType] = [...e[p.rateType], p];
+    return e;
   }, {})
 );
 
@@ -55,12 +54,8 @@ export const getNormalizedRatesByItems = createSelector(
   Settings.getDisplayRate,
   (products, displayRate) => {
     return products[RateType.Items]?.reduce((e: Entities<Rational>, p) => {
-      return {
-        ...e,
-        ...{
-          [p.id]: p.rate.div(DisplayRateVal[displayRate]),
-        },
-      };
+      e[p.id] = p.rate.div(DisplayRateVal[displayRate]);
+      return e;
     }, {});
   }
 );
@@ -70,15 +65,10 @@ export const getNormalizedRatesByBelts = createSelector(
   Items.getItemSettings,
   Settings.getBeltSpeed,
   (products, itemSettings, beltSpeed) => {
-    return products[RateType.Belts]?.reduce(
-      (e: Entities<Rational>, p) => ({
-        ...e,
-        ...{
-          [p.id]: p.rate.mul(beltSpeed[itemSettings[p.itemId].belt]),
-        },
-      }),
-      {}
-    );
+    return products[RateType.Belts]?.reduce((e: Entities<Rational>, p) => {
+      e[p.id] = p.rate.mul(beltSpeed[itemSettings[p.itemId].belt]);
+      return e;
+    }, {});
   }
 );
 
@@ -89,14 +79,10 @@ export const getNormalizedRatesByWagons = createSelector(
   (products, displayRate, data) => {
     return products[RateType.Wagons]?.reduce((e: Entities<Rational>, p) => {
       const item = data.itemR[p.itemId];
-      return {
-        ...e,
-        ...{
-          [p.id]: p.rate
-            .div(DisplayRateVal[displayRate])
-            .mul(item.stack ? item.stack.mul(WAGON_STACKS) : WAGON_FLUID),
-        },
-      };
+      e[p.id] = p.rate
+        .div(DisplayRateVal[displayRate])
+        .mul(item.stack ? item.stack.mul(WAGON_STACKS) : WAGON_FLUID);
+      return e;
     }, {});
   }
 );
@@ -107,18 +93,13 @@ export const getNormalizedRatesByFactories = createSelector(
   (products, data) => {
     return products[RateType.Factories]?.reduce((e: Entities<Rational>, p) => {
       const recipe = data.recipeR[data.itemRecipeIds[p.itemId]];
+      // Ensures matching recipe is found, else case should be blocked by UI
       if (recipe) {
-        return {
-          ...e,
-          ...{
-            [p.id]: p.rate
-              .div(recipe.time)
-              .mul(recipe.out[p.itemId])
-              .div(recipe.adjustProd || Rational.one),
-          },
-        };
+        e[p.id] = p.rate
+          .div(recipe.time)
+          .mul(recipe.out[p.itemId])
+          .div(recipe.adjustProd || Rational.one);
       }
-      // No matching recipe found, this case should be blocked by UI
       return e;
     }, {});
   }

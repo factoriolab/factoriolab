@@ -242,7 +242,6 @@ describe('Settings Selectors', () => {
       expect(Object.keys(result.recipeModuleIds).length).toEqual(
         result.recipeIds.length
       );
-      expect(Object.keys(result.limitations).length).toBeGreaterThan(0);
     });
 
     it('should handle empty categories', () => {
@@ -290,7 +289,6 @@ describe('Settings Selectors', () => {
       expect(Object.keys(result.recipeModuleIds).length).toEqual(
         result.recipeIds.length
       );
-      expect(Object.keys(result.limitations).length).toBeGreaterThan(0);
     });
 
     it('should find item recipe with no inputs', () => {
@@ -349,7 +347,6 @@ describe('Settings Selectors', () => {
       expect(Object.keys(result.recipeModuleIds).length).toEqual(
         result.recipeIds.length
       );
-      expect(Object.keys(result.limitations).length).toBeGreaterThan(0);
       expect(result.itemRecipeIds[ItemId.WoodenChest]).toEqual('test');
     });
   });
