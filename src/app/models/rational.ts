@@ -1,5 +1,3 @@
-import { memoize } from './memoize';
-
 const FLOAT_PRECISION = 100000;
 
 export class Rational {
@@ -13,7 +11,6 @@ export class Rational {
   p: bigint;
   q: bigint;
 
-  @memoize()
   static gcd(x: bigint, y: bigint) {
     x = Rational.abs(x);
     y = Rational.abs(y);
@@ -25,12 +22,10 @@ export class Rational {
     return x;
   }
 
-  @memoize()
   static abs(x: bigint) {
     return x < BigInt(0) ? x * BigInt(-1) : x;
   }
 
-  @memoize()
   static fromNumber(x: number) {
     if (Number.isInteger(x)) {
       return new Rational(BigInt(x), BigInt(1));

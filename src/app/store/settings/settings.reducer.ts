@@ -237,25 +237,33 @@ export function settingsReducer(
 }
 
 export function loadSettings() {
-  const lsSettings = localStorage.getItem(LocalStorageKey.Settings);
-  if (lsSettings) {
-    if (location.hash) {
-      // Only keep columns, theme, and showHeader
-      const stored = JSON.parse(lsSettings);
-      return {
-        ...initialSettingsState,
-        ...{
-          columns: stored.columns,
-          theme: stored.theme,
-          showHeader: stored.showHeader,
-        },
-      };
-    } else {
-      // Load full saved settings
-      return JSON.parse(lsSettings);
+  try {
+    const lsSettings = localStorage.getItem(LocalStorageKey.Settings);
+    if (lsSettings) {
+      if (location.hash) {
+        // Only keep columns, theme, and showHeader
+        const stored = JSON.parse(lsSettings);
+        return {
+          ...initialSettingsState,
+          ...{
+            columns: stored.columns,
+            theme: stored.theme,
+            showHeader: stored.showHeader,
+          },
+        };
+      } else {
+        // Load full saved settings
+        return JSON.parse(lsSettings);
+      }
     }
-  } else {
-    // Use initial settings
-    return initialSettingsState;
+  } catch (e) {
+    console.warn('Settings: Failed to parse local storage');
+    console.error(e);
+
+    // Delete local storage to repair
+    localStorage.clear();
   }
+
+  // Use initial settings
+  return initialSettingsState;
 }

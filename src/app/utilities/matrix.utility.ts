@@ -55,7 +55,7 @@ export class MatrixUtility {
       matrix.solve();
       return matrix.steps;
     } catch (e) {
-      console.error('Matrix: Failed to solve, returning incomplete steps');
+      console.warn('Matrix: Failed to solve, returning incomplete steps');
       console.error(e);
       return steps;
     }

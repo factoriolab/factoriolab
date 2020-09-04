@@ -7,7 +7,6 @@ export * from './constants';
 export * from './entities';
 export * from './id-name';
 export * from './item-settings';
-export * from './memoize';
 export * from './mod';
 export * from './payload';
 export * from './product';
