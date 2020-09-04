@@ -354,6 +354,16 @@ describe('Settings Reducer', () => {
       expect(loadSettings()).toEqual(mockFullSettings);
     });
 
+    it('should handle invalid settings', () => {
+      spyOn(console, 'warn');
+      spyOn(console, 'error');
+      localStorage.setItem(LocalStorageKey.Settings, '[[[');
+      expect(loadSettings()).toEqual(initialSettingsState);
+      expect(console.warn).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(localStorage.getItem(LocalStorageKey.Settings)).toBeFalsy();
+    });
+
     it('should use initial settings if no stored settings', () => {
       expect(loadSettings()).toEqual(initialSettingsState);
     });

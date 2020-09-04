@@ -79,9 +79,11 @@ describe('MatrixUtility', () => {
           throw new Error('test');
         },
       } as any;
+      spyOn(console, 'warn');
       spyOn(console, 'error');
       const result = MatrixUtility.solveTryCatch([], matrix);
-      expect(console.error).toHaveBeenCalledTimes(2);
+      expect(console.warn).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledTimes(1);
       expect(result).toEqual([]);
     });
   });

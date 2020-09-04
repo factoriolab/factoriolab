@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Mocks, TestUtility } from 'src/tests';
 import { IconComponent } from '../icon/icon.component';
@@ -36,7 +36,7 @@ describe('MultiselectComponent', () => {
   let component: TestMultiselectComponent;
   let fixture: ComponentFixture<TestMultiselectComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [
         IconComponent,
@@ -44,7 +44,7 @@ describe('MultiselectComponent', () => {
         TestMultiselectComponent,
       ],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TestMultiselectComponent);

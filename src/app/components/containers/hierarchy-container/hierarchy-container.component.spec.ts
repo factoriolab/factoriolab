@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 
@@ -11,7 +11,7 @@ describe('HierarchyContainerComponent', () => {
   let component: HierarchyContainerComponent;
   let fixture: ComponentFixture<HierarchyContainerComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [
         SunburstComponent,
@@ -24,7 +24,7 @@ describe('HierarchyContainerComponent', () => {
         StoreModule.forRoot(reducers, { metaReducers }),
       ],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(HierarchyContainerComponent);

@@ -164,19 +164,17 @@ export class RouterService {
     for (const product of zProducts) {
       const p = product.split(FIELDSEP);
       const id = index.toString();
-      try {
-        const en: Product = {
+      if (p.length === 2 || p.length === 3) {
+        ids.push(id);
+        entities[id] = {
           id,
           itemId: p[0],
           rate: Number(p[1]),
           rateType: p.length > 2 ? Number(p[2]) : RateType.Items,
         };
-        ids.push(id);
-        entities[id] = en;
         index++;
-      } catch (e) {
-        console.warn(`Router: Failed to parse product`);
-        console.error(e);
+      } else {
+        console.warn(`Router: Invalid number of fields in product: '${product}'`);
       }
     }
     return { ids, index, entities };
@@ -198,19 +196,13 @@ export class RouterService {
       const r = recipe.split(FIELDSEP);
       const u: ItemSettings = {};
       let i = 1;
-      let v = '';
-      try {
-        v = r[i++];
-        if (v !== '') {
-          u.ignore = this.parseBool(v);
-        }
-        v = r[i++];
-        if (v !== '') {
-          u.belt = this.parseString(v);
-        }
-      } catch (e) {
-        console.warn(`Router: Failed to parse item settings for id: '${r[0]}'`);
-        console.error(e);
+      let v = r[i++];
+      if (v?.length) {
+        u.ignore = this.parseBool(v);
+      }
+      v = r[i++];
+      if (v?.length) {
+        u.belt = this.parseString(v);
       }
       items[r[0]] = u;
     }
@@ -235,27 +227,21 @@ export class RouterService {
       const r = recipe.split(FIELDSEP);
       const u: RecipeSettings = {};
       let i = 1;
-      let v = '';
-      try {
-        v = r[i++];
-        if (v !== '') {
-          u.factory = this.parseString(v);
-        }
-        v = r[i++];
-        if (v !== '') {
-          u.modules = this.parseArray(v);
-        }
-        v = r[i++];
-        if (v !== '') {
-          u.beaconModule = this.parseString(v);
-        }
-        v = r[i++];
-        if (v !== '') {
-          u.beaconCount = this.parseNumber(v);
-        }
-      } catch (e) {
-        console.warn(`Router: Failed to parse recipe settings for id: '${r[0]}'`);
-        console.error(e);
+      let v = r[i++];
+      if (v?.length) {
+        u.factory = this.parseString(v);
+      }
+      v = r[i++];
+      if (v?.length) {
+        u.modules = this.parseArray(v);
+      }
+      v = r[i++];
+      if (v?.length) {
+        u.beaconModule = this.parseString(v);
+      }
+      v = r[i++];
+      if (v?.length) {
+        u.beaconCount = this.parseNumber(v);
       }
       recipes[r[0]] = u;
     }
@@ -309,83 +295,77 @@ export class RouterService {
     const s = zSettings.split(FIELDSEP);
     const settings: Settings.SettingsState = {} as any;
     let i = 0;
-    let v = '';
-    try {
-      v = s[i++];
-      if (v !== '') {
-        settings.baseId = v;
-      }
-      v = s[i++];
-      if (v !== '') {
-        settings.modIds = this.parseArray(v);
-      }
-      v = s[i++];
-      if (v !== '') {
-        settings.displayRate = this.parseNumber(v);
-      }
-      v = s[i++];
-      if (v !== '') {
-        settings.itemPrecision = this.parseNumber(v);
-      }
-      v = s[i++];
-      if (v !== '') {
-        settings.beltPrecision = this.parseNumber(v);
-      }
-      v = s[i++];
-      if (v !== '') {
-        settings.factoryPrecision = this.parseNumber(v);
-      }
-      v = s[i++];
-      if (v !== '') {
-        settings.belt = this.parseString(v);
-      }
-      v = s[i++];
-      if (v !== '') {
-        settings.fuel = this.parseString(v);
-      }
-      v = s[i++];
-      if (v !== '') {
-        settings.disabledRecipes = this.parseArray(v);
-      }
-      v = s[i++];
-      if (v !== '') {
-        settings.factoryRank = this.parseArray(v);
-      }
-      v = s[i++];
-      if (v !== '') {
-        settings.moduleRank = this.parseArray(v);
-      }
-      v = s[i++];
-      if (v !== '') {
-        settings.beaconModule = this.parseString(v);
-      }
-      v = s[i++];
-      if (v !== '') {
-        settings.beaconCount = this.parseNumber(v);
-      }
-      v = s[i++];
-      if (v !== '') {
-        settings.drillModule = this.parseBool(v);
-      }
-      v = s[i++];
-      if (v !== '') {
-        settings.miningBonus = this.parseNumber(v);
-      }
-      v = s[i++];
-      if (v !== '') {
-        settings.researchSpeed = this.parseNumber(v);
-      }
-      v = s[i++];
-      if (v !== '') {
-        settings.flowRate = this.parseNumber(v);
-      }
-      v = s[i++];
-      if (v !== '') {
-        settings.expensive = this.parseBool(v);
-      }
-    } catch (e) {
-      console.warn('Router: Failed to parse settings');
-      console.error(e);
+    let v = s[i++];
+    if (v.length) {
+      settings.baseId = v;
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.modIds = this.parseArray(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.displayRate = this.parseNumber(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.itemPrecision = this.parseNumber(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.beltPrecision = this.parseNumber(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.factoryPrecision = this.parseNumber(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.belt = this.parseString(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.fuel = this.parseString(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.disabledRecipes = this.parseArray(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.factoryRank = this.parseArray(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.moduleRank = this.parseArray(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.beaconModule = this.parseString(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.beaconCount = this.parseNumber(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.drillModule = this.parseBool(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.miningBonus = this.parseNumber(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.researchSpeed = this.parseNumber(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.flowRate = this.parseNumber(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.expensive = this.parseBool(v);
     }
     return settings;
   }
