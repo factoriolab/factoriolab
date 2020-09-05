@@ -3,6 +3,14 @@
   user-select: none;
   font-weight: normal;
   position: relative;
+
+  &.ignored {
+    > .image {
+      > img {
+        opacity: 0.25;
+      }
+    }
+  }
 }
 
 .image {
