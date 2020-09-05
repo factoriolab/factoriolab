@@ -6,7 +6,7 @@
 
   &.ignored {
     > .image {
-      img {
+      > img {
         opacity: 0.25;
       }
     }
