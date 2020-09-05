@@ -104,11 +104,10 @@ export const getRationalRecipeSettings = createSelector(
 export const getAdjustedDataset = createSelector(
   getRationalRecipeSettings,
   Settings.getFuel,
-  Settings.getDisplayRate,
   Settings.getRationalMiningBonus,
   Settings.getResearchFactor,
   Settings.getDataset,
-  (recipeSettings, fuel, displayRate, miningBonus, researchSpeed, data) => ({
+  (recipeSettings, fuel, miningBonus, researchSpeed, data) => ({
     ...data,
     ...{
       recipeR: Object.keys(recipeSettings).reduce(
@@ -116,7 +115,6 @@ export const getAdjustedDataset = createSelector(
           e[i] = RecipeUtility.adjustRecipe(
             i,
             fuel,
-            displayRate,
             miningBonus,
             researchSpeed,
             recipeSettings[i],

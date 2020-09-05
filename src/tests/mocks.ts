@@ -12,7 +12,6 @@ import {
   RationalProduct,
   ItemSettings,
   Mod,
-  DisplayRate,
   Preset,
   toEntities,
 } from '~/models';
@@ -159,7 +158,6 @@ export const RationalRecipeSettings = getRationalRecipeSettings.projector(
 export const AdjustedData = getAdjustedDataset.projector(
   RationalRecipeSettings,
   ItemId.Coal,
-  DisplayRate.PerMinute,
   Rational.zero,
   Rational.zero,
   Data
