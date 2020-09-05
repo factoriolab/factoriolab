@@ -1,5 +1,5 @@
 import { ViewChild, Component } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { Mocks, TestUtility, ElementId } from 'src/tests';
@@ -27,7 +27,7 @@ describe('HeaderComponent', () => {
   let component: TestHeaderComponent;
   let fixture: ComponentFixture<TestHeaderComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [NoopAnimationsModule],
       declarations: [IconComponent, HeaderComponent, TestHeaderComponent],
@@ -38,7 +38,7 @@ describe('HeaderComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

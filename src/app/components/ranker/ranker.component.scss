@@ -4,9 +4,17 @@
   border: 1px solid var(--color-brand);
   border-radius: 0.25rem;
   z-index: 10;
-  padding: 0.5rem;
   margin: -1px;
-  width: 16.875rem;
+  min-width: 10.25rem;
+  max-width: 25rem;
+  max-height: 15rem;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+}
+
+.scroll {
+  overflow-y: auto;
 
   > * + * {
     margin-top: 0.5rem;
@@ -23,4 +31,8 @@
 
 .info {
   font-size: x-small;
+}
+
+lab-icon {
+  position: static;
 }

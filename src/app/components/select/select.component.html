@@ -3,7 +3,7 @@
 >
 <lab-icon
   *ngIf="includeEmptyModule"
-  class="clickable module"
+  class="clickable"
   iconId="module"
   tooltip="No Module"
   [class.selected]="selectedId === MODULE_ID"
@@ -15,22 +15,22 @@
   <lab-icon
     class="clickable"
     *ngIf="selectType === IdType.Item"
+    [data]="data"
     [iconId]="id"
     [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"
     [item]="data.itemEntities[id]"
     [displayRate]="displayRate"
     [class.selected]="id === selectedId"
-    [data]="data"
     (click)="clickId(id, $event)"
   ></lab-icon>
   <lab-icon
     class="clickable"
     *ngIf="selectType === IdType.Recipe"
+    [data]="data"
     [iconId]="id"
     [tooltip]="data.recipeEntities[id].name"
     [recipe]="data.recipeEntities[id]"
     [class.selected]="id === selectedId"
-    [data]="data"
     (click)="clickId(id, $event)"
   ></lab-icon>
 </ng-container>

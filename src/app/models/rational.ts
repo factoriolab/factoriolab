@@ -1,5 +1,6 @@
+const FLOAT_PRECISION = 100000;
+
 export class Rational {
-  static _floatPrecision = 100000;
   static zero = new Rational(BigInt(0));
   static minusOne = new Rational(BigInt(-1));
   static one = new Rational(BigInt(1));
@@ -31,8 +32,8 @@ export class Rational {
     }
 
     return new Rational(
-      BigInt(Math.round(x * this._floatPrecision)),
-      BigInt(this._floatPrecision)
+      BigInt(Math.round(x * FLOAT_PRECISION)),
+      BigInt(FLOAT_PRECISION)
     );
   }
 

@@ -11,6 +11,7 @@ export interface Recipe {
     time?: number;
     in?: Entities<number>;
   };
+  mining?: boolean;
   producers: string[];
 }
 
@@ -25,6 +26,7 @@ export class RationalRecipe {
     time?: Rational;
     in?: Entities<Rational>;
   };
+  mining?: boolean;
   producers?: string[];
   consumption?: Rational;
   pollution?: Rational;
@@ -35,12 +37,14 @@ export class RationalRecipe {
     this.time = Rational.fromNumber(data.time);
     if (data.in) {
       this.in = Object.keys(data.in).reduce((e: Entities<Rational>, i) => {
-        return { ...e, ...{ [i]: Rational.fromNumber(data.in[i]) } };
+        e[i] = Rational.fromNumber(data.in[i]);
+        return e;
       }, {});
     }
     if (data.out) {
       this.out = Object.keys(data.out).reduce((e: Entities<Rational>, i) => {
-        return { ...e, ...{ [i]: Rational.fromNumber(data.out[i]) } };
+        e[i] = Rational.fromNumber(data.out[i]);
+        return e;
       }, {});
     }
     if (data.expensive) {
@@ -51,14 +55,15 @@ export class RationalRecipe {
       if (data.expensive.in) {
         this.expensive.in = Object.keys(data.expensive.in).reduce(
           (e: Entities<Rational>, i) => {
-            return {
-              ...e,
-              ...{ [i]: Rational.fromNumber(data.expensive.in[i]) },
-            };
+            e[i] = Rational.fromNumber(data.expensive.in[i]);
+            return e;
           },
           {}
         );
       }
+    }
+    if (data.mining) {
+      this.mining = data.mining;
     }
     this.producers = data.producers;
   }

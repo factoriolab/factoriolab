@@ -16,6 +16,7 @@ import {
   MODULE_ID,
   Column,
   ColumnsAsOptions,
+  toBoolEntities,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { ItemsState } from '~/store/items';
@@ -64,10 +65,7 @@ export class ListComponent {
   }
   @Input() set columns(value: string[]) {
     this._columns = value;
-    this.show = value.reduce(
-      (e: Entities<boolean>, c) => ({ ...e, ...{ [c]: true } }),
-      {}
-    );
+    this.show = toBoolEntities(value);
     this.totalSpan = 2;
     if (this.columns.indexOf(Column.Belts) !== -1) {
       this.totalSpan++;

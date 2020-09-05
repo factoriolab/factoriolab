@@ -3,13 +3,12 @@ import {
   RationalRecipe,
   RationalRecipeSettings,
   Dataset,
-  MODULE_ID,
-  DisplayRate,
-  DisplayRateVal,
+  MODULE_ID
 } from '~/models';
 
 export class RecipeUtility {
   static MIN_CONSUMPTION = new Rational(BigInt(1), BigInt(5));
+  static POLLUTION_FACTOR = new Rational(BigInt(60));
 
   /** Determines what option to use based on preferred rank */
   static bestMatch(options: string[], rank: string[]) {
@@ -43,7 +42,6 @@ export class RecipeUtility {
   static adjustRecipe(
     recipeId: string,
     fuelId: string,
-    displayRate: DisplayRate,
     miningBonus: Rational,
     researchFactor: Rational,
     settings: RationalRecipeSettings,
@@ -155,17 +153,14 @@ export class RecipeUtility {
     );
 
     // Pollution
-    // Original value is in units per minute
-    const pollDrFactor = DisplayRateVal[displayRate].div(
-      Rational.fromNumber(60)
-    );
     recipe.pollution = factory.pollution
-      ? factory.pollution.mul(pollDrFactor).mul(pollution).mul(consumption)
+      ? factory.pollution.div(this.POLLUTION_FACTOR).mul(pollution).mul(consumption)
       : Rational.zero;
 
     // Calculate burner fuel inputs
     if (factory.burner) {
       const fuel = data.itemR[fuelId];
+      const fuelIn = recipe.time.mul(factory.burner).div(fuel.fuel).div(Rational.thousand);
 
       if (!recipe.in) {
         recipe.in = {};
@@ -175,9 +170,21 @@ export class RecipeUtility {
         recipe.in[fuelId] = Rational.zero;
       }
 
-      recipe.in[fuelId] = recipe.in[fuelId].add(
-        recipe.time.mul(factory.burner).div(fuel.fuel).div(Rational.thousand)
-      );
+      // Check whether recipe also outputs the fuel
+      if (recipe.out[fuelId]) {
+        if (recipe.out[fuelId].gte(fuelIn)) {
+          // Recipe outputs more fuel than consumed, subtract input
+          recipe.out[fuelId] = recipe.out[fuelId].sub(fuelIn);
+          delete recipe.in[fuelId];
+        } else {
+          // Recipe outputs less fuel than consumed, adjust input and delete output
+          recipe.in[fuelId] = recipe.in[fuelId].add(fuelIn).sub(recipe.out[fuelId]);
+          delete recipe.out[fuelId];
+        }
+      } else {
+        // Recipe only takes fuel as input
+        recipe.in[fuelId] = recipe.in[fuelId].add(fuelIn);
+      }
     }
 
     return recipe;

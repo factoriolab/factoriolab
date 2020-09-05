@@ -1,7 +1,7 @@
 {
   "name": "factorio-lab",
   "description": "Angular-based calculator for the game Factorio",
-  "version": "1.1.31",
+  "version": "1.1.32",
   "private": true,
   "contributors": [
     "Doug Broad (https://github.com/dcbroad3)"
@@ -25,17 +25,17 @@
     "e2e": "ng e2e"
   },
   "dependencies": {
-    "@angular/animations": "~10.0.8",
-    "@angular/common": "~10.0.8",
-    "@angular/compiler": "~10.0.8",
-    "@angular/core": "~10.0.8",
-    "@angular/forms": "~10.0.8",
-    "@angular/platform-browser": "~10.0.8",
-    "@angular/platform-browser-dynamic": "~10.0.8",
-    "@angular/router": "~10.0.8",
-    "@ngrx/effects": "^9.2.0",
-    "@ngrx/store": "^9.1.2",
-    "@ngrx/store-devtools": "^9.1.2",
+    "@angular/animations": "~10.1.0",
+    "@angular/common": "~10.1.0",
+    "@angular/compiler": "~10.1.0",
+    "@angular/core": "~10.1.0",
+    "@angular/forms": "~10.1.0",
+    "@angular/platform-browser": "~10.1.0",
+    "@angular/platform-browser-dynamic": "~10.1.0",
+    "@angular/router": "~10.1.0",
+    "@ngrx/effects": "^10.0.0",
+    "@ngrx/store": "^10.0.0",
+    "@ngrx/store-devtools": "^10.0.0",
     "big-integer": "^1.6.48",
     "d3": "^5.16.0",
     "material-design-icons": "~3.0.1",
@@ -45,10 +45,10 @@
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.1000.4",
-    "@angular/cli": "^10.0.4",
-    "@angular/compiler-cli": "~10.0.5",
-    "@angular/language-service": "~10.0.5",
+    "@angular-devkit/build-angular": "^0.1001.0",
+    "@angular/cli": "^10.1.0",
+    "@angular/compiler-cli": "~10.1.0",
+    "@angular/language-service": "~10.1.0",
     "@types/d3": "^5.7.2",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",

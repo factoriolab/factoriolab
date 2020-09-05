@@ -243,6 +243,9 @@ export class RateUtility {
       if (step.surplus) {
         step.surplus = step.surplus.mul(displayRateVal);
       }
+      if (step.pollution) {
+        step.pollution = step.pollution.mul(displayRateVal);
+      }
     }
     return steps;
   }
@@ -254,6 +257,9 @@ export class RateUtility {
     }
     if (node.surplus) {
       node.surplus = node.surplus.mul(displayRateVal);
+    }
+    if (node.pollution) {
+      node.pollution = node.pollution.mul(displayRateVal);
     }
     if (node.children) {
       for (const child of node.children) {

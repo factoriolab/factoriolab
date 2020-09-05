@@ -2,7 +2,7 @@ import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule, Store, Action } from '@ngrx/store';
@@ -21,7 +21,7 @@ describe('DatasetsEffects', () => {
   let effects: DatasetsEffects;
   let http: HttpTestingController;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
@@ -34,7 +34,7 @@ describe('DatasetsEffects', () => {
     store = TestBed.inject(Store);
     effects = TestBed.inject(DatasetsEffects);
     http = TestBed.inject(HttpTestingController);
-  }));
+  });
 
   afterEach(() => {
     location.hash = '';

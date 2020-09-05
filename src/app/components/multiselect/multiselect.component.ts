@@ -9,7 +9,7 @@ import {
   HostBinding,
 } from '@angular/core';
 
-import { Entities, IdName } from '~/models';
+import { Entities, IdName, toBoolEntities } from '~/models';
 
 @Component({
   selector: 'lab-multiselect',
@@ -20,10 +20,7 @@ import { Entities, IdName } from '~/models';
 export class MultiselectComponent {
   @Input() header: string;
   @Input() set enabledIds(value: string[]) {
-    this.idEnabled = value.reduce(
-      (e: Entities<boolean>, m) => ({ ...e, ...{ [m]: true } }),
-      {}
-    );
+    this.idEnabled = toBoolEntities(value);
   }
   @Input() options: IdName[];
   @Input() parent: HTMLElement;

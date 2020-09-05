@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Mocks, TestUtility } from 'src/tests';
 import { SunburstComponent } from './sunburst.component';
@@ -27,7 +27,7 @@ describe('SunburstComponent', () => {
   let component: TestSunburstComponent;
   let fixture: ComponentFixture<TestSunburstComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [SunburstComponent, TestSunburstComponent],
     })
@@ -37,7 +37,7 @@ describe('SunburstComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   describe('Component', () => {
     it('should create', () => {

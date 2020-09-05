@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { StoreModule, Store } from '@ngrx/store';
 
@@ -15,7 +15,7 @@ describe('SettingsContainerComponent', () => {
   let fixture: ComponentFixture<SettingsContainerComponent>;
   let store: Store<State>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [FormsModule, StoreModule.forRoot(reducers, { metaReducers })],
       declarations: [
@@ -31,7 +31,7 @@ describe('SettingsContainerComponent', () => {
         fixture.detectChanges();
         store = TestBed.inject(Store);
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

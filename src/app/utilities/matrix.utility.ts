@@ -12,6 +12,7 @@ import {
   Strength,
   Operator,
   WATER_ID,
+  toBoolEntities,
 } from '~/models';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
@@ -54,7 +55,7 @@ export class MatrixUtility {
       matrix.solve();
       return matrix.steps;
     } catch (e) {
-      console.error('Matrix: Failed to solve, returning incomplete steps');
+      console.warn('Matrix: Failed to solve, returning incomplete steps');
       console.error(e);
       return steps;
     }
@@ -95,10 +96,7 @@ export class MatrixSolver {
     this.steps = steps;
     this.itemSettings = itemSettings;
     this.recipeSettings = recipeSettings;
-    this.recipeDisabled = disabledRecipes.reduce(
-      (e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }),
-      {}
-    );
+    this.recipeDisabled = toBoolEntities(disabledRecipes);
     this.fuel = fuel;
     this.data = data;
     this.depth = Math.max(...this.steps.map((s) => s.depth)) + 1;
@@ -148,10 +146,7 @@ export class MatrixSolver {
   findRecipesRecursively(itemId: string) {
     const simpleRecipeId = this.data.itemRecipeIds[itemId];
     if (simpleRecipeId) {
-      const simpleRecipe = this.data.recipeR[simpleRecipeId];
-      if (!this.recipeDisabled[simpleRecipe.id]) {
-        this.parseRecipeRecursively(simpleRecipe);
-      }
+      this.parseRecipeRecursively(this.data.recipeR[simpleRecipeId]);
     } else {
       // Find complex recipes
       const recipeMatches = this.data.recipeIds
@@ -165,7 +160,7 @@ export class MatrixSolver {
   }
 
   parseRecipeRecursively(recipe: RationalRecipe) {
-    if (!this.recipes[recipe.id]) {
+    if (!this.recipes[recipe.id] && !this.recipeDisabled[recipe.id]) {
       const circular = this.checkForCircularRecipes(recipe);
       if (!circular) {
         this.recipes[recipe.id] = recipe;
@@ -179,6 +174,7 @@ export class MatrixSolver {
           }
         }
       } else {
+        this.recipeDisabled[recipe.id] = true;
         console.warn(
           `Matrix: Ignoring recipe '${recipe.id}' due to detected circular recipes.`
         );

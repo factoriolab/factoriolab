@@ -323,7 +323,7 @@
   <lab-select
     *ngIf="openSelect === OpenSelect.Fuel"
     [data]="data"
-    [options]="data.fuelIds"
+    [options]="sortedFuels"
     [selectedId]="settings.fuel"
     [parent]="btnFuel.element"
     (cancel)="openSelect = OpenSelect.None"

@@ -1,9 +1,10 @@
-<div class="tabs">
+<div #tabsScroll class="tabs">
   <ng-container *ngFor="let id of data.categoryIds">
     <lab-icon
       *ngIf="data.categoryEntities[id] as category"
       [scale]="false"
       [iconId]="id"
+      [scrollLeft]="tabsScroll.scrollLeft"
       [tooltip]="category.name"
       [class.selected]="id === categoryId"
       [data]="data"
@@ -11,12 +12,13 @@
     ></lab-icon>
   </ng-container>
 </div>
-<div class="tab">
+<div #tabScroll class="tab">
   <div class="row" *ngFor="let row of data.categoryItemRows[categoryId]">
     <div class="item" *ngFor="let id of row">
       <lab-icon
         class="clickable"
         [iconId]="id"
+        [scrollTop]="tabScroll.scrollTop"
         [tooltip]="data.itemEntities[id].name"
         [recipe]="data.recipeEntities[data.itemRecipeIds[id]]"
         [class.selected]="id === itemId"

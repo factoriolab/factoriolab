@@ -1,16 +1,23 @@
-<img
-  *ngIf="data.iconEntities[iconId] as icon"
-  src="assets/transparent.gif"
-  class="icon"
-  [style.background-position]="icon.position"
-  [style.background-image]="icon.file ? 'url(' + icon.file + ')' : ''"
-  [ngClass]="iconId + (icon.size ? ' size-' + icon.size : '')"
-  [class.scale]="scale"
-  (mouseenter)="hover = true"
-  (mouseleave)="hover = false"
-/>
-<div *ngIf="text" class="icon-text">{{ text }}</div>
-<div *ngIf="hover && (recipe || item || tooltip)" class="tooltip">
+<div class="image">
+  <img
+    *ngIf="data.iconEntities[iconId] as icon"
+    src="assets/transparent.gif"
+    class="icon"
+    [style.background-position]="icon.position"
+    [style.background-image]="icon.file ? 'url(' + icon.file + ')' : ''"
+    [ngClass]="iconId + (icon.size ? ' size-' + icon.size : '')"
+    [class.scale]="scale"
+    (mouseenter)="hover = true"
+    (mouseleave)="hover = false"
+  />
+  <div *ngIf="text" class="icon-text">{{ text }}</div>
+</div>
+<div
+  *ngIf="hover && (recipe || item || tooltip)"
+  [style.marginTop.px]="tooltipMarginTop"
+  [style.marginLeft.px]="-scrollLeft"
+  class="tooltip"
+>
   <div *ngIf="tooltip" class="title nowrap">
     {{ tooltip }}
   </div>

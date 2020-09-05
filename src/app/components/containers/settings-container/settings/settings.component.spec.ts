@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
 import { Mocks, TestUtility, ElementId } from 'src/tests';
@@ -77,12 +77,12 @@ describe('SettingsComponent', () => {
   let component: TestSettingsComponent;
   let fixture: ComponentFixture<TestSettingsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [FormsModule],
       declarations: [IconComponent, SettingsComponent, TestSettingsComponent],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TestSettingsComponent);
@@ -92,6 +92,11 @@ describe('SettingsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should sort the list of fuels', () => {
+    expect(component.child.sortedFuels.length).toBeGreaterThan(1);
+    expect(component.child.sortedFuels).not.toEqual(Mocks.Data.fuelIds);
   });
 
   it('should detect changes on scroll', () => {

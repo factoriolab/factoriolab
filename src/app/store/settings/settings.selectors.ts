@@ -12,6 +12,9 @@ import {
   Preset,
   MODULE_ID,
   Defaults,
+  PRODUCTIVITY_LIMITATION,
+  toBoolEntities,
+  toEntities,
 } from '~/models';
 import { State } from '../';
 import * as Datasets from '../datasets';
@@ -209,20 +212,14 @@ export const getNormalDataset = createSelector(
       .map((i) => i.id);
 
     // Convert to rationals
-    const itemR = itemIds.reduce(
-      (e: Entities<RationalItem>, i) => ({
-        ...e,
-        ...{ [i]: new RationalItem(itemEntities[i]) },
-      }),
-      {}
-    );
-    const recipeR = recipeIds.reduce(
-      (e: Entities<RationalRecipe>, r) => ({
-        ...e,
-        ...{ [r]: new RationalRecipe(recipeEntities[r]) },
-      }),
-      {}
-    );
+    const itemR = itemIds.reduce((e: Entities<RationalItem>, i) => {
+      e[i] = new RationalItem(itemEntities[i]);
+      return e;
+    }, {});
+    const recipeR = recipeIds.reduce((e: Entities<RationalRecipe>, r) => {
+      e[r] = new RationalRecipe(recipeEntities[r]);
+      return e;
+    }, {});
 
     // Calculate category item rows
     const categoryItemRows: Entities<string[][]> = {};
@@ -245,21 +242,35 @@ export const getNormalDataset = createSelector(
     }
 
     // Calculate item simple recipes
+    const recipeMatches = recipes.reduce((e: Entities<Recipe[]>, r) => {
+      const outputs = r.out ? Object.keys(r.out) : [r.id];
+      for (const o of outputs) {
+        if (!e[o]) {
+          e[o] = [r];
+        } else {
+          e[o].push(r);
+        }
+      }
+      return e;
+    }, {});
     const itemRecipeIds = itemIds.reduce((e: Entities<string>, i) => {
       const exact = recipes.find((r) => r.id === i);
       if (exact && !exact.in) {
         // Exact match has no inputs, so use it
-        return { ...e, ...{ [i]: exact.id } };
+        e[i] = exact.id;
+        return e;
       }
-      const matches = recipes.filter((r) => r.id === i || (r.out && r.out[i]));
+      const matches = recipeMatches[i] || [];
       if (matches.length === 1) {
         // Only one recipe produces this item, so use it
-        return { ...e, ...{ [i]: matches[0].id } };
+        e[i] = matches[0].id;
+        return e;
       }
       const noIn = matches.find((r) => !r.in);
       if (noIn) {
         // One matching recipe requires no inputs, so use it
-        return { ...e, ...{ [i]: noIn.id } };
+        e[i] = noIn.id;
+        return e;
       }
       return e;
     }, {});
@@ -279,23 +290,19 @@ export const getNormalDataset = createSelector(
       }
     }
 
+    // Add missing mining recipes to productivity limitation
+    recipes
+      .filter((r) => r.mining)
+      .forEach((r) => (limitations[PRODUCTIVITY_LIMITATION][r.id] = true));
+
     // Calculate allowed modules for recipes
     const recipeModuleIds = recipes.reduce((e: Entities<string[]>, r) => {
-      const isMining = r.producers.every((p) => itemEntities[p].factory.mining);
-      return {
-        ...e,
-        ...{
-          [r.id]: modules
-            .filter(
-              (m) =>
-                !m.module.limitation ||
-                limitations[m.module.limitation].some((l) => l === r.id) ||
-                // Manual override for raw mining recipes
-                (m.module.limitation === 'productivity-module' && isMining)
-            )
-            .map((m) => m.id),
-        },
-      };
+      e[r.id] = modules
+        .filter(
+          (m) => !m.module.limitation || limitations[m.module.limitation][r.id]
+        )
+        .map((m) => m.id);
+      return e;
     }, {});
 
     const dataset: Dataset = {
@@ -317,7 +324,6 @@ export const getNormalDataset = createSelector(
       recipeEntities,
       recipeR,
       recipeModuleIds,
-      limitations,
       defaults,
     };
     return dataset;
@@ -340,10 +346,7 @@ export const getDataset = createSelector(
           recipes.push(recipe);
         }
       }
-      newData.recipeEntities = recipes.reduce(
-        (e: Entities<Recipe>, r) => ({ ...e, ...{ [r.id]: r } }),
-        {}
-      );
+      newData.recipeEntities = toEntities(recipes);
       return newData;
     } else {
       return data;
@@ -369,10 +372,7 @@ export function getEntities<T extends { id: string }>(
   base: T[],
   mods: T[][]
 ): Entities<T> {
-  const entities = base.reduce(
-    (e: Entities<T>, i) => ({ ...e, ...{ [i.id]: i } }),
-    {}
-  );
+  const entities = toEntities(base);
   for (const mod of mods.filter((m) => m)) {
     for (const i of mod) {
       entities[i.id] = i;
@@ -384,16 +384,20 @@ export function getEntities<T extends { id: string }>(
 export function getArrayEntities(
   base: Entities<string[]>,
   mods: Entities<string[]>[]
-): Entities<string[]> {
-  const entities = { ...base };
+) {
+  let entities = reduceEntities(base);
   for (const mod of mods.filter((m) => m)) {
-    for (const i of Object.keys(mod)) {
-      if (entities[i]) {
-        entities[i] = [...entities[i], ...mod[i]];
-      } else {
-        entities[i] = mod[i];
-      }
-    }
+    entities = reduceEntities(mod, entities);
   }
   return entities;
+}
+
+export function reduceEntities(
+  value: Entities<string[]>,
+  init: Entities<Entities<boolean>> = {}
+): Entities<Entities<boolean>> {
+  return Object.keys(value).reduce((e: Entities<Entities<boolean>>, x) => {
+    e[x] = toBoolEntities(value[x], init[x]);
+    return e;
+  }, init);
 }

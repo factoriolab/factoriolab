@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Mocks, TestUtility, RecipeId } from 'src/tests';
 import { IconComponent } from '../icon/icon.component';
@@ -36,11 +36,11 @@ describe('ToggleComponent', () => {
   let component: TestToggleComponent;
   let fixture: ComponentFixture<TestToggleComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [IconComponent, ToggleComponent, TestToggleComponent],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TestToggleComponent);
@@ -64,6 +64,10 @@ describe('ToggleComponent', () => {
     expect(component.child.left).toEqual(-8);
     component.child.parent = null;
     expect(component.child.left).toEqual(1);
+  });
+
+  it('should set width based on options', () => {
+    expect(component.child.width).toEqual(10.25);
   });
 
   it('should set opening to false on first click event', () => {

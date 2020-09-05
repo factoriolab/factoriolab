@@ -1,5 +1,5 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import { Step, Rational, Entities } from '~/models';
+import { Step, Rational, toBoolEntities } from '~/models';
 import { RateUtility } from './rate.utility';
 import { MatrixUtility, MatrixSolver } from './matrix.utility';
 
@@ -79,9 +79,11 @@ describe('MatrixUtility', () => {
           throw new Error('test');
         },
       } as any;
+      spyOn(console, 'warn');
       spyOn(console, 'error');
       const result = MatrixUtility.solveTryCatch([], matrix);
-      expect(console.error).toHaveBeenCalledTimes(2);
+      expect(console.warn).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledTimes(1);
       expect(result).toEqual([]);
     });
   });
@@ -148,9 +150,8 @@ describe('MatrixSolver', () => {
         itemId: ItemId.LightOil,
         items: Rational.one,
       });
-      matrix.recipeDisabled = Mocks.SettingsState1.disabledRecipes.reduce(
-        (e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }),
-        {}
+      matrix.recipeDisabled = toBoolEntities(
+        Mocks.SettingsState1.disabledRecipes
       );
       matrix.calculateRecipes();
       expect(matrix.steps).toEqual([
@@ -194,12 +195,6 @@ describe('MatrixSolver', () => {
       expect(matrix.parseRecipeRecursively).toHaveBeenCalledWith(
         Mocks.AdjustedData.recipeR[RecipeId.SteelChest]
       );
-    });
-
-    it('should ignore disabled simple recipe', () => {
-      matrix.recipeDisabled[RecipeId.SteelChest] = true;
-      matrix.findRecipesRecursively(ItemId.SteelChest);
-      expect(matrix.parseRecipeRecursively).not.toHaveBeenCalled();
     });
 
     it('should parse complex recipes', () => {
@@ -431,9 +426,8 @@ describe('MatrixSolver', () => {
     it('should parse outputs from solver', () => {
       matrix.steps[0].itemId = ItemId.HeavyOil;
       matrix.steps[0].recipeId = null;
-      matrix.recipeDisabled = Mocks.SettingsState1.disabledRecipes.reduce(
-        (e: Entities<boolean>, r) => ({ ...e, ...{ [r]: true } }),
-        {}
+      matrix.recipeDisabled = toBoolEntities(
+        Mocks.SettingsState1.disabledRecipes
       );
       matrix.calculateRecipes();
       // Add dummy recipe with no inputs
@@ -458,7 +452,7 @@ describe('MatrixSolver', () => {
           recipeId: RecipeId.AdvancedOilProcessing,
           factories: new Rational(BigInt(4), BigInt(15)),
           consumption: new Rational(BigInt(124), BigInt(3)),
-          pollution: new Rational(BigInt(4), BigInt(5)),
+          pollution: new Rational(BigInt(1), BigInt(75)),
         },
         {
           depth: 1,
@@ -479,7 +473,7 @@ describe('MatrixSolver', () => {
           items: new Rational(BigInt(4)),
           factories: new Rational(BigInt(8), BigInt(15)),
           consumption: new Rational(BigInt(248), BigInt(3)),
-          pollution: new Rational(BigInt(8), BigInt(5)),
+          pollution: new Rational(BigInt(2), BigInt(75)),
         },
         {
           depth: 1,
@@ -488,7 +482,7 @@ describe('MatrixSolver', () => {
           items: Rational.two,
           factories: new Rational(BigInt(8), BigInt(3)),
           consumption: new Rational(BigInt(1240), BigInt(3)),
-          pollution: new Rational(BigInt(8)),
+          pollution: new Rational(BigInt(2), BigInt(15)),
         },
       ]);
     });

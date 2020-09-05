@@ -1,5 +1,5 @@
 import { ViewChild, Component } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Mocks, TestUtility } from 'src/tests';
 import { Dataset } from '~/models';
@@ -33,7 +33,7 @@ describe('PickerComponent', () => {
   let component: TestPickerComponent;
   let fixture: ComponentFixture<TestPickerComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [IconComponent, PickerComponent, TestPickerComponent],
     })
@@ -43,7 +43,7 @@ describe('PickerComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

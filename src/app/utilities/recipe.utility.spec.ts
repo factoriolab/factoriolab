@@ -1,5 +1,5 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import { Rational, RationalRecipe, DisplayRate } from '~/models';
+import { Rational, RationalRecipe } from '~/models';
 import { RecipeUtility } from './recipe.utility';
 
 describe('RecipeUtility', () => {
@@ -39,7 +39,6 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Coal,
-        DisplayRate.PerMinute,
         Rational.zero,
         Rational.zero,
         settings,
@@ -51,7 +50,7 @@ describe('RecipeUtility', () => {
       expected.out = { [ItemId.SteelChest]: Rational.one };
       expected.time = new Rational(BigInt(2), BigInt(3));
       expected.consumption = new Rational(BigInt(155));
-      expected.pollution = new Rational(BigInt(3));
+      expected.pollution = new Rational(BigInt(1), BigInt(20));
       expect(result).toEqual(expected);
     });
 
@@ -59,7 +58,6 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.CopperCable,
         ItemId.Coal,
-        DisplayRate.PerMinute,
         Rational.zero,
         Rational.zero,
         Mocks.RationalRecipeSettings[RecipeId.CopperCable],
@@ -70,7 +68,7 @@ describe('RecipeUtility', () => {
       );
       expected.time = new Rational(BigInt(2), BigInt(3));
       expected.consumption = new Rational(BigInt(155));
-      expected.pollution = new Rational(BigInt(3));
+      expected.pollution = new Rational(BigInt(1), BigInt(20));
       expect(result).toEqual(expected);
     });
 
@@ -82,7 +80,6 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.MiningProductivity,
         ItemId.Coal,
-        DisplayRate.PerMinute,
         Rational.zero,
         Rational.two,
         settings,
@@ -105,7 +102,6 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.IronOre,
         ItemId.Coal,
-        DisplayRate.PerMinute,
         Rational.two,
         Rational.zero,
         settings,
@@ -117,7 +113,7 @@ describe('RecipeUtility', () => {
       expected.out = { [ItemId.IronOre]: new Rational(BigInt(3)) };
       expected.time = Rational.two;
       expected.consumption = new Rational(BigInt(90));
-      expected.pollution = new Rational(BigInt(10));
+      expected.pollution = new Rational(BigInt(1), BigInt(6));
       expect(result).toEqual(expected);
     });
 
@@ -163,7 +159,6 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Coal,
-        DisplayRate.PerMinute,
         Rational.zero,
         Rational.zero,
         settings,
@@ -177,7 +172,7 @@ describe('RecipeUtility', () => {
       };
       expected.time = new Rational(BigInt(8), BigInt(15));
       expected.consumption = new Rational(BigInt(260));
-      expected.pollution = new Rational(BigInt(3111), BigInt(200));
+      expected.pollution = new Rational(BigInt(1037), BigInt(4000));
       expect(result).toEqual(expected);
     });
 
@@ -208,7 +203,6 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Coal,
-        DisplayRate.PerMinute,
         Rational.zero,
         Rational.zero,
         settings,
@@ -222,7 +216,7 @@ describe('RecipeUtility', () => {
       };
       expected.time = new Rational(BigInt(2), BigInt(3));
       expected.consumption = new Rational(BigInt(155));
-      expected.pollution = new Rational(BigInt(3));
+      expected.pollution = new Rational(BigInt(1), BigInt(20));
       expect(result).toEqual(expected);
     });
 
@@ -238,7 +232,6 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Coal,
-        DisplayRate.PerMinute,
         Rational.zero,
         Rational.zero,
         settings,
@@ -252,7 +245,7 @@ describe('RecipeUtility', () => {
       };
       expected.time = new Rational(BigInt(2), BigInt(3));
       expected.consumption = new Rational(BigInt(35));
-      expected.pollution = new Rational(BigInt(3), BigInt(5));
+      expected.pollution = new Rational(BigInt(1), BigInt(100));
       expect(result).toEqual(expected);
     });
 
@@ -262,7 +255,6 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.IronOre,
         ItemId.Coal,
-        DisplayRate.PerMinute,
         Rational.zero,
         Rational.zero,
         settings,
@@ -277,7 +269,7 @@ describe('RecipeUtility', () => {
       };
       expected.time = new Rational(BigInt(4));
       expected.consumption = Rational.zero;
-      expected.pollution = new Rational(BigInt(12));
+      expected.pollution = new Rational(BigInt(1), BigInt(5));
       expect(result).toEqual(expected);
     });
 
@@ -287,7 +279,6 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.PlasticBar,
         ItemId.Coal,
-        DisplayRate.PerMinute,
         Rational.zero,
         Rational.zero,
         settings,
@@ -302,8 +293,62 @@ describe('RecipeUtility', () => {
       };
       expected.time = new Rational(BigInt(1), BigInt(2));
       expected.consumption = Rational.zero;
-      expected.pollution = new Rational(BigInt(4));
+      expected.pollution = new Rational(BigInt(1), BigInt(15));
       expect(result).toEqual(expected);
+    });
+
+    it('should subtract from existing burner fuel output', () => {
+      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.Coal] };
+      settings.factory = ItemId.BurnerMiningDrill;
+      settings.modules = null;
+      settings.beaconModule = null;
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.Coal,
+        ItemId.Coal,
+        Rational.zero,
+        Rational.zero,
+        settings,
+        Mocks.Data
+      );
+      expect(result.in[ItemId.Coal]).toBeUndefined();
+      expect(result.out[ItemId.Coal]).toEqual(
+        new Rational(BigInt(17), BigInt(20))
+      );
+    });
+
+    it('should negate existing burner fuel output', () => {
+      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.Coal] };
+      settings.factory = ItemId.BurnerMiningDrill;
+      settings.modules = null;
+      settings.beaconModule = null;
+      const data = {
+        ...Mocks.Data,
+        ...{
+          recipeEntities: {
+            ...Mocks.Data.recipeEntities,
+            ...{
+              [RecipeId.Coal]: {
+                ...Mocks.Data.recipeEntities[RecipeId.Coal],
+                ...{
+                  out: { [ItemId.Coal]: 0.05 },
+                },
+              },
+            },
+          },
+        },
+      };
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.Coal,
+        ItemId.Coal,
+        Rational.zero,
+        Rational.zero,
+        settings,
+        data
+      );
+      expect(result.in[ItemId.Coal]).toEqual(
+        new Rational(BigInt(1), BigInt(10))
+      );
+      expect(result.out[ItemId.Coal]).toBeUndefined();
     });
   });
 });

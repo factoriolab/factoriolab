@@ -40,7 +40,16 @@ enum OpenSelect {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent {
-  @Input() data: Dataset;
+  _data: Dataset;
+  get data() {
+    return this._data;
+  }
+  @Input() set data(value: Dataset) {
+    this._data = value;
+    this.sortedFuels = [...value.fuelIds].sort((a, b) =>
+      value.itemR[a].fuel.sub(value.itemR[b].fuel).toNumber()
+    );
+  }
   @Input() base: ModInfo[];
   @Input() mods: ModInfo[];
   @Input() settings: SettingsState;
@@ -81,6 +90,7 @@ export class SettingsComponent {
   MODULE_ID = MODULE_ID;
 
   initial = initialSettingsState;
+  sortedFuels: string[] = [];
 
   constructor(private ref: ChangeDetectorRef) {}
 
