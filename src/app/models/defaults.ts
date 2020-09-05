@@ -1,5 +1,6 @@
 export interface Defaults {
   modIds: string[];
+  beacon: string;
   belt: string;
   fuel: string;
   disabledRecipes: string[];

@@ -19,11 +19,14 @@ export interface SettingsState {
   disabledRecipes: string[];
   factoryRank: string[];
   moduleRank: string[];
+  beacon: string;
   beaconModule: string;
   displayRate: DisplayRate;
   itemPrecision: number;
   beltPrecision: number;
   factoryPrecision: number;
+  powerPrecision: number;
+  pollutionPrecision: number;
   beaconCount: number;
   drillModule: boolean;
   miningBonus: number;
@@ -44,11 +47,14 @@ export const initialSettingsState: SettingsState = {
   disabledRecipes: null,
   factoryRank: null,
   moduleRank: null,
+  beacon: null,
   beaconModule: null,
   displayRate: DisplayRate.PerMinute,
   itemPrecision: 3,
   beltPrecision: 1,
   factoryPrecision: 1,
+  powerPrecision: 1,
+  pollutionPrecision: 1,
   beaconCount: null,
   drillModule: false,
   miningBonus: 0,
@@ -86,6 +92,7 @@ export function settingsReducer(
           disabledRecipes: null,
           factoryRank: null,
           moduleRank: null,
+          beacon: null,
           beaconModule: null,
         },
       };
@@ -176,6 +183,12 @@ export function settingsReducer(
             action.payload
           ),
         },
+      };
+    }
+    case SettingsActionType.SET_BEACON: {
+      return {
+        ...state,
+        ...{ beacon: StoreUtility.compareValue(action.payload) },
       };
     }
     case SettingsActionType.SET_BEACON_MODULE: {

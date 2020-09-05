@@ -80,7 +80,7 @@ const mockRecipeSettings: Recipes.RecipesState = {
 const mockFullRecipeSettings: Recipes.RecipesState = {
   [RecipeId.SteelChest]: {
     factory: ItemId.AssemblingMachine3,
-    modules: [ItemId.Module],
+    factoryModules: [ItemId.Module],
     beaconModule: ItemId.Module,
     beaconCount: 1,
   },
@@ -320,7 +320,7 @@ describe('RouterService', () => {
       spyOn(console, 'warn');
       const result = service.unzipProducts(['id']);
       expect(console.warn).toHaveBeenCalledTimes(1);
-      expect(result).toEqual({ids: [], index: 0, entities: {}});
+      expect(result).toEqual({ ids: [], index: 0, entities: {} });
     });
   });
 
@@ -362,7 +362,7 @@ describe('RouterService', () => {
     it('should handle empty state', () => {
       const id = 'id';
       const result = service.unzipItems([id]);
-      expect(result).toEqual({[id]: {}});
+      expect(result).toEqual({ [id]: {} });
     });
   });
 
@@ -392,7 +392,7 @@ describe('RouterService', () => {
     it('should handle empty state', () => {
       const id = 'id';
       const result = service.unzipRecipes([id]);
-      expect(result).toEqual({[id]: {}});
+      expect(result).toEqual({ [id]: {} });
     });
   });
 

@@ -119,6 +119,10 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.DropModuleAction(value));
   }
 
+  setBeacon(value: DefaultPayload) {
+    this.store.dispatch(new Settings.SetBeaconAction(value));
+  }
+
   setBeaconModule(value: DefaultPayload) {
     this.store.dispatch(new Settings.SetBeaconModuleAction(value));
   }
@@ -137,6 +141,14 @@ export class SettingsContainerComponent implements OnInit {
 
   setFactoryPrecision(value: number) {
     this.store.dispatch(new Settings.SetFactoryPrecisionAction(value));
+  }
+
+  setPowerPrecision(value: number) {
+    this.store.dispatch(new Settings.SetPowerPrecisionAction(value));
+  }
+
+  setPollutionPrecision(value: number) {
+    this.store.dispatch(new Settings.SetPollutionPrecisionAction(value));
   }
 
   setBeaconCount(value: number) {

@@ -35,13 +35,13 @@ describe('Recipes Reducer', () => {
     it('should set the modules', () => {
       const result = recipesReducer(
         initialRecipesState,
-        new Actions.SetModulesAction({
+        new Actions.SetFactoryModulesAction({
           id: Mocks.Recipe1.id,
           value: [Mocks.Item1.id],
           default: null,
         })
       );
-      expect(result[Mocks.Recipe1.id].modules).toEqual([Mocks.Item1.id]);
+      expect(result[Mocks.Recipe1.id].factoryModules).toEqual([Mocks.Item1.id]);
     });
   });
 
@@ -49,7 +49,7 @@ describe('Recipes Reducer', () => {
     it('should set the beacon module', () => {
       const result = recipesReducer(
         initialRecipesState,
-        new Actions.SetBeaconModuleAction({
+        new Actions.SetBeaconModulesAction({
           id: Mocks.Recipe1.id,
           value: Mocks.Item1.id,
           default: null,

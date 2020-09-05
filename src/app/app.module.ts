@@ -27,6 +27,7 @@ import {
   ToggleComponent,
   RankerComponent,
   MultiselectComponent,
+  PrecisionComponent,
 } from './components';
 import { reducers, metaReducers } from './store';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
@@ -49,6 +50,7 @@ import { DatasetsEffects } from './store/datasets/datasets.effects';
     ProductsComponent,
     SettingsComponent,
     SettingsContainerComponent,
+    PrecisionComponent,
   ],
   imports: [
     BrowserModule,

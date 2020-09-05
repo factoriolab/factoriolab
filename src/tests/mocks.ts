@@ -87,13 +87,13 @@ export const ItemSettings1: ItemSettings = {
 };
 export const RecipeSettings1: RecipeSettings = {
   factory: ItemId.AssemblingMachine2,
-  modules: [ItemId.Module, ItemId.Module],
+  factoryModules: [ItemId.Module, ItemId.Module],
   beaconModule: ItemId.SpeedModule,
   beaconCount: 0,
 };
 export const RecipeSettings2: RecipeSettings = {
   factory: ItemId.AssemblingMachine2,
-  modules: [ItemId.Module, ItemId.Module],
+  factoryModules: [ItemId.Module, ItemId.Module],
   beaconModule: ItemId.Module,
   beaconCount: 0,
 };

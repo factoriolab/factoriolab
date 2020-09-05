@@ -40,13 +40,14 @@ export class ListContainerComponent implements OnInit {
   itemPrecision$: Observable<number>;
   beltPrecision$: Observable<number>;
   factoryPrecision$: Observable<number>;
+  powerPrecision$: Observable<number>;
+  pollutionPrecision$: Observable<number>;
   beaconCount$: Observable<number>;
   drillModule$: Observable<boolean>;
   columns$: Observable<string[]>;
   modifiedIgnore$: Observable<boolean>;
   modifiedBelt$: Observable<boolean>;
   modifiedFactory$: Observable<boolean>;
-  modifiedModules$: Observable<boolean>;
   modifiedBeacons$: Observable<boolean>;
 
   constructor(private store: Store<State>) {}
@@ -67,13 +68,16 @@ export class ListContainerComponent implements OnInit {
     this.itemPrecision$ = this.store.select(Settings.getItemPrecision);
     this.beltPrecision$ = this.store.select(Settings.getBeltPrecision);
     this.factoryPrecision$ = this.store.select(Settings.getFactoryPrecision);
+    this.powerPrecision$ = this.store.select(Settings.getPowerPrecision);
+    this.pollutionPrecision$ = this.store.select(
+      Settings.getPollutionPrecision
+    );
     this.beaconCount$ = this.store.select(Settings.getBeaconCount);
     this.drillModule$ = this.store.select(Settings.getDrillModule);
     this.columns$ = this.store.select(Settings.getColumns);
     this.modifiedIgnore$ = this.store.select(Items.getContainsIgnore);
     this.modifiedBelt$ = this.store.select(Items.getContainsBelt);
     this.modifiedFactory$ = this.store.select(Recipes.getContainsFactory);
-    this.modifiedModules$ = this.store.select(Recipes.getContainsModules);
     this.modifiedBeacons$ = this.store.select(Recipes.getContainsBeacons);
   }
 
@@ -89,12 +93,16 @@ export class ListContainerComponent implements OnInit {
     this.store.dispatch(new Recipes.SetFactoryAction(data));
   }
 
-  setModules(data: DefaultIdPayload<string[]>) {
-    this.store.dispatch(new Recipes.SetModulesAction(data));
+  setFactoryModules(data: DefaultIdPayload<string[]>) {
+    this.store.dispatch(new Recipes.SetFactoryModulesAction(data));
   }
 
-  setBeaconModule(data: DefaultIdPayload) {
-    this.store.dispatch(new Recipes.SetBeaconModuleAction(data));
+  setBeacon(data: DefaultIdPayload) {
+    this.store.dispatch(new Recipes.SetBeaconAction(data));
+  }
+
+  setBeaconModules(data: DefaultIdPayload<string[]>) {
+    this.store.dispatch(new Recipes.SetBeaconModulesAction(data));
   }
 
   setBeaconCount(data: DefaultIdPayload<number>) {
@@ -127,10 +135,6 @@ export class ListContainerComponent implements OnInit {
 
   resetFactory() {
     this.store.dispatch(new Recipes.ResetFactoryAction());
-  }
-
-  resetModules() {
-    this.store.dispatch(new Recipes.ResetModulesAction());
   }
 
   resetBeacons() {

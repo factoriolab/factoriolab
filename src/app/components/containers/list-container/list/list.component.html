@@ -43,7 +43,7 @@
           >
         </div>
       </th>
-      <th *ngIf="show[Column.Factories]" colspan="2">
+      <th *ngIf="show[Column.Factories]" colspan="3">
         <div>
           Factories
           <i
@@ -51,18 +51,6 @@
             title="Undo all factory modifications"
             class="clickable material-icons"
             (click)="resetFactory.emit()"
-            >undo</i
-          >
-        </div>
-      </th>
-      <th *ngIf="show[Column.Modules]">
-        <div>
-          Modules
-          <i
-            *ngIf="modifiedModules"
-            title="Undo all module modifications"
-            class="clickable material-icons"
-            (click)="resetModules.emit()"
             >undo</i
           >
         </div>
@@ -284,6 +272,46 @@
                 </ng-container>
               </div>
             </td>
+            <td class="split-column">
+              <ng-container
+                *ngIf="recipeSettings[step.recipeId]?.factoryModules as modules"
+              >
+                <div class="flex mod">
+                  <div class="relative" *ngFor="let mod of modules; index as i">
+                    <lab-icon
+                      class="list-edit-factory-module clickable"
+                      title="Click to change factory module"
+                      [iconId]="mod"
+                      [tooltip]="data.itemEntities[mod]?.name"
+                      [item]="data.itemEntities[mod]"
+                      [data]="data"
+                      (click)="
+                        edit = {
+                          step: step,
+                          type: StepEditType.FactoryModule,
+                          index: i
+                        }
+                      "
+                    ></lab-icon>
+                    <lab-select
+                      *ngIf="
+                        edit &&
+                        edit.step === step &&
+                        edit.type === StepEditType.FactoryModule &&
+                        edit.index === i
+                      "
+                      [data]="data"
+                      [selectedId]="mod"
+                      [options]="data.recipeModuleIds[step.recipeId]"
+                      includeEmptyModule="true"
+                      (cancel)="edit = null"
+                      (selectId)="factoryModuleChange(step, $event, i)"
+                    >
+                    </lab-select>
+                  </div>
+                </div>
+              </ng-container>
+            </td>
           </ng-container>
           <ng-container
             *ngIf="!recipeSettings[step.recipeId]?.factory as factory"
@@ -291,75 +319,44 @@
             <td colspan="2"></td>
           </ng-container>
         </ng-container>
-        <td *ngIf="show[Column.Modules]">
+        <td *ngIf="show[Column.Beacons]">
           <ng-container
-            *ngIf="recipeSettings[step.recipeId]?.modules as modules"
+            *ngIf="recipeSettings[step.recipeId]?.beaconModules as modules"
           >
-            <div class="flex mod factory">
+            <div class="flex mod">
               <div class="relative" *ngFor="let mod of modules; index as i">
                 <lab-icon
-                  class="list-edit-factory-module clickable"
-                  title="Click to change module"
+                  class="list-edit-beacon-module clickable"
+                  title="Click to change beacon module"
                   [iconId]="mod"
                   [tooltip]="data.itemEntities[mod]?.name"
                   [item]="data.itemEntities[mod]"
                   [data]="data"
                   (click)="
-                    edit = { step: step, type: StepEditType.Module, index: i }
+                    edit = {
+                      step: step,
+                      type: StepEditType.BeaconModule,
+                      index: i
+                    }
                   "
                 ></lab-icon>
                 <lab-select
                   *ngIf="
                     edit &&
                     edit.step === step &&
-                    edit.type === StepEditType.Module &&
+                    edit.type === StepEditType.Beacon &&
                     edit.index === i
                   "
                   [data]="data"
                   [selectedId]="mod"
-                  [options]="data.recipeModuleIds[step.recipeId]"
-                  includeEmptyModule="true"
-                  [data]="data"
-                  (cancel)="edit = null"
-                  (selectId)="factoryModuleChange(step, $event, i)"
-                >
-                </lab-select>
-              </div>
-            </div>
-          </ng-container>
-        </td>
-        <td *ngIf="show[Column.Beacons]">
-          <ng-container
-            *ngIf="recipeSettings[step.recipeId]?.beaconModule as module"
-          >
-            <div class="flex mod">
-              <div class="relative">
-                <lab-icon
-                  class="list-edit-beacon-module clickable"
-                  title="Click to change beacon module"
-                  [iconId]="module"
-                  [tooltip]="data.itemEntities[module]?.name"
-                  [item]="data.itemEntities[module]"
-                  [data]="data"
-                  (click)="edit = { step: step, type: StepEditType.Beacon }"
-                ></lab-icon>
-                <lab-select
-                  *ngIf="
-                    edit &&
-                    edit.step === step &&
-                    edit.type === StepEditType.Beacon
-                  "
-                  [data]="data"
-                  [selectedId]="module"
                   [options]="data.beaconModuleIds"
                   includeEmptyModule="true"
                   (cancel)="edit = null"
-                  (selectId)="beaconModuleChange(step, $event)"
+                  (selectId)="beaconModuleChange(step, $event, i)"
                 >
                 </lab-select>
               </div>
               <input
-                *ngIf="module !== MODULE_ID"
                 title="Enter number of beacon modules"
                 type="number"
                 min="0"
@@ -382,7 +379,7 @@
           <ng-container *ngIf="step.pollution?.nonzero()">
             <div class="flex">
               <div class="monospace">
-                {{ rate(step.pollution, factoryPrecision) }}
+                {{ rate(step.pollution, pollutionPrecision) }}
               </div>
             </div>
           </ng-container>

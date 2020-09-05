@@ -22,11 +22,14 @@ export const enum SettingsActionType {
   DROP_FACTORY = '[Settings Page] Drop Factory',
   PREFER_MODULE = '[Settings Page] Prefer Module',
   DROP_MODULE = '[Settings Page] Drop Module',
+  SET_BEACON = '[Settings Page] Set Beacon',
   SET_BEACON_MODULE = '[Settings Page] Set Beacon Module',
   SET_DISPLAY_RATE = '[Settings Page] Set Display Rate',
   SET_ITEM_PRECISION = '[Settings Page] Set Item Precision',
   SET_BELT_PRECISION = '[Settings Page] Set Belt Precision',
   SET_FACTORY_PRECISION = '[Settings Page] Set Factory Precision',
+  SET_POWER_PRECISION = '[Settings Page] Set Power Precision',
+  SET_POLLUTION_PRECISION = '[Settings Page] Set Pollution Precision',
   SET_BEACON_COUNT = '[Settings Page] Set Beacon Count',
   SET_DRILL_MODULE = '[Settings Page] Set Drill Module',
   SET_MINING_BONUS = '[Settings Page] Set Mining Bonus',
@@ -100,6 +103,11 @@ export class DropModuleAction implements Action {
   constructor(public payload: DefaultTogglePayload) {}
 }
 
+export class SetBeaconAction implements Action {
+  readonly type = SettingsActionType.SET_BEACON;
+  constructor(public payload: DefaultPayload) {}
+}
+
 export class SetBeaconModuleAction implements Action {
   readonly type = SettingsActionType.SET_BEACON_MODULE;
   constructor(public payload: DefaultPayload) {}
@@ -122,6 +130,16 @@ export class SetBeltPrecisionAction implements Action {
 
 export class SetFactoryPrecisionAction implements Action {
   readonly type = SettingsActionType.SET_FACTORY_PRECISION;
+  constructor(public payload: number) {}
+}
+
+export class SetPowerPrecisionAction implements Action {
+  readonly type = SettingsActionType.SET_POWER_PRECISION;
+  constructor(public payload: number) {}
+}
+
+export class SetPollutionPrecisionAction implements Action {
+  readonly type = SettingsActionType.SET_POLLUTION_PRECISION;
   constructor(public payload: number) {}
 }
 
@@ -191,11 +209,14 @@ export type SettingsAction =
   | DropFactoryAction
   | PreferModuleAction
   | DropModuleAction
+  | SetBeaconAction
   | SetBeaconModuleAction
   | SetDisplayRateAction
   | SetItemPrecisionAction
   | SetBeltPrecisionAction
   | SetFactoryPrecisionAction
+  | SetPowerPrecisionAction
+  | SetPollutionPrecisionAction
   | SetBeaconCountAction
   | SetDrillModuleAction
   | SetMiningBonusAction

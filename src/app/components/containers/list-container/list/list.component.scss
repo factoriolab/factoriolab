@@ -61,15 +61,13 @@ td > div {
   &.mod {
     justify-content: flex-start;
 
-    &.factory {
-      > :first-child {
-        border: 1px solid var(--color-gray-1);
-        border-radius: 0.25rem;
-      }
+    > :first-child {
+      border: 1px solid var(--color-gray-1);
+      border-radius: 0.25rem;
+    }
 
-      > * + * {
-        margin-left: 0;
-      }
+    > * + * {
+      margin-left: 0;
     }
   }
 

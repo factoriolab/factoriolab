@@ -59,3 +59,11 @@ a {
 input[type='radio'] + * {
   margin-left: 0.25rem;
 }
+
+.hidden {
+  display: none;
+}
+
+.static > lab-icon {
+  position: static;
+}

@@ -27,8 +27,9 @@ enum ListEditType {
   Columns,
   Belt,
   Factory,
-  Module,
+  FactoryModule,
   Beacon,
+  BeaconModule,
 }
 
 interface ListEdit {
@@ -57,6 +58,8 @@ export class ListComponent {
   @Input() itemPrecision: number;
   @Input() beltPrecision: number;
   @Input() factoryPrecision: number;
+  @Input() powerPrecision: number;
+  @Input() pollutionPrecision: number;
   @Input() beaconCount: number;
   @Input() drillModule: boolean;
   _columns: string[];
@@ -71,10 +74,7 @@ export class ListComponent {
       this.totalSpan++;
     }
     if (this.columns.indexOf(Column.Factories) !== -1) {
-      this.totalSpan += 2;
-    }
-    if (this.columns.indexOf(Column.Modules) !== -1) {
-      this.totalSpan++;
+      this.totalSpan += 3;
     }
     if (this.columns.indexOf(Column.Beacons) !== -1) {
       this.totalSpan++;
@@ -83,14 +83,14 @@ export class ListComponent {
   @Input() modifiedIgnore: boolean;
   @Input() modifiedBelt: boolean;
   @Input() modifiedFactory: boolean;
-  @Input() modifiedModules: boolean;
   @Input() modifiedBeacons: boolean;
 
   @Output() ignoreItem = new EventEmitter<string>();
   @Output() setBelt = new EventEmitter<DefaultIdPayload>();
   @Output() setFactory = new EventEmitter<DefaultIdPayload>();
-  @Output() setModules = new EventEmitter<DefaultIdPayload<string[]>>();
-  @Output() setBeaconModule = new EventEmitter<DefaultIdPayload>();
+  @Output() setFactoryModules = new EventEmitter<DefaultIdPayload<string[]>>();
+  @Output() setBeacon = new EventEmitter<DefaultIdPayload>();
+  @Output() setBeaconModules = new EventEmitter<DefaultIdPayload<string[]>>();
   @Output() setBeaconCount = new EventEmitter<DefaultIdPayload<number>>();
   @Output() hideColumn = new EventEmitter<string>();
   @Output() showColumn = new EventEmitter<string>();
@@ -99,7 +99,6 @@ export class ListComponent {
   @Output() resetIgnore = new EventEmitter();
   @Output() resetBelt = new EventEmitter();
   @Output() resetFactory = new EventEmitter();
-  @Output() resetModules = new EventEmitter();
   @Output() resetBeacons = new EventEmitter();
 
   edit: ListEdit;
@@ -113,12 +112,7 @@ export class ListComponent {
   Rational = Rational;
   MODULE_ID = MODULE_ID;
   ColumnsAsOptions = ColumnsAsOptions;
-  ColumnsLeftOfPower = [
-    Column.Belts,
-    Column.Factories,
-    Column.Modules,
-    Column.Beacons,
-  ];
+  ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
 
   get rateLabel() {
     switch (this.displayRate) {
@@ -146,7 +140,7 @@ export class ListComponent {
     for (const step of this.steps.filter((s) => s.pollution)) {
       value = value.add(step.pollution);
     }
-    return this.rate(value, this.factoryPrecision);
+    return this.rate(value, this.pollutionPrecision);
   }
 
   constructor(public router: RouterService) {}
@@ -181,11 +175,11 @@ export class ListComponent {
 
   power(value: Rational) {
     if (value.lt(Rational.thousand)) {
-      return `${this.rate(value, this.factoryPrecision)} kW`;
+      return `${this.rate(value, this.powerPrecision)} kW`;
     } else {
       return `${this.rate(
         value.div(Rational.thousand),
-        this.factoryPrecision
+        this.powerPrecision
       )} MW`;
     }
   }
@@ -212,38 +206,58 @@ export class ListComponent {
   }
 
   factoryModuleChange(step: Step, value: string, index: number) {
-    const count = this.recipeSettings[step.recipeId].modules.length;
+    const count = this.recipeSettings[step.recipeId].factoryModules.length;
     const options = this.miningIgnoreModule(step)
       ? [MODULE_ID]
       : [...this.data.recipeModuleIds[step.recipeId], MODULE_ID];
     const def = RecipeUtility.defaultModules(options, this.moduleRank, count);
-    if (index === 0) {
-      // Copy to all
-      const modules = [];
-      for (let i = 0; i < count; i++) {
-        modules.push(value);
-      }
-      this.setModules.emit({ id: step.recipeId, value: modules, default: def });
-    } else {
-      // Edit individual module
-      const modules = [
-        ...this.recipeSettings[step.recipeId].modules.slice(0, index),
-        value,
-        ...this.recipeSettings[step.recipeId].modules.slice(index + 1),
-      ];
-      this.setModules.emit({ id: step.recipeId, value: modules, default: def });
-    }
+    const modules = this.generateModules(
+      index,
+      count,
+      value,
+      this.recipeSettings[step.recipeId].factoryModules
+    );
+    this.setFactoryModules.emit({
+      id: step.recipeId,
+      value: modules,
+      default: def,
+    });
   }
 
-  beaconModuleChange(step: Step, value: string) {
+  beaconModuleChange(step: Step, value: string, index: number) {
+    const count = this.recipeSettings[step.recipeId].beaconModules.length;
     const defaultModule = this.miningIgnoreModule(step)
       ? MODULE_ID
       : this.beaconModule;
-    this.setBeaconModule.emit({
-      id: step.recipeId,
+    const def = new Array(count).fill(defaultModule);
+    const modules = this.generateModules(
+      index,
+      count,
       value,
-      default: defaultModule,
+      this.recipeSettings[step.recipeId].beaconModules
+    );
+    this.setBeaconModules.emit({
+      id: step.recipeId,
+      value: modules,
+      default: def,
     });
+  }
+
+  generateModules(
+    index: number,
+    count: number,
+    value: string,
+    original: string[]
+  ) {
+    if (index === 0) {
+      // Copy to all
+      return new Array(count).fill(value);
+    } else {
+      // Edit individual module
+      const modules = [...original];
+      modules[index] = value;
+      return modules;
+    }
   }
 
   beaconCountChange(step: Step, event: any) {

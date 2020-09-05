@@ -1,3 +1,4 @@
+export * from './beacon';
 export * from './belt';
 export * from './category';
 export * from './dataset';

@@ -174,7 +174,9 @@ export class RouterService {
         };
         index++;
       } else {
-        console.warn(`Router: Invalid number of fields in product: '${product}'`);
+        console.warn(
+          `Router: Invalid number of fields in product: '${product}'`
+        );
       }
     }
     return { ids, index, entities };
@@ -214,10 +216,11 @@ export class RouterService {
       const settings = state[id];
       const i = id;
       const fc = this.zipTruthy(settings.factory);
-      const md = this.zipTruthyArray(settings.modules);
-      const bt = this.zipTruthy(settings.beaconModule);
+      const md = this.zipTruthyArray(settings.factoryModules);
+      const bt = this.zipTruthyArray(settings.beaconModules);
       const bc = this.zipTruthyNum(settings.beaconCount);
-      return [i, fc, md, bt, bc].join(FIELDSEP);
+      const be = this.zipTruthy(settings.beacon);
+      return [i, fc, md, bt, bc, be].join(FIELDSEP);
     });
   }
 
@@ -233,15 +236,19 @@ export class RouterService {
       }
       v = r[i++];
       if (v?.length) {
-        u.modules = this.parseArray(v);
+        u.factoryModules = this.parseArray(v);
       }
       v = r[i++];
       if (v?.length) {
-        u.beaconModule = this.parseString(v);
+        u.beaconModules = this.parseArray(v);
       }
       v = r[i++];
       if (v?.length) {
         u.beaconCount = this.parseNumber(v);
+      }
+      v = r[i++];
+      if (v?.length) {
+        u.beacon = this.parseString(v);
       }
       recipes[r[0]] = u;
     }
@@ -268,6 +275,12 @@ export class RouterService {
     const rs = this.zipDiffNum(state.researchSpeed, init.researchSpeed);
     const fw = this.zipDiffNum(state.flowRate, init.flowRate);
     const ex = this.zipDiffBool(state.expensive, init.expensive);
+    const be = this.zipDiff(state.beacon, init.beacon);
+    const ep = this.zipDiffNum(state.powerPrecision, init.powerPrecision);
+    const pp = this.zipDiffNum(
+      state.pollutionPrecision,
+      init.pollutionPrecision
+    );
     const value = [
       bd,
       md,
@@ -287,6 +300,9 @@ export class RouterService {
       rs,
       fw,
       ex,
+      be,
+      ep,
+      pp,
     ].join(FIELDSEP);
     return /^[:]+$/.test(value) ? '' : value;
   }
@@ -366,6 +382,18 @@ export class RouterService {
     v = s[i++];
     if (v?.length) {
       settings.expensive = this.parseBool(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.beacon = this.parseString(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.powerPrecision = this.parseNumber(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.pollutionPrecision = this.parseNumber(v);
     }
     return settings;
   }

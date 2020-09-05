@@ -22,7 +22,7 @@ describe('RecipeUtility', () => {
 
   describe('defaultModules', () => {
     it('should fill in modules list for factory', () => {
-      const result = RecipeUtility.defaultModules(
+      const result = RecipeUtility.defaultModule(
         [ItemId.SpeedModule],
         [ItemId.ProductivityModule, ItemId.SpeedModule],
         1
@@ -34,7 +34,7 @@ describe('RecipeUtility', () => {
   describe('adjustRecipe', () => {
     it('should adjust a standard recipe', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
-      settings.modules = null;
+      settings.factoryModules = null;
       settings.beaconModule = ItemId.Module;
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
@@ -119,7 +119,7 @@ describe('RecipeUtility', () => {
 
     it('should handle modules and beacons', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
-      settings.modules = [
+      settings.factoryModules = [
         ItemId.SpeedModule,
         ItemId.ProductivityModule,
         ItemId.EfficiencyModule,
@@ -222,7 +222,7 @@ describe('RecipeUtility', () => {
 
     it('should use minimum 20% consumption', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
-      settings.modules = [
+      settings.factoryModules = [
         ItemId.EfficiencyModule3,
         ItemId.EfficiencyModule3,
         ItemId.EfficiencyModule3,
@@ -300,7 +300,7 @@ describe('RecipeUtility', () => {
     it('should subtract from existing burner fuel output', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.Coal] };
       settings.factory = ItemId.BurnerMiningDrill;
-      settings.modules = null;
+      settings.factoryModules = null;
       settings.beaconModule = null;
       const result = RecipeUtility.adjustRecipe(
         RecipeId.Coal,
@@ -319,7 +319,7 @@ describe('RecipeUtility', () => {
     it('should negate existing burner fuel output', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.Coal] };
       settings.factory = ItemId.BurnerMiningDrill;
-      settings.modules = null;
+      settings.factoryModules = null;
       settings.beaconModule = null;
       const data = {
         ...Mocks.Data,

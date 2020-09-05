@@ -44,7 +44,9 @@ export class SelectComponent {
 
   @HostBinding('style.width.rem')
   get width() {
-    return Math.ceil(Math.sqrt(this.options.length)) * 2.25 + 1.25;
+    const buttons = this.options.length + 1;
+    const iconsPerRow = buttons < 4 ? buttons : Math.ceil(Math.sqrt(buttons));
+    return iconsPerRow * 2.25 + 1.25;
   }
 
   constructor(private element: ElementRef) {}

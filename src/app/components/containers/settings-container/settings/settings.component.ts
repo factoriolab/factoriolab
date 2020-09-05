@@ -30,6 +30,7 @@ enum OpenSelect {
   Fuel,
   Factory,
   Module,
+  Beacon,
   BeaconModule,
 }
 
@@ -66,11 +67,14 @@ export class SettingsComponent {
   @Output() dropFactory = new EventEmitter<DefaultTogglePayload>();
   @Output() preferModule = new EventEmitter<DefaultTogglePayload>();
   @Output() dropModule = new EventEmitter<DefaultTogglePayload>();
+  @Output() setBeacon = new EventEmitter<DefaultPayload>();
   @Output() setBeaconModule = new EventEmitter<DefaultPayload>();
   @Output() setDisplayRate = new EventEmitter<DisplayRate>();
   @Output() setItemPrecision = new EventEmitter<number>();
   @Output() setBeltPrecision = new EventEmitter<number>();
   @Output() setFactoryPrecision = new EventEmitter<number>();
+  @Output() setPowerPrecision = new EventEmitter<number>();
+  @Output() setPollutionPrecision = new EventEmitter<number>();
   @Output() setBeaconCount = new EventEmitter<number>();
   @Output() setDrillModule = new EventEmitter<boolean>();
   @Output() setMiningBonus = new EventEmitter<number>();

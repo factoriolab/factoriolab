@@ -77,9 +77,9 @@ describe('ListContainerComponent', () => {
       value: [ItemId.SpeedModule],
       default: [],
     };
-    component.child.setModules.emit(data);
+    component.child.setFactoryModules.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Recipes.SetModulesAction(data)
+      new Recipes.SetFactoryModulesAction(data)
     );
   });
 
@@ -90,9 +90,9 @@ describe('ListContainerComponent', () => {
       value: ItemId.SpeedModule,
       default: ItemId.SpeedModule,
     };
-    component.child.setBeaconModule.emit(data);
+    component.child.setBeaconModules.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Recipes.SetBeaconModuleAction(data)
+      new Recipes.SetBeaconModulesAction(data)
     );
   });
 

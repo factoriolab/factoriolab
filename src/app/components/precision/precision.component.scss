@@ -1,0 +1,16 @@
+:host {
+  display: flex;
+  align-items: center;
+
+  > * + * {
+    margin-left: 0.5rem;
+  }
+}
+
+lab-icon {
+  padding: 0.125rem;
+}
+
+input[type='radio'] + * {
+  margin-left: 0.25rem;
+}

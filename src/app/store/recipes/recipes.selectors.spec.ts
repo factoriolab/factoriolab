@@ -77,7 +77,9 @@ describe('Recipes Selectors', () => {
         Mocks.SettingsState1.drillModule,
         Mocks.Data
       );
-      expect(result[Mocks.Item1.id].modules as string[]).toEqual([stringValue]);
+      expect(result[Mocks.Item1.id].factoryModules as string[]).toEqual([
+        stringValue,
+      ]);
     });
 
     it('should use beacon type override', () => {

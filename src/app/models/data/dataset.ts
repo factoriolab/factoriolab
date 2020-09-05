@@ -12,14 +12,15 @@ export interface Dataset {
   iconIds: string[];
   iconEntities: Entities<Icon>;
   itemIds: string[];
-  fuelIds: string[];
+  beaconIds: string[];
+  beltIds: string[];
   factoryIds: string[];
+  fuelIds: string[];
   moduleIds: string[];
   beaconModuleIds: string[];
   itemEntities: Entities<Item>;
   itemR: Entities<RationalItem>;
   itemRecipeIds: Entities<string>;
-  beltIds: string[];
   recipeIds: string[];
   recipeEntities: Entities<Recipe>;
   recipeR: Entities<RationalRecipe>;

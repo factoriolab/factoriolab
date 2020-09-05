@@ -1,4 +1,5 @@
 import { Rational } from '../rational';
+import { Beacon, RationalBeacon } from './beacon';
 import { Belt, RationalBelt } from './belt';
 import { Factory, RationalFactory } from './factory';
 import { Module, RationalModule } from './module';
@@ -9,6 +10,7 @@ export interface Item {
   category: string;
   row: number;
   stack?: number;
+  beacon?: Beacon;
   belt?: Belt;
   factory?: Factory;
   module?: Module;
@@ -22,6 +24,7 @@ export class RationalItem {
   category: string;
   row: number;
   stack?: Rational;
+  beacon?: RationalBeacon;
   belt?: RationalBelt;
   factory?: RationalFactory;
   module?: RationalModule;
@@ -35,6 +38,9 @@ export class RationalItem {
     this.row = Math.round(data.row);
     if (data.stack) {
       this.stack = Rational.fromNumber(data.stack);
+    }
+    if (data.beacon) {
+      this.beacon = new RationalBeacon(data.beacon);
     }
     if (data.belt) {
       this.belt = new RationalBelt(data.belt);

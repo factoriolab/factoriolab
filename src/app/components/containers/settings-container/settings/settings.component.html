@@ -89,183 +89,6 @@
     >
   </div>
 </div>
-<div class="label">Display Rate</div>
-<div class="field">
-  <div class="flex option">
-    <input
-      id="settings-display-persecond"
-      title="Display rates per second"
-      type="radio"
-      name="displayRate"
-      [value]="DisplayRate.PerSecond"
-      [ngModel]="settings.displayRate"
-      (change)="setDisplayRate.emit(DisplayRate.PerSecond)"
-    />
-    <label for="settings-display-persecond" title="Display rates per second"
-      >#/sec</label
-    >
-  </div>
-  <div class="flex option">
-    <input
-      id="settings-display-perminute"
-      title="Display rates per minute"
-      type="radio"
-      name="displayRate"
-      [value]="DisplayRate.PerMinute"
-      [ngModel]="settings.displayRate"
-      (change)="setDisplayRate.emit(DisplayRate.PerMinute)"
-    />
-    <label for="settings-display-perminute" title="Display rates per minute"
-      >#/min</label
-    >
-  </div>
-  <div class="flex option">
-    <input
-      id="settings-display-perhour"
-      title="Display rates per hour"
-      type="radio"
-      name="displayRate"
-      [value]="DisplayRate.PerHour"
-      [ngModel]="settings.displayRate"
-      (change)="setDisplayRate.emit(DisplayRate.PerHour)"
-    />
-    <label for="settings-display-perhour" title="Display rates per hour"
-      >#/hr</label
-    >
-  </div>
-</div>
-<div class="label">Precision</div>
-<div class="field">
-  <lab-icon
-    iconId="iron-plate"
-    tooltip="Items precision"
-    [data]="data"
-  ></lab-icon>
-  <div class="flex">
-    <input
-      id="settings-precision-item-decimals"
-      title="Use decimal precision"
-      type="radio"
-      name="itemPrecision"
-      [value]="false"
-      [ngModel]="settings.itemPrecision == null"
-      (change)="setItemPrecision.emit(initial.itemPrecision)"
-    />
-    <label for="settings-precision-item-decimals">
-      <input
-        id="settings-precision-item-value"
-        title="Set decimal precision"
-        type="number"
-        placeholder="0.334"
-        min="0"
-        step="1"
-        [disabled]="settings.itemPrecision == null"
-        [value]="settings.itemPrecision"
-        (change)="emitNumber(setItemPrecision, $event)"
-      />
-    </label>
-  </div>
-  <div class="flex">
-    <input
-      id="settings-precision-item-fractions"
-      title="Use fractions"
-      type="radio"
-      name="itemPrecision"
-      [value]="true"
-      [ngModel]="settings.itemPrecision == null"
-      (change)="setItemPrecision.emit(null)"
-    />
-    <label for="settings-precision-item-fractions" title="Use fractions"
-      >⅓</label
-    >
-  </div>
-</div>
-<div class="field">
-  <lab-icon
-    iconId="transport-belt"
-    tooltip="Belts precision"
-    [data]="data"
-  ></lab-icon>
-  <div class="flex">
-    <input
-      id="settings-precision-belt-decimals"
-      title="Use decimal precision"
-      type="radio"
-      name="beltPrecision"
-      [value]="false"
-      [ngModel]="settings.beltPrecision == null"
-      (change)="setBeltPrecision.emit(initial.beltPrecision)"
-    />
-    <input
-      id="settings-precision-belt-value"
-      title="Set decimal precision"
-      type="number"
-      placeholder="0.4"
-      min="0"
-      step="1"
-      [disabled]="settings.beltPrecision == null"
-      [value]="settings.beltPrecision"
-      (change)="emitNumber(setBeltPrecision, $event)"
-    />
-  </div>
-  <div class="flex">
-    <input
-      id="settings-precision-belt-fractions"
-      title="Use fractions"
-      type="radio"
-      name="beltPrecision"
-      [value]="true"
-      [ngModel]="settings.beltPrecision == null"
-      (change)="setBeltPrecision.emit(null)"
-    />
-    <label for="settings-precision-belt-fractions" title="Use fractions"
-      >⅓</label
-    >
-  </div>
-</div>
-<div class="field">
-  <lab-icon
-    [data]="data"
-    iconId="assembling-machine-1"
-    tooltip="Factories precision"
-  ></lab-icon>
-  <div class="flex">
-    <input
-      id="settings-precision-factory-decimals"
-      title="Use decimal precision"
-      type="radio"
-      name="factoryPrecision"
-      [value]="false"
-      [ngModel]="settings.factoryPrecision == null"
-      (change)="setFactoryPrecision.emit(initial.factoryPrecision)"
-    />
-    <input
-      id="settings-precision-factory-value"
-      title="Set decimal precision"
-      type="number"
-      placeholder="0.4"
-      min="0"
-      step="1"
-      [disabled]="settings.factoryPrecision == null"
-      [value]="settings.factoryPrecision"
-      (change)="emitNumber(setFactoryPrecision, $event)"
-    />
-  </div>
-  <div class="flex">
-    <input
-      id="settings-precision-factory-fractions"
-      title="Use fractions"
-      type="radio"
-      name="factoryPrecision"
-      [value]="true"
-      [ngModel]="settings.factoryPrecision == null"
-      (change)="setFactoryPrecision.emit(null)"
-    />
-    <label for="settings-precision-factory-fractions" title="Use fractions"
-      >⅓</label
-    >
-  </div>
-</div>
 <div class="label">Factory</div>
 <div class="field">
   <lab-icon
@@ -292,6 +115,107 @@
     (dropItem)="dropFactory.emit($event)"
   >
   </lab-ranker>
+  <lab-icon
+    #btnModule
+    class="clickable"
+    tooltip="Module preferences"
+    [iconId]="settings.moduleRank.length ? settings.moduleRank[0] : MODULE_ID"
+    [data]="data"
+    (click)="openSelect = OpenSelect.Module"
+  ></lab-icon>
+  <lab-ranker
+    *ngIf="openSelect === OpenSelect.Module"
+    [data]="data"
+    [rank]="settings.moduleRank"
+    [options]="data.moduleIds"
+    [default]="data.defaults.moduleRank"
+    [parent]="btnModule.element"
+    (cancel)="openSelect = OpenSelect.None"
+    (preferItem)="preferModule.emit($event)"
+    (dropItem)="dropModule.emit($event)"
+  >
+  </lab-ranker>
+  <div
+    class="flex clickable static"
+    (click)="setDrillModule.emit(!settings.drillModule)"
+  >
+    <lab-icon
+      iconId="electric-mining-drill"
+      [data]="data"
+      tooltip="Toggle drill modules"
+      [scale]="true"
+    ></lab-icon>
+    <lab-icon
+      [iconId]="settings.drillModule ? 'speed-module-3' : MODULE_ID"
+      [data]="data"
+      tooltip="Toggle drill modules"
+    ></lab-icon>
+  </div>
+</div>
+<div *ngIf="data.beaconIds.length" class="field">
+  <lab-icon
+    *ngIf="data.beaconIds.length === 1"
+    class="clickable-size"
+    [iconId]="settings.beacon"
+    [data]="data"
+  ></lab-icon>
+  <lab-icon
+    #btnBeacon
+    class="clickable"
+    [class.hidden]="data.beaconIds.length === 0"
+    tooltip="Choose default beacon"
+    [iconId]="settings.beacon"
+    [data]="data"
+    (click)="openSelect = OpenSelect.Beacon"
+  ></lab-icon>
+  <lab-select
+    *ngIf="openSelect === OpenSelect.Beacon"
+    [data]="data"
+    [selectedId]="settings.beacon"
+    [options]="data.beaconIds"
+    [data]="data"
+    [parent]="btnBeacon.element"
+    (cancel)="openSelect = OpenSelect.None"
+    (selectId)="
+      setBeacon.emit({ value: $event, default: data.defaults.beacon })
+    "
+  >
+  </lab-select>
+  <lab-icon
+    #btnBeaconModule
+    class="clickable"
+    tooltip="Beacon module"
+    [iconId]="settings.beaconModule"
+    [data]="data"
+    (click)="openSelect = OpenSelect.BeaconModule"
+  ></lab-icon>
+  <lab-select
+    *ngIf="openSelect === OpenSelect.BeaconModule"
+    [data]="data"
+    [selectedId]="settings.beaconModule"
+    [options]="data.beaconModuleIds"
+    [parent]="btnBeaconModule.element"
+    includeEmptyModule="true"
+    (cancel)="openSelect = OpenSelect.None"
+    (selectId)="
+      setBeaconModule.emit({
+        value: $event,
+        default: data.defaults.beaconModule
+      })
+    "
+  >
+  </lab-select>
+  <input
+    type="number"
+    title="Enter default number of beacons"
+    placeholder="# Beacons"
+    min="0"
+    step="1"
+    [value]="settings.beaconCount"
+    (change)="emitNumber(setBeaconCount, $event)"
+  />
+</div>
+<div class="field">
   <lab-icon
     #btnBelt
     class="clickable"
@@ -349,80 +273,101 @@
     >
   </div>
 </div>
-<div class="label">Modules</div>
+<div class="label">Display Rate</div>
 <div class="field">
-  <lab-icon
-    #btnModule
-    class="clickable"
-    tooltip="Module preferences"
-    [iconId]="settings.moduleRank.length ? settings.moduleRank[0] : MODULE_ID"
+  <div class="flex option">
+    <input
+      id="settings-display-persecond"
+      title="Display rates per second"
+      type="radio"
+      name="displayRate"
+      [value]="DisplayRate.PerSecond"
+      [ngModel]="settings.displayRate"
+      (change)="setDisplayRate.emit(DisplayRate.PerSecond)"
+    />
+    <label for="settings-display-persecond" title="Display rates per second"
+      >#/sec</label
+    >
+  </div>
+  <div class="flex option">
+    <input
+      id="settings-display-perminute"
+      title="Display rates per minute"
+      type="radio"
+      name="displayRate"
+      [value]="DisplayRate.PerMinute"
+      [ngModel]="settings.displayRate"
+      (change)="setDisplayRate.emit(DisplayRate.PerMinute)"
+    />
+    <label for="settings-display-perminute" title="Display rates per minute"
+      >#/min</label
+    >
+  </div>
+  <div class="flex option">
+    <input
+      id="settings-display-perhour"
+      title="Display rates per hour"
+      type="radio"
+      name="displayRate"
+      [value]="DisplayRate.PerHour"
+      [ngModel]="settings.displayRate"
+      (change)="setDisplayRate.emit(DisplayRate.PerHour)"
+    />
+    <label for="settings-display-perhour" title="Display rates per hour"
+      >#/hr</label
+    >
+  </div>
+</div>
+<div class="label">Precision</div>
+<div class="field">
+  <lab-precision
     [data]="data"
-    (click)="openSelect = OpenSelect.Module"
-  ></lab-icon>
-  <lab-ranker
-    *ngIf="openSelect === OpenSelect.Module"
-    [data]="data"
-    [rank]="settings.moduleRank"
-    [options]="data.moduleIds"
-    [default]="data.defaults.moduleRank"
-    [parent]="btnModule.element"
-    (cancel)="openSelect = OpenSelect.None"
-    (preferItem)="preferModule.emit($event)"
-    (dropItem)="dropModule.emit($event)"
-  >
-  </lab-ranker>
-  <lab-icon iconId="beacon" [data]="data"></lab-icon>
-  <lab-icon
-    #btnBeaconModule
-    class="clickable"
-    tooltip="Beacon module"
-    [iconId]="settings.beaconModule"
-    [data]="data"
-    (click)="openSelect = OpenSelect.BeaconModule"
-  ></lab-icon>
-  <lab-select
-    *ngIf="openSelect === OpenSelect.BeaconModule"
-    [data]="data"
-    [selectedId]="settings.beaconModule"
-    [options]="data.beaconModuleIds"
-    [parent]="btnBeaconModule.element"
-    includeEmptyModule="true"
-    (cancel)="openSelect = OpenSelect.None"
-    (selectId)="
-      setBeaconModule.emit({
-        value: $event,
-        default: data.defaults.beaconModule
-      })
-    "
-  >
-  </lab-select>
-  <input
-    type="number"
-    title="Enter default number of beacon modules"
-    placeholder="# Modules"
-    min="0"
-    step="1"
-    [value]="settings.beaconCount"
-    (change)="emitNumber(setBeaconCount, $event)"
-  />
+    iconId="iron-plate"
+    tooltip="Items precision"
+    [value]="settings.itemPrecision"
+    [default]="initial.itemPrecision"
+    (setValue)="setItemPrecision.emit($event)"
+  ></lab-precision>
 </div>
 <div class="field">
-  <div
-    class="flex clickable"
-    (click)="setDrillModule.emit(!settings.drillModule)"
-  >
-    <lab-icon
-      iconId="electric-mining-drill"
-      [data]="data"
-      tooltip="Toggle drill modules"
-      [scale]="true"
-    ></lab-icon>
-    <lab-icon
-      [iconId]="settings.drillModule ? 'speed-module-3' : MODULE_ID"
-      [data]="data"
-      tooltip="Toggle drill modules"
-    ></lab-icon>
-  </div>
+  <lab-precision
+    [data]="data"
+    iconId="transport-belt"
+    tooltip="Belts precision"
+    [value]="settings.beltPrecision"
+    [default]="initial.beltPrecision"
+    (setValue)="setBeltPrecision.emit($event)"
+  ></lab-precision>
+</div>
+<div class="field">
+  <lab-precision
+    [data]="data"
+    iconId="assembling-machine-1"
+    tooltip="Factories precision"
+    [value]="settings.factoryPrecision"
+    [default]="initial.factoryPrecision"
+    (setValue)="setFactoryPrecision.emit($event)"
+  ></lab-precision>
+</div>
+<div class="field">
+  <lab-precision
+    [data]="data"
+    iconId="substation"
+    tooltip="Power precision"
+    [value]="settings.powerPrecision"
+    [default]="initial.powerPrecision"
+    (setValue)="setPowerPrecision.emit($event)"
+  ></lab-precision>
+</div>
+<div class="field">
+  <lab-precision
+    [data]="data"
+    iconId="steam"
+    tooltip="Pollution precision"
+    [value]="settings.pollutionPrecision"
+    [default]="initial.pollutionPrecision"
+    (setValue)="setPollutionPrecision.emit($event)"
+  ></lab-precision>
 </div>
 <div class="label">Bonuses</div>
 <div class="field">
