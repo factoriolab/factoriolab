@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
@@ -17,7 +17,7 @@ describe('ListContainerComponent', () => {
   let fixture: ComponentFixture<ListContainerComponent>;
   let store: Store<State>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [ListComponent, ListContainerComponent],
       imports: [
@@ -33,7 +33,7 @@ describe('ListContainerComponent', () => {
         store = TestBed.inject(Store);
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

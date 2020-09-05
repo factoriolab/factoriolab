@@ -12,7 +12,7 @@ describe('RateUtility', () => {
         items: new Rational(BigInt(30)),
         factories: new Rational(BigInt(20)),
         consumption: new Rational(BigInt(3100)),
-        pollution: new Rational(BigInt(60)),
+        pollution: new Rational(BigInt(1)),
       },
       {
         depth: 1,
@@ -21,7 +21,7 @@ describe('RateUtility', () => {
         items: new Rational(BigInt(240)),
         factories: new Rational(BigInt(1024)),
         consumption: new Rational(BigInt(158720)),
-        pollution: new Rational(BigInt(3072)),
+        pollution: new Rational(BigInt(256), BigInt(5)),
         parents: { 'iron-chest': new Rational(BigInt(240)) },
       },
       {
@@ -31,7 +31,7 @@ describe('RateUtility', () => {
         items: new Rational(BigInt(240)),
         factories: new Rational(BigInt(320)),
         consumption: new Rational(BigInt(49600)),
-        pollution: new Rational(BigInt(960)),
+        pollution: new Rational(BigInt(16)),
         parents: { 'iron-plate': new Rational(BigInt(240)) },
       },
     ];
@@ -203,7 +203,7 @@ describe('RateUtility', () => {
           items: new Rational(BigInt(30)),
           factories: new Rational(BigInt(20)),
           consumption: new Rational(BigInt(3100)),
-          pollution: new Rational(BigInt(60)),
+          pollution: new Rational(BigInt(1)),
           children: [
             {
               id: 'root:iron-chest:iron-plate',
@@ -213,7 +213,7 @@ describe('RateUtility', () => {
               items: new Rational(BigInt(240)),
               factories: new Rational(BigInt(1024)),
               consumption: new Rational(BigInt(158720)),
-              pollution: new Rational(BigInt(3072)),
+              pollution: new Rational(BigInt(256), BigInt(5)),
               children: [
                 {
                   id: 'root:iron-chest:iron-plate:iron-ore',
@@ -223,7 +223,7 @@ describe('RateUtility', () => {
                   items: new Rational(BigInt(240)),
                   factories: new Rational(BigInt(320)),
                   consumption: new Rational(BigInt(49600)),
-                  pollution: new Rational(BigInt(960)),
+                  pollution: new Rational(BigInt(16)),
                 },
               ],
             },
@@ -513,20 +513,28 @@ describe('RateUtility', () => {
 
     it('should apply the display rate to the given steps', () => {
       const result = RateUtility.displayRate(
-        [{ items: Rational.two, surplus: new Rational(BigInt(3)) }] as any,
+        [
+          {
+            items: Rational.one,
+            surplus: Rational.two,
+            pollution: new Rational(BigInt(3)),
+          },
+        ] as any,
         DisplayRate.PerMinute
       );
-      expect(result[0].items).toEqual(new Rational(BigInt(120)));
-      expect(result[0].surplus).toEqual(new Rational(BigInt(180)));
+      expect(result[0].items).toEqual(new Rational(BigInt(60)));
+      expect(result[0].surplus).toEqual(new Rational(BigInt(120)));
+      expect(result[0].pollution).toEqual(new Rational(BigInt(180)));
     });
 
-    it('should apply the display rate to the given steps with no surplus', () => {
+    it('should apply the display rate to partial steps', () => {
       const result = RateUtility.displayRate(
         [{ items: Rational.two }] as any,
         DisplayRate.PerMinute
       );
       expect(result[0].items).toEqual(new Rational(BigInt(120)));
-      expect(result[0].surplus).toBeFalsy();
+      expect(result[0].surplus).toBeUndefined();
+      expect(result[0].pollution).toBeUndefined();
     });
 
     it('should calculate parent percentages', () => {
@@ -558,8 +566,9 @@ describe('RateUtility', () => {
         name: 'test',
         itemId: Mocks.Item1.id,
         recipeId: null,
-        items: Rational.two,
-        surplus: new Rational(BigInt(3)),
+        items: Rational.one,
+        surplus: Rational.two,
+        pollution: new Rational(BigInt(3)),
         belts: null,
         children: [
           {
@@ -567,20 +576,23 @@ describe('RateUtility', () => {
             name: 'test2',
             itemId: Mocks.Item1.id,
             recipeId: null,
-            items: Rational.two,
-            surplus: new Rational(BigInt(3)),
+            items: new Rational(BigInt(4)),
+            surplus: new Rational(BigInt(5)),
+            pollution: new Rational(BigInt(6)),
             belts: null,
           },
         ],
       };
       RateUtility.nodeDisplayRate(node, DisplayRate.PerMinute);
-      expect(node.items).toEqual(new Rational(BigInt(120)));
-      expect(node.surplus).toEqual(new Rational(BigInt(180)));
-      expect(node.children[0].items).toEqual(new Rational(BigInt(120)));
-      expect(node.children[0].surplus).toEqual(new Rational(BigInt(180)));
+      expect(node.items).toEqual(new Rational(BigInt(60)));
+      expect(node.surplus).toEqual(new Rational(BigInt(120)));
+      expect(node.pollution).toEqual(new Rational(BigInt(180)));
+      expect(node.children[0].items).toEqual(new Rational(BigInt(240)));
+      expect(node.children[0].surplus).toEqual(new Rational(BigInt(300)));
+      expect(node.children[0].pollution).toEqual(new Rational(BigInt(360)));
     });
 
-    it('should apply the display rate to the given nodes with no surplus', () => {
+    it('should apply the display rate to partial nodes', () => {
       const node: Node = {
         id: 'test',
         name: 'test',
@@ -591,7 +603,8 @@ describe('RateUtility', () => {
       };
       RateUtility.nodeDisplayRate(node, DisplayRate.PerMinute);
       expect(node.items).toEqual(new Rational(BigInt(120)));
-      expect(node.surplus).toBeFalsy();
+      expect(node.surplus).toBeUndefined();
+      expect(node.pollution).toBeUndefined();
     });
   });
 });

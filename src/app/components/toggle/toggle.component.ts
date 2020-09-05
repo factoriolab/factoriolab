@@ -24,9 +24,9 @@ export class ToggleComponent {
     const simpleRecipes = Object.keys(value.itemRecipeIds).map(
       (i) => value.itemRecipeIds[i]
     );
-    this.complexRecipes = value.recipeIds.filter(
-      (r) => simpleRecipes.indexOf(r) === -1
-    ).sort();
+    this.complexRecipes = value.recipeIds
+      .filter((r) => simpleRecipes.indexOf(r) === -1)
+      .sort();
   }
   get data() {
     return this._data;
@@ -48,6 +48,10 @@ export class ToggleComponent {
 
   @HostBinding('style.left.px') get left() {
     return this.parent ? this.parent.getBoundingClientRect().x - 8 : 1;
+  }
+
+  @HostBinding('style.width.rem') get width() {
+    return Math.ceil(Math.sqrt(this.complexRecipes.length)) * 2.25 + 1.25;
   }
 
   constructor(private element: ElementRef) {}

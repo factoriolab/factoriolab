@@ -1,8 +1,13 @@
 :host {
   display: flex;
   user-select: none;
-  position: relative;
   font-weight: normal;
+  position: relative;
+}
+
+.image {
+  display: flex;
+  position: relative;
 }
 
 .tooltip {
@@ -14,8 +19,6 @@
   user-select: none;
   cursor: default;
 
-  left: 0;
-  top: calc(100% + 0.25rem);
   z-index: 1;
 
   .title {

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Mocks, TestUtility, ItemId } from 'src/tests';
 import { IdType, DisplayRate, Dataset } from '~/models';
@@ -42,11 +42,11 @@ describe('SelectComponent', () => {
   let component: TestSelectComponent;
   let fixture: ComponentFixture<TestSelectComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [IconComponent, SelectComponent, TestSelectComponent],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TestSelectComponent);
@@ -70,6 +70,10 @@ describe('SelectComponent', () => {
     expect(component.child.left).toEqual(-13);
     component.child.parent = null;
     expect(component.child.left).toEqual(-4);
+  });
+
+  it('should set width based on options', () => {
+    expect(component.child.width).toEqual(5.75);
   });
 
   it('should set opening to false on first click event', () => {

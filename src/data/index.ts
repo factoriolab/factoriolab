@@ -9,6 +9,7 @@ export const data: AppData = {
     { id: '0.18', name: '0.18.47' },
     { id: '0.17', name: '0.17.79' },
     { id: '0.16', name: '0.16.51' },
+    { id: 'bobs-angels', name: 'Bobs & Angels' },
     { id: 'krastorio2', name: 'Krastorio 2' },
   ],
   mods: [

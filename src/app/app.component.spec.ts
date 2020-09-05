@@ -1,4 +1,4 @@
-import { TestBed, async, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -28,7 +28,7 @@ describe('AppComponent', () => {
   let store: Store<State>;
   let router: RouterService;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [
         NoopAnimationsModule,
@@ -55,7 +55,7 @@ describe('AppComponent', () => {
         store = TestBed.inject(Store);
         router = TestBed.inject(RouterService);
       });
-  }));
+  });
 
   afterEach(() => {
     localStorage.removeItem(LocalStorageKey.Settings);

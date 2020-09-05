@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
 import { Mocks, TestUtility, CategoryId, ItemId } from 'src/tests';
@@ -37,7 +37,7 @@ describe('ProductsComponent', () => {
   let component: TestProductsComponent;
   let fixture: ComponentFixture<TestProductsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [FormsModule],
       declarations: [
@@ -53,7 +53,7 @@ describe('ProductsComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

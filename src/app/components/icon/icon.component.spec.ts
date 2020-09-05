@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Mocks } from 'src/tests';
 import { DisplayRate } from '~/models';
@@ -34,7 +34,7 @@ describe('IconComponent', () => {
   let component: TestIconComponent;
   let fixture: ComponentFixture<TestIconComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [IconComponent, TestIconComponent],
     })
@@ -44,7 +44,7 @@ describe('IconComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -53,6 +53,27 @@ describe('IconComponent', () => {
   describe('element', () => {
     it('should return the native element', () => {
       expect(component.child.element).toBeTruthy();
+    });
+  });
+
+  describe('setTooltipMargin', () => {
+    it('should handle scaled icons', () => {
+      component.child.scale = true;
+      component.child.scrollTop = 40;
+      expect(component.child.tooltipMarginTop).toEqual(0);
+    });
+
+    it('should handle non-scaled icons', () => {
+      component.child.scale = false;
+      component.child.scrollTop = 72;
+      expect(component.child.tooltipMarginTop).toEqual(0);
+    });
+  });
+
+  describe('round', () => {
+    it('should truncate long numbers', () => {
+      expect(component.child.round(0.333333)).toEqual(0.33);
+      expect(component.child.round(100)).toEqual(100);
     });
   });
 

@@ -263,10 +263,12 @@ describe('RouterService', () => {
       expect(store.dispatch).not.toHaveBeenCalled();
     });
 
-    it('should log error on bad zipped url', () => {
+    it('should log warning on bad zipped url', () => {
+      spyOn(console, 'warn');
       spyOn(console, 'error');
       (router.events as any).next(new NavigationEnd(2, '/#z=test', '/#z=test'));
-      expect(console.error).toHaveBeenCalledTimes(2);
+      expect(console.warn).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledTimes(1);
     });
 
     it('should unzip the hash', () => {
@@ -310,9 +312,15 @@ describe('RouterService', () => {
     });
 
     it('should unzip the products by other rates', () => {
-      spyOn(store, 'dispatch');
       const result = service.unzipProducts([mockZipProductBelts]);
       expect(result).toEqual(mockProductsBeltsState);
+    });
+
+    it('should handle invalid number of product fields', () => {
+      spyOn(console, 'warn');
+      const result = service.unzipProducts(['id']);
+      expect(console.warn).toHaveBeenCalledTimes(1);
+      expect(result).toEqual({ids: [], index: 0, entities: {}});
     });
   });
 
@@ -350,6 +358,12 @@ describe('RouterService', () => {
       const result = service.unzipItems([`${ItemId.SteelChest}:0:`]);
       expect(result).toEqual({ [ItemId.SteelChest]: { ignore: false } });
     });
+
+    it('should handle empty state', () => {
+      const id = 'id';
+      const result = service.unzipItems([id]);
+      expect(result).toEqual({[id]: {}});
+    });
   });
 
   describe('zipRecipes', () => {
@@ -373,6 +387,12 @@ describe('RouterService', () => {
     it('should unzip the full recipe settings', () => {
       const result = service.unzipRecipes([mockZipFullRecipeSettings]);
       expect(result).toEqual(mockFullRecipeSettings);
+    });
+
+    it('should handle empty state', () => {
+      const id = 'id';
+      const result = service.unzipRecipes([id]);
+      expect(result).toEqual({[id]: {}});
     });
   });
 
@@ -408,6 +428,11 @@ describe('RouterService', () => {
     it('should unzip the full settings', () => {
       const result = service.unzipSettings(mockZipFullSettings);
       expect(result).toEqual(mockFullSettings);
+    });
+
+    it('should handle empty state', () => {
+      const result = service.unzipSettings('');
+      expect(result).toEqual({} as any);
     });
   });
 
