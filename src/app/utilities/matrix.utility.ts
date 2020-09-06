@@ -18,10 +18,10 @@ import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
 import { RateUtility } from './rate.utility';
 
-const COST_WATER = new Rational(BigInt(10));
-const COST_CRUDE = Rational.hundred;
-const COST_MINING = Rational.thousand;
-const COST_INPUT = new Rational(BigInt(10000));
+const COST_WATER = Rational.hundred;
+const COST_CRUDE = new Rational(BigInt(10000));
+const COST_MINING = new Rational(BigInt(1000000));
+const COST_INPUT = new Rational(BigInt(100000000));
 
 export class MatrixUtility {
   static solveMatricesFor(
