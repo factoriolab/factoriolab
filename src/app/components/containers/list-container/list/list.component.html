@@ -108,14 +108,14 @@
         </td>
         <td>
           <div class="flex" *ngIf="step.items">
-            <div *ngIf="step.items" class="monospace">
-              {{ rate(step.items, itemPrecision) }}
-            </div>
             <div
               *ngIf="step.surplus && step.surplus.nonzero()"
               class="monospace"
             >
               (+{{ rate(step.surplus, itemPrecision) }})
+            </div>
+            <div *ngIf="step.items" class="monospace">
+              {{ rate(step.items, itemPrecision) }}
             </div>
             <lab-icon
               class="clickable"
