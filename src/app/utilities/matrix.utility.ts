@@ -18,6 +18,9 @@ import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
 import { RateUtility } from './rate.utility';
 
+const COST_WATER = Rational.hundred;
+const COST_INPUT = new Rational(BigInt(10000));
+
 export class MatrixUtility {
   static solveMatricesFor(
     steps: Step[],
@@ -310,16 +313,22 @@ export class MatrixSolver {
     let factoryExpr = new Expression(tax);
     for (const r of this.recipeIds) {
       if (r === WATER_ID) {
-        factoryExpr = factoryExpr.minus(this.recipeVar[r]);
-      } else {
         factoryExpr = factoryExpr.minus(
-          new Expression([Rational.hundred, this.recipeVar[r]])
+          new Expression([COST_WATER, this.recipeVar[r]])
         );
+      } else if (this.data.recipeR[r].mining) {
+        factoryExpr = factoryExpr.minus(
+          new Expression([COST_INPUT, this.recipeVar[r]])
+        );
+      } else {
+        factoryExpr = factoryExpr.minus(this.recipeVar[r]);
       }
     }
     let costExpr = new Expression(cost);
     for (const i of Object.keys(this.inputVar)) {
-      costExpr = costExpr.minus(this.inputVar[i]);
+      costExpr = costExpr.minus(
+        new Expression([COST_INPUT, this.inputVar[i]])
+      );
     }
 
     this.solver.addConstraint(new Constraint(factoryExpr, Operator.Eq));
