@@ -318,7 +318,7 @@ export class MatrixSolver {
         factoryExpr = factoryExpr.minus(
           new Expression([COST_WATER, this.recipeVar[r]])
         );
-      } else if (r === 'crude-oil) {
+      } else if (r === 'crude-oil') {
         factoryExpr = factoryExpr.minus(
           new Expression([COST_CRUDE, this.recipeVar[r]])
         );
