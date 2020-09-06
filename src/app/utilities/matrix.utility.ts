@@ -19,8 +19,6 @@ import { RecipesState } from '~/store/recipes';
 import { RateUtility } from './rate.utility';
 
 const COST_WATER = Rational.hundred;
-const COST_CRUDE = new Rational(BigInt(10000));
-const COST_MINING = new Rational(BigInt(10000));
 const COST_INPUT = new Rational(BigInt(10000));
 
 export class MatrixUtility {
@@ -318,13 +316,9 @@ export class MatrixSolver {
         factoryExpr = factoryExpr.minus(
           new Expression([COST_WATER, this.recipeVar[r]])
         );
-      } else if (r === 'crude-oil') {
-        factoryExpr = factoryExpr.minus(
-          new Expression([COST_CRUDE, this.recipeVar[r]])
-        );
       } else if (this.data.recipeR[r].mining) {
         factoryExpr = factoryExpr.minus(
-          new Expression([COST_MINING, this.recipeVar[r]])
+          new Expression([COST_INPUT, this.recipeVar[r]])
         );
       } else {
         factoryExpr = factoryExpr.minus(this.recipeVar[r]);
