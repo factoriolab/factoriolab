@@ -327,7 +327,7 @@ export class MatrixSolver {
           new Expression([COST_MINING, this.recipeVar[r]])
         );
       } else {
-        factoryExpr = factoryExpr.minus(this.recipeVar[r]]));
+        factoryExpr = factoryExpr.minus(this.recipeVar[r]);
       }
     }
     let costExpr = new Expression(cost);
