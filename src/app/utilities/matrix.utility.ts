@@ -20,8 +20,8 @@ import { RateUtility } from './rate.utility';
 
 const COST_WATER = Rational.hundred;
 const COST_CRUDE = new Rational(BigInt(10000));
-const COST_MINING = new Rational(BigInt(1000000));
-const COST_INPUT = new Rational(BigInt(100000000));
+const COST_MINING = new Rational(BigInt(10000));
+const COST_INPUT = new Rational(BigInt(10000));
 
 export class MatrixUtility {
   static solveMatricesFor(
