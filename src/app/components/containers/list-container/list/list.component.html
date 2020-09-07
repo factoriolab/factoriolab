@@ -407,7 +407,6 @@
       </tr>
       <ng-container
         *ngIf="
-          step.recipeId &&
           data.recipeEntities[step.recipeId] &&
           expanded[step.itemId]
         "
@@ -421,7 +420,7 @@
         >
           <ng-container *ngIf="findStep(input.key) as inStep">
             <tr
-              *ngIf="inStep.parents?[step.recipeId] as percent"
+              *ngIf="inStep.parents?.[step.recipeId] as percent"
               class="details"
               [class.first]="isFirst"
               [class.last]="isLast"
