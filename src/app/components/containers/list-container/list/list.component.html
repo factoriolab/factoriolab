@@ -421,7 +421,7 @@
         >
           <ng-container *ngIf="findStep(input.key) as inStep">
             <tr
-              *ngIf="inStep.parents && inStep.parents[step.recipeId]"
+              *ngIf="inStep.parents?[step.recipeId] as percent"
               class="details"
               [class.first]="isFirst"
               [class.last]="isLast"
@@ -432,7 +432,7 @@
                   <div *ngIf="inStep.items" class="monospace">
                     {{
                       rate(
-                        inStep.items.mul(inStep.parents[step.recipeId]),
+                        inStep.items.mul(percent),
                         itemPrecision
                       )
                     }}
@@ -464,7 +464,7 @@
                     <div class="monospace">
                       {{
                         rate(
-                          inStep.belts.mul(inStep.parents[step.recipeId]),
+                          inStep.belts.mul(percent),
                           beltPrecision
                         )
                       }}
@@ -482,20 +482,22 @@
               </td>
               <ng-container *ngIf="show[Column.Factories]">
                 <ng-container
-                  *ngIf="
-                    inStep.recipeId &&
-                    recipeSettings[inStep.recipeId].factory as factory
-                  "
+                  *ngIf="recipeSettings[inStep.recipeId]?.factory as factory"
                 >
                   <td>
                     <div *ngIf="inStep.factories?.nonzero()" class="flex">
                       <div *ngIf="factory !== 'pumpjack'" class="monospace">
-                        {{ rate(step.factories, factoryPrecision) }}
+                        {{ 
+                          rate(
+                            inStep.factories.mul(percent),
+                            factoryPrecision
+                          )
+                        }}
                       </div>
                       <div *ngIf="factory === 'pumpjack'" class="monospace">
                         {{
                           rate(
-                            step.factories.mul(Rational.hundred),
+                            inStep.factories.mul(percent).mul(Rational.hundred),
                             factoryPrecision
                           )
                         }}%
@@ -524,7 +526,7 @@
                   </td>
                 </ng-container>
                 <ng-container
-                  *ngIf="!recipeSettings[step.recipeId]?.factory as factory"
+                  *ngIf="!recipeSettings[inStep.recipeId]?.factory as factory"
                 >
                   <td colspan="2"></td>
                 </ng-container>
@@ -534,7 +536,7 @@
                   <div class="monospace">
                     {{
                       rate(
-                        inStep.parents[step.recipeId].mul(Rational.hundred),
+                        percent.mul(Rational.hundred),
                         0
                       )
                     }}%
@@ -615,12 +617,12 @@
               <td>
                 <div class="flex" *ngIf="step.factories?.nonzero()">
                   <div *ngIf="factory !== 'pumpjack'" class="monospace">
-                    {{ rate(step.factories, factoryPrecision) }}
+                    {{ rate(step.factories.mul(parent.value), factoryPrecision) }}
                   </div>
                   <div *ngIf="factory === 'pumpjack'" class="monospace">
                     {{
                       rate(
-                        step.factories.mul(Rational.hundred),
+                        step.factories.mul(parent.value).mul(Rational.hundred),
                         factoryPrecision
                       )
                     }}%
