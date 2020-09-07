@@ -207,10 +207,10 @@
           >
             <td>
               <div *ngIf="step.factories?.nonzero()" class="flex">
-                <div *ngIf="factory !== 'pumpjack'" class="monospace">
+                <div *ngIf="factory !== PUMPJACK_ID" class="monospace">
                   {{ rate(step.factories, factoryPrecision) }}
                 </div>
-                <div *ngIf="factory === 'pumpjack'" class="monospace">
+                <div *ngIf="factory === PUMPJACK_ID" class="monospace">
                   {{
                     rate(
                       step.factories.mul(Rational.hundred),
@@ -485,7 +485,7 @@
                 >
                   <td>
                     <div *ngIf="inStep.factories?.nonzero()" class="flex">
-                      <div *ngIf="factory !== 'pumpjack'" class="monospace">
+                      <div *ngIf="factory !== PUMPJACK_ID" class="monospace">
                         {{ 
                           rate(
                             inStep.factories.mul(percent),
@@ -493,7 +493,7 @@
                           )
                         }}
                       </div>
-                      <div *ngIf="factory === 'pumpjack'" class="monospace">
+                      <div *ngIf="factory === PUMPJACK_ID" class="monospace">
                         {{
                           rate(
                             inStep.factories.mul(percent).mul(Rational.hundred),
@@ -615,10 +615,10 @@
             >
               <td>
                 <div class="flex" *ngIf="step.factories?.nonzero()">
-                  <div *ngIf="factory !== 'pumpjack'" class="monospace">
+                  <div *ngIf="factory !== PUMPJACK_ID" class="monospace">
                     {{ rate(step.factories.mul(parent.value), factoryPrecision) }}
                   </div>
-                  <div *ngIf="factory === 'pumpjack'" class="monospace">
+                  <div *ngIf="factory === PUMPJACK_ID" class="monospace">
                     {{
                       rate(
                         step.factories.mul(parent.value).mul(Rational.hundred),
