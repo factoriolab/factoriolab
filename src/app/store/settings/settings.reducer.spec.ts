@@ -229,7 +229,7 @@ describe('Settings Reducer', () => {
       const value = 2;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetBeaconCountAction(value)
+        new Actions.SetBeaconCountAction({ value, default: null })
       );
       expect(result.beaconCount).toEqual(value);
     });

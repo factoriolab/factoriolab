@@ -174,7 +174,9 @@ export class RouterService {
         };
         index++;
       } else {
-        console.warn(`Router: Invalid number of fields in product: '${product}'`);
+        console.warn(
+          `Router: Invalid number of fields in product: '${product}'`
+        );
       }
     }
     return { ids, index, entities };

@@ -397,13 +397,14 @@
   >
   </lab-select>
   <input
+    id="settings-beacon-count"
     type="number"
     title="Enter default number of beacon modules"
     placeholder="# Modules"
     min="0"
     step="1"
     [value]="settings.beaconCount"
-    (change)="emitNumber(setBeaconCount, $event)"
+    (change)="changeBeaconCount($event)"
   />
 </div>
 <div class="field">
