@@ -47,6 +47,30 @@
       [data]="data"
     ></lab-icon>
   </div>
+  <div *ngIf="item?.beacon">
+    <table>
+      <tr>
+        <td>Effectivity</td>
+        <td>{{ round(item.beacon.effectivity) }}</td>
+      </tr>
+      <tr>
+        <td>Modules</td>
+        <td>{{ item.beacon.modules }}</td>
+      </tr>
+      <tr>
+        <td>Range</td>
+        <td>{{ item.beacon.range }}</td>
+      </tr>
+      <tr *ngIf="item.beacon.burner">
+        <td>Burner</td>
+        <td>{{ round(item.beacon.burner) }} kW</td>
+      </tr>
+      <tr *ngIf="item.beacon.electric">
+        <td>Energy Consumption</td>
+        <td>{{ round(item.beacon.electric) }} kW</td>
+      </tr>
+    </table>
+  </div>
   <div *ngIf="item?.belt" class="nowrap">
     {{ round(item.belt.speed * displayRate) }}
     {{

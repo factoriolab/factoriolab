@@ -1,0 +1,33 @@
+<lab-icon [data]="data" [iconId]="iconId" [tooltip]="tooltip"></lab-icon>
+<div class="flex">
+  <input
+    title="Use decimal precision"
+    type="radio"
+    [name]="tooltip"
+    [value]="false"
+    [ngModel]="value == null"
+    (change)="setValue.emit(default)"
+  />
+  <input
+    class="precision-decimal"
+    title="Set decimal precision"
+    type="number"
+    placeholder="0.4"
+    min="0"
+    step="1"
+    [disabled]="value == null"
+    [value]="value"
+    (change)="emitEvent($event)"
+  />
+</div>
+<label class="flex" title="Use fractions">
+  <input
+    title="Use fractions"
+    type="radio"
+    [name]="tooltip"
+    [value]="true"
+    [ngModel]="value == null"
+    (change)="setValue.emit(null)"
+  />
+  <span>⅓</span>
+</label>

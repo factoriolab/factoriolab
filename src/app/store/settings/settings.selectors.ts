@@ -28,6 +28,8 @@ const sDisplayRate = (state: SettingsState) => state.displayRate;
 const sItemPrecision = (state: SettingsState) => state.itemPrecision;
 const sBeltPrecision = (state: SettingsState) => state.beltPrecision;
 const sFactoryPrecision = (state: SettingsState) => state.factoryPrecision;
+const sPowerPrecision = (state: SettingsState) => state.powerPrecision;
+const sPollutionPrecision = (state: SettingsState) => state.pollutionPrecision;
 const sDrillModule = (state: SettingsState) => state.drillModule;
 const sMiningBonus = (state: SettingsState) => state.miningBonus;
 const sResearchSpeed = (state: SettingsState) => state.researchSpeed;
@@ -44,6 +46,11 @@ export const getDisplayRate = compose(sDisplayRate, settingsState);
 export const getItemPrecision = compose(sItemPrecision, settingsState);
 export const getBeltPrecision = compose(sBeltPrecision, settingsState);
 export const getFactoryPrecision = compose(sFactoryPrecision, settingsState);
+export const getPowerPrecision = compose(sPowerPrecision, settingsState);
+export const getPollutionPrecision = compose(
+  sPollutionPrecision,
+  settingsState
+);
 export const getDrillModule = compose(sDrillModule, settingsState);
 export const getMiningBonus = compose(sMiningBonus, settingsState);
 export const getResearchSpeed = compose(sResearchSpeed, settingsState);
@@ -74,9 +81,10 @@ export const getDefaults = createSelector(
         factoryRank:
           preset === Preset.Minimum ? m.minFactoryRank : m.maxFactoryRank,
         moduleRank: preset === Preset.Minimum ? [] : m.moduleRank,
-        beaconModule: preset < Preset.Beacon16 ? MODULE_ID : m.beaconModule,
         beaconCount:
-          preset < Preset.Beacon16 ? 0 : preset < Preset.Beacon24 ? 16 : 24,
+          preset < Preset.Beacon8 ? 0 : preset < Preset.Beacon12 ? 8 : 12,
+        beacon: m.beacon,
+        beaconModule: preset < Preset.Beacon8 ? MODULE_ID : m.beaconModule,
       };
       return defaults;
     }
@@ -96,8 +104,9 @@ export const getSettings = createSelector(
       disabledRecipes: s.disabledRecipes || d?.disabledRecipes || [],
       factoryRank: s.factoryRank || d?.factoryRank || [],
       moduleRank: s.moduleRank || d?.moduleRank || [],
-      beaconModule: s.beaconModule || d?.beaconModule,
       beaconCount: s.beaconCount != null ? s.beaconCount : d?.beaconCount,
+      beacon: s.beacon || d?.beacon,
+      beaconModule: s.beaconModule || d?.beaconModule,
     },
   })
 );
@@ -117,12 +126,14 @@ export const getFactoryRank = createSelector(getSettings, (s) => s.factoryRank);
 
 export const getModuleRank = createSelector(getSettings, (s) => s.moduleRank);
 
+export const getBeaconCount = createSelector(getSettings, (s) => s.beaconCount);
+
+export const getBeacon = createSelector(getSettings, (s) => s.beacon);
+
 export const getBeaconModule = createSelector(
   getSettings,
   (s) => s.beaconModule
 );
-
-export const getBeaconCount = createSelector(getSettings, (s) => s.beaconCount);
 
 export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
   Rational.fromNumber(bonus).div(Rational.hundred)
@@ -202,6 +213,7 @@ export const getNormalDataset = createSelector(
     const recipes = recipeIds.map((r) => recipeEntities[r]);
 
     // Filter for item types
+    const beaconIds = items.filter((i) => i.beacon).map((i) => i.id);
     const beltIds = items.filter((i) => i.belt).map((i) => i.id);
     const fuelIds = items.filter((i) => i.fuel).map((i) => i.id);
     const factoryIds = items.filter((i) => i.factory).map((i) => i.id);
@@ -312,6 +324,7 @@ export const getNormalDataset = createSelector(
       iconIds,
       iconEntities,
       itemIds,
+      beaconIds,
       beltIds,
       fuelIds,
       factoryIds,

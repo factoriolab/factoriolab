@@ -16,23 +16,24 @@ export function recipesReducer(
       return action.payload.recipesState ? action.payload.recipesState : state;
     }
     case RecipesActionType.SET_FACTORY: {
-      return StoreUtility.compareReset(
-        state,
-        RecipeSettingsField.Factory,
-        action.payload
+      return StoreUtility.resetFields(
+        StoreUtility.compareReset(
+          state,
+          RecipeSettingsField.Factory,
+          action.payload
+        ),
+        [
+          RecipeSettingsField.FactoryModules,
+          RecipeSettingsField.BeaconCount,
+          RecipeSettingsField.Beacon,
+          RecipeSettingsField.BeaconModules,
+        ]
       );
     }
-    case RecipesActionType.SET_MODULES: {
+    case RecipesActionType.SET_FACTORY_MODULES: {
       return StoreUtility.compareReset(
         state,
-        RecipeSettingsField.Modules,
-        action.payload
-      );
-    }
-    case RecipesActionType.SET_BEACON_MODULE: {
-      return StoreUtility.compareReset(
-        state,
-        RecipeSettingsField.BeaconModule,
+        RecipeSettingsField.FactoryModules,
         action.payload
       );
     }
@@ -43,22 +44,40 @@ export function recipesReducer(
         action.payload
       );
     }
+    case RecipesActionType.SET_BEACON: {
+      return StoreUtility.resetField(
+        StoreUtility.compareReset(
+          state,
+          RecipeSettingsField.Beacon,
+          action.payload
+        ),
+        RecipeSettingsField.BeaconModules
+      );
+    }
+    case RecipesActionType.SET_BEACON_MODULES: {
+      return StoreUtility.compareReset(
+        state,
+        RecipeSettingsField.BeaconModules,
+        action.payload
+      );
+    }
     case RecipesActionType.RESET: {
       const newState = { ...state };
       delete newState[action.payload];
       return newState;
     }
     case RecipesActionType.RESET_FACTORY: {
-      return StoreUtility.resetField(state, RecipeSettingsField.Factory);
-    }
-    case RecipesActionType.RESET_MODULES: {
-      return StoreUtility.resetField(state, RecipeSettingsField.Modules);
+      return StoreUtility.resetFields(state, [
+        RecipeSettingsField.Factory,
+        RecipeSettingsField.FactoryModules,
+      ]);
     }
     case RecipesActionType.RESET_BEACONS: {
-      return StoreUtility.resetField(
-        StoreUtility.resetField(state, RecipeSettingsField.BeaconModule),
-        RecipeSettingsField.BeaconCount
-      );
+      return StoreUtility.resetFields(state, [
+        RecipeSettingsField.BeaconCount,
+        RecipeSettingsField.Beacon,
+        RecipeSettingsField.BeaconModules,
+      ]);
     }
     default:
       return state;

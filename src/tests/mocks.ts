@@ -38,7 +38,7 @@ export const Base: Mod = { ...BaseInfo, ...BaseData };
 export const ModData1 = mod;
 export const Mod1: Mod = { ...data.mods[0], ...ModData1 };
 export const ModInfo = [data.mods[0]];
-export const Defaults = getDefaults.projector(Preset.Beacon16, base);
+export const Defaults = getDefaults.projector(Preset.Beacon8, base);
 export const Data = getNormalDataset.projector(
   data.app,
   [Base, Mod1],
@@ -87,14 +87,16 @@ export const ItemSettings1: ItemSettings = {
 };
 export const RecipeSettings1: RecipeSettings = {
   factory: ItemId.AssemblingMachine2,
-  modules: [ItemId.Module, ItemId.Module],
-  beaconModule: ItemId.SpeedModule,
+  factoryModules: [ItemId.Module, ItemId.Module],
+  beacon: ItemId.Beacon,
+  beaconModules: [ItemId.SpeedModule, ItemId.SpeedModule],
   beaconCount: 0,
 };
 export const RecipeSettings2: RecipeSettings = {
   factory: ItemId.AssemblingMachine2,
-  modules: [ItemId.Module, ItemId.Module],
-  beaconModule: ItemId.Module,
+  factoryModules: [ItemId.Module, ItemId.Module],
+  beacon: ItemId.Beacon,
+  beaconModules: [ItemId.SpeedModule, ItemId.SpeedModule],
   beaconCount: 0,
 };
 export const Step1: Step = {
@@ -104,7 +106,7 @@ export const Step1: Step = {
   items: Rational.fromNumber(Product1.rate),
   belts: Rational.fromNumber(0.5),
   factories: Rational.one,
-  consumption: Rational.one,
+  power: Rational.one,
   pollution: Rational.one,
 };
 export const Step2: Step = {
@@ -114,7 +116,7 @@ export const Step2: Step = {
   items: Rational.fromNumber(Product2.rate),
   belts: Rational.one,
   factories: Rational.two,
-  consumption: Rational.zero,
+  power: Rational.zero,
   pollution: Rational.zero,
 };
 export const Steps = [Step1, Step2];
@@ -147,8 +149,9 @@ export const RecipeSettingsInitial = getRecipeSettings.projector(
   {},
   Defaults.factoryRank,
   Defaults.moduleRank,
-  Defaults.beaconModule,
   Defaults.beaconCount,
+  Defaults.beacon,
+  Defaults.beaconModule,
   InitialSettingsState.drillModule,
   Data
 );

@@ -1,15 +1,15 @@
 import { Action } from '@ngrx/store';
 
-import { DefaultIdPayload, IdPayload } from '~/models';
+import { DefaultIdPayload } from '~/models';
 
 export const enum RecipesActionType {
   SET_FACTORY = '[Recipes Page] Set Factory',
-  SET_MODULES = '[Recipes Page] Set Modules',
-  SET_BEACON_MODULE = '[Recipes Page] Set Beacon Module',
+  SET_FACTORY_MODULES = '[Recipes Page] Set Modules',
   SET_BEACONS_COUNT = '[Recipes Page] Set Beacon Count',
+  SET_BEACON = '[Recipes Page] Set Beacon',
+  SET_BEACON_MODULES = '[Recipes Page] Set Beacon Modules',
   RESET = '[Recipes Page] Reset Recipe',
   RESET_FACTORY = '[Recipes Page] Reset Factory',
-  RESET_MODULES = '[Recipes Page] Reset Modules',
   RESET_BEACONS = '[Recipes Page] Reset Beacons',
 }
 
@@ -18,19 +18,24 @@ export class SetFactoryAction implements Action {
   constructor(public payload: DefaultIdPayload) {}
 }
 
-export class SetModulesAction implements Action {
-  readonly type = RecipesActionType.SET_MODULES;
+export class SetFactoryModulesAction implements Action {
+  readonly type = RecipesActionType.SET_FACTORY_MODULES;
   constructor(public payload: DefaultIdPayload<string[]>) {}
-}
-
-export class SetBeaconModuleAction implements Action {
-  readonly type = RecipesActionType.SET_BEACON_MODULE;
-  constructor(public payload: DefaultIdPayload) {}
 }
 
 export class SetBeaconCountAction implements Action {
   readonly type = RecipesActionType.SET_BEACONS_COUNT;
   constructor(public payload: DefaultIdPayload<number>) {}
+}
+
+export class SetBeaconAction implements Action {
+  readonly type = RecipesActionType.SET_BEACON;
+  constructor(public payload: DefaultIdPayload) {}
+}
+
+export class SetBeaconModulesAction implements Action {
+  readonly type = RecipesActionType.SET_BEACON_MODULES;
+  constructor(public payload: DefaultIdPayload<string[]>) {}
 }
 
 export class ResetAction implements Action {
@@ -42,20 +47,16 @@ export class ResetFactoryAction implements Action {
   readonly type = RecipesActionType.RESET_FACTORY;
 }
 
-export class ResetModulesAction implements Action {
-  readonly type = RecipesActionType.RESET_MODULES;
-}
-
 export class ResetBeaconsAction implements Action {
   readonly type = RecipesActionType.RESET_BEACONS;
 }
 
 export type RecipesAction =
   | SetFactoryAction
-  | SetModulesAction
-  | SetBeaconModuleAction
+  | SetFactoryModulesAction
   | SetBeaconCountAction
+  | SetBeaconAction
+  | SetBeaconModulesAction
   | ResetAction
   | ResetFactoryAction
-  | ResetModulesAction
   | ResetBeaconsAction;
