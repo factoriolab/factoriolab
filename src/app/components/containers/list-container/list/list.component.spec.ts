@@ -5,7 +5,7 @@ import { StoreModule } from '@ngrx/store';
 
 import { Mocks, TestUtility, ItemId, RecipeId } from 'src/tests';
 import { IconComponent, SelectComponent } from '~/components';
-import { DisplayRate, AllColumns, Rational } from '~/models';
+import { DisplayRate, AllColumns, Rational, Step } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers } from '~/store';
 import { ListComponent } from './list.component';
@@ -27,20 +27,22 @@ import { ListComponent } from './list.component';
       [itemPrecision]="itemPrecision"
       [beltPrecision]="beltPrecision"
       [factoryPrecision]="factoryPrecision"
+      [powerPrecision]="powerPrecision"
+      [pollutionPrecision]="pollutionPrecision"
       [beaconCount]="beaconCount"
       [drillModule]="drillModule"
       [columns]="columns"
       [modifiedIgnore]="modifiedIgnore"
       [modifiedBelt]="modifiedBelt"
       [modifiedFactory]="modifiedFactory"
-      [modifiedModules]="modifiedModules"
       [modifiedBeacons]="modifiedBeacons"
       (ignoreItem)="ignoreItem($event)"
       (setBelt)="setBelt($event)"
       (setFactory)="setFactory($event)"
-      (setModules)="setModules($event)"
-      (setBeaconModule)="setBeaconModule($event)"
+      (setFactoryModules)="setFactoryModules($event)"
       (setBeaconCount)="setBeaconCount($event)"
+      (setBeacon)="setBeacon($event)"
+      (setBeaconModules)="setBeaconModules($event)"
       (showColumn)="showColumn($event)"
       (hideColumn)="hideColumn($event)"
       (resetItem)="resetItem($event)"
@@ -48,7 +50,6 @@ import { ListComponent } from './list.component';
       (resetIgnore)="resetIgnore()"
       (resetBelt)="resetBelt()"
       (resetFactory)="resetFactory()"
-      (resetModules)="resetModules()"
       (resetBeacons)="resetBeacons()"
     >
     </lab-list>
@@ -69,20 +70,22 @@ class TestListComponent {
   itemPrecision = null;
   beltPrecision = 0;
   factoryPrecision = 1;
+  powerPrecision = 2;
+  pollutionPrecision = 3;
   beaconCount = 0;
   drillModule = false;
   columns = AllColumns;
   modifiedIgnore = false;
   modifiedBelt = false;
   modifiedFactory = false;
-  modifiedModules = false;
   modifiedBeacons = false;
   ignoreItem(data) {}
   setBelt(data) {}
   setFactory(data) {}
-  setModules(data) {}
-  setBeaconModule(data) {}
+  setFactoryModules(data) {}
   setBeaconCount(data) {}
+  setBeacon(data) {}
+  setBeaconModules(data) {}
   showColumn(data) {}
   hideColumn(data) {}
   resetItem(data) {}
@@ -90,7 +93,6 @@ class TestListComponent {
   resetIgnore() {}
   resetBelt() {}
   resetFactory() {}
-  resetModules() {}
   resetBeacons() {}
 }
 
@@ -136,7 +138,7 @@ describe('ListComponent', () => {
     });
 
     it('should set the totalspan', () => {
-      expect(component.child.totalSpan).toEqual(7);
+      expect(component.child.totalSpan).toEqual(9);
     });
 
     it('should set totalspan with no columns', () => {
@@ -184,6 +186,51 @@ describe('ListComponent', () => {
     });
   });
 
+  describe('setItemPrecision', () => {
+    it('should set the effective items and surplus precision', () => {
+      expect(component.child.effPrecSurplus).toEqual(null);
+      expect(component.child.effPrecItems).toEqual(null);
+    });
+  });
+
+  describe('setBeltsPrecision', () => {
+    it('should set the effective belts precision', () => {
+      expect(component.child.effPrecBelts).toEqual(0);
+    });
+  });
+
+  describe('setFactoriesPrecision', () => {
+    it('should set the effective factories precision', () => {
+      expect(component.child.effPrecFactories).toEqual(0);
+    });
+  });
+
+  describe('setPowerPrecision', () => {
+    it('should set the effective power precision', () => {
+      expect(component.child.effPrecPower).toEqual(0);
+    });
+  });
+
+  describe('setPollutionPrecision', () => {
+    it('should set the effective pollution precision', () => {
+      expect(component.child.effPrecPollution).toEqual(0);
+    });
+  });
+
+  describe('effPrecFrom', () => {
+    it('should return null if precision is null', () => {
+      expect(component.child.effPrecFrom(null, null)).toEqual(null);
+    });
+
+    it('should return precision if any step has higher number of decimals', () => {
+      expect(component.child.effPrecFrom(0, (s: Step) => s.belts)).toEqual(0);
+    });
+
+    it('should return max number of decimals if less than precision', () => {
+      expect(component.child.effPrecFrom(5, (s: Step) => s.belts)).toEqual(1);
+    });
+  });
+
   describe('trackBy', () => {
     it('should combine the step item and recipe ids', () => {
       expect(component.child.trackBy(Mocks.Step1)).toEqual(
@@ -219,6 +266,10 @@ describe('ListComponent', () => {
 
     it('should add necessary spaces', () => {
       expect(component.child.rate(Rational.one, 3)).toEqual('1    ');
+    });
+
+    it('should add necessary zeros to rounded value', () => {
+      expect(component.child.rate(Rational.fromNumber(0.99), 1)).toEqual('1.0');
     });
   });
 
@@ -277,12 +328,12 @@ describe('ListComponent', () => {
 
   describe('factoryModuleChange', () => {
     it('should set a specific factory module', () => {
-      spyOn(component, 'setModules');
+      spyOn(component, 'setFactoryModules');
       TestUtility.clickSelector(fixture, '.list-edit-factory-module', 1);
       fixture.detectChanges();
       TestUtility.clickSelector(fixture, 'lab-select lab-icon', 1);
       fixture.detectChanges();
-      expect(component.setModules).toHaveBeenCalledWith({
+      expect(component.setFactoryModules).toHaveBeenCalledWith({
         id: Mocks.Step1.itemId,
         value: [
           ItemId.SpeedModule3,
@@ -295,12 +346,12 @@ describe('ListComponent', () => {
     });
 
     it('should set all factory modules', () => {
-      spyOn(component, 'setModules');
+      spyOn(component, 'setFactoryModules');
       TestUtility.clickSelector(fixture, '.list-edit-factory-module', 0);
       fixture.detectChanges();
       TestUtility.clickSelector(fixture, 'lab-select lab-icon', 1);
       fixture.detectChanges();
-      expect(component.setModules).toHaveBeenCalledWith({
+      expect(component.setFactoryModules).toHaveBeenCalledWith({
         id: Mocks.Step1.itemId,
         value: [
           ItemId.SpeedModule,
@@ -313,7 +364,7 @@ describe('ListComponent', () => {
     });
 
     it('should get correct default when ignoring mining modules', () => {
-      spyOn(component, 'setModules');
+      spyOn(component, 'setFactoryModules');
       component.child.factoryModuleChange(
         {
           recipeId: RecipeId.IronOre,
@@ -321,7 +372,7 @@ describe('ListComponent', () => {
         ItemId.SpeedModule,
         0
       );
-      expect(component.setModules).toHaveBeenCalledWith({
+      expect(component.setFactoryModules).toHaveBeenCalledWith({
         id: ItemId.IronOre,
         value: [ItemId.SpeedModule, ItemId.SpeedModule, ItemId.SpeedModule],
         default: [ItemId.Module, ItemId.Module, ItemId.Module],
@@ -331,30 +382,15 @@ describe('ListComponent', () => {
 
   describe('beaconModuleChange', () => {
     it('should set the beacon module', () => {
-      spyOn(component, 'setBeaconModule');
+      spyOn(component, 'setBeaconModules');
       TestUtility.clickSelector(fixture, '.list-edit-beacon-module', 0);
       fixture.detectChanges();
       TestUtility.clickSelector(fixture, 'lab-select lab-icon', 1);
       fixture.detectChanges();
-      expect(component.setBeaconModule).toHaveBeenCalledWith({
+      expect(component.setBeaconModules).toHaveBeenCalledWith({
         id: Mocks.Step1.recipeId,
-        value: ItemId.SpeedModule,
-        default: component.beaconModule,
-      });
-    });
-
-    it('should get correct default when ignoring mining modules', () => {
-      spyOn(component, 'setBeaconModule');
-      component.child.beaconModuleChange(
-        {
-          recipeId: RecipeId.IronOre,
-        } as any,
-        ItemId.SpeedModule
-      );
-      expect(component.setBeaconModule).toHaveBeenCalledWith({
-        id: ItemId.IronOre,
-        value: ItemId.SpeedModule,
-        default: ItemId.Module,
+        value: [ItemId.SpeedModule, ItemId.SpeedModule],
+        default: [ItemId.SpeedModule, ItemId.SpeedModule],
       });
     });
   });
@@ -362,27 +398,39 @@ describe('ListComponent', () => {
   describe('beaconCountChange', () => {
     it('should set beacon count', () => {
       spyOn(component, 'setBeaconCount');
-      TestUtility.selectSelector(fixture, 'input', '24');
+      TestUtility.selectSelector(fixture, 'input', '12');
       fixture.detectChanges();
       expect(component.setBeaconCount).toHaveBeenCalledWith({
         id: Mocks.Step1.itemId,
-        value: 24,
+        value: 12,
         default: 0,
       });
     });
 
     it('should not set beacon count on invalid event', () => {
       spyOn(component, 'setBeaconCount');
-      const event = { target: {} };
+      const event: any = { target: {} };
       component.child.beaconCountChange(Mocks.Step1.itemId as any, event);
       expect(component.setBeaconCount).not.toHaveBeenCalled();
     });
 
     it('should not set beacon count if unchanged', () => {
       spyOn(component, 'setBeaconCount');
-      TestUtility.selectSelector(fixture, 'input', '16');
+      TestUtility.selectSelector(fixture, 'input', '8');
       fixture.detectChanges();
       expect(component.setBeaconCount).not.toHaveBeenCalled();
+    });
+
+    it('should get correct default when ignoring mining modules', () => {
+      spyOn(component, 'setBeaconCount');
+      spyOn(component.child, 'miningIgnoreModule').and.returnValue(true);
+      TestUtility.selectSelector(fixture, 'input', '12');
+      fixture.detectChanges();
+      expect(component.setBeaconCount).toHaveBeenCalledWith({
+        id: Mocks.Step1.itemId,
+        value: 12,
+        default: 0,
+      });
     });
   });
 

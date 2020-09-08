@@ -5,6 +5,6 @@ export enum ElementId {
   HeaderHide = 'header-hide',
   HeaderIcon = 'header-icon',
   SettingsBeaconCount = 'settings-beacon-count',
-  SettingsPrecisionItemValue = 'settings-precision-item-value',
+  SettingsPreset = 'settings-preset',
   SettingsThemeSelect = 'settings-theme-select',
 }

@@ -14,33 +14,34 @@ export const enum SettingsActionType {
   SET_BASE = '[Settings Page] Set Base',
   ENABLE_MOD = '[Settings Page] Enable Mod',
   DISABLE_MOD = '[Settings Page] Disable Mod',
-  SET_BELT = '[Settings Page] Set Belt',
-  SET_FUEL = '[Settings Page] Set Fuel',
   DISABLE_RECIPE = '[Settings Page] Disable Recipe',
   ENABLE_RECIPE = '[Settings Page] Enable Recipe',
+  SET_EXPENSIVE = '[Settings Page] Set Expensive',
   PREFER_FACTORY = '[Settings Page] Prefer Factory',
   DROP_FACTORY = '[Settings Page] Drop Factory',
   PREFER_MODULE = '[Settings Page] Prefer Module',
   DROP_MODULE = '[Settings Page] Drop Module',
+  SET_DRILL_MODULE = '[Settings Page] Set Drill Module',
   SET_BEACON = '[Settings Page] Set Beacon',
   SET_BEACON_MODULE = '[Settings Page] Set Beacon Module',
+  SET_BEACON_COUNT = '[Settings Page] Set Beacon Count',
+  SET_BELT = '[Settings Page] Set Belt',
+  SET_FUEL = '[Settings Page] Set Fuel',
+  SET_FLOW_RATE = '[Settings Page] Set Flow Rate',
   SET_DISPLAY_RATE = '[Settings Page] Set Display Rate',
   SET_ITEM_PRECISION = '[Settings Page] Set Item Precision',
   SET_BELT_PRECISION = '[Settings Page] Set Belt Precision',
   SET_FACTORY_PRECISION = '[Settings Page] Set Factory Precision',
   SET_POWER_PRECISION = '[Settings Page] Set Power Precision',
   SET_POLLUTION_PRECISION = '[Settings Page] Set Pollution Precision',
-  SET_BEACON_COUNT = '[Settings Page] Set Beacon Count',
-  SET_DRILL_MODULE = '[Settings Page] Set Drill Module',
   SET_MINING_BONUS = '[Settings Page] Set Mining Bonus',
   SET_RESEARCH_SPEED = '[Settings Page] Set Research Speed',
-  SET_FLOW_RATE = '[Settings Page] Set Flow Rate',
-  SET_EXPENSIVE = '[Settings Page] Set Expensive',
   HIDE_COLUMN = '[Settings Page] Hide Column',
   SHOW_COLUMN = '[Settings Page] Show Column',
   SET_THEME = '[Settings Page] Set Theme',
   SHOW_HEADER = '[Settings Page] Show Header',
   HIDE_HEADER = '[Settings Page] Hide Header',
+  RESET = '[Settings Page] Reset',
 }
 
 export class SetPresetAction implements Action {
@@ -63,16 +64,6 @@ export class DisableModAction implements Action {
   constructor(public payload: DefaultTogglePayload) {}
 }
 
-export class SetBeltAction implements Action {
-  readonly type = SettingsActionType.SET_BELT;
-  constructor(public payload: DefaultPayload) {}
-}
-
-export class SetFuelAction implements Action {
-  readonly type = SettingsActionType.SET_FUEL;
-  constructor(public payload: DefaultPayload) {}
-}
-
 export class DisableRecipeAction implements Action {
   readonly type = SettingsActionType.DISABLE_RECIPE;
   constructor(public payload: DefaultTogglePayload) {}
@@ -81,6 +72,11 @@ export class DisableRecipeAction implements Action {
 export class EnableRecipeAction implements Action {
   readonly type = SettingsActionType.ENABLE_RECIPE;
   constructor(public payload: DefaultTogglePayload) {}
+}
+
+export class SetExpensiveAction implements Action {
+  readonly type = SettingsActionType.SET_EXPENSIVE;
+  constructor(public payload: boolean) {}
 }
 
 export class PreferFactoryAction implements Action {
@@ -103,6 +99,11 @@ export class DropModuleAction implements Action {
   constructor(public payload: DefaultTogglePayload) {}
 }
 
+export class SetDrillModuleAction implements Action {
+  readonly type = SettingsActionType.SET_DRILL_MODULE;
+  constructor(public payload: boolean) {}
+}
+
 export class SetBeaconAction implements Action {
   readonly type = SettingsActionType.SET_BEACON;
   constructor(public payload: DefaultPayload) {}
@@ -111,6 +112,26 @@ export class SetBeaconAction implements Action {
 export class SetBeaconModuleAction implements Action {
   readonly type = SettingsActionType.SET_BEACON_MODULE;
   constructor(public payload: DefaultPayload) {}
+}
+
+export class SetBeaconCountAction implements Action {
+  readonly type = SettingsActionType.SET_BEACON_COUNT;
+  constructor(public payload: DefaultPayload<number>) {}
+}
+
+export class SetBeltAction implements Action {
+  readonly type = SettingsActionType.SET_BELT;
+  constructor(public payload: DefaultPayload) {}
+}
+
+export class SetFuelAction implements Action {
+  readonly type = SettingsActionType.SET_FUEL;
+  constructor(public payload: DefaultPayload) {}
+}
+
+export class SetFlowRateAction implements Action {
+  readonly type = SettingsActionType.SET_FLOW_RATE;
+  constructor(public payload: number) {}
 }
 
 export class SetDisplayRateAction implements Action {
@@ -143,16 +164,6 @@ export class SetPollutionPrecisionAction implements Action {
   constructor(public payload: number) {}
 }
 
-export class SetBeaconCountAction implements Action {
-  readonly type = SettingsActionType.SET_BEACON_COUNT;
-  constructor(public payload: DefaultPayload<number>) {}
-}
-
-export class SetDrillModuleAction implements Action {
-  readonly type = SettingsActionType.SET_DRILL_MODULE;
-  constructor(public payload: boolean) {}
-}
-
 export class SetMiningBonusAction implements Action {
   readonly type = SettingsActionType.SET_MINING_BONUS;
   constructor(public payload: number) {}
@@ -161,16 +172,6 @@ export class SetMiningBonusAction implements Action {
 export class SetResearchSpeedAction implements Action {
   readonly type = SettingsActionType.SET_RESEARCH_SPEED;
   constructor(public payload: ResearchSpeed) {}
-}
-
-export class SetFlowRateAction implements Action {
-  readonly type = SettingsActionType.SET_FLOW_RATE;
-  constructor(public payload: number) {}
-}
-
-export class SetExpensiveAction implements Action {
-  readonly type = SettingsActionType.SET_EXPENSIVE;
-  constructor(public payload: boolean) {}
 }
 
 export class HideColumnAction implements Action {
@@ -196,35 +197,40 @@ export class HideHeaderAction implements Action {
   readonly type = SettingsActionType.HIDE_HEADER;
 }
 
+export class ResetAction implements Action {
+  readonly type = SettingsActionType.RESET;
+}
+
 export type SettingsAction =
   | SetPresetAction
   | SetBaseAction
   | EnableModAction
   | DisableModAction
-  | SetBeltAction
-  | SetFuelAction
   | DisableRecipeAction
   | EnableRecipeAction
+  | SetExpensiveAction
   | PreferFactoryAction
   | DropFactoryAction
   | PreferModuleAction
   | DropModuleAction
+  | SetDrillModuleAction
   | SetBeaconAction
   | SetBeaconModuleAction
+  | SetBeaconCountAction
+  | SetBeltAction
+  | SetFuelAction
+  | SetFlowRateAction
   | SetDisplayRateAction
   | SetItemPrecisionAction
   | SetBeltPrecisionAction
   | SetFactoryPrecisionAction
   | SetPowerPrecisionAction
   | SetPollutionPrecisionAction
-  | SetBeaconCountAction
-  | SetDrillModuleAction
   | SetMiningBonusAction
   | SetResearchSpeedAction
-  | SetFlowRateAction
-  | SetExpensiveAction
   | HideColumnAction
   | ShowColumnAction
   | SetThemeAction
   | HideHeaderAction
-  | ShowHeaderAction;
+  | ShowHeaderAction
+  | ResetAction;

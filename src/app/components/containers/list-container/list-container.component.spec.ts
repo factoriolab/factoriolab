@@ -70,7 +70,7 @@ describe('ListContainerComponent', () => {
     );
   });
 
-  it('should set modules', () => {
+  it('should set factory modules', () => {
     spyOn(store, 'dispatch');
     const data: DefaultIdPayload<string[]> = {
       id: Mocks.Recipe1.id,
@@ -80,19 +80,6 @@ describe('ListContainerComponent', () => {
     component.child.setFactoryModules.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Recipes.SetFactoryModulesAction(data)
-    );
-  });
-
-  it('should set beacon module', () => {
-    spyOn(store, 'dispatch');
-    const data: DefaultIdPayload = {
-      id: Mocks.Recipe1.id,
-      value: ItemId.SpeedModule,
-      default: ItemId.SpeedModule,
-    };
-    component.child.setBeaconModules.emit(data);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Recipes.SetBeaconModulesAction(data)
     );
   });
 
@@ -106,6 +93,32 @@ describe('ListContainerComponent', () => {
     component.child.setBeaconCount.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Recipes.SetBeaconCountAction(data)
+    );
+  });
+
+  it('should set beacon', () => {
+    spyOn(store, 'dispatch');
+    const data: DefaultIdPayload = {
+      id: Mocks.Recipe1.id,
+      value: ItemId.Beacon,
+      default: ItemId.Beacon,
+    };
+    component.child.setBeacon.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Recipes.SetBeaconAction(data)
+    );
+  });
+
+  it('should set beacon modules', () => {
+    spyOn(store, 'dispatch');
+    const data: DefaultIdPayload<string[]> = {
+      id: Mocks.Recipe1.id,
+      value: [ItemId.SpeedModule],
+      default: [ItemId.SpeedModule],
+    };
+    component.child.setBeaconModules.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Recipes.SetBeaconModulesAction(data)
     );
   });
 
@@ -154,14 +167,6 @@ describe('ListContainerComponent', () => {
     component.child.resetFactory.emit();
     expect(store.dispatch).toHaveBeenCalledWith(
       new Recipes.ResetFactoryAction()
-    );
-  });
-
-  it('should reset module modifications', () => {
-    spyOn(store, 'dispatch');
-    component.child.resetModules.emit();
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Recipes.ResetModulesAction()
     );
   });
 

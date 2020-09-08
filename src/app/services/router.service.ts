@@ -217,10 +217,10 @@ export class RouterService {
       const i = id;
       const fc = this.zipTruthy(settings.factory);
       const md = this.zipTruthyArray(settings.factoryModules);
-      const bt = this.zipTruthyArray(settings.beaconModules);
       const bc = this.zipTruthyNum(settings.beaconCount);
       const be = this.zipTruthy(settings.beacon);
-      return [i, fc, md, bt, bc, be].join(FIELDSEP);
+      const bt = this.zipTruthyArray(settings.beaconModules);
+      return [i, fc, md, bc, be, bt].join(FIELDSEP);
     });
   }
 
@@ -240,15 +240,15 @@ export class RouterService {
       }
       v = r[i++];
       if (v?.length) {
-        u.beaconModules = this.parseArray(v);
-      }
-      v = r[i++];
-      if (v?.length) {
         u.beaconCount = this.parseNumber(v);
       }
       v = r[i++];
       if (v?.length) {
         u.beacon = this.parseString(v);
+      }
+      v = r[i++];
+      if (v?.length) {
+        u.beaconModules = this.parseArray(v);
       }
       recipes[r[0]] = u;
     }
@@ -259,50 +259,50 @@ export class RouterService {
     const init = Settings.initialSettingsState;
     const bd = this.zipDiff(state.baseId, init.baseId);
     const md = this.zipDiffArray(state.modIds, init.modIds);
+    const di = this.zipDiffArray(state.disabledRecipes, init.disabledRecipes);
+    const ex = this.zipDiffBool(state.expensive, init.expensive);
+    const fr = this.zipDiffRank(state.factoryRank, init.factoryRank);
+    const mr = this.zipDiffRank(state.moduleRank, init.moduleRank);
+    const dm = this.zipDiffBool(state.drillModule, init.drillModule);
+    const bc = this.zipDiffNum(state.beaconCount, init.beaconCount);
+    const be = this.zipDiff(state.beacon, init.beacon);
+    const bm = this.zipDiff(state.beaconModule, init.beaconModule);
+    const tb = this.zipDiff(state.belt, init.belt);
+    const fl = this.zipDiff(state.fuel, init.fuel);
+    const fw = this.zipDiffNum(state.flowRate, init.flowRate);
     const dr = this.zipDiffNum(state.displayRate, init.displayRate);
     const ip = this.zipDiffNum(state.itemPrecision, init.itemPrecision);
     const bp = this.zipDiffNum(state.beltPrecision, init.beltPrecision);
     const fp = this.zipDiffNum(state.factoryPrecision, init.factoryPrecision);
-    const tb = this.zipDiff(state.belt, init.belt);
-    const fl = this.zipDiff(state.fuel, init.fuel);
-    const di = this.zipDiffArray(state.disabledRecipes, init.disabledRecipes);
-    const fr = this.zipDiffRank(state.factoryRank, init.factoryRank);
-    const mr = this.zipDiffRank(state.moduleRank, init.moduleRank);
-    const bm = this.zipDiff(state.beaconModule, init.beaconModule);
-    const bc = this.zipDiffNum(state.beaconCount, init.beaconCount);
-    const dm = this.zipDiffBool(state.drillModule, init.drillModule);
-    const mb = this.zipDiffNum(state.miningBonus, init.miningBonus);
-    const rs = this.zipDiffNum(state.researchSpeed, init.researchSpeed);
-    const fw = this.zipDiffNum(state.flowRate, init.flowRate);
-    const ex = this.zipDiffBool(state.expensive, init.expensive);
-    const be = this.zipDiff(state.beacon, init.beacon);
     const ep = this.zipDiffNum(state.powerPrecision, init.powerPrecision);
     const pp = this.zipDiffNum(
       state.pollutionPrecision,
       init.pollutionPrecision
     );
+    const mb = this.zipDiffNum(state.miningBonus, init.miningBonus);
+    const rs = this.zipDiffNum(state.researchSpeed, init.researchSpeed);
     const value = [
       bd,
       md,
+      di,
+      ex,
+      fr,
+      mr,
+      dm,
+      bc,
+      be,
+      bm,
+      tb,
+      fl,
+      fw,
       dr,
       ip,
       bp,
       fp,
-      tb,
-      fl,
-      di,
-      fr,
-      mr,
-      bm,
-      bc,
-      dm,
-      mb,
-      rs,
-      fw,
-      ex,
-      be,
       ep,
       pp,
+      mb,
+      rs,
     ].join(FIELDSEP);
     return /^[:]+$/.test(value) ? '' : value;
   }
@@ -318,6 +318,50 @@ export class RouterService {
     v = s[i++];
     if (v?.length) {
       settings.modIds = this.parseArray(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.disabledRecipes = this.parseArray(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.expensive = this.parseBool(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.factoryRank = this.parseArray(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.moduleRank = this.parseArray(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.drillModule = this.parseBool(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.beaconCount = this.parseNumber(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.beacon = this.parseString(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.beaconModule = this.parseString(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.belt = this.parseString(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.fuel = this.parseString(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.flowRate = this.parseNumber(v);
     }
     v = s[i++];
     if (v?.length) {
@@ -337,35 +381,11 @@ export class RouterService {
     }
     v = s[i++];
     if (v?.length) {
-      settings.belt = this.parseString(v);
+      settings.powerPrecision = this.parseNumber(v);
     }
     v = s[i++];
     if (v?.length) {
-      settings.fuel = this.parseString(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.disabledRecipes = this.parseArray(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.factoryRank = this.parseArray(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.moduleRank = this.parseArray(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.beaconModule = this.parseString(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.beaconCount = this.parseNumber(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.drillModule = this.parseBool(v);
+      settings.pollutionPrecision = this.parseNumber(v);
     }
     v = s[i++];
     if (v?.length) {
@@ -374,26 +394,6 @@ export class RouterService {
     v = s[i++];
     if (v?.length) {
       settings.researchSpeed = this.parseNumber(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.flowRate = this.parseNumber(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.expensive = this.parseBool(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.beacon = this.parseString(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.powerPrecision = this.parseNumber(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.pollutionPrecision = this.parseNumber(v);
     }
     return settings;
   }

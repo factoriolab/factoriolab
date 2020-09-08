@@ -75,16 +75,16 @@ export const getDefaults = createSelector(
       const m = base.defaults;
       const defaults: Defaults = {
         modIds: m.modIds,
-        beacon: m.beacon,
         belt: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
         fuel: m.fuel,
         disabledRecipes: m.disabledRecipes,
         factoryRank:
           preset === Preset.Minimum ? m.minFactoryRank : m.maxFactoryRank,
         moduleRank: preset === Preset.Minimum ? [] : m.moduleRank,
-        beaconModule: preset < Preset.Beacon16 ? MODULE_ID : m.beaconModule,
         beaconCount:
-          preset < Preset.Beacon16 ? 0 : preset < Preset.Beacon24 ? 16 : 24,
+          preset < Preset.Beacon8 ? 0 : preset < Preset.Beacon12 ? 8 : 12,
+        beacon: m.beacon,
+        beaconModule: preset < Preset.Beacon8 ? MODULE_ID : m.beaconModule,
       };
       return defaults;
     }
@@ -99,14 +99,14 @@ export const getSettings = createSelector(
     ...s,
     ...{
       modIds: s.modIds || d?.modIds || [],
-      beacon: s.beacon || d?.beacon,
       belt: s.belt || d?.belt,
       fuel: s.fuel || d?.fuel,
       disabledRecipes: s.disabledRecipes || d?.disabledRecipes || [],
       factoryRank: s.factoryRank || d?.factoryRank || [],
       moduleRank: s.moduleRank || d?.moduleRank || [],
-      beaconModule: s.beaconModule || d?.beaconModule,
       beaconCount: s.beaconCount != null ? s.beaconCount : d?.beaconCount,
+      beacon: s.beacon || d?.beacon,
+      beaconModule: s.beaconModule || d?.beaconModule,
     },
   })
 );
@@ -126,14 +126,14 @@ export const getFactoryRank = createSelector(getSettings, (s) => s.factoryRank);
 
 export const getModuleRank = createSelector(getSettings, (s) => s.moduleRank);
 
+export const getBeaconCount = createSelector(getSettings, (s) => s.beaconCount);
+
 export const getBeacon = createSelector(getSettings, (s) => s.beacon);
 
 export const getBeaconModule = createSelector(
   getSettings,
   (s) => s.beaconModule
 );
-
-export const getBeaconCount = createSelector(getSettings, (s) => s.beaconCount);
 
 export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
   Rational.fromNumber(bonus).div(Rational.hundred)

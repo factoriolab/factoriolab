@@ -29,6 +29,13 @@ export function recipesReducer(
         action.payload
       );
     }
+    case RecipesActionType.SET_BEACONS_COUNT: {
+      return StoreUtility.compareReset(
+        state,
+        RecipeSettingsField.BeaconCount,
+        action.payload
+      );
+    }
     case RecipesActionType.SET_BEACON: {
       return StoreUtility.compareReset(
         state,
@@ -40,13 +47,6 @@ export function recipesReducer(
       return StoreUtility.compareReset(
         state,
         RecipeSettingsField.BeaconModules,
-        action.payload
-      );
-    }
-    case RecipesActionType.SET_BEACONS_COUNT: {
-      return StoreUtility.compareReset(
-        state,
-        RecipeSettingsField.BeaconCount,
         action.payload
       );
     }
@@ -63,9 +63,9 @@ export function recipesReducer(
     }
     case RecipesActionType.RESET_BEACONS: {
       return StoreUtility.resetFields(state, [
+        RecipeSettingsField.BeaconCount,
         RecipeSettingsField.Beacon,
         RecipeSettingsField.BeaconModules,
-        RecipeSettingsField.BeaconCount,
       ]);
     }
     default:

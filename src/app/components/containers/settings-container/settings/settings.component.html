@@ -1,6 +1,13 @@
+<i
+  class="trash clickable material-icons"
+  title="Reset settings"
+  (click)="resetSettings.emit()"
+  >delete</i
+>
 <div class="label">Preset</div>
 <div class="field">
   <select
+    id="settings-preset"
     title="Select preset settings"
     [ngModel]="settings.preset"
     (change)="emitNumber(setPreset, $event)"
@@ -18,12 +25,12 @@
     <option
       label="8 Beacons"
       title="Best belt and assembler with modules in factories and 8 beacons per factory"
-      [value]="Preset.Beacon16"
+      [value]="Preset.Beacon8"
     ></option>
     <option
       label="12 Beacons"
       title="Best belt and assembler with modules in factories and 12 beacons per factory"
-      [value]="Preset.Beacon24"
+      [value]="Preset.Beacon12"
     ></option>
   </select>
 </div>
@@ -162,7 +169,7 @@
   <lab-icon
     #btnBeacon
     class="clickable"
-    [class.hidden]="data.beaconIds.length === 0"
+    [class.hidden]="data.beaconIds.length === 1"
     tooltip="Choose default beacon"
     [iconId]="settings.beacon"
     [data]="data"
@@ -206,13 +213,14 @@
   >
   </lab-select>
   <input
+    id="settings-beacon-count"
     type="number"
     title="Enter default number of beacons"
     placeholder="# Beacons"
     min="0"
     step="1"
     [value]="settings.beaconCount"
-    (change)="emitNumber(setBeaconCount, $event)"
+    (change)="changeBeaconCount($event)"
   />
 </div>
 <div class="field">

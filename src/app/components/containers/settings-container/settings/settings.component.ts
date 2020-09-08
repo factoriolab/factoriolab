@@ -59,29 +59,30 @@ export class SettingsComponent {
   @Output() setBase = new EventEmitter<string>();
   @Output() enableMod = new EventEmitter<DefaultTogglePayload>();
   @Output() disableMod = new EventEmitter<DefaultTogglePayload>();
-  @Output() setBelt = new EventEmitter<DefaultPayload>();
-  @Output() setFuel = new EventEmitter<DefaultPayload>();
   @Output() disableRecipe = new EventEmitter<DefaultTogglePayload>();
   @Output() enableRecipe = new EventEmitter<DefaultTogglePayload>();
+  @Output() setExpensive = new EventEmitter<boolean>();
   @Output() preferFactory = new EventEmitter<DefaultTogglePayload>();
   @Output() dropFactory = new EventEmitter<DefaultTogglePayload>();
   @Output() preferModule = new EventEmitter<DefaultTogglePayload>();
   @Output() dropModule = new EventEmitter<DefaultTogglePayload>();
+  @Output() setDrillModule = new EventEmitter<boolean>();
   @Output() setBeacon = new EventEmitter<DefaultPayload>();
   @Output() setBeaconModule = new EventEmitter<DefaultPayload>();
+  @Output() setBeaconCount = new EventEmitter<DefaultPayload<number>>();
+  @Output() setBelt = new EventEmitter<DefaultPayload>();
+  @Output() setFuel = new EventEmitter<DefaultPayload>();
+  @Output() setFlowRate = new EventEmitter<number>();
   @Output() setDisplayRate = new EventEmitter<DisplayRate>();
   @Output() setItemPrecision = new EventEmitter<number>();
   @Output() setBeltPrecision = new EventEmitter<number>();
   @Output() setFactoryPrecision = new EventEmitter<number>();
   @Output() setPowerPrecision = new EventEmitter<number>();
   @Output() setPollutionPrecision = new EventEmitter<number>();
-  @Output() setBeaconCount = new EventEmitter<DefaultPayload<number>>();
-  @Output() setDrillModule = new EventEmitter<boolean>();
   @Output() setMiningBonus = new EventEmitter<number>();
   @Output() setResearchSpeed = new EventEmitter<ResearchSpeed>();
-  @Output() setFlowRate = new EventEmitter<number>();
-  @Output() setExpensive = new EventEmitter<boolean>();
   @Output() setTheme = new EventEmitter<Theme>();
+  @Output() resetSettings = new EventEmitter();
 
   openSelect = OpenSelect.None;
 

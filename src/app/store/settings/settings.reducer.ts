@@ -14,25 +14,25 @@ export interface SettingsState {
   preset: Preset;
   baseId: string;
   modIds: string[];
-  belt: string;
-  fuel: string;
   disabledRecipes: string[];
+  expensive: boolean;
   factoryRank: string[];
   moduleRank: string[];
+  drillModule: boolean;
   beacon: string;
   beaconModule: string;
+  beaconCount: number;
+  belt: string;
+  fuel: string;
+  flowRate: number;
   displayRate: DisplayRate;
   itemPrecision: number;
   beltPrecision: number;
   factoryPrecision: number;
   powerPrecision: number;
   pollutionPrecision: number;
-  beaconCount: number;
-  drillModule: boolean;
   miningBonus: number;
   researchSpeed: ResearchSpeed;
-  flowRate: number;
-  expensive: boolean;
   columns?: string[];
   theme?: Theme;
   showHeader?: boolean;
@@ -42,29 +42,31 @@ export const initialSettingsState: SettingsState = {
   preset: Preset.Minimum,
   baseId: '1.0',
   modIds: null,
-  belt: null,
-  fuel: null,
   disabledRecipes: null,
+  expensive: false,
   factoryRank: null,
   moduleRank: null,
+  drillModule: false,
   beacon: null,
   beaconModule: null,
+  beaconCount: null,
+  belt: null,
+  fuel: null,
+  flowRate: 1500,
   displayRate: DisplayRate.PerMinute,
   itemPrecision: 3,
   beltPrecision: 1,
   factoryPrecision: 1,
   powerPrecision: 1,
   pollutionPrecision: 1,
-  beaconCount: null,
-  drillModule: false,
   miningBonus: 0,
   researchSpeed: ResearchSpeed.Speed6,
-  flowRate: 1500,
-  expensive: false,
   columns: AllColumns,
   theme: Theme.DarkMode,
   showHeader: true,
 };
+
+export const schema = JSON.stringify(initialSettingsState);
 
 export const storedSettingsState: SettingsState = loadSettings();
 
@@ -113,18 +115,6 @@ export function settingsReducer(
         },
       };
     }
-    case SettingsActionType.SET_BELT: {
-      return {
-        ...state,
-        ...{ belt: StoreUtility.compareValue(action.payload) },
-      };
-    }
-    case SettingsActionType.SET_FUEL: {
-      return {
-        ...state,
-        ...{ fuel: StoreUtility.compareValue(action.payload) },
-      };
-    }
     case SettingsActionType.DISABLE_RECIPE: {
       return {
         ...state,
@@ -146,6 +136,9 @@ export function settingsReducer(
           ),
         },
       };
+    }
+    case SettingsActionType.SET_EXPENSIVE: {
+      return { ...state, ...{ expensive: action.payload } };
     }
     case SettingsActionType.PREFER_FACTORY: {
       return {
@@ -185,6 +178,9 @@ export function settingsReducer(
         },
       };
     }
+    case SettingsActionType.SET_DRILL_MODULE: {
+      return { ...state, ...{ drillModule: action.payload } };
+    }
     case SettingsActionType.SET_BEACON: {
       return {
         ...state,
@@ -196,6 +192,27 @@ export function settingsReducer(
         ...state,
         ...{ beaconModule: StoreUtility.compareValue(action.payload) },
       };
+    }
+    case SettingsActionType.SET_BEACON_COUNT: {
+      return {
+        ...state,
+        ...{ beaconCount: StoreUtility.compareValue(action.payload) },
+      };
+    }
+    case SettingsActionType.SET_BELT: {
+      return {
+        ...state,
+        ...{ belt: StoreUtility.compareValue(action.payload) },
+      };
+    }
+    case SettingsActionType.SET_FUEL: {
+      return {
+        ...state,
+        ...{ fuel: StoreUtility.compareValue(action.payload) },
+      };
+    }
+    case SettingsActionType.SET_FLOW_RATE: {
+      return { ...state, ...{ flowRate: action.payload } };
     }
     case SettingsActionType.SET_DISPLAY_RATE: {
       return { ...state, ...{ displayRate: action.payload } };
@@ -209,26 +226,17 @@ export function settingsReducer(
     case SettingsActionType.SET_FACTORY_PRECISION: {
       return { ...state, ...{ factoryPrecision: action.payload } };
     }
-    case SettingsActionType.SET_BEACON_COUNT: {
-      return {
-        ...state,
-        ...{ beaconCount: StoreUtility.compareValue(action.payload) },
-      };
+    case SettingsActionType.SET_POWER_PRECISION: {
+      return { ...state, ...{ powerPrecision: action.payload } };
     }
-    case SettingsActionType.SET_DRILL_MODULE: {
-      return { ...state, ...{ drillModule: action.payload } };
+    case SettingsActionType.SET_POLLUTION_PRECISION: {
+      return { ...state, ...{ pollutionPrecision: action.payload } };
     }
     case SettingsActionType.SET_MINING_BONUS: {
       return { ...state, ...{ miningBonus: action.payload } };
     }
     case SettingsActionType.SET_RESEARCH_SPEED: {
       return { ...state, ...{ researchSpeed: action.payload } };
-    }
-    case SettingsActionType.SET_FLOW_RATE: {
-      return { ...state, ...{ flowRate: action.payload } };
-    }
-    case SettingsActionType.SET_EXPENSIVE: {
-      return { ...state, ...{ expensive: action.payload } };
     }
     case SettingsActionType.HIDE_COLUMN: {
       const result = state.columns.filter((c) => c !== action.payload);
@@ -247,6 +255,13 @@ export function settingsReducer(
     case SettingsActionType.HIDE_HEADER: {
       return { ...state, ...{ showHeader: false } };
     }
+    case SettingsActionType.RESET: {
+      localStorage.clear();
+      return {
+        ...initialSettingsState,
+        ...{ baseId: state.baseId, modIds: state.modIds },
+      };
+    }
     default:
       return state;
   }
@@ -254,11 +269,15 @@ export function settingsReducer(
 
 export function loadSettings() {
   try {
+    const lsSchema = localStorage.getItem(LocalStorageKey.Schema);
+    if (lsSchema !== schema) {
+      localStorage.clear();
+    }
     const lsSettings = localStorage.getItem(LocalStorageKey.Settings);
     if (lsSettings) {
+      const stored = JSON.parse(lsSettings);
       if (location.hash) {
         // Only keep columns, theme, and showHeader
-        const stored = JSON.parse(lsSettings);
         return {
           ...initialSettingsState,
           ...{
@@ -269,7 +288,7 @@ export function loadSettings() {
         };
       } else {
         // Load full saved settings
-        return JSON.parse(lsSettings);
+        return { ...initialSettingsState, ...stored };
       }
     }
   } catch (e) {

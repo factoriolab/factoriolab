@@ -326,9 +326,7 @@ export class MatrixSolver {
     }
     let costExpr = new Expression(cost);
     for (const i of Object.keys(this.inputVar)) {
-      costExpr = costExpr.minus(
-        new Expression([COST_INPUT, this.inputVar[i]])
-      );
+      costExpr = costExpr.minus(new Expression([COST_INPUT, this.inputVar[i]]));
     }
 
     this.solver.addConstraint(new Constraint(factoryExpr, Operator.Eq));
@@ -382,7 +380,7 @@ export class MatrixSolver {
             this.data.recipeR[recipeId].time
           );
           const recipe = this.data.recipeR[recipeId];
-          RateUtility.adjustConsumptionPollution(step, recipe);
+          RateUtility.adjustPowerPollution(step, recipe);
           this.mappedRecipeIds.push(recipeId);
         }
         if (surplusVal.nonzero()) {

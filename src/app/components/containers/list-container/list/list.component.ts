@@ -56,55 +56,41 @@ export class ListComponent {
   }
   @Input() set steps(value: Step[]) {
     this._steps = value;
-    this.effPrecSurplus = this.effPrecFrom(
-      this._itemPrecision,
-      (s: Step) => s.surplus
-    );
-    this.effPrecItems = this.effPrecFrom(
-      this._itemPrecision,
-      (s: Step) => s.surplus
-    );
-    this.effPrecBelts = this.effPrecFrom(
-      this._beltPrecision,
-      (s: Step) => s.belts
-    );
-    this.effPrecFactories = this.effPrecFrom(
-      this._factoryPrecision,
-      (s: Step) => s.factories
-    );
-    this.effPrecPower = this.effPrecFrom(
-      this._factoryPrecision,
-      (s: Step) => s.consumption
-    );
-    this.effPrecPollution = this.effPrecFrom(
-      this._factoryPrecision,
-      (s: Step) => s.pollution
-    );
+    this.setItemsPrecision();
+    this.setBeltsPrecision();
+    this.setFactoriesPrecision();
+    this.setPowerPrecision();
+    this.setPollutionPrecision();
   }
   @Input() belt: string;
   @Input() factoryRank: string[];
   @Input() moduleRank: string[];
   @Input() beaconModule: string;
   @Input() displayRate: DisplayRate;
-  @Input() powerPrecision: number;
-  @Input() pollutionPrecision: number;
-  _itemPrecision: number;
+  _itemPrecision = 0;
   @Input() set itemPrecision(value: number) {
     this._itemPrecision = value;
-    this.effPrecSurplus = this.effPrecFrom(value, (s: Step) => s.surplus);
-    this.effPrecItems = this.effPrecFrom(value, (s: Step) => s.items);
+    this.setItemsPrecision();
   }
-  _beltPrecision: number;
+  _beltPrecision = 0;
   @Input() set beltPrecision(value: number) {
     this._beltPrecision = value;
-    this.effPrecBelts = this.effPrecFrom(value, (s: Step) => s.belts);
+    this.setBeltsPrecision();
   }
-  _factoryPrecision: number;
+  _factoryPrecision = 0;
   @Input() set factoryPrecision(value: number) {
     this._factoryPrecision = value;
-    this.effPrecFactories = this.effPrecFrom(value, (s: Step) => s.factories);
-    this.effPrecPower = this.effPrecFrom(value, (s: Step) => s.consumption);
-    this.effPrecPollution = this.effPrecFrom(value, (s: Step) => s.pollution);
+    this.setFactoriesPrecision();
+  }
+  _powerPrecision = 0;
+  @Input() set powerPrecision(value: number) {
+    this._powerPrecision = value;
+    this.setPowerPrecision();
+  }
+  _pollutionPrecision = 0;
+  @Input() set pollutionPrecision(value: number) {
+    this._pollutionPrecision = value;
+    this.setPollutionPrecision();
   }
   @Input() beaconCount: number;
   @Input() drillModule: boolean;
@@ -123,7 +109,7 @@ export class ListComponent {
       this.totalSpan += 3;
     }
     if (this.columns.indexOf(Column.Beacons) !== -1) {
-      this.totalSpan++;
+      this.totalSpan += 3;
     }
   }
   @Input() modifiedIgnore: boolean;
@@ -135,9 +121,9 @@ export class ListComponent {
   @Output() setBelt = new EventEmitter<DefaultIdPayload>();
   @Output() setFactory = new EventEmitter<DefaultIdPayload>();
   @Output() setFactoryModules = new EventEmitter<DefaultIdPayload<string[]>>();
+  @Output() setBeaconCount = new EventEmitter<DefaultIdPayload<number>>();
   @Output() setBeacon = new EventEmitter<DefaultIdPayload>();
   @Output() setBeaconModules = new EventEmitter<DefaultIdPayload<string[]>>();
-  @Output() setBeaconCount = new EventEmitter<DefaultIdPayload<number>>();
   @Output() hideColumn = new EventEmitter<string>();
   @Output() showColumn = new EventEmitter<string>();
   @Output() resetItem = new EventEmitter<string>();
@@ -182,8 +168,8 @@ export class ListComponent {
 
   get totalPower() {
     let value = Rational.zero;
-    for (const step of this.steps.filter((s) => s.consumption)) {
-      value = value.add(step.consumption);
+    for (const step of this.steps.filter((s) => s.power)) {
+      value = value.add(step.power);
     }
     return this.power(value);
   }
@@ -198,7 +184,49 @@ export class ListComponent {
 
   constructor(public router: RouterService) {}
 
+  setItemsPrecision() {
+    this.effPrecSurplus = this.effPrecFrom(
+      this._itemPrecision,
+      (s: Step) => s.surplus
+    );
+    this.effPrecItems = this.effPrecFrom(
+      this._itemPrecision,
+      (s: Step) => s.items
+    );
+  }
+
+  setBeltsPrecision() {
+    this.effPrecBelts = this.effPrecFrom(
+      this._beltPrecision,
+      (s: Step) => s.belts
+    );
+  }
+
+  setFactoriesPrecision() {
+    this.effPrecFactories = this.effPrecFrom(
+      this._factoryPrecision,
+      (s: Step) => s.factories
+    );
+  }
+
+  setPowerPrecision() {
+    this.effPrecPower = this.effPrecFrom(
+      this._powerPrecision,
+      (s: Step) => s.power
+    );
+  }
+
+  setPollutionPrecision() {
+    this.effPrecPollution = this.effPrecFrom(
+      this._pollutionPrecision,
+      (s: Step) => s.pollution
+    );
+  }
+
   effPrecFrom(precision: number, fn: (step: Step) => Rational) {
+    if (precision == null) {
+      return precision;
+    }
     let max = 0;
     for (const step of this.steps) {
       const dec = fn(step)?.toDecimals();
@@ -231,8 +259,10 @@ export class ListComponent {
             const spaces = precision - split[1].length;
             return result + '0'.repeat(spaces);
           }
-        } else {
+        } else if (value.isInteger()) {
           return result + ' '.repeat(precision + 1);
+        } else {
+          return result + '.' + '0'.repeat(precision);
         }
       }
       return result;
@@ -289,10 +319,7 @@ export class ListComponent {
 
   beaconModuleChange(step: Step, value: string, index: number) {
     const count = this.recipeSettings[step.recipeId].beaconModules.length;
-    const defaultModule = this.miningIgnoreModule(step)
-      ? MODULE_ID
-      : this.beaconModule;
-    const def = new Array(count).fill(defaultModule);
+    const def = new Array(count).fill(this.beaconModule);
     const modules = this.generateModules(
       index,
       count,
@@ -323,9 +350,11 @@ export class ListComponent {
     }
   }
 
-  beaconCountChange(step: Step, event: any) {
-    if (event.target.value) {
-      const value = Math.round(Number(event.target.value));
+  beaconCountChange(step: Step, event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.value) {
+      const value = Math.round(Number(target.value));
+      const def = this.miningIgnoreModule(step) ? 0 : this.beaconCount;
       if (
         this.recipeSettings[
           this.steps.find((s) => s.recipeId === step.recipeId).recipeId
@@ -334,7 +363,7 @@ export class ListComponent {
         this.setBeaconCount.emit({
           id: step.recipeId,
           value,
-          default: this.beaconCount,
+          default: def,
         });
       }
     }

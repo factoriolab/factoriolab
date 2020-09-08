@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
 import { Mocks, TestUtility, ElementId } from 'src/tests';
-import { IconComponent } from '~/components';
+import { IconComponent, PrecisionComponent } from '~/components';
 import { Theme } from '~/models';
 import { SettingsComponent } from './settings.component';
 
@@ -15,6 +15,7 @@ import { SettingsComponent } from './settings.component';
       [base]="base"
       [mods]="mods"
       [settings]="settings"
+      (setPreset)="setPreset($event)"
       (setBase)="setBase($event)"
       (enableMod)="enableMod($event)"
       (disableMod)="disableMod($event)"
@@ -48,6 +49,7 @@ class TestSettingsComponent {
   base = Mocks.Raw.base;
   mods = Mocks.Raw.mods;
   settings = Mocks.SettingsState1;
+  setPreset(data) {}
   setBase(data) {}
   enableMod(data) {}
   disableMod(data) {}
@@ -80,7 +82,12 @@ describe('SettingsComponent', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [FormsModule],
-      declarations: [IconComponent, SettingsComponent, TestSettingsComponent],
+      declarations: [
+        IconComponent,
+        PrecisionComponent,
+        SettingsComponent,
+        TestSettingsComponent,
+      ],
     }).compileComponents();
   });
 
@@ -112,23 +119,23 @@ describe('SettingsComponent', () => {
     fixture.detectChanges();
     expect(component.setBeaconCount).toHaveBeenCalledWith({
       value: 3,
-      default: 16,
+      default: 8,
     });
   });
 
   it('should emit numeric settings', () => {
-    spyOn(component, 'setItemPrecision');
-    TestUtility.selectId(fixture, ElementId.SettingsPrecisionItemValue, '3');
+    spyOn(component, 'setPreset');
+    TestUtility.selectId(fixture, ElementId.SettingsPreset, '2');
     fixture.detectChanges();
-    expect(component.setItemPrecision).toHaveBeenCalledWith(3);
+    expect(component.setPreset).toHaveBeenCalledWith(2);
   });
 
   it('should ignore invalid numeric events', () => {
-    spyOn(component, 'setItemPrecision');
+    spyOn(component, 'setPreset');
     const event = { target: {} };
-    component.child.emitNumber(component.child.setItemPrecision, event as any);
+    component.child.emitNumber(component.child.setPreset, event as any);
     fixture.detectChanges();
-    expect(component.setItemPrecision).not.toHaveBeenCalled();
+    expect(component.setPreset).not.toHaveBeenCalled();
   });
 
   it('should emit other truthy settings', () => {

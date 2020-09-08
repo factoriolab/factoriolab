@@ -30,25 +30,25 @@ describe('Settings Selectors', () => {
       expect(result.beaconCount).toEqual(0);
     });
 
-    it('should use 16 beacons', () => {
+    it('should use 8 beacons', () => {
       const result = Selectors.getDefaults.projector(
-        Preset.Beacon16,
+        Preset.Beacon8,
         Mocks.Base
       );
-      expect(result.beaconCount).toEqual(16);
+      expect(result.beaconCount).toEqual(8);
     });
 
-    it('should use 24 beacons', () => {
+    it('should use 12 beacons', () => {
       const result = Selectors.getDefaults.projector(
-        Preset.Beacon24,
+        Preset.Beacon12,
         Mocks.Base
       );
-      expect(result.beaconCount).toEqual(24);
+      expect(result.beaconCount).toEqual(12);
     });
 
     it('should get the defaults from the current base mod', () => {
       const result = Selectors.getDefaults.projector(
-        Preset.Beacon16,
+        Preset.Beacon8,
         Mocks.Base
       );
       expect(result).toEqual(Mocks.Defaults);
@@ -64,8 +64,9 @@ describe('Settings Selectors', () => {
         disabledRecipes: 'disabledRecipes',
         factoryRank: 'factoryRank',
         moduleRank: 'moduleRank',
-        beaconModule: 'beaconModule',
         beaconCount: 'beaconCount',
+        beacon: 'beacon',
+        beaconModule: 'beaconModule',
       };
       const result = Selectors.getSettings.projector(
         value,

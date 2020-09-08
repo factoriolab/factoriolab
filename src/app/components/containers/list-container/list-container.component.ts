@@ -97,16 +97,16 @@ export class ListContainerComponent implements OnInit {
     this.store.dispatch(new Recipes.SetFactoryModulesAction(data));
   }
 
+  setBeaconCount(data: DefaultIdPayload<number>) {
+    this.store.dispatch(new Recipes.SetBeaconCountAction(data));
+  }
+
   setBeacon(data: DefaultIdPayload) {
     this.store.dispatch(new Recipes.SetBeaconAction(data));
   }
 
   setBeaconModules(data: DefaultIdPayload<string[]>) {
     this.store.dispatch(new Recipes.SetBeaconModulesAction(data));
-  }
-
-  setBeaconCount(data: DefaultIdPayload<number>) {
-    this.store.dispatch(new Recipes.SetBeaconCountAction(data));
   }
 
   showColumn(value: string) {

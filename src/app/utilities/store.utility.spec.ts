@@ -66,6 +66,24 @@ describe('StoreUtility', () => {
     });
   });
 
+  describe('resetFields', () => {
+    it('should reset multiple fields', () => {
+      const result = StoreUtility.resetFields(
+        {
+          [Mocks.Item1.id]: {
+            ignore: true,
+            belt: ItemId.TransportBelt,
+            factory: ItemId.AssemblingMachine1,
+          },
+        },
+        ['ignore', 'belt']
+      );
+      expect(result[Mocks.Item1.id]).toEqual({
+        factory: ItemId.AssemblingMachine1,
+      } as any);
+    });
+  });
+
   describe('resetField', () => {
     it('should reset changes to a field', () => {
       const result = StoreUtility.resetField(

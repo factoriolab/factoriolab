@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { StoreModule, Store } from '@ngrx/store';
 
 import { TestUtility, ItemId, RecipeId } from 'src/tests';
-import { IconComponent } from '~/components';
+import { IconComponent, PrecisionComponent } from '~/components';
 import { DisplayRate, ResearchSpeed, Theme, Preset } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as Settings from '~/store/settings';
@@ -20,6 +20,7 @@ describe('SettingsContainerComponent', () => {
       imports: [FormsModule, StoreModule.forRoot(reducers, { metaReducers })],
       declarations: [
         IconComponent,
+        PrecisionComponent,
         SettingsComponent,
         SettingsContainerComponent,
       ],
@@ -108,27 +109,6 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
-  it('should set the default belt', () => {
-    spyOn(store, 'dispatch');
-    const value = {
-      value: ItemId.TransportBelt,
-      default: ItemId.TransportBelt,
-    };
-    component.child.setBelt.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetBeltAction(value)
-    );
-  });
-
-  it('should set the fuel', () => {
-    spyOn(store, 'dispatch');
-    const value = { value: ItemId.Wood, default: ItemId.Wood };
-    component.child.setFuel.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetFuelAction(value)
-    );
-  });
-
   it('should disable a recipe', () => {
     spyOn(store, 'dispatch');
     const value = { id: RecipeId.BasicOilProcessing, default: [] };
@@ -144,6 +124,15 @@ describe('SettingsContainerComponent', () => {
     component.child.enableRecipe.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.EnableRecipeAction(value)
+    );
+  });
+
+  it('should set the expensive flag', () => {
+    spyOn(store, 'dispatch');
+    const value = true;
+    component.child.setExpensive.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetExpensiveAction(value)
     );
   });
 
@@ -183,12 +172,69 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
+  it('should set the drill module flag', () => {
+    spyOn(store, 'dispatch');
+    const value = true;
+    component.child.setDrillModule.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetDrillModuleAction(value)
+    );
+  });
+
+  it('should set the default beacon', () => {
+    spyOn(store, 'dispatch');
+    const value = { value: ItemId.Beacon, default: ItemId.Beacon };
+    component.child.setBeacon.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetBeaconAction(value)
+    );
+  });
+
   it('should set the default beacon module', () => {
     spyOn(store, 'dispatch');
     const value = { value: ItemId.SpeedModule, default: ItemId.SpeedModule };
     component.child.setBeaconModule.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetBeaconModuleAction(value)
+    );
+  });
+
+  it('should set the default beacon count', () => {
+    spyOn(store, 'dispatch');
+    const value = { value: 2, default: 0 };
+    component.child.setBeaconCount.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetBeaconCountAction(value)
+    );
+  });
+
+  it('should set the default belt', () => {
+    spyOn(store, 'dispatch');
+    const value = {
+      value: ItemId.TransportBelt,
+      default: ItemId.TransportBelt,
+    };
+    component.child.setBelt.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetBeltAction(value)
+    );
+  });
+
+  it('should set the fuel', () => {
+    spyOn(store, 'dispatch');
+    const value = { value: ItemId.Wood, default: ItemId.Wood };
+    component.child.setFuel.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetFuelAction(value)
+    );
+  });
+
+  it('should set the flow rate', () => {
+    spyOn(store, 'dispatch');
+    const value = 1000;
+    component.child.setFlowRate.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetFlowRateAction(value)
     );
   });
 
@@ -228,21 +274,21 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
-  it('should set the default beacon module count', () => {
+  it('should set power precision', () => {
     spyOn(store, 'dispatch');
-    const value = { value: 2, default: 0 };
-    component.child.setBeaconCount.emit(value);
+    const value = 0;
+    component.child.setPowerPrecision.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetBeaconCountAction(value)
+      new Settings.SetPowerPrecisionAction(value)
     );
   });
 
-  it('should set the drill module flag', () => {
+  it('should set pollution precision', () => {
     spyOn(store, 'dispatch');
-    const value = true;
-    component.child.setDrillModule.emit(value);
+    const value = 0;
+    component.child.setPollutionPrecision.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetDrillModuleAction(value)
+      new Settings.SetPollutionPrecisionAction(value)
     );
   });
 
@@ -264,24 +310,6 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
-  it('should set the flow rate', () => {
-    spyOn(store, 'dispatch');
-    const value = 1000;
-    component.child.setFlowRate.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetFlowRateAction(value)
-    );
-  });
-
-  it('should set the expensive flag', () => {
-    spyOn(store, 'dispatch');
-    const value = true;
-    component.child.setExpensive.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetExpensiveAction(value)
-    );
-  });
-
   it('should set theme', () => {
     spyOn(store, 'dispatch');
     const value = Theme.DarkMode;
@@ -289,5 +317,11 @@ describe('SettingsContainerComponent', () => {
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetThemeAction(value)
     );
+  });
+
+  it('should reset settings', () => {
+    spyOn(store, 'dispatch');
+    component.child.resetSettings.emit();
+    expect(store.dispatch).toHaveBeenCalledWith(new Settings.ResetAction());
   });
 });

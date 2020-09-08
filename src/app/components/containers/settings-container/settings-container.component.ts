@@ -87,20 +87,16 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.DisableModAction(value));
   }
 
-  setBelt(value: DefaultPayload) {
-    this.store.dispatch(new Settings.SetBeltAction(value));
-  }
-
-  setFuel(value: DefaultPayload) {
-    this.store.dispatch(new Settings.SetFuelAction(value));
-  }
-
   disableRecipe(value: DefaultTogglePayload) {
     this.store.dispatch(new Settings.DisableRecipeAction(value));
   }
 
   enableRecipe(value: DefaultTogglePayload) {
     this.store.dispatch(new Settings.EnableRecipeAction(value));
+  }
+
+  setExpensive(value: boolean) {
+    this.store.dispatch(new Settings.SetExpensiveAction(value));
   }
 
   preferFactory(value: DefaultTogglePayload) {
@@ -119,12 +115,32 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.DropModuleAction(value));
   }
 
+  setDrillModule(value: boolean) {
+    this.store.dispatch(new Settings.SetDrillModuleAction(value));
+  }
+
   setBeacon(value: DefaultPayload) {
     this.store.dispatch(new Settings.SetBeaconAction(value));
   }
 
   setBeaconModule(value: DefaultPayload) {
     this.store.dispatch(new Settings.SetBeaconModuleAction(value));
+  }
+
+  setBeaconCount(value: DefaultPayload<number>) {
+    this.store.dispatch(new Settings.SetBeaconCountAction(value));
+  }
+
+  setBelt(value: DefaultPayload) {
+    this.store.dispatch(new Settings.SetBeltAction(value));
+  }
+
+  setFuel(value: DefaultPayload) {
+    this.store.dispatch(new Settings.SetFuelAction(value));
+  }
+
+  setFlowRate(value: number) {
+    this.store.dispatch(new Settings.SetFlowRateAction(value));
   }
 
   setDisplayRate(value: DisplayRate) {
@@ -151,14 +167,6 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetPollutionPrecisionAction(value));
   }
 
-  setBeaconCount(value: DefaultPayload<number>) {
-    this.store.dispatch(new Settings.SetBeaconCountAction(value));
-  }
-
-  setDrillModule(value: boolean) {
-    this.store.dispatch(new Settings.SetDrillModuleAction(value));
-  }
-
   setMiningBonus(value: number) {
     this.store.dispatch(new Settings.SetMiningBonusAction(value));
   }
@@ -167,15 +175,11 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetResearchSpeedAction(value));
   }
 
-  setFlowRate(value: number) {
-    this.store.dispatch(new Settings.SetFlowRateAction(value));
-  }
-
-  setExpensive(value: boolean) {
-    this.store.dispatch(new Settings.SetExpensiveAction(value));
-  }
-
   setTheme(value: Theme) {
     this.store.dispatch(new Settings.SetThemeAction(value));
+  }
+
+  resetSettings() {
+    this.store.dispatch(new Settings.ResetAction());
   }
 }

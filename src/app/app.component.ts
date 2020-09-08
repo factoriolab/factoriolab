@@ -66,6 +66,10 @@ export class AppComponent implements OnInit {
         this.router.updateUrl(s.products, s.items, s.recipes, s.settings);
       });
     this.store.select(Settings.settingsState).subscribe((s) => {
+      localStorage.setItem(
+        LocalStorageKey.Schema,
+        JSON.stringify(Settings.schema)
+      );
       localStorage.setItem(LocalStorageKey.Settings, JSON.stringify(s));
     });
   }

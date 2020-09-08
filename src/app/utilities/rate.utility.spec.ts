@@ -11,7 +11,7 @@ describe('RateUtility', () => {
         recipeId: 'iron-chest',
         items: new Rational(BigInt(30)),
         factories: new Rational(BigInt(20)),
-        consumption: new Rational(BigInt(3100)),
+        power: new Rational(BigInt(3100)),
         pollution: new Rational(BigInt(1)),
       },
       {
@@ -20,7 +20,7 @@ describe('RateUtility', () => {
         recipeId: 'iron-plate',
         items: new Rational(BigInt(240)),
         factories: new Rational(BigInt(1024)),
-        consumption: new Rational(BigInt(158720)),
+        power: new Rational(BigInt(158720)),
         pollution: new Rational(BigInt(256), BigInt(5)),
         parents: { 'iron-chest': new Rational(BigInt(240)) },
       },
@@ -30,7 +30,7 @@ describe('RateUtility', () => {
         recipeId: 'iron-ore',
         items: new Rational(BigInt(240)),
         factories: new Rational(BigInt(320)),
-        consumption: new Rational(BigInt(49600)),
+        power: new Rational(BigInt(49600)),
         pollution: new Rational(BigInt(16)),
         parents: { 'iron-plate': new Rational(BigInt(240)) },
       },
@@ -202,7 +202,7 @@ describe('RateUtility', () => {
           recipeId: 'iron-chest',
           items: new Rational(BigInt(30)),
           factories: new Rational(BigInt(20)),
-          consumption: new Rational(BigInt(3100)),
+          power: new Rational(BigInt(3100)),
           pollution: new Rational(BigInt(1)),
           children: [
             {
@@ -212,7 +212,7 @@ describe('RateUtility', () => {
               recipeId: 'iron-plate',
               items: new Rational(BigInt(240)),
               factories: new Rational(BigInt(1024)),
-              consumption: new Rational(BigInt(158720)),
+              power: new Rational(BigInt(158720)),
               pollution: new Rational(BigInt(256), BigInt(5)),
               children: [
                 {
@@ -222,7 +222,7 @@ describe('RateUtility', () => {
                   recipeId: 'iron-ore',
                   items: new Rational(BigInt(240)),
                   factories: new Rational(BigInt(320)),
-                  consumption: new Rational(BigInt(49600)),
+                  power: new Rational(BigInt(49600)),
                   pollution: new Rational(BigInt(16)),
                 },
               ],
@@ -362,32 +362,32 @@ describe('RateUtility', () => {
     });
   });
 
-  describe('adjustConsumptionPollution', () => {
+  describe('adjustPowerPollution', () => {
     it('should handle no factories', () => {
       const step: any = { factories: null };
       const result = { ...step };
-      RateUtility.adjustConsumptionPollution(result, null);
+      RateUtility.adjustPowerPollution(result, null);
       expect(result).toEqual(step);
     });
 
-    it('should handle null consumption/pollution', () => {
+    it('should handle null power/pollution', () => {
       const step: any = { factories: Rational.one };
       const result = { ...step };
-      const recipe: any = { consumption: null, pollution: null };
-      RateUtility.adjustConsumptionPollution(result, recipe);
+      const recipe: any = { power: null, pollution: null };
+      RateUtility.adjustPowerPollution(result, recipe);
       expect(result).toEqual(step);
     });
 
-    it('should calculate consumption/pollution', () => {
+    it('should calculate power/pollution', () => {
       const step: any = { factories: Rational.two };
       const recipe: any = {
         consumption: new Rational(BigInt(3)),
         pollution: new Rational(BigInt(4)),
       };
-      RateUtility.adjustConsumptionPollution(step, recipe);
+      RateUtility.adjustPowerPollution(step, recipe);
       expect(step).toEqual({
         factories: Rational.two,
-        consumption: new Rational(BigInt(6)),
+        power: new Rational(BigInt(6)),
         pollution: new Rational(BigInt(8)),
       });
     });
