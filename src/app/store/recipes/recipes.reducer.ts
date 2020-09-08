@@ -16,10 +16,18 @@ export function recipesReducer(
       return action.payload.recipesState ? action.payload.recipesState : state;
     }
     case RecipesActionType.SET_FACTORY: {
-      return StoreUtility.compareReset(
-        state,
-        RecipeSettingsField.Factory,
-        action.payload
+      return StoreUtility.resetFields(
+        StoreUtility.compareReset(
+          state,
+          RecipeSettingsField.Factory,
+          action.payload
+        ),
+        [
+          RecipeSettingsField.FactoryModules,
+          RecipeSettingsField.BeaconCount,
+          RecipeSettingsField.Beacon,
+          RecipeSettingsField.BeaconModules,
+        ]
       );
     }
     case RecipesActionType.SET_FACTORY_MODULES: {
@@ -37,10 +45,13 @@ export function recipesReducer(
       );
     }
     case RecipesActionType.SET_BEACON: {
-      return StoreUtility.compareReset(
-        state,
-        RecipeSettingsField.Beacon,
-        action.payload
+      return StoreUtility.resetField(
+        StoreUtility.compareReset(
+          state,
+          RecipeSettingsField.Beacon,
+          action.payload
+        ),
+        RecipeSettingsField.BeaconModules
       );
     }
     case RecipesActionType.SET_BEACON_MODULES: {

@@ -30,6 +30,28 @@ describe('Recipes Reducer', () => {
       );
       expect(result[Mocks.Recipe1.id].factory).toEqual(Mocks.Item1.id);
     });
+
+    it('should reset all other recipe settings', () => {
+      const result = recipesReducer(
+        {
+          ...initialRecipesState,
+          ...{
+            [Mocks.Recipe1.id]: {
+              factoryModules: ['test'],
+              beaconCount: 20,
+              beacon: 'test',
+              beaconModules: ['test'],
+            },
+          },
+        },
+        new Actions.SetFactoryAction({
+          id: Mocks.Recipe1.id,
+          value: Mocks.Item1.id,
+          default: null,
+        })
+      );
+      expect(result[Mocks.Recipe1.id]).toEqual({ factory: Mocks.Item1.id });
+    });
   });
 
   describe('SET_FACTORY_MODULES', () => {
@@ -71,6 +93,21 @@ describe('Recipes Reducer', () => {
         })
       );
       expect(result[Mocks.Recipe1.id].beacon).toEqual(ItemId.Beacon);
+    });
+
+    it('should reset the beacon modules', () => {
+      const result = recipesReducer(
+        {
+          ...initialRecipesState,
+          ...{ [Mocks.Recipe1.id]: { beaconModules: ['test'] } },
+        },
+        new Actions.SetBeaconAction({
+          id: Mocks.Recipe1.id,
+          value: ItemId.Beacon,
+          default: null,
+        })
+      );
+      expect(result[Mocks.Recipe1.id]).toEqual({ beacon: ItemId.Beacon });
     });
   });
 
