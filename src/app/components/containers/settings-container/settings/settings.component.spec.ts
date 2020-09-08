@@ -106,6 +106,16 @@ describe('SettingsComponent', () => {
     expect(component.child[ref].detectChanges).toHaveBeenCalled();
   });
 
+  it('should emit beacon count', () => {
+    spyOn(component, 'setBeaconCount');
+    TestUtility.selectId(fixture, ElementId.SettingsBeaconCount, '3');
+    fixture.detectChanges();
+    expect(component.setBeaconCount).toHaveBeenCalledWith({
+      value: 3,
+      default: 16,
+    });
+  });
+
   it('should emit numeric settings', () => {
     spyOn(component, 'setItemPrecision');
     TestUtility.selectId(fixture, ElementId.SettingsPrecisionItemValue, '3');

@@ -61,6 +61,13 @@ describe('Rational', () => {
       });
     });
 
+    describe('isInteger', () => {
+      it('should deterine whether Rational is an integer', () => {
+        expect(Rational.one.isInteger()).toBeTrue();
+        expect(Rational.one.div(Rational.two).isInteger()).toBeFalse();
+      });
+    });
+
     describe('inverse', () => {
       it('should inverse a number', () => {
         expect(Rational.zero.inverse()).toEqual(Rational.zero);
@@ -156,6 +163,20 @@ describe('Rational', () => {
 
       it('should handle fractions', () => {
         expect(new Rational(BigInt(1), BigInt(2)).toFraction()).toEqual('1/2');
+      });
+    });
+
+    describe('toDecimals', () => {
+      it('should handle integers', () => {
+        expect(Rational.one.toDecimals()).toEqual(0);
+      });
+
+      it('should determine number of decimals', () => {
+        expect(Rational.one.div(Rational.two).toDecimals()).toEqual(1);
+      });
+
+      it('should handle invalid Rational', () => {
+        expect(new Rational(BigInt(1), BigInt(0)).toDecimals()).toEqual(0);
       });
     });
 

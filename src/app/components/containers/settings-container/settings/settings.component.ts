@@ -71,7 +71,7 @@ export class SettingsComponent {
   @Output() setItemPrecision = new EventEmitter<number>();
   @Output() setBeltPrecision = new EventEmitter<number>();
   @Output() setFactoryPrecision = new EventEmitter<number>();
-  @Output() setBeaconCount = new EventEmitter<number>();
+  @Output() setBeaconCount = new EventEmitter<DefaultPayload<number>>();
   @Output() setDrillModule = new EventEmitter<boolean>();
   @Output() setMiningBonus = new EventEmitter<number>();
   @Output() setResearchSpeed = new EventEmitter<ResearchSpeed>();
@@ -97,6 +97,14 @@ export class SettingsComponent {
   /** Forces change detector to update on scroll */
   @HostListener('scroll', ['$event']) scroll() {
     this.ref.detectChanges();
+  }
+
+  changeBeaconCount(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.setBeaconCount.emit({
+      value: Number(target.value),
+      default: this.data.defaults.beaconCount,
+    });
   }
 
   emitNumber(emitter: EventEmitter<number>, event: any) {
