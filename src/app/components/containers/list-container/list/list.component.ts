@@ -17,6 +17,7 @@ import {
   Column,
   ColumnsAsOptions,
   toBoolEntities,
+  PUMPJACK_ID,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { ItemsState } from '~/store/items';
@@ -112,6 +113,7 @@ export class ListComponent {
   StepEditType = ListEditType;
   Rational = Rational;
   MODULE_ID = MODULE_ID;
+  PUMPJACK_ID = PUMPJACK_ID;
   ColumnsAsOptions = ColumnsAsOptions;
   ColumnsLeftOfPower = [
     Column.Belts,
