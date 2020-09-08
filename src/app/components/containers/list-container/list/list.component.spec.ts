@@ -174,13 +174,13 @@ describe('ListComponent', () => {
 
   describe('totalPower', () => {
     it('should sum the total power from steps', () => {
-      expect(component.child.totalPower).toEqual('1   kW');
+      expect(component.child.totalPower).toEqual('1 kW');
     });
   });
 
   describe('totalPollution', () => {
     it('should sum the total pollution from steps', () => {
-      expect(component.child.totalPollution).toEqual('1  ');
+      expect(component.child.totalPollution).toEqual('1');
     });
   });
 
@@ -211,20 +211,24 @@ describe('ListComponent', () => {
       ).toEqual('0.334');
     });
 
-    it('should add necessary spaces', () => {
+    it('should add necessary zeros', () => {
       expect(component.child.rate(Rational.fromNumber(0.99), 3)).toEqual(
-        '0.99 '
+        '0.990'
       );
+    });
+
+    it('should add necessary spaces', () => {
+      expect(component.child.rate(Rational.one, 3)).toEqual('1    ');
     });
   });
 
   describe('power', () => {
     it('should return value in kW', () => {
-      expect(component.child.power(Rational.one)).toEqual('1   kW');
+      expect(component.child.power(Rational.one)).toEqual('1 kW');
     });
 
     it('should return a value in MW', () => {
-      expect(component.child.power(Rational.thousand)).toEqual('1   MW');
+      expect(component.child.power(Rational.thousand)).toEqual('1 MW');
     });
   });
 

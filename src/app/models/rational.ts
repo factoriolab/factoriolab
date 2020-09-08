@@ -53,6 +53,10 @@ export class Rational {
     return this.p !== BigInt(0);
   }
 
+  isInteger() {
+    return this.q === BigInt(1);
+  }
+
   inverse() {
     return this.mul(Rational.minusOne);
   }
@@ -107,7 +111,7 @@ export class Rational {
   }
 
   toFraction() {
-    if (this.q === BigInt(1)) {
+    if (this.isInteger()) {
       return this.p.toString();
     }
 
@@ -118,6 +122,13 @@ export class Rational {
     }
 
     return `${this.p}/${this.q}`;
+  }
+
+  toDecimals() {
+    if (this.isInteger()) {
+      return 0;
+    }
+    return this.toNumber().toString().split('.')[1]?.length || 0;
   }
 
   constructor(p: bigint, q: bigint = BigInt(1)) {
