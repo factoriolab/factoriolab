@@ -96,15 +96,12 @@
         </td>
         <td>
           <div class="flex" *ngIf="step.items">
-            <div *ngIf="step.items" class="monospace">
-              {{ rate(step.items, itemPrecision) }}
-            </div>
-            <div
-              *ngIf="step.surplus && step.surplus.nonzero()"
-              class="monospace"
+            <span *ngIf="step.surplus?.nonzero()" class="monospace"
+              >(+{{ rate(step.surplus, effPrecSurplus) }})</span
             >
-              (+{{ rate(step.surplus, itemPrecision) }})
-            </div>
+            <span *ngIf="step.items" class="monospace">{{
+              rate(step.items, effPrecItems)
+            }}</span>
             <lab-icon
               class="clickable"
               [title]="
@@ -132,9 +129,9 @@
               "
               class="flex"
             >
-              <div class="monospace">
-                {{ rate(step.belts, beltPrecision) }}
-              </div>
+              <span class="monospace">{{
+                rate(step.belts, effPrecBelts)
+              }}</span>
               <ng-container
                 *ngIf="
                   data.beltIds.indexOf(belt) === -1;
@@ -195,17 +192,17 @@
           >
             <td>
               <div *ngIf="step.factories?.nonzero()" class="flex">
-                <div *ngIf="factory !== 'pumpjack'" class="monospace">
-                  {{ rate(step.factories, factoryPrecision) }}
-                </div>
-                <div *ngIf="factory === 'pumpjack'" class="monospace">
-                  {{
+                <span *ngIf="factory !== PUMPJACK_ID" class="monospace">{{
+                  rate(step.factories, effPrecFactories)
+                }}</span>
+                <span *ngIf="factory === PUMPJACK_ID" class="monospace"
+                  >{{
                     rate(
                       step.factories.mul(Rational.hundred),
-                      factoryPrecision
+                      effPrecFactories - 1
                     )
-                  }}%
-                </div>
+                  }}%</span
+                >
               </div>
             </td>
             <td class="split-column">
@@ -369,18 +366,16 @@
         <td *ngIf="show[Column.Power]">
           <ng-container *ngIf="step.consumption?.nonzero()">
             <div class="flex">
-              <div class="monospace">
-                {{ power(step.consumption) }}
-              </div>
+              <span class="monospace">{{ power(step.consumption) }}</span>
             </div>
           </ng-container>
         </td>
         <td *ngIf="show[Column.Pollution]">
           <ng-container *ngIf="step.pollution?.nonzero()">
             <div class="flex">
-              <div class="monospace">
-                {{ rate(step.pollution, pollutionPrecision) }}
-              </div>
+              <span class="monospace">{{
+                rate(step.pollution, effPrecPollution)
+              }}</span>
             </div>
           </ng-container>
         </td>
@@ -403,11 +398,7 @@
         </td>
       </tr>
       <ng-container
-        *ngIf="
-          step.recipeId &&
-          data.recipeEntities[step.recipeId] &&
-          expanded[step.itemId]
-        "
+        *ngIf="data.recipeEntities[step.recipeId] && expanded[step.itemId]"
       >
         <ng-container
           *ngFor="
@@ -418,7 +409,7 @@
         >
           <ng-container *ngIf="findStep(input.key) as inStep">
             <tr
-              *ngIf="inStep.parents && inStep.parents[step.recipeId]"
+              *ngIf="inStep.parents[step.recipeId] as percent"
               class="details"
               [class.first]="isFirst"
               [class.last]="isLast"
@@ -426,14 +417,9 @@
               <td></td>
               <td>
                 <div class="flex">
-                  <div *ngIf="inStep.items" class="monospace">
-                    {{
-                      rate(
-                        inStep.items.mul(inStep.parents[step.recipeId]),
-                        itemPrecision
-                      )
-                    }}
-                  </div>
+                  <span *ngIf="inStep.items" class="monospace">{{
+                    rate(inStep.items.mul(percent), effPrecItems)
+                  }}</span>
                   <lab-icon
                     class="clickable-size"
                     [iconId]="input.key"
@@ -458,14 +444,9 @@
                     "
                     class="flex"
                   >
-                    <div class="monospace">
-                      {{
-                        rate(
-                          inStep.belts.mul(inStep.parents[step.recipeId]),
-                          beltPrecision
-                        )
-                      }}
-                    </div>
+                    <span class="monospace">{{
+                      rate(inStep.belts.mul(percent), effPrecBelts)
+                    }}</span>
                     <lab-icon
                       class="clickable-size"
                       [iconId]="belt"
@@ -479,24 +460,21 @@
               </td>
               <ng-container *ngIf="show[Column.Factories]">
                 <ng-container
-                  *ngIf="
-                    inStep.recipeId &&
-                    recipeSettings[inStep.recipeId].factory as factory
-                  "
+                  *ngIf="recipeSettings[inStep.recipeId]?.factory as factory"
                 >
                   <td>
                     <div *ngIf="inStep.factories?.nonzero()" class="flex">
-                      <div *ngIf="factory !== 'pumpjack'" class="monospace">
-                        {{ rate(step.factories, factoryPrecision) }}
-                      </div>
-                      <div *ngIf="factory === 'pumpjack'" class="monospace">
-                        {{
+                      <span *ngIf="factory !== PUMPJACK_ID" class="monospace">{{
+                        rate(inStep.factories.mul(percent), effPrecFactories)
+                      }}</span>
+                      <span *ngIf="factory === PUMPJACK_ID" class="monospace"
+                        >{{
                           rate(
-                            step.factories.mul(Rational.hundred),
-                            factoryPrecision
+                            inStep.factories.mul(percent).mul(Rational.hundred),
+                            effPrecFactories - 1
                           )
-                        }}%
-                      </div>
+                        }}%</span
+                      >
                     </div>
                   </td>
                   <td class="split-column">
@@ -521,21 +499,16 @@
                   </td>
                 </ng-container>
                 <ng-container
-                  *ngIf="!recipeSettings[step.recipeId]?.factory as factory"
+                  *ngIf="!recipeSettings[inStep.recipeId]?.factory as factory"
                 >
                   <td colspan="2"></td>
                 </ng-container>
               </ng-container>
               <td>
                 <div class="flex">
-                  <div class="monospace">
-                    {{
-                      rate(
-                        inStep.parents[step.recipeId].mul(Rational.hundred),
-                        0
-                      )
-                    }}%
-                  </div>
+                  <span class="monospace"
+                    >{{ rate(percent.mul(Rational.hundred), 0) }}%</span
+                  >
                   <i class="material-icons">arrow_forward</i>
                   <lab-icon
                     class="clickable-size"
@@ -567,9 +540,9 @@
           <td></td>
           <td>
             <div class="flex">
-              <div *ngIf="step.items" class="monospace">
-                {{ rate(step.items.mul(parent.value), itemPrecision) }}
-              </div>
+              <span *ngIf="step.items" class="monospace">{{
+                rate(step.items.mul(parent.value), effPrecItems)
+              }}</span>
               <lab-icon
                 class="clickable-size"
                 [iconId]="step.itemId"
@@ -591,9 +564,9 @@
                 "
                 class="flex"
               >
-                <div class="monospace">
-                  {{ rate(step.belts.mul(parent.value), beltPrecision) }}
-                </div>
+                <span class="monospace">{{
+                  rate(step.belts.mul(parent.value), effPrecBelts)
+                }}</span>
                 <lab-icon
                   class="clickable-size"
                   [iconId]="belt"
@@ -611,17 +584,17 @@
             >
               <td>
                 <div class="flex" *ngIf="step.factories?.nonzero()">
-                  <div *ngIf="factory !== 'pumpjack'" class="monospace">
-                    {{ rate(step.factories, factoryPrecision) }}
-                  </div>
-                  <div *ngIf="factory === 'pumpjack'" class="monospace">
-                    {{
+                  <span *ngIf="factory !== PUMPJACK_ID" class="monospace">{{
+                    rate(step.factories.mul(parent.value), effPrecFactories)
+                  }}</span>
+                  <span *ngIf="factory === PUMPJACK_ID" class="monospace"
+                    >{{
                       rate(
-                        step.factories.mul(Rational.hundred),
-                        factoryPrecision
+                        step.factories.mul(parent.value).mul(Rational.hundred),
+                        effPrecFactories - 1
                       )
-                    }}%
-                  </div>
+                    }}%</span
+                  >
                 </div>
               </td>
               <td class="split-column">
@@ -653,9 +626,9 @@
           </ng-container>
           <td>
             <div class="flex">
-              <div class="monospace">
-                {{ rate(parent.value.mul(Rational.hundred), 0) }}%
-              </div>
+              <span class="monospace"
+                >{{ rate(parent.value.mul(Rational.hundred), 0) }}%</span
+              >
               <i class="material-icons">arrow_forward</i>
               <lab-icon
                 class="clickable-size"
@@ -673,19 +646,17 @@
       </ng-container>
     </ng-container>
     <tr *ngIf="show[Column.Power] || show[Column.Pollution]">
-      <td [colSpan]="totalSpan" class="summary-label monospace">Total:</td>
+      <td [colSpan]="totalSpan" class="summary-label">
+        <span class="monospace">Total:</span>
+      </td>
       <td *ngIf="show[Column.Power]">
         <div class="flex">
-          <div class="monospace">
-            {{ totalPower }}
-          </div>
+          <span class="monospace">{{ totalPower }}</span>
         </div>
       </td>
       <td *ngIf="show[Column.Pollution]">
         <div class="flex">
-          <div class="monospace">
-            {{ totalPollution }}
-          </div>
+          <span class="monospace">{{ totalPollution }}</span>
         </div>
       </td>
       <td></td>

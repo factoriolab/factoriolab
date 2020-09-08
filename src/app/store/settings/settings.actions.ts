@@ -145,7 +145,7 @@ export class SetPollutionPrecisionAction implements Action {
 
 export class SetBeaconCountAction implements Action {
   readonly type = SettingsActionType.SET_BEACON_COUNT;
-  constructor(public payload: number) {}
+  constructor(public payload: DefaultPayload<number>) {}
 }
 
 export class SetDrillModuleAction implements Action {

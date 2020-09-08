@@ -17,6 +17,7 @@ import {
   Column,
   ColumnsAsOptions,
   toBoolEntities,
+  PUMPJACK_ID,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { ItemsState } from '~/store/items';
@@ -49,17 +50,62 @@ export class ListComponent {
   @Input() itemSettings: ItemsState;
   @Input() recipeSettings: RecipesState;
   @Input() recipeRaw: RecipesState;
-  @Input() steps: Step[];
+  _steps: Step[];
+  get steps() {
+    return this._steps;
+  }
+  @Input() set steps(value: Step[]) {
+    this._steps = value;
+    this.effPrecSurplus = this.effPrecFrom(
+      this._itemPrecision,
+      (s: Step) => s.surplus
+    );
+    this.effPrecItems = this.effPrecFrom(
+      this._itemPrecision,
+      (s: Step) => s.surplus
+    );
+    this.effPrecBelts = this.effPrecFrom(
+      this._beltPrecision,
+      (s: Step) => s.belts
+    );
+    this.effPrecFactories = this.effPrecFrom(
+      this._factoryPrecision,
+      (s: Step) => s.factories
+    );
+    this.effPrecPower = this.effPrecFrom(
+      this._factoryPrecision,
+      (s: Step) => s.consumption
+    );
+    this.effPrecPollution = this.effPrecFrom(
+      this._factoryPrecision,
+      (s: Step) => s.pollution
+    );
+  }
   @Input() belt: string;
   @Input() factoryRank: string[];
   @Input() moduleRank: string[];
   @Input() beaconModule: string;
   @Input() displayRate: DisplayRate;
-  @Input() itemPrecision: number;
-  @Input() beltPrecision: number;
-  @Input() factoryPrecision: number;
   @Input() powerPrecision: number;
   @Input() pollutionPrecision: number;
+  _itemPrecision: number;
+  @Input() set itemPrecision(value: number) {
+    this._itemPrecision = value;
+    this.effPrecSurplus = this.effPrecFrom(value, (s: Step) => s.surplus);
+    this.effPrecItems = this.effPrecFrom(value, (s: Step) => s.items);
+  }
+  _beltPrecision: number;
+  @Input() set beltPrecision(value: number) {
+    this._beltPrecision = value;
+    this.effPrecBelts = this.effPrecFrom(value, (s: Step) => s.belts);
+  }
+  _factoryPrecision: number;
+  @Input() set factoryPrecision(value: number) {
+    this._factoryPrecision = value;
+    this.effPrecFactories = this.effPrecFrom(value, (s: Step) => s.factories);
+    this.effPrecPower = this.effPrecFrom(value, (s: Step) => s.consumption);
+    this.effPrecPollution = this.effPrecFrom(value, (s: Step) => s.pollution);
+  }
   @Input() beaconCount: number;
   @Input() drillModule: boolean;
   _columns: string[];
@@ -105,12 +151,19 @@ export class ListComponent {
   expanded: Entities<boolean> = {};
   show: Entities<boolean> = {};
   totalSpan = 2;
+  effPrecSurplus: number;
+  effPrecItems: number;
+  effPrecBelts: number;
+  effPrecFactories: number;
+  effPrecPower: number;
+  effPrecPollution: number;
 
   Column = Column;
   DisplayRate = DisplayRate;
   StepEditType = ListEditType;
   Rational = Rational;
   MODULE_ID = MODULE_ID;
+  PUMPJACK_ID = PUMPJACK_ID;
   ColumnsAsOptions = ColumnsAsOptions;
   ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
 
@@ -140,10 +193,23 @@ export class ListComponent {
     for (const step of this.steps.filter((s) => s.pollution)) {
       value = value.add(step.pollution);
     }
-    return this.rate(value, this.pollutionPrecision);
+    return this.rate(value, this.effPrecPollution);
   }
 
   constructor(public router: RouterService) {}
+
+  effPrecFrom(precision: number, fn: (step: Step) => Rational) {
+    let max = 0;
+    for (const step of this.steps) {
+      const dec = fn(step)?.toDecimals();
+      if (dec >= precision) {
+        return precision;
+      } else if (dec > max) {
+        max = dec;
+      }
+    }
+    return max;
+  }
 
   trackBy(step: Step) {
     return `${step.itemId}.${step.recipeId}`;
@@ -163,7 +229,7 @@ export class ListComponent {
         if (split.length > 1) {
           if (split[1].length < precision) {
             const spaces = precision - split[1].length;
-            return result + ' '.repeat(spaces);
+            return result + '0'.repeat(spaces);
           }
         } else {
           return result + ' '.repeat(precision + 1);
@@ -175,12 +241,9 @@ export class ListComponent {
 
   power(value: Rational) {
     if (value.lt(Rational.thousand)) {
-      return `${this.rate(value, this.powerPrecision)} kW`;
+      return `${this.rate(value, this.effPrecPower)} kW`;
     } else {
-      return `${this.rate(
-        value.div(Rational.thousand),
-        this.powerPrecision
-      )} MW`;
+      return `${this.rate(value.div(Rational.thousand), this.effPrecPower)} MW`;
     }
   }
 

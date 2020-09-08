@@ -230,7 +230,7 @@ describe('SettingsContainerComponent', () => {
 
   it('should set the default beacon module count', () => {
     spyOn(store, 'dispatch');
-    const value = 2;
+    const value = { value: 2, default: 0 };
     component.child.setBeaconCount.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetBeaconCountAction(value)

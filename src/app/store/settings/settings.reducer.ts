@@ -210,7 +210,10 @@ export function settingsReducer(
       return { ...state, ...{ factoryPrecision: action.payload } };
     }
     case SettingsActionType.SET_BEACON_COUNT: {
-      return { ...state, ...{ beaconCount: action.payload } };
+      return {
+        ...state,
+        ...{ beaconCount: StoreUtility.compareValue(action.payload) },
+      };
     }
     case SettingsActionType.SET_DRILL_MODULE: {
       return { ...state, ...{ drillModule: action.payload } };

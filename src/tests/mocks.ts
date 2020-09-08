@@ -38,12 +38,12 @@ export const Base: Mod = { ...BaseInfo, ...BaseData };
 export const ModData1 = mod;
 export const Mod1: Mod = { ...data.mods[0], ...ModData1 };
 export const ModInfo = [data.mods[0]];
+export const Defaults = getDefaults.projector(Preset.Beacon16, base);
 export const Data = getNormalDataset.projector(
   data.app,
   [Base, Mod1],
-  Base.defaults
+  Defaults
 );
-export const Defaults = getDefaults.projector(Preset.Beacon16, base);
 export const CategoryId = Data.categoryIds[0];
 export const Item1 = Data.itemEntities[Data.itemIds[0]];
 export const Item2 = Data.itemEntities[Data.itemIds[1]];

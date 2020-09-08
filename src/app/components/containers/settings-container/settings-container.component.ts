@@ -151,7 +151,7 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetPollutionPrecisionAction(value));
   }
 
-  setBeaconCount(value: number) {
+  setBeaconCount(value: DefaultPayload<number>) {
     this.store.dispatch(new Settings.SetBeaconCountAction(value));
   }
 
