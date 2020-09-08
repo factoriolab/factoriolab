@@ -30,11 +30,11 @@ import {
 const mockZipEmpty = 'eJwrsAUAAR8Arg==';
 const mockZipProducts = 'p=steel-chest:1';
 const mockZipAll =
-  'eJwrsC0uSU3N0U3OSC0usTJUy0ThW5UUJeYVF+QXlegmpeaUqBWhylpZWagV21pZGZsZGFihAgBxgByr';
+  'eJwrsC0uSU3N0U3OSC0usTJUy0ThW5UUJeYVF+QXlegmpeaUqBWhylpZWFmpFdtaIQNjMwMDKBMA57odkw==';
 const mockZipExtra =
-  'eJwrsC0uSU3N0U3OSC0usTJUS7I1VMtEEbMqKUrMKy7ILyrRTUrNKVErQpW1srJQK7a1sjI2MzCwQgVqqbYlQDUAqF8gKQ==';
+  'eJwrsC0uSU3N0U3OSC0usTJUS7I1VMtEEbMqKUrMKy7ILyrRTUrNKVErQpW1srCyUiu2tUIGxmYGBlCmWqptCVAdACjYIRE=';
 const mockZipLink =
-  'eJxtT+0KAiEQfBv/7aEWFQs+jKd7neCpuFr09gl1UNGvYWaX+SjmnrOnBG4lbqjEbJIIhhtR3DVs1SYuuTaYKTZRv86WmbY5hnSFzbo1JIIDbtn3SDsowUZO6oyEh5OUqPGI8scVOcfgYekUcbYcHOQQodTsiHmY/8vRE7c8cOk1WUc4vn13LdxCe8Are+JC5N8EPwlovIxtSo4qSo9W6gm0u183';
+  'eJxtT+0KwjAMfJv+y+imqAT2MP2IrtA1o+kU396ATlQkkI/L3YUs4405UoEwkTTsjR+LSaM0orxh2KorsnBt4Ck3U7/WToRmn1O5wOzClArBDmeOayaVenKBy2s2MtquPyKhd5ICcMqwVA4konJl//EaOmms9bzW4gKh8uMaWrqmdoenbScLUYT3zdN29ROH4ecNFM4pqi9l7AdrcXfQNOAetdXoLdoHfgVlVQ==';
 const mockProducts: Product[] = [
   {
     id: '0',
@@ -80,17 +80,19 @@ const mockRecipeSettings: Recipes.RecipesState = {
 const mockFullRecipeSettings: Recipes.RecipesState = {
   [RecipeId.SteelChest]: {
     factory: ItemId.AssemblingMachine3,
-    modules: [ItemId.Module],
-    beaconModule: ItemId.Module,
+    factoryModules: [ItemId.Module],
     beaconCount: 1,
+    beacon: ItemId.Beacon,
+    beaconModules: [ItemId.Module],
   },
 };
 const mockZipFullRecipeSettings = [
   RecipeId.SteelChest,
   ItemId.AssemblingMachine3,
   ItemId.Module,
-  ItemId.Module,
   '1',
+  ItemId.Beacon,
+  ItemId.Module,
 ].join(FIELDSEP);
 const mockSettings: Settings.SettingsState = {
   ...Mocks.InitialSettingsState,
@@ -99,66 +101,81 @@ const mockSettings: Settings.SettingsState = {
 export const mockFullSettings: Settings.SettingsState = {
   baseId: '0.17',
   modIds: [],
+  disabledRecipes: [RecipeId.BasicOilProcessing],
+  expensive: true,
+  factoryRank: [ItemId.AssemblingMachine2, ItemId.StoneFurnace],
+  moduleRank: [ItemId.ProductivityModule, ItemId.SpeedModule],
+  drillModule: true,
+  beacon: ItemId.Beacon,
+  beaconModule: ItemId.SpeedModule2,
+  beaconCount: 8,
+  belt: ItemId.TransportBelt,
+  fuel: ItemId.SolidFuel,
+  flowRate: 1200,
   displayRate: DisplayRate.PerHour,
   itemPrecision: 2,
   beltPrecision: 4,
   factoryPrecision: 0,
-  belt: ItemId.TransportBelt,
-  fuel: ItemId.SolidFuel,
-  disabledRecipes: [RecipeId.BasicOilProcessing],
-  factoryRank: [ItemId.AssemblingMachine2, ItemId.StoneFurnace],
-  moduleRank: [ItemId.ProductivityModule, ItemId.SpeedModule],
-  beaconModule: ItemId.SpeedModule2,
-  beaconCount: 8,
-  drillModule: true,
+  powerPrecision: 3,
+  pollutionPrecision: 3,
   miningBonus: 10,
   researchSpeed: ResearchSpeed.Speed0,
-  flowRate: 1200,
-  expensive: true,
 } as any;
 const mockZipFullSettings = [
   '0.17',
   EMPTY,
+  RecipeId.BasicOilProcessing,
+  '1',
+  [ItemId.AssemblingMachine2, ItemId.StoneFurnace].join(ARRAYSEP),
+  [ItemId.ProductivityModule, ItemId.SpeedModule].join(ARRAYSEP),
+  '1',
+  '8',
+  mockFullSettings.beacon,
+  mockFullSettings.beaconModule,
+  mockFullSettings.belt,
+  mockFullSettings.fuel,
+  '1200',
   DisplayRate.PerHour,
   '2',
   '4',
   '0',
-  mockFullSettings.belt,
-  mockFullSettings.fuel,
-  RecipeId.BasicOilProcessing,
-  [ItemId.AssemblingMachine2, ItemId.StoneFurnace].join(ARRAYSEP),
-  [ItemId.ProductivityModule, ItemId.SpeedModule].join(ARRAYSEP),
-  mockFullSettings.beaconModule,
-  '8',
-  '1',
+  '3',
+  '3',
   '10',
   '0',
-  '1200',
-  '1',
 ].join(FIELDSEP);
 const mockNullSettings = {
   ...mockFullSettings,
-  ...{ itemPrecision: null, beltPrecision: null, factoryPrecision: null },
+  ...{
+    itemPrecision: null,
+    beltPrecision: null,
+    factoryPrecision: null,
+    powerPrecision: null,
+    pollutionPrecision: null,
+  },
 };
 const mockZipNullSettings = [
   '0.17',
   EMPTY,
+  RecipeId.BasicOilProcessing,
+  '1',
+  [ItemId.AssemblingMachine2, ItemId.StoneFurnace].join(ARRAYSEP),
+  [ItemId.ProductivityModule, ItemId.SpeedModule].join(ARRAYSEP),
+  '1',
+  '8',
+  mockFullSettings.beacon,
+  mockFullSettings.beaconModule,
+  mockFullSettings.belt,
+  mockFullSettings.fuel,
+  '1200',
   DisplayRate.PerHour,
   NULL,
   NULL,
   NULL,
-  mockFullSettings.belt,
-  mockFullSettings.fuel,
-  RecipeId.BasicOilProcessing,
-  [ItemId.AssemblingMachine2, ItemId.StoneFurnace].join(ARRAYSEP),
-  [ItemId.ProductivityModule, ItemId.SpeedModule].join(ARRAYSEP),
-  mockFullSettings.beaconModule,
-  '8',
-  '1',
+  NULL,
+  NULL,
   '10',
   '0',
-  '1200',
-  '1',
 ].join(FIELDSEP);
 
 describe('RouterService', () => {
@@ -320,7 +337,7 @@ describe('RouterService', () => {
       spyOn(console, 'warn');
       const result = service.unzipProducts(['id']);
       expect(console.warn).toHaveBeenCalledTimes(1);
-      expect(result).toEqual({ids: [], index: 0, entities: {}});
+      expect(result).toEqual({ ids: [], index: 0, entities: {} });
     });
   });
 
@@ -362,14 +379,14 @@ describe('RouterService', () => {
     it('should handle empty state', () => {
       const id = 'id';
       const result = service.unzipItems([id]);
-      expect(result).toEqual({[id]: {}});
+      expect(result).toEqual({ [id]: {} });
     });
   });
 
   describe('zipRecipes', () => {
     it('should zip empty recipe settings', () => {
       const result = service.zipRecipes({ [RecipeId.SteelChest]: {} });
-      expect(result).toEqual([`${RecipeId.SteelChest}::::`]);
+      expect(result).toEqual([`${RecipeId.SteelChest}:::::`]);
     });
 
     it('should zip full recipe settings', () => {
@@ -380,7 +397,7 @@ describe('RouterService', () => {
 
   describe('unzipRecipes', () => {
     it('should unzip the empty recipe settings', () => {
-      const result = service.unzipRecipes([`${RecipeId.SteelChest}::::`]);
+      const result = service.unzipRecipes([`${RecipeId.SteelChest}:::::`]);
       expect(result).toEqual({ [RecipeId.SteelChest]: {} });
     });
 
@@ -392,7 +409,7 @@ describe('RouterService', () => {
     it('should handle empty state', () => {
       const id = 'id';
       const result = service.unzipRecipes([id]);
-      expect(result).toEqual({[id]: {}});
+      expect(result).toEqual({ [id]: {} });
     });
   });
 

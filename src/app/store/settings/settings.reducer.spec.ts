@@ -14,6 +14,7 @@ import {
   settingsReducer,
   initialSettingsState,
   loadSettings,
+  schema,
 } from './settings.reducer';
 
 describe('Settings Reducer', () => {
@@ -84,69 +85,6 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_DISPLAY_RATE', () => {
-    it('should set the display rate', () => {
-      const value = DisplayRate.PerHour;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetDisplayRateAction(value)
-      );
-      expect(result.displayRate).toEqual(value);
-    });
-  });
-
-  describe('SET_ITEM_PRECISION', () => {
-    it('should set the item precision', () => {
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetItemPrecisionAction(null)
-      );
-      expect(result.itemPrecision).toEqual(null);
-    });
-  });
-
-  describe('SET_BELT_PRECISION', () => {
-    it('should set the belt precision', () => {
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetBeltPrecisionAction(null)
-      );
-      expect(result.beltPrecision).toEqual(null);
-    });
-  });
-
-  describe('SET_FACTORY_PRECISION', () => {
-    it('should set the factory precision', () => {
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetFactoryPrecisionAction(null)
-      );
-      expect(result.factoryPrecision).toEqual(null);
-    });
-  });
-
-  describe('SET_BELT', () => {
-    it('should set the default belt', () => {
-      const value = ItemId.TransportBelt;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetBeltAction({ value, default: null })
-      );
-      expect(result.belt).toEqual(value);
-    });
-  });
-
-  describe('SET_FUEL', () => {
-    it('should set the fuel', () => {
-      const value = ItemId.Wood;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetFuelAction({ value, default: null })
-      );
-      expect(result.fuel).toEqual(value);
-    });
-  });
-
   describe('DISABLE_RECIPE', () => {
     it('should disable a recipe', () => {
       const id = RecipeId.AdvancedOilProcessing;
@@ -166,6 +104,17 @@ describe('Settings Reducer', () => {
         new Actions.EnableRecipeAction({ id, default: [] })
       );
       expect(result.disabledRecipes).toBeNull();
+    });
+  });
+
+  describe('SET_EXPENSIVE', () => {
+    it('should set expensive flag', () => {
+      const value = true;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetExpensiveAction(value)
+      );
+      expect(result.expensive).toEqual(value);
     });
   });
 
@@ -213,6 +162,28 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('SET_DRILL_MODULE', () => {
+    it('should set the drill module flag', () => {
+      const value = true;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetDrillModuleAction(value)
+      );
+      expect(result.drillModule).toEqual(value);
+    });
+  });
+
+  describe('SET_BEACON', () => {
+    it('should set the default beacon', () => {
+      const value = ItemId.Beacon;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetBeaconAction({ value, default: null })
+      );
+      expect(result.beacon).toEqual(value);
+    });
+  });
+
   describe('SET_BEACON_MODULE', () => {
     it('should set the default beacon module', () => {
       const value = ItemId.SpeedModule;
@@ -235,14 +206,97 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_DRILL_MODULE', () => {
-    it('should set the drill module flag', () => {
-      const value = true;
+  describe('SET_BELT', () => {
+    it('should set the default belt', () => {
+      const value = ItemId.TransportBelt;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetDrillModuleAction(value)
+        new Actions.SetBeltAction({ value, default: null })
       );
-      expect(result.drillModule).toEqual(value);
+      expect(result.belt).toEqual(value);
+    });
+  });
+
+  describe('SET_FUEL', () => {
+    it('should set the fuel', () => {
+      const value = ItemId.Wood;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetFuelAction({ value, default: null })
+      );
+      expect(result.fuel).toEqual(value);
+    });
+  });
+
+  describe('SET_FLOW_RATE', () => {
+    it('should set the flow rate', () => {
+      const value = 6000;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetFlowRateAction(value)
+      );
+      expect(result.flowRate).toEqual(value);
+    });
+  });
+
+  describe('SET_DISPLAY_RATE', () => {
+    it('should set the display rate', () => {
+      const value = DisplayRate.PerHour;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetDisplayRateAction(value)
+      );
+      expect(result.displayRate).toEqual(value);
+    });
+  });
+
+  describe('SET_ITEM_PRECISION', () => {
+    it('should set the item precision', () => {
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetItemPrecisionAction(null)
+      );
+      expect(result.itemPrecision).toEqual(null);
+    });
+  });
+
+  describe('SET_BELT_PRECISION', () => {
+    it('should set the belt precision', () => {
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetBeltPrecisionAction(null)
+      );
+      expect(result.beltPrecision).toEqual(null);
+    });
+  });
+
+  describe('SET_FACTORY_PRECISION', () => {
+    it('should set the factory precision', () => {
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetFactoryPrecisionAction(null)
+      );
+      expect(result.factoryPrecision).toEqual(null);
+    });
+  });
+
+  describe('SET_POWER_PRECISION', () => {
+    it('should set the power precision', () => {
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetPowerPrecisionAction(null)
+      );
+      expect(result.powerPrecision).toEqual(null);
+    });
+  });
+
+  describe('SET_POLLUTION_PRECISION', () => {
+    it('should set the pollution precision', () => {
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetPollutionPrecisionAction(null)
+      );
+      expect(result.pollutionPrecision).toEqual(null);
     });
   });
 
@@ -265,28 +319,6 @@ describe('Settings Reducer', () => {
         new Actions.SetResearchSpeedAction(value)
       );
       expect(result.researchSpeed).toEqual(value);
-    });
-  });
-
-  describe('SET_FLOW_RATE', () => {
-    it('should set the flow rate', () => {
-      const value = 6000;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetFlowRateAction(value)
-      );
-      expect(result.flowRate).toEqual(value);
-    });
-  });
-
-  describe('SET_EXPENSIVE', () => {
-    it('should set expensive flag', () => {
-      const value = true;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetExpensiveAction(value)
-      );
-      expect(result.expensive).toEqual(value);
     });
   });
 
@@ -322,6 +354,17 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('RESET', () => {
+    it('should reset all except the dataset ids', () => {
+      const preserved = { baseId: 'test', modIds: ['test'] };
+      const result = settingsReducer(
+        { ...mockFullSettings, ...preserved },
+        new Actions.ResetAction()
+      );
+      expect(result).toEqual({ ...initialSettingsState, ...preserved });
+    });
+  });
+
   it('should return default state', () => {
     expect(settingsReducer(undefined, { type: 'Test' } as any)).toBe(
       initialSettingsState
@@ -330,7 +373,7 @@ describe('Settings Reducer', () => {
 
   describe('loadSettings', () => {
     afterEach(() => {
-      localStorage.removeItem(LocalStorageKey.Settings);
+      localStorage.clear();
       location.hash = '';
     });
 
@@ -341,22 +384,28 @@ describe('Settings Reducer', () => {
         showHeader: false,
       };
       const total = { ...mockFullSettings, ...preserved };
+      localStorage.setItem(LocalStorageKey.Schema, schema);
       localStorage.setItem(LocalStorageKey.Settings, JSON.stringify(total));
       location.hash = 'test';
       expect(loadSettings()).toEqual({ ...initialSettingsState, ...preserved });
     });
 
     it('should preserve all settings if no hash is present', () => {
+      localStorage.setItem(LocalStorageKey.Schema, schema);
       localStorage.setItem(
         LocalStorageKey.Settings,
         JSON.stringify(mockFullSettings)
       );
-      expect(loadSettings()).toEqual(mockFullSettings);
+      expect(loadSettings()).toEqual({
+        ...initialSettingsState,
+        ...mockFullSettings,
+      });
     });
 
     it('should handle invalid settings', () => {
       spyOn(console, 'warn');
       spyOn(console, 'error');
+      localStorage.setItem(LocalStorageKey.Schema, schema);
       localStorage.setItem(LocalStorageKey.Settings, '[[[');
       expect(loadSettings()).toEqual(initialSettingsState);
       expect(console.warn).toHaveBeenCalledTimes(1);

@@ -73,7 +73,12 @@ describe('SelectComponent', () => {
   });
 
   it('should set width based on options', () => {
-    expect(component.child.width).toEqual(5.75);
+    expect(component.child.width).toEqual(10.25);
+  });
+
+  it('should set minimum width', () => {
+    component.child.options = new Array(25);
+    expect(component.child.width).toEqual(14.75);
   });
 
   it('should set opening to false on first click event', () => {

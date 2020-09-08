@@ -34,8 +34,8 @@ describe('RecipeUtility', () => {
   describe('adjustRecipe', () => {
     it('should adjust a standard recipe', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
-      settings.modules = null;
-      settings.beaconModule = ItemId.Module;
+      settings.factoryModules = null;
+      settings.beaconModules = [ItemId.Module];
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Coal,
@@ -119,13 +119,13 @@ describe('RecipeUtility', () => {
 
     it('should handle modules and beacons', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
-      settings.modules = [
+      settings.factoryModules = [
         ItemId.SpeedModule,
         ItemId.ProductivityModule,
         ItemId.EfficiencyModule,
       ];
-      settings.beaconModule = ItemId.SpeedModule;
-      settings.beaconCount = Rational.two;
+      settings.beaconCount = Rational.one;
+      settings.beaconModules = [ItemId.SpeedModule, ItemId.SpeedModule];
       const data = {
         ...Mocks.Data,
         ...{
@@ -178,8 +178,11 @@ describe('RecipeUtility', () => {
 
     it('should handle beacon with no effect', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
-      settings.beaconModule = ItemId.EfficiencyModule;
-      settings.beaconCount = Rational.two;
+      settings.beaconCount = Rational.one;
+      settings.beaconModules = [
+        ItemId.EfficiencyModule,
+        ItemId.EfficiencyModule,
+      ];
       const data = {
         ...Mocks.Data,
         ...{
@@ -222,13 +225,13 @@ describe('RecipeUtility', () => {
 
     it('should use minimum 20% consumption', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
-      settings.modules = [
+      settings.factoryModules = [
         ItemId.EfficiencyModule3,
         ItemId.EfficiencyModule3,
         ItemId.EfficiencyModule3,
       ];
-      settings.beaconModule = ItemId.Module;
       settings.beaconCount = Rational.zero;
+      settings.beaconModules = [ItemId.Module];
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Coal,
@@ -300,8 +303,8 @@ describe('RecipeUtility', () => {
     it('should subtract from existing burner fuel output', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.Coal] };
       settings.factory = ItemId.BurnerMiningDrill;
-      settings.modules = null;
-      settings.beaconModule = null;
+      settings.factoryModules = null;
+      settings.beaconModules = null;
       const result = RecipeUtility.adjustRecipe(
         RecipeId.Coal,
         ItemId.Coal,
@@ -319,8 +322,8 @@ describe('RecipeUtility', () => {
     it('should negate existing burner fuel output', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.Coal] };
       settings.factory = ItemId.BurnerMiningDrill;
-      settings.modules = null;
-      settings.beaconModule = null;
+      settings.factoryModules = null;
+      settings.beaconModules = null;
       const data = {
         ...Mocks.Data,
         ...{

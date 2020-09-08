@@ -5,6 +5,7 @@ export interface Defaults {
   disabledRecipes: string[];
   factoryRank: string[];
   moduleRank: string[];
-  beaconModule: string;
   beaconCount: number;
+  beacon: string;
+  beaconModule: string;
 }

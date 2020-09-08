@@ -3,7 +3,6 @@ import { IdName } from '../id-name';
 export enum Column {
   Belts = 'Belts',
   Factories = 'Factories',
-  Modules = 'Modules',
   Beacons = 'Beacons',
   Power = 'Power',
   Pollution = 'Pollution',
@@ -13,7 +12,6 @@ export enum Column {
 export const AllColumns = [
   Column.Belts,
   Column.Factories,
-  Column.Modules,
   Column.Beacons,
   Column.Power,
   Column.Pollution,

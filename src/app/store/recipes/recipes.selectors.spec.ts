@@ -15,6 +15,7 @@ describe('Recipes Selectors', () => {
         null,
         null,
         null,
+        null,
         null
       );
       expect(Object.keys(result).length).toEqual(0);
@@ -28,6 +29,7 @@ describe('Recipes Selectors', () => {
         null,
         null,
         null,
+        null,
         { recipeIds: [] }
       );
       expect(Object.keys(result).length).toEqual(0);
@@ -38,8 +40,9 @@ describe('Recipes Selectors', () => {
         initialRecipesState,
         Mocks.SettingsState1.factoryRank,
         Mocks.SettingsState1.moduleRank,
-        Mocks.SettingsState1.beaconModule,
         Mocks.SettingsState1.beaconCount,
+        Mocks.SettingsState1.beacon,
+        Mocks.SettingsState1.beaconModule,
         Mocks.SettingsState1.drillModule,
         Mocks.Data
       );
@@ -55,8 +58,9 @@ describe('Recipes Selectors', () => {
         state,
         Mocks.SettingsState1.factoryRank,
         Mocks.SettingsState1.moduleRank,
-        Mocks.SettingsState1.beaconModule,
         Mocks.SettingsState1.beaconCount,
+        Mocks.SettingsState1.beacon,
+        Mocks.SettingsState1.beaconModule,
         Mocks.SettingsState1.drillModule,
         Mocks.Data
       );
@@ -66,35 +70,19 @@ describe('Recipes Selectors', () => {
     it('should use module override', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { modules: [stringValue] } },
+        ...{ [Mocks.Item1.id]: { factoryModules: [stringValue] } },
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
         Mocks.SettingsState1.factoryRank,
         Mocks.SettingsState1.moduleRank,
-        Mocks.SettingsState1.beaconModule,
         Mocks.SettingsState1.beaconCount,
+        Mocks.SettingsState1.beacon,
+        Mocks.SettingsState1.beaconModule,
         Mocks.SettingsState1.drillModule,
         Mocks.Data
       );
-      expect(result[Mocks.Item1.id].modules as string[]).toEqual([stringValue]);
-    });
-
-    it('should use beacon type override', () => {
-      const state = {
-        ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { beaconModule: stringValue } },
-      };
-      const result = Selectors.getRecipeSettings.projector(
-        state,
-        Mocks.SettingsState1.factoryRank,
-        Mocks.SettingsState1.moduleRank,
-        Mocks.SettingsState1.beaconModule,
-        Mocks.SettingsState1.beaconCount,
-        Mocks.SettingsState1.drillModule,
-        Mocks.Data
-      );
-      expect(result[Mocks.Item1.id].beaconModule).toEqual(stringValue);
+      expect(result[Mocks.Item1.id].factoryModules).toEqual([stringValue]);
     });
 
     it('should use beacon count override', () => {
@@ -106,12 +94,49 @@ describe('Recipes Selectors', () => {
         state,
         Mocks.SettingsState1.factoryRank,
         Mocks.SettingsState1.moduleRank,
-        Mocks.SettingsState1.beaconModule,
         Mocks.SettingsState1.beaconCount,
+        Mocks.SettingsState1.beacon,
+        Mocks.SettingsState1.beaconModule,
         Mocks.SettingsState1.drillModule,
         Mocks.Data
       );
       expect(result[Mocks.Item1.id].beaconCount).toEqual(numberValue);
+    });
+
+    it('should use beacon override', () => {
+      const state = {
+        ...initialRecipesState,
+        ...{ [Mocks.Item1.id]: { beacon: stringValue } },
+      };
+      const result = Selectors.getRecipeSettings.projector(
+        state,
+        Mocks.SettingsState1.factoryRank,
+        Mocks.SettingsState1.moduleRank,
+        Mocks.SettingsState1.beaconCount,
+        Mocks.SettingsState1.beacon,
+        Mocks.SettingsState1.beaconModule,
+        Mocks.SettingsState1.drillModule,
+        Mocks.Data
+      );
+      expect(result[Mocks.Item1.id].beacon).toEqual(stringValue);
+    });
+
+    it('should use beacon module override', () => {
+      const state = {
+        ...initialRecipesState,
+        ...{ [Mocks.Item1.id]: { beaconModules: [stringValue] } },
+      };
+      const result = Selectors.getRecipeSettings.projector(
+        state,
+        Mocks.SettingsState1.factoryRank,
+        Mocks.SettingsState1.moduleRank,
+        Mocks.SettingsState1.beaconCount,
+        Mocks.SettingsState1.beacon,
+        Mocks.SettingsState1.beaconModule,
+        Mocks.SettingsState1.drillModule,
+        Mocks.Data
+      );
+      expect(result[Mocks.Item1.id].beaconModules).toEqual([stringValue]);
     });
   });
 
@@ -121,23 +146,16 @@ describe('Recipes Selectors', () => {
       expect(result).toBeFalse();
     });
 
-    it('should find a relevant step', () => {
+    it('should find a relevant step by factory', () => {
       const result = Selectors.getContainsFactory.projector({
         ['id']: { factory: ItemId.AssemblingMachine1 },
       });
       expect(result).toBeTrue();
     });
-  });
 
-  describe('getContainsModules', () => {
-    it('should handle null/empty values', () => {
-      const result = Selectors.getContainsModules.projector({});
-      expect(result).toBeFalse();
-    });
-
-    it('should find a relevant step', () => {
-      const result = Selectors.getContainsModules.projector({
-        ['id']: { modules: [ItemId.SpeedModule] },
+    it('should find a relevant step by factory modules', () => {
+      const result = Selectors.getContainsFactory.projector({
+        ['id']: { factoryModules: [ItemId.SpeedModule] },
       });
       expect(result).toBeTrue();
     });
@@ -149,16 +167,23 @@ describe('Recipes Selectors', () => {
       expect(result).toBeFalse();
     });
 
-    it('should find a relevant step by module', () => {
+    it('should find a relevant step by beacon count', () => {
       const result = Selectors.getContainsBeacons.projector({
-        ['id']: { beaconModule: ItemId.SpeedModule },
+        ['id']: { beaconCount: 0 },
       });
       expect(result).toBeTrue();
     });
 
-    it('should find a relevant step by count', () => {
+    it('should find a relevant step by beacon', () => {
       const result = Selectors.getContainsBeacons.projector({
-        ['id']: { beaconCount: 0 },
+        ['id']: { beacon: 'beacon' },
+      });
+      expect(result).toBeTrue();
+    });
+
+    it('should find a relevant step by beacon modules', () => {
+      const result = Selectors.getContainsBeacons.projector({
+        ['id']: { beaconModules: [ItemId.SpeedModule] },
       });
       expect(result).toBeTrue();
     });

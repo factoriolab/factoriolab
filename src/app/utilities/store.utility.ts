@@ -19,7 +19,17 @@ export class StoreUtility {
       : payload.value === payload.default;
   }
 
-  /** Resets a passed field of the recipe state */
+  /** Resets a passed fields of the state */
+  static resetFields<T>(state: T, fields: string[]) {
+    // Spread into new state
+    let newState = { ...state };
+    for (const field of fields) {
+      newState = this.resetField(newState, field);
+    }
+    return newState;
+  }
+
+  /** Resets a passed field of the state */
   static resetField<T>(state: T, field: string): T {
     // Spread into new state
     const newState = { ...state };
@@ -29,7 +39,7 @@ export class StoreUtility {
       if (Object.keys(newState[id]).length === 1) {
         delete newState[id];
       } else {
-        // Spread into new recipe settings state
+        // Spread into new state
         newState[id] = { ...newState[id] };
         delete newState[id][field];
       }

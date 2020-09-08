@@ -2,36 +2,42 @@ import { Rational } from './rational';
 
 export enum RecipeSettingsField {
   Factory = 'factory',
-  Modules = 'modules',
-  BeaconModule = 'beaconModule',
+  FactoryModules = 'factoryModules',
+  Beacon = 'beacon',
+  BeaconModules = 'beaconModules',
   BeaconCount = 'beaconCount',
 }
 
 export interface RecipeSettings {
   factory?: string;
-  modules?: string[];
-  beaconModule?: string;
+  factoryModules?: string[];
   beaconCount?: number;
+  beacon?: string;
+  beaconModules?: string[];
 }
 
 export class RationalRecipeSettings {
   factory?: string;
-  modules?: string[];
-  beaconModule?: string;
+  factoryModules?: string[];
   beaconCount?: Rational;
+  beacon?: string;
+  beaconModules?: string[];
 
   constructor(data: RecipeSettings) {
     if (data.factory != null) {
       this.factory = data.factory;
     }
-    if (data.modules != null) {
-      this.modules = data.modules;
-    }
-    if (data.beaconModule != null) {
-      this.beaconModule = data.beaconModule;
+    if (data.factoryModules != null) {
+      this.factoryModules = data.factoryModules;
     }
     if (data.beaconCount != null) {
       this.beaconCount = Rational.fromNumber(data.beaconCount);
+    }
+    if (data.beacon != null) {
+      this.beacon = data.beacon;
+    }
+    if (data.beaconModules != null) {
+      this.beaconModules = data.beaconModules;
     }
   }
 }

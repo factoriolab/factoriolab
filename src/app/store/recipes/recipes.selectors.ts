@@ -20,16 +20,18 @@ export const getRecipeSettings = createSelector(
   recipesState,
   Settings.getFactoryRank,
   Settings.getModuleRank,
-  Settings.getBeaconModule,
   Settings.getBeaconCount,
+  Settings.getBeacon,
+  Settings.getBeaconModule,
   Settings.getDrillModule,
   Settings.getDataset,
   (
     state,
     factoryRank,
     moduleRank,
-    beaconModule,
     beaconCount,
+    beacon,
+    beaconModule,
     drillModule,
     data
   ) => {
@@ -53,32 +55,30 @@ export const getRecipeSettings = createSelector(
           const drillSkipDefaults = !drillModule && factoryItem.factory.mining;
 
           // Modules
-          if (!recipeSettings.modules) {
+          if (!recipeSettings.factoryModules) {
+            const count = factoryItem.factory.modules;
             if (drillSkipDefaults) {
-              recipeSettings.modules = [];
-              const count = factoryItem.factory.modules;
-              for (let i = 0; i < count; i++) {
-                recipeSettings.modules.push(MODULE_ID);
-              }
+              recipeSettings.factoryModules = new Array(count).fill(MODULE_ID);
             } else {
-              recipeSettings.modules = RecipeUtility.defaultModules(
+              recipeSettings.factoryModules = RecipeUtility.defaultModules(
                 data.recipeModuleIds[recipe.id],
                 moduleRank,
-                factoryItem.factory.modules
+                count
               );
             }
           }
 
           // Beacons
-          if (!recipeSettings.beaconModule) {
-            if (drillSkipDefaults) {
-              recipeSettings.beaconModule = MODULE_ID;
-            } else {
-              recipeSettings.beaconModule = beaconModule;
-            }
-          }
           if (recipeSettings.beaconCount == null) {
-            recipeSettings.beaconCount = beaconCount;
+            recipeSettings.beaconCount = drillSkipDefaults ? 0 : beaconCount;
+          }
+          if (!recipeSettings.beacon) {
+            recipeSettings.beacon = beacon;
+          }
+          const beaconItem = data.itemEntities[recipeSettings.beacon];
+          if (beaconItem?.beacon && !recipeSettings.beaconModules) {
+            const count = beaconItem.beacon.modules;
+            recipeSettings.beaconModules = new Array(count).fill(beaconModule);
           }
         }
 
@@ -129,15 +129,14 @@ export const getAdjustedDataset = createSelector(
 );
 
 export const getContainsFactory = createSelector(recipesState, (state) =>
-  Object.keys(state).some((id) => state[id].factory)
-);
-
-export const getContainsModules = createSelector(recipesState, (state) =>
-  Object.keys(state).some((id) => state[id].modules)
+  Object.keys(state).some((id) => state[id].factory || state[id].factoryModules)
 );
 
 export const getContainsBeacons = createSelector(recipesState, (state) =>
   Object.keys(state).some(
-    (id) => state[id].beaconModule || state[id].beaconCount != null
+    (id) =>
+      state[id].beacon ||
+      state[id].beaconModules ||
+      state[id].beaconCount != null
   )
 );

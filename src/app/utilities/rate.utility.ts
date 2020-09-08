@@ -76,7 +76,7 @@ export class RateUtility {
         }
       }
 
-      this.adjustConsumptionPollution(step, recipe);
+      this.adjustPowerPollution(step, recipe);
 
       // Recurse adding steps for ingredients
       if (
@@ -159,7 +159,7 @@ export class RateUtility {
         }
       }
 
-      this.adjustConsumptionPollution(node, recipe);
+      this.adjustPowerPollution(node, recipe);
 
       // Recurse adding nodes for ingredients
       if (
@@ -182,11 +182,11 @@ export class RateUtility {
     }
   }
 
-  static adjustConsumptionPollution(step: StepBase, recipe: RationalRecipe) {
+  static adjustPowerPollution(step: StepBase, recipe: RationalRecipe) {
     if (step.factories?.nonzero()) {
       // Calculate power
       if (recipe.consumption?.nonzero()) {
-        step.consumption = step.factories.mul(recipe.consumption);
+        step.power = step.factories.mul(recipe.consumption);
       }
       // Calculate pollution
       if (recipe.pollution?.nonzero()) {

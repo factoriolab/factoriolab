@@ -7,7 +7,7 @@ export interface StepBase {
   surplus?: Rational;
   belts?: Rational;
   factories?: Rational;
-  consumption?: Rational;
+  power?: Rational;
   pollution?: Rational;
   recipeId?: string;
   parents?: Entities<Rational>;
