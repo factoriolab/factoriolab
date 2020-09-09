@@ -9,7 +9,7 @@ import {
   HostBinding,
 } from '@angular/core';
 
-import { IdType, DisplayRate, Dataset, MODULE_ID } from '~/models';
+import { IdType, DisplayRate, Dataset, ItemId } from '~/models';
 
 @Component({
   selector: 'lab-select',
@@ -30,7 +30,7 @@ export class SelectComponent {
   @Output() selectId = new EventEmitter<string>();
 
   IdType = IdType;
-  MODULE_ID = MODULE_ID;
+  ItemId = ItemId;
 
   opening = true;
 

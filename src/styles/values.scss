@@ -33,7 +33,7 @@ $color-invalid: #ff0000;
 
   --color-brand: #{$color-brand};
   --color-back: #fff;
-  --color-font: #{invert($color-font)};
+  --color-font: #{invert($color-white)};
   --color-invalid: #{$color-invalid};
 
   --module-icon-filter: invert(100%);

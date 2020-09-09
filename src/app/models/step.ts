@@ -6,6 +6,7 @@ export interface StepBase {
   items: Rational;
   surplus?: Rational;
   belts?: Rational;
+  wagons?: Rational;
   factories?: Rational;
   power?: Rational;
   pollution?: Rational;

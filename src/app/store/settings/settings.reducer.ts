@@ -28,6 +28,7 @@ export interface SettingsState {
   displayRate: DisplayRate;
   itemPrecision: number;
   beltPrecision: number;
+  wagonPrecision: number;
   factoryPrecision: number;
   powerPrecision: number;
   pollutionPrecision: number;
@@ -56,6 +57,7 @@ export const initialSettingsState: SettingsState = {
   displayRate: DisplayRate.PerMinute,
   itemPrecision: 3,
   beltPrecision: 1,
+  wagonPrecision: 1,
   factoryPrecision: 1,
   powerPrecision: 1,
   pollutionPrecision: 1,
@@ -222,6 +224,9 @@ export function settingsReducer(
     }
     case SettingsActionType.SET_BELT_PRECISION: {
       return { ...state, ...{ beltPrecision: action.payload } };
+    }
+    case SettingsActionType.SET_WAGON_PRECISION: {
+      return { ...state, ...{ wagonPrecision: action.payload } };
     }
     case SettingsActionType.SET_FACTORY_PRECISION: {
       return { ...state, ...{ factoryPrecision: action.payload } };

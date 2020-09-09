@@ -9,7 +9,7 @@ import {
   ElementRef,
 } from '@angular/core';
 
-import { Dataset } from '~/models';
+import { Dataset, ItemId } from '~/models';
 
 @Component({
   selector: 'lab-header',
@@ -33,6 +33,8 @@ export class HeaderComponent {
   @Input() data: Dataset;
   @Output() toggleSettings = new EventEmitter();
   @Output() hideHeader = new EventEmitter();
+
+  ItemId = ItemId;
 
   menuOpen = false;
 

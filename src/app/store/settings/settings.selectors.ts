@@ -3,18 +3,16 @@ import { compose, createSelector } from '@ngrx/store';
 import {
   ResearchSpeedFactor,
   Rational,
-  PIPE_ID,
   Entities,
   Recipe,
   RationalItem,
   RationalRecipe,
   Dataset,
   Preset,
-  MODULE_ID,
   Defaults,
-  PRODUCTIVITY_LIMITATION,
   toBoolEntities,
   toEntities,
+  ItemId,
 } from '~/models';
 import { State } from '../';
 import * as Datasets from '../datasets';
@@ -27,6 +25,7 @@ const sBaseDatasetId = (state: SettingsState) => state.baseId;
 const sDisplayRate = (state: SettingsState) => state.displayRate;
 const sItemPrecision = (state: SettingsState) => state.itemPrecision;
 const sBeltPrecision = (state: SettingsState) => state.beltPrecision;
+const sWagonPrecision = (state: SettingsState) => state.wagonPrecision;
 const sFactoryPrecision = (state: SettingsState) => state.factoryPrecision;
 const sPowerPrecision = (state: SettingsState) => state.powerPrecision;
 const sPollutionPrecision = (state: SettingsState) => state.pollutionPrecision;
@@ -45,6 +44,7 @@ export const getBaseDatasetId = compose(sBaseDatasetId, settingsState);
 export const getDisplayRate = compose(sDisplayRate, settingsState);
 export const getItemPrecision = compose(sItemPrecision, settingsState);
 export const getBeltPrecision = compose(sBeltPrecision, settingsState);
+export const getWagonPrecision = compose(sWagonPrecision, settingsState);
 export const getFactoryPrecision = compose(sFactoryPrecision, settingsState);
 export const getPowerPrecision = compose(sPowerPrecision, settingsState);
 export const getPollutionPrecision = compose(
@@ -84,7 +84,7 @@ export const getDefaults = createSelector(
         beaconCount:
           preset < Preset.Beacon8 ? 0 : preset < Preset.Beacon12 ? 8 : 12,
         beacon: m.beacon,
-        beaconModule: preset < Preset.Beacon8 ? MODULE_ID : m.beaconModule,
+        beaconModule: preset < Preset.Beacon8 ? ItemId.Module : m.beaconModule,
       };
       return defaults;
     }
@@ -305,7 +305,9 @@ export const getNormalDataset = createSelector(
     // Add missing mining recipes to productivity limitation
     recipes
       .filter((r) => r.mining)
-      .forEach((r) => (limitations[PRODUCTIVITY_LIMITATION][r.id] = true));
+      .forEach(
+        (r) => (limitations[ItemId.ProductivityLimitation][r.id] = true)
+      );
 
     // Calculate allowed modules for recipes
     const recipeModuleIds = recipes.reduce((e: Entities<string[]>, r) => {
@@ -371,7 +373,7 @@ export const getBeltSpeed = createSelector(
   getDataset,
   getRationalFlowRate,
   (data, flowRate) => {
-    const value: Entities<Rational> = { [PIPE_ID]: flowRate };
+    const value: Entities<Rational> = { [ItemId.Pipe]: flowRate };
     if (data.beltIds) {
       for (const id of data.beltIds) {
         value[id] = data.itemR[id].belt.speed;

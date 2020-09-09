@@ -13,11 +13,10 @@ import {
   Rational,
   Dataset,
   DefaultIdPayload,
-  MODULE_ID,
   Column,
   ColumnsAsOptions,
   toBoolEntities,
-  PUMPJACK_ID,
+  ItemId,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { ItemsState } from '~/store/items';
@@ -58,6 +57,7 @@ export class ListComponent {
     this._steps = value;
     this.setItemsPrecision();
     this.setBeltsPrecision();
+    this.setWagonsPrecision();
     this.setFactoriesPrecision();
     this.setPowerPrecision();
     this.setPollutionPrecision();
@@ -76,6 +76,11 @@ export class ListComponent {
   @Input() set beltPrecision(value: number) {
     this._beltPrecision = value;
     this.setBeltsPrecision();
+  }
+  _wagonPrecision = 0;
+  @Input() set wagonPrecision(value: number) {
+    this._wagonPrecision = value;
+    this.setWagonsPrecision();
   }
   _factoryPrecision = 0;
   @Input() set factoryPrecision(value: number) {
@@ -103,6 +108,9 @@ export class ListComponent {
     this.show = toBoolEntities(value);
     this.totalSpan = 2;
     if (this.columns.indexOf(Column.Belts) !== -1) {
+      this.totalSpan++;
+    }
+    if (this.columns.indexOf(Column.Wagons) !== -1) {
       this.totalSpan++;
     }
     if (this.columns.indexOf(Column.Factories) !== -1) {
@@ -140,16 +148,16 @@ export class ListComponent {
   effPrecSurplus: number;
   effPrecItems: number;
   effPrecBelts: number;
+  effPrecWagons: number;
   effPrecFactories: number;
   effPrecPower: number;
   effPrecPollution: number;
 
   Column = Column;
   DisplayRate = DisplayRate;
+  ItemId = ItemId;
   StepEditType = ListEditType;
   Rational = Rational;
-  MODULE_ID = MODULE_ID;
-  PUMPJACK_ID = PUMPJACK_ID;
   ColumnsAsOptions = ColumnsAsOptions;
   ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
 
@@ -202,6 +210,13 @@ export class ListComponent {
     );
   }
 
+  setWagonsPrecision() {
+    this.effPrecWagons = this.effPrecFrom(
+      this._wagonPrecision,
+      (s: Step) => s.wagons
+    );
+  }
+
   setFactoriesPrecision() {
     this.effPrecFactories = this.effPrecFrom(
       this._factoryPrecision,
@@ -245,6 +260,14 @@ export class ListComponent {
 
   findStep(id: string) {
     return this.steps.find((s) => s.itemId === id);
+  }
+
+  factoryRate(value: Rational, precision: number, factory: string) {
+    if (factory === ItemId.Pumpjack) {
+      return `${this.rate(value.mul(Rational.hundred), precision - 1)}%`;
+    } else {
+      return this.rate(value, precision);
+    }
   }
 
   rate(value: Rational, precision: number) {
@@ -301,8 +324,8 @@ export class ListComponent {
   factoryModuleChange(step: Step, value: string, index: number) {
     const count = this.recipeSettings[step.recipeId].factoryModules.length;
     const options = this.miningIgnoreModule(step)
-      ? [MODULE_ID]
-      : [...this.data.recipeModuleIds[step.recipeId], MODULE_ID];
+      ? [ItemId.Module]
+      : [...this.data.recipeModuleIds[step.recipeId], ItemId.Module];
     const def = RecipeUtility.defaultModules(options, this.moduleRank, count);
     const modules = this.generateModules(
       index,

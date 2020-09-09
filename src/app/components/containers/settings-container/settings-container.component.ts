@@ -155,6 +155,10 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetBeltPrecisionAction(value));
   }
 
+  setWagonPrecision(value: number) {
+    this.store.dispatch(new Settings.SetWagonPrecisionAction(value));
+  }
+
   setFactoryPrecision(value: number) {
     this.store.dispatch(new Settings.SetFactoryPrecisionAction(value));
   }
