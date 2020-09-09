@@ -17,8 +17,8 @@ import {
   ModInfo,
   DefaultTogglePayload,
   DefaultPayload,
-  MODULE_ID,
   Preset,
+  ItemId,
 } from '~/models';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
@@ -76,6 +76,7 @@ export class SettingsComponent {
   @Output() setDisplayRate = new EventEmitter<DisplayRate>();
   @Output() setItemPrecision = new EventEmitter<number>();
   @Output() setBeltPrecision = new EventEmitter<number>();
+  @Output() setWagonPrecision = new EventEmitter<number>();
   @Output() setFactoryPrecision = new EventEmitter<number>();
   @Output() setPowerPrecision = new EventEmitter<number>();
   @Output() setPollutionPrecision = new EventEmitter<number>();
@@ -87,12 +88,12 @@ export class SettingsComponent {
   openSelect = OpenSelect.None;
 
   DisplayRate = DisplayRate;
+  ItemId = ItemId;
   OpenSelect = OpenSelect;
+  Preset = Preset;
   ResearchSpeed = ResearchSpeed;
   SelectType = IdType;
   Theme = Theme;
-  Preset = Preset;
-  MODULE_ID = MODULE_ID;
 
   initial = initialSettingsState;
   sortedFuels: string[] = [];

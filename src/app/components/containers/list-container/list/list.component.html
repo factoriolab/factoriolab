@@ -2,22 +2,24 @@
   <thead>
     <tr>
       <!-- Expand -->
-      <th class="relative">
-        <i
-          title="Select columns"
-          class="clickable material-icons"
-          (click)="edit = { step: null, type: StepEditType.Columns }"
-          >visibility</i
-        >
-        <lab-multiselect
-          *ngIf="edit?.type === StepEditType.Columns"
-          [header]="'Select Columns'"
-          [enabledIds]="columns"
-          [options]="ColumnsAsOptions"
-          (cancel)="edit = null"
-          (enableId)="showColumn.emit($event)"
-          (disableId)="hideColumn.emit($event)"
-        ></lab-multiselect>
+      <th>
+        <span class="relative flex">
+          <i
+            title="Select columns"
+            class="clickable material-icons"
+            (click)="edit = { step: null, type: StepEditType.Columns }"
+            >visibility</i
+          >
+          <lab-multiselect
+            *ngIf="edit?.type === StepEditType.Columns"
+            [header]="'Select Columns'"
+            [enabledIds]="columns"
+            [options]="ColumnsAsOptions"
+            (cancel)="edit = null"
+            (enableId)="showColumn.emit($event)"
+            (disableId)="hideColumn.emit($event)"
+          ></lab-multiselect>
+        </span>
       </th>
       <th>
         <div>
@@ -42,6 +44,9 @@
             >undo</i
           >
         </div>
+      </th>
+      <th *ngIf="show[Column.Wagons]">
+        <div>Wagons{{ rateLabel }}</div>
       </th>
       <th *ngIf="show[Column.Factories]" colspan="3">
         <div>
@@ -186,23 +191,38 @@
             </div>
           </ng-container>
         </td>
+        <td *ngIf="show[Column.Wagons]">
+          <ng-container *ngIf="itemSettings[step.itemId]?.wagon as wagon">
+            <div
+              *ngIf="
+                step.wagons &&
+                (!step.recipeId ||
+                  !data.itemEntities[recipeSettings[step.recipeId].factory]
+                    .factory.research)
+              "
+              class="flex"
+            >
+              <span class="monospace">{{
+                rate(step.wagons, effPrecWagons)
+              }}</span>
+              <lab-icon
+                class="clickable-size"
+                [iconId]="wagon"
+                [tooltip]="data.itemEntities[wagon].name"
+                [data]="data"
+              ></lab-icon>
+            </div>
+          </ng-container>
+        </td>
         <ng-container *ngIf="show[Column.Factories]">
           <ng-container
             *ngIf="recipeSettings[step.recipeId]?.factory as factory"
           >
             <td>
               <div *ngIf="step.factories?.nonzero()" class="flex">
-                <span *ngIf="factory !== PUMPJACK_ID" class="monospace">{{
-                  rate(step.factories, effPrecFactories)
+                <span class="monospace">{{
+                  factoryRate(step.factories, effPrecFactories, factory)
                 }}</span>
-                <span *ngIf="factory === PUMPJACK_ID" class="monospace"
-                  >{{
-                    rate(
-                      step.factories.mul(Rational.hundred),
-                      effPrecFactories - 1
-                    )
-                  }}%</span
-                >
               </div>
             </td>
             <td class="split-column">
@@ -530,23 +550,45 @@
                   </div>
                 </ng-container>
               </td>
+              <td *ngIf="show[Column.Wagons]">
+                <ng-container
+                  *ngIf="itemSettings[inStep.itemId]?.wagon as wagon"
+                >
+                  <div
+                    *ngIf="
+                      inStep.wagons &&
+                      (!inStep.recipeId ||
+                        !data.itemEntities[
+                          recipeSettings[inStep.recipeId].factory
+                        ].factory.research)
+                    "
+                    class="flex"
+                  >
+                    <span class="monospace">{{
+                      rate(inStep.wagons, effPrecWagons)
+                    }}</span>
+                    <lab-icon
+                      class="clickable-size"
+                      [iconId]="wagon"
+                      [tooltip]="data.itemEntities[wagon].name"
+                      [data]="data"
+                    ></lab-icon>
+                  </div>
+                </ng-container>
+              </td>
               <ng-container *ngIf="show[Column.Factories]">
                 <ng-container
                   *ngIf="recipeSettings[inStep.recipeId]?.factory as factory"
                 >
                   <td>
                     <div *ngIf="inStep.factories?.nonzero()" class="flex">
-                      <span *ngIf="factory !== PUMPJACK_ID" class="monospace">{{
-                        rate(inStep.factories.mul(percent), effPrecFactories)
+                      <span class="monospace">{{
+                        factoryRate(
+                          inStep.factories.mul(percent),
+                          effPrecFactories,
+                          factory
+                        )
                       }}</span>
-                      <span *ngIf="factory === PUMPJACK_ID" class="monospace"
-                        >{{
-                          rate(
-                            inStep.factories.mul(percent).mul(Rational.hundred),
-                            effPrecFactories - 1
-                          )
-                        }}%</span
-                      >
                     </div>
                   </td>
                   <td class="split-column">
@@ -650,23 +692,42 @@
               </div>
             </ng-container>
           </td>
+          <td *ngIf="show[Column.Wagons]">
+            <ng-container *ngIf="itemSettings[step.itemId]?.wagon as wagon">
+              <div
+                *ngIf="
+                  step.wagons &&
+                  (!step.recipeId ||
+                    !data.itemEntities[recipeSettings[step.recipeId].factory]
+                      .factory.research)
+                "
+                class="flex"
+              >
+                <span class="monospace">{{
+                  rate(step.wagons.mul(parent.value), effPrecWagons)
+                }}</span>
+                <lab-icon
+                  class="clickable-size"
+                  [iconId]="wagon"
+                  [tooltip]="data.itemEntities[wagon].name"
+                  [data]="data"
+                ></lab-icon>
+              </div>
+            </ng-container>
+          </td>
           <ng-container *ngIf="show[Column.Factories]">
             <ng-container
               *ngIf="recipeSettings[step.recipeId]?.factory as factory"
             >
               <td>
                 <div class="flex" *ngIf="step.factories?.nonzero()">
-                  <span *ngIf="factory !== PUMPJACK_ID" class="monospace">{{
-                    rate(step.factories.mul(parent.value), effPrecFactories)
+                  <span class="monospace">{{
+                    factoryRate(
+                      step.factories.mul(parent.value),
+                      effPrecFactories,
+                      factory
+                    )
                   }}</span>
-                  <span *ngIf="factory === PUMPJACK_ID" class="monospace"
-                    >{{
-                      rate(
-                        step.factories.mul(parent.value).mul(Rational.hundred),
-                        effPrecFactories - 1
-                      )
-                    }}%</span
-                  >
                 </div>
               </td>
               <td class="split-column">

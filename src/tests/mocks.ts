@@ -129,6 +129,7 @@ export const Node3 = { ...Step1, ...{ id: 'id3', name: 'name3' } };
 export const Root: Node = { id: 'root', children: [Node2, Node3] } as any;
 export const BeltSpeed: Entities<Rational> = {
   [ItemId.TransportBelt]: new Rational(BigInt(15)),
+  [ItemId.Pipe]: new Rational(BigInt(1500)),
 };
 export const ItemSettingsEntities: Entities<ItemSettings> = {};
 for (const item of Data.itemIds.map((i) => Data.itemEntities[i])) {

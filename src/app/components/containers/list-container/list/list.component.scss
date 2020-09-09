@@ -49,6 +49,10 @@ th > div {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: var(--color-gray-2);
+  border-radius: 0.5rem;
+  height: 2rem;
+  padding: 0 0.25rem;
 
   > * {
     margin-left: 0.5rem;

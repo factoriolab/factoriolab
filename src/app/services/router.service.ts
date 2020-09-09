@@ -149,10 +149,10 @@ export class RouterService {
       const r = product.rate;
 
       if (product.rateType === RateType.Items) {
-        return `${i}:${r}`;
+        return [i, r].join(FIELDSEP);
       } else {
         const t = product.rateType;
-        return `${i}:${r}:${t}`;
+        return [i, r, t].join(FIELDSEP);
       }
     });
   }
@@ -185,10 +185,11 @@ export class RouterService {
   zipItems(state: Items.ItemsState): string[] {
     return Object.keys(state).map((id) => {
       const settings = state[id];
-      const i = id;
-      const ig = this.zipTruthyBool(settings.ignore);
-      const bl = this.zipTruthy(settings.belt);
-      return [i, ig, bl].join(FIELDSEP);
+      return [
+        id,
+        this.zipTruthyBool(settings.ignore),
+        this.zipTruthy(settings.belt),
+      ].join(FIELDSEP);
     });
   }
 
@@ -214,13 +215,14 @@ export class RouterService {
   zipRecipes(state: Recipes.RecipesState): string[] {
     return Object.keys(state).map((id) => {
       const settings = state[id];
-      const i = id;
-      const fc = this.zipTruthy(settings.factory);
-      const md = this.zipTruthyArray(settings.factoryModules);
-      const bc = this.zipTruthyNum(settings.beaconCount);
-      const be = this.zipTruthy(settings.beacon);
-      const bt = this.zipTruthyArray(settings.beaconModules);
-      return [i, fc, md, bc, be, bt].join(FIELDSEP);
+      return [
+        id,
+        this.zipTruthy(settings.factory),
+        this.zipTruthyArray(settings.factoryModules),
+        this.zipTruthyNum(settings.beaconCount),
+        this.zipTruthy(settings.beacon),
+        this.zipTruthyArray(settings.beaconModules),
+      ].join(FIELDSEP);
     });
   }
 
@@ -257,54 +259,30 @@ export class RouterService {
 
   zipSettings(state: Settings.SettingsState): string {
     const init = Settings.initialSettingsState;
-    const bd = this.zipDiff(state.baseId, init.baseId);
-    const md = this.zipDiffArray(state.modIds, init.modIds);
-    const di = this.zipDiffArray(state.disabledRecipes, init.disabledRecipes);
-    const ex = this.zipDiffBool(state.expensive, init.expensive);
-    const fr = this.zipDiffRank(state.factoryRank, init.factoryRank);
-    const mr = this.zipDiffRank(state.moduleRank, init.moduleRank);
-    const dm = this.zipDiffBool(state.drillModule, init.drillModule);
-    const bc = this.zipDiffNum(state.beaconCount, init.beaconCount);
-    const be = this.zipDiff(state.beacon, init.beacon);
-    const bm = this.zipDiff(state.beaconModule, init.beaconModule);
-    const tb = this.zipDiff(state.belt, init.belt);
-    const fl = this.zipDiff(state.fuel, init.fuel);
-    const fw = this.zipDiffNum(state.flowRate, init.flowRate);
-    const dr = this.zipDiffNum(state.displayRate, init.displayRate);
-    const ip = this.zipDiffNum(state.itemPrecision, init.itemPrecision);
-    const bp = this.zipDiffNum(state.beltPrecision, init.beltPrecision);
-    const fp = this.zipDiffNum(state.factoryPrecision, init.factoryPrecision);
-    const ep = this.zipDiffNum(state.powerPrecision, init.powerPrecision);
-    const pp = this.zipDiffNum(
-      state.pollutionPrecision,
-      init.pollutionPrecision
-    );
-    const mb = this.zipDiffNum(state.miningBonus, init.miningBonus);
-    const rs = this.zipDiffNum(state.researchSpeed, init.researchSpeed);
-    const value = [
-      bd,
-      md,
-      di,
-      ex,
-      fr,
-      mr,
-      dm,
-      bc,
-      be,
-      bm,
-      tb,
-      fl,
-      fw,
-      dr,
-      ip,
-      bp,
-      fp,
-      ep,
-      pp,
-      mb,
-      rs,
+    const z = [
+      this.zipDiff(state.baseId, init.baseId),
+      this.zipDiffArray(state.modIds, init.modIds),
+      this.zipDiffArray(state.disabledRecipes, init.disabledRecipes),
+      this.zipDiffBool(state.expensive, init.expensive),
+      this.zipDiffRank(state.factoryRank, init.factoryRank),
+      this.zipDiffRank(state.moduleRank, init.moduleRank),
+      this.zipDiffBool(state.drillModule, init.drillModule),
+      this.zipDiffNum(state.beaconCount, init.beaconCount),
+      this.zipDiff(state.beacon, init.beacon),
+      this.zipDiff(state.beaconModule, init.beaconModule),
+      this.zipDiff(state.belt, init.belt),
+      this.zipDiff(state.fuel, init.fuel),
+      this.zipDiffNum(state.flowRate, init.flowRate),
+      this.zipDiffNum(state.displayRate, init.displayRate),
+      this.zipDiffNum(state.itemPrecision, init.itemPrecision),
+      this.zipDiffNum(state.beltPrecision, init.beltPrecision),
+      this.zipDiffNum(state.factoryPrecision, init.factoryPrecision),
+      this.zipDiffNum(state.powerPrecision, init.powerPrecision),
+      this.zipDiffNum(state.pollutionPrecision, init.pollutionPrecision),
+      this.zipDiffNum(state.miningBonus, init.miningBonus),
+      this.zipDiffNum(state.researchSpeed, init.researchSpeed),
     ].join(FIELDSEP);
-    return /^[:]+$/.test(value) ? '' : value;
+    return /^[:]+$/.test(z) ? '' : z;
   }
 
   unzipSettings(zSettings: string) {

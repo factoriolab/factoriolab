@@ -11,7 +11,7 @@ import {
   Constraint,
   Strength,
   Operator,
-  WATER_ID,
+  ItemId,
   toBoolEntities,
 } from '~/models';
 import { ItemsState } from '~/store/items';
@@ -312,7 +312,7 @@ export class MatrixSolver {
 
     let factoryExpr = new Expression(tax);
     for (const r of this.recipeIds) {
-      if (r === WATER_ID) {
+      if (r === ItemId.Water) {
         factoryExpr = factoryExpr.minus(
           new Expression([COST_WATER, this.recipeVar[r]])
         );

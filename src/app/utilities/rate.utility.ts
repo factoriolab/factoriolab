@@ -7,9 +7,10 @@ import {
   Node,
   Rational,
   DisplayRateVal,
-  ROCKET_PART_ID,
-  SPACE_SCIENCE_ID,
   RationalRecipe,
+  WAGON_FLUID,
+  WAGON_STACKS,
+  ItemId,
 } from '~/models';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
@@ -63,13 +64,13 @@ export class RateUtility {
       const out = recipe.out[itemId];
 
       // Calculate factories
-      if (itemId === SPACE_SCIENCE_ID) {
+      if (itemId === ItemId.SpaceSciencePack) {
         // Factories are for rocket parts, space science packs are a side effect
         step.factories = null;
       } else {
         step.factories = step.items.mul(recipe.time).div(out);
         // Add # of factories to actually launch rockets
-        if (itemId === ROCKET_PART_ID) {
+        if (itemId === ItemId.RocketPart) {
           step.factories = step.factories.add(
             step.items.div(Rational.hundred).mul(this.LAUNCH_TIME)
           );
@@ -146,13 +147,13 @@ export class RateUtility {
       const out = recipe.out[itemId];
 
       // Calculate factories
-      if (itemId === SPACE_SCIENCE_ID) {
+      if (itemId === ItemId.SpaceSciencePack) {
         // Factories are for rocket parts, space science packs are a side effect
         node.factories = null;
       } else {
         node.factories = node.items.mul(recipe.time).div(out);
         // Add # of factories to actually launch rockets
-        if (itemId === ROCKET_PART_ID) {
+        if (itemId === ItemId.RocketPart) {
           node.factories = node.factories.add(
             node.items.div(Rational.hundred).mul(this.LAUNCH_TIME)
           );
@@ -198,13 +199,21 @@ export class RateUtility {
   static calculateBelts(
     steps: Step[],
     itemSettings: ItemsState,
-    beltSpeed: Entities<Rational>
+    beltSpeed: Entities<Rational>,
+    data: Dataset
   ) {
     steps = steps.map((s) => ({ ...s }));
     for (const step of steps) {
       const belt = itemSettings[step.itemId]?.belt;
       if (step.items && belt) {
         step.belts = step.items.div(beltSpeed[belt]);
+        if (belt === ItemId.Pipe) {
+          step.wagons = step.items.div(WAGON_FLUID);
+        } else {
+          step.wagons = step.items.div(
+            WAGON_STACKS.mul(data.itemR[step.itemId].stack)
+          );
+        }
       }
     }
     return steps;
@@ -213,16 +222,24 @@ export class RateUtility {
   static calculateNodeBelts(
     node: Node,
     itemSettings: ItemsState,
-    beltSpeed: Entities<Rational>
+    beltSpeed: Entities<Rational>,
+    data: Dataset
   ) {
     node = { ...node };
     const belt = itemSettings[node.itemId]?.belt;
     if (node.items && belt) {
       node.belts = node.items.div(beltSpeed[belt]);
+      if (belt === ItemId.Pipe) {
+        node.wagons = node.items.div(WAGON_FLUID);
+      } else {
+        node.wagons = node.items.div(
+          WAGON_STACKS.mul(data.itemR[node.itemId].stack)
+        );
+      }
     }
     if (node.children) {
       node.children = node.children.map((n) =>
-        this.calculateNodeBelts(n, itemSettings, beltSpeed)
+        this.calculateNodeBelts(n, itemSettings, beltSpeed, data)
       );
     }
     return node;
@@ -243,6 +260,9 @@ export class RateUtility {
       if (step.surplus) {
         step.surplus = step.surplus.mul(displayRateVal);
       }
+      if (step.wagons) {
+        step.wagons = step.wagons.mul(displayRateVal);
+      }
       if (step.pollution) {
         step.pollution = step.pollution.mul(displayRateVal);
       }
@@ -257,6 +277,9 @@ export class RateUtility {
     }
     if (node.surplus) {
       node.surplus = node.surplus.mul(displayRateVal);
+    }
+    if (node.wagons) {
+      node.wagons = node.wagons.mul(displayRateVal);
     }
     if (node.pollution) {
       node.pollution = node.pollution.mul(displayRateVal);

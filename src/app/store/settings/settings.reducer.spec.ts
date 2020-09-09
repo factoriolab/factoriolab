@@ -270,6 +270,16 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('SET_WAGON_PRECISION', () => {
+    it('should set the wagon precision', () => {
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetWagonPrecisionAction(null)
+      );
+      expect(result.wagonPrecision).toEqual(null);
+    });
+  });
+
   describe('SET_FACTORY_PRECISION', () => {
     it('should set the factory precision', () => {
       const result = settingsReducer(

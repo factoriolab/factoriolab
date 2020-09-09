@@ -185,16 +185,18 @@ export const getNormalizedStepsWithBelts = createSelector(
   getNormalizedStepsWithMatrices,
   Items.getItemSettings,
   Settings.getBeltSpeed,
-  (steps, itemSettings, beltSpeed) =>
-    RateUtility.calculateBelts(steps, itemSettings, beltSpeed)
+  Recipes.getAdjustedDataset,
+  (steps, itemSettings, beltSpeed, data) =>
+    RateUtility.calculateBelts(steps, itemSettings, beltSpeed, data)
 );
 
 export const getNormalizedNodesWithBelts = createSelector(
   getNormalizedNodes,
   Items.getItemSettings,
   Settings.getBeltSpeed,
-  (nodes, itemSettings, beltSpeed) =>
-    RateUtility.calculateNodeBelts(nodes, itemSettings, beltSpeed)
+  Recipes.getAdjustedDataset,
+  (nodes, itemSettings, beltSpeed, data) =>
+    RateUtility.calculateNodeBelts(nodes, itemSettings, beltSpeed, data)
 );
 
 export const getSteps = createSelector(
