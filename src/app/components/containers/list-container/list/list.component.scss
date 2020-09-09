@@ -12,6 +12,10 @@ tr > * + * {
 
   &.split-column {
     padding-left: 0.5rem;
+
+    > .flex {
+      justify-content: flex-start;
+    }
   }
 }
 
@@ -62,11 +66,13 @@ th > div {
 td > div {
   justify-content: flex-end;
 
-  &.mod {
+  &.mod,
+  > .mod {
     justify-content: flex-start;
 
-    > :first-child {
+    > :first-child > lab-icon {
       border: 1px solid var(--color-gray-1);
+      padding: 1px;
       border-radius: 0.25rem;
     }
 
@@ -98,4 +104,13 @@ a {
 
 td.nowrap {
   white-space: nowrap;
+}
+
+.recipe {
+  margin-left: -0.25rem;
+}
+
+.arrow {
+  flex-grow: 1;
+  justify-content: flex-end;
 }
