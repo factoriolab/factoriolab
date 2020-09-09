@@ -138,7 +138,7 @@ describe('ListComponent', () => {
     });
 
     it('should set the totalspan', () => {
-      expect(component.child.totalSpan).toEqual(9);
+      expect(component.child.totalSpan).toEqual(10);
     });
 
     it('should set totalspan with no columns', () => {
@@ -199,6 +199,12 @@ describe('ListComponent', () => {
     });
   });
 
+  describe('setWagonsPrecision', () => {
+    it('should set the effective wagons precision', () => {
+      expect(component.child.effPrecWagons).toEqual(0);
+    });
+  });
+
   describe('setFactoriesPrecision', () => {
     it('should set the effective factories precision', () => {
       expect(component.child.effPrecFactories).toEqual(0);
@@ -242,6 +248,28 @@ describe('ListComponent', () => {
   describe('findStep', () => {
     it('should find the step with a specific item id', () => {
       expect(component.child.findStep(Mocks.Step1.itemId)).toEqual(Mocks.Step1);
+    });
+  });
+
+  describe('factoryRate', () => {
+    it('should return the normal rate for standard factories', () => {
+      expect(
+        component.child.factoryRate(
+          new Rational(BigInt(1), BigInt(3)),
+          3,
+          ItemId.AssemblingMachine1
+        )
+      ).toEqual('0.334');
+    });
+
+    it('should convert to percentage for pumpjacks', () => {
+      expect(
+        component.child.factoryRate(
+          new Rational(BigInt(1), BigInt(3)),
+          3,
+          ItemId.Pumpjack
+        )
+      ).toEqual('33.34%');
     });
   });
 

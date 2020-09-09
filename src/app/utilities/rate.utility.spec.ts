@@ -1,6 +1,6 @@
 import { Mocks, CategoryId, ItemId } from 'src/tests';
 import { RateUtility } from './rate.utility';
-import { Step, Node, Rational, DisplayRate } from '~/models';
+import { Step, Node, Rational, DisplayRate, WAGON_FLUID } from '~/models';
 
 describe('RateUtility', () => {
   describe('addStepsFor', () => {
@@ -407,7 +407,8 @@ describe('RateUtility', () => {
       const result = RateUtility.calculateBelts(
         steps,
         Mocks.ItemSettingsEntities,
-        Mocks.BeltSpeed
+        Mocks.BeltSpeed,
+        Mocks.AdjustedData
       );
       expect(result[0].belts).toBeNull();
     });
@@ -425,12 +426,13 @@ describe('RateUtility', () => {
       const result = RateUtility.calculateBelts(
         steps,
         Mocks.ItemSettingsEntities,
-        Mocks.BeltSpeed
+        Mocks.BeltSpeed,
+        Mocks.AdjustedData
       );
       expect(result[0].belts).toBeNull();
     });
 
-    it('should calculate required belts for steps', () => {
+    it('should calculate required belts & wagons for steps', () => {
       const steps: Step[] = [
         {
           depth: 0,
@@ -443,13 +445,52 @@ describe('RateUtility', () => {
       const result = RateUtility.calculateBelts(
         steps,
         Mocks.ItemSettingsEntities,
-        Mocks.BeltSpeed
+        Mocks.BeltSpeed,
+        Mocks.AdjustedData
       );
       expect(result[0].belts).toEqual(Rational.one);
+      expect(result[0].wagons).toEqual(new Rational(BigInt(3), BigInt(400)));
+    });
+
+    it('should calculate required wagons for fluids', () => {
+      const steps: Step[] = [
+        {
+          depth: 0,
+          itemId: ItemId.CrudeOil,
+          recipeId: null,
+          items: WAGON_FLUID,
+          belts: Rational.zero,
+        },
+      ];
+      const result = RateUtility.calculateBelts(
+        steps,
+        Mocks.ItemSettingsInitial,
+        Mocks.BeltSpeed,
+        Mocks.AdjustedData
+      );
+      expect(result[0].wagons).toEqual(Rational.one);
     });
   });
 
   describe('calculateNodeBelts', () => {
+    it('should skip nodes with no settings', () => {
+      const node: Node = {
+        id: 'test',
+        name: 'test',
+        itemId: null,
+        recipeId: null,
+        items: null,
+        belts: null,
+      };
+      const result = RateUtility.calculateNodeBelts(
+        node,
+        Mocks.ItemSettingsEntities,
+        Mocks.BeltSpeed,
+        Mocks.AdjustedData
+      );
+      expect(result.belts).toBeNull();
+    });
+
     it('should skip nodes with no items', () => {
       const node: Node = {
         id: 'test',
@@ -462,12 +503,13 @@ describe('RateUtility', () => {
       const result = RateUtility.calculateNodeBelts(
         node,
         Mocks.ItemSettingsEntities,
-        Mocks.BeltSpeed
+        Mocks.BeltSpeed,
+        Mocks.AdjustedData
       );
       expect(result.belts).toBeNull();
     });
 
-    it('should calculate required belts for nodes', () => {
+    it('should calculate required belts & wagons for nodes', () => {
       const node: Node = {
         id: 'test',
         name: 'test',
@@ -489,10 +531,44 @@ describe('RateUtility', () => {
       const result = RateUtility.calculateNodeBelts(
         node,
         Mocks.ItemSettingsEntities,
-        Mocks.BeltSpeed
+        Mocks.BeltSpeed,
+        Mocks.AdjustedData
       );
       expect(result.belts).toEqual(Rational.one);
+      expect(result.wagons).toEqual(new Rational(BigInt(3), BigInt(400)));
       expect(result.children[0].belts).toEqual(Rational.one);
+      expect(result.children[0].wagons).toEqual(
+        new Rational(BigInt(3), BigInt(400))
+      );
+    });
+
+    it('should calculate required wagons for fluids', () => {
+      const node: Node = {
+        id: 'test',
+        name: 'test',
+        itemId: ItemId.CrudeOil,
+        recipeId: null,
+        items: WAGON_FLUID,
+        belts: null,
+        children: [
+          {
+            id: 'test2',
+            name: 'test2',
+            itemId: ItemId.CrudeOil,
+            recipeId: null,
+            items: WAGON_FLUID,
+            belts: null,
+          },
+        ],
+      };
+      const result = RateUtility.calculateNodeBelts(
+        node,
+        Mocks.ItemSettingsInitial,
+        Mocks.BeltSpeed,
+        Mocks.AdjustedData
+      );
+      expect(result.wagons).toEqual(Rational.one);
+      expect(result.children[0].wagons).toEqual(Rational.one);
     });
   });
 
@@ -517,14 +593,16 @@ describe('RateUtility', () => {
           {
             items: Rational.one,
             surplus: Rational.two,
-            pollution: new Rational(BigInt(3)),
+            wagons: new Rational(BigInt(3)),
+            pollution: new Rational(BigInt(4)),
           },
         ] as any,
         DisplayRate.PerMinute
       );
       expect(result[0].items).toEqual(new Rational(BigInt(60)));
       expect(result[0].surplus).toEqual(new Rational(BigInt(120)));
-      expect(result[0].pollution).toEqual(new Rational(BigInt(180)));
+      expect(result[0].wagons).toEqual(new Rational(BigInt(180)));
+      expect(result[0].pollution).toEqual(new Rational(BigInt(240)));
     });
 
     it('should apply the display rate to partial steps', () => {
@@ -534,6 +612,7 @@ describe('RateUtility', () => {
       );
       expect(result[0].items).toEqual(new Rational(BigInt(120)));
       expect(result[0].surplus).toBeUndefined();
+      expect(result[0].wagons).toBeUndefined();
       expect(result[0].pollution).toBeUndefined();
     });
 
@@ -568,7 +647,8 @@ describe('RateUtility', () => {
         recipeId: null,
         items: Rational.one,
         surplus: Rational.two,
-        pollution: new Rational(BigInt(3)),
+        wagons: new Rational(BigInt(3)),
+        pollution: new Rational(BigInt(4)),
         belts: null,
         children: [
           {
@@ -576,9 +656,10 @@ describe('RateUtility', () => {
             name: 'test2',
             itemId: Mocks.Item1.id,
             recipeId: null,
-            items: new Rational(BigInt(4)),
-            surplus: new Rational(BigInt(5)),
-            pollution: new Rational(BigInt(6)),
+            items: new Rational(BigInt(5)),
+            surplus: new Rational(BigInt(6)),
+            wagons: new Rational(BigInt(7)),
+            pollution: new Rational(BigInt(8)),
             belts: null,
           },
         ],
@@ -586,10 +667,12 @@ describe('RateUtility', () => {
       RateUtility.nodeDisplayRate(node, DisplayRate.PerMinute);
       expect(node.items).toEqual(new Rational(BigInt(60)));
       expect(node.surplus).toEqual(new Rational(BigInt(120)));
-      expect(node.pollution).toEqual(new Rational(BigInt(180)));
-      expect(node.children[0].items).toEqual(new Rational(BigInt(240)));
-      expect(node.children[0].surplus).toEqual(new Rational(BigInt(300)));
-      expect(node.children[0].pollution).toEqual(new Rational(BigInt(360)));
+      expect(node.wagons).toEqual(new Rational(BigInt(180)));
+      expect(node.pollution).toEqual(new Rational(BigInt(240)));
+      expect(node.children[0].items).toEqual(new Rational(BigInt(300)));
+      expect(node.children[0].surplus).toEqual(new Rational(BigInt(360)));
+      expect(node.children[0].wagons).toEqual(new Rational(BigInt(420)));
+      expect(node.children[0].pollution).toEqual(new Rational(BigInt(480)));
     });
 
     it('should apply the display rate to partial nodes', () => {
@@ -604,6 +687,7 @@ describe('RateUtility', () => {
       RateUtility.nodeDisplayRate(node, DisplayRate.PerMinute);
       expect(node.items).toEqual(new Rational(BigInt(120)));
       expect(node.surplus).toBeUndefined();
+      expect(node.wagons).toBeUndefined();
       expect(node.pollution).toBeUndefined();
     });
   });

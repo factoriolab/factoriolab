@@ -39,6 +39,7 @@ export class ListContainerComponent implements OnInit {
   displayRate$: Observable<DisplayRate>;
   itemPrecision$: Observable<number>;
   beltPrecision$: Observable<number>;
+  wagonPrecision$: Observable<number>;
   factoryPrecision$: Observable<number>;
   powerPrecision$: Observable<number>;
   pollutionPrecision$: Observable<number>;
@@ -67,6 +68,7 @@ export class ListContainerComponent implements OnInit {
     this.displayRate$ = this.store.select(Settings.getDisplayRate);
     this.itemPrecision$ = this.store.select(Settings.getItemPrecision);
     this.beltPrecision$ = this.store.select(Settings.getBeltPrecision);
+    this.wagonPrecision$ = this.store.select(Settings.getWagonPrecision);
     this.factoryPrecision$ = this.store.select(Settings.getFactoryPrecision);
     this.powerPrecision$ = this.store.select(Settings.getPowerPrecision);
     this.pollutionPrecision$ = this.store.select(

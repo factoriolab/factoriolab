@@ -105,7 +105,7 @@
     [iconId]="
       settings.factoryRank.length
         ? settings.factoryRank[0]
-        : 'assembling-machine-1'
+        : ItemId.AssemblingMachine1
     "
     [data]="data"
     (click)="openSelect = OpenSelect.Factory"
@@ -126,7 +126,9 @@
     #btnModule
     class="clickable"
     tooltip="Module preferences"
-    [iconId]="settings.moduleRank.length ? settings.moduleRank[0] : MODULE_ID"
+    [iconId]="
+      settings.moduleRank.length ? settings.moduleRank[0] : ItemId.Module
+    "
     [data]="data"
     (click)="openSelect = OpenSelect.Module"
   ></lab-icon>
@@ -147,13 +149,13 @@
     (click)="setDrillModule.emit(!settings.drillModule)"
   >
     <lab-icon
-      iconId="electric-mining-drill"
+      [iconId]="ItemId.ElectricMiningDrill"
       [data]="data"
       tooltip="Toggle drill modules"
       [scale]="true"
     ></lab-icon>
     <lab-icon
-      [iconId]="settings.drillModule ? 'speed-module-3' : MODULE_ID"
+      [iconId]="settings.drillModule ? ItemId.SpeedModule3 : ItemId.Module"
       [data]="data"
       tooltip="Toggle drill modules"
     ></lab-icon>
@@ -264,7 +266,11 @@
   </lab-select>
 </div>
 <div class="field">
-  <lab-icon iconId="pipe" tooltip="Pipe flow rate" [data]="data"></lab-icon>
+  <lab-icon
+    [iconId]="ItemId.Pipe"
+    tooltip="Pipe flow rate"
+    [data]="data"
+  ></lab-icon>
   <input
     type="number"
     title="Enter pipe flow rate"
@@ -330,7 +336,7 @@
 <div class="field">
   <lab-precision
     [data]="data"
-    iconId="iron-plate"
+    [iconId]="ItemId.IronPlate"
     tooltip="Items precision"
     [value]="settings.itemPrecision"
     [default]="initial.itemPrecision"
@@ -340,7 +346,7 @@
 <div class="field">
   <lab-precision
     [data]="data"
-    iconId="transport-belt"
+    [iconId]="ItemId.TransportBelt"
     tooltip="Belts precision"
     [value]="settings.beltPrecision"
     [default]="initial.beltPrecision"
@@ -350,7 +356,17 @@
 <div class="field">
   <lab-precision
     [data]="data"
-    iconId="assembling-machine-1"
+    [iconId]="ItemId.CargoWagon"
+    tooltip="Wagons precision"
+    [value]="settings.wagonPrecision"
+    [default]="initial.wagonPrecision"
+    (setValue)="setWagonPrecision.emit($event)"
+  ></lab-precision>
+</div>
+<div class="field">
+  <lab-precision
+    [data]="data"
+    [iconId]="ItemId.AssemblingMachine1"
     tooltip="Factories precision"
     [value]="settings.factoryPrecision"
     [default]="initial.factoryPrecision"
@@ -360,7 +376,7 @@
 <div class="field">
   <lab-precision
     [data]="data"
-    iconId="substation"
+    [iconId]="ItemId.Substation"
     tooltip="Power precision"
     [value]="settings.powerPrecision"
     [default]="initial.powerPrecision"
@@ -370,7 +386,7 @@
 <div class="field">
   <lab-precision
     [data]="data"
-    iconId="steam"
+    [iconId]="ItemId.Steam"
     tooltip="Pollution precision"
     [value]="settings.pollutionPrecision"
     [default]="initial.pollutionPrecision"
@@ -380,7 +396,7 @@
 <div class="label">Bonuses</div>
 <div class="field">
   <lab-icon
-    iconId="electric-mining-drill"
+    [iconId]="ItemId.ElectricMiningDrill"
     [data]="data"
     tooltip="Mining productivity bonus"
     [scale]="true"
@@ -401,7 +417,7 @@
 </div>
 <div class="field">
   <lab-icon
-    iconId="lab"
+    [iconId]="ItemId.Lab"
     [data]="data"
     tooltip="Research speed bonus"
     [scale]="true"

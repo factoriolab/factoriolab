@@ -265,6 +265,15 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
+  it('should set wagon precision', () => {
+    spyOn(store, 'dispatch');
+    const value = 0;
+    component.child.setWagonPrecision.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetWagonPrecisionAction(value)
+    );
+  });
+
   it('should set factory precision', () => {
     spyOn(store, 'dispatch');
     const value = 0;

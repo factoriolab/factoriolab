@@ -3,7 +3,7 @@ import {
   RationalRecipe,
   RationalRecipeSettings,
   Dataset,
-  MODULE_ID,
+  ItemId,
 } from '~/models';
 
 export class RecipeUtility {
@@ -29,7 +29,10 @@ export class RecipeUtility {
     moduleRank: string[],
     count: number
   ) {
-    const module = this.bestMatch([MODULE_ID, ...allowedModules], moduleRank);
+    const module = this.bestMatch(
+      [ItemId.Module, ...allowedModules],
+      moduleRank
+    );
     return new Array(count).fill(module);
   }
 
@@ -91,7 +94,7 @@ export class RecipeUtility {
 
     // Beacons
     const beaconModules = settings.beaconModules?.filter(
-      (m) => m !== MODULE_ID
+      (m) => m !== ItemId.Module
     );
     if (beaconModules?.length && settings.beaconCount.nonzero()) {
       for (const id of beaconModules) {

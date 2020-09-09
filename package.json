@@ -1,7 +1,7 @@
 {
   "name": "factorio-lab",
   "description": "Angular-based calculator for the game Factorio",
-  "version": "1.1.37",
+  "version": "1.1.38",
   "private": true,
   "contributors": [
     "Doug Broad (https://github.com/dcbroad3)"
@@ -69,7 +69,7 @@
     "protractor": "~7.0.0",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
-    "typescript": "~3.9.7",
+    "typescript": "^4.0.2",
     "webpack-bundle-analyzer": "^3.8.0"
   }
 }

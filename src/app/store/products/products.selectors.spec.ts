@@ -253,13 +253,18 @@ describe('Products Selectors', () => {
 
   describe('getNormalizedStepsWithBelts', () => {
     it('should handle empty/null values', () => {
-      const result = Selectors.getNormalizedStepsWithBelts.projector([], {});
+      const result = Selectors.getNormalizedStepsWithBelts.projector(
+        [],
+        {},
+        {},
+        {}
+      );
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should calculate rates using utility method', () => {
       spyOn(RateUtility, 'calculateBelts');
-      Selectors.getNormalizedStepsWithBelts.projector([], {});
+      Selectors.getNormalizedStepsWithBelts.projector([], {}, {}, {});
       expect(RateUtility.calculateBelts).toHaveBeenCalled();
     });
   });
@@ -267,7 +272,7 @@ describe('Products Selectors', () => {
   describe('getNormalizedNodesWithBelts', () => {
     it('should calculate rates using utility method', () => {
       spyOn(RateUtility, 'calculateNodeBelts');
-      Selectors.getNormalizedNodesWithBelts.projector({}, {});
+      Selectors.getNormalizedNodesWithBelts.projector({}, {}, {}, {});
       expect(RateUtility.calculateNodeBelts).toHaveBeenCalled();
     });
   });

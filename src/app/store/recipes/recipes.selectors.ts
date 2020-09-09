@@ -5,8 +5,7 @@ import {
   Entities,
   RationalRecipeSettings,
   RationalRecipe,
-  SPACE_SCIENCE_ID,
-  MODULE_ID,
+  ItemId,
 } from '~/models';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 import * as Settings from '../settings';
@@ -51,14 +50,19 @@ export const getRecipeSettings = createSelector(
         }
 
         const factoryItem = data.itemEntities[recipeSettings.factory];
-        if (recipe.id !== SPACE_SCIENCE_ID && factoryItem?.factory?.modules) {
+        if (
+          recipe.id !== ItemId.SpaceSciencePack &&
+          factoryItem?.factory?.modules
+        ) {
           const drillSkipDefaults = !drillModule && factoryItem.factory.mining;
 
           // Modules
           if (!recipeSettings.factoryModules) {
             const count = factoryItem.factory.modules;
             if (drillSkipDefaults) {
-              recipeSettings.factoryModules = new Array(count).fill(MODULE_ID);
+              recipeSettings.factoryModules = new Array(count).fill(
+                ItemId.Module
+              );
             } else {
               recipeSettings.factoryModules = RecipeUtility.defaultModules(
                 data.recipeModuleIds[recipe.id],

@@ -23,6 +23,7 @@ export enum ItemId {
   PlasticBar = 'plastic-bar',
   ProductivityModule = 'productivity-module',
   ProductivityModule3 = 'productivity-module-3',
+  Pumpjack = 'pumpjack',
   SolidFuel = 'solid-fuel',
   SpaceSciencePack = 'space-science-pack',
   SpeedModule = 'speed-module',

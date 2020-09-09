@@ -1,5 +1,5 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import { Rational, ResearchSpeed, Preset, MODULE_ID } from '~/models';
+import { Rational, ResearchSpeed, Preset } from '~/models';
 import * as Selectors from './settings.selectors';
 
 describe('Settings Selectors', () => {
@@ -26,7 +26,7 @@ describe('Settings Selectors', () => {
       expect(result.belt).toEqual(Mocks.Base.defaults.minBelt);
       expect(result.factoryRank).toEqual(Mocks.Base.defaults.minFactoryRank);
       expect(result.moduleRank).toEqual([]);
-      expect(result.beaconModule).toEqual(MODULE_ID);
+      expect(result.beaconModule).toEqual(ItemId.Module);
       expect(result.beaconCount).toEqual(0);
     });
 

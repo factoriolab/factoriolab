@@ -4,11 +4,11 @@
 <lab-icon
   *ngIf="includeEmptyModule"
   class="clickable"
-  iconId="module"
+  [iconId]="ItemId.Module"
   tooltip="No Module"
-  [class.selected]="selectedId === MODULE_ID"
+  [class.selected]="selectedId === ItemId.Module"
   [data]="data"
-  (click)="clickId(MODULE_ID, $event)"
+  (click)="clickId(ItemId.Module, $event)"
 >
 </lab-icon>
 <ng-container *ngFor="let id of options">

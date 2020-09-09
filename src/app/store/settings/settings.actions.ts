@@ -31,6 +31,7 @@ export const enum SettingsActionType {
   SET_DISPLAY_RATE = '[Settings Page] Set Display Rate',
   SET_ITEM_PRECISION = '[Settings Page] Set Item Precision',
   SET_BELT_PRECISION = '[Settings Page] Set Belt Precision',
+  SET_WAGON_PRECISION = '[Settings Page] Set Wagon Precision',
   SET_FACTORY_PRECISION = '[Settings Page] Set Factory Precision',
   SET_POWER_PRECISION = '[Settings Page] Set Power Precision',
   SET_POLLUTION_PRECISION = '[Settings Page] Set Pollution Precision',
@@ -149,6 +150,11 @@ export class SetBeltPrecisionAction implements Action {
   constructor(public payload: number) {}
 }
 
+export class SetWagonPrecisionAction implements Action {
+  readonly type = SettingsActionType.SET_WAGON_PRECISION;
+  constructor(public payload: number) {}
+}
+
 export class SetFactoryPrecisionAction implements Action {
   readonly type = SettingsActionType.SET_FACTORY_PRECISION;
   constructor(public payload: number) {}
@@ -223,6 +229,7 @@ export type SettingsAction =
   | SetDisplayRateAction
   | SetItemPrecisionAction
   | SetBeltPrecisionAction
+  | SetWagonPrecisionAction
   | SetFactoryPrecisionAction
   | SetPowerPrecisionAction
   | SetPollutionPrecisionAction
