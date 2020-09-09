@@ -3,20 +3,23 @@
     *ngIf="data.iconEntities[iconId] as icon"
     src="assets/transparent.gif"
     class="icon"
+    [class.shadow]="hover && hoverIcon"
     [style.background-position]="icon.position"
     [style.background-image]="icon.file ? 'url(' + icon.file + ')' : ''"
     [ngClass]="iconId + (icon.size ? ' size-' + icon.size : '')"
     [class.scale]="scale"
-    (mouseenter)="hover = true"
-    (mouseleave)="hover = false"
   />
   <div *ngIf="text" class="icon-text">{{ text }}</div>
+</div>
+<div class="overlay" *ngIf="hover && hoverIcon">
+  <i class="material-icons">{{ hoverIcon }}</i>
 </div>
 <div
   *ngIf="hover && (recipe || item || tooltip)"
   [style.marginTop.px]="tooltipMarginTop"
   [style.marginLeft.px]="-scrollLeft"
   class="tooltip"
+  (mouseenter)="hover = false"
 >
   <div *ngIf="tooltip" class="title nowrap">
     {{ tooltip }}

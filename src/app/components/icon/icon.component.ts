@@ -3,6 +3,7 @@ import {
   Input,
   ChangeDetectionStrategy,
   ElementRef,
+  HostListener,
 } from '@angular/core';
 
 import { Recipe, Item, DisplayRate, Dataset, Rational } from '~/models';
@@ -38,6 +39,7 @@ export class IconComponent {
   @Input() recipe: Recipe;
   @Input() item: Item;
   @Input() displayRate: DisplayRate;
+  @Input() hoverIcon: string;
 
   hover = false;
   tooltipMarginTop = 40;
@@ -49,6 +51,13 @@ export class IconComponent {
   }
 
   constructor(private ref: ElementRef) {}
+
+  @HostListener('mouseenter') mouseenter() {
+    this.hover = true;
+  }
+  @HostListener('mouseleave') mouseleave() {
+    this.hover = false;
+  }
 
   setTooltipMargin() {
     this.tooltipMarginTop = (this.scale ? 40 : 72) - this.scrollTop;
