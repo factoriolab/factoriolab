@@ -2,7 +2,7 @@
 name: Mod request
 about: Request support for a mod or set of mods
 title: ''
-labels: ''
+labels: mod support
 assignees: ''
 
 ---
