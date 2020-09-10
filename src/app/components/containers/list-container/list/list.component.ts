@@ -21,7 +21,7 @@ import {
 import { RouterService } from '~/services/router.service';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
-import { RecipeUtility } from '~/utilities';
+import { ExportUtility, RecipeUtility } from '~/utilities';
 
 enum ListEditType {
   Columns,
@@ -99,11 +99,11 @@ export class ListComponent {
   }
   @Input() beaconCount: number;
   @Input() drillModule: boolean;
-  _columns: string[];
+  _columns: Column[];
   get columns() {
     return this._columns;
   }
-  @Input() set columns(value: string[]) {
+  @Input() set columns(value: Column[]) {
     this._columns = value;
     this.show = toBoolEntities(value);
     this.totalSpan = 2;
@@ -395,5 +395,14 @@ export class ListComponent {
   resetStep(step: Step) {
     this.resetItem.emit(step.itemId);
     this.resetRecipe.emit(step.recipeId);
+  }
+
+  export() {
+    ExportUtility.stepsToCsv(
+      this.steps,
+      this.columns,
+      this.itemSettings,
+      this.recipeSettings
+    );
   }
 }

@@ -3,11 +3,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 
-import { Mocks, TestUtility, ItemId, RecipeId } from 'src/tests';
+import { Mocks, TestUtility, ItemId, RecipeId, ElementId } from 'src/tests';
 import { IconComponent, SelectComponent } from '~/components';
 import { DisplayRate, AllColumns, Rational, Step } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers } from '~/store';
+import { ExportUtility } from '~/utilities';
 import { ListComponent } from './list.component';
 
 @Component({
@@ -470,6 +471,15 @@ describe('ListComponent', () => {
       fixture.detectChanges();
       expect(component.resetItem).toHaveBeenCalled();
       expect(component.resetRecipe).toHaveBeenCalled();
+    });
+  });
+
+  describe('export', () => {
+    it('should call the export utility', () => {
+      spyOn(ExportUtility, 'stepsToCsv');
+      TestUtility.clickId(fixture, ElementId.ListSaveCsv);
+      fixture.detectChanges();
+      expect(ExportUtility.stepsToCsv).toHaveBeenCalled();
     });
   });
 });

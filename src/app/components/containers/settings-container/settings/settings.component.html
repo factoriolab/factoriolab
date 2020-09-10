@@ -62,6 +62,12 @@
     (enableId)="enableMod.emit({ id: $event, default: data.defaults.modIds })"
     (disableId)="disableMod.emit({ id: $event, default: data.defaults.modIds })"
   ></lab-multiselect>
+  <a
+    style="font-size: x-small"
+    href="https://github.com/factoriolab/factorio-lab/issues/new?assignees=&labels=mod+support&template=mod-request.md&title="
+    target="_blank"
+    >Request a mod</a
+  >
 </div>
 <div class="field">
   <button #btnRecipes (click)="openSelect = OpenSelect.DisabledRecipes">
