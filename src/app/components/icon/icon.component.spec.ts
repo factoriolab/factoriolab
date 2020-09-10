@@ -1,13 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Mocks } from 'src/tests';
+import { Mocks, TestUtility, ElementId } from 'src/tests';
 import { DisplayRate } from '~/models';
 import { IconComponent } from './icon.component';
 
 @Component({
   selector: 'lab-test-icon',
   template: `<lab-icon
+    id="${ElementId.LabTestIcon}"
     [iconId]="iconId"
     [scale]="scale"
     [text]="text"
@@ -53,6 +54,24 @@ describe('IconComponent', () => {
   describe('element', () => {
     it('should return the native element', () => {
       expect(component.child.element).toBeTruthy();
+    });
+  });
+
+  describe('mouseenter', () => {
+    it('should set the hover value to true', () => {
+      component.child.hover = false;
+      TestUtility.dispatchId(fixture, ElementId.LabTestIcon, 'mouseenter');
+      fixture.detectChanges();
+      expect(component.child.hover).toBeTrue();
+    });
+  });
+
+  describe('mouseleave', () => {
+    it('should set the hover value to false', () => {
+      component.child.hover = true;
+      TestUtility.dispatchId(fixture, ElementId.LabTestIcon, 'mouseleave');
+      fixture.detectChanges();
+      expect(component.child.hover).toBeFalse();
     });
   });
 
