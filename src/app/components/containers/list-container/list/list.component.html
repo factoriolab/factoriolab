@@ -114,11 +114,16 @@
                   ? 'Click to include'
                   : 'Click to ignore'
               "
+              [data]="data"
               [iconId]="step.itemId"
               [class.ignored]="itemSettings[step.itemId].ignore"
               [tooltip]="data.itemEntities[step.itemId]?.name"
               [recipe]="data.recipeEntities[data.itemRecipeIds[step.itemId]]"
-              [data]="data"
+              [hoverIcon]="
+                itemSettings[step.itemId].ignore
+                  ? 'visibility'
+                  : 'visibility_off'
+              "
               (click)="ignoreItem.emit(step.itemId)"
             ></lab-icon>
           </div>
