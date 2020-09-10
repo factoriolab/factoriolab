@@ -20,7 +20,7 @@
     "test-build": "ng test --no-watch --browsers=ChromeHeadless",
     "codecov": "codecov",
     "analyze:build": "ng build --statsJson=true",
-    "analyze": "webpack-bundle-analyzer dist/stats-es2015.json",
+    "analyze": "webpack-bundle-analyzer dist/stats.json",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
@@ -38,6 +38,7 @@
     "@ngrx/store-devtools": "^10.0.0",
     "big-integer": "^1.6.48",
     "d3": "^5.16.0",
+    "file-saver": "^2.0.2",
     "material-design-icons": "~3.0.1",
     "pako": "^1.0.11",
     "rxjs": "~6.6.2",

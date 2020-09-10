@@ -32,7 +32,7 @@
               "includePaths": ["src/styles"]
             },
             "scripts": [],
-            "allowedCommonJsDependencies": ["pako"]
+            "allowedCommonJsDependencies": ["pako", "file-saver"]
           },
           "configurations": {
             "production": {
