@@ -77,7 +77,17 @@
         <div>Pollution{{ rateLabel }}</div>
       </th>
       <!-- Reset / Link -->
-      <th></th>
+      <th>
+        <span class="flex">
+          <i
+            id="list-save-csv"
+            title="Save as CSV"
+            class="clickable material-icons"
+            (click)="export()"
+            >file_download</i
+          >
+        </span>
+      </th>
     </tr>
   </thead>
   <tbody>
