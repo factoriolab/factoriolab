@@ -1,10 +1,12 @@
-<i
-  class="trash clickable material-icons"
-  title="Reset settings"
-  (click)="resetSettings.emit()"
-  >delete</i
->
-<div class="label">Preset</div>
+<div class="flex tween">
+  <div class="label">Preset</div>
+  <i
+    class="trash clickable material-icons"
+    title="Reset settings"
+    (click)="resetSettings.emit()"
+    >delete</i
+  >
+</div>
 <div class="field">
   <select
     id="settings-preset"
@@ -442,8 +444,21 @@
     <option label="Research Speed 6" [value]="ResearchSpeed.Speed6"></option>
   </select>
 </div>
-<div class="label">Theme</div>
+<div class="label">User Preferences</div>
 <div class="field">
+  <div>Sort:</div>
+  <select
+    id="settings-sort-select"
+    title="Set sort option"
+    [ngModel]="settings.sort"
+    (change)="emitNumber(setSort, $event)"
+  >
+    <option label="Depth First" [value]="Sort.DepthFirst"></option>
+    <option label="Breadth First" [value]="Sort.BreadthFirst"></option>
+  </select>
+</div>
+<div class="field">
+  <div>Theme:</div>
   <select
     id="settings-theme-select"
     title="Choose color theme"

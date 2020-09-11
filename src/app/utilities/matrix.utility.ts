@@ -395,13 +395,21 @@ export class MatrixSolver {
     for (const r of this.usedRecipeIds.filter(
       (i) => !this.mappedRecipeIds.some((m) => m === i)
     )) {
-      this.steps.push({
-        depth: this.depth + 1,
+      const index = this.steps.findIndex(
+        (s) => this.data.recipeR[r].out[s.itemId]
+      );
+      const step = {
+        depth: this.depth,
         itemId: null,
         items: null,
         recipeId: r,
         factories: this.recipeVar[r].value.mul(this.data.recipeR[r].time),
-      });
+      };
+      if (index !== -1 && index < this.steps.length - 1) {
+        this.steps.splice(index + 1, 0, step);
+      } else {
+        this.steps.push(step);
+      }
     }
   }
 

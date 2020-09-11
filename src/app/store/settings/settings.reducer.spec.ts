@@ -6,6 +6,7 @@ import {
   Column,
   Preset,
   Theme,
+  Sort,
 } from '~/models';
 import { mockFullSettings } from '~/services/router.service.spec';
 import { AppLoadAction } from '../app.actions';
@@ -354,6 +355,17 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('SET_SORT', () => {
+    it('should set the sort', () => {
+      const value = Sort.BreadthFirst;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetSortAction(value)
+      );
+      expect(result.sort).toEqual(value);
+    });
+  });
+
   describe('SET_THEME', () => {
     it('should set the theme', () => {
       const result = settingsReducer(
@@ -389,8 +401,9 @@ describe('Settings Reducer', () => {
 
     it('should only preserve columns theme and showHeader if hash is present', () => {
       const preserved = {
-        theme: Theme.LightMode,
         columns: [],
+        sort: Sort.BreadthFirst,
+        theme: Theme.LightMode,
         showHeader: false,
       };
       const total = { ...mockFullSettings, ...preserved };
