@@ -19,6 +19,7 @@ import {
   DefaultPayload,
   Preset,
   ItemId,
+  Sort,
 } from '~/models';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
@@ -82,6 +83,7 @@ export class SettingsComponent {
   @Output() setPollutionPrecision = new EventEmitter<number>();
   @Output() setMiningBonus = new EventEmitter<number>();
   @Output() setResearchSpeed = new EventEmitter<ResearchSpeed>();
+  @Output() setSort = new EventEmitter<Sort>();
   @Output() setTheme = new EventEmitter<Theme>();
   @Output() resetSettings = new EventEmitter();
 
@@ -93,6 +95,7 @@ export class SettingsComponent {
   Preset = Preset;
   ResearchSpeed = ResearchSpeed;
   SelectType = IdType;
+  Sort = Sort;
   Theme = Theme;
 
   initial = initialSettingsState;

@@ -7,42 +7,44 @@ import {
   DefaultPayload,
   DefaultTogglePayload,
   Preset,
+  Sort,
 } from '~/models';
 
 export const enum SettingsActionType {
-  SET_PRESET = '[Settings Page] Set Preset',
-  SET_BASE = '[Settings Page] Set Base',
-  ENABLE_MOD = '[Settings Page] Enable Mod',
-  DISABLE_MOD = '[Settings Page] Disable Mod',
-  DISABLE_RECIPE = '[Settings Page] Disable Recipe',
-  ENABLE_RECIPE = '[Settings Page] Enable Recipe',
-  SET_EXPENSIVE = '[Settings Page] Set Expensive',
-  PREFER_FACTORY = '[Settings Page] Prefer Factory',
-  DROP_FACTORY = '[Settings Page] Drop Factory',
-  PREFER_MODULE = '[Settings Page] Prefer Module',
-  DROP_MODULE = '[Settings Page] Drop Module',
-  SET_DRILL_MODULE = '[Settings Page] Set Drill Module',
-  SET_BEACON = '[Settings Page] Set Beacon',
-  SET_BEACON_MODULE = '[Settings Page] Set Beacon Module',
-  SET_BEACON_COUNT = '[Settings Page] Set Beacon Count',
-  SET_BELT = '[Settings Page] Set Belt',
-  SET_FUEL = '[Settings Page] Set Fuel',
-  SET_FLOW_RATE = '[Settings Page] Set Flow Rate',
-  SET_DISPLAY_RATE = '[Settings Page] Set Display Rate',
-  SET_ITEM_PRECISION = '[Settings Page] Set Item Precision',
-  SET_BELT_PRECISION = '[Settings Page] Set Belt Precision',
-  SET_WAGON_PRECISION = '[Settings Page] Set Wagon Precision',
-  SET_FACTORY_PRECISION = '[Settings Page] Set Factory Precision',
-  SET_POWER_PRECISION = '[Settings Page] Set Power Precision',
-  SET_POLLUTION_PRECISION = '[Settings Page] Set Pollution Precision',
-  SET_MINING_BONUS = '[Settings Page] Set Mining Bonus',
-  SET_RESEARCH_SPEED = '[Settings Page] Set Research Speed',
-  HIDE_COLUMN = '[Settings Page] Hide Column',
-  SHOW_COLUMN = '[Settings Page] Show Column',
-  SET_THEME = '[Settings Page] Set Theme',
-  SHOW_HEADER = '[Settings Page] Show Header',
-  HIDE_HEADER = '[Settings Page] Hide Header',
-  RESET = '[Settings Page] Reset',
+  SET_PRESET = '[Settings] Set Preset',
+  SET_BASE = '[Settings] Set Base',
+  ENABLE_MOD = '[Settings] Enable Mod',
+  DISABLE_MOD = '[Settings] Disable Mod',
+  DISABLE_RECIPE = '[Settings] Disable Recipe',
+  ENABLE_RECIPE = '[Settings] Enable Recipe',
+  SET_EXPENSIVE = '[Settings] Set Expensive',
+  PREFER_FACTORY = '[Settings] Prefer Factory',
+  DROP_FACTORY = '[Settings] Drop Factory',
+  PREFER_MODULE = '[Settings] Prefer Module',
+  DROP_MODULE = '[Settings] Drop Module',
+  SET_DRILL_MODULE = '[Settings] Set Drill Module',
+  SET_BEACON = '[Settings] Set Beacon',
+  SET_BEACON_MODULE = '[Settings] Set Beacon Module',
+  SET_BEACON_COUNT = '[Settings] Set Beacon Count',
+  SET_BELT = '[Settings] Set Belt',
+  SET_FUEL = '[Settings] Set Fuel',
+  SET_FLOW_RATE = '[Settings] Set Flow Rate',
+  SET_DISPLAY_RATE = '[Settings] Set Display Rate',
+  SET_ITEM_PRECISION = '[Settings] Set Item Precision',
+  SET_BELT_PRECISION = '[Settings] Set Belt Precision',
+  SET_WAGON_PRECISION = '[Settings] Set Wagon Precision',
+  SET_FACTORY_PRECISION = '[Settings] Set Factory Precision',
+  SET_POWER_PRECISION = '[Settings] Set Power Precision',
+  SET_POLLUTION_PRECISION = '[Settings] Set Pollution Precision',
+  SET_MINING_BONUS = '[Settings] Set Mining Bonus',
+  SET_RESEARCH_SPEED = '[Settings] Set Research Speed',
+  HIDE_COLUMN = '[Settings] Hide Column',
+  SHOW_COLUMN = '[Settings] Show Column',
+  SET_SORT = '[Settings] Set Sort',
+  SET_THEME = '[Settings] Set Theme',
+  SHOW_HEADER = '[Settings] Show Header',
+  HIDE_HEADER = '[Settings] Hide Header',
+  RESET = '[Settings] Reset',
 }
 
 export class SetPresetAction implements Action {
@@ -190,6 +192,11 @@ export class ShowColumnAction implements Action {
   constructor(public payload: string) {}
 }
 
+export class SetSortAction implements Action {
+  readonly type = SettingsActionType.SET_SORT;
+  constructor(public payload: Sort) {}
+}
+
 export class SetThemeAction implements Action {
   readonly type = SettingsActionType.SET_THEME;
   constructor(public payload: Theme) {}
@@ -237,6 +244,7 @@ export type SettingsAction =
   | SetResearchSpeedAction
   | HideColumnAction
   | ShowColumnAction
+  | SetSortAction
   | SetThemeAction
   | HideHeaderAction
   | ShowHeaderAction

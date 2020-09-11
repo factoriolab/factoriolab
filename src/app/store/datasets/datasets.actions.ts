@@ -3,7 +3,7 @@ import { Action } from '@ngrx/store';
 import { IdPayload, ModData } from 'src/app/models';
 
 export const enum DatasetsActionType {
-  LOAD_MOD = '[Dataset Json] Load Mod Data',
+  LOAD_MOD = '[Datasets] Load Mod Data',
 }
 
 export class LoadModAction implements Action {

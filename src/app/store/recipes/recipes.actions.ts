@@ -3,14 +3,14 @@ import { Action } from '@ngrx/store';
 import { DefaultIdPayload } from '~/models';
 
 export const enum RecipesActionType {
-  SET_FACTORY = '[Recipes Page] Set Factory',
-  SET_FACTORY_MODULES = '[Recipes Page] Set Modules',
-  SET_BEACONS_COUNT = '[Recipes Page] Set Beacon Count',
-  SET_BEACON = '[Recipes Page] Set Beacon',
-  SET_BEACON_MODULES = '[Recipes Page] Set Beacon Modules',
-  RESET = '[Recipes Page] Reset Recipe',
-  RESET_FACTORY = '[Recipes Page] Reset Factory',
-  RESET_BEACONS = '[Recipes Page] Reset Beacons',
+  SET_FACTORY = '[Recipes] Set Factory',
+  SET_FACTORY_MODULES = '[Recipes] Set Modules',
+  SET_BEACONS_COUNT = '[Recipes] Set Beacon Count',
+  SET_BEACON = '[Recipes] Set Beacon',
+  SET_BEACON_MODULES = '[Recipes] Set Beacon Modules',
+  RESET = '[Recipes] Reset Recipe',
+  RESET_FACTORY = '[Recipes] Reset Factory',
+  RESET_BEACONS = '[Recipes] Reset Beacons',
 }
 
 export class SetFactoryAction implements Action {

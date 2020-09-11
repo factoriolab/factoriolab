@@ -20,6 +20,7 @@ import {
   DefaultTogglePayload,
   DefaultPayload,
   Preset,
+  Sort,
 } from '~/models';
 import { State } from '~/store';
 import { getBaseSets } from '~/store/datasets';
@@ -177,6 +178,10 @@ export class SettingsContainerComponent implements OnInit {
 
   setResearchSpeed(value: ResearchSpeed) {
     this.store.dispatch(new Settings.SetResearchSpeedAction(value));
+  }
+
+  setSort(value: Sort) {
+    this.store.dispatch(new Settings.SetSortAction(value));
   }
 
   setTheme(value: Theme) {
