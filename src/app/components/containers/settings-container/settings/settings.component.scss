@@ -7,7 +7,7 @@
   width: 18rem;
 
   > :last-child {
-    margin-bottom: 1rem;
+    margin-bottom: 4rem;
   }
 }
 
@@ -68,7 +68,6 @@ input[type='radio'] + * {
   position: static;
 }
 
-.trash {
-  position: absolute;
-  margin-left: 14.25rem;
+.tween {
+  justify-content: space-between;
 }

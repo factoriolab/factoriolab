@@ -5,6 +5,7 @@ import {
   LocalStorageKey,
   AllColumns,
   Preset,
+  Sort,
 } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { AppLoadAction, AppActionType } from '../app.actions';
@@ -35,6 +36,7 @@ export interface SettingsState {
   miningBonus: number;
   researchSpeed: ResearchSpeed;
   columns?: string[];
+  sort?: Sort;
   theme?: Theme;
   showHeader?: boolean;
 }
@@ -64,6 +66,7 @@ export const initialSettingsState: SettingsState = {
   miningBonus: 0,
   researchSpeed: ResearchSpeed.Speed6,
   columns: AllColumns,
+  sort: Sort.DepthFirst,
   theme: Theme.DarkMode,
   showHeader: true,
 };
@@ -251,6 +254,9 @@ export function settingsReducer(
       const result = [...state.columns, action.payload];
       return { ...state, ...{ columns: result } };
     }
+    case SettingsActionType.SET_SORT: {
+      return { ...state, ...{ sort: action.payload } };
+    }
     case SettingsActionType.SET_THEME: {
       return { ...state, ...{ theme: action.payload } };
     }
@@ -287,6 +293,7 @@ export function loadSettings() {
           ...initialSettingsState,
           ...{
             columns: stored.columns,
+            sort: stored.sort,
             theme: stored.theme,
             showHeader: stored.showHeader,
           },

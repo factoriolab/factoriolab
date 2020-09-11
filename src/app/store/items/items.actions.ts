@@ -3,11 +3,11 @@ import { Action } from '@ngrx/store';
 import { DefaultIdPayload } from '~/models';
 
 export const enum ItemsActionType {
-  IGNORE = '[Items Page] Ignore Item',
-  SET_BELT = '[Items Page] Set Belt',
-  RESET = '[Items Page] Reset Item',
-  RESET_IGNORE = '[Items Page] Reset Ignore',
-  RESET_BELT = '[Items Page] Reset Belt',
+  IGNORE = '[Items] Ignore Item',
+  SET_BELT = '[Items] Set Belt',
+  RESET = '[Items] Reset Item',
+  RESET_IGNORE = '[Items] Reset Ignore',
+  RESET_BELT = '[Items] Reset Belt',
 }
 
 export class IgnoreAction implements Action {

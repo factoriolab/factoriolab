@@ -36,6 +36,7 @@ export class RateUtility {
 
     if (step) {
       step.depth = Math.max(step.depth, depth);
+      steps.push(steps.splice(steps.indexOf(step), 1)[0]);
     } else {
       // No existing step found, create a new one
       step = {

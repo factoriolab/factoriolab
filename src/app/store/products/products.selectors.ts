@@ -9,6 +9,7 @@ import {
   Rational,
   DisplayRateVal,
   RationalProduct,
+  Sort,
 } from '~/models';
 import { RateUtility, MatrixUtility } from '~/utilities';
 import * as Items from '../items';
@@ -178,11 +179,23 @@ export const getNormalizedStepsWithMatrices = createSelector(
       disabledRecipes,
       fuel,
       data
-    ).sort((a, b) => a.depth - b.depth)
+    )
+);
+
+export const getNormalizedStepsSorted = createSelector(
+  getNormalizedStepsWithMatrices,
+  Settings.getSort,
+  (steps, sort) => {
+    const newSteps = [...steps];
+    if (sort === Sort.BreadthFirst) {
+      return newSteps.sort((a, b) => a.depth - b.depth);
+    }
+    return newSteps;
+  }
 );
 
 export const getNormalizedStepsWithBelts = createSelector(
-  getNormalizedStepsWithMatrices,
+  getNormalizedStepsSorted,
   Items.getItemSettings,
   Settings.getBeltSpeed,
   Recipes.getAdjustedDataset,

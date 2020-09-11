@@ -500,7 +500,7 @@ describe('MatrixSolver', () => {
       } as any;
       matrix.parseSolutionSteps();
       expect(matrix.steps[1]).toEqual({
-        depth: 2,
+        depth: 1,
         itemId: null,
         items: null,
         recipeId: RecipeId.AdvancedOilProcessing,

@@ -3,12 +3,12 @@ import { Action } from '@ngrx/store';
 import { RateType, IdPayload } from '~/models';
 
 export const enum ProductsActionType {
-  RESET = '[Products Effect] Reset',
-  ADD = '[Products Page] Add',
-  REMOVE = '[Products Page] Remove',
-  EDIT_PRODUCT = '[Products Page] Edit Product',
-  EDIT_RATE = '[Products Page] Edit Rate',
-  EDIT_RATE_TYPE = '[Products Page] Edit Rate Type',
+  RESET = '[Products] Reset',
+  ADD = '[Products] Add',
+  REMOVE = '[Products] Remove',
+  EDIT_PRODUCT = '[Products] Edit Product',
+  EDIT_RATE = '[Products] Edit Rate',
+  EDIT_RATE_TYPE = '[Products] Edit Rate Type',
 }
 
 export class ResetAction implements Action {
