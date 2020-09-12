@@ -21,8 +21,8 @@ import * as Settings from '~/store/settings';
 export const NULL = 'n';
 export const EMPTY = 'e';
 export const LISTSEP = ',';
-export const ARRAYSEP = '.';
-export const FIELDSEP = ';';
+export const ARRAYSEP = '+';
+export const FIELDSEP = '.';
 export const TRUE = '1';
 export const FALSE = '0';
 
