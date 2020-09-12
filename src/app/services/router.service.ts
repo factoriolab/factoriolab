@@ -282,7 +282,7 @@ export class RouterService {
       this.zipDiffNum(state.pollutionPrecision, init.pollutionPrecision),
       this.zipDiffNum(state.miningBonus, init.miningBonus),
       this.zipDiffNum(state.researchSpeed, init.researchSpeed),
-    ].join(' ').trimEnd().replace(' ', FIELDSEP);
+    ].join(FIELDSEP).replace(/(\.*)$/, '');
   }
 
   unzipSettings(zSettings: string) {
