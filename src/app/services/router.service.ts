@@ -109,7 +109,7 @@ export class RouterService {
               const s = p.split('=');
               if (s[1]) {
                 if (s[0] === 'p') {
-                  state.productsState = this.unzipProducts(s[1].split());
+                  state.productsState = this.unzipProducts(s[1].split(LISTSEP));
                 } else if (s[0] === 'b') {
                   this.zipPartial += `&b=${s[1]}`;
                   state.settingsState = {
