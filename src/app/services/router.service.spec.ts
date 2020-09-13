@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
+import { deflate, inflate } from 'pako';
 
 import { Mocks, ItemId, RecipeId } from 'src/tests';
 import {
@@ -28,13 +29,13 @@ import {
 } from './router.service';
 
 const mockZipEmpty = 'eJwrsAUAAR8Arg==';
-const mockZipProducts = 'p=steel-chest:1';
+const mockZipProducts = 'p=steel-chest*1';
 const mockZipAll =
-  'eJwrsC0uSU3N0U3OSC0usTJUy0ThW5UUJeYVF+QXlegmpeaUqBWhylpZWFmpFdtaIQNjMwMDKBMA57odkw==';
+  'eJwrsC0uSU3N0U3OSC0u0TJUy0Tha5UUJeYVF+QXlegmpeaUqBWhympZqBXbaiEDYzMDAwDNahpZ';
 const mockZipExtra =
-  'eJwrsC0uSU3N0U3OSC0usTJUS7I1VMtEEbMqKUrMKy7ILyrRTUrNKVErQpW1srCyUiu2tUIGxmYGBlCmWqptCVAdACjYIRE=';
+  'eJwrsC0uSU3N0U3OSC0u0TJUS7I1VMtEEdMqKUrMKy7ILyrRTUrNKVErQpXVslArttVCBsZmBgZqJbYlQGkA71cd5g==';
 const mockZipLink =
-  'eJxtT+0KwjAMfJv+y+imqAT2MP2IrtA1o+kU396ATlQkkI/L3YUs4405UoEwkTTsjR+LSaM0orxh2KorsnBt4Ck3U7/WToRmn1O5wOzClArBDmeOayaVenKBy2s2MtquPyKhd5ICcMqwVA4konJl//EaOmms9bzW4gKh8uMaWrqmdoenbScLUYT3zdN29ROH4ecNFM4pqi9l7AdrcXfQNOAetdXoLdoHfgVlVQ==';
+  'eJxtT1sKwkAMvE0/UiLbVtSfHmYf0S5sN2WzVby9Aa2oSCCPycyELOONOVBGP5FU6Bo35iaOUonShkEtNsvCpaKjVJvytbYiNLsU8wVn66eYCQeYOayJVOrIes6vuZHR7LojEDgr0SPHhEthTyIqV/Yfr76VylrPa8nWEyg/rL7Ga6x3fNq2shAFfN88bVc/cex/3gDhFIP6UoKuNwaGg6Ye9qCtRmfAPADAtGOP';
 const mockProducts: Product[] = [
   {
     id: '0',
@@ -344,7 +345,7 @@ describe('RouterService', () => {
   describe('zipItems', () => {
     it('should zip empty item settings', () => {
       const result = service.zipItems({ [ItemId.SteelChest]: {} });
-      expect(result).toEqual([`${ItemId.SteelChest}::`]);
+      expect(result).toEqual([`${ItemId.SteelChest}`]);
     });
 
     it('should zip full item settings', () => {
@@ -356,13 +357,13 @@ describe('RouterService', () => {
       const result = service.zipItems({
         [ItemId.SteelChest]: { ignore: false },
       });
-      expect(result).toEqual([`${ItemId.SteelChest}:0:`]);
+      expect(result).toEqual([`${ItemId.SteelChest}*0`]);
     });
   });
 
   describe('unzipItems', () => {
     it('should unzip the empty item settings', () => {
-      const result = service.unzipItems([`${ItemId.SteelChest}::`]);
+      const result = service.unzipItems([`${ItemId.SteelChest}`]);
       expect(result).toEqual({ [ItemId.SteelChest]: {} });
     });
 
@@ -372,7 +373,7 @@ describe('RouterService', () => {
     });
 
     it('should unzip false ignore value', () => {
-      const result = service.unzipItems([`${ItemId.SteelChest}:0:`]);
+      const result = service.unzipItems([`${ItemId.SteelChest}*0`]);
       expect(result).toEqual({ [ItemId.SteelChest]: { ignore: false } });
     });
 
@@ -386,7 +387,7 @@ describe('RouterService', () => {
   describe('zipRecipes', () => {
     it('should zip empty recipe settings', () => {
       const result = service.zipRecipes({ [RecipeId.SteelChest]: {} });
-      expect(result).toEqual([`${RecipeId.SteelChest}:::::`]);
+      expect(result).toEqual([`${RecipeId.SteelChest}`]);
     });
 
     it('should zip full recipe settings', () => {
@@ -397,7 +398,7 @@ describe('RouterService', () => {
 
   describe('unzipRecipes', () => {
     it('should unzip the empty recipe settings', () => {
-      const result = service.unzipRecipes([`${RecipeId.SteelChest}:::::`]);
+      const result = service.unzipRecipes([`${RecipeId.SteelChest}`]);
       expect(result).toEqual({ [RecipeId.SteelChest]: {} });
     });
 
@@ -432,11 +433,6 @@ describe('RouterService', () => {
   });
 
   describe('unzipSettings', () => {
-    it('should unzip the empty settings', () => {
-      const result = service.unzipSettings(':::::::::::::::::');
-      expect(result).toEqual({} as any);
-    });
-
     it('should unzip the null settings', () => {
       const result = service.unzipSettings(mockZipNullSettings);
       expect(result).toEqual(mockNullSettings);
@@ -557,7 +553,7 @@ describe('RouterService', () => {
     });
 
     it('should handle truthy', () => {
-      expect(service.zipDiffArray(['b', 'a'], ['a', 'c'])).toEqual('a.b');
+      expect(service.zipDiffArray(['b', 'a'], ['a', 'c'])).toEqual('a+b');
     });
   });
 
@@ -567,7 +563,7 @@ describe('RouterService', () => {
     });
 
     it('should honor order', () => {
-      expect(service.zipDiffRank(['a', 'b'], ['b', 'a'])).toEqual('a.b');
+      expect(service.zipDiffRank(['a', 'b'], ['b', 'a'])).toEqual('a+b');
     });
 
     it('should handle both empty', () => {
@@ -579,7 +575,7 @@ describe('RouterService', () => {
     });
 
     it('should handle truthy', () => {
-      expect(service.zipDiffRank(['a', 'b'], ['a', 'c'])).toEqual('a.b');
+      expect(service.zipDiffRank(['a', 'b'], ['a', 'c'])).toEqual('a+b');
     });
   });
 
@@ -627,7 +623,7 @@ describe('RouterService', () => {
     });
 
     it('should parse value', () => {
-      expect(service.parseArray('a.b')).toEqual(['a', 'b']);
+      expect(service.parseArray('a+b')).toEqual(['a', 'b']);
     });
   });
 });

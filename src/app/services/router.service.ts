@@ -20,8 +20,9 @@ import * as Settings from '~/store/settings';
 
 export const NULL = 'n';
 export const EMPTY = 'e';
-export const ARRAYSEP = '.';
-export const FIELDSEP = ':';
+export const LISTSEP = ',';
+export const ARRAYSEP = '+';
+export const FIELDSEP = '*';
 export const TRUE = '1';
 export const FALSE = '0';
 
@@ -47,7 +48,7 @@ export class RouterService {
       const zProducts = this.zipProducts(
         products.ids.map((i) => products.entities[i])
       );
-      const zState = `p=${zProducts.join(',')}`;
+      const zState = `p=${zProducts.join(LISTSEP)}`;
       this.zipPartial = '';
       const zPreset = this.zipDiffNum(
         settings.preset,
@@ -58,11 +59,11 @@ export class RouterService {
       }
       const zItems = this.zipItems(items);
       if (zItems.length) {
-        this.zipPartial += `&i=${zItems.join(',')}`;
+        this.zipPartial += `&i=${zItems.join(LISTSEP)}`;
       }
       const zRecipes = this.zipRecipes(recipes);
       if (zRecipes.length) {
-        this.zipPartial += `&r=${zRecipes.join(',')}`;
+        this.zipPartial += `&r=${zRecipes.join(LISTSEP)}`;
       }
       const zSettings = this.zipSettings(settings);
       if (zSettings.length) {
@@ -83,7 +84,7 @@ export class RouterService {
       },
     ];
     const zProducts = this.zipProducts(products);
-    return '#' + this.getHash(`p=${zProducts.join(',')}`);
+    return '#' + this.getHash(`p=${zProducts.join(LISTSEP)}`);
   }
 
   getHash(zProducts: string) {
@@ -108,7 +109,7 @@ export class RouterService {
               const s = p.split('=');
               if (s[1]) {
                 if (s[0] === 'p') {
-                  state.productsState = this.unzipProducts(s[1].split(','));
+                  state.productsState = this.unzipProducts(s[1].split(LISTSEP));
                 } else if (s[0] === 'b') {
                   this.zipPartial += `&b=${s[1]}`;
                   state.settingsState = {
@@ -117,10 +118,10 @@ export class RouterService {
                   };
                 } else if (s[0] === 'i') {
                   this.zipPartial = `&i=${s[1]}`;
-                  state.itemsState = this.unzipItems(s[1].split(','));
+                  state.itemsState = this.unzipItems(s[1].split(LISTSEP));
                 } else if (s[0] === 'r') {
                   this.zipPartial = `&r=${s[1]}`;
-                  state.recipesState = this.unzipRecipes(s[1].split(','));
+                  state.recipesState = this.unzipRecipes(s[1].split(LISTSEP));
                 } else if (s[0] === 's') {
                   this.zipPartial += `&s=${s[1]}`;
                   state.settingsState = {
@@ -189,7 +190,9 @@ export class RouterService {
         id,
         this.zipTruthyBool(settings.ignore),
         this.zipTruthy(settings.belt),
-      ].join(FIELDSEP);
+      ]
+        .join(FIELDSEP)
+        .replace(/\**$/, '');
     });
   }
 
@@ -222,7 +225,9 @@ export class RouterService {
         this.zipTruthyNum(settings.beaconCount),
         this.zipTruthy(settings.beacon),
         this.zipTruthyArray(settings.beaconModules),
-      ].join(FIELDSEP);
+      ]
+        .join(FIELDSEP)
+        .replace(/\**$/, '');
     });
   }
 
@@ -259,7 +264,7 @@ export class RouterService {
 
   zipSettings(state: Settings.SettingsState): string {
     const init = Settings.initialSettingsState;
-    const z = [
+    return [
       this.zipDiff(state.baseId, init.baseId),
       this.zipDiffArray(state.modIds, init.modIds),
       this.zipDiffArray(state.disabledRecipes, init.disabledRecipes),
@@ -281,8 +286,9 @@ export class RouterService {
       this.zipDiffNum(state.pollutionPrecision, init.pollutionPrecision),
       this.zipDiffNum(state.miningBonus, init.miningBonus),
       this.zipDiffNum(state.researchSpeed, init.researchSpeed),
-    ].join(FIELDSEP);
-    return /^[:]+$/.test(z) ? '' : z;
+    ]
+      .join(FIELDSEP)
+      .replace(/\**$/, '');
   }
 
   unzipSettings(zSettings: string) {
