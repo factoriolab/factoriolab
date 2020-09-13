@@ -190,7 +190,9 @@ export class RouterService {
         id,
         this.zipTruthyBool(settings.ignore),
         this.zipTruthy(settings.belt),
-      ].join(FIELDSEP).replace(/\**$/, '');
+      ]
+        .join(FIELDSEP)
+        .replace(/\**$/, '');
     });
   }
 
@@ -223,7 +225,9 @@ export class RouterService {
         this.zipTruthyNum(settings.beaconCount),
         this.zipTruthy(settings.beacon),
         this.zipTruthyArray(settings.beaconModules),
-      ].join(FIELDSEP).replace(/\**$/, '');
+      ]
+        .join(FIELDSEP)
+        .replace(/\**$/, '');
     });
   }
 
@@ -282,7 +286,9 @@ export class RouterService {
       this.zipDiffNum(state.pollutionPrecision, init.pollutionPrecision),
       this.zipDiffNum(state.miningBonus, init.miningBonus),
       this.zipDiffNum(state.researchSpeed, init.researchSpeed),
-    ].join(FIELDSEP).replace(/\**$/, '');
+    ]
+      .join(FIELDSEP)
+      .replace(/\**$/, '');
   }
 
   unzipSettings(zSettings: string) {
