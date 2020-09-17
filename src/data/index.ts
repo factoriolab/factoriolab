@@ -11,6 +11,7 @@ export const data: AppData = {
     { id: '0.16', name: '0.16.51' },
     { id: 'bobs-angels', name: 'Bobs & Angels' },
     { id: 'krastorio2', name: 'Krastorio 2' },
+    { id: 'pyanodons', name: 'Pyanodons' },
   ],
   mods: [
     {

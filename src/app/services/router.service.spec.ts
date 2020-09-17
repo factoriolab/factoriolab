@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
-import { deflate, inflate } from 'pako';
 
 import { Mocks, ItemId, RecipeId } from 'src/tests';
 import {
