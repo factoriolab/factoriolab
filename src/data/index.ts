@@ -10,6 +10,7 @@ export const data: AppData = {
     { id: '0.17', name: '0.17.79' },
     { id: '0.16', name: '0.16.51' },
     { id: 'bobs-angels', name: 'Bobs & Angels' },
+    { id: 'factorio-extended-plus', name: 'FactorioExtended Plus' },
     { id: 'krastorio2', name: 'Krastorio 2' },
     { id: 'pyanodons', name: 'Pyanodons' },
   ],
@@ -17,7 +18,7 @@ export const data: AppData = {
     {
       id: 'research',
       name: 'Infinite Research',
-      compatibleIds: ['1.0', '0.18', '0.17', '0.16'],
+      compatibleIds: ['1.0', '0.18', '0.17', '0.16', 'factorio-extended-plus'],
     },
   ],
 };

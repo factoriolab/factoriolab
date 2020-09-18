@@ -38,6 +38,7 @@
 </div>
 <div class="label">Recipes</div>
 <div class="field">
+  <div>Base:</div>
   <select
     title="Select base game version"
     [ngModel]="settings.baseId"
@@ -45,7 +46,6 @@
   >
     <option *ngFor="let b of base" [value]="b.id" [label]="b.name"></option>
   </select>
-  <div>Recipe Set</div>
 </div>
 <div class="field" *ngIf="mods.length">
   <button #btnMods (click)="openSelect = OpenSelect.Mods">
