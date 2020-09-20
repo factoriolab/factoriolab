@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import {
   ListContainerComponent,
-  HierarchyContainerComponent,
+  DiagramContainerComponent,
 } from './components';
 
 const routes: Routes = [
@@ -12,8 +12,8 @@ const routes: Routes = [
     component: ListContainerComponent,
   },
   {
-    path: 'hierarchy',
-    component: HierarchyContainerComponent,
+    path: 'diagram',
+    component: DiagramContainerComponent,
   },
   {
     path: '**',

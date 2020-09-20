@@ -1,0 +1,5 @@
+<lab-sankey
+  [sankeyData]="sankeyData$ | async"
+  (selectNode)="selectNode($event)"
+></lab-sankey>
+<lab-list-container *ngIf="selected" [steps]="selected"></lab-list-container>

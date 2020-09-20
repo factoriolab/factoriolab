@@ -225,16 +225,6 @@ export const getNormalDataset = createSelector(
       .filter((i) => !i.module.productivity)
       .map((i) => i.id);
 
-    // Convert to rationals
-    const itemR = itemIds.reduce((e: Entities<RationalItem>, i) => {
-      e[i] = new RationalItem(itemEntities[i]);
-      return e;
-    }, {});
-    const recipeR = recipeIds.reduce((e: Entities<RationalRecipe>, r) => {
-      e[r] = new RationalRecipe(recipeEntities[r]);
-      return e;
-    }, {});
-
     // Calculate category item rows
     const categoryItemRows: Entities<string[][]> = {};
     for (const id of categoryIds) {
@@ -303,6 +293,16 @@ export const getNormalDataset = createSelector(
         recipeEntities[id] = { ...recipeEntities[id], ...{ name } };
       }
     }
+
+    // Convert to rationals
+    const itemR = itemIds.reduce((e: Entities<RationalItem>, i) => {
+      e[i] = new RationalItem(itemEntities[i]);
+      return e;
+    }, {});
+    const recipeR = recipeIds.reduce((e: Entities<RationalRecipe>, r) => {
+      e[r] = new RationalRecipe(recipeEntities[r]);
+      return e;
+    }, {});
 
     // Add missing mining recipes to productivity limitation
     recipes

@@ -4,20 +4,20 @@ import { StoreModule } from '@ngrx/store';
 
 import { reducers, metaReducers } from '~/store';
 import { ListComponent, ListContainerComponent } from '../list-container';
-import { SunburstComponent } from './sunburst/sunburst.component';
-import { HierarchyContainerComponent } from './hierarchy-container.component';
+import { SankeyComponent } from './sankey/sankey.component';
+import { DiagramContainerComponent } from './diagram-container.component';
 
-describe('HierarchyContainerComponent', () => {
-  let component: HierarchyContainerComponent;
-  let fixture: ComponentFixture<HierarchyContainerComponent>;
+describe('DiagramContainerComponent', () => {
+  let component: DiagramContainerComponent;
+  let fixture: ComponentFixture<DiagramContainerComponent>;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [
-        SunburstComponent,
+        SankeyComponent,
         ListComponent,
         ListContainerComponent,
-        HierarchyContainerComponent,
+        DiagramContainerComponent,
       ],
       imports: [
         RouterTestingModule,
@@ -27,7 +27,7 @@ describe('HierarchyContainerComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HierarchyContainerComponent);
+    fixture = TestBed.createComponent(DiagramContainerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

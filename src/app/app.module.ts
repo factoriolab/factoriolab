@@ -22,12 +22,12 @@ import {
   SelectComponent,
   ListContainerComponent,
   ListComponent,
-  HierarchyContainerComponent,
-  SunburstComponent,
+  DiagramContainerComponent,
   ToggleComponent,
   RankerComponent,
   MultiselectComponent,
   PrecisionComponent,
+  SankeyComponent,
 } from './components';
 import { reducers, metaReducers } from './store';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
@@ -44,13 +44,13 @@ import { DatasetsEffects } from './store/datasets/datasets.effects';
     ToggleComponent,
     ListContainerComponent,
     ListComponent,
-    HierarchyContainerComponent,
-    SunburstComponent,
+    DiagramContainerComponent,
     ProductsContainerComponent,
     ProductsComponent,
     SettingsComponent,
     SettingsContainerComponent,
     PrecisionComponent,
+    SankeyComponent,
   ],
   imports: [
     BrowserModule,

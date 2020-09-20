@@ -10,6 +10,7 @@ import {
   DisplayRateVal,
   RationalProduct,
   Sort,
+  SankeyData,
 } from '~/models';
 import { RateUtility, MatrixUtility } from '~/utilities';
 import * as Items from '../items';
@@ -140,30 +141,6 @@ export const getNormalizedSteps = createSelector(
   }
 );
 
-export const getNormalizedNodes = createSelector(
-  getProducts,
-  getNormalizedRates,
-  Items.getItemSettings,
-  Recipes.getRecipeSettings,
-  Recipes.getAdjustedDataset,
-  Settings.getFuel,
-  (products, rates, itemSettings, recipeSettings, data, fuel) => {
-    const root: any = { id: 'root', children: [] };
-    for (const product of products) {
-      RateUtility.addNodesFor(
-        root,
-        product.itemId,
-        rates[product.id],
-        itemSettings,
-        recipeSettings,
-        fuel,
-        data
-      );
-    }
-    return root;
-  }
-);
-
 export const getNormalizedStepsWithMatrices = createSelector(
   getNormalizedSteps,
   Items.getItemSettings,
@@ -203,25 +180,58 @@ export const getNormalizedStepsWithBelts = createSelector(
     RateUtility.calculateBelts(steps, itemSettings, beltSpeed, data)
 );
 
-export const getNormalizedNodesWithBelts = createSelector(
-  getNormalizedNodes,
-  Items.getItemSettings,
-  Settings.getBeltSpeed,
-  Recipes.getAdjustedDataset,
-  (nodes, itemSettings, beltSpeed, data) =>
-    RateUtility.calculateNodeBelts(nodes, itemSettings, beltSpeed, data)
-);
-
 export const getSteps = createSelector(
   getNormalizedStepsWithBelts,
   Settings.getDisplayRate,
   (steps, displayRate) => RateUtility.displayRate(steps, displayRate)
 );
 
-export const getNodes = createSelector(
-  getNormalizedNodesWithBelts,
-  Settings.getDisplayRate,
-  (nodes, displayRate) => RateUtility.nodeDisplayRate(nodes, displayRate)
+export const getSankey = createSelector(
+  getSteps,
+  Settings.getDataset,
+  (steps, data) => {
+    const sankey: SankeyData = {
+      nodes: [],
+      links: [],
+    };
+
+    for (const step of steps) {
+      if (step.recipeId) {
+        sankey.nodes.push({
+          id: step.recipeId,
+          name: data.recipeR[step.recipeId].name,
+          color: data.iconEntities[step.recipeId].color,
+        });
+        if (step.parents) {
+          for (const i of Object.keys(step.parents)) {
+            sankey.links.push({
+              target: i,
+              source: step.recipeId,
+              value: step.parents[i].mul(step.items).toNumber(),
+            });
+          }
+        }
+      }
+      if (step.itemId && step.itemId !== step.recipeId) {
+        sankey.nodes.push({
+          id: step.itemId,
+          name: data.itemR[step.itemId].name,
+          color: data.iconEntities[step.itemId].color,
+        });
+        if (step.parents) {
+          for (const i of Object.keys(step.parents)) {
+            sankey.links.push({
+              target: i,
+              source: step.itemId,
+              value: step.parents[i].mul(step.items).toNumber(),
+            });
+          }
+        }
+      }
+    }
+
+    return sankey;
+  }
 );
 
 export const getZipState = createSelector(

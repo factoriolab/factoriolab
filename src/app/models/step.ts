@@ -1,9 +1,10 @@
 import { Entities } from './entities';
 import { Rational } from './rational';
 
-export interface StepBase {
+export interface Step {
   itemId: string;
   items: Rational;
+  depth: number;
   surplus?: Rational;
   belts?: Rational;
   wagons?: Rational;
@@ -12,14 +13,4 @@ export interface StepBase {
   pollution?: Rational;
   recipeId?: string;
   parents?: Entities<Rational>;
-}
-
-export interface Step extends StepBase {
-  depth: number;
-}
-
-export interface Node extends StepBase {
-  id: string;
-  name: string;
-  children?: Node[];
 }

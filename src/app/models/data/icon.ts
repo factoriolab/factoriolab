@@ -1,6 +1,6 @@
 export interface Icon {
   id: string;
+  color: string;
   position: string;
-  size?: number;
   file?: string;
 }

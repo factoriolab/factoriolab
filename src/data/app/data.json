@@ -1,1 +1,80 @@
-{"id":"app","name":null,"categories":[],"items":[],"recipes":[],"icons":[{"id":"assembling-machine-1","position":"-0px -0px"},{"id":"cargo-wagon","position":"-32px -0px"},{"id":"electric-mining-drill","position":"-64px -0px"},{"id":"fluid-wagon","position":"-96px -0px"},{"id":"iron-gear-wheel","position":"-128px -0px"},{"id":"iron-plate","position":"-160px -0px"},{"id":"lab","position":"-192px -0px"},{"id":"module","position":"-224px -0px"},{"id":"pipe","position":"-256px -0px"},{"id":"speed-module-3","position":"-288px -0px"},{"id":"steam","position":"-320px -0px"},{"id":"substation","position":"-352px -0px"},{"id":"time","position":"-384px -0px"},{"id":"transport-belt","position":"-416px -0px"}],"limitations":{}}
+{
+  "id": "app",
+  "name": null,
+  "categories": [],
+  "items": [],
+  "recipes": [],
+  "icons": [
+    {
+      "color": "#74655E",
+      "id": "assembling-machine-1",
+      "position": "0px 0px"
+    },
+    {
+      "color": "#6B6969",
+      "id": "cargo-wagon",
+      "position": "-64px 0px"
+    },
+    {
+      "color": "#6E6A61",
+      "id": "electric-mining-drill",
+      "position": "-128px 0px"
+    },
+    {
+      "color": "#7F7C7A",
+      "id": "fluid-wagon",
+      "position": "-192px 0px"
+    },
+    {
+      "color": "#6F716B",
+      "id": "iron-gear-wheel",
+      "position": "0px -64px"
+    },
+    {
+      "color": "#8F8F8F",
+      "id": "iron-plate",
+      "position": "-64px -64px"
+    },
+    {
+      "color": "#697B98",
+      "id": "lab",
+      "position": "-128px -64px"
+    },
+    {
+      "color": "#E2E2E2",
+      "id": "module",
+      "position": "-192px -64px"
+    },
+    {
+      "color": "#695F4A",
+      "id": "pipe",
+      "position": "0px -128px"
+    },
+    {
+      "color": "#6296A3",
+      "id": "speed-module-3",
+      "position": "-64px -128px"
+    },
+    {
+      "color": "#909090",
+      "id": "steam",
+      "position": "-128px -128px"
+    },
+    {
+      "color": "#6F7076",
+      "id": "substation",
+      "position": "-192px -128px"
+    },
+    {
+      "color": "#A5A4A5",
+      "id": "time",
+      "position": "0px -192px"
+    },
+    {
+      "color": "#9A7F69",
+      "id": "transport-belt",
+      "position": "-64px -192px"
+    }
+  ],
+  "limitations": {}
+}

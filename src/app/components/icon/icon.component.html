@@ -6,7 +6,7 @@
     [class.shadow]="hover && hoverIcon"
     [style.background-position]="icon.position"
     [style.background-image]="icon.file ? 'url(' + icon.file + ')' : ''"
-    [ngClass]="iconId + (icon.size ? ' size-' + icon.size : '')"
+    [ngClass]="iconId"
     [class.scale]="scale"
   />
   <div *ngIf="text" class="icon-text">{{ text }}</div>
