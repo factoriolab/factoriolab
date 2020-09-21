@@ -180,7 +180,7 @@ export class RateUtility {
 
   static stepLinkValue(step: Step, linkValue: RateType) {
     if (linkValue === RateType.Factories && !step.factories) {
-      // Step has no factories associated, default back to items
+      // Step has no factories associated, return 0
       return Rational.zero;
     }
 
@@ -192,7 +192,7 @@ export class RateUtility {
       case RateType.Factories:
         return step.factories;
       default:
-        return step.items;
+        return (step.items || Rational.zero).add(step.surplus || Rational.zero);
     }
   }
 }
