@@ -8,7 +8,13 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { Step, DisplayRate, Dataset, DefaultIdPayload } from '~/models';
+import {
+  Step,
+  DisplayRate,
+  Dataset,
+  DefaultIdPayload,
+  ListMode,
+} from '~/models';
 import { State } from '~/store';
 import * as Items from '~/store/items';
 import { getSteps } from '~/store/products';
@@ -25,6 +31,8 @@ import { ListComponent } from './list/list.component';
 export class ListContainerComponent implements OnInit {
   @ViewChild(ListComponent) child: ListComponent;
 
+  @Input() mode: ListMode;
+  @Input() selected: string;
   @Input() steps: Step[];
 
   data$: Observable<Dataset>;

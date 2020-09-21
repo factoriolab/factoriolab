@@ -1,5 +1,9 @@
 <lab-sankey
   [sankeyData]="sankeyData$ | async"
-  (selectNode)="selectNode($event)"
+  (selectNode)="selected = $event"
 ></lab-sankey>
-<lab-list-container *ngIf="selected" [steps]="selected"></lab-list-container>
+<lab-list-container
+  [mode]="ListMode.Focus"
+  [steps]="steps$ | async"
+  [selected]="selected"
+></lab-list-container>

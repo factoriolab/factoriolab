@@ -8,6 +8,10 @@ import {
 } from '@angular/core';
 import { sankey, sankeyLinkHorizontal, SankeyNode } from 'd3-sankey';
 import { select, Selection } from 'd3-selection';
+import {
+  NgResizeObserver,
+  ngResizeObserverProviders,
+} from 'ng-resize-observer';
 
 import { SankeyData, Node, Link } from '~/models';
 
@@ -15,6 +19,7 @@ import { SankeyData, Node, Link } from '~/models';
   selector: 'lab-sankey',
   templateUrl: './sankey.component.html',
   styleUrls: ['./sankey.component.scss'],
+  providers: [...ngResizeObserverProviders],
 })
 export class SankeyComponent implements OnInit {
   _sankeyData: SankeyData;
@@ -23,25 +28,34 @@ export class SankeyComponent implements OnInit {
   }
   @Input() set sankeyData(value: SankeyData) {
     this._sankeyData = value;
-    console.log(value);
     if (value.nodes.length && value.links.length) {
       this.rebuildChart();
     }
   }
-  @Input() height = 400;
-  @Input() width = 800;
 
-  @Output() selectNode = new EventEmitter<any>();
+  @Output() selectNode = new EventEmitter<string>();
 
+  width = 800;
+  height = 400;
   svg: Selection<any, {}, null, undefined>;
 
   get element() {
     return this.ref.nativeElement as HTMLElement;
   }
 
-  constructor(private ref: ElementRef) {}
+  constructor(private ref: ElementRef, private resize$: NgResizeObserver) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.resize$.subscribe((entry) => {
+      const w = entry.contentRect.width;
+      const h = entry.contentRect.height;
+      if (w && h && w / h !== this.width / this.height) {
+        this.width = entry.contentRect.width;
+        this.height = entry.contentRect.height;
+        this.rebuildChart();
+      }
+    });
+  }
 
   rebuildChart() {
     if (this.svg) {
@@ -53,9 +67,9 @@ export class SankeyComponent implements OnInit {
   createChart() {
     this.svg = select(this.element)
       .append('svg')
+      .attr('preserveAspectRatio', 'xMinYMin meet')
       .attr('viewBox', `0 0 ${this.width} ${this.height}`)
-      .style('max-height', '75vh')
-      .style('min-width', '40rem');
+      .style('max-height', '75vh');
 
     const skLayout = sankey<Node, Link>()
       .nodeId((d) => d.id)
@@ -70,26 +84,6 @@ export class SankeyComponent implements OnInit {
       nodes: this.sankeyData.nodes.map((d) => ({ ...d })),
       links: this.sankeyData.links.map((l) => ({ ...l })),
     });
-
-    this.svg
-      .append('g')
-      .attr('stroke', '#000')
-      .selectAll('rect')
-      .data(skGraph.nodes)
-      .join('rect')
-      .attr('x', (d) => d.x0)
-      .attr('y', (d) => d.y0)
-      .attr('height', (d) => d.y1 - d.y0)
-      .attr('width', (d) => d.x1 - d.x0)
-      .attr('fill', (d) => d.color)
-      .on('click', (e, d) => {
-        // Typings currently incorrect: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/47296
-        const node = (d as any) as SankeyNode<Node, Link>;
-        this.selectNode.emit(node);
-      })
-      .append('title')
-      .text((d) => d.name)
-      .selectAll('rect');
 
     const link = this.svg
       .append('g')
@@ -108,6 +102,32 @@ export class SankeyComponent implements OnInit {
 
     link.append('title').text((d) => (d.source as Node).name);
 
+    let firstId: string;
+    this.svg
+      .append('g')
+      .attr('stroke', '#000')
+      .selectAll('rect')
+      .data(skGraph.nodes)
+      .join('rect')
+      .attr('x', (d) => d.x0)
+      .attr('y', (d) => d.y0)
+      .attr('height', (d) => d.y1 - d.y0)
+      .attr('width', (d) => d.x1 - d.x0)
+      .attr('fill', (d) => d.color)
+      .each((d) => {
+        if (!firstId) {
+          firstId = d.id;
+        }
+      })
+      .on('click', (e, d) => {
+        // Typings currently incorrect: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/47296
+        const node = (d as any) as SankeyNode<Node, Link>;
+        this.selectNode.emit(node.id);
+      })
+      .append('title')
+      .text((d) => d.name)
+      .selectAll('rect');
+
     this.svg
       .append('g')
       .selectAll('text')
@@ -121,7 +141,7 @@ export class SankeyComponent implements OnInit {
       .on('click', (e, d) => {
         // Typings currently incorrect: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/47296
         const node = (d as any) as SankeyNode<Node, Link>;
-        this.selectNode.emit(node);
+        this.selectNode.emit(node.id);
       });
   }
 }

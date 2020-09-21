@@ -17,6 +17,7 @@ import {
   ColumnsAsOptions,
   toBoolEntities,
   ItemId,
+  ListMode,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { ItemsState } from '~/store/items';
@@ -55,6 +56,13 @@ export class ListComponent {
   }
   @Input() set steps(value: Step[]) {
     this._steps = value;
+    if (this.mode === ListMode.All) {
+      this.displayedSteps = value;
+    } else if (this.selected) {
+      this.displayedSteps = value.filter(
+        (s) => s.itemId === this.selected || s.recipeId === this.selected
+      );
+    }
     this.setItemsPrecision();
     this.setBeltsPrecision();
     this.setWagonsPrecision();
@@ -124,6 +132,22 @@ export class ListComponent {
   @Input() modifiedBelt: boolean;
   @Input() modifiedFactory: boolean;
   @Input() modifiedBeacons: boolean;
+  @Input() mode: ListMode;
+  _selected: string;
+  get selected() {
+    return this._selected;
+  }
+  @Input() set selected(value: string) {
+    this._selected = value;
+    if (this.mode === ListMode.Focus && this.steps) {
+      if (this.steps) {
+        this.displayedSteps = this.steps.filter(
+          (s) => s.itemId === value || s.recipeId === value
+        );
+      }
+      this.expanded = { [value]: true };
+    }
+  }
 
   @Output() ignoreItem = new EventEmitter<string>();
   @Output() setBelt = new EventEmitter<DefaultIdPayload>();
@@ -141,6 +165,7 @@ export class ListComponent {
   @Output() resetFactory = new EventEmitter();
   @Output() resetBeacons = new EventEmitter();
 
+  displayedSteps: Step[] = [];
   edit: ListEdit;
   expanded: Entities<boolean> = {};
   show: Entities<boolean> = {};
@@ -156,6 +181,7 @@ export class ListComponent {
   Column = Column;
   DisplayRate = DisplayRate;
   ItemId = ItemId;
+  ListMode = ListMode;
   StepEditType = ListEditType;
   Rational = Rational;
   ColumnsAsOptions = ColumnsAsOptions;
