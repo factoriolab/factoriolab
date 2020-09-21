@@ -21,6 +21,7 @@ import {
   DefaultPayload,
   Preset,
   Sort,
+  RateType,
 } from '~/models';
 import { State } from '~/store';
 import { getBaseSets } from '~/store/datasets';
@@ -182,6 +183,10 @@ export class SettingsContainerComponent implements OnInit {
 
   setSort(value: Sort) {
     this.store.dispatch(new Settings.SetSortAction(value));
+  }
+
+  setLinkValue(value: RateType) {
+    this.store.dispatch(new Settings.SetLinkValue(value));
   }
 
   setTheme(value: Theme) {

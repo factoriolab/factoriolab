@@ -6,6 +6,7 @@ import {
   AllColumns,
   Preset,
   Sort,
+  RateType,
 } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { AppLoadAction, AppActionType } from '../app.actions';
@@ -37,6 +38,7 @@ export interface SettingsState {
   researchSpeed: ResearchSpeed;
   columns?: string[];
   sort?: Sort;
+  linkValue?: RateType;
   theme?: Theme;
   showHeader?: boolean;
 }
@@ -67,6 +69,7 @@ export const initialSettingsState: SettingsState = {
   researchSpeed: ResearchSpeed.Speed6,
   columns: AllColumns,
   sort: Sort.DepthFirst,
+  linkValue: RateType.Items,
   theme: Theme.DarkMode,
   showHeader: true,
 };
@@ -257,6 +260,9 @@ export function settingsReducer(
     case SettingsActionType.SET_SORT: {
       return { ...state, ...{ sort: action.payload } };
     }
+    case SettingsActionType.SET_LINK_VALUE: {
+      return { ...state, ...{ linkValue: action.payload } };
+    }
     case SettingsActionType.SET_THEME: {
       return { ...state, ...{ theme: action.payload } };
     }
@@ -286,7 +292,7 @@ export function loadSettings() {
     }
     const lsSettings = localStorage.getItem(LocalStorageKey.Settings);
     if (lsSettings) {
-      const stored = JSON.parse(lsSettings);
+      const stored = JSON.parse(lsSettings) as SettingsState;
       if (location.hash) {
         // Only keep columns, theme, and showHeader
         return {
@@ -294,6 +300,7 @@ export function loadSettings() {
           ...{
             columns: stored.columns,
             sort: stored.sort,
+            linkValue: stored.linkValue,
             theme: stored.theme,
             showHeader: stored.showHeader,
           },

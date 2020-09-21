@@ -188,14 +188,17 @@ export const getSteps = createSelector(
 
 export const getSankey = createSelector(
   getSteps,
+  Settings.getLinkValue,
   Settings.getDataset,
-  (steps, data) => {
+  (steps, linkValue, data) => {
     const sankey: SankeyData = {
       nodes: [],
       links: [],
     };
 
     for (const step of steps) {
+      const value = RateUtility.stepLinkValue(step, linkValue);
+
       if (step.recipeId) {
         sankey.nodes.push({
           id: step.recipeId,
@@ -207,7 +210,7 @@ export const getSankey = createSelector(
             sankey.links.push({
               target: i,
               source: step.recipeId,
-              value: step.parents[i].mul(step.items).toNumber(),
+              value: step.parents[i].mul(value).toNumber(),
             });
           }
         }
@@ -223,7 +226,7 @@ export const getSankey = createSelector(
             sankey.links.push({
               target: i,
               source: step.itemId,
-              value: step.parents[i].mul(step.items).toNumber(),
+              value: step.parents[i].mul(value).toNumber(),
             });
           }
         }

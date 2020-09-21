@@ -20,6 +20,7 @@ import {
   Preset,
   ItemId,
   Sort,
+  RateType,
 } from '~/models';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
@@ -84,6 +85,7 @@ export class SettingsComponent {
   @Output() setMiningBonus = new EventEmitter<number>();
   @Output() setResearchSpeed = new EventEmitter<ResearchSpeed>();
   @Output() setSort = new EventEmitter<Sort>();
+  @Output() setLinkValue = new EventEmitter<RateType>();
   @Output() setTheme = new EventEmitter<Theme>();
   @Output() resetSettings = new EventEmitter();
 
@@ -93,6 +95,7 @@ export class SettingsComponent {
   ItemId = ItemId;
   OpenSelect = OpenSelect;
   Preset = Preset;
+  RateType = RateType;
   ResearchSpeed = ResearchSpeed;
   SelectType = IdType;
   Sort = Sort;

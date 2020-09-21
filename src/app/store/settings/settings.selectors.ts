@@ -36,6 +36,7 @@ const sFlowRate = (state: SettingsState) => state.flowRate;
 const sExpensive = (state: SettingsState) => state.expensive;
 const sColumns = (state: SettingsState) => state.columns;
 const sSort = (state: SettingsState) => state.sort;
+const sLinkValue = (state: SettingsState) => state.linkValue;
 const sTheme = (state: SettingsState) => state.theme;
 const sShowHeader = (state: SettingsState) => state.showHeader;
 
@@ -59,6 +60,7 @@ export const getFlowRate = compose(sFlowRate, settingsState);
 export const getExpensive = compose(sExpensive, settingsState);
 export const getColumns = compose(sColumns, settingsState);
 export const getSort = compose(sSort, settingsState);
+export const getLinkValue = compose(sLinkValue, settingsState);
 export const getTheme = compose(sTheme, settingsState);
 export const getShowHeader = compose(sShowHeader, settingsState);
 

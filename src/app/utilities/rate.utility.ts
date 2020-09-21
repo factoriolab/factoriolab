@@ -9,6 +9,7 @@ import {
   WAGON_FLUID,
   WAGON_STACKS,
   ItemId,
+  RateType,
 } from '~/models';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
@@ -175,5 +176,23 @@ export class RateUtility {
       }
     }
     return steps;
+  }
+
+  static stepLinkValue(step: Step, linkValue: RateType) {
+    if (linkValue === RateType.Factories && !step.factories) {
+      // Step has no factories associated, default back to items
+      return Rational.zero;
+    }
+
+    switch (linkValue) {
+      case RateType.Belts:
+        return step.belts;
+      case RateType.Wagons:
+        return step.wagons;
+      case RateType.Factories:
+        return step.factories;
+      default:
+        return step.items;
+    }
   }
 }
