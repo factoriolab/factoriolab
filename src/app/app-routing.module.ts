@@ -1,10 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import {
-  ListContainerComponent,
-  DiagramContainerComponent,
-} from './components';
+import { ListContainerComponent, FlowContainerComponent } from './components';
 
 const routes: Routes = [
   {
@@ -12,8 +9,8 @@ const routes: Routes = [
     component: ListContainerComponent,
   },
   {
-    path: 'diagram',
-    component: DiagramContainerComponent,
+    path: 'flow',
+    component: FlowContainerComponent,
   },
   {
     path: '**',

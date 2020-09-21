@@ -31,7 +31,7 @@ import { ListComponent } from './list/list.component';
 export class ListContainerComponent implements OnInit {
   @ViewChild(ListComponent) child: ListComponent;
 
-  @Input() mode: ListMode;
+  @Input() mode = ListMode.All;
   @Input() selected: string;
   @Input() steps: Step[];
 

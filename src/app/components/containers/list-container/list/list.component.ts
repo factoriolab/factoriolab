@@ -132,7 +132,7 @@ export class ListComponent {
   @Input() modifiedBelt: boolean;
   @Input() modifiedFactory: boolean;
   @Input() modifiedBeacons: boolean;
-  @Input() mode: ListMode;
+  @Input() mode: ListMode; // Default defined in container
   _selected: string;
   get selected() {
     return this._selected;
@@ -144,8 +144,10 @@ export class ListComponent {
         this.displayedSteps = this.steps.filter(
           (s) => s.itemId === value || s.recipeId === value
         );
+        this.expanded = toBoolEntities(
+          this.displayedSteps.map((s) => s.itemId)
+        );
       }
-      this.expanded = { [value]: true };
     }
   }
 

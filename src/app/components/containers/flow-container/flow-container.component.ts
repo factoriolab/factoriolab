@@ -13,12 +13,12 @@ import { getSankey, getSteps } from '~/store/products';
 import { SankeyComponent } from './sankey/sankey.component';
 
 @Component({
-  selector: 'lab-diagram-container',
-  templateUrl: './diagram-container.component.html',
-  styleUrls: ['./diagram-container.component.scss'],
+  selector: 'lab-flow-container',
+  templateUrl: './flow-container.component.html',
+  styleUrls: ['./flow-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DiagramContainerComponent implements OnInit {
+export class FlowContainerComponent implements OnInit {
   @ViewChild(SankeyComponent) child: SankeyComponent;
 
   sankeyData$: Observable<SankeyData>;
