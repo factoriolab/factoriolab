@@ -7,6 +7,8 @@ export interface Node {
   id: string;
   name: string;
   color: string;
+  viewBox: string;
+  href: string;
 }
 
 export interface Link {

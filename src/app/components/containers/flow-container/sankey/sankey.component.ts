@@ -6,7 +6,15 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { sankey, sankeyLinkHorizontal, SankeyNode } from 'd3-sankey';
+import { path } from 'd3-path';
+import {
+  sankey,
+  SankeyNode,
+  SankeyLink,
+  SankeyNodeMinimal,
+  SankeyLayout,
+  SankeyGraph,
+} from 'd3-sankey';
 import { select, Selection } from 'd3-selection';
 import {
   NgResizeObserver,
@@ -73,7 +81,7 @@ export class SankeyComponent implements OnInit {
 
     const skLayout = sankey<Node, Link>()
       .nodeId((d) => d.id)
-      .nodeWidth(15)
+      .nodeWidth(32)
       .nodePadding(10)
       .extent([
         [1, 5],
@@ -87,8 +95,7 @@ export class SankeyComponent implements OnInit {
 
     const link = this.svg
       .append('g')
-      .attr('fill', 'none')
-      .attr('stroke-opacity', 0.5)
+      .attr('fill-opacity', 0.5)
       .selectAll('g')
       .data(skGraph.links)
       .join('g')
@@ -96,13 +103,12 @@ export class SankeyComponent implements OnInit {
 
     link
       .append('path')
-      .attr('d', sankeyLinkHorizontal())
-      .attr('stroke', (d) => (d.source as Node).color)
+      .attr('d', this.sankeyLinkPath)
+      .attr('fill', (d) => (d.source as Node).color)
       .attr('stroke-width', (d) => Math.max(1, d.width));
 
     link.append('title').text((d) => (d.source as Node).name);
 
-    let firstId: string;
     this.svg
       .append('g')
       .attr('stroke', '#000')
@@ -114,34 +120,61 @@ export class SankeyComponent implements OnInit {
       .attr('height', (d) => d.y1 - d.y0)
       .attr('width', (d) => d.x1 - d.x0)
       .attr('fill', (d) => d.color)
-      .each((d) => {
-        if (!firstId) {
-          firstId = d.id;
-        }
-      })
       .on('click', (e, d) => {
         // Typings currently incorrect: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/47296
         const node = (d as any) as SankeyNode<Node, Link>;
         this.selectNode.emit(node.id);
       })
       .append('title')
-      .text((d) => d.name)
-      .selectAll('rect');
+      .text((d) => d.name);
 
     this.svg
       .append('g')
-      .selectAll('text')
-      .data(skGraph.nodes)
-      .join('text')
-      .attr('x', (d) => (d.x0 < this.width / 2 ? d.x1 + 6 : d.x0 - 6))
-      .attr('y', (d) => (d.y1 + d.y0) / 2)
-      .attr('dy', '0.35em')
-      .attr('text-anchor', (d) => (d.x0 < this.width / 2 ? 'start' : 'end'))
-      .text((d) => d.name)
-      .on('click', (e, d) => {
-        // Typings currently incorrect: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/47296
-        const node = (d as any) as SankeyNode<Node, Link>;
-        this.selectNode.emit(node.id);
-      });
+      .selectAll('svg')
+      .data(skGraph.nodes.filter((d) => d.y1 - d.y0 > 16))
+      .join('svg')
+      .attr('viewBox', (d) => d.viewBox)
+      .attr('width', (d) => Math.min(30, d.y1 - d.y0 - 2))
+      .attr('height', (d) => Math.min(30, d.y1 - d.y0 - 2))
+      .attr('x', (d) => (d.x1 + d.x0) / 2 - Math.min(30, d.y1 - d.y0 - 2) / 2)
+      .attr('y', (d) => (d.y1 + d.y0) / 2 - Math.min(30, d.y1 - d.y0 - 2) / 2)
+      .style('pointer-events', 'none')
+      .append('image')
+      .attr('href', (d) => d.href);
+  }
+
+  /**
+   * Use custom function in place of d3.sankeyLinkHorizontal, see:
+   * https://observablehq.com/@enjalot/weird-sankey-links
+   */
+  sankeyLinkPath(link: SankeyLink<Node, Link>) {
+    const offset = 0;
+    const t = link.source;
+    const sx = (link.source as SankeyNodeMinimal<Node, Link>).x1;
+    const tx = (link.target as SankeyNodeMinimal<Node, Link>).x0 + 1;
+    const sy0 = link.y0 - link.width / 2;
+    const sy1 = link.y0 + link.width / 2;
+    const ty0 = link.y1 - link.width / 2;
+    const ty1 = link.y1 + link.width / 2;
+
+    const halfx = (tx - sx) / 2;
+
+    const lPath = path();
+    lPath.moveTo(sx, sy0);
+
+    let cpx1 = sx + halfx;
+    let cpy1 = sy0 + offset;
+    let cpx2 = sx + halfx;
+    let cpy2 = ty0 - offset;
+    lPath.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, tx, ty0);
+    lPath.lineTo(tx, ty1);
+
+    cpx1 = sx + halfx;
+    cpy1 = ty1 - offset;
+    cpx2 = sx + halfx;
+    cpy2 = sy1 + offset;
+    lPath.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, sx, sy1);
+    lPath.lineTo(sx, sy0);
+    return lPath.toString();
   }
 }

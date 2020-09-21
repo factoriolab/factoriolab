@@ -12,7 +12,7 @@ import {
   Sort,
   SankeyData,
 } from '~/models';
-import { RateUtility, MatrixUtility } from '~/utilities';
+import { RateUtility, MatrixUtility, RecipeUtility } from '~/utilities';
 import * as Items from '../items';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
@@ -200,24 +200,32 @@ export const getSankey = createSelector(
       const value = RateUtility.stepLinkValue(step, linkValue);
 
       if (step.recipeId) {
-        const recipe = data.recipeR[step.recipeId];
+        const recipe = RecipeUtility.nonCircularRecipe(
+          data.recipeR[step.recipeId]
+        );
+        const icon = data.iconEntities[step.recipeId];
 
         sankey.nodes.push({
           id: step.recipeId,
           name: recipe.name,
-          color: data.iconEntities[step.recipeId].color,
+          color: icon.color,
+          viewBox: `${icon.position
+            .replace(/px/g, '')
+            .replace(/-/g, '')} 64 64`,
+          href: icon.file,
         });
-        if (step.parents) {
-          for (const i of Object.keys(step.parents)) {
-            sankey.links.push({
-              target: i,
-              source: step.recipeId,
-              value: step.parents[i].mul(value).toNumber(),
-            });
-          }
-        }
 
-        if (step.itemId !== step.recipeId) {
+        if (step.itemId === step.recipeId) {
+          if (step.parents) {
+            for (const i of Object.keys(step.parents)) {
+              sankey.links.push({
+                target: i,
+                source: step.recipeId,
+                value: step.parents[i].mul(value).toNumber(),
+              });
+            }
+          }
+        } else {
           for (const outId of Object.keys(recipe.out)) {
             const outStep = steps.find((s) => s.itemId === outId);
             const outValue = RateUtility.stepLinkValue(outStep, linkValue);
@@ -229,19 +237,29 @@ export const getSankey = createSelector(
           }
         }
       }
+
       if (step.itemId && step.itemId !== step.recipeId) {
+        const icon = data.iconEntities[step.itemId];
+
         sankey.nodes.push({
           id: step.itemId,
           name: data.itemR[step.itemId].name,
-          color: data.iconEntities[step.itemId].color,
+          color: icon.color,
+          viewBox: `${icon.position
+            .replace(/px/g, '')
+            .replace(/-/g, '')} 64 64`,
+          href: icon.file,
         });
         if (step.parents) {
           for (const i of Object.keys(step.parents)) {
-            sankey.links.push({
-              target: i,
-              source: step.itemId,
-              value: step.parents[i].mul(value).toNumber(),
-            });
+            const recipe = RecipeUtility.nonCircularRecipe(data.recipeR[i]);
+            if (recipe.in[step.itemId]) {
+              sankey.links.push({
+                target: i,
+                source: step.itemId,
+                value: step.parents[i].mul(value).toNumber(),
+              });
+            }
           }
         }
       }
