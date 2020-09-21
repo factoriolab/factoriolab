@@ -532,7 +532,7 @@
                 class="clickable-size"
                 [iconId]="step.itemId"
                 [tooltip]="data.itemEntities[step.itemId]?.name"
-                [recipe]="data.recipeEntities[step.recipeId]"
+                [recipe]="data.recipeEntities[data.itemRecipeIds[step.itemId]]"
                 [data]="data"
               >
               </lab-icon>
@@ -621,7 +621,9 @@
           </ng-container>
           <td class="split-column">
             <div class="flex">
-              <ng-container *ngIf="step.recipeId !== step.itemId">
+              <ng-container
+                *ngIf="step.recipeId && step.recipeId !== step.itemId"
+              >
                 <lab-icon
                   class="recipe"
                   [iconId]="step.recipeId"
