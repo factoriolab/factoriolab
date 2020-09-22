@@ -7,6 +7,7 @@ import {
   Preset,
   Theme,
   Sort,
+  RateType,
 } from '~/models';
 import { mockFullSettings } from '~/services/router.service.spec';
 import { AppLoadAction } from '../app.actions';
@@ -403,6 +404,7 @@ describe('Settings Reducer', () => {
       const preserved = {
         columns: [],
         sort: Sort.BreadthFirst,
+        linkValue: RateType.Belts,
         theme: Theme.LightMode,
         showHeader: false,
       };

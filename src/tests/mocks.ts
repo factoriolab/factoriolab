@@ -120,13 +120,6 @@ export const Step2: Step = {
   pollution: Rational.zero,
 };
 export const Steps = [Step1, Step2];
-export const Node1: Node = { ...Step1, ...{ id: 'id1', name: 'name1' } };
-export const Node2: Node = {
-  ...Step1,
-  ...{ id: 'id2', name: Array(1000).join('X'), children: [Node1] },
-};
-export const Node3 = { ...Step1, ...{ id: 'id3', name: 'name3' } };
-export const Root: Node = { id: 'root', children: [Node2, Node3] } as any;
 export const BeltSpeed: Entities<Rational> = {
   [ItemId.TransportBelt]: new Rational(BigInt(15)),
   [ItemId.Pipe]: new Rational(BigInt(1500)),

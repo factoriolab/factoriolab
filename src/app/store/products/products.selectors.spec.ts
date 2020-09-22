@@ -185,35 +185,6 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getNormalizedNodes', () => {
-    it('should handle empty/null values', () => {
-      const result = Selectors.getNormalizedNodes.projector(
-        [],
-        {},
-        {},
-        {},
-        null,
-        null,
-        {}
-      );
-      expect(result).toEqual({ id: 'root', children: [] } as any);
-    });
-
-    it('should calculate rates using utility method', () => {
-      spyOn(RateUtility, 'addNodesFor');
-      Selectors.getNormalizedNodes.projector(
-        [Mocks.Product1],
-        { [Mocks.Product1.id]: Rational.one },
-        {},
-        {},
-        null,
-        null,
-        {}
-      );
-      expect(RateUtility.addNodesFor).toHaveBeenCalled();
-    });
-  });
-
   describe('getNormalizedStepsWithMatrices', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getNormalizedStepsWithMatrices.projector(
@@ -277,14 +248,6 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getNormalizedNodesWithBelts', () => {
-    it('should calculate rates using utility method', () => {
-      spyOn(RateUtility, 'calculateNodeBelts');
-      Selectors.getNormalizedNodesWithBelts.projector({}, {}, {}, {});
-      expect(RateUtility.calculateNodeBelts).toHaveBeenCalled();
-    });
-  });
-
   describe('getSteps', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getSteps.projector([], null);
@@ -295,14 +258,6 @@ describe('Products Selectors', () => {
       spyOn(RateUtility, 'displayRate');
       Selectors.getSteps.projector([], null);
       expect(RateUtility.displayRate).toHaveBeenCalled();
-    });
-  });
-
-  describe('getNodes', () => {
-    it('should calculate rates using utility method', () => {
-      spyOn(RateUtility, 'nodeDisplayRate');
-      Selectors.getNodes.projector({}, null);
-      expect(RateUtility.nodeDisplayRate).toHaveBeenCalled();
     });
   });
 

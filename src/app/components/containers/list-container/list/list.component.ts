@@ -56,13 +56,7 @@ export class ListComponent {
   }
   @Input() set steps(value: Step[]) {
     this._steps = value;
-    if (this.mode === ListMode.All) {
-      this.displayedSteps = value;
-    } else if (this.selected) {
-      this.displayedSteps = value.filter(
-        (s) => s.itemId === this.selected || s.recipeId === this.selected
-      );
-    }
+    this.setDisplayedSteps();
     this.setItemsPrecision();
     this.setBeltsPrecision();
     this.setWagonsPrecision();
@@ -132,7 +126,16 @@ export class ListComponent {
   @Input() modifiedBelt: boolean;
   @Input() modifiedFactory: boolean;
   @Input() modifiedBeacons: boolean;
-  @Input() mode: ListMode; // Default defined in container
+  _mode = ListMode.All; // Default also defined in container
+  get mode() {
+    return this._mode;
+  }
+  @Input() set mode(value: ListMode) {
+    this._mode = value;
+    if (this.steps) {
+      this.setDisplayedSteps();
+    }
+  }
   _selected: string;
   get selected() {
     return this._selected;
@@ -264,6 +267,16 @@ export class ListComponent {
       this._pollutionPrecision,
       (s: Step) => s.pollution
     );
+  }
+
+  setDisplayedSteps() {
+    if (this.mode === ListMode.All) {
+      this.displayedSteps = this.steps;
+    } else if (this.selected) {
+      this.displayedSteps = this.steps.filter(
+        (s) => s.itemId === this.selected || s.recipeId === this.selected
+      );
+    }
   }
 
   effPrecFrom(precision: number, fn: (step: Step) => Rational) {
