@@ -465,10 +465,12 @@
     [ngModel]="settings.linkValue"
     (change)="emitNumber(setLinkValue, $event)"
   >
-    <option label="Items" [value]="RateType.Items"></option>
-    <option label="Belts" [value]="RateType.Belts"></option>
-    <option label="Wagons" [value]="RateType.Wagons"></option>
-    <option label="Factories" [value]="RateType.Factories"></option>
+    <option label="None" [value]="LinkValue.None"></option>
+    <option label="Percent" [value]="LinkValue.Percent"></option>
+    <option label="Items" [value]="LinkValue.Items"></option>
+    <option label="Belts" [value]="LinkValue.Belts"></option>
+    <option label="Wagons" [value]="LinkValue.Wagons"></option>
+    <option label="Factories" [value]="LinkValue.Factories"></option>
   </select>
 </div>
 <div class="field">

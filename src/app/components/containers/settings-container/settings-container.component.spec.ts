@@ -4,7 +4,14 @@ import { StoreModule, Store } from '@ngrx/store';
 
 import { TestUtility, ItemId, RecipeId } from 'src/tests';
 import { IconComponent, PrecisionComponent } from '~/components';
-import { DisplayRate, ResearchSpeed, Theme, Preset, Sort } from '~/models';
+import {
+  DisplayRate,
+  ResearchSpeed,
+  Theme,
+  Preset,
+  Sort,
+  LinkValue,
+} from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as Settings from '~/store/settings';
 import { SettingsComponent } from './settings/settings.component';
@@ -325,6 +332,15 @@ describe('SettingsContainerComponent', () => {
     component.child.setSort.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetSortAction(value)
+    );
+  });
+
+  it('should set link value', () => {
+    spyOn(store, 'dispatch');
+    const value = LinkValue.Belts;
+    component.child.setLinkValue.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetLinkValueAction(value)
     );
   });
 

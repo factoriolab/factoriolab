@@ -1,6 +1,6 @@
 import { Mocks, CategoryId, ItemId } from 'src/tests';
 import { RateUtility } from './rate.utility';
-import { Step, Rational, DisplayRate, WAGON_FLUID } from '~/models';
+import { Step, Rational, DisplayRate, WAGON_FLUID, LinkValue } from '~/models';
 
 describe('RateUtility', () => {
   describe('addStepsFor', () => {
@@ -351,6 +351,84 @@ describe('RateUtility', () => {
         DisplayRate.PerMinute
       );
       expect(result[0].parents.id).toEqual(new Rational(BigInt(1), BigInt(2)));
+    });
+  });
+
+  describe('stepLinkValue', () => {
+    const step: Step = {
+      itemId: ItemId.IronOre,
+      depth: 0,
+      items: Rational.two,
+      surplus: new Rational(BigInt(3)),
+      belts: new Rational(BigInt(4)),
+      wagons: new Rational(BigInt(6)),
+      factories: new Rational(BigInt(7)),
+    };
+
+    it('should return correct value for none', () => {
+      expect(RateUtility.stepLinkValue(step, LinkValue.None)).toEqual(
+        Rational.one
+      );
+    });
+
+    it('should return correct value for percent', () => {
+      expect(RateUtility.stepLinkValue(step, LinkValue.Percent)).toEqual(
+        Rational.one
+      );
+    });
+
+    it('should return correct value for factories when null', () => {
+      expect(RateUtility.stepLinkValue({} as any, LinkValue.Factories)).toEqual(
+        Rational.zero
+      );
+    });
+
+    it('should return correct value for belts', () => {
+      expect(RateUtility.stepLinkValue(step, LinkValue.Belts)).toEqual(
+        new Rational(BigInt(4))
+      );
+    });
+
+    it('should return correct value for wagons', () => {
+      expect(RateUtility.stepLinkValue(step, LinkValue.Wagons)).toEqual(
+        new Rational(BigInt(6))
+      );
+    });
+
+    it('should return correct value for factories', () => {
+      expect(RateUtility.stepLinkValue(step, LinkValue.Factories)).toEqual(
+        new Rational(BigInt(7))
+      );
+    });
+
+    it('should return correct value for items', () => {
+      expect(RateUtility.stepLinkValue(step, LinkValue.Items)).toEqual(
+        new Rational(BigInt(5))
+      );
+    });
+
+    it('should return correct value for null items/surplus', () => {
+      expect(RateUtility.stepLinkValue({} as any, LinkValue.Items)).toEqual(
+        Rational.zero
+      );
+    });
+  });
+
+  describe('linkValue', () => {
+    it('should return correct value for none', () => {
+      expect(RateUtility.linkValue(null, null, LinkValue.None)).toEqual(1);
+    });
+
+    it('should return correct value for percent', () => {
+      expect(
+        RateUtility.linkValue(null, Rational.two, LinkValue.Percent)
+      ).toEqual(2);
+    });
+
+    it('should multiply percent and value', () => {
+      expect(
+        RateUtility.linkValue(Rational.two, new Rational(BigInt(3)), null)
+      ).toEqual(6);
     });
   });
 });

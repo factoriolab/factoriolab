@@ -1,6 +1,8 @@
-import { Mocks, ItemId } from 'src/tests';
+import { Mocks, ItemId, RecipeId } from 'src/tests';
 import {
   DisplayRate,
+  LinkValue,
+  Node,
   RateType,
   Rational,
   RationalProduct,
@@ -258,6 +260,105 @@ describe('Products Selectors', () => {
       spyOn(RateUtility, 'displayRate');
       Selectors.getSteps.projector([], null);
       expect(RateUtility.displayRate).toHaveBeenCalled();
+    });
+  });
+
+  describe('getSankey', () => {
+    const node: Node = {
+      id: ItemId.Coal,
+      name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
+      color: Mocks.AdjustedData.iconEntities[ItemId.Coal].color,
+      viewBox: '896 768 64 64',
+      href: Mocks.AdjustedData.iconEntities[ItemId.Coal].file,
+    };
+
+    it('should handle empty/null values', () => {
+      const result = Selectors.getSankey.projector([], null, null);
+      expect(result).toEqual({ nodes: [], links: [] });
+    });
+
+    it('should handle normal steps', () => {
+      const result = Selectors.getSankey.projector(
+        [
+          {
+            itemId: ItemId.Coal,
+            recipeId: RecipeId.Coal,
+            parents: { [ItemId.PlasticBar]: Rational.one },
+          },
+        ],
+        LinkValue.None,
+        Mocks.AdjustedData
+      );
+      expect(result).toEqual({
+        nodes: [node],
+        links: [{ target: ItemId.PlasticBar, source: ItemId.Coal, value: 1 }],
+      });
+    });
+
+    it('should handle normal step with no parents', () => {
+      const result = Selectors.getSankey.projector(
+        [
+          {
+            itemId: ItemId.Coal,
+            recipeId: RecipeId.Coal,
+          },
+        ],
+        LinkValue.None,
+        Mocks.AdjustedData
+      );
+      expect(result).toEqual({ nodes: [node], links: [] });
+    });
+
+    it('should handle mismatched step', () => {
+      const result = Selectors.getSankey.projector(
+        [{ itemId: ItemId.Coal }, { recipeId: RecipeId.Coal }],
+        LinkValue.None,
+        Mocks.AdjustedData
+      );
+      expect(result).toEqual({
+        nodes: [node, node],
+        links: [{ target: ItemId.Coal, source: ItemId.Coal, value: 1 }],
+      });
+    });
+
+    it('should handle steps with no recipe', () => {
+      const result = Selectors.getSankey.projector(
+        [
+          {
+            itemId: ItemId.Coal,
+            parents: { [ItemId.PlasticBar]: Rational.one },
+          },
+        ],
+        LinkValue.None,
+        Mocks.AdjustedData
+      );
+      expect(result).toEqual({
+        nodes: [node],
+        links: [{ target: ItemId.PlasticBar, source: ItemId.Coal, value: 1 }],
+      });
+    });
+
+    it('should handle steps with no recipe and no-input parent', () => {
+      const result = Selectors.getSankey.projector(
+        [
+          {
+            itemId: ItemId.Coal,
+            parents: { [ItemId.IronOre]: Rational.one },
+          },
+        ],
+        LinkValue.None,
+        Mocks.AdjustedData
+      );
+      expect(result).toEqual({ nodes: [node], links: [] });
+    });
+
+    it('should handle steps with no recipe or parents', () => {
+      const result = Selectors.getSankey.projector(
+        [{ itemId: ItemId.Coal }],
+        LinkValue.None,
+        Mocks.AdjustedData
+      );
+      expect(result).toEqual({ nodes: [node], links: [] });
     });
   });
 

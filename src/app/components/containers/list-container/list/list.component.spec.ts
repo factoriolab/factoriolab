@@ -28,6 +28,7 @@ import { ListComponent } from './list.component';
       [displayRate]="displayRate"
       [itemPrecision]="itemPrecision"
       [beltPrecision]="beltPrecision"
+      [wagonPrecision]="wagonPrecision"
       [factoryPrecision]="factoryPrecision"
       [powerPrecision]="powerPrecision"
       [pollutionPrecision]="pollutionPrecision"
@@ -73,9 +74,10 @@ class TestListComponent {
   displayRate = DisplayRate.PerMinute;
   itemPrecision = null;
   beltPrecision = 0;
-  factoryPrecision = 1;
-  powerPrecision = 2;
-  pollutionPrecision = 3;
+  wagonPrecision = 1;
+  factoryPrecision = 2;
+  powerPrecision = 3;
+  pollutionPrecision = 4;
   beaconCount = 0;
   drillModule = false;
   columns = AllColumns;
@@ -129,6 +131,28 @@ describe('ListComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('mode', () => {
+    it('should call setDisplayedSteps when changed', () => {
+      spyOn(component.child, 'setDisplayedSteps');
+      component.mode = null;
+      fixture.detectChanges();
+      expect(component.child.setDisplayedSteps).toHaveBeenCalled();
+    });
+  });
+
+  describe('selected', () => {
+    it('should get the selected value', () => {
+      expect(component.child.selected).toBeNull();
+    });
+
+    it('should call setDisplayedSteps when changed', () => {
+      spyOn(component.child, 'setDisplayedSteps');
+      component.selected = 'id';
+      fixture.detectChanges();
+      expect(component.child.setDisplayedSteps).toHaveBeenCalled();
+    });
   });
 
   describe('columns', () => {
@@ -239,6 +263,27 @@ describe('ListComponent', () => {
 
     it('should return max number of decimals if less than precision', () => {
       expect(component.child.effPrecFrom(5, (s: Step) => s.belts)).toEqual(1);
+    });
+  });
+
+  describe('setDisplayedSteps', () => {
+    it('should set displayed steps to the full list', () => {
+      expect(component.child.displayedSteps).toEqual(Mocks.Steps);
+    });
+
+    it('should set displayed steps to selected step', () => {
+      component.mode = ListMode.Focus;
+      component.selected = Mocks.Step1.itemId;
+      fixture.detectChanges();
+      expect(component.child.displayedSteps).toEqual([Mocks.Step1]);
+      expect(component.child.expanded).toEqual({ [Mocks.Step1.itemId]: true });
+    });
+
+    it('should set displayed steps and expanded to empty if nothing is selected', () => {
+      component.mode = ListMode.Focus;
+      fixture.detectChanges();
+      expect(component.child.displayedSteps).toEqual([]);
+      expect(component.child.expanded).toEqual({});
     });
   });
 

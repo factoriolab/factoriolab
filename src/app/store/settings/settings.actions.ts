@@ -8,7 +8,7 @@ import {
   DefaultTogglePayload,
   Preset,
   Sort,
-  RateType,
+  LinkValue,
 } from '~/models';
 
 export const enum SettingsActionType {
@@ -199,9 +199,9 @@ export class SetSortAction implements Action {
   constructor(public payload: Sort) {}
 }
 
-export class SetLinkValue implements Action {
+export class SetLinkValueAction implements Action {
   readonly type = SettingsActionType.SET_LINK_VALUE;
-  constructor(public payload: RateType) {}
+  constructor(public payload: LinkValue) {}
 }
 
 export class SetThemeAction implements Action {
@@ -252,7 +252,7 @@ export type SettingsAction =
   | HideColumnAction
   | ShowColumnAction
   | SetSortAction
-  | SetLinkValue
+  | SetLinkValueAction
   | SetThemeAction
   | HideHeaderAction
   | ShowHeaderAction

@@ -221,7 +221,7 @@ export const getSankey = createSelector(
               sankey.links.push({
                 target: i,
                 source: step.recipeId,
-                value: step.parents[i].mul(value).toNumber(),
+                value: RateUtility.linkValue(value, step.parents[i], linkValue),
               });
             }
           }
@@ -232,7 +232,7 @@ export const getSankey = createSelector(
             sankey.links.push({
               target: outId,
               source: step.recipeId,
-              value: outValue.toNumber(),
+              value: RateUtility.linkValue(outValue, Rational.one, linkValue),
             });
           }
         }
@@ -253,11 +253,11 @@ export const getSankey = createSelector(
         if (step.parents) {
           for (const i of Object.keys(step.parents)) {
             const recipe = RecipeUtility.nonCircularRecipe(data.recipeR[i]);
-            if (recipe.in[step.itemId]) {
+            if (recipe.in?.[step.itemId]) {
               sankey.links.push({
                 target: i,
                 source: step.itemId,
-                value: step.parents[i].mul(value).toNumber(),
+                value: RateUtility.linkValue(value, step.parents[i], linkValue),
               });
             }
           }

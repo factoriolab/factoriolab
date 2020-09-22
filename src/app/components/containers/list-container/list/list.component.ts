@@ -142,16 +142,7 @@ export class ListComponent {
   }
   @Input() set selected(value: string) {
     this._selected = value;
-    if (this.mode === ListMode.Focus && this.steps) {
-      if (this.steps) {
-        this.displayedSteps = this.steps.filter(
-          (s) => s.itemId === value || s.recipeId === value
-        );
-        this.expanded = toBoolEntities(
-          this.displayedSteps.map((s) => s.itemId)
-        );
-      }
-    }
+    this.setDisplayedSteps();
   }
 
   @Output() ignoreItem = new EventEmitter<string>();
@@ -269,16 +260,6 @@ export class ListComponent {
     );
   }
 
-  setDisplayedSteps() {
-    if (this.mode === ListMode.All) {
-      this.displayedSteps = this.steps;
-    } else if (this.selected) {
-      this.displayedSteps = this.steps.filter(
-        (s) => s.itemId === this.selected || s.recipeId === this.selected
-      );
-    }
-  }
-
   effPrecFrom(precision: number, fn: (step: Step) => Rational) {
     if (precision == null) {
       return precision;
@@ -293,6 +274,20 @@ export class ListComponent {
       }
     }
     return max;
+  }
+
+  setDisplayedSteps() {
+    if (this.mode === ListMode.All) {
+      this.displayedSteps = this.steps;
+    } else if (this.selected) {
+      this.displayedSteps = this.steps.filter(
+        (s) => s.itemId === this.selected || s.recipeId === this.selected
+      );
+      this.expanded = toBoolEntities(this.displayedSteps.map((s) => s.itemId));
+    } else {
+      this.displayedSteps = [];
+      this.expanded = {};
+    }
   }
 
   trackBy(step: Step) {

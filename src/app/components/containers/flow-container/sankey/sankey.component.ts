@@ -6,15 +6,9 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { ResizeObserverEntry } from '@juggle/resize-observer';
 import { path } from 'd3-path';
-import {
-  sankey,
-  SankeyNode,
-  SankeyLink,
-  SankeyNodeMinimal,
-  SankeyLayout,
-  SankeyGraph,
-} from 'd3-sankey';
+import { sankey, SankeyNode, SankeyLink, SankeyNodeMinimal } from 'd3-sankey';
 import { select, Selection } from 'd3-selection';
 import {
   NgResizeObserver,
@@ -52,15 +46,17 @@ export class SankeyComponent implements OnInit {
   constructor(private ref: ElementRef, private resize$: NgResizeObserver) {}
 
   ngOnInit(): void {
-    this.resize$.subscribe((entry) => {
-      const w = entry.contentRect.width;
-      const h = entry.contentRect.height;
-      if (w && h && w / h !== this.width / this.height) {
-        this.width = entry.contentRect.width;
-        this.height = entry.contentRect.height;
-        this.rebuildChart();
-      }
-    });
+    this.resize$.subscribe(this.handleResize);
+  }
+
+  handleResize(entry: ResizeObserverEntry) {
+    const w = entry.contentRect.width;
+    const h = entry.contentRect.height;
+    if (w && h && w / h !== this.width / this.height) {
+      this.width = entry.contentRect.width;
+      this.height = entry.contentRect.height;
+      this.rebuildChart();
+    }
   }
 
   rebuildChart() {

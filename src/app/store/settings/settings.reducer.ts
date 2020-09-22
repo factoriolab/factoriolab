@@ -6,7 +6,7 @@ import {
   AllColumns,
   Preset,
   Sort,
-  RateType,
+  LinkValue,
 } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { AppLoadAction, AppActionType } from '../app.actions';
@@ -38,7 +38,7 @@ export interface SettingsState {
   researchSpeed: ResearchSpeed;
   columns?: string[];
   sort?: Sort;
-  linkValue?: RateType;
+  linkValue?: LinkValue;
   theme?: Theme;
   showHeader?: boolean;
 }
@@ -69,7 +69,7 @@ export const initialSettingsState: SettingsState = {
   researchSpeed: ResearchSpeed.Speed6,
   columns: AllColumns,
   sort: Sort.DepthFirst,
-  linkValue: RateType.Items,
+  linkValue: LinkValue.Items,
   theme: Theme.DarkMode,
   showHeader: true,
 };

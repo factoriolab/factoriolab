@@ -7,13 +7,13 @@ import {
   Step,
   RecipeSettings,
   Entities,
-  Node,
   Rational,
   RationalProduct,
   ItemSettings,
   Mod,
   Preset,
   toEntities,
+  SankeyData,
 } from '~/models';
 import { initialDatasetsState } from '~/store/datasets';
 import { getProductsBy, ProductsState } from '~/store/products';
@@ -159,3 +159,40 @@ export const AdjustedData = getAdjustedDataset.projector(
   Rational.zero,
   Data
 );
+export const Sankey: SankeyData = {
+  nodes: [
+    {
+      id: '0',
+      name: 'A',
+      color: 'red',
+      href: 'data/1.0/icons.png',
+      viewBox: '0 0 64 64',
+    },
+    {
+      id: '1',
+      name: 'B',
+      color: 'green',
+      href: 'data/1.0/icons.png',
+      viewBox: '0 64 64 64',
+    },
+    {
+      id: '2',
+      name: 'C',
+      color: 'blue',
+      href: 'data/1.0/icons.png',
+      viewBox: '64 0 64 64',
+    },
+  ],
+  links: [
+    {
+      source: '0',
+      target: '2',
+      value: 1,
+    },
+    {
+      source: '1',
+      target: '2',
+      value: 2,
+    },
+  ],
+};
