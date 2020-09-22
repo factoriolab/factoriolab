@@ -252,13 +252,32 @@ export const getSankey = createSelector(
         });
         if (step.parents) {
           for (const i of Object.keys(step.parents)) {
-            const recipe = RecipeUtility.nonCircularRecipe(data.recipeR[i]);
-            if (recipe.in?.[step.itemId]) {
-              sankey.links.push({
-                target: i,
-                source: step.itemId,
-                value: RateUtility.linkValue(value, step.parents[i], linkValue),
-              });
+            const lVal = RateUtility.linkValue(
+              value,
+              step.parents[i],
+              linkValue
+            );
+            if (data.recipeR[i]) {
+              const recipe = RecipeUtility.nonCircularRecipe(data.recipeR[i]);
+              if (recipe.in?.[step.itemId]) {
+                sankey.links.push({
+                  target: i,
+                  source: step.itemId,
+                  value: lVal,
+                });
+              }
+            } else {
+              const parentStep = steps.find((s) => s.itemId === i);
+              const recipe = RecipeUtility.nonCircularRecipe(
+                data.recipeR[parentStep.recipeId]
+              );
+              if (recipe.in[step.itemId]) {
+                sankey.links.push({
+                  target: parentStep.recipeId,
+                  source: step.itemId,
+                  value: lVal,
+                });
+              }
             }
           }
         }
