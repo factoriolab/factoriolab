@@ -10,6 +10,7 @@ import {
   WAGON_STACKS,
   ItemId,
   LinkValue,
+  MIN_LINK_VALUE,
 } from '~/models';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
@@ -206,9 +207,9 @@ export class RateUtility {
     }
 
     if (linkValue === LinkValue.Percent) {
-      return percent.toNumber();
+      return percent.toNumber() || MIN_LINK_VALUE;
     }
 
-    return value.mul(percent).toNumber();
+    return value.mul(percent).toNumber() || MIN_LINK_VALUE;
   }
 }

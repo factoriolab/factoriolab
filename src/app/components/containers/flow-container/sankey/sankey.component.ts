@@ -46,7 +46,7 @@ export class SankeyComponent implements OnInit {
   constructor(private ref: ElementRef, private resize$: NgResizeObserver) {}
 
   ngOnInit(): void {
-    this.resize$.subscribe(this.handleResize);
+    this.resize$.subscribe((entry) => this.handleResize(entry));
   }
 
   handleResize(entry: ResizeObserverEntry) {

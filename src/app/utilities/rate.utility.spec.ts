@@ -1,6 +1,13 @@
 import { Mocks, CategoryId, ItemId } from 'src/tests';
 import { RateUtility } from './rate.utility';
-import { Step, Rational, DisplayRate, WAGON_FLUID, LinkValue } from '~/models';
+import {
+  Step,
+  Rational,
+  DisplayRate,
+  WAGON_FLUID,
+  LinkValue,
+  MIN_LINK_VALUE,
+} from '~/models';
 
 describe('RateUtility', () => {
   describe('addStepsFor', () => {
@@ -425,10 +432,22 @@ describe('RateUtility', () => {
       ).toEqual(2);
     });
 
+    it('should return minimum value for percent', () => {
+      expect(
+        RateUtility.linkValue(null, Rational.zero, LinkValue.Percent)
+      ).toEqual(MIN_LINK_VALUE);
+    });
+
     it('should multiply percent and value', () => {
       expect(
         RateUtility.linkValue(Rational.two, new Rational(BigInt(3)), null)
       ).toEqual(6);
+    });
+
+    it('should return minimum value', () => {
+      expect(RateUtility.linkValue(Rational.zero, Rational.zero, null)).toEqual(
+        MIN_LINK_VALUE
+      );
     });
   });
 });
