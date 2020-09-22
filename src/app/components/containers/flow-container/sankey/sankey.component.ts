@@ -36,9 +36,7 @@ export class SankeyComponent implements OnInit {
   }
   @Input() set sankeyData(value: SankeyData) {
     this._sankeyData = value;
-    if (value.nodes.length && value.links.length) {
-      this.rebuildChart();
-    }
+    this.rebuildChart();
   }
 
   @Output() selectNode = new EventEmitter<string>();
@@ -69,7 +67,10 @@ export class SankeyComponent implements OnInit {
     if (this.svg) {
       select('svg').remove();
     }
-    this.createChart();
+
+    if (this.sankeyData.nodes.length && this.sankeyData.links.length) {
+      this.createChart();
+    }
   }
 
   createChart() {
