@@ -14,6 +14,8 @@ import {
   Preset,
   toEntities,
   SankeyData,
+  Node,
+  Link,
 } from '~/models';
 import { initialDatasetsState } from '~/store/datasets';
 import { getProductsBy, ProductsState } from '~/store/products';
@@ -159,44 +161,49 @@ export const AdjustedData = getAdjustedDataset.projector(
   Rational.zero,
   Data
 );
+
+function node(i: number): Node {
+  return {
+    id: `${i}`,
+    href: 'data/1.0/icons.png',
+    viewBox: '0 0 64 64',
+    name: `${i}`,
+    color: 'black',
+  };
+}
+
+function link(i: number, j: number): Link {
+  return {
+    source: `${i}`,
+    target: `${j}`,
+    value: Math.max(1, i),
+    name: `${i}->${j}`,
+    color: 'white',
+  };
+}
+
 export const Sankey: SankeyData = {
   nodes: [
-    {
-      id: '0',
-      name: 'A',
-      color: 'red',
-      href: 'data/1.0/icons.png',
-      viewBox: '0 0 64 64',
-    },
-    {
-      id: '1',
-      name: 'B',
-      color: 'green',
-      href: 'data/1.0/icons.png',
-      viewBox: '0 64 64 64',
-    },
-    {
-      id: '2',
-      name: 'C',
-      color: 'blue',
-      href: 'data/1.0/icons.png',
-      viewBox: '64 0 64 64',
-    },
+    node(0),
+    node(1),
+    node(2),
+    node(3),
+    node(4),
+    node(5),
+    node(6),
+    node(7),
+    node(8),
+    node(9),
   ],
   links: [
-    {
-      source: '0',
-      target: '2',
-      value: 1,
-      name: '0->2',
-      color: 'yellow',
-    },
-    {
-      source: '1',
-      target: '2',
-      value: 2,
-      name: '1->2',
-      color: 'orange',
-    },
+    link(1, 0),
+    link(2, 0),
+    link(3, 0),
+    link(4, 0),
+    link(5, 0),
+    link(6, 0),
+    link(7, 0),
+    link(8, 0),
+    link(0, 9),
   ],
 };
