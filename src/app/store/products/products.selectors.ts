@@ -207,12 +207,12 @@ export const getSankey = createSelector(
 
         sankey.nodes.push({
           id: step.recipeId,
-          name: recipe.name,
-          color: icon.color,
           viewBox: `${icon.position
             .replace(/px/g, '')
             .replace(/-/g, '')} 64 64`,
           href: icon.file,
+          name: recipe.name,
+          color: icon.color,
         });
 
         if (step.itemId === step.recipeId) {
@@ -222,6 +222,8 @@ export const getSankey = createSelector(
                 target: i,
                 source: step.recipeId,
                 value: RateUtility.linkValue(value, step.parents[i], linkValue),
+                name: data.itemEntities[step.itemId].name,
+                color: icon.color,
               });
             }
           }
@@ -233,22 +235,25 @@ export const getSankey = createSelector(
               target: outId,
               source: step.recipeId,
               value: RateUtility.linkValue(outValue, Rational.one, linkValue),
+              name: data.itemEntities[outId].name,
+              color: data.iconEntities[outId].color,
             });
           }
         }
       }
 
       if (step.itemId && step.itemId !== step.recipeId) {
+        const item = data.itemEntities[step.itemId];
         const icon = data.iconEntities[step.itemId];
 
         sankey.nodes.push({
           id: step.itemId,
-          name: data.itemR[step.itemId].name,
-          color: icon.color,
           viewBox: `${icon.position
             .replace(/px/g, '')
             .replace(/-/g, '')} 64 64`,
           href: icon.file,
+          name: item.name,
+          color: icon.color,
         });
         if (step.parents) {
           for (const i of Object.keys(step.parents)) {
@@ -264,6 +269,8 @@ export const getSankey = createSelector(
                   target: i,
                   source: step.itemId,
                   value: lVal,
+                  name: item.name,
+                  color: icon.color,
                 });
               }
             } else {
@@ -276,6 +283,8 @@ export const getSankey = createSelector(
                   target: parentStep.recipeId,
                   source: step.itemId,
                   value: lVal,
+                  name: data.itemEntities[i].name,
+                  color: data.iconEntities[i].color,
                 });
               }
             }

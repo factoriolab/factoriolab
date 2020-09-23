@@ -90,6 +90,7 @@ export class SankeyComponent implements OnInit {
       links: this.sankeyData.links.map((l) => ({ ...l })),
     });
 
+    // Draw linkages (draw first so rects are drawn over them)
     const link = this.svg
       .append('g')
       .attr('fill-opacity', 0.5)
@@ -101,11 +102,12 @@ export class SankeyComponent implements OnInit {
     link
       .append('path')
       .attr('d', this.sankeyLinkPath)
-      .attr('fill', (d) => (d.source as Node).color)
-      .attr('stroke-width', (d) => Math.max(1, d.width));
+      .attr('fill', (l) => l.color)
+      .attr('stroke-width', (l) => Math.max(1, l.width));
 
-    link.append('title').text((d) => (d.source as Node).name);
+    link.append('title').text((l) => l.name);
 
+    // Draw rects for nodes
     this.svg
       .append('g')
       .attr('stroke', '#000')
@@ -125,10 +127,11 @@ export class SankeyComponent implements OnInit {
       .append('title')
       .text((d) => d.name);
 
+    // Draw icons (for rect height >= 16px)
     this.svg
       .append('g')
       .selectAll('svg')
-      .data(skGraph.nodes.filter((d) => d.y1 - d.y0 > 16))
+      .data(skGraph.nodes.filter((d) => d.y1 - d.y0 >= 16))
       .join('svg')
       .attr('viewBox', (d) => d.viewBox)
       .attr('width', (d) => Math.min(30, d.y1 - d.y0 - 2))
@@ -138,6 +141,19 @@ export class SankeyComponent implements OnInit {
       .style('pointer-events', 'none')
       .append('image')
       .attr('href', (d) => d.href);
+
+    // Draw text (for rect height < 16px)
+    this.svg
+      .append('g')
+      .selectAll('text')
+      .data(skGraph.nodes.filter((d) => d.y1 - d.y0 < 16))
+      .join('text')
+      .attr('x', (d) => (d.x0 < this.width / 2 ? d.x1 + 6 : d.x0 - 6))
+      .attr('y', (d) => (d.y1 + d.y0) / 2)
+      .attr('dy', '0.35em')
+      .attr('text-anchor', (d) => (d.x0 < this.width / 2 ? 'start' : 'end'))
+      .text((d) => d.name)
+      .style('pointer-events', 'none');
   }
 
   /**

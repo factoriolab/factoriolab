@@ -3,15 +3,18 @@ export interface SankeyData {
   links: Link[];
 }
 
-export interface Node {
-  id: string;
+export interface SankeyBase {
   name: string;
   color: string;
+}
+
+export interface Node extends SankeyBase {
+  id: string;
   viewBox: string;
   href: string;
 }
 
-export interface Link {
+export interface Link extends SankeyBase {
   source: string;
   target: string;
   value: number;
