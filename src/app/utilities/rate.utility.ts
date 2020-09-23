@@ -252,6 +252,7 @@ export class RateUtility {
     for (const step of steps) {
       if (step.items) {
         if (step.parents) {
+          step.parents = { ...step.parents };
           for (const key of Object.keys(step.parents)) {
             step.parents[key] = step.parents[key].div(step.items);
           }
