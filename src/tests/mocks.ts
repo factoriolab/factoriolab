@@ -188,11 +188,15 @@ export const Sankey: SankeyData = {
       source: '0',
       target: '2',
       value: 1,
+      name: '0->2',
+      color: 'yellow',
     },
     {
       source: '1',
       target: '2',
       value: 2,
+      name: '1->2',
+      color: 'orange',
     },
   ],
 };

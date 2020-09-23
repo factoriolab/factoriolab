@@ -98,7 +98,7 @@ export class RateUtility {
             fuel,
             data,
             inDepth,
-            itemId
+            recipe.id
           );
         }
       }

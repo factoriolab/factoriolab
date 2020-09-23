@@ -291,7 +291,15 @@ describe('Products Selectors', () => {
       );
       expect(result).toEqual({
         nodes: [node],
-        links: [{ target: ItemId.PlasticBar, source: ItemId.Coal, value: 1 }],
+        links: [
+          {
+            target: ItemId.PlasticBar,
+            source: ItemId.Coal,
+            value: 1,
+            name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
+            color: Mocks.AdjustedData.iconEntities[ItemId.Coal].color,
+          },
+        ],
       });
     });
 
@@ -317,7 +325,15 @@ describe('Products Selectors', () => {
       );
       expect(result).toEqual({
         nodes: [node, node],
-        links: [{ target: ItemId.Coal, source: ItemId.Coal, value: 1 }],
+        links: [
+          {
+            target: ItemId.Coal,
+            source: ItemId.Coal,
+            value: 1,
+            name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
+            color: Mocks.AdjustedData.iconEntities[ItemId.Coal].color,
+          },
+        ],
       });
     });
 
@@ -334,7 +350,15 @@ describe('Products Selectors', () => {
       );
       expect(result).toEqual({
         nodes: [node],
-        links: [{ target: ItemId.PlasticBar, source: ItemId.Coal, value: 1 }],
+        links: [
+          {
+            target: ItemId.PlasticBar,
+            source: ItemId.Coal,
+            value: 1,
+            name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
+            color: Mocks.AdjustedData.iconEntities[ItemId.Coal].color,
+          },
+        ],
       });
     });
 
@@ -359,87 +383,6 @@ describe('Products Selectors', () => {
         Mocks.AdjustedData
       );
       expect(result).toEqual({ nodes: [node], links: [] });
-    });
-
-    it('should handle steps with mismatched parent', () => {
-      const result = Selectors.getSankey.projector(
-        [
-          {
-            itemId: ItemId.CrudeOil,
-            parents: { [ItemId.HeavyOil]: Rational.one },
-          },
-          {
-            itemId: ItemId.LightOil,
-            parents: { [ItemId.HeavyOil]: Rational.one },
-          },
-          {
-            itemId: ItemId.HeavyOil,
-            recipeId: RecipeId.AdvancedOilProcessing,
-          },
-        ],
-        LinkValue.None,
-        Mocks.AdjustedData
-      );
-      expect(result).toEqual({
-        nodes: [
-          {
-            id: ItemId.CrudeOil,
-            name: Mocks.AdjustedData.itemEntities[ItemId.CrudeOil].name,
-            color: Mocks.AdjustedData.iconEntities[ItemId.CrudeOil].color,
-            viewBox: '128 896 64 64',
-            href: Mocks.AdjustedData.iconEntities[ItemId.CrudeOil].file,
-          },
-          {
-            id: ItemId.LightOil,
-            name: Mocks.AdjustedData.itemEntities[ItemId.LightOil].name,
-            color: Mocks.AdjustedData.iconEntities[ItemId.LightOil].color,
-            viewBox: '320 896 64 64',
-            href: Mocks.AdjustedData.iconEntities[ItemId.LightOil].file,
-          },
-          {
-            id: RecipeId.AdvancedOilProcessing,
-            name:
-              Mocks.AdjustedData.recipeEntities[RecipeId.AdvancedOilProcessing]
-                .name,
-            color:
-              Mocks.AdjustedData.iconEntities[RecipeId.AdvancedOilProcessing]
-                .color,
-            viewBox: '64 384 64 64',
-            href:
-              Mocks.AdjustedData.iconEntities[RecipeId.AdvancedOilProcessing]
-                .file,
-          },
-          {
-            id: ItemId.HeavyOil,
-            name: Mocks.AdjustedData.itemEntities[ItemId.HeavyOil].name,
-            color: Mocks.AdjustedData.iconEntities[ItemId.HeavyOil].color,
-            viewBox: '256 896 64 64',
-            href: Mocks.AdjustedData.iconEntities[ItemId.HeavyOil].file,
-          },
-        ],
-        links: [
-          {
-            target: RecipeId.AdvancedOilProcessing,
-            source: ItemId.CrudeOil,
-            value: 1,
-          },
-          {
-            target: ItemId.HeavyOil,
-            source: RecipeId.AdvancedOilProcessing,
-            value: 1,
-          },
-          {
-            target: ItemId.LightOil,
-            source: RecipeId.AdvancedOilProcessing,
-            value: 1,
-          },
-          {
-            target: ItemId.PetroleumGas,
-            source: RecipeId.AdvancedOilProcessing,
-            value: 1,
-          },
-        ],
-      });
     });
   });
 

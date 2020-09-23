@@ -262,31 +262,15 @@ export const getSankey = createSelector(
               step.parents[i],
               linkValue
             );
-            if (data.recipeR[i]) {
-              const recipe = RecipeUtility.nonCircularRecipe(data.recipeR[i]);
-              if (recipe.in?.[step.itemId]) {
-                sankey.links.push({
-                  target: i,
-                  source: step.itemId,
-                  value: lVal,
-                  name: item.name,
-                  color: icon.color,
-                });
-              }
-            } else {
-              const parentStep = steps.find((s) => s.itemId === i);
-              const recipe = RecipeUtility.nonCircularRecipe(
-                data.recipeR[parentStep.recipeId]
-              );
-              if (recipe.in[step.itemId]) {
-                sankey.links.push({
-                  target: parentStep.recipeId,
-                  source: step.itemId,
-                  value: lVal,
-                  name: data.itemEntities[i].name,
-                  color: data.iconEntities[i].color,
-                });
-              }
+            const recipe = RecipeUtility.nonCircularRecipe(data.recipeR[i]);
+            if (recipe.in?.[step.itemId]) {
+              sankey.links.push({
+                target: i,
+                source: step.itemId,
+                value: lVal,
+                name: item.name,
+                color: icon.color,
+              });
             }
           }
         }
