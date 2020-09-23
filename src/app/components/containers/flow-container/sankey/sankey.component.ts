@@ -7,8 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { ResizeObserverEntry } from '@juggle/resize-observer';
-import { path } from 'd3-path';
-import { sankey, SankeyNode, SankeyLink, SankeyNodeMinimal } from 'd3-sankey';
+import { sankey, SankeyNode, sankeyLinkHorizontal } from 'd3-sankey';
 import { select, Selection } from 'd3-selection';
 import {
   NgResizeObserver,
@@ -93,7 +92,8 @@ export class SankeyComponent implements OnInit {
     // Draw linkages (draw first so rects are drawn over them)
     const link = this.svg
       .append('g')
-      .attr('fill-opacity', 0.5)
+      .attr('fill', 'none')
+      .attr('stroke-opacity', 0.5)
       .selectAll('g')
       .data(skGraph.links)
       .join('g')
@@ -101,8 +101,8 @@ export class SankeyComponent implements OnInit {
 
     link
       .append('path')
-      .attr('d', this.sankeyLinkPath)
-      .attr('fill', (l) => l.color)
+      .attr('d', sankeyLinkHorizontal())
+      .attr('stroke', (l) => l.color)
       .attr('stroke-width', (l) => Math.max(1, l.width));
 
     link.append('title').text((l) => l.name);
@@ -154,40 +154,5 @@ export class SankeyComponent implements OnInit {
       .attr('text-anchor', (d) => (d.x0 < this.width / 2 ? 'start' : 'end'))
       .text((d) => d.name)
       .style('pointer-events', 'none');
-  }
-
-  /**
-   * Use custom function in place of d3.sankeyLinkHorizontal, see:
-   * https://observablehq.com/@enjalot/weird-sankey-links
-   */
-  sankeyLinkPath(link: SankeyLink<Node, Link>) {
-    const offset = 0;
-    const t = link.source;
-    const sx = (link.source as SankeyNodeMinimal<Node, Link>).x1;
-    const tx = (link.target as SankeyNodeMinimal<Node, Link>).x0 + 1;
-    const sy0 = link.y0 - link.width / 2;
-    const sy1 = link.y0 + link.width / 2;
-    const ty0 = link.y1 - link.width / 2;
-    const ty1 = link.y1 + link.width / 2;
-
-    const halfx = (tx - sx) / 2;
-
-    const lPath = path();
-    lPath.moveTo(sx, sy0);
-
-    let cpx1 = sx + halfx;
-    let cpy1 = sy0 + offset;
-    let cpx2 = sx + halfx;
-    let cpy2 = ty0 - offset;
-    lPath.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, tx, ty0);
-    lPath.lineTo(tx, ty1);
-
-    cpx1 = sx + halfx;
-    cpy1 = ty1 - offset;
-    cpx2 = sx + halfx;
-    cpy2 = sy1 + offset;
-    lPath.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, sx, sy1);
-    lPath.lineTo(sx, sy0);
-    return lPath.toString();
   }
 }
