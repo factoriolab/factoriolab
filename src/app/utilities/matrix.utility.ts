@@ -30,7 +30,6 @@ export class MatrixUtility {
     fuel: string,
     data: Dataset
   ) {
-    steps = steps.map((s) => ({ ...s }));
     const matrix = new MatrixSolver(
       steps,
       itemSettings,

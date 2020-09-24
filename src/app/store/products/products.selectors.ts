@@ -149,7 +149,7 @@ export const getNormalizedStepsWithMatrices = createSelector(
   Settings.getFuel,
   (steps, itemSettings, recipeSettings, data, disabledRecipes, fuel) =>
     MatrixUtility.solveMatricesFor(
-      steps,
+      RateUtility.copy(steps),
       itemSettings,
       recipeSettings,
       disabledRecipes,
@@ -162,11 +162,11 @@ export const getNormalizedStepsSorted = createSelector(
   getNormalizedStepsWithMatrices,
   Settings.getSort,
   (steps, sort) => {
-    const newSteps = [...steps];
+    steps = RateUtility.copy(steps);
     if (sort === Sort.BreadthFirst) {
-      return newSteps.sort((a, b) => a.depth - b.depth);
+      return steps.sort((a, b) => a.depth - b.depth);
     }
-    return newSteps;
+    return steps;
   }
 );
 
@@ -176,20 +176,27 @@ export const getNormalizedStepsWithBelts = createSelector(
   Settings.getBeltSpeed,
   Recipes.getAdjustedDataset,
   (steps, itemSettings, beltSpeed, data) =>
-    RateUtility.calculateBelts(steps, itemSettings, beltSpeed, data)
+    RateUtility.calculateBelts(
+      RateUtility.copy(steps),
+      itemSettings,
+      beltSpeed,
+      data
+    )
 );
 
 export const getSteps = createSelector(
   getNormalizedStepsWithBelts,
   Settings.getDisplayRate,
-  (steps, displayRate) => RateUtility.displayRate(steps, displayRate)
+  (steps, displayRate) =>
+    RateUtility.displayRate(RateUtility.copy(steps), displayRate)
 );
 
 export const getSankey = createSelector(
   getSteps,
   Settings.getLinkValue,
   Recipes.getAdjustedDataset,
-  (steps, linkValue, data) => FlowUtility.buildSankey(steps, linkValue, data)
+  (steps, linkValue, data) =>
+    FlowUtility.buildSankey(RateUtility.copy(steps), linkValue, data)
 );
 
 export const getZipState = createSelector(

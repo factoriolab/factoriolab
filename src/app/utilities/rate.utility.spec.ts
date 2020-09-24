@@ -1,4 +1,4 @@
-import { Mocks, CategoryId, ItemId } from 'src/tests';
+import { Mocks, CategoryId, ItemId, RecipeId } from 'src/tests';
 import { RateUtility } from './rate.utility';
 import { Step, Rational, DisplayRate, WAGON_FLUID } from '~/models';
 
@@ -351,6 +351,31 @@ describe('RateUtility', () => {
         DisplayRate.PerMinute
       );
       expect(result[0].parents.id).toEqual(new Rational(BigInt(1), BigInt(2)));
+    });
+  });
+
+  describe('copy', () => {
+    it('should create a copy of steps', () => {
+      const steps: Step[] = [
+        {
+          itemId: ItemId.Coal,
+          items: Rational.one,
+          depth: 0,
+        },
+        {
+          itemId: ItemId.Coal,
+          items: Rational.one,
+          depth: 0,
+          parents: {
+            [RecipeId.IronOre]: Rational.one,
+          },
+        },
+      ];
+      const result = RateUtility.copy(steps);
+      steps[0].depth = 1;
+      steps[1].parents[RecipeId.CrudeOil] = Rational.one;
+      expect(result[0].depth).toEqual(0);
+      expect(result[1].parents[RecipeId.CrudeOil]).toBeUndefined();
     });
   });
 });
