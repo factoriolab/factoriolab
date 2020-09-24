@@ -135,7 +135,6 @@ export class RateUtility {
     beltSpeed: Entities<Rational>,
     data: Dataset
   ) {
-    steps = steps.map((s) => ({ ...s }));
     for (const step of steps) {
       const belt = itemSettings[step.itemId]?.belt;
       if (step.items && belt) {
@@ -153,12 +152,10 @@ export class RateUtility {
   }
 
   static displayRate(steps: Step[], displayRate: DisplayRate) {
-    steps = steps.map((s) => ({ ...s }));
     const displayRateVal = DisplayRateVal[displayRate];
     for (const step of steps) {
       if (step.items) {
         if (step.parents) {
-          step.parents = { ...step.parents };
           for (const key of Object.keys(step.parents)) {
             step.parents[key] = step.parents[key].div(step.items);
           }
@@ -176,5 +173,11 @@ export class RateUtility {
       }
     }
     return steps;
+  }
+
+  static copy(steps: Step[]) {
+    return steps.map((s) =>
+      s.parents ? { ...s, ...{ parents: { ...s.parents } } } : { ...s }
+    );
   }
 }
