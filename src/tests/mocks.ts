@@ -7,13 +7,15 @@ import {
   Step,
   RecipeSettings,
   Entities,
-  Node,
   Rational,
   RationalProduct,
   ItemSettings,
   Mod,
   Preset,
   toEntities,
+  SankeyData,
+  Node,
+  Link,
 } from '~/models';
 import { initialDatasetsState } from '~/store/datasets';
 import { getProductsBy, ProductsState } from '~/store/products';
@@ -120,13 +122,6 @@ export const Step2: Step = {
   pollution: Rational.zero,
 };
 export const Steps = [Step1, Step2];
-export const Node1: Node = { ...Step1, ...{ id: 'id1', name: 'name1' } };
-export const Node2: Node = {
-  ...Step1,
-  ...{ id: 'id2', name: Array(1000).join('X'), children: [Node1] },
-};
-export const Node3 = { ...Step1, ...{ id: 'id3', name: 'name3' } };
-export const Root: Node = { id: 'root', children: [Node2, Node3] } as any;
 export const BeltSpeed: Entities<Rational> = {
   [ItemId.TransportBelt]: new Rational(BigInt(15)),
   [ItemId.Pipe]: new Rational(BigInt(1500)),
@@ -166,3 +161,49 @@ export const AdjustedData = getAdjustedDataset.projector(
   Rational.zero,
   Data
 );
+
+function node(i: number): Node {
+  return {
+    id: `${i}`,
+    href: 'data/1.0/icons.png',
+    viewBox: '0 0 64 64',
+    name: `${i}`,
+    color: 'black',
+  };
+}
+
+function link(i: number, j: number): Link {
+  return {
+    source: `${i}`,
+    target: `${j}`,
+    value: Math.max(1, i),
+    name: `${i}->${j}`,
+    color: 'white',
+  };
+}
+
+export const Sankey: SankeyData = {
+  nodes: [
+    node(0),
+    node(1),
+    node(2),
+    node(3),
+    node(4),
+    node(5),
+    node(6),
+    node(7),
+    node(8),
+    node(9),
+  ],
+  links: [
+    link(1, 0),
+    link(2, 0),
+    link(3, 0),
+    link(4, 0),
+    link(5, 0),
+    link(6, 0),
+    link(7, 0),
+    link(8, 0),
+    link(0, 9),
+  ],
+};

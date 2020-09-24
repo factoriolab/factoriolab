@@ -17,6 +17,7 @@ import {
   ColumnsAsOptions,
   toBoolEntities,
   ItemId,
+  ListMode,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { ItemsState } from '~/store/items';
@@ -55,6 +56,7 @@ export class ListComponent {
   }
   @Input() set steps(value: Step[]) {
     this._steps = value;
+    this.setDisplayedSteps();
     this.setItemsPrecision();
     this.setBeltsPrecision();
     this.setWagonsPrecision();
@@ -124,6 +126,24 @@ export class ListComponent {
   @Input() modifiedBelt: boolean;
   @Input() modifiedFactory: boolean;
   @Input() modifiedBeacons: boolean;
+  _mode = ListMode.All; // Default also defined in container
+  get mode() {
+    return this._mode;
+  }
+  @Input() set mode(value: ListMode) {
+    this._mode = value;
+    if (this.steps) {
+      this.setDisplayedSteps();
+    }
+  }
+  _selected: string;
+  get selected() {
+    return this._selected;
+  }
+  @Input() set selected(value: string) {
+    this._selected = value;
+    this.setDisplayedSteps();
+  }
 
   @Output() ignoreItem = new EventEmitter<string>();
   @Output() setBelt = new EventEmitter<DefaultIdPayload>();
@@ -141,6 +161,7 @@ export class ListComponent {
   @Output() resetFactory = new EventEmitter();
   @Output() resetBeacons = new EventEmitter();
 
+  displayedSteps: Step[] = [];
   edit: ListEdit;
   expanded: Entities<boolean> = {};
   show: Entities<boolean> = {};
@@ -156,6 +177,7 @@ export class ListComponent {
   Column = Column;
   DisplayRate = DisplayRate;
   ItemId = ItemId;
+  ListMode = ListMode;
   StepEditType = ListEditType;
   Rational = Rational;
   ColumnsAsOptions = ColumnsAsOptions;
@@ -252,6 +274,20 @@ export class ListComponent {
       }
     }
     return max;
+  }
+
+  setDisplayedSteps() {
+    if (this.mode === ListMode.All) {
+      this.displayedSteps = this.steps;
+    } else if (this.selected) {
+      this.displayedSteps = this.steps.filter(
+        (s) => s.itemId === this.selected || s.recipeId === this.selected
+      );
+      this.expanded = toBoolEntities(this.displayedSteps.map((s) => s.itemId));
+    } else {
+      this.displayedSteps = [];
+      this.expanded = {};
+    }
   }
 
   trackBy(step: Step) {

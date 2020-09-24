@@ -33,6 +33,11 @@ select {
     border-color: var(--color-brand);
     color: var(--color-brand);
   }
+
+  &:focus,
+  &:active {
+    outline: none;
+  }
 }
 
 button {
@@ -40,12 +45,6 @@ button {
   border-color: var(--color-back);
   cursor: pointer;
   user-select: none;
-
-  &:focus,
-  &:active {
-    outline: none;
-    border-color: var(--color-brand);
-  }
 
   &:not([disabled]):hover {
     background-color: var(--color-gray-1);
@@ -56,6 +55,12 @@ input {
   &[type='number'],
   &[type='text'] {
     width: 5rem;
+
+    &:focus,
+    &:active {
+      border-color: var(--color-brand);
+      color: var(--color-brand);
+    }
   }
 
   &[type='radio'],
@@ -74,32 +79,13 @@ li {
 
 img.icon {
   background-repeat: no-repeat;
-  height: 32px;
-  width: 32px;
+  height: 64px;
+  width: 64px;
 
-  &.size-64 {
-    height: 64px;
-    width: 64px;
-
-    &.scale {
-      transform: scale(0.5);
-      transform-origin: 0 0;
-      margin: 0 calc(-64px * 0.5) calc(-64px * 0.5) 0;
-    }
-  }
-
-  &.size-128 {
-    height: 128px;
-    width: 128px;
+  &.scale {
     transform: scale(0.5);
     transform-origin: 0 0;
-    margin: 0 calc(-128px * 0.5) calc(-128px * 0.5) 0;
-
-    &.scale {
-      transform: scale(0.25);
-      transform-origin: 0 0;
-      margin: 0 calc(-128px * 0.75) calc(-128px * 0.75) 0;
-    }
+    margin: 0 calc(-64px * 0.5) calc(-64px * 0.5) 0;
   }
 }
 
@@ -159,4 +145,24 @@ g {
 
 .header {
   color: var(--color-brand);
+}
+
+// Sankey SVG styles
+
+text {
+  fill: var(--color-font);
+  font-family: $font-family;
+  font-size: 10px;
+
+  &:hover {
+    fill: var(--color-brand);
+    cursor: pointer;
+  }
+}
+
+rect {
+  &:hover {
+    stroke: var(--color-brand);
+    cursor: pointer;
+  }
 }

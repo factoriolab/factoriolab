@@ -7,6 +7,11 @@
 
   > .add-button {
     margin-top: 0.125rem;
+
+    > div {
+      margin-left: 0.25rem;
+      color: var(--color-brand);
+    }
   }
 
   > * + * {

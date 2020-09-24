@@ -458,6 +458,22 @@
   </select>
 </div>
 <div class="field">
+  <div>Flow Link Value:</div>
+  <select
+    id="settings-link-value"
+    title="Set flow diagram link weight"
+    [ngModel]="settings.linkValue"
+    (change)="emitNumber(setLinkValue, $event)"
+  >
+    <option label="None" [value]="LinkValue.None"></option>
+    <option label="Percent" [value]="LinkValue.Percent"></option>
+    <option label="Items" [value]="LinkValue.Items"></option>
+    <option label="Belts" [value]="LinkValue.Belts"></option>
+    <option label="Wagons" [value]="LinkValue.Wagons"></option>
+    <option label="Factories" [value]="LinkValue.Factories"></option>
+  </select>
+</div>
+<div class="field">
   <div>Theme:</div>
   <select
     id="settings-theme-select"

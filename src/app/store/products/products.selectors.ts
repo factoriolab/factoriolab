@@ -11,7 +11,7 @@ import {
   RationalProduct,
   Sort,
 } from '~/models';
-import { RateUtility, MatrixUtility } from '~/utilities';
+import { RateUtility, MatrixUtility, FlowUtility } from '~/utilities';
 import * as Items from '../items';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
@@ -140,30 +140,6 @@ export const getNormalizedSteps = createSelector(
   }
 );
 
-export const getNormalizedNodes = createSelector(
-  getProducts,
-  getNormalizedRates,
-  Items.getItemSettings,
-  Recipes.getRecipeSettings,
-  Recipes.getAdjustedDataset,
-  Settings.getFuel,
-  (products, rates, itemSettings, recipeSettings, data, fuel) => {
-    const root: any = { id: 'root', children: [] };
-    for (const product of products) {
-      RateUtility.addNodesFor(
-        root,
-        product.itemId,
-        rates[product.id],
-        itemSettings,
-        recipeSettings,
-        fuel,
-        data
-      );
-    }
-    return root;
-  }
-);
-
 export const getNormalizedStepsWithMatrices = createSelector(
   getNormalizedSteps,
   Items.getItemSettings,
@@ -203,25 +179,17 @@ export const getNormalizedStepsWithBelts = createSelector(
     RateUtility.calculateBelts(steps, itemSettings, beltSpeed, data)
 );
 
-export const getNormalizedNodesWithBelts = createSelector(
-  getNormalizedNodes,
-  Items.getItemSettings,
-  Settings.getBeltSpeed,
-  Recipes.getAdjustedDataset,
-  (nodes, itemSettings, beltSpeed, data) =>
-    RateUtility.calculateNodeBelts(nodes, itemSettings, beltSpeed, data)
-);
-
 export const getSteps = createSelector(
   getNormalizedStepsWithBelts,
   Settings.getDisplayRate,
   (steps, displayRate) => RateUtility.displayRate(steps, displayRate)
 );
 
-export const getNodes = createSelector(
-  getNormalizedNodesWithBelts,
-  Settings.getDisplayRate,
-  (nodes, displayRate) => RateUtility.nodeDisplayRate(nodes, displayRate)
+export const getSankey = createSelector(
+  getSteps,
+  Settings.getLinkValue,
+  Recipes.getAdjustedDataset,
+  (steps, linkValue, data) => FlowUtility.buildSankey(steps, linkValue, data)
 );
 
 export const getZipState = createSelector(

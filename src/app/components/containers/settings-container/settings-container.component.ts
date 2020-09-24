@@ -21,6 +21,7 @@ import {
   DefaultPayload,
   Preset,
   Sort,
+  LinkValue,
 } from '~/models';
 import { State } from '~/store';
 import { getBaseSets } from '~/store/datasets';
@@ -182,6 +183,10 @@ export class SettingsContainerComponent implements OnInit {
 
   setSort(value: Sort) {
     this.store.dispatch(new Settings.SetSortAction(value));
+  }
+
+  setLinkValue(value: LinkValue) {
+    this.store.dispatch(new Settings.SetLinkValueAction(value));
   }
 
   setTheme(value: Theme) {

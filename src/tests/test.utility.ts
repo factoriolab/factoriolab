@@ -33,6 +33,14 @@ export class TestUtility {
     return this.altClick(this.getId(fixture, id));
   }
 
+  static altClickSelector(
+    fixture: ComponentFixture<any>,
+    selector: string,
+    index = 0
+  ) {
+    return this.altClick(this.getSelector(fixture, selector, index));
+  }
+
   static setTextId(
     fixture: ComponentFixture<any>,
     id: ElementId,

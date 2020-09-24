@@ -8,6 +8,7 @@ import {
   DefaultTogglePayload,
   Preset,
   Sort,
+  LinkValue,
 } from '~/models';
 
 export const enum SettingsActionType {
@@ -41,6 +42,7 @@ export const enum SettingsActionType {
   HIDE_COLUMN = '[Settings] Hide Column',
   SHOW_COLUMN = '[Settings] Show Column',
   SET_SORT = '[Settings] Set Sort',
+  SET_LINK_VALUE = '[Settings] Set Link Value',
   SET_THEME = '[Settings] Set Theme',
   SHOW_HEADER = '[Settings] Show Header',
   HIDE_HEADER = '[Settings] Hide Header',
@@ -197,6 +199,11 @@ export class SetSortAction implements Action {
   constructor(public payload: Sort) {}
 }
 
+export class SetLinkValueAction implements Action {
+  readonly type = SettingsActionType.SET_LINK_VALUE;
+  constructor(public payload: LinkValue) {}
+}
+
 export class SetThemeAction implements Action {
   readonly type = SettingsActionType.SET_THEME;
   constructor(public payload: Theme) {}
@@ -245,6 +252,7 @@ export type SettingsAction =
   | HideColumnAction
   | ShowColumnAction
   | SetSortAction
+  | SetLinkValueAction
   | SetThemeAction
   | HideHeaderAction
   | ShowHeaderAction
