@@ -7,6 +7,7 @@ import {
   Preset,
   Theme,
   Sort,
+  LinkValue,
 } from '~/models';
 import { mockFullSettings } from '~/services/router.service.spec';
 import { AppLoadAction } from '../app.actions';
@@ -366,6 +367,17 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('SET_LINK_VALUE', () => {
+    it('should set the link value', () => {
+      const value = LinkValue.Belts;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetLinkValueAction(value)
+      );
+      expect(result.linkValue).toEqual(value);
+    });
+  });
+
   describe('SET_THEME', () => {
     it('should set the theme', () => {
       const result = settingsReducer(
@@ -394,6 +406,11 @@ describe('Settings Reducer', () => {
   });
 
   describe('loadSettings', () => {
+    beforeEach(() => {
+      localStorage.clear();
+      location.hash = '';
+    });
+
     afterEach(() => {
       localStorage.clear();
       location.hash = '';
@@ -403,6 +420,7 @@ describe('Settings Reducer', () => {
       const preserved = {
         columns: [],
         sort: Sort.BreadthFirst,
+        linkValue: LinkValue.Belts,
         theme: Theme.LightMode,
         showHeader: false,
       };

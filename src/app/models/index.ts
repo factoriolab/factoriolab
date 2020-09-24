@@ -12,4 +12,5 @@ export * from './payload';
 export * from './product';
 export * from './rational';
 export * from './recipe-settings';
+export * from './sankey';
 export * from './step';

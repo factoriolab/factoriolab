@@ -1,10 +1,8 @@
 import {
   Step,
-  StepBase,
   Dataset,
   DisplayRate,
   Entities,
-  Node,
   Rational,
   DisplayRateVal,
   RationalRecipe,
@@ -98,7 +96,7 @@ export class RateUtility {
             fuel,
             data,
             inDepth,
-            itemId
+            recipe.id
           );
         }
       }
@@ -118,73 +116,7 @@ export class RateUtility {
     }
   }
 
-  static addNodesFor(
-    parent: Node,
-    itemId: string,
-    rate: Rational,
-    itemSettings: ItemsState,
-    recipeSettings: RecipesState,
-    fuel: string,
-    data: Dataset
-  ) {
-    const recipe = data.recipeR[data.itemRecipeIds[itemId]];
-
-    const node: Node = {
-      id: `${parent.id}:${itemId}`,
-      name: data.itemEntities[itemId].name,
-      itemId,
-      recipeId: itemId as any,
-      items: recipe?.adjustProd ? rate.mul(recipe.adjustProd) : rate,
-      factories: Rational.zero,
-    };
-
-    if (!parent.children) {
-      parent.children = [];
-    }
-    parent.children.push(node);
-
-    if (recipe) {
-      // Calculate number of outputs from recipe
-      const out = recipe.out[itemId];
-
-      // Calculate factories
-      if (itemId === ItemId.SpaceSciencePack) {
-        // Factories are for rocket parts, space science packs are a side effect
-        node.factories = null;
-      } else {
-        node.factories = node.items.mul(recipe.time).div(out);
-        // Add # of factories to actually launch rockets
-        if (itemId === ItemId.RocketPart) {
-          node.factories = node.factories.add(
-            node.items.div(Rational.hundred).mul(this.LAUNCH_TIME)
-          );
-        }
-      }
-
-      this.adjustPowerPollution(node, recipe);
-
-      // Recurse adding nodes for ingredients
-      if (
-        recipe.in &&
-        node.items.nonzero() &&
-        !itemSettings[node.itemId].ignore
-      ) {
-        for (const ingredient of Object.keys(recipe.in)) {
-          RateUtility.addNodesFor(
-            node,
-            ingredient,
-            rate.mul(recipe.in[ingredient]).div(out),
-            itemSettings,
-            recipeSettings,
-            fuel,
-            data
-          );
-        }
-      }
-    }
-  }
-
-  static adjustPowerPollution(step: StepBase, recipe: RationalRecipe) {
+  static adjustPowerPollution(step: Step, recipe: RationalRecipe) {
     if (step.factories?.nonzero()) {
       // Calculate power
       if (recipe.consumption?.nonzero()) {
@@ -220,32 +152,6 @@ export class RateUtility {
     return steps;
   }
 
-  static calculateNodeBelts(
-    node: Node,
-    itemSettings: ItemsState,
-    beltSpeed: Entities<Rational>,
-    data: Dataset
-  ) {
-    node = { ...node };
-    const belt = itemSettings[node.itemId]?.belt;
-    if (node.items && belt) {
-      node.belts = node.items.div(beltSpeed[belt]);
-      if (belt === ItemId.Pipe) {
-        node.wagons = node.items.div(WAGON_FLUID);
-      } else {
-        node.wagons = node.items.div(
-          WAGON_STACKS.mul(data.itemR[node.itemId].stack)
-        );
-      }
-    }
-    if (node.children) {
-      node.children = node.children.map((n) =>
-        this.calculateNodeBelts(n, itemSettings, beltSpeed, data)
-      );
-    }
-    return node;
-  }
-
   static displayRate(steps: Step[], displayRate: DisplayRate) {
     steps = steps.map((s) => ({ ...s }));
     const displayRateVal = DisplayRateVal[displayRate];
@@ -270,27 +176,5 @@ export class RateUtility {
       }
     }
     return steps;
-  }
-
-  static nodeDisplayRate(node: Node, displayRate: DisplayRate) {
-    const displayRateVal = DisplayRateVal[displayRate];
-    if (node.items) {
-      node.items = node.items.mul(displayRateVal);
-    }
-    if (node.surplus) {
-      node.surplus = node.surplus.mul(displayRateVal);
-    }
-    if (node.wagons) {
-      node.wagons = node.wagons.mul(displayRateVal);
-    }
-    if (node.pollution) {
-      node.pollution = node.pollution.mul(displayRateVal);
-    }
-    if (node.children) {
-      for (const child of node.children) {
-        this.nodeDisplayRate(child, displayRate);
-      }
-    }
-    return node;
   }
 }

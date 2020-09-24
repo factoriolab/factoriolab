@@ -115,3 +115,10 @@ td.nowrap {
   flex-grow: 1;
   justify-content: flex-end;
 }
+
+.message {
+  color: var(--color-brand);
+  font-size: large;
+  text-align: center;
+  padding: 1rem;
+}

@@ -2,6 +2,8 @@ export * from './column';
 export * from './display-rate';
 export * from './id-type';
 export * from './item-id';
+export * from './link-value';
+export * from './list-mode';
 export * from './local-storage';
 export * from './preset';
 export * from './rate-type';

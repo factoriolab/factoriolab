@@ -1,0 +1,9 @@
+<lab-sankey
+  [sankeyData]="sankeyData$ | async"
+  (selectNode)="selected = $event"
+></lab-sankey>
+<lab-list-container
+  [mode]="ListMode.Focus"
+  [steps]="steps$ | async"
+  [selected]="selected"
+></lab-list-container>

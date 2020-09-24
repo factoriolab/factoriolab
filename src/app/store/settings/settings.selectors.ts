@@ -36,6 +36,7 @@ const sFlowRate = (state: SettingsState) => state.flowRate;
 const sExpensive = (state: SettingsState) => state.expensive;
 const sColumns = (state: SettingsState) => state.columns;
 const sSort = (state: SettingsState) => state.sort;
+const sLinkValue = (state: SettingsState) => state.linkValue;
 const sTheme = (state: SettingsState) => state.theme;
 const sShowHeader = (state: SettingsState) => state.showHeader;
 
@@ -59,6 +60,7 @@ export const getFlowRate = compose(sFlowRate, settingsState);
 export const getExpensive = compose(sExpensive, settingsState);
 export const getColumns = compose(sColumns, settingsState);
 export const getSort = compose(sSort, settingsState);
+export const getLinkValue = compose(sLinkValue, settingsState);
 export const getTheme = compose(sTheme, settingsState);
 export const getShowHeader = compose(sShowHeader, settingsState);
 
@@ -225,16 +227,6 @@ export const getNormalDataset = createSelector(
       .filter((i) => !i.module.productivity)
       .map((i) => i.id);
 
-    // Convert to rationals
-    const itemR = itemIds.reduce((e: Entities<RationalItem>, i) => {
-      e[i] = new RationalItem(itemEntities[i]);
-      return e;
-    }, {});
-    const recipeR = recipeIds.reduce((e: Entities<RationalRecipe>, r) => {
-      e[r] = new RationalRecipe(recipeEntities[r]);
-      return e;
-    }, {});
-
     // Calculate category item rows
     const categoryItemRows: Entities<string[][]> = {};
     for (const id of categoryIds) {
@@ -303,6 +295,16 @@ export const getNormalDataset = createSelector(
         recipeEntities[id] = { ...recipeEntities[id], ...{ name } };
       }
     }
+
+    // Convert to rationals
+    const itemR = itemIds.reduce((e: Entities<RationalItem>, i) => {
+      e[i] = new RationalItem(itemEntities[i]);
+      return e;
+    }, {});
+    const recipeR = recipeIds.reduce((e: Entities<RationalRecipe>, r) => {
+      e[r] = new RationalRecipe(recipeEntities[r]);
+      return e;
+    }, {});
 
     // Add missing mining recipes to productivity limitation
     recipes

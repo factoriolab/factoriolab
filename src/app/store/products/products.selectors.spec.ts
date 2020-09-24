@@ -6,7 +6,7 @@ import {
   RationalProduct,
   Sort,
 } from '~/models';
-import { RateUtility, MatrixUtility } from '~/utilities';
+import { RateUtility, MatrixUtility, FlowUtility } from '~/utilities';
 import { initialSettingsState } from '../settings';
 import * as Selectors from './products.selectors';
 
@@ -185,35 +185,6 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getNormalizedNodes', () => {
-    it('should handle empty/null values', () => {
-      const result = Selectors.getNormalizedNodes.projector(
-        [],
-        {},
-        {},
-        {},
-        null,
-        null,
-        {}
-      );
-      expect(result).toEqual({ id: 'root', children: [] } as any);
-    });
-
-    it('should calculate rates using utility method', () => {
-      spyOn(RateUtility, 'addNodesFor');
-      Selectors.getNormalizedNodes.projector(
-        [Mocks.Product1],
-        { [Mocks.Product1.id]: Rational.one },
-        {},
-        {},
-        null,
-        null,
-        {}
-      );
-      expect(RateUtility.addNodesFor).toHaveBeenCalled();
-    });
-  });
-
   describe('getNormalizedStepsWithMatrices', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getNormalizedStepsWithMatrices.projector(
@@ -277,14 +248,6 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getNormalizedNodesWithBelts', () => {
-    it('should calculate rates using utility method', () => {
-      spyOn(RateUtility, 'calculateNodeBelts');
-      Selectors.getNormalizedNodesWithBelts.projector({}, {}, {}, {});
-      expect(RateUtility.calculateNodeBelts).toHaveBeenCalled();
-    });
-  });
-
   describe('getSteps', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getSteps.projector([], null);
@@ -298,11 +261,16 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getNodes', () => {
-    it('should calculate rates using utility method', () => {
-      spyOn(RateUtility, 'nodeDisplayRate');
-      Selectors.getNodes.projector({}, null);
-      expect(RateUtility.nodeDisplayRate).toHaveBeenCalled();
+  describe('getSankey', () => {
+    it('should handle empty/null values', () => {
+      const result = Selectors.getSankey.projector([], null, null);
+      expect(result).toEqual({ nodes: [], links: [] });
+    });
+
+    it('should build sankey model using utility method', () => {
+      spyOn(FlowUtility, 'buildSankey');
+      Selectors.getSankey.projector([], null, null);
+      expect(FlowUtility.buildSankey).toHaveBeenCalled();
     });
   });
 
