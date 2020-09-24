@@ -196,26 +196,4 @@ export class RecipeUtility {
 
     return recipe;
   }
-
-  static nonCircularRecipe(recipe: RationalRecipe) {
-    if (!recipe.in || !recipe.out) {
-      return recipe;
-    }
-
-    const result = { ...recipe };
-
-    for (const outId of Object.keys(result.out)) {
-      if (result.in[outId]) {
-        if (result.in[outId].gt(result.out[outId])) {
-          result.in[outId] = result.in[outId].sub(result.out[outId]);
-          delete result.out[outId];
-        } else {
-          result.out[outId] = result.out[outId].sub(result.in[outId]);
-          delete result.in[outId];
-        }
-      }
-    }
-
-    return result;
-  }
 }

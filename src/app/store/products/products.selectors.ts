@@ -10,9 +10,8 @@ import {
   DisplayRateVal,
   RationalProduct,
   Sort,
-  SankeyData,
 } from '~/models';
-import { RateUtility, MatrixUtility, RecipeUtility } from '~/utilities';
+import { RateUtility, MatrixUtility, FlowUtility } from '~/utilities';
 import * as Items from '../items';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
@@ -190,95 +189,7 @@ export const getSankey = createSelector(
   getSteps,
   Settings.getLinkValue,
   Recipes.getAdjustedDataset,
-  (steps, linkValue, data) => {
-    const sankey: SankeyData = {
-      nodes: [],
-      links: [],
-    };
-
-    for (const step of steps) {
-      const value = RateUtility.stepLinkValue(step, linkValue);
-
-      if (step.recipeId) {
-        const recipe = RecipeUtility.nonCircularRecipe(
-          data.recipeR[step.recipeId]
-        );
-        const icon = data.iconEntities[step.recipeId];
-
-        sankey.nodes.push({
-          id: step.recipeId,
-          viewBox: `${icon.position
-            .replace(/px/g, '')
-            .replace(/-/g, '')} 64 64`,
-          href: icon.file,
-          name: recipe.name,
-          color: icon.color,
-        });
-
-        if (step.itemId === step.recipeId) {
-          if (step.parents) {
-            for (const i of Object.keys(step.parents)) {
-              sankey.links.push({
-                target: i,
-                source: step.recipeId,
-                value: RateUtility.linkValue(value, step.parents[i], linkValue),
-                name: data.itemEntities[step.itemId].name,
-                color: icon.color,
-              });
-            }
-          }
-        } else {
-          for (const outId of Object.keys(recipe.out)) {
-            const outStep = steps.find((s) => s.itemId === outId);
-            const outValue = RateUtility.stepLinkValue(outStep, linkValue);
-            sankey.links.push({
-              target: outId,
-              source: step.recipeId,
-              value: RateUtility.linkValue(outValue, Rational.one, linkValue),
-              name: data.itemEntities[outId].name,
-              color: data.iconEntities[outId].color,
-            });
-          }
-        }
-      }
-
-      if (step.itemId && step.itemId !== step.recipeId) {
-        const item = data.itemEntities[step.itemId];
-        const icon = data.iconEntities[step.itemId];
-
-        sankey.nodes.push({
-          id: step.itemId,
-          viewBox: `${icon.position
-            .replace(/px/g, '')
-            .replace(/-/g, '')} 64 64`,
-          href: icon.file,
-          name: item.name,
-          color: icon.color,
-        });
-        if (step.parents) {
-          for (const i of Object.keys(step.parents)) {
-            const lVal = RateUtility.linkValue(
-              value,
-              step.parents[i],
-              linkValue
-            );
-            const recipe = RecipeUtility.nonCircularRecipe(data.recipeR[i]);
-            if (recipe.in?.[step.itemId]) {
-              sankey.links.push({
-                target: i,
-                source: step.itemId,
-                value: lVal,
-                name: item.name,
-                color: icon.color,
-              });
-            }
-          }
-        }
-      }
-    }
-
-    return sankey;
-  }
+  (steps, linkValue, data) => FlowUtility.buildSankey(steps, linkValue, data)
 );
 
 export const getZipState = createSelector(

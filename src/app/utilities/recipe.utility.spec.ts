@@ -354,43 +354,4 @@ describe('RecipeUtility', () => {
       expect(result.out[ItemId.Coal]).toBeUndefined();
     });
   });
-
-  describe('nonCircularRecipe', () => {
-    it('should return the recipe if in or out are falsy', () => {
-      const recipe: any = { in: 'test', out: null };
-      expect(RecipeUtility.nonCircularRecipe(recipe)).toEqual(recipe);
-    });
-
-    it('should return normal recipe if no loop exists', () => {
-      expect(
-        RecipeUtility.nonCircularRecipe(
-          Mocks.AdjustedData.recipeR[RecipeId.CopperCable]
-        )
-      ).toEqual({ ...Mocks.AdjustedData.recipeR[RecipeId.CopperCable] });
-    });
-
-    it('should subtract input from output', () => {
-      const recipe: any = {
-        in: { [ItemId.Coal]: Rational.one },
-        out: { [ItemId.Coal]: Rational.two },
-      };
-      const result = RecipeUtility.nonCircularRecipe(recipe);
-      expect(result).toEqual({
-        in: {},
-        out: { [ItemId.Coal]: Rational.one },
-      } as any);
-    });
-
-    it('should subtract output from input', () => {
-      const recipe: any = {
-        in: { [ItemId.Coal]: Rational.two },
-        out: { [ItemId.Coal]: Rational.one },
-      };
-      const result = RecipeUtility.nonCircularRecipe(recipe);
-      expect(result).toEqual({
-        in: { [ItemId.Coal]: Rational.one },
-        out: {},
-      } as any);
-    });
-  });
 });

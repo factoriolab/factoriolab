@@ -9,8 +9,6 @@ import {
   WAGON_FLUID,
   WAGON_STACKS,
   ItemId,
-  LinkValue,
-  MIN_LINK_VALUE,
 } from '~/models';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
@@ -178,39 +176,5 @@ export class RateUtility {
       }
     }
     return steps;
-  }
-
-  static stepLinkValue(step: Step, linkValue: LinkValue) {
-    if (linkValue === LinkValue.None || linkValue === LinkValue.Percent) {
-      return Rational.one;
-    }
-
-    if (linkValue === LinkValue.Factories && !step.factories) {
-      // Step has no factories associated, return 0
-      return Rational.zero;
-    }
-
-    switch (linkValue) {
-      case LinkValue.Belts:
-        return step.belts;
-      case LinkValue.Wagons:
-        return step.wagons;
-      case LinkValue.Factories:
-        return step.factories;
-      default:
-        return (step.items || Rational.zero).add(step.surplus || Rational.zero);
-    }
-  }
-
-  static linkValue(value: Rational, percent: Rational, linkValue: LinkValue) {
-    if (linkValue === LinkValue.None) {
-      return 1;
-    }
-
-    if (linkValue === LinkValue.Percent) {
-      return percent.toNumber() || MIN_LINK_VALUE;
-    }
-
-    return value.mul(percent).toNumber() || MIN_LINK_VALUE;
   }
 }
