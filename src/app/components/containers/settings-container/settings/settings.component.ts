@@ -123,6 +123,7 @@ export class SettingsComponent implements OnInit {
       Object.keys(this.settings.states).find(
         (s) => this.settings.states[s] === this.hash
       ) || '';
+    this.router.events.subscribe((e) => this.ref.detectChanges());
   }
 
   /** Forces change detector to update on scroll */
