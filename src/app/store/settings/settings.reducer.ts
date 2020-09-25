@@ -7,12 +7,14 @@ import {
   Preset,
   Sort,
   LinkValue,
+  Entities,
 } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { AppLoadAction, AppActionType } from '../app.actions';
 import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
+  states: Entities<string>;
   preset: Preset;
   baseId: string;
   modIds: string[];
@@ -44,6 +46,7 @@ export interface SettingsState {
 }
 
 export const initialSettingsState: SettingsState = {
+  states: {},
   preset: Preset.Minimum,
   baseId: '1.0',
   modIds: null,
@@ -84,9 +87,22 @@ export function settingsReducer(
 ): SettingsState {
   switch (action.type) {
     case AppActionType.LOAD: {
+      const initial = getInitial(state);
       return action.payload.settingsState
-        ? { ...state, ...action.payload.settingsState }
-        : state;
+        ? { ...initial, ...action.payload.settingsState }
+        : initial;
+    }
+    case SettingsActionType.SAVE_STATE: {
+      const states = {
+        ...state.states,
+        ...{ [action.payload.id]: action.payload.value },
+      };
+      return { ...state, ...{ states } };
+    }
+    case SettingsActionType.DELETE_STATE: {
+      const states = { ...state.states };
+      delete states[action.payload];
+      return { ...state, ...{ states } };
     }
     case SettingsActionType.SET_PRESET: {
       return { ...state, ...{ preset: action.payload } };
@@ -294,17 +310,8 @@ export function loadSettings() {
     if (lsSettings) {
       const stored = JSON.parse(lsSettings) as SettingsState;
       if (location.hash) {
-        // Only keep columns, theme, and showHeader
-        return {
-          ...initialSettingsState,
-          ...{
-            columns: stored.columns,
-            sort: stored.sort,
-            linkValue: stored.linkValue,
-            theme: stored.theme,
-            showHeader: stored.showHeader,
-          },
-        };
+        // Only keep user preferences
+        return getInitial(stored);
       } else {
         // Load full saved settings
         return { ...initialSettingsState, ...stored };
@@ -320,4 +327,17 @@ export function loadSettings() {
 
   // Use initial settings
   return initialSettingsState;
+}
+
+/** Keep user preferences and reset all other fields */
+export function getInitial(state: SettingsState) {
+  return {
+    ...initialSettingsState,
+    states: state.states,
+    columns: state.columns,
+    sort: state.sort,
+    linkValue: state.linkValue,
+    theme: state.theme,
+    showHeader: state.showHeader,
+  };
 }

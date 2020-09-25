@@ -3,6 +3,8 @@
   [base]="base$ | async"
   [mods]="mods$ | async"
   [settings]="settings$ | async"
+  (saveState)="saveState($event)"
+  (deleteState)="deleteState($event)"
   (setPreset)="setPreset($event)"
   (setBase)="setBase($event)"
   (enableMod)="enableMod($event)"

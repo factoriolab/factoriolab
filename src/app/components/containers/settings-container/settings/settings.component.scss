@@ -49,6 +49,21 @@ lab-icon {
   > * + * {
     margin-left: 0.5rem;
   }
+
+  .grow {
+    flex-grow: 1;
+  }
+}
+
+.states {
+  display: flex;
+  align-items: center;
+  min-height: 2rem;
+
+  :first-child {
+    margin-right: 0.5rem;
+    flex-grow: 1;
+  }
 }
 
 a {
