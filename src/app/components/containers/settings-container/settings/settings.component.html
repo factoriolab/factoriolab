@@ -1,12 +1,66 @@
 <div class="flex tween">
-  <div class="label">Preset</div>
+  <div class="label">Saved States</div>
   <i
     class="trash clickable material-icons"
-    title="Reset settings"
-    (click)="resetSettings.emit()"
+    title="Delete all settings"
+    (click)="clickResetSettings()"
     >delete</i
   >
 </div>
+<div class="states" *ngIf="!editState">
+  <select [ngModel]="state" (change)="setState($event)">
+    <option
+      *ngFor="let state of settings.states | keyvalue"
+      [value]="state.key"
+      [label]="state.key"
+    ></option>
+    <option
+      label="No state selected"
+      value=""
+      selected
+      disabled
+      hidden
+    ></option>
+  </select>
+  <i
+    *ngIf="hash"
+    class="clickable material-icons"
+    title="Name and save this state"
+    (click)="toggleEditState($event)"
+    >edit</i
+  >
+  <i
+    *ngIf="state && hash"
+    class="clickable material-icons"
+    title="Overwrite this saved state"
+    (click)="saveState.emit({ id: state, value: hash })"
+    >save</i
+  >
+  <i
+    *ngIf="state"
+    class="clickable material-icons"
+    title="Delete this saved state"
+    (click)="clickDeleteState($event)"
+    >delete</i
+  >
+</div>
+<div class="states" *ngIf="editState">
+  <input type="text" placeholder="Enter a name..." [(ngModel)]="state" />
+  <i
+    *ngIf="state && hash"
+    class="clickable material-icons"
+    title="Save this state"
+    (click)="clickSaveState($event)"
+    >save</i
+  >
+  <i
+    class="clickable material-icons"
+    title="Cancel"
+    (click)="toggleEditState($event)"
+    >close</i
+  >
+</div>
+<div class="label">Preset</div>
 <div class="field">
   <select
     id="settings-preset"

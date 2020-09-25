@@ -17,6 +17,7 @@ import {
   initialSettingsState,
   loadSettings,
   schema,
+  getInitial,
 } from './settings.reducer';
 
 describe('Settings Reducer', () => {
@@ -37,6 +38,30 @@ describe('Settings Reducer', () => {
         } as any)
       );
       expect(result.displayRate).toEqual(DisplayRate.PerHour);
+    });
+  });
+
+  describe('SAVE_STATE', () => {
+    it('should add the state to the saved states', () => {
+      const id = 'id';
+      const value = 'value';
+      const result = settingsReducer(
+        undefined,
+        new Actions.SaveStateAction({ id, value })
+      );
+      expect(result.states[id]).toEqual(value);
+    });
+  });
+
+  describe('DELETE_STATE', () => {
+    it('should remove the state from the saved states', () => {
+      const id = 'id';
+      const value = 'value';
+      const result = settingsReducer(
+        { states: { [id]: value } } as any,
+        new Actions.DeleteStateAction(id)
+      );
+      expect(result.states).toEqual({});
     });
   });
 
@@ -408,16 +433,17 @@ describe('Settings Reducer', () => {
   describe('loadSettings', () => {
     beforeEach(() => {
       localStorage.clear();
-      location.hash = '';
+      history.replaceState(null, null, '');
     });
 
     afterEach(() => {
       localStorage.clear();
-      location.hash = '';
+      history.replaceState(null, null, '');
     });
 
-    it('should only preserve columns theme and showHeader if hash is present', () => {
+    it('should only keep user preferences if hash is present', () => {
       const preserved = {
+        states: {},
         columns: [],
         sort: Sort.BreadthFirst,
         linkValue: LinkValue.Belts,
@@ -456,6 +482,25 @@ describe('Settings Reducer', () => {
 
     it('should use initial settings if no stored settings', () => {
       expect(loadSettings()).toEqual(initialSettingsState);
+    });
+  });
+
+  describe('getInitial', () => {
+    it('should apply only user preferences to the initial state', () => {
+      const result = getInitial({
+        preset: Preset.Beacon12,
+        states: {},
+        columns: [],
+        sort: Sort.BreadthFirst,
+        linkValue: LinkValue.Belts,
+        theme: Theme.LightMode,
+        showHeader: false,
+      } as any);
+      expect(result.preset).toEqual(initialSettingsState.preset);
+      expect(result.sort).toEqual(Sort.BreadthFirst);
+      expect(result.linkValue).toEqual(LinkValue.Belts);
+      expect(result.theme).toEqual(Theme.LightMode);
+      expect(result.showHeader).toBeFalse();
     });
   });
 });

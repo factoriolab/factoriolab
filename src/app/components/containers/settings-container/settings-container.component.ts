@@ -22,6 +22,7 @@ import {
   Preset,
   Sort,
   LinkValue,
+  IdPayload,
 } from '~/models';
 import { State } from '~/store';
 import { getBaseSets } from '~/store/datasets';
@@ -71,6 +72,14 @@ export class SettingsContainerComponent implements OnInit {
     ) {
       this.cancel.emit();
     }
+  }
+
+  saveState(value: IdPayload) {
+    this.store.dispatch(new Settings.SaveStateAction(value));
+  }
+
+  deleteState(value: string) {
+    this.store.dispatch(new Settings.DeleteStateAction(value));
   }
 
   setPreset(value: Preset) {
