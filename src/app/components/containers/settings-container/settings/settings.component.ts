@@ -6,7 +6,9 @@ import {
   ChangeDetectionStrategy,
   HostListener,
   ChangeDetectorRef,
+  OnInit,
 } from '@angular/core';
+import { Router } from '@angular/router';
 
 import {
   DisplayRate,
@@ -21,6 +23,8 @@ import {
   ItemId,
   Sort,
   LinkValue,
+  IdPayload,
+  RESET_WARNING,
 } from '~/models';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
@@ -42,7 +46,7 @@ enum OpenSelect {
   styleUrls: ['./settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SettingsComponent {
+export class SettingsComponent implements OnInit {
   _data: Dataset;
   get data() {
     return this._data;
@@ -57,6 +61,8 @@ export class SettingsComponent {
   @Input() mods: ModInfo[];
   @Input() settings: SettingsState;
 
+  @Output() saveState = new EventEmitter<IdPayload>();
+  @Output() deleteState = new EventEmitter<string>();
   @Output() setPreset = new EventEmitter<Preset>();
   @Output() setBase = new EventEmitter<string>();
   @Output() enableMod = new EventEmitter<DefaultTogglePayload>();
@@ -103,8 +109,21 @@ export class SettingsComponent {
 
   initial = initialSettingsState;
   sortedFuels: string[] = [];
+  state = '';
+  editState = false;
 
-  constructor(private ref: ChangeDetectorRef) {}
+  get hash() {
+    return location.hash.substr(1);
+  }
+
+  constructor(private ref: ChangeDetectorRef, private router: Router) {}
+
+  ngOnInit() {
+    this.state =
+      Object.keys(this.settings.states).find(
+        (s) => this.settings.states[s] === this.hash
+      ) || '';
+  }
 
   /** Forces change detector to update on scroll */
   @HostListener('scroll', ['$event']) scroll() {
@@ -129,6 +148,38 @@ export class SettingsComponent {
   emitString(emitter: EventEmitter<string>, event: any) {
     if (event.target.value) {
       emitter.emit(event.target.value);
+    }
+  }
+
+  setState(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const id = target.value;
+    if (id && this.settings.states[id]) {
+      this.state = id;
+      this.router.navigate([], { fragment: this.settings.states[id] });
+    }
+  }
+
+  clickSaveState(event: Event) {
+    this.saveState.emit({ id: this.state, value: this.hash });
+    this.editState = false;
+    event.stopPropagation();
+  }
+
+  clickDeleteState(event: Event) {
+    this.deleteState.emit(this.state);
+    this.state = '';
+    event.stopPropagation();
+  }
+
+  toggleEditState(event: Event) {
+    this.editState = !this.editState;
+    event.stopPropagation();
+  }
+
+  clickResetSettings() {
+    if (confirm(RESET_WARNING)) {
+      this.resetSettings.emit();
     }
   }
 }

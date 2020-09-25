@@ -37,7 +37,7 @@ describe('DatasetsEffects', () => {
   });
 
   afterEach(() => {
-    location.hash = '';
+    history.replaceState(null, null, '');
   });
 
   describe('loadMod$', () => {

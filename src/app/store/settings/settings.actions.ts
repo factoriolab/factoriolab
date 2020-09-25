@@ -9,9 +9,12 @@ import {
   Preset,
   Sort,
   LinkValue,
+  IdPayload,
 } from '~/models';
 
 export const enum SettingsActionType {
+  SAVE_STATE = '[Settings] Save State',
+  DELETE_STATE = '[Settings] Delete State',
   SET_PRESET = '[Settings] Set Preset',
   SET_BASE = '[Settings] Set Base',
   ENABLE_MOD = '[Settings] Enable Mod',
@@ -47,6 +50,16 @@ export const enum SettingsActionType {
   SHOW_HEADER = '[Settings] Show Header',
   HIDE_HEADER = '[Settings] Hide Header',
   RESET = '[Settings] Reset',
+}
+
+export class SaveStateAction implements Action {
+  readonly type = SettingsActionType.SAVE_STATE;
+  constructor(public payload: IdPayload) {}
+}
+
+export class DeleteStateAction implements Action {
+  readonly type = SettingsActionType.DELETE_STATE;
+  constructor(public payload: string) {}
 }
 
 export class SetPresetAction implements Action {
@@ -222,6 +235,8 @@ export class ResetAction implements Action {
 }
 
 export type SettingsAction =
+  | SaveStateAction
+  | DeleteStateAction
   | SetPresetAction
   | SetBaseAction
   | EnableModAction

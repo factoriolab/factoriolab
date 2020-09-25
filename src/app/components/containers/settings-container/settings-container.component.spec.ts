@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
 import { TestUtility, ItemId, RecipeId } from 'src/tests';
@@ -24,7 +25,11 @@ describe('SettingsContainerComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, StoreModule.forRoot(reducers, { metaReducers })],
+      imports: [
+        FormsModule,
+        RouterTestingModule,
+        StoreModule.forRoot(reducers, { metaReducers }),
+      ],
       declarations: [
         IconComponent,
         PrecisionComponent,
@@ -78,6 +83,24 @@ describe('SettingsContainerComponent', () => {
     component.opening = false;
     TestUtility.clickSelector(fixture, 'lab-settings');
     expect(component.cancel.emit).not.toHaveBeenCalled();
+  });
+
+  it('should save a state', () => {
+    spyOn(store, 'dispatch');
+    const value = { id: 'test', value: 'hash' };
+    component.child.saveState.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SaveStateAction(value)
+    );
+  });
+
+  it('should delete a state', () => {
+    spyOn(store, 'dispatch');
+    const value = 'id';
+    component.child.deleteState.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.DeleteStateAction(value)
+    );
   });
 
   it('should set the preset', () => {
