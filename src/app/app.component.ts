@@ -10,6 +10,7 @@ import { RouterService } from './services/router.service';
 import { State } from './store';
 import { getZipState } from './store/products';
 import * as Settings from './store/settings';
+import { SimplexUtility } from './utilities'; // TODO: Remove this temporary test
 
 @Component({
   selector: 'lab-root',
@@ -54,6 +55,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    SimplexUtility.testPivot(); // TODO: Remove this temporary test
     this.data$ = this.store.select(Settings.getDataset);
     this.showHeader$ = this.store.select(Settings.getShowHeader);
     this.store.select(Settings.getTheme).subscribe((s) => {
