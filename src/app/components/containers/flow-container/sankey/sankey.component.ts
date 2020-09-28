@@ -49,6 +49,9 @@ export class SankeyComponent implements OnInit {
 
     this.width = this.element.getBoundingClientRect().width;
     this.height = Math.min(window.innerHeight * 0.75, this.width / 2);
+    if (this.svg) {
+      this.rebuildChart();
+    }
   }
 
   handleResize(entry: ResizeObserverEntry) {
