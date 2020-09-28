@@ -46,6 +46,9 @@ export class SankeyComponent implements OnInit {
 
   ngOnInit(): void {
     this.resize$.subscribe((entry) => this.handleResize(entry));
+
+    this.width = this.element.getBoundingClientRect().width;
+    this.height = Math.min(window.innerHeight * 0.75, this.width / 2);
   }
 
   handleResize(entry: ResizeObserverEntry) {
@@ -72,8 +75,7 @@ export class SankeyComponent implements OnInit {
     this.svg = select(this.element)
       .append('svg')
       .attr('preserveAspectRatio', 'xMinYMin meet')
-      .attr('viewBox', `0 0 ${this.width} ${this.height}`)
-      .style('max-height', '75vh');
+      .attr('viewBox', `0 0 ${this.width} ${this.height}`);
 
     const skLayout = sankey<Node, Link>()
       .nodeId((d) => d.id)
@@ -94,6 +96,7 @@ export class SankeyComponent implements OnInit {
       .append('g')
       .attr('fill', 'none')
       .attr('stroke-opacity', 0.5)
+      .style('will-change', 'opacity')
       .selectAll('g')
       .data(skGraph.links)
       .join('g')
