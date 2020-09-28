@@ -43,6 +43,27 @@ describe('SankeyComponent', () => {
     });
   });
 
+  describe('ngOnInit', () => {
+    it('should set width and height', () => {
+      expect(component.child.width).not.toEqual(800);
+      expect(component.child.height).not.toEqual(400);
+    });
+
+    it('should rebuild the svg if it has already been created', () => {
+      spyOn(component.child, 'rebuildChart');
+      component.child.svg = true as any;
+      component.child.ngOnInit();
+      expect(component.child.rebuildChart).toHaveBeenCalled();
+    });
+
+    it('should not rebuild the svg if it has not been created', () => {
+      spyOn(component.child, 'rebuildChart');
+      component.child.svg = false as any;
+      component.child.ngOnInit();
+      expect(component.child.rebuildChart).not.toHaveBeenCalled();
+    });
+  });
+
   describe('handleResize', () => {
     it('should ignore zero values', () => {
       spyOn(component.child, 'rebuildChart');
