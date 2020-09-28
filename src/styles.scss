@@ -148,6 +148,9 @@ g {
 }
 
 // Sankey SVG styles
+svg {
+  width: 100vw;
+}
 
 text {
   fill: var(--color-font);
