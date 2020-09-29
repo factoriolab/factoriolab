@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { Mocks, TestUtility, ElementId } from 'src/tests';
@@ -85,6 +86,7 @@ class TestSettingsComponent {
 describe('SettingsComponent', () => {
   let component: TestSettingsComponent;
   let fixture: ComponentFixture<TestSettingsComponent>;
+  let router: Router;
   const id = 'id';
   const value = 'value';
 
@@ -103,6 +105,7 @@ describe('SettingsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TestSettingsComponent);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
     fixture.detectChanges();
     history.replaceState(null, null, '');
   });
@@ -145,6 +148,16 @@ describe('SettingsComponent', () => {
       fixture.detectChanges();
       component.child.ngOnInit();
       expect(component.child.state).toEqual(id);
+    });
+
+    it('should set up subscription to router', () => {
+      const ref = 'ref';
+      spyOn(component.child[ref], 'detectChanges');
+      fixture.ngZone.run(() => {
+        router.navigate([]);
+      });
+      fixture.detectChanges();
+      expect(component.child[ref].detectChanges).toHaveBeenCalled();
     });
   });
 
@@ -209,16 +222,14 @@ describe('SettingsComponent', () => {
 
   describe('setState', () => {
     it('should ignore falsy values', () => {
-      const router = 'router';
-      spyOn(component.child[router], 'navigate');
+      spyOn(router, 'navigate');
       const event: any = { target: { value: null } };
       component.child.setState(event);
-      expect(component.child[router].navigate).not.toHaveBeenCalled();
+      expect(router.navigate).not.toHaveBeenCalled();
     });
 
     it('should call the router to navigate', () => {
-      const router = 'router';
-      spyOn(component.child[router], 'navigate');
+      spyOn(router, 'navigate');
       component.settings = {
         ...Mocks.SettingsState1,
         ...{ states: { [id]: value } },
@@ -226,7 +237,7 @@ describe('SettingsComponent', () => {
       fixture.detectChanges();
       const event: any = { target: { value: id } };
       component.child.setState(event);
-      expect(component.child[router].navigate).toHaveBeenCalledWith([], {
+      expect(router.navigate).toHaveBeenCalledWith([], {
         fragment: value,
       });
     });
