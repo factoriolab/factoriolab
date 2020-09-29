@@ -168,7 +168,11 @@ export function settingsReducer(
       return {
         ...state,
         ...{
-          factoryRank: StoreUtility.tryAddId(state.factoryRank, action.payload),
+          factoryRank: StoreUtility.tryAddId(
+            state.factoryRank,
+            action.payload,
+            true
+          ),
         },
       };
     }
@@ -178,7 +182,8 @@ export function settingsReducer(
         ...{
           factoryRank: StoreUtility.tryRemoveId(
             state.factoryRank,
-            action.payload
+            action.payload,
+            true
           ),
         },
       };
@@ -187,7 +192,11 @@ export function settingsReducer(
       return {
         ...state,
         ...{
-          moduleRank: StoreUtility.tryAddId(state.moduleRank, action.payload),
+          moduleRank: StoreUtility.tryAddId(
+            state.moduleRank,
+            action.payload,
+            true
+          ),
         },
       };
     }
@@ -197,7 +206,8 @@ export function settingsReducer(
         ...{
           moduleRank: StoreUtility.tryRemoveId(
             state.moduleRank,
-            action.payload
+            action.payload,
+            true
           ),
         },
       };

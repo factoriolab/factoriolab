@@ -11,7 +11,7 @@ import {
   RationalProduct,
   Sort,
 } from '~/models';
-import { RateUtility, MatrixUtility, FlowUtility } from '~/utilities';
+import { RateUtility, SimplexUtility, FlowUtility } from '~/utilities';
 import * as Items from '../items';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
@@ -143,17 +143,13 @@ export const getNormalizedSteps = createSelector(
 export const getNormalizedStepsWithMatrices = createSelector(
   getNormalizedSteps,
   Items.getItemSettings,
-  Recipes.getRecipeSettings,
   Recipes.getAdjustedDataset,
   Settings.getDisabledRecipes,
-  Settings.getFuel,
-  (steps, itemSettings, recipeSettings, data, disabledRecipes, fuel) =>
-    MatrixUtility.solveMatricesFor(
+  (steps, itemSettings, data, disabledRecipes) =>
+    SimplexUtility.solve(
       RateUtility.copy(steps),
       itemSettings,
-      recipeSettings,
       disabledRecipes,
-      fuel,
       data
     )
 );

@@ -9,8 +9,12 @@ export class StoreUtility {
     return a.length === b.length && a.every((v, i) => v === b[i]);
   }
 
-  static arrayEquals<T extends number | string>(a: T[], b: T[]) {
-    return this.rankEquals([...a].sort(), [...b].sort());
+  static arrayEquals<T extends number | string>(a: T[], b: T[], rank = false) {
+    if (rank) {
+      return this.rankEquals(a, b);
+    } else {
+      return this.rankEquals([...a].sort(), [...b].sort());
+    }
   }
 
   static payloadEquals<T>(payload: DefaultIdPayload<T>) {
@@ -79,21 +83,29 @@ export class StoreUtility {
     return payload.value === payload.default ? null : payload.value;
   }
 
-  static tryAddId(state: string[], payload: DefaultTogglePayload) {
+  static tryAddId(
+    state: string[],
+    payload: DefaultTogglePayload,
+    rank = false
+  ) {
     if (state == null) {
       return [...payload.default, payload.id];
     }
     const result = [...state, payload.id];
-    const equal = this.arrayEquals(result, payload.default);
+    const equal = this.arrayEquals(result, payload.default, rank);
     return equal ? null : result;
   }
 
-  static tryRemoveId(state: string[], payload: DefaultTogglePayload) {
+  static tryRemoveId(
+    state: string[],
+    payload: DefaultTogglePayload,
+    rank = false
+  ) {
     if (state == null) {
       return payload.default.filter((i) => i !== payload.id);
     }
     const result = state.filter((i) => i !== payload.id);
-    const equal = this.arrayEquals(result, payload.default);
+    const equal = this.arrayEquals(result, payload.default, rank);
     return equal ? null : result;
   }
 }
