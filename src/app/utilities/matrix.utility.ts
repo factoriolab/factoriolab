@@ -17,6 +17,7 @@ import {
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
 import { RateUtility } from './rate.utility';
+import { SimplexUtility } from './simplex.utility';
 
 const COST_WATER = Rational.hundred;
 const COST_INPUT = new Rational(BigInt(10000));
@@ -38,6 +39,7 @@ export class MatrixUtility {
       fuel,
       data
     );
+    SimplexUtility.solve(steps, disabledRecipes, itemSettings, data);
     if (matrix.simpleStepsOnly) {
       return steps;
     }
