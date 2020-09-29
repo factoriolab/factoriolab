@@ -14,6 +14,10 @@ label {
   user-select: none;
 }
 
+.x-small {
+  font-size: x-small;
+}
+
 .option {
   > * {
     cursor: pointer;
@@ -84,4 +88,10 @@ input[type='radio'] + * {
 
 .tween {
   justify-content: space-between;
+}
+
+table.center {
+  tr > :first-child {
+    text-align: right;
+  }
 }

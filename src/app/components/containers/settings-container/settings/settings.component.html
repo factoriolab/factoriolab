@@ -1,7 +1,7 @@
 <div class="flex tween">
   <div class="label">Saved States</div>
   <i
-    class="trash clickable material-icons"
+    class="clickable material-icons"
     title="Delete all settings"
     (click)="clickResetSettings()"
     >delete</i
@@ -90,7 +90,15 @@
     ></option>
   </select>
 </div>
-<div class="label">Recipes</div>
+<div class="flex tween">
+  <div class="label">Recipes</div>
+  <a
+    class="x-small"
+    href="https://github.com/factoriolab/factorio-lab/issues/new?assignees=&labels=mod+support&template=mod-request.md&title="
+    target="_blank"
+    >Request a mod</a
+  >
+</div>
 <div class="field">
   <div>Base:</div>
   <select
@@ -118,12 +126,6 @@
     (enableId)="enableMod.emit({ id: $event, default: data.defaults.modIds })"
     (disableId)="disableMod.emit({ id: $event, default: data.defaults.modIds })"
   ></lab-multiselect>
-  <a
-    style="font-size: x-small"
-    href="https://github.com/factoriolab/factorio-lab/issues/new?assignees=&labels=mod+support&template=mod-request.md&title="
-    target="_blank"
-    >Request a mod</a
-  >
 </div>
 <div class="field">
   <button #btnRecipes (click)="openSelect = OpenSelect.DisabledRecipes">
@@ -223,7 +225,7 @@
     ></lab-icon>
   </div>
 </div>
-<div *ngIf="data.beaconIds.length" class="field">
+<div class="field">
   <lab-icon
     *ngIf="data.beaconIds.length === 1"
     class="clickable-size"
@@ -499,43 +501,51 @@
   </select>
 </div>
 <div class="label">User Preferences</div>
-<div class="field">
-  <div>Sort:</div>
-  <select
-    id="settings-sort-select"
-    title="Set sort option"
-    [ngModel]="settings.sort"
-    (change)="emitNumber(setSort, $event)"
-  >
-    <option label="Depth First" [value]="Sort.DepthFirst"></option>
-    <option label="Breadth First" [value]="Sort.BreadthFirst"></option>
-  </select>
-</div>
-<div class="field">
-  <div>Flow Link Value:</div>
-  <select
-    id="settings-link-value"
-    title="Set flow diagram link weight"
-    [ngModel]="settings.linkValue"
-    (change)="emitNumber(setLinkValue, $event)"
-  >
-    <option label="None" [value]="LinkValue.None"></option>
-    <option label="Percent" [value]="LinkValue.Percent"></option>
-    <option label="Items" [value]="LinkValue.Items"></option>
-    <option label="Belts" [value]="LinkValue.Belts"></option>
-    <option label="Wagons" [value]="LinkValue.Wagons"></option>
-    <option label="Factories" [value]="LinkValue.Factories"></option>
-  </select>
-</div>
-<div class="field">
-  <div>Theme:</div>
-  <select
-    id="settings-theme-select"
-    title="Choose color theme"
-    [ngModel]="settings.theme"
-    (change)="emitString(setTheme, $event)"
-  >
-    <option label="Dark Mode" [value]="Theme.DarkMode"></option>
-    <option label="Light Mode" [value]="Theme.LightMode"></option>
-  </select>
-</div>
+<table class="center">
+  <tr>
+    <td>Sort:</td>
+    <td>
+      <select
+        id="settings-sort-select"
+        title="Set sort option"
+        [ngModel]="settings.sort"
+        (change)="emitNumber(setSort, $event)"
+      >
+        <option label="Depth First" [value]="Sort.DepthFirst"></option>
+        <option label="Breadth First" [value]="Sort.BreadthFirst"></option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Flow Link Value:</td>
+    <td>
+      <select
+        id="settings-link-value"
+        title="Set flow diagram link weight"
+        [ngModel]="settings.linkValue"
+        (change)="emitNumber(setLinkValue, $event)"
+      >
+        <option label="None" [value]="LinkValue.None"></option>
+        <option label="Percent" [value]="LinkValue.Percent"></option>
+        <option label="Items" [value]="LinkValue.Items"></option>
+        <option label="Belts" [value]="LinkValue.Belts"></option>
+        <option label="Wagons" [value]="LinkValue.Wagons"></option>
+        <option label="Factories" [value]="LinkValue.Factories"></option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Theme:</td>
+    <td>
+      <select
+        id="settings-theme-select"
+        title="Choose color theme"
+        [ngModel]="settings.theme"
+        (change)="emitString(setTheme, $event)"
+      >
+        <option label="Dark Mode" [value]="Theme.DarkMode"></option>
+        <option label="Light Mode" [value]="Theme.LightMode"></option>
+      </select>
+    </td>
+  </tr>
+</table>
