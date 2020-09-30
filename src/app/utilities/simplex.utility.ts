@@ -186,11 +186,13 @@ export class SimplexUtility {
   //#region Simplex
   /** Convert state to canonical tableau, solve using simplex, and parse solution */
   static getSolution(state: MatrixState) {
+    console.time('simplex');
     // Convert state to canonical tableau
     const A = this.canonical(state);
 
     // Solve tableau using simplex method
     const result = this.simplex(A);
+    console.timeEnd('simplex');
 
     if (result) {
       // Parse solution into usable state
@@ -199,6 +201,14 @@ export class SimplexUtility {
       // No solution found
       return null;
     }
+  }
+
+  static testRevised(state: MatrixState) {
+    console.time('revised');
+    // Convert state to simplex matrices
+    const [cn, An, b] = this.canonical2(state);
+    this.simplex2(cn, An, b);
+    console.timeEnd('revised');
   }
 
   /** Convert state into canonical tableau */
@@ -254,6 +264,61 @@ export class SimplexUtility {
     return A;
   }
 
+  static canonical2(
+    state: MatrixState
+  ): [Rational[], Rational[][], Rational[]] {
+    const recipes = Object.keys(state.recipes).map((r) => state.recipes[r]);
+
+    // Build objective matric (c)
+    const cn: Rational[] = [];
+    for (const itemId of Object.keys(state.items)) {
+      // Add item columns
+      cn.push(state.items[itemId].inverse());
+    }
+    // Add recipe columns
+    const zeros = new Array(recipes.length).fill(Rational.zero);
+    cn.push(...zeros);
+
+    // Build recipe matrix
+    const An: Rational[][] = [];
+    for (const recipe of recipes) {
+      const R: Rational[] = [];
+      for (const itemId of Object.keys(state.items)) {
+        // Add item columns
+        let val = Rational.zero;
+        if (recipe.in?.[itemId]) {
+          val = val.sub(recipe.in[itemId]);
+        }
+        if (recipe.out[itemId]) {
+          val = val.add(recipe.out[itemId]);
+        }
+        R.push(val);
+      }
+      for (const otherId of Object.keys(state.recipes)) {
+        // Add recipe columns
+        R.push(recipe.id === otherId ? Rational.one : Rational.zero);
+      }
+      An.push(R);
+    }
+
+    // Build basis matrix
+    const b: Rational[] = [];
+    // Build recipe rows
+    for (const recipe of recipes) {
+      if (recipe.id == null) {
+        b.push(COST_MANUAL);
+      } else if (recipe.id === ItemId.Water) {
+        b.push(COST_WATER);
+      } else if (recipe.mining) {
+        b.push(COST_MINED);
+      } else {
+        b.push(COST_RECIPE);
+      }
+    }
+
+    return [cn, An, b];
+  }
+
   /** Solve the canonical tableau using the simplex method */
   static simplex(A: Rational[][]) {
     while (true) {
@@ -272,6 +337,26 @@ export class SimplexUtility {
       if (!this.pivotCol(A, c)) {
         return false;
       }
+    }
+  }
+
+  /** Solve the canonical tableau using the simplex method */
+  static simplex2(cn: Rational[], An: Rational[][], b: Rational[]) {
+    while (true) {
+      let q: number = null;
+      for (let i = 0; i < cn.length - 1; i++) {
+        if (q === null || cn[i].lt(cn[i])) {
+          q = i;
+        }
+      }
+
+      if (!cn[q].lt(Rational.zero)) {
+        return true;
+      }
+
+      // if (!this.pivotCol2(cn, An, b, q)) {
+      return false;
+      // }
     }
   }
 
@@ -495,4 +580,31 @@ export class SimplexUtility {
     }
   }
   //#endregion
+}
+
+class RevisedSimplex {
+  An: Rational[][];
+  B: Rational[][];
+  b: Rational[];
+  cn: Rational[];
+  cb: Rational[];
+
+  constructor(cn: Rational[], An: Rational[][], b: Rational[]) {
+    this.An = An;
+    this.B = this.eye(An.length);
+    this.b = b;
+    this.cn = cn;
+    this.cb = new Array(An.length).fill(Rational.zero);
+  }
+
+  eye(n: number) {
+    const I: Rational[][] = [];
+    for (let i = 0; i < n; i++) {
+      I.push([]);
+      for (let j = 0; j < n; j++) {
+        I[i].push(i === j ? Rational.one : Rational.zero);
+      }
+    }
+    return I;
+  }
 }

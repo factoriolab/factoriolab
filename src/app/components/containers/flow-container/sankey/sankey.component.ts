@@ -7,7 +7,13 @@ import {
   Output,
 } from '@angular/core';
 import { ResizeObserverEntry } from '@juggle/resize-observer';
-import { sankey, SankeyNode, sankeyLinkHorizontal } from 'd3-sankey';
+import {
+  SankeyNode,
+  sankeyLinkHorizontal,
+  SankeyLayout,
+  SankeyGraph,
+} from 'd3-sankey';
+import { sankeyCircular } from 'd3-sankey-circular';
 import { select, Selection } from 'd3-selection';
 import {
   NgResizeObserver,
@@ -80,7 +86,11 @@ export class SankeyComponent implements OnInit {
       .attr('preserveAspectRatio', 'xMinYMin meet')
       .attr('viewBox', `0 0 ${this.width} ${this.height}`);
 
-    const skLayout = sankey<Node, Link>()
+    const skLayout: SankeyLayout<
+      SankeyGraph<Node, Link>,
+      Node,
+      Link
+    > = sankeyCircular<Node, Link>()
       .nodeId((d) => d.id)
       .nodeWidth(32)
       .nodePadding(10)
