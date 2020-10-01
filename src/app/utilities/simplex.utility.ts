@@ -9,7 +9,7 @@ import {
 } from '~/models';
 import { RateUtility } from './rate.utility';
 
-interface MatrixState {
+export interface MatrixState {
   /** Recipes used in the matrix */
   recipes: Entities<RationalRecipe>;
   /** Items used in the matrix */
@@ -21,7 +21,7 @@ interface MatrixState {
   data: Dataset;
 }
 
-interface MatrixSolution {
+export interface MatrixSolution {
   /** Surplus items, may be empty */
   surplus: Entities<Rational>;
   /** Input items (no recipe), may be empty */
@@ -31,13 +31,13 @@ interface MatrixSolution {
 }
 
 /** Cost of a standard recipe */
-const COST_RECIPE = Rational.one;
+export const COST_RECIPE = Rational.one;
 /** Cost of water recipe */
-const COST_WATER = Rational.from(100);
+export const COST_WATER = Rational.from(100);
 /** Cost of mined resources */
-const COST_MINED = Rational.from(10000);
+export const COST_MINED = Rational.from(10000);
 /** Cost of resouces with no recipe */
-const COST_MANUAL = Rational.from(1000000);
+export const COST_MANUAL = Rational.from(1000000);
 
 export class SimplexUtility {
   /** Solve all remaining steps using simplex method, if necessary */
@@ -47,6 +47,10 @@ export class SimplexUtility {
     disabledRecipes: string[],
     data: Dataset
   ) {
+    if (!steps.length) {
+      return steps;
+    }
+
     // Get matrix state
     const state = this.getState(steps, itemSettings, disabledRecipes, data);
 
@@ -130,12 +134,11 @@ export class SimplexUtility {
 
   /** Find matching item inputs for a recipe that have not yet been parsed */
   static itemMatches(recipe: RationalRecipe, state: MatrixState) {
-    const itemIds = Object.keys(recipe.in).filter(
-      (i) => !state.items[i] && state.itemIds.indexOf(i) !== -1
-    );
+    const itemIds = Object.keys(recipe.in).filter((i) => !state.items[i]);
     for (const itemId of itemIds) {
       state.items[itemId] = Rational.zero;
       if (
+        state.itemIds.indexOf(itemId) === -1 ||
         state.recipeIds.filter((r) => state.data.recipeR[r].out[itemId])
           .length === 0
       ) {
@@ -159,7 +162,9 @@ export class SimplexUtility {
   static parseRecipeRecursively(recipe: RationalRecipe, state: MatrixState) {
     if (recipe.in) {
       const matches = this.itemMatches(recipe, state);
-      for (const itemId of matches) {
+      for (const itemId of matches.filter(
+        (m) => state.itemIds.indexOf(m) !== -1
+      )) {
         this.parseItemRecursively(itemId, state);
       }
     }
@@ -186,13 +191,11 @@ export class SimplexUtility {
   //#region Simplex
   /** Convert state to canonical tableau, solve using simplex, and parse solution */
   static getSolution(state: MatrixState) {
-    console.time('simplex');
     // Convert state to canonical tableau
     const A = this.canonical(state);
 
     // Solve tableau using simplex method
     const result = this.simplex(A);
-    console.timeEnd('simplex');
 
     if (result) {
       // Parse solution into usable state
@@ -203,36 +206,26 @@ export class SimplexUtility {
     }
   }
 
-  static testRevised(state: MatrixState) {
-    console.time('revised');
-    // Convert state to simplex matrices
-    const [cn, An, b] = this.canonical2(state);
-    this.simplex2(cn, An, b);
-    console.timeEnd('revised');
-  }
-
   /** Convert state into canonical tableau */
   static canonical(state: MatrixState) {
+    const itemIds = Object.keys(state.items);
+    const recipes = Object.keys(state.recipes).map((r) => state.recipes[r]);
     const A: Rational[][] = [];
 
     // Build objective row
     const O: Rational[] = [Rational.one]; // C
-    for (const itemId of Object.keys(state.items)) {
+    for (const itemId of itemIds) {
       // Add item columns
       O.push(state.items[itemId].inverse());
     }
-    for (const recipeId of Object.keys(state.recipes)) {
-      // Add recipe columns
-      O.push(Rational.zero);
-    }
-    O.push(Rational.zero); // Cost
+    // Add recipe columns and cost
+    O.push(...new Array(recipes.length + 1).fill(Rational.zero));
     A.push(O);
 
     // Build recipe rows
-    for (const recipeId of Object.keys(state.recipes)) {
+    for (const recipe of recipes) {
       const R: Rational[] = [Rational.zero]; // C
-      const recipe = state.recipes[recipeId];
-      for (const itemId of Object.keys(state.items)) {
+      for (const itemId of itemIds) {
         // Add item columns
         let val = Rational.zero;
         if (recipe.in?.[itemId]) {
@@ -243,9 +236,9 @@ export class SimplexUtility {
         }
         R.push(val);
       }
-      for (const otherId of Object.keys(state.recipes)) {
+      for (const other of recipes) {
         // Add recipe columns
-        R.push(recipeId === otherId ? Rational.one : Rational.zero);
+        R.push(recipe.id === other.id ? Rational.one : Rational.zero);
       }
 
       // Cost
@@ -262,61 +255,6 @@ export class SimplexUtility {
     }
 
     return A;
-  }
-
-  static canonical2(
-    state: MatrixState
-  ): [Rational[], Rational[][], Rational[]] {
-    const recipes = Object.keys(state.recipes).map((r) => state.recipes[r]);
-
-    // Build objective matric (c)
-    const cn: Rational[] = [];
-    for (const itemId of Object.keys(state.items)) {
-      // Add item columns
-      cn.push(state.items[itemId].inverse());
-    }
-    // Add recipe columns
-    const zeros = new Array(recipes.length).fill(Rational.zero);
-    cn.push(...zeros);
-
-    // Build recipe matrix
-    const An: Rational[][] = [];
-    for (const recipe of recipes) {
-      const R: Rational[] = [];
-      for (const itemId of Object.keys(state.items)) {
-        // Add item columns
-        let val = Rational.zero;
-        if (recipe.in?.[itemId]) {
-          val = val.sub(recipe.in[itemId]);
-        }
-        if (recipe.out[itemId]) {
-          val = val.add(recipe.out[itemId]);
-        }
-        R.push(val);
-      }
-      for (const otherId of Object.keys(state.recipes)) {
-        // Add recipe columns
-        R.push(recipe.id === otherId ? Rational.one : Rational.zero);
-      }
-      An.push(R);
-    }
-
-    // Build basis matrix
-    const b: Rational[] = [];
-    // Build recipe rows
-    for (const recipe of recipes) {
-      if (recipe.id == null) {
-        b.push(COST_MANUAL);
-      } else if (recipe.id === ItemId.Water) {
-        b.push(COST_WATER);
-      } else if (recipe.mining) {
-        b.push(COST_MINED);
-      } else {
-        b.push(COST_RECIPE);
-      }
-    }
-
-    return [cn, An, b];
   }
 
   /** Solve the canonical tableau using the simplex method */
@@ -340,41 +278,23 @@ export class SimplexUtility {
     }
   }
 
-  /** Solve the canonical tableau using the simplex method */
-  static simplex2(cn: Rational[], An: Rational[][], b: Rational[]) {
-    while (true) {
-      let q: number = null;
-      for (let i = 0; i < cn.length - 1; i++) {
-        if (q === null || cn[i].lt(cn[i])) {
-          q = i;
-        }
-      }
-
-      if (!cn[q].lt(Rational.zero)) {
-        return true;
-      }
-
-      // if (!this.pivotCol2(cn, An, b, q)) {
-      return false;
-      // }
-    }
-  }
-
   /** Pivot a column of the tableau */
   static pivotCol(A: Rational[][], c: number) {
+    const x = A[0].length - 1;
     let r: number = null;
-    let v: Rational = null;
+    let rN: Rational = null;
     for (let i = 1; i < A.length; i++) {
-      if (A[i][c].gt(Rational.zero)) {
-        const ratio = A[i][A[0].length - 1].div(A[i][c]);
-        if (v === null || ratio.lt(v)) {
+      const R = A[i];
+      if (R[c].gt(Rational.zero)) {
+        const ratio = R[x].div(R[c]);
+        if (rN === null || ratio.lt(rN)) {
           r = i;
-          v = ratio;
+          rN = ratio;
         }
       }
     }
 
-    if (r == null) {
+    if (r === null) {
       return false;
     }
 
@@ -405,28 +325,30 @@ export class SimplexUtility {
 
   /** Parse solution from solved tableau */
   static parseSolution(A: Rational[][], state: MatrixState): MatrixSolution {
-    // Parse items
+    const O = A[0];
     const itemIds = Object.keys(state.items);
+    const recipeIds = Object.keys(state.recipes);
+
+    // Parse items
     const surplus: Entities<Rational> = {};
     for (let i = 0; i < itemIds.length; i++) {
       const c = i + 1;
-      if (A[0][c].gt(Rational.zero)) {
-        surplus[itemIds[i]] = A[0][c];
+      if (O[c].gt(Rational.zero)) {
+        surplus[itemIds[i]] = O[c];
       }
     }
 
     // Parse recipes
-    const recipeIds = Object.keys(state.recipes);
     const recipes: Entities<Rational> = {};
     const inputs: Entities<Rational> = {};
     for (let i = 0; i < recipeIds.length; i++) {
       const c = 1 + itemIds.length + i;
-      if (A[0][c].gt(Rational.zero)) {
+      if (O[c].gt(Rational.zero)) {
         const id = recipeIds[i];
         if (state.recipes[id].id) {
-          recipes[id] = A[0][c];
+          recipes[id] = O[c];
         } else {
-          inputs[id] = A[0][c];
+          inputs[id] = O[c];
         }
       }
     }
@@ -582,29 +504,113 @@ export class SimplexUtility {
   //#endregion
 }
 
-class RevisedSimplex {
-  An: Rational[][];
-  B: Rational[][];
-  b: Rational[];
-  cn: Rational[];
-  cb: Rational[];
-
-  constructor(cn: Rational[], An: Rational[][], b: Rational[]) {
-    this.An = An;
-    this.B = this.eye(An.length);
-    this.b = b;
-    this.cn = cn;
-    this.cb = new Array(An.length).fill(Rational.zero);
+/**
+ * Experiments with the revised simplex method have shown that it is less performant for Factorio
+ * recipes than standard simplex, even with fairly large recipe charts. While revised simplex
+ * makes pivot operations faster, there are more calculations involved before running the pivot,
+ * and this decreases the overall performance. Benchmarks (using console.time) are showing the
+ * algorithm is approximately 4 times slower than standard simplex. In addition, the algorithm
+ * does not seem to properly compute surplus resources, for example when only producing only heavy
+ * oil via advanced oil processing. Performance could potentially be improved by performing LU
+ * factorization using Forrest-Tomlin or Bartels-Golub methods, but generally I'm satisfied with
+ * the performance of standard simplex method.
+ */
+/* istanbul ignore next */
+function revisedSimplex(A: Rational[][]) {
+  // Setup
+  const m = A.length;
+  const n = A[0].length;
+  const x = n - 1;
+  const B: number[] = [0];
+  const N: number[] = [];
+  for (let i = n - m; i < x; i++) {
+    B.push(i);
   }
+  for (let i = 1; i < n - m; i++) {
+    N.push(i);
+  }
+  const pCol = [0, x, ...B.slice(1)];
+  const O = A[0];
 
-  eye(n: number) {
-    const I: Rational[][] = [];
-    for (let i = 0; i < n; i++) {
-      I.push([]);
-      for (let j = 0; j < n; j++) {
-        I[i].push(i === j ? Rational.one : Rational.zero);
+  // Setup complete, start iterating
+  while (true) {
+    // Step 1, select entering variable
+    let eMin: Rational = null;
+    let eCol: number = null;
+    for (const c of N) {
+      let v = Rational.zero;
+      for (let i = 0; i < m; i++) {
+        const a = A[0][B[i]];
+        const b = A[i][c];
+        v = v.add(a.mul(b));
+      }
+
+      if (eMin == null || v.lt(eMin)) {
+        eCol = c;
+        eMin = v;
       }
     }
-    return I;
+
+    if (!eMin.lt(Rational.zero)) {
+      return true;
+    }
+
+    // Step 2, select leaving variable
+    const y: Rational[] = [];
+    for (let i = 0; i < m; i++) {
+      let val = Rational.zero;
+      const R = A[i];
+      for (let j = 0; j < m; j++) {
+        const a = R[B[j]];
+        const b = A[j][eCol];
+        val = val.add(a.mul(b));
+      }
+      y.push(val);
+    }
+
+    // Replace values in actual matrix after multiplication
+    for (let i = 0; i < m; i++) {
+      A[i][eCol] = y[i];
+    }
+
+    // Determine outgoing vector, ignore row 0
+    let lMin: Rational = null;
+    let lRow: number = null;
+    for (let i = 1; i < m; i++) {
+      const aix = A[i][x];
+      const yi = y[i];
+      if (yi.gt(Rational.zero) && aix.nonzero()) {
+        const a = aix;
+        const b = yi;
+        const v = a.div(b);
+
+        if (lMin == null || v.lt(lMin)) {
+          lRow = i;
+          lMin = v;
+        }
+      }
+    }
+
+    if (lRow == null) {
+      return false;
+    }
+
+    // Step 3, pivot
+    pCol[0] = eCol;
+    const P = A[lRow];
+    const reciprocal = P[eCol].reciprocal();
+    for (const i of pCol) {
+      P[i] = P[i].mul(reciprocal);
+    }
+
+    for (let i = 0; i < m; i++) {
+      if (i !== lRow && A[i][eCol].nonzero()) {
+        const R = A[i];
+        const factor = R[eCol];
+        for (const j of pCol) {
+          R[j] = R[j].sub(P[j].mul(factor));
+        }
+      }
+    }
   }
 }

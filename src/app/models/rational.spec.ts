@@ -75,6 +75,13 @@ describe('Rational', () => {
       });
     });
 
+    describe('reciprocal', () => {
+      it('should switch p and q', () => {
+        expect(Rational.one.reciprocal()).toEqual(Rational.one);
+        expect(Rational.two.reciprocal()).toEqual(Rational.from(1, 2));
+      });
+    });
+
     describe('lt', () => {
       it('should determine whether Rational is less than another', () => {
         expect(Rational.zero.lt(Rational.one)).toBeTrue();

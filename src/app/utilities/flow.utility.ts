@@ -3,7 +3,6 @@ import {
   LinkValue,
   MIN_LINK_VALUE,
   Rational,
-  RationalRecipe,
   SankeyData,
   Step,
 } from '~/models';
@@ -19,7 +18,7 @@ export class FlowUtility {
       const value = this.stepLinkValue(step, linkValue);
 
       if (step.recipeId) {
-        const recipe = this.nonCircularRecipe(data.recipeR[step.recipeId]);
+        const recipe = data.recipeR[step.recipeId];
         const icon = data.iconEntities[step.recipeId];
 
         sankey.nodes.push({
@@ -75,7 +74,7 @@ export class FlowUtility {
         if (step.parents) {
           for (const i of Object.keys(step.parents)) {
             const lVal = this.linkValue(value, step.parents[i], linkValue);
-            const recipe = this.nonCircularRecipe(data.recipeR[i]);
+            const recipe = data.recipeR[i];
             if (recipe.in?.[step.itemId]) {
               sankey.links.push({
                 target: i,
@@ -125,27 +124,5 @@ export class FlowUtility {
     }
 
     return value.mul(percent).toNumber() || MIN_LINK_VALUE;
-  }
-
-  static nonCircularRecipe(recipe: RationalRecipe) {
-    if (!recipe.in || !recipe.out) {
-      return recipe;
-    }
-
-    const result = { ...recipe };
-
-    for (const outId of Object.keys(result.out)) {
-      if (result.in[outId]) {
-        if (result.in[outId].gt(result.out[outId])) {
-          result.in[outId] = result.in[outId].sub(result.out[outId]);
-          delete result.out[outId];
-        } else {
-          result.out[outId] = result.out[outId].sub(result.in[outId]);
-          delete result.in[outId];
-        }
-      }
-    }
-
-    return result;
   }
 }

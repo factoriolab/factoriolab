@@ -7,12 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { ResizeObserverEntry } from '@juggle/resize-observer';
-import {
-  SankeyNode,
-  sankeyLinkHorizontal,
-  SankeyLayout,
-  SankeyGraph,
-} from 'd3-sankey';
+import { SankeyNode, SankeyLayout, SankeyGraph } from 'd3-sankey';
 import { sankeyCircular } from 'd3-sankey-circular';
 import { select, Selection } from 'd3-selection';
 import {
@@ -117,7 +112,7 @@ export class SankeyComponent implements OnInit {
 
     link
       .append('path')
-      .attr('d', sankeyLinkHorizontal())
+      .attr('d', (d) => (d as any).path)
       .attr('stroke', (l) => l.color)
       .attr('stroke-width', (l) => Math.max(1, l.width));
 
