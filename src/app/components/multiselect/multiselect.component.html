@@ -1,11 +1,22 @@
-<div class="header">{{ header }}</div>
+<div class="flex tween dialog-title">
+  <span class="header">{{ header }}</span>
+  <i
+    *ngIf="edited"
+    class="clickable material-icons"
+    title="Cancel changes"
+    (click)="cancel.emit()"
+    >close</i
+  >
+</div>
 <div
   class="flex clickable"
   *ngFor="let opt of options"
   (click)="clickId(opt.id, $event)"
 >
   <div class="material-icons">
-    {{ idEnabled[opt.id] ? 'check_box' : 'check_box_outline_blank' }}
+    {{
+      editValue.indexOf(opt.id) === -1 ? 'check_box_outline_blank' : 'check_box'
+    }}
   </div>
   <div>{{ opt.name }}</div>
 </div>

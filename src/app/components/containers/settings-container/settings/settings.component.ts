@@ -17,7 +17,6 @@ import {
   Theme,
   Dataset,
   ModInfo,
-  DefaultTogglePayload,
   DefaultPayload,
   Preset,
   ItemId,
@@ -29,7 +28,6 @@ import {
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
 enum OpenSelect {
-  None,
   Mods,
   DisabledRecipes,
   Belt,
@@ -65,10 +63,8 @@ export class SettingsComponent implements OnInit {
   @Output() deleteState = new EventEmitter<string>();
   @Output() setPreset = new EventEmitter<Preset>();
   @Output() setBase = new EventEmitter<string>();
-  @Output() enableMod = new EventEmitter<DefaultTogglePayload>();
-  @Output() disableMod = new EventEmitter<DefaultTogglePayload>();
+  @Output() setMods = new EventEmitter<DefaultPayload<string[]>>();
   @Output() setDisabledRecipes = new EventEmitter<DefaultPayload<string[]>>();
-  @Output() enableRecipe = new EventEmitter<DefaultTogglePayload>();
   @Output() setExpensive = new EventEmitter<boolean>();
   @Output() setFactoryRank = new EventEmitter<DefaultPayload<string[]>>();
   @Output() setModuleRank = new EventEmitter<DefaultPayload<string[]>>();
@@ -93,7 +89,7 @@ export class SettingsComponent implements OnInit {
   @Output() setTheme = new EventEmitter<Theme>();
   @Output() resetSettings = new EventEmitter();
 
-  openSelect = OpenSelect.None;
+  openSelect: OpenSelect;
 
   DisplayRate = DisplayRate;
   ItemId = ItemId;
@@ -127,30 +123,6 @@ export class SettingsComponent implements OnInit {
   /** Forces change detector to update on scroll */
   @HostListener('scroll', ['$event']) scroll() {
     this.ref.detectChanges();
-  }
-
-  commitDisabledRecipes(value: string[]) {
-    this.openSelect = OpenSelect.None;
-    this.setDisabledRecipes.emit({
-      value,
-      default: this.data.defaults.disabledRecipes,
-    });
-  }
-
-  commitFactoryRank(value: string[]) {
-    this.openSelect = OpenSelect.None;
-    this.setFactoryRank.emit({
-      value,
-      default: this.data.defaults.factoryRank,
-    });
-  }
-
-  commitModuleRank(value: string[]) {
-    this.openSelect = OpenSelect.None;
-    this.setModuleRank.emit({
-      value,
-      default: this.data.defaults.moduleRank,
-    });
   }
 
   changeBeaconCount(event: Event) {

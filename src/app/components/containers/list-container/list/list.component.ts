@@ -152,8 +152,7 @@ export class ListComponent {
   @Output() setBeaconCount = new EventEmitter<DefaultIdPayload<number>>();
   @Output() setBeacon = new EventEmitter<DefaultIdPayload>();
   @Output() setBeaconModules = new EventEmitter<DefaultIdPayload<string[]>>();
-  @Output() hideColumn = new EventEmitter<string>();
-  @Output() showColumn = new EventEmitter<string>();
+  @Output() setColumns = new EventEmitter<string[]>();
   @Output() resetItem = new EventEmitter<string>();
   @Output() resetRecipe = new EventEmitter<string>();
   @Output() resetIgnore = new EventEmitter();

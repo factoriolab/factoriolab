@@ -1,5 +1,14 @@
 <div #scrollContainer class="scroll">
-  <div class="header">Preferred</div>
+  <div class="flex tween dialog-title">
+    <span class="header">Preferred</span>
+    <i
+      *ngIf="edited"
+      class="clickable material-icons"
+      title="Cancel changes"
+      (click)="cancel.emit()"
+      >close</i
+    >
+  </div>
   <div class="info">Click to remove from preferred list</div>
   <div class="flex">
     <lab-icon

@@ -36,9 +36,11 @@ export class ToggleComponent {
   }
   @Input() parent: HTMLElement;
 
+  @Output() cancel = new EventEmitter();
   @Output() commit = new EventEmitter<string[]>();
 
   opening = true;
+  edited = false;
   editValue: string[];
   complexRecipes: string[] = [];
 
@@ -61,11 +63,16 @@ export class ToggleComponent {
     if (this.opening) {
       this.opening = false;
     } else if (!this.element.nativeElement.contains(event.target)) {
-      this.commit.emit(this.editValue);
+      if (this.edited) {
+        this.commit.emit(this.editValue);
+      } else {
+        this.cancel.emit();
+      }
     }
   }
 
   clickId(id: string, event: MouseEvent) {
+    this.edited = true;
     if (this.editValue.indexOf(id) === -1) {
       this.editValue.push(id);
     } else {

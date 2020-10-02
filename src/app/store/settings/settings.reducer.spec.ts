@@ -90,47 +90,25 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('ENABLE_MOD', () => {
-    it('should enable a mod', () => {
-      const id = 'test';
+  describe('SET_MODS', () => {
+    it('should set selected mods', () => {
+      const value = ['test'];
       const result = settingsReducer(
         undefined,
-        new Actions.EnableModAction({ id, default: [] })
+        new Actions.SetModsAction({ value, default: [] })
       );
-      expect(result.modIds).toEqual([id]);
+      expect(result.modIds).toEqual(value);
     });
   });
 
-  describe('DISABLE_MOD', () => {
-    it('should disable a mod', () => {
-      const id = 'test';
-      const result = settingsReducer(
-        { modIds: [id] } as any,
-        new Actions.DisableModAction({ id, default: [] })
-      );
-      expect(result.modIds).toBeNull();
-    });
-  });
-
-  describe('DISABLE_RECIPE', () => {
-    it('should disable a recipe', () => {
-      const id = RecipeId.AdvancedOilProcessing;
+  describe('SET_DISABLED_RECIPES', () => {
+    it('should set the list of disabled recipes', () => {
+      const value = [RecipeId.AdvancedOilProcessing];
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetDisabledRecipesAction({ id, default: [] })
+        new Actions.SetDisabledRecipesAction({ value, default: [] })
       );
-      expect(result.disabledRecipes).toEqual([id]);
-    });
-  });
-
-  describe('ENABLE_RECIPE', () => {
-    it('should enable a recipe', () => {
-      const id = RecipeId.BasicOilProcessing;
-      const result = settingsReducer(
-        { disabledRecipes: [id] } as any,
-        new Actions.EnableRecipeAction({ id, default: [] })
-      );
-      expect(result.disabledRecipes).toBeNull();
+      expect(result.disabledRecipes).toEqual(value);
     });
   });
 
@@ -145,47 +123,25 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('PREFER_FACTORY', () => {
-    it('should add a factory to the rank list', () => {
-      const id = ItemId.AssemblingMachine1;
+  describe('SET_FACTORY_RANK', () => {
+    it('should set the preferred factory rank', () => {
+      const value = [ItemId.AssemblingMachine1];
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetFactoryRankAction({ id, default: [] })
+        new Actions.SetFactoryRankAction({ value, default: [] })
       );
-      expect(result.factoryRank).toEqual([id]);
+      expect(result.factoryRank).toEqual(value);
     });
   });
 
-  describe('DROP_FACTORY', () => {
-    it('should remove a factory from the rank list', () => {
-      const id = ItemId.AssemblingMachine1;
-      const result = settingsReducer(
-        { ...initialSettingsState, ...{ factoryRank: [id] } },
-        new Actions.DropFactoryAction({ id, default: [] })
-      );
-      expect(result.factoryRank).toBeNull();
-    });
-  });
-
-  describe('PREFER_MODULE', () => {
-    it('should add a module to the rank list', () => {
-      const id = ItemId.SpeedModule;
+  describe('SET_MODULE_RANK', () => {
+    it('should set the preferred module rank', () => {
+      const value = [ItemId.SpeedModule];
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetModuleRankAction({ id, default: [] })
+        new Actions.SetModuleRankAction({ value, default: [] })
       );
-      expect(result.moduleRank).toEqual([id]);
-    });
-  });
-
-  describe('DROP_MODULE', () => {
-    it('should remove a module from the rank list', () => {
-      const id = ItemId.SpeedModule;
-      const result = settingsReducer(
-        { ...initialSettingsState, ...{ moduleRank: [id] } },
-        new Actions.DropModuleAction({ id, default: [] })
-      );
-      expect(result.moduleRank).toBeNull();
+      expect(result.moduleRank).toEqual(value);
     });
   });
 
@@ -359,25 +315,14 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('HIDE_COLUMN', () => {
-    it('should remove a column from the list', () => {
-      const value = Column.Beacons;
+  describe('SET_COLUMNS', () => {
+    it('should set the list of visible columns', () => {
+      const value = [Column.Beacons];
       const result = settingsReducer(
         { columns: [value] } as any,
-        new Actions.HideColumnAction(value)
+        new Actions.SetColumnsAction(value)
       );
-      expect(result.columns).toEqual([]);
-    });
-  });
-
-  describe('SHOW_COLUMN', () => {
-    it('should add a column to the list', () => {
-      const value = Column.Beacons;
-      const result = settingsReducer(
-        { columns: [] } as any,
-        new Actions.ShowColumnAction(value)
-      );
-      expect(result.columns).toEqual([value]);
+      expect(result.columns).toEqual(value);
     });
   });
 

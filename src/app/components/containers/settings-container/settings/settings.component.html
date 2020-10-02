@@ -122,9 +122,11 @@
     [enabledIds]="settings.modIds"
     [options]="mods"
     [parent]="btnMods"
-    (cancel)="openSelect = OpenSelect.None"
-    (enableId)="enableMod.emit({ id: $event, default: data.defaults.modIds })"
-    (disableId)="disableMod.emit({ id: $event, default: data.defaults.modIds })"
+    (cancel)="openSelect = null"
+    (commit)="
+      openSelect = null;
+      setMods.emit({ value: $event, default: data.defaults.modIds })
+    "
   ></lab-multiselect>
 </div>
 <div class="field">
@@ -139,8 +141,14 @@
     [data]="data"
     [disabledRecipes]="settings.disabledRecipes"
     [parent]="btnRecipes"
-    (commit)="commitDisabledRecipes($event)"
-    (cancel)="openSelect = OpenSelect.None"
+    (cancel)="openSelect = null"
+    (commit)="
+      openSelect = null;
+      setDisabledRecipes.emit({
+        value: $event,
+        default: data.defaults.disabledRecipes
+      })
+    "
   >
   </lab-toggle>
 </div>
@@ -178,7 +186,11 @@
     [rank]="settings.factoryRank"
     [options]="data.factoryIds"
     [parent]="btnFactory.element"
-    (commit)="commitFactoryRank($event)"
+    (cancel)="openSelect = null"
+    (commit)="
+      openSelect = null;
+      setFactoryRank.emit({ value: $event, default: data.defaults.factoryRank })
+    "
   >
   </lab-ranker>
   <lab-icon
@@ -197,7 +209,11 @@
     [rank]="settings.moduleRank"
     [options]="data.moduleIds"
     [parent]="btnModule.element"
-    (commit)="commitModuleRank($event)"
+    (cancel)="openSelect = null"
+    (commit)="
+      openSelect = null;
+      setModuleRank.emit({ value: $event, default: data.defaults.moduleRank })
+    "
   >
   </lab-ranker>
   <div
@@ -240,7 +256,7 @@
     [options]="data.beaconIds"
     [data]="data"
     [parent]="btnBeacon.element"
-    (cancel)="openSelect = OpenSelect.None"
+    (cancel)="openSelect = null"
     (selectId)="
       setBeacon.emit({ value: $event, default: data.defaults.beacon })
     "
@@ -261,7 +277,7 @@
     [options]="data.beaconModuleIds"
     [parent]="btnBeaconModule.element"
     includeEmptyModule="true"
-    (cancel)="openSelect = OpenSelect.None"
+    (cancel)="openSelect = null"
     (selectId)="
       setBeaconModule.emit({
         value: $event,
@@ -298,7 +314,7 @@
     [displayRate]="settings.displayRate"
     [data]="data"
     [parent]="btnBelt.element"
-    (cancel)="openSelect = OpenSelect.None"
+    (cancel)="openSelect = null"
     (selectId)="setBelt.emit({ value: $event, default: data.defaults.belt })"
   >
   </lab-select>
@@ -316,7 +332,7 @@
     [options]="sortedFuels"
     [selectedId]="settings.fuel"
     [parent]="btnFuel.element"
-    (cancel)="openSelect = OpenSelect.None"
+    (cancel)="openSelect = null"
     (selectId)="setFuel.emit({ value: $event, default: data.defaults.fuel })"
   >
   </lab-select>
@@ -495,7 +511,7 @@
 <div class="label">User Preferences</div>
 <table class="center">
   <tr>
-    <td>Sort:</td>
+    <td>Sort Steps:</td>
     <td>
       <select
         id="settings-sort-select"

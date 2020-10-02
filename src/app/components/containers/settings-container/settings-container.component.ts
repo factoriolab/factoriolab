@@ -17,7 +17,6 @@ import {
   Theme,
   Dataset,
   ModInfo,
-  DefaultTogglePayload,
   DefaultPayload,
   Preset,
   Sort,
@@ -90,12 +89,8 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetBaseAction(value));
   }
 
-  enableMod(value: DefaultTogglePayload) {
-    this.store.dispatch(new Settings.EnableModAction(value));
-  }
-
-  disableMod(value: DefaultTogglePayload) {
-    this.store.dispatch(new Settings.DisableModAction(value));
+  setMods(value: DefaultPayload<string[]>) {
+    this.store.dispatch(new Settings.SetModsAction(value));
   }
 
   setDisabledRecipes(value: DefaultPayload<string[]>) {

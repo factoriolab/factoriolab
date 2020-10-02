@@ -5,7 +5,6 @@ import {
   ResearchSpeed,
   Theme,
   DefaultPayload,
-  DefaultTogglePayload,
   Preset,
   Sort,
   LinkValue,
@@ -17,8 +16,7 @@ export const enum SettingsActionType {
   DELETE_STATE = '[Settings] Delete State',
   SET_PRESET = '[Settings] Set Preset',
   SET_BASE = '[Settings] Set Base',
-  ENABLE_MOD = '[Settings] Enable Mod',
-  DISABLE_MOD = '[Settings] Disable Mod',
+  SET_MODS = '[Settings] Set Mods',
   SET_DISABLED_RECIPES = '[Settings] Set Disabled Recipes',
   SET_EXPENSIVE = '[Settings] Set Expensive',
   SET_FACTORY_RANK = '[Settings] Set Factory Rank',
@@ -39,8 +37,7 @@ export const enum SettingsActionType {
   SET_POLLUTION_PRECISION = '[Settings] Set Pollution Precision',
   SET_MINING_BONUS = '[Settings] Set Mining Bonus',
   SET_RESEARCH_SPEED = '[Settings] Set Research Speed',
-  HIDE_COLUMN = '[Settings] Hide Column',
-  SHOW_COLUMN = '[Settings] Show Column',
+  SET_COLUMNS = '[Settings] Set Columns',
   SET_SORT = '[Settings] Set Sort',
   SET_LINK_VALUE = '[Settings] Set Link Value',
   SET_THEME = '[Settings] Set Theme',
@@ -69,14 +66,9 @@ export class SetBaseAction implements Action {
   constructor(public payload: string) {}
 }
 
-export class EnableModAction implements Action {
-  readonly type = SettingsActionType.ENABLE_MOD;
-  constructor(public payload: DefaultTogglePayload) {}
-}
-
-export class DisableModAction implements Action {
-  readonly type = SettingsActionType.DISABLE_MOD;
-  constructor(public payload: DefaultTogglePayload) {}
+export class SetModsAction implements Action {
+  readonly type = SettingsActionType.SET_MODS;
+  constructor(public payload: DefaultPayload<string[]>) {}
 }
 
 export class SetDisabledRecipesAction implements Action {
@@ -179,14 +171,9 @@ export class SetResearchSpeedAction implements Action {
   constructor(public payload: ResearchSpeed) {}
 }
 
-export class HideColumnAction implements Action {
-  readonly type = SettingsActionType.HIDE_COLUMN;
-  constructor(public payload: string) {}
-}
-
-export class ShowColumnAction implements Action {
-  readonly type = SettingsActionType.SHOW_COLUMN;
-  constructor(public payload: string) {}
+export class SetColumnsAction implements Action {
+  readonly type = SettingsActionType.SET_COLUMNS;
+  constructor(public payload: string[]) {}
 }
 
 export class SetSortAction implements Action {
@@ -221,8 +208,7 @@ export type SettingsAction =
   | DeleteStateAction
   | SetPresetAction
   | SetBaseAction
-  | EnableModAction
-  | DisableModAction
+  | SetModsAction
   | SetDisabledRecipesAction
   | SetExpensiveAction
   | SetFactoryRankAction
@@ -243,8 +229,7 @@ export type SettingsAction =
   | SetPollutionPrecisionAction
   | SetMiningBonusAction
   | SetResearchSpeedAction
-  | HideColumnAction
-  | ShowColumnAction
+  | SetColumnsAction
   | SetSortAction
   | SetLinkValueAction
   | SetThemeAction

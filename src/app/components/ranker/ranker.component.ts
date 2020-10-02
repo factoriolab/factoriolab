@@ -25,9 +25,11 @@ export class RankerComponent {
   @Input() options: string[];
   @Input() parent: HTMLElement;
 
+  @Output() cancel = new EventEmitter();
   @Output() commit = new EventEmitter<string[]>();
 
   opening = true;
+  edited = false;
   editValue: string[];
 
   @HostBinding('style.top.px') get top() {
@@ -49,16 +51,22 @@ export class RankerComponent {
     if (this.opening) {
       this.opening = false;
     } else if (!this.element.nativeElement.contains(event.target)) {
-      this.commit.emit(this.editValue);
+      if (this.edited) {
+        this.commit.emit(this.editValue);
+      } else {
+        this.cancel.emit();
+      }
     }
   }
 
   clickPrefer(id: string, event: MouseEvent) {
+    this.edited = true;
     this.editValue.push(id);
     event.stopPropagation();
   }
 
   clickDrop(id: string, event: MouseEvent) {
+    this.edited = true;
     this.editValue = this.editValue.filter((i) => i !== id);
     event.stopPropagation();
   }

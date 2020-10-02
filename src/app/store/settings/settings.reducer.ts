@@ -123,19 +123,11 @@ export function settingsReducer(
         },
       };
     }
-    case SettingsActionType.ENABLE_MOD: {
+    case SettingsActionType.SET_MODS: {
       return {
         ...state,
         ...{
-          modIds: StoreUtility.tryAddId(state.modIds, action.payload),
-        },
-      };
-    }
-    case SettingsActionType.DISABLE_MOD: {
-      return {
-        ...state,
-        ...{
-          modIds: StoreUtility.tryRemoveId(state.modIds, action.payload),
+          modIds: StoreUtility.compareValues(action.payload),
         },
       };
     }
@@ -229,13 +221,8 @@ export function settingsReducer(
     case SettingsActionType.SET_RESEARCH_SPEED: {
       return { ...state, ...{ researchSpeed: action.payload } };
     }
-    case SettingsActionType.HIDE_COLUMN: {
-      const result = state.columns.filter((c) => c !== action.payload);
-      return { ...state, ...{ columns: result } };
-    }
-    case SettingsActionType.SHOW_COLUMN: {
-      const result = [...state.columns, action.payload];
-      return { ...state, ...{ columns: result } };
+    case SettingsActionType.SET_COLUMNS: {
+      return { ...state, ...{ columns: action.payload } };
     }
     case SettingsActionType.SET_SORT: {
       return { ...state, ...{ sort: action.payload } };

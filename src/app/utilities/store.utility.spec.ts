@@ -150,42 +150,4 @@ describe('StoreUtility', () => {
       );
     });
   });
-
-  describe('tryAddId', () => {
-    it('should add to default if previously null', () => {
-      expect(StoreUtility.tryAddId(null, { id: 'a', default: [] })).toEqual([
-        'a',
-      ]);
-    });
-
-    it('should return null if result is equal to default', () => {
-      expect(StoreUtility.tryAddId([], { id: 'a', default: ['a'] })).toBeNull();
-    });
-
-    it('should return result if not equal to default', () => {
-      expect(StoreUtility.tryAddId([], { id: 'a', default: [] })).toEqual([
-        'a',
-      ]);
-    });
-  });
-
-  describe('tryRemoveId', () => {
-    it('should remove from default if previously null', () => {
-      expect(
-        StoreUtility.tryRemoveId(null, { id: 'a', default: ['a'] })
-      ).toEqual([]);
-    });
-
-    it('should return null if result is equal to default', () => {
-      expect(
-        StoreUtility.tryRemoveId(['a'], { id: 'a', default: [] })
-      ).toBeNull();
-    });
-
-    it('should return result if not equal to default', () => {
-      expect(
-        StoreUtility.tryRemoveId(['a', 'b'], { id: 'b', default: [] })
-      ).toEqual(['a']);
-    });
-  });
 });

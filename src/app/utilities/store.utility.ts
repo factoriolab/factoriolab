@@ -1,8 +1,4 @@
-import {
-  DefaultPayload,
-  DefaultTogglePayload,
-  DefaultIdPayload,
-} from '~/models';
+import { DefaultPayload, DefaultIdPayload } from '~/models';
 
 export class StoreUtility {
   static rankEquals<T extends number | string>(a: T[], b: T[]) {
@@ -93,31 +89,5 @@ export class StoreUtility {
     return this.rankEquals(payload.value, payload.default)
       ? null
       : payload.value;
-  }
-
-  static tryAddId(
-    state: string[],
-    payload: DefaultTogglePayload,
-    rank = false
-  ) {
-    if (state == null) {
-      return [...payload.default, payload.id];
-    }
-    const result = [...state, payload.id];
-    const equal = this.arrayEquals(result, payload.default, rank);
-    return equal ? null : result;
-  }
-
-  static tryRemoveId(
-    state: string[],
-    payload: DefaultTogglePayload,
-    rank = false
-  ) {
-    if (state == null) {
-      return payload.default.filter((i) => i !== payload.id);
-    }
-    const result = state.filter((i) => i !== payload.id);
-    const equal = this.arrayEquals(result, payload.default, rank);
-    return equal ? null : result;
   }
 }
