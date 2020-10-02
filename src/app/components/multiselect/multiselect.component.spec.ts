@@ -14,8 +14,7 @@ import { MultiselectComponent } from './multiselect.component';
       [options]="options"
       [parent]="element.nativeElement"
       (cancel)="cancel()"
-      (enableId)="enableId($event)"
-      (disableId)="disableId($event)"
+      (commit)="commit($event)"
     >
     </lab-multiselect>
   `,
@@ -23,11 +22,10 @@ import { MultiselectComponent } from './multiselect.component';
 class TestMultiselectComponent {
   @ViewChild(MultiselectComponent) child: MultiselectComponent;
   header = 'Header';
-  enabledIds = [];
-  options = Mocks.Raw.mods;
+  enabledIds = ['1'];
+  options = ['1', '2'];
   cancel() {}
-  enableId(data) {}
-  disableId(data) {}
+  commit(data) {}
 
   constructor(public element: ElementRef) {}
 }
@@ -92,22 +90,16 @@ describe('MultiselectComponent', () => {
   });
 
   it('should enable an item', () => {
-    spyOn(component, 'enableId');
-    spyOn(component, 'cancel');
     component.child.opening = false;
     TestUtility.clickSelector(fixture, '.clickable', 0);
-    expect(component.enableId).toHaveBeenCalledWith(Mocks.Raw.mods[0].id);
-    expect(component.cancel).not.toHaveBeenCalled();
+    expect(component.child.edited).toBeTrue();
+    expect(component.child.editValue).toEqual(null);
   });
 
   it('should disable an item', () => {
-    component.enabledIds = [Mocks.Raw.mods[0].id];
-    fixture.detectChanges();
-    spyOn(component, 'disableId');
-    spyOn(component, 'cancel');
     component.child.opening = false;
     TestUtility.clickSelector(fixture, '.clickable', 0);
-    expect(component.disableId).toHaveBeenCalledWith(Mocks.Raw.mods[0].id);
-    expect(component.cancel).not.toHaveBeenCalled();
+    expect(component.child.edited).toBeTrue();
+    expect(component.child.editValue).toEqual(null);
   });
 });

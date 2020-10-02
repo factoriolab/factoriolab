@@ -13,11 +13,9 @@ import { RankerComponent } from './ranker.component';
       [data]="data"
       [rank]="rank"
       [options]="options"
-      [default]="default"
       [parent]="element.nativeElement"
       (cancel)="cancel()"
-      (preferItem)="preferItem($event)"
-      (dropItem)="dropItem($event)"
+      (commit)="commit($event)"
     >
     </lab-ranker>
   `,
@@ -27,10 +25,8 @@ class TestRankerComponent {
   data: Dataset = Mocks.Data;
   rank = [ItemId.AssemblingMachine1];
   options = [ItemId.AssemblingMachine2];
-  default = [];
   cancel() {}
-  preferItem(data) {}
-  dropItem(data) {}
+  commit(data) {}
 
   constructor(public element: ElementRef) {}
 }
@@ -95,22 +91,16 @@ describe('RankerComponent', () => {
   });
 
   it('should prefer an item', () => {
-    spyOn(component, 'preferItem');
     component.child.opening = false;
     TestUtility.clickSelector(fixture, 'lab-icon', 1);
-    expect(component.preferItem).toHaveBeenCalledWith({
-      id: ItemId.AssemblingMachine2,
-      default: [],
-    });
+    expect(component.child.edited).toBeTrue();
+    expect(component.child.editValue).toEqual(null);
   });
 
   it('should drop an item', () => {
-    spyOn(component, 'dropItem');
     component.child.opening = false;
     TestUtility.clickSelector(fixture, 'lab-icon', 0);
-    expect(component.dropItem).toHaveBeenCalledWith({
-      id: ItemId.AssemblingMachine1,
-      default: [],
-    });
+    expect(component.child.edited).toBeTrue();
+    expect(component.child.editValue).toEqual(null);
   });
 });
