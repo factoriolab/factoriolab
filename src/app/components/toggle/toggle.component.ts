@@ -9,7 +9,7 @@ import {
   HostBinding,
 } from '@angular/core';
 
-import { Dataset, DefaultTogglePayload } from '~/models';
+import { Dataset } from '~/models';
 
 @Component({
   selector: 'lab-toggle',
@@ -31,15 +31,15 @@ export class ToggleComponent {
   get data() {
     return this._data;
   }
-  @Input() disabledRecipes: string[];
-  @Input() default: string[];
+  @Input() set disabledRecipes(value: string[]) {
+    this.editValue = [...value];
+  }
   @Input() parent: HTMLElement;
 
-  @Output() cancel = new EventEmitter();
-  @Output() enableRecipe = new EventEmitter<DefaultTogglePayload>();
-  @Output() disableRecipe = new EventEmitter<DefaultTogglePayload>();
+  @Output() commit = new EventEmitter<string[]>();
 
   opening = true;
+  editValue: string[];
   complexRecipes: string[] = [];
 
   @HostBinding('style.top.px') get top() {
@@ -61,19 +61,15 @@ export class ToggleComponent {
     if (this.opening) {
       this.opening = false;
     } else if (!this.element.nativeElement.contains(event.target)) {
-      this.cancel.emit();
+      this.commit.emit(this.editValue);
     }
   }
 
-  isDisabled(id: string) {
-    return this.disabledRecipes.some((r) => r === id);
-  }
-
   clickId(id: string, event: MouseEvent) {
-    if (this.isDisabled(id)) {
-      this.enableRecipe.emit({ id, default: this.default });
+    if (this.editValue.indexOf(id) === -1) {
+      this.editValue.push(id);
     } else {
-      this.disableRecipe.emit({ id, default: this.default });
+      this.editValue = this.editValue.filter((i) => i !== id);
     }
     event.stopPropagation();
   }

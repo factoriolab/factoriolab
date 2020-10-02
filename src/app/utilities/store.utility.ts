@@ -83,6 +83,18 @@ export class StoreUtility {
     return payload.value === payload.default ? null : payload.value;
   }
 
+  static compareValues(payload: DefaultPayload<string[]>) {
+    return this.arrayEquals(payload.value, payload.default)
+      ? null
+      : payload.value;
+  }
+
+  static compareRank(payload: DefaultPayload<string[]>) {
+    return this.rankEquals(payload.value, payload.default)
+      ? null
+      : payload.value;
+  }
+
   static tryAddId(
     state: string[],
     payload: DefaultTogglePayload,

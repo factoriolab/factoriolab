@@ -19,13 +19,10 @@ export const enum SettingsActionType {
   SET_BASE = '[Settings] Set Base',
   ENABLE_MOD = '[Settings] Enable Mod',
   DISABLE_MOD = '[Settings] Disable Mod',
-  DISABLE_RECIPE = '[Settings] Disable Recipe',
-  ENABLE_RECIPE = '[Settings] Enable Recipe',
+  SET_DISABLED_RECIPES = '[Settings] Set Disabled Recipes',
   SET_EXPENSIVE = '[Settings] Set Expensive',
-  PREFER_FACTORY = '[Settings] Prefer Factory',
-  DROP_FACTORY = '[Settings] Drop Factory',
-  PREFER_MODULE = '[Settings] Prefer Module',
-  DROP_MODULE = '[Settings] Drop Module',
+  SET_FACTORY_RANK = '[Settings] Set Factory Rank',
+  SET_MODULE_RANK = '[Settings] Set Module Rank',
   SET_DRILL_MODULE = '[Settings] Set Drill Module',
   SET_BEACON = '[Settings] Set Beacon',
   SET_BEACON_MODULE = '[Settings] Set Beacon Module',
@@ -82,14 +79,9 @@ export class DisableModAction implements Action {
   constructor(public payload: DefaultTogglePayload) {}
 }
 
-export class DisableRecipeAction implements Action {
-  readonly type = SettingsActionType.DISABLE_RECIPE;
-  constructor(public payload: DefaultTogglePayload) {}
-}
-
-export class EnableRecipeAction implements Action {
-  readonly type = SettingsActionType.ENABLE_RECIPE;
-  constructor(public payload: DefaultTogglePayload) {}
+export class SetDisabledRecipesAction implements Action {
+  readonly type = SettingsActionType.SET_DISABLED_RECIPES;
+  constructor(public payload: DefaultPayload<string[]>) {}
 }
 
 export class SetExpensiveAction implements Action {
@@ -97,24 +89,14 @@ export class SetExpensiveAction implements Action {
   constructor(public payload: boolean) {}
 }
 
-export class PreferFactoryAction implements Action {
-  readonly type = SettingsActionType.PREFER_FACTORY;
-  constructor(public payload: DefaultTogglePayload) {}
+export class SetFactoryRankAction implements Action {
+  readonly type = SettingsActionType.SET_FACTORY_RANK;
+  constructor(public payload: DefaultPayload<string[]>) {}
 }
 
-export class DropFactoryAction implements Action {
-  readonly type = SettingsActionType.DROP_FACTORY;
-  constructor(public payload: DefaultTogglePayload) {}
-}
-
-export class PreferModuleAction implements Action {
-  readonly type = SettingsActionType.PREFER_MODULE;
-  constructor(public payload: DefaultTogglePayload) {}
-}
-
-export class DropModuleAction implements Action {
-  readonly type = SettingsActionType.DROP_MODULE;
-  constructor(public payload: DefaultTogglePayload) {}
+export class SetModuleRankAction implements Action {
+  readonly type = SettingsActionType.SET_MODULE_RANK;
+  constructor(public payload: DefaultPayload<string[]>) {}
 }
 
 export class SetDrillModuleAction implements Action {
@@ -241,13 +223,10 @@ export type SettingsAction =
   | SetBaseAction
   | EnableModAction
   | DisableModAction
-  | DisableRecipeAction
-  | EnableRecipeAction
+  | SetDisabledRecipesAction
   | SetExpensiveAction
-  | PreferFactoryAction
-  | DropFactoryAction
-  | PreferModuleAction
-  | DropModuleAction
+  | SetFactoryRankAction
+  | SetModuleRankAction
   | SetDrillModuleAction
   | SetBeaconAction
   | SetBeaconModuleAction

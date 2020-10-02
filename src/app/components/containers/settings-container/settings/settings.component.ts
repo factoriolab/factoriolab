@@ -67,13 +67,11 @@ export class SettingsComponent implements OnInit {
   @Output() setBase = new EventEmitter<string>();
   @Output() enableMod = new EventEmitter<DefaultTogglePayload>();
   @Output() disableMod = new EventEmitter<DefaultTogglePayload>();
-  @Output() disableRecipe = new EventEmitter<DefaultTogglePayload>();
+  @Output() setDisabledRecipes = new EventEmitter<DefaultPayload<string[]>>();
   @Output() enableRecipe = new EventEmitter<DefaultTogglePayload>();
   @Output() setExpensive = new EventEmitter<boolean>();
-  @Output() preferFactory = new EventEmitter<DefaultTogglePayload>();
-  @Output() dropFactory = new EventEmitter<DefaultTogglePayload>();
-  @Output() preferModule = new EventEmitter<DefaultTogglePayload>();
-  @Output() dropModule = new EventEmitter<DefaultTogglePayload>();
+  @Output() setFactoryRank = new EventEmitter<DefaultPayload<string[]>>();
+  @Output() setModuleRank = new EventEmitter<DefaultPayload<string[]>>();
   @Output() setDrillModule = new EventEmitter<boolean>();
   @Output() setBeacon = new EventEmitter<DefaultPayload>();
   @Output() setBeaconModule = new EventEmitter<DefaultPayload>();
@@ -129,6 +127,30 @@ export class SettingsComponent implements OnInit {
   /** Forces change detector to update on scroll */
   @HostListener('scroll', ['$event']) scroll() {
     this.ref.detectChanges();
+  }
+
+  commitDisabledRecipes(value: string[]) {
+    this.openSelect = OpenSelect.None;
+    this.setDisabledRecipes.emit({
+      value,
+      default: this.data.defaults.disabledRecipes,
+    });
+  }
+
+  commitFactoryRank(value: string[]) {
+    this.openSelect = OpenSelect.None;
+    this.setFactoryRank.emit({
+      value,
+      default: this.data.defaults.factoryRank,
+    });
+  }
+
+  commitModuleRank(value: string[]) {
+    this.openSelect = OpenSelect.None;
+    this.setModuleRank.emit({
+      value,
+      default: this.data.defaults.moduleRank,
+    });
   }
 
   changeBeaconCount(event: Event) {

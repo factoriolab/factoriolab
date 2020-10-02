@@ -139,76 +139,30 @@ export function settingsReducer(
         },
       };
     }
-    case SettingsActionType.DISABLE_RECIPE: {
+    case SettingsActionType.SET_DISABLED_RECIPES: {
       return {
         ...state,
         ...{
-          disabledRecipes: StoreUtility.tryAddId(
-            state.disabledRecipes,
-            action.payload
-          ),
-        },
-      };
-    }
-    case SettingsActionType.ENABLE_RECIPE: {
-      return {
-        ...state,
-        ...{
-          disabledRecipes: StoreUtility.tryRemoveId(
-            state.disabledRecipes,
-            action.payload
-          ),
+          disabledRecipes: StoreUtility.compareValues(action.payload),
         },
       };
     }
     case SettingsActionType.SET_EXPENSIVE: {
       return { ...state, ...{ expensive: action.payload } };
     }
-    case SettingsActionType.PREFER_FACTORY: {
+    case SettingsActionType.SET_FACTORY_RANK: {
       return {
         ...state,
         ...{
-          factoryRank: StoreUtility.tryAddId(
-            state.factoryRank,
-            action.payload,
-            true
-          ),
+          factoryRank: StoreUtility.compareRank(action.payload),
         },
       };
     }
-    case SettingsActionType.DROP_FACTORY: {
+    case SettingsActionType.SET_MODULE_RANK: {
       return {
         ...state,
         ...{
-          factoryRank: StoreUtility.tryRemoveId(
-            state.factoryRank,
-            action.payload,
-            true
-          ),
-        },
-      };
-    }
-    case SettingsActionType.PREFER_MODULE: {
-      return {
-        ...state,
-        ...{
-          moduleRank: StoreUtility.tryAddId(
-            state.moduleRank,
-            action.payload,
-            true
-          ),
-        },
-      };
-    }
-    case SettingsActionType.DROP_MODULE: {
-      return {
-        ...state,
-        ...{
-          moduleRank: StoreUtility.tryRemoveId(
-            state.moduleRank,
-            action.payload,
-            true
-          ),
+          moduleRank: StoreUtility.compareRank(action.payload),
         },
       };
     }

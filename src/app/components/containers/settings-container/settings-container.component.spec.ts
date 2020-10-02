@@ -144,7 +144,7 @@ describe('SettingsContainerComponent', () => {
     const value = { id: RecipeId.BasicOilProcessing, default: [] };
     component.child.disableRecipe.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.DisableRecipeAction(value)
+      new Settings.SetDisabledRecipesAction(value)
     );
   });
 
@@ -171,7 +171,7 @@ describe('SettingsContainerComponent', () => {
     const value = { id: ItemId.AssemblingMachine1, default: [] };
     component.child.preferFactory.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.PreferFactoryAction(value)
+      new Settings.SetFactoryRankAction(value)
     );
   });
 
@@ -187,9 +187,9 @@ describe('SettingsContainerComponent', () => {
   it('should prefer a module', () => {
     spyOn(store, 'dispatch');
     const value = { id: ItemId.SpeedModule, default: [] };
-    component.child.preferModule.emit(value);
+    component.child.setModuleRank.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.PreferModuleAction(value)
+      new Settings.SetModuleRankAction(value)
     );
   });
 

@@ -117,7 +117,7 @@ describe('Settings Reducer', () => {
       const id = RecipeId.AdvancedOilProcessing;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.DisableRecipeAction({ id, default: [] })
+        new Actions.SetDisabledRecipesAction({ id, default: [] })
       );
       expect(result.disabledRecipes).toEqual([id]);
     });
@@ -150,7 +150,7 @@ describe('Settings Reducer', () => {
       const id = ItemId.AssemblingMachine1;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.PreferFactoryAction({ id, default: [] })
+        new Actions.SetFactoryRankAction({ id, default: [] })
       );
       expect(result.factoryRank).toEqual([id]);
     });
@@ -172,7 +172,7 @@ describe('Settings Reducer', () => {
       const id = ItemId.SpeedModule;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.PreferModuleAction({ id, default: [] })
+        new Actions.SetModuleRankAction({ id, default: [] })
       );
       expect(result.moduleRank).toEqual([id]);
     });

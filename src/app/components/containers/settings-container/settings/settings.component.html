@@ -138,11 +138,9 @@
     *ngIf="openSelect === OpenSelect.DisabledRecipes"
     [data]="data"
     [disabledRecipes]="settings.disabledRecipes"
-    [default]="data.defaults.disabledRecipes"
     [parent]="btnRecipes"
+    (commit)="commitDisabledRecipes($event)"
     (cancel)="openSelect = OpenSelect.None"
-    (enableRecipe)="enableRecipe.emit($event)"
-    (disableRecipe)="disableRecipe.emit($event)"
   >
   </lab-toggle>
 </div>
@@ -179,11 +177,8 @@
     [data]="data"
     [rank]="settings.factoryRank"
     [options]="data.factoryIds"
-    [default]="data.defaults.factoryRank"
     [parent]="btnFactory.element"
-    (cancel)="openSelect = OpenSelect.None"
-    (preferItem)="preferFactory.emit($event)"
-    (dropItem)="dropFactory.emit($event)"
+    (commit)="commitFactoryRank($event)"
   >
   </lab-ranker>
   <lab-icon
@@ -201,11 +196,8 @@
     [data]="data"
     [rank]="settings.moduleRank"
     [options]="data.moduleIds"
-    [default]="data.defaults.moduleRank"
     [parent]="btnModule.element"
-    (cancel)="openSelect = OpenSelect.None"
-    (preferItem)="preferModule.emit($event)"
-    (dropItem)="dropModule.emit($event)"
+    (commit)="commitModuleRank($event)"
   >
   </lab-ranker>
   <div

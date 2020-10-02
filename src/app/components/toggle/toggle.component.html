@@ -3,7 +3,7 @@
   <lab-icon
     *ngFor="let id of complexRecipes"
     class="clickable"
-    [class.ignored]="isDisabled(id)"
+    [class.ignored]="editValue.indexOf(id) !== -1"
     [data]="data"
     [iconId]="id"
     [scrollTop]="scrollContainer.scrollTop"

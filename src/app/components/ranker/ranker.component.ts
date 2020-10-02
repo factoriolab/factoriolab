@@ -9,7 +9,7 @@ import {
   HostBinding,
 } from '@angular/core';
 
-import { Dataset, DefaultTogglePayload } from '~/models';
+import { Dataset } from '~/models';
 
 @Component({
   selector: 'lab-ranker',
@@ -19,16 +19,16 @@ import { Dataset, DefaultTogglePayload } from '~/models';
 })
 export class RankerComponent {
   @Input() data: Dataset;
-  @Input() rank: string[];
+  @Input() set rank(value: string[]) {
+    this.editValue = [...value];
+  }
   @Input() options: string[];
-  @Input() default: string[];
   @Input() parent: HTMLElement;
 
-  @Output() cancel = new EventEmitter();
-  @Output() preferItem = new EventEmitter<DefaultTogglePayload>();
-  @Output() dropItem = new EventEmitter<DefaultTogglePayload>();
+  @Output() commit = new EventEmitter<string[]>();
 
   opening = true;
+  editValue: string[];
 
   @HostBinding('style.top.px') get top() {
     return this.parent ? this.parent.getBoundingClientRect().y - 4 : -4;
@@ -49,17 +49,17 @@ export class RankerComponent {
     if (this.opening) {
       this.opening = false;
     } else if (!this.element.nativeElement.contains(event.target)) {
-      this.cancel.emit();
+      this.commit.emit(this.editValue);
     }
   }
 
   clickPrefer(id: string, event: MouseEvent) {
-    this.preferItem.emit({ id, default: this.default });
+    this.editValue.push(id);
     event.stopPropagation();
   }
 
   clickDrop(id: string, event: MouseEvent) {
-    this.dropItem.emit({ id, default: this.default });
+    this.editValue = this.editValue.filter((i) => i !== id);
     event.stopPropagation();
   }
 }

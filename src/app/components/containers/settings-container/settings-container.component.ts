@@ -98,32 +98,20 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.DisableModAction(value));
   }
 
-  disableRecipe(value: DefaultTogglePayload) {
-    this.store.dispatch(new Settings.DisableRecipeAction(value));
-  }
-
-  enableRecipe(value: DefaultTogglePayload) {
-    this.store.dispatch(new Settings.EnableRecipeAction(value));
+  setDisabledRecipes(value: DefaultPayload<string[]>) {
+    this.store.dispatch(new Settings.SetDisabledRecipesAction(value));
   }
 
   setExpensive(value: boolean) {
     this.store.dispatch(new Settings.SetExpensiveAction(value));
   }
 
-  preferFactory(value: DefaultTogglePayload) {
-    this.store.dispatch(new Settings.PreferFactoryAction(value));
+  setFactoryRank(value: DefaultPayload<string[]>) {
+    this.store.dispatch(new Settings.SetFactoryRankAction(value));
   }
 
-  dropFactory(value: DefaultTogglePayload) {
-    this.store.dispatch(new Settings.DropFactoryAction(value));
-  }
-
-  preferModule(value: DefaultTogglePayload) {
-    this.store.dispatch(new Settings.PreferModuleAction(value));
-  }
-
-  dropModule(value: DefaultTogglePayload) {
-    this.store.dispatch(new Settings.DropModuleAction(value));
+  setModuleRank(value: DefaultPayload<string[]>) {
+    this.store.dispatch(new Settings.SetModuleRankAction(value));
   }
 
   setDrillModule(value: boolean) {
