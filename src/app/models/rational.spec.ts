@@ -15,6 +15,12 @@ describe('Rational', () => {
       });
     });
 
+    describe('from', () => {
+      it('should build a Rational from an integer Number', () => {
+        expect(Rational.from(1, 3)).toEqual(new Rational(BigInt(1), BigInt(3)));
+      });
+    });
+
     describe('fromNumber', () => {
       it('should generate a Rational from integer', () => {
         expect(Rational.fromNumber(2)).toEqual(new Rational(BigInt(2)));
@@ -72,6 +78,13 @@ describe('Rational', () => {
       it('should inverse a number', () => {
         expect(Rational.zero.inverse()).toEqual(Rational.zero);
         expect(Rational.one.inverse()).toEqual(Rational.minusOne);
+      });
+    });
+
+    describe('reciprocal', () => {
+      it('should switch p and q', () => {
+        expect(Rational.one.reciprocal()).toEqual(Rational.one);
+        expect(Rational.two.reciprocal()).toEqual(Rational.from(1, 2));
       });
     });
 

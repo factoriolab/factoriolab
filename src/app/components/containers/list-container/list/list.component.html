@@ -16,8 +16,7 @@
             [enabledIds]="columns"
             [options]="ColumnsAsOptions"
             (cancel)="edit = null"
-            (enableId)="showColumn.emit($event)"
-            (disableId)="hideColumn.emit($event)"
+            (commit)="edit = null; setColumns.emit($event)"
           ></lab-multiselect>
         </span>
       </th>

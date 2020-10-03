@@ -118,6 +118,10 @@ img.icon {
 .flex {
   display: flex;
   align-items: center;
+
+  &.tween {
+    justify-content: space-between;
+  }
 }
 
 .relative {
@@ -145,6 +149,10 @@ g {
 
 .header {
   color: var(--color-brand);
+}
+
+.dialog-title {
+  height: 1.75rem;
 }
 
 // Sankey SVG styles

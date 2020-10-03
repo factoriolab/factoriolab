@@ -32,7 +32,11 @@
               "includePaths": ["src/styles"]
             },
             "scripts": [],
-            "allowedCommonJsDependencies": ["pako", "file-saver"]
+            "allowedCommonJsDependencies": [
+              "pako",
+              "file-saver",
+              "elementary-circuits-directed-graph"
+            ]
           },
           "configurations": {
             "production": {

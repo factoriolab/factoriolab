@@ -17,7 +17,6 @@ import {
   Theme,
   Dataset,
   ModInfo,
-  DefaultTogglePayload,
   DefaultPayload,
   Preset,
   ItemId,
@@ -29,7 +28,6 @@ import {
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
 enum OpenSelect {
-  None,
   Mods,
   DisabledRecipes,
   Belt,
@@ -65,15 +63,11 @@ export class SettingsComponent implements OnInit {
   @Output() deleteState = new EventEmitter<string>();
   @Output() setPreset = new EventEmitter<Preset>();
   @Output() setBase = new EventEmitter<string>();
-  @Output() enableMod = new EventEmitter<DefaultTogglePayload>();
-  @Output() disableMod = new EventEmitter<DefaultTogglePayload>();
-  @Output() disableRecipe = new EventEmitter<DefaultTogglePayload>();
-  @Output() enableRecipe = new EventEmitter<DefaultTogglePayload>();
+  @Output() setMods = new EventEmitter<DefaultPayload<string[]>>();
+  @Output() setDisabledRecipes = new EventEmitter<DefaultPayload<string[]>>();
   @Output() setExpensive = new EventEmitter<boolean>();
-  @Output() preferFactory = new EventEmitter<DefaultTogglePayload>();
-  @Output() dropFactory = new EventEmitter<DefaultTogglePayload>();
-  @Output() preferModule = new EventEmitter<DefaultTogglePayload>();
-  @Output() dropModule = new EventEmitter<DefaultTogglePayload>();
+  @Output() setFactoryRank = new EventEmitter<DefaultPayload<string[]>>();
+  @Output() setModuleRank = new EventEmitter<DefaultPayload<string[]>>();
   @Output() setDrillModule = new EventEmitter<boolean>();
   @Output() setBeacon = new EventEmitter<DefaultPayload>();
   @Output() setBeaconModule = new EventEmitter<DefaultPayload>();
@@ -95,7 +89,7 @@ export class SettingsComponent implements OnInit {
   @Output() setTheme = new EventEmitter<Theme>();
   @Output() resetSettings = new EventEmitter();
 
-  openSelect = OpenSelect.None;
+  openSelect: OpenSelect;
 
   DisplayRate = DisplayRate;
   ItemId = ItemId;

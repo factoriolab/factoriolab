@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Mocks, TestUtility } from 'src/tests';
+import { TestUtility } from 'src/tests';
 import { IconComponent } from '../icon/icon.component';
 import { MultiselectComponent } from './multiselect.component';
 
@@ -14,8 +14,7 @@ import { MultiselectComponent } from './multiselect.component';
       [options]="options"
       [parent]="element.nativeElement"
       (cancel)="cancel()"
-      (enableId)="enableId($event)"
-      (disableId)="disableId($event)"
+      (commit)="commit($event)"
     >
     </lab-multiselect>
   `,
@@ -23,11 +22,13 @@ import { MultiselectComponent } from './multiselect.component';
 class TestMultiselectComponent {
   @ViewChild(MultiselectComponent) child: MultiselectComponent;
   header = 'Header';
-  enabledIds = [];
-  options = Mocks.Raw.mods;
+  enabledIds = ['1'];
+  options = [
+    { id: '1', name: 'name1' },
+    { id: '2', name: 'name2' },
+  ];
   cancel() {}
-  enableId(data) {}
-  disableId(data) {}
+  commit(data) {}
 
   constructor(public element: ElementRef) {}
 }
@@ -77,7 +78,17 @@ describe('MultiselectComponent', () => {
     expect(component.child.opening).toEqual(false);
   });
 
-  it('should cancel when clicked away', () => {
+  it('should commit when clicked away with edits', () => {
+    spyOn(component, 'commit');
+    const value = ['A'];
+    component.child.opening = false;
+    component.child.edited = true;
+    component.child.editValue = value;
+    document.body.click();
+    expect(component.commit).toHaveBeenCalledWith(value);
+  });
+
+  it('should cancel when clicked away with no edits', () => {
     spyOn(component, 'cancel');
     component.child.opening = false;
     document.body.click();
@@ -92,22 +103,16 @@ describe('MultiselectComponent', () => {
   });
 
   it('should enable an item', () => {
-    spyOn(component, 'enableId');
-    spyOn(component, 'cancel');
     component.child.opening = false;
-    TestUtility.clickSelector(fixture, '.clickable', 0);
-    expect(component.enableId).toHaveBeenCalledWith(Mocks.Raw.mods[0].id);
-    expect(component.cancel).not.toHaveBeenCalled();
+    TestUtility.clickSelector(fixture, '.clickable', 1);
+    expect(component.child.edited).toBeTrue();
+    expect(component.child.editValue).toEqual(['1', '2']);
   });
 
   it('should disable an item', () => {
-    component.enabledIds = [Mocks.Raw.mods[0].id];
-    fixture.detectChanges();
-    spyOn(component, 'disableId');
-    spyOn(component, 'cancel');
     component.child.opening = false;
     TestUtility.clickSelector(fixture, '.clickable', 0);
-    expect(component.disableId).toHaveBeenCalledWith(Mocks.Raw.mods[0].id);
-    expect(component.cancel).not.toHaveBeenCalled();
+    expect(component.child.edited).toBeTrue();
+    expect(component.child.editValue).toEqual([]);
   });
 });

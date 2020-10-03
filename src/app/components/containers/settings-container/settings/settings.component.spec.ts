@@ -21,16 +21,12 @@ import { SettingsComponent } from './settings.component';
       (deleteState)="deleteState($event)"
       (setPreset)="setPreset($event)"
       (setBase)="setBase($event)"
-      (enableMod)="enableMod($event)"
-      (disableMod)="disableMod($event)"
+      (setMods)="setMods($event)"
       (setBelt)="setBelt($event)"
       (setFuel)="setFuel($event)"
-      (disableRecipe)="disableRecipe($event)"
-      (enableRecipe)="enableRecipe($event)"
-      (preferFactory)="preferFactory($event)"
-      (dropFactory)="dropFactory($event)"
-      (preferModule)="preferModule($event)"
-      (dropModule)="dropModule($event)"
+      (setDisabledRecipes)="setDisabledRecipes($event)"
+      (setFactoryRank)="setFactoryRank($event)"
+      (setModuleRank)="setModuleRank($event)"
       (setBeaconModule)="setBeaconModule($event)"
       (setDisplayRate)="setDisplayRate($event)"
       (setItemPrecision)="setItemPrecision($event)"
@@ -58,16 +54,12 @@ class TestSettingsComponent {
   deleteState(data) {}
   setPreset(data) {}
   setBase(data) {}
-  enableMod(data) {}
-  disableMod(data) {}
+  setMods(data) {}
   setBelt(data) {}
   setFuel(data) {}
-  disableRecipe(data) {}
-  enableRecipe(data) {}
-  preferFactory(data) {}
-  dropFactory(data) {}
-  preferModule(data) {}
-  dropModule(data) {}
+  setDisabledRecipes(data) {}
+  setFactoryRank(data) {}
+  setModuleRank(data) {}
   setBeaconModule(data) {}
   setDisplayRate(data) {}
   setItemPrecision(data) {}

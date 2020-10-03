@@ -119,12 +119,8 @@ export class ListContainerComponent implements OnInit {
     this.store.dispatch(new Recipes.SetBeaconModulesAction(data));
   }
 
-  showColumn(value: string) {
-    this.store.dispatch(new Settings.ShowColumnAction(value));
-  }
-
-  hideColumn(value: string) {
-    this.store.dispatch(new Settings.HideColumnAction(value));
+  setColumns(value: string[]) {
+    this.store.dispatch(new Settings.SetColumnsAction(value));
   }
 
   resetItem(value: string) {

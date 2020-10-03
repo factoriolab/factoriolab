@@ -123,82 +123,38 @@ export function settingsReducer(
         },
       };
     }
-    case SettingsActionType.ENABLE_MOD: {
+    case SettingsActionType.SET_MODS: {
       return {
         ...state,
         ...{
-          modIds: StoreUtility.tryAddId(state.modIds, action.payload),
+          modIds: StoreUtility.compareValues(action.payload),
         },
       };
     }
-    case SettingsActionType.DISABLE_MOD: {
+    case SettingsActionType.SET_DISABLED_RECIPES: {
       return {
         ...state,
         ...{
-          modIds: StoreUtility.tryRemoveId(state.modIds, action.payload),
-        },
-      };
-    }
-    case SettingsActionType.DISABLE_RECIPE: {
-      return {
-        ...state,
-        ...{
-          disabledRecipes: StoreUtility.tryAddId(
-            state.disabledRecipes,
-            action.payload
-          ),
-        },
-      };
-    }
-    case SettingsActionType.ENABLE_RECIPE: {
-      return {
-        ...state,
-        ...{
-          disabledRecipes: StoreUtility.tryRemoveId(
-            state.disabledRecipes,
-            action.payload
-          ),
+          disabledRecipes: StoreUtility.compareValues(action.payload),
         },
       };
     }
     case SettingsActionType.SET_EXPENSIVE: {
       return { ...state, ...{ expensive: action.payload } };
     }
-    case SettingsActionType.PREFER_FACTORY: {
+    case SettingsActionType.SET_FACTORY_RANK: {
       return {
         ...state,
         ...{
-          factoryRank: StoreUtility.tryAddId(state.factoryRank, action.payload),
+          factoryRank: StoreUtility.compareRank(action.payload),
         },
       };
     }
-    case SettingsActionType.DROP_FACTORY: {
+    case SettingsActionType.SET_MODULE_RANK: {
       return {
         ...state,
         ...{
-          factoryRank: StoreUtility.tryRemoveId(
-            state.factoryRank,
-            action.payload
-          ),
-        },
-      };
-    }
-    case SettingsActionType.PREFER_MODULE: {
-      return {
-        ...state,
-        ...{
-          moduleRank: StoreUtility.tryAddId(state.moduleRank, action.payload),
-        },
-      };
-    }
-    case SettingsActionType.DROP_MODULE: {
-      return {
-        ...state,
-        ...{
-          moduleRank: StoreUtility.tryRemoveId(
-            state.moduleRank,
-            action.payload
-          ),
+          moduleRank: StoreUtility.compareRank(action.payload),
         },
       };
     }
@@ -265,13 +221,8 @@ export function settingsReducer(
     case SettingsActionType.SET_RESEARCH_SPEED: {
       return { ...state, ...{ researchSpeed: action.payload } };
     }
-    case SettingsActionType.HIDE_COLUMN: {
-      const result = state.columns.filter((c) => c !== action.payload);
-      return { ...state, ...{ columns: result } };
-    }
-    case SettingsActionType.SHOW_COLUMN: {
-      const result = [...state.columns, action.payload];
-      return { ...state, ...{ columns: result } };
+    case SettingsActionType.SET_COLUMNS: {
+      return { ...state, ...{ columns: action.payload } };
     }
     case SettingsActionType.SET_SORT: {
       return { ...state, ...{ sort: action.payload } };

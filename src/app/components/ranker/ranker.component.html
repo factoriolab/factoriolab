@@ -1,9 +1,18 @@
 <div #scrollContainer class="scroll">
-  <div class="header">Preferred</div>
+  <div class="flex tween dialog-title">
+    <span class="header">Preferred</span>
+    <i
+      *ngIf="edited"
+      class="clickable material-icons"
+      title="Cancel changes"
+      (click)="cancel.emit()"
+      >close</i
+    >
+  </div>
   <div class="info">Click to remove from preferred list</div>
   <div class="flex">
     <lab-icon
-      *ngFor="let id of rank"
+      *ngFor="let id of editValue"
       class="clickable"
       [data]="data"
       [iconId]="id"
@@ -18,7 +27,7 @@
   <div class="flex">
     <ng-container *ngFor="let id of options">
       <lab-icon
-        *ngIf="rank.indexOf(id) === -1"
+        *ngIf="editValue.indexOf(id) === -1"
         class="clickable"
         [data]="data"
         [iconId]="id"
