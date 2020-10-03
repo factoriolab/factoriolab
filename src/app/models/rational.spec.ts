@@ -15,6 +15,12 @@ describe('Rational', () => {
       });
     });
 
+    describe('from', () => {
+      it('should build a Rational from an integer Number', () => {
+        expect(Rational.from(1, 3)).toEqual(new Rational(BigInt(1), BigInt(3)));
+      });
+    });
+
     describe('fromNumber', () => {
       it('should generate a Rational from integer', () => {
         expect(Rational.fromNumber(2)).toEqual(new Rational(BigInt(2)));
