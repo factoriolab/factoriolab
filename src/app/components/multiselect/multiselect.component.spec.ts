@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Mocks, TestUtility } from 'src/tests';
+import { TestUtility } from 'src/tests';
 import { IconComponent } from '../icon/icon.component';
 import { MultiselectComponent } from './multiselect.component';
 
@@ -23,7 +23,10 @@ class TestMultiselectComponent {
   @ViewChild(MultiselectComponent) child: MultiselectComponent;
   header = 'Header';
   enabledIds = ['1'];
-  options = ['1', '2'];
+  options = [
+    { id: '1', name: 'name1' },
+    { id: '2', name: 'name2' },
+  ];
   cancel() {}
   commit(data) {}
 
@@ -75,7 +78,17 @@ describe('MultiselectComponent', () => {
     expect(component.child.opening).toEqual(false);
   });
 
-  it('should cancel when clicked away', () => {
+  it('should commit when clicked away with edits', () => {
+    spyOn(component, 'commit');
+    const value = ['A'];
+    component.child.opening = false;
+    component.child.edited = true;
+    component.child.editValue = value;
+    document.body.click();
+    expect(component.commit).toHaveBeenCalledWith(value);
+  });
+
+  it('should cancel when clicked away with no edits', () => {
     spyOn(component, 'cancel');
     component.child.opening = false;
     document.body.click();
@@ -91,15 +104,15 @@ describe('MultiselectComponent', () => {
 
   it('should enable an item', () => {
     component.child.opening = false;
-    TestUtility.clickSelector(fixture, '.clickable', 0);
+    TestUtility.clickSelector(fixture, '.clickable', 1);
     expect(component.child.edited).toBeTrue();
-    expect(component.child.editValue).toEqual(null);
+    expect(component.child.editValue).toEqual(['1', '2']);
   });
 
   it('should disable an item', () => {
     component.child.opening = false;
     TestUtility.clickSelector(fixture, '.clickable', 0);
     expect(component.child.edited).toBeTrue();
-    expect(component.child.editValue).toEqual(null);
+    expect(component.child.editValue).toEqual([]);
   });
 });

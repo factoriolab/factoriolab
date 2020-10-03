@@ -73,7 +73,17 @@ describe('ToggleComponent', () => {
     expect(component.child.opening).toEqual(false);
   });
 
-  it('should cancel when clicked away', () => {
+  it('should commit when clicked away with edits', () => {
+    spyOn(component, 'commit');
+    const value = ['A'];
+    component.child.opening = false;
+    component.child.edited = true;
+    component.child.editValue = value;
+    document.body.click();
+    expect(component.commit).toHaveBeenCalledWith(value);
+  });
+
+  it('should cancel when clicked away with no edits', () => {
     spyOn(component, 'cancel');
     component.child.opening = false;
     document.body.click();
@@ -91,13 +101,16 @@ describe('ToggleComponent', () => {
     component.child.opening = false;
     TestUtility.clickSelector(fixture, 'lab-icon.clickable', 1);
     expect(component.child.edited).toBeTrue();
-    expect(component.child.editValue).toEqual(null);
+    expect(component.child.editValue).toEqual([]);
   });
 
   it('should disable a recipe', () => {
     component.child.opening = false;
     TestUtility.clickSelector(fixture, 'lab-icon.clickable', 0);
     expect(component.child.edited).toBeTrue();
-    expect(component.child.editValue).toEqual(null);
+    expect(component.child.editValue).toEqual([
+      RecipeId.BasicOilProcessing,
+      RecipeId.AdvancedOilProcessing,
+    ]);
   });
 });

@@ -150,4 +150,32 @@ describe('StoreUtility', () => {
       );
     });
   });
+
+  describe('compareValues', () => {
+    it('should return null if equal to default', () => {
+      expect(
+        StoreUtility.compareValues({ value: ['a', 'b'], default: ['b', 'a'] })
+      ).toBeNull();
+    });
+
+    it('should return value if not equal to default', () => {
+      expect(
+        StoreUtility.compareValues({ value: ['a'], default: ['b', 'a'] })
+      ).toEqual(['a']);
+    });
+  });
+
+  describe('compareRank', () => {
+    it('should return null if equal to default', () => {
+      expect(
+        StoreUtility.compareRank({ value: ['a', 'b'], default: ['a', 'b'] })
+      ).toBeNull();
+    });
+
+    it('should return value if not equal to default', () => {
+      expect(
+        StoreUtility.compareRank({ value: ['a', 'b'], default: ['b', 'a'] })
+      ).toEqual(['a', 'b']);
+    });
+  });
 });

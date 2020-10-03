@@ -5,12 +5,8 @@ export class StoreUtility {
     return a.length === b.length && a.every((v, i) => v === b[i]);
   }
 
-  static arrayEquals<T extends number | string>(a: T[], b: T[], rank = false) {
-    if (rank) {
-      return this.rankEquals(a, b);
-    } else {
-      return this.rankEquals([...a].sort(), [...b].sort());
-    }
+  static arrayEquals<T extends number | string>(a: T[], b: T[]) {
+    return this.rankEquals([...a].sort(), [...b].sort());
   }
 
   static payloadEquals<T>(payload: DefaultIdPayload<T>) {
