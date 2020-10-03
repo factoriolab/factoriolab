@@ -26,6 +26,10 @@ export class Rational {
     return x < BigInt(0) ? x * BigInt(-1) : x;
   }
 
+  static from(p: number, q: number = 1) {
+    return new Rational(BigInt(p), BigInt(q));
+  }
+
   static fromNumber(x: number) {
     if (Number.isInteger(x)) {
       return new Rational(BigInt(x), BigInt(1));
@@ -59,6 +63,10 @@ export class Rational {
 
   inverse() {
     return this.mul(Rational.minusOne);
+  }
+
+  reciprocal() {
+    return new Rational(this.q, this.p);
   }
 
   lt(x: Rational) {

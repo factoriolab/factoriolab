@@ -6,7 +6,7 @@ import {
   RationalProduct,
   Sort,
 } from '~/models';
-import { RateUtility, MatrixUtility, FlowUtility } from '~/utilities';
+import { RateUtility, FlowUtility, SimplexUtility } from '~/utilities';
 import { initialSettingsState } from '../settings';
 import * as Selectors from './products.selectors';
 
@@ -191,24 +191,20 @@ describe('Products Selectors', () => {
         [],
         {},
         {},
-        {},
-        [],
-        null
+        []
       );
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should calculate rates using utility method', () => {
-      spyOn(MatrixUtility, 'solveMatricesFor').and.returnValue([]);
+      spyOn(SimplexUtility, 'solve').and.returnValue([]);
       Selectors.getNormalizedStepsWithMatrices.projector(
         [Mocks.Step1],
         {},
         {},
-        {},
-        [],
-        null
+        []
       );
-      expect(MatrixUtility.solveMatricesFor).toHaveBeenCalled();
+      expect(SimplexUtility.solve).toHaveBeenCalled();
     });
   });
 

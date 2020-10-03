@@ -1,5 +1,4 @@
 export * from './app-data';
-export * from './cassowary';
 export * from './data';
 export * from './defaults';
 export * from './enum';

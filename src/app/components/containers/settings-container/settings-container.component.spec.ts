@@ -121,39 +121,21 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
-  it('should enable a mod', () => {
+  it('should set the selected mods', () => {
     spyOn(store, 'dispatch');
-    const value = { id: 'test', default: [] };
-    component.child.enableMod.emit(value);
+    const value = { value: ['test'], default: [] };
+    component.child.setMods.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.EnableModAction(value)
+      new Settings.SetModsAction(value)
     );
   });
 
-  it('should disable a mod', () => {
+  it('should set the disabled recipes', () => {
     spyOn(store, 'dispatch');
-    const value = { id: 'test', default: [] };
-    component.child.disableMod.emit(value);
+    const value = { value: [RecipeId.BasicOilProcessing], default: [] };
+    component.child.setDisabledRecipes.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.DisableModAction(value)
-    );
-  });
-
-  it('should disable a recipe', () => {
-    spyOn(store, 'dispatch');
-    const value = { id: RecipeId.BasicOilProcessing, default: [] };
-    component.child.disableRecipe.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.DisableRecipeAction(value)
-    );
-  });
-
-  it('should enable a recipe', () => {
-    spyOn(store, 'dispatch');
-    const value = { id: RecipeId.BasicOilProcessing, default: [] };
-    component.child.enableRecipe.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.EnableRecipeAction(value)
+      new Settings.SetDisabledRecipesAction(value)
     );
   });
 
@@ -166,39 +148,21 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
-  it('should prefer a factory', () => {
+  it('should set the preferred factory rank', () => {
     spyOn(store, 'dispatch');
-    const value = { id: ItemId.AssemblingMachine1, default: [] };
-    component.child.preferFactory.emit(value);
+    const value = { value: [ItemId.AssemblingMachine1], default: [] };
+    component.child.setFactoryRank.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.PreferFactoryAction(value)
+      new Settings.SetFactoryRankAction(value)
     );
   });
 
-  it('should drop a factory', () => {
+  it('should set the preferred module rank', () => {
     spyOn(store, 'dispatch');
-    const value = { id: ItemId.AssemblingMachine1, default: [] };
-    component.child.dropFactory.emit(value);
+    const value = { value: [ItemId.SpeedModule], default: [] };
+    component.child.setModuleRank.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.DropFactoryAction(value)
-    );
-  });
-
-  it('should prefer a module', () => {
-    spyOn(store, 'dispatch');
-    const value = { id: ItemId.SpeedModule, default: [] };
-    component.child.preferModule.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.PreferModuleAction(value)
-    );
-  });
-
-  it('should drop a module', () => {
-    spyOn(store, 'dispatch');
-    const value = { id: ItemId.SpeedModule, default: [] };
-    component.child.dropModule.emit(value);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.DropModuleAction(value)
+      new Settings.SetModuleRankAction(value)
     );
   });
 

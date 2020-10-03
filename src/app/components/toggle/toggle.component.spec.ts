@@ -11,11 +11,9 @@ import { ToggleComponent } from './toggle.component';
     <lab-toggle
       [data]="data"
       [disabledRecipes]="disabledRecipes"
-      [default]="default"
       [parent]="element.nativeElement"
       (cancel)="cancel()"
-      (enableRecipe)="enableRecipe($event)"
-      (disableRecipe)="disableRecipe($event)"
+      (commit)="commit($event)"
     >
     </lab-toggle>
   `,
@@ -23,11 +21,9 @@ import { ToggleComponent } from './toggle.component';
 class TestToggleComponent {
   @ViewChild(ToggleComponent) child: ToggleComponent;
   data = Mocks.Data;
-  disabledRecipes = Mocks.SettingsState1.disabledRecipes;
-  default = [];
+  disabledRecipes = [RecipeId.BasicOilProcessing];
   cancel() {}
-  enableRecipe(data) {}
-  disableRecipe(data) {}
+  commit(data) {}
 
   constructor(public element: ElementRef) {}
 }
@@ -77,7 +73,17 @@ describe('ToggleComponent', () => {
     expect(component.child.opening).toEqual(false);
   });
 
-  it('should cancel when clicked away', () => {
+  it('should commit when clicked away with edits', () => {
+    spyOn(component, 'commit');
+    const value = ['A'];
+    component.child.opening = false;
+    component.child.edited = true;
+    component.child.editValue = value;
+    document.body.click();
+    expect(component.commit).toHaveBeenCalledWith(value);
+  });
+
+  it('should cancel when clicked away with no edits', () => {
     spyOn(component, 'cancel');
     component.child.opening = false;
     document.body.click();
@@ -92,26 +98,19 @@ describe('ToggleComponent', () => {
   });
 
   it('should enable a recipe', () => {
-    spyOn(component, 'enableRecipe');
-    spyOn(component, 'cancel');
     component.child.opening = false;
     TestUtility.clickSelector(fixture, 'lab-icon.clickable', 1);
-    expect(component.enableRecipe).toHaveBeenCalledWith({
-      id: RecipeId.BasicOilProcessing,
-      default: [],
-    });
-    expect(component.cancel).not.toHaveBeenCalled();
+    expect(component.child.edited).toBeTrue();
+    expect(component.child.editValue).toEqual([]);
   });
 
   it('should disable a recipe', () => {
-    spyOn(component, 'disableRecipe');
-    spyOn(component, 'cancel');
     component.child.opening = false;
     TestUtility.clickSelector(fixture, 'lab-icon.clickable', 0);
-    expect(component.disableRecipe).toHaveBeenCalledWith({
-      id: RecipeId.AdvancedOilProcessing,
-      default: [],
-    });
-    expect(component.cancel).not.toHaveBeenCalled();
+    expect(component.child.edited).toBeTrue();
+    expect(component.child.editValue).toEqual([
+      RecipeId.BasicOilProcessing,
+      RecipeId.AdvancedOilProcessing,
+    ]);
   });
 });

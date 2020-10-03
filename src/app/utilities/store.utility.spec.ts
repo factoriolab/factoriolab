@@ -151,41 +151,31 @@ describe('StoreUtility', () => {
     });
   });
 
-  describe('tryAddId', () => {
-    it('should add to default if previously null', () => {
-      expect(StoreUtility.tryAddId(null, { id: 'a', default: [] })).toEqual([
-        'a',
-      ]);
-    });
-
-    it('should return null if result is equal to default', () => {
-      expect(StoreUtility.tryAddId([], { id: 'a', default: ['a'] })).toBeNull();
-    });
-
-    it('should return result if not equal to default', () => {
-      expect(StoreUtility.tryAddId([], { id: 'a', default: [] })).toEqual([
-        'a',
-      ]);
-    });
-  });
-
-  describe('tryRemoveId', () => {
-    it('should remove from default if previously null', () => {
+  describe('compareValues', () => {
+    it('should return null if equal to default', () => {
       expect(
-        StoreUtility.tryRemoveId(null, { id: 'a', default: ['a'] })
-      ).toEqual([]);
-    });
-
-    it('should return null if result is equal to default', () => {
-      expect(
-        StoreUtility.tryRemoveId(['a'], { id: 'a', default: [] })
+        StoreUtility.compareValues({ value: ['a', 'b'], default: ['b', 'a'] })
       ).toBeNull();
     });
 
-    it('should return result if not equal to default', () => {
+    it('should return value if not equal to default', () => {
       expect(
-        StoreUtility.tryRemoveId(['a', 'b'], { id: 'b', default: [] })
+        StoreUtility.compareValues({ value: ['a'], default: ['b', 'a'] })
       ).toEqual(['a']);
+    });
+  });
+
+  describe('compareRank', () => {
+    it('should return null if equal to default', () => {
+      expect(
+        StoreUtility.compareRank({ value: ['a', 'b'], default: ['a', 'b'] })
+      ).toBeNull();
+    });
+
+    it('should return value if not equal to default', () => {
+      expect(
+        StoreUtility.compareRank({ value: ['a', 'b'], default: ['b', 'a'] })
+      ).toEqual(['a', 'b']);
     });
   });
 });

@@ -13,8 +13,3 @@ export interface DefaultPayload<T = string> {
   value: T;
   default: T;
 }
-
-export interface DefaultTogglePayload {
-  id: string;
-  default: string[];
-}

@@ -9,7 +9,7 @@ import {
   HostBinding,
 } from '@angular/core';
 
-import { Entities, IdName, toBoolEntities } from '~/models';
+import { Entities, IdName } from '~/models';
 
 @Component({
   selector: 'lab-multiselect',
@@ -20,16 +20,17 @@ import { Entities, IdName, toBoolEntities } from '~/models';
 export class MultiselectComponent {
   @Input() header: string;
   @Input() set enabledIds(value: string[]) {
-    this.idEnabled = toBoolEntities(value);
+    this.editValue = [...value];
   }
   @Input() options: IdName[];
   @Input() parent: HTMLElement;
 
   @Output() cancel = new EventEmitter();
-  @Output() enableId = new EventEmitter<string>();
-  @Output() disableId = new EventEmitter<string>();
+  @Output() commit = new EventEmitter<string[]>();
 
   opening = true;
+  edited = false;
+  editValue: string[];
   idEnabled: Entities<boolean> = {};
 
   @HostBinding('style.top.px') get top() {
@@ -47,15 +48,20 @@ export class MultiselectComponent {
     if (this.opening) {
       this.opening = false;
     } else if (!this.element.nativeElement.contains(event.target)) {
-      this.cancel.emit();
+      if (this.edited) {
+        this.commit.emit(this.editValue);
+      } else {
+        this.cancel.emit();
+      }
     }
   }
 
   clickId(id: string, event: MouseEvent) {
-    if (this.idEnabled[id]) {
-      this.disableId.emit(id);
+    this.edited = true;
+    if (this.editValue.indexOf(id) === -1) {
+      this.editValue.push(id);
     } else {
-      this.enableId.emit(id);
+      this.editValue = this.editValue.filter((i) => i !== id);
     }
     event.stopPropagation();
   }
