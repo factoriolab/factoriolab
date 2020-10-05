@@ -113,6 +113,24 @@ describe('SimplexUtility', () => {
         true as any
       );
     });
+
+    it('should include heavy oil cracking', () => {
+      const step: Step = {
+        itemId: ItemId.PetroleumGas,
+        items: Rational.one,
+        depth: 0,
+      };
+      const result = SimplexUtility.solve(
+        [step],
+        Mocks.ItemSettingsInitial,
+        [],
+        Mocks.AdjustedData
+      );
+      const hocStep = result.find(
+        (s) => s.recipeId === RecipeId.HeavyOilCracking
+      );
+      expect(hocStep.factories.gt(Rational.zero)).toBeTrue();
+    });
   });
 
   describe('getState', () => {
@@ -133,6 +151,7 @@ describe('SimplexUtility', () => {
       const step: any = { itemId: id, items: Rational.one };
       spyOn(SimplexUtility, 'unsolvedSteps').and.returnValue([step]);
       spyOn(SimplexUtility, 'parseItemRecursively');
+      spyOn(SimplexUtility, 'addSurplusVariables');
       const result = SimplexUtility.getState(
         Mocks.Steps,
         Mocks.ItemSettingsInitial,
@@ -140,6 +159,7 @@ describe('SimplexUtility', () => {
         Mocks.Data
       );
       expect(SimplexUtility.parseItemRecursively).toHaveBeenCalledTimes(1);
+      expect(SimplexUtility.addSurplusVariables).toHaveBeenCalledTimes(1);
       expect(result.items[id]).toEqual(Rational.one);
     });
 
@@ -214,10 +234,7 @@ describe('SimplexUtility', () => {
       const state = getState();
       const recipe = Mocks.AdjustedData.recipeR[RecipeId.CopperCable];
       const result = SimplexUtility.itemMatches(recipe, state);
-      expect(state.items).toEqual({
-        [ItemId.CopperCable]: Rational.zero,
-        [ItemId.CopperPlate]: Rational.zero,
-      });
+      expect(state.items).toEqual({ [ItemId.CopperPlate]: Rational.zero });
       expect(state.recipes).toEqual({});
       expect(result).toEqual([ItemId.CopperPlate]);
     });
@@ -226,10 +243,7 @@ describe('SimplexUtility', () => {
       const state = getState();
       const recipe = Mocks.AdjustedData.recipeR[RecipeId.WoodenChest];
       const result = SimplexUtility.itemMatches(recipe, state);
-      expect(state.items).toEqual({
-        [ItemId.Wood]: Rational.zero,
-        [ItemId.WoodenChest]: Rational.zero,
-      });
+      expect(state.items).toEqual({ [ItemId.Wood]: Rational.zero });
       expect(state.recipes).toEqual({
         [ItemId.Wood]: new RationalRecipe({
           id: null,
@@ -302,6 +316,15 @@ describe('SimplexUtility', () => {
         recipe,
         state
       );
+    });
+  });
+
+  describe('addSurplusVariables', () => {
+    it('should add other items that only appear as recipe outputs', () => {
+      const state = getState();
+      state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
+      SimplexUtility.addSurplusVariables(state);
+      expect(state.items[ItemId.Coal]).toEqual(Rational.zero);
     });
   });
 
