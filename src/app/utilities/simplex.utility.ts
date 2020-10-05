@@ -107,6 +107,9 @@ export class SimplexUtility {
       this.parseItemRecursively(step.itemId, state);
     }
 
+    // Include any output-only items to calculate surplus
+    this.addSurplusVariables(state);
+
     return state;
   }
 
@@ -151,10 +154,6 @@ export class SimplexUtility {
         });
       }
     }
-    const itemOutIds = Object.keys(recipe.out).filter((i) => !state.items[i]);
-    for (const itemId of itemOutIds) {
-      state.items[itemId] = Rational.zero;
-    }
     return itemIds;
   }
 
@@ -183,6 +182,16 @@ export class SimplexUtility {
       const matches = this.recipeMatches(itemId, state);
       for (const recipe of matches) {
         this.parseRecipeRecursively(recipe, state);
+      }
+    }
+  }
+
+  /** Include items that only function as outputs to calculate surplus values */
+  static addSurplusVariables(state: MatrixState) {
+    const recipes = Object.keys(state.recipes).map((r) => state.recipes[r]);
+    for (const recipe of recipes) {
+      for (const id of Object.keys(recipe.out).filter((o) => !state.items[o])) {
+        state.items[id] = Rational.zero;
       }
     }
   }
@@ -442,7 +451,9 @@ export class SimplexUtility {
         .map((r) => r.id);
     }
 
-    const order = Object.keys(potentials).sort((i) => potentials[i].length);
+    const order = Object.keys(potentials).sort(
+      (a, b) => potentials[a].length - potentials[b].length
+    );
     for (const itemId of order) {
       for (const option of potentials[itemId]) {
         if (!steps.some((s) => s.recipeId === option)) {

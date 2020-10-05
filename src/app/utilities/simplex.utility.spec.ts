@@ -113,6 +113,24 @@ describe('SimplexUtility', () => {
         true as any
       );
     });
+
+    it('should include heavy oil cracking', () => {
+      const step: Step = {
+        itemId: ItemId.PetroleumGas,
+        items: Rational.one,
+        depth: 0,
+      };
+      const result = SimplexUtility.solve(
+        [step],
+        Mocks.ItemSettingsInitial,
+        [],
+        Mocks.AdjustedData
+      );
+      const hocStep = result.find(
+        (s) => s.recipeId === RecipeId.HeavyOilCracking
+      );
+      expect(hocStep.factories.gt(Rational.zero)).toBeTrue();
+    });
   });
 
   describe('getState', () => {
@@ -133,6 +151,7 @@ describe('SimplexUtility', () => {
       const step: any = { itemId: id, items: Rational.one };
       spyOn(SimplexUtility, 'unsolvedSteps').and.returnValue([step]);
       spyOn(SimplexUtility, 'parseItemRecursively');
+      spyOn(SimplexUtility, 'addSurplusVariables');
       const result = SimplexUtility.getState(
         Mocks.Steps,
         Mocks.ItemSettingsInitial,
@@ -140,6 +159,7 @@ describe('SimplexUtility', () => {
         Mocks.Data
       );
       expect(SimplexUtility.parseItemRecursively).toHaveBeenCalledTimes(1);
+      expect(SimplexUtility.addSurplusVariables).toHaveBeenCalledTimes(1);
       expect(result.items[id]).toEqual(Rational.one);
     });
 
@@ -302,6 +322,15 @@ describe('SimplexUtility', () => {
         recipe,
         state
       );
+    });
+  });
+
+  describe('addSurplusVariables', () => {
+    it('should add other items that only appear as recipe outputs', () => {
+      const state = getState();
+      state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
+      SimplexUtility.addSurplusVariables(state);
+      expect(state.items[ItemId.Coal]).toEqual(Rational.zero);
     });
   });
 

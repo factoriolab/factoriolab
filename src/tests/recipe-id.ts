@@ -7,6 +7,7 @@ export enum RecipeId {
   CrudeOil = 'crude-oil',
   ElectronicCircuit = 'electronic-circuit',
   FillWaterBarrel = 'fill-water-barrel',
+  HeavyOilCracking = 'heavy-oil-cracking',
   IronOre = 'iron-ore',
   KovarexEnrichmentProcess = 'kovarex-enrichment-process',
   MiningProductivity = 'mining-productivity',
