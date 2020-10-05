@@ -234,10 +234,7 @@ describe('SimplexUtility', () => {
       const state = getState();
       const recipe = Mocks.AdjustedData.recipeR[RecipeId.CopperCable];
       const result = SimplexUtility.itemMatches(recipe, state);
-      expect(state.items).toEqual({
-        [ItemId.CopperCable]: Rational.zero,
-        [ItemId.CopperPlate]: Rational.zero,
-      });
+      expect(state.items).toEqual({ [ItemId.CopperPlate]: Rational.zero });
       expect(state.recipes).toEqual({});
       expect(result).toEqual([ItemId.CopperPlate]);
     });
@@ -246,10 +243,7 @@ describe('SimplexUtility', () => {
       const state = getState();
       const recipe = Mocks.AdjustedData.recipeR[RecipeId.WoodenChest];
       const result = SimplexUtility.itemMatches(recipe, state);
-      expect(state.items).toEqual({
-        [ItemId.Wood]: Rational.zero,
-        [ItemId.WoodenChest]: Rational.zero,
-      });
+      expect(state.items).toEqual({ [ItemId.Wood]: Rational.zero });
       expect(state.recipes).toEqual({
         [ItemId.Wood]: new RationalRecipe({
           id: null,
