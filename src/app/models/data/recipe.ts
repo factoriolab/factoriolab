@@ -67,4 +67,19 @@ export class RationalRecipe {
     }
     this.producers = data.producers;
   }
+
+  produces(id: string) {
+    if (this.out) {
+      if (this.out[id]) {
+        // Recipe declares this as output, check inputs
+        return this.in?.[id] == null || this.in[id].lt(this.out[id]);
+      }
+      // Recipe declares outputs but not this item
+      return false;
+    } else if (this.id === id) {
+      // Recipe matches item id, check inputs
+      return this.in?.[id] == null || this.in[id].lt(Rational.one);
+    }
+    return false;
+  }
 }

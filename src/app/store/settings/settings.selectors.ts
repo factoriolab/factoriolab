@@ -247,18 +247,32 @@ export const getNormalDataset = createSelector(
       }
     }
 
-    // Calculate item simple recipes
-    const recipeMatches = recipes.reduce((e: Entities<Recipe[]>, r) => {
-      const outputs = r.out ? Object.keys(r.out) : [r.id];
-      for (const o of outputs) {
-        if (!e[o]) {
-          e[o] = [r];
-        } else {
-          e[o].push(r);
-        }
-      }
+    // Convert to rationals
+    const itemR = itemIds.reduce((e: Entities<RationalItem>, i) => {
+      e[i] = new RationalItem(itemEntities[i]);
       return e;
     }, {});
+    const recipeR = recipeIds.reduce((e: Entities<RationalRecipe>, r) => {
+      e[r] = new RationalRecipe(recipeEntities[r]);
+      return e;
+    }, {});
+
+    // Calculate item simple recipes
+    const recipeMatches = recipeIds.reduce(
+      (e: Entities<RationalRecipe[]>, r) => {
+        const recipe = recipeR[r];
+        const outputs = recipe.out ? Object.keys(recipe.out) : [recipe.id];
+        for (const o of outputs.filter((i) => recipe.produces(i))) {
+          if (!e[o]) {
+            e[o] = [recipe];
+          } else {
+            e[o].push(recipe);
+          }
+        }
+        return e;
+      },
+      {}
+    );
     const itemRecipeIds = itemIds.reduce((e: Entities<string>, i) => {
       const exact = recipes.find((r) => r.id === i);
       if (exact && !exact.in) {
@@ -295,16 +309,6 @@ export const getNormalDataset = createSelector(
         recipeEntities[id] = { ...recipeEntities[id], ...{ name } };
       }
     }
-
-    // Convert to rationals
-    const itemR = itemIds.reduce((e: Entities<RationalItem>, i) => {
-      e[i] = new RationalItem(itemEntities[i]);
-      return e;
-    }, {});
-    const recipeR = recipeIds.reduce((e: Entities<RationalRecipe>, r) => {
-      e[r] = new RationalRecipe(recipeEntities[r]);
-      return e;
-    }, {});
 
     // Add missing mining recipes to productivity limitation
     recipes

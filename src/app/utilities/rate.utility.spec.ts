@@ -128,7 +128,7 @@ describe('RateUtility', () => {
               [Mocks.Item2.id]: {
                 ...Mocks.AdjustedData.recipeR[Mocks.Item2.id],
                 ...{ adjustProd: Rational.one },
-              },
+              } as any,
             },
           },
         },
