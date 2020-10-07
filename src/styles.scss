@@ -153,6 +153,7 @@ g {
 
 .dialog-title {
   height: 1.75rem;
+  flex-shrink: 0;
 }
 
 // Sankey SVG styles
