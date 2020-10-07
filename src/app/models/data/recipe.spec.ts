@@ -72,4 +72,41 @@ describe('RationalRecipe', () => {
       expect(result.expensive).toBeUndefined();
     });
   });
+
+  describe('produces', () => {
+    const id = 'id';
+
+    it('should handle a recipe that contains the item as input and output', () => {
+      const recipe = new RationalRecipe({
+        time: 0,
+        in: { [id]: 1 },
+        out: { [id]: 2 },
+      } as any);
+      expect(recipe.produces(id)).toBeTrue();
+    });
+
+    it('should handle a recipe that contains other outputs', () => {
+      const recipe = new RationalRecipe({
+        time: 0,
+        out: { ['test']: 2 },
+      } as any);
+      expect(recipe.produces(id)).toBeFalse();
+    });
+
+    it('should handle a recipe that matches by id', () => {
+      const recipe = new RationalRecipe({
+        id,
+        time: 0,
+        in: { [id]: 0.5 },
+      } as any);
+      expect(recipe.produces(id)).toBeTrue();
+    });
+
+    it('should handle a recipe that does not match', () => {
+      const recipe = new RationalRecipe({
+        time: 0,
+      } as any);
+      expect(recipe.produces(id)).toBeFalse();
+    });
+  });
 });

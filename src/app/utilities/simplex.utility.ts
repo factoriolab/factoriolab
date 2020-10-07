@@ -119,7 +119,7 @@ export class SimplexUtility {
       (s) =>
         !s.recipeId &&
         state.itemIds.indexOf(s.itemId) !== -1 &&
-        state.recipeIds.some((r) => state.data.recipeR[r].out[s.itemId])
+        state.recipeIds.some((r) => state.data.recipeR[r].produces(s.itemId))
     );
   }
 
@@ -140,19 +140,6 @@ export class SimplexUtility {
     const itemIds = Object.keys(recipe.in).filter((i) => !state.items[i]);
     for (const itemId of itemIds) {
       state.items[itemId] = Rational.zero;
-      if (
-        state.itemIds.indexOf(itemId) === -1 ||
-        state.recipeIds.filter((r) => state.data.recipeR[r].out[itemId])
-          .length === 0
-      ) {
-        // No recipe found, create a fake recipe
-        state.recipes[itemId] = new RationalRecipe({
-          id: null,
-          time: 0,
-          out: { [itemId]: 1 },
-          producers: [],
-        });
-      }
     }
     return itemIds;
   }
@@ -227,8 +214,10 @@ export class SimplexUtility {
       // Add item columns
       O.push(state.items[itemId].inverse());
     }
-    // Add recipe columns and cost
-    O.push(...new Array(recipes.length + 1).fill(Rational.zero));
+    // Add recipe columns, input columns, and cost
+    O.push(
+      ...new Array(recipes.length + itemIds.length + 1).fill(Rational.zero)
+    );
     A.push(O);
 
     // Build recipe rows
@@ -250,16 +239,31 @@ export class SimplexUtility {
         R.push(recipe.id === other.id ? Rational.one : Rational.zero);
       }
 
+      // Add input columns
+      R.push(...new Array(itemIds.length).fill(Rational.zero));
+
       // Cost
-      if (recipe.id == null) {
-        R.push(COST_MANUAL);
-      } else if (recipe.id === ItemId.Water) {
+      if (recipe.id === ItemId.Water) {
         R.push(COST_WATER);
       } else if (recipe.mining) {
         R.push(COST_MINED);
       } else {
         R.push(COST_RECIPE);
       }
+      A.push(R);
+    }
+
+    // Build input rows
+    for (const itemId of itemIds) {
+      const R: Rational[] = [Rational.zero]; // C
+      for (const other of itemIds) {
+        R.push(itemId === other ? Rational.one : Rational.zero);
+      }
+      R.push(...new Array(recipes.length).fill(Rational.zero));
+      for (const other of itemIds) {
+        R.push(itemId === other ? Rational.one : Rational.zero);
+      }
+      R.push(COST_MANUAL);
       A.push(R);
     }
 
@@ -353,12 +357,15 @@ export class SimplexUtility {
     for (let i = 0; i < recipeIds.length; i++) {
       const c = 1 + itemIds.length + i;
       if (O[c].gt(Rational.zero)) {
-        const id = recipeIds[i];
-        if (state.recipes[id].id) {
-          recipes[id] = O[c];
-        } else {
-          inputs[id] = O[c];
-        }
+        recipes[recipeIds[i]] = O[c];
+      }
+    }
+
+    // Parse inputs
+    for (let i = 0; i < itemIds.length; i++) {
+      const c = i + itemIds.length + recipeIds.length + 1;
+      if (O[c].gt(Rational.zero)) {
+        inputs[itemIds[i]] = O[c];
       }
     }
 
@@ -417,7 +424,7 @@ export class SimplexUtility {
           .map((r) => state.recipes[r])
           .filter((r) => r);
         const index = steps.findIndex((s) =>
-          recipes.some((r) => r.out[s.itemId] && r.out[itemId])
+          recipes.some((r) => r.produces(s.itemId) && r.produces(itemId))
         );
         step = {
           depth,
@@ -447,7 +454,7 @@ export class SimplexUtility {
     const recipes = Object.keys(solution.recipes).map((r) => state.recipes[r]);
     for (const step of steps.filter((s) => !s.recipeId)) {
       potentials[step.itemId] = recipes
-        .filter((r) => r.out[step.itemId])
+        .filter((r) => r.produces(step.itemId))
         .map((r) => r.id);
     }
 
@@ -474,10 +481,10 @@ export class SimplexUtility {
   ) {
     let step = steps.find((s) => s.recipeId === recipe.id);
     if (!step) {
-      step = steps.find((s) => !s.recipeId && recipe.out[s.itemId]);
+      step = steps.find((s) => !s.recipeId && recipe.produces(s.itemId));
     }
     if (!step) {
-      const index = steps.findIndex((s) => recipe.out[s.itemId]);
+      const index = steps.findIndex((s) => recipe.produces(s.itemId));
       step = {
         depth,
         itemId: null,
@@ -513,115 +520,4 @@ export class SimplexUtility {
     }
   }
   //#endregion
-}
-
-/**
- * Experiments with the revised simplex method have shown that it is less performant for Factorio
- * recipes than standard simplex, even with fairly large recipe charts. While revised simplex
- * makes pivot operations faster, there are more calculations involved before running the pivot,
- * and this decreases the overall performance. Benchmarks (using console.time) are showing the
- * algorithm is approximately 4 times slower than standard simplex. In addition, the algorithm
- * does not seem to properly compute surplus resources, for example when only producing only heavy
- * oil via advanced oil processing. Performance could potentially be improved by performing LU
- * factorization using Forrest-Tomlin or Bartels-Golub methods, but generally I'm satisfied with
- * the performance of standard simplex method.
- */
-/* istanbul ignore next */
-function revisedSimplex(A: Rational[][]) {
-  // Setup
-  const m = A.length;
-  const n = A[0].length;
-  const x = n - 1;
-  const B: number[] = [0];
-  const N: number[] = [];
-  for (let i = n - m; i < x; i++) {
-    B.push(i);
-  }
-  for (let i = 1; i < n - m; i++) {
-    N.push(i);
-  }
-  const pCol = [0, x, ...B.slice(1)];
-  const O = A[0];
-
-  // Setup complete, start iterating
-  while (true) {
-    // Step 1, select entering variable
-    let eMin: Rational = null;
-    let eCol: number = null;
-    for (const c of N) {
-      let v = Rational.zero;
-      for (let i = 0; i < m; i++) {
-        const a = A[0][B[i]];
-        const b = A[i][c];
-        v = v.add(a.mul(b));
-      }
-
-      if (eMin == null || v.lt(eMin)) {
-        eCol = c;
-        eMin = v;
-      }
-    }
-
-    if (!eMin.lt(Rational.zero)) {
-      return true;
-    }
-
-    // Step 2, select leaving variable
-    const y: Rational[] = [];
-    for (let i = 0; i < m; i++) {
-      let val = Rational.zero;
-      const R = A[i];
-      for (let j = 0; j < m; j++) {
-        const a = R[B[j]];
-        const b = A[j][eCol];
-        val = val.add(a.mul(b));
-      }
-      y.push(val);
-    }
-
-    // Replace values in actual matrix after multiplication
-    for (let i = 0; i < m; i++) {
-      A[i][eCol] = y[i];
-    }
-
-    // Determine outgoing vector, ignore row 0
-    let lMin: Rational = null;
-    let lRow: number = null;
-    for (let i = 1; i < m; i++) {
-      const aix = A[i][x];
-      const yi = y[i];
-      if (yi.gt(Rational.zero) && aix.nonzero()) {
-        const a = aix;
-        const b = yi;
-        const v = a.div(b);
-
-        if (lMin == null || v.lt(lMin)) {
-          lRow = i;
-          lMin = v;
-        }
-      }
-    }
-
-    if (lRow == null) {
-      return false;
-    }
-
-    // Step 3, pivot
-    pCol[0] = eCol;
-    const P = A[lRow];
-    const reciprocal = P[eCol].reciprocal();
-    for (const i of pCol) {
-      P[i] = P[i].mul(reciprocal);
-    }
-
-    for (let i = 0; i < m; i++) {
-      if (i !== lRow && A[i][eCol].nonzero()) {
-        const R = A[i];
-        const factor = R[eCol];
-        for (const j of pCol) {
-          R[j] = R[j].sub(P[j].mul(factor));
-        }
-      }
-    }
-  }
 }

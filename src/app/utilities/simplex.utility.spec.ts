@@ -238,22 +238,6 @@ describe('SimplexUtility', () => {
       expect(state.recipes).toEqual({});
       expect(result).toEqual([ItemId.CopperPlate]);
     });
-
-    it('should create a fake recipe for items that are ignored', () => {
-      const state = getState();
-      const recipe = Mocks.AdjustedData.recipeR[RecipeId.WoodenChest];
-      const result = SimplexUtility.itemMatches(recipe, state);
-      expect(state.items).toEqual({ [ItemId.Wood]: Rational.zero });
-      expect(state.recipes).toEqual({
-        [ItemId.Wood]: new RationalRecipe({
-          id: null,
-          time: 0,
-          out: { [ItemId.Wood]: 1 },
-          producers: [],
-        }),
-      });
-      expect(result).toEqual([ItemId.Wood]);
-    });
   });
 
   describe('parseRecipeRecursively', () => {
@@ -384,12 +368,16 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
+          Rational.zero,
+          Rational.zero,
         ],
         [
           Rational.zero,
           Rational.two,
           Rational.minusOne,
           Rational.one,
+          Rational.zero,
+          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -403,7 +391,9 @@ describe('SimplexUtility', () => {
           Rational.one,
           Rational.zero,
           Rational.zero,
-          COST_MANUAL,
+          Rational.zero,
+          Rational.zero,
+          Rational.one,
         ],
         [
           Rational.zero,
@@ -412,6 +402,8 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.one,
+          Rational.zero,
+          Rational.zero,
           Rational.zero,
           COST_WATER,
         ],
@@ -423,7 +415,33 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.one,
+          Rational.zero,
+          Rational.zero,
           COST_MINED,
+        ],
+        [
+          Rational.zero,
+          Rational.one,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.one,
+          Rational.zero,
+          COST_MANUAL,
+        ],
+        [
+          Rational.zero,
+          Rational.zero,
+          Rational.one,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.one,
+          COST_MANUAL,
         ],
       ]);
     });
@@ -482,7 +500,6 @@ describe('SimplexUtility', () => {
       state.items[ItemId.Coal] = Rational.zero;
       state.items[ItemId.IronOre] = Rational.zero;
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
-      state.recipes[ItemId.Wood] = { id: null } as any;
       state.recipes[RecipeId.IronOre] =
         Mocks.AdjustedData.recipeR[RecipeId.IronOre];
       const O = [
@@ -490,14 +507,15 @@ describe('SimplexUtility', () => {
         Rational.zero,
         Rational.one,
         Rational.zero,
-        Rational.one,
         Rational.two,
+        Rational.one,
+        Rational.zero,
         Rational.zero,
       ];
       const result = SimplexUtility.parseSolution([O], state);
       expect(result).toEqual({
         surplus: { [ItemId.IronOre]: Rational.one },
-        inputs: { [ItemId.Wood]: Rational.one },
+        inputs: { [ItemId.Coal]: Rational.one },
         recipes: { [RecipeId.IronOre]: Rational.two },
       });
     });
