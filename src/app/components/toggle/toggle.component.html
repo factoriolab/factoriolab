@@ -8,6 +8,30 @@
     >close</i
   >
 </div>
+<div class="info">
+  <div>
+    Click recipes to enable or disable them. Disabled recipes will not be used
+    in the solution.
+  </div>
+  <div class="warn">
+    Warning: Enabling a large number of modded recipes can cause the calculator
+    to hang due to the complexity of the calculations.
+  </div>
+</div>
+<div class="flex buttons">
+  <button
+    [disabled]="!editValue.length"
+    (click)="edited = true; editValue = []"
+  >
+    Enable All
+  </button>
+  <button
+    [disabled]="editValue.length === complexRecipes.length"
+    (click)="edited = true; editValue = complexRecipes"
+  >
+    Disable All
+  </button>
+</div>
 <div #scrollContainer class="flex scroll">
   <lab-icon
     *ngFor="let id of complexRecipes"

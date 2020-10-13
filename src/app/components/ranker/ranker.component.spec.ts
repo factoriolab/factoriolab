@@ -66,7 +66,7 @@ describe('RankerComponent', () => {
   });
 
   it('should set width based on options', () => {
-    expect(component.child.width).toEqual(3.5);
+    expect(component.child.width).toEqual(8);
   });
 
   it('should set opening to false on first click event', () => {

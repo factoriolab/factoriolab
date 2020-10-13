@@ -10,6 +10,15 @@
     >
   </div>
   <div class="info">Click to remove from preferred list</div>
+  <button
+    [disabled]="!editValue.length"
+    (click)="edited = true; editValue = []"
+  >
+    Remove All
+  </button>
+  <div *ngIf="!editValue.length" class="flex empty">
+    <span>No preferences</span>
+  </div>
   <div class="flex">
     <lab-icon
       *ngFor="let id of editValue"

@@ -6,6 +6,7 @@ import {
   Rational,
   RationalRecipe,
   Step,
+  WARNING_HANG,
 } from '~/models';
 import { RateUtility } from './rate.utility';
 
@@ -272,6 +273,9 @@ export class SimplexUtility {
 
   /** Solve the canonical tableau using the simplex method */
   static simplex(A: Rational[][]) {
+    const start = Date.now();
+    let check = true;
+
     while (true) {
       let c: number = null;
       const O = A[0];
@@ -287,6 +291,14 @@ export class SimplexUtility {
 
       if (!this.pivotCol(A, c)) {
         return false;
+      }
+
+      if (check && Date.now() - start > 5000) {
+        if (confirm(WARNING_HANG)) {
+          check = false;
+        } else {
+          return false;
+        }
       }
     }
   }
