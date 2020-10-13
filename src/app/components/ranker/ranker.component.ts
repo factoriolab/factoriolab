@@ -41,7 +41,7 @@ export class RankerComponent {
   }
 
   @HostBinding('style.width.rem') get width() {
-    return Math.ceil(Math.sqrt(this.options.length)) * 2.25 + 1.25;
+    return Math.ceil(Math.sqrt(this.options.length) + 2) * 2.25 + 1.25;
   }
 
   constructor(private element: ElementRef) {}

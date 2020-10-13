@@ -23,7 +23,7 @@ import {
   Sort,
   LinkValue,
   IdPayload,
-  RESET_WARNING,
+  WARNING_RESET,
 } from '~/models';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
@@ -173,7 +173,7 @@ export class SettingsComponent implements OnInit {
   }
 
   clickResetSettings() {
-    if (confirm(RESET_WARNING)) {
+    if (confirm(WARNING_RESET)) {
       this.resetSettings.emit();
     }
   }

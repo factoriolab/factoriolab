@@ -459,6 +459,21 @@ describe('SimplexUtility', () => {
       spyOn(SimplexUtility, 'pivotCol').and.returnValue(false);
       expect(SimplexUtility.simplex(getTableau())).toBeFalse();
     });
+
+    it('should prompt on timeout and continue', () => {
+      spyOn(window, 'confirm').and.returnValue(true);
+      spyOn(Date, 'now').and.returnValues(0, 5001);
+      const A = getTableau();
+      const result = SimplexUtility.simplex(A);
+      expect(A).toEqual(getSolution());
+      expect(result).toBeTrue();
+    });
+
+    it('should prompt on timeout and quit', () => {
+      spyOn(window, 'confirm').and.returnValue(false);
+      spyOn(Date, 'now').and.returnValues(0, 5001);
+      expect(SimplexUtility.simplex(getTableau())).toBeFalse();
+    });
   });
 
   describe('pivotCol', () => {
