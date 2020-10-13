@@ -16,12 +16,8 @@
 .scroll {
   overflow-y: auto;
 
-  > * + * {
-    margin-top: 0.5rem;
-
-    &.info {
-      margin-top: 0.25rem;
-    }
+  > .header {
+    margin-top: 0.25rem;
   }
 }
 
@@ -31,6 +27,16 @@
 
 .info {
   font-size: x-small;
+  margin-bottom: 0.5rem;
+}
+
+.empty {
+  height: 2.25rem;
+  opacity: 0.5;
+}
+
+button {
+  margin-bottom: 0.25rem;
 }
 
 lab-icon {
