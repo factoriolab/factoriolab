@@ -14,6 +14,7 @@ export const data: AppData = {
     { id: 'factorio-extended-plus', name: 'FactorioExtended Plus' },
     { id: 'krastorio2', name: 'Krastorio 2' },
     { id: 'pyanodons', name: 'Pyanodons' },
+    { id: 'space-exploration', name: 'Space Exploration' },
   ],
   mods: [
     {
