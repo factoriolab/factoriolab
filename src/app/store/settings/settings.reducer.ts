@@ -8,6 +8,8 @@ import {
   Sort,
   LinkValue,
   Entities,
+  InserterTarget,
+  InserterCapacity,
 } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { AppLoadAction, AppActionType } from '../app.actions';
@@ -38,6 +40,8 @@ export interface SettingsState {
   pollutionPrecision: number;
   miningBonus: number;
   researchSpeed: ResearchSpeed;
+  inserterTarget: InserterTarget;
+  inserterCapacity: InserterCapacity;
   columns?: string[];
   sort?: Sort;
   linkValue?: LinkValue;
@@ -70,6 +74,8 @@ export const initialSettingsState: SettingsState = {
   pollutionPrecision: 1,
   miningBonus: 0,
   researchSpeed: ResearchSpeed.Speed6,
+  inserterTarget: InserterTarget.Chest,
+  inserterCapacity: InserterCapacity.Capacity7,
   columns: AllColumns,
   sort: Sort.DepthFirst,
   linkValue: LinkValue.Items,
@@ -220,6 +226,12 @@ export function settingsReducer(
     }
     case SettingsActionType.SET_RESEARCH_SPEED: {
       return { ...state, ...{ researchSpeed: action.payload } };
+    }
+    case SettingsActionType.SET_INSERTER_TARGET: {
+      return { ...state, ...{ inserterTarget: action.payload } };
+    }
+    case SettingsActionType.SET_INSERTER_CAPACITY: {
+      return { ...state, ...{ inserterCapacity: action.payload } };
     }
     case SettingsActionType.SET_COLUMNS: {
       return { ...state, ...{ columns: action.payload } };

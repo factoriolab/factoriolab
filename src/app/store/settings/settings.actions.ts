@@ -9,6 +9,8 @@ import {
   Sort,
   LinkValue,
   IdPayload,
+  InserterTarget,
+  InserterCapacity,
 } from '~/models';
 
 export const enum SettingsActionType {
@@ -37,6 +39,8 @@ export const enum SettingsActionType {
   SET_POLLUTION_PRECISION = '[Settings] Set Pollution Precision',
   SET_MINING_BONUS = '[Settings] Set Mining Bonus',
   SET_RESEARCH_SPEED = '[Settings] Set Research Speed',
+  SET_INSERTER_TARGET = '[Settings] Set Inserter Target',
+  SET_INSERTER_CAPACITY = '[Settings] Set Inserter Capacity',
   SET_COLUMNS = '[Settings] Set Columns',
   SET_SORT = '[Settings] Set Sort',
   SET_LINK_VALUE = '[Settings] Set Link Value',
@@ -171,6 +175,16 @@ export class SetResearchSpeedAction implements Action {
   constructor(public payload: ResearchSpeed) {}
 }
 
+export class SetInserterTargetAction implements Action {
+  readonly type = SettingsActionType.SET_INSERTER_TARGET;
+  constructor(public payload: InserterTarget) {}
+}
+
+export class SetInserterCapacityAction implements Action {
+  readonly type = SettingsActionType.SET_INSERTER_CAPACITY;
+  constructor(public payload: InserterCapacity) {}
+}
+
 export class SetColumnsAction implements Action {
   readonly type = SettingsActionType.SET_COLUMNS;
   constructor(public payload: string[]) {}
@@ -229,6 +243,8 @@ export type SettingsAction =
   | SetPollutionPrecisionAction
   | SetMiningBonusAction
   | SetResearchSpeedAction
+  | SetInserterTargetAction
+  | SetInserterCapacityAction
   | SetColumnsAction
   | SetSortAction
   | SetLinkValueAction

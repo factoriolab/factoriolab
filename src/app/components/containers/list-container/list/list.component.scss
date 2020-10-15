@@ -3,6 +3,10 @@
   display: block;
 }
 
+lab-icon {
+  padding: 0.125rem;
+}
+
 table {
   border-spacing: 0;
 }
@@ -21,10 +25,6 @@ tr > * + * {
 
 tr.details {
   &.first {
-    > :nth-child(2) {
-      border-top-left-radius: 0.5rem;
-    }
-
     > :last-child {
       border-top-right-radius: 0.5rem;
     }
@@ -40,8 +40,30 @@ tr.details {
     }
   }
 
+  .factory {
+    padding: 0;
+
+    > div {
+      padding: 0 0.5rem;
+
+      > * {
+        margin-left: 0;
+      }
+    }
+
+    .monospace {
+      white-space: normal;
+    }
+
+    > div {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+  }
+
   > :not(:first-child) {
-    background-color: var(--color-gray-1);
+    background-color: var(--color-gray-2);
 
     &:last-child {
       padding-right: 0.5rem;
@@ -109,11 +131,7 @@ td.nowrap {
 
 .recipe {
   margin-left: -0.25rem;
-}
-
-.arrow {
-  flex-grow: 1;
-  justify-content: flex-end;
+  padding: 0;
 }
 
 .message {
@@ -121,4 +139,42 @@ td.nowrap {
   font-size: large;
   text-align: center;
   padding: 1rem;
+}
+
+tr {
+  &.spacer {
+    height: 0.25rem;
+  }
+
+  td.detail-tabs {
+    padding: 0;
+
+    ul {
+      display: flex;
+
+      li {
+        padding: 0.5rem;
+        border-radius: 0.5rem 0.5rem 0 0;
+        user-select: none;
+
+        &:not(.active) {
+          color: var(--color-brand);
+          cursor: pointer;
+
+          &:hover {
+            background-color: var(--color-gray-1);
+          }
+        }
+
+        &.active {
+          cursor: default;
+          background-color: var(--color-gray-2);
+        }
+      }
+    }
+  }
+}
+
+.info {
+  font-size: x-small;
 }

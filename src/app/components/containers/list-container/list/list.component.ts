@@ -18,13 +18,17 @@ import {
   toBoolEntities,
   ItemId,
   ListMode,
+  DisplayRateVal,
+  InserterTarget,
+  InserterCapacity,
+  InserterData,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
 import { ExportUtility, RecipeUtility } from '~/utilities';
 
-enum ListEditType {
+enum StepEditType {
   Columns,
   Belt,
   Factory,
@@ -33,10 +37,22 @@ enum ListEditType {
   BeaconModule,
 }
 
-interface ListEdit {
+enum StepDetailTab {
+  None,
+  Inputs,
+  Outputs,
+  Factory,
+}
+
+interface StepEdit {
   step: Step;
-  type: ListEditType;
+  type: StepEditType;
   index?: number;
+}
+
+interface StepInserter {
+  id: string;
+  value: Rational;
 }
 
 @Component({
@@ -50,6 +66,7 @@ export class ListComponent {
   @Input() itemSettings: ItemsState;
   @Input() recipeSettings: RecipesState;
   @Input() recipeRaw: RecipesState;
+  @Input() beltSpeed: Entities<Rational>;
   _steps: Step[];
   get steps() {
     return this._steps;
@@ -57,6 +74,7 @@ export class ListComponent {
   @Input() set steps(value: Step[]) {
     this._steps = value;
     this.setDisplayedSteps();
+    this.setDetailTabs();
     this.setItemsPrecision();
     this.setBeltsPrecision();
     this.setWagonsPrecision();
@@ -64,7 +82,6 @@ export class ListComponent {
     this.setPowerPrecision();
     this.setPollutionPrecision();
   }
-  @Input() belt: string;
   @Input() factoryRank: string[];
   @Input() moduleRank: string[];
   @Input() beaconModule: string;
@@ -101,6 +118,8 @@ export class ListComponent {
   }
   @Input() beaconCount: number;
   @Input() drillModule: boolean;
+  @Input() inserterTarget: InserterTarget;
+  @Input() inserterCapacity: InserterCapacity;
   _columns: Column[];
   get columns() {
     return this._columns;
@@ -118,6 +137,7 @@ export class ListComponent {
     if (this.columns.indexOf(Column.Factories) !== -1) {
       this.totalSpan += 3;
     }
+    this.detailSpan = this.totalSpan - 1;
     if (this.columns.indexOf(Column.Beacons) !== -1) {
       this.totalSpan += 3;
     }
@@ -161,10 +181,12 @@ export class ListComponent {
   @Output() resetBeacons = new EventEmitter();
 
   displayedSteps: Step[] = [];
-  edit: ListEdit;
-  expanded: Entities<boolean> = {};
+  edit: StepEdit;
+  details: Entities<StepDetailTab[]> = {};
+  expanded: Entities<StepDetailTab> = {};
   show: Entities<boolean> = {};
   totalSpan = 2;
+  detailSpan = 1;
   effPrecSurplus: number;
   effPrecItems: number;
   effPrecBelts: number;
@@ -177,8 +199,10 @@ export class ListComponent {
   DisplayRate = DisplayRate;
   ItemId = ItemId;
   ListMode = ListMode;
-  StepEditType = ListEditType;
+  StepDetailTab = StepDetailTab;
+  StepEditType = StepEditType;
   Rational = Rational;
+  DisplayRateVal = DisplayRateVal;
   ColumnsAsOptions = ColumnsAsOptions;
   ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
 
@@ -282,10 +306,31 @@ export class ListComponent {
       this.displayedSteps = this.steps.filter(
         (s) => s.itemId === this.selected || s.recipeId === this.selected
       );
-      this.expanded = toBoolEntities(this.displayedSteps.map((s) => s.itemId));
+      this.expanded = this.displayedSteps
+        .map((s) => s.itemId)
+        .reduce((e: Entities<StepDetailTab>, v) => {
+          e[v] = StepDetailTab.Inputs;
+          return e;
+        }, {});
     } else {
       this.displayedSteps = [];
       this.expanded = {};
+    }
+  }
+
+  setDetailTabs() {
+    this.details = {};
+    for (const step of this.steps.filter((s) => s.itemId)) {
+      this.details[step.itemId] = [];
+      if (this.data.recipeEntities[step.recipeId]?.in) {
+        this.details[step.itemId].push(StepDetailTab.Inputs);
+      }
+      if (step.parents) {
+        this.details[step.itemId].push(StepDetailTab.Outputs);
+      }
+      if (step.factories) {
+        this.details[step.itemId].push(StepDetailTab.Factory);
+      }
     }
   }
 
@@ -333,6 +378,20 @@ export class ListComponent {
     } else {
       return `${this.rate(value.div(Rational.thousand), this.effPrecPower)} MW`;
     }
+  }
+
+  leftPad(value: string) {
+    return ' '.repeat(4 - value.length) + value;
+  }
+
+  inserter(value: Rational): StepInserter {
+    const inserter = InserterData[this.inserterTarget][
+      this.inserterCapacity
+    ].find((d) => d.value.gt(value) || d.id === ItemId.StackInserter);
+    return {
+      id: inserter.id,
+      value: value.div(inserter.value),
+    };
   }
 
   miningIgnoreModule(step: Step) {

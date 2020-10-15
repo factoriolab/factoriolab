@@ -24,6 +24,8 @@ import {
   LinkValue,
   IdPayload,
   WARNING_RESET,
+  InserterTarget,
+  InserterCapacity,
 } from '~/models';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
@@ -84,6 +86,8 @@ export class SettingsComponent implements OnInit {
   @Output() setPollutionPrecision = new EventEmitter<number>();
   @Output() setMiningBonus = new EventEmitter<number>();
   @Output() setResearchSpeed = new EventEmitter<ResearchSpeed>();
+  @Output() setInserterTarget = new EventEmitter<InserterTarget>();
+  @Output() setInserterCapacity = new EventEmitter<InserterCapacity>();
   @Output() setSort = new EventEmitter<Sort>();
   @Output() setLinkValue = new EventEmitter<LinkValue>();
   @Output() setTheme = new EventEmitter<Theme>();
@@ -92,6 +96,8 @@ export class SettingsComponent implements OnInit {
   openSelect: OpenSelect;
 
   DisplayRate = DisplayRate;
+  InserterCapacity = InserterCapacity;
+  InserterTarget = InserterTarget;
   ItemId = ItemId;
   LinkValue = LinkValue;
   OpenSelect = OpenSelect;

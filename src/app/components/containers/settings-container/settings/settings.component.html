@@ -508,6 +508,59 @@
     <option label="Research Speed 6" [value]="ResearchSpeed.Speed6"></option>
   </select>
 </div>
+<div class="field">
+  <lab-icon
+    [iconId]="ItemId.Inserter"
+    [data]="data"
+    tooltip="Inserter capacity bonus"
+    [scale]="true"
+  ></lab-icon>
+  <select
+    title="Select inserter capacity bonus level"
+    [ngModel]="settings.inserterCapacity"
+    (change)="emitNumber(setInserterCapacity, $event)"
+  >
+    <option
+      label="No Capacity Bonus"
+      [value]="InserterCapacity.Capacity0"
+    ></option>
+    <option
+      label="Capacity Bonus 2"
+      [value]="InserterCapacity.Capacity2"
+    ></option>
+    <option
+      label="Capacity Bonus 7"
+      [value]="InserterCapacity.Capacity7"
+    ></option>
+  </select>
+</div>
+<div class="label">Inserter Target</div>
+<div class="field">
+  <select
+    title="Select inserter target"
+    [ngModel]="settings.inserterTarget"
+    (change)="emitNumber(setInserterTarget, $event)"
+  >
+    <option label="Chest" [value]="InserterTarget.Chest"></option>
+    <option
+      label="Express Transport Belt"
+      [value]="InserterTarget.ExpressTransportBelt"
+    ></option>
+    <option
+      label="Fast Transport Belt"
+      [value]="InserterTarget.FastTransportBelt"
+    ></option>
+    <option
+      label="Transport Belt"
+      [value]="InserterTarget.TransportBelt"
+    ></option>
+  </select>
+  <a
+    href="https://wiki.factorio.com/Inserters#Inserter_Throughput"
+    target="_blank"
+    >Wiki</a
+  >
+</div>
 <div class="label">User Preferences</div>
 <table class="center">
   <tr>
