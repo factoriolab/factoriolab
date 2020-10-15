@@ -2,12 +2,12 @@ import { ItemId, RecipeId, Mocks } from 'src/tests';
 import {
   DisplayRate,
   ResearchSpeed,
-  LocalStorageKey,
   Column,
   Preset,
   Theme,
   Sort,
   LinkValue,
+  SETTINGS_KEY,
 } from '~/models';
 import { mockFullSettings } from '~/services/router.service.spec';
 import { AppLoadAction } from '../app.actions';
@@ -396,18 +396,13 @@ describe('Settings Reducer', () => {
         showHeader: false,
       };
       const total = { ...mockFullSettings, ...preserved };
-      localStorage.setItem(LocalStorageKey.Schema, schema);
-      localStorage.setItem(LocalStorageKey.Settings, JSON.stringify(total));
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(total));
       location.hash = 'test';
       expect(loadSettings()).toEqual({ ...initialSettingsState, ...preserved });
     });
 
     it('should preserve all settings if no hash is present', () => {
-      localStorage.setItem(LocalStorageKey.Schema, schema);
-      localStorage.setItem(
-        LocalStorageKey.Settings,
-        JSON.stringify(mockFullSettings)
-      );
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(mockFullSettings));
       expect(loadSettings()).toEqual({
         ...initialSettingsState,
         ...mockFullSettings,
@@ -417,12 +412,11 @@ describe('Settings Reducer', () => {
     it('should handle invalid settings', () => {
       spyOn(console, 'warn');
       spyOn(console, 'error');
-      localStorage.setItem(LocalStorageKey.Schema, schema);
-      localStorage.setItem(LocalStorageKey.Settings, '[[[');
+      localStorage.setItem(SETTINGS_KEY, '[[[');
       expect(loadSettings()).toEqual(initialSettingsState);
       expect(console.warn).toHaveBeenCalledTimes(1);
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(localStorage.getItem(LocalStorageKey.Settings)).toBeFalsy();
+      expect(localStorage.getItem(SETTINGS_KEY)).toBeFalsy();
     });
 
     it('should use initial settings if no stored settings', () => {

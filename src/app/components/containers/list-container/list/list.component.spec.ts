@@ -9,7 +9,7 @@ import { DisplayRate, AllColumns, Rational, Step, ListMode } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers } from '~/store';
 import { ExportUtility } from '~/utilities';
-import { ListComponent } from './list.component';
+import { ListComponent, StepDetailTab } from './list.component';
 
 @Component({
   selector: 'lab-test-list',
@@ -21,7 +21,7 @@ import { ListComponent } from './list.component';
       [recipeSettings]="recipeSettings"
       [recipeRaw]="recipeRaw"
       [steps]="steps"
-      [belt]="belt"
+      [beltSpeed]="beltSpeed"
       [factoryRank]="factoryRank"
       [moduleRank]="moduleRank"
       [beaconModule]="beaconModule"
@@ -67,7 +67,7 @@ class TestListComponent {
   recipeSettings = Mocks.RecipeSettingsInitial;
   recipeRaw = Mocks.RecipeSettingsEntities;
   steps = Mocks.Steps;
-  belt = ItemId.TransportBelt;
+  beltSpeed = Mocks.BeltSpeed;
   factoryRank = [];
   moduleRank = [];
   beaconModule = ItemId.SpeedModule;
@@ -276,7 +276,9 @@ describe('ListComponent', () => {
       component.selected = Mocks.Step1.itemId;
       fixture.detectChanges();
       expect(component.child.displayedSteps).toEqual([Mocks.Step1]);
-      expect(component.child.expanded).toEqual({ [Mocks.Step1.itemId]: true });
+      expect(component.child.expanded).toEqual({
+        [Mocks.Step1.itemId]: StepDetailTab.Inputs,
+      });
     });
 
     it('should set displayed steps and expanded to empty if nothing is selected', () => {

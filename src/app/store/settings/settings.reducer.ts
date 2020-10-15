@@ -2,7 +2,6 @@ import {
   DisplayRate,
   ResearchSpeed,
   Theme,
-  LocalStorageKey,
   AllColumns,
   Preset,
   Sort,
@@ -10,6 +9,7 @@ import {
   Entities,
   InserterTarget,
   InserterCapacity,
+  SETTINGS_KEY,
 } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { AppLoadAction, AppActionType } from '../app.actions';
@@ -74,7 +74,7 @@ export const initialSettingsState: SettingsState = {
   pollutionPrecision: 1,
   miningBonus: 0,
   researchSpeed: ResearchSpeed.Speed6,
-  inserterTarget: InserterTarget.Chest,
+  inserterTarget: InserterTarget.ExpressTransportBelt,
   inserterCapacity: InserterCapacity.Capacity7,
   columns: AllColumns,
   sort: Sort.DepthFirst,
@@ -265,11 +265,7 @@ export function settingsReducer(
 
 export function loadSettings() {
   try {
-    const lsSchema = localStorage.getItem(LocalStorageKey.Schema);
-    if (lsSchema !== schema) {
-      localStorage.clear();
-    }
-    const lsSettings = localStorage.getItem(LocalStorageKey.Settings);
+    const lsSettings = localStorage.getItem(SETTINGS_KEY);
     if (lsSettings) {
       const stored = JSON.parse(lsSettings) as SettingsState;
       if (location.hash) {

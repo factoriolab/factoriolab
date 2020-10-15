@@ -37,7 +37,7 @@ enum StepEditType {
   BeaconModule,
 }
 
-enum StepDetailTab {
+export enum StepDetailTab {
   None,
   Inputs,
   Outputs,
@@ -73,8 +73,8 @@ export class ListComponent {
   }
   @Input() set steps(value: Step[]) {
     this._steps = value;
-    this.setDisplayedSteps();
     this.setDetailTabs();
+    this.setDisplayedSteps();
     this.setItemsPrecision();
     this.setBeltsPrecision();
     this.setWagonsPrecision();
@@ -309,7 +309,7 @@ export class ListComponent {
       this.expanded = this.displayedSteps
         .map((s) => s.itemId)
         .reduce((e: Entities<StepDetailTab>, v) => {
-          e[v] = StepDetailTab.Inputs;
+          e[v] = this.details[v][0];
           return e;
         }, {});
     } else {

@@ -6,7 +6,6 @@ export * from './inserter-target';
 export * from './item-id';
 export * from './link-value';
 export * from './list-mode';
-export * from './local-storage';
 export * from './preset';
 export * from './rate-type';
 export * from './research-speed';
