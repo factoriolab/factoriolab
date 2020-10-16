@@ -83,8 +83,6 @@ export const initialSettingsState: SettingsState = {
   showHeader: true,
 };
 
-export const schema = JSON.stringify(initialSettingsState);
-
 export const storedSettingsState: SettingsState = loadSettings();
 
 export function settingsReducer(

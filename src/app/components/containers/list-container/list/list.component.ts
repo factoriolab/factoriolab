@@ -28,7 +28,7 @@ import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
 import { ExportUtility, RecipeUtility } from '~/utilities';
 
-enum StepEditType {
+export enum StepEditType {
   Columns,
   Belt,
   Factory,
@@ -44,13 +44,13 @@ export enum StepDetailTab {
   Factory,
 }
 
-interface StepEdit {
+export interface StepEdit {
   step: Step;
   type: StepEditType;
   index?: number;
 }
 
-interface StepInserter {
+export interface StepInserter {
   id: string;
   value: Rational;
 }
@@ -299,6 +299,22 @@ export class ListComponent {
     return max;
   }
 
+  setDetailTabs() {
+    this.details = {};
+    for (const step of this.steps.filter((s) => s.itemId)) {
+      this.details[step.itemId] = [];
+      if (this.data.recipeEntities[step.recipeId]?.in) {
+        this.details[step.itemId].push(StepDetailTab.Inputs);
+      }
+      if (step.parents) {
+        this.details[step.itemId].push(StepDetailTab.Outputs);
+      }
+      if (step.factories) {
+        this.details[step.itemId].push(StepDetailTab.Factory);
+      }
+    }
+  }
+
   setDisplayedSteps() {
     if (this.mode === ListMode.All) {
       this.displayedSteps = this.steps;
@@ -315,22 +331,6 @@ export class ListComponent {
     } else {
       this.displayedSteps = [];
       this.expanded = {};
-    }
-  }
-
-  setDetailTabs() {
-    this.details = {};
-    for (const step of this.steps.filter((s) => s.itemId)) {
-      this.details[step.itemId] = [];
-      if (this.data.recipeEntities[step.recipeId]?.in) {
-        this.details[step.itemId].push(StepDetailTab.Inputs);
-      }
-      if (step.parents) {
-        this.details[step.itemId].push(StepDetailTab.Outputs);
-      }
-      if (step.factories) {
-        this.details[step.itemId].push(StepDetailTab.Factory);
-      }
     }
   }
 

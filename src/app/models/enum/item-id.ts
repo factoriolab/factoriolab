@@ -1,6 +1,5 @@
 export enum ItemId {
   AssemblingMachine1 = 'assembling-machine-1',
-  BurnerInserter = 'burner-inserter',
   CargoWagon = 'cargo-wagon',
   ElectricMiningDrill = 'electric-mining-drill',
   FastInserter = 'fast-inserter',

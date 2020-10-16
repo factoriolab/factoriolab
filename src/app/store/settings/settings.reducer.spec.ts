@@ -8,6 +8,8 @@ import {
   Sort,
   LinkValue,
   SETTINGS_KEY,
+  InserterTarget,
+  InserterCapacity,
 } from '~/models';
 import { mockFullSettings } from '~/services/router.service.spec';
 import { AppLoadAction } from '../app.actions';
@@ -16,7 +18,6 @@ import {
   settingsReducer,
   initialSettingsState,
   loadSettings,
-  schema,
   getInitial,
 } from './settings.reducer';
 
@@ -312,6 +313,28 @@ describe('Settings Reducer', () => {
         new Actions.SetResearchSpeedAction(value)
       );
       expect(result.researchSpeed).toEqual(value);
+    });
+  });
+
+  describe('SET_INSERTER_TARGET', () => {
+    it('should set the inserter target', () => {
+      const value = InserterTarget.Chest;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetInserterTargetAction(value)
+      );
+      expect(result.inserterTarget).toEqual(value);
+    });
+  });
+
+  describe('SET_INSERTER_CAPACITY', () => {
+    it('should set the inserter capacity', () => {
+      const value = InserterCapacity.Capacity2;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetInserterCapacityAction(value)
+      );
+      expect(result.inserterCapacity).toEqual(value);
     });
   });
 
