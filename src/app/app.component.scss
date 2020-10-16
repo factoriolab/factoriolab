@@ -22,11 +22,8 @@ main {
 
 ul {
   display: flex;
-  list-style: none;
-  margin: 0;
-  padding-left: 0;
 
-  > * {
+  li {
     padding: 0.5rem;
     border-radius: 0 0 0.25rem 0.25rem;
     user-select: none;

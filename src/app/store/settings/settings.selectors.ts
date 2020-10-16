@@ -32,6 +32,8 @@ const sPollutionPrecision = (state: SettingsState) => state.pollutionPrecision;
 const sDrillModule = (state: SettingsState) => state.drillModule;
 const sMiningBonus = (state: SettingsState) => state.miningBonus;
 const sResearchSpeed = (state: SettingsState) => state.researchSpeed;
+const sInserterTarget = (state: SettingsState) => state.inserterTarget;
+const sInserterCapacity = (state: SettingsState) => state.inserterCapacity;
 const sFlowRate = (state: SettingsState) => state.flowRate;
 const sExpensive = (state: SettingsState) => state.expensive;
 const sColumns = (state: SettingsState) => state.columns;
@@ -56,6 +58,8 @@ export const getPollutionPrecision = compose(
 export const getDrillModule = compose(sDrillModule, settingsState);
 export const getMiningBonus = compose(sMiningBonus, settingsState);
 export const getResearchSpeed = compose(sResearchSpeed, settingsState);
+export const getInserterTarget = compose(sInserterTarget, settingsState);
+export const getInserterCapacity = compose(sInserterCapacity, settingsState);
 export const getFlowRate = compose(sFlowRate, settingsState);
 export const getExpensive = compose(sExpensive, settingsState);
 export const getColumns = compose(sColumns, settingsState);
