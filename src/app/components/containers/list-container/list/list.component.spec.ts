@@ -5,11 +5,19 @@ import { StoreModule } from '@ngrx/store';
 
 import { Mocks, TestUtility, ItemId, RecipeId, ElementId } from 'src/tests';
 import { IconComponent, SelectComponent } from '~/components';
-import { DisplayRate, AllColumns, Rational, Step, ListMode } from '~/models';
+import {
+  DisplayRate,
+  AllColumns,
+  Rational,
+  Step,
+  ListMode,
+  InserterTarget,
+  InserterCapacity,
+} from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers } from '~/store';
 import { ExportUtility } from '~/utilities';
-import { ListComponent } from './list.component';
+import { ListComponent, StepDetailTab } from './list.component';
 
 @Component({
   selector: 'lab-test-list',
@@ -21,7 +29,7 @@ import { ListComponent } from './list.component';
       [recipeSettings]="recipeSettings"
       [recipeRaw]="recipeRaw"
       [steps]="steps"
-      [belt]="belt"
+      [beltSpeed]="beltSpeed"
       [factoryRank]="factoryRank"
       [moduleRank]="moduleRank"
       [beaconModule]="beaconModule"
@@ -34,6 +42,8 @@ import { ListComponent } from './list.component';
       [pollutionPrecision]="pollutionPrecision"
       [beaconCount]="beaconCount"
       [drillModule]="drillModule"
+      [inserterTarget]="inserterTarget"
+      [inserterCapacity]="inserterCapacity"
       [columns]="columns"
       [modifiedIgnore]="modifiedIgnore"
       [modifiedBelt]="modifiedBelt"
@@ -67,7 +77,7 @@ class TestListComponent {
   recipeSettings = Mocks.RecipeSettingsInitial;
   recipeRaw = Mocks.RecipeSettingsEntities;
   steps = Mocks.Steps;
-  belt = ItemId.TransportBelt;
+  beltSpeed = Mocks.BeltSpeed;
   factoryRank = [];
   moduleRank = [];
   beaconModule = ItemId.SpeedModule;
@@ -81,6 +91,8 @@ class TestListComponent {
   beaconCount = 0;
   drillModule = false;
   columns = AllColumns;
+  inserterTarget = InserterTarget.Chest;
+  inserterCapacity = InserterCapacity.Capacity0;
   modifiedIgnore = false;
   modifiedBelt = false;
   modifiedFactory = false;
@@ -266,6 +278,35 @@ describe('ListComponent', () => {
     });
   });
 
+  describe('setDetailTabs', () => {
+    it('should include no tabs', () => {
+      component.steps = [
+        { itemId: ItemId.CopperPlate, items: Rational.one, depth: 0 },
+      ];
+      fixture.detectChanges();
+      expect(component.child.details[ItemId.CopperPlate]).toEqual([]);
+    });
+
+    it('should include all tabs', () => {
+      component.steps = [
+        {
+          itemId: ItemId.CopperCable,
+          recipeId: RecipeId.CopperCable,
+          items: Rational.one,
+          depth: 0,
+          parents: {},
+          factories: Rational.one,
+        },
+      ];
+      fixture.detectChanges();
+      expect(component.child.details[ItemId.CopperCable]).toEqual([
+        StepDetailTab.Inputs,
+        StepDetailTab.Outputs,
+        StepDetailTab.Factory,
+      ]);
+    });
+  });
+
   describe('setDisplayedSteps', () => {
     it('should set displayed steps to the full list', () => {
       expect(component.child.displayedSteps).toEqual(Mocks.Steps);
@@ -276,7 +317,9 @@ describe('ListComponent', () => {
       component.selected = Mocks.Step1.itemId;
       fixture.detectChanges();
       expect(component.child.displayedSteps).toEqual([Mocks.Step1]);
-      expect(component.child.expanded).toEqual({ [Mocks.Step1.itemId]: true });
+      expect(component.child.expanded).toEqual({
+        [Mocks.Step1.itemId]: StepDetailTab.Inputs,
+      });
     });
 
     it('should set displayed steps and expanded to empty if nothing is selected', () => {
@@ -358,6 +401,21 @@ describe('ListComponent', () => {
 
     it('should return a value in MW', () => {
       expect(component.child.power(Rational.thousand)).toEqual('1 MW');
+    });
+  });
+
+  describe('leftPad', () => {
+    it('should pad the left side of a percent value', () => {
+      expect(component.child.leftPad('10')).toEqual('  10');
+    });
+  });
+
+  describe('inserter', () => {
+    it('should calculate the number and type of inserters required', () => {
+      expect(component.child.inserter(Rational.one)).toEqual({
+        id: ItemId.LongHandedInserter,
+        value: Rational.from(5, 6),
+      });
     });
   });
 

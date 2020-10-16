@@ -10,6 +10,8 @@ import {
   DisplayRate,
   ResearchSpeed,
   Preset,
+  InserterTarget,
+  InserterCapacity,
 } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import { AppLoadAction } from '~/store/app.actions';
@@ -34,7 +36,7 @@ const mockZipAll =
 const mockZipExtra =
   'eJwrsC0uSU3N0U3OSC0u0TJUS7I1VMtEEdMqKUrMKy7ILyrRTUrNKVErQpXVslArttVCBsZmBgZqJbYlQGkA71cd5g==';
 const mockZipLink =
-  'eJxtT1sKwkAMvE0/UiLbVtSfHmYf0S5sN2WzVby9Aa2oSCCPycyELOONOVBGP5FU6Bo35iaOUonShkEtNsvCpaKjVJvytbYiNLsU8wVn66eYCQeYOayJVOrIes6vuZHR7LojEDgr0SPHhEthTyIqV/Yfr76VylrPa8nWEyg/rL7Ga6x3fNq2shAFfN88bVc/cex/3gDhFIP6UoKuNwaGg6Ye9qCtRmfAPADAtGOP';
+  'eJxtT1sKwkAMvE0/IpFuK+pPD7OPaBe2m7LZKt7eiFZUZCCPyWRC5uHKHCijH0kqmMYNuYmDVKK0clCLzTJzqego1aZ8ja0ITS7FfMbJ+jFmwh4mDksiXXVkPedX38jQbs0BCJyV6JFjwrmwJxFdV/Ufr24jlTWflpKtJ1B9WHyNl1hv+LTdyEwU8H3zuF795LH7eQOEUwzqSwlM17bQ7zV0sAMtFaaFB8wdUMtkRA==';
 const mockProducts: Product[] = [
   {
     id: '0',
@@ -120,6 +122,8 @@ export const mockFullSettings: Settings.SettingsState = {
   pollutionPrecision: 3,
   miningBonus: 10,
   researchSpeed: ResearchSpeed.Speed0,
+  inserterTarget: InserterTarget.Chest,
+  inserterCapacity: InserterCapacity.Capacity2,
 } as any;
 const mockZipFullSettings = [
   '0.17',
@@ -143,6 +147,8 @@ const mockZipFullSettings = [
   '3',
   '10',
   '0',
+  '0',
+  '1',
 ].join(FIELDSEP);
 const mockNullSettings = {
   ...mockFullSettings,
@@ -176,6 +182,8 @@ const mockZipNullSettings = [
   NULL,
   '10',
   '0',
+  '0',
+  '1',
 ].join(FIELDSEP);
 
 describe('RouterService', () => {

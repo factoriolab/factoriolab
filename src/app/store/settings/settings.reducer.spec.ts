@@ -2,12 +2,14 @@ import { ItemId, RecipeId, Mocks } from 'src/tests';
 import {
   DisplayRate,
   ResearchSpeed,
-  LocalStorageKey,
   Column,
   Preset,
   Theme,
   Sort,
   LinkValue,
+  SETTINGS_KEY,
+  InserterTarget,
+  InserterCapacity,
 } from '~/models';
 import { mockFullSettings } from '~/services/router.service.spec';
 import { AppLoadAction } from '../app.actions';
@@ -16,7 +18,6 @@ import {
   settingsReducer,
   initialSettingsState,
   loadSettings,
-  schema,
   getInitial,
 } from './settings.reducer';
 
@@ -315,6 +316,28 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('SET_INSERTER_TARGET', () => {
+    it('should set the inserter target', () => {
+      const value = InserterTarget.Chest;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetInserterTargetAction(value)
+      );
+      expect(result.inserterTarget).toEqual(value);
+    });
+  });
+
+  describe('SET_INSERTER_CAPACITY', () => {
+    it('should set the inserter capacity', () => {
+      const value = InserterCapacity.Capacity2;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetInserterCapacityAction(value)
+      );
+      expect(result.inserterCapacity).toEqual(value);
+    });
+  });
+
   describe('SET_COLUMNS', () => {
     it('should set the list of visible columns', () => {
       const value = [Column.Beacons];
@@ -396,18 +419,13 @@ describe('Settings Reducer', () => {
         showHeader: false,
       };
       const total = { ...mockFullSettings, ...preserved };
-      localStorage.setItem(LocalStorageKey.Schema, schema);
-      localStorage.setItem(LocalStorageKey.Settings, JSON.stringify(total));
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(total));
       location.hash = 'test';
       expect(loadSettings()).toEqual({ ...initialSettingsState, ...preserved });
     });
 
     it('should preserve all settings if no hash is present', () => {
-      localStorage.setItem(LocalStorageKey.Schema, schema);
-      localStorage.setItem(
-        LocalStorageKey.Settings,
-        JSON.stringify(mockFullSettings)
-      );
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(mockFullSettings));
       expect(loadSettings()).toEqual({
         ...initialSettingsState,
         ...mockFullSettings,
@@ -417,12 +435,11 @@ describe('Settings Reducer', () => {
     it('should handle invalid settings', () => {
       spyOn(console, 'warn');
       spyOn(console, 'error');
-      localStorage.setItem(LocalStorageKey.Schema, schema);
-      localStorage.setItem(LocalStorageKey.Settings, '[[[');
+      localStorage.setItem(SETTINGS_KEY, '[[[');
       expect(loadSettings()).toEqual(initialSettingsState);
       expect(console.warn).toHaveBeenCalledTimes(1);
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(localStorage.getItem(LocalStorageKey.Settings)).toBeFalsy();
+      expect(localStorage.getItem(SETTINGS_KEY)).toBeFalsy();
     });
 
     it('should use initial settings if no stored settings', () => {

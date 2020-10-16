@@ -22,6 +22,8 @@ import {
   Sort,
   LinkValue,
   IdPayload,
+  InserterTarget,
+  InserterCapacity,
 } from '~/models';
 import { State } from '~/store';
 import { getBaseSets } from '~/store/datasets';
@@ -171,6 +173,14 @@ export class SettingsContainerComponent implements OnInit {
 
   setResearchSpeed(value: ResearchSpeed) {
     this.store.dispatch(new Settings.SetResearchSpeedAction(value));
+  }
+
+  setInserterTarget(value: InserterTarget) {
+    this.store.dispatch(new Settings.SetInserterTargetAction(value));
+  }
+
+  setInserterCapacity(value: InserterCapacity) {
+    this.store.dispatch(new Settings.SetInserterCapacityAction(value));
   }
 
   setSort(value: Sort) {

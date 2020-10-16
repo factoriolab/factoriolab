@@ -12,6 +12,8 @@ import {
   Preset,
   Sort,
   LinkValue,
+  InserterTarget,
+  InserterCapacity,
 } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as Settings from '~/store/settings';
@@ -310,6 +312,24 @@ describe('SettingsContainerComponent', () => {
     component.child.setResearchSpeed.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetResearchSpeedAction(value)
+    );
+  });
+
+  it('should set the inserter target', () => {
+    spyOn(store, 'dispatch');
+    const value = InserterTarget.Chest;
+    component.child.setInserterTarget.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetInserterTargetAction(value)
+    );
+  });
+
+  it('should set the inserter capacity', () => {
+    spyOn(store, 'dispatch');
+    const value = InserterCapacity.Capacity2;
+    component.child.setInserterCapacity.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetInserterCapacityAction(value)
     );
   });
 

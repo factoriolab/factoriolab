@@ -14,6 +14,10 @@ import {
   Dataset,
   DefaultIdPayload,
   ListMode,
+  Entities,
+  Rational,
+  InserterTarget,
+  InserterCapacity,
 } from '~/models';
 import { State } from '~/store';
 import * as Items from '~/store/items';
@@ -39,8 +43,8 @@ export class ListContainerComponent implements OnInit {
   itemSettings$: Observable<Items.ItemsState>;
   recipeSettings$: Observable<Recipes.RecipesState>;
   recipeRaw$: Observable<Recipes.RecipesState>;
+  beltSpeed$: Observable<Entities<Rational>>;
   steps$: Observable<Step[]>;
-  belt$: Observable<string>;
   factoryRank$: Observable<string[]>;
   moduleRank$: Observable<string[]>;
   beaconModule$: Observable<string>;
@@ -53,6 +57,8 @@ export class ListContainerComponent implements OnInit {
   pollutionPrecision$: Observable<number>;
   beaconCount$: Observable<number>;
   drillModule$: Observable<boolean>;
+  inserterTarget$: Observable<InserterTarget>;
+  inserterCapacity$: Observable<InserterCapacity>;
   columns$: Observable<string[]>;
   modifiedIgnore$: Observable<boolean>;
   modifiedBelt$: Observable<boolean>;
@@ -65,11 +71,11 @@ export class ListContainerComponent implements OnInit {
     if (!this.steps) {
       this.steps$ = this.store.select(getSteps);
     }
-    this.data$ = this.store.select(Settings.getDataset);
+    this.data$ = this.store.select(Recipes.getAdjustedDataset);
     this.itemSettings$ = this.store.select(Items.getItemSettings);
     this.recipeSettings$ = this.store.select(Recipes.getRecipeSettings);
     this.recipeRaw$ = this.store.select(Recipes.recipesState);
-    this.belt$ = this.store.select(Settings.getBelt);
+    this.beltSpeed$ = this.store.select(Settings.getBeltSpeed);
     this.factoryRank$ = this.store.select(Settings.getFactoryRank);
     this.moduleRank$ = this.store.select(Settings.getModuleRank);
     this.beaconModule$ = this.store.select(Settings.getBeaconModule);
@@ -84,6 +90,8 @@ export class ListContainerComponent implements OnInit {
     );
     this.beaconCount$ = this.store.select(Settings.getBeaconCount);
     this.drillModule$ = this.store.select(Settings.getDrillModule);
+    this.inserterTarget$ = this.store.select(Settings.getInserterTarget);
+    this.inserterCapacity$ = this.store.select(Settings.getInserterCapacity);
     this.columns$ = this.store.select(Settings.getColumns);
     this.modifiedIgnore$ = this.store.select(Items.getContainsIgnore);
     this.modifiedBelt$ = this.store.select(Items.getContainsBelt);

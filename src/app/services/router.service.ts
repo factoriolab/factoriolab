@@ -286,6 +286,8 @@ export class RouterService {
       this.zipDiffNum(state.pollutionPrecision, init.pollutionPrecision),
       this.zipDiffNum(state.miningBonus, init.miningBonus),
       this.zipDiffNum(state.researchSpeed, init.researchSpeed),
+      this.zipDiffNum(state.inserterTarget, init.inserterTarget),
+      this.zipDiffNum(state.inserterCapacity, init.inserterCapacity),
     ]
       .join(FIELDSEP)
       .replace(/\**$/, '');
@@ -378,6 +380,14 @@ export class RouterService {
     v = s[i++];
     if (v?.length) {
       settings.researchSpeed = this.parseNumber(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.inserterTarget = this.parseNumber(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.inserterCapacity = this.parseNumber(v);
     }
     return settings;
   }

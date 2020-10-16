@@ -5,7 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
 import { TestUtility, ElementId, Mocks } from 'src/tests';
-import { Theme, LocalStorageKey } from './models';
+import { SETTINGS_KEY, Theme } from './models';
 import { RouterService } from './services/router.service';
 import { State, reducers, metaReducers } from './store';
 import { AddAction } from './store/products';
@@ -58,7 +58,7 @@ describe('AppComponent', () => {
   });
 
   afterEach(() => {
-    localStorage.removeItem(LocalStorageKey.Settings);
+    localStorage.removeItem(SETTINGS_KEY);
   });
 
   it('should create the app', () => {
