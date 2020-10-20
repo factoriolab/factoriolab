@@ -77,7 +77,7 @@
       </th>
       <!-- Reset / Link -->
       <th>
-        <span *ngIf="mode === ListMode.All" class="flex">
+        <span *ngIf="mode === ListMode.All && show[Column.Link]" class="flex">
           <i
             id="list-save-csv"
             title="Save as CSV"
@@ -94,7 +94,7 @@
       <tr>
         <td>
           <i
-            *ngIf="details[step.itemId].length && !expanded[step.itemId]"
+            *ngIf="details[step.itemId]?.length && !expanded[step.itemId]"
             class="clickable material-icons"
             title="Click to show details"
             (click)="expanded[step.itemId] = details[step.itemId][0]"
@@ -537,6 +537,15 @@
                 (click)="expanded[step.itemId] = StepDetailTab.Factory"
               >
                 Factory
+              </li>
+              <li
+                *ngIf="
+                  details[step.itemId].indexOf(StepDetailTab.Recipes) !== -1
+                "
+                [class.active]="expanded[step.itemId] === StepDetailTab.Recipes"
+                (click)="expanded[step.itemId] = StepDetailTab.Recipes"
+              >
+                Recipes
               </li>
             </ul>
           </td>
@@ -1039,6 +1048,29 @@
                     >wiki.</a
                   >
                 </span>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container *ngIf="expanded[step.itemId] === StepDetailTab.Recipes">
+          <tr class="details first last">
+            <td></td>
+            <td colspan="100" class="recipes">
+              <div class="info">
+                Click recipes to enable or disable them. Disabled recipes will
+                not be used in the solution.
+              </div>
+              <div class="list">
+                <lab-icon
+                  *ngFor="let id of recipes[step.itemId]"
+                  class="clickable"
+                  [class.ignored]="disabledRecipes.indexOf(id) !== -1"
+                  [iconId]="id"
+                  [tooltip]="data.recipeEntities[id].name"
+                  [recipe]="data.recipeEntities[id]"
+                  [data]="data"
+                  (click)="toggleRecipe(id)"
+                ></lab-icon>
               </div>
             </td>
           </tr>

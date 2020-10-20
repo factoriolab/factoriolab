@@ -3,12 +3,12 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
 import { Mocks, ItemId } from 'src/tests';
-import { DefaultIdPayload } from '~/models';
+import { DefaultIdPayload, DefaultPayload } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers, State } from '~/store';
 import * as Items from '~/store/items';
 import * as Recipes from '~/store/recipes';
-import { SetColumnsAction } from '~/store/settings';
+import { SetColumnsAction, SetDisabledRecipesAction } from '~/store/settings';
 import { ListComponent } from './list/list.component';
 import { ListContainerComponent } from './list-container.component';
 
@@ -168,6 +168,15 @@ describe('ListContainerComponent', () => {
     component.child.resetBeacons.emit();
     expect(store.dispatch).toHaveBeenCalledWith(
       new Recipes.ResetBeaconsAction()
+    );
+  });
+
+  it('should set the list of disabled recipes', () => {
+    spyOn(store, 'dispatch');
+    const value: DefaultPayload<string[]> = { value: [], default: [] };
+    component.child.setDisabledRecipes.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new SetDisabledRecipesAction(value)
     );
   });
 });

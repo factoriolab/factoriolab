@@ -22,6 +22,7 @@ export interface Dataset {
   itemR: Entities<RationalItem>;
   itemRecipeIds: Entities<string>;
   recipeIds: string[];
+  complexRecipeIds: string[];
   recipeEntities: Entities<Recipe>;
   recipeR: Entities<RationalRecipe>;
   recipeModuleIds: Entities<string[]>;

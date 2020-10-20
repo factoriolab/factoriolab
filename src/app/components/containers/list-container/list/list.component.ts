@@ -22,6 +22,7 @@ import {
   InserterTarget,
   InserterCapacity,
   InserterData,
+  DefaultPayload,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { ItemsState } from '~/store/items';
@@ -42,6 +43,7 @@ export enum StepDetailTab {
   Inputs,
   Outputs,
   Factory,
+  Recipes,
 }
 
 export interface StepEdit {
@@ -82,6 +84,7 @@ export class ListComponent {
     this.setPowerPrecision();
     this.setPollutionPrecision();
   }
+  @Input() disabledRecipes: string[];
   @Input() factoryRank: string[];
   @Input() moduleRank: string[];
   @Input() beaconModule: string;
@@ -137,7 +140,6 @@ export class ListComponent {
     if (this.columns.indexOf(Column.Factories) !== -1) {
       this.totalSpan += 3;
     }
-    this.detailSpan = this.totalSpan - 1;
     if (this.columns.indexOf(Column.Beacons) !== -1) {
       this.totalSpan += 3;
     }
@@ -179,14 +181,15 @@ export class ListComponent {
   @Output() resetBelt = new EventEmitter();
   @Output() resetFactory = new EventEmitter();
   @Output() resetBeacons = new EventEmitter();
+  @Output() setDisabledRecipes = new EventEmitter<DefaultPayload<string[]>>();
 
   displayedSteps: Step[] = [];
   edit: StepEdit;
   details: Entities<StepDetailTab[]> = {};
+  recipes: Entities<string[]> = {};
   expanded: Entities<StepDetailTab> = {};
   show: Entities<boolean> = {};
   totalSpan = 2;
-  detailSpan = 1;
   effPrecSurplus: number;
   effPrecItems: number;
   effPrecBelts: number;
@@ -301,6 +304,7 @@ export class ListComponent {
 
   setDetailTabs() {
     this.details = {};
+    this.recipes = {};
     for (const step of this.steps.filter((s) => s.itemId)) {
       this.details[step.itemId] = [];
       if (this.data.recipeEntities[step.recipeId]?.in) {
@@ -311,6 +315,25 @@ export class ListComponent {
       }
       if (step.factories) {
         this.details[step.itemId].push(StepDetailTab.Factory);
+      }
+      if (step.itemId !== step.recipeId) {
+        const recipeIds = this.data.complexRecipeIds.filter((r) =>
+          this.data.recipeR[r].produces(step.itemId)
+        );
+        if (recipeIds.length) {
+          this.details[step.itemId].push(StepDetailTab.Recipes);
+          this.recipes[step.itemId] = recipeIds;
+        }
+      }
+    }
+
+    // Hide any step details that are no longer valid
+    for (const id of Object.keys(this.expanded)) {
+      if (
+        !this.details[id] ||
+        this.details[id].indexOf(this.expanded[id]) === -1
+      ) {
+        delete this.expanded[id];
       }
     }
   }
@@ -498,5 +521,19 @@ export class ListComponent {
       this.itemSettings,
       this.recipeSettings
     );
+  }
+
+  toggleRecipe(id: string) {
+    if (this.disabledRecipes.indexOf(id) === -1) {
+      this.setDisabledRecipes.emit({
+        value: [...this.disabledRecipes, id],
+        default: this.data.defaults.disabledRecipes,
+      });
+    } else {
+      this.setDisabledRecipes.emit({
+        value: this.disabledRecipes.filter((i) => i !== id),
+        default: this.data.defaults.disabledRecipes,
+      });
+    }
   }
 }
