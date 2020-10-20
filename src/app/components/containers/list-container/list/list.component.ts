@@ -319,14 +319,12 @@ export class ListComponent {
       if (step.factories?.nonzero()) {
         this.details[step.itemId].push(StepDetailTab.Factory);
       }
-      if (step.itemId !== step.recipeId) {
-        const recipeIds = this.data.complexRecipeIds.filter((r) =>
-          this.data.recipeR[r].produces(step.itemId)
-        );
-        if (recipeIds.length) {
-          this.details[step.itemId].push(StepDetailTab.Recipes);
-          this.recipes[step.itemId] = recipeIds;
-        }
+      const recipeIds = this.data.complexRecipeIds.filter((r) =>
+        this.data.recipeR[r].produces(step.itemId)
+      );
+      if (recipeIds.length) {
+        this.details[step.itemId].push(StepDetailTab.Recipes);
+        this.recipes[step.itemId] = recipeIds;
       }
     }
 

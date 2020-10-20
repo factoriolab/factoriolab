@@ -472,8 +472,19 @@ export class SimplexUtility {
     solution: MatrixSolution,
     state: MatrixState
   ) {
-    const potentials: Entities<string[]> = {};
     const recipes = Object.keys(solution.recipes).map((r) => state.recipes[r]);
+
+    // Check for exact id matches
+    for (const step of steps.filter((s) => !s.recipeId)) {
+      const i = recipes.findIndex((r) => r.id === step.itemId);
+      if (i !== -1) {
+        step.recipeId = recipes[i].id;
+        recipes.splice(i, 1);
+      }
+    }
+
+    // Find best recipe match for remaining steps
+    const potentials: Entities<string[]> = {};
     for (const step of steps.filter((s) => !s.recipeId)) {
       potentials[step.itemId] = recipes
         .filter((r) => r.produces(step.itemId))

@@ -733,6 +733,11 @@ describe('SimplexUtility', () => {
     it('should assign recipes to appropriate steps', () => {
       const steps: Step[] = [
         {
+          itemId: ItemId.CopperCable,
+          items: Rational.zero,
+          depth: 0,
+        },
+        {
           itemId: ItemId.HeavyOil,
           items: Rational.zero,
           depth: 0,
@@ -747,17 +752,26 @@ describe('SimplexUtility', () => {
         surplus: {},
         inputs: {},
         recipes: {
+          [RecipeId.CopperCable]: Rational.one,
           [RecipeId.AdvancedOilProcessing]: Rational.one,
           [RecipeId.BasicOilProcessing]: Rational.one,
         },
       };
       const state = getState();
+      state.recipes[RecipeId.CopperCable] =
+        Mocks.AdjustedData.recipeR[RecipeId.CopperCable];
       state.recipes[RecipeId.AdvancedOilProcessing] =
         Mocks.AdjustedData.recipeR[RecipeId.AdvancedOilProcessing];
       state.recipes[RecipeId.BasicOilProcessing] =
         Mocks.AdjustedData.recipeR[RecipeId.BasicOilProcessing];
       SimplexUtility.assignRecipes(steps, solution, state);
       expect(steps).toEqual([
+        {
+          itemId: ItemId.CopperCable,
+          recipeId: RecipeId.CopperCable,
+          items: Rational.zero,
+          depth: 0,
+        },
         {
           itemId: ItemId.HeavyOil,
           recipeId: RecipeId.AdvancedOilProcessing,
