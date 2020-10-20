@@ -313,7 +313,7 @@ export class ListComponent {
       if (step.parents) {
         this.details[step.itemId].push(StepDetailTab.Outputs);
       }
-      if (step.factories) {
+      if (step.factories?.nonzero()) {
         this.details[step.itemId].push(StepDetailTab.Factory);
       }
       if (step.itemId !== step.recipeId) {

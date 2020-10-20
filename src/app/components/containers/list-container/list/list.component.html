@@ -291,9 +291,7 @@
             </td>
             <td class="split-column">
               <div class="flex">
-                <ng-container
-                  *ngIf="step.recipeId !== data.itemRecipeIds[step.itemId]"
-                >
+                <ng-container *ngIf="step.recipeId !== step.itemId">
                   <lab-icon
                     class="recipe"
                     [iconId]="step.recipeId"

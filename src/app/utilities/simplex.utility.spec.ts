@@ -8,6 +8,7 @@ import {
   COST_WATER,
   COST_MINED,
   COST_MANUAL,
+  COST_DISABLED,
 } from './simplex.utility';
 
 describe('SimplexUtility', () => {
@@ -357,6 +358,7 @@ describe('SimplexUtility', () => {
         Mocks.AdjustedData.recipeR[RecipeId.IronOre];
       state.items[ItemId.CopperCable] = Rational.one;
       state.items[ItemId.CopperPlate] = Rational.zero;
+      state.items[ItemId.Wood] = Rational.zero;
       const result = SimplexUtility.canonical(state);
       expect(result).toEqual([
         [
@@ -370,12 +372,16 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
+          Rational.zero,
+          Rational.zero,
         ],
         [
           Rational.zero,
           Rational.two,
           Rational.minusOne,
+          Rational.zero,
           Rational.one,
+          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -388,7 +394,9 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.one,
           Rational.zero,
+          Rational.zero,
           Rational.one,
+          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -401,7 +409,9 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
+          Rational.zero,
           Rational.one,
+          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -414,7 +424,9 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
+          Rational.zero,
           Rational.one,
+          Rational.zero,
           Rational.zero,
           Rational.zero,
           COST_MINED,
@@ -427,14 +439,32 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
+          Rational.zero,
           Rational.one,
           Rational.zero,
-          COST_MANUAL,
+          Rational.zero,
+          COST_DISABLED,
         ],
         [
           Rational.zero,
           Rational.zero,
           Rational.one,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.one,
+          Rational.zero,
+          COST_DISABLED,
+        ],
+        [
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.one,
+          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
