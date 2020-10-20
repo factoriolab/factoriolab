@@ -18,19 +18,7 @@ import { Dataset } from '~/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToggleComponent {
-  _data: Dataset;
-  @Input() set data(value: Dataset) {
-    this._data = value;
-    const simpleRecipes = Object.keys(value.itemRecipeIds).map(
-      (i) => value.itemRecipeIds[i]
-    );
-    this.complexRecipes = value.recipeIds
-      .filter((r) => simpleRecipes.indexOf(r) === -1)
-      .sort();
-  }
-  get data() {
-    return this._data;
-  }
+  @Input() data: Dataset;
   @Input() set disabledRecipes(value: string[]) {
     this.editValue = [...value];
   }
@@ -42,7 +30,6 @@ export class ToggleComponent {
   opening = true;
   edited = false;
   editValue: string[];
-  complexRecipes: string[] = [];
 
   @HostBinding('style.top.px') get top() {
     return this.parent ? this.parent.getBoundingClientRect().y + 1 : 1;
@@ -53,7 +40,9 @@ export class ToggleComponent {
   }
 
   @HostBinding('style.width.rem') get width() {
-    return Math.ceil(Math.sqrt(this.complexRecipes.length) + 2) * 2.25 + 1.25;
+    return (
+      Math.ceil(Math.sqrt(this.data.complexRecipeIds.length) + 2) * 2.25 + 1.25
+    );
   }
 
   constructor(private element: ElementRef) {}

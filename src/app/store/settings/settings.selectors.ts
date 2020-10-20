@@ -331,6 +331,14 @@ export const getNormalDataset = createSelector(
       return e;
     }, {});
 
+    // Calculate complex recipes
+    const simpleRecipes = Object.keys(itemRecipeIds).map(
+      (i) => itemRecipeIds[i]
+    );
+    const complexRecipeIds = recipeIds
+      .filter((r) => simpleRecipes.indexOf(r) === -1)
+      .sort();
+
     const dataset: Dataset = {
       categoryIds,
       categoryEntities,
@@ -348,6 +356,7 @@ export const getNormalDataset = createSelector(
       itemR,
       itemRecipeIds,
       recipeIds,
+      complexRecipeIds,
       recipeEntities,
       recipeR,
       recipeModuleIds,
