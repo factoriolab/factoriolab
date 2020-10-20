@@ -666,16 +666,19 @@
                 </ng-container>
                 <td class="split-column" colspan="100">
                   <div class="flex">
-                    <ng-container *ngIf="inStep.recipeId !== inStep.itemId">
-                      <lab-icon
-                        class="recipe"
-                        [iconId]="inStep.recipeId"
-                        [tooltip]="data.recipeEntities[inStep.recipeId]?.name"
-                        [recipe]="data.recipeEntities[inStep.recipeId]"
-                        [data]="data"
-                      ></lab-icon>
-                    </ng-container>
-                    <div class="flex">
+                    <lab-icon
+                      *ngIf="inStep.recipeId !== inStep.itemId"
+                      class="recipe"
+                      [iconId]="inStep.recipeId"
+                      [tooltip]="data.recipeEntities[inStep.recipeId]?.name"
+                      [recipe]="data.recipeEntities[inStep.recipeId]"
+                      [data]="data"
+                    ></lab-icon>
+                    <div
+                      *ngIf="inStep.recipeId === inStep.itemId"
+                      class="recipe-spacer"
+                    ></div>
+                    <div class="flex percent">
                       <span class="monospace"
                         >{{
                           leftPad(rate(percent.mul(Rational.hundred), 0))
@@ -811,7 +814,11 @@
                   [recipe]="data.recipeEntities[step.recipeId]"
                   [data]="data"
                 ></lab-icon>
-                <div class="flex">
+                <div
+                  *ngIf="step.recipeId === step.itemId"
+                  class="recipe-spacer"
+                ></div>
+                <div class="flex percent">
                   <span class="monospace"
                     >{{
                       leftPad(rate(parent.value.mul(Rational.hundred), 0))

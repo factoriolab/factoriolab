@@ -307,7 +307,10 @@ export class ListComponent {
     this.recipes = {};
     for (const step of this.steps.filter((s) => s.itemId)) {
       this.details[step.itemId] = [];
-      if (this.data.recipeEntities[step.recipeId]?.in) {
+      if (
+        this.data.recipeEntities[step.recipeId]?.in &&
+        !this.itemSettings[step.itemId].ignore
+      ) {
         this.details[step.itemId].push(StepDetailTab.Inputs);
       }
       if (step.parents) {
@@ -329,11 +332,12 @@ export class ListComponent {
 
     // Hide any step details that are no longer valid
     for (const id of Object.keys(this.expanded)) {
-      if (
-        !this.details[id] ||
-        this.details[id].indexOf(this.expanded[id]) === -1
-      ) {
+      if (!this.details[id]?.length) {
+        // Collapse this step
         delete this.expanded[id];
+      } else if (this.details[id].indexOf(this.expanded[id]) === -1) {
+        // Pick a different tab
+        this.expanded[id] = this.details[id][0];
       }
     }
   }
