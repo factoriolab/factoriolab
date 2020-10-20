@@ -18,6 +18,7 @@ import {
   Rational,
   InserterTarget,
   InserterCapacity,
+  DefaultPayload,
 } from '~/models';
 import { State } from '~/store';
 import * as Items from '~/store/items';
@@ -45,6 +46,7 @@ export class ListContainerComponent implements OnInit {
   recipeRaw$: Observable<Recipes.RecipesState>;
   beltSpeed$: Observable<Entities<Rational>>;
   steps$: Observable<Step[]>;
+  disabledRecipes$: Observable<string[]>;
   factoryRank$: Observable<string[]>;
   moduleRank$: Observable<string[]>;
   beaconModule$: Observable<string>;
@@ -76,6 +78,7 @@ export class ListContainerComponent implements OnInit {
     this.recipeSettings$ = this.store.select(Recipes.getRecipeSettings);
     this.recipeRaw$ = this.store.select(Recipes.recipesState);
     this.beltSpeed$ = this.store.select(Settings.getBeltSpeed);
+    this.disabledRecipes$ = this.store.select(Settings.getDisabledRecipes);
     this.factoryRank$ = this.store.select(Settings.getFactoryRank);
     this.moduleRank$ = this.store.select(Settings.getModuleRank);
     this.beaconModule$ = this.store.select(Settings.getBeaconModule);
@@ -153,5 +156,9 @@ export class ListContainerComponent implements OnInit {
 
   resetBeacons() {
     this.store.dispatch(new Recipes.ResetBeaconsAction());
+  }
+
+  setDisabledRecipes(value: DefaultPayload<string[]>) {
+    this.store.dispatch(new Settings.SetDisabledRecipesAction(value));
   }
 }

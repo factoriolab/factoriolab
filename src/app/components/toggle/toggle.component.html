@@ -26,15 +26,15 @@
     Enable All
   </button>
   <button
-    [disabled]="editValue.length === complexRecipes.length"
-    (click)="edited = true; editValue = complexRecipes"
+    [disabled]="editValue.length === data.complexRecipeIds.length"
+    (click)="edited = true; editValue = data.complexRecipeIds"
   >
     Disable All
   </button>
 </div>
 <div #scrollContainer class="flex scroll">
   <lab-icon
-    *ngFor="let id of complexRecipes"
+    *ngFor="let id of data.complexRecipeIds"
     class="clickable"
     [class.ignored]="editValue.indexOf(id) !== -1"
     [data]="data"

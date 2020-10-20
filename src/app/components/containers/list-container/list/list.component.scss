@@ -62,12 +62,24 @@ tr.details {
     }
   }
 
+  .recipes {
+    padding: 0.5rem;
+
+    > .list {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      margin-top: 0.25rem;
+
+      > * {
+        margin-left: 0;
+      }
+    }
+  }
+
   > :not(:first-child) {
     background-color: var(--color-gray-2);
-
-    &:last-child {
-      padding-right: 0.5rem;
-    }
   }
 }
 
