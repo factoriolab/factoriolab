@@ -30,6 +30,7 @@ import { ListComponent, StepDetailTab } from './list.component';
       [recipeRaw]="recipeRaw"
       [steps]="steps"
       [beltSpeed]="beltSpeed"
+      [disabledRecipes]="disabledRecipes"
       [factoryRank]="factoryRank"
       [moduleRank]="moduleRank"
       [beaconModule]="beaconModule"
@@ -65,6 +66,7 @@ import { ListComponent, StepDetailTab } from './list.component';
       (resetBelt)="resetBelt()"
       (resetFactory)="resetFactory()"
       (resetBeacons)="resetBeacons()"
+      (setDisabledRecipes)="setDisabledRecipes($event)"
     >
     </lab-list>
   `,
@@ -78,6 +80,7 @@ class TestListComponent {
   recipeRaw = Mocks.RecipeSettingsEntities;
   steps = Mocks.Steps;
   beltSpeed = Mocks.BeltSpeed;
+  disabledRecipes = [];
   factoryRank = [];
   moduleRank = [];
   beaconModule = ItemId.SpeedModule;
@@ -113,6 +116,7 @@ class TestListComponent {
   resetBelt() {}
   resetFactory() {}
   resetBeacons() {}
+  setDisabledRecipes($event) {}
 }
 
 describe('ListComponent', () => {
@@ -290,8 +294,8 @@ describe('ListComponent', () => {
     it('should include all tabs', () => {
       component.steps = [
         {
-          itemId: ItemId.CopperCable,
-          recipeId: RecipeId.CopperCable,
+          itemId: ItemId.PetroleumGas,
+          recipeId: RecipeId.AdvancedOilProcessing,
           items: Rational.one,
           depth: 0,
           parents: {},
@@ -299,11 +303,40 @@ describe('ListComponent', () => {
         },
       ];
       fixture.detectChanges();
-      expect(component.child.details[ItemId.CopperCable]).toEqual([
+      expect(component.child.details[ItemId.PetroleumGas]).toEqual([
         StepDetailTab.Inputs,
         StepDetailTab.Outputs,
         StepDetailTab.Factory,
+        StepDetailTab.Recipes,
       ]);
+      expect(component.child.recipes[ItemId.PetroleumGas].length).toEqual(4);
+    });
+
+    it('should keep an expanded step that is still valid', () => {
+      component.child.expanded[ItemId.PetroleumGas] = StepDetailTab.Inputs;
+      component.steps = [
+        {
+          itemId: ItemId.PetroleumGas,
+          recipeId: RecipeId.AdvancedOilProcessing,
+          items: Rational.one,
+          depth: 0,
+          parents: {},
+          factories: Rational.one,
+        },
+      ];
+      fixture.detectChanges();
+      expect(component.child.expanded[ItemId.PetroleumGas]).toEqual(
+        StepDetailTab.Inputs
+      );
+    });
+
+    it('should reset an expanded step that is no longer valid', () => {
+      component.child.expanded[ItemId.CopperPlate] = StepDetailTab.Inputs;
+      component.steps = [
+        { itemId: ItemId.CopperPlate, items: Rational.one, depth: 0 },
+      ];
+      fixture.detectChanges();
+      expect(component.child.expanded[ItemId.CopperPlate]).toBeUndefined();
     });
   });
 
@@ -587,6 +620,29 @@ describe('ListComponent', () => {
       TestUtility.clickId(fixture, ElementId.ListSaveCsv);
       fixture.detectChanges();
       expect(ExportUtility.stepsToCsv).toHaveBeenCalled();
+    });
+  });
+
+  describe('toggleRecipe', () => {
+    it('should enable a recipe', () => {
+      spyOn(component, 'setDisabledRecipes');
+      component.disabledRecipes = [RecipeId.AdvancedOilProcessing];
+      fixture.detectChanges();
+      component.child.toggleRecipe(RecipeId.AdvancedOilProcessing);
+      expect(component.setDisabledRecipes).toHaveBeenCalledWith({
+        value: [],
+        default: [],
+      });
+    });
+
+    it('should disable a recipe', () => {
+      spyOn(component, 'setDisabledRecipes');
+      fixture.detectChanges();
+      component.child.toggleRecipe(RecipeId.AdvancedOilProcessing);
+      expect(component.setDisabledRecipes).toHaveBeenCalledWith({
+        value: [RecipeId.AdvancedOilProcessing],
+        default: [],
+      });
     });
   });
 });
