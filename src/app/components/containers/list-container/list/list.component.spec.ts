@@ -330,13 +330,40 @@ describe('ListComponent', () => {
       );
     });
 
-    it('should reset an expanded step that is no longer valid', () => {
+    it('should collapse an expanded step that can no longer be expanded', () => {
       component.child.expanded[ItemId.CopperPlate] = StepDetailTab.Inputs;
       component.steps = [
         { itemId: ItemId.CopperPlate, items: Rational.one, depth: 0 },
       ];
       fixture.detectChanges();
       expect(component.child.expanded[ItemId.CopperPlate]).toBeUndefined();
+    });
+
+    it('should collapse an expanded step that no longer exists', () => {
+      component.child.expanded[ItemId.CopperCable] = StepDetailTab.Inputs;
+      component.steps = [
+        { itemId: ItemId.CopperPlate, items: Rational.one, depth: 0 },
+      ];
+      fixture.detectChanges();
+      expect(component.child.expanded[ItemId.CopperCable]).toBeUndefined();
+    });
+
+    it('should select a new detail tab when possible', () => {
+      component.child.expanded[ItemId.PetroleumGas] = -1 as any;
+      component.steps = [
+        {
+          itemId: ItemId.PetroleumGas,
+          recipeId: RecipeId.AdvancedOilProcessing,
+          items: Rational.one,
+          depth: 0,
+          parents: {},
+          factories: Rational.one,
+        },
+      ];
+      fixture.detectChanges();
+      expect(component.child.expanded[ItemId.PetroleumGas]).toEqual(
+        StepDetailTab.Inputs
+      );
     });
   });
 
