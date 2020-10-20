@@ -118,6 +118,10 @@ td > div {
 
   > * + * {
     margin-left: 0.5rem;
+
+    &.percent {
+      margin-left: 0;
+    }
   }
 }
 
@@ -189,4 +193,8 @@ tr {
 
 .info {
   font-size: x-small;
+}
+
+.recipe-spacer {
+  width: 1.75rem;
 }

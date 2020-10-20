@@ -37,8 +37,10 @@ export const COST_RECIPE = Rational.one;
 export const COST_WATER = Rational.from(100);
 /** Cost of mined resources */
 export const COST_MINED = Rational.from(10000);
-/** Cost of resouces with no recipe */
+/** Cost of raw input resources with no recipe */
 export const COST_MANUAL = Rational.from(1000000);
+/** Cost of raw input resources with disabled/unused recipe */
+export const COST_DISABLED = Rational.from(100000000);
 
 export class SimplexUtility {
   /** Solve all remaining steps using simplex method, if necessary */
@@ -264,7 +266,15 @@ export class SimplexUtility {
       for (const other of itemIds) {
         R.push(itemId === other ? Rational.one : Rational.zero);
       }
-      R.push(COST_MANUAL);
+      const hasRecipe = state.data.recipeIds.some((r) =>
+        state.data.recipeR[r].produces(itemId)
+      );
+      if (hasRecipe) {
+        // This item has a recipe, so we should avoid using this as a raw input above all else
+        R.push(COST_DISABLED);
+      } else {
+        R.push(COST_MANUAL);
+      }
       A.push(R);
     }
 
@@ -462,8 +472,19 @@ export class SimplexUtility {
     solution: MatrixSolution,
     state: MatrixState
   ) {
-    const potentials: Entities<string[]> = {};
     const recipes = Object.keys(solution.recipes).map((r) => state.recipes[r]);
+
+    // Check for exact id matches
+    for (const step of steps.filter((s) => !s.recipeId)) {
+      const i = recipes.findIndex((r) => r.id === step.itemId);
+      if (i !== -1) {
+        step.recipeId = recipes[i].id;
+        recipes.splice(i, 1);
+      }
+    }
+
+    // Find best recipe match for remaining steps
+    const potentials: Entities<string[]> = {};
     for (const step of steps.filter((s) => !s.recipeId)) {
       potentials[step.itemId] = recipes
         .filter((r) => r.produces(step.itemId))
