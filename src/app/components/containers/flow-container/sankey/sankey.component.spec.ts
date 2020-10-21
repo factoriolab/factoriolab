@@ -37,6 +37,14 @@ describe('SankeyComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should handle sankey with circular links', () => {
+    spyOn(component.child, 'createChart').and.callThrough();
+    component.sankeyData = Mocks.SankeyCircular;
+    fixture.detectChanges();
+    expect(component.child.createChart).toHaveBeenCalled();
+    expect(component.child.svg).toBeTruthy();
+  });
+
   describe('element', () => {
     it('should return the native element', () => {
       expect(component.child.element).toBeTruthy();

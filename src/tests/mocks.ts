@@ -207,3 +207,8 @@ export const Sankey: SankeyData = {
     link(0, 9),
   ],
 };
+
+export const SankeyCircular: SankeyData = {
+  nodes: [node(0), node(1), node(2)],
+  links: [link(0, 1), link(1, 2), link(2, 0)],
+};
