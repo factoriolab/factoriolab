@@ -7,7 +7,13 @@ import {
   Output,
 } from '@angular/core';
 import { ResizeObserverEntry } from '@juggle/resize-observer';
-import { SankeyNode, SankeyLayout, SankeyGraph } from 'd3-sankey';
+import {
+  SankeyNode,
+  SankeyLayout,
+  SankeyGraph,
+  sankey,
+  sankeyLinkHorizontal,
+} from 'd3-sankey';
 import { sankeyCircular } from 'd3-sankey-circular';
 import { select, Selection } from 'd3-selection';
 import {
@@ -75,17 +81,8 @@ export class SankeyComponent implements OnInit {
     }
   }
 
-  createChart() {
-    this.svg = select(this.element)
-      .append('svg')
-      .attr('preserveAspectRatio', 'xMinYMin meet')
-      .attr('viewBox', `0 0 ${this.width} ${this.height}`);
-
-    const skLayout: SankeyLayout<
-      SankeyGraph<Node, Link>,
-      Node,
-      Link
-    > = sankeyCircular<Node, Link>()
+  getLayout(fn: () => SankeyLayout<SankeyGraph<Node, Link>, Node, Link>) {
+    const skLayout = fn()
       .nodeId((d) => d.id)
       .nodeWidth(32)
       .nodePadding(10)
@@ -94,10 +91,26 @@ export class SankeyComponent implements OnInit {
         [this.width - 1, this.height - 5],
       ]);
 
-    const skGraph = skLayout({
+    return skLayout({
       nodes: this.sankeyData.nodes.map((d) => ({ ...d })),
       links: this.sankeyData.links.map((l) => ({ ...l })),
     });
+  }
+
+  createChart() {
+    this.svg = select(this.element)
+      .append('svg')
+      .attr('preserveAspectRatio', 'xMinYMin meet')
+      .attr('viewBox', `0 0 ${this.width} ${this.height}`);
+
+    let skGraph = this.getLayout(sankeyCircular);
+    let circular = true;
+
+    if (!skGraph.nodes.some((n: any) => n.partOfCycle === true)) {
+      // No circular references, use built in sankey generator
+      skGraph = this.getLayout(sankey);
+      circular = false;
+    }
 
     // Draw linkages (draw first so rects are drawn over them)
     const link = this.svg
@@ -112,7 +125,7 @@ export class SankeyComponent implements OnInit {
 
     link
       .append('path')
-      .attr('d', (d) => (d as any).path)
+      .attr('d', circular ? (d) => (d as any).path : sankeyLinkHorizontal())
       .attr('stroke', (l) => l.color)
       .attr('stroke-width', (l) => Math.max(1, l.width));
 
