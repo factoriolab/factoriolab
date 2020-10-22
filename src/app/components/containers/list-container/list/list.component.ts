@@ -329,7 +329,9 @@ export class ListComponent {
     }
 
     // Hide any step details that are no longer valid
-    for (const id of Object.keys(this.expanded)) {
+    for (const id of Object.keys(this.expanded).filter(
+      (i) => this.expanded[i]
+    )) {
       if (!this.details[id]?.length) {
         // Collapse this step
         delete this.expanded[id];
