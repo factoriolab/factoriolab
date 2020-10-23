@@ -41,6 +41,10 @@ export class ProductsComponent {
 
   constructor() {}
 
+  trackBy(product: Product) {
+    return product.id;
+  }
+
   clickEditProduct(product: Product) {
     this.editProductId = product.id;
     this.categoryId = this.data.itemEntities[product.itemId].category;
