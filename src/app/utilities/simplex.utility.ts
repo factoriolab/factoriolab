@@ -1,6 +1,7 @@
 import {
   Dataset,
   Entities,
+  ERROR_SIMPLEX,
   ItemId,
   ItemSettings,
   Rational,
@@ -15,6 +16,8 @@ export interface MatrixState {
   recipes: Entities<RationalRecipe>;
   /** Items used in the matrix */
   items: Entities<Rational>;
+  /** Items that have no enabled recipe */
+  inputs: string[];
   /** All recipes that are not disabled */
   recipeIds: string[];
   /** All items that are not disabled */
@@ -39,8 +42,6 @@ export const COST_WATER = Rational.from(100);
 export const COST_MINED = Rational.from(10000);
 /** Cost of raw input resources with no recipe */
 export const COST_MANUAL = Rational.from(1000000);
-/** Cost of raw input resources with disabled/unused recipe */
-export const COST_DISABLED = Rational.from(100000000);
 
 export class SimplexUtility {
   /** Solve all remaining steps using simplex method, if necessary */
@@ -66,6 +67,7 @@ export class SimplexUtility {
     const solution = this.getSolution(state);
 
     if (solution == null) {
+      alert(ERROR_SIMPLEX);
       console.error('Failed to solve matrix using simplex method');
       return steps;
     }
@@ -87,6 +89,7 @@ export class SimplexUtility {
     const state: MatrixState = {
       recipes: {},
       items: {},
+      inputs: null,
       recipeIds: data.recipeIds.filter(
         (r) => disabledRecipes.indexOf(r) === -1
       ),
@@ -112,6 +115,9 @@ export class SimplexUtility {
 
     // Include any output-only items to calculate surplus
     this.addSurplusVariables(state);
+
+    // Parse items that are input-only (no recipe available)
+    this.parseInputs(state);
 
     return state;
   }
@@ -185,6 +191,15 @@ export class SimplexUtility {
       }
     }
   }
+
+  /** Determines which items in the matrix are input-only, or have no recipe */
+  static parseInputs(state: MatrixState) {
+    const itemIds = Object.keys(state.items);
+    const recipeIds = Object.keys(state.recipes);
+    state.inputs = itemIds.filter(
+      (i) => !recipeIds.some((r) => state.data.recipeR[r].produces(i))
+    );
+  }
   //#endregion
 
   //#region Simplex
@@ -257,7 +272,7 @@ export class SimplexUtility {
     }
 
     // Build input rows
-    for (const itemId of itemIds) {
+    for (const itemId of state.inputs) {
       const R: Rational[] = [Rational.zero]; // C
       for (const other of itemIds) {
         R.push(itemId === other ? Rational.one : Rational.zero);
@@ -266,15 +281,7 @@ export class SimplexUtility {
       for (const other of itemIds) {
         R.push(itemId === other ? Rational.one : Rational.zero);
       }
-      const hasRecipe = state.data.recipeIds.some((r) =>
-        state.data.recipeR[r].produces(itemId)
-      );
-      if (hasRecipe) {
-        // This item has a recipe, so we should avoid using this as a raw input above all else
-        R.push(COST_DISABLED);
-      } else {
-        R.push(COST_MANUAL);
-      }
+      R.push(COST_MANUAL);
       A.push(R);
     }
 

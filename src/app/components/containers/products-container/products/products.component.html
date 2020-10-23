@@ -16,7 +16,7 @@
   </div>
 </div>
 <div *ngIf="products && products.length">
-  <div class="product-row" *ngFor="let product of products">
+  <div class="product-row" *ngFor="let product of products; trackBy: trackBy">
     <ng-container *ngIf="product && data.itemEntities[product.itemId]">
       <button
         type="button"
