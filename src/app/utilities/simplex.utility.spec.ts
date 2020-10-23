@@ -8,13 +8,13 @@ import {
   COST_WATER,
   COST_MINED,
   COST_MANUAL,
-  COST_DISABLED,
 } from './simplex.utility';
 
 describe('SimplexUtility', () => {
   const getState = (): MatrixState => ({
     recipes: {},
     items: {},
+    inputs: [],
     recipeIds: Mocks.Data.recipeIds,
     itemIds: Mocks.Data.itemIds,
     data: Mocks.AdjustedData,
@@ -95,10 +95,12 @@ describe('SimplexUtility', () => {
       spyOn(SimplexUtility, 'getState').and.returnValue(true as any);
       spyOn(SimplexUtility, 'getSolution').and.returnValue(null);
       spyOn(console, 'error');
+      spyOn(window, 'alert');
       expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual(
         Mocks.Steps
       );
       expect(console.error).toHaveBeenCalled();
+      expect(window.alert).toHaveBeenCalled();
     });
 
     it('should update steps with solution from simplex method', () => {
@@ -177,6 +179,7 @@ describe('SimplexUtility', () => {
       expect(result).toEqual({
         recipes: {},
         items: { [Mocks.Step1.itemId]: Mocks.Step1.items },
+        inputs: [Mocks.Step1.itemId],
         recipeIds: Mocks.Data.recipeIds,
         itemIds: Mocks.Data.itemIds,
         data: Mocks.Data,
@@ -313,6 +316,15 @@ describe('SimplexUtility', () => {
     });
   });
 
+  describe('parseInputs', () => {
+    it('should parse input-only items', () => {
+      const state = getState();
+      state.items[ItemId.Coal] = Rational.one;
+      SimplexUtility.parseInputs(state);
+      expect(state.inputs).toEqual([ItemId.Coal]);
+    });
+  });
+
   describe('getSolution', () => {
     it('should handle no solution found by simplex', () => {
       spyOn(SimplexUtility, 'canonical').and.returnValue('A' as any);
@@ -345,6 +357,7 @@ describe('SimplexUtility', () => {
   describe('canonical', () => {
     it('should get a canonical matrix', () => {
       const state = getState();
+      state.inputs = [ItemId.Wood];
       state.recipes[RecipeId.CopperCable] =
         Mocks.AdjustedData.recipeR[RecipeId.CopperCable];
       state.recipes[ItemId.CopperPlate] = new RationalRecipe({
@@ -430,34 +443,6 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           COST_MINED,
-        ],
-        [
-          Rational.zero,
-          Rational.one,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.one,
-          Rational.zero,
-          Rational.zero,
-          COST_DISABLED,
-        ],
-        [
-          Rational.zero,
-          Rational.zero,
-          Rational.one,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.one,
-          Rational.zero,
-          COST_DISABLED,
         ],
         [
           Rational.zero,
