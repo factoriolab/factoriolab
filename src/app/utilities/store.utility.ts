@@ -16,28 +16,28 @@ export class StoreUtility {
   }
 
   /** Resets a passed fields of the state */
-  static resetFields<T>(state: T, fields: string[]) {
+  static resetFields<T>(state: T, fields: string[], id: string = null) {
     // Spread into new state
     let newState = { ...state };
     for (const field of fields) {
-      newState = this.resetField(newState, field);
+      newState = this.resetField(newState, field, id);
     }
     return newState;
   }
 
   /** Resets a passed field of the state */
-  static resetField<T>(state: T, field: string): T {
+  static resetField<T>(state: T, field: string, id: string = null): T {
     // Spread into new state
     const newState = { ...state };
-    for (const id of Object.keys(newState).filter(
-      (i) => newState[i][field] != null
+    for (const i of Object.keys(newState).filter(
+      (j) => (!id || id === j) && newState[j][field] != null
     )) {
-      if (Object.keys(newState[id]).length === 1) {
-        delete newState[id];
+      if (Object.keys(newState[i]).length === 1) {
+        delete newState[i];
       } else {
         // Spread into new state
-        newState[id] = { ...newState[id] };
-        delete newState[id][field];
+        newState[i] = { ...newState[i] };
+        delete newState[i][field];
       }
     }
     return newState;

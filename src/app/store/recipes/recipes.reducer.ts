@@ -27,7 +27,8 @@ export function recipesReducer(
           RecipeSettingsField.BeaconCount,
           RecipeSettingsField.Beacon,
           RecipeSettingsField.BeaconModules,
-        ]
+        ],
+        action.payload.id
       );
     }
     case RecipesActionType.SET_FACTORY_MODULES: {
@@ -51,7 +52,8 @@ export function recipesReducer(
           RecipeSettingsField.Beacon,
           action.payload
         ),
-        RecipeSettingsField.BeaconModules
+        RecipeSettingsField.BeaconModules,
+        action.payload.id
       );
     }
     case RecipesActionType.SET_BEACON_MODULES: {
