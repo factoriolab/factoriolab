@@ -1,15 +1,19 @@
 const FLOAT_PRECISION = 100000;
 
+const bigZero = BigInt(0);
+const bigOne = BigInt(1);
+const bigMinusOne = BigInt(-1);
+
 export class Rational {
-  static zero = new Rational(BigInt(0));
-  static minusOne = new Rational(BigInt(-1));
-  static one = new Rational(BigInt(1));
+  static zero = new Rational(bigZero);
+  static minusOne = new Rational(bigMinusOne);
+  static one = new Rational(bigOne);
   static two = new Rational(BigInt(2));
   static hundred = new Rational(BigInt(100));
   static thousand = new Rational(BigInt(1000));
 
-  p: bigint;
-  q: bigint;
+  readonly p: bigint;
+  readonly q: bigint;
 
   static gcd(x: bigint, y: bigint) {
     x = Rational.abs(x);
@@ -23,7 +27,7 @@ export class Rational {
   }
 
   static abs(x: bigint) {
-    return x < BigInt(0) ? x * BigInt(-1) : x;
+    return x < bigZero ? x * bigMinusOne : x;
   }
 
   static from(p: number, q: number = 1) {
@@ -32,7 +36,7 @@ export class Rational {
 
   static fromNumber(x: number) {
     if (Number.isInteger(x)) {
-      return new Rational(BigInt(x), BigInt(1));
+      return new Rational(BigInt(x), bigOne);
     }
 
     return new Rational(
@@ -50,15 +54,19 @@ export class Rational {
   }
 
   isZero() {
-    return this.p === BigInt(0);
+    return this.p === bigZero;
+  }
+
+  isOne() {
+    return this.p === bigOne && this.q === bigOne;
   }
 
   nonzero() {
-    return this.p !== BigInt(0);
+    return this.p !== bigZero;
   }
 
   isInteger() {
-    return this.q === BigInt(1);
+    return this.q === bigOne;
   }
 
   inverse() {
@@ -98,14 +106,32 @@ export class Rational {
   }
 
   sub(x: Rational) {
+    if (x.isZero()) {
+      return this;
+    }
     return new Rational(this.p * x.q - this.q * x.p, this.q * x.q);
   }
 
   mul(x: Rational) {
+    if (this.isOne()) {
+      return x;
+    }
+    if (x.isOne()) {
+      return this;
+    }
+    if (this.isZero() || x.isZero()) {
+      return Rational.zero;
+    }
     return new Rational(this.p * x.p, this.q * x.q);
   }
 
   div(x: Rational) {
+    if (x.isOne()) {
+      return this;
+    }
+    if (this.eq(x)) {
+      return Rational.one;
+    }
     return new Rational(this.p * x.q, this.q * x.p);
   }
 
@@ -139,13 +165,13 @@ export class Rational {
     return this.toNumber().toString().split('.')[1]?.length || 0;
   }
 
-  constructor(p: bigint, q: bigint = BigInt(1)) {
-    if (q < BigInt(0)) {
+  constructor(p: bigint, q: bigint = bigOne) {
+    if (q < bigZero) {
       p = -p;
       q = -q;
     }
     const gcd = Rational.gcd(Rational.abs(p), q);
-    if (gcd > BigInt(1)) {
+    if (gcd > bigOne) {
       p = p / gcd;
       q = q / gcd;
     }
