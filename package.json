@@ -34,7 +34,7 @@
     "@angular/platform-browser-dynamic": "~10.1.4",
     "@angular/router": "~10.1.4",
     "@juggle/resize-observer": "^3.2.0",
-    "@ngrx/effects": "^10.0.0",
+    "@ngrx/effects": "^10.0.1",
     "@ngrx/store": "^10.0.0",
     "@ngrx/store-devtools": "^10.0.0",
     "big-integer": "^1.6.48",
