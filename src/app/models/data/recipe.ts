@@ -10,6 +10,7 @@ export interface Recipe {
   expensive?: {
     time?: number;
     in?: Entities<number>;
+    out?: Entities<number>;
   };
   mining?: boolean;
   producers: string[];
@@ -25,6 +26,7 @@ export class RationalRecipe {
   expensive?: {
     time?: Rational;
     in?: Entities<Rational>;
+    out?: Entities<Rational>;
   };
   mining?: boolean;
   producers?: string[];
@@ -56,6 +58,15 @@ export class RationalRecipe {
         this.expensive.in = Object.keys(data.expensive.in).reduce(
           (e: Entities<Rational>, i) => {
             e[i] = Rational.fromNumber(data.expensive.in[i]);
+            return e;
+          },
+          {}
+        );
+      }
+      if (data.expensive.out) {
+        this.expensive.out = Object.keys(data.expensive.out).reduce(
+          (e: Entities<Rational>, i) => {
+            e[i] = Rational.fromNumber(data.expensive.out[i]);
             return e;
           },
           {}

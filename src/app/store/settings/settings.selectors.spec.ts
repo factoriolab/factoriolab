@@ -373,6 +373,25 @@ describe('Settings Selectors', () => {
         Mocks.Data[RecipeId.ElectronicCircuit]
       );
     });
+
+    it('should delete normal outputs if expensive mode does not declare outputs', () => {
+      const data = {
+        ...Mocks.Data,
+        ...{
+          recipeEntities: {
+            ...Mocks.Data.recipeEntities,
+            ...{
+              [RecipeId.CopperCable]: {
+                ...Mocks.Data.recipeEntities[RecipeId.CopperCable],
+                ...{ expensive: {} },
+              },
+            },
+          },
+        },
+      };
+      const result = Selectors.getDataset.projector(data, true);
+      expect(result.recipeEntities[RecipeId.CopperCable].out).toBeUndefined();
+    });
   });
 
   describe('getBeltSpeed', () => {

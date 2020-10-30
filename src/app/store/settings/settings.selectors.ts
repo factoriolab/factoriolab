@@ -377,7 +377,12 @@ export const getDataset = createSelector(
         (id) => data.recipeEntities[id]
       )) {
         if (recipe.expensive) {
-          recipes.push({ ...recipe, ...recipe.expensive });
+          const newRecipe = { ...recipe, ...recipe.expensive };
+          if (recipe.out && !recipe.expensive.out) {
+            // If expensive recipe specifies no outputs, reset to default
+            delete newRecipe.out;
+          }
+          recipes.push(newRecipe);
         } else {
           recipes.push(recipe);
         }
