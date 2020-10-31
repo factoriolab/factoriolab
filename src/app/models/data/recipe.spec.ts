@@ -20,6 +20,9 @@ describe('RationalRecipe', () => {
           in: {
             [ItemId.Coal]: 2,
           },
+          out: {
+            [ItemId.PetroleumGas]: 1,
+          },
         },
         mining: true,
         producers: [ItemId.AssemblingMachine1],
@@ -31,6 +34,7 @@ describe('RationalRecipe', () => {
       expect(result.out[ItemId.PetroleumGas]).toEqual(Rational.two);
       expect(result.expensive.time).toEqual(Rational.two);
       expect(result.expensive.in[ItemId.Coal]).toEqual(Rational.two);
+      expect(result.expensive.out[ItemId.PetroleumGas]).toEqual(Rational.one);
       expect(result.mining).toBeTrue();
       expect(result.producers).toEqual([ItemId.AssemblingMachine1]);
     });
@@ -53,6 +57,7 @@ describe('RationalRecipe', () => {
       expect(result.out).toBeUndefined();
       expect(result.expensive.time).toEqual(Rational.two);
       expect(result.expensive.in).toBeUndefined();
+      expect(result.expensive.out).toBeUndefined();
     });
 
     it('should ignore undefined fields', () => {
