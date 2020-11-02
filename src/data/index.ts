@@ -15,6 +15,7 @@ export const data: AppData = {
     { id: 'krastorio2', name: 'Krastorio 2' },
     { id: 'krastorio2+se', name: 'Krastorio 2 + SE' },
     { id: 'pyanodons', name: 'Pyanodons' },
+    { id: 'seablock', name: 'Sea Block' },
     { id: 'space-exploration', name: 'Space Exploration' },
   ],
   mods: [
