@@ -13,6 +13,7 @@ export const data: AppData = {
     { id: 'bobs-angels', name: 'Bobs & Angels' },
     { id: 'factorio-extended-plus', name: 'FactorioExtended Plus' },
     { id: 'krastorio2', name: 'Krastorio 2' },
+    { id: 'krastorio2+se', name: 'Krastorio 2 + SE' },
     { id: 'pyanodons', name: 'Pyanodons' },
     { id: 'space-exploration', name: 'Space Exploration' },
   ],
