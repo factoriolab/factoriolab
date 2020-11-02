@@ -7,7 +7,8 @@ $color-black: #000;
 $color-brand: #ff7200;
 $color-back: #171717;
 $color-font: #c8c8c8;
-$color-invalid: #ff0000;
+$color-invalid: #dd0000;
+$color-valid: #009900;
 
 .dark-mode {
   --color-white: #{$color-white};
@@ -20,6 +21,7 @@ $color-invalid: #ff0000;
   --color-back: #{$color-back};
   --color-font: #{$color-font};
   --color-invalid: #{$color-invalid};
+  --color-valid: #{$color-valid};
 
   --module-icon-filter: none;
 }
@@ -35,6 +37,7 @@ $color-invalid: #ff0000;
   --color-back: #fff;
   --color-font: #{invert($color-white)};
   --color-invalid: #{$color-invalid};
+  --color-valid: #{$color-valid};
 
   --module-icon-filter: invert(100%);
 }

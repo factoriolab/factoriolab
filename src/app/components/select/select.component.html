@@ -1,4 +1,7 @@
-<i class="clickable material-icons" title="Cancel" (click)="clickCancel($event)"
+<i
+  class="clickable material-icons"
+  title="Cancel"
+  (click)="cancel.emit(); $event.stopPropagation()"
   >close</i
 >
 <lab-icon
