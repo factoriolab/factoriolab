@@ -65,9 +65,4 @@ export class SelectComponent {
     this.cancel.emit();
     event.stopPropagation();
   }
-
-  clickCancel(event: MouseEvent) {
-    this.cancel.emit();
-    event.stopPropagation();
-  }
 }

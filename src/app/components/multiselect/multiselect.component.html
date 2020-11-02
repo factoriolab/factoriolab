@@ -1,12 +1,21 @@
 <div class="flex tween dialog-title">
   <span class="header">{{ header }}</span>
-  <i
-    *ngIf="edited"
-    class="clickable material-icons"
-    title="Cancel changes"
-    (click)="cancel.emit()"
-    >close</i
-  >
+  <div class="flex">
+    <i
+      *ngIf="edited"
+      class="cancel clickable material-icons"
+      title="Cancel changes"
+      (click)="cancel.emit(); $event.stopPropagation()"
+      >close</i
+    >
+    <i
+      *ngIf="edited"
+      class="confirm clickable material-icons"
+      title="Confirm changes"
+      (click)="commit.emit(editValue); $event.stopPropagation()"
+      >check</i
+    >
+  </div>
 </div>
 <div
   class="flex clickable"

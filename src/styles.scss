@@ -168,7 +168,15 @@ g {
 
   .clickable {
     padding: 0;
-    margin-left: 0.5rem;
+    margin-left: 0.25rem;
+
+    &.confirm {
+      color: var(--color-valid);
+    }
+
+    &.cancel {
+      color: var(--color-invalid);
+    }
   }
 }
 
