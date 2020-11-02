@@ -103,6 +103,18 @@ describe('SimplexUtility', () => {
       expect(window.alert).toHaveBeenCalled();
     });
 
+    it('should handle timeout and quit in simplex method', () => {
+      spyOn(SimplexUtility, 'getState').and.returnValue(true as any);
+      spyOn(SimplexUtility, 'getSolution').and.returnValue(undefined);
+      spyOn(console, 'error');
+      spyOn(window, 'alert');
+      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual(
+        Mocks.Steps
+      );
+      expect(console.error).not.toHaveBeenCalled();
+      expect(window.alert).not.toHaveBeenCalled();
+    });
+
     it('should update steps with solution from simplex method', () => {
       spyOn(SimplexUtility, 'getState').and.returnValue(true as any);
       spyOn(SimplexUtility, 'getSolution').and.returnValue(true as any);
@@ -328,7 +340,7 @@ describe('SimplexUtility', () => {
   describe('getSolution', () => {
     it('should handle no solution found by simplex', () => {
       spyOn(SimplexUtility, 'canonical').and.returnValue('A' as any);
-      spyOn(SimplexUtility, 'simplex').and.returnValue(null);
+      spyOn(SimplexUtility, 'simplex').and.returnValue(false);
       spyOn(SimplexUtility, 'parseSolution');
       const state = getState();
       const result = SimplexUtility.getSolution(state);
@@ -336,6 +348,18 @@ describe('SimplexUtility', () => {
       expect(SimplexUtility.simplex).toHaveBeenCalledWith('A' as any);
       expect(SimplexUtility.parseSolution).not.toHaveBeenCalled();
       expect(result).toBeNull();
+    });
+
+    it('should handle timeout and quit in simplex', () => {
+      spyOn(SimplexUtility, 'canonical').and.returnValue('A' as any);
+      spyOn(SimplexUtility, 'simplex').and.returnValue(null);
+      spyOn(SimplexUtility, 'parseSolution');
+      const state = getState();
+      const result = SimplexUtility.getSolution(state);
+      expect(SimplexUtility.canonical).toHaveBeenCalledWith(state);
+      expect(SimplexUtility.simplex).toHaveBeenCalledWith('A' as any);
+      expect(SimplexUtility.parseSolution).not.toHaveBeenCalled();
+      expect(result).toBeUndefined();
     });
 
     it('should parse the solution found by simplex', () => {
@@ -487,7 +511,7 @@ describe('SimplexUtility', () => {
     it('should prompt on timeout and quit', () => {
       spyOn(window, 'confirm').and.returnValue(false);
       spyOn(Date, 'now').and.returnValues(0, 5001);
-      expect(SimplexUtility.simplex(getTableau())).toBeFalse();
+      expect(SimplexUtility.simplex(getTableau())).toBeNull();
     });
   });
 
