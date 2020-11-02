@@ -67,8 +67,10 @@ export class SimplexUtility {
     const solution = this.getSolution(state);
 
     if (solution == null) {
-      alert(ERROR_SIMPLEX);
-      console.error('Failed to solve matrix using simplex method');
+      if (solution === null) {
+        alert(ERROR_SIMPLEX);
+        console.error('Failed to solve matrix using simplex method');
+      }
       return steps;
     }
 
@@ -216,7 +218,7 @@ export class SimplexUtility {
       return this.parseSolution(A, state);
     } else {
       // No solution found
-      return null;
+      return result === false ? null : undefined;
     }
   }
 
@@ -314,7 +316,7 @@ export class SimplexUtility {
         if (confirm(WARNING_HANG)) {
           check = false;
         } else {
-          return false;
+          return null;
         }
       }
     }
