@@ -51,7 +51,8 @@ export const getRecipeSettings = createSelector(
 
         const factoryItem = data.itemEntities[recipeSettings.factory];
         if (
-          recipe.id !== ItemId.SpaceSciencePack &&
+          (recipe.producers[0] !== ItemId.RocketSilo ||
+            recipe.id === ItemId.RocketPart) &&
           factoryItem?.factory?.modules
         ) {
           const drillSkipDefaults = !drillModule && factoryItem.factory.mining;

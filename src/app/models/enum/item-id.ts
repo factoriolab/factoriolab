@@ -14,7 +14,7 @@ export enum ItemId {
   ProductivityLimitation = 'productivity-module',
   Pumpjack = 'pumpjack',
   RocketPart = 'rocket-part',
-  SpaceSciencePack = 'space-science-pack',
+  RocketSilo = 'rocket-silo',
   SpeedModule3 = 'speed-module-3',
   StackInserter = 'stack-inserter',
   Steam = 'steam',

@@ -29,7 +29,7 @@ export class RationalRecipe {
     out?: Entities<Rational>;
   };
   mining?: boolean;
-  producers?: string[];
+  producers: string[];
   consumption?: Rational;
   pollution?: Rational;
 
