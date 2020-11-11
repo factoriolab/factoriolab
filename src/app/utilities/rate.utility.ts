@@ -63,7 +63,10 @@ export class RateUtility {
       const out = recipe.out[itemId];
 
       // Calculate factories
-      if (itemId === ItemId.SpaceSciencePack) {
+      if (
+        recipe.producers[0] === ItemId.RocketSilo &&
+        itemId !== ItemId.RocketPart
+      ) {
         // Factories are for rocket parts, space science packs are a side effect
         step.factories = null;
       } else {
