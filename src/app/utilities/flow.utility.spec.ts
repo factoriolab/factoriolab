@@ -124,6 +124,55 @@ describe('FlowUtility', () => {
       );
       expect(result).toEqual({ nodes: [node], links: [] });
     });
+
+    it('should handle recipe that matches id with extra outputs', () => {
+      const result = FlowUtility.buildSankey(
+        [
+          {
+            itemId: RecipeId.UraniumProcessing,
+            recipeId: RecipeId.UraniumProcessing,
+          },
+          {
+            itemId: RecipeId.UraniumProcessing,
+            recipeId: RecipeId.UraniumProcessing,
+            parents: {},
+          },
+        ] as any[],
+        LinkValue.None,
+        Mocks.AdjustedData
+      );
+      const name =
+        Mocks.AdjustedData.recipeEntities[RecipeId.UraniumProcessing].name;
+      const color =
+        Mocks.AdjustedData.iconEntities[RecipeId.UraniumProcessing].color;
+      const href =
+        Mocks.AdjustedData.iconEntities[RecipeId.UraniumProcessing].file;
+      const uNode: any = {
+        id: RecipeId.UraniumProcessing,
+        name,
+        color,
+        viewBox: '0 448 64 64',
+        href,
+      };
+      const uLink1: any = {
+        target: ItemId.Uranium235,
+        source: RecipeId.UraniumProcessing,
+        value: 1,
+        name: Mocks.AdjustedData.itemEntities[ItemId.Uranium235].name,
+        color: Mocks.AdjustedData.iconEntities[ItemId.Uranium235].color,
+      };
+      const uLink2: any = {
+        target: ItemId.Uranium238,
+        source: RecipeId.UraniumProcessing,
+        value: 1,
+        name: Mocks.AdjustedData.itemEntities[ItemId.Uranium238].name,
+        color: Mocks.AdjustedData.iconEntities[ItemId.Uranium238].color,
+      };
+      expect(result).toEqual({
+        nodes: [uNode, uNode],
+        links: [uLink1, uLink2, uLink1, uLink2],
+      });
+    });
   });
 
   describe('stepLinkValue', () => {

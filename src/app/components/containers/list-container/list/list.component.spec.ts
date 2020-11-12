@@ -658,7 +658,7 @@ describe('ListComponent', () => {
       component.child.toggleRecipe(RecipeId.AdvancedOilProcessing);
       expect(component.setDisabledRecipes).toHaveBeenCalledWith({
         value: [],
-        default: [],
+        default: [RecipeId.NuclearFuelReprocessing],
       });
     });
 
@@ -668,7 +668,7 @@ describe('ListComponent', () => {
       component.child.toggleRecipe(RecipeId.AdvancedOilProcessing);
       expect(component.setDisabledRecipes).toHaveBeenCalledWith({
         value: [RecipeId.AdvancedOilProcessing],
-        default: [],
+        default: [RecipeId.NuclearFuelReprocessing],
       });
     });
   });
