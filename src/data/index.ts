@@ -17,6 +17,7 @@ export const data: AppData = {
     { id: 'pyanodons', name: 'Pyanodons' },
     { id: 'seablock', name: 'Sea Block' },
     { id: 'space-exploration', name: 'Space Exploration' },
+    { id: 'xander', name: 'Xander Mod' },
   ],
   mods: [
     {
