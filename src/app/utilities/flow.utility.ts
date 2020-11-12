@@ -43,6 +43,19 @@ export class FlowUtility {
               });
             }
           }
+          for (const outId of Object.keys(recipe.out).filter(
+            (id) => step.itemId !== id && !step.parents?.[id]
+          )) {
+            const outStep = steps.find((s) => s.itemId === outId);
+            const outValue = this.stepLinkValue(outStep, linkValue);
+            sankey.links.push({
+              target: outId,
+              source: step.recipeId,
+              value: this.linkValue(outValue, Rational.one, linkValue),
+              name: data.itemEntities[outId].name,
+              color: data.iconEntities[outId].color,
+            });
+          }
         } else {
           for (const outId of Object.keys(recipe.out)) {
             const outStep = steps.find((s) => s.itemId === outId);
