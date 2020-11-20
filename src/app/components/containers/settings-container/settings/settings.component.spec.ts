@@ -115,7 +115,7 @@ describe('SettingsComponent', () => {
     expect(component.child.sortedFuels).not.toEqual(Mocks.Data.fuelIds);
   });
 
-  describe('get', () => {
+  describe('hash', () => {
     it('should handle no hash in url', () => {
       expect(component.child.hash).toEqual('');
     });
@@ -159,6 +159,14 @@ describe('SettingsComponent', () => {
       spyOn(component.child[ref], 'detectChanges');
       component.child.scroll();
       expect(component.child[ref].detectChanges).toHaveBeenCalled();
+    });
+  });
+
+  describe('trackBy', () => {
+    it('should return the key of the keyvalue', () => {
+      expect(component.child.trackBy({ key: 'key', value: 'value' })).toEqual(
+        'key'
+      );
     });
   });
 
