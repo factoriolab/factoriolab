@@ -10,7 +10,7 @@
 <div class="states" *ngIf="!editState">
   <select [ngModel]="state" (change)="setState($event)">
     <option
-      *ngFor="let state of settings.states | keyvalue"
+      *ngFor="let state of settings.states | keyvalue; trackBy: trackBy"
       [value]="state.key"
       [label]="state.key"
     ></option>
@@ -30,7 +30,7 @@
     >edit</i
   >
   <i
-    *ngIf="state && hash"
+    *ngIf="state && hash && settings.states[state] !== hash"
     class="clickable material-icons"
     title="Overwrite this saved state"
     (click)="saveState.emit({ id: state, value: hash })"
