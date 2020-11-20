@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import {
   Component,
   Input,
@@ -129,6 +130,10 @@ export class SettingsComponent implements OnInit {
   /** Forces change detector to update on scroll */
   @HostListener('scroll', ['$event']) scroll() {
     this.ref.detectChanges();
+  }
+
+  trackBy(data: KeyValue<string, string>) {
+    return data.key;
   }
 
   changeBeaconCount(event: Event) {
