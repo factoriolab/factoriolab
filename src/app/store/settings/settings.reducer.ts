@@ -52,7 +52,7 @@ export interface SettingsState {
 export const initialSettingsState: SettingsState = {
   states: {},
   preset: Preset.Minimum,
-  baseId: '1.0',
+  baseId: '1.1',
   modIds: null,
   disabledRecipes: null,
   expensive: false,

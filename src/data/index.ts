@@ -5,6 +5,7 @@ export { app };
 export const data: AppData = {
   app,
   base: [
+    { id: '1.1', name: '1.1.2' },
     { id: '1.0', name: '1.0.0' },
     { id: '0.18', name: '0.18.47' },
     { id: '0.17', name: '0.17.79' },
@@ -23,7 +24,14 @@ export const data: AppData = {
     {
       id: 'research',
       name: 'Infinite Research',
-      compatibleIds: ['1.0', '0.18', '0.17', '0.16', 'factorio-extended-plus'],
+      compatibleIds: [
+        '1.1',
+        '1.0',
+        '0.18',
+        '0.17',
+        '0.16',
+        'factorio-extended-plus',
+      ],
     },
   ],
 };
