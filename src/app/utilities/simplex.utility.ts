@@ -540,7 +540,9 @@ export class SimplexUtility {
     }
     step.depth = depth;
     step.recipeId = recipe.id;
-    step.factories = solution.recipes[recipe.id].mul(recipe.time);
+    step.factories = solution.recipes[recipe.id]
+      .mul(recipe.time)
+      .add(step.factories || Rational.zero);
     RateUtility.adjustPowerPollution(step, recipe);
   }
 
