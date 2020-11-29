@@ -339,6 +339,11 @@ export const getNormalDataset = createSelector(
       .filter((r) => simpleRecipes.indexOf(r) === -1)
       .sort();
 
+    // Used to build default disabledRecipes for new data sets
+    // console.log(
+    //   JSON.stringify(complexRecipeIds.filter((i) => !itemEntities[i]))
+    // );
+
     const dataset: Dataset = {
       categoryIds,
       categoryEntities,
