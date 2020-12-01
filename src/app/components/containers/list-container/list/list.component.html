@@ -605,7 +605,7 @@
                       class="flex"
                     >
                       <span class="monospace">{{
-                        rate(inStep.wagons, effPrecWagons)
+                        rate(inStep.wagons.mul(percent), effPrecWagons)
                       }}</span>
                       <lab-icon
                         [iconId]="wagon"
