@@ -149,12 +149,14 @@ export class RouterService {
       const i = product.itemId;
       const r = product.rate;
 
-      if (product.rateType === RateType.Items) {
-        return [i, r].join(FIELDSEP);
-      } else {
-        const t = product.rateType;
-        return [i, r, t].join(FIELDSEP);
-      }
+      return [
+        i,
+        r,
+        this.zipDiffNum(product.rateType, RateType.Items),
+        this.zipTruthy(product.recipeId),
+      ]
+        .join(FIELDSEP)
+        .replace(/\**$/, '');
     });
   }
 
@@ -165,20 +167,20 @@ export class RouterService {
     for (const product of zProducts) {
       const p = product.split(FIELDSEP);
       const id = index.toString();
-      if (p.length === 2 || p.length === 3) {
-        ids.push(id);
-        entities[id] = {
-          id,
-          itemId: p[0],
-          rate: Number(p[1]),
-          rateType: p.length > 2 ? Number(p[2]) : RateType.Items,
-        };
-        index++;
-      } else {
-        console.warn(
-          `Router: Invalid number of fields in product: '${product}'`
-        );
+      const u: Product = {
+        id,
+        itemId: p[0],
+        rate: Number(p[1]),
+        rateType: p.length > 2 ? Number(p[2]) : RateType.Items,
+      };
+      let i = 3;
+      let v = p[i++];
+      if (v?.length) {
+        u.recipeId = this.parseString(v);
       }
+      ids.push(id);
+      entities[id] = u;
+      index++;
     }
     return { ids, index, entities };
   }

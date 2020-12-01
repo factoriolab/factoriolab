@@ -44,6 +44,39 @@ export const COST_MINED = Rational.from(10000);
 export const COST_MANUAL = Rational.from(1000000);
 
 export class SimplexUtility {
+  static getRecipes(
+    itemId: string,
+    itemSettings: ItemSettings,
+    disabledRecipes: string[],
+    data: Dataset
+  ): [string, Rational][] {
+    const result = this.solve(
+      [
+        {
+          itemId,
+          items: Rational.one,
+          depth: 0,
+        },
+      ],
+      itemSettings,
+      disabledRecipes,
+      data
+    );
+    return result
+      .filter((s) => data.recipeR[s.recipeId]?.produces(itemId))
+      .sort((a, b) =>
+        data.recipeR[b.recipeId].out[itemId]
+          .sub(data.recipeR[b.recipeId].in[itemId] || Rational.zero)
+          .sub(
+            data.recipeR[a.recipeId].out[itemId].sub(
+              data.recipeR[a.recipeId].in[itemId] || Rational.zero
+            )
+          )
+          .toNumber()
+      )
+      .map((s) => [s.recipeId, s.factories]);
+  }
+
   /** Solve all remaining steps using simplex method, if necessary */
   static solve(
     steps: Step[],

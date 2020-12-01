@@ -9,6 +9,7 @@ export const enum ProductsActionType {
   EDIT_PRODUCT = '[Products] Edit Product',
   EDIT_RATE = '[Products] Edit Rate',
   EDIT_RATE_TYPE = '[Products] Edit Rate Type',
+  EDIT_RECIPE = '[Products] Edit Recipe',
 }
 
 export class ResetAction implements Action {
@@ -41,10 +42,16 @@ export class EditRateTypeAction implements Action {
   constructor(public payload: IdPayload<RateType>) {}
 }
 
+export class EditRecipeAction implements Action {
+  readonly type = ProductsActionType.EDIT_RECIPE;
+  constructor(public payload: IdPayload) {}
+}
+
 export type ProductsAction =
   | ResetAction
   | AddAction
   | RemoveAction
   | EditProductAction
   | EditRateAction
-  | EditRateTypeAction;
+  | EditRateTypeAction
+  | EditRecipeAction;

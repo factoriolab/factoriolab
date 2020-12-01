@@ -6,7 +6,18 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { Product, RateType, IdPayload, Dataset } from '~/models';
+import { Product, RateType, IdPayload, Dataset, ItemSettings } from '~/models';
+import { SimplexUtility } from '~/utilities';
+
+export enum ProductEditType {
+  Product,
+  Recipe,
+}
+
+export interface ProductEdit {
+  product: Product;
+  type: ProductEditType;
+}
 
 @Component({
   selector: 'lab-products',
@@ -25,6 +36,8 @@ export class ProductsComponent {
   get data() {
     return this._data;
   }
+  @Input() itemSettings: ItemSettings;
+  @Input() disabledRecipes: string[];
   @Input() products: Product[];
 
   @Output() add = new EventEmitter<string>();
@@ -32,12 +45,14 @@ export class ProductsComponent {
   @Output() editProduct = new EventEmitter<IdPayload>();
   @Output() editRate = new EventEmitter<IdPayload<number>>();
   @Output() editRateType = new EventEmitter<IdPayload<RateType>>();
+  @Output() editRecipeId = new EventEmitter<IdPayload>();
 
   adding: boolean;
-  editProductId: string;
+  edit: ProductEdit;
   categoryId: string;
 
   RateType = RateType;
+  ProductEditType = ProductEditType;
 
   constructor() {}
 
@@ -46,7 +61,7 @@ export class ProductsComponent {
   }
 
   clickEditProduct(product: Product) {
-    this.editProductId = product.id;
+    this.edit = { product, type: ProductEditType.Product };
     this.categoryId = this.data.itemEntities[product.itemId].category;
   }
 
@@ -67,5 +82,23 @@ export class ProductsComponent {
       const value = Number(event.target.value);
       emitter.emit({ id, value });
     }
+  }
+
+  getRecipe(product: Product) {
+    const recipes = SimplexUtility.getRecipes(
+      product.itemId,
+      this.itemSettings,
+      this.disabledRecipes,
+      this.data
+    );
+    if (recipes.length === 0) {
+      return null;
+    } else if (product.recipeId) {
+      const tuple = recipes.find((r) => r[0] === product.recipeId);
+      if (tuple) {
+        return tuple[0];
+      }
+    }
+    return recipes[0][0];
   }
 }

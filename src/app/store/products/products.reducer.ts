@@ -83,6 +83,7 @@ export function productsReducer(
                 ...state.entities[id],
                 ...{
                   itemId: action.payload.value,
+                  recipeId: undefined,
                 },
               },
             },
@@ -121,6 +122,26 @@ export function productsReducer(
                 ...state.entities[id],
                 ...{
                   rateType: action.payload.value,
+                  recipeId: undefined,
+                },
+              },
+            },
+          },
+        },
+      };
+    }
+    case ProductsActionType.EDIT_RECIPE: {
+      const id = action.payload.id;
+      return {
+        ...state,
+        ...{
+          entities: {
+            ...state.entities,
+            ...{
+              [id]: {
+                ...state.entities[id],
+                ...{
+                  recipeId: action.payload.value,
                 },
               },
             },

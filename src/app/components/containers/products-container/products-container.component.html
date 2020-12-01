@@ -1,5 +1,7 @@
 <lab-products
   [data]="data$ | async"
+  [itemSettings]="itemSettings$ | async"
+  [disabledRecipes]="disabledRecipes$ | async"
   [products]="products$ | async"
   (add)="add($event)"
   (remove)="remove($event)"

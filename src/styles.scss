@@ -180,6 +180,10 @@ g {
   }
 }
 
+.invalid {
+  color: var(--color-invalid);
+}
+
 // Sankey SVG styles
 svg {
   width: 100vw;

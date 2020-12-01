@@ -90,8 +90,10 @@ export const getNormalizedRatesByWagons = createSelector(
 
 export const getNormalizedRatesByFactories = createSelector(
   getProductsBy,
+  Items.getItemSettings,
+  Settings.getDisabledRecipes,
   Recipes.getAdjustedDataset,
-  (products, data) => {
+  (products, itemSettings, disabledRecipes, data) => {
     return products[RateType.Factories]?.reduce((e: Entities<Rational>, p) => {
       const recipe = data.recipeR[data.itemRecipeIds[p.itemId]];
       // Ensures matching recipe is found, else case should be blocked by UI
@@ -100,6 +102,30 @@ export const getNormalizedRatesByFactories = createSelector(
           .div(recipe.time)
           .mul(recipe.out[p.itemId])
           .div(recipe.adjustProd || Rational.one);
+      } else {
+        const recipes = SimplexUtility.getRecipes(
+          p.itemId,
+          itemSettings,
+          disabledRecipes,
+          data
+        );
+
+        if (recipes.length === 0) {
+          // No matching recipes found, fall back to zero
+          e[p.id] = Rational.zero;
+        } else if (!p.recipeId) {
+          // No recipe defined, use best recipe available
+          e[p.id] = p.rate.div(recipes[0][1]);
+        } else {
+          const tuple = recipes.find((r) => r[0] === p.recipeId);
+          if (tuple) {
+            // Found matching result, calculate number of items
+            e[p.id] = p.rate.div(tuple[1]);
+          } else {
+            // No match found for setting, fall back to best recipe
+            e[p.id] = p.rate.div(recipes[0][1]);
+          }
+        }
       }
       return e;
     }, {});
