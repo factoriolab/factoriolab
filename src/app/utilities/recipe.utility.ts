@@ -7,7 +7,7 @@ import {
 } from '~/models';
 
 export class RecipeUtility {
-  static MIN_CONSUMPTION = new Rational(BigInt(1), BigInt(5));
+  static MIN_FACTOR = new Rational(BigInt(1), BigInt(5));
   static POLLUTION_FACTOR = new Rational(BigInt(60));
 
   /** Determines what option to use based on preferred rank */
@@ -116,6 +116,17 @@ export class RecipeUtility {
       }
     }
 
+    // Check for speed, consumption, or pollution below minimum value (20%)
+    if (speed.lt(this.MIN_FACTOR)) {
+      speed = this.MIN_FACTOR;
+    }
+    if (consumption.lt(this.MIN_FACTOR)) {
+      consumption = this.MIN_FACTOR;
+    }
+    if (pollution.lt(this.MIN_FACTOR)) {
+      pollution = this.MIN_FACTOR;
+    }
+
     // Calculate module/beacon effects
     // Speed
     recipe.time = recipe.time.div(speed);
@@ -142,10 +153,6 @@ export class RecipeUtility {
     }
 
     // Power
-    // Minimum value is 20%
-    if (consumption.lt(this.MIN_CONSUMPTION)) {
-      consumption = this.MIN_CONSUMPTION;
-    }
     recipe.consumption = factory.drain ? factory.drain : Rational.zero;
     recipe.consumption = recipe.consumption.add(
       factory.electric ? factory.electric.mul(consumption) : Rational.zero

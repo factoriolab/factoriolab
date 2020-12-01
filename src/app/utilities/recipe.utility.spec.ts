@@ -223,13 +223,40 @@ describe('RecipeUtility', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should use minimum 20% consumption', () => {
+    it('should use minimum 20% effects', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
       settings.factoryModules = [
         ItemId.EfficiencyModule3,
         ItemId.EfficiencyModule3,
         ItemId.EfficiencyModule3,
       ];
+      // Set up efficiency module 3 to cause more than maximum effect in speed, consumption, and pollution
+      const data = {
+        ...Mocks.Data,
+        ...{
+          itemR: {
+            ...Mocks.Data.itemR,
+            ...{
+              [ItemId.EfficiencyModule3]: {
+                ...Mocks.Data.itemR[ItemId.EfficiencyModule3],
+                ...{
+                  module: {
+                    ...Mocks.Data.itemR[ItemId.EfficiencyModule3].module,
+                    ...{
+                      speed:
+                        Mocks.Data.itemR[ItemId.EfficiencyModule3].module
+                          .consumption,
+                      pollution:
+                        Mocks.Data.itemR[ItemId.EfficiencyModule3].module
+                          .consumption,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
       settings.beaconCount = Rational.zero;
       settings.beaconModules = [ItemId.Module];
       const result = RecipeUtility.adjustRecipe(
@@ -238,7 +265,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         Rational.zero,
         settings,
-        Mocks.Data
+        data
       );
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.SteelChest]
@@ -246,9 +273,9 @@ describe('RecipeUtility', () => {
       expected.out = {
         [ItemId.SteelChest]: Rational.one,
       };
-      expected.time = new Rational(BigInt(2), BigInt(3));
-      expected.consumption = new Rational(BigInt(35));
-      expected.pollution = new Rational(BigInt(1), BigInt(100));
+      expected.time = Rational.from(10, 3);
+      expected.consumption = Rational.from(35);
+      expected.pollution = Rational.from(1, 500);
       expect(result).toEqual(expected);
     });
 
