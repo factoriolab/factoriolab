@@ -35,11 +35,11 @@ export class SelectComponent {
   opening = true;
 
   @HostBinding('style.top.px') get top() {
-    return this.parent ? this.parent.getBoundingClientRect().y - 4 : -4;
+    return this.parent ? this.parent.getBoundingClientRect().y - 8 : -8;
   }
 
   @HostBinding('style.left.px') get left() {
-    return this.parent ? this.parent.getBoundingClientRect().x - 13 : -4;
+    return this.parent ? this.parent.getBoundingClientRect().x - 17 : -8;
   }
 
   @HostBinding('style.width.rem')

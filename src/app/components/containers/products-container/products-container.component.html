@@ -1,12 +1,12 @@
 <lab-products
   [data]="data$ | async"
-  [itemSettings]="itemSettings$ | async"
-  [disabledRecipes]="disabledRecipes$ | async"
+  [complexRecipes]="complexRecipes$ | async"
   [products]="products$ | async"
   (add)="add($event)"
   (remove)="remove($event)"
   (editProduct)="editProduct($event)"
   (editRate)="editRate($event)"
   (editRateType)="editRateType($event)"
+  (editRecipeId)="editRecipeId($event)"
 >
 </lab-products>

@@ -6,8 +6,15 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { Product, RateType, IdPayload, Dataset, ItemSettings } from '~/models';
-import { SimplexUtility } from '~/utilities';
+import {
+  Product,
+  RateType,
+  IdPayload,
+  Dataset,
+  Rational,
+  Entities,
+} from '~/models';
+import { RecipeUtility } from '~/utilities';
 
 export enum ProductEditType {
   Product,
@@ -27,17 +34,16 @@ export interface ProductEdit {
 })
 export class ProductsComponent {
   _data: Dataset;
+  get data() {
+    return this._data;
+  }
   @Input() set data(value: Dataset) {
     this._data = value;
     if (!this.categoryId) {
       this.categoryId = value.categoryIds[0];
     }
   }
-  get data() {
-    return this._data;
-  }
-  @Input() itemSettings: ItemSettings;
-  @Input() disabledRecipes: string[];
+  @Input() complexRecipes: Entities<[string, Rational][]>;
   @Input() products: Product[];
 
   @Output() add = new EventEmitter<string>();
@@ -85,20 +91,11 @@ export class ProductsComponent {
   }
 
   getRecipe(product: Product) {
-    const recipes = SimplexUtility.getRecipes(
-      product.itemId,
-      this.itemSettings,
-      this.disabledRecipes,
-      this.data
-    );
-    if (recipes.length === 0) {
-      return null;
-    } else if (product.recipeId) {
-      const tuple = recipes.find((r) => r[0] === product.recipeId);
-      if (tuple) {
-        return tuple[0];
-      }
-    }
-    return recipes[0][0];
+    const recipes = this.complexRecipes[product.itemId];
+    return RecipeUtility.getComplexRecipeData(recipes, product.recipeId)[0];
+  }
+
+  getOptions(product: Product) {
+    return this.complexRecipes[product.itemId].map((r) => r[0]);
   }
 }

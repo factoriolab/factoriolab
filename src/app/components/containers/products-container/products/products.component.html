@@ -73,18 +73,57 @@
           !data.itemRecipeIds[product.itemId]
         "
       >
-        <ng-container *ngIf="getRecipe(product) as recipe; else recipeNone">
-          <div class="relative">
-            <lab-icon
-              class="clickable"
-              title="Choose recipe"
-              [iconId]="recipe"
-              [tooltip]="data.recipeEntities[recipe].name"
-              [recipe]="data.recipeEntities[recipe]"
-              [data]="data"
+        <ng-container
+          *ngIf="complexRecipes[product.itemId].length > 0; else recipeNone"
+        >
+          <ng-container *ngIf="getRecipe(product) as recipe">
+            <ng-container
+              *ngIf="
+                complexRecipes[product.itemId].length === 1;
+                else recipePicker
+              "
             >
-            </lab-icon></div
-        ></ng-container>
+              <lab-icon
+                [iconId]="recipe"
+                [tooltip]="data.recipeEntities[recipe].name"
+                [recipe]="data.recipeEntities[recipe]"
+                [data]="data"
+              >
+              </lab-icon>
+            </ng-container>
+            <ng-template #recipePicker>
+              <div class="relative">
+                <lab-icon
+                  class="clickable"
+                  title="Choose recipe"
+                  [iconId]="recipe"
+                  [tooltip]="data.recipeEntities[recipe].name"
+                  [recipe]="data.recipeEntities[recipe]"
+                  [data]="data"
+                  (click)="
+                    edit = { product: product, type: ProductEditType.Recipe }
+                  "
+                >
+                </lab-icon>
+                <lab-select
+                  *ngIf="
+                    edit &&
+                    edit.product === product &&
+                    edit.type === ProductEditType.Recipe
+                  "
+                  [selectedId]="recipe"
+                  [options]="getOptions(product)"
+                  [data]="data"
+                  (cancel)="edit = null"
+                  (selectId)="
+                    editRecipeId.emit({ id: product.id, value: $event })
+                  "
+                >
+                </lab-select>
+              </div>
+            </ng-template>
+          </ng-container>
+        </ng-container>
         <ng-template #recipeNone>
           <div class="invalid">No matching enabled recipes</div>
         </ng-template>

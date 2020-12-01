@@ -11,7 +11,12 @@ import {
   RationalProduct,
   Sort,
 } from '~/models';
-import { RateUtility, SimplexUtility, FlowUtility } from '~/utilities';
+import {
+  RateUtility,
+  SimplexUtility,
+  FlowUtility,
+  RecipeUtility,
+} from '~/utilities';
 import * as Items from '../items';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
@@ -50,11 +55,31 @@ export const getProductsBy = createSelector(getRationalProducts, (products) =>
   }, {})
 );
 
-export const getNormalizedRatesByItems = createSelector(
+export const getProductsByItems = createSelector(
   getProductsBy,
+  (products) => products[RateType.Items]
+);
+
+export const getProductsByBelts = createSelector(
+  getProductsBy,
+  (products) => products[RateType.Belts]
+);
+
+export const getProductsByWagons = createSelector(
+  getProductsBy,
+  (products) => products[RateType.Wagons]
+);
+
+export const getProductsByFactories = createSelector(
+  getProductsBy,
+  (products) => products[RateType.Factories]
+);
+
+export const getNormalizedRatesByItems = createSelector(
+  getProductsByItems,
   Settings.getDisplayRate,
   (products, displayRate) => {
-    return products[RateType.Items]?.reduce((e: Entities<Rational>, p) => {
+    return products?.reduce((e: Entities<Rational>, p) => {
       e[p.id] = p.rate.div(DisplayRateVal[displayRate]);
       return e;
     }, {});
@@ -62,11 +87,11 @@ export const getNormalizedRatesByItems = createSelector(
 );
 
 export const getNormalizedRatesByBelts = createSelector(
-  getProductsBy,
+  getProductsByBelts,
   Items.getItemSettings,
   Settings.getBeltSpeed,
   (products, itemSettings, beltSpeed) => {
-    return products[RateType.Belts]?.reduce((e: Entities<Rational>, p) => {
+    return products?.reduce((e: Entities<Rational>, p) => {
       e[p.id] = p.rate.mul(beltSpeed[itemSettings[p.itemId].belt]);
       return e;
     }, {});
@@ -74,11 +99,11 @@ export const getNormalizedRatesByBelts = createSelector(
 );
 
 export const getNormalizedRatesByWagons = createSelector(
-  getProductsBy,
+  getProductsByWagons,
   Settings.getDisplayRate,
   Settings.getDataset,
   (products, displayRate, data) => {
-    return products[RateType.Wagons]?.reduce((e: Entities<Rational>, p) => {
+    return products?.reduce((e: Entities<Rational>, p) => {
       const item = data.itemR[p.itemId];
       e[p.id] = p.rate
         .div(DisplayRateVal[displayRate])
@@ -88,12 +113,31 @@ export const getNormalizedRatesByWagons = createSelector(
   }
 );
 
-export const getNormalizedRatesByFactories = createSelector(
-  getProductsBy,
+export const getComplexItemRecipes = createSelector(
+  getProductsByFactories,
   Items.getItemSettings,
   Settings.getDisabledRecipes,
   Recipes.getAdjustedDataset,
   (products, itemSettings, disabledRecipes, data) => {
+    return products
+      ?.filter((p) => !data.recipeR[data.itemRecipeIds[p.itemId]])
+      .reduce((e: Entities<[string, Rational][]>, p) => {
+        e[p.itemId] = SimplexUtility.getRecipes(
+          p.itemId,
+          itemSettings,
+          disabledRecipes,
+          data
+        );
+        return e;
+      }, {});
+  }
+);
+
+export const getNormalizedRatesByFactories = createSelector(
+  getProductsBy,
+  getComplexItemRecipes,
+  Recipes.getAdjustedDataset,
+  (products, complexRecipes, data) => {
     return products[RateType.Factories]?.reduce((e: Entities<Rational>, p) => {
       const recipe = data.recipeR[data.itemRecipeIds[p.itemId]];
       // Ensures matching recipe is found, else case should be blocked by UI
@@ -103,28 +147,12 @@ export const getNormalizedRatesByFactories = createSelector(
           .mul(recipe.out[p.itemId])
           .div(recipe.adjustProd || Rational.one);
       } else {
-        const recipes = SimplexUtility.getRecipes(
-          p.itemId,
-          itemSettings,
-          disabledRecipes,
-          data
-        );
-
-        if (recipes.length === 0) {
-          // No matching recipes found, fall back to zero
-          e[p.id] = Rational.zero;
-        } else if (!p.recipeId) {
-          // No recipe defined, use best recipe available
-          e[p.id] = p.rate.div(recipes[0][1]);
+        const recipes = complexRecipes[p.itemId];
+        const data = RecipeUtility.getComplexRecipeData(recipes, p.recipeId);
+        if (data) {
+          e[p.id] = p.rate.div(data[1]);
         } else {
-          const tuple = recipes.find((r) => r[0] === p.recipeId);
-          if (tuple) {
-            // Found matching result, calculate number of items
-            e[p.id] = p.rate.div(tuple[1]);
-          } else {
-            // No match found for setting, fall back to best recipe
-            e[p.id] = p.rate.div(recipes[0][1]);
-          }
+          e[p.id] = Rational.zero;
         }
       }
       return e;
