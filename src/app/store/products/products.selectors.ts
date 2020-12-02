@@ -134,11 +134,11 @@ export const getComplexItemRecipes = createSelector(
 );
 
 export const getNormalizedRatesByFactories = createSelector(
-  getProductsBy,
+  getProductsByFactories,
   getComplexItemRecipes,
   Recipes.getAdjustedDataset,
   (products, complexRecipes, data) => {
-    return products[RateType.Factories]?.reduce((e: Entities<Rational>, p) => {
+    return products?.reduce((e: Entities<Rational>, p) => {
       const recipe = data.recipeR[data.itemRecipeIds[p.itemId]];
       // Ensures matching recipe is found, else case should be blocked by UI
       if (recipe) {

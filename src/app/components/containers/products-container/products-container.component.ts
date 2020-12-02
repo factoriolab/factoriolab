@@ -61,7 +61,7 @@ export class ProductsContainerComponent implements OnInit {
     this.store.dispatch(new Products.EditRateTypeAction(data));
   }
 
-  editRecipeId(data: IdPayload) {
+  editRecipe(data: IdPayload) {
     this.store.dispatch(new Products.EditRecipeAction(data));
   }
 }

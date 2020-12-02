@@ -73,7 +73,7 @@ describe('ProductsComponent', () => {
   it('should open edit on a product', () => {
     TestUtility.clickSelector(fixture, '.relative lab-icon', 0);
     fixture.detectChanges();
-    expect(component.child.editProductId).toEqual('0');
+    expect(component.child.edit.product.id).toEqual('0');
     expect(component.child.categoryId).toEqual(CategoryId.Logistics);
   });
 

@@ -341,13 +341,6 @@ describe('RouterService', () => {
       const result = service.unzipProducts([mockZipProductBelts]);
       expect(result).toEqual(mockProductsBeltsState);
     });
-
-    it('should handle invalid number of product fields', () => {
-      spyOn(console, 'warn');
-      const result = service.unzipProducts(['id']);
-      expect(console.warn).toHaveBeenCalledTimes(1);
-      expect(result).toEqual({ ids: [], index: 0, entities: {} });
-    });
   });
 
   describe('zipItems', () => {

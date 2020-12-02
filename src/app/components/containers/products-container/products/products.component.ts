@@ -51,7 +51,7 @@ export class ProductsComponent {
   @Output() editProduct = new EventEmitter<IdPayload>();
   @Output() editRate = new EventEmitter<IdPayload<number>>();
   @Output() editRateType = new EventEmitter<IdPayload<RateType>>();
-  @Output() editRecipeId = new EventEmitter<IdPayload>();
+  @Output() editRecipe = new EventEmitter<IdPayload>();
 
   adding: boolean;
   edit: ProductEdit;
