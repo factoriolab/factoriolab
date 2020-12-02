@@ -116,7 +116,7 @@
                   [data]="data"
                   (cancel)="edit = null"
                   (selectId)="
-                    editRecipeId.emit({ id: product.id, value: $event })
+                    editRecipe.emit({ id: product.id, value: $event })
                   "
                 >
                 </lab-select>
