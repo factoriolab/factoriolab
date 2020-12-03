@@ -78,39 +78,36 @@ export const getProductsByFactories = createSelector(
 export const getNormalizedRatesByItems = createSelector(
   getProductsByItems,
   Settings.getDisplayRate,
-  (products, displayRate) => {
-    return products?.reduce((e: Entities<Rational>, p) => {
+  (products, displayRate) =>
+    products?.reduce((e: Entities<Rational>, p) => {
       e[p.id] = p.rate.div(DisplayRateVal[displayRate]);
       return e;
-    }, {});
-  }
+    }, {})
 );
 
 export const getNormalizedRatesByBelts = createSelector(
   getProductsByBelts,
   Items.getItemSettings,
   Settings.getBeltSpeed,
-  (products, itemSettings, beltSpeed) => {
-    return products?.reduce((e: Entities<Rational>, p) => {
+  (products, itemSettings, beltSpeed) =>
+    products?.reduce((e: Entities<Rational>, p) => {
       e[p.id] = p.rate.mul(beltSpeed[itemSettings[p.itemId].belt]);
       return e;
-    }, {});
-  }
+    }, {})
 );
 
 export const getNormalizedRatesByWagons = createSelector(
   getProductsByWagons,
   Settings.getDisplayRate,
   Settings.getDataset,
-  (products, displayRate, data) => {
-    return products?.reduce((e: Entities<Rational>, p) => {
+  (products, displayRate, data) =>
+    products?.reduce((e: Entities<Rational>, p) => {
       const item = data.itemR[p.itemId];
       e[p.id] = p.rate
         .div(DisplayRateVal[displayRate])
         .mul(item.stack ? item.stack.mul(WAGON_STACKS) : WAGON_FLUID);
       return e;
-    }, {});
-  }
+    }, {})
 );
 
 export const getComplexItemRecipes = createSelector(
@@ -118,9 +115,9 @@ export const getComplexItemRecipes = createSelector(
   Items.getItemSettings,
   Settings.getDisabledRecipes,
   Recipes.getAdjustedDataset,
-  (products, itemSettings, disabledRecipes, data) => {
-    return products
-      ?.filter((p) => !data.recipeR[data.itemRecipeIds[p.itemId]])
+  (products, itemSettings, disabledRecipes, data) =>
+    products
+      ?.filter((p) => !data.itemRecipeIds[p.itemId])
       .reduce((e: Entities<[string, Rational][]>, p) => {
         e[p.itemId] = SimplexUtility.getRecipes(
           p.itemId,
@@ -129,16 +126,15 @@ export const getComplexItemRecipes = createSelector(
           data
         );
         return e;
-      }, {});
-  }
+      }, {})
 );
 
 export const getNormalizedRatesByFactories = createSelector(
   getProductsByFactories,
   getComplexItemRecipes,
   Recipes.getAdjustedDataset,
-  (products, complexRecipes, data) => {
-    return products?.reduce((e: Entities<Rational>, p) => {
+  (products, complexRecipes, data) =>
+    products?.reduce((e: Entities<Rational>, p) => {
       const recipe = data.recipeR[data.itemRecipeIds[p.itemId]];
       // Ensures matching recipe is found, else case should be blocked by UI
       if (recipe) {
@@ -147,6 +143,7 @@ export const getNormalizedRatesByFactories = createSelector(
           .mul(recipe.out[p.itemId])
           .div(recipe.adjustProd || Rational.one);
       } else {
+        console.log('test');
         const recipes = complexRecipes[p.itemId];
         const data = RecipeUtility.getComplexRecipeData(recipes, p.recipeId);
         if (data) {
@@ -156,8 +153,7 @@ export const getNormalizedRatesByFactories = createSelector(
         }
       }
       return e;
-    }, {});
-  }
+    }, {})
 );
 
 export const getNormalizedRates = createSelector(
@@ -165,9 +161,12 @@ export const getNormalizedRates = createSelector(
   getNormalizedRatesByBelts,
   getNormalizedRatesByWagons,
   getNormalizedRatesByFactories,
-  (byItems, byBelts, byWagons, byFactories) => {
-    return { ...byItems, ...byBelts, ...byWagons, ...byFactories };
-  }
+  (byItems, byBelts, byWagons, byFactories) => ({
+    ...byItems,
+    ...byBelts,
+    ...byWagons,
+    ...byFactories,
+  })
 );
 
 export const getNormalizedSteps = createSelector(
@@ -254,7 +253,10 @@ export const getZipState = createSelector(
   Items.itemsState,
   Recipes.recipesState,
   Settings.settingsState,
-  (products, items, recipes, settings) => {
-    return { products, items, recipes, settings };
-  }
+  (products, items, recipes, settings) => ({
+    products,
+    items,
+    recipes,
+    settings,
+  })
 );

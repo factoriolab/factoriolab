@@ -93,4 +93,10 @@ export class RationalRecipe {
     }
     return false;
   }
+
+  output(id: string) {
+    return (this.out?.[id] || Rational.zero).sub(
+      this.in?.[id] || Rational.zero
+    );
+  }
 }

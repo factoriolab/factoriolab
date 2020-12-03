@@ -63,15 +63,11 @@ export class SimplexUtility {
       data
     );
     return result
-      .filter((s) => data.recipeR[s.recipeId]?.produces(itemId))
+      .filter((s) => s.recipeId)
       .sort((a, b) =>
-        data.recipeR[b.recipeId].out[itemId]
-          .sub(data.recipeR[b.recipeId].in[itemId] || Rational.zero)
-          .sub(
-            data.recipeR[a.recipeId].out[itemId].sub(
-              data.recipeR[a.recipeId].in[itemId] || Rational.zero
-            )
-          )
+        data.recipeR[b.recipeId]
+          .output(itemId)
+          .sub(data.recipeR[a.recipeId].output(itemId))
           .toNumber()
       )
       .map((s) => [s.recipeId, s.factories]);
