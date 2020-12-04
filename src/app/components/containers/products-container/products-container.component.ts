@@ -30,14 +30,14 @@ export class ProductsContainerComponent implements OnInit {
   @ViewChild(ProductsComponent) child: ProductsComponent;
 
   data$: Observable<Dataset>;
-  complexRecipes$: Observable<Entities<[string, Rational][]>>;
+  productRecipes$: Observable<Entities<[string, Rational][]>>;
   products$: Observable<Product[]>;
 
   constructor(private store: Store<State>) {}
 
   ngOnInit() {
     this.data$ = this.store.select(getAdjustedDataset);
-    this.complexRecipes$ = this.store.select(Products.getComplexItemRecipes);
+    this.productRecipes$ = this.store.select(Products.getProductRecipes);
     this.products$ = this.store.select(Products.getProducts);
   }
 

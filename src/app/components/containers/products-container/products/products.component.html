@@ -67,19 +67,14 @@
         <option label="Wagons" [value]="RateType.Wagons"></option>
         <option label="Factories" [value]="RateType.Factories"></option>
       </select>
-      <ng-container
-        *ngIf="
-          product.rateType === RateType.Factories &&
-          !data.itemRecipeIds[product.itemId]
-        "
-      >
+      <ng-container *ngIf="product.rateType === RateType.Factories">
         <ng-container
-          *ngIf="complexRecipes[product.itemId].length > 0; else recipeNone"
+          *ngIf="productRecipes[product.itemId].length > 0; else recipeNone"
         >
           <ng-container *ngIf="getRecipe(product) as recipe">
             <ng-container
               *ngIf="
-                complexRecipes[product.itemId].length === 1;
+                productRecipes[product.itemId].length === 1;
                 else recipePicker
               "
             >

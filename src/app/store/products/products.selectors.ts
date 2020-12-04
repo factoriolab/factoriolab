@@ -110,41 +110,38 @@ export const getNormalizedRatesByWagons = createSelector(
     }, {})
 );
 
-export const getComplexItemRecipes = createSelector(
+export const getProductRecipes = createSelector(
   getProductsByFactories,
   Items.getItemSettings,
   Settings.getDisabledRecipes,
   Recipes.getAdjustedDataset,
   (products, itemSettings, disabledRecipes, data) =>
-    products
-      ?.filter((p) => !data.itemRecipeIds[p.itemId])
-      .reduce((e: Entities<[string, Rational][]>, p) => {
-        e[p.itemId] = SimplexUtility.getRecipes(
-          p.itemId,
-          itemSettings,
-          disabledRecipes,
-          data
-        );
-        return e;
-      }, {})
+    products?.reduce((e: Entities<[string, Rational][]>, p) => {
+      e[p.itemId] = SimplexUtility.getRecipes(
+        p.itemId,
+        itemSettings,
+        disabledRecipes,
+        data
+      );
+      return e;
+    }, {})
 );
 
 export const getNormalizedRatesByFactories = createSelector(
   getProductsByFactories,
-  getComplexItemRecipes,
+  getProductRecipes,
   Recipes.getAdjustedDataset,
-  (products, complexRecipes, data) =>
+  (products, productRecipes, data) =>
     products?.reduce((e: Entities<Rational>, p) => {
-      const recipe = data.recipeR[data.itemRecipeIds[p.itemId]];
-      // Ensures matching recipe is found, else case should be blocked by UI
-      if (recipe) {
+      const simpleRecipeId = data.itemRecipeIds[p.itemId];
+      if (p.recipeId == null || p.recipeId === simpleRecipeId) {
+        const recipe = data.recipeR[simpleRecipeId];
         e[p.id] = p.rate
           .div(recipe.time)
           .mul(recipe.out[p.itemId])
           .div(recipe.adjustProd || Rational.one);
       } else {
-        console.log('test');
-        const recipes = complexRecipes[p.itemId];
+        const recipes = productRecipes[p.itemId];
         const data = RecipeUtility.getComplexRecipeData(recipes, p.recipeId);
         if (data) {
           e[p.id] = p.rate.div(data[1]);

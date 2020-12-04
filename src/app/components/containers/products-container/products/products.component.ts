@@ -43,7 +43,7 @@ export class ProductsComponent {
       this.categoryId = value.categoryIds[0];
     }
   }
-  @Input() complexRecipes: Entities<[string, Rational][]>;
+  @Input() productRecipes: Entities<[string, Rational][]>;
   @Input() products: Product[];
 
   @Output() add = new EventEmitter<string>();
@@ -91,11 +91,11 @@ export class ProductsComponent {
   }
 
   getRecipe(product: Product) {
-    const recipes = this.complexRecipes[product.itemId];
+    const recipes = this.productRecipes[product.itemId];
     return RecipeUtility.getComplexRecipeData(recipes, product.recipeId)[0];
   }
 
   getOptions(product: Product) {
-    return this.complexRecipes[product.itemId].map((r) => r[0]);
+    return this.productRecipes[product.itemId].map((r) => r[0]);
   }
 }
