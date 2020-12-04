@@ -44,35 +44,6 @@ export const COST_MINED = Rational.from(10000);
 export const COST_MANUAL = Rational.from(1000000);
 
 export class SimplexUtility {
-  static getRecipes(
-    itemId: string,
-    itemSettings: ItemSettings,
-    disabledRecipes: string[],
-    data: Dataset
-  ): [string, Rational][] {
-    const result = this.solve(
-      [
-        {
-          itemId,
-          items: Rational.one,
-          depth: 0,
-        },
-      ],
-      itemSettings,
-      disabledRecipes,
-      data
-    );
-    return result
-      .filter((s) => s.recipeId)
-      .sort((a, b) =>
-        data.recipeR[b.recipeId]
-          .output(itemId)
-          .sub(data.recipeR[a.recipeId].output(itemId))
-          .toNumber()
-      )
-      .map((s) => [s.recipeId, s.factories]);
-  }
-
   /** Solve all remaining steps using simplex method, if necessary */
   static solve(
     steps: Step[],
@@ -107,6 +78,36 @@ export class SimplexUtility {
     this.updateSteps(steps, solution, state);
 
     return steps;
+  }
+
+  /** Solve simplex for a given item id and return recipes in order of output */
+  static getRecipes(
+    itemId: string,
+    itemSettings: ItemSettings,
+    disabledRecipes: string[],
+    data: Dataset
+  ): [string, Rational][] {
+    const result = this.solve(
+      [
+        {
+          itemId,
+          items: Rational.one,
+          depth: 0,
+        },
+      ],
+      itemSettings,
+      disabledRecipes,
+      data
+    );
+    return result
+      .filter((s) => s.recipeId)
+      .sort((a, b) =>
+        data.recipeR[b.recipeId]
+          .output(itemId)
+          .sub(data.recipeR[a.recipeId].output(itemId))
+          .toNumber()
+      )
+      .map((s) => [s.recipeId, s.factories]);
   }
 
   //#region Setup

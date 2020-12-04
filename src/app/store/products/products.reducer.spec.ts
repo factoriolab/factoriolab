@@ -1,4 +1,4 @@
-import { Mocks, ItemId } from 'src/tests';
+import { Mocks, ItemId, RecipeId } from 'src/tests';
 import { RateType } from '~/models';
 import { AppLoadAction } from '../app.actions';
 import * as Actions from './products.actions';
@@ -72,6 +72,17 @@ describe('Products Reducer', () => {
         new Actions.EditRateTypeAction({ id: Mocks.Product1.id, value })
       );
       expect(result.entities[Mocks.Product1.id].rateType).toEqual(value);
+    });
+  });
+
+  describe('EDIT_RECIPE', () => {
+    it('should edit the recipe of a product', () => {
+      const value = RecipeId.AdvancedOilProcessing;
+      const result = productsReducer(
+        state,
+        new Actions.EditRecipeAction({ id: Mocks.Product1.id, value })
+      );
+      expect(result.entities[Mocks.Product1.id].recipeId).toEqual(value);
     });
   });
 

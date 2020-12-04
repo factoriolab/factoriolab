@@ -1,4 +1,4 @@
-import { Mocks, ItemId } from 'src/tests';
+import { Mocks, ItemId, RecipeId } from 'src/tests';
 import {
   DisplayRate,
   RateType,
@@ -6,7 +6,12 @@ import {
   RationalProduct,
   Sort,
 } from '~/models';
-import { RateUtility, FlowUtility, SimplexUtility } from '~/utilities';
+import {
+  RateUtility,
+  FlowUtility,
+  SimplexUtility,
+  RecipeUtility,
+} from '~/utilities';
 import { initialSettingsState } from '../settings';
 import * as Selectors from './products.selectors';
 
@@ -151,6 +156,29 @@ describe('Products Selectors', () => {
     });
   });
 
+  describe('getProductRecipes', () => {
+    it('should handle empty/null values', () => {
+      const result = Selectors.getProductRecipes.projector(
+        null,
+        null,
+        null,
+        null
+      );
+      expect(result).toBeUndefined();
+    });
+
+    it('should use the utility method to determine recipes', () => {
+      spyOn(SimplexUtility, 'getRecipes');
+      const result = Selectors.getProductRecipes.projector(
+        [Mocks.Product4],
+        null,
+        null,
+        null
+      );
+      expect(SimplexUtility.getRecipes).toHaveBeenCalled();
+    });
+  });
+
   describe('getNormalizedRatesByFactories', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getNormalizedRatesByFactories.projector(
@@ -183,6 +211,66 @@ describe('Products Selectors', () => {
         Mocks.AdjustedData
       );
       expect(result[0].nonzero()).toBeTrue();
+    });
+
+    it('should directly calculate if recipeId matches simple recipe', () => {
+      spyOn(RecipeUtility, 'getProductRecipeData');
+      const result = Selectors.getNormalizedRatesByFactories.projector(
+        [
+          {
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Factories,
+            recipeId: RecipeId.Coal,
+          },
+        ],
+        null,
+        Mocks.AdjustedData
+      );
+      expect(RecipeUtility.getProductRecipeData).not.toHaveBeenCalled();
+      expect(result['0']).toEqual(Rational.from(3, 4));
+    });
+
+    it('should calculate using utility method', () => {
+      spyOn(RecipeUtility, 'getProductRecipeData').and.returnValue([
+        '0',
+        Rational.two,
+      ]);
+      const result = Selectors.getNormalizedRatesByFactories.projector(
+        [
+          {
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Factories,
+            recipeId: RecipeId.IronOre,
+          },
+        ],
+        { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
+        Mocks.AdjustedData
+      );
+      expect(RecipeUtility.getProductRecipeData).toHaveBeenCalled();
+      expect(result['0']).toEqual(Rational.from(1, 2));
+    });
+
+    it('should fall back to zero if utility method fails', () => {
+      spyOn(RecipeUtility, 'getProductRecipeData').and.returnValue(null);
+      const result = Selectors.getNormalizedRatesByFactories.projector(
+        [
+          {
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Factories,
+            recipeId: RecipeId.IronOre,
+          },
+        ],
+        { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
+        Mocks.AdjustedData
+      );
+      expect(RecipeUtility.getProductRecipeData).toHaveBeenCalled();
+      expect(result['0']).toEqual(Rational.zero);
     });
   });
 
