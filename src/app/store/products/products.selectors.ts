@@ -11,7 +11,12 @@ import {
   RationalProduct,
   Sort,
 } from '~/models';
-import { RateUtility, SimplexUtility, FlowUtility } from '~/utilities';
+import {
+  RateUtility,
+  SimplexUtility,
+  FlowUtility,
+  RecipeUtility,
+} from '~/utilities';
 import * as Items from '../items';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
@@ -50,60 +55,102 @@ export const getProductsBy = createSelector(getRationalProducts, (products) =>
   }, {})
 );
 
-export const getNormalizedRatesByItems = createSelector(
+export const getProductsByItems = createSelector(
   getProductsBy,
+  (products) => products[RateType.Items]
+);
+
+export const getProductsByBelts = createSelector(
+  getProductsBy,
+  (products) => products[RateType.Belts]
+);
+
+export const getProductsByWagons = createSelector(
+  getProductsBy,
+  (products) => products[RateType.Wagons]
+);
+
+export const getProductsByFactories = createSelector(
+  getProductsBy,
+  (products) => products[RateType.Factories]
+);
+
+export const getNormalizedRatesByItems = createSelector(
+  getProductsByItems,
   Settings.getDisplayRate,
-  (products, displayRate) => {
-    return products[RateType.Items]?.reduce((e: Entities<Rational>, p) => {
+  (products, displayRate) =>
+    products?.reduce((e: Entities<Rational>, p) => {
       e[p.id] = p.rate.div(DisplayRateVal[displayRate]);
       return e;
-    }, {});
-  }
+    }, {})
 );
 
 export const getNormalizedRatesByBelts = createSelector(
-  getProductsBy,
+  getProductsByBelts,
   Items.getItemSettings,
   Settings.getBeltSpeed,
-  (products, itemSettings, beltSpeed) => {
-    return products[RateType.Belts]?.reduce((e: Entities<Rational>, p) => {
+  (products, itemSettings, beltSpeed) =>
+    products?.reduce((e: Entities<Rational>, p) => {
       e[p.id] = p.rate.mul(beltSpeed[itemSettings[p.itemId].belt]);
       return e;
-    }, {});
-  }
+    }, {})
 );
 
 export const getNormalizedRatesByWagons = createSelector(
-  getProductsBy,
+  getProductsByWagons,
   Settings.getDisplayRate,
   Settings.getDataset,
-  (products, displayRate, data) => {
-    return products[RateType.Wagons]?.reduce((e: Entities<Rational>, p) => {
+  (products, displayRate, data) =>
+    products?.reduce((e: Entities<Rational>, p) => {
       const item = data.itemR[p.itemId];
       e[p.id] = p.rate
         .div(DisplayRateVal[displayRate])
         .mul(item.stack ? item.stack.mul(WAGON_STACKS) : WAGON_FLUID);
       return e;
-    }, {});
-  }
+    }, {})
+);
+
+export const getProductRecipes = createSelector(
+  getProductsByFactories,
+  Items.getItemSettings,
+  Settings.getDisabledRecipes,
+  Recipes.getAdjustedDataset,
+  (products, itemSettings, disabledRecipes, data) =>
+    products?.reduce((e: Entities<[string, Rational][]>, p) => {
+      e[p.itemId] = SimplexUtility.getRecipes(
+        p.itemId,
+        itemSettings,
+        disabledRecipes,
+        data
+      );
+      return e;
+    }, {})
 );
 
 export const getNormalizedRatesByFactories = createSelector(
-  getProductsBy,
+  getProductsByFactories,
+  getProductRecipes,
   Recipes.getAdjustedDataset,
-  (products, data) => {
-    return products[RateType.Factories]?.reduce((e: Entities<Rational>, p) => {
-      const recipe = data.recipeR[data.itemRecipeIds[p.itemId]];
-      // Ensures matching recipe is found, else case should be blocked by UI
-      if (recipe) {
+  (products, productRecipes, data) =>
+    products?.reduce((e: Entities<Rational>, p) => {
+      const simpleRecipeId = data.itemRecipeIds[p.itemId];
+      if (p.recipeId == null || p.recipeId === simpleRecipeId) {
+        const recipe = data.recipeR[simpleRecipeId];
         e[p.id] = p.rate
           .div(recipe.time)
           .mul(recipe.out[p.itemId])
           .div(recipe.adjustProd || Rational.one);
+      } else {
+        const recipes = productRecipes[p.itemId];
+        const data = RecipeUtility.getProductRecipeData(recipes, p.recipeId);
+        if (data) {
+          e[p.id] = p.rate.div(data[1]);
+        } else {
+          e[p.id] = Rational.zero;
+        }
       }
       return e;
-    }, {});
-  }
+    }, {})
 );
 
 export const getNormalizedRates = createSelector(
@@ -111,9 +158,12 @@ export const getNormalizedRates = createSelector(
   getNormalizedRatesByBelts,
   getNormalizedRatesByWagons,
   getNormalizedRatesByFactories,
-  (byItems, byBelts, byWagons, byFactories) => {
-    return { ...byItems, ...byBelts, ...byWagons, ...byFactories };
-  }
+  (byItems, byBelts, byWagons, byFactories) => ({
+    ...byItems,
+    ...byBelts,
+    ...byWagons,
+    ...byFactories,
+  })
 );
 
 export const getNormalizedSteps = createSelector(
@@ -200,7 +250,10 @@ export const getZipState = createSelector(
   Items.itemsState,
   Recipes.recipesState,
   Settings.settingsState,
-  (products, items, recipes, settings) => {
-    return { products, items, recipes, settings };
-  }
+  (products, items, recipes, settings) => ({
+    products,
+    items,
+    recipes,
+    settings,
+  })
 );

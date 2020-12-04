@@ -6,7 +6,25 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { Product, RateType, IdPayload, Dataset } from '~/models';
+import {
+  Product,
+  RateType,
+  IdPayload,
+  Dataset,
+  Rational,
+  Entities,
+} from '~/models';
+import { RecipeUtility } from '~/utilities';
+
+export enum ProductEditType {
+  Product,
+  Recipe,
+}
+
+export interface ProductEdit {
+  product: Product;
+  type: ProductEditType;
+}
 
 @Component({
   selector: 'lab-products',
@@ -16,15 +34,16 @@ import { Product, RateType, IdPayload, Dataset } from '~/models';
 })
 export class ProductsComponent {
   _data: Dataset;
+  get data() {
+    return this._data;
+  }
   @Input() set data(value: Dataset) {
     this._data = value;
     if (!this.categoryId) {
       this.categoryId = value.categoryIds[0];
     }
   }
-  get data() {
-    return this._data;
-  }
+  @Input() productRecipes: Entities<[string, Rational][]>;
   @Input() products: Product[];
 
   @Output() add = new EventEmitter<string>();
@@ -32,12 +51,14 @@ export class ProductsComponent {
   @Output() editProduct = new EventEmitter<IdPayload>();
   @Output() editRate = new EventEmitter<IdPayload<number>>();
   @Output() editRateType = new EventEmitter<IdPayload<RateType>>();
+  @Output() editRecipe = new EventEmitter<IdPayload>();
 
   adding: boolean;
-  editProductId: string;
+  edit: ProductEdit;
   categoryId: string;
 
   RateType = RateType;
+  ProductEditType = ProductEditType;
 
   constructor() {}
 
@@ -46,7 +67,7 @@ export class ProductsComponent {
   }
 
   clickEditProduct(product: Product) {
-    this.editProductId = product.id;
+    this.edit = { product, type: ProductEditType.Product };
     this.categoryId = this.data.itemEntities[product.itemId].category;
   }
 
@@ -67,5 +88,14 @@ export class ProductsComponent {
       const value = Number(event.target.value);
       emitter.emit({ id, value });
     }
+  }
+
+  getRecipe(product: Product) {
+    const recipes = this.productRecipes[product.itemId];
+    return RecipeUtility.getProductRecipeData(recipes, product.recipeId)[0];
+  }
+
+  getOptions(product: Product) {
+    return this.productRecipes[product.itemId].map((r) => r[0]);
   }
 }

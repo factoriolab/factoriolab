@@ -80,6 +80,36 @@ export class SimplexUtility {
     return steps;
   }
 
+  /** Solve simplex for a given item id and return recipes in order of output */
+  static getRecipes(
+    itemId: string,
+    itemSettings: ItemSettings,
+    disabledRecipes: string[],
+    data: Dataset
+  ): [string, Rational][] {
+    const result = this.solve(
+      [
+        {
+          itemId,
+          items: Rational.one,
+          depth: 0,
+        },
+      ],
+      itemSettings,
+      disabledRecipes,
+      data
+    );
+    return result
+      .filter((s) => s.recipeId)
+      .sort((a, b) =>
+        data.recipeR[b.recipeId]
+          .output(itemId)
+          .sub(data.recipeR[a.recipeId].output(itemId))
+          .toNumber()
+      )
+      .map((s) => [s.recipeId, s.factories]);
+  }
+
   //#region Setup
   static getState(
     steps: Step[],

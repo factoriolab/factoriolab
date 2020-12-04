@@ -381,4 +381,32 @@ describe('RecipeUtility', () => {
       expect(result.out[ItemId.Coal]).toBeUndefined();
     });
   });
+
+  describe('getProductRecipeData', () => {
+    it('should handle no recipes available', () => {
+      const result = RecipeUtility.getProductRecipeData([], null);
+      expect(result).toBeNull();
+    });
+
+    it('should find matching data', () => {
+      const data: [string, Rational] = [RecipeId.Coal, Rational.one];
+      const result = RecipeUtility.getProductRecipeData([data], RecipeId.Coal);
+      expect(result).toEqual(data);
+    });
+
+    it('should fail to find matching data', () => {
+      const data: [string, Rational] = [RecipeId.Coal, Rational.one];
+      const result = RecipeUtility.getProductRecipeData(
+        [data],
+        RecipeId.IronOre
+      );
+      expect(result).toEqual(data);
+    });
+
+    it('should handle no recipe specified', () => {
+      const data: [string, Rational] = [RecipeId.Coal, Rational.one];
+      const result = RecipeUtility.getProductRecipeData([data], null);
+      expect(result).toEqual(data);
+    });
+  });
 });

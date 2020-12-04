@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { StoreModule, Store } from '@ngrx/store';
 
-import { Mocks, ItemId } from 'src/tests';
+import { Mocks, ItemId, RecipeId } from 'src/tests';
 import { IconComponent } from '~/components';
 import { RateType } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
@@ -78,6 +78,18 @@ describe('ProductsContainerComponent', () => {
     component.child.editRateType.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Products.EditRateTypeAction(data)
+    );
+  });
+
+  it('should edit recipe on a product', () => {
+    spyOn(store, 'dispatch');
+    const data = {
+      id: Mocks.Product1.id,
+      value: RecipeId.AdvancedOilProcessing,
+    };
+    component.child.editRecipe.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Products.EditRecipeAction(data)
     );
   });
 });

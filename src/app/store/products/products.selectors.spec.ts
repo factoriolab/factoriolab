@@ -1,4 +1,4 @@
-import { Mocks, ItemId } from 'src/tests';
+import { Mocks, ItemId, RecipeId } from 'src/tests';
 import {
   DisplayRate,
   RateType,
@@ -6,7 +6,12 @@ import {
   RationalProduct,
   Sort,
 } from '~/models';
-import { RateUtility, FlowUtility, SimplexUtility } from '~/utilities';
+import {
+  RateUtility,
+  FlowUtility,
+  SimplexUtility,
+  RecipeUtility,
+} from '~/utilities';
 import { initialSettingsState } from '../settings';
 import * as Selectors from './products.selectors';
 
@@ -47,15 +52,55 @@ describe('Products Selectors', () => {
     });
   });
 
+  describe('getProductsByItems', () => {
+    it('should select the products calculated by items', () => {
+      expect(
+        Selectors.getProductsByItems.projector({
+          [RateType.Items]: true,
+        } as any)
+      ).toBeTrue();
+    });
+  });
+
+  describe('getProductsByBelts', () => {
+    it('should select the products calculated by belts', () => {
+      expect(
+        Selectors.getProductsByBelts.projector({
+          [RateType.Belts]: true,
+        } as any)
+      ).toBeTrue();
+    });
+  });
+
+  describe('getProductsByWagons', () => {
+    it('should select the products calculated by wagons', () => {
+      expect(
+        Selectors.getProductsByWagons.projector({
+          [RateType.Wagons]: true,
+        } as any)
+      ).toBeTrue();
+    });
+  });
+
+  describe('getProductsByFactories', () => {
+    it('should select the products calculated by factories', () => {
+      expect(
+        Selectors.getProductsByFactories.projector({
+          [RateType.Factories]: true,
+        } as any)
+      ).toBeTrue();
+    });
+  });
+
   describe('getNormalizedRatesByItems', () => {
     it('should handle empty/null values', () => {
-      const result = Selectors.getNormalizedRatesByItems.projector({}, null);
+      const result = Selectors.getNormalizedRatesByItems.projector(null, null);
       expect(result).toBeUndefined();
     });
 
     it('should return the rate entities', () => {
       const result = Selectors.getNormalizedRatesByItems.projector(
-        Mocks.ProductEntities,
+        [Mocks.RationalProducts[0]],
         DisplayRate.PerHour
       );
       expect(result[Mocks.Product1.id].nonzero()).toBeTrue();
@@ -64,13 +109,17 @@ describe('Products Selectors', () => {
 
   describe('getNormalizedRatesByBelts', () => {
     it('should handle empty/null values', () => {
-      const result = Selectors.getNormalizedRatesByBelts.projector({}, {}, {});
+      const result = Selectors.getNormalizedRatesByBelts.projector(
+        null,
+        {},
+        {}
+      );
       expect(result).toBeUndefined();
     });
 
     it('should return the rate entities', () => {
       const result = Selectors.getNormalizedRatesByBelts.projector(
-        Mocks.ProductEntities,
+        [Mocks.RationalProducts[1]],
         { [Mocks.Product2.itemId]: Mocks.ItemSettings1 },
         { [Mocks.ItemSettings1.belt]: Rational.one }
       );
@@ -81,7 +130,7 @@ describe('Products Selectors', () => {
   describe('getNormalizedRatesByWagons', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getNormalizedRatesByWagons.projector(
-        {},
+        null,
         null,
         {}
       );
@@ -90,7 +139,7 @@ describe('Products Selectors', () => {
 
     it('should return the rate entities', () => {
       const result = Selectors.getNormalizedRatesByWagons.projector(
-        Mocks.ProductEntities,
+        [Mocks.RationalProducts[2]],
         DisplayRate.PerHour,
         Mocks.Data
       );
@@ -99,9 +148,7 @@ describe('Products Selectors', () => {
 
     it('should return the rate entities for items', () => {
       const result = Selectors.getNormalizedRatesByWagons.projector(
-        {
-          [RateType.Wagons]: [Mocks.RationalProducts[0]],
-        },
+        [Mocks.RationalProducts[0]],
         DisplayRate.PerHour,
         Mocks.Data
       );
@@ -109,26 +156,43 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getNormalizedRatesByFactories', () => {
+  describe('getProductRecipes', () => {
     it('should handle empty/null values', () => {
-      const result = Selectors.getNormalizedRatesByFactories.projector({}, {});
+      const result = Selectors.getProductRecipes.projector(
+        null,
+        null,
+        null,
+        null
+      );
       expect(result).toBeUndefined();
     });
 
-    it('should handle no recipe found', () => {
-      const result = Selectors.getNormalizedRatesByFactories.projector(
-        {
-          ...Mocks.ProductEntities,
-          ...{ [Mocks.Product4.id]: [{ itemId: 'test' }] },
-        },
-        Mocks.Data
+    it('should use the utility method to determine recipes', () => {
+      spyOn(SimplexUtility, 'getRecipes');
+      const result = Selectors.getProductRecipes.projector(
+        [Mocks.Product4],
+        null,
+        null,
+        null
       );
-      expect(Object.keys(result).length).toEqual(0);
+      expect(SimplexUtility.getRecipes).toHaveBeenCalled();
+    });
+  });
+
+  describe('getNormalizedRatesByFactories', () => {
+    it('should handle empty/null values', () => {
+      const result = Selectors.getNormalizedRatesByFactories.projector(
+        null,
+        {},
+        {}
+      );
+      expect(result).toBeUndefined();
     });
 
     it('should return the rate entities', () => {
       const result = Selectors.getNormalizedRatesByFactories.projector(
-        Mocks.ProductEntities,
+        [Mocks.RationalProducts[3]],
+        {},
         Mocks.Data
       );
       expect(result[Mocks.Product4.id].nonzero()).toBeTrue();
@@ -142,10 +206,71 @@ describe('Products Selectors', () => {
         rateType: RateType.Factories,
       };
       const result = Selectors.getNormalizedRatesByFactories.projector(
-        { [RateType.Factories]: [product] },
+        [product],
+        {},
         Mocks.AdjustedData
       );
       expect(result[0].nonzero()).toBeTrue();
+    });
+
+    it('should directly calculate if recipeId matches simple recipe', () => {
+      spyOn(RecipeUtility, 'getProductRecipeData');
+      const result = Selectors.getNormalizedRatesByFactories.projector(
+        [
+          {
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Factories,
+            recipeId: RecipeId.Coal,
+          },
+        ],
+        null,
+        Mocks.AdjustedData
+      );
+      expect(RecipeUtility.getProductRecipeData).not.toHaveBeenCalled();
+      expect(result['0']).toEqual(Rational.from(3, 4));
+    });
+
+    it('should calculate using utility method', () => {
+      spyOn(RecipeUtility, 'getProductRecipeData').and.returnValue([
+        '0',
+        Rational.two,
+      ]);
+      const result = Selectors.getNormalizedRatesByFactories.projector(
+        [
+          {
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Factories,
+            recipeId: RecipeId.IronOre,
+          },
+        ],
+        { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
+        Mocks.AdjustedData
+      );
+      expect(RecipeUtility.getProductRecipeData).toHaveBeenCalled();
+      expect(result['0']).toEqual(Rational.from(1, 2));
+    });
+
+    it('should fall back to zero if utility method fails', () => {
+      spyOn(RecipeUtility, 'getProductRecipeData').and.returnValue(null);
+      const result = Selectors.getNormalizedRatesByFactories.projector(
+        [
+          {
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Factories,
+            recipeId: RecipeId.IronOre,
+          },
+        ],
+        { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
+        Mocks.AdjustedData
+      );
+      expect(RecipeUtility.getProductRecipeData).toHaveBeenCalled();
+      expect(result['0']).toEqual(Rational.zero);
     });
   });
 

@@ -51,21 +51,24 @@ const mockProductsState: Products.ProductsState = {
   entities: { ['0']: mockProducts[0] },
   index: 1,
 };
-const mockProductsBelts: Product[] = [
+const mockProductsFull: Product[] = [
   {
     id: '0',
     itemId: ItemId.SteelChest,
     rate: 1,
     rateType: RateType.Belts,
+    recipeId: RecipeId.Coal,
   },
 ];
-const mockProductsBeltsState: Products.ProductsState = {
+const mockProductsFullState: Products.ProductsState = {
   ids: ['0'],
-  entities: { ['0']: mockProductsBelts[0] },
+  entities: { ['0']: mockProductsFull[0] },
   index: 1,
 };
 const mockZipProduct = [ItemId.SteelChest, '1'].join(FIELDSEP);
-const mockZipProductBelts = [ItemId.SteelChest, '1', '1'].join(FIELDSEP);
+const mockZipProductFull = [ItemId.SteelChest, '1', '1', RecipeId.Coal].join(
+  FIELDSEP
+);
 const mockItemSettings: Items.ItemsState = {
   [ItemId.SteelChest]: { belt: ItemId.TransportBelt },
 };
@@ -326,8 +329,8 @@ describe('RouterService', () => {
     });
 
     it('should zip products by other rates', () => {
-      const result = service.zipProducts(mockProductsBelts);
-      expect(result).toEqual([mockZipProductBelts]);
+      const result = service.zipProducts(mockProductsFull);
+      expect(result).toEqual([mockZipProductFull]);
     });
   });
 
@@ -337,16 +340,9 @@ describe('RouterService', () => {
       expect(result).toEqual(mockProductsState);
     });
 
-    it('should unzip the products by other rates', () => {
-      const result = service.unzipProducts([mockZipProductBelts]);
-      expect(result).toEqual(mockProductsBeltsState);
-    });
-
-    it('should handle invalid number of product fields', () => {
-      spyOn(console, 'warn');
-      const result = service.unzipProducts(['id']);
-      expect(console.warn).toHaveBeenCalledTimes(1);
-      expect(result).toEqual({ ids: [], index: 0, entities: {} });
+    it('should unzip fully defined products', () => {
+      const result = service.unzipProducts([mockZipProductFull]);
+      expect(result).toEqual(mockProductsFullState);
     });
   });
 

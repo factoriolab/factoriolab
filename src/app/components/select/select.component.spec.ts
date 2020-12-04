@@ -60,16 +60,16 @@ describe('SelectComponent', () => {
 
   it('should set top based on parent', () => {
     component.child.parent = { getBoundingClientRect: () => ({ y: 0 }) } as any;
-    expect(component.child.top).toEqual(-4);
+    expect(component.child.top).toEqual(-8);
     component.child.parent = null;
-    expect(component.child.top).toEqual(-4);
+    expect(component.child.top).toEqual(-8);
   });
 
   it('should set left based on parent', () => {
     component.child.parent = { getBoundingClientRect: () => ({ x: 0 }) } as any;
-    expect(component.child.left).toEqual(-13);
+    expect(component.child.left).toEqual(-17);
     component.child.parent = null;
-    expect(component.child.left).toEqual(-4);
+    expect(component.child.left).toEqual(-8);
   });
 
   it('should set width based on options', () => {
