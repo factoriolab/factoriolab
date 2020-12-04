@@ -6,6 +6,7 @@ export interface Product {
   itemId: string;
   rate: number;
   rateType: RateType;
+  recipeId?: string;
 }
 
 export class RationalProduct {
@@ -13,11 +14,15 @@ export class RationalProduct {
   itemId: string;
   rate: Rational;
   rateType: RateType;
+  recipeId?: string;
 
   constructor(data: Product) {
     this.id = data.id;
     this.itemId = data.itemId;
     this.rate = Rational.fromNumber(data.rate);
     this.rateType = data.rateType;
+    if (data.recipeId) {
+      this.recipeId = data.recipeId;
+    }
   }
 }

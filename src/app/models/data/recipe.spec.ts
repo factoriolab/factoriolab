@@ -114,4 +114,30 @@ describe('RationalRecipe', () => {
       expect(recipe.produces(id)).toBeFalse();
     });
   });
+
+  describe('output', () => {
+    const id = 'id';
+
+    it('should handle null values', () => {
+      const recipe = new RationalRecipe({
+        id,
+        time: 0,
+        in: null,
+        out: null,
+        producers: [],
+      });
+      expect(recipe.output(id)).toEqual(Rational.zero);
+    });
+
+    it('should subtract input from output', () => {
+      const recipe = new RationalRecipe({
+        id,
+        time: 0,
+        in: { [id]: 1 },
+        out: { [id]: 2 },
+        producers: [],
+      });
+      expect(recipe.output(id)).toEqual(Rational.one);
+    });
+  });
 });

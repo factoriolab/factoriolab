@@ -203,4 +203,16 @@ export class RecipeUtility {
 
     return recipe;
   }
+
+  static getProductRecipeData(recipes: [string, Rational][], recipeId: string) {
+    if (recipes.length === 0) {
+      return null;
+    } else if (recipeId) {
+      const tuple = recipes.find((r) => r[0] === recipeId);
+      if (tuple) {
+        return tuple;
+      }
+    }
+    return recipes[0];
+  }
 }

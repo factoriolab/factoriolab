@@ -148,6 +148,22 @@ describe('SimplexUtility', () => {
     });
   });
 
+  describe('getRecipes', () => {
+    it('should get recipe information for an item', () => {
+      expect(
+        SimplexUtility.getRecipes(
+          ItemId.CopperPlate,
+          Mocks.ItemSettingsInitial,
+          [],
+          Mocks.AdjustedData
+        )
+      ).toEqual([
+        [ItemId.CopperPlate, Rational.from(64, 15)],
+        [ItemId.CopperOre, Rational.from(4, 3)],
+      ]);
+    });
+  });
+
   describe('getState', () => {
     it('should return null for fully solved steps', () => {
       spyOn(SimplexUtility, 'unsolvedSteps').and.returnValue([]);

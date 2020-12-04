@@ -7,10 +7,17 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { Product, RateType, IdPayload, Dataset } from '~/models';
+import {
+  Product,
+  RateType,
+  IdPayload,
+  Dataset,
+  Rational,
+  Entities,
+} from '~/models';
 import { State } from '~/store';
 import * as Products from '~/store/products';
-import { getDataset } from '~/store/settings';
+import { getAdjustedDataset } from '~/store/recipes';
 import { ProductsComponent } from './products/products.component';
 
 @Component({
@@ -23,12 +30,14 @@ export class ProductsContainerComponent implements OnInit {
   @ViewChild(ProductsComponent) child: ProductsComponent;
 
   data$: Observable<Dataset>;
+  productRecipes$: Observable<Entities<[string, Rational][]>>;
   products$: Observable<Product[]>;
 
   constructor(private store: Store<State>) {}
 
   ngOnInit() {
-    this.data$ = this.store.select(getDataset);
+    this.data$ = this.store.select(getAdjustedDataset);
+    this.productRecipes$ = this.store.select(Products.getProductRecipes);
     this.products$ = this.store.select(Products.getProducts);
   }
 
@@ -50,5 +59,9 @@ export class ProductsContainerComponent implements OnInit {
 
   editRateType(data: IdPayload<RateType>) {
     this.store.dispatch(new Products.EditRateTypeAction(data));
+  }
+
+  editRecipe(data: IdPayload) {
+    this.store.dispatch(new Products.EditRecipeAction(data));
   }
 }
