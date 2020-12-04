@@ -92,7 +92,7 @@ export class ProductsComponent {
 
   getRecipe(product: Product) {
     const recipes = this.productRecipes[product.itemId];
-    return RecipeUtility.getComplexRecipeData(recipes, product.recipeId)[0];
+    return RecipeUtility.getProductRecipeData(recipes, product.recipeId)[0];
   }
 
   getOptions(product: Product) {

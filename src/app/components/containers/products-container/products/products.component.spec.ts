@@ -2,9 +2,10 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
-import { Mocks, TestUtility, CategoryId, ItemId } from 'src/tests';
+import { Mocks, TestUtility, CategoryId, ItemId, RecipeId } from 'src/tests';
 import { IconComponent, PickerComponent } from '~/components';
-import { Product, RateType, Dataset } from '~/models';
+import { RateType } from '~/models';
+import { RecipeUtility } from '~/utilities';
 import { ProductsComponent } from './products.component';
 
 @Component({
@@ -12,25 +13,29 @@ import { ProductsComponent } from './products.component';
   template: `
     <lab-products
       [data]="data"
+      [productRecipes]="productRecipes"
       [products]="products"
       (add)="add()"
       (remove)="remove($event)"
       (editProduct)="editProduct($event)"
       (editRate)="editRate($event)"
       (editRateType)="editRateType($event)"
+      (editRecipe)="editRecipe($event)"
     >
     </lab-products>
   `,
 })
 class TestProductsComponent {
   @ViewChild(ProductsComponent) child: ProductsComponent;
-  data: Dataset = Mocks.Data;
-  products: Product[] = Mocks.Products;
+  data = Mocks.Data;
+  productRecipes = Mocks.ProductRecipes;
+  products = Mocks.Products;
   add() {}
   remove(data) {}
   editProduct(data) {}
   editRate(data) {}
   editRateType(data) {}
+  editRecipe(data) {}
 }
 
 describe('ProductsComponent', () => {
@@ -120,5 +125,21 @@ describe('ProductsComponent', () => {
     );
     fixture.detectChanges();
     expect(component.editRate).not.toHaveBeenCalled();
+  });
+
+  describe('getRecipe', () => {
+    it('should call getProductRecipeData', () => {
+      spyOn(RecipeUtility, 'getProductRecipeData').and.callThrough();
+      const result = component.child.getRecipe(Mocks.Product4);
+      expect(RecipeUtility.getProductRecipeData).toHaveBeenCalled();
+      expect(result).toEqual(RecipeId.TransportBelt);
+    });
+  });
+
+  describe('getOptions', () => {
+    it('should get the recipe ids that are available as options', () => {
+      const result = component.child.getOptions(Mocks.Product4);
+      expect(result).toEqual([RecipeId.TransportBelt]);
+    });
   });
 });

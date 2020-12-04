@@ -204,7 +204,7 @@ export class RecipeUtility {
     return recipe;
   }
 
-  static getComplexRecipeData(recipes: [string, Rational][], recipeId: string) {
+  static getProductRecipeData(recipes: [string, Rational][], recipeId: string) {
     if (recipes.length === 0) {
       return null;
     } else if (recipeId) {

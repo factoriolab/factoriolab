@@ -31,6 +31,7 @@ import {
 } from '~/store/settings';
 import { getItemSettings } from '~/store/items';
 import { ItemId } from './item-id';
+import { RecipeId } from './recipe-id';
 
 export const Raw = data;
 export const DataState = initialDatasetsState;
@@ -83,6 +84,9 @@ export const ProductsState1: ProductsState = {
 export const RationalProducts = Products.map((p) => new RationalProduct(p));
 export const ProductIds = Products.map((p) => p.id);
 export const ProductEntities = getProductsBy.projector(RationalProducts);
+export const ProductRecipes = {
+  [ItemId.TransportBelt]: [[RecipeId.TransportBelt, Rational.one]],
+};
 export const ItemSettings1: ItemSettings = {
   ignore: false,
   belt: ItemId.TransportBelt,

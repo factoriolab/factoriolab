@@ -142,7 +142,7 @@ export const getNormalizedRatesByFactories = createSelector(
           .div(recipe.adjustProd || Rational.one);
       } else {
         const recipes = productRecipes[p.itemId];
-        const data = RecipeUtility.getComplexRecipeData(recipes, p.recipeId);
+        const data = RecipeUtility.getProductRecipeData(recipes, p.recipeId);
         if (data) {
           e[p.id] = p.rate.div(data[1]);
         } else {
