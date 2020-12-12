@@ -134,7 +134,7 @@ export const getNormalizedRatesByFactories = createSelector(
   (products, productRecipes, data) =>
     products?.reduce((e: Entities<Rational>, p) => {
       const simpleRecipeId = data.itemRecipeIds[p.itemId];
-      if (p.recipeId == null || p.recipeId === simpleRecipeId) {
+      if (simpleRecipeId && (p.recipeId == null || p.recipeId === simpleRecipeId)) {
         const recipe = data.recipeR[simpleRecipeId];
         e[p.id] = p.rate
           .div(recipe.time)
