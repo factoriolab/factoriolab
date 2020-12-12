@@ -41,7 +41,7 @@
     "d3-sankey": "^0.12.3",
     "d3-sankey-circular": "^0.34.0",
     "d3-selection": "^2.0.0",
-    "file-saver": "^2.0.2",
+    "file-saver": "^2.0.5",
     "material-design-icons": "~3.0.1",
     "ng-resize-observer": "^1.0.2",
     "pako": "^1.0.11",
