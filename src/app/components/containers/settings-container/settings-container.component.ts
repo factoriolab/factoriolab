@@ -26,7 +26,10 @@ import {
   InserterCapacity,
 } from '~/models';
 import { State } from '~/store';
+import { ColumnsState, getColumns, SetPrecisionAction } from '~/store/columns';
 import { getBaseSets } from '~/store/datasets';
+import { ResetAction } from '~/store/app.actions';
+import * as Preferences from '~/store/preferences';
 import * as Settings from '~/store/settings';
 import { SettingsComponent } from './settings/settings.component';
 
@@ -45,6 +48,8 @@ export class SettingsContainerComponent implements OnInit {
   base$: Observable<ModInfo[]>;
   mods$: Observable<ModInfo[]>;
   settings$: Observable<Settings.SettingsState>;
+  columns$: Observable<ColumnsState>;
+  preferences$: Observable<Preferences.PreferencesState>;
 
   opening = true;
 
@@ -55,6 +60,8 @@ export class SettingsContainerComponent implements OnInit {
     this.base$ = this.store.select(getBaseSets);
     this.mods$ = this.store.select(Settings.getAvailableMods);
     this.settings$ = this.store.select(Settings.getSettings);
+    this.columns$ = this.store.select(getColumns);
+    this.preferences$ = this.store.select(Preferences.preferencesState);
   }
 
   isInOverlayMode() {
@@ -76,11 +83,11 @@ export class SettingsContainerComponent implements OnInit {
   }
 
   saveState(value: IdPayload) {
-    this.store.dispatch(new Settings.SaveStateAction(value));
+    this.store.dispatch(new Preferences.SaveStateAction(value));
   }
 
   deleteState(value: string) {
-    this.store.dispatch(new Settings.DeleteStateAction(value));
+    this.store.dispatch(new Preferences.DeleteStateAction(value));
   }
 
   setPreset(value: Preset) {
@@ -111,10 +118,6 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetModuleRankAction(value));
   }
 
-  setDrillModule(value: boolean) {
-    this.store.dispatch(new Settings.SetDrillModuleAction(value));
-  }
-
   setBeacon(value: DefaultPayload) {
     this.store.dispatch(new Settings.SetBeaconAction(value));
   }
@@ -143,28 +146,8 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetDisplayRateAction(value));
   }
 
-  setItemPrecision(value: number) {
-    this.store.dispatch(new Settings.SetItemPrecisionAction(value));
-  }
-
-  setBeltPrecision(value: number) {
-    this.store.dispatch(new Settings.SetBeltPrecisionAction(value));
-  }
-
-  setWagonPrecision(value: number) {
-    this.store.dispatch(new Settings.SetWagonPrecisionAction(value));
-  }
-
-  setFactoryPrecision(value: number) {
-    this.store.dispatch(new Settings.SetFactoryPrecisionAction(value));
-  }
-
-  setPowerPrecision(value: number) {
-    this.store.dispatch(new Settings.SetPowerPrecisionAction(value));
-  }
-
-  setPollutionPrecision(value: number) {
-    this.store.dispatch(new Settings.SetPollutionPrecisionAction(value));
+  setPrecision(value: IdPayload<number>) {
+    this.store.dispatch(new SetPrecisionAction(value));
   }
 
   setMiningBonus(value: number) {
@@ -184,18 +167,18 @@ export class SettingsContainerComponent implements OnInit {
   }
 
   setSort(value: Sort) {
-    this.store.dispatch(new Settings.SetSortAction(value));
+    this.store.dispatch(new Preferences.SetSortAction(value));
   }
 
   setLinkValue(value: LinkValue) {
-    this.store.dispatch(new Settings.SetLinkValueAction(value));
+    this.store.dispatch(new Preferences.SetLinkValueAction(value));
   }
 
   setTheme(value: Theme) {
-    this.store.dispatch(new Settings.SetThemeAction(value));
+    this.store.dispatch(new Preferences.SetThemeAction(value));
   }
 
-  resetSettings() {
-    this.store.dispatch(new Settings.ResetAction());
+  reset() {
+    this.store.dispatch(new ResetAction());
   }
 }

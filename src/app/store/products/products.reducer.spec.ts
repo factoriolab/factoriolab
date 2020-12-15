@@ -1,6 +1,6 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
 import { RateType } from '~/models';
-import { AppLoadAction } from '../app.actions';
+import { LoadAction } from '../app.actions';
 import * as Actions from './products.actions';
 import { productsReducer, ProductsState } from './products.reducer';
 
@@ -19,7 +19,7 @@ describe('Products Reducer', () => {
       };
       const result = productsReducer(
         undefined,
-        new AppLoadAction({ productsState } as any)
+        new LoadAction({ productsState } as any)
       );
       expect(result).toEqual(productsState);
     });

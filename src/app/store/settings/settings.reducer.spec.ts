@@ -12,7 +12,7 @@ import {
   InserterCapacity,
 } from '~/models';
 import { mockFullSettings } from '~/services/router.service.spec';
-import { AppLoadAction } from '../app.actions';
+import { LoadAction } from '../app.actions';
 import * as Actions from './settings.actions';
 import {
   settingsReducer,
@@ -26,7 +26,7 @@ describe('Settings Reducer', () => {
     it('should return state if settings state is not included', () => {
       const result = settingsReducer(
         initialSettingsState,
-        new AppLoadAction({} as any)
+        new LoadAction({} as any)
       );
       expect(result).toEqual(initialSettingsState);
     });
@@ -34,7 +34,7 @@ describe('Settings Reducer', () => {
     it('should load settings', () => {
       const result = settingsReducer(
         undefined,
-        new AppLoadAction({
+        new LoadAction({
           settingsState: { displayRate: DisplayRate.PerHour },
         } as any)
       );

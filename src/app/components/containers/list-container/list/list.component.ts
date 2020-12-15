@@ -15,7 +15,6 @@ import {
   DefaultIdPayload,
   Column,
   ColumnsAsOptions,
-  toBoolEntities,
   ItemId,
   ListMode,
   DisplayRateVal,
@@ -23,6 +22,7 @@ import {
   InserterCapacity,
   InserterData,
   DefaultPayload,
+  ColumnSettings,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { ItemsState } from '~/store/items';
@@ -77,72 +77,37 @@ export class ListComponent {
     this._steps = value;
     this.setDetailTabs();
     this.setDisplayedSteps();
-    this.setItemsPrecision();
-    this.setBeltsPrecision();
-    this.setWagonsPrecision();
-    this.setFactoriesPrecision();
-    this.setPowerPrecision();
-    this.setPollutionPrecision();
+    this.setEffectivePrecision();
   }
   @Input() disabledRecipes: string[];
   @Input() factoryRank: string[];
   @Input() moduleRank: string[];
   @Input() beaconModule: string;
   @Input() displayRate: DisplayRate;
-  _itemPrecision = 0;
-  @Input() set itemPrecision(value: number) {
-    this._itemPrecision = value;
-    this.setItemsPrecision();
-  }
-  _beltPrecision = 0;
-  @Input() set beltPrecision(value: number) {
-    this._beltPrecision = value;
-    this.setBeltsPrecision();
-  }
-  _wagonPrecision = 0;
-  @Input() set wagonPrecision(value: number) {
-    this._wagonPrecision = value;
-    this.setWagonsPrecision();
-  }
-  _factoryPrecision = 0;
-  @Input() set factoryPrecision(value: number) {
-    this._factoryPrecision = value;
-    this.setFactoriesPrecision();
-  }
-  _powerPrecision = 0;
-  @Input() set powerPrecision(value: number) {
-    this._powerPrecision = value;
-    this.setPowerPrecision();
-  }
-  _pollutionPrecision = 0;
-  @Input() set pollutionPrecision(value: number) {
-    this._pollutionPrecision = value;
-    this.setPollutionPrecision();
-  }
   @Input() beaconCount: number;
   @Input() drillModule: boolean;
   @Input() inserterTarget: InserterTarget;
   @Input() inserterCapacity: InserterCapacity;
-  _columns: Column[];
+  _columns: Entities<ColumnSettings>;
   get columns() {
     return this._columns;
   }
-  @Input() set columns(value: Column[]) {
+  @Input() set columns(value: Entities<ColumnSettings>) {
     this._columns = value;
-    this.show = toBoolEntities(value);
     this.totalSpan = 2;
-    if (this.columns.indexOf(Column.Belts) !== -1) {
+    if (!this.columns[Column.Belts].ignore) {
       this.totalSpan++;
     }
-    if (this.columns.indexOf(Column.Wagons) !== -1) {
+    if (!this.columns[Column.Wagons].ignore) {
       this.totalSpan++;
     }
-    if (this.columns.indexOf(Column.Factories) !== -1) {
+    if (!this.columns[Column.Factories].ignore) {
       this.totalSpan += 3;
     }
-    if (this.columns.indexOf(Column.Beacons) !== -1) {
+    if (!this.columns[Column.Beacons].ignore) {
       this.totalSpan += 3;
     }
+    this.setEffectivePrecision();
   }
   @Input() modifiedIgnore: boolean;
   @Input() modifiedBelt: boolean;
@@ -188,15 +153,8 @@ export class ListComponent {
   details: Entities<StepDetailTab[]> = {};
   recipes: Entities<string[]> = {};
   expanded: Entities<StepDetailTab> = {};
-  show: Entities<boolean> = {};
   totalSpan = 2;
-  effPrecSurplus: number;
-  effPrecItems: number;
-  effPrecBelts: number;
-  effPrecWagons: number;
-  effPrecFactories: number;
-  effPrecPower: number;
-  effPrecPollution: number;
+  effPrecision: Entities<number> = {};
 
   Column = Column;
   DisplayRate = DisplayRate;
@@ -235,55 +193,25 @@ export class ListComponent {
     for (const step of this.steps.filter((s) => s.pollution)) {
       value = value.add(step.pollution);
     }
-    return this.rate(value, this.effPrecPollution);
+    return this.rate(value, this.effPrecision[Column.Pollution]);
   }
 
   constructor(public router: RouterService) {}
 
-  setItemsPrecision() {
-    this.effPrecSurplus = this.effPrecFrom(
-      this._itemPrecision,
-      (s: Step) => s.surplus
-    );
-    this.effPrecItems = this.effPrecFrom(
-      this._itemPrecision,
-      (s: Step) => s.items
-    );
-  }
-
-  setBeltsPrecision() {
-    this.effPrecBelts = this.effPrecFrom(
-      this._beltPrecision,
-      (s: Step) => s.belts
-    );
-  }
-
-  setWagonsPrecision() {
-    this.effPrecWagons = this.effPrecFrom(
-      this._wagonPrecision,
-      (s: Step) => s.wagons
-    );
-  }
-
-  setFactoriesPrecision() {
-    this.effPrecFactories = this.effPrecFrom(
-      this._factoryPrecision,
-      (s: Step) => s.factories
-    );
-  }
-
-  setPowerPrecision() {
-    this.effPrecPower = this.effPrecFrom(
-      this._powerPrecision,
-      (s: Step) => s.power
-    );
-  }
-
-  setPollutionPrecision() {
-    this.effPrecPollution = this.effPrecFrom(
-      this._pollutionPrecision,
-      (s: Step) => s.pollution
-    );
+  setEffectivePrecision() {
+    if (this.steps && this.columns) {
+      this.effPrecision = {};
+      this.effPrecision[Column.Surplus] = this.effPrecFrom(
+        this.columns[Column.Items].precision,
+        (s) => s[Column.Surplus.toLowerCase()]
+      );
+      for (const i of Object.keys(this.columns)) {
+        this.effPrecision[i] = this.effPrecFrom(
+          this.columns[i].precision,
+          (s) => s[i.toLowerCase()]
+        );
+      }
+    }
   }
 
   effPrecFrom(precision: number, fn: (step: Step) => Rational) {
@@ -401,9 +329,12 @@ export class ListComponent {
 
   power(value: Rational) {
     if (value.lt(Rational.thousand)) {
-      return `${this.rate(value, this.effPrecPower)} kW`;
+      return `${this.rate(value, this.effPrecision[Column.Power])} kW`;
     } else {
-      return `${this.rate(value.div(Rational.thousand), this.effPrecPower)} MW`;
+      return `${this.rate(
+        value.div(Rational.thousand),
+        this.effPrecision[Column.Power]
+      )} MW`;
     }
   }
 

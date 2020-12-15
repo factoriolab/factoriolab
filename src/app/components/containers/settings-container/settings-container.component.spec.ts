@@ -362,7 +362,7 @@ describe('SettingsContainerComponent', () => {
 
   it('should reset settings', () => {
     spyOn(store, 'dispatch');
-    component.child.resetSettings.emit();
+    component.child.reset.emit();
     expect(store.dispatch).toHaveBeenCalledWith(new Settings.ResetAction());
   });
 });

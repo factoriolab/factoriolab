@@ -10,7 +10,7 @@ import { of, EMPTY } from 'rxjs';
 
 import { Mocks } from 'src/tests';
 import { reducers, metaReducers, State } from '..';
-import { AppLoadAction } from '../app.actions';
+import { LoadAction } from '../app.actions';
 import { ResetAction } from '../products';
 import { SetBaseAction } from '../settings';
 import { LoadModAction } from './datasets.actions';
@@ -56,7 +56,7 @@ describe('DatasetsEffects', () => {
       spyOn(effects, 'loadModsForBase');
       let effect: Action;
       effects.appLoad$.subscribe((a) => (effect = a));
-      store.dispatch(new AppLoadAction({} as any));
+      store.dispatch(new LoadAction({} as any));
       expect(effects.loadModsForBase).toHaveBeenCalledWith(
         Mocks.Base.defaults.modIds
       );
@@ -75,7 +75,7 @@ describe('DatasetsEffects', () => {
       let effect: Action;
       effects.appLoad$.subscribe((a) => (effect = a));
       store.dispatch(
-        new AppLoadAction({
+        new LoadAction({
           settingsState: {
             baseId: Mocks.Base.id,
             modIds: [],

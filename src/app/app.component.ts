@@ -5,11 +5,12 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { skip } from 'rxjs/operators';
 
-import { Dataset, SETTINGS_KEY } from './models';
+import { Dataset } from './models';
 import { RouterService } from './services/router.service';
 import { State } from './store';
+import * as Preferences from './store/preferences';
 import { getZipState } from './store/products';
-import * as Settings from './store/settings';
+import { getDataset } from './store/settings';
 
 @Component({
   selector: 'lab-root',
@@ -54,9 +55,9 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.data$ = this.store.select(Settings.getDataset);
-    this.showHeader$ = this.store.select(Settings.getShowHeader);
-    this.store.select(Settings.getTheme).subscribe((s) => {
+    this.data$ = this.store.select(getDataset);
+    this.showHeader$ = this.store.select(Preferences.getShowHeader);
+    this.store.select(Preferences.getTheme).subscribe((s) => {
       this.document.body.className = s;
     });
     this.store
@@ -65,9 +66,6 @@ export class AppComponent implements OnInit {
       .subscribe((s) => {
         this.router.updateUrl(s.products, s.items, s.recipes, s.settings);
       });
-    this.store.select(Settings.settingsState).subscribe((s) => {
-      localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
-    });
   }
 
   toggleSettings() {
@@ -75,10 +73,10 @@ export class AppComponent implements OnInit {
   }
 
   showHeader() {
-    this.store.dispatch(new Settings.ShowHeaderAction());
+    this.store.dispatch(new Preferences.ShowHeaderAction());
   }
 
   hideHeader() {
-    this.store.dispatch(new Settings.HideHeaderAction());
+    this.store.dispatch(new Preferences.HideHeaderAction());
   }
 }

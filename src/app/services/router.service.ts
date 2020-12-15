@@ -12,7 +12,7 @@ import {
   Entities,
 } from '~/models';
 import { State } from '~/store';
-import { AppLoadAction } from '~/store/app.actions';
+import { LoadAction } from '~/store/app.actions';
 import * as Items from '~/store/items';
 import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipes';
@@ -133,7 +133,7 @@ export class RouterService {
             }
             this.zip = urlZip;
             this.unzipping = true;
-            this.store.dispatch(new AppLoadAction(state));
+            this.store.dispatch(new LoadAction(state));
             this.unzipping = false;
           }
         }
@@ -273,7 +273,6 @@ export class RouterService {
       this.zipDiffBool(state.expensive, init.expensive),
       this.zipDiffRank(state.factoryRank, init.factoryRank),
       this.zipDiffRank(state.moduleRank, init.moduleRank),
-      this.zipDiffBool(state.drillModule, init.drillModule),
       this.zipDiffNum(state.beaconCount, init.beaconCount),
       this.zipDiff(state.beacon, init.beacon),
       this.zipDiff(state.beaconModule, init.beaconModule),
@@ -281,11 +280,6 @@ export class RouterService {
       this.zipDiff(state.fuel, init.fuel),
       this.zipDiffNum(state.flowRate, init.flowRate),
       this.zipDiffNum(state.displayRate, init.displayRate),
-      this.zipDiffNum(state.itemPrecision, init.itemPrecision),
-      this.zipDiffNum(state.beltPrecision, init.beltPrecision),
-      this.zipDiffNum(state.factoryPrecision, init.factoryPrecision),
-      this.zipDiffNum(state.powerPrecision, init.powerPrecision),
-      this.zipDiffNum(state.pollutionPrecision, init.pollutionPrecision),
       this.zipDiffNum(state.miningBonus, init.miningBonus),
       this.zipDiffNum(state.researchSpeed, init.researchSpeed),
       this.zipDiffNum(state.inserterTarget, init.inserterTarget),
@@ -325,10 +319,6 @@ export class RouterService {
     }
     v = s[i++];
     if (v?.length) {
-      settings.drillModule = this.parseBool(v);
-    }
-    v = s[i++];
-    if (v?.length) {
       settings.beaconCount = this.parseNumber(v);
     }
     v = s[i++];
@@ -354,26 +344,6 @@ export class RouterService {
     v = s[i++];
     if (v?.length) {
       settings.displayRate = this.parseNumber(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.itemPrecision = this.parseNumber(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.beltPrecision = this.parseNumber(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.factoryPrecision = this.parseNumber(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.powerPrecision = this.parseNumber(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.pollutionPrecision = this.parseNumber(v);
     }
     v = s[i++];
     if (v?.length) {

@@ -1,6 +1,6 @@
 import { saveAs } from 'file-saver';
 
-import { Step, Column, toBoolEntities, Entities } from '~/models';
+import { Step, Column, Entities, ColumnSettings } from '~/models';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
 
@@ -29,7 +29,7 @@ export interface StepExport {
 export class ExportUtility {
   static stepsToCsv(
     steps: Step[],
-    columns: Column[],
+    columns: Entities<ColumnSettings>,
     itemSettings: ItemsState,
     recipeSettings: RecipesState
   ) {
@@ -52,19 +52,18 @@ export class ExportUtility {
 
   static stepsToJson(
     steps: Step[],
-    columns: Column[],
+    columns: Entities<ColumnSettings>,
     itemSettings: ItemsState,
     recipeSettings: RecipesState
   ) {
-    const map = toBoolEntities(columns);
     return steps.map((s) =>
-      this.stepToJson(s, map, itemSettings, recipeSettings)
+      this.stepToJson(s, columns, itemSettings, recipeSettings)
     );
   }
 
   static stepToJson(
     step: Step,
-    columns: Entities<boolean>,
+    columns: Entities<ColumnSettings>,
     itemSettings: ItemsState,
     recipeSettings: RecipesState
   ) {
@@ -73,49 +72,49 @@ export class ExportUtility {
       Items: step.items.toNumber(),
       Surplus: step.surplus?.toNumber() || 0,
     };
-    if (columns[Column.Belts]) {
+    if (!columns[Column.Belts].ignore) {
       exp.Belts = step.belts?.toNumber() || 0;
       exp.Belt = itemSettings[step.itemId].belt;
     }
-    if (columns[Column.Wagons]) {
+    if (!columns[Column.Wagons].ignore) {
       exp.Wagons = step.wagons?.toNumber() || 0;
       exp.Wagon = itemSettings[step.itemId].wagon;
     }
     if (step.recipeId) {
       exp.Recipe = step.recipeId;
       const recipe = recipeSettings[step.recipeId];
-      if (columns[Column.Factories]) {
+      if (!columns[Column.Factories].ignore) {
         exp.Factories = step.factories?.toNumber() || 0;
         exp.Factory = recipe.factory;
         exp.FactoryModules = `"${(recipe.factoryModules || []).join(',')}"`;
       }
-      if (columns[Column.Beacons]) {
+      if (!columns[Column.Beacons].ignore) {
         exp.Beacons = recipe.beaconCount;
         exp.Beacon = recipe.beacon;
         exp.BeaconModules = `"${(recipe.beaconModules || []).join(',')}"`;
       }
-      if (columns[Column.Power]) {
+      if (!columns[Column.Power].ignore) {
         exp.Power = step.power?.toNumber() || 0;
       }
-      if (columns[Column.Pollution]) {
+      if (!columns[Column.Pollution].ignore) {
         exp.Pollution = step.pollution?.toNumber() || 0;
       }
     } else {
       exp.Recipe = '';
-      if (columns[Column.Factories]) {
+      if (!columns[Column.Factories].ignore) {
         exp.Factories = 0;
         exp.Factory = '';
         exp.FactoryModules = '';
       }
-      if (columns[Column.Beacons]) {
+      if (!columns[Column.Beacons].ignore) {
         exp.Beacons = 0;
         exp.Beacon = '';
         exp.BeaconModules = '';
       }
-      if (columns[Column.Power]) {
+      if (!columns[Column.Power].ignore) {
         exp.Power = 0;
       }
-      if (columns[Column.Pollution]) {
+      if (!columns[Column.Pollution].ignore) {
         exp.Pollution = 0;
       }
     }

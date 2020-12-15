@@ -32,7 +32,7 @@
           >
         </div>
       </th>
-      <th *ngIf="show[Column.Belts]">
+      <th *ngIf="!columns[Column.Belts].ignore">
         <div>
           Belts
           <i
@@ -44,10 +44,10 @@
           >
         </div>
       </th>
-      <th *ngIf="show[Column.Wagons]">
+      <th *ngIf="!columns[Column.Wagons].ignore">
         <div>Wagons{{ rateLabel }}</div>
       </th>
-      <th *ngIf="show[Column.Factories]" colspan="3">
+      <th *ngIf="!columns[Column.Factories].ignore" colspan="3">
         <div>
           Factories
           <i
@@ -59,7 +59,7 @@
           >
         </div>
       </th>
-      <th *ngIf="show[Column.Beacons]" colspan="3">
+      <th *ngIf="!columns[Column.Beacons].ignore" colspan="3">
         <div>
           Beacons
           <i
@@ -71,13 +71,16 @@
           >
         </div>
       </th>
-      <th *ngIf="show[Column.Power]"><div>Power</div></th>
-      <th *ngIf="show[Column.Pollution]">
+      <th *ngIf="!columns[Column.Power].ignore"><div>Power</div></th>
+      <th *ngIf="!columns[Column.Pollution].ignore">
         <div>Pollution{{ rateLabel }}</div>
       </th>
       <!-- Reset / Link -->
       <th>
-        <span *ngIf="mode === ListMode.All && show[Column.Link]" class="flex">
+        <span
+          *ngIf="mode === ListMode.All && !columns[Column.Link].ignore"
+          class="flex"
+        >
           <i
             id="list-save-csv"
             title="Save as CSV"
@@ -111,10 +114,10 @@
         <td>
           <div class="flex" *ngIf="step.items">
             <span *ngIf="step.surplus?.nonzero()" class="monospace"
-              >(+{{ rate(step.surplus, effPrecSurplus) }})</span
+              >(+{{ rate(step.surplus, effPrecision[Column.Surplus]) }})</span
             >
             <span *ngIf="step.items" class="monospace">{{
-              rate(step.items, effPrecItems)
+              rate(step.items, effPrecision[Column.Items])
             }}</span>
             <lab-icon
               class="clickable"
@@ -137,7 +140,7 @@
             ></lab-icon>
           </div>
         </td>
-        <td *ngIf="show[Column.Belts]">
+        <td *ngIf="!columns[Column.Belts].ignore">
           <ng-container *ngIf="itemSettings[step.itemId]?.belt as belt">
             <div
               *ngIf="
@@ -149,7 +152,7 @@
               class="flex"
             >
               <span class="monospace">{{
-                rate(step.belts, effPrecBelts)
+                rate(step.belts, effPrecision[Column.Belts])
               }}</span>
               <ng-container
                 *ngIf="
@@ -204,7 +207,7 @@
             </div>
           </ng-container>
         </td>
-        <td *ngIf="show[Column.Wagons]">
+        <td *ngIf="!columns[Column.Wagons].ignore">
           <ng-container *ngIf="itemSettings[step.itemId]?.wagon as wagon">
             <div
               *ngIf="
@@ -216,7 +219,7 @@
               class="flex"
             >
               <span class="monospace">{{
-                rate(step.wagons, effPrecWagons)
+                rate(step.wagons, effPrecision[Column.Wagons])
               }}</span>
               <lab-icon
                 [iconId]="wagon"
@@ -226,14 +229,18 @@
             </div>
           </ng-container>
         </td>
-        <ng-container *ngIf="show[Column.Factories]">
+        <ng-container *ngIf="!columns[Column.Factories].ignore">
           <ng-container
             *ngIf="recipeSettings[step.recipeId]?.factory as factory"
           >
             <td>
               <div *ngIf="step.factories?.nonzero()" class="flex">
                 <span class="monospace">{{
-                  factoryRate(step.factories, effPrecFactories, factory)
+                  factoryRate(
+                    step.factories,
+                    effPrecision[Column.Factories],
+                    factory
+                  )
                 }}</span>
               </div>
             </td>
@@ -343,7 +350,7 @@
           </ng-container>
           <td colspan="3" *ngIf="!recipeSettings[step.recipeId]?.factory"></td>
         </ng-container>
-        <ng-container *ngIf="show[Column.Beacons]">
+        <ng-container *ngIf="!columns[Column.Beacons].ignore">
           <ng-container *ngIf="recipeSettings[step.recipeId]?.beacon as beacon">
             <td>
               <div class="flex">
@@ -457,19 +464,19 @@
           </ng-container>
           <td colspan="3" *ngIf="!recipeSettings[step.recipeId]?.beacon"></td>
         </ng-container>
-        <td *ngIf="show[Column.Power]">
+        <td *ngIf="!columns[Column.Power].ignore">
           <div *ngIf="step.power?.nonzero()" class="flex">
             <span class="monospace">{{ power(step.power) }}</span>
           </div>
         </td>
-        <td *ngIf="show[Column.Pollution]">
+        <td *ngIf="!columns[Column.Pollution].ignore">
           <div *ngIf="step.pollution?.nonzero()" class="flex">
             <span class="monospace">{{
-              rate(step.pollution, effPrecPollution)
+              rate(step.pollution, effPrecision[Column.Pollution])
             }}</span>
           </div>
         </td>
-        <td class="nowrap" *ngIf="show[Column.Link]">
+        <td class="nowrap" *ngIf="!columns[Column.Link].ignore">
           <a
             *ngIf="step.items"
             title="Click to open this step in a new tab"
@@ -550,7 +557,10 @@
                 <td>
                   <div class="flex">
                     <span *ngIf="inStep.items" class="monospace">{{
-                      rate(inStep.items.mul(percent), effPrecItems)
+                      rate(
+                        inStep.items.mul(percent),
+                        effPrecision[Column.Items]
+                      )
                     }}</span>
                     <lab-icon
                       [iconId]="input.key"
@@ -563,7 +573,7 @@
                     </lab-icon>
                   </div>
                 </td>
-                <td *ngIf="show[Column.Belts]">
+                <td *ngIf="!columns[Column.Belts].ignore">
                   <ng-container
                     *ngIf="itemSettings[inStep.itemId].belt as belt"
                   >
@@ -578,7 +588,10 @@
                       class="flex"
                     >
                       <span class="monospace">{{
-                        rate(inStep.belts.mul(percent), effPrecBelts)
+                        rate(
+                          inStep.belts.mul(percent),
+                          effPrecision[Column.Belts]
+                        )
                       }}</span>
                       <lab-icon
                         [iconId]="belt"
@@ -590,7 +603,7 @@
                     </div>
                   </ng-container>
                 </td>
-                <td *ngIf="show[Column.Wagons]">
+                <td *ngIf="!columns[Column.Wagons].ignore">
                   <ng-container
                     *ngIf="itemSettings[inStep.itemId]?.wagon as wagon"
                   >
@@ -605,7 +618,10 @@
                       class="flex"
                     >
                       <span class="monospace">{{
-                        rate(inStep.wagons.mul(percent), effPrecWagons)
+                        rate(
+                          inStep.wagons.mul(percent),
+                          effPrecision[Column.Wagons]
+                        )
                       }}</span>
                       <lab-icon
                         [iconId]="wagon"
@@ -615,7 +631,7 @@
                     </div>
                   </ng-container>
                 </td>
-                <ng-container *ngIf="show[Column.Factories]">
+                <ng-container *ngIf="!columns[Column.Factories].ignore">
                   <ng-container
                     *ngIf="recipeSettings[inStep.recipeId]?.factory as factory"
                   >
@@ -624,7 +640,7 @@
                         <span class="monospace">{{
                           factoryRate(
                             inStep.factories.mul(percent),
-                            effPrecFactories,
+                            effPrecision[Column.Factories],
                             factory
                           )
                         }}</span>
@@ -699,7 +715,7 @@
             <td>
               <div class="flex">
                 <span *ngIf="step.items" class="monospace">{{
-                  rate(step.items.mul(parent.value), effPrecItems)
+                  rate(step.items.mul(parent.value), effPrecision[Column.Items])
                 }}</span>
                 <lab-icon
                   [iconId]="step.itemId"
@@ -712,7 +728,7 @@
                 </lab-icon>
               </div>
             </td>
-            <td *ngIf="show[Column.Belts]">
+            <td *ngIf="!columns[Column.Belts].ignore">
               <ng-container *ngIf="itemSettings[step.itemId].belt as belt">
                 <div
                   *ngIf="
@@ -724,7 +740,10 @@
                   class="flex"
                 >
                   <span class="monospace">{{
-                    rate(step.belts.mul(parent.value), effPrecBelts)
+                    rate(
+                      step.belts.mul(parent.value),
+                      effPrecision[Column.Belts]
+                    )
                   }}</span>
                   <lab-icon
                     [iconId]="belt"
@@ -736,7 +755,7 @@
                 </div>
               </ng-container>
             </td>
-            <td *ngIf="show[Column.Wagons]">
+            <td *ngIf="!columns[Column.Wagons].ignore">
               <ng-container *ngIf="itemSettings[step.itemId]?.wagon as wagon">
                 <div
                   *ngIf="
@@ -748,7 +767,10 @@
                   class="flex"
                 >
                   <span class="monospace">{{
-                    rate(step.wagons.mul(parent.value), effPrecWagons)
+                    rate(
+                      step.wagons.mul(parent.value),
+                      effPrecision[Column.Wagons]
+                    )
                   }}</span>
                   <lab-icon
                     [iconId]="wagon"
@@ -758,7 +780,7 @@
                 </div>
               </ng-container>
             </td>
-            <ng-container *ngIf="show[Column.Factories]">
+            <ng-container *ngIf="!columns[Column.Factories].ignore">
               <ng-container
                 *ngIf="recipeSettings[step.recipeId]?.factory as factory"
               >
@@ -767,7 +789,7 @@
                     <span class="monospace">{{
                       factoryRate(
                         step.factories.mul(parent.value),
-                        effPrecFactories,
+                        effPrecision[Column.Factories],
                         factory
                       )
                     }}</span>
@@ -846,7 +868,7 @@
                           <span *ngIf="inStep.items" class="monospace">{{
                             rate(
                               inStep.items.mul(percent).div(step.factories),
-                              effPrecItems
+                              effPrecision[Column.Items]
                             )
                           }}</span>
                           <lab-icon
@@ -883,7 +905,7 @@
                             <span class="monospace">{{
                               rate(
                                 inStep.belts.mul(percent).div(step.factories),
-                                effPrecBelts
+                                effPrecision[Column.Belts]
                               )
                             }}</span>
                             <lab-icon
@@ -986,7 +1008,10 @@
                         class="flex"
                       >
                         <span class="monospace">{{
-                          rate(items.div(beltSpeed[belt]), effPrecBelts)
+                          rate(
+                            items.div(beltSpeed[belt]),
+                            effPrecision[Column.Belts]
+                          )
                         }}</span>
                         <lab-icon
                           [iconId]="belt"
@@ -1003,7 +1028,7 @@
                         <span class="monospace">{{
                           rate(
                             items.mul(DisplayRateVal[displayRate]),
-                            effPrecItems
+                            effPrecision[Column.Items]
                           )
                         }}</span>
                         <lab-icon
@@ -1064,18 +1089,19 @@
     </ng-container>
     <tr
       *ngIf="
-        mode === ListMode.All && (show[Column.Power] || show[Column.Pollution])
+        mode === ListMode.All &&
+        (!columns[Column.Power].ignore || !columns[Column.Pollution].ignore)
       "
     >
       <td [colSpan]="totalSpan" class="summary-label">
         <span class="monospace">Total:</span>
       </td>
-      <td *ngIf="show[Column.Power]">
+      <td *ngIf="!columns[Column.Power].ignore">
         <div class="flex">
           <span class="monospace">{{ totalPower }}</span>
         </div>
       </td>
-      <td *ngIf="show[Column.Pollution]">
+      <td *ngIf="!columns[Column.Pollution].ignore">
         <div class="flex">
           <span class="monospace">{{ totalPollution }}</span>
         </div>

@@ -1,6 +1,6 @@
 import { Mocks } from 'src/tests';
 import { StoreUtility } from '~/utilities';
-import { AppLoadAction } from '../app.actions';
+import { LoadAction } from '../app.actions';
 import * as Actions from './items.actions';
 import { itemsReducer, initialItemsState } from './items.reducer';
 
@@ -11,7 +11,7 @@ describe('Items Reducer', () => {
     it('should load item settings', () => {
       const result = itemsReducer(
         undefined,
-        new AppLoadAction({ itemsState: Mocks.ItemSettingsEntities } as any)
+        new LoadAction({ itemsState: Mocks.ItemSettingsEntities } as any)
       );
       expect(result).toEqual(Mocks.ItemSettingsEntities);
     });
@@ -21,7 +21,7 @@ describe('Items Reducer', () => {
     it('should ignore a recipe', () => {
       const result = itemsReducer(
         initialItemsState,
-        new Actions.IgnoreAction(Mocks.Item1.id)
+        new Actions.IgnoreItemAction(Mocks.Item1.id)
       );
       expect(result[Mocks.Item1.id].ignore).toEqual(true);
     });
@@ -29,9 +29,12 @@ describe('Items Reducer', () => {
     it('should delete key if ignore = false is the only modification', () => {
       let result = itemsReducer(
         initialItemsState,
-        new Actions.IgnoreAction(Mocks.Item1.id)
+        new Actions.IgnoreItemAction(Mocks.Item1.id)
       );
-      result = itemsReducer(result, new Actions.IgnoreAction(Mocks.Item1.id));
+      result = itemsReducer(
+        result,
+        new Actions.IgnoreItemAction(Mocks.Item1.id)
+      );
       expect(result[Mocks.Recipe1.id]).toBeUndefined();
     });
   });
@@ -54,7 +57,7 @@ describe('Items Reducer', () => {
     it('should reset an item', () => {
       const result = itemsReducer(
         initialItemsState,
-        new Actions.ResetAction(Mocks.Item1.id)
+        new Actions.ResetItemAction(Mocks.Item1.id)
       );
       expect(result[Mocks.Recipe1.id]).toBeUndefined();
     });

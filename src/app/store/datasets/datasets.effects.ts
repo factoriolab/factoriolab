@@ -7,10 +7,12 @@ import { switchMap, map, tap } from 'rxjs/operators';
 import { ModData, Entities } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { State } from '..';
-import { AppActionType, AppLoadAction } from '../app.actions';
+import * as App from '../app.actions';
 import { ResetAction } from '../products';
 import * as Settings from '../settings';
 import { LoadModAction, DatasetsActionType } from './datasets.actions';
+import { initialSettingsState } from '../settings';
+import { storedState } from '../storage.reducer';
 
 @Injectable()
 export class DatasetsEffects {
@@ -24,8 +26,8 @@ export class DatasetsEffects {
 
   @Effect()
   appLoad$ = this.actions$.pipe(
-    ofType(AppActionType.LOAD),
-    switchMap((a: AppLoadAction) => {
+    ofType(App.AppActionType.LOAD),
+    switchMap((a: App.LoadAction) => {
       const id =
         a.payload.settingsState?.baseId || Settings.initialSettingsState.baseId;
       return this.requestData(id).pipe(
@@ -44,6 +46,23 @@ export class DatasetsEffects {
         map((value) => new LoadModAction({ id, value }))
       );
     })
+  );
+
+  @Effect()
+  appReset$ = this.actions$.pipe(
+    ofType(App.AppActionType.RESET),
+    map((a: App.ResetAction) => Settings.initialSettingsState.baseId),
+    switchMap((id: string) =>
+      this.cache[id]
+        ? [new ResetAction(this.cache[id].items[0].id)]
+        : this.requestData(id).pipe(
+            tap((value) => this.loadModsForBase(value.defaults.modIds)),
+            switchMap((value) => [
+              new ResetAction(value.items[0].id),
+              new LoadModAction({ id, value }),
+            ])
+          )
+    )
   );
 
   @Effect()
@@ -83,7 +102,8 @@ export class DatasetsEffects {
     private router: RouterService
   ) {
     if (!location.hash) {
-      const id = Settings.storedSettingsState.baseId;
+      const id =
+        storedState?.settingsState?.baseId || initialSettingsState.baseId;
       this.requestData(id).subscribe((value) => {
         this.router.unzipping = true;
         this.loadModsForBase(value.defaults.modIds);

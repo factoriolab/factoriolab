@@ -23,50 +23,23 @@ export const settingsState = (state: State) => state.settingsState;
 const sPreset = (state: SettingsState) => state.preset;
 const sBaseDatasetId = (state: SettingsState) => state.baseId;
 const sDisplayRate = (state: SettingsState) => state.displayRate;
-const sItemPrecision = (state: SettingsState) => state.itemPrecision;
-const sBeltPrecision = (state: SettingsState) => state.beltPrecision;
-const sWagonPrecision = (state: SettingsState) => state.wagonPrecision;
-const sFactoryPrecision = (state: SettingsState) => state.factoryPrecision;
-const sPowerPrecision = (state: SettingsState) => state.powerPrecision;
-const sPollutionPrecision = (state: SettingsState) => state.pollutionPrecision;
-const sDrillModule = (state: SettingsState) => state.drillModule;
 const sMiningBonus = (state: SettingsState) => state.miningBonus;
 const sResearchSpeed = (state: SettingsState) => state.researchSpeed;
 const sInserterTarget = (state: SettingsState) => state.inserterTarget;
 const sInserterCapacity = (state: SettingsState) => state.inserterCapacity;
 const sFlowRate = (state: SettingsState) => state.flowRate;
 const sExpensive = (state: SettingsState) => state.expensive;
-const sColumns = (state: SettingsState) => state.columns;
-const sSort = (state: SettingsState) => state.sort;
-const sLinkValue = (state: SettingsState) => state.linkValue;
-const sTheme = (state: SettingsState) => state.theme;
-const sShowHeader = (state: SettingsState) => state.showHeader;
 
 /* Simple selectors */
 export const getPreset = compose(sPreset, settingsState);
 export const getBaseDatasetId = compose(sBaseDatasetId, settingsState);
 export const getDisplayRate = compose(sDisplayRate, settingsState);
-export const getItemPrecision = compose(sItemPrecision, settingsState);
-export const getBeltPrecision = compose(sBeltPrecision, settingsState);
-export const getWagonPrecision = compose(sWagonPrecision, settingsState);
-export const getFactoryPrecision = compose(sFactoryPrecision, settingsState);
-export const getPowerPrecision = compose(sPowerPrecision, settingsState);
-export const getPollutionPrecision = compose(
-  sPollutionPrecision,
-  settingsState
-);
-export const getDrillModule = compose(sDrillModule, settingsState);
 export const getMiningBonus = compose(sMiningBonus, settingsState);
 export const getResearchSpeed = compose(sResearchSpeed, settingsState);
 export const getInserterTarget = compose(sInserterTarget, settingsState);
 export const getInserterCapacity = compose(sInserterCapacity, settingsState);
 export const getFlowRate = compose(sFlowRate, settingsState);
 export const getExpensive = compose(sExpensive, settingsState);
-export const getColumns = compose(sColumns, settingsState);
-export const getSort = compose(sSort, settingsState);
-export const getLinkValue = compose(sLinkValue, settingsState);
-export const getTheme = compose(sTheme, settingsState);
-export const getShowHeader = compose(sShowHeader, settingsState);
 
 /* Complex selectors */
 export const getBase = createSelector(

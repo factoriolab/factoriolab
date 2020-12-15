@@ -2,18 +2,25 @@ import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { storeFreeze } from 'ngrx-store-freeze';
 
 import { environment } from 'src/environments/environment';
+import { columnsReducer, ColumnsState } from './columns';
 import { DatasetsState, datasetsReducer } from './datasets';
+import { factoriesReducer, FactoriesState } from './factories';
 import { ItemsState, itemsReducer } from './items';
+import { preferencesReducer, PreferencesState } from './preferences';
 import { ProductsState, productsReducer } from './products';
 import { RecipesState, recipesReducer } from './recipes';
 import { SettingsState, settingsReducer } from './settings';
+import { storageMetaReducer } from './storage.reducer';
 
 export interface State {
   datasetsState: DatasetsState;
   productsState: ProductsState;
   itemsState: ItemsState;
   recipesState: RecipesState;
+  factoriesState: FactoriesState;
   settingsState: SettingsState;
+  columnsState: ColumnsState;
+  preferencesState: PreferencesState;
 }
 
 export const reducers: ActionReducerMap<State> = {
@@ -21,11 +28,14 @@ export const reducers: ActionReducerMap<State> = {
   productsState: productsReducer,
   itemsState: itemsReducer,
   recipesState: recipesReducer,
+  factoriesState: factoriesReducer,
   settingsState: settingsReducer,
+  columnsState: columnsReducer,
+  preferencesState: preferencesReducer,
 };
 
 /* No need to test without storeFreeze, ignore that branch here. */
 export const metaReducers: MetaReducer<State>[] = !environment.production
-  ? [storeFreeze]
+  ? [storeFreeze, storageMetaReducer]
   : /* istanbul ignore next */
-    [];
+    [storageMetaReducer];

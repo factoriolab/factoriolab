@@ -16,7 +16,7 @@ export function datasetsReducer(
   action: DatasetsAction
 ): DatasetsState {
   switch (action.type) {
-    case DatasetsActionType.LOAD_MOD: {
+    case DatasetsActionType.LOAD_MOD:
       return {
         ...state,
         ...{
@@ -26,7 +26,6 @@ export function datasetsReducer(
           },
         },
       };
-    }
     default:
       return state;
   }

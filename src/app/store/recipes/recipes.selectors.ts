@@ -22,18 +22,8 @@ export const getRecipeSettings = createSelector(
   Settings.getBeaconCount,
   Settings.getBeacon,
   Settings.getBeaconModule,
-  Settings.getDrillModule,
   Settings.getDataset,
-  (
-    state,
-    factoryRank,
-    moduleRank,
-    beaconCount,
-    beacon,
-    beaconModule,
-    drillModule,
-    data
-  ) => {
+  (state, factoryRank, moduleRank, beaconCount, beacon, beaconModule, data) => {
     const value: Entities<RecipeSettings> = {};
     if (data?.recipeIds?.length) {
       for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
@@ -55,7 +45,7 @@ export const getRecipeSettings = createSelector(
             recipe.id === ItemId.RocketPart) &&
           factoryItem?.factory?.modules
         ) {
-          const drillSkipDefaults = !drillModule && factoryItem.factory.mining;
+          const drillSkipDefaults = factoryItem.factory.mining;
 
           // Modules
           if (!recipeSettings.factoryModules) {

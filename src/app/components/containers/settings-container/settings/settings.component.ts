@@ -27,7 +27,11 @@ import {
   WARNING_RESET,
   InserterTarget,
   InserterCapacity,
+  DefaultColumnSettings,
+  Column,
 } from '~/models';
+import { ColumnsState } from '~/store/columns';
+import { PreferencesState } from '~/store/preferences';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
 enum OpenSelect {
@@ -61,6 +65,8 @@ export class SettingsComponent implements OnInit {
   @Input() base: ModInfo[];
   @Input() mods: ModInfo[];
   @Input() settings: SettingsState;
+  @Input() columns: ColumnsState;
+  @Input() preferences: PreferencesState;
 
   @Output() saveState = new EventEmitter<IdPayload>();
   @Output() deleteState = new EventEmitter<string>();
@@ -79,12 +85,7 @@ export class SettingsComponent implements OnInit {
   @Output() setFuel = new EventEmitter<DefaultPayload>();
   @Output() setFlowRate = new EventEmitter<number>();
   @Output() setDisplayRate = new EventEmitter<DisplayRate>();
-  @Output() setItemPrecision = new EventEmitter<number>();
-  @Output() setBeltPrecision = new EventEmitter<number>();
-  @Output() setWagonPrecision = new EventEmitter<number>();
-  @Output() setFactoryPrecision = new EventEmitter<number>();
-  @Output() setPowerPrecision = new EventEmitter<number>();
-  @Output() setPollutionPrecision = new EventEmitter<number>();
+  @Output() setPrecision = new EventEmitter<IdPayload<number>>();
   @Output() setMiningBonus = new EventEmitter<number>();
   @Output() setResearchSpeed = new EventEmitter<ResearchSpeed>();
   @Output() setInserterTarget = new EventEmitter<InserterTarget>();
@@ -92,10 +93,12 @@ export class SettingsComponent implements OnInit {
   @Output() setSort = new EventEmitter<Sort>();
   @Output() setLinkValue = new EventEmitter<LinkValue>();
   @Output() setTheme = new EventEmitter<Theme>();
-  @Output() resetSettings = new EventEmitter();
+  @Output() reset = new EventEmitter();
 
   openSelect: OpenSelect;
 
+  Column = Column;
+  DefaultColumnSettings = DefaultColumnSettings;
   DisplayRate = DisplayRate;
   InserterCapacity = InserterCapacity;
   InserterTarget = InserterTarget;
@@ -121,8 +124,8 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
     this.state =
-      Object.keys(this.settings.states).find(
-        (s) => this.settings.states[s] === this.hash
+      Object.keys(this.preferences.states).find(
+        (s) => this.preferences.states[s] === this.hash
       ) || '';
     this.router.events.subscribe((e) => this.ref.detectChanges());
   }
@@ -160,9 +163,9 @@ export class SettingsComponent implements OnInit {
   setState(event: Event) {
     const target = event.target as HTMLSelectElement;
     const id = target.value;
-    if (id && this.settings.states[id]) {
+    if (id && this.preferences.states[id]) {
       this.state = id;
-      this.router.navigate([], { fragment: this.settings.states[id] });
+      this.router.navigate([], { fragment: this.preferences.states[id] });
     }
   }
 
@@ -185,7 +188,7 @@ export class SettingsComponent implements OnInit {
 
   clickResetSettings() {
     if (confirm(WARNING_RESET)) {
-      this.resetSettings.emit();
+      this.reset.emit();
     }
   }
 }

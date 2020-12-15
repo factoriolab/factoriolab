@@ -14,7 +14,7 @@ import {
   InserterCapacity,
 } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
-import { AppLoadAction } from '~/store/app.actions';
+import { LoadAction } from '~/store/app.actions';
 import * as Products from '~/store/products';
 import * as Items from '~/store/items';
 import * as Recipes from '~/store/recipes';
@@ -305,7 +305,7 @@ describe('RouterService', () => {
       const url = `/#z=${mockZipExtra}`;
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(store.dispatch).toHaveBeenCalledWith(
-        new AppLoadAction({
+        new LoadAction({
           productsState: mockProductsState,
           itemsState: mockItemSettings,
           recipesState: mockRecipeSettings,
@@ -318,7 +318,7 @@ describe('RouterService', () => {
       spyOn(store, 'dispatch');
       const url = `/#${mockZipEmpty}`;
       (router.events as any).next(new NavigationEnd(2, url, url));
-      expect(store.dispatch).toHaveBeenCalledWith(new AppLoadAction({} as any));
+      expect(store.dispatch).toHaveBeenCalledWith(new LoadAction({} as any));
     });
   });
 

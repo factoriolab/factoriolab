@@ -1,5 +1,5 @@
 import { Product, RateType, Entities } from '~/models';
-import { AppLoadAction, AppActionType } from '../app.actions';
+import { AppActionType, AppAction } from '../app.actions';
 import { ProductsAction, ProductsActionType } from './products.actions';
 
 export interface ProductsState {
@@ -16,14 +16,13 @@ export const initialProductsState: ProductsState = {
 
 export function productsReducer(
   state: ProductsState = initialProductsState,
-  action: ProductsAction | AppLoadAction
+  action: ProductsAction | AppAction
 ): ProductsState {
   switch (action.type) {
-    case AppActionType.LOAD: {
+    case AppActionType.LOAD:
       return action.payload.productsState
         ? action.payload.productsState
         : state;
-    }
     case ProductsActionType.RESET: {
       const id = '0';
       return {
@@ -39,7 +38,7 @@ export function productsReducer(
         index: 1,
       };
     }
-    case ProductsActionType.ADD: {
+    case ProductsActionType.ADD:
       return {
         ...state,
         ...{
@@ -58,7 +57,6 @@ export function productsReducer(
           index: state.index + 1,
         },
       };
-    }
     case ProductsActionType.REMOVE: {
       const newEntities = { ...state.entities };
       delete newEntities[action.payload];

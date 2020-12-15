@@ -18,6 +18,7 @@ import {
   RecipeUtility,
 } from '~/utilities';
 import * as Items from '../items';
+import * as Preferences from '../preferences';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
 import { State } from '../';
@@ -206,7 +207,7 @@ export const getNormalizedStepsWithMatrices = createSelector(
 
 export const getNormalizedStepsSorted = createSelector(
   getNormalizedStepsWithMatrices,
-  Settings.getSort,
+  Preferences.getSort,
   (steps, sort) => {
     steps = RateUtility.copy(steps);
     if (sort === Sort.BreadthFirst) {
@@ -239,7 +240,7 @@ export const getSteps = createSelector(
 
 export const getSankey = createSelector(
   getSteps,
-  Settings.getLinkValue,
+  Preferences.getLinkValue,
   Recipes.getAdjustedDataset,
   (steps, linkValue, data) =>
     FlowUtility.buildSankey(RateUtility.copy(steps), linkValue, data)

@@ -19,8 +19,10 @@ import {
   InserterTarget,
   InserterCapacity,
   DefaultPayload,
+  ColumnSettings,
 } from '~/models';
 import { State } from '~/store';
+import { getColumns } from '~/store/columns';
 import * as Items from '~/store/items';
 import { getSteps } from '~/store/products';
 import * as Recipes from '~/store/recipes';
@@ -51,17 +53,10 @@ export class ListContainerComponent implements OnInit {
   moduleRank$: Observable<string[]>;
   beaconModule$: Observable<string>;
   displayRate$: Observable<DisplayRate>;
-  itemPrecision$: Observable<number>;
-  beltPrecision$: Observable<number>;
-  wagonPrecision$: Observable<number>;
-  factoryPrecision$: Observable<number>;
-  powerPrecision$: Observable<number>;
-  pollutionPrecision$: Observable<number>;
   beaconCount$: Observable<number>;
-  drillModule$: Observable<boolean>;
   inserterTarget$: Observable<InserterTarget>;
   inserterCapacity$: Observable<InserterCapacity>;
-  columns$: Observable<string[]>;
+  columns$: Observable<Entities<ColumnSettings>>;
   modifiedIgnore$: Observable<boolean>;
   modifiedBelt$: Observable<boolean>;
   modifiedFactory$: Observable<boolean>;
@@ -83,19 +78,10 @@ export class ListContainerComponent implements OnInit {
     this.moduleRank$ = this.store.select(Settings.getModuleRank);
     this.beaconModule$ = this.store.select(Settings.getBeaconModule);
     this.displayRate$ = this.store.select(Settings.getDisplayRate);
-    this.itemPrecision$ = this.store.select(Settings.getItemPrecision);
-    this.beltPrecision$ = this.store.select(Settings.getBeltPrecision);
-    this.wagonPrecision$ = this.store.select(Settings.getWagonPrecision);
-    this.factoryPrecision$ = this.store.select(Settings.getFactoryPrecision);
-    this.powerPrecision$ = this.store.select(Settings.getPowerPrecision);
-    this.pollutionPrecision$ = this.store.select(
-      Settings.getPollutionPrecision
-    );
     this.beaconCount$ = this.store.select(Settings.getBeaconCount);
-    this.drillModule$ = this.store.select(Settings.getDrillModule);
     this.inserterTarget$ = this.store.select(Settings.getInserterTarget);
     this.inserterCapacity$ = this.store.select(Settings.getInserterCapacity);
-    this.columns$ = this.store.select(Settings.getColumns);
+    this.columns$ = this.store.select(getColumns);
     this.modifiedIgnore$ = this.store.select(Items.getContainsIgnore);
     this.modifiedBelt$ = this.store.select(Items.getContainsBelt);
     this.modifiedFactory$ = this.store.select(Recipes.getContainsFactory);
@@ -103,7 +89,7 @@ export class ListContainerComponent implements OnInit {
   }
 
   ignoreItem(value: string) {
-    this.store.dispatch(new Items.IgnoreAction(value));
+    this.store.dispatch(new Items.IgnoreItemAction(value));
   }
 
   setBelt(data: DefaultIdPayload) {
@@ -135,11 +121,11 @@ export class ListContainerComponent implements OnInit {
   }
 
   resetItem(value: string) {
-    this.store.dispatch(new Items.ResetAction(value));
+    this.store.dispatch(new Items.ResetItemAction(value));
   }
 
   resetRecipe(value: string) {
-    this.store.dispatch(new Recipes.ResetAction(value));
+    this.store.dispatch(new Recipes.ResetRecipeAction(value));
   }
 
   resetIgnore() {

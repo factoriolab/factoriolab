@@ -10,7 +10,7 @@
 <div class="states" *ngIf="!editState">
   <select [ngModel]="state" (change)="setState($event)">
     <option
-      *ngFor="let state of settings.states | keyvalue; trackBy: trackBy"
+      *ngFor="let state of preferences.states | keyvalue; trackBy: trackBy"
       [value]="state.key"
       [label]="state.key"
     ></option>
@@ -30,7 +30,7 @@
     >edit</i
   >
   <i
-    *ngIf="state && hash && settings.states[state] !== hash"
+    *ngIf="state && hash && preferences.states[state] !== hash"
     class="clickable material-icons"
     title="Overwrite this saved state"
     (click)="saveState.emit({ id: state, value: hash })"
@@ -216,22 +216,6 @@
     "
   >
   </lab-ranker>
-  <div
-    class="flex clickable static"
-    (click)="setDrillModule.emit(!settings.drillModule)"
-  >
-    <lab-icon
-      [iconId]="ItemId.ElectricMiningDrill"
-      [data]="data"
-      tooltip="Toggle drill modules"
-      [scale]="true"
-    ></lab-icon>
-    <lab-icon
-      [iconId]="settings.drillModule ? ItemId.SpeedModule3 : ItemId.Module"
-      [data]="data"
-      tooltip="Toggle drill modules"
-    ></lab-icon>
-  </div>
 </div>
 <div class="field">
   <lab-icon
@@ -410,9 +394,9 @@
     [data]="data"
     [iconId]="ItemId.IronPlate"
     tooltip="Items precision"
-    [value]="settings.itemPrecision"
-    [default]="initial.itemPrecision"
-    (setValue)="setItemPrecision.emit($event)"
+    [value]="columns[Column.Items].precision"
+    [default]="DefaultColumnSettings.precision"
+    (setValue)="setPrecision.emit({ id: Column.Items, value: $event })"
   ></lab-precision>
 </div>
 <div class="field">
@@ -420,9 +404,9 @@
     [data]="data"
     [iconId]="ItemId.TransportBelt"
     tooltip="Belts precision"
-    [value]="settings.beltPrecision"
-    [default]="initial.beltPrecision"
-    (setValue)="setBeltPrecision.emit($event)"
+    [value]="columns[Column.Belts].precision"
+    [default]="DefaultColumnSettings.precision"
+    (setValue)="setPrecision.emit({ id: Column.Belts, value: $event })"
   ></lab-precision>
 </div>
 <div class="field">
@@ -430,9 +414,9 @@
     [data]="data"
     [iconId]="ItemId.CargoWagon"
     tooltip="Wagons precision"
-    [value]="settings.wagonPrecision"
-    [default]="initial.wagonPrecision"
-    (setValue)="setWagonPrecision.emit($event)"
+    [value]="columns[Column.Wagons].precision"
+    [default]="DefaultColumnSettings.precision"
+    (setValue)="setPrecision.emit({ id: Column.Wagons, value: $event })"
   ></lab-precision>
 </div>
 <div class="field">
@@ -440,9 +424,9 @@
     [data]="data"
     [iconId]="ItemId.AssemblingMachine1"
     tooltip="Factories precision"
-    [value]="settings.factoryPrecision"
-    [default]="initial.factoryPrecision"
-    (setValue)="setFactoryPrecision.emit($event)"
+    [value]="columns[Column.Factories].precision"
+    [default]="DefaultColumnSettings.precision"
+    (setValue)="setPrecision.emit({ id: Column.Factories, value: $event })"
   ></lab-precision>
 </div>
 <div class="field">
@@ -450,9 +434,9 @@
     [data]="data"
     [iconId]="ItemId.Substation"
     tooltip="Power precision"
-    [value]="settings.powerPrecision"
-    [default]="initial.powerPrecision"
-    (setValue)="setPowerPrecision.emit($event)"
+    [value]="columns[Column.Power].precision"
+    [default]="DefaultColumnSettings.precision"
+    (setValue)="setPrecision.emit({ id: Column.Power, value: $event })"
   ></lab-precision>
 </div>
 <div class="field">
@@ -460,9 +444,9 @@
     [data]="data"
     [iconId]="ItemId.Steam"
     tooltip="Pollution precision"
-    [value]="settings.pollutionPrecision"
-    [default]="initial.pollutionPrecision"
-    (setValue)="setPollutionPrecision.emit($event)"
+    [value]="columns[Column.Pollution].precision"
+    [default]="DefaultColumnSettings.precision"
+    (setValue)="setPrecision.emit({ id: Column.Pollution, value: $event })"
   ></lab-precision>
 </div>
 <div class="label">Bonuses</div>
@@ -569,7 +553,7 @@
       <select
         id="settings-sort-select"
         title="Set sort option"
-        [ngModel]="settings.sort"
+        [ngModel]="preferences.sort"
         (change)="emitNumber(setSort, $event)"
       >
         <option label="Depth First" [value]="Sort.DepthFirst"></option>
@@ -583,7 +567,7 @@
       <select
         id="settings-link-value"
         title="Set flow diagram link weight"
-        [ngModel]="settings.linkValue"
+        [ngModel]="preferences.linkValue"
         (change)="emitNumber(setLinkValue, $event)"
       >
         <option label="None" [value]="LinkValue.None"></option>
@@ -601,7 +585,7 @@
       <select
         id="settings-theme-select"
         title="Choose color theme"
-        [ngModel]="settings.theme"
+        [ngModel]="preferences.theme"
         (change)="emitString(setTheme, $event)"
       >
         <option label="Dark Mode" [value]="Theme.DarkMode"></option>

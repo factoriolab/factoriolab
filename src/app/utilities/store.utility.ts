@@ -1,4 +1,4 @@
-import { DefaultPayload, DefaultIdPayload } from '~/models';
+import { DefaultPayload, DefaultIdPayload, IdPayload } from '~/models';
 
 export class StoreUtility {
   static rankEquals<T extends number | string>(a: T[], b: T[]) {
@@ -11,7 +11,10 @@ export class StoreUtility {
 
   static payloadEquals<T>(payload: DefaultIdPayload<T>) {
     return Array.isArray(payload.value) && Array.isArray(payload.default)
-      ? this.arrayEquals(payload.value, payload.default)
+      ? this.arrayEquals(
+          payload.value as (number | string)[],
+          payload.default as (number | string)[]
+        )
       : payload.value === payload.default;
   }
 
@@ -30,7 +33,7 @@ export class StoreUtility {
     // Spread into new state
     const newState = { ...state };
     for (const i of Object.keys(newState).filter(
-      (j) => (!id || id === j) && newState[j][field] != null
+      (j) => (!id || id === j) && newState[j][field] !== undefined
     )) {
       if (Object.keys(newState[i]).length === 1) {
         delete newState[i];
@@ -49,26 +52,32 @@ export class StoreUtility {
     payload: DefaultIdPayload<P>
   ): T {
     // Spread into new state
-    const newState = { ...state };
     if (this.payloadEquals(payload)) {
       // Resetting to null
-      if (newState[payload.id] != null) {
+      const newState = { ...state };
+      if (newState[payload.id] !== undefined) {
         newState[payload.id] = { ...newState[payload.id] };
-        if (newState[payload.id][field] != null) {
+        if (newState[payload.id][field] !== undefined) {
           delete newState[payload.id][field];
         }
         if (Object.keys(newState[payload.id]).length === 0) {
           delete newState[payload.id];
         }
       }
+      return newState;
     } else {
       // Setting field
-      newState[payload.id] = {
-        ...newState[payload.id],
-        ...{ [field]: payload.value },
-      };
+      return this.assignValue(state, field, payload);
     }
-    return newState;
+  }
+
+  static assignValue<T, P>(state: T, field: string, payload: IdPayload<P>) {
+    return {
+      ...state,
+      ...{
+        [payload.id]: { ...state[payload.id], ...{ [field]: payload.value } },
+      },
+    };
   }
 
   static compareValue<T>(payload: DefaultPayload<T>) {

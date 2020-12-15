@@ -43,7 +43,9 @@ describe('ListContainerComponent', () => {
     spyOn(store, 'dispatch');
     const data = Mocks.Item1.id;
     component.child.ignoreItem.emit(data);
-    expect(store.dispatch).toHaveBeenCalledWith(new Items.IgnoreAction(data));
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Items.IgnoreItemAction(data)
+    );
   });
 
   it('should set belt', () => {
@@ -133,14 +135,18 @@ describe('ListContainerComponent', () => {
     spyOn(store, 'dispatch');
     const data = Mocks.Item1.id;
     component.child.resetItem.emit(data);
-    expect(store.dispatch).toHaveBeenCalledWith(new Items.ResetAction(data));
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Items.ResetItemAction(data)
+    );
   });
 
   it('should reset recipe to default', () => {
     spyOn(store, 'dispatch');
     const data = Mocks.Recipe1.id;
     component.child.resetRecipe.emit(data);
-    expect(store.dispatch).toHaveBeenCalledWith(new Recipes.ResetAction(data));
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Recipes.ResetRecipeAction(data)
+    );
   });
 
   it('should reset ignore modifications', () => {
