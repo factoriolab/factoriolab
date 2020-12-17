@@ -100,7 +100,6 @@
   >
 </div>
 <div class="field">
-  <div>Base:</div>
   <select
     title="Select base game version"
     [ngModel]="settings.baseId"
@@ -166,121 +165,184 @@
     >
   </div>
 </div>
-<div class="label">Factory</div>
+<div class="label">Factories</div>
 <div class="field">
-  <lab-icon
-    #btnFactory
-    class="clickable"
-    tooltip="Factory preferences"
-    [iconId]="
-      settings.factoryRank.length
-        ? settings.factoryRank[0]
-        : ItemId.AssemblingMachine1
-    "
-    [data]="data"
-    (click)="openSelect = OpenSelect.Factory"
-  ></lab-icon>
-  <lab-ranker
-    *ngIf="openSelect === OpenSelect.Factory"
-    [data]="data"
-    [rank]="settings.factoryRank"
-    [options]="data.factoryIds"
-    [parent]="btnFactory.element"
-    (cancel)="openSelect = null"
-    (commit)="
-      openSelect = null;
-      setFactoryRank.emit({ value: $event, default: data.defaults.factoryRank })
-    "
-  >
-  </lab-ranker>
-  <lab-icon
-    #btnModule
-    class="clickable"
-    tooltip="Module preferences"
-    [iconId]="
-      settings.moduleRank.length ? settings.moduleRank[0] : ItemId.Module
-    "
-    [data]="data"
-    (click)="openSelect = OpenSelect.Module"
-  ></lab-icon>
-  <lab-ranker
-    *ngIf="openSelect === OpenSelect.Module"
-    [data]="data"
-    [rank]="settings.moduleRank"
-    [options]="data.moduleIds"
-    [parent]="btnModule.element"
-    (cancel)="openSelect = null"
-    (commit)="
-      openSelect = null;
-      setModuleRank.emit({ value: $event, default: data.defaults.moduleRank })
-    "
-  >
-  </lab-ranker>
+  <table>
+    <tr>
+      <td>
+        <lab-icon
+          #btnFactory
+          class="clickable"
+          tooltip="Factory preferences"
+          [iconId]="
+            settings.factoryRank.length
+              ? settings.factoryRank[0]
+              : ItemId.AssemblingMachine1
+          "
+          [data]="data"
+          (click)="openSelect = OpenSelect.Factory"
+        ></lab-icon>
+        <lab-ranker
+          *ngIf="openSelect === OpenSelect.Factory"
+          [data]="data"
+          [rank]="settings.factoryRank"
+          [options]="data.factoryIds"
+          [parent]="btnFactory.element"
+          (cancel)="openSelect = null"
+          (commit)="
+            openSelect = null;
+            setFactoryRank.emit({
+              value: $event,
+              default: data.defaults.factoryRank
+            })
+          "
+        >
+        </lab-ranker>
+      </td>
+      <td>
+        <lab-icon
+          #btnModule
+          class="clickable"
+          tooltip="Module preferences"
+          [iconId]="
+            settings.moduleRank.length ? settings.moduleRank[0] : ItemId.Module
+          "
+          [data]="data"
+          (click)="openSelect = OpenSelect.Module"
+        ></lab-icon>
+        <lab-ranker
+          *ngIf="openSelect === OpenSelect.Module"
+          [data]="data"
+          [rank]="settings.moduleRank"
+          [options]="data.moduleIds"
+          [parent]="btnModule.element"
+          (cancel)="openSelect = null"
+          (commit)="
+            openSelect = null;
+            setModuleRank.emit({
+              value: $event,
+              default: data.defaults.moduleRank
+            })
+          "
+        >
+        </lab-ranker>
+      </td>
+      <td>
+        <input
+          class="beacon"
+          id="settings-beacon-count"
+          type="number"
+          title="Enter default number of beacons"
+          placeholder="# Beacons"
+          min="0"
+          step="1"
+          [value]="settings.beaconCount"
+          (change)="changeBeaconCount($event)"
+        />
+      </td>
+      <td>
+        <lab-icon
+          *ngIf="data.beaconIds.length === 1"
+          class="clickable-size"
+          [iconId]="settings.beacon"
+          [data]="data"
+        ></lab-icon>
+        <lab-icon
+          #btnBeacon
+          class="clickable static"
+          [class.hidden]="data.beaconIds.length === 1"
+          tooltip="Choose default beacon"
+          [iconId]="settings.beacon"
+          [scrollTop]="element.scrollTop"
+          [data]="data"
+          (click)="openSelect = OpenSelect.Beacon"
+        ></lab-icon>
+        <lab-select
+          *ngIf="openSelect === OpenSelect.Beacon"
+          [data]="data"
+          [selectedId]="settings.beacon"
+          [options]="data.beaconIds"
+          [data]="data"
+          [parent]="btnBeacon.element"
+          (cancel)="openSelect = null"
+          (selectId)="
+            setBeacon.emit({ value: $event, default: data.defaults.beacon })
+          "
+        >
+        </lab-select>
+      </td>
+      <td>
+        <lab-icon
+          #btnBeaconModule
+          class="clickable static"
+          tooltip="Beacon module"
+          [iconId]="settings.beaconModule"
+          [scrollTop]="element.scrollTop"
+          [data]="data"
+          (click)="openSelect = OpenSelect.BeaconModule"
+        ></lab-icon>
+        <lab-select
+          *ngIf="openSelect === OpenSelect.BeaconModule"
+          [data]="data"
+          [selectedId]="settings.beaconModule"
+          [options]="data.beaconModuleIds"
+          [parent]="btnBeaconModule.element"
+          includeEmptyModule="true"
+          (cancel)="openSelect = null"
+          (selectId)="
+            setBeaconModule.emit({
+              value: $event,
+              default: data.defaults.beaconModule
+            })
+          "
+        >
+        </lab-select>
+      </td>
+    </tr>
+    <tr *ngFor="let factory of factories | keyvalue">
+      <td>
+        <lab-icon
+          [data]="data"
+          [iconId]="factory.key"
+          [tooltip]="data.itemEntities[factory.key]?.name"
+          [item]="data.itemEntities[factory.key]"
+        ></lab-icon>
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>
+        <i
+          class="clickable material-icons"
+          title="Remove override"
+          (click)="removeOverride(factory.key)"
+          >remove</i
+        >
+      </td>
+    </tr>
+  </table>
 </div>
 <div class="field">
-  <lab-icon
-    *ngIf="data.beaconIds.length === 1"
-    class="clickable-size"
-    [iconId]="settings.beacon"
-    [data]="data"
-  ></lab-icon>
-  <lab-icon
-    #btnBeacon
-    class="clickable"
-    [class.hidden]="data.beaconIds.length === 1"
-    tooltip="Choose default beacon"
-    [iconId]="settings.beacon"
-    [data]="data"
-    (click)="openSelect = OpenSelect.Beacon"
-  ></lab-icon>
+  <button
+    #btnOverride
+    [disabled]="!overrideOptions.length"
+    (click)="openSelect = OpenSelect.Override"
+  >
+    Add Override
+  </button>
   <lab-select
-    *ngIf="openSelect === OpenSelect.Beacon"
+    *ngIf="openSelect === OpenSelect.Override"
     [data]="data"
-    [selectedId]="settings.beacon"
-    [options]="data.beaconIds"
+    [options]="overrideOptions"
     [data]="data"
-    [parent]="btnBeacon.element"
+    [parent]="btnOverride"
     (cancel)="openSelect = null"
-    (selectId)="
-      setBeacon.emit({ value: $event, default: data.defaults.beacon })
-    "
+    (selectId)="addOverride($event)"
   >
   </lab-select>
-  <lab-icon
-    #btnBeaconModule
-    class="clickable"
-    tooltip="Beacon module"
-    [iconId]="settings.beaconModule"
-    [data]="data"
-    (click)="openSelect = OpenSelect.BeaconModule"
-  ></lab-icon>
-  <lab-select
-    *ngIf="openSelect === OpenSelect.BeaconModule"
-    [data]="data"
-    [selectedId]="settings.beaconModule"
-    [options]="data.beaconModuleIds"
-    [parent]="btnBeaconModule.element"
-    includeEmptyModule="true"
-    (cancel)="openSelect = null"
-    (selectId)="
-      setBeaconModule.emit({
-        value: $event,
-        default: data.defaults.beaconModule
-      })
-    "
-  >
-  </lab-select>
-  <input
-    id="settings-beacon-count"
-    type="number"
-    title="Enter default number of beacons"
-    placeholder="# Beacons"
-    min="0"
-    step="1"
-    [value]="settings.beaconCount"
-    (change)="changeBeaconCount($event)"
-  />
 </div>
+<div class="label">Entities</div>
 <div class="field">
   <lab-icon
     #btnBelt

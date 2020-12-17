@@ -8,6 +8,7 @@ import {
   HostListener,
   ChangeDetectorRef,
   OnInit,
+  ElementRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -31,6 +32,7 @@ import {
   Column,
 } from '~/models';
 import { ColumnsState } from '~/store/columns';
+import { FactoriesState } from '~/store/factories';
 import { PreferencesState } from '~/store/preferences';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
@@ -41,6 +43,7 @@ enum OpenSelect {
   Fuel,
   Factory,
   Module,
+  Override,
   Beacon,
   BeaconModule,
 }
@@ -64,6 +67,7 @@ export class SettingsComponent implements OnInit {
   }
   @Input() base: ModInfo[];
   @Input() mods: ModInfo[];
+  @Input() factories: FactoriesState;
   @Input() settings: SettingsState;
   @Input() columns: ColumnsState;
   @Input() preferences: PreferencesState;
@@ -77,7 +81,6 @@ export class SettingsComponent implements OnInit {
   @Output() setExpensive = new EventEmitter<boolean>();
   @Output() setFactoryRank = new EventEmitter<DefaultPayload<string[]>>();
   @Output() setModuleRank = new EventEmitter<DefaultPayload<string[]>>();
-  @Output() setDrillModule = new EventEmitter<boolean>();
   @Output() setBeacon = new EventEmitter<DefaultPayload>();
   @Output() setBeaconModule = new EventEmitter<DefaultPayload>();
   @Output() setBeaconCount = new EventEmitter<DefaultPayload<number>>();
@@ -120,7 +123,25 @@ export class SettingsComponent implements OnInit {
     return location.hash.substr(1);
   }
 
-  constructor(private ref: ChangeDetectorRef, private router: Router) {}
+  get overrides() {
+    return Object.keys(this.factories).length;
+  }
+
+  get overrideOptions() {
+    return this.data.factoryIds.filter(
+      (f) => !this.factories[f] && this.data.itemEntities[f].factory?.modules
+    );
+  }
+
+  get element() {
+    return this.el.nativeElement as HTMLElement;
+  }
+
+  constructor(
+    private ref: ChangeDetectorRef,
+    private router: Router,
+    private el: ElementRef
+  ) {}
 
   ngOnInit() {
     this.state =
@@ -184,6 +205,20 @@ export class SettingsComponent implements OnInit {
   toggleEditState(event: Event) {
     this.editState = !this.editState;
     event.stopPropagation();
+  }
+
+  addOverride(id: string) {
+    this.setFactoryRank.emit({
+      value: [...this.settings.factoryRank, id],
+      default: this.data.defaults.factoryRank,
+    });
+  }
+
+  removeOverride(id: string) {
+    this.setFactoryRank.emit({
+      value: this.settings.factoryRank.filter((i) => i !== id),
+      default: this.data.defaults.factoryRank,
+    });
   }
 
   clickResetSettings() {

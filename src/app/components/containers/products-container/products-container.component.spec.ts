@@ -57,9 +57,9 @@ describe('ProductsContainerComponent', () => {
   it('should commit edit on a product', () => {
     spyOn(store, 'dispatch');
     const data = { id: Mocks.Product1.id, value: Mocks.Item2.id };
-    component.child.editProduct.emit(data);
+    component.child.editItem.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.EditProductAction(data)
+      new Products.EditItemAction(data)
     );
   });
 

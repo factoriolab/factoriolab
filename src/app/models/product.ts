@@ -1,6 +1,14 @@
 import { RateType } from './enum/rate-type';
 import { Rational } from './rational';
 
+export enum ProductField {
+  Id = 'id',
+  ItemId = 'itemId',
+  Rate = 'rate',
+  RateType = 'rateType',
+  RecipeId = 'recipeId',
+}
+
 export interface Product {
   id: string;
   itemId: string;

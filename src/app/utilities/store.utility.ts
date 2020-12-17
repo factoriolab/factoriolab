@@ -1,4 +1,9 @@
-import { DefaultPayload, DefaultIdPayload, IdPayload } from '~/models';
+import {
+  DefaultPayload,
+  DefaultIdPayload,
+  IdPayload,
+  Entities,
+} from '~/models';
 
 export class StoreUtility {
   static rankEquals<T extends number | string>(a: T[], b: T[]) {
@@ -9,12 +14,17 @@ export class StoreUtility {
     return this.rankEquals([...a].sort(), [...b].sort());
   }
 
-  static payloadEquals<T>(payload: DefaultIdPayload<T>) {
+  static payloadEquals<T>(payload: DefaultIdPayload<T>, rank = false) {
     return Array.isArray(payload.value) && Array.isArray(payload.default)
-      ? this.arrayEquals(
-          payload.value as (number | string)[],
-          payload.default as (number | string)[]
-        )
+      ? rank
+        ? this.rankEquals(
+            payload.value as (number | string)[],
+            payload.default as (number | string)[]
+          )
+        : this.arrayEquals(
+            payload.value as (number | string)[],
+            payload.default as (number | string)[]
+          )
       : payload.value === payload.default;
   }
 
@@ -49,10 +59,11 @@ export class StoreUtility {
   static compareReset<T, P>(
     state: T,
     field: string,
-    payload: DefaultIdPayload<P>
+    payload: DefaultIdPayload<P>,
+    rank = false
   ): T {
     // Spread into new state
-    if (this.payloadEquals(payload)) {
+    if (this.payloadEquals(payload, rank)) {
       // Resetting to null
       const newState = { ...state };
       if (newState[payload.id] !== undefined) {
@@ -94,5 +105,18 @@ export class StoreUtility {
     return this.rankEquals(payload.value, payload.default)
       ? null
       : payload.value;
+  }
+
+  static setEntityValue<T, S extends { entities: Entities<T> }, P>(
+    state: S,
+    field: string,
+    payload: IdPayload<P>
+  ) {
+    return {
+      ...state,
+      ...{
+        entities: this.assignValue(state.entities, field, payload),
+      },
+    };
   }
 }

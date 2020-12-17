@@ -1,50 +1,36 @@
 import { Action } from '@ngrx/store';
 
-import { IdPayload } from '~/models';
+import { DefaultIdPayload, IdPayload } from '~/models';
 
 export const enum FactoriesActionType {
-  ADD = '[Factories] Add Override',
-  REMOVE = '[Factories] Remove Override',
-  SET_FACTORY_MODULES = '[Factories] Set Modules',
+  SET_MODULE_RANK = '[Factories] Set Module Rank',
   SET_BEACON_COUNT = '[Factories] Set Beacon Count',
   SET_BEACON = '[Factories] Set Beacon',
-  SET_BEACON_MODULES = '[Factories] Set Beacon Modules',
+  SET_BEACON_MODULE = '[Factories] Set Beacon Module',
 }
 
-export class AddAction implements Action {
-  readonly type = FactoriesActionType.ADD;
-  constructor(public payload: string) {}
-}
-
-export class RemoveAction implements Action {
-  readonly type = FactoriesActionType.REMOVE;
-  constructor(public payload: string) {}
-}
-
-export class SetFactoryModulesAction implements Action {
-  readonly type = FactoriesActionType.SET_FACTORY_MODULES;
-  constructor(public payload: IdPayload<string[]>) {}
+export class SetModuleRankAction implements Action {
+  readonly type = FactoriesActionType.SET_MODULE_RANK;
+  constructor(public payload: DefaultIdPayload<string[]>) {}
 }
 
 export class SetBeaconCountAction implements Action {
   readonly type = FactoriesActionType.SET_BEACON_COUNT;
-  constructor(public payload: IdPayload<number>) {}
+  constructor(public payload: DefaultIdPayload<number>) {}
 }
 
 export class SetBeaconAction implements Action {
   readonly type = FactoriesActionType.SET_BEACON;
-  constructor(public payload: IdPayload) {}
+  constructor(public payload: DefaultIdPayload) {}
 }
 
-export class SetBeaconModulesAction implements Action {
-  readonly type = FactoriesActionType.SET_BEACON_MODULES;
-  constructor(public payload: IdPayload<string[]>) {}
+export class SetBeaconModuleAction implements Action {
+  readonly type = FactoriesActionType.SET_BEACON_MODULE;
+  constructor(public payload: DefaultIdPayload) {}
 }
 
 export type FactoriesAction =
-  | AddAction
-  | RemoveAction
-  | SetFactoryModulesAction
+  | SetModuleRankAction
   | SetBeaconCountAction
   | SetBeaconAction
-  | SetBeaconModulesAction;
+  | SetBeaconModuleAction;

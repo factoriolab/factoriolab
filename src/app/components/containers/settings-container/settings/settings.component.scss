@@ -43,6 +43,10 @@ label {
 
 lab-icon {
   padding: 0.125rem;
+
+  &.static {
+    position: static;
+  }
 }
 
 .field {

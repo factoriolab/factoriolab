@@ -26,9 +26,10 @@ import {
   InserterCapacity,
 } from '~/models';
 import { State } from '~/store';
+import { ResetAction } from '~/store/app.actions';
 import { ColumnsState, getColumns, SetPrecisionAction } from '~/store/columns';
 import { getBaseSets } from '~/store/datasets';
-import { ResetAction } from '~/store/app.actions';
+import * as Factories from '~/store/factories';
 import * as Preferences from '~/store/preferences';
 import * as Settings from '~/store/settings';
 import { SettingsComponent } from './settings/settings.component';
@@ -47,6 +48,7 @@ export class SettingsContainerComponent implements OnInit {
   data$: Observable<Dataset>;
   base$: Observable<ModInfo[]>;
   mods$: Observable<ModInfo[]>;
+  factories$: Observable<Factories.FactoriesState>;
   settings$: Observable<Settings.SettingsState>;
   columns$: Observable<ColumnsState>;
   preferences$: Observable<Preferences.PreferencesState>;
@@ -59,6 +61,7 @@ export class SettingsContainerComponent implements OnInit {
     this.data$ = this.store.select(Settings.getDataset);
     this.base$ = this.store.select(getBaseSets);
     this.mods$ = this.store.select(Settings.getAvailableMods);
+    this.factories$ = this.store.select(Factories.getFactoryOverrides);
     this.settings$ = this.store.select(Settings.getSettings);
     this.columns$ = this.store.select(getColumns);
     this.preferences$ = this.store.select(Preferences.preferencesState);
@@ -118,16 +121,16 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetModuleRankAction(value));
   }
 
+  setBeaconCount(value: DefaultPayload<number>) {
+    this.store.dispatch(new Settings.SetBeaconCountAction(value));
+  }
+
   setBeacon(value: DefaultPayload) {
     this.store.dispatch(new Settings.SetBeaconAction(value));
   }
 
   setBeaconModule(value: DefaultPayload) {
     this.store.dispatch(new Settings.SetBeaconModuleAction(value));
-  }
-
-  setBeaconCount(value: DefaultPayload<number>) {
-    this.store.dispatch(new Settings.SetBeaconCountAction(value));
   }
 
   setBelt(value: DefaultPayload) {

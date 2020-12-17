@@ -6,7 +6,7 @@ export const enum ProductsActionType {
   RESET = '[Products] Reset',
   ADD = '[Products] Add',
   REMOVE = '[Products] Remove',
-  EDIT_PRODUCT = '[Products] Edit Product',
+  EDIT_ITEM = '[Products] Edit Item',
   EDIT_RATE = '[Products] Edit Rate',
   EDIT_RATE_TYPE = '[Products] Edit Rate Type',
   EDIT_RECIPE = '[Products] Edit Recipe',
@@ -27,8 +27,8 @@ export class RemoveAction implements Action {
   constructor(public payload: string) {}
 }
 
-export class EditProductAction implements Action {
-  readonly type = ProductsActionType.EDIT_PRODUCT;
+export class EditItemAction implements Action {
+  readonly type = ProductsActionType.EDIT_ITEM;
   constructor(public payload: IdPayload) {}
 }
 
@@ -51,7 +51,7 @@ export type ProductsAction =
   | ResetAction
   | AddAction
   | RemoveAction
-  | EditProductAction
+  | EditItemAction
   | EditRateAction
   | EditRateTypeAction
   | EditRecipeAction;

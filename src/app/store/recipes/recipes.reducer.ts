@@ -1,6 +1,7 @@
 import { Entities, RecipeSettings, RecipeSettingsField } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { AppActionType, AppAction } from '../app.actions';
+import { SetBaseAction, SettingsActionType } from '../settings';
 import { RecipesAction, RecipesActionType } from './recipes.actions';
 
 export type RecipesState = Entities<RecipeSettings>;
@@ -9,12 +10,13 @@ export const initialRecipesState: RecipesState = {};
 
 export function recipesReducer(
   state: RecipesState = initialRecipesState,
-  action: RecipesAction | AppAction
+  action: RecipesAction | AppAction | SetBaseAction
 ): RecipesState {
   switch (action.type) {
     case AppActionType.LOAD:
       return { ...initialRecipesState, ...action.payload.recipesState };
     case AppActionType.RESET:
+    case SettingsActionType.SET_BASE:
       return initialRecipesState;
     case RecipesActionType.SET_FACTORY:
       return StoreUtility.resetFields(

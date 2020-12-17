@@ -1,13 +1,13 @@
 export enum FactorySettingsField {
-  FactoryModules = 'factoryModules',
+  ModuleRank = 'moduleRank',
   BeaconCount = 'beaconCount',
   Beacon = 'beacon',
-  BeaconModules = 'beaconModules',
+  BeaconModule = 'beaconModule',
 }
 
 export interface FactorySettings {
-  factoryModules?: string[];
+  moduleRank?: string[];
   beaconCount?: number;
   beacon?: string;
-  beaconModules?: string[];
+  beaconModule?: string;
 }

@@ -1,9 +1,4 @@
-import {
-  ColumnSettings,
-  ColumnSettingsField,
-  DefaultColumnSettings,
-  Entities,
-} from '~/models';
+import { ColumnSettings, ColumnSettingsField, Entities } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { AppAction, AppActionType } from '../app.actions';
 import { ColumnsAction, ColumnsActionType } from './columns.actions';
@@ -20,16 +15,14 @@ export function columnsReducer(
     case AppActionType.RESET:
       return initialColumnsState;
     case ColumnsActionType.IGNORE:
-      return StoreUtility.compareReset(state, ColumnSettingsField.Ignore, {
+      return StoreUtility.assignValue(state, ColumnSettingsField.Ignore, {
         id: action.payload,
         value: !state[action.payload]?.ignore,
-        default: DefaultColumnSettings.ignore,
       });
     case ColumnsActionType.SET_PRECISION:
-      return StoreUtility.compareReset(state, ColumnSettingsField.Precision, {
+      return StoreUtility.assignValue(state, ColumnSettingsField.Precision, {
         id: action.payload.id,
         value: action.payload.value,
-        default: DefaultColumnSettings.precision,
       });
     default:
       return state;

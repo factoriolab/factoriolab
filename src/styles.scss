@@ -61,6 +61,10 @@ input {
   &[type='text'] {
     width: 5rem;
 
+    &.beacon {
+      width: 3rem;
+    }
+
     &:focus,
     &:active {
       border-color: var(--color-brand);

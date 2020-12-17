@@ -48,7 +48,7 @@ export class ProductsComponent {
 
   @Output() add = new EventEmitter<string>();
   @Output() remove = new EventEmitter<string>();
-  @Output() editProduct = new EventEmitter<IdPayload>();
+  @Output() editItem = new EventEmitter<IdPayload>();
   @Output() editRate = new EventEmitter<IdPayload<number>>();
   @Output() editRateType = new EventEmitter<IdPayload<RateType>>();
   @Output() editRecipe = new EventEmitter<IdPayload>();
@@ -80,7 +80,7 @@ export class ProductsComponent {
       this.editRateType.emit({ id: product.id, value: RateType.Items });
     }
 
-    this.editProduct.emit({ id: product.id, value: itemId });
+    this.editItem.emit({ id: product.id, value: itemId });
   }
 
   emitNumber(emitter: EventEmitter<IdPayload<number>>, id: string, event: any) {

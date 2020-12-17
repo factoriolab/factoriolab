@@ -1,4 +1,5 @@
-import { Product, RateType, Entities } from '~/models';
+import { Product, RateType, Entities, ProductField } from '~/models';
+import { StoreUtility } from '~/utilities';
 import { AppActionType, AppAction } from '../app.actions';
 import { ProductsAction, ProductsActionType } from './products.actions';
 
@@ -68,85 +69,30 @@ export function productsReducer(
         },
       };
     }
-    case ProductsActionType.EDIT_PRODUCT: {
-      const id = action.payload.id;
-      return {
-        ...state,
-        ...{
-          editProductId: null,
-          entities: {
-            ...state.entities,
-            ...{
-              [id]: {
-                ...state.entities[id],
-                ...{
-                  itemId: action.payload.value,
-                  recipeId: undefined,
-                },
-              },
-            },
-          },
-        },
-      };
-    }
-    case ProductsActionType.EDIT_RATE: {
-      const id = action.payload.id;
-      return {
-        ...state,
-        ...{
-          entities: {
-            ...state.entities,
-            ...{
-              [id]: {
-                ...state.entities[id],
-                ...{
-                  rate: action.payload.value,
-                },
-              },
-            },
-          },
-        },
-      };
-    }
-    case ProductsActionType.EDIT_RATE_TYPE: {
-      const id = action.payload.id;
-      return {
-        ...state,
-        ...{
-          entities: {
-            ...state.entities,
-            ...{
-              [id]: {
-                ...state.entities[id],
-                ...{
-                  rateType: action.payload.value,
-                  recipeId: undefined,
-                },
-              },
-            },
-          },
-        },
-      };
-    }
-    case ProductsActionType.EDIT_RECIPE: {
-      const id = action.payload.id;
-      return {
-        ...state,
-        ...{
-          entities: {
-            ...state.entities,
-            ...{
-              [id]: {
-                ...state.entities[id],
-                ...{
-                  recipeId: action.payload.value,
-                },
-              },
-            },
-          },
-        },
-      };
-    }
+    case ProductsActionType.EDIT_ITEM:
+      return StoreUtility.setEntityValue(
+        state,
+        ProductField.ItemId,
+        action.payload
+      );
+    case ProductsActionType.EDIT_RATE:
+      return StoreUtility.setEntityValue(
+        state,
+        ProductField.Rate,
+        action.payload
+      );
+    case ProductsActionType.EDIT_RATE_TYPE:
+      return StoreUtility.setEntityValue(
+        state,
+        ProductField.RateType,
+        action.payload
+      );
+    case ProductsActionType.EDIT_RECIPE:
+      return StoreUtility.setEntityValue(
+        state,
+        ProductField.RecipeId,
+        action.payload
+      );
     default:
       return state;
   }

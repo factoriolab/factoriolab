@@ -311,26 +311,6 @@ export class RouterService {
     }
     v = s[i++];
     if (v?.length) {
-      settings.factoryRank = this.parseArray(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.moduleRank = this.parseArray(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.beaconCount = this.parseNumber(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.beacon = this.parseString(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.beaconModule = this.parseString(v);
-    }
-    v = s[i++];
-    if (v?.length) {
       settings.belt = this.parseString(v);
     }
     v = s[i++];

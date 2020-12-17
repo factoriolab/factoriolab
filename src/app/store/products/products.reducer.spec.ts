@@ -42,7 +42,7 @@ describe('Products Reducer', () => {
     it('should commit edit on a product', () => {
       const result = productsReducer(
         state,
-        new Actions.EditProductAction({
+        new Actions.EditItemAction({
           id: Mocks.Product1.id,
           value: Mocks.Product2.itemId,
         })
