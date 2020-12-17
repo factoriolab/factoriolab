@@ -83,11 +83,6 @@ export const getSettings = createSelector(
       belt: s.belt || d?.belt,
       fuel: s.fuel || d?.fuel,
       disabledRecipes: s.disabledRecipes || d?.disabledRecipes || [],
-      factoryRank: s.factoryRank || d?.factoryRank || [],
-      moduleRank: s.moduleRank || d?.moduleRank || [],
-      beaconCount: s.beaconCount != null ? s.beaconCount : d?.beaconCount,
-      beacon: s.beacon || d?.beacon,
-      beaconModule: s.beaconModule || d?.beaconModule,
     },
   })
 );
@@ -101,19 +96,6 @@ export const getFuel = createSelector(getSettings, (s) => s.fuel);
 export const getDisabledRecipes = createSelector(
   getSettings,
   (s) => s.disabledRecipes
-);
-
-export const getFactoryRank = createSelector(getSettings, (s) => s.factoryRank);
-
-export const getModuleRank = createSelector(getSettings, (s) => s.moduleRank);
-
-export const getBeaconCount = createSelector(getSettings, (s) => s.beaconCount);
-
-export const getBeacon = createSelector(getSettings, (s) => s.beacon);
-
-export const getBeaconModule = createSelector(
-  getSettings,
-  (s) => s.beaconModule
 );
 
 export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>

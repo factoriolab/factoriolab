@@ -13,7 +13,9 @@
         *ngIf="edited"
         class="confirm clickable material-icons"
         title="Confirm changes"
-        (click)="commit.emit(editValue); $event.stopPropagation()"
+        (click)="
+          commit.emit(editValue); cancel.emit(); $event.stopPropagation()
+        "
         >check</i
       >
     </div>

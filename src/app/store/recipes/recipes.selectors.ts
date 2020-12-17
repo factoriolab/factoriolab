@@ -8,6 +8,7 @@ import {
   ItemId,
 } from '~/models';
 import { RecipeUtility } from '~/utilities/recipe.utility';
+import * as Factories from '../factories';
 import * as Settings from '../settings';
 import { State } from '..';
 
@@ -17,69 +18,45 @@ export const recipesState = (state: State) => state.recipesState;
 /* Complex selectors */
 export const getRecipeSettings = createSelector(
   recipesState,
-  Settings.getFactoryRank,
-  Settings.getModuleRank,
-  Settings.getBeaconCount,
-  Settings.getBeacon,
-  Settings.getBeaconModule,
+  Factories.getFactorySettings,
   Settings.getDataset,
-  (state, factoryRank, moduleRank, beaconCount, beacon, beaconModule, data) => {
+  (state, factories, data) => {
     const value: Entities<RecipeSettings> = {};
     if (data?.recipeIds?.length) {
       for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
-        const recipeSettings: RecipeSettings = state[recipe.id]
-          ? { ...state[recipe.id] }
-          : {};
+        const s: RecipeSettings = { ...state[recipe.id] } || {};
+        s.factory =
+          s.factory || RecipeUtility.bestMatch(recipe.producers, factories.ids);
 
-        // Factory
-        if (!recipeSettings.factory) {
-          recipeSettings.factory = RecipeUtility.bestMatch(
-            recipe.producers,
-            factoryRank
-          );
-        }
-
-        const factoryItem = data.itemEntities[recipeSettings.factory];
+        const factory = data.itemEntities[s.factory]?.factory;
         if (
           (recipe.producers[0] !== ItemId.RocketSilo ||
             recipe.id === ItemId.RocketPart) &&
-          factoryItem?.factory?.modules
+          factory?.modules
         ) {
-          const drillSkipDefaults = factoryItem.factory.mining;
-
-          // Modules
-          if (!recipeSettings.factoryModules) {
-            const count = factoryItem.factory.modules;
-            if (drillSkipDefaults) {
-              recipeSettings.factoryModules = new Array(count).fill(
-                ItemId.Module
-              );
-            } else {
-              recipeSettings.factoryModules = RecipeUtility.defaultModules(
-                data.recipeModuleIds[recipe.id],
-                moduleRank,
-                count
-              );
-            }
+          const def = factories.entities[s.factory];
+          if (!s.factoryModules) {
+            s.factoryModules = RecipeUtility.defaultModules(
+              data.recipeModuleIds[recipe.id],
+              def.moduleRank,
+              factory.modules
+            );
           }
 
-          // Beacons
-          if (recipeSettings.beaconCount == null) {
-            recipeSettings.beaconCount = drillSkipDefaults ? 0 : beaconCount;
-          }
-          if (!recipeSettings.beacon) {
-            recipeSettings.beacon = beacon;
-          }
-          const beaconItem = data.itemEntities[recipeSettings.beacon];
-          if (beaconItem?.beacon && !recipeSettings.beaconModules) {
-            const count = beaconItem.beacon.modules;
-            recipeSettings.beaconModules = new Array(count).fill(beaconModule);
+          s.beaconCount =
+            s.beaconCount != null ? s.beaconCount : def.beaconCount;
+          s.beacon = s.beacon || def.beacon;
+
+          const beacon = data.itemEntities[s.beacon]?.beacon;
+          if (beacon && !s.beaconModules) {
+            s.beaconModules = new Array(beacon.modules).fill(def.beaconModule);
           }
         }
 
-        value[recipe.id] = recipeSettings;
+        value[recipe.id] = s;
       }
     }
+
     return value;
   }
 );

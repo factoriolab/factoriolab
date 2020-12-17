@@ -109,49 +109,51 @@
   </select>
 </div>
 <div class="field" *ngIf="mods.length">
-  <button #btnMods (click)="openSelect = OpenSelect.Mods">
-    {{ settings.modIds.length }} Mod Set{{
-      settings.modIds.length === 1 ? '' : 's'
-    }}
-    Enabled
-  </button>
-  <lab-multiselect
-    *ngIf="openSelect === OpenSelect.Mods"
-    [header]="'Select Mod Sets'"
-    [enabledIds]="settings.modIds"
-    [options]="mods"
-    [parent]="btnMods"
-    (cancel)="openSelect = null"
-    (commit)="
-      openSelect = null;
-      setMods.emit({ value: $event, default: data.defaults.modIds })
-    "
-  ></lab-multiselect>
+  <div>
+    <button #btnMods (click)="openSelect = OpenSelect.Mods">
+      {{ settings.modIds.length }} Mod Set{{
+        settings.modIds.length === 1 ? '' : 's'
+      }}
+      Enabled
+    </button>
+    <lab-multiselect
+      *ngIf="openSelect === OpenSelect.Mods"
+      [header]="'Select Mod Sets'"
+      [enabledIds]="settings.modIds"
+      [options]="mods"
+      [parent]="btnMods"
+      (cancel)="openSelect = null"
+      (commit)="
+        openSelect = null;
+        setMods.emit({ value: $event, default: data.defaults.modIds })
+      "
+    ></lab-multiselect>
+  </div>
 </div>
 <div class="field">
-  <button #btnRecipes (click)="openSelect = OpenSelect.DisabledRecipes">
-    {{ settings.disabledRecipes.length }} Recipe{{
-      settings.disabledRecipes.length === 1 ? '' : 's'
-    }}
-    Disabled
-  </button>
-  <lab-toggle
-    *ngIf="openSelect === OpenSelect.DisabledRecipes"
-    [data]="data"
-    [disabledRecipes]="settings.disabledRecipes"
-    [parent]="btnRecipes"
-    (cancel)="openSelect = null"
-    (commit)="
-      openSelect = null;
-      setDisabledRecipes.emit({
-        value: $event,
-        default: data.defaults.disabledRecipes
-      })
-    "
-  >
-  </lab-toggle>
-</div>
-<div class="field">
+  <div>
+    <button #btnRecipes (click)="openSelect = OpenSelect.DisabledRecipes">
+      {{ settings.disabledRecipes.length }} Recipe{{
+        settings.disabledRecipes.length === 1 ? '' : 's'
+      }}
+      Disabled
+    </button>
+    <lab-toggle
+      *ngIf="openSelect === OpenSelect.DisabledRecipes"
+      [data]="data"
+      [disabledRecipes]="settings.disabledRecipes"
+      [parent]="btnRecipes"
+      (cancel)="openSelect = null"
+      (commit)="
+        openSelect = null;
+        setDisabledRecipes.emit({
+          value: $event,
+          default: data.defaults.disabledRecipes
+        })
+      "
+    >
+    </lab-toggle>
+  </div>
   <div class="flex option" (click)="setExpensive.emit(!settings.expensive)">
     <div
       id="settings-expensive"
@@ -168,220 +170,303 @@
 <div class="label">Factories</div>
 <div class="field">
   <table>
-    <tr>
-      <td>
-        <lab-icon
-          #btnFactory
-          class="clickable"
-          tooltip="Factory preferences"
-          [iconId]="
-            settings.factoryRank.length
-              ? settings.factoryRank[0]
-              : ItemId.AssemblingMachine1
-          "
-          [data]="data"
-          (click)="openSelect = OpenSelect.Factory"
-        ></lab-icon>
-        <lab-ranker
-          *ngIf="openSelect === OpenSelect.Factory"
-          [data]="data"
-          [rank]="settings.factoryRank"
-          [options]="data.factoryIds"
-          [parent]="btnFactory.element"
-          (cancel)="openSelect = null"
-          (commit)="
-            openSelect = null;
-            setFactoryRank.emit({
-              value: $event,
-              default: data.defaults.factoryRank
-            })
-          "
-        >
-        </lab-ranker>
-      </td>
-      <td>
-        <lab-icon
-          #btnModule
-          class="clickable"
-          tooltip="Module preferences"
-          [iconId]="
-            settings.moduleRank.length ? settings.moduleRank[0] : ItemId.Module
-          "
-          [data]="data"
-          (click)="openSelect = OpenSelect.Module"
-        ></lab-icon>
-        <lab-ranker
-          *ngIf="openSelect === OpenSelect.Module"
-          [data]="data"
-          [rank]="settings.moduleRank"
-          [options]="data.moduleIds"
-          [parent]="btnModule.element"
-          (cancel)="openSelect = null"
-          (commit)="
-            openSelect = null;
-            setModuleRank.emit({
-              value: $event,
-              default: data.defaults.moduleRank
-            })
-          "
-        >
-        </lab-ranker>
-      </td>
-      <td>
-        <input
-          class="beacon"
-          id="settings-beacon-count"
-          type="number"
-          title="Enter default number of beacons"
-          placeholder="# Beacons"
-          min="0"
-          step="1"
-          [value]="settings.beaconCount"
-          (change)="changeBeaconCount($event)"
-        />
-      </td>
-      <td>
-        <lab-icon
-          *ngIf="data.beaconIds.length === 1"
-          class="clickable-size"
-          [iconId]="settings.beacon"
-          [data]="data"
-        ></lab-icon>
-        <lab-icon
-          #btnBeacon
-          class="clickable static"
-          [class.hidden]="data.beaconIds.length === 1"
-          tooltip="Choose default beacon"
-          [iconId]="settings.beacon"
-          [scrollTop]="element.scrollTop"
-          [data]="data"
-          (click)="openSelect = OpenSelect.Beacon"
-        ></lab-icon>
-        <lab-select
-          *ngIf="openSelect === OpenSelect.Beacon"
-          [data]="data"
-          [selectedId]="settings.beacon"
-          [options]="data.beaconIds"
-          [data]="data"
-          [parent]="btnBeacon.element"
-          (cancel)="openSelect = null"
-          (selectId)="
-            setBeacon.emit({ value: $event, default: data.defaults.beacon })
-          "
-        >
-        </lab-select>
-      </td>
-      <td>
-        <lab-icon
-          #btnBeaconModule
-          class="clickable static"
-          tooltip="Beacon module"
-          [iconId]="settings.beaconModule"
-          [scrollTop]="element.scrollTop"
-          [data]="data"
-          (click)="openSelect = OpenSelect.BeaconModule"
-        ></lab-icon>
-        <lab-select
-          *ngIf="openSelect === OpenSelect.BeaconModule"
-          [data]="data"
-          [selectedId]="settings.beaconModule"
-          [options]="data.beaconModuleIds"
-          [parent]="btnBeaconModule.element"
-          includeEmptyModule="true"
-          (cancel)="openSelect = null"
-          (selectId)="
-            setBeaconModule.emit({
-              value: $event,
-              default: data.defaults.beaconModule
-            })
-          "
-        >
-        </lab-select>
-      </td>
-    </tr>
-    <tr *ngFor="let factory of factories | keyvalue">
-      <td>
-        <lab-icon
-          [data]="data"
-          [iconId]="factory.key"
-          [tooltip]="data.itemEntities[factory.key]?.name"
-          [item]="data.itemEntities[factory.key]"
-        ></lab-icon>
-      </td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td>
-        <i
-          class="clickable material-icons"
-          title="Remove override"
-          (click)="removeOverride(factory.key)"
-          >remove</i
-        >
-      </td>
-    </tr>
+    <ng-container *ngFor="let f of factoryRows; let i = index; let last = last">
+      <tr *ngIf="factories.entities[f] as factory">
+        <td>
+          <ng-container *ngIf="!f">
+            <button
+              #btnAddFactory
+              class="icon"
+              title="Add factory preference"
+              [disabled]="!factoryOptions.length"
+              (click)="editFactory = { id: f, type: FactoryEditType.Factory }"
+            >
+              <i class="material-icons">add</i>
+            </button>
+            <lab-select
+              *ngIf="
+                editFactory &&
+                editFactory.id === f &&
+                editFactory.type === FactoryEditType.Factory
+              "
+              [data]="data"
+              [options]="factoryOptions"
+              [data]="data"
+              [parent]="btnAddFactory"
+              (cancel)="editFactory = null"
+              (selectId)="
+                addFactory.emit({
+                  value: $event,
+                  default: data.defaults.factoryRank
+                })
+              "
+            >
+            </lab-select>
+          </ng-container>
+          <button
+            *ngIf="f"
+            class="icon"
+            title="Remove factory preference"
+            (click)="
+              removeFactory.emit({
+                value: f,
+                default: data.defaults.factoryRank
+              });
+              $event.stopPropagation()
+            "
+          >
+            <i class="material-icons">remove</i>
+          </button>
+        </td>
+        <td>
+          <lab-icon
+            *ngIf="f && !factoryOptions.length"
+            class="static"
+            [iconId]="f"
+            [tooltip]="data.itemEntities[f].name"
+            [item]="data.itemEntities[f]"
+            [scrollTop]="element.scrollTop"
+            [data]="data"
+          >
+          </lab-icon>
+          <ng-container *ngIf="f && factoryOptions.length">
+            <div>
+              <lab-icon
+                #btnFactory
+                class="clickable static"
+                [iconId]="f"
+                [tooltip]="data.itemEntities[f].name"
+                [item]="data.itemEntities[f]"
+                [data]="data"
+                (click)="editFactory = { id: f, type: FactoryEditType.Factory }"
+              >
+              </lab-icon>
+              <lab-select
+                *ngIf="
+                  editFactory &&
+                  editFactory.id === f &&
+                  editFactory.type === FactoryEditType.Factory
+                "
+                [data]="data"
+                [selectedId]="f"
+                [options]="factoryOptions"
+                [data]="data"
+                [parent]="btnFactory.element"
+                (cancel)="editFactory = null"
+                (selectId)="
+                  setFactory.emit({
+                    id: f,
+                    value: $event,
+                    default: data.defaults.factoryRank
+                  })
+                "
+              >
+              </lab-select>
+            </div>
+          </ng-container>
+          <lab-icon
+            *ngIf="!f"
+            tooltip="Factory defaults"
+            iconId="production"
+            [data]="data"
+          ></lab-icon>
+        </td>
+        <td>
+          <ng-container *ngIf="factory.moduleRank">
+            <lab-icon
+              #btnModule
+              class="clickable"
+              tooltip="Module preferences"
+              [iconId]="
+                factory.moduleRank.length
+                  ? factory.moduleRank[0]
+                  : ItemId.Module
+              "
+              [data]="data"
+              (click)="editFactory = { id: f, type: FactoryEditType.Module }"
+            ></lab-icon>
+            <lab-ranker
+              *ngIf="
+                editFactory &&
+                editFactory.id === f &&
+                editFactory.type === FactoryEditType.Module
+              "
+              [data]="data"
+              [rank]="factory.moduleRank"
+              [options]="data.moduleIds"
+              [parent]="btnModule.element"
+              (cancel)="editFactory = null"
+              (commit)="
+                setModuleRank.emit({
+                  id: f,
+                  value: $event
+                })
+              "
+            >
+            </lab-ranker>
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="factory.beaconCount != null">
+            <input
+              class="beacon"
+              id="settings-beacon-count"
+              type="number"
+              title="Enter default number of beacons"
+              placeholder="# Beacons"
+              min="0"
+              step="1"
+              [value]="factory.beaconCount"
+              (change)="changeBeaconCount(f, $event)"
+            />
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="factory.beaconCount > 0">
+            <lab-icon
+              *ngIf="data.beaconIds.length === 1"
+              class="clickable-size"
+              [iconId]="factory.beacon"
+              [data]="data"
+            ></lab-icon>
+            <lab-icon
+              #btnBeacon
+              class="clickable static"
+              [class.hidden]="data.beaconIds.length === 1"
+              tooltip="Choose default beacon"
+              [iconId]="factory.beacon"
+              [scrollTop]="element.scrollTop"
+              [data]="data"
+              (click)="editFactory = { id: f, type: FactoryEditType.Beacon }"
+            ></lab-icon>
+            <lab-select
+              *ngIf="
+                editFactory &&
+                editFactory.id === f &&
+                editFactory.type === FactoryEditType.Beacon
+              "
+              [data]="data"
+              [selectedId]="factory.beacon"
+              [options]="data.beaconIds"
+              [data]="data"
+              [parent]="btnBeacon.element"
+              (cancel)="editFactory = null"
+              (selectId)="setBeacon.emit({ id: f, value: $event })"
+            >
+            </lab-select>
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="factory.beaconCount > 0">
+            <lab-icon
+              #btnBeaconModule
+              class="clickable static"
+              tooltip="Beacon module"
+              [iconId]="factory.beaconModule"
+              [scrollTop]="element.scrollTop"
+              [data]="data"
+              (click)="
+                editFactory = { id: f, type: FactoryEditType.BeaconModule }
+              "
+            ></lab-icon>
+            <lab-select
+              *ngIf="
+                editFactory &&
+                editFactory.id === f &&
+                editFactory.type === FactoryEditType.BeaconModule
+              "
+              [data]="data"
+              [selectedId]="factory.beaconModule"
+              [options]="data.beaconModuleIds"
+              [parent]="btnBeaconModule.element"
+              includeEmptyModule="true"
+              (cancel)="editFactory = null"
+              (selectId)="
+                setBeaconModule.emit({
+                  id: f,
+                  value: $event
+                })
+              "
+            >
+            </lab-select>
+          </ng-container>
+        </td>
+        <td>
+          <div class="arrows">
+            <i
+              class="material-icons"
+              title="Raise factory rank"
+              [class.invisible]="i < 2"
+              (click)="
+                raiseFactory.emit({
+                  value: f,
+                  default: data.defaults.factoryRank
+                })
+              "
+              >arrow_drop_up</i
+            >
+            <i
+              class="material-icons"
+              title="Lower factory rank"
+              [class.invisible]="i === 0 || last"
+              (click)="
+                lowerFactory.emit({
+                  value: f,
+                  default: data.defaults.factoryRank
+                })
+              "
+              >arrow_drop_down</i
+            >
+          </div>
+        </td>
+      </tr>
+    </ng-container>
   </table>
-</div>
-<div class="field">
-  <button
-    #btnOverride
-    [disabled]="!overrideOptions.length"
-    (click)="openSelect = OpenSelect.Override"
-  >
-    Add Override
-  </button>
-  <lab-select
-    *ngIf="openSelect === OpenSelect.Override"
-    [data]="data"
-    [options]="overrideOptions"
-    [data]="data"
-    [parent]="btnOverride"
-    (cancel)="openSelect = null"
-    (selectId)="addOverride($event)"
-  >
-  </lab-select>
 </div>
 <div class="label">Entities</div>
 <div class="field">
-  <lab-icon
-    #btnBelt
-    class="clickable"
-    tooltip="Choose default belt"
-    [iconId]="settings.belt"
-    [data]="data"
-    (click)="openSelect = OpenSelect.Belt"
-  ></lab-icon>
-  <lab-select
-    *ngIf="openSelect === OpenSelect.Belt"
-    [data]="data"
-    [selectedId]="settings.belt"
-    [options]="data.beltIds"
-    [displayRate]="settings.displayRate"
-    [data]="data"
-    [parent]="btnBelt.element"
-    (cancel)="openSelect = null"
-    (selectId)="setBelt.emit({ value: $event, default: data.defaults.belt })"
-  >
-  </lab-select>
-  <lab-icon
-    #btnFuel
-    class="clickable"
-    tooltip="Choose fuel"
-    [iconId]="settings.fuel"
-    [data]="data"
-    (click)="openSelect = OpenSelect.Fuel"
-  ></lab-icon>
-  <lab-select
-    *ngIf="openSelect === OpenSelect.Fuel"
-    [data]="data"
-    [options]="sortedFuels"
-    [selectedId]="settings.fuel"
-    [parent]="btnFuel.element"
-    (cancel)="openSelect = null"
-    (selectId)="setFuel.emit({ value: $event, default: data.defaults.fuel })"
-  >
-  </lab-select>
+  <div>
+    <lab-icon
+      #btnBelt
+      class="clickable"
+      tooltip="Choose default belt"
+      [iconId]="settings.belt"
+      [data]="data"
+      (click)="openSelect = OpenSelect.Belt"
+    ></lab-icon>
+    <lab-select
+      *ngIf="openSelect === OpenSelect.Belt"
+      [data]="data"
+      [selectedId]="settings.belt"
+      [options]="data.beltIds"
+      [displayRate]="settings.displayRate"
+      [data]="data"
+      [parent]="btnBelt.element"
+      (cancel)="openSelect = null"
+      (selectId)="setBelt.emit({ value: $event, default: data.defaults.belt })"
+    >
+    </lab-select>
+  </div>
+  <div>
+    <lab-icon
+      #btnFuel
+      class="clickable"
+      tooltip="Choose fuel"
+      [iconId]="settings.fuel"
+      [data]="data"
+      (click)="openSelect = OpenSelect.Fuel"
+    ></lab-icon>
+    <lab-select
+      *ngIf="openSelect === OpenSelect.Fuel"
+      [data]="data"
+      [options]="sortedFuels"
+      [selectedId]="settings.fuel"
+      [parent]="btnFuel.element"
+      (cancel)="openSelect = null"
+      (selectId)="setFuel.emit({ value: $event, default: data.defaults.fuel })"
+    >
+    </lab-select>
+  </div>
 </div>
 <div class="field">
   <lab-icon
@@ -449,67 +534,6 @@
       >#/hr</label
     >
   </div>
-</div>
-<div class="label">Precision</div>
-<div class="field">
-  <lab-precision
-    [data]="data"
-    [iconId]="ItemId.IronPlate"
-    tooltip="Items precision"
-    [value]="columns[Column.Items].precision"
-    [default]="DefaultColumnSettings.precision"
-    (setValue)="setPrecision.emit({ id: Column.Items, value: $event })"
-  ></lab-precision>
-</div>
-<div class="field">
-  <lab-precision
-    [data]="data"
-    [iconId]="ItemId.TransportBelt"
-    tooltip="Belts precision"
-    [value]="columns[Column.Belts].precision"
-    [default]="DefaultColumnSettings.precision"
-    (setValue)="setPrecision.emit({ id: Column.Belts, value: $event })"
-  ></lab-precision>
-</div>
-<div class="field">
-  <lab-precision
-    [data]="data"
-    [iconId]="ItemId.CargoWagon"
-    tooltip="Wagons precision"
-    [value]="columns[Column.Wagons].precision"
-    [default]="DefaultColumnSettings.precision"
-    (setValue)="setPrecision.emit({ id: Column.Wagons, value: $event })"
-  ></lab-precision>
-</div>
-<div class="field">
-  <lab-precision
-    [data]="data"
-    [iconId]="ItemId.AssemblingMachine1"
-    tooltip="Factories precision"
-    [value]="columns[Column.Factories].precision"
-    [default]="DefaultColumnSettings.precision"
-    (setValue)="setPrecision.emit({ id: Column.Factories, value: $event })"
-  ></lab-precision>
-</div>
-<div class="field">
-  <lab-precision
-    [data]="data"
-    [iconId]="ItemId.Substation"
-    tooltip="Power precision"
-    [value]="columns[Column.Power].precision"
-    [default]="DefaultColumnSettings.precision"
-    (setValue)="setPrecision.emit({ id: Column.Power, value: $event })"
-  ></lab-precision>
-</div>
-<div class="field">
-  <lab-precision
-    [data]="data"
-    [iconId]="ItemId.Steam"
-    tooltip="Pollution precision"
-    [value]="columns[Column.Pollution].precision"
-    [default]="DefaultColumnSettings.precision"
-    (setValue)="setPrecision.emit({ id: Column.Pollution, value: $event })"
-  ></lab-precision>
 </div>
 <div class="label">Bonuses</div>
 <div class="field">
@@ -606,6 +630,67 @@
     target="_blank"
     >Wiki</a
   >
+</div>
+<div class="label">Precision</div>
+<div class="field">
+  <lab-precision
+    [data]="data"
+    [iconId]="ItemId.IronPlate"
+    tooltip="Items precision"
+    [value]="columns[Column.Items].precision"
+    [default]="DefaultColumnSettings.precision"
+    (setValue)="setPrecision.emit({ id: Column.Items, value: $event })"
+  ></lab-precision>
+</div>
+<div class="field">
+  <lab-precision
+    [data]="data"
+    [iconId]="ItemId.TransportBelt"
+    tooltip="Belts precision"
+    [value]="columns[Column.Belts].precision"
+    [default]="DefaultColumnSettings.precision"
+    (setValue)="setPrecision.emit({ id: Column.Belts, value: $event })"
+  ></lab-precision>
+</div>
+<div class="field">
+  <lab-precision
+    [data]="data"
+    [iconId]="ItemId.CargoWagon"
+    tooltip="Wagons precision"
+    [value]="columns[Column.Wagons].precision"
+    [default]="DefaultColumnSettings.precision"
+    (setValue)="setPrecision.emit({ id: Column.Wagons, value: $event })"
+  ></lab-precision>
+</div>
+<div class="field">
+  <lab-precision
+    [data]="data"
+    [iconId]="ItemId.AssemblingMachine1"
+    tooltip="Factories precision"
+    [value]="columns[Column.Factories].precision"
+    [default]="DefaultColumnSettings.precision"
+    (setValue)="setPrecision.emit({ id: Column.Factories, value: $event })"
+  ></lab-precision>
+</div>
+<div class="field">
+  <lab-precision
+    [data]="data"
+    [iconId]="ItemId.Substation"
+    tooltip="Power precision"
+    [value]="columns[Column.Power].precision"
+    [default]="DefaultColumnSettings.precision"
+    (setValue)="setPrecision.emit({ id: Column.Power, value: $event })"
+  ></lab-precision>
+</div>
+<div class="field">
+  <lab-precision
+    [data]="data"
+    [iconId]="ItemId.Steam"
+    tooltip="Pollution precision"
+    [value]="columns[Column.Pollution].precision"
+    [default]="DefaultColumnSettings.precision"
+    (setValue)="setPrecision.emit({ id: Column.Pollution, value: $event })"
+  ></lab-precision>
 </div>
 <div class="label">User Preferences</div>
 <table class="center">

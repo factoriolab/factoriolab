@@ -23,6 +23,7 @@ import {
 } from '~/models';
 import { State } from '~/store';
 import { getColumns } from '~/store/columns';
+import { FactoriesState, getFactorySettings } from '~/store/factories';
 import * as Items from '~/store/items';
 import { getSteps } from '~/store/products';
 import * as Recipes from '~/store/recipes';
@@ -46,6 +47,7 @@ export class ListContainerComponent implements OnInit {
   itemSettings$: Observable<Items.ItemsState>;
   recipeSettings$: Observable<Recipes.RecipesState>;
   recipeRaw$: Observable<Recipes.RecipesState>;
+  factories$: Observable<FactoriesState>;
   beltSpeed$: Observable<Entities<Rational>>;
   steps$: Observable<Step[]>;
   disabledRecipes$: Observable<string[]>;
@@ -72,13 +74,10 @@ export class ListContainerComponent implements OnInit {
     this.itemSettings$ = this.store.select(Items.getItemSettings);
     this.recipeSettings$ = this.store.select(Recipes.getRecipeSettings);
     this.recipeRaw$ = this.store.select(Recipes.recipesState);
+    this.factories$ = this.store.select(getFactorySettings);
     this.beltSpeed$ = this.store.select(Settings.getBeltSpeed);
     this.disabledRecipes$ = this.store.select(Settings.getDisabledRecipes);
-    this.factoryRank$ = this.store.select(Settings.getFactoryRank);
-    this.moduleRank$ = this.store.select(Settings.getModuleRank);
-    this.beaconModule$ = this.store.select(Settings.getBeaconModule);
     this.displayRate$ = this.store.select(Settings.getDisplayRate);
-    this.beaconCount$ = this.store.select(Settings.getBeaconCount);
     this.inserterTarget$ = this.store.select(Settings.getInserterTarget);
     this.inserterCapacity$ = this.store.select(Settings.getInserterCapacity);
     this.columns$ = this.store.select(getColumns);

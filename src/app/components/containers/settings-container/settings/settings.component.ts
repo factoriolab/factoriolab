@@ -30,6 +30,7 @@ import {
   InserterCapacity,
   DefaultColumnSettings,
   Column,
+  DefaultIdPayload,
 } from '~/models';
 import { ColumnsState } from '~/store/columns';
 import { FactoriesState } from '~/store/factories';
@@ -41,11 +42,18 @@ enum OpenSelect {
   DisabledRecipes,
   Belt,
   Fuel,
+}
+
+export enum FactoryEditType {
   Factory,
   Module,
-  Override,
   Beacon,
   BeaconModule,
+}
+
+export interface FactoryEdit {
+  id: string;
+  type: FactoryEditType;
 }
 
 @Component({
@@ -79,11 +87,17 @@ export class SettingsComponent implements OnInit {
   @Output() setMods = new EventEmitter<DefaultPayload<string[]>>();
   @Output() setDisabledRecipes = new EventEmitter<DefaultPayload<string[]>>();
   @Output() setExpensive = new EventEmitter<boolean>();
-  @Output() setFactoryRank = new EventEmitter<DefaultPayload<string[]>>();
-  @Output() setModuleRank = new EventEmitter<DefaultPayload<string[]>>();
-  @Output() setBeacon = new EventEmitter<DefaultPayload>();
-  @Output() setBeaconModule = new EventEmitter<DefaultPayload>();
-  @Output() setBeaconCount = new EventEmitter<DefaultPayload<number>>();
+  @Output() addFactory = new EventEmitter<DefaultPayload<string, string[]>>();
+  @Output() removeFactory = new EventEmitter<
+    DefaultPayload<string, string[]>
+  >();
+  @Output() raiseFactory = new EventEmitter<DefaultPayload<string, string[]>>();
+  @Output() lowerFactory = new EventEmitter<DefaultPayload<string, string[]>>();
+  @Output() setFactory = new EventEmitter<DefaultIdPayload<string, string[]>>();
+  @Output() setModuleRank = new EventEmitter<IdPayload<string[]>>();
+  @Output() setBeaconCount = new EventEmitter<IdPayload<number>>();
+  @Output() setBeacon = new EventEmitter<IdPayload>();
+  @Output() setBeaconModule = new EventEmitter<IdPayload>();
   @Output() setBelt = new EventEmitter<DefaultPayload>();
   @Output() setFuel = new EventEmitter<DefaultPayload>();
   @Output() setFlowRate = new EventEmitter<number>();
@@ -99,10 +113,16 @@ export class SettingsComponent implements OnInit {
   @Output() reset = new EventEmitter();
 
   openSelect: OpenSelect;
+  editFactory: FactoryEdit;
+  initial = initialSettingsState;
+  sortedFuels: string[] = [];
+  state = '';
+  editState = false;
 
   Column = Column;
   DefaultColumnSettings = DefaultColumnSettings;
   DisplayRate = DisplayRate;
+  FactoryEditType = FactoryEditType;
   InserterCapacity = InserterCapacity;
   InserterTarget = InserterTarget;
   ItemId = ItemId;
@@ -114,22 +134,17 @@ export class SettingsComponent implements OnInit {
   Sort = Sort;
   Theme = Theme;
 
-  initial = initialSettingsState;
-  sortedFuels: string[] = [];
-  state = '';
-  editState = false;
-
   get hash() {
     return location.hash.substr(1);
   }
 
-  get overrides() {
-    return Object.keys(this.factories).length;
+  get factoryRows() {
+    return ['', ...this.factories.ids];
   }
 
-  get overrideOptions() {
+  get factoryOptions() {
     return this.data.factoryIds.filter(
-      (f) => !this.factories[f] && this.data.itemEntities[f].factory?.modules
+      (f) => this.factories.ids.indexOf(f) === -1
     );
   }
 
@@ -160,11 +175,11 @@ export class SettingsComponent implements OnInit {
     return data.key;
   }
 
-  changeBeaconCount(event: Event) {
+  changeBeaconCount(id: string, event: Event) {
     const target = event.target as HTMLInputElement;
     this.setBeaconCount.emit({
+      id,
       value: Number(target.value),
-      default: this.data.defaults.beaconCount,
     });
   }
 
@@ -205,20 +220,6 @@ export class SettingsComponent implements OnInit {
   toggleEditState(event: Event) {
     this.editState = !this.editState;
     event.stopPropagation();
-  }
-
-  addOverride(id: string) {
-    this.setFactoryRank.emit({
-      value: [...this.settings.factoryRank, id],
-      default: this.data.defaults.factoryRank,
-    });
-  }
-
-  removeOverride(id: string) {
-    this.setFactoryRank.emit({
-      value: this.settings.factoryRank.filter((i) => i !== id),
-      default: this.data.defaults.factoryRank,
-    });
   }
 
   clickResetSettings() {

@@ -3,13 +3,13 @@ export interface IdPayload<T = string> {
   value: T;
 }
 
-export interface DefaultIdPayload<T = string> {
+export interface DefaultIdPayload<T = string, D = T> {
   id: string;
   value: T;
-  default: T;
+  default: D;
 }
 
-export interface DefaultPayload<T = string> {
+export interface DefaultPayload<T = string, D = T> {
   value: T;
-  default: T;
+  default: D;
 }

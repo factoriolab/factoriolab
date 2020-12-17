@@ -36,7 +36,7 @@ export class ToggleComponent {
   }
 
   @HostBinding('style.left.px') get left() {
-    return this.parent ? this.parent.getBoundingClientRect().x - 8 : 1;
+    return this.parent ? this.parent.getBoundingClientRect().x + 1 : 1;
   }
 
   @HostBinding('style.width.rem') get width() {

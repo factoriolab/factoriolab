@@ -15,11 +15,6 @@ export const enum SettingsActionType {
   SET_MODS = '[Settings] Set Mods',
   SET_DISABLED_RECIPES = '[Settings] Set Disabled Recipes',
   SET_EXPENSIVE = '[Settings] Set Expensive',
-  SET_FACTORY_RANK = '[Settings] Set Factory Rank',
-  SET_MODULE_RANK = '[Settings] Set Module Rank',
-  SET_BEACON = '[Settings] Set Beacon',
-  SET_BEACON_MODULE = '[Settings] Set Beacon Module',
-  SET_BEACON_COUNT = '[Settings] Set Beacon Count',
   SET_BELT = '[Settings] Set Belt',
   SET_FUEL = '[Settings] Set Fuel',
   SET_FLOW_RATE = '[Settings] Set Flow Rate',
@@ -54,31 +49,6 @@ export class SetDisabledRecipesAction implements Action {
 export class SetExpensiveAction implements Action {
   readonly type = SettingsActionType.SET_EXPENSIVE;
   constructor(public payload: boolean) {}
-}
-
-export class SetFactoryRankAction implements Action {
-  readonly type = SettingsActionType.SET_FACTORY_RANK;
-  constructor(public payload: DefaultPayload<string[]>) {}
-}
-
-export class SetModuleRankAction implements Action {
-  readonly type = SettingsActionType.SET_MODULE_RANK;
-  constructor(public payload: DefaultPayload<string[]>) {}
-}
-
-export class SetBeaconAction implements Action {
-  readonly type = SettingsActionType.SET_BEACON;
-  constructor(public payload: DefaultPayload) {}
-}
-
-export class SetBeaconModuleAction implements Action {
-  readonly type = SettingsActionType.SET_BEACON_MODULE;
-  constructor(public payload: DefaultPayload) {}
-}
-
-export class SetBeaconCountAction implements Action {
-  readonly type = SettingsActionType.SET_BEACON_COUNT;
-  constructor(public payload: DefaultPayload<number>) {}
 }
 
 export class SetBeltAction implements Action {
@@ -132,11 +102,6 @@ export type SettingsAction =
   | SetModsAction
   | SetDisabledRecipesAction
   | SetExpensiveAction
-  | SetFactoryRankAction
-  | SetModuleRankAction
-  | SetBeaconAction
-  | SetBeaconModuleAction
-  | SetBeaconCountAction
   | SetBeltAction
   | SetFuelAction
   | SetFlowRateAction

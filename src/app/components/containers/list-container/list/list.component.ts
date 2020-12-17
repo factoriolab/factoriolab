@@ -25,6 +25,7 @@ import {
   ColumnSettings,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
+import { FactoriesState } from '~/store/factories';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
 import { ExportUtility, RecipeUtility } from '~/utilities';
@@ -68,6 +69,7 @@ export class ListComponent {
   @Input() itemSettings: ItemsState;
   @Input() recipeSettings: RecipesState;
   @Input() recipeRaw: RecipesState;
+  @Input() factories: FactoriesState;
   @Input() beltSpeed: Entities<Rational>;
   _steps: Step[];
   get steps() {
@@ -80,12 +82,7 @@ export class ListComponent {
     this.setEffectivePrecision();
   }
   @Input() disabledRecipes: string[];
-  @Input() factoryRank: string[];
-  @Input() moduleRank: string[];
-  @Input() beaconModule: string;
   @Input() displayRate: DisplayRate;
-  @Input() beaconCount: number;
-  @Input() drillModule: boolean;
   @Input() inserterTarget: InserterTarget;
   @Input() inserterCapacity: InserterCapacity;
   _columns: Entities<ColumnSettings>;
@@ -352,18 +349,14 @@ export class ListComponent {
     };
   }
 
-  miningIgnoreModule(step: Step) {
-    if (!this.drillModule && this.recipeSettings[step.recipeId]?.factory) {
-      return this.data.itemR[this.recipeSettings[step.recipeId].factory].factory
-        .mining;
-    }
-    return false;
+  getSettings(step: Step) {
+    return this.factories.entities[this.recipeSettings[step.recipeId].factory];
   }
 
   factoryChange(step: Step, value: string) {
     const def = RecipeUtility.bestMatch(
       this.data.recipeEntities[step.recipeId].producers,
-      this.factoryRank
+      this.factories.ids
     );
     const event = {
       id: step.recipeId,
@@ -375,10 +368,15 @@ export class ListComponent {
 
   factoryModuleChange(step: Step, value: string, index: number) {
     const count = this.recipeSettings[step.recipeId].factoryModules.length;
-    const options = this.miningIgnoreModule(step)
-      ? [ItemId.Module]
-      : [...this.data.recipeModuleIds[step.recipeId], ItemId.Module];
-    const def = RecipeUtility.defaultModules(options, this.moduleRank, count);
+    const options = [
+      ...this.data.recipeModuleIds[step.recipeId],
+      ItemId.Module,
+    ];
+    const def = RecipeUtility.defaultModules(
+      options,
+      this.getSettings(step).moduleRank,
+      count
+    );
     const modules = this.generateModules(
       index,
       count,
@@ -394,7 +392,7 @@ export class ListComponent {
 
   beaconModuleChange(step: Step, value: string, index: number) {
     const count = this.recipeSettings[step.recipeId].beaconModules.length;
-    const def = new Array(count).fill(this.beaconModule);
+    const def = new Array(count).fill(this.getSettings(step).beaconModule);
     const modules = this.generateModules(
       index,
       count,
@@ -429,7 +427,7 @@ export class ListComponent {
     const target = event.target as HTMLInputElement;
     if (target.value) {
       const value = Math.round(Number(target.value));
-      const def = this.miningIgnoreModule(step) ? 0 : this.beaconCount;
+      const def = this.getSettings(step).beaconCount;
       if (
         this.recipeSettings[
           this.steps.find((s) => s.recipeId === step.recipeId).recipeId

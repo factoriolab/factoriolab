@@ -24,6 +24,7 @@ import {
   IdPayload,
   InserterTarget,
   InserterCapacity,
+  DefaultIdPayload,
 } from '~/models';
 import { State } from '~/store';
 import { ResetAction } from '~/store/app.actions';
@@ -61,7 +62,7 @@ export class SettingsContainerComponent implements OnInit {
     this.data$ = this.store.select(Settings.getDataset);
     this.base$ = this.store.select(getBaseSets);
     this.mods$ = this.store.select(Settings.getAvailableMods);
-    this.factories$ = this.store.select(Factories.getFactoryOverrides);
+    this.factories$ = this.store.select(Factories.getFactorySettings);
     this.settings$ = this.store.select(Settings.getSettings);
     this.columns$ = this.store.select(getColumns);
     this.preferences$ = this.store.select(Preferences.preferencesState);
@@ -113,24 +114,40 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetExpensiveAction(value));
   }
 
-  setFactoryRank(value: DefaultPayload<string[]>) {
-    this.store.dispatch(new Settings.SetFactoryRankAction(value));
+  addFactory(value: DefaultPayload<string, string[]>) {
+    this.store.dispatch(new Factories.AddAction(value));
   }
 
-  setModuleRank(value: DefaultPayload<string[]>) {
-    this.store.dispatch(new Settings.SetModuleRankAction(value));
+  removeFactory(value: DefaultPayload<string, string[]>) {
+    this.store.dispatch(new Factories.RemoveAction(value));
   }
 
-  setBeaconCount(value: DefaultPayload<number>) {
-    this.store.dispatch(new Settings.SetBeaconCountAction(value));
+  raiseFactory(value: DefaultPayload<string, string[]>) {
+    this.store.dispatch(new Factories.RaiseAction(value));
   }
 
-  setBeacon(value: DefaultPayload) {
-    this.store.dispatch(new Settings.SetBeaconAction(value));
+  lowerFactory(value: DefaultPayload<string, string[]>) {
+    this.store.dispatch(new Factories.LowerAction(value));
   }
 
-  setBeaconModule(value: DefaultPayload) {
-    this.store.dispatch(new Settings.SetBeaconModuleAction(value));
+  setFactory(value: DefaultIdPayload<string, string[]>) {
+    this.store.dispatch(new Factories.SetFactoryAction(value));
+  }
+
+  setModuleRank(value: DefaultIdPayload<string[]>) {
+    this.store.dispatch(new Factories.SetModuleRankAction(value));
+  }
+
+  setBeaconCount(value: DefaultIdPayload<number>) {
+    this.store.dispatch(new Factories.SetBeaconCountAction(value));
+  }
+
+  setBeacon(value: DefaultIdPayload) {
+    this.store.dispatch(new Factories.SetBeaconAction(value));
+  }
+
+  setBeaconModule(value: DefaultIdPayload) {
+    this.store.dispatch(new Factories.SetBeaconModuleAction(value));
   }
 
   setBelt(value: DefaultPayload) {

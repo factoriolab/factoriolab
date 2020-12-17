@@ -19,14 +19,6 @@
   }
 }
 
-button {
-  height: 2rem;
-  width: 2rem;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-}
-
 .icon-container {
   height: 36px;
   width: 36px;
@@ -39,8 +31,4 @@ button {
   > * + * {
     margin-left: 0.25rem;
   }
-}
-
-.material-icons {
-  line-height: 1.875rem;
 }

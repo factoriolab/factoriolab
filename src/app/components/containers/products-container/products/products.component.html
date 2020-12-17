@@ -1,5 +1,10 @@
 <div class="flex add-button relative">
-  <button type="button" title="Add Product" (click)="adding = true">
+  <button
+    type="button"
+    class="icon"
+    title="Add Product"
+    (click)="adding = true"
+  >
     <i class="material-icons">add</i>
   </button>
   <lab-picker
@@ -11,15 +16,16 @@
     (selectTab)="categoryId = $event"
     (selectItem)="add.emit($event)"
   ></lab-picker>
-  <div *ngIf="!products?.length" class="flex">
+  <button type="button" class="icon" *ngIf="!products?.length" class="flex">
     <i class="material-icons">arrow_back</i>Click to add a product
-  </div>
+  </button>
 </div>
 <div *ngIf="products && products.length">
   <div class="product-row" *ngFor="let product of products; trackBy: trackBy">
     <ng-container *ngIf="product && data.itemEntities[product.itemId]">
       <button
         type="button"
+        class="icon"
         title="Remove Product"
         (click)="remove.emit(product.id)"
       >

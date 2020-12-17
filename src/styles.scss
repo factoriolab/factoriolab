@@ -29,6 +29,18 @@ select {
   padding: 0.25rem;
   height: 1.625rem;
 
+  &.icon {
+    height: 2rem;
+    width: 2rem;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+
+    > .material-icons {
+      line-height: 1.875rem;
+    }
+  }
+
   &:not([disabled]):hover {
     border-color: var(--color-brand);
     color: var(--color-brand);

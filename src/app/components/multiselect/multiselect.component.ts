@@ -38,7 +38,7 @@ export class MultiselectComponent {
   }
 
   @HostBinding('style.left.px') get left() {
-    return this.parent ? this.parent.getBoundingClientRect().x - 8 : 1;
+    return this.parent ? this.parent.getBoundingClientRect().x + 1 : 1;
   }
 
   constructor(private element: ElementRef) {}

@@ -3,43 +3,40 @@ import { createSelector } from '@ngrx/store';
 import { Entities, FactorySettings } from '~/models';
 import * as Settings from '../settings';
 import { State } from '..';
+import { FactoriesState } from './factories.reducer';
 
 /* Base selector functions */
 export const factoriesState = (state: State) => state.factoriesState;
 
 /* Complex selectors */
-export const getFactoryOverrides = createSelector(
+export const getFactorySettings = createSelector(
   factoriesState,
-  Settings.getModuleRank,
-  Settings.getBeaconCount,
-  Settings.getBeacon,
-  Settings.getBeaconModule,
+  Settings.getDefaults,
   Settings.getDataset,
-  (state, moduleRank, beaconCount, beacon, beaconModule, data) => {
+  (state, defaults, data): FactoriesState => {
+    const ids = state.ids || defaults?.factoryRank || [];
+
     const entities: Entities<FactorySettings> = {};
-    for (const id of Object.keys(state)) {
-      const override = { ...state[id] };
+    const def: FactorySettings = { ...state.entities[''] } || {};
+    def.moduleRank = def.moduleRank || defaults?.moduleRank || [];
+    def.beaconCount = def.beaconCount || defaults?.beaconCount;
+    def.beacon = def.beacon || defaults?.beacon;
+    def.beaconModule = def.beaconModule || defaults?.beaconModule;
+    entities[''] = def;
+
+    for (const id of data.factoryIds.filter((i) => data.itemEntities[i])) {
+      const s: FactorySettings = { ...state.entities[id] } || {};
       const factory = data.itemEntities[id].factory;
       if (factory.modules) {
-        if (!override.moduleRank) {
-          override.moduleRank = moduleRank;
-        }
-
-        if (override.beaconCount == null) {
-          override.beaconCount = beaconCount;
-        }
-
-        if (!override.beacon) {
-          override.beacon = beacon;
-        }
-
-        if (!override.beaconModule) {
-          override.beaconModule = beaconModule;
-        }
+        s.moduleRank = s.moduleRank || def.moduleRank;
+        s.beaconCount = s.beaconCount != null ? s.beaconCount : def.beaconCount;
+        s.beacon = s.beacon || def.beacon;
+        s.beaconModule = s.beaconModule || def.beaconModule;
       }
 
-      entities[id] = override;
+      entities[id] = s;
     }
-    return { ...state, ...{ entities } };
+
+    return { ids, entities };
   }
 );

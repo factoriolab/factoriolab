@@ -3,7 +3,7 @@
   padding: 1rem;
   flex-grow: 1;
   overflow-y: auto;
-  width: 18rem;
+  width: 20rem;
 
   > :last-child {
     margin-bottom: 4rem;
@@ -86,6 +86,10 @@ input[type='radio'] + * {
   display: none;
 }
 
+.invisible {
+  visibility: hidden;
+}
+
 .static > lab-icon {
   position: static;
 }
@@ -93,5 +97,22 @@ input[type='radio'] + * {
 table.center {
   tr > :first-child {
     text-align: right;
+  }
+}
+
+.arrows {
+  display: flex;
+  flex-direction: column;
+
+  > i {
+    line-height: 1rem;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 0.25rem;
+
+    &:hover {
+      background-color: var(--color-brand);
+      color: var(--color-black);
+    }
   }
 }

@@ -39,7 +39,7 @@ export class SelectComponent {
   }
 
   @HostBinding('style.left.px') get left() {
-    return this.parent ? this.parent.getBoundingClientRect().x - 17 : -8;
+    return this.parent ? this.parent.getBoundingClientRect().x - 8 : -8;
   }
 
   @HostBinding('style.width.rem')

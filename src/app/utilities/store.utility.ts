@@ -119,4 +119,17 @@ export class StoreUtility {
       },
     };
   }
+
+  static compareResetDefault<T, P>(
+    state: T,
+    field: string,
+    payload: IdPayload<P>,
+    rank = false
+  ) {
+    const def: DefaultIdPayload<P> = {
+      ...payload,
+      ...{ default: payload.id ? state[''][field] : null },
+    };
+    return this.compareReset(state, field, def, rank);
+  }
 }

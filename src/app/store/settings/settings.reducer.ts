@@ -15,11 +15,6 @@ export interface SettingsState {
   modIds: string[];
   disabledRecipes: string[];
   expensive: boolean;
-  factoryRank: string[];
-  moduleRank: string[];
-  beaconCount: number;
-  beacon: string;
-  beaconModule: string;
   belt: string;
   fuel: string;
   flowRate: number;
@@ -36,11 +31,6 @@ export const initialSettingsState: SettingsState = {
   modIds: null,
   disabledRecipes: null,
   expensive: false,
-  factoryRank: null,
-  moduleRank: null,
-  beaconCount: null,
-  beacon: null,
-  beaconModule: null,
   belt: null,
   fuel: null,
   flowRate: 1500,
@@ -95,35 +85,6 @@ export function settingsReducer(
       };
     case SettingsActionType.SET_EXPENSIVE:
       return { ...state, ...{ expensive: action.payload } };
-    case SettingsActionType.SET_FACTORY_RANK:
-      return {
-        ...state,
-        ...{
-          factoryRank: StoreUtility.compareRank(action.payload),
-        },
-      };
-    case SettingsActionType.SET_MODULE_RANK:
-      return {
-        ...state,
-        ...{
-          moduleRank: StoreUtility.compareRank(action.payload),
-        },
-      };
-    case SettingsActionType.SET_BEACON:
-      return {
-        ...state,
-        ...{ beacon: StoreUtility.compareValue(action.payload) },
-      };
-    case SettingsActionType.SET_BEACON_MODULE:
-      return {
-        ...state,
-        ...{ beaconModule: StoreUtility.compareValue(action.payload) },
-      };
-    case SettingsActionType.SET_BEACON_COUNT:
-      return {
-        ...state,
-        ...{ beaconCount: StoreUtility.compareValue(action.payload) },
-      };
     case SettingsActionType.SET_BELT:
       return {
         ...state,

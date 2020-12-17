@@ -19,12 +19,12 @@ import { Dataset, ItemId } from '~/models';
   animations: [
     trigger('slideInOut', [
       transition(':enter', [
-        style({ right: '-18rem', opacity: 0.1 }),
+        style({ right: '-20rem', opacity: 0.1 }),
         animate('300ms ease', style({ right: '0', opacity: 1 })),
       ]),
       transition(':leave', [
         style({ right: '0', opacity: 1 }),
-        animate('300ms ease', style({ right: '-18rem', opacity: 0.1 })),
+        animate('300ms ease', style({ right: '-20rem', opacity: 0.1 })),
       ]),
     ]),
   ],

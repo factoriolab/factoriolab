@@ -29,14 +29,14 @@ import { getDataset } from './store/settings';
     ]),
     trigger('slideLeftRight', [
       transition(':enter', [
-        style({ marginLeft: '-18rem', marginRight: '0' }),
+        style({ marginLeft: '-20rem', marginRight: '0' }),
         animate('300ms ease', style({ marginLeft: '0', marginRight: '*' })),
       ]),
       transition(':leave', [
         style({ marginLeft: '0', marginRight: '*' }),
         animate(
           '300ms ease',
-          style({ marginLeft: '-18rem', marginRight: '0' })
+          style({ marginLeft: '-20rem', marginRight: '0' })
         ),
       ]),
     ]),
