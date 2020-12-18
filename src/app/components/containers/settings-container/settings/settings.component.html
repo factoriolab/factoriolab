@@ -490,51 +490,6 @@
     >
   </div>
 </div>
-<div class="label">Display Rate</div>
-<div class="field">
-  <div class="flex option">
-    <input
-      id="settings-display-persecond"
-      title="Display rates per second"
-      type="radio"
-      name="displayRate"
-      [value]="DisplayRate.PerSecond"
-      [ngModel]="settings.displayRate"
-      (change)="setDisplayRate.emit(DisplayRate.PerSecond)"
-    />
-    <label for="settings-display-persecond" title="Display rates per second"
-      >#/sec</label
-    >
-  </div>
-  <div class="flex option">
-    <input
-      id="settings-display-perminute"
-      title="Display rates per minute"
-      type="radio"
-      name="displayRate"
-      [value]="DisplayRate.PerMinute"
-      [ngModel]="settings.displayRate"
-      (change)="setDisplayRate.emit(DisplayRate.PerMinute)"
-    />
-    <label for="settings-display-perminute" title="Display rates per minute"
-      >#/min</label
-    >
-  </div>
-  <div class="flex option">
-    <input
-      id="settings-display-perhour"
-      title="Display rates per hour"
-      type="radio"
-      name="displayRate"
-      [value]="DisplayRate.PerHour"
-      [ngModel]="settings.displayRate"
-      (change)="setDisplayRate.emit(DisplayRate.PerHour)"
-    />
-    <label for="settings-display-perhour" title="Display rates per hour"
-      >#/hr</label
-    >
-  </div>
-</div>
 <div class="label">Bonuses</div>
 <div class="field">
   <lab-icon
@@ -630,6 +585,51 @@
     target="_blank"
     >Wiki</a
   >
+</div>
+<div class="label">Display Rate</div>
+<div class="field">
+  <div class="flex option">
+    <input
+      id="settings-display-persecond"
+      title="Display rates per second"
+      type="radio"
+      name="displayRate"
+      [value]="DisplayRate.PerSecond"
+      [ngModel]="settings.displayRate"
+      (change)="setDisplayRate.emit(DisplayRate.PerSecond)"
+    />
+    <label for="settings-display-persecond" title="Display rates per second"
+      >#/sec</label
+    >
+  </div>
+  <div class="flex option">
+    <input
+      id="settings-display-perminute"
+      title="Display rates per minute"
+      type="radio"
+      name="displayRate"
+      [value]="DisplayRate.PerMinute"
+      [ngModel]="settings.displayRate"
+      (change)="setDisplayRate.emit(DisplayRate.PerMinute)"
+    />
+    <label for="settings-display-perminute" title="Display rates per minute"
+      >#/min</label
+    >
+  </div>
+  <div class="flex option">
+    <input
+      id="settings-display-perhour"
+      title="Display rates per hour"
+      type="radio"
+      name="displayRate"
+      [value]="DisplayRate.PerHour"
+      [ngModel]="settings.displayRate"
+      (change)="setDisplayRate.emit(DisplayRate.PerHour)"
+    />
+    <label for="settings-display-perhour" title="Display rates per hour"
+      >#/hr</label
+    >
+  </div>
 </div>
 <div class="label">Precision</div>
 <div class="field">
