@@ -277,12 +277,15 @@
               #btnModule
               class="clickable"
               tooltip="Module preferences"
+              [data]="data"
               [iconId]="
                 factory.moduleRank.length
                   ? factory.moduleRank[0]
                   : ItemId.Module
               "
-              [data]="data"
+              [text]="
+                factory.moduleRank.length > 1 ? factory.moduleRank.length : null
+              "
               (click)="editFactory = { id: f, type: FactoryEditType.Module }"
             ></lab-icon>
             <lab-ranker

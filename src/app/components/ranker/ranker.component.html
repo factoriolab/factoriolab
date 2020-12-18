@@ -1,61 +1,34 @@
-<div #scrollContainer class="scroll">
-  <div class="flex tween dialog-title">
-    <span class="header">Preferred</span>
-    <div class="flex">
-      <i
-        *ngIf="edited"
-        class="cancel clickable material-icons"
-        title="Cancel changes"
-        (click)="cancel.emit(); $event.stopPropagation()"
-        >close</i
-      >
-      <i
-        *ngIf="edited"
-        class="confirm clickable material-icons"
-        title="Confirm changes"
-        (click)="
-          commit.emit(editValue); cancel.emit(); $event.stopPropagation()
-        "
-        >check</i
-      >
-    </div>
-  </div>
-  <div class="info">Click to remove from preferred list</div>
-  <button
-    [disabled]="!editValue.length"
-    (click)="edited = true; editValue = []"
+<div class="dialog-content">
+  <i
+    class="clickable material-icons"
+    title="Cancel"
+    (click)="cancel.emit(); $event.stopPropagation()"
+    >close</i
   >
-    Remove All
-  </button>
-  <div *ngIf="!editValue.length" class="flex empty">
-    <span>No preferences</span>
-  </div>
-  <div class="flex">
-    <lab-icon
-      *ngFor="let id of editValue"
-      class="clickable"
-      [data]="data"
-      [iconId]="id"
-      [scrollTop]="scrollContainer.scrollTop"
-      [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"
-      [item]="data.itemEntities[id]"
-      (click)="clickDrop(id, $event)"
-    ></lab-icon>
-  </div>
-  <div class="header">Not Preferred</div>
-  <div class="info">Click to add to preferred list</div>
-  <div class="flex">
-    <ng-container *ngFor="let id of options">
-      <lab-icon
-        *ngIf="editValue.indexOf(id) === -1"
-        class="clickable"
-        [data]="data"
-        [iconId]="id"
-        [scrollTop]="scrollContainer.scrollTop"
-        [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"
-        [item]="data.itemEntities[id]"
-        (click)="clickPrefer(id, $event)"
-      ></lab-icon>
-    </ng-container>
-  </div>
+  <lab-icon
+    tooltip="No Module"
+    class="clickable-size"
+    [class.clickable]="canAdd(ItemId.Module)"
+    [class.selected]="!editValue.length"
+    [data]="data"
+    [iconId]="ItemId.Module"
+    [text]="text(ItemId.Module)"
+    (click)="clickId(ItemId.Module, $event)"
+  >
+  </lab-icon>
+  <lab-icon
+    *ngFor="let id of options"
+    class="clickable-size"
+    [class.clickable]="canAdd(id)"
+    [class.selected]="editValue.indexOf(id) !== -1"
+    [data]="data"
+    [iconId]="id"
+    [text]="text(id)"
+    [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"
+    [item]="data.itemEntities[id]"
+    (click)="clickId(id, $event)"
+  ></lab-icon>
 </div>
+<span class="dialog-info" *ngIf="edited"
+  >(Optional) Select another module to use as a fallback</span
+>

@@ -9,7 +9,7 @@ import {
   HostBinding,
 } from '@angular/core';
 
-import { Dataset } from '~/models';
+import { Dataset, ItemId } from '~/models';
 
 @Component({
   selector: 'lab-ranker',
@@ -32,16 +32,20 @@ export class RankerComponent {
   edited = false;
   editValue: string[];
 
+  ItemId = ItemId;
+
   @HostBinding('style.top.px') get top() {
-    return this.parent ? this.parent.getBoundingClientRect().y - 4 : -4;
+    return this.parent ? this.parent.getBoundingClientRect().y - 8 : -8;
   }
 
   @HostBinding('style.left.px') get left() {
-    return this.parent ? this.parent.getBoundingClientRect().x - 14 : -4;
+    return this.parent ? this.parent.getBoundingClientRect().x - 8 : -8;
   }
 
   @HostBinding('style.width.rem') get width() {
-    return Math.ceil(Math.sqrt(this.options.length) + 4) * 2.25 + 1.25;
+    const buttons = this.options.length + 1;
+    const iconsPerRow = buttons <= 4 ? buttons : Math.ceil(Math.sqrt(buttons));
+    return iconsPerRow * 2.25 + 1.25;
   }
 
   constructor(private element: ElementRef) {}
@@ -58,15 +62,51 @@ export class RankerComponent {
     }
   }
 
-  clickPrefer(id: string, event: MouseEvent) {
-    this.edited = true;
-    this.editValue.push(id);
-    event.stopPropagation();
+  text(id: string) {
+    if (this.editValue.length > 1 && this.editValue.indexOf(id) !== -1) {
+      return this.editValue.indexOf(id) + 1;
+    }
+    return null;
   }
 
-  clickDrop(id: string, event: MouseEvent) {
-    this.edited = true;
-    this.editValue = this.editValue.filter((i) => i !== id);
+  canAdd(id: string) {
+    if (!this.edited) {
+      return true;
+    }
+
+    if (this.editValue.indexOf(id) !== -1) {
+      return false;
+    }
+
+    if (id === ItemId.Module) {
+      return true;
+    }
+
+    const lim = this.data.itemEntities[id].module.limitation;
+    return (
+      !lim ||
+      !this.editValue.some(
+        (i) => this.data.itemEntities[i].module.limitation === lim
+      )
+    );
+  }
+
+  clickId(id: string, event: MouseEvent) {
+    if (this.canAdd(id)) {
+      if (!this.edited) {
+        this.edited = true;
+        this.editValue = [id];
+      } else {
+        this.editValue.push(id);
+      }
+      if (
+        id === ItemId.Module ||
+        !this.data.itemEntities[id].module.limitation
+      ) {
+        this.commit.emit(this.editValue);
+        this.cancel.emit();
+      }
+    }
     event.stopPropagation();
   }
 }

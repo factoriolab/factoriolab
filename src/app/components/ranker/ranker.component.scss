@@ -5,40 +5,61 @@
   border-radius: 0.25rem;
   z-index: 10;
   margin: -1px;
-  min-width: 10.25rem;
   max-width: 25rem;
-  max-height: 15rem;
+  max-height: 20rem;
   display: flex;
   flex-direction: column;
   padding: 0.5rem;
 }
 
-.scroll {
-  overflow-y: auto;
-
-  > .header {
-    margin-top: 0.25rem;
-  }
-}
-
-.flex {
-  flex-wrap: wrap;
-}
-
-.info {
-  font-size: x-small;
-  margin-bottom: 0.5rem;
-}
-
-.empty {
-  height: 2.25rem;
-  opacity: 0.5;
-}
-
-button {
-  margin-bottom: 0.25rem;
+.clickable.material-icons {
+  padding: 0.375rem;
 }
 
 lab-icon {
   position: static;
+
+  &.selected {
+    background-color: var(--color-gray-0);
+  }
 }
+
+.dialog-info {
+  font-size: x-small;
+  color: var(--color-brand);
+}
+
+.dialog-content {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+// .scroll {
+//   overflow-y: auto;
+
+//   > .header {
+//     margin-top: 0.25rem;
+//   }
+// }
+
+// .flex {
+//   flex-wrap: wrap;
+// }
+
+// .info {
+//   font-size: x-small;
+//   margin-bottom: 0.5rem;
+// }
+
+// .empty {
+//   height: 2.25rem;
+//   opacity: 0.5;
+// }
+
+// button {
+//   margin-bottom: 0.25rem;
+// }
+
+// lab-icon {
+//   position: static;
+// }

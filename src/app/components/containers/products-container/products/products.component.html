@@ -16,9 +16,9 @@
     (selectTab)="categoryId = $event"
     (selectItem)="add.emit($event)"
   ></lab-picker>
-  <button type="button" class="icon" *ngIf="!products?.length" class="flex">
+  <div *ngIf="!products?.length" class="flex">
     <i class="material-icons">arrow_back</i>Click to add a product
-  </button>
+  </div>
 </div>
 <div *ngIf="products && products.length">
   <div class="product-row" *ngFor="let product of products; trackBy: trackBy">
