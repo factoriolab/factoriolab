@@ -1,17 +1,22 @@
 import { createSelector } from '@ngrx/store';
-import {
-  AllColumns,
-  ColumnSettings,
-  DefaultColumnSettings,
-  Entities,
-} from '~/models';
+import { AllColumns, DEFAULT_PRECISION, Entities } from '~/models';
 import { State } from '..';
+import { ColumnsState } from './columns.reducer';
 
 export const columnsState = (state: State) => state.columnsState;
 
-export const getColumns = createSelector(columnsState, (state) =>
-  AllColumns.reduce((e: Entities<ColumnSettings>, c) => {
-    e[c] = { ...DefaultColumnSettings, ...state[c] };
-    return e;
-  }, {})
+export const getColumns = createSelector(
+  columnsState,
+  (state): ColumnsState => {
+    const ids = state.ids;
+    const precision: Entities<number> = AllColumns.reduce(
+      (e: Entities<number>, c) => {
+        e[c] = state[c] != null ? state[c] : DEFAULT_PRECISION;
+        return e;
+      },
+      {}
+    );
+
+    return { ids, precision };
+  }
 );

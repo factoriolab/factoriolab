@@ -22,9 +22,10 @@ import {
   InserterCapacity,
   InserterData,
   DefaultPayload,
-  ColumnSettings,
+  toBoolEntities,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
+import { ColumnsState } from '~/store/columns';
 import { FactoriesState } from '~/store/factories';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
@@ -85,23 +86,24 @@ export class ListComponent {
   @Input() displayRate: DisplayRate;
   @Input() inserterTarget: InserterTarget;
   @Input() inserterCapacity: InserterCapacity;
-  _columns: Entities<ColumnSettings>;
+  _columns: ColumnsState;
   get columns() {
     return this._columns;
   }
-  @Input() set columns(value: Entities<ColumnSettings>) {
+  @Input() set columns(value: ColumnsState) {
     this._columns = value;
+    this.show = toBoolEntities(value.ids);
     this.totalSpan = 2;
-    if (!this.columns[Column.Belts].ignore) {
+    if (this.show[Column.Belts]) {
       this.totalSpan++;
     }
-    if (!this.columns[Column.Wagons].ignore) {
+    if (this.show[Column.Wagons]) {
       this.totalSpan++;
     }
-    if (!this.columns[Column.Factories].ignore) {
+    if (this.show[Column.Factories]) {
       this.totalSpan += 3;
     }
-    if (!this.columns[Column.Beacons].ignore) {
+    if (this.show[Column.Beacons]) {
       this.totalSpan += 3;
     }
     this.setEffectivePrecision();
@@ -150,6 +152,7 @@ export class ListComponent {
   details: Entities<StepDetailTab[]> = {};
   recipes: Entities<string[]> = {};
   expanded: Entities<StepDetailTab> = {};
+  show: Entities<boolean> = {};
   totalSpan = 2;
   effPrecision: Entities<number> = {};
 
@@ -199,12 +202,12 @@ export class ListComponent {
     if (this.steps && this.columns) {
       this.effPrecision = {};
       this.effPrecision[Column.Surplus] = this.effPrecFrom(
-        this.columns[Column.Items].precision,
+        this.columns.precision[Column.Items],
         (s) => s[Column.Surplus.toLowerCase()]
       );
-      for (const i of Object.keys(this.columns)) {
+      for (const i of this.columns.ids) {
         this.effPrecision[i] = this.effPrecFrom(
-          this.columns[i].precision,
+          this.columns.precision[i],
           (s) => s[i.toLowerCase()]
         );
       }
@@ -450,7 +453,7 @@ export class ListComponent {
   export() {
     ExportUtility.stepsToCsv(
       this.steps,
-      this.columns,
+      this.columns.ids,
       this.itemSettings,
       this.recipeSettings
     );

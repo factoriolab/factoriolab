@@ -63,10 +63,6 @@ export function settingsReducer(
           belt: null,
           fuel: null,
           disabledRecipes: null,
-          factoryRank: null,
-          moduleRank: null,
-          beacon: null,
-          beaconModule: null,
         },
       };
     case SettingsActionType.SET_MODS:

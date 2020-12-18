@@ -60,36 +60,6 @@
     >close</i
   >
 </div>
-<div class="label">Preset</div>
-<div class="field">
-  <select
-    id="settings-preset"
-    title="Select preset settings"
-    [ngModel]="settings.preset"
-    (change)="emitNumber(setPreset, $event)"
-  >
-    <option
-      label="Minimum"
-      title="Minimum belt and assembler, and no modules or beacons"
-      [value]="Preset.Minimum"
-    ></option>
-    <option
-      label="Modules"
-      title="Best belt and assembler with modules in factories, but no beacons"
-      [value]="Preset.Modules"
-    ></option>
-    <option
-      label="8 Beacons"
-      title="Best belt and assembler with modules in factories and 8 beacons per factory"
-      [value]="Preset.Beacon8"
-    ></option>
-    <option
-      label="12 Beacons"
-      title="Best belt and assembler with modules in factories and 12 beacons per factory"
-      [value]="Preset.Beacon12"
-    ></option>
-  </select>
-</div>
 <div class="flex tween">
   <div class="label">Recipes</div>
   <a
@@ -166,6 +136,36 @@
       >Expensive</label
     >
   </div>
+</div>
+<div class="label">Preset</div>
+<div class="field">
+  <select
+    id="settings-preset"
+    title="Select preset settings"
+    [ngModel]="settings.preset"
+    (change)="emitNumber(setPreset, $event)"
+  >
+    <option
+      label="Minimum"
+      title="Minimum belt and assembler, and no modules or beacons"
+      [value]="Preset.Minimum"
+    ></option>
+    <option
+      label="Modules"
+      title="Best belt and assembler with modules in factories, but no beacons"
+      [value]="Preset.Modules"
+    ></option>
+    <option
+      label="8 Beacons"
+      title="Best belt and assembler with modules in factories and 8 beacons per factory"
+      [value]="Preset.Beacon8"
+    ></option>
+    <option
+      label="12 Beacons"
+      title="Best belt and assembler with modules in factories and 12 beacons per factory"
+      [value]="Preset.Beacon12"
+    ></option>
+  </select>
 </div>
 <div class="label">Factories</div>
 <div class="field">
@@ -637,8 +637,8 @@
     [data]="data"
     [iconId]="ItemId.IronPlate"
     tooltip="Items precision"
-    [value]="columns[Column.Items].precision"
-    [default]="DefaultColumnSettings.precision"
+    [value]="columns.precision[Column.Items]"
+    [default]="DEFAULT_PRECISION"
     (setValue)="setPrecision.emit({ id: Column.Items, value: $event })"
   ></lab-precision>
 </div>
@@ -647,8 +647,8 @@
     [data]="data"
     [iconId]="ItemId.TransportBelt"
     tooltip="Belts precision"
-    [value]="columns[Column.Belts].precision"
-    [default]="DefaultColumnSettings.precision"
+    [value]="columns.precision[Column.Belts]"
+    [default]="DEFAULT_PRECISION"
     (setValue)="setPrecision.emit({ id: Column.Belts, value: $event })"
   ></lab-precision>
 </div>
@@ -657,8 +657,8 @@
     [data]="data"
     [iconId]="ItemId.CargoWagon"
     tooltip="Wagons precision"
-    [value]="columns[Column.Wagons].precision"
-    [default]="DefaultColumnSettings.precision"
+    [value]="columns.precision[Column.Wagons]"
+    [default]="DEFAULT_PRECISION"
     (setValue)="setPrecision.emit({ id: Column.Wagons, value: $event })"
   ></lab-precision>
 </div>
@@ -667,8 +667,8 @@
     [data]="data"
     [iconId]="ItemId.AssemblingMachine1"
     tooltip="Factories precision"
-    [value]="columns[Column.Factories].precision"
-    [default]="DefaultColumnSettings.precision"
+    [value]="columns.precision[Column.Factories]"
+    [default]="DEFAULT_PRECISION"
     (setValue)="setPrecision.emit({ id: Column.Factories, value: $event })"
   ></lab-precision>
 </div>
@@ -677,8 +677,8 @@
     [data]="data"
     [iconId]="ItemId.Substation"
     tooltip="Power precision"
-    [value]="columns[Column.Power].precision"
-    [default]="DefaultColumnSettings.precision"
+    [value]="columns.precision[Column.Power]"
+    [default]="DEFAULT_PRECISION"
     (setValue)="setPrecision.emit({ id: Column.Power, value: $event })"
   ></lab-precision>
 </div>
@@ -687,8 +687,8 @@
     [data]="data"
     [iconId]="ItemId.Steam"
     tooltip="Pollution precision"
-    [value]="columns[Column.Pollution].precision"
-    [default]="DefaultColumnSettings.precision"
+    [value]="columns.precision[Column.Pollution]"
+    [default]="DEFAULT_PRECISION"
     (setValue)="setPrecision.emit({ id: Column.Pollution, value: $event })"
   ></lab-precision>
 </div>

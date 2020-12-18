@@ -23,7 +23,6 @@ export const enum SettingsActionType {
   SET_RESEARCH_SPEED = '[Settings] Set Research Speed',
   SET_INSERTER_TARGET = '[Settings] Set Inserter Target',
   SET_INSERTER_CAPACITY = '[Settings] Set Inserter Capacity',
-  SET_COLUMNS = '[Settings] Set Columns',
 }
 
 export class SetPresetAction implements Action {
@@ -91,11 +90,6 @@ export class SetInserterCapacityAction implements Action {
   constructor(public payload: InserterCapacity) {}
 }
 
-export class SetColumnsAction implements Action {
-  readonly type = SettingsActionType.SET_COLUMNS;
-  constructor(public payload: string[]) {}
-}
-
 export type SettingsAction =
   | SetPresetAction
   | SetBaseAction
@@ -109,5 +103,4 @@ export type SettingsAction =
   | SetMiningBonusAction
   | SetResearchSpeedAction
   | SetInserterTargetAction
-  | SetInserterCapacityAction
-  | SetColumnsAction;
+  | SetInserterCapacityAction;

@@ -1,11 +1,16 @@
-import { ColumnSettings, ColumnSettingsField, Entities } from '~/models';
-import { StoreUtility } from '~/utilities';
+import { AllColumns, Entities } from '~/models';
 import { AppAction, AppActionType } from '../app.actions';
 import { ColumnsAction, ColumnsActionType } from './columns.actions';
 
-export type ColumnsState = Entities<ColumnSettings>;
+export type ColumnsState = {
+  ids: string[];
+  precision: Entities<number>;
+};
 
-export const initialColumnsState: ColumnsState = {};
+export const initialColumnsState: ColumnsState = {
+  ids: AllColumns,
+  precision: {},
+};
 
 export function columnsReducer(
   state: ColumnsState = initialColumnsState,
@@ -14,16 +19,18 @@ export function columnsReducer(
   switch (action.type) {
     case AppActionType.RESET:
       return initialColumnsState;
-    case ColumnsActionType.IGNORE:
-      return StoreUtility.assignValue(state, ColumnSettingsField.Ignore, {
-        id: action.payload,
-        value: !state[action.payload]?.ignore,
-      });
+    case ColumnsActionType.SET_COLUMNS:
+      return { ...state, ...{ ids: action.payload } };
     case ColumnsActionType.SET_PRECISION:
-      return StoreUtility.assignValue(state, ColumnSettingsField.Precision, {
-        id: action.payload.id,
-        value: action.payload.value,
-      });
+      return {
+        ...state,
+        ...{
+          precision: {
+            ...state.precision,
+            ...{ [action.payload.id]: action.payload.value },
+          },
+        },
+      };
     default:
       return state;
   }

@@ -19,13 +19,13 @@ import {
   InserterTarget,
   InserterCapacity,
   DefaultPayload,
-  ColumnSettings,
 } from '~/models';
 import { State } from '~/store';
-import { getColumns } from '~/store/columns';
-import { FactoriesState, getFactorySettings } from '~/store/factories';
+import * as Columns from '~/store/columns';
+import { ColumnsState } from '~/store/columns';
+import * as Factories from '~/store/factories';
 import * as Items from '~/store/items';
-import { getSteps } from '~/store/products';
+import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 import { ListComponent } from './list/list.component';
@@ -47,7 +47,7 @@ export class ListContainerComponent implements OnInit {
   itemSettings$: Observable<Items.ItemsState>;
   recipeSettings$: Observable<Recipes.RecipesState>;
   recipeRaw$: Observable<Recipes.RecipesState>;
-  factories$: Observable<FactoriesState>;
+  factories$: Observable<Factories.FactoriesState>;
   beltSpeed$: Observable<Entities<Rational>>;
   steps$: Observable<Step[]>;
   disabledRecipes$: Observable<string[]>;
@@ -58,7 +58,7 @@ export class ListContainerComponent implements OnInit {
   beaconCount$: Observable<number>;
   inserterTarget$: Observable<InserterTarget>;
   inserterCapacity$: Observable<InserterCapacity>;
-  columns$: Observable<Entities<ColumnSettings>>;
+  columns$: Observable<ColumnsState>;
   modifiedIgnore$: Observable<boolean>;
   modifiedBelt$: Observable<boolean>;
   modifiedFactory$: Observable<boolean>;
@@ -68,19 +68,19 @@ export class ListContainerComponent implements OnInit {
 
   ngOnInit() {
     if (!this.steps) {
-      this.steps$ = this.store.select(getSteps);
+      this.steps$ = this.store.select(Products.getSteps);
     }
     this.data$ = this.store.select(Recipes.getAdjustedDataset);
     this.itemSettings$ = this.store.select(Items.getItemSettings);
     this.recipeSettings$ = this.store.select(Recipes.getRecipeSettings);
     this.recipeRaw$ = this.store.select(Recipes.recipesState);
-    this.factories$ = this.store.select(getFactorySettings);
+    this.factories$ = this.store.select(Factories.getFactorySettings);
     this.beltSpeed$ = this.store.select(Settings.getBeltSpeed);
     this.disabledRecipes$ = this.store.select(Settings.getDisabledRecipes);
     this.displayRate$ = this.store.select(Settings.getDisplayRate);
     this.inserterTarget$ = this.store.select(Settings.getInserterTarget);
     this.inserterCapacity$ = this.store.select(Settings.getInserterCapacity);
-    this.columns$ = this.store.select(getColumns);
+    this.columns$ = this.store.select(Columns.getColumns);
     this.modifiedIgnore$ = this.store.select(Items.getContainsIgnore);
     this.modifiedBelt$ = this.store.select(Items.getContainsBelt);
     this.modifiedFactory$ = this.store.select(Recipes.getContainsFactory);
@@ -116,7 +116,7 @@ export class ListContainerComponent implements OnInit {
   }
 
   setColumns(value: string[]) {
-    this.store.dispatch(new Settings.SetColumnsAction(value));
+    this.store.dispatch(new Columns.SetColumnsAction(value));
   }
 
   resetItem(value: string) {

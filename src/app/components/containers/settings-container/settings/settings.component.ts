@@ -28,9 +28,9 @@ import {
   WARNING_RESET,
   InserterTarget,
   InserterCapacity,
-  DefaultColumnSettings,
   Column,
   DefaultIdPayload,
+  DEFAULT_PRECISION,
 } from '~/models';
 import { ColumnsState } from '~/store/columns';
 import { FactoriesState } from '~/store/factories';
@@ -118,9 +118,9 @@ export class SettingsComponent implements OnInit {
   sortedFuels: string[] = [];
   state = '';
   editState = false;
+  DEFAULT_PRECISION = DEFAULT_PRECISION;
 
   Column = Column;
-  DefaultColumnSettings = DefaultColumnSettings;
   DisplayRate = DisplayRate;
   FactoryEditType = FactoryEditType;
   InserterCapacity = InserterCapacity;
