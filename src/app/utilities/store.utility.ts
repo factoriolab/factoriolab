@@ -128,7 +128,7 @@ export class StoreUtility {
   ) {
     const def: DefaultIdPayload<P> = {
       ...payload,
-      ...{ default: payload.id ? state[''][field] : null },
+      ...{ default: payload.id ? state['']?.[field] : null },
     };
     return this.compareReset(state, field, def, rank);
   }

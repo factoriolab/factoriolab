@@ -58,6 +58,7 @@ button {
   border-color: var(--color-back);
   cursor: pointer;
   user-select: none;
+  padding: 0 0.25rem;
 
   &:not([disabled]):hover {
     background-color: var(--color-gray-1);
