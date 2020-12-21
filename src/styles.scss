@@ -1,13 +1,14 @@
 @import './styles/values';
 
-$font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-$font-family-monospace: 'Courier New', Courier, monospace;
+$font-family: 'titillium web', helvetica, arial, sans-serif;
+$font-family-monospace: inconsolata, 'courier new', courier, monospace;
 
 body {
   margin: 0;
   background-color: var(--color-back);
   color: var(--color-font);
   font-family: $font-family;
+  line-height: 1;
   overflow: hidden;
   box-sizing: border-box;
 

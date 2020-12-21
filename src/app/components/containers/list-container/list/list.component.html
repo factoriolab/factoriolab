@@ -1091,8 +1091,10 @@
       "
       class="border row col"
     >
-      <td [colSpan]="totalSpan" class="summary-label">
-        <span class="monospace">Total:</span>
+      <td [colSpan]="totalSpan">
+        <div class="flex summary-label">
+          <span class="monospace">Total:</span>
+        </div>
       </td>
       <td *ngIf="show[Column.Power]">
         <div class="flex">
