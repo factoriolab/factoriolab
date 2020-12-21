@@ -70,16 +70,12 @@ export class RankerComponent {
   }
 
   canAdd(id: string) {
-    if (!this.edited) {
+    if (!this.edited || id === ItemId.Module) {
       return true;
     }
 
     if (this.editValue.indexOf(id) !== -1) {
       return false;
-    }
-
-    if (id === ItemId.Module) {
-      return true;
     }
 
     const lim = this.data.itemEntities[id].module.limitation;
@@ -92,17 +88,17 @@ export class RankerComponent {
   }
 
   clickId(id: string, event: MouseEvent) {
-    if (this.canAdd(id)) {
+    if (id === ItemId.Module) {
+      this.commit.emit(this.editValue);
+      this.cancel.emit();
+    } else if (this.canAdd(id)) {
       if (!this.edited) {
         this.edited = true;
         this.editValue = [id];
       } else {
         this.editValue.push(id);
       }
-      if (
-        id === ItemId.Module ||
-        !this.data.itemEntities[id].module.limitation
-      ) {
+      if (!this.data.itemEntities[id].module.limitation) {
         this.commit.emit(this.editValue);
         this.cancel.emit();
       }

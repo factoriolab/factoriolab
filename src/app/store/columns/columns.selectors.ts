@@ -1,5 +1,5 @@
 import { createSelector } from '@ngrx/store';
-import { AllColumns, DEFAULT_PRECISION, Entities } from '~/models';
+import { Column, DEFAULT_PRECISION, Entities } from '~/models';
 import { State } from '..';
 import { ColumnsState } from './columns.reducer';
 
@@ -9,9 +9,10 @@ export const getColumns = createSelector(
   columnsState,
   (state): ColumnsState => {
     const ids = state.ids;
-    const precision: Entities<number> = AllColumns.reduce(
+    const precision: Entities<number> = Object.values(Column).reduce(
       (e: Entities<number>, c) => {
-        e[c] = state[c] != null ? state[c] : DEFAULT_PRECISION;
+        e[c] =
+          state.precision[c] != null ? state.precision[c] : DEFAULT_PRECISION;
         return e;
       },
       {}
