@@ -1,7 +1,7 @@
 @import './styles/values';
 
 $font-family: 'titillium web', helvetica, arial, sans-serif;
-$font-family-monospace: inconsolata, 'courier new', courier, monospace;
+$font-family-monospace: 'roboto mono', 'courier new', courier, monospace;
 
 body {
   margin: 0;
@@ -145,7 +145,7 @@ img.icon {
 
 .monospace {
   font-family: $font-family-monospace;
-  font-size: 0.875rem;
+  // font-size: 0.875rem;
   white-space: pre;
 }
 
