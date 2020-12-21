@@ -14,8 +14,8 @@ label {
   user-select: none;
 }
 
-.x-small {
-  font-size: x-small;
+.small {
+  font-size: small;
 }
 
 .option {
@@ -36,7 +36,7 @@ label {
 
 .label {
   font-weight: bold;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   padding: 0.5rem 0;
   color: var(--color-brand);
 }
@@ -52,7 +52,7 @@ lab-icon {
 .field {
   display: flex;
   align-items: center;
-  min-height: 2rem;
+  min-height: 2.5rem;
 
   > * + * {
     margin-left: 0.5rem;
