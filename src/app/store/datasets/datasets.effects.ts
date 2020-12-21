@@ -107,7 +107,9 @@ export class DatasetsEffects {
       this.requestData(id).subscribe((value) => {
         this.router.unzipping = true;
         this.loadModsForBase(value.defaults.modIds);
-        this.store.dispatch(new ResetAction(value.items[0].id));
+        if (!storedState?.productsState) {
+          this.store.dispatch(new ResetAction(value.items[0].id));
+        }
         this.store.dispatch(new LoadModAction({ id, value }));
         this.router.unzipping = false;
       });

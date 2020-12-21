@@ -50,5 +50,7 @@ export function mergeState(initial: State): State {
 }
 
 export function saveState(state: State): void {
+  const newState = { ...state };
+  delete newState.datasetsState;
   localStorage.setItem(STATE_KEY, JSON.stringify(state));
 }
