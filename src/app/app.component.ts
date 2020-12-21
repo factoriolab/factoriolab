@@ -64,7 +64,13 @@ export class AppComponent implements OnInit {
       .select(getZipState)
       .pipe(skip(1))
       .subscribe((s) => {
-        this.router.updateUrl(s.products, s.items, s.recipes, s.settings);
+        this.router.updateUrl(
+          s.products,
+          s.items,
+          s.recipes,
+          s.factories,
+          s.settings
+        );
       });
   }
 

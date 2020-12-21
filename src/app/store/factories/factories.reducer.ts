@@ -15,7 +15,7 @@ export type FactoriesState = {
 
 export const initialFactoriesState: FactoriesState = {
   ids: null,
-  entities: { '': {} },
+  entities: {},
 };
 
 export function factoriesReducer(

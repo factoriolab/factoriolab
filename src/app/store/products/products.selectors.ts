@@ -17,6 +17,7 @@ import {
   FlowUtility,
   RecipeUtility,
 } from '~/utilities';
+import * as Factories from '../factories';
 import * as Items from '../items';
 import * as Preferences from '../preferences';
 import * as Recipes from '../recipes';
@@ -135,7 +136,10 @@ export const getNormalizedRatesByFactories = createSelector(
   (products, productRecipes, data) =>
     products?.reduce((e: Entities<Rational>, p) => {
       const simpleRecipeId = data.itemRecipeIds[p.itemId];
-      if (simpleRecipeId && (p.recipeId == null || p.recipeId === simpleRecipeId)) {
+      if (
+        simpleRecipeId &&
+        (p.recipeId == null || p.recipeId === simpleRecipeId)
+      ) {
         const recipe = data.recipeR[simpleRecipeId];
         e[p.id] = p.rate
           .div(recipe.time)
@@ -250,11 +254,13 @@ export const getZipState = createSelector(
   productsState,
   Items.itemsState,
   Recipes.recipesState,
+  Factories.factoriesState,
   Settings.settingsState,
-  (products, items, recipes, settings) => ({
+  (products, items, recipes, factories, settings) => ({
     products,
     items,
     recipes,
+    factories,
     settings,
   })
 );

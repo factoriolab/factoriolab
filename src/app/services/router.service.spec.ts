@@ -455,21 +455,21 @@ describe('RouterService', () => {
 
   describe('zipTruthy', () => {
     it('should handle falsy', () => {
-      expect(service.zipTruthy(null)).toEqual('');
+      expect(service.zipTruthyString(null)).toEqual('');
     });
 
     it('should handle truthy', () => {
-      expect(service.zipTruthy('a')).toEqual('a');
+      expect(service.zipTruthyString('a')).toEqual('a');
     });
   });
 
   describe('zipTruthyNum', () => {
     it('should handle falsy', () => {
-      expect(service.zipTruthyNum(null)).toEqual('');
+      expect(service.zipTruthyNumber(null)).toEqual('');
     });
 
     it('should handle truthy', () => {
-      expect(service.zipTruthyNum(1)).toEqual('1');
+      expect(service.zipTruthyNumber(1)).toEqual('1');
     });
   });
 
@@ -503,29 +503,29 @@ describe('RouterService', () => {
 
   describe('zipDiff', () => {
     it('should handle default', () => {
-      expect(service.zipDiff('a', 'a')).toEqual('');
+      expect(service.zipDiffString('a', 'a')).toEqual('');
     });
 
     it('should handle falsy', () => {
-      expect(service.zipDiff(null, 'a')).toEqual(NULL);
+      expect(service.zipDiffString(null, 'a')).toEqual(NULL);
     });
 
     it('should handle truthy', () => {
-      expect(service.zipDiff('a', 'b')).toEqual('a');
+      expect(service.zipDiffString('a', 'b')).toEqual('a');
     });
   });
 
   describe('zipDiffNum', () => {
     it('should handle default', () => {
-      expect(service.zipDiffNum(0, 0)).toEqual('');
+      expect(service.zipDiffNumber(0, 0)).toEqual('');
     });
 
     it('should handle falsy', () => {
-      expect(service.zipDiffNum(null, 0)).toEqual(NULL);
+      expect(service.zipDiffNumber(null, 0)).toEqual(NULL);
     });
 
     it('should handle truthy', () => {
-      expect(service.zipDiffNum(0, 1)).toEqual('0');
+      expect(service.zipDiffNumber(0, 1)).toEqual('0');
     });
   });
 
