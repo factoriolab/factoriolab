@@ -119,7 +119,7 @@ describe('ProductsComponent', () => {
     spyOn(component, 'editRate');
     const event = { target: {} };
     component.child.emitNumber(
-      component.child.editRate,
+      component.child.setRate,
       Mocks.Product1.id,
       event as any
     );

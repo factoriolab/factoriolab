@@ -49,19 +49,19 @@ export class ProductsContainerComponent implements OnInit {
     this.store.dispatch(new Products.RemoveAction(id));
   }
 
-  editItem(data: IdPayload) {
-    this.store.dispatch(new Products.EditItemAction(data));
+  setItem(data: IdPayload) {
+    this.store.dispatch(new Products.SetItemAction(data));
   }
 
-  editRate(data: IdPayload<number>) {
-    this.store.dispatch(new Products.EditRateAction(data));
+  setRate(data: IdPayload<number>) {
+    this.store.dispatch(new Products.SetRateAction(data));
   }
 
-  editRateType(data: IdPayload<RateType>) {
-    this.store.dispatch(new Products.EditRateTypeAction(data));
+  setRateType(data: IdPayload<RateType>) {
+    this.store.dispatch(new Products.SetRateTypeAction(data));
   }
 
-  editRecipe(data: IdPayload) {
-    this.store.dispatch(new Products.EditRecipeAction(data));
+  setRecipe(data: IdPayload) {
+    this.store.dispatch(new Products.SetRecipeAction(data));
   }
 }

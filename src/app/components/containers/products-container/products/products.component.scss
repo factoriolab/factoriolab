@@ -3,32 +3,21 @@
 :host {
   display: flex;
   align-items: flex-start;
-  padding: 0.5rem 1rem;
 
-  > .add-button {
-    margin-top: 0.125rem;
-
-    > div {
-      margin-left: 0.25rem;
-      color: var(--color-brand);
-    }
+  > :first-child {
+    margin-right: 0.5rem;
   }
-
-  > * + * {
-    margin-left: 0.5rem;
-  }
-}
-
-.icon-container {
-  height: 36px;
-  width: 36px;
 }
 
 .product-row {
   display: flex;
   align-items: center;
 
+  + .product-row {
+    margin-top: 0.5rem;
+  }
+
   > * + * {
-    margin-left: 0.25rem;
+    margin-left: 0.5rem;
   }
 }

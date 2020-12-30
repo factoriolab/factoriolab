@@ -31,6 +31,7 @@ import {
 } from './components';
 import { reducers, metaReducers } from './store';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
+import { DialogComponent } from './components/dialog/dialog.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { DatasetsEffects } from './store/datasets/datasets.effects';
     SettingsContainerComponent,
     PrecisionComponent,
     SankeyComponent,
+    DialogComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,43 +1,61 @@
 $color-white: #fff;
-$color-gray-0: #bbb;
-$color-gray-1: #333;
-$color-gray-2: #2a2a2a;
+$color-button: #8e8e8e;
+$color-dark: #242324;
+$color-back: #313031;
+$color-light: #403f40;
 $color-black: #000;
 
-$color-brand: #ff7200;
-$color-back: #171717;
-$color-font: #c8c8c8;
-$color-invalid: #dd0000;
-$color-valid: #009900;
+$color-link: #7dcaed;
+$color-link-alt: #9ad1ea;
+$color-input: #828282;
+$color-input-alt: #f0dab4;
+$color-brand: #fca000;
+$color-brand-alt: #f1be64;
+$color-brand-drk: #b26e00;
+$color-header: #ffe6c0;
+$color-green: #5eb663;
+$color-red: #fe5a5a;
 
 .dark-mode {
   --color-white: #{$color-white};
-  --color-gray-0: #{$color-gray-0};
-  --color-gray-1: #{$color-gray-1};
-  --color-gray-2: #{$color-gray-2};
+  --color-button: #{$color-button};
+  --color-dark: #{$color-dark};
+  --color-back: #{$color-back};
+  --color-light: #{$color-light};
   --color-black: #{$color-black};
 
+  --color-link: #{$color-link};
+  --color-link-alt: #{$color-link-alt};
+  --color-input: #{$color-input};
+  --color-input-alt: #{$color-input-alt};
   --color-brand: #{$color-brand};
-  --color-back: #{$color-back};
-  --color-font: #{$color-font};
-  --color-invalid: #{$color-invalid};
-  --color-valid: #{$color-valid};
+  --color-brand-alt: #{$color-brand-alt};
+  --color-brand-drk: #{$color-brand-drk};
+  --color-header: #{$color-header};
+  --color-green: #{$color-green};
+  --color-red: #{$color-red};
 
   --module-icon-filter: none;
 }
 
 .light-mode {
-  --color-white: #{invert($color-white)};
-  --color-gray-0: #{invert($color-gray-0)};
-  --color-gray-1: #d5d5d5;
-  --color-gray-2: #e8e8e8;
-  --color-black: #{invert($color-black)};
+  --color-white: #{$color-white};
+  --color-button: #{$color-button};
+  --color-dark: #{$color-dark};
+  --color-back: #{$color-back};
+  --color-light: #{$color-light};
+  --color-black: #{$color-black};
 
+  --color-link: #{$color-link};
+  --color-link-alt: #{$color-link-alt};
+  --color-input: #{$color-input};
+  --color-input-alt: #{$color-input-alt};
   --color-brand: #{$color-brand};
-  --color-back: #fff;
-  --color-font: #{invert($color-white)};
-  --color-invalid: #{$color-invalid};
-  --color-valid: #{$color-valid};
+  --color-brand-alt: #{$color-brand-alt};
+  --color-brand-drk: #{$color-brand-drk};
+  --color-header: #{$color-header};
+  --color-green: #{$color-green};
+  --color-red: #{$color-red};
 
   --module-icon-filter: invert(100%);
 }

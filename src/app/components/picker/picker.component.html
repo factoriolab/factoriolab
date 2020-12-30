@@ -1,30 +1,43 @@
-<div #tabsScroll class="tabs">
-  <ng-container *ngFor="let id of data.categoryIds">
-    <lab-icon
-      *ngIf="data.categoryEntities[id] as category"
-      [scale]="false"
-      [iconId]="id"
-      [scrollLeft]="tabsScroll.scrollLeft"
-      [tooltip]="category.name"
-      [class.selected]="id === categoryId"
-      [data]="data"
-      (click)="selectTab.emit(id)"
-    ></lab-icon>
-  </ng-container>
+<div (click)="open = true">
+  <ng-content></ng-content>
 </div>
-<div #tabScroll class="tab">
-  <div class="row" *ngFor="let row of data.categoryItemRows[categoryId]">
-    <div class="item" *ngFor="let id of row">
-      <lab-icon
-        class="clickable"
-        [iconId]="id"
-        [scrollTop]="tabScroll.scrollTop"
-        [tooltip]="data.itemEntities[id].name"
-        [recipe]="data.recipeEntities[data.itemRecipeIds[id]]"
-        [class.selected]="id === itemId"
-        [data]="data"
-        (click)="clickItem(id)"
-      ></lab-icon>
+<div class="dialog panel" *ngIf="open">
+  <div class="dialog-title">
+    <div class="header">Select an item to produce</div>
+    <div class="spacer"></div>
+    <div class="panel">
+      <button (click)="open = false">
+        <i class="material-icons">close</i>
+      </button>
+    </div>
+  </div>
+  <div class="panel">
+    <div #tabsScroll class="tabs">
+      <ng-container *ngFor="let id of data.categoryIds">
+        <lab-icon
+          *ngIf="data.categoryEntities[id] as category"
+          [scale]="false"
+          [iconId]="id"
+          [scrollLeft]="tabsScroll.scrollLeft"
+          [tooltip]="category.name"
+          [class.selected]="id === tab"
+          [data]="data"
+          (click)="tab = id"
+        ></lab-icon>
+      </ng-container>
+    </div>
+    <div #tabScroll class="tab panel dark">
+      <div class="row" *ngFor="let row of data.categoryItemRows[tab]">
+        <lab-icon
+          *ngFor="let id of row"
+          [iconId]="id"
+          [scrollTop]="tabScroll.scrollTop"
+          [tooltip]="data.itemEntities[id].name"
+          [recipe]="data.recipeEntities[data.itemRecipeIds[id]]"
+          [data]="data"
+          (click)="clickItem(id)"
+        ></lab-icon>
+      </div>
     </div>
   </div>
 </div>

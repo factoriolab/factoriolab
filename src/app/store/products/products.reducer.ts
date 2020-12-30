@@ -69,25 +69,25 @@ export function productsReducer(
         },
       };
     }
-    case ProductsActionType.EDIT_ITEM:
+    case ProductsActionType.SET_ITEM:
       return StoreUtility.setEntityValue(
         state,
         ProductField.ItemId,
         action.payload
       );
-    case ProductsActionType.EDIT_RATE:
+    case ProductsActionType.SET_RATE:
       return StoreUtility.setEntityValue(
         state,
         ProductField.Rate,
         action.payload
       );
-    case ProductsActionType.EDIT_RATE_TYPE:
+    case ProductsActionType.SET_RATE_TYPE:
       return StoreUtility.setEntityValue(
         state,
         ProductField.RateType,
         action.payload
       );
-    case ProductsActionType.EDIT_RECIPE:
+    case ProductsActionType.SET_RECIPE:
       return StoreUtility.setEntityValue(
         state,
         ProductField.RecipeId,

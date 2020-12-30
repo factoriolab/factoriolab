@@ -4,6 +4,7 @@ import {
   Output,
   Input,
   ChangeDetectionStrategy,
+  HostBinding,
 } from '@angular/core';
 
 import {
@@ -33,42 +34,28 @@ export interface ProductEdit {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsComponent {
-  _data: Dataset;
-  get data() {
-    return this._data;
-  }
-  @Input() set data(value: Dataset) {
-    this._data = value;
-    if (!this.categoryId) {
-      this.categoryId = value.categoryIds[0];
-    }
-  }
+  @Input() data: Dataset;
   @Input() productRecipes: Entities<[string, Rational][]>;
   @Input() products: Product[];
 
   @Output() add = new EventEmitter<string>();
   @Output() remove = new EventEmitter<string>();
-  @Output() editItem = new EventEmitter<IdPayload>();
-  @Output() editRate = new EventEmitter<IdPayload<number>>();
-  @Output() editRateType = new EventEmitter<IdPayload<RateType>>();
-  @Output() editRecipe = new EventEmitter<IdPayload>();
+  @Output() setItem = new EventEmitter<IdPayload>();
+  @Output() setRate = new EventEmitter<IdPayload<number>>();
+  @Output() setRateType = new EventEmitter<IdPayload<RateType>>();
+  @Output() setRecipe = new EventEmitter<IdPayload>();
 
-  adding: boolean;
   edit: ProductEdit;
-  categoryId: string;
 
   RateType = RateType;
   ProductEditType = ProductEditType;
+
+  @HostBinding('class.panel') panel = true;
 
   constructor() {}
 
   trackBy(product: Product) {
     return product.id;
-  }
-
-  clickEditProduct(product: Product) {
-    this.edit = { product, type: ProductEditType.Product };
-    this.categoryId = this.data.itemEntities[product.itemId].category;
   }
 
   commitEditProduct(product: Product, itemId: string) {
@@ -77,10 +64,10 @@ export class ProductsComponent {
       !this.data.itemRecipeIds[itemId]
     ) {
       // Reset rate type to items
-      this.editRateType.emit({ id: product.id, value: RateType.Items });
+      this.setRateType.emit({ id: product.id, value: RateType.Items });
     }
 
-    this.editItem.emit({ id: product.id, value: itemId });
+    this.setItem.emit({ id: product.id, value: itemId });
   }
 
   emitNumber(emitter: EventEmitter<IdPayload<number>>, id: string, event: any) {

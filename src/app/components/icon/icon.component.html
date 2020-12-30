@@ -18,10 +18,10 @@
   *ngIf="hover && (recipe || item || tooltip)"
   [style.marginTop.px]="tooltipMarginTop"
   [style.marginLeft.px]="-scrollLeft"
-  class="tooltip"
+  class="tooltip panel dark"
   (mouseenter)="hover = false"
 >
-  <div *ngIf="tooltip" class="title nowrap">
+  <div *ngIf="tooltip" class="header nowrap">
     {{ tooltip }}
   </div>
   <div *ngIf="recipe" class="flex">

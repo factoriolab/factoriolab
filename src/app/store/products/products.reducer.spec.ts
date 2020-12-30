@@ -42,7 +42,7 @@ describe('Products Reducer', () => {
     it('should commit edit on a product', () => {
       const result = productsReducer(
         state,
-        new Actions.EditItemAction({
+        new Actions.SetItemAction({
           id: Mocks.Product1.id,
           value: Mocks.Product2.itemId,
         })
@@ -58,7 +58,7 @@ describe('Products Reducer', () => {
       const value = 3;
       const result = productsReducer(
         state,
-        new Actions.EditRateAction({ id: Mocks.Product1.id, value })
+        new Actions.SetRateAction({ id: Mocks.Product1.id, value })
       );
       expect(result.entities[Mocks.Product1.id].rate).toEqual(value);
     });
@@ -69,7 +69,7 @@ describe('Products Reducer', () => {
       const value = RateType.Wagons;
       const result = productsReducer(
         state,
-        new Actions.EditRateTypeAction({ id: Mocks.Product1.id, value })
+        new Actions.SetRateTypeAction({ id: Mocks.Product1.id, value })
       );
       expect(result.entities[Mocks.Product1.id].rateType).toEqual(value);
     });
@@ -80,7 +80,7 @@ describe('Products Reducer', () => {
       const value = RecipeId.AdvancedOilProcessing;
       const result = productsReducer(
         state,
-        new Actions.EditRecipeAction({ id: Mocks.Product1.id, value })
+        new Actions.SetRecipeAction({ id: Mocks.Product1.id, value })
       );
       expect(result.entities[Mocks.Product1.id].recipeId).toEqual(value);
     });

@@ -57,27 +57,27 @@ describe('ProductsContainerComponent', () => {
   it('should commit edit on a product', () => {
     spyOn(store, 'dispatch');
     const data = { id: Mocks.Product1.id, value: Mocks.Item2.id };
-    component.child.editItem.emit(data);
+    component.child.setItem.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.EditItemAction(data)
+      new Products.SetItemAction(data)
     );
   });
 
   it('should edit rate on a product', () => {
     spyOn(store, 'dispatch');
     const data = { id: Mocks.Product1.id, value: 2 };
-    component.child.editRate.emit(data);
+    component.child.setRate.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.EditRateAction(data)
+      new Products.SetRateAction(data)
     );
   });
 
   it('should edit rate type on a product', () => {
     spyOn(store, 'dispatch');
     const data = { id: Mocks.Product1.id, value: RateType.Wagons };
-    component.child.editRateType.emit(data);
+    component.child.setRateType.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.EditRateTypeAction(data)
+      new Products.SetRateTypeAction(data)
     );
   });
 
@@ -87,9 +87,9 @@ describe('ProductsContainerComponent', () => {
       id: Mocks.Product1.id,
       value: RecipeId.AdvancedOilProcessing,
     };
-    component.child.editRecipe.emit(data);
+    component.child.setRecipe.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.EditRecipeAction(data)
+      new Products.SetRecipeAction(data)
     );
   });
 });

@@ -31,18 +31,15 @@ img.shadow {
 
 .tooltip {
   position: absolute;
-  background-color: var(--color-gray-1);
-  border-radius: 0.25rem;
-  border: 1px solid var(--color-brand);
+  background-color: var(--color-dark);
+  opacity: 0.95;
   padding: 0.5rem;
   user-select: none;
   cursor: default;
-
+  box-shadow: inset 4px 0 2px -4px #000, inset -4px 0 2px -4px #000,
+    inset 0 5px 1px -4px #e3e3e3, inset 0 5px 1px -4px #282828,
+    inset 0 -5px 1px -4px #000, 0 0 2px 0 #000;
   z-index: 1;
-
-  .title {
-    font-weight: bold;
-  }
 
   .nowrap {
     white-space: nowrap;

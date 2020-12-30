@@ -1,72 +1,49 @@
-<div class="flex add-button relative">
-  <button
-    type="button"
-    class="icon"
-    title="Add Product"
-    (click)="adding = true"
-  >
-    <i class="material-icons">add</i>
-  </button>
+<div class="flex relative">
   <lab-picker
-    *ngIf="adding"
     [data]="data"
-    [categoryId]="categoryId"
     [itemId]="data.itemIds[0]"
-    (cancel)="adding = false"
-    (selectTab)="categoryId = $event"
     (selectItem)="add.emit($event)"
-  ></lab-picker>
-  <div *ngIf="!products?.length" class="flex">
-    <i class="material-icons">arrow_back</i>Click to add a product
-  </div>
+  >
+    <button title="Add product">
+      <i class="material-icons">add</i>
+      <div class="text" *ngIf="!products?.length">Click to add a product</div>
+    </button></lab-picker
+  >
 </div>
 <div *ngIf="products && products.length">
   <div class="product-row" *ngFor="let product of products; trackBy: trackBy">
     <ng-container *ngIf="product && data.itemEntities[product.itemId]">
-      <button
-        type="button"
-        class="icon"
-        title="Remove Product"
-        (click)="remove.emit(product.id)"
-      >
+      <button title="Remove product" (click)="remove.emit(product.id)">
         <i class="material-icons">remove</i>
       </button>
-      <div class="icon-container">
-        <div class="relative">
+      <div class="relative">
+        <lab-picker
+          [data]="data"
+          [itemId]="product.itemId"
+          (selectItem)="commitEditProduct(product, $event)"
+        >
           <lab-icon
-            class="clickable"
-            title="Change Product"
+            class="button"
+            title="Change product"
+            hoverIcon="settings"
             [iconId]="product.itemId"
             [data]="data"
-            (click)="clickEditProduct(product)"
-          ></lab-icon>
-          <lab-picker
-            *ngIf="
-              edit &&
-              edit.product === product &&
-              edit.type === ProductEditType.Product
-            "
-            [data]="data"
-            [categoryId]="categoryId"
-            [itemId]="product.itemId"
-            (cancel)="edit = null"
-            (selectTab)="categoryId = $event"
-            (selectItem)="commitEditProduct(product, $event)"
-          ></lab-picker>
-        </div>
+          ></lab-icon
+        ></lab-picker>
       </div>
       <input
         type="number"
         min="0"
         step="any"
-        title="Set Output Rate"
+        title="Set output rate"
+        placeholder="Rate"
         [value]="product.rate"
-        (change)="emitNumber(editRate, product.id, $event)"
+        (change)="emitNumber(setRate, product.id, $event)"
       />
       <select
         title="Set Rate Type"
         [ngModel]="product.rateType"
-        (change)="emitNumber(editRateType, product.id, $event)"
+        (change)="emitNumber(setRateType, product.id, $event)"
       >
         <option label="Items" [value]="RateType.Items"></option>
         <option label="Belts" [value]="RateType.Belts"></option>
@@ -116,9 +93,7 @@
                   [options]="getOptions(product)"
                   [data]="data"
                   (cancel)="edit = null"
-                  (selectId)="
-                    editRecipe.emit({ id: product.id, value: $event })
-                  "
+                  (selectId)="setRecipe.emit({ id: product.id, value: $event })"
                 >
                 </lab-select>
               </div>
