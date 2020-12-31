@@ -16,7 +16,7 @@ $color-header: #ffe6c0;
 $color-green: #5eb663;
 $color-red: #fe5a5a;
 
-.dark-mode {
+body {
   --color-white: #{$color-white};
   --color-button: #{$color-button};
   --color-dark: #{$color-dark};
@@ -36,26 +36,4 @@ $color-red: #fe5a5a;
   --color-red: #{$color-red};
 
   --module-icon-filter: none;
-}
-
-.light-mode {
-  --color-white: #{$color-white};
-  --color-button: #{$color-button};
-  --color-dark: #{$color-dark};
-  --color-back: #{$color-back};
-  --color-light: #{$color-light};
-  --color-black: #{$color-black};
-
-  --color-link: #{$color-link};
-  --color-link-alt: #{$color-link-alt};
-  --color-input: #{$color-input};
-  --color-input-alt: #{$color-input-alt};
-  --color-brand: #{$color-brand};
-  --color-brand-alt: #{$color-brand-alt};
-  --color-brand-drk: #{$color-brand-drk};
-  --color-header: #{$color-header};
-  --color-green: #{$color-green};
-  --color-red: #{$color-red};
-
-  --module-icon-filter: invert(100%);
 }

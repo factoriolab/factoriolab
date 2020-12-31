@@ -729,18 +729,4 @@
       </select>
     </td>
   </tr>
-  <tr>
-    <td>Theme:</td>
-    <td>
-      <select
-        id="settings-theme-select"
-        title="Choose color theme"
-        [ngModel]="preferences.theme"
-        (change)="emitString(setTheme, $event)"
-      >
-        <option label="Dark Mode" [value]="Theme.DarkMode"></option>
-        <option label="Light Mode" [value]="Theme.LightMode"></option>
-      </select>
-    </td>
-  </tr>
 </table>

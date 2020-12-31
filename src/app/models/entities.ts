@@ -1,4 +1,4 @@
-export type Entities<T> = Record<string, T>;
+export type Entities<T = string> = Record<string, T>;
 
 export function toEntities<T extends { id: string }>(
   value: T[],

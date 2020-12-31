@@ -16,7 +16,6 @@ import {
   ProductsContainerComponent,
   SettingsComponent,
   SettingsContainerComponent,
-  HeaderComponent,
   IconComponent,
   PickerComponent,
   SelectComponent,
@@ -28,15 +27,14 @@ import {
   MultiselectComponent,
   PrecisionComponent,
   SankeyComponent,
+  OptionsComponent,
 } from './components';
 import { reducers, metaReducers } from './store';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
-import { DialogComponent } from './components/dialog/dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
     IconComponent,
     MultiselectComponent,
     PickerComponent,
@@ -52,7 +50,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
     SettingsContainerComponent,
     PrecisionComponent,
     SankeyComponent,
-    DialogComponent,
+    OptionsComponent,
   ],
   imports: [
     BrowserModule,

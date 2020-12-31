@@ -42,7 +42,7 @@ export class PickerComponent extends DialogComponent {
     super(element);
   }
 
-  setTab() {
+  setTab(): void {
     if (this.data) {
       if (this.itemId) {
         this.tab = this.data.itemEntities[this.itemId].category;
@@ -52,7 +52,7 @@ export class PickerComponent extends DialogComponent {
     }
   }
 
-  clickItem(id: string) {
+  clickItem(id: string): void {
     this.selectItem.emit(id);
     this.open = false;
   }

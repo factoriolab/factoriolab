@@ -1,11 +1,13 @@
 @import 'values';
 
 :host {
-  display: flex;
-  align-items: flex-start;
+  > .panel {
+    display: flex;
+    align-items: flex-start;
 
-  > :first-child {
-    margin-right: 0.5rem;
+    > :first-child {
+      margin-right: 0.5rem;
+    }
   }
 }
 

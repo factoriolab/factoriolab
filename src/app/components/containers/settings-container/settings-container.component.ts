@@ -14,7 +14,6 @@ import { Observable } from 'rxjs';
 import {
   DisplayRate,
   ResearchSpeed,
-  Theme,
   Dataset,
   ModInfo,
   DefaultPayload,
@@ -192,10 +191,6 @@ export class SettingsContainerComponent implements OnInit {
 
   setLinkValue(value: LinkValue) {
     this.store.dispatch(new Preferences.SetLinkValueAction(value));
-  }
-
-  setTheme(value: Theme) {
-    this.store.dispatch(new Preferences.SetThemeAction(value));
   }
 
   reset() {

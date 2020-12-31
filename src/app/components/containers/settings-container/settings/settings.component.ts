@@ -16,7 +16,6 @@ import {
   DisplayRate,
   ResearchSpeed,
   IdType,
-  Theme,
   Dataset,
   ModInfo,
   DefaultPayload,
@@ -109,7 +108,6 @@ export class SettingsComponent implements OnInit {
   @Output() setInserterCapacity = new EventEmitter<InserterCapacity>();
   @Output() setSort = new EventEmitter<Sort>();
   @Output() setLinkValue = new EventEmitter<LinkValue>();
-  @Output() setTheme = new EventEmitter<Theme>();
   @Output() reset = new EventEmitter();
 
   openSelect: OpenSelect;
@@ -132,7 +130,6 @@ export class SettingsComponent implements OnInit {
   ResearchSpeed = ResearchSpeed;
   SelectType = IdType;
   Sort = Sort;
-  Theme = Theme;
 
   get hash() {
     return location.hash.substr(1);

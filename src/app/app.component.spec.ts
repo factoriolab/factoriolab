@@ -82,10 +82,10 @@ describe('AppComponent', () => {
 
   describe('toggleSettings', () => {
     it('should toggle settings open when clicked', () => {
-      component.settingsOpen = false;
+      component.showSettings = false;
       fixture.detectChanges();
       TestUtility.clickId(fixture, ElementId.HeaderSettings);
-      expect(component.settingsOpen).toBe(true);
+      expect(component.showSettings).toBe(true);
     });
   });
 

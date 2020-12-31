@@ -4,7 +4,6 @@ import {
   Output,
   Input,
   ChangeDetectionStrategy,
-  HostBinding,
 } from '@angular/core';
 
 import {
@@ -14,6 +13,7 @@ import {
   Dataset,
   Rational,
   Entities,
+  RateTypeOptions,
 } from '~/models';
 import { RecipeUtility } from '~/utilities';
 
@@ -48,9 +48,8 @@ export class ProductsComponent {
   edit: ProductEdit;
 
   RateType = RateType;
+  RateTypeOptions = RateTypeOptions;
   ProductEditType = ProductEditType;
-
-  @HostBinding('class.panel') panel = true;
 
   constructor() {}
 

@@ -1,4 +1,4 @@
-import { Entities, LinkValue, Sort, Theme } from '~/models';
+import { Entities, LinkValue, Sort } from '~/models';
 import { AppAction, AppActionType } from '../app.actions';
 import {
   PreferencesAction,
@@ -9,16 +9,12 @@ export interface PreferencesState {
   states: Entities<string>;
   sort?: Sort;
   linkValue?: LinkValue;
-  theme?: Theme;
-  showHeader?: boolean;
 }
 
 export const initialPreferencesState: PreferencesState = {
   states: {},
   sort: Sort.DepthFirst,
   linkValue: LinkValue.Items,
-  theme: Theme.DarkMode,
-  showHeader: true,
 };
 
 export function preferencesReducer(
@@ -44,12 +40,6 @@ export function preferencesReducer(
       return { ...state, ...{ sort: action.payload } };
     case PreferencesActionType.SET_LINK_VALUE:
       return { ...state, ...{ linkValue: action.payload } };
-    case PreferencesActionType.SET_THEME:
-      return { ...state, ...{ theme: action.payload } };
-    case PreferencesActionType.SHOW_HEADER:
-      return { ...state, ...{ showHeader: true } };
-    case PreferencesActionType.HIDE_HEADER:
-      return { ...state, ...{ showHeader: false } };
     default:
       return state;
   }
