@@ -1087,7 +1087,7 @@
     </ng-container>
     <tr
       *ngIf="
-        mode === ListMode.All && (!show[Column.Power] || show[Column.Pollution])
+        mode === ListMode.All && (show[Column.Power] || show[Column.Pollution])
       "
       class="border row col"
     >
