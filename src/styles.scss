@@ -75,6 +75,7 @@ button,
   font-size: inherit;
   line-height: 1;
   padding: 0.125rem;
+  text-decoration: none;
 
   & > .material-icons {
     width: 1.5rem;
@@ -93,6 +94,11 @@ button,
 
   &[lab-icon] {
     margin: 0.125rem;
+  }
+
+  &.module {
+    box-shadow: var(--shadow-button-sm);
+    background-color: var(--color-dark);
   }
 
   &:hover {
@@ -152,7 +158,7 @@ input[type='text'] {
   box-shadow: var(--shadow-input);
 
   &.beacon {
-    width: 3rem;
+    width: 3.5rem;
   }
 
   &:focus,
@@ -161,7 +167,7 @@ input[type='text'] {
   }
 }
 
-a {
+a:not(.button) {
   color: var(--color-link);
   text-decoration: none;
 

@@ -106,6 +106,7 @@ tr.details {
       justify-content: flex-start;
       flex-wrap: wrap;
       margin-top: 0.25rem;
+      background: url(~/src/assets/tile.png);
 
       > * {
         margin-left: 0;
@@ -134,6 +135,10 @@ th > div {
 td > div {
   justify-content: flex-end;
 
+  &.links {
+    justify-content: flex-start;
+  }
+
   &.mod,
   > .mod {
     justify-content: flex-start;
@@ -160,10 +165,6 @@ td > div {
   }
 }
 
-a {
-  color: var(--color-font);
-}
-
 .summary-label {
   text-align: right;
 }
@@ -173,7 +174,7 @@ td.nowrap {
 }
 
 .recipe {
-  margin-left: -0.25rem;
+  margin-left: -0.5rem;
   padding: 0;
 }
 
@@ -208,4 +209,8 @@ tr {
 
 .recipe-spacer {
   width: 1.75rem;
+}
+
+lab-icon:not(.button) {
+  padding: 0.125rem;
 }

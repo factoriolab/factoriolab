@@ -247,32 +247,22 @@
                     ></lab-icon>
                   </ng-template>
                   <ng-template #factoryPicker>
-                    <div class="relative">
+                    <lab-select
+                      header="Select a factory"
+                      [data]="data"
+                      [selected]="factory"
+                      [options]="recipe.producers"
+                      (selectId)="factoryChange(step, $event)"
+                    >
                       <lab-icon
-                        class="list-edit-factory clickable"
+                        class="button"
                         title="Click to change factory"
+                        [data]="data"
                         [iconId]="factory"
                         [tooltip]="data.itemEntities[factory].name"
                         [item]="data.itemEntities[factory]"
-                        [data]="data"
-                        (click)="
-                          edit = { step: step, type: StepEditType.Factory }
-                        "
                       ></lab-icon>
-                      <!-- <lab-select
-                        *ngIf="
-                          edit &&
-                          edit.step === step &&
-                          edit.type === StepEditType.Factory
-                        "
-                        [data]="data"
-                        [selectedId]="factory"
-                        [options]="recipe.producers"
-                        (cancel)="edit = null"
-                        (selectId)="factoryChange(step, $event)"
-                      >
-                      </lab-select> -->
-                    </div>
+                    </lab-select>
                   </ng-template>
                 </ng-container>
               </div>
@@ -282,10 +272,10 @@
                 <lab-icon
                   *ngIf="step.recipeId && step.recipeId !== step.itemId"
                   class="recipe"
+                  [data]="data"
                   [iconId]="step.recipeId"
                   [tooltip]="data.recipeEntities[step.recipeId].name"
                   [recipe]="data.recipeEntities[step.recipeId]"
-                  [data]="data"
                 ></lab-icon>
                 <div
                   *ngIf="
@@ -293,38 +283,24 @@
                   "
                   class="flex mod"
                 >
-                  <div class="relative" *ngFor="let mod of modules; index as i">
+                  <lab-select
+                    *ngFor="let mod of modules; index as i"
+                    header="Select a module"
+                    [data]="data"
+                    [selected]="mod"
+                    [options]="data.recipeModuleIds[step.recipeId]"
+                    includeEmptyModule="true"
+                    (selectId)="factoryModuleChange(step, $event, i)"
+                  >
                     <lab-icon
-                      class="list-edit-factory-module clickable"
+                      class="button module"
+                      [data]="data"
                       title="Click to change factory module"
                       [iconId]="mod"
                       [tooltip]="data.itemEntities[mod]?.name"
                       [item]="data.itemEntities[mod]"
-                      [data]="data"
-                      (click)="
-                        edit = {
-                          step: step,
-                          type: StepEditType.FactoryModule,
-                          index: i
-                        }
-                      "
                     ></lab-icon>
-                    <!-- <lab-select
-                      *ngIf="
-                        edit &&
-                        edit.step === step &&
-                        edit.type === StepEditType.FactoryModule &&
-                        edit.index === i
-                      "
-                      [data]="data"
-                      [selectedId]="mod"
-                      [options]="data.recipeModuleIds[step.recipeId]"
-                      includeEmptyModule="true"
-                      (cancel)="edit = null"
-                      (selectId)="factoryModuleChange(step, $event, i)"
-                    >
-                    </lab-select> -->
-                  </div>
+                  </lab-select>
                 </div>
               </div>
             </td>
@@ -364,38 +340,28 @@
                     ></lab-icon>
                   </ng-template>
                   <ng-template #beaconPicker>
-                    <div class="relative">
+                    <lab-select
+                      header="Select a beacon"
+                      [data]="data"
+                      [selected]="beacon"
+                      [options]="data.beaconIds"
+                      (selectId)="
+                        setBeacon.emit({
+                          id: step.itemId,
+                          value: $event,
+                          default: beacon
+                        })
+                      "
+                    >
                       <lab-icon
-                        class="clickable"
+                        class="button"
                         title="Click to change beacon"
+                        [data]="data"
                         [iconId]="beacon"
                         [tooltip]="data.itemEntities[beacon].name"
                         [item]="data.itemEntities[beacon]"
-                        [data]="data"
-                        (click)="
-                          edit = { step: step, type: StepEditType.Beacon }
-                        "
                       ></lab-icon>
-                      <!-- <lab-select
-                        *ngIf="
-                          edit &&
-                          edit.step === step &&
-                          edit.type === StepEditType.Beacon
-                        "
-                        [data]="data"
-                        [selectedId]="beacon"
-                        [options]="data.beaconIds"
-                        (cancel)="edit = null"
-                        (selectId)="
-                          setBeacon.emit({
-                            id: step.itemId,
-                            value: $event,
-                            default: beacon
-                          })
-                        "
-                      >
-                      </lab-select> -->
-                    </div>
+                    </lab-select>
                   </ng-template>
                 </ng-container>
               </div>
@@ -408,38 +374,24 @@
                   "
                   class="flex mod"
                 >
-                  <div class="relative" *ngFor="let mod of modules; index as i">
+                  <lab-select
+                    *ngFor="let mod of modules; index as i"
+                    header="Select a module"
+                    [data]="data"
+                    [selected]="mod"
+                    [options]="data.beaconModuleIds"
+                    includeEmptyModule="true"
+                    (selectId)="beaconModuleChange(step, $event, i)"
+                  >
                     <lab-icon
-                      class="list-edit-beacon-module clickable"
+                      class="button module"
                       title="Click to change beacon module"
+                      [data]="data"
                       [iconId]="mod"
                       [tooltip]="data.itemEntities[mod]?.name"
                       [item]="data.itemEntities[mod]"
-                      [data]="data"
-                      (click)="
-                        edit = {
-                          step: step,
-                          type: StepEditType.BeaconModule,
-                          index: i
-                        }
-                      "
                     ></lab-icon>
-                    <!-- <lab-select
-                      *ngIf="
-                        edit &&
-                        edit.step === step &&
-                        edit.type === StepEditType.BeaconModule &&
-                        edit.index === i
-                      "
-                      [data]="data"
-                      [selectedId]="mod"
-                      [options]="data.beaconModuleIds"
-                      includeEmptyModule="true"
-                      (cancel)="edit = null"
-                      (selectId)="beaconModuleChange(step, $event, i)"
-                    >
-                    </lab-select> -->
-                  </div>
+                  </lab-select>
                 </div>
               </ng-container>
             </td>
@@ -459,21 +411,24 @@
           </div>
         </td>
         <td class="nowrap" *ngIf="show[Column.Link]">
-          <a
-            *ngIf="step.items"
-            title="Click to open this step in a new tab"
-            [href]="router.stepHref(step)"
-            target="_blank"
-          >
-            <i class="clickable material-icons">open_in_new</i>
-          </a>
-          <i
-            *ngIf="recipeRaw[step.recipeId]"
-            title="Undo modifications to this step"
-            class="clickable material-icons list-step-reset"
-            (click)="resetStep(step)"
-            >undo</i
-          >
+          <div class="flex links">
+            <a
+              *ngIf="step.items"
+              class="button"
+              title="Click to open this step in a new tab"
+              [href]="router.stepHref(step)"
+              target="_blank"
+            >
+              <i class="clickable material-icons">open_in_new</i>
+            </a>
+            <button
+              *ngIf="recipeRaw[step.recipeId]"
+              title="Undo modifications to this step"
+              (click)="resetStep(step)"
+            >
+              <i class="material-icons">undo</i>
+            </button>
+          </div>
         </td>
       </tr>
       <ng-container *ngIf="expanded[step.itemId]">
@@ -545,12 +500,12 @@
                       )
                     }}</span>
                     <lab-icon
+                      [data]="data"
                       [iconId]="input.key"
                       [tooltip]="data.itemEntities[input.key]?.name"
                       [recipe]="
                         data.recipeEntities[data.itemRecipeIds[input.key]]
                       "
-                      [data]="data"
                     >
                     </lab-icon>
                   </div>
@@ -576,11 +531,11 @@
                         )
                       }}</span>
                       <lab-icon
+                        [data]="data"
                         [iconId]="belt"
                         [tooltip]="data.itemEntities[belt].name"
                         [item]="data.itemEntities[belt]"
                         [displayRate]="displayRate"
-                        [data]="data"
                       ></lab-icon>
                     </div>
                   </ng-container>
@@ -606,9 +561,9 @@
                         )
                       }}</span>
                       <lab-icon
+                        [data]="data"
                         [iconId]="wagon"
                         [tooltip]="data.itemEntities[wagon].name"
-                        [data]="data"
                       ></lab-icon>
                     </div>
                   </ng-container>
@@ -631,10 +586,10 @@
                     <td class="split-column">
                       <div class="flex">
                         <lab-icon
+                          [data]="data"
                           [iconId]="factory"
                           [tooltip]="data.itemEntities[factory].name"
                           [item]="data.itemEntities[factory]"
-                          [data]="data"
                         ></lab-icon>
                       </div>
                     </td>
@@ -651,10 +606,10 @@
                         inStep.recipeId && inStep.recipeId !== inStep.itemId
                       "
                       class="recipe"
+                      [data]="data"
                       [iconId]="inStep.recipeId"
                       [tooltip]="data.recipeEntities[inStep.recipeId]?.name"
                       [recipe]="data.recipeEntities[inStep.recipeId]"
-                      [data]="data"
                     ></lab-icon>
                     <div
                       *ngIf="
@@ -670,10 +625,10 @@
                       >
                       <i class="material-icons">arrow_forward</i>
                       <lab-icon
+                        [data]="data"
                         [iconId]="step.recipeId"
                         [tooltip]="data.recipeEntities[step.recipeId]?.name"
                         [recipe]="data.recipeEntities[step.recipeId]"
-                        [data]="data"
                       ></lab-icon>
                     </div>
                   </div>
@@ -700,12 +655,12 @@
                   rate(step.items.mul(parent.value), effPrecision[Column.Items])
                 }}</span>
                 <lab-icon
+                  [data]="data"
                   [iconId]="step.itemId"
                   [tooltip]="data.itemEntities[step.itemId]?.name"
                   [recipe]="
                     data.recipeEntities[data.itemRecipeIds[step.itemId]]
                   "
-                  [data]="data"
                 >
                 </lab-icon>
               </div>
@@ -728,11 +683,11 @@
                     )
                   }}</span>
                   <lab-icon
+                    [data]="data"
                     [iconId]="belt"
                     [tooltip]="data.itemEntities[belt].name"
                     [item]="data.itemEntities[belt]"
                     [displayRate]="displayRate"
-                    [data]="data"
                   ></lab-icon>
                 </div>
               </ng-container>
@@ -755,9 +710,9 @@
                     )
                   }}</span>
                   <lab-icon
+                    [data]="data"
                     [iconId]="wagon"
                     [tooltip]="data.itemEntities[wagon].name"
-                    [data]="data"
                   ></lab-icon>
                 </div>
               </ng-container>
@@ -780,10 +735,10 @@
                 <td class="split-column">
                   <div class="flex">
                     <lab-icon
+                      [data]="data"
                       [iconId]="factory"
                       [tooltip]="data.itemEntities[factory].name"
                       [item]="data.itemEntities[factory]"
-                      [data]="data"
                     ></lab-icon>
                   </div>
                 </td>
@@ -798,10 +753,10 @@
                 <lab-icon
                   *ngIf="step.recipeId && step.recipeId !== step.itemId"
                   class="recipe"
+                  [data]="data"
                   [iconId]="step.recipeId"
                   [tooltip]="data.recipeEntities[step.recipeId].name"
                   [recipe]="data.recipeEntities[step.recipeId]"
-                  [data]="data"
                 ></lab-icon>
                 <div
                   *ngIf="!step.recipeId || step.recipeId === step.itemId"
@@ -815,10 +770,10 @@
                   >
                   <i class="material-icons">arrow_forward</i>
                   <lab-icon
+                    [data]="data"
                     [iconId]="parent.key"
                     [tooltip]="data.recipeEntities[parent.key].name"
                     [recipe]="data.recipeEntities[parent.key]"
-                    [data]="data"
                   ></lab-icon>
                 </div>
               </div>
@@ -854,12 +809,12 @@
                             )
                           }}</span>
                           <lab-icon
+                            [data]="data"
                             [iconId]="input.key"
                             [tooltip]="data.itemEntities[input.key]?.name"
                             [recipe]="
                               data.recipeEntities[data.itemRecipeIds[input.key]]
                             "
-                            [data]="data"
                           >
                           </lab-icon>
                         </div>
@@ -891,11 +846,11 @@
                               )
                             }}</span>
                             <lab-icon
+                              [data]="data"
                               [iconId]="belt"
                               [tooltip]="data.itemEntities[belt].name"
                               [item]="data.itemEntities[belt]"
                               [displayRate]="displayRate"
-                              [data]="data"
                             ></lab-icon>
                           </div>
                         </ng-container>
@@ -918,10 +873,10 @@
                             rate(ins.value, 1)
                           }}</span>
                           <lab-icon
+                            [data]="data"
                             [iconId]="ins.id"
                             [tooltip]="data.itemEntities[ins.id].name"
                             [item]="data.itemEntities[ins.id]"
-                            [data]="data"
                           ></lab-icon>
                         </div>
                       </td>
@@ -939,17 +894,17 @@
                     >
                       <span class="monospace">1</span>
                       <lab-icon
+                        [data]="data"
                         [iconId]="factory"
                         [tooltip]="data.itemEntities[factory].name"
                         [item]="data.itemEntities[factory]"
-                        [data]="data"
                       ></lab-icon>
                       <lab-icon
                         *ngIf="step.recipeId && step.recipeId !== step.itemId"
+                        [data]="data"
                         [iconId]="step.recipeId"
                         [tooltip]="data.recipeEntities[step.recipeId].name"
                         [recipe]="data.recipeEntities[step.recipeId]"
-                        [data]="data"
                       ></lab-icon>
                     </div>
                   </td>
@@ -973,10 +928,10 @@
                       <div class="flex" *ngIf="inserter(items) as ins">
                         <span class="monospace">{{ rate(ins.value, 1) }}</span>
                         <lab-icon
+                          [data]="data"
                           [iconId]="ins.id"
                           [tooltip]="data.itemEntities[ins.id].name"
                           [item]="data.itemEntities[ins.id]"
-                          [data]="data"
                         ></lab-icon>
                       </div>
                     </td>
@@ -996,11 +951,11 @@
                           )
                         }}</span>
                         <lab-icon
+                          [data]="data"
                           [iconId]="belt"
                           [tooltip]="data.itemEntities[belt].name"
                           [item]="data.itemEntities[belt]"
                           [displayRate]="displayRate"
-                          [data]="data"
                         >
                         </lab-icon>
                       </div>
@@ -1014,12 +969,12 @@
                           )
                         }}</span>
                         <lab-icon
+                          [data]="data"
                           [iconId]="output.key"
                           [tooltip]="data.itemEntities[output.key]?.name"
                           [recipe]="
                             data.recipeEntities[data.itemRecipeIds[output.key]]
                           "
-                          [data]="data"
                         >
                         </lab-icon>
                       </div>
@@ -1053,12 +1008,12 @@
             <div class="list">
               <lab-icon
                 *ngFor="let id of recipes[step.itemId]"
-                class="clickable"
+                class="button grid"
                 [class.ignored]="disabledRecipes.indexOf(id) !== -1"
+                [data]="data"
                 [iconId]="id"
                 [tooltip]="data.recipeEntities[id].name"
                 [recipe]="data.recipeEntities[id]"
-                [data]="data"
                 (click)="toggleRecipe(id)"
               ></lab-icon>
             </div>
