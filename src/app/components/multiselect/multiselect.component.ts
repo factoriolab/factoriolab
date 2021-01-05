@@ -3,12 +3,11 @@ import {
   Input,
   Output,
   EventEmitter,
-  ElementRef,
   ChangeDetectionStrategy,
 } from '@angular/core';
 
 import { IdName } from '~/models';
-import { DialogComponent } from '../dialog/dialog.component';
+import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
   selector: 'lab-multiselect',
@@ -16,7 +15,7 @@ import { DialogComponent } from '../dialog/dialog.component';
   styleUrls: ['./multiselect.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MultiselectComponent extends DialogComponent {
+export class MultiselectComponent extends DialogContainerComponent {
   @Input() selected: string[];
   @Input() options: IdName[];
 
@@ -25,8 +24,8 @@ export class MultiselectComponent extends DialogComponent {
   edited = false;
   editValue: string[];
 
-  constructor(element: ElementRef) {
-    super(element);
+  constructor() {
+    super();
   }
 
   clickOpen(): void {
@@ -39,11 +38,6 @@ export class MultiselectComponent extends DialogComponent {
       this.selectIds.emit(this.editValue);
     }
     this.open = false;
-  }
-
-  cancel(event: Event): void {
-    this.open = false;
-    event.stopPropagation();
   }
 
   clickId(id: string, event: MouseEvent) {

@@ -28,6 +28,7 @@ import {
   PrecisionComponent,
   SankeyComponent,
   OptionsComponent,
+  DialogComponent,
 } from './components';
 import { reducers, metaReducers } from './store';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
@@ -51,6 +52,7 @@ import { DatasetsEffects } from './store/datasets/datasets.effects';
     PrecisionComponent,
     SankeyComponent,
     OptionsComponent,
+    DialogComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,10 +1,10 @@
 <div (click)="open = true">
   <ng-content></ng-content>
 </div>
-<div class="dialog panel" *ngIf="open" [style.minWidth.rem]="width">
+<lab-dialog *ngIf="open" [style.minWidth.rem]="width" (close)="cancel()">
   <div class="dialog-title">
     <div class="header">{{ header }}</div>
-    <button (click)="open = false; $event.stopPropagation()">
+    <button (click)="cancel($event)">
       <i class="material-icons">close</i>
     </button>
   </div>
@@ -35,4 +35,4 @@
       ></lab-icon>
     </ng-container>
   </div>
-</div>
+</lab-dialog>

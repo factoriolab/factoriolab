@@ -1,7 +1,7 @@
 <div (click)="clickOpen()">
   <ng-content></ng-content>
 </div>
-<div class="dialog panel" *ngIf="open">
+<lab-dialog *ngIf="open" (close)="close()">
   <div class="dialog-title">
     <div class="header">{{ header }}</div>
     <button (click)="cancel($event)">
@@ -25,4 +25,4 @@
     <button (click)="cancel($event)"><span class="text">Cancel</span></button>
     <button class="green" (click)="close()">Confirm</button>
   </div>
-</div>
+</lab-dialog>

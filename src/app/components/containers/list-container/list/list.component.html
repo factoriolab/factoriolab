@@ -109,7 +109,7 @@
               rate(step.items, effPrecision[Column.Items])
             }}</span>
             <lab-icon
-              class="clickable"
+              class="button"
               [title]="
                 itemSettings[step.itemId].ignore
                   ? 'Click to include'
@@ -160,38 +160,30 @@
                 ></lab-icon>
               </ng-template>
               <ng-template #beltPicker>
-                <div class="relative">
+                <lab-select
+                  header="Select a belt type"
+                  [data]="data"
+                  [selected]="belt"
+                  [options]="data.beltIds"
+                  [displayRate]="displayRate"
+                  (selectId)="
+                    setBelt.emit({
+                      id: step.itemId,
+                      value: $event,
+                      default: belt
+                    })
+                  "
+                >
                   <lab-icon
-                    class="clickable"
+                    class="button"
                     title="Click to change belt"
+                    [data]="data"
                     [iconId]="belt"
                     [tooltip]="data.itemEntities[belt].name"
                     [item]="data.itemEntities[belt]"
                     [displayRate]="displayRate"
-                    [data]="data"
-                    (click)="edit = { step: step, type: StepEditType.Belt }"
                   ></lab-icon>
-                  <!-- <lab-select
-                    *ngIf="
-                      edit &&
-                      edit.step === step &&
-                      edit.type === StepEditType.Belt
-                    "
-                    [data]="data"
-                    [selectedId]="belt"
-                    [options]="data.beltIds"
-                    [displayRate]="displayRate"
-                    (cancel)="edit = null"
-                    (selectId)="
-                      setBelt.emit({
-                        id: step.itemId,
-                        value: $event,
-                        default: belt
-                      })
-                    "
-                  >
-                  </lab-select> -->
-                </div>
+                </lab-select>
               </ng-template>
             </div>
           </ng-container>

@@ -259,14 +259,6 @@ img.icon {
   }
 }
 
-.dialog {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  background-color: var(--color-back);
-}
-
 .dialog-title {
   height: 1.5rem;
   display: flex;

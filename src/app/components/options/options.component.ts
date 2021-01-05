@@ -2,14 +2,13 @@ import { KeyValue } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   Output,
 } from '@angular/core';
 
 import { Entities } from '~/models';
-import { DialogComponent } from '../dialog/dialog.component';
+import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
   selector: 'lab-options',
@@ -17,15 +16,15 @@ import { DialogComponent } from '../dialog/dialog.component';
   styleUrls: ['./options.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OptionsComponent extends DialogComponent {
+export class OptionsComponent extends DialogContainerComponent {
   @Input() title: string;
   @Input() selected: number;
   @Input() options: Entities;
 
   @Output() selectId = new EventEmitter<number>();
 
-  constructor(element: ElementRef) {
-    super(element);
+  constructor() {
+    super();
   }
 
   cast(kv: KeyValue<string, string>): KeyValue<number, string> {

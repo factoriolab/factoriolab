@@ -3,12 +3,11 @@ import {
   Input,
   Output,
   EventEmitter,
-  ElementRef,
   ChangeDetectionStrategy,
 } from '@angular/core';
 
 import { IdType, DisplayRate, Dataset, ItemId } from '~/models';
-import { DialogComponent } from '../dialog/dialog.component';
+import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
   selector: 'lab-select',
@@ -16,7 +15,7 @@ import { DialogComponent } from '../dialog/dialog.component';
   styleUrls: ['./select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectComponent extends DialogComponent {
+export class SelectComponent extends DialogContainerComponent {
   @Input() data: Dataset;
   @Input() selected: string;
   @Input() options: string[];
@@ -35,8 +34,8 @@ export class SelectComponent extends DialogComponent {
     return iconsPerRow * 2.375 + 1.5;
   }
 
-  constructor(element: ElementRef) {
-    super(element);
+  constructor() {
+    super();
   }
 
   clickId(id: string, event: MouseEvent): void {

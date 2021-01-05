@@ -2,10 +2,6 @@
   display: block;
 }
 
-lab-icon {
-  padding: 0.125rem;
-}
-
 table {
   border-spacing: 0;
   border-collapse: collapse;
@@ -129,6 +125,10 @@ th > div {
   height: 2rem;
   padding: 0 0.25rem;
   margin: 0 -0.25rem;
+
+  &.header button {
+    margin-left: 0.5rem;
+  }
 }
 
 td > div {

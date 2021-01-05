@@ -201,6 +201,10 @@ export class ListComponent {
   setEffectivePrecision() {
     if (this.steps && this.columns) {
       this.effPrecision = {};
+      this.effPrecision[Column.Items] = this.effPrecFrom(
+        this.columns.precision[Column.Items],
+        (s) => s[Column.Items.toLowerCase()]
+      );
       this.effPrecision[Column.Surplus] = this.effPrecFrom(
         this.columns.precision[Column.Items],
         (s) => s[Column.Surplus.toLowerCase()]

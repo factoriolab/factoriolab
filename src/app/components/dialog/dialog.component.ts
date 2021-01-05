@@ -1,32 +1,32 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
-  HostBinding,
+  EventEmitter,
   HostListener,
-  Input,
+  Output,
 } from '@angular/core';
 
 @Component({
   selector: 'lab-dialog',
-  template: '',
+  templateUrl: './dialog.component.html',
+  styleUrls: ['./dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogComponent {
-  @Input() header: string;
+  @Output() close = new EventEmitter();
 
-  open = false;
+  opening = true;
 
-  @HostBinding('class.relative') relative = true;
-
-  constructor(protected element: ElementRef) {}
+  constructor(private element: ElementRef) {}
 
   @HostListener('document:click', ['$event'])
   click(event: MouseEvent): void {
-    if (!this.element.nativeElement.contains(event.target)) {
-      this.close();
+    if (this.opening) {
+      this.opening = false;
+    } else if (!this.element.nativeElement.contains(event.target)) {
+      this.close.emit();
+      event.stopPropagation();
     }
-  }
-
-  close(): void {
-    this.open = false;
   }
 }

@@ -1,4 +1,5 @@
 export * from './containers';
+export * from './dialog/dialog.component';
 export * from './icon/icon.component';
 export * from './multiselect/multiselect.component';
 export * from './options/options.component';

@@ -2,7 +2,7 @@
   <div class="text">{{ options[selected] }}</div>
   <i class="material-icons">arrow_drop_down</i>
 </button>
-<div class="dialog panel" *ngIf="open">
+<lab-dialog *ngIf="open" (close)="cancel()">
   <ng-container *ngFor="let kv of options | keyvalue">
     <button
       *ngIf="cast(kv) as opt"
@@ -14,4 +14,4 @@
       </div>
     </button>
   </ng-container>
-</div>
+</lab-dialog>

@@ -1,6 +1,5 @@
 import {
   Component,
-  ElementRef,
   Input,
   Output,
   EventEmitter,
@@ -8,7 +7,7 @@ import {
 } from '@angular/core';
 
 import { Dataset } from '~/models';
-import { DialogComponent } from '../dialog/dialog.component';
+import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
   selector: 'lab-picker',
@@ -16,7 +15,7 @@ import { DialogComponent } from '../dialog/dialog.component';
   styleUrls: ['./picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PickerComponent extends DialogComponent {
+export class PickerComponent extends DialogContainerComponent {
   _data: Dataset;
   get data() {
     return this._data;
@@ -38,8 +37,8 @@ export class PickerComponent extends DialogComponent {
 
   tab: string;
 
-  constructor(element: ElementRef) {
-    super(element);
+  constructor() {
+    super();
   }
 
   setTab(): void {
