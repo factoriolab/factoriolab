@@ -14,10 +14,12 @@ import {
   Dataset,
   Rational,
   Entities,
+  DisplayRate,
 } from '~/models';
 import { State } from '~/store';
 import * as Products from '~/store/products';
 import { getAdjustedDataset } from '~/store/recipes';
+import { getDisplayRate } from '~/store/settings';
 import { ProductsComponent } from './products/products.component';
 
 @Component({
@@ -32,6 +34,7 @@ export class ProductsContainerComponent implements OnInit {
   data$: Observable<Dataset>;
   productRecipes$: Observable<Entities<[string, Rational][]>>;
   products$: Observable<Product[]>;
+  displayRate$: Observable<DisplayRate>;
 
   constructor(private store: Store<State>) {}
 
@@ -39,6 +42,7 @@ export class ProductsContainerComponent implements OnInit {
     this.data$ = this.store.select(getAdjustedDataset);
     this.productRecipes$ = this.store.select(Products.getProductRecipes);
     this.products$ = this.store.select(Products.getProducts);
+    this.displayRate$ = this.store.select(getDisplayRate);
   }
 
   add(value: string) {
@@ -62,6 +66,6 @@ export class ProductsContainerComponent implements OnInit {
   }
 
   setRecipe(data: IdPayload) {
-    this.store.dispatch(new Products.SetRecipeAction(data));
+    this.store.dispatch(new Products.SetViaAction(data));
   }
 }

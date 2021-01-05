@@ -14,6 +14,7 @@ import {
   Rational,
   Entities,
   RateTypeOptions,
+  DisplayRate,
 } from '~/models';
 import { RecipeUtility } from '~/utilities';
 
@@ -37,6 +38,7 @@ export class ProductsComponent {
   @Input() data: Dataset;
   @Input() productRecipes: Entities<[string, Rational][]>;
   @Input() products: Product[];
+  @Input() displayRate: DisplayRate;
 
   @Output() add = new EventEmitter<string>();
   @Output() remove = new EventEmitter<string>();
@@ -78,7 +80,7 @@ export class ProductsComponent {
 
   getRecipe(product: Product) {
     const recipes = this.productRecipes[product.itemId];
-    return RecipeUtility.getProductRecipeData(recipes, product.recipeId)[0];
+    return RecipeUtility.getProductRecipeData(recipes, product.viaId)[0];
   }
 
   getOptions(product: Product) {

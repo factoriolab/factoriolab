@@ -57,7 +57,7 @@ const mockProductsFull: Product[] = [
     itemId: ItemId.SteelChest,
     rate: 1,
     rateType: RateType.Belts,
-    recipeId: RecipeId.Coal,
+    viaId: RecipeId.Coal,
   },
 ];
 const mockProductsFullState: Products.ProductsState = {

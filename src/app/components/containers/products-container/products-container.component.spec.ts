@@ -89,7 +89,7 @@ describe('ProductsContainerComponent', () => {
     };
     component.child.setRecipe.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.SetRecipeAction(data)
+      new Products.SetViaAction(data)
     );
   });
 });

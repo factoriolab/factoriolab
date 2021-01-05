@@ -87,10 +87,10 @@ export function productsReducer(
         ProductField.RateType,
         action.payload
       );
-    case ProductsActionType.SET_RECIPE:
+    case ProductsActionType.SET_VIA:
       return StoreUtility.setEntityValue(
         state,
-        ProductField.RecipeId,
+        ProductField.ViaId,
         action.payload
       );
     default:

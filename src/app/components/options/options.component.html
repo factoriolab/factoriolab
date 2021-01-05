@@ -1,15 +1,17 @@
-<button (click)="open = !open" [class.active]="open">
+<button [title]="title" (click)="open = !open" [class.active]="open">
   <div class="text">{{ options[selected] }}</div>
   <i class="material-icons">arrow_drop_down</i>
 </button>
 <div class="dialog panel" *ngIf="open">
-  <button
-    *ngFor="let opt of options | keyvalue"
-    [class.active]="opt.key === selected"
-    (click)="selectOption.emit(opt.key); open = false"
-  >
-    <div class="text">
-      {{ opt.value }}
-    </div>
-  </button>
+  <ng-container *ngFor="let kv of options | keyvalue">
+    <button
+      *ngIf="cast(kv) as opt"
+      [class.active]="opt.key === selected"
+      (click)="selectId.emit(opt.key); open = false"
+    >
+      <div class="text">
+        {{ opt.value }}
+      </div>
+    </button>
+  </ng-container>
 </div>

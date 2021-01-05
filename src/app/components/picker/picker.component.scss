@@ -24,16 +24,11 @@
   > :not(.selected) {
     cursor: pointer;
     background-color: var(--color-button);
-    box-shadow: inset 8px 0 4px -8px #000, inset -8px 0 4px -8px #000,
-      inset 0 10px 2px -8px #e3e3e3, inset 0 10px 2px -8px #282828,
-      inset 0 -9px 2px -8px #000, 0 0 4px 0 #000;
+    box-shadow: var(--shadow-button);
 
     &:hover {
       background-color: var(--color-brand);
-      box-shadow: inset 8px 0 4px -8px #000, inset -8px 0 4px -8px #000,
-        inset 0 9px 2px -8px #fff, inset 0 8px 4px -8px #000,
-        inset 0 -8px 4px -8px #000, inset 0 -9px 2px -8px #432400,
-        0 0 4px 0 #000, inset 0 0 4px 2px #f9b44b;
+      box-shadow: var(--shadow-hover);
     }
   }
 }
@@ -57,15 +52,11 @@
     margin: 1px;
 
     cursor: pointer;
-    box-shadow: inset 0 -4px 0.5px -2px #121212, inset 5px 0 2px -2.5px #1f1f1f,
-      inset -3px 0 1px -1.5px #292929, inset 0 4px 1px -2px #515050;
+    box-shadow: var(--shadow-item);
 
     &:hover {
       background-color: var(--color-brand-drk);
-      box-shadow: inset 8px 0 4px -8px #000, inset -8px 0 4px -8px #000,
-        inset 0 9px 2px -8px #fff, inset 0 8px 4px -8px #000,
-        inset 0 -8px 4px -8px #000, inset 0 -9px 2px -8px #432400,
-        0 0 4px 0 #000, inset 0 0 4px 2px #f9b44b;
+      box-shadow: var(--shadow-hover);
     }
   }
 }

@@ -4,11 +4,9 @@
 <div class="dialog panel" *ngIf="open">
   <div class="dialog-title">
     <div class="header">Select an item to produce</div>
-    <div class="panel">
-      <button (click)="open = false">
-        <i class="material-icons">close</i>
-      </button>
-    </div>
+    <button (click)="open = false">
+      <i class="material-icons">close</i>
+    </button>
   </div>
   <div class="panel">
     <div #tabsScroll class="tabs">
@@ -29,12 +27,13 @@
       <div class="row" *ngFor="let row of data.categoryItemRows[tab]">
         <lab-icon
           *ngFor="let id of row"
+          class="grid-button"
           [iconId]="id"
           [scrollTop]="tabScroll.scrollTop"
           [tooltip]="data.itemEntities[id].name"
           [recipe]="data.recipeEntities[data.itemRecipeIds[id]]"
           [data]="data"
-          (click)="clickItem(id)"
+          (click)="selectId.emit(id); open = false"
         ></lab-icon>
       </div>
     </div>

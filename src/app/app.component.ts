@@ -4,10 +4,10 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { skip } from 'rxjs/operators';
 
-import { Dataset, ItemId } from './models';
+import { Dataset, ItemId, Product } from './models';
 import { RouterService } from './services/router.service';
 import { State } from './store';
-import { getZipState } from './store/products';
+import { getProducts, getZipState } from './store/products';
 import { getDataset } from './store/settings';
 
 @Component({
@@ -32,6 +32,7 @@ import { getDataset } from './store/settings';
 })
 export class AppComponent implements OnInit {
   data$: Observable<Dataset>;
+  products$: Observable<Product[]>;
 
   ItemId = ItemId;
 
@@ -41,6 +42,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.data$ = this.store.select(getDataset);
+    this.products$ = this.store.select(getProducts);
     this.store
       .select(getZipState)
       .pipe(skip(1))

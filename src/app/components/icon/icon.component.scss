@@ -1,14 +1,28 @@
 :host {
   display: flex;
+  align-items: start;
   user-select: none;
   font-weight: normal;
   position: relative;
+  color: var(--color-white);
 
   &.ignored {
     > .image {
       > img {
         opacity: 0.25;
       }
+    }
+  }
+
+  &.button:hover {
+    padding: 0;
+    filter: none;
+
+    // Moves filter effect to image to avoid affecting tooltip
+    > .image {
+      padding: 0.125rem;
+      box-shadow: var(--shadow-hover);
+      filter: drop-shadow(0 0 2px var(--color-brand-sha));
     }
   }
 }
@@ -31,15 +45,13 @@ img.shadow {
 
 .tooltip {
   position: absolute;
+  z-index: 1;
   background-color: var(--color-dark);
   opacity: 0.95;
   padding: 0.5rem;
   user-select: none;
   cursor: default;
-  box-shadow: inset 4px 0 2px -4px #000, inset -4px 0 2px -4px #000,
-    inset 0 5px 1px -4px #e3e3e3, inset 0 5px 1px -4px #282828,
-    inset 0 -5px 1px -4px #000, 0 0 2px 0 #000;
-  z-index: 1;
+  box-shadow: var(--shadow-tip);
 
   .nowrap {
     white-space: nowrap;

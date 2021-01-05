@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,12 +18,17 @@ import { DialogComponent } from '../dialog/dialog.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionsComponent extends DialogComponent {
-  @Input() selected: string | number;
+  @Input() title: string;
+  @Input() selected: number;
   @Input() options: Entities;
 
-  @Output() selectOption = new EventEmitter<string | number>();
+  @Output() selectId = new EventEmitter<number>();
 
   constructor(element: ElementRef) {
     super(element);
+  }
+
+  cast(kv: KeyValue<string, string>): KeyValue<number, string> {
+    return { key: Number(kv.key), value: kv.value };
   }
 }

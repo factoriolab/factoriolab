@@ -12,9 +12,55 @@ $color-input-alt: #f0dab4;
 $color-brand: #fca000;
 $color-brand-alt: #f1be64;
 $color-brand-drk: #b26e00;
+$color-brand-sha: #f9b44b;
 $color-header: #ffe6c0;
+$color-scroll: #201810;
 $color-green: #5eb663;
 $color-red: #fe5a5a;
+
+$shadow-button: inset 8px 0 4px -8px #000, inset -8px 0 4px -8px #000,
+  inset 0 10px 2px -8px #e3e3e3, inset 0 10px 2px -8px #282828,
+  inset 0 -9px 2px -8px #000, 0 0 4px 0 #000;
+$shadow-button-sm: inset 4px 0 2px -4px #150802, inset -4px 0 2px -4px #150802,
+  inset 0 4px 2px -4px #969490, inset 0 -4px 2px -3px #000, 0 -1px 2px 0px #000,
+  0 1px 2px 0px #7e7b79;
+$shadow-input: inset 0 4px 1px -2px #000, inset 0 -4px 1px -2px #c5c5c5,
+  inset 2px 0 1px 0 #5f5f5f, inset -2px 0 1px 0 #5f5f5f,
+  inset 0 -2px 2px 0 #5f5f5f, 0 0 4px 1px #2e2521;
+$shadow-panel: inset 0 0 3px 0 #000, 0 -2px 2px -1px #000,
+  -2px 0 2px -2px #28221f, -2px 0 2px -2px #28221f, 2px 0 2px -2px #28221f,
+  2px 0 2px -2px #28221f, 0 3px 3px -3px #8f8c8b, 0 2px 2px -2px #8f8c8b,
+  0 1px 1px -1px #8f8c8b;
+$shadow-hover: inset 8px 0 4px -8px #000, inset -8px 0 4px -8px #000,
+  inset 0 9px 2px -8px #fff, inset 0 8px 4px -8px #000,
+  inset 0 -8px 4px -8px #000, inset 0 -9px 2px -8px #432400, 0 0 4px 0 #000,
+  inset 0 0 4px 2px #f9b44b;
+$shadow-hover-sm: inset 4px 0 2px -4px #000, inset -4px 0 2px -4px #000,
+  inset 0 5px 1px -4px #fff, inset 0 4px 2px -4px #000,
+  inset 0 -4px 4px -4px #000, inset 0 -5px 1px -4px #432400, 0 0 2px 0 #000,
+  inset 0 0 2px 1px #f9b44b;
+$shadow-active: inset 0 10px 2px -8px #000, inset 0 9px 2px -8px #000,
+  inset 8px 0 4px -8px #563a10, inset 8px 0 4px -8px #563a10,
+  inset -8px 0 4px -8px #563a10, inset -8px 0 4px -8px #563a10,
+  inset 0 9px 2px -8px #563a10, inset 0 -9px 2px -8px #563a10,
+  inset 0 -8.5px 0 -8px #563a10, 0 0 4px 0 #000;
+$shadow-active-sm: inset 0 5px 1px -4px #000, inset 0 5px 1px -4px #000,
+  inset 4px 0 2px -4px #563a10, inset 4px 0 2px -4px #563a10,
+  inset -4px 0 2px -4px #563a10, inset -4px 0 2px -4px #563a10,
+  inset 0 5px 1px -4px #563a10, inset 0 -5px 1px -4px #563a10,
+  inset 0 -4px 0 -4px #563a10, 0 0 2px 0 #000;
+$shadow-main: inset 3px 0 3px -3px #201815, inset 2px 0 2px -2px #201815,
+  inset 1px 0 1px -1px #201815, inset 0 3px 3px -3px #8f8c8b,
+  inset 0 2px 2px -2px #8f8c8b, inset 0 1px 1px -1px #8f8c8b,
+  inset -3px 0 3px -3px #201815, inset -2px 0 2px -2px #201815,
+  inset -2px 0 1px -1px #201815, inset 0 -3px 3px -3px #000,
+  inset 0 -2px 2px -2px #000, inset 0 -1px 1px -1px #000, 0 0 2px 0 #201815,
+  0 0 4px 0 #201815;
+$shadow-tip: inset 4px 0 2px -4px #000, inset -4px 0 2px -4px #000,
+  inset 0 5px 1px -4px #e3e3e3, inset 0 5px 1px -4px #282828,
+  inset 0 -5px 1px -4px #000, 0 0 2px 0 #000;
+$shadow-item: inset 0 -4px 0.5px -2px #121212, inset 5px 0 2px -2.5px #1f1f1f,
+  inset -3px 0 1px -1.5px #292929, inset 0 4px 1px -2px #515050;
 
 body {
   --color-white: #{$color-white};
@@ -31,9 +77,23 @@ body {
   --color-brand: #{$color-brand};
   --color-brand-alt: #{$color-brand-alt};
   --color-brand-drk: #{$color-brand-drk};
+  --color-brand-sha: #{$color-brand-sha};
   --color-header: #{$color-header};
+  --color-scroll: #{$color-scroll};
   --color-green: #{$color-green};
   --color-red: #{$color-red};
+
+  --shadow-button: #{$shadow-button};
+  --shadow-button-sm: #{$shadow-button-sm};
+  --shadow-input: #{$shadow-input};
+  --shadow-panel: #{$shadow-panel};
+  --shadow-hover: #{$shadow-hover};
+  --shadow-hover-sm: #{$shadow-hover-sm};
+  --shadow-active: #{$shadow-active};
+  --shadow-active-sm: #{$shadow-active-sm};
+  --shadow-main: #{$shadow-main};
+  --shadow-tip: #{$shadow-tip};
+  --shadow-item: #{$shadow-item};
 
   --module-icon-filter: none;
 }

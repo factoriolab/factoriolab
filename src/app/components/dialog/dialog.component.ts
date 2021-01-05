@@ -1,4 +1,9 @@
-import { Component, ElementRef, HostListener } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostBinding,
+  HostListener,
+} from '@angular/core';
 
 @Component({
   selector: 'lab-dialog',
@@ -6,6 +11,8 @@ import { Component, ElementRef, HostListener } from '@angular/core';
 })
 export class DialogComponent {
   open = false;
+
+  @HostBinding('class.relative') relative = true;
 
   constructor(protected element: ElementRef) {}
 

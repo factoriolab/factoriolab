@@ -80,9 +80,9 @@ describe('Products Reducer', () => {
       const value = RecipeId.AdvancedOilProcessing;
       const result = productsReducer(
         state,
-        new Actions.SetRecipeAction({ id: Mocks.Product1.id, value })
+        new Actions.SetViaAction({ id: Mocks.Product1.id, value })
       );
-      expect(result.entities[Mocks.Product1.id].recipeId).toEqual(value);
+      expect(result.entities[Mocks.Product1.id].viaId).toEqual(value);
     });
   });
 

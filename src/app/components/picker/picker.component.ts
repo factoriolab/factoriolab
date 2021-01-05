@@ -34,7 +34,7 @@ export class PickerComponent extends DialogComponent {
     this.setTab();
   }
 
-  @Output() selectItem = new EventEmitter<string>();
+  @Output() selectId = new EventEmitter<string>();
 
   tab: string;
 
@@ -50,10 +50,5 @@ export class PickerComponent extends DialogComponent {
         this.tab = this.data.categoryIds[0];
       }
     }
-  }
-
-  clickItem(id: string): void {
-    this.selectItem.emit(id);
-    this.open = false;
   }
 }

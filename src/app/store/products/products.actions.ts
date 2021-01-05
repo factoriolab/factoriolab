@@ -9,7 +9,7 @@ export const enum ProductsActionType {
   SET_ITEM = '[Products] Set Item',
   SET_RATE = '[Products] Set Rate',
   SET_RATE_TYPE = '[Products] Set Rate Type',
-  SET_RECIPE = '[Products] Set Recipe',
+  SET_VIA = '[Products] Set Via',
 }
 
 export class ResetAction implements Action {
@@ -42,8 +42,8 @@ export class SetRateTypeAction implements Action {
   constructor(public payload: IdPayload<RateType>) {}
 }
 
-export class SetRecipeAction implements Action {
-  readonly type = ProductsActionType.SET_RECIPE;
+export class SetViaAction implements Action {
+  readonly type = ProductsActionType.SET_VIA;
   constructor(public payload: IdPayload) {}
 }
 
@@ -54,4 +54,4 @@ export type ProductsAction =
   | SetItemAction
   | SetRateAction
   | SetRateTypeAction
-  | SetRecipeAction;
+  | SetViaAction;

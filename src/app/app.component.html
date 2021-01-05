@@ -38,7 +38,7 @@
   </lab-settings-container>
   <div class="view">
     <lab-products-container></lab-products-container>
-    <div>
+    <div *ngIf="(products$ | async).length">
       <ul role="navigation">
         <li
           routerLink="/list"

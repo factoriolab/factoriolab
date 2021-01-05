@@ -166,7 +166,7 @@ export class RouterService {
           i,
           r,
           this.zipDiffNumber(product.rateType, RateType.Items),
-          this.zipTruthyString(product.recipeId),
+          this.zipTruthyString(product.viaId),
         ]
           .join(FIELDSEP)
           .replace(/\**$/, '');
@@ -190,7 +190,7 @@ export class RouterService {
       let i = 3;
       let v = p[i++];
       if (v?.length) {
-        u.recipeId = this.parseString(v);
+        u.viaId = this.parseString(v);
       }
       ids.push(id);
       entities[id] = u;

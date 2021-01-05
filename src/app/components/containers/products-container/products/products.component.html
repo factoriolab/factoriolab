@@ -1,38 +1,37 @@
 <h2>Products</h2>
 <div class="panel">
-  <div class="flex relative">
-    <lab-picker
-      [data]="data"
-      [itemId]="data.itemIds[0]"
-      (selectItem)="add.emit($event)"
-    >
-      <button title="Add product">
-        <i class="material-icons">add</i>
-        <div class="text" *ngIf="!products?.length">Click to add a product</div>
-      </button></lab-picker
-    >
-  </div>
+  <lab-picker
+    [data]="data"
+    [itemId]="data.itemIds[0]"
+    (selectId)="add.emit($event)"
+  >
+    <button title="Add product">
+      <i class="material-icons">add</i>
+      <div class="text" *ngIf="!products?.length">Click to add a product</div>
+    </button></lab-picker
+  >
   <div *ngIf="products && products.length">
     <div class="product-row" *ngFor="let product of products; trackBy: trackBy">
       <ng-container *ngIf="product && data.itemEntities[product.itemId]">
         <button title="Remove product" (click)="remove.emit(product.id)">
           <i class="material-icons">remove</i>
         </button>
-        <div class="relative">
-          <lab-picker
+        <lab-picker
+          [data]="data"
+          [itemId]="product.itemId"
+          (selectId)="commitEditProduct(product, $event)"
+        >
+          <lab-icon
+            class="button"
+            title="Change product"
+            hoverIcon="settings"
             [data]="data"
-            [itemId]="product.itemId"
-            (selectItem)="commitEditProduct(product, $event)"
-          >
-            <lab-icon
-              class="button"
-              title="Change product"
-              hoverIcon="settings"
-              [iconId]="product.itemId"
-              [data]="data"
-            ></lab-icon
-          ></lab-picker>
-        </div>
+            [iconId]="product.itemId"
+            [tooltip]="data.itemEntities[product.itemId].name"
+            [item]="data.itemEntities[product.itemId]"
+            [displayRate]="displayRate"
+          ></lab-icon
+        ></lab-picker>
         <input
           type="number"
           min="0"
@@ -43,15 +42,17 @@
           (change)="emitNumber(setRate, product.id, $event)"
         />
         <lab-options
+          title="Change rate type"
           [selected]="product.rateType"
           [options]="RateTypeOptions"
-          (selectOption)="setRateType.emit({ id: product.id, value: $event })"
+          (selectId)="setRateType.emit({ id: product.id, value: $event })"
         ></lab-options>
         <ng-container *ngIf="product.rateType === RateType.Factories">
           <ng-container
             *ngIf="productRecipes[product.itemId].length > 0; else recipeNone"
           >
             <ng-container *ngIf="getRecipe(product) as recipe">
+              <span>via</span>
               <ng-container
                 *ngIf="
                   productRecipes[product.itemId].length === 1;
@@ -67,35 +68,30 @@
                 </lab-icon>
               </ng-container>
               <ng-template #recipePicker>
-                <div class="relative">
+                <lab-select
+                  [selected]="recipe"
+                  [options]="getOptions(product)"
+                  [data]="data"
+                  (cancel)="edit = null"
+                  (selectId)="setRecipe.emit({ id: product.id, value: $event })"
+                >
                   <lab-icon
-                    class="clickable"
-                    title="Choose recipe"
+                    class="button"
+                    title="Change recipe"
+                    hoverIcon="settings"
+                    [data]="data"
                     [iconId]="recipe"
                     [tooltip]="data.recipeEntities[recipe].name"
                     [recipe]="data.recipeEntities[recipe]"
-                    [data]="data"
                     (click)="
-                      edit = { product: product, type: ProductEditType.Recipe }
+                      edit = {
+                        product: product,
+                        type: ProductEditType.Recipe
+                      }
                     "
                   >
                   </lab-icon>
-                  <lab-select
-                    *ngIf="
-                      edit &&
-                      edit.product === product &&
-                      edit.type === ProductEditType.Recipe
-                    "
-                    [selectedId]="recipe"
-                    [options]="getOptions(product)"
-                    [data]="data"
-                    (cancel)="edit = null"
-                    (selectId)="
-                      setRecipe.emit({ id: product.id, value: $event })
-                    "
-                  >
-                  </lab-select>
-                </div>
+                </lab-select>
               </ng-template>
             </ng-container>
           </ng-container>

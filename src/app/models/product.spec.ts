@@ -11,13 +11,13 @@ describe('RationalProduct', () => {
         itemId: ItemId.ArtilleryShellRange,
         rate: 2,
         rateType: RateType.Belts,
-        recipeId: RecipeId.AdvancedOilProcessing,
+        viaId: RecipeId.AdvancedOilProcessing,
       });
       expect(result.id).toEqual('1');
       expect(result.itemId).toEqual(ItemId.ArtilleryShellRange);
       expect(result.rate).toEqual(Rational.two);
       expect(result.rateType).toEqual(RateType.Belts);
-      expect(result.recipeId).toEqual(RecipeId.AdvancedOilProcessing);
+      expect(result.viaId).toEqual(RecipeId.AdvancedOilProcessing);
     });
 
     it('should ignore undefined fields', () => {
@@ -31,7 +31,7 @@ describe('RationalProduct', () => {
       expect(result.itemId).toEqual(ItemId.ArtilleryShellRange);
       expect(result.rate).toEqual(Rational.two);
       expect(result.rateType).toEqual(RateType.Belts);
-      expect(result.recipeId).toBeUndefined();
+      expect(result.viaId).toBeUndefined();
     });
   });
 });
