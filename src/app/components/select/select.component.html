@@ -1,15 +1,9 @@
 <div (click)="open = true">
   <ng-content></ng-content>
 </div>
-<div
-  class="dialog panel"
-  *ngIf="open"
-  [style.top.px]="top"
-  [style.left.px]="left"
-  [style.width.rem]="width"
->
+<div class="dialog panel" *ngIf="open" [style.minWidth.rem]="width">
   <div class="dialog-title">
-    <div class="header"></div>
+    <div class="header">{{ header }}</div>
     <button (click)="open = false; $event.stopPropagation()">
       <i class="material-icons">close</i>
     </button>

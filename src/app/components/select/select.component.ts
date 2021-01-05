@@ -23,20 +23,11 @@ export class SelectComponent extends DialogComponent {
   @Input() selectType = IdType.Item;
   @Input() displayRate: DisplayRate;
   @Input() includeEmptyModule: boolean;
-  @Input() parent: HTMLElement;
 
   @Output() selectId = new EventEmitter<string>();
 
   IdType = IdType;
   ItemId = ItemId;
-
-  get top(): number {
-    return (this.parent?.getBoundingClientRect().y || 0) - 41;
-  }
-
-  get left(): number {
-    return (this.parent?.getBoundingClientRect().x || 0) - 13;
-  }
 
   get width(): number {
     const buttons = this.options.length + 1;

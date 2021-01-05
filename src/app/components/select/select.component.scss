@@ -2,35 +2,9 @@
   > .panel {
     display: flex;
     flex-wrap: wrap;
-    max-width: 25rem;
+    max-width: 24rem;
     max-height: 20rem;
     padding: 0;
     background: url(~/src/assets/tile.png);
   }
 }
-
-// :host {
-//   position: absolute;
-//   background-color: var(--color-gray-2);
-//   border: 1px solid var(--color-brand);
-//   border-radius: 0.25rem;
-//   z-index: 10;
-//   margin: -1px;
-//   max-width: 25rem;
-//   max-height: 20rem;
-//   display: flex;
-//   flex-wrap: wrap;
-//   padding: 0.5rem;
-// }
-
-// .clickable.material-icons {
-//   padding: 0.375rem;
-// }
-
-// lab-icon {
-//   position: static;
-
-//   &.selected {
-//     background-color: var(--color-gray-0);
-//   }
-// }

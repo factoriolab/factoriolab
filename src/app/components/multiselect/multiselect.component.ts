@@ -17,23 +17,13 @@ import { DialogComponent } from '../dialog/dialog.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultiselectComponent extends DialogComponent {
-  @Input() header: string;
   @Input() selected: string[];
   @Input() options: IdName[];
-  @Input() parent: HTMLElement;
 
   @Output() selectIds = new EventEmitter<string[]>();
 
   edited = false;
   editValue: string[];
-
-  get top(): number {
-    return (this.parent?.getBoundingClientRect().y || 0) + 1;
-  }
-
-  get left(): number {
-    return (this.parent?.getBoundingClientRect().x || 0) + 1;
-  }
 
   constructor(element: ElementRef) {
     super(element);

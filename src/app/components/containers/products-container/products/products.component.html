@@ -69,11 +69,11 @@
               </ng-container>
               <ng-template #recipePicker>
                 <lab-select
+                  header="Select a step to calculate by"
                   [data]="data"
                   [selected]="recipe"
                   [options]="getOptions(product)"
                   [selectType]="IdType.Recipe"
-                  (cancel)="edit = null"
                   (selectId)="setRecipe.emit({ id: product.id, value: $event })"
                 >
                   <lab-icon

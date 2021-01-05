@@ -72,16 +72,10 @@
         <div class="header">Pollution{{ rateLabel }}</div>
       </th>
       <!-- Reset / Link -->
-      <th>
-        <span *ngIf="mode === ListMode.All && show[Column.Link]" class="flex">
-          <i
-            id="list-save-csv"
-            title="Save as CSV"
-            class="clickable material-icons"
-            (click)="export()"
-            >file_download</i
-          >
-        </span>
+      <th *ngIf="show[Column.Link] && mode === ListMode.All">
+        <button title="Export to CSV" (click)="export()">
+          <i class="material-icons">file_download</i>
+        </button>
       </th>
     </tr>
   </thead>

@@ -28,6 +28,10 @@ body {
 
 th {
   font-weight: normal;
+
+  .header {
+    font-size: large;
+  }
 }
 
 .header {
@@ -312,6 +316,10 @@ img.icon {
   display: flex;
   justify-content: flex-end;
   margin-top: 0.75rem;
+
+  > * + * {
+    margin-left: 0.75rem;
+  }
 }
 
 .invalid {
@@ -328,7 +336,7 @@ img.icon {
 
 // Sankey SVG styles
 svg {
-  width: 100vw;
+  width: 100%;
 }
 
 text {

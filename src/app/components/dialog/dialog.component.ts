@@ -3,6 +3,7 @@ import {
   ElementRef,
   HostBinding,
   HostListener,
+  Input,
 } from '@angular/core';
 
 @Component({
@@ -10,6 +11,8 @@ import {
   template: '',
 })
 export class DialogComponent {
+  @Input() header: string;
+
   open = false;
 
   @HostBinding('class.relative') relative = true;
