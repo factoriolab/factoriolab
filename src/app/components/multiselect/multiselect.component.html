@@ -1,31 +1,27 @@
-<div class="flex tween dialog-title">
-  <span class="header">{{ header }}</span>
-  <div class="flex">
-    <i
-      *ngIf="edited"
-      class="cancel clickable material-icons"
-      title="Cancel changes"
-      (click)="cancel.emit(); $event.stopPropagation()"
-      >close</i
-    >
-    <i
-      *ngIf="edited"
-      class="confirm clickable material-icons"
-      title="Confirm changes"
-      (click)="commit.emit(editValue); $event.stopPropagation()"
-      >check</i
-    >
-  </div>
+<div (click)="clickOpen()">
+  <ng-content></ng-content>
 </div>
-<div
-  class="flex clickable"
-  *ngFor="let opt of options"
-  (click)="clickId(opt.id, $event)"
->
-  <div class="material-icons">
-    {{
-      editValue.indexOf(opt.id) === -1 ? 'check_box_outline_blank' : 'check_box'
-    }}
+<div class="dialog panel" *ngIf="open">
+  <div class="dialog-title">
+    <div class="header">{{ header }}</div>
+    <button (click)="cancel($event)">
+      <i class="material-icons">close</i>
+    </button>
   </div>
-  <div>{{ opt.name }}</div>
+  <div class="panel">
+    <div
+      class="flex option"
+      *ngFor="let opt of options"
+      (click)="clickId(opt.id, $event)"
+    >
+      <div
+        class="checkbox"
+        [class.checked]="editValue.indexOf(opt.id) !== -1"
+      ></div>
+      <div>{{ opt.name }}</div>
+    </div>
+  </div>
+  <div class="dialog-buttons">
+    <button class="green" (click)="close()">Confirm</button>
+  </div>
 </div>

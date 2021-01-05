@@ -19,7 +19,11 @@ export class DialogComponent {
   @HostListener('document:click', ['$event'])
   click(event: MouseEvent): void {
     if (!this.element.nativeElement.contains(event.target)) {
-      this.open = false;
+      this.close();
     }
+  }
+
+  close(): void {
+    this.open = false;
   }
 }

@@ -241,7 +241,7 @@
                 (click)="editFactory = { id: f, type: FactoryEditType.Factory }"
               >
               </lab-icon>
-              <lab-select
+              <!-- <lab-select
                 *ngIf="
                   editFactory &&
                   editFactory.id === f &&
@@ -261,7 +261,7 @@
                   })
                 "
               >
-              </lab-select>
+              </lab-select> -->
             </div>
           </ng-container>
           <lab-icon
@@ -342,7 +342,7 @@
               [data]="data"
               (click)="editFactory = { id: f, type: FactoryEditType.Beacon }"
             ></lab-icon>
-            <lab-select
+            <!-- <lab-select
               *ngIf="
                 editFactory &&
                 editFactory.id === f &&
@@ -356,7 +356,7 @@
               (cancel)="editFactory = null"
               (selectId)="setBeacon.emit({ id: f, value: $event })"
             >
-            </lab-select>
+            </lab-select> -->
           </ng-container>
         </td>
         <td>
@@ -372,7 +372,7 @@
                 editFactory = { id: f, type: FactoryEditType.BeaconModule }
               "
             ></lab-icon>
-            <lab-select
+            <!-- <lab-select
               *ngIf="
                 editFactory &&
                 editFactory.id === f &&
@@ -391,7 +391,7 @@
                 })
               "
             >
-            </lab-select>
+            </lab-select> -->
           </ng-container>
         </td>
         <td>
@@ -437,7 +437,7 @@
       [data]="data"
       (click)="openSelect = OpenSelect.Belt"
     ></lab-icon>
-    <lab-select
+    <!-- <lab-select
       *ngIf="openSelect === OpenSelect.Belt"
       [data]="data"
       [selectedId]="settings.belt"
@@ -448,7 +448,7 @@
       (cancel)="openSelect = null"
       (selectId)="setBelt.emit({ value: $event, default: data.defaults.belt })"
     >
-    </lab-select>
+    </lab-select> -->
   </div>
   <div>
     <lab-icon
@@ -459,7 +459,7 @@
       [data]="data"
       (click)="openSelect = OpenSelect.Fuel"
     ></lab-icon>
-    <lab-select
+    <!-- <lab-select
       *ngIf="openSelect === OpenSelect.Fuel"
       [data]="data"
       [options]="sortedFuels"
@@ -468,7 +468,7 @@
       (cancel)="openSelect = null"
       (selectId)="setFuel.emit({ value: $event, default: data.defaults.fuel })"
     >
-    </lab-select>
+    </lab-select> -->
   </div>
 </div>
 <div class="field">

@@ -52,22 +52,22 @@ export class IconComponent {
 
   constructor(private ref: ElementRef) {}
 
-  @HostListener('mouseenter') mouseenter() {
+  @HostListener('mouseenter') mouseenter(): void {
     this.hover = true;
   }
-  @HostListener('mouseleave') mouseleave() {
+  @HostListener('mouseleave') mouseleave(): void {
     this.hover = false;
   }
 
-  setTooltipMargin() {
+  setTooltipMargin(): void {
     this.tooltipMarginTop = (this.scale ? 40 : 72) - this.scrollTop;
   }
 
-  round(value: number) {
+  round(value: number): number {
     return Number(value.toFixed(2));
   }
 
-  toBonusPercent(value: number) {
+  toBonusPercent(value: number): string {
     const rational = this.round(
       Rational.fromNumber(value).mul(Rational.hundred).toNumber()
     );

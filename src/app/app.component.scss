@@ -36,11 +36,11 @@
     display: flex;
     align-items: center;
     margin-left: 2.75rem;
+  }
 
-    .separator {
-      color: var(--color-link);
-      margin: 0 0.5rem;
-    }
+  .separator {
+    color: var(--color-link);
+    margin: 0 0.5rem;
   }
 }
 
@@ -69,30 +69,38 @@ main {
 
 ul {
   display: flex;
+  padding: 0 0.75rem;
 
   li {
+    font-weight: 900;
+    line-height: 1.25;
+    font-size: 120%;
+    height: 3rem;
+    width: 5rem;
     padding: 0.5rem;
-    border-radius: 0 0 0.25rem 0.25rem;
-    user-select: none;
-
-    &.expand {
-      padding: 0.25rem 0.5rem 0 0.5rem;
-    }
-
-    &:first-child {
-      border-bottom-left-radius: 0;
-    }
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     &.active {
-      background-color: var(--color-gray-2);
+      color: var(--color-header);
+      background-color: var(--color-light);
+      box-shadow: var(--shadow-button-ac);
+      z-index: 1;
     }
 
     &:not(.active) {
-      color: var(--color-brand);
+      color: var(--color-black);
       cursor: pointer;
+      background-color: var(--color-button);
+      box-shadow: var(--shadow-button);
 
       &:hover {
-        background-color: var(--color-gray-1);
+        background-color: var(--color-brand);
+        box-shadow: var(--shadow-hover);
+        filter: drop-shadow(0 0 2px var(--color-brand-sha));
       }
     }
   }

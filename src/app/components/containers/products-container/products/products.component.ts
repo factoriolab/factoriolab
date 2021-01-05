@@ -18,16 +18,6 @@ import {
 } from '~/models';
 import { RecipeUtility } from '~/utilities';
 
-export enum ProductEditType {
-  Product,
-  Recipe,
-}
-
-export interface ProductEdit {
-  product: Product;
-  type: ProductEditType;
-}
-
 @Component({
   selector: 'lab-products',
   templateUrl: './products.component.html',
@@ -47,11 +37,8 @@ export class ProductsComponent {
   @Output() setRateType = new EventEmitter<IdPayload<RateType>>();
   @Output() setRecipe = new EventEmitter<IdPayload>();
 
-  edit: ProductEdit;
-
   RateType = RateType;
   RateTypeOptions = RateTypeOptions;
-  ProductEditType = ProductEditType;
 
   constructor() {}
 

@@ -8,7 +8,7 @@
         [data]="data$ | async"
         (click)="showSettings = !showSettings"
       ></lab-icon>
-      <div class="header"><a href="/">Factorio Lab Calculator</a></div>
+      <div class="header"><a href="list#p=">Factorio Lab Calculator</a></div>
     </div>
     <div class="links">
       <a target="_blank" href="https://github.com/factoriolab/factorio-lab/wiki"
@@ -43,21 +43,23 @@
         <li
           routerLink="/list"
           routerLinkActive="active"
-          [fragment]="router.zip"
+          preserveFragment="true"
           title="View as list of steps"
         >
-          List
+          <span>List</span>
         </li>
         <li
           routerLink="/flow"
           routerLinkActive="active"
-          [fragment]="router.zip"
+          preserveFragment="true"
           title="View as sankey flow diagram"
         >
-          Flow
+          <span>Flow</span>
         </li>
       </ul>
-      <router-outlet></router-outlet>
+      <div class="panel">
+        <router-outlet></router-outlet>
+      </div>
     </div>
   </div>
 </main>

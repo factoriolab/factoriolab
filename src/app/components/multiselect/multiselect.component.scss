@@ -1,25 +1,9 @@
-:host {
-  position: absolute;
-  background-color: var(--color-gray-2);
-  border: 1px solid var(--color-brand);
-  border-radius: 0.25rem;
-  z-index: 10;
-  padding: 0.5rem;
-  margin: -1px;
+.option {
+  cursor: pointer;
+  padding: 0.375rem 0;
+  user-select: none;
 
   > * + * {
-    margin-top: 0.5rem;
+    margin-left: 0.375rem;
   }
-}
-
-.header {
-  white-space: nowrap;
-}
-
-.clickable > * {
-  white-space: nowrap;
-}
-
-.clickable:hover {
-  color: var(--color-black);
 }

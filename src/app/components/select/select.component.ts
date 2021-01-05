@@ -30,15 +30,15 @@ export class SelectComponent extends DialogComponent {
   IdType = IdType;
   ItemId = ItemId;
 
-  get top() {
+  get top(): number {
     return this.parent ? this.parent.getBoundingClientRect().y - 13 : -13;
   }
 
-  get left() {
+  get left(): number {
     return this.parent ? this.parent.getBoundingClientRect().x - 13 : -13;
   }
 
-  get width() {
+  get width(): number {
     const buttons = this.options.length + 1;
     const iconsPerRow = buttons <= 4 ? buttons : Math.ceil(Math.sqrt(buttons));
     return iconsPerRow * 2.375 + 1.5;

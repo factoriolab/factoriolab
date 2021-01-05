@@ -3,25 +3,21 @@
     <tr class="border col">
       <!-- Expand -->
       <th>
-        <span class="relative flex">
-          <i
-            title="Select columns"
-            class="clickable material-icons"
-            (click)="edit = { step: null, type: StepEditType.Columns }"
-            >visibility</i
-          >
+        <div>
           <lab-multiselect
-            *ngIf="edit?.type === StepEditType.Columns"
             [header]="'Select Columns'"
-            [enabledIds]="columns.ids"
+            [selected]="columns.ids"
             [options]="ColumnsAsOptions"
-            (cancel)="edit = null"
-            (commit)="edit = null; setColumns.emit($event)"
-          ></lab-multiselect>
-        </span>
+            (selectIds)="setColumns.emit($event)"
+          >
+            <button title="Select columns">
+              <i class="material-icons">visibility</i>
+            </button></lab-multiselect
+          >
+        </div>
       </th>
       <th>
-        <div>
+        <div class="header">
           Items{{ rateLabel }}
           <i
             *ngIf="modifiedIgnore"
@@ -33,7 +29,7 @@
         </div>
       </th>
       <th *ngIf="show[Column.Belts]">
-        <div>
+        <div class="header">
           Belts
           <i
             *ngIf="modifiedBelt"
@@ -45,10 +41,10 @@
         </div>
       </th>
       <th *ngIf="show[Column.Wagons]">
-        <div>Wagons{{ rateLabel }}</div>
+        <div class="header">Wagons{{ rateLabel }}</div>
       </th>
       <th *ngIf="show[Column.Factories]" colspan="3">
-        <div>
+        <div class="header">
           Factories
           <i
             *ngIf="modifiedFactory"
@@ -60,7 +56,7 @@
         </div>
       </th>
       <th *ngIf="show[Column.Beacons]" colspan="3">
-        <div>
+        <div class="header">
           Beacons
           <i
             *ngIf="modifiedBeacons"
@@ -71,9 +67,9 @@
           >
         </div>
       </th>
-      <th *ngIf="show[Column.Power]"><div>Power</div></th>
+      <th *ngIf="show[Column.Power]"><div class="header">Power</div></th>
       <th *ngIf="show[Column.Pollution]">
-        <div>Pollution{{ rateLabel }}</div>
+        <div class="header">Pollution{{ rateLabel }}</div>
       </th>
       <!-- Reset / Link -->
       <th>
@@ -179,7 +175,7 @@
                     [data]="data"
                     (click)="edit = { step: step, type: StepEditType.Belt }"
                   ></lab-icon>
-                  <lab-select
+                  <!-- <lab-select
                     *ngIf="
                       edit &&
                       edit.step === step &&
@@ -198,7 +194,7 @@
                       })
                     "
                   >
-                  </lab-select>
+                  </lab-select> -->
                 </div>
               </ng-template>
             </div>
@@ -275,7 +271,7 @@
                           edit = { step: step, type: StepEditType.Factory }
                         "
                       ></lab-icon>
-                      <lab-select
+                      <!-- <lab-select
                         *ngIf="
                           edit &&
                           edit.step === step &&
@@ -287,7 +283,7 @@
                         (cancel)="edit = null"
                         (selectId)="factoryChange(step, $event)"
                       >
-                      </lab-select>
+                      </lab-select> -->
                     </div>
                   </ng-template>
                 </ng-container>
@@ -325,7 +321,7 @@
                         }
                       "
                     ></lab-icon>
-                    <lab-select
+                    <!-- <lab-select
                       *ngIf="
                         edit &&
                         edit.step === step &&
@@ -339,7 +335,7 @@
                       (cancel)="edit = null"
                       (selectId)="factoryModuleChange(step, $event, i)"
                     >
-                    </lab-select>
+                    </lab-select> -->
                   </div>
                 </div>
               </div>
@@ -392,7 +388,7 @@
                           edit = { step: step, type: StepEditType.Beacon }
                         "
                       ></lab-icon>
-                      <lab-select
+                      <!-- <lab-select
                         *ngIf="
                           edit &&
                           edit.step === step &&
@@ -410,7 +406,7 @@
                           })
                         "
                       >
-                      </lab-select>
+                      </lab-select> -->
                     </div>
                   </ng-template>
                 </ng-container>
@@ -440,7 +436,7 @@
                         }
                       "
                     ></lab-icon>
-                    <lab-select
+                    <!-- <lab-select
                       *ngIf="
                         edit &&
                         edit.step === step &&
@@ -454,7 +450,7 @@
                       (cancel)="edit = null"
                       (selectId)="beaconModuleChange(step, $event, i)"
                     >
-                    </lab-select>
+                    </lab-select> -->
                   </div>
                 </div>
               </ng-container>

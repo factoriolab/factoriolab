@@ -13,9 +13,11 @@ $color-brand: #fca000;
 $color-brand-alt: #f1be64;
 $color-brand-drk: #b26e00;
 $color-brand-sha: #f9b44b;
+$color-brand-che: #e39827;
 $color-header: #ffe6c0;
 $color-scroll: #201810;
 $color-green: #5eb663;
+$color-green-alt: #34be3c;
 $color-red: #fe5a5a;
 
 $shadow-button: inset 8px 0 4px -8px #000, inset -8px 0 4px -8px #000,
@@ -24,9 +26,17 @@ $shadow-button: inset 8px 0 4px -8px #000, inset -8px 0 4px -8px #000,
 $shadow-button-sm: inset 4px 0 2px -4px #150802, inset -4px 0 2px -4px #150802,
   inset 0 4px 2px -4px #969490, inset 0 -4px 2px -3px #000, 0 -1px 2px 0px #000,
   0 1px 2px 0px #7e7b79;
+$shadow-button-ac: inset 8px 0 4px -8px #000, inset -8px 0 4px -8px #000,
+  inset 0 10px 2px -8px#969490, inset 0 10px 2px -8px #282828,
+  0 10px 4px -1px $color-light;
+$shadow-button-gr: inset 8px 0 4px -8px #000, inset 0 10px 2px -8px #95df99,
+  inset 0 10px 2px -8px #163218, inset 0 -9px 2px -8px #000, 0 0 4px 0 #000;
 $shadow-input: inset 0 4px 1px -2px #000, inset 0 -4px 1px -2px #c5c5c5,
   inset 2px 0 1px 0 #5f5f5f, inset -2px 0 1px 0 #5f5f5f,
   inset 0 -2px 2px 0 #5f5f5f, 0 0 4px 1px #2e2521;
+$shadow-check: inset 0 4px 2.5px -2.5px #111, inset 2px 0 2px 0 #323232,
+  inset -2px 0 2px 0 #323232, inset 0 -1px 1px 0 #fff,
+  inset 0 -4px 2px -2px #8e8e8e, 0 0 4px 1px #2e2521;
 $shadow-panel: inset 0 0 3px 0 #000, 0 -2px 2px -1px #000,
   -2px 0 2px -2px #28221f, -2px 0 2px -2px #28221f, 2px 0 2px -2px #28221f,
   2px 0 2px -2px #28221f, 0 3px 3px -3px #8f8c8b, 0 2px 2px -2px #8f8c8b,
@@ -39,6 +49,9 @@ $shadow-hover-sm: inset 4px 0 2px -4px #000, inset -4px 0 2px -4px #000,
   inset 0 5px 1px -4px #fff, inset 0 4px 2px -4px #000,
   inset 0 -4px 4px -4px #000, inset 0 -5px 1px -4px #432400, 0 0 2px 0 #000,
   inset 0 0 2px 1px #f9b44b;
+$shadow-hover-ch: inset 0 4px 2px -2px #412a07, inset 2px 0 2px 0 #5a3c10,
+  inset -2px 0 2px 0 #5a3c10, inset 0 -2px 2px 0 #d0ae79,
+  inset 0 -2px 4px 0 #c78627, 0 0 4px 1px #786b4f;
 $shadow-active: inset 0 10px 2px -8px #000, inset 0 9px 2px -8px #000,
   inset 8px 0 4px -8px #563a10, inset 8px 0 4px -8px #563a10,
   inset -8px 0 4px -8px #563a10, inset -8px 0 4px -8px #563a10,
@@ -78,17 +91,23 @@ body {
   --color-brand-alt: #{$color-brand-alt};
   --color-brand-drk: #{$color-brand-drk};
   --color-brand-sha: #{$color-brand-sha};
+  --color-brand-che: #{$color-brand-che};
   --color-header: #{$color-header};
   --color-scroll: #{$color-scroll};
   --color-green: #{$color-green};
+  --color-green-alt: #{$color-green-alt};
   --color-red: #{$color-red};
 
   --shadow-button: #{$shadow-button};
   --shadow-button-sm: #{$shadow-button-sm};
+  --shadow-button-ac: #{$shadow-button-ac};
+  --shadow-button-gr: #{$shadow-button-gr};
   --shadow-input: #{$shadow-input};
+  --shadow-check: #{$shadow-check};
   --shadow-panel: #{$shadow-panel};
   --shadow-hover: #{$shadow-hover};
   --shadow-hover-sm: #{$shadow-hover-sm};
+  --shadow-hover-ch: #{$shadow-hover-ch};
   --shadow-active: #{$shadow-active};
   --shadow-active-sm: #{$shadow-active-sm};
   --shadow-main: #{$shadow-main};

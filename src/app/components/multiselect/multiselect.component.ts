@@ -4,12 +4,11 @@ import {
   Output,
   EventEmitter,
   ElementRef,
-  HostListener,
   ChangeDetectionStrategy,
-  HostBinding,
 } from '@angular/core';
 
-import { Entities, IdName } from '~/models';
+import { IdName } from '~/models';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'lab-multiselect',
@@ -17,43 +16,44 @@ import { Entities, IdName } from '~/models';
   styleUrls: ['./multiselect.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MultiselectComponent {
+export class MultiselectComponent extends DialogComponent {
   @Input() header: string;
-  @Input() set enabledIds(value: string[]) {
-    this.editValue = [...value];
-  }
+  @Input() selected: string[];
   @Input() options: IdName[];
   @Input() parent: HTMLElement;
 
-  @Output() cancel = new EventEmitter();
-  @Output() commit = new EventEmitter<string[]>();
+  @Output() selectIds = new EventEmitter<string[]>();
 
-  opening = true;
   edited = false;
   editValue: string[];
-  idEnabled: Entities<boolean> = {};
 
-  @HostBinding('style.top.px') get top() {
-    return this.parent ? this.parent.getBoundingClientRect().y + 1 : 1;
+  get top(): number {
+    return this.parent?.getBoundingClientRect().y + 1;
   }
 
-  @HostBinding('style.left.px') get left() {
-    return this.parent ? this.parent.getBoundingClientRect().x + 1 : 1;
+  get left(): number {
+    return this.parent?.getBoundingClientRect().x + 1;
   }
 
-  constructor(private element: ElementRef) {}
+  constructor(element: ElementRef) {
+    super(element);
+  }
 
-  @HostListener('document:click', ['$event'])
-  click(event: MouseEvent) {
-    if (this.opening) {
-      this.opening = false;
-    } else if (!this.element.nativeElement.contains(event.target)) {
-      if (this.edited) {
-        this.commit.emit(this.editValue);
-      } else {
-        this.cancel.emit();
-      }
+  clickOpen(): void {
+    this.open = true;
+    this.editValue = [...this.selected];
+  }
+
+  close(): void {
+    if (this.edited) {
+      this.selectIds.emit(this.editValue);
     }
+    this.open = false;
+  }
+
+  cancel(event: Event): void {
+    this.open = false;
+    event.stopPropagation();
   }
 
   clickId(id: string, event: MouseEvent) {
