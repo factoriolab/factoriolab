@@ -28,11 +28,11 @@ export class MultiselectComponent extends DialogComponent {
   editValue: string[];
 
   get top(): number {
-    return this.parent?.getBoundingClientRect().y + 1;
+    return (this.parent?.getBoundingClientRect().y || 0) + 1;
   }
 
   get left(): number {
-    return this.parent?.getBoundingClientRect().x + 1;
+    return (this.parent?.getBoundingClientRect().x || 0) + 1;
   }
 
   constructor(element: ElementRef) {

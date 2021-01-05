@@ -8,17 +8,16 @@
   [style.left.px]="left"
   [style.width.rem]="width"
 >
-  <div class="panel">
-    <div
-      class="grid-button"
-      title="Cancel"
-      (click)="open = false; $event.stopPropagation()"
-    >
+  <div class="dialog-title">
+    <div class="header"></div>
+    <button (click)="open = false; $event.stopPropagation()">
       <i class="material-icons">close</i>
-    </div>
+    </button>
+  </div>
+  <div class="panel">
     <lab-icon
       *ngIf="includeEmptyModule"
-      class="grid-button"
+      class="grid"
       tooltip="No Module"
       [iconId]="ItemId.Module"
       [class.selected]="selected === ItemId.Module"
@@ -28,7 +27,7 @@
     </lab-icon>
     <ng-container *ngFor="let id of options">
       <lab-icon
-        class="grid-button"
+        class="grid"
         [data]="data"
         [iconId]="id"
         [tooltip]="

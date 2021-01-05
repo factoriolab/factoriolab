@@ -31,11 +31,11 @@ export class SelectComponent extends DialogComponent {
   ItemId = ItemId;
 
   get top(): number {
-    return this.parent ? this.parent.getBoundingClientRect().y - 13 : -13;
+    return (this.parent?.getBoundingClientRect().y || 0) - 41;
   }
 
   get left(): number {
-    return this.parent ? this.parent.getBoundingClientRect().x - 13 : -13;
+    return (this.parent?.getBoundingClientRect().x || 0) - 13;
   }
 
   get width(): number {

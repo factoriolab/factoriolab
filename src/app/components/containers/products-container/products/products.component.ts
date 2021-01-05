@@ -15,6 +15,7 @@ import {
   Entities,
   RateTypeOptions,
   DisplayRate,
+  IdType,
 } from '~/models';
 import { RecipeUtility } from '~/utilities';
 
@@ -39,6 +40,7 @@ export class ProductsComponent {
 
   RateType = RateType;
   RateTypeOptions = RateTypeOptions;
+  IdType = IdType;
 
   constructor() {}
 

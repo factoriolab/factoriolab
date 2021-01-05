@@ -132,27 +132,6 @@ button,
   }
 }
 
-.grid-button {
-  padding: 0.125rem;
-  border-radius: 0.25rem;
-  background-color: var(--color-back);
-  margin: 1px;
-  cursor: pointer;
-  box-shadow: var(--shadow-item);
-
-  &:hover {
-    background-color: var(--color-brand-drk);
-    box-shadow: var(--shadow-hover);
-  }
-}
-
-div.grid-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 2.25rem;
-}
-
 input[type='number'],
 input[type='text'] {
   width: 5rem;

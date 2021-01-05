@@ -69,15 +69,16 @@
               </ng-container>
               <ng-template #recipePicker>
                 <lab-select
+                  [data]="data"
                   [selected]="recipe"
                   [options]="getOptions(product)"
-                  [data]="data"
+                  [selectType]="IdType.Recipe"
                   (cancel)="edit = null"
                   (selectId)="setRecipe.emit({ id: product.id, value: $event })"
                 >
                   <lab-icon
                     class="button"
-                    title="Change recipe"
+                    title="Change rate step"
                     hoverIcon="settings"
                     [data]="data"
                     [iconId]="recipe"

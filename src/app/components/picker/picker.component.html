@@ -27,7 +27,7 @@
       <div class="row" *ngFor="let row of data.categoryItemRows[tab]">
         <lab-icon
           *ngFor="let id of row"
-          class="grid-button"
+          class="grid"
           [iconId]="id"
           [scrollTop]="tabScroll.scrollTop"
           [tooltip]="data.itemEntities[id].name"
