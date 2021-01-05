@@ -19,25 +19,25 @@
       <th>
         <div class="header">
           Items{{ rateLabel }}
-          <i
+          <button
             *ngIf="modifiedIgnore"
             title="Undo all ignored steps"
-            class="clickable material-icons"
             (click)="resetIgnore.emit()"
-            >undo</i
           >
+            <i class="material-icons">undo</i>
+          </button>
         </div>
       </th>
       <th *ngIf="show[Column.Belts]">
         <div class="header">
           Belts
-          <i
+          <button
             *ngIf="modifiedBelt"
             title="Undo all belt modifications"
-            class="clickable material-icons"
             (click)="resetBelt.emit()"
-            >undo</i
           >
+            <i class="material-icons">undo</i>
+          </button>
         </div>
       </th>
       <th *ngIf="show[Column.Wagons]">
@@ -46,25 +46,25 @@
       <th *ngIf="show[Column.Factories]" colspan="3">
         <div class="header">
           Factories
-          <i
+          <button
             *ngIf="modifiedFactory"
             title="Undo all factory modifications"
-            class="clickable material-icons"
             (click)="resetFactory.emit()"
-            >undo</i
           >
+            <i class="material-icons">undo</i>
+          </button>
         </div>
       </th>
       <th *ngIf="show[Column.Beacons]" colspan="3">
         <div class="header">
           Beacons
-          <i
+          <button
             *ngIf="modifiedBeacons"
             title="Undo all beacon modifications"
-            class="clickable material-icons"
             (click)="resetBeacons.emit()"
-            >undo</i
           >
+            <i class="material-icons">undo</i>
+          </button>
         </div>
       </th>
       <th *ngIf="show[Column.Power]"><div class="header">Power</div></th>
@@ -83,20 +83,22 @@
     <ng-container *ngFor="let step of displayedSteps; trackBy: trackBy">
       <tr class="border row col">
         <td>
-          <i
-            *ngIf="details[step.itemId]?.length && !expanded[step.itemId]"
-            class="clickable material-icons"
-            title="Click to show details"
-            (click)="expanded[step.itemId] = details[step.itemId][0]"
-            >expand_more</i
-          >
-          <i
-            *ngIf="mode === ListMode.All && expanded[step.itemId]"
-            class="clickable material-icons"
-            title="Click to hide details"
-            (click)="expanded[step.itemId] = null"
-            >expand_less</i
-          >
+          <div>
+            <button
+              *ngIf="details[step.itemId]?.length && !expanded[step.itemId]"
+              title="Click to show details"
+              (click)="expanded[step.itemId] = details[step.itemId][0]"
+            >
+              <i class="material-icons">expand_more</i>
+            </button>
+            <button
+              *ngIf="mode === ListMode.All && expanded[step.itemId]"
+              title="Click to hide details"
+              (click)="expanded[step.itemId] = null"
+            >
+              <i class="material-icons">expand_less</i>
+            </button>
+          </div>
         </td>
         <td>
           <div class="flex" *ngIf="step.items">
@@ -483,10 +485,10 @@
         </td>
       </tr>
       <ng-container *ngIf="expanded[step.itemId]">
-        <tr>
+        <tr class="detail-header">
           <td></td>
           <td colspan="100" class="detail-tabs">
-            <ul>
+            <ul class="tabs">
               <li
                 *ngIf="
                   details[step.itemId].indexOf(StepDetailTab.Inputs) !== -1
@@ -494,7 +496,7 @@
                 [class.active]="expanded[step.itemId] === StepDetailTab.Inputs"
                 (click)="expanded[step.itemId] = StepDetailTab.Inputs"
               >
-                Inputs
+                <span>Inputs</span>
               </li>
               <li
                 *ngIf="
@@ -503,7 +505,7 @@
                 [class.active]="expanded[step.itemId] === StepDetailTab.Outputs"
                 (click)="expanded[step.itemId] = StepDetailTab.Outputs"
               >
-                Outputs
+                <span>Outputs</span>
               </li>
               <li
                 *ngIf="
@@ -512,7 +514,7 @@
                 [class.active]="expanded[step.itemId] === StepDetailTab.Factory"
                 (click)="expanded[step.itemId] = StepDetailTab.Factory"
               >
-                Factory
+                <span>Factory</span>
               </li>
               <li
                 *ngIf="
@@ -521,7 +523,7 @@
                 [class.active]="expanded[step.itemId] === StepDetailTab.Recipes"
                 (click)="expanded[step.itemId] = StepDetailTab.Recipes"
               >
-                Recipes
+                <span>Recipes</span>
               </li>
             </ul>
           </td>

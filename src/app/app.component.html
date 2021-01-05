@@ -39,7 +39,7 @@
   <div class="view">
     <lab-products-container></lab-products-container>
     <div *ngIf="(products$ | async).length">
-      <ul role="navigation">
+      <ul role="navigation" class="tabs">
         <li
           routerLink="/list"
           routerLinkActive="active"

@@ -36,28 +36,46 @@ table {
   }
 }
 
+tr.detail-header {
+  > * {
+    &:not(:first-child) {
+      background-color: var(--color-back);
+    }
+
+    &:nth-child(2) {
+      border-top-left-radius: 0.375rem;
+    }
+
+    &:last-child {
+      border-top-right-radius: 0.375rem;
+    }
+  }
+}
+
 tr.details {
+  > :first-child {
+    background-color: var(--color-light);
+  }
+
+  > :not(:first-child) {
+    background-color: var(--color-dark);
+  }
+
   > *:not(:first-child):not(:nth-child(2)):not(.split-column) {
     border-left: 1px solid var(--color-back);
   }
 
-  &:not(.first) {
+  &:not(.first) > td:not(:first-child) {
     border-top: 1px solid var(--color-back);
-  }
-
-  &.first {
-    > :last-child {
-      border-top-right-radius: 0.5rem;
-    }
   }
 
   &.last {
     > :nth-child(2) {
-      border-bottom-left-radius: 0.5rem;
+      border-bottom-left-radius: 0.375rem;
     }
 
     > :last-child {
-      border-bottom-right-radius: 0.5rem;
+      border-bottom-right-radius: 0.375rem;
     }
   }
 
@@ -100,7 +118,7 @@ tr.details {
   }
 
   > :not(:first-child) {
-    background-color: var(--color-gray-2);
+    background-color: var(--color-dark);
   }
 }
 
@@ -111,10 +129,6 @@ th > div {
   height: 2rem;
   padding: 0 0.25rem;
   margin: 0 -0.25rem;
-
-  > * {
-    margin-left: 0.5rem;
-  }
 }
 
 td > div {
@@ -178,27 +192,10 @@ tr {
   td.detail-tabs {
     padding: 0;
 
-    ul {
-      display: flex;
-
-      li {
-        padding: 0.5rem;
-        border-radius: 0.5rem 0.5rem 0 0;
-        user-select: none;
-
-        &:not(.active) {
-          color: var(--color-brand);
-          cursor: pointer;
-
-          &:hover {
-            background-color: var(--color-gray-1);
-          }
-        }
-
-        &.active {
-          cursor: default;
-          background-color: var(--color-gray-2);
-        }
+    ul.tabs li {
+      &.active {
+        background-color: var(--color-dark);
+        box-shadow: var(--shadow-button-dk);
       }
     }
   }
@@ -206,6 +203,7 @@ tr {
 
 .info {
   font-size: small;
+  margin-bottom: 0.25rem;
 }
 
 .recipe-spacer {

@@ -29,6 +29,8 @@ $shadow-button-sm: inset 4px 0 2px -4px #150802, inset -4px 0 2px -4px #150802,
 $shadow-button-ac: inset 8px 0 4px -8px #000, inset -8px 0 4px -8px #000,
   inset 0 10px 2px -8px#969490, inset 0 10px 2px -8px #282828,
   0 10px 4px -1px $color-light;
+$shadow-button-dk: inset 8px 0 4px -8px #000, inset -8px 0 4px -8px #000,
+  inset 0 10px 2px -8px#969490, inset 0 10px 2px -8px #282828;
 $shadow-button-gr: inset 8px 0 4px -8px #000, inset 0 10px 2px -8px #95df99,
   inset 0 10px 2px -8px #163218, inset 0 -9px 2px -8px #000, 0 0 4px 0 #000;
 $shadow-input: inset 0 4px 1px -2px #000, inset 0 -4px 1px -2px #c5c5c5,
@@ -101,6 +103,7 @@ body {
   --shadow-button: #{$shadow-button};
   --shadow-button-sm: #{$shadow-button-sm};
   --shadow-button-ac: #{$shadow-button-ac};
+  --shadow-button-dk: #{$shadow-button-dk};
   --shadow-button-gr: #{$shadow-button-gr};
   --shadow-input: #{$shadow-input};
   --shadow-check: #{$shadow-check};
