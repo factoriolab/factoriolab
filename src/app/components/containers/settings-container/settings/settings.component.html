@@ -14,61 +14,49 @@
   </div>
 </div>
 <div class="panel">
-  <div class="flex tween">
-    <div class="label">Saved States</div>
-  </div>
-  <div class="states" *ngIf="!editState">
-    <select [ngModel]="state" (change)="setState($event)">
-      <option
-        *ngFor="let state of preferences.states | keyvalue; trackBy: trackBy"
-        [value]="state.key"
-        [label]="state.key"
-      ></option>
-      <option
-        label="No state selected"
-        value=""
-        selected
-        disabled
-        hidden
-      ></option>
-    </select>
-    <i
-      *ngIf="hash"
-      class="clickable material-icons"
-      title="Name and save this state"
-      (click)="toggleEditState($event)"
-      >edit</i
-    >
-    <i
-      *ngIf="state && hash && preferences.states[state] !== hash"
-      class="clickable material-icons"
-      title="Overwrite this saved state"
-      (click)="saveState.emit({ id: state, value: hash })"
-      >save</i
-    >
-    <i
-      *ngIf="state"
-      class="clickable material-icons"
-      title="Delete this saved state"
-      (click)="clickDeleteState($event)"
-      >delete</i
-    >
-  </div>
-  <div class="states" *ngIf="editState">
-    <input type="text" placeholder="Enter a name..." [(ngModel)]="state" />
-    <i
-      *ngIf="state && hash"
-      class="clickable material-icons"
-      title="Save this state"
-      (click)="clickSaveState($event)"
-      >save</i
-    >
-    <i
-      class="clickable material-icons"
-      title="Cancel"
-      (click)="toggleEditState($event)"
-      >close</i
-    >
+  <div class="field tween">
+    <div>Saved State</div>
+    <div class="flex states">
+      <ng-container *ngIf="!editState; else stateInput">
+        <lab-options
+          title="Select saved state"
+          [selected]="preferences.states[state]"
+          [options]="savedStates"
+          (selectId)="setState($event)"
+        ></lab-options>
+        <button
+          *ngIf="hash"
+          title="Name and save this state"
+          (click)="toggleEditState($event)"
+        >
+          <i class="material-icons">edit</i>
+        </button>
+        <button
+          *ngIf="state"
+          title="Delete this saved state"
+          (click)="clickDeleteState($event)"
+        >
+          <i class="material-icons">delete</i>
+        </button>
+      </ng-container>
+      <ng-template #stateInput>
+        <input
+          type="text"
+          placeholder="Enter a name..."
+          [(ngModel)]="tempState"
+        />
+        <button
+          *ngIf="state && hash"
+          title="Save this state"
+          (click)="clickSaveState($event)"
+        >
+          <i class="material-icons">save</i>
+        </button>
+        <button title="Cancel" (click)="toggleEditState($event)">
+          <i class="material-icons">close</i>
+        </button>
+      </ng-template>
+    </div>
   </div>
   <div class="flex tween">
     <div class="label">Recipes</div>
@@ -87,28 +75,6 @@
     >
       <option *ngFor="let b of base" [value]="b.id" [label]="b.name"></option>
     </select>
-  </div>
-  <div class="field" *ngIf="mods.length">
-    <div>
-      <button #btnMods (click)="openSelect = OpenSelect.Mods">
-        {{ settings.modIds.length }} Mod Set{{
-          settings.modIds.length === 1 ? '' : 's'
-        }}
-        Enabled
-      </button>
-      <!-- <lab-multiselect
-        *ngIf="openSelect === OpenSelect.Mods"
-        [header]="'Select Mod Sets'"
-        [enabledIds]="settings.modIds"
-        [options]="mods"
-        [parent]="btnMods"
-        (cancel)="openSelect = null"
-        (commit)="
-          openSelect = null;
-          setMods.emit({ value: $event, default: data.defaults.modIds })
-        "
-      ></lab-multiselect> -->
-    </div>
   </div>
   <div class="field">
     <div>

@@ -101,10 +101,6 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetBaseAction(value));
   }
 
-  setMods(value: DefaultPayload<string[]>) {
-    this.store.dispatch(new Settings.SetModsAction(value));
-  }
-
   setDisabledRecipes(value: DefaultPayload<string[]>) {
     this.store.dispatch(new Settings.SetDisabledRecipesAction(value));
   }

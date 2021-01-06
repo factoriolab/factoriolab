@@ -1,3 +1,7 @@
+:host {
+  display: flex;
+}
+
 lab-dialog {
   margin-top: 2.25rem;
   padding: 0;
@@ -17,6 +21,10 @@ lab-dialog {
 }
 
 button {
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-between;
+
   &.active:not(:hover) {
     background: var(--color-brand-alt);
     box-shadow: var(--shadow-active);

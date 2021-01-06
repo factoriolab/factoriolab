@@ -65,13 +65,6 @@ export function settingsReducer(
           disabledRecipes: null,
         },
       };
-    case SettingsActionType.SET_MODS:
-      return {
-        ...state,
-        ...{
-          modIds: StoreUtility.compareValues(action.payload),
-        },
-      };
     case SettingsActionType.SET_DISABLED_RECIPES:
       return {
         ...state,

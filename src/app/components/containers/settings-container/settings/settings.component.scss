@@ -57,10 +57,11 @@ lab-icon {
 .field {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   min-height: 2.5rem;
 
   > * + * {
-    margin-left: 0.5rem;
+    margin-left: 1rem;
   }
 
   .grow {
@@ -69,13 +70,21 @@ lab-icon {
 }
 
 .states {
-  display: flex;
-  align-items: center;
-  min-height: 2rem;
+  flex-grow: 1;
 
-  :first-child {
-    margin-right: 0.5rem;
+  > :first-child {
     flex-grow: 1;
+  }
+
+  lab-options {
+    display: flex;
+    > :first-child {
+      flex-grow: 1;
+    }
+  }
+
+  > * + * {
+    margin-left: 0.25rem;
   }
 }
 

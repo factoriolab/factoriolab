@@ -1,4 +1,3 @@
-import { KeyValue } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,7 +6,7 @@ import {
   Output,
 } from '@angular/core';
 
-import { Entities } from '~/models';
+import { IdName } from '~/models';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
@@ -18,16 +17,16 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
 })
 export class OptionsComponent extends DialogContainerComponent {
   @Input() title: string;
-  @Input() selected: number;
-  @Input() options: Entities;
+  @Input() selected: string | number;
+  @Input() options: IdName[];
 
-  @Output() selectId = new EventEmitter<number>();
+  @Output() selectId = new EventEmitter<string | number>();
+
+  get text() {
+    return this.options.find((o) => o.id === this.selected)?.name || 'None';
+  }
 
   constructor() {
     super();
-  }
-
-  cast(kv: KeyValue<string, string>): KeyValue<number, string> {
-    return { key: Number(kv.key), value: kv.value };
   }
 }

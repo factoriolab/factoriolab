@@ -22,7 +22,7 @@ export const AllColumns = [
   Column.Link,
 ];
 
-export const ColumnsAsOptions: IdName[] = AllColumns.map((c) => ({
-  id: c,
-  name: c,
+export const ColumnsAsOptions: IdName[] = AllColumns.map((id) => ({
+  id,
+  name: id,
 }));

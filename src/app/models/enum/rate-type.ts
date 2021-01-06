@@ -1,4 +1,4 @@
-import { Entities } from '../entities';
+import { IdName } from '../id-name';
 
 export enum RateType {
   Items,
@@ -7,9 +7,9 @@ export enum RateType {
   Factories,
 }
 
-export const RateTypeOptions: Entities = {
-  [RateType.Items]: 'Items',
-  [RateType.Belts]: 'Belts',
-  [RateType.Wagons]: 'Wagons',
-  [RateType.Factories]: 'Factories',
-};
+export const RateTypeOptions: IdName[] = [
+  { id: RateType.Items, name: 'Items' },
+  { id: RateType.Belts, name: 'Belts' },
+  { id: RateType.Wagons, name: 'Wagons' },
+  { id: RateType.Factories, name: 'Factories' },
+];

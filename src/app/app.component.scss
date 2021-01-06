@@ -10,7 +10,6 @@
   font-size: 110%;
 
   > * {
-    max-width: 75rem;
     padding: 0 1rem;
     margin: auto;
     display: flex;
@@ -47,7 +46,6 @@
 main {
   flex-grow: 1;
   display: flex;
-  width: 75rem;
   max-width: 100%;
   margin: 0 auto;
 }

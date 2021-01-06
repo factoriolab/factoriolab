@@ -30,6 +30,7 @@ import {
   Column,
   DefaultIdPayload,
   DEFAULT_PRECISION,
+  IdName,
 } from '~/models';
 import { ColumnsState } from '~/store/columns';
 import { FactoriesState } from '~/store/factories';
@@ -84,7 +85,6 @@ export class SettingsComponent implements OnInit {
   @Output() deleteState = new EventEmitter<string>();
   @Output() setPreset = new EventEmitter<Preset>();
   @Output() setBase = new EventEmitter<string>();
-  @Output() setMods = new EventEmitter<DefaultPayload<string[]>>();
   @Output() setDisabledRecipes = new EventEmitter<DefaultPayload<string[]>>();
   @Output() setExpensive = new EventEmitter<boolean>();
   @Output() addFactory = new EventEmitter<DefaultPayload<string, string[]>>();
@@ -116,6 +116,7 @@ export class SettingsComponent implements OnInit {
   initial = initialSettingsState;
   sortedFuels: string[] = [];
   state = '';
+  tempState = '';
   editState = false;
   DEFAULT_PRECISION = DEFAULT_PRECISION;
 
@@ -148,6 +149,13 @@ export class SettingsComponent implements OnInit {
 
   get element() {
     return this.el.nativeElement as HTMLElement;
+  }
+
+  get savedStates(): IdName[] {
+    return Object.keys(this.preferences.states).map((i) => ({
+      id: this.preferences.states[i],
+      name: i,
+    }));
   }
 
   constructor(
@@ -194,18 +202,20 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-  setState(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    const id = target.value;
-    if (id && this.preferences.states[id]) {
+  setState(state: string) {
+    const id = Object.keys(this.preferences.states).find(
+      (i) => this.preferences.states[i] === state
+    );
+    if (id) {
       this.state = id;
-      this.router.navigate([], { fragment: this.preferences.states[id] });
+      this.router.navigate([], { fragment: state });
     }
   }
 
   clickSaveState(event: Event) {
-    this.saveState.emit({ id: this.state, value: this.hash });
+    this.saveState.emit({ id: this.tempState, value: this.hash });
     this.editState = false;
+    this.state = this.tempState;
     event.stopPropagation();
   }
 
@@ -217,6 +227,7 @@ export class SettingsComponent implements OnInit {
 
   toggleEditState(event: Event) {
     this.editState = !this.editState;
+    this.tempState = this.state;
     event.stopPropagation();
   }
 
