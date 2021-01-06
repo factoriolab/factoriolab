@@ -43,7 +43,7 @@ import { SettingsComponent } from './settings/settings.component';
 export class SettingsContainerComponent implements OnInit {
   @ViewChild(SettingsComponent) child: SettingsComponent;
 
-  @Output() cancel = new EventEmitter();
+  @Output() close = new EventEmitter();
 
   data$: Observable<Dataset>;
   base$: Observable<ModInfo[]>;
@@ -81,7 +81,7 @@ export class SettingsContainerComponent implements OnInit {
       !this.element.nativeElement.contains(event.target) &&
       this.isInOverlayMode()
     ) {
-      this.cancel.emit();
+      this.close.emit();
     }
   }
 

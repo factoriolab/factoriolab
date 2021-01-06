@@ -58,33 +58,33 @@ describe('SettingsContainerComponent', () => {
   });
 
   it('should set opening to false on first click', () => {
-    spyOn(component.cancel, 'emit');
+    spyOn(component.close, 'emit');
     document.body.click();
     expect(component.opening).toBeFalse();
-    expect(component.cancel.emit).not.toHaveBeenCalled();
+    expect(component.close.emit).not.toHaveBeenCalled();
   });
 
   it('should cancel when clicked away in overlay mode', () => {
-    spyOn(component.cancel, 'emit');
+    spyOn(component.close, 'emit');
     spyOn(component, 'isInOverlayMode').and.returnValue(true);
     component.opening = false;
     document.body.click();
-    expect(component.cancel.emit).toHaveBeenCalled();
+    expect(component.close.emit).toHaveBeenCalled();
   });
 
   it('should not cancel when clicked away in wide screen mode', () => {
-    spyOn(component.cancel, 'emit');
+    spyOn(component.close, 'emit');
     spyOn(component, 'isInOverlayMode').and.returnValue(false);
     component.opening = false;
     document.body.click();
-    expect(component.cancel.emit).not.toHaveBeenCalled();
+    expect(component.close.emit).not.toHaveBeenCalled();
   });
 
   it('should not cancel when clicked on', () => {
-    spyOn(component.cancel, 'emit');
+    spyOn(component.close, 'emit');
     component.opening = false;
     TestUtility.clickSelector(fixture, 'lab-settings');
-    expect(component.cancel.emit).not.toHaveBeenCalled();
+    expect(component.close.emit).not.toHaveBeenCalled();
   });
 
   it('should save a state', () => {

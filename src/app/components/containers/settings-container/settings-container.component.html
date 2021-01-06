@@ -6,6 +6,7 @@
   [settings]="settings$ | async"
   [columns]="columns$ | async"
   [preferences]="preferences$ | async"
+  (close)="close.emit()"
   (saveState)="saveState($event)"
   (deleteState)="deleteState($event)"
   (setPreset)="setPreset($event)"

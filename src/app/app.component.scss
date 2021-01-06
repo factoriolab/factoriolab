@@ -58,17 +58,21 @@ main {
   padding: 0 1rem;
 
   > * {
-    background-color: var(--color-back);
-    box-shadow: var(--shadow-main);
     display: flex;
     flex-direction: column;
-    padding: 0.75rem;
     margin-bottom: 0.75rem;
   }
 }
 
+.view > *,
+lab-settings-container {
+  background-color: var(--color-back);
+  box-shadow: var(--shadow-main);
+  padding: 0.75rem;
+}
+
 @media screen and (max-width: 1000px) {
   lab-settings-container {
-    margin-right: -20rem;
+    margin-right: -22.5rem;
   }
 }

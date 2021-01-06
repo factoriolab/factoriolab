@@ -15,8 +15,8 @@ body {
   background-position: center top;
   height: 100vh;
   background-color: var(--color-scroll);
-  overflow-x: auto;
   overflow-y: scroll;
+  overflow-x: auto;
 
   *,
   *:before,
@@ -282,31 +282,32 @@ img.icon {
   .panel {
     padding: 0;
   }
+}
 
-  button,
-  .button {
-    background-color: var(--color-back);
-    color: var(--color-white);
-    box-shadow: var(--shadow-button-sm);
-    height: 1.5rem;
+.dialog-title button,
+.dialog-title .button,
+.dialog-button {
+  background-color: var(--color-back);
+  color: var(--color-white);
+  box-shadow: var(--shadow-button-sm);
+  height: 1.5rem;
 
-    > .material-icons {
-      margin: 0 -0.125rem;
-    }
+  > .material-icons {
+    margin: 0 -0.125rem;
+  }
 
-    &:hover {
-      background-color: var(--color-brand);
-      color: var(--color-black);
-      box-shadow: var(--shadow-hover-sm);
-      filter: drop-shadow(0 0 2px var(--color-brand-sha));
-    }
+  &:hover {
+    background-color: var(--color-brand);
+    color: var(--color-black);
+    box-shadow: var(--shadow-hover-sm);
+    filter: drop-shadow(0 0 2px var(--color-brand-sha));
+  }
 
-    &:active {
-      background: var(--color-brand-alt);
-      color: var(--color-black);
-      box-shadow: var(--shadow-active-sm);
-      filter: none;
-    }
+  &:active {
+    background: var(--color-brand-alt);
+    color: var(--color-black);
+    box-shadow: var(--shadow-active-sm);
+    filter: none;
   }
 }
 

@@ -79,6 +79,7 @@ export class SettingsComponent implements OnInit {
   @Input() columns: ColumnsState;
   @Input() preferences: PreferencesState;
 
+  @Output() close = new EventEmitter();
   @Output() saveState = new EventEmitter<IdPayload>();
   @Output() deleteState = new EventEmitter<string>();
   @Output() setPreset = new EventEmitter<Preset>();

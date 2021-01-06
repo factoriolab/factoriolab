@@ -17,14 +17,17 @@ import { getDataset } from './store/settings';
   animations: [
     trigger('slideLeftRight', [
       transition(':enter', [
-        style({ marginLeft: '-20rem', marginRight: '0' }),
-        animate('300ms ease', style({ marginLeft: '0', marginRight: '*' })),
-      ]),
-      transition(':leave', [
-        style({ marginLeft: '0', marginRight: '*' }),
+        style({ marginLeft: '-22.5rem', marginRight: '1rem', opacity: 0 }),
         animate(
           '300ms ease',
-          style({ marginLeft: '-20rem', marginRight: '0' })
+          style({ marginLeft: '*', marginRight: '*', opacity: 1 })
+        ),
+      ]),
+      transition(':leave', [
+        style({ marginLeft: '*', marginRight: '*', opacity: 1 }),
+        animate(
+          '300ms ease',
+          style({ marginLeft: '-22.5rem', marginRight: '1rem', opacity: 0 })
         ),
       ]),
     ]),
