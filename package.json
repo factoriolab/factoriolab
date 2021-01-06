@@ -36,7 +36,7 @@
     "@juggle/resize-observer": "^3.2.0",
     "@ngrx/effects": "^10.0.1",
     "@ngrx/store": "^10.0.1",
-    "@ngrx/store-devtools": "^10.0.1",
+    "@ngrx/store-devtools": "^10.1.1",
     "big-integer": "^1.6.48",
     "d3-sankey": "^0.12.3",
     "d3-sankey-circular": "^0.34.0",
