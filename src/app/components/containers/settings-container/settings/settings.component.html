@@ -25,18 +25,18 @@
           (selectId)="setState($event)"
         ></lab-options>
         <button
-          *ngIf="hash"
-          title="Name and save this state"
-          (click)="toggleEditState($event)"
-        >
-          <i class="material-icons">edit</i>
-        </button>
-        <button
           *ngIf="state"
-          title="Delete this saved state"
+          title="Delete saved state"
           (click)="clickDeleteState($event)"
         >
           <i class="material-icons">delete</i>
+        </button>
+        <button
+          *ngIf="hash"
+          title="Name and save state"
+          (click)="toggleEditState($event)"
+        >
+          <i class="material-icons">edit</i>
         </button>
       </ng-container>
       <ng-template #stateInput>
@@ -46,8 +46,8 @@
           [(ngModel)]="tempState"
         />
         <button
-          *ngIf="state && hash"
-          title="Save this state"
+          *ngIf="tempState && hash"
+          title="Save state"
           (click)="clickSaveState($event)"
         >
           <i class="material-icons">save</i>
