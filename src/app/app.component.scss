@@ -13,16 +13,8 @@
     padding: 0 1rem;
     margin: auto;
     display: flex;
-
-    > lab-icon {
-      align-self: center;
-    }
-
-    > .flex {
-      flex-grow: 1;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
+    justify-content: space-between;
+    flex-wrap: wrap;
   }
 
   lab-icon {
