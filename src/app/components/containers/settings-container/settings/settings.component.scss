@@ -38,6 +38,10 @@
     table {
       width: 100%;
 
+      &.factories {
+        width: auto;
+      }
+
       &.center {
         td > * {
           display: flex;

@@ -13,8 +13,16 @@
     padding: 0 1rem;
     margin: auto;
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+
+    > lab-icon {
+      align-self: center;
+    }
+
+    > .flex {
+      flex-grow: 1;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
   }
 
   lab-icon {
@@ -34,7 +42,6 @@
   .links {
     display: flex;
     align-items: center;
-    margin-left: 2.75rem;
   }
 
   .separator {
@@ -71,6 +78,6 @@ lab-settings-container {
 
 @media screen and (max-width: 1000px) {
   lab-settings-container {
-    margin-right: -22.5rem;
+    margin-right: -25rem;
   }
 }
