@@ -1,3 +1,4 @@
+import { IdName } from '../id-name';
 import { Rational } from '../rational';
 
 export enum ResearchSpeed {
@@ -9,6 +10,16 @@ export enum ResearchSpeed {
   Speed5 = 190,
   Speed6 = 250,
 }
+
+export const ResearchSpeedOptions: IdName[] = [
+  { id: ResearchSpeed.Speed0, name: 'No Research Bonus' },
+  { id: ResearchSpeed.Speed1, name: 'Research Speed 1' },
+  { id: ResearchSpeed.Speed2, name: 'Research Speed 2' },
+  { id: ResearchSpeed.Speed3, name: 'Research Speed 3' },
+  { id: ResearchSpeed.Speed4, name: 'Research Speed 4' },
+  { id: ResearchSpeed.Speed5, name: 'Research Speed 5' },
+  { id: ResearchSpeed.Speed6, name: 'Research Speed 6' },
+];
 
 export const ResearchSpeedVal = {
   [ResearchSpeed.Speed0]: new Rational(BigInt(ResearchSpeed.Speed0)),

@@ -55,6 +55,14 @@ h2 {
   &.dark {
     background-color: var(--color-dark);
   }
+
+  &.tile {
+    padding: 0;
+  }
+}
+
+.tile {
+  background: url(~/src/assets/tile.png);
 }
 
 button,
@@ -178,11 +186,6 @@ a:not(.button) {
 }
 
 input {
-  &[type='radio'],
-  &[type='checkbox'] {
-    margin: 0;
-  }
-
   &:invalid {
     border-color: var(--color-red);
   }

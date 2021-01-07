@@ -25,6 +25,10 @@ button {
   display: flex;
   justify-content: space-between;
 
+  .text {
+    white-space: nowrap;
+  }
+
   &.active:not(:hover) {
     background: var(--color-brand-alt);
     box-shadow: var(--shadow-active);

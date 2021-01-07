@@ -17,7 +17,7 @@ import { getDataset } from './store/settings';
   animations: [
     trigger('slideLeftRight', [
       transition(':enter', [
-        style({ marginLeft: '-22.5rem', marginRight: '1rem', opacity: 0 }),
+        style({ marginLeft: '-25rem', marginRight: '1rem', opacity: 0 }),
         animate(
           '300ms ease',
           style({ marginLeft: '*', marginRight: '*', opacity: 1 })
@@ -27,7 +27,7 @@ import { getDataset } from './store/settings';
         style({ marginLeft: '*', marginRight: '*', opacity: 1 }),
         animate(
           '300ms ease',
-          style({ marginLeft: '-22.5rem', marginRight: '1rem', opacity: 0 })
+          style({ marginLeft: '-25rem', marginRight: '1rem', opacity: 0 })
         ),
       ]),
     ]),

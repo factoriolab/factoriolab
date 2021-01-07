@@ -9,7 +9,6 @@ import {
   Rational,
   DisplayRateVal,
   RationalProduct,
-  Sort,
 } from '~/models';
 import {
   RateUtility,
@@ -206,20 +205,8 @@ export const getNormalizedStepsWithMatrices = createSelector(
     )
 );
 
-export const getNormalizedStepsSorted = createSelector(
-  getNormalizedStepsWithMatrices,
-  Preferences.getSort,
-  (steps, sort) => {
-    steps = RateUtility.copy(steps);
-    if (sort === Sort.BreadthFirst) {
-      return steps.sort((a, b) => a.depth - b.depth);
-    }
-    return steps;
-  }
-);
-
 export const getNormalizedStepsWithBelts = createSelector(
-  getNormalizedStepsSorted,
+  getNormalizedStepsWithMatrices,
   Items.getItemSettings,
   Settings.getBeltSpeed,
   Recipes.getAdjustedDataset,

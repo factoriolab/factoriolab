@@ -1,6 +1,6 @@
 :host {
   flex-grow: 1;
-  width: 20rem;
+  width: 22.5rem;
 
   > .flex {
     justify-content: space-between;
@@ -13,60 +13,54 @@
       margin-left: 0.25rem;
     }
   }
+
+  > .panel {
+    padding: 0.125rem;
+  }
 }
 
-label {
-  user-select: none;
-}
+.hole {
+  padding: 0.125rem;
+  margin: 0.25rem;
+  background-color: var(--color-back);
+  box-shadow: var(--shadow-hole);
 
-.small {
-  font-size: small;
-}
-
-.option {
   > * {
-    cursor: pointer;
-  }
+    padding: 0.5rem;
+    margin: 1px 0;
+    background-color: var(--color-light);
+    box-shadow: var(--shadow-inner);
 
-  > * + * {
-    margin-left: 0.25rem;
-  }
+    .header {
+      margin-bottom: 0.25rem;
+    }
 
-  &:hover {
-    > * {
-      color: var(--color-brand);
+    table {
+      width: 100%;
+
+      &.center {
+        td > * {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          > * + * {
+            margin-left: 0.5rem;
+          }
+        }
+      }
+
+      &.fields > tr > :first-child {
+        width: 1px;
+        padding-right: 4rem;
+        white-space: nowrap;
+      }
     }
   }
 }
 
-.label {
-  font-weight: bold;
-  font-size: 0.875rem;
-  padding: 0.5rem 0;
-  color: var(--color-brand);
-}
-
-lab-icon {
-  padding: 0.125rem;
-
-  &.static {
-    position: static;
-  }
-}
-
-.field {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 2.5rem;
-
-  > * + * {
-    margin-left: 1rem;
-  }
-
-  .grow {
-    flex-grow: 1;
-  }
+.small {
+  font-size: small;
 }
 
 .states {
@@ -88,45 +82,10 @@ lab-icon {
   }
 }
 
-a {
-  color: var(--color-brand);
+table + table {
+  margin-top: 0.5rem;
 }
 
-input[type='radio'] + * {
-  margin-left: 0.25rem;
-}
-
-.hidden {
-  display: none;
-}
-
-.invisible {
-  visibility: hidden;
-}
-
-.static > lab-icon {
-  position: static;
-}
-
-table.center {
-  tr > :first-child {
-    text-align: right;
-  }
-}
-
-.arrows {
-  display: flex;
-  flex-direction: column;
-
-  > i {
-    line-height: 1rem;
-    cursor: pointer;
-    user-select: none;
-    border-radius: 0.25rem;
-
-    &:hover {
-      background-color: var(--color-brand);
-      color: var(--color-black);
-    }
-  }
+.right {
+  text-align: right;
 }

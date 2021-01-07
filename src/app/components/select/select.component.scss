@@ -1,10 +1,14 @@
+:host {
+  display: flex;
+}
+
 lab-dialog {
+  max-width: 24rem;
+  max-height: 20rem;
+
   > .panel {
     display: flex;
     flex-wrap: wrap;
-    max-width: 24rem;
-    max-height: 20rem;
     padding: 0;
-    background: url(~/src/assets/tile.png);
   }
 }

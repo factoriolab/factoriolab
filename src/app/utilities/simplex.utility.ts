@@ -92,7 +92,6 @@ export class SimplexUtility {
         {
           itemId,
           items: Rational.one,
-          depth: 0,
         },
       ],
       itemSettings,
@@ -441,15 +440,14 @@ export class SimplexUtility {
     solution: MatrixSolution,
     state: MatrixState
   ) {
-    const depth = Math.max(...steps.map((s) => s.depth)) + 1;
     for (const itemId of Object.keys(state.items)) {
-      this.addItemStep(itemId, steps, depth, solution, state);
+      this.addItemStep(itemId, steps, solution, state);
     }
     this.assignRecipes(steps, solution, state);
     for (const recipe of Object.keys(solution.recipes).map(
       (r) => state.recipes[r]
     )) {
-      this.addRecipeStep(recipe, steps, depth, solution);
+      this.addRecipeStep(recipe, steps, solution);
     }
     this.updateParents(steps, solution, state);
   }
@@ -458,7 +456,6 @@ export class SimplexUtility {
   static addItemStep(
     itemId: string,
     steps: Step[],
-    depth: number,
     solution: MatrixSolution,
     state: MatrixState
   ) {
@@ -474,7 +471,6 @@ export class SimplexUtility {
     if (output.nonzero()) {
       let step = steps.find((s) => s.itemId === itemId);
       if (step) {
-        step.depth = depth;
         if (state.items[itemId].nonzero()) {
           step.items = output;
         } else {
@@ -488,7 +484,6 @@ export class SimplexUtility {
           recipes.some((r) => r.produces(s.itemId) && r.produces(itemId))
         );
         step = {
-          depth,
           itemId,
           items: output,
         };
@@ -548,7 +543,6 @@ export class SimplexUtility {
   static addRecipeStep(
     recipe: RationalRecipe,
     steps: Step[],
-    depth: number,
     solution: MatrixSolution
   ) {
     let step = steps.find((s) => s.recipeId === recipe.id);
@@ -558,7 +552,6 @@ export class SimplexUtility {
     if (!step) {
       const index = steps.findIndex((s) => recipe.produces(s.itemId));
       step = {
-        depth,
         itemId: null,
         items: null,
       };
@@ -568,7 +561,6 @@ export class SimplexUtility {
         steps.push(step);
       }
     }
-    step.depth = depth;
     step.recipeId = recipe.id;
     step.factories = solution.recipes[recipe.id]
       .mul(recipe.time)

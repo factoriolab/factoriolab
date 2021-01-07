@@ -30,6 +30,7 @@ export class MultiselectComponent extends DialogContainerComponent {
 
   clickOpen(): void {
     this.open = true;
+    this.edited = false;
     this.editValue = [...this.selected];
   }
 

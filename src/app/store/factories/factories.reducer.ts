@@ -62,18 +62,6 @@ export function factoriesReducer(
       }
       return state;
     }
-    case FactoriesActionType.LOWER: {
-      let ids = [...(state.ids || action.payload.default)];
-      const i = ids.indexOf(action.payload.value);
-      if (i !== -1 && i < ids.length - 1) {
-        ids.splice(i + 1, 0, ids.splice(i, 1)[0]);
-        if (StoreUtility.rankEquals(ids, action.payload.default)) {
-          ids = null;
-        }
-        return { ...state, ...{ ids } };
-      }
-      return state;
-    }
     case FactoriesActionType.SET_FACTORY: {
       let ids = [...(state.ids || action.payload.default)];
       const i = ids.indexOf(action.payload.id);

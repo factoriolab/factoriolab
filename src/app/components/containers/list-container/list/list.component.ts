@@ -31,27 +31,12 @@ import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
 import { ExportUtility, RecipeUtility } from '~/utilities';
 
-export enum StepEditType {
-  Columns,
-  Belt,
-  Factory,
-  FactoryModule,
-  Beacon,
-  BeaconModule,
-}
-
 export enum StepDetailTab {
   None,
   Inputs,
   Outputs,
   Factory,
   Recipes,
-}
-
-export interface StepEdit {
-  step: Step;
-  type: StepEditType;
-  index?: number;
 }
 
 export interface StepInserter {
@@ -148,7 +133,6 @@ export class ListComponent {
   @Output() setDisabledRecipes = new EventEmitter<DefaultPayload<string[]>>();
 
   displayedSteps: Step[] = [];
-  edit: StepEdit;
   details: Entities<StepDetailTab[]> = {};
   recipes: Entities<string[]> = {};
   expanded: Entities<StepDetailTab> = {};
@@ -161,7 +145,6 @@ export class ListComponent {
   ItemId = ItemId;
   ListMode = ListMode;
   StepDetailTab = StepDetailTab;
-  StepEditType = StepEditType;
   Rational = Rational;
   DisplayRateVal = DisplayRateVal;
   ColumnsAsOptions = ColumnsAsOptions;

@@ -17,10 +17,10 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
 })
 export class OptionsComponent extends DialogContainerComponent {
   @Input() title: string;
-  @Input() selected: string | number;
+  @Input() selected: string | number | boolean;
   @Input() options: IdName[];
 
-  @Output() selectId = new EventEmitter<string | number>();
+  @Output() selectId = new EventEmitter<string | number | boolean>();
 
   get text() {
     return this.options.find((o) => o.id === this.selected)?.name || 'None';

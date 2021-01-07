@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { IdPayload, LinkValue, Sort } from '~/models';
+import { IdPayload, LinkValue } from '~/models';
 
 export const enum PreferencesActionType {
   SAVE_STATE = '[Preferences] Save State',
@@ -19,11 +19,6 @@ export class DeleteStateAction implements Action {
   constructor(public payload: string) {}
 }
 
-export class SetSortAction implements Action {
-  readonly type = PreferencesActionType.SET_SORT;
-  constructor(public payload: Sort) {}
-}
-
 export class SetLinkValueAction implements Action {
   readonly type = PreferencesActionType.SET_LINK_VALUE;
   constructor(public payload: LinkValue) {}
@@ -32,5 +27,4 @@ export class SetLinkValueAction implements Action {
 export type PreferencesAction =
   | SaveStateAction
   | DeleteStateAction
-  | SetSortAction
   | SetLinkValueAction;

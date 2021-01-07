@@ -6,7 +6,6 @@ export const enum FactoriesActionType {
   ADD = '[Factories] Add',
   REMOVE = '[Factories] Remove',
   RAISE = '[Factories] Raise',
-  LOWER = '[Factories] Lower',
   SET_FACTORY = '[Factories] Set Factory',
   SET_MODULE_RANK = '[Factories] Set Module Rank',
   SET_BEACON_COUNT = '[Factories] Set Beacon Count',
@@ -26,11 +25,6 @@ export class RemoveAction implements Action {
 
 export class RaiseAction implements Action {
   readonly type = FactoriesActionType.RAISE;
-  constructor(public payload: DefaultPayload<string, string[]>) {}
-}
-
-export class LowerAction implements Action {
-  readonly type = FactoriesActionType.LOWER;
   constructor(public payload: DefaultPayload<string, string[]>) {}
 }
 
@@ -63,7 +57,6 @@ export type FactoriesAction =
   | AddAction
   | RemoveAction
   | RaiseAction
-  | LowerAction
   | SetFactoryAction
   | SetModuleRankAction
   | SetBeaconCountAction

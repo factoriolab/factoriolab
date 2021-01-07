@@ -1,3 +1,4 @@
+import { IdName } from '../id-name';
 import { Rational } from '../rational';
 
 export enum DisplayRate {
@@ -5,6 +6,12 @@ export enum DisplayRate {
   PerMinute = 60,
   PerHour = 3600,
 }
+
+export const DisplayRateOptions: IdName[] = [
+  { id: DisplayRate.PerSecond, name: '#/sec' },
+  { id: DisplayRate.PerMinute, name: '#/min' },
+  { id: DisplayRate.PerHour, name: '#/hr' },
+];
 
 export const DisplayRateVal = {
   [DisplayRate.PerSecond]: new Rational(BigInt(DisplayRate.PerSecond)),

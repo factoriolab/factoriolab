@@ -1,56 +1,46 @@
-<div class="flex tween dialog-title">
-  <span class="header">Select Recipes</span>
-  <div class="flex">
-    <i
-      *ngIf="edited"
-      class="cancel clickable material-icons"
-      title="Cancel changes"
-      (click)="cancel.emit(); $event.stopPropagation()"
-      >close</i
-    >
-    <i
-      *ngIf="edited"
-      class="confirm clickable material-icons"
-      title="Confirm changes"
-      (click)="commit.emit(editValue); $event.stopPropagation()"
-      >check</i
-    >
-  </div>
-</div>
-<div class="info">
-  <div>
-    Click recipes to enable or disable them. Disabled recipes will not be used
-    in the solution.
-  </div>
-  <div class="warn">
-    Warning: Enabling a large number of modded recipes can cause the calculator
-    to hang due to the complexity of the calculations.
-  </div>
-</div>
-<div class="flex buttons">
-  <button
-    [disabled]="!editValue.length"
-    (click)="edited = true; editValue = []"
+<button [title]="title" (click)="clickOpen()">
+  <span class="text"
+    >{{ selected.length }} Recipe{{ selected.length === 1 ? '' : 's' }}</span
   >
-    Enable All
-  </button>
-  <button
-    [disabled]="editValue.length === data.complexRecipeIds.length"
-    (click)="edited = true; editValue = data.complexRecipeIds"
-  >
-    Disable All
-  </button>
-</div>
-<div #scrollContainer class="flex scroll">
-  <lab-icon
-    *ngFor="let id of data.complexRecipeIds"
-    class="clickable"
-    [class.ignored]="editValue.indexOf(id) !== -1"
-    [data]="data"
-    [iconId]="id"
-    [scrollTop]="scrollContainer.scrollTop"
-    [tooltip]="data.recipeEntities[id].name"
-    [recipe]="data.recipeEntities[id]"
-    (click)="clickId(id, $event)"
-  ></lab-icon>
-</div>
+</button>
+<lab-dialog *ngIf="open" [style.width.rem]="width" (close)="close()">
+  <div class="dialog-title">
+    <div class="header">Select Recipes</div>
+    <button (click)="cancel($event)">
+      <i class="material-icons">close</i>
+    </button>
+  </div>
+  <div #scrollContainer class="panel scroll">
+    <div class="flex buttons">
+      <button
+        [disabled]="!editValue.length"
+        (click)="edited = true; editValue = []"
+      >
+        <span class="text">Enable All</span>
+      </button>
+      <button
+        [disabled]="editValue.length === data.complexRecipeIds.length"
+        (click)="edited = true; editValue = data.complexRecipeIds"
+      >
+        <span class="text">Disable All</span>
+      </button>
+    </div>
+    <div class="flex panel dark tile">
+      <lab-icon
+        *ngFor="let id of data.complexRecipeIds"
+        class="button grid"
+        [class.ignored]="editValue.indexOf(id) !== -1"
+        [data]="data"
+        [iconId]="id"
+        [scrollTop]="scrollContainer.scrollTop"
+        [tooltip]="data.recipeEntities[id].name"
+        [recipe]="data.recipeEntities[id]"
+        (click)="clickId(id, $event)"
+      ></lab-icon>
+    </div>
+  </div>
+  <div class="dialog-buttons">
+    <button (click)="cancel($event)"><span class="text">Cancel</span></button>
+    <button class="green" (click)="close()">Confirm</button>
+  </div>
+</lab-dialog>

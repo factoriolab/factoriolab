@@ -8,11 +8,11 @@
       <i class="material-icons">close</i>
     </button>
   </div>
-  <div class="panel">
+  <div class="panel tile">
     <lab-icon
       *ngIf="includeEmptyModule"
-      class="grid"
       tooltip="No Module"
+      class="grid"
       [iconId]="ItemId.Module"
       [class.selected]="selected === ItemId.Module"
       [data]="data"

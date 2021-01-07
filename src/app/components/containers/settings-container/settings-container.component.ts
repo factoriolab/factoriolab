@@ -18,8 +18,6 @@ import {
   ModInfo,
   DefaultPayload,
   Preset,
-  Sort,
-  LinkValue,
   IdPayload,
   InserterTarget,
   InserterCapacity,
@@ -121,10 +119,6 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Factories.RaiseAction(value));
   }
 
-  lowerFactory(value: DefaultPayload<string, string[]>) {
-    this.store.dispatch(new Factories.LowerAction(value));
-  }
-
   setFactory(value: DefaultIdPayload<string, string[]>) {
     this.store.dispatch(new Factories.SetFactoryAction(value));
   }
@@ -179,14 +173,6 @@ export class SettingsContainerComponent implements OnInit {
 
   setInserterCapacity(value: InserterCapacity) {
     this.store.dispatch(new Settings.SetInserterCapacityAction(value));
-  }
-
-  setSort(value: Sort) {
-    this.store.dispatch(new Preferences.SetSortAction(value));
-  }
-
-  setLinkValue(value: LinkValue) {
-    this.store.dispatch(new Preferences.SetLinkValueAction(value));
   }
 
   reset() {

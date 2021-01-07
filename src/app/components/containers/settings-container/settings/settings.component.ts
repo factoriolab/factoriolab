@@ -8,21 +8,17 @@ import {
   HostListener,
   ChangeDetectorRef,
   OnInit,
-  ElementRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
   DisplayRate,
   ResearchSpeed,
-  IdType,
   Dataset,
   ModInfo,
   DefaultPayload,
   Preset,
   ItemId,
-  Sort,
-  LinkValue,
   IdPayload,
   WARNING_RESET,
   InserterTarget,
@@ -31,30 +27,16 @@ import {
   DefaultIdPayload,
   DEFAULT_PRECISION,
   IdName,
+  PresetOptions,
+  InserterCapacityOptions,
+  ResearchSpeedOptions,
+  InserterTargetOptions,
+  DisplayRateOptions,
 } from '~/models';
 import { ColumnsState } from '~/store/columns';
 import { FactoriesState } from '~/store/factories';
 import { PreferencesState } from '~/store/preferences';
 import { SettingsState, initialSettingsState } from '~/store/settings';
-
-enum OpenSelect {
-  Mods,
-  DisabledRecipes,
-  Belt,
-  Fuel,
-}
-
-export enum FactoryEditType {
-  Factory,
-  Module,
-  Beacon,
-  BeaconModule,
-}
-
-export interface FactoryEdit {
-  id: string;
-  type: FactoryEditType;
-}
 
 @Component({
   selector: 'lab-settings',
@@ -92,7 +74,6 @@ export class SettingsComponent implements OnInit {
     DefaultPayload<string, string[]>
   >();
   @Output() raiseFactory = new EventEmitter<DefaultPayload<string, string[]>>();
-  @Output() lowerFactory = new EventEmitter<DefaultPayload<string, string[]>>();
   @Output() setFactory = new EventEmitter<DefaultIdPayload<string, string[]>>();
   @Output() setModuleRank = new EventEmitter<IdPayload<string[]>>();
   @Output() setBeaconCount = new EventEmitter<IdPayload<number>>();
@@ -107,31 +88,33 @@ export class SettingsComponent implements OnInit {
   @Output() setResearchSpeed = new EventEmitter<ResearchSpeed>();
   @Output() setInserterTarget = new EventEmitter<InserterTarget>();
   @Output() setInserterCapacity = new EventEmitter<InserterCapacity>();
-  @Output() setSort = new EventEmitter<Sort>();
-  @Output() setLinkValue = new EventEmitter<LinkValue>();
   @Output() reset = new EventEmitter();
 
-  openSelect: OpenSelect;
-  editFactory: FactoryEdit;
   initial = initialSettingsState;
   sortedFuels: string[] = [];
   state = '';
   tempState = '';
   editState = false;
   DEFAULT_PRECISION = DEFAULT_PRECISION;
+  difficultyOptions: IdName[] = [
+    {
+      id: false,
+      name: 'Normal',
+    },
+    {
+      id: true,
+      name: 'Expensive',
+    },
+  ];
+  PresetOptions = PresetOptions;
+  ResearchSpeedOptions = ResearchSpeedOptions;
+  InserterCapacityOptions = InserterCapacityOptions;
+  InserterTargetOptions = InserterTargetOptions;
+  DisplayRateOptions = DisplayRateOptions;
 
   Column = Column;
   DisplayRate = DisplayRate;
-  FactoryEditType = FactoryEditType;
-  InserterCapacity = InserterCapacity;
-  InserterTarget = InserterTarget;
   ItemId = ItemId;
-  LinkValue = LinkValue;
-  OpenSelect = OpenSelect;
-  Preset = Preset;
-  ResearchSpeed = ResearchSpeed;
-  SelectType = IdType;
-  Sort = Sort;
 
   get hash() {
     return location.hash.substr(1);
@@ -147,10 +130,6 @@ export class SettingsComponent implements OnInit {
     );
   }
 
-  get element() {
-    return this.el.nativeElement as HTMLElement;
-  }
-
   get savedStates(): IdName[] {
     return Object.keys(this.preferences.states).map((i) => ({
       id: this.preferences.states[i],
@@ -158,11 +137,7 @@ export class SettingsComponent implements OnInit {
     }));
   }
 
-  constructor(
-    private ref: ChangeDetectorRef,
-    private router: Router,
-    private el: ElementRef
-  ) {}
+  constructor(private ref: ChangeDetectorRef, private router: Router) {}
 
   ngOnInit() {
     this.state =
@@ -193,12 +168,6 @@ export class SettingsComponent implements OnInit {
     if (event.target.value) {
       const value = Math.round(Number(event.target.value));
       emitter.emit(value);
-    }
-  }
-
-  emitString(emitter: EventEmitter<string>, event: any) {
-    if (event.target.value) {
-      emitter.emit(event.target.value);
     }
   }
 

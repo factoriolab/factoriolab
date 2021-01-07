@@ -6,6 +6,10 @@
   position: relative;
   color: var(--color-white);
 
+  &.pad {
+    padding: 0.125rem;
+  }
+
   &.ignored {
     > .image {
       > img {
@@ -23,6 +27,11 @@
       padding: 0.125rem;
       box-shadow: var(--shadow-hover);
       filter: drop-shadow(0 0 2px var(--color-brand-sha));
+
+      > .icon-text {
+        bottom: 0.25rem;
+        right: 0.25rem;
+      }
     }
   }
 

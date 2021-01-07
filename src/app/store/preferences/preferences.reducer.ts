@@ -1,4 +1,4 @@
-import { Entities, LinkValue, Sort } from '~/models';
+import { Entities, LinkValue } from '~/models';
 import { AppAction, AppActionType } from '../app.actions';
 import {
   PreferencesAction,
@@ -7,13 +7,11 @@ import {
 
 export interface PreferencesState {
   states: Entities<string>;
-  sort?: Sort;
   linkValue?: LinkValue;
 }
 
 export const initialPreferencesState: PreferencesState = {
   states: {},
-  sort: Sort.DepthFirst,
   linkValue: LinkValue.Items,
 };
 
@@ -36,8 +34,6 @@ export function preferencesReducer(
       delete states[action.payload];
       return { ...state, ...{ states } };
     }
-    case PreferencesActionType.SET_SORT:
-      return { ...state, ...{ sort: action.payload } };
     case PreferencesActionType.SET_LINK_VALUE:
       return { ...state, ...{ linkValue: action.payload } };
     default:

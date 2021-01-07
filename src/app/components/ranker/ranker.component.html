@@ -1,34 +1,39 @@
-<div class="dialog-content">
-  <i
-    class="clickable material-icons"
-    title="Cancel"
-    (click)="cancel.emit(); $event.stopPropagation()"
-    >close</i
-  >
-  <lab-icon
-    tooltip="No Module"
-    class="clickable-size"
-    [class.clickable]="canAdd(ItemId.Module)"
-    [class.selected]="!editValue.length"
-    [data]="data"
-    [iconId]="ItemId.Module"
-    [text]="text(ItemId.Module)"
-    (click)="clickId(ItemId.Module, $event)"
-  >
-  </lab-icon>
-  <lab-icon
-    *ngFor="let id of options"
-    class="clickable-size"
-    [class.clickable]="canAdd(id)"
-    [class.selected]="editValue.indexOf(id) !== -1"
-    [data]="data"
-    [iconId]="id"
-    [text]="text(id)"
-    [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"
-    [item]="data.itemEntities[id]"
-    (click)="clickId(id, $event)"
-  ></lab-icon>
+<div (click)="clickOpen()">
+  <ng-content></ng-content>
 </div>
-<span class="dialog-info" *ngIf="edited"
-  >(Optional) Select another module to use as a fallback</span
->
+<lab-dialog *ngIf="open" [style.minWidth.rem]="width" (close)="cancel()">
+  <div class="dialog-title">
+    <div class="header">{{ header }}</div>
+    <button (click)="cancel($event)">
+      <i class="material-icons">close</i>
+    </button>
+  </div>
+  <div class="panel tile">
+    <lab-icon
+      tooltip="No Module"
+      class="grid"
+      [class.disabled]="!canAdd(ItemId.Module)"
+      [class.selected]="!editValue.length"
+      [data]="data"
+      [iconId]="ItemId.Module"
+      [text]="text(ItemId.Module)"
+      (click)="clickId(ItemId.Module, $event)"
+    >
+    </lab-icon>
+    <lab-icon
+      *ngFor="let id of options"
+      class="grid"
+      [class.disabled]="!canAdd(id)"
+      [class.selected]="editValue.indexOf(id) !== -1"
+      [data]="data"
+      [iconId]="id"
+      [text]="text(id)"
+      [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"
+      [item]="data.itemEntities[id]"
+      (click)="clickId(id, $event)"
+    ></lab-icon>
+  </div>
+  <div class="info" *ngIf="edited">
+    (Optional) Select another module to use as a fallback
+  </div>
+</lab-dialog>
