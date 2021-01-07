@@ -7,7 +7,7 @@ export enum InserterCapacity {
 }
 
 export const InserterCapacityOptions: IdName[] = [
-  { id: InserterCapacity.Capacity0, name: 'No Capacity Bonus' },
-  { id: InserterCapacity.Capacity2, name: 'Capacity Bonus 2' },
-  { id: InserterCapacity.Capacity7, name: 'Capacity Bonus 7' },
+  { id: InserterCapacity.Capacity0, name: 'No capacity bonus' },
+  { id: InserterCapacity.Capacity2, name: 'Capacity bonus 2' },
+  { id: InserterCapacity.Capacity7, name: 'Capacity bonus 7' },
 ];

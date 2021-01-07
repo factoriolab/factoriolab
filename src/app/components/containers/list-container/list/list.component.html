@@ -4,16 +4,12 @@
       <!-- Expand -->
       <th>
         <div>
-          <lab-multiselect
-            [header]="'Select Columns'"
+          <lab-columns
             [selected]="columns.ids"
-            [options]="ColumnsAsOptions"
+            [precision]="columns.precision"
             (selectIds)="setColumns.emit($event)"
-          >
-            <button title="Select columns">
-              <i class="material-icons">visibility</i>
-            </button></lab-multiselect
-          >
+            (setPrecision)="setPrecision.emit($event)"
+          ></lab-columns>
         </div>
       </th>
       <th>

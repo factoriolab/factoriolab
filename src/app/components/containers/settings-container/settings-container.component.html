@@ -4,7 +4,6 @@
   [mods]="mods$ | async"
   [factories]="factories$ | async"
   [settings]="settings$ | async"
-  [columns]="columns$ | async"
   [preferences]="preferences$ | async"
   (close)="close.emit()"
   (saveState)="saveState($event)"
@@ -24,12 +23,11 @@
   (setBelt)="setBelt($event)"
   (setFuel)="setFuel($event)"
   (setFlowRate)="setFlowRate($event)"
-  (setDisplayRate)="setDisplayRate($event)"
-  (setPrecision)="setPrecision($event)"
   (setMiningBonus)="setMiningBonus($event)"
   (setResearchSpeed)="setResearchSpeed($event)"
   (setInserterTarget)="setInserterTarget($event)"
   (setInserterCapacity)="setInserterCapacity($event)"
+  (setDisplayRate)="setDisplayRate($event)"
   (reset)="reset()"
 >
 </lab-settings>

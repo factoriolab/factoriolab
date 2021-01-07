@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { IdPayload } from '~/models';
+import { Entities } from '~/models';
 
 export const enum ColumnsActionType {
   SET_COLUMNS = '[Columns] Set Columns',
@@ -14,7 +14,7 @@ export class SetColumnsAction implements Action {
 
 export class SetPrecisionAction implements Action {
   readonly type = ColumnsActionType.SET_PRECISION;
-  constructor(public payload: IdPayload<number>) {}
+  constructor(public payload: Entities<number>) {}
 }
 
 export type ColumnsAction = SetColumnsAction | SetPrecisionAction;

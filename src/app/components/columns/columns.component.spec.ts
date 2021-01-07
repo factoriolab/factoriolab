@@ -3,12 +3,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TestUtility } from 'src/tests';
 import { IconComponent } from '../icon/icon.component';
-import { MultiselectComponent } from './multiselect.component';
+import { ColumnsComponent } from './columns.component';
 
 @Component({
-  selector: 'lab-test-multiselect',
+  selector: 'lab-test-columns',
   template: `
-    <lab-multiselect
+    <lab-columns
       [header]="header"
       [enabledIds]="enabledIds"
       [options]="options"
@@ -16,11 +16,11 @@ import { MultiselectComponent } from './multiselect.component';
       (cancel)="cancel()"
       (commit)="commit($event)"
     >
-    </lab-multiselect>
+    </lab-columns>
   `,
 })
-class TestMultiselectComponent {
-  @ViewChild(MultiselectComponent) child: MultiselectComponent;
+class TestColumnsComponent {
+  @ViewChild(ColumnsComponent) child: ColumnsComponent;
   header = 'Header';
   enabledIds = ['1'];
   options = [
@@ -34,21 +34,17 @@ class TestMultiselectComponent {
 }
 
 describe('MultiselectComponent', () => {
-  let component: TestMultiselectComponent;
-  let fixture: ComponentFixture<TestMultiselectComponent>;
+  let component: TestColumnsComponent;
+  let fixture: ComponentFixture<TestColumnsComponent>;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      declarations: [
-        IconComponent,
-        MultiselectComponent,
-        TestMultiselectComponent,
-      ],
+      declarations: [IconComponent, ColumnsComponent, TestColumnsComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TestMultiselectComponent);
+    fixture = TestBed.createComponent(TestColumnsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -82,7 +78,7 @@ describe('MultiselectComponent', () => {
     spyOn(component, 'commit');
     const value = ['A'];
     component.child.opening = false;
-    component.child.edited = true;
+    component.child.editedValue = true;
     component.child.editValue = value;
     document.body.click();
     expect(component.commit).toHaveBeenCalledWith(value);
@@ -105,14 +101,14 @@ describe('MultiselectComponent', () => {
   it('should enable an item', () => {
     component.child.opening = false;
     TestUtility.clickSelector(fixture, '.clickable', 1);
-    expect(component.child.edited).toBeTrue();
+    expect(component.child.editedValue).toBeTrue();
     expect(component.child.editValue).toEqual(['1', '2']);
   });
 
   it('should disable an item', () => {
     component.child.opening = false;
     TestUtility.clickSelector(fixture, '.clickable', 0);
-    expect(component.child.edited).toBeTrue();
+    expect(component.child.editedValue).toBeTrue();
     expect(component.child.editValue).toEqual([]);
   });
 });

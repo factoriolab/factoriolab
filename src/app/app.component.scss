@@ -76,6 +76,11 @@ lab-settings-container {
   padding: 0.75rem;
 }
 
+.loading {
+  width: 20rem;
+  align-self: center;
+}
+
 @media screen and (max-width: 1000px) {
   lab-settings-container {
     margin-right: -25rem;

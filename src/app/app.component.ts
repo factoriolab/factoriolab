@@ -7,6 +7,7 @@ import { skip } from 'rxjs/operators';
 import { Dataset, ItemId, Product } from './models';
 import { RouterService } from './services/router.service';
 import { State } from './store';
+import { getInitialized } from './store/datasets';
 import { getProducts, getZipState } from './store/products';
 import { getDataset } from './store/settings';
 
@@ -36,6 +37,7 @@ import { getDataset } from './store/settings';
 export class AppComponent implements OnInit {
   data$: Observable<Dataset>;
   products$: Observable<Product[]>;
+  initialized$: Observable<boolean>;
 
   ItemId = ItemId;
 
@@ -46,6 +48,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.data$ = this.store.select(getDataset);
     this.products$ = this.store.select(getProducts);
+    this.initialized$ = this.store.select(getInitialized);
     this.store
       .select(getZipState)
       .pipe(skip(1))

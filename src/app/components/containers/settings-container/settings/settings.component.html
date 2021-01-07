@@ -16,7 +16,7 @@
 <div class="panel">
   <div class="hole">
     <div>
-      <div class="header">Saved States</div>
+      <div class="header">Saved states</div>
       <div class="flex states">
         <ng-container *ngIf="!editState; else stateInput">
           <lab-options
@@ -73,7 +73,7 @@
       </div>
       <table class="fields">
         <tr>
-          <td>Base Set</td>
+          <td>Base set</td>
           <td>
             <lab-options
               title="Select base recipe set"
@@ -328,7 +328,7 @@
         <tr>
           <td><div>Belt</div></td>
           <td><div>Fuel</div></td>
-          <td><div>Pipe Flow Rate</div></td>
+          <td><div>Pipe flow rate</div></td>
         </tr>
         <tr>
           <td>
@@ -395,7 +395,7 @@
       <table>
         <tr>
           <td>
-            Inserter Target
+            Inserter target
             <a
               href="https://wiki.factorio.com/Inserters#Inserter_Throughput"
               target="_blank"
@@ -419,7 +419,7 @@
       <div class="header">Bonuses</div>
       <table>
         <tr>
-          <td>Mining Productivity</td>
+          <td>Mining productivity</td>
           <td class="right">
             +
             <input
@@ -435,7 +435,7 @@
           </td>
         </tr>
         <tr>
-          <td>Research Speed</td>
+          <td>Research speed</td>
           <td>
             <lab-options
               title="Select research speed bonus"
@@ -446,7 +446,7 @@
           </td>
         </tr>
         <tr>
-          <td>Inserter Capacity</td>
+          <td>Inserter capacity</td>
           <td>
             <lab-options
               title="Select inserter capacity bonus"
@@ -462,9 +462,9 @@
   <div class="hole">
     <div>
       <div class="header">Display</div>
-      <table class="fields">
+      <table>
         <tr>
-          <td>Display Rate</td>
+          <td>Display rates as</td>
           <td>
             <lab-options
               title="Select display rate"
@@ -475,71 +475,6 @@
           </td>
         </tr>
       </table>
-      <div class="label">Precision</div>
-      <div class="field">
-        <lab-precision
-          [data]="data"
-          [iconId]="ItemId.IronPlate"
-          tooltip="Items precision"
-          [value]="columns.precision[Column.Items]"
-          [default]="DEFAULT_PRECISION"
-          (setValue)="setPrecision.emit({ id: Column.Items, value: $event })"
-        ></lab-precision>
-      </div>
-      <div class="field">
-        <lab-precision
-          [data]="data"
-          [iconId]="ItemId.TransportBelt"
-          tooltip="Belts precision"
-          [value]="columns.precision[Column.Belts]"
-          [default]="DEFAULT_PRECISION"
-          (setValue)="setPrecision.emit({ id: Column.Belts, value: $event })"
-        ></lab-precision>
-      </div>
-      <div class="field">
-        <lab-precision
-          [data]="data"
-          [iconId]="ItemId.CargoWagon"
-          tooltip="Wagons precision"
-          [value]="columns.precision[Column.Wagons]"
-          [default]="DEFAULT_PRECISION"
-          (setValue)="setPrecision.emit({ id: Column.Wagons, value: $event })"
-        ></lab-precision>
-      </div>
-      <div class="field">
-        <lab-precision
-          [data]="data"
-          [iconId]="ItemId.Production"
-          tooltip="Factories precision"
-          [value]="columns.precision[Column.Factories]"
-          [default]="DEFAULT_PRECISION"
-          (setValue)="
-            setPrecision.emit({ id: Column.Factories, value: $event })
-          "
-        ></lab-precision>
-      </div>
-      <div class="field">
-        <lab-precision
-          [data]="data"
-          [iconId]="ItemId.Substation"
-          tooltip="Power precision"
-          [value]="columns.precision[Column.Power]"
-          [default]="DEFAULT_PRECISION"
-          (setValue)="setPrecision.emit({ id: Column.Power, value: $event })"
-        ></lab-precision>
-      </div>
-      <div class="field">
-        <lab-precision
-          [data]="data"
-          [iconId]="ItemId.Steam"
-          tooltip="Pollution precision"
-          [value]="columns.precision[Column.Pollution]"
-          [default]="DEFAULT_PRECISION"
-          (setValue)="
-            setPrecision.emit({ id: Column.Pollution, value: $event })
-          "
-        ></lab-precision>
-      </div>
     </div>
   </div>
 </div>

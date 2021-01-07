@@ -124,6 +124,7 @@ export class ListComponent {
   @Output() setBeacon = new EventEmitter<DefaultIdPayload>();
   @Output() setBeaconModules = new EventEmitter<DefaultIdPayload<string[]>>();
   @Output() setColumns = new EventEmitter<string[]>();
+  @Output() setPrecision = new EventEmitter<Entities<number>>();
   @Output() resetItem = new EventEmitter<string>();
   @Output() resetRecipe = new EventEmitter<string>();
   @Output() resetIgnore = new EventEmitter();
@@ -184,10 +185,6 @@ export class ListComponent {
   setEffectivePrecision() {
     if (this.steps && this.columns) {
       this.effPrecision = {};
-      this.effPrecision[Column.Items] = this.effPrecFrom(
-        this.columns.precision[Column.Items],
-        (s) => s[Column.Items.toLowerCase()]
-      );
       this.effPrecision[Column.Surplus] = this.effPrecFrom(
         this.columns.precision[Column.Items],
         (s) => s[Column.Surplus.toLowerCase()]

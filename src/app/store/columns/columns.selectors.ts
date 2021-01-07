@@ -12,7 +12,9 @@ export const getColumns = createSelector(
     const precision: Entities<number> = Object.values(Column).reduce(
       (e: Entities<number>, c) => {
         e[c] =
-          state.precision[c] != null ? state.precision[c] : DEFAULT_PRECISION;
+          state.precision[c] !== undefined
+            ? state.precision[c]
+            : DEFAULT_PRECISION;
         return e;
       },
       {}

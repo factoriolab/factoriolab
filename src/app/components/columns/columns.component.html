@@ -1,0 +1,65 @@
+<button title="Select columns" (click)="clickOpen()">
+  <i class="material-icons">visibility</i>
+</button>
+<lab-dialog *ngIf="open" (close)="close()">
+  <div class="dialog-title">
+    <div class="header">Select columns</div>
+    <button (click)="cancel($event)">
+      <i class="material-icons">close</i>
+    </button>
+  </div>
+  <div class="panel">
+    <table>
+      <thead>
+        <tr>
+          <td class="header">Visibility</td>
+          <td colspan="2" class="header">Precision</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let opt of options">
+          <td>
+            <div *ngIf="opt.id === Column.Items; else colCheckbox">
+              {{ opt.name }}
+            </div>
+            <ng-template #colCheckbox>
+              <div class="flex option" (click)="clickId(opt.id, $event)">
+                <div
+                  class="checkbox"
+                  [class.checked]="editValue.indexOf(opt.id) !== -1"
+                ></div>
+                <div>{{ opt.name }}</div>
+              </div>
+            </ng-template>
+          </td>
+          <ng-container *ngIf="opt.id !== Column.Link">
+            <td>
+              <input
+                *ngIf="editPrecision[opt.id] != null"
+                type="number"
+                placeholder="Decimals"
+                min="0"
+                step="1"
+                [value]="editPrecision[opt.id]"
+                (change)="changePrecision(opt.id, $event)"
+              />
+            </td>
+            <td>
+              <div class="flex option" (click)="clickFraction(opt.id)">
+                <div
+                  class="checkbox"
+                  [class.checked]="editPrecision[opt.id] == null"
+                ></div>
+                <div>Fractions</div>
+              </div>
+            </td>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="dialog-buttons">
+    <button (click)="cancel($event)"><span class="text">Cancel</span></button>
+    <button class="green" (click)="close()">Confirm</button>
+  </div>
+</lab-dialog>

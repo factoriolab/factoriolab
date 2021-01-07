@@ -22,15 +22,7 @@ export function columnsReducer(
     case ColumnsActionType.SET_COLUMNS:
       return { ...state, ...{ ids: action.payload } };
     case ColumnsActionType.SET_PRECISION:
-      return {
-        ...state,
-        ...{
-          precision: {
-            ...state.precision,
-            ...{ [action.payload.id]: action.payload.value },
-          },
-        },
-      };
+      return { ...state, ...{ precision: action.payload } };
     default:
       return state;
   }

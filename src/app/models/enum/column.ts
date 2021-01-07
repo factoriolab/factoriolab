@@ -13,6 +13,7 @@ export enum Column {
 }
 
 export const AllColumns = [
+  Column.Items,
   Column.Belts,
   Column.Wagons,
   Column.Factories,

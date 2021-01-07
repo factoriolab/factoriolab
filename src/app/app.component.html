@@ -31,7 +31,7 @@
     </div>
   </div>
 </div>
-<main>
+<main *ngIf="initialized$ | async; else loading">
   <lab-settings-container
     *ngIf="showSettings"
     @slideLeftRight
@@ -46,7 +46,6 @@
           routerLink="/list"
           routerLinkActive="active"
           preserveFragment="true"
-          title="View as list of steps"
         >
           <span>List</span>
         </li>
@@ -54,9 +53,11 @@
           routerLink="/flow"
           routerLinkActive="active"
           preserveFragment="true"
-          title="View as sankey flow diagram"
         >
           <span>Flow</span>
+        </li>
+        <li *ngIf="!showSettings" (click)="showSettings = true">
+          <span>Settings</span>
         </li>
       </ul>
       <div class="panel">
@@ -65,3 +66,8 @@
     </div>
   </div>
 </main>
+<ng-template #loading>
+  <div class="view loading">
+    <div><div class="panel">Loading data, please wait...</div></div>
+  </div>
+</ng-template>

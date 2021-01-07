@@ -1,0 +1,13 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-width: 40rem;
+
+  > .flex > * + * {
+    margin-left: 1rem;
+  }
+
+  > * + * {
+    margin-top: 0.75rem;
+  }
+}

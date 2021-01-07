@@ -18,6 +18,10 @@ export const getModSets = compose(sModSets, datasetsState);
 export const getDataEntities = compose(sDataEntities, datasetsState);
 
 /* Complex selectors */
+export const getInitialized = createSelector(datasetsState, (state) => {
+  return Object.keys(state.dataEntities).length > 0;
+});
+
 export const getBaseEntities = createSelector(
   getBaseSets,
   getDataEntities,

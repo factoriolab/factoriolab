@@ -25,7 +25,6 @@ import {
 } from '~/models';
 import { State } from '~/store';
 import { ResetAction } from '~/store/app.actions';
-import { ColumnsState, getColumns, SetPrecisionAction } from '~/store/columns';
 import { getBaseSets } from '~/store/datasets';
 import * as Factories from '~/store/factories';
 import * as Preferences from '~/store/preferences';
@@ -48,7 +47,6 @@ export class SettingsContainerComponent implements OnInit {
   mods$: Observable<ModInfo[]>;
   factories$: Observable<Factories.FactoriesState>;
   settings$: Observable<Settings.SettingsState>;
-  columns$: Observable<ColumnsState>;
   preferences$: Observable<Preferences.PreferencesState>;
 
   opening = true;
@@ -61,7 +59,6 @@ export class SettingsContainerComponent implements OnInit {
     this.mods$ = this.store.select(Settings.getAvailableMods);
     this.factories$ = this.store.select(Factories.getFactorySettings);
     this.settings$ = this.store.select(Settings.getSettings);
-    this.columns$ = this.store.select(getColumns);
     this.preferences$ = this.store.select(Preferences.preferencesState);
   }
 
@@ -150,15 +147,6 @@ export class SettingsContainerComponent implements OnInit {
   setFlowRate(value: number) {
     this.store.dispatch(new Settings.SetFlowRateAction(value));
   }
-
-  setDisplayRate(value: DisplayRate) {
-    this.store.dispatch(new Settings.SetDisplayRateAction(value));
-  }
-
-  setPrecision(value: IdPayload<number>) {
-    this.store.dispatch(new SetPrecisionAction(value));
-  }
-
   setMiningBonus(value: number) {
     this.store.dispatch(new Settings.SetMiningBonusAction(value));
   }
@@ -173,6 +161,10 @@ export class SettingsContainerComponent implements OnInit {
 
   setInserterCapacity(value: InserterCapacity) {
     this.store.dispatch(new Settings.SetInserterCapacityAction(value));
+  }
+
+  setDisplayRate(value: DisplayRate) {
+    this.store.dispatch(new Settings.SetDisplayRateAction(value));
   }
 
   reset() {

@@ -1,6 +1,15 @@
+<div class="flex">
+  <div>Link value</div>
+  <lab-options
+    title="Select flow link value"
+    [selected]="linkValue$ | async"
+    [options]="LinkValueOptions"
+    (selectId)="setLinkValue($event)"
+  ></lab-options>
+</div>
 <lab-sankey
   [sankeyData]="sankeyData$ | async"
-  (selectNode)="selected = $event"
+  (selectNode)="setSelected($event)"
 ></lab-sankey>
 <lab-list-container
   [mode]="ListMode.Focus"

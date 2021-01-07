@@ -119,6 +119,10 @@ export class ListContainerComponent implements OnInit {
     this.store.dispatch(new Columns.SetColumnsAction(value));
   }
 
+  setPrecision(value: Entities<number>) {
+    this.store.dispatch(new Columns.SetPrecisionAction(value));
+  }
+
   resetItem(value: string) {
     this.store.dispatch(new Items.ResetItemAction(value));
   }

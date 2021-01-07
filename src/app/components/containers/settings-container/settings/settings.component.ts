@@ -23,9 +23,7 @@ import {
   WARNING_RESET,
   InserterTarget,
   InserterCapacity,
-  Column,
   DefaultIdPayload,
-  DEFAULT_PRECISION,
   IdName,
   PresetOptions,
   InserterCapacityOptions,
@@ -33,7 +31,6 @@ import {
   InserterTargetOptions,
   DisplayRateOptions,
 } from '~/models';
-import { ColumnsState } from '~/store/columns';
 import { FactoriesState } from '~/store/factories';
 import { PreferencesState } from '~/store/preferences';
 import { SettingsState, initialSettingsState } from '~/store/settings';
@@ -59,7 +56,6 @@ export class SettingsComponent implements OnInit {
   @Input() mods: ModInfo[];
   @Input() factories: FactoriesState;
   @Input() settings: SettingsState;
-  @Input() columns: ColumnsState;
   @Input() preferences: PreferencesState;
 
   @Output() close = new EventEmitter();
@@ -82,12 +78,11 @@ export class SettingsComponent implements OnInit {
   @Output() setBelt = new EventEmitter<DefaultPayload>();
   @Output() setFuel = new EventEmitter<DefaultPayload>();
   @Output() setFlowRate = new EventEmitter<number>();
-  @Output() setDisplayRate = new EventEmitter<DisplayRate>();
-  @Output() setPrecision = new EventEmitter<IdPayload<number>>();
   @Output() setMiningBonus = new EventEmitter<number>();
   @Output() setResearchSpeed = new EventEmitter<ResearchSpeed>();
   @Output() setInserterTarget = new EventEmitter<InserterTarget>();
   @Output() setInserterCapacity = new EventEmitter<InserterCapacity>();
+  @Output() setDisplayRate = new EventEmitter<DisplayRate>();
   @Output() reset = new EventEmitter();
 
   initial = initialSettingsState;
@@ -95,7 +90,6 @@ export class SettingsComponent implements OnInit {
   state = '';
   tempState = '';
   editState = false;
-  DEFAULT_PRECISION = DEFAULT_PRECISION;
   difficultyOptions: IdName[] = [
     {
       id: false,
@@ -112,8 +106,6 @@ export class SettingsComponent implements OnInit {
   InserterTargetOptions = InserterTargetOptions;
   DisplayRateOptions = DisplayRateOptions;
 
-  Column = Column;
-  DisplayRate = DisplayRate;
   ItemId = ItemId;
 
   get hash() {
