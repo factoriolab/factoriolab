@@ -6,7 +6,8 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { Column, ColumnsAsOptions, Entities } from '~/models';
+import { Column, ColumnsAsOptions } from '~/models';
+import { ColumnsState } from '~/store/preferences';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
@@ -16,17 +17,13 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnsComponent extends DialogContainerComponent {
-  @Input() selected: string[];
-  @Input() precision: Entities<number>;
+  @Input() columns: ColumnsState;
 
-  @Output() selectIds = new EventEmitter<string[]>();
-  @Output() setPrecision = new EventEmitter<Entities<number>>();
+  @Output() setColumns = new EventEmitter<ColumnsState>();
 
   options = ColumnsAsOptions;
-  editedValue = false;
-  editValue: string[];
-  editedPrecision = false;
-  editPrecision: Entities<number>;
+  edited = false;
+  editValue: ColumnsState;
 
   Column = Column;
 
@@ -36,47 +33,40 @@ export class ColumnsComponent extends DialogContainerComponent {
 
   clickOpen(): void {
     this.open = true;
-    this.editedValue = false;
-    this.editValue = [...this.selected];
-    this.editedPrecision = false;
-    this.editPrecision = { ...this.precision };
+    this.edited = false;
+    this.editValue = Object.keys(this.columns).reduce((e: ColumnsState, c) => {
+      e[c] = { ...this.columns[c] };
+      return e;
+    }, {});
   }
 
   close(): void {
-    if (this.editedValue) {
-      this.selectIds.emit(this.editValue);
-    }
-    if (this.editedPrecision) {
-      this.setPrecision.emit(this.editPrecision);
+    if (this.edited) {
+      this.setColumns.emit(this.editValue);
     }
     this.open = false;
   }
 
-  clickId(id: string, event: MouseEvent): void {
-    this.editedValue = true;
-    if (this.editValue.indexOf(id) === -1) {
-      this.editValue.push(id);
-    } else {
-      this.editValue = this.editValue.filter((i) => i !== id);
-    }
-    event.stopPropagation();
+  clickId(id: string): void {
+    this.edited = true;
+    this.editValue[id].show = !this.editValue[id].show;
   }
 
   changePrecision(id: string, event: Event): void {
     const target = event.target as HTMLInputElement;
     const value = Number(target?.value);
     if (!isNaN(value)) {
-      this.editedPrecision = true;
-      this.editPrecision[id] = value;
+      this.edited = true;
+      this.editValue[id].precision = value;
     }
   }
 
   clickFraction(id: string) {
-    this.editedPrecision = true;
-    if (this.editPrecision[id] == null) {
-      this.editPrecision[id] = 1;
+    this.edited = true;
+    if (this.editValue[id].precision == null) {
+      this.editValue[id].precision = 1;
     } else {
-      this.editPrecision[id] = null;
+      this.editValue[id].precision = null;
     }
   }
 }

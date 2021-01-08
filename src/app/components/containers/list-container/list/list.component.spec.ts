@@ -15,6 +15,7 @@ import {
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers } from '~/store';
+import { initialColumnsState } from '~/store/preferences';
 import { ListComponent, StepDetailTab } from './list.component';
 
 @Component({
@@ -74,7 +75,7 @@ class TestListComponent {
   displayRate = DisplayRate.PerMinute;
   inserterTarget = InserterTarget.Chest;
   inserterCapacity = InserterCapacity.Capacity0;
-  columns = Mocks.Columns;
+  columns = initialColumnsState;
   modifiedIgnore = false;
   modifiedBelt = false;
   modifiedFactory = false;

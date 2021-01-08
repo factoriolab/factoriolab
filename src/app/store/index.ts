@@ -2,7 +2,6 @@ import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { storeFreeze } from 'ngrx-store-freeze';
 
 import { environment } from 'src/environments/environment';
-import { columnsReducer, ColumnsState } from './columns';
 import { DatasetsState, datasetsReducer } from './datasets';
 import { factoriesReducer, FactoriesState } from './factories';
 import { ItemsState, itemsReducer } from './items';
@@ -19,7 +18,6 @@ export interface State {
   recipesState: RecipesState;
   factoriesState: FactoriesState;
   settingsState: SettingsState;
-  columnsState: ColumnsState;
   preferencesState: PreferencesState;
 }
 
@@ -30,7 +28,6 @@ export const reducers: ActionReducerMap<State> = {
   recipesState: recipesReducer,
   factoriesState: factoriesReducer,
   settingsState: settingsReducer,
-  columnsState: columnsReducer,
   preferencesState: preferencesReducer,
 };
 

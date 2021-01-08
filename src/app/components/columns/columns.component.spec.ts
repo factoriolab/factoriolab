@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Mocks, TestUtility } from 'src/tests';
 import { Column, Entities } from '~/models';
+import { initialColumnsState } from '~/store/preferences';
 import { DialogComponent } from '../dialog/dialog.component';
 import { ColumnsComponent } from './columns.component';
 
@@ -17,21 +18,14 @@ enum DataTest {
 @Component({
   selector: 'lab-test-columns',
   template: `
-    <lab-columns
-      [selected]="selected"
-      [precision]="precision"
-      (selectIds)="selectIds($event)"
-      (setPrecision)="setPrecision($event)"
-    >
+    <lab-columns [columns]="columns" (setColumns)="setColumns($event)">
     </lab-columns>
   `,
 })
 class TestColumnsComponent {
   @ViewChild(ColumnsComponent) child: ColumnsComponent;
-  selected = Mocks.Columns.ids;
-  precision: Entities<number> = Mocks.Columns.precision;
-  selectIds(data) {}
-  setPrecision(data) {}
+  columns = initialColumnsState;
+  setColumns(data) {}
   constructor(public ref: ChangeDetectorRef) {}
 }
 
@@ -57,38 +51,33 @@ describe('ColumnsComponent', () => {
 
   describe('clickOpen', () => {
     it('should set up edit objects', () => {
-      component.child.editedValue = true;
-      component.child.editedPrecision = true;
+      component.child.edited = true;
       TestUtility.clickDt(fixture, DataTest.Open);
       expect(component.child.open).toBeTrue();
-      expect(component.child.editedValue).toBeFalse();
-      expect(component.child.editValue).toEqual(component.selected);
-      expect(component.child.editedPrecision).toBeFalse();
-      expect(component.child.editPrecision).toEqual(component.precision);
+      expect(component.child.edited).toBeFalse();
+      expect(component.child.editValue).toEqual(component.columns);
+      component.child.editValue[Column.Items].show = false;
+      expect(component.child.columns[Column.Items].show).toBeTrue();
     });
   });
 
   describe('close', () => {
     beforeEach(() => {
-      spyOn(component, 'selectIds');
-      spyOn(component, 'setPrecision');
+      spyOn(component, 'setColumns');
       TestUtility.clickDt(fixture, DataTest.Open);
       fixture.detectChanges();
     });
 
     it('should close the dialog', () => {
       TestUtility.clickDt(fixture, DataTest.Confirm);
-      expect(component.selectIds).not.toHaveBeenCalled();
-      expect(component.setPrecision).not.toHaveBeenCalled();
+      expect(component.setColumns).not.toHaveBeenCalled();
       expect(component.child.open).toBeFalse();
     });
 
     it('should emit edits', () => {
-      component.child.editedValue = true;
-      component.child.editedPrecision = true;
+      component.child.edited = true;
       TestUtility.clickDt(fixture, DataTest.Confirm);
-      expect(component.selectIds).toHaveBeenCalled();
-      expect(component.setPrecision).toHaveBeenCalled();
+      expect(component.setColumns).toHaveBeenCalled();
       expect(component.child.open).toBeFalse();
     });
   });
@@ -99,20 +88,11 @@ describe('ColumnsComponent', () => {
       fixture.detectChanges();
     });
 
-    it('should add id to selected', () => {
-      component.child.editValue = [];
+    it('should toggle show value', () => {
       fixture.detectChanges();
       TestUtility.clickDt(fixture, DataTest.Visibility);
-      expect(component.child.editedValue).toBeTrue();
-      expect(component.child.editValue).toEqual([Column.Belts]);
-    });
-
-    it('should remove id from selected', () => {
-      component.child.editValue = [Column.Belts];
-      fixture.detectChanges();
-      TestUtility.clickDt(fixture, DataTest.Visibility);
-      expect(component.child.editedValue).toBeTrue();
-      expect(component.child.editValue).toEqual([]);
+      expect(component.child.edited).toBeTrue();
+      expect(component.child.editValue[Column.Belts].show).toBeFalse();
     });
   });
 
@@ -124,13 +104,13 @@ describe('ColumnsComponent', () => {
 
     it('should handle invalid events', () => {
       component.child.changePrecision(null, { target: null } as any);
-      expect(component.child.editedPrecision).toBeFalse();
+      expect(component.child.edited).toBeFalse();
     });
 
     it('should change the precision value', () => {
       TestUtility.setTextDt(fixture, DataTest.Decimals, '0');
-      expect(component.child.editedPrecision).toBeTrue();
-      expect(component.child.editPrecision[Column.Items]).toEqual(0);
+      expect(component.child.edited).toBeTrue();
+      expect(component.child.editValue[Column.Items].precision).toEqual(0);
     });
   });
 
@@ -142,15 +122,15 @@ describe('ColumnsComponent', () => {
 
     it('should switch to using fractions', () => {
       TestUtility.clickDt(fixture, DataTest.Fractions);
-      expect(component.child.editedPrecision).toBeTrue();
-      expect(component.child.editPrecision[Column.Items]).toBeNull();
+      expect(component.child.edited).toBeTrue();
+      expect(component.child.editValue[Column.Items].precision).toBeNull();
     });
 
     it('should switch to using decimals', () => {
-      component.child.editPrecision[Column.Items] = null;
+      component.child.editValue[Column.Items].precision = null;
       TestUtility.clickDt(fixture, DataTest.Fractions);
-      expect(component.child.editedPrecision).toBeTrue();
-      expect(component.child.editPrecision[Column.Items]).toEqual(1);
+      expect(component.child.edited).toBeTrue();
+      expect(component.child.editValue[Column.Items].precision).toEqual(1);
     });
   });
 });

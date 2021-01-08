@@ -21,10 +21,9 @@ import {
   DefaultPayload,
 } from '~/models';
 import { State } from '~/store';
-import * as Columns from '~/store/columns';
-import { ColumnsState } from '~/store/columns';
 import * as Factories from '~/store/factories';
 import * as Items from '~/store/items';
+import * as Preferences from '~/store/preferences';
 import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
@@ -58,7 +57,7 @@ export class ListContainerComponent implements OnInit {
   beaconCount$: Observable<number>;
   inserterTarget$: Observable<InserterTarget>;
   inserterCapacity$: Observable<InserterCapacity>;
-  columns$: Observable<ColumnsState>;
+  columns$: Observable<Preferences.ColumnsState>;
   modifiedIgnore$: Observable<boolean>;
   modifiedBelt$: Observable<boolean>;
   modifiedFactory$: Observable<boolean>;
@@ -80,7 +79,7 @@ export class ListContainerComponent implements OnInit {
     this.displayRate$ = this.store.select(Settings.getDisplayRate);
     this.inserterTarget$ = this.store.select(Settings.getInserterTarget);
     this.inserterCapacity$ = this.store.select(Settings.getInserterCapacity);
-    this.columns$ = this.store.select(Columns.getColumns);
+    this.columns$ = this.store.select(Preferences.getColumns);
     this.modifiedIgnore$ = this.store.select(Items.getContainsIgnore);
     this.modifiedBelt$ = this.store.select(Items.getContainsBelt);
     this.modifiedFactory$ = this.store.select(Recipes.getContainsFactory);
@@ -115,12 +114,8 @@ export class ListContainerComponent implements OnInit {
     this.store.dispatch(new Recipes.SetBeaconModulesAction(data));
   }
 
-  setColumns(value: string[]) {
-    this.store.dispatch(new Columns.SetColumnsAction(value));
-  }
-
-  setPrecision(value: Entities<number>) {
-    this.store.dispatch(new Columns.SetPrecisionAction(value));
+  setColumns(value: Preferences.ColumnsState) {
+    this.store.dispatch(new Preferences.SetColumnsAction(value));
   }
 
   resetItem(value: string) {

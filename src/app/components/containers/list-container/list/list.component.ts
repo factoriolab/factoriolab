@@ -25,9 +25,9 @@ import {
   toBoolEntities,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
-import { ColumnsState } from '~/store/columns';
 import { FactoriesState } from '~/store/factories';
 import { ItemsState } from '~/store/items';
+import { ColumnsState } from '~/store/preferences';
 import { RecipesState } from '~/store/recipes';
 import { ExportUtility, RecipeUtility } from '~/utilities';
 
@@ -77,18 +77,17 @@ export class ListComponent {
   }
   @Input() set columns(value: ColumnsState) {
     this._columns = value;
-    this.show = toBoolEntities(value.ids);
     this.totalSpan = 2;
-    if (this.show[Column.Belts]) {
+    if (this.columns[Column.Belts].show) {
       this.totalSpan++;
     }
-    if (this.show[Column.Wagons]) {
+    if (this.columns[Column.Wagons].show) {
       this.totalSpan++;
     }
-    if (this.show[Column.Factories]) {
+    if (this.columns[Column.Factories].show) {
       this.totalSpan += 3;
     }
-    if (this.show[Column.Beacons]) {
+    if (this.columns[Column.Beacons].show) {
       this.totalSpan += 3;
     }
     this.setEffectivePrecision();
@@ -123,8 +122,7 @@ export class ListComponent {
   @Output() setBeaconCount = new EventEmitter<DefaultIdPayload<number>>();
   @Output() setBeacon = new EventEmitter<DefaultIdPayload>();
   @Output() setBeaconModules = new EventEmitter<DefaultIdPayload<string[]>>();
-  @Output() setColumns = new EventEmitter<string[]>();
-  @Output() setPrecision = new EventEmitter<Entities<number>>();
+  @Output() setColumns = new EventEmitter<ColumnsState>();
   @Output() resetItem = new EventEmitter<string>();
   @Output() resetRecipe = new EventEmitter<string>();
   @Output() resetIgnore = new EventEmitter();
@@ -137,7 +135,6 @@ export class ListComponent {
   details: Entities<StepDetailTab[]> = {};
   recipes: Entities<string[]> = {};
   expanded: Entities<StepDetailTab> = {};
-  show: Entities<boolean> = {};
   totalSpan = 2;
   effPrecision: Entities<number> = {};
 
@@ -186,12 +183,14 @@ export class ListComponent {
     if (this.steps && this.columns) {
       this.effPrecision = {};
       this.effPrecision[Column.Surplus] = this.effPrecFrom(
-        this.columns.precision[Column.Items],
+        this.columns[Column.Items].precision,
         (s) => s[Column.Surplus.toLowerCase()]
       );
-      for (const i of this.columns.ids) {
+      for (const i of Object.keys(this.columns).filter(
+        (i) => this.columns[i].show
+      )) {
         this.effPrecision[i] = this.effPrecFrom(
-          this.columns.precision[i],
+          this.columns[i].precision,
           (s) => s[i.toLowerCase()]
         );
       }
@@ -437,7 +436,7 @@ export class ListComponent {
   export() {
     ExportUtility.stepsToCsv(
       this.steps,
-      this.columns.ids,
+      this.columns,
       this.itemSettings,
       this.recipeSettings
     );

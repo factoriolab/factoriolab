@@ -4,9 +4,6 @@
   (click)="clickOpen()"
 >
   <i class="material-icons">visibility</i>
-  <div>{{ open }}</div>
-  <div>{{ header }}</div>
-  <div>{{ selected.length }}</div>
 </button>
 <lab-dialog *ngIf="open" (close)="close()">
   <div class="dialog-title">
@@ -33,11 +30,11 @@
               <div
                 class="flex option"
                 data-test="lab-columns-visibility"
-                (click)="clickId(opt.id, $event)"
+                (click)="clickId(opt.id)"
               >
                 <div
                   class="checkbox"
-                  [class.checked]="editValue.indexOf(opt.id) !== -1"
+                  [class.checked]="editValue[opt.id].show"
                 ></div>
                 <div>{{ opt.name }}</div>
               </div>
@@ -46,13 +43,13 @@
           <ng-container *ngIf="opt.id !== Column.Link">
             <td>
               <input
-                *ngIf="editPrecision[opt.id] != null"
+                *ngIf="editValue[opt.id].precision != null"
                 type="number"
                 placeholder="Decimals"
                 min="0"
                 step="1"
                 data-test="lab-columns-decimals"
-                [value]="editPrecision[opt.id]"
+                [value]="editValue[opt.id].precision"
                 (input)="changePrecision(opt.id, $event)"
               />
             </td>
@@ -64,7 +61,7 @@
               >
                 <div
                   class="checkbox"
-                  [class.checked]="editPrecision[opt.id] == null"
+                  [class.checked]="editValue[opt.id].precision == null"
                 ></div>
                 <div>Fractions</div>
               </div>

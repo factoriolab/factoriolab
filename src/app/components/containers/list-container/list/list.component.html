@@ -5,10 +5,8 @@
       <th>
         <div>
           <lab-columns
-            [selected]="columns.ids"
-            [precision]="columns.precision"
-            (selectIds)="setColumns.emit($event)"
-            (setPrecision)="setPrecision.emit($event)"
+            [columns]="columns"
+            (setColumns)="setColumns.emit($event)"
           ></lab-columns>
         </div>
       </th>
@@ -24,7 +22,7 @@
           </button>
         </div>
       </th>
-      <th *ngIf="show[Column.Belts]">
+      <th *ngIf="columns[Column.Belts].show">
         <div class="header">
           Belts
           <button
@@ -36,10 +34,10 @@
           </button>
         </div>
       </th>
-      <th *ngIf="show[Column.Wagons]">
+      <th *ngIf="columns[Column.Wagons].show">
         <div class="header">Wagons{{ rateLabel }}</div>
       </th>
-      <th *ngIf="show[Column.Factories]" colspan="3">
+      <th *ngIf="columns[Column.Factories].show" colspan="3">
         <div class="header">
           Factories
           <button
@@ -51,7 +49,7 @@
           </button>
         </div>
       </th>
-      <th *ngIf="show[Column.Beacons]" colspan="3">
+      <th *ngIf="columns[Column.Beacons].show" colspan="3">
         <div class="header">
           Beacons
           <button
@@ -63,12 +61,14 @@
           </button>
         </div>
       </th>
-      <th *ngIf="show[Column.Power]"><div class="header">Power</div></th>
-      <th *ngIf="show[Column.Pollution]">
+      <th *ngIf="columns[Column.Power].show">
+        <div class="header">Power</div>
+      </th>
+      <th *ngIf="columns[Column.Pollution].show">
         <div class="header">Pollution{{ rateLabel }}</div>
       </th>
       <!-- Reset / Link -->
-      <th *ngIf="show[Column.Link] && mode === ListMode.All">
+      <th *ngIf="columns[Column.Link].show && mode === ListMode.All">
         <button title="Export to CSV" (click)="export()">
           <i class="material-icons">file_download</i>
         </button>
@@ -125,7 +125,7 @@
             ></lab-icon>
           </div>
         </td>
-        <td *ngIf="show[Column.Belts]">
+        <td *ngIf="columns[Column.Belts].show">
           <ng-container *ngIf="itemSettings[step.itemId]?.belt as belt">
             <div
               *ngIf="
@@ -184,7 +184,7 @@
             </div>
           </ng-container>
         </td>
-        <td *ngIf="show[Column.Wagons]">
+        <td *ngIf="columns[Column.Wagons].show">
           <ng-container *ngIf="itemSettings[step.itemId]?.wagon as wagon">
             <div
               *ngIf="
@@ -206,7 +206,7 @@
             </div>
           </ng-container>
         </td>
-        <ng-container *ngIf="show[Column.Factories]">
+        <ng-container *ngIf="columns[Column.Factories].show">
           <ng-container
             *ngIf="recipeSettings[step.recipeId]?.factory as factory"
           >
@@ -303,7 +303,7 @@
           </ng-container>
           <td colspan="3" *ngIf="!recipeSettings[step.recipeId]?.factory"></td>
         </ng-container>
-        <ng-container *ngIf="show[Column.Beacons]">
+        <ng-container *ngIf="columns[Column.Beacons].show">
           <ng-container *ngIf="recipeSettings[step.recipeId]?.beacon as beacon">
             <td>
               <div class="flex">
@@ -394,19 +394,19 @@
           </ng-container>
           <td colspan="3" *ngIf="!recipeSettings[step.recipeId]?.beacon"></td>
         </ng-container>
-        <td *ngIf="show[Column.Power]">
+        <td *ngIf="columns[Column.Power].show">
           <div *ngIf="step.power?.nonzero()" class="flex">
             <span class="monospace">{{ power(step.power) }}</span>
           </div>
         </td>
-        <td *ngIf="show[Column.Pollution]">
+        <td *ngIf="columns[Column.Pollution].show">
           <div *ngIf="step.pollution?.nonzero()" class="flex">
             <span class="monospace">{{
               rate(step.pollution, effPrecision[Column.Pollution])
             }}</span>
           </div>
         </td>
-        <td class="nowrap" *ngIf="show[Column.Link]">
+        <td class="nowrap" *ngIf="columns[Column.Link].show">
           <div class="flex links">
             <a
               *ngIf="step.items"
@@ -506,7 +506,7 @@
                     </lab-icon>
                   </div>
                 </td>
-                <td *ngIf="show[Column.Belts]">
+                <td *ngIf="columns[Column.Belts].show">
                   <ng-container
                     *ngIf="itemSettings[inStep.itemId].belt as belt"
                   >
@@ -536,7 +536,7 @@
                     </div>
                   </ng-container>
                 </td>
-                <td *ngIf="show[Column.Wagons]">
+                <td *ngIf="columns[Column.Wagons].show">
                   <ng-container
                     *ngIf="itemSettings[inStep.itemId]?.wagon as wagon"
                   >
@@ -564,7 +564,7 @@
                     </div>
                   </ng-container>
                 </td>
-                <ng-container *ngIf="show[Column.Factories]">
+                <ng-container *ngIf="columns[Column.Factories].show">
                   <ng-container
                     *ngIf="recipeSettings[inStep.recipeId]?.factory as factory"
                   >
@@ -661,7 +661,7 @@
                 </lab-icon>
               </div>
             </td>
-            <td *ngIf="show[Column.Belts]">
+            <td *ngIf="columns[Column.Belts].show">
               <ng-container *ngIf="itemSettings[step.itemId].belt as belt">
                 <div
                   *ngIf="
@@ -688,7 +688,7 @@
                 </div>
               </ng-container>
             </td>
-            <td *ngIf="show[Column.Wagons]">
+            <td *ngIf="columns[Column.Wagons].show">
               <ng-container *ngIf="itemSettings[step.itemId]?.wagon as wagon">
                 <div
                   *ngIf="
@@ -713,7 +713,7 @@
                 </div>
               </ng-container>
             </td>
-            <ng-container *ngIf="show[Column.Factories]">
+            <ng-container *ngIf="columns[Column.Factories].show">
               <ng-container
                 *ngIf="recipeSettings[step.recipeId]?.factory as factory"
               >
@@ -1022,7 +1022,8 @@
     </ng-container>
     <tr
       *ngIf="
-        mode === ListMode.All && (show[Column.Power] || show[Column.Pollution])
+        mode === ListMode.All &&
+        (columns[Column.Power].show || columns[Column.Pollution].show)
       "
       class="border row col"
     >
@@ -1031,12 +1032,12 @@
           <span class="monospace">Total:</span>
         </div>
       </td>
-      <td *ngIf="show[Column.Power]">
+      <td *ngIf="columns[Column.Power].show">
         <div class="flex">
           <span class="monospace">{{ totalPower }}</span>
         </div>
       </td>
-      <td *ngIf="show[Column.Pollution]">
+      <td *ngIf="columns[Column.Pollution].show">
         <div class="flex">
           <span class="monospace">{{ totalPollution }}</span>
         </div>

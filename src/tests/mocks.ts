@@ -16,9 +16,7 @@ import {
   SankeyData,
   Node,
   Link,
-  AllColumns,
 } from '~/models';
-import { ColumnsState } from '~/store/columns';
 import { initialDatasetsState } from '~/store/datasets';
 import { getFactorySettings, initialFactoriesState } from '~/store/factories';
 import { getItemSettings } from '~/store/items';
@@ -165,14 +163,6 @@ export const AdjustedData = getAdjustedDataset.projector(
   Rational.zero,
   Rational.zero,
   Data
-);
-export const Columns = AllColumns.reduce(
-  (e: ColumnsState, c) => {
-    e.ids.push(c);
-    e.precision[c] = 1;
-    return e;
-  },
-  { ids: [], precision: {} }
 );
 
 function node(i: number): Node {
