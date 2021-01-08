@@ -97,7 +97,7 @@ class TestListComponent {
   setDisabledRecipes($event) {}
 }
 
-fdescribe('ListComponent', () => {
+describe('ListComponent', () => {
   let component: TestListComponent;
   let fixture: ComponentFixture<TestListComponent>;
 
