@@ -43,7 +43,6 @@ describe('Recipes Selectors', () => {
         Mocks.SettingsState1.beaconCount,
         Mocks.SettingsState1.beacon,
         Mocks.SettingsState1.beaconModule,
-        Mocks.SettingsState1.drillModule,
         Mocks.Data
       );
       expect(Object.keys(result).length).toEqual(Mocks.Data.recipeIds.length);
@@ -61,7 +60,6 @@ describe('Recipes Selectors', () => {
         Mocks.SettingsState1.beaconCount,
         Mocks.SettingsState1.beacon,
         Mocks.SettingsState1.beaconModule,
-        Mocks.SettingsState1.drillModule,
         Mocks.Data
       );
       expect(result[Mocks.Item1.id].factory).toEqual(stringValue);
@@ -79,7 +77,6 @@ describe('Recipes Selectors', () => {
         Mocks.SettingsState1.beaconCount,
         Mocks.SettingsState1.beacon,
         Mocks.SettingsState1.beaconModule,
-        Mocks.SettingsState1.drillModule,
         Mocks.Data
       );
       expect(result[Mocks.Item1.id].factoryModules).toEqual([stringValue]);
@@ -97,7 +94,6 @@ describe('Recipes Selectors', () => {
         Mocks.SettingsState1.beaconCount,
         Mocks.SettingsState1.beacon,
         Mocks.SettingsState1.beaconModule,
-        Mocks.SettingsState1.drillModule,
         Mocks.Data
       );
       expect(result[Mocks.Item1.id].beaconCount).toEqual(numberValue);
@@ -115,7 +111,6 @@ describe('Recipes Selectors', () => {
         Mocks.SettingsState1.beaconCount,
         Mocks.SettingsState1.beacon,
         Mocks.SettingsState1.beaconModule,
-        Mocks.SettingsState1.drillModule,
         Mocks.Data
       );
       expect(result[Mocks.Item1.id].beacon).toEqual(stringValue);
@@ -133,7 +128,6 @@ describe('Recipes Selectors', () => {
         Mocks.SettingsState1.beaconCount,
         Mocks.SettingsState1.beacon,
         Mocks.SettingsState1.beaconModule,
-        Mocks.SettingsState1.drillModule,
         Mocks.Data
       );
       expect(result[Mocks.Item1.id].beaconModules).toEqual([stringValue]);

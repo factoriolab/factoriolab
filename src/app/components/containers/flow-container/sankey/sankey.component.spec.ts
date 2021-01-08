@@ -82,6 +82,9 @@ describe('SankeyComponent', () => {
     });
 
     it('should ignore if ratio of width to height is unchanged', () => {
+      component.child.handleResize({
+        contentRect: { width: 400, height: 200 },
+      } as any);
       spyOn(component.child, 'rebuildChart');
       component.child.handleResize({
         contentRect: { width: 800, height: 400 },

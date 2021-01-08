@@ -1,11 +1,5 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import {
-  DisplayRate,
-  RateType,
-  Rational,
-  RationalProduct,
-  Sort,
-} from '~/models';
+import { DisplayRate, RateType, Rational, RationalProduct } from '~/models';
 import {
   RateUtility,
   FlowUtility,
@@ -330,24 +324,6 @@ describe('Products Selectors', () => {
         []
       );
       expect(SimplexUtility.solve).toHaveBeenCalled();
-    });
-  });
-
-  describe('getNormalizedStepsSorted', () => {
-    it('should sort steps breadth first', () => {
-      const result = Selectors.getNormalizedStepsSorted.projector(
-        [Mocks.Step2, Mocks.Step1],
-        Sort.BreadthFirst
-      );
-      expect(result).toEqual([Mocks.Step1, Mocks.Step2]);
-    });
-
-    it('should leave steps when sorting by depth', () => {
-      const result = Selectors.getNormalizedStepsSorted.projector(
-        [Mocks.Step2, Mocks.Step1],
-        Sort.DepthFirst
-      );
-      expect(result).toEqual([Mocks.Step2, Mocks.Step1]);
     });
   });
 

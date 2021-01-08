@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
-import { Mocks, TestUtility, CategoryId, ItemId, RecipeId } from 'src/tests';
+import { Mocks, TestUtility, ItemId, RecipeId } from 'src/tests';
 import { IconComponent, PickerComponent } from '~/components';
 import { RateType } from '~/models';
 import { RecipeUtility } from '~/utilities';
@@ -64,23 +64,23 @@ describe('ProductsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set the default category id', () => {
-    expect(component.child.categoryId).toEqual(component.data.categoryIds[0]);
-  });
+  // it('should set the default category id', () => {
+  //   expect(component.child.categoryId).toEqual(component.data.categoryIds[0]);
+  // });
 
-  it('should not reset the category id', () => {
-    const value = 'test';
-    component.child.categoryId = value;
-    component.child.data = null;
-    expect(component.child.categoryId).toEqual(value);
-  });
+  // it('should not reset the category id', () => {
+  //   const value = 'test';
+  //   component.child.categoryId = value;
+  //   component.child.data = null;
+  //   expect(component.child.categoryId).toEqual(value);
+  // });
 
-  it('should open edit on a product', () => {
-    TestUtility.clickSelector(fixture, '.relative lab-icon', 0);
-    fixture.detectChanges();
-    expect(component.child.edit.product.id).toEqual('0');
-    expect(component.child.categoryId).toEqual(CategoryId.Logistics);
-  });
+  // it('should open edit on a product', () => {
+  //   TestUtility.clickSelector(fixture, '.relative lab-icon', 0);
+  //   fixture.detectChanges();
+  //   expect(component.child.edit.product.id).toEqual('0');
+  //   expect(component.child.categoryId).toEqual(CategoryId.Logistics);
+  // });
 
   it('should commit an edit product', () => {
     spyOn(component, 'editProduct');

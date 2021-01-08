@@ -158,7 +158,6 @@ describe('RateUtility', () => {
       );
       expect(steps).toEqual([
         {
-          depth: 0,
           itemId: ItemId.Uranium235,
           recipeId: null,
           items: new Rational(BigInt(30)),
@@ -226,7 +225,6 @@ describe('RateUtility', () => {
     it('should skip steps with no settings', () => {
       const steps: Step[] = [
         {
-          depth: 0,
           itemId: null,
           recipeId: null,
           items: null,
@@ -245,7 +243,6 @@ describe('RateUtility', () => {
     it('should skip steps with no items', () => {
       const steps: Step[] = [
         {
-          depth: 0,
           itemId: Mocks.Item1.id,
           recipeId: null,
           items: null,
@@ -264,7 +261,6 @@ describe('RateUtility', () => {
     it('should calculate required belts & wagons for steps', () => {
       const steps: Step[] = [
         {
-          depth: 0,
           itemId: Mocks.Item1.id,
           recipeId: null,
           items: Mocks.BeltSpeed[ItemId.TransportBelt],
@@ -284,7 +280,6 @@ describe('RateUtility', () => {
     it('should calculate required wagons for fluids', () => {
       const steps: Step[] = [
         {
-          depth: 0,
           itemId: ItemId.CrudeOil,
           recipeId: null,
           items: WAGON_FLUID,
@@ -305,7 +300,6 @@ describe('RateUtility', () => {
     it('should skip steps with no items', () => {
       const steps: Step[] = [
         {
-          depth: 0,
           itemId: Mocks.Item1.id,
           recipeId: null,
           items: null,
@@ -360,21 +354,17 @@ describe('RateUtility', () => {
         {
           itemId: ItemId.Coal,
           items: Rational.one,
-          depth: 0,
         },
         {
           itemId: ItemId.Coal,
           items: Rational.one,
-          depth: 0,
           parents: {
             [RecipeId.IronOre]: Rational.one,
           },
         },
       ];
       const result = RateUtility.copy(steps);
-      steps[0].depth = 1;
       steps[1].parents[RecipeId.CrudeOil] = Rational.one;
-      expect(result[0].depth).toEqual(0);
       expect(result[1].parents[RecipeId.CrudeOil]).toBeUndefined();
     });
   });

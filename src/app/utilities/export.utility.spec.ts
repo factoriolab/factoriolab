@@ -53,13 +53,11 @@ describe('ExportUtility', () => {
       power: new Rational(BigInt(6)),
       pollution: new Rational(BigInt(7)),
       recipeId,
-      depth: 0,
     };
     const minStep: Step = {
       itemId,
       items: Rational.one,
       recipeId,
-      depth: 0,
     };
     const itemS: ItemSettings = {
       belt: 'belt',

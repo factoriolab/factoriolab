@@ -1,5 +1,12 @@
-<button title="Select columns" (click)="clickOpen()">
+<button
+  title="Select columns"
+  data-test="lab-columns-open"
+  (click)="clickOpen()"
+>
   <i class="material-icons">visibility</i>
+  <div>{{ open }}</div>
+  <div>{{ header }}</div>
+  <div>{{ selected.length }}</div>
 </button>
 <lab-dialog *ngIf="open" (close)="close()">
   <div class="dialog-title">
@@ -23,7 +30,11 @@
               {{ opt.name }}
             </div>
             <ng-template #colCheckbox>
-              <div class="flex option" (click)="clickId(opt.id, $event)">
+              <div
+                class="flex option"
+                data-test="lab-columns-visibility"
+                (click)="clickId(opt.id, $event)"
+              >
                 <div
                   class="checkbox"
                   [class.checked]="editValue.indexOf(opt.id) !== -1"
@@ -40,12 +51,17 @@
                 placeholder="Decimals"
                 min="0"
                 step="1"
+                data-test="lab-columns-decimals"
                 [value]="editPrecision[opt.id]"
-                (change)="changePrecision(opt.id, $event)"
+                (input)="changePrecision(opt.id, $event)"
               />
             </td>
             <td>
-              <div class="flex option" (click)="clickFraction(opt.id)">
+              <div
+                class="flex option"
+                data-test="lab-columns-fractions"
+                (click)="clickFraction(opt.id)"
+              >
                 <div
                   class="checkbox"
                   [class.checked]="editPrecision[opt.id] == null"
@@ -59,7 +75,11 @@
     </table>
   </div>
   <div class="dialog-buttons">
-    <button (click)="cancel($event)"><span class="text">Cancel</span></button>
-    <button class="green" (click)="close()">Confirm</button>
+    <button (click)="cancel($event)">
+      <span class="text">Cancel</span>
+    </button>
+    <button class="green" data-test="lab-columns-confirm" (click)="close()">
+      Confirm
+    </button>
   </div>
 </lab-dialog>

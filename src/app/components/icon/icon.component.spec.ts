@@ -1,14 +1,18 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Mocks, TestUtility, ElementId } from 'src/tests';
+import { Mocks, TestUtility } from 'src/tests';
 import { DisplayRate } from '~/models';
 import { IconComponent } from './icon.component';
+
+enum DataTest {
+  LabIcon = 'lab-icon',
+}
 
 @Component({
   selector: 'lab-test-icon',
   template: `<lab-icon
-    id="${ElementId.LabTestIcon}"
+    data-test="lab-icon"
     [iconId]="iconId"
     [scale]="scale"
     [text]="text"
@@ -60,7 +64,7 @@ describe('IconComponent', () => {
   describe('mouseenter', () => {
     it('should set the hover value to true', () => {
       component.child.hover = false;
-      TestUtility.dispatchId(fixture, ElementId.LabTestIcon, 'mouseenter');
+      TestUtility.dispatchDt(fixture, DataTest.LabIcon, 'mouseenter');
       fixture.detectChanges();
       expect(component.child.hover).toBeTrue();
     });
@@ -69,7 +73,7 @@ describe('IconComponent', () => {
   describe('mouseleave', () => {
     it('should set the hover value to false', () => {
       component.child.hover = true;
-      TestUtility.dispatchId(fixture, ElementId.LabTestIcon, 'mouseleave');
+      TestUtility.dispatchDt(fixture, DataTest.LabIcon, 'mouseleave');
       fixture.detectChanges();
       expect(component.child.hover).toBeFalse();
     });

@@ -112,32 +112,32 @@ describe('Settings Selectors', () => {
     });
   });
 
-  describe('getFactoryRank', () => {
-    it('should return factoryRank from settings', () => {
-      const result = Selectors.getFactoryRank.projector(
-        Mocks.InitialSettingsState
-      );
-      expect(result).toEqual(Mocks.InitialSettingsState.factoryRank);
-    });
-  });
+  // describe('getFactoryRank', () => {
+  //   it('should return factoryRank from settings', () => {
+  //     const result = Selectors.getFactoryRank.projector(
+  //       Mocks.InitialSettingsState
+  //     );
+  //     expect(result).toEqual(Mocks.InitialSettingsState.factoryRank);
+  //   });
+  // });
 
-  describe('getModuleRank', () => {
-    it('should return moduleRank from settings', () => {
-      const result = Selectors.getModuleRank.projector(
-        Mocks.InitialSettingsState
-      );
-      expect(result).toEqual(Mocks.InitialSettingsState.moduleRank);
-    });
-  });
+  // describe('getModuleRank', () => {
+  //   it('should return moduleRank from settings', () => {
+  //     const result = Selectors.getModuleRank.projector(
+  //       Mocks.InitialSettingsState
+  //     );
+  //     expect(result).toEqual(Mocks.InitialSettingsState.moduleRank);
+  //   });
+  // });
 
-  describe('getBeaconModule', () => {
-    it('should return beaconModule from settings', () => {
-      const result = Selectors.getBeaconModule.projector(
-        Mocks.InitialSettingsState
-      );
-      expect(result).toEqual(Mocks.InitialSettingsState.beaconModule);
-    });
-  });
+  // describe('getBeaconModule', () => {
+  //   it('should return beaconModule from settings', () => {
+  //     const result = Selectors.getBeaconModule.projector(
+  //       Mocks.InitialSettingsState
+  //     );
+  //     expect(result).toEqual(Mocks.InitialSettingsState.beaconModule);
+  //   });
+  // });
 
   describe('getRationalMiningBonus', () => {
     it('should convert the numeric value to a percent Rational', () => {

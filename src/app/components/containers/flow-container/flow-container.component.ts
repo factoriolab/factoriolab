@@ -38,7 +38,7 @@ export class FlowContainerComponent implements OnInit {
 
   ListMode = ListMode;
 
-  constructor(private store: Store<State>, private ref: ChangeDetectorRef) {}
+  constructor(public store: Store<State>, public ref: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.sankeyData$ = this.store.select(getSankey);

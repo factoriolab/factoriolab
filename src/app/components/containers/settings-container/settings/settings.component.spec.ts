@@ -4,9 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { Mocks, TestUtility, ElementId } from 'src/tests';
-import { IconComponent, PrecisionComponent } from '~/components';
-import { Theme } from '~/models';
+import { Mocks } from 'src/tests';
+import { IconComponent } from '~/components';
 import { SettingsComponent } from './settings.component';
 
 @Component({
@@ -85,12 +84,7 @@ describe('SettingsComponent', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [FormsModule, RouterTestingModule],
-      declarations: [
-        IconComponent,
-        PrecisionComponent,
-        SettingsComponent,
-        TestSettingsComponent,
-      ],
+      declarations: [IconComponent, SettingsComponent, TestSettingsComponent],
     }).compileComponents();
   });
 
@@ -170,25 +164,25 @@ describe('SettingsComponent', () => {
     });
   });
 
-  describe('changeBeaconCount', () => {
-    it('should emit beacon count', () => {
-      spyOn(component, 'setBeaconCount');
-      TestUtility.selectId(fixture, ElementId.SettingsBeaconCount, '3');
-      fixture.detectChanges();
-      expect(component.setBeaconCount).toHaveBeenCalledWith({
-        value: 3,
-        default: 8,
-      });
-    });
-  });
+  // describe('changeBeaconCount', () => {
+  //   it('should emit beacon count', () => {
+  //     spyOn(component, 'setBeaconCount');
+  //     TestUtility.selectId(fixture, ElementId.SettingsBeaconCount, '3');
+  //     fixture.detectChanges();
+  //     expect(component.setBeaconCount).toHaveBeenCalledWith({
+  //       value: 3,
+  //       default: 8,
+  //     });
+  //   });
+  // });
 
   describe('emitNumber', () => {
-    it('should emit numeric settings', () => {
-      spyOn(component, 'setPreset');
-      TestUtility.selectId(fixture, ElementId.SettingsPreset, '2');
-      fixture.detectChanges();
-      expect(component.setPreset).toHaveBeenCalledWith(2);
-    });
+    // it('should emit numeric settings', () => {
+    //   spyOn(component, 'setPreset');
+    //   TestUtility.selectId(fixture, ElementId.SettingsPreset, '2');
+    //   fixture.detectChanges();
+    //   expect(component.setPreset).toHaveBeenCalledWith(2);
+    // });
 
     it('should ignore invalid numeric events', () => {
       spyOn(component, 'setPreset');
@@ -196,27 +190,6 @@ describe('SettingsComponent', () => {
       component.child.emitNumber(component.child.setPreset, event as any);
       fixture.detectChanges();
       expect(component.setPreset).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('emitString', () => {
-    it('should emit other truthy settings', () => {
-      spyOn(component, 'setTheme');
-      TestUtility.selectId(
-        fixture,
-        ElementId.SettingsThemeSelect,
-        Theme.LightMode
-      );
-      fixture.detectChanges();
-      expect(component.setTheme).toHaveBeenCalledWith(Theme.LightMode);
-    });
-
-    it('should ignore falsy event values', () => {
-      spyOn(component, 'setTheme');
-      const event = { target: {} };
-      component.child.emitString(component.child.setTheme, event as any);
-      fixture.detectChanges();
-      expect(component.setTheme).not.toHaveBeenCalled();
     });
   });
 

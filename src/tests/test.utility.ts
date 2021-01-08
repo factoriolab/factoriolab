@@ -1,12 +1,10 @@
 import { ComponentFixture } from '@angular/core/testing';
 
-import { ElementId } from './element-id';
-
 /* Don't care about coverage on test utility. */
 /* istanbul ignore next */
 export class TestUtility {
-  static getId(fixture: ComponentFixture<any>, id: ElementId) {
-    return this.getSelector(fixture, `#${id}`);
+  static getDt(fixture: ComponentFixture<any>, dt: string, index = 0) {
+    return this.getSelector(fixture, `[data-test="${dt}"]`, index);
   }
 
   static getSelector(
@@ -17,8 +15,8 @@ export class TestUtility {
     return fixture.nativeElement.querySelectorAll(selector)[index];
   }
 
-  static clickId(fixture: ComponentFixture<any>, id: ElementId) {
-    return this.getId(fixture, id).click();
+  static clickDt(fixture: ComponentFixture<any>, dt: string, index = 0) {
+    return this.getDt(fixture, dt, index).click();
   }
 
   static clickSelector(
@@ -29,8 +27,8 @@ export class TestUtility {
     return this.getSelector(fixture, selector, index).click();
   }
 
-  static altClickId(fixture: ComponentFixture<any>, id: ElementId) {
-    return this.altClick(this.getId(fixture, id));
+  static altClickDt(fixture: ComponentFixture<any>, dt: string) {
+    return this.altClick(this.getDt(fixture, dt));
   }
 
   static altClickSelector(
@@ -41,12 +39,13 @@ export class TestUtility {
     return this.altClick(this.getSelector(fixture, selector, index));
   }
 
-  static setTextId(
+  static setTextDt(
     fixture: ComponentFixture<any>,
-    id: ElementId,
-    value: string
+    dt: string,
+    value: string,
+    index = 0
   ) {
-    return this.setText(this.getId(fixture, id), value);
+    return this.setText(this.getDt(fixture, dt, index), value);
   }
 
   static setTextSelector(
@@ -58,12 +57,13 @@ export class TestUtility {
     return this.setText(this.getSelector(fixture, selector, index), value);
   }
 
-  static selectId(
+  static selectDt(
     fixture: ComponentFixture<any>,
-    id: ElementId,
-    value: string
+    dt: string,
+    value: string,
+    index = 0
   ) {
-    return this.select(this.getId(fixture, id), value);
+    return this.select(this.getDt(fixture, dt, index), value);
   }
 
   static selectSelector(
@@ -75,12 +75,13 @@ export class TestUtility {
     return this.select(this.getSelector(fixture, selector, index), value);
   }
 
-  static keyPressId(
+  static keyPressDt(
     fixture: ComponentFixture<any>,
-    id: ElementId,
-    value: string
+    dt: string,
+    value: string,
+    index = 0
   ) {
-    return this.keyPress(this.getId(fixture, id), value);
+    return this.keyPress(this.getDt(fixture, dt, index), value);
   }
 
   static keyPressSelector(
@@ -92,12 +93,13 @@ export class TestUtility {
     return this.keyPress(this.getSelector(fixture, selector, index), value);
   }
 
-  static dispatchId(
+  static dispatchDt(
     fixture: ComponentFixture<any>,
-    id: ElementId,
-    event: string
+    dt: string,
+    event: string,
+    index = 0
   ) {
-    return this.dispatch(this.getId(fixture, id), event);
+    return this.dispatch(this.getDt(fixture, dt, index), event);
   }
 
   static altClick(object: any) {

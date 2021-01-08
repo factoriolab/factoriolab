@@ -63,10 +63,11 @@ export class ColumnsComponent extends DialogContainerComponent {
   }
 
   changePrecision(id: string, event: Event): void {
-    this.editedPrecision = true;
     const target = event.target as HTMLInputElement;
-    if (target.value) {
-      this.editPrecision[id] = Number(target.value);
+    const value = Number(target?.value);
+    if (!isNaN(value)) {
+      this.editedPrecision = true;
+      this.editPrecision[id] = value;
     }
   }
 

@@ -1,45 +1,47 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TestUtility } from 'src/tests';
-import { IconComponent } from '../icon/icon.component';
+import { Mocks, TestUtility } from 'src/tests';
+import { Column, Entities } from '~/models';
+import { DialogComponent } from '../dialog/dialog.component';
 import { ColumnsComponent } from './columns.component';
+
+enum DataTest {
+  Open = 'lab-columns-open',
+  Visibility = 'lab-columns-visibility',
+  Decimals = 'lab-columns-decimals',
+  Fractions = 'lab-columns-fractions',
+  Confirm = 'lab-columns-confirm',
+}
 
 @Component({
   selector: 'lab-test-columns',
   template: `
     <lab-columns
-      [header]="header"
-      [enabledIds]="enabledIds"
-      [options]="options"
-      [parent]="element.nativeElement"
-      (cancel)="cancel()"
-      (commit)="commit($event)"
+      [selected]="selected"
+      [precision]="precision"
+      (selectIds)="selectIds($event)"
+      (setPrecision)="setPrecision($event)"
     >
     </lab-columns>
   `,
 })
 class TestColumnsComponent {
   @ViewChild(ColumnsComponent) child: ColumnsComponent;
-  header = 'Header';
-  enabledIds = ['1'];
-  options = [
-    { id: '1', name: 'name1' },
-    { id: '2', name: 'name2' },
-  ];
-  cancel() {}
-  commit(data) {}
-
-  constructor(public element: ElementRef) {}
+  selected = Mocks.Columns.ids;
+  precision: Entities<number> = Mocks.Columns.precision;
+  selectIds(data) {}
+  setPrecision(data) {}
+  constructor(public ref: ChangeDetectorRef) {}
 }
 
-describe('MultiselectComponent', () => {
+describe('ColumnsComponent', () => {
   let component: TestColumnsComponent;
   let fixture: ComponentFixture<TestColumnsComponent>;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
-      declarations: [IconComponent, ColumnsComponent, TestColumnsComponent],
+    await TestBed.configureTestingModule({
+      declarations: [DialogComponent, ColumnsComponent, TestColumnsComponent],
     }).compileComponents();
   });
 
@@ -53,62 +55,102 @@ describe('MultiselectComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set top based on parent', () => {
-    component.child.parent = { getBoundingClientRect: () => ({ y: 0 }) } as any;
-    expect(component.child.top).toEqual(1);
-    component.child.parent = null;
-    expect(component.child.top).toEqual(1);
+  describe('clickOpen', () => {
+    it('should set up edit objects', () => {
+      component.child.editedValue = true;
+      component.child.editedPrecision = true;
+      TestUtility.clickDt(fixture, DataTest.Open);
+      expect(component.child.open).toBeTrue();
+      expect(component.child.editedValue).toBeFalse();
+      expect(component.child.editValue).toEqual(component.selected);
+      expect(component.child.editedPrecision).toBeFalse();
+      expect(component.child.editPrecision).toEqual(component.precision);
+    });
   });
 
-  it('should set left based on parent', () => {
-    component.child.parent = { getBoundingClientRect: () => ({ x: 0 }) } as any;
-    expect(component.child.left).toEqual(-8);
-    component.child.parent = null;
-    expect(component.child.left).toEqual(1);
+  describe('close', () => {
+    beforeEach(() => {
+      spyOn(component, 'selectIds');
+      spyOn(component, 'setPrecision');
+      TestUtility.clickDt(fixture, DataTest.Open);
+      fixture.detectChanges();
+    });
+
+    it('should close the dialog', () => {
+      TestUtility.clickDt(fixture, DataTest.Confirm);
+      expect(component.selectIds).not.toHaveBeenCalled();
+      expect(component.setPrecision).not.toHaveBeenCalled();
+      expect(component.child.open).toBeFalse();
+    });
+
+    it('should emit edits', () => {
+      component.child.editedValue = true;
+      component.child.editedPrecision = true;
+      TestUtility.clickDt(fixture, DataTest.Confirm);
+      expect(component.selectIds).toHaveBeenCalled();
+      expect(component.setPrecision).toHaveBeenCalled();
+      expect(component.child.open).toBeFalse();
+    });
   });
 
-  it('should set opening to false on first click event', () => {
-    spyOn(component, 'cancel');
-    document.body.click();
-    expect(component.cancel).not.toHaveBeenCalled();
-    expect(component.child.opening).toEqual(false);
+  describe('clickId', () => {
+    beforeEach(() => {
+      TestUtility.clickDt(fixture, DataTest.Open);
+      fixture.detectChanges();
+    });
+
+    it('should add id to selected', () => {
+      component.child.editValue = [];
+      fixture.detectChanges();
+      TestUtility.clickDt(fixture, DataTest.Visibility);
+      expect(component.child.editedValue).toBeTrue();
+      expect(component.child.editValue).toEqual([Column.Belts]);
+    });
+
+    it('should remove id from selected', () => {
+      component.child.editValue = [Column.Belts];
+      fixture.detectChanges();
+      TestUtility.clickDt(fixture, DataTest.Visibility);
+      expect(component.child.editedValue).toBeTrue();
+      expect(component.child.editValue).toEqual([]);
+    });
   });
 
-  it('should commit when clicked away with edits', () => {
-    spyOn(component, 'commit');
-    const value = ['A'];
-    component.child.opening = false;
-    component.child.editedValue = true;
-    component.child.editValue = value;
-    document.body.click();
-    expect(component.commit).toHaveBeenCalledWith(value);
+  describe('changePrecision', () => {
+    beforeEach(() => {
+      TestUtility.clickDt(fixture, DataTest.Open);
+      fixture.detectChanges();
+    });
+
+    it('should handle invalid events', () => {
+      component.child.changePrecision(null, { target: null } as any);
+      expect(component.child.editedPrecision).toBeFalse();
+    });
+
+    it('should change the precision value', () => {
+      TestUtility.setTextDt(fixture, DataTest.Decimals, '0');
+      expect(component.child.editedPrecision).toBeTrue();
+      expect(component.child.editPrecision[Column.Items]).toEqual(0);
+    });
   });
 
-  it('should cancel when clicked away with no edits', () => {
-    spyOn(component, 'cancel');
-    component.child.opening = false;
-    document.body.click();
-    expect(component.cancel).toHaveBeenCalled();
-  });
+  describe('clickFraction', () => {
+    beforeEach(() => {
+      TestUtility.clickDt(fixture, DataTest.Open);
+      fixture.detectChanges();
+    });
 
-  it('should not cancel when clicked on', () => {
-    spyOn(component, 'cancel');
-    component.child.opening = false;
-    TestUtility.clickSelector(fixture, '.header');
-    expect(component.cancel).not.toHaveBeenCalled();
-  });
+    it('should switch to using fractions', () => {
+      TestUtility.clickDt(fixture, DataTest.Fractions);
+      expect(component.child.editedPrecision).toBeTrue();
+      expect(component.child.editPrecision[Column.Items]).toBeNull();
+    });
 
-  it('should enable an item', () => {
-    component.child.opening = false;
-    TestUtility.clickSelector(fixture, '.clickable', 1);
-    expect(component.child.editedValue).toBeTrue();
-    expect(component.child.editValue).toEqual(['1', '2']);
-  });
-
-  it('should disable an item', () => {
-    component.child.opening = false;
-    TestUtility.clickSelector(fixture, '.clickable', 0);
-    expect(component.child.editedValue).toBeTrue();
-    expect(component.child.editValue).toEqual([]);
+    it('should switch to using decimals', () => {
+      component.child.editPrecision[Column.Items] = null;
+      TestUtility.clickDt(fixture, DataTest.Fractions);
+      expect(component.child.editedPrecision).toBeTrue();
+      expect(component.child.editPrecision[Column.Items]).toEqual(1);
+    });
   });
 });
