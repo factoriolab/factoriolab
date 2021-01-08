@@ -53,7 +53,6 @@ export class SettingsComponent implements OnInit {
     );
   }
   @Input() base: ModInfo[];
-  @Input() mods: ModInfo[];
   @Input() factories: FactoriesState;
   @Input() settings: SettingsState;
   @Input() preferences: PreferencesState;

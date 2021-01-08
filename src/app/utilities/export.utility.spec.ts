@@ -1,12 +1,6 @@
 import { Mocks } from 'src/tests';
-import {
-  AllColumns,
-  toBoolEntities,
-  Step,
-  Rational,
-  ItemSettings,
-  RecipeSettings,
-} from '~/models';
+import { Step, Rational, ItemSettings, RecipeSettings } from '~/models';
+import { initialColumnsState } from '~/store/preferences';
 import { ExportUtility } from './export.utility';
 
 describe('ExportUtility', () => {
@@ -15,7 +9,7 @@ describe('ExportUtility', () => {
       spyOn(ExportUtility, 'saveAsCsv');
       ExportUtility.stepsToCsv(
         Mocks.Steps,
-        AllColumns,
+        initialColumnsState,
         Mocks.ItemSettingsInitial,
         Mocks.RecipeSettingsInitial
       );
@@ -23,24 +17,7 @@ describe('ExportUtility', () => {
     });
   });
 
-  describe('stepsToJson', () => {
-    it('should convert steps to json', () => {
-      spyOn(ExportUtility, 'stepToJson');
-      const result = ExportUtility.stepsToJson(
-        Mocks.Steps,
-        AllColumns,
-        Mocks.ItemSettingsInitial,
-        Mocks.RecipeSettingsInitial
-      );
-      expect(ExportUtility.stepToJson).toHaveBeenCalledTimes(
-        Mocks.Steps.length
-      );
-      expect(result.length).toEqual(Mocks.Steps.length);
-    });
-  });
-
   describe('stepToJson', () => {
-    const col = toBoolEntities(AllColumns);
     const itemId = 'itemId';
     const recipeId = 'recipeId';
     const fullStep: Step = {
@@ -79,7 +56,7 @@ describe('ExportUtility', () => {
     it('should fill in all fields', () => {
       const result = ExportUtility.stepToJson(
         fullStep,
-        col,
+        initialColumnsState,
         { [itemId]: itemS },
         { [recipeId]: fullRecipe }
       );
@@ -106,7 +83,7 @@ describe('ExportUtility', () => {
     it('should handle empty fields', () => {
       const result = ExportUtility.stepToJson(
         minStep,
-        col,
+        initialColumnsState,
         { [itemId]: itemS },
         { [recipeId]: minRecipe }
       );
@@ -149,7 +126,7 @@ describe('ExportUtility', () => {
       const step = { ...fullStep, ...{ recipeId: null } };
       const result = ExportUtility.stepToJson(
         step,
-        col,
+        initialColumnsState,
         { [itemId]: itemS },
         { [recipeId]: fullRecipe }
       );

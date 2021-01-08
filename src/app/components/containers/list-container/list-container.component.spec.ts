@@ -7,6 +7,7 @@ import { DefaultIdPayload, DefaultPayload } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers, State } from '~/store';
 import * as Items from '~/store/items';
+import * as Preferences from '~/store/preferences';
 import * as Recipes from '~/store/recipes';
 import { SetDisabledRecipesAction } from '~/store/settings';
 import { ListComponent } from './list/list.component';
@@ -18,25 +19,32 @@ describe('ListContainerComponent', () => {
   let store: Store<State>;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [ListComponent, ListContainerComponent],
       imports: [
         RouterTestingModule,
         StoreModule.forRoot(reducers, { metaReducers }),
       ],
       providers: [RouterService],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(ListContainerComponent);
-        component = fixture.componentInstance;
-        store = TestBed.inject(Store);
-        fixture.detectChanges();
-      });
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ListContainerComponent);
+    component = fixture.componentInstance;
+    store = TestBed.inject(Store);
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should bypass steps observable if specified by parent', () => {
+    component.steps$ = null;
+    component.steps = Mocks.Steps;
+    component.ngOnInit();
+    expect(component.steps$).toBeNull();
   });
 
   it('should ignore an item', () => {
@@ -124,12 +132,14 @@ describe('ListContainerComponent', () => {
     );
   });
 
-  // it('should set the visible columns', () => {
-  //   spyOn(store, 'dispatch');
-  //   const data = ['id'];
-  //   component.child.setColumns.emit(data);
-  //   expect(store.dispatch).toHaveBeenCalledWith(new SetColumnsAction(data));
-  // });
+  it('should set the visible columns', () => {
+    spyOn(store, 'dispatch');
+    const data = Preferences.initialColumnsState;
+    component.child.setColumns.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Preferences.SetColumnsAction(data)
+    );
+  });
 
   it('should reset item to default', () => {
     spyOn(store, 'dispatch');

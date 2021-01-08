@@ -6,6 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { Mocks } from 'src/tests';
 import { IconComponent } from '~/components';
+import { initialPreferencesState } from '~/store/preferences';
 import { SettingsComponent } from './settings.component';
 
 @Component({
@@ -14,31 +15,33 @@ import { SettingsComponent } from './settings.component';
     <lab-settings
       [data]="data"
       [base]="base"
-      [mods]="mods"
+      [factories]="factories"
       [settings]="settings"
+      [preferences]="preferences"
+      (close)="close()"
       (saveState)="saveState($event)"
       (deleteState)="deleteState($event)"
       (setPreset)="setPreset($event)"
       (setBase)="setBase($event)"
-      (setMods)="setMods($event)"
+      (setDisabledRecipes)="setDisabledRecipes($event)"
+      (setExpensive)="setExpensive($event)"
+      (addFactory)="addFactory($event)"
+      (removeFactory)="removeFactory($event)"
+      (raiseFactory)="raiseFactory($event)"
+      (setFactory)="setFactory($event)"
+      (setModuleRank)="setModuleRank($event)"
+      (setBeaconCount)="setBeaconCount($event)"
+      (setBeacon)="setBeacon($event)"
+      (setBeaconModule)="setBeaconModule($event)"
       (setBelt)="setBelt($event)"
       (setFuel)="setFuel($event)"
-      (setDisabledRecipes)="setDisabledRecipes($event)"
-      (setFactoryRank)="setFactoryRank($event)"
-      (setModuleRank)="setModuleRank($event)"
-      (setBeaconModule)="setBeaconModule($event)"
-      (setDisplayRate)="setDisplayRate($event)"
-      (setItemPrecision)="setItemPrecision($event)"
-      (setBeltPrecision)="setBeltPrecision($event)"
-      (setFactoryPrecision)="setFactoryPrecision($event)"
-      (setBeaconCount)="setBeaconCount($event)"
-      (setDrillModule)="setDrillModule($event)"
+      (setFlowRate)="setFlowRate($event)"
       (setMiningBonus)="setMiningBonus($event)"
       (setResearchSpeed)="setResearchSpeed($event)"
-      (setFlowRate)="setFlowRate($event)"
-      (setExpensive)="setExpensive($event)"
-      (setTheme)="setTheme($event)"
-      (resetSettings)="resetSettings($event)"
+      (setInserterTarget)="setInserterTarget($event)"
+      (setInserterCapacity)="setInserterCapacity($event)"
+      (setDisplayRate)="setDisplayRate($event)"
+      (reset)="reset()"
     >
     </lab-settings>
   `,
@@ -47,31 +50,33 @@ class TestSettingsComponent {
   @ViewChild(SettingsComponent) child: SettingsComponent;
   data = Mocks.Data;
   base = Mocks.Raw.base;
-  mods = Mocks.Raw.mods;
+  factories = Mocks.FactorySettingsInitial;
   settings = Mocks.SettingsState1;
+  preferences = initialPreferencesState;
+  close() {}
   saveState(data) {}
   deleteState(data) {}
   setPreset(data) {}
   setBase(data) {}
-  setMods(data) {}
+  setDisabledRecipes(data) {}
+  setExpensive(data) {}
+  addFactory(data) {}
+  removeFactory(data) {}
+  raiseFactory(data) {}
+  setFactory(data) {}
+  setModuleRank(data) {}
+  setBeaconCount(data) {}
+  setBeacon(data) {}
+  setBeaconModule(data) {}
   setBelt(data) {}
   setFuel(data) {}
-  setDisabledRecipes(data) {}
-  setFactoryRank(data) {}
-  setModuleRank(data) {}
-  setBeaconModule(data) {}
-  setDisplayRate(data) {}
-  setItemPrecision(data) {}
-  setBeltPrecision(data) {}
-  setFactoryPrecision(data) {}
-  setBeaconCount(data) {}
-  setDrillModule(data) {}
+  setFlowRate(data) {}
   setMiningBonus(data) {}
   setResearchSpeed(data) {}
-  setFlowRate(data) {}
-  setExpensive(data) {}
-  setTheme(data) {}
-  resetSettings() {}
+  setInserterTarget(data) {}
+  setInserterCapacity(data) {}
+  setDisplayRate(data) {}
+  reset() {}
 }
 
 describe('SettingsComponent', () => {

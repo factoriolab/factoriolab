@@ -44,7 +44,6 @@ export class SettingsContainerComponent implements OnInit {
 
   data$: Observable<Dataset>;
   base$: Observable<ModInfo[]>;
-  mods$: Observable<ModInfo[]>;
   factories$: Observable<Factories.FactoriesState>;
   settings$: Observable<Settings.SettingsState>;
   preferences$: Observable<Preferences.PreferencesState>;
@@ -56,7 +55,6 @@ export class SettingsContainerComponent implements OnInit {
   ngOnInit() {
     this.data$ = this.store.select(Settings.getDataset);
     this.base$ = this.store.select(getBaseSets);
-    this.mods$ = this.store.select(Settings.getAvailableMods);
     this.factories$ = this.store.select(Factories.getFactorySettings);
     this.settings$ = this.store.select(Settings.getSettings);
     this.preferences$ = this.store.select(Preferences.preferencesState);

@@ -65,7 +65,7 @@ export class ProductsContainerComponent implements OnInit {
     this.store.dispatch(new Products.SetRateTypeAction(data));
   }
 
-  setRecipe(data: IdPayload) {
+  setVia(data: IdPayload) {
     this.store.dispatch(new Products.SetViaAction(data));
   }
 }

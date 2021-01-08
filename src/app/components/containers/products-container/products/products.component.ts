@@ -36,7 +36,7 @@ export class ProductsComponent {
   @Output() setItem = new EventEmitter<IdPayload>();
   @Output() setRate = new EventEmitter<IdPayload<number>>();
   @Output() setRateType = new EventEmitter<IdPayload<RateType>>();
-  @Output() setRecipe = new EventEmitter<IdPayload>();
+  @Output() setVia = new EventEmitter<IdPayload>();
 
   RateType = RateType;
   RateTypeOptions = RateTypeOptions;
@@ -48,7 +48,7 @@ export class ProductsComponent {
     return product.id;
   }
 
-  commitEditProduct(product: Product, itemId: string) {
+  changeItem(product: Product, itemId: string) {
     if (
       product.rateType === RateType.Factories &&
       !this.data.itemRecipeIds[itemId]
@@ -60,10 +60,11 @@ export class ProductsComponent {
     this.setItem.emit({ id: product.id, value: itemId });
   }
 
-  emitNumber(emitter: EventEmitter<IdPayload<number>>, id: string, event: any) {
-    if (event.target.value) {
-      const value = Number(event.target.value);
-      emitter.emit({ id, value });
+  changeRate(id: string, event: InputEvent) {
+    const target = event.target as HTMLInputElement;
+    const value = Number(target?.value);
+    if (!isNaN(value)) {
+      this.setRate.emit({ id, value });
     }
   }
 

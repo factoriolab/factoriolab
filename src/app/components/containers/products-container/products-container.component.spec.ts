@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { StoreModule, Store } from '@ngrx/store';
 
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import { IconComponent } from '~/components';
+import { IconComponent, PickerComponent } from '~/components';
 import { RateType } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as Products from '~/store/products';
@@ -16,21 +16,22 @@ describe('ProductsContainerComponent', () => {
   let store: Store<State>;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [FormsModule, StoreModule.forRoot(reducers, { metaReducers })],
       declarations: [
         IconComponent,
+        PickerComponent,
         ProductsComponent,
         ProductsContainerComponent,
       ],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(ProductsContainerComponent);
-        component = fixture.componentInstance;
-        store = TestBed.inject(Store);
-        fixture.detectChanges();
-      });
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ProductsContainerComponent);
+    component = fixture.componentInstance;
+    store = TestBed.inject(Store);
+    fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -87,7 +88,7 @@ describe('ProductsContainerComponent', () => {
       id: Mocks.Product1.id,
       value: RecipeId.AdvancedOilProcessing,
     };
-    component.child.setRecipe.emit(data);
+    component.child.setVia.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Products.SetViaAction(data)
     );

@@ -23,6 +23,15 @@ export const AllColumns = [
   Column.Link,
 ];
 
+export const PrecisionColumns = [
+  Column.Items,
+  Column.Belts,
+  Column.Wagons,
+  Column.Factories,
+  Column.Power,
+  Column.Pollution,
+];
+
 export const ColumnsAsOptions: IdName[] = AllColumns.map((id) => ({
   id,
   name: id,

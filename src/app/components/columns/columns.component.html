@@ -21,7 +21,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let opt of options">
+        <tr *ngFor="let opt of ColumnsAsOptions">
           <td>
             <div *ngIf="opt.id === Column.Items; else colCheckbox">
               {{ opt.name }}
@@ -40,7 +40,7 @@
               </div>
             </ng-template>
           </td>
-          <ng-container *ngIf="opt.id !== Column.Link">
+          <ng-container *ngIf="PrecisionColumns.indexOf(opt.id) !== -1">
             <td>
               <input
                 *ngIf="editValue[opt.id].precision != null"

@@ -69,7 +69,11 @@
       </th>
       <!-- Reset / Link -->
       <th *ngIf="columns[Column.Link].show && mode === ListMode.All">
-        <button title="Export to CSV" (click)="export()">
+        <button
+          title="Export to CSV"
+          data-test="lab-list-export"
+          (click)="export()"
+        >
           <i class="material-icons">file_download</i>
         </button>
       </th>
@@ -312,8 +316,9 @@
                   title="Enter number of beacons"
                   type="number"
                   min="0"
+                  data-test="lab-list-beacons"
                   [value]="recipeSettings[step.recipeId].beaconCount"
-                  (change)="beaconCountChange(step, $event)"
+                  (input)="beaconCountChange(step, $event)"
                 />
               </div>
             </td>
@@ -420,6 +425,7 @@
             <button
               *ngIf="recipeRaw[step.recipeId]"
               title="Undo modifications to this step"
+              data-test="lab-list-reset-step"
               (click)="resetStep(step)"
             >
               <i class="material-icons">undo</i>

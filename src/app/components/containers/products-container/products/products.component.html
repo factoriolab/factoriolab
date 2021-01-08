@@ -19,11 +19,11 @@
         <lab-picker
           [data]="data"
           [itemId]="product.itemId"
-          (selectId)="commitEditProduct(product, $event)"
+          (selectId)="changeItem(product, $event)"
         >
           <lab-icon
             class="button"
-            title="Change product"
+            title="Change item"
             hoverIcon="settings"
             [data]="data"
             [iconId]="product.itemId"
@@ -38,8 +38,9 @@
           step="any"
           title="Set output rate"
           placeholder="Rate"
+          data-test="lab-products-rate"
           [value]="product.rate"
-          (change)="emitNumber(setRate, product.id, $event)"
+          (input)="changeRate(product.id, $event)"
         />
         <lab-options
           title="Change rate type"
@@ -74,7 +75,7 @@
                   [selected]="recipe"
                   [options]="getOptions(product)"
                   [selectType]="IdType.Recipe"
-                  (selectId)="setRecipe.emit({ id: product.id, value: $event })"
+                  (selectId)="setVia.emit({ id: product.id, value: $event })"
                 >
                   <lab-icon
                     class="button"

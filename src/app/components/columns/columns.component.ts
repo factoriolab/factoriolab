@@ -6,7 +6,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { Column, ColumnsAsOptions } from '~/models';
+import { Column, ColumnsAsOptions, PrecisionColumns } from '~/models';
 import { ColumnsState } from '~/store/preferences';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
@@ -21,7 +21,8 @@ export class ColumnsComponent extends DialogContainerComponent {
 
   @Output() setColumns = new EventEmitter<ColumnsState>();
 
-  options = ColumnsAsOptions;
+  ColumnsAsOptions = ColumnsAsOptions;
+  PrecisionColumns = PrecisionColumns;
   edited = false;
   editValue: ColumnsState;
 
@@ -52,7 +53,7 @@ export class ColumnsComponent extends DialogContainerComponent {
     this.editValue[id].show = !this.editValue[id].show;
   }
 
-  changePrecision(id: string, event: Event): void {
+  changePrecision(id: string, event: InputEvent): void {
     const target = event.target as HTMLInputElement;
     const value = Number(target?.value);
     if (!isNaN(value)) {

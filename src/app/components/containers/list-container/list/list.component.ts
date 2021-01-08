@@ -22,7 +22,7 @@ import {
   InserterCapacity,
   InserterData,
   DefaultPayload,
-  toBoolEntities,
+  PrecisionColumns,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { FactoriesState } from '~/store/factories';
@@ -137,6 +137,9 @@ export class ListComponent {
   expanded: Entities<StepDetailTab> = {};
   totalSpan = 2;
   effPrecision: Entities<number> = {};
+  DisplayRateVal = DisplayRateVal;
+  ColumnsAsOptions = ColumnsAsOptions;
+  ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
 
   Column = Column;
   DisplayRate = DisplayRate;
@@ -144,9 +147,6 @@ export class ListComponent {
   ListMode = ListMode;
   StepDetailTab = StepDetailTab;
   Rational = Rational;
-  DisplayRateVal = DisplayRateVal;
-  ColumnsAsOptions = ColumnsAsOptions;
-  ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
 
   get rateLabel() {
     switch (this.displayRate) {
@@ -186,9 +186,7 @@ export class ListComponent {
         this.columns[Column.Items].precision,
         (s) => s[Column.Surplus.toLowerCase()]
       );
-      for (const i of Object.keys(this.columns).filter(
-        (i) => this.columns[i].show
-      )) {
+      for (const i of PrecisionColumns.filter((i) => this.columns[i].show)) {
         this.effPrecision[i] = this.effPrecFrom(
           this.columns[i].precision,
           (s) => s[i.toLowerCase()]
@@ -365,7 +363,6 @@ export class ListComponent {
     );
     const modules = this.generateModules(
       index,
-      count,
       value,
       this.recipeSettings[step.recipeId].factoryModules
     );
@@ -381,7 +378,6 @@ export class ListComponent {
     const def = new Array(count).fill(this.getSettings(step).beaconModule);
     const modules = this.generateModules(
       index,
-      count,
       value,
       this.recipeSettings[step.recipeId].beaconModules
     );
@@ -392,15 +388,10 @@ export class ListComponent {
     });
   }
 
-  generateModules(
-    index: number,
-    count: number,
-    value: string,
-    original: string[]
-  ) {
+  generateModules(index: number, value: string, original: string[]) {
     if (index === 0) {
       // Copy to all
-      return new Array(count).fill(value);
+      return new Array(original.length).fill(value);
     } else {
       // Edit individual module
       const modules = [...original];
