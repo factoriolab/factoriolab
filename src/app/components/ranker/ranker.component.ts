@@ -77,14 +77,18 @@ export class RankerComponent extends DialogContainerComponent {
 
   clickId(id: string, event: MouseEvent): void {
     if (id === ItemId.Module) {
-      this.selectIds.emit(this.editValue);
+      if (this.edited) {
+        this.selectIds.emit(this.editValue);
+      } else {
+        this.selectIds.emit([id]);
+      }
       this.cancel();
     } else if (this.canAdd(id)) {
-      if (!this.edited) {
+      if (this.edited) {
+        this.editValue.push(id);
+      } else {
         this.edited = true;
         this.editValue = [id];
-      } else {
-        this.editValue.push(id);
       }
       if (!this.data.itemEntities[id].module.limitation) {
         this.selectIds.emit(this.editValue);

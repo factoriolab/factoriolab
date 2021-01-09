@@ -1,4 +1,4 @@
-<div (click)="clickOpen()">
+<div data-test="lab-ranker-open" (click)="clickOpen()">
   <ng-content></ng-content>
 </div>
 <lab-dialog *ngIf="open" [style.minWidth.rem]="width" (closeDialog)="cancel()">
@@ -12,6 +12,7 @@
     <lab-icon
       tooltip="No Module"
       class="grid"
+      data-test="lab-ranker-none"
       [class.disabled]="!canAdd(ItemId.Module)"
       [class.selected]="!editValue.length"
       [data]="data"
@@ -23,6 +24,7 @@
     <lab-icon
       *ngFor="let id of options"
       class="grid"
+      data-test="lab-ranker-option"
       [class.disabled]="!canAdd(id)"
       [class.selected]="editValue.indexOf(id) !== -1"
       [data]="data"
