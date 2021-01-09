@@ -16,10 +16,12 @@ import {
   SankeyData,
   Node,
   Link,
+  LinkValue,
 } from '~/models';
 import { initialDatasetsState } from '~/store/datasets';
 import { getFactorySettings, initialFactoriesState } from '~/store/factories';
 import { getItemSettings } from '~/store/items';
+import { initialColumnsState, PreferencesState } from '~/store/preferences';
 import { getProductsBy, ProductsState } from '~/store/products';
 import {
   getRecipeSettings,
@@ -164,6 +166,12 @@ export const AdjustedData = getAdjustedDataset.projector(
   Rational.zero,
   Data
 );
+export const Preferences: PreferencesState = {
+  states: { ['name']: 'hash' },
+  columns: initialColumnsState,
+  linkValue: LinkValue.Items,
+};
+export const Event: any = { stopPropagation: () => {} };
 
 function node(i: number): Node {
   return {

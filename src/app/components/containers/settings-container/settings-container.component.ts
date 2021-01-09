@@ -40,7 +40,7 @@ import { SettingsComponent } from './settings/settings.component';
 export class SettingsContainerComponent implements OnInit {
   @ViewChild(SettingsComponent) child: SettingsComponent;
 
-  @Output() close = new EventEmitter();
+  @Output() closeSettings = new EventEmitter();
 
   data$: Observable<Dataset>;
   base$: Observable<ModInfo[]>;
@@ -50,9 +50,15 @@ export class SettingsContainerComponent implements OnInit {
 
   opening = true;
 
+  get isInOverlayMode(): boolean {
+    return window
+      .getComputedStyle(this.element.nativeElement as HTMLElement)
+      .marginRight.startsWith('-');
+  }
+
   constructor(private element: ElementRef, private store: Store<State>) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.data$ = this.store.select(Settings.getDataset);
     this.base$ = this.store.select(getBaseSets);
     this.factories$ = this.store.select(Factories.getFactorySettings);
@@ -60,112 +66,107 @@ export class SettingsContainerComponent implements OnInit {
     this.preferences$ = this.store.select(Preferences.preferencesState);
   }
 
-  isInOverlayMode() {
-    return window
-      .getComputedStyle(this.element.nativeElement as HTMLElement)
-      .marginRight.startsWith('-');
-  }
-
   @HostListener('document:click', ['$event'])
-  click(event: MouseEvent) {
+  click(event: MouseEvent): void {
     if (this.opening) {
       this.opening = false;
     } else if (
       !this.element.nativeElement.contains(event.target) &&
-      this.isInOverlayMode()
+      this.isInOverlayMode
     ) {
-      this.close.emit();
+      this.closeSettings.emit();
     }
   }
 
-  saveState(value: IdPayload) {
+  resetSettings(): void {
+    this.store.dispatch(new ResetAction());
+  }
+
+  saveState(value: IdPayload): void {
     this.store.dispatch(new Preferences.SaveStateAction(value));
   }
 
-  deleteState(value: string) {
+  deleteState(value: string): void {
     this.store.dispatch(new Preferences.DeleteStateAction(value));
   }
 
-  setPreset(value: Preset) {
+  setPreset(value: Preset): void {
     this.store.dispatch(new Settings.SetPresetAction(value));
   }
 
-  setBase(value: string) {
+  setBase(value: string): void {
     this.store.dispatch(new Settings.SetBaseAction(value));
   }
 
-  setDisabledRecipes(value: DefaultPayload<string[]>) {
+  setDisabledRecipes(value: DefaultPayload<string[]>): void {
     this.store.dispatch(new Settings.SetDisabledRecipesAction(value));
   }
 
-  setExpensive(value: boolean) {
+  setExpensive(value: boolean): void {
     this.store.dispatch(new Settings.SetExpensiveAction(value));
   }
 
-  addFactory(value: DefaultPayload<string, string[]>) {
+  addFactory(value: DefaultPayload<string, string[]>): void {
     this.store.dispatch(new Factories.AddAction(value));
   }
 
-  removeFactory(value: DefaultPayload<string, string[]>) {
+  removeFactory(value: DefaultPayload<string, string[]>): void {
     this.store.dispatch(new Factories.RemoveAction(value));
   }
 
-  raiseFactory(value: DefaultPayload<string, string[]>) {
+  raiseFactory(value: DefaultPayload<string, string[]>): void {
     this.store.dispatch(new Factories.RaiseAction(value));
   }
 
-  setFactory(value: DefaultIdPayload<string, string[]>) {
+  setFactory(value: DefaultIdPayload<string, string[]>): void {
     this.store.dispatch(new Factories.SetFactoryAction(value));
   }
 
-  setModuleRank(value: DefaultIdPayload<string[]>) {
+  setModuleRank(value: DefaultIdPayload<string[]>): void {
     this.store.dispatch(new Factories.SetModuleRankAction(value));
   }
 
-  setBeaconCount(value: DefaultIdPayload<number>) {
+  setBeaconCount(value: DefaultIdPayload<number>): void {
     this.store.dispatch(new Factories.SetBeaconCountAction(value));
   }
 
-  setBeacon(value: DefaultIdPayload) {
+  setBeacon(value: DefaultIdPayload): void {
     this.store.dispatch(new Factories.SetBeaconAction(value));
   }
 
-  setBeaconModule(value: DefaultIdPayload) {
+  setBeaconModule(value: DefaultIdPayload): void {
     this.store.dispatch(new Factories.SetBeaconModuleAction(value));
   }
 
-  setBelt(value: DefaultPayload) {
+  setBelt(value: DefaultPayload): void {
     this.store.dispatch(new Settings.SetBeltAction(value));
   }
 
-  setFuel(value: DefaultPayload) {
+  setFuel(value: DefaultPayload): void {
     this.store.dispatch(new Settings.SetFuelAction(value));
   }
 
-  setFlowRate(value: number) {
+  setFlowRate(value: number): void {
     this.store.dispatch(new Settings.SetFlowRateAction(value));
   }
-  setMiningBonus(value: number) {
-    this.store.dispatch(new Settings.SetMiningBonusAction(value));
-  }
 
-  setResearchSpeed(value: ResearchSpeed) {
-    this.store.dispatch(new Settings.SetResearchSpeedAction(value));
-  }
-
-  setInserterTarget(value: InserterTarget) {
+  setInserterTarget(value: InserterTarget): void {
     this.store.dispatch(new Settings.SetInserterTargetAction(value));
   }
 
-  setInserterCapacity(value: InserterCapacity) {
+  setMiningBonus(value: number): void {
+    this.store.dispatch(new Settings.SetMiningBonusAction(value));
+  }
+
+  setResearchSpeed(value: ResearchSpeed): void {
+    this.store.dispatch(new Settings.SetResearchSpeedAction(value));
+  }
+
+  setInserterCapacity(value: InserterCapacity): void {
     this.store.dispatch(new Settings.SetInserterCapacityAction(value));
   }
 
-  setDisplayRate(value: DisplayRate) {
+  setDisplayRate(value: DisplayRate): void {
     this.store.dispatch(new Settings.SetDisplayRateAction(value));
-  }
-
-  reset() {
-    this.store.dispatch(new ResetAction());
   }
 }

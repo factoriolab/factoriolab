@@ -6,7 +6,7 @@ import {
   Output,
 } from '@angular/core';
 
-import { IdName } from '~/models';
+import { IdName, NONE } from '~/models';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
@@ -22,8 +22,8 @@ export class OptionsComponent extends DialogContainerComponent {
 
   @Output() selectId = new EventEmitter<string | number | boolean>();
 
-  get text() {
-    return this.options.find((o) => o.id === this.selected)?.name || 'None';
+  get text(): string {
+    return this.options.find((o) => o.id === this.selected)?.name || NONE;
   }
 
   constructor() {

@@ -35,8 +35,9 @@ describe('FlowContainerComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(FlowContainerComponent);
     component = fixture.componentInstance;
-    store = TestBed.inject(Store);
     fixture.detectChanges();
+    store = TestBed.inject(Store);
+    spyOn(store, 'dispatch');
   });
 
   it('should create', () => {
@@ -51,7 +52,6 @@ describe('FlowContainerComponent', () => {
   });
 
   it('should set the link value', () => {
-    spyOn(store, 'dispatch');
     component.setLinkValue(LinkValue.Belts);
     expect(store.dispatch).toHaveBeenCalledWith(
       new SetLinkValueAction(LinkValue.Belts)

@@ -25,8 +25,7 @@ export class ToggleComponent extends DialogContainerComponent {
   edited = false;
   editValue: string[];
 
-  get width() {
-    console.log(Math.ceil(Math.sqrt(this.data.complexRecipeIds.length) + 2));
+  get width(): number {
     return (
       Math.ceil(Math.sqrt(this.data.complexRecipeIds.length) + 2) * 2.375 + 3
     );
@@ -49,7 +48,7 @@ export class ToggleComponent extends DialogContainerComponent {
     this.open = false;
   }
 
-  clickId(id: string, event: MouseEvent) {
+  clickId(id: string, event: MouseEvent): void {
     this.edited = true;
     if (this.editValue.indexOf(id) === -1) {
       this.editValue.push(id);

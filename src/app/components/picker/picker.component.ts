@@ -17,19 +17,19 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
 })
 export class PickerComponent extends DialogContainerComponent {
   _data: Dataset;
-  get data() {
+  get data(): Dataset {
     return this._data;
   }
   @Input() set data(value: Dataset) {
     this._data = value;
     this.setTab();
   }
-  _itemId: string;
-  get itemId() {
-    return this._itemId;
+  _selected: string;
+  get selected(): string {
+    return this._selected;
   }
-  @Input() set itemId(value: string) {
-    this._itemId = value;
+  @Input() set selected(value: string) {
+    this._selected = value;
     this.setTab();
   }
 
@@ -43,8 +43,8 @@ export class PickerComponent extends DialogContainerComponent {
 
   setTab(): void {
     if (this.data) {
-      if (this.itemId) {
-        this.tab = this.data.itemEntities[this.itemId].category;
+      if (this.selected) {
+        this.tab = this.data.itemEntities[this.selected].category;
       } else {
         this.tab = this.data.categoryIds[0];
       }

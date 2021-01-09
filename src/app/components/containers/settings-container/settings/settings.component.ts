@@ -43,7 +43,7 @@ import { SettingsState, initialSettingsState } from '~/store/settings';
 })
 export class SettingsComponent implements OnInit {
   _data: Dataset;
-  get data() {
+  get data(): Dataset {
     return this._data;
   }
   @Input() set data(value: Dataset) {
@@ -57,7 +57,8 @@ export class SettingsComponent implements OnInit {
   @Input() settings: SettingsState;
   @Input() preferences: PreferencesState;
 
-  @Output() close = new EventEmitter();
+  @Output() resetSettings = new EventEmitter();
+  @Output() closeSettings = new EventEmitter();
   @Output() saveState = new EventEmitter<IdPayload>();
   @Output() deleteState = new EventEmitter<string>();
   @Output() setPreset = new EventEmitter<Preset>();
@@ -82,7 +83,6 @@ export class SettingsComponent implements OnInit {
   @Output() setInserterTarget = new EventEmitter<InserterTarget>();
   @Output() setInserterCapacity = new EventEmitter<InserterCapacity>();
   @Output() setDisplayRate = new EventEmitter<DisplayRate>();
-  @Output() reset = new EventEmitter();
 
   initial = initialSettingsState;
   sortedFuels: string[] = [];
@@ -107,15 +107,15 @@ export class SettingsComponent implements OnInit {
 
   ItemId = ItemId;
 
-  get hash() {
+  get hash(): string {
     return location.hash.substr(1);
   }
 
-  get factoryRows() {
+  get factoryRows(): string[] {
     return ['', ...this.factories.ids];
   }
 
-  get factoryOptions() {
+  get factoryOptions(): string[] {
     return this.data.factoryIds.filter(
       (f) => this.factories.ids.indexOf(f) === -1
     );
@@ -123,14 +123,14 @@ export class SettingsComponent implements OnInit {
 
   get savedStates(): IdName[] {
     return Object.keys(this.preferences.states).map((i) => ({
-      id: this.preferences.states[i],
+      id: i,
       name: i,
     }));
   }
 
-  constructor(private ref: ChangeDetectorRef, private router: Router) {}
+  constructor(public ref: ChangeDetectorRef, private router: Router) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.state =
       Object.keys(this.preferences.states).find(
         (s) => this.preferences.states[s] === this.hash
@@ -139,61 +139,59 @@ export class SettingsComponent implements OnInit {
   }
 
   /** Forces change detector to update on scroll */
-  @HostListener('scroll', ['$event']) scroll() {
+  @HostListener('scroll', ['$event']) scroll(): void {
     this.ref.detectChanges();
   }
 
-  trackBy(data: KeyValue<string, string>) {
+  trackBy(data: KeyValue<string, string>): string {
     return data.key;
   }
 
-  changeBeaconCount(id: string, event: Event) {
+  changeBeaconCount(id: string, event: Event): void {
     const target = event.target as HTMLInputElement;
+    const value = Number(target.value);
     this.setBeaconCount.emit({
       id,
-      value: Number(target.value),
+      value,
     });
   }
 
-  emitNumber(emitter: EventEmitter<number>, event: any) {
-    if (event.target.value) {
-      const value = Math.round(Number(event.target.value));
-      emitter.emit(value);
-    }
+  emitNumber(emitter: EventEmitter<number>, event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const value = Number(target.value);
+    emitter.emit(value);
   }
 
-  setState(state: string) {
-    const id = Object.keys(this.preferences.states).find(
-      (i) => this.preferences.states[i] === state
-    );
-    if (id) {
+  setState(id: string): void {
+    const fragment = this.preferences.states[id];
+    if (fragment) {
       this.state = id;
-      this.router.navigate([], { fragment: state });
+      this.router.navigate([], { fragment });
     }
   }
 
-  clickSaveState(event: Event) {
+  clickSaveState(event: Event): void {
     this.saveState.emit({ id: this.tempState, value: this.hash });
     this.editState = false;
     this.state = this.tempState;
     event.stopPropagation();
   }
 
-  clickDeleteState(event: Event) {
+  clickDeleteState(event: Event): void {
     this.deleteState.emit(this.state);
     this.state = '';
     event.stopPropagation();
   }
 
-  toggleEditState(event: Event) {
+  toggleEditState(event: Event): void {
     this.editState = !this.editState;
     this.tempState = this.state;
     event.stopPropagation();
   }
 
-  clickResetSettings() {
+  clickResetSettings(): void {
     if (confirm(WARNING_RESET)) {
-      this.reset.emit();
+      this.resetSettings.emit();
     }
   }
 }

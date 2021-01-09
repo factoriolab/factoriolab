@@ -38,34 +38,34 @@ export class ProductsContainerComponent implements OnInit {
 
   constructor(private store: Store<State>) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.data$ = this.store.select(getAdjustedDataset);
     this.productRecipes$ = this.store.select(Products.getProductRecipes);
     this.products$ = this.store.select(Products.getProducts);
     this.displayRate$ = this.store.select(getDisplayRate);
   }
 
-  add(value: string) {
+  addProduct(value: string): void {
     this.store.dispatch(new Products.AddAction(value));
   }
 
-  remove(id: string) {
+  removeProduct(id: string): void {
     this.store.dispatch(new Products.RemoveAction(id));
   }
 
-  setItem(data: IdPayload) {
+  setItem(data: IdPayload): void {
     this.store.dispatch(new Products.SetItemAction(data));
   }
 
-  setRate(data: IdPayload<number>) {
+  setRate(data: IdPayload<number>): void {
     this.store.dispatch(new Products.SetRateAction(data));
   }
 
-  setRateType(data: IdPayload<RateType>) {
+  setRateType(data: IdPayload<RateType>): void {
     this.store.dispatch(new Products.SetRateTypeAction(data));
   }
 
-  setVia(data: IdPayload) {
+  setVia(data: IdPayload): void {
     this.store.dispatch(new Products.SetViaAction(data));
   }
 }

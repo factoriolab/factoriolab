@@ -55,14 +55,12 @@ export class ColumnsComponent extends DialogContainerComponent {
 
   changePrecision(id: string, event: InputEvent): void {
     const target = event.target as HTMLInputElement;
-    const value = Number(target?.value);
-    if (!isNaN(value)) {
-      this.edited = true;
-      this.editValue[id].precision = value;
-    }
+    const value = Number(target.value);
+    this.edited = true;
+    this.editValue[id].precision = value;
   }
 
-  clickFraction(id: string) {
+  clickFraction(id: string): void {
     this.edited = true;
     if (this.editValue[id].precision == null) {
       this.editValue[id].precision = 1;

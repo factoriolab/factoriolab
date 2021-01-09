@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Mocks, TestUtility } from 'src/tests';
-import { Column, Entities } from '~/models';
+import { TestUtility } from 'src/tests';
+import { Column } from '~/models';
 import { initialColumnsState } from '~/store/preferences';
 import { DialogComponent } from '../dialog/dialog.component';
 import { ColumnsComponent } from './columns.component';
@@ -25,7 +25,7 @@ enum DataTest {
 class TestColumnsComponent {
   @ViewChild(ColumnsComponent) child: ColumnsComponent;
   columns = initialColumnsState;
-  setColumns(data) {}
+  setColumns(data): void {}
   constructor(public ref: ChangeDetectorRef) {}
 }
 
@@ -83,12 +83,9 @@ describe('ColumnsComponent', () => {
   });
 
   describe('clickId', () => {
-    beforeEach(() => {
+    it('should toggle show value', () => {
       TestUtility.clickDt(fixture, DataTest.Open);
       fixture.detectChanges();
-    });
-
-    it('should toggle show value', () => {
       fixture.detectChanges();
       TestUtility.clickDt(fixture, DataTest.Visibility);
       expect(component.child.edited).toBeTrue();
@@ -97,17 +94,9 @@ describe('ColumnsComponent', () => {
   });
 
   describe('changePrecision', () => {
-    beforeEach(() => {
+    it('should change the precision value', () => {
       TestUtility.clickDt(fixture, DataTest.Open);
       fixture.detectChanges();
-    });
-
-    it('should handle invalid events', () => {
-      component.child.changePrecision(null, { target: null } as any);
-      expect(component.child.edited).toBeFalse();
-    });
-
-    it('should change the precision value', () => {
       TestUtility.setTextDt(fixture, DataTest.Decimals, '0');
       expect(component.child.edited).toBeTrue();
       expect(component.child.editValue[Column.Items].precision).toEqual(0);

@@ -27,7 +27,7 @@ export class RankerComponent extends DialogContainerComponent {
 
   ItemId = ItemId;
 
-  get width() {
+  get width(): number {
     const buttons = this.options.length + 1;
     const iconsPerRow = buttons <= 4 ? buttons : Math.ceil(Math.sqrt(buttons));
     return iconsPerRow * 2.375 + 1.5;
@@ -37,14 +37,14 @@ export class RankerComponent extends DialogContainerComponent {
     super();
   }
 
-  text(id: string) {
+  text(id: string): string {
     if (this.editValue.length > 0 && this.editValue.indexOf(id) !== -1) {
-      return this.editValue.indexOf(id) + 1;
+      return (this.editValue.indexOf(id) + 1).toString();
     }
     return null;
   }
 
-  canAdd(id: string) {
+  canAdd(id: string): boolean {
     if (!this.edited || id === ItemId.Module) {
       return true;
     }
@@ -75,7 +75,7 @@ export class RankerComponent extends DialogContainerComponent {
     this.open = false;
   }
 
-  clickId(id: string, event: MouseEvent) {
+  clickId(id: string, event: MouseEvent): void {
     if (id === ItemId.Module) {
       this.selectIds.emit(this.editValue);
       this.cancel();

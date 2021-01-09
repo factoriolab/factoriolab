@@ -20,8 +20,8 @@ enum DataTest {
       [productRecipes]="productRecipes"
       [products]="products"
       [displayRate]="displayRate"
-      (add)="add()"
-      (remove)="remove($event)"
+      (addProduct)="addProduct()"
+      (removeProduct)="removeProduct($event)"
       (setItem)="setItem($event)"
       (setRate)="setRate($event)"
       (setRateType)="setRateType($event)"
@@ -36,15 +36,15 @@ class TestProductsComponent {
   productRecipes = Mocks.ProductRecipes;
   products = Mocks.Products;
   displayRate = DisplayRate.PerMinute;
-  add() {}
-  remove(data) {}
-  setItem(data) {}
-  setRate(data) {}
-  setRateType(data) {}
-  setVia(data) {}
+  addProduct(): void {}
+  removeProduct(data): void {}
+  setItem(data): void {}
+  setRate(data): void {}
+  setRateType(data): void {}
+  setVia(data): void {}
 }
 
-fdescribe('ProductsComponent', () => {
+describe('ProductsComponent', () => {
   let component: TestProductsComponent;
   let fixture: ComponentFixture<TestProductsComponent>;
 

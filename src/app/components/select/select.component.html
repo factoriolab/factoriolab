@@ -1,7 +1,7 @@
 <div (click)="open = true">
   <ng-content></ng-content>
 </div>
-<lab-dialog *ngIf="open" [style.minWidth.rem]="width" (close)="cancel()">
+<lab-dialog *ngIf="open" [style.minWidth.rem]="width" (closeDialog)="cancel()">
   <div class="dialog-title">
     <div class="header">{{ header }}</div>
     <button (click)="cancel($event)">

@@ -31,8 +31,8 @@ export class ProductsComponent {
   @Input() products: Product[];
   @Input() displayRate: DisplayRate;
 
-  @Output() add = new EventEmitter<string>();
-  @Output() remove = new EventEmitter<string>();
+  @Output() addProduct = new EventEmitter<string>();
+  @Output() removeProduct = new EventEmitter<string>();
   @Output() setItem = new EventEmitter<IdPayload>();
   @Output() setRate = new EventEmitter<IdPayload<number>>();
   @Output() setRateType = new EventEmitter<IdPayload<RateType>>();
@@ -44,11 +44,11 @@ export class ProductsComponent {
 
   constructor() {}
 
-  trackBy(product: Product) {
+  trackBy(product: Product): string {
     return product.id;
   }
 
-  changeItem(product: Product, itemId: string) {
+  changeItem(product: Product, itemId: string): void {
     if (
       product.rateType === RateType.Factories &&
       !this.data.itemRecipeIds[itemId]
@@ -60,20 +60,18 @@ export class ProductsComponent {
     this.setItem.emit({ id: product.id, value: itemId });
   }
 
-  changeRate(id: string, event: InputEvent) {
+  changeRate(id: string, event: InputEvent): void {
     const target = event.target as HTMLInputElement;
-    const value = Number(target?.value);
-    if (!isNaN(value)) {
-      this.setRate.emit({ id, value });
-    }
+    const value = Number(target.value);
+    this.setRate.emit({ id, value });
   }
 
-  getRecipe(product: Product) {
+  getRecipe(product: Product): string {
     const recipes = this.productRecipes[product.itemId];
     return RecipeUtility.getProductRecipeData(recipes, product.viaId)[0];
   }
 
-  getOptions(product: Product) {
+  getOptions(product: Product): string[] {
     return this.productRecipes[product.itemId].map((r) => r[0]);
   }
 }

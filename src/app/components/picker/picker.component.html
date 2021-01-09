@@ -1,7 +1,7 @@
 <div (click)="open = true">
   <ng-content></ng-content>
 </div>
-<lab-dialog *ngIf="open" (close)="cancel()">
+<lab-dialog *ngIf="open" (closeDialog)="cancel()">
   <div class="dialog-title">
     <div class="header">Select an item to produce</div>
     <button (click)="open = false">

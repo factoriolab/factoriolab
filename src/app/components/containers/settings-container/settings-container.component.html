@@ -4,7 +4,8 @@
   [factories]="factories$ | async"
   [settings]="settings$ | async"
   [preferences]="preferences$ | async"
-  (close)="close.emit()"
+  (resetSettings)="resetSettings()"
+  (closeSettings)="closeSettings.emit()"
   (saveState)="saveState($event)"
   (deleteState)="deleteState($event)"
   (setPreset)="setPreset($event)"
@@ -27,6 +28,5 @@
   (setInserterTarget)="setInserterTarget($event)"
   (setInserterCapacity)="setInserterCapacity($event)"
   (setDisplayRate)="setDisplayRate($event)"
-  (reset)="reset()"
 >
 </lab-settings>

@@ -65,7 +65,7 @@ export class ListContainerComponent implements OnInit {
 
   constructor(private store: Store<State>) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (!this.steps) {
       this.steps$ = this.store.select(Products.getSteps);
     }
@@ -86,63 +86,63 @@ export class ListContainerComponent implements OnInit {
     this.modifiedBeacons$ = this.store.select(Recipes.getContainsBeacons);
   }
 
-  ignoreItem(value: string) {
+  ignoreItem(value: string): void {
     this.store.dispatch(new Items.IgnoreItemAction(value));
   }
 
-  setBelt(data: DefaultIdPayload) {
+  setBelt(data: DefaultIdPayload): void {
     this.store.dispatch(new Items.SetBeltAction(data));
   }
 
-  setFactory(data: DefaultIdPayload) {
+  setFactory(data: DefaultIdPayload): void {
     this.store.dispatch(new Recipes.SetFactoryAction(data));
   }
 
-  setFactoryModules(data: DefaultIdPayload<string[]>) {
+  setFactoryModules(data: DefaultIdPayload<string[]>): void {
     this.store.dispatch(new Recipes.SetFactoryModulesAction(data));
   }
 
-  setBeaconCount(data: DefaultIdPayload<number>) {
+  setBeaconCount(data: DefaultIdPayload<number>): void {
     this.store.dispatch(new Recipes.SetBeaconCountAction(data));
   }
 
-  setBeacon(data: DefaultIdPayload) {
+  setBeacon(data: DefaultIdPayload): void {
     this.store.dispatch(new Recipes.SetBeaconAction(data));
   }
 
-  setBeaconModules(data: DefaultIdPayload<string[]>) {
+  setBeaconModules(data: DefaultIdPayload<string[]>): void {
     this.store.dispatch(new Recipes.SetBeaconModulesAction(data));
   }
 
-  setColumns(value: Preferences.ColumnsState) {
+  setColumns(value: Preferences.ColumnsState): void {
     this.store.dispatch(new Preferences.SetColumnsAction(value));
   }
 
-  resetItem(value: string) {
+  resetItem(value: string): void {
     this.store.dispatch(new Items.ResetItemAction(value));
   }
 
-  resetRecipe(value: string) {
+  resetRecipe(value: string): void {
     this.store.dispatch(new Recipes.ResetRecipeAction(value));
   }
 
-  resetIgnore() {
+  resetIgnore(): void {
     this.store.dispatch(new Items.ResetIgnoreAction());
   }
 
-  resetBelt() {
+  resetBelt(): void {
     this.store.dispatch(new Items.ResetBeltAction());
   }
 
-  resetFactory() {
+  resetFactory(): void {
     this.store.dispatch(new Recipes.ResetFactoryAction());
   }
 
-  resetBeacons() {
+  resetBeacons(): void {
     this.store.dispatch(new Recipes.ResetBeaconsAction());
   }
 
-  setDisabledRecipes(value: DefaultPayload<string[]>) {
+  setDisabledRecipes(value: DefaultPayload<string[]>): void {
     this.store.dispatch(new Settings.SetDisabledRecipesAction(value));
   }
 }

@@ -8,7 +8,7 @@
     >
       <i class="material-icons">delete</i>
     </button>
-    <button class="dialog-button" (click)="close.emit()">
+    <button class="dialog-button" (click)="closeSettings.emit()">
       <i class="material-icons">close</i>
     </button>
   </div>
@@ -252,8 +252,9 @@
                   placeholder="# Beacons"
                   min="0"
                   step="1"
+                  data-test="lab-settings-beacons"
                   [value]="factory.beaconCount"
-                  (change)="changeBeaconCount(f, $event)"
+                  (input)="changeBeaconCount(f, $event)"
                 />
               </ng-container>
             </td>
@@ -377,8 +378,9 @@
                 placeholder="1500"
                 min="0"
                 step="1"
+                data-test="lab-settings-flow-rate"
                 [value]="settings.flowRate"
-                (change)="emitNumber(setFlowRate, $event)"
+                (input)="emitNumber(setFlowRate, $event)"
               />
               <div>
                 u/sec
@@ -428,8 +430,9 @@
               placeholder="Mining productivity"
               min="0"
               step="10"
+              data-test="lab-settings-mining-bonus"
               [value]="settings.miningBonus"
-              (change)="emitNumber(setMiningBonus, $event)"
+              (input)="emitNumber(setMiningBonus, $event)"
             />
             %
           </td>

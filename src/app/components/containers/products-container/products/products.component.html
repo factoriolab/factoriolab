@@ -2,8 +2,8 @@
 <div class="panel">
   <lab-picker
     [data]="data"
-    [itemId]="data.itemIds[0]"
-    (selectId)="add.emit($event)"
+    [selected]="data.itemIds[0]"
+    (selectId)="addProduct.emit($event)"
   >
     <button title="Add product">
       <i class="material-icons">add</i>
@@ -13,12 +13,12 @@
   <div *ngIf="products && products.length">
     <div class="product-row" *ngFor="let product of products; trackBy: trackBy">
       <ng-container *ngIf="product && data.itemEntities[product.itemId]">
-        <button title="Remove product" (click)="remove.emit(product.id)">
+        <button title="Remove product" (click)="removeProduct.emit(product.id)">
           <i class="material-icons">remove</i>
         </button>
         <lab-picker
           [data]="data"
-          [itemId]="product.itemId"
+          [selected]="product.itemId"
           (selectId)="changeItem(product, $event)"
         >
           <lab-icon

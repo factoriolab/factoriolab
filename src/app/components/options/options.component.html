@@ -2,7 +2,7 @@
   <div class="text">{{ text }}</div>
   <i class="material-icons">arrow_drop_down</i>
 </button>
-<lab-dialog *ngIf="open" (close)="cancel()">
+<lab-dialog *ngIf="open" (closeDialog)="cancel()">
   <button
     *ngFor="let opt of options"
     [class.active]="opt.id === selected"

@@ -40,15 +40,15 @@ describe('IconComponent', () => {
   let fixture: ComponentFixture<TestIconComponent>;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [IconComponent, TestIconComponent],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(TestIconComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TestIconComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create', () => {

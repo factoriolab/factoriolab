@@ -10,7 +10,7 @@ export type ColumnsState = Entities<ColumnSettings>;
 export interface PreferencesState {
   states: Entities<string>;
   columns: ColumnsState;
-  linkValue?: LinkValue;
+  linkValue: LinkValue;
 }
 
 export const initialColumnsState: ColumnsState = AllColumns.reduce(

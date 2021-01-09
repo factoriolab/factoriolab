@@ -88,22 +88,22 @@ class TestListComponent {
   modifiedBelt = false;
   modifiedFactory = false;
   modifiedBeacons = false;
-  ignoreItem(data) {}
-  setBelt(data) {}
-  setFactory(data) {}
-  setFactoryModules(data) {}
-  setBeaconCount(data) {}
-  setBeacon(data) {}
-  setBeaconModules(data) {}
-  setColumns(data) {}
-  setPrecision(data) {}
-  resetItem(data) {}
-  resetRecipe(data) {}
-  resetIgnore() {}
-  resetBelt() {}
-  resetFactory() {}
-  resetBeacons() {}
-  setDisabledRecipes($event) {}
+  ignoreItem(data): void {}
+  setBelt(data): void {}
+  setFactory(data): void {}
+  setFactoryModules(data): void {}
+  setBeaconCount(data): void {}
+  setBeacon(data): void {}
+  setBeaconModules(data): void {}
+  setColumns(data): void {}
+  setPrecision(data): void {}
+  resetItem(data): void {}
+  resetRecipe(data): void {}
+  resetIgnore(): void {}
+  resetBelt(): void {}
+  resetFactory(): void {}
+  resetBeacons(): void {}
+  setDisabledRecipes($event): void {}
 }
 
 describe('ListComponent', () => {

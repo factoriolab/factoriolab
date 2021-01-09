@@ -46,12 +46,12 @@ export class FlowContainerComponent implements OnInit {
     this.linkValue$ = this.store.select(getLinkValue);
   }
 
-  setSelected(value: string) {
+  setSelected(value: string): void {
     this.selected = value;
     this.ref.detectChanges();
   }
 
-  setLinkValue(value: LinkValue) {
+  setLinkValue(value: LinkValue): void {
     this.store.dispatch(new SetLinkValueAction(value));
   }
 }

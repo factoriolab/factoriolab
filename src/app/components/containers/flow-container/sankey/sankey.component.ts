@@ -31,7 +31,7 @@ import { SankeyData, Node, Link } from '~/models';
 })
 export class SankeyComponent implements OnInit {
   _sankeyData: SankeyData;
-  get sankeyData() {
+  get sankeyData(): SankeyData {
     return this._sankeyData;
   }
   @Input() set sankeyData(value: SankeyData) {
@@ -45,7 +45,7 @@ export class SankeyComponent implements OnInit {
   height = 400;
   svg: Selection<any, {}, null, undefined>;
 
-  get element() {
+  get element(): HTMLElement {
     return this.ref.nativeElement as HTMLElement;
   }
 
@@ -61,7 +61,7 @@ export class SankeyComponent implements OnInit {
     }
   }
 
-  handleResize(entry: ResizeObserverEntry) {
+  handleResize(entry: ResizeObserverEntry): void {
     const w = entry.contentRect.width;
     const h = entry.contentRect.height;
     if (w && h && w / h !== this.width / this.height) {
@@ -71,7 +71,7 @@ export class SankeyComponent implements OnInit {
     }
   }
 
-  rebuildChart() {
+  rebuildChart(): void {
     if (this.svg) {
       select('svg').remove();
     }
@@ -81,7 +81,9 @@ export class SankeyComponent implements OnInit {
     }
   }
 
-  getLayout(fn: () => SankeyLayout<SankeyGraph<Node, Link>, Node, Link>) {
+  getLayout(
+    fn: () => SankeyLayout<SankeyGraph<Node, Link>, Node, Link>
+  ): SankeyGraph<Node, Link> {
     const skLayout = fn()
       .nodeId((d) => d.id)
       .nodeWidth(32)
@@ -97,7 +99,7 @@ export class SankeyComponent implements OnInit {
     });
   }
 
-  createChart() {
+  createChart(): void {
     this.svg = select(this.element)
       .append('svg')
       .attr('preserveAspectRatio', 'xMinYMin meet')
@@ -125,7 +127,10 @@ export class SankeyComponent implements OnInit {
 
     link
       .append('path')
-      .attr('d', circular ? (d) => (d as any).path : sankeyLinkHorizontal())
+      .attr(
+        'd',
+        circular ? (d): string => (d as any).path : sankeyLinkHorizontal()
+      )
       .attr('stroke', (l) => l.color)
       .attr('stroke-width', (l) => Math.max(1, l.width));
 

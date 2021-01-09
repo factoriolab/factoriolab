@@ -4,10 +4,21 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { Mocks } from 'src/tests';
-import { IconComponent } from '~/components';
-import { initialPreferencesState } from '~/store/preferences';
+import { Mocks, TestUtility } from 'src/tests';
+import {
+  IconComponent,
+  OptionsComponent,
+  RankerComponent,
+  SelectComponent,
+  ToggleComponent,
+} from '~/components';
 import { SettingsComponent } from './settings.component';
+
+enum DataTest {
+  Beacons = 'lab-settings-beacons',
+  FlowRate = 'lab-settings-flow-rate',
+  MiningBonus = 'lab-settings-mining-bonus',
+}
 
 @Component({
   selector: 'lab-test-settings',
@@ -18,7 +29,8 @@ import { SettingsComponent } from './settings.component';
       [factories]="factories"
       [settings]="settings"
       [preferences]="preferences"
-      (close)="close()"
+      (resetSettings)="resetSettings()"
+      (closeSettings)="closeSettings()"
       (saveState)="saveState($event)"
       (deleteState)="deleteState($event)"
       (setPreset)="setPreset($event)"
@@ -41,7 +53,6 @@ import { SettingsComponent } from './settings.component';
       (setInserterTarget)="setInserterTarget($event)"
       (setInserterCapacity)="setInserterCapacity($event)"
       (setDisplayRate)="setDisplayRate($event)"
-      (reset)="reset()"
     >
     </lab-settings>
   `,
@@ -52,31 +63,31 @@ class TestSettingsComponent {
   base = Mocks.Raw.base;
   factories = Mocks.FactorySettingsInitial;
   settings = Mocks.SettingsState1;
-  preferences = initialPreferencesState;
-  close() {}
-  saveState(data) {}
-  deleteState(data) {}
-  setPreset(data) {}
-  setBase(data) {}
-  setDisabledRecipes(data) {}
-  setExpensive(data) {}
-  addFactory(data) {}
-  removeFactory(data) {}
-  raiseFactory(data) {}
-  setFactory(data) {}
-  setModuleRank(data) {}
-  setBeaconCount(data) {}
-  setBeacon(data) {}
-  setBeaconModule(data) {}
-  setBelt(data) {}
-  setFuel(data) {}
-  setFlowRate(data) {}
-  setMiningBonus(data) {}
-  setResearchSpeed(data) {}
-  setInserterTarget(data) {}
-  setInserterCapacity(data) {}
-  setDisplayRate(data) {}
-  reset() {}
+  preferences = Mocks.Preferences;
+  resetSettings(): void {}
+  closeSettings(): void {}
+  saveState(data): void {}
+  deleteState(data): void {}
+  setPreset(data): void {}
+  setBase(data): void {}
+  setDisabledRecipes(data): void {}
+  setExpensive(data): void {}
+  addFactory(data): void {}
+  removeFactory(data): void {}
+  raiseFactory(data): void {}
+  setFactory(data): void {}
+  setModuleRank(data): void {}
+  setBeaconCount(data): void {}
+  setBeacon(data): void {}
+  setBeaconModule(data): void {}
+  setBelt(data): void {}
+  setFuel(data): void {}
+  setFlowRate(data): void {}
+  setMiningBonus(data): void {}
+  setResearchSpeed(data): void {}
+  setInserterTarget(data): void {}
+  setInserterCapacity(data): void {}
+  setDisplayRate(data): void {}
 }
 
 describe('SettingsComponent', () => {
@@ -87,9 +98,17 @@ describe('SettingsComponent', () => {
   const value = 'value';
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [FormsModule, RouterTestingModule],
-      declarations: [IconComponent, SettingsComponent, TestSettingsComponent],
+      declarations: [
+        IconComponent,
+        OptionsComponent,
+        RankerComponent,
+        SelectComponent,
+        ToggleComponent,
+        SettingsComponent,
+        TestSettingsComponent,
+      ],
     }).compileComponents();
   });
 
@@ -125,20 +144,40 @@ describe('SettingsComponent', () => {
     });
   });
 
+  describe('factoryRows', () => {
+    it('should add empty string to list of ids', () => {
+      expect(component.child.factoryRows).toEqual([
+        '',
+        ...Mocks.FactorySettingsInitial.ids,
+      ]);
+    });
+  });
+
+  describe('factoryOptions', () => {
+    it('should filter for factories that have not been added', () => {
+      const result = component.child.factoryOptions;
+      expect(result.length).toBeLessThan(component.data.factoryIds.length);
+      expect(result.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('savedStates', () => {
+    it('should map saved states to an array of options', () => {
+      expect(component.child.savedStates).toEqual([
+        { id: 'name', name: 'name' },
+      ]);
+    });
+  });
+
   describe('ngOnInit', () => {
     it('should ignore if no matching state is found', () => {
       expect(component.child.state).toEqual('');
     });
 
     it('should set state to matching saved state', () => {
-      location.hash = value;
-      component.settings = {
-        ...Mocks.SettingsState1,
-        ...{ states: { [id]: value } },
-      };
-      fixture.detectChanges();
+      location.hash = 'hash';
       component.child.ngOnInit();
-      expect(component.child.state).toEqual(id);
+      expect(component.child.state).toEqual('name');
     });
 
     it('should set up subscription to router', () => {
@@ -154,132 +193,96 @@ describe('SettingsComponent', () => {
 
   describe('scroll', () => {
     it('should detect changes on scroll', () => {
-      const ref = 'ref';
-      spyOn(component.child[ref], 'detectChanges');
+      spyOn(component.child.ref, 'detectChanges');
       component.child.scroll();
-      expect(component.child[ref].detectChanges).toHaveBeenCalled();
+      expect(component.child.ref.detectChanges).toHaveBeenCalled();
     });
   });
 
   describe('trackBy', () => {
     it('should return the key of the keyvalue', () => {
-      expect(component.child.trackBy({ key: 'key', value: 'value' })).toEqual(
-        'key'
-      );
+      expect(component.child.trackBy({ key: id, value })).toEqual(id);
     });
   });
 
-  // describe('changeBeaconCount', () => {
-  //   it('should emit beacon count', () => {
-  //     spyOn(component, 'setBeaconCount');
-  //     TestUtility.selectId(fixture, ElementId.SettingsBeaconCount, '3');
-  //     fixture.detectChanges();
-  //     expect(component.setBeaconCount).toHaveBeenCalledWith({
-  //       value: 3,
-  //       default: 8,
-  //     });
-  //   });
-  // });
+  describe('changeBeaconCount', () => {
+    it('should emit beacon count', () => {
+      spyOn(component, 'setBeaconCount');
+      TestUtility.setTextDt(fixture, DataTest.Beacons, '3');
+      fixture.detectChanges();
+      expect(component.setBeaconCount).toHaveBeenCalledWith({
+        id: '',
+        value: 3,
+      });
+    });
+  });
 
   describe('emitNumber', () => {
-    // it('should emit numeric settings', () => {
-    //   spyOn(component, 'setPreset');
-    //   TestUtility.selectId(fixture, ElementId.SettingsPreset, '2');
-    //   fixture.detectChanges();
-    //   expect(component.setPreset).toHaveBeenCalledWith(2);
-    // });
-
-    it('should ignore invalid numeric events', () => {
-      spyOn(component, 'setPreset');
-      const event = { target: {} };
-      component.child.emitNumber(component.child.setPreset, event as any);
+    it('should emit flow rate', () => {
+      spyOn(component, 'setFlowRate');
+      TestUtility.setTextDt(fixture, DataTest.FlowRate, '1000');
       fixture.detectChanges();
-      expect(component.setPreset).not.toHaveBeenCalled();
+      expect(component.setFlowRate).toHaveBeenCalledWith(1000);
+    });
+
+    it('should emit mining bonus', () => {
+      spyOn(component, 'setMiningBonus');
+      TestUtility.setTextDt(fixture, DataTest.MiningBonus, '100');
+      fixture.detectChanges();
+      expect(component.setMiningBonus).toHaveBeenCalledWith(100);
     });
   });
 
   describe('setState', () => {
     it('should ignore falsy values', () => {
       spyOn(router, 'navigate');
-      const event: any = { target: { value: null } };
-      component.child.setState(event);
+      component.child.setState(null);
       expect(router.navigate).not.toHaveBeenCalled();
     });
 
     it('should call the router to navigate', () => {
       spyOn(router, 'navigate');
-      component.settings = {
-        ...Mocks.SettingsState1,
-        ...{ states: { [id]: value } },
-      };
-      fixture.detectChanges();
-      const event: any = { target: { value: id } };
-      component.child.setState(event);
+      component.child.setState('name');
+      expect(component.child.state).toEqual('name');
       expect(router.navigate).toHaveBeenCalledWith([], {
-        fragment: value,
+        fragment: 'hash',
       });
     });
   });
 
   describe('clickSaveState', () => {
-    const event: any = { stopPropagation: () => {} };
-
     it('should emit to save the state', () => {
+      spyOn(Mocks.Event, 'stopPropagation');
       spyOn(component, 'saveState');
-      component.child.state = id;
-      location.hash = value;
-      component.child.clickSaveState(event);
-      expect(component.saveState).toHaveBeenCalledWith({ id, value });
-    });
-
-    it('should set editState to false', () => {
+      component.child.tempState = id;
       component.child.editState = true;
-      component.child.clickSaveState(event);
+      location.hash = value;
+      component.child.clickSaveState(Mocks.Event);
+      expect(component.saveState).toHaveBeenCalledWith({ id, value });
       expect(component.child.editState).toBeFalse();
-    });
-
-    it('should stop propagation', () => {
-      spyOn(event, 'stopPropagation');
-      component.child.clickSaveState(event);
-      expect(event.stopPropagation).toHaveBeenCalled();
+      expect(Mocks.Event.stopPropagation).toHaveBeenCalled();
     });
   });
 
   describe('clickDeleteState', () => {
-    const event: any = { stopPropagation: () => {} };
-
     it('should emit to delete the state', () => {
+      spyOn(Mocks.Event, 'stopPropagation');
       spyOn(component, 'deleteState');
       component.child.state = id;
-      component.child.clickDeleteState(event);
-      expect(component.deleteState).toHaveBeenCalledWith(id);
-    });
-
-    it('should set state to empty string', () => {
       component.child.state = id;
-      component.child.clickDeleteState(event);
+      component.child.clickDeleteState(Mocks.Event);
+      expect(component.deleteState).toHaveBeenCalledWith(id);
       expect(component.child.state).toEqual('');
-    });
-
-    it('should stop propagation', () => {
-      spyOn(event, 'stopPropagation');
-      component.child.clickDeleteState(event);
-      expect(event.stopPropagation).toHaveBeenCalled();
+      expect(Mocks.Event.stopPropagation).toHaveBeenCalled();
     });
   });
 
   describe('toggleEditState', () => {
-    const event: any = { stopPropagation: () => {} };
-
     it('should toggle the edit state', () => {
-      component.child.toggleEditState(event);
+      spyOn(Mocks.Event, 'stopPropagation');
+      component.child.toggleEditState(Mocks.Event);
       expect(component.child.editState).toBeTrue();
-    });
-
-    it('should stop propagation', () => {
-      spyOn(event, 'stopPropagation');
-      component.child.toggleEditState(event);
-      expect(event.stopPropagation).toHaveBeenCalled();
+      expect(Mocks.Event.stopPropagation).toHaveBeenCalled();
     });
   });
 

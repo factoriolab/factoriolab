@@ -14,7 +14,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogComponent {
-  @Output() close = new EventEmitter();
+  @Output() closeDialog = new EventEmitter();
 
   opening = true;
 
@@ -25,7 +25,7 @@ export class DialogComponent {
     if (this.opening) {
       this.opening = false;
     } else if (!this.element.nativeElement.contains(event.target)) {
-      this.close.emit();
+      this.closeDialog.emit();
       event.stopPropagation();
     }
   }

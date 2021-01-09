@@ -3,7 +3,7 @@
     >{{ selected.length }} Recipe{{ selected.length === 1 ? '' : 's' }}</span
   >
 </button>
-<lab-dialog *ngIf="open" [style.width.rem]="width" (close)="close()">
+<lab-dialog *ngIf="open" [style.width.rem]="width" (closeDialog)="close()">
   <div class="dialog-title">
     <div class="header">Select Recipes</div>
     <button (click)="cancel($event)">
