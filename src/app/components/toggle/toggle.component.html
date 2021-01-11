@@ -6,7 +6,7 @@
 <lab-dialog *ngIf="open" [style.width.rem]="width" (closeDialog)="close()">
   <div class="dialog-title">
     <div class="header">Select Recipes</div>
-    <button (click)="cancel($event)">
+    <button (click)="cancel()">
       <i class="material-icons">close</i>
     </button>
   </div>
@@ -35,12 +35,12 @@
         [scrollTop]="scrollContainer.scrollTop"
         [tooltip]="data.recipeEntities[id].name"
         [recipe]="data.recipeEntities[id]"
-        (click)="clickId(id, $event)"
+        (click)="clickId(id)"
       ></lab-icon>
     </div>
   </div>
   <div class="dialog-buttons">
-    <button (click)="cancel($event)"><span class="text">Cancel</span></button>
+    <button (click)="cancel()"><span class="text">Cancel</span></button>
     <button class="green" (click)="close()">Confirm</button>
   </div>
 </lab-dialog>

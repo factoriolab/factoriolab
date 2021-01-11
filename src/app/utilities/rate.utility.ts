@@ -11,7 +11,6 @@ import {
   ItemId,
 } from '~/models';
 import { ItemsState } from '~/store/items';
-import { RecipesState } from '~/store/recipes';
 
 export class RateUtility {
   static LAUNCH_TIME = new Rational(BigInt(2420), BigInt(60));
@@ -21,8 +20,6 @@ export class RateUtility {
     rate: Rational,
     steps: Step[],
     itemSettings: ItemsState,
-    recipeSettings: RecipesState,
-    fuel: string,
     data: Dataset,
     parentId: string = null
   ) {
@@ -91,8 +88,6 @@ export class RateUtility {
             ingredientRate,
             steps,
             itemSettings,
-            recipeSettings,
-            fuel,
             data,
             recipe.id
           );

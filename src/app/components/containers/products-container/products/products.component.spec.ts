@@ -97,12 +97,6 @@ describe('ProductsComponent', () => {
   });
 
   describe('changeRate', () => {
-    it('should handle invalid events', () => {
-      spyOn(component, 'setRate');
-      component.child.changeRate(null, { target: null } as any);
-      expect(component.setRate).not.toHaveBeenCalled();
-    });
-
     it('should change the product rate', () => {
       spyOn(component, 'setRate');
       TestUtility.setTextDt(fixture, DataTest.Rate, '3');

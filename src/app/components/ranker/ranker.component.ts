@@ -75,7 +75,7 @@ export class RankerComponent extends DialogContainerComponent {
     this.open = false;
   }
 
-  clickId(id: string, event: MouseEvent): void {
+  clickId(id: string): void {
     if (id === ItemId.Module) {
       if (this.edited) {
         this.selectIds.emit(this.editValue);
@@ -95,6 +95,5 @@ export class RankerComponent extends DialogContainerComponent {
         this.cancel();
       }
     }
-    event.stopPropagation();
   }
 }

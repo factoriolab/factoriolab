@@ -45,16 +45,15 @@ export class SankeyComponent implements OnInit {
   height = 400;
   svg: Selection<any, {}, null, undefined>;
 
-  get element(): HTMLElement {
-    return this.ref.nativeElement as HTMLElement;
-  }
-
-  constructor(private ref: ElementRef, private resize$: NgResizeObserver) {}
+  constructor(
+    private ref: ElementRef<HTMLElement>,
+    private resize$: NgResizeObserver
+  ) {}
 
   ngOnInit(): void {
     this.resize$.subscribe((entry) => this.handleResize(entry));
 
-    this.width = this.element.getBoundingClientRect().width;
+    this.width = this.ref.nativeElement.getBoundingClientRect().width;
     this.height = Math.min(window.innerHeight * 0.75, this.width / 2);
     if (this.svg) {
       this.rebuildChart();
@@ -100,7 +99,7 @@ export class SankeyComponent implements OnInit {
   }
 
   createChart(): void {
-    this.svg = select(this.element)
+    this.svg = select(this.ref.nativeElement)
       .append('svg')
       .attr('preserveAspectRatio', 'xMinYMin meet')
       .attr('viewBox', `0 0 ${this.width} ${this.height}`);

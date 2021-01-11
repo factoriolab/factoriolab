@@ -252,37 +252,32 @@ describe('SettingsComponent', () => {
 
   describe('clickSaveState', () => {
     it('should emit to save the state', () => {
-      spyOn(Mocks.Event, 'stopPropagation');
       spyOn(component, 'saveState');
       component.child.tempState = id;
       component.child.editState = true;
       location.hash = value;
-      component.child.clickSaveState(Mocks.Event);
+      component.child.clickSaveState();
       expect(component.saveState).toHaveBeenCalledWith({ id, value });
       expect(component.child.editState).toBeFalse();
-      expect(Mocks.Event.stopPropagation).toHaveBeenCalled();
     });
   });
 
   describe('clickDeleteState', () => {
     it('should emit to delete the state', () => {
-      spyOn(Mocks.Event, 'stopPropagation');
       spyOn(component, 'deleteState');
       component.child.state = id;
       component.child.state = id;
-      component.child.clickDeleteState(Mocks.Event);
+      component.child.clickDeleteState();
       expect(component.deleteState).toHaveBeenCalledWith(id);
       expect(component.child.state).toEqual('');
-      expect(Mocks.Event.stopPropagation).toHaveBeenCalled();
     });
   });
 
   describe('toggleEditState', () => {
     it('should toggle the edit state', () => {
-      spyOn(Mocks.Event, 'stopPropagation');
-      component.child.toggleEditState(Mocks.Event);
+      component.child.toggleEditState();
       expect(component.child.editState).toBeTrue();
-      expect(Mocks.Event.stopPropagation).toHaveBeenCalled();
+      expect(component.child.tempState).toEqual(component.child.state);
     });
   });
 

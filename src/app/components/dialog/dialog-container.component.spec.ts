@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Mocks } from 'src/tests';
 
 import { DialogContainerComponent } from './dialog-container.component';
 
@@ -24,12 +23,6 @@ describe('DialogContainerComponent', () => {
       component.open = true;
       component.cancel();
       expect(component.open).toBeFalse();
-    });
-
-    it('should cancel propagation on event', () => {
-      spyOn(Mocks.Event, 'stopPropagation');
-      component.cancel(Mocks.Event);
-      expect(Mocks.Event.stopPropagation).toHaveBeenCalled();
     });
   });
 });

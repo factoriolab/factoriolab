@@ -4,7 +4,7 @@
 <lab-dialog *ngIf="open" [style.minWidth.rem]="width" (closeDialog)="cancel()">
   <div class="dialog-title">
     <div class="header">{{ header }}</div>
-    <button (click)="cancel($event)">
+    <button (click)="cancel()">
       <i class="material-icons">close</i>
     </button>
   </div>
@@ -16,7 +16,7 @@
       [iconId]="ItemId.Module"
       [class.selected]="selected === ItemId.Module"
       [data]="data"
-      (click)="clickId(ItemId.Module, $event)"
+      (click)="clickId(ItemId.Module)"
     >
     </lab-icon>
     <ng-container *ngFor="let id of options">
@@ -31,7 +31,7 @@
         [recipe]="selectType === IdType.Recipe ? data.recipeEntities[id] : null"
         [displayRate]="displayRate"
         [class.selected]="id === selected"
-        (click)="clickId(id, $event)"
+        (click)="clickId(id)"
       ></lab-icon>
     </ng-container>
   </div>

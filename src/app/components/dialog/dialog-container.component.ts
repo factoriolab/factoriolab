@@ -13,10 +13,7 @@ export class DialogContainerComponent {
 
   constructor() {}
 
-  cancel(event: MouseEvent = null): void {
+  cancel(): void {
     this.open = false;
-    if (event) {
-      event.stopPropagation();
-    }
   }
 }

@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Mocks } from 'src/tests';
 import { DialogComponent } from './dialog.component';
 
 describe('DialogComponent', () => {
@@ -31,11 +30,9 @@ describe('DialogComponent', () => {
 
     it('should close the dialog', () => {
       spyOn(component.closeDialog, 'emit');
-      spyOn(Mocks.Event, 'stopPropagation');
       component.opening = false;
-      component.click(Mocks.Event);
+      document.body.click();
       expect(component.closeDialog.emit).toHaveBeenCalled();
-      expect(Mocks.Event.stopPropagation).toHaveBeenCalled();
     });
 
     it('should ignore click on this element', () => {

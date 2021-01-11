@@ -170,23 +170,20 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-  clickSaveState(event: Event): void {
+  clickSaveState(): void {
     this.saveState.emit({ id: this.tempState, value: this.hash });
     this.editState = false;
     this.state = this.tempState;
-    event.stopPropagation();
   }
 
-  clickDeleteState(event: Event): void {
+  clickDeleteState(): void {
     this.deleteState.emit(this.state);
     this.state = '';
-    event.stopPropagation();
   }
 
-  toggleEditState(event: Event): void {
+  toggleEditState(): void {
     this.editState = !this.editState;
     this.tempState = this.state;
-    event.stopPropagation();
   }
 
   clickResetSettings(): void {

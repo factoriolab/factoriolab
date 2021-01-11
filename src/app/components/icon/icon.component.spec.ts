@@ -55,12 +55,6 @@ describe('IconComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('element', () => {
-    it('should return the native element', () => {
-      expect(component.child.element).toBeTruthy();
-    });
-  });
-
   describe('mouseenter', () => {
     it('should set the hover value to true', () => {
       component.child.hover = false;

@@ -171,7 +171,6 @@ export const Preferences: PreferencesState = {
   columns: initialColumnsState,
   linkValue: LinkValue.Items,
 };
-export const Event: any = { stopPropagation: () => {} };
 
 function node(i: number): Node {
   return {

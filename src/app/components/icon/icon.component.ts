@@ -2,7 +2,6 @@ import {
   Component,
   Input,
   ChangeDetectionStrategy,
-  ElementRef,
   HostListener,
 } from '@angular/core';
 
@@ -46,11 +45,7 @@ export class IconComponent {
 
   DisplayRate = DisplayRate;
 
-  get element(): HTMLElement {
-    return this.ref.nativeElement;
-  }
-
-  constructor(private ref: ElementRef) {}
+  constructor() {}
 
   @HostListener('mouseenter') mouseenter(): void {
     this.hover = true;

@@ -38,9 +38,8 @@ export class SelectComponent extends DialogContainerComponent {
     super();
   }
 
-  clickId(id: string, event: MouseEvent): void {
+  clickId(id: string): void {
     this.selectId.emit(id);
     this.open = false;
-    event.stopPropagation();
   }
 }

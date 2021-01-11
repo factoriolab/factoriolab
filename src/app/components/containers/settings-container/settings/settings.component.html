@@ -21,21 +21,21 @@
         <ng-container *ngIf="!editState; else stateInput">
           <lab-options
             title="Select saved state"
-            [selected]="preferences.states[state]"
+            [selected]="state"
             [options]="savedStates"
             (selectId)="setState($event)"
           ></lab-options>
           <button
             *ngIf="state"
             title="Delete saved state"
-            (click)="clickDeleteState($event)"
+            (click)="clickDeleteState()"
           >
             <i class="material-icons">delete</i>
           </button>
           <button
             *ngIf="hash"
             title="Name and save state"
-            (click)="toggleEditState($event)"
+            (click)="toggleEditState()"
           >
             <i class="material-icons">edit</i>
           </button>
@@ -49,11 +49,11 @@
           <button
             *ngIf="tempState && hash"
             title="Save state"
-            (click)="clickSaveState($event)"
+            (click)="clickSaveState()"
           >
             <i class="material-icons">save</i>
           </button>
-          <button title="Cancel" (click)="toggleEditState($event)">
+          <button title="Cancel" (click)="toggleEditState()">
             <i class="material-icons">close</i>
           </button>
         </ng-template>
@@ -162,8 +162,7 @@
                   removeFactory.emit({
                     value: f,
                     default: data.defaults.factoryRank
-                  });
-                  $event.stopPropagation()
+                  })
                 "
               >
                 <i class="material-icons">remove</i>
@@ -226,7 +225,7 @@
                   "
                 >
                   <lab-icon
-                    class="button module"
+                    class="button"
                     tooltip="Module preferences"
                     [data]="data"
                     [iconId]="
@@ -301,7 +300,7 @@
                 "
               >
                 <lab-icon
-                  class="button module"
+                  class="button"
                   tooltip="Beacon module"
                   [data]="data"
                   [iconId]="factory.beaconModule"

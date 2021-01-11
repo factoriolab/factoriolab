@@ -43,8 +43,6 @@ describe('RateUtility', () => {
         new Rational(BigInt(30)),
         steps,
         Mocks.ItemSettingsEntities,
-        Mocks.RecipeSettingsEntities,
-        ItemId.Coal,
         Mocks.AdjustedData
       );
       expect(steps as any).toEqual(expected as any);
@@ -57,8 +55,6 @@ describe('RateUtility', () => {
         new Rational(BigInt(15)),
         steps,
         Mocks.ItemSettingsEntities,
-        Mocks.RecipeSettingsEntities,
-        ItemId.Coal,
         Mocks.AdjustedData
       );
       RateUtility.addStepsFor(
@@ -66,8 +62,6 @@ describe('RateUtility', () => {
         new Rational(BigInt(15)),
         steps,
         Mocks.ItemSettingsEntities,
-        Mocks.RecipeSettingsEntities,
-        ItemId.Coal,
         Mocks.AdjustedData
       );
       expect(steps).toEqual(expected as any);
@@ -80,8 +74,6 @@ describe('RateUtility', () => {
         new Rational(BigInt(30)),
         steps,
         Mocks.ItemSettingsEntities,
-        Mocks.RecipeSettingsEntities,
-        ItemId.Coal,
         {
           ...Mocks.AdjustedData,
           ...{
@@ -107,8 +99,6 @@ describe('RateUtility', () => {
         new Rational(BigInt(60)),
         steps,
         Mocks.ItemSettingsEntities,
-        Mocks.RecipeSettingsEntities,
-        ItemId.Coal,
         Mocks.AdjustedData
       );
       expect(steps[0].factories).toBe(null);
@@ -138,8 +128,6 @@ describe('RateUtility', () => {
         new Rational(BigInt(30)),
         steps,
         Mocks.ItemSettingsEntities,
-        Mocks.RecipeSettingsEntities,
-        ItemId.Coal,
         data
       );
       expect(steps as any).toEqual(expected as any);
@@ -152,8 +140,6 @@ describe('RateUtility', () => {
         new Rational(BigInt(30)),
         steps,
         Mocks.ItemSettingsEntities,
-        Mocks.RecipeSettingsEntities,
-        ItemId.Coal,
         Mocks.AdjustedData
       );
       expect(steps).toEqual([

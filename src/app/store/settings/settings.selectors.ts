@@ -233,23 +233,10 @@ export const getNormalDataset = createSelector(
       {}
     );
     const itemRecipeIds = itemIds.reduce((e: Entities<string>, i) => {
-      const exact = recipes.find((r) => r.id === i);
-      if (exact && !exact.in) {
-        // Exact match has no inputs, so use it
-        e[i] = exact.id;
-        return e;
-      }
       const matches = recipeMatches[i] || [];
       if (matches.length === 1) {
-        // Only one recipe produces this item, so use it
+        // Only one recipe produces this item, use direct mapping
         e[i] = matches[0].id;
-        return e;
-      }
-      const noIn = matches.find((r) => !r.in);
-      if (noIn) {
-        // One matching recipe requires no inputs, so use it
-        e[i] = noIn.id;
-        return e;
       }
       return e;
     }, {});

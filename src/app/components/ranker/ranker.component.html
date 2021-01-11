@@ -4,7 +4,7 @@
 <lab-dialog *ngIf="open" [style.minWidth.rem]="width" (closeDialog)="cancel()">
   <div class="dialog-title">
     <div class="header">{{ header }}</div>
-    <button (click)="cancel($event)">
+    <button (click)="cancel()">
       <i class="material-icons">close</i>
     </button>
   </div>
@@ -18,7 +18,7 @@
       [data]="data"
       [iconId]="ItemId.Module"
       [text]="text(ItemId.Module)"
-      (click)="clickId(ItemId.Module, $event)"
+      (click)="clickId(ItemId.Module)"
     >
     </lab-icon>
     <lab-icon
@@ -32,7 +32,7 @@
       [text]="text(id)"
       [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"
       [item]="data.itemEntities[id]"
-      (click)="clickId(id, $event)"
+      (click)="clickId(id)"
     ></lab-icon>
   </div>
   <div class="info" *ngIf="edited">

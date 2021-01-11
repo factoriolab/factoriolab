@@ -8,7 +8,7 @@
 <lab-dialog *ngIf="open" (close)="close()">
   <div class="dialog-title">
     <div class="header">Select columns</div>
-    <button (click)="cancel($event)">
+    <button (click)="cancel()">
       <i class="material-icons">close</i>
     </button>
   </div>
@@ -72,7 +72,7 @@
     </table>
   </div>
   <div class="dialog-buttons">
-    <button (click)="cancel($event)">
+    <button (click)="cancel()">
       <span class="text">Cancel</span>
     </button>
     <button class="green" data-test="lab-columns-confirm" (click)="close()">

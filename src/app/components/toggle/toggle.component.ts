@@ -48,13 +48,12 @@ export class ToggleComponent extends DialogContainerComponent {
     this.open = false;
   }
 
-  clickId(id: string, event: MouseEvent): void {
+  clickId(id: string): void {
     this.edited = true;
     if (this.editValue.indexOf(id) === -1) {
       this.editValue.push(id);
     } else {
       this.editValue = this.editValue.filter((i) => i !== id);
     }
-    event.stopPropagation();
   }
 }

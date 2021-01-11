@@ -49,7 +49,6 @@ describe('ListContainerComponent', () => {
   });
 
   it('should ignore an item', () => {
-    spyOn(store, 'dispatch');
     const data = Mocks.Item1.id;
     component.child.ignoreItem.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(

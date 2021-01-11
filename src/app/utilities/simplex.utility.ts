@@ -3,12 +3,12 @@ import {
   Entities,
   ERROR_SIMPLEX,
   ItemId,
-  ItemSettings,
   Rational,
   RationalRecipe,
   Step,
   WARNING_HANG,
 } from '~/models';
+import { ItemsState } from '~/store/items';
 import { RateUtility } from './rate.utility';
 
 export interface MatrixState {
@@ -47,7 +47,7 @@ export class SimplexUtility {
   /** Solve all remaining steps using simplex method, if necessary */
   static solve(
     steps: Step[],
-    itemSettings: ItemSettings,
+    itemSettings: ItemsState,
     disabledRecipes: string[],
     data: Dataset
   ) {
@@ -83,22 +83,27 @@ export class SimplexUtility {
   /** Solve simplex for a given item id and return recipes in order of output */
   static getRecipes(
     itemId: string,
-    itemSettings: ItemSettings,
+    itemSettings: ItemsState,
     disabledRecipes: string[],
     data: Dataset
   ): [string, Rational][] {
-    const result = this.solve(
-      [
-        {
-          itemId,
-          items: Rational.one,
-        },
-      ],
-      itemSettings,
-      disabledRecipes,
-      data
-    );
-    return result
+    let steps: Step[] = [];
+    if (data.itemRecipeIds[itemId]) {
+      RateUtility.addStepsFor(itemId, Rational.one, steps, itemSettings, data);
+    } else {
+      steps = this.solve(
+        [
+          {
+            itemId,
+            items: Rational.one,
+          },
+        ],
+        itemSettings,
+        disabledRecipes,
+        data
+      );
+    }
+    return steps
       .filter((s) => s.recipeId)
       .sort((a, b) =>
         data.recipeR[b.recipeId]
@@ -112,7 +117,7 @@ export class SimplexUtility {
   //#region Setup
   static getState(
     steps: Step[],
-    itemSettings: ItemSettings,
+    itemSettings: ItemsState,
     disabledRecipes: string[],
     data: Dataset
   ) {

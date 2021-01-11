@@ -45,12 +45,6 @@ describe('SankeyComponent', () => {
     expect(component.child.svg).toBeTruthy();
   });
 
-  describe('element', () => {
-    it('should return the native element', () => {
-      expect(component.child.element).toBeTruthy();
-    });
-  });
-
   describe('ngOnInit', () => {
     it('should set width and height', () => {
       expect(component.child.width).not.toEqual(800);

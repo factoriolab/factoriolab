@@ -171,10 +171,8 @@ export const getNormalizedSteps = createSelector(
   getProducts,
   getNormalizedRates,
   Items.getItemSettings,
-  Recipes.getRecipeSettings,
   Recipes.getAdjustedDataset,
-  Settings.getFuel,
-  (products, rates, itemSettings, recipeSettings, data, fuel) => {
+  (products, rates, itemSettings, data) => {
     const steps: Step[] = [];
     for (const product of products) {
       RateUtility.addStepsFor(
@@ -182,8 +180,6 @@ export const getNormalizedSteps = createSelector(
         rates[product.id],
         steps,
         itemSettings,
-        recipeSettings,
-        fuel,
         data
       );
     }

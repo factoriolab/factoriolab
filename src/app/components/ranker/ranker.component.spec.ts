@@ -195,11 +195,5 @@ describe('RankerComponent', () => {
       expect(component.selectIds).not.toHaveBeenCalled();
       expect(component.child.cancel).not.toHaveBeenCalled();
     });
-
-    it('should stop propagation', () => {
-      spyOn(Mocks.Event, 'stopPropagation');
-      component.child.clickId(ItemId.Module, Mocks.Event);
-      expect(Mocks.Event.stopPropagation).toHaveBeenCalled();
-    });
   });
 });

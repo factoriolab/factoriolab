@@ -52,11 +52,14 @@ export class SettingsContainerComponent implements OnInit {
 
   get isInOverlayMode(): boolean {
     return window
-      .getComputedStyle(this.element.nativeElement as HTMLElement)
+      .getComputedStyle(this.ref.nativeElement)
       .marginRight.startsWith('-');
   }
 
-  constructor(private element: ElementRef, private store: Store<State>) {}
+  constructor(
+    private ref: ElementRef<HTMLElement>,
+    private store: Store<State>
+  ) {}
 
   ngOnInit(): void {
     this.data$ = this.store.select(Settings.getDataset);
@@ -71,7 +74,8 @@ export class SettingsContainerComponent implements OnInit {
     if (this.opening) {
       this.opening = false;
     } else if (
-      !this.element.nativeElement.contains(event.target) &&
+      !this.ref.nativeElement.contains(event.target as Node) &&
+      document.contains(event.target as Node) &&
       this.isInOverlayMode
     ) {
       this.closeSettings.emit();
