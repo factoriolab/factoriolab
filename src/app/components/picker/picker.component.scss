@@ -1,11 +1,8 @@
-:host {
-  position: absolute;
-  left: 0;
-  top: 0;
-  background-color: var(--color-gray-2);
-  border: 1px solid var(--color-brand);
-  border-radius: 0.25rem;
-  z-index: 10;
+lab-dialog {
+  > .panel {
+    padding: 0;
+    padding-bottom: 0.75rem;
+  }
 }
 
 .tabs {
@@ -13,31 +10,53 @@
   max-width: 27rem;
   overflow-x: auto;
 
-  .selected {
-    background-color: var(--color-gray-1);
+  > * {
+    height: inherit;
+    padding: 0.25rem;
   }
 
-  > * {
+  > .selected {
+    background-color: var(--color-light);
+    margin: 0.25rem;
+    padding: 0;
+  }
+
+  > :not(.selected) {
     cursor: pointer;
-    padding: 0.25rem;
+    background-color: var(--color-button);
+    box-shadow: var(--shadow-button);
 
     &:hover {
       background-color: var(--color-brand);
+      box-shadow: var(--shadow-hover);
     }
   }
 }
 
 .tab {
-  background-color: var(--color-gray-1);
   max-height: 27rem;
   overflow-y: auto;
+  margin: 0.75rem;
+  margin-bottom: 0;
+  padding: 0;
 }
 
 .row {
   display: flex;
 
-  lab-icon.selected {
-    background-color: var(--color-gray-0);
+  lab-icon {
+    padding: 0.125rem;
+    border-radius: 0.25rem;
+    background-color: var(--color-back);
+    margin: 1px;
+
+    cursor: pointer;
+    box-shadow: var(--shadow-item);
+
+    &:hover {
+      background-color: var(--color-brand-drk);
+      box-shadow: var(--shadow-hover);
+    }
   }
 }
 

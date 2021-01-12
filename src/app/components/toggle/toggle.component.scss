@@ -1,33 +1,31 @@
 :host {
-  position: absolute;
-  background-color: var(--color-gray-2);
-  border: 1px solid var(--color-brand);
-  border-radius: 0.25rem;
-  z-index: 10;
-  margin: -1px;
-  max-width: 25rem;
-  max-height: 25rem;
   display: flex;
-  flex-direction: column;
-  padding: 0.5rem;
+
+  > button {
+    flex-grow: 1;
+  }
+
+  > lab-dialog {
+    max-width: 25.5rem;
+    max-height: 24.5rem;
+
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .scroll {
-  flex-wrap: wrap;
   overflow-y: auto;
+  padding-bottom: 0;
 }
 
-.info {
-  font-size: x-small;
-  margin-bottom: 0.5rem;
-}
-
-.warn {
-  color: var(--color-brand);
+.tile {
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
 }
 
 .buttons {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
 
   * + * {
     margin-left: 0.5rem;

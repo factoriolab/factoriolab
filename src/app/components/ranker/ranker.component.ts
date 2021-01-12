@@ -3,13 +3,11 @@ import {
   Input,
   Output,
   EventEmitter,
-  ElementRef,
-  HostListener,
   ChangeDetectionStrategy,
-  HostBinding,
 } from '@angular/core';
 
-import { Dataset } from '~/models';
+import { Dataset, ItemId } from '~/models';
+import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
   selector: 'lab-ranker',
@@ -17,57 +15,85 @@ import { Dataset } from '~/models';
   styleUrls: ['./ranker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RankerComponent {
+export class RankerComponent extends DialogContainerComponent {
   @Input() data: Dataset;
-  @Input() set rank(value: string[]) {
-    this.editValue = [...value];
-  }
+  @Input() selected: string[];
   @Input() options: string[];
-  @Input() parent: HTMLElement;
 
-  @Output() cancel = new EventEmitter();
-  @Output() commit = new EventEmitter<string[]>();
+  @Output() selectIds = new EventEmitter<string[]>();
 
-  opening = true;
   edited = false;
   editValue: string[];
 
-  @HostBinding('style.top.px') get top() {
-    return this.parent ? this.parent.getBoundingClientRect().y - 4 : -4;
+  ItemId = ItemId;
+
+  get width(): number {
+    const buttons = this.options.length + 1;
+    const iconsPerRow = buttons <= 4 ? buttons : Math.ceil(Math.sqrt(buttons));
+    return iconsPerRow * 2.375 + 1.5;
   }
 
-  @HostBinding('style.left.px') get left() {
-    return this.parent ? this.parent.getBoundingClientRect().x - 14 : -4;
+  constructor() {
+    super();
   }
 
-  @HostBinding('style.width.rem') get width() {
-    return Math.ceil(Math.sqrt(this.options.length) + 2) * 2.25 + 1.25;
+  text(id: string): string {
+    if (this.editValue.length > 0 && this.editValue.indexOf(id) !== -1) {
+      return (this.editValue.indexOf(id) + 1).toString();
+    }
+    return null;
   }
 
-  constructor(private element: ElementRef) {}
+  canAdd(id: string): boolean {
+    if (!this.edited || id === ItemId.Module) {
+      return true;
+    }
 
-  @HostListener('document:click', ['$event'])
-  click(event: MouseEvent) {
-    if (this.opening) {
-      this.opening = false;
-    } else if (!this.element.nativeElement.contains(event.target)) {
+    if (this.editValue.indexOf(id) !== -1) {
+      return false;
+    }
+
+    const lim = this.data.itemEntities[id].module.limitation;
+    return (
+      !lim ||
+      !this.editValue.some(
+        (i) => this.data.itemEntities[i].module.limitation === lim
+      )
+    );
+  }
+
+  clickOpen(): void {
+    this.open = true;
+    this.edited = false;
+    this.editValue = [...this.selected];
+  }
+
+  close(): void {
+    if (this.edited) {
+      this.selectIds.emit(this.editValue);
+    }
+    this.open = false;
+  }
+
+  clickId(id: string): void {
+    if (id === ItemId.Module) {
       if (this.edited) {
-        this.commit.emit(this.editValue);
+        this.selectIds.emit(this.editValue);
       } else {
-        this.cancel.emit();
+        this.selectIds.emit([id]);
+      }
+      this.cancel();
+    } else if (this.canAdd(id)) {
+      if (this.edited) {
+        this.editValue.push(id);
+      } else {
+        this.edited = true;
+        this.editValue = [id];
+      }
+      if (!this.data.itemEntities[id].module.limitation) {
+        this.selectIds.emit(this.editValue);
+        this.cancel();
       }
     }
-  }
-
-  clickPrefer(id: string, event: MouseEvent) {
-    this.edited = true;
-    this.editValue.push(id);
-    event.stopPropagation();
-  }
-
-  clickDrop(id: string, event: MouseEvent) {
-    this.edited = true;
-    this.editValue = this.editValue.filter((i) => i !== id);
-    event.stopPropagation();
   }
 }

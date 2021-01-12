@@ -3,13 +3,11 @@ import {
   Input,
   Output,
   EventEmitter,
-  ElementRef,
-  HostListener,
   ChangeDetectionStrategy,
-  HostBinding,
 } from '@angular/core';
 
 import { Dataset } from '~/models';
+import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
   selector: 'lab-toggle',
@@ -17,56 +15,44 @@ import { Dataset } from '~/models';
   styleUrls: ['./toggle.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ToggleComponent {
+export class ToggleComponent extends DialogContainerComponent {
   @Input() data: Dataset;
-  @Input() set disabledRecipes(value: string[]) {
-    this.editValue = [...value];
-  }
-  @Input() parent: HTMLElement;
+  @Input() selected: string[];
 
-  @Output() cancel = new EventEmitter();
-  @Output() commit = new EventEmitter<string[]>();
+  @Output() selectIds = new EventEmitter<string[]>();
 
-  opening = true;
   edited = false;
   editValue: string[];
 
-  @HostBinding('style.top.px') get top() {
-    return this.parent ? this.parent.getBoundingClientRect().y + 1 : 1;
-  }
-
-  @HostBinding('style.left.px') get left() {
-    return this.parent ? this.parent.getBoundingClientRect().x - 8 : 1;
-  }
-
-  @HostBinding('style.width.rem') get width() {
+  get width(): number {
     return (
-      Math.ceil(Math.sqrt(this.data.complexRecipeIds.length) + 2) * 2.25 + 1.25
+      Math.ceil(Math.sqrt(this.data.complexRecipeIds.length) + 2) * 2.375 + 3
     );
   }
 
-  constructor(private element: ElementRef) {}
-
-  @HostListener('document:click', ['$event'])
-  click(event: MouseEvent) {
-    if (this.opening) {
-      this.opening = false;
-    } else if (!this.element.nativeElement.contains(event.target)) {
-      if (this.edited) {
-        this.commit.emit(this.editValue);
-      } else {
-        this.cancel.emit();
-      }
-    }
+  constructor() {
+    super();
   }
 
-  clickId(id: string, event: MouseEvent) {
+  clickOpen(): void {
+    this.open = true;
+    this.edited = false;
+    this.editValue = [...this.selected];
+  }
+
+  close(): void {
+    if (this.edited) {
+      this.selectIds.emit(this.editValue);
+    }
+    this.open = false;
+  }
+
+  clickId(id: string): void {
     this.edited = true;
     if (this.editValue.indexOf(id) === -1) {
       this.editValue.push(id);
     } else {
       this.editValue = this.editValue.filter((i) => i !== id);
     }
-    event.stopPropagation();
   }
 }

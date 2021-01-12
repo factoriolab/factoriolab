@@ -1,5 +1,5 @@
 import { ItemId } from 'src/tests';
-import { Rational } from './rational';
+import { Rational } from '../rational';
 import { RationalRecipeSettings } from './recipe-settings';
 
 describe('RationalRecipeSettings', () => {

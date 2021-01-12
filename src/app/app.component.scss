@@ -1,63 +1,80 @@
 :host {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
 }
 
-main {
-  display: flex;
-  overflow: hidden;
-  flex-grow: 1;
-}
+.top-bar {
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  padding: 1rem;
+  font-size: 110%;
 
-.view {
-  background-color: var(--color-back);
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  overflow: auto;
-}
+  > * {
+    padding: 0 1rem;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
 
-ul {
-  display: flex;
+  lab-icon {
+    margin: -0.5rem 0.5rem -0.5rem 0;
+  }
 
-  li {
-    padding: 0.5rem;
-    border-radius: 0 0 0.25rem 0.25rem;
-    user-select: none;
+  .header {
+    font-size: larger;
 
-    &.expand {
-      padding: 0.25rem 0.5rem 0 0.5rem;
+    a,
+    a:hover {
+      color: var(--color-header);
+      text-decoration: none;
     }
+  }
 
-    &:first-child {
-      border-bottom-left-radius: 0;
-    }
+  .links {
+    display: flex;
+    align-items: center;
+  }
 
-    &.active {
-      background-color: var(--color-gray-2);
-    }
-
-    &:not(.active) {
-      color: var(--color-brand);
-      cursor: pointer;
-
-      &:hover {
-        background-color: var(--color-gray-1);
-      }
-    }
+  .separator {
+    color: var(--color-link);
+    margin: 0 0.5rem;
   }
 }
 
-.spacer {
+main {
   flex-grow: 1;
-  visibility: hidden;
+  display: flex;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.view {
+  flex-grow: 1;
+  margin-top: 0.75rem;
+  padding: 0 1rem;
+
+  > * {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.75rem;
+  }
+}
+
+.view > *,
+lab-settings-container {
+  background-color: var(--color-back);
+  box-shadow: var(--shadow-main);
+  padding: 0.75rem;
+}
+
+.loading {
+  width: 20rem;
+  align-self: center;
 }
 
 @media screen and (max-width: 1000px) {
   lab-settings-container {
-    margin-right: -18rem;
+    margin-right: -25rem;
   }
 }

@@ -1,5 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ResizeObserverEntry } from '@juggle/resize-observer';
+import { Subject } from 'rxjs';
 
 import { Mocks, TestUtility } from 'src/tests';
 import { SankeyComponent } from './sankey.component';
@@ -14,7 +16,7 @@ import { SankeyComponent } from './sankey.component';
 class TestSankeyComponent {
   @ViewChild(SankeyComponent) child: SankeyComponent;
   sankeyData = Mocks.Sankey;
-  selectNode(data) {}
+  selectNode(data): void {}
 }
 
 describe('SankeyComponent', () => {
@@ -45,12 +47,6 @@ describe('SankeyComponent', () => {
     expect(component.child.svg).toBeTruthy();
   });
 
-  describe('element', () => {
-    it('should return the native element', () => {
-      expect(component.child.element).toBeTruthy();
-    });
-  });
-
   describe('ngOnInit', () => {
     it('should set width and height', () => {
       expect(component.child.width).not.toEqual(800);
@@ -70,6 +66,15 @@ describe('SankeyComponent', () => {
       component.child.ngOnInit();
       expect(component.child.rebuildChart).not.toHaveBeenCalled();
     });
+
+    it('should call handleResize when detected by NgResizeObserver', () => {
+      spyOn(component.child, 'handleResize');
+      const resize$ = new Subject<ResizeObserverEntry>();
+      component.child.resize$ = resize$;
+      component.child.ngOnInit();
+      resize$.next(null);
+      expect(component.child.handleResize).toHaveBeenCalled();
+    });
   });
 
   describe('handleResize', () => {
@@ -82,6 +87,9 @@ describe('SankeyComponent', () => {
     });
 
     it('should ignore if ratio of width to height is unchanged', () => {
+      component.child.handleResize({
+        contentRect: { width: 400, height: 200 },
+      } as any);
       spyOn(component.child, 'rebuildChart');
       component.child.handleResize({
         contentRect: { width: 800, height: 400 },

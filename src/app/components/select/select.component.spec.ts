@@ -2,21 +2,26 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Mocks, TestUtility, ItemId } from 'src/tests';
+import { DialogComponent, IconComponent } from '~/components';
 import { IdType, DisplayRate, Dataset } from '~/models';
-import { IconComponent } from '../icon/icon.component';
 import { SelectComponent } from './select.component';
+
+enum DataTest {
+  Open = 'lab-select-open',
+  None = 'lab-select-none',
+  Option = 'lab-select-option',
+}
 
 @Component({
   selector: 'lab-test-select',
   template: `
     <lab-select
       [data]="data"
-      [selectedId]="selectedId"
+      [selected]="selected"
       [options]="options"
       [selectType]="selectType"
       [displayRate]="displayRate"
       [includeEmptyModule]="includeEmptyModule"
-      (cancel)="cancel()"
       (selectId)="selectId($event)"
     >
     </lab-select>
@@ -25,8 +30,8 @@ import { SelectComponent } from './select.component';
 class TestSelectComponent {
   @ViewChild(SelectComponent) child: SelectComponent;
   data: Dataset = Mocks.Data;
-  selectedId = ItemId.AssemblingMachine1;
-  options = [
+  selected = ItemId.AssemblingMachine1;
+  options: string[] = [
     ItemId.AssemblingMachine1,
     ItemId.AssemblingMachine2,
     ItemId.AssemblingMachine3,
@@ -34,8 +39,7 @@ class TestSelectComponent {
   selectType = IdType.Item;
   displayRate = DisplayRate.PerMinute;
   includeEmptyModule = false;
-  cancel() {}
-  selectId(data) {}
+  selectId(data): void {}
 }
 
 describe('SelectComponent', () => {
@@ -43,8 +47,13 @@ describe('SelectComponent', () => {
   let fixture: ComponentFixture<TestSelectComponent>;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
-      declarations: [IconComponent, SelectComponent, TestSelectComponent],
+    await TestBed.configureTestingModule({
+      declarations: [
+        DialogComponent,
+        IconComponent,
+        SelectComponent,
+        TestSelectComponent,
+      ],
     }).compileComponents();
   });
 
@@ -58,63 +67,28 @@ describe('SelectComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set top based on parent', () => {
-    component.child.parent = { getBoundingClientRect: () => ({ y: 0 }) } as any;
-    expect(component.child.top).toEqual(-8);
-    component.child.parent = null;
-    expect(component.child.top).toEqual(-8);
+  describe('width', () => {
+    it('should make room for all options when <= 4', () => {
+      expect(component.child.width).toEqual(11);
+    });
+
+    it('should calculate based on number of options', () => {
+      component.options = ['1', '2', '3', '4', '5'];
+      fixture.detectChanges();
+      expect(component.child.width).toEqual(8.625);
+    });
   });
 
-  it('should set left based on parent', () => {
-    component.child.parent = { getBoundingClientRect: () => ({ x: 0 }) } as any;
-    expect(component.child.left).toEqual(-17);
-    component.child.parent = null;
-    expect(component.child.left).toEqual(-8);
-  });
-
-  it('should set width based on options', () => {
-    expect(component.child.width).toEqual(10.25);
-  });
-
-  it('should set minimum width', () => {
-    component.child.options = new Array(25);
-    expect(component.child.width).toEqual(14.75);
-  });
-
-  it('should set opening to false on first click event', () => {
-    spyOn(component, 'cancel');
-    document.body.click();
-    expect(component.cancel).not.toHaveBeenCalled();
-    expect(component.child.opening).toEqual(false);
-  });
-
-  it('should cancel', () => {
-    spyOn(component, 'cancel');
-    TestUtility.clickSelector(fixture, 'i', 0);
-    fixture.detectChanges();
-    expect(component.cancel).toHaveBeenCalled();
-  });
-
-  it('should cancel when clicked away', () => {
-    spyOn(component, 'cancel');
-    component.child.opening = false;
-    document.body.click();
-    expect(component.cancel).toHaveBeenCalled();
-  });
-
-  it('should not cancel when clicked on', () => {
-    spyOn(component, 'cancel');
-    component.child.opening = false;
-    TestUtility.clickSelector(fixture, 'lab-select');
-    expect(component.cancel).not.toHaveBeenCalled();
-  });
-
-  it('should select a new id', () => {
-    spyOn(component, 'selectId');
-    spyOn(component, 'cancel');
-    TestUtility.clickSelector(fixture, 'lab-icon', 1);
-    fixture.detectChanges();
-    expect(component.selectId).toHaveBeenCalledWith(ItemId.AssemblingMachine2);
-    expect(component.cancel).toHaveBeenCalled();
+  describe('clickId', () => {
+    it('should emit the selection', () => {
+      spyOn(component, 'selectId');
+      TestUtility.clickDt(fixture, DataTest.Open);
+      fixture.detectChanges();
+      TestUtility.clickDt(fixture, DataTest.Option);
+      expect(component.selectId).toHaveBeenCalledWith(
+        ItemId.AssemblingMachine1
+      );
+      expect(component.child.open).toBeFalse();
+    });
   });
 });

@@ -1,5 +1,6 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
 import { Rational, ResearchSpeed, Preset } from '~/models';
+import { initialSettingsState } from './settings.reducer';
 import * as Selectors from './settings.selectors';
 
 describe('Settings Selectors', () => {
@@ -76,66 +77,44 @@ describe('Settings Selectors', () => {
     });
 
     it('should use defaults', () => {
-      const value = Mocks.InitialSettingsState;
-      const result = Selectors.getSettings.projector(value, Mocks.Defaults);
-      expect(result).toEqual({ ...value, ...Mocks.Defaults });
+      const result = Selectors.getSettings.projector({}, Mocks.Defaults);
+      expect(result).toEqual({
+        belt: Mocks.Defaults.belt,
+        fuel: Mocks.Defaults.fuel,
+        disabledRecipes: Mocks.Defaults.disabledRecipes,
+      } as any);
     });
-  });
 
-  describe('getModIds', () => {
-    it('should return modIds from settings', () => {
-      const result = Selectors.getModIds.projector(Mocks.InitialSettingsState);
-      expect(result).toEqual(Mocks.InitialSettingsState.modIds);
+    it('should use handle null defaults', () => {
+      const result = Selectors.getSettings.projector({}, null);
+      expect(result).toEqual({
+        belt: undefined,
+        fuel: undefined,
+        disabledRecipes: [],
+      } as any);
     });
   });
 
   describe('getBelt', () => {
     it('should return belt from settings', () => {
-      const result = Selectors.getBelt.projector(Mocks.InitialSettingsState);
-      expect(result).toEqual(Mocks.InitialSettingsState.belt);
+      const result = Selectors.getBelt.projector(initialSettingsState);
+      expect(result).toEqual(initialSettingsState.belt);
     });
   });
 
   describe('getFuel', () => {
     it('should return fuel from settings', () => {
-      const result = Selectors.getFuel.projector(Mocks.InitialSettingsState);
-      expect(result).toEqual(Mocks.InitialSettingsState.fuel);
+      const result = Selectors.getFuel.projector(initialSettingsState);
+      expect(result).toEqual(initialSettingsState.fuel);
     });
   });
 
   describe('getDisabledRecipes', () => {
     it('should return disabledRecipes from settings', () => {
       const result = Selectors.getDisabledRecipes.projector(
-        Mocks.InitialSettingsState
+        initialSettingsState
       );
-      expect(result).toEqual(Mocks.InitialSettingsState.disabledRecipes);
-    });
-  });
-
-  describe('getFactoryRank', () => {
-    it('should return factoryRank from settings', () => {
-      const result = Selectors.getFactoryRank.projector(
-        Mocks.InitialSettingsState
-      );
-      expect(result).toEqual(Mocks.InitialSettingsState.factoryRank);
-    });
-  });
-
-  describe('getModuleRank', () => {
-    it('should return moduleRank from settings', () => {
-      const result = Selectors.getModuleRank.projector(
-        Mocks.InitialSettingsState
-      );
-      expect(result).toEqual(Mocks.InitialSettingsState.moduleRank);
-    });
-  });
-
-  describe('getBeaconModule', () => {
-    it('should return beaconModule from settings', () => {
-      const result = Selectors.getBeaconModule.projector(
-        Mocks.InitialSettingsState
-      );
-      expect(result).toEqual(Mocks.InitialSettingsState.beaconModule);
+      expect(result).toEqual(initialSettingsState.disabledRecipes);
     });
   });
 
@@ -182,7 +161,7 @@ describe('Settings Selectors', () => {
 
   describe('getMods', () => {
     it('should map mod ids to entities', () => {
-      const result = Selectors.getMods.projector(['research'], {
+      const result = Selectors.getMods.projector(Mocks.Base, {
         research: Mocks.Base,
       });
       expect(result).toEqual([Mocks.Base]);
@@ -294,65 +273,6 @@ describe('Settings Selectors', () => {
       expect(Object.keys(result.recipeModuleIds).length).toEqual(
         result.recipeIds.length
       );
-    });
-
-    it('should find item recipe with no inputs', () => {
-      const data = {
-        ...Mocks.Raw.app,
-        ...{
-          recipes: [
-            {
-              id: 'test',
-              time: 1,
-              out: {
-                [ItemId.WoodenChest]: 1,
-              },
-              producers: [ItemId.AssemblingMachine1],
-            },
-          ],
-        },
-      };
-      const result = Selectors.getNormalDataset.projector(
-        data,
-        [Mocks.Base, Mocks.Mod1],
-        Mocks.Defaults
-      );
-      expect(result.categoryIds.length).toBeGreaterThan(0);
-      expect(Object.keys(result.categoryEntities).length).toEqual(
-        result.categoryIds.length
-      );
-      expect(Object.keys(result.categoryItemRows).length).toEqual(
-        result.categoryIds.length
-      );
-      expect(result.iconIds.length).toBeGreaterThan(0);
-      expect(Object.keys(result.iconEntities).length).toEqual(
-        result.iconIds.length
-      );
-      expect(result.itemIds.length).toBeGreaterThan(0);
-      expect(result.beltIds.length).toBeGreaterThan(0);
-      expect(result.fuelIds.length).toBeGreaterThan(0);
-      expect(result.factoryIds.length).toBeGreaterThan(0);
-      expect(result.moduleIds.length).toBeGreaterThan(0);
-      expect(result.beaconModuleIds.length).toBeGreaterThan(0);
-      expect(Object.keys(result.itemEntities).length).toEqual(
-        result.itemIds.length
-      );
-      expect(Object.keys(result.itemR).length).toEqual(result.itemIds.length);
-      expect(Object.keys(result.itemRecipeIds).length).toBeGreaterThan(0);
-      expect(Object.keys(result.itemRecipeIds).length).toBeLessThan(
-        result.itemIds.length
-      );
-      expect(result.recipeIds.length).toBeGreaterThan(0);
-      expect(Object.keys(result.recipeEntities).length).toEqual(
-        result.recipeIds.length
-      );
-      expect(Object.keys(result.recipeR).length).toEqual(
-        result.recipeIds.length
-      );
-      expect(Object.keys(result.recipeModuleIds).length).toEqual(
-        result.recipeIds.length
-      );
-      expect(result.itemRecipeIds[ItemId.WoodenChest]).toEqual('test');
     });
   });
 

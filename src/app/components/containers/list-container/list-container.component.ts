@@ -21,8 +21,10 @@ import {
   DefaultPayload,
 } from '~/models';
 import { State } from '~/store';
+import * as Factories from '~/store/factories';
 import * as Items from '~/store/items';
-import { getSteps } from '~/store/products';
+import * as Preferences from '~/store/preferences';
+import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 import { ListComponent } from './list/list.component';
@@ -44,6 +46,7 @@ export class ListContainerComponent implements OnInit {
   itemSettings$: Observable<Items.ItemsState>;
   recipeSettings$: Observable<Recipes.RecipesState>;
   recipeRaw$: Observable<Recipes.RecipesState>;
+  factories$: Observable<Factories.FactoriesState>;
   beltSpeed$: Observable<Entities<Rational>>;
   steps$: Observable<Step[]>;
   disabledRecipes$: Observable<string[]>;
@@ -51,17 +54,10 @@ export class ListContainerComponent implements OnInit {
   moduleRank$: Observable<string[]>;
   beaconModule$: Observable<string>;
   displayRate$: Observable<DisplayRate>;
-  itemPrecision$: Observable<number>;
-  beltPrecision$: Observable<number>;
-  wagonPrecision$: Observable<number>;
-  factoryPrecision$: Observable<number>;
-  powerPrecision$: Observable<number>;
-  pollutionPrecision$: Observable<number>;
   beaconCount$: Observable<number>;
-  drillModule$: Observable<boolean>;
   inserterTarget$: Observable<InserterTarget>;
   inserterCapacity$: Observable<InserterCapacity>;
-  columns$: Observable<string[]>;
+  columns$: Observable<Preferences.ColumnsState>;
   modifiedIgnore$: Observable<boolean>;
   modifiedBelt$: Observable<boolean>;
   modifiedFactory$: Observable<boolean>;
@@ -69,96 +65,84 @@ export class ListContainerComponent implements OnInit {
 
   constructor(private store: Store<State>) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (!this.steps) {
-      this.steps$ = this.store.select(getSteps);
+      this.steps$ = this.store.select(Products.getSteps);
     }
     this.data$ = this.store.select(Recipes.getAdjustedDataset);
     this.itemSettings$ = this.store.select(Items.getItemSettings);
     this.recipeSettings$ = this.store.select(Recipes.getRecipeSettings);
     this.recipeRaw$ = this.store.select(Recipes.recipesState);
+    this.factories$ = this.store.select(Factories.getFactorySettings);
     this.beltSpeed$ = this.store.select(Settings.getBeltSpeed);
     this.disabledRecipes$ = this.store.select(Settings.getDisabledRecipes);
-    this.factoryRank$ = this.store.select(Settings.getFactoryRank);
-    this.moduleRank$ = this.store.select(Settings.getModuleRank);
-    this.beaconModule$ = this.store.select(Settings.getBeaconModule);
     this.displayRate$ = this.store.select(Settings.getDisplayRate);
-    this.itemPrecision$ = this.store.select(Settings.getItemPrecision);
-    this.beltPrecision$ = this.store.select(Settings.getBeltPrecision);
-    this.wagonPrecision$ = this.store.select(Settings.getWagonPrecision);
-    this.factoryPrecision$ = this.store.select(Settings.getFactoryPrecision);
-    this.powerPrecision$ = this.store.select(Settings.getPowerPrecision);
-    this.pollutionPrecision$ = this.store.select(
-      Settings.getPollutionPrecision
-    );
-    this.beaconCount$ = this.store.select(Settings.getBeaconCount);
-    this.drillModule$ = this.store.select(Settings.getDrillModule);
     this.inserterTarget$ = this.store.select(Settings.getInserterTarget);
     this.inserterCapacity$ = this.store.select(Settings.getInserterCapacity);
-    this.columns$ = this.store.select(Settings.getColumns);
+    this.columns$ = this.store.select(Preferences.getColumns);
     this.modifiedIgnore$ = this.store.select(Items.getContainsIgnore);
     this.modifiedBelt$ = this.store.select(Items.getContainsBelt);
     this.modifiedFactory$ = this.store.select(Recipes.getContainsFactory);
     this.modifiedBeacons$ = this.store.select(Recipes.getContainsBeacons);
   }
 
-  ignoreItem(value: string) {
-    this.store.dispatch(new Items.IgnoreAction(value));
+  ignoreItem(value: string): void {
+    this.store.dispatch(new Items.IgnoreItemAction(value));
   }
 
-  setBelt(data: DefaultIdPayload) {
+  setBelt(data: DefaultIdPayload): void {
     this.store.dispatch(new Items.SetBeltAction(data));
   }
 
-  setFactory(data: DefaultIdPayload) {
+  setFactory(data: DefaultIdPayload): void {
     this.store.dispatch(new Recipes.SetFactoryAction(data));
   }
 
-  setFactoryModules(data: DefaultIdPayload<string[]>) {
+  setFactoryModules(data: DefaultIdPayload<string[]>): void {
     this.store.dispatch(new Recipes.SetFactoryModulesAction(data));
   }
 
-  setBeaconCount(data: DefaultIdPayload<number>) {
+  setBeaconCount(data: DefaultIdPayload<number>): void {
     this.store.dispatch(new Recipes.SetBeaconCountAction(data));
   }
 
-  setBeacon(data: DefaultIdPayload) {
+  setBeacon(data: DefaultIdPayload): void {
     this.store.dispatch(new Recipes.SetBeaconAction(data));
   }
 
-  setBeaconModules(data: DefaultIdPayload<string[]>) {
+  setBeaconModules(data: DefaultIdPayload<string[]>): void {
     this.store.dispatch(new Recipes.SetBeaconModulesAction(data));
   }
 
-  setColumns(value: string[]) {
-    this.store.dispatch(new Settings.SetColumnsAction(value));
+  setColumns(value: Preferences.ColumnsState): void {
+    this.store.dispatch(new Preferences.SetColumnsAction(value));
   }
 
-  resetItem(value: string) {
-    this.store.dispatch(new Items.ResetAction(value));
+  resetItem(value: string): void {
+    this.store.dispatch(new Items.ResetItemAction(value));
   }
 
-  resetRecipe(value: string) {
-    this.store.dispatch(new Recipes.ResetAction(value));
+  resetRecipe(value: string): void {
+    this.store.dispatch(new Recipes.ResetRecipeAction(value));
   }
 
-  resetIgnore() {
+  resetIgnore(): void {
     this.store.dispatch(new Items.ResetIgnoreAction());
   }
 
-  resetBelt() {
+  resetBelt(): void {
     this.store.dispatch(new Items.ResetBeltAction());
   }
 
-  resetFactory() {
+  resetFactory(): void {
     this.store.dispatch(new Recipes.ResetFactoryAction());
   }
 
-  resetBeacons() {
+  resetBeacons(): void {
     this.store.dispatch(new Recipes.ResetBeaconsAction());
   }
 
-  setDisabledRecipes(value: DefaultPayload<string[]>) {
+  setDisabledRecipes(value: DefaultPayload<string[]>): void {
     this.store.dispatch(new Settings.SetDisabledRecipesAction(value));
   }
 }

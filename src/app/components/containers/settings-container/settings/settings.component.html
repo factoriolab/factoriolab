@@ -1,612 +1,480 @@
-<div class="flex tween">
-  <div class="label">Saved States</div>
-  <i
-    class="clickable material-icons"
-    title="Delete all settings"
-    (click)="clickResetSettings()"
-    >delete</i
-  >
-</div>
-<div class="states" *ngIf="!editState">
-  <select [ngModel]="state" (change)="setState($event)">
-    <option
-      *ngFor="let state of settings.states | keyvalue; trackBy: trackBy"
-      [value]="state.key"
-      [label]="state.key"
-    ></option>
-    <option
-      label="No state selected"
-      value=""
-      selected
-      disabled
-      hidden
-    ></option>
-  </select>
-  <i
-    *ngIf="hash"
-    class="clickable material-icons"
-    title="Name and save this state"
-    (click)="toggleEditState($event)"
-    >edit</i
-  >
-  <i
-    *ngIf="state && hash && settings.states[state] !== hash"
-    class="clickable material-icons"
-    title="Overwrite this saved state"
-    (click)="saveState.emit({ id: state, value: hash })"
-    >save</i
-  >
-  <i
-    *ngIf="state"
-    class="clickable material-icons"
-    title="Delete this saved state"
-    (click)="clickDeleteState($event)"
-    >delete</i
-  >
-</div>
-<div class="states" *ngIf="editState">
-  <input type="text" placeholder="Enter a name..." [(ngModel)]="state" />
-  <i
-    *ngIf="state && hash"
-    class="clickable material-icons"
-    title="Save this state"
-    (click)="clickSaveState($event)"
-    >save</i
-  >
-  <i
-    class="clickable material-icons"
-    title="Cancel"
-    (click)="toggleEditState($event)"
-    >close</i
-  >
-</div>
-<div class="label">Preset</div>
-<div class="field">
-  <select
-    id="settings-preset"
-    title="Select preset settings"
-    [ngModel]="settings.preset"
-    (change)="emitNumber(setPreset, $event)"
-  >
-    <option
-      label="Minimum"
-      title="Minimum belt and assembler, and no modules or beacons"
-      [value]="Preset.Minimum"
-    ></option>
-    <option
-      label="Modules"
-      title="Best belt and assembler with modules in factories, but no beacons"
-      [value]="Preset.Modules"
-    ></option>
-    <option
-      label="8 Beacons"
-      title="Best belt and assembler with modules in factories and 8 beacons per factory"
-      [value]="Preset.Beacon8"
-    ></option>
-    <option
-      label="12 Beacons"
-      title="Best belt and assembler with modules in factories and 12 beacons per factory"
-      [value]="Preset.Beacon12"
-    ></option>
-  </select>
-</div>
-<div class="flex tween">
-  <div class="label">Recipes</div>
-  <a
-    class="x-small"
-    href="https://github.com/factoriolab/factorio-lab/issues/new?assignees=&labels=mod+support&template=mod-request.md&title="
-    target="_blank"
-    >Request a mod</a
-  >
-</div>
-<div class="field">
-  <div>Base:</div>
-  <select
-    title="Select base game version"
-    [ngModel]="settings.baseId"
-    (change)="setBase.emit($event.target.value)"
-  >
-    <option *ngFor="let b of base" [value]="b.id" [label]="b.name"></option>
-  </select>
-</div>
-<div class="field" *ngIf="mods.length">
-  <button #btnMods (click)="openSelect = OpenSelect.Mods">
-    {{ settings.modIds.length }} Mod Set{{
-      settings.modIds.length === 1 ? '' : 's'
-    }}
-    Enabled
-  </button>
-  <lab-multiselect
-    *ngIf="openSelect === OpenSelect.Mods"
-    [header]="'Select Mod Sets'"
-    [enabledIds]="settings.modIds"
-    [options]="mods"
-    [parent]="btnMods"
-    (cancel)="openSelect = null"
-    (commit)="
-      openSelect = null;
-      setMods.emit({ value: $event, default: data.defaults.modIds })
-    "
-  ></lab-multiselect>
-</div>
-<div class="field">
-  <button #btnRecipes (click)="openSelect = OpenSelect.DisabledRecipes">
-    {{ settings.disabledRecipes.length }} Recipe{{
-      settings.disabledRecipes.length === 1 ? '' : 's'
-    }}
-    Disabled
-  </button>
-  <lab-toggle
-    *ngIf="openSelect === OpenSelect.DisabledRecipes"
-    [data]="data"
-    [disabledRecipes]="settings.disabledRecipes"
-    [parent]="btnRecipes"
-    (cancel)="openSelect = null"
-    (commit)="
-      openSelect = null;
-      setDisabledRecipes.emit({
-        value: $event,
-        default: data.defaults.disabledRecipes
-      })
-    "
-  >
-  </lab-toggle>
-</div>
-<div class="field">
-  <div class="flex option" (click)="setExpensive.emit(!settings.expensive)">
-    <div
-      id="settings-expensive"
-      title="Use expensive recipes"
-      class="material-icons"
+<div class="flex">
+  <h2 class="header">Settings</h2>
+  <div class="flex">
+    <button
+      class="dialog-button"
+      title="Delete all settings"
+      (click)="clickResetSettings()"
     >
-      {{ settings.expensive ? 'check_box' : 'check_box_outline_blank' }}
+      <i class="material-icons">delete</i>
+    </button>
+    <button class="dialog-button" (click)="closeSettings.emit()">
+      <i class="material-icons">close</i>
+    </button>
+  </div>
+</div>
+<div class="panel">
+  <div class="hole">
+    <div>
+      <div class="header">Saved states</div>
+      <div class="flex states">
+        <ng-container *ngIf="!editState; else stateInput">
+          <lab-options
+            title="Select saved state"
+            [selected]="state"
+            [options]="savedStates"
+            (selectId)="setState($event)"
+          ></lab-options>
+          <button
+            *ngIf="state"
+            title="Delete saved state"
+            (click)="clickRemoveState()"
+          >
+            <i class="material-icons">delete</i>
+          </button>
+          <button
+            *ngIf="hash"
+            title="Name and save state"
+            (click)="toggleEditState()"
+          >
+            <i class="material-icons">edit</i>
+          </button>
+        </ng-container>
+        <ng-template #stateInput>
+          <input
+            type="text"
+            placeholder="Enter a name..."
+            [(ngModel)]="tempState"
+          />
+          <button
+            *ngIf="tempState && hash"
+            title="Save state"
+            (click)="clickSaveState()"
+          >
+            <i class="material-icons">save</i>
+          </button>
+          <button title="Cancel" (click)="toggleEditState()">
+            <i class="material-icons">close</i>
+          </button>
+        </ng-template>
+      </div>
     </div>
-    <label for="settings-expensive" title="Use expensive recipes"
-      >Expensive</label
-    >
+  </div>
+  <div class="hole">
+    <div>
+      <div class="flex tween">
+        <div class="header">Recipes</div>
+        <a
+          class="small"
+          href="https://github.com/factoriolab/factorio-lab/issues/new?assignees=&labels=mod+support&template=mod-request.md&title="
+          target="_blank"
+          >Request a mod</a
+        >
+      </div>
+      <table class="fields">
+        <tr>
+          <td>Base set</td>
+          <td>
+            <lab-options
+              title="Select base recipe set"
+              [selected]="settings.baseId"
+              [options]="base"
+              (selectId)="setBase.emit($event)"
+            ></lab-options>
+          </td>
+        </tr>
+        <tr>
+          <td>Disabled</td>
+          <td>
+            <lab-toggle
+              [data]="data"
+              [selected]="settings.disabledRecipes"
+              (selectIds)="
+                setDisabledRecipes.emit({
+                  value: $event,
+                  default: data.defaults.disabledRecipes
+                })
+              "
+            >
+            </lab-toggle>
+          </td>
+        </tr>
+        <tr>
+          <td>Difficulty</td>
+          <td>
+            <lab-options
+              title="Select recipe difficulty"
+              [selected]="settings.expensive"
+              [options]="difficultyOptions"
+              (selectId)="setExpensive.emit($event)"
+            ></lab-options>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="hole">
+    <div>
+      <div class="header">Factory</div>
+      <table class="fields">
+        <tr>
+          <td>Preset</td>
+          <td>
+            <lab-options
+              title="Select preset factory"
+              [selected]="settings.preset"
+              [options]="PresetOptions"
+              (selectId)="setPreset.emit($event)"
+            ></lab-options>
+          </td>
+        </tr>
+      </table>
+      <table class="factories">
+        <ng-container
+          *ngFor="let f of factoryRows; let i = index; let last = last"
+        >
+          <tr *ngIf="factories.entities[f] as factory">
+            <td>
+              <ng-container *ngIf="!f">
+                <lab-select
+                  *ngIf="factoryOptions.length"
+                  header="Select a factory"
+                  [data]="data"
+                  [options]="factoryOptions"
+                  [data]="data"
+                  (selectId)="
+                    addFactory.emit({
+                      value: $event,
+                      default: data.defaults.factoryRank
+                    })
+                  "
+                >
+                  <button title="Add factory preference">
+                    <i class="material-icons">add</i>
+                  </button>
+                </lab-select>
+              </ng-container>
+              <button
+                *ngIf="f"
+                title="Remove factory preference"
+                (click)="
+                  removeFactory.emit({
+                    value: f,
+                    default: data.defaults.factoryRank
+                  })
+                "
+              >
+                <i class="material-icons">remove</i>
+              </button>
+            </td>
+            <td>
+              <lab-icon
+                *ngIf="f && !factoryOptions.length"
+                class="pad"
+                [iconId]="f"
+                [tooltip]="data.itemEntities[f].name"
+                [item]="data.itemEntities[f]"
+                [data]="data"
+              >
+              </lab-icon>
+              <lab-select
+                *ngIf="f && factoryOptions.length"
+                header="Select a factory"
+                [data]="data"
+                [selected]="f"
+                [options]="factoryOptions"
+                [data]="data"
+                (selectId)="
+                  setFactory.emit({
+                    id: f,
+                    value: $event,
+                    default: data.defaults.factoryRank
+                  })
+                "
+              >
+                <lab-icon
+                  class="button"
+                  [data]="data"
+                  [iconId]="f"
+                  [tooltip]="data.itemEntities[f].name"
+                  [item]="data.itemEntities[f]"
+                >
+                </lab-icon>
+              </lab-select>
+              <lab-icon
+                *ngIf="!f"
+                class="pad"
+                tooltip="Factory defaults"
+                iconId="production"
+                [data]="data"
+              ></lab-icon>
+            </td>
+            <td>
+              <ng-container *ngIf="factory.moduleRank">
+                <lab-ranker
+                  [data]="data"
+                  [selected]="factory.moduleRank"
+                  [options]="data.moduleIds"
+                  (selectIds)="
+                    setModuleRank.emit({
+                      id: f,
+                      value: $event
+                    })
+                  "
+                >
+                  <lab-icon
+                    class="button"
+                    tooltip="Module preferences"
+                    [data]="data"
+                    [iconId]="
+                      factory.moduleRank.length
+                        ? factory.moduleRank[0]
+                        : ItemId.Module
+                    "
+                    [text]="
+                      factory.moduleRank.length > 1
+                        ? factory.moduleRank.length
+                        : null
+                    "
+                  ></lab-icon>
+                </lab-ranker>
+              </ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="factory.beaconCount != null">
+                <input
+                  class="beacon"
+                  type="number"
+                  title="Default number of beacons"
+                  placeholder="# Beacons"
+                  min="0"
+                  step="1"
+                  data-test="lab-settings-beacons"
+                  [value]="factory.beaconCount"
+                  (input)="changeBeaconCount(f, $event)"
+                />
+              </ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="factory.beaconCount > 0">
+                <lab-icon
+                  class="pad"
+                  *ngIf="data.beaconIds.length === 1; else beaconPicker"
+                  [iconId]="factory.beacon"
+                  [data]="data"
+                ></lab-icon>
+                <ng-template #beaconPicker>
+                  <lab-select
+                    header="Select a beacon"
+                    [data]="data"
+                    [selected]="factory.beacon"
+                    [options]="data.beaconIds"
+                    [data]="data"
+                    (selectId)="setBeacon.emit({ id: f, value: $event })"
+                  >
+                    <lab-icon
+                      class="button"
+                      tooltip="Choose default beacon"
+                      [data]="data"
+                      [iconId]="factory.beacon"
+                    ></lab-icon>
+                  </lab-select>
+                </ng-template>
+              </ng-container>
+            </td>
+            <td>
+              <lab-select
+                *ngIf="factory.beaconCount > 0"
+                header="Select a module"
+                [data]="data"
+                [selected]="factory.beaconModule"
+                [options]="data.beaconModuleIds"
+                includeEmptyModule="true"
+                (selectId)="
+                  setBeaconModule.emit({
+                    id: f,
+                    value: $event
+                  })
+                "
+              >
+                <lab-icon
+                  class="button"
+                  tooltip="Beacon module"
+                  [data]="data"
+                  [iconId]="factory.beaconModule"
+                ></lab-icon>
+              </lab-select>
+            </td>
+            <td>
+              <button
+                *ngIf="i > 1"
+                title="Raise factory rank"
+                (click)="
+                  raiseFactory.emit({
+                    value: f,
+                    default: data.defaults.factoryRank
+                  })
+                "
+              >
+                <i class="material-icons">arrow_drop_up</i>
+              </button>
+            </td>
+          </tr>
+        </ng-container>
+      </table>
+      <table class="center">
+        <tr>
+          <td><div>Belt</div></td>
+          <td><div>Fuel</div></td>
+          <td><div>Pipe flow rate</div></td>
+        </tr>
+        <tr>
+          <td>
+            <lab-select
+              header="Select a belt"
+              [data]="data"
+              [selected]="settings.belt"
+              [options]="data.beltIds"
+              [displayRate]="settings.displayRate"
+              [data]="data"
+              (selectId)="
+                setBelt.emit({ value: $event, default: data.defaults.belt })
+              "
+            >
+              <lab-icon
+                class="button"
+                tooltip="Select default belt"
+                [data]="data"
+                [iconId]="settings.belt"
+              ></lab-icon>
+            </lab-select>
+          </td>
+          <td>
+            <lab-select
+              header="Select a fuel"
+              [data]="data"
+              [options]="sortedFuels"
+              [selected]="settings.fuel"
+              (selectId)="
+                setFuel.emit({ value: $event, default: data.defaults.fuel })
+              "
+            >
+              <lab-icon
+                class="button"
+                tooltip="Select fuel"
+                [iconId]="settings.fuel"
+                [data]="data"
+              ></lab-icon>
+            </lab-select>
+          </td>
+          <td>
+            <div>
+              <input
+                type="number"
+                title="Enter pipe flow rate"
+                placeholder="1500"
+                min="0"
+                step="1"
+                data-test="lab-settings-flow-rate"
+                [value]="settings.flowRate"
+                (input)="emitNumber(setFlowRate, $event)"
+              />
+              <div>
+                u/sec
+                <a
+                  href="https://wiki.factorio.com/Fluid_system#Pipelines"
+                  target="_blank"
+                  >Wiki</a
+                >
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <td>
+            Inserter target
+            <a
+              href="https://wiki.factorio.com/Inserters#Inserter_Throughput"
+              target="_blank"
+              >Wiki</a
+            >
+          </td>
+          <td>
+            <lab-options
+              title="Select inserter target"
+              [selected]="settings.inserterTarget"
+              [options]="InserterTargetOptions"
+              (selectId)="setInserterTarget.emit($event)"
+            ></lab-options>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="hole">
+    <div>
+      <div class="header">Bonuses</div>
+      <table>
+        <tr>
+          <td>Mining productivity</td>
+          <td class="right">
+            +
+            <input
+              type="number"
+              title="Enter mining productivity bonus"
+              placeholder="Mining productivity"
+              min="0"
+              step="10"
+              data-test="lab-settings-mining-bonus"
+              [value]="settings.miningBonus"
+              (input)="emitNumber(setMiningBonus, $event)"
+            />
+            %
+          </td>
+        </tr>
+        <tr>
+          <td>Research speed</td>
+          <td>
+            <lab-options
+              title="Select research speed bonus"
+              [selected]="settings.researchSpeed"
+              [options]="ResearchSpeedOptions"
+              (selectId)="setResearchSpeed.emit($event)"
+            ></lab-options>
+          </td>
+        </tr>
+        <tr>
+          <td>Inserter capacity</td>
+          <td>
+            <lab-options
+              title="Select inserter capacity bonus"
+              [selected]="settings.inserterCapacity"
+              [options]="InserterCapacityOptions"
+              (selectId)="setInserterCapacity.emit($event)"
+            ></lab-options>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="hole">
+    <div>
+      <div class="header">Display</div>
+      <table>
+        <tr>
+          <td>Display rates as</td>
+          <td>
+            <lab-options
+              title="Select display rate"
+              [selected]="settings.displayRate"
+              [options]="DisplayRateOptions"
+              (selectId)="setDisplayRate.emit($event)"
+            ></lab-options>
+          </td>
+        </tr>
+      </table>
+    </div>
   </div>
 </div>
-<div class="label">Factory</div>
-<div class="field">
-  <lab-icon
-    #btnFactory
-    class="clickable"
-    tooltip="Factory preferences"
-    [iconId]="
-      settings.factoryRank.length
-        ? settings.factoryRank[0]
-        : ItemId.AssemblingMachine1
-    "
-    [data]="data"
-    (click)="openSelect = OpenSelect.Factory"
-  ></lab-icon>
-  <lab-ranker
-    *ngIf="openSelect === OpenSelect.Factory"
-    [data]="data"
-    [rank]="settings.factoryRank"
-    [options]="data.factoryIds"
-    [parent]="btnFactory.element"
-    (cancel)="openSelect = null"
-    (commit)="
-      openSelect = null;
-      setFactoryRank.emit({ value: $event, default: data.defaults.factoryRank })
-    "
-  >
-  </lab-ranker>
-  <lab-icon
-    #btnModule
-    class="clickable"
-    tooltip="Module preferences"
-    [iconId]="
-      settings.moduleRank.length ? settings.moduleRank[0] : ItemId.Module
-    "
-    [data]="data"
-    (click)="openSelect = OpenSelect.Module"
-  ></lab-icon>
-  <lab-ranker
-    *ngIf="openSelect === OpenSelect.Module"
-    [data]="data"
-    [rank]="settings.moduleRank"
-    [options]="data.moduleIds"
-    [parent]="btnModule.element"
-    (cancel)="openSelect = null"
-    (commit)="
-      openSelect = null;
-      setModuleRank.emit({ value: $event, default: data.defaults.moduleRank })
-    "
-  >
-  </lab-ranker>
-  <div
-    class="flex clickable static"
-    (click)="setDrillModule.emit(!settings.drillModule)"
-  >
-    <lab-icon
-      [iconId]="ItemId.ElectricMiningDrill"
-      [data]="data"
-      tooltip="Toggle drill modules"
-      [scale]="true"
-    ></lab-icon>
-    <lab-icon
-      [iconId]="settings.drillModule ? ItemId.SpeedModule3 : ItemId.Module"
-      [data]="data"
-      tooltip="Toggle drill modules"
-    ></lab-icon>
-  </div>
-</div>
-<div class="field">
-  <lab-icon
-    *ngIf="data.beaconIds.length === 1"
-    class="clickable-size"
-    [iconId]="settings.beacon"
-    [data]="data"
-  ></lab-icon>
-  <lab-icon
-    #btnBeacon
-    class="clickable"
-    [class.hidden]="data.beaconIds.length === 1"
-    tooltip="Choose default beacon"
-    [iconId]="settings.beacon"
-    [data]="data"
-    (click)="openSelect = OpenSelect.Beacon"
-  ></lab-icon>
-  <lab-select
-    *ngIf="openSelect === OpenSelect.Beacon"
-    [data]="data"
-    [selectedId]="settings.beacon"
-    [options]="data.beaconIds"
-    [data]="data"
-    [parent]="btnBeacon.element"
-    (cancel)="openSelect = null"
-    (selectId)="
-      setBeacon.emit({ value: $event, default: data.defaults.beacon })
-    "
-  >
-  </lab-select>
-  <lab-icon
-    #btnBeaconModule
-    class="clickable"
-    tooltip="Beacon module"
-    [iconId]="settings.beaconModule"
-    [data]="data"
-    (click)="openSelect = OpenSelect.BeaconModule"
-  ></lab-icon>
-  <lab-select
-    *ngIf="openSelect === OpenSelect.BeaconModule"
-    [data]="data"
-    [selectedId]="settings.beaconModule"
-    [options]="data.beaconModuleIds"
-    [parent]="btnBeaconModule.element"
-    includeEmptyModule="true"
-    (cancel)="openSelect = null"
-    (selectId)="
-      setBeaconModule.emit({
-        value: $event,
-        default: data.defaults.beaconModule
-      })
-    "
-  >
-  </lab-select>
-  <input
-    id="settings-beacon-count"
-    type="number"
-    title="Enter default number of beacons"
-    placeholder="# Beacons"
-    min="0"
-    step="1"
-    [value]="settings.beaconCount"
-    (change)="changeBeaconCount($event)"
-  />
-</div>
-<div class="field">
-  <lab-icon
-    #btnBelt
-    class="clickable"
-    tooltip="Choose default belt"
-    [iconId]="settings.belt"
-    [data]="data"
-    (click)="openSelect = OpenSelect.Belt"
-  ></lab-icon>
-  <lab-select
-    *ngIf="openSelect === OpenSelect.Belt"
-    [data]="data"
-    [selectedId]="settings.belt"
-    [options]="data.beltIds"
-    [displayRate]="settings.displayRate"
-    [data]="data"
-    [parent]="btnBelt.element"
-    (cancel)="openSelect = null"
-    (selectId)="setBelt.emit({ value: $event, default: data.defaults.belt })"
-  >
-  </lab-select>
-  <lab-icon
-    #btnFuel
-    class="clickable"
-    tooltip="Choose fuel"
-    [iconId]="settings.fuel"
-    [data]="data"
-    (click)="openSelect = OpenSelect.Fuel"
-  ></lab-icon>
-  <lab-select
-    *ngIf="openSelect === OpenSelect.Fuel"
-    [data]="data"
-    [options]="sortedFuels"
-    [selectedId]="settings.fuel"
-    [parent]="btnFuel.element"
-    (cancel)="openSelect = null"
-    (selectId)="setFuel.emit({ value: $event, default: data.defaults.fuel })"
-  >
-  </lab-select>
-</div>
-<div class="field">
-  <lab-icon
-    [iconId]="ItemId.Pipe"
-    tooltip="Pipe flow rate"
-    [data]="data"
-  ></lab-icon>
-  <input
-    type="number"
-    title="Enter pipe flow rate"
-    placeholder="1500"
-    min="0"
-    step="1"
-    [value]="settings.flowRate"
-    (change)="emitNumber(setFlowRate, $event)"
-  />
-  <div>
-    #/sec
-    <a href="https://wiki.factorio.com/Fluid_system#Pipelines" target="_blank"
-      >Wiki</a
-    >
-  </div>
-</div>
-<div class="label">Display Rate</div>
-<div class="field">
-  <div class="flex option">
-    <input
-      id="settings-display-persecond"
-      title="Display rates per second"
-      type="radio"
-      name="displayRate"
-      [value]="DisplayRate.PerSecond"
-      [ngModel]="settings.displayRate"
-      (change)="setDisplayRate.emit(DisplayRate.PerSecond)"
-    />
-    <label for="settings-display-persecond" title="Display rates per second"
-      >#/sec</label
-    >
-  </div>
-  <div class="flex option">
-    <input
-      id="settings-display-perminute"
-      title="Display rates per minute"
-      type="radio"
-      name="displayRate"
-      [value]="DisplayRate.PerMinute"
-      [ngModel]="settings.displayRate"
-      (change)="setDisplayRate.emit(DisplayRate.PerMinute)"
-    />
-    <label for="settings-display-perminute" title="Display rates per minute"
-      >#/min</label
-    >
-  </div>
-  <div class="flex option">
-    <input
-      id="settings-display-perhour"
-      title="Display rates per hour"
-      type="radio"
-      name="displayRate"
-      [value]="DisplayRate.PerHour"
-      [ngModel]="settings.displayRate"
-      (change)="setDisplayRate.emit(DisplayRate.PerHour)"
-    />
-    <label for="settings-display-perhour" title="Display rates per hour"
-      >#/hr</label
-    >
-  </div>
-</div>
-<div class="label">Precision</div>
-<div class="field">
-  <lab-precision
-    [data]="data"
-    [iconId]="ItemId.IronPlate"
-    tooltip="Items precision"
-    [value]="settings.itemPrecision"
-    [default]="initial.itemPrecision"
-    (setValue)="setItemPrecision.emit($event)"
-  ></lab-precision>
-</div>
-<div class="field">
-  <lab-precision
-    [data]="data"
-    [iconId]="ItemId.TransportBelt"
-    tooltip="Belts precision"
-    [value]="settings.beltPrecision"
-    [default]="initial.beltPrecision"
-    (setValue)="setBeltPrecision.emit($event)"
-  ></lab-precision>
-</div>
-<div class="field">
-  <lab-precision
-    [data]="data"
-    [iconId]="ItemId.CargoWagon"
-    tooltip="Wagons precision"
-    [value]="settings.wagonPrecision"
-    [default]="initial.wagonPrecision"
-    (setValue)="setWagonPrecision.emit($event)"
-  ></lab-precision>
-</div>
-<div class="field">
-  <lab-precision
-    [data]="data"
-    [iconId]="ItemId.AssemblingMachine1"
-    tooltip="Factories precision"
-    [value]="settings.factoryPrecision"
-    [default]="initial.factoryPrecision"
-    (setValue)="setFactoryPrecision.emit($event)"
-  ></lab-precision>
-</div>
-<div class="field">
-  <lab-precision
-    [data]="data"
-    [iconId]="ItemId.Substation"
-    tooltip="Power precision"
-    [value]="settings.powerPrecision"
-    [default]="initial.powerPrecision"
-    (setValue)="setPowerPrecision.emit($event)"
-  ></lab-precision>
-</div>
-<div class="field">
-  <lab-precision
-    [data]="data"
-    [iconId]="ItemId.Steam"
-    tooltip="Pollution precision"
-    [value]="settings.pollutionPrecision"
-    [default]="initial.pollutionPrecision"
-    (setValue)="setPollutionPrecision.emit($event)"
-  ></lab-precision>
-</div>
-<div class="label">Bonuses</div>
-<div class="field">
-  <lab-icon
-    [iconId]="ItemId.ElectricMiningDrill"
-    [data]="data"
-    tooltip="Mining productivity bonus"
-    [scale]="true"
-  ></lab-icon>
-  <div class="field">
-    +
-    <input
-      type="number"
-      title="Enter mining productivity bonus"
-      placeholder="Mining productivity"
-      min="0"
-      step="10"
-      [value]="settings.miningBonus"
-      (change)="emitNumber(setMiningBonus, $event)"
-    />
-    %
-  </div>
-</div>
-<div class="field">
-  <lab-icon
-    [iconId]="ItemId.Lab"
-    [data]="data"
-    tooltip="Research speed bonus"
-    [scale]="true"
-  ></lab-icon>
-  <select
-    title="Select research speed bonus level"
-    [ngModel]="settings.researchSpeed"
-    (change)="emitNumber(setResearchSpeed, $event)"
-  >
-    <option label="No Research Bonus" [value]="ResearchSpeed.Speed0"></option>
-    <option label="Research Speed 1" [value]="ResearchSpeed.Speed1"></option>
-    <option label="Research Speed 2" [value]="ResearchSpeed.Speed2"></option>
-    <option label="Research Speed 3" [value]="ResearchSpeed.Speed3"></option>
-    <option label="Research Speed 4" [value]="ResearchSpeed.Speed4"></option>
-    <option label="Research Speed 5" [value]="ResearchSpeed.Speed5"></option>
-    <option label="Research Speed 6" [value]="ResearchSpeed.Speed6"></option>
-  </select>
-</div>
-<div class="field">
-  <lab-icon
-    [iconId]="ItemId.Inserter"
-    [data]="data"
-    tooltip="Inserter capacity bonus"
-    [scale]="true"
-  ></lab-icon>
-  <select
-    title="Select inserter capacity bonus level"
-    [ngModel]="settings.inserterCapacity"
-    (change)="emitNumber(setInserterCapacity, $event)"
-  >
-    <option
-      label="No Capacity Bonus"
-      [value]="InserterCapacity.Capacity0"
-    ></option>
-    <option
-      label="Capacity Bonus 2"
-      [value]="InserterCapacity.Capacity2"
-    ></option>
-    <option
-      label="Capacity Bonus 7"
-      [value]="InserterCapacity.Capacity7"
-    ></option>
-  </select>
-</div>
-<div class="label">Inserter Target</div>
-<div class="field">
-  <select
-    title="Select inserter target"
-    [ngModel]="settings.inserterTarget"
-    (change)="emitNumber(setInserterTarget, $event)"
-  >
-    <option label="Chest" [value]="InserterTarget.Chest"></option>
-    <option
-      label="Express Transport Belt"
-      [value]="InserterTarget.ExpressTransportBelt"
-    ></option>
-    <option
-      label="Fast Transport Belt"
-      [value]="InserterTarget.FastTransportBelt"
-    ></option>
-    <option
-      label="Transport Belt"
-      [value]="InserterTarget.TransportBelt"
-    ></option>
-  </select>
-  <a
-    href="https://wiki.factorio.com/Inserters#Inserter_Throughput"
-    target="_blank"
-    >Wiki</a
-  >
-</div>
-<div class="label">User Preferences</div>
-<table class="center">
-  <tr>
-    <td>Sort Steps:</td>
-    <td>
-      <select
-        id="settings-sort-select"
-        title="Set sort option"
-        [ngModel]="settings.sort"
-        (change)="emitNumber(setSort, $event)"
-      >
-        <option label="Depth First" [value]="Sort.DepthFirst"></option>
-        <option label="Breadth First" [value]="Sort.BreadthFirst"></option>
-      </select>
-    </td>
-  </tr>
-  <tr>
-    <td>Flow Link Value:</td>
-    <td>
-      <select
-        id="settings-link-value"
-        title="Set flow diagram link weight"
-        [ngModel]="settings.linkValue"
-        (change)="emitNumber(setLinkValue, $event)"
-      >
-        <option label="None" [value]="LinkValue.None"></option>
-        <option label="Percent" [value]="LinkValue.Percent"></option>
-        <option label="Items" [value]="LinkValue.Items"></option>
-        <option label="Belts" [value]="LinkValue.Belts"></option>
-        <option label="Wagons" [value]="LinkValue.Wagons"></option>
-        <option label="Factories" [value]="LinkValue.Factories"></option>
-      </select>
-    </td>
-  </tr>
-  <tr>
-    <td>Theme:</td>
-    <td>
-      <select
-        id="settings-theme-select"
-        title="Choose color theme"
-        [ngModel]="settings.theme"
-        (change)="emitString(setTheme, $event)"
-      >
-        <option label="Dark Mode" [value]="Theme.DarkMode"></option>
-        <option label="Light Mode" [value]="Theme.LightMode"></option>
-      </select>
-    </td>
-  </tr>
-</table>

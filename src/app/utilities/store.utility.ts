@@ -1,22 +1,30 @@
-import { DefaultPayload, DefaultIdPayload } from '~/models';
+import { DefaultPayload, DefaultIdPayload, IdPayload } from '~/models';
 
 export class StoreUtility {
-  static rankEquals<T extends number | string>(a: T[], b: T[]) {
+  static rankEquals<T extends number | string>(a: T[], b: T[]): boolean {
     return a.length === b.length && a.every((v, i) => v === b[i]);
   }
 
-  static arrayEquals<T extends number | string>(a: T[], b: T[]) {
+  static arrayEquals<T extends number | string>(a: T[], b: T[]): boolean {
     return this.rankEquals([...a].sort(), [...b].sort());
   }
 
-  static payloadEquals<T>(payload: DefaultIdPayload<T>) {
+  static payloadEquals<T>(payload: DefaultIdPayload<T>, rank = false): boolean {
     return Array.isArray(payload.value) && Array.isArray(payload.default)
-      ? this.arrayEquals(payload.value, payload.default)
+      ? rank
+        ? this.rankEquals(
+            payload.value as (number | string)[],
+            payload.default as (number | string)[]
+          )
+        : this.arrayEquals(
+            payload.value as (number | string)[],
+            payload.default as (number | string)[]
+          )
       : payload.value === payload.default;
   }
 
   /** Resets a passed fields of the state */
-  static resetFields<T>(state: T, fields: string[], id: string = null) {
+  static resetFields<T>(state: T, fields: string[], id: string = null): T {
     // Spread into new state
     let newState = { ...state };
     for (const field of fields) {
@@ -30,7 +38,7 @@ export class StoreUtility {
     // Spread into new state
     const newState = { ...state };
     for (const i of Object.keys(newState).filter(
-      (j) => (!id || id === j) && newState[j][field] != null
+      (j) => (!id || id === j) && newState[j][field] !== undefined
     )) {
       if (Object.keys(newState[i]).length === 1) {
         delete newState[i];
@@ -46,44 +54,62 @@ export class StoreUtility {
   static compareReset<T, P>(
     state: T,
     field: string,
-    payload: DefaultIdPayload<P>
+    payload: DefaultIdPayload<P>,
+    rank = false
   ): T {
     // Spread into new state
-    const newState = { ...state };
-    if (this.payloadEquals(payload)) {
+    if (this.payloadEquals(payload, rank)) {
       // Resetting to null
-      if (newState[payload.id] != null) {
+      const newState = { ...state };
+      if (newState[payload.id] !== undefined) {
         newState[payload.id] = { ...newState[payload.id] };
-        if (newState[payload.id][field] != null) {
+        if (newState[payload.id][field] !== undefined) {
           delete newState[payload.id][field];
         }
         if (Object.keys(newState[payload.id]).length === 0) {
           delete newState[payload.id];
         }
       }
+      return newState;
     } else {
       // Setting field
-      newState[payload.id] = {
-        ...newState[payload.id],
-        ...{ [field]: payload.value },
-      };
+      return this.assignValue(state, field, payload);
     }
-    return newState;
   }
 
-  static compareValue<T>(payload: DefaultPayload<T>) {
+  static assignValue<T, P>(state: T, field: string, payload: IdPayload<P>): T {
+    return {
+      ...state,
+      ...{
+        [payload.id]: { ...state[payload.id], ...{ [field]: payload.value } },
+      },
+    };
+  }
+
+  static compareValue<T>(payload: DefaultPayload<T>): T {
     return payload.value === payload.default ? null : payload.value;
   }
 
-  static compareValues(payload: DefaultPayload<string[]>) {
+  static compareValues(payload: DefaultPayload<string[]>): string[] {
     return this.arrayEquals(payload.value, payload.default)
       ? null
       : payload.value;
   }
 
-  static compareRank(payload: DefaultPayload<string[]>) {
-    return this.rankEquals(payload.value, payload.default)
-      ? null
-      : payload.value;
+  static compareRank(value: string[], def: string[]): string[] {
+    return this.rankEquals(value, def) ? null : value;
+  }
+
+  static compareResetDefault<T, P>(
+    state: T,
+    field: string,
+    payload: IdPayload<P>,
+    rank = false
+  ): T {
+    const def: DefaultIdPayload<P> = {
+      ...payload,
+      ...{ default: (payload.id && state['']?.[field]) || null },
+    };
+    return this.compareReset(state, field, def, rank);
   }
 }

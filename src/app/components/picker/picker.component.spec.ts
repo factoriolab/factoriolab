@@ -1,7 +1,7 @@
 import { ViewChild, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Mocks, TestUtility } from 'src/tests';
+import { Mocks, CategoryId, ItemId } from 'src/tests';
 import { Dataset } from '~/models';
 import { IconComponent } from '../icon/icon.component';
 import { PickerComponent } from './picker.component';
@@ -11,22 +11,18 @@ import { PickerComponent } from './picker.component';
   template: `
     <lab-picker
       [data]="data"
-      [categoryId]="categoryId"
-      [itemId]="itemId"
-      (cancel)="cancel()"
-      (selectTab)="selectTab($event)"
-      (selectItem)="selectItem($event)"
+      [selected]="selected"
+      (selectId)="selectId($event)"
     ></lab-picker>
   `,
 })
 class TestPickerComponent {
   @ViewChild(PickerComponent) child: PickerComponent;
   data: Dataset = Mocks.Data;
-  categoryId: string = Mocks.CategoryId;
-  itemId: string = Mocks.Item1.id;
-  cancel() {}
-  selectTab(data) {}
-  selectItem(data) {}
+  selected: string = null;
+  cancel(): void {}
+  selectTab(data): void {}
+  selectId(data): void {}
 }
 
 describe('PickerComponent', () => {
@@ -34,46 +30,39 @@ describe('PickerComponent', () => {
   let fixture: ComponentFixture<TestPickerComponent>;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [IconComponent, PickerComponent, TestPickerComponent],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(TestPickerComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TestPickerComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should cancel when clicked away', () => {
-    spyOn(component, 'cancel');
-    component.child.opening = false;
-    document.body.click();
-    expect(component.cancel).toHaveBeenCalled();
-  });
+  describe('setTab', () => {
+    it('should do nothing if data is falsy', () => {
+      component.child.tab = null;
+      component.data = null;
+      fixture.detectChanges();
+      expect(component.child.tab).toBeNull();
+    });
 
-  it('should not cancel when clicked on', () => {
-    spyOn(component, 'cancel');
-    component.child.opening = false;
-    TestUtility.clickSelector(fixture, 'lab-picker');
-    expect(component.cancel).not.toHaveBeenCalled();
-  });
+    it('should set to first category if selected is falsy', () => {
+      component.selected = null;
+      fixture.detectChanges();
+      expect(component.child.tab).toEqual(CategoryId.Logistics);
+    });
 
-  it('should select a new item', () => {
-    spyOn(component, 'selectItem');
-    TestUtility.clickSelector(fixture, '.item > lab-icon', 1);
-    fixture.detectChanges();
-    expect(component.selectItem).toHaveBeenCalledWith(Mocks.Item2.id);
-  });
-
-  it('should cancel when the same item is selected', () => {
-    spyOn(component, 'cancel');
-    TestUtility.clickSelector(fixture, '.item lab-icon', 0);
-    fixture.detectChanges();
-    expect(component.cancel).toHaveBeenCalled();
+    it('should set to a matching category', () => {
+      component.selected = ItemId.CopperCable;
+      fixture.detectChanges();
+      expect(component.child.tab).toEqual(CategoryId.Intermediate);
+    });
   });
 });

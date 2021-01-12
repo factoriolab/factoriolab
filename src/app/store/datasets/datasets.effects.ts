@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { switchMap, map, tap } from 'rxjs/operators';
 
 import { ModData, Entities } from '~/models';
 import { RouterService } from '~/services/router.service';
+import { BrowserUtility } from '~/utilities';
 import { State } from '..';
-import { AppActionType, AppLoadAction } from '../app.actions';
+import * as App from '../app.actions';
 import { ResetAction } from '../products';
 import * as Settings from '../settings';
 import { LoadModAction, DatasetsActionType } from './datasets.actions';
@@ -24,16 +26,12 @@ export class DatasetsEffects {
 
   @Effect()
   appLoad$ = this.actions$.pipe(
-    ofType(AppActionType.LOAD),
-    switchMap((a: AppLoadAction) => {
+    ofType(App.AppActionType.LOAD),
+    switchMap((a: App.LoadAction) => {
       const id =
         a.payload.settingsState?.baseId || Settings.initialSettingsState.baseId;
       return this.requestData(id).pipe(
-        tap((value) =>
-          this.loadModsForBase(
-            a.payload.settingsState?.modIds || value.defaults.modIds
-          )
-        ),
+        tap((value) => this.loadModsForBase(value.defaults.modIds)),
         tap((value) => {
           if (!a.payload.productsState) {
             this.router.unzipping = true;
@@ -44,6 +42,23 @@ export class DatasetsEffects {
         map((value) => new LoadModAction({ id, value }))
       );
     })
+  );
+
+  @Effect()
+  appReset$ = this.actions$.pipe(
+    ofType(App.AppActionType.RESET),
+    map(() => Settings.initialSettingsState.baseId),
+    switchMap((id: string) =>
+      this.cache[id]
+        ? [new ResetAction(this.cache[id].items[0].id)]
+        : this.requestData(id).pipe(
+            tap((value) => this.loadModsForBase(value.defaults.modIds)),
+            switchMap((value) => [
+              new ResetAction(value.items[0].id),
+              new LoadModAction({ id, value }),
+            ])
+          )
+    )
   );
 
   @Effect()
@@ -62,7 +77,7 @@ export class DatasetsEffects {
     )
   );
 
-  loadModsForBase(modIds: string[]) {
+  loadModsForBase(modIds: string[]): void {
     for (const id of modIds.filter((m) => !this.cache[m])) {
       this.requestData(id).subscribe((value) => {
         this.store.dispatch(new LoadModAction({ id, value }));
@@ -70,10 +85,25 @@ export class DatasetsEffects {
     }
   }
 
-  requestData(id: string) {
+  requestData(id: string): Observable<ModData> {
     return this.http
       .get(`data/${id}/data.json`)
       .pipe(map((response) => response as ModData));
+  }
+
+  load(hash: string, stored: State, initial: Settings.SettingsState): void {
+    if (!hash) {
+      const id = stored?.settingsState?.baseId || initial.baseId;
+      this.requestData(id).subscribe((value) => {
+        this.router.unzipping = true;
+        this.loadModsForBase(value.defaults.modIds);
+        if (!stored?.productsState) {
+          this.store.dispatch(new ResetAction(value.items[0].id));
+        }
+        this.store.dispatch(new LoadModAction({ id, value }));
+        this.router.unzipping = false;
+      });
+    }
   }
 
   constructor(
@@ -82,15 +112,10 @@ export class DatasetsEffects {
     private store: Store<State>,
     private router: RouterService
   ) {
-    if (!location.hash) {
-      const id = Settings.storedSettingsState.baseId;
-      this.requestData(id).subscribe((value) => {
-        this.router.unzipping = true;
-        this.loadModsForBase(value.defaults.modIds);
-        this.store.dispatch(new ResetAction(value.items[0].id));
-        this.store.dispatch(new LoadModAction({ id, value }));
-        this.router.unzipping = false;
-      });
-    }
+    this.load(
+      BrowserUtility.hash,
+      BrowserUtility.storedState,
+      Settings.initialSettingsState
+    );
   }
 }

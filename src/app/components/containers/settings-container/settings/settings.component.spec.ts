@@ -4,10 +4,21 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { Mocks, TestUtility, ElementId } from 'src/tests';
-import { IconComponent, PrecisionComponent } from '~/components';
-import { Theme } from '~/models';
+import { Mocks, TestUtility } from 'src/tests';
+import {
+  IconComponent,
+  OptionsComponent,
+  RankerComponent,
+  SelectComponent,
+  ToggleComponent,
+} from '~/components';
 import { SettingsComponent } from './settings.component';
+
+enum DataTest {
+  Beacons = 'lab-settings-beacons',
+  FlowRate = 'lab-settings-flow-rate',
+  MiningBonus = 'lab-settings-mining-bonus',
+}
 
 @Component({
   selector: 'lab-test-settings',
@@ -15,31 +26,33 @@ import { SettingsComponent } from './settings.component';
     <lab-settings
       [data]="data"
       [base]="base"
-      [mods]="mods"
+      [factories]="factories"
       [settings]="settings"
+      [preferences]="preferences"
+      (resetSettings)="resetSettings()"
+      (closeSettings)="closeSettings()"
       (saveState)="saveState($event)"
-      (deleteState)="deleteState($event)"
+      (removeState)="removeState($event)"
       (setPreset)="setPreset($event)"
       (setBase)="setBase($event)"
-      (setMods)="setMods($event)"
+      (setDisabledRecipes)="setDisabledRecipes($event)"
+      (setExpensive)="setExpensive($event)"
+      (addFactory)="addFactory($event)"
+      (removeFactory)="removeFactory($event)"
+      (raiseFactory)="raiseFactory($event)"
+      (setFactory)="setFactory($event)"
+      (setModuleRank)="setModuleRank($event)"
+      (setBeaconCount)="setBeaconCount($event)"
+      (setBeacon)="setBeacon($event)"
+      (setBeaconModule)="setBeaconModule($event)"
       (setBelt)="setBelt($event)"
       (setFuel)="setFuel($event)"
-      (setDisabledRecipes)="setDisabledRecipes($event)"
-      (setFactoryRank)="setFactoryRank($event)"
-      (setModuleRank)="setModuleRank($event)"
-      (setBeaconModule)="setBeaconModule($event)"
-      (setDisplayRate)="setDisplayRate($event)"
-      (setItemPrecision)="setItemPrecision($event)"
-      (setBeltPrecision)="setBeltPrecision($event)"
-      (setFactoryPrecision)="setFactoryPrecision($event)"
-      (setBeaconCount)="setBeaconCount($event)"
-      (setDrillModule)="setDrillModule($event)"
+      (setFlowRate)="setFlowRate($event)"
       (setMiningBonus)="setMiningBonus($event)"
       (setResearchSpeed)="setResearchSpeed($event)"
-      (setFlowRate)="setFlowRate($event)"
-      (setExpensive)="setExpensive($event)"
-      (setTheme)="setTheme($event)"
-      (resetSettings)="resetSettings($event)"
+      (setInserterTarget)="setInserterTarget($event)"
+      (setInserterCapacity)="setInserterCapacity($event)"
+      (setDisplayRate)="setDisplayRate($event)"
     >
     </lab-settings>
   `,
@@ -48,31 +61,33 @@ class TestSettingsComponent {
   @ViewChild(SettingsComponent) child: SettingsComponent;
   data = Mocks.Data;
   base = Mocks.Raw.base;
-  mods = Mocks.Raw.mods;
+  factories = Mocks.FactorySettingsInitial;
   settings = Mocks.SettingsState1;
-  saveState(data) {}
-  deleteState(data) {}
-  setPreset(data) {}
-  setBase(data) {}
-  setMods(data) {}
-  setBelt(data) {}
-  setFuel(data) {}
-  setDisabledRecipes(data) {}
-  setFactoryRank(data) {}
-  setModuleRank(data) {}
-  setBeaconModule(data) {}
-  setDisplayRate(data) {}
-  setItemPrecision(data) {}
-  setBeltPrecision(data) {}
-  setFactoryPrecision(data) {}
-  setBeaconCount(data) {}
-  setDrillModule(data) {}
-  setMiningBonus(data) {}
-  setResearchSpeed(data) {}
-  setFlowRate(data) {}
-  setExpensive(data) {}
-  setTheme(data) {}
-  resetSettings() {}
+  preferences = Mocks.Preferences;
+  resetSettings(): void {}
+  closeSettings(): void {}
+  saveState(data): void {}
+  removeState(data): void {}
+  setPreset(data): void {}
+  setBase(data): void {}
+  setDisabledRecipes(data): void {}
+  setExpensive(data): void {}
+  addFactory(data): void {}
+  removeFactory(data): void {}
+  raiseFactory(data): void {}
+  setFactory(data): void {}
+  setModuleRank(data): void {}
+  setBeaconCount(data): void {}
+  setBeacon(data): void {}
+  setBeaconModule(data): void {}
+  setBelt(data): void {}
+  setFuel(data): void {}
+  setFlowRate(data): void {}
+  setMiningBonus(data): void {}
+  setResearchSpeed(data): void {}
+  setInserterTarget(data): void {}
+  setInserterCapacity(data): void {}
+  setDisplayRate(data): void {}
 }
 
 describe('SettingsComponent', () => {
@@ -83,11 +98,14 @@ describe('SettingsComponent', () => {
   const value = 'value';
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [FormsModule, RouterTestingModule],
       declarations: [
         IconComponent,
-        PrecisionComponent,
+        OptionsComponent,
+        RankerComponent,
+        SelectComponent,
+        ToggleComponent,
         SettingsComponent,
         TestSettingsComponent,
       ],
@@ -115,14 +133,28 @@ describe('SettingsComponent', () => {
     expect(component.child.sortedFuels).not.toEqual(Mocks.Data.fuelIds);
   });
 
-  describe('hash', () => {
-    it('should handle no hash in url', () => {
-      expect(component.child.hash).toEqual('');
+  describe('factoryRows', () => {
+    it('should add empty string to list of ids', () => {
+      expect(component.child.factoryRows).toEqual([
+        '',
+        ...Mocks.FactorySettingsInitial.ids,
+      ]);
     });
+  });
 
-    it('should strip the hash character off the hash', () => {
-      location.hash = 'test';
-      expect(component.child.hash).toEqual('test');
+  describe('factoryOptions', () => {
+    it('should filter for factories that have not been added', () => {
+      const result = component.child.factoryOptions;
+      expect(result.length).toBeLessThan(component.data.factoryIds.length);
+      expect(result.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('savedStates', () => {
+    it('should map saved states to an array of options', () => {
+      expect(component.child.savedStates).toEqual([
+        { id: 'name', name: 'name' },
+      ]);
     });
   });
 
@@ -132,14 +164,9 @@ describe('SettingsComponent', () => {
     });
 
     it('should set state to matching saved state', () => {
-      location.hash = value;
-      component.settings = {
-        ...Mocks.SettingsState1,
-        ...{ states: { [id]: value } },
-      };
-      fixture.detectChanges();
+      spyOnProperty(component.child, 'hash').and.returnValue('hash');
       component.child.ngOnInit();
-      expect(component.child.state).toEqual(id);
+      expect(component.child.state).toEqual('name');
     });
 
     it('should set up subscription to router', () => {
@@ -155,153 +182,91 @@ describe('SettingsComponent', () => {
 
   describe('scroll', () => {
     it('should detect changes on scroll', () => {
-      const ref = 'ref';
-      spyOn(component.child[ref], 'detectChanges');
+      spyOn(component.child.ref, 'detectChanges');
       component.child.scroll();
-      expect(component.child[ref].detectChanges).toHaveBeenCalled();
+      expect(component.child.ref.detectChanges).toHaveBeenCalled();
     });
   });
 
   describe('trackBy', () => {
     it('should return the key of the keyvalue', () => {
-      expect(component.child.trackBy({ key: 'key', value: 'value' })).toEqual(
-        'key'
-      );
+      expect(component.child.trackBy({ key: id, value })).toEqual(id);
     });
   });
 
   describe('changeBeaconCount', () => {
     it('should emit beacon count', () => {
       spyOn(component, 'setBeaconCount');
-      TestUtility.selectId(fixture, ElementId.SettingsBeaconCount, '3');
+      TestUtility.setTextDt(fixture, DataTest.Beacons, '3');
       fixture.detectChanges();
       expect(component.setBeaconCount).toHaveBeenCalledWith({
+        id: '',
         value: 3,
-        default: 8,
       });
     });
   });
 
   describe('emitNumber', () => {
-    it('should emit numeric settings', () => {
-      spyOn(component, 'setPreset');
-      TestUtility.selectId(fixture, ElementId.SettingsPreset, '2');
+    it('should emit flow rate', () => {
+      spyOn(component, 'setFlowRate');
+      TestUtility.setTextDt(fixture, DataTest.FlowRate, '1000');
       fixture.detectChanges();
-      expect(component.setPreset).toHaveBeenCalledWith(2);
+      expect(component.setFlowRate).toHaveBeenCalledWith(1000);
     });
 
-    it('should ignore invalid numeric events', () => {
-      spyOn(component, 'setPreset');
-      const event = { target: {} };
-      component.child.emitNumber(component.child.setPreset, event as any);
+    it('should emit mining bonus', () => {
+      spyOn(component, 'setMiningBonus');
+      TestUtility.setTextDt(fixture, DataTest.MiningBonus, '100');
       fixture.detectChanges();
-      expect(component.setPreset).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('emitString', () => {
-    it('should emit other truthy settings', () => {
-      spyOn(component, 'setTheme');
-      TestUtility.selectId(
-        fixture,
-        ElementId.SettingsThemeSelect,
-        Theme.LightMode
-      );
-      fixture.detectChanges();
-      expect(component.setTheme).toHaveBeenCalledWith(Theme.LightMode);
-    });
-
-    it('should ignore falsy event values', () => {
-      spyOn(component, 'setTheme');
-      const event = { target: {} };
-      component.child.emitString(component.child.setTheme, event as any);
-      fixture.detectChanges();
-      expect(component.setTheme).not.toHaveBeenCalled();
+      expect(component.setMiningBonus).toHaveBeenCalledWith(100);
     });
   });
 
   describe('setState', () => {
     it('should ignore falsy values', () => {
       spyOn(router, 'navigate');
-      const event: any = { target: { value: null } };
-      component.child.setState(event);
+      component.child.setState(null);
       expect(router.navigate).not.toHaveBeenCalled();
     });
 
     it('should call the router to navigate', () => {
       spyOn(router, 'navigate');
-      component.settings = {
-        ...Mocks.SettingsState1,
-        ...{ states: { [id]: value } },
-      };
-      fixture.detectChanges();
-      const event: any = { target: { value: id } };
-      component.child.setState(event);
+      component.child.setState('name');
+      expect(component.child.state).toEqual('name');
       expect(router.navigate).toHaveBeenCalledWith([], {
-        fragment: value,
+        fragment: 'hash',
       });
     });
   });
 
   describe('clickSaveState', () => {
-    const event: any = { stopPropagation: () => {} };
-
     it('should emit to save the state', () => {
       spyOn(component, 'saveState');
-      component.child.state = id;
-      location.hash = value;
-      component.child.clickSaveState(event);
-      expect(component.saveState).toHaveBeenCalledWith({ id, value });
-    });
-
-    it('should set editState to false', () => {
+      component.child.tempState = id;
       component.child.editState = true;
-      component.child.clickSaveState(event);
+      spyOnProperty(component.child, 'hash').and.returnValue(value);
+      component.child.clickSaveState();
+      expect(component.saveState).toHaveBeenCalledWith({ id, value });
       expect(component.child.editState).toBeFalse();
-    });
-
-    it('should stop propagation', () => {
-      spyOn(event, 'stopPropagation');
-      component.child.clickSaveState(event);
-      expect(event.stopPropagation).toHaveBeenCalled();
     });
   });
 
-  describe('clickDeleteState', () => {
-    const event: any = { stopPropagation: () => {} };
-
-    it('should emit to delete the state', () => {
-      spyOn(component, 'deleteState');
+  describe('clickRemoveState', () => {
+    it('should emit to remove the state', () => {
+      spyOn(component, 'removeState');
       component.child.state = id;
-      component.child.clickDeleteState(event);
-      expect(component.deleteState).toHaveBeenCalledWith(id);
-    });
-
-    it('should set state to empty string', () => {
       component.child.state = id;
-      component.child.clickDeleteState(event);
+      component.child.clickRemoveState();
+      expect(component.removeState).toHaveBeenCalledWith(id);
       expect(component.child.state).toEqual('');
-    });
-
-    it('should stop propagation', () => {
-      spyOn(event, 'stopPropagation');
-      component.child.clickDeleteState(event);
-      expect(event.stopPropagation).toHaveBeenCalled();
     });
   });
 
   describe('toggleEditState', () => {
-    const event: any = { stopPropagation: () => {} };
-
     it('should toggle the edit state', () => {
-      component.child.toggleEditState(event);
+      component.child.toggleEditState();
       expect(component.child.editState).toBeTrue();
-    });
-
-    it('should stop propagation', () => {
-      spyOn(event, 'stopPropagation');
-      component.child.toggleEditState(event);
-      expect(event.stopPropagation).toHaveBeenCalled();
+      expect(component.child.tempState).toEqual(component.child.state);
     });
   });
 

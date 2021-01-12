@@ -1,7 +1,5 @@
 import {
   Component,
-  ElementRef,
-  HostListener,
   Input,
   Output,
   EventEmitter,
@@ -9,6 +7,7 @@ import {
 } from '@angular/core';
 
 import { Dataset } from '~/models';
+import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
   selector: 'lab-picker',
@@ -16,30 +15,37 @@ import { Dataset } from '~/models';
   styleUrls: ['./picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PickerComponent {
-  @Input() data: Dataset;
-  @Input() categoryId: string;
-  @Input() itemId: string;
-
-  @Output() cancel = new EventEmitter();
-  @Output() selectTab = new EventEmitter<string>();
-  @Output() selectItem = new EventEmitter<string>();
-
-  opening = true;
-
-  constructor(private element: ElementRef) {}
-
-  @HostListener('document:click', ['$event'])
-  click(event: MouseEvent) {
-    if (this.opening) {
-      this.opening = false;
-    } else if (!this.element.nativeElement.contains(event.target)) {
-      this.cancel.emit();
-    }
+export class PickerComponent extends DialogContainerComponent {
+  _data: Dataset;
+  get data(): Dataset {
+    return this._data;
+  }
+  @Input() set data(value: Dataset) {
+    this._data = value;
+    this.setTab();
+  }
+  _selected: string;
+  get selected(): string {
+    return this._selected;
+  }
+  @Input() set selected(value: string) {
+    this._selected = value;
+    this.setTab();
   }
 
-  clickItem(id: string) {
-    this.selectItem.emit(id);
-    this.cancel.emit();
+  @Output() selectId = new EventEmitter<string>();
+
+  tab: string;
+
+  constructor() {
+    super();
+  }
+
+  setTab(): void {
+    if (this.data) {
+      this.tab =
+        this.data.itemEntities[this.selected]?.category ||
+        this.data.categoryIds[0];
+    }
   }
 }

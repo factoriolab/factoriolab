@@ -1,9 +1,11 @@
 import { Rational } from './rational';
 
+export const DEFAULT_PRECISION = 1;
 export const WAGON_STACKS = new Rational(BigInt(40));
 export const WAGON_FLUID = new Rational(BigInt(25000));
 export const MIN_LINK_VALUE = 1e-10;
-export const SETTINGS_KEY = 'factoriolab-settings';
+export const STATE_KEY = 'state';
+export const NONE = 'None';
 export const ERROR_SIMPLEX = `No solution found. Check your disabled recipes to ensure a solution is feasible.
 
 E.G.: If one iron plate requires two gears, and one gear requires two iron plates, a solution for iron plates is not feasible.`;

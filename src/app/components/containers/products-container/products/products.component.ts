@@ -13,18 +13,11 @@ import {
   Dataset,
   Rational,
   Entities,
+  RateTypeOptions,
+  DisplayRate,
+  IdType,
 } from '~/models';
 import { RecipeUtility } from '~/utilities';
-
-export enum ProductEditType {
-  Product,
-  Recipe,
-}
-
-export interface ProductEdit {
-  product: Product;
-  type: ProductEditType;
-}
 
 @Component({
   selector: 'lab-products',
@@ -33,69 +26,52 @@ export interface ProductEdit {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsComponent {
-  _data: Dataset;
-  get data() {
-    return this._data;
-  }
-  @Input() set data(value: Dataset) {
-    this._data = value;
-    if (!this.categoryId) {
-      this.categoryId = value.categoryIds[0];
-    }
-  }
+  @Input() data: Dataset;
   @Input() productRecipes: Entities<[string, Rational][]>;
   @Input() products: Product[];
+  @Input() displayRate: DisplayRate;
 
-  @Output() add = new EventEmitter<string>();
-  @Output() remove = new EventEmitter<string>();
-  @Output() editProduct = new EventEmitter<IdPayload>();
-  @Output() editRate = new EventEmitter<IdPayload<number>>();
-  @Output() editRateType = new EventEmitter<IdPayload<RateType>>();
-  @Output() editRecipe = new EventEmitter<IdPayload>();
-
-  adding: boolean;
-  edit: ProductEdit;
-  categoryId: string;
+  @Output() addProduct = new EventEmitter<string>();
+  @Output() removeProduct = new EventEmitter<string>();
+  @Output() setItem = new EventEmitter<IdPayload>();
+  @Output() setRate = new EventEmitter<IdPayload<number>>();
+  @Output() setRateType = new EventEmitter<IdPayload<RateType>>();
+  @Output() setVia = new EventEmitter<IdPayload>();
 
   RateType = RateType;
-  ProductEditType = ProductEditType;
+  RateTypeOptions = RateTypeOptions;
+  IdType = IdType;
 
   constructor() {}
 
-  trackBy(product: Product) {
+  trackBy(product: Product): string {
     return product.id;
   }
 
-  clickEditProduct(product: Product) {
-    this.edit = { product, type: ProductEditType.Product };
-    this.categoryId = this.data.itemEntities[product.itemId].category;
-  }
-
-  commitEditProduct(product: Product, itemId: string) {
+  changeItem(product: Product, itemId: string): void {
     if (
       product.rateType === RateType.Factories &&
       !this.data.itemRecipeIds[itemId]
     ) {
       // Reset rate type to items
-      this.editRateType.emit({ id: product.id, value: RateType.Items });
+      this.setRateType.emit({ id: product.id, value: RateType.Items });
     }
 
-    this.editProduct.emit({ id: product.id, value: itemId });
+    this.setItem.emit({ id: product.id, value: itemId });
   }
 
-  emitNumber(emitter: EventEmitter<IdPayload<number>>, id: string, event: any) {
-    if (event.target.value) {
-      const value = Number(event.target.value);
-      emitter.emit({ id, value });
-    }
+  changeRate(id: string, event: InputEvent): void {
+    const target = event.target as HTMLInputElement;
+    const value = Number(target.value);
+    this.setRate.emit({ id, value });
   }
 
-  getRecipe(product: Product) {
+  getRecipe(product: Product): string {
     const recipes = this.productRecipes[product.itemId];
-    return RecipeUtility.getProductRecipeData(recipes, product.recipeId)[0];
+    return RecipeUtility.getProductRecipeData(recipes, product.viaId)[0];
   }
 
-  getOptions(product: Product) {
+  getOptions(product: Product): string[] {
     return this.productRecipes[product.itemId].map((r) => r[0]);
   }
 }

@@ -1,0 +1,13 @@
+.option {
+  cursor: pointer;
+  padding: 0.375rem 0;
+  user-select: none;
+
+  > * + * {
+    margin-left: 0.375rem;
+  }
+}
+
+tr {
+  height: 2.375rem;
+}

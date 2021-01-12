@@ -31,7 +31,7 @@ import { SankeyData, Node, Link } from '~/models';
 })
 export class SankeyComponent implements OnInit {
   _sankeyData: SankeyData;
-  get sankeyData() {
+  get sankeyData(): SankeyData {
     return this._sankeyData;
   }
   @Input() set sankeyData(value: SankeyData) {
@@ -45,23 +45,22 @@ export class SankeyComponent implements OnInit {
   height = 400;
   svg: Selection<any, {}, null, undefined>;
 
-  get element() {
-    return this.ref.nativeElement as HTMLElement;
-  }
-
-  constructor(private ref: ElementRef, private resize$: NgResizeObserver) {}
+  constructor(
+    private ref: ElementRef<HTMLElement>,
+    public resize$: NgResizeObserver
+  ) {}
 
   ngOnInit(): void {
     this.resize$.subscribe((entry) => this.handleResize(entry));
 
-    this.width = this.element.getBoundingClientRect().width;
+    this.width = this.ref.nativeElement.getBoundingClientRect().width;
     this.height = Math.min(window.innerHeight * 0.75, this.width / 2);
     if (this.svg) {
       this.rebuildChart();
     }
   }
 
-  handleResize(entry: ResizeObserverEntry) {
+  handleResize(entry: ResizeObserverEntry): void {
     const w = entry.contentRect.width;
     const h = entry.contentRect.height;
     if (w && h && w / h !== this.width / this.height) {
@@ -71,7 +70,7 @@ export class SankeyComponent implements OnInit {
     }
   }
 
-  rebuildChart() {
+  rebuildChart(): void {
     if (this.svg) {
       select('svg').remove();
     }
@@ -81,7 +80,9 @@ export class SankeyComponent implements OnInit {
     }
   }
 
-  getLayout(fn: () => SankeyLayout<SankeyGraph<Node, Link>, Node, Link>) {
+  getLayout(
+    fn: () => SankeyLayout<SankeyGraph<Node, Link>, Node, Link>
+  ): SankeyGraph<Node, Link> {
     const skLayout = fn()
       .nodeId((d) => d.id)
       .nodeWidth(32)
@@ -97,8 +98,8 @@ export class SankeyComponent implements OnInit {
     });
   }
 
-  createChart() {
-    this.svg = select(this.element)
+  createChart(): void {
+    this.svg = select(this.ref.nativeElement)
       .append('svg')
       .attr('preserveAspectRatio', 'xMinYMin meet')
       .attr('viewBox', `0 0 ${this.width} ${this.height}`);
@@ -125,7 +126,10 @@ export class SankeyComponent implements OnInit {
 
     link
       .append('path')
-      .attr('d', circular ? (d) => (d as any).path : sankeyLinkHorizontal())
+      .attr(
+        'd',
+        circular ? (d): string => (d as any).path : sankeyLinkHorizontal()
+      )
       .attr('stroke', (l) => l.color)
       .attr('stroke-width', (l) => Math.max(1, l.width));
 

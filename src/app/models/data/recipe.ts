@@ -79,7 +79,7 @@ export class RationalRecipe {
     this.producers = data.producers;
   }
 
-  produces(id: string) {
+  produces(id: string): boolean {
     if (this.out) {
       if (this.out[id]) {
         // Recipe declares this as output, check inputs
@@ -94,7 +94,7 @@ export class RationalRecipe {
     return false;
   }
 
-  output(id: string) {
+  output(id: string): Rational {
     return (this.out?.[id] || Rational.zero).sub(
       this.in?.[id] || Rational.zero
     );

@@ -8,7 +8,11 @@ import {
 } from '~/models';
 
 export class FlowUtility {
-  static buildSankey(steps: Step[], linkValue: LinkValue, data: Dataset) {
+  static buildSankey(
+    steps: Step[],
+    linkValue: LinkValue,
+    data: Dataset
+  ): SankeyData {
     const sankey: SankeyData = {
       nodes: [],
       links: [],
@@ -105,7 +109,7 @@ export class FlowUtility {
     return sankey;
   }
 
-  static stepLinkValue(step: Step, linkValue: LinkValue) {
+  static stepLinkValue(step: Step, linkValue: LinkValue): Rational {
     if (linkValue === LinkValue.None || linkValue === LinkValue.Percent) {
       return Rational.one;
     }
@@ -127,7 +131,11 @@ export class FlowUtility {
     }
   }
 
-  static linkValue(value: Rational, percent: Rational, linkValue: LinkValue) {
+  static linkValue(
+    value: Rational,
+    percent: Rational,
+    linkValue: LinkValue
+  ): number {
     if (linkValue === LinkValue.None) {
       return 1;
     }

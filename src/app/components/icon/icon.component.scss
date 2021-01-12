@@ -1,14 +1,51 @@
 :host {
   display: flex;
+  align-items: flex-start;
   user-select: none;
   font-weight: normal;
   position: relative;
+  color: var(--color-white);
 
-  &.ignored {
+  &:not(.module):not(.grid) .module {
+    filter: invert(100%);
+  }
+
+  &.pad {
+    padding: 0.125rem;
+  }
+
+  &.ignored > .image > img {
+    opacity: 0.25;
+  }
+
+  &.button:hover {
+    padding: 0;
+    filter: none;
+
+    // Moves filter effect to image to avoid affecting tooltip
     > .image {
-      > img {
-        opacity: 0.25;
+      padding: 0.125rem;
+      box-shadow: var(--shadow-hover);
+      filter: drop-shadow(0 0 2px var(--color-brand-sha));
+
+      > .icon-text {
+        bottom: 0.25rem;
+        right: 0.25rem;
       }
+    }
+  }
+
+  &.grid {
+    padding: 0.125rem;
+    border-radius: 0.25rem;
+    background-color: var(--color-back);
+    margin: 1px;
+    cursor: pointer;
+    box-shadow: var(--shadow-item);
+
+    &:hover {
+      background-color: var(--color-brand-drk);
+      box-shadow: var(--shadow-hover);
     }
   }
 }
@@ -31,27 +68,20 @@ img.shadow {
 
 .tooltip {
   position: absolute;
-  background-color: var(--color-gray-1);
-  border-radius: 0.25rem;
-  border: 1px solid var(--color-brand);
+  z-index: 2;
+  background-color: var(--color-dark);
+  opacity: 0.95;
   padding: 0.5rem;
   user-select: none;
   cursor: default;
-
-  z-index: 1;
-
-  .title {
-    font-weight: bold;
-  }
+  box-shadow: var(--shadow-tip);
 
   .nowrap {
     white-space: nowrap;
   }
 
-  .flex {
-    > * + * {
-      margin-left: 0.5rem;
-    }
+  .flex > * + * {
+    margin-left: 0.5rem;
   }
 
   > * + * {
@@ -68,10 +98,6 @@ img.shadow {
   text-shadow: 0px 1px 1px var(--color-black), 0px -1px 1px var(--color-black),
     1px 0px 1px var(--color-black), -1px 0px 1px var(--color-black);
   pointer-events: none;
-}
-
-.module {
-  filter: var(--module-icon-filter);
 }
 
 td {

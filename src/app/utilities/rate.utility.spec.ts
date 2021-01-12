@@ -6,7 +6,6 @@ describe('RateUtility', () => {
   describe('addStepsFor', () => {
     const expected = [
       {
-        depth: 0,
         itemId: 'iron-chest',
         recipeId: 'iron-chest',
         items: new Rational(BigInt(30)),
@@ -15,7 +14,6 @@ describe('RateUtility', () => {
         pollution: new Rational(BigInt(1)),
       },
       {
-        depth: 1,
         itemId: 'iron-plate',
         recipeId: 'iron-plate',
         items: new Rational(BigInt(240)),
@@ -25,7 +23,6 @@ describe('RateUtility', () => {
         parents: { 'iron-chest': new Rational(BigInt(240)) },
       },
       {
-        depth: 2,
         itemId: 'iron-ore',
         recipeId: 'iron-ore',
         items: new Rational(BigInt(240)),
@@ -43,8 +40,6 @@ describe('RateUtility', () => {
         new Rational(BigInt(30)),
         steps,
         Mocks.ItemSettingsEntities,
-        Mocks.RecipeSettingsEntities,
-        ItemId.Coal,
         Mocks.AdjustedData
       );
       expect(steps as any).toEqual(expected as any);
@@ -57,8 +52,6 @@ describe('RateUtility', () => {
         new Rational(BigInt(15)),
         steps,
         Mocks.ItemSettingsEntities,
-        Mocks.RecipeSettingsEntities,
-        ItemId.Coal,
         Mocks.AdjustedData
       );
       RateUtility.addStepsFor(
@@ -66,8 +59,6 @@ describe('RateUtility', () => {
         new Rational(BigInt(15)),
         steps,
         Mocks.ItemSettingsEntities,
-        Mocks.RecipeSettingsEntities,
-        ItemId.Coal,
         Mocks.AdjustedData
       );
       expect(steps).toEqual(expected as any);
@@ -80,8 +71,6 @@ describe('RateUtility', () => {
         new Rational(BigInt(30)),
         steps,
         Mocks.ItemSettingsEntities,
-        Mocks.RecipeSettingsEntities,
-        ItemId.Coal,
         {
           ...Mocks.AdjustedData,
           ...{
@@ -107,8 +96,6 @@ describe('RateUtility', () => {
         new Rational(BigInt(60)),
         steps,
         Mocks.ItemSettingsEntities,
-        Mocks.RecipeSettingsEntities,
-        ItemId.Coal,
         Mocks.AdjustedData
       );
       expect(steps[0].factories).toBe(null);
@@ -138,8 +125,6 @@ describe('RateUtility', () => {
         new Rational(BigInt(30)),
         steps,
         Mocks.ItemSettingsEntities,
-        Mocks.RecipeSettingsEntities,
-        ItemId.Coal,
         data
       );
       expect(steps as any).toEqual(expected as any);
@@ -152,13 +137,10 @@ describe('RateUtility', () => {
         new Rational(BigInt(30)),
         steps,
         Mocks.ItemSettingsEntities,
-        Mocks.RecipeSettingsEntities,
-        ItemId.Coal,
         Mocks.AdjustedData
       );
       expect(steps).toEqual([
         {
-          depth: 0,
           itemId: ItemId.Uranium235,
           recipeId: null,
           items: new Rational(BigInt(30)),
@@ -226,7 +208,6 @@ describe('RateUtility', () => {
     it('should skip steps with no settings', () => {
       const steps: Step[] = [
         {
-          depth: 0,
           itemId: null,
           recipeId: null,
           items: null,
@@ -245,7 +226,6 @@ describe('RateUtility', () => {
     it('should skip steps with no items', () => {
       const steps: Step[] = [
         {
-          depth: 0,
           itemId: Mocks.Item1.id,
           recipeId: null,
           items: null,
@@ -264,7 +244,6 @@ describe('RateUtility', () => {
     it('should calculate required belts & wagons for steps', () => {
       const steps: Step[] = [
         {
-          depth: 0,
           itemId: Mocks.Item1.id,
           recipeId: null,
           items: Mocks.BeltSpeed[ItemId.TransportBelt],
@@ -284,7 +263,6 @@ describe('RateUtility', () => {
     it('should calculate required wagons for fluids', () => {
       const steps: Step[] = [
         {
-          depth: 0,
           itemId: ItemId.CrudeOil,
           recipeId: null,
           items: WAGON_FLUID,
@@ -305,7 +283,6 @@ describe('RateUtility', () => {
     it('should skip steps with no items', () => {
       const steps: Step[] = [
         {
-          depth: 0,
           itemId: Mocks.Item1.id,
           recipeId: null,
           items: null,
@@ -360,21 +337,17 @@ describe('RateUtility', () => {
         {
           itemId: ItemId.Coal,
           items: Rational.one,
-          depth: 0,
         },
         {
           itemId: ItemId.Coal,
           items: Rational.one,
-          depth: 0,
           parents: {
             [RecipeId.IronOre]: Rational.one,
           },
         },
       ];
       const result = RateUtility.copy(steps);
-      steps[0].depth = 1;
       steps[1].parents[RecipeId.CrudeOil] = Rational.one;
-      expect(result[0].depth).toEqual(0);
       expect(result[1].parents[RecipeId.CrudeOil]).toBeUndefined();
     });
   });

@@ -1,6 +1,6 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
 import { RateType } from '~/models';
-import { AppLoadAction } from '../app.actions';
+import { LoadAction } from '../app.actions';
 import * as Actions from './products.actions';
 import { productsReducer, ProductsState } from './products.reducer';
 
@@ -19,7 +19,7 @@ describe('Products Reducer', () => {
       };
       const result = productsReducer(
         undefined,
-        new AppLoadAction({ productsState } as any)
+        new LoadAction({ productsState } as any)
       );
       expect(result).toEqual(productsState);
     });
@@ -42,7 +42,7 @@ describe('Products Reducer', () => {
     it('should commit edit on a product', () => {
       const result = productsReducer(
         state,
-        new Actions.EditProductAction({
+        new Actions.SetItemAction({
           id: Mocks.Product1.id,
           value: Mocks.Product2.itemId,
         })
@@ -58,7 +58,7 @@ describe('Products Reducer', () => {
       const value = 3;
       const result = productsReducer(
         state,
-        new Actions.EditRateAction({ id: Mocks.Product1.id, value })
+        new Actions.SetRateAction({ id: Mocks.Product1.id, value })
       );
       expect(result.entities[Mocks.Product1.id].rate).toEqual(value);
     });
@@ -69,7 +69,7 @@ describe('Products Reducer', () => {
       const value = RateType.Wagons;
       const result = productsReducer(
         state,
-        new Actions.EditRateTypeAction({ id: Mocks.Product1.id, value })
+        new Actions.SetRateTypeAction({ id: Mocks.Product1.id, value })
       );
       expect(result.entities[Mocks.Product1.id].rateType).toEqual(value);
     });
@@ -80,9 +80,9 @@ describe('Products Reducer', () => {
       const value = RecipeId.AdvancedOilProcessing;
       const result = productsReducer(
         state,
-        new Actions.EditRecipeAction({ id: Mocks.Product1.id, value })
+        new Actions.SetViaAction({ id: Mocks.Product1.id, value })
       );
-      expect(result.entities[Mocks.Product1.id].recipeId).toEqual(value);
+      expect(result.entities[Mocks.Product1.id].viaId).toEqual(value);
     });
   });
 

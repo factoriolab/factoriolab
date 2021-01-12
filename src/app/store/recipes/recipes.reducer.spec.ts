@@ -1,7 +1,7 @@
 import { Mocks, ItemId } from 'src/tests';
 import { RecipeSettingsField } from '~/models';
 import { StoreUtility } from '~/utilities';
-import { AppLoadAction } from '../app.actions';
+import { LoadAction } from '../app.actions';
 import * as Actions from './recipes.actions';
 import { recipesReducer, initialRecipesState } from './recipes.reducer';
 
@@ -12,7 +12,7 @@ describe('Recipes Reducer', () => {
     it('should load recipe settings', () => {
       const result = recipesReducer(
         undefined,
-        new AppLoadAction({ recipesState: Mocks.RecipeSettingsEntities } as any)
+        new LoadAction({ recipesState: Mocks.RecipeSettingsEntities } as any)
       );
       expect(result).toEqual(Mocks.RecipeSettingsEntities);
     });
@@ -129,7 +129,7 @@ describe('Recipes Reducer', () => {
     it('should reset a recipe', () => {
       const result = recipesReducer(
         initialRecipesState,
-        new Actions.ResetAction(Mocks.Recipe1.id)
+        new Actions.ResetRecipeAction(Mocks.Recipe1.id)
       );
       expect(result[Mocks.Recipe1.id]).toBeUndefined();
     });

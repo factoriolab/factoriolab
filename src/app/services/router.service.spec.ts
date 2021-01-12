@@ -14,30 +14,31 @@ import {
   InserterCapacity,
 } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
-import { AppLoadAction } from '~/store/app.actions';
-import * as Products from '~/store/products';
-import * as Items from '~/store/items';
-import * as Recipes from '~/store/recipes';
-import * as Settings from '~/store/settings';
+import { LoadAction } from '~/store/app.actions';
+import { FactoriesState, initialFactoriesState } from '~/store/factories';
+import { ItemsState } from '~/store/items';
+import { ProductsState } from '~/store/products';
+import { RecipesState } from '~/store/recipes';
+import { initialSettingsState, SettingsState } from '~/store/settings';
 import {
   RouterService,
   FIELDSEP,
-  ARRAYSEP,
   EMPTY,
   NULL,
   TRUE,
   FALSE,
+  LISTSEP,
 } from './router.service';
 
 const mockZipEmpty = 'eJwrsAUAAR8Arg==';
 const mockZipProducts = 'p=steel-chest*1';
 const mockZipAll =
-  'eJwrsC0uSU3N0U3OSC0u0TJUy0Tha5UUJeYVF+QXlegmpeaUqBWhympZqBXbaiEDYzMDAwDNahpZ';
+  'p=steel-chest*1&b=1&i=steel-chest**transport-belt&r=steel-chest***8&f=1,assembling-machine-1,electric-mining-drill&s=******3600';
 const mockZipExtra =
-  'eJwrsC0uSU3N0U3OSC0u0TJUS7I1VMtEEdMqKUrMKy7ILyrRTUrNKVErQpXVslArttVCBsZmBgZqJbYlQGkA71cd5g==';
+  'eJwrsC0uSU3N0U3OSC0u0TJUS7I1VMtEEdMqKUrMKy7ILyrRTUrNKVErQpXVslBLs9UC6iwGkiBgbGZgoFZiWwKUBQDYwh4O';
 const mockZipLink =
-  'eJxtT1sKwkAMvE0/IpFuK+pPD7OPaBe2m7LZKt7eiFZUZCCPyWRC5uHKHCijH0kqmMYNuYmDVKK0clCLzTJzqego1aZ8ja0ITS7FfMbJ+jFmwh4mDksiXXVkPedX38jQbs0BC' +
-  'JyV6JFjwrmwJxFdV/Ufr24jlTWflpKtJ1B9WHyNl1hv+LTdyEwU8H3zuF795LH7eQOEUwzqSwlM17bQ7zV0sAMtFaaFB8wdUMtkRA==';
+  'eJxtTssKwzAM+5sczDySFrZTPiYPdw2kcYhT9vvLoD2UDYORZEm42jdzpIJhJelglLdFJSudKJ8a9OaKVG4dPeWu2uXsRGjzOZUXbi6sqRDOsHHcM43oATy5wEUt1tz++qUSR' +
+  'TzM04XidKbF6rt5gneSAnLKWBsHEhlVP0+CcE4Rl50ymElrmB9jGQ3fMR+Ih1UK';
 const mockProducts: Product[] = [
   {
     id: '0',
@@ -46,7 +47,7 @@ const mockProducts: Product[] = [
     rateType: RateType.Items,
   },
 ];
-const mockProductsState: Products.ProductsState = {
+const mockProductsState: ProductsState = {
   ids: ['0'],
   entities: { ['0']: mockProducts[0] },
   index: 1,
@@ -57,10 +58,10 @@ const mockProductsFull: Product[] = [
     itemId: ItemId.SteelChest,
     rate: 1,
     rateType: RateType.Belts,
-    recipeId: RecipeId.Coal,
+    viaId: RecipeId.Coal,
   },
 ];
-const mockProductsFullState: Products.ProductsState = {
+const mockFullProductsState: ProductsState = {
   ids: ['0'],
   entities: { ['0']: mockProductsFull[0] },
   index: 1,
@@ -69,21 +70,21 @@ const mockZipProduct = [ItemId.SteelChest, '1'].join(FIELDSEP);
 const mockZipProductFull = [ItemId.SteelChest, '1', '1', RecipeId.Coal].join(
   FIELDSEP
 );
-const mockItemSettings: Items.ItemsState = {
+const mockItemsState: ItemsState = {
   [ItemId.SteelChest]: { belt: ItemId.TransportBelt },
 };
-const mockFullItemSettings: Items.ItemsState = {
+const mockFullItemsState: ItemsState = {
   [ItemId.SteelChest]: { ignore: true, belt: ItemId.TransportBelt },
 };
-const mockZipFullItemSettings = [
+const mockZipFullItemsState = [
   ItemId.SteelChest,
   '1',
   ItemId.TransportBelt,
 ].join(FIELDSEP);
-const mockRecipeSettings: Recipes.RecipesState = {
+const mockRecipesState: RecipesState = {
   [RecipeId.SteelChest]: { beaconCount: 8 },
 };
-const mockFullRecipeSettings: Recipes.RecipesState = {
+const mockFullRecipesState: RecipesState = {
   [RecipeId.SteelChest]: {
     factory: ItemId.AssemblingMachine3,
     factoryModules: [ItemId.Module],
@@ -92,98 +93,79 @@ const mockFullRecipeSettings: Recipes.RecipesState = {
     beaconModules: [ItemId.Module],
   },
 };
-const mockZipFullRecipeSettings = [
+const mockZipFullRecipesState = [
   RecipeId.SteelChest,
   ItemId.AssemblingMachine3,
   ItemId.Module,
   '1',
-  ItemId.Beacon,
   ItemId.Module,
+  ItemId.Beacon,
 ].join(FIELDSEP);
-const mockSettings: Settings.SettingsState = {
-  ...Mocks.InitialSettingsState,
-  ...{ displayRate: DisplayRate.PerHour },
+const mockFactoriesState: FactoriesState = {
+  ids: [ItemId.AssemblingMachine1, ItemId.ElectricMiningDrill],
+  entities: {},
 };
-export const mockFullSettings: Settings.SettingsState = {
+const mockFullFactoriesState: FactoriesState = {
+  ids: [ItemId.AssemblingMachine3],
+  entities: {
+    ['']: {},
+    [ItemId.AssemblingMachine3]: {
+      moduleRank: [ItemId.SpeedModule],
+      beaconCount: 2,
+      beacon: ItemId.Beacon,
+      beaconModule: ItemId.SpeedModule2,
+    },
+  },
+};
+const mockZipFullFactoriesState = [
+  '1',
+  [
+    ItemId.AssemblingMachine3,
+    ItemId.SpeedModule,
+    2,
+    ItemId.SpeedModule2,
+    ItemId.Beacon,
+  ].join(FIELDSEP),
+];
+
+const mockSettingsState: SettingsState = {
+  ...initialSettingsState,
+  ...{ preset: Preset.Modules, displayRate: DisplayRate.PerHour },
+};
+export const mockFullSettingsState: SettingsState = {
   baseId: '0.17',
-  modIds: [],
   disabledRecipes: [RecipeId.BasicOilProcessing],
   expensive: true,
-  factoryRank: [ItemId.AssemblingMachine2, ItemId.StoneFurnace],
-  moduleRank: [ItemId.ProductivityModule, ItemId.SpeedModule],
-  drillModule: true,
-  beacon: ItemId.Beacon,
-  beaconModule: ItemId.SpeedModule2,
-  beaconCount: 8,
   belt: ItemId.TransportBelt,
   fuel: ItemId.SolidFuel,
   flowRate: 1200,
   displayRate: DisplayRate.PerHour,
-  itemPrecision: 2,
-  beltPrecision: 4,
-  factoryPrecision: 0,
-  powerPrecision: 3,
-  pollutionPrecision: 3,
   miningBonus: 10,
   researchSpeed: ResearchSpeed.Speed0,
   inserterTarget: InserterTarget.Chest,
   inserterCapacity: InserterCapacity.Capacity2,
 } as any;
-const mockZipFullSettings = [
+const mockZipFullSettingsState = [
   '0.17',
-  EMPTY,
   RecipeId.BasicOilProcessing,
   '1',
-  [ItemId.AssemblingMachine2, ItemId.StoneFurnace].join(ARRAYSEP),
-  [ItemId.ProductivityModule, ItemId.SpeedModule].join(ARRAYSEP),
-  '1',
-  '8',
-  mockFullSettings.beacon,
-  mockFullSettings.beaconModule,
-  mockFullSettings.belt,
-  mockFullSettings.fuel,
+  mockFullSettingsState.belt,
+  mockFullSettingsState.fuel,
   '1200',
   DisplayRate.PerHour,
-  '2',
-  '4',
-  '0',
-  '3',
-  '3',
   '10',
   '0',
   '0',
   '1',
 ].join(FIELDSEP);
-const mockNullSettings = {
-  ...mockFullSettings,
-  ...{
-    itemPrecision: null,
-    beltPrecision: null,
-    factoryPrecision: null,
-    powerPrecision: null,
-    pollutionPrecision: null,
-  },
-};
-const mockZipNullSettings = [
+const mockZipNullSettingsState = [
   '0.17',
-  EMPTY,
   RecipeId.BasicOilProcessing,
   '1',
-  [ItemId.AssemblingMachine2, ItemId.StoneFurnace].join(ARRAYSEP),
-  [ItemId.ProductivityModule, ItemId.SpeedModule].join(ARRAYSEP),
-  '1',
-  '8',
-  mockFullSettings.beacon,
-  mockFullSettings.beaconModule,
-  mockFullSettings.belt,
-  mockFullSettings.fuel,
+  mockFullSettingsState.belt,
+  mockFullSettingsState.fuel,
   '1200',
   DisplayRate.PerHour,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
   '10',
   '0',
   '0',
@@ -221,13 +203,19 @@ describe('RouterService', () => {
     it('should return while unzipping', () => {
       service.unzipping = true;
       spyOn(router, 'navigateByUrl');
-      service.updateUrl(null, null, null, null);
+      service.updateUrl(null, null, null, null, null);
       expect(router.navigateByUrl).not.toHaveBeenCalled();
     });
 
     it('should update url with products', () => {
       spyOn(router, 'navigateByUrl');
-      service.updateUrl(mockProductsState, {}, {}, Mocks.InitialSettingsState);
+      service.updateUrl(
+        mockProductsState,
+        {},
+        {},
+        initialFactoriesState,
+        initialSettingsState
+      );
       expect(router.navigateByUrl).toHaveBeenCalledWith(`/#${mockZipProducts}`);
     });
 
@@ -235,11 +223,12 @@ describe('RouterService', () => {
       spyOn(router, 'navigateByUrl');
       service.updateUrl(
         mockProductsState,
-        mockItemSettings,
-        mockRecipeSettings,
-        mockSettings
+        mockItemsState,
+        mockRecipesState,
+        mockFactoriesState,
+        mockSettingsState
       );
-      expect(router.navigateByUrl).toHaveBeenCalledWith(`/#z=${mockZipAll}`);
+      expect(router.navigateByUrl).toHaveBeenCalledWith(`/#${mockZipAll}`);
     });
   });
 
@@ -248,9 +237,10 @@ describe('RouterService', () => {
       spyOn(router, 'navigateByUrl');
       service.updateUrl(
         mockProductsState,
-        mockFullItemSettings,
-        mockFullRecipeSettings,
-        mockFullSettings
+        mockFullItemsState,
+        mockFullRecipesState,
+        mockFullFactoriesState,
+        mockFullSettingsState
       );
       const href = service.stepHref(Mocks.Step1);
       expect(href).toEqual(`#z=${mockZipLink}`);
@@ -265,7 +255,7 @@ describe('RouterService', () => {
 
     it('should zip a large state', () => {
       const result = service.getHash(
-        `p=${mockZipProduct}&i=${mockZipFullItemSettings}&r=${mockZipFullRecipeSettings}&s=${mockZipFullSettings}`
+        `p=${mockZipProduct}&i=${mockZipFullItemsState}&r=${mockZipFullRecipesState}&s=${mockZipFullSettingsState}`
       );
       expect(result.startsWith('z=')).toBeTrue();
     });
@@ -305,10 +295,11 @@ describe('RouterService', () => {
       const url = `/#z=${mockZipExtra}`;
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(store.dispatch).toHaveBeenCalledWith(
-        new AppLoadAction({
+        new LoadAction({
           productsState: mockProductsState,
-          itemsState: mockItemSettings,
-          recipesState: mockRecipeSettings,
+          itemsState: mockItemsState,
+          recipesState: mockRecipesState,
+          factoriesState: { ids: null, entities: { ['']: { beaconCount: 1 } } },
           settingsState: { preset: Preset.Modules, displayRate: 3600 },
         } as any)
       );
@@ -318,19 +309,19 @@ describe('RouterService', () => {
       spyOn(store, 'dispatch');
       const url = `/#${mockZipEmpty}`;
       (router.events as any).next(new NavigationEnd(2, url, url));
-      expect(store.dispatch).toHaveBeenCalledWith(new AppLoadAction({} as any));
+      expect(store.dispatch).toHaveBeenCalledWith(new LoadAction({} as any));
     });
   });
 
   describe('zipProducts', () => {
     it('should zip products by items', () => {
       const result = service.zipProducts(mockProducts);
-      expect(result).toEqual([mockZipProduct]);
+      expect(result).toEqual(mockZipProduct);
     });
 
     it('should zip products by other rates', () => {
       const result = service.zipProducts(mockProductsFull);
-      expect(result).toEqual([mockZipProductFull]);
+      expect(result).toEqual(mockZipProductFull);
     });
   });
 
@@ -342,26 +333,26 @@ describe('RouterService', () => {
 
     it('should unzip fully defined products', () => {
       const result = service.unzipProducts([mockZipProductFull]);
-      expect(result).toEqual(mockProductsFullState);
+      expect(result).toEqual(mockFullProductsState);
     });
   });
 
   describe('zipItems', () => {
     it('should zip empty item settings', () => {
       const result = service.zipItems({ [ItemId.SteelChest]: {} });
-      expect(result).toEqual([`${ItemId.SteelChest}`]);
+      expect(result).toEqual(`${ItemId.SteelChest}`);
     });
 
     it('should zip full item settings', () => {
-      const result = service.zipItems(mockFullItemSettings);
-      expect(result).toEqual([mockZipFullItemSettings]);
+      const result = service.zipItems(mockFullItemsState);
+      expect(result).toEqual(mockZipFullItemsState);
     });
 
     it('should zip false ignore value', () => {
       const result = service.zipItems({
         [ItemId.SteelChest]: { ignore: false },
       });
-      expect(result).toEqual([`${ItemId.SteelChest}*0`]);
+      expect(result).toEqual(`${ItemId.SteelChest}*0`);
     });
   });
 
@@ -372,8 +363,8 @@ describe('RouterService', () => {
     });
 
     it('should unzip the full item settings', () => {
-      const result = service.unzipItems([mockZipFullItemSettings]);
-      expect(result).toEqual(mockFullItemSettings);
+      const result = service.unzipItems([mockZipFullItemsState]);
+      expect(result).toEqual(mockFullItemsState);
     });
 
     it('should unzip false ignore value', () => {
@@ -391,24 +382,24 @@ describe('RouterService', () => {
   describe('zipRecipes', () => {
     it('should zip empty recipe settings', () => {
       const result = service.zipRecipes({ [RecipeId.SteelChest]: {} });
-      expect(result).toEqual([`${RecipeId.SteelChest}`]);
+      expect(result).toEqual(`${RecipeId.SteelChest}`);
     });
 
     it('should zip full recipe settings', () => {
-      const result = service.zipRecipes(mockFullRecipeSettings);
-      expect(result).toEqual([mockZipFullRecipeSettings]);
+      const result = service.zipRecipes(mockFullRecipesState);
+      expect(result).toEqual(mockZipFullRecipesState);
     });
   });
 
   describe('unzipRecipes', () => {
-    it('should unzip the empty recipe settings', () => {
+    it('should unzip empty recipe settings', () => {
       const result = service.unzipRecipes([`${RecipeId.SteelChest}`]);
       expect(result).toEqual({ [RecipeId.SteelChest]: {} });
     });
 
-    it('should unzip the full recipe settings', () => {
-      const result = service.unzipRecipes([mockZipFullRecipeSettings]);
-      expect(result).toEqual(mockFullRecipeSettings);
+    it('should unzip full recipe settings', () => {
+      const result = service.unzipRecipes([mockZipFullRecipesState]);
+      expect(result).toEqual(mockFullRecipesState);
     });
 
     it('should handle empty state', () => {
@@ -418,33 +409,63 @@ describe('RouterService', () => {
     });
   });
 
+  describe('zipFactories', () => {
+    it('should zip empty factory settings', () => {
+      const result = service.zipFactories(initialFactoriesState);
+      expect(result).toEqual('');
+    });
+
+    it('should zip full factory settings', () => {
+      const result = service.zipFactories(mockFullFactoriesState);
+      expect(result).toEqual(mockZipFullFactoriesState.join(LISTSEP));
+    });
+
+    it('should handle null ids', () => {
+      const result = service.zipFactories({
+        ids: null,
+        entities: { ['']: {} },
+      });
+      expect(result).toEqual('');
+    });
+  });
+
+  describe('unzipFactories', () => {
+    it('should unzip the full factory settings', () => {
+      const result = service.unzipFactories(mockZipFullFactoriesState);
+      expect(result).toEqual(mockFullFactoriesState);
+    });
+
+    it('should handle empty state', () => {
+      const result = service.unzipFactories(['', 'id']);
+      expect(result).toEqual({
+        ids: null,
+        entities: { ['']: {}, ['id']: {} },
+      } as any);
+    });
+  });
+
   describe('zipSettings', () => {
     it('should zip full settings', () => {
-      const result = service.zipSettings(mockFullSettings);
-      expect(result).toEqual(mockZipFullSettings);
+      const result = service.zipSettings(mockFullSettingsState);
+      expect(result).toEqual(mockZipFullSettingsState);
     });
 
     it('should zip settings with null values', () => {
-      const result = service.zipSettings(mockNullSettings);
-      expect(result).toEqual(mockZipNullSettings);
+      const result = service.zipSettings(mockFullSettingsState);
+      expect(result).toEqual(mockZipNullSettingsState);
     });
 
     it('should zip default settings', () => {
-      const test = { ...Mocks.InitialSettingsState, ...{ test: true } };
+      const test = { ...initialSettingsState, ...{ test: true } };
       const result = service.zipSettings(test);
       expect(result).toEqual('');
     });
   });
 
   describe('unzipSettings', () => {
-    it('should unzip the null settings', () => {
-      const result = service.unzipSettings(mockZipNullSettings);
-      expect(result).toEqual(mockNullSettings);
-    });
-
     it('should unzip the full settings', () => {
-      const result = service.unzipSettings(mockZipFullSettings);
-      expect(result).toEqual(mockFullSettings);
+      const result = service.unzipSettings(mockZipFullSettingsState);
+      expect(result).toEqual(mockFullSettingsState);
     });
 
     it('should handle empty state', () => {
@@ -455,21 +476,21 @@ describe('RouterService', () => {
 
   describe('zipTruthy', () => {
     it('should handle falsy', () => {
-      expect(service.zipTruthy(null)).toEqual('');
+      expect(service.zipTruthyString(null)).toEqual('');
     });
 
     it('should handle truthy', () => {
-      expect(service.zipTruthy('a')).toEqual('a');
+      expect(service.zipTruthyString('a')).toEqual('a');
     });
   });
 
   describe('zipTruthyNum', () => {
     it('should handle falsy', () => {
-      expect(service.zipTruthyNum(null)).toEqual('');
+      expect(service.zipTruthyNumber(null)).toEqual('');
     });
 
     it('should handle truthy', () => {
-      expect(service.zipTruthyNum(1)).toEqual('1');
+      expect(service.zipTruthyNumber(1)).toEqual('1');
     });
   });
 
@@ -503,29 +524,29 @@ describe('RouterService', () => {
 
   describe('zipDiff', () => {
     it('should handle default', () => {
-      expect(service.zipDiff('a', 'a')).toEqual('');
+      expect(service.zipDiffString('a', 'a')).toEqual('');
     });
 
     it('should handle falsy', () => {
-      expect(service.zipDiff(null, 'a')).toEqual(NULL);
+      expect(service.zipDiffString(null, 'a')).toEqual(NULL);
     });
 
     it('should handle truthy', () => {
-      expect(service.zipDiff('a', 'b')).toEqual('a');
+      expect(service.zipDiffString('a', 'b')).toEqual('a');
     });
   });
 
   describe('zipDiffNum', () => {
     it('should handle default', () => {
-      expect(service.zipDiffNum(0, 0)).toEqual('');
+      expect(service.zipDiffNumber(0, 0)).toEqual('');
     });
 
     it('should handle falsy', () => {
-      expect(service.zipDiffNum(null, 0)).toEqual(NULL);
+      expect(service.zipDiffNumber(null, 0)).toEqual(NULL);
     });
 
     it('should handle truthy', () => {
-      expect(service.zipDiffNum(0, 1)).toEqual('0');
+      expect(service.zipDiffNumber(0, 1)).toEqual('0');
     });
   });
 
@@ -580,6 +601,10 @@ describe('RouterService', () => {
 
     it('should handle truthy', () => {
       expect(service.zipDiffRank(['a', 'b'], ['a', 'c'])).toEqual('a+b');
+    });
+
+    it('should handle nulls', () => {
+      expect(service.zipDiffRank(null, null)).toEqual('');
     });
   });
 

@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import {
   Component,
   Input,
@@ -15,7 +16,6 @@ import {
   DefaultIdPayload,
   Column,
   ColumnsAsOptions,
-  toBoolEntities,
   ItemId,
   ListMode,
   DisplayRateVal,
@@ -23,20 +23,15 @@ import {
   InserterCapacity,
   InserterData,
   DefaultPayload,
+  PrecisionColumns,
+  FactorySettings,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
+import { FactoriesState } from '~/store/factories';
 import { ItemsState } from '~/store/items';
+import { ColumnsState } from '~/store/preferences';
 import { RecipesState } from '~/store/recipes';
 import { ExportUtility, RecipeUtility } from '~/utilities';
-
-export enum StepEditType {
-  Columns,
-  Belt,
-  Factory,
-  FactoryModule,
-  Beacon,
-  BeaconModule,
-}
 
 export enum StepDetailTab {
   None,
@@ -44,12 +39,6 @@ export enum StepDetailTab {
   Outputs,
   Factory,
   Recipes,
-}
-
-export interface StepEdit {
-  step: Step;
-  type: StepEditType;
-  index?: number;
 }
 
 export interface StepInserter {
@@ -68,88 +57,49 @@ export class ListComponent {
   @Input() itemSettings: ItemsState;
   @Input() recipeSettings: RecipesState;
   @Input() recipeRaw: RecipesState;
+  @Input() factories: FactoriesState;
   @Input() beltSpeed: Entities<Rational>;
   _steps: Step[];
-  get steps() {
+  get steps(): Step[] {
     return this._steps;
   }
   @Input() set steps(value: Step[]) {
     this._steps = value;
     this.setDetailTabs();
     this.setDisplayedSteps();
-    this.setItemsPrecision();
-    this.setBeltsPrecision();
-    this.setWagonsPrecision();
-    this.setFactoriesPrecision();
-    this.setPowerPrecision();
-    this.setPollutionPrecision();
+    this.setEffectivePrecision();
   }
   @Input() disabledRecipes: string[];
-  @Input() factoryRank: string[];
-  @Input() moduleRank: string[];
-  @Input() beaconModule: string;
   @Input() displayRate: DisplayRate;
-  _itemPrecision = 0;
-  @Input() set itemPrecision(value: number) {
-    this._itemPrecision = value;
-    this.setItemsPrecision();
-  }
-  _beltPrecision = 0;
-  @Input() set beltPrecision(value: number) {
-    this._beltPrecision = value;
-    this.setBeltsPrecision();
-  }
-  _wagonPrecision = 0;
-  @Input() set wagonPrecision(value: number) {
-    this._wagonPrecision = value;
-    this.setWagonsPrecision();
-  }
-  _factoryPrecision = 0;
-  @Input() set factoryPrecision(value: number) {
-    this._factoryPrecision = value;
-    this.setFactoriesPrecision();
-  }
-  _powerPrecision = 0;
-  @Input() set powerPrecision(value: number) {
-    this._powerPrecision = value;
-    this.setPowerPrecision();
-  }
-  _pollutionPrecision = 0;
-  @Input() set pollutionPrecision(value: number) {
-    this._pollutionPrecision = value;
-    this.setPollutionPrecision();
-  }
-  @Input() beaconCount: number;
-  @Input() drillModule: boolean;
   @Input() inserterTarget: InserterTarget;
   @Input() inserterCapacity: InserterCapacity;
-  _columns: Column[];
-  get columns() {
+  _columns: ColumnsState;
+  get columns(): ColumnsState {
     return this._columns;
   }
-  @Input() set columns(value: Column[]) {
+  @Input() set columns(value: ColumnsState) {
     this._columns = value;
-    this.show = toBoolEntities(value);
     this.totalSpan = 2;
-    if (this.columns.indexOf(Column.Belts) !== -1) {
+    if (this.columns[Column.Belts].show) {
       this.totalSpan++;
     }
-    if (this.columns.indexOf(Column.Wagons) !== -1) {
+    if (this.columns[Column.Wagons].show) {
       this.totalSpan++;
     }
-    if (this.columns.indexOf(Column.Factories) !== -1) {
+    if (this.columns[Column.Factories].show) {
       this.totalSpan += 3;
     }
-    if (this.columns.indexOf(Column.Beacons) !== -1) {
+    if (this.columns[Column.Beacons].show) {
       this.totalSpan += 3;
     }
+    this.setEffectivePrecision();
   }
   @Input() modifiedIgnore: boolean;
   @Input() modifiedBelt: boolean;
   @Input() modifiedFactory: boolean;
   @Input() modifiedBeacons: boolean;
   _mode = ListMode.All; // Default also defined in container
-  get mode() {
+  get mode(): ListMode {
     return this._mode;
   }
   @Input() set mode(value: ListMode) {
@@ -159,7 +109,7 @@ export class ListComponent {
     }
   }
   _selected: string;
-  get selected() {
+  get selected(): string {
     return this._selected;
   }
   @Input() set selected(value: string) {
@@ -174,7 +124,7 @@ export class ListComponent {
   @Output() setBeaconCount = new EventEmitter<DefaultIdPayload<number>>();
   @Output() setBeacon = new EventEmitter<DefaultIdPayload>();
   @Output() setBeaconModules = new EventEmitter<DefaultIdPayload<string[]>>();
-  @Output() setColumns = new EventEmitter<string[]>();
+  @Output() setColumns = new EventEmitter<ColumnsState>();
   @Output() resetItem = new EventEmitter<string>();
   @Output() resetRecipe = new EventEmitter<string>();
   @Output() resetIgnore = new EventEmitter();
@@ -184,32 +134,23 @@ export class ListComponent {
   @Output() setDisabledRecipes = new EventEmitter<DefaultPayload<string[]>>();
 
   displayedSteps: Step[] = [];
-  edit: StepEdit;
   details: Entities<StepDetailTab[]> = {};
   recipes: Entities<string[]> = {};
   expanded: Entities<StepDetailTab> = {};
-  show: Entities<boolean> = {};
   totalSpan = 2;
-  effPrecSurplus: number;
-  effPrecItems: number;
-  effPrecBelts: number;
-  effPrecWagons: number;
-  effPrecFactories: number;
-  effPrecPower: number;
-  effPrecPollution: number;
+  effPrecision: Entities<number> = {};
+  DisplayRateVal = DisplayRateVal;
+  ColumnsAsOptions = ColumnsAsOptions;
+  ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
 
   Column = Column;
   DisplayRate = DisplayRate;
   ItemId = ItemId;
   ListMode = ListMode;
   StepDetailTab = StepDetailTab;
-  StepEditType = StepEditType;
   Rational = Rational;
-  DisplayRateVal = DisplayRateVal;
-  ColumnsAsOptions = ColumnsAsOptions;
-  ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
 
-  get rateLabel() {
+  get rateLabel(): string {
     switch (this.displayRate) {
       case DisplayRate.PerHour:
         return '/h';
@@ -222,7 +163,7 @@ export class ListComponent {
     }
   }
 
-  get totalPower() {
+  get totalPower(): string {
     let value = Rational.zero;
     for (const step of this.steps.filter((s) => s.power)) {
       value = value.add(step.power);
@@ -230,63 +171,33 @@ export class ListComponent {
     return this.power(value);
   }
 
-  get totalPollution() {
+  get totalPollution(): string {
     let value = Rational.zero;
     for (const step of this.steps.filter((s) => s.pollution)) {
       value = value.add(step.pollution);
     }
-    return this.rate(value, this.effPrecPollution);
+    return this.rate(value, this.effPrecision[Column.Pollution]);
   }
 
   constructor(public router: RouterService) {}
 
-  setItemsPrecision() {
-    this.effPrecSurplus = this.effPrecFrom(
-      this._itemPrecision,
-      (s: Step) => s.surplus
-    );
-    this.effPrecItems = this.effPrecFrom(
-      this._itemPrecision,
-      (s: Step) => s.items
-    );
+  setEffectivePrecision(): void {
+    if (this.steps && this.columns) {
+      this.effPrecision = {};
+      this.effPrecision[Column.Surplus] = this.effPrecFrom(
+        this.columns[Column.Items].precision,
+        (s) => s[Column.Surplus.toLowerCase()]
+      );
+      for (const i of PrecisionColumns.filter((i) => this.columns[i].show)) {
+        this.effPrecision[i] = this.effPrecFrom(
+          this.columns[i].precision,
+          (s) => s[i.toLowerCase()]
+        );
+      }
+    }
   }
 
-  setBeltsPrecision() {
-    this.effPrecBelts = this.effPrecFrom(
-      this._beltPrecision,
-      (s: Step) => s.belts
-    );
-  }
-
-  setWagonsPrecision() {
-    this.effPrecWagons = this.effPrecFrom(
-      this._wagonPrecision,
-      (s: Step) => s.wagons
-    );
-  }
-
-  setFactoriesPrecision() {
-    this.effPrecFactories = this.effPrecFrom(
-      this._factoryPrecision,
-      (s: Step) => s.factories
-    );
-  }
-
-  setPowerPrecision() {
-    this.effPrecPower = this.effPrecFrom(
-      this._powerPrecision,
-      (s: Step) => s.power
-    );
-  }
-
-  setPollutionPrecision() {
-    this.effPrecPollution = this.effPrecFrom(
-      this._pollutionPrecision,
-      (s: Step) => s.pollution
-    );
-  }
-
-  effPrecFrom(precision: number, fn: (step: Step) => Rational) {
+  effPrecFrom(precision: number, fn: (step: Step) => Rational): number {
     if (precision == null) {
       return precision;
     }
@@ -302,7 +213,7 @@ export class ListComponent {
     return max;
   }
 
-  setDetailTabs() {
+  setDetailTabs(): void {
     this.details = {};
     this.recipes = {};
     for (const step of this.steps.filter((s) => s.itemId)) {
@@ -342,7 +253,7 @@ export class ListComponent {
     }
   }
 
-  setDisplayedSteps() {
+  setDisplayedSteps(): void {
     if (this.mode === ListMode.All) {
       this.displayedSteps = this.steps;
     } else if (this.selected) {
@@ -361,15 +272,22 @@ export class ListComponent {
     }
   }
 
-  trackBy(step: Step) {
+  trackBy(step: Step): string {
     return `${step.itemId}.${step.recipeId}`;
   }
 
-  findStep(id: string) {
+  findStep(id: string): Step {
     return this.steps.find((s) => s.itemId === id);
   }
 
-  factoryRate(value: Rational, precision: number, factory: string) {
+  sortKeyValue(
+    a: KeyValue<string, Rational>,
+    b: KeyValue<string, Rational>
+  ): number {
+    return b.value.sub(a.value).toNumber();
+  }
+
+  factoryRate(value: Rational, precision: number, factory: string): string {
     if (factory === ItemId.Pumpjack) {
       return `${this.rate(value.mul(Rational.hundred), precision - 1)}%`;
     } else {
@@ -377,7 +295,7 @@ export class ListComponent {
     }
   }
 
-  rate(value: Rational, precision: number) {
+  rate(value: Rational, precision: number): string {
     if (precision == null) {
       return value.toFraction();
     } else {
@@ -399,15 +317,18 @@ export class ListComponent {
     }
   }
 
-  power(value: Rational) {
+  power(value: Rational): string {
     if (value.lt(Rational.thousand)) {
-      return `${this.rate(value, this.effPrecPower)} kW`;
+      return `${this.rate(value, this.effPrecision[Column.Power])} kW`;
     } else {
-      return `${this.rate(value.div(Rational.thousand), this.effPrecPower)} MW`;
+      return `${this.rate(
+        value.div(Rational.thousand),
+        this.effPrecision[Column.Power]
+      )} MW`;
     }
   }
 
-  leftPad(value: string) {
+  leftPad(value: string): string {
     return ' '.repeat(4 - value.length) + value;
   }
 
@@ -421,18 +342,14 @@ export class ListComponent {
     };
   }
 
-  miningIgnoreModule(step: Step) {
-    if (!this.drillModule && this.recipeSettings[step.recipeId]?.factory) {
-      return this.data.itemR[this.recipeSettings[step.recipeId].factory].factory
-        .mining;
-    }
-    return false;
+  getSettings(step: Step): FactorySettings {
+    return this.factories.entities[this.recipeSettings[step.recipeId].factory];
   }
 
-  factoryChange(step: Step, value: string) {
+  factoryChange(step: Step, value: string): void {
     const def = RecipeUtility.bestMatch(
       this.data.recipeEntities[step.recipeId].producers,
-      this.factoryRank
+      this.factories.ids
     );
     const event = {
       id: step.recipeId,
@@ -442,15 +359,19 @@ export class ListComponent {
     this.setFactory.emit(event);
   }
 
-  factoryModuleChange(step: Step, value: string, index: number) {
+  factoryModuleChange(step: Step, value: string, index: number): void {
     const count = this.recipeSettings[step.recipeId].factoryModules.length;
-    const options = this.miningIgnoreModule(step)
-      ? [ItemId.Module]
-      : [...this.data.recipeModuleIds[step.recipeId], ItemId.Module];
-    const def = RecipeUtility.defaultModules(options, this.moduleRank, count);
+    const options = [
+      ...this.data.recipeModuleIds[step.recipeId],
+      ItemId.Module,
+    ];
+    const def = RecipeUtility.defaultModules(
+      options,
+      this.getSettings(step).moduleRank,
+      count
+    );
     const modules = this.generateModules(
       index,
-      count,
       value,
       this.recipeSettings[step.recipeId].factoryModules
     );
@@ -461,12 +382,11 @@ export class ListComponent {
     });
   }
 
-  beaconModuleChange(step: Step, value: string, index: number) {
+  beaconModuleChange(step: Step, value: string, index: number): void {
     const count = this.recipeSettings[step.recipeId].beaconModules.length;
-    const def = new Array(count).fill(this.beaconModule);
+    const def = new Array(count).fill(this.getSettings(step).beaconModule);
     const modules = this.generateModules(
       index,
-      count,
       value,
       this.recipeSettings[step.recipeId].beaconModules
     );
@@ -477,15 +397,10 @@ export class ListComponent {
     });
   }
 
-  generateModules(
-    index: number,
-    count: number,
-    value: string,
-    original: string[]
-  ) {
+  generateModules(index: number, value: string, original: string[]): string[] {
     if (index === 0) {
       // Copy to all
-      return new Array(count).fill(value);
+      return new Array(original.length).fill(value);
     } else {
       // Edit individual module
       const modules = [...original];
@@ -494,11 +409,11 @@ export class ListComponent {
     }
   }
 
-  beaconCountChange(step: Step, event: Event) {
+  beaconCountChange(step: Step, event: Event): void {
     const target = event.target as HTMLInputElement;
     if (target.value) {
       const value = Math.round(Number(target.value));
-      const def = this.miningIgnoreModule(step) ? 0 : this.beaconCount;
+      const def = this.getSettings(step).beaconCount;
       if (
         this.recipeSettings[
           this.steps.find((s) => s.recipeId === step.recipeId).recipeId
@@ -513,12 +428,12 @@ export class ListComponent {
     }
   }
 
-  resetStep(step: Step) {
+  resetStep(step: Step): void {
     this.resetItem.emit(step.itemId);
     this.resetRecipe.emit(step.recipeId);
   }
 
-  export() {
+  export(): void {
     ExportUtility.stepsToCsv(
       this.steps,
       this.columns,
@@ -527,7 +442,7 @@ export class ListComponent {
     );
   }
 
-  toggleRecipe(id: string) {
+  toggleRecipe(id: string): void {
     if (this.disabledRecipes.indexOf(id) === -1) {
       this.setDisabledRecipes.emit({
         value: [...this.disabledRecipes, id],

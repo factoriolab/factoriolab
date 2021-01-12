@@ -2,7 +2,6 @@ import {
   Component,
   Input,
   ChangeDetectionStrategy,
-  ElementRef,
   HostListener,
 } from '@angular/core';
 
@@ -18,7 +17,7 @@ export class IconComponent {
   @Input() data: Dataset;
   @Input() iconId: string;
   _scale = true;
-  get scale() {
+  get scale(): boolean {
     return this._scale;
   }
   @Input() set scale(value: boolean) {
@@ -27,7 +26,7 @@ export class IconComponent {
   }
   @Input() text: string;
   _scrollTop = 0;
-  get scrollTop() {
+  get scrollTop(): number {
     return this._scrollTop;
   }
   @Input() set scrollTop(value: number) {
@@ -46,28 +45,24 @@ export class IconComponent {
 
   DisplayRate = DisplayRate;
 
-  get element(): HTMLElement {
-    return this.ref.nativeElement;
-  }
+  constructor() {}
 
-  constructor(private ref: ElementRef) {}
-
-  @HostListener('mouseenter') mouseenter() {
+  @HostListener('mouseenter') mouseenter(): void {
     this.hover = true;
   }
-  @HostListener('mouseleave') mouseleave() {
+  @HostListener('mouseleave') mouseleave(): void {
     this.hover = false;
   }
 
-  setTooltipMargin() {
+  setTooltipMargin(): void {
     this.tooltipMarginTop = (this.scale ? 40 : 72) - this.scrollTop;
   }
 
-  round(value: number) {
+  round(value: number): number {
     return Number(value.toFixed(2));
   }
 
-  toBonusPercent(value: number) {
+  toBonusPercent(value: number): string {
     const rational = this.round(
       Rational.fromNumber(value).mul(Rational.hundred).toNumber()
     );

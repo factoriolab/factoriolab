@@ -14,19 +14,20 @@ import { Observable } from 'rxjs';
 import {
   DisplayRate,
   ResearchSpeed,
-  Theme,
   Dataset,
   ModInfo,
   DefaultPayload,
   Preset,
-  Sort,
-  LinkValue,
   IdPayload,
   InserterTarget,
   InserterCapacity,
+  DefaultIdPayload,
 } from '~/models';
 import { State } from '~/store';
+import { ResetAction } from '~/store/app.actions';
 import { getBaseSets } from '~/store/datasets';
+import * as Factories from '~/store/factories';
+import * as Preferences from '~/store/preferences';
 import * as Settings from '~/store/settings';
 import { SettingsComponent } from './settings/settings.component';
 
@@ -39,163 +40,137 @@ import { SettingsComponent } from './settings/settings.component';
 export class SettingsContainerComponent implements OnInit {
   @ViewChild(SettingsComponent) child: SettingsComponent;
 
-  @Output() cancel = new EventEmitter();
+  @Output() closeSettings = new EventEmitter();
 
   data$: Observable<Dataset>;
   base$: Observable<ModInfo[]>;
-  mods$: Observable<ModInfo[]>;
+  factories$: Observable<Factories.FactoriesState>;
   settings$: Observable<Settings.SettingsState>;
+  preferences$: Observable<Preferences.PreferencesState>;
 
   opening = true;
 
-  constructor(private element: ElementRef, private store: Store<State>) {}
-
-  ngOnInit() {
-    this.data$ = this.store.select(Settings.getDataset);
-    this.base$ = this.store.select(getBaseSets);
-    this.mods$ = this.store.select(Settings.getAvailableMods);
-    this.settings$ = this.store.select(Settings.getSettings);
-  }
-
-  isInOverlayMode() {
+  get isInOverlayMode(): boolean {
     return window
-      .getComputedStyle(this.element.nativeElement as HTMLElement)
+      .getComputedStyle(this.ref.nativeElement)
       .marginRight.startsWith('-');
   }
 
+  constructor(
+    private ref: ElementRef<HTMLElement>,
+    private store: Store<State>
+  ) {}
+
+  ngOnInit(): void {
+    this.data$ = this.store.select(Settings.getDataset);
+    this.base$ = this.store.select(getBaseSets);
+    this.factories$ = this.store.select(Factories.getFactorySettings);
+    this.settings$ = this.store.select(Settings.getSettings);
+    this.preferences$ = this.store.select(Preferences.preferencesState);
+  }
+
   @HostListener('document:click', ['$event'])
-  click(event: MouseEvent) {
+  click(event: MouseEvent): void {
     if (this.opening) {
       this.opening = false;
     } else if (
-      !this.element.nativeElement.contains(event.target) &&
-      this.isInOverlayMode()
+      !this.ref.nativeElement.contains(event.target as Node) &&
+      document.contains(event.target as Node) &&
+      this.isInOverlayMode
     ) {
-      this.cancel.emit();
+      this.closeSettings.emit();
     }
   }
 
-  saveState(value: IdPayload) {
-    this.store.dispatch(new Settings.SaveStateAction(value));
+  resetSettings(): void {
+    this.store.dispatch(new ResetAction());
   }
 
-  deleteState(value: string) {
-    this.store.dispatch(new Settings.DeleteStateAction(value));
+  saveState(value: IdPayload): void {
+    this.store.dispatch(new Preferences.SaveStateAction(value));
   }
 
-  setPreset(value: Preset) {
+  removeState(value: string): void {
+    this.store.dispatch(new Preferences.RemoveStateAction(value));
+  }
+
+  setPreset(value: Preset): void {
     this.store.dispatch(new Settings.SetPresetAction(value));
   }
 
-  setBase(value: string) {
+  setBase(value: string): void {
     this.store.dispatch(new Settings.SetBaseAction(value));
   }
 
-  setMods(value: DefaultPayload<string[]>) {
-    this.store.dispatch(new Settings.SetModsAction(value));
-  }
-
-  setDisabledRecipes(value: DefaultPayload<string[]>) {
+  setDisabledRecipes(value: DefaultPayload<string[]>): void {
     this.store.dispatch(new Settings.SetDisabledRecipesAction(value));
   }
 
-  setExpensive(value: boolean) {
+  setExpensive(value: boolean): void {
     this.store.dispatch(new Settings.SetExpensiveAction(value));
   }
 
-  setFactoryRank(value: DefaultPayload<string[]>) {
-    this.store.dispatch(new Settings.SetFactoryRankAction(value));
+  addFactory(value: DefaultPayload<string, string[]>): void {
+    this.store.dispatch(new Factories.AddAction(value));
   }
 
-  setModuleRank(value: DefaultPayload<string[]>) {
-    this.store.dispatch(new Settings.SetModuleRankAction(value));
+  removeFactory(value: DefaultPayload<string, string[]>): void {
+    this.store.dispatch(new Factories.RemoveAction(value));
   }
 
-  setDrillModule(value: boolean) {
-    this.store.dispatch(new Settings.SetDrillModuleAction(value));
+  raiseFactory(value: DefaultPayload<string, string[]>): void {
+    this.store.dispatch(new Factories.RaiseAction(value));
   }
 
-  setBeacon(value: DefaultPayload) {
-    this.store.dispatch(new Settings.SetBeaconAction(value));
+  setFactory(value: DefaultIdPayload<string, string[]>): void {
+    this.store.dispatch(new Factories.SetFactoryAction(value));
   }
 
-  setBeaconModule(value: DefaultPayload) {
-    this.store.dispatch(new Settings.SetBeaconModuleAction(value));
+  setModuleRank(value: DefaultIdPayload<string[]>): void {
+    this.store.dispatch(new Factories.SetModuleRankAction(value));
   }
 
-  setBeaconCount(value: DefaultPayload<number>) {
-    this.store.dispatch(new Settings.SetBeaconCountAction(value));
+  setBeaconCount(value: DefaultIdPayload<number>): void {
+    this.store.dispatch(new Factories.SetBeaconCountAction(value));
   }
 
-  setBelt(value: DefaultPayload) {
+  setBeacon(value: DefaultIdPayload): void {
+    this.store.dispatch(new Factories.SetBeaconAction(value));
+  }
+
+  setBeaconModule(value: DefaultIdPayload): void {
+    this.store.dispatch(new Factories.SetBeaconModuleAction(value));
+  }
+
+  setBelt(value: DefaultPayload): void {
     this.store.dispatch(new Settings.SetBeltAction(value));
   }
 
-  setFuel(value: DefaultPayload) {
+  setFuel(value: DefaultPayload): void {
     this.store.dispatch(new Settings.SetFuelAction(value));
   }
 
-  setFlowRate(value: number) {
+  setFlowRate(value: number): void {
     this.store.dispatch(new Settings.SetFlowRateAction(value));
   }
 
-  setDisplayRate(value: DisplayRate) {
-    this.store.dispatch(new Settings.SetDisplayRateAction(value));
-  }
-
-  setItemPrecision(value: number) {
-    this.store.dispatch(new Settings.SetItemPrecisionAction(value));
-  }
-
-  setBeltPrecision(value: number) {
-    this.store.dispatch(new Settings.SetBeltPrecisionAction(value));
-  }
-
-  setWagonPrecision(value: number) {
-    this.store.dispatch(new Settings.SetWagonPrecisionAction(value));
-  }
-
-  setFactoryPrecision(value: number) {
-    this.store.dispatch(new Settings.SetFactoryPrecisionAction(value));
-  }
-
-  setPowerPrecision(value: number) {
-    this.store.dispatch(new Settings.SetPowerPrecisionAction(value));
-  }
-
-  setPollutionPrecision(value: number) {
-    this.store.dispatch(new Settings.SetPollutionPrecisionAction(value));
-  }
-
-  setMiningBonus(value: number) {
-    this.store.dispatch(new Settings.SetMiningBonusAction(value));
-  }
-
-  setResearchSpeed(value: ResearchSpeed) {
-    this.store.dispatch(new Settings.SetResearchSpeedAction(value));
-  }
-
-  setInserterTarget(value: InserterTarget) {
+  setInserterTarget(value: InserterTarget): void {
     this.store.dispatch(new Settings.SetInserterTargetAction(value));
   }
 
-  setInserterCapacity(value: InserterCapacity) {
+  setMiningBonus(value: number): void {
+    this.store.dispatch(new Settings.SetMiningBonusAction(value));
+  }
+
+  setResearchSpeed(value: ResearchSpeed): void {
+    this.store.dispatch(new Settings.SetResearchSpeedAction(value));
+  }
+
+  setInserterCapacity(value: InserterCapacity): void {
     this.store.dispatch(new Settings.SetInserterCapacityAction(value));
   }
 
-  setSort(value: Sort) {
-    this.store.dispatch(new Settings.SetSortAction(value));
-  }
-
-  setLinkValue(value: LinkValue) {
-    this.store.dispatch(new Settings.SetLinkValueAction(value));
-  }
-
-  setTheme(value: Theme) {
-    this.store.dispatch(new Settings.SetThemeAction(value));
-  }
-
-  resetSettings() {
-    this.store.dispatch(new Settings.ResetAction());
+  setDisplayRate(value: DisplayRate): void {
+    this.store.dispatch(new Settings.SetDisplayRateAction(value));
   }
 }

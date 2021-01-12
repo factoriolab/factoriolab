@@ -1,6 +1,7 @@
 import { Entities, RecipeSettings, RecipeSettingsField } from '~/models';
 import { StoreUtility } from '~/utilities';
-import { AppLoadAction, AppActionType } from '../app.actions';
+import { AppActionType, AppAction } from '../app.actions';
+import { SetBaseAction, SettingsActionType } from '../settings';
 import { RecipesAction, RecipesActionType } from './recipes.actions';
 
 export type RecipesState = Entities<RecipeSettings>;
@@ -9,13 +10,15 @@ export const initialRecipesState: RecipesState = {};
 
 export function recipesReducer(
   state: RecipesState = initialRecipesState,
-  action: RecipesAction | AppLoadAction
+  action: RecipesAction | AppAction | SetBaseAction
 ): RecipesState {
   switch (action.type) {
-    case AppActionType.LOAD: {
-      return action.payload.recipesState ? action.payload.recipesState : state;
-    }
-    case RecipesActionType.SET_FACTORY: {
+    case AppActionType.LOAD:
+      return { ...initialRecipesState, ...action.payload.recipesState };
+    case AppActionType.RESET:
+    case SettingsActionType.SET_BASE:
+      return initialRecipesState;
+    case RecipesActionType.SET_FACTORY:
       return StoreUtility.resetFields(
         StoreUtility.compareReset(
           state,
@@ -30,22 +33,19 @@ export function recipesReducer(
         ],
         action.payload.id
       );
-    }
-    case RecipesActionType.SET_FACTORY_MODULES: {
+    case RecipesActionType.SET_FACTORY_MODULES:
       return StoreUtility.compareReset(
         state,
         RecipeSettingsField.FactoryModules,
         action.payload
       );
-    }
-    case RecipesActionType.SET_BEACONS_COUNT: {
+    case RecipesActionType.SET_BEACON_COUNT:
       return StoreUtility.compareReset(
         state,
         RecipeSettingsField.BeaconCount,
         action.payload
       );
-    }
-    case RecipesActionType.SET_BEACON: {
+    case RecipesActionType.SET_BEACON:
       return StoreUtility.resetField(
         StoreUtility.compareReset(
           state,
@@ -55,32 +55,28 @@ export function recipesReducer(
         RecipeSettingsField.BeaconModules,
         action.payload.id
       );
-    }
-    case RecipesActionType.SET_BEACON_MODULES: {
+    case RecipesActionType.SET_BEACON_MODULES:
       return StoreUtility.compareReset(
         state,
         RecipeSettingsField.BeaconModules,
         action.payload
       );
-    }
-    case RecipesActionType.RESET: {
+    case RecipesActionType.RESET_RECIPE: {
       const newState = { ...state };
       delete newState[action.payload];
       return newState;
     }
-    case RecipesActionType.RESET_FACTORY: {
+    case RecipesActionType.RESET_FACTORY:
       return StoreUtility.resetFields(state, [
         RecipeSettingsField.Factory,
         RecipeSettingsField.FactoryModules,
       ]);
-    }
-    case RecipesActionType.RESET_BEACONS: {
+    case RecipesActionType.RESET_BEACONS:
       return StoreUtility.resetFields(state, [
         RecipeSettingsField.BeaconCount,
         RecipeSettingsField.Beacon,
         RecipeSettingsField.BeaconModules,
       ]);
-    }
     default:
       return state;
   }

@@ -6,10 +6,10 @@ export const enum ProductsActionType {
   RESET = '[Products] Reset',
   ADD = '[Products] Add',
   REMOVE = '[Products] Remove',
-  EDIT_PRODUCT = '[Products] Edit Product',
-  EDIT_RATE = '[Products] Edit Rate',
-  EDIT_RATE_TYPE = '[Products] Edit Rate Type',
-  EDIT_RECIPE = '[Products] Edit Recipe',
+  SET_ITEM = '[Products] Set Item',
+  SET_RATE = '[Products] Set Rate',
+  SET_RATE_TYPE = '[Products] Set Rate Type',
+  SET_VIA = '[Products] Set Via',
 }
 
 export class ResetAction implements Action {
@@ -27,23 +27,23 @@ export class RemoveAction implements Action {
   constructor(public payload: string) {}
 }
 
-export class EditProductAction implements Action {
-  readonly type = ProductsActionType.EDIT_PRODUCT;
+export class SetItemAction implements Action {
+  readonly type = ProductsActionType.SET_ITEM;
   constructor(public payload: IdPayload) {}
 }
 
-export class EditRateAction implements Action {
-  readonly type = ProductsActionType.EDIT_RATE;
+export class SetRateAction implements Action {
+  readonly type = ProductsActionType.SET_RATE;
   constructor(public payload: IdPayload<number>) {}
 }
 
-export class EditRateTypeAction implements Action {
-  readonly type = ProductsActionType.EDIT_RATE_TYPE;
+export class SetRateTypeAction implements Action {
+  readonly type = ProductsActionType.SET_RATE_TYPE;
   constructor(public payload: IdPayload<RateType>) {}
 }
 
-export class EditRecipeAction implements Action {
-  readonly type = ProductsActionType.EDIT_RECIPE;
+export class SetViaAction implements Action {
+  readonly type = ProductsActionType.SET_VIA;
   constructor(public payload: IdPayload) {}
 }
 
@@ -51,7 +51,7 @@ export type ProductsAction =
   | ResetAction
   | AddAction
   | RemoveAction
-  | EditProductAction
-  | EditRateAction
-  | EditRateTypeAction
-  | EditRecipeAction;
+  | SetItemAction
+  | SetRateAction
+  | SetRateTypeAction
+  | SetViaAction;
