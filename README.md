@@ -9,7 +9,7 @@ This project is intended to build on the features of the Kirk McDonald [Factorio
 
 **To submit suggestions or issues,** please check out the [issues page](https://github.com/factoriolab/factorio-lab/issues).
 
-**If you love Factorio Lab,** consider supporting it by [buying me a ☕](https://www.buymeacoffee.com/dcbroad3)!
+**If you love Factorio Lab,** consider supporting it by [buying me a ☕](https://ko-fi.com/dcbroad3)!
 
 ## Running locally
 
