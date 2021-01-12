@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import {
   Component,
   Input,
@@ -277,6 +278,13 @@ export class ListComponent {
 
   findStep(id: string): Step {
     return this.steps.find((s) => s.itemId === id);
+  }
+
+  sortKeyValue(
+    a: KeyValue<string, Rational>,
+    b: KeyValue<string, Rational>
+  ): number {
+    return b.value.sub(a.value).toNumber();
   }
 
   factoryRate(value: Rational, precision: number, factory: string): string {

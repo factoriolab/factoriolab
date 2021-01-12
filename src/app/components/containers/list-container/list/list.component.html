@@ -641,7 +641,7 @@
         <ng-container *ngIf="expanded[step.itemId] === StepDetailTab.Outputs">
           <tr
             *ngFor="
-              let parent of step.parents | keyvalue;
+              let parent of step.parents | keyvalue: sortKeyValue;
               first as isFirst;
               last as isLast
             "

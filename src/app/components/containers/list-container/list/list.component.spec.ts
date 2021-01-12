@@ -365,6 +365,17 @@ describe('ListComponent', () => {
     });
   });
 
+  describe('sortKeyValue', () => {
+    it('should sort KeyValue objects', () => {
+      expect(
+        component.child.sortKeyValue(
+          { key: 'a', value: Rational.zero },
+          { key: 'b', value: Rational.one }
+        )
+      ).toEqual(1);
+    });
+  });
+
   describe('factoryRate', () => {
     it('should return the normal rate for standard factories', () => {
       expect(
