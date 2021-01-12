@@ -4,6 +4,7 @@ import { Step, Column } from '~/models';
 import { ItemsState } from '~/store/items';
 import { ColumnsState } from '~/store/preferences';
 import { RecipesState } from '~/store/recipes';
+import { BrowserUtility } from './browser.utility';
 
 const CSV_TYPE = 'text/csv;charset=UTF-8';
 const CSV_EXTENSION = '.csv';
@@ -40,7 +41,7 @@ export class ExportUtility {
     const fields = Object.keys(json[0]);
     const csv = json.map((row) => fields.map((f) => row[f]).join(','));
     csv.unshift(fields.join(','));
-    csv.unshift(`"${location.href}"`);
+    csv.unshift(`"${BrowserUtility.href}"`);
     this.saveAsCsv(csv.join('\r\n'));
   }
 

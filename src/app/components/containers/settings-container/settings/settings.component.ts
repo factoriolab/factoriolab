@@ -34,6 +34,7 @@ import {
 import { FactoriesState } from '~/store/factories';
 import { PreferencesState } from '~/store/preferences';
 import { SettingsState, initialSettingsState } from '~/store/settings';
+import { BrowserUtility } from '~/utilities';
 
 @Component({
   selector: 'lab-settings',
@@ -60,7 +61,7 @@ export class SettingsComponent implements OnInit {
   @Output() resetSettings = new EventEmitter();
   @Output() closeSettings = new EventEmitter();
   @Output() saveState = new EventEmitter<IdPayload>();
-  @Output() deleteState = new EventEmitter<string>();
+  @Output() removeState = new EventEmitter<string>();
   @Output() setPreset = new EventEmitter<Preset>();
   @Output() setBase = new EventEmitter<string>();
   @Output() setDisabledRecipes = new EventEmitter<DefaultPayload<string[]>>();
@@ -108,7 +109,7 @@ export class SettingsComponent implements OnInit {
   ItemId = ItemId;
 
   get hash(): string {
-    return location.hash.substr(1);
+    return BrowserUtility.hash;
   }
 
   get factoryRows(): string[] {
@@ -176,8 +177,8 @@ export class SettingsComponent implements OnInit {
     this.state = this.tempState;
   }
 
-  clickDeleteState(): void {
-    this.deleteState.emit(this.state);
+  clickRemoveState(): void {
+    this.removeState.emit(this.state);
     this.state = '';
   }
 

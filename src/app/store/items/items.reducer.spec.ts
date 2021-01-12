@@ -1,12 +1,10 @@
 import { Mocks } from 'src/tests';
 import { StoreUtility } from '~/utilities';
-import { LoadAction } from '../app.actions';
+import { LoadAction, ResetAction } from '../app.actions';
 import * as Actions from './items.actions';
 import { itemsReducer, initialItemsState } from './items.reducer';
 
 describe('Items Reducer', () => {
-  const numberValue = 2;
-
   describe('LOAD', () => {
     it('should load item settings', () => {
       const result = itemsReducer(
@@ -14,6 +12,13 @@ describe('Items Reducer', () => {
         new LoadAction({ itemsState: Mocks.ItemSettingsEntities } as any)
       );
       expect(result).toEqual(Mocks.ItemSettingsEntities);
+    });
+  });
+
+  describe('RESET', () => {
+    it('should return the initial state', () => {
+      const result = itemsReducer(null, new ResetAction());
+      expect(result).toEqual(initialItemsState);
     });
   });
 
@@ -53,7 +58,7 @@ describe('Items Reducer', () => {
     });
   });
 
-  describe('RESET', () => {
+  describe('RESET_ITEM', () => {
     it('should reset an item', () => {
       const result = itemsReducer(
         initialItemsState,
@@ -79,7 +84,7 @@ describe('Items Reducer', () => {
     });
   });
 
-  it('should return default state', () => {
+  it('should return the default state', () => {
     expect(itemsReducer(undefined, { type: 'Test' } as any)).toBe(
       initialItemsState
     );

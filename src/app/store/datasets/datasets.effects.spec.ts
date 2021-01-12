@@ -154,6 +154,10 @@ describe('DatasetsEffects', () => {
   });
 
   describe('load', () => {
+    beforeEach(() => {
+      http.expectOne(`data/${Mocks.Base.id}/data.json`).flush(Mocks.BaseData);
+    });
+
     it('should request data via HTTP and load base mod', () => {
       spyOn(store, 'dispatch');
       spyOn(effects, 'loadModsForBase');

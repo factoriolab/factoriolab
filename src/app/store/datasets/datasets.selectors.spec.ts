@@ -2,7 +2,7 @@ import { data } from 'src/data';
 import { Mocks } from 'src/tests';
 import * as Selectors from './datasets.selectors';
 
-describe('Dataset Selectors', () => {
+describe('Datasets Selectors', () => {
   describe('getBaseEntities', () => {
     it('should convert base list to entities', () => {
       const result = Selectors.getBaseEntities.projector(data.base, {

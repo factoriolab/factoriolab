@@ -21,16 +21,6 @@ import {
 } from './components';
 import { AppComponent } from './app.component';
 
-beforeEach(() => {
-  location.hash = null;
-  localStorage.clear();
-});
-
-afterEach(() => {
-  location.hash = null;
-  localStorage.clear();
-});
-
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;

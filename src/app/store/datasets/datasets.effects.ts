@@ -7,13 +7,12 @@ import { switchMap, map, tap } from 'rxjs/operators';
 
 import { ModData, Entities } from '~/models';
 import { RouterService } from '~/services/router.service';
+import { BrowserUtility } from '~/utilities';
 import { State } from '..';
 import * as App from '../app.actions';
 import { ResetAction } from '../products';
 import * as Settings from '../settings';
 import { LoadModAction, DatasetsActionType } from './datasets.actions';
-import { initialSettingsState, SettingsState } from '../settings';
-import { storedState } from '../storage.reducer';
 
 @Injectable()
 export class DatasetsEffects {
@@ -92,7 +91,7 @@ export class DatasetsEffects {
       .pipe(map((response) => response as ModData));
   }
 
-  load(hash: string, stored: State, initial: SettingsState): void {
+  load(hash: string, stored: State, initial: Settings.SettingsState): void {
     if (!hash) {
       const id = stored?.settingsState?.baseId || initial.baseId;
       this.requestData(id).subscribe((value) => {
@@ -113,6 +112,10 @@ export class DatasetsEffects {
     private store: Store<State>,
     private router: RouterService
   ) {
-    this.load(location.hash, storedState, initialSettingsState);
+    this.load(
+      BrowserUtility.hash,
+      BrowserUtility.storedState,
+      Settings.initialSettingsState
+    );
   }
 }

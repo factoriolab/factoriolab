@@ -41,7 +41,7 @@ export function preferencesReducer(
       };
       return { ...state, ...{ states } };
     }
-    case PreferencesActionType.DELETE_STATE: {
+    case PreferencesActionType.REMOVE_STATE: {
       const states = { ...state.states };
       delete states[action.payload];
       return { ...state, ...{ states } };

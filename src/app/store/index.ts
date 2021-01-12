@@ -32,7 +32,9 @@ export const reducers: ActionReducerMap<State> = {
 };
 
 /* No need to test without storeFreeze, ignore that branch here. */
-export const metaReducers: MetaReducer<State>[] = !environment.production
-  ? [storeFreeze, storageMetaReducer]
+export const metaReducers: MetaReducer<State>[] = environment.testing
+  ? [storeFreeze]
   : /* istanbul ignore next */
-    [storageMetaReducer];
+  environment.production
+  ? [storageMetaReducer]
+  : [storeFreeze, storageMetaReducer];

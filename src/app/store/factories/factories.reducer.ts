@@ -30,46 +30,38 @@ export function factoriesReducer(
     case SettingsActionType.SET_PRESET:
       return initialFactoriesState;
     case FactoriesActionType.ADD: {
-      let ids = [
+      const value = [
         ...(state.ids || action.payload.default),
         action.payload.value,
       ];
-      if (StoreUtility.rankEquals(ids, action.payload.default)) {
-        ids = null;
-      }
+      const ids = StoreUtility.compareRank(value, action.payload.default);
       return { ...state, ...{ ids } };
     }
     case FactoriesActionType.REMOVE: {
-      let ids = (state.ids || action.payload.default).filter(
+      const value = (state.ids || action.payload.default).filter(
         (i) => i !== action.payload.value
       );
-      if (StoreUtility.rankEquals(ids, action.payload.default)) {
-        ids = null;
-      }
+      const ids = StoreUtility.compareRank(value, action.payload.default);
       const newState = { ...state, ...{ ids } };
       delete newState.entities[action.payload.value];
       return newState;
     }
     case FactoriesActionType.RAISE: {
-      let ids = [...(state.ids || action.payload.default)];
-      const i = ids.indexOf(action.payload.value);
+      const value = [...(state.ids || action.payload.default)];
+      const i = value.indexOf(action.payload.value);
       if (i !== -1 && i > 0) {
-        ids.splice(i - 1, 0, ids.splice(i, 1)[0]);
-        if (StoreUtility.rankEquals(ids, action.payload.default)) {
-          ids = null;
-        }
+        value.splice(i - 1, 0, value.splice(i, 1)[0]);
+        const ids = StoreUtility.compareRank(value, action.payload.default);
         return { ...state, ...{ ids } };
       }
       return state;
     }
     case FactoriesActionType.SET_FACTORY: {
-      let ids = [...(state.ids || action.payload.default)];
-      const i = ids.indexOf(action.payload.id);
+      const value = [...(state.ids || action.payload.default)];
+      const i = value.indexOf(action.payload.id);
       if (i !== -1) {
-        ids[i] = action.payload.value;
-        if (StoreUtility.rankEquals(ids, action.payload.default)) {
-          ids = null;
-        }
+        value[i] = action.payload.value;
+        const ids = StoreUtility.compareRank(value, action.payload.default);
         const newState = {
           ...state,
           ...{ ids, entities: { ...state.entities } },

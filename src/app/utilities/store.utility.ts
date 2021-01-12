@@ -96,10 +96,8 @@ export class StoreUtility {
       : payload.value;
   }
 
-  static compareRank(payload: DefaultPayload<string[]>): string[] {
-    return this.rankEquals(payload.value, payload.default)
-      ? null
-      : payload.value;
+  static compareRank(value: string[], def: string[]): string[] {
+    return this.rankEquals(value, def) ? null : value;
   }
 
   static compareResetDefault<T, P>(

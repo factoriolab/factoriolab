@@ -112,11 +112,11 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
-  it('should delete a state', () => {
+  it('should remove a state', () => {
     const value = 'id';
-    component.child.deleteState.emit(value);
+    component.child.removeState.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new Preferences.DeleteStateAction(value)
+      new Preferences.RemoveStateAction(value)
     );
   });
 

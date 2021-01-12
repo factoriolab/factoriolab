@@ -32,7 +32,7 @@ enum DataTest {
       (resetSettings)="resetSettings()"
       (closeSettings)="closeSettings()"
       (saveState)="saveState($event)"
-      (deleteState)="deleteState($event)"
+      (removeState)="removeState($event)"
       (setPreset)="setPreset($event)"
       (setBase)="setBase($event)"
       (setDisabledRecipes)="setDisabledRecipes($event)"
@@ -67,7 +67,7 @@ class TestSettingsComponent {
   resetSettings(): void {}
   closeSettings(): void {}
   saveState(data): void {}
-  deleteState(data): void {}
+  removeState(data): void {}
   setPreset(data): void {}
   setBase(data): void {}
   setDisabledRecipes(data): void {}
@@ -133,17 +133,6 @@ describe('SettingsComponent', () => {
     expect(component.child.sortedFuels).not.toEqual(Mocks.Data.fuelIds);
   });
 
-  describe('hash', () => {
-    it('should handle no hash in url', () => {
-      expect(component.child.hash).toEqual('');
-    });
-
-    it('should strip the hash character off the hash', () => {
-      location.hash = 'test';
-      expect(component.child.hash).toEqual('test');
-    });
-  });
-
   describe('factoryRows', () => {
     it('should add empty string to list of ids', () => {
       expect(component.child.factoryRows).toEqual([
@@ -175,7 +164,7 @@ describe('SettingsComponent', () => {
     });
 
     it('should set state to matching saved state', () => {
-      location.hash = 'hash';
+      spyOnProperty(component.child, 'hash').and.returnValue('hash');
       component.child.ngOnInit();
       expect(component.child.state).toEqual('name');
     });
@@ -255,20 +244,20 @@ describe('SettingsComponent', () => {
       spyOn(component, 'saveState');
       component.child.tempState = id;
       component.child.editState = true;
-      location.hash = value;
+      spyOnProperty(component.child, 'hash').and.returnValue(value);
       component.child.clickSaveState();
       expect(component.saveState).toHaveBeenCalledWith({ id, value });
       expect(component.child.editState).toBeFalse();
     });
   });
 
-  describe('clickDeleteState', () => {
-    it('should emit to delete the state', () => {
-      spyOn(component, 'deleteState');
+  describe('clickRemoveState', () => {
+    it('should emit to remove the state', () => {
+      spyOn(component, 'removeState');
       component.child.state = id;
       component.child.state = id;
-      component.child.clickDeleteState();
-      expect(component.deleteState).toHaveBeenCalledWith(id);
+      component.child.clickRemoveState();
+      expect(component.removeState).toHaveBeenCalledWith(id);
       expect(component.child.state).toEqual('');
     });
   });

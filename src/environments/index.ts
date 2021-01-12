@@ -1,5 +1,6 @@
 export interface Environment {
   production: boolean;
+  testing: boolean;
   baseHref: string;
 }
 

@@ -18,7 +18,7 @@ export const getFactorySettings = createSelector(
     const ids = state.ids || defaults?.factoryRank || [];
 
     const entities: Entities<FactorySettings> = {};
-    const def: FactorySettings = { ...state.entities[''] } || {};
+    const def: FactorySettings = { ...state.entities[''] };
     def.moduleRank = def.moduleRank || defaults?.moduleRank || [];
     def.beaconCount = def.beaconCount || defaults?.beaconCount;
     def.beacon = def.beacon || defaults?.beacon;
@@ -26,7 +26,7 @@ export const getFactorySettings = createSelector(
     entities[''] = def;
 
     for (const id of data.factoryIds.filter((i) => data.itemEntities[i])) {
-      const s: FactorySettings = { ...state.entities[id] } || {};
+      const s: FactorySettings = { ...state.entities[id] };
       const factory = data.itemEntities[id].factory;
       if (factory.modules) {
         s.moduleRank = s.moduleRank || def.moduleRank;

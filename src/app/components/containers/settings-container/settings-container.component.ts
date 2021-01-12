@@ -90,8 +90,8 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Preferences.SaveStateAction(value));
   }
 
-  deleteState(value: string): void {
-    this.store.dispatch(new Preferences.DeleteStateAction(value));
+  removeState(value: string): void {
+    this.store.dispatch(new Preferences.RemoveStateAction(value));
   }
 
   setPreset(value: Preset): void {

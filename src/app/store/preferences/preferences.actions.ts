@@ -4,7 +4,7 @@ import { ColumnSettings, Entities, IdPayload, LinkValue } from '~/models';
 
 export const enum PreferencesActionType {
   SAVE_STATE = '[Preferences] Save State',
-  DELETE_STATE = '[Preferences] Delete State',
+  REMOVE_STATE = '[Preferences] Remove State',
   SET_COLUMNS = '[Preferences] Set Columns',
   SET_LINK_VALUE = '[Preferences] Set Link Value',
 }
@@ -14,8 +14,8 @@ export class SaveStateAction implements Action {
   constructor(public payload: IdPayload) {}
 }
 
-export class DeleteStateAction implements Action {
-  readonly type = PreferencesActionType.DELETE_STATE;
+export class RemoveStateAction implements Action {
+  readonly type = PreferencesActionType.REMOVE_STATE;
   constructor(public payload: string) {}
 }
 
@@ -31,6 +31,6 @@ export class SetLinkValueAction implements Action {
 
 export type PreferencesAction =
   | SaveStateAction
-  | DeleteStateAction
+  | RemoveStateAction
   | SetColumnsAction
   | SetLinkValueAction;
