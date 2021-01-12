@@ -17,7 +17,7 @@ export class IconComponent {
   @Input() data: Dataset;
   @Input() iconId: string;
   _scale = true;
-  get scale() {
+  get scale(): boolean {
     return this._scale;
   }
   @Input() set scale(value: boolean) {
@@ -26,7 +26,7 @@ export class IconComponent {
   }
   @Input() text: string;
   _scrollTop = 0;
-  get scrollTop() {
+  get scrollTop(): number {
     return this._scrollTop;
   }
   @Input() set scrollTop(value: number) {

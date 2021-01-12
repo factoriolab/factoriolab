@@ -45,7 +45,7 @@ export class AppComponent implements OnInit {
 
   constructor(public router: RouterService, private store: Store<State>) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.data$ = this.store.select(getDataset);
     this.products$ = this.store.select(getProducts);
     this.initialized$ = this.store.select(getInitialized);
