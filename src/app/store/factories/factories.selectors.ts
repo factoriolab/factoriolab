@@ -6,7 +6,8 @@ import { State } from '..';
 import { FactoriesState } from './factories.reducer';
 
 /* Base selector functions */
-export const factoriesState = (state: State) => state.factoriesState;
+export const factoriesState = (state: State): FactoriesState =>
+  state.factoriesState;
 
 /* Complex selectors */
 export const getFactorySettings = createSelector(

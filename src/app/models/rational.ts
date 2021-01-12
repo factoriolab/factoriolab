@@ -15,7 +15,7 @@ export class Rational {
   readonly p: bigint;
   readonly q: bigint;
 
-  static gcd(x: bigint, y: bigint) {
+  static gcd(x: bigint, y: bigint): bigint {
     x = Rational.abs(x);
     y = Rational.abs(y);
     while (y) {
@@ -26,15 +26,15 @@ export class Rational {
     return x;
   }
 
-  static abs(x: bigint) {
+  static abs(x: bigint): bigint {
     return x < bigZero ? x * bigMinusOne : x;
   }
 
-  static from(p: number, q: number = 1) {
+  static from(p: number, q: number = 1): Rational {
     return new Rational(BigInt(p), BigInt(q));
   }
 
-  static fromNumber(x: number) {
+  static fromNumber(x: number): Rational {
     if (Number.isInteger(x)) {
       return new Rational(BigInt(x), bigOne);
     }
@@ -45,39 +45,39 @@ export class Rational {
     );
   }
 
-  static min(x: Rational, y: Rational) {
+  static min(x: Rational, y: Rational): Rational {
     return x.lt(y) ? x : y;
   }
 
-  static max(x: Rational, y: Rational) {
+  static max(x: Rational, y: Rational): Rational {
     return x.gt(y) ? x : y;
   }
 
-  isZero() {
+  isZero(): boolean {
     return this.p === bigZero;
   }
 
-  isOne() {
+  isOne(): boolean {
     return this.p === bigOne && this.q === bigOne;
   }
 
-  nonzero() {
+  nonzero(): boolean {
     return this.p !== bigZero;
   }
 
-  isInteger() {
+  isInteger(): boolean {
     return this.q === bigOne;
   }
 
-  inverse() {
+  inverse(): Rational {
     return this.mul(Rational.minusOne);
   }
 
-  reciprocal() {
+  reciprocal(): Rational {
     return new Rational(this.q, this.p);
   }
 
-  lt(x: Rational) {
+  lt(x: Rational): boolean {
     if (this.q === x.q) {
       return this.p < x.p;
     }
@@ -85,34 +85,34 @@ export class Rational {
     return this.p * x.q < x.p * this.q;
   }
 
-  lte(x: Rational) {
+  lte(x: Rational): boolean {
     return this.eq(x) || this.lt(x);
   }
 
-  gt(x: Rational) {
+  gt(x: Rational): boolean {
     return x.lt(this);
   }
 
-  gte(x: Rational) {
+  gte(x: Rational): boolean {
     return this.eq(x) || this.gt(x);
   }
 
-  eq(x: Rational) {
+  eq(x: Rational): boolean {
     return this.p === x.p && this.q === x.q;
   }
 
-  add(x: Rational) {
+  add(x: Rational): Rational {
     return new Rational(this.p * x.q + this.q * x.p, this.q * x.q);
   }
 
-  sub(x: Rational) {
+  sub(x: Rational): Rational {
     if (x.isZero()) {
       return this;
     }
     return new Rational(this.p * x.q - this.q * x.p, this.q * x.q);
   }
 
-  mul(x: Rational) {
+  mul(x: Rational): Rational {
     if (this.isOne()) {
       return x;
     }
@@ -125,7 +125,7 @@ export class Rational {
     return new Rational(this.p * x.p, this.q * x.q);
   }
 
-  div(x: Rational) {
+  div(x: Rational): Rational {
     if (x.isOne()) {
       return this;
     }
@@ -135,16 +135,16 @@ export class Rational {
     return new Rational(this.p * x.q, this.q * x.p);
   }
 
-  toNumber() {
+  toNumber(): number {
     return Number(this.p) / Number(this.q);
   }
 
-  toPrecision(x: number) {
+  toPrecision(x: number): number {
     const round = Math.pow(10, x);
     return Math.ceil(this.toNumber() * round) / round;
   }
 
-  toFraction() {
+  toFraction(): string {
     if (this.isInteger()) {
       return this.p.toString();
     }
@@ -158,7 +158,7 @@ export class Rational {
     return `${this.p}/${this.q}`;
   }
 
-  toDecimals() {
+  toDecimals(): number {
     if (this.isInteger()) {
       return 0;
     }
