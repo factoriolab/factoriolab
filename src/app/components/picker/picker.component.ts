@@ -43,11 +43,9 @@ export class PickerComponent extends DialogContainerComponent {
 
   setTab(): void {
     if (this.data) {
-      if (this.selected) {
-        this.tab = this.data.itemEntities[this.selected]?.category;
-      } else {
-        this.tab = this.data.categoryIds[0];
-      }
+      this.tab =
+        this.data.itemEntities[this.selected]?.category ||
+        this.data.categoryIds[0];
     }
   }
 }

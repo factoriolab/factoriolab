@@ -13,33 +13,41 @@ import {
   toBoolEntities,
   toEntities,
   ItemId,
+  DisplayRate,
+  ResearchSpeed,
+  InserterTarget,
+  InserterCapacity,
 } from '~/models';
 import { State } from '../';
 import * as Datasets from '../datasets';
 import { SettingsState } from './settings.reducer';
 
 /* Base selector functions */
-export const settingsState = (state: State) => state.settingsState;
-const sPreset = (state: SettingsState) => state.preset;
-const sBaseDatasetId = (state: SettingsState) => state.baseId;
-const sDisplayRate = (state: SettingsState) => state.displayRate;
-const sMiningBonus = (state: SettingsState) => state.miningBonus;
-const sResearchSpeed = (state: SettingsState) => state.researchSpeed;
-const sInserterTarget = (state: SettingsState) => state.inserterTarget;
-const sInserterCapacity = (state: SettingsState) => state.inserterCapacity;
-const sFlowRate = (state: SettingsState) => state.flowRate;
-const sExpensive = (state: SettingsState) => state.expensive;
+export const settingsState = (state: State): SettingsState =>
+  state.settingsState;
+const sPreset = (state: SettingsState): Preset => state.preset;
+const sBaseDatasetId = (state: SettingsState): string => state.baseId;
+const sExpensive = (state: SettingsState): boolean => state.expensive;
+const sFlowRate = (state: SettingsState): number => state.flowRate;
+const sDisplayRate = (state: SettingsState): DisplayRate => state.displayRate;
+const sMiningBonus = (state: SettingsState): number => state.miningBonus;
+const sResearchSpeed = (state: SettingsState): ResearchSpeed =>
+  state.researchSpeed;
+const sInserterTarget = (state: SettingsState): InserterTarget =>
+  state.inserterTarget;
+const sInserterCapacity = (state: SettingsState): InserterCapacity =>
+  state.inserterCapacity;
 
 /* Simple selectors */
 export const getPreset = compose(sPreset, settingsState);
 export const getBaseDatasetId = compose(sBaseDatasetId, settingsState);
+export const getExpensive = compose(sExpensive, settingsState);
+export const getFlowRate = compose(sFlowRate, settingsState);
 export const getDisplayRate = compose(sDisplayRate, settingsState);
 export const getMiningBonus = compose(sMiningBonus, settingsState);
 export const getResearchSpeed = compose(sResearchSpeed, settingsState);
 export const getInserterTarget = compose(sInserterTarget, settingsState);
 export const getInserterCapacity = compose(sInserterCapacity, settingsState);
-export const getFlowRate = compose(sFlowRate, settingsState);
-export const getExpensive = compose(sExpensive, settingsState);
 
 /* Complex selectors */
 export const getBase = createSelector(
@@ -79,15 +87,12 @@ export const getSettings = createSelector(
   (s, d) => ({
     ...s,
     ...{
-      modIds: s.modIds || d?.modIds || [],
       belt: s.belt || d?.belt,
       fuel: s.fuel || d?.fuel,
       disabledRecipes: s.disabledRecipes || d?.disabledRecipes || [],
     },
   })
 );
-
-export const getModIds = createSelector(getSettings, (s) => s.modIds);
 
 export const getBelt = createSelector(getSettings, (s) => s.belt);
 
@@ -121,9 +126,10 @@ export const getAvailableMods = createSelector(
 );
 
 export const getMods = createSelector(
-  getModIds,
+  getBase,
   Datasets.getModEntities,
-  (ids, data) => ids.filter((i) => data[i]).map((i) => data[i])
+  (base, data) =>
+    base?.defaults?.modIds?.filter((i) => data[i]).map((i) => data[i]) || []
 );
 
 export const getDatasets = createSelector(getBase, getMods, (base, mods) =>
@@ -372,7 +378,7 @@ export function getEntities<T extends { id: string }>(
 export function getArrayEntities(
   base: Entities<string[]>,
   mods: Entities<string[]>[]
-) {
+): Entities<Entities<boolean>> {
   let entities = reduceEntities(base);
   for (const mod of mods.filter((m) => m)) {
     entities = reduceEntities(mod, entities);

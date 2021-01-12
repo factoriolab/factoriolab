@@ -6,7 +6,6 @@ describe('RateUtility', () => {
   describe('addStepsFor', () => {
     const expected = [
       {
-        depth: 0,
         itemId: 'iron-chest',
         recipeId: 'iron-chest',
         items: new Rational(BigInt(30)),
@@ -15,7 +14,6 @@ describe('RateUtility', () => {
         pollution: new Rational(BigInt(1)),
       },
       {
-        depth: 1,
         itemId: 'iron-plate',
         recipeId: 'iron-plate',
         items: new Rational(BigInt(240)),
@@ -25,7 +23,6 @@ describe('RateUtility', () => {
         parents: { 'iron-chest': new Rational(BigInt(240)) },
       },
       {
-        depth: 2,
         itemId: 'iron-ore',
         recipeId: 'iron-ore',
         items: new Rational(BigInt(240)),

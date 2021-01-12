@@ -64,6 +64,29 @@ describe('StoreUtility', () => {
         })
       ).toBeFalse();
     });
+
+    it('should validate rank payload equality', () => {
+      expect(
+        StoreUtility.payloadEquals(
+          {
+            id: 'id',
+            value: ['a', 'b'],
+            default: ['a', 'b'],
+          },
+          true
+        )
+      ).toBeTrue();
+      expect(
+        StoreUtility.payloadEquals(
+          {
+            id: 'id',
+            value: ['a', 'b'],
+            default: ['b', 'a'],
+          },
+          true
+        )
+      ).toBeFalse();
+    });
   });
 
   describe('resetFields', () => {
@@ -101,6 +124,17 @@ describe('StoreUtility', () => {
         'ignore'
       );
       expect(result[Mocks.Item1.id]).toBeUndefined();
+    });
+
+    it('should reset a field for a specific id', () => {
+      const result = StoreUtility.resetField(
+        { [Mocks.Item1.id]: { ignore: true, belt: ItemId.TransportBelt } },
+        'ignore',
+        Mocks.Item1.id
+      );
+      expect(result[Mocks.Item1.id]).toEqual({
+        belt: ItemId.TransportBelt,
+      } as any);
     });
   });
 
@@ -176,6 +210,52 @@ describe('StoreUtility', () => {
       expect(
         StoreUtility.compareRank({ value: ['a', 'b'], default: ['b', 'a'] })
       ).toEqual(['a', 'b']);
+    });
+  });
+
+  describe('compareResetDefault', () => {
+    it('should get the default for the null id', () => {
+      spyOn(StoreUtility, 'compareReset');
+      StoreUtility.compareResetDefault(
+        null,
+        null,
+        { id: null, value: null },
+        true
+      );
+      expect(StoreUtility.compareReset).toHaveBeenCalledWith(
+        null,
+        null,
+        { id: null, value: null, default: null },
+        true
+      );
+    });
+
+    it('should get the null default for a specified id', () => {
+      spyOn(StoreUtility, 'compareReset');
+      const id = 'id';
+      const field = 'field';
+      const state = {};
+      StoreUtility.compareResetDefault(state, field, { id, value: null });
+      expect(StoreUtility.compareReset).toHaveBeenCalledWith(
+        state,
+        field,
+        { id, value: null, default: null },
+        false
+      );
+    });
+
+    it('should get the default for a specified id', () => {
+      spyOn(StoreUtility, 'compareReset');
+      const id = 'id';
+      const field = 'field';
+      const state = { ['']: { [field]: 'test' } };
+      StoreUtility.compareResetDefault(state, field, { id, value: null });
+      expect(StoreUtility.compareReset).toHaveBeenCalledWith(
+        state,
+        field,
+        { id, value: null, default: 'test' },
+        false
+      );
     });
   });
 });

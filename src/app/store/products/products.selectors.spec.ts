@@ -207,7 +207,7 @@ describe('Products Selectors', () => {
       expect(result[0].nonzero()).toBeTrue();
     });
 
-    it('should directly calculate if recipeId matches simple recipe', () => {
+    it('should directly calculate if viaId matches simple recipe', () => {
       spyOn(RecipeUtility, 'getProductRecipeData');
       const result = Selectors.getNormalizedRatesByFactories.projector(
         [
@@ -216,7 +216,7 @@ describe('Products Selectors', () => {
             itemId: ItemId.Coal,
             rate: Rational.one,
             rateType: RateType.Factories,
-            recipeId: RecipeId.Coal,
+            viaId: RecipeId.Coal,
           },
         ],
         null,
@@ -238,7 +238,7 @@ describe('Products Selectors', () => {
             itemId: ItemId.Coal,
             rate: Rational.one,
             rateType: RateType.Factories,
-            recipeId: RecipeId.IronOre,
+            viaId: RecipeId.IronOre,
           },
         ],
         { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
@@ -257,7 +257,7 @@ describe('Products Selectors', () => {
             itemId: ItemId.Coal,
             rate: Rational.one,
             rateType: RateType.Factories,
-            recipeId: RecipeId.IronOre,
+            viaId: RecipeId.IronOre,
           },
         ],
         { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
@@ -376,16 +376,19 @@ describe('Products Selectors', () => {
       const products = Mocks.ProductsState1;
       const items = Mocks.ItemSettingsEntities;
       const recipes = Mocks.RecipeSettingsEntities;
+      const factories = Mocks.FactorySettingsInitial;
       const settings = initialSettingsState;
       const result = Selectors.getZipState.projector(
         products,
         items,
         recipes,
+        factories,
         settings
       );
       expect(result.products).toBe(products);
       expect(result.items).toBe(items);
       expect(result.recipes).toBe(recipes);
+      expect(result.factories).toBe(factories);
       expect(result.settings).toBe(settings);
     });
   });

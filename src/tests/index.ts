@@ -1,4 +1,5 @@
 import * as Mocks from './mocks';
+Object.freeze(Mocks);
 export { Mocks };
 export * from './category-id';
 export * from './item-id';

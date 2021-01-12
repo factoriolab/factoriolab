@@ -1,9 +1,20 @@
 import { Mocks } from 'src/tests';
-import { Step, Rational, ItemSettings, RecipeSettings } from '~/models';
-import { initialColumnsState } from '~/store/preferences';
+import {
+  Step,
+  Rational,
+  ItemSettings,
+  RecipeSettings,
+  AllColumns,
+} from '~/models';
+import { initialColumnsState, ColumnsState } from '~/store/preferences';
 import { ExportUtility } from './export.utility';
 
 describe('ExportUtility', () => {
+  const noCols = AllColumns.reduce((e: ColumnsState, c) => {
+    e[c] = { show: false, precision: 1 };
+    return e;
+  }, {});
+
   describe('saveAsCsv', () => {
     it('should save the csv', () => {
       spyOn(ExportUtility, 'saveAsCsv');
@@ -110,7 +121,7 @@ describe('ExportUtility', () => {
     it('should handle minimum columns', () => {
       const result = ExportUtility.stepToJson(
         fullStep,
-        {},
+        noCols,
         { [itemId]: itemS },
         { [recipeId]: fullRecipe }
       );
@@ -154,7 +165,7 @@ describe('ExportUtility', () => {
       const step = { ...fullStep, ...{ recipeId: null } };
       const result = ExportUtility.stepToJson(
         step,
-        {},
+        noCols,
         { [itemId]: itemS },
         { [recipeId]: fullRecipe }
       );

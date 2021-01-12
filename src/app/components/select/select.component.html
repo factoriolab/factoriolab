@@ -1,4 +1,4 @@
-<div (click)="open = true">
+<div data-test="lab-select-open" (click)="open = true">
   <ng-content></ng-content>
 </div>
 <lab-dialog *ngIf="open" [style.minWidth.rem]="width" (closeDialog)="cancel()">
@@ -13,6 +13,7 @@
       *ngIf="includeEmptyModule"
       tooltip="No Module"
       class="grid"
+      data-test="lab-select-none"
       [iconId]="ItemId.Module"
       [class.selected]="selected === ItemId.Module"
       [data]="data"
@@ -22,6 +23,7 @@
     <ng-container *ngFor="let id of options">
       <lab-icon
         class="grid"
+        data-test="lab-select-option"
         [data]="data"
         [iconId]="id"
         [tooltip]="

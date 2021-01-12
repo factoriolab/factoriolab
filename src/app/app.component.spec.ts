@@ -16,8 +16,20 @@ import {
   ProductsComponent,
   ListContainerComponent,
   ListComponent,
+  OptionsComponent,
+  PickerComponent,
 } from './components';
 import { AppComponent } from './app.component';
+
+beforeEach(() => {
+  location.hash = null;
+  localStorage.clear();
+});
+
+afterEach(() => {
+  location.hash = null;
+  localStorage.clear();
+});
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -35,6 +47,8 @@ describe('AppComponent', () => {
       ],
       declarations: [
         IconComponent,
+        OptionsComponent,
+        PickerComponent,
         SettingsContainerComponent,
         SettingsComponent,
         ProductsContainerComponent,
@@ -65,13 +79,4 @@ describe('AppComponent', () => {
     fixture.detectChanges();
     expect(router.updateUrl).toHaveBeenCalled();
   });
-
-  // describe('toggleSettings', () => {
-  //   it('should toggle settings open when clicked', () => {
-  //     component.showSettings = false;
-  //     fixture.detectChanges();
-  //     TestUtility.clickId(fixture, ElementId.HeaderSettings);
-  //     expect(component.showSettings).toBe(true);
-  //   });
-  // });
 });

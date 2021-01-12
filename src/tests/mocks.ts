@@ -139,7 +139,6 @@ export const RecipeSettingsEntities: Entities<RecipeSettings> = {};
 for (const recipe of Data.recipeIds.map((i) => Data.recipeEntities[i])) {
   RecipeSettingsEntities[recipe.id] = { ...RecipeSettings1 };
 }
-export const InitialSettingsState = initialSettingsState;
 export const SettingsState1 = { ...initialSettingsState, ...Defaults };
 export const ItemSettingsInitial = getItemSettings.projector(
   {},

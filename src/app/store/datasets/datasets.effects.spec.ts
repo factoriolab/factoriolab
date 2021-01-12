@@ -6,11 +6,11 @@ import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule, Store, Action } from '@ngrx/store';
-import { of, EMPTY } from 'rxjs';
+import { of } from 'rxjs';
 
 import { Mocks } from 'src/tests';
 import { reducers, metaReducers, State } from '..';
-import { LoadAction } from '../app.actions';
+import * as App from '../app.actions';
 import { ResetAction } from '../products';
 import { SetBaseAction } from '../settings';
 import { LoadModAction } from './datasets.actions';
@@ -56,7 +56,7 @@ describe('DatasetsEffects', () => {
       spyOn(effects, 'loadModsForBase');
       let effect: Action;
       effects.appLoad$.subscribe((a) => (effect = a));
-      store.dispatch(new LoadAction({} as any));
+      store.dispatch(new App.LoadAction({} as any));
       expect(effects.loadModsForBase).toHaveBeenCalledWith(
         Mocks.Base.defaults.modIds
       );
@@ -75,15 +75,14 @@ describe('DatasetsEffects', () => {
       let effect: Action;
       effects.appLoad$.subscribe((a) => (effect = a));
       store.dispatch(
-        new LoadAction({
-          settingsState: {
-            baseId: Mocks.Base.id,
-            modIds: [],
-          },
+        new App.LoadAction({
+          settingsState: { baseId: Mocks.Base.id },
           productsState: {},
         } as any)
       );
-      expect(effects.loadModsForBase).toHaveBeenCalledWith([]);
+      expect(effects.loadModsForBase).toHaveBeenCalledWith(
+        Mocks.Base.defaults.modIds
+      );
       expect(store.dispatch).not.toHaveBeenCalledWith(
         new ResetAction(Mocks.Base.items[0].id)
       );
@@ -93,8 +92,33 @@ describe('DatasetsEffects', () => {
     });
   });
 
+  describe('appReset$', () => {
+    it('should return reset action if already loaded', () => {
+      effects.cache[Mocks.Base.id] = Mocks.BaseData;
+      const effect: Action[] = [];
+      effects.appReset$.subscribe((a) => effect.push(a));
+      store.dispatch(new App.ResetAction());
+      expect(effect).toEqual([new ResetAction(Mocks.Base.items[0].id)]);
+    });
+
+    it('should reset and load mod for new mod', () => {
+      spyOn(effects, 'requestData').and.returnValue(of(Mocks.BaseData));
+      spyOn(effects, 'loadModsForBase');
+      const effect: Action[] = [];
+      effects.appReset$.subscribe((a) => effect.push(a));
+      store.dispatch(new App.ResetAction());
+      expect(effects.loadModsForBase).toHaveBeenCalledWith(
+        Mocks.Base.defaults.modIds
+      );
+      expect(effect).toEqual([
+        new ResetAction(Mocks.Base.items[0].id),
+        new LoadModAction({ id: Mocks.Base.id, value: Mocks.BaseData }),
+      ]);
+    });
+  });
+
   describe('setBaseId$', () => {
-    it('should return reset products if already loaded', () => {
+    it('should return reset action if already loaded', () => {
       effects.cache[Mocks.Base.id] = Mocks.BaseData;
       const effect: Action[] = [];
       effects.setBaseId$.subscribe((a) => effect.push(a));
@@ -129,11 +153,11 @@ describe('DatasetsEffects', () => {
     });
   });
 
-  describe('constructor', () => {
+  describe('load', () => {
     it('should request data via HTTP and load base mod', () => {
-      // Note: Request has already been made since location hash is empty
       spyOn(store, 'dispatch');
       spyOn(effects, 'loadModsForBase');
+      effects.load(null, null, { baseId: Mocks.Base.id } as any);
       http.expectOne(`data/${Mocks.Base.id}/data.json`).flush(Mocks.BaseData);
       expect(effects.loadModsForBase).toHaveBeenCalledWith(
         Mocks.Base.defaults.modIds
@@ -146,14 +170,33 @@ describe('DatasetsEffects', () => {
       );
     });
 
-    it('should skip request if url contains a hash', () => {
+    it('should load from storage', () => {
+      spyOn(store, 'dispatch');
+      spyOn(effects, 'loadModsForBase');
+      effects.load(
+        null,
+        { settingsState: { baseId: Mocks.Base.id }, productsState: {} } as any,
+        null
+      );
       http.expectOne(`data/${Mocks.Base.id}/data.json`).flush(Mocks.BaseData);
-      location.hash = 'test';
-      const fakeHttp = { get: () => {} };
-      spyOn(fakeHttp, 'get');
-      const e = new DatasetsEffects(EMPTY, fakeHttp as any, null, null);
+      expect(effects.loadModsForBase).toHaveBeenCalledWith(
+        Mocks.Base.defaults.modIds
+      );
+      expect(store.dispatch).not.toHaveBeenCalledWith(
+        new ResetAction(Mocks.Base.items[0].id)
+      );
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new LoadModAction({ id: Mocks.Base.id, value: Mocks.BaseData })
+      );
+    });
+
+    it('should skip request if url contains a hash', () => {
+      spyOn(store, 'dispatch');
+      spyOn(effects, 'loadModsForBase');
+      effects.load('test', null, { baseId: Mocks.Base.id } as any);
       http.expectNone(`data/${Mocks.Base.id}/data.json`);
-      expect(fakeHttp.get).not.toHaveBeenCalled();
+      expect(effects.loadModsForBase).not.toHaveBeenCalled();
+      expect(store.dispatch).not.toHaveBeenCalled();
     });
   });
 });

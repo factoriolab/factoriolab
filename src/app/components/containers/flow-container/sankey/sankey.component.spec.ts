@@ -1,5 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ResizeObserverEntry } from '@juggle/resize-observer';
+import { Subject } from 'rxjs';
 
 import { Mocks, TestUtility } from 'src/tests';
 import { SankeyComponent } from './sankey.component';
@@ -63,6 +65,15 @@ describe('SankeyComponent', () => {
       component.child.svg = false as any;
       component.child.ngOnInit();
       expect(component.child.rebuildChart).not.toHaveBeenCalled();
+    });
+
+    it('should call handleResize when detected by NgResizeObserver', () => {
+      spyOn(component.child, 'handleResize');
+      const resize$ = new Subject<ResizeObserverEntry>();
+      component.child.resize$ = resize$;
+      component.child.ngOnInit();
+      resize$.next(null);
+      expect(component.child.handleResize).toHaveBeenCalled();
     });
   });
 

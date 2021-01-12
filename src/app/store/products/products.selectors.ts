@@ -9,6 +9,7 @@ import {
   Rational,
   DisplayRateVal,
   RationalProduct,
+  Product,
 } from '~/models';
 import {
   RateUtility,
@@ -25,9 +26,9 @@ import { State } from '../';
 import { ProductsState } from './products.reducer';
 
 /* Base selector functions */
-const productsState = (state: State) => state.productsState;
-const sIds = (state: ProductsState) => state.ids;
-const sEntities = (state: ProductsState) => state.entities;
+const productsState = (state: State): ProductsState => state.productsState;
+const sIds = (state: ProductsState): string[] => state.ids;
+const sEntities = (state: ProductsState): Entities<Product> => state.entities;
 
 /* Simple selectors */
 export const getIds = compose(sIds, productsState);

@@ -103,7 +103,7 @@ class TestListComponent {
   resetBelt(): void {}
   resetFactory(): void {}
   resetBeacons(): void {}
-  setDisabledRecipes($event): void {}
+  setDisabledRecipes(data): void {}
 }
 
 describe('ListComponent', () => {

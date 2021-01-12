@@ -144,21 +144,16 @@
                 rate(step.belts, effPrecision[Column.Belts])
               }}</span>
               <ng-container
-                *ngIf="
-                  data.beltIds.indexOf(belt) === -1;
-                  then beltDefault;
-                  else beltPicker
-                "
-              ></ng-container>
-              <ng-template #beltDefault>
+                *ngIf="data.beltIds.indexOf(belt) === -1; else beltPicker"
+              >
                 <lab-icon
                   [iconId]="belt"
                   [tooltip]="data.itemEntities[belt].name"
                   [item]="data.itemEntities[belt]"
                   [displayRate]="displayRate"
                   [data]="data"
-                ></lab-icon>
-              </ng-template>
+                ></lab-icon
+              ></ng-container>
               <ng-template #beltPicker>
                 <lab-select
                   header="Select a belt type"
@@ -324,20 +319,15 @@
               <div class="flex">
                 <ng-container *ngIf="recipeSettings[step.recipeId].beaconCount">
                   <ng-container
-                    *ngIf="
-                      data.beaconIds.length === 1;
-                      then beaconDefault;
-                      else beaconPicker
-                    "
-                  ></ng-container>
-                  <ng-template #beaconDefault>
+                    *ngIf="data.beaconIds.length === 1; else beaconPicker"
+                  >
                     <lab-icon
                       [iconId]="beacon"
                       [tooltip]="data.itemEntities[beacon].name"
                       [item]="data.itemEntities[beacon]"
                       [data]="data"
-                    ></lab-icon>
-                  </ng-template>
+                    ></lab-icon
+                  ></ng-container>
                   <ng-template #beaconPicker>
                     <lab-select
                       header="Select a beacon"

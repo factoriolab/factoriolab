@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { StoreModule, Store } from '@ngrx/store';
 
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import { IconComponent, PickerComponent } from '~/components';
+import { IconComponent, OptionsComponent, PickerComponent } from '~/components';
 import { RateType } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as Products from '~/store/products';
@@ -20,6 +20,7 @@ describe('ProductsContainerComponent', () => {
       imports: [FormsModule, StoreModule.forRoot(reducers, { metaReducers })],
       declarations: [
         IconComponent,
+        OptionsComponent,
         PickerComponent,
         ProductsComponent,
         ProductsContainerComponent,

@@ -22,7 +22,7 @@ export class RateUtility {
     itemSettings: ItemsState,
     data: Dataset,
     parentId: string = null
-  ) {
+  ): void {
     const recipe = data.recipeR[data.itemRecipeIds[itemId]];
 
     // Find existing step for this item
@@ -96,7 +96,7 @@ export class RateUtility {
     }
   }
 
-  static addParentValue(step: Step, parentId: string, rate: Rational) {
+  static addParentValue(step: Step, parentId: string, rate: Rational): void {
     if (parentId) {
       if (!step.parents) {
         step.parents = {};
@@ -109,7 +109,7 @@ export class RateUtility {
     }
   }
 
-  static adjustPowerPollution(step: Step, recipe: RationalRecipe) {
+  static adjustPowerPollution(step: Step, recipe: RationalRecipe): void {
     if (step.factories?.nonzero()) {
       // Calculate power
       if (recipe.consumption?.nonzero()) {
@@ -127,7 +127,7 @@ export class RateUtility {
     itemSettings: ItemsState,
     beltSpeed: Entities<Rational>,
     data: Dataset
-  ) {
+  ): Step[] {
     for (const step of steps) {
       const belt = itemSettings[step.itemId]?.belt;
       if (step.items && belt) {
@@ -144,7 +144,7 @@ export class RateUtility {
     return steps;
   }
 
-  static displayRate(steps: Step[], displayRate: DisplayRate) {
+  static displayRate(steps: Step[], displayRate: DisplayRate): Step[] {
     const displayRateVal = DisplayRateVal[displayRate];
     for (const step of steps) {
       if (step.items) {
@@ -168,7 +168,7 @@ export class RateUtility {
     return steps;
   }
 
-  static copy(steps: Step[]) {
+  static copy(steps: Step[]): Step[] {
     return steps.map((s) =>
       s.parents ? { ...s, ...{ parents: { ...s.parents } } } : { ...s }
     );

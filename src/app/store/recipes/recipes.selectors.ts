@@ -11,9 +11,10 @@ import { RecipeUtility } from '~/utilities/recipe.utility';
 import * as Factories from '../factories';
 import * as Settings from '../settings';
 import { State } from '..';
+import { RecipesState } from './recipes.reducer';
 
 /* Base selector functions */
-export const recipesState = (state: State) => state.recipesState;
+export const recipesState = (state: State): RecipesState => state.recipesState;
 
 /* Complex selectors */
 export const getRecipeSettings = createSelector(
@@ -24,9 +25,11 @@ export const getRecipeSettings = createSelector(
     const value: Entities<RecipeSettings> = {};
     if (data?.recipeIds?.length) {
       for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
-        const s: RecipeSettings = { ...state[recipe.id] } || {};
-        s.factory =
-          s.factory || RecipeUtility.bestMatch(recipe.producers, factories.ids);
+        const s: RecipeSettings = { ...state[recipe.id] };
+
+        if (!s.factory) {
+          s.factory = RecipeUtility.bestMatch(recipe.producers, factories.ids);
+        }
 
         const factory = data.itemEntities[s.factory]?.factory;
         if (

@@ -17,7 +17,6 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
 })
 export class ToggleComponent extends DialogContainerComponent {
   @Input() data: Dataset;
-  @Input() title: string;
   @Input() selected: string[];
 
   @Output() selectIds = new EventEmitter<string[]>();

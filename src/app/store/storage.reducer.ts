@@ -3,7 +3,9 @@ import { ActionReducer, Action } from '@ngrx/store';
 import { STATE_KEY } from '~/models';
 import { State } from '.';
 
-export function storageMetaReducer(reducer: ActionReducer<State, Action>) {
+export function storageMetaReducer(
+  reducer: ActionReducer<State, Action>
+): (state: State, action: Action) => State {
   let onInit = true;
   return function (state: State, action: Action): State {
     const nextState = reducer(state, action);

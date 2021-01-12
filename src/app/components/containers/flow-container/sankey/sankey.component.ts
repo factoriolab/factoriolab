@@ -47,7 +47,7 @@ export class SankeyComponent implements OnInit {
 
   constructor(
     private ref: ElementRef<HTMLElement>,
-    private resize$: NgResizeObserver
+    public resize$: NgResizeObserver
   ) {}
 
   ngOnInit(): void {

@@ -70,29 +70,49 @@ export function productsReducer(
       };
     }
     case ProductsActionType.SET_ITEM:
-      return StoreUtility.setEntityValue(
-        state,
-        ProductField.ItemId,
-        action.payload
-      );
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.assignValue(
+            state.entities,
+            ProductField.ItemId,
+            action.payload
+          ),
+        },
+      };
     case ProductsActionType.SET_RATE:
-      return StoreUtility.setEntityValue(
-        state,
-        ProductField.Rate,
-        action.payload
-      );
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.assignValue(
+            state.entities,
+            ProductField.Rate,
+            action.payload
+          ),
+        },
+      };
     case ProductsActionType.SET_RATE_TYPE:
-      return StoreUtility.setEntityValue(
-        state,
-        ProductField.RateType,
-        action.payload
-      );
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.assignValue(
+            state.entities,
+            ProductField.RateType,
+            action.payload
+          ),
+        },
+      };
     case ProductsActionType.SET_VIA:
-      return StoreUtility.setEntityValue(
-        state,
-        ProductField.ViaId,
-        action.payload
-      );
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.assignValue(
+            state.entities,
+            ProductField.ViaId,
+            action.payload
+          ),
+        },
+      };
     default:
       return state;
   }

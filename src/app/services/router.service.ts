@@ -14,11 +14,11 @@ import {
 } from '~/models';
 import { State } from '~/store';
 import { LoadAction } from '~/store/app.actions';
-import * as Factories from '~/store/factories';
-import * as Items from '~/store/items';
+import { FactoriesState } from '~/store/factories';
+import { ItemsState } from '~/store/items';
 import * as Products from '~/store/products';
-import * as Recipes from '~/store/recipes';
-import * as Settings from '~/store/settings';
+import { RecipesState } from '~/store/recipes';
+import { SettingsState, initialSettingsState } from '~/store/settings';
 
 export const NULL = 'n';
 export const EMPTY = 'e';
@@ -42,11 +42,11 @@ export class RouterService {
 
   updateUrl(
     products: Products.ProductsState,
-    items: Items.ItemsState,
-    recipes: Recipes.RecipesState,
-    factories: Factories.FactoriesState,
-    settings: Settings.SettingsState
-  ) {
+    items: ItemsState,
+    recipes: RecipesState,
+    factories: FactoriesState,
+    settings: SettingsState
+  ): void {
     if (!this.unzipping) {
       const zProducts = this.zipProducts(
         products.ids.map((i) => products.entities[i])
@@ -55,7 +55,7 @@ export class RouterService {
       this.zipPartial = '';
       const zPreset = this.zipDiffNumber(
         settings.preset,
-        Settings.initialSettingsState.preset
+        initialSettingsState.preset
       );
       if (zPreset.length) {
         this.zipPartial += `&b=${zPreset}`;
@@ -81,7 +81,7 @@ export class RouterService {
     }
   }
 
-  stepHref(step: Step) {
+  stepHref(step: Step): string {
     const products: Product[] = [
       {
         id: '0',
@@ -94,13 +94,13 @@ export class RouterService {
     return '#' + this.getHash(`p=${zProducts}`);
   }
 
-  getHash(zProducts: string) {
+  getHash(zProducts: string): string {
     const unzipped = zProducts + this.zipPartial;
     const zipped = `z=${btoa(deflate(unzipped, { to: 'string' }))}`;
     return unzipped.length < zipped.length ? unzipped : zipped;
   }
 
-  updateState(e: Event) {
+  updateState(e: Event): void {
     try {
       if (e instanceof NavigationEnd) {
         const fragments = e.url.split('#');
@@ -199,7 +199,7 @@ export class RouterService {
     return { ids, index, entities };
   }
 
-  zipItems(state: Items.ItemsState): string {
+  zipItems(state: ItemsState): string {
     return Object.keys(state)
       .map((id) => {
         const settings = state[id];
@@ -214,8 +214,8 @@ export class RouterService {
       .join(LISTSEP);
   }
 
-  unzipItems(zItems: string[]) {
-    const items: Items.ItemsState = {};
+  unzipItems(zItems: string[]): ItemsState {
+    const items: ItemsState = {};
     for (const recipe of zItems) {
       const r = recipe.split(FIELDSEP);
       const u: ItemSettings = {};
@@ -233,7 +233,7 @@ export class RouterService {
     return items;
   }
 
-  zipRecipes(state: Recipes.RecipesState): string {
+  zipRecipes(state: RecipesState): string {
     return Object.keys(state)
       .map((id) => {
         const settings = state[id];
@@ -251,8 +251,8 @@ export class RouterService {
       .join(LISTSEP);
   }
 
-  unzipRecipes(zRecipes: string[]) {
-    const recipes: Recipes.RecipesState = {};
+  unzipRecipes(zRecipes: string[]): RecipesState {
+    const recipes: RecipesState = {};
     for (const recipe of zRecipes) {
       const r = recipe.split(FIELDSEP);
       const u: RecipeSettings = {};
@@ -282,7 +282,7 @@ export class RouterService {
     return recipes;
   }
 
-  zipFactories(state: Factories.FactoriesState): string {
+  zipFactories(state: FactoriesState): string {
     const ids = state.ids ? ['', ...state.ids] : Object.keys(state.entities);
     return ids
       .map((id) => {
@@ -303,16 +303,13 @@ export class RouterService {
       .join(LISTSEP);
   }
 
-  unzipFactories(zFactories: string[]) {
-    const factories: Factories.FactoriesState = {
+  unzipFactories(zFactories: string[]): FactoriesState {
+    const factories: FactoriesState = {
       ids: null,
       entities: {},
     };
-    const loadIds = zFactories[0] === TRUE;
-    if (loadIds) {
-      factories.ids = [];
-    }
-    for (let z = 1; z < zFactories.length; z++) {
+    let loadIds = false;
+    for (let z = 0; z < zFactories.length; z++) {
       const factory = zFactories[z];
       const f = factory.split(FIELDSEP);
       const u: FactorySettings = {};
@@ -333,20 +330,25 @@ export class RouterService {
       if (v?.length) {
         u.beacon = this.parseString(v);
       }
-      const id = f[0];
-      factories.entities[id] = u;
-      if (loadIds) {
+      let id = f[0];
+      if (z === 0) {
+        if (id === TRUE) {
+          loadIds = true;
+          factories.ids = [];
+        }
+        id = '';
+      } else if (loadIds) {
         factories.ids.push(id);
       }
+      factories.entities[id] = u;
     }
     return factories;
   }
 
-  zipSettings(state: Settings.SettingsState): string {
-    const init = Settings.initialSettingsState;
+  zipSettings(state: SettingsState): string {
+    const init = initialSettingsState;
     return [
       this.zipDiffString(state.baseId, init.baseId),
-      this.zipDiffArray(state.modIds, init.modIds),
       this.zipDiffArray(state.disabledRecipes, init.disabledRecipes),
       this.zipDiffBool(state.expensive, init.expensive),
       this.zipDiffString(state.belt, init.belt),
@@ -362,17 +364,13 @@ export class RouterService {
       .replace(/\**$/, '');
   }
 
-  unzipSettings(zSettings: string) {
+  unzipSettings(zSettings: string): SettingsState {
     const s = zSettings.split(FIELDSEP);
-    const settings: Settings.SettingsState = {} as any;
+    const settings: SettingsState = {} as any;
     let i = 0;
     let v = s[i++];
     if (v.length) {
       settings.baseId = v;
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.modIds = this.parseArray(v);
     }
     v = s[i++];
     if (v?.length) {
@@ -417,35 +415,35 @@ export class RouterService {
     return settings;
   }
 
-  zipTruthyString(value: string) {
+  zipTruthyString(value: string): string {
     return value == null ? '' : value;
   }
 
-  zipTruthyNumber(value: number) {
+  zipTruthyNumber(value: number): string {
     return value == null ? '' : value.toString();
   }
 
-  zipTruthyBool(value: boolean) {
+  zipTruthyBool(value: boolean): string {
     return value == null ? '' : value ? TRUE : FALSE;
   }
 
-  zipTruthyArray(value: string[]) {
+  zipTruthyArray(value: string[]): string {
     return value == null ? '' : value.length ? value.join(ARRAYSEP) : EMPTY;
   }
 
-  zipDiffString(value: string, init: string) {
+  zipDiffString(value: string, init: string): string {
     return value === init ? '' : value == null ? NULL : value;
   }
 
-  zipDiffNumber(value: number, init: number) {
+  zipDiffNumber(value: number, init: number): string {
     return value === init ? '' : value == null ? NULL : value.toString();
   }
 
-  zipDiffBool(value: boolean, init: boolean) {
+  zipDiffBool(value: boolean, init: boolean): string {
     return value === init ? '' : value == null ? NULL : value ? TRUE : FALSE;
   }
 
-  zipDiffArray(value: string[], init: string[]) {
+  zipDiffArray(value: string[], init: string[]): string {
     const zVal = value
       ? value.length
         ? [...value].sort().join(ARRAYSEP)
@@ -459,7 +457,7 @@ export class RouterService {
     return zVal === zInit ? '' : zVal;
   }
 
-  zipDiffRank(value: string[], init: string[]) {
+  zipDiffRank(value: string[], init: string[]): string {
     const zVal = value
       ? value.length
         ? [...value].join(ARRAYSEP)
@@ -473,19 +471,19 @@ export class RouterService {
     return zVal === zInit ? '' : zVal;
   }
 
-  parseString(value: string) {
+  parseString(value: string): string {
     return value === NULL ? null : value;
   }
 
-  parseBool(value: string) {
+  parseBool(value: string): boolean {
     return value === NULL ? null : value === TRUE;
   }
 
-  parseNumber(value: string) {
+  parseNumber(value: string): number {
     return value === NULL ? null : Number(value);
   }
 
-  parseArray(value: string) {
+  parseArray(value: string): string[] {
     return value === NULL ? null : value === EMPTY ? [] : value.split(ARRAYSEP);
   }
 }

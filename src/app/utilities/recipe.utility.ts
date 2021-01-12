@@ -11,7 +11,7 @@ export class RecipeUtility {
   static POLLUTION_FACTOR = new Rational(BigInt(60));
 
   /** Determines what option to use based on preferred rank */
-  static bestMatch(options: string[], rank: string[]) {
+  static bestMatch(options: string[], rank: string[]): string {
     if (options.length > 1) {
       for (const r of rank) {
         if (options.indexOf(r) !== -1) {
@@ -28,7 +28,7 @@ export class RecipeUtility {
     allowedModules: string[],
     moduleRank: string[],
     count: number
-  ) {
+  ): string[] {
     const module = this.bestMatch(
       [ItemId.Module, ...allowedModules],
       moduleRank
@@ -43,7 +43,7 @@ export class RecipeUtility {
     researchFactor: Rational,
     settings: RationalRecipeSettings,
     data: Dataset
-  ) {
+  ): RationalRecipe {
     const recipe = new RationalRecipe(data.recipeEntities[recipeId]);
     const factory = data.itemR[settings.factory].factory;
 
@@ -204,7 +204,10 @@ export class RecipeUtility {
     return recipe;
   }
 
-  static getProductRecipeData(recipes: [string, Rational][], recipeId: string) {
+  static getProductRecipeData(
+    recipes: [string, Rational][],
+    recipeId: string
+  ): [string, Rational] {
     if (recipes.length === 0) {
       return null;
     } else if (recipeId) {

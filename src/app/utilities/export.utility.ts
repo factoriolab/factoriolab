@@ -33,7 +33,7 @@ export class ExportUtility {
     columns: ColumnsState,
     itemSettings: ItemsState,
     recipeSettings: RecipesState
-  ) {
+  ): void {
     const json = steps.map((s) =>
       this.stepToJson(s, columns, itemSettings, recipeSettings)
     );
@@ -46,7 +46,7 @@ export class ExportUtility {
 
   /* Don't test dependencies (file-saver) */
   /* istanbul ignore next */
-  static saveAsCsv(data: string) {
+  static saveAsCsv(data: string): void {
     saveAs(
       new Blob([data], { type: CSV_TYPE }),
       'factoriolab_steps' + CSV_EXTENSION
@@ -58,7 +58,7 @@ export class ExportUtility {
     columns: ColumnsState,
     itemSettings: ItemsState,
     recipeSettings: RecipesState
-  ) {
+  ): StepExport {
     const exp: StepExport = {
       Item: step.itemId,
       Items: step.items.toNumber(),

@@ -12,7 +12,6 @@ import { SettingsAction, SettingsActionType } from './settings.actions';
 export interface SettingsState {
   preset: Preset;
   baseId: string;
-  modIds: string[];
   disabledRecipes: string[];
   expensive: boolean;
   belt: string;
@@ -28,7 +27,6 @@ export interface SettingsState {
 export const initialSettingsState: SettingsState = {
   preset: Preset.Minimum,
   baseId: '1.1',
-  modIds: null,
   disabledRecipes: null,
   expensive: false,
   belt: null,

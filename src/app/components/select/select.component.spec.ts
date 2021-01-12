@@ -6,6 +6,12 @@ import { DialogComponent, IconComponent } from '~/components';
 import { IdType, DisplayRate, Dataset } from '~/models';
 import { SelectComponent } from './select.component';
 
+enum DataTest {
+  Open = 'lab-select-open',
+  None = 'lab-select-none',
+  Option = 'lab-select-option',
+}
+
 @Component({
   selector: 'lab-test-select',
   template: `
@@ -41,7 +47,7 @@ describe('SelectComponent', () => {
   let fixture: ComponentFixture<TestSelectComponent>;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [
         DialogComponent,
         IconComponent,
@@ -70,6 +76,19 @@ describe('SelectComponent', () => {
       component.options = ['1', '2', '3', '4', '5'];
       fixture.detectChanges();
       expect(component.child.width).toEqual(8.625);
+    });
+  });
+
+  describe('clickId', () => {
+    it('should emit the selection', () => {
+      spyOn(component, 'selectId');
+      TestUtility.clickDt(fixture, DataTest.Open);
+      fixture.detectChanges();
+      TestUtility.clickDt(fixture, DataTest.Option);
+      expect(component.selectId).toHaveBeenCalledWith(
+        ItemId.AssemblingMachine1
+      );
+      expect(component.child.open).toBeFalse();
     });
   });
 });
