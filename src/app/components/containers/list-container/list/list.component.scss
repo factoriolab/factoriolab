@@ -178,7 +178,7 @@ td.nowrap {
 }
 
 .message {
-  color: var(--color-brand);
+  color: var(--color-header);
   font-size: large;
   text-align: center;
   padding: 1rem;
@@ -204,10 +204,6 @@ tr {
 .info {
   font-size: small;
   margin-bottom: 0.25rem;
-}
-
-.recipe-spacer {
-  width: 1.75rem;
 }
 
 lab-icon:not(.button) {

@@ -612,12 +612,6 @@
                       [tooltip]="data.recipeEntities[inStep.recipeId]?.name"
                       [recipe]="data.recipeEntities[inStep.recipeId]"
                     ></lab-icon>
-                    <div
-                      *ngIf="
-                        !inStep.recipeId || inStep.recipeId === inStep.itemId
-                      "
-                      class="recipe-spacer"
-                    ></div>
                     <div class="flex percent">
                       <span class="monospace"
                         >{{
@@ -759,10 +753,6 @@
             </ng-container>
             <td class="split-column" colspan="100">
               <div class="flex">
-                <div
-                  *ngIf="!step.recipeId || step.recipeId === step.itemId"
-                  class="recipe-spacer"
-                ></div>
                 <div class="flex percent">
                   <span class="monospace"
                     >{{
