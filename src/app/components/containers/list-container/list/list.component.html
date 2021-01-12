@@ -601,17 +601,7 @@
                   ></td>
                 </ng-container>
                 <td class="split-column" colspan="100">
-                  <div class="flex">
-                    <lab-icon
-                      *ngIf="
-                        inStep.recipeId && inStep.recipeId !== inStep.itemId
-                      "
-                      class="recipe"
-                      [data]="data"
-                      [iconId]="inStep.recipeId"
-                      [tooltip]="data.recipeEntities[inStep.recipeId]?.name"
-                      [recipe]="data.recipeEntities[inStep.recipeId]"
-                    ></lab-icon>
+                  <div>
                     <div class="flex percent">
                       <span class="monospace"
                         >{{
@@ -752,7 +742,7 @@
               ></td>
             </ng-container>
             <td class="split-column" colspan="100">
-              <div class="flex">
+              <div>
                 <div class="flex percent">
                   <span class="monospace"
                     >{{
