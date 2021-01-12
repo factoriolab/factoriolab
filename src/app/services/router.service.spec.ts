@@ -15,8 +15,8 @@ import {
 } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import { LoadAction } from '~/store/app.actions';
-import { ItemsState } from '~/store/items';
 import { FactoriesState, initialFactoriesState } from '~/store/factories';
+import { ItemsState } from '~/store/items';
 import { ProductsState } from '~/store/products';
 import { RecipesState } from '~/store/recipes';
 import { initialSettingsState, SettingsState } from '~/store/settings';
@@ -27,7 +27,6 @@ import {
   NULL,
   TRUE,
   FALSE,
-  ARRAYSEP,
   LISTSEP,
 } from './router.service';
 
