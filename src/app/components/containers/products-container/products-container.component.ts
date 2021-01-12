@@ -14,10 +14,12 @@ import {
   Dataset,
   Rational,
   Entities,
+  DisplayRate,
 } from '~/models';
 import { State } from '~/store';
 import * as Products from '~/store/products';
 import { getAdjustedDataset } from '~/store/recipes';
+import { getDisplayRate } from '~/store/settings';
 import { ProductsComponent } from './products/products.component';
 
 @Component({
@@ -32,36 +34,38 @@ export class ProductsContainerComponent implements OnInit {
   data$: Observable<Dataset>;
   productRecipes$: Observable<Entities<[string, Rational][]>>;
   products$: Observable<Product[]>;
+  displayRate$: Observable<DisplayRate>;
 
   constructor(private store: Store<State>) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.data$ = this.store.select(getAdjustedDataset);
     this.productRecipes$ = this.store.select(Products.getProductRecipes);
     this.products$ = this.store.select(Products.getProducts);
+    this.displayRate$ = this.store.select(getDisplayRate);
   }
 
-  add(value: string) {
+  addProduct(value: string): void {
     this.store.dispatch(new Products.AddAction(value));
   }
 
-  remove(id: string) {
+  removeProduct(id: string): void {
     this.store.dispatch(new Products.RemoveAction(id));
   }
 
-  editProduct(data: IdPayload) {
-    this.store.dispatch(new Products.EditProductAction(data));
+  setItem(data: IdPayload): void {
+    this.store.dispatch(new Products.SetItemAction(data));
   }
 
-  editRate(data: IdPayload<number>) {
-    this.store.dispatch(new Products.EditRateAction(data));
+  setRate(data: IdPayload<number>): void {
+    this.store.dispatch(new Products.SetRateAction(data));
   }
 
-  editRateType(data: IdPayload<RateType>) {
-    this.store.dispatch(new Products.EditRateTypeAction(data));
+  setRateType(data: IdPayload<RateType>): void {
+    this.store.dispatch(new Products.SetRateTypeAction(data));
   }
 
-  editRecipe(data: IdPayload) {
-    this.store.dispatch(new Products.EditRecipeAction(data));
+  setVia(data: IdPayload): void {
+    this.store.dispatch(new Products.SetViaAction(data));
   }
 }

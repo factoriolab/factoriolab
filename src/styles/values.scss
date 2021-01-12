@@ -1,43 +1,127 @@
 $color-white: #fff;
-$color-gray-0: #bbb;
-$color-gray-1: #333;
-$color-gray-2: #2a2a2a;
+$color-button: #8e8e8e;
+$color-light: #403f40;
+$color-back: #313031;
+$color-dark: #242324;
 $color-black: #000;
 
-$color-brand: #ff7200;
-$color-back: #171717;
-$color-font: #c8c8c8;
-$color-invalid: #dd0000;
-$color-valid: #009900;
+$color-link: #7dcaed;
+$color-link-alt: #9ad1ea;
+$color-input: #828282;
+$color-input-alt: #f0dab4;
+$color-brand: #fca000;
+$color-brand-alt: #f1be64;
+$color-brand-drk: #b26e00;
+$color-brand-sha: #f9b44b;
+$color-brand-che: #e39827;
+$color-header: #ffe6c0;
+$color-scroll: #201810;
+$color-green: #5eb663;
+$color-green-alt: #34be3c;
+$color-red: #fe5a5a;
 
-.dark-mode {
+$shadow-button: inset 8px 0 4px -8px #000, inset -8px 0 4px -8px #000,
+  inset 0 10px 2px -8px #e3e3e3, inset 0 10px 2px -8px #282828,
+  inset 0 -9px 2px -8px #000, 0 0 4px 0 #000;
+$shadow-button-sm: inset 4px 0 2px -4px #150802, inset -4px 0 2px -4px #150802,
+  inset 0 4px 2px -4px #969490, inset 0 -4px 2px -3px #000, 0 -1px 2px 0px #000,
+  0 1px 2px 0px #7e7b79;
+$shadow-button-ac: inset 8px 0 4px -8px #000, inset -8px 0 4px -8px #000,
+  inset 0 10px 2px -8px#969490, inset 0 10px 2px -8px #282828,
+  0 10px 4px -1px $color-light;
+$shadow-button-dk: inset 8px 0 4px -8px #000, inset -8px 0 4px -8px #000,
+  inset 0 10px 2px -8px#969490, inset 0 10px 2px -8px #282828;
+$shadow-button-gr: inset 8px 0 4px -8px #000, inset 0 10px 2px -8px #95df99,
+  inset 0 10px 2px -8px #163218, inset 0 -9px 2px -8px #000, 0 0 4px 0 #000;
+$shadow-input: inset 0 4px 1px -2px #000, inset 0 -4px 1px -2px #c5c5c5,
+  inset 2px 0 1px 0 #5f5f5f, inset -2px 0 1px 0 #5f5f5f,
+  inset 0 -2px 2px 0 #5f5f5f, 0 0 4px 1px #2e2521;
+$shadow-check: inset 0 4px 2.5px -2.5px #111, inset 2px 0 2px 0 #323232,
+  inset -2px 0 2px 0 #323232, inset 0 -1px 1px 0 #fff,
+  inset 0 -4px 2px -2px #8e8e8e, 0 0 4px 1px #2e2521;
+$shadow-panel: inset 0 0 3px 0 #000, 0 -2px 2px -1px #000,
+  -2px 0 2px -2px #28221f, -2px 0 2px -2px #28221f, 2px 0 2px -2px #28221f,
+  2px 0 2px -2px #28221f, 0 3px 3px -3px #8f8c8b, 0 2px 2px -2px #8f8c8b,
+  0 1px 1px -1px #8f8c8b;
+$shadow-hole: inset 0 2px 2px -2px #000, inset 0 2px 2px -2px #000,
+  inset 0 0 2px 0 #33302f, inset 0 0 2px 0 #33302f, inset 0 -2px 2px -2px #fff,
+  0 0 2px 0 #2b2b2b;
+$shadow-inner: inset 0 0 4px 0 #2d2d2d, 0 -2px 2px -2px #888,
+  0 -2px 2px -2px #888, -2px 0 2px -2px #000, 2px 0 2px -2px #000,
+  0 2px 2px -2px #000;
+$shadow-hover: inset 8px 0 4px -8px #000, inset -8px 0 4px -8px #000,
+  inset 0 9px 2px -8px #fff, inset 0 8px 4px -8px #000,
+  inset 0 -8px 4px -8px #000, inset 0 -9px 2px -8px #432400, 0 0 4px 0 #000,
+  inset 0 0 4px 2px #f9b44b;
+$shadow-hover-sm: inset 4px 0 2px -4px #000, inset -4px 0 2px -4px #000,
+  inset 0 5px 1px -4px #fff, inset 0 4px 2px -4px #000,
+  inset 0 -4px 4px -4px #000, inset 0 -5px 1px -4px #432400, 0 0 2px 0 #000,
+  inset 0 0 2px 1px #f9b44b;
+$shadow-hover-ch: inset 0 4px 2px -2px #412a07, inset 2px 0 2px 0 #5a3c10,
+  inset -2px 0 2px 0 #5a3c10, inset 0 -2px 2px 0 #d0ae79,
+  inset 0 -2px 4px 0 #c78627, 0 0 4px 1px #786b4f;
+$shadow-active: inset 0 10px 2px -8px #000, inset 0 9px 2px -8px #000,
+  inset 8px 0 4px -8px #563a10, inset 8px 0 4px -8px #563a10,
+  inset -8px 0 4px -8px #563a10, inset -8px 0 4px -8px #563a10,
+  inset 0 9px 2px -8px #563a10, inset 0 -9px 2px -8px #563a10,
+  inset 0 -8.5px 0 -8px #563a10, 0 0 4px 0 #000;
+$shadow-active-sm: inset 0 5px 1px -4px #000, inset 0 5px 1px -4px #000,
+  inset 4px 0 2px -4px #563a10, inset 4px 0 2px -4px #563a10,
+  inset -4px 0 2px -4px #563a10, inset -4px 0 2px -4px #563a10,
+  inset 0 5px 1px -4px #563a10, inset 0 -5px 1px -4px #563a10,
+  inset 0 -4px 0 -4px #563a10, 0 0 2px 0 #000;
+$shadow-main: inset 3px 0 3px -3px #201815, inset 2px 0 2px -2px #201815,
+  inset 1px 0 1px -1px #201815, inset 0 3px 3px -3px #8f8c8b,
+  inset 0 2px 2px -2px #8f8c8b, inset 0 1px 1px -1px #8f8c8b,
+  inset -3px 0 3px -3px #201815, inset -2px 0 2px -2px #201815,
+  inset -2px 0 1px -1px #201815, inset 0 -3px 3px -3px #000,
+  inset 0 -2px 2px -2px #000, inset 0 -1px 1px -1px #000, 0 0 2px 0 #201815,
+  0 0 4px 0 #201815;
+$shadow-tip: inset 4px 0 2px -4px #000, inset -4px 0 2px -4px #000,
+  inset 0 5px 1px -4px #e3e3e3, inset 0 5px 1px -4px #282828,
+  inset 0 -5px 1px -4px #000, 0 0 2px 0 #000;
+$shadow-item: inset 0 -4px 0.5px -2px #121212, inset 5px 0 2px -2.5px #1f1f1f,
+  inset -3px 0 1px -1.5px #292929, inset 0 4px 1px -2px #515050;
+
+body {
   --color-white: #{$color-white};
-  --color-gray-0: #{$color-gray-0};
-  --color-gray-1: #{$color-gray-1};
-  --color-gray-2: #{$color-gray-2};
+  --color-button: #{$color-button};
+  --color-dark: #{$color-dark};
+  --color-back: #{$color-back};
+  --color-light: #{$color-light};
   --color-black: #{$color-black};
 
+  --color-link: #{$color-link};
+  --color-link-alt: #{$color-link-alt};
+  --color-input: #{$color-input};
+  --color-input-alt: #{$color-input-alt};
   --color-brand: #{$color-brand};
-  --color-back: #{$color-back};
-  --color-font: #{$color-font};
-  --color-invalid: #{$color-invalid};
-  --color-valid: #{$color-valid};
+  --color-brand-alt: #{$color-brand-alt};
+  --color-brand-drk: #{$color-brand-drk};
+  --color-brand-sha: #{$color-brand-sha};
+  --color-brand-che: #{$color-brand-che};
+  --color-header: #{$color-header};
+  --color-scroll: #{$color-scroll};
+  --color-green: #{$color-green};
+  --color-green-alt: #{$color-green-alt};
+  --color-red: #{$color-red};
 
-  --module-icon-filter: none;
-}
-
-.light-mode {
-  --color-white: #{invert($color-white)};
-  --color-gray-0: #{invert($color-gray-0)};
-  --color-gray-1: #d5d5d5;
-  --color-gray-2: #e8e8e8;
-  --color-black: #{invert($color-black)};
-
-  --color-brand: #{$color-brand};
-  --color-back: #fff;
-  --color-font: #{invert($color-white)};
-  --color-invalid: #{$color-invalid};
-  --color-valid: #{$color-valid};
-
-  --module-icon-filter: invert(100%);
+  --shadow-button: #{$shadow-button};
+  --shadow-button-sm: #{$shadow-button-sm};
+  --shadow-button-ac: #{$shadow-button-ac};
+  --shadow-button-dk: #{$shadow-button-dk};
+  --shadow-button-gr: #{$shadow-button-gr};
+  --shadow-input: #{$shadow-input};
+  --shadow-check: #{$shadow-check};
+  --shadow-panel: #{$shadow-panel};
+  --shadow-hole: #{$shadow-hole};
+  --shadow-inner: #{$shadow-inner};
+  --shadow-hover: #{$shadow-hover};
+  --shadow-hover-sm: #{$shadow-hover-sm};
+  --shadow-hover-ch: #{$shadow-hover-ch};
+  --shadow-active: #{$shadow-active};
+  --shadow-active-sm: #{$shadow-active-sm};
+  --shadow-main: #{$shadow-main};
+  --shadow-tip: #{$shadow-tip};
+  --shadow-item: #{$shadow-item};
 }

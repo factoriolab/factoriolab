@@ -178,7 +178,6 @@ describe('FlowUtility', () => {
   describe('stepLinkValue', () => {
     const step: Step = {
       itemId: ItemId.IronOre,
-      depth: 0,
       items: Rational.two,
       surplus: new Rational(BigInt(3)),
       belts: new Rational(BigInt(4)),

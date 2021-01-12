@@ -1,19 +1,24 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Mocks, TestUtility, RecipeId } from 'src/tests';
+import { Mocks, RecipeId, TestUtility } from 'src/tests';
+import { DialogComponent } from '../dialog/dialog.component';
 import { IconComponent } from '../icon/icon.component';
 import { ToggleComponent } from './toggle.component';
+
+enum DataTest {
+  Open = 'lab-toggle-open',
+  Recipe = 'lab-toggle-recipe',
+  Close = 'lab-toggle-close',
+}
 
 @Component({
   selector: 'lab-test-toggle',
   template: `
     <lab-toggle
       [data]="data"
-      [disabledRecipes]="disabledRecipes"
-      [parent]="element.nativeElement"
-      (cancel)="cancel()"
-      (commit)="commit($event)"
+      [selected]="selected"
+      (selectIds)="selectIds($event)"
     >
     </lab-toggle>
   `,
@@ -21,11 +26,8 @@ import { ToggleComponent } from './toggle.component';
 class TestToggleComponent {
   @ViewChild(ToggleComponent) child: ToggleComponent;
   data = Mocks.Data;
-  disabledRecipes = [RecipeId.BasicOilProcessing];
-  cancel() {}
-  commit(data) {}
-
-  constructor(public element: ElementRef) {}
+  selected: string[] = [RecipeId.AdvancedOilProcessing];
+  selectIds(data): void {}
 }
 
 describe('ToggleComponent', () => {
@@ -33,8 +35,13 @@ describe('ToggleComponent', () => {
   let fixture: ComponentFixture<TestToggleComponent>;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
-      declarations: [IconComponent, ToggleComponent, TestToggleComponent],
+    await TestBed.configureTestingModule({
+      declarations: [
+        DialogComponent,
+        IconComponent,
+        ToggleComponent,
+        TestToggleComponent,
+      ],
     }).compileComponents();
   });
 
@@ -48,69 +55,62 @@ describe('ToggleComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set top based on parent', () => {
-    component.child.parent = { getBoundingClientRect: () => ({ y: 0 }) } as any;
-    expect(component.child.top).toEqual(1);
-    component.child.parent = null;
-    expect(component.child.top).toEqual(1);
+  describe('width', () => {
+    it('should set width based on options', () => {
+      expect(component.child.width).toEqual(17.25);
+    });
   });
 
-  it('should set left based on parent', () => {
-    component.child.parent = { getBoundingClientRect: () => ({ x: 0 }) } as any;
-    expect(component.child.left).toEqual(-8);
-    component.child.parent = null;
-    expect(component.child.left).toEqual(1);
+  describe('clickOpen', () => {
+    it('should set up the dialog', () => {
+      component.child.edited = true;
+      TestUtility.clickDt(fixture, DataTest.Open);
+      expect(component.child.open).toBeTrue();
+      expect(component.child.edited).toBeFalse();
+      expect(component.child.editValue).toEqual(component.selected);
+    });
   });
 
-  it('should set width based on options', () => {
-    expect(component.child.width).toEqual(14.75);
+  describe('close', () => {
+    beforeEach(() => {
+      spyOn(component, 'selectIds');
+      TestUtility.clickDt(fixture, DataTest.Open);
+      fixture.detectChanges();
+    });
+
+    it('should close the dialog', () => {
+      TestUtility.clickDt(fixture, DataTest.Close);
+      expect(component.selectIds).not.toHaveBeenCalled();
+      expect(component.child.open).toBeFalse();
+    });
+
+    it('should emit edits', () => {
+      component.child.edited = true;
+      TestUtility.clickDt(fixture, DataTest.Close);
+      expect(component.selectIds).toHaveBeenCalled();
+      expect(component.child.open).toBeFalse();
+    });
   });
 
-  it('should set opening to false on first click event', () => {
-    spyOn(component, 'cancel');
-    document.body.click();
-    expect(component.cancel).not.toHaveBeenCalled();
-    expect(component.child.opening).toEqual(false);
-  });
+  describe('clickId', () => {
+    beforeEach(() => {
+      TestUtility.clickDt(fixture, DataTest.Open);
+      fixture.detectChanges();
+    });
 
-  it('should commit when clicked away with edits', () => {
-    spyOn(component, 'commit');
-    const value = ['A'];
-    component.child.opening = false;
-    component.child.edited = true;
-    component.child.editValue = value;
-    document.body.click();
-    expect(component.commit).toHaveBeenCalledWith(value);
-  });
+    it('should add the recipe to the list', () => {
+      TestUtility.clickDt(fixture, DataTest.Recipe, 2);
+      expect(component.child.edited).toBeTrue();
+      expect(component.child.editValue).toEqual([
+        RecipeId.AdvancedOilProcessing,
+        RecipeId.CoalLiquefaction,
+      ]);
+    });
 
-  it('should cancel when clicked away with no edits', () => {
-    spyOn(component, 'cancel');
-    component.child.opening = false;
-    document.body.click();
-    expect(component.cancel).toHaveBeenCalled();
-  });
-
-  it('should not cancel when clicked on', () => {
-    spyOn(component, 'cancel');
-    component.child.opening = false;
-    TestUtility.clickSelector(fixture, 'lab-toggle');
-    expect(component.cancel).not.toHaveBeenCalled();
-  });
-
-  it('should enable a recipe', () => {
-    component.child.opening = false;
-    TestUtility.clickSelector(fixture, 'lab-icon.clickable', 1);
-    expect(component.child.edited).toBeTrue();
-    expect(component.child.editValue).toEqual([]);
-  });
-
-  it('should disable a recipe', () => {
-    component.child.opening = false;
-    TestUtility.clickSelector(fixture, 'lab-icon.clickable', 0);
-    expect(component.child.edited).toBeTrue();
-    expect(component.child.editValue).toEqual([
-      RecipeId.BasicOilProcessing,
-      RecipeId.AdvancedOilProcessing,
-    ]);
+    it('should remove the recipe from the list', () => {
+      TestUtility.clickDt(fixture, DataTest.Recipe);
+      expect(component.child.edited).toBeTrue();
+      expect(component.child.editValue).toEqual([]);
+    });
   });
 });

@@ -1,5 +1,6 @@
-import { Product, RateType, Entities } from '~/models';
-import { AppLoadAction, AppActionType } from '../app.actions';
+import { Product, RateType, Entities, ProductField } from '~/models';
+import { StoreUtility } from '~/utilities';
+import { AppActionType, AppAction } from '../app.actions';
 import { ProductsAction, ProductsActionType } from './products.actions';
 
 export interface ProductsState {
@@ -16,14 +17,13 @@ export const initialProductsState: ProductsState = {
 
 export function productsReducer(
   state: ProductsState = initialProductsState,
-  action: ProductsAction | AppLoadAction
+  action: ProductsAction | AppAction
 ): ProductsState {
   switch (action.type) {
-    case AppActionType.LOAD: {
+    case AppActionType.LOAD:
       return action.payload.productsState
         ? action.payload.productsState
         : state;
-    }
     case ProductsActionType.RESET: {
       const id = '0';
       return {
@@ -39,7 +39,7 @@ export function productsReducer(
         index: 1,
       };
     }
-    case ProductsActionType.ADD: {
+    case ProductsActionType.ADD:
       return {
         ...state,
         ...{
@@ -58,7 +58,6 @@ export function productsReducer(
           index: state.index + 1,
         },
       };
-    }
     case ProductsActionType.REMOVE: {
       const newEntities = { ...state.entities };
       delete newEntities[action.payload];
@@ -70,85 +69,50 @@ export function productsReducer(
         },
       };
     }
-    case ProductsActionType.EDIT_PRODUCT: {
-      const id = action.payload.id;
+    case ProductsActionType.SET_ITEM:
       return {
         ...state,
         ...{
-          editProductId: null,
-          entities: {
-            ...state.entities,
-            ...{
-              [id]: {
-                ...state.entities[id],
-                ...{
-                  itemId: action.payload.value,
-                  recipeId: undefined,
-                },
-              },
-            },
-          },
+          entities: StoreUtility.assignValue(
+            state.entities,
+            ProductField.ItemId,
+            action.payload
+          ),
         },
       };
-    }
-    case ProductsActionType.EDIT_RATE: {
-      const id = action.payload.id;
+    case ProductsActionType.SET_RATE:
       return {
         ...state,
         ...{
-          entities: {
-            ...state.entities,
-            ...{
-              [id]: {
-                ...state.entities[id],
-                ...{
-                  rate: action.payload.value,
-                },
-              },
-            },
-          },
+          entities: StoreUtility.assignValue(
+            state.entities,
+            ProductField.Rate,
+            action.payload
+          ),
         },
       };
-    }
-    case ProductsActionType.EDIT_RATE_TYPE: {
-      const id = action.payload.id;
+    case ProductsActionType.SET_RATE_TYPE:
       return {
         ...state,
         ...{
-          entities: {
-            ...state.entities,
-            ...{
-              [id]: {
-                ...state.entities[id],
-                ...{
-                  rateType: action.payload.value,
-                  recipeId: undefined,
-                },
-              },
-            },
-          },
+          entities: StoreUtility.assignValue(
+            state.entities,
+            ProductField.RateType,
+            action.payload
+          ),
         },
       };
-    }
-    case ProductsActionType.EDIT_RECIPE: {
-      const id = action.payload.id;
+    case ProductsActionType.SET_VIA:
       return {
         ...state,
         ...{
-          entities: {
-            ...state.entities,
-            ...{
-              [id]: {
-                ...state.entities[id],
-                ...{
-                  recipeId: action.payload.value,
-                },
-              },
-            },
-          },
+          entities: StoreUtility.assignValue(
+            state.entities,
+            ProductField.ViaId,
+            action.payload
+          ),
         },
       };
-    }
     default:
       return state;
   }

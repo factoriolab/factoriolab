@@ -1,93 +1,95 @@
 :host {
-  background-color: var(--color-gray-1);
-  padding: 1rem;
   flex-grow: 1;
-  overflow-y: auto;
-  width: 18rem;
+  width: 22.5rem;
 
-  > :last-child {
-    margin-bottom: 4rem;
+  > .flex {
+    justify-content: space-between;
+
+    > * {
+      margin-bottom: 0.75rem;
+    }
+
+    > .flex > * + * {
+      margin-left: 0.25rem;
+    }
+  }
+
+  > .panel {
+    padding: 0.125rem;
   }
 }
 
-label {
-  user-select: none;
-}
+.hole {
+  padding: 0.125rem;
+  margin: 0.25rem;
+  background-color: var(--color-back);
+  box-shadow: var(--shadow-hole);
 
-.x-small {
-  font-size: x-small;
-}
-
-.option {
   > * {
-    cursor: pointer;
+    padding: 0.5rem;
+    margin: 1px 0;
+    background-color: var(--color-light);
+    box-shadow: var(--shadow-inner);
+
+    .header {
+      margin-bottom: 0.25rem;
+    }
+
+    table {
+      width: 100%;
+
+      &.factories {
+        width: auto;
+      }
+
+      &.center {
+        td > * {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          > * + * {
+            margin-left: 0.5rem;
+          }
+        }
+      }
+
+      &.fields > tr > :first-child {
+        width: 1px;
+        padding-right: 4rem;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.small {
+  font-size: small;
+}
+
+.states {
+  flex-grow: 1;
+
+  > :first-child {
+    flex-grow: 1;
+  }
+
+  lab-options {
+    display: flex;
+    > :first-child {
+      flex-grow: 1;
+    }
   }
 
   > * + * {
     margin-left: 0.25rem;
   }
-
-  &:hover {
-    > * {
-      color: var(--color-brand);
-    }
-  }
 }
 
-.label {
-  font-weight: bold;
-  font-size: 0.75rem;
-  padding: 0.5rem 0;
-  color: var(--color-brand);
+table + table {
+  margin-top: 0.5rem;
 }
 
-lab-icon {
-  padding: 0.125rem;
-}
-
-.field {
-  display: flex;
-  align-items: center;
-  min-height: 2rem;
-
-  > * + * {
-    margin-left: 0.5rem;
-  }
-
-  .grow {
-    flex-grow: 1;
-  }
-}
-
-.states {
-  display: flex;
-  align-items: center;
-  min-height: 2rem;
-
-  :first-child {
-    margin-right: 0.5rem;
-    flex-grow: 1;
-  }
-}
-
-a {
-  color: var(--color-brand);
-}
-
-input[type='radio'] + * {
-  margin-left: 0.25rem;
-}
-
-.hidden {
-  display: none;
-}
-
-.static > lab-icon {
-  position: static;
-}
-
-table.center {
-  tr > :first-child {
-    text-align: right;
-  }
+.right {
+  text-align: right;
 }

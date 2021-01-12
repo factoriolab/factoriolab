@@ -16,7 +16,6 @@ import {
   ProductsContainerComponent,
   SettingsComponent,
   SettingsContainerComponent,
-  HeaderComponent,
   IconComponent,
   PickerComponent,
   SelectComponent,
@@ -25,9 +24,10 @@ import {
   FlowContainerComponent,
   ToggleComponent,
   RankerComponent,
-  MultiselectComponent,
-  PrecisionComponent,
   SankeyComponent,
+  OptionsComponent,
+  DialogComponent,
+  ColumnsComponent,
 } from './components';
 import { reducers, metaReducers } from './store';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
@@ -35,9 +35,7 @@ import { DatasetsEffects } from './store/datasets/datasets.effects';
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
     IconComponent,
-    MultiselectComponent,
     PickerComponent,
     RankerComponent,
     SelectComponent,
@@ -49,8 +47,10 @@ import { DatasetsEffects } from './store/datasets/datasets.effects';
     ProductsComponent,
     SettingsComponent,
     SettingsContainerComponent,
-    PrecisionComponent,
     SankeyComponent,
+    OptionsComponent,
+    DialogComponent,
+    ColumnsComponent,
   ],
   imports: [
     BrowserModule,

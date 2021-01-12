@@ -24,14 +24,7 @@ export const data: AppData = {
     {
       id: 'research',
       name: 'Infinite Research',
-      compatibleIds: [
-        '1.1',
-        '1.0',
-        '0.18',
-        '0.17',
-        '0.16',
-        'factorio-extended-plus',
-      ],
+      compatibleIds: ['1.1', '1.0', '0.18', '0.17', '0.16'],
     },
   ],
 };

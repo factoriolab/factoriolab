@@ -16,8 +16,12 @@ import {
   SankeyData,
   Node,
   Link,
+  LinkValue,
 } from '~/models';
 import { initialDatasetsState } from '~/store/datasets';
+import { getFactorySettings, initialFactoriesState } from '~/store/factories';
+import { getItemSettings } from '~/store/items';
+import { initialColumnsState, PreferencesState } from '~/store/preferences';
 import { getProductsBy, ProductsState } from '~/store/products';
 import {
   getRecipeSettings,
@@ -29,7 +33,6 @@ import {
   initialSettingsState,
   getDefaults,
 } from '~/store/settings';
-import { getItemSettings } from '~/store/items';
 import { ItemId } from './item-id';
 import { RecipeId } from './recipe-id';
 
@@ -106,7 +109,6 @@ export const RecipeSettings2: RecipeSettings = {
   beaconCount: 0,
 };
 export const Step1: Step = {
-  depth: 0,
   itemId: Item1.id,
   recipeId: Item1.id as any,
   items: Rational.fromNumber(Product1.rate),
@@ -116,7 +118,6 @@ export const Step1: Step = {
   pollution: Rational.one,
 };
 export const Step2: Step = {
-  depth: 1,
   itemId: Item2.id,
   recipeId: Item2.id as any,
   items: Rational.fromNumber(Product2.rate),
@@ -138,21 +139,20 @@ export const RecipeSettingsEntities: Entities<RecipeSettings> = {};
 for (const recipe of Data.recipeIds.map((i) => Data.recipeEntities[i])) {
   RecipeSettingsEntities[recipe.id] = { ...RecipeSettings1 };
 }
-export const InitialSettingsState = initialSettingsState;
 export const SettingsState1 = { ...initialSettingsState, ...Defaults };
 export const ItemSettingsInitial = getItemSettings.projector(
   {},
   Data,
   ItemId.TransportBelt
 );
+export const FactorySettingsInitial = getFactorySettings.projector(
+  initialFactoriesState,
+  Defaults,
+  Data
+);
 export const RecipeSettingsInitial = getRecipeSettings.projector(
   {},
-  Defaults.factoryRank,
-  Defaults.moduleRank,
-  Defaults.beaconCount,
-  Defaults.beacon,
-  Defaults.beaconModule,
-  InitialSettingsState.drillModule,
+  FactorySettingsInitial,
   Data
 );
 export const RationalRecipeSettings = getRationalRecipeSettings.projector(
@@ -165,6 +165,11 @@ export const AdjustedData = getAdjustedDataset.projector(
   Rational.zero,
   Data
 );
+export const Preferences: PreferencesState = {
+  states: { ['name']: 'hash' },
+  columns: initialColumnsState,
+  linkValue: LinkValue.Items,
+};
 
 function node(i: number): Node {
   return {

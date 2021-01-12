@@ -1,46 +1,25 @@
 @import 'values';
 
 :host {
-  display: flex;
-  align-items: flex-start;
-  padding: 0.5rem 1rem;
+  > .panel {
+    display: flex;
+    align-items: flex-start;
 
-  > .add-button {
-    margin-top: 0.125rem;
-
-    > div {
-      margin-left: 0.25rem;
-      color: var(--color-brand);
+    > :first-child {
+      margin-right: 0.5rem;
     }
   }
-
-  > * + * {
-    margin-left: 0.5rem;
-  }
-}
-
-button {
-  height: 2rem;
-  width: 2rem;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-}
-
-.icon-container {
-  height: 36px;
-  width: 36px;
 }
 
 .product-row {
   display: flex;
   align-items: center;
 
-  > * + * {
-    margin-left: 0.25rem;
+  + .product-row {
+    margin-top: 0.5rem;
   }
-}
 
-.material-icons {
-  line-height: 1.875rem;
+  > * + * {
+    margin-left: 0.5rem;
+  }
 }

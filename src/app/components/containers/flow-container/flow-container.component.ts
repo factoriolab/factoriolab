@@ -3,12 +3,20 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   ViewChild,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { SankeyData, Step, ListMode } from '~/models';
+import {
+  SankeyData,
+  Step,
+  ListMode,
+  LinkValue,
+  LinkValueOptions,
+} from '~/models';
 import { State } from '~/store';
+import { getLinkValue, SetLinkValueAction } from '~/store/preferences';
 import { getSankey, getSteps } from '~/store/products';
 import { SankeyComponent } from './sankey/sankey.component';
 
@@ -23,15 +31,27 @@ export class FlowContainerComponent implements OnInit {
 
   sankeyData$: Observable<SankeyData>;
   steps$: Observable<Step[]>;
+  linkValue$: Observable<LinkValue>;
 
   selected: string;
+  LinkValueOptions = LinkValueOptions;
 
   ListMode = ListMode;
 
-  constructor(private store: Store<State>) {}
+  constructor(public store: Store<State>, public ref: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.sankeyData$ = this.store.select(getSankey);
     this.steps$ = this.store.select(getSteps);
+    this.linkValue$ = this.store.select(getLinkValue);
+  }
+
+  setSelected(value: string): void {
+    this.selected = value;
+    this.ref.detectChanges();
+  }
+
+  setLinkValue(value: LinkValue): void {
+    this.store.dispatch(new SetLinkValueAction(value));
   }
 }

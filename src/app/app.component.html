@@ -1,48 +1,62 @@
-<lab-header
-  *ngIf="showHeader$ | async"
-  @slideUpDown
-  [data]="data$ | async"
-  (toggleSettings)="toggleSettings()"
-  (hideHeader)="hideHeader()"
-></lab-header>
-<main>
+<div class="top-bar">
+  <div>
+    <div class="header"><a href="list#p=">Factorio Lab Calculator</a></div>
+    <div class="links">
+      <a target="_blank" href="https://github.com/factoriolab/factorio-lab/wiki"
+        >Wiki</a
+      >
+      <span class="separator">|</span>
+      <a
+        target="_blank"
+        href="https://github.com/factoriolab/factorio-lab/issues"
+        >Issues</a
+      >
+      <span class="separator">|</span>
+      <a target="_blank" href="https://github.com/factoriolab/factorio-lab"
+        >Source</a
+      >
+      <span class="separator">|</span>
+      <a target="_blank" href="https://ko-fi.com/dcbroad3">Donate</a>
+    </div>
+  </div>
+</div>
+<main *ngIf="initialized$ | async; else loading">
   <lab-settings-container
-    *ngIf="settingsOpen"
+    *ngIf="showSettings"
     @slideLeftRight
-    (cancel)="toggleSettings()"
+    (closeSettings)="showSettings = !showSettings"
   >
   </lab-settings-container>
   <div class="view">
-    <ul role="navigation">
-      <li (click)="toggleSettings()">Settings</li>
-      <li
-        routerLink="/list"
-        routerLinkActive="active"
-        [fragment]="router.zip"
-        title="View as list of steps"
-      >
-        List
-      </li>
-      <li
-        routerLink="/flow"
-        routerLinkActive="active"
-        [fragment]="router.zip"
-        title="View as sankey flow diagram"
-      >
-        Flow
-      </li>
-      <li class="spacer"></li>
-      <li
-        *ngIf="(showHeader$ | async) === false"
-        id="app-show-header"
-        class="expand"
-        title="Show header"
-        (click)="showHeader()"
-      >
-        <i class="material-icons">expand_more</i>
-      </li>
-    </ul>
     <lab-products-container></lab-products-container>
-    <router-outlet></router-outlet>
+    <div *ngIf="(products$ | async).length">
+      <ul role="navigation" class="tabs">
+        <li
+          routerLink="/list"
+          routerLinkActive="active"
+          preserveFragment="true"
+        >
+          <span>List</span>
+        </li>
+        <li
+          routerLink="/flow"
+          routerLinkActive="active"
+          preserveFragment="true"
+        >
+          <span>Flow</span>
+        </li>
+        <li *ngIf="!showSettings" (click)="showSettings = true">
+          <span>Settings</span>
+        </li>
+      </ul>
+      <div class="panel">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
   </div>
 </main>
+<ng-template #loading>
+  <div class="view loading">
+    <div><div class="panel">Loading data, please wait...</div></div>
+  </div>
+</ng-template>

@@ -14,32 +14,27 @@ import { Router } from '@angular/router';
 import {
   DisplayRate,
   ResearchSpeed,
-  IdType,
-  Theme,
   Dataset,
   ModInfo,
   DefaultPayload,
   Preset,
   ItemId,
-  Sort,
-  LinkValue,
   IdPayload,
   WARNING_RESET,
   InserterTarget,
   InserterCapacity,
+  DefaultIdPayload,
+  IdName,
+  PresetOptions,
+  InserterCapacityOptions,
+  ResearchSpeedOptions,
+  InserterTargetOptions,
+  DisplayRateOptions,
 } from '~/models';
+import { FactoriesState } from '~/store/factories';
+import { PreferencesState } from '~/store/preferences';
 import { SettingsState, initialSettingsState } from '~/store/settings';
-
-enum OpenSelect {
-  Mods,
-  DisabledRecipes,
-  Belt,
-  Fuel,
-  Factory,
-  Module,
-  Beacon,
-  BeaconModule,
-}
+import { BrowserUtility } from '~/utilities';
 
 @Component({
   selector: 'lab-settings',
@@ -49,7 +44,7 @@ enum OpenSelect {
 })
 export class SettingsComponent implements OnInit {
   _data: Dataset;
-  get data() {
+  get data(): Dataset {
     return this._data;
   }
   @Input() set data(value: Dataset) {
@@ -59,131 +54,140 @@ export class SettingsComponent implements OnInit {
     );
   }
   @Input() base: ModInfo[];
-  @Input() mods: ModInfo[];
+  @Input() factories: FactoriesState;
   @Input() settings: SettingsState;
+  @Input() preferences: PreferencesState;
 
+  @Output() resetSettings = new EventEmitter();
+  @Output() closeSettings = new EventEmitter();
   @Output() saveState = new EventEmitter<IdPayload>();
-  @Output() deleteState = new EventEmitter<string>();
+  @Output() removeState = new EventEmitter<string>();
   @Output() setPreset = new EventEmitter<Preset>();
   @Output() setBase = new EventEmitter<string>();
-  @Output() setMods = new EventEmitter<DefaultPayload<string[]>>();
   @Output() setDisabledRecipes = new EventEmitter<DefaultPayload<string[]>>();
   @Output() setExpensive = new EventEmitter<boolean>();
-  @Output() setFactoryRank = new EventEmitter<DefaultPayload<string[]>>();
-  @Output() setModuleRank = new EventEmitter<DefaultPayload<string[]>>();
-  @Output() setDrillModule = new EventEmitter<boolean>();
-  @Output() setBeacon = new EventEmitter<DefaultPayload>();
-  @Output() setBeaconModule = new EventEmitter<DefaultPayload>();
-  @Output() setBeaconCount = new EventEmitter<DefaultPayload<number>>();
+  @Output() addFactory = new EventEmitter<DefaultPayload<string, string[]>>();
+  @Output() removeFactory = new EventEmitter<
+    DefaultPayload<string, string[]>
+  >();
+  @Output() raiseFactory = new EventEmitter<DefaultPayload<string, string[]>>();
+  @Output() setFactory = new EventEmitter<DefaultIdPayload<string, string[]>>();
+  @Output() setModuleRank = new EventEmitter<IdPayload<string[]>>();
+  @Output() setBeaconCount = new EventEmitter<IdPayload<number>>();
+  @Output() setBeacon = new EventEmitter<IdPayload>();
+  @Output() setBeaconModule = new EventEmitter<IdPayload>();
   @Output() setBelt = new EventEmitter<DefaultPayload>();
   @Output() setFuel = new EventEmitter<DefaultPayload>();
   @Output() setFlowRate = new EventEmitter<number>();
-  @Output() setDisplayRate = new EventEmitter<DisplayRate>();
-  @Output() setItemPrecision = new EventEmitter<number>();
-  @Output() setBeltPrecision = new EventEmitter<number>();
-  @Output() setWagonPrecision = new EventEmitter<number>();
-  @Output() setFactoryPrecision = new EventEmitter<number>();
-  @Output() setPowerPrecision = new EventEmitter<number>();
-  @Output() setPollutionPrecision = new EventEmitter<number>();
   @Output() setMiningBonus = new EventEmitter<number>();
   @Output() setResearchSpeed = new EventEmitter<ResearchSpeed>();
   @Output() setInserterTarget = new EventEmitter<InserterTarget>();
   @Output() setInserterCapacity = new EventEmitter<InserterCapacity>();
-  @Output() setSort = new EventEmitter<Sort>();
-  @Output() setLinkValue = new EventEmitter<LinkValue>();
-  @Output() setTheme = new EventEmitter<Theme>();
-  @Output() resetSettings = new EventEmitter();
-
-  openSelect: OpenSelect;
-
-  DisplayRate = DisplayRate;
-  InserterCapacity = InserterCapacity;
-  InserterTarget = InserterTarget;
-  ItemId = ItemId;
-  LinkValue = LinkValue;
-  OpenSelect = OpenSelect;
-  Preset = Preset;
-  ResearchSpeed = ResearchSpeed;
-  SelectType = IdType;
-  Sort = Sort;
-  Theme = Theme;
+  @Output() setDisplayRate = new EventEmitter<DisplayRate>();
 
   initial = initialSettingsState;
   sortedFuels: string[] = [];
   state = '';
+  tempState = '';
   editState = false;
+  difficultyOptions: IdName[] = [
+    {
+      id: false,
+      name: 'Normal',
+    },
+    {
+      id: true,
+      name: 'Expensive',
+    },
+  ];
+  PresetOptions = PresetOptions;
+  ResearchSpeedOptions = ResearchSpeedOptions;
+  InserterCapacityOptions = InserterCapacityOptions;
+  InserterTargetOptions = InserterTargetOptions;
+  DisplayRateOptions = DisplayRateOptions;
 
-  get hash() {
-    return location.hash.substr(1);
+  ItemId = ItemId;
+
+  get hash(): string {
+    return BrowserUtility.hash;
   }
 
-  constructor(private ref: ChangeDetectorRef, private router: Router) {}
+  get factoryRows(): string[] {
+    return ['', ...this.factories.ids];
+  }
 
-  ngOnInit() {
+  get factoryOptions(): string[] {
+    return this.data.factoryIds.filter(
+      (f) => this.factories.ids.indexOf(f) === -1
+    );
+  }
+
+  get savedStates(): IdName[] {
+    return Object.keys(this.preferences.states).map((i) => ({
+      id: i,
+      name: i,
+    }));
+  }
+
+  constructor(public ref: ChangeDetectorRef, private router: Router) {}
+
+  ngOnInit(): void {
     this.state =
-      Object.keys(this.settings.states).find(
-        (s) => this.settings.states[s] === this.hash
+      Object.keys(this.preferences.states).find(
+        (s) => this.preferences.states[s] === this.hash
       ) || '';
     this.router.events.subscribe((e) => this.ref.detectChanges());
   }
 
   /** Forces change detector to update on scroll */
-  @HostListener('scroll', ['$event']) scroll() {
+  @HostListener('scroll', ['$event']) scroll(): void {
     this.ref.detectChanges();
   }
 
-  trackBy(data: KeyValue<string, string>) {
+  trackBy(data: KeyValue<string, string>): string {
     return data.key;
   }
 
-  changeBeaconCount(event: Event) {
+  changeBeaconCount(id: string, event: Event): void {
     const target = event.target as HTMLInputElement;
+    const value = Number(target.value);
     this.setBeaconCount.emit({
-      value: Number(target.value),
-      default: this.data.defaults.beaconCount,
+      id,
+      value,
     });
   }
 
-  emitNumber(emitter: EventEmitter<number>, event: any) {
-    if (event.target.value) {
-      const value = Math.round(Number(event.target.value));
-      emitter.emit(value);
-    }
+  emitNumber(emitter: EventEmitter<number>, event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const value = Number(target.value);
+    emitter.emit(value);
   }
 
-  emitString(emitter: EventEmitter<string>, event: any) {
-    if (event.target.value) {
-      emitter.emit(event.target.value);
-    }
-  }
-
-  setState(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    const id = target.value;
-    if (id && this.settings.states[id]) {
+  setState(id: string): void {
+    const fragment = this.preferences.states[id];
+    if (fragment) {
       this.state = id;
-      this.router.navigate([], { fragment: this.settings.states[id] });
+      this.router.navigate([], { fragment });
     }
   }
 
-  clickSaveState(event: Event) {
-    this.saveState.emit({ id: this.state, value: this.hash });
+  clickSaveState(): void {
+    this.saveState.emit({ id: this.tempState, value: this.hash });
     this.editState = false;
-    event.stopPropagation();
+    this.state = this.tempState;
   }
 
-  clickDeleteState(event: Event) {
-    this.deleteState.emit(this.state);
+  clickRemoveState(): void {
+    this.removeState.emit(this.state);
     this.state = '';
-    event.stopPropagation();
   }
 
-  toggleEditState(event: Event) {
+  toggleEditState(): void {
     this.editState = !this.editState;
-    event.stopPropagation();
+    this.tempState = this.state;
   }
 
-  clickResetSettings() {
+  clickResetSettings(): void {
     if (confirm(WARNING_RESET)) {
       this.resetSettings.emit();
     }

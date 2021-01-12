@@ -11,7 +11,6 @@ import {
   ItemId,
 } from '~/models';
 import { ItemsState } from '~/store/items';
-import { RecipesState } from '~/store/recipes';
 
 export class RateUtility {
   static LAUNCH_TIME = new Rational(BigInt(2420), BigInt(60));
@@ -21,24 +20,19 @@ export class RateUtility {
     rate: Rational,
     steps: Step[],
     itemSettings: ItemsState,
-    recipeSettings: RecipesState,
-    fuel: string,
     data: Dataset,
-    depth: number = 0,
     parentId: string = null
-  ) {
+  ): void {
     const recipe = data.recipeR[data.itemRecipeIds[itemId]];
 
     // Find existing step for this item
     let step = steps.find((s) => s.itemId === itemId);
 
     if (step) {
-      step.depth = Math.max(step.depth, depth);
       steps.push(steps.splice(steps.indexOf(step), 1)[0]);
     } else {
       // No existing step found, create a new one
       step = {
-        depth,
         itemId,
         recipeId: recipe ? recipe.id : null,
         items: Rational.zero,
@@ -87,7 +81,6 @@ export class RateUtility {
         step.items.nonzero() &&
         !itemSettings[step.itemId].ignore
       ) {
-        const inDepth = depth + 1;
         for (const ingredient of Object.keys(recipe.in)) {
           const ingredientRate = rate.mul(recipe.in[ingredient]).div(out);
           RateUtility.addStepsFor(
@@ -95,10 +88,7 @@ export class RateUtility {
             ingredientRate,
             steps,
             itemSettings,
-            recipeSettings,
-            fuel,
             data,
-            inDepth,
             recipe.id
           );
         }
@@ -106,7 +96,7 @@ export class RateUtility {
     }
   }
 
-  static addParentValue(step: Step, parentId: string, rate: Rational) {
+  static addParentValue(step: Step, parentId: string, rate: Rational): void {
     if (parentId) {
       if (!step.parents) {
         step.parents = {};
@@ -119,7 +109,7 @@ export class RateUtility {
     }
   }
 
-  static adjustPowerPollution(step: Step, recipe: RationalRecipe) {
+  static adjustPowerPollution(step: Step, recipe: RationalRecipe): void {
     if (step.factories?.nonzero()) {
       // Calculate power
       if (recipe.consumption?.nonzero()) {
@@ -137,7 +127,7 @@ export class RateUtility {
     itemSettings: ItemsState,
     beltSpeed: Entities<Rational>,
     data: Dataset
-  ) {
+  ): Step[] {
     for (const step of steps) {
       const belt = itemSettings[step.itemId]?.belt;
       if (step.items && belt) {
@@ -154,7 +144,7 @@ export class RateUtility {
     return steps;
   }
 
-  static displayRate(steps: Step[], displayRate: DisplayRate) {
+  static displayRate(steps: Step[], displayRate: DisplayRate): Step[] {
     const displayRateVal = DisplayRateVal[displayRate];
     for (const step of steps) {
       if (step.items) {
@@ -178,7 +168,7 @@ export class RateUtility {
     return steps;
   }
 
-  static copy(steps: Step[]) {
+  static copy(steps: Step[]): Step[] {
     return steps.map((s) =>
       s.parents ? { ...s, ...{ parents: { ...s.parents } } } : { ...s }
     );

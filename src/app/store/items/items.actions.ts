@@ -3,15 +3,15 @@ import { Action } from '@ngrx/store';
 import { DefaultIdPayload } from '~/models';
 
 export const enum ItemsActionType {
-  IGNORE = '[Items] Ignore Item',
+  IGNORE_ITEM = '[Items] Ignore Item',
   SET_BELT = '[Items] Set Belt',
-  RESET = '[Items] Reset Item',
+  RESET_ITEM = '[Items] Reset Item',
   RESET_IGNORE = '[Items] Reset Ignore',
   RESET_BELT = '[Items] Reset Belt',
 }
 
-export class IgnoreAction implements Action {
-  readonly type = ItemsActionType.IGNORE;
+export class IgnoreItemAction implements Action {
+  readonly type = ItemsActionType.IGNORE_ITEM;
   constructor(public payload: string) {}
 }
 
@@ -20,8 +20,8 @@ export class SetBeltAction implements Action {
   constructor(public payload: DefaultIdPayload) {}
 }
 
-export class ResetAction implements Action {
-  readonly type = ItemsActionType.RESET;
+export class ResetItemAction implements Action {
+  readonly type = ItemsActionType.RESET_ITEM;
   constructor(public payload: string) {}
 }
 
@@ -34,8 +34,8 @@ export class ResetBeltAction implements Action {
 }
 
 export type ItemsAction =
-  | IgnoreAction
+  | IgnoreItemAction
   | SetBeltAction
-  | ResetAction
+  | ResetItemAction
   | ResetIgnoreAction
   | ResetBeltAction;

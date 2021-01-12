@@ -18,10 +18,10 @@
   *ngIf="hover && (recipe || item || tooltip)"
   [style.marginTop.px]="tooltipMarginTop"
   [style.marginLeft.px]="-scrollLeft"
-  class="tooltip"
+  class="tooltip panel dark"
   (mouseenter)="hover = false"
 >
-  <div *ngIf="tooltip" class="title nowrap">
+  <div *ngIf="tooltip" class="header nowrap">
     {{ tooltip }}
   </div>
   <div *ngIf="recipe" class="flex">
@@ -69,7 +69,7 @@
         <td>{{ round(item.beacon.burner) }} kW</td>
       </tr>
       <tr *ngIf="item.beacon.electric">
-        <td>Energy Consumption</td>
+        <td>Energy consumption</td>
         <td>{{ round(item.beacon.electric) }} kW</td>
       </tr>
     </table>
@@ -87,7 +87,7 @@
   <div *ngIf="item?.factory">
     <table>
       <tr>
-        <td>Crafting Speed</td>
+        <td>Crafting speed</td>
         <td>{{ round(item.factory.speed) }}</td>
       </tr>
       <tr *ngIf="item.factory.modules">
@@ -99,7 +99,7 @@
         <td>{{ round(item.factory.burner) }} kW</td>
       </tr>
       <tr *ngIf="item.factory.electric">
-        <td>Energy Consumption</td>
+        <td>Energy consumption</td>
         <td>{{ round(item.factory.electric) }} kW</td>
       </tr>
       <tr *ngIf="item.factory.drain">

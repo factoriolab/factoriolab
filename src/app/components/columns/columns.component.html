@@ -1,0 +1,82 @@
+<button
+  title="Select columns"
+  data-test="lab-columns-open"
+  (click)="clickOpen()"
+>
+  <i class="material-icons">visibility</i>
+</button>
+<lab-dialog *ngIf="open" (close)="close()">
+  <div class="dialog-title">
+    <div class="header">Select columns</div>
+    <button (click)="cancel()">
+      <i class="material-icons">close</i>
+    </button>
+  </div>
+  <div class="panel">
+    <table>
+      <thead>
+        <tr>
+          <td class="header">Visibility</td>
+          <td colspan="2" class="header">Precision</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let opt of ColumnsAsOptions">
+          <td>
+            <div *ngIf="opt.id === Column.Items; else colCheckbox">
+              {{ opt.name }}
+            </div>
+            <ng-template #colCheckbox>
+              <div
+                class="flex option"
+                data-test="lab-columns-visibility"
+                (click)="clickId(opt.id)"
+              >
+                <div
+                  class="checkbox"
+                  [class.checked]="editValue[opt.id].show"
+                ></div>
+                <div>{{ opt.name }}</div>
+              </div>
+            </ng-template>
+          </td>
+          <ng-container *ngIf="PrecisionColumns.indexOf(opt.id) !== -1">
+            <td>
+              <input
+                *ngIf="editValue[opt.id].precision != null"
+                type="number"
+                placeholder="Decimals"
+                min="0"
+                step="1"
+                data-test="lab-columns-decimals"
+                [value]="editValue[opt.id].precision"
+                (input)="changePrecision(opt.id, $event)"
+              />
+            </td>
+            <td>
+              <div
+                class="flex option"
+                data-test="lab-columns-fractions"
+                (click)="clickFraction(opt.id)"
+              >
+                <div
+                  class="checkbox"
+                  [class.checked]="editValue[opt.id].precision == null"
+                ></div>
+                <div>Fractions</div>
+              </div>
+            </td>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="dialog-buttons">
+    <button (click)="cancel()">
+      <span class="text">Cancel</span>
+    </button>
+    <button class="green" data-test="lab-columns-confirm" (click)="close()">
+      Confirm
+    </button>
+  </div>
+</lab-dialog>

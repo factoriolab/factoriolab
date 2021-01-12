@@ -8,42 +8,21 @@ describe('Recipes Selectors', () => {
 
   describe('getRecipeSettings', () => {
     it('should handle null/empty values', () => {
-      const result = Selectors.getRecipeSettings.projector(
-        {},
-        [],
-        [],
-        null,
-        null,
-        null,
-        null,
-        null
-      );
+      const result = Selectors.getRecipeSettings.projector({}, null, null);
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should handle empty recipes', () => {
-      const result = Selectors.getRecipeSettings.projector(
-        {},
-        [],
-        [],
-        null,
-        null,
-        null,
-        null,
-        { recipeIds: [] }
-      );
+      const result = Selectors.getRecipeSettings.projector({}, null, {
+        recipeIds: [],
+      });
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should return the recipe settings', () => {
       const result = Selectors.getRecipeSettings.projector(
         initialRecipesState,
-        Mocks.SettingsState1.factoryRank,
-        Mocks.SettingsState1.moduleRank,
-        Mocks.SettingsState1.beaconCount,
-        Mocks.SettingsState1.beacon,
-        Mocks.SettingsState1.beaconModule,
-        Mocks.SettingsState1.drillModule,
+        Mocks.FactorySettingsInitial,
         Mocks.Data
       );
       expect(Object.keys(result).length).toEqual(Mocks.Data.recipeIds.length);
@@ -56,12 +35,7 @@ describe('Recipes Selectors', () => {
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
-        Mocks.SettingsState1.factoryRank,
-        Mocks.SettingsState1.moduleRank,
-        Mocks.SettingsState1.beaconCount,
-        Mocks.SettingsState1.beacon,
-        Mocks.SettingsState1.beaconModule,
-        Mocks.SettingsState1.drillModule,
+        Mocks.FactorySettingsInitial,
         Mocks.Data
       );
       expect(result[Mocks.Item1.id].factory).toEqual(stringValue);
@@ -74,12 +48,7 @@ describe('Recipes Selectors', () => {
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
-        Mocks.SettingsState1.factoryRank,
-        Mocks.SettingsState1.moduleRank,
-        Mocks.SettingsState1.beaconCount,
-        Mocks.SettingsState1.beacon,
-        Mocks.SettingsState1.beaconModule,
-        Mocks.SettingsState1.drillModule,
+        Mocks.FactorySettingsInitial,
         Mocks.Data
       );
       expect(result[Mocks.Item1.id].factoryModules).toEqual([stringValue]);
@@ -92,12 +61,7 @@ describe('Recipes Selectors', () => {
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
-        Mocks.SettingsState1.factoryRank,
-        Mocks.SettingsState1.moduleRank,
-        Mocks.SettingsState1.beaconCount,
-        Mocks.SettingsState1.beacon,
-        Mocks.SettingsState1.beaconModule,
-        Mocks.SettingsState1.drillModule,
+        Mocks.FactorySettingsInitial,
         Mocks.Data
       );
       expect(result[Mocks.Item1.id].beaconCount).toEqual(numberValue);
@@ -110,12 +74,7 @@ describe('Recipes Selectors', () => {
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
-        Mocks.SettingsState1.factoryRank,
-        Mocks.SettingsState1.moduleRank,
-        Mocks.SettingsState1.beaconCount,
-        Mocks.SettingsState1.beacon,
-        Mocks.SettingsState1.beaconModule,
-        Mocks.SettingsState1.drillModule,
+        Mocks.FactorySettingsInitial,
         Mocks.Data
       );
       expect(result[Mocks.Item1.id].beacon).toEqual(stringValue);
@@ -128,12 +87,7 @@ describe('Recipes Selectors', () => {
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
-        Mocks.SettingsState1.factoryRank,
-        Mocks.SettingsState1.moduleRank,
-        Mocks.SettingsState1.beaconCount,
-        Mocks.SettingsState1.beacon,
-        Mocks.SettingsState1.beaconModule,
-        Mocks.SettingsState1.drillModule,
+        Mocks.FactorySettingsInitial,
         Mocks.Data
       );
       expect(result[Mocks.Item1.id].beaconModules).toEqual([stringValue]);

@@ -23,10 +23,7 @@
     {
       "files": ["*.ts"],
       "parserOptions": {
-        "project": [
-          "tsconfig.*?.json",
-          "e2e/tsconfig.json"
-        ],
+        "project": ["tsconfig.*?.json", "e2e/tsconfig.json"],
         "createDefaultProgram": true
       },
       "extends": ["plugin:@angular-eslint/recommended"],
@@ -45,6 +42,7 @@
           "error",
           { "type": "element", "prefix": "lab", "style": "kebab-case" }
         ],
+        "@typescript-eslint/explicit-function-return-type": ["error"],
         "quotes": ["error", "single", { "allowTemplateLiterals": true }]
       }
     },

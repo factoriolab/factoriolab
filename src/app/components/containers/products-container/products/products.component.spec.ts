@@ -2,11 +2,15 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
-import { Mocks, TestUtility, CategoryId, ItemId, RecipeId } from 'src/tests';
-import { IconComponent, PickerComponent } from '~/components';
-import { RateType } from '~/models';
+import { Mocks, TestUtility, ItemId, RecipeId } from 'src/tests';
+import { IconComponent, PickerComponent, OptionsComponent } from '~/components';
+import { DisplayRate, RateType } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { ProductsComponent } from './products.component';
+
+enum DataTest {
+  Rate = 'lab-products-rate',
+}
 
 @Component({
   selector: 'lab-test-products',
@@ -15,12 +19,13 @@ import { ProductsComponent } from './products.component';
       [data]="data"
       [productRecipes]="productRecipes"
       [products]="products"
-      (add)="add()"
-      (remove)="remove($event)"
-      (editProduct)="editProduct($event)"
-      (editRate)="editRate($event)"
-      (editRateType)="editRateType($event)"
-      (editRecipe)="editRecipe($event)"
+      [displayRate]="displayRate"
+      (addProduct)="addProduct()"
+      (removeProduct)="removeProduct($event)"
+      (setItem)="setItem($event)"
+      (setRate)="setRate($event)"
+      (setRateType)="setRateType($event)"
+      (setVia)="setVia($event)"
     >
     </lab-products>
   `,
@@ -30,12 +35,13 @@ class TestProductsComponent {
   data = Mocks.Data;
   productRecipes = Mocks.ProductRecipes;
   products = Mocks.Products;
-  add() {}
-  remove(data) {}
-  editProduct(data) {}
-  editRate(data) {}
-  editRateType(data) {}
-  editRecipe(data) {}
+  displayRate = DisplayRate.PerMinute;
+  addProduct(): void {}
+  removeProduct(data): void {}
+  setItem(data): void {}
+  setRate(data): void {}
+  setRateType(data): void {}
+  setVia(data): void {}
 }
 
 describe('ProductsComponent', () => {
@@ -43,88 +49,63 @@ describe('ProductsComponent', () => {
   let fixture: ComponentFixture<TestProductsComponent>;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [FormsModule],
       declarations: [
         IconComponent,
+        OptionsComponent,
         PickerComponent,
         ProductsComponent,
         TestProductsComponent,
       ],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(TestProductsComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TestProductsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set the default category id', () => {
-    expect(component.child.categoryId).toEqual(component.data.categoryIds[0]);
-  });
+  describe('changeItem', () => {
+    it('should edit a product item', () => {
+      spyOn(component, 'setItem');
+      component.child.changeItem(Mocks.Product1, ItemId.Coal);
+      expect(component.setItem).toHaveBeenCalledWith({
+        id: Mocks.Product1.id,
+        value: ItemId.Coal,
+      });
+    });
 
-  it('should not reset the category id', () => {
-    const value = 'test';
-    component.child.categoryId = value;
-    component.child.data = null;
-    expect(component.child.categoryId).toEqual(value);
-  });
-
-  it('should open edit on a product', () => {
-    TestUtility.clickSelector(fixture, '.relative lab-icon', 0);
-    fixture.detectChanges();
-    expect(component.child.edit.product.id).toEqual('0');
-    expect(component.child.categoryId).toEqual(CategoryId.Logistics);
-  });
-
-  it('should commit an edit product', () => {
-    spyOn(component, 'editProduct');
-    component.child.commitEditProduct(Mocks.Product1, ItemId.Coal);
-    expect(component.editProduct).toHaveBeenCalledWith({
-      id: Mocks.Product1.id,
-      value: ItemId.Coal,
+    it('should reset the rate type when changing a product that has no simple recipe', () => {
+      spyOn(component, 'setRateType');
+      spyOn(component, 'setItem');
+      component.child.changeItem(Mocks.Product4, ItemId.PetroleumGas);
+      expect(component.setRateType).toHaveBeenCalledWith({
+        id: Mocks.Product4.id,
+        value: RateType.Items,
+      });
+      expect(component.setItem).toHaveBeenCalledWith({
+        id: Mocks.Product4.id,
+        value: ItemId.PetroleumGas,
+      });
     });
   });
 
-  it('should reset the rate type on committing a product that has no simple recipe', () => {
-    spyOn(component, 'editRateType');
-    spyOn(component, 'editProduct');
-    component.child.commitEditProduct(Mocks.Product4, ItemId.PetroleumGas);
-    expect(component.editRateType).toHaveBeenCalledWith({
-      id: Mocks.Product4.id,
-      value: RateType.Items,
+  describe('changeRate', () => {
+    it('should change the product rate', () => {
+      spyOn(component, 'setRate');
+      TestUtility.setTextDt(fixture, DataTest.Rate, '3');
+      fixture.detectChanges();
+      expect(component.setRate).toHaveBeenCalledWith({
+        id: Mocks.Product1.id,
+        value: 3,
+      });
     });
-    expect(component.editProduct).toHaveBeenCalledWith({
-      id: Mocks.Product4.id,
-      value: ItemId.PetroleumGas,
-    });
-  });
-
-  it('should emit numeric values', () => {
-    spyOn(component, 'editRate');
-    TestUtility.selectSelector(fixture, 'input', '3');
-    fixture.detectChanges();
-    expect(component.editRate).toHaveBeenCalledWith({
-      id: Mocks.Product1.id,
-      value: 3,
-    });
-  });
-
-  it('should ignore invalid numeric values', () => {
-    spyOn(component, 'editRate');
-    const event = { target: {} };
-    component.child.emitNumber(
-      component.child.editRate,
-      Mocks.Product1.id,
-      event as any
-    );
-    fixture.detectChanges();
-    expect(component.editRate).not.toHaveBeenCalled();
   });
 
   describe('getRecipe', () => {

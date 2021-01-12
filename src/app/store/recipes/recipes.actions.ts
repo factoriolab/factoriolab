@@ -5,10 +5,10 @@ import { DefaultIdPayload } from '~/models';
 export const enum RecipesActionType {
   SET_FACTORY = '[Recipes] Set Factory',
   SET_FACTORY_MODULES = '[Recipes] Set Modules',
-  SET_BEACONS_COUNT = '[Recipes] Set Beacon Count',
+  SET_BEACON_COUNT = '[Recipes] Set Beacon Count',
   SET_BEACON = '[Recipes] Set Beacon',
   SET_BEACON_MODULES = '[Recipes] Set Beacon Modules',
-  RESET = '[Recipes] Reset Recipe',
+  RESET_RECIPE = '[Recipes] Reset Recipe',
   RESET_FACTORY = '[Recipes] Reset Factory',
   RESET_BEACONS = '[Recipes] Reset Beacons',
 }
@@ -24,7 +24,7 @@ export class SetFactoryModulesAction implements Action {
 }
 
 export class SetBeaconCountAction implements Action {
-  readonly type = RecipesActionType.SET_BEACONS_COUNT;
+  readonly type = RecipesActionType.SET_BEACON_COUNT;
   constructor(public payload: DefaultIdPayload<number>) {}
 }
 
@@ -38,8 +38,8 @@ export class SetBeaconModulesAction implements Action {
   constructor(public payload: DefaultIdPayload<string[]>) {}
 }
 
-export class ResetAction implements Action {
-  readonly type = RecipesActionType.RESET;
+export class ResetRecipeAction implements Action {
+  readonly type = RecipesActionType.RESET_RECIPE;
   constructor(public payload: string) {}
 }
 
@@ -57,6 +57,6 @@ export type RecipesAction =
   | SetBeaconCountAction
   | SetBeaconAction
   | SetBeaconModulesAction
-  | ResetAction
+  | ResetRecipeAction
   | ResetFactoryAction
   | ResetBeaconsAction;

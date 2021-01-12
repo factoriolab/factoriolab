@@ -10,13 +10,15 @@ import {
   RateType,
   ItemSettings,
   Entities,
+  FactorySettings,
 } from '~/models';
 import { State } from '~/store';
-import { AppLoadAction } from '~/store/app.actions';
-import * as Items from '~/store/items';
+import { LoadAction } from '~/store/app.actions';
+import { FactoriesState } from '~/store/factories';
+import { ItemsState } from '~/store/items';
 import * as Products from '~/store/products';
-import * as Recipes from '~/store/recipes';
-import * as Settings from '~/store/settings';
+import { RecipesState } from '~/store/recipes';
+import { SettingsState, initialSettingsState } from '~/store/settings';
 
 export const NULL = 'n';
 export const EMPTY = 'e';
@@ -40,30 +42,35 @@ export class RouterService {
 
   updateUrl(
     products: Products.ProductsState,
-    items: Items.ItemsState,
-    recipes: Recipes.RecipesState,
-    settings: Settings.SettingsState
-  ) {
+    items: ItemsState,
+    recipes: RecipesState,
+    factories: FactoriesState,
+    settings: SettingsState
+  ): void {
     if (!this.unzipping) {
       const zProducts = this.zipProducts(
         products.ids.map((i) => products.entities[i])
       );
-      const zState = `p=${zProducts.join(LISTSEP)}`;
+      const zState = `p=${zProducts}`;
       this.zipPartial = '';
-      const zPreset = this.zipDiffNum(
+      const zPreset = this.zipDiffNumber(
         settings.preset,
-        Settings.initialSettingsState.preset
+        initialSettingsState.preset
       );
       if (zPreset.length) {
         this.zipPartial += `&b=${zPreset}`;
       }
       const zItems = this.zipItems(items);
       if (zItems.length) {
-        this.zipPartial += `&i=${zItems.join(LISTSEP)}`;
+        this.zipPartial += `&i=${zItems}`;
       }
       const zRecipes = this.zipRecipes(recipes);
       if (zRecipes.length) {
-        this.zipPartial += `&r=${zRecipes.join(LISTSEP)}`;
+        this.zipPartial += `&r=${zRecipes}`;
+      }
+      const zFactories = this.zipFactories(factories);
+      if (zFactories.length) {
+        this.zipPartial += `&f=${zFactories}`;
       }
       const zSettings = this.zipSettings(settings);
       if (zSettings.length) {
@@ -74,7 +81,7 @@ export class RouterService {
     }
   }
 
-  stepHref(step: Step) {
+  stepHref(step: Step): string {
     const products: Product[] = [
       {
         id: '0',
@@ -84,16 +91,16 @@ export class RouterService {
       },
     ];
     const zProducts = this.zipProducts(products);
-    return '#' + this.getHash(`p=${zProducts.join(LISTSEP)}`);
+    return '#' + this.getHash(`p=${zProducts}`);
   }
 
-  getHash(zProducts: string) {
+  getHash(zProducts: string): string {
     const unzipped = zProducts + this.zipPartial;
     const zipped = `z=${btoa(deflate(unzipped, { to: 'string' }))}`;
     return unzipped.length < zipped.length ? unzipped : zipped;
   }
 
-  updateState(e: Event) {
+  updateState(e: Event): void {
     try {
       if (e instanceof NavigationEnd) {
         const fragments = e.url.split('#');
@@ -122,6 +129,11 @@ export class RouterService {
                 } else if (s[0] === 'r') {
                   this.zipPartial = `&r=${s[1]}`;
                   state.recipesState = this.unzipRecipes(s[1].split(LISTSEP));
+                } else if (s[0] === 'f') {
+                  this.zipPartial = `&f=${s[1]}`;
+                  state.factoriesState = this.unzipFactories(
+                    s[1].split(LISTSEP)
+                  );
                 } else if (s[0] === 's') {
                   this.zipPartial += `&s=${s[1]}`;
                   state.settingsState = {
@@ -133,7 +145,7 @@ export class RouterService {
             }
             this.zip = urlZip;
             this.unzipping = true;
-            this.store.dispatch(new AppLoadAction(state));
+            this.store.dispatch(new LoadAction(state));
             this.unzipping = false;
           }
         }
@@ -144,20 +156,22 @@ export class RouterService {
     }
   }
 
-  zipProducts(products: Product[]): string[] {
-    return products.map((product) => {
-      const i = product.itemId;
-      const r = product.rate;
+  zipProducts(products: Product[]): string {
+    return products
+      .map((product) => {
+        const i = product.itemId;
+        const r = product.rate;
 
-      return [
-        i,
-        r,
-        this.zipDiffNum(product.rateType, RateType.Items),
-        this.zipTruthy(product.recipeId),
-      ]
-        .join(FIELDSEP)
-        .replace(/\**$/, '');
-    });
+        return [
+          i,
+          r,
+          this.zipDiffNumber(product.rateType, RateType.Items),
+          this.zipTruthyString(product.viaId),
+        ]
+          .join(FIELDSEP)
+          .replace(/\**$/, '');
+      })
+      .join(LISTSEP);
   }
 
   unzipProducts(zProducts: string[]): Products.ProductsState {
@@ -176,7 +190,7 @@ export class RouterService {
       let i = 3;
       let v = p[i++];
       if (v?.length) {
-        u.recipeId = this.parseString(v);
+        u.viaId = this.parseString(v);
       }
       ids.push(id);
       entities[id] = u;
@@ -185,21 +199,23 @@ export class RouterService {
     return { ids, index, entities };
   }
 
-  zipItems(state: Items.ItemsState): string[] {
-    return Object.keys(state).map((id) => {
-      const settings = state[id];
-      return [
-        id,
-        this.zipTruthyBool(settings.ignore),
-        this.zipTruthy(settings.belt),
-      ]
-        .join(FIELDSEP)
-        .replace(/\**$/, '');
-    });
+  zipItems(state: ItemsState): string {
+    return Object.keys(state)
+      .map((id) => {
+        const settings = state[id];
+        return [
+          id,
+          this.zipTruthyBool(settings.ignore),
+          this.zipTruthyString(settings.belt),
+        ]
+          .join(FIELDSEP)
+          .replace(/\**$/, '');
+      })
+      .join(LISTSEP);
   }
 
-  unzipItems(zItems: string[]) {
-    const items: Items.ItemsState = {};
+  unzipItems(zItems: string[]): ItemsState {
+    const items: ItemsState = {};
     for (const recipe of zItems) {
       const r = recipe.split(FIELDSEP);
       const u: ItemSettings = {};
@@ -217,24 +233,26 @@ export class RouterService {
     return items;
   }
 
-  zipRecipes(state: Recipes.RecipesState): string[] {
-    return Object.keys(state).map((id) => {
-      const settings = state[id];
-      return [
-        id,
-        this.zipTruthy(settings.factory),
-        this.zipTruthyArray(settings.factoryModules),
-        this.zipTruthyNum(settings.beaconCount),
-        this.zipTruthy(settings.beacon),
-        this.zipTruthyArray(settings.beaconModules),
-      ]
-        .join(FIELDSEP)
-        .replace(/\**$/, '');
-    });
+  zipRecipes(state: RecipesState): string {
+    return Object.keys(state)
+      .map((id) => {
+        const settings = state[id];
+        return [
+          id,
+          this.zipTruthyString(settings.factory),
+          this.zipTruthyArray(settings.factoryModules),
+          this.zipTruthyNumber(settings.beaconCount),
+          this.zipTruthyArray(settings.beaconModules),
+          this.zipTruthyString(settings.beacon),
+        ]
+          .join(FIELDSEP)
+          .replace(/\**$/, '');
+      })
+      .join(LISTSEP);
   }
 
-  unzipRecipes(zRecipes: string[]) {
-    const recipes: Recipes.RecipesState = {};
+  unzipRecipes(zRecipes: string[]): RecipesState {
+    const recipes: RecipesState = {};
     for (const recipe of zRecipes) {
       const r = recipe.split(FIELDSEP);
       const u: RecipeSettings = {};
@@ -253,59 +271,106 @@ export class RouterService {
       }
       v = r[i++];
       if (v?.length) {
-        u.beacon = this.parseString(v);
+        u.beaconModules = this.parseArray(v);
       }
       v = r[i++];
       if (v?.length) {
-        u.beaconModules = this.parseArray(v);
+        u.beacon = this.parseString(v);
       }
       recipes[r[0]] = u;
     }
     return recipes;
   }
 
-  zipSettings(state: Settings.SettingsState): string {
-    const init = Settings.initialSettingsState;
+  zipFactories(state: FactoriesState): string {
+    const ids = state.ids ? ['', ...state.ids] : Object.keys(state.entities);
+    return ids
+      .map((id) => {
+        const othEnt = state.entities[id] || {};
+        if (id === '') {
+          id = state.ids == null ? '' : TRUE;
+        }
+        return [
+          id,
+          this.zipTruthyArray(othEnt.moduleRank),
+          this.zipTruthyNumber(othEnt.beaconCount),
+          this.zipTruthyString(othEnt.beaconModule),
+          this.zipTruthyString(othEnt.beacon),
+        ]
+          .join(FIELDSEP)
+          .replace(/\**$/, '');
+      })
+      .join(LISTSEP);
+  }
+
+  unzipFactories(zFactories: string[]): FactoriesState {
+    const factories: FactoriesState = {
+      ids: null,
+      entities: {},
+    };
+    let loadIds = false;
+    for (let z = 0; z < zFactories.length; z++) {
+      const factory = zFactories[z];
+      const f = factory.split(FIELDSEP);
+      const u: FactorySettings = {};
+      let i = 1;
+      let v = f[i++];
+      if (v?.length) {
+        u.moduleRank = this.parseArray(v);
+      }
+      v = f[i++];
+      if (v?.length) {
+        u.beaconCount = this.parseNumber(v);
+      }
+      v = f[i++];
+      if (v?.length) {
+        u.beaconModule = this.parseString(v);
+      }
+      v = f[i++];
+      if (v?.length) {
+        u.beacon = this.parseString(v);
+      }
+      let id = f[0];
+      if (z === 0) {
+        if (id === TRUE) {
+          loadIds = true;
+          factories.ids = [];
+        }
+        id = '';
+      } else if (loadIds) {
+        factories.ids.push(id);
+      }
+      factories.entities[id] = u;
+    }
+    return factories;
+  }
+
+  zipSettings(state: SettingsState): string {
+    const init = initialSettingsState;
     return [
-      this.zipDiff(state.baseId, init.baseId),
-      this.zipDiffArray(state.modIds, init.modIds),
+      this.zipDiffString(state.baseId, init.baseId),
       this.zipDiffArray(state.disabledRecipes, init.disabledRecipes),
       this.zipDiffBool(state.expensive, init.expensive),
-      this.zipDiffRank(state.factoryRank, init.factoryRank),
-      this.zipDiffRank(state.moduleRank, init.moduleRank),
-      this.zipDiffBool(state.drillModule, init.drillModule),
-      this.zipDiffNum(state.beaconCount, init.beaconCount),
-      this.zipDiff(state.beacon, init.beacon),
-      this.zipDiff(state.beaconModule, init.beaconModule),
-      this.zipDiff(state.belt, init.belt),
-      this.zipDiff(state.fuel, init.fuel),
-      this.zipDiffNum(state.flowRate, init.flowRate),
-      this.zipDiffNum(state.displayRate, init.displayRate),
-      this.zipDiffNum(state.itemPrecision, init.itemPrecision),
-      this.zipDiffNum(state.beltPrecision, init.beltPrecision),
-      this.zipDiffNum(state.factoryPrecision, init.factoryPrecision),
-      this.zipDiffNum(state.powerPrecision, init.powerPrecision),
-      this.zipDiffNum(state.pollutionPrecision, init.pollutionPrecision),
-      this.zipDiffNum(state.miningBonus, init.miningBonus),
-      this.zipDiffNum(state.researchSpeed, init.researchSpeed),
-      this.zipDiffNum(state.inserterTarget, init.inserterTarget),
-      this.zipDiffNum(state.inserterCapacity, init.inserterCapacity),
+      this.zipDiffString(state.belt, init.belt),
+      this.zipDiffString(state.fuel, init.fuel),
+      this.zipDiffNumber(state.flowRate, init.flowRate),
+      this.zipDiffNumber(state.displayRate, init.displayRate),
+      this.zipDiffNumber(state.miningBonus, init.miningBonus),
+      this.zipDiffNumber(state.researchSpeed, init.researchSpeed),
+      this.zipDiffNumber(state.inserterTarget, init.inserterTarget),
+      this.zipDiffNumber(state.inserterCapacity, init.inserterCapacity),
     ]
       .join(FIELDSEP)
       .replace(/\**$/, '');
   }
 
-  unzipSettings(zSettings: string) {
+  unzipSettings(zSettings: string): SettingsState {
     const s = zSettings.split(FIELDSEP);
-    const settings: Settings.SettingsState = {} as any;
+    const settings: SettingsState = {} as any;
     let i = 0;
     let v = s[i++];
     if (v.length) {
       settings.baseId = v;
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.modIds = this.parseArray(v);
     }
     v = s[i++];
     if (v?.length) {
@@ -314,30 +379,6 @@ export class RouterService {
     v = s[i++];
     if (v?.length) {
       settings.expensive = this.parseBool(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.factoryRank = this.parseArray(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.moduleRank = this.parseArray(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.drillModule = this.parseBool(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.beaconCount = this.parseNumber(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.beacon = this.parseString(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.beaconModule = this.parseString(v);
     }
     v = s[i++];
     if (v?.length) {
@@ -354,26 +395,6 @@ export class RouterService {
     v = s[i++];
     if (v?.length) {
       settings.displayRate = this.parseNumber(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.itemPrecision = this.parseNumber(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.beltPrecision = this.parseNumber(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.factoryPrecision = this.parseNumber(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.powerPrecision = this.parseNumber(v);
-    }
-    v = s[i++];
-    if (v?.length) {
-      settings.pollutionPrecision = this.parseNumber(v);
     }
     v = s[i++];
     if (v?.length) {
@@ -394,35 +415,35 @@ export class RouterService {
     return settings;
   }
 
-  zipTruthy(value: string) {
+  zipTruthyString(value: string): string {
     return value == null ? '' : value;
   }
 
-  zipTruthyNum(value: number) {
+  zipTruthyNumber(value: number): string {
     return value == null ? '' : value.toString();
   }
 
-  zipTruthyBool(value: boolean) {
+  zipTruthyBool(value: boolean): string {
     return value == null ? '' : value ? TRUE : FALSE;
   }
 
-  zipTruthyArray(value: string[]) {
+  zipTruthyArray(value: string[]): string {
     return value == null ? '' : value.length ? value.join(ARRAYSEP) : EMPTY;
   }
 
-  zipDiff(value: string, init: string) {
+  zipDiffString(value: string, init: string): string {
     return value === init ? '' : value == null ? NULL : value;
   }
 
-  zipDiffNum(value: number, init: number) {
+  zipDiffNumber(value: number, init: number): string {
     return value === init ? '' : value == null ? NULL : value.toString();
   }
 
-  zipDiffBool(value: boolean, init: boolean) {
+  zipDiffBool(value: boolean, init: boolean): string {
     return value === init ? '' : value == null ? NULL : value ? TRUE : FALSE;
   }
 
-  zipDiffArray(value: string[], init: string[]) {
+  zipDiffArray(value: string[], init: string[]): string {
     const zVal = value
       ? value.length
         ? [...value].sort().join(ARRAYSEP)
@@ -436,7 +457,7 @@ export class RouterService {
     return zVal === zInit ? '' : zVal;
   }
 
-  zipDiffRank(value: string[], init: string[]) {
+  zipDiffRank(value: string[], init: string[]): string {
     const zVal = value
       ? value.length
         ? [...value].join(ARRAYSEP)
@@ -450,19 +471,19 @@ export class RouterService {
     return zVal === zInit ? '' : zVal;
   }
 
-  parseString(value: string) {
+  parseString(value: string): string {
     return value === NULL ? null : value;
   }
 
-  parseBool(value: string) {
+  parseBool(value: string): boolean {
     return value === NULL ? null : value === TRUE;
   }
 
-  parseNumber(value: string) {
+  parseNumber(value: string): number {
     return value === NULL ? null : Number(value);
   }
 
-  parseArray(value: string) {
+  parseArray(value: string): string[] {
     return value === NULL ? null : value === EMPTY ? [] : value.split(ARRAYSEP);
   }
 }

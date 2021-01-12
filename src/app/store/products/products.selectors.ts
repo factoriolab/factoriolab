@@ -9,7 +9,7 @@ import {
   Rational,
   DisplayRateVal,
   RationalProduct,
-  Sort,
+  Product,
 } from '~/models';
 import {
   RateUtility,
@@ -17,16 +17,18 @@ import {
   FlowUtility,
   RecipeUtility,
 } from '~/utilities';
+import * as Factories from '../factories';
 import * as Items from '../items';
+import * as Preferences from '../preferences';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
 import { State } from '../';
 import { ProductsState } from './products.reducer';
 
 /* Base selector functions */
-const productsState = (state: State) => state.productsState;
-const sIds = (state: ProductsState) => state.ids;
-const sEntities = (state: ProductsState) => state.entities;
+const productsState = (state: State): ProductsState => state.productsState;
+const sIds = (state: ProductsState): string[] => state.ids;
+const sEntities = (state: ProductsState): Entities<Product> => state.entities;
 
 /* Simple selectors */
 export const getIds = compose(sIds, productsState);
@@ -134,7 +136,7 @@ export const getNormalizedRatesByFactories = createSelector(
   (products, productRecipes, data) =>
     products?.reduce((e: Entities<Rational>, p) => {
       const simpleRecipeId = data.itemRecipeIds[p.itemId];
-      if (simpleRecipeId && (p.recipeId == null || p.recipeId === simpleRecipeId)) {
+      if (simpleRecipeId && (p.viaId == null || p.viaId === simpleRecipeId)) {
         const recipe = data.recipeR[simpleRecipeId];
         e[p.id] = p.rate
           .div(recipe.time)
@@ -142,7 +144,7 @@ export const getNormalizedRatesByFactories = createSelector(
           .div(recipe.adjustProd || Rational.one);
       } else {
         const recipes = productRecipes[p.itemId];
-        const data = RecipeUtility.getProductRecipeData(recipes, p.recipeId);
+        const data = RecipeUtility.getProductRecipeData(recipes, p.viaId);
         if (data) {
           e[p.id] = p.rate.div(data[1]);
         } else {
@@ -170,10 +172,8 @@ export const getNormalizedSteps = createSelector(
   getProducts,
   getNormalizedRates,
   Items.getItemSettings,
-  Recipes.getRecipeSettings,
   Recipes.getAdjustedDataset,
-  Settings.getFuel,
-  (products, rates, itemSettings, recipeSettings, data, fuel) => {
+  (products, rates, itemSettings, data) => {
     const steps: Step[] = [];
     for (const product of products) {
       RateUtility.addStepsFor(
@@ -181,8 +181,6 @@ export const getNormalizedSteps = createSelector(
         rates[product.id],
         steps,
         itemSettings,
-        recipeSettings,
-        fuel,
         data
       );
     }
@@ -204,20 +202,8 @@ export const getNormalizedStepsWithMatrices = createSelector(
     )
 );
 
-export const getNormalizedStepsSorted = createSelector(
-  getNormalizedStepsWithMatrices,
-  Settings.getSort,
-  (steps, sort) => {
-    steps = RateUtility.copy(steps);
-    if (sort === Sort.BreadthFirst) {
-      return steps.sort((a, b) => a.depth - b.depth);
-    }
-    return steps;
-  }
-);
-
 export const getNormalizedStepsWithBelts = createSelector(
-  getNormalizedStepsSorted,
+  getNormalizedStepsWithMatrices,
   Items.getItemSettings,
   Settings.getBeltSpeed,
   Recipes.getAdjustedDataset,
@@ -239,7 +225,7 @@ export const getSteps = createSelector(
 
 export const getSankey = createSelector(
   getSteps,
-  Settings.getLinkValue,
+  Preferences.getLinkValue,
   Recipes.getAdjustedDataset,
   (steps, linkValue, data) =>
     FlowUtility.buildSankey(RateUtility.copy(steps), linkValue, data)
@@ -249,11 +235,13 @@ export const getZipState = createSelector(
   productsState,
   Items.itemsState,
   Recipes.recipesState,
+  Factories.factoriesState,
   Settings.settingsState,
-  (products, items, recipes, settings) => ({
+  (products, items, recipes, factories, settings) => ({
     products,
     items,
     recipes,
+    factories,
     settings,
   })
 );

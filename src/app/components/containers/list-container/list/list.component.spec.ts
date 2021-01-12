@@ -3,46 +3,44 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 
-import { Mocks, TestUtility, ItemId, RecipeId, ElementId } from 'src/tests';
-import { IconComponent, SelectComponent } from '~/components';
+import { Mocks, TestUtility, ItemId, RecipeId } from 'src/tests';
+import { IconComponent, SelectComponent, ColumnsComponent } from '~/components';
 import {
   DisplayRate,
-  AllColumns,
   Rational,
   Step,
   ListMode,
   InserterTarget,
   InserterCapacity,
+  Column,
 } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers } from '~/store';
+import { ColumnsState, initialColumnsState } from '~/store/preferences';
 import { ExportUtility } from '~/utilities';
 import { ListComponent, StepDetailTab } from './list.component';
+
+enum DataTest {
+  Export = 'lab-list-export',
+  Beacons = 'lab-list-beacons',
+  ResetStep = 'lab-list-reset-step',
+}
 
 @Component({
   selector: 'lab-test-list',
   template: `
     <lab-list
       [mode]="mode"
+      [selected]="selected"
       [data]="data"
       [itemSettings]="itemSettings"
       [recipeSettings]="recipeSettings"
       [recipeRaw]="recipeRaw"
-      [steps]="steps"
+      [factories]="factories"
       [beltSpeed]="beltSpeed"
+      [steps]="steps"
       [disabledRecipes]="disabledRecipes"
-      [factoryRank]="factoryRank"
-      [moduleRank]="moduleRank"
-      [beaconModule]="beaconModule"
       [displayRate]="displayRate"
-      [itemPrecision]="itemPrecision"
-      [beltPrecision]="beltPrecision"
-      [wagonPrecision]="wagonPrecision"
-      [factoryPrecision]="factoryPrecision"
-      [powerPrecision]="powerPrecision"
-      [pollutionPrecision]="pollutionPrecision"
-      [beaconCount]="beaconCount"
-      [drillModule]="drillModule"
       [inserterTarget]="inserterTarget"
       [inserterCapacity]="inserterCapacity"
       [columns]="columns"
@@ -50,7 +48,6 @@ import { ListComponent, StepDetailTab } from './list.component';
       [modifiedBelt]="modifiedBelt"
       [modifiedFactory]="modifiedFactory"
       [modifiedBeacons]="modifiedBeacons"
-      [selected]="selected"
       (ignoreItem)="ignoreItem($event)"
       (setBelt)="setBelt($event)"
       (setFactory)="setFactory($event)"
@@ -58,8 +55,8 @@ import { ListComponent, StepDetailTab } from './list.component';
       (setBeaconCount)="setBeaconCount($event)"
       (setBeacon)="setBeacon($event)"
       (setBeaconModules)="setBeaconModules($event)"
-      (showColumn)="showColumn($event)"
-      (hideColumn)="hideColumn($event)"
+      (setColumns)="setColumns($event)"
+      (setPrecision)="setPrecision($event)"
       (resetItem)="resetItem($event)"
       (resetRecipe)="resetRecipe($event)"
       (resetIgnore)="resetIgnore()"
@@ -74,49 +71,39 @@ import { ListComponent, StepDetailTab } from './list.component';
 class TestListComponent {
   @ViewChild(ListComponent) child: ListComponent;
   mode = ListMode.All;
+  selected = null;
   data = Mocks.Data;
   itemSettings = Mocks.ItemSettingsInitial;
   recipeSettings = Mocks.RecipeSettingsInitial;
   recipeRaw = Mocks.RecipeSettingsEntities;
-  steps = Mocks.Steps;
+  factories = Mocks.FactorySettingsInitial;
   beltSpeed = Mocks.BeltSpeed;
+  steps = Mocks.Steps;
   disabledRecipes = [];
-  factoryRank = [];
-  moduleRank = [];
-  beaconModule = ItemId.SpeedModule;
   displayRate = DisplayRate.PerMinute;
-  itemPrecision = null;
-  beltPrecision = 0;
-  wagonPrecision = 1;
-  factoryPrecision = 2;
-  powerPrecision = 3;
-  pollutionPrecision = 4;
-  beaconCount = 0;
-  drillModule = false;
-  columns = AllColumns;
   inserterTarget = InserterTarget.Chest;
   inserterCapacity = InserterCapacity.Capacity0;
+  columns = initialColumnsState;
   modifiedIgnore = false;
   modifiedBelt = false;
   modifiedFactory = false;
   modifiedBeacons = false;
-  selected = null;
-  ignoreItem(data) {}
-  setBelt(data) {}
-  setFactory(data) {}
-  setFactoryModules(data) {}
-  setBeaconCount(data) {}
-  setBeacon(data) {}
-  setBeaconModules(data) {}
-  showColumn(data) {}
-  hideColumn(data) {}
-  resetItem(data) {}
-  resetRecipe(data) {}
-  resetIgnore() {}
-  resetBelt() {}
-  resetFactory() {}
-  resetBeacons() {}
-  setDisabledRecipes($event) {}
+  ignoreItem(data): void {}
+  setBelt(data): void {}
+  setFactory(data): void {}
+  setFactoryModules(data): void {}
+  setBeaconCount(data): void {}
+  setBeacon(data): void {}
+  setBeaconModules(data): void {}
+  setColumns(data): void {}
+  setPrecision(data): void {}
+  resetItem(data): void {}
+  resetRecipe(data): void {}
+  resetIgnore(): void {}
+  resetBelt(): void {}
+  resetFactory(): void {}
+  resetBeacons(): void {}
+  setDisabledRecipes(data): void {}
 }
 
 describe('ListComponent', () => {
@@ -124,8 +111,9 @@ describe('ListComponent', () => {
   let fixture: ComponentFixture<TestListComponent>;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [
+        ColumnsComponent,
         IconComponent,
         SelectComponent,
         ListComponent,
@@ -136,17 +124,35 @@ describe('ListComponent', () => {
         StoreModule.forRoot(reducers, { metaReducers }),
       ],
       providers: [RouterService],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(TestListComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TestListComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('columns', () => {
+    it('should set the totalspan', () => {
+      expect(component.child.totalSpan).toEqual(10);
+    });
+
+    it('should set totalspan with no columns', () => {
+      component.columns = Object.keys(component.columns).reduce(
+        (e: ColumnsState, c) => {
+          e[c] = { show: false, precision: 1 };
+          return e;
+        },
+        {}
+      );
+      fixture.detectChanges();
+      expect(component.child.totalSpan).toEqual(2);
+    });
   });
 
   describe('mode', () => {
@@ -168,28 +174,6 @@ describe('ListComponent', () => {
       component.selected = 'id';
       fixture.detectChanges();
       expect(component.child.setDisplayedSteps).toHaveBeenCalled();
-    });
-  });
-
-  describe('columns', () => {
-    it('should get the list', () => {
-      expect(component.child.columns).toEqual(AllColumns);
-    });
-
-    it('should set the the show entities', () => {
-      for (const c of AllColumns) {
-        expect(component.child.show[c]).toBeTrue();
-      }
-    });
-
-    it('should set the totalspan', () => {
-      expect(component.child.totalSpan).toEqual(10);
-    });
-
-    it('should set totalspan with no columns', () => {
-      component.columns = [];
-      fixture.detectChanges();
-      expect(component.child.totalSpan).toEqual(2);
     });
   });
 
@@ -231,40 +215,26 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('setItemPrecision', () => {
-    it('should set the effective items and surplus precision', () => {
-      expect(component.child.effPrecSurplus).toEqual(null);
-      expect(component.child.effPrecItems).toEqual(null);
+  describe('setEffectivePrecision', () => {
+    it('should wait until both steps and columns are defined', () => {
+      component.child._columns = null;
+      component.child.effPrecision = null;
+      component.child.setEffectivePrecision();
+      expect(component.child.effPrecision).toBeNull();
     });
-  });
 
-  describe('setBeltsPrecision', () => {
-    it('should set the effective belts precision', () => {
-      expect(component.child.effPrecBelts).toEqual(0);
-    });
-  });
-
-  describe('setWagonsPrecision', () => {
-    it('should set the effective wagons precision', () => {
-      expect(component.child.effPrecWagons).toEqual(0);
-    });
-  });
-
-  describe('setFactoriesPrecision', () => {
-    it('should set the effective factories precision', () => {
-      expect(component.child.effPrecFactories).toEqual(0);
-    });
-  });
-
-  describe('setPowerPrecision', () => {
-    it('should set the effective power precision', () => {
-      expect(component.child.effPrecPower).toEqual(0);
-    });
-  });
-
-  describe('setPollutionPrecision', () => {
-    it('should set the effective pollution precision', () => {
-      expect(component.child.effPrecPollution).toEqual(0);
+    it('should set up the effective precision mapping', () => {
+      component.child.effPrecision = null;
+      component.child.setEffectivePrecision();
+      expect(component.child.effPrecision).toEqual({
+        [Column.Surplus]: 0,
+        [Column.Items]: 0,
+        [Column.Belts]: 1,
+        [Column.Wagons]: 0,
+        [Column.Factories]: 0,
+        [Column.Power]: 0,
+        [Column.Pollution]: 0,
+      });
     });
   });
 
@@ -284,9 +254,7 @@ describe('ListComponent', () => {
 
   describe('setDetailTabs', () => {
     it('should include no tabs', () => {
-      component.steps = [
-        { itemId: ItemId.CopperPlate, items: Rational.one, depth: 0 },
-      ];
+      component.steps = [{ itemId: ItemId.CopperPlate, items: Rational.one }];
       fixture.detectChanges();
       expect(component.child.details[ItemId.CopperPlate]).toEqual([]);
     });
@@ -297,7 +265,6 @@ describe('ListComponent', () => {
           itemId: ItemId.PetroleumGas,
           recipeId: RecipeId.AdvancedOilProcessing,
           items: Rational.one,
-          depth: 0,
           parents: {},
           factories: Rational.one,
         },
@@ -319,7 +286,6 @@ describe('ListComponent', () => {
           itemId: ItemId.PetroleumGas,
           recipeId: RecipeId.AdvancedOilProcessing,
           items: Rational.one,
-          depth: 0,
           parents: {},
           factories: Rational.one,
         },
@@ -332,18 +298,14 @@ describe('ListComponent', () => {
 
     it('should collapse an expanded step that can no longer be expanded', () => {
       component.child.expanded[ItemId.CopperPlate] = StepDetailTab.Inputs;
-      component.steps = [
-        { itemId: ItemId.CopperPlate, items: Rational.one, depth: 0 },
-      ];
+      component.steps = [{ itemId: ItemId.CopperPlate, items: Rational.one }];
       fixture.detectChanges();
       expect(component.child.expanded[ItemId.CopperPlate]).toBeUndefined();
     });
 
     it('should collapse an expanded step that no longer exists', () => {
       component.child.expanded[ItemId.CopperCable] = StepDetailTab.Inputs;
-      component.steps = [
-        { itemId: ItemId.CopperPlate, items: Rational.one, depth: 0 },
-      ];
+      component.steps = [{ itemId: ItemId.CopperPlate, items: Rational.one }];
       fixture.detectChanges();
       expect(component.child.expanded[ItemId.CopperCable]).toBeUndefined();
     });
@@ -355,7 +317,6 @@ describe('ListComponent', () => {
           itemId: ItemId.PetroleumGas,
           recipeId: RecipeId.AdvancedOilProcessing,
           items: Rational.one,
-          depth: 0,
           parents: {},
           factories: Rational.one,
         },
@@ -401,6 +362,17 @@ describe('ListComponent', () => {
   describe('findStep', () => {
     it('should find the step with a specific item id', () => {
       expect(component.child.findStep(Mocks.Step1.itemId)).toEqual(Mocks.Step1);
+    });
+  });
+
+  describe('sortKeyValue', () => {
+    it('should sort KeyValue objects', () => {
+      expect(
+        component.child.sortKeyValue(
+          { key: 'a', value: Rational.zero },
+          { key: 'b', value: Rational.one }
+        )
+      ).toEqual(1);
     });
   });
 
@@ -479,127 +451,83 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('miningIgnoreModule', () => {
-    it('should return true for mining drill step', () => {
-      expect(
-        component.child.miningIgnoreModule({
-          recipeId: RecipeId.IronOre,
-        } as any)
-      ).toBeTrue();
-    });
-
-    it('should return false if drillModule is true', () => {
-      component.drillModule = true;
-      fixture.detectChanges();
-      expect(
-        component.child.miningIgnoreModule({
-          recipeId: RecipeId.IronOre,
-        } as any)
-      ).toBeFalse();
-    });
-
-    it('should return false if factory not found', () => {
-      expect(
-        component.child.miningIgnoreModule({
-          recipeId: 'test',
-        } as any)
-      ).toBeFalse();
+  describe('getSettings', () => {
+    it('should get the factory settings for a step', () => {
+      expect(component.child.getSettings(Mocks.Step1)).toEqual(
+        component.factories.entities[
+          component.recipeSettings[Mocks.Step1.recipeId].factory
+        ]
+      );
     });
   });
 
   describe('factoryChange', () => {
     it('should set a factory', () => {
       spyOn(component, 'setFactory');
-      TestUtility.clickSelector(fixture, '.list-edit-factory', 0);
-      fixture.detectChanges();
-      TestUtility.clickSelector(fixture, 'lab-select lab-icon', 0);
-      fixture.detectChanges();
+      component.child.factoryChange(Mocks.Step1, ItemId.AssemblingMachine1);
       expect(component.setFactory).toHaveBeenCalledWith({
         id: Mocks.Step1.itemId,
         value: ItemId.AssemblingMachine1,
-        default: ItemId.AssemblingMachine1,
+        default: ItemId.AssemblingMachine3,
       });
     });
   });
 
   describe('factoryModuleChange', () => {
-    it('should set a specific factory module', () => {
+    it('should set factory modules', () => {
       spyOn(component, 'setFactoryModules');
-      TestUtility.clickSelector(fixture, '.list-edit-factory-module', 1);
-      fixture.detectChanges();
-      TestUtility.clickSelector(fixture, 'lab-select lab-icon', 1);
-      fixture.detectChanges();
+      component.child.factoryModuleChange(Mocks.Step1, ItemId.SpeedModule, 0);
       expect(component.setFactoryModules).toHaveBeenCalledWith({
         id: Mocks.Step1.itemId,
-        value: [
-          ItemId.SpeedModule3,
-          ItemId.SpeedModule,
-          ItemId.SpeedModule3,
-          ItemId.SpeedModule3,
-        ],
-        default: [ItemId.Module, ItemId.Module, ItemId.Module, ItemId.Module],
-      });
-    });
-
-    it('should set all factory modules', () => {
-      spyOn(component, 'setFactoryModules');
-      TestUtility.clickSelector(fixture, '.list-edit-factory-module', 0);
-      fixture.detectChanges();
-      TestUtility.clickSelector(fixture, 'lab-select lab-icon', 1);
-      fixture.detectChanges();
-      expect(component.setFactoryModules).toHaveBeenCalledWith({
-        id: Mocks.Step1.itemId,
-        value: [
-          ItemId.SpeedModule,
-          ItemId.SpeedModule,
-          ItemId.SpeedModule,
-          ItemId.SpeedModule,
-        ],
-        default: [ItemId.Module, ItemId.Module, ItemId.Module, ItemId.Module],
-      });
-    });
-
-    it('should get correct default when ignoring mining modules', () => {
-      spyOn(component, 'setFactoryModules');
-      component.child.factoryModuleChange(
-        {
-          recipeId: RecipeId.IronOre,
-        } as any,
-        ItemId.SpeedModule,
-        0
-      );
-      expect(component.setFactoryModules).toHaveBeenCalledWith({
-        id: ItemId.IronOre,
-        value: [ItemId.SpeedModule, ItemId.SpeedModule, ItemId.SpeedModule],
-        default: [ItemId.Module, ItemId.Module, ItemId.Module],
+        value: new Array(4).fill(ItemId.SpeedModule),
+        default: new Array(4).fill(ItemId.SpeedModule3),
       });
     });
   });
 
   describe('beaconModuleChange', () => {
-    it('should set the beacon module', () => {
+    it('should beacon modules', () => {
       spyOn(component, 'setBeaconModules');
-      TestUtility.clickSelector(fixture, '.list-edit-beacon-module', 0);
-      fixture.detectChanges();
-      TestUtility.clickSelector(fixture, 'lab-select lab-icon', 1);
-      fixture.detectChanges();
+      component.child.beaconModuleChange(Mocks.Step1, ItemId.SpeedModule, 0);
       expect(component.setBeaconModules).toHaveBeenCalledWith({
         id: Mocks.Step1.recipeId,
-        value: [ItemId.SpeedModule, ItemId.SpeedModule],
-        default: [ItemId.SpeedModule, ItemId.SpeedModule],
+        value: new Array(2).fill(ItemId.SpeedModule),
+        default: new Array(2).fill(ItemId.SpeedModule3),
       });
+    });
+  });
+
+  describe('generateModules', () => {
+    it('should fill when index 0 is modified', () => {
+      expect(
+        component.child.generateModules(
+          0,
+          ItemId.SpeedModule,
+          new Array(2).fill(ItemId.Module)
+        )
+      ).toEqual(new Array(2).fill(ItemId.SpeedModule));
+    });
+
+    it('should modify a specific index', () => {
+      expect(
+        component.child.generateModules(
+          1,
+          ItemId.SpeedModule,
+          new Array(2).fill(ItemId.Module)
+        )
+      ).toEqual([ItemId.Module, ItemId.SpeedModule]);
     });
   });
 
   describe('beaconCountChange', () => {
     it('should set beacon count', () => {
       spyOn(component, 'setBeaconCount');
-      TestUtility.selectSelector(fixture, 'input', '12');
+      TestUtility.setTextDt(fixture, DataTest.Beacons, '12');
       fixture.detectChanges();
       expect(component.setBeaconCount).toHaveBeenCalledWith({
         id: Mocks.Step1.itemId,
         value: 12,
-        default: 0,
+        default: 8,
       });
     });
 
@@ -612,21 +540,9 @@ describe('ListComponent', () => {
 
     it('should not set beacon count if unchanged', () => {
       spyOn(component, 'setBeaconCount');
-      TestUtility.selectSelector(fixture, 'input', '8');
+      TestUtility.setTextDt(fixture, DataTest.Beacons, '8');
       fixture.detectChanges();
       expect(component.setBeaconCount).not.toHaveBeenCalled();
-    });
-
-    it('should get correct default when ignoring mining modules', () => {
-      spyOn(component, 'setBeaconCount');
-      spyOn(component.child, 'miningIgnoreModule').and.returnValue(true);
-      TestUtility.selectSelector(fixture, 'input', '12');
-      fixture.detectChanges();
-      expect(component.setBeaconCount).toHaveBeenCalledWith({
-        id: Mocks.Step1.itemId,
-        value: 12,
-        default: 0,
-      });
     });
   });
 
@@ -634,7 +550,7 @@ describe('ListComponent', () => {
     it('should reset a step', () => {
       spyOn(component, 'resetItem');
       spyOn(component, 'resetRecipe');
-      TestUtility.clickSelector(fixture, '.list-step-reset', 0);
+      TestUtility.clickDt(fixture, DataTest.ResetStep);
       fixture.detectChanges();
       expect(component.resetItem).toHaveBeenCalled();
       expect(component.resetRecipe).toHaveBeenCalled();
@@ -644,7 +560,7 @@ describe('ListComponent', () => {
   describe('export', () => {
     it('should call the export utility', () => {
       spyOn(ExportUtility, 'stepsToCsv');
-      TestUtility.clickId(fixture, ElementId.ListSaveCsv);
+      TestUtility.clickDt(fixture, DataTest.Export);
       fixture.detectChanges();
       expect(ExportUtility.stepsToCsv).toHaveBeenCalled();
     });

@@ -2,11 +2,12 @@
   [data]="data$ | async"
   [productRecipes]="productRecipes$ | async"
   [products]="products$ | async"
-  (add)="add($event)"
-  (remove)="remove($event)"
-  (editProduct)="editProduct($event)"
-  (editRate)="editRate($event)"
-  (editRateType)="editRateType($event)"
-  (editRecipe)="editRecipe($event)"
+  [displayRate]="displayRate$ | async"
+  (addProduct)="addProduct($event)"
+  (removeProduct)="removeProduct($event)"
+  (setItem)="setItem($event)"
+  (setRate)="setRate($event)"
+  (setRateType)="setRateType($event)"
+  (setVia)="setVia($event)"
 >
 </lab-products>

@@ -1,39 +1,40 @@
-<i
-  class="clickable material-icons"
-  title="Cancel"
-  (click)="cancel.emit(); $event.stopPropagation()"
-  >close</i
->
-<lab-icon
-  *ngIf="includeEmptyModule"
-  class="clickable"
-  [iconId]="ItemId.Module"
-  tooltip="No Module"
-  [class.selected]="selectedId === ItemId.Module"
-  [data]="data"
-  (click)="clickId(ItemId.Module, $event)"
->
-</lab-icon>
-<ng-container *ngFor="let id of options">
-  <lab-icon
-    class="clickable"
-    *ngIf="selectType === IdType.Item"
-    [data]="data"
-    [iconId]="id"
-    [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"
-    [item]="data.itemEntities[id]"
-    [displayRate]="displayRate"
-    [class.selected]="id === selectedId"
-    (click)="clickId(id, $event)"
-  ></lab-icon>
-  <lab-icon
-    class="clickable"
-    *ngIf="selectType === IdType.Recipe"
-    [data]="data"
-    [iconId]="id"
-    [tooltip]="data.recipeEntities[id].name"
-    [recipe]="data.recipeEntities[id]"
-    [class.selected]="id === selectedId"
-    (click)="clickId(id, $event)"
-  ></lab-icon>
-</ng-container>
+<div data-test="lab-select-open" (click)="open = true">
+  <ng-content></ng-content>
+</div>
+<lab-dialog *ngIf="open" [style.minWidth.rem]="width" (closeDialog)="cancel()">
+  <div class="dialog-title">
+    <div class="header">{{ header }}</div>
+    <button (click)="cancel()">
+      <i class="material-icons">close</i>
+    </button>
+  </div>
+  <div class="panel tile">
+    <lab-icon
+      *ngIf="includeEmptyModule"
+      tooltip="No Module"
+      class="grid"
+      data-test="lab-select-none"
+      [iconId]="ItemId.Module"
+      [class.selected]="selected === ItemId.Module"
+      [data]="data"
+      (click)="clickId(ItemId.Module)"
+    >
+    </lab-icon>
+    <ng-container *ngFor="let id of options">
+      <lab-icon
+        class="grid"
+        data-test="lab-select-option"
+        [data]="data"
+        [iconId]="id"
+        [tooltip]="
+          data.itemEntities[id]?.name || data.recipeEntities[id]?.name || null
+        "
+        [item]="selectType === IdType.Item ? data.itemEntities[id] : null"
+        [recipe]="selectType === IdType.Recipe ? data.recipeEntities[id] : null"
+        [displayRate]="displayRate"
+        [class.selected]="id === selected"
+        (click)="clickId(id)"
+      ></lab-icon>
+    </ng-container>
+  </div>
+</lab-dialog>

@@ -1,21 +1,26 @@
 import { Mocks } from 'src/tests';
 import {
-  AllColumns,
-  toBoolEntities,
   Step,
   Rational,
   ItemSettings,
   RecipeSettings,
+  AllColumns,
 } from '~/models';
+import { initialColumnsState, ColumnsState } from '~/store/preferences';
 import { ExportUtility } from './export.utility';
 
 describe('ExportUtility', () => {
+  const noCols = AllColumns.reduce((e: ColumnsState, c) => {
+    e[c] = { show: false, precision: 1 };
+    return e;
+  }, {});
+
   describe('saveAsCsv', () => {
     it('should save the csv', () => {
       spyOn(ExportUtility, 'saveAsCsv');
       ExportUtility.stepsToCsv(
         Mocks.Steps,
-        AllColumns,
+        initialColumnsState,
         Mocks.ItemSettingsInitial,
         Mocks.RecipeSettingsInitial
       );
@@ -23,24 +28,7 @@ describe('ExportUtility', () => {
     });
   });
 
-  describe('stepsToJson', () => {
-    it('should convert steps to json', () => {
-      spyOn(ExportUtility, 'stepToJson');
-      const result = ExportUtility.stepsToJson(
-        Mocks.Steps,
-        AllColumns,
-        Mocks.ItemSettingsInitial,
-        Mocks.RecipeSettingsInitial
-      );
-      expect(ExportUtility.stepToJson).toHaveBeenCalledTimes(
-        Mocks.Steps.length
-      );
-      expect(result.length).toEqual(Mocks.Steps.length);
-    });
-  });
-
   describe('stepToJson', () => {
-    const col = toBoolEntities(AllColumns);
     const itemId = 'itemId';
     const recipeId = 'recipeId';
     const fullStep: Step = {
@@ -53,13 +41,11 @@ describe('ExportUtility', () => {
       power: new Rational(BigInt(6)),
       pollution: new Rational(BigInt(7)),
       recipeId,
-      depth: 0,
     };
     const minStep: Step = {
       itemId,
       items: Rational.one,
       recipeId,
-      depth: 0,
     };
     const itemS: ItemSettings = {
       belt: 'belt',
@@ -81,7 +67,7 @@ describe('ExportUtility', () => {
     it('should fill in all fields', () => {
       const result = ExportUtility.stepToJson(
         fullStep,
-        col,
+        initialColumnsState,
         { [itemId]: itemS },
         { [recipeId]: fullRecipe }
       );
@@ -108,7 +94,7 @@ describe('ExportUtility', () => {
     it('should handle empty fields', () => {
       const result = ExportUtility.stepToJson(
         minStep,
-        col,
+        initialColumnsState,
         { [itemId]: itemS },
         { [recipeId]: minRecipe }
       );
@@ -135,7 +121,7 @@ describe('ExportUtility', () => {
     it('should handle minimum columns', () => {
       const result = ExportUtility.stepToJson(
         fullStep,
-        {},
+        noCols,
         { [itemId]: itemS },
         { [recipeId]: fullRecipe }
       );
@@ -151,7 +137,7 @@ describe('ExportUtility', () => {
       const step = { ...fullStep, ...{ recipeId: null } };
       const result = ExportUtility.stepToJson(
         step,
-        col,
+        initialColumnsState,
         { [itemId]: itemS },
         { [recipeId]: fullRecipe }
       );
@@ -179,7 +165,7 @@ describe('ExportUtility', () => {
       const step = { ...fullStep, ...{ recipeId: null } };
       const result = ExportUtility.stepToJson(
         step,
-        {},
+        noCols,
         { [itemId]: itemS },
         { [recipeId]: fullRecipe }
       );

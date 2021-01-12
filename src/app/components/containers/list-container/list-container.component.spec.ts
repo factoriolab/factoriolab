@@ -3,12 +3,14 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
 import { Mocks, ItemId } from 'src/tests';
+import { ColumnsComponent, IconComponent, SelectComponent } from '~/components';
 import { DefaultIdPayload, DefaultPayload } from '~/models';
 import { RouterService } from '~/services/router.service';
 import { reducers, metaReducers, State } from '~/store';
 import * as Items from '~/store/items';
+import * as Preferences from '~/store/preferences';
 import * as Recipes from '~/store/recipes';
-import { SetColumnsAction, SetDisabledRecipesAction } from '~/store/settings';
+import { SetDisabledRecipesAction } from '~/store/settings';
 import { ListComponent } from './list/list.component';
 import { ListContainerComponent } from './list-container.component';
 
@@ -18,36 +20,50 @@ describe('ListContainerComponent', () => {
   let store: Store<State>;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
-      declarations: [ListComponent, ListContainerComponent],
+    await TestBed.configureTestingModule({
+      declarations: [
+        ColumnsComponent,
+        IconComponent,
+        SelectComponent,
+        ListComponent,
+        ListContainerComponent,
+      ],
       imports: [
         RouterTestingModule,
         StoreModule.forRoot(reducers, { metaReducers }),
       ],
       providers: [RouterService],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(ListContainerComponent);
-        component = fixture.componentInstance;
-        store = TestBed.inject(Store);
-        fixture.detectChanges();
-      });
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ListContainerComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    store = TestBed.inject(Store);
+    spyOn(store, 'dispatch');
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should bypass steps observable if specified by parent', () => {
+    component.steps$ = null;
+    component.steps = Mocks.Steps;
+    component.ngOnInit();
+    expect(component.steps$).toBeNull();
+  });
+
   it('should ignore an item', () => {
-    spyOn(store, 'dispatch');
     const data = Mocks.Item1.id;
     component.child.ignoreItem.emit(data);
-    expect(store.dispatch).toHaveBeenCalledWith(new Items.IgnoreAction(data));
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Items.IgnoreItemAction(data)
+    );
   });
 
   it('should set belt', () => {
-    spyOn(store, 'dispatch');
     const data: DefaultIdPayload = {
       id: Mocks.Item1.id,
       value: ItemId.TransportBelt,
@@ -58,7 +74,6 @@ describe('ListContainerComponent', () => {
   });
 
   it('should set factory', () => {
-    spyOn(store, 'dispatch');
     const data: DefaultIdPayload = {
       id: Mocks.Recipe1.id,
       value: ItemId.StoneFurnace,
@@ -71,7 +86,6 @@ describe('ListContainerComponent', () => {
   });
 
   it('should set factory modules', () => {
-    spyOn(store, 'dispatch');
     const data: DefaultIdPayload<string[]> = {
       id: Mocks.Recipe1.id,
       value: [ItemId.SpeedModule],
@@ -84,7 +98,6 @@ describe('ListContainerComponent', () => {
   });
 
   it('should set beacon count', () => {
-    spyOn(store, 'dispatch');
     const data: DefaultIdPayload<number> = {
       id: Mocks.Recipe1.id,
       value: 24,
@@ -97,7 +110,6 @@ describe('ListContainerComponent', () => {
   });
 
   it('should set beacon', () => {
-    spyOn(store, 'dispatch');
     const data: DefaultIdPayload = {
       id: Mocks.Recipe1.id,
       value: ItemId.Beacon,
@@ -110,7 +122,6 @@ describe('ListContainerComponent', () => {
   });
 
   it('should set beacon modules', () => {
-    spyOn(store, 'dispatch');
     const data: DefaultIdPayload<string[]> = {
       id: Mocks.Recipe1.id,
       value: [ItemId.SpeedModule],
@@ -123,40 +134,40 @@ describe('ListContainerComponent', () => {
   });
 
   it('should set the visible columns', () => {
-    spyOn(store, 'dispatch');
-    const data = ['id'];
+    const data = Preferences.initialColumnsState;
     component.child.setColumns.emit(data);
-    expect(store.dispatch).toHaveBeenCalledWith(new SetColumnsAction(data));
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Preferences.SetColumnsAction(data)
+    );
   });
 
   it('should reset item to default', () => {
-    spyOn(store, 'dispatch');
     const data = Mocks.Item1.id;
     component.child.resetItem.emit(data);
-    expect(store.dispatch).toHaveBeenCalledWith(new Items.ResetAction(data));
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Items.ResetItemAction(data)
+    );
   });
 
   it('should reset recipe to default', () => {
-    spyOn(store, 'dispatch');
     const data = Mocks.Recipe1.id;
     component.child.resetRecipe.emit(data);
-    expect(store.dispatch).toHaveBeenCalledWith(new Recipes.ResetAction(data));
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Recipes.ResetRecipeAction(data)
+    );
   });
 
   it('should reset ignore modifications', () => {
-    spyOn(store, 'dispatch');
     component.child.resetIgnore.emit();
     expect(store.dispatch).toHaveBeenCalledWith(new Items.ResetIgnoreAction());
   });
 
   it('should reset belt modifications', () => {
-    spyOn(store, 'dispatch');
     component.child.resetBelt.emit();
     expect(store.dispatch).toHaveBeenCalledWith(new Items.ResetBeltAction());
   });
 
   it('should reset factory modifications', () => {
-    spyOn(store, 'dispatch');
     component.child.resetFactory.emit();
     expect(store.dispatch).toHaveBeenCalledWith(
       new Recipes.ResetFactoryAction()
@@ -164,7 +175,6 @@ describe('ListContainerComponent', () => {
   });
 
   it('should reset beacon modifications', () => {
-    spyOn(store, 'dispatch');
     component.child.resetBeacons.emit();
     expect(store.dispatch).toHaveBeenCalledWith(
       new Recipes.ResetBeaconsAction()
@@ -172,7 +182,6 @@ describe('ListContainerComponent', () => {
   });
 
   it('should set the list of disabled recipes', () => {
-    spyOn(store, 'dispatch');
     const value: DefaultPayload<string[]> = { value: [], default: [] };
     component.child.setDisabledRecipes.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(

@@ -133,7 +133,6 @@ describe('SimplexUtility', () => {
       const step: Step = {
         itemId: ItemId.PetroleumGas,
         items: Rational.one,
-        depth: 0,
       };
       const result = SimplexUtility.solve(
         [step],
@@ -622,7 +621,6 @@ describe('SimplexUtility', () => {
       const step: Step = {
         itemId: ItemId.Coal,
         items: Rational.one,
-        depth: 0,
       };
       const solution = {
         surplus: {},
@@ -632,11 +630,10 @@ describe('SimplexUtility', () => {
       const state = getState();
       state.items[ItemId.Coal] = Rational.from(3);
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
-      SimplexUtility.addItemStep(ItemId.Coal, [step], 1, solution, state);
+      SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
       expect(step).toEqual({
         itemId: ItemId.Coal,
         items: Rational.two,
-        depth: 1,
       });
     });
 
@@ -644,7 +641,6 @@ describe('SimplexUtility', () => {
       const step: Step = {
         itemId: ItemId.Coal,
         items: Rational.one,
-        depth: 0,
       };
       const solution = {
         surplus: {},
@@ -659,11 +655,10 @@ describe('SimplexUtility', () => {
         out: { [ItemId.Coal]: 1 },
         producers: [],
       });
-      SimplexUtility.addItemStep(ItemId.Coal, [step], 1, solution, state);
+      SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
       expect(step).toEqual({
         itemId: ItemId.Coal,
         items: Rational.from(3),
-        depth: 1,
       });
     });
 
@@ -671,7 +666,6 @@ describe('SimplexUtility', () => {
       const step: Step = {
         itemId: ItemId.Coal,
         items: Rational.one,
-        depth: 0,
       };
       const solution = {
         surplus: { [ItemId.Coal]: Rational.zero },
@@ -681,11 +675,10 @@ describe('SimplexUtility', () => {
       const state = getState();
       state.items[ItemId.Coal] = Rational.one;
       state.recipes[ItemId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
-      SimplexUtility.addItemStep(ItemId.Coal, [step], 1, solution, state);
+      SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
       expect(step).toEqual({
         itemId: ItemId.Coal,
         items: Rational.one,
-        depth: 0,
       });
     });
 
@@ -699,20 +692,19 @@ describe('SimplexUtility', () => {
       const state = getState();
       state.items[ItemId.Coal] = Rational.from(3);
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
-      SimplexUtility.addItemStep(ItemId.Coal, steps, 1, solution, state);
+      SimplexUtility.addItemStep(ItemId.Coal, steps, solution, state);
       expect(steps).toEqual([
         {
           itemId: ItemId.Coal,
           items: Rational.two,
-          depth: 1,
         },
       ]);
     });
 
     it('should place a new step next to related steps', () => {
       const steps: Step[] = [
-        { itemId: ItemId.PetroleumGas, items: Rational.zero, depth: 0 },
-        { itemId: ItemId.Wood, items: Rational.zero, depth: 0 },
+        { itemId: ItemId.PetroleumGas, items: Rational.zero },
+        { itemId: ItemId.Wood, items: Rational.zero },
       ];
       const solution = {
         surplus: {},
@@ -722,11 +714,11 @@ describe('SimplexUtility', () => {
       const state = getState();
       state.recipes[RecipeId.AdvancedOilProcessing] =
         Mocks.AdjustedData.recipeR[RecipeId.AdvancedOilProcessing];
-      SimplexUtility.addItemStep(ItemId.HeavyOil, steps, 1, solution, state);
+      SimplexUtility.addItemStep(ItemId.HeavyOil, steps, solution, state);
       expect(steps).toEqual([
-        { itemId: ItemId.PetroleumGas, items: Rational.zero, depth: 0 },
-        { itemId: ItemId.HeavyOil, items: Rational.one, depth: 1 },
-        { itemId: ItemId.Wood, items: Rational.zero, depth: 0 },
+        { itemId: ItemId.PetroleumGas, items: Rational.zero },
+        { itemId: ItemId.HeavyOil, items: Rational.one },
+        { itemId: ItemId.Wood, items: Rational.zero },
       ]);
     });
 
@@ -734,7 +726,6 @@ describe('SimplexUtility', () => {
       const step: Step = {
         itemId: ItemId.Coal,
         items: Rational.zero,
-        depth: 0,
       };
       const solution = {
         surplus: { [ItemId.Coal]: Rational.from(3) },
@@ -744,12 +735,11 @@ describe('SimplexUtility', () => {
       const state = getState();
       state.items[ItemId.Coal] = Rational.zero;
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
-      SimplexUtility.addItemStep(ItemId.Coal, [step], 1, solution, state);
+      SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
       expect(step).toEqual({
         itemId: ItemId.Coal,
         items: Rational.one,
         surplus: Rational.from(3),
-        depth: 1,
       });
     });
   });
@@ -760,17 +750,14 @@ describe('SimplexUtility', () => {
         {
           itemId: ItemId.CopperCable,
           items: Rational.zero,
-          depth: 0,
         },
         {
           itemId: ItemId.HeavyOil,
           items: Rational.zero,
-          depth: 0,
         },
         {
           itemId: ItemId.PetroleumGas,
           items: Rational.zero,
-          depth: 0,
         },
       ];
       const solution = {
@@ -795,19 +782,16 @@ describe('SimplexUtility', () => {
           itemId: ItemId.CopperCable,
           recipeId: RecipeId.CopperCable,
           items: Rational.zero,
-          depth: 0,
         },
         {
           itemId: ItemId.HeavyOil,
           recipeId: RecipeId.AdvancedOilProcessing,
           items: Rational.zero,
-          depth: 0,
         },
         {
           itemId: ItemId.PetroleumGas,
           recipeId: RecipeId.BasicOilProcessing,
           items: Rational.zero,
-          depth: 0,
         },
       ]);
     });
@@ -819,7 +803,6 @@ describe('SimplexUtility', () => {
       const step: Step = {
         itemId: ItemId.Coal,
         items: Rational.one,
-        depth: 0,
       };
       const solution = {
         surplus: {},
@@ -829,7 +812,6 @@ describe('SimplexUtility', () => {
       SimplexUtility.addRecipeStep(
         Mocks.AdjustedData.recipeR[RecipeId.Coal],
         [step],
-        1,
         solution
       );
       expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
@@ -838,7 +820,6 @@ describe('SimplexUtility', () => {
         recipeId: RecipeId.Coal,
         items: Rational.one,
         factories: Rational.from(4, 3),
-        depth: 1,
       });
     });
 
@@ -848,7 +829,6 @@ describe('SimplexUtility', () => {
         itemId: null,
         recipeId: RecipeId.Coal,
         items: Rational.one,
-        depth: 0,
       };
       const solution = {
         surplus: {},
@@ -858,7 +838,6 @@ describe('SimplexUtility', () => {
       SimplexUtility.addRecipeStep(
         Mocks.AdjustedData.recipeR[RecipeId.Coal],
         [step],
-        1,
         solution
       );
       expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
@@ -867,7 +846,6 @@ describe('SimplexUtility', () => {
         recipeId: RecipeId.Coal,
         items: Rational.one,
         factories: Rational.from(4, 3),
-        depth: 1,
       });
     });
 
@@ -882,7 +860,6 @@ describe('SimplexUtility', () => {
       SimplexUtility.addRecipeStep(
         Mocks.AdjustedData.recipeR[RecipeId.Coal],
         steps,
-        1,
         solution
       );
       expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
@@ -892,7 +869,6 @@ describe('SimplexUtility', () => {
           items: null,
           recipeId: RecipeId.Coal,
           factories: Rational.from(4, 3),
-          depth: 1,
         },
       ]);
     });
@@ -904,9 +880,8 @@ describe('SimplexUtility', () => {
           itemId: ItemId.PetroleumGas,
           recipeId: RecipeId.BasicOilProcessing,
           items: Rational.zero,
-          depth: 0,
         },
-        { itemId: ItemId.Wood, items: Rational.zero, depth: 0 },
+        { itemId: ItemId.Wood, items: Rational.zero },
       ];
       const solution = {
         surplus: {},
@@ -916,7 +891,6 @@ describe('SimplexUtility', () => {
       SimplexUtility.addRecipeStep(
         Mocks.AdjustedData.recipeR[RecipeId.AdvancedOilProcessing],
         steps,
-        1,
         solution
       );
       expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
@@ -925,16 +899,14 @@ describe('SimplexUtility', () => {
           itemId: ItemId.PetroleumGas,
           recipeId: RecipeId.BasicOilProcessing,
           items: Rational.zero,
-          depth: 0,
         },
         {
           itemId: null,
           items: null,
           recipeId: RecipeId.AdvancedOilProcessing,
           factories: Rational.from(20, 3),
-          depth: 1,
         },
-        { itemId: ItemId.Wood, items: Rational.zero, depth: 0 },
+        { itemId: ItemId.Wood, items: Rational.zero },
       ]);
     });
   });
@@ -945,7 +917,6 @@ describe('SimplexUtility', () => {
       const step: Step = {
         itemId: ItemId.Coal,
         items: Rational.one,
-        depth: 0,
       };
       const solution = {
         surplus: {},

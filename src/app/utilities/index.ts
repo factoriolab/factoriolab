@@ -1,3 +1,4 @@
+export * from './browser.utility';
 export * from './export.utility';
 export * from './flow.utility';
 export * from './rate.utility';

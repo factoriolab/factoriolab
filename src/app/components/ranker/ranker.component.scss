@@ -1,44 +1,30 @@
 :host {
-  position: absolute;
-  background-color: var(--color-gray-2);
-  border: 1px solid var(--color-brand);
-  border-radius: 0.25rem;
-  z-index: 10;
-  margin: -1px;
-  min-width: 10.25rem;
-  max-width: 25rem;
-  max-height: 15rem;
   display: flex;
-  flex-direction: column;
-  padding: 0.5rem;
 }
 
-.scroll {
-  overflow-y: auto;
+lab-dialog {
+  max-width: 24rem;
+  max-height: 20rem;
 
-  > .header {
-    margin-top: 0.25rem;
+  > .panel {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
   }
 }
 
-.flex {
-  flex-wrap: wrap;
+lab-icon.grid.disabled {
+  cursor: default;
+  background-color: inherit;
+  box-shadow: inherit;
+
+  &:hover {
+    background-color: inherit;
+    box-shadow: inherit;
+  }
 }
 
 .info {
-  font-size: x-small;
-  margin-bottom: 0.5rem;
-}
-
-.empty {
-  height: 2.25rem;
-  opacity: 0.5;
-}
-
-button {
-  margin-bottom: 0.25rem;
-}
-
-lab-icon {
-  position: static;
+  margin-top: 0.5rem;
+  font-size: small;
 }
