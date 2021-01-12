@@ -33,6 +33,29 @@ describe('Products Selectors', () => {
     });
   });
 
+  describe('getProductRecipes', () => {
+    it('should handle empty/null values', () => {
+      const result = Selectors.getProductSteps.projector(
+        null,
+        null,
+        null,
+        null
+      );
+      expect(result).toBeUndefined();
+    });
+
+    it('should use the utility method to determine recipes', () => {
+      spyOn(SimplexUtility, 'getRecipes');
+      const result = Selectors.getProductSteps.projector(
+        [Mocks.Product4],
+        null,
+        null,
+        null
+      );
+      expect(SimplexUtility.getSteps).toHaveBeenCalled();
+    });
+  });
+
   describe('getProductsBy', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getProductsBy.projector([]);
@@ -150,29 +173,6 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getProductRecipes', () => {
-    it('should handle empty/null values', () => {
-      const result = Selectors.getProductRecipes.projector(
-        null,
-        null,
-        null,
-        null
-      );
-      expect(result).toBeUndefined();
-    });
-
-    it('should use the utility method to determine recipes', () => {
-      spyOn(SimplexUtility, 'getRecipes');
-      const result = Selectors.getProductRecipes.projector(
-        [Mocks.Product4],
-        null,
-        null,
-        null
-      );
-      expect(SimplexUtility.getRecipes).toHaveBeenCalled();
-    });
-  });
-
   describe('getNormalizedRatesByFactories', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getNormalizedRatesByFactories.projector(
@@ -222,7 +222,7 @@ describe('Products Selectors', () => {
         null,
         Mocks.AdjustedData
       );
-      expect(RecipeUtility.getProductRecipeData).not.toHaveBeenCalled();
+      expect(RecipeUtility.getProductStepData).not.toHaveBeenCalled();
       expect(result['0']).toEqual(Rational.from(3, 4));
     });
 
@@ -244,7 +244,7 @@ describe('Products Selectors', () => {
         { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
         Mocks.AdjustedData
       );
-      expect(RecipeUtility.getProductRecipeData).toHaveBeenCalled();
+      expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
       expect(result['0']).toEqual(Rational.from(1, 2));
     });
 
@@ -263,7 +263,7 @@ describe('Products Selectors', () => {
         { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
         Mocks.AdjustedData
       );
-      expect(RecipeUtility.getProductRecipeData).toHaveBeenCalled();
+      expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
       expect(result['0']).toEqual(Rational.zero);
     });
   });

@@ -150,7 +150,7 @@ describe('SimplexUtility', () => {
   describe('getRecipes', () => {
     it('should get recipe information for an item', () => {
       expect(
-        SimplexUtility.getRecipes(
+        SimplexUtility.getSteps(
           ItemId.CopperPlate,
           Mocks.ItemSettingsInitial,
           [],

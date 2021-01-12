@@ -384,28 +384,25 @@ describe('RecipeUtility', () => {
 
   describe('getProductRecipeData', () => {
     it('should handle no recipes available', () => {
-      const result = RecipeUtility.getProductRecipeData([], null);
+      const result = RecipeUtility.getProductStepData([], null);
       expect(result).toBeNull();
     });
 
     it('should find matching data', () => {
       const data: [string, Rational] = [RecipeId.Coal, Rational.one];
-      const result = RecipeUtility.getProductRecipeData([data], RecipeId.Coal);
+      const result = RecipeUtility.getProductStepData([data], RecipeId.Coal);
       expect(result).toEqual(data);
     });
 
     it('should fail to find matching data', () => {
       const data: [string, Rational] = [RecipeId.Coal, Rational.one];
-      const result = RecipeUtility.getProductRecipeData(
-        [data],
-        RecipeId.IronOre
-      );
+      const result = RecipeUtility.getProductStepData([data], RecipeId.IronOre);
       expect(result).toEqual(data);
     });
 
     it('should handle no recipe specified', () => {
       const data: [string, Rational] = [RecipeId.Coal, Rational.one];
-      const result = RecipeUtility.getProductRecipeData([data], null);
+      const result = RecipeUtility.getProductStepData([data], null);
       expect(result).toEqual(data);
     });
   });

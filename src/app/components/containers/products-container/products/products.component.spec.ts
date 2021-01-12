@@ -112,7 +112,7 @@ describe('ProductsComponent', () => {
     it('should call getProductRecipeData', () => {
       spyOn(RecipeUtility, 'getProductRecipeData').and.callThrough();
       const result = component.child.getRecipe(Mocks.Product4);
-      expect(RecipeUtility.getProductRecipeData).toHaveBeenCalled();
+      expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
       expect(result).toEqual(RecipeId.TransportBelt);
     });
   });
