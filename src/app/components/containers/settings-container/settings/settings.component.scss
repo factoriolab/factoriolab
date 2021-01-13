@@ -38,8 +38,8 @@
     table {
       width: 100%;
 
-      &.factories {
-        width: auto;
+      &.factories td {
+        min-width: 2.5rem;
       }
 
       &.center {
@@ -54,10 +54,12 @@
         }
       }
 
-      &.fields > tr > :first-child {
-        width: 1px;
-        padding-right: 4rem;
-        white-space: nowrap;
+      &.thin > tr > :first-child {
+        width: 35%;
+      }
+
+      &.wide > tr > :first-child {
+        width: 42%;
       }
     }
   }
