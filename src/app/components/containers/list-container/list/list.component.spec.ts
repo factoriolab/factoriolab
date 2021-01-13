@@ -384,7 +384,7 @@ describe('ListComponent', () => {
           3,
           ItemId.AssemblingMachine1
         )
-      ).toEqual('0.334');
+      ).toEqual('0.333');
     });
 
     it('should convert to percentage for pumpjacks', () => {
@@ -394,7 +394,7 @@ describe('ListComponent', () => {
           3,
           ItemId.Pumpjack
         )
-      ).toEqual('33.34%');
+      ).toEqual('33.33%');
     });
   });
 
@@ -408,7 +408,7 @@ describe('ListComponent', () => {
     it('should return a value to correct precision', () => {
       expect(
         component.child.rate(new Rational(BigInt(1), BigInt(3)), 3)
-      ).toEqual('0.334');
+      ).toEqual('0.333');
     });
 
     it('should add necessary zeros', () => {
