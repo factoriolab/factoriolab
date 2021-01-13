@@ -80,26 +80,31 @@ export class SimplexUtility {
     return steps;
   }
 
-  /** Solve simplex for a given item id and return recipes in order of output */
-  static getRecipes(
+  /** Solve simplex for a given item id and return recipes or items in steps */
+  static getSteps(
     itemId: string,
     itemSettings: ItemsState,
     disabledRecipes: string[],
-    data: Dataset
+    data: Dataset,
+    recipes: boolean
   ): [string, Rational][] {
     let steps: Step[] = [];
     RateUtility.addStepsFor(itemId, Rational.one, steps, itemSettings, data);
     steps = this.solve(steps, itemSettings, disabledRecipes, data);
 
-    return steps
-      .filter((s) => s.recipeId)
-      .sort((a, b) =>
-        data.recipeR[b.recipeId]
-          .output(itemId)
-          .sub(data.recipeR[a.recipeId].output(itemId))
-          .toNumber()
-      )
-      .map((s) => [s.recipeId, s.factories]);
+    if (recipes) {
+      return steps
+        .filter((s) => s.recipeId)
+        .sort((a, b) =>
+          data.recipeR[b.recipeId]
+            .output(itemId)
+            .sub(data.recipeR[a.recipeId].output(itemId))
+            .toNumber()
+        )
+        .map((s) => [s.recipeId, s.factories]);
+    } else {
+      return steps.map((s) => [s.itemId, s.items]);
+    }
   }
 
   //#region Setup

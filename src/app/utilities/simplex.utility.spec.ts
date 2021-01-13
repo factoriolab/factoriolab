@@ -147,18 +147,34 @@ describe('SimplexUtility', () => {
     });
   });
 
-  describe('getRecipes', () => {
-    it('should get recipe information for an item', () => {
+  describe('getSteps', () => {
+    it('should get recipe step information for an item', () => {
       expect(
-        SimplexUtility.getRecipes(
+        SimplexUtility.getSteps(
           ItemId.CopperPlate,
           Mocks.ItemSettingsInitial,
           [],
-          Mocks.AdjustedData
+          Mocks.AdjustedData,
+          true
         )
       ).toEqual([
         [ItemId.CopperPlate, Rational.from(64, 15)],
         [ItemId.CopperOre, Rational.from(4, 3)],
+      ]);
+    });
+
+    it('should get item step information for an item', () => {
+      expect(
+        SimplexUtility.getSteps(
+          ItemId.CopperPlate,
+          Mocks.ItemSettingsInitial,
+          [],
+          Mocks.AdjustedData,
+          false
+        )
+      ).toEqual([
+        [ItemId.CopperPlate, Rational.one],
+        [ItemId.CopperOre, Rational.one],
       ]);
     });
   });

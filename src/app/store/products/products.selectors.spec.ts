@@ -33,6 +33,29 @@ describe('Products Selectors', () => {
     });
   });
 
+  describe('getProductRecipes', () => {
+    it('should handle empty/null values', () => {
+      const result = Selectors.getProductSteps.projector(
+        null,
+        null,
+        null,
+        null
+      );
+      expect(result).toBeUndefined();
+    });
+
+    it('should use the utility method to determine recipes', () => {
+      spyOn(SimplexUtility, 'getSteps');
+      const result = Selectors.getProductSteps.projector(
+        [Mocks.Product4],
+        null,
+        null,
+        null
+      );
+      expect(SimplexUtility.getSteps).toHaveBeenCalled();
+    });
+  });
+
   describe('getProductsBy', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getProductsBy.projector([]);
@@ -88,22 +111,71 @@ describe('Products Selectors', () => {
 
   describe('getNormalizedRatesByItems', () => {
     it('should handle empty/null values', () => {
-      const result = Selectors.getNormalizedRatesByItems.projector(null, null);
+      const result = Selectors.getNormalizedRatesByItems.projector(
+        null,
+        null,
+        null
+      );
       expect(result).toBeUndefined();
     });
 
     it('should return the rate entities', () => {
       const result = Selectors.getNormalizedRatesByItems.projector(
         [Mocks.RationalProducts[0]],
+        null,
         DisplayRate.PerHour
       );
       expect(result[Mocks.Product1.id].nonzero()).toBeTrue();
+    });
+
+    it('should calculate using via step', () => {
+      spyOn(RecipeUtility, 'getProductStepData').and.returnValue([
+        '0',
+        Rational.two,
+      ]);
+      const result = Selectors.getNormalizedRatesByItems.projector(
+        [
+          {
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Items,
+            viaId: RecipeId.IronOre,
+          },
+        ],
+        {
+          [ItemId.Coal]: [[ItemId.IronOre, Rational.two]],
+        },
+        DisplayRate.PerMinute
+      );
+      expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
+      expect(result['0']).toEqual(Rational.from(1, 120));
+    });
+
+    it('should fall back to zero if via is not found', () => {
+      spyOn(RecipeUtility, 'getProductStepData').and.returnValue(null);
+      const result = Selectors.getNormalizedRatesByItems.projector(
+        [
+          {
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Items,
+            viaId: RecipeId.IronOre,
+          },
+        ],
+        { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
+        DisplayRate.PerMinute
+      );
+      expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
+      expect(result['0']).toEqual(Rational.zero);
     });
   });
 
   describe('getNormalizedRatesByBelts', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getNormalizedRatesByBelts.projector(
+        null,
         null,
         {},
         {}
@@ -114,16 +186,63 @@ describe('Products Selectors', () => {
     it('should return the rate entities', () => {
       const result = Selectors.getNormalizedRatesByBelts.projector(
         [Mocks.RationalProducts[1]],
+        null,
         { [Mocks.Product2.itemId]: Mocks.ItemSettings1 },
         { [Mocks.ItemSettings1.belt]: Rational.one }
       );
       expect(result[Mocks.Product2.id].nonzero()).toBeTrue();
+    });
+
+    it('should calculate using via step', () => {
+      spyOn(RecipeUtility, 'getProductStepData').and.returnValue([
+        '0',
+        Rational.two,
+      ]);
+      const result = Selectors.getNormalizedRatesByBelts.projector(
+        [
+          {
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Belts,
+            viaId: RecipeId.IronOre,
+          },
+        ],
+        {
+          [ItemId.Coal]: [[ItemId.IronOre, Rational.two]],
+        },
+        Mocks.ItemSettingsInitial,
+        Mocks.BeltSpeed
+      );
+      expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
+      expect(result['0']).toEqual(Rational.from(15, 2));
+    });
+
+    it('should fall back to zero if via is not found', () => {
+      spyOn(RecipeUtility, 'getProductStepData').and.returnValue(null);
+      const result = Selectors.getNormalizedRatesByBelts.projector(
+        [
+          {
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Belts,
+            viaId: RecipeId.IronOre,
+          },
+        ],
+        { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
+        Mocks.ItemSettingsInitial,
+        Mocks.BeltSpeed
+      );
+      expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
+      expect(result['0']).toEqual(Rational.zero);
     });
   });
 
   describe('getNormalizedRatesByWagons', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getNormalizedRatesByWagons.projector(
+        null,
         null,
         null,
         {}
@@ -134,6 +253,7 @@ describe('Products Selectors', () => {
     it('should return the rate entities', () => {
       const result = Selectors.getNormalizedRatesByWagons.projector(
         [Mocks.RationalProducts[2]],
+        null,
         DisplayRate.PerHour,
         Mocks.Data
       );
@@ -143,33 +263,67 @@ describe('Products Selectors', () => {
     it('should return the rate entities for items', () => {
       const result = Selectors.getNormalizedRatesByWagons.projector(
         [Mocks.RationalProducts[0]],
+        null,
         DisplayRate.PerHour,
         Mocks.Data
       );
       expect(result[Mocks.Product1.id].nonzero()).toBeTrue();
     });
-  });
 
-  describe('getProductRecipes', () => {
-    it('should handle empty/null values', () => {
-      const result = Selectors.getProductRecipes.projector(
-        null,
-        null,
-        null,
-        null
+    it('should calculate using via step', () => {
+      spyOn(RecipeUtility, 'getProductStepData').and.returnValue([
+        '0',
+        Rational.two,
+      ]);
+      const result = Selectors.getNormalizedRatesByWagons.projector(
+        [
+          {
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Wagons,
+            viaId: RecipeId.IronOre,
+          },
+          {
+            id: '1',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Wagons,
+            viaId: ItemId.PetroleumGas,
+          },
+        ],
+        {
+          [ItemId.Coal]: [
+            [ItemId.IronOre, Rational.two],
+            [ItemId.PetroleumGas, Rational.one],
+          ],
+        },
+        DisplayRate.PerMinute,
+        Mocks.AdjustedData
       );
-      expect(result).toBeUndefined();
+      expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
+      expect(result['0']).toEqual(Rational.from(50, 3));
+      expect(result['1']).toEqual(Rational.from(625, 3));
     });
 
-    it('should use the utility method to determine recipes', () => {
-      spyOn(SimplexUtility, 'getRecipes');
-      const result = Selectors.getProductRecipes.projector(
-        [Mocks.Product4],
-        null,
-        null,
-        null
+    it('should fall back to zero if via is not found', () => {
+      spyOn(RecipeUtility, 'getProductStepData').and.returnValue(null);
+      const result = Selectors.getNormalizedRatesByWagons.projector(
+        [
+          {
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Wagons,
+            viaId: RecipeId.IronOre,
+          },
+        ],
+        { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
+        DisplayRate.PerMinute,
+        Mocks.AdjustedData
       );
-      expect(SimplexUtility.getRecipes).toHaveBeenCalled();
+      expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
+      expect(result['0']).toEqual(Rational.zero);
     });
   });
 
@@ -208,7 +362,7 @@ describe('Products Selectors', () => {
     });
 
     it('should directly calculate if viaId matches simple recipe', () => {
-      spyOn(RecipeUtility, 'getProductRecipeData');
+      spyOn(RecipeUtility, 'getProductStepData');
       const result = Selectors.getNormalizedRatesByFactories.projector(
         [
           {
@@ -222,12 +376,12 @@ describe('Products Selectors', () => {
         null,
         Mocks.AdjustedData
       );
-      expect(RecipeUtility.getProductRecipeData).not.toHaveBeenCalled();
+      expect(RecipeUtility.getProductStepData).not.toHaveBeenCalled();
       expect(result['0']).toEqual(Rational.from(3, 4));
     });
 
-    it('should calculate using utility method', () => {
-      spyOn(RecipeUtility, 'getProductRecipeData').and.returnValue([
+    it('should calculate using via step', () => {
+      spyOn(RecipeUtility, 'getProductStepData').and.returnValue([
         '0',
         Rational.two,
       ]);
@@ -244,12 +398,12 @@ describe('Products Selectors', () => {
         { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
         Mocks.AdjustedData
       );
-      expect(RecipeUtility.getProductRecipeData).toHaveBeenCalled();
+      expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
       expect(result['0']).toEqual(Rational.from(1, 2));
     });
 
-    it('should fall back to zero if utility method fails', () => {
-      spyOn(RecipeUtility, 'getProductRecipeData').and.returnValue(null);
+    it('should fall back to zero if via is not found', () => {
+      spyOn(RecipeUtility, 'getProductStepData').and.returnValue(null);
       const result = Selectors.getNormalizedRatesByFactories.projector(
         [
           {
@@ -263,7 +417,7 @@ describe('Products Selectors', () => {
         { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
         Mocks.AdjustedData
       );
-      expect(RecipeUtility.getProductRecipeData).toHaveBeenCalled();
+      expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
       expect(result['0']).toEqual(Rational.zero);
     });
   });

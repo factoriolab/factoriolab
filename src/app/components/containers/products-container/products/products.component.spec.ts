@@ -17,7 +17,7 @@ enum DataTest {
   template: `
     <lab-products
       [data]="data"
-      [productRecipes]="productRecipes"
+      [productSteps]="productSteps"
       [products]="products"
       [displayRate]="displayRate"
       (addProduct)="addProduct()"
@@ -33,7 +33,7 @@ enum DataTest {
 class TestProductsComponent {
   @ViewChild(ProductsComponent) child: ProductsComponent;
   data = Mocks.Data;
-  productRecipes = Mocks.ProductRecipes;
+  productSteps = Mocks.ProductSteps;
   products = Mocks.Products;
   displayRate = DisplayRate.PerMinute;
   addProduct(): void {}
@@ -108,11 +108,11 @@ describe('ProductsComponent', () => {
     });
   });
 
-  describe('getRecipe', () => {
-    it('should call getProductRecipeData', () => {
-      spyOn(RecipeUtility, 'getProductRecipeData').and.callThrough();
-      const result = component.child.getRecipe(Mocks.Product4);
-      expect(RecipeUtility.getProductRecipeData).toHaveBeenCalled();
+  describe('getStep', () => {
+    it('should call getProductStepData', () => {
+      spyOn(RecipeUtility, 'getProductStepData').and.callThrough();
+      const result = component.child.getStep(Mocks.Product4);
+      expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
       expect(result).toEqual(RecipeId.TransportBelt);
     });
   });

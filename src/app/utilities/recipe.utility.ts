@@ -4,6 +4,9 @@ import {
   RationalRecipeSettings,
   Dataset,
   ItemId,
+  Entities,
+  RationalProduct,
+  Product,
 } from '~/models';
 
 export class RecipeUtility {
@@ -204,18 +207,19 @@ export class RecipeUtility {
     return recipe;
   }
 
-  static getProductRecipeData(
-    recipes: [string, Rational][],
-    recipeId: string
+  static getProductStepData(
+    productSteps: Entities<[string, Rational][]>,
+    product: Product | RationalProduct
   ): [string, Rational] {
-    if (recipes.length === 0) {
+    const steps = productSteps[product.itemId];
+    if (steps.length === 0) {
       return null;
-    } else if (recipeId) {
-      const tuple = recipes.find((r) => r[0] === recipeId);
+    } else if (product.viaId) {
+      const tuple = steps.find((r) => r[0] === product.viaId);
       if (tuple) {
         return tuple;
       }
     }
-    return recipes[0];
+    return steps[0];
   }
 }
