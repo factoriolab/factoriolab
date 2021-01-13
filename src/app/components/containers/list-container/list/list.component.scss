@@ -10,6 +10,18 @@ table {
   td {
     padding: 0.25rem 0.5rem;
 
+    &.num {
+      width: 5.25rem;
+    }
+
+    &.num-unit {
+      width: 7rem;
+    }
+
+    &.num-icon {
+      width: 8rem;
+    }
+
     &.split-column {
       padding-left: 0;
 

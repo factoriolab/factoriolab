@@ -10,7 +10,7 @@
           ></lab-columns>
         </div>
       </th>
-      <th>
+      <th class="num-icon">
         <div class="header">
           Items{{ rateLabel }}
           <button
@@ -22,7 +22,7 @@
           </button>
         </div>
       </th>
-      <th *ngIf="columns[Column.Belts].show">
+      <th class="num-icon" *ngIf="columns[Column.Belts].show">
         <div class="header">
           Belts
           <button
@@ -34,7 +34,7 @@
           </button>
         </div>
       </th>
-      <th *ngIf="columns[Column.Wagons].show">
+      <th class="num-icon" *ngIf="columns[Column.Wagons].show">
         <div class="header">Wagons{{ rateLabel }}</div>
       </th>
       <th *ngIf="columns[Column.Factories].show" colspan="3">
@@ -61,7 +61,7 @@
           </button>
         </div>
       </th>
-      <th *ngIf="columns[Column.Power].show">
+      <th class="num-unit" *ngIf="columns[Column.Power].show">
         <div class="header">Power</div>
       </th>
       <th *ngIf="columns[Column.Pollution].show">
@@ -209,7 +209,7 @@
           <ng-container
             *ngIf="recipeSettings[step.recipeId]?.factory as factory"
           >
-            <td>
+            <td class="num">
               <div *ngIf="step.factories?.nonzero()" class="flex">
                 <span class="monospace">{{
                   factoryRate(
@@ -220,7 +220,7 @@
                 }}</span>
               </div>
             </td>
-            <td class="split-column">
+            <td class="recipe-icon split-column">
               <div>
                 <div class="flex">
                   <lab-icon
