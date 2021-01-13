@@ -27,7 +27,7 @@ import { RecipeUtility } from '~/utilities';
 })
 export class ProductsComponent {
   @Input() data: Dataset;
-  @Input() productRecipes: Entities<[string, Rational][]>;
+  @Input() productSteps: Entities<[string, Rational][]>;
   @Input() products: Product[];
   @Input() displayRate: DisplayRate;
 
@@ -66,12 +66,11 @@ export class ProductsComponent {
     this.setRate.emit({ id, value });
   }
 
-  getRecipe(product: Product): string {
-    const recipes = this.productRecipes[product.itemId];
-    return RecipeUtility.getProductRecipeData(recipes, product.viaId)[0];
+  getStep(product: Product): string {
+    return RecipeUtility.getProductStepData(this.productSteps, product)[0];
   }
 
   getOptions(product: Product): string[] {
-    return this.productRecipes[product.itemId].map((r) => r[0]);
+    return this.productSteps[product.itemId].map((r) => r[0]);
   }
 }

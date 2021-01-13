@@ -87,7 +87,10 @@ export const ProductsState1: ProductsState = {
 export const RationalProducts = Products.map((p) => new RationalProduct(p));
 export const ProductIds = Products.map((p) => p.id);
 export const ProductEntities = getProductsBy.projector(RationalProducts);
-export const ProductRecipes = {
+export const ProductSteps = {
+  [Item1.id]: [],
+  [Item2.id]: [],
+  [ItemId.PetroleumGas]: [],
   [ItemId.TransportBelt]: [[RecipeId.TransportBelt, Rational.one]],
 };
 export const ItemSettings1: ItemSettings = {
