@@ -1,4 +1,4 @@
-const FLOAT_PRECISION = 100000;
+const FLOAT_PRECISION = 100000000;
 
 const bigZero = BigInt(0);
 const bigOne = BigInt(1);
@@ -141,7 +141,11 @@ export class Rational {
 
   toPrecision(x: number): number {
     const round = Math.pow(10, x);
-    return Math.ceil(this.toNumber() * round) / round;
+    if (x === 0) {
+      return Math.ceil(this.toNumber() * round) / round;
+    } else {
+      return Math.round(this.toNumber() * round) / round;
+    }
   }
 
   toFraction(): string {
