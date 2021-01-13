@@ -32,7 +32,7 @@ export class ProductsContainerComponent implements OnInit {
   @ViewChild(ProductsComponent) child: ProductsComponent;
 
   data$: Observable<Dataset>;
-  productRecipes$: Observable<Entities<[string, Rational][]>>;
+  productSteps$: Observable<Entities<[string, Rational][]>>;
   products$: Observable<Product[]>;
   displayRate$: Observable<DisplayRate>;
 
@@ -40,7 +40,7 @@ export class ProductsContainerComponent implements OnInit {
 
   ngOnInit(): void {
     this.data$ = this.store.select(getAdjustedDataset);
-    this.productRecipes$ = this.store.select(Products.getProductRecipes);
+    this.productSteps$ = this.store.select(Products.getProductSteps);
     this.products$ = this.store.select(Products.getProducts);
     this.displayRate$ = this.store.select(getDisplayRate);
   }

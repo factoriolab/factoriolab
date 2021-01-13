@@ -48,34 +48,61 @@
           [options]="RateTypeOptions"
           (selectId)="setRateType.emit({ id: product.id, value: $event })"
         ></lab-options>
-        <ng-container *ngIf="product.rateType === RateType.Factories">
-          <ng-container
-            *ngIf="productRecipes[product.itemId].length > 0; else recipeNone"
-          >
-            <ng-container *ngIf="getRecipe(product) as recipe">
-              <span>via</span>
-              <ng-container
-                *ngIf="
-                  productRecipes[product.itemId].length === 1;
-                  else recipePicker
-                "
+        <ng-container
+          *ngIf="productSteps[product.itemId].length > 0; else recipeNone"
+        >
+          <ng-container *ngIf="getStep(product) as id">
+            <span>via</span>
+            <ng-container
+              *ngIf="productSteps[product.itemId].length === 1; else viaPicker"
+            >
+              <lab-icon
+                *ngIf="product.rateType === RateType.Factories; else singleItem"
+                class="pad"
+                [iconId]="id"
+                [tooltip]="data.recipeEntities[id].name"
+                [recipe]="data.recipeEntities[id]"
+                [data]="data"
               >
+              </lab-icon>
+              <ng-template #singleItem>
                 <lab-icon
                   class="pad"
-                  [iconId]="recipe"
-                  [tooltip]="data.recipeEntities[recipe].name"
-                  [recipe]="data.recipeEntities[recipe]"
+                  [iconId]="id"
+                  [tooltip]="data.itemEntities[id].name"
+                  [item]="data.itemEntities[id]"
                   [data]="data"
                 >
                 </lab-icon>
-              </ng-container>
-              <ng-template #recipePicker>
+              </ng-template>
+            </ng-container>
+            <ng-template #viaPicker>
+              <lab-select
+                *ngIf="product.rateType === RateType.Factories; else itemPicker"
+                header="Select a step to calculate by"
+                [data]="data"
+                [selected]="id"
+                [options]="getOptions(product)"
+                [selectType]="IdType.Recipe"
+                (selectId)="setVia.emit({ id: product.id, value: $event })"
+              >
+                <lab-icon
+                  class="button"
+                  title="Change rate step"
+                  hoverIcon="settings"
+                  [data]="data"
+                  [iconId]="id"
+                  [tooltip]="data.recipeEntities[id].name"
+                  [recipe]="data.recipeEntities[id]"
+                >
+                </lab-icon>
+              </lab-select>
+              <ng-template #itemPicker>
                 <lab-select
                   header="Select a step to calculate by"
                   [data]="data"
-                  [selected]="recipe"
+                  [selected]="id"
                   [options]="getOptions(product)"
-                  [selectType]="IdType.Recipe"
                   (selectId)="setVia.emit({ id: product.id, value: $event })"
                 >
                   <lab-icon
@@ -83,19 +110,19 @@
                     title="Change rate step"
                     hoverIcon="settings"
                     [data]="data"
-                    [iconId]="recipe"
-                    [tooltip]="data.recipeEntities[recipe].name"
-                    [recipe]="data.recipeEntities[recipe]"
+                    [iconId]="id"
+                    [tooltip]="data.itemEntities[id].name"
+                    [item]="data.itemEntities[id]"
                   >
                   </lab-icon>
                 </lab-select>
               </ng-template>
-            </ng-container>
+            </ng-template>
           </ng-container>
-          <ng-template #recipeNone>
-            <div class="invalid">No matching enabled recipes</div>
-          </ng-template>
         </ng-container>
+        <ng-template #recipeNone>
+          <div class="invalid">No matching enabled recipes</div>
+        </ng-template>
       </ng-container>
     </div>
   </div>
