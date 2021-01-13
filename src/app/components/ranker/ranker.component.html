@@ -1,7 +1,7 @@
 <div data-test="lab-ranker-open" (click)="clickOpen()">
   <ng-content></ng-content>
 </div>
-<lab-dialog *ngIf="open" [style.minWidth.rem]="width" (closeDialog)="cancel()">
+<lab-dialog *ngIf="open" [style.width.rem]="width" (closeDialog)="close()">
   <div class="dialog-title">
     <div class="header">Select modules</div>
     <button (click)="cancel()">
@@ -35,7 +35,15 @@
       (click)="clickId(id)"
     ></lab-icon>
   </div>
-  <div class="info" *ngIf="edited">
-    (Optional) Select another module to use as a fallback
-  </div>
+  <ng-container *ngIf="edited">
+    <div class="info">
+      (Optional) Select another module to use as a fallback
+    </div>
+    <div class="dialog-buttons">
+      <button (click)="cancel()"><span class="text">Cancel</span></button>
+      <button class="green" data-test="lab-toggle-close" (click)="close()">
+        Confirm
+      </button>
+    </div>
+  </ng-container>
 </lab-dialog>
