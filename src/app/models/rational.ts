@@ -141,11 +141,7 @@ export class Rational {
 
   toPrecision(x: number): number {
     const round = Math.pow(10, x);
-    if (x === 0) {
-      return Math.ceil(this.toNumber() * round) / round;
-    } else {
-      return Math.round(this.toNumber() * round) / round;
-    }
+    return Math.ceil(this.toNumber() * round) / round;
   }
 
   toFraction(): string {
