@@ -156,13 +156,9 @@ describe('Rational', () => {
     });
 
     describe('toPrecision', () => {
-      it('should round up when precision is zero', () => {
-        expect(new Rational(BigInt(1), BigInt(3)).toPrecision(0)).toEqual(1);
-      });
-
       it('should round to precision', () => {
         expect(new Rational(BigInt(1), BigInt(3)).toPrecision(3)).toEqual(
-          0.333
+          0.334
         );
       });
     });
