@@ -7,11 +7,13 @@ import {
   Entities,
   RationalProduct,
   Product,
+  EnergyType,
 } from '~/models';
 
 export class RecipeUtility {
   static MIN_FACTOR = new Rational(BigInt(1), BigInt(5));
   static POLLUTION_FACTOR = new Rational(BigInt(60));
+  static LAUNCH_TIME = new Rational(BigInt(2420), BigInt(60));
 
   /** Determines what option to use based on preferred rank */
   static bestMatch(options: string[], rank: string[]): string {
@@ -158,7 +160,9 @@ export class RecipeUtility {
     // Power
     recipe.consumption = factory.drain ? factory.drain : Rational.zero;
     recipe.consumption = recipe.consumption.add(
-      factory.electric ? factory.electric.mul(consumption) : Rational.zero
+      factory.type === EnergyType.Electric
+        ? factory.usage.mul(consumption)
+        : Rational.zero
     );
 
     // Pollution
@@ -170,11 +174,22 @@ export class RecipeUtility {
       : Rational.zero;
 
     // Calculate burner fuel inputs
-    if (factory.burner) {
-      const fuel = data.itemR[fuelId];
+    if (factory.type === EnergyType.Burner) {
+      let fuel = data.itemR[fuelId].fuel;
+      if (fuel.category !== factory.category) {
+        // Fuel does not match, use first matching fuel
+        const fuelId = data.fuelIds[factory.category][0];
+        fuel = data.itemR[fuelId].fuel;
+      }
+
+      if (!recipe.time || !factory.usage) {
+        console.log(factory);
+        console.log(recipe);
+      }
+
       const fuelIn = recipe.time
-        .mul(factory.burner)
-        .div(fuel.fuel)
+        .mul(factory.usage)
+        .div(fuel.value)
         .div(Rational.thousand);
 
       if (!recipe.in) {
@@ -201,6 +216,16 @@ export class RecipeUtility {
       } else {
         // Recipe only takes fuel as input
         recipe.in[fuelId] = recipe.in[fuelId].add(fuelIn);
+      }
+    }
+
+    // Adjust for rocket launch time
+    if (settings.factory === ItemId.RocketSilo) {
+      if (recipe.in[ItemId.RocketPart]) {
+        // Rocket launch recipe
+      } else {
+        // Rocket part recipe
+        recipe.time = recipe.time.add(this.LAUNCH_TIME);
       }
     }
 

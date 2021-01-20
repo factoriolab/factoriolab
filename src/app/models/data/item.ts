@@ -1,7 +1,10 @@
 import { Rational } from '../rational';
 import { Beacon, RationalBeacon } from './beacon';
 import { Belt, RationalBelt } from './belt';
+import { CargoWagon, RationalCargoWagon } from './cargo-wagon';
 import { Factory, RationalFactory } from './factory';
+import { FluidWagon, RationalFluidWagon } from './fluid-wagon';
+import { Fuel, RationalFuel } from './fuel';
 import { Module, RationalModule } from './module';
 
 export interface Item {
@@ -14,8 +17,9 @@ export interface Item {
   belt?: Belt;
   factory?: Factory;
   module?: Module;
-  /** Fuel value in MJ */
-  fuel?: number;
+  fuel?: Fuel;
+  cargoWagon?: CargoWagon;
+  fluidWagon?: FluidWagon;
 }
 
 export class RationalItem {
@@ -28,8 +32,9 @@ export class RationalItem {
   belt?: RationalBelt;
   factory?: RationalFactory;
   module?: RationalModule;
-  /** Fuel value in MJ */
-  fuel?: Rational;
+  fuel?: RationalFuel;
+  cargoWagon?: RationalCargoWagon;
+  fluidWagon?: RationalFluidWagon;
 
   constructor(data: Item) {
     this.id = data.id;
@@ -52,7 +57,13 @@ export class RationalItem {
       this.module = new RationalModule(data.module);
     }
     if (data.fuel) {
-      this.fuel = Rational.fromNumber(data.fuel);
+      this.fuel = new RationalFuel(data.fuel);
+    }
+    if (data.cargoWagon) {
+      this.cargoWagon = new RationalCargoWagon(data.cargoWagon);
+    }
+    if (data.fluidWagon) {
+      this.fluidWagon = new RationalFluidWagon(data.fluidWagon);
     }
   }
 }

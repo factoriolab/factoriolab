@@ -15,7 +15,7 @@ export interface Dataset {
   beaconIds: string[];
   beltIds: string[];
   factoryIds: string[];
-  fuelIds: string[];
+  fuelIds: Entities<string[]>;
   moduleIds: string[];
   beaconModuleIds: string[];
   itemEntities: Entities<Item>;

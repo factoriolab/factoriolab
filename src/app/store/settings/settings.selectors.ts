@@ -184,7 +184,15 @@ export const getNormalDataset = createSelector(
     // Filter for item types
     const beaconIds = items.filter((i) => i.beacon).map((i) => i.id);
     const beltIds = items.filter((i) => i.belt).map((i) => i.id);
-    const fuelIds = items.filter((i) => i.fuel).map((i) => i.id);
+    const fuelIds = items
+      .filter((i) => i.fuel)
+      .reduce((e: Entities<string[]>, f) => {
+        if (!e[f.fuel.category]) {
+          e[f.fuel.category] = [];
+        }
+        e[f.fuel.category].push(f.id);
+        return e;
+      }, {});
     const factoryIds = items.filter((i) => i.factory).map((i) => i.id);
     const modules = items.filter((i) => i.module);
     const moduleIds = modules.map((i) => i.id);

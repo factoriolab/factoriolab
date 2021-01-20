@@ -30,6 +30,7 @@ import {
   ResearchSpeedOptions,
   InserterTargetOptions,
   DisplayRateOptions,
+  FuelType,
 } from '~/models';
 import { FactoriesState } from '~/store/factories';
 import { PreferencesState } from '~/store/preferences';
@@ -49,8 +50,8 @@ export class SettingsComponent implements OnInit {
   }
   @Input() set data(value: Dataset) {
     this._data = value;
-    this.sortedFuels = [...value.fuelIds].sort((a, b) =>
-      value.itemR[a].fuel.sub(value.itemR[b].fuel).toNumber()
+    this.sortedFuels = [...value.fuelIds[FuelType.Chemical]].sort((a, b) =>
+      value.itemR[a].fuel.value.sub(value.itemR[b].fuel.value).toNumber()
     );
   }
   @Input() base: ModInfo[];
