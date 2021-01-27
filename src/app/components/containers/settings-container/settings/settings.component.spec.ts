@@ -140,6 +140,11 @@ describe('SettingsComponent', () => {
     );
   });
 
+  it('should handle no fuels', () => {
+    component.child.data = {} as any;
+    expect(component.child.sortedFuels).toEqual([]);
+  });
+
   describe('factoryRows', () => {
     it('should add empty string to list of ids', () => {
       expect(component.child.factoryRows).toEqual([
