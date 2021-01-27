@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { skip } from 'rxjs/operators';
 
 import { Dataset, ItemId, Product } from './models';
-import { RouterService } from './services/router.service';
+import { ErrorService, RouterService } from './services';
 import { State } from './store';
 import { getInitialized } from './store/datasets';
 import { getProducts, getZipState } from './store/products';
@@ -43,7 +43,11 @@ export class AppComponent implements OnInit {
 
   showSettings: boolean;
 
-  constructor(public router: RouterService, private store: Store<State>) {}
+  constructor(
+    public error: ErrorService,
+    public router: RouterService,
+    private store: Store<State>
+  ) {}
 
   ngOnInit(): void {
     this.data$ = this.store.select(getDataset);

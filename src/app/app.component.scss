@@ -68,9 +68,12 @@ lab-settings-container {
   padding: 0.75rem;
 }
 
-.loading {
-  width: 20rem;
+.msg {
   align-self: center;
+
+  &.load {
+    width: 20rem;
+  }
 }
 
 @media screen and (max-width: 1000px) {

@@ -14,7 +14,7 @@ import {
   InserterCapacity,
   Column,
 } from '~/models';
-import { RouterService } from '~/services/router.service';
+import { RouterService } from '~/services';
 import { reducers, metaReducers } from '~/store';
 import { ColumnsState, initialColumnsState } from '~/store/preferences';
 import { ExportUtility } from '~/utilities';

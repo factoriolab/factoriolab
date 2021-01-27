@@ -5,7 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
 import { Mocks } from 'src/tests';
-import { RouterService } from './services/router.service';
+import { RouterService } from './services';
 import { State, reducers, metaReducers } from './store';
 import { AddAction } from './store/products';
 import {
