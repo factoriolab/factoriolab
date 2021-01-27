@@ -63,6 +63,7 @@ describe('Settings Reducer', () => {
       expect(result.expensive).toEqual(value);
     });
   });
+
   describe('SET_BELT', () => {
     it('should set the default belt', () => {
       const value = ItemId.TransportBelt;
@@ -93,6 +94,28 @@ describe('Settings Reducer', () => {
         new Actions.SetFlowRateAction(value)
       );
       expect(result.flowRate).toEqual(value);
+    });
+  });
+
+  describe('SET_CARGO_WAGON', () => {
+    it('should set the default cargo wagon', () => {
+      const value = ItemId.CargoWagon;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetCargoWagonAction({ value, default: null })
+      );
+      expect(result.cargoWagon).toEqual(value);
+    });
+  });
+
+  describe('SET_FlUID_WAGON', () => {
+    it('should set the default fluid wagon', () => {
+      const value = ItemId.FluidWagon;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetFluidWagonAction({ value, default: null })
+      );
+      expect(result.fluidWagon).toEqual(value);
     });
   });
 

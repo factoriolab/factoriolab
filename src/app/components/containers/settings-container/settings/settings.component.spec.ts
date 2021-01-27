@@ -12,6 +12,7 @@ import {
   SelectComponent,
   ToggleComponent,
 } from '~/components';
+import { FuelType } from '~/models';
 import { SettingsComponent } from './settings.component';
 
 enum DataTest {
@@ -48,6 +49,8 @@ enum DataTest {
       (setBelt)="setBelt($event)"
       (setFuel)="setFuel($event)"
       (setFlowRate)="setFlowRate($event)"
+      (setCargoWagon)="setCargoWagon($event)"
+      (setFluidWagon)="setFluidWagon($event)"
       (setMiningBonus)="setMiningBonus($event)"
       (setResearchSpeed)="setResearchSpeed($event)"
       (setInserterTarget)="setInserterTarget($event)"
@@ -83,6 +86,8 @@ class TestSettingsComponent {
   setBelt(data): void {}
   setFuel(data): void {}
   setFlowRate(data): void {}
+  setCargoWagon(data): void {}
+  setFluidWagon(data): void {}
   setMiningBonus(data): void {}
   setResearchSpeed(data): void {}
   setInserterTarget(data): void {}
@@ -130,7 +135,14 @@ describe('SettingsComponent', () => {
 
   it('should sort the list of fuels', () => {
     expect(component.child.sortedFuels.length).toBeGreaterThan(1);
-    expect(component.child.sortedFuels).not.toEqual(Mocks.Data.fuelIds);
+    expect(component.child.sortedFuels).not.toEqual(
+      Mocks.Data.fuelIds[FuelType.Chemical]
+    );
+  });
+
+  it('should handle no fuels', () => {
+    component.child.data = {} as any;
+    expect(component.child.sortedFuels).toEqual([]);
   });
 
   describe('factoryRows', () => {

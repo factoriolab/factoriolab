@@ -4,8 +4,6 @@ import {
   Step,
   RateType,
   Entities,
-  WAGON_STACKS,
-  WAGON_FLUID,
   Rational,
   DisplayRateVal,
   RationalProduct,
@@ -142,22 +140,33 @@ export const getNormalizedRatesByBelts = createSelector(
 export const getNormalizedRatesByWagons = createSelector(
   getProductsByWagons,
   getProductSteps,
+  Items.getItemSettings,
   Settings.getDisplayRate,
   Settings.getDataset,
-  (products, productSteps, displayRate, data) =>
+  (products, productSteps, itemSettings, displayRate, data) =>
     products?.reduce((e: Entities<Rational>, p) => {
       if (p.viaId == null || p.viaId === p.itemId) {
         const item = data.itemR[p.itemId];
+        const wagon = data.itemR[itemSettings[p.itemId].wagon];
         e[p.id] = p.rate
           .div(DisplayRateVal[displayRate])
-          .mul(item.stack ? item.stack.mul(WAGON_STACKS) : WAGON_FLUID);
+          .mul(
+            item.stack
+              ? item.stack.mul(wagon.cargoWagon.size)
+              : wagon.fluidWagon.capacity
+          );
       } else {
         const via = RecipeUtility.getProductStepData(productSteps, p);
         if (via) {
           const item = data.itemR[p.viaId];
+          const wagon = data.itemR[itemSettings[p.viaId].wagon];
           e[p.id] = p.rate
             .div(DisplayRateVal[displayRate])
-            .mul(item.stack ? item.stack.mul(WAGON_STACKS) : WAGON_FLUID)
+            .mul(
+              item.stack
+                ? item.stack.mul(wagon.cargoWagon.size)
+                : wagon.fluidWagon.capacity
+            )
             .div(via[1]);
         } else {
           e[p.id] = Rational.zero;

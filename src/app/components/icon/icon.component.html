@@ -50,32 +50,36 @@
       [data]="data"
     ></lab-icon>
   </div>
-  <div *ngIf="item?.beacon">
+  <div *ngIf="item?.beacon as beacon">
     <table>
       <tr>
         <td>Effectivity</td>
-        <td>{{ round(item.beacon.effectivity) }}</td>
+        <td>{{ round(beacon.effectivity) }}</td>
       </tr>
       <tr>
         <td>Modules</td>
-        <td>{{ item.beacon.modules }}</td>
+        <td>{{ beacon.modules }}</td>
       </tr>
       <tr>
         <td>Range</td>
-        <td>{{ item.beacon.range }}</td>
+        <td>{{ beacon.range }}</td>
       </tr>
-      <tr *ngIf="item.beacon.burner">
-        <td>Burner</td>
-        <td>{{ round(item.beacon.burner) }} kW</td>
+      <tr *ngIf="beacon.type">
+        <td>Energy type</td>
+        <td>{{ beacon.type }}</td>
       </tr>
-      <tr *ngIf="item.beacon.electric">
+      <tr *ngIf="beacon.category">
+        <td>Fuel category</td>
+        <td>{{ beacon.category }}</td>
+      </tr>
+      <tr *ngIf="beacon.usage">
         <td>Energy consumption</td>
-        <td>{{ round(item.beacon.electric) }} kW</td>
+        <td>{{ round(beacon.usage) }} kW</td>
       </tr>
     </table>
   </div>
-  <div *ngIf="item?.belt" class="nowrap">
-    {{ round(item.belt.speed * displayRate) }}
+  <div *ngIf="item?.belt as belt" class="nowrap">
+    {{ round(belt.speed * displayRate) }}
     {{
       displayRate === DisplayRate.PerSecond
         ? 'Items/s'
@@ -84,52 +88,75 @@
         : 'Items/h'
     }}
   </div>
-  <div *ngIf="item?.factory">
+  <div *ngIf="item?.cargoWagon as wagon" class="nowrap">
+    {{ round(wagon.size) }}
+    Inventory stacks
+  </div>
+  <div *ngIf="item?.fluidWagon as wagon" class="nowrap">
+    {{ round(wagon.capacity) }}
+    Fluid capacity
+  </div>
+  <div *ngIf="item?.factory as factory">
     <table>
       <tr>
         <td>Crafting speed</td>
-        <td>{{ round(item.factory.speed) }}</td>
+        <td>{{ round(factory.speed) }}</td>
       </tr>
-      <tr *ngIf="item.factory.modules">
+      <tr *ngIf="factory.modules">
         <td>Modules</td>
-        <td>{{ item.factory.modules }}</td>
+        <td>{{ factory.modules }}</td>
       </tr>
-      <tr *ngIf="item.factory.burner">
-        <td>Burner</td>
-        <td>{{ round(item.factory.burner) }} kW</td>
+      <tr *ngIf="factory.type">
+        <td>Energy type</td>
+        <td>{{ factory.type }}</td>
       </tr>
-      <tr *ngIf="item.factory.electric">
+      <tr *ngIf="factory.category">
+        <td>Fuel category</td>
+        <td>{{ factory.category }}</td>
+      </tr>
+      <tr *ngIf="factory.usage">
         <td>Energy consumption</td>
-        <td>{{ round(item.factory.electric) }} kW</td>
+        <td>{{ round(factory.usage) }} kW</td>
       </tr>
-      <tr *ngIf="item.factory.drain">
+      <tr *ngIf="factory.drain || factory.type == EnergyType.Electric">
         <td>Drain</td>
-        <td>{{ round(item.factory.drain) }} kW</td>
+        <td>{{ round(factory.drain || factory.usage / 30) }} kW</td>
       </tr>
-      <tr *ngIf="item.factory.pollution">
+      <tr *ngIf="factory.pollution">
         <td>Pollution</td>
-        <td>{{ round(item.factory.pollution) }}/m</td>
+        <td>{{ round(factory.pollution) }}/m</td>
       </tr>
     </table>
   </div>
-  <div *ngIf="item?.fuel" class="nowrap">{{ round(item.fuel) }} MJ</div>
-  <div *ngIf="item?.module">
+  <div *ngIf="item?.fuel as fuel">
     <table>
-      <tr *ngIf="item.module.consumption">
+      <tr>
+        <td>Category</td>
+        <td>{{ fuel.category }}</td>
+      </tr>
+      <tr>
+        <td>Value</td>
+        <td>{{ round(fuel.value) }} MJ</td>
+      </tr>
+    </table>
+  </div>
+  <div *ngIf="item?.module as module">
+    <table>
+      <tr *ngIf="module.consumption">
         <td>Consumption</td>
-        <td>{{ toBonusPercent(item.module.consumption) }}</td>
+        <td>{{ toBonusPercent(module.consumption) }}</td>
       </tr>
-      <tr *ngIf="item.module.speed">
+      <tr *ngIf="module.speed">
         <td>Speed</td>
-        <td>{{ toBonusPercent(item.module.speed) }}</td>
+        <td>{{ toBonusPercent(module.speed) }}</td>
       </tr>
-      <tr *ngIf="item.module.productivity">
+      <tr *ngIf="module.productivity">
         <td>Productivity</td>
-        <td>{{ toBonusPercent(item.module.productivity) }}</td>
+        <td>{{ toBonusPercent(module.productivity) }}</td>
       </tr>
-      <tr *ngIf="item.module.pollution">
+      <tr *ngIf="module.pollution">
         <td>Pollution</td>
-        <td>{{ toBonusPercent(item.module.pollution) }}</td>
+        <td>{{ toBonusPercent(module.pollution) }}</td>
       </tr>
     </table>
   </div>

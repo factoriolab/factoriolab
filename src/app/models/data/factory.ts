@@ -1,12 +1,15 @@
+import { EnergyType } from '../enum';
 import { Rational } from '../rational';
 
 export interface Factory {
   speed: number;
   modules: number;
-  /** Fuel consumption in kW */
-  burner?: number;
+  /** Energy type, e.g. electric or burner */
+  type?: string;
+  /** Fuel category, e.g. chemical or nuclear */
+  category?: string;
   /** Energy consumption in kW */
-  electric?: number;
+  usage?: number;
   /** Drain in kW */
   drain?: number;
   /** Pollution in #/m */
@@ -18,9 +21,12 @@ export interface Factory {
 export class RationalFactory {
   speed: Rational;
   modules: number;
-  /** Fuel consumption in kW */
-  burner?: Rational;
-  electric?: Rational;
+  /** Energy type, e.g. electric or burner */
+  type?: string;
+  /** Fuel category, e.g. chemical or nuclear */
+  category?: string;
+  /** Energy consumption in kW */
+  usage?: Rational;
   drain?: Rational;
   pollution?: Rational;
   mining?: boolean;
@@ -29,16 +35,21 @@ export class RationalFactory {
   constructor(data: Factory) {
     this.speed = Rational.fromNumber(data.speed);
     this.modules = Math.round(data.modules);
-    if (data.burner) {
-      this.burner = Rational.fromNumber(data.burner);
+    if (data.type) {
+      this.type = data.type;
     }
-    if (data.electric) {
-      this.electric = Rational.fromNumber(data.electric);
+    if (data.category) {
+      this.category = data.category;
     }
-    if (data.drain) {
+    if (data.usage != null) {
+      this.usage = Rational.fromNumber(data.usage);
+    }
+    if (data.drain != null) {
       this.drain = Rational.fromNumber(data.drain);
+    } else if (data.type == EnergyType.Electric && this.usage && !data.mining) {
+      this.drain = this.usage.div(Rational.from(30));
     }
-    if (data.pollution) {
+    if (data.pollution != null) {
       this.pollution = Rational.fromNumber(data.pollution);
     }
     if (data.mining) {

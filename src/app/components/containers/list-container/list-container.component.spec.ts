@@ -73,6 +73,16 @@ describe('ListContainerComponent', () => {
     expect(store.dispatch).toHaveBeenCalledWith(new Items.SetBeltAction(data));
   });
 
+  it('should set wagon', () => {
+    const data: DefaultIdPayload = {
+      id: Mocks.Item1.id,
+      value: ItemId.CargoWagon,
+      default: ItemId.CargoWagon,
+    };
+    component.child.setWagon.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(new Items.SetWagonAction(data));
+  });
+
   it('should set factory', () => {
     const data: DefaultIdPayload = {
       id: Mocks.Recipe1.id,
@@ -165,6 +175,11 @@ describe('ListContainerComponent', () => {
   it('should reset belt modifications', () => {
     component.child.resetBelt.emit();
     expect(store.dispatch).toHaveBeenCalledWith(new Items.ResetBeltAction());
+  });
+
+  it('should reset wagon modifications', () => {
+    component.child.resetWagon.emit();
+    expect(store.dispatch).toHaveBeenCalledWith(new Items.ResetWagonAction());
   });
 
   it('should reset factory modifications', () => {

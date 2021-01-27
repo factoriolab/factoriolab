@@ -58,6 +58,20 @@ describe('Items Reducer', () => {
     });
   });
 
+  describe('SET_WAGON', () => {
+    it('should set the wagon', () => {
+      const result = itemsReducer(
+        initialItemsState,
+        new Actions.SetWagonAction({
+          id: Mocks.Item1.id,
+          value: Mocks.Item1.id,
+          default: null,
+        })
+      );
+      expect(result[Mocks.Recipe1.id].wagon).toEqual(Mocks.Item1.id);
+    });
+  });
+
   describe('RESET_ITEM', () => {
     it('should reset an item', () => {
       const result = itemsReducer(
@@ -81,6 +95,14 @@ describe('Items Reducer', () => {
       spyOn(StoreUtility, 'resetField');
       itemsReducer(null, new Actions.ResetBeltAction());
       expect(StoreUtility.resetField).toHaveBeenCalledWith(null, 'belt');
+    });
+  });
+
+  describe('RESET_WAGON', () => {
+    it('should call resetField', () => {
+      spyOn(StoreUtility, 'resetField');
+      itemsReducer(null, new Actions.ResetWagonAction());
+      expect(StoreUtility.resetField).toHaveBeenCalledWith(null, 'wagon');
     });
   });
 

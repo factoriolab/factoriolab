@@ -37,8 +37,8 @@ const mockZipAll =
 const mockZipExtra =
   'eJwrsC0uSU3N0U3OSC0u0TJUS7I1VMtEEdMqKUrMKy7ILyrRTUrNKVErQpXVslBLs9UC6iwGkiBgbGZgoFZiWwKUBQDYwh4O';
 const mockZipLink =
-  'eJxtTssKwzAM+5sczDySFrZTPiYPdw2kcYhT9vvLoD2UDYORZEm42jdzpIJhJelglLdFJSudKJ8a9OaKVG4dPeWu2uXsRGjzOZUXbi6sqRDOsHHcM43oATy5wEUt1tz++qUSR' +
-  'TzM04XidKbF6rt5gneSAnLKWBsHEhlVP0+CcE4Rl50ymElrmB9jGQ3fMR+Ih1UK';
+  'eJxtj90KgzAMhd/Gi7AMq7Bd9WH6E7VQm9JUfP11Q2GyEQgn4TuHJOud2VNCt5BUUJ3VqQtaKlE8d1CLSZK5VLQUKzhTZsbdzJy6ckGNCK02hjTjatwSEuEIK/stUos5hCXjm' +
+  'nPS6vaXl0zk8YCHy4jD6Rbd39UTrJHgkEPEXNiRSIv6PVg4Bo/TRhHU0PcwPlpTPbxLfb8DU9wa+dEvwjhijw==';
 const mockProducts: Product[] = [
   {
     id: '0',
@@ -74,12 +74,17 @@ const mockItemsState: ItemsState = {
   [ItemId.SteelChest]: { belt: ItemId.TransportBelt },
 };
 const mockFullItemsState: ItemsState = {
-  [ItemId.SteelChest]: { ignore: true, belt: ItemId.TransportBelt },
+  [ItemId.SteelChest]: {
+    ignore: true,
+    belt: ItemId.TransportBelt,
+    wagon: ItemId.CargoWagon,
+  },
 };
 const mockZipFullItemsState = [
   ItemId.SteelChest,
   '1',
   ItemId.TransportBelt,
+  ItemId.CargoWagon,
 ].join(FIELDSEP);
 const mockRecipesState: RecipesState = {
   [RecipeId.SteelChest]: { beaconCount: 8 },
@@ -139,6 +144,8 @@ export const mockFullSettingsState: SettingsState = {
   belt: ItemId.TransportBelt,
   fuel: ItemId.SolidFuel,
   flowRate: 1200,
+  cargoWagon: ItemId.CargoWagon,
+  fluidWagon: ItemId.FluidWagon,
   displayRate: DisplayRate.PerHour,
   miningBonus: 10,
   researchSpeed: ResearchSpeed.Speed0,
@@ -157,6 +164,8 @@ const mockZipFullSettingsState = [
   '0',
   '0',
   '1',
+  ItemId.CargoWagon,
+  ItemId.FluidWagon,
 ].join(FIELDSEP);
 const mockZipNullSettingsState = [
   '0.17',
@@ -170,6 +179,8 @@ const mockZipNullSettingsState = [
   '0',
   '0',
   '1',
+  ItemId.CargoWagon,
+  ItemId.FluidWagon,
 ].join(FIELDSEP);
 
 describe('RouterService', () => {

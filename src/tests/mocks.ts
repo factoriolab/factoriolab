@@ -96,6 +96,7 @@ export const ProductSteps = {
 export const ItemSettings1: ItemSettings = {
   ignore: false,
   belt: ItemId.TransportBelt,
+  wagon: ItemId.CargoWagon,
 };
 export const RecipeSettings1: RecipeSettings = {
   factory: ItemId.AssemblingMachine2,
@@ -143,11 +144,11 @@ for (const recipe of Data.recipeIds.map((i) => Data.recipeEntities[i])) {
   RecipeSettingsEntities[recipe.id] = { ...RecipeSettings1 };
 }
 export const SettingsState1 = { ...initialSettingsState, ...Defaults };
-export const ItemSettingsInitial = getItemSettings.projector(
-  {},
-  Data,
-  ItemId.TransportBelt
-);
+export const ItemSettingsInitial = getItemSettings.projector({}, Data, {
+  belt: ItemId.TransportBelt,
+  cargoWagon: ItemId.CargoWagon,
+  fluidWagon: ItemId.FluidWagon,
+});
 export const FactorySettingsInitial = getFactorySettings.projector(
   initialFactoriesState,
   Defaults,
@@ -160,6 +161,9 @@ export const RecipeSettingsInitial = getRecipeSettings.projector(
 );
 export const RationalRecipeSettings = getRationalRecipeSettings.projector(
   RecipeSettingsEntities
+);
+export const RationalRecipeSettingsInitial = getRationalRecipeSettings.projector(
+  RecipeSettingsInitial
 );
 export const AdjustedData = getAdjustedDataset.projector(
   RationalRecipeSettings,

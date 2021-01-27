@@ -6,9 +6,6 @@ import {
   Rational,
   DisplayRateVal,
   RationalRecipe,
-  WAGON_FLUID,
-  WAGON_STACKS,
-  ItemId,
 } from '~/models';
 import { ItemsState } from '~/store/items';
 
@@ -57,21 +54,7 @@ export class RateUtility {
       const out = recipe.out[itemId];
 
       // Calculate factories
-      if (
-        recipe.producers[0] === ItemId.RocketSilo &&
-        itemId !== ItemId.RocketPart
-      ) {
-        // Factories are for rocket parts, space science packs are a side effect
-        step.factories = null;
-      } else {
-        step.factories = step.items.mul(recipe.time).div(out);
-        // Add # of factories to actually launch rockets
-        if (itemId === ItemId.RocketPart) {
-          step.factories = step.factories.add(
-            step.items.div(Rational.hundred).mul(this.LAUNCH_TIME)
-          );
-        }
-      }
+      step.factories = step.items.mul(recipe.time).div(out);
 
       this.adjustPowerPollution(step, recipe);
 
@@ -132,12 +115,16 @@ export class RateUtility {
       const belt = itemSettings[step.itemId]?.belt;
       if (step.items && belt) {
         step.belts = step.items.div(beltSpeed[belt]);
-        if (belt === ItemId.Pipe) {
-          step.wagons = step.items.div(WAGON_FLUID);
-        } else {
+      }
+      const wagon = itemSettings[step.itemId]?.wagon;
+      if (step.items && wagon) {
+        const item = data.itemR[step.itemId];
+        if (item.stack) {
           step.wagons = step.items.div(
-            WAGON_STACKS.mul(data.itemR[step.itemId].stack)
+            data.itemR[wagon].cargoWagon.size.mul(item.stack)
           );
+        } else {
+          step.wagons = step.items.div(data.itemR[wagon].fluidWagon.capacity);
         }
       }
     }

@@ -12,8 +12,8 @@ export const itemsState = (state: State): ItemsState => state.itemsState;
 export const getItemSettings = createSelector(
   itemsState,
   Settings.getDataset,
-  Settings.getBelt,
-  (state, data, belt) => {
+  Settings.getSettings,
+  (state, data, settings) => {
     const value: Entities<ItemSettings> = {};
     if (data?.itemIds?.length) {
       for (const item of data.itemIds.map((i) => data.itemEntities[i])) {
@@ -23,10 +23,14 @@ export const getItemSettings = createSelector(
 
         // Belt (or Pipe)
         if (!itemSettings.belt) {
-          itemSettings.belt = item.stack ? belt : ItemId.Pipe;
+          itemSettings.belt = item.stack ? settings.belt : ItemId.Pipe;
         }
 
-        itemSettings.wagon = item.stack ? ItemId.CargoWagon : ItemId.FluidWagon;
+        if (!itemSettings.wagon) {
+          itemSettings.wagon = item.stack
+            ? settings.cargoWagon
+            : settings.fluidWagon;
+        }
 
         value[item.id] = itemSettings;
       }
@@ -41,4 +45,8 @@ export const getContainsIgnore = createSelector(itemsState, (state) =>
 
 export const getContainsBelt = createSelector(itemsState, (state) =>
   Object.keys(state).some((id) => state[id].belt)
+);
+
+export const getContainsWagon = createSelector(itemsState, (state) =>
+  Object.keys(state).some((id) => state[id].wagon)
 );

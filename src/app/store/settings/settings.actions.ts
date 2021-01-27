@@ -17,6 +17,8 @@ export const enum SettingsActionType {
   SET_BELT = '[Settings] Set Belt',
   SET_FUEL = '[Settings] Set Fuel',
   SET_FLOW_RATE = '[Settings] Set Flow Rate',
+  SET_CARGO_WAGON = '[Settings] Set Cargo Wagon',
+  SET_FLUID_WAGON = '[Settings] Set Fluid Wagon',
   SET_DISPLAY_RATE = '[Settings] Set Display Rate',
   SET_MINING_BONUS = '[Settings] Set Mining Bonus',
   SET_RESEARCH_SPEED = '[Settings] Set Research Speed',
@@ -59,6 +61,16 @@ export class SetFlowRateAction implements Action {
   constructor(public payload: number) {}
 }
 
+export class SetCargoWagonAction implements Action {
+  readonly type = SettingsActionType.SET_CARGO_WAGON;
+  constructor(public payload: DefaultPayload) {}
+}
+
+export class SetFluidWagonAction implements Action {
+  readonly type = SettingsActionType.SET_FLUID_WAGON;
+  constructor(public payload: DefaultPayload) {}
+}
+
 export class SetDisplayRateAction implements Action {
   readonly type = SettingsActionType.SET_DISPLAY_RATE;
   constructor(public payload: DisplayRate) {}
@@ -92,6 +104,8 @@ export type SettingsAction =
   | SetBeltAction
   | SetFuelAction
   | SetFlowRateAction
+  | SetCargoWagonAction
+  | SetFluidWagonAction
   | SetDisplayRateAction
   | SetMiningBonusAction
   | SetResearchSpeedAction

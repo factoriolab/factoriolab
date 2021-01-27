@@ -376,7 +376,7 @@ describe('SimplexUtility', () => {
       const state = getState();
       const result = SimplexUtility.getSolution(state);
       expect(SimplexUtility.canonical).toHaveBeenCalledWith(state);
-      expect(SimplexUtility.simplex).toHaveBeenCalledWith('A' as any);
+      expect(SimplexUtility.simplex).toHaveBeenCalledWith('A' as any, true);
       expect(SimplexUtility.parseSolution).not.toHaveBeenCalled();
       expect(result).toBeNull();
     });
@@ -388,7 +388,7 @@ describe('SimplexUtility', () => {
       const state = getState();
       const result = SimplexUtility.getSolution(state);
       expect(SimplexUtility.canonical).toHaveBeenCalledWith(state);
-      expect(SimplexUtility.simplex).toHaveBeenCalledWith('A' as any);
+      expect(SimplexUtility.simplex).toHaveBeenCalledWith('A' as any, true);
       expect(SimplexUtility.parseSolution).not.toHaveBeenCalled();
       expect(result).toBeUndefined();
     });
@@ -400,7 +400,7 @@ describe('SimplexUtility', () => {
       const state = getState();
       const result = SimplexUtility.getSolution(state);
       expect(SimplexUtility.canonical).toHaveBeenCalledWith(state);
-      expect(SimplexUtility.simplex).toHaveBeenCalledWith('A' as any);
+      expect(SimplexUtility.simplex).toHaveBeenCalledWith('A' as any, true);
       expect(SimplexUtility.parseSolution).toHaveBeenCalledWith(
         'A' as any,
         state

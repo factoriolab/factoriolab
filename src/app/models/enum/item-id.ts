@@ -1,7 +1,5 @@
 export enum ItemId {
-  CargoWagon = 'cargo-wagon',
   FastInserter = 'fast-inserter',
-  FluidWagon = 'fluid-wagon',
   Inserter = 'inserter',
   LongHandedInserter = 'long-handed-inserter',
   Module = 'module',
