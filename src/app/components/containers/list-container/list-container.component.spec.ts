@@ -5,7 +5,7 @@ import { StoreModule, Store } from '@ngrx/store';
 import { Mocks, ItemId } from 'src/tests';
 import { ColumnsComponent, IconComponent, SelectComponent } from '~/components';
 import { DefaultIdPayload, DefaultPayload } from '~/models';
-import { RouterService } from '~/services/router.service';
+import { RouterService } from '~/services';
 import { reducers, metaReducers, State } from '~/store';
 import * as Items from '~/store/items';
 import * as Preferences from '~/store/preferences';

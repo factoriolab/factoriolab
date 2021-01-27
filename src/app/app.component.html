@@ -1,6 +1,10 @@
 <div class="top-bar">
   <div>
-    <div class="header"><a href="list#p=">Factorio Lab Calculator</a></div>
+    <div class="header">
+      <a href="list#p=" onclick="setTimeout(location.reload.bind(location), 10)"
+        >Factorio Lab Calculator</a
+      >
+    </div>
     <div class="links">
       <a target="_blank" href="https://github.com/factoriolab/factorio-lab/wiki"
         >Wiki</a
@@ -20,43 +24,63 @@
     </div>
   </div>
 </div>
-<main *ngIf="initialized$ | async; else loading">
-  <lab-settings-container
-    *ngIf="showSettings"
-    @slideLeftRight
-    (closeSettings)="showSettings = !showSettings"
-  >
-  </lab-settings-container>
-  <div class="view">
-    <lab-products-container></lab-products-container>
-    <div *ngIf="(products$ | async).length">
-      <ul role="navigation" class="tabs">
-        <li
-          routerLink="/list"
-          routerLinkActive="active"
-          preserveFragment="true"
-        >
-          <span>List</span>
-        </li>
-        <li
-          routerLink="/flow"
-          routerLinkActive="active"
-          preserveFragment="true"
-        >
-          <span>Flow</span>
-        </li>
-        <li *ngIf="!showSettings" (click)="showSettings = true">
-          <span>Settings</span>
-        </li>
-      </ul>
-      <div class="panel">
-        <router-outlet></router-outlet>
+<ng-container *ngIf="initialized$ | async; else loading">
+  <main *ngIf="!error.message; else errorTile">
+    <lab-settings-container
+      *ngIf="showSettings"
+      @slideLeftRight
+      (closeSettings)="showSettings = !showSettings"
+    >
+    </lab-settings-container>
+    <div class="view">
+      <lab-products-container></lab-products-container>
+      <div *ngIf="(products$ | async).length">
+        <ul role="navigation" class="tabs">
+          <li
+            routerLink="/list"
+            routerLinkActive="active"
+            preserveFragment="true"
+          >
+            <span>List</span>
+          </li>
+          <li
+            routerLink="/flow"
+            routerLinkActive="active"
+            preserveFragment="true"
+          >
+            <span>Flow</span>
+          </li>
+          <li *ngIf="!showSettings" (click)="showSettings = true">
+            <span>Settings</span>
+          </li>
+        </ul>
+        <div class="panel">
+          <router-outlet></router-outlet>
+        </div>
       </div>
     </div>
-  </div>
-</main>
+  </main>
+</ng-container>
 <ng-template #loading>
-  <div class="view loading">
+  <div class="view msg load">
     <div><div class="panel">Loading data, please wait...</div></div>
+  </div>
+</ng-template>
+<ng-template #errorTile>
+  <div class="view msg err">
+    <div>
+      <h2>Error</h2>
+      <div class="panel invalid">
+        <div>Encountered an error loading the app:</div>
+        <br />
+        <div>{{ error.message }}</div>
+        <br />
+        <a
+          href="list#p="
+          onclick="setTimeout(location.reload.bind(location), 10)"
+          >Click here to reset</a
+        >
+      </div>
+    </div>
   </div>
 </ng-template>
