@@ -86,6 +86,17 @@ describe('SankeyComponent', () => {
       expect(component.child.rebuildChart).not.toHaveBeenCalled();
     });
 
+    it('should ignore if width and height are unchanged', () => {
+      component.child.handleResize({
+        contentRect: { width: 400, height: 200 },
+      } as any);
+      spyOn(component.child, 'rebuildChart');
+      component.child.handleResize({
+        contentRect: { width: 400, height: 200 },
+      } as any);
+      expect(component.child.rebuildChart).not.toHaveBeenCalled();
+    });
+
     it('should rebuild the chart if size changes', () => {
       spyOn(component.child, 'rebuildChart');
       component.child.handleResize({
