@@ -301,7 +301,8 @@ export const getNormalDataset = createSelector(
       .sort();
 
     // Used to build default disabledRecipes for new data sets
-    if (!environment.production) {
+    // istanbul ignore next
+    if (!environment.production && !environment.testing) {
       console.log(
         JSON.stringify(complexRecipeIds.filter((i) => !itemEntities[i]))
       );

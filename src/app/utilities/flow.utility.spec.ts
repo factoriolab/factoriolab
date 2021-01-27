@@ -8,7 +8,7 @@ describe('FlowUtility', () => {
       id: ItemId.Coal,
       name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
       color: Mocks.AdjustedData.iconEntities[ItemId.Coal].color,
-      viewBox: '896 768 64 64',
+      viewBox: '960 768 64 64',
       href: Mocks.AdjustedData.iconEntities[ItemId.Coal].file,
     };
 

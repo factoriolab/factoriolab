@@ -46,7 +46,7 @@ export class RationalFactory {
     }
     if (data.drain != null) {
       this.drain = Rational.fromNumber(data.drain);
-    } else if (data.type == EnergyType.Electric && this.usage) {
+    } else if (data.type == EnergyType.Electric && this.usage && !data.mining) {
       this.drain = this.usage.div(Rational.from(30));
     }
     if (data.pollution != null) {

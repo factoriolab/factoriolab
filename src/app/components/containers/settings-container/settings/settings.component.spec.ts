@@ -49,6 +49,8 @@ enum DataTest {
       (setBelt)="setBelt($event)"
       (setFuel)="setFuel($event)"
       (setFlowRate)="setFlowRate($event)"
+      (setCargoWagon)="setCargoWagon($event)"
+      (setFluidWagon)="setFluidWagon($event)"
       (setMiningBonus)="setMiningBonus($event)"
       (setResearchSpeed)="setResearchSpeed($event)"
       (setInserterTarget)="setInserterTarget($event)"
@@ -84,6 +86,8 @@ class TestSettingsComponent {
   setBelt(data): void {}
   setFuel(data): void {}
   setFlowRate(data): void {}
+  setCargoWagon(data): void {}
+  setFluidWagon(data): void {}
   setMiningBonus(data): void {}
   setResearchSpeed(data): void {}
   setInserterTarget(data): void {}

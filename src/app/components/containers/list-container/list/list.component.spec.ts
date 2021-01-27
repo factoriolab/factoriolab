@@ -34,8 +34,10 @@ enum DataTest {
       [selected]="selected"
       [data]="data"
       [itemSettings]="itemSettings"
+      [itemRaw]="itemRaw"
       [recipeSettings]="recipeSettings"
       [recipeRaw]="recipeRaw"
+      [settings]="settings"
       [factories]="factories"
       [beltSpeed]="beltSpeed"
       [steps]="steps"
@@ -50,6 +52,7 @@ enum DataTest {
       [modifiedBeacons]="modifiedBeacons"
       (ignoreItem)="ignoreItem($event)"
       (setBelt)="setBelt($event)"
+      (setWagon)="setWagon($event)"
       (setFactory)="setFactory($event)"
       (setFactoryModules)="setFactoryModules($event)"
       (setBeaconCount)="setBeaconCount($event)"
@@ -61,6 +64,7 @@ enum DataTest {
       (resetRecipe)="resetRecipe($event)"
       (resetIgnore)="resetIgnore()"
       (resetBelt)="resetBelt()"
+      (resetWagon)="resetWagon()"
       (resetFactory)="resetFactory()"
       (resetBeacons)="resetBeacons()"
       (setDisabledRecipes)="setDisabledRecipes($event)"
@@ -74,8 +78,10 @@ class TestListComponent {
   selected = null;
   data = Mocks.Data;
   itemSettings = Mocks.ItemSettingsInitial;
+  itemRaw = Mocks.RecipeSettingsEntities;
   recipeSettings = Mocks.RecipeSettingsInitial;
   recipeRaw = Mocks.RecipeSettingsEntities;
+  settings = Mocks.SettingsState1;
   factories = Mocks.FactorySettingsInitial;
   beltSpeed = Mocks.BeltSpeed;
   steps = Mocks.Steps;
@@ -90,6 +96,7 @@ class TestListComponent {
   modifiedBeacons = false;
   ignoreItem(data): void {}
   setBelt(data): void {}
+  setWagon(data): void {}
   setFactory(data): void {}
   setFactoryModules(data): void {}
   setBeaconCount(data): void {}
@@ -101,6 +108,7 @@ class TestListComponent {
   resetRecipe(data): void {}
   resetIgnore(): void {}
   resetBelt(): void {}
+  resetWagon(): void {}
   resetFactory(): void {}
   resetBeacons(): void {}
   setDisabledRecipes(data): void {}

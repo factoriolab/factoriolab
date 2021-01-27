@@ -89,21 +89,6 @@ describe('RateUtility', () => {
       expect(steps).toEqual(expected as any);
     });
 
-    it('should properly calculate factories for space science pack/rocket parts', () => {
-      const steps: Step[] = [];
-      RateUtility.addStepsFor(
-        ItemId.SpaceSciencePack,
-        new Rational(BigInt(60)),
-        steps,
-        Mocks.ItemSettingsEntities,
-        Mocks.AdjustedData
-      );
-      expect(steps[0].factories).toBe(null);
-      expect(steps[1].factories).toEqual(
-        new Rational(BigInt(1321), BigInt(50))
-      );
-    });
-
     it('should adjust for consumption instead of production for research recipes', () => {
       const steps: Step[] = [];
       const data = {
@@ -265,7 +250,7 @@ describe('RateUtility', () => {
         {
           itemId: ItemId.CrudeOil,
           recipeId: null,
-          items: Rational.from(250000),
+          items: Rational.from(25000),
           belts: Rational.zero,
         },
       ];

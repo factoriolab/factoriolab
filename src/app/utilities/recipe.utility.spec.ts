@@ -340,7 +340,7 @@ describe('RecipeUtility', () => {
         settings,
         Mocks.Data
       );
-      expect(result.in[ItemId.Coal]).toBeUndefined();
+      expect(result.in).toBeUndefined();
       expect(result.out[ItemId.Coal]).toEqual(
         new Rational(BigInt(17), BigInt(20))
       );
@@ -379,6 +379,66 @@ describe('RecipeUtility', () => {
         new Rational(BigInt(1), BigInt(10))
       );
       expect(result.out[ItemId.Coal]).toBeUndefined();
+    });
+
+    it('should find matching nonchemical fuel', () => {
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.UsedUpUraniumFuelCell,
+        ItemId.UsedUpUraniumFuelCell,
+        Rational.zero,
+        Rational.zero,
+        Mocks.RationalRecipeSettingsInitial[RecipeId.UsedUpUraniumFuelCell],
+        Mocks.Data
+      );
+      expect(result.in[ItemId.UraniumFuelCell]).toEqual(Rational.from(1, 200));
+    });
+
+    it('should find non-matching nonchemical fuel', () => {
+      const data = {
+        ...Mocks.Data,
+        ...{
+          recipeEntities: {
+            ...Mocks.Data.recipeEntities,
+            ...{
+              [RecipeId.UsedUpUraniumFuelCell]: {
+                ...Mocks.Data.recipeEntities[RecipeId.UsedUpUraniumFuelCell],
+                ...{ in: null, out: {} },
+              },
+            },
+          },
+        },
+      };
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.UsedUpUraniumFuelCell,
+        ItemId.UsedUpUraniumFuelCell,
+        Rational.zero,
+        Rational.zero,
+        Mocks.RationalRecipeSettingsInitial[RecipeId.UsedUpUraniumFuelCell],
+        data
+      );
+      expect(result.in[ItemId.UraniumFuelCell]).toEqual(Rational.from(1, 200));
+    });
+  });
+
+  describe('adjustSiloRecipes', () => {
+    it('should handle no rocket part recipe', () => {
+      const recipeR = {
+        ...Mocks.AdjustedData.recipeR,
+        ...{ [RecipeId.RocketPart]: null },
+      };
+      const result = RecipeUtility.adjustSiloRecipes(recipeR, null);
+      expect(result).toBe(recipeR);
+    });
+
+    it('should adjust recipes', () => {
+      const result = RecipeUtility.adjustSiloRecipes(
+        Mocks.AdjustedData.recipeR,
+        Mocks.RationalRecipeSettingsInitial
+      );
+      expect(result[RecipeId.SpaceSciencePack].time).toEqual(
+        Rational.from(1442, 3)
+      );
+      expect(result[RecipeId.RocketPart].time).toEqual(Rational.from(721, 150));
     });
   });
 

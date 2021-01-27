@@ -254,6 +254,7 @@ describe('Products Selectors', () => {
       const result = Selectors.getNormalizedRatesByWagons.projector(
         [Mocks.RationalProducts[2]],
         null,
+        Mocks.ItemSettingsInitial,
         DisplayRate.PerHour,
         Mocks.Data
       );
@@ -264,6 +265,7 @@ describe('Products Selectors', () => {
       const result = Selectors.getNormalizedRatesByWagons.projector(
         [Mocks.RationalProducts[0]],
         null,
+        Mocks.ItemSettingsInitial,
         DisplayRate.PerHour,
         Mocks.Data
       );
@@ -298,6 +300,7 @@ describe('Products Selectors', () => {
             [ItemId.PetroleumGas, Rational.one],
           ],
         },
+        Mocks.ItemSettingsInitial,
         DisplayRate.PerMinute,
         Mocks.AdjustedData
       );
@@ -319,6 +322,7 @@ describe('Products Selectors', () => {
           },
         ],
         { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
+        Mocks.ItemSettingsInitial,
         DisplayRate.PerMinute,
         Mocks.AdjustedData
       );

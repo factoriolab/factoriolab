@@ -68,14 +68,17 @@ describe('SelectComponent', () => {
   });
 
   describe('width', () => {
-    it('should make room for all options when <= 4', () => {
-      expect(component.child.width).toEqual(11);
+    it('should calculate based on number of options', () => {
+      component.options = ['1', '2', '3', '4', '5'];
+      fixture.detectChanges();
+      expect(component.child.width).toEqual(7.125);
     });
 
     it('should calculate based on number of options', () => {
       component.options = ['1', '2', '3', '4', '5'];
+      component.includeEmptyModule = true;
       fixture.detectChanges();
-      expect(component.child.width).toEqual(8.625);
+      expect(component.child.width).toEqual(7.125);
     });
   });
 

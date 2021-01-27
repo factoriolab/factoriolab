@@ -62,6 +62,8 @@ describe('Settings Selectors', () => {
         modIds: 'modDatasetIds',
         belt: 'belt',
         fuel: 'fuel',
+        cargoWagon: 'cargoWagon',
+        fluidWagon: 'fluidWagon',
         disabledRecipes: 'disabledRecipes',
         factoryRank: 'factoryRank',
         moduleRank: 'moduleRank',
@@ -81,15 +83,19 @@ describe('Settings Selectors', () => {
       expect(result).toEqual({
         belt: Mocks.Defaults.belt,
         fuel: Mocks.Defaults.fuel,
+        cargoWagon: Mocks.Defaults.cargoWagon,
+        fluidWagon: Mocks.Defaults.fluidWagon,
         disabledRecipes: Mocks.Defaults.disabledRecipes,
       } as any);
     });
 
-    it('should use handle null defaults', () => {
+    it('should handle null defaults', () => {
       const result = Selectors.getSettings.projector({}, null);
       expect(result).toEqual({
         belt: undefined,
         fuel: undefined,
+        cargoWagon: undefined,
+        fluidWagon: undefined,
         disabledRecipes: [],
       } as any);
     });
@@ -153,6 +159,11 @@ describe('Settings Selectors', () => {
   });
 
   describe('getMods', () => {
+    it('should handle nulls', () => {
+      const result = Selectors.getMods.projector(null, null);
+      expect(result).toEqual([]);
+    });
+
     it('should map mod ids to entities', () => {
       const result = Selectors.getMods.projector(Mocks.Base, {
         research: Mocks.Base,
@@ -193,7 +204,7 @@ describe('Settings Selectors', () => {
       );
       expect(result.itemIds.length).toBeGreaterThan(0);
       expect(result.beltIds.length).toBeGreaterThan(0);
-      expect(result.fuelIds.length).toBeGreaterThan(0);
+      expect(Object.keys(result.fuelIds).length).toBeGreaterThan(0);
       expect(result.factoryIds.length).toBeGreaterThan(0);
       expect(result.moduleIds.length).toBeGreaterThan(0);
       expect(result.beaconModuleIds.length).toBeGreaterThan(0);
@@ -244,7 +255,7 @@ describe('Settings Selectors', () => {
       );
       expect(result.itemIds.length).toBeGreaterThan(0);
       expect(result.beltIds.length).toBeGreaterThan(0);
-      expect(result.fuelIds.length).toBeGreaterThan(0);
+      expect(Object.keys(result.fuelIds).length).toBeGreaterThan(0);
       expect(result.factoryIds.length).toBeGreaterThan(0);
       expect(result.moduleIds.length).toBeGreaterThan(0);
       expect(result.beaconModuleIds.length).toBeGreaterThan(0);
