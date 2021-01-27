@@ -26,7 +26,7 @@ import {
   PrecisionColumns,
   FactorySettings,
 } from '~/models';
-import { RouterService } from '~/services/router.service';
+import { RouterService } from '~/services';
 import { FactoriesState } from '~/store/factories';
 import { ItemsState } from '~/store/items';
 import { ColumnsState } from '~/store/preferences';

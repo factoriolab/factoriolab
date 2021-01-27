@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -29,6 +29,7 @@ import {
   DialogComponent,
   ColumnsComponent,
 } from './components';
+import { LabErrorHandler } from './lab-error-handler';
 import { reducers, metaReducers } from './store';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
 
@@ -65,7 +66,10 @@ import { DatasetsEffects } from './store/datasets/datasets.effects';
     }),
     EffectsModule.forRoot([DatasetsEffects]),
   ],
-  providers: [{ provide: APP_BASE_HREF, useValue: environment.baseHref }],
+  providers: [
+    { provide: APP_BASE_HREF, useValue: environment.baseHref },
+    { provide: ErrorHandler, useClass: LabErrorHandler },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
