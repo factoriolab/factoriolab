@@ -38,20 +38,14 @@
     table {
       width: 100%;
 
-      &.factories td {
-        min-width: 2.5rem;
+      td > div.flex {
+        > * + * {
+          margin-left: 0.5rem;
+        }
       }
 
-      &.center {
-        td > * {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-
-          > * + * {
-            margin-left: 0.5rem;
-          }
-        }
+      &.factories td {
+        min-width: 2.5rem;
       }
 
       &.thin > tr > :first-child {
@@ -60,6 +54,11 @@
 
       &.wide > tr > :first-child {
         width: 42%;
+      }
+
+      &.icons td:last-child > div {
+        display: flex;
+        justify-content: flex-end;
       }
     }
   }

@@ -49,7 +49,8 @@ export class SimplexUtility {
     steps: Step[],
     itemSettings: ItemsState,
     disabledRecipes: string[],
-    data: Dataset
+    data: Dataset,
+    error = true
   ): Step[] {
     if (!steps.length) {
       return steps;
@@ -64,10 +65,10 @@ export class SimplexUtility {
     }
 
     // Get solution for matrix state
-    const solution = this.getSolution(state);
+    const solution = this.getSolution(state, error);
 
     if (solution == null) {
-      if (solution === null) {
+      if (solution === null && error) {
         alert(ERROR_SIMPLEX);
         console.error('Failed to solve matrix using simplex method');
       }
@@ -90,7 +91,7 @@ export class SimplexUtility {
   ): [string, Rational][] {
     let steps: Step[] = [];
     RateUtility.addStepsFor(itemId, Rational.one, steps, itemSettings, data);
-    steps = this.solve(steps, itemSettings, disabledRecipes, data);
+    steps = this.solve(steps, itemSettings, disabledRecipes, data, false);
 
     if (recipes) {
       return steps
@@ -236,12 +237,12 @@ export class SimplexUtility {
 
   //#region Simplex
   /** Convert state to canonical tableau, solve using simplex, and parse solution */
-  static getSolution(state: MatrixState): MatrixSolution {
+  static getSolution(state: MatrixState, error = true): MatrixSolution {
     // Convert state to canonical tableau
     const A = this.canonical(state);
 
     // Solve tableau using simplex method
-    const result = this.simplex(A);
+    const result = this.simplex(A, error);
 
     if (result) {
       // Parse solution into usable state
@@ -321,7 +322,7 @@ export class SimplexUtility {
   }
 
   /** Solve the canonical tableau using the simplex method */
-  static simplex(A: Rational[][]): boolean {
+  static simplex(A: Rational[][], error = true): boolean {
     const start = Date.now();
     let check = true;
 
@@ -343,7 +344,7 @@ export class SimplexUtility {
       }
 
       if (check && Date.now() - start > 5000) {
-        if (confirm(WARNING_HANG)) {
+        if (error && confirm(WARNING_HANG)) {
           check = false;
         } else {
           return null;

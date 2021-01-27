@@ -2,13 +2,19 @@
   display: flex;
 }
 
-lab-dialog {
-  max-width: 24rem;
-  max-height: 20rem;
+.scroll {
+  overflow-y: auto;
+  max-height: 16rem;
+  max-width: 22.5rem;
+  padding: 0;
 
-  > .panel {
+  > .tile {
     display: flex;
     flex-wrap: wrap;
     padding: 0;
   }
+}
+
+lab-icon {
+  position: static;
 }

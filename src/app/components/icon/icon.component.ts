@@ -5,7 +5,14 @@ import {
   HostListener,
 } from '@angular/core';
 
-import { Recipe, Item, DisplayRate, Dataset, Rational } from '~/models';
+import {
+  Recipe,
+  Item,
+  DisplayRate,
+  Dataset,
+  Rational,
+  EnergyType,
+} from '~/models';
 
 @Component({
   selector: 'lab-icon',
@@ -44,6 +51,7 @@ export class IconComponent {
   tooltipMarginTop = 40;
 
   DisplayRate = DisplayRate;
+  EnergyType = EnergyType;
 
   constructor() {}
 

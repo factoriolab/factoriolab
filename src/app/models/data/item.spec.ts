@@ -1,4 +1,5 @@
 import { CategoryId, ItemId } from 'src/tests';
+import { FuelType } from '../enum';
 import { Rational } from '../rational';
 import { RationalItem } from './item';
 
@@ -23,7 +24,10 @@ describe('RationalItem', () => {
           productivity: 1,
           consumption: 1,
         },
-        fuel: 2,
+        fuel: {
+          category: FuelType.Chemical,
+          value: 2,
+        },
       });
       expect(result.id).toEqual(ItemId.Wood);
       expect(result.name).toEqual('name');
@@ -36,7 +40,8 @@ describe('RationalItem', () => {
       expect(result.module.speed).toEqual(Rational.one);
       expect(result.module.productivity).toEqual(Rational.one);
       expect(result.module.consumption).toEqual(Rational.one);
-      expect(result.fuel).toEqual(Rational.two);
+      expect(result.fuel.category).toEqual(FuelType.Chemical);
+      expect(result.fuel.value).toEqual(Rational.two);
     });
 
     it('should ignore undefined expensive fields', () => {

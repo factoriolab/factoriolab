@@ -207,6 +207,7 @@ export class RouterService {
           id,
           this.zipTruthyBool(settings.ignore),
           this.zipTruthyString(settings.belt),
+          this.zipTruthyString(settings.wagon),
         ]
           .join(FIELDSEP)
           .replace(/\**$/, '');
@@ -227,6 +228,10 @@ export class RouterService {
       v = r[i++];
       if (v?.length) {
         u.belt = this.parseString(v);
+      }
+      v = r[i++];
+      if (v?.length) {
+        u.wagon = this.parseString(v);
       }
       items[r[0]] = u;
     }
@@ -359,6 +364,8 @@ export class RouterService {
       this.zipDiffNumber(state.researchSpeed, init.researchSpeed),
       this.zipDiffNumber(state.inserterTarget, init.inserterTarget),
       this.zipDiffNumber(state.inserterCapacity, init.inserterCapacity),
+      this.zipDiffString(state.cargoWagon, init.cargoWagon),
+      this.zipDiffString(state.fluidWagon, init.fluidWagon),
     ]
       .join(FIELDSEP)
       .replace(/\**$/, '');
@@ -411,6 +418,14 @@ export class RouterService {
     v = s[i++];
     if (v?.length) {
       settings.inserterCapacity = this.parseNumber(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.cargoWagon = this.parseString(v);
+    }
+    v = s[i++];
+    if (v?.length) {
+      settings.fluidWagon = this.parseString(v);
     }
     return settings;
   }

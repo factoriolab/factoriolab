@@ -13,28 +13,30 @@
       <ng-container *ngFor="let id of data.categoryIds">
         <lab-icon
           *ngIf="data.categoryEntities[id] as category"
-          [scale]="false"
-          [iconId]="id"
-          [scrollLeft]="tabsScroll.scrollLeft"
-          [tooltip]="category.name"
           [class.selected]="id === tab"
           [data]="data"
+          [iconId]="id"
+          [scale]="false"
+          [scrollLeft]="tabsScroll.scrollLeft"
+          [tooltip]="category.name"
           (click)="tab = id"
         ></lab-icon>
       </ng-container>
     </div>
-    <div #tabScroll class="tab panel dark tile">
-      <div class="row" *ngFor="let row of data.categoryItemRows[tab]">
-        <lab-icon
-          *ngFor="let id of row"
-          class="grid"
-          [iconId]="id"
-          [scrollTop]="tabScroll.scrollTop"
-          [tooltip]="data.itemEntities[id].name"
-          [recipe]="data.recipeEntities[data.itemRecipeIds[id]]"
-          [data]="data"
-          (click)="selectId.emit(id); open = false"
-        ></lab-icon>
+    <div #tabScroll class="tab panel">
+      <div class="tile">
+        <div class="row" *ngFor="let row of data.categoryItemRows[tab]">
+          <lab-icon
+            *ngFor="let id of row"
+            class="grid"
+            [data]="data"
+            [iconId]="id"
+            [scrollTop]="tabScroll.scrollTop"
+            [tooltip]="data.itemEntities[id].name"
+            [recipe]="data.recipeEntities[data.itemRecipeIds[id]]"
+            (click)="selectId.emit(id); open = false"
+          ></lab-icon>
+        </div>
       </div>
     </div>
   </div>

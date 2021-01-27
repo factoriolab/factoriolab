@@ -266,6 +266,22 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
+  it('should set the cargo wagon', () => {
+    const value = { value: ItemId.CargoWagon, default: ItemId.CargoWagon };
+    component.child.setCargoWagon.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetCargoWagonAction(value)
+    );
+  });
+
+  it('should set the fluid wagon', () => {
+    const value = { value: ItemId.FluidWagon, default: ItemId.FluidWagon };
+    component.child.setFluidWagon.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetFluidWagonAction(value)
+    );
+  });
+
   it('should set the inserter target', () => {
     const value = InserterTarget.Chest;
     component.child.setInserterTarget.emit(value);

@@ -30,10 +30,10 @@ describe('Items Selectors', () => {
       expect(Object.keys(result).length).toEqual(Mocks.Data.itemIds.length);
     });
 
-    it('should use belt override', () => {
+    it('should use the passed overrides', () => {
       const state = {
         ...initialItemsState,
-        ...{ [Mocks.Item1.id]: { belt: stringValue } },
+        ...{ [Mocks.Item1.id]: { belt: stringValue, wagon: stringValue } },
       };
       const result = Selectors.getItemSettings.projector(
         state,
@@ -41,6 +41,7 @@ describe('Items Selectors', () => {
         initialSettingsState
       );
       expect(result[Mocks.Item1.id].belt).toEqual(stringValue);
+      expect(result[Mocks.Item1.id].wagon).toEqual(stringValue);
     });
   });
 
@@ -67,6 +68,20 @@ describe('Items Selectors', () => {
     it('should find a relevant step', () => {
       const result = Selectors.getContainsBelt.projector({
         ['id']: { belt: ItemId.TransportBelt },
+      });
+      expect(result).toBeTrue();
+    });
+  });
+
+  describe('getContainsWagon', () => {
+    it('should handle null/empty values', () => {
+      const result = Selectors.getContainsWagon.projector({});
+      expect(result).toBeFalse();
+    });
+
+    it('should find a relevant step', () => {
+      const result = Selectors.getContainsWagon.projector({
+        ['id']: { wagon: ItemId.CargoWagon },
       });
       expect(result).toBeTrue();
     });

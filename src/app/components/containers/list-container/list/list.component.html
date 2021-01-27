@@ -35,7 +35,16 @@
         </div>
       </th>
       <th class="num-icon" *ngIf="columns[Column.Wagons].show">
-        <div class="header">Wagons{{ rateLabel }}</div>
+        <div class="header">
+          Wagons{{ rateLabel }}
+          <button
+            *ngIf="modifiedWagon"
+            title="Undo all wagon modifications"
+            (click)="resetWagon.emit()"
+          >
+            <i class="material-icons">undo</i>
+          </button>
+        </div>
       </th>
       <th *ngIf="columns[Column.Factories].show" colspan="3">
         <div class="header">
@@ -165,7 +174,7 @@
                     setBelt.emit({
                       id: step.itemId,
                       value: $event,
-                      default: belt
+                      default: settings.belt
                     })
                   "
                 >
@@ -197,11 +206,75 @@
               <span class="monospace">{{
                 rate(step.wagons, effPrecision[Column.Wagons])
               }}</span>
-              <lab-icon
-                [iconId]="wagon"
-                [tooltip]="data.itemEntities[wagon].name"
-                [data]="data"
-              ></lab-icon>
+              <ng-container
+                *ngIf="
+                  data.fluidWagonIds.indexOf(wagon) === -1;
+                  else fluidWagon
+                "
+              >
+                <ng-container
+                  *ngIf="data.cargoWagonIds.length > 1; else wagonDefault"
+                >
+                  <lab-select
+                    header="Select a cargo wagon"
+                    [data]="data"
+                    [selected]="wagon"
+                    [options]="data.cargoWagonIds"
+                    (selectId)="
+                      setWagon.emit({
+                        id: step.itemId,
+                        value: $event,
+                        default: settings.cargoWagon
+                      })
+                    "
+                  >
+                    <lab-icon
+                      class="button"
+                      title="Click to change cargo wagon"
+                      [data]="data"
+                      [iconId]="wagon"
+                      [tooltip]="data.itemEntities[wagon].name"
+                      [item]="data.itemEntities[wagon]"
+                    ></lab-icon>
+                  </lab-select>
+                </ng-container>
+              </ng-container>
+              <ng-template #fluidWagon>
+                <ng-container
+                  *ngIf="data.fluidWagonIds.length > 1; else wagonDefault"
+                >
+                  <lab-select
+                    header="Select a fluid wagon"
+                    [data]="data"
+                    [selected]="wagon"
+                    [options]="data.fluidWagonIds"
+                    (selectId)="
+                      setWagon.emit({
+                        id: step.itemId,
+                        value: $event,
+                        default: settings.fluidWagon
+                      })
+                    "
+                  >
+                    <lab-icon
+                      class="button"
+                      title="Click to change fluid wagon"
+                      [data]="data"
+                      [iconId]="wagon"
+                      [tooltip]="data.itemEntities[wagon].name"
+                      [item]="data.itemEntities[wagon]"
+                    ></lab-icon>
+                  </lab-select>
+                </ng-container>
+              </ng-template>
+              <ng-template #wagonDefault>
+                <lab-icon
+                  [data]="data"
+                  [iconId]="wagon"
+                  [tooltip]="data.itemEntities[wagon].name"
+                  [item]="data.itemEntities[wagon]"
+                ></lab-icon>
+              </ng-template>
             </div>
           </ng-container>
         </td>
@@ -338,7 +411,10 @@
                         setBeacon.emit({
                           id: step.itemId,
                           value: $event,
-                          default: beacon
+                          default:
+                            factories.entities[
+                              recipeSettings[step.recipeId].factory
+                            ].beacon
                         })
                       "
                     >
@@ -412,7 +488,7 @@
               <i class="clickable material-icons">open_in_new</i>
             </a>
             <button
-              *ngIf="recipeRaw[step.recipeId]"
+              *ngIf="recipeRaw[step.recipeId] || itemRaw[step.itemId]"
               title="Undo modifications to this step"
               data-test="lab-list-reset-step"
               (click)="resetStep(step)"
@@ -555,6 +631,7 @@
                         [data]="data"
                         [iconId]="wagon"
                         [tooltip]="data.itemEntities[wagon].name"
+                        [item]="data.itemEntities[wagon]"
                       ></lab-icon>
                     </div>
                   </ng-container>
@@ -698,6 +775,7 @@
                     [data]="data"
                     [iconId]="wagon"
                     [tooltip]="data.itemEntities[wagon].name"
+                    [item]="data.itemEntities[wagon]"
                   ></lab-icon>
                 </div>
               </ng-container>

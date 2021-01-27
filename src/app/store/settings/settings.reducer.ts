@@ -17,6 +17,8 @@ export interface SettingsState {
   belt: string;
   fuel: string;
   flowRate: number;
+  cargoWagon: string;
+  fluidWagon: string;
   displayRate: DisplayRate;
   miningBonus: number;
   researchSpeed: ResearchSpeed;
@@ -32,6 +34,8 @@ export const initialSettingsState: SettingsState = {
   belt: null,
   fuel: null,
   flowRate: 1500,
+  cargoWagon: null,
+  fluidWagon: null,
   displayRate: DisplayRate.PerMinute,
   miningBonus: 0,
   researchSpeed: ResearchSpeed.Speed6,
@@ -60,6 +64,8 @@ export function settingsReducer(
           modIds: null,
           belt: null,
           fuel: null,
+          cargoWagon: null,
+          fluidWagon: null,
           disabledRecipes: null,
         },
       };
@@ -84,6 +90,16 @@ export function settingsReducer(
       };
     case SettingsActionType.SET_FLOW_RATE:
       return { ...state, ...{ flowRate: action.payload } };
+    case SettingsActionType.SET_CARGO_WAGON:
+      return {
+        ...state,
+        ...{ cargoWagon: StoreUtility.compareValue(action.payload) },
+      };
+    case SettingsActionType.SET_FLUID_WAGON:
+      return {
+        ...state,
+        ...{ fluidWagon: StoreUtility.compareValue(action.payload) },
+      };
     case SettingsActionType.SET_DISPLAY_RATE:
       return { ...state, ...{ displayRate: action.payload } };
     case SettingsActionType.SET_MINING_BONUS:

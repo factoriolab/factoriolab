@@ -44,8 +44,10 @@ export class ListContainerComponent implements OnInit {
 
   data$: Observable<Dataset>;
   itemSettings$: Observable<Items.ItemsState>;
+  itemRaw$: Observable<Items.ItemsState>;
   recipeSettings$: Observable<Recipes.RecipesState>;
   recipeRaw$: Observable<Recipes.RecipesState>;
+  settings$: Observable<Settings.SettingsState>;
   factories$: Observable<Factories.FactoriesState>;
   beltSpeed$: Observable<Entities<Rational>>;
   steps$: Observable<Step[]>;
@@ -60,6 +62,7 @@ export class ListContainerComponent implements OnInit {
   columns$: Observable<Preferences.ColumnsState>;
   modifiedIgnore$: Observable<boolean>;
   modifiedBelt$: Observable<boolean>;
+  modifiedWagon$: Observable<boolean>;
   modifiedFactory$: Observable<boolean>;
   modifiedBeacons$: Observable<boolean>;
 
@@ -71,8 +74,10 @@ export class ListContainerComponent implements OnInit {
     }
     this.data$ = this.store.select(Recipes.getAdjustedDataset);
     this.itemSettings$ = this.store.select(Items.getItemSettings);
+    this.itemRaw$ = this.store.select(Items.itemsState);
     this.recipeSettings$ = this.store.select(Recipes.getRecipeSettings);
     this.recipeRaw$ = this.store.select(Recipes.recipesState);
+    this.settings$ = this.store.select(Settings.getSettings);
     this.factories$ = this.store.select(Factories.getFactorySettings);
     this.beltSpeed$ = this.store.select(Settings.getBeltSpeed);
     this.disabledRecipes$ = this.store.select(Settings.getDisabledRecipes);
@@ -82,6 +87,7 @@ export class ListContainerComponent implements OnInit {
     this.columns$ = this.store.select(Preferences.getColumns);
     this.modifiedIgnore$ = this.store.select(Items.getContainsIgnore);
     this.modifiedBelt$ = this.store.select(Items.getContainsBelt);
+    this.modifiedWagon$ = this.store.select(Items.getContainsWagon);
     this.modifiedFactory$ = this.store.select(Recipes.getContainsFactory);
     this.modifiedBeacons$ = this.store.select(Recipes.getContainsBeacons);
   }
@@ -92,6 +98,10 @@ export class ListContainerComponent implements OnInit {
 
   setBelt(data: DefaultIdPayload): void {
     this.store.dispatch(new Items.SetBeltAction(data));
+  }
+
+  setWagon(data: DefaultIdPayload): void {
+    this.store.dispatch(new Items.SetWagonAction(data));
   }
 
   setFactory(data: DefaultIdPayload): void {
@@ -132,6 +142,10 @@ export class ListContainerComponent implements OnInit {
 
   resetBelt(): void {
     this.store.dispatch(new Items.ResetBeltAction());
+  }
+
+  resetWagon(): void {
+    this.store.dispatch(new Items.ResetWagonAction());
   }
 
   resetFactory(): void {

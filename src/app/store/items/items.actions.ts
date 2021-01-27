@@ -5,9 +5,11 @@ import { DefaultIdPayload } from '~/models';
 export const enum ItemsActionType {
   IGNORE_ITEM = '[Items] Ignore Item',
   SET_BELT = '[Items] Set Belt',
+  SET_WAGON = '[Items] Set Wagon',
   RESET_ITEM = '[Items] Reset Item',
   RESET_IGNORE = '[Items] Reset Ignore',
   RESET_BELT = '[Items] Reset Belt',
+  RESET_WAGON = '[Items] Reset Wagon',
 }
 
 export class IgnoreItemAction implements Action {
@@ -17,6 +19,11 @@ export class IgnoreItemAction implements Action {
 
 export class SetBeltAction implements Action {
   readonly type = ItemsActionType.SET_BELT;
+  constructor(public payload: DefaultIdPayload) {}
+}
+
+export class SetWagonAction implements Action {
+  readonly type = ItemsActionType.SET_WAGON;
   constructor(public payload: DefaultIdPayload) {}
 }
 
@@ -33,9 +40,15 @@ export class ResetBeltAction implements Action {
   readonly type = ItemsActionType.RESET_BELT;
 }
 
+export class ResetWagonAction implements Action {
+  readonly type = ItemsActionType.RESET_WAGON;
+}
+
 export type ItemsAction =
   | IgnoreItemAction
   | SetBeltAction
+  | SetWagonAction
   | ResetItemAction
   | ResetIgnoreAction
-  | ResetBeltAction;
+  | ResetBeltAction
+  | ResetWagonAction;

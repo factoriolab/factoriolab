@@ -29,9 +29,12 @@ export class SelectComponent extends DialogContainerComponent {
   ItemId = ItemId;
 
   get width(): number {
-    const buttons = this.options.length + 1;
+    let buttons = this.options.length;
+    if (this.includeEmptyModule) {
+      buttons++;
+    }
     const iconsPerRow = buttons <= 4 ? buttons : Math.ceil(Math.sqrt(buttons));
-    return iconsPerRow * 2.375 + 1.5;
+    return iconsPerRow * 2.375;
   }
 
   constructor() {

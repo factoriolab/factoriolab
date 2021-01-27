@@ -8,32 +8,36 @@
       <i class="material-icons">close</i>
     </button>
   </div>
-  <div class="panel tile">
-    <lab-icon
-      tooltip="No Module"
-      class="grid"
-      data-test="lab-ranker-none"
-      [class.disabled]="!canAdd(ItemId.Module)"
-      [class.selected]="!editValue.length"
-      [data]="data"
-      [iconId]="ItemId.Module"
-      [text]="text(ItemId.Module)"
-      (click)="clickId(ItemId.Module)"
-    >
-    </lab-icon>
-    <lab-icon
-      *ngFor="let id of options"
-      class="grid"
-      data-test="lab-ranker-option"
-      [class.disabled]="!canAdd(id)"
-      [class.selected]="editValue.indexOf(id) !== -1"
-      [data]="data"
-      [iconId]="id"
-      [text]="text(id)"
-      [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"
-      [item]="data.itemEntities[id]"
-      (click)="clickId(id)"
-    ></lab-icon>
+  <div #scroll class="panel scroll">
+    <div class="tile">
+      <lab-icon
+        tooltip="No Module"
+        class="grid"
+        data-test="lab-ranker-none"
+        [class.disabled]="!canAdd(ItemId.Module)"
+        [class.selected]="!editValue.length"
+        [data]="data"
+        [iconId]="ItemId.Module"
+        [text]="text(ItemId.Module)"
+        [scrollTop]="scroll.scrollTop"
+        (click)="clickId(ItemId.Module)"
+      >
+      </lab-icon>
+      <lab-icon
+        *ngFor="let id of options"
+        class="grid"
+        data-test="lab-ranker-option"
+        [class.disabled]="!canAdd(id)"
+        [class.selected]="editValue.indexOf(id) !== -1"
+        [data]="data"
+        [iconId]="id"
+        [text]="text(id)"
+        [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"
+        [item]="data.itemEntities[id]"
+        [scrollTop]="scroll.scrollTop"
+        (click)="clickId(id)"
+      ></lab-icon>
+    </div>
   </div>
   <ng-container *ngIf="edited">
     <div class="info">
