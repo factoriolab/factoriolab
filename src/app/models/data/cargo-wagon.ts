@@ -1,13 +1,13 @@
 import { Rational } from '../rational';
 
 export interface CargoWagon {
-  inventorySize: number;
+  size: number;
 }
 
 export class RationalCargoWagon {
-  inventorySize: Rational;
+  size: Rational;
 
   constructor(data: CargoWagon) {
-    this.inventorySize = Rational.fromNumber(data.inventorySize);
+    this.size = Rational.fromNumber(data.size);
   }
 }

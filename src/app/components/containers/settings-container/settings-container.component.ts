@@ -154,6 +154,14 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetFlowRateAction(value));
   }
 
+  setCargoWagon(value: DefaultPayload): void {
+    this.store.dispatch(new Settings.SetCargoWagonAction(value));
+  }
+
+  setFluidWagon(value: DefaultPayload): void {
+    this.store.dispatch(new Settings.SetFluidWagonAction(value));
+  }
+
   setInserterTarget(value: InserterTarget): void {
     this.store.dispatch(new Settings.SetInserterTargetAction(value));
   }

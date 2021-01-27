@@ -30,6 +30,12 @@ export function itemsReducer(
         ItemSettingsField.Belt,
         action.payload
       );
+    case ItemsActionType.SET_WAGON:
+      return StoreUtility.compareReset(
+        state,
+        ItemSettingsField.Wagon,
+        action.payload
+      );
     case ItemsActionType.RESET_ITEM: {
       const newState = { ...state };
       delete newState[action.payload];
@@ -39,6 +45,8 @@ export function itemsReducer(
       return StoreUtility.resetField(state, ItemSettingsField.Ignore);
     case ItemsActionType.RESET_BELT:
       return StoreUtility.resetField(state, ItemSettingsField.Belt);
+    case ItemsActionType.RESET_WAGON:
+      return StoreUtility.resetField(state, ItemSettingsField.Wagon);
     default:
       return state;
   }

@@ -88,6 +88,14 @@
         : 'Items/h'
     }}
   </div>
+  <div *ngIf="item?.cargoWagon as wagon" class="nowrap">
+    {{ round(wagon.size) }}
+    Inventory stacks
+  </div>
+  <div *ngIf="item?.fluidWagon as wagon" class="nowrap">
+    {{ round(wagon.capacity) }}
+    Fluid capacity
+  </div>
   <div *ngIf="item?.factory as factory">
     <table>
       <tr>
@@ -110,9 +118,9 @@
         <td>Energy consumption</td>
         <td>{{ round(factory.usage) }} kW</td>
       </tr>
-      <tr *ngIf="factory.drain">
+      <tr *ngIf="factory.drain || factory.type == EnergyType.Electric">
         <td>Drain</td>
-        <td>{{ round(factory.drain) }} kW</td>
+        <td>{{ round(factory.drain || factory.usage / 30) }} kW</td>
       </tr>
       <tr *ngIf="factory.pollution">
         <td>Pollution</td>

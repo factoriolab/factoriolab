@@ -1,6 +1,6 @@
 import { Mocks, CategoryId, ItemId, RecipeId } from 'src/tests';
 import { RateUtility } from './rate.utility';
-import { Step, Rational, DisplayRate, WAGON_FLUID } from '~/models';
+import { Step, Rational, DisplayRate } from '~/models';
 
 describe('RateUtility', () => {
   describe('addStepsFor', () => {
@@ -265,7 +265,7 @@ describe('RateUtility', () => {
         {
           itemId: ItemId.CrudeOil,
           recipeId: null,
-          items: WAGON_FLUID,
+          items: Rational.from(250000),
           belts: Rational.zero,
         },
       ];

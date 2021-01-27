@@ -1,5 +1,6 @@
 import { compose, createSelector } from '@ngrx/store';
 
+import { environment } from 'src/environments';
 import {
   ResearchSpeedFactor,
   Rational,
@@ -66,6 +67,8 @@ export const getDefaults = createSelector(
         modIds: m.modIds,
         belt: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
         fuel: m.fuel,
+        cargoWagon: m.cargoWagon,
+        fluidWagon: m.fluidWagon,
         disabledRecipes: m.disabledRecipes,
         factoryRank:
           preset === Preset.Minimum ? m.minFactoryRank : m.maxFactoryRank,
@@ -89,12 +92,12 @@ export const getSettings = createSelector(
     ...{
       belt: s.belt || d?.belt,
       fuel: s.fuel || d?.fuel,
+      cargoWagon: s.cargoWagon || d?.cargoWagon,
+      fluidWagon: s.fluidWagon || d?.fluidWagon,
       disabledRecipes: s.disabledRecipes || d?.disabledRecipes || [],
     },
   })
 );
-
-export const getBelt = createSelector(getSettings, (s) => s.belt);
 
 export const getFuel = createSelector(getSettings, (s) => s.fuel);
 
@@ -184,6 +187,14 @@ export const getNormalDataset = createSelector(
     // Filter for item types
     const beaconIds = items.filter((i) => i.beacon).map((i) => i.id);
     const beltIds = items.filter((i) => i.belt).map((i) => i.id);
+    const cargoWagonIds = items.filter((i) => i.cargoWagon).map((i) => i.id);
+    const fluidWagonIds = items.filter((i) => i.fluidWagon).map((i) => i.id);
+    const factoryIds = items.filter((i) => i.factory).map((i) => i.id);
+    const modules = items.filter((i) => i.module);
+    const moduleIds = modules.map((i) => i.id);
+    const beaconModuleIds = modules
+      .filter((i) => !i.module.productivity)
+      .map((i) => i.id);
     const fuelIds = items
       .filter((i) => i.fuel)
       .reduce((e: Entities<string[]>, f) => {
@@ -193,12 +204,6 @@ export const getNormalDataset = createSelector(
         e[f.fuel.category].push(f.id);
         return e;
       }, {});
-    const factoryIds = items.filter((i) => i.factory).map((i) => i.id);
-    const modules = items.filter((i) => i.module);
-    const moduleIds = modules.map((i) => i.id);
-    const beaconModuleIds = modules
-      .filter((i) => !i.module.productivity)
-      .map((i) => i.id);
 
     // Calculate category item rows
     const categoryItemRows: Entities<string[][]> = {};
@@ -296,9 +301,11 @@ export const getNormalDataset = createSelector(
       .sort();
 
     // Used to build default disabledRecipes for new data sets
-    // console.log(
-    //   JSON.stringify(complexRecipeIds.filter((i) => !itemEntities[i]))
-    // );
+    if (!environment.production) {
+      console.log(
+        JSON.stringify(complexRecipeIds.filter((i) => !itemEntities[i]))
+      );
+    }
 
     const dataset: Dataset = {
       categoryIds,
@@ -309,10 +316,12 @@ export const getNormalDataset = createSelector(
       itemIds,
       beaconIds,
       beltIds,
-      fuelIds,
+      cargoWagonIds,
+      fluidWagonIds,
       factoryIds,
       moduleIds,
       beaconModuleIds,
+      fuelIds,
       itemEntities,
       itemR,
       itemRecipeIds,

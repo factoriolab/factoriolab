@@ -12,6 +12,7 @@ import {
   SelectComponent,
   ToggleComponent,
 } from '~/components';
+import { FuelType } from '~/models';
 import { SettingsComponent } from './settings.component';
 
 enum DataTest {
@@ -130,7 +131,9 @@ describe('SettingsComponent', () => {
 
   it('should sort the list of fuels', () => {
     expect(component.child.sortedFuels.length).toBeGreaterThan(1);
-    expect(component.child.sortedFuels).not.toEqual(Mocks.Data.fuelIds);
+    expect(component.child.sortedFuels).not.toEqual(
+      Mocks.Data.fuelIds[FuelType.Chemical]
+    );
   });
 
   describe('factoryRows', () => {

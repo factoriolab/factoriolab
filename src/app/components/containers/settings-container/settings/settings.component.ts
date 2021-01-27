@@ -50,9 +50,12 @@ export class SettingsComponent implements OnInit {
   }
   @Input() set data(value: Dataset) {
     this._data = value;
-    this.sortedFuels = [...value.fuelIds[FuelType.Chemical]].sort((a, b) =>
-      value.itemR[a].fuel.value.sub(value.itemR[b].fuel.value).toNumber()
-    );
+    this.sortedFuels = [];
+    if (value.fuelIds?.[FuelType.Chemical]) {
+      this.sortedFuels = [...value.fuelIds[FuelType.Chemical]].sort((a, b) =>
+        value.itemR[a].fuel.value.sub(value.itemR[b].fuel.value).toNumber()
+      );
+    }
   }
   @Input() base: ModInfo[];
   @Input() factories: FactoriesState;
@@ -80,6 +83,8 @@ export class SettingsComponent implements OnInit {
   @Output() setBelt = new EventEmitter<DefaultPayload>();
   @Output() setFuel = new EventEmitter<DefaultPayload>();
   @Output() setFlowRate = new EventEmitter<number>();
+  @Output() setCargoWagon = new EventEmitter<DefaultPayload>();
+  @Output() setFluidWagon = new EventEmitter<DefaultPayload>();
   @Output() setMiningBonus = new EventEmitter<number>();
   @Output() setResearchSpeed = new EventEmitter<ResearchSpeed>();
   @Output() setInserterTarget = new EventEmitter<InserterTarget>();

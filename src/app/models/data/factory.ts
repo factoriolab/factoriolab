@@ -1,3 +1,4 @@
+import { EnergyType } from '../enum';
 import { Rational } from '../rational';
 
 export interface Factory {
@@ -45,6 +46,8 @@ export class RationalFactory {
     }
     if (data.drain != null) {
       this.drain = Rational.fromNumber(data.drain);
+    } else if (data.type == EnergyType.Electric && this.usage) {
+      this.drain = this.usage.div(Rational.from(30));
     }
     if (data.pollution != null) {
       this.pollution = Rational.fromNumber(data.pollution);

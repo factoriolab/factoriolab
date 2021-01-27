@@ -31,6 +31,7 @@ import { FactoriesState } from '~/store/factories';
 import { ItemsState } from '~/store/items';
 import { ColumnsState } from '~/store/preferences';
 import { RecipesState } from '~/store/recipes';
+import { SettingsState } from '~/store/settings';
 import { ExportUtility, RecipeUtility } from '~/utilities';
 
 export enum StepDetailTab {
@@ -55,8 +56,10 @@ export interface StepInserter {
 export class ListComponent {
   @Input() data: Dataset;
   @Input() itemSettings: ItemsState;
+  @Input() itemRaw: ItemsState;
   @Input() recipeSettings: RecipesState;
   @Input() recipeRaw: RecipesState;
+  @Input() settings: SettingsState;
   @Input() factories: FactoriesState;
   @Input() beltSpeed: Entities<Rational>;
   _steps: Step[];
@@ -96,6 +99,7 @@ export class ListComponent {
   }
   @Input() modifiedIgnore: boolean;
   @Input() modifiedBelt: boolean;
+  @Input() modifiedWagon: boolean;
   @Input() modifiedFactory: boolean;
   @Input() modifiedBeacons: boolean;
   _mode = ListMode.All; // Default also defined in container
@@ -119,6 +123,7 @@ export class ListComponent {
 
   @Output() ignoreItem = new EventEmitter<string>();
   @Output() setBelt = new EventEmitter<DefaultIdPayload>();
+  @Output() setWagon = new EventEmitter<DefaultIdPayload>();
   @Output() setFactory = new EventEmitter<DefaultIdPayload>();
   @Output() setFactoryModules = new EventEmitter<DefaultIdPayload<string[]>>();
   @Output() setBeaconCount = new EventEmitter<DefaultIdPayload<number>>();
@@ -129,6 +134,7 @@ export class ListComponent {
   @Output() resetRecipe = new EventEmitter<string>();
   @Output() resetIgnore = new EventEmitter();
   @Output() resetBelt = new EventEmitter();
+  @Output() resetWagon = new EventEmitter();
   @Output() resetFactory = new EventEmitter();
   @Output() resetBeacons = new EventEmitter();
   @Output() setDisabledRecipes = new EventEmitter<DefaultPayload<string[]>>();
@@ -219,7 +225,7 @@ export class ListComponent {
     for (const step of this.steps.filter((s) => s.itemId)) {
       this.details[step.itemId] = [];
       if (
-        this.data.recipeEntities[step.recipeId]?.in &&
+        this.data.recipeR[step.recipeId]?.in &&
         !this.itemSettings[step.itemId].ignore
       ) {
         this.details[step.itemId].push(StepDetailTab.Inputs);

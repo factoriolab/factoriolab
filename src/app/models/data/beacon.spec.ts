@@ -1,3 +1,4 @@
+import { EnergyType, FuelType } from '../enum';
 import { Rational } from '../rational';
 import { RationalBeacon } from './beacon';
 
@@ -8,14 +9,16 @@ describe('RationalBeacon', () => {
         effectivity: 0.5,
         modules: 2,
         range: 3,
-        burner: 2.5,
-        electric: 7.5,
+        type: EnergyType.Burner,
+        category: FuelType.Chemical,
+        usage: 1,
       });
       expect(result.effectivity).toEqual(new Rational(BigInt(1), BigInt(2)));
       expect(result.modules).toEqual(2);
       expect(result.range).toEqual(3);
-      expect(result.burner).toEqual(2.5);
-      expect(result.electric).toEqual(7.5);
+      expect(result.type).toEqual(EnergyType.Burner);
+      expect(result.category).toEqual(FuelType.Chemical);
+      expect(result.usage).toEqual(Rational.one);
     });
 
     it('should ignore undefined fields', () => {
@@ -27,8 +30,9 @@ describe('RationalBeacon', () => {
       expect(result.effectivity).toEqual(new Rational(BigInt(1), BigInt(2)));
       expect(result.modules).toEqual(2);
       expect(result.range).toEqual(3);
-      expect(result.burner).toBeUndefined();
-      expect(result.electric).toBeUndefined();
+      expect(result.type).toBeUndefined();
+      expect(result.category).toBeUndefined();
+      expect(result.usage).toBeUndefined();
     });
   });
 });

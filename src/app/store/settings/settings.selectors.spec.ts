@@ -95,13 +95,6 @@ describe('Settings Selectors', () => {
     });
   });
 
-  describe('getBelt', () => {
-    it('should return belt from settings', () => {
-      const result = Selectors.getBelt.projector(initialSettingsState);
-      expect(result).toEqual(initialSettingsState.belt);
-    });
-  });
-
   describe('getFuel', () => {
     it('should return fuel from settings', () => {
       const result = Selectors.getFuel.projector(initialSettingsState);

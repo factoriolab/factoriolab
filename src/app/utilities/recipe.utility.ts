@@ -8,6 +8,7 @@ import {
   RationalProduct,
   Product,
   EnergyType,
+  FuelType,
 } from '~/models';
 
 export class RecipeUtility {
@@ -175,17 +176,14 @@ export class RecipeUtility {
 
     // Calculate burner fuel inputs
     if (factory.type === EnergyType.Burner) {
-      let fuel = data.itemR[fuelId].fuel;
-      if (fuel.category !== factory.category) {
-        // Fuel does not match, use first matching fuel
-        const fuelId = data.fuelIds[factory.category][0];
-        fuel = data.itemR[fuelId].fuel;
+      let rFuelId = fuelId;
+      if (factory.category !== FuelType.Chemical) {
+        // Try to find matching input for burning recipes
+        const ins = Object.keys(recipe.in || {});
+        const fuels = data.fuelIds[factory.category];
+        rFuelId = ins.find((i) => fuels.indexOf(i) !== -1) || fuels[0];
       }
-
-      if (!recipe.time || !factory.usage) {
-        console.log(factory);
-        console.log(recipe);
-      }
+      const fuel = data.itemR[rFuelId].fuel;
 
       const fuelIn = recipe.time
         .mul(factory.usage)
@@ -196,40 +194,58 @@ export class RecipeUtility {
         recipe.in = {};
       }
 
-      if (!recipe.in[fuelId]) {
-        recipe.in[fuelId] = Rational.zero;
-      }
+      recipe.in[rFuelId] = (recipe.in[rFuelId] || Rational.zero).add(fuelIn);
 
-      // Check whether recipe also outputs the fuel
-      if (recipe.out[fuelId]) {
-        if (recipe.out[fuelId].gte(fuelIn)) {
-          // Recipe outputs more fuel than consumed, subtract input
-          recipe.out[fuelId] = recipe.out[fuelId].sub(fuelIn);
-          delete recipe.in[fuelId];
-        } else {
-          // Recipe outputs less fuel than consumed, adjust input and delete output
-          recipe.in[fuelId] = recipe.in[fuelId]
-            .add(fuelIn)
-            .sub(recipe.out[fuelId]);
-          delete recipe.out[fuelId];
-        }
-      } else {
-        // Recipe only takes fuel as input
-        recipe.in[fuelId] = recipe.in[fuelId].add(fuelIn);
+      if (fuel.result) {
+        recipe.out[fuel.result] = (
+          recipe.out[fuel.result] || Rational.zero
+        ).add(fuelIn);
       }
     }
 
-    // Adjust for rocket launch time
-    if (settings.factory === ItemId.RocketSilo) {
-      if (recipe.in[ItemId.RocketPart]) {
-        // Rocket launch recipe
+    // After productivity, nullify all loops
+    for (const o of Object.keys(recipe.out).filter((i) => recipe.in?.[i])) {
+      if (recipe.out[o].gte(recipe.in[o])) {
+        // Outputs more than consumed, subtract input
+        recipe.out[o] = recipe.out[o].sub(recipe.in[o]);
+        delete recipe.in[o];
       } else {
-        // Rocket part recipe
-        recipe.time = recipe.time.add(this.LAUNCH_TIME);
+        // Outputs less than consumed
+        recipe.in[o] = recipe.in[o].sub(recipe.out[o]);
+        delete recipe.out[o];
       }
+    }
+
+    if (recipe.in && Object.keys(recipe.in).length === 0) {
+      delete recipe.in;
     }
 
     return recipe;
+  }
+
+  static adjustSiloRecipes(
+    recipeR: Entities<RationalRecipe>,
+    settings: Entities<RationalRecipeSettings>
+  ): Entities<RationalRecipe> {
+    // Adjust rocket launch recipes
+    const rocketRecipe = recipeR[ItemId.RocketPart];
+    if (rocketRecipe) {
+      for (const id of Object.keys(recipeR).filter(
+        (i) =>
+          i !== ItemId.RocketPart && settings[i].factory === ItemId.RocketSilo
+      )) {
+        recipeR[id].time = rocketRecipe.time
+          .mul(Rational.hundred)
+          .add(this.LAUNCH_TIME);
+      }
+
+      rocketRecipe.time = rocketRecipe.time
+        .mul(Rational.hundred)
+        .add(this.LAUNCH_TIME)
+        .div(Rational.hundred);
+    }
+
+    return recipeR;
   }
 
   static getProductStepData(

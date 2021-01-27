@@ -171,10 +171,10 @@
               <lab-icon
                 *ngIf="f && !factoryOptions.length"
                 class="pad"
+                [data]="data"
                 [iconId]="f"
                 [tooltip]="data.itemEntities[f].name"
                 [item]="data.itemEntities[f]"
-                [data]="data"
               >
               </lab-icon>
               <lab-select
@@ -259,9 +259,10 @@
               <ng-container *ngIf="factory.beaconCount > 0">
                 <lab-icon
                   class="pad"
-                  *ngIf="data.beaconIds.length === 1; else beaconPicker"
-                  [iconId]="factory.beacon"
                   [data]="data"
+                  [iconId]="factory.beacon"
+                  [tooltip]="data.itemEntities[factory.beacon].name"
+                  [item]="data.itemEntities[factory.beacon]"
                 ></lab-icon>
                 <ng-template #beaconPicker>
                   <lab-select
@@ -269,12 +270,11 @@
                     [data]="data"
                     [selected]="factory.beacon"
                     [options]="data.beaconIds"
-                    [data]="data"
                     (selectId)="setBeacon.emit({ id: f, value: $event })"
                   >
                     <lab-icon
                       class="button"
-                      tooltip="Choose default beacon"
+                      tooltip="Select default beacon"
                       [data]="data"
                       [iconId]="factory.beacon"
                     ></lab-icon>
@@ -322,53 +322,112 @@
           </tr>
         </ng-container>
       </table>
-      <table class="center">
+      <table class="icons">
         <tr>
-          <td><div>Belt</div></td>
-          <td><div>Fuel</div></td>
-          <td><div>Pipe flow rate</div></td>
-        </tr>
-        <tr>
-          <td>
-            <lab-select
-              header="Select a belt"
-              [data]="data"
-              [selected]="settings.belt"
-              [options]="data.beltIds"
-              [displayRate]="settings.displayRate"
-              [data]="data"
-              (selectId)="
-                setBelt.emit({ value: $event, default: data.defaults.belt })
-              "
-            >
-              <lab-icon
-                class="button"
-                tooltip="Select default belt"
-                [data]="data"
-                [iconId]="settings.belt"
-              ></lab-icon>
-            </lab-select>
-          </td>
-          <td>
-            <lab-select
-              header="Select a fuel"
-              [data]="data"
-              [options]="sortedFuels"
-              [selected]="settings.fuel"
-              (selectId)="
-                setFuel.emit({ value: $event, default: data.defaults.fuel })
-              "
-            >
-              <lab-icon
-                class="button"
-                tooltip="Select fuel"
-                [iconId]="settings.fuel"
-                [data]="data"
-              ></lab-icon>
-            </lab-select>
-          </td>
+          <td>Default Transport Belt</td>
           <td>
             <div>
+              <lab-select
+                header="Select a belt"
+                [data]="data"
+                [selected]="settings.belt"
+                [options]="data.beltIds"
+                [displayRate]="settings.displayRate"
+                (selectId)="
+                  setBelt.emit({ value: $event, default: data.defaults.belt })
+                "
+              >
+                <lab-icon
+                  class="button"
+                  tooltip="Select default belt"
+                  [data]="data"
+                  [iconId]="settings.belt"
+                ></lab-icon>
+              </lab-select>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="data.cargoWagonIds.length > 1">
+          <td>Default Cargo Wagon</td>
+          <td>
+            <div>
+              <lab-select
+                header="Select a cargo wagon"
+                [data]="data"
+                [selected]="settings.cargoWagon"
+                [options]="data.cargoWagonIds"
+                (selectId)="
+                  setCargoWagon.emit({
+                    value: $event,
+                    default: data.defaults.cargoWagon
+                  })
+                "
+              >
+                <lab-icon
+                  class="button"
+                  tooltip="Select default cargo wagon"
+                  [iconId]="settings.cargoWagon"
+                  [data]="data"
+                ></lab-icon>
+              </lab-select>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="data.fluidWagonIds.length > 1">
+          <td>Default Fluid Wagon</td>
+          <td>
+            <div>
+              <lab-select
+                header="Select a fluid wagon"
+                [data]="data"
+                [selected]="settings.fluidWagon"
+                [options]="data.fluidWagonIds"
+                (selectId)="
+                  setFluidWagon.emit({
+                    value: $event,
+                    default: data.defaults.fluidWagon
+                  })
+                "
+              >
+                <lab-icon
+                  class="button"
+                  tooltip="Select default fluid wagon"
+                  [iconId]="settings.fluidWagon"
+                  [data]="data"
+                ></lab-icon>
+              </lab-select>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>Chemical Fuel</td>
+          <td>
+            <div>
+              <lab-select
+                header="Select a fuel"
+                [data]="data"
+                [selected]="settings.fuel"
+                [options]="sortedFuels"
+                (selectId)="
+                  setFuel.emit({ value: $event, default: data.defaults.fuel })
+                "
+              >
+                <lab-icon
+                  class="button"
+                  tooltip="Select fuel"
+                  [iconId]="settings.fuel"
+                  [data]="data"
+                ></lab-icon>
+              </lab-select>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <table class="thin">
+        <tr>
+          <td>Pipe flow rate</td>
+          <td>
+            <div class="flex">
               <input
                 type="number"
                 title="Enter pipe flow rate"
@@ -390,8 +449,6 @@
             </div>
           </td>
         </tr>
-      </table>
-      <table class="wide">
         <tr>
           <td>
             Inserter target
