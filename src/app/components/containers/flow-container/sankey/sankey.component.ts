@@ -63,7 +63,7 @@ export class SankeyComponent implements OnInit {
   handleResize(entry: ResizeObserverEntry): void {
     const w = entry.contentRect.width;
     const h = entry.contentRect.height;
-    if (w && h && w / h !== this.width / this.height) {
+    if (w && h) {
       this.width = entry.contentRect.width;
       this.height = entry.contentRect.height;
       this.rebuildChart();
