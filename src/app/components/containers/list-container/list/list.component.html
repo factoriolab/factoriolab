@@ -842,104 +842,111 @@
           <td></td>
           <td colspan="100" class="factory">
             <div>
-              <table
+              <ng-container
                 *ngIf="
                   details[step.itemId].indexOf(StepDetailTab.Inputs) !== -1
                 "
               >
-                <ng-container
-                  *ngFor="
-                    let input of data.recipeEntities[step.recipeId].in
-                      | keyvalue
-                  "
-                >
-                  <ng-container *ngIf="findStep(input.key) as inStep">
-                    <tr *ngIf="inStep.parents[step.recipeId] as percent">
-                      <td>
-                        <div class="flex" *ngIf="step.items">
-                          <span *ngIf="inStep.items" class="monospace">{{
-                            rate(
-                              inStep.items.mul(percent).div(step.factories),
-                              effPrecision[Column.Items]
-                            )
-                          }}</span>
-                          <lab-icon
-                            [data]="data"
-                            [iconId]="input.key"
-                            [tooltip]="data.itemEntities[input.key]?.name"
-                            [recipe]="
-                              data.recipeEntities[data.itemRecipeIds[input.key]]
-                            "
-                          >
-                          </lab-icon>
-                        </div>
-                      </td>
-                      <td
-                        [colSpan]="
-                          itemSettings[inStep.itemId].belt === ItemId.Pipe
-                            ? 2
-                            : 0
-                        "
-                      >
-                        <ng-container
-                          *ngIf="itemSettings[inStep.itemId].belt as belt"
-                        >
-                          <div
-                            *ngIf="
-                              inStep.belts &&
-                              (!inStep.recipeId ||
-                                !data.itemEntities[
-                                  recipeSettings[inStep.recipeId].factory
-                                ].factory.research)
-                            "
-                            class="flex"
-                          >
-                            <span class="monospace">{{
+                <table>
+                  <ng-container
+                    *ngFor="
+                      let input of data.recipeEntities[step.recipeId].in
+                        | keyvalue
+                    "
+                  >
+                    <ng-container *ngIf="findStep(input.key) as inStep">
+                      <tr *ngIf="inStep.parents[step.recipeId] as percent">
+                        <td>
+                          <div class="flex" *ngIf="step.items">
+                            <span *ngIf="inStep.items" class="monospace">{{
                               rate(
-                                inStep.belts.mul(percent).div(step.factories),
-                                effPrecision[Column.Belts]
+                                inStep.items.mul(percent).div(step.factories),
+                                effPrecision[Column.Items]
                               )
                             }}</span>
                             <lab-icon
                               [data]="data"
-                              [iconId]="belt"
-                              [tooltip]="data.itemEntities[belt].name"
-                              [item]="data.itemEntities[belt]"
-                              [displayRate]="displayRate"
-                            ></lab-icon>
+                              [iconId]="input.key"
+                              [tooltip]="data.itemEntities[input.key]?.name"
+                              [recipe]="
+                                data.recipeEntities[
+                                  data.itemRecipeIds[input.key]
+                                ]
+                              "
+                            >
+                            </lab-icon>
                           </div>
-                        </ng-container>
-                      </td>
-                      <td
-                        *ngIf="itemSettings[inStep.itemId].belt !== ItemId.Pipe"
-                      >
-                        <div
-                          class="flex"
-                          *ngIf="
-                            inserter(
-                              inStep.items
-                                .mul(percent)
-                                .div(step.factories)
-                                .div(DisplayRateVal[displayRate])
-                            ) as ins
+                        </td>
+                        <td
+                          [colSpan]="
+                            itemSettings[inStep.itemId].belt === ItemId.Pipe
+                              ? 2
+                              : 0
                           "
                         >
-                          <span class="monospace">{{
-                            rate(ins.value, 1)
-                          }}</span>
-                          <lab-icon
-                            [data]="data"
-                            [iconId]="ins.id"
-                            [tooltip]="data.itemEntities[ins.id].name"
-                            [item]="data.itemEntities[ins.id]"
-                          ></lab-icon>
-                        </div>
-                      </td>
-                    </tr>
+                          <ng-container
+                            *ngIf="itemSettings[inStep.itemId].belt as belt"
+                          >
+                            <div
+                              *ngIf="
+                                inStep.belts &&
+                                (!inStep.recipeId ||
+                                  !data.itemEntities[
+                                    recipeSettings[inStep.recipeId].factory
+                                  ].factory.research)
+                              "
+                              class="flex"
+                            >
+                              <span class="monospace">{{
+                                rate(
+                                  inStep.belts.mul(percent).div(step.factories),
+                                  effPrecision[Column.Belts]
+                                )
+                              }}</span>
+                              <lab-icon
+                                [data]="data"
+                                [iconId]="belt"
+                                [tooltip]="data.itemEntities[belt].name"
+                                [item]="data.itemEntities[belt]"
+                                [displayRate]="displayRate"
+                              ></lab-icon>
+                            </div>
+                          </ng-container>
+                        </td>
+                        <ng-container
+                          *ngIf="
+                            itemSettings[inStep.itemId].belt !== ItemId.Pipe
+                          "
+                        >
+                          <td
+                            *ngIf="
+                              inserter(
+                                inStep.items
+                                  .mul(percent)
+                                  .div(step.factories)
+                                  .div(DisplayRateVal[displayRate])
+                              ) as ins
+                            "
+                          >
+                            <div class="flex">
+                              <span class="monospace">{{
+                                rate(ins.value, 1)
+                              }}</span>
+                              <lab-icon
+                                [data]="data"
+                                [iconId]="ins.id"
+                                [tooltip]="data.itemEntities[ins.id].name"
+                                [item]="data.itemEntities[ins.id]"
+                              ></lab-icon>
+                            </div>
+                          </td>
+                        </ng-container>
+                      </tr>
+                    </ng-container>
                   </ng-container>
-                </ng-container>
-              </table>
-              <i class="material-icons">arrow_forward</i>
+                </table>
+                <i class="material-icons">arrow_forward</i>
+              </ng-container>
               <table>
                 <tr>
                   <td>
@@ -981,17 +988,23 @@
                       ) as items
                     "
                   >
-                    <td *ngIf="itemSettings[output.key].belt !== ItemId.Pipe">
-                      <div class="flex" *ngIf="inserter(items) as ins">
-                        <span class="monospace">{{ rate(ins.value, 1) }}</span>
-                        <lab-icon
-                          [data]="data"
-                          [iconId]="ins.id"
-                          [tooltip]="data.itemEntities[ins.id].name"
-                          [item]="data.itemEntities[ins.id]"
-                        ></lab-icon>
-                      </div>
-                    </td>
+                    <ng-container
+                      *ngIf="itemSettings[output.key].belt !== ItemId.Pipe"
+                    >
+                      <td *ngIf="inserter(items) as ins">
+                        <div class="flex">
+                          <span class="monospace">{{
+                            rate(ins.value, 1)
+                          }}</span>
+                          <lab-icon
+                            [data]="data"
+                            [iconId]="ins.id"
+                            [tooltip]="data.itemEntities[ins.id].name"
+                            [item]="data.itemEntities[ins.id]"
+                          ></lab-icon>
+                        </div>
+                      </td>
+                    </ng-container>
                     <td
                       [colSpan]="
                         itemSettings[output.key].belt === ItemId.Pipe ? 2 : 0

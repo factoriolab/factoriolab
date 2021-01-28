@@ -461,6 +461,11 @@ describe('ListComponent', () => {
         value: Rational.from(5, 6),
       });
     });
+
+    it('should handle no match for the inserter in the dataset', () => {
+      component.child.data = { ...Mocks.AdjustedData, ...{ itemEntities: {} } };
+      expect(component.child.inserter(Rational.one)).toBeNull();
+    });
   });
 
   describe('getSettings', () => {
