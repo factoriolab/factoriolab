@@ -42,7 +42,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         Rational.zero,
         settings,
-        { ...Mocks.Data }
+        Mocks.Data
       );
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.SteelChest]
@@ -61,7 +61,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         Rational.zero,
         Mocks.RationalRecipeSettings[RecipeId.CopperCable],
-        { ...Mocks.Data }
+        Mocks.Data
       );
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.CopperCable]
@@ -83,7 +83,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         Rational.two,
         settings,
-        { ...Mocks.Data }
+        Mocks.Data
       );
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.MiningProductivity]
@@ -105,7 +105,7 @@ describe('RecipeUtility', () => {
         Rational.two,
         Rational.zero,
         settings,
-        { ...Mocks.Data }
+        Mocks.Data
       );
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.IronOre]
@@ -288,7 +288,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         Rational.zero,
         settings,
-        { ...Mocks.Data }
+        Mocks.Data
       );
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.IronOre]
@@ -312,7 +312,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         Rational.zero,
         settings,
-        { ...Mocks.Data }
+        Mocks.Data
       );
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.PlasticBar]
@@ -334,7 +334,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         Rational.zero,
         Mocks.RationalRecipeSettingsInitial[RecipeId.UsedUpUraniumFuelCell],
-        { ...Mocks.Data }
+        Mocks.Data
       );
       expect(result.in[ItemId.UraniumFuelCell]).toEqual(Rational.from(1, 200));
     });
