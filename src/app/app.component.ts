@@ -46,7 +46,7 @@ export class AppComponent implements OnInit {
   constructor(
     public error: ErrorService,
     public router: RouterService,
-    private store: Store<State>
+    public store: Store<State>
   ) {}
 
   ngOnInit(): void {

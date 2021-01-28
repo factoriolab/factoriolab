@@ -346,6 +346,11 @@ export class ListComponent {
     const inserter = InserterData[this.inserterTarget][
       this.inserterCapacity
     ].find((d) => d.value.gt(value) || d.id === ItemId.StackInserter);
+
+    if (!this.data.itemEntities[inserter.id]) {
+      return null;
+    }
+
     return {
       id: inserter.id,
       value: value.div(inserter.value),
