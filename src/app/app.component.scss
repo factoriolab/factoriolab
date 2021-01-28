@@ -1,11 +1,11 @@
 :host {
   display: flex;
   flex-direction: column;
+  min-width: max-content;
 }
 
 .top-bar {
   background-color: rgba(0, 0, 0, 0.5);
-  width: 100%;
   padding: 1rem;
   font-size: 110%;
 
@@ -45,7 +45,6 @@
 main {
   flex-grow: 1;
   display: flex;
-  max-width: 100%;
   margin: 0 auto;
   margin-bottom: 20rem;
 }

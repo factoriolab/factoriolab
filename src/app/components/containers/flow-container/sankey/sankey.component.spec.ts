@@ -1,7 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ResizeObserverEntry } from '@juggle/resize-observer';
-import { Subject } from 'rxjs';
 
 import { Mocks, TestUtility } from 'src/tests';
 import { SankeyComponent } from './sankey.component';
@@ -45,67 +43,6 @@ describe('SankeyComponent', () => {
     fixture.detectChanges();
     expect(component.child.createChart).toHaveBeenCalled();
     expect(component.child.svg).toBeTruthy();
-  });
-
-  describe('ngOnInit', () => {
-    it('should set width and height', () => {
-      expect(component.child.width).not.toEqual(800);
-      expect(component.child.height).not.toEqual(400);
-    });
-
-    it('should rebuild the svg if it has already been created', () => {
-      spyOn(component.child, 'rebuildChart');
-      component.child.svg = true as any;
-      component.child.ngOnInit();
-      expect(component.child.rebuildChart).toHaveBeenCalled();
-    });
-
-    it('should not rebuild the svg if it has not been created', () => {
-      spyOn(component.child, 'rebuildChart');
-      component.child.svg = false as any;
-      component.child.ngOnInit();
-      expect(component.child.rebuildChart).not.toHaveBeenCalled();
-    });
-
-    it('should call handleResize when detected by NgResizeObserver', () => {
-      spyOn(component.child, 'handleResize');
-      const resize$ = new Subject<ResizeObserverEntry>();
-      component.child.resize$ = resize$;
-      component.child.ngOnInit();
-      resize$.next(null);
-      expect(component.child.handleResize).toHaveBeenCalled();
-    });
-  });
-
-  describe('handleResize', () => {
-    it('should ignore zero values', () => {
-      spyOn(component.child, 'rebuildChart');
-      component.child.handleResize({
-        contentRect: { width: 0, height: 0 },
-      } as any);
-      expect(component.child.rebuildChart).not.toHaveBeenCalled();
-    });
-
-    it('should ignore if width and height are unchanged', () => {
-      component.child.handleResize({
-        contentRect: { width: 400, height: 200 },
-      } as any);
-      spyOn(component.child, 'rebuildChart');
-      component.child.handleResize({
-        contentRect: { width: 400, height: 200 },
-      } as any);
-      expect(component.child.rebuildChart).not.toHaveBeenCalled();
-    });
-
-    it('should rebuild the chart if size changes', () => {
-      spyOn(component.child, 'rebuildChart');
-      component.child.handleResize({
-        contentRect: { width: 400, height: 800 },
-      } as any);
-      expect(component.child.width).toEqual(400);
-      expect(component.child.height).toEqual(800);
-      expect(component.child.rebuildChart).toHaveBeenCalled();
-    });
   });
 
   describe('rebuildChart', () => {

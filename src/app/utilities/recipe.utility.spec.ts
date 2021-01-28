@@ -327,60 +327,6 @@ describe('RecipeUtility', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should subtract from existing burner fuel output', () => {
-      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.Coal] };
-      settings.factory = ItemId.BurnerMiningDrill;
-      settings.factoryModules = null;
-      settings.beaconModules = null;
-      const result = RecipeUtility.adjustRecipe(
-        RecipeId.Coal,
-        ItemId.Coal,
-        Rational.zero,
-        Rational.zero,
-        settings,
-        Mocks.Data
-      );
-      expect(result.in).toBeUndefined();
-      expect(result.out[ItemId.Coal]).toEqual(
-        new Rational(BigInt(17), BigInt(20))
-      );
-    });
-
-    it('should negate existing burner fuel output', () => {
-      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.Coal] };
-      settings.factory = ItemId.BurnerMiningDrill;
-      settings.factoryModules = null;
-      settings.beaconModules = null;
-      const data = {
-        ...Mocks.Data,
-        ...{
-          recipeEntities: {
-            ...Mocks.Data.recipeEntities,
-            ...{
-              [RecipeId.Coal]: {
-                ...Mocks.Data.recipeEntities[RecipeId.Coal],
-                ...{
-                  out: { [ItemId.Coal]: 0.05 },
-                },
-              },
-            },
-          },
-        },
-      };
-      const result = RecipeUtility.adjustRecipe(
-        RecipeId.Coal,
-        ItemId.Coal,
-        Rational.zero,
-        Rational.zero,
-        settings,
-        data
-      );
-      expect(result.in[ItemId.Coal]).toEqual(
-        new Rational(BigInt(1), BigInt(10))
-      );
-      expect(result.out[ItemId.Coal]).toBeUndefined();
-    });
-
     it('should find matching nonchemical fuel', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.UsedUpUraniumFuelCell,

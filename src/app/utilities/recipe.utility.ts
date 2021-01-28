@@ -203,23 +203,6 @@ export class RecipeUtility {
       }
     }
 
-    // After productivity, nullify all loops
-    for (const o of Object.keys(recipe.out).filter((i) => recipe.in?.[i])) {
-      if (recipe.out[o].gte(recipe.in[o])) {
-        // Outputs more than consumed, subtract input
-        recipe.out[o] = recipe.out[o].sub(recipe.in[o]);
-        delete recipe.in[o];
-      } else {
-        // Outputs less than consumed
-        recipe.in[o] = recipe.in[o].sub(recipe.out[o]);
-        delete recipe.out[o];
-      }
-    }
-
-    if (recipe.in && Object.keys(recipe.in).length === 0) {
-      delete recipe.in;
-    }
-
     return recipe;
   }
 
