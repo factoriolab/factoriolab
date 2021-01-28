@@ -11,6 +11,7 @@ export class FlowUtility {
   static buildSankey(
     steps: Step[],
     linkValue: LinkValue,
+    linkPrecision: number,
     data: Dataset
   ): SankeyData {
     const sankey: SankeyData = {
@@ -42,6 +43,12 @@ export class FlowUtility {
                 target: i,
                 source: step.recipeId,
                 value: this.linkValue(value, step.parents[i], linkValue),
+                dispValue: this.linkDisp(
+                  value,
+                  step.parents[i],
+                  linkValue,
+                  linkPrecision
+                ),
                 name: data.itemEntities[step.itemId].name,
                 color: icon.color,
               });
@@ -56,6 +63,12 @@ export class FlowUtility {
               target: outId,
               source: step.recipeId,
               value: this.linkValue(outValue, Rational.one, linkValue),
+              dispValue: this.linkDisp(
+                outValue,
+                Rational.one,
+                linkValue,
+                linkPrecision
+              ),
               name: data.itemEntities[outId].name,
               color: data.iconEntities[outId].color,
             });
@@ -68,6 +81,12 @@ export class FlowUtility {
               target: outId,
               source: step.recipeId,
               value: this.linkValue(outValue, Rational.one, linkValue),
+              dispValue: this.linkDisp(
+                outValue,
+                Rational.one,
+                linkValue,
+                linkPrecision
+              ),
               name: data.itemEntities[outId].name,
               color: data.iconEntities[outId].color,
             });
@@ -90,13 +109,18 @@ export class FlowUtility {
         });
         if (step.parents) {
           for (const i of Object.keys(step.parents)) {
-            const lVal = this.linkValue(value, step.parents[i], linkValue);
             const recipe = data.recipeR[i];
             if (recipe.in?.[step.itemId]) {
               sankey.links.push({
                 target: i,
                 source: step.itemId,
-                value: lVal,
+                value: this.linkValue(value, step.parents[i], linkValue),
+                dispValue: this.linkDisp(
+                  value,
+                  step.parents[i],
+                  linkValue,
+                  linkPrecision
+                ),
                 name: item.name,
                 color: icon.color,
               });
@@ -145,5 +169,21 @@ export class FlowUtility {
     }
 
     return value.mul(percent).toNumber() || MIN_LINK_VALUE;
+  }
+
+  static linkDisp(
+    value: Rational,
+    percent: Rational,
+    linkValue: LinkValue,
+    linkPrecision: number
+  ): string {
+    switch (linkValue) {
+      case LinkValue.None:
+        return '';
+      case LinkValue.Percent:
+        return `${Math.round(percent.mul(Rational.hundred).toNumber())}%`;
+      default:
+        return `${value.mul(percent).toPrecision(linkPrecision)}`;
+    }
   }
 }

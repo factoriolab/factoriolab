@@ -681,9 +681,7 @@
                   <div>
                     <div class="flex percent">
                       <span class="monospace"
-                        >{{
-                          leftPad(rate(percent.mul(Rational.hundred), 0))
-                        }}%</span
+                        >{{ leftPad(rate(percent, -2)) }}%</span
                       >
                       <i class="material-icons">arrow_forward</i>
                       <lab-icon
@@ -823,9 +821,7 @@
               <div>
                 <div class="flex percent">
                   <span class="monospace"
-                    >{{
-                      leftPad(rate(parent.value.mul(Rational.hundred), 0))
-                    }}%</span
+                    >{{ leftPad(rate(parent.value, -2)) }}%</span
                   >
                   <i class="material-icons">arrow_forward</i>
                   <lab-icon

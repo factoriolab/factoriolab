@@ -413,6 +413,10 @@ describe('ListComponent', () => {
       ).toEqual('1/2');
     });
 
+    it('should return a correct percentage', () => {
+      expect(component.child.rate(Rational.one, -2)).toEqual('100');
+    });
+
     it('should return a value to correct precision', () => {
       expect(
         component.child.rate(new Rational(BigInt(1), BigInt(3)), 3)

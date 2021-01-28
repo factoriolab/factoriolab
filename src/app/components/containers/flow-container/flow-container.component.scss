@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   min-width: 40rem;
+  max-width: calc(100vw - 6rem - 1px);
 
   > .flex > * + * {
     margin-left: 1rem;

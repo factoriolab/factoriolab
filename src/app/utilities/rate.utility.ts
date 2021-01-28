@@ -20,7 +20,10 @@ export class RateUtility {
     data: Dataset,
     parentId: string = null
   ): void {
-    const recipe = data.recipeR[data.itemRecipeIds[itemId]];
+    let recipe = data.recipeR[data.itemRecipeIds[itemId]];
+    if (recipe && !recipe.produces(itemId)) {
+      recipe = null;
+    }
 
     // Find existing step for this item
     let step = steps.find((s) => s.itemId === itemId);
@@ -51,7 +54,7 @@ export class RateUtility {
 
     if (recipe) {
       // Calculate number of outputs from recipe
-      const out = recipe.out[itemId];
+      const out = recipe.out[itemId].sub(recipe.in?.[itemId] || Rational.zero);
 
       // Calculate factories
       step.factories = step.items.mul(recipe.time).div(out);
@@ -64,7 +67,9 @@ export class RateUtility {
         step.items.nonzero() &&
         !itemSettings[step.itemId].ignore
       ) {
-        for (const ingredient of Object.keys(recipe.in)) {
+        for (const ingredient of Object.keys(recipe.in).filter(
+          (i) => i !== itemId
+        )) {
           const ingredientRate = rate.mul(recipe.in[ingredient]).div(out);
           RateUtility.addStepsFor(
             ingredient,
