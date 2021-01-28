@@ -12,6 +12,7 @@ export const data: AppData = {
     { id: 'bio-industries', name: 'Bio Industries' },
     { id: 'bobs', name: 'Bob\'s Mods' },
     { id: 'bobs-angels', name: 'Bob\'s & Angel\'s' },
+    { id: 'dsp', name: 'Dyson Sphere Program' },
     { id: 'factorio-extended-plus', name: 'FactorioExtended Plus' },
     { id: 'industrial-revolution', name: 'Industrial Revolution 2' },
     { id: 'krastorio2', name: 'Krastorio 2' },
