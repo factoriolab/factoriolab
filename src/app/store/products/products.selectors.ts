@@ -272,9 +272,15 @@ export const getSteps = createSelector(
 export const getSankey = createSelector(
   getSteps,
   Preferences.getLinkValue,
+  Preferences.getLinkPrecision,
   Recipes.getAdjustedDataset,
-  (steps, linkValue, data) =>
-    FlowUtility.buildSankey(RateUtility.copy(steps), linkValue, data)
+  (steps, linkValue, linkPrecision, data) =>
+    FlowUtility.buildSankey(
+      RateUtility.copy(steps),
+      linkValue,
+      linkPrecision,
+      data
+    )
 );
 
 export const getZipState = createSelector(

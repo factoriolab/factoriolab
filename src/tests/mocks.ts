@@ -193,6 +193,7 @@ function link(i: number, j: number): Link {
     source: `${i}`,
     target: `${j}`,
     value: Math.max(1, i),
+    dispValue: '1 items',
     name: `${i}->${j}`,
     color: 'white',
   };

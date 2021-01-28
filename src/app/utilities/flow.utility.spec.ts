@@ -1,5 +1,12 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { LinkValue, MIN_LINK_VALUE, Rational, Step, Node } from '~/models';
+import {
+  LinkValue,
+  MIN_LINK_VALUE,
+  Rational,
+  Step,
+  Node,
+  Link,
+} from '~/models';
 import { FlowUtility } from './flow.utility';
 
 describe('FlowUtility', () => {
@@ -13,7 +20,7 @@ describe('FlowUtility', () => {
     };
 
     it('should handle empty/null values', () => {
-      const result = FlowUtility.buildSankey([], null, null);
+      const result = FlowUtility.buildSankey([], null, null, null);
       expect(result).toEqual({ nodes: [], links: [] });
     });
 
@@ -27,6 +34,7 @@ describe('FlowUtility', () => {
           },
         ] as any[],
         LinkValue.None,
+        null,
         Mocks.AdjustedData
       );
       expect(result).toEqual({
@@ -36,6 +44,7 @@ describe('FlowUtility', () => {
             target: ItemId.PlasticBar,
             source: ItemId.Coal,
             value: 1,
+            dispValue: '',
             name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
             color: Mocks.AdjustedData.iconEntities[ItemId.Coal].color,
           },
@@ -52,6 +61,7 @@ describe('FlowUtility', () => {
           },
         ] as any[],
         LinkValue.None,
+        null,
         Mocks.AdjustedData
       );
       expect(result).toEqual({ nodes: [node], links: [] });
@@ -61,6 +71,7 @@ describe('FlowUtility', () => {
       const result = FlowUtility.buildSankey(
         [{ itemId: ItemId.Coal }, { recipeId: RecipeId.Coal }] as any[],
         LinkValue.None,
+        null,
         Mocks.AdjustedData
       );
       expect(result).toEqual({
@@ -70,6 +81,7 @@ describe('FlowUtility', () => {
             target: ItemId.Coal,
             source: ItemId.Coal,
             value: 1,
+            dispValue: '',
             name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
             color: Mocks.AdjustedData.iconEntities[ItemId.Coal].color,
           },
@@ -86,6 +98,7 @@ describe('FlowUtility', () => {
           },
         ] as any[],
         LinkValue.None,
+        null,
         Mocks.AdjustedData
       );
       expect(result).toEqual({
@@ -95,6 +108,7 @@ describe('FlowUtility', () => {
             target: ItemId.PlasticBar,
             source: ItemId.Coal,
             value: 1,
+            dispValue: '',
             name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
             color: Mocks.AdjustedData.iconEntities[ItemId.Coal].color,
           },
@@ -111,6 +125,7 @@ describe('FlowUtility', () => {
           },
         ] as any[],
         LinkValue.None,
+        null,
         Mocks.AdjustedData
       );
       expect(result).toEqual({ nodes: [node], links: [] });
@@ -120,6 +135,7 @@ describe('FlowUtility', () => {
       const result = FlowUtility.buildSankey(
         [{ itemId: ItemId.Coal }] as any[],
         LinkValue.None,
+        null,
         Mocks.AdjustedData
       );
       expect(result).toEqual({ nodes: [node], links: [] });
@@ -139,6 +155,7 @@ describe('FlowUtility', () => {
           },
         ] as any[],
         LinkValue.None,
+        null,
         Mocks.AdjustedData
       );
       const name =
@@ -147,24 +164,26 @@ describe('FlowUtility', () => {
         Mocks.AdjustedData.iconEntities[RecipeId.UraniumProcessing].color;
       const href =
         Mocks.AdjustedData.iconEntities[RecipeId.UraniumProcessing].file;
-      const uNode: any = {
+      const uNode: Node = {
         id: RecipeId.UraniumProcessing,
         name,
         color,
         viewBox: '0 448 64 64',
         href,
       };
-      const uLink1: any = {
+      const uLink1: Link = {
         target: ItemId.Uranium235,
         source: RecipeId.UraniumProcessing,
         value: 1,
+        dispValue: '',
         name: Mocks.AdjustedData.itemEntities[ItemId.Uranium235].name,
         color: Mocks.AdjustedData.iconEntities[ItemId.Uranium235].color,
       };
-      const uLink2: any = {
+      const uLink2: Link = {
         target: ItemId.Uranium238,
         source: RecipeId.UraniumProcessing,
         value: 1,
+        dispValue: '',
         name: Mocks.AdjustedData.itemEntities[ItemId.Uranium238].name,
         color: Mocks.AdjustedData.iconEntities[ItemId.Uranium238].color,
       };
@@ -261,6 +280,31 @@ describe('FlowUtility', () => {
       expect(FlowUtility.linkValue(Rational.zero, Rational.zero, null)).toEqual(
         MIN_LINK_VALUE
       );
+    });
+  });
+
+  describe('linkDisp', () => {
+    it('should return correct value for none', () => {
+      expect(FlowUtility.linkDisp(null, null, LinkValue.None, null)).toEqual(
+        ''
+      );
+    });
+
+    it('should return correct value for percent', () => {
+      expect(
+        FlowUtility.linkDisp(null, Rational.one, LinkValue.Percent, null)
+      ).toEqual('100%');
+    });
+
+    it('should return correct value for others', () => {
+      expect(
+        FlowUtility.linkDisp(
+          Rational.from(4, 3),
+          Rational.one,
+          LinkValue.Items,
+          1
+        )
+      ).toEqual('1.4');
     });
   });
 });

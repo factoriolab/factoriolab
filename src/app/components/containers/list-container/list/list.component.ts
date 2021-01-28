@@ -305,7 +305,11 @@ export class ListComponent {
     if (precision == null) {
       return value.toFraction();
     } else {
-      const result = value.toPrecision(precision).toString();
+      const num =
+        precision === -2
+          ? Math.round(value.mul(Rational.hundred).toNumber())
+          : value.toPrecision(precision);
+      const result = num.toString();
       if (precision > 0) {
         const split = result.split('.');
         if (split.length > 1) {

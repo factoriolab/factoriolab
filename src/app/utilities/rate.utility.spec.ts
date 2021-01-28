@@ -91,27 +91,15 @@ describe('RateUtility', () => {
 
     it('should adjust for consumption instead of production for research recipes', () => {
       const steps: Step[] = [];
-      const data = {
-        ...Mocks.AdjustedData,
-        ...{
-          recipeR: {
-            ...Mocks.AdjustedData.recipeR,
-            ...{
-              [Mocks.Item2.id]: {
-                ...Mocks.AdjustedData.recipeR[Mocks.Item2.id],
-                ...{ adjustProd: Rational.one },
-              } as any,
-            },
-          },
-        },
-      };
+      Mocks.AdjustedData.recipeR[Mocks.Item2.id].adjustProd = Rational.one;
       RateUtility.addStepsFor(
         Mocks.Item2.id,
         new Rational(BigInt(30)),
         steps,
         Mocks.ItemSettingsEntities,
-        data
+        Mocks.AdjustedData
       );
+      delete Mocks.AdjustedData.recipeR[Mocks.Item2.id].adjustProd;
       expect(steps as any).toEqual(expected as any);
     });
 
@@ -129,6 +117,29 @@ describe('RateUtility', () => {
           itemId: ItemId.Uranium235,
           recipeId: null,
           items: new Rational(BigInt(30)),
+          factories: Rational.zero,
+        },
+      ]);
+    });
+
+    it('should handle recipe that does not produce the item', () => {
+      const steps: Step[] = [];
+      spyOn(
+        Mocks.AdjustedData.recipeR[RecipeId.Coal],
+        'produces'
+      ).and.returnValue(false);
+      RateUtility.addStepsFor(
+        ItemId.Coal,
+        Rational.one,
+        steps,
+        Mocks.ItemSettingsEntities,
+        Mocks.AdjustedData
+      );
+      expect(steps).toEqual([
+        {
+          itemId: ItemId.Coal,
+          recipeId: null,
+          items: Rational.one,
           factories: Rational.zero,
         },
       ]);

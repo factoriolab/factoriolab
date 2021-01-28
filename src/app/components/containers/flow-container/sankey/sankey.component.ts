@@ -3,23 +3,16 @@ import {
   ElementRef,
   EventEmitter,
   Input,
-  OnInit,
   Output,
 } from '@angular/core';
-import { ResizeObserverEntry } from '@juggle/resize-observer';
 import {
   SankeyNode,
-  SankeyLayout,
   SankeyGraph,
   sankey,
   sankeyLinkHorizontal,
 } from 'd3-sankey';
 import { sankeyCircular } from 'd3-sankey-circular';
 import { select, Selection } from 'd3-selection';
-import {
-  NgResizeObserver,
-  ngResizeObserverProviders,
-} from 'ng-resize-observer';
 
 import { SankeyData, Node, Link } from '~/models';
 
@@ -27,9 +20,8 @@ import { SankeyData, Node, Link } from '~/models';
   selector: 'lab-sankey',
   templateUrl: './sankey.component.html',
   styleUrls: ['./sankey.component.scss'],
-  providers: [...ngResizeObserverProviders],
 })
-export class SankeyComponent implements OnInit {
+export class SankeyComponent {
   _sankeyData: SankeyData;
   get sankeyData(): SankeyData {
     return this._sankeyData;
@@ -41,34 +33,10 @@ export class SankeyComponent implements OnInit {
 
   @Output() selectNode = new EventEmitter<string>();
 
-  width = 800;
-  height = 400;
+  height = window.innerHeight * 0.75;
   svg: Selection<any, {}, null, undefined>;
 
-  constructor(
-    private ref: ElementRef<HTMLElement>,
-    public resize$: NgResizeObserver
-  ) {}
-
-  ngOnInit(): void {
-    this.resize$.subscribe((entry) => this.handleResize(entry));
-
-    this.width = this.ref.nativeElement.getBoundingClientRect().width;
-    this.height = Math.min(window.innerHeight * 0.75, this.width / 2);
-    if (this.svg) {
-      this.rebuildChart();
-    }
-  }
-
-  handleResize(entry: ResizeObserverEntry): void {
-    const w = entry.contentRect.width;
-    const h = entry.contentRect.height;
-    if (w && h && (w !== this.width || h !== this.height)) {
-      this.width = w;
-      this.height = h;
-      this.rebuildChart();
-    }
-  }
+  constructor(private ref: ElementRef<HTMLElement>) {}
 
   rebuildChart(): void {
     if (this.svg) {
@@ -81,15 +49,18 @@ export class SankeyComponent implements OnInit {
   }
 
   getLayout(
-    fn: () => SankeyLayout<SankeyGraph<Node, Link>, Node, Link>
+    circular: boolean,
+    width: number,
+    height: number
   ): SankeyGraph<Node, Link> {
+    const fn = circular ? sankeyCircular : sankey;
     const skLayout = fn()
       .nodeId((d) => d.id)
       .nodeWidth(32)
-      .nodePadding(10)
+      .nodePadding(8)
       .extent([
         [1, 5],
-        [this.width - 1, this.height - 5],
+        [width - 1, height - 5],
       ]);
 
     return skLayout({
@@ -99,19 +70,26 @@ export class SankeyComponent implements OnInit {
   }
 
   createChart(): void {
-    this.svg = select(this.ref.nativeElement)
-      .append('svg')
-      .attr('preserveAspectRatio', 'xMinYMin meet')
-      .attr('viewBox', `0 0 ${this.width} ${this.height}`);
-
-    let skGraph = this.getLayout(sankeyCircular);
     let circular = true;
+    let skGraph = this.getLayout(true, 800, this.height);
 
     if (!skGraph.nodes.some((n: any) => n.partOfCycle === true)) {
       // No circular references, use built in sankey generator
-      skGraph = this.getLayout(sankey);
       circular = false;
+      skGraph = this.getLayout(circular, 800, this.height);
     }
+
+    const columns = Math.max(...skGraph.nodes.map((n) => n.depth));
+    const width = (columns + 1) * 32 + columns * 32 * 6;
+    const height = Math.min(this.height, width * 0.75);
+    skGraph = this.getLayout(circular, width, height);
+
+    this.svg = select(this.ref.nativeElement)
+      .append('svg')
+      .attr('preserveAspectRatio', 'xMinYMin meet')
+      .style('width', `${width}px`)
+      .style('height', `${height}px`)
+      .attr('viewBox', `0 0 ${width} ${height}`);
 
     // Draw linkages (draw first so rects are drawn over them)
     const link = this.svg
@@ -126,6 +104,7 @@ export class SankeyComponent implements OnInit {
 
     link
       .append('path')
+      .attr('id', (l) => `${l.index}`)
       .attr(
         'd',
         circular ? (d): string => (d as any).path : sankeyLinkHorizontal()
@@ -134,11 +113,19 @@ export class SankeyComponent implements OnInit {
       .attr('stroke-width', (l) => Math.max(1, l.width));
 
     link.append('title').text((l) => l.name);
+    this.svg
+      .append('text')
+      .selectAll('textPath')
+      .data(skGraph.links)
+      .join('textPath')
+      .attr('startOffset', '4px')
+      .attr('href', (l) => `#${l.index}`)
+      .text((l) => `${l.dispValue} ${l.name}`);
 
     // Draw rects for nodes
     this.svg
       .append('g')
-      .attr('stroke', '#000')
+      .attr('stroke', 'var(--color-black)')
       .selectAll('rect')
       .data(skGraph.nodes)
       .join('rect')
@@ -169,18 +156,5 @@ export class SankeyComponent implements OnInit {
       .style('pointer-events', 'none')
       .append('image')
       .attr('href', (d) => d.href);
-
-    // Draw text (for rect height < 16px)
-    this.svg
-      .append('g')
-      .selectAll('text')
-      .data(skGraph.nodes.filter((d) => d.y1 - d.y0 < 16))
-      .join('text')
-      .attr('x', (d) => (d.x0 < this.width / 2 ? d.x1 + 6 : d.x0 - 6))
-      .attr('y', (d) => (d.y1 + d.y0) / 2)
-      .attr('dy', '0.35em')
-      .attr('text-anchor', (d) => (d.x0 < this.width / 2 ? 'start' : 'end'))
-      .text((d) => d.name)
-      .style('pointer-events', 'none');
   }
 }
