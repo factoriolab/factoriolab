@@ -45,7 +45,7 @@
         <lab-options
           title="Change rate type"
           [selected]="product.rateType"
-          [options]="RateTypeOptions"
+          [options]="rateTypeOptions"
           (selectId)="setRateType.emit({ id: product.id, value: $event })"
         ></lab-options>
         <ng-container

@@ -36,6 +36,12 @@ export class SankeyComponent {
   height = window.innerHeight * 0.75;
   svg: Selection<any, {}, null, undefined>;
 
+  get linkedNodes(): Node[] {
+    return this.sankeyData.nodes.filter((n) =>
+      this.sankeyData.links.some((l) => l.source === n.id || l.target === n.id)
+    );
+  }
+
   constructor(private ref: ElementRef<HTMLElement>) {}
 
   rebuildChart(): void {
@@ -64,7 +70,7 @@ export class SankeyComponent {
       ]);
 
     return skLayout({
-      nodes: this.sankeyData.nodes.map((d) => ({ ...d })),
+      nodes: this.linkedNodes.map((d) => ({ ...d })),
       links: this.sankeyData.links.map((l) => ({ ...l })),
     });
   }

@@ -6,6 +6,7 @@ import {
   Step,
   Node,
   Link,
+  DisplayRate,
 } from '~/models';
 import { FlowUtility } from './flow.utility';
 
@@ -20,7 +21,7 @@ describe('FlowUtility', () => {
     };
 
     it('should handle empty/null values', () => {
-      const result = FlowUtility.buildSankey([], null, null, null);
+      const result = FlowUtility.buildSankey([], null, null, null, null);
       expect(result).toEqual({ nodes: [], links: [] });
     });
 
@@ -35,6 +36,7 @@ describe('FlowUtility', () => {
         ] as any[],
         LinkValue.None,
         null,
+        DisplayRate.PerMinute,
         Mocks.AdjustedData
       );
       expect(result).toEqual({
@@ -62,6 +64,7 @@ describe('FlowUtility', () => {
         ] as any[],
         LinkValue.None,
         null,
+        DisplayRate.PerMinute,
         Mocks.AdjustedData
       );
       expect(result).toEqual({ nodes: [node], links: [] });
@@ -69,9 +72,13 @@ describe('FlowUtility', () => {
 
     it('should handle mismatched step', () => {
       const result = FlowUtility.buildSankey(
-        [{ itemId: ItemId.Coal }, { recipeId: RecipeId.Coal }] as any[],
+        [
+          { itemId: ItemId.Coal, items: Rational.one },
+          { recipeId: RecipeId.Coal, factories: Rational.one },
+        ] as any[],
         LinkValue.None,
         null,
+        DisplayRate.PerMinute,
         Mocks.AdjustedData
       );
       expect(result).toEqual({
@@ -99,6 +106,7 @@ describe('FlowUtility', () => {
         ] as any[],
         LinkValue.None,
         null,
+        DisplayRate.PerMinute,
         Mocks.AdjustedData
       );
       expect(result).toEqual({
@@ -126,6 +134,7 @@ describe('FlowUtility', () => {
         ] as any[],
         LinkValue.None,
         null,
+        DisplayRate.PerMinute,
         Mocks.AdjustedData
       );
       expect(result).toEqual({ nodes: [node], links: [] });
@@ -136,6 +145,7 @@ describe('FlowUtility', () => {
         [{ itemId: ItemId.Coal }] as any[],
         LinkValue.None,
         null,
+        DisplayRate.PerMinute,
         Mocks.AdjustedData
       );
       expect(result).toEqual({ nodes: [node], links: [] });
@@ -147,15 +157,26 @@ describe('FlowUtility', () => {
           {
             itemId: RecipeId.UraniumProcessing,
             recipeId: RecipeId.UraniumProcessing,
+            factories: Rational.one,
           },
           {
             itemId: RecipeId.UraniumProcessing,
             recipeId: RecipeId.UraniumProcessing,
+            factories: Rational.one,
             parents: {},
+          },
+          {
+            itemId: ItemId.Uranium235,
+            items: Rational.zero,
+          },
+          {
+            itemId: ItemId.Uranium238,
+            items: Rational.zero,
           },
         ] as any[],
         LinkValue.None,
         null,
+        DisplayRate.PerMinute,
         Mocks.AdjustedData
       );
       const name =
@@ -169,6 +190,20 @@ describe('FlowUtility', () => {
         name,
         color,
         viewBox: '0 448 64 64',
+        href,
+      };
+      const uNode1: Node = {
+        id: ItemId.Uranium235,
+        name: Mocks.AdjustedData.itemEntities[ItemId.Uranium235].name,
+        color: Mocks.AdjustedData.iconEntities[ItemId.Uranium235].color,
+        viewBox: '832 832 64 64',
+        href,
+      };
+      const uNode2: Node = {
+        id: ItemId.Uranium238,
+        name: Mocks.AdjustedData.itemEntities[ItemId.Uranium238].name,
+        color: Mocks.AdjustedData.iconEntities[ItemId.Uranium238].color,
+        viewBox: '896 832 64 64',
         href,
       };
       const uLink1: Link = {
@@ -188,7 +223,7 @@ describe('FlowUtility', () => {
         color: Mocks.AdjustedData.iconEntities[ItemId.Uranium238].color,
       };
       expect(result).toEqual({
-        nodes: [uNode, uNode],
+        nodes: [uNode, uNode, uNode1, uNode2],
         links: [uLink1, uLink2, uLink1, uLink2],
       });
     });

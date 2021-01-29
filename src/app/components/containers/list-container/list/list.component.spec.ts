@@ -185,32 +185,6 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('rateLabel', () => {
-    it('should handle per hour', () => {
-      component.displayRate = DisplayRate.PerHour;
-      fixture.detectChanges();
-      expect(component.child.rateLabel).toEqual('/h');
-    });
-
-    it('should handle per minute', () => {
-      component.displayRate = DisplayRate.PerMinute;
-      fixture.detectChanges();
-      expect(component.child.rateLabel).toEqual('/m');
-    });
-
-    it('should handle per second', () => {
-      component.displayRate = DisplayRate.PerSecond;
-      fixture.detectChanges();
-      expect(component.child.rateLabel).toEqual('/s');
-    });
-
-    it('should handle invalid value', () => {
-      component.displayRate = 'test' as any;
-      fixture.detectChanges();
-      expect(component.child.rateLabel).toEqual('');
-    });
-  });
-
   describe('totalPower', () => {
     it('should sum the total power from steps', () => {
       expect(component.child.totalPower).toEqual('1 kW');
