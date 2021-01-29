@@ -13,9 +13,10 @@ import {
   Dataset,
   Rational,
   Entities,
-  RateTypeOptions,
+  rateTypeOptions,
   DisplayRate,
   IdType,
+  IdName,
 } from '~/models';
 import { RecipeUtility } from '~/utilities';
 
@@ -39,8 +40,11 @@ export class ProductsComponent {
   @Output() setVia = new EventEmitter<IdPayload>();
 
   RateType = RateType;
-  RateTypeOptions = RateTypeOptions;
   IdType = IdType;
+
+  get rateTypeOptions(): IdName[] {
+    return rateTypeOptions(this.displayRate);
+  }
 
   constructor() {}
 

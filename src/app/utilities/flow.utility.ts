@@ -1,5 +1,7 @@
 import {
   Dataset,
+  DisplayRate,
+  DisplayRateVal,
   LinkValue,
   MIN_LINK_VALUE,
   Rational,
@@ -12,6 +14,7 @@ export class FlowUtility {
     steps: Step[],
     linkValue: LinkValue,
     linkPrecision: number,
+    displayRate: DisplayRate,
     data: Dataset
   ): SankeyData {
     const sankey: SankeyData = {
@@ -36,61 +39,52 @@ export class FlowUtility {
           color: icon.color,
         });
 
-        if (step.itemId === step.recipeId) {
-          if (step.parents) {
-            for (const i of Object.keys(step.parents)) {
-              sankey.links.push({
-                target: i,
-                source: step.recipeId,
-                value: this.linkValue(value, step.parents[i], linkValue),
-                dispValue: this.linkDisp(
-                  value,
-                  step.parents[i],
-                  linkValue,
-                  linkPrecision
-                ),
-                name: data.itemEntities[step.itemId].name,
-                color: icon.color,
-              });
-            }
-          }
-          for (const outId of Object.keys(recipe.out).filter(
-            (id) => step.itemId !== id && !step.parents?.[id]
-          )) {
-            const outStep = steps.find((s) => s.itemId === outId);
-            const outValue = this.stepLinkValue(outStep, linkValue);
+        if (step.itemId === step.recipeId && step.parents) {
+          for (const i of Object.keys(step.parents)) {
             sankey.links.push({
-              target: outId,
+              target: i,
               source: step.recipeId,
-              value: this.linkValue(outValue, Rational.one, linkValue),
+              value: this.linkValue(value, step.parents[i], linkValue),
               dispValue: this.linkDisp(
-                outValue,
-                Rational.one,
+                value,
+                step.parents[i],
                 linkValue,
                 linkPrecision
               ),
-              name: data.itemEntities[outId].name,
-              color: data.iconEntities[outId].color,
+              name: data.itemEntities[step.itemId].name,
+              color: icon.color,
             });
           }
-        } else {
-          for (const outId of Object.keys(recipe.out)) {
-            const outStep = steps.find((s) => s.itemId === outId);
-            const outValue = this.stepLinkValue(outStep, linkValue);
-            sankey.links.push({
-              target: outId,
-              source: step.recipeId,
-              value: this.linkValue(outValue, Rational.one, linkValue),
-              dispValue: this.linkDisp(
-                outValue,
-                Rational.one,
-                linkValue,
-                linkPrecision
-              ),
-              name: data.itemEntities[outId].name,
-              color: data.iconEntities[outId].color,
-            });
-          }
+        }
+
+        for (const outId of Object.keys(recipe.out).filter(
+          (id) =>
+            step.itemId !== step.recipeId ||
+            (step.itemId !== id && !step.parents?.[id])
+        )) {
+          const outStep = steps.find((s) => s.itemId === outId);
+          const outStepValue = step.factories
+            .mul(recipe.out[outId])
+            .div(recipe.time);
+          const percent = outStepValue.div(
+            outStep.items
+              .add(outStep.surplus || Rational.zero)
+              .div(DisplayRateVal[displayRate])
+          );
+          const outValue = this.stepLinkValue(outStep, linkValue);
+          sankey.links.push({
+            target: outId,
+            source: step.recipeId,
+            value: this.linkValue(outValue, percent, linkValue),
+            dispValue: this.linkDisp(
+              outValue,
+              percent,
+              linkValue,
+              linkPrecision
+            ),
+            name: data.itemEntities[outId].name,
+            color: data.iconEntities[outId].color,
+          });
         }
       }
 

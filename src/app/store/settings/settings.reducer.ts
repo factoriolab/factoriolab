@@ -60,13 +60,16 @@ export function settingsReducer(
       return {
         ...state,
         ...{
+          preset: Preset.Minimum,
           baseId: action.payload,
-          modIds: null,
+          disabledRecipes: null,
+          expensive: false,
           belt: null,
           fuel: null,
           cargoWagon: null,
           fluidWagon: null,
-          disabledRecipes: null,
+          miningBonus: 0,
+          researchSpeed: ResearchSpeed.Speed6,
         },
       };
     case SettingsActionType.SET_DISABLED_RECIPES:

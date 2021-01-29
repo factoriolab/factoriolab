@@ -18,3 +18,9 @@ export const DisplayRateVal = {
   [DisplayRate.PerMinute]: new Rational(BigInt(DisplayRate.PerMinute)),
   [DisplayRate.PerHour]: new Rational(BigInt(DisplayRate.PerHour)),
 };
+
+export const DisplayRateLabel = {
+  [DisplayRate.PerHour]: '/h',
+  [DisplayRate.PerMinute]: '/m',
+  [DisplayRate.PerSecond]: '/s',
+};

@@ -25,6 +25,7 @@ import {
   DefaultPayload,
   PrecisionColumns,
   FactorySettings,
+  DisplayRateLabel,
 } from '~/models';
 import { RouterService } from '~/services';
 import { FactoriesState } from '~/store/factories';
@@ -157,16 +158,7 @@ export class ListComponent {
   Rational = Rational;
 
   get rateLabel(): string {
-    switch (this.displayRate) {
-      case DisplayRate.PerHour:
-        return '/h';
-      case DisplayRate.PerMinute:
-        return '/m';
-      case DisplayRate.PerSecond:
-        return '/s';
-      default:
-        return '';
-    }
+    return DisplayRateLabel[this.displayRate];
   }
 
   get totalPower(): string {
