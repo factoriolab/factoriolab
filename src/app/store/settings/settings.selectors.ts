@@ -175,7 +175,7 @@ export const getNormalDataset = createSelector(
     );
 
     // Convert to id arrays
-    const categoryIds = Object.keys(categoryEntities);
+    let categoryIds = Object.keys(categoryEntities);
     const iconIds = Object.keys(iconEntities);
     const itemIds = Object.keys(itemEntities);
     const recipeIds = Object.keys(recipeEntities);
@@ -224,6 +224,7 @@ export const getNormalDataset = createSelector(
         categoryItemRows[id] = rows;
       }
     }
+    categoryIds = categoryIds.filter((c) => categoryItemRows[c]);
 
     // Convert to rationals
     const itemR = itemIds.reduce((e: Entities<RationalItem>, i) => {
@@ -253,8 +254,12 @@ export const getNormalDataset = createSelector(
     );
     const itemRecipeIds = itemIds.reduce((e: Entities<string>, i) => {
       const matches = recipeMatches[i] || [];
-      if (matches.length === 1) {
-        // Only one recipe produces this item, use direct mapping
+      if (
+        matches.length === 1 &&
+        (!matches[0].out || Object.keys(matches[0].out).length === 1)
+      ) {
+        // Ensure recipe produces this item and this item only
+        // If so, use this recipe as a direct mapping
         e[i] = matches[0].id;
       }
       return e;

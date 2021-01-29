@@ -273,12 +273,14 @@ export const getSankey = createSelector(
   getSteps,
   Preferences.getLinkValue,
   Preferences.getLinkPrecision,
+  Settings.getDisplayRate,
   Recipes.getAdjustedDataset,
-  (steps, linkValue, linkPrecision, data) =>
+  (steps, linkValue, linkPrecision, displayRate, data) =>
     FlowUtility.buildSankey(
       RateUtility.copy(steps),
       linkValue,
       linkPrecision,
+      displayRate,
       data
     )
 );
