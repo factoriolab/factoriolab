@@ -62,12 +62,15 @@ export class ListComponent {
   @Input() settings: SettingsState;
   @Input() factories: FactoriesState;
   @Input() beltSpeed: Entities<Rational>;
-  _steps: Step[];
+  _steps: Step[] = [];
   get steps(): Step[] {
     return this._steps;
   }
   @Input() set steps(value: Step[]) {
-    this._steps = value;
+    this._steps = value.map((s) => ({
+      ...s,
+      ...{ href: this.router.stepHref(s) },
+    }));
     this.setDetailTabs();
     this.setDisplayedSteps();
     this.setEffectivePrecision();

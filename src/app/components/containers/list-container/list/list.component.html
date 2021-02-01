@@ -483,7 +483,7 @@
               *ngIf="step.items"
               class="button"
               title="Click to open this step in a new tab"
-              [href]="router.stepHref(step)"
+              [href]="step.href"
               target="_blank"
             >
               <i class="clickable material-icons">open_in_new</i>
