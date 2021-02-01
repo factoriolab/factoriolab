@@ -5,6 +5,7 @@
       <th>
         <div>
           <lab-columns
+            [isDsp]="data.isDsp"
             [columns]="columns"
             (setColumns)="setColumns.emit($event)"
           ></lab-columns>
@@ -1053,7 +1054,7 @@
                 </ng-container>
               </table>
             </div>
-            <div class="info">
+            <div class="info" *ngIf="!data.isDsp">
               <span>
                 * Inserters are calculated using target/capacity settings and
                 0.18 experimental data from the

@@ -13,6 +13,10 @@ const routes: Routes = [
     component: FlowContainerComponent,
   },
   {
+    path: 'dsp',
+    redirectTo: '/list#s=dsp',
+  },
+  {
     path: '**',
     redirectTo: 'list',
   },

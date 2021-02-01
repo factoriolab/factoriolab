@@ -51,6 +51,8 @@ export const getInserterTarget = compose(sInserterTarget, settingsState);
 export const getInserterCapacity = compose(sInserterCapacity, settingsState);
 
 /* Complex selectors */
+export const getIsDsp = createSelector(getBaseDatasetId, (id) => id === 'dsp');
+
 export const getBase = createSelector(
   getBaseDatasetId,
   Datasets.getBaseEntities,
@@ -143,7 +145,8 @@ export const getNormalDataset = createSelector(
   Datasets.getAppData,
   getDatasets,
   getDefaults,
-  (app, mods, defaults) => {
+  getIsDsp,
+  (app, mods, defaults, isDsp) => {
     // Map out entities with mods
     const categoryEntities = getEntities(
       app.categories,
@@ -314,6 +317,7 @@ export const getNormalDataset = createSelector(
     }
 
     const dataset: Dataset = {
+      isDsp,
       categoryIds,
       categoryEntities,
       categoryItemRows,

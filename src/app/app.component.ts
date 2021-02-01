@@ -1,15 +1,16 @@
 import { trigger, transition, style, animate } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { skip } from 'rxjs/operators';
 
-import { Dataset, ItemId, Product } from './models';
+import { Dataset, ItemId, Product, TITLE_DSP, TITLE_LAB } from './models';
 import { ErrorService, RouterService } from './services';
 import { State } from './store';
 import { getInitialized } from './store/datasets';
 import { getProducts, getZipState } from './store/products';
-import { getDataset } from './store/settings';
+import { getDataset, getIsDsp } from './store/settings';
 
 @Component({
   selector: 'lab-root',
@@ -46,7 +47,8 @@ export class AppComponent implements OnInit {
   constructor(
     public error: ErrorService,
     public router: RouterService,
-    public store: Store<State>
+    public store: Store<State>,
+    public title: Title
   ) {}
 
   ngOnInit(): void {
@@ -65,5 +67,8 @@ export class AppComponent implements OnInit {
           s.settings
         );
       });
+    this.store
+      .select(getIsDsp)
+      .subscribe((dsp) => this.title.setTitle(dsp ? TITLE_DSP : TITLE_LAB));
   }
 }

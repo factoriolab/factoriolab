@@ -6,6 +6,7 @@ import { Item, RationalItem } from './item';
 import { Recipe, RationalRecipe } from './recipe';
 
 export interface Dataset {
+  isDsp: boolean;
   categoryIds: string[];
   categoryEntities: Entities<Category>;
   categoryItemRows: Entities<string[][]>;

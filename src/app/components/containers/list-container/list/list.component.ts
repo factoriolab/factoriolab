@@ -15,7 +15,6 @@ import {
   Dataset,
   DefaultIdPayload,
   Column,
-  ColumnsAsOptions,
   ItemId,
   ListMode,
   DisplayRateVal,
@@ -147,7 +146,6 @@ export class ListComponent {
   totalSpan = 2;
   effPrecision: Entities<number> = {};
   DisplayRateVal = DisplayRateVal;
-  ColumnsAsOptions = ColumnsAsOptions;
   ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
 
   Column = Column;

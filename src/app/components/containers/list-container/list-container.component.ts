@@ -84,7 +84,7 @@ export class ListContainerComponent implements OnInit {
     this.displayRate$ = this.store.select(Settings.getDisplayRate);
     this.inserterTarget$ = this.store.select(Settings.getInserterTarget);
     this.inserterCapacity$ = this.store.select(Settings.getInserterCapacity);
-    this.columns$ = this.store.select(Preferences.getColumns);
+    this.columns$ = this.store.select(Preferences.getColumnsState);
     this.modifiedIgnore$ = this.store.select(Items.getContainsIgnore);
     this.modifiedBelt$ = this.store.select(Items.getContainsBelt);
     this.modifiedWagon$ = this.store.select(Items.getContainsWagon);

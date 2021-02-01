@@ -99,7 +99,7 @@
             </lab-toggle>
           </td>
         </tr>
-        <tr>
+        <tr *ngIf="!data.isDsp">
           <td>Difficulty</td>
           <td>
             <lab-options
@@ -116,7 +116,7 @@
   <div class="hole">
     <div>
       <div class="header">Factory</div>
-      <table class="thin">
+      <table class="thin" *ngIf="!data.isDsp">
         <tr>
           <td>Preset</td>
           <td>
@@ -399,7 +399,7 @@
             </div>
           </td>
         </tr>
-        <tr>
+        <tr *ngIf="!data.isDsp">
           <td>Chemical Fuel</td>
           <td>
             <div>
@@ -423,7 +423,7 @@
           </td>
         </tr>
       </table>
-      <table class="thin">
+      <table class="thin" *ngIf="!data.isDsp">
         <tr>
           <td>Pipe flow rate</td>
           <td>
@@ -470,7 +470,7 @@
       </table>
     </div>
   </div>
-  <div class="hole">
+  <div class="hole" *ngIf="!data.isDsp">
     <div>
       <div class="header">Bonuses</div>
       <table class="wide">
