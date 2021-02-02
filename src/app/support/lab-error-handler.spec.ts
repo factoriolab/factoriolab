@@ -2,7 +2,7 @@ import { ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { LabErrorHandler } from './lab-error-handler';
-import { ErrorService } from './services';
+import { ErrorService } from '../services';
 
 describe('LabErrorHandler', () => {
   let errorHandler: ErrorHandler;

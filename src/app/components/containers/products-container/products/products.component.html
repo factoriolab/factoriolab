@@ -22,13 +22,12 @@
         ></lab-icon
       ></lab-picker>
       <input
-        type="number"
-        min="0"
-        step="any"
+        type="text"
         title="Set output rate"
         placeholder="Rate"
+        [ngModel]="product.rate"
+        labValidateNumber
         data-test="lab-products-rate"
-        [value]="product.rate"
         (input)="changeRate(product.id, $event)"
       />
       <lab-options

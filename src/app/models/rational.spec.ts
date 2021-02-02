@@ -19,6 +19,10 @@ describe('Rational', () => {
       it('should build a Rational from an integer Number', () => {
         expect(Rational.from(1, 3)).toEqual(new Rational(BigInt(1), BigInt(3)));
       });
+
+      it('should throw a divide by zero error', () => {
+        expect(() => Rational.from(1, 0)).toThrowError('Cannot divide by zero');
+      });
     });
 
     describe('fromNumber', () => {
@@ -30,6 +34,20 @@ describe('Rational', () => {
         expect(Rational.fromNumber(0.25)).toEqual(
           new Rational(BigInt(1), BigInt(4))
         );
+      });
+    });
+
+    describe('fromString', () => {
+      it('should generate a Rational from a decimal', () => {
+        expect(Rational.fromString('0.5')).toEqual(Rational.from(1, 2));
+      });
+
+      it('should generate a Rational from a fraction', () => {
+        expect(Rational.fromString('1/2')).toEqual(Rational.from(1, 2));
+      });
+
+      it('should generate a Rational from a mixed fraction', () => {
+        expect(Rational.fromString('1 1/2')).toEqual(Rational.from(3, 2));
       });
     });
 
@@ -127,11 +145,19 @@ describe('Rational', () => {
       it('should add two rationals', () => {
         expect(Rational.one.add(Rational.one)).toEqual(Rational.two);
       });
+
+      it('should skip if adding zero', () => {
+        expect(Rational.one.add(Rational.zero)).toBe(Rational.one);
+      });
     });
 
     describe('sub', () => {
       it('should subtract two rationals', () => {
         expect(Rational.one.sub(Rational.one)).toEqual(Rational.zero);
+      });
+
+      it('should skip if subtracting zero', () => {
+        expect(Rational.one.sub(Rational.zero)).toBe(Rational.one);
       });
     });
 
@@ -176,6 +202,20 @@ describe('Rational', () => {
 
       it('should handle fractions', () => {
         expect(new Rational(BigInt(1), BigInt(2)).toFraction()).toEqual('1/2');
+      });
+    });
+
+    describe('toString', () => {
+      it('should handle integers', () => {
+        expect(Rational.one.toString()).toEqual('1');
+      });
+
+      it('should simplify a trivial fraction', () => {
+        expect(Rational.from(1, 2).toString()).toEqual('0.5');
+      });
+
+      it('should handle fractions', () => {
+        expect(Rational.from(1, 3).toString()).toEqual('1/3');
       });
     });
 
