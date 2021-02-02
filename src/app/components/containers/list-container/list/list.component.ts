@@ -111,9 +111,7 @@ export class ListComponent {
   }
   @Input() set mode(value: ListMode) {
     this._mode = value;
-    if (this.steps) {
-      this.setDisplayedSteps();
-    }
+    this.setDisplayedSteps();
   }
   _selected: string;
   get selected(): string {

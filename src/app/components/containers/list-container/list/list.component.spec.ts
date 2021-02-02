@@ -312,14 +312,16 @@ describe('ListComponent', () => {
 
   describe('setDisplayedSteps', () => {
     it('should set displayed steps to the full list', () => {
-      expect(component.child.displayedSteps).toEqual(Mocks.Steps);
+      expect(component.child.displayedSteps).toEqual(component.child.steps);
     });
 
     it('should set displayed steps to selected step', () => {
       component.mode = ListMode.Focus;
       component.selected = Mocks.Step1.itemId;
       fixture.detectChanges();
-      expect(component.child.displayedSteps).toEqual([Mocks.Step1]);
+      expect(component.child.displayedSteps).toEqual([
+        component.child.steps[0],
+      ]);
       expect(component.child.expanded).toEqual({
         [Mocks.Step1.itemId]: StepDetailTab.Inputs,
       });
@@ -343,7 +345,9 @@ describe('ListComponent', () => {
 
   describe('findStep', () => {
     it('should find the step with a specific item id', () => {
-      expect(component.child.findStep(Mocks.Step1.itemId)).toEqual(Mocks.Step1);
+      expect(component.child.findStep(Mocks.Step1.itemId)).toEqual(
+        component.child.steps[0]
+      );
     });
   });
 
