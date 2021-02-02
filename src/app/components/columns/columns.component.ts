@@ -6,7 +6,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { Column, ColumnsAsOptions, PrecisionColumns } from '~/models';
+import { Column, columnOptions, IdName, PrecisionColumns } from '~/models';
 import { ColumnsState } from '~/store/preferences';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
@@ -17,16 +17,20 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnsComponent extends DialogContainerComponent {
+  @Input() isDsp: boolean;
   @Input() columns: ColumnsState;
 
   @Output() setColumns = new EventEmitter<ColumnsState>();
 
-  ColumnsAsOptions = ColumnsAsOptions;
   PrecisionColumns = PrecisionColumns;
   edited = false;
   editValue: ColumnsState;
 
   Column = Column;
+
+  get columnOptions(): IdName[] {
+    return columnOptions(this.isDsp);
+  }
 
   constructor() {
     super();

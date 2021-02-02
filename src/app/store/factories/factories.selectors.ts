@@ -20,7 +20,9 @@ export const getFactorySettings = createSelector(
     const entities: Entities<FactorySettings> = {};
     const def: FactorySettings = { ...state.entities[''] };
     def.moduleRank = def.moduleRank || defaults?.moduleRank || [];
-    def.beaconCount = def.beaconCount || defaults?.beaconCount;
+    def.beaconCount = data.isDsp
+      ? null
+      : def.beaconCount || defaults?.beaconCount;
     def.beacon = def.beacon || defaults?.beacon;
     def.beaconModule = def.beaconModule || defaults?.beaconModule;
     entities[''] = def;

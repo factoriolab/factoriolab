@@ -3,7 +3,7 @@
   <lab-options
     title="Select flow link value"
     [selected]="linkValue$ | async"
-    [options]="LinkValueOptions"
+    [options]="linkValueOptions(isDsp$ | async)"
     (selectId)="setLinkValue($event)"
   ></lab-options>
 </div>

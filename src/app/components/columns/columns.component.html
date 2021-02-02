@@ -21,7 +21,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let opt of ColumnsAsOptions">
+        <tr *ngFor="let opt of columnOptions">
           <td>
             <div *ngIf="opt.id === Column.Items; else colCheckbox">
               {{ opt.name }}

@@ -3,23 +3,20 @@
 :host {
   > .panel {
     display: flex;
+    flex-direction: column;
     align-items: flex-start;
 
-    > :first-child {
-      margin-right: 0.5rem;
+    > div {
+      display: flex;
+      align-items: center;
+
+      + * {
+        margin-top: 0.5rem;
+      }
+
+      > * + * {
+        margin-left: 0.5rem;
+      }
     }
-  }
-}
-
-.product-row {
-  display: flex;
-  align-items: center;
-
-  + .product-row {
-    margin-top: 0.5rem;
-  }
-
-  > * + * {
-    margin-left: 0.5rem;
   }
 }

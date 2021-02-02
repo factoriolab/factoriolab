@@ -99,7 +99,7 @@
             </lab-toggle>
           </td>
         </tr>
-        <tr>
+        <tr *ngIf="!data.isDsp">
           <td>Difficulty</td>
           <td>
             <lab-options
@@ -123,7 +123,7 @@
             <lab-options
               title="Select preset factory"
               [selected]="settings.preset"
-              [options]="PresetOptions"
+              [options]="presetOptions"
               (selectId)="setPreset.emit($event)"
             ></lab-options>
           </td>
@@ -211,14 +211,18 @@
             </td>
             <td>
               <ng-container *ngIf="factory.moduleRank">
-                <lab-ranker
+                <lab-select
+                  *ngIf="data.isDsp; else moduleRanker"
+                  header="Select a module"
                   [data]="data"
-                  [selected]="factory.moduleRank"
+                  [selected]="factory.moduleRank[0]"
                   [options]="data.moduleIds"
-                  (selectIds)="
+                  [includeEmptyModule]="false"
+                  [displayRate]="settings.displayRate"
+                  (selectId)="
                     setModuleRank.emit({
                       id: f,
-                      value: $event
+                      value: [$event]
                     })
                   "
                 >
@@ -237,7 +241,36 @@
                         : null
                     "
                   ></lab-icon>
-                </lab-ranker>
+                </lab-select>
+                <ng-template #moduleRanker>
+                  <lab-ranker
+                    [data]="data"
+                    [selected]="factory.moduleRank"
+                    [options]="data.moduleIds"
+                    (selectIds)="
+                      setModuleRank.emit({
+                        id: f,
+                        value: $event
+                      })
+                    "
+                  >
+                    <lab-icon
+                      class="button"
+                      tooltip="Module preferences"
+                      [data]="data"
+                      [iconId]="
+                        factory.moduleRank.length
+                          ? factory.moduleRank[0]
+                          : ItemId.Module
+                      "
+                      [text]="
+                        factory.moduleRank.length > 1
+                          ? factory.moduleRank.length
+                          : null
+                      "
+                    ></lab-icon>
+                  </lab-ranker>
+                </ng-template>
               </ng-container>
             </td>
             <td>
@@ -399,7 +432,7 @@
             </div>
           </td>
         </tr>
-        <tr>
+        <tr *ngIf="!data.isDsp">
           <td>Chemical Fuel</td>
           <td>
             <div>
@@ -423,7 +456,7 @@
           </td>
         </tr>
       </table>
-      <table class="thin">
+      <table class="thin" *ngIf="!data.isDsp">
         <tr>
           <td>Pipe flow rate</td>
           <td>
@@ -470,7 +503,7 @@
       </table>
     </div>
   </div>
-  <div class="hole">
+  <div class="hole" *ngIf="!data.isDsp">
     <div>
       <div class="header">Bonuses</div>
       <table class="wide">
