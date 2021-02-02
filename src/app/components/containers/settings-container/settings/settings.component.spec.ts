@@ -6,6 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { Mocks, TestUtility } from 'src/tests';
 import {
+  ColumnsComponent,
   IconComponent,
   OptionsComponent,
   RankerComponent,
@@ -13,6 +14,7 @@ import {
   ToggleComponent,
 } from '~/components';
 import { FuelType } from '~/models';
+import { initialColumnsState } from '~/store/preferences';
 import { SettingsComponent } from './settings.component';
 
 enum DataTest {
@@ -30,6 +32,7 @@ enum DataTest {
       [factories]="factories"
       [settings]="settings"
       [preferences]="preferences"
+      [columns]="columns"
       (resetSettings)="resetSettings()"
       (closeSettings)="closeSettings()"
       (saveState)="saveState($event)"
@@ -56,6 +59,7 @@ enum DataTest {
       (setInserterTarget)="setInserterTarget($event)"
       (setInserterCapacity)="setInserterCapacity($event)"
       (setDisplayRate)="setDisplayRate($event)"
+      (setColumns)="setColumns($event)"
     >
     </lab-settings>
   `,
@@ -67,6 +71,7 @@ class TestSettingsComponent {
   factories = Mocks.FactorySettingsInitial;
   settings = Mocks.SettingsState1;
   preferences = Mocks.Preferences;
+  columns = initialColumnsState;
   resetSettings(): void {}
   closeSettings(): void {}
   saveState(data): void {}
@@ -93,6 +98,7 @@ class TestSettingsComponent {
   setInserterTarget(data): void {}
   setInserterCapacity(data): void {}
   setDisplayRate(data): void {}
+  setColumns(data): void {}
 }
 
 describe('SettingsComponent', () => {
@@ -106,6 +112,7 @@ describe('SettingsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [FormsModule, RouterTestingModule],
       declarations: [
+        ColumnsComponent,
         IconComponent,
         OptionsComponent,
         RankerComponent,
