@@ -83,6 +83,9 @@ export class RouterService {
   }
 
   stepHref(step: Step): string {
+    if (!step.items) {
+      return null;
+    }
     const products: Product[] = [
       {
         id: '0',

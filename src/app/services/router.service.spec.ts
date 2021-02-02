@@ -256,6 +256,11 @@ describe('RouterService', () => {
       const href = service.stepHref(Mocks.Step1);
       expect(href).toEqual(`#z=${mockZipLink}`);
     });
+
+    it('should handle no items', () => {
+      const href = service.stepHref({} as any);
+      expect(href).toBeNull();
+    });
   });
 
   describe('getHash', () => {
