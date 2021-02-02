@@ -1,7 +1,7 @@
 export const DEFAULT_PRECISION = 1;
 export const MIN_LINK_VALUE = 1e-10;
 export const STATE_KEY = 'state';
-export const NONE = 'None';
+export const NONE = '<None>';
 export const TITLE_LAB = 'Factorio Calculator';
 export const TITLE_DSP = 'Dyson Sphere Program Calculator';
 export const ERROR_SIMPLEX = `No solution found. Check your disabled recipes to ensure a solution is feasible.

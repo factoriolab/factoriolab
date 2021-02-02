@@ -6,7 +6,13 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { Column, columnOptions, IdName, PrecisionColumns } from '~/models';
+import {
+  Column,
+  columnOptions,
+  IdName,
+  PrecisionColumns,
+  Rational,
+} from '~/models';
 import { ColumnsState } from '~/store/preferences';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
@@ -71,5 +77,11 @@ export class ColumnsComponent extends DialogContainerComponent {
     } else {
       this.editValue[id].precision = null;
     }
+  }
+
+  example(id: string): string {
+    const r = Rational.from(1, 3);
+    const p = this.editValue[id].precision;
+    return p != null ? r.toPrecision(p).toString() : r.toFraction();
   }
 }

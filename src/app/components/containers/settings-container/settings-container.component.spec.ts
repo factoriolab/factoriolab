@@ -5,6 +5,7 @@ import { StoreModule, Store } from '@ngrx/store';
 
 import { TestUtility, ItemId, RecipeId } from 'src/tests';
 import {
+  ColumnsComponent,
   IconComponent,
   OptionsComponent,
   RankerComponent,
@@ -41,6 +42,7 @@ describe('SettingsContainerComponent', () => {
         StoreModule.forRoot(reducers, { metaReducers }),
       ],
       declarations: [
+        ColumnsComponent,
         IconComponent,
         OptionsComponent,
         RankerComponent,
@@ -319,6 +321,14 @@ describe('SettingsContainerComponent', () => {
     component.child.setDisplayRate.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetDisplayRateAction(value)
+    );
+  });
+
+  it('should set columns', () => {
+    const data = Preferences.initialColumnsState;
+    component.child.setColumns.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Preferences.SetColumnsAction(data)
     );
   });
 });

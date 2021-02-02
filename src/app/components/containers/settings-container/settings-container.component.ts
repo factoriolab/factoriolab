@@ -47,6 +47,7 @@ export class SettingsContainerComponent implements OnInit {
   factories$: Observable<Factories.FactoriesState>;
   settings$: Observable<Settings.SettingsState>;
   preferences$: Observable<Preferences.PreferencesState>;
+  columns$: Observable<Preferences.ColumnsState>;
 
   opening = true;
 
@@ -67,6 +68,7 @@ export class SettingsContainerComponent implements OnInit {
     this.factories$ = this.store.select(Factories.getFactorySettings);
     this.settings$ = this.store.select(Settings.getSettings);
     this.preferences$ = this.store.select(Preferences.preferencesState);
+    this.columns$ = this.store.select(Preferences.getColumnsState);
   }
 
   @HostListener('document:click', ['$event'])
@@ -180,5 +182,9 @@ export class SettingsContainerComponent implements OnInit {
 
   setDisplayRate(value: DisplayRate): void {
     this.store.dispatch(new Settings.SetDisplayRateAction(value));
+  }
+
+  setColumns(value: Preferences.ColumnsState): void {
+    this.store.dispatch(new Preferences.SetColumnsAction(value));
   }
 }

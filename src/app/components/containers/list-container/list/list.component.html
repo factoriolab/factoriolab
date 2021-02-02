@@ -8,7 +8,11 @@
             [isDsp]="data.isDsp"
             [columns]="columns"
             (setColumns)="setColumns.emit($event)"
-          ></lab-columns>
+          >
+            <button title="Set columns visibility and precision">
+              <i class="material-icons">settings</i>
+            </button></lab-columns
+          >
         </div>
       </th>
       <th class="num-icon">
