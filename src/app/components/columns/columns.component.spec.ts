@@ -18,12 +18,17 @@ enum DataTest {
 @Component({
   selector: 'lab-test-columns',
   template: `
-    <lab-columns [columns]="columns" (setColumns)="setColumns($event)">
+    <lab-columns
+      [isDsp]="isDsp"
+      [columns]="columns"
+      (setColumns)="setColumns($event)"
+    >
     </lab-columns>
   `,
 })
 class TestColumnsComponent {
   @ViewChild(ColumnsComponent) child: ColumnsComponent;
+  isDsp = false;
   columns = initialColumnsState;
   setColumns(data): void {}
   constructor(public ref: ChangeDetectorRef) {}
@@ -120,6 +125,23 @@ describe('ColumnsComponent', () => {
       TestUtility.clickDt(fixture, DataTest.Fractions);
       expect(component.child.edited).toBeTrue();
       expect(component.child.editValue[Column.Items].precision).toEqual(1);
+    });
+  });
+
+  describe('example', () => {
+    beforeEach(() => {
+      TestUtility.clickDt(fixture, DataTest.Open);
+      fixture.detectChanges();
+    });
+
+    it('should give an example of decimal precision', () => {
+      component.child.editValue[Column.Items].precision = 2;
+      expect(component.child.example(Column.Items)).toEqual('0.34');
+    });
+
+    it('should give an example of fractional precision', () => {
+      component.child.editValue[Column.Items].precision = null;
+      expect(component.child.example(Column.Items)).toEqual('1/3');
     });
   });
 });

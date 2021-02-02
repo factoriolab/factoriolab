@@ -143,7 +143,7 @@ describe('ListContainerComponent', () => {
     );
   });
 
-  it('should set the visible columns', () => {
+  it('should set columns', () => {
     const data = Preferences.initialColumnsState;
     component.child.setColumns.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
