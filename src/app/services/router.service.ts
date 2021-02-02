@@ -103,7 +103,7 @@ export class RouterService {
   updateState(e: Event): void {
     try {
       if (e instanceof NavigationEnd) {
-        const fragments = e.url.split('#');
+        const fragments = e.urlAfterRedirects.split('#');
         if (fragments.length > 1) {
           const urlZip = fragments[fragments.length - 1];
           if (this.zip !== urlZip) {

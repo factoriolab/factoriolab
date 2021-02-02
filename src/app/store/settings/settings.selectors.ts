@@ -51,6 +51,8 @@ export const getInserterTarget = compose(sInserterTarget, settingsState);
 export const getInserterCapacity = compose(sInserterCapacity, settingsState);
 
 /* Complex selectors */
+export const getIsDsp = createSelector(getBaseDatasetId, (id) => id === 'dsp');
+
 export const getBase = createSelector(
   getBaseDatasetId,
   Datasets.getBaseEntities,
@@ -60,7 +62,8 @@ export const getBase = createSelector(
 export const getDefaults = createSelector(
   getPreset,
   getBase,
-  (preset, base) => {
+  getIsDsp,
+  (preset, base, isDsp) => {
     if (base) {
       const m = base.defaults;
       const defaults: Defaults = {
@@ -72,7 +75,13 @@ export const getDefaults = createSelector(
         disabledRecipes: m.disabledRecipes,
         factoryRank:
           preset === Preset.Minimum ? m.minFactoryRank : m.maxFactoryRank,
-        moduleRank: preset === Preset.Minimum ? [] : m.moduleRank,
+        moduleRank: isDsp
+          ? preset === Preset.Minimum
+            ? [m.minBelt]
+            : [m.maxBelt]
+          : preset === Preset.Minimum
+          ? []
+          : m.moduleRank,
         beaconCount:
           preset < Preset.Beacon8 ? 0 : preset < Preset.Beacon12 ? 8 : 12,
         beacon: m.beacon,
@@ -143,7 +152,8 @@ export const getNormalDataset = createSelector(
   Datasets.getAppData,
   getDatasets,
   getDefaults,
-  (app, mods, defaults) => {
+  getIsDsp,
+  (app, mods, defaults, isDsp) => {
     // Map out entities with mods
     const categoryEntities = getEntities(
       app.categories,
@@ -314,6 +324,7 @@ export const getNormalDataset = createSelector(
     }
 
     const dataset: Dataset = {
+      isDsp,
       categoryIds,
       categoryEntities,
       categoryItemRows,

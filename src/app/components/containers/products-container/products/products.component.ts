@@ -29,7 +29,7 @@ import { RecipeUtility } from '~/utilities';
 export class ProductsComponent {
   @Input() data: Dataset;
   @Input() productSteps: Entities<[string, Rational][]>;
-  @Input() products: Product[];
+  @Input() products: Product[] = [];
   @Input() displayRate: DisplayRate;
 
   @Output() addProduct = new EventEmitter<string>();
@@ -43,7 +43,7 @@ export class ProductsComponent {
   IdType = IdType;
 
   get rateTypeOptions(): IdName[] {
-    return rateTypeOptions(this.displayRate);
+    return rateTypeOptions(this.displayRate, this.data.isDsp);
   }
 
   constructor() {}

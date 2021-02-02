@@ -1,88 +1,96 @@
 <h2>Products</h2>
 <div class="panel">
-  <lab-picker
-    [data]="data"
-    [selected]="data.itemIds[0]"
-    (selectId)="addProduct.emit($event)"
-  >
-    <button title="Add product">
-      <i class="material-icons">add</i>
-      <div class="text" *ngIf="!products?.length">Click to add a product</div>
-    </button></lab-picker
-  >
-  <div *ngIf="products && products.length">
-    <div class="product-row" *ngFor="let product of products; trackBy: trackBy">
-      <ng-container *ngIf="product && data.itemEntities[product.itemId]">
-        <button title="Remove product" (click)="removeProduct.emit(product.id)">
-          <i class="material-icons">remove</i>
-        </button>
-        <lab-picker
+  <div class="product-row" *ngFor="let product of products; trackBy: trackBy">
+    <ng-container *ngIf="product && data.itemEntities[product.itemId]">
+      <button title="Remove product" (click)="removeProduct.emit(product.id)">
+        <i class="material-icons">remove</i>
+      </button>
+      <lab-picker
+        [data]="data"
+        [selected]="product.itemId"
+        (selectId)="changeItem(product, $event)"
+      >
+        <lab-icon
+          class="button"
+          title="Change item"
+          hoverIcon="settings"
           [data]="data"
-          [selected]="product.itemId"
-          (selectId)="changeItem(product, $event)"
-        >
-          <lab-icon
-            class="button"
-            title="Change item"
-            hoverIcon="settings"
-            [data]="data"
-            [iconId]="product.itemId"
-            [tooltip]="data.itemEntities[product.itemId].name"
-            [item]="data.itemEntities[product.itemId]"
-            [displayRate]="displayRate"
-          ></lab-icon
-        ></lab-picker>
-        <input
-          type="text"
-          title="Set output rate"
-          placeholder="Rate"
-          [ngModel]="product.rate"
-          labValidateNumber
-          data-test="lab-products-rate"
-          (input)="changeRate(product.id, $event)"
-        />
-        <lab-options
-          title="Change rate type"
-          [selected]="product.rateType"
-          [options]="rateTypeOptions"
-          (selectId)="setRateType.emit({ id: product.id, value: $event })"
-        ></lab-options>
-        <ng-container
-          *ngIf="productSteps[product.itemId].length > 0; else recipeNone"
-        >
-          <ng-container *ngIf="getStep(product) as id">
-            <span>via</span>
-            <ng-container
-              *ngIf="productSteps[product.itemId].length === 1; else viaPicker"
+          [iconId]="product.itemId"
+          [tooltip]="data.itemEntities[product.itemId].name"
+          [item]="data.itemEntities[product.itemId]"
+          [displayRate]="displayRate"
+        ></lab-icon
+      ></lab-picker>
+      <input
+        type="text"
+        title="Set output rate"
+        placeholder="Rate"
+        [ngModel]="product.rate"
+        labValidateNumber
+        data-test="lab-products-rate"
+        (input)="changeRate(product.id, $event)"
+      />
+      <lab-options
+        title="Change rate type"
+        [selected]="product.rateType"
+        [options]="rateTypeOptions"
+        (selectId)="setRateType.emit({ id: product.id, value: $event })"
+      ></lab-options>
+      <ng-container
+        *ngIf="productSteps[product.itemId].length > 0; else recipeNone"
+      >
+        <ng-container *ngIf="getStep(product) as id">
+          <span>via</span>
+          <ng-container
+            *ngIf="productSteps[product.itemId].length === 1; else viaPicker"
+          >
+            <lab-icon
+              *ngIf="product.rateType === RateType.Factories; else singleItem"
+              class="pad"
+              [iconId]="id"
+              [tooltip]="data.recipeEntities[id].name"
+              [recipe]="data.recipeEntities[id]"
+              [data]="data"
             >
+            </lab-icon>
+            <ng-template #singleItem>
               <lab-icon
-                *ngIf="product.rateType === RateType.Factories; else singleItem"
                 class="pad"
                 [iconId]="id"
-                [tooltip]="data.recipeEntities[id].name"
-                [recipe]="data.recipeEntities[id]"
+                [tooltip]="data.itemEntities[id].name"
+                [item]="data.itemEntities[id]"
                 [data]="data"
               >
               </lab-icon>
-              <ng-template #singleItem>
-                <lab-icon
-                  class="pad"
-                  [iconId]="id"
-                  [tooltip]="data.itemEntities[id].name"
-                  [item]="data.itemEntities[id]"
-                  [data]="data"
-                >
-                </lab-icon>
-              </ng-template>
-            </ng-container>
-            <ng-template #viaPicker>
+            </ng-template>
+          </ng-container>
+          <ng-template #viaPicker>
+            <lab-select
+              *ngIf="product.rateType === RateType.Factories; else itemPicker"
+              header="Select a step to calculate by"
+              [data]="data"
+              [selected]="id"
+              [options]="getOptions(product)"
+              [selectType]="IdType.Recipe"
+              (selectId)="setVia.emit({ id: product.id, value: $event })"
+            >
+              <lab-icon
+                class="button"
+                title="Change rate step"
+                hoverIcon="settings"
+                [data]="data"
+                [iconId]="id"
+                [tooltip]="data.recipeEntities[id].name"
+                [recipe]="data.recipeEntities[id]"
+              >
+              </lab-icon>
+            </lab-select>
+            <ng-template #itemPicker>
               <lab-select
-                *ngIf="product.rateType === RateType.Factories; else itemPicker"
                 header="Select a step to calculate by"
                 [data]="data"
                 [selected]="id"
                 [options]="getOptions(product)"
-                [selectType]="IdType.Recipe"
                 (selectId)="setVia.emit({ id: product.id, value: $event })"
               >
                 <lab-icon
@@ -91,38 +99,30 @@
                   hoverIcon="settings"
                   [data]="data"
                   [iconId]="id"
-                  [tooltip]="data.recipeEntities[id].name"
-                  [recipe]="data.recipeEntities[id]"
+                  [tooltip]="data.itemEntities[id].name"
+                  [item]="data.itemEntities[id]"
                 >
                 </lab-icon>
               </lab-select>
-              <ng-template #itemPicker>
-                <lab-select
-                  header="Select a step to calculate by"
-                  [data]="data"
-                  [selected]="id"
-                  [options]="getOptions(product)"
-                  (selectId)="setVia.emit({ id: product.id, value: $event })"
-                >
-                  <lab-icon
-                    class="button"
-                    title="Change rate step"
-                    hoverIcon="settings"
-                    [data]="data"
-                    [iconId]="id"
-                    [tooltip]="data.itemEntities[id].name"
-                    [item]="data.itemEntities[id]"
-                  >
-                  </lab-icon>
-                </lab-select>
-              </ng-template>
             </ng-template>
-          </ng-container>
+          </ng-template>
         </ng-container>
-        <ng-template #recipeNone>
-          <div class="invalid">No matching enabled recipes</div>
-        </ng-template>
       </ng-container>
-    </div>
+      <ng-template #recipeNone>
+        <div class="invalid">No matching enabled recipes</div>
+      </ng-template>
+    </ng-container>
+  </div>
+  <div>
+    <lab-picker
+      [data]="data"
+      [selected]="data.itemIds[0]"
+      (selectId)="addProduct.emit($event)"
+    >
+      <button title="Add a product">
+        <i class="material-icons">add</i>
+        <div class="text">Add a product</div>
+      </button></lab-picker
+    >
   </div>
 </div>

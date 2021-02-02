@@ -13,11 +13,13 @@ import {
   Step,
   ListMode,
   LinkValue,
-  LinkValueOptions,
+  linkValueOptions,
+  IdName,
 } from '~/models';
 import { State } from '~/store';
 import { getLinkValue, SetLinkValueAction } from '~/store/preferences';
 import { getSankey, getSteps } from '~/store/products';
+import { getIsDsp } from '~/store/settings';
 import { SankeyComponent } from './sankey/sankey.component';
 
 @Component({
@@ -29,21 +31,26 @@ import { SankeyComponent } from './sankey/sankey.component';
 export class FlowContainerComponent implements OnInit {
   @ViewChild(SankeyComponent) child: SankeyComponent;
 
+  isDsp$: Observable<boolean>;
   sankeyData$: Observable<SankeyData>;
   steps$: Observable<Step[]>;
   linkValue$: Observable<LinkValue>;
 
   selected: string;
-  LinkValueOptions = LinkValueOptions;
 
   ListMode = ListMode;
 
   constructor(public store: Store<State>, public ref: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    this.isDsp$ = this.store.select(getIsDsp);
     this.sankeyData$ = this.store.select(getSankey);
     this.steps$ = this.store.select(getSteps);
     this.linkValue$ = this.store.select(getLinkValue);
+  }
+
+  linkValueOptions(isDsp: boolean): IdName[] {
+    return linkValueOptions(isDsp);
   }
 
   setSelected(value: string): void {

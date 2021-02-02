@@ -6,7 +6,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { Dataset, ItemId } from '~/models';
+import { Dataset, DisplayRate, ItemId } from '~/models';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
@@ -19,6 +19,7 @@ export class RankerComponent extends DialogContainerComponent {
   @Input() data: Dataset;
   @Input() selected: string[];
   @Input() options: string[];
+  @Input() displayRate: DisplayRate;
 
   @Output() selectIds = new EventEmitter<string[]>();
 

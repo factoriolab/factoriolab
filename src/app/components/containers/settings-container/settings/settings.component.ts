@@ -25,12 +25,12 @@ import {
   InserterCapacity,
   DefaultIdPayload,
   IdName,
-  PresetOptions,
   InserterCapacityOptions,
   ResearchSpeedOptions,
   InserterTargetOptions,
   DisplayRateOptions,
   FuelType,
+  presetOptions,
 } from '~/models';
 import { FactoriesState } from '~/store/factories';
 import { PreferencesState } from '~/store/preferences';
@@ -106,7 +106,6 @@ export class SettingsComponent implements OnInit {
       name: 'Expensive',
     },
   ];
-  PresetOptions = PresetOptions;
   ResearchSpeedOptions = ResearchSpeedOptions;
   InserterCapacityOptions = InserterCapacityOptions;
   InserterTargetOptions = InserterTargetOptions;
@@ -116,6 +115,10 @@ export class SettingsComponent implements OnInit {
 
   get hash(): string {
     return BrowserUtility.hash;
+  }
+
+  get presetOptions(): IdName[] {
+    return presetOptions(this.data.isDsp);
   }
 
   get factoryRows(): string[] {

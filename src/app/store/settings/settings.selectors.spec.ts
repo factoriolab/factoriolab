@@ -54,6 +54,24 @@ describe('Settings Selectors', () => {
       );
       expect(result).toEqual(Mocks.Defaults);
     });
+
+    it('should handle dsp minimum module rank', () => {
+      const result = Selectors.getDefaults.projector(
+        Preset.Minimum,
+        Mocks.Base,
+        true
+      );
+      expect(result.moduleRank).toEqual([Mocks.Base.defaults.minBelt]);
+    });
+
+    it('should handle dsp maximum module rank', () => {
+      const result = Selectors.getDefaults.projector(
+        Preset.Modules,
+        Mocks.Base,
+        true
+      );
+      expect(result.moduleRank).toEqual([Mocks.Base.defaults.maxBelt]);
+    });
   });
 
   describe('getSettings', () => {

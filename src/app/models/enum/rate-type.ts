@@ -8,11 +8,20 @@ export enum RateType {
   Factories,
 }
 
-export function rateTypeOptions(displayRate: DisplayRate): IdName[] {
-  return [
+export function rateTypeOptions(
+  displayRate: DisplayRate,
+  isDsp: boolean
+): IdName[] {
+  const result = [
     { id: RateType.Items, name: `Items${DisplayRateLabel[displayRate]}` },
     { id: RateType.Belts, name: 'Belts' },
     { id: RateType.Wagons, name: `Wagons${DisplayRateLabel[displayRate]}` },
     { id: RateType.Factories, name: 'Factories' },
   ];
+
+  if (isDsp) {
+    return result.filter((i) => i.id !== RateType.Wagons);
+  }
+
+  return result;
 }
