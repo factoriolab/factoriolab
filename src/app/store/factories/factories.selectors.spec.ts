@@ -37,5 +37,14 @@ describe('Factories Selectors', () => {
       expect(Object.keys(result.entities).length).toEqual(19);
       expect(result.entities[ItemId.AssemblingMachine2].beaconCount).toEqual(0);
     });
+
+    it('should use null beaconCount for dsp', () => {
+      const result = Selectors.getFactorySettings.projector(
+        initialFactoriesState,
+        Mocks.Defaults,
+        { ...Mocks.AdjustedData, ...{ isDsp: true } }
+      );
+      expect(result.entities[''].beaconCount).toBeNull();
+    });
   });
 });
