@@ -120,12 +120,13 @@ export class SankeyComponent {
 
     link.append('title').text((l) => l.name);
     this.svg
-      .append('text')
-      .selectAll('textPath')
+      .append('g')
+      .selectAll('text')
       .data(skGraph.links)
-      .join('textPath')
+      .join('text')
+      .append('textPath')
       .attr('startOffset', '4px')
-      .attr('href', (l) => `${location.origin}${location.pathname}#${l.index}`)
+      .attr('href', (l) => `#${l.index}`)
       .text((l) => `${l.dispValue} ${l.name}`);
 
     // Draw rects for nodes
