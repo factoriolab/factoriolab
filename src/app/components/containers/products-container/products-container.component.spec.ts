@@ -64,7 +64,7 @@ describe('ProductsContainerComponent', () => {
   });
 
   it('should set rate on a product', () => {
-    const data = { id: Mocks.Product1.id, value: 2 };
+    const data = { id: Mocks.Product1.id, value: '2' };
     component.child.setRate.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Products.SetRateAction(data)

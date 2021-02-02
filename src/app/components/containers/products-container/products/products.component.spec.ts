@@ -103,7 +103,7 @@ describe('ProductsComponent', () => {
       fixture.detectChanges();
       expect(component.setRate).toHaveBeenCalledWith({
         id: Mocks.Product1.id,
-        value: 3,
+        value: '3',
       });
     });
   });

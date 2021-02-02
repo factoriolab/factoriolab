@@ -55,7 +55,7 @@ describe('Products Reducer', () => {
 
   describe('EDIT_RATE', () => {
     it('should edit rate of a product', () => {
-      const value = 3;
+      const value = '3';
       const result = productsReducer(
         state,
         new Actions.SetRateAction({ id: Mocks.Product1.id, value })

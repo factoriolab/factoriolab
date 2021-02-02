@@ -43,7 +43,7 @@ const mockProducts: Product[] = [
   {
     id: '0',
     itemId: ItemId.SteelChest,
-    rate: 1,
+    rate: '1',
     rateType: RateType.Items,
   },
 ];
@@ -56,7 +56,7 @@ const mockProductsFull: Product[] = [
   {
     id: '0',
     itemId: ItemId.SteelChest,
-    rate: 1,
+    rate: '1',
     rateType: RateType.Belts,
     viaId: RecipeId.Coal,
   },

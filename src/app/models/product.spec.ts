@@ -9,7 +9,7 @@ describe('RationalProduct', () => {
       const result = new RationalProduct({
         id: '1',
         itemId: ItemId.ArtilleryShellRange,
-        rate: 2,
+        rate: '2',
         rateType: RateType.Belts,
         viaId: RecipeId.AdvancedOilProcessing,
       });
@@ -24,7 +24,7 @@ describe('RationalProduct', () => {
       const result = new RationalProduct({
         id: '1',
         itemId: ItemId.ArtilleryShellRange,
-        rate: 2,
+        rate: '2',
         rateType: RateType.Belts,
       });
       expect(result.id).toEqual('1');
