@@ -67,8 +67,8 @@ export class ProductsComponent {
   changeRate(id: string, event: InputEvent): void {
     try {
       const target = event.target as HTMLInputElement;
-      const rational = Rational.fromString(target.value);
-      const value = rational.toString();
+      const value = target.value;
+      Rational.fromString(value);
       this.setRate.emit({ id, value });
     } catch {}
   }

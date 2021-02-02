@@ -12,8 +12,7 @@ export function validateNumber(
   try {
     Rational.fromString(c.value);
     return null;
-  } catch (ex) {
-    console.log(ex);
+  } catch {
     return {
       validateNumber: {
         valid: false,
