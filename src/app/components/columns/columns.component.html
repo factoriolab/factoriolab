@@ -1,11 +1,7 @@
-<button
-  title="Select columns"
-  data-test="lab-columns-open"
-  (click)="clickOpen()"
->
-  <i class="material-icons">settings</i>
-</button>
-<lab-dialog *ngIf="open" (close)="close()">
+<div data-test="lab-columns-open" (click)="clickOpen()">
+  <ng-content></ng-content>
+</div>
+<lab-dialog *ngIf="open" (closeDialog)="close()">
   <div class="dialog-title">
     <div class="header">Select columns</div>
     <button (click)="cancel()">
@@ -16,8 +12,13 @@
     <table>
       <thead>
         <tr>
-          <td class="header">Visibility</td>
-          <td colspan="2" class="header">Precision</td>
+          <th rowspan="2" class="header">Visibility</th>
+          <th colspan="3" class="header">Precision</th>
+        </tr>
+        <tr>
+          <td>Decimals</td>
+          <td>Fractions</td>
+          <td>Example</td>
         </tr>
       </thead>
       <tbody>
@@ -40,33 +41,47 @@
               </div>
             </ng-template>
           </td>
-          <ng-container *ngIf="PrecisionColumns.indexOf(opt.id) !== -1">
-            <td>
-              <input
-                *ngIf="editValue[opt.id].precision != null"
-                type="number"
-                placeholder="Decimals"
-                min="0"
-                step="1"
-                data-test="lab-columns-decimals"
-                [value]="editValue[opt.id].precision"
-                (input)="changePrecision(opt.id, $event)"
-              />
-            </td>
-            <td>
-              <div
-                class="flex option"
-                data-test="lab-columns-fractions"
-                (click)="clickFraction(opt.id)"
-              >
+          <ng-container *ngIf="editValue[opt.id].show; else noShow">
+            <ng-container
+              *ngIf="PrecisionColumns.indexOf(opt.id) !== -1; else noPrecision"
+            >
+              <td>
+                <input
+                  *ngIf="editValue[opt.id].precision != null; else noInput"
+                  type="number"
+                  placeholder="Decimals"
+                  min="0"
+                  step="1"
+                  data-test="lab-columns-decimals"
+                  [value]="editValue[opt.id].precision"
+                  (input)="changePrecision(opt.id, $event)"
+                />
+                <ng-template #noInput>---</ng-template>
+              </td>
+              <td>
                 <div
-                  class="checkbox"
-                  [class.checked]="editValue[opt.id].precision == null"
-                ></div>
-                <div>Fractions</div>
-              </div>
-            </td>
+                  class="flex option"
+                  data-test="lab-columns-fractions"
+                  (click)="clickFraction(opt.id)"
+                >
+                  <div
+                    class="checkbox"
+                    [class.checked]="editValue[opt.id].precision == null"
+                  ></div>
+                  <div>Fractions</div>
+                </div>
+              </td>
+              <td>
+                {{ example(opt.id) }}
+              </td>
+            </ng-container>
+            <ng-template #noPrecision>
+              <td colspan="3">n/a</td>
+            </ng-template>
           </ng-container>
+          <ng-template #noShow>
+            <td colspan="3"></td>
+          </ng-template>
         </tr>
       </tbody>
     </table>

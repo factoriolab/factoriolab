@@ -44,6 +44,10 @@
         }
       }
 
+      td.center {
+        text-align: center;
+      }
+
       &.factories td {
         min-width: 2.5rem;
       }
@@ -54,6 +58,10 @@
 
       &.wide > tr > :first-child {
         width: 42%;
+      }
+
+      &.x-wide > tr > :first-child {
+        width: 50%;
       }
 
       &.icons td:last-child > div {

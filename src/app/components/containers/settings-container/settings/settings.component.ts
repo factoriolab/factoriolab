@@ -33,7 +33,7 @@ import {
   presetOptions,
 } from '~/models';
 import { FactoriesState } from '~/store/factories';
-import { PreferencesState } from '~/store/preferences';
+import { ColumnsState, PreferencesState } from '~/store/preferences';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 import { BrowserUtility } from '~/utilities';
 
@@ -61,6 +61,7 @@ export class SettingsComponent implements OnInit {
   @Input() factories: FactoriesState;
   @Input() settings: SettingsState;
   @Input() preferences: PreferencesState;
+  @Input() columns: ColumnsState;
 
   @Output() resetSettings = new EventEmitter();
   @Output() closeSettings = new EventEmitter();
@@ -90,6 +91,7 @@ export class SettingsComponent implements OnInit {
   @Output() setInserterTarget = new EventEmitter<InserterTarget>();
   @Output() setInserterCapacity = new EventEmitter<InserterCapacity>();
   @Output() setDisplayRate = new EventEmitter<DisplayRate>();
+  @Output() setColumns = new EventEmitter<ColumnsState>();
 
   initial = initialSettingsState;
   sortedFuels: string[] = [];
@@ -136,6 +138,12 @@ export class SettingsComponent implements OnInit {
       id: i,
       name: i,
     }));
+  }
+
+  get columnsButton(): string {
+    const num = Object.keys(this.columns).filter((c) => this.columns[c].show)
+      .length;
+    return `${num} Visible`;
   }
 
   constructor(public ref: ChangeDetectorRef, private router: Router) {}

@@ -115,6 +115,39 @@
   </div>
   <div class="hole">
     <div>
+      <div class="header">Display</div>
+      <table class="x-wide">
+        <tr>
+          <td>Columns & Precision</td>
+          <td>
+            <lab-columns
+              class="relative"
+              [isDsp]="data.isDsp"
+              [columns]="columns"
+              (setColumns)="setColumns.emit($event)"
+            >
+              <button class="grow" title="Set columns visibility and precision">
+                <span class="text">{{ columnsButton }}</span>
+              </button>
+            </lab-columns>
+          </td>
+        </tr>
+        <tr>
+          <td>Display rates as</td>
+          <td>
+            <lab-options
+              title="Select display rate"
+              [selected]="settings.displayRate"
+              [options]="DisplayRateOptions"
+              (selectId)="setDisplayRate.emit($event)"
+            ></lab-options>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="hole">
+    <div>
       <div class="header">Factory</div>
       <table class="thin">
         <tr>
@@ -543,24 +576,6 @@
               [selected]="settings.inserterCapacity"
               [options]="InserterCapacityOptions"
               (selectId)="setInserterCapacity.emit($event)"
-            ></lab-options>
-          </td>
-        </tr>
-      </table>
-    </div>
-  </div>
-  <div class="hole">
-    <div>
-      <div class="header">Display</div>
-      <table class="wide">
-        <tr>
-          <td>Display rates as</td>
-          <td>
-            <lab-options
-              title="Select display rate"
-              [selected]="settings.displayRate"
-              [options]="DisplayRateOptions"
-              (selectId)="setDisplayRate.emit($event)"
             ></lab-options>
           </td>
         </tr>

@@ -34,7 +34,8 @@ button:focus {
 th {
   font-weight: normal;
 
-  .header {
+  &.header,
+  > .header {
     font-size: large;
   }
 }
@@ -270,6 +271,10 @@ img.icon {
   }
 }
 
+.grow {
+  flex-grow: 1;
+}
+
 .dialog-title {
   height: 1.5rem;
   display: flex;
@@ -377,6 +382,11 @@ ul.tabs {
 
 .material-icons {
   user-select: none;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
 }
 
 // Sankey SVG styles
