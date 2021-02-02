@@ -503,7 +503,7 @@
       </table>
     </div>
   </div>
-  <div class="hole" *ngIf="!data.isDsp">
+  <div class="hole">
     <div>
       <div class="header">Bonuses</div>
       <table class="wide">
@@ -524,7 +524,7 @@
             %
           </td>
         </tr>
-        <tr>
+        <tr *ngIf="!data.isDsp">
           <td>Research speed</td>
           <td>
             <lab-options
@@ -535,7 +535,7 @@
             ></lab-options>
           </td>
         </tr>
-        <tr>
+        <tr *ngIf="!data.isDsp">
           <td>Inserter capacity</td>
           <td>
             <lab-options
