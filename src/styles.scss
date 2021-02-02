@@ -24,6 +24,13 @@ body {
   }
 }
 
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
+
 th {
   font-weight: normal;
 
@@ -148,8 +155,7 @@ button,
   }
 }
 
-input[type='number'],
-input[type='text'] {
+input {
   width: 5rem;
 
   vertical-align: baseline;
@@ -168,9 +174,12 @@ input[type='text'] {
     width: 3.5rem;
   }
 
-  &:focus,
-  &:active {
+  &:focus {
     background-color: var(--color-input-alt);
+  }
+
+  &.ng-invalid {
+    background-color: var(--color-red);
   }
 }
 
@@ -181,12 +190,6 @@ a:not(.button) {
   &:hover {
     color: var(--color-link-alt);
     text-decoration: underline;
-  }
-}
-
-input {
-  &:invalid {
-    border-color: var(--color-red);
   }
 }
 

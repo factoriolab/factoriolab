@@ -57,25 +57,25 @@ export const Recipe1 = Data.recipeEntities[Data.recipeIds[0]];
 export const Product1: Product = {
   id: '0',
   itemId: Item1.id,
-  rate: 1,
+  rate: '1',
   rateType: RateType.Items,
 };
 export const Product2: Product = {
   id: '1',
   itemId: Item2.id,
-  rate: 2,
+  rate: '2',
   rateType: RateType.Belts,
 };
 export const Product3: Product = {
   id: '2',
   itemId: ItemId.PetroleumGas,
-  rate: 3,
+  rate: '3',
   rateType: RateType.Wagons,
 };
 export const Product4: Product = {
   id: '3',
   itemId: ItemId.TransportBelt,
-  rate: 4,
+  rate: '4',
   rateType: RateType.Factories,
 };
 export const Products = [Product1, Product2, Product3, Product4];
@@ -115,7 +115,7 @@ export const RecipeSettings2: RecipeSettings = {
 export const Step1: Step = {
   itemId: Item1.id,
   recipeId: Item1.id as any,
-  items: Rational.fromNumber(Product1.rate),
+  items: Rational.fromString(Product1.rate),
   belts: Rational.fromNumber(0.5),
   factories: Rational.one,
   power: Rational.one,
@@ -124,7 +124,7 @@ export const Step1: Step = {
 export const Step2: Step = {
   itemId: Item2.id,
   recipeId: Item2.id as any,
-  items: Rational.fromNumber(Product2.rate),
+  items: Rational.fromString(Product2.rate),
   belts: Rational.one,
   factories: Rational.two,
   power: Rational.zero,

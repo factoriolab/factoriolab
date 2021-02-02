@@ -29,7 +29,7 @@ import {
   DialogComponent,
   ColumnsComponent,
 } from './components';
-import { LabErrorHandler } from './lab-error-handler';
+import { LabErrorHandler, ValidateNumberDirective } from './support';
 import { reducers, metaReducers } from './store';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
 
@@ -52,6 +52,7 @@ import { DatasetsEffects } from './store/datasets/datasets.effects';
     OptionsComponent,
     DialogComponent,
     ColumnsComponent,
+    ValidateNumberDirective,
   ],
   imports: [
     BrowserModule,

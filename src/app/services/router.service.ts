@@ -11,6 +11,7 @@ import {
   ItemSettings,
   Entities,
   FactorySettings,
+  Rational,
 } from '~/models';
 import { State } from '~/store';
 import { LoadAction } from '~/store/app.actions';
@@ -86,7 +87,7 @@ export class RouterService {
       {
         id: '0',
         itemId: step.itemId,
-        rate: step.items.toNumber(),
+        rate: step.items.toString(),
         rateType: RateType.Items,
       },
     ];
@@ -160,7 +161,7 @@ export class RouterService {
     return products
       .map((product) => {
         const i = product.itemId;
-        const r = product.rate;
+        const r = Rational.fromString(product.rate).toString();
 
         return [
           i,
@@ -184,7 +185,7 @@ export class RouterService {
       const u: Product = {
         id,
         itemId: p[0],
-        rate: Number(p[1]),
+        rate: p[1],
         rateType: p.length > 2 ? Number(p[2]) : RateType.Items,
       };
       let i = 3;

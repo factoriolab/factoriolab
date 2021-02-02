@@ -35,7 +35,7 @@ export class ProductsComponent {
   @Output() addProduct = new EventEmitter<string>();
   @Output() removeProduct = new EventEmitter<string>();
   @Output() setItem = new EventEmitter<IdPayload>();
-  @Output() setRate = new EventEmitter<IdPayload<number>>();
+  @Output() setRate = new EventEmitter<IdPayload<string>>();
   @Output() setRateType = new EventEmitter<IdPayload<RateType>>();
   @Output() setVia = new EventEmitter<IdPayload>();
 
@@ -65,9 +65,12 @@ export class ProductsComponent {
   }
 
   changeRate(id: string, event: InputEvent): void {
-    const target = event.target as HTMLInputElement;
-    const value = Number(target.value);
-    this.setRate.emit({ id, value });
+    try {
+      const target = event.target as HTMLInputElement;
+      const value = target.value;
+      Rational.fromString(value);
+      this.setRate.emit({ id, value });
+    } catch {}
   }
 
   getStep(product: Product): string {
