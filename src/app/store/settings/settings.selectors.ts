@@ -62,7 +62,8 @@ export const getBase = createSelector(
 export const getDefaults = createSelector(
   getPreset,
   getBase,
-  (preset, base) => {
+  getIsDsp,
+  (preset, base, isDsp) => {
     if (base) {
       const m = base.defaults;
       const defaults: Defaults = {
@@ -74,7 +75,13 @@ export const getDefaults = createSelector(
         disabledRecipes: m.disabledRecipes,
         factoryRank:
           preset === Preset.Minimum ? m.minFactoryRank : m.maxFactoryRank,
-        moduleRank: preset === Preset.Minimum ? [] : m.moduleRank,
+        moduleRank: isDsp
+          ? preset === Preset.Minimum
+            ? [m.minBelt]
+            : [m.maxBelt]
+          : preset === Preset.Minimum
+          ? []
+          : m.moduleRank,
         beaconCount:
           preset < Preset.Beacon8 ? 0 : preset < Preset.Beacon12 ? 8 : 12,
         beacon: m.beacon,

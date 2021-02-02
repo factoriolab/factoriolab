@@ -355,7 +355,8 @@
                     [data]="data"
                     [selected]="mod"
                     [options]="data.recipeModuleIds[step.recipeId]"
-                    includeEmptyModule="true"
+                    [includeEmptyModule]="!data.isDsp"
+                    [displayRate]="displayRate"
                     (selectId)="factoryModuleChange(step, $event, i)"
                   >
                     <lab-icon
@@ -366,6 +367,7 @@
                       [iconId]="mod"
                       [tooltip]="data.itemEntities[mod]?.name"
                       [item]="data.itemEntities[mod]"
+                      [displayRate]="displayRate"
                     ></lab-icon>
                   </lab-select>
                 </div>

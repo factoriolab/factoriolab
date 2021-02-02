@@ -51,6 +51,10 @@ export class AppComponent implements OnInit {
     public title: Title
   ) {}
 
+  homeHref(isDsp: boolean): string {
+    return isDsp ? 'list#s=dsp' : 'list#p=';
+  }
+
   ngOnInit(): void {
     this.data$ = this.store.select(getDataset);
     this.products$ = this.store.select(getProducts);
