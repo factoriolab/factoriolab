@@ -12,7 +12,7 @@ export enum ProductField {
 export interface Product {
   id: string;
   itemId: string;
-  rate: number;
+  rate: string;
   rateType: RateType;
   viaId?: string;
 }
@@ -27,7 +27,7 @@ export class RationalProduct {
   constructor(data: Product) {
     this.id = data.id;
     this.itemId = data.itemId;
-    this.rate = Rational.fromNumber(data.rate);
+    this.rate = Rational.fromString(data.rate);
     this.rateType = data.rateType;
     if (data.viaId) {
       this.viaId = data.viaId;

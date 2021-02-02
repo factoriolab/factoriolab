@@ -1,4 +1,5 @@
 const FLOAT_PRECISION = 100000000;
+const DIVIDE_BY_ZERO = 'Cannot divide by zero';
 
 const bigZero = BigInt(0);
 const bigOne = BigInt(1);
@@ -31,6 +32,9 @@ export class Rational {
   }
 
   static from(p: number, q: number = 1): Rational {
+    if (q === 0) {
+      throw Error(DIVIDE_BY_ZERO);
+    }
     return new Rational(BigInt(p), BigInt(q));
   }
 
@@ -43,6 +47,25 @@ export class Rational {
       BigInt(Math.round(x * FLOAT_PRECISION)),
       BigInt(FLOAT_PRECISION)
     );
+  }
+
+  static fromString(x: string): Rational {
+    if (typeof x === 'number' || x.indexOf('/') === -1) {
+      return Rational.fromNumber(Number(x));
+    } else {
+      const f = x.split('/');
+      if (f[0].indexOf(' ') === -1) {
+        const p = Number(f[0]);
+        const q = Number(f[1]);
+        return Rational.from(p, q);
+      } else {
+        const g = f[0].split(' ');
+        const n = Number(g[0]);
+        const p = Number(g[1]);
+        const q = Number(f[1]);
+        return Rational.from(n).add(Rational.from(p, q));
+      }
+    }
   }
 
   static min(x: Rational, y: Rational): Rational {
@@ -153,6 +176,19 @@ export class Rational {
       const whole = this.p / this.q;
       const mod = this.p % this.q;
       return `${whole} + ${mod}/${this.q}`;
+    }
+
+    return `${this.p}/${this.q}`;
+  }
+
+  toString(): string {
+    if (this.isInteger()) {
+      return this.p.toString();
+    }
+
+    const num = this.toNumber().toString();
+    if (this.eq(Rational.fromString(num))) {
+      return num;
     }
 
     return `${this.p}/${this.q}`;

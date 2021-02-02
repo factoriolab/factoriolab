@@ -32,7 +32,7 @@ export function productsReducer(
           [id]: {
             id,
             itemId: action.payload,
-            rate: 1,
+            rate: '1',
             rateType: RateType.Items,
           },
         },
