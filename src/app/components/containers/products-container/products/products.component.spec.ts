@@ -106,6 +106,13 @@ describe('ProductsComponent', () => {
         value: '3',
       });
     });
+
+    it('should ignore invalid events', () => {
+      spyOn(component, 'setRate');
+      TestUtility.setTextDt(fixture, DataTest.Rate, '1 1');
+      fixture.detectChanges();
+      expect(component.setRate).not.toHaveBeenCalled();
+    });
   });
 
   describe('getStep', () => {

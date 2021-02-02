@@ -125,6 +125,9 @@ export class Rational {
   }
 
   add(x: Rational): Rational {
+    if (x.isZero()) {
+      return this;
+    }
     return new Rational(this.p * x.q + this.q * x.p, this.q * x.q);
   }
 
