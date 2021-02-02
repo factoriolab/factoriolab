@@ -15,14 +15,15 @@ describe('Settings Selectors', () => {
 
   describe('getDefaults', () => {
     it('should handle null base data', () => {
-      const result = Selectors.getDefaults.projector(null, null);
+      const result = Selectors.getDefaults.projector(null, null, null);
       expect(result).toBeNull();
     });
 
     it('should use minimum values', () => {
       const result = Selectors.getDefaults.projector(
         Preset.Minimum,
-        Mocks.Base
+        Mocks.Base,
+        false
       );
       expect(result.belt).toEqual(Mocks.Base.defaults.minBelt);
       expect(result.factoryRank).toEqual(Mocks.Base.defaults.minFactoryRank);
@@ -34,7 +35,8 @@ describe('Settings Selectors', () => {
     it('should use 8 beacons', () => {
       const result = Selectors.getDefaults.projector(
         Preset.Beacon8,
-        Mocks.Base
+        Mocks.Base,
+        false
       );
       expect(result.beaconCount).toEqual(8);
     });
@@ -42,7 +44,8 @@ describe('Settings Selectors', () => {
     it('should use 12 beacons', () => {
       const result = Selectors.getDefaults.projector(
         Preset.Beacon12,
-        Mocks.Base
+        Mocks.Base,
+        false
       );
       expect(result.beaconCount).toEqual(12);
     });
@@ -50,7 +53,8 @@ describe('Settings Selectors', () => {
     it('should get the defaults from the current base mod', () => {
       const result = Selectors.getDefaults.projector(
         Preset.Beacon8,
-        Mocks.Base
+        Mocks.Base,
+        false
       );
       expect(result).toEqual(Mocks.Defaults);
     });
