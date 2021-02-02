@@ -32,7 +32,20 @@ export const PrecisionColumns = [
   Column.Pollution,
 ];
 
-export const ColumnsAsOptions: IdName[] = AllColumns.map((id) => ({
-  id,
-  name: id,
-}));
+export function columnOptions(isDsp: boolean): IdName[] {
+  const result = AllColumns.map((id) => ({
+    id,
+    name: id,
+  }));
+
+  if (isDsp) {
+    return result.filter(
+      (i) =>
+        i.id !== Column.Wagons &&
+        i.id !== Column.Beacons &&
+        i.id !== Column.Pollution
+    );
+  }
+
+  return result;
+}

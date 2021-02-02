@@ -12,4 +12,5 @@ export interface Step {
   pollution?: Rational;
   recipeId?: string;
   parents?: Entities<Rational>;
+  href?: string;
 }

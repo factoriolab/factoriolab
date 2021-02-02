@@ -1,7 +1,18 @@
 import { Column, LinkValue } from '~/models';
+import { initialColumnsState } from './preferences.reducer';
 import * as Selectors from './preferences.selectors';
 
 describe('Preferences Selectors', () => {
+  describe('getColumnsState', () => {
+    it('should override Wagons/Beacons/Pollution for dsp', () => {
+      const state = initialColumnsState;
+      const result = Selectors.getColumnsState.projector(state, true);
+      expect(result[Column.Wagons].show).toBeFalse();
+      expect(result[Column.Beacons].show).toBeFalse();
+      expect(result[Column.Pollution].show).toBeFalse();
+    });
+  });
+
   describe('getLinkPrecision', () => {
     it('should return null for non-column', () => {
       const result = Selectors.getLinkPrecision.projector(LinkValue.None, null);

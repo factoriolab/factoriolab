@@ -5,6 +5,7 @@
       <th>
         <div>
           <lab-columns
+            [isDsp]="data.isDsp"
             [columns]="columns"
             (setColumns)="setColumns.emit($event)"
           ></lab-columns>
@@ -354,7 +355,8 @@
                     [data]="data"
                     [selected]="mod"
                     [options]="data.recipeModuleIds[step.recipeId]"
-                    includeEmptyModule="true"
+                    [includeEmptyModule]="!data.isDsp"
+                    [displayRate]="displayRate"
                     (selectId)="factoryModuleChange(step, $event, i)"
                   >
                     <lab-icon
@@ -365,6 +367,7 @@
                       [iconId]="mod"
                       [tooltip]="data.itemEntities[mod]?.name"
                       [item]="data.itemEntities[mod]"
+                      [displayRate]="displayRate"
                     ></lab-icon>
                   </lab-select>
                 </div>
@@ -482,7 +485,7 @@
               *ngIf="step.items"
               class="button"
               title="Click to open this step in a new tab"
-              [href]="router.stepHref(step)"
+              [href]="step.href"
               target="_blank"
             >
               <i class="clickable material-icons">open_in_new</i>
@@ -1053,7 +1056,7 @@
                 </ng-container>
               </table>
             </div>
-            <div class="info">
+            <div class="info" *ngIf="!data.isDsp">
               <span>
                 * Inserters are calculated using target/capacity settings and
                 0.18 experimental data from the

@@ -2,6 +2,7 @@ import { compose, createSelector } from '@ngrx/store';
 
 import { Column, LinkValue } from '~/models';
 import { State } from '../';
+import { getIsDsp } from '../settings';
 import { ColumnsState, PreferencesState } from './preferences.reducer';
 
 export const preferencesState = (state: State): PreferencesState =>
@@ -11,6 +12,25 @@ const sLinkValue = (state: PreferencesState): LinkValue => state.linkValue;
 
 export const getColumns = compose(sColumns, preferencesState);
 export const getLinkValue = compose(sLinkValue, preferencesState);
+
+export const getColumnsState = createSelector(
+  getColumns,
+  getIsDsp,
+  (col, dsp): ColumnsState =>
+    dsp
+      ? {
+          ...col,
+          ...{
+            [Column.Wagons]: { ...col[Column.Wagons], ...{ show: false } },
+            [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
+            [Column.Pollution]: {
+              ...col[Column.Pollution],
+              ...{ show: false },
+            },
+          },
+        }
+      : col
+);
 
 export const getLinkPrecision = createSelector(
   getLinkValue,

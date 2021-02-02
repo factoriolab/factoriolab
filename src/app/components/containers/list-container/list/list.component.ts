@@ -15,7 +15,6 @@ import {
   Dataset,
   DefaultIdPayload,
   Column,
-  ColumnsAsOptions,
   ItemId,
   ListMode,
   DisplayRateVal,
@@ -63,12 +62,15 @@ export class ListComponent {
   @Input() settings: SettingsState;
   @Input() factories: FactoriesState;
   @Input() beltSpeed: Entities<Rational>;
-  _steps: Step[];
+  _steps: Step[] = [];
   get steps(): Step[] {
     return this._steps;
   }
   @Input() set steps(value: Step[]) {
-    this._steps = value;
+    this._steps = value.map((s) => ({
+      ...s,
+      ...{ href: this.router.stepHref(s) },
+    }));
     this.setDetailTabs();
     this.setDisplayedSteps();
     this.setEffectivePrecision();
@@ -109,9 +111,7 @@ export class ListComponent {
   }
   @Input() set mode(value: ListMode) {
     this._mode = value;
-    if (this.steps) {
-      this.setDisplayedSteps();
-    }
+    this.setDisplayedSteps();
   }
   _selected: string;
   get selected(): string {
@@ -147,7 +147,6 @@ export class ListComponent {
   totalSpan = 2;
   effPrecision: Entities<number> = {};
   DisplayRateVal = DisplayRateVal;
-  ColumnsAsOptions = ColumnsAsOptions;
   ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
 
   Column = Column;

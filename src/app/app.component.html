@@ -1,8 +1,10 @@
 <div class="top-bar">
   <div>
     <div class="header">
-      <a href="list#p=" onclick="setTimeout(location.reload.bind(location), 10)"
-        >Factorio Lab Calculator</a
+      <a
+        [href]="homeHref((data$ | async).isDsp)"
+        onclick="setTimeout(location.reload.bind(location), 10)"
+        >{{ title.getTitle() }}</a
       >
     </div>
     <div class="links">
@@ -76,7 +78,7 @@
         <div>{{ error.message }}</div>
         <br />
         <a
-          href="list#p="
+          [href]="homeHref((data$ | async).isDsp)"
           onclick="setTimeout(location.reload.bind(location), 10)"
           >Click here to reset</a
         >
