@@ -125,7 +125,7 @@ export class SankeyComponent {
       .data(skGraph.links)
       .join('textPath')
       .attr('startOffset', '4px')
-      .attr('href', (l) => `#${l.index}`)
+      .attr('href', (l) => `${location.href}#${l.index}`)
       .text((l) => `${l.dispValue} ${l.name}`);
 
     // Draw rects for nodes
