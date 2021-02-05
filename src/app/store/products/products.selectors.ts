@@ -262,8 +262,14 @@ export const getNormalizedStepsWithBelts = createSelector(
     )
 );
 
-export const getSteps = createSelector(
+export const getNormalizedStepsWithOutputs = createSelector(
   getNormalizedStepsWithBelts,
+  Recipes.getAdjustedDataset,
+  (steps, data) => RateUtility.calculateOutputs(RateUtility.copy(steps), data)
+);
+
+export const getSteps = createSelector(
+  getNormalizedStepsWithOutputs,
   Settings.getDisplayRate,
   (steps, displayRate) =>
     RateUtility.displayRate(RateUtility.copy(steps), displayRate)

@@ -1,4 +1,5 @@
 export enum RecipeId {
+  AdvancedCircuit = 'advanced-circuit',
   AdvancedOilProcessing = 'advanced-oil-processing',
   BasicOilProcessing = 'basic-oil-processing',
   Coal = 'coal',

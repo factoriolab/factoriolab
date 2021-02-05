@@ -63,15 +63,8 @@ export class FlowUtility {
             (step.itemId !== id && !step.parents?.[id])
         )) {
           const outStep = steps.find((s) => s.itemId === outId);
-          const outStepValue = step.factories
-            .mul(recipe.out[outId])
-            .div(recipe.time);
-          const percent = outStepValue.div(
-            outStep.items
-              .add(outStep.surplus || Rational.zero)
-              .div(DisplayRateVal[displayRate])
-          );
           const outValue = this.stepLinkValue(outStep, linkValue);
+          const percent = step.outputs[outId];
           sankey.links.push({
             target: outId,
             source: step.recipeId,

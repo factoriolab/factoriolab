@@ -74,7 +74,7 @@ describe('FlowUtility', () => {
       const result = FlowUtility.buildSankey(
         [
           { itemId: ItemId.Coal, items: Rational.one },
-          { recipeId: RecipeId.Coal, factories: Rational.one },
+          { recipeId: RecipeId.Coal, factories: Rational.one, outputs: {} },
         ] as any[],
         LinkValue.None,
         null,
@@ -158,12 +158,14 @@ describe('FlowUtility', () => {
             itemId: RecipeId.UraniumProcessing,
             recipeId: RecipeId.UraniumProcessing,
             factories: Rational.one,
+            outputs: {},
           },
           {
             itemId: RecipeId.UraniumProcessing,
             recipeId: RecipeId.UraniumProcessing,
             factories: Rational.one,
             parents: {},
+            outputs: {},
           },
           {
             itemId: ItemId.Uranium235,

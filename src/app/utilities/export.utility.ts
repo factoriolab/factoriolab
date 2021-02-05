@@ -1,6 +1,6 @@
 import { saveAs } from 'file-saver';
 
-import { Step, Column } from '~/models';
+import { Step, Column, Dataset } from '~/models';
 import { ItemsState } from '~/store/items';
 import { ColumnsState } from '~/store/preferences';
 import { RecipesState } from '~/store/recipes';
@@ -11,21 +11,24 @@ const CSV_EXTENSION = '.csv';
 
 export interface StepExport {
   Item: string;
-  Items: number;
-  Surplus: number;
-  Belts?: number;
+  Items: string;
+  Surplus: string;
+  Inputs: string;
+  Outputs: string;
+  Targets: string;
+  Belts?: string;
   Belt?: string;
-  Wagons?: number;
+  Wagons?: string;
   Wagon?: string;
   Recipe?: string;
-  Factories?: number;
+  Factories?: string;
   Factory?: string;
   FactoryModules?: string;
-  Beacons?: number;
+  Beacons?: string;
   Beacon?: string;
   BeaconModules?: string;
-  Power?: number;
-  Pollution?: number;
+  Power?: string;
+  Pollution?: string;
 }
 
 export class ExportUtility {
@@ -33,10 +36,11 @@ export class ExportUtility {
     steps: Step[],
     columns: ColumnsState,
     itemSettings: ItemsState,
-    recipeSettings: RecipesState
+    recipeSettings: RecipesState,
+    data: Dataset
   ): void {
     const json = steps.map((s) =>
-      this.stepToJson(s, columns, itemSettings, recipeSettings)
+      this.stepToJson(s, steps, columns, itemSettings, recipeSettings, data)
     );
     const fields = Object.keys(json[0]);
     const csv = json.map((row) => fields.map((f) => row[f]).join(','));
@@ -56,59 +60,63 @@ export class ExportUtility {
 
   static stepToJson(
     step: Step,
+    steps: Step[],
     columns: ColumnsState,
     itemSettings: ItemsState,
-    recipeSettings: RecipesState
+    recipeSettings: RecipesState,
+    data: Dataset
   ): StepExport {
     const exp: StepExport = {
       Item: step.itemId,
-      Items: step.items.toNumber(),
-      Surplus: step.surplus?.toNumber() || 0,
+      Items: step.items ? '=' + step.items.toString() : '',
+      Surplus: step.surplus ? '=' + step.surplus.toString() : '',
+      Inputs: '',
+      Outputs: step.outputs
+        ? `"${Object.keys(step.outputs)
+            .map((o) => `${o}:${step.outputs[o].toString()}`)
+            .join(',')}"`
+        : '',
+      Targets: step.parents
+        ? `"${Object.keys(step.parents)
+            .map((p) => `${p}:${step.parents[p].toString()}`)
+            .join(',')}"`
+        : '',
     };
     if (columns[Column.Belts].show) {
-      exp.Belts = step.belts?.toNumber() || 0;
+      exp.Belts = step.belts ? '=' + step.belts.toString() : '';
       exp.Belt = itemSettings[step.itemId].belt;
     }
     if (columns[Column.Wagons].show) {
-      exp.Wagons = step.wagons?.toNumber() || 0;
+      exp.Wagons = step.wagons ? '=' + step.wagons.toString() : '';
       exp.Wagon = itemSettings[step.itemId].wagon;
     }
     if (step.recipeId) {
       exp.Recipe = step.recipeId;
-      const recipe = recipeSettings[step.recipeId];
+      const recipe = data.recipeR[step.recipeId];
+      if (recipe.in) {
+        exp.Inputs = `"${Object.keys(recipe.in)
+          .map((i) => {
+            const inStep = steps.find((s) => s.itemId === i);
+            return `${i}:${inStep?.parents[step.recipeId].toString() || ''}`;
+          })
+          .join(',')}"`;
+      }
+      const settings = recipeSettings[step.recipeId];
       if (columns[Column.Factories].show) {
-        exp.Factories = step.factories?.toNumber() || 0;
-        exp.Factory = recipe.factory;
-        exp.FactoryModules = `"${(recipe.factoryModules || []).join(',')}"`;
+        exp.Factories = step.factories ? '=' + step.factories.toString() : '';
+        exp.Factory = settings.factory;
+        exp.FactoryModules = `"${(settings.factoryModules || []).join(',')}"`;
       }
       if (columns[Column.Beacons].show) {
-        exp.Beacons = recipe.beaconCount;
-        exp.Beacon = recipe.beacon;
-        exp.BeaconModules = `"${(recipe.beaconModules || []).join(',')}"`;
+        exp.Beacons = settings.beaconCount.toString();
+        exp.Beacon = settings.beacon;
+        exp.BeaconModules = `"${(settings.beaconModules || []).join(',')}"`;
       }
       if (columns[Column.Power].show) {
-        exp.Power = step.power?.toNumber() || 0;
+        exp.Power = step.power ? '=' + step.power.toString() : '';
       }
       if (columns[Column.Pollution].show) {
-        exp.Pollution = step.pollution?.toNumber() || 0;
-      }
-    } else {
-      exp.Recipe = '';
-      if (columns[Column.Factories].show) {
-        exp.Factories = 0;
-        exp.Factory = '';
-        exp.FactoryModules = '';
-      }
-      if (columns[Column.Beacons].show) {
-        exp.Beacons = 0;
-        exp.Beacon = '';
-        exp.BeaconModules = '';
-      }
-      if (columns[Column.Power].show) {
-        exp.Power = 0;
-      }
-      if (columns[Column.Pollution].show) {
-        exp.Pollution = 0;
+        exp.Pollution = step.pollution ? '=' + step.pollution.toString() : '';
       }
     }
     return exp;
