@@ -104,7 +104,7 @@ export class SimplexUtility {
         )
         .map((s) => [s.recipeId, s.factories]);
     } else {
-      return steps.map((s) => [s.itemId, s.items]);
+      return steps.filter((s) => s.itemId).map((s) => [s.itemId, s.items]);
     }
   }
 
