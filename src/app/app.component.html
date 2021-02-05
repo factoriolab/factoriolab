@@ -3,7 +3,7 @@
     <div class="header">
       <a
         [href]="homeHref((data$ | async).isDsp)"
-        onclick="setTimeout(location.reload.bind(location), 10)"
+        onclick="setTimeout(location.reload.bind(location), 100)"
         ><h1>{{ title }}</h1></a
       >
     </div>
@@ -75,7 +75,7 @@
         <br />
         <a
           [href]="homeHref((data$ | async).isDsp)"
-          onclick="setTimeout(location.reload.bind(location), 10)"
+          onclick="setTimeout(location.reload.bind(location), 100)"
           >Click here to reset</a
         >
       </div>

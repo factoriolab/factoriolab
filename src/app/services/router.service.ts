@@ -78,7 +78,7 @@ export class RouterService {
         this.zipPartial += `&s=${zSettings}`;
       }
       this.zip = this.getHash(zState);
-      this.router.navigateByUrl(`${this.router.url.split('#')[0]}#${this.zip}`);
+      this.router.navigateByUrl(`${location.pathname}?${this.zip}`);
     }
   }
 
@@ -95,7 +95,7 @@ export class RouterService {
       },
     ];
     const zProducts = this.zipProducts(products);
-    return '#' + this.getHash(`p=${zProducts}`);
+    return '?' + this.getHash(`p=${zProducts}`);
   }
 
   getHash(zProducts: string): string {
@@ -108,8 +108,18 @@ export class RouterService {
     try {
       if (e instanceof NavigationEnd) {
         const fragments = e.urlAfterRedirects.split('#');
-        if (fragments.length > 1) {
-          const urlZip = fragments[fragments.length - 1];
+        let query = fragments[0].split('?');
+        if (
+          query.length < 2 &&
+          fragments.length > 1 &&
+          fragments[1].length > 1 &&
+          fragments[1][1] === '='
+        ) {
+          // Try to recognize and handle old hash style navigation
+          query = fragments;
+        }
+        if (query.length > 1) {
+          const urlZip = query[1];
           if (this.zip !== urlZip) {
             const zState = urlZip.startsWith('z=')
               ? inflate(atob(urlZip.substr(2)), { to: 'string' })

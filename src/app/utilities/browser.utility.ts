@@ -8,7 +8,12 @@ export class BrowserUtility {
   }
 
   static get hash(): string {
-    return location.hash.substr(1);
+    return (
+      location.search ||
+      (location.hash?.length > 1 &&
+        location.hash[2] === '=' &&
+        location.hash.substr(1))
+    );
   }
 
   static get href(): string {
