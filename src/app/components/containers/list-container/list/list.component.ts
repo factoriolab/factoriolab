@@ -70,9 +70,11 @@ export class ListComponent {
   @Input() set steps(value: Step[]) {
     this._steps = value.map((s) => ({
       ...s,
-      ...{ id: `${s.itemId}-${s.recipeId}`, href: this.router.stepHref(s) },
+      ...{
+        id: `${s.itemId || ''}.${s.recipeId || ''}`,
+        href: this.router.stepHref(s),
+      },
     }));
-    console.log(this.steps);
     this.setDetailTabs();
     this.setDisplayedSteps();
     this.setEffectivePrecision();

@@ -275,6 +275,31 @@ describe('RateUtility', () => {
     });
   });
 
+  describe('calculateOutputs', () => {
+    it('should ignore steps with no recipe', () => {
+      const result = RateUtility.calculateOutputs(
+        [{ itemId: ItemId.Coal, items: Rational.one }],
+        Mocks.AdjustedData
+      );
+      expect(result[0].outputs).toBeUndefined();
+    });
+
+    it('should calculate step output percentages', () => {
+      const result = RateUtility.calculateOutputs(
+        [
+          {
+            itemId: ItemId.Coal,
+            items: Rational.one,
+            factories: Rational.two,
+            recipeId: RecipeId.Coal,
+          },
+        ],
+        Mocks.AdjustedData
+      );
+      expect(result[0].outputs).toEqual({ [ItemId.Coal]: Rational.from(3, 2) });
+    });
+  });
+
   describe('displayRate', () => {
     it('should skip steps with no items', () => {
       const steps: Step[] = [

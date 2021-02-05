@@ -117,6 +117,7 @@ class TestListComponent {
 describe('ListComponent', () => {
   let component: TestListComponent;
   let fixture: ComponentFixture<TestListComponent>;
+  let router: RouterService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -137,12 +138,23 @@ describe('ListComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TestListComponent);
+    router = TestBed.inject(RouterService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('steps', () => {
+    it('should set href and id', () => {
+      spyOn(router, 'stepHref').and.returnValue('test');
+      component.steps = [{}] as any;
+      fixture.detectChanges();
+      expect(component.child.steps[0].id).toEqual('.');
+      expect(component.child.steps[0].href).toEqual('test');
+    });
   });
 
   describe('columns', () => {
@@ -235,10 +247,13 @@ describe('ListComponent', () => {
   });
 
   describe('setDetailTabs', () => {
+    const id = `${ItemId.PetroleumGas}.${RecipeId.AdvancedOilProcessing}`;
+    const id2 = `${ItemId.CopperPlate}.`;
+
     it('should include no tabs', () => {
       component.steps = [{ itemId: ItemId.CopperPlate, items: Rational.one }];
       fixture.detectChanges();
-      expect(component.child.details[ItemId.CopperPlate]).toEqual([]);
+      expect(component.child.details[id2]).toEqual([]);
     });
 
     it('should include all tabs', () => {
@@ -252,19 +267,21 @@ describe('ListComponent', () => {
         },
       ];
       fixture.detectChanges();
-      expect(component.child.details[ItemId.PetroleumGas]).toEqual([
+      expect(component.child.details[id]).toEqual([
         StepDetailTab.Inputs,
         StepDetailTab.Outputs,
+        StepDetailTab.Targets,
         StepDetailTab.Factory,
         StepDetailTab.Recipes,
       ]);
-      expect(component.child.recipes[ItemId.PetroleumGas].length).toEqual(4);
+      expect(component.child.recipes[id].length).toEqual(4);
     });
 
     it('should keep an expanded step that is still valid', () => {
-      component.child.expanded[ItemId.PetroleumGas] = StepDetailTab.Inputs;
+      component.child.expanded[id] = StepDetailTab.Inputs;
       component.steps = [
         {
+          id,
           itemId: ItemId.PetroleumGas,
           recipeId: RecipeId.AdvancedOilProcessing,
           items: Rational.one,
@@ -273,27 +290,26 @@ describe('ListComponent', () => {
         },
       ];
       fixture.detectChanges();
-      expect(component.child.expanded[ItemId.PetroleumGas]).toEqual(
-        StepDetailTab.Inputs
-      );
+      expect(component.child.expanded[id]).toEqual(StepDetailTab.Inputs);
     });
 
     it('should collapse an expanded step that can no longer be expanded', () => {
-      component.child.expanded[ItemId.CopperPlate] = StepDetailTab.Inputs;
+      component.child.expanded[id2] = StepDetailTab.Inputs;
       component.steps = [{ itemId: ItemId.CopperPlate, items: Rational.one }];
       fixture.detectChanges();
-      expect(component.child.expanded[ItemId.CopperPlate]).toBeUndefined();
+      expect(component.child.expanded[id2]).toBeUndefined();
     });
 
     it('should collapse an expanded step that no longer exists', () => {
-      component.child.expanded[ItemId.CopperCable] = StepDetailTab.Inputs;
+      const i = 'id';
+      component.child.expanded[i] = StepDetailTab.Inputs;
       component.steps = [{ itemId: ItemId.CopperPlate, items: Rational.one }];
       fixture.detectChanges();
-      expect(component.child.expanded[ItemId.CopperCable]).toBeUndefined();
+      expect(component.child.expanded[i]).toBeUndefined();
     });
 
     it('should select a new detail tab when possible', () => {
-      component.child.expanded[ItemId.PetroleumGas] = -1 as any;
+      component.child.expanded[id] = -1 as any;
       component.steps = [
         {
           itemId: ItemId.PetroleumGas,
@@ -304,9 +320,22 @@ describe('ListComponent', () => {
         },
       ];
       fixture.detectChanges();
-      expect(component.child.expanded[ItemId.PetroleumGas]).toEqual(
-        StepDetailTab.Inputs
-      );
+      expect(component.child.expanded[id]).toEqual(StepDetailTab.Inputs);
+    });
+
+    it('should exclude inputs tab for recipe with no inputs', () => {
+      const i = `${ItemId.Coal}.${RecipeId.Coal}`;
+      component.steps = [
+        {
+          itemId: ItemId.Coal,
+          items: Rational.one,
+          recipeId: RecipeId.Coal,
+          parents: {},
+          factories: Rational.one,
+        },
+      ];
+      fixture.detectChanges();
+      expect(component.child.details[i].length).toEqual(3);
     });
   });
 
@@ -316,6 +345,7 @@ describe('ListComponent', () => {
     });
 
     it('should set displayed steps to selected step', () => {
+      const id = `${ItemId.WoodenChest}.${ItemId.WoodenChest}`;
       component.mode = ListMode.Focus;
       component.selected = Mocks.Step1.itemId;
       fixture.detectChanges();
@@ -323,7 +353,7 @@ describe('ListComponent', () => {
         component.child.steps[0],
       ]);
       expect(component.child.expanded).toEqual({
-        [Mocks.Step1.itemId]: StepDetailTab.Inputs,
+        [id]: StepDetailTab.Inputs,
       });
     });
 
@@ -332,14 +362,6 @@ describe('ListComponent', () => {
       fixture.detectChanges();
       expect(component.child.displayedSteps).toEqual([]);
       expect(component.child.expanded).toEqual({});
-    });
-  });
-
-  describe('trackBy', () => {
-    it('should combine the step item and recipe ids', () => {
-      expect(component.child.trackBy(Mocks.Step1)).toEqual(
-        `${Mocks.Step1.itemId}.${Mocks.Step1.recipeId}`
-      );
     });
   });
 

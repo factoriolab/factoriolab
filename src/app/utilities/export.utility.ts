@@ -69,30 +69,26 @@ export class ExportUtility {
     const exp: StepExport = {
       Item: step.itemId,
       Items: step.items ? '=' + step.items.toString() : '',
-      Surplus: step.surplus ? '=' + step.surplus?.toString() : '',
+      Surplus: step.surplus ? '=' + step.surplus.toString() : '',
       Inputs: '',
-      Outputs: `"${
-        (step.outputs &&
-          Object.keys(step.outputs)
+      Outputs: step.outputs
+        ? `"${Object.keys(step.outputs)
             .map((o) => `${o}:${step.outputs[o].toString()}`)
-            .join(',')) ||
-        ''
-      }"`,
-      Targets: `"${
-        (step.parents &&
-          Object.keys(step.parents)
+            .join(',')}"`
+        : '',
+      Targets: step.parents
+        ? `"${Object.keys(step.parents)
             .map((p) => `${p}:${step.parents[p].toString()}`)
-            .join(',')) ||
-        ''
-      }"`,
+            .join(',')}"`
+        : '',
     };
     if (columns[Column.Belts].show) {
       exp.Belts = step.belts ? '=' + step.belts.toString() : '';
-      exp.Belt = itemSettings[step.itemId]?.belt;
+      exp.Belt = itemSettings[step.itemId].belt;
     }
     if (columns[Column.Wagons].show) {
       exp.Wagons = step.wagons ? '=' + step.wagons.toString() : '';
-      exp.Wagon = itemSettings[step.itemId]?.wagon;
+      exp.Wagon = itemSettings[step.itemId].wagon;
     }
     if (step.recipeId) {
       exp.Recipe = step.recipeId;
@@ -101,7 +97,7 @@ export class ExportUtility {
         exp.Inputs = `"${Object.keys(recipe.in)
           .map((i) => {
             const inStep = steps.find((s) => s.itemId === i);
-            return `${i}:${inStep?.parents[step.recipeId].toString()}` || '';
+            return `${i}:${inStep?.parents[step.recipeId].toString() || ''}`;
           })
           .join(',')}"`;
       }
