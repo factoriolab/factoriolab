@@ -22,8 +22,11 @@
   }
 
   .header {
-    font-size: larger;
     margin-right: 1rem;
+
+    h1 {
+      font-size: larger;
+    }
 
     a,
     a:hover {

@@ -136,6 +136,20 @@ export class RateUtility {
     return steps;
   }
 
+  static calculateOutputs(steps: Step[], data: Dataset): Step[] {
+    for (const step of steps.filter((s) => s.recipeId)) {
+      const recipe = data.recipeR[step.recipeId];
+      step.outputs = {};
+      for (const id of Object.keys(recipe.out)) {
+        const val = recipe.out[id].mul(step.factories).div(recipe.time);
+        const outStep = steps.find((s) => s.itemId === id);
+        const total = outStep.items.add(outStep.surplus || Rational.zero);
+        step.outputs[id] = val.div(total);
+      }
+    }
+    return steps;
+  }
+
   static displayRate(steps: Step[], displayRate: DisplayRate): Step[] {
     const displayRateVal = DisplayRateVal[displayRate];
     for (const step of steps) {

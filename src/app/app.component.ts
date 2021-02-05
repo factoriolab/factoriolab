@@ -42,13 +42,14 @@ export class AppComponent implements OnInit {
 
   ItemId = ItemId;
 
+  title: string;
   showSettings: boolean;
 
   constructor(
     public error: ErrorService,
     public router: RouterService,
     public store: Store<State>,
-    public title: Title
+    public titleService: Title
   ) {}
 
   homeHref(isDsp: boolean): string {
@@ -71,8 +72,9 @@ export class AppComponent implements OnInit {
           s.settings
         );
       });
-    this.store
-      .select(getIsDsp)
-      .subscribe((dsp) => this.title.setTitle(dsp ? TITLE_DSP : TITLE_LAB));
+    this.store.select(getIsDsp).subscribe((dsp) => {
+      this.title = dsp ? TITLE_DSP : TITLE_LAB;
+      this.titleService.setTitle(`FactorioLab | ${this.title}`);
+    });
   }
 }

@@ -4,7 +4,7 @@
       <a
         [href]="homeHref((data$ | async).isDsp)"
         onclick="setTimeout(location.reload.bind(location), 10)"
-        >{{ title.getTitle() }}</a
+        ><h1>{{ title }}</h1></a
       >
     </div>
     <div class="links">
@@ -12,15 +12,11 @@
         >Wiki</a
       >
       <span class="separator">|</span>
-      <a
-        target="_blank"
-        href="https://github.com/factoriolab/factorio-lab/issues"
-        >Issues</a
-      >
-      <span class="separator">|</span>
       <a target="_blank" href="https://github.com/factoriolab/factorio-lab"
         >Source</a
       >
+      <span class="separator">|</span>
+      <a target="_blank" href="https://discord.gg/N4FKV687x2">Discord</a>
       <span class="separator">|</span>
       <a target="_blank" href="https://ko-fi.com/dcbroad3">Donate</a>
     </div>

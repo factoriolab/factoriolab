@@ -80,6 +80,6 @@ describe('AppComponent', () => {
     store.dispatch(new SetBaseAction('dsp'));
     spyOn(title, 'setTitle');
     fixture.detectChanges();
-    expect(title.setTitle).toHaveBeenCalledWith(TITLE_DSP);
+    expect(title.setTitle).toHaveBeenCalledWith(`FactorioLab | ${TITLE_DSP}`);
   });
 });

@@ -1,4 +1,4 @@
-import { Mocks } from 'src/tests';
+import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   Step,
   Rational,
@@ -22,15 +22,16 @@ describe('ExportUtility', () => {
         Mocks.Steps,
         initialColumnsState,
         Mocks.ItemSettingsInitial,
-        Mocks.RecipeSettingsInitial
+        Mocks.RecipeSettingsInitial,
+        Mocks.AdjustedData
       );
       expect(ExportUtility.saveAsCsv).toHaveBeenCalled();
     });
   });
 
   describe('stepToJson', () => {
-    const itemId = 'itemId';
-    const recipeId = 'recipeId';
+    const itemId = ItemId.Coal;
+    const recipeId = RecipeId.Coal;
     const fullStep: Step = {
       itemId,
       items: Rational.one,
@@ -67,68 +68,83 @@ describe('ExportUtility', () => {
     it('should fill in all fields', () => {
       const result = ExportUtility.stepToJson(
         fullStep,
+        [fullStep],
         initialColumnsState,
         { [itemId]: itemS },
-        { [recipeId]: fullRecipe }
+        { [recipeId]: fullRecipe },
+        Mocks.AdjustedData
       );
       expect(result).toEqual({
         Item: itemId,
-        Items: 1,
-        Surplus: 2,
-        Belts: 3,
+        Items: '=1',
+        Surplus: '=2',
+        Inputs: '',
+        Outputs: '',
+        Targets: '',
+        Belts: '=3',
         Belt: itemS.belt,
-        Wagons: 4,
+        Wagons: '=4',
         Wagon: itemS.wagon,
         Recipe: recipeId,
-        Factories: 5,
+        Factories: '=5',
         Factory: fullRecipe.factory,
         FactoryModules: '"a,b"',
-        Beacons: 8,
+        Beacons: '8',
         Beacon: fullRecipe.beacon,
         BeaconModules: '"c,d"',
-        Power: 6,
-        Pollution: 7,
+        Power: '=6',
+        Pollution: '=7',
       });
     });
 
     it('should handle empty fields', () => {
       const result = ExportUtility.stepToJson(
         minStep,
+        [minStep],
         initialColumnsState,
         { [itemId]: itemS },
-        { [recipeId]: minRecipe }
+        { [recipeId]: minRecipe },
+        Mocks.AdjustedData
       );
       expect(result).toEqual({
         Item: itemId,
-        Items: 1,
-        Surplus: 0,
-        Belts: 0,
+        Items: '=1',
+        Surplus: '',
+        Inputs: '',
+        Outputs: '',
+        Targets: '',
+        Belts: '',
         Belt: itemS.belt,
-        Wagons: 0,
+        Wagons: '',
         Wagon: itemS.wagon,
         Recipe: recipeId,
-        Factories: 0,
+        Factories: '',
         Factory: minRecipe.factory,
         FactoryModules: '""',
-        Beacons: 8,
+        Beacons: '8',
         Beacon: minRecipe.beacon,
         BeaconModules: '""',
-        Power: 0,
-        Pollution: 0,
+        Power: '',
+        Pollution: '',
       });
     });
 
     it('should handle minimum columns', () => {
       const result = ExportUtility.stepToJson(
         fullStep,
+        [fullStep],
         noCols,
         { [itemId]: itemS },
-        { [recipeId]: fullRecipe }
+        { [recipeId]: fullRecipe },
+        Mocks.AdjustedData
       );
       expect(result).toEqual({
         Item: itemId,
-        Items: 1,
-        Surplus: 2,
+        Items: '=1',
+        Surplus: '=2',
+        Inputs: '',
+        Outputs: '',
+        Targets: '',
         Recipe: recipeId,
       });
     });
@@ -137,43 +153,72 @@ describe('ExportUtility', () => {
       const step = { ...fullStep, ...{ recipeId: null } };
       const result = ExportUtility.stepToJson(
         step,
-        initialColumnsState,
+        [step],
+        noCols,
         { [itemId]: itemS },
-        { [recipeId]: fullRecipe }
+        { [recipeId]: fullRecipe },
+        Mocks.AdjustedData
       );
       expect(result).toEqual({
         Item: itemId,
-        Items: 1,
-        Surplus: 2,
-        Belts: 3,
-        Belt: itemS.belt,
-        Wagons: 4,
-        Wagon: itemS.wagon,
-        Recipe: '',
-        Factories: 0,
-        Factory: '',
-        FactoryModules: '',
-        Beacons: 0,
-        Beacon: '',
-        BeaconModules: '',
-        Power: 0,
-        Pollution: 0,
+        Items: '=1',
+        Surplus: '=2',
+        Inputs: '',
+        Outputs: '',
+        Targets: '',
       });
     });
 
-    it('should handle no recipe or columns', () => {
-      const step = { ...fullStep, ...{ recipeId: null } };
+    it('should handle no items', () => {
+      const step = { ...minStep, ...{ items: null } };
       const result = ExportUtility.stepToJson(
         step,
+        [step],
         noCols,
         { [itemId]: itemS },
-        { [recipeId]: fullRecipe }
+        { [recipeId]: fullRecipe },
+        Mocks.AdjustedData
       );
       expect(result).toEqual({
         Item: itemId,
-        Items: 1,
-        Surplus: 2,
-        Recipe: '',
+        Items: '',
+        Surplus: '',
+        Inputs: '',
+        Outputs: '',
+        Targets: '',
+        Recipe: recipeId,
+      });
+    });
+
+    it('should handle outputs and targets', () => {
+      const step: Step = {
+        itemId: ItemId.PlasticBar,
+        items: Rational.one,
+        recipeId: RecipeId.PlasticBar,
+        outputs: { [ItemId.PlasticBar]: Rational.one },
+        parents: { [RecipeId.AdvancedCircuit]: Rational.one },
+      };
+      const inStep: Step = {
+        itemId: ItemId.Coal,
+        items: Rational.one,
+        parents: { [RecipeId.PlasticBar]: Rational.one },
+      };
+      const result = ExportUtility.stepToJson(
+        step,
+        [step, inStep],
+        noCols,
+        { [itemId]: itemS },
+        { [recipeId]: fullRecipe },
+        Mocks.AdjustedData
+      );
+      expect(result).toEqual({
+        Item: ItemId.PlasticBar,
+        Items: '=1',
+        Surplus: '',
+        Inputs: `"${ItemId.Coal}:1,${ItemId.PetroleumGas}:"`,
+        Outputs: `"${ItemId.PlasticBar}:1"`,
+        Targets: `"${ItemId.AdvancedCircuit}:1"`,
+        Recipe: RecipeId.PlasticBar,
       });
     });
   });

@@ -99,16 +99,16 @@
         <td>
           <div>
             <button
-              *ngIf="details[step.itemId]?.length && !expanded[step.itemId]"
+              *ngIf="details[step.id]?.length && !expanded[step.id]"
               title="Click to show details"
-              (click)="expanded[step.itemId] = details[step.itemId][0]"
+              (click)="expanded[step.id] = details[step.id][0]"
             >
               <i class="material-icons">expand_more</i>
             </button>
             <button
-              *ngIf="mode === ListMode.All && expanded[step.itemId]"
+              *ngIf="mode === ListMode.All && expanded[step.id]"
               title="Click to hide details"
-              (click)="expanded[step.itemId] = null"
+              (click)="expanded[step.id] = null"
             >
               <i class="material-icons">expand_less</i>
             </button>
@@ -505,54 +505,54 @@
           </div>
         </td>
       </tr>
-      <ng-container *ngIf="expanded[step.itemId]">
+      <ng-container *ngIf="expanded[step.id]">
         <tr class="detail-header">
           <td></td>
           <td colspan="100" class="detail-tabs">
             <ul class="tabs">
               <li
-                *ngIf="
-                  details[step.itemId].indexOf(StepDetailTab.Inputs) !== -1
-                "
-                [class.active]="expanded[step.itemId] === StepDetailTab.Inputs"
-                (click)="expanded[step.itemId] = StepDetailTab.Inputs"
+                *ngIf="details[step.id].indexOf(StepDetailTab.Inputs) !== -1"
+                [class.active]="expanded[step.id] === StepDetailTab.Inputs"
+                (click)="expanded[step.id] = StepDetailTab.Inputs"
               >
                 <span>Inputs</span>
               </li>
               <li
-                *ngIf="
-                  details[step.itemId].indexOf(StepDetailTab.Outputs) !== -1
-                "
-                [class.active]="expanded[step.itemId] === StepDetailTab.Outputs"
-                (click)="expanded[step.itemId] = StepDetailTab.Outputs"
+                *ngIf="details[step.id].indexOf(StepDetailTab.Outputs) !== -1"
+                [class.active]="expanded[step.id] === StepDetailTab.Outputs"
+                (click)="expanded[step.id] = StepDetailTab.Outputs"
               >
                 <span>Outputs</span>
               </li>
               <li
-                *ngIf="
-                  details[step.itemId].indexOf(StepDetailTab.Factory) !== -1
-                "
-                [class.active]="expanded[step.itemId] === StepDetailTab.Factory"
-                (click)="expanded[step.itemId] = StepDetailTab.Factory"
+                *ngIf="details[step.id].indexOf(StepDetailTab.Targets) !== -1"
+                [class.active]="expanded[step.id] === StepDetailTab.Targets"
+                (click)="expanded[step.id] = StepDetailTab.Targets"
+              >
+                <span>Targets</span>
+              </li>
+              <li
+                *ngIf="details[step.id].indexOf(StepDetailTab.Factory) !== -1"
+                [class.active]="expanded[step.id] === StepDetailTab.Factory"
+                (click)="expanded[step.id] = StepDetailTab.Factory"
               >
                 <span>Factory</span>
               </li>
               <li
-                *ngIf="
-                  details[step.itemId].indexOf(StepDetailTab.Recipes) !== -1
-                "
-                [class.active]="expanded[step.itemId] === StepDetailTab.Recipes"
-                (click)="expanded[step.itemId] = StepDetailTab.Recipes"
+                *ngIf="details[step.id].indexOf(StepDetailTab.Recipes) !== -1"
+                [class.active]="expanded[step.id] === StepDetailTab.Recipes"
+                (click)="expanded[step.id] = StepDetailTab.Recipes"
               >
                 <span>Recipes</span>
               </li>
             </ul>
           </td>
         </tr>
-        <ng-container *ngIf="expanded[step.itemId] === StepDetailTab.Inputs">
+        <ng-container *ngIf="expanded[step.id] === StepDetailTab.Inputs">
           <ng-container
             *ngFor="
-              let input of data.recipeEntities[step.recipeId].in | keyvalue;
+              let input of data.recipeR[step.recipeId].in
+                | keyvalue: sortKeyValue;
               first as isFirst;
               last as isLast
             "
@@ -704,7 +704,166 @@
             </ng-container>
           </ng-container>
         </ng-container>
-        <ng-container *ngIf="expanded[step.itemId] === StepDetailTab.Outputs">
+        <ng-container *ngIf="expanded[step.id] === StepDetailTab.Outputs">
+          <ng-container
+            *ngFor="
+              let output of step.outputs | keyvalue: sortKeyValue;
+              first as isFirst;
+              last as isLast
+            "
+          >
+            <ng-container *ngIf="findStep(output.key) as outStep">
+              <tr
+                *ngIf="step.outputs[output.key] as percent"
+                class="details"
+                [class.first]="isFirst"
+                [class.last]="isLast"
+              >
+                <td></td>
+                <td>
+                  <div class="flex">
+                    <span class="monospace">{{
+                      rate(
+                        outStep.items
+                          .add(outStep.surplus || Rational.zero)
+                          .mul(percent),
+                        effPrecision[Column.Items]
+                      )
+                    }}</span>
+                    <lab-icon
+                      [data]="data"
+                      [iconId]="output.key"
+                      [tooltip]="data.itemEntities[output.key]?.name"
+                      [recipe]="
+                        data.recipeEntities[data.itemRecipeIds[output.key]]
+                      "
+                    >
+                    </lab-icon>
+                  </div>
+                </td>
+                <td *ngIf="columns[Column.Belts].show">
+                  <ng-container
+                    *ngIf="itemSettings[outStep.itemId].belt as belt"
+                  >
+                    <div
+                      *ngIf="
+                        outStep.belts &&
+                        (!outStep.recipeId ||
+                          !data.itemEntities[
+                            recipeSettings[outStep.recipeId].factory
+                          ].factory.research)
+                      "
+                      class="flex"
+                    >
+                      <span class="monospace">{{
+                        rate(
+                          outStep.belts.mul(percent),
+                          effPrecision[Column.Belts]
+                        )
+                      }}</span>
+                      <lab-icon
+                        [data]="data"
+                        [iconId]="belt"
+                        [tooltip]="data.itemEntities[belt].name"
+                        [item]="data.itemEntities[belt]"
+                        [displayRate]="displayRate"
+                      ></lab-icon>
+                    </div>
+                  </ng-container>
+                </td>
+                <td *ngIf="columns[Column.Wagons].show">
+                  <ng-container
+                    *ngIf="itemSettings[outStep.itemId]?.wagon as wagon"
+                  >
+                    <div
+                      *ngIf="
+                        outStep.wagons &&
+                        (!outStep.recipeId ||
+                          !data.itemEntities[
+                            recipeSettings[outStep.recipeId].factory
+                          ].factory.research)
+                      "
+                      class="flex"
+                    >
+                      <span class="monospace">{{
+                        rate(
+                          outStep.wagons.mul(percent),
+                          effPrecision[Column.Wagons]
+                        )
+                      }}</span>
+                      <lab-icon
+                        [data]="data"
+                        [iconId]="wagon"
+                        [tooltip]="data.itemEntities[wagon].name"
+                        [item]="data.itemEntities[wagon]"
+                      ></lab-icon>
+                    </div>
+                  </ng-container>
+                </td>
+                <ng-container *ngIf="columns[Column.Factories].show">
+                  <ng-container
+                    *ngIf="recipeSettings[outStep.recipeId]?.factory as factory"
+                  >
+                    <td>
+                      <div *ngIf="outStep.factories?.nonzero()" class="flex">
+                        <span class="monospace">{{
+                          factoryRate(
+                            outStep.factories.mul(percent),
+                            effPrecision[Column.Factories],
+                            factory
+                          )
+                        }}</span>
+                      </div>
+                    </td>
+                    <td class="split-column">
+                      <div>
+                        <div class="flex">
+                          <lab-icon
+                            [data]="data"
+                            [iconId]="outStep.recipeId"
+                            [tooltip]="
+                              data.recipeEntities[outStep.recipeId].name
+                            "
+                            [recipe]="data.recipeEntities[outStep.recipeId]"
+                          ></lab-icon>
+                          <lab-icon
+                            [data]="data"
+                            [iconId]="factory"
+                            [tooltip]="data.itemEntities[factory].name"
+                            [item]="data.itemEntities[factory]"
+                          ></lab-icon>
+                        </div>
+                      </div>
+                    </td>
+                  </ng-container>
+                  <td
+                    colspan="2"
+                    *ngIf="
+                      !recipeSettings[outStep.recipeId]?.factory as factory
+                    "
+                  ></td>
+                </ng-container>
+                <td class="split-column" colspan="100">
+                  <div>
+                    <div class="flex percent">
+                      <i class="material-icons">arrow_forward</i>
+                      <span class="monospace"
+                        >{{ leftPad(rate(percent, -2)) }}%</span
+                      >
+                      <lab-icon
+                        [data]="data"
+                        [iconId]="output.key"
+                        [tooltip]="data.itemEntities[output.key]?.name"
+                        [item]="data.itemEntities[output.key]"
+                      ></lab-icon>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="expanded[step.id] === StepDetailTab.Targets">
           <tr
             *ngFor="
               let parent of step.parents | keyvalue: sortKeyValue;
@@ -843,22 +1002,19 @@
           </tr>
         </ng-container>
         <tr
-          *ngIf="expanded[step.itemId] === StepDetailTab.Factory"
+          *ngIf="expanded[step.id] === StepDetailTab.Factory"
           class="details first last"
         >
           <td></td>
           <td colspan="100" class="factory">
             <div>
               <ng-container
-                *ngIf="
-                  details[step.itemId].indexOf(StepDetailTab.Inputs) !== -1
-                "
+                *ngIf="details[step.id].indexOf(StepDetailTab.Inputs) !== -1"
               >
                 <table>
                   <ng-container
                     *ngFor="
-                      let input of data.recipeEntities[step.recipeId].in
-                        | keyvalue
+                      let input of data.recipeR[step.recipeId].in | keyvalue
                     "
                   >
                     <ng-container *ngIf="findStep(input.key) as inStep">
@@ -1073,7 +1229,7 @@
           </td>
         </tr>
         <tr
-          *ngIf="expanded[step.itemId] === StepDetailTab.Recipes"
+          *ngIf="expanded[step.id] === StepDetailTab.Recipes"
           class="details first last"
         >
           <td></td>
@@ -1084,14 +1240,14 @@
             </div>
             <div class="list tile">
               <lab-icon
-                *ngFor="let id of recipes[step.itemId]"
+                *ngFor="let recipeId of recipes[step.id]"
                 class="button grid"
-                [class.ignored]="disabledRecipes.indexOf(id) !== -1"
+                [class.ignored]="disabledRecipes.indexOf(recipeId) !== -1"
                 [data]="data"
-                [iconId]="id"
-                [tooltip]="data.recipeEntities[id].name"
-                [recipe]="data.recipeEntities[id]"
-                (click)="toggleRecipe(id)"
+                [iconId]="recipeId"
+                [tooltip]="data.recipeEntities[recipeId].name"
+                [recipe]="data.recipeEntities[recipeId]"
+                (click)="toggleRecipe(recipeId)"
               ></lab-icon>
             </div>
           </td>

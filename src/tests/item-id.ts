@@ -1,4 +1,5 @@
 export enum ItemId {
+  AdvancedCircuit = 'advanced-circuit',
   ArtilleryShellRange = 'artillery-shell-range',
   AssemblingMachine1 = 'assembling-machine-1',
   AssemblingMachine2 = 'assembling-machine-2',
