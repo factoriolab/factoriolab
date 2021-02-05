@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   homeHref(isDsp: boolean): string {
-    return isDsp ? 'list#s=dsp' : 'list#p=';
+    return isDsp ? 'list?s=dsp' : 'list?p=';
   }
 
   ngOnInit(): void {

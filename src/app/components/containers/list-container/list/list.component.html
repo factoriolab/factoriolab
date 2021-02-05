@@ -51,7 +51,7 @@
           </button>
         </div>
       </th>
-      <th *ngIf="columns[Column.Factories].show" colspan="3">
+      <th colspan="3">
         <div class="header">
           Factories
           <button
@@ -96,7 +96,7 @@
   <tbody>
     <ng-container *ngFor="let step of displayedSteps; trackBy: trackBy">
       <tr class="border row col">
-        <td>
+        <td [id]="step.itemId">
           <div>
             <button
               *ngIf="details[step.id]?.length && !expanded[step.id]"
@@ -283,103 +283,97 @@
             </div>
           </ng-container>
         </td>
-        <ng-container *ngIf="columns[Column.Factories].show">
-          <ng-container
-            *ngIf="recipeSettings[step.recipeId]?.factory as factory"
-          >
-            <td class="num">
-              <div *ngIf="step.factories?.nonzero()" class="flex">
-                <span class="monospace">{{
-                  factoryRate(
-                    step.factories,
-                    effPrecision[Column.Factories],
-                    factory
-                  )
-                }}</span>
-              </div>
-            </td>
-            <td class="recipe-icon split-column">
-              <div>
-                <div class="flex">
-                  <lab-icon
-                    [data]="data"
-                    [iconId]="step.recipeId"
-                    [tooltip]="data.recipeEntities[step.recipeId].name"
-                    [recipe]="data.recipeEntities[step.recipeId]"
-                  ></lab-icon>
+        <ng-container *ngIf="recipeSettings[step.recipeId]?.factory as factory">
+          <td class="num" [id]="step.recipeId">
+            <div *ngIf="step.factories?.nonzero()" class="flex">
+              <span class="monospace">{{
+                factoryRate(
+                  step.factories,
+                  effPrecision[Column.Factories],
+                  factory
+                )
+              }}</span>
+            </div>
+          </td>
+          <td class="recipe-icon split-column">
+            <div>
+              <div class="flex">
+                <lab-icon
+                  [data]="data"
+                  [iconId]="step.recipeId"
+                  [tooltip]="data.recipeEntities[step.recipeId].name"
+                  [recipe]="data.recipeEntities[step.recipeId]"
+                ></lab-icon>
+                <ng-container
+                  *ngIf="data.recipeEntities[step.recipeId] as recipe"
+                >
                   <ng-container
-                    *ngIf="data.recipeEntities[step.recipeId] as recipe"
+                    *ngIf="
+                      recipe.producers && recipe.producers.length > 1;
+                      else factoryDefault
+                    "
                   >
-                    <ng-container
-                      *ngIf="
-                        recipe.producers && recipe.producers.length > 1;
-                        else factoryDefault
-                      "
+                    <lab-select
+                      header="Select a factory"
+                      [data]="data"
+                      [selected]="factory"
+                      [options]="recipe.producers"
+                      (selectId)="factoryChange(step, $event)"
                     >
-                      <lab-select
-                        header="Select a factory"
-                        [data]="data"
-                        [selected]="factory"
-                        [options]="recipe.producers"
-                        (selectId)="factoryChange(step, $event)"
-                      >
-                        <lab-icon
-                          class="button"
-                          title="Click to change factory"
-                          [data]="data"
-                          [iconId]="factory"
-                          [tooltip]="data.itemEntities[factory].name"
-                          [item]="data.itemEntities[factory]"
-                        ></lab-icon>
-                      </lab-select>
-                    </ng-container>
-                    <ng-template #factoryDefault>
                       <lab-icon
+                        class="button"
+                        title="Click to change factory"
+                        [data]="data"
                         [iconId]="factory"
                         [tooltip]="data.itemEntities[factory].name"
                         [item]="data.itemEntities[factory]"
-                        [data]="data"
                       ></lab-icon>
-                    </ng-template>
+                    </lab-select>
                   </ng-container>
-                </div>
-              </div>
-            </td>
-            <td class="split-column">
-              <div class="flex">
-                <div
-                  *ngIf="
-                    recipeSettings[step.recipeId]?.factoryModules as modules
-                  "
-                  class="flex mod"
-                >
-                  <lab-select
-                    *ngFor="let mod of modules; index as i; first as first"
-                    header="Select a module"
-                    [data]="data"
-                    [selected]="mod"
-                    [options]="data.recipeModuleIds[step.recipeId]"
-                    [includeEmptyModule]="!data.isDsp"
-                    [displayRate]="displayRate"
-                    (selectId)="factoryModuleChange(step, $event, i)"
-                  >
+                  <ng-template #factoryDefault>
                     <lab-icon
-                      class="button"
-                      title="Click to change factory module"
-                      [class.module]="!first"
+                      [iconId]="factory"
+                      [tooltip]="data.itemEntities[factory].name"
+                      [item]="data.itemEntities[factory]"
                       [data]="data"
-                      [iconId]="mod"
-                      [tooltip]="data.itemEntities[mod]?.name"
-                      [item]="data.itemEntities[mod]"
-                      [displayRate]="displayRate"
                     ></lab-icon>
-                  </lab-select>
-                </div>
+                  </ng-template>
+                </ng-container>
               </div>
-            </td>
-          </ng-container>
-          <td colspan="3" *ngIf="!recipeSettings[step.recipeId]?.factory"></td>
+            </div>
+          </td>
+          <td class="split-column">
+            <div class="flex">
+              <div
+                *ngIf="recipeSettings[step.recipeId]?.factoryModules as modules"
+                class="flex mod"
+              >
+                <lab-select
+                  *ngFor="let mod of modules; index as i; first as first"
+                  header="Select a module"
+                  [data]="data"
+                  [selected]="mod"
+                  [options]="data.recipeModuleIds[step.recipeId]"
+                  [includeEmptyModule]="!data.isDsp"
+                  [displayRate]="displayRate"
+                  (selectId)="factoryModuleChange(step, $event, i)"
+                >
+                  <lab-icon
+                    class="button"
+                    title="Click to change factory module"
+                    [class.module]="!first"
+                    [data]="data"
+                    [iconId]="mod"
+                    [tooltip]="data.itemEntities[mod]?.name"
+                    [item]="data.itemEntities[mod]"
+                    [displayRate]="displayRate"
+                  ></lab-icon>
+                </lab-select>
+              </div>
+            </div>
+          </td>
         </ng-container>
+        <td colspan="3" *ngIf="!recipeSettings[step.recipeId]?.factory"></td>
         <ng-container *ngIf="columns[Column.Beacons].show">
           <ng-container *ngIf="recipeSettings[step.recipeId]?.beacon as beacon">
             <td>
@@ -643,47 +637,43 @@
                     </div>
                   </ng-container>
                 </td>
-                <ng-container *ngIf="columns[Column.Factories].show">
-                  <ng-container
-                    *ngIf="recipeSettings[inStep.recipeId]?.factory as factory"
-                  >
-                    <td>
-                      <div *ngIf="inStep.factories?.nonzero()" class="flex">
-                        <span class="monospace">{{
-                          factoryRate(
-                            inStep.factories.mul(percent),
-                            effPrecision[Column.Factories],
-                            factory
-                          )
-                        }}</span>
+                <ng-container
+                  *ngIf="recipeSettings[inStep.recipeId]?.factory as factory"
+                >
+                  <td>
+                    <div *ngIf="inStep.factories?.nonzero()" class="flex">
+                      <span class="monospace">{{
+                        factoryRate(
+                          inStep.factories.mul(percent),
+                          effPrecision[Column.Factories],
+                          factory
+                        )
+                      }}</span>
+                    </div>
+                  </td>
+                  <td class="split-column">
+                    <div>
+                      <div class="flex">
+                        <lab-icon
+                          [data]="data"
+                          [iconId]="inStep.recipeId"
+                          [tooltip]="data.recipeEntities[inStep.recipeId].name"
+                          [recipe]="data.recipeEntities[inStep.recipeId]"
+                        ></lab-icon>
+                        <lab-icon
+                          [data]="data"
+                          [iconId]="factory"
+                          [tooltip]="data.itemEntities[factory].name"
+                          [item]="data.itemEntities[factory]"
+                        ></lab-icon>
                       </div>
-                    </td>
-                    <td class="split-column">
-                      <div>
-                        <div class="flex">
-                          <lab-icon
-                            [data]="data"
-                            [iconId]="inStep.recipeId"
-                            [tooltip]="
-                              data.recipeEntities[inStep.recipeId].name
-                            "
-                            [recipe]="data.recipeEntities[inStep.recipeId]"
-                          ></lab-icon>
-                          <lab-icon
-                            [data]="data"
-                            [iconId]="factory"
-                            [tooltip]="data.itemEntities[factory].name"
-                            [item]="data.itemEntities[factory]"
-                          ></lab-icon>
-                        </div>
-                      </div>
-                    </td>
-                  </ng-container>
-                  <td
-                    colspan="2"
-                    *ngIf="!recipeSettings[inStep.recipeId]?.factory as factory"
-                  ></td>
+                    </div>
+                  </td>
                 </ng-container>
+                <td
+                  colspan="2"
+                  *ngIf="!recipeSettings[inStep.recipeId]?.factory as factory"
+                ></td>
                 <td class="split-column" colspan="100">
                   <div>
                     <div class="flex percent">
@@ -800,49 +790,43 @@
                     </div>
                   </ng-container>
                 </td>
-                <ng-container *ngIf="columns[Column.Factories].show">
-                  <ng-container
-                    *ngIf="recipeSettings[outStep.recipeId]?.factory as factory"
-                  >
-                    <td>
-                      <div *ngIf="outStep.factories?.nonzero()" class="flex">
-                        <span class="monospace">{{
-                          factoryRate(
-                            outStep.factories.mul(percent),
-                            effPrecision[Column.Factories],
-                            factory
-                          )
-                        }}</span>
+                <ng-container
+                  *ngIf="recipeSettings[outStep.recipeId]?.factory as factory"
+                >
+                  <td>
+                    <div *ngIf="outStep.factories?.nonzero()" class="flex">
+                      <span class="monospace">{{
+                        factoryRate(
+                          outStep.factories.mul(percent),
+                          effPrecision[Column.Factories],
+                          factory
+                        )
+                      }}</span>
+                    </div>
+                  </td>
+                  <td class="split-column">
+                    <div>
+                      <div class="flex">
+                        <lab-icon
+                          [data]="data"
+                          [iconId]="outStep.recipeId"
+                          [tooltip]="data.recipeEntities[outStep.recipeId].name"
+                          [recipe]="data.recipeEntities[outStep.recipeId]"
+                        ></lab-icon>
+                        <lab-icon
+                          [data]="data"
+                          [iconId]="factory"
+                          [tooltip]="data.itemEntities[factory].name"
+                          [item]="data.itemEntities[factory]"
+                        ></lab-icon>
                       </div>
-                    </td>
-                    <td class="split-column">
-                      <div>
-                        <div class="flex">
-                          <lab-icon
-                            [data]="data"
-                            [iconId]="outStep.recipeId"
-                            [tooltip]="
-                              data.recipeEntities[outStep.recipeId].name
-                            "
-                            [recipe]="data.recipeEntities[outStep.recipeId]"
-                          ></lab-icon>
-                          <lab-icon
-                            [data]="data"
-                            [iconId]="factory"
-                            [tooltip]="data.itemEntities[factory].name"
-                            [item]="data.itemEntities[factory]"
-                          ></lab-icon>
-                        </div>
-                      </div>
-                    </td>
-                  </ng-container>
-                  <td
-                    colspan="2"
-                    *ngIf="
-                      !recipeSettings[outStep.recipeId]?.factory as factory
-                    "
-                  ></td>
+                    </div>
+                  </td>
                 </ng-container>
+                <td
+                  colspan="2"
+                  *ngIf="!recipeSettings[outStep.recipeId]?.factory as factory"
+                ></td>
                 <td class="split-column" colspan="100">
                   <div>
                     <div class="flex percent">
@@ -944,45 +928,43 @@
                 </div>
               </ng-container>
             </td>
-            <ng-container *ngIf="columns[Column.Factories].show">
-              <ng-container
-                *ngIf="recipeSettings[step.recipeId]?.factory as factory"
-              >
-                <td>
-                  <div class="flex" *ngIf="step.factories?.nonzero()">
-                    <span class="monospace">{{
-                      factoryRate(
-                        step.factories.mul(parent.value),
-                        effPrecision[Column.Factories],
-                        factory
-                      )
-                    }}</span>
+            <ng-container
+              *ngIf="recipeSettings[step.recipeId]?.factory as factory"
+            >
+              <td>
+                <div class="flex" *ngIf="step.factories?.nonzero()">
+                  <span class="monospace">{{
+                    factoryRate(
+                      step.factories.mul(parent.value),
+                      effPrecision[Column.Factories],
+                      factory
+                    )
+                  }}</span>
+                </div>
+              </td>
+              <td class="split-column">
+                <div>
+                  <div class="flex">
+                    <lab-icon
+                      [data]="data"
+                      [iconId]="step.recipeId"
+                      [tooltip]="data.recipeEntities[step.recipeId].name"
+                      [recipe]="data.recipeEntities[step.recipeId]"
+                    ></lab-icon>
+                    <lab-icon
+                      [data]="data"
+                      [iconId]="factory"
+                      [tooltip]="data.itemEntities[factory].name"
+                      [item]="data.itemEntities[factory]"
+                    ></lab-icon>
                   </div>
-                </td>
-                <td class="split-column">
-                  <div>
-                    <div class="flex">
-                      <lab-icon
-                        [data]="data"
-                        [iconId]="step.recipeId"
-                        [tooltip]="data.recipeEntities[step.recipeId].name"
-                        [recipe]="data.recipeEntities[step.recipeId]"
-                      ></lab-icon>
-                      <lab-icon
-                        [data]="data"
-                        [iconId]="factory"
-                        [tooltip]="data.itemEntities[factory].name"
-                        [item]="data.itemEntities[factory]"
-                      ></lab-icon>
-                    </div>
-                  </div>
-                </td>
-              </ng-container>
-              <td
-                colspan="2"
-                *ngIf="!recipeSettings[step.recipeId]?.factory as factory"
-              ></td>
+                </div>
+              </td>
             </ng-container>
+            <td
+              colspan="2"
+              *ngIf="!recipeSettings[step.recipeId]?.factory as factory"
+            ></td>
             <td class="split-column" colspan="100">
               <div>
                 <div class="flex percent">
