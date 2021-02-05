@@ -268,7 +268,7 @@ export class ListComponent {
         (s) => s.itemId === this.selected || s.recipeId === this.selected
       );
       this.expanded = this.displayedSteps
-        .map((s) => this.trackBy(s))
+        .map((s) => s.id)
         .reduce((e: Entities<StepDetailTab>, v) => {
           e[v] = this.details[v][0];
           return e;
