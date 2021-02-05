@@ -551,7 +551,8 @@
         <ng-container *ngIf="expanded[step.id] === StepDetailTab.Inputs">
           <ng-container
             *ngFor="
-              let input of data.recipeEntities[step.recipeId].in | keyvalue;
+              let input of data.recipeR[step.recipeId].in
+                | keyvalue: sortKeyValue;
               first as isFirst;
               last as isLast
             "
@@ -706,7 +707,7 @@
         <ng-container *ngIf="expanded[step.id] === StepDetailTab.Outputs">
           <ng-container
             *ngFor="
-              let output of step.outputs | keyvalue;
+              let output of step.outputs | keyvalue: sortKeyValue;
               first as isFirst;
               last as isLast
             "
@@ -858,7 +859,6 @@
                     </div>
                   </div>
                 </td>
-                -->
               </tr>
             </ng-container>
           </ng-container>
@@ -1014,8 +1014,7 @@
                 <table>
                   <ng-container
                     *ngFor="
-                      let input of data.recipeEntities[step.recipeId].in
-                        | keyvalue
+                      let input of data.recipeR[step.recipeId].in | keyvalue
                     "
                   >
                     <ng-container *ngIf="findStep(input.key) as inStep">

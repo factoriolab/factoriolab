@@ -452,7 +452,8 @@ export class ListComponent {
       this.steps,
       this.columns,
       this.itemSettings,
-      this.recipeSettings
+      this.recipeSettings,
+      this.data
     );
   }
 
