@@ -78,7 +78,7 @@ export class RouterService {
         this.zipPartial += `&s=${zSettings}`;
       }
       this.zip = this.getHash(zState);
-      this.router.navigateByUrl(`${location.pathname}?${this.zip}`);
+      this.router.navigateByUrl(`${this.router.url.split('?')[0]}?${this.zip}`);
     }
   }
 
