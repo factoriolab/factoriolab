@@ -38,6 +38,7 @@ export enum StepDetailTab {
   None,
   Inputs,
   Outputs,
+  Targets,
   Factory,
   Recipes,
 }
@@ -69,8 +70,9 @@ export class ListComponent {
   @Input() set steps(value: Step[]) {
     this._steps = value.map((s) => ({
       ...s,
-      ...{ href: this.router.stepHref(s) },
+      ...{ id: `${s.itemId}-${s.recipeId}`, href: this.router.stepHref(s) },
     }));
+    console.log(this.steps);
     this.setDetailTabs();
     this.setDisplayedSteps();
     this.setEffectivePrecision();
@@ -213,26 +215,32 @@ export class ListComponent {
   setDetailTabs(): void {
     this.details = {};
     this.recipes = {};
-    for (const step of this.steps.filter((s) => s.itemId)) {
-      this.details[step.itemId] = [];
-      if (
-        this.data.recipeR[step.recipeId]?.in &&
-        !this.itemSettings[step.itemId].ignore
-      ) {
-        this.details[step.itemId].push(StepDetailTab.Inputs);
+    for (const step of this.steps) {
+      this.details[step.id] = [];
+      if (step.recipeId) {
+        const recipe = this.data.recipeR[step.recipeId];
+        if (
+          recipe.in &&
+          (!step.itemId || !this.itemSettings[step.itemId].ignore)
+        ) {
+          this.details[step.id].push(StepDetailTab.Inputs);
+        }
+        this.details[step.id].push(StepDetailTab.Outputs);
       }
       if (step.parents) {
-        this.details[step.itemId].push(StepDetailTab.Outputs);
+        this.details[step.id].push(StepDetailTab.Targets);
       }
       if (step.factories?.nonzero()) {
-        this.details[step.itemId].push(StepDetailTab.Factory);
+        this.details[step.id].push(StepDetailTab.Factory);
       }
-      const recipeIds = this.data.complexRecipeIds.filter((r) =>
-        this.data.recipeR[r].produces(step.itemId)
-      );
-      if (recipeIds.length) {
-        this.details[step.itemId].push(StepDetailTab.Recipes);
-        this.recipes[step.itemId] = recipeIds;
+      if (step.itemId) {
+        const recipeIds = this.data.complexRecipeIds.filter((r) =>
+          this.data.recipeR[r].produces(step.itemId)
+        );
+        if (recipeIds.length) {
+          this.details[step.id].push(StepDetailTab.Recipes);
+          this.recipes[step.id] = recipeIds;
+        }
       }
     }
 
@@ -258,7 +266,7 @@ export class ListComponent {
         (s) => s.itemId === this.selected || s.recipeId === this.selected
       );
       this.expanded = this.displayedSteps
-        .map((s) => s.itemId)
+        .map((s) => this.trackBy(s))
         .reduce((e: Entities<StepDetailTab>, v) => {
           e[v] = this.details[v][0];
           return e;
@@ -270,7 +278,7 @@ export class ListComponent {
   }
 
   trackBy(step: Step): string {
-    return `${step.itemId}.${step.recipeId}`;
+    return step.id;
   }
 
   findStep(id: string): Step {

@@ -2,6 +2,7 @@ import { Entities } from './entities';
 import { Rational } from './rational';
 
 export interface Step {
+  id?: string;
   itemId: string;
   items: Rational;
   surplus?: Rational;
@@ -12,5 +13,6 @@ export interface Step {
   pollution?: Rational;
   recipeId?: string;
   parents?: Entities<Rational>;
+  outputs?: Entities<Rational>;
   href?: string;
 }
