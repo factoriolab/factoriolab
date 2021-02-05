@@ -113,7 +113,7 @@ export class DatasetsEffects {
     private router: RouterService
   ) {
     this.load(
-      BrowserUtility.hash,
+      BrowserUtility.zip,
       BrowserUtility.storedState,
       Settings.initialSettingsState
     );
