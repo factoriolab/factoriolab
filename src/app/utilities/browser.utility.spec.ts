@@ -7,28 +7,6 @@ describe('BrowserUtility', () => {
     localStorage.clear();
   });
 
-  describe('zip', () => {
-    it('should get the search value', () => {
-      spyOnProperty(BrowserUtility, 'search').and.returnValue('test');
-      expect(BrowserUtility.zip).toEqual('test');
-    });
-
-    it('should check for hash length', () => {
-      spyOnProperty(BrowserUtility, 'hash').and.returnValue('#z');
-      expect(BrowserUtility.zip).toBeFalse();
-    });
-
-    it('should check for = in hash', () => {
-      spyOnProperty(BrowserUtility, 'hash').and.returnValue('#zz');
-      expect(BrowserUtility.zip).toBeFalse();
-    });
-
-    it('should use valid hash as zip state', () => {
-      spyOnProperty(BrowserUtility, 'hash').and.returnValue('#p=');
-      expect(BrowserUtility.zip).toEqual('p=');
-    });
-  });
-
   describe('loadState', () => {
     it('should return the state from local storage', () => {
       localStorage.setItem(STATE_KEY, JSON.stringify(initialSettingsState));
@@ -46,7 +24,7 @@ describe('BrowserUtility', () => {
 
   describe('mergeState', () => {
     it('should merge the stored preferences into the state', () => {
-      spyOnProperty(BrowserUtility, 'zip').and.returnValue('hash');
+      spyOnProperty(BrowserUtility, 'hash').and.returnValue('hash');
       spyOnProperty(BrowserUtility, 'storedState', 'get').and.returnValue({
         preferencesState: 'pref',
       });
