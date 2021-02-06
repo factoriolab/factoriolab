@@ -37,6 +37,228 @@ export class RouterService {
   zip: string;
   zipPartial = '';
 
+  /*
+  // This constant can also be computed with the following algorithm:
+  const base64abc = [],
+    A = "A".charCodeAt(0),
+    a = "a".charCodeAt(0),
+    n = "0".charCodeAt(0);
+  for (let i = 0; i < 26; ++i) {
+    base64abc.push(String.fromCharCode(A + i));
+  }
+  for (let i = 0; i < 26; ++i) {
+    base64abc.push(String.fromCharCode(a + i));
+  }
+  for (let i = 0; i < 10; ++i) {
+    base64abc.push(String.fromCharCode(n + i));
+  }
+  base64abc.push("+");
+  base64abc.push("/");
+  */
+  base64abc = [
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'W',
+    'X',
+    'Y',
+    'Z',
+    'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
+    'g',
+    'h',
+    'i',
+    'j',
+    'k',
+    'l',
+    'm',
+    'n',
+    'o',
+    'p',
+    'q',
+    'r',
+    's',
+    't',
+    'u',
+    'v',
+    'w',
+    'x',
+    'y',
+    'z',
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '-',
+    '.',
+  ];
+
+  /*
+  // This constant can also be computed with the following algorithm:
+  const l = 256, base64codes = new Uint8Array(l);
+  for (let i = 0; i < l; ++i) {
+    base64codes[i] = 255; // invalid character
+  }
+  base64abc.forEach((char, index) => {
+    base64codes[char.charCodeAt(0)] = index;
+  });
+  base64codes["=".charCodeAt(0)] = 0; // ignored anyway, so we just need to prevent an error
+  */
+  base64codes = [
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    62,
+    255,
+    255,
+    255,
+    63,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    255,
+    255,
+    255,
+    0,
+    255,
+    255,
+    255,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+  ];
+
   constructor(private router: Router, private store: Store<State>) {
     this.router.events.subscribe((e) => this.updateState(e));
   }
@@ -95,13 +317,105 @@ export class RouterService {
       },
     ];
     const zProducts = this.zipProducts(products);
-    return '#' + this.getHash(`p=${zProducts}`);
+    return '#' + this.getHash(`p=${zProducts}`, false);
   }
 
-  getHash(zProducts: string): string {
+  getHash(zProducts: string, log = true): string {
     const unzipped = zProducts + this.zipPartial;
+    if (log) {
+      try {
+        const test = deflate(unzipped);
+        console.log(test);
+        const a = this.bytesToBase64(test);
+        const b = encodeURIComponent(unzipped);
+        console.log(a);
+        console.log(b);
+        console.log(`${a.length} vs ${b.length}`);
+
+        //const str = String.fromCharCode.apply(null, test);
+        //const str = new TextDecoder('utf-8').decode(test);
+        //console.log(str);
+      } catch (ex) {
+        console.error(ex);
+      }
+    }
+
     const zipped = `z=${btoa(deflate(unzipped, { to: 'string' }))}`;
     return unzipped.length < zipped.length ? unzipped : zipped;
+  }
+
+  getBase64Code(charCode): number {
+    if (charCode >= this.base64codes.length) {
+      throw new Error('Unable to parse base64 string.');
+    }
+    const code = this.base64codes[charCode];
+    if (code === 255) {
+      throw new Error('Unable to parse base64 string.');
+    }
+    return code;
+  }
+
+  bytesToBase64(bytes): string {
+    let result = '',
+      i,
+      l = bytes.length;
+    for (i = 2; i < l; i += 3) {
+      result += this.base64abc[bytes[i - 2] >> 2];
+      result += this.base64abc[
+        ((bytes[i - 2] & 0x03) << 4) | (bytes[i - 1] >> 4)
+      ];
+      result += this.base64abc[((bytes[i - 1] & 0x0f) << 2) | (bytes[i] >> 6)];
+      result += this.base64abc[bytes[i] & 0x3f];
+    }
+    if (i === l + 1) {
+      // 1 octet yet to write
+      result += this.base64abc[bytes[i - 2] >> 2];
+      result += this.base64abc[(bytes[i - 2] & 0x03) << 4];
+      result += '==';
+    }
+    if (i === l) {
+      // 2 octets yet to write
+      result += this.base64abc[bytes[i - 2] >> 2];
+      result += this.base64abc[
+        ((bytes[i - 2] & 0x03) << 4) | (bytes[i - 1] >> 4)
+      ];
+      result += this.base64abc[(bytes[i - 1] & 0x0f) << 2];
+      result += '=';
+    }
+    return result;
+  }
+
+  base64ToBytes(str): Uint8Array {
+    if (str.length % 4 !== 0) {
+      throw new Error('Unable to parse base64 string.');
+    }
+    const index = str.indexOf('=');
+    if (index !== -1 && index < str.length - 2) {
+      throw new Error('Unable to parse base64 string.');
+    }
+    let missingOctets = str.endsWith('==') ? 2 : str.endsWith('=') ? 1 : 0,
+      n = str.length,
+      result = new Uint8Array(3 * (n / 4)),
+      buffer;
+    for (let i = 0, j = 0; i < n; i += 4, j += 3) {
+      buffer =
+        (this.getBase64Code(str.charCodeAt(i)) << 18) |
+        (this.getBase64Code(str.charCodeAt(i + 1)) << 12) |
+        (this.getBase64Code(str.charCodeAt(i + 2)) << 6) |
+        this.getBase64Code(str.charCodeAt(i + 3));
+      result[j] = buffer >> 16;
+      result[j + 1] = (buffer >> 8) & 0xff;
+      result[j + 2] = buffer & 0xff;
+    }
+    return result.subarray(0, result.length - missingOctets);
+  }
+
+  base64encode(str, encoder = new TextEncoder()): string {
+    return this.bytesToBase64(encoder.encode(str));
+  }
+
+  base64decode(str, decoder = new TextDecoder()): string {
+    return decoder.decode(this.base64ToBytes(str));
   }
 
   updateState(e: Event): void {
