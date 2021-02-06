@@ -227,7 +227,7 @@ describe('RouterService', () => {
         initialFactoriesState,
         initialSettingsState
       );
-      expect(router.navigateByUrl).toHaveBeenCalledWith(`/?${mockZipProducts}`);
+      expect(router.navigateByUrl).toHaveBeenCalledWith(`/#${mockZipProducts}`);
     });
 
     it('should update url with all', () => {
@@ -239,7 +239,7 @@ describe('RouterService', () => {
         mockFactoriesState,
         mockSettingsState
       );
-      expect(router.navigateByUrl).toHaveBeenCalledWith(`/?${mockZipAll}`);
+      expect(router.navigateByUrl).toHaveBeenCalledWith(`/#${mockZipAll}`);
     });
   });
 
@@ -254,7 +254,7 @@ describe('RouterService', () => {
         mockFullSettingsState
       );
       const href = service.stepHref(Mocks.Step1);
-      expect(href).toEqual(`?z=${mockZipLink}`);
+      expect(href).toEqual(`#z=${mockZipLink}`);
     });
 
     it('should handle no items', () => {
@@ -323,7 +323,7 @@ describe('RouterService', () => {
 
     it('should skip empty values', () => {
       spyOn(store, 'dispatch');
-      const url = `/?${mockZipEmpty}`;
+      const url = `/#${mockZipEmpty}`;
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(store.dispatch).toHaveBeenCalledWith(new LoadAction({} as any));
     });

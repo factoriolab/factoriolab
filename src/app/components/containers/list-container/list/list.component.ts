@@ -5,10 +5,7 @@ import {
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
-  OnInit,
-  AfterViewInit,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 
 import {
   Step,
@@ -57,7 +54,7 @@ export interface StepInserter {
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ListComponent implements OnInit, AfterViewInit {
+export class ListComponent {
   @Input() data: Dataset;
   @Input() itemSettings: ItemsState;
   @Input() itemRaw: ItemsState;
@@ -155,7 +152,6 @@ export class ListComponent implements OnInit, AfterViewInit {
   effPrecision: Entities<number> = {};
   DisplayRateVal = DisplayRateVal;
   ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
-  fragment: string;
 
   Column = Column;
   DisplayRate = DisplayRate;
@@ -184,21 +180,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     return this.rate(value, this.effPrecision[Column.Pollution]);
   }
 
-  constructor(public router: RouterService, public route: ActivatedRoute) {}
-
-  ngOnInit(): void {
-    this.route.fragment.subscribe((fragment) => {
-      // Store the fragment to navigate to it after the component loads
-      this.fragment = fragment;
-    });
-  }
-
-  ngAfterViewInit(): void {
-    // Now that component is loaded, try navigating to the fragment
-    try {
-      document.querySelector('#' + this.fragment).scrollIntoView();
-    } catch (e) {}
-  }
+  constructor(public router: RouterService) {}
 
   setEffectivePrecision(): void {
     if (this.steps && this.columns) {
