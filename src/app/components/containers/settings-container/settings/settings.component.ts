@@ -116,7 +116,7 @@ export class SettingsComponent implements OnInit {
   ItemId = ItemId;
 
   get hash(): string {
-    return BrowserUtility.zip;
+    return BrowserUtility.hash;
   }
 
   get presetOptions(): IdName[] {
