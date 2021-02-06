@@ -93,6 +93,8 @@ export class SankeyComponent {
     this.svg = select(this.ref.nativeElement)
       .append('svg')
       .attr('preserveAspectRatio', 'xMinYMin meet')
+      .attr('width', `${width}px`)
+      .attr('height', `${height}px`)
       .style('width', `${width}px`)
       .style('height', `${height}px`)
       .attr('viewBox', `0 0 ${width} ${height}`);
