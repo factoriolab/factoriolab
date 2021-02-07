@@ -44,13 +44,24 @@ export class AppComponent implements OnInit {
 
   title: string;
   showSettings: boolean;
+  poll = 'www.google.com';
+  pollKey = 'testKey';
+  showPoll = true;
+
+  get lsHidePoll(): boolean {
+    return !!localStorage.get(this.pollKey); 
+  }
 
   constructor(
     public error: ErrorService,
     public router: RouterService,
     public store: Store<State>,
     public titleService: Title
-  ) {}
+  ) {
+    if (this.lsHidePoll) {
+      this.showPoll = false;
+    }
+  }
 
   homeHref(isDsp: boolean): string {
     return isDsp ? 'list#s=dsp' : 'list#p=';
@@ -76,5 +87,12 @@ export class AppComponent implements OnInit {
       this.title = dsp ? TITLE_DSP : TITLE_LAB;
       this.titleService.setTitle(`FactorioLab | ${this.title}`);
     });
+  }
+
+  hidePoll(persist = false): void {
+    if (persist) {
+      localStorage.set(this.pollKey, true);
+    }
+    this.closedPoll = true;
   }
 }
