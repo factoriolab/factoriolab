@@ -79,6 +79,14 @@ lab-settings-container {
   }
 }
 
+.buttons {
+  margin-top: 0.5rem;
+
+  > * + * {
+    margin-left: 0.5rem;
+  }
+}
+
 @media screen and (max-width: 1000px) {
   lab-settings-container {
     margin-right: -25rem;
