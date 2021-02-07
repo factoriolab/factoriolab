@@ -44,8 +44,8 @@ export class AppComponent implements OnInit {
 
   title: string;
   showSettings: boolean;
-  poll = 'www.google.com';
-  pollKey = 'testKey';
+  poll = 'https://linkto.run/p/0UD8IV6X';
+  pollKey = 'poll0';
   showPoll = true;
 
   get lsHidePoll(): boolean {
