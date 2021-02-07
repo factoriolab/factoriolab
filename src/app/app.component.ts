@@ -49,7 +49,7 @@ export class AppComponent implements OnInit {
   showPoll = true;
 
   get lsHidePoll(): boolean {
-    return !!localStorage.get(this.pollKey); 
+    return !!localStorage.getItem(this.pollKey); 
   }
 
   constructor(
@@ -91,7 +91,7 @@ export class AppComponent implements OnInit {
 
   hidePoll(persist = false): void {
     if (persist) {
-      localStorage.set(this.pollKey, true);
+      localStorage.setItem(this.pollKey, 'hide');
     }
     this.closedPoll = true;
   }
