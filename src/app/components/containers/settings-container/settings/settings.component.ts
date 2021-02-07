@@ -206,6 +206,7 @@ export class SettingsComponent implements OnInit {
 
   clickResetSettings(): void {
     if (confirm(WARNING_RESET)) {
+      localStorage.clear();
       this.resetSettings.emit();
     }
   }
