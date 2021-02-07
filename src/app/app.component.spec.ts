@@ -82,4 +82,28 @@ describe('AppComponent', () => {
     fixture.detectChanges();
     expect(title.setTitle).toHaveBeenCalledWith(`FactorioLab | ${TITLE_DSP}`);
   });
+
+  it('should hide the poll if persisted', () => {
+    spyOnProperty(component, 'lsHidePoll').and.returnValue(true);
+    component.showPoll = true;
+    fixture.detectChanges();
+    expect(component.showPoll).toBeFalse();
+  });
+
+  describe('hidePoll', () => {
+    afterEach(() => {
+      localStorage.clear();
+    });
+
+    it('should hide the poll', () => {
+      component.showPoll = true;
+      component.hidePoll();
+      expect(component.showPoll).toBeFalse();
+    });
+
+    it('should set the localStorage key', () => {
+      component.hidePoll(true);
+      expect(component.lsHidePoll).toBeTrue();
+    });
+  });
 });
