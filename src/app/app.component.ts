@@ -93,6 +93,6 @@ export class AppComponent implements OnInit {
     if (persist) {
       localStorage.setItem(this.pollKey, 'hide');
     }
-    this.closedPoll = true;
+    this.showPoll = false;
   }
 }
