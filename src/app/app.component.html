@@ -31,7 +31,8 @@
     >
     </lab-settings-container>
     <div class="view">
-      <div *ngIf="showPoll">
+      <div *ngIf="showPoll" class="poll">
+        <h2>Poll</h2>
         <div class="panel">
           <a target="_blank" [href]="poll">Have a minute to answer a poll?</a>
           <div class="flex buttons">
