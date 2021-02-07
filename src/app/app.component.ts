@@ -57,11 +57,7 @@ export class AppComponent implements OnInit {
     public router: RouterService,
     public store: Store<State>,
     public titleService: Title
-  ) {
-    if (this.lsHidePoll) {
-      this.showPoll = false;
-    }
-  }
+  ) {}
 
   homeHref(isDsp: boolean): string {
     return isDsp ? 'list#s=dsp' : 'list#p=';
@@ -87,6 +83,9 @@ export class AppComponent implements OnInit {
       this.title = dsp ? TITLE_DSP : TITLE_LAB;
       this.titleService.setTitle(`FactorioLab | ${this.title}`);
     });
+    if (this.lsHidePoll) {
+      this.showPoll = false;
+    }
   }
 
   hidePoll(persist = false): void {
