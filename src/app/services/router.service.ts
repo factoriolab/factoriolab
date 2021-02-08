@@ -116,10 +116,10 @@ export class RouterService {
       },
     ];
     const zProducts = this.zipProducts(products);
-    return '?' + this.getHash(`p=${zProducts}`, false);
+    return '?' + this.getHash(`p=${zProducts}`);
   }
 
-  getHash(zProducts: string, log = true): string {
+  getHash(zProducts: string): string {
     const unzipped = zProducts + this.zipPartial;
     const zipped = `z=${this.bytesToBase64(deflate(unzipped))}`;
     return unzipped.length < zipped.length ? unzipped : zipped;

@@ -46,10 +46,10 @@ export class AppComponent implements OnInit {
   showSettings: boolean;
   poll = 'https://linkto.run/p/0UD8IV6X';
   pollKey = 'poll0';
-  showPoll = true;
+  showPoll = false;
 
   get lsHidePoll(): boolean {
-    return !!localStorage.getItem(this.pollKey); 
+    return !!localStorage.getItem(this.pollKey);
   }
 
   constructor(

@@ -36,8 +36,12 @@
         <div class="panel">
           <a target="_blank" [href]="poll">Have a minute to answer a poll?</a>
           <div class="flex buttons">
-            <button (click)="hidePoll(true)"><span class="text">Don't show again</span></button>
-            <button (click)="hidePoll()"><span class="text">Close</span></button>
+            <button (click)="hidePoll(true)">
+              <span class="text">Don't show again</span>
+            </button>
+            <button (click)="hidePoll()">
+              <span class="text">Close</span>
+            </button>
           </div>
         </div>
       </div>
