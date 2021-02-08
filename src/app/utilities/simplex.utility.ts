@@ -580,7 +580,9 @@ export class SimplexUtility {
       .map((r) => state.recipes[r])
       .filter((r) => r.in)) {
       const quantity = solution.recipes[recipe.id];
-      for (const itemId of Object.keys(recipe.in)) {
+      for (const itemId of Object.keys(recipe.in).filter((i) =>
+        recipe.in[i].nonzero()
+      )) {
         const step = steps.find((s) => s.itemId === itemId);
         const rate = recipe.in[itemId].mul(quantity);
         RateUtility.addParentValue(step, recipe.id, rate);
