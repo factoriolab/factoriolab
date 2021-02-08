@@ -175,7 +175,7 @@ export class RecipeUtility {
       : Rational.zero;
 
     // Calculate burner fuel inputs
-    if (factory.type === EnergyType.Burner) {
+    if (factory.type === EnergyType.Burner && factory.usage.nonzero()) {
       let rFuelId = fuelId;
       if (factory.category !== FuelType.Chemical) {
         // Try to find matching input for burning recipes
