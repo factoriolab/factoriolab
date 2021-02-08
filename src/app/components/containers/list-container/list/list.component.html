@@ -501,7 +501,13 @@
       </tr>
       <ng-container *ngIf="expanded[step.id]">
         <tr class="detail-header">
-          <td></td>
+          <td>
+            <div>
+              <a class="button" [href]="link(step)">
+                <i class="material-icons">link</i>
+              </a>
+            </div>
+          </td>
           <td colspan="100" class="detail-tabs">
             <ul class="tabs">
               <li

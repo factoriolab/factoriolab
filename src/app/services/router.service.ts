@@ -29,7 +29,7 @@ export const FIELDSEP = '*';
 export const TRUE = '1';
 export const FALSE = '0';
 export const BASE64ABC =
-  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-.';
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.';
 export const MAX = BASE64ABC.length;
 
 export function getId(n: number): string {
@@ -99,7 +99,7 @@ export class RouterService {
         this.zipPartial += `&s=${zSettings}`;
       }
       this.zip = this.getHash(zState);
-      this.router.navigateByUrl(`${this.router.url.split('?')[0]}?${this.zip}`);
+      this.router.navigateByUrl(`${location.pathname}?${this.zip}`);
     }
   }
 
@@ -205,12 +205,16 @@ export class RouterService {
           let zip = query[1];
           if (this.zip !== zip) {
             if (zip.startsWith('z=')) {
-              // Upgrade old zipped characters
-              const z = zip.substr(2).replace('+', '-').replace('/', '.');
+              // Upgrade old query-unsafe zipped characters
+              const z = zip
+                .substr(2)
+                .replace(/\+/g, '-')
+                .replace(/\//g, '.')
+                .replace(/=/g, '_');
               zip = inflate(this.base64ToBytes(z), { to: 'string' });
             }
-            // Upgrade old delimiters
-            zip = zip.replace(',', LISTSEP).replace('+', ARRAYSEP);
+            // Upgrade old query-unsafe delimiters
+            zip = zip.replace(/,/g, LISTSEP).replace(/\+/g, ARRAYSEP);
             const params = zip.split('&');
             const state: State = {} as any;
             for (const p of params) {

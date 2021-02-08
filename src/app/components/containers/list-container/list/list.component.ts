@@ -504,4 +504,8 @@ export class ListComponent implements OnInit, AfterViewInit {
       });
     }
   }
+
+  link(step: Step): string {
+    return `#${step.itemId || step.recipeId}`;
+  }
 }
