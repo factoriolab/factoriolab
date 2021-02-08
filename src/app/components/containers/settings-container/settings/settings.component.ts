@@ -146,7 +146,7 @@ export class SettingsComponent implements OnInit {
     return `${num} Visible`;
   }
 
-  constructor(public ref: ChangeDetectorRef, private router: Router) {}
+  constructor(private ref: ChangeDetectorRef, private router: Router) {}
 
   ngOnInit(): void {
     this.state =

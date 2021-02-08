@@ -1,3 +1,4 @@
+import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Store, StoreModule } from '@ngrx/store';
@@ -14,6 +15,7 @@ describe('FlowContainerComponent', () => {
   let component: FlowContainerComponent;
   let fixture: ComponentFixture<FlowContainerComponent>;
   let store: Store<State>;
+  let ref: ChangeDetectorRef;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -37,6 +39,7 @@ describe('FlowContainerComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     store = TestBed.inject(Store);
+    ref = TestBed.inject(ChangeDetectorRef);
     spyOn(store, 'dispatch');
   });
 
@@ -45,10 +48,10 @@ describe('FlowContainerComponent', () => {
   });
 
   it('should set the selected node', () => {
-    spyOn(component.ref, 'detectChanges');
+    spyOn(ref, 'detectChanges');
     component.setSelected(null);
     expect(component.selected).toEqual(null);
-    expect(component.ref.detectChanges).toHaveBeenCalled();
+    expect(ref.detectChanges).toHaveBeenCalled();
   });
 
   it('should set the link value', () => {

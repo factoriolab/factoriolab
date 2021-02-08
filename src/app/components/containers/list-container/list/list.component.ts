@@ -76,9 +76,13 @@ export class ListComponent implements OnInit, AfterViewInit {
       ...s,
       ...{
         id: `${s.itemId || ''}.${s.recipeId || ''}`,
-        href: this.router.stepHref(s),
       },
     }));
+    this._steps.forEach((s) => {
+      this.router.stepHref(this.settings.baseId, s).subscribe((href) => {
+        s = { ...s, ...{ href } };
+      });
+    });
     this.setDetailTabs();
     this.setDisplayedSteps();
     this.setEffectivePrecision();
@@ -186,9 +190,9 @@ export class ListComponent implements OnInit, AfterViewInit {
   }
 
   constructor(
-    public router: RouterService,
-    public route: ActivatedRoute,
-    public ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private router: RouterService
   ) {}
 
   ngOnInit(): void {

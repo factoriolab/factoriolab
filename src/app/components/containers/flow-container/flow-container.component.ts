@@ -40,7 +40,7 @@ export class FlowContainerComponent implements OnInit {
 
   ListMode = ListMode;
 
-  constructor(public store: Store<State>, public ref: ChangeDetectorRef) {}
+  constructor(private ref: ChangeDetectorRef, private store: Store<State>) {}
 
   ngOnInit(): void {
     this.isDsp$ = this.store.select(getIsDsp);
