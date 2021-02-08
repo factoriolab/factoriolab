@@ -183,7 +183,7 @@ describe('SettingsComponent', () => {
     });
 
     it('should set state to matching saved state', () => {
-      spyOnProperty(component.child, 'hash').and.returnValue('hash');
+      spyOnProperty(component.child, 'search').and.returnValue('hash');
       component.child.ngOnInit();
       expect(component.child.state).toEqual('name');
     });
@@ -263,7 +263,7 @@ describe('SettingsComponent', () => {
       spyOn(component, 'saveState');
       component.child.tempState = id;
       component.child.editState = true;
-      spyOnProperty(component.child, 'hash').and.returnValue(value);
+      spyOnProperty(component.child, 'search').and.returnValue(value);
       component.child.clickSaveState();
       expect(component.saveState).toHaveBeenCalledWith({ id, value });
       expect(component.child.editState).toBeFalse();

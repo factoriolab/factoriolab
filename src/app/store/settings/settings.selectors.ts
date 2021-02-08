@@ -144,6 +144,7 @@ export const getMods = createSelector(
     base?.defaults?.modIds?.filter((i) => data[i]).map((i) => data[i]) || []
 );
 
+// Return list only if base and all mods have been loaded
 export const getDatasets = createSelector(getBase, getMods, (base, mods) =>
   base && base.defaults.modIds.length === mods.length ? [base, ...mods] : []
 );
@@ -154,10 +155,6 @@ export const getNormalDataset = createSelector(
   getDefaults,
   getIsDsp,
   (app, mods, defaults, isDsp) => {
-    if (!mods.length) {
-      return null;
-    }
-
     // Map out entities with mods
     const categoryEntities = getEntities(
       app.categories,

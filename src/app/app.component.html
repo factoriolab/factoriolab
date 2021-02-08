@@ -2,7 +2,7 @@
   <div>
     <div class="header">
       <a
-        [href]="homeHref((data$ | async)?.isDsp)"
+        [href]="homeHref((data$ | async).isDsp)"
         onclick="setTimeout(location.reload.bind(location), 100)"
         ><h1>{{ title }}</h1></a
       >
@@ -22,7 +22,7 @@
     </div>
   </div>
 </div>
-<ng-container *ngIf="data$ | async; else loading">
+<ng-container *ngIf="(datasets$ | async).length; else loading">
   <main *ngIf="!error.message; else errorTile">
     <lab-settings-container
       *ngIf="showSettings"
@@ -88,7 +88,7 @@
         <div>{{ error.message }}</div>
         <br />
         <a
-          [href]="homeHref((data$ | async)?.isDsp)"
+          [href]="homeHref((data$ | async).isDsp)"
           onclick="setTimeout(location.reload.bind(location), 100)"
           >Click here to reset</a
         >

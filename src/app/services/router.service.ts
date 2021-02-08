@@ -21,15 +21,15 @@ import * as Products from '~/store/products';
 import { RecipesState } from '~/store/recipes';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 
-export const NULL = 'n';
-export const EMPTY = 'e';
-export const LISTSEP = '_';
-export const ARRAYSEP = '~';
-export const FIELDSEP = '*';
+export const NULL = '?'; // Encoded
+export const EMPTY = '='; // Encoded
+export const LISTSEP = '_'; // Unreserved
+export const ARRAYSEP = '~'; // Unreserved
+export const FIELDSEP = '*'; // Reserved, unescaped by encoding
 export const TRUE = '1';
 export const FALSE = '0';
 export const BASE64ABC =
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.';
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.'; // Unreserved
 export const MAX = BASE64ABC.length;
 
 export function getId(n: number): string {
@@ -99,7 +99,9 @@ export class RouterService {
         this.zipPartial += `&s=${zSettings}`;
       }
       this.zip = this.getHash(zState);
-      this.router.navigateByUrl(`${location.pathname}?${this.zip}`);
+      this.router.navigateByUrl(
+        `${this.router.url.split('#')[0].split('?')[0]}?${this.zip}`
+      );
     }
   }
 
@@ -123,68 +125,6 @@ export class RouterService {
     const unzipped = zProducts + this.zipPartial;
     const zipped = `z=${this.bytesToBase64(deflate(unzipped))}`;
     return unzipped.length < zipped.length ? unzipped : zipped;
-  }
-
-  getBase64Code(charCode: number): number {
-    if (charCode >= this.base64codes.length) {
-      throw new Error('Unable to parse base64 string.');
-    }
-    const code = this.base64codes[charCode];
-    if (code === 255) {
-      throw new Error('Unable to parse base64 string.');
-    }
-    return code;
-  }
-
-  bytesToBase64(bytes: Uint8Array): string {
-    let result = '';
-    let i: number;
-    const l = bytes.length;
-    for (i = 2; i < l; i += 3) {
-      result += BASE64ABC[bytes[i - 2] >> 2];
-      result += BASE64ABC[((bytes[i - 2] & 0x03) << 4) | (bytes[i - 1] >> 4)];
-      result += BASE64ABC[((bytes[i - 1] & 0x0f) << 2) | (bytes[i] >> 6)];
-      result += BASE64ABC[bytes[i] & 0x3f];
-    }
-    if (i === l + 1) {
-      // 1 octet yet to write
-      result += BASE64ABC[bytes[i - 2] >> 2];
-      result += BASE64ABC[(bytes[i - 2] & 0x03) << 4];
-      result += '__';
-    }
-    if (i === l) {
-      // 2 octets yet to write
-      result += BASE64ABC[bytes[i - 2] >> 2];
-      result += BASE64ABC[((bytes[i - 2] & 0x03) << 4) | (bytes[i - 1] >> 4)];
-      result += BASE64ABC[(bytes[i - 1] & 0x0f) << 2];
-      result += '_';
-    }
-    return result;
-  }
-
-  base64ToBytes(str: string): Uint8Array {
-    if (str.length % 4 !== 0) {
-      throw new Error('Unable to parse base64 string.');
-    }
-    const index = str.indexOf('_');
-    if (index !== -1 && index < str.length - 2) {
-      throw new Error('Unable to parse base64 string.');
-    }
-    const missingOctets = str.endsWith('__') ? 2 : str.endsWith('_') ? 1 : 0;
-    const n = str.length;
-    const result = new Uint8Array(3 * (n / 4));
-    let buffer: number;
-    for (let i = 0, j = 0; i < n; i += 4, j += 3) {
-      buffer =
-        (this.getBase64Code(str.charCodeAt(i)) << 18) |
-        (this.getBase64Code(str.charCodeAt(i + 1)) << 12) |
-        (this.getBase64Code(str.charCodeAt(i + 2)) << 6) |
-        this.getBase64Code(str.charCodeAt(i + 3));
-      result[j] = buffer >> 16;
-      result[j + 1] = (buffer >> 8) & 0xff;
-      result[j + 2] = buffer & 0xff;
-    }
-    return result.subarray(0, result.length - missingOctets);
   }
 
   updateState(e: Event): void {
@@ -602,18 +542,88 @@ export class RouterService {
   }
 
   parseString(value: string): string {
+    // Replace old null values
+    value = value.replace(/^n$/, NULL);
     return value === NULL ? null : value;
   }
 
   parseBool(value: string): boolean {
+    // Replace old null values
+    value = value.replace(/^n$/, NULL);
     return value === NULL ? null : value === TRUE;
   }
 
   parseNumber(value: string): number {
+    // Replace old null values
+    value = value.replace(/^n$/, NULL);
     return value === NULL ? null : Number(value);
   }
 
   parseArray(value: string): string[] {
+    // Replace old null/empty values
+    value = value.replace(/^n$/, NULL).replace(/^e$/, EMPTY);
     return value === NULL ? null : value === EMPTY ? [] : value.split(ARRAYSEP);
+  }
+
+  getBase64Code(charCode: number): number {
+    if (charCode >= this.base64codes.length) {
+      throw new Error('Unable to parse base64 string.');
+    }
+    const code = this.base64codes[charCode];
+    if (code === 255) {
+      throw new Error('Unable to parse base64 string.');
+    }
+    return code;
+  }
+
+  bytesToBase64(bytes: Uint8Array): string {
+    let result = '';
+    let i: number;
+    const l = bytes.length;
+    for (i = 2; i < l; i += 3) {
+      result += BASE64ABC[bytes[i - 2] >> 2];
+      result += BASE64ABC[((bytes[i - 2] & 0x03) << 4) | (bytes[i - 1] >> 4)];
+      result += BASE64ABC[((bytes[i - 1] & 0x0f) << 2) | (bytes[i] >> 6)];
+      result += BASE64ABC[bytes[i] & 0x3f];
+    }
+    if (i === l + 1) {
+      // 1 octet yet to write
+      result += BASE64ABC[bytes[i - 2] >> 2];
+      result += BASE64ABC[(bytes[i - 2] & 0x03) << 4];
+      result += '__';
+    }
+    if (i === l) {
+      // 2 octets yet to write
+      result += BASE64ABC[bytes[i - 2] >> 2];
+      result += BASE64ABC[((bytes[i - 2] & 0x03) << 4) | (bytes[i - 1] >> 4)];
+      result += BASE64ABC[(bytes[i - 1] & 0x0f) << 2];
+      result += '_';
+    }
+    return result;
+  }
+
+  base64ToBytes(str: string): Uint8Array {
+    if (str.length % 4 !== 0) {
+      throw new Error('Unable to parse base64 string.');
+    }
+    const index = str.indexOf('_');
+    if (index !== -1 && index < str.length - 2) {
+      throw new Error('Unable to parse base64 string.');
+    }
+    const missingOctets = str.endsWith('__') ? 2 : str.endsWith('_') ? 1 : 0;
+    const n = str.length;
+    const result = new Uint8Array(3 * (n / 4));
+    let buffer: number;
+    for (let i = 0, j = 0; i < n; i += 4, j += 3) {
+      buffer =
+        (this.getBase64Code(str.charCodeAt(i)) << 18) |
+        (this.getBase64Code(str.charCodeAt(i + 1)) << 12) |
+        (this.getBase64Code(str.charCodeAt(i + 2)) << 6) |
+        this.getBase64Code(str.charCodeAt(i + 3));
+      result[j] = buffer >> 16;
+      result[j + 1] = (buffer >> 8) & 0xff;
+      result[j + 2] = buffer & 0xff;
+    }
+    return result.subarray(0, result.length - missingOctets);
   }
 }

@@ -151,7 +151,7 @@ export class SettingsComponent implements OnInit {
   ngOnInit(): void {
     this.state =
       Object.keys(this.preferences.states).find(
-        (s) => this.preferences.states[s] === this.state
+        (s) => this.preferences.states[s] === this.search
       ) || '';
     this.router.events.subscribe((e) => this.ref.detectChanges());
   }
@@ -189,7 +189,7 @@ export class SettingsComponent implements OnInit {
   }
 
   clickSaveState(): void {
-    this.saveState.emit({ id: this.tempState, value: this.state });
+    this.saveState.emit({ id: this.tempState, value: this.search });
     this.editState = false;
     this.state = this.tempState;
   }

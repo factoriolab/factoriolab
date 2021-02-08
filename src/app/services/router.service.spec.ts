@@ -33,12 +33,12 @@ import {
 const mockZipEmpty = 'eJwrsAUAAR8Arg==';
 const mockZipProducts = 'p=steel-chest*1';
 const mockZipAll =
-  'p=steel-chest*1&b=1&i=steel-chest**transport-belt&r=steel-chest***8&f=1,assembling-machine-1,electric-mining-drill&s=******3600';
+  'p=steel-chest*1&b=1&i=steel-chest**transport-belt&r=steel-chest***8&f=1_assembling-machine-1_electric-mining-drill&s=******3600';
 const mockZipExtra =
   'eJwrsC0uSU3N0U3OSC0u0TJUS7I1VMtEEdMqKUrMKy7ILyrRTUrNKVErQpXVslBLs9UC6iwGkiBgbGZgoFZiWwKUBQDYwh4O';
 const mockZipLink =
-  'eJxtj90KgzAMhd/Gi7AMq7Bd9WH6E7VQm9JUfP11Q2GyEQgn4TuHJOud2VNCt5BUUJ3VqQtaKlE8d1CLSZK5VLQUKzhTZsbdzJy6ckGNCK02hjTjatwSEuEIK/stUos5hCXjm' +
-  'nPS6vaXl0zk8YCHy4jD6Rbd39UTrJHgkEPEXNiRSIv6PVg4Bo/TRhHU0PcwPlpTPbxLfb8DU9wa+dEvwjhijw==';
+  'eJxtj90KgzAMhd.Gi0CGVdiuyh5l9Ce6Qm1KU.H11w2FyUYgnITvHJKsN2ZPCd2TpILqrL53QUsliscOajFJMpeKlmIFZ8rMuJmZU1dOqBGhxcaQZlyMe4ZEOMLCfo3UYnZhy' +
+  'bjmnLR6.OUlE3nc4eE04nC4RfcXdQNrJDjkEDEXdiTSon4PFo7B47RSBDX0PYzX1lQP71Lf78AU10Z-9AuxNmKT';
 const mockProducts: Product[] = [
   {
     id: '0',
@@ -227,7 +227,7 @@ describe('RouterService', () => {
         initialFactoriesState,
         initialSettingsState
       );
-      expect(router.navigateByUrl).toHaveBeenCalledWith(`/#${mockZipProducts}`);
+      expect(router.navigateByUrl).toHaveBeenCalledWith(`/?${mockZipProducts}`);
     });
 
     it('should update url with all', () => {
@@ -239,7 +239,7 @@ describe('RouterService', () => {
         mockFactoriesState,
         mockSettingsState
       );
-      expect(router.navigateByUrl).toHaveBeenCalledWith(`/#${mockZipAll}`);
+      expect(router.navigateByUrl).toHaveBeenCalledWith(`/?${mockZipAll}`);
     });
   });
 
@@ -254,7 +254,7 @@ describe('RouterService', () => {
         mockFullSettingsState
       );
       const href = service.stepHref(Mocks.Step1);
-      expect(href).toEqual(`#z=${mockZipLink}`);
+      expect(href).toEqual(`?z=${mockZipLink}`);
     });
 
     it('should handle no items', () => {
@@ -308,7 +308,7 @@ describe('RouterService', () => {
 
     it('should unzip the hash', () => {
       spyOn(store, 'dispatch');
-      const url = `/#z=${mockZipExtra}`;
+      const url = `/?z=${mockZipExtra}`;
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(store.dispatch).toHaveBeenCalledWith(
         new LoadAction({
@@ -323,7 +323,7 @@ describe('RouterService', () => {
 
     it('should skip empty values', () => {
       spyOn(store, 'dispatch');
-      const url = `/#${mockZipEmpty}`;
+      const url = `/?${mockZipEmpty}`;
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(store.dispatch).toHaveBeenCalledWith(new LoadAction({} as any));
     });
@@ -594,7 +594,7 @@ describe('RouterService', () => {
     });
 
     it('should handle truthy', () => {
-      expect(service.zipDiffArray(['b', 'a'], ['a', 'c'])).toEqual('a+b');
+      expect(service.zipDiffArray(['b', 'a'], ['a', 'c'])).toEqual('a~b');
     });
   });
 
@@ -604,7 +604,7 @@ describe('RouterService', () => {
     });
 
     it('should honor order', () => {
-      expect(service.zipDiffRank(['a', 'b'], ['b', 'a'])).toEqual('a+b');
+      expect(service.zipDiffRank(['a', 'b'], ['b', 'a'])).toEqual('a~b');
     });
 
     it('should handle both empty', () => {
@@ -616,7 +616,7 @@ describe('RouterService', () => {
     });
 
     it('should handle truthy', () => {
-      expect(service.zipDiffRank(['a', 'b'], ['a', 'c'])).toEqual('a+b');
+      expect(service.zipDiffRank(['a', 'b'], ['a', 'c'])).toEqual('a~b');
     });
 
     it('should handle nulls', () => {
@@ -668,7 +668,7 @@ describe('RouterService', () => {
     });
 
     it('should parse value', () => {
-      expect(service.parseArray('a+b')).toEqual(['a', 'b']);
+      expect(service.parseArray('a~b')).toEqual(['a', 'b']);
     });
   });
 });
