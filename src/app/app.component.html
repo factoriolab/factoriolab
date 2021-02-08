@@ -31,6 +31,16 @@
     >
     </lab-settings-container>
     <div class="view">
+      <div *ngIf="showPoll" class="poll">
+        <h2>Poll</h2>
+        <div class="panel">
+          <a target="_blank" [href]="poll">Have a minute to answer a poll?</a>
+          <div class="flex buttons">
+            <button (click)="hidePoll(true)"><span class="text">Don't show again</span></button>
+            <button (click)="hidePoll()"><span class="text">Close</span></button>
+          </div>
+        </div>
+      </div>
       <lab-products-container></lab-products-container>
       <div *ngIf="(products$ | async).length">
         <ul role="navigation" class="tabs">

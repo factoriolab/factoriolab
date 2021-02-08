@@ -44,6 +44,13 @@ export class AppComponent implements OnInit {
 
   title: string;
   showSettings: boolean;
+  poll = 'https://linkto.run/p/0UD8IV6X';
+  pollKey = 'poll0';
+  showPoll = true;
+
+  get lsHidePoll(): boolean {
+    return !!localStorage.getItem(this.pollKey); 
+  }
 
   constructor(
     public error: ErrorService,
@@ -76,5 +83,15 @@ export class AppComponent implements OnInit {
       this.title = dsp ? TITLE_DSP : TITLE_LAB;
       this.titleService.setTitle(`FactorioLab | ${this.title}`);
     });
+    if (this.lsHidePoll) {
+      this.showPoll = false;
+    }
+  }
+
+  hidePoll(persist = false): void {
+    if (persist) {
+      localStorage.setItem(this.pollKey, 'hide');
+    }
+    this.showPoll = false;
   }
 }
