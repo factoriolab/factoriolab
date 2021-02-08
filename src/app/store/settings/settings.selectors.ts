@@ -145,7 +145,7 @@ export const getMods = createSelector(
 );
 
 export const getDatasets = createSelector(getBase, getMods, (base, mods) =>
-  base ? [base, ...mods] : []
+  base && base.defaults.modIds.length === mods.length ? [base, ...mods] : []
 );
 
 export const getNormalDataset = createSelector(
@@ -154,6 +154,10 @@ export const getNormalDataset = createSelector(
   getDefaults,
   getIsDsp,
   (app, mods, defaults, isDsp) => {
+    if (!mods.length) {
+      return null;
+    }
+
     // Map out entities with mods
     const categoryEntities = getEntities(
       app.categories,

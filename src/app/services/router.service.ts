@@ -23,11 +23,22 @@ import { SettingsState, initialSettingsState } from '~/store/settings';
 
 export const NULL = 'n';
 export const EMPTY = 'e';
-export const LISTSEP = ',';
-export const ARRAYSEP = '+';
+export const LISTSEP = '_';
+export const ARRAYSEP = '~';
 export const FIELDSEP = '*';
 export const TRUE = '1';
 export const FALSE = '0';
+export const BASE64ABC =
+  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-.';
+export const MAX = BASE64ABC.length;
+
+export function getId(n: number): string {
+  if (n / MAX > 1) {
+    return getId(Math.floor(n / MAX)) + getId(n % MAX);
+  } else {
+    return BASE64ABC[n];
+  }
+}
 
 @Injectable({
   providedIn: 'root',
@@ -36,230 +47,18 @@ export class RouterService {
   unzipping: boolean;
   zip: string;
   zipPartial = '';
-
-  /*
-  // This constant can also be computed with the following algorithm:
-  const base64abc = [],
-    A = "A".charCodeAt(0),
-    a = "a".charCodeAt(0),
-    n = "0".charCodeAt(0);
-  for (let i = 0; i < 26; ++i) {
-    base64abc.push(String.fromCharCode(A + i));
-  }
-  for (let i = 0; i < 26; ++i) {
-    base64abc.push(String.fromCharCode(a + i));
-  }
-  for (let i = 0; i < 10; ++i) {
-    base64abc.push(String.fromCharCode(n + i));
-  }
-  base64abc.push("+");
-  base64abc.push("/");
-  */
-  base64abc = [
-    'A',
-    'B',
-    'C',
-    'D',
-    'E',
-    'F',
-    'G',
-    'H',
-    'I',
-    'J',
-    'K',
-    'L',
-    'M',
-    'N',
-    'O',
-    'P',
-    'Q',
-    'R',
-    'S',
-    'T',
-    'U',
-    'V',
-    'W',
-    'X',
-    'Y',
-    'Z',
-    'a',
-    'b',
-    'c',
-    'd',
-    'e',
-    'f',
-    'g',
-    'h',
-    'i',
-    'j',
-    'k',
-    'l',
-    'm',
-    'n',
-    'o',
-    'p',
-    'q',
-    'r',
-    's',
-    't',
-    'u',
-    'v',
-    'w',
-    'x',
-    'y',
-    'z',
-    '0',
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    '-',
-    '.',
-  ];
-
-  /*
-  // This constant can also be computed with the following algorithm:
-  const l = 256, base64codes = new Uint8Array(l);
-  for (let i = 0; i < l; ++i) {
-    base64codes[i] = 255; // invalid character
-  }
-  base64abc.forEach((char, index) => {
-    base64codes[char.charCodeAt(0)] = index;
-  });
-  base64codes["=".charCodeAt(0)] = 0; // ignored anyway, so we just need to prevent an error
-  */
-  base64codes = [
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    62,
-    255,
-    255,
-    255,
-    63,
-    52,
-    53,
-    54,
-    55,
-    56,
-    57,
-    58,
-    59,
-    60,
-    61,
-    255,
-    255,
-    255,
-    0,
-    255,
-    255,
-    255,
-    0,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19,
-    20,
-    21,
-    22,
-    23,
-    24,
-    25,
-    255,
-    255,
-    255,
-    255,
-    255,
-    255,
-    26,
-    27,
-    28,
-    29,
-    30,
-    31,
-    32,
-    33,
-    34,
-    35,
-    36,
-    37,
-    38,
-    39,
-    40,
-    41,
-    42,
-    43,
-    44,
-    45,
-    46,
-    47,
-    48,
-    49,
-    50,
-    51,
-  ];
+  base64codes: Uint8Array;
 
   constructor(private router: Router, private store: Store<State>) {
+    const l = 256;
+    this.base64codes = new Uint8Array(l);
+    for (let i = 0; i < l; i++) {
+      this.base64codes[i] = 255; // invalid character
+    }
+    for (let i = 0; i < BASE64ABC.length; i++) {
+      this.base64codes[BASE64ABC.charCodeAt(i)] = i;
+    }
+    this.base64codes['_'.charCodeAt(0)] = 0;
     this.router.events.subscribe((e) => this.updateState(e));
   }
 
@@ -300,7 +99,7 @@ export class RouterService {
         this.zipPartial += `&s=${zSettings}`;
       }
       this.zip = this.getHash(zState);
-      this.router.navigateByUrl(`${this.router.url.split('#')[0]}#${this.zip}`);
+      this.router.navigateByUrl(`${this.router.url.split('?')[0]}?${this.zip}`);
     }
   }
 
@@ -317,34 +116,16 @@ export class RouterService {
       },
     ];
     const zProducts = this.zipProducts(products);
-    return '#' + this.getHash(`p=${zProducts}`, false);
+    return '?' + this.getHash(`p=${zProducts}`, false);
   }
 
   getHash(zProducts: string, log = true): string {
     const unzipped = zProducts + this.zipPartial;
-    if (log) {
-      try {
-        const test = deflate(unzipped);
-        console.log(test);
-        const a = this.bytesToBase64(test);
-        const b = encodeURIComponent(unzipped);
-        console.log(a);
-        console.log(b);
-        console.log(`${a.length} vs ${b.length}`);
-
-        //const str = String.fromCharCode.apply(null, test);
-        //const str = new TextDecoder('utf-8').decode(test);
-        //console.log(str);
-      } catch (ex) {
-        console.error(ex);
-      }
-    }
-
-    const zipped = `z=${btoa(deflate(unzipped, { to: 'string' }))}`;
+    const zipped = `z=${this.bytesToBase64(deflate(unzipped))}`;
     return unzipped.length < zipped.length ? unzipped : zipped;
   }
 
-  getBase64Code(charCode): number {
+  getBase64Code(charCode: number): number {
     if (charCode >= this.base64codes.length) {
       throw new Error('Unable to parse base64 string.');
     }
@@ -355,48 +136,44 @@ export class RouterService {
     return code;
   }
 
-  bytesToBase64(bytes): string {
-    let result = '',
-      i,
-      l = bytes.length;
+  bytesToBase64(bytes: Uint8Array): string {
+    let result = '';
+    let i: number;
+    const l = bytes.length;
     for (i = 2; i < l; i += 3) {
-      result += this.base64abc[bytes[i - 2] >> 2];
-      result += this.base64abc[
-        ((bytes[i - 2] & 0x03) << 4) | (bytes[i - 1] >> 4)
-      ];
-      result += this.base64abc[((bytes[i - 1] & 0x0f) << 2) | (bytes[i] >> 6)];
-      result += this.base64abc[bytes[i] & 0x3f];
+      result += BASE64ABC[bytes[i - 2] >> 2];
+      result += BASE64ABC[((bytes[i - 2] & 0x03) << 4) | (bytes[i - 1] >> 4)];
+      result += BASE64ABC[((bytes[i - 1] & 0x0f) << 2) | (bytes[i] >> 6)];
+      result += BASE64ABC[bytes[i] & 0x3f];
     }
     if (i === l + 1) {
       // 1 octet yet to write
-      result += this.base64abc[bytes[i - 2] >> 2];
-      result += this.base64abc[(bytes[i - 2] & 0x03) << 4];
-      result += '==';
+      result += BASE64ABC[bytes[i - 2] >> 2];
+      result += BASE64ABC[(bytes[i - 2] & 0x03) << 4];
+      result += '__';
     }
     if (i === l) {
       // 2 octets yet to write
-      result += this.base64abc[bytes[i - 2] >> 2];
-      result += this.base64abc[
-        ((bytes[i - 2] & 0x03) << 4) | (bytes[i - 1] >> 4)
-      ];
-      result += this.base64abc[(bytes[i - 1] & 0x0f) << 2];
-      result += '=';
+      result += BASE64ABC[bytes[i - 2] >> 2];
+      result += BASE64ABC[((bytes[i - 2] & 0x03) << 4) | (bytes[i - 1] >> 4)];
+      result += BASE64ABC[(bytes[i - 1] & 0x0f) << 2];
+      result += '_';
     }
     return result;
   }
 
-  base64ToBytes(str): Uint8Array {
+  base64ToBytes(str: string): Uint8Array {
     if (str.length % 4 !== 0) {
       throw new Error('Unable to parse base64 string.');
     }
-    const index = str.indexOf('=');
+    const index = str.indexOf('_');
     if (index !== -1 && index < str.length - 2) {
       throw new Error('Unable to parse base64 string.');
     }
-    let missingOctets = str.endsWith('==') ? 2 : str.endsWith('=') ? 1 : 0,
-      n = str.length,
-      result = new Uint8Array(3 * (n / 4)),
-      buffer;
+    const missingOctets = str.endsWith('__') ? 2 : str.endsWith('_') ? 1 : 0;
+    const n = str.length;
+    const result = new Uint8Array(3 * (n / 4));
+    let buffer: number;
     for (let i = 0, j = 0; i < n; i += 4, j += 3) {
       buffer =
         (this.getBase64Code(str.charCodeAt(i)) << 18) |
@@ -410,58 +187,64 @@ export class RouterService {
     return result.subarray(0, result.length - missingOctets);
   }
 
-  base64encode(str, encoder = new TextEncoder()): string {
-    return this.bytesToBase64(encoder.encode(str));
-  }
-
-  base64decode(str, decoder = new TextDecoder()): string {
-    return decoder.decode(this.base64ToBytes(str));
-  }
-
   updateState(e: Event): void {
     try {
       if (e instanceof NavigationEnd) {
         const fragments = e.urlAfterRedirects.split('#');
-        if (fragments.length > 1) {
-          const urlZip = fragments[fragments.length - 1];
-          if (this.zip !== urlZip) {
-            const zState = urlZip.startsWith('z=')
-              ? inflate(atob(urlZip.substr(2)), { to: 'string' })
-              : urlZip;
-            const params = zState.split('&');
+        let query = fragments[0].split('?');
+        if (
+          query.length < 2 &&
+          fragments.length > 1 &&
+          fragments[1].length > 1 &&
+          fragments[1][1] === '='
+        ) {
+          // Try to recognize and handle old hash style navigation
+          query = fragments;
+        }
+        if (query.length > 1) {
+          let zip = query[1];
+          if (this.zip !== zip) {
+            if (zip.startsWith('z=')) {
+              // Upgrade old zipped characters
+              const z = zip.substr(2).replace('+', '-').replace('/', '.');
+              zip = inflate(this.base64ToBytes(z), { to: 'string' });
+            }
+            // Upgrade old delimiters
+            zip = zip.replace(',', LISTSEP).replace('+', ARRAYSEP);
+            const params = zip.split('&');
             const state: State = {} as any;
             for (const p of params) {
               const s = p.split('=');
               if (s[1]) {
-                if (s[0] === 'p') {
-                  state.productsState = this.unzipProducts(s[1].split(LISTSEP));
-                } else if (s[0] === 'b') {
-                  this.zipPartial += `&b=${s[1]}`;
+                const k = s[0];
+                const v = decodeURIComponent(s[1]);
+                if (k === 'p') {
+                  state.productsState = this.unzipProducts(v.split(LISTSEP));
+                } else if (k === 'b') {
+                  this.zipPartial += `&b=${v}`;
                   state.settingsState = {
                     ...state.settingsState,
-                    ...{ preset: this.parseNumber(s[1]) },
+                    ...{ preset: this.parseNumber(v) },
                   };
-                } else if (s[0] === 'i') {
-                  this.zipPartial = `&i=${s[1]}`;
-                  state.itemsState = this.unzipItems(s[1].split(LISTSEP));
-                } else if (s[0] === 'r') {
-                  this.zipPartial = `&r=${s[1]}`;
-                  state.recipesState = this.unzipRecipes(s[1].split(LISTSEP));
-                } else if (s[0] === 'f') {
-                  this.zipPartial = `&f=${s[1]}`;
-                  state.factoriesState = this.unzipFactories(
-                    s[1].split(LISTSEP)
-                  );
-                } else if (s[0] === 's') {
-                  this.zipPartial += `&s=${s[1]}`;
+                } else if (k === 'i') {
+                  this.zipPartial = `&i=${v}`;
+                  state.itemsState = this.unzipItems(v.split(LISTSEP));
+                } else if (k === 'r') {
+                  this.zipPartial = `&r=${v}`;
+                  state.recipesState = this.unzipRecipes(v.split(LISTSEP));
+                } else if (k === 'f') {
+                  this.zipPartial = `&f=${v}`;
+                  state.factoriesState = this.unzipFactories(v.split(LISTSEP));
+                } else if (k === 's') {
+                  this.zipPartial += `&s=${v}`;
                   state.settingsState = {
                     ...state.settingsState,
-                    ...this.unzipSettings(s[1]),
+                    ...this.unzipSettings(v),
                   };
                 }
               }
             }
-            this.zip = urlZip;
+            this.zip = zip;
             this.unzipping = true;
             this.store.dispatch(new LoadAction(state));
             this.unzipping = false;
@@ -475,21 +258,23 @@ export class RouterService {
   }
 
   zipProducts(products: Product[]): string {
-    return products
-      .map((product) => {
-        const i = product.itemId;
-        const r = Rational.fromString(product.rate).toString();
+    return encodeURIComponent(
+      products
+        .map((product) => {
+          const i = product.itemId;
+          const r = Rational.fromString(product.rate).toString();
 
-        return [
-          i,
-          r,
-          this.zipDiffNumber(product.rateType, RateType.Items),
-          this.zipTruthyString(product.viaId),
-        ]
-          .join(FIELDSEP)
-          .replace(/\**$/, '');
-      })
-      .join(LISTSEP);
+          return [
+            i,
+            r,
+            this.zipDiffNumber(product.rateType, RateType.Items),
+            this.zipTruthyString(product.viaId),
+          ]
+            .join(FIELDSEP)
+            .replace(/\**$/, '');
+        })
+        .join(LISTSEP)
+    );
   }
 
   unzipProducts(zProducts: string[]): Products.ProductsState {
@@ -518,19 +303,21 @@ export class RouterService {
   }
 
   zipItems(state: ItemsState): string {
-    return Object.keys(state)
-      .map((id) => {
-        const settings = state[id];
-        return [
-          id,
-          this.zipTruthyBool(settings.ignore),
-          this.zipTruthyString(settings.belt),
-          this.zipTruthyString(settings.wagon),
-        ]
-          .join(FIELDSEP)
-          .replace(/\**$/, '');
-      })
-      .join(LISTSEP);
+    return encodeURIComponent(
+      Object.keys(state)
+        .map((id) => {
+          const settings = state[id];
+          return [
+            id,
+            this.zipTruthyBool(settings.ignore),
+            this.zipTruthyString(settings.belt),
+            this.zipTruthyString(settings.wagon),
+          ]
+            .join(FIELDSEP)
+            .replace(/\**$/, '');
+        })
+        .join(LISTSEP)
+    );
   }
 
   unzipItems(zItems: string[]): ItemsState {
@@ -557,21 +344,23 @@ export class RouterService {
   }
 
   zipRecipes(state: RecipesState): string {
-    return Object.keys(state)
-      .map((id) => {
-        const settings = state[id];
-        return [
-          id,
-          this.zipTruthyString(settings.factory),
-          this.zipTruthyArray(settings.factoryModules),
-          this.zipTruthyNumber(settings.beaconCount),
-          this.zipTruthyArray(settings.beaconModules),
-          this.zipTruthyString(settings.beacon),
-        ]
-          .join(FIELDSEP)
-          .replace(/\**$/, '');
-      })
-      .join(LISTSEP);
+    return encodeURIComponent(
+      Object.keys(state)
+        .map((id) => {
+          const settings = state[id];
+          return [
+            id,
+            this.zipTruthyString(settings.factory),
+            this.zipTruthyArray(settings.factoryModules),
+            this.zipTruthyNumber(settings.beaconCount),
+            this.zipTruthyArray(settings.beaconModules),
+            this.zipTruthyString(settings.beacon),
+          ]
+            .join(FIELDSEP)
+            .replace(/\**$/, '');
+        })
+        .join(LISTSEP)
+    );
   }
 
   unzipRecipes(zRecipes: string[]): RecipesState {
@@ -607,23 +396,25 @@ export class RouterService {
 
   zipFactories(state: FactoriesState): string {
     const ids = state.ids ? ['', ...state.ids] : Object.keys(state.entities);
-    return ids
-      .map((id) => {
-        const othEnt = state.entities[id] || {};
-        if (id === '') {
-          id = state.ids == null ? '' : TRUE;
-        }
-        return [
-          id,
-          this.zipTruthyArray(othEnt.moduleRank),
-          this.zipTruthyNumber(othEnt.beaconCount),
-          this.zipTruthyString(othEnt.beaconModule),
-          this.zipTruthyString(othEnt.beacon),
-        ]
-          .join(FIELDSEP)
-          .replace(/\**$/, '');
-      })
-      .join(LISTSEP);
+    return encodeURIComponent(
+      ids
+        .map((id) => {
+          const othEnt = state.entities[id] || {};
+          if (id === '') {
+            id = state.ids == null ? '' : TRUE;
+          }
+          return [
+            id,
+            this.zipTruthyArray(othEnt.moduleRank),
+            this.zipTruthyNumber(othEnt.beaconCount),
+            this.zipTruthyString(othEnt.beaconModule),
+            this.zipTruthyString(othEnt.beacon),
+          ]
+            .join(FIELDSEP)
+            .replace(/\**$/, '');
+        })
+        .join(LISTSEP)
+    );
   }
 
   unzipFactories(zFactories: string[]): FactoriesState {
@@ -670,23 +461,25 @@ export class RouterService {
 
   zipSettings(state: SettingsState): string {
     const init = initialSettingsState;
-    return [
-      this.zipDiffString(state.baseId, init.baseId),
-      this.zipDiffArray(state.disabledRecipes, init.disabledRecipes),
-      this.zipDiffBool(state.expensive, init.expensive),
-      this.zipDiffString(state.belt, init.belt),
-      this.zipDiffString(state.fuel, init.fuel),
-      this.zipDiffNumber(state.flowRate, init.flowRate),
-      this.zipDiffNumber(state.displayRate, init.displayRate),
-      this.zipDiffNumber(state.miningBonus, init.miningBonus),
-      this.zipDiffNumber(state.researchSpeed, init.researchSpeed),
-      this.zipDiffNumber(state.inserterTarget, init.inserterTarget),
-      this.zipDiffNumber(state.inserterCapacity, init.inserterCapacity),
-      this.zipDiffString(state.cargoWagon, init.cargoWagon),
-      this.zipDiffString(state.fluidWagon, init.fluidWagon),
-    ]
-      .join(FIELDSEP)
-      .replace(/\**$/, '');
+    return encodeURIComponent(
+      [
+        this.zipDiffString(state.baseId, init.baseId),
+        this.zipDiffArray(state.disabledRecipes, init.disabledRecipes),
+        this.zipDiffBool(state.expensive, init.expensive),
+        this.zipDiffString(state.belt, init.belt),
+        this.zipDiffString(state.fuel, init.fuel),
+        this.zipDiffNumber(state.flowRate, init.flowRate),
+        this.zipDiffNumber(state.displayRate, init.displayRate),
+        this.zipDiffNumber(state.miningBonus, init.miningBonus),
+        this.zipDiffNumber(state.researchSpeed, init.researchSpeed),
+        this.zipDiffNumber(state.inserterTarget, init.inserterTarget),
+        this.zipDiffNumber(state.inserterCapacity, init.inserterCapacity),
+        this.zipDiffString(state.cargoWagon, init.cargoWagon),
+        this.zipDiffString(state.fluidWagon, init.fluidWagon),
+      ]
+        .join(FIELDSEP)
+        .replace(/\**$/, '')
+    );
   }
 
   unzipSettings(zSettings: string): SettingsState {

@@ -10,16 +10,16 @@ import { AppActionType, AppAction } from '../app.actions';
 import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
-  preset: Preset;
   baseId: string;
   disabledRecipes: string[];
   expensive: boolean;
+  displayRate: DisplayRate;
+  preset: Preset;
   belt: string;
   fuel: string;
-  flowRate: number;
   cargoWagon: string;
   fluidWagon: string;
-  displayRate: DisplayRate;
+  flowRate: number;
   miningBonus: number;
   researchSpeed: ResearchSpeed;
   inserterTarget: InserterTarget;
@@ -27,16 +27,16 @@ export interface SettingsState {
 }
 
 export const initialSettingsState: SettingsState = {
-  preset: Preset.Minimum,
   baseId: '1.1',
   disabledRecipes: null,
   expensive: false,
+  displayRate: DisplayRate.PerMinute,
+  preset: Preset.Minimum,
   belt: null,
   fuel: null,
-  flowRate: 1500,
   cargoWagon: null,
   fluidWagon: null,
-  displayRate: DisplayRate.PerMinute,
+  flowRate: 1500,
   miningBonus: 0,
   researchSpeed: ResearchSpeed.Speed6,
   inserterTarget: InserterTarget.ExpressTransportBelt,
@@ -60,10 +60,10 @@ export function settingsReducer(
       return {
         ...state,
         ...{
-          preset: Preset.Minimum,
           baseId: action.payload,
           disabledRecipes: null,
           expensive: false,
+          preset: Preset.Minimum,
           belt: null,
           fuel: null,
           cargoWagon: null,

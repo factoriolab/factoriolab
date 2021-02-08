@@ -91,8 +91,8 @@ export class DatasetsEffects {
       .pipe(map((response) => response as ModData));
   }
 
-  load(hash: string, stored: State, initial: Settings.SettingsState): void {
-    if (!hash) {
+  load(zip: string, stored: State, initial: Settings.SettingsState): void {
+    if (!zip) {
       const id = stored?.settingsState?.baseId || initial.baseId;
       this.requestData(id).subscribe((value) => {
         this.router.unzipping = true;
@@ -113,7 +113,7 @@ export class DatasetsEffects {
     private router: RouterService
   ) {
     this.load(
-      BrowserUtility.hash,
+      BrowserUtility.zip,
       BrowserUtility.storedState,
       Settings.initialSettingsState
     );

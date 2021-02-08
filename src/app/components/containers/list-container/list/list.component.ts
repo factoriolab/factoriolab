@@ -5,7 +5,11 @@ import {
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
+  AfterViewInit,
+  OnInit,
+  ChangeDetectorRef,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import {
   Step,
@@ -54,7 +58,7 @@ export interface StepInserter {
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ListComponent {
+export class ListComponent implements OnInit, AfterViewInit {
   @Input() data: Dataset;
   @Input() itemSettings: ItemsState;
   @Input() itemRaw: ItemsState;
@@ -150,6 +154,7 @@ export class ListComponent {
   expanded: Entities<StepDetailTab> = {};
   totalSpan = 2;
   effPrecision: Entities<number> = {};
+  fragment: string;
   DisplayRateVal = DisplayRateVal;
   ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
 
@@ -180,7 +185,34 @@ export class ListComponent {
     return this.rate(value, this.effPrecision[Column.Pollution]);
   }
 
-  constructor(public router: RouterService) {}
+  constructor(
+    public router: RouterService,
+    public route: ActivatedRoute,
+    public ref: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    this.route.fragment.subscribe((fragment) => {
+      // Store the fragment to navigate to it after the component loads
+      this.fragment = fragment;
+    });
+  }
+
+  ngAfterViewInit(): void {
+    // Now that component is loaded, try navigating to the fragment
+    try {
+      document.querySelector('#' + this.fragment).scrollIntoView();
+      if (this.fragment) {
+        const step = this.steps.find(
+          (s) => s.itemId === this.fragment || s.recipeId === this.fragment
+        );
+        if (step && this.details[step.id]?.length) {
+          this.expanded[step.id] = this.details[step.id][0];
+          this.ref.detectChanges();
+        }
+      }
+    } catch (e) {}
+  }
 
   setEffectivePrecision(): void {
     if (this.steps && this.columns) {
