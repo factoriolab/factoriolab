@@ -118,9 +118,19 @@
         <td>Energy consumption</td>
         <td>{{ round(factory.usage) }} kW</td>
       </tr>
-      <tr *ngIf="factory.drain || factory.type == EnergyType.Electric">
+      <tr
+        *ngIf="
+          factory.drain ||
+          (factory.type == EnergyType.Electric && factory.drain == null)
+        "
+      >
         <td>Drain</td>
-        <td>{{ round(factory.drain || factory.usage / 30) }} kW</td>
+        <td>
+          {{
+            round(factory.drain != null ? factory.drain : factory.usage / 30)
+          }}
+          kW
+        </td>
       </tr>
       <tr *ngIf="factory.pollution">
         <td>Pollution</td>
