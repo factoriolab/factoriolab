@@ -362,9 +362,12 @@ describe('SimplexUtility', () => {
   describe('parseInputs', () => {
     it('should parse input-only items', () => {
       const state = getState();
+      // Coal = ignored input, Wood = normal input
+      state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
+      state.items[ItemId.Wood] = Rational.one;
       state.items[ItemId.Coal] = Rational.one;
       SimplexUtility.parseInputs(state);
-      expect(state.inputs).toEqual([ItemId.Coal]);
+      expect(state.inputs).toEqual([ItemId.Wood, ItemId.Coal]);
     });
   });
 
@@ -412,7 +415,9 @@ describe('SimplexUtility', () => {
   describe('canonical', () => {
     it('should get a canonical matrix', () => {
       const state = getState();
-      state.inputs = [ItemId.Wood];
+      // Coal = ignored input, Wood = normal input
+      state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
+      state.inputs = [ItemId.Wood, ItemId.Coal];
       state.recipes[RecipeId.CopperCable] =
         Mocks.AdjustedData.recipeR[RecipeId.CopperCable];
       state.recipes[ItemId.CopperPlate] = new RationalRecipe({
@@ -427,11 +432,14 @@ describe('SimplexUtility', () => {
       state.items[ItemId.CopperCable] = Rational.one;
       state.items[ItemId.CopperPlate] = Rational.zero;
       state.items[ItemId.Wood] = Rational.zero;
+      state.items[ItemId.Coal] = Rational.zero;
       const result = SimplexUtility.canonical(state);
       expect(result).toEqual([
         [
           Rational.one,
           Rational.minusOne,
+          Rational.zero,
+          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -448,7 +456,9 @@ describe('SimplexUtility', () => {
           Rational.two,
           Rational.minusOne,
           Rational.zero,
+          Rational.zero,
           Rational.one,
+          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -463,13 +473,15 @@ describe('SimplexUtility', () => {
           Rational.one,
           Rational.zero,
           Rational.zero,
-          Rational.one,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
           Rational.zero,
           Rational.one,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          COST_RECIPE,
         ],
         [
           Rational.zero,
@@ -478,7 +490,9 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
+          Rational.zero,
           Rational.one,
+          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -493,7 +507,9 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
+          Rational.zero,
           Rational.one,
+          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -510,8 +526,26 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
+          Rational.zero,
           Rational.one,
+          Rational.zero,
           COST_MANUAL,
+        ],
+        [
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.one,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.one,
+          Rational.zero,
         ],
       ]);
     });
