@@ -13,6 +13,12 @@ This project is intended to build on the features of the Kirk McDonald [Factorio
 
 **If you love Factorio Lab,** consider supporting it by [buying me a ☕](https://ko-fi.com/dcbroad3)!
 
+## Running online
+
+The calculator can be found at [https://factoriolab.github.io](https://factoriolab.github.io).  
+The Dyson Sphere Program calculator can opened directly using the url [https://factoriolab.github.io/dsp](https://factoriolab.github.io/dsp).  
+The staging environment, for testing pull requests, can be found at [https://factoriolab.github.io/staging](https://factoriolab.github.io/staging).
+
 ## Running locally
 
 To run this project locally:
