@@ -124,5 +124,11 @@
         <div class="text">Add a product</div>
       </button></lab-picker
     >
+    <lab-options
+      title="Select display rate"
+      [selected]="displayRate"
+      [options]="DisplayRateOptions"
+      (selectId)="setDisplayRate.emit($event)"
+    ></lab-options>
   </div>
 </div>

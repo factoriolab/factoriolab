@@ -3,11 +3,12 @@
   [productSteps]="productSteps$ | async"
   [products]="products$ | async"
   [displayRate]="displayRate$ | async"
-  (addProduct)="addProduct($event)"
   (removeProduct)="removeProduct($event)"
   (setItem)="setItem($event)"
   (setRate)="setRate($event)"
   (setRateType)="setRateType($event)"
   (setVia)="setVia($event)"
+  (addProduct)="addProduct($event)"
+  (setDisplayRate)="setDisplayRate($event)"
 >
 </lab-products>
