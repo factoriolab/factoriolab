@@ -17,6 +17,7 @@ import {
   DisplayRate,
   IdType,
   IdName,
+  DisplayRateOptions,
 } from '~/models';
 import { RecipeUtility } from '~/utilities';
 
@@ -32,15 +33,18 @@ export class ProductsComponent {
   @Input() products: Product[] = [];
   @Input() displayRate: DisplayRate;
 
-  @Output() addProduct = new EventEmitter<string>();
   @Output() removeProduct = new EventEmitter<string>();
   @Output() setItem = new EventEmitter<IdPayload>();
   @Output() setRate = new EventEmitter<IdPayload<string>>();
   @Output() setRateType = new EventEmitter<IdPayload<RateType>>();
   @Output() setVia = new EventEmitter<IdPayload>();
+  @Output() addProduct = new EventEmitter<string>();
+  @Output() setDisplayRate = new EventEmitter<DisplayRate>();
 
-  RateType = RateType;
+  DisplayRateOptions = DisplayRateOptions;
+
   IdType = IdType;
+  RateType = RateType;
 
   get rateTypeOptions(): IdName[] {
     return rateTypeOptions(this.displayRate, this.data.isDsp);

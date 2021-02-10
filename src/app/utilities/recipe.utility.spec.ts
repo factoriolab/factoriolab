@@ -1,5 +1,5 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import { Rational, RationalRecipe } from '~/models';
+import { EnergyType, Rational, RationalItem, RationalRecipe } from '~/models';
 import { RecipeUtility } from './recipe.utility';
 
 describe('RecipeUtility', () => {
@@ -363,6 +363,50 @@ describe('RecipeUtility', () => {
         data
       );
       expect(result.in[ItemId.UraniumFuelCell]).toEqual(Rational.from(1, 200));
+    });
+
+    it('should ignore burner with no usage', () => {
+      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.IronOre] };
+      settings.factory = ItemId.BurnerMiningDrill;
+      const data = {
+        ...Mocks.Data,
+        ...{
+          itemR: {
+            ...Mocks.Data.itemR,
+            ...{
+              [ItemId.BurnerMiningDrill]: new RationalItem({
+                ...Mocks.Data.itemEntities[ItemId.BurnerMiningDrill],
+                ...{
+                  factory: {
+                    speed: 1,
+                    modules: 0,
+                    type: EnergyType.Burner,
+                    usage: 0,
+                  },
+                },
+              }),
+            },
+          },
+        },
+      };
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.IronOre,
+        ItemId.Coal,
+        Rational.zero,
+        Rational.zero,
+        settings,
+        data
+      );
+      const expected = new RationalRecipe(
+        Mocks.Data.recipeEntities[RecipeId.IronOre]
+      );
+      expected.out = {
+        [ItemId.IronOre]: Rational.one,
+      };
+      expected.time = Rational.one;
+      expected.consumption = Rational.zero;
+      expected.pollution = Rational.zero;
+      expect(result).toEqual(expected);
     });
   });
 
