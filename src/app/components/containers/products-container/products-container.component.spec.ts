@@ -4,9 +4,10 @@ import { StoreModule, Store } from '@ngrx/store';
 
 import { Mocks, ItemId, RecipeId } from 'src/tests';
 import { IconComponent, OptionsComponent, PickerComponent } from '~/components';
-import { RateType } from '~/models';
+import { DisplayRate, RateType } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as Products from '~/store/products';
+import { SetDisplayRateAction } from '~/store/settings';
 import { ProductsComponent } from './products/products.component';
 import { ProductsContainerComponent } from './products-container.component';
 
@@ -38,13 +39,6 @@ describe('ProductsContainerComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should add a product', () => {
-    component.child.addProduct.emit(ItemId.WoodenChest);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.AddAction(ItemId.WoodenChest)
-    );
   });
 
   it('should remove a product', () => {
@@ -87,6 +81,21 @@ describe('ProductsContainerComponent', () => {
     component.child.setVia.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Products.SetViaAction(data)
+    );
+  });
+
+  it('should add a product', () => {
+    component.child.addProduct.emit(ItemId.WoodenChest);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Products.AddAction(ItemId.WoodenChest)
+    );
+  });
+
+  it('should set display rate', () => {
+    const value = DisplayRate.PerSecond;
+    component.child.setDisplayRate.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new SetDisplayRateAction(value)
     );
   });
 });

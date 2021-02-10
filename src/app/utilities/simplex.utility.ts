@@ -225,12 +225,14 @@ export class SimplexUtility {
     }
   }
 
-  /** Determines which items in the matrix are input-only, or have no recipe */
+  /** Determines which items in the matrix are input-only (not produced by any recipe, or ignored) */
   static parseInputs(state: MatrixState): void {
     const itemIds = Object.keys(state.items);
     const recipeIds = Object.keys(state.recipes);
     state.inputs = itemIds.filter(
-      (i) => !recipeIds.some((r) => state.data.recipeR[r].produces(i))
+      (i) =>
+        !recipeIds.some((r) => state.data.recipeR[r].produces(i)) ||
+        state.itemIds.indexOf(i) === -1
     );
   }
   //#endregion
@@ -314,7 +316,13 @@ export class SimplexUtility {
       for (const other of itemIds) {
         R.push(itemId === other ? Rational.one : Rational.zero);
       }
-      R.push(COST_MANUAL);
+      if (state.itemIds.indexOf(itemId) === -1) {
+        // Item is ignored, assume unlimited free input
+        R.push(Rational.zero);
+      } else {
+        // Avoid using items that cannot currently be produced
+        R.push(COST_MANUAL);
+      }
       A.push(R);
     }
 

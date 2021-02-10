@@ -19,7 +19,7 @@ import {
 import { State } from '~/store';
 import * as Products from '~/store/products';
 import { getAdjustedDataset } from '~/store/recipes';
-import { getDisplayRate } from '~/store/settings';
+import { getDisplayRate, SetDisplayRateAction } from '~/store/settings';
 import { ProductsComponent } from './products/products.component';
 
 @Component({
@@ -45,10 +45,6 @@ export class ProductsContainerComponent implements OnInit {
     this.displayRate$ = this.store.select(getDisplayRate);
   }
 
-  addProduct(value: string): void {
-    this.store.dispatch(new Products.AddAction(value));
-  }
-
   removeProduct(id: string): void {
     this.store.dispatch(new Products.RemoveAction(id));
   }
@@ -67,5 +63,13 @@ export class ProductsContainerComponent implements OnInit {
 
   setVia(data: IdPayload): void {
     this.store.dispatch(new Products.SetViaAction(data));
+  }
+
+  addProduct(value: string): void {
+    this.store.dispatch(new Products.AddAction(value));
+  }
+
+  setDisplayRate(value: DisplayRate): void {
+    this.store.dispatch(new SetDisplayRateAction(value));
   }
 }
