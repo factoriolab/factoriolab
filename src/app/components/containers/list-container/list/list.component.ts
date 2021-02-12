@@ -78,9 +78,12 @@ export class ListComponent implements OnInit, AfterViewInit {
         id: `${s.itemId || ''}.${s.recipeId || ''}`,
       },
     }));
-    this._steps.forEach((s) => {
-      this.router.stepHref(this.settings.baseId, s).subscribe((href) => {
-        s = { ...s, ...{ href } };
+    this.router.requestHash(this.settings.baseId).subscribe((hash) => {
+      setTimeout(() => {
+        this._steps.forEach((s) => {
+          s.href = this.router.stepHref(s, hash);
+        });
+        this.ref.detectChanges();
       });
     });
     this.setDetailTabs();
@@ -205,8 +208,8 @@ export class ListComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     // Now that component is loaded, try navigating to the fragment
     try {
-      document.querySelector('#' + this.fragment).scrollIntoView();
       if (this.fragment) {
+        document.querySelector('#' + this.fragment).scrollIntoView();
         const step = this.steps.find(
           (s) => s.itemId === this.fragment || s.recipeId === this.fragment
         );

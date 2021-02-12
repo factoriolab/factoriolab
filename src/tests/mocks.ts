@@ -1,6 +1,6 @@
 import { data } from 'src/data';
 import base from 'src/data/1.0/data.json';
-import mod from 'src/data/research/data.json';
+import mod from 'src/data/res/data.json';
 import {
   Product,
   RateType,

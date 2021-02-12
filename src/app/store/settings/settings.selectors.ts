@@ -321,6 +321,7 @@ export const getNormalDataset = createSelector(
     // Used in development to build files for new data sets
     // istanbul ignore next
     if (!environment.production && !environment.testing && mods.length) {
+      console.log(mods[0].id);
       console.log(
         JSON.stringify(complexRecipeIds.filter((i) => !itemEntities[i]))
       );
