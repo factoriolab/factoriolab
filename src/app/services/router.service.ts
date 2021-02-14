@@ -128,9 +128,7 @@ export class RouterService {
     factories: FactoriesState,
     settings: SettingsState
   ): Observable<Zip> {
-    return this.requestHash(
-      settings.baseId || initialSettingsState.baseId
-    ).pipe(
+    return this.requestHash(settings.baseId).pipe(
       map((hash) => {
         let zipPartial: Zip = { bare: '', hash: '' };
         // Base
@@ -749,7 +747,7 @@ export class RouterService {
       case ZipVersion.Version1: {
         obj = {
           baseId: this.parseString(s[i++]),
-          displayRate: this.parseNumber(s[i++]),
+          displayRate: this.parseDisplayRate(s[i++]),
           preset: this.parseNumber(s[i++]),
           disabledRecipes: this.parseArray(s[i++]),
           belt: this.parseString(s[i++]),
