@@ -1,7 +1,14 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  tick,
+  fakeAsync,
+} from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
+import { of } from 'rxjs';
 
 import { Mocks, TestUtility, ItemId, RecipeId } from 'src/tests';
 import { IconComponent, SelectComponent, ColumnsComponent } from '~/components';
@@ -129,6 +136,7 @@ describe('ListComponent', () => {
         TestListComponent,
       ],
       imports: [
+        HttpClientTestingModule,
         RouterTestingModule,
         StoreModule.forRoot(reducers, { metaReducers }),
       ],
@@ -148,13 +156,15 @@ describe('ListComponent', () => {
   });
 
   describe('steps', () => {
-    it('should set href and id', () => {
+    it('should set href and id', fakeAsync(() => {
+      spyOn(router, 'requestHash').and.returnValue(of(Mocks.Hash));
       spyOn(router, 'stepHref').and.returnValue('test');
       component.steps = [{}] as any;
       fixture.detectChanges();
+      tick();
       expect(component.child.steps[0].id).toEqual('.');
       expect(component.child.steps[0].href).toEqual('test');
-    });
+    }));
   });
 
   describe('columns', () => {

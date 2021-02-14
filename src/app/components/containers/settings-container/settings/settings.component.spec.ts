@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -105,6 +105,7 @@ describe('SettingsComponent', () => {
   let component: TestSettingsComponent;
   let fixture: ComponentFixture<TestSettingsComponent>;
   let router: Router;
+  let detectChanges: jasmine.Spy;
   const id = 'id';
   const value = 'value';
 
@@ -128,6 +129,8 @@ describe('SettingsComponent', () => {
     fixture = TestBed.createComponent(TestSettingsComponent);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
+    const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
+    detectChanges = spyOn(ref.constructor.prototype, 'detectChanges');
     fixture.detectChanges();
     history.replaceState(null, null, '');
   });
@@ -189,21 +192,18 @@ describe('SettingsComponent', () => {
     });
 
     it('should set up subscription to router', () => {
-      const ref = 'ref';
-      spyOn(component.child[ref], 'detectChanges');
       fixture.ngZone.run(() => {
         router.navigate([]);
       });
       fixture.detectChanges();
-      expect(component.child[ref].detectChanges).toHaveBeenCalled();
+      expect(detectChanges).toHaveBeenCalled();
     });
   });
 
   describe('scroll', () => {
     it('should detect changes on scroll', () => {
-      spyOn(component.child.ref, 'detectChanges');
       component.child.scroll();
-      expect(component.child.ref.detectChanges).toHaveBeenCalled();
+      expect(detectChanges).toHaveBeenCalled();
     });
   });
 

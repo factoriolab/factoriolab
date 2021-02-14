@@ -1,5 +1,6 @@
 import { data } from 'src/data';
 import base from 'src/data/1.0/data.json';
+import hash from 'src/data/1.0/hash.json';
 import mod from 'src/data/res/data.json';
 import {
   Product,
@@ -17,6 +18,7 @@ import {
   Node,
   Link,
   LinkValue,
+  ModHash,
 } from '~/models';
 import { initialDatasetsState } from '~/store/datasets';
 import { getFactorySettings, initialFactoriesState } from '~/store/factories';
@@ -40,6 +42,7 @@ export const Raw = data;
 export const DataState = initialDatasetsState;
 export const BaseInfo = data.base[0];
 export const BaseData = base;
+export const Hash: ModHash = hash;
 export const Base: Mod = { ...BaseInfo, ...BaseData };
 export const ModData1 = mod;
 export const Mod1: Mod = { ...data.mods[0], ...ModData1 };
