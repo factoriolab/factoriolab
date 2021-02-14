@@ -1,11 +1,12 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
   tick,
   fakeAsync,
 } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -124,7 +125,9 @@ class TestListComponent {
 describe('ListComponent', () => {
   let component: TestListComponent;
   let fixture: ComponentFixture<TestListComponent>;
+  let route: ActivatedRoute;
   let router: RouterService;
+  let detectChanges: jasmine.Spy;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -146,7 +149,10 @@ describe('ListComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TestListComponent);
+    route = TestBed.inject(ActivatedRoute);
     router = TestBed.inject(RouterService);
+    const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
+    detectChanges = spyOn(ref.constructor.prototype, 'detectChanges');
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -216,6 +222,55 @@ describe('ListComponent', () => {
   describe('totalPollution', () => {
     it('should sum the total pollution from steps', () => {
       expect(component.child.totalPollution).toEqual('1');
+    });
+  });
+
+  describe('ngOnInit', () => {
+    afterEach(() => {
+      history.replaceState(null, null, '');
+    });
+
+    it('should save the fragment', () => {
+      route.fragment = of('test');
+      component.child.ngOnInit();
+      expect(component.child.fragment).toEqual('test');
+    });
+  });
+
+  describe('ngAfterViewInit', () => {
+    it('should do nothing if there is no fragment', () => {
+      spyOn(document, 'querySelector');
+      component.child.ngAfterViewInit();
+      expect(document.querySelector).not.toHaveBeenCalled();
+    });
+
+    it('should expand the step if a match is found', () => {
+      const element: any = { scrollIntoView: (): void => {} };
+      spyOn(element, 'scrollIntoView');
+      spyOn(document, 'querySelector').and.returnValue(element);
+
+      component.child.fragment = Mocks.Steps[0].itemId;
+      component.child.ngAfterViewInit();
+      expect(element.scrollIntoView).toHaveBeenCalled();
+      expect(component.child.expanded[component.child.steps[0].id]).toEqual(
+        StepDetailTab.Inputs
+      );
+      expect(detectChanges).toHaveBeenCalled();
+    });
+
+    it('should skip if no match is found', () => {
+      const element: any = { scrollIntoView: (): void => {} };
+      spyOn(element, 'scrollIntoView');
+      spyOn(document, 'querySelector').and.returnValue(element);
+      component.child.steps.push({
+        itemId: null,
+        items: null,
+        recipeId: 'test',
+      });
+      component.child.fragment = 'test';
+      component.child.ngAfterViewInit();
+      expect(element.scrollIntoView).toHaveBeenCalled();
+      expect(detectChanges).not.toHaveBeenCalled();
     });
   });
 
@@ -372,6 +427,21 @@ describe('ListComponent', () => {
       fixture.detectChanges();
       expect(component.child.displayedSteps).toEqual([]);
       expect(component.child.expanded).toEqual({});
+    });
+  });
+
+  describe('link', () => {
+    it('should return itemId or recipeId', () => {
+      expect(
+        component.child.link({ itemId: ItemId.Wood, items: null })
+      ).toEqual('#wood');
+      expect(
+        component.child.link({
+          itemId: null,
+          items: null,
+          recipeId: RecipeId.Coal,
+        })
+      ).toEqual('#coal');
     });
   });
 

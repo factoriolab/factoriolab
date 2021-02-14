@@ -322,6 +322,10 @@ export class ListComponent implements OnInit, AfterViewInit {
     return step.id;
   }
 
+  link(step: Step): string {
+    return `#${step.itemId || step.recipeId}`;
+  }
+
   findStep(id: string): Step {
     return this.steps.find((s) => s.itemId === id);
   }
@@ -510,9 +514,5 @@ export class ListComponent implements OnInit, AfterViewInit {
         default: this.data.defaults.disabledRecipes,
       });
     }
-  }
-
-  link(step: Step): string {
-    return `#${step.itemId || step.recipeId}`;
   }
 }
