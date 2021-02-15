@@ -204,7 +204,11 @@ export class RouterService {
               zip = inflate(this.base64ToBytes(z), { to: 'string' });
             }
             // Upgrade old query-unsafe delimiters
-            zip = zip.replace(/,/g, LISTSEP);
+            zip = zip.replace(/,/g, LISTSEP).replace(/\+/g, ARRAYSEP);
+            // Upgrade old null/empty values
+            zip = zip
+              .replace(/\*n\*/g, `*${NULL}*`)
+              .replace(/\*e\*/g, `*${EMPTY}*`);
             const sections = zip.split('&');
             const substr = sections[0][1] === '=' ? 2 : 1;
             const params = sections.reduce((e: Entities<string>, v) => {
@@ -352,7 +356,7 @@ export class RouterService {
 
   unzipProducts(
     params: Entities,
-    v = ZipVersion.Version0,
+    v: ZipVersion,
     hash: ModHash = null
   ): Products.ProductsState {
     const list = params[Section.Products].split(LISTSEP);
@@ -436,7 +440,7 @@ export class RouterService {
 
   unzipItems(
     params: Entities,
-    v = ZipVersion.Version0,
+    v: ZipVersion,
     hash: ModHash = null
   ): ItemsState {
     const list = params[Section.Items].split(LISTSEP);
@@ -514,7 +518,7 @@ export class RouterService {
 
   unzipRecipes(
     params: Entities,
-    v = ZipVersion.Version0,
+    v: ZipVersion,
     hash: ModHash = null
   ): RecipesState {
     const list = params[Section.Recipes].split(LISTSEP);
@@ -599,7 +603,7 @@ export class RouterService {
 
   unzipFactories(
     params: Entities,
-    v = ZipVersion.Version0,
+    v: ZipVersion,
     hash: ModHash = null
   ): FactoriesState {
     const list = params[Section.Factories].split(LISTSEP);
@@ -662,7 +666,9 @@ export class RouterService {
           delete obj[k];
         });
 
-      entities[id] = obj;
+      if (Object.keys(obj).length) {
+        entities[id] = obj;
+      }
     }
     return { ids, entities };
   }
@@ -715,7 +721,7 @@ export class RouterService {
 
   unzipSettings(
     params: Entities,
-    v = ZipVersion.Version0,
+    v: ZipVersion,
     hash: ModHash = null
   ): SettingsState {
     const zip = params[Section.Settings];
@@ -934,8 +940,6 @@ export class RouterService {
     if (!value?.length) {
       return undefined;
     }
-    // Replace old null values
-    value = value.replace(/^n$/, NULL);
     return value === NULL ? null : value;
   }
 
@@ -943,8 +947,6 @@ export class RouterService {
     if (!value?.length) {
       return undefined;
     }
-    // Replace old null values
-    value = value.replace(/^n$/, NULL);
     return value === NULL ? null : value === TRUE;
   }
 
@@ -952,8 +954,6 @@ export class RouterService {
     if (!value?.length) {
       return undefined;
     }
-    // Replace old null values
-    value = value.replace(/^n$/, NULL);
     return value === NULL ? null : Number(value);
   }
 
@@ -961,8 +961,6 @@ export class RouterService {
     if (!value?.length) {
       return undefined;
     }
-    // Replace old null values
-    value = value.replace(/^n$/, NULL);
     switch (value) {
       case NULL:
         return null;
@@ -979,17 +977,13 @@ export class RouterService {
     if (!value?.length) {
       return undefined;
     }
-    // Replace old null/empty values
-    value = value.replace(/^n$/, NULL).replace(/^e$/, EMPTY);
-    // Replace old array separator
-    value = value.replace(/\+/g, ARRAYSEP);
     return value === NULL ? null : value === EMPTY ? [] : value.split(ARRAYSEP);
   }
 
   parseNString(value: string, hash: string[]): string {
     const v = this.parseString(value);
-    if (!v?.length) {
-      return undefined;
+    if (v == null) {
+      return v;
     }
     return hash[this.getN(v)];
   }
@@ -1003,8 +997,8 @@ export class RouterService {
 
   parseNArray(value: string, hash: string[]): string[] {
     const v = this.parseArray(value);
-    if (!v?.length) {
-      return undefined;
+    if (v == null) {
+      return v;
     }
     return v.map((a) => hash[this.getN(a)]);
   }
@@ -1018,14 +1012,12 @@ export class RouterService {
   }
 
   getN(id: string): number {
-    if (id.length > 0) {
-      const n = INVERT[id[0]];
-      if (id.length > 1) {
-        id = id.substr(1);
-        return n * Math.pow(MAX, id.length) + this.getN(id);
-      } else {
-        return n;
-      }
+    const n = INVERT[id[0]];
+    if (id.length > 1) {
+      id = id.substr(1);
+      return n * Math.pow(MAX, id.length) + this.getN(id);
+    } else {
+      return n;
     }
   }
 
