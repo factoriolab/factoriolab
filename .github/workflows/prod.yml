@@ -1,7 +1,7 @@
 name: prod
 on:
   push:
-    branches: [master]
+    branches: [main]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,6 +24,6 @@ jobs:
         with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           REPOSITORY_NAME: factoriolab/factoriolab.github.io
-          BRANCH: master
+          BRANCH: main
           FOLDER: dist
           CLEAN: true
