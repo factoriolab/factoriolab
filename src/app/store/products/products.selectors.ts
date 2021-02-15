@@ -127,7 +127,7 @@ export const getNormalizedRatesByBelts = createSelector(
         const via = RecipeUtility.getProductStepData(productSteps, p);
         if (via) {
           e[p.id] = p.rate
-            .mul(beltSpeed[itemSettings[p.viaId].belt])
+            .mul(beltSpeed[itemSettings[via[0]].belt])
             .div(via[1]);
         } else {
           e[p.id] = Rational.zero;
@@ -158,8 +158,8 @@ export const getNormalizedRatesByWagons = createSelector(
       } else {
         const via = RecipeUtility.getProductStepData(productSteps, p);
         if (via) {
-          const item = data.itemR[p.viaId];
-          const wagon = data.itemR[itemSettings[p.viaId].wagon];
+          const item = data.itemR[via[0]];
+          const wagon = data.itemR[itemSettings[via[0]].wagon];
           e[p.id] = p.rate
             .div(DisplayRateVal[displayRate])
             .mul(
