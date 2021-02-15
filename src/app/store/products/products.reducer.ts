@@ -81,6 +81,7 @@ export function productsReducer(
         ...state,
         ...{
           entities: {
+            ...state.entities,
             [action.payload.id]: entity,
           },
         },
@@ -109,6 +110,7 @@ export function productsReducer(
         ...state,
         ...{
           entities: {
+            ...state.entities,
             [action.payload.id]: entity,
           },
         },
