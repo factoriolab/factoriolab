@@ -194,10 +194,6 @@ describe('Products Selectors', () => {
     });
 
     it('should calculate using via step', () => {
-      spyOn(RecipeUtility, 'getProductStepData').and.returnValue([
-        '0',
-        Rational.two,
-      ]);
       const result = Selectors.getNormalizedRatesByBelts.projector(
         [
           {
@@ -214,7 +210,6 @@ describe('Products Selectors', () => {
         Mocks.ItemSettingsInitial,
         Mocks.BeltSpeed
       );
-      expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
       expect(result['0']).toEqual(Rational.from(15, 2));
     });
 
@@ -273,10 +268,6 @@ describe('Products Selectors', () => {
     });
 
     it('should calculate using via step', () => {
-      spyOn(RecipeUtility, 'getProductStepData').and.returnValue([
-        '0',
-        Rational.two,
-      ]);
       const result = Selectors.getNormalizedRatesByWagons.projector(
         [
           {
@@ -304,9 +295,8 @@ describe('Products Selectors', () => {
         DisplayRate.PerMinute,
         Mocks.AdjustedData
       );
-      expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
       expect(result['0']).toEqual(Rational.from(50, 3));
-      expect(result['1']).toEqual(Rational.from(625, 3));
+      expect(result['1']).toEqual(Rational.from(1250, 3));
     });
 
     it('should fall back to zero if via is not found', () => {
