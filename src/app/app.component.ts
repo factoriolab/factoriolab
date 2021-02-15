@@ -5,12 +5,11 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { skip } from 'rxjs/operators';
 
-import { Dataset, ItemId, Product, TITLE_DSP, TITLE_LAB } from './models';
+import { Dataset, ItemId, Mod, Product, TITLE_DSP, TITLE_LAB } from './models';
 import { ErrorService, RouterService } from './services';
 import { State } from './store';
-import { getInitialized } from './store/datasets';
 import { getProducts, getZipState } from './store/products';
-import { getDataset, getIsDsp } from './store/settings';
+import { getDataset, getDatasets, getIsDsp } from './store/settings';
 
 @Component({
   selector: 'lab-root',
@@ -36,9 +35,9 @@ import { getDataset, getIsDsp } from './store/settings';
   ],
 })
 export class AppComponent implements OnInit {
+  datasets$: Observable<Mod[]>;
   data$: Observable<Dataset>;
   products$: Observable<Product[]>;
-  initialized$: Observable<boolean>;
 
   ItemId = ItemId;
 
@@ -49,7 +48,7 @@ export class AppComponent implements OnInit {
   showPoll = false;
 
   get lsHidePoll(): boolean {
-    return !!localStorage.getItem(this.pollKey); 
+    return !!localStorage.getItem(this.pollKey);
   }
 
   constructor(
@@ -60,13 +59,13 @@ export class AppComponent implements OnInit {
   ) {}
 
   homeHref(isDsp: boolean): string {
-    return isDsp ? 'list#s=dsp' : 'list#p=';
+    return isDsp ? 'list?s=dsp' : 'list?p=';
   }
 
   ngOnInit(): void {
+    this.datasets$ = this.store.select(getDatasets);
     this.data$ = this.store.select(getDataset);
     this.products$ = this.store.select(getProducts);
-    this.initialized$ = this.store.select(getInitialized);
     this.store
       .select(getZipState)
       .pipe(skip(1))

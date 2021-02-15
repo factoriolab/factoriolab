@@ -7,12 +7,21 @@ export class BrowserUtility {
     return this._storedState;
   }
 
+  static get search(): string {
+    return location.search.substr(1);
+  }
+
   static get hash(): string {
     return location.hash.substr(1);
   }
 
   static get href(): string {
     return location.href;
+  }
+
+  static get zip(): string {
+    const hash = this.hash;
+    return this.search || (hash.length > 1 && hash[1] === '=' && hash);
   }
 
   static loadState(): State {
@@ -31,7 +40,7 @@ export class BrowserUtility {
   static mergeState(initial: State): State {
     const state = BrowserUtility.storedState;
     if (state) {
-      if (this.hash) {
+      if (this.zip) {
         return {
           ...initial,
           ...{ preferencesState: state.preferencesState },

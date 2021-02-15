@@ -115,8 +115,8 @@ export class SettingsComponent implements OnInit {
 
   ItemId = ItemId;
 
-  get hash(): string {
-    return BrowserUtility.hash;
+  get search(): string {
+    return BrowserUtility.search;
   }
 
   get presetOptions(): IdName[] {
@@ -146,12 +146,12 @@ export class SettingsComponent implements OnInit {
     return `${num} Visible`;
   }
 
-  constructor(public ref: ChangeDetectorRef, private router: Router) {}
+  constructor(private ref: ChangeDetectorRef, private router: Router) {}
 
   ngOnInit(): void {
     this.state =
       Object.keys(this.preferences.states).find(
-        (s) => this.preferences.states[s] === this.hash
+        (s) => this.preferences.states[s] === this.search
       ) || '';
     this.router.events.subscribe((e) => this.ref.detectChanges());
   }
@@ -189,7 +189,7 @@ export class SettingsComponent implements OnInit {
   }
 
   clickSaveState(): void {
-    this.saveState.emit({ id: this.tempState, value: this.hash });
+    this.saveState.emit({ id: this.tempState, value: this.search });
     this.editState = false;
     this.state = this.tempState;
   }

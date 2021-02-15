@@ -14,7 +14,7 @@ const routes: Routes = [
   },
   {
     path: 'dsp',
-    redirectTo: '/list#s=dsp',
+    redirectTo: '/list?s=dsp',
   },
   {
     path: '**',

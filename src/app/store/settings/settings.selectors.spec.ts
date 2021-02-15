@@ -188,7 +188,7 @@ describe('Settings Selectors', () => {
 
     it('should map mod ids to entities', () => {
       const result = Selectors.getMods.projector(Mocks.Base, {
-        research: Mocks.Base,
+        res: Mocks.Base,
       });
       expect(result).toEqual([Mocks.Base]);
     });
