@@ -14,7 +14,7 @@ export const data: AppData = {
     { id: 'bobang', name: 'Bob\'s & Angel\'s' },
     { id: 'dsp', name: 'Dyson Sphere Program' },
     { id: 'fep', name: 'FactorioExtended Plus' },
-    { id: 'irv', name: 'Industrial Revolution 2' },
+    { id: 'ir2', name: 'Industrial Revolution 2' },
     { id: 'kr2', name: 'Krastorio 2' },
     { id: 'kr2sxp', name: 'Krastorio 2 + SE' },
     { id: 'pys', name: 'Pyanodons' },
