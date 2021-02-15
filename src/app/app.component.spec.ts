@@ -1,10 +1,10 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
-import { of } from 'rxjs';
 
 import { Mocks } from 'src/tests';
 import { RouterService } from './services';
@@ -34,12 +34,6 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [
-        NoopAnimationsModule,
-        FormsModule,
-        RouterTestingModule,
-        StoreModule.forRoot(reducers, { metaReducers }),
-      ],
       declarations: [
         IconComponent,
         OptionsComponent,
@@ -51,6 +45,13 @@ describe('AppComponent', () => {
         ListContainerComponent,
         ListComponent,
         AppComponent,
+      ],
+      imports: [
+        NoopAnimationsModule,
+        FormsModule,
+        HttpClientTestingModule,
+        RouterTestingModule,
+        StoreModule.forRoot(reducers, { metaReducers }),
       ],
     })
       .compileComponents()

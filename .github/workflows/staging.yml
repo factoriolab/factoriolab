@@ -1,7 +1,7 @@
 name: staging
 on:
   pull_request:
-    branches: [master]
+    branches: [main]
 jobs:
   build:
     if: github.event.pull_request.head.repo.full_name == github.repository
@@ -25,6 +25,6 @@ jobs:
         with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           REPOSITORY_NAME: factoriolab/staging
-          BRANCH: master
+          BRANCH: main
           FOLDER: dist
           CLEAN: true

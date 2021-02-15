@@ -13,7 +13,6 @@ import { reducers, metaReducers, State } from '..';
 import * as App from '../app.actions';
 import { ResetAction } from '../products';
 import { SetBaseAction } from '../settings';
-import { LoadModAction } from './datasets.actions';
 import { DatasetsEffects } from './datasets.effects';
 
 describe('DatasetsEffects', () => {
@@ -40,22 +39,11 @@ describe('DatasetsEffects', () => {
     history.replaceState(null, null, '');
   });
 
-  describe('loadMod$', () => {
-    it('should store loaded mods in the cache', () => {
-      store.dispatch(
-        new LoadModAction({ id: Mocks.Base.id, value: Mocks.BaseData })
-      );
-      expect(effects.cache[Mocks.Base.id]).toEqual(Mocks.BaseData);
-    });
-  });
-
   describe('appLoad$', () => {
     it('should load the default base mod', () => {
       spyOn(store, 'dispatch').and.callThrough();
       spyOn(effects, 'requestData').and.returnValue(of(Mocks.BaseData));
       spyOn(effects, 'loadModsForBase');
-      let effect: Action;
-      effects.appLoad$.subscribe((a) => (effect = a));
       store.dispatch(new App.LoadAction({} as any));
       expect(effects.loadModsForBase).toHaveBeenCalledWith(
         Mocks.Base.defaults.modIds
@@ -63,17 +51,12 @@ describe('DatasetsEffects', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         new ResetAction(Mocks.Base.items[0].id)
       );
-      expect(effect).toEqual(
-        new LoadModAction({ id: Mocks.Base.id, value: Mocks.BaseData })
-      );
     });
 
     it('should load from state', () => {
       spyOn(store, 'dispatch').and.callThrough();
       spyOn(effects, 'requestData').and.returnValue(of(Mocks.BaseData));
       spyOn(effects, 'loadModsForBase');
-      let effect: Action;
-      effects.appLoad$.subscribe((a) => (effect = a));
       store.dispatch(
         new App.LoadAction({
           settingsState: { baseId: Mocks.Base.id },
@@ -85,9 +68,6 @@ describe('DatasetsEffects', () => {
       );
       expect(store.dispatch).not.toHaveBeenCalledWith(
         new ResetAction(Mocks.Base.items[0].id)
-      );
-      expect(effect).toEqual(
-        new LoadModAction({ id: Mocks.Base.id, value: Mocks.BaseData })
       );
     });
   });
@@ -110,10 +90,7 @@ describe('DatasetsEffects', () => {
       expect(effects.loadModsForBase).toHaveBeenCalledWith(
         Mocks.Base.defaults.modIds
       );
-      expect(effect).toEqual([
-        new ResetAction(Mocks.Base.items[0].id),
-        new LoadModAction({ id: Mocks.Base.id, value: Mocks.BaseData }),
-      ]);
+      expect(effect).toEqual([new ResetAction(Mocks.Base.items[0].id)]);
     });
   });
 
@@ -135,21 +112,15 @@ describe('DatasetsEffects', () => {
       expect(effects.loadModsForBase).toHaveBeenCalledWith(
         Mocks.Base.defaults.modIds
       );
-      expect(effect).toEqual([
-        new ResetAction(Mocks.Base.items[0].id),
-        new LoadModAction({ id: Mocks.Base.id, value: Mocks.BaseData }),
-      ]);
+      expect(effect).toEqual([new ResetAction(Mocks.Base.items[0].id)]);
     });
   });
 
   describe('loadModsForBase', () => {
     it('should load a list of mods', () => {
-      spyOn(store, 'dispatch');
-      spyOn(effects, 'requestData').and.returnValue(of(Mocks.ModData1));
+      spyOn(effects, 'requestData').and.returnValue(of(null));
       effects.loadModsForBase([Mocks.Mod1.id]);
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new LoadModAction({ id: Mocks.Mod1.id, value: Mocks.ModData1 })
-      );
+      expect(effects.requestData).toHaveBeenCalled();
     });
   });
 
@@ -162,15 +133,11 @@ describe('DatasetsEffects', () => {
       spyOn(store, 'dispatch');
       spyOn(effects, 'loadModsForBase');
       effects.load(null, null, { baseId: Mocks.Base.id } as any);
-      http.expectOne(`data/${Mocks.Base.id}/data.json`).flush(Mocks.BaseData);
       expect(effects.loadModsForBase).toHaveBeenCalledWith(
         Mocks.Base.defaults.modIds
       );
       expect(store.dispatch).toHaveBeenCalledWith(
         new ResetAction(Mocks.Base.items[0].id)
-      );
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new LoadModAction({ id: Mocks.Base.id, value: Mocks.BaseData })
       );
     });
 
@@ -182,15 +149,11 @@ describe('DatasetsEffects', () => {
         { settingsState: { baseId: Mocks.Base.id }, productsState: {} } as any,
         null
       );
-      http.expectOne(`data/${Mocks.Base.id}/data.json`).flush(Mocks.BaseData);
       expect(effects.loadModsForBase).toHaveBeenCalledWith(
         Mocks.Base.defaults.modIds
       );
       expect(store.dispatch).not.toHaveBeenCalledWith(
         new ResetAction(Mocks.Base.items[0].id)
-      );
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new LoadModAction({ id: Mocks.Base.id, value: Mocks.BaseData })
       );
     });
 

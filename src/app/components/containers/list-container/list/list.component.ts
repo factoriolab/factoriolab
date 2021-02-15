@@ -5,7 +5,11 @@ import {
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
+  AfterViewInit,
+  OnInit,
+  ChangeDetectorRef,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import {
   Step,
@@ -54,7 +58,7 @@ export interface StepInserter {
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ListComponent {
+export class ListComponent implements OnInit, AfterViewInit {
   @Input() data: Dataset;
   @Input() itemSettings: ItemsState;
   @Input() itemRaw: ItemsState;
@@ -72,9 +76,16 @@ export class ListComponent {
       ...s,
       ...{
         id: `${s.itemId || ''}.${s.recipeId || ''}`,
-        href: this.router.stepHref(s),
       },
     }));
+    this.router.requestHash(this.settings.baseId).subscribe((hash) => {
+      setTimeout(() => {
+        this._steps.forEach((s) => {
+          s.href = this.router.stepHref(s, hash);
+        });
+        this.ref.detectChanges();
+      });
+    });
     this.setDetailTabs();
     this.setDisplayedSteps();
     this.setEffectivePrecision();
@@ -150,6 +161,7 @@ export class ListComponent {
   expanded: Entities<StepDetailTab> = {};
   totalSpan = 2;
   effPrecision: Entities<number> = {};
+  fragment: string;
   DisplayRateVal = DisplayRateVal;
   ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
 
@@ -180,7 +192,34 @@ export class ListComponent {
     return this.rate(value, this.effPrecision[Column.Pollution]);
   }
 
-  constructor(public router: RouterService) {}
+  constructor(
+    private ref: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private router: RouterService
+  ) {}
+
+  ngOnInit(): void {
+    this.route.fragment.subscribe((fragment) => {
+      // Store the fragment to navigate to it after the component loads
+      this.fragment = fragment;
+    });
+  }
+
+  ngAfterViewInit(): void {
+    // Now that component is loaded, try navigating to the fragment
+    try {
+      if (this.fragment) {
+        document.querySelector('#' + this.fragment).scrollIntoView();
+        const step = this.steps.find(
+          (s) => s.itemId === this.fragment || s.recipeId === this.fragment
+        );
+        if (step && this.details[step.id]?.length) {
+          this.expanded[step.id] = this.details[step.id][0];
+          this.ref.detectChanges();
+        }
+      }
+    } catch (e) {}
+  }
 
   setEffectivePrecision(): void {
     if (this.steps && this.columns) {
@@ -281,6 +320,10 @@ export class ListComponent {
 
   trackBy(step: Step): string {
     return step.id;
+  }
+
+  link(step: Step): string {
+    return `#${step.itemId || step.recipeId}`;
   }
 
   findStep(id: string): Step {

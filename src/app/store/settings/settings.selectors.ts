@@ -18,6 +18,8 @@ import {
   ResearchSpeed,
   InserterTarget,
   InserterCapacity,
+  ModHash,
+  FuelType,
 } from '~/models';
 import { State } from '../';
 import * as Datasets from '../datasets';
@@ -144,8 +146,9 @@ export const getMods = createSelector(
     base?.defaults?.modIds?.filter((i) => data[i]).map((i) => data[i]) || []
 );
 
+// Return list only if base and all mods have been loaded
 export const getDatasets = createSelector(getBase, getMods, (base, mods) =>
-  base ? [base, ...mods] : []
+  base && base.defaults.modIds.length === mods.length ? [base, ...mods] : []
 );
 
 export const getNormalDataset = createSelector(
@@ -315,12 +318,24 @@ export const getNormalDataset = createSelector(
       .filter((r) => simpleRecipes.indexOf(r) === -1)
       .sort();
 
-    // Used to build default disabledRecipes for new data sets
+    // Used in development to build files for new data sets
     // istanbul ignore next
-    if (!environment.production && !environment.testing) {
+    if (!environment.production && !environment.testing && mods.length) {
+      console.log(mods[0].id);
       console.log(
         JSON.stringify(complexRecipeIds.filter((i) => !itemEntities[i]))
       );
+      const hash: ModHash = {
+        items: [...itemIds].sort(),
+        beacons: [...beaconIds].sort(),
+        belts: [...beltIds].sort(),
+        fuels: [...fuelIds[FuelType.Chemical]].sort(),
+        wagons: [...cargoWagonIds, ...fluidWagonIds].sort(),
+        factories: [...factoryIds].sort(),
+        modules: [...moduleIds].sort(),
+        recipes: [...recipeIds].sort(),
+      };
+      console.log(JSON.stringify(hash));
     }
 
     const dataset: Dataset = {

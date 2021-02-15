@@ -1,3 +1,5 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Store, StoreModule } from '@ngrx/store';
@@ -14,6 +16,7 @@ describe('FlowContainerComponent', () => {
   let component: FlowContainerComponent;
   let fixture: ComponentFixture<FlowContainerComponent>;
   let store: Store<State>;
+  let detectChanges: jasmine.Spy;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -26,6 +29,7 @@ describe('FlowContainerComponent', () => {
         FlowContainerComponent,
       ],
       imports: [
+        HttpClientTestingModule,
         RouterTestingModule,
         StoreModule.forRoot(reducers, { metaReducers }),
       ],
@@ -37,6 +41,8 @@ describe('FlowContainerComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     store = TestBed.inject(Store);
+    const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
+    detectChanges = spyOn(ref.constructor.prototype, 'detectChanges');
     spyOn(store, 'dispatch');
   });
 
@@ -45,10 +51,9 @@ describe('FlowContainerComponent', () => {
   });
 
   it('should set the selected node', () => {
-    spyOn(component.ref, 'detectChanges');
     component.setSelected(null);
     expect(component.selected).toEqual(null);
-    expect(component.ref.detectChanges).toHaveBeenCalled();
+    expect(detectChanges).toHaveBeenCalled();
   });
 
   it('should set the link value', () => {
