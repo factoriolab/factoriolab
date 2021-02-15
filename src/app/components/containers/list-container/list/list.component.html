@@ -308,36 +308,40 @@
                   *ngIf="data.recipeEntities[step.recipeId] as recipe"
                 >
                   <ng-container
-                    *ngIf="
-                      recipe.producers && recipe.producers.length > 1;
-                      else factoryDefault
-                    "
+                    *ngIf="!data.isDsp || factory !== 'mining-drill'"
                   >
-                    <lab-select
-                      header="Select a factory"
-                      [data]="data"
-                      [selected]="factory"
-                      [options]="recipe.producers"
-                      (selectId)="factoryChange(step, $event)"
+                    <ng-container
+                      *ngIf="
+                        recipe.producers && recipe.producers.length > 1;
+                        else factoryDefault
+                      "
                     >
-                      <lab-icon
-                        class="button"
-                        title="Click to change factory"
+                      <lab-select
+                        header="Select a factory"
                         [data]="data"
+                        [selected]="factory"
+                        [options]="recipe.producers"
+                        (selectId)="factoryChange(step, $event)"
+                      >
+                        <lab-icon
+                          class="button"
+                          title="Click to change factory"
+                          [data]="data"
+                          [iconId]="factory"
+                          [tooltip]="data.itemEntities[factory].name"
+                          [item]="data.itemEntities[factory]"
+                        ></lab-icon>
+                      </lab-select>
+                    </ng-container>
+                    <ng-template #factoryDefault>
+                      <lab-icon
                         [iconId]="factory"
                         [tooltip]="data.itemEntities[factory].name"
                         [item]="data.itemEntities[factory]"
+                        [data]="data"
                       ></lab-icon>
-                    </lab-select>
+                    </ng-template>
                   </ng-container>
-                  <ng-template #factoryDefault>
-                    <lab-icon
-                      [iconId]="factory"
-                      [tooltip]="data.itemEntities[factory].name"
-                      [item]="data.itemEntities[factory]"
-                      [data]="data"
-                    ></lab-icon>
-                  </ng-template>
                 </ng-container>
               </div>
             </div>
@@ -667,6 +671,7 @@
                           [recipe]="data.recipeEntities[inStep.recipeId]"
                         ></lab-icon>
                         <lab-icon
+                          *ngIf="!data.isDsp || factory !== 'mining-drill'"
                           [data]="data"
                           [iconId]="factory"
                           [tooltip]="data.itemEntities[factory].name"
@@ -820,6 +825,7 @@
                           [recipe]="data.recipeEntities[outStep.recipeId]"
                         ></lab-icon>
                         <lab-icon
+                          *ngIf="!data.isDsp || factory !== 'mining-drill'"
                           [data]="data"
                           [iconId]="factory"
                           [tooltip]="data.itemEntities[factory].name"
@@ -958,6 +964,7 @@
                       [recipe]="data.recipeEntities[step.recipeId]"
                     ></lab-icon>
                     <lab-icon
+                      *ngIf="!data.isDsp || factory !== 'mining-drill'"
                       [data]="data"
                       [iconId]="factory"
                       [tooltip]="data.itemEntities[factory].name"
