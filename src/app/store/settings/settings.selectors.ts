@@ -130,15 +130,6 @@ export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
   Rational.fromNumber(rate)
 );
 
-export const getAvailableMods = createSelector(
-  getBaseDatasetId,
-  Datasets.getModSets,
-  (id, mods) =>
-    mods.filter(
-      (m) => !m.compatibleIds || m.compatibleIds.some((i) => i === id)
-    )
-);
-
 export const getMods = createSelector(
   getBase,
   Datasets.getModEntities,
