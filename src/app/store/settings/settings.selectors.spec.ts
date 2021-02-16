@@ -162,24 +162,6 @@ describe('Settings Selectors', () => {
     });
   });
 
-  describe('getAvailableMods', () => {
-    it('should map to mod entities', () => {
-      const result = Selectors.getAvailableMods.projector(
-        Mocks.Base.id,
-        Mocks.Raw.mods
-      );
-      expect(result).toEqual(Mocks.Raw.mods);
-    });
-
-    it('should filter out incompatible mods', () => {
-      const result = Selectors.getAvailableMods.projector(
-        'test',
-        Mocks.Raw.mods
-      );
-      expect(result).toEqual([]);
-    });
-  });
-
   describe('getMods', () => {
     it('should handle nulls', () => {
       const result = Selectors.getMods.projector(null, null);
