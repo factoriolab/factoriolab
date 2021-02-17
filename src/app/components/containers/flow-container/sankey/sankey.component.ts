@@ -103,7 +103,7 @@ export class SankeyComponent {
     const link = this.svg
       .append('g')
       .attr('fill', 'none')
-      .attr('stroke-opacity', 0.5)
+      .attr('stroke-opacity', 0.6)
       .style('will-change', 'opacity')
       .selectAll('g')
       .data(skGraph.links)
