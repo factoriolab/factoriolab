@@ -102,15 +102,18 @@ export class ExportUtility {
           .join(',')}"`;
       }
       const settings = recipeSettings[step.recipeId];
+      const factory = data.itemEntities[settings.factory].factory;
       if (columns[Column.Factories].show) {
         exp.Factories = step.factories ? '=' + step.factories.toString() : '';
         exp.Factory = settings.factory;
-        exp.FactoryModules = `"${(settings.factoryModules || []).join(',')}"`;
+        if (factory.modules) {
+          exp.FactoryModules = `"${settings.factoryModules.join(',')}"`;
+        }
       }
-      if (columns[Column.Beacons].show) {
+      if (columns[Column.Beacons].show && factory.modules) {
         exp.Beacons = settings.beaconCount.toString();
         exp.Beacon = settings.beacon;
-        exp.BeaconModules = `"${(settings.beaconModules || []).join(',')}"`;
+        exp.BeaconModules = `"${settings.beaconModules.join(',')}"`;
       }
       if (columns[Column.Power].show) {
         exp.Power = step.power ? '=' + step.power.toString() : '';
