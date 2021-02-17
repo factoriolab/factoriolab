@@ -53,14 +53,14 @@ describe('ExportUtility', () => {
       wagon: 'wagon',
     };
     const fullRecipe: RecipeSettings = {
-      factory: 'factory',
+      factory: ItemId.AssemblingMachine2,
       factoryModules: ['a', 'b'],
       beaconCount: 8,
       beacon: 'beacon',
       beaconModules: ['c', 'd'],
     };
     const minRecipe: RecipeSettings = {
-      factory: 'factory',
+      factory: ItemId.AssemblingMachine1,
       beaconCount: 8,
       beacon: 'beacon',
     };
@@ -120,10 +120,6 @@ describe('ExportUtility', () => {
         Recipe: recipeId,
         Factories: '',
         Factory: minRecipe.factory,
-        FactoryModules: '""',
-        Beacons: '8',
-        Beacon: minRecipe.beacon,
-        BeaconModules: '""',
         Power: '',
         Pollution: '',
       });
@@ -208,7 +204,7 @@ describe('ExportUtility', () => {
         [step, inStep],
         noCols,
         { [itemId]: itemS },
-        { [recipeId]: fullRecipe },
+        { [RecipeId.PlasticBar]: fullRecipe },
         Mocks.AdjustedData
       );
       expect(result).toEqual({
