@@ -100,7 +100,7 @@ export class RecipeUtility {
 
     // Beacons
     const beaconModules = settings.beaconModules?.filter(
-      (m) => m !== ItemId.Module
+      (m) => m !== ItemId.Module && data.itemR[m]
     );
     if (beaconModules?.length && settings.beaconCount.nonzero()) {
       for (const id of beaconModules) {
