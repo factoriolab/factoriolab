@@ -749,9 +749,9 @@
                     <div
                       *ngIf="
                         outStep.belts &&
-                        (!outStep.recipeId ||
+                        (!step.recipeId ||
                           !data.itemEntities[
-                            recipeSettings[outStep.recipeId].factory
+                            recipeSettings[step.recipeId].factory
                           ].factory.research)
                       "
                       class="flex"
@@ -779,9 +779,9 @@
                     <div
                       *ngIf="
                         outStep.wagons &&
-                        (!outStep.recipeId ||
+                        (!step.recipeId ||
                           !data.itemEntities[
-                            recipeSettings[outStep.recipeId].factory
+                            recipeSettings[step.recipeId].factory
                           ].factory.research)
                       "
                       class="flex"
@@ -801,44 +801,7 @@
                     </div>
                   </ng-container>
                 </td>
-                <ng-container
-                  *ngIf="recipeSettings[outStep.recipeId]?.factory as factory"
-                >
-                  <td>
-                    <div *ngIf="outStep.factories?.nonzero()" class="flex">
-                      <span class="monospace">{{
-                        factoryRate(
-                          outStep.factories.mul(percent),
-                          effPrecision[Column.Factories],
-                          factory
-                        )
-                      }}</span>
-                    </div>
-                  </td>
-                  <td class="split-column">
-                    <div>
-                      <div class="flex">
-                        <lab-icon
-                          [data]="data"
-                          [iconId]="outStep.recipeId"
-                          [tooltip]="data.recipeEntities[outStep.recipeId].name"
-                          [recipe]="data.recipeEntities[outStep.recipeId]"
-                        ></lab-icon>
-                        <lab-icon
-                          *ngIf="!data.isDsp || factory !== 'mining-drill'"
-                          [data]="data"
-                          [iconId]="factory"
-                          [tooltip]="data.itemEntities[factory].name"
-                          [item]="data.itemEntities[factory]"
-                        ></lab-icon>
-                      </div>
-                    </div>
-                  </td>
-                </ng-container>
-                <td
-                  colspan="2"
-                  *ngIf="!recipeSettings[outStep.recipeId]?.factory as factory"
-                ></td>
+                <td colspan="2"></td>
                 <td class="split-column" colspan="100">
                   <div>
                     <div class="flex percent">

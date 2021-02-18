@@ -532,6 +532,7 @@ export class SimplexUtility {
     for (const step of steps.filter((s) => !s.recipeId)) {
       potentials[step.itemId] = recipes
         .filter((r) => r.produces(step.itemId))
+        .sort((a, b) => Object.keys(a.out).length - Object.keys(b.out).length)
         .map((r) => r.id);
     }
 
