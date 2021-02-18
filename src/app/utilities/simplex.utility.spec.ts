@@ -809,6 +809,10 @@ describe('SimplexUtility', () => {
           itemId: ItemId.PetroleumGas,
           items: Rational.zero,
         },
+        {
+          itemId: ItemId.LightOil,
+          items: Rational.zero,
+        },
       ];
       const solution = {
         surplus: {},
@@ -841,6 +845,10 @@ describe('SimplexUtility', () => {
         {
           itemId: ItemId.PetroleumGas,
           recipeId: RecipeId.BasicOilProcessing,
+          items: Rational.zero,
+        },
+        {
+          itemId: ItemId.LightOil,
           items: Rational.zero,
         },
       ]);
