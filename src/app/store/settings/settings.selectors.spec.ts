@@ -282,6 +282,29 @@ describe('Settings Selectors', () => {
         result.recipeIds.length
       );
     });
+
+    it('should generate recipe names from ids', () => {
+      const base = {
+        ...Mocks.Base,
+        ...{
+          recipes: [
+            ...Mocks.Base.recipes,
+            {
+              id: 'unknown-recipe',
+              time: 1,
+            },
+          ],
+        },
+      };
+      const result = Selectors.getNormalDataset.projector(
+        Mocks.Raw.app,
+        [base, Mocks.Mod1],
+        Mocks.Defaults
+      );
+      expect(result.recipeEntities['unknown-recipe'].name).toEqual(
+        'Unknown recipe'
+      );
+    });
   });
 
   describe('getDataset', () => {
