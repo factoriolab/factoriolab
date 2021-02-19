@@ -270,7 +270,7 @@ export const getNormalDataset = createSelector(
     }, {});
 
     // Fill in missing recipe names
-    for (const id of recipeIds) {
+    for (const id of recipeIds.filter((i) => !recipeEntities[i].name)) {
       if (itemEntities[id]) {
         recipeEntities[id] = {
           ...recipeEntities[id],
@@ -308,26 +308,6 @@ export const getNormalDataset = createSelector(
     const complexRecipeIds = recipeIds
       .filter((r) => simpleRecipes.indexOf(r) === -1)
       .sort();
-
-    // Used in development to build files for new data sets
-    // istanbul ignore next
-    if (!environment.production && !environment.testing && mods.length) {
-      console.log(mods[0].id);
-      console.log(
-        JSON.stringify(complexRecipeIds.filter((i) => !itemEntities[i]))
-      );
-      const hash: ModHash = {
-        items: [...itemIds].sort(),
-        beacons: [...beaconIds].sort(),
-        belts: [...beltIds].sort(),
-        fuels: [...fuelIds[FuelType.Chemical]].sort(),
-        wagons: [...cargoWagonIds, ...fluidWagonIds].sort(),
-        factories: [...factoryIds].sort(),
-        modules: [...moduleIds].sort(),
-        recipes: [...recipeIds].sort(),
-      };
-      console.log(JSON.stringify(hash));
-    }
 
     const dataset: Dataset = {
       isDsp,
