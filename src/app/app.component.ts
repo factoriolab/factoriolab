@@ -105,57 +105,66 @@ export class AppComponent implements OnInit {
           map((d) => d[0].id)
         )
         .subscribe((id) => {
-          this.router.requestHash(id).subscribe((h) => {
-            this.data$.subscribe((d) => {
-              console.log(id);
-              console.log(
-                JSON.stringify(
-                  d.complexRecipeIds.filter((i) => !d.itemEntities[i])
-                )
-              );
-              for (const id of d.itemIds
-                .sort()
-                .filter((i) => h.items.indexOf(i) === -1)) {
-                h.items.push(id);
-              }
-              for (const id of d.beaconIds
-                .sort()
-                .filter((i) => h.beacons.indexOf(i) === -1)) {
-                h.beacons.push(id);
-              }
-              for (const id of d.beltIds
-                .sort()
-                .filter((i) => h.belts.indexOf(i) === -1)) {
-                h.belts.push(id);
-              }
-              for (const id of d.fuelIds[FuelType.Chemical]
-                .sort()
-                .filter((i) => h.fuels.indexOf(i) === -1)) {
-                h.fuels.push(id);
-              }
-              for (const id of [...d.cargoWagonIds, ...d.fluidWagonIds]
-                .sort()
-                .filter((i) => h.wagons.indexOf(i) === -1)) {
-                h.wagons.push(id);
-              }
-              for (const id of d.factoryIds
-                .sort()
-                .filter((i) => h.factories.indexOf(i) === -1)) {
-                h.factories.push(id);
-              }
-              for (const id of d.moduleIds
-                .sort()
-                .filter((i) => h.modules.indexOf(i) === -1)) {
-                h.modules.push(id);
-              }
-              for (const id of d.recipeIds
-                .sort()
-                .filter((i) => h.recipes.indexOf(i) === -1)) {
-                h.recipes.push(id);
-              }
-              console.log(JSON.stringify(h));
+          this.router
+            .requestHash(id)
+            .pipe(take(1))
+            .subscribe((h) => {
+              this.data$.pipe(take(1)).subscribe((d) => {
+                console.log(id);
+                console.log(
+                  JSON.stringify(
+                    d.complexRecipeIds.filter((i) => !d.itemEntities[i])
+                  )
+                );
+                const old = JSON.stringify(h);
+                for (const id of d.itemIds
+                  .sort()
+                  .filter((i) => h.items.indexOf(i) === -1)) {
+                  h.items.push(id);
+                }
+                for (const id of d.beaconIds
+                  .sort()
+                  .filter((i) => h.beacons.indexOf(i) === -1)) {
+                  h.beacons.push(id);
+                }
+                for (const id of d.beltIds
+                  .sort()
+                  .filter((i) => h.belts.indexOf(i) === -1)) {
+                  h.belts.push(id);
+                }
+                for (const id of d.fuelIds[FuelType.Chemical]
+                  .sort()
+                  .filter((i) => h.fuels.indexOf(i) === -1)) {
+                  h.fuels.push(id);
+                }
+                for (const id of [...d.cargoWagonIds, ...d.fluidWagonIds]
+                  .sort()
+                  .filter((i) => h.wagons.indexOf(i) === -1)) {
+                  h.wagons.push(id);
+                }
+                for (const id of d.factoryIds
+                  .sort()
+                  .filter((i) => h.factories.indexOf(i) === -1)) {
+                  h.factories.push(id);
+                }
+                for (const id of d.moduleIds
+                  .sort()
+                  .filter((i) => h.modules.indexOf(i) === -1)) {
+                  h.modules.push(id);
+                }
+                for (const id of d.recipeIds
+                  .sort()
+                  .filter((i) => h.recipes.indexOf(i) === -1)) {
+                  h.recipes.push(id);
+                }
+                if (old === JSON.stringify(h)) {
+                  console.log('No change in hash');
+                } else {
+                  console.log('New hash:');
+                  console.log(JSON.stringify(h));
+                }
+              });
             });
-          });
         });
     }
   }

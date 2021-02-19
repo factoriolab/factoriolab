@@ -5,7 +5,7 @@ export { app };
 export const data: AppData = {
   app,
   base: [
-    { id: '1.1', name: '1.1.19' },
+    { id: '1.1', name: '1.1.25' },
     { id: '1.0', name: '1.0.0' },
     { id: '017', name: '0.17.79' },
     { id: '016', name: '0.16.51' },
