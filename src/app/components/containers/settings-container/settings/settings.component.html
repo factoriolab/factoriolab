@@ -582,4 +582,22 @@
       </table>
     </div>
   </div>
+  <div class="hole">
+    <div>
+      <div class="header">Advanced</div>
+      <table class="wide">
+        <tr>
+          <td>Simplex solver</td>
+          <td>
+            <lab-options
+              title="Disable to get a faster but incomplete result"
+              [selected]="preferences.simplexEnabled"
+              [options]="enabledOptions"
+              (selectId)="setSimplex.emit($event)"
+            ></lab-options>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </div>

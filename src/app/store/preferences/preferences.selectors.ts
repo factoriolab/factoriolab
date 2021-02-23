@@ -9,9 +9,12 @@ export const preferencesState = (state: State): PreferencesState =>
   state.preferencesState;
 const sColumns = (state: PreferencesState): ColumnsState => state.columns;
 const sLinkValue = (state: PreferencesState): LinkValue => state.linkValue;
+const sSimplexEnabled = (state: PreferencesState): boolean =>
+  state.simplexEnabled;
 
 export const getColumns = compose(sColumns, preferencesState);
 export const getLinkValue = compose(sLinkValue, preferencesState);
+export const getSimplexEnabled = compose(sSimplexEnabled, preferencesState);
 
 export const getColumnsState = createSelector(
   getColumns,

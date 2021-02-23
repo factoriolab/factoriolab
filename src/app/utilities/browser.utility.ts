@@ -43,10 +43,15 @@ export class BrowserUtility {
       if (this.zip) {
         return {
           ...initial,
-          ...{ preferencesState: state.preferencesState },
+          ...{
+            preferencesState: {
+              ...initial.preferencesState,
+              ...state.preferencesState,
+            },
+          },
         };
       } else {
-        return state;
+        return { ...initial, ...state };
       }
     } else {
       return initial;

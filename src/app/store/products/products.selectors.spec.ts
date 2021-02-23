@@ -452,9 +452,9 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getNormalizedStepsWithMatrices', () => {
+  describe('getNormalizedStepsWithSimplex', () => {
     it('should handle empty/null values', () => {
-      const result = Selectors.getNormalizedStepsWithMatrices.projector(
+      const result = Selectors.getNormalizedStepsWithSimplex.projector(
         [],
         {},
         {},
@@ -465,7 +465,7 @@ describe('Products Selectors', () => {
 
     it('should calculate rates using utility method', () => {
       spyOn(SimplexUtility, 'solve').and.returnValue([]);
-      Selectors.getNormalizedStepsWithMatrices.projector(
+      Selectors.getNormalizedStepsWithSimplex.projector(
         [Mocks.Step1],
         {},
         {},

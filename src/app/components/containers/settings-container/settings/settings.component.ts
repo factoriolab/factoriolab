@@ -92,6 +92,7 @@ export class SettingsComponent implements OnInit {
   @Output() setInserterCapacity = new EventEmitter<InserterCapacity>();
   @Output() setDisplayRate = new EventEmitter<DisplayRate>();
   @Output() setColumns = new EventEmitter<ColumnsState>();
+  @Output() setSimplex = new EventEmitter<boolean>();
 
   initial = initialSettingsState;
   sortedFuels: string[] = [];
@@ -106,6 +107,16 @@ export class SettingsComponent implements OnInit {
     {
       id: true,
       name: 'Expensive',
+    },
+  ];
+  enabledOptions: IdName[] = [
+    {
+      id: true,
+      name: 'Enabled',
+    },
+    {
+      id: false,
+      name: 'Disabled',
     },
   ];
   ResearchSpeedOptions = ResearchSpeedOptions;
