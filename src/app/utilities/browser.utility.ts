@@ -51,7 +51,14 @@ export class BrowserUtility {
           },
         };
       } else {
-        return { ...initial, ...state };
+        const merge = { ...initial };
+        for (const key of Object.keys(merge)) {
+          merge[key] = {
+            ...merge[key],
+            ...state[key],
+          };
+        }
+        return merge;
       }
     } else {
       return initial;
