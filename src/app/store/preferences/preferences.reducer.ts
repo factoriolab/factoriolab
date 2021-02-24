@@ -11,7 +11,7 @@ export interface PreferencesState {
   states: Entities<string>;
   columns: ColumnsState;
   linkValue: LinkValue;
-  simplexEnabled: boolean;
+  simplex: boolean;
 }
 
 export const initialColumnsState: ColumnsState = AllColumns.reduce(
@@ -26,7 +26,7 @@ export const initialPreferencesState: PreferencesState = {
   states: {},
   columns: initialColumnsState,
   linkValue: LinkValue.Items,
-  simplexEnabled: true,
+  simplex: true,
 };
 
 export function preferencesReducer(
@@ -53,7 +53,7 @@ export function preferencesReducer(
     case PreferencesActionType.SET_LINK_VALUE:
       return { ...state, ...{ linkValue: action.payload } };
     case PreferencesActionType.SET_SIMPLEX:
-      return { ...state, ...{ simplexEnabled: action.payload } };
+      return { ...state, ...{ simplex: action.payload } };
     default:
       return state;
   }

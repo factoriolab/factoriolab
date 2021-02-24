@@ -56,6 +56,16 @@ describe('Preferences Reducer', () => {
     });
   });
 
+  describe('SET_SIMPLEX', () => {
+    it('should set the simplex flag', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetSimplexAction(false)
+      );
+      expect(result.simplex).toEqual(false);
+    });
+  });
+
   it('should return the default state', () => {
     expect(preferencesReducer(undefined, { type: 'Test' } as any)).toEqual(
       initialPreferencesState

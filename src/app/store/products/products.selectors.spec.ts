@@ -454,12 +454,14 @@ describe('Products Selectors', () => {
 
   describe('getNormalizedStepsWithSimplex', () => {
     it('should handle empty/null values', () => {
+      spyOn(SimplexUtility, 'solve').and.returnValue([]);
       const result = Selectors.getNormalizedStepsWithSimplex.projector(
         [],
         {},
         {},
         []
       );
+      expect(SimplexUtility.solve).not.toHaveBeenCalled();
       expect(Object.keys(result).length).toEqual(0);
     });
 
@@ -469,7 +471,8 @@ describe('Products Selectors', () => {
         [Mocks.Step1],
         {},
         {},
-        []
+        [],
+        true
       );
       expect(SimplexUtility.solve).toHaveBeenCalled();
     });

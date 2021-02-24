@@ -179,6 +179,7 @@ export const Preferences: PreferencesState = {
   states: { ['name']: 'hash' },
   columns: initialColumnsState,
   linkValue: LinkValue.Items,
+  simplex: true,
 };
 
 function node(i: number): Node {

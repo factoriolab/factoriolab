@@ -46,25 +46,26 @@ describe('BrowserUtility', () => {
 
   describe('mergeState', () => {
     it('should merge the stored preferences into the state', () => {
+      const preferencesState: any = { pref: 'value' };
       spyOnProperty(BrowserUtility, 'zip').and.returnValue('hash');
       spyOnProperty(BrowserUtility, 'storedState', 'get').and.returnValue({
-        preferencesState: 'pref',
+        preferencesState,
       });
-      const state: any = { a: 'a' };
-      expect(BrowserUtility.mergeState(state)).toEqual({
-        a: 'a',
-        preferencesState: 'pref',
+      const initial: any = { a: { test: 'initial' } };
+      expect(BrowserUtility.mergeState(initial)).toEqual({
+        a: { test: 'initial' },
+        preferencesState,
       } as any);
     });
 
     it('should return the full stored state if there is no hash', () => {
-      spyOnProperty(BrowserUtility, 'storedState', 'get').and.returnValue({
-        preferencesState: 'pref',
-      });
-      const state: any = { a: 'a' };
-      expect(BrowserUtility.mergeState(state)).toEqual({
-        preferencesState: 'pref',
-      } as any);
+      const preferencesState: any = { pref: 'value' };
+      const stored: any = { a: { test: 'stored' }, preferencesState };
+      spyOnProperty(BrowserUtility, 'storedState', 'get').and.returnValue(
+        stored
+      );
+      const initial: any = { a: { test: 'initial' }, preferencesState };
+      expect(BrowserUtility.mergeState(initial)).toEqual(stored);
     });
 
     it('should return the initial state if nothing is stored', () => {
