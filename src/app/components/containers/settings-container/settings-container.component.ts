@@ -187,4 +187,8 @@ export class SettingsContainerComponent implements OnInit {
   setColumns(value: Preferences.ColumnsState): void {
     this.store.dispatch(new Preferences.SetColumnsAction(value));
   }
+
+  setSimplex(value: boolean): void {
+    this.store.dispatch(new Preferences.SetSimplexAction(value));
+  }
 }

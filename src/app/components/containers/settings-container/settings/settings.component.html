@@ -582,4 +582,30 @@
       </table>
     </div>
   </div>
+  <div class="hole">
+    <div>
+      <div class="header">Advanced</div>
+      <table class="wide">
+        <tr>
+          <td>Simplex solver</td>
+          <td>
+            <lab-options
+              title="Disable to get a faster but incomplete result"
+              [selected]="preferences.simplex"
+              [options]="enabledOptions"
+              (selectId)="setSimplex.emit($event)"
+            ></lab-options>
+          </td>
+        </tr>
+        <tr *ngIf="!preferences.simplex">
+          <td colspan="2">
+            <span class="invalid"
+              >Disabling simplex improves performance but usually results in an
+              incomplete solution.</span
+            >
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </div>

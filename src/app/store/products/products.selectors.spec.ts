@@ -452,24 +452,27 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getNormalizedStepsWithMatrices', () => {
+  describe('getNormalizedStepsWithSimplex', () => {
     it('should handle empty/null values', () => {
-      const result = Selectors.getNormalizedStepsWithMatrices.projector(
+      spyOn(SimplexUtility, 'solve').and.returnValue([]);
+      const result = Selectors.getNormalizedStepsWithSimplex.projector(
         [],
         {},
         {},
         []
       );
+      expect(SimplexUtility.solve).not.toHaveBeenCalled();
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should calculate rates using utility method', () => {
       spyOn(SimplexUtility, 'solve').and.returnValue([]);
-      Selectors.getNormalizedStepsWithMatrices.projector(
+      Selectors.getNormalizedStepsWithSimplex.projector(
         [Mocks.Step1],
         {},
         {},
-        []
+        [],
+        true
       );
       expect(SimplexUtility.solve).toHaveBeenCalled();
     });
