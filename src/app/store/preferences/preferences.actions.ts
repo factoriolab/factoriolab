@@ -7,6 +7,7 @@ export const enum PreferencesActionType {
   REMOVE_STATE = '[Preferences] Remove State',
   SET_COLUMNS = '[Preferences] Set Columns',
   SET_LINK_VALUE = '[Preferences] Set Link Value',
+  SET_SIMPLEX = '[Preferences] Set Simplex Enabled',
 }
 
 export class SaveStateAction implements Action {
@@ -29,8 +30,14 @@ export class SetLinkValueAction implements Action {
   constructor(public payload: LinkValue) {}
 }
 
+export class SetSimplexAction implements Action {
+  readonly type = PreferencesActionType.SET_SIMPLEX;
+  constructor(public payload: boolean) {}
+}
+
 export type PreferencesAction =
   | SaveStateAction
   | RemoveStateAction
   | SetColumnsAction
-  | SetLinkValueAction;
+  | SetLinkValueAction
+  | SetSimplexAction;

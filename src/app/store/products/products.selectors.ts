@@ -234,22 +234,25 @@ export const getNormalizedSteps = createSelector(
   }
 );
 
-export const getNormalizedStepsWithMatrices = createSelector(
+export const getNormalizedStepsWithSimplex = createSelector(
   getNormalizedSteps,
   Items.getItemSettings,
   Recipes.getAdjustedDataset,
   Settings.getDisabledRecipes,
-  (steps, itemSettings, data, disabledRecipes) =>
-    SimplexUtility.solve(
-      RateUtility.copy(steps),
-      itemSettings,
-      disabledRecipes,
-      data
-    )
+  Preferences.getSimplex,
+  (steps, itemSettings, data, disabledRecipes, simplex) =>
+    simplex
+      ? SimplexUtility.solve(
+          RateUtility.copy(steps),
+          itemSettings,
+          disabledRecipes,
+          data
+        )
+      : steps
 );
 
 export const getNormalizedStepsWithBelts = createSelector(
-  getNormalizedStepsWithMatrices,
+  getNormalizedStepsWithSimplex,
   Items.getItemSettings,
   Settings.getBeltSpeed,
   Recipes.getAdjustedDataset,

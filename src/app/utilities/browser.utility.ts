@@ -43,10 +43,22 @@ export class BrowserUtility {
       if (this.zip) {
         return {
           ...initial,
-          ...{ preferencesState: state.preferencesState },
+          ...{
+            preferencesState: {
+              ...initial.preferencesState,
+              ...state.preferencesState,
+            },
+          },
         };
       } else {
-        return state;
+        const merge = { ...initial };
+        for (const key of Object.keys(merge)) {
+          merge[key] = {
+            ...merge[key],
+            ...state[key],
+          };
+        }
+        return merge;
       }
     } else {
       return initial;

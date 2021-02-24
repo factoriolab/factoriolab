@@ -331,4 +331,12 @@ describe('SettingsContainerComponent', () => {
       new Preferences.SetColumnsAction(data)
     );
   });
+
+  it('should set simplex', () => {
+    const value = false;
+    component.child.setSimplex.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Preferences.SetSimplexAction(value)
+    );
+  });
 });
