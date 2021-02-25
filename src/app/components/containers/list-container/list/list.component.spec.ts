@@ -253,7 +253,7 @@ describe('ListComponent', () => {
       component.child.ngAfterViewInit();
       expect(element.scrollIntoView).toHaveBeenCalled();
       expect(component.child.expanded[component.child.steps[0].id]).toEqual(
-        StepDetailTab.Inputs
+        StepDetailTab.Item
       );
       expect(detectChanges).toHaveBeenCalled();
     });
@@ -313,10 +313,10 @@ describe('ListComponent', () => {
 
   describe('setDetailTabs', () => {
     const id = `${ItemId.PetroleumGas}.${RecipeId.AdvancedOilProcessing}`;
-    const id2 = `${ItemId.CopperPlate}.`;
+    const id2 = '.';
 
     it('should include no tabs', () => {
-      component.steps = [{ itemId: ItemId.CopperPlate, items: Rational.one }];
+      component.steps = [{ itemId: null, items: null }];
       fixture.detectChanges();
       expect(component.child.details[id2]).toEqual([]);
     });
@@ -328,22 +328,29 @@ describe('ListComponent', () => {
           recipeId: RecipeId.AdvancedOilProcessing,
           items: Rational.one,
           parents: {},
+          outputs: { [ItemId.PetroleumGas]: Rational.from(1, 2) },
           factories: Rational.one,
+        },
+        {
+          itemId: null,
+          items: null,
+          recipeId: RecipeId.CoalLiquefaction,
+          outputs: { [ItemId.PetroleumGas]: Rational.from(1, 2) },
         },
       ];
       fixture.detectChanges();
       expect(component.child.details[id]).toEqual([
-        StepDetailTab.Inputs,
-        StepDetailTab.Outputs,
-        StepDetailTab.Targets,
+        StepDetailTab.Item,
+        StepDetailTab.Recipe,
         StepDetailTab.Factory,
         StepDetailTab.Recipes,
       ]);
+      expect(component.child.outputs[id].length).toEqual(2);
       expect(component.child.recipes[id].length).toEqual(4);
     });
 
     it('should keep an expanded step that is still valid', () => {
-      component.child.expanded[id] = StepDetailTab.Inputs;
+      component.child.expanded[id] = StepDetailTab.Item;
       component.steps = [
         {
           id,
@@ -355,19 +362,19 @@ describe('ListComponent', () => {
         },
       ];
       fixture.detectChanges();
-      expect(component.child.expanded[id]).toEqual(StepDetailTab.Inputs);
+      expect(component.child.expanded[id]).toEqual(StepDetailTab.Item);
     });
 
     it('should collapse an expanded step that can no longer be expanded', () => {
-      component.child.expanded[id2] = StepDetailTab.Inputs;
-      component.steps = [{ itemId: ItemId.CopperPlate, items: Rational.one }];
+      component.child.expanded[id2] = StepDetailTab.Item;
+      component.steps = [{ itemId: null, items: null }];
       fixture.detectChanges();
       expect(component.child.expanded[id2]).toBeUndefined();
     });
 
     it('should collapse an expanded step that no longer exists', () => {
       const i = 'id';
-      component.child.expanded[i] = StepDetailTab.Inputs;
+      component.child.expanded[i] = StepDetailTab.Item;
       component.steps = [{ itemId: ItemId.CopperPlate, items: Rational.one }];
       fixture.detectChanges();
       expect(component.child.expanded[i]).toBeUndefined();
@@ -385,7 +392,7 @@ describe('ListComponent', () => {
         },
       ];
       fixture.detectChanges();
-      expect(component.child.expanded[id]).toEqual(StepDetailTab.Inputs);
+      expect(component.child.expanded[id]).toEqual(StepDetailTab.Item);
     });
 
     it('should exclude inputs tab for recipe with no inputs', () => {
@@ -418,7 +425,7 @@ describe('ListComponent', () => {
         component.child.steps[0],
       ]);
       expect(component.child.expanded).toEqual({
-        [id]: StepDetailTab.Inputs,
+        [id]: StepDetailTab.Item,
       });
     });
 

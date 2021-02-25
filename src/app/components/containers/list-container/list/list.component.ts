@@ -40,9 +40,8 @@ import { ExportUtility, RecipeUtility } from '~/utilities';
 
 export enum StepDetailTab {
   None,
-  Inputs,
-  Outputs,
-  Targets,
+  Item,
+  Recipe,
   Factory,
   Recipes,
 }
@@ -158,6 +157,7 @@ export class ListComponent implements OnInit, AfterViewInit {
   displayedSteps: Step[] = [];
   details: Entities<StepDetailTab[]> = {};
   recipes: Entities<string[]> = {};
+  outputs: Entities<Step[]> = {};
   expanded: Entities<StepDetailTab> = {};
   totalSpan = 2;
   effPrecision: Entities<number> = {};
@@ -256,20 +256,19 @@ export class ListComponent implements OnInit, AfterViewInit {
   setDetailTabs(): void {
     this.details = {};
     this.recipes = {};
+    this.outputs = {};
     for (const step of this.steps) {
       this.details[step.id] = [];
-      if (step.recipeId) {
-        const recipe = this.data.recipeR[step.recipeId];
-        if (
-          recipe.in &&
-          (!step.itemId || !this.itemSettings[step.itemId].ignore)
-        ) {
-          this.details[step.id].push(StepDetailTab.Inputs);
-        }
-        this.details[step.id].push(StepDetailTab.Outputs);
+      if (step.itemId) {
+        this.details[step.id].push(StepDetailTab.Item);
+        this.outputs[step.id] = this.steps
+          .filter((s) => s.outputs?.[step.itemId])
+          .sort((a, b) =>
+            b.outputs[step.itemId].sub(a.outputs[step.itemId]).toNumber()
+          );
       }
-      if (step.parents) {
-        this.details[step.id].push(StepDetailTab.Targets);
+      if (step.recipeId) {
+        this.details[step.id].push(StepDetailTab.Recipe);
       }
       if (step.factories?.nonzero()) {
         this.details[step.id].push(StepDetailTab.Factory);

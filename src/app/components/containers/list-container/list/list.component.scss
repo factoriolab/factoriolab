@@ -123,6 +123,10 @@ tr.details {
     }
   }
 
+  .header {
+    margin-left: 0.5rem;
+  }
+
   > :not(:first-child) {
     background-color: var(--color-dark);
   }
