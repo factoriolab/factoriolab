@@ -414,7 +414,7 @@
                       [options]="data.beaconIds"
                       (selectId)="
                         setBeacon.emit({
-                          id: step.itemId,
+                          id: step.recipeId,
                           value: $event,
                           default:
                             factories.entities[

@@ -115,9 +115,10 @@ tr.details {
       justify-content: flex-start;
       flex-wrap: wrap;
       margin-top: 0.25rem;
+      max-width: 38rem;
 
       > * {
-        margin-left: 0;
+        margin-left: 1px;
       }
     }
   }
