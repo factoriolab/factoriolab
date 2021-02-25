@@ -237,10 +237,10 @@ export const getNormalizedSteps = createSelector(
 export const getNormalizedStepsWithSimplex = createSelector(
   getNormalizedSteps,
   Items.getItemSettings,
-  Recipes.getAdjustedDataset,
   Settings.getDisabledRecipes,
+  Recipes.getAdjustedDataset,
   Preferences.getSimplex,
-  (steps, itemSettings, data, disabledRecipes, simplex) =>
+  (steps, itemSettings, disabledRecipes, data, simplex) =>
     simplex
       ? SimplexUtility.solve(
           RateUtility.copy(steps),

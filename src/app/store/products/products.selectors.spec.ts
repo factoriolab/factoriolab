@@ -458,8 +458,8 @@ describe('Products Selectors', () => {
       const result = Selectors.getNormalizedStepsWithSimplex.projector(
         [],
         {},
-        {},
-        []
+        [],
+        {}
       );
       expect(SimplexUtility.solve).not.toHaveBeenCalled();
       expect(Object.keys(result).length).toEqual(0);
@@ -470,8 +470,8 @@ describe('Products Selectors', () => {
       Selectors.getNormalizedStepsWithSimplex.projector(
         [Mocks.Step1],
         {},
-        {},
         [],
+        {},
         true
       );
       expect(SimplexUtility.solve).toHaveBeenCalled();
