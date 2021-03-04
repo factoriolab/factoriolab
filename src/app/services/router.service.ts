@@ -317,9 +317,7 @@ export class RouterService {
 
   dispatch(zip: string, state: State): void {
     this.zip = zip;
-    this.unzipping = true;
     this.store.dispatch(new LoadAction(state));
-    this.unzipping = false;
   }
 
   zipProducts(products: Product[], hash: ModHash): Zip {

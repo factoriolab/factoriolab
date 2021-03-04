@@ -313,11 +313,9 @@ describe('RouterService', () => {
   describe('dispatch', () => {
     it('should dispatch a state', () => {
       spyOn(store, 'dispatch');
-      service.unzipping = true;
       service.dispatch('test', mockState);
       expect(service.zip).toEqual('test');
       expect(store.dispatch).toHaveBeenCalledWith(new LoadAction(mockState));
-      expect(service.unzipping).toBeFalse();
     });
   });
 
