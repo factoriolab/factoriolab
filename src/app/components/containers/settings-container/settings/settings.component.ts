@@ -8,7 +8,9 @@ import {
   HostListener,
   ChangeDetectorRef,
   OnInit,
+  OnChanges,
 } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import {
@@ -43,7 +45,7 @@ import { BrowserUtility } from '~/utilities';
   styleUrls: ['./settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent implements OnInit, OnChanges {
   _data: Dataset;
   get data(): Dataset {
     return this._data;
@@ -126,6 +128,10 @@ export class SettingsComponent implements OnInit {
 
   ItemId = ItemId;
 
+  ctrlFlowRate = new FormControl('', Validators.min(0));
+  ctrlMiningProductivity = new FormControl('', Validators.min(0));
+  ctrlMiningSpeed = new FormControl('', Validators.min(100));
+
   get search(): string {
     return BrowserUtility.search;
   }
@@ -167,6 +173,12 @@ export class SettingsComponent implements OnInit {
     this.router.events.subscribe((e) => this.ref.detectChanges());
   }
 
+  ngOnChanges(): void {
+    this.ctrlFlowRate.setValue(this.settings.flowRate);
+    this.ctrlMiningProductivity.setValue(this.settings.miningBonus);
+    this.ctrlMiningSpeed.setValue(this.settings.miningBonus + 100);
+  }
+
   /** Forces change detector to update on scroll */
   @HostListener('scroll', ['$event']) scroll(): void {
     this.ref.detectChanges();
@@ -185,10 +197,17 @@ export class SettingsComponent implements OnInit {
     });
   }
 
-  emitNumber(emitter: EventEmitter<number>, event: Event): void {
+  emitNumber(
+    emitter: EventEmitter<number>,
+    event: Event,
+    min: number,
+    offset = 0
+  ): void {
     const target = event.target as HTMLInputElement;
-    const value = Number(target.value);
-    emitter.emit(value);
+    const value = Number(target.value) + offset;
+    if (value >= min) {
+      emitter.emit(value);
+    }
   }
 
   setState(id: string): void {
