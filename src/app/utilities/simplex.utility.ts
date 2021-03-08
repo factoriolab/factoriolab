@@ -297,11 +297,24 @@ export class SimplexUtility {
 
       // Cost
       if (recipe.id === ItemId.Water) {
-        R.push(COST_WATER);
+        // Cost should be based on number of items, not number of pumps
+        // Sum total output and multiply cost by output
+        const output = Object.keys(recipe.out).reduce(
+          (v, o) => v.add(recipe.out[o]),
+          Rational.zero
+        );
+        R.push(output.mul(COST_WATER));
       } else if (recipe.mining) {
-        R.push(COST_MINED);
+        // Cost should be based on number of items, not number of miners
+        // Sum total output and multiply cost by output
+        const output = Object.keys(recipe.out).reduce(
+          (v, o) => v.add(recipe.out[o]),
+          Rational.zero
+        );
+        R.push(output.mul(COST_MINED));
       } else {
-        R.push(COST_RECIPE);
+        // Cost should be based on number of factories, adjusted for recipe time
+        R.push(recipe.time.mul(COST_RECIPE));
       }
       A.push(R);
     }
