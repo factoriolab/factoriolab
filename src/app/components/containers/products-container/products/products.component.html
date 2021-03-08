@@ -5,6 +5,7 @@
       <button title="Remove product" (click)="removeProduct.emit(product.id)">
         <i class="material-icons">remove</i>
       </button>
+      <span>Produce</span>
       <lab-picker
         [data]="data"
         [selected]="product.itemId"
@@ -21,6 +22,7 @@
           [displayRate]="displayRate"
         ></lab-icon
       ></lab-picker>
+      <span>from</span>
       <input
         type="text"
         title="Set output rate"
@@ -41,7 +43,7 @@
         *ngIf="productSteps[product.itemId].length > 0; else recipeNone"
       >
         <ng-container *ngIf="getStep(product) as id">
-          <span>via</span>
+          <span>of</span>
           <ng-container
             *ngIf="productSteps[product.itemId].length === 1; else viaPicker"
           >
