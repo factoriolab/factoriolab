@@ -465,7 +465,7 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
-          COST_RECIPE,
+          Rational.from(2, 3),
         ],
         [
           Rational.zero,
