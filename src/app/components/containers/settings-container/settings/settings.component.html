@@ -501,8 +501,9 @@
                 min="0"
                 step="1"
                 data-test="lab-settings-flow-rate"
+                [formControl]="ctrlFlowRate"
                 [value]="settings.flowRate"
-                (input)="emitNumber(setFlowRate, $event)"
+                (input)="emitNumber(setFlowRate, $event, 0)"
               />
               <div>
                 u/sec
@@ -540,7 +541,7 @@
     <div>
       <div class="header">Bonuses</div>
       <table class="wide">
-        <tr>
+        <tr *ngIf="!data.isDsp; else dspMiningSpeed">
           <td>Mining productivity</td>
           <td class="right">
             +
@@ -551,12 +552,32 @@
               min="0"
               step="10"
               data-test="lab-settings-mining-bonus"
+              [formControl]="ctrlMiningProductivity"
               [value]="settings.miningBonus"
-              (input)="emitNumber(setMiningBonus, $event)"
+              (input)="emitNumber(setMiningBonus, $event, 0)"
             />
             %
           </td>
         </tr>
+        <ng-template #dspMiningSpeed>
+          <tr>
+            <td>Mining speed</td>
+            <td class="right">
+              <input
+                type="number"
+                title="Enter mining speed"
+                placeholder="Mining speed"
+                min="100"
+                step="10"
+                data-test="lab-settings-mining-bonus"
+                [formControl]="ctrlMiningSpeed"
+                [value]="settings.miningBonus + 100"
+                (input)="emitNumber(setMiningBonus, $event, 0, -100)"
+              />
+              %
+            </td>
+          </tr>
+        </ng-template>
         <tr *ngIf="!data.isDsp">
           <td>Research speed</td>
           <td>

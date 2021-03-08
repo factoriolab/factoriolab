@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -111,7 +111,7 @@ describe('SettingsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormsModule, RouterTestingModule],
+      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule],
       declarations: [
         ColumnsComponent,
         IconComponent,
@@ -238,6 +238,13 @@ describe('SettingsComponent', () => {
       TestUtility.setTextDt(fixture, DataTest.MiningBonus, '100');
       fixture.detectChanges();
       expect(component.setMiningBonus).toHaveBeenCalledWith(100);
+    });
+
+    it('should not emit a number less than the minimum', () => {
+      spyOn(component, 'setMiningBonus');
+      TestUtility.setTextDt(fixture, DataTest.MiningBonus, '-10');
+      fixture.detectChanges();
+      expect(component.setMiningBonus).not.toHaveBeenCalled();
     });
   });
 
