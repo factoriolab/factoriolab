@@ -213,19 +213,19 @@ export class RecipeUtility {
     // Adjust rocket launch recipes
     const rocketRecipe = recipeR[ItemId.RocketPart];
     if (rocketRecipe) {
+      const factor = Rational.hundred.div(rocketRecipe.out[ItemId.RocketPart]);
+
       for (const id of Object.keys(recipeR).filter(
         (i) =>
           i !== ItemId.RocketPart && settings[i].factory === ItemId.RocketSilo
       )) {
-        recipeR[id].time = rocketRecipe.time
-          .mul(Rational.hundred)
-          .add(this.LAUNCH_TIME);
+        recipeR[id].time = rocketRecipe.time.mul(factor).add(this.LAUNCH_TIME);
       }
 
       rocketRecipe.time = rocketRecipe.time
-        .mul(Rational.hundred)
+        .mul(factor)
         .add(this.LAUNCH_TIME)
-        .div(Rational.hundred);
+        .div(factor);
     }
 
     return recipeR;
