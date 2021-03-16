@@ -1,7 +1,5 @@
 import {
   Dataset,
-  DisplayRate,
-  DisplayRateVal,
   LinkValue,
   MIN_LINK_VALUE,
   Rational,
@@ -14,7 +12,6 @@ export class FlowUtility {
     steps: Step[],
     linkValue: LinkValue,
     linkPrecision: number,
-    displayRate: DisplayRate,
     data: Dataset
   ): SankeyData {
     const sankey: SankeyData = {
@@ -138,7 +135,7 @@ export class FlowUtility {
       case LinkValue.Factories:
         return step.factories;
       default:
-        return (step.items || Rational.zero).add(step.surplus || Rational.zero);
+        return step.items || Rational.zero;
     }
   }
 

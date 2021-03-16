@@ -511,13 +511,13 @@ describe('Products Selectors', () => {
 
   describe('getSankey', () => {
     it('should handle empty/null values', () => {
-      const result = Selectors.getSankey.projector([], null, null);
+      const result = Selectors.getSankey.projector([], null, null, null);
       expect(result).toEqual({ nodes: [], links: [] });
     });
 
     it('should build sankey model using utility method', () => {
       spyOn(FlowUtility, 'buildSankey');
-      Selectors.getSankey.projector([], null, null);
+      Selectors.getSankey.projector([], null, null, null);
       expect(FlowUtility.buildSankey).toHaveBeenCalled();
     });
   });

@@ -788,7 +788,7 @@ describe('SimplexUtility', () => {
       SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
       expect(step).toEqual({
         itemId: ItemId.Coal,
-        items: Rational.one,
+        items: Rational.from(4),
         surplus: Rational.from(3),
       });
     });

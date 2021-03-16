@@ -518,7 +518,6 @@ export class SimplexUtility {
       }
       if (solution.surplus[itemId]?.nonzero()) {
         step.surplus = solution.surplus[itemId];
-        step.items = step.items.sub(step.surplus);
       }
     }
   }

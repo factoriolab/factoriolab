@@ -120,7 +120,10 @@
               >(+{{ rate(step.surplus, effPrecision[Column.Surplus]) }})</span
             >
             <span *ngIf="step.items" class="monospace">{{
-              rate(step.items, effPrecision[Column.Items])
+              rate(
+                step.items.sub(step.surplus || Rational.zero),
+                effPrecision[Column.Items]
+              )
             }}</span>
             <lab-icon
               class="button"
@@ -944,9 +947,7 @@
                   <div class="flex">
                     <span class="monospace">{{
                       rate(
-                        outStep.items
-                          .add(outStep.surplus || Rational.zero)
-                          .mul(percent),
+                        outStep.items.mul(percent),
                         effPrecision[Column.Items]
                       )
                     }}</span>
