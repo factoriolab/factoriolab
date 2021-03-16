@@ -143,8 +143,7 @@ export class RateUtility {
       for (const id of Object.keys(recipe.out)) {
         const val = recipe.out[id].mul(step.factories).div(recipe.time);
         const outStep = steps.find((s) => s.itemId === id);
-        const total = outStep.items.add(outStep.surplus || Rational.zero);
-        step.outputs[id] = val.div(total);
+        step.outputs[id] = val.div(outStep.items);
       }
     }
     return steps;

@@ -21,7 +21,7 @@ describe('FlowUtility', () => {
     };
 
     it('should handle empty/null values', () => {
-      const result = FlowUtility.buildSankey([], null, null, null, null);
+      const result = FlowUtility.buildSankey([], null, null, null);
       expect(result).toEqual({ nodes: [], links: [] });
     });
 
@@ -36,7 +36,6 @@ describe('FlowUtility', () => {
         ] as any[],
         LinkValue.None,
         null,
-        DisplayRate.PerMinute,
         Mocks.AdjustedData
       );
       expect(result).toEqual({
@@ -64,7 +63,6 @@ describe('FlowUtility', () => {
         ] as any[],
         LinkValue.None,
         null,
-        DisplayRate.PerMinute,
         Mocks.AdjustedData
       );
       expect(result).toEqual({ nodes: [node], links: [] });
@@ -78,7 +76,6 @@ describe('FlowUtility', () => {
         ] as any[],
         LinkValue.None,
         null,
-        DisplayRate.PerMinute,
         Mocks.AdjustedData
       );
       expect(result).toEqual({
@@ -106,7 +103,6 @@ describe('FlowUtility', () => {
         ] as any[],
         LinkValue.None,
         null,
-        DisplayRate.PerMinute,
         Mocks.AdjustedData
       );
       expect(result).toEqual({
@@ -134,7 +130,6 @@ describe('FlowUtility', () => {
         ] as any[],
         LinkValue.None,
         null,
-        DisplayRate.PerMinute,
         Mocks.AdjustedData
       );
       expect(result).toEqual({ nodes: [node], links: [] });
@@ -145,7 +140,6 @@ describe('FlowUtility', () => {
         [{ itemId: ItemId.Coal }] as any[],
         LinkValue.None,
         null,
-        DisplayRate.PerMinute,
         Mocks.AdjustedData
       );
       expect(result).toEqual({ nodes: [node], links: [] });
@@ -178,7 +172,6 @@ describe('FlowUtility', () => {
         ] as any[],
         LinkValue.None,
         null,
-        DisplayRate.PerMinute,
         Mocks.AdjustedData
       );
       const name =
@@ -234,11 +227,11 @@ describe('FlowUtility', () => {
   describe('stepLinkValue', () => {
     const step: Step = {
       itemId: ItemId.IronOre,
-      items: Rational.two,
-      surplus: new Rational(BigInt(3)),
-      belts: new Rational(BigInt(4)),
-      wagons: new Rational(BigInt(6)),
-      factories: new Rational(BigInt(7)),
+      items: Rational.from(5),
+      surplus: Rational.from(3),
+      belts: Rational.from(4),
+      wagons: Rational.from(6),
+      factories: Rational.from(7),
     };
 
     it('should return correct value for none', () => {
@@ -261,25 +254,25 @@ describe('FlowUtility', () => {
 
     it('should return correct value for belts', () => {
       expect(FlowUtility.stepLinkValue(step, LinkValue.Belts)).toEqual(
-        new Rational(BigInt(4))
+        Rational.from(4)
       );
     });
 
     it('should return correct value for wagons', () => {
       expect(FlowUtility.stepLinkValue(step, LinkValue.Wagons)).toEqual(
-        new Rational(BigInt(6))
+        Rational.from(6)
       );
     });
 
     it('should return correct value for factories', () => {
       expect(FlowUtility.stepLinkValue(step, LinkValue.Factories)).toEqual(
-        new Rational(BigInt(7))
+        Rational.from(7)
       );
     });
 
     it('should return correct value for items', () => {
       expect(FlowUtility.stepLinkValue(step, LinkValue.Items)).toEqual(
-        new Rational(BigInt(5))
+        Rational.from(5)
       );
     });
 

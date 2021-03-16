@@ -1,6 +1,6 @@
 import { saveAs } from 'file-saver';
 
-import { Step, Column, Dataset } from '~/models';
+import { Step, Column, Dataset, Rational } from '~/models';
 import { ItemsState } from '~/store/items';
 import { ColumnsState } from '~/store/preferences';
 import { RecipesState } from '~/store/recipes';
@@ -68,7 +68,9 @@ export class ExportUtility {
   ): StepExport {
     const exp: StepExport = {
       Item: step.itemId,
-      Items: step.items ? '=' + step.items.toString() : '',
+      Items: step.items
+        ? '=' + step.items.sub(step.surplus || Rational.zero).toString()
+        : '',
       Surplus: step.surplus ? '=' + step.surplus.toString() : '',
       Inputs: '',
       Outputs: step.outputs

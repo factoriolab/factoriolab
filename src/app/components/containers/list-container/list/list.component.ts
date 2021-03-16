@@ -231,7 +231,10 @@ export class ListComponent implements OnInit, AfterViewInit {
       for (const i of PrecisionColumns.filter((i) => this.columns[i].show)) {
         this.effPrecision[i] = this.effPrecFrom(
           this.columns[i].precision,
-          (s) => s[i.toLowerCase()]
+          (s) =>
+            i === Column.Items
+              ? (s.items || Rational.zero).sub(s.surplus || Rational.zero)
+              : s[i.toLowerCase()]
         );
       }
     }

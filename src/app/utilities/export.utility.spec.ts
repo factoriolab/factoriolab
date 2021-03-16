@@ -34,13 +34,13 @@ describe('ExportUtility', () => {
     const recipeId = RecipeId.Coal;
     const fullStep: Step = {
       itemId,
-      items: Rational.one,
+      items: Rational.from(3),
       surplus: Rational.two,
-      belts: new Rational(BigInt(3)),
-      wagons: new Rational(BigInt(4)),
-      factories: new Rational(BigInt(5)),
-      power: new Rational(BigInt(6)),
-      pollution: new Rational(BigInt(7)),
+      belts: Rational.from(3),
+      wagons: Rational.from(4),
+      factories: Rational.from(5),
+      power: Rational.from(6),
+      pollution: Rational.from(7),
       recipeId,
     };
     const minStep: Step = {
