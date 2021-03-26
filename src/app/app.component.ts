@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter, skip, take, map } from 'rxjs/operators';
+import { filter, take, map } from 'rxjs/operators';
 
 import { environment } from 'src/environments';
 import {
@@ -17,8 +17,14 @@ import {
 } from './models';
 import { ErrorService, RouterService } from './services';
 import { State } from './store';
+import { initialFactoriesState } from './store/factories';
 import { getProducts, getZipState } from './store/products';
-import { getDataset, getDatasets, getIsDsp } from './store/settings';
+import {
+  getDataset,
+  getDatasets,
+  getIsDsp,
+  initialSettingsState,
+} from './store/settings';
 
 @Component({
   selector: 'lab-root',
@@ -55,6 +61,7 @@ export class AppComponent implements OnInit {
   poll = 'https://linkto.run/p/0UD8IV6X';
   pollKey = 'poll0';
   showPoll = false;
+  first = true;
 
   get lsHidePoll(): boolean {
     return !!localStorage.getItem(this.pollKey);
@@ -75,10 +82,24 @@ export class AppComponent implements OnInit {
     this.datasets$ = this.store.select(getDatasets);
     this.data$ = this.store.select(getDataset);
     this.products$ = this.store.select(getProducts);
-    this.store
-      .select(getZipState)
-      .pipe(skip(1))
-      .subscribe((s) => {
+    this.store.select(getZipState).subscribe((s) => {
+      let skip = false;
+      if (this.first) {
+        // First update: if there are no modified settings, leave base URL.
+        if (
+          Object.keys(s.items).length === 0 &&
+          Object.keys(s.recipes).length === 0 &&
+          JSON.stringify(s.factories) ===
+            JSON.stringify(initialFactoriesState) &&
+          JSON.stringify(s.settings) === JSON.stringify(initialSettingsState)
+        ) {
+          // No modified settings, skip first update.
+          skip = true;
+        }
+        // Don't check again later, always update.
+        this.first = false;
+      }
+      if (!skip) {
         this.router.updateUrl(
           s.products,
           s.items,
@@ -86,7 +107,8 @@ export class AppComponent implements OnInit {
           s.factories,
           s.settings
         );
-      });
+      }
+    });
     this.store.select(getIsDsp).subscribe((dsp) => {
       this.title = dsp ? TITLE_DSP : TITLE_LAB;
       this.titleService.setTitle(`FactorioLab | ${this.title}`);
