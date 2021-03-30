@@ -10,15 +10,16 @@ export function validateNumber(
     return null;
   }
   try {
-    Rational.fromString(c.value);
-    return null;
-  } catch {
-    return {
-      validateNumber: {
-        valid: false,
-      },
-    };
-  }
+    const rational = Rational.fromString(c.value);
+    if (rational.gte(Rational.zero)) {
+      return null;
+    }
+  } catch {}
+  return {
+    validateNumber: {
+      valid: false,
+    },
+  };
 }
 
 @Directive({
