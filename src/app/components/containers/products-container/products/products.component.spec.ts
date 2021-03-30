@@ -113,6 +113,13 @@ describe('ProductsComponent', () => {
       fixture.detectChanges();
       expect(component.setRate).not.toHaveBeenCalled();
     });
+
+    it('should ignore negative rates', () => {
+      spyOn(component, 'setRate');
+      TestUtility.setTextDt(fixture, DataTest.Rate, '-1');
+      fixture.detectChanges();
+      expect(component.setRate).not.toHaveBeenCalled();
+    });
   });
 
   describe('getStep', () => {

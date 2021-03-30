@@ -72,8 +72,10 @@ export class ProductsComponent {
     try {
       const target = event.target as HTMLInputElement;
       const value = target.value;
-      Rational.fromString(value);
-      this.setRate.emit({ id, value });
+      const rational = Rational.fromString(value);
+      if (rational.gte(Rational.zero)) {
+        this.setRate.emit({ id, value });
+      }
     } catch {}
   }
 

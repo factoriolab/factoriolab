@@ -14,4 +14,10 @@ describe('validateNumber', () => {
       validateNumber({ value: '1 1' } as any).validateNumber.valid
     ).toBeFalse();
   });
+
+  it('should return state for negative value', () => {
+    expect(
+      validateNumber({ value: '-1' } as any).validateNumber.valid
+    ).toBeFalse();
+  });
 });
