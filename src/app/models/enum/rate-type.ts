@@ -11,7 +11,7 @@ export enum RateType {
 export function rateTypeOptions(
   displayRate: DisplayRate,
   isDsp: boolean
-): IdName[] {
+): IdName<RateType>[] {
   const result = [
     { id: RateType.Items, name: `Items${DisplayRateLabel[displayRate]}` },
     { id: RateType.Belts, name: 'Belts' },

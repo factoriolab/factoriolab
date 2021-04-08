@@ -7,7 +7,7 @@ export enum Preset {
   Beacon12,
 }
 
-export function presetOptions(isDsp: boolean): IdName[] {
+export function presetOptions(isDsp: boolean): IdName<Preset>[] {
   return isDsp
     ? [
         { id: Preset.Minimum, name: 'Minimum' },

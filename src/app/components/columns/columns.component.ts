@@ -34,7 +34,7 @@ export class ColumnsComponent extends DialogContainerComponent {
 
   Column = Column;
 
-  get columnOptions(): IdName[] {
+  get columnOptions(): IdName<Column>[] {
     return columnOptions(this.isDsp);
   }
 
@@ -63,7 +63,7 @@ export class ColumnsComponent extends DialogContainerComponent {
     this.editValue[id].show = !this.editValue[id].show;
   }
 
-  changePrecision(id: string, event: InputEvent): void {
+  changePrecision(id: string, event: Event): void {
     const target = event.target as HTMLInputElement;
     const value = Number(target.value);
     this.edited = true;

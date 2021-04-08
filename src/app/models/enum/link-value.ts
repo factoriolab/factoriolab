@@ -9,7 +9,7 @@ export enum LinkValue {
   Factories,
 }
 
-export function linkValueOptions(isDsp: boolean): IdName[] {
+export function linkValueOptions(isDsp: boolean): IdName<LinkValue>[] {
   const result = [
     { id: LinkValue.None, name: 'None' },
     { id: LinkValue.Percent, name: 'Percent' },

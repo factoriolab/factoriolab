@@ -46,7 +46,7 @@ export class ProductsComponent {
   IdType = IdType;
   RateType = RateType;
 
-  get rateTypeOptions(): IdName[] {
+  get rateTypeOptions(): IdName<RateType>[] {
     return rateTypeOptions(this.displayRate, this.data.isDsp);
   }
 

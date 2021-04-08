@@ -1,4 +1,4 @@
-export interface IdName {
-  id: string | number | boolean;
+export interface IdName<T = string> {
+  id: T;
   name: string;
 }

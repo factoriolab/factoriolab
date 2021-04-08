@@ -255,7 +255,8 @@
                   (selectId)="
                     setModuleRank.emit({
                       id: f,
-                      value: [$event]
+                      value: [$event],
+                      default: factories.entities[''].moduleRank
                     })
                   "
                 >
@@ -283,7 +284,8 @@
                     (selectIds)="
                       setModuleRank.emit({
                         id: f,
-                        value: $event
+                        value: $event,
+                        default: factories.entities[''].moduleRank
                       })
                     "
                   >
@@ -336,7 +338,13 @@
                     [data]="data"
                     [selected]="factory.beacon"
                     [options]="data.beaconIds"
-                    (selectId)="setBeacon.emit({ id: f, value: $event })"
+                    (selectId)="
+                      setBeacon.emit({
+                        id: f,
+                        value: $event,
+                        default: factories.entities[''].beacon
+                      })
+                    "
                   >
                     <lab-icon
                       class="button"
@@ -359,7 +367,8 @@
                 (selectId)="
                   setBeaconModule.emit({
                     id: f,
-                    value: $event
+                    value: $event,
+                    default: factories.entities[''].beaconModule
                   })
                 "
               >

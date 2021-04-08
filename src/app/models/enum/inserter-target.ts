@@ -7,7 +7,7 @@ export enum InserterTarget {
   TransportBelt,
 }
 
-export const InserterTargetOptions: IdName[] = [
+export const InserterTargetOptions: IdName<InserterTarget>[] = [
   { id: InserterTarget.Chest, name: 'Chest' },
   { id: InserterTarget.ExpressTransportBelt, name: 'Express transport belt' },
   { id: InserterTarget.FastTransportBelt, name: 'Fast transport belt' },

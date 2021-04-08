@@ -15,12 +15,12 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
   styleUrls: ['./options.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OptionsComponent extends DialogContainerComponent {
+export class OptionsComponent<T> extends DialogContainerComponent {
   @Input() title: string;
-  @Input() selected: string | number | boolean;
-  @Input() options: IdName[];
+  @Input() selected: T;
+  @Input() options: IdName<T>[];
 
-  @Output() selectId = new EventEmitter<string | number | boolean>();
+  @Output() selectId = new EventEmitter<T>();
 
   get text(): string {
     return this.options.find((o) => o.id === this.selected)?.name || NONE;
