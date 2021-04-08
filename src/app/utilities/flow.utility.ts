@@ -166,8 +166,14 @@ export class FlowUtility {
         return '';
       case LinkValue.Percent:
         return `${Math.round(percent.mul(Rational.hundred).toNumber())}%`;
-      default:
-        return `${value.mul(percent).toPrecision(linkPrecision)}`;
+      default: {
+        const result = value.mul(percent);
+        if (linkPrecision == null) {
+          return result.toFraction();
+        } else {
+          return result.toPrecision(linkPrecision).toString();
+        }
+      }
     }
   }
 }

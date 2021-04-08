@@ -81,7 +81,7 @@ export class RankerComponent extends DialogContainerComponent {
       if (this.edited) {
         this.selectIds.emit(this.editValue);
       } else {
-        this.selectIds.emit([id]);
+        this.selectIds.emit([]);
       }
       this.cancel();
     } else if (this.canAdd(id)) {

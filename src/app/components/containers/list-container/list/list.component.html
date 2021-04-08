@@ -453,7 +453,7 @@
                     [data]="data"
                     [selected]="mod"
                     [options]="data.beaconModuleIds"
-                    includeEmptyModule="true"
+                    [includeEmptyModule]="true"
                     (selectId)="beaconModuleChange(step, $event, i)"
                   >
                     <lab-icon

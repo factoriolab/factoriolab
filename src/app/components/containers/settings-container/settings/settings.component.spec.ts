@@ -207,12 +207,6 @@ describe('SettingsComponent', () => {
     });
   });
 
-  describe('trackBy', () => {
-    it('should return the key of the keyvalue', () => {
-      expect(component.child.trackBy({ key: id, value })).toEqual(id);
-    });
-  });
-
   describe('changeBeaconCount', () => {
     it('should emit beacon count', () => {
       spyOn(component, 'setBeaconCount');
@@ -221,6 +215,7 @@ describe('SettingsComponent', () => {
       expect(component.setBeaconCount).toHaveBeenCalledWith({
         id: '',
         value: 3,
+        default: 8,
       });
     });
   });

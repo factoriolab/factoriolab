@@ -74,7 +74,7 @@ export function factoriesReducer(
       return state;
     }
     case FactoriesActionType.SET_MODULE_RANK: {
-      const entities = StoreUtility.compareResetDefault(
+      const entities = StoreUtility.compareReset(
         state.entities,
         FactorySettingsField.ModuleRank,
         action.payload,
@@ -83,7 +83,7 @@ export function factoriesReducer(
       return { ...state, ...{ entities } };
     }
     case FactoriesActionType.SET_BEACON_COUNT: {
-      const entities = StoreUtility.compareResetDefault(
+      const entities = StoreUtility.compareReset(
         state.entities,
         FactorySettingsField.BeaconCount,
         action.payload
@@ -91,7 +91,7 @@ export function factoriesReducer(
       return { ...state, ...{ entities } };
     }
     case FactoriesActionType.SET_BEACON: {
-      const entities = StoreUtility.compareResetDefault(
+      const entities = StoreUtility.compareReset(
         state.entities,
         FactorySettingsField.Beacon,
         action.payload
@@ -99,7 +99,7 @@ export function factoriesReducer(
       return { ...state, ...{ entities } };
     }
     case FactoriesActionType.SET_BEACON_MODULE: {
-      const entities = StoreUtility.compareResetDefault(
+      const entities = StoreUtility.compareReset(
         state.entities,
         FactorySettingsField.BeaconModule,
         action.payload
