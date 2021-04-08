@@ -184,10 +184,6 @@ export class SettingsComponent implements OnInit, OnChanges {
     this.ref.detectChanges();
   }
 
-  trackBy(data: KeyValue<string, string>): string {
-    return data.key;
-  }
-
   changeBeaconCount(id: string, event: Event): void {
     const target = event.target as HTMLInputElement;
     const value = Number(target.value);

@@ -270,7 +270,7 @@
                     "
                     [text]="
                       factory.moduleRank.length > 1
-                        ? factory.moduleRank.length
+                        ? factory.moduleRank.length.toString()
                         : null
                     "
                   ></lab-icon>
@@ -298,7 +298,7 @@
                       "
                       [text]="
                         factory.moduleRank.length > 1
-                          ? factory.moduleRank.length
+                          ? factory.moduleRank.length.toString()
                           : null
                       "
                     ></lab-icon>
@@ -355,7 +355,7 @@
                 [data]="data"
                 [selected]="factory.beaconModule"
                 [options]="data.beaconModuleIds"
-                includeEmptyModule="true"
+                [includeEmptyModule]="true"
                 (selectId)="
                   setBeaconModule.emit({
                     id: f,

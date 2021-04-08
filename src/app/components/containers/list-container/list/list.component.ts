@@ -320,7 +320,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  trackBy(step: Step): string {
+  trackBy(i: number, step: Step): string {
     return step.id;
   }
 

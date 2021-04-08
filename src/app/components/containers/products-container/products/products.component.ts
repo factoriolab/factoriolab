@@ -52,7 +52,7 @@ export class ProductsComponent {
 
   constructor() {}
 
-  trackBy(product: Product): string {
+  trackBy(i: number, product: Product): string {
     return product.id;
   }
 
@@ -68,7 +68,7 @@ export class ProductsComponent {
     this.setItem.emit({ id: product.id, value: itemId });
   }
 
-  changeRate(id: string, event: InputEvent): void {
+  changeRate(id: string, event: Event): void {
     try {
       const target = event.target as HTMLInputElement;
       const value = target.value;
