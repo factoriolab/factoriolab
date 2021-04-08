@@ -625,11 +625,9 @@ export class RouterService {
             beaconModule: this.parseString(s[i++]),
             beacon: this.parseString(s[i++]),
           };
-          if (z === 0) {
-            if (id === TRUE) {
-              loadIds = true;
-              ids = [];
-            }
+          if (z === 0 && id === TRUE) {
+            loadIds = true;
+            ids = [];
             id = '';
           } else if (loadIds) {
             ids.push(id);
@@ -644,15 +642,15 @@ export class RouterService {
             beaconModule: this.parseNString(s[i++], hash.modules),
             beacon: this.parseNString(s[i++], hash.beacons),
           };
-          if (z === 0) {
-            if (id === TRUE) {
-              loadIds = true;
-              ids = [];
-            }
+          if (z === 0 && id === TRUE) {
+            loadIds = true;
+            ids = [];
             id = '';
-          } else if (loadIds) {
+          } else {
             id = this.parseNString(id, hash.factories);
-            ids.push(id);
+            if (loadIds) {
+              ids.push(id);
+            }
           }
           break;
         }
