@@ -49,7 +49,7 @@ export class FlowContainerComponent implements OnInit {
     this.linkValue$ = this.store.select(getLinkValue);
   }
 
-  linkValueOptions(isDsp: boolean): IdName[] {
+  linkValueOptions(isDsp: boolean): IdName<LinkValue>[] {
     return linkValueOptions(isDsp);
   }
 

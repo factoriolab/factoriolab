@@ -1,4 +1,4 @@
-import { Mocks } from 'src/tests';
+import { Mocks, ItemId } from 'src/tests';
 import { LoadAction, ResetAction } from '../app.actions';
 import * as Actions from './factories.actions';
 import { factoriesReducer, initialFactoriesState } from './factories.reducer';
@@ -88,7 +88,7 @@ describe('Factories Reducer', () => {
     it('should set the module rank for a factory', () => {
       const result = factoriesReducer(
         undefined,
-        new Actions.SetModuleRankAction({ id, value: [value] })
+        new Actions.SetModuleRankAction({ id, value: [value], default: [] })
       );
       expect(result.entities[id].moduleRank).toEqual([value]);
     });
@@ -98,7 +98,7 @@ describe('Factories Reducer', () => {
     it('should set the beacon count for a factory', () => {
       const result = factoriesReducer(
         undefined,
-        new Actions.SetBeaconCountAction({ id, value: 2 })
+        new Actions.SetBeaconCountAction({ id, value: 2, default: 8 })
       );
       expect(result.entities[id].beaconCount).toEqual(2);
     });
@@ -108,7 +108,7 @@ describe('Factories Reducer', () => {
     it('should set the beacon for a factory', () => {
       const result = factoriesReducer(
         undefined,
-        new Actions.SetBeaconAction({ id, value })
+        new Actions.SetBeaconAction({ id, value, default: ItemId.Beacon })
       );
       expect(result.entities[id].beacon).toEqual(value);
     });
@@ -118,7 +118,11 @@ describe('Factories Reducer', () => {
     it('should set the beacon module for a factory', () => {
       const result = factoriesReducer(
         undefined,
-        new Actions.SetBeaconModuleAction({ id, value })
+        new Actions.SetBeaconModuleAction({
+          id,
+          value,
+          default: ItemId.SpeedModule,
+        })
       );
       expect(result.entities[id].beaconModule).toEqual(value);
     });

@@ -79,10 +79,10 @@ export class SettingsComponent implements OnInit, OnChanges {
   >();
   @Output() raiseFactory = new EventEmitter<DefaultPayload<string, string[]>>();
   @Output() setFactory = new EventEmitter<DefaultIdPayload<string, string[]>>();
-  @Output() setModuleRank = new EventEmitter<IdPayload<string[]>>();
-  @Output() setBeaconCount = new EventEmitter<IdPayload<number>>();
-  @Output() setBeacon = new EventEmitter<IdPayload>();
-  @Output() setBeaconModule = new EventEmitter<IdPayload>();
+  @Output() setModuleRank = new EventEmitter<DefaultIdPayload<string[]>>();
+  @Output() setBeaconCount = new EventEmitter<DefaultIdPayload<number>>();
+  @Output() setBeacon = new EventEmitter<DefaultIdPayload>();
+  @Output() setBeaconModule = new EventEmitter<DefaultIdPayload>();
   @Output() setBelt = new EventEmitter<DefaultPayload>();
   @Output() setFuel = new EventEmitter<DefaultPayload>();
   @Output() setFlowRate = new EventEmitter<number>();
@@ -101,7 +101,7 @@ export class SettingsComponent implements OnInit, OnChanges {
   state = '';
   tempState = '';
   editState = false;
-  difficultyOptions: IdName[] = [
+  difficultyOptions: IdName<boolean>[] = [
     {
       id: false,
       name: 'Normal',
@@ -111,7 +111,7 @@ export class SettingsComponent implements OnInit, OnChanges {
       name: 'Expensive',
     },
   ];
-  enabledOptions: IdName[] = [
+  enabledOptions: IdName<boolean>[] = [
     {
       id: true,
       name: 'Enabled',
@@ -136,7 +136,7 @@ export class SettingsComponent implements OnInit, OnChanges {
     return BrowserUtility.search;
   }
 
-  get presetOptions(): IdName[] {
+  get presetOptions(): IdName<Preset>[] {
     return presetOptions(this.data.isDsp);
   }
 
@@ -184,16 +184,13 @@ export class SettingsComponent implements OnInit, OnChanges {
     this.ref.detectChanges();
   }
 
-  trackBy(data: KeyValue<string, string>): string {
-    return data.key;
-  }
-
   changeBeaconCount(id: string, event: Event): void {
     const target = event.target as HTMLInputElement;
     const value = Number(target.value);
     this.setBeaconCount.emit({
       id,
       value,
+      default: this.factories.entities[''].beaconCount,
     });
   }
 

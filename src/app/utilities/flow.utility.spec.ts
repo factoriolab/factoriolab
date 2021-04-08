@@ -326,7 +326,18 @@ describe('FlowUtility', () => {
       ).toEqual('100%');
     });
 
-    it('should return correct value for others', () => {
+    it('should return correct fractional value', () => {
+      expect(
+        FlowUtility.linkDisp(
+          Rational.from(4, 3),
+          Rational.one,
+          LinkValue.Items,
+          null
+        )
+      ).toEqual('1 + 1/3');
+    });
+
+    it('should return correct decimal value', () => {
       expect(
         FlowUtility.linkDisp(
           Rational.from(4, 3),

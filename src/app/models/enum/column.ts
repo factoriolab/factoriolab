@@ -32,7 +32,7 @@ export const PrecisionColumns = [
   Column.Pollution,
 ];
 
-export function columnOptions(isDsp: boolean): IdName[] {
+export function columnOptions(isDsp: boolean): IdName<Column>[] {
   const result = AllColumns.map((id) => ({
     id,
     name: id,

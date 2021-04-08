@@ -11,7 +11,7 @@ export enum ResearchSpeed {
   Speed6 = 250,
 }
 
-export const ResearchSpeedOptions: IdName[] = [
+export const ResearchSpeedOptions: IdName<ResearchSpeed>[] = [
   { id: ResearchSpeed.Speed0, name: 'No research bonus' },
   { id: ResearchSpeed.Speed1, name: 'Research speed 1' },
   { id: ResearchSpeed.Speed2, name: 'Research speed 2' },

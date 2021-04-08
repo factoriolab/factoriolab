@@ -14,7 +14,7 @@ import { OptionsComponent } from './options.component';
   ></lab-options>`,
 })
 class TestOptionsComponent {
-  @ViewChild(OptionsComponent) child: OptionsComponent;
+  @ViewChild(OptionsComponent) child: OptionsComponent<number>;
   title = 'title';
   selected = 1;
   options = [

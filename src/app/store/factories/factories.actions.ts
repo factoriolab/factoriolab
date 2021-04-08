@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { DefaultIdPayload, DefaultPayload, IdPayload } from '~/models';
+import { DefaultIdPayload, DefaultPayload } from '~/models';
 
 export const enum FactoriesActionType {
   ADD = '[Factories] Add',
@@ -35,22 +35,22 @@ export class SetFactoryAction implements Action {
 
 export class SetModuleRankAction implements Action {
   readonly type = FactoriesActionType.SET_MODULE_RANK;
-  constructor(public payload: IdPayload<string[]>) {}
+  constructor(public payload: DefaultIdPayload<string[]>) {}
 }
 
 export class SetBeaconCountAction implements Action {
   readonly type = FactoriesActionType.SET_BEACON_COUNT;
-  constructor(public payload: IdPayload<number>) {}
+  constructor(public payload: DefaultIdPayload<number>) {}
 }
 
 export class SetBeaconAction implements Action {
   readonly type = FactoriesActionType.SET_BEACON;
-  constructor(public payload: IdPayload) {}
+  constructor(public payload: DefaultIdPayload) {}
 }
 
 export class SetBeaconModuleAction implements Action {
   readonly type = FactoriesActionType.SET_BEACON_MODULE;
-  constructor(public payload: IdPayload) {}
+  constructor(public payload: DefaultIdPayload) {}
 }
 
 export type FactoriesAction =

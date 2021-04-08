@@ -46,13 +46,13 @@ export class ProductsComponent {
   IdType = IdType;
   RateType = RateType;
 
-  get rateTypeOptions(): IdName[] {
+  get rateTypeOptions(): IdName<RateType>[] {
     return rateTypeOptions(this.displayRate, this.data.isDsp);
   }
 
   constructor() {}
 
-  trackBy(product: Product): string {
+  trackBy(i: number, product: Product): string {
     return product.id;
   }
 
@@ -68,7 +68,7 @@ export class ProductsComponent {
     this.setItem.emit({ id: product.id, value: itemId });
   }
 
-  changeRate(id: string, event: InputEvent): void {
+  changeRate(id: string, event: Event): void {
     try {
       const target = event.target as HTMLInputElement;
       const value = target.value;

@@ -146,10 +146,10 @@ describe('RankerComponent', () => {
       fixture.detectChanges();
     });
 
-    it('should set the value to empty module only', () => {
+    it('should set the value to empty', () => {
       spyOn(component.child, 'cancel');
       TestUtility.clickDt(fixture, DataTest.None);
-      expect(component.selectIds).toHaveBeenCalledWith([ItemId.Module]);
+      expect(component.selectIds).toHaveBeenCalledWith([]);
       expect(component.child.cancel).toHaveBeenCalled();
     });
 
