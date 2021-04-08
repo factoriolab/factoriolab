@@ -215,6 +215,7 @@ describe('SettingsComponent', () => {
       expect(component.setBeaconCount).toHaveBeenCalledWith({
         id: '',
         value: 3,
+        default: 8,
       });
     });
   });
