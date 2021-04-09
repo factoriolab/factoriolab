@@ -50,7 +50,6 @@
   "devDependencies": {
     "@angular-devkit/architect": "^0.1101.2",
     "@angular-devkit/build-angular": "^0.1101.2",
-    "@angular-eslint/builder": "^1.1.0",
     "@angular-eslint/eslint-plugin": "^1.1.0",
     "@angular-eslint/eslint-plugin-template": "^1.1.0",
     "@angular-eslint/schematics": "^1.1.0",
