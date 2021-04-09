@@ -256,7 +256,10 @@
                     setModuleRank.emit({
                       id: f,
                       value: [$event],
-                      default: factories.entities[''].moduleRank
+                      default:
+                        f === ''
+                          ? data.defaults.moduleRank
+                          : factories.entities[''].moduleRank
                     })
                   "
                 >
@@ -285,7 +288,10 @@
                       setModuleRank.emit({
                         id: f,
                         value: $event,
-                        default: factories.entities[''].moduleRank
+                        default:
+                          f === ''
+                            ? data.defaults.moduleRank
+                            : factories.entities[''].moduleRank
                       })
                     "
                   >
@@ -312,19 +318,18 @@
               <ng-container *ngIf="factory.beaconCount != null">
                 <input
                   class="beacon"
-                  type="number"
                   title="Default number of beacons"
                   placeholder="# Beacons"
-                  min="0"
-                  step="1"
+                  type="text"
+                  [ngModel]="factory.beaconCount"
+                  labValidateNumber
                   data-test="lab-settings-beacons"
-                  [value]="factory.beaconCount"
                   (input)="changeBeaconCount(f, $event)"
                 />
               </ng-container>
             </td>
             <td>
-              <ng-container *ngIf="factory.beaconCount > 0">
+              <ng-container *ngIf="gtZero(factory.beaconCount)">
                 <lab-icon
                   class="pad"
                   [data]="data"
@@ -342,7 +347,10 @@
                       setBeacon.emit({
                         id: f,
                         value: $event,
-                        default: factories.entities[''].beacon
+                        default:
+                          f === ''
+                            ? data.defaults.beacon
+                            : factories.entities[''].beacon
                       })
                     "
                   >
@@ -358,7 +366,7 @@
             </td>
             <td>
               <lab-select
-                *ngIf="factory.beaconCount > 0"
+                *ngIf="gtZero(factory.beaconCount)"
                 header="Select a module"
                 [data]="data"
                 [selected]="factory.beaconModule"
@@ -368,7 +376,10 @@
                   setBeaconModule.emit({
                     id: f,
                     value: $event,
-                    default: factories.entities[''].beaconModule
+                    default:
+                      f === ''
+                        ? data.defaults.beaconModule
+                        : factories.entities[''].beaconModule
                   })
                 "
               >

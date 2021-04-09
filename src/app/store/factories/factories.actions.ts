@@ -40,7 +40,7 @@ export class SetModuleRankAction implements Action {
 
 export class SetBeaconCountAction implements Action {
   readonly type = FactoriesActionType.SET_BEACON_COUNT;
-  constructor(public payload: DefaultIdPayload<number>) {}
+  constructor(public payload: DefaultIdPayload<string>) {}
 }
 
 export class SetBeaconAction implements Action {

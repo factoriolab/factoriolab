@@ -568,7 +568,7 @@ describe('ListComponent', () => {
   describe('factoryChange', () => {
     it('should set a factory', () => {
       spyOn(component, 'setFactory');
-      component.child.factoryChange(Mocks.Step1, ItemId.AssemblingMachine1);
+      component.child.changeFactory(Mocks.Step1, ItemId.AssemblingMachine1);
       expect(component.setFactory).toHaveBeenCalledWith({
         id: Mocks.Step1.itemId,
         value: ItemId.AssemblingMachine1,
@@ -580,7 +580,7 @@ describe('ListComponent', () => {
   describe('factoryModuleChange', () => {
     it('should set factory modules', () => {
       spyOn(component, 'setFactoryModules');
-      component.child.factoryModuleChange(Mocks.Step1, ItemId.SpeedModule, 0);
+      component.child.changeFactoryModule(Mocks.Step1, ItemId.SpeedModule, 0);
       expect(component.setFactoryModules).toHaveBeenCalledWith({
         id: Mocks.Step1.itemId,
         value: new Array(4).fill(ItemId.SpeedModule),
@@ -592,7 +592,7 @@ describe('ListComponent', () => {
   describe('beaconModuleChange', () => {
     it('should beacon modules', () => {
       spyOn(component, 'setBeaconModules');
-      component.child.beaconModuleChange(Mocks.Step1, ItemId.SpeedModule, 0);
+      component.child.changeBeaconModule(Mocks.Step1, ItemId.SpeedModule, 0);
       expect(component.setBeaconModules).toHaveBeenCalledWith({
         id: Mocks.Step1.recipeId,
         value: new Array(2).fill(ItemId.SpeedModule),
@@ -638,7 +638,7 @@ describe('ListComponent', () => {
     it('should not set beacon count on invalid event', () => {
       spyOn(component, 'setBeaconCount');
       const event: any = { target: {} };
-      component.child.beaconCountChange(Mocks.Step1.itemId as any, event);
+      component.child.changeBeaconCount(Mocks.Step1.itemId as any, event);
       expect(component.setBeaconCount).not.toHaveBeenCalled();
     });
 

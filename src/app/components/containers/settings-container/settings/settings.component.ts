@@ -1,4 +1,3 @@
-import { KeyValue } from '@angular/common';
 import {
   Component,
   Input,
@@ -33,6 +32,7 @@ import {
   DisplayRateOptions,
   FuelType,
   presetOptions,
+  Rational,
 } from '~/models';
 import { FactoriesState } from '~/store/factories';
 import { ColumnsState, PreferencesState } from '~/store/preferences';
@@ -80,7 +80,7 @@ export class SettingsComponent implements OnInit, OnChanges {
   @Output() raiseFactory = new EventEmitter<DefaultPayload<string, string[]>>();
   @Output() setFactory = new EventEmitter<DefaultIdPayload<string, string[]>>();
   @Output() setModuleRank = new EventEmitter<DefaultIdPayload<string[]>>();
-  @Output() setBeaconCount = new EventEmitter<DefaultIdPayload<number>>();
+  @Output() setBeaconCount = new EventEmitter<DefaultIdPayload<string>>();
   @Output() setBeacon = new EventEmitter<DefaultIdPayload>();
   @Output() setBeaconModule = new EventEmitter<DefaultIdPayload>();
   @Output() setBelt = new EventEmitter<DefaultPayload>();
@@ -185,13 +185,19 @@ export class SettingsComponent implements OnInit, OnChanges {
   }
 
   changeBeaconCount(id: string, event: Event): void {
-    const target = event.target as HTMLInputElement;
-    const value = Number(target.value);
-    this.setBeaconCount.emit({
-      id,
-      value,
-      default: this.factories.entities[''].beaconCount,
-    });
+    try {
+      const target = event.target as HTMLInputElement;
+      const value = target.value;
+      const rational = Rational.fromString(value);
+      console.log(rational);
+      if (rational.gte(Rational.zero)) {
+        const def =
+          id === ''
+            ? this.data.defaults.beaconCount
+            : this.factories.entities[''].beaconCount;
+        this.setBeaconCount.emit({ id, value, default: def });
+      }
+    } catch {}
   }
 
   emitNumber(
@@ -236,5 +242,12 @@ export class SettingsComponent implements OnInit, OnChanges {
       localStorage.clear();
       this.resetSettings.emit();
     }
+  }
+
+  gtZero(value: string): boolean {
+    try {
+      return Rational.fromString(value).gt(Rational.zero);
+    } catch {}
+    return false;
   }
 }

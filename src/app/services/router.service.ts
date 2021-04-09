@@ -61,6 +61,7 @@ export enum ZipVersion {
   Version0 = '0',
   Version1 = '1',
   Version2 = '2',
+  Version3 = '3',
 }
 
 export interface Zip {
@@ -78,7 +79,7 @@ export class RouterService {
   base64codes: Uint8Array;
   // Intended to denote hashing algorithm version
   bareVersion = ZipVersion.Version1;
-  hashVersion = ZipVersion.Version2;
+  hashVersion = ZipVersion.Version3;
   zipTail: Zip = {
     bare: `&${Section.Version}=${this.bareVersion}`,
     hash: `&${Section.Version}${this.hashVersion}`,
@@ -275,7 +276,8 @@ export class RouterService {
                 this.dispatch(zip, state);
                 break;
               }
-              case ZipVersion.Version2: {
+              case ZipVersion.Version2:
+              case ZipVersion.Version3: {
                 let baseId = this.parseNString(params[Section.Base], data.hash);
                 this.requestHash(
                   baseId || initialSettingsState.baseId
@@ -379,7 +381,8 @@ export class RouterService {
           };
           break;
         }
-        case ZipVersion.Version2: {
+        case ZipVersion.Version2:
+        case ZipVersion.Version3: {
           obj = {
             id,
             itemId: this.parseNString(s[i++], hash.items),
@@ -460,7 +463,8 @@ export class RouterService {
           };
           break;
         }
-        case ZipVersion.Version2: {
+        case ZipVersion.Version2:
+        case ZipVersion.Version3: {
           id = this.parseNString(s[i++], hash.items);
           obj = {
             ignore: this.parseBool(s[i++]),
@@ -492,7 +496,7 @@ export class RouterService {
             i,
             this.zipTruthyString(obj.factory),
             this.zipTruthyArray(obj.factoryModules),
-            this.zipTruthyNumber(obj.beaconCount),
+            this.zipTruthyString(obj.beaconCount),
             this.zipTruthyArray(obj.beaconModules),
             this.zipTruthyString(obj.beacon),
           ]),
@@ -500,7 +504,7 @@ export class RouterService {
             this.zipTruthyNString(i, hash.recipes),
             this.zipTruthyNString(obj.factory, hash.factories),
             this.zipTruthyNArray(obj.factoryModules, hash.modules),
-            this.zipTruthyNNumber(obj.beaconCount),
+            this.zipTruthyString(obj.beaconCount),
             this.zipTruthyNArray(obj.beaconModules, hash.modules),
             this.zipTruthyNString(obj.beacon, hash.beacons),
           ]),
@@ -534,18 +538,22 @@ export class RouterService {
           obj = {
             factory: this.parseString(s[i++]),
             factoryModules: this.parseArray(s[i++]),
-            beaconCount: this.parseNumber(s[i++]),
+            beaconCount: this.parseString(s[i++]),
             beaconModules: this.parseArray(s[i++]),
             beacon: this.parseString(s[i++]),
           };
           break;
         }
-        case ZipVersion.Version2: {
+        case ZipVersion.Version2:
+        case ZipVersion.Version3: {
           id = this.parseNString(s[i++], hash.recipes);
           obj = {
             factory: this.parseNString(s[i++], hash.factories),
             factoryModules: this.parseNArray(s[i++], hash.modules),
-            beaconCount: this.parseNNumber(s[i++]),
+            beaconCount:
+              v === ZipVersion.Version2
+                ? this.parseNNumber(s[i++]).toString()
+                : this.parseString(s[i++]),
             beaconModules: this.parseNArray(s[i++], hash.modules),
             beacon: this.parseNString(s[i++], hash.beacons),
           };
@@ -578,14 +586,14 @@ export class RouterService {
           bare: this.zipFields([
             i,
             this.zipTruthyArray(obj.moduleRank),
-            this.zipTruthyNumber(obj.beaconCount),
+            this.zipTruthyString(obj.beaconCount),
             this.zipTruthyString(obj.beaconModule),
             this.zipTruthyString(obj.beacon),
           ]),
           hash: this.zipFields([
             h ? this.zipTruthyNString(i, hash.factories) : i,
             this.zipTruthyNArray(obj.moduleRank, hash.modules),
-            this.zipTruthyNNumber(obj.beaconCount),
+            this.zipTruthyString(obj.beaconCount),
             this.zipTruthyNString(obj.beaconModule, hash.modules),
             this.zipTruthyNString(obj.beacon, hash.beacons),
           ]),
@@ -621,7 +629,7 @@ export class RouterService {
           id = s[i++];
           obj = {
             moduleRank: this.parseArray(s[i++]),
-            beaconCount: this.parseNumber(s[i++]),
+            beaconCount: this.parseString(s[i++]),
             beaconModule: this.parseString(s[i++]),
             beacon: this.parseString(s[i++]),
           };
@@ -634,11 +642,15 @@ export class RouterService {
           }
           break;
         }
-        case ZipVersion.Version2: {
+        case ZipVersion.Version2:
+        case ZipVersion.Version3: {
           id = s[i++];
           obj = {
             moduleRank: this.parseNArray(s[i++], hash.modules),
-            beaconCount: this.parseNNumber(s[i++]),
+            beaconCount:
+              v === ZipVersion.Version2
+                ? this.parseNNumber(s[i++]).toString()
+                : this.parseString(s[i++]),
             beaconModule: this.parseNString(s[i++], hash.modules),
             beacon: this.parseNString(s[i++], hash.beacons),
           };
@@ -765,7 +777,8 @@ export class RouterService {
         };
         break;
       }
-      case ZipVersion.Version2: {
+      case ZipVersion.Version2:
+      case ZipVersion.Version3: {
         obj = {
           displayRate: this.parseDisplayRate(s[i++]),
           preset: this.parseNumber(s[i++]),

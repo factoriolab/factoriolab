@@ -1,6 +1,5 @@
 import { compose, createSelector } from '@ngrx/store';
 
-import { environment } from 'src/environments';
 import {
   ResearchSpeedFactor,
   Rational,
@@ -85,7 +84,7 @@ export const getDefaults = createSelector(
           ? []
           : m.moduleRank,
         beaconCount:
-          preset < Preset.Beacon8 ? 0 : preset < Preset.Beacon12 ? 8 : 12,
+          preset < Preset.Beacon8 ? '0' : preset < Preset.Beacon12 ? '8' : '12',
         beacon: m.beacon,
         beaconModule: preset < Preset.Beacon8 ? ItemId.Module : m.beaconModule,
       };

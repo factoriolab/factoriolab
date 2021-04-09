@@ -132,7 +132,7 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Factories.SetModuleRankAction(value));
   }
 
-  setBeaconCount(value: DefaultIdPayload<number>): void {
+  setBeaconCount(value: DefaultIdPayload<string>): void {
     this.store.dispatch(new Factories.SetBeaconCountAction(value));
   }
 

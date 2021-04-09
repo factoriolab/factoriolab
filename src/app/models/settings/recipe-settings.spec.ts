@@ -8,7 +8,7 @@ describe('RationalRecipeSettings', () => {
       const result = new RationalRecipeSettings({
         factory: ItemId.AssemblingMachine1,
         factoryModules: [],
-        beaconCount: 2,
+        beaconCount: '2',
         beacon: ItemId.Beacon,
         beaconModules: [],
       });

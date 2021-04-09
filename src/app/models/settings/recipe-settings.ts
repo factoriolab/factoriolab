@@ -11,7 +11,7 @@ export enum RecipeSettingsField {
 export interface RecipeSettings {
   factory?: string;
   factoryModules?: string[];
-  beaconCount?: number;
+  beaconCount?: string;
   beacon?: string;
   beaconModules?: string[];
 }
@@ -31,7 +31,7 @@ export class RationalRecipeSettings {
       this.factoryModules = data.factoryModules;
     }
     if (data.beaconCount != null) {
-      this.beaconCount = Rational.fromNumber(data.beaconCount);
+      this.beaconCount = Rational.fromString(data.beaconCount);
     }
     if (data.beacon != null) {
       this.beacon = data.beacon;
