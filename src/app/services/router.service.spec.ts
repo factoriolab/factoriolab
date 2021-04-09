@@ -63,7 +63,7 @@ const mockRecipesState: RecipesState = {
   [RecipeId.SteelChest]: {
     factory: ItemId.AssemblingMachine2,
     factoryModules: [ItemId.EfficiencyModule, ItemId.EfficiencyModule],
-    beaconCount: 1,
+    beaconCount: '1',
     beacon: ItemId.Beacon,
     beaconModules: [ItemId.SpeedModule, ItemId.SpeedModule],
   },
@@ -73,7 +73,7 @@ const mockFactoriesState: FactoriesState = {
   entities: {
     ['']: {
       moduleRank: [ItemId.ProductivityModule, ItemId.SpeedModule],
-      beaconCount: 1,
+      beaconCount: '1',
       beacon: ItemId.Beacon,
       beaconModule: ItemId.SpeedModule,
     },

@@ -6,8 +6,6 @@ import * as Actions from './recipes.actions';
 import { recipesReducer, initialRecipesState } from './recipes.reducer';
 
 describe('Recipes Reducer', () => {
-  const numberValue = 2;
-
   describe('LOAD', () => {
     it('should load recipe settings', () => {
       const result = recipesReducer(
@@ -38,7 +36,7 @@ describe('Recipes Reducer', () => {
           ...{
             [Mocks.Recipe1.id]: {
               factoryModules: ['test'],
-              beaconCount: 20,
+              beaconCount: '20',
               beacon: 'test',
               beaconModules: ['test'],
             },
@@ -74,11 +72,11 @@ describe('Recipes Reducer', () => {
         initialRecipesState,
         new Actions.SetBeaconCountAction({
           id: Mocks.Recipe1.id,
-          value: numberValue,
+          value: '2',
           default: null,
         })
       );
-      expect(result[Mocks.Recipe1.id].beaconCount).toEqual(numberValue);
+      expect(result[Mocks.Recipe1.id].beaconCount).toEqual('2');
     });
   });
 

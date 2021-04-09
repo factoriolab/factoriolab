@@ -17,8 +17,6 @@ import {
   ResearchSpeed,
   InserterTarget,
   InserterCapacity,
-  ModHash,
-  FuelType,
 } from '~/models';
 import { State } from '../';
 import * as Datasets from '../datasets';

@@ -113,7 +113,7 @@ export class ExportUtility {
         }
       }
       if (columns[Column.Beacons].show && factory.modules) {
-        exp.Beacons = settings.beaconCount.toString();
+        exp.Beacons = settings.beaconCount;
         exp.Beacon = settings.beacon;
         exp.BeaconModules = `"${settings.beaconModules.join(',')}"`;
       }

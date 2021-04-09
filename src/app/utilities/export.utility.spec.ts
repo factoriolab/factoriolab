@@ -55,13 +55,13 @@ describe('ExportUtility', () => {
     const fullRecipe: RecipeSettings = {
       factory: ItemId.AssemblingMachine2,
       factoryModules: ['a', 'b'],
-      beaconCount: 8,
+      beaconCount: '8',
       beacon: 'beacon',
       beaconModules: ['c', 'd'],
     };
     const minRecipe: RecipeSettings = {
       factory: ItemId.AssemblingMachine1,
-      beaconCount: 8,
+      beaconCount: '8',
       beacon: 'beacon',
     };
 

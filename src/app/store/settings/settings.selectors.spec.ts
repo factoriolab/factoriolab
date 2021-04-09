@@ -29,7 +29,7 @@ describe('Settings Selectors', () => {
       expect(result.factoryRank).toEqual(Mocks.Base.defaults.minFactoryRank);
       expect(result.moduleRank).toEqual([]);
       expect(result.beaconModule).toEqual(ItemId.Module);
-      expect(result.beaconCount).toEqual(0);
+      expect(result.beaconCount).toEqual('0');
     });
 
     it('should use 8 beacons', () => {
@@ -38,7 +38,7 @@ describe('Settings Selectors', () => {
         Mocks.Base,
         false
       );
-      expect(result.beaconCount).toEqual(8);
+      expect(result.beaconCount).toEqual('8');
     });
 
     it('should use 12 beacons', () => {
@@ -47,7 +47,7 @@ describe('Settings Selectors', () => {
         Mocks.Base,
         false
       );
-      expect(result.beaconCount).toEqual(12);
+      expect(result.beaconCount).toEqual('12');
     });
 
     it('should get the defaults from the current base mod', () => {
