@@ -285,31 +285,42 @@ describe('FlowUtility', () => {
 
   describe('linkValue', () => {
     it('should return correct value for none', () => {
-      expect(FlowUtility.linkValue(null, null, LinkValue.None)).toEqual(1);
+      expect(FlowUtility.linkValue(null, null, LinkValue.None, 100)).toEqual(1);
     });
 
     it('should return correct value for percent', () => {
       expect(
-        FlowUtility.linkValue(null, Rational.two, LinkValue.Percent)
+        FlowUtility.linkValue(null, Rational.two, LinkValue.Percent, 100)
       ).toEqual(2);
     });
 
     it('should return minimum value for percent', () => {
       expect(
-        FlowUtility.linkValue(null, Rational.zero, LinkValue.Percent)
+        FlowUtility.linkValue(null, Rational.zero, LinkValue.Percent, 100)
       ).toEqual(MIN_LINK_VALUE);
     });
 
     it('should multiply percent and value', () => {
       expect(
-        FlowUtility.linkValue(Rational.two, new Rational(BigInt(3)), null)
+        FlowUtility.linkValue(Rational.two, new Rational(BigInt(3)), null, 100)
       ).toEqual(6);
     });
 
     it('should return minimum value', () => {
-      expect(FlowUtility.linkValue(Rational.zero, Rational.zero, null)).toEqual(
-        MIN_LINK_VALUE
-      );
+      expect(
+        FlowUtility.linkValue(Rational.zero, Rational.zero, null, 100)
+      ).toEqual(MIN_LINK_VALUE);
+    });
+
+    it('should scale link size for fluids', () => {
+      expect(
+        FlowUtility.linkValue(
+          Rational.hundred,
+          Rational.one,
+          LinkValue.Items,
+          null
+        )
+      ).toEqual(10);
     });
   });
 
