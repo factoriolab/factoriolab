@@ -49,6 +49,20 @@ describe('Rational', () => {
       it('should generate a Rational from a mixed fraction', () => {
         expect(Rational.fromString('1 1/2')).toEqual(Rational.from(3, 2));
       });
+
+      it('should throw on empty string', () => {
+        expect(() => Rational.fromString('')).toThrowError('Empty string');
+      });
+
+      it('should throw on too many /', () => {
+        expect(() => Rational.fromString('1/1/1')).toThrowError('Too many /');
+      });
+
+      it('should throw on too many spaces', () => {
+        expect(() => Rational.fromString('1  1/2')).toThrowError(
+          'Too many spaces'
+        );
+      });
     });
 
     describe('min', () => {

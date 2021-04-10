@@ -567,7 +567,7 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('factoryChange', () => {
+  describe('changeFactory', () => {
     it('should set a factory', () => {
       spyOn(component, 'setFactory');
       component.child.changeFactory(Mocks.Step1, ItemId.AssemblingMachine1);
@@ -579,7 +579,7 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('factoryModuleChange', () => {
+  describe('changeFactoryModule', () => {
     it('should set factory modules', () => {
       spyOn(component, 'setFactoryModules');
       component.child.changeFactoryModule(Mocks.Step1, ItemId.SpeedModule, 0);
@@ -591,7 +591,7 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('beaconModuleChange', () => {
+  describe('changeBeaconModule', () => {
     it('should beacon modules', () => {
       spyOn(component, 'setBeaconModules');
       component.child.changeBeaconModule(Mocks.Step1, ItemId.SpeedModule, 0);
@@ -625,7 +625,7 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('beaconCountChange', () => {
+  describe('changeBeaconCount', () => {
     it('should set beacon count', () => {
       spyOn(component, 'setBeaconCount');
       TestUtility.setTextDt(fixture, DataTest.Beacons, '12');
@@ -641,6 +641,13 @@ describe('ListComponent', () => {
       spyOn(component, 'setBeaconCount');
       const event: any = { target: {} };
       component.child.changeBeaconCount(Mocks.Step1.itemId as any, event);
+      expect(component.setBeaconCount).not.toHaveBeenCalled();
+    });
+
+    it('should not emit on invalid value', () => {
+      spyOn(component, 'setBeaconCount');
+      TestUtility.setTextDt(fixture, DataTest.Beacons, '-1');
+      fixture.detectChanges();
       expect(component.setBeaconCount).not.toHaveBeenCalled();
     });
   });

@@ -839,10 +839,6 @@ export class RouterService {
     return value == null ? '' : this.getId(hash.indexOf(value));
   }
 
-  zipTruthyNNumber(value: number): string {
-    return value == null ? '' : this.getId(value);
-  }
-
   zipTruthyNArray(value: string[], hash: string[]): string {
     return value == null
       ? ''

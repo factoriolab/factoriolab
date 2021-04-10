@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { Mocks, TestUtility } from 'src/tests';
+import { Mocks, TestUtility, ItemId } from 'src/tests';
 import {
   ColumnsComponent,
   IconComponent,
@@ -217,6 +217,24 @@ describe('SettingsComponent', () => {
         value: '3',
         default: '8',
       });
+    });
+
+    it('should emit beacon count on specific factory', () => {
+      spyOn(component, 'setBeaconCount');
+      TestUtility.setTextDt(fixture, DataTest.Beacons, '3', 1);
+      fixture.detectChanges();
+      expect(component.setBeaconCount).toHaveBeenCalledWith({
+        id: ItemId.AssemblingMachine3,
+        value: '3',
+        default: '8',
+      });
+    });
+
+    it('should not emit on invalid value', () => {
+      spyOn(component, 'setBeaconCount');
+      TestUtility.setTextDt(fixture, DataTest.Beacons, '-3');
+      fixture.detectChanges();
+      expect(component.setBeaconCount).not.toHaveBeenCalled();
     });
   });
 

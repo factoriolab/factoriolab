@@ -308,6 +308,24 @@ describe('RouterService', () => {
         mockState
       );
     });
+
+    it('should unzip empty v3', () => {
+      const url = '/?z=eJwrUCszBgADVQFA';
+      spyOn(service, 'requestHash').and.returnValue(of(Mocks.Hash));
+      (router.events as any).next(new NavigationEnd(2, url, url));
+      expect(service.dispatch).toHaveBeenCalledWith('p&v3', {} as any);
+    });
+
+    it('should unzip v3', () => {
+      const url =
+        '/?z=eJwrcDbTMtQyVEtyUssEM521HNWKXJy0nLQc6xyBfPc6d6BImqGWC5AB5Go5xjvFB6oVGwE5tiDVWsHlWk7ZQNoACA2BtJNamTEAqrwVHQ__';
+      spyOn(service, 'requestHash').and.returnValue(of(Mocks.Hash));
+      (router.events as any).next(new NavigationEnd(2, url, url));
+      expect(service.dispatch).toHaveBeenCalledWith(
+        'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B&v3',
+        mockState
+      );
+    });
   });
 
   describe('dispatch', () => {
