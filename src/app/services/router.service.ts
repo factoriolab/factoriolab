@@ -649,7 +649,7 @@ export class RouterService {
             moduleRank: this.parseNArray(s[i++], hash.modules),
             beaconCount:
               v === ZipVersion.Version2
-                ? this.parseNNumber(s[i++]).toString()
+                ? this.parseNNumber(s[i++])?.toString()
                 : this.parseString(s[i++]),
             beaconModule: this.parseNString(s[i++], hash.modules),
             beacon: this.parseNString(s[i++], hash.beacons),

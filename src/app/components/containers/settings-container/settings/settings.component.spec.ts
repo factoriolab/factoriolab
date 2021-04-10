@@ -214,8 +214,8 @@ describe('SettingsComponent', () => {
       fixture.detectChanges();
       expect(component.setBeaconCount).toHaveBeenCalledWith({
         id: '',
-        value: 3,
-        default: 8,
+        value: '3',
+        default: '8',
       });
     });
   });

@@ -189,7 +189,6 @@ export class SettingsComponent implements OnInit, OnChanges {
       const target = event.target as HTMLInputElement;
       const value = target.value;
       const rational = Rational.fromString(value);
-      console.log(rational);
       if (rational.gte(Rational.zero)) {
         const def =
           id === ''

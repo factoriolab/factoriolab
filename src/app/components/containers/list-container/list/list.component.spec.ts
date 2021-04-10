@@ -6,6 +6,7 @@ import {
   tick,
   fakeAsync,
 } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
@@ -139,6 +140,7 @@ describe('ListComponent', () => {
         TestListComponent,
       ],
       imports: [
+        FormsModule,
         HttpClientTestingModule,
         RouterTestingModule,
         StoreModule.forRoot(reducers, { metaReducers }),
@@ -630,8 +632,8 @@ describe('ListComponent', () => {
       fixture.detectChanges();
       expect(component.setBeaconCount).toHaveBeenCalledWith({
         id: Mocks.Step1.itemId,
-        value: 12,
-        default: 8,
+        value: '12',
+        default: '8',
       });
     });
 
@@ -639,13 +641,6 @@ describe('ListComponent', () => {
       spyOn(component, 'setBeaconCount');
       const event: any = { target: {} };
       component.child.changeBeaconCount(Mocks.Step1.itemId as any, event);
-      expect(component.setBeaconCount).not.toHaveBeenCalled();
-    });
-
-    it('should not set beacon count if unchanged', () => {
-      spyOn(component, 'setBeaconCount');
-      TestUtility.setTextDt(fixture, DataTest.Beacons, '8');
-      fixture.detectChanges();
       expect(component.setBeaconCount).not.toHaveBeenCalled();
     });
   });
