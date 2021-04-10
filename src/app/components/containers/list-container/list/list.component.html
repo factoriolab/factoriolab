@@ -324,7 +324,7 @@
                         [data]="data"
                         [selected]="factory"
                         [options]="recipe.producers"
-                        (selectId)="factoryChange(step, $event)"
+                        (selectId)="changeFactory(step, $event)"
                       >
                         <lab-icon
                           class="button"
@@ -363,7 +363,7 @@
                   [options]="data.recipeModuleIds[step.recipeId]"
                   [includeEmptyModule]="!data.isDsp"
                   [displayRate]="displayRate"
-                  (selectId)="factoryModuleChange(step, $event, i)"
+                  (selectId)="changeFactoryModule(step, $event, i)"
                 >
                   <lab-icon
                     class="button"
@@ -387,12 +387,13 @@
               <div class="flex">
                 <input
                   class="beacon"
-                  title="Enter number of beacons"
-                  type="number"
-                  min="0"
+                  title="Set number of beacons"
+                  placeholder="# Beacons"
+                  type="text"
+                  [ngModel]="recipeSettings[step.recipeId].beaconCount"
+                  labValidateNumber
                   data-test="lab-list-beacons"
-                  [value]="recipeSettings[step.recipeId].beaconCount"
-                  (input)="beaconCountChange(step, $event)"
+                  (input)="changeBeaconCount(step, $event)"
                 />
               </div>
             </td>
@@ -454,7 +455,7 @@
                     [selected]="mod"
                     [options]="data.beaconModuleIds"
                     [includeEmptyModule]="true"
-                    (selectId)="beaconModuleChange(step, $event, i)"
+                    (selectId)="changeBeaconModule(step, $event, i)"
                   >
                     <lab-icon
                       class="button"

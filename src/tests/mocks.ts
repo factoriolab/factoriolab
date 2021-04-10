@@ -106,14 +106,14 @@ export const RecipeSettings1: RecipeSettings = {
   factoryModules: [ItemId.Module, ItemId.Module],
   beacon: ItemId.Beacon,
   beaconModules: [ItemId.SpeedModule, ItemId.SpeedModule],
-  beaconCount: 0,
+  beaconCount: '0',
 };
 export const RecipeSettings2: RecipeSettings = {
   factory: ItemId.AssemblingMachine2,
   factoryModules: [ItemId.Module, ItemId.Module],
   beacon: ItemId.Beacon,
   beaconModules: [ItemId.SpeedModule, ItemId.SpeedModule],
-  beaconCount: 0,
+  beaconCount: '0',
 };
 export const Step1: Step = {
   itemId: Item1.id,

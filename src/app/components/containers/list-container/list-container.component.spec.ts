@@ -110,10 +110,10 @@ describe('ListContainerComponent', () => {
   });
 
   it('should set beacon count', () => {
-    const data: DefaultIdPayload<number> = {
+    const data: DefaultIdPayload<string> = {
       id: Mocks.Recipe1.id,
-      value: 24,
-      default: 16,
+      value: '24',
+      default: '16',
     };
     component.child.setBeaconCount.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(

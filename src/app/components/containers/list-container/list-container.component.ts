@@ -112,7 +112,7 @@ export class ListContainerComponent implements OnInit {
     this.store.dispatch(new Recipes.SetFactoryModulesAction(data));
   }
 
-  setBeaconCount(data: DefaultIdPayload<number>): void {
+  setBeaconCount(data: DefaultIdPayload<string>): void {
     this.store.dispatch(new Recipes.SetBeaconCountAction(data));
   }
 
