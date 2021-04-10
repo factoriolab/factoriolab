@@ -6,6 +6,7 @@ import {
   tick,
   fakeAsync,
 } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
@@ -139,6 +140,7 @@ describe('ListComponent', () => {
         TestListComponent,
       ],
       imports: [
+        FormsModule,
         HttpClientTestingModule,
         RouterTestingModule,
         StoreModule.forRoot(reducers, { metaReducers }),
@@ -565,10 +567,10 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('factoryChange', () => {
+  describe('changeFactory', () => {
     it('should set a factory', () => {
       spyOn(component, 'setFactory');
-      component.child.factoryChange(Mocks.Step1, ItemId.AssemblingMachine1);
+      component.child.changeFactory(Mocks.Step1, ItemId.AssemblingMachine1);
       expect(component.setFactory).toHaveBeenCalledWith({
         id: Mocks.Step1.itemId,
         value: ItemId.AssemblingMachine1,
@@ -577,10 +579,10 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('factoryModuleChange', () => {
+  describe('changeFactoryModule', () => {
     it('should set factory modules', () => {
       spyOn(component, 'setFactoryModules');
-      component.child.factoryModuleChange(Mocks.Step1, ItemId.SpeedModule, 0);
+      component.child.changeFactoryModule(Mocks.Step1, ItemId.SpeedModule, 0);
       expect(component.setFactoryModules).toHaveBeenCalledWith({
         id: Mocks.Step1.itemId,
         value: new Array(4).fill(ItemId.SpeedModule),
@@ -589,10 +591,10 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('beaconModuleChange', () => {
+  describe('changeBeaconModule', () => {
     it('should beacon modules', () => {
       spyOn(component, 'setBeaconModules');
-      component.child.beaconModuleChange(Mocks.Step1, ItemId.SpeedModule, 0);
+      component.child.changeBeaconModule(Mocks.Step1, ItemId.SpeedModule, 0);
       expect(component.setBeaconModules).toHaveBeenCalledWith({
         id: Mocks.Step1.recipeId,
         value: new Array(2).fill(ItemId.SpeedModule),
@@ -623,28 +625,28 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('beaconCountChange', () => {
+  describe('changeBeaconCount', () => {
     it('should set beacon count', () => {
       spyOn(component, 'setBeaconCount');
       TestUtility.setTextDt(fixture, DataTest.Beacons, '12');
       fixture.detectChanges();
       expect(component.setBeaconCount).toHaveBeenCalledWith({
         id: Mocks.Step1.itemId,
-        value: 12,
-        default: 8,
+        value: '12',
+        default: '8',
       });
     });
 
     it('should not set beacon count on invalid event', () => {
       spyOn(component, 'setBeaconCount');
       const event: any = { target: {} };
-      component.child.beaconCountChange(Mocks.Step1.itemId as any, event);
+      component.child.changeBeaconCount(Mocks.Step1.itemId as any, event);
       expect(component.setBeaconCount).not.toHaveBeenCalled();
     });
 
-    it('should not set beacon count if unchanged', () => {
+    it('should not emit on invalid value', () => {
       spyOn(component, 'setBeaconCount');
-      TestUtility.setTextDt(fixture, DataTest.Beacons, '8');
+      TestUtility.setTextDt(fixture, DataTest.Beacons, '-1');
       fixture.detectChanges();
       expect(component.setBeaconCount).not.toHaveBeenCalled();
     });

@@ -98,9 +98,9 @@ describe('Factories Reducer', () => {
     it('should set the beacon count for a factory', () => {
       const result = factoriesReducer(
         undefined,
-        new Actions.SetBeaconCountAction({ id, value: 2, default: 8 })
+        new Actions.SetBeaconCountAction({ id, value: '2', default: '8' })
       );
-      expect(result.entities[id].beaconCount).toEqual(2);
+      expect(result.entities[id].beaconCount).toEqual('2');
     });
   });
 

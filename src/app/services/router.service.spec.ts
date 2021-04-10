@@ -63,7 +63,7 @@ const mockRecipesState: RecipesState = {
   [RecipeId.SteelChest]: {
     factory: ItemId.AssemblingMachine2,
     factoryModules: [ItemId.EfficiencyModule, ItemId.EfficiencyModule],
-    beaconCount: 1,
+    beaconCount: '1',
     beacon: ItemId.Beacon,
     beaconModules: [ItemId.SpeedModule, ItemId.SpeedModule],
   },
@@ -73,7 +73,7 @@ const mockFactoriesState: FactoriesState = {
   entities: {
     ['']: {
       moduleRank: [ItemId.ProductivityModule, ItemId.SpeedModule],
-      beaconCount: 1,
+      beaconCount: '1',
       beacon: ItemId.Beacon,
       beaconModule: ItemId.SpeedModule,
     },
@@ -105,7 +105,7 @@ const mockZipPartial: Zip = {
     '~speed-module*beacon&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2_steel-furnace&s=1.0*2*1*=*tran' +
     'sport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid-wagon',
   hash:
-    '&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A&f1*D~G*B*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B',
+    '&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B',
 };
 const mockState: State = {
   productsState: mockProductsState,
@@ -305,6 +305,24 @@ describe('RouterService', () => {
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A&f1*D~G*B*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B&v2',
+        mockState
+      );
+    });
+
+    it('should unzip empty v3', () => {
+      const url = '/?z=eJwrUCszBgADVQFA';
+      spyOn(service, 'requestHash').and.returnValue(of(Mocks.Hash));
+      (router.events as any).next(new NavigationEnd(2, url, url));
+      expect(service.dispatch).toHaveBeenCalledWith('p&v3', {} as any);
+    });
+
+    it('should unzip v3', () => {
+      const url =
+        '/?z=eJwrcDbTMtQyVEtyUssEM521HNWKXJy0nLQc6xyBfPc6d6BImqGWC5AB5Go5xjvFB6oVGwE5tiDVWsHlWk7ZQNoACA2BtJNamTEAqrwVHQ__';
+      spyOn(service, 'requestHash').and.returnValue(of(Mocks.Hash));
+      (router.events as any).next(new NavigationEnd(2, url, url));
+      expect(service.dispatch).toHaveBeenCalledWith(
+        'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B&v3',
         mockState
       );
     });

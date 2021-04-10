@@ -57,14 +57,14 @@ describe('Recipes Selectors', () => {
     it('should use beacon count override', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { beaconCount: numberValue } },
+        ...{ [Mocks.Item1.id]: { beaconCount: stringValue } },
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
         Mocks.FactorySettingsInitial,
         Mocks.Data
       );
-      expect(result[Mocks.Item1.id].beaconCount).toEqual(numberValue);
+      expect(result[Mocks.Item1.id].beaconCount).toEqual(stringValue);
     });
 
     it('should use beacon override', () => {

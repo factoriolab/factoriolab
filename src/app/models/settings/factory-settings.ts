@@ -7,7 +7,7 @@ export enum FactorySettingsField {
 
 export interface FactorySettings {
   moduleRank?: string[];
-  beaconCount?: number;
+  beaconCount?: string;
   beacon?: string;
   beaconModule?: string;
 }

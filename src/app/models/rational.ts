@@ -50,16 +50,25 @@ export class Rational {
   }
 
   static fromString(x: string): Rational {
+    if (x.length === 0) {
+      throw new Error('Empty string');
+    }
     if (typeof x === 'number' || x.indexOf('/') === -1) {
       return Rational.fromNumber(Number(x));
     } else {
       const f = x.split('/');
+      if (f.length > 2) {
+        throw new Error('Too many /');
+      }
       if (f[0].indexOf(' ') === -1) {
         const p = Number(f[0]);
         const q = Number(f[1]);
         return Rational.from(p, q);
       } else {
         const g = f[0].split(' ');
+        if (g.length > 2) {
+          throw new Error('Too many spaces');
+        }
         const n = Number(g[0]);
         const p = Number(g[1]);
         const q = Number(f[1]);

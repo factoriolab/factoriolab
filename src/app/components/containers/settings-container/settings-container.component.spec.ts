@@ -211,7 +211,11 @@ describe('SettingsContainerComponent', () => {
   });
 
   it('should set a factory beacon count', () => {
-    const value: DefaultIdPayload<number> = { id: 'id', value: 0, default: 0 };
+    const value: DefaultIdPayload<string> = {
+      id: 'id',
+      value: '0',
+      default: '0',
+    };
     component.child.setBeaconCount.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Factories.SetBeaconCountAction(value)

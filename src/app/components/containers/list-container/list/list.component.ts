@@ -141,7 +141,7 @@ export class ListComponent implements OnInit, AfterViewInit {
   @Output() setWagon = new EventEmitter<DefaultIdPayload>();
   @Output() setFactory = new EventEmitter<DefaultIdPayload>();
   @Output() setFactoryModules = new EventEmitter<DefaultIdPayload<string[]>>();
-  @Output() setBeaconCount = new EventEmitter<DefaultIdPayload<number>>();
+  @Output() setBeaconCount = new EventEmitter<DefaultIdPayload<string>>();
   @Output() setBeacon = new EventEmitter<DefaultIdPayload>();
   @Output() setBeaconModules = new EventEmitter<DefaultIdPayload<string[]>>();
   @Output() setColumns = new EventEmitter<ColumnsState>();
@@ -407,7 +407,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     return this.factories.entities[this.recipeSettings[step.recipeId].factory];
   }
 
-  factoryChange(step: Step, value: string): void {
+  changeFactory(step: Step, value: string): void {
     const def = RecipeUtility.bestMatch(
       this.data.recipeEntities[step.recipeId].producers,
       this.factories.ids
@@ -420,7 +420,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.setFactory.emit(event);
   }
 
-  factoryModuleChange(step: Step, value: string, index: number): void {
+  changeFactoryModule(step: Step, value: string, index: number): void {
     const count = this.recipeSettings[step.recipeId].factoryModules.length;
     const options = [
       ...this.data.recipeModuleIds[step.recipeId],
@@ -443,7 +443,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     });
   }
 
-  beaconModuleChange(step: Step, value: string, index: number): void {
+  changeBeaconModule(step: Step, value: string, index: number): void {
     const count = this.recipeSettings[step.recipeId].beaconModules.length;
     const def = new Array(count).fill(this.getSettings(step).beaconModule);
     const modules = this.generateModules(
@@ -470,23 +470,16 @@ export class ListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  beaconCountChange(step: Step, event: Event): void {
-    const target = event.target as HTMLInputElement;
-    if (target.value) {
-      const value = Math.round(Number(target.value));
-      const def = this.getSettings(step).beaconCount;
-      if (
-        this.recipeSettings[
-          this.steps.find((s) => s.recipeId === step.recipeId).recipeId
-        ].beaconCount !== value
-      ) {
-        this.setBeaconCount.emit({
-          id: step.recipeId,
-          value,
-          default: def,
-        });
+  changeBeaconCount(step: Step, event: Event): void {
+    try {
+      const target = event.target as HTMLInputElement;
+      const value = target.value;
+      const rational = Rational.fromString(value);
+      if (rational.gte(Rational.zero)) {
+        const def = this.getSettings(step).beaconCount;
+        this.setBeaconCount.emit({ id: step.recipeId, value, default: def });
       }
-    }
+    } catch {}
   }
 
   resetStep(step: Step): void {
