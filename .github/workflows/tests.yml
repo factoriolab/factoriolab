@@ -16,6 +16,4 @@ jobs:
       - name: Run tests
         run: npm run test-build
       - name: Run codecov
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: npm run codecov
