@@ -292,6 +292,14 @@ img.icon {
   .panel {
     padding: 0;
   }
+
+  .dialog-menu {
+    display: flex;
+
+    * + * {
+      margin-left: 0.5rem;
+    }
+  }
 }
 
 .dialog-title button,

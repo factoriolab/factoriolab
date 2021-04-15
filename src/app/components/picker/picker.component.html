@@ -4,9 +4,14 @@
 <lab-dialog *ngIf="open" (closeDialog)="cancel()">
   <div class="dialog-title">
     <div class="header">Select an item to produce</div>
-    <button (click)="open = false">
-      <i class="material-icons">close</i>
-    </button>
+    <div class="dialog-menu">
+      <button>
+        <i class="material-icons">search</i>
+      </button>
+      <button (click)="cancel()">
+        <i class="material-icons">close</i>
+      </button>
+    </div>
   </div>
   <div class="panel">
     <div #tabsScroll class="tabs">

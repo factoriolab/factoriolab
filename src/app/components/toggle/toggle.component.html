@@ -10,9 +10,14 @@
 <lab-dialog *ngIf="open" [style.width.rem]="width" (closeDialog)="close()">
   <div class="dialog-title">
     <div class="header">Select recipes</div>
-    <button (click)="cancel()">
-      <i class="material-icons">close</i>
-    </button>
+    <div class="dialog-menu">
+      <button>
+        <i class="material-icons">search</i>
+      </button>
+      <button (click)="cancel()">
+        <i class="material-icons">close</i>
+      </button>
+    </div>
   </div>
   <div #scrollContainer class="panel scroll">
     <div class="flex buttons">
