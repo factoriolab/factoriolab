@@ -5,13 +5,13 @@ export { app };
 export const data: AppData = {
   app,
   base: [
-    { id: '1.1', name: '1.1.25' },
+    { id: '1.1', name: '1.1.32' },
     { id: '1.0', name: '1.0.0' },
     { id: '017', name: '0.17.79' },
     { id: '016', name: '0.16.51' },
     { id: 'bio', name: 'Bio Industries' },
-    { id: 'bob', name: 'Bob\'s Mods' },
-    { id: 'bobang', name: 'Bob\'s & Angel\'s' },
+    { id: 'bob', name: `Bob's Mods` },
+    { id: 'bobang', name: `Bob's & Angel's` },
     { id: 'dsp', name: 'Dyson Sphere Program' },
     { id: 'fep', name: 'FactorioExtended Plus' },
     { id: 'ir2', name: 'Industrial Revolution 2' },
