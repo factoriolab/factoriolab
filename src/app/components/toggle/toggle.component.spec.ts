@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 
 import { Mocks, RecipeId, TestUtility } from 'src/tests';
 import { DialogComponent } from '../dialog/dialog.component';
@@ -10,6 +11,8 @@ enum DataTest {
   Open = 'lab-toggle-open',
   Recipe = 'lab-toggle-recipe',
   Close = 'lab-toggle-close',
+  Search = 'lab-toggle-search',
+  SearchValue = 'lab-toggle-search-value',
 }
 
 @Component({
@@ -42,6 +45,7 @@ describe('ToggleComponent', () => {
         ToggleComponent,
         TestToggleComponent,
       ],
+      imports: [FormsModule],
     }).compileComponents();
   });
 
@@ -111,6 +115,29 @@ describe('ToggleComponent', () => {
       TestUtility.clickDt(fixture, DataTest.Recipe);
       expect(component.child.edited).toBeTrue();
       expect(component.child.editValue).toEqual([]);
+    });
+  });
+
+  describe('inputSearch', () => {
+    it('should filter the recipe ids', () => {
+      TestUtility.clickDt(fixture, DataTest.Open);
+      fixture.detectChanges();
+      TestUtility.clickDt(fixture, DataTest.Search);
+      fixture.detectChanges();
+      TestUtility.setTextDt(fixture, DataTest.SearchValue, 'adv');
+      expect(component.child.complexRecipeIds).toEqual([
+        RecipeId.AdvancedOilProcessing,
+      ]);
+    });
+  });
+
+  describe('scrollPanel', () => {
+    it('should set the scrollTop value', () => {
+      TestUtility.clickDt(fixture, DataTest.Open);
+      fixture.detectChanges();
+      component.child.scrollTop = null;
+      component.child.scrollPanel();
+      expect(component.child.scrollTop).toEqual(0);
     });
   });
 });

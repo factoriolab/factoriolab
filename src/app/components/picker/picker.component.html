@@ -1,11 +1,23 @@
-<div (click)="open = true">
+<div data-test="lab-picker-open" (click)="clickOpen()">
   <ng-content></ng-content>
 </div>
 <lab-dialog *ngIf="open" (closeDialog)="cancel()">
   <div class="dialog-title">
     <div class="header">Select an item to produce</div>
     <div class="dialog-menu">
-      <button>
+      <input
+        class="search"
+        *ngIf="search"
+        data-test="lab-picker-search-value"
+        labFocus
+        [(ngModel)]="searchValue"
+        (input)="inputSearch()"
+      />
+      <button
+        *ngIf="!search"
+        data-test="lab-picker-search"
+        (click)="search = true"
+      >
         <i class="material-icons">search</i>
       </button>
       <button (click)="cancel()">
@@ -15,7 +27,7 @@
   </div>
   <div class="panel">
     <div #tabsScroll class="tabs">
-      <ng-container *ngFor="let id of data.categoryIds">
+      <ng-container *ngFor="let id of categoryIds">
         <lab-icon
           *ngIf="data.categoryEntities[id] as category"
           [class.selected]="id === tab"
@@ -30,7 +42,7 @@
     </div>
     <div #tabScroll class="tab panel">
       <div class="tile">
-        <div class="row" *ngFor="let row of data.categoryItemRows[tab]">
+        <div class="row" *ngFor="let row of categoryItemRows[tab]">
           <lab-icon
             *ngFor="let id of row"
             class="grid"

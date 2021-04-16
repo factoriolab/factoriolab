@@ -29,7 +29,11 @@ import {
   DialogComponent,
   ColumnsComponent,
 } from './components';
-import { LabErrorHandler, ValidateNumberDirective } from './support';
+import {
+  FocusOnShowDirective,
+  LabErrorHandler,
+  ValidateNumberDirective,
+} from './support';
 import { reducers, metaReducers } from './store';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
 
@@ -53,6 +57,7 @@ import { DatasetsEffects } from './store/datasets/datasets.effects';
     DialogComponent,
     ColumnsComponent,
     ValidateNumberDirective,
+    FocusOnShowDirective,
   ],
   imports: [
     BrowserModule,
