@@ -292,6 +292,21 @@ img.icon {
   .panel {
     padding: 0;
   }
+
+  .dialog-menu {
+    display: flex;
+    align-items: center;
+
+    .search {
+      width: 8rem;
+      position: absolute;
+      right: 2.75rem;
+    }
+
+    * + * {
+      margin-left: 0.5rem;
+    }
+  }
 }
 
 .dialog-title button,

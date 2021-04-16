@@ -1,10 +1,18 @@
 import { ViewChild, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 
-import { Mocks, CategoryId, ItemId } from 'src/tests';
+import { Mocks, CategoryId, ItemId, TestUtility } from 'src/tests';
 import { Dataset } from '~/models';
+import { DialogComponent } from '../dialog/dialog.component';
 import { IconComponent } from '../icon/icon.component';
 import { PickerComponent } from './picker.component';
+
+enum DataTest {
+  Open = 'lab-picker-open',
+  Search = 'lab-picker-search',
+  SearchValue = 'lab-picker-search-value',
+}
 
 @Component({
   selector: 'lab-test-picker',
@@ -31,7 +39,13 @@ describe('PickerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [IconComponent, PickerComponent, TestPickerComponent],
+      declarations: [
+        IconComponent,
+        DialogComponent,
+        PickerComponent,
+        TestPickerComponent,
+      ],
+      imports: [FormsModule],
     }).compileComponents();
   });
 
@@ -43,6 +57,21 @@ describe('PickerComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('clickOpen', () => {
+    it('should set up the dialog', () => {
+      component.child.search = true;
+      component.child.searchValue = 'test';
+      TestUtility.clickDt(fixture, DataTest.Open);
+      expect(component.child.open).toBeTrue();
+      expect(component.child.search).toBeFalse();
+      expect(component.child.searchValue).toBe('');
+      expect(component.child.categoryIds).toEqual(component.data.categoryIds);
+      expect(component.child.categoryItemRows).toEqual(
+        component.data.categoryItemRows
+      );
+    });
   });
 
   describe('setTab', () => {
@@ -63,6 +92,30 @@ describe('PickerComponent', () => {
       component.selected = ItemId.CopperCable;
       fixture.detectChanges();
       expect(component.child.tab).toEqual(CategoryId.Intermediate);
+    });
+  });
+
+  describe('inputSearch', () => {
+    beforeEach(() => {
+      TestUtility.clickDt(fixture, DataTest.Open);
+      fixture.detectChanges();
+      TestUtility.clickDt(fixture, DataTest.Search);
+      fixture.detectChanges();
+    });
+
+    it('should filter out matching items and categories', () => {
+      TestUtility.setTextDt(fixture, DataTest.SearchValue, 'module speed');
+      expect(component.child.tab).toEqual(CategoryId.Production);
+      expect(component.child.categoryIds).toEqual([CategoryId.Production]);
+      expect(component.child.categoryItemRows[CategoryId.Production]).toEqual([
+        [ItemId.SpeedModule, ItemId.SpeedModule2, ItemId.SpeedModule3],
+      ]);
+    });
+
+    it('should persist matching category', () => {
+      component.child.tab = CategoryId.Research;
+      TestUtility.setTextDt(fixture, DataTest.SearchValue, 'speed');
+      expect(component.child.tab).toEqual(CategoryId.Research);
     });
   });
 });

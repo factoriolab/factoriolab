@@ -10,11 +10,28 @@
 <lab-dialog *ngIf="open" [style.width.rem]="width" (closeDialog)="close()">
   <div class="dialog-title">
     <div class="header">Select recipes</div>
-    <button (click)="cancel()">
-      <i class="material-icons">close</i>
-    </button>
+    <div class="dialog-menu">
+      <input
+        class="search"
+        *ngIf="search"
+        data-test="lab-toggle-search-value"
+        labFocus
+        [(ngModel)]="searchValue"
+        (input)="inputSearch()"
+      />
+      <button
+        *ngIf="!search"
+        data-test="lab-toggle-search"
+        (click)="search = true"
+      >
+        <i class="material-icons">search</i>
+      </button>
+      <button (click)="cancel()">
+        <i class="material-icons">close</i>
+      </button>
+    </div>
   </div>
-  <div #scrollContainer class="panel scroll">
+  <div #scrollContainer class="panel scroll" (scroll)="scrollPanel()">
     <div class="flex buttons">
       <button
         [disabled]="!editValue.length"
@@ -31,13 +48,13 @@
     </div>
     <div class="flex panel dark tile">
       <lab-icon
-        *ngFor="let id of data.complexRecipeIds"
+        *ngFor="let id of complexRecipeIds"
         class="button grid"
         data-test="lab-toggle-recipe"
         [class.ignored]="editValue.indexOf(id) !== -1"
         [data]="data"
         [iconId]="id"
-        [scrollTop]="scrollContainer.scrollTop"
+        [scrollTop]="scrollTop"
         [tooltip]="data.recipeEntities[id].name"
         [recipe]="data.recipeEntities[id]"
         (click)="clickId(id)"
