@@ -187,6 +187,16 @@ describe('Rational', () => {
       });
     });
 
+    describe('ceil', () => {
+      it('should handle integers', () => {
+        expect(Rational.from(2, 1).ceil()).toEqual(Rational.from(2, 1));
+      });
+
+      it('should handle fractions', () => {
+        expect(Rational.from(3, 2).ceil()).toEqual(Rational.from(2, 1));
+      });
+    });
+
     describe('toNumber', () => {
       it('should convert to number', () => {
         expect(Rational.zero.toNumber()).toEqual(0);
@@ -200,6 +210,10 @@ describe('Rational', () => {
         expect(new Rational(BigInt(1), BigInt(3)).toPrecision(3)).toEqual(
           0.334
         );
+      });
+
+      it('should round fractions', () => {
+        expect(Rational.from(11, 20).toPrecision(2)).toEqual(0.55);
       });
     });
 
