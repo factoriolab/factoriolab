@@ -170,13 +170,21 @@ export class Rational {
     return new Rational(this.p * x.q, this.q * x.p);
   }
 
+  ceil(): Rational {
+    if (this.isInteger()) {
+      return this;
+    } else {
+      return new Rational(this.p / this.q + bigOne);
+    }
+  }
+
   toNumber(): number {
     return Number(this.p) / Number(this.q);
   }
 
   toPrecision(x: number): number {
-    const round = Math.pow(10, x);
-    return Math.ceil(this.toNumber() * round) / round;
+    const round = Rational.from(Math.pow(10, x));
+    return this.mul(round).ceil().div(round).toNumber();
   }
 
   toFraction(): string {
