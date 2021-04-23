@@ -491,7 +491,17 @@ describe('ListComponent', () => {
           3,
           ItemId.Pumpjack
         )
-      ).toEqual('33.34%');
+      ).toEqual('33.4%');
+    });
+
+    it('should handle fractions of pumpjacks', () => {
+      expect(
+        component.child.factoryRate(
+          new Rational(BigInt(1), BigInt(3)),
+          null,
+          ItemId.Pumpjack
+        )
+      ).toEqual('33 + 1/3%');
     });
   });
 
