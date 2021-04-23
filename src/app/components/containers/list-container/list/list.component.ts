@@ -341,7 +341,10 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   factoryRate(value: Rational, precision: number, factory: string): string {
     if (factory === ItemId.Pumpjack) {
-      return `${this.rate(value.mul(Rational.hundred), precision - 1)}%`;
+      return `${this.rate(
+        value.mul(Rational.hundred),
+        precision != null ? Math.max(precision - 2, 0) : precision
+      )}%`;
     } else {
       return this.rate(value, precision);
     }
