@@ -20,7 +20,7 @@ export const recipesState = (state: State): RecipesState => state.recipesState;
 export const getRecipeSettings = createSelector(
   recipesState,
   Factories.getFactorySettings,
-  Settings.getDataset,
+  Settings.getNormalDataset,
   (state, factories, data) => {
     const value: Entities<RecipeSettings> = {};
     if (data?.recipeIds?.length) {
@@ -32,11 +32,7 @@ export const getRecipeSettings = createSelector(
         }
 
         const factory = data.itemEntities[s.factory]?.factory;
-        if (
-          (recipe.producers[0] !== ItemId.RocketSilo ||
-            recipe.id === ItemId.RocketPart) &&
-          factory?.modules
-        ) {
+        if (RecipeUtility.allowsModules(recipe, factory)) {
           const def = factories.entities[s.factory];
           if (!s.factoryModules) {
             s.factoryModules = RecipeUtility.defaultModules(

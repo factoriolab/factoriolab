@@ -109,6 +109,167 @@
               </lab-select>
             </ng-template>
           </ng-template>
+          <ng-container *ngIf="product.rateType === RateType.Belts">
+            <lab-select
+              header="Select a belt"
+              [data]="data"
+              [selected]="product.viaSetting || itemSettings[id].belt"
+              [options]="data.beltIds"
+              [displayRate]="displayRate"
+              (selectId)="
+                setViaSetting.emit({
+                  id: product.id,
+                  value: $event,
+                  default: itemSettings[id].belt
+                })
+              "
+            >
+              <lab-icon
+                class="button"
+                tooltip="Change rate step belt"
+                [data]="data"
+                [iconId]="product.viaSetting || itemSettings[id].belt"
+              ></lab-icon>
+            </lab-select>
+          </ng-container>
+          <ng-container *ngIf="product.rateType === RateType.Wagons">
+            <ng-container
+              *ngIf="product.viaSetting || itemSettings[id].wagon as wagon"
+            >
+              <ng-container
+                *ngIf="
+                  data.fluidWagonIds.indexOf(wagon) === -1;
+                  else fluidWagon
+                "
+              >
+                <lab-select
+                  *ngIf="data.cargoWagonIds.length > 1"
+                  header="Select a cargo wagon"
+                  [data]="data"
+                  [selected]="wagon"
+                  [options]="data.cargoWagonIds"
+                  (selectId)="
+                    setViaSetting.emit({
+                      id: product.id,
+                      value: $event,
+                      default: itemSettings[id].wagon
+                    })
+                  "
+                >
+                  <lab-icon
+                    class="button"
+                    title="Change rate step wagon"
+                    [data]="data"
+                    [iconId]="wagon"
+                    [tooltip]="data.itemEntities[wagon].name"
+                    [item]="data.itemEntities[wagon]"
+                  ></lab-icon>
+                </lab-select>
+              </ng-container>
+              <ng-template #fluidWagon>
+                <ng-container *ngIf="data.fluidWagonIds.length > 1">
+                  <lab-select
+                    header="Select a fluid wagon"
+                    [data]="data"
+                    [selected]="wagon"
+                    [options]="data.fluidWagonIds"
+                    (selectId)="
+                      setViaSetting.emit({
+                        id: product.id,
+                        value: $event,
+                        default: itemSettings[id].wagon
+                      })
+                    "
+                  >
+                    <lab-icon
+                      class="button"
+                      title="Change rate step wagon"
+                      [data]="data"
+                      [iconId]="wagon"
+                      [tooltip]="data.itemEntities[wagon].name"
+                      [item]="data.itemEntities[wagon]"
+                    ></lab-icon>
+                  </lab-select>
+                </ng-container>
+              </ng-template>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="product.rateType === RateType.Factories">
+            <ng-container *ngIf="product.viaSetting as factory">
+              <ng-container *ngIf="data.recipeEntities[id] as recipe">
+                <ng-container
+                  *ngIf="!data.isDsp || factory !== ItemId.MiningDrill"
+                >
+                  <ng-container
+                    *ngIf="
+                      recipe.producers && recipe.producers.length > 1;
+                      else factoryDefault
+                    "
+                  >
+                    <lab-select
+                      header="Select a factory"
+                      [data]="data"
+                      [selected]="factory"
+                      [options]="recipe.producers"
+                      (selectId)="changeFactory(product, id, $event)"
+                    >
+                      <lab-icon
+                        class="button"
+                        title="Change rate step factory"
+                        [data]="data"
+                        [iconId]="factory"
+                        [tooltip]="data.itemEntities[factory].name"
+                        [item]="data.itemEntities[factory]"
+                      ></lab-icon>
+                    </lab-select>
+                  </ng-container>
+                  <ng-template #factoryDefault>
+                    <lab-icon
+                      [iconId]="factory"
+                      [tooltip]="data.itemEntities[factory].name"
+                      [item]="data.itemEntities[factory]"
+                      [data]="data"
+                    ></lab-icon>
+                  </ng-template>
+                </ng-container>
+                <div *ngIf="product.viaFactoryModules as modules" class="flex">
+                  <lab-select
+                    *ngFor="let mod of modules; index as i; first as first"
+                    header="Select a module"
+                    [data]="data"
+                    [selected]="mod"
+                    [options]="data.recipeModuleIds[id]"
+                    [includeEmptyModule]="!data.isDsp"
+                    [displayRate]="displayRate"
+                    (selectId)="changeFactoryModule(product, id, $event, i)"
+                  >
+                    <lab-icon
+                      class="button"
+                      title="Change rate step factory module"
+                      [class.module]="!first"
+                      [data]="data"
+                      [iconId]="mod"
+                      [tooltip]="data.itemEntities[mod]?.name"
+                      [item]="data.itemEntities[mod]"
+                      [displayRate]="displayRate"
+                    ></lab-icon>
+                  </lab-select>
+                </div>
+                <ng-container *ngIf="product.viaBeacon as beacon">
+                  <input
+                    class="beacon"
+                    title="Set rate step number of beacons"
+                    placeholder="# Beacons"
+                    type="text"
+                    [ngModel]="product.viaBeaconCount"
+                    labValidateNumber
+                    data-test="lab-products-beacons"
+                    (input)="changeBeaconCount(product, id, $event)"
+                  />
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </ng-container>
         </ng-container>
       </ng-container>
       <ng-template #recipeNone>

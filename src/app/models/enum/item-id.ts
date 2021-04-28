@@ -2,6 +2,7 @@ export enum ItemId {
   FastInserter = 'fast-inserter',
   Inserter = 'inserter',
   LongHandedInserter = 'long-handed-inserter',
+  MiningDrill = 'mining-drill',
   Module = 'module',
   Pipe = 'pipe',
   ProductivityLimitation = 'productivity-module',

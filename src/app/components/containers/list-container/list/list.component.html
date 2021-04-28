@@ -311,7 +311,7 @@
                   *ngIf="data.recipeEntities[step.recipeId] as recipe"
                 >
                   <ng-container
-                    *ngIf="!data.isDsp || factory !== 'mining-drill'"
+                    *ngIf="!data.isDsp || factory !== ItemId.MiningDrill"
                   >
                     <ng-container
                       *ngIf="
@@ -646,7 +646,7 @@
                         [recipe]="data.recipeEntities[output.recipeId]"
                       ></lab-icon>
                       <lab-icon
-                        *ngIf="!data.isDsp || factory !== 'mining-drill'"
+                        *ngIf="!data.isDsp || factory !== ItemId.MiningDrill"
                         [data]="data"
                         [iconId]="factory"
                         [tooltip]="data.itemEntities[factory].name"
@@ -780,7 +780,7 @@
                       [recipe]="data.recipeEntities[step.recipeId]"
                     ></lab-icon>
                     <lab-icon
-                      *ngIf="!data.isDsp || factory !== 'mining-drill'"
+                      *ngIf="!data.isDsp || factory !== ItemId.MiningDrill"
                       [data]="data"
                       [iconId]="factory"
                       [tooltip]="data.itemEntities[factory].name"

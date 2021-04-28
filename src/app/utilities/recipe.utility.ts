@@ -9,7 +9,12 @@ import {
   Product,
   EnergyType,
   FuelType,
+  Recipe,
+  Factory,
+  RateType,
 } from '~/models';
+import { FactoriesState } from '~/store/factories';
+import { RecipesState } from '~/store/recipes';
 
 export class RecipeUtility {
   static MIN_FACTOR = new Rational(BigInt(1), BigInt(5));
@@ -245,5 +250,57 @@ export class RecipeUtility {
       }
     }
     return steps[0];
+  }
+
+  static allowsModules(recipe: Recipe, factory: Factory): boolean {
+    return !!(
+      (recipe.producers[0] !== ItemId.RocketSilo ||
+        recipe.id === ItemId.RocketPart) &&
+      factory?.modules
+    );
+  }
+
+  static adjustProduct(
+    product: Product,
+    recipeSettings: RecipesState,
+    factories: FactoriesState,
+    data: Dataset
+  ): Product {
+    if (product.rateType === RateType.Factories && product.viaId) {
+      product = { ...product };
+      if (!product.viaSetting) {
+        product.viaSetting = recipeSettings[product.viaId].factory;
+      }
+
+      const recipe = data.recipeEntities[product.viaId];
+      const factory = data.itemEntities[product.viaSetting].factory;
+      if (this.allowsModules(recipe, factory)) {
+        const def = recipeSettings[recipe.id];
+        if (!product.viaFactoryModules) {
+          if (product.viaSetting === def.factory) {
+            product.viaFactoryModules = def.factoryModules;
+          } else {
+            const factoryDefaults = factories.entities[product.viaSetting];
+            product.viaFactoryModules = RecipeUtility.defaultModules(
+              data.recipeModuleIds[recipe.id],
+              factoryDefaults.moduleRank,
+              factory.modules
+            );
+          }
+        }
+
+        product.viaBeaconCount =
+          product.viaBeaconCount != null
+            ? product.viaBeaconCount
+            : def.beaconCount;
+        product.viaBeacon = product.viaBeacon || def.beacon;
+
+        const beacon = data.itemEntities[product.viaBeacon]?.beacon;
+        if (beacon && !product.viaBeaconModules) {
+          product.viaBeaconModules = def.beaconModules;
+        }
+      }
+    }
+    return product;
   }
 }
