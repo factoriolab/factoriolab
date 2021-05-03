@@ -43,6 +43,11 @@
     cursor: pointer;
     box-shadow: var(--shadow-item);
 
+    &.selected {
+      background-color: var(--color-brand);
+      box-shadow: var(--shadow-hover);
+    }
+
     &:hover {
       background-color: var(--color-brand-drk);
       box-shadow: var(--shadow-hover);
