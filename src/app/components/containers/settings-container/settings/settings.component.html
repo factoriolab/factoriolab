@@ -330,13 +330,17 @@
             </td>
             <td>
               <ng-container *ngIf="gtZero(factory.beaconCount)">
-                <lab-icon
-                  class="pad"
-                  [data]="data"
-                  [iconId]="factory.beacon"
-                  [tooltip]="data.itemEntities[factory.beacon].name"
-                  [item]="data.itemEntities[factory.beacon]"
-                ></lab-icon>
+                <ng-container
+                  *ngIf="data.beaconIds.length === 1; else beaconPicker"
+                >
+                  <lab-icon
+                    class="pad"
+                    [data]="data"
+                    [iconId]="factory.beacon"
+                    [tooltip]="data.itemEntities[factory.beacon].name"
+                    [item]="data.itemEntities[factory.beacon]"
+                  ></lab-icon>
+                </ng-container>
                 <ng-template #beaconPicker>
                   <lab-select
                     header="Select a beacon"
