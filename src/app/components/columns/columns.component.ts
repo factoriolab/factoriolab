@@ -84,4 +84,8 @@ export class ColumnsComponent extends DialogContainerComponent {
     const p = this.editValue[id].precision;
     return p != null ? r.toPrecision(p).toString() : r.toFraction();
   }
+
+  trackBy(i: number, col: IdName<Column>): Column {
+    return col.id;
+  }
 }

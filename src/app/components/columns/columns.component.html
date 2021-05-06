@@ -22,7 +22,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let opt of columnOptions">
+        <tr *ngFor="let opt of columnOptions; trackBy: trackBy">
           <td>
             <div
               *ngIf="
