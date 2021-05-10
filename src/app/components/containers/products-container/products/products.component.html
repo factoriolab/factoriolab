@@ -253,8 +253,10 @@
                         id,
                         $event,
                         i,
+                        product.viaFactoryModules,
                         setViaFactoryModules,
-                        product.id
+                        product.id,
+                        product.viaSetting
                       )
                     "
                   >
@@ -284,7 +286,8 @@
                         id,
                         $event,
                         setViaBeaconCount,
-                        product.id
+                        product.id,
+                        product.viaSetting
                       )
                     "
                   />
@@ -306,7 +309,13 @@
                         [selected]="beacon"
                         [options]="data.beaconIds"
                         (selectId)="
-                          changeBeacon(id, $event, setViaBeacon, product.id)
+                          changeBeacon(
+                            id,
+                            $event,
+                            setViaBeacon,
+                            product.id,
+                            product.viaSetting
+                          )
                         "
                       >
                         <lab-icon
@@ -335,8 +344,10 @@
                             id,
                             $event,
                             i,
+                            modules,
                             setViaBeaconModules,
-                            product.id
+                            product.id,
+                            product.viaSetting
                           )
                         "
                       >

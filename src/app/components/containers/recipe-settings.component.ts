@@ -20,8 +20,8 @@ export class RecipeSettingsComponent {
   @Input() recipeSettings: RecipesState;
   @Input() factories: FactoriesState;
 
-  getSettings(recipeId: string): FactorySettings {
-    return this.factories.entities[this.recipeSettings[recipeId].factory];
+  getSettings(factoryId: string): FactorySettings {
+    return this.factories.entities[factoryId];
   }
 
   changeFactory(
@@ -44,21 +44,19 @@ export class RecipeSettingsComponent {
     recipeId: string,
     input: string,
     index: number,
+    modules: string[],
     emitter: EventEmitter<DefaultIdPayload<string[]>>,
-    id = recipeId
+    id = recipeId,
+    factoryId = this.recipeSettings[recipeId].factory
   ): void {
-    const count = this.recipeSettings[recipeId].factoryModules.length;
+    const count = modules.length;
     const options = [...this.data.recipeModuleIds[recipeId], ItemId.Module];
     const def = RecipeUtility.defaultModules(
       options,
-      this.getSettings(recipeId).moduleRank,
+      this.getSettings(factoryId).moduleRank,
       count
     );
-    const value = this.generateModules(
-      index,
-      input,
-      this.recipeSettings[recipeId].factoryModules
-    );
+    const value = this.generateModules(index, input, modules);
     emitter.emit({
       id,
       value,
@@ -70,13 +68,14 @@ export class RecipeSettingsComponent {
     recipeId: string,
     event: Event,
     emitter: EventEmitter<DefaultIdPayload>,
-    id = recipeId
+    id = recipeId,
+    factoryId = this.recipeSettings[recipeId].factory
   ): void {
     try {
       const value = (event.target as HTMLInputElement).value;
       const rational = Rational.fromString(value);
       if (rational.gte(Rational.zero)) {
-        const def = this.recipeSettings[recipeId].beaconCount;
+        const def = this.getSettings(factoryId).beaconCount;
         emitter.emit({ id, value, default: def });
       }
     } catch {}
@@ -86,9 +85,10 @@ export class RecipeSettingsComponent {
     recipeId: string,
     value: string,
     emitter: EventEmitter<DefaultIdPayload>,
-    id = recipeId
+    id = recipeId,
+    factoryId = this.recipeSettings[recipeId].factory
   ): void {
-    const def = this.getSettings(recipeId).beacon;
+    const def = this.getSettings(factoryId).beacon;
     emitter.emit({ id, value, default: def });
   }
 
@@ -96,16 +96,14 @@ export class RecipeSettingsComponent {
     recipeId: string,
     input: string,
     index: number,
+    modules: string[],
     emitter: EventEmitter<DefaultIdPayload<string[]>>,
-    id = recipeId
+    id = recipeId,
+    factoryId = this.recipeSettings[recipeId].factory
   ): void {
-    const count = this.recipeSettings[recipeId].beaconModules.length;
-    const def = new Array(count).fill(this.getSettings(recipeId).beaconModule);
-    const value = this.generateModules(
-      index,
-      input,
-      this.recipeSettings[recipeId].beaconModules
-    );
+    const count = modules.length;
+    const def = new Array(count).fill(this.getSettings(factoryId).beaconModule);
+    const value = this.generateModules(index, input, modules);
     emitter.emit({
       id,
       value,

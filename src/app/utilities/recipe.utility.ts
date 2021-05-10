@@ -320,28 +320,32 @@ export class RecipeUtility {
         const factory = data.itemEntities[product.viaSetting].factory;
         if (this.allowsModules(recipe, factory)) {
           const def = recipeSettings[recipe.id];
-          if (!product.viaFactoryModules) {
-            if (product.viaSetting === def.factory) {
-              product.viaFactoryModules = def.factoryModules;
-            } else {
-              const factoryDefaults = factories.entities[product.viaSetting];
+          if (product.viaSetting === def.factory) {
+            product.viaFactoryModules =
+              product.viaFactoryModules || def.factoryModules;
+            product.viaBeaconCount = product.viaBeaconCount || def.beaconCount;
+            product.viaBeacon = product.viaBeacon || def.beacon;
+            product.viaBeaconModules =
+              product.viaBeaconModules || def.beaconModules;
+          } else {
+            const fDef = factories.entities[product.viaSetting];
+            if (!product.viaFactoryModules) {
               product.viaFactoryModules = this.defaultModules(
                 data.recipeModuleIds[recipe.id],
-                factoryDefaults.moduleRank,
+                fDef.moduleRank,
                 factory.modules
               );
             }
-          }
 
-          product.viaBeaconCount =
-            product.viaBeaconCount != null
-              ? product.viaBeaconCount
-              : def.beaconCount;
-          product.viaBeacon = product.viaBeacon || def.beacon;
+            product.viaBeaconCount = product.viaBeaconCount || fDef.beaconCount;
+            product.viaBeacon = product.viaBeacon || fDef.beacon;
 
-          const beacon = data.itemEntities[product.viaBeacon]?.beacon;
-          if (beacon && !product.viaBeaconModules) {
-            product.viaBeaconModules = def.beaconModules;
+            const beacon = data.itemEntities[product.viaBeacon]?.beacon;
+            if (beacon && !product.viaBeaconModules) {
+              product.viaBeaconModules = new Array(beacon.modules).fill(
+                fDef.beaconModule
+              );
+            }
           }
         }
       }
