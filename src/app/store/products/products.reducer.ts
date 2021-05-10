@@ -194,7 +194,7 @@ export function productsReducer(
           entities: StoreUtility.resetField(
             StoreUtility.compareReset(
               state.entities,
-              ProductField.ViaBeaconCount,
+              ProductField.ViaBeacon,
               action.payload
             ),
             ProductField.ViaBeaconModules,

@@ -1,5 +1,12 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import { EnergyType, Rational, RationalItem, RationalRecipe } from '~/models';
+import {
+  EnergyType,
+  Product,
+  RateType,
+  Rational,
+  RationalItem,
+  RationalRecipe,
+} from '~/models';
 import { RecipeUtility } from './recipe.utility';
 
 describe('RecipeUtility', () => {
@@ -477,6 +484,194 @@ describe('RecipeUtility', () => {
         { itemId: RecipeId.Coal } as any
       );
       expect(result).toEqual(data);
+    });
+  });
+
+  describe('allowsModules', () => {
+    it('should check factory and rocket recipes', () => {
+      // Silo recipes
+      expect(
+        RecipeUtility.allowsModules(
+          Mocks.Data.recipeEntities[RecipeId.RocketPart],
+          Mocks.Data.itemEntities[ItemId.RocketSilo].factory
+        )
+      ).toBeTrue();
+      expect(
+        RecipeUtility.allowsModules(
+          Mocks.Data.recipeEntities[RecipeId.SpaceSciencePack],
+          Mocks.Data.itemEntities[ItemId.RocketSilo].factory
+        )
+      ).toBeFalse();
+      // Normal recipes
+      expect(
+        RecipeUtility.allowsModules(
+          Mocks.Data.recipeEntities[ItemId.Coal],
+          Mocks.Data.itemEntities[ItemId.ElectricMiningDrill].factory
+        )
+      ).toBeTrue();
+      expect(
+        RecipeUtility.allowsModules(
+          Mocks.Data.recipeEntities[ItemId.Coal],
+          Mocks.Data.itemEntities[ItemId.BurnerMiningDrill].factory
+        )
+      ).toBeFalse();
+      // Null factory
+      expect(
+        RecipeUtility.allowsModules(
+          Mocks.Data.recipeEntities[ItemId.Coal],
+          null
+        )
+      ).toBeFalse();
+    });
+  });
+
+  describe('adjustDataset', () => {
+    it('should adjust recipes and silo recipes', () => {
+      spyOn(RecipeUtility, 'adjustSiloRecipes').and.callThrough();
+      spyOn(RecipeUtility, 'adjustRecipe').and.callThrough();
+      const result = RecipeUtility.adjustDataset(
+        Mocks.RationalRecipeSettingsInitial,
+        ItemId.Coal,
+        Rational.zero,
+        Rational.one,
+        Mocks.Data
+      );
+      expect(result).toBeTruthy();
+      expect(RecipeUtility.adjustSiloRecipes).toHaveBeenCalledTimes(1);
+      expect(RecipeUtility.adjustRecipe).toHaveBeenCalledTimes(220);
+    });
+  });
+
+  describe('adjustProduct', () => {
+    const id = '0';
+    const itemId = ItemId.Coal;
+    const rate = '1';
+    const rateType = RateType.Factories;
+
+    it('should ignore products using rateType other than Factories', () => {
+      const product = {
+        ...Mocks.Product1,
+        ...{ viaId: Mocks.Product1.itemId },
+      };
+      expect(
+        RecipeUtility.adjustProduct(product, null, null, null, null)
+      ).toEqual(product);
+    });
+
+    it('should add viaId to products using rateType other than Factories', () => {
+      const recipe = RecipeUtility.adjustProduct(
+        Mocks.Product1,
+        null,
+        null,
+        null,
+        null
+      );
+      expect(recipe).toEqual({
+        ...Mocks.Product1,
+        ...{ viaId: Mocks.Product1.itemId },
+      });
+    });
+
+    it('by factories, should return product with all fields defined', () => {
+      const product: Product = {
+        id,
+        itemId,
+        rate,
+        rateType,
+        viaId: RecipeId.Coal,
+        viaSetting: ItemId.ElectricMiningDrill,
+        viaFactoryModules: [],
+        viaBeaconCount: '0',
+        viaBeacon: ItemId.Beacon,
+        viaBeaconModules: [],
+      };
+      expect(
+        RecipeUtility.adjustProduct(
+          product,
+          null,
+          Mocks.RecipeSettingsInitial,
+          null,
+          Mocks.Data
+        )
+      ).toEqual(product);
+    });
+
+    it('by factories, should set simple viaId', () => {
+      const result = RecipeUtility.adjustProduct(
+        { id, itemId, rate, rateType },
+        null,
+        Mocks.RecipeSettingsInitial,
+        null,
+        Mocks.Data
+      );
+      expect(result.viaId).toEqual(itemId);
+    });
+
+    it('by factories, should set complex viaId', () => {
+      spyOn(RecipeUtility, 'getProductStepData').and.returnValue([
+        itemId,
+        Rational.zero,
+      ]);
+      const result = RecipeUtility.adjustProduct(
+        { id, itemId: ItemId.PetroleumGas, rate, rateType },
+        null,
+        Mocks.RecipeSettingsInitial,
+        null,
+        Mocks.Data
+      );
+      expect(result.viaId).toEqual(itemId);
+    });
+
+    it('by factories, should skip missed viaId', () => {
+      spyOn(RecipeUtility, 'getProductStepData').and.returnValue(null);
+      const result = RecipeUtility.adjustProduct(
+        { id, itemId: ItemId.PetroleumGas, rate, rateType },
+        null,
+        Mocks.RecipeSettingsInitial,
+        null,
+        Mocks.Data
+      );
+      expect(result.viaId).toBeUndefined();
+    });
+
+    it('by factories, should skip modules if not allowed', () => {
+      spyOn(RecipeUtility, 'allowsModules').and.returnValue(false);
+      const result = RecipeUtility.adjustProduct(
+        { id, itemId, rate, rateType },
+        null,
+        Mocks.RecipeSettingsInitial,
+        null,
+        Mocks.Data
+      );
+      expect(result.viaFactoryModules).toBeUndefined();
+      expect(result.viaBeaconCount).toBeUndefined();
+      expect(result.viaBeacon).toBeUndefined();
+      expect(result.viaBeaconModules).toBeUndefined();
+    });
+
+    it('by factories, should adjust modules if factory is nondefault', () => {
+      const result = RecipeUtility.adjustProduct(
+        { id, itemId, rate, rateType, viaSetting: ItemId.AssemblingMachine2 },
+        null,
+        Mocks.RecipeSettingsInitial,
+        Mocks.FactorySettingsInitial,
+        Mocks.Data
+      );
+      expect(result.viaFactoryModules).toEqual([
+        ItemId.ProductivityModule3,
+        ItemId.ProductivityModule3,
+      ]);
+    });
+
+    it('by factories, should handle invalid viaBeacon', () => {
+      const result = RecipeUtility.adjustProduct(
+        { id, itemId, rate, rateType, viaBeacon: 'test' },
+        null,
+        Mocks.RecipeSettingsInitial,
+        null,
+        Mocks.Data
+      );
+      expect(result.viaBeaconModules).toBeUndefined();
     });
   });
 });

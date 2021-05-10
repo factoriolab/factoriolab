@@ -66,7 +66,7 @@ export const getProducts = createSelector(
   Factories.getFactorySettings,
   Settings.getNormalDataset,
   (products, productSteps, recipeSettings, factories, data) =>
-    products.map((p) =>
+    products?.map((p) =>
       RecipeUtility.adjustProduct(
         p,
         productSteps,
@@ -234,14 +234,7 @@ export const getNormalizedRatesByFactories = createSelector(
       }
 
       // Adjust based on product recipe settings
-      if (
-        recipeId &&
-        (p.viaSetting ||
-          p.viaFactoryModules ||
-          p.viaBeaconCount ||
-          p.viaBeacon ||
-          p.viaBeaconModules)
-      ) {
+      if (recipeId && p.viaSetting) {
         const customSettings = {
           ...recipeSettings,
           ...{
