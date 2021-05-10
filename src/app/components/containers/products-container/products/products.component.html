@@ -109,8 +109,8 @@
               </lab-select>
             </ng-template>
           </ng-template>
-          <span>using</span>
           <ng-container *ngIf="product.rateType === RateType.Belts">
+            <span>using</span>
             <lab-select
               header="Select a belt"
               [data]="data"
@@ -143,32 +143,35 @@
                   else fluidWagon
                 "
               >
-                <lab-select
-                  *ngIf="data.cargoWagonIds.length > 1"
-                  header="Select a cargo wagon"
-                  [data]="data"
-                  [selected]="wagon"
-                  [options]="data.cargoWagonIds"
-                  (selectId)="
-                    setViaSetting.emit({
-                      id: product.id,
-                      value: $event,
-                      default: itemSettings[id].wagon
-                    })
-                  "
-                >
-                  <lab-icon
-                    class="button"
-                    title="Change rate step wagon"
+                <ng-container *ngIf="data.cargoWagonIds.length > 1">
+                  <span>using</span>
+                  <lab-select
+                    header="Select a cargo wagon"
                     [data]="data"
-                    [iconId]="wagon"
-                    [tooltip]="data.itemEntities[wagon].name"
-                    [item]="data.itemEntities[wagon]"
-                  ></lab-icon>
-                </lab-select>
+                    [selected]="wagon"
+                    [options]="data.cargoWagonIds"
+                    (selectId)="
+                      setViaSetting.emit({
+                        id: product.id,
+                        value: $event,
+                        default: itemSettings[id].wagon
+                      })
+                    "
+                  >
+                    <lab-icon
+                      class="button"
+                      title="Change rate step wagon"
+                      [data]="data"
+                      [iconId]="wagon"
+                      [tooltip]="data.itemEntities[wagon].name"
+                      [item]="data.itemEntities[wagon]"
+                    ></lab-icon>
+                  </lab-select>
+                </ng-container>
               </ng-container>
               <ng-template #fluidWagon>
                 <ng-container *ngIf="data.fluidWagonIds.length > 1">
+                  <span>using</span>
                   <lab-select
                     header="Select a fluid wagon"
                     [data]="data"
@@ -201,6 +204,7 @@
                 <ng-container
                   *ngIf="!data.isDsp || factory !== ItemId.MiningDrill"
                 >
+                  <span>using</span>
                   <ng-container
                     *ngIf="
                       recipe.producers && recipe.producers.length > 1;
