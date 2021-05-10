@@ -1,12 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import {
-  RecipeSettings,
-  Entities,
-  RationalRecipeSettings,
-  RationalRecipe,
-  ItemId,
-} from '~/models';
+import { RecipeSettings, Entities, RationalRecipeSettings } from '~/models';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 import * as Factories from '../factories';
 import * as Settings from '../settings';
@@ -78,25 +72,14 @@ export const getAdjustedDataset = createSelector(
   Settings.getRationalMiningBonus,
   Settings.getResearchFactor,
   Settings.getDataset,
-  (recipeSettings, fuel, miningBonus, researchSpeed, data) => ({
-    ...data,
-    ...{
-      recipeR: RecipeUtility.adjustSiloRecipes(
-        data.recipeIds.reduce((e: Entities<RationalRecipe>, i) => {
-          e[i] = RecipeUtility.adjustRecipe(
-            i,
-            fuel,
-            miningBonus,
-            researchSpeed,
-            recipeSettings[i],
-            data
-          );
-          return e;
-        }, {}),
-        recipeSettings
-      ),
-    },
-  })
+  (recipeSettings, fuel, miningBonus, researchSpeed, data) =>
+    RecipeUtility.adjustDataset(
+      recipeSettings,
+      fuel,
+      miningBonus,
+      researchSpeed,
+      data
+    )
 );
 
 export const getContainsFactory = createSelector(recipesState, (state) =>

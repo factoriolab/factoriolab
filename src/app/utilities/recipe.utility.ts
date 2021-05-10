@@ -156,11 +156,12 @@ export class RecipeUtility {
       } else {
         recipe.out[outId] = recipe.out[outId].mul(prod);
       }
+    }
 
-      // Log prod for research products
-      if (factory.research) {
-        recipe.adjustProd = prod;
-      }
+    recipe.productivity = prod;
+    // Log to adjust prod for research products
+    if (factory.research) {
+      recipe.adjustProd = true;
     }
 
     // Power
@@ -260,14 +261,56 @@ export class RecipeUtility {
     );
   }
 
+  static adjustDataset(
+    recipeSettings: Entities<RationalRecipeSettings>,
+    fuel: string,
+    miningBonus: Rational,
+    researchSpeed: Rational,
+    data: Dataset
+  ): Dataset {
+    return {
+      ...data,
+      ...{
+        recipeR: this.adjustSiloRecipes(
+          data.recipeIds.reduce((e: Entities<RationalRecipe>, i) => {
+            e[i] = RecipeUtility.adjustRecipe(
+              i,
+              fuel,
+              miningBonus,
+              researchSpeed,
+              recipeSettings[i],
+              data
+            );
+            return e;
+          }, {}),
+          recipeSettings
+        ),
+      },
+    };
+  }
+
   static adjustProduct(
     product: Product,
+    productSteps: Entities<[string, Rational][]>,
     recipeSettings: RecipesState,
     factories: FactoriesState,
     data: Dataset
   ): Product {
-    if (product.rateType === RateType.Factories && product.viaId) {
+    if (product.rateType === RateType.Factories) {
       product = { ...product };
+
+      if (!product.viaId) {
+        let simpleRecipeId = data.itemRecipeIds[product.itemId];
+        if (simpleRecipeId) {
+          product.viaId = simpleRecipeId;
+        } else {
+          const via = this.getProductStepData(productSteps, product);
+          if (via) {
+            product.viaId = via[0];
+          }
+        }
+      }
+
       if (!product.viaSetting) {
         product.viaSetting = recipeSettings[product.viaId].factory;
       }
@@ -300,7 +343,10 @@ export class RecipeUtility {
           product.viaBeaconModules = def.beaconModules;
         }
       }
+    } else if (!product.viaId) {
+      product = { ...product, ...{ viaId: product.itemId } };
     }
+
     return product;
   }
 }

@@ -42,7 +42,7 @@
       <ng-container
         *ngIf="productSteps[product.itemId].length > 0; else recipeNone"
       >
-        <ng-container *ngIf="getStep(product) as id">
+        <ng-container *ngIf="product.viaId as id">
           <span>of</span>
           <ng-container
             *ngIf="productSteps[product.itemId].length === 1; else viaPicker"
@@ -109,6 +109,7 @@
               </lab-select>
             </ng-template>
           </ng-template>
+          <span>using</span>
           <ng-container *ngIf="product.rateType === RateType.Belts">
             <lab-select
               header="Select a belt"
@@ -211,7 +212,9 @@
                       [data]="data"
                       [selected]="factory"
                       [options]="recipe.producers"
-                      (selectId)="changeFactory(product, id, $event)"
+                      (selectId)="
+                        changeFactory(id, $event, setViaSetting, product.id)
+                      "
                     >
                       <lab-icon
                         class="button"
@@ -241,7 +244,15 @@
                     [options]="data.recipeModuleIds[id]"
                     [includeEmptyModule]="!data.isDsp"
                     [displayRate]="displayRate"
-                    (selectId)="changeFactoryModule(product, id, $event, i)"
+                    (selectId)="
+                      changeFactoryModules(
+                        id,
+                        $event,
+                        i,
+                        setViaFactoryModules,
+                        product.id
+                      )
+                    "
                   >
                     <lab-icon
                       class="button"
@@ -264,8 +275,79 @@
                     [ngModel]="product.viaBeaconCount"
                     labValidateNumber
                     data-test="lab-products-beacons"
-                    (input)="changeBeaconCount(product, id, $event)"
+                    (input)="
+                      changeBeaconCount(
+                        id,
+                        $event,
+                        setViaBeaconCount,
+                        product.id
+                      )
+                    "
                   />
+                  <ng-container *ngIf="gtZero(product.viaBeaconCount)">
+                    <ng-container
+                      *ngIf="data.beaconIds.length === 1; else beaconPicker"
+                    >
+                      <lab-icon
+                        [iconId]="beacon"
+                        [tooltip]="data.itemEntities[beacon].name"
+                        [item]="data.itemEntities[beacon]"
+                        [data]="data"
+                      ></lab-icon
+                    ></ng-container>
+                    <ng-template #beaconPicker>
+                      <lab-select
+                        header="Select a beacon"
+                        [data]="data"
+                        [selected]="beacon"
+                        [options]="data.beaconIds"
+                        (selectId)="
+                          changeBeacon(id, $event, setViaBeacon, product.id)
+                        "
+                      >
+                        <lab-icon
+                          class="button"
+                          title="Set rate step beacon"
+                          [data]="data"
+                          [iconId]="beacon"
+                          [tooltip]="data.itemEntities[beacon].name"
+                          [item]="data.itemEntities[beacon]"
+                        ></lab-icon>
+                      </lab-select>
+                    </ng-template>
+                    <div
+                      *ngIf="product.viaBeaconModules as modules"
+                      class="flex"
+                    >
+                      <lab-select
+                        *ngFor="let mod of modules; index as i; first as first"
+                        header="Select a module"
+                        [data]="data"
+                        [selected]="mod"
+                        [options]="data.beaconModuleIds"
+                        [includeEmptyModule]="true"
+                        (selectId)="
+                          changeBeaconModules(
+                            id,
+                            $event,
+                            i,
+                            setViaBeaconModules,
+                            product.id
+                          )
+                        "
+                      >
+                        <lab-icon
+                          class="button"
+                          title="Change rate step beacon module"
+                          [class.module]="!first"
+                          [data]="data"
+                          [iconId]="mod"
+                          [tooltip]="data.itemEntities[mod]?.name"
+                          [item]="data.itemEntities[mod]"
+                        ></lab-icon>
+                      </lab-select>
+                    </div>
+                  </ng-container>
                 </ng-container>
               </ng-container>
             </ng-container>

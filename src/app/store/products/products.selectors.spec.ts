@@ -325,6 +325,11 @@ describe('Products Selectors', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getNormalizedRatesByFactories.projector(
         null,
+        null,
+        {},
+        null,
+        null,
+        null,
         {},
         {}
       );
@@ -334,6 +339,11 @@ describe('Products Selectors', () => {
     it('should return the rate entities', () => {
       const result = Selectors.getNormalizedRatesByFactories.projector(
         [Mocks.RationalProducts[3]],
+        null,
+        {},
+        null,
+        null,
+        null,
         {},
         Mocks.Data
       );
@@ -346,13 +356,19 @@ describe('Products Selectors', () => {
         itemId: ItemId.MiningProductivity,
         rate: Rational.one,
         rateType: RateType.Factories,
+        viaId: RecipeId.MiningProductivity,
       };
       const result = Selectors.getNormalizedRatesByFactories.projector(
         [product],
+        null,
+        {},
+        null,
+        null,
+        null,
         {},
         Mocks.AdjustedData
       );
-      expect(result[0].nonzero()).toBeTrue();
+      expect(result['0'].nonzero()).toBeTrue();
     });
 
     it('should directly calculate if viaId matches simple recipe', () => {
@@ -368,10 +384,15 @@ describe('Products Selectors', () => {
           },
         ],
         null,
+        {},
+        null,
+        null,
+        null,
+        {},
         Mocks.AdjustedData
       );
       expect(RecipeUtility.getProductStepData).not.toHaveBeenCalled();
-      expect(result['0']).toEqual(Rational.from(3, 4));
+      expect(result['0']).toEqual(Rational.from(1183, 400));
     });
 
     it('should calculate using via step', () => {
@@ -390,6 +411,11 @@ describe('Products Selectors', () => {
           },
         ],
         { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
+        {},
+        null,
+        null,
+        null,
+        {},
         Mocks.AdjustedData
       );
       expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
@@ -409,6 +435,11 @@ describe('Products Selectors', () => {
           },
         ],
         { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
+        {},
+        null,
+        null,
+        null,
+        {},
         Mocks.AdjustedData
       );
       expect(RecipeUtility.getProductStepData).toHaveBeenCalled();

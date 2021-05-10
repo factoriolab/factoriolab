@@ -44,7 +44,7 @@ export class RateUtility {
 
     // Adjust for consumption instead of production if desired
     if (recipe?.adjustProd) {
-      rate = rate.mul(recipe.adjustProd);
+      rate = rate.mul(recipe.productivity);
     }
 
     // Add items to the step

@@ -16,7 +16,6 @@ import {
   DisplayRate,
   Entities,
   Rational,
-  Dataset,
   DefaultIdPayload,
   Column,
   ItemId,
@@ -27,16 +26,15 @@ import {
   InserterData,
   DefaultPayload,
   PrecisionColumns,
-  FactorySettings,
   DisplayRateLabel,
 } from '~/models';
 import { RouterService } from '~/services';
-import { FactoriesState } from '~/store/factories';
 import { ItemsState } from '~/store/items';
 import { ColumnsState } from '~/store/preferences';
 import { RecipesState } from '~/store/recipes';
 import { SettingsState } from '~/store/settings';
-import { ExportUtility, RecipeUtility } from '~/utilities';
+import { ExportUtility } from '~/utilities';
+import { RecipeSettingsComponent } from '../../recipe-settings.component';
 
 export enum StepDetailTab {
   None,
@@ -57,14 +55,13 @@ export interface StepInserter {
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ListComponent implements OnInit, AfterViewInit {
-  @Input() data: Dataset;
+export class ListComponent
+  extends RecipeSettingsComponent
+  implements OnInit, AfterViewInit {
   @Input() itemSettings: ItemsState;
   @Input() itemRaw: ItemsState;
-  @Input() recipeSettings: RecipesState;
   @Input() recipeRaw: RecipesState;
   @Input() settings: SettingsState;
-  @Input() factories: FactoriesState;
   @Input() beltSpeed: Entities<Rational>;
   _steps: Step[] = [];
   get steps(): Step[] {
@@ -196,7 +193,9 @@ export class ListComponent implements OnInit, AfterViewInit {
     private ref: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: RouterService
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.route.fragment.subscribe((fragment) => {
@@ -404,85 +403,6 @@ export class ListComponent implements OnInit, AfterViewInit {
       id: inserter.id,
       value: value.div(inserter.value),
     };
-  }
-
-  getSettings(step: Step): FactorySettings {
-    return this.factories.entities[this.recipeSettings[step.recipeId].factory];
-  }
-
-  changeFactory(step: Step, value: string): void {
-    const def = RecipeUtility.bestMatch(
-      this.data.recipeEntities[step.recipeId].producers,
-      this.factories.ids
-    );
-    const event = {
-      id: step.recipeId,
-      value,
-      default: def,
-    };
-    this.setFactory.emit(event);
-  }
-
-  changeFactoryModule(step: Step, value: string, index: number): void {
-    const count = this.recipeSettings[step.recipeId].factoryModules.length;
-    const options = [
-      ...this.data.recipeModuleIds[step.recipeId],
-      ItemId.Module,
-    ];
-    const def = RecipeUtility.defaultModules(
-      options,
-      this.getSettings(step).moduleRank,
-      count
-    );
-    const modules = this.generateModules(
-      index,
-      value,
-      this.recipeSettings[step.recipeId].factoryModules
-    );
-    this.setFactoryModules.emit({
-      id: step.recipeId,
-      value: modules,
-      default: def,
-    });
-  }
-
-  changeBeaconModule(step: Step, value: string, index: number): void {
-    const count = this.recipeSettings[step.recipeId].beaconModules.length;
-    const def = new Array(count).fill(this.getSettings(step).beaconModule);
-    const modules = this.generateModules(
-      index,
-      value,
-      this.recipeSettings[step.recipeId].beaconModules
-    );
-    this.setBeaconModules.emit({
-      id: step.recipeId,
-      value: modules,
-      default: def,
-    });
-  }
-
-  generateModules(index: number, value: string, original: string[]): string[] {
-    if (index === 0) {
-      // Copy to all
-      return new Array(original.length).fill(value);
-    } else {
-      // Edit individual module
-      const modules = [...original];
-      modules[index] = value;
-      return modules;
-    }
-  }
-
-  changeBeaconCount(step: Step, event: Event): void {
-    try {
-      const target = event.target as HTMLInputElement;
-      const value = target.value;
-      const rational = Rational.fromString(value);
-      if (rational.gte(Rational.zero)) {
-        const def = this.getSettings(step).beaconCount;
-        this.setBeaconCount.emit({ id: step.recipeId, value, default: def });
-      }
-    } catch {}
   }
 
   resetStep(step: Step): void {

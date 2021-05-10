@@ -6,7 +6,6 @@ import {
   MatrixState,
   COST_RECIPE,
   COST_WATER,
-  COST_MINED,
   COST_MANUAL,
 } from './simplex.utility';
 
@@ -158,8 +157,8 @@ describe('SimplexUtility', () => {
           true
         )
       ).toEqual([
-        [ItemId.CopperPlate, Rational.from(64, 15)],
-        [ItemId.CopperOre, Rational.from(4, 3)],
+        [ItemId.CopperPlate, Rational.from(40, 141)],
+        [ItemId.CopperOre, Rational.from(1000, 3549)],
       ]);
     });
 
@@ -174,7 +173,7 @@ describe('SimplexUtility', () => {
         )
       ).toEqual([
         [ItemId.CopperPlate, Rational.one],
-        [ItemId.CopperOre, Rational.one],
+        [ItemId.CopperOre, Rational.from(5, 6)],
       ]);
     });
   });
@@ -453,7 +452,7 @@ describe('SimplexUtility', () => {
         ],
         [
           Rational.zero,
-          Rational.two,
+          Rational.from(14, 5),
           Rational.minusOne,
           Rational.zero,
           Rational.zero,
@@ -465,7 +464,7 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
-          Rational.from(2, 3),
+          Rational.from(1, 11),
         ],
         [
           Rational.zero,
@@ -513,7 +512,7 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
-          COST_MINED,
+          Rational.from(13000, 1),
         ],
         [
           Rational.zero,
@@ -683,7 +682,7 @@ describe('SimplexUtility', () => {
       SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
       expect(step).toEqual({
         itemId: ItemId.Coal,
-        items: Rational.two,
+        items: Rational.from(13, 5),
       });
     });
 
@@ -746,7 +745,7 @@ describe('SimplexUtility', () => {
       expect(steps).toEqual([
         {
           itemId: ItemId.Coal,
-          items: Rational.two,
+          items: Rational.from(13, 5),
         },
       ]);
     });
@@ -788,7 +787,7 @@ describe('SimplexUtility', () => {
       SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
       expect(step).toEqual({
         itemId: ItemId.Coal,
-        items: Rational.from(4),
+        items: Rational.from(26, 5),
         surplus: Rational.from(3),
       });
     });
@@ -877,7 +876,7 @@ describe('SimplexUtility', () => {
         itemId: ItemId.Coal,
         recipeId: RecipeId.Coal,
         items: Rational.one,
-        factories: Rational.from(4, 3),
+        factories: Rational.from(40, 91),
       });
     });
 
@@ -903,7 +902,7 @@ describe('SimplexUtility', () => {
         itemId: null,
         recipeId: RecipeId.Coal,
         items: Rational.one,
-        factories: Rational.from(4, 3),
+        factories: Rational.from(40, 91),
       });
     });
 
@@ -926,7 +925,7 @@ describe('SimplexUtility', () => {
           itemId: null,
           items: null,
           recipeId: RecipeId.Coal,
-          factories: Rational.from(4, 3),
+          factories: Rational.from(40, 91),
         },
       ]);
     });
@@ -962,7 +961,7 @@ describe('SimplexUtility', () => {
           itemId: null,
           items: null,
           recipeId: RecipeId.AdvancedOilProcessing,
-          factories: Rational.from(20, 3),
+          factories: Rational.from(100, 91),
         },
         { itemId: ItemId.Wood, items: Rational.zero },
       ]);
