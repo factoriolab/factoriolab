@@ -42,16 +42,22 @@ describe('RecipeSettingsComponent', () => {
 
   describe('getSettings', () => {
     it('should get the factory settings for a step', () => {
-      expect(component.child.getSettings(Mocks.Step1.recipeId)).toEqual(
-        component.factories.entities[
-          component.recipeSettings[Mocks.Step1.recipeId].factory
-        ]
-      );
+      expect(
+        component.child.getState(
+          id,
+          Mocks.Step1.recipeId,
+          ItemId.BurnerMiningDrill
+        )
+      ).toEqual({
+        recipe: component.recipeSettings[Mocks.Step1.recipeId],
+        factory: component.factories.entities[ItemId.BurnerMiningDrill],
+        fMatch: false,
+      });
     });
   });
 
   describe('changeFactory', () => {
-    it('should set a factory', () => {
+    it('should emit a factory', () => {
       const emitter = new EventEmitter<DefaultIdPayload>();
       spyOn(emitter, 'emit');
       component.child.changeFactory(
@@ -84,15 +90,17 @@ describe('RecipeSettingsComponent', () => {
   });
 
   describe('changeFactoryModules', () => {
-    it('should set factory modules', () => {
+    it('should emit factory modules', () => {
       const emitter = new EventEmitter<DefaultIdPayload<string[]>>();
       spyOn(emitter, 'emit');
       component.child.changeFactoryModules(
         Mocks.Step1.recipeId,
         ItemId.SpeedModule,
         0,
+        new Array(4).fill(ItemId.Module),
         emitter,
-        id
+        id,
+        ItemId.AssemblingMachine3
       );
       expect(emitter.emit).toHaveBeenCalledWith({
         id,
@@ -108,6 +116,7 @@ describe('RecipeSettingsComponent', () => {
         Mocks.Step1.recipeId,
         ItemId.SpeedModule,
         0,
+        new Array(4).fill(ItemId.Module),
         emitter
       );
       expect(emitter.emit).toHaveBeenCalledWith({
@@ -119,14 +128,15 @@ describe('RecipeSettingsComponent', () => {
   });
 
   describe('changeBeaconCount', () => {
-    it('should set beacon count', () => {
+    it('should emit beacon count', () => {
       const emitter = new EventEmitter<DefaultIdPayload>();
       spyOn(emitter, 'emit');
       component.child.changeBeaconCount(
         Mocks.Step1.recipeId,
         { target: { value: '12' } } as any,
         emitter,
-        id
+        id,
+        ItemId.AssemblingMachine3
       );
       expect(emitter.emit).toHaveBeenCalledWith({
         id,
@@ -142,7 +152,8 @@ describe('RecipeSettingsComponent', () => {
         Mocks.Step1.recipeId,
         { target: {} } as any,
         emitter,
-        id
+        id,
+        ItemId.AssemblingMachine3
       );
       expect(emitter.emit).not.toHaveBeenCalled();
     });
@@ -154,7 +165,8 @@ describe('RecipeSettingsComponent', () => {
         Mocks.Step1.recipeId,
         { target: { value: '-1' } } as any,
         emitter,
-        id
+        id,
+        ItemId.AssemblingMachine3
       );
       expect(emitter.emit).not.toHaveBeenCalled();
     });
@@ -176,14 +188,15 @@ describe('RecipeSettingsComponent', () => {
   });
 
   describe('changeBeacon', () => {
-    it('should beacon modules', () => {
+    it('should emit beacon modules', () => {
       const emitter = new EventEmitter<DefaultIdPayload>();
       spyOn(emitter, 'emit');
       component.child.changeBeacon(
         Mocks.Step1.recipeId,
         ItemId.Beacon,
         emitter,
-        id
+        id,
+        ItemId.AssemblingMachine3
       );
       expect(emitter.emit).toHaveBeenCalledWith({
         id,
@@ -209,15 +222,18 @@ describe('RecipeSettingsComponent', () => {
   });
 
   describe('changeBeaconModules', () => {
-    it('should beacon modules', () => {
+    it('should emit beacon modules', () => {
       const emitter = new EventEmitter<DefaultIdPayload<string[]>>();
       spyOn(emitter, 'emit');
       component.child.changeBeaconModules(
         Mocks.Step1.recipeId,
         ItemId.SpeedModule,
         0,
+        new Array(2).fill(ItemId.Module),
         emitter,
-        id
+        id,
+        ItemId.AssemblingMachine3,
+        ItemId.Beacon
       );
       expect(emitter.emit).toHaveBeenCalledWith({
         id,
@@ -233,6 +249,7 @@ describe('RecipeSettingsComponent', () => {
         Mocks.Step1.recipeId,
         ItemId.SpeedModule,
         0,
+        [ItemId.Module, ItemId.Module],
         emitter
       );
       expect(emitter.emit).toHaveBeenCalledWith({

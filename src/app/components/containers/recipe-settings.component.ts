@@ -6,10 +6,17 @@ import {
   FactorySettings,
   ItemId,
   Rational,
+  RecipeSettings,
 } from '~/models';
 import { FactoriesState } from '~/store/factories';
 import { RecipesState } from '~/store/recipes';
 import { RecipeUtility } from '~/utilities';
+
+class SettingsState {
+  recipe: RecipeSettings;
+  factory: FactorySettings;
+  fMatch: boolean;
+}
 
 @Component({
   selector: 'lab-recipe-settings',
@@ -20,8 +27,13 @@ export class RecipeSettingsComponent {
   @Input() recipeSettings: RecipesState;
   @Input() factories: FactoriesState;
 
-  getSettings(factoryId: string): FactorySettings {
-    return this.factories.entities[factoryId];
+  getState(id: string, recipeId: string, factoryId: string): SettingsState {
+    const recipe = this.recipeSettings[recipeId];
+    return {
+      recipe,
+      factory: this.factories.entities[factoryId],
+      fMatch: id !== recipeId && factoryId === recipe.factory,
+    };
   }
 
   changeFactory(
@@ -51,11 +63,10 @@ export class RecipeSettingsComponent {
   ): void {
     const count = modules.length;
     const options = [...this.data.recipeModuleIds[recipeId], ItemId.Module];
-    const def = RecipeUtility.defaultModules(
-      options,
-      this.getSettings(factoryId).moduleRank,
-      count
-    );
+    const s = this.getState(id, recipeId, factoryId);
+    const def = s.fMatch
+      ? s.recipe.factoryModules
+      : RecipeUtility.defaultModules(options, s.factory.moduleRank, count);
     const value = this.generateModules(index, input, modules);
     emitter.emit({
       id,
@@ -75,7 +86,8 @@ export class RecipeSettingsComponent {
       const value = (event.target as HTMLInputElement).value;
       const rational = Rational.fromString(value);
       if (rational.gte(Rational.zero)) {
-        const def = this.getSettings(factoryId).beaconCount;
+        const s = this.getState(id, recipeId, factoryId);
+        const def = s.fMatch ? s.recipe.beaconCount : s.factory.beaconCount;
         emitter.emit({ id, value, default: def });
       }
     } catch {}
@@ -88,7 +100,8 @@ export class RecipeSettingsComponent {
     id = recipeId,
     factoryId = this.recipeSettings[recipeId].factory
   ): void {
-    const def = this.getSettings(factoryId).beacon;
+    const s = this.getState(id, recipeId, factoryId);
+    const def = s.fMatch ? s.recipe.beacon : s.factory.beacon;
     emitter.emit({ id, value, default: def });
   }
 
@@ -99,10 +112,16 @@ export class RecipeSettingsComponent {
     modules: string[],
     emitter: EventEmitter<DefaultIdPayload<string[]>>,
     id = recipeId,
-    factoryId = this.recipeSettings[recipeId].factory
+    factoryId = this.recipeSettings[recipeId].factory,
+    beaconId = null
   ): void {
     const count = modules.length;
-    const def = new Array(count).fill(this.getSettings(factoryId).beaconModule);
+    const s = this.getState(id, recipeId, factoryId);
+    const bMatch = beaconId == null || beaconId === s.recipe.beacon;
+    const def =
+      s.fMatch && bMatch
+        ? s.recipe.beaconModules
+        : new Array(count).fill(s.factory.beaconModule);
     const value = this.generateModules(index, input, modules);
     emitter.emit({
       id,

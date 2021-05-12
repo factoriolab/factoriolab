@@ -590,7 +590,31 @@ describe('RecipeUtility', () => {
           product,
           null,
           Mocks.RecipeSettingsInitial,
+          Mocks.FactorySettingsInitial,
+          Mocks.Data
+        )
+      ).toEqual(product);
+    });
+
+    it('by factories, nondefault factory, should return product with all fields defined', () => {
+      const product: Product = {
+        id,
+        itemId,
+        rate,
+        rateType,
+        viaId: RecipeId.Coal,
+        viaSetting: ItemId.AssemblingMachine2,
+        viaFactoryModules: [],
+        viaBeaconCount: '0',
+        viaBeacon: ItemId.Beacon,
+        viaBeaconModules: [],
+      };
+      expect(
+        RecipeUtility.adjustProduct(
+          product,
           null,
+          Mocks.RecipeSettingsInitial,
+          Mocks.FactorySettingsInitial,
           Mocks.Data
         )
       ).toEqual(product);
@@ -601,7 +625,7 @@ describe('RecipeUtility', () => {
         { id, itemId, rate, rateType },
         null,
         Mocks.RecipeSettingsInitial,
-        null,
+        Mocks.FactorySettingsInitial,
         Mocks.Data
       );
       expect(result.viaId).toEqual(itemId);
@@ -616,10 +640,35 @@ describe('RecipeUtility', () => {
         { id, itemId: ItemId.PetroleumGas, rate, rateType },
         null,
         Mocks.RecipeSettingsInitial,
-        null,
+        Mocks.FactorySettingsInitial,
         Mocks.Data
       );
       expect(result.viaId).toEqual(itemId);
+    });
+
+    it('by factories, nondefault beacon, should set beacon modules', () => {
+      const recipeSettings = {
+        ...Mocks.RecipeSettingsInitial,
+        ...{
+          [RecipeId.Coal]: {
+            ...Mocks.RecipeSettingsInitial[RecipeId.Coal],
+            ...{
+              beacon: 'beacon-2',
+            },
+          },
+        },
+      };
+      const result = RecipeUtility.adjustProduct(
+        { id, itemId, rate, rateType, viaBeacon: ItemId.Beacon },
+        null,
+        recipeSettings,
+        Mocks.FactorySettingsInitial,
+        Mocks.Data
+      );
+      expect(result.viaBeaconModules).toEqual([
+        ItemId.SpeedModule3,
+        ItemId.SpeedModule3,
+      ]);
     });
 
     it('by factories, should skip missed viaId', () => {
@@ -649,7 +698,7 @@ describe('RecipeUtility', () => {
       expect(result.viaBeaconModules).toBeUndefined();
     });
 
-    it('by factories, should adjust modules if factory is nondefault', () => {
+    it('by factories, nondefault factory, should adjust modules', () => {
       const result = RecipeUtility.adjustProduct(
         { id, itemId, rate, rateType, viaSetting: ItemId.AssemblingMachine2 },
         null,
@@ -668,7 +717,25 @@ describe('RecipeUtility', () => {
         { id, itemId, rate, rateType, viaBeacon: 'test' },
         null,
         Mocks.RecipeSettingsInitial,
+        Mocks.FactorySettingsInitial,
+        Mocks.Data
+      );
+      expect(result.viaBeaconModules).toBeUndefined();
+    });
+
+    it('by factories, nondefault factory, should handle invalid viaBeacon', () => {
+      const result = RecipeUtility.adjustProduct(
+        {
+          id,
+          itemId,
+          rate,
+          rateType,
+          viaSetting: ItemId.AssemblingMachine2,
+          viaBeacon: 'test',
+        },
         null,
+        Mocks.RecipeSettingsInitial,
+        Mocks.FactorySettingsInitial,
         Mocks.Data
       );
       expect(result.viaBeaconModules).toBeUndefined();

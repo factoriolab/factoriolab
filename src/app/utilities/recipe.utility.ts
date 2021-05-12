@@ -320,15 +320,23 @@ export class RecipeUtility {
         const factory = data.itemEntities[product.viaSetting].factory;
         if (this.allowsModules(recipe, factory)) {
           const def = recipeSettings[recipe.id];
+          const fDef = factories.entities[product.viaSetting];
           if (product.viaSetting === def.factory) {
             product.viaFactoryModules =
               product.viaFactoryModules || def.factoryModules;
             product.viaBeaconCount = product.viaBeaconCount || def.beaconCount;
             product.viaBeacon = product.viaBeacon || def.beacon;
-            product.viaBeaconModules =
-              product.viaBeaconModules || def.beaconModules;
+            const beacon = data.itemEntities[product.viaBeacon]?.beacon;
+            if (beacon && !product.viaBeaconModules) {
+              if (product.viaBeacon === def.beacon) {
+                product.viaBeaconModules = def.beaconModules;
+              } else {
+                product.viaBeaconModules = new Array(beacon.modules).fill(
+                  fDef.beaconModule
+                );
+              }
+            }
           } else {
-            const fDef = factories.entities[product.viaSetting];
             if (!product.viaFactoryModules) {
               product.viaFactoryModules = this.defaultModules(
                 data.recipeModuleIds[recipe.id],
