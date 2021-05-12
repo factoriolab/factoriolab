@@ -1,12 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import {
-  RecipeSettings,
-  Entities,
-  RationalRecipeSettings,
-  RationalRecipe,
-  ItemId,
-} from '~/models';
+import { RecipeSettings, Entities, RationalRecipeSettings } from '~/models';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 import * as Factories from '../factories';
 import * as Settings from '../settings';
@@ -20,7 +14,7 @@ export const recipesState = (state: State): RecipesState => state.recipesState;
 export const getRecipeSettings = createSelector(
   recipesState,
   Factories.getFactorySettings,
-  Settings.getDataset,
+  Settings.getNormalDataset,
   (state, factories, data) => {
     const value: Entities<RecipeSettings> = {};
     if (data?.recipeIds?.length) {
@@ -32,11 +26,7 @@ export const getRecipeSettings = createSelector(
         }
 
         const factory = data.itemEntities[s.factory]?.factory;
-        if (
-          (recipe.producers[0] !== ItemId.RocketSilo ||
-            recipe.id === ItemId.RocketPart) &&
-          factory?.modules
-        ) {
+        if (RecipeUtility.allowsModules(recipe, factory)) {
           const def = factories.entities[s.factory];
           if (!s.factoryModules) {
             s.factoryModules = RecipeUtility.defaultModules(
@@ -82,25 +72,14 @@ export const getAdjustedDataset = createSelector(
   Settings.getRationalMiningBonus,
   Settings.getResearchFactor,
   Settings.getDataset,
-  (recipeSettings, fuel, miningBonus, researchSpeed, data) => ({
-    ...data,
-    ...{
-      recipeR: RecipeUtility.adjustSiloRecipes(
-        data.recipeIds.reduce((e: Entities<RationalRecipe>, i) => {
-          e[i] = RecipeUtility.adjustRecipe(
-            i,
-            fuel,
-            miningBonus,
-            researchSpeed,
-            recipeSettings[i],
-            data
-          );
-          return e;
-        }, {}),
-        recipeSettings
-      ),
-    },
-  })
+  (recipeSettings, fuel, miningBonus, researchSpeed, data) =>
+    RecipeUtility.adjustDataset(
+      recipeSettings,
+      fuel,
+      miningBonus,
+      researchSpeed,
+      data
+    )
 );
 
 export const getContainsFactory = createSelector(recipesState, (state) =>

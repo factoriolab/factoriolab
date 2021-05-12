@@ -311,7 +311,7 @@
                   *ngIf="data.recipeEntities[step.recipeId] as recipe"
                 >
                   <ng-container
-                    *ngIf="!data.isDsp || factory !== 'mining-drill'"
+                    *ngIf="!data.isDsp || factory !== ItemId.MiningDrill"
                   >
                     <ng-container
                       *ngIf="
@@ -324,7 +324,9 @@
                         [data]="data"
                         [selected]="factory"
                         [options]="recipe.producers"
-                        (selectId)="changeFactory(step, $event)"
+                        (selectId)="
+                          changeFactory(step.recipeId, $event, setFactory)
+                        "
                       >
                         <lab-icon
                           class="button"
@@ -363,7 +365,15 @@
                   [options]="data.recipeModuleIds[step.recipeId]"
                   [includeEmptyModule]="!data.isDsp"
                   [displayRate]="displayRate"
-                  (selectId)="changeFactoryModule(step, $event, i)"
+                  (selectId)="
+                    changeFactoryModules(
+                      step.recipeId,
+                      $event,
+                      i,
+                      recipeSettings[step.recipeId].factoryModules,
+                      setFactoryModules
+                    )
+                  "
                 >
                   <lab-icon
                     class="button"
@@ -393,13 +403,17 @@
                   [ngModel]="recipeSettings[step.recipeId].beaconCount"
                   labValidateNumber
                   data-test="lab-list-beacons"
-                  (input)="changeBeaconCount(step, $event)"
+                  (input)="
+                    changeBeaconCount(step.recipeId, $event, setBeaconCount)
+                  "
                 />
               </div>
             </td>
             <td class="split-column">
               <div class="flex">
-                <ng-container *ngIf="recipeSettings[step.recipeId].beaconCount">
+                <ng-container
+                  *ngIf="gtZero(recipeSettings[step.recipeId].beaconCount)"
+                >
                   <ng-container
                     *ngIf="data.beaconIds.length === 1; else beaconPicker"
                   >
@@ -417,14 +431,7 @@
                       [selected]="beacon"
                       [options]="data.beaconIds"
                       (selectId)="
-                        setBeacon.emit({
-                          id: step.recipeId,
-                          value: $event,
-                          default:
-                            factories.entities[
-                              recipeSettings[step.recipeId].factory
-                            ].beacon
-                        })
+                        changeBeacon(step.recipeId, $event, setBeacon)
                       "
                     >
                       <lab-icon
@@ -441,7 +448,9 @@
               </div>
             </td>
             <td class="split-column">
-              <ng-container *ngIf="recipeSettings[step.recipeId].beaconCount">
+              <ng-container
+                *ngIf="gtZero(recipeSettings[step.recipeId].beaconCount)"
+              >
                 <div
                   *ngIf="
                     recipeSettings[step.recipeId]?.beaconModules as modules
@@ -455,7 +464,15 @@
                     [selected]="mod"
                     [options]="data.beaconModuleIds"
                     [includeEmptyModule]="true"
-                    (selectId)="changeBeaconModule(step, $event, i)"
+                    (selectId)="
+                      changeBeaconModules(
+                        step.recipeId,
+                        $event,
+                        i,
+                        modules,
+                        setBeaconModules
+                      )
+                    "
                   >
                     <lab-icon
                       class="button"
@@ -646,7 +663,7 @@
                         [recipe]="data.recipeEntities[output.recipeId]"
                       ></lab-icon>
                       <lab-icon
-                        *ngIf="!data.isDsp || factory !== 'mining-drill'"
+                        *ngIf="!data.isDsp || factory !== ItemId.MiningDrill"
                         [data]="data"
                         [iconId]="factory"
                         [tooltip]="data.itemEntities[factory].name"
@@ -780,7 +797,7 @@
                       [recipe]="data.recipeEntities[step.recipeId]"
                     ></lab-icon>
                     <lab-icon
-                      *ngIf="!data.isDsp || factory !== 'mining-drill'"
+                      *ngIf="!data.isDsp || factory !== ItemId.MiningDrill"
                       [data]="data"
                       [iconId]="factory"
                       [tooltip]="data.itemEntities[factory].name"

@@ -7,6 +7,11 @@ export enum ProductField {
   Rate = 'rate',
   RateType = 'rateType',
   ViaId = 'viaId',
+  ViaSetting = 'viaSetting',
+  ViaFactoryModules = 'viaFactoryModules',
+  ViaBeaconCount = 'viaBeaconCount',
+  ViaBeacon = 'viaBeacon',
+  ViaBeaconModules = 'viaBeaconModules',
 }
 
 export interface Product {
@@ -15,6 +20,11 @@ export interface Product {
   rate: string;
   rateType: RateType;
   viaId?: string;
+  viaSetting?: string;
+  viaFactoryModules?: string[];
+  viaBeaconCount?: string;
+  viaBeacon?: string;
+  viaBeaconModules?: string[];
 }
 
 export class RationalProduct {
@@ -23,6 +33,11 @@ export class RationalProduct {
   rate: Rational;
   rateType: RateType;
   viaId?: string;
+  viaSetting?: string;
+  viaFactoryModules?: string[];
+  viaBeaconCount?: Rational;
+  viaBeacon?: string;
+  viaBeaconModules?: string[];
 
   constructor(data: Product) {
     this.id = data.id;
@@ -31,6 +46,21 @@ export class RationalProduct {
     this.rateType = data.rateType;
     if (data.viaId) {
       this.viaId = data.viaId;
+    }
+    if (data.viaSetting) {
+      this.viaSetting = data.viaSetting;
+    }
+    if (data.viaFactoryModules) {
+      this.viaFactoryModules = data.viaFactoryModules;
+    }
+    if (data.viaBeaconCount != null) {
+      this.viaBeaconCount = Rational.fromString(data.viaBeaconCount);
+    }
+    if (data.viaBeacon != null) {
+      this.viaBeacon = data.viaBeacon;
+    }
+    if (data.viaBeaconModules != null) {
+      this.viaBeaconModules = data.viaBeaconModules;
     }
   }
 }

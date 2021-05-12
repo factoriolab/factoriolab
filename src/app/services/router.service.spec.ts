@@ -338,6 +338,66 @@ describe('RouterService', () => {
   });
 
   describe('zipProducts', () => {
+    it('should handle RateType Items', () => {
+      const result = service.zipProducts(
+        [
+          {
+            id: '0',
+            itemId: ItemId.SteelChest,
+            rate: '1',
+            rateType: RateType.Items,
+            viaId: ItemId.IronOre,
+            viaSetting: ItemId.IronOre,
+          },
+        ],
+        Mocks.Hash
+      );
+      expect(result).toEqual({
+        bare: 'p=steel-chest*1**iron-ore*iron-ore',
+        hash: 'pC6*1**Bd*Bd',
+      });
+    });
+
+    it('should handle RateType Belts', () => {
+      const result = service.zipProducts(
+        [
+          {
+            id: '0',
+            itemId: ItemId.SteelChest,
+            rate: '1',
+            rateType: RateType.Belts,
+            viaId: ItemId.IronOre,
+            viaSetting: ItemId.TransportBelt,
+          },
+        ],
+        Mocks.Hash
+      );
+      expect(result).toEqual({
+        bare: 'p=steel-chest*1*1*iron-ore*transport-belt',
+        hash: 'pC6*1*1*Bd*C',
+      });
+    });
+
+    it('should handle RateType Wagons', () => {
+      const result = service.zipProducts(
+        [
+          {
+            id: '0',
+            itemId: ItemId.SteelChest,
+            rate: '1',
+            rateType: RateType.Wagons,
+            viaId: ItemId.IronOre,
+            viaSetting: ItemId.CargoWagon,
+          },
+        ],
+        Mocks.Hash
+      );
+      expect(result).toEqual({
+        bare: 'p=steel-chest*1*2*iron-ore*cargo-wagon',
+        hash: 'pC6*1*2*Bd*A',
+      });
+    });
+
     it('should handle RateType Factories', () => {
       const result = service.zipProducts(
         [
@@ -347,18 +407,112 @@ describe('RouterService', () => {
             rate: '1',
             rateType: RateType.Factories,
             viaId: ItemId.IronOre,
+            viaSetting: ItemId.AssemblingMachine2,
+            viaFactoryModules: [],
+            viaBeaconCount: '1',
+            viaBeaconModules: [],
+            viaBeacon: ItemId.Beacon,
           },
         ],
         Mocks.Hash
       );
       expect(result).toEqual({
-        bare: 'p=steel-chest*1*3*iron-ore',
-        hash: 'pC6*1*3*Bl',
+        bare:
+          'p=steel-chest*1*3*iron-ore*assembling-machine-2*%3D*1*%3D*beacon',
+        hash: 'pC6*1*3*Bl*B*=*1*=*A',
       });
     });
   });
 
   describe('unzipProducts', () => {
+    it('v1 should unzip', () => {
+      const result = service.unzipProducts(
+        {
+          ['p']: 'steel-chest*1*3*iron-ore',
+        },
+        ZipVersion.Version0,
+        Mocks.Hash
+      );
+      expect(result).toEqual({
+        ids: ['0'],
+        entities: {
+          ['0']: {
+            id: '0',
+            itemId: ItemId.SteelChest,
+            rate: '1',
+            rateType: RateType.Factories,
+            viaId: ItemId.IronOre,
+          },
+        },
+        index: 1,
+      });
+    });
+
+    it('v2 should handle RateType Items', () => {
+      const result = service.unzipProducts(
+        { ['p']: 'C6*1**Bd' },
+        ZipVersion.Version2,
+        Mocks.Hash
+      );
+      expect(result).toEqual({
+        ids: ['0'],
+        entities: {
+          ['0']: {
+            id: '0',
+            itemId: ItemId.SteelChest,
+            rate: '1',
+            rateType: RateType.Items,
+            viaId: ItemId.IronOre,
+          },
+        },
+        index: 1,
+      });
+    });
+
+    it('v2 should handle RateType Belts', () => {
+      const result = service.unzipProducts(
+        { ['p']: 'C6*1*1*Bd*C' },
+        ZipVersion.Version2,
+        Mocks.Hash
+      );
+      expect(result).toEqual({
+        ids: ['0'],
+        entities: {
+          ['0']: {
+            id: '0',
+            itemId: ItemId.SteelChest,
+            rate: '1',
+            rateType: RateType.Belts,
+            viaId: ItemId.IronOre,
+            viaSetting: ItemId.TransportBelt,
+          },
+        },
+        index: 1,
+      });
+    });
+
+    it('v2 should handle RateType Wagons', () => {
+      const result = service.unzipProducts(
+        { ['p']: 'C6*1*2*Bd*A' },
+        ZipVersion.Version2,
+        Mocks.Hash
+      );
+      expect(result).toEqual({
+        ids: ['0'],
+        entities: {
+          ['0']: {
+            id: '0',
+            itemId: ItemId.SteelChest,
+            rate: '1',
+            rateType: RateType.Wagons,
+            viaId: ItemId.IronOre,
+            viaSetting: ItemId.CargoWagon,
+          },
+        },
+        index: 1,
+      });
+    });
+
     it('v2 should handle RateType Factories', () => {
       const result = service.unzipProducts(
         { ['p']: 'C6*1*3*Bl' },

@@ -10,7 +10,6 @@ import {
   Product,
   RateType,
   IdPayload,
-  Dataset,
   Rational,
   Entities,
   rateTypeOptions,
@@ -18,8 +17,12 @@ import {
   IdType,
   IdName,
   DisplayRateOptions,
+  DefaultIdPayload,
+  ItemId,
 } from '~/models';
+import { ItemsState } from '~/store/items';
 import { RecipeUtility } from '~/utilities';
+import { RecipeSettingsComponent } from '../../recipe-settings.component';
 
 @Component({
   selector: 'lab-products',
@@ -27,10 +30,10 @@ import { RecipeUtility } from '~/utilities';
   styleUrls: ['./products.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductsComponent {
-  @Input() data: Dataset;
+export class ProductsComponent extends RecipeSettingsComponent {
   @Input() productSteps: Entities<[string, Rational][]>;
   @Input() products: Product[] = [];
+  @Input() itemSettings: ItemsState;
   @Input() displayRate: DisplayRate;
 
   @Output() removeProduct = new EventEmitter<string>();
@@ -38,19 +41,32 @@ export class ProductsComponent {
   @Output() setRate = new EventEmitter<IdPayload<string>>();
   @Output() setRateType = new EventEmitter<IdPayload<RateType>>();
   @Output() setVia = new EventEmitter<IdPayload>();
+  @Output() setViaSetting = new EventEmitter<DefaultIdPayload>();
+  @Output() setViaFactoryModules = new EventEmitter<
+    DefaultIdPayload<string[]>
+  >();
+  @Output() setViaBeaconCount = new EventEmitter<DefaultIdPayload>();
+  @Output() setViaBeacon = new EventEmitter<DefaultIdPayload>();
+  @Output() setViaBeaconModules = new EventEmitter<
+    DefaultIdPayload<string[]>
+  >();
   @Output() addProduct = new EventEmitter<string>();
   @Output() setDisplayRate = new EventEmitter<DisplayRate>();
 
   DisplayRateOptions = DisplayRateOptions;
 
   IdType = IdType;
+  ItemId = ItemId;
   RateType = RateType;
+  RecipeUtility = RecipeUtility;
 
   get rateTypeOptions(): IdName<RateType>[] {
     return rateTypeOptions(this.displayRate, this.data.isDsp);
   }
 
-  constructor() {}
+  constructor() {
+    super();
+  }
 
   trackBy(i: number, product: Product): string {
     return product.id;
@@ -77,10 +93,6 @@ export class ProductsComponent {
         this.setRate.emit({ id, value });
       }
     } catch {}
-  }
-
-  getStep(product: Product): string {
-    return RecipeUtility.getProductStepData(this.productSteps, product)[0];
   }
 
   getOptions(product: Product): string[] {
