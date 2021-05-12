@@ -84,6 +84,66 @@ describe('ProductsContainerComponent', () => {
     );
   });
 
+  it('should set via setting on a product', () => {
+    const data = {
+      id: Mocks.Product1.id,
+      value: ItemId.TransportBelt,
+      default: ItemId.TransportBelt,
+    };
+    component.child.setViaSetting.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Products.SetViaSettingAction(data)
+    );
+  });
+
+  it('should set via factory modules on a product', () => {
+    const data = {
+      id: Mocks.Product1.id,
+      value: [ItemId.SpeedModule, ItemId.SpeedModule],
+      default: [ItemId.Module, ItemId.Module],
+    };
+    component.child.setViaFactoryModules.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Products.SetViaFactoryModulesAction(data)
+    );
+  });
+
+  it('should set via beacon count on a product', () => {
+    const data = {
+      id: Mocks.Product1.id,
+      value: '12',
+      default: '8',
+    };
+    component.child.setViaBeaconCount.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Products.SetViaBeaconCountAction(data)
+    );
+  });
+
+  it('should set via beacon on a product', () => {
+    const data = {
+      id: Mocks.Product1.id,
+      value: ItemId.Beacon,
+      default: ItemId.Beacon,
+    };
+    component.child.setViaBeacon.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Products.SetViaBeaconAction(data)
+    );
+  });
+
+  it('should set via beacon modules on a product', () => {
+    const data = {
+      id: Mocks.Product1.id,
+      value: [ItemId.SpeedModule, ItemId.SpeedModule],
+      default: [ItemId.Module, ItemId.Module],
+    };
+    component.child.setViaBeaconModules.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Products.SetViaBeaconModulesAction(data)
+    );
+  });
+
   it('should add a product', () => {
     component.child.addProduct.emit(ItemId.WoodenChest);
     expect(store.dispatch).toHaveBeenCalledWith(

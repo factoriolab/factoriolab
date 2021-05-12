@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { Mocks, TestUtility, ItemId, RecipeId } from 'src/tests';
 import { IconComponent, PickerComponent, OptionsComponent } from '~/components';
 import { DisplayRate, RateType } from '~/models';
-import { RecipeUtility } from '~/utilities';
 import { ProductsComponent } from './products.component';
 
 enum DataTest {
@@ -119,15 +118,6 @@ describe('ProductsComponent', () => {
       TestUtility.setTextDt(fixture, DataTest.Rate, '-1');
       fixture.detectChanges();
       expect(component.setRate).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('getStep', () => {
-    it('should call getProductStepData', () => {
-      spyOn(RecipeUtility, 'getProductStepData').and.callThrough();
-      const result = component.child.getStep(Mocks.Product4);
-      expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
-      expect(result).toEqual(RecipeId.TransportBelt);
     });
   });
 

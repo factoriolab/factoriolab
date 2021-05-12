@@ -1,5 +1,12 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import { EnergyType, Rational, RationalItem, RationalRecipe } from '~/models';
+import {
+  EnergyType,
+  Product,
+  RateType,
+  Rational,
+  RationalItem,
+  RationalRecipe,
+} from '~/models';
 import { RecipeUtility } from './recipe.utility';
 
 describe('RecipeUtility', () => {
@@ -48,9 +55,10 @@ describe('RecipeUtility', () => {
         Mocks.Data.recipeEntities[RecipeId.SteelChest]
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
-      expected.time = new Rational(BigInt(2), BigInt(3));
-      expected.consumption = new Rational(BigInt(155));
-      expected.pollution = new Rational(BigInt(1), BigInt(20));
+      expected.time = Rational.from(2, 3);
+      expected.consumption = Rational.from(155);
+      expected.pollution = Rational.from(1, 20);
+      expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
 
@@ -66,9 +74,10 @@ describe('RecipeUtility', () => {
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.CopperCable]
       );
-      expected.time = new Rational(BigInt(2), BigInt(3));
-      expected.consumption = new Rational(BigInt(155));
-      expected.pollution = new Rational(BigInt(1), BigInt(20));
+      expected.time = Rational.from(2, 3);
+      expected.consumption = Rational.from(155);
+      expected.pollution = Rational.from(1, 20);
+      expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
 
@@ -90,7 +99,8 @@ describe('RecipeUtility', () => {
       );
       expected.out = { [ItemId.MiningProductivity]: Rational.one };
       expected.time = new Rational(BigInt(30));
-      expected.adjustProd = Rational.one;
+      expected.adjustProd = true;
+      expected.productivity = Rational.one;
       expected.consumption = new Rational(BigInt(62));
       expected.pollution = Rational.zero;
       expect(result).toEqual(expected);
@@ -110,10 +120,11 @@ describe('RecipeUtility', () => {
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.IronOre]
       );
-      expected.out = { [ItemId.IronOre]: new Rational(BigInt(3)) };
+      expected.out = { [ItemId.IronOre]: Rational.from(3) };
       expected.time = Rational.two;
-      expected.consumption = new Rational(BigInt(90));
-      expected.pollution = new Rational(BigInt(1), BigInt(6));
+      expected.consumption = Rational.from(90);
+      expected.pollution = Rational.from(1, 6);
+      expected.productivity = Rational.from(3);
       expect(result).toEqual(expected);
     });
 
@@ -168,11 +179,12 @@ describe('RecipeUtility', () => {
         Mocks.Data.recipeEntities[RecipeId.SteelChest]
       );
       expected.out = {
-        [ItemId.SteelChest]: new Rational(BigInt(76), BigInt(25)),
+        [ItemId.SteelChest]: Rational.from(76, 25),
       };
-      expected.time = new Rational(BigInt(8), BigInt(15));
-      expected.consumption = new Rational(BigInt(260));
-      expected.pollution = new Rational(BigInt(1037), BigInt(4000));
+      expected.time = Rational.from(8, 15);
+      expected.consumption = Rational.from(260);
+      expected.pollution = Rational.from(1037, 4000);
+      expected.productivity = Rational.from(76, 25);
       expect(result).toEqual(expected);
     });
 
@@ -217,9 +229,10 @@ describe('RecipeUtility', () => {
       expected.out = {
         [ItemId.SteelChest]: Rational.one,
       };
-      expected.time = new Rational(BigInt(2), BigInt(3));
-      expected.consumption = new Rational(BigInt(155));
-      expected.pollution = new Rational(BigInt(1), BigInt(20));
+      expected.time = Rational.from(2, 3);
+      expected.consumption = Rational.from(155);
+      expected.pollution = Rational.from(1, 20);
+      expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
 
@@ -276,6 +289,7 @@ describe('RecipeUtility', () => {
       expected.time = Rational.from(10, 3);
       expected.consumption = Rational.from(35);
       expected.pollution = Rational.from(1, 500);
+      expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
 
@@ -293,13 +307,14 @@ describe('RecipeUtility', () => {
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.IronOre]
       );
-      expected.in = { [ItemId.Coal]: new Rational(BigInt(3), BigInt(20)) };
+      expected.in = { [ItemId.Coal]: Rational.from(3, 20) };
       expected.out = {
         [ItemId.IronOre]: Rational.one,
       };
-      expected.time = new Rational(BigInt(4));
+      expected.time = Rational.from(4);
       expected.consumption = Rational.zero;
-      expected.pollution = new Rational(BigInt(1), BigInt(5));
+      expected.pollution = Rational.from(1, 5);
+      expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
 
@@ -317,13 +332,14 @@ describe('RecipeUtility', () => {
       const expected = new RationalRecipe(
         Mocks.Data.recipeEntities[RecipeId.PlasticBar]
       );
-      expected.in[ItemId.Coal] = new Rational(BigInt(809), BigInt(800));
+      expected.in[ItemId.Coal] = Rational.from(809, 800);
       expected.out = {
         [ItemId.PlasticBar]: Rational.two,
       };
-      expected.time = new Rational(BigInt(1), BigInt(2));
+      expected.time = Rational.from(1, 2);
       expected.consumption = Rational.zero;
-      expected.pollution = new Rational(BigInt(1), BigInt(15));
+      expected.pollution = Rational.from(1, 15);
+      expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
 
@@ -406,6 +422,7 @@ describe('RecipeUtility', () => {
       expected.time = Rational.one;
       expected.consumption = Rational.zero;
       expected.pollution = Rational.zero;
+      expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
   });
@@ -426,9 +443,11 @@ describe('RecipeUtility', () => {
         Mocks.RationalRecipeSettingsInitial
       );
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
-        Rational.from(1442, 3)
+        Rational.from(29884, 231)
       );
-      expect(result[RecipeId.RocketPart].time).toEqual(Rational.from(721, 150));
+      expect(result[RecipeId.RocketPart].time).toEqual(
+        Rational.from(7471, 4125)
+      );
     });
   });
 
@@ -465,6 +484,261 @@ describe('RecipeUtility', () => {
         { itemId: RecipeId.Coal } as any
       );
       expect(result).toEqual(data);
+    });
+  });
+
+  describe('allowsModules', () => {
+    it('should check factory and rocket recipes', () => {
+      // Silo recipes
+      expect(
+        RecipeUtility.allowsModules(
+          Mocks.Data.recipeEntities[RecipeId.RocketPart],
+          Mocks.Data.itemEntities[ItemId.RocketSilo].factory
+        )
+      ).toBeTrue();
+      expect(
+        RecipeUtility.allowsModules(
+          Mocks.Data.recipeEntities[RecipeId.SpaceSciencePack],
+          Mocks.Data.itemEntities[ItemId.RocketSilo].factory
+        )
+      ).toBeFalse();
+      // Normal recipes
+      expect(
+        RecipeUtility.allowsModules(
+          Mocks.Data.recipeEntities[ItemId.Coal],
+          Mocks.Data.itemEntities[ItemId.ElectricMiningDrill].factory
+        )
+      ).toBeTrue();
+      expect(
+        RecipeUtility.allowsModules(
+          Mocks.Data.recipeEntities[ItemId.Coal],
+          Mocks.Data.itemEntities[ItemId.BurnerMiningDrill].factory
+        )
+      ).toBeFalse();
+      // Null factory
+      expect(
+        RecipeUtility.allowsModules(
+          Mocks.Data.recipeEntities[ItemId.Coal],
+          null
+        )
+      ).toBeFalse();
+    });
+  });
+
+  describe('adjustDataset', () => {
+    it('should adjust recipes and silo recipes', () => {
+      spyOn(RecipeUtility, 'adjustSiloRecipes').and.callThrough();
+      spyOn(RecipeUtility, 'adjustRecipe').and.callThrough();
+      const result = RecipeUtility.adjustDataset(
+        Mocks.RationalRecipeSettingsInitial,
+        ItemId.Coal,
+        Rational.zero,
+        Rational.one,
+        Mocks.Data
+      );
+      expect(result).toBeTruthy();
+      expect(RecipeUtility.adjustSiloRecipes).toHaveBeenCalledTimes(1);
+      expect(RecipeUtility.adjustRecipe).toHaveBeenCalledTimes(220);
+    });
+  });
+
+  describe('adjustProduct', () => {
+    const id = '0';
+    const itemId = ItemId.Coal;
+    const rate = '1';
+    const rateType = RateType.Factories;
+
+    it('should ignore products using rateType other than Factories', () => {
+      const product = {
+        ...Mocks.Product1,
+        ...{ viaId: Mocks.Product1.itemId },
+      };
+      expect(
+        RecipeUtility.adjustProduct(product, null, null, null, null)
+      ).toEqual(product);
+    });
+
+    it('should add viaId to products using rateType other than Factories', () => {
+      const recipe = RecipeUtility.adjustProduct(
+        Mocks.Product1,
+        null,
+        null,
+        null,
+        null
+      );
+      expect(recipe).toEqual({
+        ...Mocks.Product1,
+        ...{ viaId: Mocks.Product1.itemId },
+      });
+    });
+
+    it('by factories, should return product with all fields defined', () => {
+      const product: Product = {
+        id,
+        itemId,
+        rate,
+        rateType,
+        viaId: RecipeId.Coal,
+        viaSetting: ItemId.ElectricMiningDrill,
+        viaFactoryModules: [],
+        viaBeaconCount: '0',
+        viaBeacon: ItemId.Beacon,
+        viaBeaconModules: [],
+      };
+      expect(
+        RecipeUtility.adjustProduct(
+          product,
+          null,
+          Mocks.RecipeSettingsInitial,
+          Mocks.FactorySettingsInitial,
+          Mocks.Data
+        )
+      ).toEqual(product);
+    });
+
+    it('by factories, nondefault factory, should return product with all fields defined', () => {
+      const product: Product = {
+        id,
+        itemId,
+        rate,
+        rateType,
+        viaId: RecipeId.Coal,
+        viaSetting: ItemId.AssemblingMachine2,
+        viaFactoryModules: [],
+        viaBeaconCount: '0',
+        viaBeacon: ItemId.Beacon,
+        viaBeaconModules: [],
+      };
+      expect(
+        RecipeUtility.adjustProduct(
+          product,
+          null,
+          Mocks.RecipeSettingsInitial,
+          Mocks.FactorySettingsInitial,
+          Mocks.Data
+        )
+      ).toEqual(product);
+    });
+
+    it('by factories, should set simple viaId', () => {
+      const result = RecipeUtility.adjustProduct(
+        { id, itemId, rate, rateType },
+        null,
+        Mocks.RecipeSettingsInitial,
+        Mocks.FactorySettingsInitial,
+        Mocks.Data
+      );
+      expect(result.viaId).toEqual(itemId);
+    });
+
+    it('by factories, should set complex viaId', () => {
+      spyOn(RecipeUtility, 'getProductStepData').and.returnValue([
+        itemId,
+        Rational.zero,
+      ]);
+      const result = RecipeUtility.adjustProduct(
+        { id, itemId: ItemId.PetroleumGas, rate, rateType },
+        null,
+        Mocks.RecipeSettingsInitial,
+        Mocks.FactorySettingsInitial,
+        Mocks.Data
+      );
+      expect(result.viaId).toEqual(itemId);
+    });
+
+    it('by factories, nondefault beacon, should set beacon modules', () => {
+      const recipeSettings = {
+        ...Mocks.RecipeSettingsInitial,
+        ...{
+          [RecipeId.Coal]: {
+            ...Mocks.RecipeSettingsInitial[RecipeId.Coal],
+            ...{
+              beacon: 'beacon-2',
+            },
+          },
+        },
+      };
+      const result = RecipeUtility.adjustProduct(
+        { id, itemId, rate, rateType, viaBeacon: ItemId.Beacon },
+        null,
+        recipeSettings,
+        Mocks.FactorySettingsInitial,
+        Mocks.Data
+      );
+      expect(result.viaBeaconModules).toEqual([
+        ItemId.SpeedModule3,
+        ItemId.SpeedModule3,
+      ]);
+    });
+
+    it('by factories, should skip missed viaId', () => {
+      spyOn(RecipeUtility, 'getProductStepData').and.returnValue(null);
+      const result = RecipeUtility.adjustProduct(
+        { id, itemId: ItemId.PetroleumGas, rate, rateType },
+        null,
+        Mocks.RecipeSettingsInitial,
+        null,
+        Mocks.Data
+      );
+      expect(result.viaId).toBeUndefined();
+    });
+
+    it('by factories, should skip modules if not allowed', () => {
+      spyOn(RecipeUtility, 'allowsModules').and.returnValue(false);
+      const result = RecipeUtility.adjustProduct(
+        { id, itemId, rate, rateType },
+        null,
+        Mocks.RecipeSettingsInitial,
+        null,
+        Mocks.Data
+      );
+      expect(result.viaFactoryModules).toBeUndefined();
+      expect(result.viaBeaconCount).toBeUndefined();
+      expect(result.viaBeacon).toBeUndefined();
+      expect(result.viaBeaconModules).toBeUndefined();
+    });
+
+    it('by factories, nondefault factory, should adjust modules', () => {
+      const result = RecipeUtility.adjustProduct(
+        { id, itemId, rate, rateType, viaSetting: ItemId.AssemblingMachine2 },
+        null,
+        Mocks.RecipeSettingsInitial,
+        Mocks.FactorySettingsInitial,
+        Mocks.Data
+      );
+      expect(result.viaFactoryModules).toEqual([
+        ItemId.ProductivityModule3,
+        ItemId.ProductivityModule3,
+      ]);
+    });
+
+    it('by factories, should handle invalid viaBeacon', () => {
+      const result = RecipeUtility.adjustProduct(
+        { id, itemId, rate, rateType, viaBeacon: 'test' },
+        null,
+        Mocks.RecipeSettingsInitial,
+        Mocks.FactorySettingsInitial,
+        Mocks.Data
+      );
+      expect(result.viaBeaconModules).toBeUndefined();
+    });
+
+    it('by factories, nondefault factory, should handle invalid viaBeacon', () => {
+      const result = RecipeUtility.adjustProduct(
+        {
+          id,
+          itemId,
+          rate,
+          rateType,
+          viaSetting: ItemId.AssemblingMachine2,
+          viaBeacon: 'test',
+        },
+        null,
+        Mocks.RecipeSettingsInitial,
+        Mocks.FactorySettingsInitial,
+        Mocks.Data
+      );
+      expect(result.viaBeaconModules).toBeUndefined();
     });
   });
 });

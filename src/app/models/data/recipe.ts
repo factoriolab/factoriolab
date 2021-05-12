@@ -20,7 +20,8 @@ export class RationalRecipe {
   id: string;
   name: string;
   time: Rational;
-  adjustProd?: Rational;
+  productivity?: Rational;
+  adjustProd?: boolean;
   in?: Entities<Rational>;
   out?: Entities<Rational>;
   expensive?: {

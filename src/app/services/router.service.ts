@@ -334,6 +334,11 @@ export class RouterService {
             r,
             t,
             this.zipTruthyString(obj.viaId),
+            this.zipTruthyString(obj.viaSetting),
+            this.zipTruthyArray(obj.viaFactoryModules),
+            this.zipTruthyString(obj.viaBeaconCount),
+            this.zipTruthyArray(obj.viaBeaconModules),
+            this.zipTruthyString(obj.viaBeacon),
           ]),
           hash: this.zipFields([
             this.zipTruthyNString(obj.itemId, hash.items),
@@ -343,6 +348,20 @@ export class RouterService {
               obj.viaId,
               obj.rateType === RateType.Factories ? hash.recipes : hash.items
             ),
+            this.zipTruthyNString(
+              obj.viaSetting,
+              obj.rateType === RateType.Belts
+                ? hash.belts
+                : obj.rateType === RateType.Wagons
+                ? hash.wagons
+                : obj.rateType === RateType.Factories
+                ? hash.factories
+                : hash.items
+            ),
+            this.zipTruthyNArray(obj.viaFactoryModules, hash.modules),
+            this.zipTruthyString(obj.viaBeaconCount),
+            this.zipTruthyNArray(obj.viaBeaconModules, hash.modules),
+            this.zipTruthyNString(obj.viaBeacon, hash.beacons),
           ]),
         };
       })
@@ -378,6 +397,11 @@ export class RouterService {
             rate: s[i++],
             rateType: Number(s[i++]) | RateType.Items,
             viaId: this.parseString(s[i++]),
+            viaSetting: this.parseString(s[i++]),
+            viaFactoryModules: this.parseArray(s[i++]),
+            viaBeaconCount: this.parseString(s[i++]),
+            viaBeaconModules: this.parseArray(s[i++]),
+            viaBeacon: this.parseString(s[i++]),
           };
           break;
         }
@@ -393,6 +417,20 @@ export class RouterService {
             s[i++],
             obj.rateType === RateType.Factories ? hash.recipes : hash.items
           );
+          obj.viaSetting = this.parseNString(
+            s[i++],
+            obj.rateType === RateType.Belts
+              ? hash.belts
+              : obj.rateType === RateType.Wagons
+              ? hash.wagons
+              : obj.rateType === RateType.Factories
+              ? hash.factories
+              : hash.items
+          );
+          obj.viaFactoryModules = this.parseNArray(s[i++], hash.modules);
+          obj.viaBeaconCount = this.parseString(s[i++]);
+          obj.viaBeaconModules = this.parseNArray(s[i++], hash.modules);
+          obj.viaBeacon = this.parseNString(s[i++], hash.beacons);
           break;
         }
       }

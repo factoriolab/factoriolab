@@ -87,7 +87,11 @@ export const ProductsState1: ProductsState = {
   entities: toEntities(Products),
   index: Products.length + 1,
 };
-export const RationalProducts = Products.map((p) => new RationalProduct(p));
+export const RationalProducts = Products.map((p) => {
+  const rp = new RationalProduct(p);
+  rp.viaId = rp.itemId;
+  return rp;
+});
 export const ProductIds = Products.map((p) => p.id);
 export const ProductEntities = getProductsBy.projector(RationalProducts);
 export const ProductSteps = {
@@ -169,10 +173,10 @@ export const RationalRecipeSettingsInitial = getRationalRecipeSettings.projector
   RecipeSettingsInitial
 );
 export const AdjustedData = getAdjustedDataset.projector(
-  RationalRecipeSettings,
+  RationalRecipeSettingsInitial,
   ItemId.Coal,
   Rational.zero,
-  Rational.zero,
+  Rational.one,
   Data
 );
 export const Preferences: PreferencesState = {

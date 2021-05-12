@@ -8,28 +8,28 @@ describe('RateUtility', () => {
       {
         itemId: 'iron-chest',
         recipeId: 'iron-chest',
-        items: new Rational(BigInt(30)),
-        factories: new Rational(BigInt(20)),
-        power: new Rational(BigInt(3100)),
-        pollution: new Rational(BigInt(1)),
+        items: Rational.from(30),
+        factories: Rational.from(12, 7),
+        power: Rational.from(42450, 7),
+        pollution: Rational.from(94, 175),
       },
       {
         itemId: 'iron-plate',
         recipeId: 'iron-plate',
-        items: new Rational(BigInt(240)),
-        factories: new Rational(BigInt(1024)),
-        power: new Rational(BigInt(158720)),
-        pollution: new Rational(BigInt(256), BigInt(5)),
-        parents: { 'iron-chest': new Rational(BigInt(240)) },
+        items: Rational.from(240),
+        factories: Rational.from(3200, 47),
+        power: Rational.from(4742400, 47),
+        pollution: Rational.from(2624, 235),
+        parents: { 'iron-chest': Rational.from(240) },
       },
       {
         itemId: 'iron-ore',
         recipeId: 'iron-ore',
-        items: new Rational(BigInt(240)),
-        factories: new Rational(BigInt(320)),
-        power: new Rational(BigInt(49600)),
-        pollution: new Rational(BigInt(16)),
-        parents: { 'iron-plate': new Rational(BigInt(240)) },
+        items: Rational.from(200),
+        factories: Rational.from(80000, 1183),
+        power: Rational.from(64800000, 1183),
+        pollution: Rational.from(12000, 91),
+        parents: { 'iron-plate': Rational.from(200) },
       },
     ];
 
@@ -37,7 +37,7 @@ describe('RateUtility', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
         Mocks.Item2.id,
-        new Rational(BigInt(30)),
+        Rational.from(30),
         steps,
         Mocks.ItemSettingsEntities,
         Mocks.AdjustedData
@@ -49,14 +49,14 @@ describe('RateUtility', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
         Mocks.Item2.id,
-        new Rational(BigInt(15)),
+        Rational.from(15),
         steps,
         Mocks.ItemSettingsEntities,
         Mocks.AdjustedData
       );
       RateUtility.addStepsFor(
         Mocks.Item2.id,
-        new Rational(BigInt(15)),
+        Rational.from(15),
         steps,
         Mocks.ItemSettingsEntities,
         Mocks.AdjustedData
@@ -68,7 +68,7 @@ describe('RateUtility', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
         Mocks.Item2.id,
-        new Rational(BigInt(30)),
+        Rational.from(30),
         steps,
         Mocks.ItemSettingsEntities,
         {
@@ -91,15 +91,17 @@ describe('RateUtility', () => {
 
     it('should adjust for consumption instead of production for research recipes', () => {
       const steps: Step[] = [];
-      Mocks.AdjustedData.recipeR[Mocks.Item2.id].adjustProd = Rational.one;
+      Mocks.AdjustedData.recipeR[Mocks.Item2.id].adjustProd = true;
+      Mocks.AdjustedData.recipeR[Mocks.Item2.id].productivity = Rational.one;
       RateUtility.addStepsFor(
         Mocks.Item2.id,
-        new Rational(BigInt(30)),
+        Rational.from(30),
         steps,
         Mocks.ItemSettingsEntities,
         Mocks.AdjustedData
       );
       delete Mocks.AdjustedData.recipeR[Mocks.Item2.id].adjustProd;
+      delete Mocks.AdjustedData.recipeR[Mocks.Item2.id].productivity;
       expect(steps as any).toEqual(expected as any);
     });
 
@@ -107,7 +109,7 @@ describe('RateUtility', () => {
       const steps: Step[] = [];
       RateUtility.addStepsFor(
         ItemId.Uranium235,
-        new Rational(BigInt(30)),
+        Rational.from(30),
         steps,
         Mocks.ItemSettingsEntities,
         Mocks.AdjustedData
@@ -296,7 +298,9 @@ describe('RateUtility', () => {
         ],
         Mocks.AdjustedData
       );
-      expect(result[0].outputs).toEqual({ [ItemId.Coal]: Rational.from(3, 2) });
+      expect(result[0].outputs).toEqual({
+        [ItemId.Coal]: Rational.from(1183, 200),
+      });
     });
   });
 
@@ -320,16 +324,16 @@ describe('RateUtility', () => {
           {
             items: Rational.one,
             surplus: Rational.two,
-            wagons: new Rational(BigInt(3)),
-            pollution: new Rational(BigInt(4)),
+            wagons: Rational.from(3),
+            pollution: Rational.from(4),
           },
         ] as any,
         DisplayRate.PerMinute
       );
-      expect(result[0].items).toEqual(new Rational(BigInt(60)));
-      expect(result[0].surplus).toEqual(new Rational(BigInt(120)));
-      expect(result[0].wagons).toEqual(new Rational(BigInt(180)));
-      expect(result[0].pollution).toEqual(new Rational(BigInt(240)));
+      expect(result[0].items).toEqual(Rational.from(60));
+      expect(result[0].surplus).toEqual(Rational.from(120));
+      expect(result[0].wagons).toEqual(Rational.from(180));
+      expect(result[0].pollution).toEqual(Rational.from(240));
     });
 
     it('should apply the display rate to partial steps', () => {
@@ -337,7 +341,7 @@ describe('RateUtility', () => {
         [{ items: Rational.two }] as any,
         DisplayRate.PerMinute
       );
-      expect(result[0].items).toEqual(new Rational(BigInt(120)));
+      expect(result[0].items).toEqual(Rational.from(120));
       expect(result[0].surplus).toBeUndefined();
       expect(result[0].wagons).toBeUndefined();
       expect(result[0].pollution).toBeUndefined();
@@ -348,7 +352,7 @@ describe('RateUtility', () => {
         [{ items: Rational.two, parents: { id: Rational.one } }] as any,
         DisplayRate.PerMinute
       );
-      expect(result[0].parents.id).toEqual(new Rational(BigInt(1), BigInt(2)));
+      expect(result[0].parents.id).toEqual(Rational.from(1, 2));
     });
   });
 

@@ -69,24 +69,28 @@ export function productsReducer(
         },
       };
     }
-    case ProductsActionType.SET_ITEM: {
-      const entity = {
-        ...state.entities[action.payload.id],
-        ...{
-          [ProductField.ItemId]: action.payload.value,
-        },
-      };
-      delete entity[ProductField.ViaId];
+    case ProductsActionType.SET_ITEM:
       return {
         ...state,
         ...{
-          entities: {
-            ...state.entities,
-            [action.payload.id]: entity,
-          },
+          entities: StoreUtility.resetFields(
+            StoreUtility.assignValue(
+              state.entities,
+              ProductField.ItemId,
+              action.payload
+            ),
+            [
+              ProductField.ViaId,
+              ProductField.ViaSetting,
+              ProductField.ViaFactoryModules,
+              ProductField.ViaBeaconCount,
+              ProductField.ViaBeacon,
+              ProductField.ViaBeaconModules,
+            ],
+            action.payload.id
+          ),
         },
       };
-    }
     case ProductsActionType.SET_RATE:
       return {
         ...state,
@@ -98,31 +102,113 @@ export function productsReducer(
           ),
         },
       };
-    case ProductsActionType.SET_RATE_TYPE: {
-      const entity = {
-        ...state.entities[action.payload.id],
-        ...{
-          [ProductField.RateType]: action.payload.value,
-        },
-      };
-      delete entity[ProductField.ViaId];
+    case ProductsActionType.SET_RATE_TYPE:
       return {
         ...state,
         ...{
-          entities: {
-            ...state.entities,
-            [action.payload.id]: entity,
-          },
+          entities: StoreUtility.resetFields(
+            StoreUtility.assignValue(
+              state.entities,
+              ProductField.RateType,
+              action.payload
+            ),
+            [
+              ProductField.ViaId,
+              ProductField.ViaSetting,
+              ProductField.ViaFactoryModules,
+              ProductField.ViaBeaconCount,
+              ProductField.ViaBeacon,
+              ProductField.ViaBeaconModules,
+            ],
+            action.payload.id
+          ),
         },
       };
-    }
     case ProductsActionType.SET_VIA:
       return {
         ...state,
         ...{
-          entities: StoreUtility.assignValue(
+          entities: StoreUtility.resetFields(
+            StoreUtility.assignValue(
+              state.entities,
+              ProductField.ViaId,
+              action.payload
+            ),
+            [
+              ProductField.ViaSetting,
+              ProductField.ViaFactoryModules,
+              ProductField.ViaBeaconCount,
+              ProductField.ViaBeacon,
+              ProductField.ViaBeaconModules,
+            ],
+            action.payload.id
+          ),
+        },
+      };
+    case ProductsActionType.SET_VIA_SETTING:
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.resetFields(
+            StoreUtility.compareReset(
+              state.entities,
+              ProductField.ViaSetting,
+              action.payload
+            ),
+            [
+              ProductField.ViaFactoryModules,
+              ProductField.ViaBeaconCount,
+              ProductField.ViaBeacon,
+              ProductField.ViaBeaconModules,
+            ],
+            action.payload.id
+          ),
+        },
+      };
+    case ProductsActionType.SET_VIA_FACTORY_MODULES:
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.compareReset(
             state.entities,
-            ProductField.ViaId,
+            ProductField.ViaFactoryModules,
+            action.payload
+          ),
+        },
+      };
+    case ProductsActionType.SET_VIA_BEACON_COUNT:
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.compareReset(
+            state.entities,
+            ProductField.ViaBeaconCount,
+            action.payload
+          ),
+        },
+      };
+    case ProductsActionType.SET_VIA_BEACON:
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.resetField(
+            StoreUtility.compareReset(
+              state.entities,
+              ProductField.ViaBeacon,
+              action.payload
+            ),
+            ProductField.ViaBeaconModules,
+            action.payload.id
+          ),
+        },
+      };
+    case ProductsActionType.SET_VIA_BEACON_MODULES:
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.compareReset(
+            state.entities,
+            ProductField.ViaBeaconModules,
             action.payload
           ),
         },
