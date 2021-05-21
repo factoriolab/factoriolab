@@ -253,7 +253,10 @@ export class RecipeUtility {
     return steps[0];
   }
 
-  static allowsModules(recipe: Recipe, factory: Factory): boolean {
+  static allowsModules(
+    recipe: Recipe | RationalRecipe,
+    factory: Factory
+  ): boolean {
     return !!(
       (recipe.producers[0] !== ItemId.RocketSilo ||
         recipe.id === ItemId.RocketPart) &&
