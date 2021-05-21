@@ -9,6 +9,7 @@ export const data: AppData = {
     { id: '1.0', name: '1.0.0' },
     { id: '017', name: '0.17.79' },
     { id: '016', name: '0.16.51' },
+    { id: 'ang', name: `Angel's Industries` },
     { id: 'bio', name: 'Bio Industries' },
     { id: 'bob', name: `Bob's Mods` },
     { id: 'bobang', name: `Bob's & Angel's` },
@@ -70,5 +71,6 @@ export const data: AppData = {
     'xan',
     'nls',
     'fpp',
+    'ang',
   ],
 };

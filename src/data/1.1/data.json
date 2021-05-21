@@ -2036,8 +2036,7 @@
         "modules": 4,
         "silo": {
           "launch": 2435,
-          "parts": 100,
-          "recipe": "rocket-part"
+          "parts": 100
         },
         "speed": 1,
         "type": "electric",
@@ -4973,6 +4972,34 @@
       "time": 3
     },
     {
+      "id": "space-science-pack",
+      "in": {
+        "rocket-part": 100,
+        "satellite": 1
+      },
+      "name": "Satellite launch",
+      "out": {
+        "space-science-pack": 1000
+      },
+      "part": "rocket-part",
+      "producers": ["rocket-silo"],
+      "time": 40.6
+    },
+    {
+      "id": "raw-fish",
+      "in": {
+        "rocket-part": 100,
+        "space-science-pack": 1
+      },
+      "name": "Space science pack launch",
+      "out": {
+        "raw-fish": 1
+      },
+      "part": "rocket-part",
+      "producers": ["rocket-silo"],
+      "time": 40.6
+    },
+    {
       "id": "nuclear-fuel",
       "in": {
         "rocket-fuel": 1,
@@ -6009,30 +6036,6 @@
       "name": "Water",
       "producers": ["offshore-pump"],
       "time": 1
-    },
-    {
-      "id": "space-science-pack",
-      "in": {
-        "satellite": 1
-      },
-      "name": "Satellite launch",
-      "out": {
-        "space-science-pack": 1000
-      },
-      "producers": ["rocket-silo"],
-      "time": 40.6
-    },
-    {
-      "id": "raw-fish",
-      "in": {
-        "space-science-pack": 1
-      },
-      "name": "Space science pack launch",
-      "out": {
-        "raw-fish": 1
-      },
-      "producers": ["rocket-silo"],
-      "time": 40.6
     }
   ],
   "defaults": {

@@ -70,11 +70,6 @@ export class RecipeUtility {
       recipe.time = recipe.time.div(researchFactor);
     }
 
-    // Add rocket parts to launch recipes
-    if (factory.silo && factory.silo.recipe !== recipeId) {
-      recipe.in[factory.silo.recipe] = factory.silo.parts;
-    }
-
     // Calculate factors
     let speed = Rational.one;
     let prod = Rational.one;
@@ -224,11 +219,11 @@ export class RecipeUtility {
   ): Entities<RationalRecipe> {
     for (const partId of Object.keys(recipeR)) {
       const rocketFactory = data.itemR[settings[partId].factory]?.factory;
-      if (rocketFactory?.silo && partId === rocketFactory.silo.recipe) {
-        const rocketRecipe = recipeR[partId];
+      const rocketRecipe = recipeR[partId];
+      if (rocketFactory?.silo && !rocketRecipe.part) {
         const factor = rocketFactory.silo.parts.div(rocketRecipe.out[partId]);
         for (const launchId of Object.keys(recipeR).filter(
-          (i) => i !== partId
+          (i) => recipeR[i].part === partId
         )) {
           if (settings[partId].factory === settings[launchId].factory) {
             recipeR[launchId].time = rocketRecipe.time
@@ -263,10 +258,7 @@ export class RecipeUtility {
   }
 
   static allowsModules(recipe: Recipe, factory: Factory): boolean {
-    return (
-      (!factory.silo || factory.silo.recipe === recipe.id) &&
-      factory?.modules > 0
-    );
+    return (!factory.silo || !recipe.part) && factory?.modules > 0;
   }
 
   static adjustDataset(
