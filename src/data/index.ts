@@ -5,7 +5,7 @@ export { app };
 export const data: AppData = {
   app,
   base: [
-    { id: '1.1', name: '1.1.32' },
+    { id: '1.1', name: '1.1.33' },
     { id: '1.0', name: '1.0.0' },
     { id: '017', name: '0.17.79' },
     { id: '016', name: '0.16.51' },
@@ -13,10 +13,12 @@ export const data: AppData = {
     { id: 'bob', name: `Bob's Mods` },
     { id: 'bobang', name: `Bob's & Angel's` },
     { id: 'dsp', name: 'Dyson Sphere Program' },
+    { id: 'fpp', name: 'Factorio Plus Plus' },
     { id: 'fep', name: 'FactorioExtended Plus' },
     { id: 'ir2', name: 'Industrial Revolution 2' },
     { id: 'kr2', name: 'Krastorio 2' },
     { id: 'kr2sxp', name: 'Krastorio 2 + SE' },
+    { id: 'nls', name: 'Nullius' },
     { id: 'pys', name: 'Pyanodons' },
     { id: 'pysalf', name: 'Pyanodons + AL' },
     { id: 'sea', name: 'Sea Block' },
@@ -66,5 +68,7 @@ export const data: AppData = {
     'sea',
     'sxp',
     'xan',
+    'nls',
+    'fpp',
   ],
 };

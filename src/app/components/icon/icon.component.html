@@ -140,6 +140,20 @@
         <td>Pollution</td>
         <td>{{ round(factory.pollution) }}/m</td>
       </tr>
+      <ng-container *ngIf="factory.silo as silo">
+        <tr>
+          <td>Rocket Part Recipe</td>
+          <td>{{ data.recipeEntities[silo.recipe].name }}</td>
+        </tr>
+        <tr>
+          <td>Rocket Parts Required</td>
+          <td>{{ silo.parts }}</td>
+        </tr>
+        <tr>
+          <td>Launch Time (ticks)</td>
+          <td>{{ silo.launch }}</td>
+        </tr>
+      </ng-container>
     </table>
   </div>
   <div *ngIf="item?.fuel as fuel">

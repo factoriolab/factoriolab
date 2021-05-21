@@ -10,8 +10,6 @@ import {
 import { ItemsState } from '~/store/items';
 
 export class RateUtility {
-  static LAUNCH_TIME = new Rational(BigInt(2420), BigInt(60));
-
   static addStepsFor(
     itemId: string,
     rate: Rational,

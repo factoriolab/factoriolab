@@ -154,10 +154,12 @@ export class AppComponent implements OnInit {
                   .filter((i) => h.belts.indexOf(i) === -1)) {
                   h.belts.push(id);
                 }
-                for (const id of d.fuelIds[FuelType.Chemical]
-                  .sort()
-                  .filter((i) => h.fuels.indexOf(i) === -1)) {
-                  h.fuels.push(id);
+                if (d.fuelIds[FuelType.Chemical]) {
+                  for (const id of d.fuelIds[FuelType.Chemical]
+                    .sort()
+                    .filter((i) => h.fuels.indexOf(i) === -1)) {
+                    h.fuels.push(id);
+                  }
                 }
                 for (const id of [...d.cargoWagonIds, ...d.fluidWagonIds]
                   .sort()

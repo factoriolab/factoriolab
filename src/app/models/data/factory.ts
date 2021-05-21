@@ -1,5 +1,6 @@
 import { EnergyType } from '../enum';
 import { Rational } from '../rational';
+import { RationalSilo, Silo } from './silo';
 
 export interface Factory {
   speed: number;
@@ -16,6 +17,7 @@ export interface Factory {
   pollution?: number;
   mining?: boolean;
   research?: boolean;
+  silo?: Silo;
 }
 
 export class RationalFactory {
@@ -31,6 +33,7 @@ export class RationalFactory {
   pollution?: Rational;
   mining?: boolean;
   research?: boolean;
+  silo?: RationalSilo;
 
   constructor(data: Factory) {
     this.speed = Rational.fromNumber(data.speed);
@@ -57,6 +60,9 @@ export class RationalFactory {
     }
     if (data.research) {
       this.research = data.research;
+    }
+    if (data.silo) {
+      this.silo = new RationalSilo(data.silo);
     }
   }
 }
