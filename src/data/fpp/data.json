@@ -4425,8 +4425,7 @@
         "modules": 4,
         "silo": {
           "launch": 2435,
-          "parts": 100,
-          "recipe": "rocket-part"
+          "parts": 100
         },
         "speed": 1,
         "type": "electric",
@@ -12645,6 +12644,76 @@
       "time": 3
     },
     {
+      "id": "space-science-pack",
+      "in": {
+        "rocket-part": 100,
+        "satellite": 1
+      },
+      "name": "Satellite launch",
+      "out": {
+        "space-science-pack": 1000
+      },
+      "part": "rocket-part",
+      "producers": ["rocket-silo"],
+      "time": 40.6
+    },
+    {
+      "id": "mercury-flask",
+      "in": {
+        "mercury-probe": 1,
+        "rocket-part": 100
+      },
+      "name": "Mercury probe launch",
+      "out": {
+        "mercury-flask": 500
+      },
+      "part": "rocket-part",
+      "producers": ["rocket-silo"],
+      "time": 40.6
+    },
+    {
+      "id": "massive-technetium-chunk",
+      "in": {
+        "rocket-part": 100,
+        "technetium-probe": 1
+      },
+      "name": "Technetium probe launch",
+      "out": {
+        "massive-technetium-chunk": 10
+      },
+      "part": "rocket-part",
+      "producers": ["rocket-silo"],
+      "time": 40.6
+    },
+    {
+      "id": "space-upgrade-pack",
+      "in": {
+        "rocket-part": 100,
+        "upgrade-satellite": 1
+      },
+      "name": "Upgrade-satellite launch",
+      "out": {
+        "space-upgrade-pack": 100
+      },
+      "part": "rocket-part",
+      "producers": ["rocket-silo"],
+      "time": 40.6
+    },
+    {
+      "id": "raw-fish",
+      "in": {
+        "rocket-part": 100,
+        "space-science-pack": 1
+      },
+      "name": "Space science pack launch",
+      "out": {
+        "raw-fish": 1
+      },
+      "part": "rocket-part",
+      "producers": ["rocket-silo"],
+      "time": 40.6
+    },
+    {
       "id": "nuclear-fuel",
       "in": {
         "rocket-fuel": 1,
@@ -20405,67 +20474,14 @@
       "out": {
         "used-up-uranium-fuel-cell": 0
       },
-      "producers": ["nuclear-reactor"],
-      "time": 1
-    },
-    {
-      "id": "used-up-uranium-fuel-cell",
-      "in": {
-        "uranium-fuel-cell": 0
-      },
-      "name": "Used-up uranium fuel cell",
-      "out": {
-        "used-up-uranium-fuel-cell": 0
-      },
-      "producers": ["advanced-nuclear-reactor"],
-      "time": 1
-    },
-    {
-      "id": "used-up-uranium-fuel-cell",
-      "in": {
-        "uranium-fuel-cell": 0
-      },
-      "name": "Used-up uranium fuel cell",
-      "out": {
-        "used-up-uranium-fuel-cell": 0
-      },
-      "producers": ["enchanted-nuclear-reactor"],
-      "time": 1
-    },
-    {
-      "id": "used-up-uranium-fuel-cell",
-      "in": {
-        "uranium-fuel-cell": 0
-      },
-      "name": "Used-up uranium fuel cell",
-      "out": {
-        "used-up-uranium-fuel-cell": 0
-      },
-      "producers": ["hightech-nuclear-reactor"],
-      "time": 1
-    },
-    {
-      "id": "used-up-uranium-fuel-cell",
-      "in": {
-        "uranium-fuel-cell": 0
-      },
-      "name": "Used-up uranium fuel cell",
-      "out": {
-        "used-up-uranium-fuel-cell": 0
-      },
-      "producers": ["legendary-nuclear-reactor"],
-      "time": 1
-    },
-    {
-      "id": "used-up-uranium-fuel-cell",
-      "in": {
-        "uranium-fuel-cell": 0
-      },
-      "name": "Used-up uranium fuel cell",
-      "out": {
-        "used-up-uranium-fuel-cell": 0
-      },
-      "producers": ["spacecrafted-nuclear-reactor"],
+      "producers": [
+        "nuclear-reactor",
+        "advanced-nuclear-reactor",
+        "enchanted-nuclear-reactor",
+        "hightech-nuclear-reactor",
+        "legendary-nuclear-reactor",
+        "spacecrafted-nuclear-reactor"
+      ],
       "time": 1
     },
     {
@@ -20473,66 +20489,6 @@
       "name": "Water",
       "producers": ["offshore-pump"],
       "time": 1
-    },
-    {
-      "id": "space-science-pack",
-      "in": {
-        "satellite": 1
-      },
-      "name": "Satellite launch",
-      "out": {
-        "space-science-pack": 1000
-      },
-      "producers": ["rocket-silo"],
-      "time": 40.6
-    },
-    {
-      "id": "mercury-flask",
-      "in": {
-        "mercury-probe": 1
-      },
-      "name": "Mercury probe launch",
-      "out": {
-        "mercury-flask": 500
-      },
-      "producers": ["rocket-silo"],
-      "time": 40.6
-    },
-    {
-      "id": "massive-technetium-chunk",
-      "in": {
-        "technetium-probe": 1
-      },
-      "name": "Technetium probe launch",
-      "out": {
-        "massive-technetium-chunk": 10
-      },
-      "producers": ["rocket-silo"],
-      "time": 40.6
-    },
-    {
-      "id": "space-upgrade-pack",
-      "in": {
-        "upgrade-satellite": 1
-      },
-      "name": "Upgrade-satellite launch",
-      "out": {
-        "space-upgrade-pack": 100
-      },
-      "producers": ["rocket-silo"],
-      "time": 40.6
-    },
-    {
-      "id": "raw-fish",
-      "in": {
-        "space-science-pack": 1
-      },
-      "name": "Space science pack launch",
-      "out": {
-        "raw-fish": 1
-      },
-      "producers": ["rocket-silo"],
-      "time": 40.6
     }
   ],
   "defaults": {

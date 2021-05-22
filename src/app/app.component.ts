@@ -119,7 +119,7 @@ export class AppComponent implements OnInit {
 
     // Used only in development to update hash files
     // istanbul ignore next
-    if (!environment.production && !environment.testing) {
+    if (environment.debug) {
       this.datasets$
         .pipe(
           filter((d) => !!d.length),
@@ -139,23 +139,23 @@ export class AppComponent implements OnInit {
                   )
                 );
                 const old = JSON.stringify(h);
-                for (const id of d.itemIds
+                for (const id of [...d.itemIds]
                   .sort()
                   .filter((i) => h.items.indexOf(i) === -1)) {
                   h.items.push(id);
                 }
-                for (const id of d.beaconIds
+                for (const id of [...d.beaconIds]
                   .sort()
                   .filter((i) => h.beacons.indexOf(i) === -1)) {
                   h.beacons.push(id);
                 }
-                for (const id of d.beltIds
+                for (const id of [...d.beltIds]
                   .sort()
                   .filter((i) => h.belts.indexOf(i) === -1)) {
                   h.belts.push(id);
                 }
                 if (d.fuelIds[FuelType.Chemical]) {
-                  for (const id of d.fuelIds[FuelType.Chemical]
+                  for (const id of [...d.fuelIds[FuelType.Chemical]]
                     .sort()
                     .filter((i) => h.fuels.indexOf(i) === -1)) {
                     h.fuels.push(id);
@@ -166,17 +166,17 @@ export class AppComponent implements OnInit {
                   .filter((i) => h.wagons.indexOf(i) === -1)) {
                   h.wagons.push(id);
                 }
-                for (const id of d.factoryIds
+                for (const id of [...d.factoryIds]
                   .sort()
                   .filter((i) => h.factories.indexOf(i) === -1)) {
                   h.factories.push(id);
                 }
-                for (const id of d.moduleIds
+                for (const id of [...d.moduleIds]
                   .sort()
                   .filter((i) => h.modules.indexOf(i) === -1)) {
                   h.modules.push(id);
                 }
-                for (const id of d.recipeIds
+                for (const id of [...d.recipeIds]
                   .sort()
                   .filter((i) => h.recipes.indexOf(i) === -1)) {
                   h.recipes.push(id);

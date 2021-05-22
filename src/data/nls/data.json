@@ -9497,8 +9497,7 @@
         "modules": 4,
         "silo": {
           "launch": 2435,
-          "parts": 1,
-          "recipe": "nullius-rocket"
+          "parts": 1
         },
         "speed": 1,
         "type": "electric",
@@ -20383,6 +20382,103 @@
       "name": "Rocket",
       "producers": ["nullius-silo"],
       "time": 400
+    },
+    {
+      "id": "nullius-satellite-launch",
+      "in": {
+        "nullius-rocket": 1,
+        "nullius-satellite": 1
+      },
+      "name": "Satellite launch",
+      "out": {
+        "nullius-box-astronomy-pack": 50
+      },
+      "part": "nullius-rocket",
+      "producers": ["nullius-silo"],
+      "time": 40.6
+    },
+    {
+      "id": "nullius-asteroid-miner-1-launch",
+      "in": {
+        "nullius-asteroid-miner-1": 1,
+        "nullius-rocket": 1
+      },
+      "name": "Asteroid miner 1 launch",
+      "out": {
+        "nullius-guide-drone-bauxite-1": 0.2,
+        "nullius-guide-drone-copper-1": 0.1,
+        "nullius-guide-drone-iron-1": 0.3,
+        "nullius-guide-drone-limestone-1": 0.1,
+        "nullius-guide-drone-sandstone-1": 0.2,
+        "nullius-guide-drone-uranium-1": 0.1
+      },
+      "part": "nullius-rocket",
+      "producers": ["nullius-silo"],
+      "time": 40.6
+    },
+    {
+      "id": "nullius-asteroid-miner-2-launch",
+      "in": {
+        "nullius-asteroid-miner-2": 1,
+        "nullius-rocket": 1
+      },
+      "name": "Asteroid miner 2 launch",
+      "out": {
+        "nullius-guide-drone-bauxite-1": 0.7,
+        "nullius-guide-drone-copper-1": 0.4,
+        "nullius-guide-drone-iron-1": 0.9,
+        "nullius-guide-drone-limestone-1": 0.5,
+        "nullius-guide-drone-sandstone-1": 0.8,
+        "nullius-guide-drone-uranium-1": 0.3
+      },
+      "part": "nullius-rocket",
+      "producers": ["nullius-silo"],
+      "time": 40.6
+    },
+    {
+      "id": "nullius-probe-launch",
+      "in": {
+        "nullius-probe": 1,
+        "nullius-rocket": 1
+      },
+      "name": "Probe launch",
+      "out": {
+        "nullius-box-astronomy-pack": 300,
+        "nullius-box-chemical-pack": 75,
+        "nullius-box-electrical-pack": 75,
+        "nullius-box-physics-pack": 75
+      },
+      "part": "nullius-rocket",
+      "producers": ["nullius-silo"],
+      "time": 40.6
+    },
+    {
+      "id": "space-science-pack",
+      "in": {
+        "nullius-rocket": 1,
+        "satellite": 1
+      },
+      "name": "Satellite launch",
+      "out": {
+        "space-science-pack": 1000
+      },
+      "part": "nullius-rocket",
+      "producers": ["nullius-silo"],
+      "time": 40.6
+    },
+    {
+      "id": "raw-fish",
+      "in": {
+        "nullius-rocket": 1,
+        "space-science-pack": 1
+      },
+      "name": "Space science pack launch",
+      "out": {
+        "raw-fish": 1
+      },
+      "part": "nullius-rocket",
+      "producers": ["nullius-silo"],
+      "time": 40.6
     },
     {
       "id": "nullius-satellite",
@@ -40963,95 +41059,10 @@
       "time": 1
     },
     {
-      "id": "nullius-seawater",
+      "id": "nullius-seawater-nullius-seawater-intake-2",
       "name": "Seawater",
       "producers": ["nullius-seawater-intake-2"],
       "time": 1
-    },
-    {
-      "id": "nullius-satellite-launch",
-      "in": {
-        "nullius-satellite": 1
-      },
-      "name": "Satellite launch",
-      "out": {
-        "nullius-box-astronomy-pack": 50
-      },
-      "producers": ["nullius-silo"],
-      "time": 40.6
-    },
-    {
-      "id": "nullius-asteroid-miner-1-launch",
-      "in": {
-        "nullius-asteroid-miner-1": 1
-      },
-      "name": "Asteroid miner 1 launch",
-      "out": {
-        "nullius-guide-drone-bauxite-1": 0.2,
-        "nullius-guide-drone-copper-1": 0.1,
-        "nullius-guide-drone-iron-1": 0.3,
-        "nullius-guide-drone-limestone-1": 0.1,
-        "nullius-guide-drone-sandstone-1": 0.2,
-        "nullius-guide-drone-uranium-1": 0.1
-      },
-      "producers": ["nullius-silo"],
-      "time": 40.6
-    },
-    {
-      "id": "nullius-asteroid-miner-2-launch",
-      "in": {
-        "nullius-asteroid-miner-2": 1
-      },
-      "name": "Asteroid miner 2 launch",
-      "out": {
-        "nullius-guide-drone-bauxite-1": 0.7,
-        "nullius-guide-drone-copper-1": 0.4,
-        "nullius-guide-drone-iron-1": 0.9,
-        "nullius-guide-drone-limestone-1": 0.5,
-        "nullius-guide-drone-sandstone-1": 0.8,
-        "nullius-guide-drone-uranium-1": 0.3
-      },
-      "producers": ["nullius-silo"],
-      "time": 40.6
-    },
-    {
-      "id": "nullius-probe-launch",
-      "in": {
-        "nullius-probe": 1
-      },
-      "name": "Probe launch",
-      "out": {
-        "nullius-box-astronomy-pack": 300,
-        "nullius-box-chemical-pack": 75,
-        "nullius-box-electrical-pack": 75,
-        "nullius-box-physics-pack": 75
-      },
-      "producers": ["nullius-silo"],
-      "time": 40.6
-    },
-    {
-      "id": "space-science-pack",
-      "in": {
-        "satellite": 1
-      },
-      "name": "Satellite launch",
-      "out": {
-        "space-science-pack": 1000
-      },
-      "producers": ["nullius-silo"],
-      "time": 40.6
-    },
-    {
-      "id": "raw-fish",
-      "in": {
-        "space-science-pack": 1
-      },
-      "name": "Space science pack launch",
-      "out": {
-        "raw-fish": 1
-      },
-      "producers": ["nullius-silo"],
-      "time": 40.6
     }
   ],
   "defaults": {

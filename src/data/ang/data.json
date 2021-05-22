@@ -54101,7 +54101,7 @@
       "time": 1
     },
     {
-      "id": "used-up-uranium-fuel-cell",
+      "id": "angels-uranium-fuel-cell-burn",
       "in": {
         "angels-uranium-fuel-cell": 0
       },
@@ -54149,7 +54149,7 @@
       "time": 1
     },
     {
-      "id": "water-viscous-mud",
+      "id": "water-viscous-mud-seafloor-pump",
       "name": "Viscous mud water",
       "producers": ["seafloor-pump"],
       "time": 1
@@ -54161,7 +54161,7 @@
       "time": 1
     },
     {
-      "id": "water",
+      "id": "water-ground-water-pump",
       "name": "Water",
       "producers": ["ground-water-pump"],
       "time": 1
