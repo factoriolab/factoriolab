@@ -221,7 +221,8 @@ export class RecipeUtility {
       const rocketFactory = data.itemR[settings[partId].factory]?.factory;
       const rocketRecipe = recipeR[partId];
       if (rocketFactory?.silo && !rocketRecipe.part) {
-        const factor = rocketFactory.silo.parts.div(rocketRecipe.out[partId]);
+        const itemId = Object.keys(rocketRecipe.out)[0];
+        const factor = rocketFactory.silo.parts.div(rocketRecipe.out[itemId]);
         for (const launchId of Object.keys(recipeR).filter(
           (i) => recipeR[i].part === partId
         )) {
