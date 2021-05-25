@@ -428,25 +428,17 @@ describe('RecipeUtility', () => {
   });
 
   describe('adjustSiloRecipes', () => {
-    it('should handle no rocket part recipe', () => {
-      const recipeR = {
-        ...Mocks.AdjustedData.recipeR,
-        ...{ [RecipeId.RocketPart]: null },
-      };
-      const result = RecipeUtility.adjustSiloRecipes(recipeR, null);
-      expect(result).toBe(recipeR);
-    });
-
     it('should adjust recipes', () => {
       const result = RecipeUtility.adjustSiloRecipes(
         Mocks.AdjustedData.recipeR,
-        Mocks.RationalRecipeSettingsInitial
+        Mocks.RationalRecipeSettingsInitial,
+        Mocks.AdjustedData
       );
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
-        Rational.from(29884, 231)
+        Rational.from(59999, 462)
       );
       expect(result[RecipeId.RocketPart].time).toEqual(
-        Rational.from(7471, 4125)
+        Rational.from(59999, 33000)
       );
     });
   });

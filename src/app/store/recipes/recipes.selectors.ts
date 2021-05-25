@@ -26,9 +26,6 @@ export const getRecipeSettings = createSelector(
         }
 
         const factory = data.itemEntities[s.factory]?.factory;
-        if (!factory) {
-          console.log(recipe);
-        }
         if (RecipeUtility.allowsModules(recipe, factory)) {
           const def = factories.entities[s.factory];
           if (!s.factoryModules) {

@@ -259,7 +259,7 @@ export class RecipeUtility {
   }
 
   static allowsModules(recipe: Recipe, factory: Factory): boolean {
-    return (!factory.silo || !recipe.part) && factory?.modules > 0;
+    return (!factory?.silo || !recipe.part) && factory?.modules > 0;
   }
 
   static adjustDataset(
