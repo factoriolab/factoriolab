@@ -7,8 +7,6 @@ export enum ItemId {
   Pipe = 'pipe',
   ProductivityLimitation = 'productivity-module',
   Pumpjack = 'pumpjack',
-  RocketPart = 'rocket-part',
-  RocketSilo = 'rocket-silo',
   StackInserter = 'stack-inserter',
   Water = 'water',
 }

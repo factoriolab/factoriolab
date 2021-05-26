@@ -1,4 +1,5 @@
 import { compose, createSelector } from '@ngrx/store';
+import { environment } from 'src/environments';
 
 import {
   ResearchSpeedFactor,
@@ -186,10 +187,22 @@ export const getNormalDataset = createSelector(
     const recipes = recipeIds.map((r) => recipeEntities[r]);
 
     // Filter for item types
-    const beaconIds = items.filter((i) => i.beacon).map((i) => i.id);
-    const beltIds = items.filter((i) => i.belt).map((i) => i.id);
-    const cargoWagonIds = items.filter((i) => i.cargoWagon).map((i) => i.id);
-    const fluidWagonIds = items.filter((i) => i.fluidWagon).map((i) => i.id);
+    const beaconIds = items
+      .filter((i) => i.beacon)
+      .sort((a, b) => a.beacon.modules - b.beacon.modules)
+      .map((i) => i.id);
+    const beltIds = items
+      .filter((i) => i.belt)
+      .sort((a, b) => a.belt.speed - b.belt.speed)
+      .map((i) => i.id);
+    const cargoWagonIds = items
+      .filter((i) => i.cargoWagon)
+      .sort((a, b) => a.cargoWagon.size - b.cargoWagon.size)
+      .map((i) => i.id);
+    const fluidWagonIds = items
+      .filter((i) => i.fluidWagon)
+      .sort((a, b) => a.fluidWagon.capacity - b.fluidWagon.capacity)
+      .map((i) => i.id);
     const factoryIds = items.filter((i) => i.factory).map((i) => i.id);
     const modules = items.filter((i) => i.module);
     const moduleIds = modules.map((i) => i.id);
@@ -198,6 +211,7 @@ export const getNormalDataset = createSelector(
       .map((i) => i.id);
     const fuelIds = items
       .filter((i) => i.fuel)
+      .sort((a, b) => a.fuel.value - b.fuel.value)
       .reduce((e: Entities<string[]>, f) => {
         if (!e[f.fuel.category]) {
           e[f.fuel.category] = [];
@@ -386,6 +400,11 @@ export function getEntities<T extends { id: string }>(
   const entities = toEntities(base);
   for (const mod of mods.filter((m) => m)) {
     for (const i of mod) {
+      // Used only in development to validate data files
+      // istanbul ignore next
+      if (environment.debug && mod.filter((m) => m.id === i.id).length > 1) {
+        console.warn(`Duplicate id: ${i.id}`);
+      }
       entities[i.id] = i;
     }
   }

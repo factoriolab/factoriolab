@@ -1,5 +1,5 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import { Rational, ResearchSpeed, Preset } from '~/models';
+import { Rational, ResearchSpeed, Preset, FuelType } from '~/models';
 import { initialSettingsState } from './settings.reducer';
 import * as Selectors from './settings.selectors';
 
@@ -132,9 +132,8 @@ describe('Settings Selectors', () => {
 
   describe('getDisabledRecipes', () => {
     it('should return disabledRecipes from settings', () => {
-      const result = Selectors.getDisabledRecipes.projector(
-        initialSettingsState
-      );
+      const result =
+        Selectors.getDisabledRecipes.projector(initialSettingsState);
       expect(result).toEqual(initialSettingsState.disabledRecipes);
     });
   });
@@ -304,6 +303,50 @@ describe('Settings Selectors', () => {
       expect(result.recipeEntities['unknown-recipe'].name).toEqual(
         'Unknown recipe'
       );
+    });
+
+    it('should sort beacons, belts, wagons, and fuels', () => {
+      const base = {
+        ...Mocks.Base,
+        ...{
+          items: [
+            ...Mocks.Base.items,
+            {
+              id: 'id',
+              name: 'Item',
+              category: 'logistics',
+              row: 0,
+              beacon: {
+                effectivity: 1,
+                modules: 1,
+                range: 1,
+              },
+              cargoWagon: { size: 1 },
+              fluidWagon: { capacity: 1 },
+            },
+          ],
+        },
+      };
+      const result = Selectors.getNormalDataset.projector(
+        Mocks.Raw.app,
+        [base, Mocks.Mod1],
+        Mocks.Defaults
+      );
+      expect(result.beaconIds).toEqual(['id', 'beacon']);
+      expect(result.beltIds).toEqual([
+        ItemId.TransportBelt,
+        'fast-transport-belt',
+        'express-transport-belt',
+      ]);
+      expect(result.cargoWagonIds).toEqual(['id', ItemId.CargoWagon]);
+      expect(result.fluidWagonIds).toEqual(['id', ItemId.FluidWagon]);
+      expect(result.fuelIds[FuelType.Chemical]).toEqual([
+        ItemId.Wood,
+        ItemId.Coal,
+        ItemId.SolidFuel,
+        'rocket-fuel',
+        'nuclear-fuel',
+      ]);
     });
   });
 

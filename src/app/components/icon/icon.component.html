@@ -125,7 +125,7 @@
       <tr
         *ngIf="
           factory.drain ||
-          (factory.type == EnergyType.Electric && factory.drain == null)
+          (factory.type === EnergyType.Electric && factory.drain == null)
         "
       >
         <td>Drain</td>
@@ -140,6 +140,16 @@
         <td>Pollution</td>
         <td>{{ round(factory.pollution) }}/m</td>
       </tr>
+      <ng-container *ngIf="factory.silo as silo">
+        <tr>
+          <td>Rocket Parts Required</td>
+          <td>{{ silo.parts }}</td>
+        </tr>
+        <tr>
+          <td>Launch Time (ticks)</td>
+          <td>{{ silo.launch }}</td>
+        </tr>
+      </ng-container>
     </table>
   </div>
   <div *ngIf="item?.fuel as fuel">

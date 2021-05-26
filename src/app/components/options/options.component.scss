@@ -3,14 +3,17 @@
 }
 
 lab-dialog {
+  max-height: 20rem;
   margin-top: 2.25rem;
   padding: 0;
   display: flex;
   flex-direction: column;
+  overflow: auto;
 
   button {
     font-weight: normal;
     filter: none;
+    flex-shrink: 0;
   }
 
   button:not(:hover):not(.active) {
