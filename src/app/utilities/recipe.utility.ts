@@ -12,6 +12,7 @@ import {
   Recipe,
   Factory,
   RateType,
+  ItemSettings,
 } from '~/models';
 import { FactoriesState } from '~/store/factories';
 import { RecipesState } from '~/store/recipes';
@@ -258,37 +259,48 @@ export class RecipeUtility {
     return steps[0];
   }
 
-  static allowsModules(recipe: Recipe | RationalRecipe, factory: Factory): boolean {
+  static allowsModules(
+    recipe: Recipe | RationalRecipe,
+    factory: Factory
+  ): boolean {
     return (!factory?.silo || !recipe.part) && factory?.modules > 0;
   }
 
   static adjustDataset(
     recipeSettings: Entities<RationalRecipeSettings>,
+    itemSettings: Entities<ItemSettings>,
     fuel: string,
     miningBonus: Rational,
     researchSpeed: Rational,
     data: Dataset
   ): Dataset {
-    return {
-      ...data,
-      ...{
-        recipeR: this.adjustSiloRecipes(
-          data.recipeIds.reduce((e: Entities<RationalRecipe>, i) => {
-            e[i] = this.adjustRecipe(
-              i,
-              fuel,
-              miningBonus,
-              researchSpeed,
-              recipeSettings[i],
-              data
-            );
-            return e;
-          }, {}),
-          recipeSettings,
+    const recipeR = this.adjustSiloRecipes(
+      data.recipeIds.reduce((e: Entities<RationalRecipe>, i) => {
+        e[i] = this.adjustRecipe(
+          i,
+          fuel,
+          miningBonus,
+          researchSpeed,
+          recipeSettings[i],
           data
-        ),
-      },
-    };
+        );
+        return e;
+      }, {}),
+      recipeSettings,
+      data
+    );
+    const itemRecipeIds = { ...data.itemRecipeIds };
+    for (const id of data.itemIds.filter((i) => !data.itemRecipeIds[i])) {
+      if (itemSettings[id].recipe) {
+        itemRecipeIds[id] = itemSettings[id].recipe;
+      } else {
+        const recipes = data.recipeIds.filter((r) => recipeR[r].produces(id));
+        if (recipes.length === 1) {
+          itemRecipeIds[id] = recipes[0];
+        }
+      }
+    }
+    return { ...data, ...{ recipeR } };
   }
 
   static adjustProduct(

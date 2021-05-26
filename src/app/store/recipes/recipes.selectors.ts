@@ -2,6 +2,7 @@ import { createSelector } from '@ngrx/store';
 
 import { RecipeSettings, Entities, RationalRecipeSettings } from '~/models';
 import { RecipeUtility } from '~/utilities/recipe.utility';
+import * as Items from '../items';
 import * as Factories from '../factories';
 import * as Settings from '../settings';
 import { State } from '..';
@@ -66,19 +67,31 @@ export const getRationalRecipeSettings = createSelector(
     )
 );
 
-export const getAdjustedDataset = createSelector(
-  getRationalRecipeSettings,
+export const getSrc = createSelector(
   Settings.getFuel,
   Settings.getRationalMiningBonus,
   Settings.getResearchFactor,
   Settings.getDataset,
-  (recipeSettings, fuel, miningBonus, researchSpeed, data) =>
+  (fuel, miningBonus, researchSpeed, data) => ({
+    fuel,
+    miningBonus,
+    researchSpeed,
+    data,
+  })
+);
+
+export const getAdjustedDataset = createSelector(
+  getRationalRecipeSettings,
+  Items.getItemSettings,
+  Settings.getAdjustmentData,
+  (recipeSettings, itemSettings, adj) =>
     RecipeUtility.adjustDataset(
       recipeSettings,
-      fuel,
-      miningBonus,
-      researchSpeed,
-      data
+      itemSettings,
+      adj.fuel,
+      adj.miningBonus,
+      adj.researchSpeed,
+      adj.data
     )
 );
 
