@@ -5,6 +5,7 @@ import { ItemsState } from '~/store/items';
 import { ColumnsState } from '~/store/preferences';
 import { RecipesState } from '~/store/recipes';
 import { BrowserUtility } from './browser.utility';
+import { RecipeUtility } from './recipe.utility';
 
 const CSV_TYPE = 'text/csv;charset=UTF-8';
 const CSV_EXTENSION = '.csv';
@@ -105,14 +106,15 @@ export class ExportUtility {
       }
       const settings = recipeSettings[step.recipeId];
       const factory = data.itemEntities[settings.factory].factory;
+      const allowsModules = RecipeUtility.allowsModules(recipe, factory);
       if (columns[Column.Factories].show) {
         exp.Factories = step.factories ? '=' + step.factories.toString() : '';
         exp.Factory = settings.factory;
-        if (factory.modules) {
+        if (allowsModules) {
           exp.FactoryModules = `"${settings.factoryModules.join(',')}"`;
         }
       }
-      if (columns[Column.Beacons].show && factory.modules) {
+      if (columns[Column.Beacons].show && allowsModules) {
         exp.Beacons = settings.beaconCount;
         exp.Beacon = settings.beacon;
         exp.BeaconModules = `"${settings.beaconModules.join(',')}"`;
