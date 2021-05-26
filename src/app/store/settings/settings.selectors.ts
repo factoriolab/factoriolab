@@ -400,6 +400,8 @@ export function getEntities<T extends { id: string }>(
   const entities = toEntities(base);
   for (const mod of mods.filter((m) => m)) {
     for (const i of mod) {
+      // Used only in development to validate data files
+      // istanbul ignore next
       if (environment.debug && mod.filter((m) => m.id === i.id).length > 1) {
         console.warn(`Duplicate id: ${i.id}`);
       }

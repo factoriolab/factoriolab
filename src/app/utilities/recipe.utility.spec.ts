@@ -1,5 +1,6 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
 import {
+  Dataset,
   EnergyType,
   Product,
   RateType,
@@ -428,17 +429,45 @@ describe('RecipeUtility', () => {
   });
 
   describe('adjustSiloRecipes', () => {
+    let data: Dataset;
+
+    beforeEach(() => {
+      data = Mocks.getAdjustedData();
+    });
+
     it('should adjust recipes', () => {
       const result = RecipeUtility.adjustSiloRecipes(
-        Mocks.AdjustedData.recipeR,
+        data.recipeR,
         Mocks.RationalRecipeSettingsInitial,
-        Mocks.AdjustedData
+        data
       );
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
         Rational.from(59999, 462)
       );
       expect(result[RecipeId.RocketPart].time).toEqual(
         Rational.from(59999, 33000)
+      );
+    });
+
+    it('should handle invalid factory', () => {
+      const settings2 = {
+        ...Mocks.RationalRecipeSettingsInitial,
+        ...{
+          [RecipeId.SpaceSciencePack]: {
+            factory: 'id',
+          },
+        },
+      };
+      const result = RecipeUtility.adjustSiloRecipes(
+        data.recipeR,
+        settings2,
+        data
+      );
+      expect(result[RecipeId.SpaceSciencePack].time).toEqual(
+        Rational.from(59999, 462)
+      );
+      expect(result[RecipeId.RocketPart].time).toEqual(
+        Rational.from(52499, 22000)
       );
     });
   });
