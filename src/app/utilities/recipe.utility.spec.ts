@@ -428,7 +428,7 @@ describe('RecipeUtility', () => {
     });
   });
 
-  fdescribe('adjustSiloRecipes', () => {
+  describe('adjustSiloRecipes', () => {
     let recipeR: Entities<RationalRecipe>;
 
     beforeEach(() => {
