@@ -19,7 +19,6 @@ import {
   Link,
   LinkValue,
   ModHash,
-  Dataset,
 } from '~/models';
 import { initialDatasetsState } from '~/store/datasets';
 import { getFactorySettings, initialFactoriesState } from '~/store/factories';
@@ -172,16 +171,13 @@ export const RationalRecipeSettings = getRationalRecipeSettings.projector(
 );
 export const RationalRecipeSettingsInitial =
   getRationalRecipeSettings.projector(RecipeSettingsInitial);
-export function getAdjustedData(): Dataset {
-  return getAdjustedDataset.projector(
-    RationalRecipeSettingsInitial,
-    ItemId.Coal,
-    Rational.zero,
-    Rational.one,
-    Data
-  );
-}
-export const AdjustedData = getAdjustedData();
+export const AdjustedData = getAdjustedDataset.projector(
+  RationalRecipeSettingsInitial,
+  ItemId.Coal,
+  Rational.zero,
+  Rational.one,
+  Data
+);
 export const Preferences: PreferencesState = {
   states: { ['name']: 'hash' },
   columns: initialColumnsState,

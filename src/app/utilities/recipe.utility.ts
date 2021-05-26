@@ -258,7 +258,10 @@ export class RecipeUtility {
     return steps[0];
   }
 
-  static allowsModules(recipe: Recipe | RationalRecipe, factory: Factory): boolean {
+  static allowsModules(
+    recipe: Recipe | RationalRecipe,
+    factory: Factory
+  ): boolean {
     return (!factory?.silo || !recipe.part) && factory?.modules > 0;
   }
 
