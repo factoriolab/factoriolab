@@ -1,3 +1,4 @@
+import { environment } from 'src/environments';
 import {
   Rational,
   RationalRecipe,
@@ -269,12 +270,53 @@ export class RecipeUtility {
   static adjustDataset(
     recipeSettings: Entities<RationalRecipeSettings>,
     itemSettings: Entities<ItemSettings>,
+    disabledRecipes: string[],
     fuel: string,
     miningBonus: Rational,
     researchSpeed: Rational,
     data: Dataset
   ): Dataset {
-    const recipeR = this.adjustSiloRecipes(
+    const recipeR = this.adjustRecipes(
+      recipeSettings,
+      fuel,
+      miningBonus,
+      researchSpeed,
+      data
+    );
+    const itemRecipeIds = { ...data.itemRecipeIds };
+    for (const id of data.itemIds.filter((i) => !data.itemRecipeIds[i])) {
+      const rec = itemSettings[id].recipe;
+      if (rec && disabledRecipes.indexOf(rec) === -1) {
+        itemRecipeIds[id] = rec;
+        if (environment.debug) {
+          console.log(`Overriding item '${id}' to use recipe '${rec}'`);
+        }
+      } else {
+        const recipes = data.recipeIds.filter(
+          (r) => recipeR[r].produces(id) && disabledRecipes.indexOf(r) === -1
+        );
+        if (
+          recipes.length === 1 &&
+          Object.keys(recipeR[recipes[0]].out).length === 1
+        ) {
+          itemRecipeIds[id] = recipes[0];
+          if (environment.debug) {
+            console.log(`Setting item '${id}' to use recipe '${recipes[0]}'`);
+          }
+        }
+      }
+    }
+    return { ...data, ...{ recipeR, itemRecipeIds } };
+  }
+
+  static adjustRecipes(
+    recipeSettings: Entities<RationalRecipeSettings>,
+    fuel: string,
+    miningBonus: Rational,
+    researchSpeed: Rational,
+    data: Dataset
+  ): Entities<RationalRecipe> {
+    return this.adjustSiloRecipes(
       data.recipeIds.reduce((e: Entities<RationalRecipe>, i) => {
         e[i] = this.adjustRecipe(
           i,
@@ -289,18 +331,6 @@ export class RecipeUtility {
       recipeSettings,
       data
     );
-    const itemRecipeIds = { ...data.itemRecipeIds };
-    for (const id of data.itemIds.filter((i) => !data.itemRecipeIds[i])) {
-      if (itemSettings[id].recipe) {
-        itemRecipeIds[id] = itemSettings[id].recipe;
-      } else {
-        const recipes = data.recipeIds.filter((r) => recipeR[r].produces(id));
-        if (recipes.length === 1) {
-          itemRecipeIds[id] = recipes[0];
-        }
-      }
-    }
-    return { ...data, ...{ recipeR } };
   }
 
   static adjustProduct(
