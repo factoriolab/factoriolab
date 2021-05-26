@@ -1,7 +1,7 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
 import {
-  Dataset,
   EnergyType,
+  Entities,
   Product,
   RateType,
   Rational,
@@ -429,23 +429,36 @@ describe('RecipeUtility', () => {
   });
 
   describe('adjustSiloRecipes', () => {
-    let data: Dataset;
+    let recipeR: Entities<RationalRecipe>;
 
     beforeEach(() => {
-      data = Mocks.getAdjustedData();
+      recipeR = Mocks.AdjustedData.recipeIds.reduce(
+        (e: Entities<RationalRecipe>, i) => {
+          e[i] = RecipeUtility.adjustRecipe(
+            i,
+            ItemId.Coal,
+            Rational.zero,
+            Rational.one,
+            Mocks.RationalRecipeSettingsInitial[i],
+            Mocks.Data
+          );
+          return e;
+        },
+        {}
+      );
     });
 
     it('should adjust recipes', () => {
       const result = RecipeUtility.adjustSiloRecipes(
-        data.recipeR,
+        recipeR,
         Mocks.RationalRecipeSettingsInitial,
-        data
+        Mocks.AdjustedData
       );
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
-        Rational.from(59999, 462)
+        Rational.from(82499, 924)
       );
       expect(result[RecipeId.RocketPart].time).toEqual(
-        Rational.from(59999, 33000)
+        Rational.from(82499, 66000)
       );
     });
 
@@ -459,15 +472,15 @@ describe('RecipeUtility', () => {
         },
       };
       const result = RecipeUtility.adjustSiloRecipes(
-        data.recipeR,
+        recipeR,
         settings2,
-        data
+        Mocks.AdjustedData
       );
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
-        Rational.from(59999, 462)
+        Rational.from(203, 5)
       );
       expect(result[RecipeId.RocketPart].time).toEqual(
-        Rational.from(52499, 22000)
+        Rational.from(82499, 66000)
       );
     });
   });
