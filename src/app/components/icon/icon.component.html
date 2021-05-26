@@ -125,7 +125,7 @@
       <tr
         *ngIf="
           factory.drain ||
-          (factory.type == EnergyType.Electric && factory.drain == null)
+          (factory.type === EnergyType.Electric && factory.drain == null)
         "
       >
         <td>Drain</td>
