@@ -52,12 +52,7 @@ export class SettingsComponent implements OnInit, OnChanges {
   }
   @Input() set data(value: Dataset) {
     this._data = value;
-    this.sortedFuels = [];
-    if (value.fuelIds?.[FuelType.Chemical]) {
-      this.sortedFuels = [...value.fuelIds[FuelType.Chemical]].sort((a, b) =>
-        value.itemR[a].fuel.value.sub(value.itemR[b].fuel.value).toNumber()
-      );
-    }
+    this.sortedFuels = value.fuelIds?.[FuelType.Chemical] || [];
   }
   @Input() base: ModInfo[];
   @Input() factories: FactoriesState;
@@ -158,8 +153,9 @@ export class SettingsComponent implements OnInit, OnChanges {
   }
 
   get columnsButton(): string {
-    const num = Object.keys(this.columns).filter((c) => this.columns[c].show)
-      .length;
+    const num = Object.keys(this.columns).filter(
+      (c) => this.columns[c].show
+    ).length;
     return `${num} Visible`;
   }
 

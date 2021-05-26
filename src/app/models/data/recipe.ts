@@ -13,6 +13,8 @@ export interface Recipe {
     out?: Entities<number>;
   };
   mining?: boolean;
+  /** If recipe is a rocket launch, indicates the rocket part recipe used */
+  part?: string;
   producers: string[];
 }
 
@@ -30,6 +32,8 @@ export class RationalRecipe {
     out?: Entities<Rational>;
   };
   mining?: boolean;
+  /** If recipe is a rocket launch, indicates the rocket part recipe used */
+  part?: string;
   producers: string[];
   consumption?: Rational;
   pollution?: Rational;
@@ -76,6 +80,9 @@ export class RationalRecipe {
     }
     if (data.mining) {
       this.mining = data.mining;
+    }
+    if (data.part) {
+      this.part = data.part;
     }
     this.producers = data.producers;
   }

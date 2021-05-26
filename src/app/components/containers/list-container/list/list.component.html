@@ -165,12 +165,11 @@
               >
                 <lab-icon
                   [iconId]="belt"
-                  [tooltip]="data.itemEntities[belt].name"
-                  [item]="data.itemEntities[belt]"
+                  tooltip="Pipe"
                   [displayRate]="displayRate"
                   [data]="data"
-                ></lab-icon
-              ></ng-container>
+                ></lab-icon>
+              </ng-container>
               <ng-template #beltPicker>
                 <lab-select
                   header="Select a belt type"
@@ -608,7 +607,7 @@
                     <lab-icon
                       [data]="data"
                       [iconId]="belt"
-                      [tooltip]="data.itemEntities[belt].name"
+                      [tooltip]="data.itemEntities[belt]?.name || 'Pipe'"
                       [item]="data.itemEntities[belt]"
                       [displayRate]="displayRate"
                     ></lab-icon>
@@ -740,7 +739,7 @@
                   <lab-icon
                     [data]="data"
                     [iconId]="belt"
-                    [tooltip]="data.itemEntities[belt].name"
+                    [tooltip]="data.itemEntities[belt]?.name || 'Pipe'"
                     [item]="data.itemEntities[belt]"
                     [displayRate]="displayRate"
                   ></lab-icon>
@@ -888,7 +887,7 @@
                       <lab-icon
                         [data]="data"
                         [iconId]="belt"
-                        [tooltip]="data.itemEntities[belt].name"
+                        [tooltip]="data.itemEntities[belt]?.name || 'Pipe'"
                         [item]="data.itemEntities[belt]"
                         [displayRate]="displayRate"
                       ></lab-icon>
@@ -1003,7 +1002,7 @@
                       <lab-icon
                         [data]="data"
                         [iconId]="belt"
-                        [tooltip]="data.itemEntities[belt].name"
+                        [tooltip]="data.itemEntities[belt]?.name || 'Pipe'"
                         [item]="data.itemEntities[belt]"
                         [displayRate]="displayRate"
                       ></lab-icon>
@@ -1123,7 +1122,9 @@
                             <lab-icon
                               [data]="data"
                               [iconId]="belt"
-                              [tooltip]="data.itemEntities[belt].name"
+                              [tooltip]="
+                                data.itemEntities[belt]?.name || 'Pipe'
+                              "
                               [item]="data.itemEntities[belt]"
                               [displayRate]="displayRate"
                             ></lab-icon>
@@ -1237,7 +1238,7 @@
                         <lab-icon
                           [data]="data"
                           [iconId]="belt"
-                          [tooltip]="data.itemEntities[belt].name"
+                          [tooltip]="data.itemEntities[belt]?.name || 'Pipe'"
                           [item]="data.itemEntities[belt]"
                           [displayRate]="displayRate"
                         >

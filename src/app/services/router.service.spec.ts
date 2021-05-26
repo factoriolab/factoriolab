@@ -104,8 +104,7 @@ const mockZipPartial: Zip = {
     '&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectivity-module*1*speed-module' +
     '~speed-module*beacon&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2_steel-furnace&s=1.0*2*1*=*tran' +
     'sport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid-wagon',
-  hash:
-    '&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B',
+  hash: '&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B',
 };
 const mockState: State = {
   productsState: mockProductsState,
@@ -417,8 +416,7 @@ describe('RouterService', () => {
         Mocks.Hash
       );
       expect(result).toEqual({
-        bare:
-          'p=steel-chest*1*3*iron-ore*assembling-machine-2*%3D*1*%3D*beacon',
+        bare: 'p=steel-chest*1*3*iron-ore*assembling-machine-2*%3D*1*%3D*beacon',
         hash: 'pC6*1*3*Bl*B*=*1*=*A',
       });
     });

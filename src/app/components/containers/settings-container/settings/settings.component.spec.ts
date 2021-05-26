@@ -13,7 +13,6 @@ import {
   SelectComponent,
   ToggleComponent,
 } from '~/components';
-import { FuelType } from '~/models';
 import { initialColumnsState } from '~/store/preferences';
 import { SettingsComponent } from './settings.component';
 
@@ -141,13 +140,6 @@ describe('SettingsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should sort the list of fuels', () => {
-    expect(component.child.sortedFuels.length).toBeGreaterThan(1);
-    expect(component.child.sortedFuels).not.toEqual(
-      Mocks.Data.fuelIds[FuelType.Chemical]
-    );
   });
 
   it('should handle no fuels', () => {

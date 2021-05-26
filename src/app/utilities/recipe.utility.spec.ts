@@ -1,5 +1,6 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
 import {
+  Dataset,
   EnergyType,
   Product,
   RateType,
@@ -428,25 +429,45 @@ describe('RecipeUtility', () => {
   });
 
   describe('adjustSiloRecipes', () => {
-    it('should handle no rocket part recipe', () => {
-      const recipeR = {
-        ...Mocks.AdjustedData.recipeR,
-        ...{ [RecipeId.RocketPart]: null },
-      };
-      const result = RecipeUtility.adjustSiloRecipes(recipeR, null);
-      expect(result).toBe(recipeR);
+    let data: Dataset;
+
+    beforeEach(() => {
+      data = Mocks.getAdjustedData();
     });
 
     it('should adjust recipes', () => {
       const result = RecipeUtility.adjustSiloRecipes(
-        Mocks.AdjustedData.recipeR,
-        Mocks.RationalRecipeSettingsInitial
+        data.recipeR,
+        Mocks.RationalRecipeSettingsInitial,
+        data
       );
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
-        Rational.from(29884, 231)
+        Rational.from(59999, 462)
       );
       expect(result[RecipeId.RocketPart].time).toEqual(
-        Rational.from(7471, 4125)
+        Rational.from(59999, 33000)
+      );
+    });
+
+    it('should handle invalid factory', () => {
+      const settings2 = {
+        ...Mocks.RationalRecipeSettingsInitial,
+        ...{
+          [RecipeId.SpaceSciencePack]: {
+            factory: 'id',
+          },
+        },
+      };
+      const result = RecipeUtility.adjustSiloRecipes(
+        data.recipeR,
+        settings2,
+        data
+      );
+      expect(result[RecipeId.SpaceSciencePack].time).toEqual(
+        Rational.from(59999, 462)
+      );
+      expect(result[RecipeId.RocketPart].time).toEqual(
+        Rational.from(52499, 22000)
       );
     });
   });

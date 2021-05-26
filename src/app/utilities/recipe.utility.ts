@@ -19,7 +19,6 @@ import { RecipesState } from '~/store/recipes';
 export class RecipeUtility {
   static MIN_FACTOR = new Rational(BigInt(1), BigInt(5));
   static POLLUTION_FACTOR = new Rational(BigInt(60));
-  static LAUNCH_TIME = new Rational(BigInt(2420), BigInt(60));
 
   /** Determines what option to use based on preferred rank */
   static bestMatch(options: string[], rank: string[]): string {
@@ -212,26 +211,32 @@ export class RecipeUtility {
     return recipe;
   }
 
+  /** Adjust rocket launch and rocket part recipes */
   static adjustSiloRecipes(
     recipeR: Entities<RationalRecipe>,
-    settings: Entities<RationalRecipeSettings>
+    settings: Entities<RationalRecipeSettings>,
+    data: Dataset
   ): Entities<RationalRecipe> {
-    // Adjust rocket launch recipes
-    const rocketRecipe = recipeR[ItemId.RocketPart];
-    if (rocketRecipe) {
-      const factor = Rational.hundred.div(rocketRecipe.out[ItemId.RocketPart]);
-
-      for (const id of Object.keys(recipeR).filter(
-        (i) =>
-          i !== ItemId.RocketPart && settings[i].factory === ItemId.RocketSilo
-      )) {
-        recipeR[id].time = rocketRecipe.time.mul(factor).add(this.LAUNCH_TIME);
+    for (const partId of Object.keys(recipeR)) {
+      const rocketFactory = data.itemR[settings[partId].factory]?.factory;
+      const rocketRecipe = recipeR[partId];
+      if (rocketFactory?.silo && !rocketRecipe.part) {
+        const itemId = Object.keys(rocketRecipe.out)[0];
+        const factor = rocketFactory.silo.parts.div(rocketRecipe.out[itemId]);
+        for (const launchId of Object.keys(recipeR).filter(
+          (i) => recipeR[i].part === partId
+        )) {
+          if (settings[partId].factory === settings[launchId].factory) {
+            recipeR[launchId].time = rocketRecipe.time
+              .mul(factor)
+              .add(rocketFactory.silo.launch);
+          }
+        }
+        rocketRecipe.time = rocketRecipe.time
+          .mul(factor)
+          .add(rocketFactory.silo.launch)
+          .div(factor);
       }
-
-      rocketRecipe.time = rocketRecipe.time
-        .mul(factor)
-        .add(this.LAUNCH_TIME)
-        .div(factor);
     }
 
     return recipeR;
@@ -253,15 +258,8 @@ export class RecipeUtility {
     return steps[0];
   }
 
-  static allowsModules(
-    recipe: Recipe | RationalRecipe,
-    factory: Factory
-  ): boolean {
-    return !!(
-      (recipe.producers[0] !== ItemId.RocketSilo ||
-        recipe.id === ItemId.RocketPart) &&
-      factory?.modules
-    );
+  static allowsModules(recipe: Recipe | RationalRecipe, factory: Factory): boolean {
+    return (!factory?.silo || !recipe.part) && factory?.modules > 0;
   }
 
   static adjustDataset(
@@ -286,7 +284,8 @@ export class RecipeUtility {
             );
             return e;
           }, {}),
-          recipeSettings
+          recipeSettings,
+          data
         ),
       },
     };

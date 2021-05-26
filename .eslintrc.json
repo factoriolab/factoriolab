@@ -67,7 +67,8 @@
          * There is an example below from ESLint core (note, this specific example is not
          * necessarily recommended for all projects):
          */
-        "max-len": ["error", { "code": 140 }]
+        "max-len": ["error", { "code": 140 }],
+        "@angular-eslint/template/eqeqeq": ["error", {"allowNullOrUndefined": true}]
       }
     },
 
