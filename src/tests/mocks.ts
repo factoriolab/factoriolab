@@ -173,10 +173,14 @@ export const RationalRecipeSettingsInitial =
   getRationalRecipeSettings.projector(RecipeSettingsInitial);
 export const AdjustedData = getAdjustedDataset.projector(
   RationalRecipeSettingsInitial,
-  ItemId.Coal,
-  Rational.zero,
-  Rational.one,
-  Data
+  ItemSettingsInitial,
+  Defaults.disabledRecipes,
+  {
+    fuel: ItemId.Coal,
+    miningBonus: Rational.zero,
+    researchSpeed: Rational.one,
+    data: Data,
+  }
 );
 export const Preferences: PreferencesState = {
   states: { ['name']: 'hash' },

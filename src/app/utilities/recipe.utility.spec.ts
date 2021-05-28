@@ -565,6 +565,8 @@ describe('RecipeUtility', () => {
       spyOn(RecipeUtility, 'adjustRecipe').and.callThrough();
       const result = RecipeUtility.adjustDataset(
         Mocks.RationalRecipeSettingsInitial,
+        Mocks.ItemSettingsInitial,
+        Mocks.Defaults.disabledRecipes,
         ItemId.Coal,
         Rational.zero,
         Rational.one,
