@@ -292,14 +292,13 @@ export class RecipeUtility {
           console.log(`Overriding item '${id}' to use recipe '${rec}'`);
         }
       } else {
-        const recipes = data.recipeIds.filter(
-          (r) => recipeR[r].produces(id) && disabledRecipes.indexOf(r) === -1
-        );
-        if (
-          recipes.length === 1 &&
-          Object.keys(recipeR[recipes[0]].out).length === 1
-        ) {
-          itemRecipeIds[id] = recipes[0];
+        const recipes = data.recipeIds
+          .map((r) => recipeR[r])
+          .filter(
+            (r) => r.produces(id) && disabledRecipes.indexOf(r.id) === -1
+          );
+        if (recipes.length === 1 && Object.keys(recipes[0].out).length === 1) {
+          itemRecipeIds[id] = recipes[0].id;
           if (environment.debug) {
             console.log(`Setting item '${id}' to use recipe '${recipes[0]}'`);
           }
@@ -307,6 +306,22 @@ export class RecipeUtility {
       }
     }
     return { ...data, ...{ recipeR, itemRecipeIds } };
+  }
+
+  static defaultRecipe(
+    itemId: string,
+    disabledRecipes: string[],
+    data: Dataset
+  ): string {
+    const recipes = data.recipeIds
+      .map((r) => data.recipeR[r])
+      .filter(
+        (r) => r.produces(itemId) && disabledRecipes.indexOf(r.id) === -1
+      );
+    if (recipes.length === 1 && Object.keys(recipes[0].out).length === 1) {
+      return recipes[0].id;
+    }
+    return null;
   }
 
   static adjustRecipes(

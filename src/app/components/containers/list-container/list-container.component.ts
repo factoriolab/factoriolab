@@ -159,4 +159,8 @@ export class ListContainerComponent implements OnInit {
   setDisabledRecipes(value: DefaultPayload<string[]>): void {
     this.store.dispatch(new Settings.SetDisabledRecipesAction(value));
   }
+
+  setDefaultRecipe(value: DefaultIdPayload): void {
+    this.store.dispatch(new Items.SetRecipeAction(value));
+  }
 }

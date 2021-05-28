@@ -102,6 +102,10 @@ export class RationalRecipe {
     return false;
   }
 
+  producesOnly(id: string): boolean {
+    return Object.keys(this.out).length === 1 && this.produces(id);
+  }
+
   output(id: string): Rational {
     return (this.out?.[id] || Rational.zero).sub(
       this.in?.[id] || Rational.zero

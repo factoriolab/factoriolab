@@ -397,9 +397,8 @@ export const getAdjustmentData = createSelector(
   getFuel,
   getRationalMiningBonus,
   getResearchFactor,
-  getDisabledRecipes,
   getDataset,
-  (fuel, miningBonus, researchSpeed, disabledRecipes, data) => ({
+  (fuel, miningBonus, researchSpeed, data) => ({
     fuel,
     miningBonus,
     researchSpeed,

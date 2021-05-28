@@ -1280,30 +1280,80 @@
             </div>
           </td>
         </tr>
-        <tr
-          *ngIf="expanded[step.id] === StepDetailTab.Recipes"
-          class="details first last"
-        >
-          <td></td>
-          <td colspan="100" class="recipes">
-            <div class="info">
-              Click recipes to enable or disable them. Disabled recipes will not
-              be used in the solution.
-            </div>
-            <div class="list tile">
-              <lab-icon
-                *ngFor="let recipeId of recipes[step.id]"
-                class="button grid"
-                [class.ignored]="disabledRecipes.indexOf(recipeId) !== -1"
-                [data]="data"
-                [iconId]="recipeId"
-                [tooltip]="data.recipeEntities[recipeId].name"
-                [recipe]="data.recipeEntities[recipeId]"
-                (click)="toggleRecipe(recipeId)"
-              ></lab-icon>
-            </div>
-          </td>
-        </tr>
+        <ng-container *ngIf="expanded[step.id] === StepDetailTab.Recipes">
+          <tr class="details first">
+            <td></td>
+            <td colspan="100">
+              <div>
+                <div class="header">Default Recipe</div>
+                <div class="info">
+                  Click to set a recipe as the default for this item. If set,
+                  the default recipe is treated as the only way to produce this
+                  item.
+                </div>
+                <div class="info">
+                  The recipe must be enabled and must only produce this item.
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr class="details">
+            <td></td>
+            <td colspan="100" class="recipes">
+              <div class="list tile">
+                <ng-container *ngFor="let recipeId of recipes[step.id]">
+                  <ng-container *ngIf="data.recipeR[recipeId] as recipe">
+                    <lab-icon
+                      *ngIf="
+                        disabledRecipes.indexOf(recipeId) === -1 &&
+                        recipe.producesOnly(step.itemId)
+                      "
+                      class="button grid"
+                      [class.selected]="
+                        data.itemRecipeIds[step.itemId] === recipeId
+                      "
+                      [data]="data"
+                      [iconId]="recipeId"
+                      [tooltip]="recipe.name"
+                      [recipe]="data.recipeEntities[recipeId]"
+                      (click)="toggleDefaultRecipe(step.itemId, recipeId)"
+                    >
+                    </lab-icon>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </td>
+          </tr>
+          <tr class="details">
+            <td></td>
+            <td colspan="100">
+              <div>
+                <div class="header">Enabled Recipes</div>
+                <div class="info">
+                  Click recipes to enable or disable them. Disabled recipes will
+                  not be used in the solution.
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr class="details last">
+            <td></td>
+            <td colspan="100" class="recipes">
+              <div class="list tile">
+                <lab-icon
+                  *ngFor="let recipeId of recipes[step.id]"
+                  class="button grid"
+                  [class.ignored]="disabledRecipes.indexOf(recipeId) !== -1"
+                  [data]="data"
+                  [iconId]="recipeId"
+                  [tooltip]="data.recipeEntities[recipeId].name"
+                  [recipe]="data.recipeEntities[recipeId]"
+                  (click)="toggleRecipe(recipeId)"
+                ></lab-icon>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
         <tr class="spacer">
           <td></td>
         </tr>
