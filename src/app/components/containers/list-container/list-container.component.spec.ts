@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
-import { Mocks, ItemId } from 'src/tests';
+import { Mocks, ItemId, RecipeId } from 'src/tests';
 import { ColumnsComponent, IconComponent, SelectComponent } from '~/components';
 import { DefaultIdPayload, DefaultPayload } from '~/models';
 import { RouterService } from '~/services';
@@ -203,6 +203,18 @@ describe('ListContainerComponent', () => {
     component.child.setDisabledRecipes.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new SetDisabledRecipesAction(value)
+    );
+  });
+
+  it('should set default recipe for an item', () => {
+    const value: DefaultIdPayload = {
+      id: ItemId.Coal,
+      value: RecipeId.Coal,
+      default: RecipeId.Coal,
+    };
+    component.child.setDefaultRecipe.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Items.SetRecipeAction(value)
     );
   });
 });

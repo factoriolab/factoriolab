@@ -36,6 +36,12 @@ export function itemsReducer(
         ItemSettingsField.Wagon,
         action.payload
       );
+    case ItemsActionType.SET_RECIPE:
+      return StoreUtility.compareReset(
+        state,
+        ItemSettingsField.Recipe,
+        action.payload
+      );
     case ItemsActionType.RESET_ITEM: {
       const newState = { ...state };
       delete newState[action.payload];

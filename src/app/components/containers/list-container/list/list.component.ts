@@ -33,7 +33,7 @@ import { ItemsState } from '~/store/items';
 import { ColumnsState } from '~/store/preferences';
 import { RecipesState } from '~/store/recipes';
 import { SettingsState } from '~/store/settings';
-import { ExportUtility } from '~/utilities';
+import { ExportUtility, RecipeUtility } from '~/utilities';
 import { RecipeSettingsComponent } from '../../recipe-settings.component';
 
 export enum StepDetailTab {
@@ -57,7 +57,8 @@ export interface StepInserter {
 })
 export class ListComponent
   extends RecipeSettingsComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   @Input() itemSettings: ItemsState;
   @Input() itemRaw: ItemsState;
   @Input() recipeRaw: RecipesState;
@@ -150,6 +151,7 @@ export class ListComponent
   @Output() resetFactory = new EventEmitter();
   @Output() resetBeacons = new EventEmitter();
   @Output() setDisabledRecipes = new EventEmitter<DefaultPayload<string[]>>();
+  @Output() setDefaultRecipe = new EventEmitter<DefaultIdPayload>();
 
   displayedSteps: Step[] = [];
   details: Entities<StepDetailTab[]> = {};
@@ -418,6 +420,28 @@ export class ListComponent
       this.recipeSettings,
       this.data
     );
+  }
+
+  toggleDefaultRecipe(itemId: string, recipeId: string): void {
+    if (this.itemSettings[itemId].recipe === recipeId) {
+      // Reset to null
+      this.setDefaultRecipe.emit({
+        id: itemId,
+        value: null,
+        default: null,
+      });
+    } else {
+      // Set default recipe
+      this.setDefaultRecipe.emit({
+        id: itemId,
+        value: recipeId,
+        default: RecipeUtility.defaultRecipe(
+          itemId,
+          this.disabledRecipes,
+          this.data
+        ),
+      });
+    }
   }
 
   toggleRecipe(id: string): void {

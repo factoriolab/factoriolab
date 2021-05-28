@@ -77,6 +77,7 @@ enum DataTest {
       (resetFactory)="resetFactory()"
       (resetBeacons)="resetBeacons()"
       (setDisabledRecipes)="setDisabledRecipes($event)"
+      (setDefaultRecipe)="setDefaultRecipe($event)"
     >
     </lab-list>
   `,
@@ -85,7 +86,7 @@ class TestListComponent {
   @ViewChild(ListComponent) child: ListComponent;
   mode = ListMode.All;
   selected = null;
-  data = Mocks.Data;
+  data = Mocks.AdjustedData;
   itemSettings = Mocks.ItemSettingsInitial;
   itemRaw = Mocks.RecipeSettingsEntities;
   recipeSettings = Mocks.RecipeSettingsInitial;
@@ -121,6 +122,7 @@ class TestListComponent {
   resetFactory(): void {}
   resetBeacons(): void {}
   setDisabledRecipes(data): void {}
+  setDefaultRecipe(data): void {}
 }
 
 describe('ListComponent', () => {
@@ -584,6 +586,39 @@ describe('ListComponent', () => {
       TestUtility.clickDt(fixture, DataTest.Export);
       fixture.detectChanges();
       expect(ExportUtility.stepsToCsv).toHaveBeenCalled();
+    });
+  });
+
+  describe('toggleDefaultRecipe', () => {
+    it('should reset a default recipe to null', () => {
+      spyOn(component, 'setDefaultRecipe');
+      component.child.itemSettings = {
+        ...Mocks.ItemSettingsInitial,
+        ...{
+          [ItemId.Coal]: {
+            ...Mocks.ItemSettingsInitial[ItemId.Coal],
+            ...{
+              recipe: RecipeId.Coal,
+            },
+          },
+        },
+      };
+      component.child.toggleDefaultRecipe(ItemId.Coal, RecipeId.Coal);
+      expect(component.setDefaultRecipe).toHaveBeenCalledWith({
+        id: ItemId.Coal,
+        value: null,
+        default: null,
+      });
+    });
+
+    it('should set a default recipe', () => {
+      spyOn(component, 'setDefaultRecipe');
+      component.child.toggleDefaultRecipe(ItemId.Coal, RecipeId.Coal);
+      expect(component.setDefaultRecipe).toHaveBeenCalledWith({
+        id: ItemId.Coal,
+        value: RecipeId.Coal,
+        default: RecipeId.Coal,
+      });
     });
   });
 
