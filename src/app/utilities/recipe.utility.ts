@@ -12,6 +12,7 @@ import {
   Recipe,
   Factory,
   RateType,
+  ItemSettings,
 } from '~/models';
 import { FactoriesState } from '~/store/factories';
 import { RecipesState } from '~/store/recipes';
@@ -267,31 +268,77 @@ export class RecipeUtility {
 
   static adjustDataset(
     recipeSettings: Entities<RationalRecipeSettings>,
+    itemSettings: Entities<ItemSettings>,
+    disabledRecipes: string[],
     fuel: string,
     miningBonus: Rational,
     researchSpeed: Rational,
     data: Dataset
   ): Dataset {
-    return {
-      ...data,
-      ...{
-        recipeR: this.adjustSiloRecipes(
-          data.recipeIds.reduce((e: Entities<RationalRecipe>, i) => {
-            e[i] = this.adjustRecipe(
-              i,
-              fuel,
-              miningBonus,
-              researchSpeed,
-              recipeSettings[i],
-              data
-            );
-            return e;
-          }, {}),
-          recipeSettings,
+    const recipeR = this.adjustRecipes(
+      recipeSettings,
+      fuel,
+      miningBonus,
+      researchSpeed,
+      data
+    );
+    const itemRecipeIds = { ...data.itemRecipeIds };
+    for (const id of data.itemIds.filter((i) => !data.itemRecipeIds[i])) {
+      const rec = itemSettings[id].recipe;
+      if (rec && disabledRecipes.indexOf(rec) === -1) {
+        itemRecipeIds[id] = rec;
+      } else {
+        const recipes = data.recipeIds
+          .map((r) => recipeR[r])
+          .filter(
+            (r) => r.produces(id) && disabledRecipes.indexOf(r.id) === -1
+          );
+        if (recipes.length === 1 && Object.keys(recipes[0].out).length === 1) {
+          itemRecipeIds[id] = recipes[0].id;
+        }
+      }
+    }
+    return { ...data, ...{ recipeR, itemRecipeIds } };
+  }
+
+  static defaultRecipe(
+    itemId: string,
+    disabledRecipes: string[],
+    data: Dataset
+  ): string {
+    const recipes = data.recipeIds
+      .map((r) => data.recipeR[r])
+      .filter(
+        (r) => r.produces(itemId) && disabledRecipes.indexOf(r.id) === -1
+      );
+    if (recipes.length === 1 && Object.keys(recipes[0].out).length === 1) {
+      return recipes[0].id;
+    }
+    return null;
+  }
+
+  static adjustRecipes(
+    recipeSettings: Entities<RationalRecipeSettings>,
+    fuel: string,
+    miningBonus: Rational,
+    researchSpeed: Rational,
+    data: Dataset
+  ): Entities<RationalRecipe> {
+    return this.adjustSiloRecipes(
+      data.recipeIds.reduce((e: Entities<RationalRecipe>, i) => {
+        e[i] = this.adjustRecipe(
+          i,
+          fuel,
+          miningBonus,
+          researchSpeed,
+          recipeSettings[i],
           data
-        ),
-      },
-    };
+        );
+        return e;
+      }, {}),
+      recipeSettings,
+      data
+    );
   }
 
   static adjustProduct(

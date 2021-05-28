@@ -393,6 +393,19 @@ export const getBeltSpeed = createSelector(
   }
 );
 
+export const getAdjustmentData = createSelector(
+  getFuel,
+  getRationalMiningBonus,
+  getResearchFactor,
+  getDataset,
+  (fuel, miningBonus, researchSpeed, data) => ({
+    fuel,
+    miningBonus,
+    researchSpeed,
+    data,
+  })
+);
+
 export function getEntities<T extends { id: string }>(
   base: T[],
   mods: T[][]

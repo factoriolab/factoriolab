@@ -1,10 +1,10 @@
 import { Mocks, ItemId } from 'src/tests';
+import { Rational } from '~/models';
 import { initialRecipesState } from './recipes.reducer';
 import * as Selectors from './recipes.selectors';
 
 describe('Recipes Selectors', () => {
   const stringValue = 'value';
-  const numberValue = 2;
 
   describe('getRecipeSettings', () => {
     it('should handle null/empty values', () => {
@@ -91,6 +91,23 @@ describe('Recipes Selectors', () => {
         Mocks.Data
       );
       expect(result[Mocks.Item1.id].beaconModules).toEqual([stringValue]);
+    });
+  });
+
+  describe('getSrc', () => {
+    it('should put together the required state parts', () => {
+      const result = Selectors.getSrc.projector(
+        ItemId.Coal,
+        Rational.zero,
+        Rational.one,
+        Mocks.Data
+      );
+      expect(result).toEqual({
+        fuel: ItemId.Coal,
+        miningBonus: Rational.zero,
+        researchSpeed: Rational.one,
+        data: Mocks.Data,
+      });
     });
   });
 

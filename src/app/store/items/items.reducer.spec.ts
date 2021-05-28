@@ -72,6 +72,20 @@ describe('Items Reducer', () => {
     });
   });
 
+  describe('SET_RECIPE', () => {
+    it('should set the recipe', () => {
+      const result = itemsReducer(
+        initialItemsState,
+        new Actions.SetRecipeAction({
+          id: Mocks.Item1.id,
+          value: Mocks.Item1.id,
+          default: null,
+        })
+      );
+      expect(result[Mocks.Recipe1.id].recipe).toEqual(Mocks.Item1.id);
+    });
+  });
+
   describe('RESET_ITEM', () => {
     it('should reset an item', () => {
       const result = itemsReducer(

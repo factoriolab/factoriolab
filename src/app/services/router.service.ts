@@ -460,12 +460,14 @@ export class RouterService {
             g,
             this.zipTruthyString(obj.belt),
             this.zipTruthyString(obj.wagon),
+            this.zipTruthyString(obj.recipe),
           ]),
           hash: this.zipFields([
             this.zipTruthyNString(i, hash.items),
             g,
             this.zipTruthyNString(obj.belt, hash.belts),
             this.zipTruthyNString(obj.wagon, hash.wagons),
+            this.zipTruthyNString(obj.recipe, hash.recipes),
           ]),
         };
       })
@@ -498,6 +500,7 @@ export class RouterService {
             ignore: this.parseBool(s[i++]),
             belt: this.parseString(s[i++]),
             wagon: this.parseString(s[i++]),
+            recipe: this.parseString(s[i++]),
           };
           break;
         }
@@ -508,6 +511,7 @@ export class RouterService {
             ignore: this.parseBool(s[i++]),
             belt: this.parseNString(s[i++], hash.belts),
             wagon: this.parseNString(s[i++], hash.wagons),
+            recipe: this.parseNString(s[i++], hash.recipes),
           };
           break;
         }

@@ -352,11 +352,8 @@ describe('Products Selectors', () => {
         null,
         null,
         {},
-        null,
-        null,
-        null,
-        {},
-        {}
+        { fuel: null, miningBonus: null, researchSpeed: null, data: null },
+        null
       );
       expect(result).toBeUndefined();
     });
@@ -366,10 +363,7 @@ describe('Products Selectors', () => {
         [Mocks.RationalProducts[3]],
         null,
         {},
-        null,
-        null,
-        null,
-        {},
+        { fuel: null, miningBonus: null, researchSpeed: null, data: null },
         Mocks.Data
       );
       expect(result[Mocks.Product4.id].nonzero()).toBeTrue();
@@ -387,10 +381,7 @@ describe('Products Selectors', () => {
         [product],
         null,
         {},
-        null,
-        null,
-        null,
-        {},
+        { fuel: null, miningBonus: null, researchSpeed: null, data: null },
         Mocks.AdjustedData
       );
       expect(result['0'].nonzero()).toBeTrue();
@@ -410,10 +401,7 @@ describe('Products Selectors', () => {
         ],
         null,
         {},
-        null,
-        null,
-        null,
-        {},
+        { fuel: null, miningBonus: null, researchSpeed: null, data: null },
         Mocks.AdjustedData
       );
       expect(RecipeUtility.getProductStepData).not.toHaveBeenCalled();
@@ -437,10 +425,7 @@ describe('Products Selectors', () => {
         ],
         { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
         {},
-        null,
-        null,
-        null,
-        {},
+        { fuel: null, miningBonus: null, researchSpeed: null, data: null },
         Mocks.AdjustedData
       );
       expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
@@ -461,10 +446,7 @@ describe('Products Selectors', () => {
         ],
         { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
         {},
-        null,
-        null,
-        null,
-        {},
+        { fuel: null, miningBonus: null, researchSpeed: null, data: null },
         Mocks.AdjustedData
       );
       expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
@@ -489,10 +471,12 @@ describe('Products Selectors', () => {
         ],
         { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
         Mocks.RationalRecipeSettingsInitial,
-        ItemId.Coal,
-        Rational.zero,
-        Rational.one,
-        Mocks.Data,
+        {
+          fuel: ItemId.Coal,
+          miningBonus: Rational.zero,
+          researchSpeed: Rational.one,
+          data: Mocks.Data,
+        },
         Mocks.AdjustedData
       );
       expect(result['0']).toEqual(Rational.from(3, 4));
