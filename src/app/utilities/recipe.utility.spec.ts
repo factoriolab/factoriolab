@@ -576,6 +576,67 @@ describe('RecipeUtility', () => {
       expect(RecipeUtility.adjustSiloRecipes).toHaveBeenCalledTimes(1);
       expect(RecipeUtility.adjustRecipe).toHaveBeenCalledTimes(220);
     });
+
+    it('should use specified item recipe', () => {
+      const itemSettings = {
+        ...Mocks.ItemSettingsInitial,
+        ...{
+          [ItemId.PetroleumGas]: {
+            ...Mocks.ItemSettingsInitial[ItemId.PetroleumGas],
+            ...{
+              recipe: RecipeId.CoalLiquefaction,
+            },
+          },
+        },
+      };
+      const result = RecipeUtility.adjustDataset(
+        Mocks.RationalRecipeSettingsInitial,
+        itemSettings,
+        Mocks.Defaults.disabledRecipes,
+        ItemId.Coal,
+        Rational.zero,
+        Rational.one,
+        Mocks.Data
+      );
+      expect(result.itemRecipeIds[ItemId.PetroleumGas]).toEqual(
+        RecipeId.CoalLiquefaction
+      );
+    });
+
+    it('should find unique item recipes', () => {
+      const result = RecipeUtility.adjustDataset(
+        Mocks.RationalRecipeSettingsInitial,
+        Mocks.ItemSettingsInitial,
+        [RecipeId.SolidFuelFromHeavyOil, RecipeId.SolidFuelFromPetroleumGas],
+        ItemId.Coal,
+        Rational.zero,
+        Rational.one,
+        Mocks.Data
+      );
+      expect(result.itemRecipeIds[ItemId.SolidFuel]).toEqual(
+        RecipeId.SolidFuelFromLightOil
+      );
+    });
+  });
+
+  describe('defaultRecipe', () => {
+    it('should find a default recipe for an item', () => {
+      const result = RecipeUtility.defaultRecipe(
+        ItemId.Coal,
+        [],
+        Mocks.AdjustedData
+      );
+      expect(result).toEqual(RecipeId.Coal);
+    });
+
+    it('should handle disabled recipes', () => {
+      const result = RecipeUtility.defaultRecipe(
+        ItemId.Coal,
+        [RecipeId.Coal],
+        Mocks.AdjustedData
+      );
+      expect(result).toBeNull();
+    });
   });
 
   describe('adjustProduct', () => {

@@ -1,4 +1,3 @@
-import { environment } from 'src/environments';
 import {
   Rational,
   RationalRecipe,
@@ -288,9 +287,6 @@ export class RecipeUtility {
       const rec = itemSettings[id].recipe;
       if (rec && disabledRecipes.indexOf(rec) === -1) {
         itemRecipeIds[id] = rec;
-        if (environment.debug) {
-          console.log(`Overriding item '${id}' to use recipe '${rec}'`);
-        }
       } else {
         const recipes = data.recipeIds
           .map((r) => recipeR[r])
@@ -299,9 +295,6 @@ export class RecipeUtility {
           );
         if (recipes.length === 1 && Object.keys(recipes[0].out).length === 1) {
           itemRecipeIds[id] = recipes[0].id;
-          if (environment.debug) {
-            console.log(`Setting item '${id}' to use recipe '${recipes[0]}'`);
-          }
         }
       }
     }

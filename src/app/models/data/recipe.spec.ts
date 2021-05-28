@@ -115,6 +115,26 @@ describe('RationalRecipe', () => {
     });
   });
 
+  describe('producesOnly', () => {
+    const id = 'id';
+
+    it('handle recipe with multiple outputs', () => {
+      const recipe = new RationalRecipe({
+        time: 0,
+        out: { [id]: 1, ['other']: 1 },
+      } as any);
+      expect(recipe.producesOnly(id)).toBeFalse();
+    });
+
+    it('handle recipe with single output', () => {
+      const recipe = new RationalRecipe({
+        time: 0,
+        out: { [id]: 1 },
+      } as any);
+      expect(recipe.producesOnly(id)).toBeTrue();
+    });
+  });
+
   describe('output', () => {
     const id = 'id';
 
