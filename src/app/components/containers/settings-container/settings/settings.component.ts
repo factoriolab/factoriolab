@@ -125,6 +125,7 @@ export class SettingsComponent implements OnInit, OnChanges {
   InserterCapacityOptions = InserterCapacityOptions;
   InserterTargetOptions = InserterTargetOptions;
   DisplayRateOptions = DisplayRateOptions;
+  BrowserUtility = BrowserUtility;
 
   ItemId = ItemId;
 
@@ -132,16 +133,12 @@ export class SettingsComponent implements OnInit, OnChanges {
   ctrlMiningProductivity = new FormControl('', Validators.min(0));
   ctrlMiningSpeed = new FormControl('', Validators.min(100));
 
-  get search(): string {
-    return BrowserUtility.search;
-  }
-
   constructor(private ref: ChangeDetectorRef, private router: Router) {}
 
   ngOnInit(): void {
     this.state =
       Object.keys(this.preferences.states).find(
-        (s) => this.preferences.states[s] === this.search
+        (s) => this.preferences.states[s] === BrowserUtility.search
       ) || '';
     this.router.events.subscribe((e) => this.ref.detectChanges());
   }
@@ -208,7 +205,7 @@ export class SettingsComponent implements OnInit, OnChanges {
   }
 
   clickSaveState(): void {
-    this.saveState.emit({ id: this.tempState, value: this.search });
+    this.saveState.emit({ id: this.tempState, value: BrowserUtility.search });
     this.editState = false;
     this.state = this.tempState;
   }
