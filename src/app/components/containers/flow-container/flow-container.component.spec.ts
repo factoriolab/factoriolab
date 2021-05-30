@@ -7,7 +7,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { OptionsComponent, ColumnsComponent } from '~/components';
 import { LinkValue } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
-import { SetLinkValueAction } from '~/store/preferences';
+import { SetLinkSizeAction, SetLinkTextAction } from '~/store/preferences';
 import { ListComponent, ListContainerComponent } from '../list-container';
 import { SankeyComponent } from './sankey/sankey.component';
 import { FlowContainerComponent } from './flow-container.component';
@@ -56,10 +56,17 @@ describe('FlowContainerComponent', () => {
     expect(detectChanges).toHaveBeenCalled();
   });
 
-  it('should set the link value', () => {
-    component.setLinkValue(LinkValue.Belts);
+  it('should set the link size', () => {
+    component.setLinkSize(LinkValue.Belts);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new SetLinkValueAction(LinkValue.Belts)
+      new SetLinkSizeAction(LinkValue.Belts)
+    );
+  });
+
+  it('should set the link text', () => {
+    component.setLinkText(LinkValue.Belts);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new SetLinkTextAction(LinkValue.Belts)
     );
   });
 });

@@ -10,7 +10,8 @@ export type ColumnsState = Entities<ColumnSettings>;
 export interface PreferencesState {
   states: Entities<string>;
   columns: ColumnsState;
-  linkValue: LinkValue;
+  linkSize: LinkValue;
+  linkText: LinkValue;
   simplex: boolean;
 }
 
@@ -25,7 +26,8 @@ export const initialColumnsState: ColumnsState = AllColumns.reduce(
 export const initialPreferencesState: PreferencesState = {
   states: {},
   columns: initialColumnsState,
-  linkValue: LinkValue.Items,
+  linkSize: LinkValue.Items,
+  linkText: LinkValue.Items,
   simplex: true,
 };
 
@@ -50,8 +52,10 @@ export function preferencesReducer(
     }
     case PreferencesActionType.SET_COLUMNS:
       return { ...state, ...{ columns: action.payload } };
-    case PreferencesActionType.SET_LINK_VALUE:
-      return { ...state, ...{ linkValue: action.payload } };
+    case PreferencesActionType.SET_LINK_SIZE:
+      return { ...state, ...{ linkSize: action.payload } };
+    case PreferencesActionType.SET_LINK_TEXT:
+      return { ...state, ...{ linkText: action.payload } };
     case PreferencesActionType.SET_SIMPLEX:
       return { ...state, ...{ simplex: action.payload } };
     default:
