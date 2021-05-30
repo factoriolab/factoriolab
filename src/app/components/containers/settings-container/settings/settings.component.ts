@@ -116,6 +116,11 @@ export class SettingsComponent implements OnInit, OnChanges {
       name: 'Disabled',
     },
   ];
+  presetOptions: IdName<Preset>[];
+  factoryOptions: string[];
+  factoryRows: string[];
+  savedStates: IdName[];
+  columnsButton: string;
   ResearchSpeedOptions = ResearchSpeedOptions;
   InserterCapacityOptions = InserterCapacityOptions;
   InserterTargetOptions = InserterTargetOptions;
@@ -129,34 +134,6 @@ export class SettingsComponent implements OnInit, OnChanges {
 
   get search(): string {
     return BrowserUtility.search;
-  }
-
-  get presetOptions(): IdName<Preset>[] {
-    return presetOptions(this.data.isDsp);
-  }
-
-  get factoryRows(): string[] {
-    return ['', ...this.factories.ids];
-  }
-
-  get factoryOptions(): string[] {
-    return this.data.factoryIds.filter(
-      (f) => this.factories.ids.indexOf(f) === -1
-    );
-  }
-
-  get savedStates(): IdName[] {
-    return Object.keys(this.preferences.states).map((i) => ({
-      id: i,
-      name: i,
-    }));
-  }
-
-  get columnsButton(): string {
-    const num = Object.keys(this.columns).filter(
-      (c) => this.columns[c].show
-    ).length;
-    return `${num} Visible`;
   }
 
   constructor(private ref: ChangeDetectorRef, private router: Router) {}
@@ -173,6 +150,20 @@ export class SettingsComponent implements OnInit, OnChanges {
     this.ctrlFlowRate.setValue(this.settings.flowRate);
     this.ctrlMiningProductivity.setValue(this.settings.miningBonus);
     this.ctrlMiningSpeed.setValue(this.settings.miningBonus + 100);
+
+    this.presetOptions = presetOptions(this.data.isDsp);
+    this.factoryOptions = this.data.factoryIds.filter(
+      (f) => this.factories.ids.indexOf(f) === -1
+    );
+    this.factoryRows = ['', ...this.factories.ids];
+    this.savedStates = Object.keys(this.preferences.states).map((i) => ({
+      id: i,
+      name: i,
+    }));
+    const numCols = Object.keys(this.columns).filter(
+      (c) => this.columns[c].show
+    ).length;
+    this.columnsButton = `${numCols} Visible`;
   }
 
   /** Forces change detector to update on scroll */
