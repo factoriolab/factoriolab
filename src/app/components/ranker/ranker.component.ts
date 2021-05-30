@@ -18,20 +18,26 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
 export class RankerComponent extends DialogContainerComponent {
   @Input() data: Dataset;
   @Input() selected: string[];
-  @Input() options: string[];
+  @Input() set options(value: string[]) {
+    this.rows = this.moduleRows(value);
+  }
   @Input() displayRate: DisplayRate;
 
   @Output() selectIds = new EventEmitter<string[]>();
 
   edited = false;
   editValue: string[];
+  rows: string[][];
 
   ItemId = ItemId;
 
   get width(): number {
-    const buttons = this.options.length + 1;
-    const iconsPerRow = buttons <= 4 ? buttons : Math.ceil(Math.sqrt(buttons));
-    return iconsPerRow * 2.375 + 1.5;
+    const w = Math.max(...this.rows.map((r) => r.length)) * 2.375;
+    if (this.rows.length > 5) {
+      return w + 1.125; // Add in padding for scrollbar
+    } else {
+      return w;
+    }
   }
 
   constructor() {

@@ -74,11 +74,9 @@ describe('SelectComponent', () => {
       expect(component.child.width).toEqual(7.125);
     });
 
-    it('should calculate based on number of options', () => {
-      component.options = ['1', '2', '3', '4', '5'];
-      component.includeEmptyModule = true;
-      fixture.detectChanges();
-      expect(component.child.width).toEqual(7.125);
+    it('should calculate based maximum row size', () => {
+      component.child.rows = [[], ['1', '2', '3', '4', '5']];
+      expect(component.child.width).toEqual(11.875);
     });
   });
 
