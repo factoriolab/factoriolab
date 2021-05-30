@@ -116,10 +116,16 @@ export class SettingsComponent implements OnInit, OnChanges {
       name: 'Disabled',
     },
   ];
+  presetOptions: IdName<Preset>[];
+  factoryOptions: string[];
+  factoryRows: string[];
+  savedStates: IdName[];
+  columnsButton: string;
   ResearchSpeedOptions = ResearchSpeedOptions;
   InserterCapacityOptions = InserterCapacityOptions;
   InserterTargetOptions = InserterTargetOptions;
   DisplayRateOptions = DisplayRateOptions;
+  BrowserUtility = BrowserUtility;
 
   ItemId = ItemId;
 
@@ -127,44 +133,12 @@ export class SettingsComponent implements OnInit, OnChanges {
   ctrlMiningProductivity = new FormControl('', Validators.min(0));
   ctrlMiningSpeed = new FormControl('', Validators.min(100));
 
-  get search(): string {
-    return BrowserUtility.search;
-  }
-
-  get presetOptions(): IdName<Preset>[] {
-    return presetOptions(this.data.isDsp);
-  }
-
-  get factoryRows(): string[] {
-    return ['', ...this.factories.ids];
-  }
-
-  get factoryOptions(): string[] {
-    return this.data.factoryIds.filter(
-      (f) => this.factories.ids.indexOf(f) === -1
-    );
-  }
-
-  get savedStates(): IdName[] {
-    return Object.keys(this.preferences.states).map((i) => ({
-      id: i,
-      name: i,
-    }));
-  }
-
-  get columnsButton(): string {
-    const num = Object.keys(this.columns).filter(
-      (c) => this.columns[c].show
-    ).length;
-    return `${num} Visible`;
-  }
-
   constructor(private ref: ChangeDetectorRef, private router: Router) {}
 
   ngOnInit(): void {
     this.state =
       Object.keys(this.preferences.states).find(
-        (s) => this.preferences.states[s] === this.search
+        (s) => this.preferences.states[s] === BrowserUtility.search
       ) || '';
     this.router.events.subscribe((e) => this.ref.detectChanges());
   }
@@ -173,6 +147,20 @@ export class SettingsComponent implements OnInit, OnChanges {
     this.ctrlFlowRate.setValue(this.settings.flowRate);
     this.ctrlMiningProductivity.setValue(this.settings.miningBonus);
     this.ctrlMiningSpeed.setValue(this.settings.miningBonus + 100);
+
+    this.presetOptions = presetOptions(this.data.isDsp);
+    this.factoryOptions = this.data.factoryIds.filter(
+      (f) => this.factories.ids.indexOf(f) === -1
+    );
+    this.factoryRows = ['', ...this.factories.ids];
+    this.savedStates = Object.keys(this.preferences.states).map((i) => ({
+      id: i,
+      name: i,
+    }));
+    const numCols = Object.keys(this.columns).filter(
+      (c) => this.columns[c].show
+    ).length;
+    this.columnsButton = `${numCols} Visible`;
   }
 
   /** Forces change detector to update on scroll */
@@ -217,7 +205,7 @@ export class SettingsComponent implements OnInit, OnChanges {
   }
 
   clickSaveState(): void {
-    this.saveState.emit({ id: this.tempState, value: this.search });
+    this.saveState.emit({ id: this.tempState, value: BrowserUtility.search });
     this.editState = false;
     this.state = this.tempState;
   }

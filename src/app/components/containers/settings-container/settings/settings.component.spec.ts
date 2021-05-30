@@ -14,6 +14,7 @@ import {
   ToggleComponent,
 } from '~/components';
 import { initialColumnsState } from '~/store/preferences';
+import { BrowserUtility } from '~/utilities';
 import { SettingsComponent } from './settings.component';
 
 enum DataTest {
@@ -178,7 +179,7 @@ describe('SettingsComponent', () => {
     });
 
     it('should set state to matching saved state', () => {
-      spyOnProperty(component.child, 'search').and.returnValue('hash');
+      spyOnProperty(BrowserUtility, 'search').and.returnValue('hash');
       component.child.ngOnInit();
       expect(component.child.state).toEqual('name');
     });
@@ -275,7 +276,7 @@ describe('SettingsComponent', () => {
       spyOn(component, 'saveState');
       component.child.tempState = id;
       component.child.editState = true;
-      spyOnProperty(component.child, 'search').and.returnValue(value);
+      spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
       component.child.clickSaveState();
       expect(component.saveState).toHaveBeenCalledWith({ id, value });
       expect(component.child.editState).toBeFalse();
