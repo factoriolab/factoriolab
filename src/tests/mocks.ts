@@ -185,7 +185,8 @@ export const AdjustedData = getAdjustedDataset.projector(
 export const Preferences: PreferencesState = {
   states: { ['name']: 'hash' },
   columns: initialColumnsState,
-  linkValue: LinkValue.Items,
+  linkSize: LinkValue.Items,
+  linkText: LinkValue.Items,
   simplex: true,
 };
 
@@ -204,7 +205,7 @@ function link(i: number, j: number): Link {
     source: `${i}`,
     target: `${j}`,
     value: Math.max(1, i),
-    dispValue: '1 items',
+    text: '1 items',
     name: `${i}->${j}`,
     color: 'white',
   };

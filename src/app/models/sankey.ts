@@ -18,5 +18,5 @@ export interface Link extends SankeyBase {
   source: string;
   target: string;
   value: number;
-  dispValue: string;
+  text: string;
 }

@@ -10,7 +10,8 @@ import {
 export class FlowUtility {
   static buildSankey(
     steps: Step[],
-    linkValue: LinkValue,
+    linkSize: LinkValue,
+    linkText: LinkValue,
     linkPrecision: number,
     data: Dataset
   ): SankeyData {
@@ -20,7 +21,9 @@ export class FlowUtility {
     };
 
     for (const step of steps) {
-      const value = this.stepLinkValue(step, linkValue);
+      const text = this.stepLinkValue(step, linkText);
+      const value =
+        linkText === linkSize ? text : this.stepLinkValue(step, linkSize);
 
       if (step.recipeId) {
         const recipe = data.recipeR[step.recipeId];
@@ -42,16 +45,16 @@ export class FlowUtility {
             sankey.links.push({
               target: i,
               source: step.recipeId,
-              value: this.linkValue(
+              value: this.linkSize(
                 value,
                 step.parents[i],
-                linkValue,
+                linkSize,
                 item.stack
               ),
-              dispValue: this.linkDisp(
-                value,
+              text: this.linkText(
+                text,
                 step.parents[i],
-                linkValue,
+                linkText,
                 linkPrecision
               ),
               name: item.name,
@@ -66,19 +69,18 @@ export class FlowUtility {
             (step.itemId !== id && !step.parents?.[id])
         )) {
           const outStep = steps.find((s) => s.itemId === outId);
-          const outValue = this.stepLinkValue(outStep, linkValue);
+          const outText = this.stepLinkValue(outStep, linkText);
+          const outValue =
+            linkText === linkSize
+              ? outText
+              : this.stepLinkValue(outStep, linkSize);
           const percent = step.outputs[outId];
           const item = data.itemEntities[outId];
           sankey.links.push({
             target: outId,
             source: step.recipeId,
-            value: this.linkValue(outValue, percent, linkValue, item.stack),
-            dispValue: this.linkDisp(
-              outValue,
-              percent,
-              linkValue,
-              linkPrecision
-            ),
+            value: this.linkSize(outValue, percent, linkSize, item.stack),
+            text: this.linkText(outValue, percent, linkText, linkPrecision),
             name: item.name,
             color: data.iconEntities[outId].color,
           });
@@ -105,16 +107,16 @@ export class FlowUtility {
               sankey.links.push({
                 target: i,
                 source: step.itemId,
-                value: this.linkValue(
+                value: this.linkSize(
                   value,
                   step.parents[i],
-                  linkValue,
+                  linkSize,
                   item.stack
                 ),
-                dispValue: this.linkDisp(
-                  value,
+                text: this.linkText(
+                  text,
                   step.parents[i],
-                  linkValue,
+                  linkText,
                   linkPrecision
                 ),
                 name: item.name,
@@ -129,17 +131,17 @@ export class FlowUtility {
     return sankey;
   }
 
-  static stepLinkValue(step: Step, linkValue: LinkValue): Rational {
-    if (linkValue === LinkValue.None || linkValue === LinkValue.Percent) {
+  static stepLinkValue(step: Step, prop: LinkValue): Rational {
+    if (prop === LinkValue.None || prop === LinkValue.Percent) {
       return Rational.one;
     }
 
-    if (linkValue === LinkValue.Factories && !step.factories) {
+    if (prop === LinkValue.Factories && !step.factories) {
       // Step has no factories associated, return 0
       return Rational.zero;
     }
 
-    switch (linkValue) {
+    switch (prop) {
       case LinkValue.Belts:
         return step.belts;
       case LinkValue.Wagons:
@@ -151,45 +153,45 @@ export class FlowUtility {
     }
   }
 
-  static linkValue(
+  static linkSize(
     value: Rational,
     percent: Rational,
-    linkValue: LinkValue,
+    prop: LinkValue,
     stack: number
   ): number {
-    if (linkValue === LinkValue.None) {
+    if (prop === LinkValue.None) {
       return 1;
     }
 
-    if (linkValue === LinkValue.Percent) {
+    if (prop === LinkValue.Percent) {
       return percent.toNumber() || MIN_LINK_VALUE;
     }
 
     // Scale link size for fluids to 1/10
-    if (linkValue === LinkValue.Items && !stack) {
+    if (prop === LinkValue.Items && !stack) {
       value = value.div(Rational.from(10));
     }
 
     return value.mul(percent).toNumber() || MIN_LINK_VALUE;
   }
 
-  static linkDisp(
+  static linkText(
     value: Rational,
     percent: Rational,
-    linkValue: LinkValue,
-    linkPrecision: number
+    prop: LinkValue,
+    precision: number
   ): string {
-    switch (linkValue) {
+    switch (prop) {
       case LinkValue.None:
         return '';
       case LinkValue.Percent:
         return `${Math.round(percent.mul(Rational.hundred).toNumber())}%`;
       default: {
         const result = value.mul(percent);
-        if (linkPrecision == null) {
+        if (precision == null) {
           return result.toFraction();
         } else {
-          return result.toPrecision(linkPrecision).toString();
+          return result.toPrecision(precision).toString();
         }
       }
     }
