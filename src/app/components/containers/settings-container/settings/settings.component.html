@@ -33,7 +33,7 @@
             <i class="material-icons">delete</i>
           </button>
           <button
-            *ngIf="search"
+            *ngIf="BrowserUtility.search"
             title="Name and save state"
             (click)="toggleEditState()"
           >
@@ -47,7 +47,7 @@
             [(ngModel)]="tempState"
           />
           <button
-            *ngIf="tempState && search"
+            *ngIf="tempState && BrowserUtility.search"
             title="Save state"
             (click)="clickSaveState()"
           >
