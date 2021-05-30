@@ -18,27 +18,53 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
 export class SelectComponent extends DialogContainerComponent {
   @Input() data: Dataset;
   @Input() selected: string;
-  @Input() options: string[];
+  _options: string[];
+  get options(): string[] {
+    return this._options;
+  }
+  @Input() set options(value: string[]) {
+    this._options = value;
+    this.updateRows();
+  }
   @Input() selectType = IdType.Item;
   @Input() displayRate: DisplayRate;
-  @Input() includeEmptyModule: boolean;
+  _includeEmptyModule: boolean;
+  get includeEmptyModule(): boolean {
+    return this._includeEmptyModule;
+  }
+  @Input() set includeEmptyModule(value: boolean) {
+    this._includeEmptyModule = value;
+    this.updateRows();
+  }
 
   @Output() selectId = new EventEmitter<string>();
+
+  rows: string[][];
 
   IdType = IdType;
   ItemId = ItemId;
 
   get width(): number {
-    let buttons = this.options.length;
-    if (this.includeEmptyModule) {
-      buttons++;
+    if (this.rows.length > 1) {
+      return Math.max(...this.rows.map((r) => r.length)) * 2.375;
+    } else {
+      let buttons = this.rows[0].length;
+      const iconsPerRow =
+        buttons <= 4 ? buttons : Math.ceil(Math.sqrt(buttons));
+      return iconsPerRow * 2.375;
     }
-    const iconsPerRow = buttons <= 4 ? buttons : Math.ceil(Math.sqrt(buttons));
-    return iconsPerRow * 2.375;
   }
 
   constructor() {
     super();
+  }
+
+  updateRows(): void {
+    if (this.includeEmptyModule) {
+      this.rows = this.moduleRows(this.options);
+    } else {
+      this.rows = [this.options];
+    }
   }
 
   clickId(id: string): void {

@@ -9,9 +9,8 @@
     </button>
   </div>
   <div #scroll class="panel scroll" [style.width.rem]="width">
-    <div class="tile">
+    <div class="tile" *ngIf="includeEmptyModule">
       <lab-icon
-        *ngIf="includeEmptyModule"
         tooltip="No Module"
         class="grid"
         [class.selected]="selected === ItemId.Module"
@@ -22,7 +21,9 @@
         (click)="clickId(ItemId.Module)"
       >
       </lab-icon>
-      <ng-container *ngFor="let id of options">
+    </div>
+    <div class="tile" *ngFor="let row of rows">
+      <ng-container *ngFor="let id of row">
         <lab-icon
           class="grid"
           [class.selected]="id === selected"
