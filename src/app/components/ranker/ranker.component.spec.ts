@@ -29,11 +29,11 @@ class TestRankerComponent {
   data: Dataset = Mocks.Data;
   selected = [ItemId.SpeedModule];
   options: string[] = [
+    ItemId.ProductivityModule,
+    ItemId.ProductivityModule3,
     ItemId.SpeedModule,
     ItemId.SpeedModule2,
     ItemId.SpeedModule3,
-    ItemId.ProductivityModule,
-    ItemId.ProductivityModule3,
   ];
   selectIds(data): void {}
 }
@@ -64,14 +64,14 @@ describe('RankerComponent', () => {
   });
 
   describe('width', () => {
-    it('should make room for all options when <= 4', () => {
-      component.options = ['1', '2', '3'];
-      fixture.detectChanges();
-      expect(component.child.width).toEqual(11);
+    it('should calculate based on maximum width row', () => {
+      component.child.rows = [['1', '2', '3']];
+      expect(component.child.width).toEqual(7.125);
     });
 
-    it('should calculate based on number of options', () => {
-      expect(component.child.width).toEqual(8.625);
+    it('should add room for scrollbar', () => {
+      component.child.rows = [['1'], ['2'], ['3'], ['4'], ['5'], ['6']];
+      expect(component.child.width).toEqual(3.5);
     });
   });
 
@@ -165,21 +165,21 @@ describe('RankerComponent', () => {
       spyOn(component.child, 'cancel');
       component.child.edited = true;
       component.child.editValue = [];
-      TestUtility.clickDt(fixture, DataTest.Option);
+      TestUtility.clickDt(fixture, DataTest.Option, 2);
       expect(component.selectIds).toHaveBeenCalledWith([ItemId.SpeedModule]);
       expect(component.child.cancel).toHaveBeenCalled();
     });
 
     it('should start editing and then close', () => {
       spyOn(component.child, 'cancel');
-      TestUtility.clickDt(fixture, DataTest.Option);
+      TestUtility.clickDt(fixture, DataTest.Option, 2);
       expect(component.selectIds).toHaveBeenCalledWith([ItemId.SpeedModule]);
       expect(component.child.cancel).toHaveBeenCalled();
     });
 
     it('should start editing and continue if limited', () => {
       spyOn(component.child, 'cancel');
-      TestUtility.clickDt(fixture, DataTest.Option, 3);
+      TestUtility.clickDt(fixture, DataTest.Option);
       expect(component.child.edited).toBeTrue();
       expect(component.child.editValue).toEqual([ItemId.ProductivityModule]);
       expect(component.selectIds).not.toHaveBeenCalled();

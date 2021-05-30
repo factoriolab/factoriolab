@@ -1,14 +1,14 @@
 <div data-test="lab-ranker-open" (click)="clickOpen()">
   <ng-content></ng-content>
 </div>
-<lab-dialog *ngIf="open" [style.width.rem]="width" (closeDialog)="close()">
+<lab-dialog *ngIf="open" (closeDialog)="close()">
   <div class="dialog-title">
     <div class="header">Select modules</div>
     <button (click)="cancel()">
       <i class="material-icons">close</i>
     </button>
   </div>
-  <div #scroll class="panel scroll">
+  <div #scroll class="panel scroll" [style.width.rem]="width">
     <div class="tile">
       <lab-icon
         tooltip="No Module"
@@ -23,8 +23,10 @@
         (click)="clickId(ItemId.Module)"
       >
       </lab-icon>
+    </div>
+    <div class="tile" *ngFor="let row of rows">
       <lab-icon
-        *ngFor="let id of options"
+        *ngFor="let id of row"
         class="grid"
         data-test="lab-ranker-option"
         [class.disabled]="!canAdd(id)"

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { ItemId } from 'src/tests';
 import { DialogContainerComponent } from './dialog-container.component';
 
 describe('DialogContainerComponent', () => {
@@ -23,6 +24,21 @@ describe('DialogContainerComponent', () => {
       component.open = true;
       component.cancel();
       expect(component.open).toBeFalse();
+    });
+  });
+
+  describe('moduleRows', () => {
+    it('should build rows of options', () => {
+      const result = component.moduleRows([
+        ItemId.SpeedModule,
+        ItemId.SpeedModule2,
+        ItemId.ProductivityModule,
+        ItemId.ProductivityModule3,
+      ]);
+      expect(result).toEqual([
+        [ItemId.ProductivityModule, ItemId.ProductivityModule3],
+        [ItemId.SpeedModule, ItemId.SpeedModule2],
+      ]);
     });
   });
 });
