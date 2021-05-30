@@ -1,10 +1,17 @@
-<div class="flex">
-  <div>Link value</div>
+<div class="flex" *ngIf="linkValueOptions(isDsp$ | async) as options">
+  <div>Link text</div>
   <lab-options
-    title="Select flow link value"
-    [selected]="linkValue$ | async"
-    [options]="linkValueOptions(isDsp$ | async)"
-    (selectId)="setLinkValue($event)"
+    title="Select flow link text"
+    [selected]="linkText$ | async"
+    [options]="options"
+    (selectId)="setLinkText($event)"
+  ></lab-options>
+  <div>Link size</div>
+  <lab-options
+    title="Select flow link size"
+    [selected]="linkSize$ | async"
+    [options]="options"
+    (selectId)="setLinkSize($event)"
   ></lab-options>
 </div>
 <lab-sankey

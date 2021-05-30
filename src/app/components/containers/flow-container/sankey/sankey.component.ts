@@ -129,7 +129,7 @@ export class SankeyComponent {
       .append('textPath')
       .attr('startOffset', '4px')
       .attr('href', (l) => `#${l.index}`)
-      .text((l) => `${l.dispValue} ${l.name}`);
+      .text((l) => `${l.text} ${l.name}`);
 
     // Draw rects for nodes
     this.svg
@@ -145,7 +145,7 @@ export class SankeyComponent {
       .attr('fill', (d) => d.color)
       .on('click', (e, d) => {
         // Typings currently incorrect: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/47296
-        const node = (d as any) as SankeyNode<Node, Link>;
+        const node = d as any as SankeyNode<Node, Link>;
         this.selectNode.emit(node.id);
       })
       .append('title')

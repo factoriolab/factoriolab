@@ -17,7 +17,12 @@ import {
   IdName,
 } from '~/models';
 import { State } from '~/store';
-import { getLinkValue, SetLinkValueAction } from '~/store/preferences';
+import {
+  getLinkText,
+  getLinkSize,
+  SetLinkTextAction,
+  SetLinkSizeAction,
+} from '~/store/preferences';
 import { getSankey, getSteps } from '~/store/products';
 import { getIsDsp } from '~/store/settings';
 import { SankeyComponent } from './sankey/sankey.component';
@@ -34,7 +39,8 @@ export class FlowContainerComponent implements OnInit {
   isDsp$: Observable<boolean>;
   sankeyData$: Observable<SankeyData>;
   steps$: Observable<Step[]>;
-  linkValue$: Observable<LinkValue>;
+  linkText$: Observable<LinkValue>;
+  linkSize$: Observable<LinkValue>;
 
   selected: string;
 
@@ -46,7 +52,8 @@ export class FlowContainerComponent implements OnInit {
     this.isDsp$ = this.store.select(getIsDsp);
     this.sankeyData$ = this.store.select(getSankey);
     this.steps$ = this.store.select(getSteps);
-    this.linkValue$ = this.store.select(getLinkValue);
+    this.linkText$ = this.store.select(getLinkText);
+    this.linkSize$ = this.store.select(getLinkSize);
   }
 
   linkValueOptions(isDsp: boolean): IdName<LinkValue>[] {
@@ -58,7 +65,11 @@ export class FlowContainerComponent implements OnInit {
     this.ref.detectChanges();
   }
 
-  setLinkValue(value: LinkValue): void {
-    this.store.dispatch(new SetLinkValueAction(value));
+  setLinkSize(value: LinkValue): void {
+    this.store.dispatch(new SetLinkSizeAction(value));
+  }
+
+  setLinkText(value: LinkValue): void {
+    this.store.dispatch(new SetLinkTextAction(value));
   }
 }

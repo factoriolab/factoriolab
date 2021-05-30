@@ -46,13 +46,23 @@ describe('Preferences Reducer', () => {
     });
   });
 
-  describe('SET_LINK_VALUE', () => {
-    it('should set the link value', () => {
+  describe('SET_LINK_SIZE', () => {
+    it('should set the link size', () => {
       const result = preferencesReducer(
         undefined,
-        new Actions.SetLinkValueAction(value as any)
+        new Actions.SetLinkSizeAction(value as any)
       );
-      expect(result.linkValue).toEqual(value as any);
+      expect(result.linkSize).toEqual(value as any);
+    });
+  });
+
+  describe('SET_LINK_TEXT', () => {
+    it('should set the link text', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetLinkTextAction(value as any)
+      );
+      expect(result.linkText).toEqual(value as any);
     });
   });
 

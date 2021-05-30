@@ -8,11 +8,13 @@ import { ColumnsState, PreferencesState } from './preferences.reducer';
 export const preferencesState = (state: State): PreferencesState =>
   state.preferencesState;
 const sColumns = (state: PreferencesState): ColumnsState => state.columns;
-const sLinkValue = (state: PreferencesState): LinkValue => state.linkValue;
+const sLinkSize = (state: PreferencesState): LinkValue => state.linkSize;
+const sLinkText = (state: PreferencesState): LinkValue => state.linkText;
 const sSimplex = (state: PreferencesState): boolean => state.simplex;
 
 export const getColumns = compose(sColumns, preferencesState);
-export const getLinkValue = compose(sLinkValue, preferencesState);
+export const getLinkSize = compose(sLinkSize, preferencesState);
+export const getLinkText = compose(sLinkText, preferencesState);
 export const getSimplex = compose(sSimplex, preferencesState);
 
 export const getColumnsState = createSelector(
@@ -35,10 +37,10 @@ export const getColumnsState = createSelector(
 );
 
 export const getLinkPrecision = createSelector(
-  getLinkValue,
+  getLinkText,
   getColumns,
-  (linkValue, columns) => {
-    switch (linkValue) {
+  (linkText, columns) => {
+    switch (linkText) {
       case LinkValue.Items:
         return columns[Column.Items].precision;
       case LinkValue.Belts:

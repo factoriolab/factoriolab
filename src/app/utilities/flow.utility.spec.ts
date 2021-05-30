@@ -6,7 +6,6 @@ import {
   Step,
   Node,
   Link,
-  DisplayRate,
 } from '~/models';
 import { FlowUtility } from './flow.utility';
 
@@ -21,7 +20,7 @@ describe('FlowUtility', () => {
     };
 
     it('should handle empty/null values', () => {
-      const result = FlowUtility.buildSankey([], null, null, null);
+      const result = FlowUtility.buildSankey([], null, null, null, null);
       expect(result).toEqual({ nodes: [], links: [] });
     });
 
@@ -35,6 +34,7 @@ describe('FlowUtility', () => {
           },
         ] as any[],
         LinkValue.None,
+        LinkValue.None,
         null,
         Mocks.AdjustedData
       );
@@ -45,7 +45,7 @@ describe('FlowUtility', () => {
             target: ItemId.PlasticBar,
             source: ItemId.Coal,
             value: 1,
-            dispValue: '',
+            text: '',
             name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
             color: Mocks.AdjustedData.iconEntities[ItemId.Coal].color,
           },
@@ -62,6 +62,7 @@ describe('FlowUtility', () => {
           },
         ] as any[],
         LinkValue.None,
+        LinkValue.None,
         null,
         Mocks.AdjustedData
       );
@@ -75,6 +76,7 @@ describe('FlowUtility', () => {
           { recipeId: RecipeId.Coal, factories: Rational.one, outputs: {} },
         ] as any[],
         LinkValue.None,
+        LinkValue.None,
         null,
         Mocks.AdjustedData
       );
@@ -85,7 +87,38 @@ describe('FlowUtility', () => {
             target: ItemId.Coal,
             source: ItemId.Coal,
             value: 1,
-            dispValue: '',
+            text: '',
+            name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
+            color: Mocks.AdjustedData.iconEntities[ItemId.Coal].color,
+          },
+        ],
+      });
+    });
+
+    it('should handle different text and size', () => {
+      const result = FlowUtility.buildSankey(
+        [
+          { itemId: ItemId.Coal, items: Rational.one },
+          {
+            recipeId: RecipeId.Coal,
+            factories: Rational.one,
+            outputs: { [ItemId.Coal]: Rational.one },
+            items: Rational.two,
+          },
+        ] as any[],
+        LinkValue.Items,
+        LinkValue.Percent,
+        null,
+        Mocks.AdjustedData
+      );
+      expect(result).toEqual({
+        nodes: [node, node],
+        links: [
+          {
+            target: ItemId.Coal,
+            source: ItemId.Coal,
+            value: 1,
+            text: '100%',
             name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
             color: Mocks.AdjustedData.iconEntities[ItemId.Coal].color,
           },
@@ -102,6 +135,7 @@ describe('FlowUtility', () => {
           },
         ] as any[],
         LinkValue.None,
+        LinkValue.None,
         null,
         Mocks.AdjustedData
       );
@@ -112,7 +146,7 @@ describe('FlowUtility', () => {
             target: ItemId.PlasticBar,
             source: ItemId.Coal,
             value: 1,
-            dispValue: '',
+            text: '',
             name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
             color: Mocks.AdjustedData.iconEntities[ItemId.Coal].color,
           },
@@ -129,6 +163,7 @@ describe('FlowUtility', () => {
           },
         ] as any[],
         LinkValue.None,
+        LinkValue.None,
         null,
         Mocks.AdjustedData
       );
@@ -138,6 +173,7 @@ describe('FlowUtility', () => {
     it('should handle steps with no recipe or parents', () => {
       const result = FlowUtility.buildSankey(
         [{ itemId: ItemId.Coal }] as any[],
+        LinkValue.None,
         LinkValue.None,
         null,
         Mocks.AdjustedData
@@ -170,6 +206,7 @@ describe('FlowUtility', () => {
             items: Rational.zero,
           },
         ] as any[],
+        LinkValue.None,
         LinkValue.None,
         null,
         Mocks.AdjustedData
@@ -205,7 +242,7 @@ describe('FlowUtility', () => {
         target: ItemId.Uranium235,
         source: RecipeId.UraniumProcessing,
         value: 1,
-        dispValue: '',
+        text: '',
         name: Mocks.AdjustedData.itemEntities[ItemId.Uranium235].name,
         color: Mocks.AdjustedData.iconEntities[ItemId.Uranium235].color,
       };
@@ -213,7 +250,7 @@ describe('FlowUtility', () => {
         target: ItemId.Uranium238,
         source: RecipeId.UraniumProcessing,
         value: 1,
-        dispValue: '',
+        text: '',
         name: Mocks.AdjustedData.itemEntities[ItemId.Uranium238].name,
         color: Mocks.AdjustedData.iconEntities[ItemId.Uranium238].color,
       };
@@ -285,36 +322,36 @@ describe('FlowUtility', () => {
 
   describe('linkValue', () => {
     it('should return correct value for none', () => {
-      expect(FlowUtility.linkValue(null, null, LinkValue.None, 100)).toEqual(1);
+      expect(FlowUtility.linkSize(null, null, LinkValue.None, 100)).toEqual(1);
     });
 
     it('should return correct value for percent', () => {
       expect(
-        FlowUtility.linkValue(null, Rational.two, LinkValue.Percent, 100)
+        FlowUtility.linkSize(null, Rational.two, LinkValue.Percent, 100)
       ).toEqual(2);
     });
 
     it('should return minimum value for percent', () => {
       expect(
-        FlowUtility.linkValue(null, Rational.zero, LinkValue.Percent, 100)
+        FlowUtility.linkSize(null, Rational.zero, LinkValue.Percent, 100)
       ).toEqual(MIN_LINK_VALUE);
     });
 
     it('should multiply percent and value', () => {
       expect(
-        FlowUtility.linkValue(Rational.two, new Rational(BigInt(3)), null, 100)
+        FlowUtility.linkSize(Rational.two, new Rational(BigInt(3)), null, 100)
       ).toEqual(6);
     });
 
     it('should return minimum value', () => {
       expect(
-        FlowUtility.linkValue(Rational.zero, Rational.zero, null, 100)
+        FlowUtility.linkSize(Rational.zero, Rational.zero, null, 100)
       ).toEqual(MIN_LINK_VALUE);
     });
 
     it('should scale link size for fluids', () => {
       expect(
-        FlowUtility.linkValue(
+        FlowUtility.linkSize(
           Rational.hundred,
           Rational.one,
           LinkValue.Items,
@@ -326,20 +363,20 @@ describe('FlowUtility', () => {
 
   describe('linkDisp', () => {
     it('should return correct value for none', () => {
-      expect(FlowUtility.linkDisp(null, null, LinkValue.None, null)).toEqual(
+      expect(FlowUtility.linkText(null, null, LinkValue.None, null)).toEqual(
         ''
       );
     });
 
     it('should return correct value for percent', () => {
       expect(
-        FlowUtility.linkDisp(null, Rational.one, LinkValue.Percent, null)
+        FlowUtility.linkText(null, Rational.one, LinkValue.Percent, null)
       ).toEqual('100%');
     });
 
     it('should return correct fractional value', () => {
       expect(
-        FlowUtility.linkDisp(
+        FlowUtility.linkText(
           Rational.from(4, 3),
           Rational.one,
           LinkValue.Items,
@@ -350,7 +387,7 @@ describe('FlowUtility', () => {
 
     it('should return correct decimal value', () => {
       expect(
-        FlowUtility.linkDisp(
+        FlowUtility.linkText(
           Rational.from(4, 3),
           Rational.one,
           LinkValue.Items,
