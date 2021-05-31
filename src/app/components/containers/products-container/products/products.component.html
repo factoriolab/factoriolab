@@ -73,7 +73,7 @@
               header="Select a step to calculate by"
               [data]="data"
               [selected]="id"
-              [options]="getOptions(product)"
+              [options]="productOptions[product.id]"
               [selectType]="IdType.Recipe"
               (selectId)="setVia.emit({ id: product.id, value: $event })"
             >
@@ -93,7 +93,7 @@
                 header="Select a step to calculate by"
                 [data]="data"
                 [selected]="id"
-                [options]="getOptions(product)"
+                [options]="productOptions[product.id]"
                 (selectId)="setVia.emit({ id: product.id, value: $event })"
               >
                 <lab-icon
