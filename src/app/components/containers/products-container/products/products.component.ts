@@ -31,7 +31,7 @@ import { RecipeSettingsComponent } from '../../recipe-settings.component';
   styleUrls: ['./products.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductsComponent extends RecipeSettingsComponent, implements OnChanges {
+export class ProductsComponent extends RecipeSettingsComponent implements OnChanges {
   @Input() productSteps: Entities<[string, Rational][]>;
   @Input() products: Product[] = [];
   @Input() itemSettings: ItemsState;
