@@ -4,6 +4,7 @@ import {
   Output,
   Input,
   ChangeDetectionStrategy,
+  OnChanges,
 } from '@angular/core';
 
 import {
@@ -30,7 +31,7 @@ import { RecipeSettingsComponent } from '../../recipe-settings.component';
   styleUrls: ['./products.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductsComponent extends RecipeSettingsComponent {
+export class ProductsComponent extends RecipeSettingsComponent, implements OnChanges {
   @Input() productSteps: Entities<[string, Rational][]>;
   @Input() products: Product[] = [];
   @Input() itemSettings: ItemsState;
@@ -54,18 +55,24 @@ export class ProductsComponent extends RecipeSettingsComponent {
   @Output() setDisplayRate = new EventEmitter<DisplayRate>();
 
   DisplayRateOptions = DisplayRateOptions;
+  rateTypeOptions: IdName<RateType>[];
+  productOptions: Entities<string[]>;
 
   IdType = IdType;
   ItemId = ItemId;
   RateType = RateType;
   RecipeUtility = RecipeUtility;
 
-  get rateTypeOptions(): IdName<RateType>[] {
-    return rateTypeOptions(this.displayRate, this.data.isDsp);
-  }
-
   constructor() {
     super();
+  }
+
+  ngOnChanges(): void {
+    this.rateTypeOptions = rateTypeOptions(this.displayRate, this.data.isDsp);
+    this.productOptions = {};
+    for (const p of this.products) {
+      this.productOptions[p.id] = this.productSteps[product.itemId].map((r) => r[0]);
+    }
   }
 
   trackBy(i: number, product: Product): string {
@@ -93,9 +100,5 @@ export class ProductsComponent extends RecipeSettingsComponent {
         this.setRate.emit({ id, value });
       }
     } catch {}
-  }
-
-  getOptions(product: Product): string[] {
-    return this.productSteps[product.itemId].map((r) => r[0]);
   }
 }
