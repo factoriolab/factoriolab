@@ -120,11 +120,4 @@ describe('ProductsComponent', () => {
       expect(component.setRate).not.toHaveBeenCalled();
     });
   });
-
-  describe('getOptions', () => {
-    it('should get the recipe ids that are available as options', () => {
-      const result = component.child.getOptions(Mocks.Product4);
-      expect(result).toEqual([RecipeId.TransportBelt]);
-    });
-  });
 });
