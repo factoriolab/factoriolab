@@ -71,7 +71,7 @@ export class ProductsComponent extends RecipeSettingsComponent, implements OnCha
     this.rateTypeOptions = rateTypeOptions(this.displayRate, this.data.isDsp);
     this.productOptions = {};
     for (const p of this.products) {
-      this.productOptions[p.id] = this.productSteps[product.itemId].map((r) => r[0]);
+      this.productOptions[p.id] = this.productSteps[p.itemId].map((r) => r[0]);
     }
   }
 
