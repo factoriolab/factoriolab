@@ -574,7 +574,7 @@ describe('RecipeUtility', () => {
       );
       expect(result).toBeTruthy();
       expect(RecipeUtility.adjustSiloRecipes).toHaveBeenCalledTimes(1);
-      expect(RecipeUtility.adjustRecipe).toHaveBeenCalledTimes(220);
+      expect(RecipeUtility.adjustRecipe).toHaveBeenCalledTimes(221);
     });
 
     it('should use specified item recipe', () => {
