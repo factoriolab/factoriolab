@@ -1294,6 +1294,12 @@
                 <div class="info">
                   The recipe must be enabled and must only produce this item.
                 </div>
+                <div
+                  class="info warn"
+                  *ngIf="data.itemRecipeIds[step.itemId] === null"
+                >
+                  Default was ignored due to a detected circular loop.
+                </div>
               </div>
             </td>
           </tr>
