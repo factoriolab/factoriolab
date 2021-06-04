@@ -19,6 +19,7 @@ export const data: AppData = {
     { id: 'ir2', name: 'Industrial Revolution 2' },
     { id: 'kr2', name: 'Krastorio 2' },
     { id: 'kr2sxp', name: 'Krastorio 2 + SE' },
+    { id: 'msc', name: 'More Science' },
     { id: 'nls', name: 'Nullius' },
     { id: 'pys', name: 'Pyanodons' },
     { id: 'pysalf', name: 'Pyanodons + AL' },
@@ -72,5 +73,6 @@ export const data: AppData = {
     'nls',
     'fpp',
     'ang',
+    'msc',
   ],
 };
