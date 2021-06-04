@@ -309,12 +309,14 @@ export const getNormalizedStepsWithSimplex = createSelector(
 export const getNormalizedStepsWithBelts = createSelector(
   getNormalizedStepsWithSimplex,
   Items.getItemSettings,
+  Recipes.getRecipeSettings,
   Settings.getBeltSpeed,
   Recipes.getAdjustedDataset,
-  (steps, itemSettings, beltSpeed, data) =>
+  (steps, itemSettings, recipeSettings, beltSpeed, data) =>
     RateUtility.calculateBelts(
       RateUtility.copy(steps),
       itemSettings,
+      recipeSettings,
       beltSpeed,
       data
     )

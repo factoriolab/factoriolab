@@ -217,18 +217,6 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('totalPower', () => {
-    it('should sum the total power from steps', () => {
-      expect(component.child.totalPower).toEqual('1 kW');
-    });
-  });
-
-  describe('totalPollution', () => {
-    it('should sum the total pollution from steps', () => {
-      expect(component.child.totalPollution).toEqual('1');
-    });
-  });
-
   describe('ngOnInit', () => {
     afterEach(() => {
       history.replaceState(null, null, '');
@@ -238,6 +226,56 @@ describe('ListComponent', () => {
       route.fragment = of('test');
       component.child.ngOnInit();
       expect(component.child.fragment).toEqual('test');
+    });
+  });
+
+  describe('ngOnChanges', () => {
+    it('should set up totals', () => {
+      expect(component.child.totalBelts).toEqual({
+        [ItemId.TransportBelt]: Rational.two,
+      });
+      expect(component.child.totalWagons).toEqual({
+        [ItemId.CargoWagon]: Rational.from(3),
+      });
+      expect(component.child.totalFactories).toEqual({
+        [ItemId.AssemblingMachine3]: Rational.from(3),
+      });
+      expect(component.child.totalPower).toEqual('1 kW');
+      expect(component.child.totalPollution).toEqual('1');
+    });
+
+    it('should handle null values', () => {
+      const step: Step = {
+        itemId: ItemId.WoodenChest,
+        recipeId: RecipeId.WoodenChest,
+        items: Rational.one,
+        belts: null,
+        wagons: null,
+        factories: null,
+      };
+      component.child.steps = [step];
+      component.child.ngOnChanges();
+
+      expect(component.child.totalBelts).toEqual({});
+      expect(component.child.totalWagons).toEqual({});
+      expect(component.child.totalFactories).toEqual({});
+    });
+
+    it('should skip factories from rocket launch recipes', () => {
+      const step: Step = {
+        itemId: ItemId.SpaceSciencePack,
+        recipeId: RecipeId.SpaceSciencePack,
+        items: Rational.one,
+        belts: null,
+        wagons: null,
+        factories: Rational.one,
+      };
+      component.child.steps = [step];
+      component.child.ngOnChanges();
+
+      expect(component.child.totalBelts).toEqual({});
+      expect(component.child.totalWagons).toEqual({});
+      expect(component.child.totalFactories).toEqual({});
     });
   });
 

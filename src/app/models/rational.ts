@@ -10,6 +10,7 @@ export class Rational {
   static minusOne = new Rational(bigMinusOne);
   static one = new Rational(bigOne);
   static two = new Rational(BigInt(2));
+  static ten = new Rational(BigInt(10));
   static hundred = new Rational(BigInt(100));
   static thousand = new Rational(BigInt(1000));
 
