@@ -308,7 +308,13 @@ export class SimplexUtility {
         // Cost should be based on number of items, not number of miners
         // Sum total output and multiply cost by output
         const output = Object.keys(recipe.out).reduce(
-          (v, o) => v.add(recipe.out[o]),
+          (v, o) =>
+            v.add(
+              state.data.itemEntities[o].stack
+                ? recipe.out[o]
+                : // Divide fluid amounts by 10
+                  recipe.out[o].div(Rational.ten)
+            ),
           Rational.zero
         );
         R.push(output.mul(COST_MINED));

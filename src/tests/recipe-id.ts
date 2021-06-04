@@ -1,6 +1,7 @@
 export enum RecipeId {
   AdvancedCircuit = 'advanced-circuit',
   AdvancedOilProcessing = 'advanced-oil-processing',
+  ArtilleryShellRange = 'artillery-shell-range',
   BasicOilProcessing = 'basic-oil-processing',
   Coal = 'coal',
   CoalLiquefaction = 'coal-liquefaction',

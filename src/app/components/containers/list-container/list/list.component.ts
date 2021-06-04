@@ -8,6 +8,7 @@ import {
   AfterViewInit,
   OnInit,
   ChangeDetectorRef,
+  OnChanges,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -57,7 +58,7 @@ export interface StepInserter {
 })
 export class ListComponent
   extends RecipeSettingsComponent
-  implements OnInit, AfterViewInit
+  implements OnInit, OnChanges, AfterViewInit
 {
   @Input() itemSettings: ItemsState;
   @Input() itemRaw: ItemsState;
@@ -88,7 +89,14 @@ export class ListComponent
     this.setEffectivePrecision();
   }
   @Input() disabledRecipes: string[];
-  @Input() displayRate: DisplayRate;
+  _displayRate: DisplayRate;
+  get displayRate(): DisplayRate {
+    return this._displayRate;
+  }
+  @Input() set displayRate(value: DisplayRate) {
+    this._displayRate = value;
+    this.rateLabel = DisplayRateLabel[this.displayRate];
+  }
   @Input() inserterTarget: InserterTarget;
   @Input() inserterCapacity: InserterCapacity;
   _columns: ColumnsState;
@@ -163,6 +171,13 @@ export class ListComponent
   fragment: string;
   DisplayRateVal = DisplayRateVal;
   ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
+  rateLabel: string;
+
+  totalBelts: Entities<Rational> = {};
+  totalWagons: Entities<Rational> = {};
+  totalFactories: Entities<Rational> = {};
+  totalPower: string;
+  totalPollution: string;
 
   Column = Column;
   DisplayRate = DisplayRate;
@@ -170,26 +185,6 @@ export class ListComponent
   ListMode = ListMode;
   StepDetailTab = StepDetailTab;
   Rational = Rational;
-
-  get rateLabel(): string {
-    return DisplayRateLabel[this.displayRate];
-  }
-
-  get totalPower(): string {
-    let value = Rational.zero;
-    for (const step of this.steps.filter((s) => s.power)) {
-      value = value.add(step.power);
-    }
-    return this.power(value);
-  }
-
-  get totalPollution(): string {
-    let value = Rational.zero;
-    for (const step of this.steps.filter((s) => s.pollution)) {
-      value = value.add(step.pollution);
-    }
-    return this.rate(value, this.effPrecision[Column.Pollution]);
-  }
 
   constructor(
     private ref: ChangeDetectorRef,
@@ -204,6 +199,58 @@ export class ListComponent
       // Store the fragment to navigate to it after the component loads
       this.fragment = fragment;
     });
+  }
+
+  ngOnChanges(): void {
+    // Total Belts
+    this.totalBelts = {};
+    for (const step of this.steps.filter((s) => s.belts?.nonzero())) {
+      const belt = this.itemSettings[step.itemId].belt;
+      if (!this.totalBelts[belt]) {
+        this.totalBelts[belt] = Rational.zero;
+      }
+      this.totalBelts[belt] = this.totalBelts[belt].add(step.belts.ceil());
+    }
+
+    // Total Wagons
+    this.totalWagons = {};
+    for (const step of this.steps.filter((s) => s.wagons?.nonzero())) {
+      const wagon = this.itemSettings[step.itemId].wagon;
+      if (!this.totalWagons[wagon]) {
+        this.totalWagons[wagon] = Rational.zero;
+      }
+      this.totalWagons[wagon] = this.totalWagons[wagon].add(step.wagons.ceil());
+    }
+
+    // Total Factories
+    this.totalFactories = {};
+    for (const step of this.steps.filter((s) => s.factories?.nonzero())) {
+      const recipe = this.data.recipeEntities[step.recipeId];
+      // Don't include silos from launch recipes
+      if (!recipe.part) {
+        const factory = this.recipeSettings[step.recipeId].factory;
+        if (!this.totalFactories[factory]) {
+          this.totalFactories[factory] = Rational.zero;
+        }
+        this.totalFactories[factory] = this.totalFactories[factory].add(
+          step.factories.ceil()
+        );
+      }
+    }
+
+    // Total Power
+    let value = Rational.zero;
+    for (const step of this.steps.filter((s) => s.power)) {
+      value = value.add(step.power);
+    }
+    this.totalPower = this.power(value);
+
+    // Total Pollution
+    value = Rational.zero;
+    for (const step of this.steps.filter((s) => s.pollution)) {
+      value = value.add(step.pollution);
+    }
+    this.totalPollution = this.rate(value, this.effPrecision[Column.Pollution]);
   }
 
   ngAfterViewInit(): void {

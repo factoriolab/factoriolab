@@ -148,15 +148,7 @@
         </td>
         <td *ngIf="columns[Column.Belts].show">
           <ng-container *ngIf="itemSettings[step.itemId]?.belt as belt">
-            <div
-              *ngIf="
-                step.belts &&
-                (!step.recipeId ||
-                  !data.itemEntities[recipeSettings[step.recipeId].factory]
-                    .factory.research)
-              "
-              class="flex"
-            >
+            <div *ngIf="step.belts" class="flex">
               <span class="monospace">{{
                 rate(step.belts, effPrecision[Column.Belts])
               }}</span>
@@ -201,15 +193,7 @@
         </td>
         <td *ngIf="columns[Column.Wagons].show">
           <ng-container *ngIf="itemSettings[step.itemId]?.wagon as wagon">
-            <div
-              *ngIf="
-                step.wagons &&
-                (!step.recipeId ||
-                  !data.itemEntities[recipeSettings[step.recipeId].factory]
-                    .factory.research)
-              "
-              class="flex"
-            >
+            <div *ngIf="step.wagons" class="flex">
               <span class="monospace">{{
                 rate(step.wagons, effPrecision[Column.Wagons])
               }}</span>
@@ -591,16 +575,7 @@
               </td>
               <td *ngIf="columns[Column.Belts].show">
                 <ng-container *ngIf="itemSettings[step.itemId].belt as belt">
-                  <div
-                    *ngIf="
-                      step.belts &&
-                      (!step.recipeId ||
-                        !data.itemEntities[
-                          recipeSettings[step.recipeId].factory
-                        ].factory.research)
-                    "
-                    class="flex"
-                  >
+                  <div *ngIf="step.belts" class="flex">
                     <span class="monospace">{{
                       rate(step.belts.mul(value), effPrecision[Column.Belts])
                     }}</span>
@@ -616,16 +591,7 @@
               </td>
               <td *ngIf="columns[Column.Wagons].show">
                 <ng-container *ngIf="itemSettings[step.itemId]?.wagon as wagon">
-                  <div
-                    *ngIf="
-                      step.wagons &&
-                      (!step.recipeId ||
-                        !data.itemEntities[
-                          recipeSettings[step.recipeId].factory
-                        ].factory.research)
-                    "
-                    class="flex"
-                  >
+                  <div *ngIf="step.wagons" class="flex">
                     <span class="monospace">{{
                       rate(step.wagons.mul(value), effPrecision[Column.Wagons])
                     }}</span>
@@ -721,15 +687,7 @@
             </td>
             <td *ngIf="columns[Column.Belts].show">
               <ng-container *ngIf="itemSettings[step.itemId].belt as belt">
-                <div
-                  *ngIf="
-                    step.belts &&
-                    (!step.recipeId ||
-                      !data.itemEntities[recipeSettings[step.recipeId].factory]
-                        .factory.research)
-                  "
-                  class="flex"
-                >
+                <div *ngIf="step.belts" class="flex">
                   <span class="monospace">{{
                     rate(
                       step.belts.mul(parent.value),
@@ -748,15 +706,7 @@
             </td>
             <td *ngIf="columns[Column.Wagons].show">
               <ng-container *ngIf="itemSettings[step.itemId]?.wagon as wagon">
-                <div
-                  *ngIf="
-                    step.wagons &&
-                    (!step.recipeId ||
-                      !data.itemEntities[recipeSettings[step.recipeId].factory]
-                        .factory.research)
-                  "
-                  class="flex"
-                >
+                <div *ngIf="step.wagons" class="flex">
                   <span class="monospace">{{
                     rate(
                       step.wagons.mul(parent.value),
@@ -868,16 +818,7 @@
                   <ng-container
                     *ngIf="itemSettings[inStep.itemId].belt as belt"
                   >
-                    <div
-                      *ngIf="
-                        inStep.belts &&
-                        (!inStep.recipeId ||
-                          !data.itemEntities[
-                            recipeSettings[inStep.recipeId].factory
-                          ].factory.research)
-                      "
-                      class="flex"
-                    >
+                    <div *ngIf="inStep.belts" class="flex">
                       <span class="monospace">{{
                         rate(
                           inStep.belts.mul(percent),
@@ -898,16 +839,7 @@
                   <ng-container
                     *ngIf="itemSettings[inStep.itemId]?.wagon as wagon"
                   >
-                    <div
-                      *ngIf="
-                        inStep.wagons &&
-                        (!inStep.recipeId ||
-                          !data.itemEntities[
-                            recipeSettings[inStep.recipeId].factory
-                          ].factory.research)
-                      "
-                      class="flex"
-                    >
+                    <div *ngIf="inStep.wagons" class="flex">
                       <span class="monospace">{{
                         rate(
                           inStep.wagons.mul(percent),
@@ -983,16 +915,7 @@
                   <ng-container
                     *ngIf="itemSettings[outStep.itemId].belt as belt"
                   >
-                    <div
-                      *ngIf="
-                        outStep.belts &&
-                        (!step.recipeId ||
-                          !data.itemEntities[
-                            recipeSettings[step.recipeId].factory
-                          ].factory.research)
-                      "
-                      class="flex"
-                    >
+                    <div *ngIf="outStep.belts" class="flex">
                       <span class="monospace">{{
                         rate(
                           outStep.belts.mul(percent),
@@ -1013,16 +936,7 @@
                   <ng-container
                     *ngIf="itemSettings[outStep.itemId]?.wagon as wagon"
                   >
-                    <div
-                      *ngIf="
-                        outStep.wagons &&
-                        (!step.recipeId ||
-                          !data.itemEntities[
-                            recipeSettings[step.recipeId].factory
-                          ].factory.research)
-                      "
-                      class="flex"
-                    >
+                    <div *ngIf="outStep.wagons" class="flex">
                       <span class="monospace">{{
                         rate(
                           outStep.wagons.mul(percent),
@@ -1103,16 +1017,7 @@
                         <ng-container
                           *ngIf="itemSettings[inStep.itemId].belt as belt"
                         >
-                          <div
-                            *ngIf="
-                              inStep.belts &&
-                              (!inStep.recipeId ||
-                                !data.itemEntities[
-                                  recipeSettings[inStep.recipeId].factory
-                                ].factory.research)
-                            "
-                            class="flex"
-                          >
+                          <div *ngIf="inStep.belts" class="flex">
                             <span class="monospace">{{
                               rate(
                                 inStep.belts.mul(percent).div(step.factories),
@@ -1372,11 +1277,61 @@
       "
       class="border row col"
     >
-      <td [colSpan]="totalSpan">
+      <td colspan="2">
         <div class="flex summary-label">
           <span class="monospace">Total:</span>
         </div>
       </td>
+      <td *ngIf="columns[Column.Belts].show">
+        <div
+          class="flex"
+          *ngFor="let tot of totalBelts | keyvalue: sortKeyValue"
+        >
+          <span class="monospace">{{ tot.value }}</span>
+          <lab-icon
+            *ngIf="data.itemEntities[tot.key] as item"
+            [data]="data"
+            [iconId]="tot.key"
+            [tooltip]="item.name"
+            [item]="item"
+            [displayRate]="displayRate"
+          >
+          </lab-icon>
+        </div>
+      </td>
+      <td *ngIf="columns[Column.Wagons].show">
+        <div
+          class="flex"
+          *ngFor="let tot of totalWagons | keyvalue: sortKeyValue"
+        >
+          <span class="monospace">{{ tot.value }}</span>
+          <lab-icon
+            *ngIf="data.itemEntities[tot.key] as item"
+            [data]="data"
+            [iconId]="tot.key"
+            [tooltip]="item.name"
+            [item]="item"
+          >
+          </lab-icon>
+        </div>
+      </td>
+      <td colspan="3">
+        <div
+          class="flex"
+          *ngFor="let tot of totalFactories | keyvalue: sortKeyValue"
+        >
+          <span class="monospace">{{ tot.value }}</span>
+          <lab-icon
+            *ngIf="data.itemEntities[tot.key] as item"
+            [data]="data"
+            [iconId]="tot.key"
+            [tooltip]="item.name"
+            [item]="item"
+          >
+          </lab-icon>
+        </div>
+      </td>
+      <td colspan="3" *ngIf="columns[Column.Beacons].show"></td>
       <td *ngIf="columns[Column.Power].show">
         <div class="flex">
           <span class="monospace">{{ totalPower }}</span>

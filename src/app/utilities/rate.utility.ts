@@ -8,6 +8,7 @@ import {
   RationalRecipe,
 } from '~/models';
 import { ItemsState } from '~/store/items';
+import { RecipesState } from '~/store/recipes';
 
 export class RateUtility {
   static addStepsFor(
@@ -96,7 +97,7 @@ export class RateUtility {
   }
 
   static adjustPowerPollution(step: Step, recipe: RationalRecipe): void {
-    if (step.factories?.nonzero()) {
+    if (step.factories?.nonzero() && !recipe.part) {
       // Calculate power
       if (recipe.consumption?.nonzero()) {
         step.power = step.factories.mul(recipe.consumption);
@@ -111,23 +112,37 @@ export class RateUtility {
   static calculateBelts(
     steps: Step[],
     itemSettings: ItemsState,
+    recipeSettings: RecipesState,
     beltSpeed: Entities<Rational>,
     data: Dataset
   ): Step[] {
     for (const step of steps) {
-      const belt = itemSettings[step.itemId]?.belt;
-      if (step.items && belt) {
-        step.belts = step.items.div(beltSpeed[belt]);
+      let noItems = false;
+      if (step.recipeId) {
+        const factory =
+          data.itemEntities[recipeSettings[step.recipeId].factory].factory;
+        const recipe = data.recipeEntities[step.recipeId];
+        // No belts/wagons on research rows or rocket part rows
+        noItems = factory.research || (factory.silo && !recipe.part);
       }
-      const wagon = itemSettings[step.itemId]?.wagon;
-      if (step.items && wagon) {
-        const item = data.itemR[step.itemId];
-        if (item.stack) {
-          step.wagons = step.items.div(
-            data.itemR[wagon].cargoWagon.size.mul(item.stack)
-          );
-        } else {
-          step.wagons = step.items.div(data.itemR[wagon].fluidWagon.capacity);
+      if (noItems) {
+        step.belts = null;
+        step.wagons = null;
+      } else {
+        const belt = itemSettings[step.itemId]?.belt;
+        if (step.items && belt) {
+          step.belts = step.items.div(beltSpeed[belt]);
+        }
+        const wagon = itemSettings[step.itemId]?.wagon;
+        if (step.items && wagon) {
+          const item = data.itemR[step.itemId];
+          if (item.stack) {
+            step.wagons = step.items.div(
+              data.itemR[wagon].cargoWagon.size.mul(item.stack)
+            );
+          } else {
+            step.wagons = step.items.div(data.itemR[wagon].fluidWagon.capacity);
+          }
         }
       }
     }
