@@ -217,6 +217,10 @@ tr {
 .info {
   font-size: small;
   margin-bottom: 0.25rem;
+
+  &.warn {
+    color: var(--color-red);
+  }
 }
 
 lab-icon:not(.button) {

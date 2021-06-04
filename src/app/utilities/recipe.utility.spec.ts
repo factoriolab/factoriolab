@@ -838,4 +838,27 @@ describe('RecipeUtility', () => {
       expect(result.viaBeaconModules).toBeUndefined();
     });
   });
+
+  describe('cleanCircularRecipes', () => {
+    it('should do nothing for items with no default recipe', () => {
+      const itemRecipeIds = {};
+      RecipeUtility.cleanCircularRecipes(
+        ItemId.Wood,
+        Mocks.AdjustedData.recipeR,
+        itemRecipeIds
+      );
+      expect(itemRecipeIds).toEqual({});
+    });
+
+    it('should clean up when a circular loop is detected', () => {
+      const itemRecipeIds: Entities = { [ItemId.Wood]: RecipeId.WoodenChest };
+      RecipeUtility.cleanCircularRecipes(
+        ItemId.Wood,
+        Mocks.AdjustedData.recipeR,
+        itemRecipeIds,
+        [ItemId.Wood]
+      );
+      expect(itemRecipeIds).toEqual({ [ItemId.Wood]: null });
+    });
+  });
 });

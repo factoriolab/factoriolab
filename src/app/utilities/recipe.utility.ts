@@ -283,6 +283,8 @@ export class RecipeUtility {
       data
     );
     const itemRecipeIds = { ...data.itemRecipeIds };
+
+    // Check for calculated default recipe ids
     for (const id of data.itemIds.filter((i) => !data.itemRecipeIds[i])) {
       const rec = itemSettings[id].recipe;
       if (rec && disabledRecipes.indexOf(rec) === -1) {
@@ -298,6 +300,12 @@ export class RecipeUtility {
         }
       }
     }
+
+    // Check for loops in default recipes
+    for (const id of Object.keys(data.itemRecipeIds)) {
+      this.cleanCircularRecipes(id, data.recipeR, itemRecipeIds);
+    }
+
     return { ...data, ...{ recipeR, itemRecipeIds } };
   }
 
@@ -414,5 +422,36 @@ export class RecipeUtility {
     }
 
     return product;
+  }
+
+  static cleanCircularRecipes(
+    itemId: string,
+    recipeR: Entities<RationalRecipe>,
+    itemRecipeIds: Entities,
+    itemIds: string[] = []
+  ): void {
+    const recipeId = itemRecipeIds[itemId];
+    if (recipeId) {
+      if (itemIds.indexOf(itemId) !== -1) {
+        // Found a circular loop
+        itemRecipeIds[itemId] = null;
+      } else {
+        const recipe = recipeR[recipeId];
+        if (recipe.produces(itemId) && recipe.in) {
+          // Need to check recipe inputs for circular loops
+          itemIds = [...itemIds, itemId];
+          for (const ingredient of Object.keys(recipe.in).filter(
+            (i) => i !== itemId
+          )) {
+            this.cleanCircularRecipes(
+              ingredient,
+              recipeR,
+              itemRecipeIds,
+              itemIds
+            );
+          }
+        }
+      }
+    }
   }
 }
