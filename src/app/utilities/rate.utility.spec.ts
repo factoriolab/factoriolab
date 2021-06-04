@@ -214,7 +214,8 @@ describe('RateUtility', () => {
       ];
       const result = RateUtility.calculateBelts(
         steps,
-        Mocks.ItemSettingsEntities,
+        Mocks.ItemSettingsInitial,
+        Mocks.RecipeSettingsInitial,
         Mocks.BeltSpeed,
         Mocks.AdjustedData
       );
@@ -232,7 +233,8 @@ describe('RateUtility', () => {
       ];
       const result = RateUtility.calculateBelts(
         steps,
-        Mocks.ItemSettingsEntities,
+        Mocks.ItemSettingsInitial,
+        Mocks.RecipeSettingsInitial,
         Mocks.BeltSpeed,
         Mocks.AdjustedData
       );
@@ -250,7 +252,8 @@ describe('RateUtility', () => {
       ];
       const result = RateUtility.calculateBelts(
         steps,
-        Mocks.ItemSettingsEntities,
+        Mocks.ItemSettingsInitial,
+        Mocks.RecipeSettingsInitial,
         Mocks.BeltSpeed,
         Mocks.AdjustedData
       );
@@ -270,6 +273,7 @@ describe('RateUtility', () => {
       const result = RateUtility.calculateBelts(
         steps,
         Mocks.ItemSettingsInitial,
+        Mocks.RecipeSettingsInitial,
         Mocks.BeltSpeed,
         Mocks.AdjustedData
       );

@@ -8,6 +8,7 @@ import {
   RationalRecipe,
 } from '~/models';
 import { ItemsState } from '~/store/items';
+import { RecipesState } from '~/store/recipes';
 
 export class RateUtility {
   static addStepsFor(
@@ -111,23 +112,34 @@ export class RateUtility {
   static calculateBelts(
     steps: Step[],
     itemSettings: ItemsState,
+    recipeSettings: RecipesState,
     beltSpeed: Entities<Rational>,
     data: Dataset
   ): Step[] {
     for (const step of steps) {
-      const belt = itemSettings[step.itemId]?.belt;
-      if (step.items && belt) {
-        step.belts = step.items.div(beltSpeed[belt]);
-      }
-      const wagon = itemSettings[step.itemId]?.wagon;
-      if (step.items && wagon) {
-        const item = data.itemR[step.itemId];
-        if (item.stack) {
-          step.wagons = step.items.div(
-            data.itemR[wagon].cargoWagon.size.mul(item.stack)
-          );
-        } else {
-          step.wagons = step.items.div(data.itemR[wagon].fluidWagon.capacity);
+      if (
+        step.recipeId &&
+        data.itemEntities[recipeSettings[step.recipeId].factory].factory
+          .research
+      ) {
+        // No belts/wagons on research rows
+        step.belts = null;
+        step.wagons = null;
+      } else {
+        const belt = itemSettings[step.itemId]?.belt;
+        if (step.items && belt) {
+          step.belts = step.items.div(beltSpeed[belt]);
+        }
+        const wagon = itemSettings[step.itemId]?.wagon;
+        if (step.items && wagon) {
+          const item = data.itemR[step.itemId];
+          if (item.stack) {
+            step.wagons = step.items.div(
+              data.itemR[wagon].cargoWagon.size.mul(item.stack)
+            );
+          } else {
+            step.wagons = step.items.div(data.itemR[wagon].fluidWagon.capacity);
+          }
         }
       }
     }
