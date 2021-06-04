@@ -227,9 +227,6 @@ export class ListComponent
     for (const step of this.steps.filter((s) => s.factories?.nonzero())) {
       const recipe = this.data.recipeEntities[step.recipeId];
       // Don't include silos from launch recipes
-      if (!recipe) {
-        console.log(step);
-      }
       if (!recipe.part) {
         const factory = this.recipeSettings[step.recipeId].factory;
         if (!this.totalFactories[factory]) {

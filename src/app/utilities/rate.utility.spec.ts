@@ -279,6 +279,48 @@ describe('RateUtility', () => {
       );
       expect(result[0].wagons).toEqual(Rational.one);
     });
+
+    it('should set to null for research recipes', () => {
+      const steps: Step[] = [
+        {
+          itemId: ItemId.ArtilleryShellRange,
+          recipeId: RecipeId.ArtilleryShellRange,
+          items: Rational.one,
+          belts: Rational.one,
+          wagons: Rational.one,
+        },
+      ];
+      const result = RateUtility.calculateBelts(
+        steps,
+        Mocks.ItemSettingsInitial,
+        Mocks.RecipeSettingsInitial,
+        Mocks.BeltSpeed,
+        Mocks.AdjustedData
+      );
+      expect(result[0].belts).toBeNull();
+      expect(result[0].wagons).toBeNull();
+    });
+
+    it('should set to null for rocket part recipes', () => {
+      const steps: Step[] = [
+        {
+          itemId: ItemId.RocketPart,
+          recipeId: RecipeId.RocketPart,
+          items: Rational.one,
+          belts: Rational.one,
+          wagons: Rational.one,
+        },
+      ];
+      const result = RateUtility.calculateBelts(
+        steps,
+        Mocks.ItemSettingsInitial,
+        Mocks.RecipeSettingsInitial,
+        Mocks.BeltSpeed,
+        Mocks.AdjustedData
+      );
+      expect(result[0].belts).toBeNull();
+      expect(result[0].wagons).toBeNull();
+    });
   });
 
   describe('calculateOutputs', () => {

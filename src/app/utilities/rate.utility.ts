@@ -97,7 +97,7 @@ export class RateUtility {
   }
 
   static adjustPowerPollution(step: Step, recipe: RationalRecipe): void {
-    if (step.factories?.nonzero()) {
+    if (step.factories?.nonzero() && !recipe.part) {
       // Calculate power
       if (recipe.consumption?.nonzero()) {
         step.power = step.factories.mul(recipe.consumption);
@@ -117,12 +117,15 @@ export class RateUtility {
     data: Dataset
   ): Step[] {
     for (const step of steps) {
-      if (
-        step.recipeId &&
-        data.itemEntities[recipeSettings[step.recipeId].factory].factory
-          .research
-      ) {
-        // No belts/wagons on research rows
+      let noItems = false;
+      if (step.recipeId) {
+        const factory =
+          data.itemEntities[recipeSettings[step.recipeId].factory].factory;
+        const recipe = data.recipeEntities[step.recipeId];
+        // No belts/wagons on research rows or rocket part rows
+        noItems = factory.research || (factory.silo && !recipe.part);
+      }
+      if (noItems) {
         step.belts = null;
         step.wagons = null;
       } else {
