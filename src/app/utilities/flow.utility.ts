@@ -143,9 +143,9 @@ export class FlowUtility {
 
     switch (prop) {
       case LinkValue.Belts:
-        return step.belts;
+        return step.belts || Rational.zero;
       case LinkValue.Wagons:
-        return step.wagons;
+        return step.wagons || Rational.zero;
       case LinkValue.Factories:
         return step.factories;
       default:
