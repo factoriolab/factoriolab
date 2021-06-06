@@ -135,22 +135,21 @@ export class FlowUtility {
     if (prop === LinkValue.None || prop === LinkValue.Percent) {
       return Rational.one;
     }
-
-    if (prop === LinkValue.Factories && !step.factories) {
-      // Step has no factories associated, return 0
-      return Rational.zero;
-    }
+    
+    let value: Rational;
 
     switch (prop) {
       case LinkValue.Belts:
-        return step.belts || Rational.zero;
+        value = step.belts;
       case LinkValue.Wagons:
-        return step.wagons || Rational.zero;
+        value = step.wagons;
       case LinkValue.Factories:
-        return step.factories;
+        value = step.factories;
       default:
-        return step.items || Rational.zero;
+        value = step.items;
     }
+    
+    return value || Rational.zero;
   }
 
   static linkSize(
