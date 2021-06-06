@@ -135,20 +135,24 @@ export class FlowUtility {
     if (prop === LinkValue.None || prop === LinkValue.Percent) {
       return Rational.one;
     }
-    
+
     let value: Rational;
 
     switch (prop) {
       case LinkValue.Belts:
         value = step.belts;
+        break;
       case LinkValue.Wagons:
         value = step.wagons;
+        break;
       case LinkValue.Factories:
         value = step.factories;
+        break;
       default:
         value = step.items;
+        break;
     }
-    
+
     return value || Rational.zero;
   }
 
