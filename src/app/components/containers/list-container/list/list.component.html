@@ -1271,10 +1271,7 @@
       </ng-container>
     </ng-container>
     <tr
-      *ngIf="
-        mode === ListMode.All &&
-        (columns[Column.Power].show || columns[Column.Pollution].show)
-      "
+      *ngIf="mode === ListMode.All"
       class="border row col"
     >
       <td colspan="2">
