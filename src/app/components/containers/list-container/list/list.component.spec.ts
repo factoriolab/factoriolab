@@ -277,6 +277,33 @@ describe('ListComponent', () => {
       expect(component.child.totalWagons).toEqual({});
       expect(component.child.totalFactories).toEqual({});
     });
+
+    it('should use recipeId for DSP mining', () => {
+      component.child.data = { ...Mocks.Data, ...{ isDsp: true } };
+      component.child.recipeSettings = {
+        ...Mocks.RecipeSettingsInitial,
+        ...{
+          [RecipeId.Coal]: {
+            ...Mocks.RecipeSettingsInitial,
+            ...{ factory: ItemId.MiningDrill },
+          },
+        },
+      };
+      const step: Step = {
+        itemId: ItemId.Coal,
+        recipeId: RecipeId.Coal,
+        items: Rational.one,
+        belts: null,
+        wagons: null,
+        factories: Rational.one,
+      };
+      component.child.steps = [step];
+      component.child.ngOnChanges();
+
+      expect(component.child.totalFactories).toEqual({
+        [RecipeId.Coal]: Rational.one,
+      });
+    });
   });
 
   describe('ngAfterViewInit', () => {
