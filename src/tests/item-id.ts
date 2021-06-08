@@ -23,6 +23,7 @@ export enum ItemId {
   Lab = 'lab',
   LightOil = 'light-oil',
   LongHandedInserter = 'long-handed-inserter',
+  MiningDrill = 'mining-drill',
   MiningProductivity = 'mining-productivity',
   Module = 'module',
   OilRefinery = 'oil-refinery',

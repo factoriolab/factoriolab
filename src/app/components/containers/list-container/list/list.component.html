@@ -1270,10 +1270,7 @@
         </tr>
       </ng-container>
     </ng-container>
-    <tr
-      *ngIf="mode === ListMode.All"
-      class="border row col"
-    >
+    <tr *ngIf="mode === ListMode.All" class="border row col">
       <td colspan="2">
         <div class="flex summary-label">
           <span class="monospace">Total:</span>
@@ -1319,13 +1316,23 @@
         >
           <span class="monospace">{{ tot.value }}</span>
           <lab-icon
-            *ngIf="data.itemEntities[tot.key] as item"
+            *ngIf="data.itemEntities[tot.key] as item; else totalRecipe"
             [data]="data"
             [iconId]="tot.key"
             [tooltip]="item.name"
             [item]="item"
           >
           </lab-icon>
+          <ng-template #totalRecipe>
+            <lab-icon
+              *ngIf="data.recipeEntities[tot.key] as recipe"
+              [data]="data"
+              [iconId]="tot.key"
+              [tooltip]="recipe.name"
+              [recipe]="recipe"
+            >
+            </lab-icon>
+          </ng-template>
         </div>
       </td>
       <td colspan="3" *ngIf="columns[Column.Beacons].show"></td>
