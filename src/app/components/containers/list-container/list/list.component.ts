@@ -228,7 +228,11 @@ export class ListComponent
       const recipe = this.data.recipeEntities[step.recipeId];
       // Don't include silos from launch recipes
       if (!recipe.part) {
-        const factory = this.recipeSettings[step.recipeId].factory;
+        let factory = this.recipeSettings[step.recipeId].factory;
+        if (this.data.isDsp && factory === ItemId.MiningDrill) {
+          // Use recipe id (vein type) in place of mining drill for DSP mining
+          factory = step.recipeId;
+        }
         if (!this.totalFactories[factory]) {
           this.totalFactories[factory] = Rational.zero;
         }
