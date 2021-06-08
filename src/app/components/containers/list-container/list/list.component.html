@@ -3,7 +3,7 @@
     <tr class="border col">
       <!-- Expand -->
       <th>
-        <div>
+        <div class="flex end">
           <lab-columns
             [isDsp]="data.isDsp"
             [columns]="columns"
@@ -97,7 +97,14 @@
     <ng-container *ngFor="let step of displayedSteps; trackBy: trackBy">
       <tr class="border row col">
         <td [id]="step.itemId">
-          <div>
+          <div class="flex links">
+            <ng-container *ngIf="step.indent">
+              <div
+                [style.marginLeft.rem]="step.indent * 2.25 - 1.125"
+                class="connect"
+              ></div>
+              <div class="indent"></div>
+            </ng-container>
             <button
               *ngIf="details[step.id]?.length && !expanded[step.id]"
               title="Click to show details"
@@ -510,8 +517,8 @@
       <ng-container *ngIf="expanded[step.id]">
         <tr class="detail-header">
           <td>
-            <div>
-              <a class="button" [href]="link(step)">
+            <div class="flex">
+              <a class="button icon" [href]="link(step)">
                 <i class="material-icons">link</i>
               </a>
             </div>

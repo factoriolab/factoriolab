@@ -142,6 +142,10 @@ th > div {
   &.header button {
     margin-left: 0.5rem;
   }
+
+  &.end {
+    justify-content: flex-end;
+  }
 }
 
 td > div {
@@ -149,6 +153,18 @@ td > div {
 
   &.links {
     justify-content: flex-start;
+
+    .connect {
+      margin-left: 1.125rem;
+      height: 2.25rem;
+      border: 1px dashed var(--color-black);
+    }
+
+    .indent {
+      margin-left: 0;
+      width: 0.625rem;
+      border: 1px dashed var(--color-black);
+    }
   }
 
   &.mod,

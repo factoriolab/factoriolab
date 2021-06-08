@@ -70,12 +70,29 @@ export class ListComponent
     return this._steps;
   }
   @Input() set steps(value: Step[]) {
-    this._steps = value.map((s) => ({
-      ...s,
-      ...{
-        id: `${s.itemId || ''}.${s.recipeId || ''}`,
-      },
-    }));
+    const indents: Entities<number> = {};
+    const steps = value.map((s) => {
+      const id = `${s.itemId || ''}.${s.recipeId || ''}`;
+      let indent = 0;
+      if (s.parents) {
+        const keys = Object.keys(s.parents);
+        if (keys.length === 1) {
+          indent = indents[keys[0]] + 1;
+        }
+      }
+      if (s.recipeId) {
+        indents[s.recipeId] = indent;
+      }
+      return { ...s, ...{ id, indent } };
+    });
+
+    // Organize items by indent level
+    this.sortIndents(steps);
+    // Rerun organize to reverse items to original order
+    this.sortIndents(steps);
+
+    this._steps = steps;
+
     this.router.requestHash(this.settings.baseId).subscribe((hash) => {
       setTimeout(() => {
         this._steps.forEach((s) => {
@@ -506,6 +523,17 @@ export class ListComponent
         value: this.disabledRecipes.filter((i) => i !== id),
         default: this.data.defaults.disabledRecipes,
       });
+    }
+  }
+
+  sortIndents(steps: Step[]): void {
+    for (let i = 0; i < steps.length; i++) {
+      const step = steps[i];
+      if (step.indent) {
+        const recipeId = Object.keys(step.parents)[0];
+        const parent = steps.find((s) => s.recipeId === recipeId);
+        steps.splice(steps.indexOf(parent) + 1, 0, steps.splice(i, 1)[0]);
+      }
     }
   }
 }
