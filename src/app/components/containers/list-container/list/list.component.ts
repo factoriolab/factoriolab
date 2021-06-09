@@ -74,22 +74,26 @@ export class ListComponent
     const steps = value.map((s) => {
       const id = `${s.itemId || ''}.${s.recipeId || ''}`;
       let indent = 0;
-      if (s.parents) {
-        const keys = Object.keys(s.parents);
-        if (keys.length === 1) {
-          indent = indents[keys[0]] + 1;
+      if (this.mode === ListMode.All) {
+        if (s.parents) {
+          const keys = Object.keys(s.parents);
+          if (keys.length === 1) {
+            indent = indents[keys[0]] + 1;
+          }
         }
-      }
-      if (s.recipeId) {
-        indents[s.recipeId] = indent;
+        if (s.recipeId) {
+          indents[s.recipeId] = indent;
+        }
       }
       return { ...s, ...{ id, indent } };
     });
 
-    // Organize items by indent level
-    this.sortIndents(steps);
-    // Rerun organize to reverse items to original order
-    this.sortIndents(steps);
+    if (this.mode === ListMode.All) {
+      // Organize items by indent level
+      this.sortIndents(steps);
+      // Rerun organize to reverse items to original order
+      this.sortIndents(steps);
+    }
 
     this._steps = steps;
 
