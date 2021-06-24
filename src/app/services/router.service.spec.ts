@@ -159,6 +159,15 @@ describe('RouterService', () => {
       service.updateUrl(null, null, null, null, null);
       expect(router.navigateByUrl).toHaveBeenCalledWith('/?test');
     });
+
+    it('should preserve a hash', () => {
+      spyOn(service, 'zipState').and.returnValue(of(null));
+      spyOn(service, 'getHash').and.returnValue('test');
+      spyOn(router, 'navigateByUrl');
+      spyOnProperty(router, 'url').and.returnValue('path#hash');
+      service.updateUrl(null, null, null, null, null);
+      expect(router.navigateByUrl).toHaveBeenCalledWith('path?test#hash');
+    });
   });
 
   describe('zipState', () => {

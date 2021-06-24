@@ -3,7 +3,7 @@
     <tr class="border col">
       <!-- Expand -->
       <th>
-        <div>
+        <div class="flex end">
           <lab-columns
             [isDsp]="data.isDsp"
             [columns]="columns"
@@ -15,6 +15,7 @@
           >
         </div>
       </th>
+      <th *ngIf="columns[Column.Tree].show"><div class="header">Tree</div></th>
       <th class="num-icon">
         <div class="header">
           Items{{ rateLabel }}
@@ -112,6 +113,31 @@
             >
               <i class="material-icons">expand_less</i>
             </button>
+          </div>
+        </td>
+        <td *ngIf="columns[Column.Tree].show" class="tree">
+          <div class="flex links">
+            <ng-container *ngIf="step.indent">
+              <div *ngFor="let i of toArray(step.indent)" class="connect"></div>
+              <div class="indent"></div>
+            </ng-container>
+            <lab-icon
+              *ngIf="step.recipeId; else itemIcon"
+              [data]="data"
+              [iconId]="step.recipeId"
+              [tooltip]="data.recipeEntities[step.recipeId]?.name"
+              [recipe]="data.recipeEntities[step.recipeId]"
+            >
+            </lab-icon>
+            <ng-template #itemIcon>
+              <lab-icon
+                [data]="data"
+                [iconId]="step.itemId"
+                [tooltip]="data.itemEntities[step.itemId]?.name"
+                [recipe]="data.recipeEntities[data.itemRecipeIds[step.itemId]]"
+              >
+              </lab-icon>
+            </ng-template>
           </div>
         </td>
         <td>
@@ -509,8 +535,8 @@
       </tr>
       <ng-container *ngIf="expanded[step.id]">
         <tr class="detail-header">
-          <td>
-            <div>
+          <td [colSpan]="leftSpan">
+            <div class="flex">
               <a class="button" [href]="link(step)">
                 <i class="material-icons">link</i>
               </a>
@@ -551,12 +577,12 @@
         </tr>
         <ng-container *ngIf="expanded[step.id] === StepDetailTab.Item">
           <tr class="details first" *ngIf="outputs[step.id].length">
-            <td></td>
+            <td [colSpan]="leftSpan"></td>
             <td colspan="100"><span class="header">Sources</span></td>
           </tr>
           <tr class="details" *ngFor="let output of outputs[step.id]">
             <ng-container *ngIf="output.outputs[step.itemId] as value">
-              <td></td>
+              <td [colSpan]="leftSpan"></td>
               <td>
                 <div class="flex">
                   <span *ngIf="step.items" class="monospace">{{
@@ -657,7 +683,7 @@
             </ng-container>
           </tr>
           <tr class="details" *ngIf="step.parents">
-            <td></td>
+            <td [colSpan]="leftSpan"></td>
             <td colspan="100"><span class="header">Destinations</span></td>
           </tr>
           <tr
@@ -668,7 +694,7 @@
             class="details"
             [class.last]="isLast"
           >
-            <td></td>
+            <td [colSpan]="leftSpan"></td>
             <td>
               <div class="flex">
                 <span *ngIf="step.items" class="monospace">{{
@@ -780,7 +806,7 @@
         </ng-container>
         <ng-container *ngIf="expanded[step.id] === StepDetailTab.Recipe">
           <tr class="details first" *ngIf="data.recipeR[step.recipeId].in">
-            <td></td>
+            <td [colSpan]="leftSpan"></td>
             <td colspan="100"><span class="header">Inputs</span></td>
           </tr>
           <ng-container
@@ -794,7 +820,7 @@
                 *ngIf="inStep.parents[step.recipeId] as percent"
                 class="details"
               >
-                <td></td>
+                <td [colSpan]="leftSpan"></td>
                 <td>
                   <div class="flex">
                     <span *ngIf="inStep.items" class="monospace">{{
@@ -876,7 +902,7 @@
             </ng-container>
           </ng-container>
           <tr class="details">
-            <td></td>
+            <td [colSpan]="leftSpan"></td>
             <td colspan="100"><span class="header">Outputs</span></td>
           </tr>
           <ng-container
@@ -891,7 +917,7 @@
                 class="details"
                 [class.last]="isLast"
               >
-                <td></td>
+                <td [colSpan]="leftSpan"></td>
                 <td>
                   <div class="flex">
                     <span class="monospace">{{
@@ -977,7 +1003,7 @@
           *ngIf="expanded[step.id] === StepDetailTab.Factory"
           class="details first last"
         >
-          <td></td>
+          <td [colSpan]="leftSpan"></td>
           <td colspan="100" class="factory">
             <div>
               <table>
@@ -1187,7 +1213,7 @@
         </tr>
         <ng-container *ngIf="expanded[step.id] === StepDetailTab.Recipes">
           <tr class="details first">
-            <td></td>
+            <td [colSpan]="leftSpan"></td>
             <td colspan="100">
               <div>
                 <div class="header">Default Recipe</div>
@@ -1209,7 +1235,7 @@
             </td>
           </tr>
           <tr class="details">
-            <td></td>
+            <td [colSpan]="leftSpan"></td>
             <td colspan="100" class="recipes">
               <div class="list tile">
                 <ng-container *ngFor="let recipeId of recipes[step.id]">
@@ -1236,7 +1262,7 @@
             </td>
           </tr>
           <tr class="details">
-            <td></td>
+            <td [colSpan]="leftSpan"></td>
             <td colspan="100">
               <div>
                 <div class="header">Enabled Recipes</div>
@@ -1248,7 +1274,7 @@
             </td>
           </tr>
           <tr class="details last">
-            <td></td>
+            <td [colSpan]="leftSpan"></td>
             <td colspan="100" class="recipes">
               <div class="list tile">
                 <lab-icon
@@ -1271,7 +1297,7 @@
       </ng-container>
     </ng-container>
     <tr *ngIf="mode === ListMode.All" class="border row col">
-      <td colspan="2">
+      <td [colSpan]="leftSpan + 1">
         <div class="flex summary-label">
           <span class="monospace">Total:</span>
         </div>

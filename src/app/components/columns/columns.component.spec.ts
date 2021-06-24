@@ -94,7 +94,7 @@ describe('ColumnsComponent', () => {
       fixture.detectChanges();
       TestUtility.clickDt(fixture, DataTest.Visibility);
       expect(component.child.edited).toBeTrue();
-      expect(component.child.editValue[Column.Belts].show).toBeFalse();
+      expect(component.child.editValue[Column.Tree].show).toBeFalse();
     });
   });
 
