@@ -211,7 +211,7 @@ describe('ExportUtility', () => {
         Item: ItemId.PlasticBar,
         Items: '=1',
         Surplus: '',
-        Inputs: `"${ItemId.Coal}:1,${ItemId.PetroleumGas}:"`,
+        Inputs: `"${ItemId.Coal}:1"`,
         Outputs: `"${ItemId.PlasticBar}:1"`,
         Targets: `"${ItemId.AdvancedCircuit}:1"`,
         Recipe: RecipeId.PlasticBar,

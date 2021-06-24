@@ -26,6 +26,10 @@ table {
         justify-content: flex-start;
       }
     }
+
+    &.tree {
+      padding: 0 0.25rem;
+    }
   }
 
   tr.border {
@@ -154,16 +158,28 @@ td > div {
   &.links {
     justify-content: flex-start;
 
+    > * + * {
+      margin-left: 0;
+    }
+
     .connect {
-      margin-left: 1.125rem;
-      height: 2.25rem;
-      border: 1px dashed var(--color-black);
+      margin-left: 1rem;
+      height: 2.75rem;
+      border-left: 2px dotted var(--color-dark);
+
+      & + .connect {
+        margin-left: 1.5rem;
+      }
     }
 
     .indent {
       margin-left: 0;
       width: 0.625rem;
-      border: 1px dashed var(--color-black);
+      border-top: 2px dotted var(--color-dark);
+    }
+
+    lab-icon {
+      padding: 0;
     }
   }
 

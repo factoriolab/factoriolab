@@ -114,8 +114,11 @@ export class RouterService {
       this.zipState(products, items, recipes, factories, settings).subscribe(
         (zState) => {
           this.zip = this.getHash(zState);
+          const hash = this.router.url.split('#');
           this.router.navigateByUrl(
-            `${this.router.url.split('#')[0].split('?')[0]}?${this.zip}`
+            `${hash[0].split('?')[0]}?${this.zip}${
+              (hash[1] && `#${hash[1]}`) || ''
+            }`
           );
         }
       );

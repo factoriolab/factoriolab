@@ -126,19 +126,7 @@ export class ListComponent
   }
   @Input() set columns(value: ColumnsState) {
     this._columns = value;
-    this.totalSpan = 2;
-    if (this.columns[Column.Belts].show) {
-      this.totalSpan++;
-    }
-    if (this.columns[Column.Wagons].show) {
-      this.totalSpan++;
-    }
-    if (this.columns[Column.Factories].show) {
-      this.totalSpan += 3;
-    }
-    if (this.columns[Column.Beacons].show) {
-      this.totalSpan += 3;
-    }
+    this.leftSpan = value[Column.Tree].show ? 2 : 1;
     this.setEffectivePrecision();
   }
   @Input() modifiedIgnore: boolean;
@@ -187,7 +175,7 @@ export class ListComponent
   recipes: Entities<string[]> = {};
   outputs: Entities<Step[]> = {};
   expanded: Entities<StepDetailTab> = {};
-  totalSpan = 2;
+  leftSpan = 2;
   effPrecision: Entities<number> = {};
   fragment: string;
   DisplayRateVal = DisplayRateVal;
@@ -539,5 +527,9 @@ export class ListComponent
         steps.splice(steps.indexOf(parent) + 1, 0, steps.splice(i, 1)[0]);
       }
     }
+  }
+
+  toArray(i: number): any[] {
+    return Array(i);
   }
 }

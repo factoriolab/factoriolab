@@ -25,7 +25,7 @@ import {
 } from '~/models';
 import { RouterService } from '~/services';
 import { reducers, metaReducers } from '~/store';
-import { ColumnsState, initialColumnsState } from '~/store/preferences';
+import { initialColumnsState } from '~/store/preferences';
 import { ExportUtility } from '~/utilities';
 import { ListComponent, StepDetailTab } from './list.component';
 
@@ -175,24 +175,6 @@ describe('ListComponent', () => {
       expect(component.child.steps[0].id).toEqual('.');
       expect(component.child.steps[0].href).toEqual('test');
     }));
-  });
-
-  describe('columns', () => {
-    it('should set the totalspan', () => {
-      expect(component.child.totalSpan).toEqual(10);
-    });
-
-    it('should set totalspan with no columns', () => {
-      component.columns = Object.keys(component.columns).reduce(
-        (e: ColumnsState, c) => {
-          e[c] = { show: false, precision: 1 };
-          return e;
-        },
-        {}
-      );
-      fixture.detectChanges();
-      expect(component.child.totalSpan).toEqual(2);
-    });
   });
 
   describe('mode', () => {
