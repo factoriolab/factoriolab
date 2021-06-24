@@ -175,6 +175,65 @@ describe('ListComponent', () => {
       expect(component.child.steps[0].id).toEqual('.');
       expect(component.child.steps[0].href).toEqual('test');
     }));
+
+    it('should set up indents', () => {
+      component.steps = [
+        {
+          itemId: ItemId.PlasticBar,
+          recipeId: RecipeId.PlasticBar,
+          items: Rational.one,
+        },
+        {
+          itemId: ItemId.Coal,
+          recipeId: RecipeId.Coal,
+          items: Rational.one,
+          parents: { [RecipeId.PlasticBar]: Rational.one },
+        },
+        {
+          itemId: ItemId.IronOre,
+          items: Rational.one,
+          parents: {
+            [RecipeId.CopperCable]: Rational.one,
+            [RecipeId.CrudeOil]: Rational.one,
+          },
+        },
+      ];
+      fixture.detectChanges();
+      expect(component.child.steps[0].indent).toEqual(0);
+      expect(component.child.steps[1].indent).toEqual(1);
+      expect(component.child.steps[2].indent).toEqual(0);
+    });
+
+    it('should skip indents in ListMode.Focus', () => {
+      component.mode = ListMode.Focus;
+      component.steps = [
+        {
+          itemId: ItemId.Coal,
+          recipeId: RecipeId.Coal,
+          items: Rational.one,
+          parents: { [RecipeId.PlasticBar]: Rational.one },
+        },
+      ];
+      fixture.detectChanges();
+      expect(component.child.steps[0].indent).toEqual(0);
+    });
+  });
+
+  describe('columns', () => {
+    it('should set leftSpan based on Tree visibility', () => {
+      expect(component.child.leftSpan).toEqual(2);
+      component.columns = {
+        ...initialColumnsState,
+        ...{
+          [Column.Tree]: {
+            ...initialColumnsState[Column.Tree],
+            ...{ show: false },
+          },
+        },
+      };
+      fixture.detectChanges();
+      expect(component.child.leftSpan).toEqual(1);
+    });
   });
 
   describe('mode', () => {
@@ -689,6 +748,38 @@ describe('ListComponent', () => {
         value: [RecipeId.AdvancedOilProcessing],
         default: [RecipeId.NuclearFuelReprocessing],
       });
+    });
+  });
+
+  describe('sortIndents', () => {
+    it('should move an indented step to its parent in tree', () => {
+      const steps = [
+        {
+          itemId: ItemId.PlasticBar,
+          recipeId: RecipeId.PlasticBar,
+          items: Rational.one,
+        },
+        {
+          itemId: ItemId.IronOre,
+          recipeId: ItemId.IronOre,
+          items: Rational.one,
+        },
+        {
+          itemId: ItemId.Coal,
+          recipeId: RecipeId.Coal,
+          items: Rational.one,
+          indent: 1,
+          parents: { [RecipeId.PlasticBar]: Rational.one },
+        },
+      ];
+      component.child.sortIndents(steps);
+      expect(steps[1].itemId).toEqual(ItemId.Coal);
+    });
+  });
+
+  describe('toArray', () => {
+    it('should create an array of the specified length', () => {
+      expect(component.child.toArray(2)).toEqual([undefined, undefined]);
     });
   });
 });
