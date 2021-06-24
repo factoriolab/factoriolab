@@ -100,8 +100,10 @@ export class ExportUtility {
         exp.Inputs = `"${Object.keys(recipe.in)
           .map((i) => {
             const inStep = steps.find((s) => s.itemId === i);
-            return `${i}:${inStep?.parents[step.recipeId].toString() || ''}`;
+            return [i, inStep?.parents[step.recipeId]?.toString()];
           })
+          .filter((v) => v[1])
+          .map((v) => `${v[0]}:${v[1]}`)
           .join(',')}"`;
       }
       const settings = recipeSettings[step.recipeId];
