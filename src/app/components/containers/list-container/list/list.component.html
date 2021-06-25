@@ -117,8 +117,14 @@
         </td>
         <td *ngIf="columns[Column.Tree].show" class="tree">
           <div class="flex links" *ngIf="step.itemId">
-            <ng-container *ngIf="step.indent">
-              <div *ngFor="let i of toArray(step.indent)" class="connect"></div>
+            <ng-container *ngIf="step.indent.length">
+              <div
+                *ngFor="let i of step.indent; last as last"
+                class="connect"
+                [class.trail]="i"
+                [class.last]="last"
+              >
+              </div>
               <div class="indent"></div>
             </ng-container>
             <lab-icon

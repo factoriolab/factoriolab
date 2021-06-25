@@ -199,9 +199,9 @@ describe('ListComponent', () => {
         },
       ];
       fixture.detectChanges();
-      expect(component.child.steps[0].indent).toEqual(0);
-      expect(component.child.steps[1].indent).toEqual(1);
-      expect(component.child.steps[2].indent).toEqual(0);
+      expect(component.child.steps[0].indent).toEqual([]);
+      expect(component.child.steps[1].indent).toEqual([false]);
+      expect(component.child.steps[2].indent).toEqual([]);
     });
 
     it('should skip indents in ListMode.Focus', () => {
@@ -215,7 +215,7 @@ describe('ListComponent', () => {
         },
       ];
       fixture.detectChanges();
-      expect(component.child.steps[0].indent).toEqual(0);
+      expect(component.child.steps[0].indent).toEqual([]);
     });
   });
 
@@ -758,17 +758,19 @@ describe('ListComponent', () => {
           itemId: ItemId.PlasticBar,
           recipeId: RecipeId.PlasticBar,
           items: Rational.one,
+          indent: [],
         },
         {
           itemId: ItemId.IronOre,
           recipeId: ItemId.IronOre,
           items: Rational.one,
+          indent: [],
         },
         {
           itemId: ItemId.Coal,
           recipeId: RecipeId.Coal,
           items: Rational.one,
-          indent: 1,
+          indent: [false],
           parents: { [RecipeId.PlasticBar]: Rational.one },
         },
       ];
@@ -777,9 +779,49 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('toArray', () => {
-    it('should create an array of the specified length', () => {
-      expect(component.child.toArray(2)).toEqual([undefined, undefined]);
+  describe('trailIndents', () => {
+    it('should set up trails between steps at the same level', () => {
+      const steps = [
+        {
+          itemId: ItemId.PlasticBar,
+          recipeId: RecipeId.PlasticBar,
+          items: Rational.one,
+          indent: [],
+        },
+        {
+          itemId: ItemId.IronOre,
+          recipeId: ItemId.IronOre,
+          items: Rational.one,
+          indent: [false],
+          parents: { [RecipeId.PlasticBar]: Rational.one },
+        },
+        {
+          itemId: ItemId.Coal,
+          recipeId: RecipeId.Coal,
+          items: Rational.one,
+          indent: [false],
+          parents: { [RecipeId.PlasticBar]: Rational.one },
+        },
+        {
+          itemId: ItemId.AdvancedCircuit,
+          recipeId: RecipeId.AdvancedCircuit,
+          items: Rational.one,
+          indent: [false, false],
+          parents: { [RecipeId.Coal]: Rational.one },
+        },
+        {
+          itemId: ItemId.CopperCable,
+          recipeId: RecipeId.CopperCable,
+          items: Rational.one,
+          indent: [],
+        },
+      ];
+      component.child.trailIndents(steps);
+      expect(steps[0].indent).toEqual([]);
+      expect(steps[1].indent).toEqual([true]);
+      expect(steps[2].indent).toEqual([false]);
+      expect(steps[3].indent).toEqual([false, false]);
+      expect(steps[4].indent).toEqual([]);
     });
   });
 });
