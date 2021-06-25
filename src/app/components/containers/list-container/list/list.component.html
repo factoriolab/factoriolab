@@ -116,28 +116,18 @@
           </div>
         </td>
         <td *ngIf="columns[Column.Tree].show" class="tree">
-          <div class="flex links">
+          <div class="flex links" *ngIf="step.itemId">
             <ng-container *ngIf="step.indent">
               <div *ngFor="let i of toArray(step.indent)" class="connect"></div>
               <div class="indent"></div>
             </ng-container>
             <lab-icon
-              *ngIf="step.recipeId; else itemIcon"
               [data]="data"
-              [iconId]="step.recipeId"
-              [tooltip]="data.recipeEntities[step.recipeId]?.name"
-              [recipe]="data.recipeEntities[step.recipeId]"
+              [iconId]="step.itemId"
+              [tooltip]="data.itemEntities[step.itemId]?.name"
+              [recipe]="data.recipeEntities[data.itemRecipeIds[step.itemId]]"
             >
             </lab-icon>
-            <ng-template #itemIcon>
-              <lab-icon
-                [data]="data"
-                [iconId]="step.itemId"
-                [tooltip]="data.itemEntities[step.itemId]?.name"
-                [recipe]="data.recipeEntities[data.itemRecipeIds[step.itemId]]"
-              >
-              </lab-icon>
-            </ng-template>
           </div>
         </td>
         <td>
