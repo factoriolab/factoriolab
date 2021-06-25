@@ -13,7 +13,6 @@ export const data: AppData = {
     { id: 'bio', name: 'Bio Industries' },
     { id: 'bob', name: `Bob's Mods` },
     { id: 'bobang', name: `Bob's & Angel's` },
-    { id: 'bobani', name: `B&A (No overhaul)` },
     { id: 'dsp', name: 'Dyson Sphere Program' },
     { id: 'fpp', name: 'Factorio Plus Plus' },
     { id: 'fep', name: 'FactorioExtended Plus' },
@@ -75,6 +74,5 @@ export const data: AppData = {
     'fpp',
     'ang',
     'msc',
-    'bobani',
   ],
 };
