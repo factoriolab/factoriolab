@@ -71,21 +71,10 @@ export class ListComponent
   }
   @Input() set steps(value: Step[]) {
     const indents: Entities<number> = {};
-    const steps = value.map((s) => {
+
+    let steps = value.map((s) => {
       const id = `${s.itemId || ''}.${s.recipeId || ''}`;
-      let indent: boolean[] = [];
-      if (this.mode === ListMode.All) {
-        if (s.parents) {
-          const keys = Object.keys(s.parents);
-          if (keys.length === 1) {
-            indent = new Array(indents[keys[0]] + 1).fill(false);
-          }
-        }
-        if (s.recipeId) {
-          indents[s.recipeId] = indent.length;
-        }
-      }
-      return { ...s, ...{ id, indent } };
+      return { ...s, ...{ id } };
     });
 
     if (this.mode === ListMode.All) {
@@ -93,6 +82,22 @@ export class ListComponent
       this.sortIndents(steps);
       // Rerun organize to reverse items to original order
       this.sortIndents(steps);
+
+      steps = steps.map((s) => {
+        let indent: boolean[] = [];
+        if (this.mode === ListMode.All) {
+          if (s.parents) {
+            const keys = Object.keys(s.parents);
+            if (keys.length === 1) {
+              indent = new Array(indents[keys[0]] + 1).fill(false);
+            }
+          }
+          if (s.recipeId) {
+            indents[s.recipeId] = indent.length;
+          }
+        }
+        return { ...s, ...{ indent } };
+      });
 
       this.trailIndents(steps);
     }
@@ -523,7 +528,7 @@ export class ListComponent
   sortIndents(steps: Step[]): void {
     for (let i = 0; i < steps.length; i++) {
       const step = steps[i];
-      if (step.indent.length) {
+      if (step.parents && Object.keys(step.parents).length === 1) {
         const recipeId = Object.keys(step.parents)[0];
         const parent = steps.find((s) => s.recipeId === recipeId);
         steps.splice(steps.indexOf(parent) + 1, 0, steps.splice(i, 1)[0]);
