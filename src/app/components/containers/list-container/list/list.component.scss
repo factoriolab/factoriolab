@@ -165,7 +165,17 @@ td > div {
     .connect {
       margin-left: 1rem;
       height: 2.75rem;
-      border-left: 2px dotted var(--color-dark);
+      border-left: 2px dotted transparent;
+
+      &.trail {
+        border-color: var(--color-dark);
+      }
+
+      &.last:not(.trail) {
+        height: 1.5rem;
+        margin-bottom: 1.25rem;
+        border-color: var(--color-dark);
+      }
 
       & + .connect {
         margin-left: 1.5rem;
