@@ -179,11 +179,6 @@ describe('ListComponent', () => {
     it('should set up indents', () => {
       component.steps = [
         {
-          itemId: ItemId.PlasticBar,
-          recipeId: RecipeId.PlasticBar,
-          items: Rational.one,
-        },
-        {
           itemId: ItemId.Coal,
           recipeId: RecipeId.Coal,
           items: Rational.one,
@@ -197,11 +192,19 @@ describe('ListComponent', () => {
             [RecipeId.CrudeOil]: Rational.one,
           },
         },
+        {
+          itemId: ItemId.PlasticBar,
+          recipeId: RecipeId.PlasticBar,
+          items: Rational.one,
+        },
       ];
       fixture.detectChanges();
+      expect(component.child.steps[0].itemId).toEqual(ItemId.IronOre);
       expect(component.child.steps[0].indent).toEqual([]);
-      expect(component.child.steps[1].indent).toEqual([false]);
-      expect(component.child.steps[2].indent).toEqual([]);
+      expect(component.child.steps[1].itemId).toEqual(ItemId.PlasticBar);
+      expect(component.child.steps[1].indent).toEqual([]);
+      expect(component.child.steps[2].itemId).toEqual(ItemId.Coal);
+      expect(component.child.steps[2].indent).toEqual([false]);
     });
 
     it('should skip indents in ListMode.Focus', () => {
@@ -215,7 +218,7 @@ describe('ListComponent', () => {
         },
       ];
       fixture.detectChanges();
-      expect(component.child.steps[0].indent).toEqual([]);
+      expect(component.child.steps[0].indent).toBeUndefined();
     });
   });
 

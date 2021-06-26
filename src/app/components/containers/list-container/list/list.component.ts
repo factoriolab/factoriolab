@@ -85,16 +85,14 @@ export class ListComponent
 
       steps = steps.map((s) => {
         let indent: boolean[] = [];
-        if (this.mode === ListMode.All) {
-          if (s.parents) {
-            const keys = Object.keys(s.parents);
-            if (keys.length === 1) {
-              indent = new Array(indents[keys[0]] + 1).fill(false);
-            }
+        if (s.parents) {
+          const keys = Object.keys(s.parents);
+          if (keys.length === 1) {
+            indent = new Array(indents[keys[0]] + 1).fill(false);
           }
-          if (s.recipeId) {
-            indents[s.recipeId] = indent.length;
-          }
+        }
+        if (s.recipeId) {
+          indents[s.recipeId] = indent.length;
         }
         return { ...s, ...{ indent } };
       });
