@@ -73,16 +73,16 @@ export class ListComponent
     const indents: Entities<number> = {};
     const steps = value.map((s) => {
       const id = `${s.itemId || ''}.${s.recipeId || ''}`;
-      let indent: boolean[] = [];
+      let indent = 0;
       if (this.mode === ListMode.All) {
         if (s.parents) {
           const keys = Object.keys(s.parents);
           if (keys.length === 1) {
-            indent = new Array(indents[keys[0]] + 1).fill(false);
+            indent = indents[keys[0]] + 1;
           }
         }
         if (s.recipeId) {
-          indents[s.recipeId] = indent.length;
+          indents[s.recipeId] = indent;
         }
       }
       return { ...s, ...{ id, indent } };
@@ -93,8 +93,6 @@ export class ListComponent
       this.sortIndents(steps);
       // Rerun organize to reverse items to original order
       this.sortIndents(steps);
-
-      this.trailIndents(steps);
     }
 
     this._steps = steps;
@@ -523,7 +521,7 @@ export class ListComponent
   sortIndents(steps: Step[]): void {
     for (let i = 0; i < steps.length; i++) {
       const step = steps[i];
-      if (step.indent.length) {
+      if (step.indent) {
         const recipeId = Object.keys(step.parents)[0];
         const parent = steps.find((s) => s.recipeId === recipeId);
         steps.splice(steps.indexOf(parent) + 1, 0, steps.splice(i, 1)[0]);
@@ -531,23 +529,7 @@ export class ListComponent
     }
   }
 
-  trailIndents(steps: Step[]): void {
-    for (let i = 0; i < steps.length; i++) {
-      const step = steps[i];
-      if (step.indent.length) {
-        for (let j = i + 1; j < steps.length; j++) {
-          const next = steps[j];
-          if (next.indent.length === step.indent.length) {
-            for (let k = i; k < j; k++) {
-              const trail = steps[k];
-              trail.indent[step.indent.length - 1] = true;
-            }
-            break;
-          } else if (next.indent.length < step.indent.length) {
-            break;
-          }
-        }
-      }
-    }
+  toArray(i: number): any[] {
+    return Array(i);
   }
 }
