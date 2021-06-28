@@ -145,13 +145,6 @@ describe('RouterService', () => {
   });
 
   describe('updateUrl', () => {
-    it('should return while unzipping', () => {
-      service.unzipping = true;
-      spyOn(service, 'zipState');
-      service.updateUrl(null, null, null, null, null);
-      expect(service.zipState).not.toHaveBeenCalled();
-    });
-
     it('should update url with products', () => {
       spyOn(service, 'zipState').and.returnValue(of(null));
       spyOn(service, 'getHash').and.returnValue('test');

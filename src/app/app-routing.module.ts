@@ -13,6 +13,10 @@ const routes: Routes = [
     component: FlowContainerComponent,
   },
   {
+    path: 'factorio',
+    redirectTo: '/list?s=',
+  },
+  {
     path: 'dsp',
     redirectTo: '/list?s=dsp',
   },
