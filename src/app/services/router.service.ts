@@ -73,7 +73,6 @@ export interface Zip {
   providedIn: 'root',
 })
 export class RouterService {
-  unzipping: boolean;
   zip: string;
   zipPartial: Zip = { bare: '', hash: '' };
   base64codes: Uint8Array;
@@ -110,19 +109,17 @@ export class RouterService {
     factories: FactoriesState,
     settings: SettingsState
   ): void {
-    if (!this.unzipping) {
-      this.zipState(products, items, recipes, factories, settings).subscribe(
-        (zState) => {
-          this.zip = this.getHash(zState);
-          const hash = this.router.url.split('#');
-          this.router.navigateByUrl(
-            `${hash[0].split('?')[0]}?${this.zip}${
-              (hash[1] && `#${hash[1]}`) || ''
-            }`
-          );
-        }
-      );
-    }
+    this.zipState(products, items, recipes, factories, settings).subscribe(
+      (zState) => {
+        this.zip = this.getHash(zState);
+        const hash = this.router.url.split('#');
+        this.router.navigateByUrl(
+          `${hash[0].split('?')[0]}?${this.zip}${
+            (hash[1] && `#${hash[1]}`) || ''
+          }`
+        );
+      }
+    );
   }
 
   zipState(
