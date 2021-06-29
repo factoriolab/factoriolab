@@ -70,37 +70,7 @@ export class ListComponent
     return this._steps;
   }
   @Input() set steps(value: Step[]) {
-    const indents: Entities<number> = {};
-
-    let steps = value.map((s) => {
-      const id = `${s.itemId || ''}.${s.recipeId || ''}`;
-      return { ...s, ...{ id } };
-    });
-
-    if (this.mode === ListMode.All) {
-      // Organize items by indent level
-      this.sortIndents(steps);
-      // Rerun organize to reverse items to original order
-      this.sortIndents(steps);
-
-      steps = steps.map((s) => {
-        let indent: boolean[] = [];
-        if (s.parents) {
-          const keys = Object.keys(s.parents);
-          if (keys.length === 1) {
-            indent = new Array(indents[keys[0]] + 1).fill(false);
-          }
-        }
-        if (s.recipeId) {
-          indents[s.recipeId] = indent.length;
-        }
-        return { ...s, ...{ indent } };
-      });
-
-      this.trailIndents(steps);
-    }
-
-    this._steps = steps;
+    this._steps = [...value];
 
     this.router.requestHash(this.settings.baseId).subscribe((hash) => {
       setTimeout(() => {
@@ -269,6 +239,26 @@ export class ListComponent
       value = value.add(step.pollution);
     }
     this.totalPollution = this.rate(value, this.effPrecision[Column.Pollution]);
+
+    // Calculate Tree
+    if (this.mode === ListMode.All && this.columns[Column.Tree].show) {
+      const indents: Entities<number> = {};
+      for (const step of this.steps) {
+        let indent: boolean[] = [];
+        if (step.parents) {
+          const keys = Object.keys(step.parents);
+          if (keys.length === 1 && indents[keys[0]] != null) {
+            indent = new Array(indents[keys[0]] + 1).fill(false);
+          }
+        }
+        if (step.recipeId) {
+          indents[step.recipeId] = indent.length;
+        }
+        step.indent = indent;
+      }
+
+      this.trailIndents();
+    }
   }
 
   ngAfterViewInit(): void {
@@ -523,26 +513,15 @@ export class ListComponent
     }
   }
 
-  sortIndents(steps: Step[]): void {
-    for (let i = 0; i < steps.length; i++) {
-      const step = steps[i];
-      if (step.parents && Object.keys(step.parents).length === 1) {
-        const recipeId = Object.keys(step.parents)[0];
-        const parent = steps.find((s) => s.recipeId === recipeId);
-        steps.splice(steps.indexOf(parent) + 1, 0, steps.splice(i, 1)[0]);
-      }
-    }
-  }
-
-  trailIndents(steps: Step[]): void {
-    for (let i = 0; i < steps.length; i++) {
-      const step = steps[i];
+  trailIndents(): void {
+    for (let i = 0; i < this.steps.length; i++) {
+      const step = this.steps[i];
       if (step.indent.length) {
-        for (let j = i + 1; j < steps.length; j++) {
-          const next = steps[j];
+        for (let j = i + 1; j < this.steps.length; j++) {
+          const next = this.steps[j];
           if (next.indent.length === step.indent.length) {
             for (let k = i; k < j; k++) {
-              const trail = steps[k];
+              const trail = this.steps[k];
               trail.indent[step.indent.length - 1] = true;
             }
             break;

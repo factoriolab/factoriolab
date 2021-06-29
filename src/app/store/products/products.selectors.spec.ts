@@ -570,9 +570,11 @@ describe('Products Selectors', () => {
     });
 
     it('should calculate rates using utility method', () => {
-      spyOn(RateUtility, 'displayRate');
+      spyOn(RateUtility, 'sortHierarchy');
+      spyOn(RateUtility, 'displayRate').and.returnValue([]);
       Selectors.getSteps.projector([], null);
       expect(RateUtility.displayRate).toHaveBeenCalled();
+      expect(RateUtility.sortHierarchy).toHaveBeenCalled();
     });
   });
 

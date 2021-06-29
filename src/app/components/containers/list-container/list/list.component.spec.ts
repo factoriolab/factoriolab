@@ -172,54 +172,8 @@ describe('ListComponent', () => {
       component.steps = [{}] as any;
       fixture.detectChanges();
       tick();
-      expect(component.child.steps[0].id).toEqual('.');
       expect(component.child.steps[0].href).toEqual('test');
     }));
-
-    it('should set up indents', () => {
-      component.steps = [
-        {
-          itemId: ItemId.Coal,
-          recipeId: RecipeId.Coal,
-          items: Rational.one,
-          parents: { [RecipeId.PlasticBar]: Rational.one },
-        },
-        {
-          itemId: ItemId.IronOre,
-          items: Rational.one,
-          parents: {
-            [RecipeId.CopperCable]: Rational.one,
-            [RecipeId.CrudeOil]: Rational.one,
-          },
-        },
-        {
-          itemId: ItemId.PlasticBar,
-          recipeId: RecipeId.PlasticBar,
-          items: Rational.one,
-        },
-      ];
-      fixture.detectChanges();
-      expect(component.child.steps[0].itemId).toEqual(ItemId.IronOre);
-      expect(component.child.steps[0].indent).toEqual([]);
-      expect(component.child.steps[1].itemId).toEqual(ItemId.PlasticBar);
-      expect(component.child.steps[1].indent).toEqual([]);
-      expect(component.child.steps[2].itemId).toEqual(ItemId.Coal);
-      expect(component.child.steps[2].indent).toEqual([false]);
-    });
-
-    it('should skip indents in ListMode.Focus', () => {
-      component.mode = ListMode.Focus;
-      component.steps = [
-        {
-          itemId: ItemId.Coal,
-          recipeId: RecipeId.Coal,
-          items: Rational.one,
-          parents: { [RecipeId.PlasticBar]: Rational.one },
-        },
-      ];
-      fixture.detectChanges();
-      expect(component.child.steps[0].indent).toBeUndefined();
-    });
   });
 
   describe('columns', () => {
@@ -348,6 +302,51 @@ describe('ListComponent', () => {
         [RecipeId.Coal]: Rational.one,
       });
     });
+
+    it('should set up indents', () => {
+      component.child.steps = [
+        {
+          itemId: ItemId.IronOre,
+          items: Rational.one,
+          parents: {
+            [RecipeId.CopperCable]: Rational.one,
+            [RecipeId.CrudeOil]: Rational.one,
+          },
+        },
+        {
+          itemId: ItemId.PlasticBar,
+          recipeId: RecipeId.PlasticBar,
+          items: Rational.one,
+        },
+        {
+          itemId: ItemId.Coal,
+          recipeId: RecipeId.Coal,
+          items: Rational.one,
+          parents: { [RecipeId.PlasticBar]: Rational.one },
+        },
+      ];
+      component.child.ngOnChanges();
+      expect(component.child.steps[0].itemId).toEqual(ItemId.IronOre);
+      expect(component.child.steps[0].indent).toEqual([]);
+      expect(component.child.steps[1].itemId).toEqual(ItemId.PlasticBar);
+      expect(component.child.steps[1].indent).toEqual([]);
+      expect(component.child.steps[2].itemId).toEqual(ItemId.Coal);
+      expect(component.child.steps[2].indent).toEqual([false]);
+    });
+
+    it('should skip indents in ListMode.Focus', () => {
+      component.mode = ListMode.Focus;
+      component.steps = [
+        {
+          itemId: ItemId.Coal,
+          recipeId: RecipeId.Coal,
+          items: Rational.one,
+          parents: { [RecipeId.PlasticBar]: Rational.one },
+        },
+      ];
+      fixture.detectChanges();
+      expect(component.child.steps[0].indent).toBeUndefined();
+    });
   });
 
   describe('ngAfterViewInit', () => {
@@ -429,7 +428,7 @@ describe('ListComponent', () => {
     const id2 = '.';
 
     it('should include no tabs', () => {
-      component.steps = [{ itemId: null, items: null }];
+      component.steps = [{ id: id2, itemId: null, items: null }];
       fixture.detectChanges();
       expect(component.child.details[id2]).toEqual([]);
     });
@@ -437,6 +436,7 @@ describe('ListComponent', () => {
     it('should include all tabs', () => {
       component.steps = [
         {
+          id,
           itemId: ItemId.PetroleumGas,
           recipeId: RecipeId.AdvancedOilProcessing,
           items: Rational.one,
@@ -445,6 +445,7 @@ describe('ListComponent', () => {
           factories: Rational.one,
         },
         {
+          id: id2,
           itemId: null,
           items: null,
           recipeId: RecipeId.CoalLiquefaction,
@@ -480,7 +481,7 @@ describe('ListComponent', () => {
 
     it('should collapse an expanded step that can no longer be expanded', () => {
       component.child.expanded[id2] = StepDetailTab.Item;
-      component.steps = [{ itemId: null, items: null }];
+      component.steps = [{ id: id2, itemId: null, items: null }];
       fixture.detectChanges();
       expect(component.child.expanded[id2]).toBeUndefined();
     });
@@ -488,7 +489,9 @@ describe('ListComponent', () => {
     it('should collapse an expanded step that no longer exists', () => {
       const i = 'id';
       component.child.expanded[i] = StepDetailTab.Item;
-      component.steps = [{ itemId: ItemId.CopperPlate, items: Rational.one }];
+      component.steps = [
+        { id: id2, itemId: ItemId.CopperPlate, items: Rational.one },
+      ];
       fixture.detectChanges();
       expect(component.child.expanded[i]).toBeUndefined();
     });
@@ -497,6 +500,7 @@ describe('ListComponent', () => {
       component.child.expanded[id] = -1 as any;
       component.steps = [
         {
+          id,
           itemId: ItemId.PetroleumGas,
           recipeId: RecipeId.AdvancedOilProcessing,
           items: Rational.one,
@@ -512,6 +516,7 @@ describe('ListComponent', () => {
       const i = `${ItemId.Coal}.${RecipeId.Coal}`;
       component.steps = [
         {
+          id: i,
           itemId: ItemId.Coal,
           items: Rational.one,
           recipeId: RecipeId.Coal,
@@ -754,37 +759,9 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('sortIndents', () => {
-    it('should move an indented step to its parent in tree', () => {
-      const steps = [
-        {
-          itemId: ItemId.PlasticBar,
-          recipeId: RecipeId.PlasticBar,
-          items: Rational.one,
-          indent: [],
-        },
-        {
-          itemId: ItemId.IronOre,
-          recipeId: ItemId.IronOre,
-          items: Rational.one,
-          indent: [],
-        },
-        {
-          itemId: ItemId.Coal,
-          recipeId: RecipeId.Coal,
-          items: Rational.one,
-          indent: [false],
-          parents: { [RecipeId.PlasticBar]: Rational.one },
-        },
-      ];
-      component.child.sortIndents(steps);
-      expect(steps[1].itemId).toEqual(ItemId.Coal);
-    });
-  });
-
   describe('trailIndents', () => {
     it('should set up trails between steps at the same level', () => {
-      const steps = [
+      component.child.steps = [
         {
           itemId: ItemId.PlasticBar,
           recipeId: RecipeId.PlasticBar,
@@ -819,12 +796,12 @@ describe('ListComponent', () => {
           indent: [],
         },
       ];
-      component.child.trailIndents(steps);
-      expect(steps[0].indent).toEqual([]);
-      expect(steps[1].indent).toEqual([true]);
-      expect(steps[2].indent).toEqual([false]);
-      expect(steps[3].indent).toEqual([false, false]);
-      expect(steps[4].indent).toEqual([]);
+      component.child.trailIndents();
+      expect(component.child.steps[0].indent).toEqual([]);
+      expect(component.child.steps[1].indent).toEqual([true]);
+      expect(component.child.steps[2].indent).toEqual([false]);
+      expect(component.child.steps[3].indent).toEqual([false, false]);
+      expect(component.child.steps[4].indent).toEqual([]);
     });
   });
 });
