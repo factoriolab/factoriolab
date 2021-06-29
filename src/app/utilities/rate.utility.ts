@@ -186,6 +186,57 @@ export class RateUtility {
     return steps;
   }
 
+  static sortHierarchy(steps: Step[]): Step[] {
+    // Assign unique ids
+    for (const step of steps) {
+      step.id = `${step.itemId || ''}.${step.recipeId || ''}`;
+    }
+
+    // Determine parents
+    const parents: Entities = {};
+    for (const step of steps) {
+      if (step.parents && Object.keys(step.parents).length === 1) {
+        const recipeId = Object.keys(step.parents)[0];
+        const parent = steps.find((s) => s.recipeId === recipeId);
+        parents[step.id] = parent.id;
+      } else {
+        parents[step.id] = '';
+      }
+    }
+
+    // Set up hierarchy groups
+    const groups: Entities<Step[]> = {};
+    for (let i = 0; i < steps.length; i++) {
+      const s = steps[i];
+      const p = parents[s.id];
+      if (!groups[p]) {
+        groups[p] = [];
+      }
+      groups[p].push(s);
+    }
+
+    // Perform recursive sort
+    return this.sortRecursive(groups, '', []);
+  }
+
+  static sortRecursive(
+    groups: Entities<Step[]>,
+    id: string,
+    result: Step[]
+  ): Step[] {
+    if (!groups[id]) {
+      return [];
+    }
+    const group = groups[id];
+    for (let i = 0; i < group.length; i++) {
+      const s = group[i];
+      result.push(s);
+      this.sortRecursive(groups, s.id, result);
+    }
+
+    return result;
+  }
+
   static copy(steps: Step[]): Step[] {
     return steps.map((s) =>
       s.parents ? { ...s, ...{ parents: { ...s.parents } } } : { ...s }

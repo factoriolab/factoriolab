@@ -120,6 +120,7 @@ export const RecipeSettings2: RecipeSettings = {
   beaconCount: '0',
 };
 export const Step1: Step = {
+  id: `${Item1.id}.${Item1.id}`,
   itemId: Item1.id,
   recipeId: Item1.id as any,
   items: Rational.fromString(Product1.rate),
@@ -130,6 +131,7 @@ export const Step1: Step = {
   pollution: Rational.one,
 };
 export const Step2: Step = {
+  id: `${Item2.id}.${Item2.id}`,
   itemId: Item2.id,
   recipeId: Item2.id as any,
   items: Rational.fromString(Product2.rate),
