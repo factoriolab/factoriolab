@@ -402,6 +402,105 @@ describe('RateUtility', () => {
     });
   });
 
+  describe('sortHierarchy', () => {
+    it('should assign ids', () => {
+      const steps: Step[] = [
+        {
+          itemId: ItemId.IronOre,
+          recipeId: null,
+          items: Rational.one,
+        },
+        {
+          itemId: null,
+          recipeId: RecipeId.Coal,
+          items: Rational.one,
+        },
+      ];
+      const result = RateUtility.sortHierarchy(steps);
+      expect(result[0].id).toEqual(`${ItemId.IronOre}.`);
+      expect(result[1].id).toEqual(`.${RecipeId.Coal}`);
+    });
+
+    it('should set up groups by parents', () => {
+      spyOn(RateUtility, 'sortRecursive');
+      const steps: Step[] = [
+        {
+          itemId: ItemId.Coal,
+          recipeId: RecipeId.Coal,
+          items: Rational.one,
+          parents: { [RecipeId.PlasticBar]: Rational.one },
+        },
+        {
+          itemId: ItemId.IronOre,
+          recipeId: RecipeId.IronOre,
+          items: Rational.one,
+          parents: {
+            [RecipeId.CopperCable]: Rational.one,
+            [RecipeId.WoodenChest]: Rational.one,
+          },
+        },
+        {
+          itemId: ItemId.PlasticBar,
+          recipeId: RecipeId.PlasticBar,
+          items: Rational.one,
+        },
+      ];
+      RateUtility.sortHierarchy(steps);
+      expect(RateUtility.sortRecursive).toHaveBeenCalledWith(
+        {
+          [`${ItemId.PlasticBar}.${RecipeId.PlasticBar}`]: [steps[0]],
+          ['']: [steps[1], steps[2]],
+        },
+        '',
+        []
+      );
+    });
+  });
+
+  describe('sortRecursive', () => {
+    it('should return empty array if no group matches id', () => {
+      const result = RateUtility.sortRecursive({}, 'id', ['item'] as any);
+      expect(result).toEqual([]);
+    });
+
+    it('should sort groups by hierarchy', () => {
+      const steps: Step[] = [
+        {
+          id: `${ItemId.Coal}.${RecipeId.Coal}`,
+          itemId: ItemId.Coal,
+          recipeId: RecipeId.Coal,
+          items: Rational.one,
+          parents: { [RecipeId.PlasticBar]: Rational.one },
+        },
+        {
+          id: `${ItemId.IronOre}.${RecipeId.IronOre}`,
+          itemId: ItemId.IronOre,
+          recipeId: RecipeId.IronOre,
+          items: Rational.one,
+          parents: {
+            [RecipeId.CopperCable]: Rational.one,
+            [RecipeId.WoodenChest]: Rational.one,
+          },
+        },
+        {
+          id: `${ItemId.PlasticBar}.${RecipeId.PlasticBar}`,
+          itemId: ItemId.PlasticBar,
+          recipeId: RecipeId.PlasticBar,
+          items: Rational.one,
+        },
+      ];
+      const result = RateUtility.sortRecursive(
+        {
+          [`${ItemId.PlasticBar}.${RecipeId.PlasticBar}`]: [steps[0]],
+          ['']: [steps[1], steps[2]],
+        },
+        '',
+        []
+      );
+      expect(result).toEqual([steps[1], steps[2], steps[0]]);
+    });
+  });
+
   describe('copy', () => {
     it('should create a copy of steps', () => {
       const steps: Step[] = [
