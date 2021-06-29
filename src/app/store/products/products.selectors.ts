@@ -332,7 +332,9 @@ export const getSteps = createSelector(
   getNormalizedStepsWithOutputs,
   Settings.getDisplayRate,
   (steps, displayRate) =>
-    RateUtility.displayRate(RateUtility.copy(steps), displayRate)
+    RateUtility.sortHierarchy(
+      RateUtility.displayRate(RateUtility.copy(steps), displayRate)
+    )
 );
 
 export const getSankey = createSelector(
