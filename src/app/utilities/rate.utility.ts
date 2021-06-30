@@ -198,7 +198,11 @@ export class RateUtility {
       if (step.parents && Object.keys(step.parents).length === 1) {
         const recipeId = Object.keys(step.parents)[0];
         const parent = steps.find((s) => s.recipeId === recipeId);
-        parents[step.id] = parent.id;
+        if (step.id === parent.id) {
+          parents[step.id] = '';
+        } else {
+          parents[step.id] = parent.id;
+        }
       } else {
         parents[step.id] = '';
       }

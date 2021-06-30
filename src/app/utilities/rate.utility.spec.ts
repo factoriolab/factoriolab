@@ -455,6 +455,24 @@ describe('RateUtility', () => {
         []
       );
     });
+
+    it('should put self-parented steps at root', () => {
+      spyOn(RateUtility, 'sortRecursive');
+      const steps: Step[] = [
+        {
+          itemId: ItemId.Coal,
+          recipeId: RecipeId.Coal,
+          items: Rational.one,
+          parents: { [RecipeId.Coal]: Rational.one },
+        },
+      ];
+      RateUtility.sortHierarchy(steps);
+      expect(RateUtility.sortRecursive).toHaveBeenCalledWith(
+        { ['']: [steps[0]] },
+        '',
+        []
+      );
+    });
   });
 
   describe('sortRecursive', () => {
