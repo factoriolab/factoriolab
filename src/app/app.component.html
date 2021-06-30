@@ -8,13 +8,8 @@
       >
     </div>
     <div class="links">
-      <a target="_blank" href="factorio">
-        Factorio
-      </a>
-      <span class="separator">|</span>
-      <a target="_blank" href="dsp">
-        Dyson Sphere Program
-      </a>
+      <a *ngIf="(data$ | async).isDsp; else dspLink" target="_blank" href="factorio">Factorio Calculator</a>
+      <ng-template #dspLink><a target="_blank" href="dsp">Dyson Sphere Program Calculator</a></ng-template>
       <span class="separator">|</span>
       <a target="_blank" href="https://github.com/factoriolab/factorio-lab/wiki"
         >Wiki</a
