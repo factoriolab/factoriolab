@@ -6,15 +6,7 @@ import { Observable } from 'rxjs';
 import { filter, take, map } from 'rxjs/operators';
 
 import { environment } from 'src/environments';
-import {
-  Dataset,
-  FuelType,
-  ItemId,
-  Mod,
-  Product,
-  TITLE_DSP,
-  TITLE_LAB,
-} from './models';
+import { Dataset, FuelType, ItemId, Mod, Product } from './models';
 import { ErrorService, RouterService } from './services';
 import { State } from './store';
 import { initialFactoriesState } from './store/factories';
@@ -62,6 +54,8 @@ export class AppComponent implements OnInit {
   pollKey = 'poll0';
   showPoll = false;
   first = true;
+  titleFactorio = 'Factorio Calculator';
+  titleDsp = 'Dyson Sphere Program Calculator';
 
   get lsHidePoll(): boolean {
     return !!localStorage.getItem(this.pollKey);
@@ -110,7 +104,7 @@ export class AppComponent implements OnInit {
       }
     });
     this.store.select(getIsDsp).subscribe((dsp) => {
-      this.title = dsp ? TITLE_DSP : TITLE_LAB;
+      this.title = dsp ? this.titleDsp : this.titleFactorio;
       this.titleService.setTitle(`FactorioLab | ${this.title}`);
     });
     if (this.lsHidePoll) {
