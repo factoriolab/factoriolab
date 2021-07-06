@@ -61,7 +61,8 @@ export class FlowContainerComponent implements OnInit {
   }
 
   setSelected(value: string): void {
-    this.selected = value;
+    const split = value.split('|');
+    this.selected = split[split.length - 1];
     this.ref.detectChanges();
   }
 
