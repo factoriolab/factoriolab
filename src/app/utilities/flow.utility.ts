@@ -28,8 +28,8 @@ export class FlowUtility {
         iId[step.itemId] = step.itemId;
         rId[step.recipeId] = step.recipeId;
       } else {
-        iId[step.itemId] = `i:${step.itemId}`;
-        rId[step.recipeId] = `r:${step.recipeId}`;
+        iId[step.itemId] = `i|${step.itemId}`;
+        rId[step.recipeId] = `r|${step.recipeId}`;
       }
     }
 

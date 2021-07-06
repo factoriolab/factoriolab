@@ -51,8 +51,8 @@ describe('FlowContainerComponent', () => {
   });
 
   it('should set the selected node', () => {
-    component.setSelected(null);
-    expect(component.selected).toEqual(null);
+    component.setSelected('node');
+    expect(component.selected).toEqual('node');
     expect(detectChanges).toHaveBeenCalled();
   });
 
