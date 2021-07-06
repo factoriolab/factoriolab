@@ -18,6 +18,8 @@ describe('FlowUtility', () => {
       viewBox: '960 768 64 64',
       href: Mocks.AdjustedData.iconEntities[ItemId.Coal].file,
     };
+    const iId = `i|${ItemId.Coal}`;
+    const rId = `r|${RecipeId.Coal}`;
 
     it('should handle empty/null values', () => {
       const result = FlowUtility.buildSankey([], null, null, null, null);
@@ -32,6 +34,10 @@ describe('FlowUtility', () => {
             recipeId: RecipeId.Coal,
             parents: { [ItemId.PlasticBar]: Rational.one },
           },
+          {
+            itemId: ItemId.PlasticBar,
+            recipeId: RecipeId.PlasticBar,
+          },
         ] as any[],
         LinkValue.None,
         LinkValue.None,
@@ -39,7 +45,16 @@ describe('FlowUtility', () => {
         Mocks.AdjustedData
       );
       expect(result).toEqual({
-        nodes: [node],
+        nodes: [
+          node,
+          {
+            id: ItemId.PlasticBar,
+            name: Mocks.AdjustedData.itemEntities[ItemId.PlasticBar].name,
+            color: Mocks.AdjustedData.iconEntities[ItemId.PlasticBar].color,
+            viewBox: '768 384 64 64',
+            href: Mocks.AdjustedData.iconEntities[ItemId.PlasticBar].file,
+          },
+        ],
         links: [
           {
             target: ItemId.PlasticBar,
@@ -81,11 +96,14 @@ describe('FlowUtility', () => {
         Mocks.AdjustedData
       );
       expect(result).toEqual({
-        nodes: [node, node],
+        nodes: [
+          { ...node, ...{ id: iId } },
+          { ...node, ...{ id: rId } },
+        ],
         links: [
           {
-            target: ItemId.Coal,
-            source: ItemId.Coal,
+            target: iId,
+            source: rId,
             value: 1,
             text: '',
             name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
@@ -112,11 +130,14 @@ describe('FlowUtility', () => {
         Mocks.AdjustedData
       );
       expect(result).toEqual({
-        nodes: [node, node],
+        nodes: [
+          { ...node, ...{ id: iId } },
+          { ...node, ...{ id: rId } },
+        ],
         links: [
           {
-            target: ItemId.Coal,
-            source: ItemId.Coal,
+            target: iId,
+            source: rId,
             value: 1,
             text: '100%',
             name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
@@ -140,11 +161,11 @@ describe('FlowUtility', () => {
         Mocks.AdjustedData
       );
       expect(result).toEqual({
-        nodes: [node],
+        nodes: [{ ...node, ...{ id: iId } }],
         links: [
           {
-            target: ItemId.PlasticBar,
-            source: ItemId.Coal,
+            target: undefined,
+            source: iId,
             value: 1,
             text: '',
             name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
@@ -167,7 +188,10 @@ describe('FlowUtility', () => {
         null,
         Mocks.AdjustedData
       );
-      expect(result).toEqual({ nodes: [node], links: [] });
+      expect(result).toEqual({
+        nodes: [{ ...node, ...{ id: iId } }],
+        links: [],
+      });
     });
 
     it('should handle steps with no recipe or parents', () => {
@@ -178,10 +202,15 @@ describe('FlowUtility', () => {
         null,
         Mocks.AdjustedData
       );
-      expect(result).toEqual({ nodes: [node], links: [] });
+      expect(result).toEqual({
+        nodes: [{ ...node, ...{ id: iId } }],
+        links: [],
+      });
     });
 
     it('should handle recipe that matches id with extra outputs', () => {
+      const recipe = Mocks.AdjustedData.recipeR[RecipeId.UraniumProcessing];
+      spyOn(recipe, 'produces').and.returnValue(true);
       const result = FlowUtility.buildSankey(
         [
           {
@@ -225,21 +254,21 @@ describe('FlowUtility', () => {
         href,
       };
       const uNode1: Node = {
-        id: ItemId.Uranium235,
+        id: `i|${ItemId.Uranium235}`,
         name: Mocks.AdjustedData.itemEntities[ItemId.Uranium235].name,
         color: Mocks.AdjustedData.iconEntities[ItemId.Uranium235].color,
         viewBox: '832 832 64 64',
         href,
       };
       const uNode2: Node = {
-        id: ItemId.Uranium238,
+        id: `i|${ItemId.Uranium238}`,
         name: Mocks.AdjustedData.itemEntities[ItemId.Uranium238].name,
         color: Mocks.AdjustedData.iconEntities[ItemId.Uranium238].color,
         viewBox: '896 832 64 64',
         href,
       };
       const uLink1: Link = {
-        target: ItemId.Uranium235,
+        target: `i|${ItemId.Uranium235}`,
         source: RecipeId.UraniumProcessing,
         value: 1,
         text: '',
@@ -247,7 +276,7 @@ describe('FlowUtility', () => {
         color: Mocks.AdjustedData.iconEntities[ItemId.Uranium235].color,
       };
       const uLink2: Link = {
-        target: ItemId.Uranium238,
+        target: `i|${ItemId.Uranium238}`,
         source: RecipeId.UraniumProcessing,
         value: 1,
         text: '',
