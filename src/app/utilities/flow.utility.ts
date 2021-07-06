@@ -1,5 +1,6 @@
 import {
   Dataset,
+  Entities,
   LinkValue,
   MIN_LINK_VALUE,
   Rational,
@@ -19,18 +20,32 @@ export class FlowUtility {
       nodes: [],
       links: [],
     };
+    const iId: Entities = {};
+    const rId: Entities = {};
+    for (const step of steps) {
+      const recipe = data.recipeR[step.recipeId];
+      if (step.itemId === step.recipeId && recipe.produces(step.itemId)) {
+        iId[step.itemId] = step.itemId;
+        rId[step.recipeId] = step.recipeId;
+      } else {
+        iId[step.itemId] = `i:${step.itemId}`;
+        rId[step.recipeId] = `r:${step.recipeId}`;
+      }
+    }
 
     for (const step of steps) {
       const text = this.stepLinkValue(step, linkText);
       const value =
         linkText === linkSize ? text : this.stepLinkValue(step, linkSize);
+      let match = false;
 
       if (step.recipeId) {
         const recipe = data.recipeR[step.recipeId];
         const icon = data.iconEntities[step.recipeId];
+        match = step.itemId === step.recipeId && recipe.produces(step.itemId);
 
         sankey.nodes.push({
-          id: step.recipeId,
+          id: rId[step.recipeId],
           viewBox: `${icon.position
             .replace(/px/g, '')
             .replace(/-/g, '')} 64 64`,
@@ -39,12 +54,12 @@ export class FlowUtility {
           color: icon.color,
         });
 
-        if (step.itemId === step.recipeId && step.parents) {
+        if (match && step.parents) {
           for (const i of Object.keys(step.parents)) {
             const item = data.itemEntities[step.itemId];
             sankey.links.push({
-              target: i,
-              source: step.recipeId,
+              target: rId[i],
+              source: rId[step.recipeId],
               value: this.linkSize(
                 value,
                 step.parents[i],
@@ -64,9 +79,7 @@ export class FlowUtility {
         }
 
         for (const outId of Object.keys(recipe.out).filter(
-          (id) =>
-            step.itemId !== step.recipeId ||
-            (step.itemId !== id && !step.parents?.[id])
+          (id) => !match || (step.itemId !== id && !step.parents?.[id])
         )) {
           const outStep = steps.find((s) => s.itemId === outId);
           const outText = this.stepLinkValue(outStep, linkText);
@@ -77,8 +90,8 @@ export class FlowUtility {
           const percent = step.outputs[outId];
           const item = data.itemEntities[outId];
           sankey.links.push({
-            target: outId,
-            source: step.recipeId,
+            target: iId[outId],
+            source: rId[step.recipeId],
             value: this.linkSize(outValue, percent, linkSize, item.stack),
             text: this.linkText(outValue, percent, linkText, linkPrecision),
             name: item.name,
@@ -87,12 +100,12 @@ export class FlowUtility {
         }
       }
 
-      if (step.itemId && step.itemId !== step.recipeId) {
+      if (step.itemId && !match) {
         const item = data.itemEntities[step.itemId];
         const icon = data.iconEntities[step.itemId];
 
         sankey.nodes.push({
-          id: step.itemId,
+          id: iId[step.itemId],
           viewBox: `${icon.position
             .replace(/px/g, '')
             .replace(/-/g, '')} 64 64`,
@@ -105,8 +118,8 @@ export class FlowUtility {
             const recipe = data.recipeR[i];
             if (recipe.in?.[step.itemId]) {
               sankey.links.push({
-                target: i,
-                source: step.itemId,
+                target: rId[i],
+                source: iId[step.itemId],
                 value: this.linkSize(
                   value,
                   step.parents[i],
