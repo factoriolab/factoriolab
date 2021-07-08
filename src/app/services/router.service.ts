@@ -22,7 +22,7 @@ import {
 } from '~/models';
 import { State } from '~/store';
 import { LoadAction } from '~/store/app.actions';
-import { FactoriesState } from '~/store/factories';
+import { FactoriesState, initialFactoriesState } from '~/store/factories';
 import { ItemsState } from '~/store/items';
 import * as Products from '~/store/products';
 import { RecipesState } from '~/store/recipes';
@@ -84,6 +84,7 @@ export class RouterService {
     hash: `&${Section.Version}${this.hashVersion}`,
   };
   cache: Entities<ModHash> = {};
+  first = true;
 
   constructor(
     private router: Router,
@@ -99,7 +100,30 @@ export class RouterService {
       this.base64codes[BASE64ABC.charCodeAt(i)] = i;
     }
     this.base64codes['_'.charCodeAt(0)] = 0;
+
     this.router.events.subscribe((e) => this.updateState(e));
+
+    this.store.select(Products.getZipState).subscribe((s) => {
+      let skip = false;
+      if (this.first) {
+        // First update: if there are no modified settings, leave base URL.
+        if (
+          Object.keys(s.items).length === 0 &&
+          Object.keys(s.recipes).length === 0 &&
+          JSON.stringify(s.factories) ===
+            JSON.stringify(initialFactoriesState) &&
+          JSON.stringify(s.settings) === JSON.stringify(initialSettingsState)
+        ) {
+          // No modified settings, skip first update.
+          skip = true;
+        }
+        // Don't check again later, always update.
+        this.first = false;
+      }
+      if (!skip) {
+        this.updateUrl(s.products, s.items, s.recipes, s.factories, s.settings);
+      }
+    });
   }
 
   updateUrl(

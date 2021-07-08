@@ -353,6 +353,12 @@ export const getSankey = createSelector(
     )
 );
 
+export const checkViaState = createSelector(
+  getRationalProducts,
+  getNormalizedRates,
+  (products, rates) => ({ products, rates })
+);
+
 export const getZipState = createSelector(
   productsState,
   Items.itemsState,
