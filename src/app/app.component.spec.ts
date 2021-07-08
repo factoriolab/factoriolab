@@ -6,10 +6,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
-import { Mocks } from 'src/tests';
 import { RouterService } from './services';
 import { State, reducers, metaReducers } from './store';
-import { AddAction } from './store/products';
 import {
   IconComponent,
   SettingsContainerComponent,
@@ -67,14 +65,6 @@ describe('AppComponent', () => {
   it('should create the app', () => {
     fixture.detectChanges();
     expect(component).toBeTruthy();
-  });
-
-  it('should update the url', () => {
-    spyOn(router, 'updateUrl');
-    fixture.detectChanges();
-    store.dispatch(new AddAction(Mocks.Base.items[0].id));
-    fixture.detectChanges();
-    expect(router.updateUrl).toHaveBeenCalled();
   });
 
   it('should update the title', () => {
