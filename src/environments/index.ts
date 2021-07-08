@@ -3,6 +3,7 @@ export interface Environment {
   testing: boolean;
   debug: boolean;
   baseHref: string;
+  version: string;
 }
 
 export * from './environment';
