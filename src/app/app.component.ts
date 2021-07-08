@@ -4,7 +4,15 @@ import { Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { Dataset, ItemId, Mod, Product, TITLE_DSP, TITLE_LAB } from './models';
+import {
+  Dataset,
+  ItemId,
+  Mod,
+  Product,
+  TITLE_DSP,
+  TITLE_LAB,
+  APP,
+} from './models';
 import { ErrorService, RouterService, StateService } from './services';
 import { State } from './store';
 import { getProducts } from './store/products';
@@ -68,7 +76,7 @@ export class AppComponent implements OnInit {
     this.products$ = this.store.select(getProducts);
     this.store.select(getIsDsp).subscribe((dsp) => {
       this.title = dsp ? TITLE_DSP : TITLE_LAB;
-      this.titleService.setTitle(`FactorioLab | ${this.title}`);
+      this.titleService.setTitle(`${APP} | ${this.title}`);
     });
     if (this.lsHidePoll) {
       this.showPoll = false;
