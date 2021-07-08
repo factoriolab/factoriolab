@@ -508,7 +508,7 @@ describe('RecipeUtility', () => {
         { [RecipeId.Coal]: [data] },
         { itemId: RecipeId.Coal, viaId: RecipeId.AdvancedOilProcessing } as any
       );
-      expect(result).toEqual(data);
+      expect(result).toBeUndefined();
     });
 
     it('should handle no recipe specified', () => {

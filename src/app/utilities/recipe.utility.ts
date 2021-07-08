@@ -251,12 +251,10 @@ export class RecipeUtility {
     if (steps.length === 0) {
       return null;
     } else if (product.viaId) {
-      const tuple = steps.find((r) => r[0] === product.viaId);
-      if (tuple) {
-        return tuple;
-      }
+      return steps.find((r) => r[0] === product.viaId);
+    } else {
+      return steps[0];
     }
-    return steps[0];
   }
 
   static allowsModules(
