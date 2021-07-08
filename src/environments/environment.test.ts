@@ -1,4 +1,4 @@
-import { version } from 'package.json';
+import pkg from 'package.json';
 import { Environment } from '.';
 
 export const environment: Environment = {
@@ -6,5 +6,5 @@ export const environment: Environment = {
   testing: true,
   debug: false,
   baseHref: '/',
-  version: `${version} (test)`,
+  version: `${pkg.version} (test)`,
 };
