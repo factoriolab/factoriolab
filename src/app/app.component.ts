@@ -5,13 +5,13 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import {
-  APP,
   Dataset,
   ItemId,
   Mod,
   Product,
   TITLE_DSP,
   TITLE_LAB,
+  APP,
 } from './models';
 import { ErrorService, RouterService, StateService } from './services';
 import { State } from './store';
