@@ -538,7 +538,9 @@ export class SimplexUtility {
 
     // Check for exact id matches
     for (const step of steps.filter((s) => !s.recipeId)) {
-      const i = recipes.findIndex((r) => r.id === step.itemId);
+      const i = recipes.findIndex(
+        (r) => r.id === step.itemId && r.produces(step.itemId)
+      );
       if (i !== -1) {
         step.recipeId = recipes[i].id;
         recipes.splice(i, 1);

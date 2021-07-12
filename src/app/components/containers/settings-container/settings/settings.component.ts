@@ -12,6 +12,7 @@ import {
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { environment } from 'src/environments';
 import {
   DisplayRate,
   ResearchSpeed,
@@ -33,6 +34,7 @@ import {
   FuelType,
   presetOptions,
   Rational,
+  APP,
 } from '~/models';
 import { FactoriesState } from '~/store/factories';
 import { ColumnsState, PreferencesState } from '~/store/preferences';
@@ -121,6 +123,7 @@ export class SettingsComponent implements OnInit, OnChanges {
   factoryRows: string[];
   savedStates: IdName[];
   columnsButton: string;
+  version = `${APP} ${environment.version}`;
   ResearchSpeedOptions = ResearchSpeedOptions;
   InserterCapacityOptions = InserterCapacityOptions;
   InserterTargetOptions = InserterTargetOptions;

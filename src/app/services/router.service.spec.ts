@@ -24,7 +24,7 @@ import {
 import { reducers, metaReducers, State } from '~/store';
 import { LoadAction } from '~/store/app.actions';
 import { FactoriesState, initialFactoriesState } from '~/store/factories';
-import { initialItemsState, ItemsState } from '~/store/items';
+import { IgnoreItemAction, initialItemsState, ItemsState } from '~/store/items';
 import { initialProductsState, ProductsState } from '~/store/products';
 import { initialRecipesState, RecipesState } from '~/store/recipes';
 import { initialSettingsState, SettingsState } from '~/store/settings';
@@ -142,6 +142,13 @@ describe('RouterService', () => {
     spyOn(service, 'updateState');
     (router.events as any).next(new NavigationEnd(2, '/', '/'));
     expect(service.updateState).toHaveBeenCalled();
+  });
+
+  it('should run first update of url if settings modified', () => {
+    spyOn(service, 'updateUrl');
+    service.first = true;
+    store.dispatch(new IgnoreItemAction(ItemId.Wood));
+    expect(service.updateUrl).toHaveBeenCalled();
   });
 
   describe('updateUrl', () => {
