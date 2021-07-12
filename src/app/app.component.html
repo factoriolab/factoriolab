@@ -10,10 +10,10 @@
       </div>
       <span class="separator">|</span>
       <a *ngIf="(data$ | async).isDsp; else dspLink" href="factorio">{{
-        titleFactorio
+        TITLE_LAB
       }}</a>
       <ng-template #dspLink
-        ><a href="dsp">{{ titleDsp }}</a></ng-template
+        ><a href="dsp">{{ TITLE_DSP }}</a></ng-template
       >
     </div>
     <div class="links">
