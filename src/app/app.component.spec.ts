@@ -20,8 +20,8 @@ import {
   PickerComponent,
 } from './components';
 import { AppComponent } from './app.component';
-import { SetBaseAction } from './store/settings';
 import { APP, TITLE_DSP } from './models';
+import { SetBaseAction } from './store/settings';
 
 describe('AppComponent', () => {
   let component: AppComponent;
