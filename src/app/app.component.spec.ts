@@ -21,6 +21,7 @@ import {
 } from './components';
 import { AppComponent } from './app.component';
 import { SetBaseAction } from './store/settings';
+import { APP, TITLE_DSP } from './models';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -70,9 +71,7 @@ describe('AppComponent', () => {
     store.dispatch(new SetBaseAction('dsp'));
     spyOn(title, 'setTitle');
     fixture.detectChanges();
-    expect(title.setTitle).toHaveBeenCalledWith(
-      `FactorioLab | ${component.titleDsp}`
-    );
+    expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_DSP}`);
   });
 
   it('should hide the poll if persisted', () => {
