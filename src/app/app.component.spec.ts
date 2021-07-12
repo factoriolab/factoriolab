@@ -20,7 +20,7 @@ import {
   PickerComponent,
 } from './components';
 import { AppComponent } from './app.component';
-import { TITLE_DSP } from './models';
+import { APP, TITLE_DSP } from './models';
 import { SetBaseAction } from './store/settings';
 
 describe('AppComponent', () => {
@@ -71,7 +71,7 @@ describe('AppComponent', () => {
     store.dispatch(new SetBaseAction('dsp'));
     spyOn(title, 'setTitle');
     fixture.detectChanges();
-    expect(title.setTitle).toHaveBeenCalledWith(`FactorioLab | ${TITLE_DSP}`);
+    expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_DSP}`);
   });
 
   it('should hide the poll if persisted', () => {

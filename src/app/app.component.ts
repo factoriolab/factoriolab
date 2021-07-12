@@ -47,6 +47,8 @@ export class AppComponent implements OnInit {
   products$: Observable<Product[]>;
 
   ItemId = ItemId;
+  TITLE_LAB = TITLE_LAB;
+  TITLE_DSP = TITLE_DSP;
 
   title: string;
   showSettings: boolean;

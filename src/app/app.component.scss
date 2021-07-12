@@ -22,8 +22,6 @@
   }
 
   .header {
-    margin-right: 1rem;
-
     h1 {
       font-size: larger;
     }
@@ -38,6 +36,10 @@
   .links {
     display: flex;
     align-items: center;
+
+    + .links {
+      margin-left: 1rem;
+    }
   }
 
   .separator {

@@ -1,10 +1,19 @@
 <div class="top-bar">
   <div>
-    <div class="header">
-      <a
-        [href]="homeHref((data$ | async).isDsp)"
-        onclick="setTimeout(location.reload.bind(location), 200)"
-        ><h1>{{ title }}</h1></a
+    <div class="links">
+      <div class="header">
+        <a
+          [href]="homeHref((data$ | async).isDsp)"
+          onclick="setTimeout(location.reload.bind(location), 200)"
+          ><h1>{{ title }}</h1></a
+        >
+      </div>
+      <span class="separator">|</span>
+      <a *ngIf="(data$ | async).isDsp; else dspLink" href="factorio">{{
+        TITLE_LAB
+      }}</a>
+      <ng-template #dspLink
+        ><a href="dsp">{{ TITLE_DSP }}</a></ng-template
       >
     </div>
     <div class="links">
