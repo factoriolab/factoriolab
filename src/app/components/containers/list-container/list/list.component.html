@@ -1378,7 +1378,7 @@
           <span class="monospace">{{ totalPollution }}</span>
         </div>
       </td>
-      <td></td>
+      <td *ngIf="columns[Column.Link].show"></td>
     </tr>
     <tr *ngIf="mode === ListMode.Focus && !selected">
       <td colspan="100" class="message">Select a node to see details</td>

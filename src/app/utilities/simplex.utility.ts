@@ -7,6 +7,8 @@ import {
   RationalRecipe,
   Step,
   WARNING_HANG,
+  MatrixResult,
+  MatrixResultType,
 } from '~/models';
 import { ItemsState } from '~/store/items';
 import { RateUtility } from './rate.utility';
@@ -26,12 +28,34 @@ export interface MatrixState {
 }
 
 export interface MatrixSolution {
+  /** Final number of simplex pivots */
+  pivots: number;
+  /** Runtime in ms */
+  time: number;
+  /** Simplex canonical matrix */
+  A: Rational[][];
+  /** Simplex objective solution */
+  O: Rational[];
+  /** Items in tableau */
+  itemIds: string[];
+  /** Recipes in tableau */
+  recipeIds: string[];
+  /** Items identified as inputs in tableau */
+  inputIds: string[];
+
   /** Surplus items, may be empty */
   surplus: Entities<Rational>;
   /** Input items (no recipe), may be empty */
   inputs: Entities<Rational>;
   /** Recipe values of the solution */
   recipes: Entities<Rational>;
+}
+
+export interface MatrixCache {
+  O: Rational[];
+  R: Rational[];
+  pivots: number;
+  time: number;
 }
 
 /** Cost of a standard recipe */
@@ -44,6 +68,8 @@ export const COST_MINED = Rational.from(10000);
 export const COST_MANUAL = Rational.from(1000000);
 
 export class SimplexUtility {
+  static cache: Entities<MatrixCache[]> = {};
+
   /** Solve all remaining steps using simplex method, if necessary */
   static solve(
     steps: Step[],
@@ -51,9 +77,9 @@ export class SimplexUtility {
     disabledRecipes: string[],
     data: Dataset,
     error = true
-  ): Step[] {
+  ): MatrixResult {
     if (!steps.length) {
-      return steps;
+      return { steps, result: MatrixResultType.Skipped };
     }
 
     // Get matrix state
@@ -61,24 +87,47 @@ export class SimplexUtility {
 
     if (state == null) {
       // Matrix solution is not required
-      return steps;
+      return { steps, result: MatrixResultType.Skipped };
     }
 
     // Get solution for matrix state
-    const solution = this.getSolution(state, error);
+    const [result, solution] = this.getSolution(state, error);
 
-    if (solution == null) {
-      if (solution === null && error) {
+    if (
+      result === MatrixResultType.Solved ||
+      result === MatrixResultType.Cached
+    ) {
+      // Update steps with solution
+      this.updateSteps(steps, solution, state);
+
+      return {
+        steps,
+        result,
+        pivots: solution.pivots,
+        time: solution.time,
+        A: solution.A,
+        O: solution.O,
+        items: solution.itemIds,
+        recipes: solution.recipeIds,
+        inputs: solution.inputIds,
+      };
+    } else {
+      if (result === MatrixResultType.Failed && error) {
         alert(ERROR_SIMPLEX);
         console.error('Failed to solve matrix using simplex method');
       }
-      return steps;
+      return {
+        steps,
+        result,
+        pivots: solution.pivots,
+        time: solution.time,
+        A: solution.A,
+        O: solution.O,
+        items: solution.itemIds,
+        recipes: solution.recipeIds,
+        inputs: solution.inputIds,
+      };
     }
-
-    // Update steps with solution
-    this.updateSteps(steps, solution, state);
-
-    return steps;
   }
 
   /** Solve simplex for a given item id and return recipes or items in steps */
@@ -91,7 +140,7 @@ export class SimplexUtility {
   ): [string, Rational][] {
     let steps: Step[] = [];
     RateUtility.addStepsFor(itemId, Rational.one, steps, itemSettings, data);
-    steps = this.solve(steps, itemSettings, disabledRecipes, data, false);
+    steps = this.solve(steps, itemSettings, disabledRecipes, data, false).steps;
 
     if (recipes) {
       return steps
@@ -239,19 +288,82 @@ export class SimplexUtility {
 
   //#region Simplex
   /** Convert state to canonical tableau, solve using simplex, and parse solution */
-  static getSolution(state: MatrixState, error = true): MatrixSolution {
+  static getSolution(
+    state: MatrixState,
+    error = true
+  ): [MatrixResultType, MatrixSolution] {
     // Convert state to canonical tableau
     const A = this.canonical(state);
 
-    // Solve tableau using simplex method
-    const result = this.simplex(A, error);
+    const [O, H] = this.hash(A);
 
-    if (result) {
-      // Parse solution into usable state
-      return this.parseSolution(A, state);
+    const itemIds = Object.keys(state.items);
+    const recipeIds = Object.keys(state.recipes);
+    const inputIds = state.inputs;
+
+    // Check cache
+    const cache = this.checkCache(O, H);
+    if (cache) {
+      const [surplus, recipes, inputs] = this.parseSolution(cache.R, state);
+      // Found cached result
+      return [
+        MatrixResultType.Cached,
+        {
+          surplus,
+          recipes,
+          inputs,
+          pivots: cache.pivots,
+          time: cache.time,
+          A,
+          O: cache.R,
+          itemIds,
+          recipeIds,
+          inputIds,
+        },
+      ];
     } else {
-      // No solution found
-      return result === false ? null : undefined;
+      // Cache original tableau
+      const A0 = A.map((R) => [...R]);
+      // Solve tableau using simplex method
+      const [result, pivots, time] = this.simplex(A, error);
+
+      if (result === MatrixResultType.Solved) {
+        // Parse solution into usable state
+        this.cacheResult(O, H, A[0], pivots, time);
+        const [surplus, recipes, inputs] = this.parseSolution(A[0], state);
+        return [
+          result,
+          {
+            surplus,
+            recipes,
+            inputs,
+            pivots,
+            time,
+            A: A0,
+            O: A[0],
+            itemIds,
+            recipeIds,
+            inputIds,
+          },
+        ];
+      } else {
+        // No solution found
+        return [
+          result,
+          {
+            surplus: null,
+            recipes: null,
+            inputs: null,
+            pivots,
+            time,
+            A: A0,
+            O: A[0],
+            itemIds,
+            recipeIds,
+            inputIds,
+          },
+        ];
+      }
     }
   }
 
@@ -349,11 +461,18 @@ export class SimplexUtility {
   }
 
   /** Solve the canonical tableau using the simplex method */
-  static simplex(A: Rational[][], error = true): boolean {
+  static simplex(
+    A: Rational[][],
+    error = true
+  ): [MatrixResultType, number, number] {
+    const timeout = error ? 5000 : 1000;
     const start = Date.now();
     let check = true;
 
+    let p = 0;
+
     while (true) {
+      p++;
       let c: number = null;
       const O = A[0];
       for (let i = 0; i < O.length - 1; i++) {
@@ -363,18 +482,22 @@ export class SimplexUtility {
       }
 
       if (!O[c].lt(Rational.zero)) {
-        return true;
+        return [MatrixResultType.Solved, p, Date.now() - start];
       }
 
       if (!this.pivotCol(A, c)) {
-        return false;
+        return [MatrixResultType.Failed, p, Date.now() - start];
       }
 
-      if (check && Date.now() - start > 5000) {
-        if (error && confirm(WARNING_HANG)) {
+      const time = Date.now() - start;
+      if (check && time > timeout) {
+        const warn =
+          WARNING_HANG +
+          `\n\nmatrix size: ${A.length} x ${A[0].length}, pivots: ${p}, time: ${time}ms`;
+        if (error && confirm(warn)) {
           check = false;
         } else {
-          return null;
+          return [MatrixResultType.Cancelled, p, time];
         }
       }
     }
@@ -426,8 +549,10 @@ export class SimplexUtility {
   }
 
   /** Parse solution from solved tableau */
-  static parseSolution(A: Rational[][], state: MatrixState): MatrixSolution {
-    const O = A[0];
+  static parseSolution(
+    O: Rational[],
+    state: MatrixState
+  ): [Entities<Rational>, Entities<Rational>, Entities<Rational>] {
     const itemIds = Object.keys(state.items);
     const recipeIds = Object.keys(state.recipes);
 
@@ -458,7 +583,7 @@ export class SimplexUtility {
       }
     }
 
-    return { surplus, inputs, recipes };
+    return [surplus, recipes, inputs];
   }
   //#endregion
 
@@ -617,6 +742,89 @@ export class SimplexUtility {
         RateUtility.addParentValue(step, recipe.id, rate);
       }
     }
+  }
+  //#endregion
+
+  //#region Cache
+  static hash(A: Rational[][]): [Rational[], string] {
+    const O = [...A[0]];
+    const B = A.filter((R, i) => i !== 0);
+    const H = B.map((R) => R.map((c) => c.toString()).join(',')).join('\n');
+    return [O, H];
+  }
+
+  static cacheResult(
+    O: Rational[],
+    H: string,
+    R: Rational[],
+    pivots: number,
+    time: number
+  ): void {
+    if (!this.cache[H]) {
+      this.cache[H] = [];
+    }
+    this.cache[H].push({
+      O,
+      R,
+      pivots,
+      time,
+    });
+  }
+
+  static checkCache(O: Rational[], H: string): MatrixCache {
+    if (this.cache[H]) {
+      // Check objective matches
+      for (const c of this.cache[H]) {
+        const ratio = this.objectiveRatio(O, c.O);
+        if (ratio) {
+          if (ratio.isOne()) {
+            return c;
+          } else {
+            return { ...c, ...{ R: c.R.map((r) => r.mul(ratio)) } };
+          }
+        }
+      }
+    }
+
+    return null;
+  }
+
+  static objectiveRatio(O: Rational[], C: Rational[]): Rational {
+    // Check length first
+    if (O.length !== C.length) {
+      return null;
+    }
+
+    // Check ratio
+    let ratio: Rational;
+    for (let i = 1; i < O.length; i++) {
+      if (C[i].isZero()) {
+        if (O[i].isZero()) {
+          // Keep looking, both 0
+        } else {
+          // No match
+          return null;
+        }
+      } else {
+        if (O[i].isZero()) {
+          // No match
+          return null;
+        } else if (ratio) {
+          // Ratio must match
+          if (ratio.eq(O[i].div(C[i]))) {
+            // Keep going
+          } else {
+            // No match
+            return null;
+          }
+        } else {
+          // Log the ratio
+          ratio = O[i].div(C[i]);
+        }
+      }
+    }
+
+    return ratio;
   }
   //#endregion
 }

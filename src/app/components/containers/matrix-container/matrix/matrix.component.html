@@ -1,0 +1,120 @@
+<table>
+  <tr>
+    <td class="header">Simplex Result</td>
+    <td>{{ result.result }}</td>
+  </tr>
+  <tr *ngIf="result.time != null">
+    <td class="header">Runtime</td>
+    <td>{{ result.time }} ms</td>
+  </tr>
+  <tr *ngIf="result.pivots != null">
+    <td class="header">Pivots</td>
+    <td>{{ result.pivots }}</td>
+  </tr>
+  <tr *ngIf="result.A && result.O">
+    <td class="header">Size</td>
+    <td>{{ result.A.length }} rows, {{ result.O.length }} cols</td>
+  </tr>
+</table>
+<table *ngIf="result.A">
+  <tr>
+    <th [colSpan]="result.O.length + 1" class="header">
+      Simplex Canonical Tableau
+    </th>
+  </tr>
+  <tr>
+    <td rowspan="2"></td>
+    <th class="header" rowspan="2">I</th>
+    <th class="header" [colSpan]="result.items.length">Items</th>
+    <th class="header" [colSpan]="result.recipes.length">Recipes</th>
+    <th class="header" [colSpan]="result.items.length">Inputs</th>
+    <th class="header" rowspan="2">Cost</th>
+  </tr>
+  <tr>
+    <td *ngFor="let i of result.items">
+      <lab-icon
+        [data]="data"
+        [iconId]="i"
+        [tooltip]="data.itemEntities[i].name"
+      ></lab-icon>
+    </td>
+    <td *ngFor="let i of result.recipes">
+      <lab-icon
+        [data]="data"
+        [iconId]="i"
+        [tooltip]="data.recipeEntities[i].name"
+        [recipe]="data.recipeEntities[i]"
+      ></lab-icon>
+    </td>
+    <td *ngFor="let i of result.items">
+      <lab-icon
+        [data]="data"
+        [iconId]="i"
+        [tooltip]="data.itemEntities[i].name"
+      ></lab-icon>
+    </td>
+  </tr>
+  <tr *ngFor="let R of result.A; let i = index">
+    <th class="header" *ngIf="i === 0; else notObj">Objective</th>
+    <ng-template #notObj>
+      <td>
+        <span *ngIf="result.recipes[i - 1] as i; else notRecipe">
+          <lab-icon
+            [data]="data"
+            [iconId]="i"
+            [tooltip]="data.recipeEntities[i].name"
+            [recipe]="data.recipeEntities[i]"
+          ></lab-icon
+        ></span>
+        <ng-template #notRecipe>
+          <span *ngIf="result.inputs[i - 1 - result.recipes.length] as i">
+            <lab-icon
+              [data]="data"
+              [iconId]="i"
+              [tooltip]="data.itemEntities[i].name"
+            ></lab-icon
+          ></span>
+        </ng-template>
+      </td>
+    </ng-template>
+    <td *ngFor="let c of R">{{ c.toString() }}</td>
+  </tr>
+  <!-- <tr>
+    <th [colSpan]="result.O.length + 1" class="header">Solution</th>
+  </tr> -->
+  <tr>
+    <th class="header" rowspan="3">Solution</th>
+    <th class="header" rowspan="2">I</th>
+    <th class="header" [colSpan]="result.items.length">Surplus</th>
+    <th class="header" [colSpan]="result.recipes.length">Recipes</th>
+    <th class="header" [colSpan]="result.items.length">Inputs</th>
+    <th class="header" rowspan="2">Cost</th>
+  </tr>
+  <tr>
+    <td *ngFor="let i of result.items">
+      <lab-icon
+        [data]="data"
+        [iconId]="i"
+        [tooltip]="data.itemEntities[i].name"
+      ></lab-icon>
+    </td>
+    <td *ngFor="let i of result.recipes">
+      <lab-icon
+        [data]="data"
+        [iconId]="i"
+        [tooltip]="data.recipeEntities[i].name"
+        [recipe]="data.recipeEntities[i]"
+      ></lab-icon>
+    </td>
+    <td *ngFor="let i of result.items">
+      <lab-icon
+        [data]="data"
+        [iconId]="i"
+        [tooltip]="data.itemEntities[i].name"
+      ></lab-icon>
+    </td>
+  </tr>
+  <tr>
+    <td *ngFor="let c of result.O">{{ c.toString() }}</td>
+  </tr>
+</table>

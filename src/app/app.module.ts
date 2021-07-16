@@ -28,6 +28,8 @@ import {
   OptionsComponent,
   DialogComponent,
   ColumnsComponent,
+  MatrixContainerComponent,
+  MatrixComponent,
 } from './components';
 import {
   FocusOnShowDirective,
@@ -58,6 +60,8 @@ import { DatasetsEffects } from './store/datasets/datasets.effects';
     ColumnsComponent,
     ValidateNumberDirective,
     FocusOnShowDirective,
+    MatrixContainerComponent,
+    MatrixComponent,
   ],
   imports: [
     BrowserModule,

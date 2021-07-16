@@ -11,7 +11,7 @@ E.G.: If one iron plate requires two gears, and one gear requires two iron plate
 export const WARNING_RESET = `\u26a0 Warning:
 This will delete ALL saved Factorio Lab settings in this browser, are you sure?`;
 export const WARNING_HANG = `No solution found in 5 seconds. Continue trying to solve?
-To avoid this issue, try disabling some recipes.
+To avoid this issue, try disabling some/all recipes.
 \u26a0 Warning: The browser may hang if you choose to continue.
 
 (Click "OK" to keep trying, click "Cancel" to quit)`;

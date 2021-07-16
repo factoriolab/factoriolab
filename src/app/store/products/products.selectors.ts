@@ -8,6 +8,7 @@ import {
   DisplayRateVal,
   RationalProduct,
   Product,
+  MatrixResultType,
 } from '~/models';
 import {
   RateUtility,
@@ -289,7 +290,7 @@ export const getNormalizedSteps = createSelector(
   }
 );
 
-export const getNormalizedStepsWithSimplex = createSelector(
+export const getMatrixResult = createSelector(
   getNormalizedSteps,
   Items.getItemSettings,
   Settings.getDisabledRecipes,
@@ -303,18 +304,18 @@ export const getNormalizedStepsWithSimplex = createSelector(
           disabledRecipes,
           data
         )
-      : steps
+      : { steps, result: MatrixResultType.Skipped }
 );
 
 export const getNormalizedStepsWithBelts = createSelector(
-  getNormalizedStepsWithSimplex,
+  getMatrixResult,
   Items.getItemSettings,
   Recipes.getRecipeSettings,
   Settings.getBeltSpeed,
   Recipes.getAdjustedDataset,
-  (steps, itemSettings, recipeSettings, beltSpeed, data) =>
+  (result, itemSettings, recipeSettings, beltSpeed, data) =>
     RateUtility.calculateBelts(
-      RateUtility.copy(steps),
+      RateUtility.copy(result.steps),
       itemSettings,
       recipeSettings,
       beltSpeed,
