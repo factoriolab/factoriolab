@@ -381,7 +381,7 @@ export class SimplexUtility {
     }
     // Add recipe columns, input columns, and cost
     O.push(
-      ...new Array(recipes.length + itemIds.length + 1).fill(Rational.zero)
+      ...new Array(recipes.length + state.inputs.length + 1).fill(Rational.zero)
     );
     A.push(O);
 
@@ -405,7 +405,7 @@ export class SimplexUtility {
       }
 
       // Add input columns
-      R.push(...new Array(itemIds.length).fill(Rational.zero));
+      R.push(...new Array(state.inputs.length).fill(Rational.zero));
 
       // Cost
       if (recipe.id === ItemId.Water) {
@@ -444,7 +444,7 @@ export class SimplexUtility {
         R.push(itemId === other ? Rational.one : Rational.zero);
       }
       R.push(...new Array(recipes.length).fill(Rational.zero));
-      for (const other of itemIds) {
+      for (const other of state.inputs) {
         R.push(itemId === other ? Rational.one : Rational.zero);
       }
       if (state.itemIds.indexOf(itemId) === -1) {
@@ -576,10 +576,10 @@ export class SimplexUtility {
     }
 
     // Parse inputs
-    for (let i = 0; i < itemIds.length; i++) {
+    for (let i = 0; i < state.inputs.length; i++) {
       const c = i + itemIds.length + recipeIds.length + 1;
       if (O[c].gt(Rational.zero)) {
-        inputs[itemIds[i]] = O[c];
+        inputs[state.inputs[i]] = O[c];
       }
     }
 
