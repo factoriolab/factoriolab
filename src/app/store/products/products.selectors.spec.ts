@@ -1,5 +1,11 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import { DisplayRate, RateType, Rational, RationalProduct } from '~/models';
+import {
+  DisplayRate,
+  MatrixResultType,
+  RateType,
+  Rational,
+  RationalProduct,
+} from '~/models';
 import {
   RateUtility,
   FlowUtility,
@@ -519,28 +525,20 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getNormalizedStepsWithSimplex', () => {
+  describe('getMatrixResult', () => {
     it('should handle empty/null values', () => {
-      spyOn(SimplexUtility, 'solve').and.returnValue([]);
-      const result = Selectors.getNormalizedStepsWithSimplex.projector(
-        [],
-        {},
-        [],
-        {}
-      );
+      spyOn(SimplexUtility, 'solve');
+      const result = Selectors.getMatrixResult.projector([], {}, [], {}, null);
       expect(SimplexUtility.solve).not.toHaveBeenCalled();
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should calculate rates using utility method', () => {
-      spyOn(SimplexUtility, 'solve').and.returnValue([]);
-      Selectors.getNormalizedStepsWithSimplex.projector(
-        [Mocks.Step1],
-        {},
-        [],
-        {},
-        true
-      );
+      spyOn(SimplexUtility, 'solve').and.returnValue({
+        steps: [],
+        result: MatrixResultType.Skipped,
+      });
+      Selectors.getMatrixResult.projector([Mocks.Step1], {}, [], {}, true);
       expect(SimplexUtility.solve).toHaveBeenCalled();
     });
   });

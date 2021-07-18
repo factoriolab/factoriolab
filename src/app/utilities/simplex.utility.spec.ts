@@ -1,5 +1,5 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { Rational, RationalRecipe, Step } from '~/models';
+import { MatrixResultType, Rational, RationalRecipe, Step } from '~/models';
 import { RateUtility } from './rate.utility';
 import {
   SimplexUtility,
@@ -80,14 +80,18 @@ describe('SimplexUtility', () => {
 
   describe('solve', () => {
     it('should handle empty list of steps', () => {
-      expect(SimplexUtility.solve([], null, null, null)).toEqual([]);
+      expect(SimplexUtility.solve([], null, null, null)).toEqual({
+        steps: [],
+        result: MatrixResultType.Skipped,
+      });
     });
 
     it('should handle fully solved steps', () => {
       spyOn(SimplexUtility, 'getState').and.returnValue(null);
-      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual(
-        Mocks.Steps
-      );
+      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual({
+        steps: Mocks.Steps,
+        result: MatrixResultType.Solved,
+      });
     });
 
     it('should handle failure of simplex method', () => {
@@ -95,9 +99,10 @@ describe('SimplexUtility', () => {
       spyOn(SimplexUtility, 'getSolution').and.returnValue(null);
       spyOn(console, 'error');
       spyOn(window, 'alert');
-      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual(
-        Mocks.Steps
-      );
+      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual({
+        steps: Mocks.Steps,
+        result: MatrixResultType.Failed,
+      });
       expect(console.error).toHaveBeenCalled();
       expect(window.alert).toHaveBeenCalled();
     });
@@ -107,9 +112,10 @@ describe('SimplexUtility', () => {
       spyOn(SimplexUtility, 'getSolution').and.returnValue(undefined);
       spyOn(console, 'error');
       spyOn(window, 'alert');
-      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual(
-        Mocks.Steps
-      );
+      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual({
+        steps: Mocks.Steps,
+        result: MatrixResultType.Cancelled,
+      });
       expect(console.error).not.toHaveBeenCalled();
       expect(window.alert).not.toHaveBeenCalled();
     });
@@ -118,9 +124,10 @@ describe('SimplexUtility', () => {
       spyOn(SimplexUtility, 'getState').and.returnValue(true as any);
       spyOn(SimplexUtility, 'getSolution').and.returnValue(true as any);
       spyOn(SimplexUtility, 'updateSteps');
-      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual(
-        Mocks.Steps
-      );
+      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual({
+        steps: Mocks.Steps,
+        result: MatrixResultType.Solved,
+      });
       expect(SimplexUtility.updateSteps).toHaveBeenCalledWith(
         Mocks.Steps,
         true as any,
@@ -139,7 +146,7 @@ describe('SimplexUtility', () => {
         [],
         Mocks.AdjustedData
       );
-      const hocStep = result.find(
+      const hocStep = result.steps.find(
         (s) => s.recipeId === RecipeId.HeavyOilCracking
       );
       expect(hocStep.factories.gt(Rational.zero)).toBeTrue();
@@ -373,7 +380,11 @@ describe('SimplexUtility', () => {
   describe('getSolution', () => {
     it('should handle no solution found by simplex', () => {
       spyOn(SimplexUtility, 'canonical').and.returnValue('A' as any);
-      spyOn(SimplexUtility, 'simplex').and.returnValue(false);
+      spyOn(SimplexUtility, 'simplex').and.returnValue([
+        MatrixResultType.Failed,
+        0,
+        0,
+      ]);
       spyOn(SimplexUtility, 'parseSolution');
       const state = getState();
       const result = SimplexUtility.getSolution(state);
@@ -630,12 +641,12 @@ describe('SimplexUtility', () => {
         Rational.zero,
         Rational.zero,
       ];
-      const result = SimplexUtility.parseSolution([O], state);
-      expect(result).toEqual({
-        surplus: { [ItemId.IronOre]: Rational.one },
-        inputs: { [ItemId.Coal]: Rational.one },
-        recipes: { [RecipeId.IronOre]: Rational.two },
-      });
+      const result = SimplexUtility.parseSolution(O, state);
+      expect(result).toEqual([
+        { [ItemId.IronOre]: Rational.one },
+        { [RecipeId.IronOre]: Rational.two },
+        { [ItemId.Coal]: Rational.one },
+      ]);
     });
   });
 
@@ -652,7 +663,7 @@ describe('SimplexUtility', () => {
       state.recipes[ItemId.Wood] = { id: null } as any;
       state.recipes[RecipeId.IronOre] =
         Mocks.AdjustedData.recipeR[RecipeId.IronOre];
-      const solution = {
+      const solution: any = {
         surplus: { [ItemId.IronOre]: Rational.one },
         inputs: { [ItemId.Wood]: Rational.one },
         recipes: { [RecipeId.IronOre]: Rational.two },
@@ -671,7 +682,7 @@ describe('SimplexUtility', () => {
         itemId: ItemId.Coal,
         items: Rational.one,
       };
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: {},
         recipes: { [RecipeId.Coal]: Rational.two },
@@ -691,7 +702,7 @@ describe('SimplexUtility', () => {
         itemId: ItemId.Coal,
         items: Rational.one,
       };
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: { [ItemId.Coal]: Rational.two },
         recipes: {},
@@ -716,7 +727,7 @@ describe('SimplexUtility', () => {
         itemId: ItemId.Coal,
         items: Rational.one,
       };
-      const solution = {
+      const solution: any = {
         surplus: { [ItemId.Coal]: Rational.zero },
         inputs: { [ItemId.Coal]: Rational.zero },
         recipes: { [RecipeId.Coal]: Rational.zero },
@@ -733,7 +744,7 @@ describe('SimplexUtility', () => {
 
     it('should add a new step', () => {
       const steps: Step[] = [];
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: {},
         recipes: { [RecipeId.Coal]: Rational.two },
@@ -755,7 +766,7 @@ describe('SimplexUtility', () => {
         { itemId: ItemId.PetroleumGas, items: Rational.zero },
         { itemId: ItemId.Wood, items: Rational.zero },
       ];
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: { [ItemId.HeavyOil]: Rational.one },
         recipes: {},
@@ -776,7 +787,7 @@ describe('SimplexUtility', () => {
         itemId: ItemId.Coal,
         items: Rational.zero,
       };
-      const solution = {
+      const solution: any = {
         surplus: { [ItemId.Coal]: Rational.from(3) },
         inputs: {},
         recipes: { [RecipeId.Coal]: Rational.from(4) },
@@ -813,7 +824,7 @@ describe('SimplexUtility', () => {
           items: Rational.zero,
         },
       ];
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: {},
         recipes: {
@@ -861,7 +872,7 @@ describe('SimplexUtility', () => {
         itemId: ItemId.Coal,
         items: Rational.one,
       };
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: {},
         recipes: { [RecipeId.Coal]: Rational.one },
@@ -887,7 +898,7 @@ describe('SimplexUtility', () => {
         recipeId: RecipeId.Coal,
         items: Rational.one,
       };
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: {},
         recipes: { [RecipeId.Coal]: Rational.one },
@@ -909,7 +920,7 @@ describe('SimplexUtility', () => {
     it('should add a new step', () => {
       spyOn(RateUtility, 'adjustPowerPollution');
       const steps: Step[] = [];
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: {},
         recipes: { [RecipeId.Coal]: Rational.one },
@@ -940,7 +951,7 @@ describe('SimplexUtility', () => {
         },
         { itemId: ItemId.Wood, items: Rational.zero },
       ];
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: {},
         recipes: { [RecipeId.AdvancedOilProcessing]: Rational.one },
@@ -975,7 +986,7 @@ describe('SimplexUtility', () => {
         itemId: ItemId.Coal,
         items: Rational.one,
       };
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: {},
         recipes: { [RecipeId.PlasticBar]: Rational.one },
