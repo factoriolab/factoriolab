@@ -796,27 +796,25 @@ export class SimplexUtility {
     }
 
     // Check ratio
-    let ratio: Rational;
+    let ratio: Rational = null;
     for (let i = 1; i < O.length; i++) {
       if (C[i].isZero()) {
-        if (O[i].isZero()) {
-          // Keep looking, both 0
-        } else {
+        if (!O[i].isZero()) {
           // No match
           return null;
         }
+        // Keep looking, both 0
       } else {
         if (O[i].isZero()) {
           // No match
           return null;
         } else if (ratio) {
           // Ratio must match
-          if (ratio.eq(O[i].div(C[i]))) {
-            // Keep going
-          } else {
+          if (!ratio.eq(O[i].div(C[i]))) {
             // No match
             return null;
           }
+          // Keep going
         } else {
           // Log the ratio
           ratio = O[i].div(C[i]);

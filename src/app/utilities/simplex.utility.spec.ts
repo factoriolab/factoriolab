@@ -91,6 +91,10 @@ describe('SimplexUtility', () => {
     inputIds: [],
   });
 
+  beforeEach(() => {
+    SimplexUtility.cache = {};
+  });
+
   describe('solve', () => {
     it('should handle empty list of steps', () => {
       expect(SimplexUtility.solve([], null, null, null)).toEqual({
@@ -487,6 +491,26 @@ describe('SimplexUtility', () => {
       );
       expect(result[0]).toEqual(MatrixResultType.Solved);
     });
+
+    it('should parse a solution from the cache', () => {
+      spyOn(SimplexUtility, 'canonical').and.returnValue([[Rational.one]]);
+      spyOn(SimplexUtility, 'hash').and.returnValue(['O' as any, 'H']);
+      spyOn(SimplexUtility, 'checkCache').and.returnValue({
+        O: [Rational.one],
+        R: [Rational.two],
+        pivots: 2,
+        time: 20,
+      });
+      spyOn(SimplexUtility, 'parseSolution').and.returnValue([{}, {}, {}]);
+      const state = getState();
+      const result = SimplexUtility.getSolution(state);
+      expect(SimplexUtility.canonical).toHaveBeenCalledWith(state);
+      expect(SimplexUtility.parseSolution).toHaveBeenCalledWith(
+        [Rational.two],
+        state
+      );
+      expect(result[0]).toEqual(MatrixResultType.Cached);
+    });
   });
 
   describe('canonical', () => {
@@ -647,6 +671,14 @@ describe('SimplexUtility', () => {
       expect(result[0]).toEqual(MatrixResultType.Cancelled);
       expect(result[1]).toEqual(1);
     });
+
+    it('should quit one timeout with error = false', () => {
+      spyOn(window, 'confirm').and.returnValue(false);
+      spyOn(Date, 'now').and.returnValues(0, 1001);
+      const result = SimplexUtility.simplex(getTableau(), false);
+      expect(result[0]).toEqual(MatrixResultType.Cancelled);
+      expect(result[1]).toEqual(1);
+    });
   });
 
   describe('pivotCol', () => {
@@ -690,19 +722,22 @@ describe('SimplexUtility', () => {
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
       state.recipes[RecipeId.IronOre] =
         Mocks.AdjustedData.recipeR[RecipeId.IronOre];
+      state.inputs = [ItemId.Coal, ItemId.IronOre];
       const O = [
         Rational.one,
         Rational.zero,
         Rational.one,
         Rational.zero,
         Rational.two,
+        Rational.one,
+        Rational.zero,
         Rational.zero,
       ];
       const result = SimplexUtility.parseSolution(O, state);
       expect(result).toEqual([
         { [ItemId.IronOre]: Rational.one },
         { [RecipeId.IronOre]: Rational.two },
-        {},
+        { [ItemId.Coal]: Rational.one },
       ]);
     });
   });
@@ -1057,6 +1092,118 @@ describe('SimplexUtility', () => {
         RecipeId.PlasticBar,
         Rational.one
       );
+    });
+  });
+
+  describe('hash', () => {
+    it('should generate a hash of the tableau and objective', () => {
+      const result = SimplexUtility.hash([
+        [Rational.one],
+        [Rational.one, Rational.two],
+      ]);
+      expect(result[0]).toEqual([Rational.one]);
+      expect(result[1]).toEqual('1,2');
+    });
+  });
+
+  describe('cacheResult', () => {
+    it('should create a new cache entry', () => {
+      SimplexUtility.cacheResult([Rational.one], 'H', [Rational.two], 2, 20);
+      expect(SimplexUtility.cache).toEqual({
+        H: [{ O: [Rational.one], R: [Rational.two], pivots: 2, time: 20 }],
+      });
+    });
+
+    it('should add to an existing cache entry', () => {
+      SimplexUtility.cache['H'] = ['old' as any];
+      SimplexUtility.cacheResult([Rational.one], 'H', [Rational.two], 2, 20);
+      expect(SimplexUtility.cache).toEqual({
+        H: [
+          'old' as any,
+          { O: [Rational.one], R: [Rational.two], pivots: 2, time: 20 },
+        ],
+      });
+    });
+  });
+
+  describe('checkCache', () => {
+    it('should skip if no cache matches H', () => {
+      expect(SimplexUtility.checkCache([Rational.one], 'H')).toBeNull();
+    });
+
+    it('should skip if ratio is null', () => {
+      spyOn(SimplexUtility, 'objectiveRatio').and.returnValue(null);
+      SimplexUtility.cache['H'] = ['cache' as any];
+      expect(SimplexUtility.checkCache([Rational.one], 'H')).toBeNull();
+    });
+
+    it('should return cache entry if ratio is one', () => {
+      spyOn(SimplexUtility, 'objectiveRatio').and.returnValue(Rational.one);
+      SimplexUtility.cache['H'] = ['cache' as any];
+      expect(SimplexUtility.checkCache([Rational.one], 'H')).toEqual(
+        'cache' as any
+      );
+    });
+
+    it('should adjust cache entry based on ratio', () => {
+      spyOn(SimplexUtility, 'objectiveRatio').and.returnValue(Rational.two);
+      SimplexUtility.cache['H'] = [
+        { O: [Rational.one], R: [Rational.one], pivots: 2, time: 20 },
+      ];
+      expect(SimplexUtility.checkCache([Rational.one], 'H')).toEqual({
+        O: [Rational.one],
+        R: [Rational.two],
+        pivots: 2,
+        time: 20,
+      });
+    });
+  });
+
+  describe('objectiveRatio', () => {
+    it('should check length first', () => {
+      expect(SimplexUtility.objectiveRatio([], [Rational.one])).toBeNull();
+    });
+
+    it('should handle all zeroes', () => {
+      expect(
+        SimplexUtility.objectiveRatio(
+          [Rational.one, Rational.zero],
+          [Rational.one, Rational.zero]
+        )
+      ).toBeNull();
+    });
+
+    it('should handle zero/nonzero mismatches', () => {
+      expect(
+        SimplexUtility.objectiveRatio(
+          [Rational.one, Rational.one],
+          [Rational.one, Rational.zero]
+        )
+      ).toBeNull();
+      expect(
+        SimplexUtility.objectiveRatio(
+          [Rational.one, Rational.zero],
+          [Rational.one, Rational.one]
+        )
+      ).toBeNull();
+    });
+
+    it('should handle ratio mismatch', () => {
+      expect(
+        SimplexUtility.objectiveRatio(
+          [Rational.one, Rational.one, Rational.one],
+          [Rational.one, Rational.one, Rational.two]
+        )
+      ).toBeNull();
+    });
+
+    it('should handle ratio match', () => {
+      expect(
+        SimplexUtility.objectiveRatio(
+          [Rational.one, Rational.one, Rational.one],
+          [Rational.one, Rational.two, Rational.two]
+        )
+      ).toEqual(Rational.from(1, 2));
     });
   });
 });
