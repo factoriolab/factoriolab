@@ -4,6 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
+import { environment } from 'src/environments';
 import {
   Dataset,
   ItemId,
@@ -12,10 +13,15 @@ import {
   TITLE_DSP,
   TITLE_LAB,
   APP,
+  MatrixResult,
+  MatrixResultType,
 } from './models';
 import { ErrorService, RouterService, StateService } from './services';
 import { State } from './store';
-import { getProducts } from './store/products';
+import {
+  getProducts,
+  getMatrixResult as getSimplexResult,
+} from './store/products';
 import { getDataset, getDatasets, getIsDsp } from './store/settings';
 
 @Component({
@@ -45,8 +51,10 @@ export class AppComponent implements OnInit {
   datasets$: Observable<Mod[]>;
   data$: Observable<Dataset>;
   products$: Observable<Product[]>;
+  result$: Observable<MatrixResult>;
 
   ItemId = ItemId;
+  MatrixResultType = MatrixResultType;
   TITLE_LAB = TITLE_LAB;
   TITLE_DSP = TITLE_DSP;
 
@@ -55,6 +63,7 @@ export class AppComponent implements OnInit {
   poll = 'https://linkto.run/p/0UD8IV6X';
   pollKey = 'poll0';
   showPoll = false;
+  version = `${APP} ${environment.version}`;
 
   get lsHidePoll(): boolean {
     return !!localStorage.getItem(this.pollKey);
@@ -76,6 +85,7 @@ export class AppComponent implements OnInit {
     this.datasets$ = this.store.select(getDatasets);
     this.data$ = this.store.select(getDataset);
     this.products$ = this.store.select(getProducts);
+    this.result$ = this.store.select(getSimplexResult);
     this.store.select(getIsDsp).subscribe((dsp) => {
       this.title = dsp ? TITLE_DSP : TITLE_LAB;
       this.titleService.setTitle(`${APP} | ${this.title}`);
