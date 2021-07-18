@@ -71,12 +71,40 @@
           >
             <span>Flow</span>
           </li>
+          <li
+            routerLink="/matrix"
+            routerLinkActive="active"
+            queryParamsHandling="preserve"
+          >
+            <span>Matrix</span>
+          </li>
           <li *ngIf="!showSettings" (click)="showSettings = true">
             <span>Settings</span>
           </li>
         </ul>
         <div class="panel">
           <router-outlet></router-outlet>
+        </div>
+      </div>
+      <div>
+        <div class="panel dark flex tween">
+          <div *ngIf="result$ | async as result">
+            <span
+              *ngIf="
+                result.result === MatrixResultType.Solved ||
+                  result.result === MatrixResultType.Cached;
+                else notSolved
+              "
+              >Simplex {{ result.result }}: {{ result.time }}ms,
+              {{ result.pivots }} pivots<br />
+              Size: {{ result.A.length }} x {{ result.A[0].length }}, Cost:
+              {{ result.O[result.O.length - 1].toPrecision(2) }}
+            </span>
+            <ng-template #notSolved>
+              <span>Simplex {{ result.result }}</span>
+            </ng-template>
+          </div>
+          <span>{{ version }}</span>
         </div>
       </div>
     </div>

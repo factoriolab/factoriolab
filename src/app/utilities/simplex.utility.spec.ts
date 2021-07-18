@@ -1,5 +1,5 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { Rational, RationalRecipe, Step } from '~/models';
+import { MatrixResultType, Rational, RationalRecipe, Step } from '~/models';
 import { RateUtility } from './rate.utility';
 import {
   SimplexUtility,
@@ -7,6 +7,7 @@ import {
   COST_RECIPE,
   COST_WATER,
   COST_MANUAL,
+  MatrixSolution,
 } from './simplex.utility';
 
 describe('SimplexUtility', () => {
@@ -77,53 +78,107 @@ describe('SimplexUtility', () => {
       Rational.from(5),
     ],
   ];
+  const getResult = (): MatrixSolution => ({
+    surplus: {},
+    recipes: {},
+    inputs: {},
+    pivots: 1,
+    time: 2,
+    A: [],
+    O: [],
+    itemIds: [],
+    recipeIds: [],
+    inputIds: [],
+  });
+
+  beforeEach(() => {
+    SimplexUtility.cache = {};
+  });
 
   describe('solve', () => {
     it('should handle empty list of steps', () => {
-      expect(SimplexUtility.solve([], null, null, null)).toEqual([]);
+      expect(SimplexUtility.solve([], null, null, null)).toEqual({
+        steps: [],
+        result: MatrixResultType.Skipped,
+      });
     });
 
     it('should handle fully solved steps', () => {
       spyOn(SimplexUtility, 'getState').and.returnValue(null);
-      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual(
-        Mocks.Steps
-      );
+      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual({
+        steps: Mocks.Steps,
+        result: MatrixResultType.Skipped,
+      });
     });
 
     it('should handle failure of simplex method', () => {
       spyOn(SimplexUtility, 'getState').and.returnValue(true as any);
-      spyOn(SimplexUtility, 'getSolution').and.returnValue(null);
+      spyOn(SimplexUtility, 'getSolution').and.returnValue([
+        MatrixResultType.Failed,
+        getResult(),
+      ]);
       spyOn(console, 'error');
       spyOn(window, 'alert');
-      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual(
-        Mocks.Steps
-      );
+      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual({
+        steps: Mocks.Steps,
+        result: MatrixResultType.Failed,
+        pivots: 1,
+        time: 2,
+        A: [],
+        O: [],
+        items: [],
+        recipes: [],
+        inputs: [],
+      });
       expect(console.error).toHaveBeenCalled();
       expect(window.alert).toHaveBeenCalled();
     });
 
     it('should handle timeout and quit in simplex method', () => {
       spyOn(SimplexUtility, 'getState').and.returnValue(true as any);
-      spyOn(SimplexUtility, 'getSolution').and.returnValue(undefined);
+      spyOn(SimplexUtility, 'getSolution').and.returnValue([
+        MatrixResultType.Cancelled,
+        getResult(),
+      ]);
       spyOn(console, 'error');
       spyOn(window, 'alert');
-      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual(
-        Mocks.Steps
-      );
+      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual({
+        steps: Mocks.Steps,
+        result: MatrixResultType.Cancelled,
+        pivots: 1,
+        time: 2,
+        A: [],
+        O: [],
+        items: [],
+        recipes: [],
+        inputs: [],
+      });
       expect(console.error).not.toHaveBeenCalled();
       expect(window.alert).not.toHaveBeenCalled();
     });
 
     it('should update steps with solution from simplex method', () => {
       spyOn(SimplexUtility, 'getState').and.returnValue(true as any);
-      spyOn(SimplexUtility, 'getSolution').and.returnValue(true as any);
+      const result = getResult();
+      spyOn(SimplexUtility, 'getSolution').and.returnValue([
+        MatrixResultType.Solved,
+        result,
+      ]);
       spyOn(SimplexUtility, 'updateSteps');
-      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual(
-        Mocks.Steps
-      );
+      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual({
+        steps: Mocks.Steps,
+        result: MatrixResultType.Solved,
+        pivots: 1,
+        time: 2,
+        A: [],
+        O: [],
+        items: [],
+        recipes: [],
+        inputs: [],
+      });
       expect(SimplexUtility.updateSteps).toHaveBeenCalledWith(
         Mocks.Steps,
-        true as any,
+        result,
         true as any
       );
     });
@@ -139,7 +194,7 @@ describe('SimplexUtility', () => {
         [],
         Mocks.AdjustedData
       );
-      const hocStep = result.find(
+      const hocStep = result.steps.find(
         (s) => s.recipeId === RecipeId.HeavyOilCracking
       );
       expect(hocStep.factories.gt(Rational.zero)).toBeTrue();
@@ -372,42 +427,89 @@ describe('SimplexUtility', () => {
 
   describe('getSolution', () => {
     it('should handle no solution found by simplex', () => {
-      spyOn(SimplexUtility, 'canonical').and.returnValue('A' as any);
-      spyOn(SimplexUtility, 'simplex').and.returnValue(false);
+      spyOn(SimplexUtility, 'canonical').and.returnValue([[Rational.one]]);
+      spyOn(SimplexUtility, 'hash').and.returnValue(['O' as any, 'H']);
+      spyOn(SimplexUtility, 'checkCache').and.returnValue(null);
+      spyOn(SimplexUtility, 'simplex').and.returnValue([
+        MatrixResultType.Failed,
+        0,
+        0,
+      ]);
       spyOn(SimplexUtility, 'parseSolution');
       const state = getState();
       const result = SimplexUtility.getSolution(state);
       expect(SimplexUtility.canonical).toHaveBeenCalledWith(state);
-      expect(SimplexUtility.simplex).toHaveBeenCalledWith('A' as any, true);
+      expect(SimplexUtility.simplex).toHaveBeenCalledWith(
+        [[Rational.one]],
+        true
+      );
       expect(SimplexUtility.parseSolution).not.toHaveBeenCalled();
-      expect(result).toBeNull();
+      expect(result[0]).toEqual(MatrixResultType.Failed);
     });
 
     it('should handle timeout and quit in simplex', () => {
-      spyOn(SimplexUtility, 'canonical').and.returnValue('A' as any);
-      spyOn(SimplexUtility, 'simplex').and.returnValue(null);
+      spyOn(SimplexUtility, 'canonical').and.returnValue([[Rational.one]]);
+      spyOn(SimplexUtility, 'hash').and.returnValue(['O' as any, 'H']);
+      spyOn(SimplexUtility, 'checkCache').and.returnValue(null);
+      spyOn(SimplexUtility, 'simplex').and.returnValue([
+        MatrixResultType.Cancelled,
+        0,
+        0,
+      ]);
       spyOn(SimplexUtility, 'parseSolution');
       const state = getState();
       const result = SimplexUtility.getSolution(state);
       expect(SimplexUtility.canonical).toHaveBeenCalledWith(state);
-      expect(SimplexUtility.simplex).toHaveBeenCalledWith('A' as any, true);
+      expect(SimplexUtility.simplex).toHaveBeenCalledWith(
+        [[Rational.one]],
+        true
+      );
       expect(SimplexUtility.parseSolution).not.toHaveBeenCalled();
-      expect(result).toBeUndefined();
+      expect(result[0]).toEqual(MatrixResultType.Cancelled);
     });
 
     it('should parse the solution found by simplex', () => {
-      spyOn(SimplexUtility, 'canonical').and.returnValue('A' as any);
-      spyOn(SimplexUtility, 'simplex').and.returnValue('B' as any);
-      spyOn(SimplexUtility, 'parseSolution').and.returnValue('C' as any);
+      spyOn(SimplexUtility, 'canonical').and.returnValue([[Rational.one]]);
+      spyOn(SimplexUtility, 'hash').and.returnValue(['O' as any, 'H']);
+      spyOn(SimplexUtility, 'checkCache').and.returnValue(null);
+      spyOn(SimplexUtility, 'simplex').and.returnValue([
+        MatrixResultType.Solved,
+        0,
+        0,
+      ]);
+      spyOn(SimplexUtility, 'parseSolution').and.returnValue([{}, {}, {}]);
       const state = getState();
       const result = SimplexUtility.getSolution(state);
       expect(SimplexUtility.canonical).toHaveBeenCalledWith(state);
-      expect(SimplexUtility.simplex).toHaveBeenCalledWith('A' as any, true);
+      expect(SimplexUtility.simplex).toHaveBeenCalledWith(
+        [[Rational.one]],
+        true
+      );
       expect(SimplexUtility.parseSolution).toHaveBeenCalledWith(
-        'A' as any,
+        [Rational.one],
         state
       );
-      expect(result).toEqual('C' as any);
+      expect(result[0]).toEqual(MatrixResultType.Solved);
+    });
+
+    it('should parse a solution from the cache', () => {
+      spyOn(SimplexUtility, 'canonical').and.returnValue([[Rational.one]]);
+      spyOn(SimplexUtility, 'hash').and.returnValue(['O' as any, 'H']);
+      spyOn(SimplexUtility, 'checkCache').and.returnValue({
+        O: [Rational.one],
+        R: [Rational.two],
+        pivots: 2,
+        time: 20,
+      });
+      spyOn(SimplexUtility, 'parseSolution').and.returnValue([{}, {}, {}]);
+      const state = getState();
+      const result = SimplexUtility.getSolution(state);
+      expect(SimplexUtility.canonical).toHaveBeenCalledWith(state);
+      expect(SimplexUtility.parseSolution).toHaveBeenCalledWith(
+        [Rational.two],
+        state
+      );
+      expect(result[0]).toEqual(MatrixResultType.Cached);
     });
   });
 
@@ -447,8 +549,6 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
-          Rational.zero,
-          Rational.zero,
         ],
         [
           Rational.zero,
@@ -457,8 +557,6 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.one,
-          Rational.zero,
-          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -478,8 +576,6 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
-          Rational.zero,
-          Rational.zero,
           COST_RECIPE,
         ],
         [
@@ -491,8 +587,6 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.one,
-          Rational.zero,
-          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -510,8 +604,6 @@ describe('SimplexUtility', () => {
           Rational.one,
           Rational.zero,
           Rational.zero,
-          Rational.zero,
-          Rational.zero,
           Rational.from(13000, 1),
         ],
         [
@@ -519,8 +611,6 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.one,
-          Rational.zero,
-          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -541,8 +631,6 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
-          Rational.zero,
-          Rational.zero,
           Rational.one,
           Rational.zero,
         ],
@@ -555,12 +643,15 @@ describe('SimplexUtility', () => {
       const A = getTableau();
       const result = SimplexUtility.simplex(A);
       expect(A).toEqual(getSolution());
-      expect(result).toBeTrue();
+      expect(result[0]).toEqual(MatrixResultType.Solved);
+      expect(result[1]).toEqual(2);
     });
 
     it('should handle a failed pivot', () => {
       spyOn(SimplexUtility, 'pivotCol').and.returnValue(false);
-      expect(SimplexUtility.simplex(getTableau())).toBeFalse();
+      const result = SimplexUtility.simplex(getTableau());
+      expect(result[0]).toEqual(MatrixResultType.Failed);
+      expect(result[1]).toEqual(1);
     });
 
     it('should prompt on timeout and continue', () => {
@@ -569,13 +660,24 @@ describe('SimplexUtility', () => {
       const A = getTableau();
       const result = SimplexUtility.simplex(A);
       expect(A).toEqual(getSolution());
-      expect(result).toBeTrue();
+      expect(result[0]).toEqual(MatrixResultType.Solved);
+      expect(result[1]).toEqual(2);
     });
 
     it('should prompt on timeout and quit', () => {
       spyOn(window, 'confirm').and.returnValue(false);
       spyOn(Date, 'now').and.returnValues(0, 5001);
-      expect(SimplexUtility.simplex(getTableau())).toBeNull();
+      const result = SimplexUtility.simplex(getTableau());
+      expect(result[0]).toEqual(MatrixResultType.Cancelled);
+      expect(result[1]).toEqual(1);
+    });
+
+    it('should quit one timeout with error = false', () => {
+      spyOn(window, 'confirm').and.returnValue(false);
+      spyOn(Date, 'now').and.returnValues(0, 1001);
+      const result = SimplexUtility.simplex(getTableau(), false);
+      expect(result[0]).toEqual(MatrixResultType.Cancelled);
+      expect(result[1]).toEqual(1);
     });
   });
 
@@ -620,6 +722,7 @@ describe('SimplexUtility', () => {
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
       state.recipes[RecipeId.IronOre] =
         Mocks.AdjustedData.recipeR[RecipeId.IronOre];
+      state.inputs = [ItemId.Coal, ItemId.IronOre];
       const O = [
         Rational.one,
         Rational.zero,
@@ -630,12 +733,12 @@ describe('SimplexUtility', () => {
         Rational.zero,
         Rational.zero,
       ];
-      const result = SimplexUtility.parseSolution([O], state);
-      expect(result).toEqual({
-        surplus: { [ItemId.IronOre]: Rational.one },
-        inputs: { [ItemId.Coal]: Rational.one },
-        recipes: { [RecipeId.IronOre]: Rational.two },
-      });
+      const result = SimplexUtility.parseSolution(O, state);
+      expect(result).toEqual([
+        { [ItemId.IronOre]: Rational.one },
+        { [RecipeId.IronOre]: Rational.two },
+        { [ItemId.Coal]: Rational.one },
+      ]);
     });
   });
 
@@ -652,7 +755,7 @@ describe('SimplexUtility', () => {
       state.recipes[ItemId.Wood] = { id: null } as any;
       state.recipes[RecipeId.IronOre] =
         Mocks.AdjustedData.recipeR[RecipeId.IronOre];
-      const solution = {
+      const solution: any = {
         surplus: { [ItemId.IronOre]: Rational.one },
         inputs: { [ItemId.Wood]: Rational.one },
         recipes: { [RecipeId.IronOre]: Rational.two },
@@ -671,7 +774,7 @@ describe('SimplexUtility', () => {
         itemId: ItemId.Coal,
         items: Rational.one,
       };
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: {},
         recipes: { [RecipeId.Coal]: Rational.two },
@@ -691,7 +794,7 @@ describe('SimplexUtility', () => {
         itemId: ItemId.Coal,
         items: Rational.one,
       };
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: { [ItemId.Coal]: Rational.two },
         recipes: {},
@@ -716,7 +819,7 @@ describe('SimplexUtility', () => {
         itemId: ItemId.Coal,
         items: Rational.one,
       };
-      const solution = {
+      const solution: any = {
         surplus: { [ItemId.Coal]: Rational.zero },
         inputs: { [ItemId.Coal]: Rational.zero },
         recipes: { [RecipeId.Coal]: Rational.zero },
@@ -733,7 +836,7 @@ describe('SimplexUtility', () => {
 
     it('should add a new step', () => {
       const steps: Step[] = [];
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: {},
         recipes: { [RecipeId.Coal]: Rational.two },
@@ -755,7 +858,7 @@ describe('SimplexUtility', () => {
         { itemId: ItemId.PetroleumGas, items: Rational.zero },
         { itemId: ItemId.Wood, items: Rational.zero },
       ];
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: { [ItemId.HeavyOil]: Rational.one },
         recipes: {},
@@ -776,7 +879,7 @@ describe('SimplexUtility', () => {
         itemId: ItemId.Coal,
         items: Rational.zero,
       };
-      const solution = {
+      const solution: any = {
         surplus: { [ItemId.Coal]: Rational.from(3) },
         inputs: {},
         recipes: { [RecipeId.Coal]: Rational.from(4) },
@@ -813,7 +916,7 @@ describe('SimplexUtility', () => {
           items: Rational.zero,
         },
       ];
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: {},
         recipes: {
@@ -861,7 +964,7 @@ describe('SimplexUtility', () => {
         itemId: ItemId.Coal,
         items: Rational.one,
       };
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: {},
         recipes: { [RecipeId.Coal]: Rational.one },
@@ -887,7 +990,7 @@ describe('SimplexUtility', () => {
         recipeId: RecipeId.Coal,
         items: Rational.one,
       };
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: {},
         recipes: { [RecipeId.Coal]: Rational.one },
@@ -909,7 +1012,7 @@ describe('SimplexUtility', () => {
     it('should add a new step', () => {
       spyOn(RateUtility, 'adjustPowerPollution');
       const steps: Step[] = [];
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: {},
         recipes: { [RecipeId.Coal]: Rational.one },
@@ -940,7 +1043,7 @@ describe('SimplexUtility', () => {
         },
         { itemId: ItemId.Wood, items: Rational.zero },
       ];
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: {},
         recipes: { [RecipeId.AdvancedOilProcessing]: Rational.one },
@@ -975,7 +1078,7 @@ describe('SimplexUtility', () => {
         itemId: ItemId.Coal,
         items: Rational.one,
       };
-      const solution = {
+      const solution: any = {
         surplus: {},
         inputs: {},
         recipes: { [RecipeId.PlasticBar]: Rational.one },
@@ -989,6 +1092,118 @@ describe('SimplexUtility', () => {
         RecipeId.PlasticBar,
         Rational.one
       );
+    });
+  });
+
+  describe('hash', () => {
+    it('should generate a hash of the tableau and objective', () => {
+      const result = SimplexUtility.hash([
+        [Rational.one],
+        [Rational.one, Rational.two],
+      ]);
+      expect(result[0]).toEqual([Rational.one]);
+      expect(result[1]).toEqual('1,2');
+    });
+  });
+
+  describe('cacheResult', () => {
+    it('should create a new cache entry', () => {
+      SimplexUtility.cacheResult([Rational.one], 'H', [Rational.two], 2, 20);
+      expect(SimplexUtility.cache).toEqual({
+        H: [{ O: [Rational.one], R: [Rational.two], pivots: 2, time: 20 }],
+      });
+    });
+
+    it('should add to an existing cache entry', () => {
+      SimplexUtility.cache['H'] = ['old' as any];
+      SimplexUtility.cacheResult([Rational.one], 'H', [Rational.two], 2, 20);
+      expect(SimplexUtility.cache).toEqual({
+        H: [
+          'old' as any,
+          { O: [Rational.one], R: [Rational.two], pivots: 2, time: 20 },
+        ],
+      });
+    });
+  });
+
+  describe('checkCache', () => {
+    it('should skip if no cache matches H', () => {
+      expect(SimplexUtility.checkCache([Rational.one], 'H')).toBeNull();
+    });
+
+    it('should skip if ratio is null', () => {
+      spyOn(SimplexUtility, 'objectiveRatio').and.returnValue(null);
+      SimplexUtility.cache['H'] = ['cache' as any];
+      expect(SimplexUtility.checkCache([Rational.one], 'H')).toBeNull();
+    });
+
+    it('should return cache entry if ratio is one', () => {
+      spyOn(SimplexUtility, 'objectiveRatio').and.returnValue(Rational.one);
+      SimplexUtility.cache['H'] = ['cache' as any];
+      expect(SimplexUtility.checkCache([Rational.one], 'H')).toEqual(
+        'cache' as any
+      );
+    });
+
+    it('should adjust cache entry based on ratio', () => {
+      spyOn(SimplexUtility, 'objectiveRatio').and.returnValue(Rational.two);
+      SimplexUtility.cache['H'] = [
+        { O: [Rational.one], R: [Rational.one], pivots: 2, time: 20 },
+      ];
+      expect(SimplexUtility.checkCache([Rational.one], 'H')).toEqual({
+        O: [Rational.one],
+        R: [Rational.two],
+        pivots: 2,
+        time: 20,
+      });
+    });
+  });
+
+  describe('objectiveRatio', () => {
+    it('should check length first', () => {
+      expect(SimplexUtility.objectiveRatio([], [Rational.one])).toBeNull();
+    });
+
+    it('should handle all zeroes', () => {
+      expect(
+        SimplexUtility.objectiveRatio(
+          [Rational.one, Rational.zero],
+          [Rational.one, Rational.zero]
+        )
+      ).toBeNull();
+    });
+
+    it('should handle zero/nonzero mismatches', () => {
+      expect(
+        SimplexUtility.objectiveRatio(
+          [Rational.one, Rational.one],
+          [Rational.one, Rational.zero]
+        )
+      ).toBeNull();
+      expect(
+        SimplexUtility.objectiveRatio(
+          [Rational.one, Rational.zero],
+          [Rational.one, Rational.one]
+        )
+      ).toBeNull();
+    });
+
+    it('should handle ratio mismatch', () => {
+      expect(
+        SimplexUtility.objectiveRatio(
+          [Rational.one, Rational.one, Rational.one],
+          [Rational.one, Rational.one, Rational.two]
+        )
+      ).toBeNull();
+    });
+
+    it('should handle ratio match', () => {
+      expect(
+        SimplexUtility.objectiveRatio(
+          [Rational.one, Rational.one, Rational.one],
+          [Rational.one, Rational.two, Rational.two]
+        )
+      ).toEqual(Rational.from(1, 2));
     });
   });
 });
