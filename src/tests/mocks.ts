@@ -19,6 +19,8 @@ import {
   Link,
   LinkValue,
   ModHash,
+  MatrixResult,
+  MatrixResultType,
 } from '~/models';
 import { initialDatasetsState } from '~/store/datasets';
 import { getFactorySettings, initialFactoriesState } from '~/store/factories';
@@ -244,4 +246,19 @@ export const Sankey: SankeyData = {
 export const SankeyCircular: SankeyData = {
   nodes: [node(0), node(1), node(2)],
   links: [link(0, 1), link(1, 2), link(2, 0)],
+};
+
+export const MatrixResultSolved: MatrixResult = {
+  steps: Steps,
+  result: MatrixResultType.Solved,
+  pivots: 9,
+  time: 20,
+  A: [
+    [Rational.one, Rational.one, Rational.zero, Rational.zero],
+    [Rational.zero, Rational.one, Rational.one, Rational.one],
+  ],
+  O: [Rational.one, Rational.one, Rational.one, Rational.one],
+  items: [ItemId.Wood],
+  recipes: [RecipeId.WoodenChest],
+  inputs: [],
 };

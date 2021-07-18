@@ -7,6 +7,7 @@ import {
   COST_RECIPE,
   COST_WATER,
   COST_MANUAL,
+  MatrixSolution,
 } from './simplex.utility';
 
 describe('SimplexUtility', () => {
@@ -77,6 +78,18 @@ describe('SimplexUtility', () => {
       Rational.from(5),
     ],
   ];
+  const getResult = (): MatrixSolution => ({
+    surplus: {},
+    recipes: {},
+    inputs: {},
+    pivots: 1,
+    time: 2,
+    A: [],
+    O: [],
+    itemIds: [],
+    recipeIds: [],
+    inputIds: [],
+  });
 
   describe('solve', () => {
     it('should handle empty list of steps', () => {
@@ -90,18 +103,28 @@ describe('SimplexUtility', () => {
       spyOn(SimplexUtility, 'getState').and.returnValue(null);
       expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual({
         steps: Mocks.Steps,
-        result: MatrixResultType.Solved,
+        result: MatrixResultType.Skipped,
       });
     });
 
     it('should handle failure of simplex method', () => {
       spyOn(SimplexUtility, 'getState').and.returnValue(true as any);
-      spyOn(SimplexUtility, 'getSolution').and.returnValue(null);
+      spyOn(SimplexUtility, 'getSolution').and.returnValue([
+        MatrixResultType.Failed,
+        getResult(),
+      ]);
       spyOn(console, 'error');
       spyOn(window, 'alert');
       expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual({
         steps: Mocks.Steps,
         result: MatrixResultType.Failed,
+        pivots: 1,
+        time: 2,
+        A: [],
+        O: [],
+        items: [],
+        recipes: [],
+        inputs: [],
       });
       expect(console.error).toHaveBeenCalled();
       expect(window.alert).toHaveBeenCalled();
@@ -109,12 +132,22 @@ describe('SimplexUtility', () => {
 
     it('should handle timeout and quit in simplex method', () => {
       spyOn(SimplexUtility, 'getState').and.returnValue(true as any);
-      spyOn(SimplexUtility, 'getSolution').and.returnValue(undefined);
+      spyOn(SimplexUtility, 'getSolution').and.returnValue([
+        MatrixResultType.Cancelled,
+        getResult(),
+      ]);
       spyOn(console, 'error');
       spyOn(window, 'alert');
       expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual({
         steps: Mocks.Steps,
         result: MatrixResultType.Cancelled,
+        pivots: 1,
+        time: 2,
+        A: [],
+        O: [],
+        items: [],
+        recipes: [],
+        inputs: [],
       });
       expect(console.error).not.toHaveBeenCalled();
       expect(window.alert).not.toHaveBeenCalled();
@@ -122,15 +155,26 @@ describe('SimplexUtility', () => {
 
     it('should update steps with solution from simplex method', () => {
       spyOn(SimplexUtility, 'getState').and.returnValue(true as any);
-      spyOn(SimplexUtility, 'getSolution').and.returnValue(true as any);
+      const result = getResult();
+      spyOn(SimplexUtility, 'getSolution').and.returnValue([
+        MatrixResultType.Solved,
+        result,
+      ]);
       spyOn(SimplexUtility, 'updateSteps');
       expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual({
         steps: Mocks.Steps,
         result: MatrixResultType.Solved,
+        pivots: 1,
+        time: 2,
+        A: [],
+        O: [],
+        items: [],
+        recipes: [],
+        inputs: [],
       });
       expect(SimplexUtility.updateSteps).toHaveBeenCalledWith(
         Mocks.Steps,
-        true as any,
+        result,
         true as any
       );
     });
@@ -379,7 +423,9 @@ describe('SimplexUtility', () => {
 
   describe('getSolution', () => {
     it('should handle no solution found by simplex', () => {
-      spyOn(SimplexUtility, 'canonical').and.returnValue('A' as any);
+      spyOn(SimplexUtility, 'canonical').and.returnValue([[Rational.one]]);
+      spyOn(SimplexUtility, 'hash').and.returnValue(['O' as any, 'H']);
+      spyOn(SimplexUtility, 'checkCache').and.returnValue(null);
       spyOn(SimplexUtility, 'simplex').and.returnValue([
         MatrixResultType.Failed,
         0,
@@ -389,36 +435,57 @@ describe('SimplexUtility', () => {
       const state = getState();
       const result = SimplexUtility.getSolution(state);
       expect(SimplexUtility.canonical).toHaveBeenCalledWith(state);
-      expect(SimplexUtility.simplex).toHaveBeenCalledWith('A' as any, true);
+      expect(SimplexUtility.simplex).toHaveBeenCalledWith(
+        [[Rational.one]],
+        true
+      );
       expect(SimplexUtility.parseSolution).not.toHaveBeenCalled();
-      expect(result).toBeNull();
+      expect(result[0]).toEqual(MatrixResultType.Failed);
     });
 
     it('should handle timeout and quit in simplex', () => {
-      spyOn(SimplexUtility, 'canonical').and.returnValue('A' as any);
-      spyOn(SimplexUtility, 'simplex').and.returnValue(null);
+      spyOn(SimplexUtility, 'canonical').and.returnValue([[Rational.one]]);
+      spyOn(SimplexUtility, 'hash').and.returnValue(['O' as any, 'H']);
+      spyOn(SimplexUtility, 'checkCache').and.returnValue(null);
+      spyOn(SimplexUtility, 'simplex').and.returnValue([
+        MatrixResultType.Cancelled,
+        0,
+        0,
+      ]);
       spyOn(SimplexUtility, 'parseSolution');
       const state = getState();
       const result = SimplexUtility.getSolution(state);
       expect(SimplexUtility.canonical).toHaveBeenCalledWith(state);
-      expect(SimplexUtility.simplex).toHaveBeenCalledWith('A' as any, true);
+      expect(SimplexUtility.simplex).toHaveBeenCalledWith(
+        [[Rational.one]],
+        true
+      );
       expect(SimplexUtility.parseSolution).not.toHaveBeenCalled();
-      expect(result).toBeUndefined();
+      expect(result[0]).toEqual(MatrixResultType.Cancelled);
     });
 
     it('should parse the solution found by simplex', () => {
-      spyOn(SimplexUtility, 'canonical').and.returnValue('A' as any);
-      spyOn(SimplexUtility, 'simplex').and.returnValue('B' as any);
-      spyOn(SimplexUtility, 'parseSolution').and.returnValue('C' as any);
+      spyOn(SimplexUtility, 'canonical').and.returnValue([[Rational.one]]);
+      spyOn(SimplexUtility, 'hash').and.returnValue(['O' as any, 'H']);
+      spyOn(SimplexUtility, 'checkCache').and.returnValue(null);
+      spyOn(SimplexUtility, 'simplex').and.returnValue([
+        MatrixResultType.Solved,
+        0,
+        0,
+      ]);
+      spyOn(SimplexUtility, 'parseSolution').and.returnValue([{}, {}, {}]);
       const state = getState();
       const result = SimplexUtility.getSolution(state);
       expect(SimplexUtility.canonical).toHaveBeenCalledWith(state);
-      expect(SimplexUtility.simplex).toHaveBeenCalledWith('A' as any, true);
+      expect(SimplexUtility.simplex).toHaveBeenCalledWith(
+        [[Rational.one]],
+        true
+      );
       expect(SimplexUtility.parseSolution).toHaveBeenCalledWith(
-        'A' as any,
+        [Rational.one],
         state
       );
-      expect(result).toEqual('C' as any);
+      expect(result[0]).toEqual(MatrixResultType.Solved);
     });
   });
 
@@ -458,8 +525,6 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
-          Rational.zero,
-          Rational.zero,
         ],
         [
           Rational.zero,
@@ -468,8 +533,6 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.one,
-          Rational.zero,
-          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -489,8 +552,6 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
-          Rational.zero,
-          Rational.zero,
           COST_RECIPE,
         ],
         [
@@ -502,8 +563,6 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.one,
-          Rational.zero,
-          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -521,8 +580,6 @@ describe('SimplexUtility', () => {
           Rational.one,
           Rational.zero,
           Rational.zero,
-          Rational.zero,
-          Rational.zero,
           Rational.from(13000, 1),
         ],
         [
@@ -530,8 +587,6 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.one,
-          Rational.zero,
-          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -552,8 +607,6 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
-          Rational.zero,
-          Rational.zero,
           Rational.one,
           Rational.zero,
         ],
@@ -566,12 +619,15 @@ describe('SimplexUtility', () => {
       const A = getTableau();
       const result = SimplexUtility.simplex(A);
       expect(A).toEqual(getSolution());
-      expect(result).toBeTrue();
+      expect(result[0]).toEqual(MatrixResultType.Solved);
+      expect(result[1]).toEqual(2);
     });
 
     it('should handle a failed pivot', () => {
       spyOn(SimplexUtility, 'pivotCol').and.returnValue(false);
-      expect(SimplexUtility.simplex(getTableau())).toBeFalse();
+      const result = SimplexUtility.simplex(getTableau());
+      expect(result[0]).toEqual(MatrixResultType.Failed);
+      expect(result[1]).toEqual(1);
     });
 
     it('should prompt on timeout and continue', () => {
@@ -580,13 +636,16 @@ describe('SimplexUtility', () => {
       const A = getTableau();
       const result = SimplexUtility.simplex(A);
       expect(A).toEqual(getSolution());
-      expect(result).toBeTrue();
+      expect(result[0]).toEqual(MatrixResultType.Solved);
+      expect(result[1]).toEqual(2);
     });
 
     it('should prompt on timeout and quit', () => {
       spyOn(window, 'confirm').and.returnValue(false);
       spyOn(Date, 'now').and.returnValues(0, 5001);
-      expect(SimplexUtility.simplex(getTableau())).toBeNull();
+      const result = SimplexUtility.simplex(getTableau());
+      expect(result[0]).toEqual(MatrixResultType.Cancelled);
+      expect(result[1]).toEqual(1);
     });
   });
 
@@ -637,15 +696,13 @@ describe('SimplexUtility', () => {
         Rational.one,
         Rational.zero,
         Rational.two,
-        Rational.one,
-        Rational.zero,
         Rational.zero,
       ];
       const result = SimplexUtility.parseSolution(O, state);
       expect(result).toEqual([
         { [ItemId.IronOre]: Rational.one },
         { [RecipeId.IronOre]: Rational.two },
-        { [ItemId.Coal]: Rational.one },
+        {},
       ]);
     });
   });

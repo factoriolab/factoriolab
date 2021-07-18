@@ -530,7 +530,7 @@ describe('Products Selectors', () => {
       spyOn(SimplexUtility, 'solve');
       const result = Selectors.getMatrixResult.projector([], {}, [], {}, null);
       expect(SimplexUtility.solve).not.toHaveBeenCalled();
-      expect(Object.keys(result).length).toEqual(0);
+      expect(result).toEqual({ steps: [], result: MatrixResultType.Skipped });
     });
 
     it('should calculate rates using utility method', () => {
@@ -546,7 +546,7 @@ describe('Products Selectors', () => {
   describe('getNormalizedStepsWithBelts', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getNormalizedStepsWithBelts.projector(
-        [],
+        { steps: [], result: MatrixResultType.Skipped },
         {},
         {},
         {}
@@ -556,7 +556,12 @@ describe('Products Selectors', () => {
 
     it('should calculate rates using utility method', () => {
       spyOn(RateUtility, 'calculateBelts');
-      Selectors.getNormalizedStepsWithBelts.projector([], {}, {}, {});
+      Selectors.getNormalizedStepsWithBelts.projector(
+        { steps: [], result: MatrixResultType.Skipped },
+        {},
+        {},
+        {}
+      );
       expect(RateUtility.calculateBelts).toHaveBeenCalled();
     });
   });
