@@ -133,7 +133,7 @@ describe('RecipeSettingsComponent', () => {
       spyOn(emitter, 'emit');
       component.child.changeBeaconCount(
         Mocks.Step1.recipeId,
-        { target: { value: '12' } } as any,
+        '12',
         emitter,
         id,
         ItemId.AssemblingMachine3
@@ -145,40 +145,10 @@ describe('RecipeSettingsComponent', () => {
       });
     });
 
-    it('should not set beacon count on invalid event', () => {
-      const emitter = new EventEmitter<DefaultIdPayload>();
-      spyOn(emitter, 'emit');
-      component.child.changeBeaconCount(
-        Mocks.Step1.recipeId,
-        { target: {} } as any,
-        emitter,
-        id,
-        ItemId.AssemblingMachine3
-      );
-      expect(emitter.emit).not.toHaveBeenCalled();
-    });
-
-    it('should not emit on invalid value', () => {
-      const emitter = new EventEmitter<DefaultIdPayload>();
-      spyOn(emitter, 'emit');
-      component.child.changeBeaconCount(
-        Mocks.Step1.recipeId,
-        { target: { value: '-1' } } as any,
-        emitter,
-        id,
-        ItemId.AssemblingMachine3
-      );
-      expect(emitter.emit).not.toHaveBeenCalled();
-    });
-
     it('should use recipe id as default id', () => {
       const emitter = new EventEmitter<DefaultIdPayload>();
       spyOn(emitter, 'emit');
-      component.child.changeBeaconCount(
-        Mocks.Step1.recipeId,
-        { target: { value: '12' } } as any,
-        emitter
-      );
+      component.child.changeBeaconCount(Mocks.Step1.recipeId, '12', emitter);
       expect(emitter.emit).toHaveBeenCalledWith({
         id: Mocks.Step1.recipeId,
         value: '12',

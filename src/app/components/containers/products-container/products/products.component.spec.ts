@@ -3,7 +3,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
 import { Mocks, ItemId } from 'src/tests';
-import { IconComponent, PickerComponent, OptionsComponent } from '~/components';
+import {
+  IconComponent,
+  InputComponent,
+  PickerComponent,
+  OptionsComponent,
+} from '~/components';
 import { DisplayRate, RateType } from '~/models';
 import { ProductsComponent } from './products.component';
 
@@ -48,6 +53,7 @@ describe('ProductsComponent', () => {
       imports: [FormsModule],
       declarations: [
         IconComponent,
+        InputComponent,
         OptionsComponent,
         PickerComponent,
         ProductsComponent,
