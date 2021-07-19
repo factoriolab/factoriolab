@@ -168,19 +168,12 @@ export class SettingsComponent implements OnInit, OnChanges {
     this.ref.detectChanges();
   }
 
-  changeBeaconCount(id: string, event: Event): void {
-    try {
-      const target = event.target as HTMLInputElement;
-      const value = target.value;
-      const rational = Rational.fromString(value);
-      if (rational.gte(Rational.zero)) {
-        const def =
-          id === ''
-            ? this.data.defaults.beaconCount
-            : this.factories.entities[''].beaconCount;
-        this.setBeaconCount.emit({ id, value, default: def });
-      }
-    } catch {}
+  changeBeaconCount(id: string, value: string): void {
+    const def =
+      id === ''
+        ? this.data.defaults.beaconCount
+        : this.factories.entities[''].beaconCount;
+    this.setBeaconCount.emit({ id, value, default: def });
   }
 
   emitNumber(

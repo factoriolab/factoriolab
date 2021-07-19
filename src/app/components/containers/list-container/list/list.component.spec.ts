@@ -13,7 +13,12 @@ import { StoreModule } from '@ngrx/store';
 import { of } from 'rxjs';
 
 import { Mocks, TestUtility, ItemId, RecipeId } from 'src/tests';
-import { IconComponent, SelectComponent, ColumnsComponent } from '~/components';
+import {
+  IconComponent,
+  InputComponent,
+  SelectComponent,
+  ColumnsComponent,
+} from '~/components';
 import {
   DisplayRate,
   Rational,
@@ -137,6 +142,7 @@ describe('ListComponent', () => {
       declarations: [
         ColumnsComponent,
         IconComponent,
+        InputComponent,
         SelectComponent,
         ListComponent,
         TestListComponent,

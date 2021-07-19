@@ -179,6 +179,14 @@ export class Rational {
     }
   }
 
+  floor(): Rational {
+    if (this.isInteger()) {
+      return this;
+    } else {
+      return new Rational(this.p / this.q);
+    }
+  }
+
   toNumber(): number {
     return Number(this.p) / Number(this.q);
   }

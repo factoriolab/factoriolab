@@ -8,6 +8,7 @@ import { Mocks, TestUtility, ItemId } from 'src/tests';
 import {
   ColumnsComponent,
   IconComponent,
+  InputComponent,
   OptionsComponent,
   RankerComponent,
   SelectComponent,
@@ -18,7 +19,6 @@ import { BrowserUtility } from '~/utilities';
 import { SettingsComponent } from './settings.component';
 
 enum DataTest {
-  Beacons = 'lab-settings-beacons',
   FlowRate = 'lab-settings-flow-rate',
   MiningBonus = 'lab-settings-mining-bonus',
 }
@@ -115,6 +115,7 @@ describe('SettingsComponent', () => {
       declarations: [
         ColumnsComponent,
         IconComponent,
+        InputComponent,
         OptionsComponent,
         RankerComponent,
         SelectComponent,
@@ -203,8 +204,7 @@ describe('SettingsComponent', () => {
   describe('changeBeaconCount', () => {
     it('should emit beacon count', () => {
       spyOn(component, 'setBeaconCount');
-      TestUtility.setTextDt(fixture, DataTest.Beacons, '3');
-      fixture.detectChanges();
+      component.child.changeBeaconCount('', '3');
       expect(component.setBeaconCount).toHaveBeenCalledWith({
         id: '',
         value: '3',
@@ -214,20 +214,12 @@ describe('SettingsComponent', () => {
 
     it('should emit beacon count on specific factory', () => {
       spyOn(component, 'setBeaconCount');
-      TestUtility.setTextDt(fixture, DataTest.Beacons, '3', 1);
-      fixture.detectChanges();
+      component.child.changeBeaconCount(ItemId.AssemblingMachine3, '3');
       expect(component.setBeaconCount).toHaveBeenCalledWith({
         id: ItemId.AssemblingMachine3,
         value: '3',
         default: '8',
       });
-    });
-
-    it('should not emit on invalid value', () => {
-      spyOn(component, 'setBeaconCount');
-      TestUtility.setTextDt(fixture, DataTest.Beacons, '-3');
-      fixture.detectChanges();
-      expect(component.setBeaconCount).not.toHaveBeenCalled();
     });
   });
 

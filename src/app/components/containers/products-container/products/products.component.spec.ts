@@ -2,14 +2,15 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
-import { Mocks, TestUtility, ItemId, RecipeId } from 'src/tests';
-import { IconComponent, PickerComponent, OptionsComponent } from '~/components';
+import { Mocks, ItemId } from 'src/tests';
+import {
+  IconComponent,
+  InputComponent,
+  PickerComponent,
+  OptionsComponent,
+} from '~/components';
 import { DisplayRate, RateType } from '~/models';
 import { ProductsComponent } from './products.component';
-
-enum DataTest {
-  Rate = 'lab-products-rate',
-}
 
 @Component({
   selector: 'lab-test-products',
@@ -52,6 +53,7 @@ describe('ProductsComponent', () => {
       imports: [FormsModule],
       declarations: [
         IconComponent,
+        InputComponent,
         OptionsComponent,
         PickerComponent,
         ProductsComponent,
@@ -92,32 +94,6 @@ describe('ProductsComponent', () => {
         id: Mocks.Product4.id,
         value: ItemId.PetroleumGas,
       });
-    });
-  });
-
-  describe('changeRate', () => {
-    it('should change the product rate', () => {
-      spyOn(component, 'setRate');
-      TestUtility.setTextDt(fixture, DataTest.Rate, '3');
-      fixture.detectChanges();
-      expect(component.setRate).toHaveBeenCalledWith({
-        id: Mocks.Product1.id,
-        value: '3',
-      });
-    });
-
-    it('should ignore invalid events', () => {
-      spyOn(component, 'setRate');
-      TestUtility.setTextDt(fixture, DataTest.Rate, '1 1');
-      fixture.detectChanges();
-      expect(component.setRate).not.toHaveBeenCalled();
-    });
-
-    it('should ignore negative rates', () => {
-      spyOn(component, 'setRate');
-      TestUtility.setTextDt(fixture, DataTest.Rate, '-1');
-      fixture.detectChanges();
-      expect(component.setRate).not.toHaveBeenCalled();
     });
   });
 });
