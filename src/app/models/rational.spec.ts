@@ -197,6 +197,16 @@ describe('Rational', () => {
       });
     });
 
+    describe('floor', () => {
+      it('should handle integers', () => {
+        expect(Rational.from(2, 1).floor()).toEqual(Rational.from(2, 1));
+      });
+
+      it('should handle fractions', () => {
+        expect(Rational.from(3, 2).floor()).toEqual(Rational.one);
+      });
+    });
+
     describe('toNumber', () => {
       it('should convert to number', () => {
         expect(Rational.zero.toNumber()).toEqual(0);
