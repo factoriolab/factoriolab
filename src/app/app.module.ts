@@ -30,6 +30,7 @@ import {
   ColumnsComponent,
   MatrixContainerComponent,
   MatrixComponent,
+  InputComponent,
 } from './components';
 import {
   FocusOnShowDirective,
@@ -62,6 +63,7 @@ import { DatasetsEffects } from './store/datasets/datasets.effects';
     FocusOnShowDirective,
     MatrixContainerComponent,
     MatrixComponent,
+    InputComponent,
   ],
   imports: [
     BrowserModule,

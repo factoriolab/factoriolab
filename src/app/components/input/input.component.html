@@ -1,0 +1,17 @@
+<input
+  type="text"
+  [class.narrow]="narrow"
+  [title]="title"
+  [placeholder]="placeholder"
+  [ngModel]="value"
+  labValidateNumber
+  (input)="changeValue($event)"
+/>
+<div>
+  <button title="Increase 1" (click)="increase()">
+    <i class="material-icons">arrow_drop_up</i>
+  </button>
+  <button title="Decrease 1" (click)="decrease()">
+    <i class="material-icons">arrow_drop_down</i>
+  </button>
+</div>

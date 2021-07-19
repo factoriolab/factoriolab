@@ -31,7 +31,10 @@ import { RecipeSettingsComponent } from '../../recipe-settings.component';
   styleUrls: ['./products.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductsComponent extends RecipeSettingsComponent implements OnChanges {
+export class ProductsComponent
+  extends RecipeSettingsComponent
+  implements OnChanges
+{
   @Input() productSteps: Entities<[string, Rational][]>;
   @Input() products: Product[] = [];
   @Input() itemSettings: ItemsState;
@@ -89,16 +92,5 @@ export class ProductsComponent extends RecipeSettingsComponent implements OnChan
     }
 
     this.setItem.emit({ id: product.id, value: itemId });
-  }
-
-  changeRate(id: string, event: Event): void {
-    try {
-      const target = event.target as HTMLInputElement;
-      const value = target.value;
-      const rational = Rational.fromString(value);
-      if (rational.gte(Rational.zero)) {
-        this.setRate.emit({ id, value });
-      }
-    } catch {}
   }
 }

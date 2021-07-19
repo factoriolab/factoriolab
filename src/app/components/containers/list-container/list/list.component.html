@@ -410,18 +410,16 @@
           <ng-container *ngIf="recipeSettings[step.recipeId]?.beacon as beacon">
             <td>
               <div class="flex">
-                <input
-                  class="beacon"
+                <lab-input
                   title="Set number of beacons"
                   placeholder="# Beacons"
-                  type="text"
-                  [ngModel]="recipeSettings[step.recipeId].beaconCount"
-                  labValidateNumber
-                  data-test="lab-list-beacons"
-                  (input)="
+                  [narrow]="true"
+                  [value]="recipeSettings[step.recipeId].beaconCount"
+                  (setValue)="
                     changeBeaconCount(step.recipeId, $event, setBeaconCount)
                   "
-                />
+                >
+                </lab-input>
               </div>
             </td>
             <td class="split-column">

@@ -315,16 +315,14 @@
             </td>
             <td>
               <ng-container *ngIf="factory.beaconCount != null">
-                <input
-                  class="beacon"
+                <lab-input
                   title="Default number of beacons"
                   placeholder="# Beacons"
-                  type="text"
-                  [ngModel]="factory.beaconCount"
-                  labValidateNumber
-                  data-test="lab-settings-beacons"
-                  (input)="changeBeaconCount(f, $event)"
-                />
+                  [narrow]="true"
+                  [value]="factory.beaconCount"
+                  (setValue)="changeBeaconCount(f, $event)"
+                >
+                </lab-input>
               </ng-container>
             </td>
             <td>

@@ -18,7 +18,6 @@ import { BrowserUtility } from '~/utilities';
 import { SettingsComponent } from './settings.component';
 
 enum DataTest {
-  Beacons = 'lab-settings-beacons',
   FlowRate = 'lab-settings-flow-rate',
   MiningBonus = 'lab-settings-mining-bonus',
 }
@@ -200,36 +199,36 @@ describe('SettingsComponent', () => {
     });
   });
 
-  describe('changeBeaconCount', () => {
-    it('should emit beacon count', () => {
-      spyOn(component, 'setBeaconCount');
-      TestUtility.setTextDt(fixture, DataTest.Beacons, '3');
-      fixture.detectChanges();
-      expect(component.setBeaconCount).toHaveBeenCalledWith({
-        id: '',
-        value: '3',
-        default: '8',
-      });
-    });
+  // describe('changeBeaconCount', () => {
+  //   it('should emit beacon count', () => {
+  //     spyOn(component, 'setBeaconCount');
+  //     TestUtility.setTextDt(fixture, DataTest.Beacons, '3');
+  //     fixture.detectChanges();
+  //     expect(component.setBeaconCount).toHaveBeenCalledWith({
+  //       id: '',
+  //       value: '3',
+  //       default: '8',
+  //     });
+  //   });
 
-    it('should emit beacon count on specific factory', () => {
-      spyOn(component, 'setBeaconCount');
-      TestUtility.setTextDt(fixture, DataTest.Beacons, '3', 1);
-      fixture.detectChanges();
-      expect(component.setBeaconCount).toHaveBeenCalledWith({
-        id: ItemId.AssemblingMachine3,
-        value: '3',
-        default: '8',
-      });
-    });
+  //   it('should emit beacon count on specific factory', () => {
+  //     spyOn(component, 'setBeaconCount');
+  //     TestUtility.setTextDt(fixture, DataTest.Beacons, '3', 1);
+  //     fixture.detectChanges();
+  //     expect(component.setBeaconCount).toHaveBeenCalledWith({
+  //       id: ItemId.AssemblingMachine3,
+  //       value: '3',
+  //       default: '8',
+  //     });
+  //   });
 
-    it('should not emit on invalid value', () => {
-      spyOn(component, 'setBeaconCount');
-      TestUtility.setTextDt(fixture, DataTest.Beacons, '-3');
-      fixture.detectChanges();
-      expect(component.setBeaconCount).not.toHaveBeenCalled();
-    });
-  });
+  //   it('should not emit on invalid value', () => {
+  //     spyOn(component, 'setBeaconCount');
+  //     TestUtility.setTextDt(fixture, DataTest.Beacons, '-3');
+  //     fixture.detectChanges();
+  //     expect(component.setBeaconCount).not.toHaveBeenCalled();
+  //   });
+  // });
 
   describe('emitNumber', () => {
     it('should emit flow rate', () => {
