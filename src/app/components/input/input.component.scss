@@ -1,0 +1,12 @@
+:host {
+  display: flex;
+}
+
+button {
+  height: 1.125rem;
+  width: 1.75rem;
+
+  .material-icons {
+    margin: 0;
+  }
+}

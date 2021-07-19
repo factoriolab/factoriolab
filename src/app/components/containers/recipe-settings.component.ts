@@ -77,20 +77,14 @@ export class RecipeSettingsComponent {
 
   changeBeaconCount(
     recipeId: string,
-    event: Event,
+    value: string,
     emitter: EventEmitter<DefaultIdPayload>,
     id = recipeId,
     factoryId = this.recipeSettings[recipeId].factory
   ): void {
-    try {
-      const value = (event.target as HTMLInputElement).value;
-      const rational = Rational.fromString(value);
-      if (rational.gte(Rational.zero)) {
-        const s = this.getState(id, recipeId, factoryId);
-        const def = s.fMatch ? s.recipe.beaconCount : s.factory.beaconCount;
-        emitter.emit({ id, value, default: def });
-      }
-    } catch {}
+    const s = this.getState(id, recipeId, factoryId);
+    const def = s.fMatch ? s.recipe.beaconCount : s.factory.beaconCount;
+    emitter.emit({ id, value, default: def });
   }
 
   changeBeacon(

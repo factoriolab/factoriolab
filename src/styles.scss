@@ -171,8 +171,8 @@ input {
   border: none;
   box-shadow: var(--shadow-input);
 
-  &.beacon {
-    width: 3.5rem;
+  &.narrow {
+    width: 3rem;
   }
 
   &:focus {

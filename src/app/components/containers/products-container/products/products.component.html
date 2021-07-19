@@ -23,15 +23,12 @@
         ></lab-icon
       ></lab-picker>
       <span>from</span>
-      <input
-        type="text"
+      <lab-input
         title="Set output rate"
         placeholder="Rate"
-        [ngModel]="product.rate"
-        labValidateNumber
-        data-test="lab-products-rate"
-        (input)="changeRate(product.id, $event)"
-      />
+        [value]="product.rate"
+        (setValue)="setRate.emit({ id: product.id, value: $event })"
+      ></lab-input>
       <lab-options
         class="ratetype"
         title="Change rate type"
@@ -273,15 +270,12 @@
                   </lab-select>
                 </div>
                 <ng-container *ngIf="product.viaBeacon as beacon">
-                  <input
-                    class="beacon"
+                  <lab-input
                     title="Set rate step number of beacons"
                     placeholder="# Beacons"
-                    type="text"
-                    [ngModel]="product.viaBeaconCount"
-                    labValidateNumber
-                    data-test="lab-products-beacons"
-                    (input)="
+                    [narrow]="true"
+                    [value]="product.viaBeaconCount"
+                    (setValue)="
                       changeBeaconCount(
                         id,
                         $event,
@@ -290,7 +284,8 @@
                         product.viaSetting
                       )
                     "
-                  />
+                  >
+                  </lab-input>
                   <ng-container *ngIf="gtZero(product.viaBeaconCount)">
                     <ng-container
                       *ngIf="data.beaconIds.length === 1; else beaconPicker"
