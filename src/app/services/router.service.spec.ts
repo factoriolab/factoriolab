@@ -86,6 +86,7 @@ const mockSettingsState: SettingsState = {
   displayRate: DisplayRate.PerHour,
   preset: Preset.Modules,
   belt: ItemId.TransportBelt,
+  pipe: ItemId.Pipe,
   fuel: ItemId.Coal,
   cargoWagon: ItemId.CargoWagon,
   fluidWagon: ItemId.FluidWagon,

@@ -1,13 +1,14 @@
 import { columnOptions } from './column';
+import { Game } from './game';
 
 describe('Column', () => {
   describe('columnOptions', () => {
     it('should return the correct options for Factorio', () => {
-      expect(columnOptions(false).length).toEqual(9);
+      expect(columnOptions(Game.Factorio).length).toEqual(9);
     });
 
     it('should return the correct options for Dyson Sphere Program', () => {
-      expect(columnOptions(true).length).toEqual(6);
+      expect(columnOptions(Game.DysonSphereProgram).length).toEqual(6);
     });
   });
 });
