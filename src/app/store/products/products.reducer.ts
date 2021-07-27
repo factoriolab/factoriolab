@@ -213,6 +213,18 @@ export function productsReducer(
           ),
         },
       };
+    case ProductsActionType.SET_VIA_OVERCLOCK: {
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.compareReset(
+            state.entities,
+            ProductField.ViaOverclock,
+            action.payload
+          ),
+        },
+      };
+    }
     default:
       return state;
   }

@@ -94,6 +94,10 @@ export class ProductsContainerComponent implements OnInit {
     this.store.dispatch(new Products.SetViaBeaconModulesAction(data));
   }
 
+  setViaOverclock(data: DefaultIdPayload<number>): void {
+    this.store.dispatch(new Products.SetViaOverclockAction(data));
+  }
+
   addProduct(value: string): void {
     this.store.dispatch(new Products.AddAction(value));
   }

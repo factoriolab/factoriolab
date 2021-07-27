@@ -22,11 +22,15 @@ const routes: Routes = [
   },
   {
     path: 'factorio',
-    redirectTo: '/list?s=',
+    redirectTo: '/list?s=&v=1',
   },
   {
     path: 'dsp',
-    redirectTo: '/list?s=dsp',
+    redirectTo: '/list?s=dsp&v=1',
+  },
+  {
+    path: 'satisfactory',
+    redirectTo: '/list?s=sfy&v=1',
   },
   {
     path: '**',

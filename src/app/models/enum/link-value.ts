@@ -1,4 +1,5 @@
 import { IdName } from '../id-name';
+import { Game } from './game';
 
 export enum LinkValue {
   None,
@@ -9,7 +10,7 @@ export enum LinkValue {
   Factories,
 }
 
-export function linkValueOptions(isDsp: boolean): IdName<LinkValue>[] {
+export function linkValueOptions(game: Game): IdName<LinkValue>[] {
   const result = [
     { id: LinkValue.None, name: 'None' },
     { id: LinkValue.Percent, name: 'Percent' },
@@ -19,7 +20,7 @@ export function linkValueOptions(isDsp: boolean): IdName<LinkValue>[] {
     { id: LinkValue.Factories, name: 'Factories' },
   ];
 
-  if (isDsp) {
+  if (game === Game.DysonSphereProgram) {
     return result.filter((i) => i.id !== LinkValue.Wagons);
   }
 

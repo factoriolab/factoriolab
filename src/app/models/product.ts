@@ -12,6 +12,7 @@ export enum ProductField {
   ViaBeaconCount = 'viaBeaconCount',
   ViaBeacon = 'viaBeacon',
   ViaBeaconModules = 'viaBeaconModules',
+  ViaOverclock = 'viaOverclock',
 }
 
 export interface Product {
@@ -25,6 +26,7 @@ export interface Product {
   viaBeaconCount?: string;
   viaBeacon?: string;
   viaBeaconModules?: string[];
+  viaOverclock?: number;
 }
 
 export class RationalProduct {
@@ -38,6 +40,7 @@ export class RationalProduct {
   viaBeaconCount?: Rational;
   viaBeacon?: string;
   viaBeaconModules?: string[];
+  viaOverclock?: Rational;
 
   constructor(data: Product) {
     this.id = data.id;
@@ -61,6 +64,9 @@ export class RationalProduct {
     }
     if (data.viaBeaconModules != null) {
       this.viaBeaconModules = data.viaBeaconModules;
+    }
+    if (data.viaOverclock != null) {
+      this.viaOverclock = Rational.fromNumber(data.viaOverclock);
     }
   }
 }

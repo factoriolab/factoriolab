@@ -1,6 +1,11 @@
 import { createSelector } from '@ngrx/store';
 
-import { RecipeSettings, Entities, RationalRecipeSettings } from '~/models';
+import {
+  RecipeSettings,
+  Entities,
+  RationalRecipeSettings,
+  Game,
+} from '~/models';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 import * as Items from '../items';
 import * as Factories from '../factories';
@@ -27,8 +32,8 @@ export const getRecipeSettings = createSelector(
         }
 
         const factory = data.itemEntities[s.factory]?.factory;
+        const def = factories.entities[s.factory];
         if (RecipeUtility.allowsModules(recipe, factory)) {
-          const def = factories.entities[s.factory];
           if (!s.factoryModules) {
             s.factoryModules = RecipeUtility.defaultModules(
               data.recipeModuleIds[recipe.id],
@@ -37,14 +42,20 @@ export const getRecipeSettings = createSelector(
             );
           }
 
-          s.beaconCount =
-            s.beaconCount != null ? s.beaconCount : def.beaconCount;
+          if (s.beaconCount == null) {
+            s.beaconCount = def.beaconCount;
+          }
+
           s.beacon = s.beacon || def.beacon;
 
           const beacon = data.itemEntities[s.beacon]?.beacon;
           if (beacon && !s.beaconModules) {
             s.beaconModules = new Array(beacon.modules).fill(def.beaconModule);
           }
+        }
+
+        if (data.game === Game.Satisfactory) {
+          s.overclock = s.overclock || def.overclock;
         }
 
         value[recipe.id] = s;
@@ -99,6 +110,10 @@ export const getAdjustedDataset = createSelector(
 
 export const getContainsFactory = createSelector(recipesState, (state) =>
   Object.keys(state).some((id) => state[id].factory || state[id].factoryModules)
+);
+
+export const getContainsOverclock = createSelector(recipesState, (state) =>
+  Object.keys(state).some((id) => state[id].overclock)
 );
 
 export const getContainsBeacons = createSelector(recipesState, (state) =>

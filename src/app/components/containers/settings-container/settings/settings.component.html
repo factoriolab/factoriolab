@@ -65,6 +65,7 @@
       <div class="flex tween">
         <div class="header">Recipes</div>
         <a
+          *ngIf="data.game === Game.Factorio"
           class="small"
           href="https://github.com/factoriolab/factorio-lab/issues/new?assignees=&labels=mod+support&template=mod-request.md&title="
           target="_blank"
@@ -73,12 +74,23 @@
       </div>
       <table class="thin">
         <tr>
-          <td>Base set</td>
+          <td>Game</td>
+          <td>
+            <lab-options
+              title="Select game"
+              [selected]="data.game"
+              [options]="GameOptions"
+              (selectId)="setGame($event)"
+            ></lab-options>
+          </td>
+        </tr>
+        <tr *ngIf="data.game === Game.Factorio">
+          <td>Mod set</td>
           <td>
             <lab-options
               title="Select base recipe set"
               [selected]="settings.baseId"
-              [options]="base"
+              [options]="baseOptions"
               (selectId)="setBase.emit($event)"
             ></lab-options>
           </td>
@@ -99,7 +111,7 @@
             </lab-toggle>
           </td>
         </tr>
-        <tr *ngIf="!data.isDsp">
+        <tr *ngIf="data.game === Game.Factorio">
           <td>Difficulty</td>
           <td>
             <lab-options
@@ -122,7 +134,7 @@
           <td>
             <lab-columns
               class="relative"
-              [isDsp]="data.isDsp"
+              [game]="data.game"
               [columns]="columns"
               (setColumns)="setColumns.emit($event)"
             >
@@ -244,17 +256,15 @@
             </td>
             <td>
               <ng-container *ngIf="factory.moduleRank">
-                <lab-select
-                  *ngIf="data.isDsp; else moduleRanker"
-                  header="Select a module"
+                <lab-ranker
+                  *ngIf="data.game === Game.Factorio; else moduleSelect"
                   [data]="data"
-                  [selected]="factory.moduleRank[0]"
+                  [selected]="factory.moduleRank"
                   [options]="data.moduleIds"
-                  [displayRate]="settings.displayRate"
-                  (selectId)="
+                  (selectIds)="
                     setModuleRank.emit({
                       id: f,
-                      value: [$event],
+                      value: $event,
                       default:
                         f === ''
                           ? data.defaults.moduleRank
@@ -277,16 +287,18 @@
                         : null
                     "
                   ></lab-icon>
-                </lab-select>
-                <ng-template #moduleRanker>
-                  <lab-ranker
+                </lab-ranker>
+                <ng-template #moduleSelect>
+                  <lab-select
+                    header="Select a module"
                     [data]="data"
-                    [selected]="factory.moduleRank"
+                    [selected]="factory.moduleRank[0]"
                     [options]="data.moduleIds"
-                    (selectIds)="
+                    [displayRate]="settings.displayRate"
+                    (selectId)="
                       setModuleRank.emit({
                         id: f,
-                        value: $event,
+                        value: [$event],
                         default:
                           f === ''
                             ? data.defaults.moduleRank
@@ -309,89 +321,105 @@
                           : null
                       "
                     ></lab-icon>
-                  </lab-ranker>
-                </ng-template>
-              </ng-container>
-            </td>
-            <td>
-              <ng-container *ngIf="factory.beaconCount != null">
-                <lab-input
-                  title="Default number of beacons"
-                  placeholder="# Beacons"
-                  [narrow]="true"
-                  [value]="factory.beaconCount"
-                  (setValue)="changeBeaconCount(f, $event)"
-                >
-                </lab-input>
-              </ng-container>
-            </td>
-            <td>
-              <ng-container *ngIf="gtZero(factory.beaconCount)">
-                <ng-container
-                  *ngIf="data.beaconIds.length === 1; else beaconPicker"
-                >
-                  <lab-icon
-                    class="pad"
-                    [data]="data"
-                    [iconId]="factory.beacon"
-                    [tooltip]="data.itemEntities[factory.beacon].name"
-                    [item]="data.itemEntities[factory.beacon]"
-                  ></lab-icon>
-                </ng-container>
-                <ng-template #beaconPicker>
-                  <lab-select
-                    header="Select a beacon"
-                    [data]="data"
-                    [selected]="factory.beacon"
-                    [options]="data.beaconIds"
-                    (selectId)="
-                      setBeacon.emit({
-                        id: f,
-                        value: $event,
-                        default:
-                          f === ''
-                            ? data.defaults.beacon
-                            : factories.entities[''].beacon
-                      })
-                    "
-                  >
-                    <lab-icon
-                      class="button"
-                      tooltip="Select default beacon"
-                      [data]="data"
-                      [iconId]="factory.beacon"
-                    ></lab-icon>
                   </lab-select>
                 </ng-template>
               </ng-container>
             </td>
-            <td>
-              <lab-select
-                *ngIf="gtZero(factory.beaconCount)"
-                header="Select a module"
-                [data]="data"
-                [selected]="factory.beaconModule"
-                [options]="data.beaconModuleIds"
-                [includeEmptyModule]="true"
-                (selectId)="
-                  setBeaconModule.emit({
-                    id: f,
-                    value: $event,
-                    default:
-                      f === ''
-                        ? data.defaults.beaconModule
-                        : factories.entities[''].beaconModule
-                  })
-                "
-              >
-                <lab-icon
-                  class="button"
-                  tooltip="Beacon module"
-                  [data]="data"
-                  [iconId]="factory.beaconModule"
-                ></lab-icon>
-              </lab-select>
+            <td *ngIf="data.game === Game.Satisfactory">
+              <input
+                type="number"
+                title="Default overclock"
+                placeholder="100"
+                min="0"
+                max="250"
+                step="10"
+                labValidateOverclock
+                [ngModel]="factory.overclock"
+                (input)="changeOverclock(f, $event)"
+              />
+              %
             </td>
+            <ng-container *ngIf="data.game === Game.Factorio">
+              <td>
+                <ng-container *ngIf="factory.beaconCount != null">
+                  <lab-input
+                    title="Default number of beacons"
+                    placeholder="# Beacons"
+                    [narrow]="true"
+                    [value]="factory.beaconCount"
+                    (setValue)="changeBeaconCount(f, $event)"
+                  >
+                  </lab-input>
+                </ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="gtZero(factory.beaconCount)">
+                  <ng-container
+                    *ngIf="data.beaconIds.length === 1; else beaconPicker"
+                  >
+                    <lab-icon
+                      class="pad"
+                      [data]="data"
+                      [iconId]="factory.beacon"
+                      [tooltip]="data.itemEntities[factory.beacon].name"
+                      [item]="data.itemEntities[factory.beacon]"
+                    ></lab-icon>
+                  </ng-container>
+                  <ng-template #beaconPicker>
+                    <lab-select
+                      header="Select a beacon"
+                      [data]="data"
+                      [selected]="factory.beacon"
+                      [options]="data.beaconIds"
+                      (selectId)="
+                        setBeacon.emit({
+                          id: f,
+                          value: $event,
+                          default:
+                            f === ''
+                              ? data.defaults.beacon
+                              : factories.entities[''].beacon
+                        })
+                      "
+                    >
+                      <lab-icon
+                        class="button"
+                        tooltip="Select default beacon"
+                        [data]="data"
+                        [iconId]="factory.beacon"
+                      ></lab-icon>
+                    </lab-select>
+                  </ng-template>
+                </ng-container>
+              </td>
+              <td>
+                <lab-select
+                  *ngIf="gtZero(factory.beaconCount)"
+                  header="Select a module"
+                  [data]="data"
+                  [selected]="factory.beaconModule"
+                  [options]="data.beaconModuleIds"
+                  [includeEmptyModule]="true"
+                  (selectId)="
+                    setBeaconModule.emit({
+                      id: f,
+                      value: $event,
+                      default:
+                        f === ''
+                          ? data.defaults.beaconModule
+                          : factories.entities[''].beaconModule
+                    })
+                  "
+                >
+                  <lab-icon
+                    class="button"
+                    tooltip="Beacon module"
+                    [data]="data"
+                    [iconId]="factory.beaconModule"
+                  ></lab-icon>
+                </lab-select>
+              </td>
+            </ng-container>
             <td>
               <button
                 *ngIf="i > 1"
@@ -486,7 +514,7 @@
             </div>
           </td>
         </tr>
-        <tr *ngIf="sortedFuels.length">
+        <tr *ngIf="sortedFuels.length && data.game !== Game.Satisfactory">
           <td>Chemical fuel</td>
           <td>
             <div>
@@ -510,7 +538,7 @@
           </td>
         </tr>
       </table>
-      <table class="thin" *ngIf="!data.isDsp">
+      <table class="thin" *ngIf="data.game === Game.Factorio">
         <tr>
           <td>Pipe flow rate</td>
           <td>
@@ -558,11 +586,11 @@
       </table>
     </div>
   </div>
-  <div class="hole">
+  <div class="hole" *ngIf="data.game !== Game.Satisfactory">
     <div>
       <div class="header">Bonuses</div>
       <table class="wide">
-        <tr *ngIf="!data.isDsp; else dspMiningSpeed">
+        <tr *ngIf="data.game === Game.Factorio">
           <td>Mining productivity</td>
           <td class="right">
             +
@@ -580,26 +608,24 @@
             %
           </td>
         </tr>
-        <ng-template #dspMiningSpeed>
-          <tr>
-            <td>Mining speed</td>
-            <td class="right">
-              <input
-                type="number"
-                title="Enter mining speed"
-                placeholder="Mining speed"
-                min="100"
-                step="10"
-                data-test="lab-settings-mining-bonus"
-                [formControl]="ctrlMiningSpeed"
-                [value]="settings.miningBonus + 100"
-                (input)="emitNumber(setMiningBonus, $event, 0, -100)"
-              />
-              %
-            </td>
-          </tr>
-        </ng-template>
-        <tr *ngIf="!data.isDsp">
+        <tr *ngIf="data.game === Game.DysonSphereProgram">
+          <td>Mining speed</td>
+          <td class="right">
+            <input
+              type="number"
+              title="Enter mining speed"
+              placeholder="Mining speed"
+              min="100"
+              step="10"
+              data-test="lab-settings-mining-bonus"
+              [formControl]="ctrlMiningSpeed"
+              [value]="settings.miningBonus + 100"
+              (input)="emitNumber(setMiningBonus, $event, 0, -100)"
+            />
+            %
+          </td>
+        </tr>
+        <tr *ngIf="data.game === Game.Factorio">
           <td>Research speed</td>
           <td>
             <lab-options
@@ -610,7 +636,7 @@
             ></lab-options>
           </td>
         </tr>
-        <tr *ngIf="!data.isDsp">
+        <tr *ngIf="data.game === Game.Factorio">
           <td>Inserter capacity</td>
           <td>
             <lab-options

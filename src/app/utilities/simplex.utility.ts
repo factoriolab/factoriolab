@@ -408,6 +408,7 @@ export class SimplexUtility {
       R.push(...new Array(state.inputs.length).fill(Rational.zero));
 
       // Cost
+      const factoryCost = recipe.time.mul(COST_RECIPE);
       if (recipe.id === ItemId.Water) {
         // Cost should be based on number of items, not number of pumps
         // Sum total output and multiply cost by output
@@ -415,7 +416,7 @@ export class SimplexUtility {
           (v, o) => v.add(recipe.out[o]),
           Rational.zero
         );
-        R.push(output.mul(COST_WATER));
+        R.push(output.mul(COST_WATER).add(factoryCost));
       } else if (recipe.mining) {
         // Cost should be based on number of items, not number of miners
         // Sum total output and multiply cost by output
@@ -429,10 +430,10 @@ export class SimplexUtility {
             ),
           Rational.zero
         );
-        R.push(output.mul(COST_MINED));
+        R.push(output.mul(COST_MINED).add(factoryCost));
       } else {
         // Cost should be based on number of factories, adjusted for recipe time
-        R.push(recipe.time.mul(COST_RECIPE));
+        R.push(factoryCost);
       }
       A.push(R);
     }

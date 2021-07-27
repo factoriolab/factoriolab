@@ -3,18 +3,23 @@
     <div class="links">
       <div class="header">
         <a
-          [href]="homeHref((data$ | async).isDsp)"
+          [href]="homeHref"
           onclick="setTimeout(location.reload.bind(location), 200)"
           ><h1>{{ title }}</h1></a
         >
       </div>
-      <span class="separator">|</span>
-      <a *ngIf="(data$ | async).isDsp; else dspLink" href="factorio">{{
-        TITLE_LAB
-      }}</a>
-      <ng-template #dspLink
-        ><a href="dsp">{{ TITLE_DSP }}</a></ng-template
-      >
+      <ng-container *ngIf="game !== Game.Factorio">
+        <span class="separator">|</span>
+        <a href="factorio">Factorio</a>
+      </ng-container>
+      <ng-container *ngIf="game !== Game.DysonSphereProgram">
+        <span class="separator">|</span>
+        <a href="dsp">Dyson Sphere Program</a>
+      </ng-container>
+      <ng-container *ngIf="game !== Game.Satisfactory">
+        <span class="separator">|</span>
+        <a href="satisfactory">Satisfactory</a>
+      </ng-container>
     </div>
     <div class="links">
       <a target="_blank" href="https://github.com/factoriolab/factorio-lab/wiki"
@@ -125,7 +130,7 @@
         <div>{{ error.message }}</div>
         <br />
         <a
-          [href]="homeHref((data$ | async).isDsp)"
+          [href]="homeHref"
           onclick="setTimeout(location.reload.bind(location), 200)"
           >Click here to reset</a
         >

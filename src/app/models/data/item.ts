@@ -20,6 +20,8 @@ export interface Item {
   fuel?: Fuel;
   cargoWagon?: CargoWagon;
   fluidWagon?: FluidWagon;
+  /** Used to link the item to an alternate icon id */
+  icon?: string;
 }
 
 export class RationalItem {

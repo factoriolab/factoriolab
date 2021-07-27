@@ -1,5 +1,6 @@
 import { IdName } from '../id-name';
 import { DisplayRate, DisplayRateLabel } from './display-rate';
+import { Game } from './game';
 
 export enum RateType {
   Items,
@@ -10,7 +11,7 @@ export enum RateType {
 
 export function rateTypeOptions(
   displayRate: DisplayRate,
-  isDsp: boolean
+  game: Game
 ): IdName<RateType>[] {
   const result = [
     { id: RateType.Items, name: `Items${DisplayRateLabel[displayRate]}` },
@@ -19,7 +20,7 @@ export function rateTypeOptions(
     { id: RateType.Factories, name: 'Factories' },
   ];
 
-  if (isDsp) {
+  if (game === Game.DysonSphereProgram) {
     return result.filter((i) => i.id !== RateType.Wagons);
   }
 

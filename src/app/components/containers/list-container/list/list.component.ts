@@ -28,6 +28,7 @@ import {
   DefaultPayload,
   PrecisionColumns,
   DisplayRateLabel,
+  Game,
 } from '~/models';
 import { RouterService } from '~/services';
 import { ItemsState } from '~/store/items';
@@ -108,6 +109,7 @@ export class ListComponent
   @Input() modifiedBelt: boolean;
   @Input() modifiedWagon: boolean;
   @Input() modifiedFactory: boolean;
+  @Input() modifiedOverclock: boolean;
   @Input() modifiedBeacons: boolean;
   _mode = ListMode.All; // Default also defined in container
   get mode(): ListMode {
@@ -134,6 +136,7 @@ export class ListComponent
   @Output() setBeaconCount = new EventEmitter<DefaultIdPayload<string>>();
   @Output() setBeacon = new EventEmitter<DefaultIdPayload>();
   @Output() setBeaconModules = new EventEmitter<DefaultIdPayload<string[]>>();
+  @Output() setOverclock = new EventEmitter<DefaultIdPayload<number>>();
   @Output() setColumns = new EventEmitter<ColumnsState>();
   @Output() resetItem = new EventEmitter<string>();
   @Output() resetRecipe = new EventEmitter<string>();
@@ -141,6 +144,7 @@ export class ListComponent
   @Output() resetBelt = new EventEmitter();
   @Output() resetWagon = new EventEmitter();
   @Output() resetFactory = new EventEmitter();
+  @Output() resetOverclock = new EventEmitter();
   @Output() resetBeacons = new EventEmitter();
   @Output() setDisabledRecipes = new EventEmitter<DefaultPayload<string[]>>();
   @Output() setDefaultRecipe = new EventEmitter<DefaultIdPayload>();
@@ -168,6 +172,7 @@ export class ListComponent
   ItemId = ItemId;
   ListMode = ListMode;
   StepDetailTab = StepDetailTab;
+  Game = Game;
   Rational = Rational;
 
   constructor(
@@ -213,11 +218,14 @@ export class ListComponent
       // Don't include silos from launch recipes
       if (!recipe.part) {
         let factory = this.recipeSettings[step.recipeId].factory;
-        if (this.data.isDsp && factory === ItemId.MiningDrill) {
+        if (
+          this.data.game === Game.DysonSphereProgram &&
+          factory === ItemId.MiningDrill
+        ) {
           // Use recipe id (vein type) in place of mining drill for DSP mining
           factory = step.recipeId;
         }
-        if (!this.totalFactories[factory]) {
+        if (!this.totalFactories.hasOwnProperty(factory)) {
           this.totalFactories[factory] = Rational.zero;
         }
         this.totalFactories[factory] = this.totalFactories[factory].add(
@@ -433,7 +441,7 @@ export class ListComponent
   }
 
   power(value: Rational): string {
-    if (value.lt(Rational.thousand)) {
+    if (value.abs().lt(Rational.thousand)) {
       return `${this.rate(value, this.effPrecision[Column.Power])} kW`;
     } else {
       return `${this.rate(

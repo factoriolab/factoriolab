@@ -11,6 +11,7 @@ export const enum FactoriesActionType {
   SET_BEACON_COUNT = '[Factories] Set Beacon Count',
   SET_BEACON = '[Factories] Set Beacon',
   SET_BEACON_MODULE = '[Factories] Set Beacon Module',
+  SET_OVERCLOCK = '[Factories] Set Overclock',
 }
 
 export class AddAction implements Action {
@@ -53,6 +54,11 @@ export class SetBeaconModuleAction implements Action {
   constructor(public payload: DefaultIdPayload) {}
 }
 
+export class SetOverclockAction implements Action {
+  readonly type = FactoriesActionType.SET_OVERCLOCK;
+  constructor(public payload: DefaultIdPayload<number>) {}
+}
+
 export type FactoriesAction =
   | AddAction
   | RemoveAction
@@ -61,4 +67,5 @@ export type FactoriesAction =
   | SetModuleRankAction
   | SetBeaconCountAction
   | SetBeaconAction
-  | SetBeaconModuleAction;
+  | SetBeaconModuleAction
+  | SetOverclockAction;

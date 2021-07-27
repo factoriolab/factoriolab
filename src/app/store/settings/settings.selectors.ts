@@ -18,6 +18,7 @@ import {
   ResearchSpeed,
   InserterTarget,
   InserterCapacity,
+  Game,
 } from '~/models';
 import { State } from '../';
 import * as Datasets from '../datasets';
@@ -51,21 +52,38 @@ export const getInserterTarget = compose(sInserterTarget, settingsState);
 export const getInserterCapacity = compose(sInserterCapacity, settingsState);
 
 /* Complex selectors */
-export const getIsDsp = createSelector(getBaseDatasetId, (id) => id === 'dsp');
-
 export const getBase = createSelector(
   getBaseDatasetId,
   Datasets.getBaseEntities,
   (id, data) => data[id]
 );
 
+export const getGame = createSelector(
+  getBaseDatasetId,
+  Datasets.getBaseInfoEntities,
+  (id, data) => data[id].game
+);
+
 export const getDefaults = createSelector(
   getPreset,
   getBase,
-  getIsDsp,
-  (preset, base, isDsp) => {
+  (preset, base) => {
     if (base) {
       const m = base.defaults;
+      let moduleRank: string[];
+      switch (base.game) {
+        case Game.Factorio: {
+          moduleRank = preset === Preset.Minimum ? [] : m.moduleRank;
+          break;
+        }
+        case Game.DysonSphereProgram: {
+          moduleRank = preset === Preset.Minimum ? [m.minBelt] : [m.maxBelt];
+          break;
+        }
+        case Game.Satisfactory: {
+          moduleRank = m.moduleRank;
+        }
+      }
       const defaults: Defaults = {
         modIds: m.modIds,
         belt: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
@@ -75,13 +93,7 @@ export const getDefaults = createSelector(
         disabledRecipes: m.disabledRecipes,
         factoryRank:
           preset === Preset.Minimum ? m.minFactoryRank : m.maxFactoryRank,
-        moduleRank: isDsp
-          ? preset === Preset.Minimum
-            ? [m.minBelt]
-            : [m.maxBelt]
-          : preset === Preset.Minimum
-          ? []
-          : m.moduleRank,
+        moduleRank,
         beaconCount:
           preset < Preset.Beacon8 ? '0' : preset < Preset.Beacon12 ? '8' : '12',
         beacon: m.beacon,
@@ -144,8 +156,8 @@ export const getNormalDataset = createSelector(
   Datasets.getAppData,
   getDatasets,
   getDefaults,
-  getIsDsp,
-  (app, mods, defaults, isDsp) => {
+  getGame,
+  (app, mods, defaults, game) => {
     // Map out entities with mods
     const categoryEntities = getEntities(
       app.categories,
@@ -220,6 +232,22 @@ export const getNormalDataset = createSelector(
         return e;
       }, {});
 
+    // Apply icon references
+    items
+      .filter((i) => i.icon)
+      .forEach((i) => (iconEntities[i.id] = iconEntities[i.icon]));
+    recipes
+      .filter((r) => r.icon)
+      .forEach((r) => (iconEntities[r.id] = iconEntities[r.icon]));
+
+    // Calculate missing implicit recipe icons
+    // For recipes with no icon, use icon of first output product
+    recipes
+      .filter((r) => !iconEntities[r.id])
+      .forEach(
+        (r) => (iconEntities[r.id] = iconEntities[Object.keys(r.out)[0]])
+      );
+
     // Calculate category item rows
     const categoryItemRows: Entities<string[][]> = {};
     for (const id of categoryIds) {
@@ -268,7 +296,7 @@ export const getNormalDataset = createSelector(
       {}
     );
     const itemRecipeIds = itemIds.reduce((e: Entities<string>, i) => {
-      const matches = recipeMatches[i] || [];
+      const matches = recipeMatches.hasOwnProperty(i) ? recipeMatches[i] : [];
       if (
         matches.length === 1 &&
         (!matches[0].out || Object.keys(matches[0].out).length === 1)
@@ -295,12 +323,14 @@ export const getNormalDataset = createSelector(
       }
     }
 
-    // Add missing mining recipes to productivity limitation
-    recipes
-      .filter((r) => r.mining)
-      .forEach(
-        (r) => (limitations[ItemId.ProductivityLimitation][r.id] = true)
-      );
+    if (limitations[ItemId.ProductivityLimitation]) {
+      // Add missing mining recipes to productivity limitation
+      recipes
+        .filter((r) => r.mining)
+        .forEach(
+          (r) => (limitations[ItemId.ProductivityLimitation][r.id] = true)
+        );
+    }
 
     // Calculate allowed modules for recipes
     const recipeModuleIds = recipes.reduce((e: Entities<string[]>, r) => {
@@ -321,7 +351,7 @@ export const getNormalDataset = createSelector(
       .sort();
 
     const dataset: Dataset = {
-      isDsp,
+      game,
       categoryIds,
       categoryEntities,
       categoryItemRows,

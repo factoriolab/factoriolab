@@ -199,7 +199,10 @@
             <ng-container *ngIf="product.viaSetting as factory">
               <ng-container *ngIf="data.recipeEntities[id] as recipe">
                 <ng-container
-                  *ngIf="!data.isDsp || factory !== ItemId.MiningDrill"
+                  *ngIf="
+                    data.game !== Game.DysonSphereProgram ||
+                    factory !== ItemId.MiningDrill
+                  "
                 >
                   <span>using</span>
                   <ng-container
@@ -243,7 +246,7 @@
                     [data]="data"
                     [selected]="mod"
                     [options]="data.recipeModuleIds[id]"
-                    [includeEmptyModule]="!data.isDsp"
+                    [includeEmptyModule]="data.game === Game.Factorio"
                     [displayRate]="displayRate"
                     (selectId)="
                       changeFactoryModules(
@@ -268,6 +271,28 @@
                       [displayRate]="displayRate"
                     ></lab-icon>
                   </lab-select>
+                </div>
+                <div *ngIf="product.viaOverclock as overclock" class="flex">
+                  <input
+                    type="number"
+                    title="Set rate step overclock"
+                    placeholder="100"
+                    min="0"
+                    max="250"
+                    step="10"
+                    labValidateOverclock
+                    [ngModel]="product.viaOverclock"
+                    (input)="
+                      changeOverclock(
+                        id,
+                        $event,
+                        setViaOverclock,
+                        product.id,
+                        product.viaSetting
+                      )
+                    "
+                  />
+                  <span style="margin-left: 0.25rem">%</span>
                 </div>
                 <ng-container *ngIf="product.viaBeacon as beacon">
                   <lab-input

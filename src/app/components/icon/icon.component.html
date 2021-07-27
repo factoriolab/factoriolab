@@ -78,7 +78,7 @@
       </tr>
       <tr *ngIf="beacon.usage">
         <td>Energy consumption</td>
-        <td>{{ round(beacon.usage) }} kW</td>
+        <td>{{ power(beacon.usage) }}</td>
       </tr>
     </table>
   </div>
@@ -120,7 +120,7 @@
       </tr>
       <tr *ngIf="factory.usage">
         <td>Energy consumption</td>
-        <td>{{ round(factory.usage) }} kW</td>
+        <td>{{ power(factory.usage) }}</td>
       </tr>
       <tr
         *ngIf="
@@ -131,9 +131,8 @@
         <td>Drain</td>
         <td>
           {{
-            round(factory.drain != null ? factory.drain : factory.usage / 30)
+            power(factory.drain != null ? factory.drain : factory.usage / 30)
           }}
-          kW
         </td>
       </tr>
       <tr *ngIf="factory.pollution">

@@ -13,6 +13,7 @@ import {
   Factory,
   RateType,
   ItemSettings,
+  Game,
 } from '~/models';
 import { FactoriesState } from '~/store/factories';
 import { RecipesState } from '~/store/recipes';
@@ -138,6 +139,13 @@ export class RecipeUtility {
       pollution = this.MIN_FACTOR;
     }
 
+    // Overclock effects
+    let oc: Rational;
+    if (settings.overclock && !settings.overclock.eq(Rational.hundred)) {
+      oc = settings.overclock.div(Rational.hundred);
+      speed = speed.mul(oc);
+    }
+
     // Calculate module/beacon effects
     // Speed
     recipe.time = recipe.time.div(speed);
@@ -166,9 +174,14 @@ export class RecipeUtility {
 
     // Power
     recipe.consumption = factory.drain ? factory.drain : Rational.zero;
+    let usage = recipe.usage ? recipe.usage : factory.usage;
+    if (oc) {
+      const factor = Math.pow(oc.toNumber(), 1.6);
+      usage = usage.mul(Rational.fromNumber(factor));
+    }
     recipe.consumption = recipe.consumption.add(
       factory.type === EnergyType.Electric
-        ? factory.usage.mul(consumption)
+        ? usage.mul(consumption)
         : Rational.zero
     );
 
@@ -181,7 +194,7 @@ export class RecipeUtility {
       : Rational.zero;
 
     // Calculate burner fuel inputs
-    if (factory.type === EnergyType.Burner && factory.usage.nonzero()) {
+    if (factory.type === EnergyType.Burner && usage.nonzero()) {
       let rFuelId = fuelId;
       if (factory.category !== FuelType.Chemical) {
         // Try to find matching input for burning recipes
@@ -192,7 +205,7 @@ export class RecipeUtility {
       const fuel = data.itemR[rFuelId].fuel;
 
       const fuelIn = recipe.time
-        .mul(factory.usage)
+        .mul(usage)
         .div(fuel.value)
         .div(Rational.thousand);
 
@@ -376,9 +389,9 @@ export class RecipeUtility {
 
         const recipe = data.recipeEntities[product.viaId];
         const factory = data.itemEntities[product.viaSetting].factory;
+        const def = recipeSettings[recipe.id];
+        const fDef = factories.entities[product.viaSetting];
         if (this.allowsModules(recipe, factory)) {
-          const def = recipeSettings[recipe.id];
-          const fDef = factories.entities[product.viaSetting];
           if (product.viaSetting === def.factory) {
             product.viaFactoryModules =
               product.viaFactoryModules || def.factoryModules;
@@ -412,6 +425,14 @@ export class RecipeUtility {
                 fDef.beaconModule
               );
             }
+          }
+        }
+
+        if (data.game === Game.Satisfactory) {
+          if (product.viaSetting === def.factory) {
+            product.viaOverclock = product.viaOverclock || def.overclock;
+          } else {
+            product.viaOverclock = product.viaOverclock || fDef.overclock;
           }
         }
       }

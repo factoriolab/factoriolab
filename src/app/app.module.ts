@@ -36,6 +36,7 @@ import {
   FocusOnShowDirective,
   LabErrorHandler,
   ValidateNumberDirective,
+  ValidateOverclockDirective,
 } from './support';
 import { reducers, metaReducers } from './store';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
@@ -60,6 +61,7 @@ import { DatasetsEffects } from './store/datasets/datasets.effects';
     DialogComponent,
     ColumnsComponent,
     ValidateNumberDirective,
+    ValidateOverclockDirective,
     FocusOnShowDirective,
     MatrixContainerComponent,
     MatrixComponent,

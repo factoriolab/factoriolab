@@ -247,9 +247,6 @@ export class RouterService {
             const state: State = {} as any;
             switch (v) {
               case ZipVersion.Version0: {
-                Object.keys(params).forEach((k) => {
-                  params[k] = params[k];
-                });
                 if (params[Section.Products]) {
                   state.productsState = this.unzipProducts(params, v);
                 }
@@ -363,6 +360,7 @@ export class RouterService {
             this.zipTruthyString(obj.viaBeaconCount),
             this.zipTruthyArray(obj.viaBeaconModules),
             this.zipTruthyString(obj.viaBeacon),
+            this.zipTruthyNumber(obj.viaOverclock),
           ]),
           hash: this.zipFields([
             this.zipTruthyNString(obj.itemId, hash.items),
@@ -386,6 +384,7 @@ export class RouterService {
             this.zipTruthyString(obj.viaBeaconCount),
             this.zipTruthyNArray(obj.viaBeaconModules, hash.modules),
             this.zipTruthyNString(obj.viaBeacon, hash.beacons),
+            this.zipTruthyNumber(obj.viaOverclock),
           ]),
         };
       })
@@ -426,6 +425,7 @@ export class RouterService {
             viaBeaconCount: this.parseString(s[i++]),
             viaBeaconModules: this.parseArray(s[i++]),
             viaBeacon: this.parseString(s[i++]),
+            viaOverclock: this.parseNumber(s[i++]),
           };
           break;
         }
@@ -455,6 +455,7 @@ export class RouterService {
           obj.viaBeaconCount = this.parseString(s[i++]);
           obj.viaBeaconModules = this.parseNArray(s[i++], hash.modules);
           obj.viaBeacon = this.parseNString(s[i++], hash.beacons);
+          obj.viaOverclock = this.parseNumber(s[i++]);
           break;
         }
       }
@@ -565,6 +566,7 @@ export class RouterService {
             this.zipTruthyString(obj.beaconCount),
             this.zipTruthyArray(obj.beaconModules),
             this.zipTruthyString(obj.beacon),
+            this.zipTruthyNumber(obj.overclock),
           ]),
           hash: this.zipFields([
             this.zipTruthyNString(i, hash.recipes),
@@ -573,6 +575,7 @@ export class RouterService {
             this.zipTruthyString(obj.beaconCount),
             this.zipTruthyNArray(obj.beaconModules, hash.modules),
             this.zipTruthyNString(obj.beacon, hash.beacons),
+            this.zipTruthyNumber(obj.overclock),
           ]),
         };
       })
@@ -607,6 +610,7 @@ export class RouterService {
             beaconCount: this.parseString(s[i++]),
             beaconModules: this.parseArray(s[i++]),
             beacon: this.parseString(s[i++]),
+            overclock: this.parseNumber(s[i++]),
           };
           break;
         }
@@ -622,6 +626,7 @@ export class RouterService {
                 : this.parseString(s[i++]),
             beaconModules: this.parseNArray(s[i++], hash.modules),
             beacon: this.parseNString(s[i++], hash.beacons),
+            overclock: this.parseNumber(s[i++]),
           };
           break;
         }
@@ -655,6 +660,7 @@ export class RouterService {
             this.zipTruthyString(obj.beaconCount),
             this.zipTruthyString(obj.beaconModule),
             this.zipTruthyString(obj.beacon),
+            this.zipTruthyNumber(obj.overclock),
           ]),
           hash: this.zipFields([
             h ? this.zipTruthyNString(i, hash.factories) : i,
@@ -662,6 +668,7 @@ export class RouterService {
             this.zipTruthyString(obj.beaconCount),
             this.zipTruthyNString(obj.beaconModule, hash.modules),
             this.zipTruthyNString(obj.beacon, hash.beacons),
+            this.zipTruthyNumber(obj.overclock),
           ]),
         };
       })
@@ -698,6 +705,7 @@ export class RouterService {
             beaconCount: this.parseString(s[i++]),
             beaconModule: this.parseString(s[i++]),
             beacon: this.parseString(s[i++]),
+            overclock: this.parseNumber(s[i++]),
           };
           if (z === 0 && id === TRUE) {
             loadIds = true;
@@ -719,6 +727,7 @@ export class RouterService {
                 : this.parseString(s[i++]),
             beaconModule: this.parseNString(s[i++], hash.modules),
             beacon: this.parseNString(s[i++], hash.beacons),
+            overclock: this.parseNumber(s[i++]),
           };
           if (z === 0 && id === TRUE) {
             loadIds = true;

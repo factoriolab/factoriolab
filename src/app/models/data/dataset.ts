@@ -1,4 +1,5 @@
 import { Entities } from '../entities';
+import { Game } from '../enum';
 import { Defaults } from '../defaults';
 import { Category } from './category';
 import { Icon } from './icon';
@@ -6,7 +7,7 @@ import { Item, RationalItem } from './item';
 import { Recipe, RationalRecipe } from './recipe';
 
 export interface Dataset {
-  isDsp: boolean;
+  game: Game;
   categoryIds: string[];
   categoryEntities: Entities<Category>;
   categoryItemRows: Entities<string[][]>;

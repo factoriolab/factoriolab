@@ -8,9 +8,11 @@ export const enum RecipesActionType {
   SET_BEACON_COUNT = '[Recipes] Set Beacon Count',
   SET_BEACON = '[Recipes] Set Beacon',
   SET_BEACON_MODULES = '[Recipes] Set Beacon Modules',
+  SET_OVERCLOCK = '[Recipes] Set Overclock',
   RESET_RECIPE = '[Recipes] Reset Recipe',
   RESET_FACTORY = '[Recipes] Reset Factory',
   RESET_BEACONS = '[Recipes] Reset Beacons',
+  RESET_OVERCLOCK = '[Recipes] Reset Overclock',
 }
 
 export class SetFactoryAction implements Action {
@@ -38,6 +40,11 @@ export class SetBeaconModulesAction implements Action {
   constructor(public payload: DefaultIdPayload<string[]>) {}
 }
 
+export class SetOverclockAction implements Action {
+  readonly type = RecipesActionType.SET_OVERCLOCK;
+  constructor(public payload: DefaultIdPayload<number>) {}
+}
+
 export class ResetRecipeAction implements Action {
   readonly type = RecipesActionType.RESET_RECIPE;
   constructor(public payload: string) {}
@@ -51,12 +58,18 @@ export class ResetBeaconsAction implements Action {
   readonly type = RecipesActionType.RESET_BEACONS;
 }
 
+export class ResetOverclockAction implements Action {
+  readonly type = RecipesActionType.RESET_OVERCLOCK;
+}
+
 export type RecipesAction =
   | SetFactoryAction
   | SetFactoryModulesAction
   | SetBeaconCountAction
   | SetBeaconAction
   | SetBeaconModulesAction
+  | SetOverclockAction
   | ResetRecipeAction
   | ResetFactoryAction
-  | ResetBeaconsAction;
+  | ResetBeaconsAction
+  | ResetOverclockAction;
