@@ -29,6 +29,7 @@ import {
   PrecisionColumns,
   DisplayRateLabel,
   Game,
+  PIPE,
 } from '~/models';
 import { RouterService } from '~/services';
 import { ItemsState } from '~/store/items';
@@ -174,6 +175,7 @@ export class ListComponent
   StepDetailTab = StepDetailTab;
   Game = Game;
   Rational = Rational;
+  PIPE = PIPE;
 
   constructor(
     private ref: ChangeDetectorRef,

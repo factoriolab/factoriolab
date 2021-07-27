@@ -16,3 +16,4 @@ To avoid this issue, try disabling some/all recipes.
 \u26a0 Warning: The browser may hang if you choose to continue.
 
 (Click "OK" to keep trying, click "Cancel" to quit)`;
+export const PIPE = 'Pipe';

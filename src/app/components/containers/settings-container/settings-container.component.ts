@@ -152,6 +152,10 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetBeltAction(value));
   }
 
+  setPipe(value: DefaultPayload): void {
+    this.store.dispatch(new Settings.SetPipeAction(value));
+  }
+
   setFuel(value: DefaultPayload): void {
     this.store.dispatch(new Settings.SetFuelAction(value));
   }

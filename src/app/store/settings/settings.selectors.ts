@@ -87,6 +87,7 @@ export const getDefaults = createSelector(
       const defaults: Defaults = {
         modIds: m.modIds,
         belt: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
+        pipe: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
         fuel: m.fuel,
         cargoWagon: m.cargoWagon,
         fluidWagon: m.fluidWagon,
@@ -112,6 +113,7 @@ export const getSettings = createSelector(
     ...s,
     ...{
       belt: s.belt || d?.belt,
+      pipe: s.pipe || d?.pipe,
       fuel: s.fuel || d?.fuel,
       cargoWagon: s.cargoWagon || d?.cargoWagon,
       fluidWagon: s.fluidWagon || d?.fluidWagon,
@@ -206,6 +208,10 @@ export const getNormalDataset = createSelector(
     const beltIds = items
       .filter((i) => i.belt)
       .sort((a, b) => a.belt.speed - b.belt.speed)
+      .map((i) => i.id);
+    const pipeIds = items
+      .filter((i) => i.pipe)
+      .sort((a, b) => a.pipe.speed - b.pipe.speed)
       .map((i) => i.id);
     const cargoWagonIds = items
       .filter((i) => i.cargoWagon)
@@ -360,6 +366,7 @@ export const getNormalDataset = createSelector(
       itemIds,
       beaconIds,
       beltIds,
+      pipeIds,
       cargoWagonIds,
       fluidWagonIds,
       factoryIds,
@@ -417,6 +424,11 @@ export const getBeltSpeed = createSelector(
     if (data.beltIds) {
       for (const id of data.beltIds) {
         value[id] = data.itemR[id].belt.speed;
+      }
+    }
+    if (data.pipeIds) {
+      for (const id of data.pipeIds) {
+        value[id] = data.itemR[id].pipe.speed;
       }
     }
     return value;

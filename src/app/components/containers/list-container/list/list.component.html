@@ -196,34 +196,50 @@
               <span class="monospace">{{
                 rate(step.belts, effPrecision[Column.Belts])
               }}</span>
-              <ng-container
-                *ngIf="data.beltIds.indexOf(belt) === -1; else beltPicker"
+              <lab-select
+                *ngIf="data.beltIds.indexOf(belt) !== -1; else pipePicker"
+                header="Select a belt"
+                [data]="data"
+                [selected]="belt"
+                [options]="data.beltIds"
+                [displayRate]="displayRate"
+                (selectId)="
+                  setBelt.emit({
+                    id: step.itemId,
+                    value: $event,
+                    default: settings.belt
+                  })
+                "
               >
                 <lab-icon
-                  [iconId]="belt"
-                  tooltip="Pipe"
-                  [displayRate]="displayRate"
+                  class="button"
+                  title="Click to change belt"
                   [data]="data"
+                  [iconId]="belt"
+                  [tooltip]="data.itemEntities[belt].name"
+                  [item]="data.itemEntities[belt]"
+                  [displayRate]="displayRate"
                 ></lab-icon>
-              </ng-container>
-              <ng-template #beltPicker>
+              </lab-select>
+              <ng-template #pipePicker>
                 <lab-select
-                  header="Select a belt type"
+                  *ngIf="data.pipeIds.indexOf(belt) !== -1; else pipeIcon"
+                  header="Select a pipe"
                   [data]="data"
                   [selected]="belt"
-                  [options]="data.beltIds"
+                  [options]="data.pipeIds"
                   [displayRate]="displayRate"
                   (selectId)="
                     setBelt.emit({
                       id: step.itemId,
                       value: $event,
-                      default: settings.belt
+                      default: settings.pipe
                     })
                   "
                 >
                   <lab-icon
                     class="button"
-                    title="Click to change belt"
+                    title="Click to change pipe"
                     [data]="data"
                     [iconId]="belt"
                     [tooltip]="data.itemEntities[belt].name"
@@ -231,6 +247,13 @@
                     [displayRate]="displayRate"
                   ></lab-icon>
                 </lab-select>
+              </ng-template>
+              <ng-template #pipeIcon>
+                <lab-icon
+                  [iconId]="belt"
+                  [tooltip]="data.itemEntities[belt]?.name || PIPE"
+                  [data]="data"
+                ></lab-icon>
               </ng-template>
             </div>
           </ng-container>
@@ -642,7 +665,7 @@
                     <lab-icon
                       [data]="data"
                       [iconId]="belt"
-                      [tooltip]="data.itemEntities[belt]?.name || 'Pipe'"
+                      [tooltip]="data.itemEntities[belt]?.name || PIPE"
                       [item]="data.itemEntities[belt]"
                       [displayRate]="displayRate"
                     ></lab-icon>
@@ -760,7 +783,7 @@
                   <lab-icon
                     [data]="data"
                     [iconId]="belt"
-                    [tooltip]="data.itemEntities[belt]?.name || 'Pipe'"
+                    [tooltip]="data.itemEntities[belt]?.name || PIPE"
                     [item]="data.itemEntities[belt]"
                     [displayRate]="displayRate"
                   ></lab-icon>
@@ -894,7 +917,7 @@
                       <lab-icon
                         [data]="data"
                         [iconId]="belt"
-                        [tooltip]="data.itemEntities[belt]?.name || 'Pipe'"
+                        [tooltip]="data.itemEntities[belt]?.name || PIPE"
                         [item]="data.itemEntities[belt]"
                         [displayRate]="displayRate"
                       ></lab-icon>
@@ -991,7 +1014,7 @@
                       <lab-icon
                         [data]="data"
                         [iconId]="belt"
-                        [tooltip]="data.itemEntities[belt]?.name || 'Pipe'"
+                        [tooltip]="data.itemEntities[belt]?.name || PIPE"
                         [item]="data.itemEntities[belt]"
                         [displayRate]="displayRate"
                       ></lab-icon>
@@ -1093,9 +1116,7 @@
                             <lab-icon
                               [data]="data"
                               [iconId]="belt"
-                              [tooltip]="
-                                data.itemEntities[belt]?.name || 'Pipe'
-                              "
+                              [tooltip]="data.itemEntities[belt]?.name || PIPE"
                               [item]="data.itemEntities[belt]"
                               [displayRate]="displayRate"
                             ></lab-icon>
@@ -1209,7 +1230,7 @@
                         <lab-icon
                           [data]="data"
                           [iconId]="belt"
-                          [tooltip]="data.itemEntities[belt]?.name || 'Pipe'"
+                          [tooltip]="data.itemEntities[belt]?.name || PIPE"
                           [item]="data.itemEntities[belt]"
                           [displayRate]="displayRate"
                         >

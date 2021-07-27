@@ -21,6 +21,7 @@ import {
   DefaultIdPayload,
   ItemId,
   Game,
+  PIPE,
 } from '~/models';
 import { ItemsState } from '~/store/items';
 import { RecipeUtility } from '~/utilities';
@@ -68,6 +69,7 @@ export class ProductsComponent
   RateType = RateType;
   Game = Game;
   RecipeUtility = RecipeUtility;
+  PIPE = PIPE;
 
   constructor() {
     super();

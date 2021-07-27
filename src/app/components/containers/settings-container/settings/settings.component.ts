@@ -82,6 +82,7 @@ export class SettingsComponent implements OnInit, OnChanges {
   @Output() setBeaconModule = new EventEmitter<DefaultIdPayload>();
   @Output() setOverclock = new EventEmitter<DefaultIdPayload<number>>();
   @Output() setBelt = new EventEmitter<DefaultPayload>();
+  @Output() setPipe = new EventEmitter<DefaultPayload>();
   @Output() setFuel = new EventEmitter<DefaultPayload>();
   @Output() setFlowRate = new EventEmitter<number>();
   @Output() setCargoWagon = new EventEmitter<DefaultPayload>();

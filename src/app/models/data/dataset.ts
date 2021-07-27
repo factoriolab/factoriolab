@@ -16,6 +16,7 @@ export interface Dataset {
   itemIds: string[];
   beaconIds: string[];
   beltIds: string[];
+  pipeIds: string[];
   cargoWagonIds: string[];
   fluidWagonIds: string[];
   factoryIds: string[];

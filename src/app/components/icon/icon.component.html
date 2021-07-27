@@ -92,6 +92,16 @@
         : 'Items/h'
     }}
   </div>
+  <div *ngIf="item?.pipe as pipe" class="nowrap">
+    {{ round(pipe.speed * displayRate) }}
+    {{
+      displayRate === DisplayRate.PerSecond
+        ? 'Items/s'
+        : displayRate === DisplayRate.PerMinute
+        ? 'Items/m'
+        : 'Items/h'
+    }}
+  </div>
   <div *ngIf="item?.cargoWagon as wagon" class="nowrap">
     {{ round(wagon.size) }}
     Inventory stacks

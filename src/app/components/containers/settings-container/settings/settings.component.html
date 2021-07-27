@@ -462,6 +462,30 @@
             </div>
           </td>
         </tr>
+        <tr *ngIf="data.pipeIds.length">
+          <td>Default pipe</td>
+          <td>
+            <div>
+              <lab-select
+                header="Select a pipe"
+                [data]="data"
+                [selected]="settings.pipe"
+                [options]="data.pipeIds"
+                [displayRate]="settings.displayRate"
+                (selectId)="
+                  setPipe.emit({ value: $event, default: data.defaults.pipe })
+                "
+              >
+                <lab-icon
+                  class="button"
+                  tooltip="Select default pipe"
+                  [data]="data"
+                  [iconId]="settings.pipe"
+                ></lab-icon>
+              </lab-select>
+            </div>
+          </td>
+        </tr>
         <tr *ngIf="data.cargoWagonIds.length > 1">
           <td>Default cargo wagon</td>
           <td>

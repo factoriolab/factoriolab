@@ -774,6 +774,7 @@ export class RouterService {
         this.zipDiffBool(state.expensive, init.expensive),
         this.zipDiffString(state.cargoWagon, init.cargoWagon),
         this.zipDiffString(state.fluidWagon, init.fluidWagon),
+        this.zipDiffString(state.pipe, init.pipe),
       ]),
       hash: this.zipFields([
         this.zipDiffDisplayRate(state.displayRate, init.displayRate),
@@ -793,6 +794,7 @@ export class RouterService {
         this.zipDiffBool(state.expensive, init.expensive),
         this.zipDiffNString(state.cargoWagon, init.cargoWagon, hash.wagons),
         this.zipDiffNString(state.fluidWagon, init.fluidWagon, hash.wagons),
+        this.zipDiffNString(state.pipe, init.pipe, hash.belts),
       ]),
     };
 
@@ -830,6 +832,7 @@ export class RouterService {
           cargoWagon: this.parseString(s[i++]),
           fluidWagon: this.parseString(s[i++]),
           preset: undefined,
+          pipe: undefined,
         };
         break;
       }
@@ -849,6 +852,7 @@ export class RouterService {
           expensive: this.parseBool(s[i++]),
           cargoWagon: this.parseString(s[i++]),
           fluidWagon: this.parseString(s[i++]),
+          pipe: this.parseString(s[i++]),
         };
         break;
       }
@@ -868,6 +872,7 @@ export class RouterService {
           expensive: this.parseBool(s[i++]),
           cargoWagon: this.parseNString(s[i++], hash.wagons),
           fluidWagon: this.parseNString(s[i++], hash.wagons),
+          pipe: this.parseNString(s[i++], hash.belts),
           baseId: undefined,
         };
         break;

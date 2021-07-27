@@ -75,7 +75,7 @@ export class StateService {
                   .filter((i) => h.beacons.indexOf(i) === -1)) {
                   h.beacons.push(id);
                 }
-                for (const id of [...d.beltIds]
+                for (const id of [...d.beltIds, ...d.pipeIds]
                   .sort()
                   .filter((i) => h.belts.indexOf(i) === -1)) {
                   h.belts.push(id);

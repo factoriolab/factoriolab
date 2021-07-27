@@ -16,6 +16,7 @@ export interface SettingsState {
   displayRate: DisplayRate;
   preset: Preset;
   belt: string;
+  pipe: string;
   fuel: string;
   cargoWagon: string;
   fluidWagon: string;
@@ -33,6 +34,7 @@ export const initialSettingsState: SettingsState = {
   displayRate: DisplayRate.PerMinute,
   preset: Preset.Minimum,
   belt: null,
+  pipe: null,
   fuel: null,
   cargoWagon: null,
   fluidWagon: null,
@@ -65,6 +67,7 @@ export function settingsReducer(
           expensive: false,
           preset: Preset.Minimum,
           belt: null,
+          pipe: null,
           fuel: null,
           cargoWagon: null,
           fluidWagon: null,
@@ -85,6 +88,11 @@ export function settingsReducer(
       return {
         ...state,
         ...{ belt: StoreUtility.compareValue(action.payload) },
+      };
+    case SettingsActionType.SET_PIPE:
+      return {
+        ...state,
+        ...{ pipe: StoreUtility.compareValue(action.payload) },
       };
     case SettingsActionType.SET_FUEL:
       return {
