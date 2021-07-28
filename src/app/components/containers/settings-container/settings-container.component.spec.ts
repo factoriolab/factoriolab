@@ -20,6 +20,7 @@ import {
   InserterCapacity,
   DefaultIdPayload,
   DefaultPayload,
+  IdPayload,
 } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import { ResetAction } from '~/store/app.actions';
@@ -108,7 +109,7 @@ describe('SettingsContainerComponent', () => {
   });
 
   it('should save a state', () => {
-    const value = { id: 'test', value: 'hash' };
+    const value: IdPayload = { id: 'test', value: 'hash' };
     component.child.saveState.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Preferences.SaveStateAction(value)
@@ -140,7 +141,10 @@ describe('SettingsContainerComponent', () => {
   });
 
   it('should set the disabled recipes', () => {
-    const value = { value: [RecipeId.BasicOilProcessing], default: [] };
+    const value: DefaultPayload<string[]> = {
+      value: [RecipeId.BasicOilProcessing],
+      default: [],
+    };
     component.child.setDisabledRecipes.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetDisabledRecipesAction(value)
@@ -211,7 +215,7 @@ describe('SettingsContainerComponent', () => {
   });
 
   it('should set a factory beacon count', () => {
-    const value: DefaultIdPayload<string> = {
+    const value: DefaultIdPayload = {
       id: 'id',
       value: '0',
       default: '0',
@@ -246,8 +250,20 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
+  it('should set a factory overclock', () => {
+    const value: DefaultIdPayload<number> = {
+      id: 'id',
+      value: 200,
+      default: 100,
+    };
+    component.child.setOverclock.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Factories.SetOverclockAction(value)
+    );
+  });
+
   it('should set the default belt', () => {
-    const value = {
+    const value: DefaultPayload = {
       value: ItemId.TransportBelt,
       default: ItemId.TransportBelt,
     };
@@ -257,8 +273,19 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
+  it('should set the default pipe', () => {
+    const value: DefaultPayload = {
+      value: ItemId.Pipe,
+      default: ItemId.Pipe,
+    };
+    component.child.setPipe.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetPipeAction(value)
+    );
+  });
+
   it('should set the fuel', () => {
-    const value = { value: ItemId.Wood, default: ItemId.Wood };
+    const value: DefaultPayload = { value: ItemId.Wood, default: ItemId.Wood };
     component.child.setFuel.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetFuelAction(value)
@@ -274,7 +301,10 @@ describe('SettingsContainerComponent', () => {
   });
 
   it('should set the cargo wagon', () => {
-    const value = { value: ItemId.CargoWagon, default: ItemId.CargoWagon };
+    const value: DefaultPayload = {
+      value: ItemId.CargoWagon,
+      default: ItemId.CargoWagon,
+    };
     component.child.setCargoWagon.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetCargoWagonAction(value)
@@ -282,7 +312,10 @@ describe('SettingsContainerComponent', () => {
   });
 
   it('should set the fluid wagon', () => {
-    const value = { value: ItemId.FluidWagon, default: ItemId.FluidWagon };
+    const value: DefaultPayload = {
+      value: ItemId.FluidWagon,
+      default: ItemId.FluidWagon,
+    };
     component.child.setFluidWagon.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetFluidWagonAction(value)

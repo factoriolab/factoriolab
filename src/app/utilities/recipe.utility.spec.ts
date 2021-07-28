@@ -426,6 +426,66 @@ describe('RecipeUtility', () => {
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
+
+    it('should adjust based on overclock', () => {
+      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
+      settings.overclock = Rational.from(200);
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.SteelChest,
+        ItemId.Coal,
+        Rational.zero,
+        Rational.zero,
+        settings,
+        Mocks.Data
+      );
+      const expected = new RationalRecipe(
+        Mocks.Data.recipeEntities[RecipeId.SteelChest]
+      );
+      expected.out = { [ItemId.SteelChest]: Rational.one };
+      expected.time = Rational.from(1, 3);
+      expected.consumption = Rational.from(919429939, 2000000);
+      expected.pollution = Rational.from(1, 20);
+      expected.productivity = Rational.one;
+      expect(result).toEqual(expected);
+    });
+
+    it('should use a recipe specific usage', () => {
+      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
+      const data = {
+        ...Mocks.Data,
+        ...{
+          recipeEntities: {
+            ...Mocks.Data.recipeEntities,
+            ...{
+              [RecipeId.SteelChest]: {
+                ...Mocks.Data.recipeEntities[RecipeId.SteelChest],
+                ...{
+                  usage: 10000,
+                },
+              },
+            },
+          },
+        },
+      };
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.SteelChest,
+        ItemId.Coal,
+        Rational.zero,
+        Rational.zero,
+        settings,
+        data
+      );
+      const expected = new RationalRecipe(
+        Mocks.Data.recipeEntities[RecipeId.SteelChest]
+      );
+      expected.out = { [ItemId.SteelChest]: Rational.one };
+      expected.time = Rational.from(2, 3);
+      expected.consumption = Rational.from(10005);
+      expected.pollution = Rational.from(1, 20);
+      expected.productivity = Rational.one;
+      expected.usage = Rational.from(10000);
+      expect(result).toEqual(expected);
+    });
   });
 
   describe('adjustSiloRecipes', () => {
@@ -681,6 +741,7 @@ describe('RecipeUtility', () => {
         viaBeaconCount: '0',
         viaBeacon: ItemId.Beacon,
         viaBeaconModules: [],
+        viaOverclock: 200,
       };
       expect(
         RecipeUtility.adjustProduct(
@@ -705,6 +766,7 @@ describe('RecipeUtility', () => {
         viaBeaconCount: '0',
         viaBeacon: ItemId.Beacon,
         viaBeaconModules: [],
+        viaOverclock: 200,
       };
       expect(
         RecipeUtility.adjustProduct(

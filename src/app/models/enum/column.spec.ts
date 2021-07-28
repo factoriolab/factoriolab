@@ -10,5 +10,9 @@ describe('Column', () => {
     it('should return the correct options for Dyson Sphere Program', () => {
       expect(columnOptions(Game.DysonSphereProgram).length).toEqual(6);
     });
+
+    it('should return the correct options for Satisfactory', () => {
+      expect(columnOptions(Game.Satisfactory).length).toEqual(8);
+    });
   });
 });

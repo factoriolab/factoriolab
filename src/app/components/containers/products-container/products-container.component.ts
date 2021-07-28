@@ -62,7 +62,7 @@ export class ProductsContainerComponent implements OnInit {
     this.store.dispatch(new Products.SetItemAction(data));
   }
 
-  setRate(data: IdPayload<string>): void {
+  setRate(data: IdPayload): void {
     this.store.dispatch(new Products.SetRateAction(data));
   }
 

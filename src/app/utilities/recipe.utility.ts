@@ -428,12 +428,10 @@ export class RecipeUtility {
           }
         }
 
-        if (data.game === Game.Satisfactory) {
-          if (product.viaSetting === def.factory) {
-            product.viaOverclock = product.viaOverclock || def.overclock;
-          } else {
-            product.viaOverclock = product.viaOverclock || fDef.overclock;
-          }
+        if (product.viaSetting === def.factory) {
+          product.viaOverclock = product.viaOverclock || def.overclock;
+        } else {
+          product.viaOverclock = product.viaOverclock || fDef.overclock;
         }
       }
     } else if (!product.viaId) {

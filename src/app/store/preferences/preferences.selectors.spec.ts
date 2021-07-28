@@ -4,13 +4,35 @@ import * as Selectors from './preferences.selectors';
 
 describe('Preferences Selectors', () => {
   describe('getColumnsState', () => {
-    it('should override Wagons/Beacons/Pollution for dsp', () => {
+    it('should override Overclock for Factorio', () => {
+      const state = initialColumnsState;
+      const result = Selectors.getColumnsState.projector(state, Game.Factorio);
+      expect(result[Column.Wagons].show).toBeTrue();
+      expect(result[Column.Overclock].show).toBeFalse();
+      expect(result[Column.Beacons].show).toBeTrue();
+      expect(result[Column.Pollution].show).toBeTrue();
+    });
+
+    it('should override Wagons/Beacons/Pollution for Dyson Sphere Program', () => {
       const state = initialColumnsState;
       const result = Selectors.getColumnsState.projector(
         state,
         Game.DysonSphereProgram
       );
       expect(result[Column.Wagons].show).toBeFalse();
+      expect(result[Column.Overclock].show).toBeFalse();
+      expect(result[Column.Beacons].show).toBeFalse();
+      expect(result[Column.Pollution].show).toBeFalse();
+    });
+
+    it('should override Beacons/Pollution for Satisfactory', () => {
+      const state = initialColumnsState;
+      const result = Selectors.getColumnsState.projector(
+        state,
+        Game.Satisfactory
+      );
+      expect(result[Column.Wagons].show).toBeTrue();
+      expect(result[Column.Overclock].show).toBeTrue();
       expect(result[Column.Beacons].show).toBeFalse();
       expect(result[Column.Pollution].show).toBeFalse();
     });

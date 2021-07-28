@@ -55,7 +55,7 @@ describe('Settings Selectors', () => {
       expect(result).toEqual(Mocks.Defaults);
     });
 
-    it('should handle dsp minimum module rank', () => {
+    it('should handle DSP minimum module rank', () => {
       const result = Selectors.getDefaults.projector(Preset.Minimum, {
         ...Mocks.Base,
         ...{ game: Game.DysonSphereProgram },
@@ -63,12 +63,20 @@ describe('Settings Selectors', () => {
       expect(result.moduleRank).toEqual([Mocks.Base.defaults.minBelt]);
     });
 
-    it('should handle dsp maximum module rank', () => {
+    it('should handle DSP maximum module rank', () => {
       const result = Selectors.getDefaults.projector(Preset.Modules, {
         ...Mocks.Base,
         ...{ game: Game.DysonSphereProgram },
       });
       expect(result.moduleRank).toEqual([Mocks.Base.defaults.maxBelt]);
+    });
+
+    it('should handle Satisfactory module rank', () => {
+      const result = Selectors.getDefaults.projector(Preset.Minimum, {
+        ...Mocks.Base,
+        ...{ game: Game.Satisfactory },
+      });
+      expect(result.moduleRank).toEqual(Mocks.Defaults.moduleRank);
     });
   });
 
@@ -348,6 +356,31 @@ describe('Settings Selectors', () => {
         'rocket-fuel',
         'nuclear-fuel',
       ]);
+    });
+
+    it('should handle pipes when found', () => {
+      const items = Mocks.Base.items.map((i) => {
+        if (i.id === ItemId.Pipe) {
+          return { ...i, ...{ pipe: { speed: 100 } } };
+        } else if (i.id === ItemId.CopperCable) {
+          return { ...i, ...{ pipe: { speed: 10 } } };
+        } else {
+          return { ...i };
+        }
+      });
+      const base = {
+        ...Mocks.Base,
+        ...{
+          items,
+        },
+      };
+      const result = Selectors.getNormalDataset.projector(
+        Mocks.Raw.app,
+        [base, Mocks.Mod1],
+        Mocks.Defaults,
+        Game.Factorio
+      );
+      expect(result.pipeIds).toEqual([ItemId.CopperCable, ItemId.Pipe]);
     });
   });
 
