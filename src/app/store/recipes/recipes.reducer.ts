@@ -61,6 +61,12 @@ export function recipesReducer(
         RecipeSettingsField.BeaconModules,
         action.payload
       );
+    case RecipesActionType.SET_OVERCLOCK:
+      return StoreUtility.compareReset(
+        state,
+        RecipeSettingsField.Overclock,
+        action.payload
+      );
     case RecipesActionType.RESET_RECIPE: {
       const newState = { ...state };
       delete newState[action.payload];
@@ -77,6 +83,8 @@ export function recipesReducer(
         RecipeSettingsField.Beacon,
         RecipeSettingsField.BeaconModules,
       ]);
+    case RecipesActionType.RESET_OVERCLOCK:
+      return StoreUtility.resetFields(state, [RecipeSettingsField.Overclock]);
     default:
       return state;
   }

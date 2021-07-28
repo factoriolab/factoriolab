@@ -128,6 +128,16 @@ describe('Factories Reducer', () => {
     });
   });
 
+  describe('SET_OVERCLOCK', () => {
+    it('should set the overclock for a factory', () => {
+      const result = factoriesReducer(
+        undefined,
+        new Actions.SetOverclockAction({ id, value: 200, default: 100 })
+      );
+      expect(result.entities[id].overclock).toEqual(200);
+    });
+  });
+
   it('should return the default state', () => {
     expect(factoriesReducer(undefined, { type: 'Test' } as any)).toEqual(
       initialFactoriesState

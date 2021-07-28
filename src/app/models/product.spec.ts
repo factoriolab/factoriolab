@@ -17,6 +17,7 @@ describe('RationalProduct', () => {
         viaBeaconCount: '1',
         viaBeacon: ItemId.Beacon,
         viaBeaconModules: [ItemId.SpeedModule],
+        viaOverclock: 200,
       });
       expect(result.id).toEqual('1');
       expect(result.itemId).toEqual(ItemId.ArtilleryShellRange);
@@ -28,6 +29,7 @@ describe('RationalProduct', () => {
       expect(result.viaBeaconCount).toEqual(Rational.one);
       expect(result.viaBeacon).toEqual(ItemId.Beacon);
       expect(result.viaBeaconModules).toEqual([ItemId.SpeedModule]);
+      expect(result.viaOverclock).toEqual(Rational.from(200));
     });
 
     it('should ignore undefined fields', () => {
@@ -47,6 +49,7 @@ describe('RationalProduct', () => {
       expect(result.viaBeaconCount).toBeUndefined();
       expect(result.viaBeacon).toBeUndefined();
       expect(result.viaBeaconModules).toBeUndefined();
+      expect(result.viaOverclock).toBeUndefined();
     });
   });
 });

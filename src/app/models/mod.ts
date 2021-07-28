@@ -1,4 +1,5 @@
 import { ModData } from './data/mod-data';
+import { Game } from './enum';
 
 export interface ModInfo {
   /**
@@ -7,6 +8,7 @@ export interface ModInfo {
    */
   id: string;
   name: string;
+  game: Game;
   compatibleIds?: string[];
 }
 

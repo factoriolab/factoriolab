@@ -5,6 +5,7 @@ export interface Recipe {
   id: string;
   name?: string;
   time: number;
+  producers: string[];
   in?: Entities<number>;
   out?: Entities<number>;
   expensive?: {
@@ -15,13 +16,17 @@ export interface Recipe {
   mining?: boolean;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
-  producers: string[];
+  /** Used to link the item to an alternate icon id */
+  icon?: string;
+  /** Used to override the factory's usage for this recipe */
+  usage?: number;
 }
 
 export class RationalRecipe {
   id: string;
   name: string;
   time: Rational;
+  producers: string[];
   productivity?: Rational;
   adjustProd?: boolean;
   in?: Entities<Rational>;
@@ -34,7 +39,7 @@ export class RationalRecipe {
   mining?: boolean;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
-  producers: string[];
+  usage?: Rational;
   consumption?: Rational;
   pollution?: Rational;
 
@@ -42,6 +47,7 @@ export class RationalRecipe {
     this.id = data.id;
     this.name = data.name;
     this.time = Rational.fromNumber(data.time);
+    this.producers = data.producers;
     if (data.in) {
       this.in = Object.keys(data.in).reduce((e: Entities<Rational>, i) => {
         e[i] = Rational.fromNumber(data.in[i]);
@@ -84,7 +90,9 @@ export class RationalRecipe {
     if (data.part) {
       this.part = data.part;
     }
-    this.producers = data.producers;
+    if (data.usage != null) {
+      this.usage = Rational.fromNumber(data.usage);
+    }
   }
 
   produces(id: string): boolean {

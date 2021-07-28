@@ -1,4 +1,5 @@
 import { IdName } from '../id-name';
+import { Game } from './game';
 
 export enum Preset {
   Minimum,
@@ -7,16 +8,16 @@ export enum Preset {
   Beacon12,
 }
 
-export function presetOptions(isDsp: boolean): IdName<Preset>[] {
-  return isDsp
+export function presetOptions(game: Game): IdName<Preset>[] {
+  return game === Game.Factorio
     ? [
-        { id: Preset.Minimum, name: 'Minimum' },
-        { id: Preset.Modules, name: 'Maximum' },
-      ]
-    : [
         { id: Preset.Minimum, name: 'Minimum' },
         { id: Preset.Modules, name: 'Modules' },
         { id: Preset.Beacon8, name: '8 Beacons' },
         { id: Preset.Beacon12, name: '12 Beacons' },
+      ]
+    : [
+        { id: Preset.Minimum, name: 'Minimum' },
+        { id: Preset.Modules, name: 'Maximum' },
       ];
 }

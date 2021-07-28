@@ -15,6 +15,7 @@ export const enum SettingsActionType {
   SET_DISABLED_RECIPES = '[Settings] Set Disabled Recipes',
   SET_EXPENSIVE = '[Settings] Set Expensive',
   SET_BELT = '[Settings] Set Belt',
+  SET_PIPE = '[Settings] Set Pipe',
   SET_FUEL = '[Settings] Set Fuel',
   SET_FLOW_RATE = '[Settings] Set Flow Rate',
   SET_CARGO_WAGON = '[Settings] Set Cargo Wagon',
@@ -48,6 +49,11 @@ export class SetExpensiveAction implements Action {
 
 export class SetBeltAction implements Action {
   readonly type = SettingsActionType.SET_BELT;
+  constructor(public payload: DefaultPayload) {}
+}
+
+export class SetPipeAction implements Action {
+  readonly type = SettingsActionType.SET_PIPE;
   constructor(public payload: DefaultPayload) {}
 }
 
@@ -102,6 +108,7 @@ export type SettingsAction =
   | SetDisabledRecipesAction
   | SetExpensiveAction
   | SetBeltAction
+  | SetPipeAction
   | SetFuelAction
   | SetFlowRateAction
   | SetCargoWagonAction

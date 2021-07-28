@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TestUtility } from 'src/tests';
-import { Column } from '~/models';
+import { Column, Game } from '~/models';
 import { initialColumnsState } from '~/store/preferences';
 import { DialogComponent } from '../dialog/dialog.component';
 import { ColumnsComponent } from './columns.component';
@@ -19,7 +19,7 @@ enum DataTest {
   selector: 'lab-test-columns',
   template: `
     <lab-columns
-      [isDsp]="isDsp"
+      [game]="game"
       [columns]="columns"
       (setColumns)="setColumns($event)"
     >
@@ -28,7 +28,7 @@ enum DataTest {
 })
 class TestColumnsComponent {
   @ViewChild(ColumnsComponent) child: ColumnsComponent;
-  isDsp = false;
+  game = Game.Factorio;
   columns = initialColumnsState;
   setColumns(data): void {}
   constructor(public ref: ChangeDetectorRef) {}

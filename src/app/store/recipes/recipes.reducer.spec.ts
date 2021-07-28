@@ -66,7 +66,7 @@ describe('Recipes Reducer', () => {
     });
   });
 
-  describe('SET_BEACONS_COUNT', () => {
+  describe('SET_BEACON_COUNT', () => {
     it('should set the beacon count', () => {
       const result = recipesReducer(
         initialRecipesState,
@@ -123,6 +123,20 @@ describe('Recipes Reducer', () => {
     });
   });
 
+  describe('SET_OVERCLOCK', () => {
+    it('should set the overclock', () => {
+      const result = recipesReducer(
+        initialRecipesState,
+        new Actions.SetOverclockAction({
+          id: Mocks.Recipe1.id,
+          value: 200,
+          default: 100,
+        })
+      );
+      expect(result[Mocks.Recipe1.id].overclock).toEqual(200);
+    });
+  });
+
   describe('RESET', () => {
     it('should reset a recipe', () => {
       const result = recipesReducer(
@@ -152,6 +166,16 @@ describe('Recipes Reducer', () => {
         RecipeSettingsField.BeaconCount,
         RecipeSettingsField.Beacon,
         RecipeSettingsField.BeaconModules,
+      ]);
+    });
+  });
+
+  describe('RESET_OVERCLOCK', () => {
+    it('should call resetField', () => {
+      spyOn(StoreUtility, 'resetFields');
+      recipesReducer(null, new Actions.ResetOverclockAction());
+      expect(StoreUtility.resetFields).toHaveBeenCalledWith(null, [
+        RecipeSettingsField.Overclock,
       ]);
     });
   });

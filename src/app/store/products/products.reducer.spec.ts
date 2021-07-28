@@ -186,6 +186,21 @@ describe('Products Reducer', () => {
     });
   });
 
+  describe('SET_VIA_OVERCLOCK', () => {
+    it('should set the via overclock of a product', () => {
+      const value = 200;
+      const result = productsReducer(
+        state,
+        new Actions.SetViaOverclockAction({
+          id: Mocks.Product1.id,
+          value,
+          default: null,
+        })
+      );
+      expect(result.entities[Mocks.Product1.id].viaOverclock).toEqual(value);
+    });
+  });
+
   it('should return default state', () => {
     expect(productsReducer(state, { type: 'Test' } as any)).toBe(state);
   });

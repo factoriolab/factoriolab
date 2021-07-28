@@ -33,6 +33,8 @@ import {
   FuelType,
   presetOptions,
   Rational,
+  Game,
+  GameOptions,
 } from '~/models';
 import { FactoriesState } from '~/store/factories';
 import { ColumnsState, PreferencesState } from '~/store/preferences';
@@ -78,7 +80,9 @@ export class SettingsComponent implements OnInit, OnChanges {
   @Output() setBeaconCount = new EventEmitter<DefaultIdPayload<string>>();
   @Output() setBeacon = new EventEmitter<DefaultIdPayload>();
   @Output() setBeaconModule = new EventEmitter<DefaultIdPayload>();
+  @Output() setOverclock = new EventEmitter<DefaultIdPayload<number>>();
   @Output() setBelt = new EventEmitter<DefaultPayload>();
+  @Output() setPipe = new EventEmitter<DefaultPayload>();
   @Output() setFuel = new EventEmitter<DefaultPayload>();
   @Output() setFlowRate = new EventEmitter<number>();
   @Output() setCargoWagon = new EventEmitter<DefaultPayload>();
@@ -116,11 +120,13 @@ export class SettingsComponent implements OnInit, OnChanges {
       name: 'Disabled',
     },
   ];
+  baseOptions: ModInfo[] = [];
   presetOptions: IdName<Preset>[];
   factoryOptions: string[];
   factoryRows: string[];
   savedStates: IdName[];
   columnsButton: string;
+  GameOptions = GameOptions;
   ResearchSpeedOptions = ResearchSpeedOptions;
   InserterCapacityOptions = InserterCapacityOptions;
   InserterTargetOptions = InserterTargetOptions;
@@ -128,6 +134,7 @@ export class SettingsComponent implements OnInit, OnChanges {
   BrowserUtility = BrowserUtility;
 
   ItemId = ItemId;
+  Game = Game;
 
   ctrlFlowRate = new FormControl('', Validators.min(0));
   ctrlMiningProductivity = new FormControl('', Validators.min(0));
@@ -148,7 +155,7 @@ export class SettingsComponent implements OnInit, OnChanges {
     this.ctrlMiningProductivity.setValue(this.settings.miningBonus);
     this.ctrlMiningSpeed.setValue(this.settings.miningBonus + 100);
 
-    this.presetOptions = presetOptions(this.data.isDsp);
+    this.presetOptions = presetOptions(this.data.game);
     this.factoryOptions = this.data.factoryIds.filter(
       (f) => this.factories.ids.indexOf(f) === -1
     );
@@ -161,11 +168,26 @@ export class SettingsComponent implements OnInit, OnChanges {
       (c) => this.columns[c].show
     ).length;
     this.columnsButton = `${numCols} Visible`;
+    this.baseOptions = this.base.filter((b) => b.game === this.data.game);
   }
 
   /** Forces change detector to update on scroll */
   @HostListener('scroll', ['$event']) scroll(): void {
     this.ref.detectChanges();
+  }
+
+  setGame(game: Game): void {
+    switch (game) {
+      case Game.Factorio:
+        this.setBase.emit(initialSettingsState.baseId);
+        break;
+      case Game.DysonSphereProgram:
+        this.setBase.emit('dsp');
+        break;
+      case Game.Satisfactory:
+        this.setBase.emit('sfy');
+        break;
+    }
   }
 
   changeBeaconCount(id: string, value: string): void {
@@ -174,6 +196,15 @@ export class SettingsComponent implements OnInit, OnChanges {
         ? this.data.defaults.beaconCount
         : this.factories.entities[''].beaconCount;
     this.setBeaconCount.emit({ id, value, default: def });
+  }
+
+  changeOverclock(id: string, input: Event): void {
+    const target = input.target as HTMLInputElement;
+    const value = target.valueAsNumber;
+    if (value >= 1 && value <= 250) {
+      const def = id === '' ? 100 : this.factories.entities[''].overclock;
+      this.setOverclock.emit({ id, value, default: def });
+    }
   }
 
   emitNumber(

@@ -4,7 +4,7 @@ import { StoreModule, Store } from '@ngrx/store';
 
 import { Mocks, ItemId, RecipeId } from 'src/tests';
 import { IconComponent, OptionsComponent, PickerComponent } from '~/components';
-import { DisplayRate, RateType } from '~/models';
+import { DefaultIdPayload, DisplayRate, IdPayload, RateType } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as Products from '~/store/products';
 import { SetDisplayRateAction } from '~/store/settings';
@@ -50,7 +50,7 @@ describe('ProductsContainerComponent', () => {
   });
 
   it('should set item on a product', () => {
-    const data = { id: Mocks.Product1.id, value: Mocks.Item2.id };
+    const data: IdPayload = { id: Mocks.Product1.id, value: Mocks.Item2.id };
     component.child.setItem.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Products.SetItemAction(data)
@@ -58,7 +58,7 @@ describe('ProductsContainerComponent', () => {
   });
 
   it('should set rate on a product', () => {
-    const data = { id: Mocks.Product1.id, value: '2' };
+    const data: IdPayload = { id: Mocks.Product1.id, value: '2' };
     component.child.setRate.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Products.SetRateAction(data)
@@ -66,7 +66,10 @@ describe('ProductsContainerComponent', () => {
   });
 
   it('should set rate type on a product', () => {
-    const data = { id: Mocks.Product1.id, value: RateType.Wagons };
+    const data: IdPayload<RateType> = {
+      id: Mocks.Product1.id,
+      value: RateType.Wagons,
+    };
     component.child.setRateType.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Products.SetRateTypeAction(data)
@@ -74,7 +77,7 @@ describe('ProductsContainerComponent', () => {
   });
 
   it('should set via on a product', () => {
-    const data = {
+    const data: IdPayload = {
       id: Mocks.Product1.id,
       value: RecipeId.AdvancedOilProcessing,
     };
@@ -85,7 +88,7 @@ describe('ProductsContainerComponent', () => {
   });
 
   it('should set via setting on a product', () => {
-    const data = {
+    const data: DefaultIdPayload = {
       id: Mocks.Product1.id,
       value: ItemId.TransportBelt,
       default: ItemId.TransportBelt,
@@ -97,7 +100,7 @@ describe('ProductsContainerComponent', () => {
   });
 
   it('should set via factory modules on a product', () => {
-    const data = {
+    const data: DefaultIdPayload<string[]> = {
       id: Mocks.Product1.id,
       value: [ItemId.SpeedModule, ItemId.SpeedModule],
       default: [ItemId.Module, ItemId.Module],
@@ -109,7 +112,7 @@ describe('ProductsContainerComponent', () => {
   });
 
   it('should set via beacon count on a product', () => {
-    const data = {
+    const data: DefaultIdPayload = {
       id: Mocks.Product1.id,
       value: '12',
       default: '8',
@@ -121,7 +124,7 @@ describe('ProductsContainerComponent', () => {
   });
 
   it('should set via beacon on a product', () => {
-    const data = {
+    const data: DefaultIdPayload = {
       id: Mocks.Product1.id,
       value: ItemId.Beacon,
       default: ItemId.Beacon,
@@ -133,7 +136,7 @@ describe('ProductsContainerComponent', () => {
   });
 
   it('should set via beacon modules on a product', () => {
-    const data = {
+    const data: DefaultIdPayload<string[]> = {
       id: Mocks.Product1.id,
       value: [ItemId.SpeedModule, ItemId.SpeedModule],
       default: [ItemId.Module, ItemId.Module],
@@ -141,6 +144,18 @@ describe('ProductsContainerComponent', () => {
     component.child.setViaBeaconModules.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Products.SetViaBeaconModulesAction(data)
+    );
+  });
+
+  it('should set via overclock on a product', () => {
+    const data: DefaultIdPayload<number> = {
+      id: Mocks.Product1.id,
+      value: 200,
+      default: 100,
+    };
+    component.child.setViaOverclock.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Products.SetViaOverclockAction(data)
     );
   });
 

@@ -108,27 +108,63 @@
           </ng-template>
           <ng-container *ngIf="product.rateType === RateType.Belts">
             <span>using</span>
-            <lab-select
-              header="Select a belt"
-              [data]="data"
-              [selected]="product.viaSetting || itemSettings[id].belt"
-              [options]="data.beltIds"
-              [displayRate]="displayRate"
-              (selectId)="
-                setViaSetting.emit({
-                  id: product.id,
-                  value: $event,
-                  default: itemSettings[id].belt
-                })
-              "
+            <ng-container
+              *ngIf="product.viaSetting || itemSettings[id].belt as belt"
             >
-              <lab-icon
-                class="button"
-                tooltip="Change rate step belt"
+              <lab-select
+                *ngIf="data.beltIds.indexOf(belt) !== -1; else pipePicker"
+                header="Select a belt"
                 [data]="data"
-                [iconId]="product.viaSetting || itemSettings[id].belt"
-              ></lab-icon>
-            </lab-select>
+                [selected]="belt"
+                [options]="data.beltIds"
+                [displayRate]="displayRate"
+                (selectId)="
+                  setViaSetting.emit({
+                    id: product.id,
+                    value: $event,
+                    default: itemSettings[id].belt
+                  })
+                "
+              >
+                <lab-icon
+                  class="button"
+                  tooltip="Change rate step belt"
+                  [data]="data"
+                  [iconId]="belt"
+                ></lab-icon>
+              </lab-select>
+              <ng-template #pipePicker>
+                <lab-select
+                  *ngIf="data.pipeIds.indexOf(belt) !== -1; else pipeIcon"
+                  header="Select a pipe"
+                  [data]="data"
+                  [selected]="belt"
+                  [options]="data.pipeIds"
+                  [displayRate]="displayRate"
+                  (selectId)="
+                    setViaSetting.emit({
+                      id: product.id,
+                      value: $event,
+                      default: itemSettings[id].belt
+                    })
+                  "
+                >
+                  <lab-icon
+                    class="button"
+                    tooltip="Change rate step pipe"
+                    [data]="data"
+                    [iconId]="belt"
+                  ></lab-icon>
+                </lab-select>
+              </ng-template>
+              <ng-template #pipeIcon>
+                <lab-icon
+                  [iconId]="belt"
+                  [tooltip]="data.itemEntities[belt]?.name || PIPE"
+                  [data]="data"
+                ></lab-icon>
+              </ng-template>
+            </ng-container>
           </ng-container>
           <ng-container *ngIf="product.rateType === RateType.Wagons">
             <ng-container
@@ -199,7 +235,10 @@
             <ng-container *ngIf="product.viaSetting as factory">
               <ng-container *ngIf="data.recipeEntities[id] as recipe">
                 <ng-container
-                  *ngIf="!data.isDsp || factory !== ItemId.MiningDrill"
+                  *ngIf="
+                    data.game !== Game.DysonSphereProgram ||
+                    factory !== ItemId.MiningDrill
+                  "
                 >
                   <span>using</span>
                   <ng-container
@@ -243,7 +282,7 @@
                     [data]="data"
                     [selected]="mod"
                     [options]="data.recipeModuleIds[id]"
-                    [includeEmptyModule]="!data.isDsp"
+                    [includeEmptyModule]="data.game === Game.Factorio"
                     [displayRate]="displayRate"
                     (selectId)="
                       changeFactoryModules(
@@ -268,6 +307,28 @@
                       [displayRate]="displayRate"
                     ></lab-icon>
                   </lab-select>
+                </div>
+                <div *ngIf="product.viaOverclock as overclock" class="flex">
+                  <input
+                    type="number"
+                    title="Set rate step overclock"
+                    placeholder="100"
+                    min="0"
+                    max="250"
+                    step="10"
+                    labValidateOverclock
+                    [ngModel]="product.viaOverclock"
+                    (input)="
+                      changeOverclock(
+                        id,
+                        $event,
+                        setViaOverclock,
+                        product.id,
+                        product.viaSetting
+                      )
+                    "
+                  />
+                  <span style="margin-left: 0.25rem">%</span>
                 </div>
                 <ng-container *ngIf="product.viaBeacon as beacon">
                   <lab-input

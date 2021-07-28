@@ -1,36 +1,38 @@
-import { AppData } from '~/models';
+import { AppData, Game } from '~/models';
 import app from './app/data.json';
 
 export { app };
 export const data: AppData = {
   app,
   base: [
-    { id: '1.1', name: '1.1.34' },
-    { id: '1.0', name: '1.0.0' },
-    { id: '017', name: '0.17.79' },
-    { id: '016', name: '0.16.51' },
-    { id: 'ang', name: `Angel's Industries` },
-    { id: 'bio', name: 'Bio Industries' },
-    { id: 'bob', name: `Bob's Mods` },
-    { id: 'bobang', name: `Bob's & Angel's` },
-    { id: 'dsp', name: 'Dyson Sphere Program' },
-    { id: 'fpp', name: 'Factorio Plus Plus' },
-    { id: 'fep', name: 'FactorioExtended Plus' },
-    { id: 'ir2', name: 'Industrial Revolution 2' },
-    { id: 'kr2', name: 'Krastorio 2' },
-    { id: 'kr2sxp', name: 'Krastorio 2 + SE' },
-    { id: 'msc', name: 'More Science' },
-    { id: 'nls', name: 'Nullius' },
-    { id: 'pys', name: 'Pyanodons' },
-    { id: 'pysalf', name: 'Pyanodons + AL' },
-    { id: 'sea', name: 'Sea Block' },
-    { id: 'sxp', name: 'Space Exploration' },
-    { id: 'xan', name: 'Xander Mod' },
+    { id: '1.1', name: '1.1.34', game: Game.Factorio },
+    { id: '1.0', name: '1.0.0', game: Game.Factorio },
+    { id: '017', name: '0.17.79', game: Game.Factorio },
+    { id: '016', name: '0.16.51', game: Game.Factorio },
+    { id: 'ang', name: `Angel's Industries`, game: Game.Factorio },
+    { id: 'bio', name: 'Bio Industries', game: Game.Factorio },
+    { id: 'bob', name: `Bob's Mods`, game: Game.Factorio },
+    { id: 'bobang', name: `Bob's & Angel's`, game: Game.Factorio },
+    { id: 'fpp', name: 'Factorio Plus Plus', game: Game.Factorio },
+    { id: 'fep', name: 'FactorioExtended Plus', game: Game.Factorio },
+    { id: 'ir2', name: 'Industrial Revolution 2', game: Game.Factorio },
+    { id: 'kr2', name: 'Krastorio 2', game: Game.Factorio },
+    { id: 'kr2sxp', name: 'Krastorio 2 + SE', game: Game.Factorio },
+    { id: 'msc', name: 'More Science', game: Game.Factorio },
+    { id: 'nls', name: 'Nullius', game: Game.Factorio },
+    { id: 'pys', name: 'Pyanodons', game: Game.Factorio },
+    { id: 'pysalf', name: 'Pyanodons + AL', game: Game.Factorio },
+    { id: 'sea', name: 'Sea Block', game: Game.Factorio },
+    { id: 'sxp', name: 'Space Exploration', game: Game.Factorio },
+    { id: 'xan', name: 'Xander Mod', game: Game.Factorio },
+    { id: 'dsp', name: 'Dyson Sphere Program', game: Game.DysonSphereProgram },
+    { id: 'sfy', name: 'Satisfactory', game: Game.Satisfactory },
   ],
   mods: [
     {
       id: 'res',
       name: 'Infinite Research',
+      game: Game.Factorio,
     },
   ],
   v0: [
@@ -74,5 +76,6 @@ export const data: AppData = {
     'fpp',
     'ang',
     'msc',
+    'sfy',
   ],
 };

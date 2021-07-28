@@ -15,6 +15,7 @@ export const enum ProductsActionType {
   SET_VIA_BEACON_COUNT = '[Products] Set Via Beacon Count',
   SET_VIA_BEACON = '[Products] Set Via Beacon',
   SET_VIA_BEACON_MODULES = '[Products] Set Via Beacon Modules',
+  SET_VIA_OVERCLOCK = '[Products] Set Via Overclock',
 }
 
 export class ResetAction implements Action {
@@ -77,6 +78,11 @@ export class SetViaBeaconModulesAction implements Action {
   constructor(public payload: DefaultIdPayload<string[]>) {}
 }
 
+export class SetViaOverclockAction implements Action {
+  readonly type = ProductsActionType.SET_VIA_OVERCLOCK;
+  constructor(public payload: DefaultIdPayload<number>) {}
+}
+
 export type ProductsAction =
   | ResetAction
   | AddAction
@@ -89,4 +95,5 @@ export type ProductsAction =
   | SetViaFactoryModulesAction
   | SetViaBeaconCountAction
   | SetViaBeaconAction
-  | SetViaBeaconModulesAction;
+  | SetViaBeaconModulesAction
+  | SetViaOverclockAction;

@@ -187,6 +187,10 @@ export class Rational {
     }
   }
 
+  abs(): Rational {
+    return new Rational(Rational.abs(this.p), this.q);
+  }
+
   toNumber(): number {
     return Number(this.p) / Number(this.q);
   }

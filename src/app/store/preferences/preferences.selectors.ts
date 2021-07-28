@@ -1,8 +1,8 @@
 import { compose, createSelector } from '@ngrx/store';
 
-import { Column, LinkValue } from '~/models';
+import { Column, Game, LinkValue } from '~/models';
 import { State } from '../';
-import { getIsDsp } from '../settings';
+import { getGame } from '../settings';
 import {
   ColumnsState,
   initialColumnsState,
@@ -23,14 +23,18 @@ export const getSimplex = compose(sSimplex, preferencesState);
 
 export const getColumnsState = createSelector(
   getColumns,
-  getIsDsp,
-  (col, dsp): ColumnsState =>
-    dsp
+  getGame,
+  (col, game): ColumnsState =>
+    game === Game.DysonSphereProgram
       ? {
           ...initialColumnsState,
           ...col,
           ...{
             [Column.Wagons]: { ...col[Column.Wagons], ...{ show: false } },
+            [Column.Overclock]: {
+              ...col[Column.Overclock],
+              ...{ show: false },
+            },
             [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
             [Column.Pollution]: {
               ...col[Column.Pollution],
@@ -38,7 +42,28 @@ export const getColumnsState = createSelector(
             },
           },
         }
-      : { ...initialColumnsState, ...col }
+      : game === Game.Satisfactory
+      ? {
+          ...initialColumnsState,
+          ...col,
+          ...{
+            [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
+            [Column.Pollution]: {
+              ...col[Column.Pollution],
+              ...{ show: false },
+            },
+          },
+        }
+      : {
+          ...initialColumnsState,
+          ...col,
+          ...{
+            [Column.Overclock]: {
+              ...col[Column.Overclock],
+              ...{ show: false },
+            },
+          },
+        }
 );
 
 export const getLinkPrecision = createSelector(

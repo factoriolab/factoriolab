@@ -78,12 +78,22 @@
       </tr>
       <tr *ngIf="beacon.usage">
         <td>Energy consumption</td>
-        <td>{{ round(beacon.usage) }} kW</td>
+        <td>{{ power(beacon.usage) }}</td>
       </tr>
     </table>
   </div>
   <div *ngIf="item?.belt as belt" class="nowrap">
     {{ round(belt.speed * displayRate) }}
+    {{
+      displayRate === DisplayRate.PerSecond
+        ? 'Items/s'
+        : displayRate === DisplayRate.PerMinute
+        ? 'Items/m'
+        : 'Items/h'
+    }}
+  </div>
+  <div *ngIf="item?.pipe as pipe" class="nowrap">
+    {{ round(pipe.speed * displayRate) }}
     {{
       displayRate === DisplayRate.PerSecond
         ? 'Items/s'
@@ -120,7 +130,7 @@
       </tr>
       <tr *ngIf="factory.usage">
         <td>Energy consumption</td>
-        <td>{{ round(factory.usage) }} kW</td>
+        <td>{{ power(factory.usage) }}</td>
       </tr>
       <tr
         *ngIf="
@@ -131,9 +141,8 @@
         <td>Drain</td>
         <td>
           {{
-            round(factory.drain != null ? factory.drain : factory.usage / 30)
+            power(factory.drain != null ? factory.drain : factory.usage / 30)
           }}
-          kW
         </td>
       </tr>
       <tr *ngIf="factory.pollution">

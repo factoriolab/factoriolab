@@ -590,7 +590,7 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
-          COST_WATER,
+          Rational.from(120001, 1200),
         ],
         [
           Rational.zero,
@@ -604,7 +604,7 @@ describe('SimplexUtility', () => {
           Rational.one,
           Rational.zero,
           Rational.zero,
-          Rational.from(13000, 1),
+          Rational.from(1183040, 91),
         ],
         [
           Rational.zero,

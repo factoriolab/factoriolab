@@ -230,6 +230,53 @@ describe('RecipeSettingsComponent', () => {
     });
   });
 
+  describe('changeOverclock', () => {
+    it('should emit overclock', () => {
+      const emitter = new EventEmitter<DefaultIdPayload<number>>();
+      spyOn(emitter, 'emit');
+      component.child.changeOverclock(
+        Mocks.Step1.recipeId,
+        { target: { valueAsNumber: 200 } } as any,
+        emitter,
+        id,
+        ItemId.AssemblingMachine3
+      );
+      expect(emitter.emit).toHaveBeenCalledWith({
+        id,
+        value: 200,
+        default: null,
+      });
+    });
+
+    it('should use recipe id as default id', () => {
+      const emitter = new EventEmitter<DefaultIdPayload<number>>();
+      spyOn(emitter, 'emit');
+      component.child.changeOverclock(
+        Mocks.Step1.recipeId,
+        { target: { valueAsNumber: 200 } } as any,
+        emitter
+      );
+      expect(emitter.emit).toHaveBeenCalledWith({
+        id: Mocks.Step1.recipeId,
+        value: 200,
+        default: null,
+      });
+    });
+
+    it('should ignore bad values', () => {
+      const emitter = new EventEmitter<DefaultIdPayload<number>>();
+      spyOn(emitter, 'emit');
+      component.child.changeOverclock(
+        Mocks.Step1.recipeId,
+        { target: { valueAsNumber: 260 } } as any,
+        emitter,
+        id,
+        ItemId.AssemblingMachine3
+      );
+      expect(emitter.emit).not.toHaveBeenCalled();
+    });
+  });
+
   describe('generateModules', () => {
     it('should fill when index 0 is modified', () => {
       expect(
