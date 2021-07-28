@@ -1,4 +1,5 @@
 import { Mocks, ItemId } from 'src/tests';
+import { Game } from '~/models';
 import { initialFactoriesState } from './factories.reducer';
 import * as Selectors from './factories.selectors';
 
@@ -44,7 +45,7 @@ describe('Factories Selectors', () => {
       const result = Selectors.getFactorySettings.projector(
         initialFactoriesState,
         Mocks.Defaults,
-        { ...Mocks.AdjustedData, ...{ isDsp: true } }
+        { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } }
       );
       expect(result.entities[''].beaconCount).toBeNull();
     });

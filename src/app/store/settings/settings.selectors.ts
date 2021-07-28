@@ -249,11 +249,10 @@ export const getNormalDataset = createSelector(
     // Calculate missing implicit recipe icons
     // For recipes with no icon, use icon of first output product
     recipes
-      .filter((r) => !iconEntities[r.id])
+      .filter((r) => !iconEntities[r.id] && r.out)
       .forEach(
         (r) => (iconEntities[r.id] = iconEntities[Object.keys(r.out)[0]])
       );
-
     // Calculate category item rows
     const categoryItemRows: Entities<string[][]> = {};
     for (const id of categoryIds) {

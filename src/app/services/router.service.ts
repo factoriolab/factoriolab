@@ -205,19 +205,16 @@ export class RouterService {
   updateState(e: Event): void {
     try {
       if (e instanceof NavigationEnd) {
-        const fragments = e.urlAfterRedirects.split('#');
-        let query = fragments[0].split('?');
-        if (
-          query.length < 2 &&
-          fragments.length > 1 &&
-          fragments[1].length > 1 &&
-          fragments[1][1] === '='
-        ) {
+        const [prehash, ...posthash] = e.urlAfterRedirects.split('#');
+        const hash = posthash.join('#'); // Preserve # after first instance
+        const [prequery, ...postquery] = prehash.split('?');
+        let query = postquery.join('?'); // Preserve ? after first instance
+        if (!query.length && hash.length > 1 && hash[1] === '=') {
           // Try to recognize and handle old hash style navigation
-          query = fragments;
+          query = hash;
         }
-        if (query.length > 1) {
-          let zip = query[1];
+        if (query) {
+          let zip = query;
           if (this.zip !== zip) {
             if (zip.startsWith('z=')) {
               // Upgrade old query-unsafe zipped characters
@@ -831,8 +828,8 @@ export class RouterService {
           inserterCapacity: this.parseNumber(s[i++]),
           cargoWagon: this.parseString(s[i++]),
           fluidWagon: this.parseString(s[i++]),
+          pipe: this.parseString(s[i++]),
           preset: undefined,
-          pipe: undefined,
         };
         break;
       }

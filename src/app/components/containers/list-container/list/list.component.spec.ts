@@ -27,6 +27,7 @@ import {
   InserterTarget,
   InserterCapacity,
   Column,
+  Game,
 } from '~/models';
 import { RouterService } from '~/services';
 import { reducers, metaReducers } from '~/store';
@@ -283,7 +284,10 @@ describe('ListComponent', () => {
     });
 
     it('should use recipeId for DSP mining', () => {
-      component.child.data = { ...Mocks.Data, ...{ isDsp: true } };
+      component.child.data = {
+        ...Mocks.Data,
+        ...{ game: Game.DysonSphereProgram },
+      };
       component.child.recipeSettings = {
         ...Mocks.RecipeSettingsInitial,
         ...{

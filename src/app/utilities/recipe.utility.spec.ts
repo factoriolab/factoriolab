@@ -182,7 +182,7 @@ describe('RecipeUtility', () => {
       expected.out = {
         [ItemId.SteelChest]: Rational.from(76, 25),
       };
-      expected.time = Rational.from(8, 15);
+      expected.time = Rational.from(40, 81);
       expected.consumption = Rational.from(260);
       expected.pollution = Rational.from(1037, 4000);
       expected.productivity = Rational.from(76, 25);
@@ -786,7 +786,7 @@ describe('RecipeUtility', () => {
         { id, itemId, rate, rateType },
         null,
         Mocks.RecipeSettingsInitial,
-        null,
+        Mocks.FactorySettingsInitial,
         Mocks.Data
       );
       expect(result.viaFactoryModules).toBeUndefined();

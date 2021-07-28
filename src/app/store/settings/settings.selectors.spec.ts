@@ -1,5 +1,5 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import { Rational, ResearchSpeed, Preset, FuelType } from '~/models';
+import { Rational, ResearchSpeed, Preset, FuelType, Game } from '~/models';
 import { initialSettingsState } from './settings.reducer';
 import * as Selectors from './settings.selectors';
 
@@ -15,15 +15,14 @@ describe('Settings Selectors', () => {
 
   describe('getDefaults', () => {
     it('should handle null base data', () => {
-      const result = Selectors.getDefaults.projector(null, null, null);
+      const result = Selectors.getDefaults.projector(null, null);
       expect(result).toBeNull();
     });
 
     it('should use minimum values', () => {
       const result = Selectors.getDefaults.projector(
         Preset.Minimum,
-        Mocks.Base,
-        false
+        Mocks.Base
       );
       expect(result.belt).toEqual(Mocks.Base.defaults.minBelt);
       expect(result.factoryRank).toEqual(Mocks.Base.defaults.minFactoryRank);
@@ -35,8 +34,7 @@ describe('Settings Selectors', () => {
     it('should use 8 beacons', () => {
       const result = Selectors.getDefaults.projector(
         Preset.Beacon8,
-        Mocks.Base,
-        false
+        Mocks.Base
       );
       expect(result.beaconCount).toEqual('8');
     });
@@ -44,8 +42,7 @@ describe('Settings Selectors', () => {
     it('should use 12 beacons', () => {
       const result = Selectors.getDefaults.projector(
         Preset.Beacon12,
-        Mocks.Base,
-        false
+        Mocks.Base
       );
       expect(result.beaconCount).toEqual('12');
     });
@@ -53,27 +50,24 @@ describe('Settings Selectors', () => {
     it('should get the defaults from the current base mod', () => {
       const result = Selectors.getDefaults.projector(
         Preset.Beacon8,
-        Mocks.Base,
-        false
+        Mocks.Base
       );
       expect(result).toEqual(Mocks.Defaults);
     });
 
     it('should handle dsp minimum module rank', () => {
-      const result = Selectors.getDefaults.projector(
-        Preset.Minimum,
-        Mocks.Base,
-        true
-      );
+      const result = Selectors.getDefaults.projector(Preset.Minimum, {
+        ...Mocks.Base,
+        ...{ game: Game.DysonSphereProgram },
+      });
       expect(result.moduleRank).toEqual([Mocks.Base.defaults.minBelt]);
     });
 
     it('should handle dsp maximum module rank', () => {
-      const result = Selectors.getDefaults.projector(
-        Preset.Modules,
-        Mocks.Base,
-        true
-      );
+      const result = Selectors.getDefaults.projector(Preset.Modules, {
+        ...Mocks.Base,
+        ...{ game: Game.DysonSphereProgram },
+      });
       expect(result.moduleRank).toEqual([Mocks.Base.defaults.maxBelt]);
     });
   });
@@ -83,6 +77,7 @@ describe('Settings Selectors', () => {
       const value: any = {
         modIds: 'modDatasetIds',
         belt: 'belt',
+        pipe: 'pipe',
         fuel: 'fuel',
         cargoWagon: 'cargoWagon',
         fluidWagon: 'fluidWagon',
@@ -104,6 +99,7 @@ describe('Settings Selectors', () => {
       const result = Selectors.getSettings.projector({}, Mocks.Defaults);
       expect(result).toEqual({
         belt: Mocks.Defaults.belt,
+        pipe: undefined,
         fuel: Mocks.Defaults.fuel,
         cargoWagon: Mocks.Defaults.cargoWagon,
         fluidWagon: Mocks.Defaults.fluidWagon,
@@ -115,6 +111,7 @@ describe('Settings Selectors', () => {
       const result = Selectors.getSettings.projector({}, null);
       expect(result).toEqual({
         belt: undefined,
+        pipe: undefined,
         fuel: undefined,
         cargoWagon: undefined,
         fluidWagon: undefined,
@@ -192,7 +189,8 @@ describe('Settings Selectors', () => {
       const result = Selectors.getNormalDataset.projector(
         Mocks.Raw.app,
         [Mocks.Base, Mocks.Mod1],
-        Mocks.Defaults
+        Mocks.Defaults,
+        Game.Factorio
       );
       expect(result.categoryIds.length).toBeGreaterThan(0);
       expect(Object.keys(result.categoryEntities).length).toEqual(
@@ -243,7 +241,8 @@ describe('Settings Selectors', () => {
       const result = Selectors.getNormalDataset.projector(
         data,
         [Mocks.Base, Mocks.Mod1],
-        Mocks.Defaults
+        Mocks.Defaults,
+        Game.Factorio
       );
       expect(result.categoryIds.length).toBeGreaterThan(0);
       expect(
@@ -298,7 +297,8 @@ describe('Settings Selectors', () => {
       const result = Selectors.getNormalDataset.projector(
         Mocks.Raw.app,
         [base, Mocks.Mod1],
-        Mocks.Defaults
+        Mocks.Defaults,
+        Game.Factorio
       );
       expect(result.recipeEntities['unknown-recipe'].name).toEqual(
         'Unknown recipe'
@@ -330,7 +330,8 @@ describe('Settings Selectors', () => {
       const result = Selectors.getNormalDataset.projector(
         Mocks.Raw.app,
         [base, Mocks.Mod1],
-        Mocks.Defaults
+        Mocks.Defaults,
+        Game.Factorio
       );
       expect(result.beaconIds).toEqual(['id', 'beacon']);
       expect(result.beltIds).toEqual([
