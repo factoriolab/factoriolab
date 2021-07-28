@@ -1,11 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import {
-  RecipeSettings,
-  Entities,
-  RationalRecipeSettings,
-  Game,
-} from '~/models';
+import { RecipeSettings, Entities, RationalRecipeSettings } from '~/models';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 import * as Items from '../items';
 import * as Factories from '../factories';
@@ -54,9 +49,7 @@ export const getRecipeSettings = createSelector(
           }
         }
 
-        if (data.game === Game.Satisfactory) {
-          s.overclock = s.overclock || def.overclock;
-        }
+        s.overclock = s.overclock || def?.overclock;
 
         value[recipe.id] = s;
       }

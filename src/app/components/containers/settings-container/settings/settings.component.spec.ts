@@ -14,6 +14,7 @@ import {
   SelectComponent,
   ToggleComponent,
 } from '~/components';
+import { Game } from '~/models';
 import { initialColumnsState } from '~/store/preferences';
 import { BrowserUtility } from '~/utilities';
 import { SettingsComponent } from './settings.component';
@@ -49,7 +50,9 @@ enum DataTest {
       (setBeaconCount)="setBeaconCount($event)"
       (setBeacon)="setBeacon($event)"
       (setBeaconModule)="setBeaconModule($event)"
+      (setOverclock)="setOverclock($event)"
       (setBelt)="setBelt($event)"
+      (setPipe)="setPipe($event)"
       (setFuel)="setFuel($event)"
       (setFlowRate)="setFlowRate($event)"
       (setCargoWagon)="setCargoWagon($event)"
@@ -88,7 +91,9 @@ class TestSettingsComponent {
   setBeaconCount(data): void {}
   setBeacon(data): void {}
   setBeaconModule(data): void {}
+  setOverclock(data): void {}
   setBelt(data): void {}
+  setPipe(data): void {}
   setFuel(data): void {}
   setFlowRate(data): void {}
   setCargoWagon(data): void {}
@@ -201,6 +206,26 @@ describe('SettingsComponent', () => {
     });
   });
 
+  describe('setGame', () => {
+    it('should select the baseId for Factorio', () => {
+      spyOn(component, 'setBase');
+      component.child.setGame(Game.Factorio);
+      expect(component.setBase).toHaveBeenCalledWith('1.1');
+    });
+
+    it('should select the baseId for Dyson Sphere Program', () => {
+      spyOn(component, 'setBase');
+      component.child.setGame(Game.DysonSphereProgram);
+      expect(component.setBase).toHaveBeenCalledWith('dsp');
+    });
+
+    it('should select the baseId for Satisfactory', () => {
+      spyOn(component, 'setBase');
+      component.child.setGame(Game.Satisfactory);
+      expect(component.setBase).toHaveBeenCalledWith('sfy');
+    });
+  });
+
   describe('changeBeaconCount', () => {
     it('should emit beacon count', () => {
       spyOn(component, 'setBeaconCount');
@@ -220,6 +245,40 @@ describe('SettingsComponent', () => {
         value: '3',
         default: '8',
       });
+    });
+  });
+
+  describe('changeOverclock', () => {
+    it('should emit overclock', () => {
+      spyOn(component, 'setOverclock');
+      component.child.changeOverclock('', {
+        target: { valueAsNumber: 200 },
+      } as any);
+      expect(component.setOverclock).toHaveBeenCalledWith({
+        id: '',
+        value: 200,
+        default: 100,
+      });
+    });
+
+    it('should emit overclock on specific factory', () => {
+      spyOn(component, 'setOverclock');
+      component.child.changeOverclock(ItemId.AssemblingMachine3, {
+        target: { valueAsNumber: 200 },
+      } as any);
+      expect(component.setOverclock).toHaveBeenCalledWith({
+        id: ItemId.AssemblingMachine3,
+        value: 200,
+        default: null,
+      });
+    });
+
+    it('should ignore bad values', () => {
+      spyOn(component, 'setOverclock');
+      component.child.changeOverclock('', {
+        target: { valueAsNumber: 260 },
+      } as any);
+      expect(component.setOverclock).not.toHaveBeenCalled();
     });
   });
 
@@ -309,6 +368,17 @@ describe('SettingsComponent', () => {
       component.child.clickResetSettings();
       expect(window.confirm).toHaveBeenCalled();
       expect(component.resetSettings).toHaveBeenCalled();
+    });
+  });
+
+  describe('gtZero', () => {
+    it('should handle valid values', () => {
+      expect(component.child.gtZero('0')).toBeFalse();
+      expect(component.child.gtZero('0.5')).toBeTrue();
+    });
+
+    it('should handle invalid value', () => {
+      expect(component.child.gtZero('x')).toBeFalse();
     });
   });
 });

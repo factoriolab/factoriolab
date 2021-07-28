@@ -168,9 +168,7 @@ export class SettingsComponent implements OnInit, OnChanges {
       (c) => this.columns[c].show
     ).length;
     this.columnsButton = `${numCols} Visible`;
-    if (this.data.game === Game.Factorio) {
-      this.baseOptions = this.base.filter((b) => b.game === this.data.game);
-    }
+    this.baseOptions = this.base.filter((b) => b.game === this.data.game);
   }
 
   /** Forces change detector to update on scroll */
