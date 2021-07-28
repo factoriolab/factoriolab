@@ -2,9 +2,7 @@
   <div>
     <div class="links">
       <div class="header">
-        <a
-          [href]="homeHref"
-          onclick="setTimeout(location.reload.bind(location), 200)"
+        <a [href]="homeHref"
           ><h1>{{ title }}</h1></a
         >
       </div>
@@ -129,11 +127,7 @@
         <br />
         <div>{{ error.message }}</div>
         <br />
-        <a
-          [href]="homeHref"
-          onclick="setTimeout(location.reload.bind(location), 200)"
-          >Click here to reset</a
-        >
+        <a [href]="homeHref">Click here to reset</a>
       </div>
     </div>
   </div>
