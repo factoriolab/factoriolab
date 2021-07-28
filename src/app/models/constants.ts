@@ -5,6 +5,7 @@ export const NONE = '<None>';
 export const APP = 'FactorioLab';
 export const TITLE_LAB = 'Factorio Calculator';
 export const TITLE_DSP = 'Dyson Sphere Program Calculator';
+export const TITLE_SFY = 'Satisfactory Calculator';
 export const ERROR_SIMPLEX = `No solution found. Check your disabled recipes to ensure a solution is feasible.
 
 E.G.: If one iron plate requires two gears, and one gear requires two iron plates, a solution for iron plates is not feasible.`;
@@ -15,3 +16,4 @@ To avoid this issue, try disabling some/all recipes.
 \u26a0 Warning: The browser may hang if you choose to continue.
 
 (Click "OK" to keep trying, click "Cancel" to quit)`;
+export const PIPE = 'Pipe';

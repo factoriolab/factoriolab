@@ -20,7 +20,7 @@ import {
   PickerComponent,
 } from './components';
 import { AppComponent } from './app.component';
-import { APP, TITLE_DSP } from './models';
+import { APP, TITLE_DSP, TITLE_SFY } from './models';
 import { SetBaseAction } from './store/settings';
 
 describe('AppComponent', () => {
@@ -67,11 +67,18 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should update the title', () => {
+  it('should update the title for Dyson Sphere Program', () => {
     store.dispatch(new SetBaseAction('dsp'));
     spyOn(title, 'setTitle');
     fixture.detectChanges();
     expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_DSP}`);
+  });
+
+  it('should update the title for Satisfactory', () => {
+    store.dispatch(new SetBaseAction('sfy'));
+    spyOn(title, 'setTitle');
+    fixture.detectChanges();
+    expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_SFY}`);
   });
 
   it('should hide the poll if persisted', () => {

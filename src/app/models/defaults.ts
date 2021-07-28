@@ -1,6 +1,7 @@
 export interface Defaults {
   modIds: string[];
   belt: string;
+  pipe: string;
   fuel: string;
   cargoWagon: string;
   fluidWagon: string;

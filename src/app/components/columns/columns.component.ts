@@ -9,6 +9,7 @@ import {
 import {
   Column,
   columnOptions,
+  Game,
   IdName,
   PrecisionColumns,
   Rational,
@@ -23,7 +24,7 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnsComponent extends DialogContainerComponent {
-  @Input() isDsp: boolean;
+  @Input() game: Game;
   @Input() columns: ColumnsState;
 
   @Output() setColumns = new EventEmitter<ColumnsState>();
@@ -35,7 +36,7 @@ export class ColumnsComponent extends DialogContainerComponent {
   Column = Column;
 
   get columnOptions(): IdName<Column>[] {
-    return columnOptions(this.isDsp);
+    return columnOptions(this.game);
   }
 
   constructor() {

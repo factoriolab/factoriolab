@@ -20,10 +20,17 @@ export const getModSets = compose(sModSets, datasetsState);
 export const getDataEntities = compose(sDataEntities, datasetsState);
 
 /* Complex selectors */
+export const getBaseInfoEntities = createSelector(getBaseSets, (base) =>
+  base.reduce((e: Entities<ModInfo>, b) => {
+    e[b.id] = b;
+    return e;
+  }, {})
+);
+
 export const getBaseEntities = createSelector(
   getBaseSets,
   getDataEntities,
-  (base, entities): Entities<Mod> =>
+  (base, entities) =>
     base.reduce((e: Entities<Mod>, b) => {
       e[b.id] = entities[b.id] ? { ...b, ...entities[b.id] } : null;
       return e;
@@ -33,7 +40,7 @@ export const getBaseEntities = createSelector(
 export const getModEntities = createSelector(
   getModSets,
   getDataEntities,
-  (mod, entities): Entities<Mod> =>
+  (mod, entities) =>
     mod.reduce((e: Entities<Mod>, m) => {
       e[m.id] = entities[m.id] ? { ...m, ...entities[m.id] } : null;
       return e;

@@ -51,7 +51,7 @@ describe('FlowUtility', () => {
             id: ItemId.PlasticBar,
             name: Mocks.AdjustedData.itemEntities[ItemId.PlasticBar].name,
             color: Mocks.AdjustedData.iconEntities[ItemId.PlasticBar].color,
-            viewBox: '768 384 64 64',
+            viewBox: '896 384 64 64',
             href: Mocks.AdjustedData.iconEntities[ItemId.PlasticBar].file,
           },
         ],
@@ -250,7 +250,7 @@ describe('FlowUtility', () => {
         id: RecipeId.UraniumProcessing,
         name,
         color,
-        viewBox: '0 448 64 64',
+        viewBox: '128 448 64 64',
         href,
       };
       const uNode1: Node = {

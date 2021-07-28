@@ -205,19 +205,16 @@ export class RouterService {
   updateState(e: Event): void {
     try {
       if (e instanceof NavigationEnd) {
-        const fragments = e.urlAfterRedirects.split('#');
-        let query = fragments[0].split('?');
-        if (
-          query.length < 2 &&
-          fragments.length > 1 &&
-          fragments[1].length > 1 &&
-          fragments[1][1] === '='
-        ) {
+        const [prehash, ...posthash] = e.urlAfterRedirects.split('#');
+        const hash = posthash.join('#'); // Preserve # after first instance
+        const [prequery, ...postquery] = prehash.split('?');
+        let query = postquery.join('?'); // Preserve ? after first instance
+        if (!query.length && hash.length > 1 && hash[1] === '=') {
           // Try to recognize and handle old hash style navigation
-          query = fragments;
+          query = hash;
         }
-        if (query.length > 1) {
-          let zip = query[1];
+        if (query) {
+          let zip = query;
           if (this.zip !== zip) {
             if (zip.startsWith('z=')) {
               // Upgrade old query-unsafe zipped characters
@@ -247,9 +244,6 @@ export class RouterService {
             const state: State = {} as any;
             switch (v) {
               case ZipVersion.Version0: {
-                Object.keys(params).forEach((k) => {
-                  params[k] = params[k];
-                });
                 if (params[Section.Products]) {
                   state.productsState = this.unzipProducts(params, v);
                 }
@@ -363,6 +357,7 @@ export class RouterService {
             this.zipTruthyString(obj.viaBeaconCount),
             this.zipTruthyArray(obj.viaBeaconModules),
             this.zipTruthyString(obj.viaBeacon),
+            this.zipTruthyNumber(obj.viaOverclock),
           ]),
           hash: this.zipFields([
             this.zipTruthyNString(obj.itemId, hash.items),
@@ -386,6 +381,7 @@ export class RouterService {
             this.zipTruthyString(obj.viaBeaconCount),
             this.zipTruthyNArray(obj.viaBeaconModules, hash.modules),
             this.zipTruthyNString(obj.viaBeacon, hash.beacons),
+            this.zipTruthyNumber(obj.viaOverclock),
           ]),
         };
       })
@@ -426,6 +422,7 @@ export class RouterService {
             viaBeaconCount: this.parseString(s[i++]),
             viaBeaconModules: this.parseArray(s[i++]),
             viaBeacon: this.parseString(s[i++]),
+            viaOverclock: this.parseNumber(s[i++]),
           };
           break;
         }
@@ -455,6 +452,7 @@ export class RouterService {
           obj.viaBeaconCount = this.parseString(s[i++]);
           obj.viaBeaconModules = this.parseNArray(s[i++], hash.modules);
           obj.viaBeacon = this.parseNString(s[i++], hash.beacons);
+          obj.viaOverclock = this.parseNumber(s[i++]);
           break;
         }
       }
@@ -565,6 +563,7 @@ export class RouterService {
             this.zipTruthyString(obj.beaconCount),
             this.zipTruthyArray(obj.beaconModules),
             this.zipTruthyString(obj.beacon),
+            this.zipTruthyNumber(obj.overclock),
           ]),
           hash: this.zipFields([
             this.zipTruthyNString(i, hash.recipes),
@@ -573,6 +572,7 @@ export class RouterService {
             this.zipTruthyString(obj.beaconCount),
             this.zipTruthyNArray(obj.beaconModules, hash.modules),
             this.zipTruthyNString(obj.beacon, hash.beacons),
+            this.zipTruthyNumber(obj.overclock),
           ]),
         };
       })
@@ -607,6 +607,7 @@ export class RouterService {
             beaconCount: this.parseString(s[i++]),
             beaconModules: this.parseArray(s[i++]),
             beacon: this.parseString(s[i++]),
+            overclock: this.parseNumber(s[i++]),
           };
           break;
         }
@@ -622,6 +623,7 @@ export class RouterService {
                 : this.parseString(s[i++]),
             beaconModules: this.parseNArray(s[i++], hash.modules),
             beacon: this.parseNString(s[i++], hash.beacons),
+            overclock: this.parseNumber(s[i++]),
           };
           break;
         }
@@ -655,6 +657,7 @@ export class RouterService {
             this.zipTruthyString(obj.beaconCount),
             this.zipTruthyString(obj.beaconModule),
             this.zipTruthyString(obj.beacon),
+            this.zipTruthyNumber(obj.overclock),
           ]),
           hash: this.zipFields([
             h ? this.zipTruthyNString(i, hash.factories) : i,
@@ -662,6 +665,7 @@ export class RouterService {
             this.zipTruthyString(obj.beaconCount),
             this.zipTruthyNString(obj.beaconModule, hash.modules),
             this.zipTruthyNString(obj.beacon, hash.beacons),
+            this.zipTruthyNumber(obj.overclock),
           ]),
         };
       })
@@ -698,6 +702,7 @@ export class RouterService {
             beaconCount: this.parseString(s[i++]),
             beaconModule: this.parseString(s[i++]),
             beacon: this.parseString(s[i++]),
+            overclock: this.parseNumber(s[i++]),
           };
           if (z === 0 && id === TRUE) {
             loadIds = true;
@@ -719,6 +724,7 @@ export class RouterService {
                 : this.parseString(s[i++]),
             beaconModule: this.parseNString(s[i++], hash.modules),
             beacon: this.parseNString(s[i++], hash.beacons),
+            overclock: this.parseNumber(s[i++]),
           };
           if (z === 0 && id === TRUE) {
             loadIds = true;
@@ -765,6 +771,7 @@ export class RouterService {
         this.zipDiffBool(state.expensive, init.expensive),
         this.zipDiffString(state.cargoWagon, init.cargoWagon),
         this.zipDiffString(state.fluidWagon, init.fluidWagon),
+        this.zipDiffString(state.pipe, init.pipe),
       ]),
       hash: this.zipFields([
         this.zipDiffDisplayRate(state.displayRate, init.displayRate),
@@ -784,6 +791,7 @@ export class RouterService {
         this.zipDiffBool(state.expensive, init.expensive),
         this.zipDiffNString(state.cargoWagon, init.cargoWagon, hash.wagons),
         this.zipDiffNString(state.fluidWagon, init.fluidWagon, hash.wagons),
+        this.zipDiffNString(state.pipe, init.pipe, hash.belts),
       ]),
     };
 
@@ -820,6 +828,7 @@ export class RouterService {
           inserterCapacity: this.parseNumber(s[i++]),
           cargoWagon: this.parseString(s[i++]),
           fluidWagon: this.parseString(s[i++]),
+          pipe: this.parseString(s[i++]),
           preset: undefined,
         };
         break;
@@ -840,6 +849,7 @@ export class RouterService {
           expensive: this.parseBool(s[i++]),
           cargoWagon: this.parseString(s[i++]),
           fluidWagon: this.parseString(s[i++]),
+          pipe: this.parseString(s[i++]),
         };
         break;
       }
@@ -859,6 +869,7 @@ export class RouterService {
           expensive: this.parseBool(s[i++]),
           cargoWagon: this.parseNString(s[i++], hash.wagons),
           fluidWagon: this.parseNString(s[i++], hash.wagons),
+          pipe: this.parseNString(s[i++], hash.belts),
           baseId: undefined,
         };
         break;

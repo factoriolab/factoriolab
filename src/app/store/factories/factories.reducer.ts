@@ -106,6 +106,14 @@ export function factoriesReducer(
       );
       return { ...state, ...{ entities } };
     }
+    case FactoriesActionType.SET_OVERCLOCK: {
+      const entities = StoreUtility.compareReset(
+        state.entities,
+        FactorySettingsField.Overclock,
+        action.payload
+      );
+      return { ...state, ...{ entities } };
+    }
     default:
       return state;
   }

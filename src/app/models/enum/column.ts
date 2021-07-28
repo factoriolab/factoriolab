@@ -1,4 +1,5 @@
 import { IdName } from '../id-name';
+import { Game } from './game';
 
 export enum Column {
   Tree = 'Tree',
@@ -7,6 +8,7 @@ export enum Column {
   Belts = 'Belts',
   Wagons = 'Wagons',
   Factories = 'Factories',
+  Overclock = 'Overclock',
   Beacons = 'Beacons',
   Power = 'Power',
   Pollution = 'Pollution',
@@ -19,6 +21,7 @@ export const AllColumns = [
   Column.Belts,
   Column.Wagons,
   Column.Factories,
+  Column.Overclock,
   Column.Beacons,
   Column.Power,
   Column.Pollution,
@@ -34,20 +37,26 @@ export const PrecisionColumns = [
   Column.Pollution,
 ];
 
-export function columnOptions(isDsp: boolean): IdName<Column>[] {
+export function columnOptions(game: Game): IdName<Column>[] {
   const result = AllColumns.map((id) => ({
     id,
     name: id,
   }));
 
-  if (isDsp) {
-    return result.filter(
-      (i) =>
-        i.id !== Column.Wagons &&
-        i.id !== Column.Beacons &&
-        i.id !== Column.Pollution
-    );
+  switch (game) {
+    case Game.Factorio:
+      return result.filter((i) => i.id !== Column.Overclock);
+    case Game.DysonSphereProgram:
+      return result.filter(
+        (i) =>
+          i.id !== Column.Wagons &&
+          i.id !== Column.Overclock &&
+          i.id !== Column.Beacons &&
+          i.id !== Column.Pollution
+      );
+    case Game.Satisfactory:
+      return result.filter(
+        (i) => i.id !== Column.Beacons && i.id !== Column.Pollution
+      );
   }
-
-  return result;
 }

@@ -15,11 +15,14 @@ export interface Item {
   stack?: number;
   beacon?: Beacon;
   belt?: Belt;
+  pipe?: Belt;
   factory?: Factory;
   module?: Module;
   fuel?: Fuel;
   cargoWagon?: CargoWagon;
   fluidWagon?: FluidWagon;
+  /** Used to link the item to an alternate icon id */
+  icon?: string;
 }
 
 export class RationalItem {
@@ -30,6 +33,7 @@ export class RationalItem {
   stack?: Rational;
   beacon?: RationalBeacon;
   belt?: RationalBelt;
+  pipe?: RationalBelt;
   factory?: RationalFactory;
   module?: RationalModule;
   fuel?: RationalFuel;
@@ -49,6 +53,9 @@ export class RationalItem {
     }
     if (data.belt) {
       this.belt = new RationalBelt(data.belt);
+    }
+    if (data.pipe) {
+      this.pipe = new RationalBelt(data.pipe);
     }
     if (data.factory) {
       this.factory = new RationalFactory(data.factory);

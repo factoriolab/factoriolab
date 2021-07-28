@@ -67,6 +67,14 @@ export class IconComponent implements OnChanges {
     return Number(value.toFixed(2));
   }
 
+  power(value: number): string {
+    if (Math.abs(value) < 1000) {
+      return `${this.round(value)} kW`;
+    } else {
+      return `${this.round(value / 1000)} MW`;
+    }
+  }
+
   toBonusPercent(value: number): string {
     const rational = this.round(
       Rational.fromNumber(value).mul(Rational.hundred).toNumber()

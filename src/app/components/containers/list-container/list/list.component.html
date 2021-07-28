@@ -5,7 +5,7 @@
       <th>
         <div class="flex end">
           <lab-columns
-            [isDsp]="data.isDsp"
+            [game]="data.game"
             [columns]="columns"
             (setColumns)="setColumns.emit($event)"
           >
@@ -59,6 +59,18 @@
             *ngIf="modifiedFactory"
             title="Undo all factory modifications"
             (click)="resetFactory.emit()"
+          >
+            <i class="material-icons">undo</i>
+          </button>
+        </div>
+      </th>
+      <th *ngIf="columns[Column.Overclock].show">
+        <div class="header">
+          Overclock
+          <button
+            *ngIf="modifiedOverclock"
+            title="Undo all overclock modifications"
+            (click)="resetOverclock.emit()"
           >
             <i class="material-icons">undo</i>
           </button>
@@ -184,34 +196,50 @@
               <span class="monospace">{{
                 rate(step.belts, effPrecision[Column.Belts])
               }}</span>
-              <ng-container
-                *ngIf="data.beltIds.indexOf(belt) === -1; else beltPicker"
+              <lab-select
+                *ngIf="data.beltIds.indexOf(belt) !== -1; else pipePicker"
+                header="Select a belt"
+                [data]="data"
+                [selected]="belt"
+                [options]="data.beltIds"
+                [displayRate]="displayRate"
+                (selectId)="
+                  setBelt.emit({
+                    id: step.itemId,
+                    value: $event,
+                    default: settings.belt
+                  })
+                "
               >
                 <lab-icon
-                  [iconId]="belt"
-                  tooltip="Pipe"
-                  [displayRate]="displayRate"
+                  class="button"
+                  title="Click to change belt"
                   [data]="data"
+                  [iconId]="belt"
+                  [tooltip]="data.itemEntities[belt].name"
+                  [item]="data.itemEntities[belt]"
+                  [displayRate]="displayRate"
                 ></lab-icon>
-              </ng-container>
-              <ng-template #beltPicker>
+              </lab-select>
+              <ng-template #pipePicker>
                 <lab-select
-                  header="Select a belt type"
+                  *ngIf="data.pipeIds.indexOf(belt) !== -1; else pipeIcon"
+                  header="Select a pipe"
                   [data]="data"
                   [selected]="belt"
-                  [options]="data.beltIds"
+                  [options]="data.pipeIds"
                   [displayRate]="displayRate"
                   (selectId)="
                     setBelt.emit({
                       id: step.itemId,
                       value: $event,
-                      default: settings.belt
+                      default: settings.pipe
                     })
                   "
                 >
                   <lab-icon
                     class="button"
-                    title="Click to change belt"
+                    title="Click to change pipe"
                     [data]="data"
                     [iconId]="belt"
                     [tooltip]="data.itemEntities[belt].name"
@@ -219,6 +247,13 @@
                     [displayRate]="displayRate"
                   ></lab-icon>
                 </lab-select>
+              </ng-template>
+              <ng-template #pipeIcon>
+                <lab-icon
+                  [iconId]="belt"
+                  [tooltip]="data.itemEntities[belt]?.name || PIPE"
+                  [data]="data"
+                ></lab-icon>
               </ng-template>
             </div>
           </ng-container>
@@ -326,7 +361,10 @@
                   *ngIf="data.recipeEntities[step.recipeId] as recipe"
                 >
                   <ng-container
-                    *ngIf="!data.isDsp || factory !== ItemId.MiningDrill"
+                    *ngIf="
+                      data.game !== Game.DysonSphereProgram ||
+                      factory !== ItemId.MiningDrill
+                    "
                   >
                     <ng-container
                       *ngIf="
@@ -378,7 +416,7 @@
                   [data]="data"
                   [selected]="mod"
                   [options]="data.recipeModuleIds[step.recipeId]"
-                  [includeEmptyModule]="!data.isDsp"
+                  [includeEmptyModule]="data.game === Game.Factorio"
                   [displayRate]="displayRate"
                   (selectId)="
                     changeFactoryModules(
@@ -406,6 +444,21 @@
           </td>
         </ng-container>
         <td colspan="3" *ngIf="!recipeSettings[step.recipeId]?.factory"></td>
+        <td *ngIf="columns[Column.Overclock].show">
+          <input
+            *ngIf="recipeSettings[step.recipeId]"
+            type="number"
+            title="Set overclock"
+            placeholder="100"
+            min="0"
+            max="250"
+            step="10"
+            labValidateOverclock
+            [ngModel]="recipeSettings[step.recipeId].overclock"
+            (input)="changeOverclock(step.recipeId, $event, setOverclock)"
+          />
+          %
+        </td>
         <ng-container *ngIf="columns[Column.Beacons].show">
           <ng-container *ngIf="recipeSettings[step.recipeId]?.beacon as beacon">
             <td>
@@ -612,7 +665,7 @@
                     <lab-icon
                       [data]="data"
                       [iconId]="belt"
-                      [tooltip]="data.itemEntities[belt]?.name || 'Pipe'"
+                      [tooltip]="data.itemEntities[belt]?.name || PIPE"
                       [item]="data.itemEntities[belt]"
                       [displayRate]="displayRate"
                     ></lab-icon>
@@ -658,7 +711,10 @@
                         [recipe]="data.recipeEntities[output.recipeId]"
                       ></lab-icon>
                       <lab-icon
-                        *ngIf="!data.isDsp || factory !== ItemId.MiningDrill"
+                        *ngIf="
+                          data.game !== Game.DysonSphereProgram ||
+                          factory !== ItemId.MiningDrill
+                        "
                         [data]="data"
                         [iconId]="factory"
                         [tooltip]="data.itemEntities[factory].name"
@@ -727,7 +783,7 @@
                   <lab-icon
                     [data]="data"
                     [iconId]="belt"
-                    [tooltip]="data.itemEntities[belt]?.name || 'Pipe'"
+                    [tooltip]="data.itemEntities[belt]?.name || PIPE"
                     [item]="data.itemEntities[belt]"
                     [displayRate]="displayRate"
                   ></lab-icon>
@@ -776,7 +832,10 @@
                       [recipe]="data.recipeEntities[step.recipeId]"
                     ></lab-icon>
                     <lab-icon
-                      *ngIf="!data.isDsp || factory !== ItemId.MiningDrill"
+                      *ngIf="
+                        data.game !== Game.DysonSphereProgram ||
+                        factory !== ItemId.MiningDrill
+                      "
                       [data]="data"
                       [iconId]="factory"
                       [tooltip]="data.itemEntities[factory].name"
@@ -858,7 +917,7 @@
                       <lab-icon
                         [data]="data"
                         [iconId]="belt"
-                        [tooltip]="data.itemEntities[belt]?.name || 'Pipe'"
+                        [tooltip]="data.itemEntities[belt]?.name || PIPE"
                         [item]="data.itemEntities[belt]"
                         [displayRate]="displayRate"
                       ></lab-icon>
@@ -955,7 +1014,7 @@
                       <lab-icon
                         [data]="data"
                         [iconId]="belt"
-                        [tooltip]="data.itemEntities[belt]?.name || 'Pipe'"
+                        [tooltip]="data.itemEntities[belt]?.name || PIPE"
                         [item]="data.itemEntities[belt]"
                         [displayRate]="displayRate"
                       ></lab-icon>
@@ -1057,9 +1116,7 @@
                             <lab-icon
                               [data]="data"
                               [iconId]="belt"
-                              [tooltip]="
-                                data.itemEntities[belt]?.name || 'Pipe'
-                              "
+                              [tooltip]="data.itemEntities[belt]?.name || PIPE"
                               [item]="data.itemEntities[belt]"
                               [displayRate]="displayRate"
                             ></lab-icon>
@@ -1173,7 +1230,7 @@
                         <lab-icon
                           [data]="data"
                           [iconId]="belt"
-                          [tooltip]="data.itemEntities[belt]?.name || 'Pipe'"
+                          [tooltip]="data.itemEntities[belt]?.name || PIPE"
                           [item]="data.itemEntities[belt]"
                           [displayRate]="displayRate"
                         >
@@ -1203,7 +1260,7 @@
                 </ng-container>
               </table>
             </div>
-            <div class="info" *ngIf="!data.isDsp">
+            <div class="info" *ngIf="data.game === Game.Factorio">
               <span>
                 * Inserters are calculated using target/capacity settings and
                 0.18 experimental data from the
@@ -1365,6 +1422,7 @@
           </ng-template>
         </div>
       </td>
+      <td *ngIf="columns[Column.Overclock].show"></td>
       <td colspan="3" *ngIf="columns[Column.Beacons].show"></td>
       <td *ngIf="columns[Column.Power].show">
         <div class="flex">

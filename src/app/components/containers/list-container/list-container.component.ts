@@ -64,6 +64,7 @@ export class ListContainerComponent implements OnInit {
   modifiedBelt$: Observable<boolean>;
   modifiedWagon$: Observable<boolean>;
   modifiedFactory$: Observable<boolean>;
+  modifiedOverclock$: Observable<boolean>;
   modifiedBeacons$: Observable<boolean>;
 
   constructor(private store: Store<State>) {}
@@ -89,6 +90,7 @@ export class ListContainerComponent implements OnInit {
     this.modifiedBelt$ = this.store.select(Items.getContainsBelt);
     this.modifiedWagon$ = this.store.select(Items.getContainsWagon);
     this.modifiedFactory$ = this.store.select(Recipes.getContainsFactory);
+    this.modifiedOverclock$ = this.store.select(Recipes.getContainsOverclock);
     this.modifiedBeacons$ = this.store.select(Recipes.getContainsBeacons);
   }
 
@@ -124,6 +126,10 @@ export class ListContainerComponent implements OnInit {
     this.store.dispatch(new Recipes.SetBeaconModulesAction(data));
   }
 
+  setOverclock(data: DefaultIdPayload<number>): void {
+    this.store.dispatch(new Recipes.SetOverclockAction(data));
+  }
+
   setColumns(value: Preferences.ColumnsState): void {
     this.store.dispatch(new Preferences.SetColumnsAction(value));
   }
@@ -150,6 +156,10 @@ export class ListContainerComponent implements OnInit {
 
   resetFactory(): void {
     this.store.dispatch(new Recipes.ResetFactoryAction());
+  }
+
+  resetOverclock(): void {
+    this.store.dispatch(new Recipes.ResetOverclockAction());
   }
 
   resetBeacons(): void {

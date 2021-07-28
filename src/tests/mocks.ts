@@ -1,6 +1,6 @@
 import { data } from 'src/data';
-import base from 'src/data/1.0/data.json';
-import hash from 'src/data/1.0/hash.json';
+import base from 'src/data/1.1/data.json';
+import hash from 'src/data/1.1/hash.json';
 import mod from 'src/data/res/data.json';
 import {
   Product,
@@ -21,6 +21,7 @@ import {
   ModHash,
   MatrixResult,
   MatrixResultType,
+  Game,
 } from '~/models';
 import { initialDatasetsState } from '~/store/datasets';
 import { getFactorySettings, initialFactoriesState } from '~/store/factories';
@@ -49,11 +50,12 @@ export const Base: Mod = { ...BaseInfo, ...BaseData };
 export const ModData1 = mod;
 export const Mod1: Mod = { ...data.mods[0], ...ModData1 };
 export const ModInfo = [data.mods[0]];
-export const Defaults = getDefaults.projector(Preset.Beacon8, base);
+export const Defaults = getDefaults.projector(Preset.Beacon8, Base);
 export const Data = getNormalDataset.projector(
   data.app,
   [Base, Mod1],
-  Defaults
+  Defaults,
+  Game.Factorio
 );
 export const CategoryId = Data.categoryIds[0];
 export const Item1 = Data.itemEntities[Data.itemIds[0]];

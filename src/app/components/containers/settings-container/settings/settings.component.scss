@@ -1,6 +1,6 @@
 :host {
   flex-grow: 1;
-  width: 22.5rem;
+  width: 21.75rem;
 
   > .flex {
     justify-content: space-between;
@@ -37,6 +37,10 @@
 
     table {
       width: 100%;
+
+      &.factories {
+        width: auto;
+      }
 
       td > div.flex {
         > * + * {

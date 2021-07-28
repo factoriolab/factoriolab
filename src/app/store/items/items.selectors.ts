@@ -23,7 +23,13 @@ export const getItemSettings = createSelector(
 
         // Belt (or Pipe)
         if (!itemSettings.belt) {
-          itemSettings.belt = item.stack ? settings.belt : ItemId.Pipe;
+          if (item.stack) {
+            itemSettings.belt = settings.belt;
+          } else if (settings.pipe) {
+            itemSettings.belt = settings.pipe;
+          } else {
+            itemSettings.belt = ItemId.Pipe;
+          }
         }
 
         if (!itemSettings.wagon) {

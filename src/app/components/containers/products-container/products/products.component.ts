@@ -20,6 +20,8 @@ import {
   DisplayRateOptions,
   DefaultIdPayload,
   ItemId,
+  Game,
+  PIPE,
 } from '~/models';
 import { ItemsState } from '~/store/items';
 import { RecipeUtility } from '~/utilities';
@@ -54,6 +56,7 @@ export class ProductsComponent
   @Output() setViaBeaconModules = new EventEmitter<
     DefaultIdPayload<string[]>
   >();
+  @Output() setViaOverclock = new EventEmitter<DefaultIdPayload<number>>();
   @Output() addProduct = new EventEmitter<string>();
   @Output() setDisplayRate = new EventEmitter<DisplayRate>();
 
@@ -64,14 +67,16 @@ export class ProductsComponent
   IdType = IdType;
   ItemId = ItemId;
   RateType = RateType;
+  Game = Game;
   RecipeUtility = RecipeUtility;
+  PIPE = PIPE;
 
   constructor() {
     super();
   }
 
   ngOnChanges(): void {
-    this.rateTypeOptions = rateTypeOptions(this.displayRate, this.data.isDsp);
+    this.rateTypeOptions = rateTypeOptions(this.displayRate, this.data.game);
     this.productOptions = {};
     for (const p of this.products) {
       this.productOptions[p.id] = this.productSteps[p.itemId].map((r) => r[0]);

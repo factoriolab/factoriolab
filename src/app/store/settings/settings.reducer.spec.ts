@@ -75,6 +75,17 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('SET_PIPE', () => {
+    it('should set the default pipe', () => {
+      const value = ItemId.Pipe;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetPipeAction({ value, default: null })
+      );
+      expect(result.pipe).toEqual(value);
+    });
+  });
+
   describe('SET_FUEL', () => {
     it('should set the fuel', () => {
       const value = ItemId.Wood;

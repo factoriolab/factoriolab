@@ -3,6 +3,7 @@ export enum FactorySettingsField {
   BeaconCount = 'beaconCount',
   Beacon = 'beacon',
   BeaconModule = 'beaconModule',
+  Overclock = 'overclock',
 }
 
 export interface FactorySettings {
@@ -10,4 +11,5 @@ export interface FactorySettings {
   beaconCount?: string;
   beacon?: string;
   beaconModule?: string;
+  overclock?: number;
 }

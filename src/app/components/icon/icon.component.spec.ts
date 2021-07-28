@@ -111,6 +111,13 @@ describe('IconComponent', () => {
     });
   });
 
+  describe('power', () => {
+    it('should use appropriate units', () => {
+      expect(component.child.power(500)).toEqual('500 kW');
+      expect(component.child.power(5000)).toEqual('5 MW');
+    });
+  });
+
   describe('toBonusPercent', () => {
     it('should handle positive percentage bonus', () => {
       expect(component.child.toBonusPercent(0.1)).toEqual('+10%');

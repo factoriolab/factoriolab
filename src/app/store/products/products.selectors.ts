@@ -234,6 +234,7 @@ export const getNormalizedRatesByFactories = createSelector(
                 beaconCount: p.viaBeaconCount,
                 beacon: p.viaBeacon,
                 beaconModules: p.viaBeaconModules,
+                overclock: p.viaOverclock,
               },
             },
           },

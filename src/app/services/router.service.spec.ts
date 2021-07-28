@@ -86,6 +86,7 @@ const mockSettingsState: SettingsState = {
   displayRate: DisplayRate.PerHour,
   preset: Preset.Modules,
   belt: ItemId.TransportBelt,
+  pipe: null,
   fuel: ItemId.Coal,
   cargoWagon: ItemId.CargoWagon,
   fluidWagon: ItemId.FluidWagon,
@@ -273,14 +274,13 @@ describe('RouterService', () => {
 
     it('should unzip v0', () => {
       const url =
-        '/#z=eJxtUNsKwyAM/RsfsjqaDvbmx0QbW8GqqN3Y30/oBm03QkJyODm5JFUqs5dm5lIBAYVWKNwJrZlCSTFXqdlXMJSnKJ80xSDygUql8KK9C5NcyMwusByArWVT3cP' +
-        'Vl1ziuHq+/EJtSknM45exL0AzmTbLKoSUG3RSO3CPOp/W7t9i3ba5XXMgw6IovPbAf86N5AGHvofbvQVsvtnuD2D96sYtfwNKCHjx';
+        '/#z=eJxtUNsKwyAM.RsfAo7awd5kn1Kija1gVdSu7GXfPqEdtF0JCcnh5OQSZS5EjuuRcgEBgikpmD2hJaHPMaTCFbkCGtMQ-IJD8CwdqJgzTcpZP.AJ9Wg98RbIGNLFvmx58yn0s6PPP1Sn5EjU.xj7AhShrrOMFBBThU5qB-5RZ2vtrhbr1s3NnDxqYlmKWwPy4tyADkTbNHB.1CCqr7b7Axg3237Ln18PbnqR';
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(
         mockZip.bare +
           '&b=1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectiv' +
           'ity-module*1*speed-module~speed-module*beacon&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2' +
-          '_steel-furnace&s=1.0*=*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon',
+          '_steel-furnace&s=1.0*=*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon*?',
         mockState
       );
     });
@@ -293,7 +293,7 @@ describe('RouterService', () => {
     });
 
     it('should unzip v1', () => {
-      const v1Full = mockZip.bare + mockZipPartial.bare + '&v=1';
+      const v1Full = mockZip.bare + mockZipPartial.bare + '*?&v=1';
       const url = `/?${v1Full}`;
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(v1Full, mockState);
@@ -308,11 +308,11 @@ describe('RouterService', () => {
 
     it('should unzip v2', () => {
       const url =
-        '/?z=eJwrcDbTMtQyVEtyUssEM521HNWKXJy0nLQc6xyBpHudO1AkzVDLBcgAcrUc453iA9WKjYBqbUGqtYLLtZyygbQBEBoCaSe1MiMAsSwVPg__';
+        '/?z=eJwrcDbTMtQyVEtyUssEM521HNWKXJy0nLQc6xyBpHudO1AkzVDLBcgAcrUc453iA9WKjYBqbUGqtYLLtZyygbQBEBpqgfTYq5UZAQDb2hWn';
       spyOn(service, 'requestHash').and.returnValue(of(Mocks.Hash));
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(
-        'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A&f1*D~G*B*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B&v2',
+        'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A&f1*D~G*B*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?&v2',
         mockState
       );
     });
@@ -326,11 +326,11 @@ describe('RouterService', () => {
 
     it('should unzip v3', () => {
       const url =
-        '/?z=eJwrcDbTMtQyVEtyUssEM521HNWKXJy0nLQc6xyBfPc6d6BImqGWC5AB5Go5xjvFB6oVGwE5tiDVWsHlWk7ZQNoACA2BtJNamTEAqrwVHQ__';
+        '/?z=eJwrcDbTMtQyVEtyUssEM521HNWKXJy0nLQc6xyBfPc6d6BImqGWC5AB5Go5xjvFB6oVGwE5tiDVWsHlWk7ZQNoACA2BtJOWvVqZMQDVJhWG';
       spyOn(service, 'requestHash').and.returnValue(of(Mocks.Hash));
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(
-        'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B&v3',
+        'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?&v3',
         mockState
       );
     });

@@ -124,6 +124,22 @@ export class RecipeSettingsComponent {
     });
   }
 
+  changeOverclock(
+    recipeId: string,
+    input: Event,
+    emitter: EventEmitter<DefaultIdPayload<number>>,
+    id = recipeId,
+    factoryId = this.recipeSettings[recipeId].factory
+  ): void {
+    const target = input.target as HTMLInputElement;
+    const value = target.valueAsNumber;
+    if (value >= 1 && value <= 250) {
+      const s = this.getState(id, recipeId, factoryId);
+      const def = s.fMatch ? s.recipe.overclock : s.factory.overclock;
+      emitter.emit({ id, value, default: def });
+    }
+  }
+
   generateModules(index: number, value: string, original: string[]): string[] {
     if (index === 0) {
       // Copy to all

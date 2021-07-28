@@ -110,7 +110,7 @@ describe('ListContainerComponent', () => {
   });
 
   it('should set beacon count', () => {
-    const data: DefaultIdPayload<string> = {
+    const data: DefaultIdPayload = {
       id: Mocks.Recipe1.id,
       value: '24',
       default: '16',
@@ -142,6 +142,18 @@ describe('ListContainerComponent', () => {
     component.child.setBeaconModules.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Recipes.SetBeaconModulesAction(data)
+    );
+  });
+
+  it('should set overclock', () => {
+    const data: DefaultIdPayload<number> = {
+      id: Mocks.Recipe1.id,
+      value: 200,
+      default: 100,
+    };
+    component.child.setOverclock.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Recipes.SetOverclockAction(data)
     );
   });
 
@@ -188,6 +200,13 @@ describe('ListContainerComponent', () => {
     component.child.resetFactory.emit();
     expect(store.dispatch).toHaveBeenCalledWith(
       new Recipes.ResetFactoryAction()
+    );
+  });
+
+  it('should reset overclock modifications', () => {
+    component.child.resetOverclock.emit();
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Recipes.ResetOverclockAction()
     );
   });
 

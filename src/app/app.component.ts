@@ -6,15 +6,16 @@ import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments';
 import {
-  Dataset,
   ItemId,
   Mod,
   Product,
   TITLE_DSP,
   TITLE_LAB,
+  TITLE_SFY,
   APP,
   MatrixResult,
   MatrixResultType,
+  Game,
 } from './models';
 import { ErrorService, RouterService, StateService } from './services';
 import { State } from './store';
@@ -22,7 +23,7 @@ import {
   getProducts,
   getMatrixResult as getSimplexResult,
 } from './store/products';
-import { getDataset, getDatasets, getIsDsp } from './store/settings';
+import { getDatasets, getGame } from './store/settings';
 
 @Component({
   selector: 'lab-root',
@@ -31,7 +32,7 @@ import { getDataset, getDatasets, getIsDsp } from './store/settings';
   animations: [
     trigger('slideLeftRight', [
       transition(':enter', [
-        style({ marginLeft: '-25rem', marginRight: '1rem', opacity: 0 }),
+        style({ marginLeft: '-24.25rem', marginRight: '1rem', opacity: 0 }),
         animate(
           '300ms ease',
           style({ marginLeft: '*', marginRight: '*', opacity: 1 })
@@ -41,7 +42,7 @@ import { getDataset, getDatasets, getIsDsp } from './store/settings';
         style({ marginLeft: '*', marginRight: '*', opacity: 1 }),
         animate(
           '300ms ease',
-          style({ marginLeft: '-25rem', marginRight: '1rem', opacity: 0 })
+          style({ marginLeft: '-24.25rem', marginRight: '1rem', opacity: 0 })
         ),
       ]),
     ]),
@@ -49,16 +50,16 @@ import { getDataset, getDatasets, getIsDsp } from './store/settings';
 })
 export class AppComponent implements OnInit {
   datasets$: Observable<Mod[]>;
-  data$: Observable<Dataset>;
   products$: Observable<Product[]>;
   result$: Observable<MatrixResult>;
 
   ItemId = ItemId;
   MatrixResultType = MatrixResultType;
-  TITLE_LAB = TITLE_LAB;
-  TITLE_DSP = TITLE_DSP;
+  Game = Game;
 
   title: string;
+  homeHref: string;
+  game: Game;
   showSettings: boolean;
   poll = 'https://linkto.run/p/0UD8IV6X';
   pollKey = 'poll0';
@@ -77,17 +78,26 @@ export class AppComponent implements OnInit {
     public state: StateService // Included only to initialize the service
   ) {}
 
-  homeHref(isDsp: boolean): string {
-    return isDsp ? 'list?s=dsp' : 'list?p=';
-  }
-
   ngOnInit(): void {
     this.datasets$ = this.store.select(getDatasets);
-    this.data$ = this.store.select(getDataset);
     this.products$ = this.store.select(getProducts);
     this.result$ = this.store.select(getSimplexResult);
-    this.store.select(getIsDsp).subscribe((dsp) => {
-      this.title = dsp ? TITLE_DSP : TITLE_LAB;
+    this.store.select(getGame).subscribe((game) => {
+      this.game = game;
+      switch (game) {
+        case Game.Factorio:
+          this.title = TITLE_LAB;
+          this.homeHref = 'factorio';
+          break;
+        case Game.DysonSphereProgram:
+          this.title = TITLE_DSP;
+          this.homeHref = 'dsp';
+          break;
+        case Game.Satisfactory:
+          this.title = TITLE_SFY;
+          this.homeHref = 'satisfactory';
+          break;
+      }
       this.titleService.setTitle(`${APP} | ${this.title}`);
     });
     if (this.lsHidePoll) {

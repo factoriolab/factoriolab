@@ -24,7 +24,7 @@ import {
   SetLinkSizeAction,
 } from '~/store/preferences';
 import { getSankey, getSteps } from '~/store/products';
-import { getIsDsp } from '~/store/settings';
+import { getGame } from '~/store/settings';
 import { SankeyComponent } from './sankey/sankey.component';
 
 @Component({
@@ -36,28 +36,26 @@ import { SankeyComponent } from './sankey/sankey.component';
 export class FlowContainerComponent implements OnInit {
   @ViewChild(SankeyComponent) child: SankeyComponent;
 
-  isDsp$: Observable<boolean>;
   sankeyData$: Observable<SankeyData>;
   steps$: Observable<Step[]>;
   linkText$: Observable<LinkValue>;
   linkSize$: Observable<LinkValue>;
 
   selected: string;
+  options: IdName<LinkValue>[];
 
   ListMode = ListMode;
 
   constructor(private ref: ChangeDetectorRef, private store: Store<State>) {}
 
   ngOnInit(): void {
-    this.isDsp$ = this.store.select(getIsDsp);
+    this.store.select(getGame).subscribe((game) => {
+      this.options = linkValueOptions(game);
+    });
     this.sankeyData$ = this.store.select(getSankey);
     this.steps$ = this.store.select(getSteps);
     this.linkText$ = this.store.select(getLinkText);
     this.linkSize$ = this.store.select(getLinkSize);
-  }
-
-  linkValueOptions(isDsp: boolean): IdName<LinkValue>[] {
-    return linkValueOptions(isDsp);
   }
 
   setSelected(value: string): void {
