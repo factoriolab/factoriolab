@@ -132,6 +132,20 @@ describe('Recipes Selectors', () => {
     });
   });
 
+  describe('getContainsOverclock', () => {
+    it('should handle null/empty values', () => {
+      const result = Selectors.getContainsOverclock.projector({});
+      expect(result).toBeFalse();
+    });
+
+    it('should find a relevant step by overclock', () => {
+      const result = Selectors.getContainsOverclock.projector({
+        ['id']: { overclock: 100 },
+      });
+      expect(result).toBeTrue();
+    });
+  });
+
   describe('getContainsBeacons', () => {
     it('should handle null/empty values', () => {
       const result = Selectors.getContainsBeacons.projector({});

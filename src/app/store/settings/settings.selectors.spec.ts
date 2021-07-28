@@ -1,5 +1,12 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
-import { Rational, ResearchSpeed, Preset, FuelType, Game } from '~/models';
+import {
+  Rational,
+  ResearchSpeed,
+  Preset,
+  FuelType,
+  Game,
+  RationalItem,
+} from '~/models';
 import { initialSettingsState } from './settings.reducer';
 import * as Selectors from './settings.selectors';
 
@@ -382,6 +389,63 @@ describe('Settings Selectors', () => {
       );
       expect(result.pipeIds).toEqual([ItemId.CopperCable, ItemId.Pipe]);
     });
+
+    it('should copy icons', () => {
+      const items = Mocks.Base.items.map((i) => {
+        if (i.id === ItemId.Pipe) {
+          return { ...i, ...{ icon: ItemId.Beacon } };
+        } else {
+          return { ...i };
+        }
+      });
+      const recipes = Mocks.Base.recipes.map((r) => {
+        if (r.id === RecipeId.Coal) {
+          return { ...r, ...{ icon: RecipeId.PlasticBar } };
+        } else {
+          return { ...r };
+        }
+      });
+      const base = {
+        ...Mocks.Base,
+        ...{
+          items,
+          recipes,
+        },
+      };
+      const result = Selectors.getNormalDataset.projector(
+        Mocks.Raw.app,
+        [base, Mocks.Mod1],
+        Mocks.Defaults,
+        Game.Factorio
+      );
+      expect(result.iconEntities[ItemId.Pipe]).toEqual(
+        result.iconEntities[ItemId.Beacon]
+      );
+      expect(result.iconEntities[RecipeId.Coal]).toEqual(
+        result.iconEntities[RecipeId.PlasticBar]
+      );
+    });
+
+    it('should claculate missing recipe icons', () => {
+      const icons = Mocks.Base.icons.filter(
+        (i) => i.id !== RecipeId.AdvancedOilProcessing
+      );
+      const base = {
+        ...Mocks.Base,
+        ...{
+          icons,
+        },
+      };
+      const result = Selectors.getNormalDataset.projector(
+        Mocks.Raw.app,
+        [base, Mocks.Mod1],
+        Mocks.Defaults,
+        Game.Factorio
+      );
+      expect(result.iconEntities[RecipeId.AdvancedOilProcessing]).toEqual(
+        result.iconEntities[ItemId.HeavyOil]
+      );
+    });
   });
 
   describe('getDataset', () => {
@@ -429,11 +493,29 @@ describe('Settings Selectors', () => {
     });
 
     it('should return the map of belt speeds', () => {
-      const beltId = 'transport-belt';
-      const flowRate = new Rational(BigInt(2000));
+      const flowRate = Rational.from(2000);
       const result = Selectors.getBeltSpeed.projector(Mocks.Data, flowRate);
-      expect(result[beltId]).toEqual(Mocks.Data.itemR[beltId].belt.speed);
+      expect(result[ItemId.TransportBelt]).toEqual(
+        Mocks.Data.itemR[ItemId.TransportBelt].belt.speed
+      );
       expect(result[ItemId.Pipe]).toEqual(flowRate);
+    });
+
+    it('should include pipe speeds', () => {
+      const pipe = {
+        ...Mocks.Data.itemEntities[ItemId.Pipe],
+        ...{ pipe: { speed: 10 } },
+      };
+      const rPipe = new RationalItem(pipe);
+      const data = {
+        ...Mocks.Data,
+        ...{
+          pipeIds: [ItemId.Pipe],
+          itemR: { ...Mocks.Data.itemR, ...{ [ItemId.Pipe]: rPipe } },
+        },
+      };
+      const result = Selectors.getBeltSpeed.projector(data, Rational.from(0));
+      expect(result[ItemId.Pipe]).toEqual(Rational.ten);
     });
   });
 

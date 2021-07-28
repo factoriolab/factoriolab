@@ -41,13 +41,59 @@ describe('Factories Selectors', () => {
       );
     });
 
-    it('should use null beaconCount for dsp', () => {
+    it('should use null beaconCount for DSP', () => {
       const result = Selectors.getFactorySettings.projector(
         initialFactoriesState,
         Mocks.Defaults,
         { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } }
       );
       expect(result.entities[''].beaconCount).toBeNull();
+    });
+
+    it('should include overclock in Satisfactory', () => {
+      const state = {
+        ...initialFactoriesState,
+        ...{
+          entities: {
+            ...initialFactoriesState.entities,
+            ...{
+              '': {
+                ...initialFactoriesState.entities[''],
+                ...{ overclock: 200 },
+              },
+            },
+          },
+        },
+      };
+      const result = Selectors.getFactorySettings.projector(
+        state,
+        Mocks.Defaults,
+        { ...Mocks.AdjustedData, ...{ game: Game.Satisfactory } }
+      );
+      expect(result.entities[''].overclock).toEqual(200);
+    });
+
+    it('should default overclock to 100 in Satisfactory', () => {
+      const state = {
+        ...initialFactoriesState,
+        ...{
+          entities: {
+            ...initialFactoriesState.entities,
+            ...{
+              '': {
+                ...initialFactoriesState.entities[''],
+                ...{ overclock: null },
+              },
+            },
+          },
+        },
+      };
+      const result = Selectors.getFactorySettings.projector(
+        state,
+        Mocks.Defaults,
+        { ...Mocks.AdjustedData, ...{ game: Game.Satisfactory } }
+      );
+      expect(result.entities[''].overclock).toEqual(100);
     });
   });
 });
