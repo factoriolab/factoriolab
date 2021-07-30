@@ -220,7 +220,12 @@ export class RateUtility {
     }
 
     // Perform recursive sort
-    return this.sortRecursive(groups, '', []);
+    const sorted = this.sortRecursive(groups, '', []);
+
+    // Add back any steps left out (potentially circular loops)
+    sorted.push(...steps.filter((s) => sorted.indexOf(s) === -1));
+
+    return sorted;
   }
 
   static sortRecursive(
