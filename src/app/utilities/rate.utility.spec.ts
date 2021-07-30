@@ -422,7 +422,7 @@ describe('RateUtility', () => {
     });
 
     it('should set up groups by parents', () => {
-      spyOn(RateUtility, 'sortRecursive');
+      spyOn(RateUtility, 'sortRecursive').and.returnValue([]);
       const steps: Step[] = [
         {
           itemId: ItemId.Coal,
@@ -457,7 +457,7 @@ describe('RateUtility', () => {
     });
 
     it('should put self-parented steps at root', () => {
-      spyOn(RateUtility, 'sortRecursive');
+      spyOn(RateUtility, 'sortRecursive').and.returnValue([]);
       const steps: Step[] = [
         {
           itemId: ItemId.Coal,
@@ -472,6 +472,25 @@ describe('RateUtility', () => {
         '',
         []
       );
+    });
+
+    it('should handle steps not connected to root', () => {
+      const steps: Step[] = [
+        {
+          itemId: ItemId.Coal,
+          recipeId: RecipeId.Coal,
+          items: Rational.one,
+          parents: { [RecipeId.PlasticBar]: Rational.one },
+        },
+        {
+          itemId: ItemId.PlasticBar,
+          recipeId: RecipeId.PlasticBar,
+          items: Rational.one,
+          parents: { [RecipeId.Coal]: Rational.one },
+        },
+      ];
+      const sorted = RateUtility.sortHierarchy(steps);
+      expect(sorted.length).toEqual(steps.length);
     });
   });
 
