@@ -268,3 +268,10 @@ tr {
 lab-icon:not(.button) {
   padding: 0.125rem;
 }
+
+// Highlight modules to the right of the hovered module
+lab-select:hover ~ lab-select .button.module {
+  background-color: var(--color-brand);
+  box-shadow: var(--shadow-hover);
+  filter: drop-shadow(0 0 2px var(--color-brand-sha));
+}

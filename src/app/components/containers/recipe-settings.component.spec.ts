@@ -278,24 +278,19 @@ describe('RecipeSettingsComponent', () => {
   });
 
   describe('generateModules', () => {
-    it('should fill when index 0 is modified', () => {
+    it('should fill from the index to the right', () => {
       expect(
         component.child.generateModules(
-          0,
+          2,
           ItemId.SpeedModule,
-          new Array(2).fill(ItemId.Module)
+          new Array(4).fill(ItemId.Module)
         )
-      ).toEqual(new Array(2).fill(ItemId.SpeedModule));
-    });
-
-    it('should modify a specific index', () => {
-      expect(
-        component.child.generateModules(
-          1,
-          ItemId.SpeedModule,
-          new Array(2).fill(ItemId.Module)
-        )
-      ).toEqual([ItemId.Module, ItemId.SpeedModule]);
+      ).toEqual([
+        ItemId.Module,
+        ItemId.Module,
+        ItemId.SpeedModule,
+        ItemId.SpeedModule,
+      ]);
     });
   });
 

@@ -154,6 +154,9 @@ describe('Recipes Reducer', () => {
       expect(StoreUtility.resetFields).toHaveBeenCalledWith(null, [
         RecipeSettingsField.Factory,
         RecipeSettingsField.FactoryModules,
+        RecipeSettingsField.BeaconCount,
+        RecipeSettingsField.Beacon,
+        RecipeSettingsField.BeaconModules,
       ]);
     });
   });

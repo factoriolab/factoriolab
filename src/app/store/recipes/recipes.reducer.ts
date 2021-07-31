@@ -76,6 +76,9 @@ export function recipesReducer(
       return StoreUtility.resetFields(state, [
         RecipeSettingsField.Factory,
         RecipeSettingsField.FactoryModules,
+        RecipeSettingsField.BeaconCount,
+        RecipeSettingsField.Beacon,
+        RecipeSettingsField.BeaconModules,
       ]);
     case RecipesActionType.RESET_BEACONS:
       return StoreUtility.resetFields(state, [
