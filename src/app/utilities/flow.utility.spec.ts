@@ -15,7 +15,7 @@ describe('FlowUtility', () => {
       id: ItemId.Coal,
       name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
       color: Mocks.AdjustedData.iconEntities[ItemId.Coal].color,
-      viewBox: '960 768 64 64',
+      viewBox: '256 448 64 64',
       href: Mocks.AdjustedData.iconEntities[ItemId.Coal].file,
     };
     const iId = `i|${ItemId.Coal}`;
@@ -51,7 +51,7 @@ describe('FlowUtility', () => {
             id: ItemId.PlasticBar,
             name: Mocks.AdjustedData.itemEntities[ItemId.PlasticBar].name,
             color: Mocks.AdjustedData.iconEntities[ItemId.PlasticBar].color,
-            viewBox: '896 384 64 64',
+            viewBox: '896 448 64 64',
             href: Mocks.AdjustedData.iconEntities[ItemId.PlasticBar].file,
           },
         ],
@@ -250,21 +250,21 @@ describe('FlowUtility', () => {
         id: RecipeId.UraniumProcessing,
         name,
         color,
-        viewBox: '128 448 64 64',
+        viewBox: '512 0 64 64',
         href,
       };
       const uNode1: Node = {
         id: `i|${ItemId.Uranium235}`,
         name: Mocks.AdjustedData.itemEntities[ItemId.Uranium235].name,
         color: Mocks.AdjustedData.iconEntities[ItemId.Uranium235].color,
-        viewBox: '832 832 64 64',
+        viewBox: '512 576 64 64',
         href,
       };
       const uNode2: Node = {
         id: `i|${ItemId.Uranium238}`,
         name: Mocks.AdjustedData.itemEntities[ItemId.Uranium238].name,
         color: Mocks.AdjustedData.iconEntities[ItemId.Uranium238].color,
-        viewBox: '896 832 64 64',
+        viewBox: '576 576 64 64',
         href,
       };
       const uLink1: Link = {
