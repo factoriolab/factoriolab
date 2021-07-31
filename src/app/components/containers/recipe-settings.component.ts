@@ -141,15 +141,12 @@ export class RecipeSettingsComponent {
   }
 
   generateModules(index: number, value: string, original: string[]): string[] {
-    if (index === 0) {
-      // Copy to all
-      return new Array(original.length).fill(value);
-    } else {
-      // Edit individual module
-      const modules = [...original];
-      modules[index] = value;
-      return modules;
+    const modules = [...original]; // Copy
+    // Fill in index to the right
+    for (let i = index; i < modules.length; i++) {
+      modules[i] = value;
     }
+    return modules;
   }
 
   gtZero(value: string): boolean {
