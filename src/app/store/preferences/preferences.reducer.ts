@@ -1,4 +1,10 @@
-import { ColumnSettings, Entities, LinkValue, AllColumns } from '~/models';
+import {
+  ColumnSettings,
+  Entities,
+  LinkValue,
+  AllColumns,
+  SankeyAlign,
+} from '~/models';
 import { AppAction, AppActionType } from '../app.actions';
 import {
   PreferencesAction,
@@ -12,6 +18,7 @@ export interface PreferencesState {
   columns: ColumnsState;
   linkSize: LinkValue;
   linkText: LinkValue;
+  sankeyAlign: SankeyAlign;
   simplex: boolean;
 }
 
@@ -28,6 +35,7 @@ export const initialPreferencesState: PreferencesState = {
   columns: initialColumnsState,
   linkSize: LinkValue.Items,
   linkText: LinkValue.Items,
+  sankeyAlign: SankeyAlign.Justify,
   simplex: true,
 };
 
@@ -56,6 +64,8 @@ export function preferencesReducer(
       return { ...state, ...{ linkSize: action.payload } };
     case PreferencesActionType.SET_LINK_TEXT:
       return { ...state, ...{ linkText: action.payload } };
+    case PreferencesActionType.SET_SANKEY_ALIGN:
+      return { ...state, ...{ sankeyAlign: action.payload } };
     case PreferencesActionType.SET_SIMPLEX:
       return { ...state, ...{ simplex: action.payload } };
     default:

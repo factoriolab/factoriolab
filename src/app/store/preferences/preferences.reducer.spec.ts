@@ -66,6 +66,16 @@ describe('Preferences Reducer', () => {
     });
   });
 
+  describe('SET_SANKEY_ALIGN', () => {
+    it('should set the sankey alignment', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetSankeyAlignAction(value as any)
+      );
+      expect(result.sankeyAlign).toEqual(value as any);
+    });
+  });
+
   describe('SET_SIMPLEX', () => {
     it('should set the simplex flag', () => {
       const result = preferencesReducer(

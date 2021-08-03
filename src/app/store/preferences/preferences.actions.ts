@@ -1,6 +1,12 @@
 import { Action } from '@ngrx/store';
 
-import { ColumnSettings, Entities, IdPayload, LinkValue } from '~/models';
+import {
+  ColumnSettings,
+  Entities,
+  IdPayload,
+  LinkValue,
+  SankeyAlign,
+} from '~/models';
 
 export const enum PreferencesActionType {
   SAVE_STATE = '[Preferences] Save State',
@@ -8,6 +14,7 @@ export const enum PreferencesActionType {
   SET_COLUMNS = '[Preferences] Set Columns',
   SET_LINK_SIZE = '[Preferences] Set Link Size',
   SET_LINK_TEXT = '[Preferences] Set Link Text',
+  SET_SANKEY_ALIGN = '[Preferences] Set Sankey Align',
   SET_SIMPLEX = '[Preferences] Set Simplex Enabled',
 }
 
@@ -36,6 +43,11 @@ export class SetLinkTextAction implements Action {
   constructor(public payload: LinkValue) {}
 }
 
+export class SetSankeyAlignAction implements Action {
+  readonly type = PreferencesActionType.SET_SANKEY_ALIGN;
+  constructor(public payload: SankeyAlign) {}
+}
+
 export class SetSimplexAction implements Action {
   readonly type = PreferencesActionType.SET_SIMPLEX;
   constructor(public payload: boolean) {}
@@ -47,4 +59,5 @@ export type PreferencesAction =
   | SetColumnsAction
   | SetLinkSizeAction
   | SetLinkTextAction
+  | SetSankeyAlignAction
   | SetSimplexAction;
