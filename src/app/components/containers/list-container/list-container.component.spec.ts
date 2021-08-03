@@ -69,7 +69,7 @@ describe('ListContainerComponent', () => {
     const data: DefaultIdPayload = {
       id: Mocks.Item1.id,
       value: ItemId.TransportBelt,
-      default: ItemId.TransportBelt,
+      def: ItemId.TransportBelt,
     };
     component.child.setBelt.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(new Items.SetBeltAction(data));
@@ -79,7 +79,7 @@ describe('ListContainerComponent', () => {
     const data: DefaultIdPayload = {
       id: Mocks.Item1.id,
       value: ItemId.CargoWagon,
-      default: ItemId.CargoWagon,
+      def: ItemId.CargoWagon,
     };
     component.child.setWagon.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(new Items.SetWagonAction(data));
@@ -89,7 +89,7 @@ describe('ListContainerComponent', () => {
     const data: DefaultIdPayload = {
       id: Mocks.Recipe1.id,
       value: ItemId.StoneFurnace,
-      default: ItemId.StoneFurnace,
+      def: ItemId.StoneFurnace,
     };
     component.child.setFactory.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -101,7 +101,7 @@ describe('ListContainerComponent', () => {
     const data: DefaultIdPayload<string[]> = {
       id: Mocks.Recipe1.id,
       value: [ItemId.SpeedModule],
-      default: [],
+      def: [],
     };
     component.child.setFactoryModules.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -113,7 +113,7 @@ describe('ListContainerComponent', () => {
     const data: DefaultIdPayload = {
       id: Mocks.Recipe1.id,
       value: '24',
-      default: '16',
+      def: '16',
     };
     component.child.setBeaconCount.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -125,7 +125,7 @@ describe('ListContainerComponent', () => {
     const data: DefaultIdPayload = {
       id: Mocks.Recipe1.id,
       value: ItemId.Beacon,
-      default: ItemId.Beacon,
+      def: ItemId.Beacon,
     };
     component.child.setBeacon.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -137,7 +137,7 @@ describe('ListContainerComponent', () => {
     const data: DefaultIdPayload<string[]> = {
       id: Mocks.Recipe1.id,
       value: [ItemId.SpeedModule],
-      default: [ItemId.SpeedModule],
+      def: [ItemId.SpeedModule],
     };
     component.child.setBeaconModules.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -149,7 +149,7 @@ describe('ListContainerComponent', () => {
     const data: DefaultIdPayload<number> = {
       id: Mocks.Recipe1.id,
       value: 200,
-      default: 100,
+      def: 100,
     };
     component.child.setOverclock.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -218,7 +218,7 @@ describe('ListContainerComponent', () => {
   });
 
   it('should set the list of disabled recipes', () => {
-    const value: DefaultPayload<string[]> = { value: [], default: [] };
+    const value: DefaultPayload<string[]> = { value: [], def: [] };
     component.child.setDisabledRecipes.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new SetDisabledRecipesAction(value)
@@ -229,7 +229,7 @@ describe('ListContainerComponent', () => {
     const value: DefaultIdPayload = {
       id: ItemId.Coal,
       value: RecipeId.Coal,
-      default: RecipeId.Coal,
+      def: RecipeId.Coal,
     };
     component.child.setDefaultRecipe.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(

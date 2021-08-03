@@ -47,7 +47,7 @@ describe('Settings Reducer', () => {
       const value = [RecipeId.AdvancedOilProcessing];
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetDisabledRecipesAction({ value, default: [] })
+        new Actions.SetDisabledRecipesAction({ value, def: [] })
       );
       expect(result.disabledRecipes).toEqual(value);
     });
@@ -69,7 +69,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.TransportBelt;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetBeltAction({ value, default: null })
+        new Actions.SetBeltAction({ value, def: null })
       );
       expect(result.belt).toEqual(value);
     });
@@ -80,7 +80,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.Pipe;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetPipeAction({ value, default: null })
+        new Actions.SetPipeAction({ value, def: null })
       );
       expect(result.pipe).toEqual(value);
     });
@@ -91,7 +91,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.Wood;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetFuelAction({ value, default: null })
+        new Actions.SetFuelAction({ value, def: null })
       );
       expect(result.fuel).toEqual(value);
     });
@@ -113,7 +113,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.CargoWagon;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetCargoWagonAction({ value, default: null })
+        new Actions.SetCargoWagonAction({ value, def: null })
       );
       expect(result.cargoWagon).toEqual(value);
     });
@@ -124,7 +124,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.FluidWagon;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetFluidWagonAction({ value, default: null })
+        new Actions.SetFluidWagonAction({ value, def: null })
       );
       expect(result.fluidWagon).toEqual(value);
     });
@@ -135,7 +135,7 @@ describe('Settings Reducer', () => {
       const value = DisplayRate.PerHour;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetDisplayRateAction(value)
+        new Actions.SetDisplayRateAction({ value, prev: DisplayRate.PerSecond })
       );
       expect(result.displayRate).toEqual(value);
     });

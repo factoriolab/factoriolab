@@ -69,7 +69,7 @@ describe('RecipeSettingsComponent', () => {
       expect(emitter.emit).toHaveBeenCalledWith({
         id,
         value: ItemId.AssemblingMachine1,
-        default: ItemId.AssemblingMachine3,
+        def: ItemId.AssemblingMachine3,
       });
     });
 
@@ -84,7 +84,7 @@ describe('RecipeSettingsComponent', () => {
       expect(emitter.emit).toHaveBeenCalledWith({
         id: Mocks.Step1.recipeId,
         value: ItemId.AssemblingMachine1,
-        default: ItemId.AssemblingMachine3,
+        def: ItemId.AssemblingMachine3,
       });
     });
   });
@@ -105,7 +105,7 @@ describe('RecipeSettingsComponent', () => {
       expect(emitter.emit).toHaveBeenCalledWith({
         id,
         value: new Array(4).fill(ItemId.SpeedModule),
-        default: new Array(4).fill(ItemId.SpeedModule3),
+        def: new Array(4).fill(ItemId.SpeedModule3),
       });
     });
 
@@ -122,7 +122,7 @@ describe('RecipeSettingsComponent', () => {
       expect(emitter.emit).toHaveBeenCalledWith({
         id: Mocks.Step1.recipeId,
         value: new Array(4).fill(ItemId.SpeedModule),
-        default: new Array(4).fill(ItemId.SpeedModule3),
+        def: new Array(4).fill(ItemId.SpeedModule3),
       });
     });
   });
@@ -141,7 +141,7 @@ describe('RecipeSettingsComponent', () => {
       expect(emitter.emit).toHaveBeenCalledWith({
         id,
         value: '12',
-        default: '8',
+        def: '8',
       });
     });
 
@@ -152,7 +152,7 @@ describe('RecipeSettingsComponent', () => {
       expect(emitter.emit).toHaveBeenCalledWith({
         id: Mocks.Step1.recipeId,
         value: '12',
-        default: '8',
+        def: '8',
       });
     });
   });
@@ -171,7 +171,7 @@ describe('RecipeSettingsComponent', () => {
       expect(emitter.emit).toHaveBeenCalledWith({
         id,
         value: ItemId.Beacon,
-        default: ItemId.Beacon,
+        def: ItemId.Beacon,
       });
     });
 
@@ -186,7 +186,7 @@ describe('RecipeSettingsComponent', () => {
       expect(emitter.emit).toHaveBeenCalledWith({
         id: Mocks.Step1.recipeId,
         value: ItemId.Beacon,
-        default: ItemId.Beacon,
+        def: ItemId.Beacon,
       });
     });
   });
@@ -208,7 +208,7 @@ describe('RecipeSettingsComponent', () => {
       expect(emitter.emit).toHaveBeenCalledWith({
         id,
         value: new Array(2).fill(ItemId.SpeedModule),
-        default: new Array(2).fill(ItemId.SpeedModule3),
+        def: new Array(2).fill(ItemId.SpeedModule3),
       });
     });
 
@@ -225,7 +225,7 @@ describe('RecipeSettingsComponent', () => {
       expect(emitter.emit).toHaveBeenCalledWith({
         id: Mocks.Step1.recipeId,
         value: new Array(2).fill(ItemId.SpeedModule),
-        default: new Array(2).fill(ItemId.SpeedModule3),
+        def: new Array(2).fill(ItemId.SpeedModule3),
       });
     });
   });
@@ -244,7 +244,7 @@ describe('RecipeSettingsComponent', () => {
       expect(emitter.emit).toHaveBeenCalledWith({
         id,
         value: 200,
-        default: null,
+        def: null,
       });
     });
 
@@ -259,7 +259,7 @@ describe('RecipeSettingsComponent', () => {
       expect(emitter.emit).toHaveBeenCalledWith({
         id: Mocks.Step1.recipeId,
         value: 200,
-        default: null,
+        def: null,
       });
     });
 

@@ -45,7 +45,7 @@ export class RecipeSettingsComponent {
     emitter.emit({
       id,
       value,
-      default: RecipeUtility.bestMatch(
+      def: RecipeUtility.bestMatch(
         this.data.recipeEntities[recipeId].producers,
         this.factories.ids
       ),
@@ -68,11 +68,7 @@ export class RecipeSettingsComponent {
       ? s.recipe.factoryModules
       : RecipeUtility.defaultModules(options, s.factory.moduleRank, count);
     const value = this.generateModules(index, input, modules);
-    emitter.emit({
-      id,
-      value,
-      default: def,
-    });
+    emitter.emit({ id, value, def });
   }
 
   changeBeaconCount(
@@ -84,7 +80,7 @@ export class RecipeSettingsComponent {
   ): void {
     const s = this.getState(id, recipeId, factoryId);
     const def = s.fMatch ? s.recipe.beaconCount : s.factory.beaconCount;
-    emitter.emit({ id, value, default: def });
+    emitter.emit({ id, value, def });
   }
 
   changeBeacon(
@@ -96,7 +92,7 @@ export class RecipeSettingsComponent {
   ): void {
     const s = this.getState(id, recipeId, factoryId);
     const def = s.fMatch ? s.recipe.beacon : s.factory.beacon;
-    emitter.emit({ id, value, default: def });
+    emitter.emit({ id, value, def });
   }
 
   changeBeaconModules(
@@ -117,11 +113,7 @@ export class RecipeSettingsComponent {
         ? s.recipe.beaconModules
         : new Array(count).fill(s.factory.beaconModule);
     const value = this.generateModules(index, input, modules);
-    emitter.emit({
-      id,
-      value,
-      default: def,
-    });
+    emitter.emit({ id, value, def });
   }
 
   changeOverclock(
@@ -136,7 +128,7 @@ export class RecipeSettingsComponent {
     if (value >= 1 && value <= 250) {
       const s = this.getState(id, recipeId, factoryId);
       const def = s.fMatch ? s.recipe.overclock : s.factory.overclock;
-      emitter.emit({ id, value, default: def });
+      emitter.emit({ id, value, def });
     }
   }
 

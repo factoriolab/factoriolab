@@ -122,7 +122,7 @@
                   setViaSetting.emit({
                     id: product.id,
                     value: $event,
-                    default: itemSettings[id].belt
+                    def: itemSettings[id].belt
                   })
                 "
               >
@@ -145,7 +145,7 @@
                     setViaSetting.emit({
                       id: product.id,
                       value: $event,
-                      default: itemSettings[id].belt
+                      def: itemSettings[id].belt
                     })
                   "
                 >
@@ -187,7 +187,7 @@
                       setViaSetting.emit({
                         id: product.id,
                         value: $event,
-                        default: itemSettings[id].wagon
+                        def: itemSettings[id].wagon
                       })
                     "
                   >
@@ -214,7 +214,7 @@
                       setViaSetting.emit({
                         id: product.id,
                         value: $event,
-                        default: itemSettings[id].wagon
+                        def: itemSettings[id].wagon
                       })
                     "
                   >
@@ -446,7 +446,7 @@
       title="Select display rate"
       [selected]="displayRate"
       [options]="DisplayRateOptions"
-      (selectId)="setDisplayRate.emit($event)"
+      (selectId)="setDisplayRate.emit({ value: $event, prev: displayRate })"
     ></lab-options>
   </div>
 </div>

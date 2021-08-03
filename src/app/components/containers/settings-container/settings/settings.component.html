@@ -104,7 +104,7 @@
               (selectIds)="
                 setDisabledRecipes.emit({
                   value: $event,
-                  default: data.defaults.disabledRecipes
+                  def: data.defaults.disabledRecipes
                 })
               "
             >
@@ -151,7 +151,12 @@
               title="Select display rate"
               [selected]="settings.displayRate"
               [options]="DisplayRateOptions"
-              (selectId)="setDisplayRate.emit($event)"
+              (selectId)="
+                setDisplayRate.emit({
+                  value: $event,
+                  prev: settings.displayRate
+                })
+              "
             ></lab-options>
           </td>
         </tr>
@@ -190,7 +195,7 @@
                   (selectId)="
                     addFactory.emit({
                       value: $event,
-                      default: data.defaults.factoryRank
+                      def: data.defaults.factoryRank
                     })
                   "
                 >
@@ -205,7 +210,7 @@
                 (click)="
                   removeFactory.emit({
                     value: f,
-                    default: data.defaults.factoryRank
+                    def: data.defaults.factoryRank
                   })
                 "
               >
@@ -233,7 +238,7 @@
                   setFactory.emit({
                     id: f,
                     value: $event,
-                    default: data.defaults.factoryRank
+                    def: data.defaults.factoryRank
                   })
                 "
               >
@@ -265,7 +270,7 @@
                     setModuleRank.emit({
                       id: f,
                       value: $event,
-                      default:
+                      def:
                         f === ''
                           ? data.defaults.moduleRank
                           : factories.entities[''].moduleRank
@@ -299,7 +304,7 @@
                       setModuleRank.emit({
                         id: f,
                         value: [$event],
-                        default:
+                        def:
                           f === ''
                             ? data.defaults.moduleRank
                             : factories.entities[''].moduleRank
@@ -375,7 +380,7 @@
                         setBeacon.emit({
                           id: f,
                           value: $event,
-                          default:
+                          def:
                             f === ''
                               ? data.defaults.beacon
                               : factories.entities[''].beacon
@@ -404,7 +409,7 @@
                     setBeaconModule.emit({
                       id: f,
                       value: $event,
-                      default:
+                      def:
                         f === ''
                           ? data.defaults.beaconModule
                           : factories.entities[''].beaconModule
@@ -427,7 +432,7 @@
                 (click)="
                   raiseFactory.emit({
                     value: f,
-                    default: data.defaults.factoryRank
+                    def: data.defaults.factoryRank
                   })
                 "
               >
@@ -449,7 +454,7 @@
                 [options]="data.beltIds"
                 [displayRate]="settings.displayRate"
                 (selectId)="
-                  setBelt.emit({ value: $event, default: data.defaults.belt })
+                  setBelt.emit({ value: $event, def: data.defaults.belt })
                 "
               >
                 <lab-icon
@@ -473,7 +478,7 @@
                 [options]="data.pipeIds"
                 [displayRate]="settings.displayRate"
                 (selectId)="
-                  setPipe.emit({ value: $event, default: data.defaults.pipe })
+                  setPipe.emit({ value: $event, def: data.defaults.pipe })
                 "
               >
                 <lab-icon
@@ -498,7 +503,7 @@
                 (selectId)="
                   setCargoWagon.emit({
                     value: $event,
-                    default: data.defaults.cargoWagon
+                    def: data.defaults.cargoWagon
                   })
                 "
               >
@@ -524,7 +529,7 @@
                 (selectId)="
                   setFluidWagon.emit({
                     value: $event,
-                    default: data.defaults.fluidWagon
+                    def: data.defaults.fluidWagon
                   })
                 "
               >
@@ -548,7 +553,7 @@
                 [selected]="settings.fuel"
                 [options]="sortedFuels"
                 (selectId)="
-                  setFuel.emit({ value: $event, default: data.defaults.fuel })
+                  setFuel.emit({ value: $event, def: data.defaults.fuel })
                 "
               >
                 <lab-icon

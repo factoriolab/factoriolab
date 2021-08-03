@@ -7,6 +7,7 @@ import {
   Preset,
   InserterTarget,
   InserterCapacity,
+  PreviousPayload,
 } from '~/models';
 
 export const enum SettingsActionType {
@@ -79,7 +80,7 @@ export class SetFluidWagonAction implements Action {
 
 export class SetDisplayRateAction implements Action {
   readonly type = SettingsActionType.SET_DISPLAY_RATE;
-  constructor(public payload: DisplayRate) {}
+  constructor(public payload: PreviousPayload<DisplayRate>) {}
 }
 
 export class SetMiningBonusAction implements Action {
