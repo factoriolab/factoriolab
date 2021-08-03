@@ -5,9 +5,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Store, StoreModule } from '@ngrx/store';
 
 import { OptionsComponent, ColumnsComponent } from '~/components';
-import { LinkValue } from '~/models';
+import { LinkValue, SankeyAlign } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
-import { SetLinkSizeAction, SetLinkTextAction } from '~/store/preferences';
+import {
+  SetLinkSizeAction,
+  SetLinkTextAction,
+  SetSankeyAlignAction,
+} from '~/store/preferences';
 import { ListComponent, ListContainerComponent } from '../list-container';
 import { SankeyComponent } from './sankey/sankey.component';
 import { FlowContainerComponent } from './flow-container.component';
@@ -57,16 +61,22 @@ describe('FlowContainerComponent', () => {
   });
 
   it('should set the link size', () => {
-    component.setLinkSize(LinkValue.Belts);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new SetLinkSizeAction(LinkValue.Belts)
-    );
+    const value = LinkValue.Belts;
+    component.setLinkSize(value);
+    expect(store.dispatch).toHaveBeenCalledWith(new SetLinkSizeAction(value));
   });
 
   it('should set the link text', () => {
-    component.setLinkText(LinkValue.Belts);
+    const value = LinkValue.Belts;
+    component.setLinkText(value);
+    expect(store.dispatch).toHaveBeenCalledWith(new SetLinkTextAction(value));
+  });
+
+  it('should set the sankey alignment', () => {
+    const value = SankeyAlign.Left;
+    component.setSankeyAlign(value);
     expect(store.dispatch).toHaveBeenCalledWith(
-      new SetLinkTextAction(LinkValue.Belts)
+      new SetSankeyAlignAction(value)
     );
   });
 });

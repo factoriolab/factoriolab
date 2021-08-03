@@ -22,6 +22,7 @@ import {
   MatrixResult,
   MatrixResultType,
   Game,
+  SankeyAlign,
 } from '~/models';
 import { initialDatasetsState } from '~/store/datasets';
 import { getFactorySettings, initialFactoriesState } from '~/store/factories';
@@ -195,6 +196,7 @@ export const Preferences: PreferencesState = {
   columns: initialColumnsState,
   linkSize: LinkValue.Items,
   linkText: LinkValue.Items,
+  sankeyAlign: SankeyAlign.Justify,
   simplex: true,
 };
 

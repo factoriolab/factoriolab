@@ -397,6 +397,10 @@ ul.tabs {
 
 .material-icons {
   user-select: none;
+
+  &.small {
+    font-size: large;
+  }
 }
 
 table {

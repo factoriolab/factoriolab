@@ -1,7 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  sankeyCenter,
+  sankeyJustify,
+  sankeyLeft,
+  sankeyRight,
+} from 'd3-sankey';
 
 import { Mocks, TestUtility } from 'src/tests';
+import { SankeyAlign } from '~/models';
 import { SankeyComponent } from './sankey.component';
 
 @Component({
@@ -67,6 +74,19 @@ describe('SankeyComponent', () => {
       TestUtility.altClickSelector(fixture, 'rect');
       expect(component.selectNode).toHaveBeenCalledWith(
         Mocks.Sankey.nodes[0].id
+      );
+    });
+  });
+
+  describe('getAlign', () => {
+    it('should return the proper sankey alignment function', () => {
+      expect(component.child.getAlign(SankeyAlign.Justify)).toEqual(
+        sankeyJustify
+      );
+      expect(component.child.getAlign(SankeyAlign.Left)).toEqual(sankeyLeft);
+      expect(component.child.getAlign(SankeyAlign.Right)).toEqual(sankeyRight);
+      expect(component.child.getAlign(SankeyAlign.Center)).toEqual(
+        sankeyCenter
       );
     });
   });
