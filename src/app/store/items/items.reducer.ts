@@ -22,7 +22,7 @@ export function itemsReducer(
       return StoreUtility.compareReset(state, ItemSettingsField.Ignore, {
         id: action.payload,
         value: !state[action.payload]?.ignore,
-        default: false,
+        def: false,
       });
     case ItemsActionType.SET_BELT:
       return StoreUtility.compareReset(

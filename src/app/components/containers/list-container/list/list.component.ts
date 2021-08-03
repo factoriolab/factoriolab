@@ -493,14 +493,14 @@ export class ListComponent
       this.setDefaultRecipe.emit({
         id: itemId,
         value: null,
-        default: null,
+        def: null,
       });
     } else {
       // Set default recipe
       this.setDefaultRecipe.emit({
         id: itemId,
         value: recipeId,
-        default: RecipeUtility.defaultRecipe(
+        def: RecipeUtility.defaultRecipe(
           itemId,
           this.disabledRecipes,
           this.data
@@ -513,12 +513,12 @@ export class ListComponent
     if (this.disabledRecipes.indexOf(id) === -1) {
       this.setDisabledRecipes.emit({
         value: [...this.disabledRecipes, id],
-        default: this.data.defaults.disabledRecipes,
+        def: this.data.defaults.disabledRecipes,
       });
     } else {
       this.setDisabledRecipes.emit({
         value: this.disabledRecipes.filter((i) => i !== id),
-        default: this.data.defaults.disabledRecipes,
+        def: this.data.defaults.disabledRecipes,
       });
     }
   }

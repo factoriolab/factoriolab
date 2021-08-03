@@ -51,7 +51,7 @@ describe('Items Reducer', () => {
         new Actions.SetBeltAction({
           id: Mocks.Item1.id,
           value: Mocks.Item1.id,
-          default: null,
+          def: null,
         })
       );
       expect(result[Mocks.Recipe1.id].belt).toEqual(Mocks.Item1.id);
@@ -65,7 +65,7 @@ describe('Items Reducer', () => {
         new Actions.SetWagonAction({
           id: Mocks.Item1.id,
           value: Mocks.Item1.id,
-          default: null,
+          def: null,
         })
       );
       expect(result[Mocks.Recipe1.id].wagon).toEqual(Mocks.Item1.id);
@@ -79,7 +79,7 @@ describe('Items Reducer', () => {
         new Actions.SetRecipeAction({
           id: Mocks.Item1.id,
           value: Mocks.Item1.id,
-          default: null,
+          def: null,
         })
       );
       expect(result[Mocks.Recipe1.id].recipe).toEqual(Mocks.Item1.id);

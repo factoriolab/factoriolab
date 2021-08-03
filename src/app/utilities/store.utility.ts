@@ -10,17 +10,17 @@ export class StoreUtility {
   }
 
   static payloadEquals<T>(payload: DefaultIdPayload<T>, rank = false): boolean {
-    return Array.isArray(payload.value) && Array.isArray(payload.default)
+    return Array.isArray(payload.value) && Array.isArray(payload.def)
       ? rank
         ? this.rankEquals(
             payload.value as (number | string)[],
-            payload.default as (number | string)[]
+            payload.def as (number | string)[]
           )
         : this.arrayEquals(
             payload.value as (number | string)[],
-            payload.default as (number | string)[]
+            payload.def as (number | string)[]
           )
-      : payload.value === payload.default;
+      : payload.value === payload.def;
   }
 
   /** Resets a passed fields of the state */
@@ -87,13 +87,11 @@ export class StoreUtility {
   }
 
   static compareValue<T>(payload: DefaultPayload<T>): T {
-    return payload.value === payload.default ? null : payload.value;
+    return payload.value === payload.def ? null : payload.value;
   }
 
   static compareValues(payload: DefaultPayload<string[]>): string[] {
-    return this.arrayEquals(payload.value, payload.default)
-      ? null
-      : payload.value;
+    return this.arrayEquals(payload.value, payload.def) ? null : payload.value;
   }
 
   static compareRank(value: string[], def: string[]): string[] {

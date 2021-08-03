@@ -16,6 +16,7 @@ import {
   Entities,
   DisplayRate,
   DefaultIdPayload,
+  PreviousPayload,
 } from '~/models';
 import { State } from '~/store';
 import * as Factories from '~/store/factories';
@@ -102,7 +103,7 @@ export class ProductsContainerComponent implements OnInit {
     this.store.dispatch(new Products.AddAction(value));
   }
 
-  setDisplayRate(value: DisplayRate): void {
+  setDisplayRate(value: PreviousPayload<DisplayRate>): void {
     this.store.dispatch(new SetDisplayRateAction(value));
   }
 }

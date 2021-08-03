@@ -22,6 +22,7 @@ import {
   ItemId,
   Game,
   PIPE,
+  PreviousPayload,
 } from '~/models';
 import { ItemsState } from '~/store/items';
 import { RecipeUtility } from '~/utilities';
@@ -58,7 +59,7 @@ export class ProductsComponent
   >();
   @Output() setViaOverclock = new EventEmitter<DefaultIdPayload<number>>();
   @Output() addProduct = new EventEmitter<string>();
-  @Output() setDisplayRate = new EventEmitter<DisplayRate>();
+  @Output() setDisplayRate = new EventEmitter<PreviousPayload<DisplayRate>>();
 
   DisplayRateOptions = DisplayRateOptions;
   rateTypeOptions: IdName<RateType>[];

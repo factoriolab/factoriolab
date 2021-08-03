@@ -35,6 +35,7 @@ import {
   Rational,
   Game,
   GameOptions,
+  PreviousPayload,
 } from '~/models';
 import { FactoriesState } from '~/store/factories';
 import { ColumnsState, PreferencesState } from '~/store/preferences';
@@ -91,7 +92,7 @@ export class SettingsComponent implements OnInit, OnChanges {
   @Output() setResearchSpeed = new EventEmitter<ResearchSpeed>();
   @Output() setInserterTarget = new EventEmitter<InserterTarget>();
   @Output() setInserterCapacity = new EventEmitter<InserterCapacity>();
-  @Output() setDisplayRate = new EventEmitter<DisplayRate>();
+  @Output() setDisplayRate = new EventEmitter<PreviousPayload<DisplayRate>>();
   @Output() setColumns = new EventEmitter<ColumnsState>();
   @Output() setSimplex = new EventEmitter<boolean>();
 
@@ -195,7 +196,7 @@ export class SettingsComponent implements OnInit, OnChanges {
       id === ''
         ? this.data.defaults.beaconCount
         : this.factories.entities[''].beaconCount;
-    this.setBeaconCount.emit({ id, value, default: def });
+    this.setBeaconCount.emit({ id, value, def });
   }
 
   changeOverclock(id: string, input: Event): void {
@@ -203,7 +204,7 @@ export class SettingsComponent implements OnInit, OnChanges {
     const value = target.valueAsNumber;
     if (value >= 1 && value <= 250) {
       const def = id === '' ? 100 : this.factories.entities[''].overclock;
-      this.setOverclock.emit({ id, value, default: def });
+      this.setOverclock.emit({ id, value, def });
     }
   }
 

@@ -112,7 +112,7 @@ export function settingsReducer(
         ...{ fluidWagon: StoreUtility.compareValue(action.payload) },
       };
     case SettingsActionType.SET_DISPLAY_RATE:
-      return { ...state, ...{ displayRate: action.payload } };
+      return { ...state, ...{ displayRate: action.payload.value } };
     case SettingsActionType.SET_MINING_BONUS:
       return { ...state, ...{ miningBonus: action.payload } };
     case SettingsActionType.SET_RESEARCH_SPEED:

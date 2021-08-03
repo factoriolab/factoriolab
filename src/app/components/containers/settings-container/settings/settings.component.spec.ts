@@ -233,7 +233,7 @@ describe('SettingsComponent', () => {
       expect(component.setBeaconCount).toHaveBeenCalledWith({
         id: '',
         value: '3',
-        default: '8',
+        def: '8',
       });
     });
 
@@ -243,7 +243,7 @@ describe('SettingsComponent', () => {
       expect(component.setBeaconCount).toHaveBeenCalledWith({
         id: ItemId.AssemblingMachine3,
         value: '3',
-        default: '8',
+        def: '8',
       });
     });
   });
@@ -257,7 +257,7 @@ describe('SettingsComponent', () => {
       expect(component.setOverclock).toHaveBeenCalledWith({
         id: '',
         value: 200,
-        default: 100,
+        def: 100,
       });
     });
 
@@ -269,7 +269,7 @@ describe('SettingsComponent', () => {
       expect(component.setOverclock).toHaveBeenCalledWith({
         id: ItemId.AssemblingMachine3,
         value: 200,
-        default: null,
+        def: null,
       });
     });
 

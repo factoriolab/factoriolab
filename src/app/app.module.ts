@@ -40,6 +40,7 @@ import {
 } from './support';
 import { reducers, metaReducers } from './store';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
+import { ProductsEffects } from './store/products';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,7 @@ import { DatasetsEffects } from './store/datasets/datasets.effects';
     StoreDevtoolsModule.instrument({
       logOnly: environment.production,
     }),
-    EffectsModule.forRoot([DatasetsEffects]),
+    EffectsModule.forRoot([DatasetsEffects, ProductsEffects]),
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: environment.baseHref },
