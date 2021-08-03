@@ -1,6 +1,6 @@
 import { compose, createSelector } from '@ngrx/store';
 
-import { Column, Game, LinkValue } from '~/models';
+import { Column, Game, LinkValue, SankeyAlign } from '~/models';
 import { State } from '../';
 import { getGame } from '../settings';
 import {
@@ -14,11 +14,14 @@ export const preferencesState = (state: State): PreferencesState =>
 const sColumns = (state: PreferencesState): ColumnsState => state.columns;
 const sLinkSize = (state: PreferencesState): LinkValue => state.linkSize;
 const sLinkText = (state: PreferencesState): LinkValue => state.linkText;
+const sSankeyAlign = (state: PreferencesState): SankeyAlign =>
+  state.sankeyAlign;
 const sSimplex = (state: PreferencesState): boolean => state.simplex;
 
 export const getColumns = compose(sColumns, preferencesState);
 export const getLinkSize = compose(sLinkSize, preferencesState);
 export const getLinkText = compose(sLinkText, preferencesState);
+export const getSankeyAlign = compose(sSankeyAlign, preferencesState);
 export const getSimplex = compose(sSimplex, preferencesState);
 
 export const getColumnsState = createSelector(

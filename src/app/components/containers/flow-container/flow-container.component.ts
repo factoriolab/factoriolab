@@ -15,14 +15,11 @@ import {
   LinkValue,
   linkValueOptions,
   IdName,
+  SankeyAlign,
+  sankeyAlignOptions,
 } from '~/models';
 import { State } from '~/store';
-import {
-  getLinkText,
-  getLinkSize,
-  SetLinkTextAction,
-  SetLinkSizeAction,
-} from '~/store/preferences';
+import * as Preferences from '~/store/preferences';
 import { getSankey, getSteps } from '~/store/products';
 import { getGame } from '~/store/settings';
 import { SankeyComponent } from './sankey/sankey.component';
@@ -40,9 +37,11 @@ export class FlowContainerComponent implements OnInit {
   steps$: Observable<Step[]>;
   linkText$: Observable<LinkValue>;
   linkSize$: Observable<LinkValue>;
+  sankeyAlign$: Observable<SankeyAlign>;
 
   selected: string;
   options: IdName<LinkValue>[];
+  sankeyAlignOptions = sankeyAlignOptions;
 
   ListMode = ListMode;
 
@@ -54,8 +53,9 @@ export class FlowContainerComponent implements OnInit {
     });
     this.sankeyData$ = this.store.select(getSankey);
     this.steps$ = this.store.select(getSteps);
-    this.linkText$ = this.store.select(getLinkText);
-    this.linkSize$ = this.store.select(getLinkSize);
+    this.linkText$ = this.store.select(Preferences.getLinkText);
+    this.linkSize$ = this.store.select(Preferences.getLinkSize);
+    this.sankeyAlign$ = this.store.select(Preferences.getSankeyAlign);
   }
 
   setSelected(value: string): void {
@@ -65,10 +65,14 @@ export class FlowContainerComponent implements OnInit {
   }
 
   setLinkSize(value: LinkValue): void {
-    this.store.dispatch(new SetLinkSizeAction(value));
+    this.store.dispatch(new Preferences.SetLinkSizeAction(value));
   }
 
   setLinkText(value: LinkValue): void {
-    this.store.dispatch(new SetLinkTextAction(value));
+    this.store.dispatch(new Preferences.SetLinkTextAction(value));
+  }
+
+  setSankeyAlign(value: SankeyAlign): void {
+    this.store.dispatch(new Preferences.SetSankeyAlignAction(value));
   }
 }

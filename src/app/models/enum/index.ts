@@ -13,3 +13,4 @@ export * from './matrix-result-type';
 export * from './preset';
 export * from './rate-type';
 export * from './research-speed';
+export * from './sankey-align';

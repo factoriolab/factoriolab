@@ -10,11 +10,16 @@ import {
   SankeyGraph,
   sankey,
   sankeyLinkHorizontal,
+  sankeyJustify,
+  sankeyCenter,
+  sankeyLeft,
+  sankeyRight,
+  SankeyNodeMinimal,
 } from 'd3-sankey';
 import { sankeyCircular } from 'd3-sankey-circular';
 import { select, Selection } from 'd3-selection';
 
-import { SankeyData, Node, Link } from '~/models';
+import { SankeyData, Node, Link, SankeyAlign } from '~/models';
 
 @Component({
   selector: 'lab-sankey',
@@ -28,6 +33,14 @@ export class SankeyComponent {
   }
   @Input() set sankeyData(value: SankeyData) {
     this._sankeyData = value;
+    this.rebuildChart();
+  }
+  _sankeyAlign: SankeyAlign;
+  get sankeyAlign(): SankeyAlign {
+    return this._sankeyAlign;
+  }
+  @Input() set sankeyAlign(value: SankeyAlign) {
+    this._sankeyAlign = value;
     this.rebuildChart();
   }
 
@@ -64,6 +77,7 @@ export class SankeyComponent {
       .nodeId((d) => d.id)
       .nodeWidth(32)
       .nodePadding(8)
+      .nodeAlign(this.getAlign(this.sankeyAlign))
       .extent([
         [1, 5],
         [width - 1, height - 5],
@@ -73,6 +87,21 @@ export class SankeyComponent {
       nodes: this.linkedNodes.map((d) => ({ ...d })),
       links: this.sankeyData.links.map((l) => ({ ...l })),
     });
+  }
+
+  getAlign(
+    align: SankeyAlign
+  ): (node: SankeyNodeMinimal<{}, {}>, n: number) => number {
+    switch (align) {
+      case SankeyAlign.Left:
+        return sankeyLeft;
+      case SankeyAlign.Right:
+        return sankeyRight;
+      case SankeyAlign.Center:
+        return sankeyCenter;
+      default:
+        return sankeyJustify;
+    }
   }
 
   createChart(): void {

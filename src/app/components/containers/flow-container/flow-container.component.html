@@ -13,9 +13,22 @@
     [options]="options"
     (selectId)="setLinkSize($event)"
   ></lab-options>
+  <div class="flex">
+    <span>Sankey align</span>
+    <a href="https://github.com/d3/d3-sankey#alignments" target="_blank"
+      ><i class="material-icons small">help</i></a
+    >
+  </div>
+  <lab-options
+    title="Select sankey alignment"
+    [selected]="sankeyAlign$ | async"
+    [options]="sankeyAlignOptions"
+    (selectId)="setSankeyAlign($event)"
+  ></lab-options>
 </div>
 <lab-sankey
   [sankeyData]="sankeyData$ | async"
+  [sankeyAlign]="sankeyAlign$ | async"
   (selectNode)="setSelected($event)"
 ></lab-sankey>
 <lab-list-container
