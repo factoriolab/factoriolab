@@ -4,7 +4,13 @@ import { StoreModule, Store } from '@ngrx/store';
 
 import { Mocks, ItemId, RecipeId } from 'src/tests';
 import { IconComponent, OptionsComponent, PickerComponent } from '~/components';
-import { DefaultIdPayload, DisplayRate, IdPayload, RateType } from '~/models';
+import {
+  DefaultIdPayload,
+  DisplayRate,
+  IdPayload,
+  PreviousPayload,
+  RateType,
+} from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import * as Products from '~/store/products';
 import { SetDisplayRateAction } from '~/store/settings';
@@ -91,7 +97,7 @@ describe('ProductsContainerComponent', () => {
     const data: DefaultIdPayload = {
       id: Mocks.Product1.id,
       value: ItemId.TransportBelt,
-      default: ItemId.TransportBelt,
+      def: ItemId.TransportBelt,
     };
     component.child.setViaSetting.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -103,7 +109,7 @@ describe('ProductsContainerComponent', () => {
     const data: DefaultIdPayload<string[]> = {
       id: Mocks.Product1.id,
       value: [ItemId.SpeedModule, ItemId.SpeedModule],
-      default: [ItemId.Module, ItemId.Module],
+      def: [ItemId.Module, ItemId.Module],
     };
     component.child.setViaFactoryModules.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -115,7 +121,7 @@ describe('ProductsContainerComponent', () => {
     const data: DefaultIdPayload = {
       id: Mocks.Product1.id,
       value: '12',
-      default: '8',
+      def: '8',
     };
     component.child.setViaBeaconCount.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -127,7 +133,7 @@ describe('ProductsContainerComponent', () => {
     const data: DefaultIdPayload = {
       id: Mocks.Product1.id,
       value: ItemId.Beacon,
-      default: ItemId.Beacon,
+      def: ItemId.Beacon,
     };
     component.child.setViaBeacon.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -139,7 +145,7 @@ describe('ProductsContainerComponent', () => {
     const data: DefaultIdPayload<string[]> = {
       id: Mocks.Product1.id,
       value: [ItemId.SpeedModule, ItemId.SpeedModule],
-      default: [ItemId.Module, ItemId.Module],
+      def: [ItemId.Module, ItemId.Module],
     };
     component.child.setViaBeaconModules.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -151,7 +157,7 @@ describe('ProductsContainerComponent', () => {
     const data: DefaultIdPayload<number> = {
       id: Mocks.Product1.id,
       value: 200,
-      default: 100,
+      def: 100,
     };
     component.child.setViaOverclock.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -167,7 +173,10 @@ describe('ProductsContainerComponent', () => {
   });
 
   it('should set display rate', () => {
-    const value = DisplayRate.PerSecond;
+    const value: PreviousPayload<DisplayRate> = {
+      value: DisplayRate.PerSecond,
+      prev: DisplayRate.PerMinute,
+    };
     component.child.setDisplayRate.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new SetDisplayRateAction(value)

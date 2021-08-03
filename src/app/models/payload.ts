@@ -6,10 +6,15 @@ export interface IdPayload<T = string> {
 export interface DefaultIdPayload<T = string, D = T> {
   id: string;
   value: T;
-  default: D;
+  def: D;
 }
 
 export interface DefaultPayload<T = string, D = T> {
   value: T;
-  default: D;
+  def: D;
+}
+
+export interface PreviousPayload<T = string> {
+  value: T;
+  prev: T;
 }

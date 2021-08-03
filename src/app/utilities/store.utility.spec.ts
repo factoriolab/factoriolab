@@ -36,14 +36,14 @@ describe('StoreUtility', () => {
         StoreUtility.payloadEquals({
           id: 'id',
           value: ['a', 'b'],
-          default: ['a', 'b'],
+          def: ['a', 'b'],
         })
       ).toBeTrue();
       expect(
         StoreUtility.payloadEquals({
           id: 'id',
           value: ['a', 'b'],
-          default: ['a', 'c'],
+          def: ['a', 'c'],
         })
       ).toBeFalse();
     });
@@ -53,14 +53,14 @@ describe('StoreUtility', () => {
         StoreUtility.payloadEquals({
           id: 'id',
           value: 'a',
-          default: 'a',
+          def: 'a',
         })
       ).toBeTrue();
       expect(
         StoreUtility.payloadEquals({
           id: 'id',
           value: 'a',
-          default: 'b',
+          def: 'b',
         })
       ).toBeFalse();
     });
@@ -71,7 +71,7 @@ describe('StoreUtility', () => {
           {
             id: 'id',
             value: ['a', 'b'],
-            default: ['a', 'b'],
+            def: ['a', 'b'],
           },
           true
         )
@@ -81,7 +81,7 @@ describe('StoreUtility', () => {
           {
             id: 'id',
             value: ['a', 'b'],
-            default: ['b', 'a'],
+            def: ['b', 'a'],
           },
           true
         )
@@ -143,19 +143,19 @@ describe('StoreUtility', () => {
     const field = 'test';
 
     it('should set field when not equal to default', () => {
-      const payload = { id, value: 'a', default: 'b' };
+      const payload = { id, value: 'a', def: 'b' };
       const result = StoreUtility.compareReset({}, field, payload);
       expect(result[id][field]).toEqual('a');
     });
 
     it('should do nothing if null and equal to default', () => {
-      const payload = { id, value: 'a', default: 'a' };
+      const payload = { id, value: 'a', def: 'a' };
       const result = StoreUtility.compareReset({}, field, payload);
       expect(result).toEqual({});
     });
 
     it('should delete field when equal to default', () => {
-      const payload = { id, value: 'a', default: 'a' };
+      const payload = { id, value: 'a', def: 'a' };
       const result = StoreUtility.compareReset(
         { [id]: { other: 'b', [field]: 'b' } },
         field,
@@ -165,7 +165,7 @@ describe('StoreUtility', () => {
     });
 
     it('should delete entry when equal to default and no other entries', () => {
-      const payload = { id, value: 'a', default: 'a' };
+      const payload = { id, value: 'a', def: 'a' };
       const result = StoreUtility.compareReset({ [id]: {} }, field, payload);
       expect(result).toEqual({} as any);
     });
@@ -173,28 +173,24 @@ describe('StoreUtility', () => {
 
   describe('compareValue', () => {
     it('should return null if equal to default', () => {
-      expect(
-        StoreUtility.compareValue({ value: 'a', default: 'a' })
-      ).toBeNull();
+      expect(StoreUtility.compareValue({ value: 'a', def: 'a' })).toBeNull();
     });
 
     it('should return value if not equal to default', () => {
-      expect(StoreUtility.compareValue({ value: 'a', default: 'b' })).toEqual(
-        'a'
-      );
+      expect(StoreUtility.compareValue({ value: 'a', def: 'b' })).toEqual('a');
     });
   });
 
   describe('compareValues', () => {
     it('should return null if equal to default', () => {
       expect(
-        StoreUtility.compareValues({ value: ['a', 'b'], default: ['b', 'a'] })
+        StoreUtility.compareValues({ value: ['a', 'b'], def: ['b', 'a'] })
       ).toBeNull();
     });
 
     it('should return value if not equal to default', () => {
       expect(
-        StoreUtility.compareValues({ value: ['a'], default: ['b', 'a'] })
+        StoreUtility.compareValues({ value: ['a'], def: ['b', 'a'] })
       ).toEqual(['a']);
     });
   });

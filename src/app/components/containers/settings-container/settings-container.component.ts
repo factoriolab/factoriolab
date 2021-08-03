@@ -22,6 +22,7 @@ import {
   InserterTarget,
   InserterCapacity,
   DefaultIdPayload,
+  PreviousPayload,
 } from '~/models';
 import { State } from '~/store';
 import { ResetAction } from '~/store/app.actions';
@@ -188,7 +189,7 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Settings.SetInserterCapacityAction(value));
   }
 
-  setDisplayRate(value: DisplayRate): void {
+  setDisplayRate(value: PreviousPayload<DisplayRate>): void {
     this.store.dispatch(new Settings.SetDisplayRateAction(value));
   }
 

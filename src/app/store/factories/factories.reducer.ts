@@ -31,37 +31,37 @@ export function factoriesReducer(
       return initialFactoriesState;
     case FactoriesActionType.ADD: {
       const value = [
-        ...(state.ids || action.payload.default),
+        ...(state.ids || action.payload.def),
         action.payload.value,
       ];
-      const ids = StoreUtility.compareRank(value, action.payload.default);
+      const ids = StoreUtility.compareRank(value, action.payload.def);
       return { ...state, ...{ ids } };
     }
     case FactoriesActionType.REMOVE: {
-      const value = (state.ids || action.payload.default).filter(
+      const value = (state.ids || action.payload.def).filter(
         (i) => i !== action.payload.value
       );
-      const ids = StoreUtility.compareRank(value, action.payload.default);
+      const ids = StoreUtility.compareRank(value, action.payload.def);
       const newState = { ...state, ...{ ids } };
       delete newState.entities[action.payload.value];
       return newState;
     }
     case FactoriesActionType.RAISE: {
-      const value = [...(state.ids || action.payload.default)];
+      const value = [...(state.ids || action.payload.def)];
       const i = value.indexOf(action.payload.value);
       if (i !== -1 && i > 0) {
         value.splice(i - 1, 0, value.splice(i, 1)[0]);
-        const ids = StoreUtility.compareRank(value, action.payload.default);
+        const ids = StoreUtility.compareRank(value, action.payload.def);
         return { ...state, ...{ ids } };
       }
       return state;
     }
     case FactoriesActionType.SET_FACTORY: {
-      const value = [...(state.ids || action.payload.default)];
+      const value = [...(state.ids || action.payload.def)];
       const i = value.indexOf(action.payload.id);
       if (i !== -1) {
         value[i] = action.payload.value;
-        const ids = StoreUtility.compareRank(value, action.payload.default);
+        const ids = StoreUtility.compareRank(value, action.payload.def);
         const newState = {
           ...state,
           ...{ ids, entities: { ...state.entities } },

@@ -1,4 +1,4 @@
-import { Product, RateType, Entities, ProductField } from '~/models';
+import { Product, RateType, Entities, ProductField, Rational } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { AppActionType, AppAction } from '../app.actions';
 import { ProductsAction, ProductsActionType } from './products.actions';
@@ -32,7 +32,7 @@ export function productsReducer(
           [id]: {
             id,
             itemId: action.payload,
-            rate: '1',
+            rate: '60',
             rateType: RateType.Items,
           },
         },
@@ -223,6 +223,20 @@ export function productsReducer(
             action.payload
           ),
         },
+      };
+    }
+    case ProductsActionType.ADJUST_DISPLAY_RATE: {
+      const factor = Rational.fromString(action.payload);
+      const newEntities = { ...state.entities };
+      for (const id of state.ids) {
+        const rate = Rational.fromString(state.entities[id].rate)
+          .mul(factor)
+          .toString();
+        newEntities[id] = { ...state.entities[id], ...{ rate } };
+      }
+      return {
+        ...state,
+        ...{ entities: newEntities },
       };
     }
     default:

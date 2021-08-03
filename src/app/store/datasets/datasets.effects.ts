@@ -6,7 +6,6 @@ import { Observable, of } from 'rxjs';
 import { switchMap, map, tap } from 'rxjs/operators';
 
 import { ModData, Entities } from '~/models';
-import { RouterService } from '~/services';
 import { BrowserUtility } from '~/utilities';
 import { State } from '..';
 import * as App from '../app.actions';
@@ -93,7 +92,6 @@ export class DatasetsEffects {
   constructor(
     private actions$: Actions,
     private http: HttpClient,
-    private router: RouterService,
     private store: Store<State>
   ) {
     this.load(

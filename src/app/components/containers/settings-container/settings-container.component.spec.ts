@@ -21,6 +21,7 @@ import {
   DefaultIdPayload,
   DefaultPayload,
   IdPayload,
+  PreviousPayload,
 } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import { ResetAction } from '~/store/app.actions';
@@ -143,7 +144,7 @@ describe('SettingsContainerComponent', () => {
   it('should set the disabled recipes', () => {
     const value: DefaultPayload<string[]> = {
       value: [RecipeId.BasicOilProcessing],
-      default: [],
+      def: [],
     };
     component.child.setDisabledRecipes.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -162,7 +163,7 @@ describe('SettingsContainerComponent', () => {
   it('should add a factory', () => {
     const value: DefaultPayload<string, string[]> = {
       value: 'value',
-      default: ['value'],
+      def: ['value'],
     };
     component.child.addFactory.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(new Factories.AddAction(value));
@@ -171,7 +172,7 @@ describe('SettingsContainerComponent', () => {
   it('should remove a factory', () => {
     const value: DefaultPayload<string, string[]> = {
       value: 'value',
-      default: ['value'],
+      def: ['value'],
     };
     component.child.removeFactory.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -182,7 +183,7 @@ describe('SettingsContainerComponent', () => {
   it('should raise a factory', () => {
     const value: DefaultPayload<string, string[]> = {
       value: 'value',
-      default: ['value'],
+      def: ['value'],
     };
     component.child.raiseFactory.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -194,7 +195,7 @@ describe('SettingsContainerComponent', () => {
     const value: DefaultIdPayload<string, string[]> = {
       id: 'id',
       value: 'value',
-      default: ['value'],
+      def: ['value'],
     };
     component.child.setFactory.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -206,7 +207,7 @@ describe('SettingsContainerComponent', () => {
     const value: DefaultIdPayload<string[]> = {
       id: 'id',
       value: ['value'],
-      default: ['value'],
+      def: ['value'],
     };
     component.child.setModuleRank.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -218,7 +219,7 @@ describe('SettingsContainerComponent', () => {
     const value: DefaultIdPayload = {
       id: 'id',
       value: '0',
-      default: '0',
+      def: '0',
     };
     component.child.setBeaconCount.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -230,7 +231,7 @@ describe('SettingsContainerComponent', () => {
     const value: DefaultIdPayload = {
       id: 'id',
       value: 'value',
-      default: 'value',
+      def: 'value',
     };
     component.child.setBeacon.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -242,7 +243,7 @@ describe('SettingsContainerComponent', () => {
     const value: DefaultIdPayload = {
       id: 'id',
       value: 'value',
-      default: 'value',
+      def: 'value',
     };
     component.child.setBeaconModule.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -254,7 +255,7 @@ describe('SettingsContainerComponent', () => {
     const value: DefaultIdPayload<number> = {
       id: 'id',
       value: 200,
-      default: 100,
+      def: 100,
     };
     component.child.setOverclock.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -265,7 +266,7 @@ describe('SettingsContainerComponent', () => {
   it('should set the default belt', () => {
     const value: DefaultPayload = {
       value: ItemId.TransportBelt,
-      default: ItemId.TransportBelt,
+      def: ItemId.TransportBelt,
     };
     component.child.setBelt.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -276,7 +277,7 @@ describe('SettingsContainerComponent', () => {
   it('should set the default pipe', () => {
     const value: DefaultPayload = {
       value: ItemId.Pipe,
-      default: ItemId.Pipe,
+      def: ItemId.Pipe,
     };
     component.child.setPipe.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -285,7 +286,7 @@ describe('SettingsContainerComponent', () => {
   });
 
   it('should set the fuel', () => {
-    const value: DefaultPayload = { value: ItemId.Wood, default: ItemId.Wood };
+    const value: DefaultPayload = { value: ItemId.Wood, def: ItemId.Wood };
     component.child.setFuel.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetFuelAction(value)
@@ -303,7 +304,7 @@ describe('SettingsContainerComponent', () => {
   it('should set the cargo wagon', () => {
     const value: DefaultPayload = {
       value: ItemId.CargoWagon,
-      default: ItemId.CargoWagon,
+      def: ItemId.CargoWagon,
     };
     component.child.setCargoWagon.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -314,7 +315,7 @@ describe('SettingsContainerComponent', () => {
   it('should set the fluid wagon', () => {
     const value: DefaultPayload = {
       value: ItemId.FluidWagon,
-      default: ItemId.FluidWagon,
+      def: ItemId.FluidWagon,
     };
     component.child.setFluidWagon.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -355,7 +356,10 @@ describe('SettingsContainerComponent', () => {
   });
 
   it('should set display rate', () => {
-    const value = DisplayRate.PerSecond;
+    const value: PreviousPayload<DisplayRate> = {
+      value: DisplayRate.PerSecond,
+      prev: DisplayRate.PerMinute,
+    };
     component.child.setDisplayRate.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Settings.SetDisplayRateAction(value)

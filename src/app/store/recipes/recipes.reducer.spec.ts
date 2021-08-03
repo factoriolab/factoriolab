@@ -23,7 +23,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetFactoryAction({
           id: Mocks.Recipe1.id,
           value: Mocks.Item1.id,
-          default: null,
+          def: null,
         })
       );
       expect(result[Mocks.Recipe1.id].factory).toEqual(Mocks.Item1.id);
@@ -45,7 +45,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetFactoryAction({
           id: Mocks.Recipe1.id,
           value: Mocks.Item1.id,
-          default: null,
+          def: null,
         })
       );
       expect(result[Mocks.Recipe1.id]).toEqual({ factory: Mocks.Item1.id });
@@ -59,7 +59,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetFactoryModulesAction({
           id: Mocks.Recipe1.id,
           value: [Mocks.Item1.id],
-          default: null,
+          def: null,
         })
       );
       expect(result[Mocks.Recipe1.id].factoryModules).toEqual([Mocks.Item1.id]);
@@ -73,7 +73,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetBeaconCountAction({
           id: Mocks.Recipe1.id,
           value: '2',
-          default: null,
+          def: null,
         })
       );
       expect(result[Mocks.Recipe1.id].beaconCount).toEqual('2');
@@ -87,7 +87,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetBeaconAction({
           id: Mocks.Recipe1.id,
           value: ItemId.Beacon,
-          default: null,
+          def: null,
         })
       );
       expect(result[Mocks.Recipe1.id].beacon).toEqual(ItemId.Beacon);
@@ -102,7 +102,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetBeaconAction({
           id: Mocks.Recipe1.id,
           value: ItemId.Beacon,
-          default: null,
+          def: null,
         })
       );
       expect(result[Mocks.Recipe1.id]).toEqual({ beacon: ItemId.Beacon });
@@ -116,7 +116,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetBeaconModulesAction({
           id: Mocks.Recipe1.id,
           value: [Mocks.Item1.id],
-          default: null,
+          def: null,
         })
       );
       expect(result[Mocks.Recipe1.id].beaconModules).toEqual([Mocks.Item1.id]);
@@ -130,7 +130,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetOverclockAction({
           id: Mocks.Recipe1.id,
           value: 200,
-          default: 100,
+          def: 100,
         })
       );
       expect(result[Mocks.Recipe1.id].overclock).toEqual(200);

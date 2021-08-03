@@ -731,7 +731,7 @@ describe('ListComponent', () => {
       expect(component.setDefaultRecipe).toHaveBeenCalledWith({
         id: ItemId.Coal,
         value: null,
-        default: null,
+        def: null,
       });
     });
 
@@ -741,7 +741,7 @@ describe('ListComponent', () => {
       expect(component.setDefaultRecipe).toHaveBeenCalledWith({
         id: ItemId.Coal,
         value: RecipeId.Coal,
-        default: RecipeId.Coal,
+        def: RecipeId.Coal,
       });
     });
   });
@@ -754,7 +754,7 @@ describe('ListComponent', () => {
       component.child.toggleRecipe(RecipeId.AdvancedOilProcessing);
       expect(component.setDisabledRecipes).toHaveBeenCalledWith({
         value: [],
-        default: [RecipeId.NuclearFuelReprocessing],
+        def: [RecipeId.NuclearFuelReprocessing],
       });
     });
 
@@ -764,7 +764,7 @@ describe('ListComponent', () => {
       component.child.toggleRecipe(RecipeId.AdvancedOilProcessing);
       expect(component.setDisabledRecipes).toHaveBeenCalledWith({
         value: [RecipeId.AdvancedOilProcessing],
-        default: [RecipeId.NuclearFuelReprocessing],
+        def: [RecipeId.NuclearFuelReprocessing],
       });
     });
   });

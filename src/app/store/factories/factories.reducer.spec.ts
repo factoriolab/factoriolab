@@ -29,7 +29,7 @@ describe('Factories Reducer', () => {
     it('should add a factory to the list', () => {
       const result = factoriesReducer(
         undefined,
-        new Actions.AddAction({ value, default: [def] })
+        new Actions.AddAction({ value, def: [def] })
       );
       expect(result.ids).toEqual([def, value]);
     });
@@ -39,7 +39,7 @@ describe('Factories Reducer', () => {
     it('should remove a factory from the list', () => {
       const result = factoriesReducer(
         { ids: null, entities: { [def]: {} } } as any,
-        new Actions.RemoveAction({ value: def, default: [def] })
+        new Actions.RemoveAction({ value: def, def: [def] })
       );
       expect(result.ids).toEqual([]);
       expect(result.entities[value]).toBeUndefined();
@@ -50,7 +50,7 @@ describe('Factories Reducer', () => {
     it('should raise the rank of a factory', () => {
       const result = factoriesReducer(
         { ids: null } as any,
-        new Actions.RaiseAction({ value: def, default: [value, def] })
+        new Actions.RaiseAction({ value: def, def: [value, def] })
       );
       expect(result.ids).toEqual([def, value]);
     });
@@ -58,7 +58,7 @@ describe('Factories Reducer', () => {
     it('should do nothing if rank is already highest', () => {
       const result = factoriesReducer(
         { ids: null } as any,
-        new Actions.RaiseAction({ value, default: [value, def] })
+        new Actions.RaiseAction({ value, def: [value, def] })
       );
       expect(result.ids).toBeNull();
     });
@@ -68,7 +68,7 @@ describe('Factories Reducer', () => {
     it('should replace an id in the rank list', () => {
       const result = factoriesReducer(
         { ids: null, entities: { [def]: 'test' } } as any,
-        new Actions.SetFactoryAction({ id: def, value, default: [def] })
+        new Actions.SetFactoryAction({ id: def, value, def: [def] })
       );
       expect(result.ids).toEqual([value]);
       expect(result.entities[value]).toEqual('test' as any);
@@ -77,7 +77,7 @@ describe('Factories Reducer', () => {
     it('should do nothing if id is not found', () => {
       const result = factoriesReducer(
         { ids: null, entities: { [def]: 'test' } } as any,
-        new Actions.SetFactoryAction({ id, value, default: [def] })
+        new Actions.SetFactoryAction({ id, value, def: [def] })
       );
       expect(result.ids).toBeNull();
       expect(result.entities[def]).toEqual('test' as any);
@@ -88,7 +88,7 @@ describe('Factories Reducer', () => {
     it('should set the module rank for a factory', () => {
       const result = factoriesReducer(
         undefined,
-        new Actions.SetModuleRankAction({ id, value: [value], default: [] })
+        new Actions.SetModuleRankAction({ id, value: [value], def: [] })
       );
       expect(result.entities[id].moduleRank).toEqual([value]);
     });
@@ -98,7 +98,7 @@ describe('Factories Reducer', () => {
     it('should set the beacon count for a factory', () => {
       const result = factoriesReducer(
         undefined,
-        new Actions.SetBeaconCountAction({ id, value: '2', default: '8' })
+        new Actions.SetBeaconCountAction({ id, value: '2', def: '8' })
       );
       expect(result.entities[id].beaconCount).toEqual('2');
     });
@@ -108,7 +108,7 @@ describe('Factories Reducer', () => {
     it('should set the beacon for a factory', () => {
       const result = factoriesReducer(
         undefined,
-        new Actions.SetBeaconAction({ id, value, default: ItemId.Beacon })
+        new Actions.SetBeaconAction({ id, value, def: ItemId.Beacon })
       );
       expect(result.entities[id].beacon).toEqual(value);
     });
@@ -121,7 +121,7 @@ describe('Factories Reducer', () => {
         new Actions.SetBeaconModuleAction({
           id,
           value,
-          default: ItemId.SpeedModule,
+          def: ItemId.SpeedModule,
         })
       );
       expect(result.entities[id].beaconModule).toEqual(value);
@@ -132,7 +132,7 @@ describe('Factories Reducer', () => {
     it('should set the overclock for a factory', () => {
       const result = factoriesReducer(
         undefined,
-        new Actions.SetOverclockAction({ id, value: 200, default: 100 })
+        new Actions.SetOverclockAction({ id, value: 200, def: 100 })
       );
       expect(result.entities[id].overclock).toEqual(200);
     });

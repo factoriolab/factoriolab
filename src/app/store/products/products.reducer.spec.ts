@@ -37,7 +37,7 @@ describe('Products Reducer', () => {
           ['0']: {
             id: '0',
             itemId: ItemId.Coal,
-            rate: '1',
+            rate: '60',
             rateType: RateType.Items,
           },
         },
@@ -115,7 +115,7 @@ describe('Products Reducer', () => {
         new Actions.SetViaSettingAction({
           id: Mocks.Product1.id,
           value,
-          default: null,
+          def: null,
         })
       );
       expect(result.entities[Mocks.Product1.id].viaSetting).toEqual(value);
@@ -130,7 +130,7 @@ describe('Products Reducer', () => {
         new Actions.SetViaFactoryModulesAction({
           id: Mocks.Product1.id,
           value,
-          default: null,
+          def: null,
         })
       );
       expect(result.entities[Mocks.Product1.id].viaFactoryModules).toEqual(
@@ -147,7 +147,7 @@ describe('Products Reducer', () => {
         new Actions.SetViaBeaconCountAction({
           id: Mocks.Product1.id,
           value,
-          default: '8',
+          def: '8',
         })
       );
       expect(result.entities[Mocks.Product1.id].viaBeaconCount).toEqual(value);
@@ -162,7 +162,7 @@ describe('Products Reducer', () => {
         new Actions.SetViaBeaconAction({
           id: Mocks.Product1.id,
           value,
-          default: null,
+          def: null,
         })
       );
       expect(result.entities[Mocks.Product1.id].viaBeacon).toEqual(value);
@@ -177,7 +177,7 @@ describe('Products Reducer', () => {
         new Actions.SetViaBeaconModulesAction({
           id: Mocks.Product1.id,
           value,
-          default: null,
+          def: null,
         })
       );
       expect(result.entities[Mocks.Product1.id].viaBeaconModules).toEqual(
@@ -194,10 +194,20 @@ describe('Products Reducer', () => {
         new Actions.SetViaOverclockAction({
           id: Mocks.Product1.id,
           value,
-          default: null,
+          def: null,
         })
       );
       expect(result.entities[Mocks.Product1.id].viaOverclock).toEqual(value);
+    });
+  });
+
+  describe('ADJUST_DISPLAY_RATE', () => {
+    it('should adjust rates for products when display rate changes', () => {
+      const result = productsReducer(
+        state,
+        new Actions.AdjustDisplayRateAction('1/60')
+      );
+      expect(result.entities[Mocks.Product1.id].rate).toEqual('1/60');
     });
   });
 
