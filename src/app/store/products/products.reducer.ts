@@ -39,7 +39,15 @@ export function productsReducer(
         index: 1,
       };
     }
-    case ProductsActionType.ADD:
+    case ProductsActionType.ADD: {
+      let rate = '60';
+      let rateType = RateType.Items;
+      if (state.ids.length > 0) {
+        // Use rate and rate type from last product in list
+        const id = state.ids[state.ids.length - 1];
+        rate = state.entities[id].rate;
+        rateType = state.entities[id].rateType;
+      }
       return {
         ...state,
         ...{
@@ -50,14 +58,15 @@ export function productsReducer(
               [state.index]: {
                 id: state.index.toString(),
                 itemId: action.payload,
-                rate: 1,
-                rateType: RateType.Items,
+                rate,
+                rateType,
               },
             },
           },
           index: state.index + 1,
         },
       };
+    }
     case ProductsActionType.REMOVE: {
       const newEntities = { ...state.entities };
       delete newEntities[action.payload];
@@ -228,7 +237,11 @@ export function productsReducer(
     case ProductsActionType.ADJUST_DISPLAY_RATE: {
       const factor = Rational.fromString(action.payload);
       const newEntities = { ...state.entities };
-      for (const id of state.ids) {
+      for (const id of state.ids.filter(
+        (i) =>
+          state.entities[i].rateType === RateType.Items ||
+          state.entities[i].rateType === RateType.Wagons
+      )) {
         const rate = Rational.fromString(state.entities[id].rate)
           .mul(factor)
           .toString();

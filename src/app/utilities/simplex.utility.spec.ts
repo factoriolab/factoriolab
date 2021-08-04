@@ -5,7 +5,6 @@ import {
   SimplexUtility,
   MatrixState,
   COST_RECIPE,
-  COST_WATER,
   COST_MANUAL,
   MatrixSolution,
 } from './simplex.utility';
@@ -209,6 +208,7 @@ describe('SimplexUtility', () => {
           Mocks.ItemSettingsInitial,
           [],
           Mocks.AdjustedData,
+          true,
           true
         )
       ).toEqual([
@@ -224,12 +224,26 @@ describe('SimplexUtility', () => {
           Mocks.ItemSettingsInitial,
           [],
           Mocks.AdjustedData,
-          false
+          false,
+          true
         )
       ).toEqual([
         [ItemId.CopperPlate, Rational.one],
         [ItemId.CopperOre, Rational.from(5, 6)],
       ]);
+    });
+
+    it('should not call simplex solver when disabled', () => {
+      spyOn(SimplexUtility, 'solve');
+      SimplexUtility.getSteps(
+        ItemId.CopperPlate,
+        Mocks.ItemSettingsInitial,
+        [],
+        Mocks.AdjustedData,
+        true,
+        false
+      );
+      expect(SimplexUtility.solve).not.toHaveBeenCalled();
     });
   });
 

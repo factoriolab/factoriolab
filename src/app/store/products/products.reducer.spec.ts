@@ -50,6 +50,28 @@ describe('Products Reducer', () => {
     it('should add a new product', () => {
       expect(state.ids.length).toEqual(1);
     });
+
+    it('should use settings from the last added product', () => {
+      const state: ProductsState = {
+        ids: ['0'],
+        entities: {
+          ['0']: {
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: '30',
+            rateType: RateType.Wagons,
+          },
+        },
+        index: 1,
+      };
+      const result = productsReducer(state, new Actions.AddAction(ItemId.Wood));
+      expect(result.entities['1']).toEqual({
+        id: '1',
+        itemId: ItemId.Wood,
+        rate: '30',
+        rateType: RateType.Wagons,
+      });
+    });
   });
 
   describe('REMOVE', () => {
@@ -207,7 +229,19 @@ describe('Products Reducer', () => {
         state,
         new Actions.AdjustDisplayRateAction('1/60')
       );
-      expect(result.entities[Mocks.Product1.id].rate).toEqual('1/60');
+      expect(result.entities[Mocks.Product1.id].rate).toEqual('1');
+    });
+
+    it('should not adjust rates when rate type unaffected by display rate', () => {
+      let result = productsReducer(
+        state,
+        new Actions.SetRateTypeAction({ id: '0', value: RateType.Belts })
+      );
+      result = productsReducer(
+        result,
+        new Actions.AdjustDisplayRateAction('1/60')
+      );
+      expect(result.entities[Mocks.Product1.id].rate).toEqual('60');
     });
   });
 

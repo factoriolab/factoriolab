@@ -47,14 +47,16 @@ export const getProductSteps = createSelector(
   Items.getItemSettings,
   Settings.getDisabledRecipes,
   Recipes.getAdjustedDataset,
-  (products, itemSettings, disabledRecipes, data) =>
+  Preferences.getSimplex,
+  (products, itemSettings, disabledRecipes, data, simplex) =>
     products?.reduce((e: Entities<[string, Rational][]>, p) => {
       e[p.itemId] = SimplexUtility.getSteps(
         p.itemId,
         itemSettings,
         disabledRecipes,
         data,
-        p.rateType === RateType.Factories
+        p.rateType === RateType.Factories,
+        simplex
       );
       return e;
     }, {})

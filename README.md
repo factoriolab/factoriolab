@@ -16,7 +16,9 @@ This project is intended to build on the features of the Kirk McDonald [Factorio
 ## Running online
 
 The calculator can be found at [https://factoriolab.github.io](https://factoriolab.github.io).  
+The Factorio calculator can opened directly using the url [https://factoriolab.github.io/factorio](https://factoriolab.github.io/factorio).  
 The Dyson Sphere Program calculator can opened directly using the url [https://factoriolab.github.io/dsp](https://factoriolab.github.io/dsp).  
+The Satisfactory calculator can opened directly using the url [https://factoriolab.github.io/satisfactory](https://factoriolab.github.io/satisfactory).  
 The staging environment, for testing pull requests, can be found at [https://factoriolab.github.io/staging](https://factoriolab.github.io/staging).
 
 ## Running locally
