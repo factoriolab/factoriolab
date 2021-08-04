@@ -15,6 +15,12 @@ import {
 import { ListComponent, ListContainerComponent } from '../list-container';
 import { SankeyComponent } from './sankey/sankey.component';
 import { FlowContainerComponent } from './flow-container.component';
+import { ExportUtility } from '~/utilities';
+import { Mocks, TestUtility } from 'src/tests';
+
+enum DataTest {
+  Export = 'lab-flow-container-export',
+}
 
 describe('FlowContainerComponent', () => {
   let component: FlowContainerComponent;
@@ -77,6 +83,14 @@ describe('FlowContainerComponent', () => {
     component.setSankeyAlign(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new SetSankeyAlignAction(value)
+    );
+  });
+
+  it('should call the utility method to export JSON', () => {
+    spyOn(ExportUtility, 'saveAsJson');
+    TestUtility.clickDt(fixture, DataTest.Export);
+    expect(ExportUtility.saveAsJson).toHaveBeenCalledWith(
+      '{"nodes":[],"links":[]}'
     );
   });
 });
