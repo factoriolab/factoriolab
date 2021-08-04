@@ -25,6 +25,14 @@
     [options]="sankeyAlignOptions"
     (selectId)="setSankeyAlign($event)"
   ></lab-options>
+  <button
+    *ngIf="sankeyData$ | async as data"
+    title="Export to JSON"
+    data-test="lab-flow-container-export"
+    (click)="export(data)"
+  >
+    <i class="material-icons">file_download</i>
+  </button>
 </div>
 <lab-sankey
   [sankeyData]="sankeyData$ | async"

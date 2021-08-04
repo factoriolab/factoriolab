@@ -9,6 +9,8 @@ import { RecipeUtility } from './recipe.utility';
 
 const CSV_TYPE = 'text/csv;charset=UTF-8';
 const CSV_EXTENSION = '.csv';
+const JSON_TYPE = 'text/json;charset=UTF-8';
+const JSON_EXTENSION = '.json';
 
 export interface StepExport {
   Item: string;
@@ -55,7 +57,16 @@ export class ExportUtility {
   static saveAsCsv(data: string): void {
     saveAs(
       new Blob([data], { type: CSV_TYPE }),
-      'factoriolab_steps' + CSV_EXTENSION
+      'factoriolab_list' + CSV_EXTENSION
+    );
+  }
+
+  /* Don't test dependencies (file-saver) */
+  /* istanbul ignore next */
+  static saveAsJson(data: string): void {
+    saveAs(
+      new Blob([data], { type: JSON_TYPE }),
+      'factoriolab_flow' + JSON_EXTENSION
     );
   }
 
