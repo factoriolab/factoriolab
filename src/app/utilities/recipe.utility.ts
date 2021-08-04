@@ -13,7 +13,6 @@ import {
   Factory,
   RateType,
   ItemSettings,
-  Game,
 } from '~/models';
 import { FactoriesState } from '~/store/factories';
 import { RecipesState } from '~/store/recipes';

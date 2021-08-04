@@ -136,11 +136,21 @@ export class SimplexUtility {
     itemSettings: ItemsState,
     disabledRecipes: string[],
     data: Dataset,
-    recipes: boolean
+    recipes: boolean,
+    simplex: boolean
   ): [string, Rational][] {
     let steps: Step[] = [];
     RateUtility.addStepsFor(itemId, Rational.one, steps, itemSettings, data);
-    steps = this.solve(steps, itemSettings, disabledRecipes, data, false).steps;
+
+    if (simplex) {
+      steps = this.solve(
+        steps,
+        itemSettings,
+        disabledRecipes,
+        data,
+        false
+      ).steps;
+    }
 
     if (recipes) {
       return steps
