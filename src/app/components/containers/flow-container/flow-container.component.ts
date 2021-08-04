@@ -22,6 +22,7 @@ import { State } from '~/store';
 import * as Preferences from '~/store/preferences';
 import { getSankey, getSteps } from '~/store/products';
 import { getGame } from '~/store/settings';
+import { ExportUtility } from '~/utilities';
 import { SankeyComponent } from './sankey/sankey.component';
 
 @Component({
@@ -74,5 +75,9 @@ export class FlowContainerComponent implements OnInit {
 
   setSankeyAlign(value: SankeyAlign): void {
     this.store.dispatch(new Preferences.SetSankeyAlignAction(value));
+  }
+
+  export(data: SankeyData): void {
+    ExportUtility.saveAsJson(JSON.stringify(data));
   }
 }
