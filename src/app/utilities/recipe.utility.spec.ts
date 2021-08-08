@@ -705,6 +705,50 @@ describe('RecipeUtility', () => {
     });
   });
 
+  describe('adjustCost', () => {
+    let recipeR: Entities<RationalRecipe>;
+
+    beforeEach(() => {
+      recipeR = RecipeUtility.adjustRecipes(
+        Mocks.RationalRecipeSettingsInitial,
+        ItemId.Coal,
+        Rational.zero,
+        Rational.one,
+        Mocks.Data
+      );
+    });
+
+    it('should apply an overridden cost', () => {
+      const recipeSettings = {
+        ...Mocks.RationalRecipeSettingsInitial,
+        ...{
+          [RecipeId.Coal]: {
+            ...Mocks.RationalRecipeSettingsInitial[RecipeId.Coal],
+            ...{ cost: Rational.two },
+          },
+        },
+      };
+      RecipeUtility.adjustCost(
+        recipeR,
+        recipeSettings,
+        Rational.one,
+        Rational.one
+      );
+      expect(recipeR[RecipeId.Coal].cost).toEqual(Rational.two);
+    });
+
+    it('should apply normal recipe and factory costs', () => {
+      RecipeUtility.adjustCost(
+        recipeR,
+        Mocks.RationalRecipeSettingsInitial,
+        Rational.one,
+        Rational.one
+      );
+      expect(recipeR[RecipeId.Coal].cost).toEqual(Rational.from(1183040, 91));
+      expect(recipeR[RecipeId.CopperCable].cost).toEqual(Rational.from(1, 11));
+    });
+  });
+
   describe('adjustProduct', () => {
     const id = '0';
     const itemId = ItemId.Coal;

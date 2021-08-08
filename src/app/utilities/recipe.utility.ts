@@ -371,7 +371,7 @@ export class RecipeUtility {
     for (const id of Object.keys(recipeR)) {
       const recipe = recipeR[id];
       const factoryCost = costFactory.mul(recipe.time);
-      if (recipeSettings[id]?.cost) {
+      if (recipeSettings[id].cost) {
         recipe.cost = recipeSettings[id].cost;
       } else if (recipe.cost) {
         // Recipe has a declared cost, base this on output items not factories

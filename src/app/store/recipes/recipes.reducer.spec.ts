@@ -137,6 +137,20 @@ describe('Recipes Reducer', () => {
     });
   });
 
+  describe('SET_COST', () => {
+    it('should set the cost', () => {
+      const result = recipesReducer(
+        initialRecipesState,
+        new Actions.SetCostAction({
+          id: Mocks.Recipe1.id,
+          value: '10',
+          def: null,
+        })
+      );
+      expect(result[Mocks.Recipe1.id].cost).toEqual('10');
+    });
+  });
+
   describe('RESET', () => {
     it('should reset a recipe', () => {
       const result = recipesReducer(
@@ -179,6 +193,16 @@ describe('Recipes Reducer', () => {
       recipesReducer(null, new Actions.ResetOverclockAction());
       expect(StoreUtility.resetFields).toHaveBeenCalledWith(null, [
         RecipeSettingsField.Overclock,
+      ]);
+    });
+  });
+
+  describe('RESET_COST', () => {
+    it('should call resetField', () => {
+      spyOn(StoreUtility, 'resetFields');
+      recipesReducer(null, new Actions.ResetCostAction());
+      expect(StoreUtility.resetFields).toHaveBeenCalledWith(null, [
+        RecipeSettingsField.Cost,
       ]);
     });
   });

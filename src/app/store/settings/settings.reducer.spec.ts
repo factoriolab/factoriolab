@@ -185,6 +185,68 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('SET_COST_FACTOR', () => {
+    it('should set the recipe cost multiplier', () => {
+      const value = '10';
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetCostFactorAction(value)
+      );
+      expect(result.costFactor).toEqual(value);
+    });
+  });
+
+  describe('SET_COST_FACTORY', () => {
+    it('should set the factory cost multiplier', () => {
+      const value = '10';
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetCostFactoryAction(value)
+      );
+      expect(result.costFactory).toEqual(value);
+    });
+  });
+
+  describe('SET_COST_INPUT', () => {
+    it('should set the input cost', () => {
+      const value = '10';
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetCostInputAction(value)
+      );
+      expect(result.costInput).toEqual(value);
+    });
+  });
+
+  describe('SET_COST_IGNORED', () => {
+    it('should set the ignored cost', () => {
+      const value = '10';
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetCostIgnoredAction(value)
+      );
+      expect(result.costIgnored).toEqual(value);
+    });
+  });
+
+  describe('RESET_COST', () => {
+    it('should reset the cost fields', () => {
+      const result = settingsReducer(
+        {
+          costFactor: 'a',
+          costFactory: 'b',
+          costInput: 'c',
+          costIgnored: 'd',
+        } as any,
+        new Actions.ResetCostAction()
+      );
+      expect(result.costFactor).toEqual('1');
+      expect(result.costFactory).toEqual('1');
+      expect(result.costInput).toEqual('1000000');
+      expect(result.costIgnored).toEqual('0');
+    });
+  });
+
   it('should return default state', () => {
     expect(settingsReducer(undefined, { type: 'Test' } as any)).toBe(
       initialSettingsState

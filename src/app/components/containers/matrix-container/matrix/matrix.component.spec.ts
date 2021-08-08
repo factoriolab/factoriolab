@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
-import { Mocks } from 'src/tests';
+import { Mocks, RecipeId } from 'src/tests';
 import { IconComponent, InputComponent, InfoComponent } from '~/components';
 import { MatrixComponent } from './matrix.component';
 
@@ -72,5 +72,11 @@ describe('MatrixComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('trackRowBy', () => {
+    it('should use recipe id', () => {
+      expect(component.child.trackRowBy(1, null)).toEqual(RecipeId.WoodenChest);
+    });
   });
 });

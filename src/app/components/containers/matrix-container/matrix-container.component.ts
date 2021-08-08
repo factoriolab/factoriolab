@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -7,6 +12,7 @@ import { State } from '~/store';
 import { getMatrixResult } from '~/store/products';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
+import { MatrixComponent } from './matrix/matrix.component';
 
 @Component({
   selector: 'lab-matrix-container',
@@ -15,6 +21,8 @@ import * as Settings from '~/store/settings';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatrixContainerComponent implements OnInit {
+  @ViewChild(MatrixComponent) child: MatrixComponent;
+
   data$: Observable<Dataset>;
   result$: Observable<MatrixResult>;
   costFactor$: Observable<string>;
