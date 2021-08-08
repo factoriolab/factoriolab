@@ -1,18 +1,50 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 
 import { Mocks } from 'src/tests';
-import { IconComponent } from '~/components/icon/icon.component';
+import { IconComponent, InputComponent, InfoComponent } from '~/components';
 import { MatrixComponent } from './matrix.component';
 
 @Component({
   selector: 'lab-test-matrix',
-  template: `<lab-matrix [data]="data" [result]="result"></lab-matrix>`,
+  template: `<lab-matrix
+    [data]="data"
+    [result]="result"
+    [costFactor]="costFactor"
+    [costFactory]="costFactory"
+    [costInput]="costInput"
+    [costIgnored]="costIgnored"
+    [recipeRaw]="recipeRaw"
+    [modifiedCost]="modifiedCost"
+    [modifiedRecipeCost]="modifiedRecipeCost"
+    (setCostFactory)="setCostFactor($event)"
+    (setCostFactory)="setCostFactory($event)"
+    (setCostInput)="setCostInput($event)"
+    (setCostIgnored)="setCostIgnored($event)"
+    (setRecipeCost)="setRecipeCost($event)"
+    (resetCost)="resetCost()"
+    (resetRecipeCost)="resetRecipeCost()"
+  ></lab-matrix>`,
 })
 class TestMatrixComponent {
   @ViewChild(MatrixComponent) child: MatrixComponent;
   data = Mocks.AdjustedData;
   result = Mocks.MatrixResultSolved;
+  costFactor = '1';
+  costFactory = '1';
+  costInput = '1000000';
+  costIgnored = '0';
+  recipeRaw = {};
+  modifiedCost = false;
+  modifiedRecipeCost = false;
+  setCostFactor(data): void {}
+  setCostFactory(data): void {}
+  setCostIgnored(data): void {}
+  setCostInput(data): void {}
+  setRecipeCost(data): void {}
+  resetCost(): void {}
+  resetRecipeCost(): void {}
 }
 
 describe('MatrixComponent', () => {
@@ -21,7 +53,14 @@ describe('MatrixComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [IconComponent, TestMatrixComponent, MatrixComponent],
+      imports: [FormsModule],
+      declarations: [
+        IconComponent,
+        InfoComponent,
+        InputComponent,
+        TestMatrixComponent,
+        MatrixComponent,
+      ],
     }).compileComponents();
   });
 

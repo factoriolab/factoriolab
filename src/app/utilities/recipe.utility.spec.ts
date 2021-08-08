@@ -630,6 +630,8 @@ describe('RecipeUtility', () => {
         ItemId.Coal,
         Rational.zero,
         Rational.one,
+        Rational.one,
+        Rational.one,
         Mocks.Data
       );
       expect(result).toBeTruthy();
@@ -656,6 +658,8 @@ describe('RecipeUtility', () => {
         ItemId.Coal,
         Rational.zero,
         Rational.one,
+        Rational.one,
+        Rational.one,
         Mocks.Data
       );
       expect(result.itemRecipeIds[ItemId.PetroleumGas]).toEqual(
@@ -670,6 +674,8 @@ describe('RecipeUtility', () => {
         [RecipeId.SolidFuelFromHeavyOil, RecipeId.SolidFuelFromPetroleumGas],
         ItemId.Coal,
         Rational.zero,
+        Rational.one,
+        Rational.one,
         Rational.one,
         Mocks.Data
       );

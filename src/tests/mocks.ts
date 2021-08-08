@@ -188,6 +188,8 @@ export const AdjustedData = getAdjustedDataset.projector(
     fuel: ItemId.Coal,
     miningBonus: Rational.zero,
     researchSpeed: Rational.one,
+    costFactor: Rational.one,
+    costFactory: Rational.one,
     data: Data,
   }
 );
