@@ -4,7 +4,7 @@ import { Step, Rational, DisplayRate } from '~/models';
 
 describe('RateUtility', () => {
   describe('addStepsFor', () => {
-    const expected = [
+    const expected: Step[] = [
       {
         itemId: 'iron-chest',
         recipeId: 'iron-chest',
@@ -117,9 +117,7 @@ describe('RateUtility', () => {
       expect(steps).toEqual([
         {
           itemId: ItemId.Uranium235,
-          recipeId: null,
           items: new Rational(BigInt(30)),
-          factories: Rational.zero,
         },
       ]);
     });
@@ -140,9 +138,33 @@ describe('RateUtility', () => {
       expect(steps).toEqual([
         {
           itemId: ItemId.Coal,
-          recipeId: null,
           items: Rational.one,
-          factories: Rational.zero,
+        },
+      ]);
+    });
+
+    it('should not assign a recipe to an ignored item', () => {
+      const steps: Step[] = [];
+      const itemSettings = {
+        ...Mocks.ItemSettingsEntities,
+        ...{
+          [Mocks.Item2.id]: {
+            ...Mocks.ItemSettingsEntities[Mocks.Item2.id],
+            ...{ ignore: true },
+          },
+        },
+      };
+      RateUtility.addStepsFor(
+        Mocks.Item2.id,
+        Rational.from(30),
+        steps,
+        itemSettings,
+        Mocks.AdjustedData
+      );
+      expect(steps).toEqual([
+        {
+          itemId: Mocks.Item2.id,
+          items: Rational.from(30),
         },
       ]);
     });

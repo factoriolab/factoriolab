@@ -19,9 +19,14 @@ export class RateUtility {
     data: Dataset,
     parentId: string = null
   ): void {
-    let recipe = data.recipeR[data.itemRecipeIds[itemId]];
-    if (recipe && !recipe.produces(itemId)) {
-      recipe = null;
+    let recipe: RationalRecipe;
+
+    if (!itemSettings[itemId].ignore) {
+      recipe = data.recipeR[data.itemRecipeIds[itemId]];
+
+      if (recipe && !recipe.produces(itemId)) {
+        recipe = null;
+      }
     }
 
     // Find existing step for this item
@@ -33,10 +38,12 @@ export class RateUtility {
       // No existing step found, create a new one
       step = {
         itemId,
-        recipeId: recipe ? recipe.id : null,
         items: Rational.zero,
-        factories: Rational.zero,
       };
+
+      if (recipe) {
+        step.recipeId = recipe.id;
+      }
 
       steps.push(step);
     }
@@ -61,11 +68,7 @@ export class RateUtility {
       this.adjustPowerPollution(step, recipe);
 
       // Recurse adding steps for ingredients
-      if (
-        recipe.in &&
-        step.items.nonzero() &&
-        !itemSettings[step.itemId].ignore
-      ) {
+      if (recipe.in && step.items.nonzero()) {
         for (const ingredient of Object.keys(recipe.in).filter(
           (i) => i !== itemId
         )) {
