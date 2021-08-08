@@ -21,7 +21,7 @@ export class RateUtility {
   ): void {
     let recipe: RationalRecipe;
 
-    if (!itemSettings[itemId]?.ignore) {
+    if (!itemSettings[itemId].ignore) {
       recipe = data.recipeR[data.itemRecipeIds[itemId]];
 
       if (recipe && !recipe.produces(itemId)) {
