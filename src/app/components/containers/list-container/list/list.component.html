@@ -444,19 +444,20 @@
         </ng-container>
         <td colspan="3" *ngIf="!recipeSettings[step.recipeId]?.factory"></td>
         <td *ngIf="columns[Column.Overclock].show">
-          <input
-            *ngIf="recipeSettings[step.recipeId]"
-            type="number"
-            title="Set overclock"
-            placeholder="100"
-            min="0"
-            max="250"
-            step="10"
-            labValidateOverclock
-            [ngModel]="recipeSettings[step.recipeId].overclock"
-            (input)="changeOverclock(step.recipeId, $event, setOverclock)"
-          />
-          %
+          <ng-container *ngIf="recipeSettings[step.recipeId]">
+            <input
+              type="number"
+              title="Set overclock"
+              placeholder="100"
+              min="0"
+              max="250"
+              step="10"
+              labValidateOverclock
+              [ngModel]="recipeSettings[step.recipeId].overclock"
+              (input)="changeOverclock(step.recipeId, $event, setOverclock)"
+            />
+            %
+          </ng-container>
         </td>
         <ng-container *ngIf="columns[Column.Beacons].show">
           <ng-container *ngIf="recipeSettings[step.recipeId]?.beacon as beacon">
