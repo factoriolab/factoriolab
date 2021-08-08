@@ -47,16 +47,18 @@ export const getProductSteps = createSelector(
   Items.getItemSettings,
   Settings.getDisabledRecipes,
   Recipes.getAdjustedDataset,
-  Preferences.getSimplex,
-  (products, itemSettings, disabledRecipes, data, simplex) =>
+  Preferences.getSimplexModifiers,
+  (products, itemSettings, disabledRecipes, data, adj) =>
     products?.reduce((e: Entities<[string, Rational][]>, p) => {
       e[p.itemId] = SimplexUtility.getSteps(
         p.itemId,
         itemSettings,
         disabledRecipes,
+        adj.costInput,
+        adj.costIgnored,
         data,
         p.rateType === RateType.Factories,
-        simplex
+        adj.simplex
       );
       return e;
     }, {})
@@ -298,13 +300,15 @@ export const getMatrixResult = createSelector(
   Items.getItemSettings,
   Settings.getDisabledRecipes,
   Recipes.getAdjustedDataset,
-  Preferences.getSimplex,
-  (steps, itemSettings, disabledRecipes, data, simplex) =>
-    simplex
+  Preferences.getSimplexModifiers,
+  (steps, itemSettings, disabledRecipes, data, adj) =>
+    adj.simplex
       ? SimplexUtility.solve(
           RateUtility.copy(steps),
           itemSettings,
           disabledRecipes,
+          adj.costInput,
+          adj.costIgnored,
           data
         )
       : { steps, result: MatrixResultType.Skipped }

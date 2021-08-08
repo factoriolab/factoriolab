@@ -283,6 +283,8 @@ export class RecipeUtility {
     fuel: string,
     miningBonus: Rational,
     researchSpeed: Rational,
+    costFactor: Rational,
+    costFactory: Rational,
     data: Dataset
   ): Dataset {
     const recipeR = this.adjustRecipes(
@@ -292,6 +294,7 @@ export class RecipeUtility {
       researchSpeed,
       data
     );
+    this.adjustCost(recipeR, recipeSettings, costFactor, costFactory);
     const itemRecipeIds = { ...data.itemRecipeIds };
 
     // Check for calculated default recipe ids
@@ -357,6 +360,32 @@ export class RecipeUtility {
       recipeSettings,
       data
     );
+  }
+
+  static adjustCost(
+    recipeR: Entities<RationalRecipe>,
+    recipeSettings: Entities<RationalRecipeSettings>,
+    costFactor: Rational,
+    costFactory: Rational
+  ): void {
+    for (const id of Object.keys(recipeR)) {
+      const recipe = recipeR[id];
+      const factoryCost = costFactory.mul(recipe.time);
+      if (recipeSettings[id]?.cost) {
+        recipe.cost = recipeSettings[id].cost;
+      } else if (recipe.cost) {
+        // Recipe has a declared cost, base this on output items not factories
+        // Calculate total output, sum, and multiply cost by output
+        const output = Object.keys(recipe.out).reduce(
+          (v, o) => v.add(recipe.out[o]),
+          Rational.zero
+        );
+        recipe.cost = output.mul(recipe.cost).mul(costFactor).add(factoryCost);
+      } else {
+        // Adjust based on recipe time so that this is based on # factories
+        recipe.cost = factoryCost;
+      }
+    }
   }
 
   static adjustProduct(

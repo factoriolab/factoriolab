@@ -25,6 +25,10 @@ export interface SettingsState {
   researchSpeed: ResearchSpeed;
   inserterTarget: InserterTarget;
   inserterCapacity: InserterCapacity;
+  costFactor: string;
+  costFactory: string;
+  costInput: string;
+  costIgnored: string;
 }
 
 export const initialSettingsState: SettingsState = {
@@ -43,6 +47,10 @@ export const initialSettingsState: SettingsState = {
   researchSpeed: ResearchSpeed.Speed6,
   inserterTarget: InserterTarget.ExpressTransportBelt,
   inserterCapacity: InserterCapacity.Capacity7,
+  costFactor: '1',
+  costFactory: '1',
+  costInput: '1000000',
+  costIgnored: '0',
 };
 
 export function settingsReducer(
@@ -121,6 +129,24 @@ export function settingsReducer(
       return { ...state, ...{ inserterTarget: action.payload } };
     case SettingsActionType.SET_INSERTER_CAPACITY:
       return { ...state, ...{ inserterCapacity: action.payload } };
+    case SettingsActionType.SET_COST_FACTOR:
+      return { ...state, ...{ costFactor: action.payload } };
+    case SettingsActionType.SET_COST_FACTORY:
+      return { ...state, ...{ costFactory: action.payload } };
+    case SettingsActionType.SET_COST_INPUT:
+      return { ...state, ...{ costInput: action.payload } };
+    case SettingsActionType.SET_COST_IGNORED:
+      return { ...state, ...{ costIgnored: action.payload } };
+    case SettingsActionType.RESET_COST:
+      return {
+        ...state,
+        ...{
+          costFactor: initialSettingsState.costFactor,
+          costFactory: initialSettingsState.costFactory,
+          costInput: initialSettingsState.costInput,
+          costIgnored: initialSettingsState.costIgnored,
+        },
+      };
     default:
       return state;
   }

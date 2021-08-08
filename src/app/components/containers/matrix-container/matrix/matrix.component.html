@@ -18,6 +18,93 @@
 </table>
 <table *ngIf="result.A">
   <tr>
+    <th colspan="2">
+      <div class="flex">
+        <lab-info
+          text="Cost Modifiers"
+          tooltip="These values determine the default costs of
+each row in the simplex canonical tableau."
+        ></lab-info>
+        <button
+          *ngIf="modifiedCost"
+          title="Undo all cost modifiers"
+          (click)="resetCost.emit()"
+        >
+          <i class="material-icons">undo</i>
+        </button>
+      </div>
+    </th>
+  </tr>
+  <tr>
+    <td>
+      <div class="flex">
+        <lab-info
+          text="Recipe"
+          tooltip="Multiplies cost of recipes with a
+defined cost, usually mining."
+        ></lab-info>
+      </div>
+    </td>
+    <td>
+      <lab-input
+        title="Set recipe cost multipler"
+        placeholder="Cost"
+        [value]="costFactor"
+        (setValue)="setCostFactor.emit($event)"
+      ></lab-input>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <lab-info
+        text="Factory"
+        tooltip="Multiplies cost of physical factories running recipes."
+      ></lab-info>
+    </td>
+    <td>
+      <lab-input
+        title="Set factory cost multipler"
+        placeholder="Cost"
+        [value]="costFactory"
+        (setValue)="setCostFactory.emit($event)"
+      ></lab-input>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <lab-info
+        text="Input"
+        tooltip="Cost of input items that are produced by no recipes."
+      ></lab-info>
+    </td>
+    <td>
+      <lab-input
+        title="Set input item cost"
+        placeholder="Cost"
+        [value]="costInput"
+        (setValue)="setCostInput.emit($event)"
+      ></lab-input>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <lab-info
+        text="Ignored"
+        tooltip="Cost of items that have been explicitly ignored."
+      ></lab-info>
+    </td>
+    <td>
+      <lab-input
+        title="Set ignored item cost"
+        placeholder="Cost"
+        [value]="costIgnored"
+        (setValue)="setCostIgnored.emit($event)"
+      ></lab-input>
+    </td>
+  </tr>
+</table>
+<table *ngIf="result.A">
+  <tr>
     <th [colSpan]="result.O.length + 1" class="header">
       Simplex Canonical Tableau
     </th>
@@ -34,7 +121,18 @@
     >
       Inputs
     </th>
-    <th class="header" rowspan="2">Cost</th>
+    <th class="header" rowspan="2">
+      <div class="flex">
+        <span>Cost</span>
+        <button
+          *ngIf="modifiedRecipeCost"
+          title="Undo all cost modifications"
+          (click)="resetRecipeCost.emit()"
+        >
+          <i class="material-icons">undo</i>
+        </button>
+      </div>
+    </th>
   </tr>
   <tr>
     <td *ngFor="let i of result.items">
@@ -60,30 +158,52 @@
       ></lab-icon>
     </td>
   </tr>
-  <tr *ngFor="let R of result.A; let i = index">
+  <tr *ngFor="let R of result.A; let i = index; trackBy: trackRowBy">
     <th class="header" *ngIf="i === 0; else notObj">Objective</th>
     <ng-template #notObj>
       <td>
-        <span *ngIf="result.recipes[i - 1] as i; else notRecipe">
+        <span *ngIf="result.recipes[i - 1] as id; else notRecipe">
           <lab-icon
             [data]="data"
-            [iconId]="i"
-            [tooltip]="data.recipeEntities[i].name"
-            [recipe]="data.recipeEntities[i]"
+            [iconId]="id"
+            [tooltip]="data.recipeEntities[id].name"
+            [recipe]="data.recipeEntities[id]"
           ></lab-icon
         ></span>
         <ng-template #notRecipe>
-          <span *ngIf="result.inputs[i - 1 - result.recipes.length] as i">
+          <span *ngIf="result.inputs[i - 1 - result.recipes.length] as id">
             <lab-icon
               [data]="data"
-              [iconId]="i"
-              [tooltip]="data.itemEntities[i].name"
+              [iconId]="id"
+              [tooltip]="data.itemEntities[id].name"
             ></lab-icon
           ></span>
         </ng-template>
       </td>
     </ng-template>
-    <td *ngFor="let c of R">{{ c.toString() }}</td>
+    <td *ngFor="let c of R; last as last; trackBy: trackColBy">
+      <div
+        class="flex"
+        *ngIf="last && result.recipes[i - 1] as id; else valueSpan"
+      >
+        <lab-input
+          title="Set cost"
+          placeholder="Cost"
+          [value]="c.toString()"
+          (setValue)="setRecipeCost.emit({ id: id, value: $event, def: null })"
+        ></lab-input>
+        <button
+          *ngIf="recipeRaw[id]?.cost"
+          title="Undo recipe cost modification"
+          (click)="setRecipeCost.emit({ id: id, value: null, def: null })"
+        >
+          <i class="material-icons">undo</i>
+        </button>
+      </div>
+      <ng-template #valueSpan>
+        <span>{{ c.toString() }}</span>
+      </ng-template>
+    </td>
   </tr>
   <tr>
     <th [colSpan]="result.O.length + 1" class="header">Solution</th>

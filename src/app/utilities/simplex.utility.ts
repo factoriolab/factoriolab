@@ -2,7 +2,6 @@ import {
   Dataset,
   Entities,
   ERROR_SIMPLEX,
-  ItemId,
   Rational,
   RationalRecipe,
   Step,
@@ -25,6 +24,8 @@ export interface MatrixState {
   /** All items that are not disabled */
   itemIds: string[];
   data: Dataset;
+  costInput: Rational;
+  costIgnored: Rational;
 }
 
 export interface MatrixSolution {
@@ -58,15 +59,6 @@ export interface MatrixCache {
   time: number;
 }
 
-/** Cost of a standard recipe */
-export const COST_RECIPE = Rational.one;
-/** Cost of water recipe */
-export const COST_WATER = Rational.from(100);
-/** Cost of mined resources */
-export const COST_MINED = Rational.from(10000);
-/** Cost of raw input resources with no recipe */
-export const COST_MANUAL = Rational.from(1000000);
-
 export class SimplexUtility {
   static cache: Entities<MatrixCache[]> = {};
 
@@ -75,6 +67,8 @@ export class SimplexUtility {
     steps: Step[],
     itemSettings: ItemsState,
     disabledRecipes: string[],
+    costInput: Rational,
+    costIgnored: Rational,
     data: Dataset,
     error = true
   ): MatrixResult {
@@ -83,7 +77,14 @@ export class SimplexUtility {
     }
 
     // Get matrix state
-    const state = this.getState(steps, itemSettings, disabledRecipes, data);
+    const state = this.getState(
+      steps,
+      itemSettings,
+      disabledRecipes,
+      costInput,
+      costIgnored,
+      data
+    );
 
     if (state == null) {
       // Matrix solution is not required
@@ -135,6 +136,8 @@ export class SimplexUtility {
     itemId: string,
     itemSettings: ItemsState,
     disabledRecipes: string[],
+    costInput: Rational,
+    costIgnored: Rational,
     data: Dataset,
     recipes: boolean,
     simplex: boolean
@@ -147,6 +150,8 @@ export class SimplexUtility {
         steps,
         itemSettings,
         disabledRecipes,
+        costInput,
+        costIgnored,
         data,
         false
       ).steps;
@@ -172,6 +177,8 @@ export class SimplexUtility {
     steps: Step[],
     itemSettings: ItemsState,
     disabledRecipes: string[],
+    costInput: Rational,
+    costIgnored: Rational,
     data: Dataset
   ): MatrixState {
     // Set up state object
@@ -183,6 +190,8 @@ export class SimplexUtility {
         (r) => disabledRecipes.indexOf(r) === -1
       ),
       itemIds: data.itemIds.filter((i) => !itemSettings[i].ignore),
+      costInput,
+      costIgnored,
       data,
     };
 
@@ -398,8 +407,9 @@ export class SimplexUtility {
     // Build recipe rows
     for (const recipe of recipes) {
       const R: Rational[] = [Rational.zero]; // C
+
+      // Add item columns
       for (const itemId of itemIds) {
-        // Add item columns
         let val = Rational.zero;
         if (recipe.in?.[itemId]) {
           val = val.sub(recipe.in[itemId]);
@@ -409,61 +419,45 @@ export class SimplexUtility {
         }
         R.push(val);
       }
+
+      // Add recipe columns
       for (const other of recipes) {
-        // Add recipe columns
         R.push(recipe.id === other.id ? Rational.one : Rational.zero);
       }
 
       // Add input columns
       R.push(...new Array(state.inputs.length).fill(Rational.zero));
 
-      // Cost
-      const factoryCost = recipe.time.mul(COST_RECIPE);
-      if (recipe.id === ItemId.Water) {
-        // Cost should be based on number of items, not number of pumps
-        // Sum total output and multiply cost by output
-        const output = Object.keys(recipe.out).reduce(
-          (v, o) => v.add(recipe.out[o]),
-          Rational.zero
-        );
-        R.push(output.mul(COST_WATER).add(factoryCost));
-      } else if (recipe.mining) {
-        // Cost should be based on number of items, not number of miners
-        // Sum total output and multiply cost by output
-        const output = Object.keys(recipe.out).reduce(
-          (v, o) =>
-            v.add(
-              state.data.itemEntities[o].stack
-                ? recipe.out[o]
-                : // Divide fluid amounts by 10
-                  recipe.out[o].div(Rational.ten)
-            ),
-          Rational.zero
-        );
-        R.push(output.mul(COST_MINED).add(factoryCost));
-      } else {
-        // Cost should be based on number of factories, adjusted for recipe time
-        R.push(factoryCost);
-      }
+      // Add cost column
+      R.push(recipe.cost);
+
       A.push(R);
     }
 
     // Build input rows
     for (const itemId of state.inputs) {
       const R: Rational[] = [Rational.zero]; // C
+
+      // Add item columns
       for (const other of itemIds) {
         R.push(itemId === other ? Rational.one : Rational.zero);
       }
+
+      // Add recipe columns
       R.push(...new Array(recipes.length).fill(Rational.zero));
+
+      // Add input columns
       for (const other of state.inputs) {
         R.push(itemId === other ? Rational.one : Rational.zero);
       }
+
+      // Add cost column
       if (state.itemIds.indexOf(itemId) === -1) {
         // Item is ignored, assume unlimited free input
-        R.push(Rational.zero);
+        R.push(state.costIgnored);
       } else {
         // Avoid using items that cannot currently be produced
-        R.push(COST_MANUAL);
+        R.push(state.costInput);
       }
       A.push(R);
     }
