@@ -2,6 +2,7 @@ export * from './containers';
 export * from './columns/columns.component';
 export * from './dialog/dialog.component';
 export * from './icon/icon.component';
+export * from './info/info.component';
 export * from './input/input.component';
 export * from './options/options.component';
 export * from './picker/picker.component';

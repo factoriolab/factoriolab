@@ -24,7 +24,7 @@ describe('RationalRecipe', () => {
             [ItemId.PetroleumGas]: 1,
           },
         },
-        mining: true,
+        cost: 100,
         producers: [ItemId.AssemblingMachine1],
       });
       expect(result.id).toEqual(RecipeId.AdvancedOilProcessing);
@@ -35,7 +35,7 @@ describe('RationalRecipe', () => {
       expect(result.expensive.time).toEqual(Rational.two);
       expect(result.expensive.in[ItemId.Coal]).toEqual(Rational.two);
       expect(result.expensive.out[ItemId.PetroleumGas]).toEqual(Rational.one);
-      expect(result.mining).toBeTrue();
+      expect(result.cost).toEqual(Rational.hundred);
       expect(result.producers).toEqual([ItemId.AssemblingMachine1]);
     });
 
@@ -73,7 +73,7 @@ describe('RationalRecipe', () => {
       expect(result.producers).toEqual([ItemId.AssemblingMachine1]);
       expect(result.in).toBeUndefined();
       expect(result.out).toBeUndefined();
-      expect(result.mining).toBeUndefined();
+      expect(result.cost).toBeUndefined();
       expect(result.expensive).toBeUndefined();
     });
   });

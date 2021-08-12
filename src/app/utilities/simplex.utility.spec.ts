@@ -1,13 +1,7 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import { MatrixResultType, Rational, RationalRecipe, Step } from '~/models';
 import { RateUtility } from './rate.utility';
-import {
-  SimplexUtility,
-  MatrixState,
-  COST_RECIPE,
-  COST_MANUAL,
-  MatrixSolution,
-} from './simplex.utility';
+import { SimplexUtility, MatrixState, MatrixSolution } from './simplex.utility';
 
 describe('SimplexUtility', () => {
   const getState = (): MatrixState => ({
@@ -17,6 +11,8 @@ describe('SimplexUtility', () => {
     recipeIds: Mocks.Data.recipeIds,
     itemIds: Mocks.Data.itemIds,
     data: Mocks.AdjustedData,
+    costInput: Rational.from(1000000),
+    costIgnored: Rational.zero,
   });
   /** https://en.wikipedia.org/wiki/Simplex_algorithm#Example */
   const getTableau = (): Rational[][] => [
@@ -96,7 +92,7 @@ describe('SimplexUtility', () => {
 
   describe('solve', () => {
     it('should handle empty list of steps', () => {
-      expect(SimplexUtility.solve([], null, null, null)).toEqual({
+      expect(SimplexUtility.solve([], null, null, null, null, null)).toEqual({
         steps: [],
         result: MatrixResultType.Skipped,
       });
@@ -104,7 +100,9 @@ describe('SimplexUtility', () => {
 
     it('should handle fully solved steps', () => {
       spyOn(SimplexUtility, 'getState').and.returnValue(null);
-      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual({
+      expect(
+        SimplexUtility.solve(Mocks.Steps, null, null, null, null, null)
+      ).toEqual({
         steps: Mocks.Steps,
         result: MatrixResultType.Skipped,
       });
@@ -118,7 +116,9 @@ describe('SimplexUtility', () => {
       ]);
       spyOn(console, 'error');
       spyOn(window, 'alert');
-      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual({
+      expect(
+        SimplexUtility.solve(Mocks.Steps, null, null, null, null, null)
+      ).toEqual({
         steps: Mocks.Steps,
         result: MatrixResultType.Failed,
         pivots: 1,
@@ -141,7 +141,9 @@ describe('SimplexUtility', () => {
       ]);
       spyOn(console, 'error');
       spyOn(window, 'alert');
-      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual({
+      expect(
+        SimplexUtility.solve(Mocks.Steps, null, null, null, null, null)
+      ).toEqual({
         steps: Mocks.Steps,
         result: MatrixResultType.Cancelled,
         pivots: 1,
@@ -164,7 +166,9 @@ describe('SimplexUtility', () => {
         result,
       ]);
       spyOn(SimplexUtility, 'updateSteps');
-      expect(SimplexUtility.solve(Mocks.Steps, null, null, null)).toEqual({
+      expect(
+        SimplexUtility.solve(Mocks.Steps, null, null, null, null, null)
+      ).toEqual({
         steps: Mocks.Steps,
         result: MatrixResultType.Solved,
         pivots: 1,
@@ -191,6 +195,8 @@ describe('SimplexUtility', () => {
         [step],
         Mocks.ItemSettingsInitial,
         [],
+        Rational.from(1000000),
+        Rational.zero,
         Mocks.AdjustedData
       );
       const hocStep = result.steps.find(
@@ -207,6 +213,8 @@ describe('SimplexUtility', () => {
           ItemId.CopperPlate,
           Mocks.ItemSettingsInitial,
           [],
+          Rational.from(1000000),
+          Rational.zero,
           Mocks.AdjustedData,
           true,
           true
@@ -223,6 +231,8 @@ describe('SimplexUtility', () => {
           ItemId.CopperPlate,
           Mocks.ItemSettingsInitial,
           [],
+          Rational.from(1000000),
+          Rational.zero,
           Mocks.AdjustedData,
           false,
           true
@@ -239,6 +249,8 @@ describe('SimplexUtility', () => {
         ItemId.CopperPlate,
         Mocks.ItemSettingsInitial,
         [],
+        Rational.from(1000000),
+        Rational.zero,
         Mocks.AdjustedData,
         true,
         false
@@ -255,6 +267,8 @@ describe('SimplexUtility', () => {
           Mocks.Steps,
           Mocks.ItemSettingsInitial,
           [],
+          Rational.from(1000000),
+          Rational.zero,
           Mocks.Data
         )
       ).toBeNull();
@@ -270,6 +284,8 @@ describe('SimplexUtility', () => {
         Mocks.Steps,
         Mocks.ItemSettingsInitial,
         [],
+        Rational.from(1000000),
+        Rational.zero,
         Mocks.Data
       );
       expect(SimplexUtility.parseItemRecursively).toHaveBeenCalledTimes(1);
@@ -284,6 +300,8 @@ describe('SimplexUtility', () => {
         Mocks.Steps,
         Mocks.ItemSettingsInitial,
         [],
+        Rational.from(1000000),
+        Rational.zero,
         Mocks.Data
       );
       expect(SimplexUtility.parseItemRecursively).toHaveBeenCalledTimes(1);
@@ -294,6 +312,8 @@ describe('SimplexUtility', () => {
         recipeIds: Mocks.Data.recipeIds,
         itemIds: Mocks.Data.itemIds,
         data: Mocks.Data,
+        costInput: Rational.from(1000000),
+        costIgnored: Rational.zero,
       });
     });
   });
@@ -539,6 +559,7 @@ describe('SimplexUtility', () => {
         id: null,
         time: 1,
         out: { [ItemId.CopperPlate]: 1 },
+        cost: 1,
         producers: [],
       });
       state.recipes[ItemId.Water] = Mocks.AdjustedData.recipeR[RecipeId.Water];
@@ -566,8 +587,8 @@ describe('SimplexUtility', () => {
         ],
         [
           Rational.zero,
-          Rational.from(14, 5),
-          Rational.minusOne,
+          Rational.from(154, 5),
+          Rational.from(-11),
           Rational.zero,
           Rational.zero,
           Rational.one,
@@ -576,7 +597,7 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
-          Rational.from(1, 11),
+          Rational.one,
         ],
         [
           Rational.zero,
@@ -590,7 +611,7 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
-          COST_RECIPE,
+          Rational.one,
         ],
         [
           Rational.zero,
@@ -604,7 +625,7 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
-          Rational.from(120001, 1200),
+          Rational.hundred,
         ],
         [
           Rational.zero,
@@ -618,7 +639,7 @@ describe('SimplexUtility', () => {
           Rational.one,
           Rational.zero,
           Rational.zero,
-          Rational.from(1183040, 91),
+          Rational.from(13000),
         ],
         [
           Rational.zero,
@@ -632,7 +653,7 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.one,
           Rational.zero,
-          COST_MANUAL,
+          Rational.from(1000000),
         ],
         [
           Rational.zero,
@@ -799,7 +820,7 @@ describe('SimplexUtility', () => {
       SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
       expect(step).toEqual({
         itemId: ItemId.Coal,
-        items: Rational.from(13, 5),
+        items: Rational.from(1183, 200),
       });
     });
 
@@ -862,7 +883,7 @@ describe('SimplexUtility', () => {
       expect(steps).toEqual([
         {
           itemId: ItemId.Coal,
-          items: Rational.from(13, 5),
+          items: Rational.from(1183, 200),
         },
       ]);
     });
@@ -904,7 +925,7 @@ describe('SimplexUtility', () => {
       SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
       expect(step).toEqual({
         itemId: ItemId.Coal,
-        items: Rational.from(26, 5),
+        items: Rational.from(1183, 100),
         surplus: Rational.from(3),
       });
     });
@@ -993,7 +1014,7 @@ describe('SimplexUtility', () => {
         itemId: ItemId.Coal,
         recipeId: RecipeId.Coal,
         items: Rational.one,
-        factories: Rational.from(40, 91),
+        factories: Rational.one,
       });
     });
 
@@ -1019,7 +1040,7 @@ describe('SimplexUtility', () => {
         itemId: null,
         recipeId: RecipeId.Coal,
         items: Rational.one,
-        factories: Rational.from(40, 91),
+        factories: Rational.one,
       });
     });
 
@@ -1042,7 +1063,7 @@ describe('SimplexUtility', () => {
           itemId: null,
           items: null,
           recipeId: RecipeId.Coal,
-          factories: Rational.from(40, 91),
+          factories: Rational.one,
         },
       ]);
     });
@@ -1078,7 +1099,7 @@ describe('SimplexUtility', () => {
           itemId: null,
           items: null,
           recipeId: RecipeId.AdvancedOilProcessing,
-          factories: Rational.from(100, 91),
+          factories: Rational.one,
         },
         { itemId: ItemId.Wood, items: Rational.zero },
       ]);

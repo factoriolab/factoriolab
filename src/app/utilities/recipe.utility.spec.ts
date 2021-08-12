@@ -630,6 +630,8 @@ describe('RecipeUtility', () => {
         ItemId.Coal,
         Rational.zero,
         Rational.one,
+        Rational.one,
+        Rational.one,
         Mocks.Data
       );
       expect(result).toBeTruthy();
@@ -656,6 +658,8 @@ describe('RecipeUtility', () => {
         ItemId.Coal,
         Rational.zero,
         Rational.one,
+        Rational.one,
+        Rational.one,
         Mocks.Data
       );
       expect(result.itemRecipeIds[ItemId.PetroleumGas]).toEqual(
@@ -670,6 +674,8 @@ describe('RecipeUtility', () => {
         [RecipeId.SolidFuelFromHeavyOil, RecipeId.SolidFuelFromPetroleumGas],
         ItemId.Coal,
         Rational.zero,
+        Rational.one,
+        Rational.one,
         Rational.one,
         Mocks.Data
       );
@@ -696,6 +702,50 @@ describe('RecipeUtility', () => {
         Mocks.AdjustedData
       );
       expect(result).toBeNull();
+    });
+  });
+
+  describe('adjustCost', () => {
+    let recipeR: Entities<RationalRecipe>;
+
+    beforeEach(() => {
+      recipeR = RecipeUtility.adjustRecipes(
+        Mocks.RationalRecipeSettingsInitial,
+        ItemId.Coal,
+        Rational.zero,
+        Rational.one,
+        Mocks.Data
+      );
+    });
+
+    it('should apply an overridden cost', () => {
+      const recipeSettings = {
+        ...Mocks.RationalRecipeSettingsInitial,
+        ...{
+          [RecipeId.Coal]: {
+            ...Mocks.RationalRecipeSettingsInitial[RecipeId.Coal],
+            ...{ cost: Rational.two },
+          },
+        },
+      };
+      RecipeUtility.adjustCost(
+        recipeR,
+        recipeSettings,
+        Rational.one,
+        Rational.one
+      );
+      expect(recipeR[RecipeId.Coal].cost).toEqual(Rational.two);
+    });
+
+    it('should apply normal recipe and factory costs', () => {
+      RecipeUtility.adjustCost(
+        recipeR,
+        Mocks.RationalRecipeSettingsInitial,
+        Rational.one,
+        Rational.one
+      );
+      expect(recipeR[RecipeId.Coal].cost).toEqual(Rational.from(13000));
+      expect(recipeR[RecipeId.CopperCable].cost).toEqual(Rational.one);
     });
   });
 

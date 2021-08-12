@@ -31,6 +31,7 @@ import {
   MatrixContainerComponent,
   MatrixComponent,
   InputComponent,
+  InfoComponent,
 } from './components';
 import {
   FocusOnShowDirective,
@@ -67,6 +68,7 @@ import { ProductsEffects } from './store/products';
     MatrixContainerComponent,
     MatrixComponent,
     InputComponent,
+    InfoComponent,
   ],
   imports: [
     BrowserModule,

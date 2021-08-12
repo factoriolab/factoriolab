@@ -22,7 +22,7 @@ import {
 } from '~/models';
 import { State } from '../';
 import * as Datasets from '../datasets';
-import { SettingsState } from './settings.reducer';
+import { initialSettingsState, SettingsState } from './settings.reducer';
 
 /* Base selector functions */
 export const settingsState = (state: State): SettingsState =>
@@ -39,6 +39,10 @@ const sInserterTarget = (state: SettingsState): InserterTarget =>
   state.inserterTarget;
 const sInserterCapacity = (state: SettingsState): InserterCapacity =>
   state.inserterCapacity;
+const sCostFactor = (state: SettingsState): string => state.costFactor;
+const sCostFactory = (state: SettingsState): string => state.costFactory;
+const sCostInput = (state: SettingsState): string => state.costInput;
+const sCostIgnored = (state: SettingsState): string => state.costIgnored;
 
 /* Simple selectors */
 export const getPreset = compose(sPreset, settingsState);
@@ -50,6 +54,10 @@ export const getMiningBonus = compose(sMiningBonus, settingsState);
 export const getResearchSpeed = compose(sResearchSpeed, settingsState);
 export const getInserterTarget = compose(sInserterTarget, settingsState);
 export const getInserterCapacity = compose(sInserterCapacity, settingsState);
+export const getCostFactor = compose(sCostFactor, settingsState);
+export const getCostFactory = compose(sCostFactory, settingsState);
+export const getCostInput = compose(sCostInput, settingsState);
+export const getCostIgnored = compose(sCostIgnored, settingsState);
 
 /* Complex selectors */
 export const getBase = createSelector(
@@ -140,6 +148,22 @@ export const getResearchFactor = createSelector(
 
 export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
   Rational.fromNumber(rate)
+);
+
+export const getRationalCostFactor = createSelector(getCostFactor, (cost) =>
+  Rational.fromString(cost)
+);
+
+export const getRationalCostFactory = createSelector(getCostFactory, (cost) =>
+  Rational.fromString(cost)
+);
+
+export const getRationalCostInput = createSelector(getCostInput, (cost) =>
+  Rational.fromString(cost)
+);
+
+export const getRationalCostIgnored = createSelector(getCostIgnored, (cost) =>
+  Rational.fromString(cost)
 );
 
 export const getMods = createSelector(
@@ -328,15 +352,6 @@ export const getNormalDataset = createSelector(
       }
     }
 
-    if (limitations[ItemId.ProductivityLimitation]) {
-      // Add missing mining recipes to productivity limitation
-      recipes
-        .filter((r) => r.mining)
-        .forEach(
-          (r) => (limitations[ItemId.ProductivityLimitation][r.id] = true)
-        );
-    }
-
     // Calculate allowed modules for recipes
     const recipeModuleIds = recipes.reduce((e: Entities<string[]>, r) => {
       e[r.id] = modules
@@ -438,13 +453,26 @@ export const getAdjustmentData = createSelector(
   getFuel,
   getRationalMiningBonus,
   getResearchFactor,
+  getRationalCostFactor,
+  getRationalCostFactory,
   getDataset,
-  (fuel, miningBonus, researchSpeed, data) => ({
+  (fuel, miningBonus, researchSpeed, costFactor, costFactory, data) => ({
     fuel,
     miningBonus,
     researchSpeed,
+    costFactor,
+    costFactory,
     data,
   })
+);
+
+export const getModifiedCost = createSelector(
+  settingsState,
+  (state) =>
+    state.costFactor !== initialSettingsState.costFactor ||
+    state.costFactory !== initialSettingsState.costFactory ||
+    state.costInput !== initialSettingsState.costInput ||
+    state.costIgnored !== initialSettingsState.costIgnored
 );
 
 export function getEntities<T extends { id: string }>(

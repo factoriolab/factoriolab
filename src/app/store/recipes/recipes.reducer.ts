@@ -67,6 +67,12 @@ export function recipesReducer(
         RecipeSettingsField.Overclock,
         action.payload
       );
+    case RecipesActionType.SET_COST:
+      return StoreUtility.compareReset(
+        state,
+        RecipeSettingsField.Cost,
+        action.payload
+      );
     case RecipesActionType.RESET_RECIPE: {
       const newState = { ...state };
       delete newState[action.payload];
@@ -88,6 +94,8 @@ export function recipesReducer(
       ]);
     case RecipesActionType.RESET_OVERCLOCK:
       return StoreUtility.resetFields(state, [RecipeSettingsField.Overclock]);
+    case RecipesActionType.RESET_COST:
+      return StoreUtility.resetFields(state, [RecipeSettingsField.Cost]);
     default:
       return state;
   }

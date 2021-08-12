@@ -12,6 +12,7 @@ describe('RationalRecipeSettings', () => {
         beacon: ItemId.Beacon,
         beaconModules: [],
         overclock: 200,
+        cost: '100',
       });
       expect(result.factory).toEqual(ItemId.AssemblingMachine1);
       expect(result.factoryModules).toEqual([]);
@@ -19,6 +20,7 @@ describe('RationalRecipeSettings', () => {
       expect(result.beacon).toEqual(ItemId.Beacon);
       expect(result.beaconModules).toEqual([]);
       expect(result.overclock).toEqual(Rational.from(200));
+      expect(result.cost).toEqual(Rational.hundred);
     });
 
     it('should ignore undefined fields', () => {
@@ -29,6 +31,7 @@ describe('RationalRecipeSettings', () => {
       expect(result.beacon).toBeUndefined();
       expect(result.beaconModules).toBeUndefined();
       expect(result.overclock).toBeUndefined();
+      expect(result.cost).toBeUndefined();
     });
   });
 });

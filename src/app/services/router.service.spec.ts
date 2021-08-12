@@ -95,6 +95,10 @@ const mockSettingsState: SettingsState = {
   researchSpeed: ResearchSpeed.Speed0,
   inserterTarget: InserterTarget.Chest,
   inserterCapacity: InserterCapacity.Capacity0,
+  costFactor: '2',
+  costFactory: '10',
+  costInput: '0',
+  costIgnored: '100',
 };
 const mockZip: Zip = {
   bare: 'p=steel-chest*1*1',
@@ -104,8 +108,8 @@ const mockZipPartial: Zip = {
   bare:
     '&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectivity-module*1*speed-module' +
     '~speed-module*beacon&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2_steel-furnace&s=1.0*2*1*=*tran' +
-    'sport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid-wagon',
-  hash: '&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B',
+    'sport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid-wagon**2*10*0*100',
+  hash: '&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B**2*10*0*100',
 };
 const mockState: State = {
   productsState: mockProductsState,
@@ -274,13 +278,13 @@ describe('RouterService', () => {
 
     it('should unzip v0', () => {
       const url =
-        '/#z=eJxtUNsKwyAM.RsfAo7awd5kn1Kija1gVdSu7GXfPqEdtF0JCcnh5OQSZS5EjuuRcgEBgikpmD2hJaHPMaTCFbkCGtMQ-IJD8CwdqJgzTcpZP.AJ9Wg98RbIGNLFvmx58yn0s6PPP1Sn5EjU.xj7AhShrrOMFBBThU5qB-5RZ2vtrhbr1s3NnDxqYlmKWwPy4tyADkTbNHB.1CCqr7b7Axg3237Ln18PbnqR';
+        '/#z=eJxtkNsKwyAMht.Gi4CjdrA72aOUaGMrWBW1G7vZs0.WDtquhITk58tBo8yFyHE9Ui4gQDAlBbMHtST0OYZUuCJXQGMaAn.iEDxLOxRzpkk56wc-oR6tJ94CGUO62IctLz6Ffnb0.pfqlhyJ-h-xLUAR6rrLSAExVekwbcfu56yt3dlh3XK5mZNHTSxLcWlAnjw3oAPRNg1cbzWI6ott.gGMm22.5ndoKwVf9ANfv3yN';
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(
         mockZip.bare +
           '&b=1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectiv' +
           'ity-module*1*speed-module~speed-module*beacon&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2' +
-          '_steel-furnace&s=1.0*=*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon*?',
+          '_steel-furnace&s=1.0*=*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon*?*2*10*0*100',
         mockState
       );
     });
@@ -293,7 +297,11 @@ describe('RouterService', () => {
     });
 
     it('should unzip v1', () => {
-      const v1Full = mockZip.bare + mockZipPartial.bare + '*?&v=1';
+      const v1Full =
+        mockZip.bare +
+        // Replace empty with explicit null
+        mockZipPartial.bare.replace('fluid-wagon**', 'fluid-wagon*?*') +
+        '&v=1';
       const url = `/?${v1Full}`;
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(v1Full, mockState);
@@ -308,11 +316,12 @@ describe('RouterService', () => {
 
     it('should unzip v2', () => {
       const url =
-        '/?z=eJwrcDbTMtQyVEtyUssEM521HNWKXJy0nLQc6xyBpHudO1AkzVDLBcgAcrUc453iA9WKjYBqbUGqtYLLtZyygbQBEBpqgfTYq5UZAQDb2hWn';
+        '/?z=eJwrcDbTMtQyVEtyUssEM521HNWKXJy0nLQc6xyBpHudO1AkzVDLBcgAcrUc453iA9WKjYBqbUGqtYLLtZyygbQBEBpqgfTYawFlwVwDA7UyIwDS-xej';
+
       spyOn(service, 'requestHash').and.returnValue(of(Mocks.Hash));
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(
-        'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A&f1*D~G*B*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?&v2',
+        'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A&f1*D~G*B*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100&v2',
         mockState
       );
     });
@@ -326,11 +335,11 @@ describe('RouterService', () => {
 
     it('should unzip v3', () => {
       const url =
-        '/?z=eJwrcDbTMtQyVEtyUssEM521HNWKXJy0nLQc6xyBfPc6d6BImqGWC5AB5Go5xjvFB6oVGwE5tiDVWsHlWk7ZQNoACA2BtJOWvVqZMQDVJhWG';
+        '/?z=eJwrcDbTMtQyVEtyUssEM521HNWKXJy0nLQc6xyBfPc6d6BImqGWC5AB5Go5xjvFB6oVGwE5tiDVWsHlWk7ZQNoACA2BtJOWvRZQFsw1MFArMwYAytEXgg__';
       spyOn(service, 'requestHash').and.returnValue(of(Mocks.Hash));
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(
-        'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?&v3',
+        'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100&v3',
         mockState
       );
     });
@@ -1015,12 +1024,9 @@ describe('RouterService', () => {
 
   describe('bytesToBase64', () => {
     it('should convert Uint8array to string', () => {
-      const z = mockZip.bare + mockZipPartial.bare + service.zipTail.bare;
+      const z = 'abcdefghij';
       const result = service.bytesToBase64(deflate(z));
-      expect(result).toEqual(
-        'eJxtUMsKwzAM-5seDBl17.mW4qZOG0iTkLgbu-zbF2gHfQzjg4UsyU66CLNXZuYigICNuyCSKZQUs6iBvYChPEX1oimGJp-oVAovg3dhUguZ2QVWHbC1bMQ9nbzVEsf' +
-          'V8-cOVZeSmMcf4zjAwGSql9UIKVfoonbinnX21f5fsH5LbtccyHBTND5a6KqAvh0cyQN2bQtYeys8vgGsX924v-Sp8Qs2D3oA'
-      );
+      expect(result).toEqual('eJxLTEpOSU1Lz8jMAgAVhgP4');
     });
 
     it('should handle trailing octets', () => {
@@ -1053,15 +1059,10 @@ describe('RouterService', () => {
 
     it('should convert string to bytes', () => {
       const result = inflate(
-        service.base64ToBytes(
-          'eJxtUMsKwzAM-5seDBl17.mW4qZOG0iTkLgbu-zbF2gHfQzjg4UsyU66CLNXZuYigICNuyCSKZQUs6iBvYChPEX1oimGJp-oVAovg3dhUguZ2QVWHbC1bMQ9nbzVE' +
-            'sfV8-cOVZeSmMcf4zjAwGSql9UIKVfoonbinnX21f5fsH5LbtccyHBTND5a6KqAvh0cyQN2bQtYeys8vgGsX924v-Sp8Qs2D3oA'
-        ),
+        service.base64ToBytes('eJxLTEpOSU1Lz8jMAgAVhgP4'),
         { to: 'string' }
       );
-      expect(result).toEqual(
-        mockZip.bare + mockZipPartial.bare + service.zipTail.bare
-      );
+      expect(result).toEqual('abcdefghij');
     });
   });
 

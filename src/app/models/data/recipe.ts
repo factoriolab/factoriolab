@@ -13,7 +13,7 @@ export interface Recipe {
     in?: Entities<number>;
     out?: Entities<number>;
   };
-  mining?: boolean;
+  cost?: number;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
   /** Used to link the item to an alternate icon id */
@@ -36,7 +36,7 @@ export class RationalRecipe {
     in?: Entities<Rational>;
     out?: Entities<Rational>;
   };
-  mining?: boolean;
+  cost?: Rational;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
   usage?: Rational;
@@ -84,8 +84,8 @@ export class RationalRecipe {
         );
       }
     }
-    if (data.mining) {
-      this.mining = data.mining;
+    if (data.cost) {
+      this.cost = Rational.fromNumber(data.cost);
     }
     if (data.part) {
       this.part = data.part;

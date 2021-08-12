@@ -173,4 +173,18 @@ describe('Recipes Selectors', () => {
       expect(result).toBeTrue();
     });
   });
+
+  describe('getContainsCost', () => {
+    it('should handle null/empty values', () => {
+      const result = Selectors.getContainsCost.projector({});
+      expect(result).toBeFalse();
+    });
+
+    it('should find a relevant step', () => {
+      const result = Selectors.getContainsCost.projector({
+        ['id']: { cost: '1' },
+      });
+      expect(result).toBeTrue();
+    });
+  });
 });

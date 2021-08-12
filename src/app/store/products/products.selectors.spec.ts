@@ -38,7 +38,8 @@ describe('Products Selectors', () => {
         null,
         null,
         null,
-        null
+        null,
+        {}
       );
       expect(result).toBeUndefined();
     });
@@ -49,7 +50,8 @@ describe('Products Selectors', () => {
         [Mocks.Product4],
         null,
         null,
-        null
+        null,
+        {}
       );
       expect(SimplexUtility.getSteps).toHaveBeenCalled();
     });
@@ -528,7 +530,7 @@ describe('Products Selectors', () => {
   describe('getMatrixResult', () => {
     it('should handle empty/null values', () => {
       spyOn(SimplexUtility, 'solve');
-      const result = Selectors.getMatrixResult.projector([], {}, [], {}, null);
+      const result = Selectors.getMatrixResult.projector([], {}, [], {}, {});
       expect(SimplexUtility.solve).not.toHaveBeenCalled();
       expect(result).toEqual({ steps: [], result: MatrixResultType.Skipped });
     });
@@ -538,7 +540,13 @@ describe('Products Selectors', () => {
         steps: [],
         result: MatrixResultType.Skipped,
       });
-      Selectors.getMatrixResult.projector([Mocks.Step1], {}, [], {}, true);
+      Selectors.getMatrixResult.projector(
+        [Mocks.Step1],
+        {},
+        [],
+        {},
+        { simplex: true }
+      );
       expect(SimplexUtility.solve).toHaveBeenCalled();
     });
   });
