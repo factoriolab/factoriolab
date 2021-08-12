@@ -1,0 +1,7 @@
+<div>
+  <span>{{ text }}</span>
+  <i class="material-icons small">info</i>
+</div>
+<span *ngIf="hover" class="tooltip panel dark" (mouseenter)="hover = false">{{
+  tooltip
+}}</span>

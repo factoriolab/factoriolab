@@ -97,6 +97,8 @@ export const getAdjustedDataset = createSelector(
       adj.fuel,
       adj.miningBonus,
       adj.researchSpeed,
+      adj.costFactor,
+      adj.costFactory,
       adj.data
     )
 );
@@ -116,4 +118,8 @@ export const getContainsBeacons = createSelector(recipesState, (state) =>
       state[id].beaconModules ||
       state[id].beaconCount != null
   )
+);
+
+export const getContainsCost = createSelector(recipesState, (state) =>
+  Object.keys(state).some((id) => state[id].cost)
 );

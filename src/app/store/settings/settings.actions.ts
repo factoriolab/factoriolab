@@ -26,6 +26,11 @@ export const enum SettingsActionType {
   SET_RESEARCH_SPEED = '[Settings] Set Research Speed',
   SET_INSERTER_TARGET = '[Settings] Set Inserter Target',
   SET_INSERTER_CAPACITY = '[Settings] Set Inserter Capacity',
+  SET_COST_FACTOR = '[Settings] Set Cost Factor',
+  SET_COST_FACTORY = '[Settings] Set Factory Cost',
+  SET_COST_INPUT = '[Settings] Set Input Cost',
+  SET_COST_IGNORED = '[Settings] Set Ignored Cost',
+  RESET_COST = '[Settings] Reset Cost Modifiers',
 }
 
 export class SetPresetAction implements Action {
@@ -103,6 +108,30 @@ export class SetInserterCapacityAction implements Action {
   constructor(public payload: InserterCapacity) {}
 }
 
+export class SetCostFactorAction implements Action {
+  readonly type = SettingsActionType.SET_COST_FACTOR;
+  constructor(public payload: string) {}
+}
+
+export class SetCostFactoryAction implements Action {
+  readonly type = SettingsActionType.SET_COST_FACTORY;
+  constructor(public payload: string) {}
+}
+
+export class SetCostInputAction implements Action {
+  readonly type = SettingsActionType.SET_COST_INPUT;
+  constructor(public payload: string) {}
+}
+
+export class SetCostIgnoredAction implements Action {
+  readonly type = SettingsActionType.SET_COST_IGNORED;
+  constructor(public payload: string) {}
+}
+
+export class ResetCostAction implements Action {
+  readonly type = SettingsActionType.RESET_COST;
+}
+
 export type SettingsAction =
   | SetPresetAction
   | SetBaseAction
@@ -118,4 +147,9 @@ export type SettingsAction =
   | SetMiningBonusAction
   | SetResearchSpeedAction
   | SetInserterTargetAction
-  | SetInserterCapacityAction;
+  | SetInserterCapacityAction
+  | SetCostFactorAction
+  | SetCostFactoryAction
+  | SetCostInputAction
+  | SetCostIgnoredAction
+  | ResetCostAction;

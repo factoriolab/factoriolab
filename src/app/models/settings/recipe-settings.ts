@@ -7,6 +7,7 @@ export enum RecipeSettingsField {
   BeaconModules = 'beaconModules',
   BeaconCount = 'beaconCount',
   Overclock = 'overclock',
+  Cost = 'cost',
 }
 
 export interface RecipeSettings {
@@ -16,6 +17,7 @@ export interface RecipeSettings {
   beacon?: string;
   beaconModules?: string[];
   overclock?: number;
+  cost?: string;
 }
 
 export class RationalRecipeSettings {
@@ -25,6 +27,7 @@ export class RationalRecipeSettings {
   beacon?: string;
   beaconModules?: string[];
   overclock?: Rational;
+  cost?: Rational;
 
   constructor(data: RecipeSettings) {
     if (data.factory != null) {
@@ -44,6 +47,9 @@ export class RationalRecipeSettings {
     }
     if (data.overclock != null) {
       this.overclock = Rational.fromNumber(data.overclock);
+    }
+    if (data.cost != null) {
+      this.cost = Rational.fromString(data.cost);
     }
   }
 }

@@ -1,8 +1,8 @@
 import { compose, createSelector } from '@ngrx/store';
 
-import { Column, Game, LinkValue, SankeyAlign } from '~/models';
+import { Column, Game, LinkValue, Rational, SankeyAlign } from '~/models';
 import { State } from '../';
-import { getGame } from '../settings';
+import * as Settings from '../settings';
 import {
   ColumnsState,
   initialColumnsState,
@@ -26,7 +26,7 @@ export const getSimplex = compose(sSimplex, preferencesState);
 
 export const getColumnsState = createSelector(
   getColumns,
-  getGame,
+  Settings.getGame,
   (col, game): ColumnsState =>
     game === Game.DysonSphereProgram
       ? {
@@ -86,4 +86,15 @@ export const getLinkPrecision = createSelector(
         return null;
     }
   }
+);
+
+export const getSimplexModifiers = createSelector(
+  getSimplex,
+  Settings.getRationalCostInput,
+  Settings.getRationalCostIgnored,
+  (simplex, costInput, costIgnored) => ({
+    simplex,
+    costInput,
+    costIgnored,
+  })
 );
