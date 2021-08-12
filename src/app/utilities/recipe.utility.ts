@@ -370,7 +370,6 @@ export class RecipeUtility {
   ): void {
     for (const id of Object.keys(recipeR)) {
       const recipe = recipeR[id];
-      const factoryCost = costFactory.mul(recipe.time);
       if (recipeSettings[id].cost) {
         recipe.cost = recipeSettings[id].cost;
       } else if (recipe.cost) {
@@ -380,10 +379,10 @@ export class RecipeUtility {
           (v, o) => v.add(recipe.out[o]),
           Rational.zero
         );
-        recipe.cost = output.mul(recipe.cost).mul(costFactor).add(factoryCost);
+        recipe.cost = output.mul(recipe.cost).mul(costFactor);
       } else {
         // Adjust based on recipe time so that this is based on # factories
-        recipe.cost = factoryCost;
+        recipe.cost = costFactory;
       }
     }
   }

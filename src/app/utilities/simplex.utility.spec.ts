@@ -587,26 +587,12 @@ describe('SimplexUtility', () => {
         ],
         [
           Rational.zero,
-          Rational.from(14, 5),
-          Rational.minusOne,
+          Rational.from(154, 5),
+          Rational.from(-11),
           Rational.zero,
           Rational.zero,
           Rational.one,
           Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.from(1, 11),
-        ],
-        [
-          Rational.zero,
-          Rational.zero,
-          Rational.one,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.one,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -616,6 +602,20 @@ describe('SimplexUtility', () => {
         [
           Rational.zero,
           Rational.zero,
+          Rational.one,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.one,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.one,
+        ],
+        [
+          Rational.zero,
+          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -625,7 +625,7 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
-          Rational.from(120001, 1200),
+          Rational.hundred,
         ],
         [
           Rational.zero,
@@ -639,7 +639,7 @@ describe('SimplexUtility', () => {
           Rational.one,
           Rational.zero,
           Rational.zero,
-          Rational.from(1183040, 91),
+          Rational.from(13000),
         ],
         [
           Rational.zero,
@@ -820,7 +820,7 @@ describe('SimplexUtility', () => {
       SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
       expect(step).toEqual({
         itemId: ItemId.Coal,
-        items: Rational.from(13, 5),
+        items: Rational.from(1183, 200),
       });
     });
 
@@ -883,7 +883,7 @@ describe('SimplexUtility', () => {
       expect(steps).toEqual([
         {
           itemId: ItemId.Coal,
-          items: Rational.from(13, 5),
+          items: Rational.from(1183, 200),
         },
       ]);
     });
@@ -925,7 +925,7 @@ describe('SimplexUtility', () => {
       SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
       expect(step).toEqual({
         itemId: ItemId.Coal,
-        items: Rational.from(26, 5),
+        items: Rational.from(1183, 100),
         surplus: Rational.from(3),
       });
     });
@@ -1014,7 +1014,7 @@ describe('SimplexUtility', () => {
         itemId: ItemId.Coal,
         recipeId: RecipeId.Coal,
         items: Rational.one,
-        factories: Rational.from(40, 91),
+        factories: Rational.one,
       });
     });
 
@@ -1040,7 +1040,7 @@ describe('SimplexUtility', () => {
         itemId: null,
         recipeId: RecipeId.Coal,
         items: Rational.one,
-        factories: Rational.from(40, 91),
+        factories: Rational.one,
       });
     });
 
@@ -1063,7 +1063,7 @@ describe('SimplexUtility', () => {
           itemId: null,
           items: null,
           recipeId: RecipeId.Coal,
-          factories: Rational.from(40, 91),
+          factories: Rational.one,
         },
       ]);
     });
@@ -1099,7 +1099,7 @@ describe('SimplexUtility', () => {
           itemId: null,
           items: null,
           recipeId: RecipeId.AdvancedOilProcessing,
-          factories: Rational.from(100, 91),
+          factories: Rational.one,
         },
         { itemId: ItemId.Wood, items: Rational.zero },
       ]);

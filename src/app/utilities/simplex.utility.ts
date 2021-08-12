@@ -417,7 +417,7 @@ export class SimplexUtility {
         if (recipe.out[itemId]) {
           val = val.add(recipe.out[itemId]);
         }
-        R.push(val);
+        R.push(val.div(recipe.time));
       }
 
       // Add recipe columns
@@ -622,7 +622,9 @@ export class SimplexUtility {
     for (const recipe of Object.keys(solution.recipes)
       .map((r) => state.recipes[r])
       .filter((r) => r.out[itemId])) {
-      output = output.add(recipe.out[itemId].mul(solution.recipes[recipe.id]));
+      output = output.add(
+        recipe.out[itemId].mul(solution.recipes[recipe.id]).div(recipe.time)
+      );
     }
     if (solution.inputs[itemId]) {
       output = output.add(solution.inputs[itemId]);
@@ -723,9 +725,9 @@ export class SimplexUtility {
       }
     }
     step.recipeId = recipe.id;
-    step.factories = solution.recipes[recipe.id]
-      .mul(recipe.time)
-      .add(step.factories || Rational.zero);
+    step.factories = solution.recipes[recipe.id].add(
+      step.factories || Rational.zero
+    );
     RateUtility.adjustPowerPollution(step, recipe);
   }
 

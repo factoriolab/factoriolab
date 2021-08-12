@@ -744,8 +744,8 @@ describe('RecipeUtility', () => {
         Rational.one,
         Rational.one
       );
-      expect(recipeR[RecipeId.Coal].cost).toEqual(Rational.from(1183040, 91));
-      expect(recipeR[RecipeId.CopperCable].cost).toEqual(Rational.from(1, 11));
+      expect(recipeR[RecipeId.Coal].cost).toEqual(Rational.from(13000));
+      expect(recipeR[RecipeId.CopperCable].cost).toEqual(Rational.one);
     });
   });
 
