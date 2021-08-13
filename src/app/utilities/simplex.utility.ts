@@ -740,7 +740,7 @@ export class SimplexUtility {
     for (const recipe of Object.keys(solution.recipes)
       .map((r) => state.recipes[r])
       .filter((r) => r.in)) {
-      const quantity = solution.recipes[recipe.id];
+      const quantity = solution.recipes[recipe.id].div(recipe.time);
       for (const itemId of Object.keys(recipe.in).filter((i) =>
         recipe.in[i].nonzero()
       )) {
