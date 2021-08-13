@@ -93,7 +93,7 @@ export class FlowUtility {
             target: iId[outId],
             source: rId[step.recipeId],
             value: this.linkSize(outValue, percent, linkSize, item.stack),
-            text: this.linkText(outValue, percent, linkText, linkPrecision),
+            text: this.linkText(outText, percent, linkText, linkPrecision),
             name: item.name,
             color: data.iconEntities[outId].color,
           });
