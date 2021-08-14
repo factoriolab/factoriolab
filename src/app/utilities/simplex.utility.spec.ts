@@ -1125,7 +1125,7 @@ describe('SimplexUtility', () => {
       expect(RateUtility.addParentValue).toHaveBeenCalledWith(
         step,
         RecipeId.PlasticBar,
-        Rational.one
+        Rational.from(91, 20)
       );
     });
   });
