@@ -58,7 +58,7 @@ export class SankeyComponent {
     );
   }
 
-  constructor(private ref: ElementRef<HTMLElement>) { }
+  constructor(private ref: ElementRef<HTMLElement>) {}
 
   rebuildChart(): void {
     if (this.svg) {

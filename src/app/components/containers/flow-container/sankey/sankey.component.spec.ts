@@ -21,7 +21,7 @@ import { SankeyComponent } from './sankey.component';
 class TestSankeyComponent {
   @ViewChild(SankeyComponent) child: SankeyComponent;
   sankeyData = Mocks.Sankey;
-  selectNode(data): void { }
+  selectNode(data): void {}
 }
 
 describe('SankeyComponent', () => {
