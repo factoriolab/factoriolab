@@ -375,10 +375,9 @@ export class RecipeUtility {
       } else if (recipe.cost) {
         // Recipe has a declared cost, base this on output items not factories
         // Calculate total output, sum, and multiply cost by output
-        const output = Object.keys(recipe.out).reduce(
-          (v, o) => v.add(recipe.out[o]),
-          Rational.zero
-        );
+        const output = Object.keys(recipe.out)
+          .reduce((v, o) => v.add(recipe.out[o]), Rational.zero)
+          .div(recipe.time);
         recipe.cost = output.mul(recipe.cost).mul(costFactor);
       } else {
         // Adjust based on recipe time so that this is based on # factories
@@ -398,7 +397,7 @@ export class RecipeUtility {
       product = { ...product };
 
       if (!product.viaId) {
-        let simpleRecipeId = data.itemRecipeIds[product.itemId];
+        const simpleRecipeId = data.itemRecipeIds[product.itemId];
         if (simpleRecipeId) {
           product.viaId = simpleRecipeId;
         } else {

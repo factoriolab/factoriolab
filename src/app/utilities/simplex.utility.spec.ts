@@ -625,7 +625,7 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
-          Rational.hundred,
+          Rational.from(120000),
         ],
         [
           Rational.zero,
@@ -639,7 +639,7 @@ describe('SimplexUtility', () => {
           Rational.one,
           Rational.zero,
           Rational.zero,
-          Rational.from(13000),
+          Rational.from(29575),
         ],
         [
           Rational.zero,

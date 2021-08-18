@@ -15,7 +15,7 @@ import {
   sankeyLeft,
   sankeyRight,
   SankeyNodeMinimal,
-  SankeyLayout
+  SankeyLayout,
 } from 'd3-sankey';
 import { sankeyCircular } from 'd3-sankey-circular';
 import { select, Selection } from 'd3-selection';
@@ -50,7 +50,7 @@ export class SankeyComponent {
 
   height = window.innerHeight * 0.75;
   svg: Selection<any, {}, null, undefined>;
-  private skLayout: SankeyLayout<SankeyGraph<Node, Link>, Node, Link>
+  private skLayout: SankeyLayout<SankeyGraph<Node, Link>, Node, Link>;
 
   get linkedNodes(): Node[] {
     return this.sankeyData.nodes.filter((n) =>
@@ -154,8 +154,12 @@ export class SankeyComponent {
 
     link.append('title').text((l) => l.name);
 
-    const layout = this.skLayout
-    function dragMove(this: SVGGElement, event: any, d: SankeyNode<Node, Link>): void {
+    const layout = this.skLayout;
+    function dragMove(
+      this: SVGGElement,
+      event: any,
+      d: SankeyNode<Node, Link>
+    ): void {
       const rectY = parseFloat(select(this).attr('y'));
       const rectX = parseFloat(select(this).attr('x'));
       d.y0 = d.y0 + event.dy;
@@ -163,7 +167,7 @@ export class SankeyComponent {
       d.x1 = d.x1 + event.dx;
       const trX = d.x0 - rectX;
       const trY = d.y0 - rectY;
-      const transform = 'translate(' + (trX) + ',' + (trY) + ')';
+      const transform = 'translate(' + trX + ',' + trY + ')';
       select(this).attr('transform', transform);
 
       // also move the image
@@ -171,7 +175,10 @@ export class SankeyComponent {
       layout.update(skGraph);
 
       // force an update of the path
-      path.attr('d', circular ? (d): string => (d as any).path : sankeyLinkHorizontal())
+      path.attr(
+        'd',
+        circular ? (d): string => (d as any).path : sankeyLinkHorizontal()
+      );
     }
 
     this.svg
@@ -200,9 +207,11 @@ export class SankeyComponent {
         if (e.defaultPrevented) return;
         this.selectNode.emit(d.id);
       })
-      .call(drag<SVGGElement, SankeyNode<Node, Link>>()
-        .subject((d) => d)
-        .on('drag', dragMove))
+      .call(
+        drag<SVGGElement, SankeyNode<Node, Link>>()
+          .subject((d) => d)
+          .on('drag', dragMove)
+      )
       .append('title')
       .text((d) => d.name);
 

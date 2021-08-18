@@ -155,7 +155,7 @@ export class RouterService {
   ): Observable<Zip> {
     return this.requestHash(settings.baseId).pipe(
       map((hash) => {
-        let zipPartial: Zip = { bare: '', hash: '' };
+        const zipPartial: Zip = { bare: '', hash: '' };
         // Base
         const zBase = this.zipDiffString(
           settings.baseId,
@@ -296,7 +296,10 @@ export class RouterService {
               }
               case ZipVersion.Version2:
               case ZipVersion.Version3: {
-                let baseId = this.parseNString(params[Section.Base], data.hash);
+                const baseId = this.parseNString(
+                  params[Section.Base],
+                  data.hash
+                );
                 this.requestHash(
                   baseId || initialSettingsState.baseId
                 ).subscribe((hash) => {

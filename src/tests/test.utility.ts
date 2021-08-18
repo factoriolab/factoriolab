@@ -33,16 +33,24 @@ export class TestUtility {
     return this.getSelector(fixture, selector, index).click();
   }
 
-  static altClickDt(fixture: ComponentFixture<any>, dt: string): void {
-    return this.altClick(this.getDt(fixture, dt));
+  static altClickDt(
+    fixture: ComponentFixture<any>,
+    dt: string,
+    preventDefault = false
+  ): void {
+    return this.altClick(this.getDt(fixture, dt), preventDefault);
   }
 
   static altClickSelector(
     fixture: ComponentFixture<any>,
     selector: string,
-    index = 0
+    index = 0,
+    preventDefault = false
   ): void {
-    return this.altClick(this.getSelector(fixture, selector, index));
+    return this.altClick(
+      this.getSelector(fixture, selector, index),
+      preventDefault
+    );
   }
 
   static setTextDt(
@@ -108,56 +116,44 @@ export class TestUtility {
     return this.dispatch(this.getDt(fixture, dt, index), event);
   }
 
-  static altClick(object: any): void {
-    object.dispatchEvent(new MouseEvent('click'));
+  static altClick(element: HTMLElement, preventDefault = false): void {
+    const event = new MouseEvent('click', { cancelable: true });
+    if (preventDefault) {
+      event.preventDefault();
+    }
+    element.dispatchEvent(event);
   }
 
-  static dispatch(object: any, event: string): void {
-    object.dispatchEvent(new Event(event));
+  static dispatch(element: HTMLElement, event: string): void {
+    element.dispatchEvent(new Event(event));
   }
 
-  static setText(object: any, value: string): void {
-    object.value = value;
-    object.dispatchEvent(new Event('input'));
+  static setText(element: HTMLElement, value: string): void {
+    (element as HTMLInputElement).value = value;
+    element.dispatchEvent(new Event('input'));
   }
 
-  static select(object: any, value: string): void {
-    object.value = value;
-    object.dispatchEvent(new Event('change'));
+  static select(element: HTMLElement, value: string): void {
+    (element as HTMLSelectElement).value = value;
+    element.dispatchEvent(new Event('change'));
   }
 
-  static keyPress(object: any, value: string): void {
-    const event: any = document.createEvent('CustomEvent');
-    event.key = value;
-    event.initEvent('keypress', true, true);
-    object.dispatchEvent(event);
+  static keyPress(element: HTMLElement, value: string): void {
+    element.dispatchEvent(new KeyboardEvent('keypress', { key: value }));
   }
 
   static mouseEvent(
     type: string,
-    elem: Element,
+    element: HTMLElement,
     posX: number,
     posY: number
   ): void {
-    var evt = document.createEvent('MouseEvents')
-    evt.initMouseEvent(
-      type,
-      true,
-      true,
-      window,
-      1,
-      1,
-      1,
-      posX,
-      posY,
-      false,
-      false,
-      false,
-      false,
-      0,
-      elem
-    )
-    elem.dispatchEvent(evt)
+    const event = new MouseEvent(type, {
+      view: window,
+      clientX: posX,
+      clientY: posY,
+    });
+    element.dispatchEvent(event);
   }
 
   static dragAndDropSelector(
@@ -166,14 +162,14 @@ export class TestUtility {
     xOffset: number,
     yOffset: number
   ): void {
-    var elemDrag = this.getSelector(fixture, selector)
+    const element = this.getSelector(fixture, selector);
 
-    var pos = elemDrag.getBoundingClientRect()
-    var center1X = Math.floor((pos.left + pos.right) / 2)
-    var center1Y = Math.floor((pos.top + pos.bottom) / 2)
+    const pos = element.getBoundingClientRect();
+    const centerX = Math.floor((pos.left + pos.right) / 2);
+    const centerY = Math.floor((pos.top + pos.bottom) / 2);
 
-    this.mouseEvent('mousedown', elemDrag, center1X, center1Y)
-    this.mouseEvent('mousemove', elemDrag, center1X + xOffset, center1Y + yOffset)
-    this.mouseEvent('mouseup', elemDrag, center1X + xOffset, center1Y + yOffset)
+    this.mouseEvent('mousedown', element, centerX, centerY);
+    this.mouseEvent('mousemove', element, centerX + xOffset, centerY + yOffset);
+    this.mouseEvent('mouseup', element, centerX + xOffset, centerY + yOffset);
   }
 }

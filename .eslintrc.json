@@ -43,7 +43,10 @@
           { "type": "element", "prefix": "lab", "style": "kebab-case" }
         ],
         "@typescript-eslint/explicit-function-return-type": ["error"],
-        "quotes": ["error", "single", { "allowTemplateLiterals": true }]
+        "no-var": "error",
+        "prefer-const": "error",
+        "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+        "semi": "error"
       }
     },
 
@@ -68,7 +71,10 @@
          * necessarily recommended for all projects):
          */
         "max-len": ["error", { "code": 140 }],
-        "@angular-eslint/template/eqeqeq": ["error", {"allowNullOrUndefined": true}]
+        "@angular-eslint/template/eqeqeq": [
+          "error",
+          { "allowNullOrUndefined": true }
+        ]
       }
     },
 
