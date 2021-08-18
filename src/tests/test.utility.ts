@@ -132,4 +132,48 @@ export class TestUtility {
     event.initEvent('keypress', true, true);
     object.dispatchEvent(event);
   }
+
+  static mouseEvent(
+    type: string,
+    elem: Element,
+    posX: number,
+    posY: number
+  ): void {
+    var evt = document.createEvent('MouseEvents')
+    evt.initMouseEvent(
+      type,
+      true,
+      true,
+      window,
+      1,
+      1,
+      1,
+      posX,
+      posY,
+      false,
+      false,
+      false,
+      false,
+      0,
+      elem
+    )
+    elem.dispatchEvent(evt)
+  }
+
+  static dragAndDropSelector(
+    fixture: ComponentFixture<any>,
+    selector: string,
+    xOffset: number,
+    yOffset: number
+  ): void {
+    var elemDrag = this.getSelector(fixture, selector)
+
+    var pos = elemDrag.getBoundingClientRect()
+    var center1X = Math.floor((pos.left + pos.right) / 2)
+    var center1Y = Math.floor((pos.top + pos.bottom) / 2)
+
+    this.mouseEvent('mousedown', elemDrag, center1X, center1Y)
+    this.mouseEvent('mousemove', elemDrag, center1X + xOffset, center1Y + yOffset)
+    this.mouseEvent('mouseup', elemDrag, center1X + xOffset, center1Y + yOffset)
+  }
 }

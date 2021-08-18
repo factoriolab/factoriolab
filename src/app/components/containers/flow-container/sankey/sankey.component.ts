@@ -15,9 +15,11 @@ import {
   sankeyLeft,
   sankeyRight,
   SankeyNodeMinimal,
+  SankeyLayout
 } from 'd3-sankey';
 import { sankeyCircular } from 'd3-sankey-circular';
 import { select, Selection } from 'd3-selection';
+import { drag } from 'd3-drag';
 
 import { SankeyData, Node, Link, SankeyAlign } from '~/models';
 
@@ -48,6 +50,7 @@ export class SankeyComponent {
 
   height = window.innerHeight * 0.75;
   svg: Selection<any, {}, null, undefined>;
+  private skLayout: SankeyLayout<SankeyGraph<Node, Link>, Node, Link>
 
   get linkedNodes(): Node[] {
     return this.sankeyData.nodes.filter((n) =>
@@ -73,7 +76,7 @@ export class SankeyComponent {
     height: number
   ): SankeyGraph<Node, Link> {
     const fn = circular ? sankeyCircular : sankey;
-    const skLayout = fn()
+    this.skLayout = fn()
       .nodeId((d) => d.id)
       .nodeWidth(32)
       .nodePadding(8)
@@ -83,7 +86,7 @@ export class SankeyComponent {
         [width - 1, height - 5],
       ]);
 
-    return skLayout({
+    return this.skLayout({
       nodes: this.linkedNodes.map((d) => ({ ...d })),
       links: this.sankeyData.links.map((l) => ({ ...l })),
     });
@@ -139,7 +142,7 @@ export class SankeyComponent {
       .join('g')
       .style('mix-blend-mode', 'multiply');
 
-    link
+    const path = link
       .append('path')
       .attr('id', (l) => `${l.index}`)
       .attr(
@@ -150,6 +153,27 @@ export class SankeyComponent {
       .attr('stroke-width', (l) => Math.max(1, l.width));
 
     link.append('title').text((l) => l.name);
+
+    const layout = this.skLayout
+    function dragMove(this: SVGGElement, event: any, d: SankeyNode<Node, Link>): void {
+      const rectY = parseFloat(select(this).attr('y'));
+      const rectX = parseFloat(select(this).attr('x'));
+      d.y0 = d.y0 + event.dy;
+      d.x0 = d.x0 + event.dx;
+      d.x1 = d.x1 + event.dx;
+      const trX = d.x0 - rectX;
+      const trY = d.y0 - rectY;
+      const transform = 'translate(' + (trX) + ',' + (trY) + ')';
+      select(this).attr('transform', transform);
+
+      // also move the image
+      select(`[id='image-${d.id}']`).attr('transform', transform);
+      layout.update(skGraph);
+
+      // force an update of the path
+      path.attr('d', circular ? (d): string => (d as any).path : sankeyLinkHorizontal())
+    }
+
     this.svg
       .append('g')
       .selectAll('text')
@@ -173,10 +197,12 @@ export class SankeyComponent {
       .attr('width', (d) => d.x1 - d.x0)
       .attr('fill', (d) => d.color)
       .on('click', (e, d) => {
-        // Typings currently incorrect: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/47296
-        const node = d as any as SankeyNode<Node, Link>;
-        this.selectNode.emit(node.id);
+        if (e.defaultPrevented) return;
+        this.selectNode.emit(d.id);
       })
+      .call(drag<SVGGElement, SankeyNode<Node, Link>>()
+        .subject((d) => d)
+        .on('drag', dragMove))
       .append('title')
       .text((d) => d.name);
 
@@ -185,7 +211,9 @@ export class SankeyComponent {
       .append('g')
       .selectAll('svg')
       .data(skGraph.nodes.filter((d) => d.y1 - d.y0 >= 16))
-      .join('svg')
+      .join('g')
+      .attr('id', (d) => `image-${d.id}`)
+      .append('svg')
       .attr('viewBox', (d) => d.viewBox)
       .attr('width', (d) => Math.min(30, d.y1 - d.y0 - 2))
       .attr('height', (d) => Math.min(30, d.y1 - d.y0 - 2))
