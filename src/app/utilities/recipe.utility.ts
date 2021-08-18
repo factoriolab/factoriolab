@@ -397,7 +397,7 @@ export class RecipeUtility {
       product = { ...product };
 
       if (!product.viaId) {
-        let simpleRecipeId = data.itemRecipeIds[product.itemId];
+        const simpleRecipeId = data.itemRecipeIds[product.itemId];
         if (simpleRecipeId) {
           product.viaId = simpleRecipeId;
         } else {
