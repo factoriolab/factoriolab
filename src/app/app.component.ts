@@ -61,8 +61,8 @@ export class AppComponent implements OnInit {
   homeHref: string;
   game: Game;
   showSettings: boolean;
-  poll = 'https://linkto.run/p/0UD8IV6X';
-  pollKey = 'poll0';
+  poll = 'https://www.survey-maker.com/Q62LJFYVL';
+  pollKey = 'poll1';
   showPoll = false;
   version = `${APP} ${environment.version}`;
 
@@ -88,21 +88,23 @@ export class AppComponent implements OnInit {
         case Game.Factorio:
           this.title = TITLE_LAB;
           this.homeHref = 'factorio';
+          this.showPoll = false;
           break;
         case Game.DysonSphereProgram:
           this.title = TITLE_DSP;
           this.homeHref = 'dsp';
+          if (!this.lsHidePoll) {
+            this.showPoll = true;
+          }
           break;
         case Game.Satisfactory:
           this.title = TITLE_SFY;
           this.homeHref = 'satisfactory';
+          this.showPoll = false;
           break;
       }
       this.titleService.setTitle(`${APP} | ${this.title}`);
     });
-    if (this.lsHidePoll) {
-      this.showPoll = false;
-    }
   }
 
   hidePoll(persist = false): void {

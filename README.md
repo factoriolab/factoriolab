@@ -11,7 +11,7 @@ This project is intended to build on the features of the Kirk McDonald [Factorio
 
 **To discuss the calculator,** join the [Discord](https://discord.gg/N4FKV687x2).
 
-**If you love Factorio Lab,** consider supporting it by [buying me a ☕](https://ko-fi.com/dcbroad3)!
+**If you love FactorioLab,** consider supporting it by [buying me a ☕](https://ko-fi.com/dcbroad3)!
 
 ## Running online
 
