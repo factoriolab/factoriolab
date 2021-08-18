@@ -48,7 +48,7 @@ export class SelectComponent extends DialogContainerComponent {
     if (this.rows.length > 1) {
       return Math.max(...this.rows.map((r) => r.length)) * 2.375;
     } else {
-      let buttons = this.rows[0].length;
+      const buttons = this.rows[0].length;
       const iconsPerRow =
         buttons <= 4 ? buttons : Math.ceil(Math.sqrt(buttons));
       return iconsPerRow * 2.375;

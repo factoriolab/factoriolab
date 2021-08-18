@@ -76,6 +76,15 @@ describe('SankeyComponent', () => {
         Mocks.Sankey.nodes[0].id
       );
     });
+
+    it('should not emit when default is prevented', () => {
+      spyOn(component, 'selectNode');
+      fixture.detectChanges();
+      TestUtility.altClickSelector(fixture, 'rect', 0, true);
+      expect(component.selectNode).not.toHaveBeenCalledWith(
+        Mocks.Sankey.nodes[0].id
+      );
+    });
   });
 
   describe('getAlign', () => {
@@ -93,16 +102,23 @@ describe('SankeyComponent', () => {
 
   it('should handle drag and drop', () => {
     TestUtility.dragAndDropSelector(fixture, 'rect', 100, 200);
-    expect(component.child.svg.select('rect').attr('transform')).toEqual('translate(100,200)')
-    expect(component.child.svg.select('#image-0').attr('transform')).toEqual('translate(100,200)')
+    expect(component.child.svg.select('rect').attr('transform')).toEqual(
+      'translate(100,200)'
+    );
+    expect(component.child.svg.select('#image-0').attr('transform')).toEqual(
+      'translate(100,200)'
+    );
   });
 
   it('should handle drag and drop for sankey with circular links', () => {
     component.sankeyData = Mocks.SankeyCircular;
     fixture.detectChanges();
     TestUtility.dragAndDropSelector(fixture, 'rect', 100, 200);
-    expect(component.child.svg.select('rect').attr('transform')).toEqual('translate(100,200)')
-    expect(component.child.svg.select('#image-0').attr('transform')).toEqual('translate(100,200)')
+    expect(component.child.svg.select('rect').attr('transform')).toEqual(
+      'translate(100,200)'
+    );
+    expect(component.child.svg.select('#image-0').attr('transform')).toEqual(
+      'translate(100,200)'
+    );
   });
-
 });
