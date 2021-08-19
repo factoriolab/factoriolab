@@ -100,6 +100,9 @@ export class AppComponent implements OnInit {
       }
       this.titleService.setTitle(`${APP} | ${this.title}`);
     });
+    if (!this.lsHidePoll) {
+      this.showPoll = true;
+    }
   }
 
   hidePoll(persist = false): void {
