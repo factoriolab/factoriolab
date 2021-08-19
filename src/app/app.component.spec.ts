@@ -74,14 +74,6 @@ describe('AppComponent', () => {
     expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_DSP}`);
   });
 
-  it('should hide the poll for Dyson Sphere Program', () => {
-    spyOnProperty(component, 'lsHidePoll').and.returnValue(true);
-    store.dispatch(new SetBaseAction('dsp'));
-    spyOn(title, 'setTitle');
-    fixture.detectChanges();
-    expect(component.showPoll).toBeFalse();
-  });
-
   it('should update the title for Satisfactory', () => {
     store.dispatch(new SetBaseAction('sfy'));
     spyOn(title, 'setTitle');
