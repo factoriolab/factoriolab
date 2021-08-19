@@ -88,19 +88,14 @@ export class AppComponent implements OnInit {
         case Game.Factorio:
           this.title = TITLE_LAB;
           this.homeHref = 'factorio';
-          this.showPoll = false;
           break;
         case Game.DysonSphereProgram:
           this.title = TITLE_DSP;
           this.homeHref = 'dsp';
-          if (!this.lsHidePoll) {
-            this.showPoll = true;
-          }
           break;
         case Game.Satisfactory:
           this.title = TITLE_SFY;
           this.homeHref = 'satisfactory';
-          this.showPoll = false;
           break;
       }
       this.titleService.setTitle(`${APP} | ${this.title}`);
