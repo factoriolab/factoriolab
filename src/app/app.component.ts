@@ -17,7 +17,7 @@ import {
   MatrixResultType,
   Game,
 } from './models';
-import { ErrorService, RouterService, StateService } from './services';
+import { ErrorService, StateService } from './services';
 import { State } from './store';
 import {
   getProducts,
@@ -72,7 +72,6 @@ export class AppComponent implements OnInit {
 
   constructor(
     public error: ErrorService,
-    public router: RouterService,
     public store: Store<State>,
     public titleService: Title,
     public state: StateService // Included only to initialize the service

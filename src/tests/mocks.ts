@@ -194,7 +194,7 @@ export const AdjustedData = getAdjustedDataset.projector(
   }
 );
 export const Preferences: PreferencesState = {
-  states: { ['name']: 'hash' },
+  states: { ['name']: 'z=zip' },
   columns: initialColumnsState,
   linkSize: LinkValue.Items,
   linkText: LinkValue.Items,

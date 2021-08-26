@@ -202,6 +202,16 @@ export class RouterService {
     return bare.length < Math.max(zip.length, MIN_ZIP) ? bare : zip;
   }
 
+  getParams(zip: string): Entities {
+    const sections = zip.split('&');
+    const substr = sections[0][1] === '=' ? 2 : 1;
+    const params = sections.reduce((e: Entities<string>, v) => {
+      e[v[0]] = v.substr(substr);
+      return e;
+    }, {});
+    return params;
+  }
+
   updateState(e: Event): void {
     try {
       if (e instanceof NavigationEnd) {
@@ -231,12 +241,7 @@ export class RouterService {
             zip = zip
               .replace(/\*n\*/g, `*${NULL}*`)
               .replace(/\*e\*/g, `*${EMPTY}*`);
-            const sections = zip.split('&');
-            const substr = sections[0][1] === '=' ? 2 : 1;
-            const params = sections.reduce((e: Entities<string>, v) => {
-              e[v[0]] = v.substr(substr);
-              return e;
-            }, {});
+            const params = this.getParams(zip);
             let v = ZipVersion.Version0;
             if (params[Section.Version]) {
               v = params[Section.Version] as ZipVersion;
