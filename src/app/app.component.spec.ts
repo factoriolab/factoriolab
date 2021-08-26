@@ -6,7 +6,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
-import { RouterService } from './services';
 import { State, reducers, metaReducers } from './store';
 import {
   IconComponent,
@@ -27,7 +26,6 @@ describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
   let store: Store<State>;
-  let router: RouterService;
   let title: Title;
 
   beforeEach(async () => {
@@ -57,7 +55,6 @@ describe('AppComponent', () => {
         fixture = TestBed.createComponent(AppComponent);
         component = fixture.componentInstance;
         store = TestBed.inject(Store);
-        router = TestBed.inject(RouterService);
         title = TestBed.inject(Title);
       });
   });

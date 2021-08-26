@@ -37,6 +37,7 @@ import {
   GameOptions,
   PreviousPayload,
 } from '~/models';
+import { RouterService } from '~/services';
 import { FactoriesState } from '~/store/factories';
 import { ColumnsState, PreferencesState } from '~/store/preferences';
 import { SettingsState, initialSettingsState } from '~/store/settings';
@@ -141,7 +142,11 @@ export class SettingsComponent implements OnInit, OnChanges {
   ctrlMiningProductivity = new FormControl('', Validators.min(0));
   ctrlMiningSpeed = new FormControl('', Validators.min(100));
 
-  constructor(private ref: ChangeDetectorRef, private router: Router) {}
+  constructor(
+    private ref: ChangeDetectorRef,
+    private router: Router,
+    private routerSvc: RouterService
+  ) {}
 
   ngOnInit(): void {
     this.state =
@@ -222,10 +227,11 @@ export class SettingsComponent implements OnInit, OnChanges {
   }
 
   setState(id: string): void {
-    const fragment = this.preferences.states[id];
-    if (fragment) {
+    const query = this.preferences.states[id];
+    if (query) {
+      const queryParams = this.routerSvc.getParams(query);
       this.state = id;
-      this.router.navigate([], { fragment });
+      this.router.navigate([], { queryParams });
     }
   }
 
