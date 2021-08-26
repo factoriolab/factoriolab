@@ -74,10 +74,10 @@ export class ListComponent
   @Input() set steps(value: Step[]) {
     this._steps = [...value];
 
-    this.router.requestHash(this.settings.baseId).subscribe((hash) => {
+    this.routerSvc.requestHash(this.settings.baseId).subscribe((hash) => {
       setTimeout(() => {
         this._steps.forEach((s) => {
-          s.href = this.router.stepHref(s, hash);
+          s.href = this.routerSvc.stepHref(s, hash);
         });
         this.ref.detectChanges();
       });
@@ -180,7 +180,7 @@ export class ListComponent
   constructor(
     private ref: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private router: RouterService
+    private routerSvc: RouterService
   ) {
     super();
   }

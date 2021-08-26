@@ -240,6 +240,19 @@ describe('RouterService', () => {
     });
   });
 
+  describe('getParams', () => {
+    it('should handle params with & and =', () => {
+      expect(service.getParams('p=prod&s=sett')).toEqual({
+        p: 'prod',
+        s: 'sett',
+      });
+    });
+
+    it('should handle params with no =', () => {
+      expect(service.getParams('abc')).toEqual({ a: 'bc' });
+    });
+  });
+
   describe('updateState', () => {
     beforeEach(() => {
       spyOn(service, 'dispatch');

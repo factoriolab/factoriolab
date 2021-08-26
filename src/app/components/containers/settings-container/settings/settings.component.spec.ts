@@ -1,8 +1,10 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { StoreModule } from '@ngrx/store';
 
 import { Mocks, TestUtility, ItemId } from 'src/tests';
 import {
@@ -15,6 +17,8 @@ import {
   ToggleComponent,
 } from '~/components';
 import { Game } from '~/models';
+import { RouterService } from '~/services';
+import { reducers, metaReducers } from '~/store';
 import { initialColumnsState } from '~/store/preferences';
 import { BrowserUtility } from '~/utilities';
 import { SettingsComponent } from './settings.component';
@@ -116,7 +120,13 @@ describe('SettingsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule],
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        RouterTestingModule,
+        StoreModule.forRoot(reducers, { metaReducers }),
+      ],
       declarations: [
         ColumnsComponent,
         IconComponent,
@@ -128,6 +138,7 @@ describe('SettingsComponent', () => {
         SettingsComponent,
         TestSettingsComponent,
       ],
+      providers: [RouterService],
     }).compileComponents();
   });
 
@@ -185,7 +196,7 @@ describe('SettingsComponent', () => {
     });
 
     it('should set state to matching saved state', () => {
-      spyOnProperty(BrowserUtility, 'search').and.returnValue('hash');
+      spyOnProperty(BrowserUtility, 'search').and.returnValue('z=zip');
       component.child.ngOnInit();
       expect(component.child.state).toEqual('name');
     });
@@ -317,7 +328,7 @@ describe('SettingsComponent', () => {
       component.child.setState('name');
       expect(component.child.state).toEqual('name');
       expect(router.navigate).toHaveBeenCalledWith([], {
-        fragment: 'hash',
+        queryParams: { z: 'zip' },
       });
     });
   });
