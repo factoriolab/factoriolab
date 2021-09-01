@@ -12,7 +12,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run build
-        run: npm run build -- --prod
+        run: npm run build -- -c=production
       - name: Copy index to list
         run: cp dist/index.html dist/list.html
       - name: Copy index to flow
