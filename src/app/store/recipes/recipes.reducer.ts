@@ -78,6 +78,17 @@ export function recipesReducer(
       delete newState[action.payload];
       return newState;
     }
+    case RecipesActionType.RESET_RECIPE_MODULES:
+      return StoreUtility.resetFields(
+        state,
+        [
+          RecipeSettingsField.FactoryModules,
+          RecipeSettingsField.BeaconCount,
+          RecipeSettingsField.Beacon,
+          RecipeSettingsField.BeaconModules,
+        ],
+        action.payload
+      );
     case RecipesActionType.RESET_FACTORY:
       return StoreUtility.resetFields(state, [
         RecipeSettingsField.Factory,

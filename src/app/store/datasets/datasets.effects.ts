@@ -41,9 +41,8 @@ export class DatasetsEffects {
   appReset$ = createEffect(() =>
     this.actions$.pipe(
       ofType(App.AppActionType.RESET),
-      map(() => Settings.initialSettingsState.baseId),
-      switchMap((id: string) =>
-        this.requestData(id).pipe(
+      switchMap(() =>
+        this.requestData(Settings.initialSettingsState.baseId).pipe(
           tap((value) => this.loadModsForBase(value.defaults.modIds)),
           map((value) => new ResetAction(value.items[0].id))
         )

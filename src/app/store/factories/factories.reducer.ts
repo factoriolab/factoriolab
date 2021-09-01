@@ -42,7 +42,10 @@ export function factoriesReducer(
         (i) => i !== action.payload.value
       );
       const ids = StoreUtility.compareRank(value, action.payload.def);
-      const newState = { ...state, ...{ ids } };
+      const newState = {
+        ...state,
+        ...{ ids, entities: { ...state.entities } },
+      };
       delete newState.entities[action.payload.value];
       return newState;
     }
