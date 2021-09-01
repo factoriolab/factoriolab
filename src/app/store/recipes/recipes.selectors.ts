@@ -47,6 +47,12 @@ export const getRecipeSettings = createSelector(
           if (beacon && !s.beaconModules) {
             s.beaconModules = new Array(beacon.modules).fill(def.beaconModule);
           }
+        } else {
+          // Factory doesn't support modules, remove any
+          delete s.factoryModules;
+          delete s.beaconCount;
+          delete s.beacon;
+          delete s.beaconModules;
         }
 
         s.overclock = s.overclock || def?.overclock;

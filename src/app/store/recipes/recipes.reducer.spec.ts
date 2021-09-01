@@ -151,13 +151,33 @@ describe('Recipes Reducer', () => {
     });
   });
 
-  describe('RESET', () => {
+  describe('RESET_RECIPE', () => {
     it('should reset a recipe', () => {
       const result = recipesReducer(
         initialRecipesState,
         new Actions.ResetRecipeAction(Mocks.Recipe1.id)
       );
       expect(result[Mocks.Recipe1.id]).toBeUndefined();
+    });
+  });
+
+  describe('RESET_RECIPE_MODULES', () => {
+    it(`should reset a recipe's modules`, () => {
+      spyOn(StoreUtility, 'resetFields');
+      recipesReducer(
+        null,
+        new Actions.ResetRecipeModulesAction(Mocks.Recipe1.id)
+      );
+      expect(StoreUtility.resetFields).toHaveBeenCalledWith(
+        null,
+        [
+          RecipeSettingsField.FactoryModules,
+          RecipeSettingsField.BeaconCount,
+          RecipeSettingsField.Beacon,
+          RecipeSettingsField.BeaconModules,
+        ],
+        Mocks.Recipe1.id
+      );
     });
   });
 
