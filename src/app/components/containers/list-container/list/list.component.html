@@ -639,7 +639,7 @@
           <tr
             *ngFor="let output of outputs[step.id]; last as isLast"
             class="details"
-            [class.last]="isLast"
+            [class.last]="isLast && !step.parents"
           >
             <ng-container *ngIf="output.outputs[step.itemId] as value">
               <td [colSpan]="leftSpan"></td>
@@ -883,17 +883,10 @@
               <td colspan="100"><span class="header">Depletion</span></td>
             </tr>
             <ng-container
-              *ngFor="
-                let output of step.outputs | keyvalue: sortKeyValue;
-                last as isLast
-              "
+              *ngFor="let output of step.outputs | keyvalue: sortKeyValue"
             >
               <ng-container *ngIf="findStep(output.key) as outStep">
-                <tr
-                  *ngIf="step.outputs[output.key] as percent"
-                  class="details"
-                  [class.last]="isLast"
-                >
+                <tr *ngIf="step.outputs[output.key] as percent" class="details">
                   <td [colSpan]="leftSpan"></td>
                   <td>
                     <div class="flex">
@@ -921,7 +914,15 @@
               </ng-container>
             </ng-container>
           </ng-container>
-          <tr class="details first" *ngIf="data.recipeR[step.recipeId].in">
+          <tr
+            class="details"
+            *ngIf="data.recipeR[step.recipeId].in"
+            [class.first]="
+              data.game !== Game.Factorio ||
+              !data.itemEntities[recipeSettings[step.recipeId].factory].factory
+                .mining
+            "
+          >
             <td [colSpan]="leftSpan"></td>
             <td colspan="100"><span class="header">Inputs</span></td>
           </tr>
@@ -933,7 +934,7 @@
           >
             <ng-container *ngIf="findStep(input.key) as inStep">
               <tr
-                *ngIf="inStep.parents[step.recipeId] as percent"
+                *ngIf="inStep.parents?.[step.recipeId] as percent"
                 class="details"
               >
                 <td [colSpan]="leftSpan"></td>
