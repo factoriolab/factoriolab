@@ -636,7 +636,11 @@
             <td [colSpan]="leftSpan"></td>
             <td colspan="100"><span class="header">Sources</span></td>
           </tr>
-          <tr class="details" *ngFor="let output of outputs[step.id]">
+          <tr
+            *ngFor="let output of outputs[step.id]; last as isLast"
+            class="details"
+            [class.last]="isLast"
+          >
             <ng-container *ngIf="output.outputs[step.itemId] as value">
               <td [colSpan]="leftSpan"></td>
               <td>
@@ -867,6 +871,56 @@
           </tr>
         </ng-container>
         <ng-container *ngIf="expanded[step.id] === StepDetailTab.Recipe">
+          <ng-container
+            *ngIf="
+              data.game === Game.Factorio &&
+              data.itemEntities[recipeSettings[step.recipeId].factory].factory
+                .mining
+            "
+          >
+            <tr class="details first">
+              <td [colSpan]="leftSpan"></td>
+              <td colspan="100"><span class="header">Depletion</span></td>
+            </tr>
+            <ng-container
+              *ngFor="
+                let output of step.outputs | keyvalue: sortKeyValue;
+                last as isLast
+              "
+            >
+              <ng-container *ngIf="findStep(output.key) as outStep">
+                <tr
+                  *ngIf="step.outputs[output.key] as percent"
+                  class="details"
+                  [class.last]="isLast"
+                >
+                  <td [colSpan]="leftSpan"></td>
+                  <td>
+                    <div class="flex">
+                      <span class="monospace">{{
+                        rate(
+                          outStep.items
+                            .mul(percent)
+                            .div(data.recipeR[step.recipeId].productivity),
+                          effPrecision[Column.Items]
+                        )
+                      }}</span>
+                      <lab-icon
+                        [data]="data"
+                        [iconId]="output.key"
+                        [tooltip]="data.itemEntities[output.key]?.name"
+                        [recipe]="
+                          data.recipeEntities[data.itemRecipeIds[output.key]]
+                        "
+                      >
+                      </lab-icon>
+                    </div>
+                  </td>
+                  <td colspan="100"></td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </ng-container>
           <tr class="details first" *ngIf="data.recipeR[step.recipeId].in">
             <td [colSpan]="leftSpan"></td>
             <td colspan="100"><span class="header">Inputs</span></td>
