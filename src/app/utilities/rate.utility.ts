@@ -69,18 +69,20 @@ export class RateUtility {
 
       // Recurse adding steps for ingredients
       if (recipe.in && step.items.nonzero()) {
-        for (const ingredient of Object.keys(recipe.in).filter(
-          (i) => i !== itemId
-        )) {
+        for (const ingredient of Object.keys(recipe.in)) {
           const ingredientRate = rate.mul(recipe.in[ingredient]).div(out);
-          RateUtility.addStepsFor(
-            ingredient,
-            ingredientRate,
-            steps,
-            itemSettings,
-            data,
-            recipe.id
-          );
+          if (ingredient === itemId) {
+            this.addParentValue(step, recipe.id, ingredientRate);
+          } else {
+            RateUtility.addStepsFor(
+              ingredient,
+              ingredientRate,
+              steps,
+              itemSettings,
+              data,
+              recipe.id
+            );
+          }
         }
       }
     }

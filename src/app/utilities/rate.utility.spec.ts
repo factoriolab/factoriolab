@@ -1,6 +1,6 @@
 import { Mocks, CategoryId, ItemId, RecipeId } from 'src/tests';
 import { RateUtility } from './rate.utility';
-import { Step, Rational, DisplayRate } from '~/models';
+import { Step, Rational, DisplayRate, RationalRecipe } from '~/models';
 
 describe('RateUtility', () => {
   describe('addStepsFor', () => {
@@ -165,6 +165,40 @@ describe('RateUtility', () => {
         {
           itemId: Mocks.Item2.id,
           items: Rational.from(30),
+        },
+      ]);
+    });
+
+    it('should assign parents for circular recipes', () => {
+      const steps: Step[] = [];
+      const recipe = new RationalRecipe({
+        ...Mocks.AdjustedData.recipeEntities[RecipeId.Coal],
+        ...{ in: { [ItemId.Coal]: 0.1 }, out: { [ItemId.Coal]: 1 } },
+      });
+      RateUtility.addStepsFor(
+        ItemId.Coal,
+        Rational.one,
+        steps,
+        Mocks.ItemSettingsEntities,
+        {
+          ...Mocks.AdjustedData,
+          ...{
+            recipeR: {
+              ...Mocks.AdjustedData.recipeR,
+              ...{
+                [RecipeId.Coal]: recipe,
+              },
+            },
+          },
+        }
+      );
+      expect(steps).toEqual([
+        {
+          itemId: ItemId.Coal,
+          items: Rational.one,
+          recipeId: RecipeId.Coal,
+          factories: Rational.from(10, 9),
+          parents: { [RecipeId.Coal]: Rational.from(1, 9) },
         },
       ]);
     });
