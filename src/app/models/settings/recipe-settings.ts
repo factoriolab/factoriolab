@@ -3,9 +3,10 @@ import { Rational } from '../rational';
 export enum RecipeSettingsField {
   Factory = 'factory',
   FactoryModules = 'factoryModules',
+  BeaconCount = 'beaconCount',
   Beacon = 'beacon',
   BeaconModules = 'beaconModules',
-  BeaconCount = 'beaconCount',
+  BeaconTotal = 'beaconTotal',
   Overclock = 'overclock',
   Cost = 'cost',
 }
@@ -16,6 +17,7 @@ export interface RecipeSettings {
   beaconCount?: string;
   beacon?: string;
   beaconModules?: string[];
+  beaconTotal?: string;
   overclock?: number;
   cost?: string;
 }
@@ -26,6 +28,7 @@ export class RationalRecipeSettings {
   beaconCount?: Rational;
   beacon?: string;
   beaconModules?: string[];
+  beaconTotal?: Rational;
   overclock?: Rational;
   cost?: Rational;
 
@@ -44,6 +47,9 @@ export class RationalRecipeSettings {
     }
     if (data.beaconModules != null) {
       this.beaconModules = data.beaconModules;
+    }
+    if (data.beaconTotal != null) {
+      this.beaconTotal = Rational.fromString(data.beaconTotal);
     }
     if (data.overclock != null) {
       this.overclock = Rational.fromNumber(data.overclock);

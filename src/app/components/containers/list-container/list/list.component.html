@@ -78,7 +78,8 @@
       </th>
       <th *ngIf="columns[Column.Beacons].show" colspan="3">
         <div class="header">
-          Beacons
+          <span *ngIf="settings.beaconReceivers" class="sub left">Each</span>
+          <span>Beacons</span>
           <button
             *ngIf="modifiedBeacons"
             title="Undo all beacon modifications"
@@ -86,6 +87,7 @@
           >
             <i class="material-icons">undo</i>
           </button>
+          <span *ngIf="settings.beaconReceivers" class="sub right">Total</span>
         </div>
       </th>
       <th class="num-unit" *ngIf="columns[Column.Power].show">
@@ -466,7 +468,7 @@
                 <lab-input
                   title="Set number of beacons"
                   placeholder="# Beacons"
-                  [narrow]="true"
+                  [digits]="2"
                   [value]="recipeSettings[step.recipeId].beaconCount"
                   (setValue)="
                     changeBeaconCount(step.recipeId, $event, setBeaconCount)
@@ -517,38 +519,55 @@
               <ng-container
                 *ngIf="gtZero(recipeSettings[step.recipeId].beaconCount)"
               >
-                <div
-                  *ngIf="
-                    recipeSettings[step.recipeId]?.beaconModules as modules
-                  "
-                  class="flex mod"
-                >
-                  <lab-select
-                    *ngFor="let mod of modules; index as i; first as first"
-                    header="Select a module"
-                    [data]="data"
-                    [selected]="mod"
-                    [options]="data.beaconModuleIds"
-                    [includeEmptyModule]="true"
-                    (selectId)="
-                      changeBeaconModules(
-                        step.recipeId,
-                        $event,
-                        i,
-                        modules,
-                        setBeaconModules
-                      )
+                <div class="flex">
+                  <div
+                    *ngIf="
+                      recipeSettings[step.recipeId]?.beaconModules as modules
                     "
+                    class="flex mod"
                   >
-                    <lab-icon
-                      class="button module"
-                      title="Click to change beacon modules"
+                    <lab-select
+                      *ngFor="let mod of modules; index as i; first as first"
+                      header="Select a module"
                       [data]="data"
-                      [iconId]="mod"
-                      [tooltip]="data.itemEntities[mod]?.name"
-                      [item]="data.itemEntities[mod]"
-                    ></lab-icon>
-                  </lab-select>
+                      [selected]="mod"
+                      [options]="data.beaconModuleIds"
+                      [includeEmptyModule]="true"
+                      (selectId)="
+                        changeBeaconModules(
+                          step.recipeId,
+                          $event,
+                          i,
+                          modules,
+                          setBeaconModules
+                        )
+                      "
+                    >
+                      <lab-icon
+                        class="button module"
+                        title="Click to change beacon modules"
+                        [data]="data"
+                        [iconId]="mod"
+                        [tooltip]="data.itemEntities[mod]?.name"
+                        [item]="data.itemEntities[mod]"
+                      ></lab-icon>
+                    </lab-select>
+                  </div>
+                  <div *ngIf="step.beacons">
+                    <lab-input
+                      title="Set total beacons"
+                      placeholder="# Beacons"
+                      [digits]="4"
+                      [value]="step.beacons.toString()"
+                      (setValue)="
+                        setBeaconTotal.emit({
+                          id: step.recipeId,
+                          value: $event
+                        })
+                      "
+                    >
+                    </lab-input>
+                  </div>
                 </div>
               </ng-container>
             </td>
@@ -1477,7 +1496,22 @@
         </div>
       </td>
       <td *ngIf="columns[Column.Overclock].show"></td>
-      <td colspan="3" *ngIf="columns[Column.Beacons].show"></td>
+      <td colspan="3" *ngIf="columns[Column.Beacons].show">
+        <div
+          class="flex"
+          *ngFor="let tot of totalBeacons | keyvalue: sortKeyValue"
+        >
+          <span class="monospace">{{ tot.value }}</span>
+          <lab-icon
+            *ngIf="data.itemEntities[tot.key] as item"
+            [data]="data"
+            [iconId]="tot.key"
+            [tooltip]="item.name"
+            [item]="item"
+          >
+          </lab-icon>
+        </div>
+      </td>
       <td *ngIf="columns[Column.Power].show">
         <div class="flex">
           <span class="monospace">{{ totalPower }}</span>

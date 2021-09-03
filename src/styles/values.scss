@@ -1,5 +1,6 @@
 $color-white: #fff;
 $color-button: #8e8e8e;
+$color-disabled: #585858;
 $color-light: #403f40;
 $color-back: #313031;
 $color-dark: #242324;
@@ -86,6 +87,7 @@ $shadow-item: inset 0 -4px 0.5px -2px #121212, inset 5px 0 2px -2.5px #1f1f1f,
 body {
   --color-white: #{$color-white};
   --color-button: #{$color-button};
+  --color-disabled: #{$color-disabled};
   --color-dark: #{$color-dark};
   --color-back: #{$color-back};
   --color-light: #{$color-light};

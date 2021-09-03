@@ -30,6 +30,7 @@ import {
   DisplayRateLabel,
   Game,
   PIPE,
+  IdPayload,
 } from '~/models';
 import { RouterService } from '~/services';
 import { ItemsState } from '~/store/items';
@@ -137,6 +138,7 @@ export class ListComponent
   @Output() setBeaconCount = new EventEmitter<DefaultIdPayload<string>>();
   @Output() setBeacon = new EventEmitter<DefaultIdPayload>();
   @Output() setBeaconModules = new EventEmitter<DefaultIdPayload<string[]>>();
+  @Output() setBeaconTotal = new EventEmitter<IdPayload>();
   @Output() setOverclock = new EventEmitter<DefaultIdPayload<number>>();
   @Output() setColumns = new EventEmitter<ColumnsState>();
   @Output() resetItem = new EventEmitter<string>();
@@ -165,6 +167,7 @@ export class ListComponent
   totalBelts: Entities<Rational> = {};
   totalWagons: Entities<Rational> = {};
   totalFactories: Entities<Rational> = {};
+  totalBeacons: Entities<Rational> = {};
   totalPower: string;
   totalPollution: string;
 
@@ -232,6 +235,18 @@ export class ListComponent
         }
         this.totalFactories[factory] = this.totalFactories[factory].add(
           step.factories.ceil()
+        );
+      }
+
+      // Total Beacons
+      this.totalBeacons = {};
+      for (const step of this.steps.filter((s) => s.beacons?.nonzero())) {
+        const beacon = this.recipeSettings[step.recipeId].beacon;
+        if (!this.totalBeacons.hasOwnProperty(beacon)) {
+          this.totalBeacons[beacon] = Rational.zero;
+        }
+        this.totalBeacons[beacon] = this.totalBeacons[beacon].add(
+          step.beacons.ceil()
         );
       }
     }

@@ -19,6 +19,7 @@ import {
   InserterTarget,
   InserterCapacity,
   DefaultPayload,
+  IdPayload,
 } from '~/models';
 import { State } from '~/store';
 import * as Factories from '~/store/factories';
@@ -124,6 +125,10 @@ export class ListContainerComponent implements OnInit {
 
   setBeaconModules(data: DefaultIdPayload<string[]>): void {
     this.store.dispatch(new Recipes.SetBeaconModulesAction(data));
+  }
+
+  setBeaconTotal(data: IdPayload): void {
+    this.store.dispatch(new Recipes.SetBeaconTotalAction(data));
   }
 
   setOverclock(data: DefaultIdPayload<number>): void {
