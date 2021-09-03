@@ -154,7 +154,7 @@ describe('Recipes Selectors', () => {
 
     it('should find a relevant step by beacon count', () => {
       const result = Selectors.getContainsBeacons.projector({
-        ['id']: { beaconCount: 0 },
+        ['id']: { beaconCount: '0' },
       });
       expect(result).toBeTrue();
     });

@@ -17,7 +17,7 @@ enum DataTest {
     [title]="title"
     [placeholder]="placeholder"
     [value]="value"
-    [narrow]="narrow"
+    [digits]="digits"
     (setValue)="setValue($event)"
   ></lab-input>`,
 })
@@ -26,7 +26,7 @@ class TestInputComponent {
   title = 'title';
   placeholder = 'placeholder';
   value = '10';
-  narrow = false;
+  digits = '2';
   setValue(data): void {}
 }
 

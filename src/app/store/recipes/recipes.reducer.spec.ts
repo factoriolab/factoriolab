@@ -175,6 +175,7 @@ describe('Recipes Reducer', () => {
           RecipeSettingsField.BeaconCount,
           RecipeSettingsField.Beacon,
           RecipeSettingsField.BeaconModules,
+          RecipeSettingsField.BeaconTotal,
         ],
         Mocks.Recipe1.id
       );
@@ -191,6 +192,7 @@ describe('Recipes Reducer', () => {
         RecipeSettingsField.BeaconCount,
         RecipeSettingsField.Beacon,
         RecipeSettingsField.BeaconModules,
+        RecipeSettingsField.BeaconTotal,
       ]);
     });
   });
@@ -203,6 +205,7 @@ describe('Recipes Reducer', () => {
         RecipeSettingsField.BeaconCount,
         RecipeSettingsField.Beacon,
         RecipeSettingsField.BeaconModules,
+        RecipeSettingsField.BeaconTotal,
       ]);
     });
   });

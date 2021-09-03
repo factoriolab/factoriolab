@@ -41,7 +41,11 @@ export class InputComponent implements OnChanges {
   constructor() {}
 
   ngOnChanges(): void {
-    this.isMinimum = Rational.fromString(this.value).eq(this.min);
+    try {
+      this.isMinimum = Rational.fromString(this.value).eq(this.min);
+    } catch {
+      this.isMinimum = false;
+    }
   }
 
   changeValue(event: Event): void {
