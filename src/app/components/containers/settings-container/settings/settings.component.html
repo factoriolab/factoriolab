@@ -350,7 +350,7 @@
                   <lab-input
                     title="Default number of beacons"
                     placeholder="# Beacons"
-                    [narrow]="true"
+                    [digits]="2"
                     [value]="factory.beaconCount"
                     (setValue)="changeBeaconCount(f, $event)"
                   >
@@ -443,6 +443,34 @@
         </ng-container>
       </table>
       <table class="icons">
+        <ng-container *ngIf="data.game === Game.Factorio">
+          <tr>
+            <td colspan="2">
+              <div class="flex option" (click)="toggleBeaconPower()">
+                <div
+                  class="checkbox"
+                  [class.checked]="settings.beaconReceivers"
+                ></div>
+                <span>Estimate beacon power usage</span>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="settings.beaconReceivers">
+            <td>Average beacon receivers</td>
+            <td>
+              <div>
+                <lab-input
+                  title="Set average beacon receivers"
+                  placeholder="# Receivers"
+                  [value]="settings.beaconReceivers"
+                  minimum="1"
+                  (setValue)="setBeaconReceivers.emit($event)"
+                >
+                </lab-input>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
         <tr>
           <td>Default transport belt</td>
           <td>

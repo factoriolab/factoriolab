@@ -92,6 +92,19 @@ describe('Recipes Selectors', () => {
       );
       expect(result[Mocks.Item1.id].beaconModules).toEqual([stringValue]);
     });
+
+    it('should reset invalid beacon totals', () => {
+      const state = {
+        ...initialRecipesState,
+        ...{ [Mocks.Item1.id]: { beaconTotal: '8', beaconCount: '0' } },
+      };
+      const result = Selectors.getRecipeSettings.projector(
+        state,
+        Mocks.FactorySettingsInitial,
+        Mocks.Data
+      );
+      expect(result[Mocks.Item1.id].beaconTotal).toBeUndefined();
+    });
   });
 
   describe('getSrc', () => {
@@ -154,7 +167,7 @@ describe('Recipes Selectors', () => {
 
     it('should find a relevant step by beacon count', () => {
       const result = Selectors.getContainsBeacons.projector({
-        ['id']: { beaconCount: 0 },
+        ['id']: { beaconCount: '0' },
       });
       expect(result).toBeTrue();
     });
@@ -169,6 +182,13 @@ describe('Recipes Selectors', () => {
     it('should find a relevant step by beacon modules', () => {
       const result = Selectors.getContainsBeacons.projector({
         ['id']: { beaconModules: [ItemId.SpeedModule] },
+      });
+      expect(result).toBeTrue();
+    });
+
+    it('should find a relevant step by beacon total', () => {
+      const result = Selectors.getContainsBeacons.projector({
+        ['id']: { beaconTotal: '8' },
       });
       expect(result).toBeTrue();
     });

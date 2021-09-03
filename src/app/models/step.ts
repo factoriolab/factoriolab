@@ -10,6 +10,7 @@ export interface Step {
   belts?: Rational;
   wagons?: Rational;
   factories?: Rational;
+  beacons?: Rational;
   power?: Rational;
   pollution?: Rational;
   recipeId?: string;

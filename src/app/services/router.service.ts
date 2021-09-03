@@ -573,6 +573,7 @@ export class RouterService {
             this.zipTruthyString(obj.beacon),
             this.zipTruthyNumber(obj.overclock),
             this.zipTruthyString(obj.cost),
+            this.zipTruthyString(obj.beaconTotal),
           ]),
           hash: this.zipFields([
             this.zipTruthyNString(i, hash.recipes),
@@ -583,6 +584,7 @@ export class RouterService {
             this.zipTruthyNString(obj.beacon, hash.beacons),
             this.zipTruthyNumber(obj.overclock),
             this.zipTruthyString(obj.cost),
+            this.zipTruthyString(obj.beaconTotal),
           ]),
         };
       })
@@ -619,6 +621,7 @@ export class RouterService {
             beacon: this.parseString(s[i++]),
             overclock: this.parseNumber(s[i++]),
             cost: this.parseString(s[i++]),
+            beaconTotal: this.parseString(s[i++]),
           };
           break;
         }
@@ -636,6 +639,7 @@ export class RouterService {
             beacon: this.parseNString(s[i++], hash.beacons),
             overclock: this.parseNumber(s[i++]),
             cost: this.parseString(s[i++]),
+            beaconTotal: this.parseString(s[i++]),
           };
           break;
         }
@@ -788,6 +792,7 @@ export class RouterService {
         this.zipDiffString(state.costFactory, init.costFactory),
         this.zipDiffString(state.costInput, init.costInput),
         this.zipDiffString(state.costIgnored, init.costIgnored),
+        this.zipDiffString(state.beaconReceivers, init.beaconReceivers),
       ]),
       hash: this.zipFields([
         this.zipDiffDisplayRate(state.displayRate, init.displayRate),
@@ -812,6 +817,7 @@ export class RouterService {
         this.zipDiffString(state.costFactory, init.costFactory),
         this.zipDiffString(state.costInput, init.costInput),
         this.zipDiffString(state.costIgnored, init.costIgnored),
+        this.zipDiffString(state.beaconReceivers, init.beaconReceivers),
       ]),
     };
 
@@ -853,6 +859,7 @@ export class RouterService {
           costFactory: this.parseString(s[i++]),
           costInput: this.parseString(s[i++]),
           costIgnored: this.parseString(s[i++]),
+          beaconReceivers: this.parseString(s[i++]),
           preset: undefined,
         };
         break;
@@ -878,6 +885,7 @@ export class RouterService {
           costFactory: this.parseString(s[i++]),
           costInput: this.parseString(s[i++]),
           costIgnored: this.parseString(s[i++]),
+          beaconReceivers: this.parseString(s[i++]),
         };
         break;
       }
@@ -902,6 +910,7 @@ export class RouterService {
           costFactory: this.parseString(s[i++]),
           costInput: this.parseString(s[i++]),
           costIgnored: this.parseString(s[i++]),
+          beaconReceivers: this.parseString(s[i++]),
           baseId: undefined,
         };
         break;

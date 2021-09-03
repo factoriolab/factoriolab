@@ -83,6 +83,7 @@ export class SettingsComponent implements OnInit, OnChanges {
   @Output() setBeacon = new EventEmitter<DefaultIdPayload>();
   @Output() setBeaconModule = new EventEmitter<DefaultIdPayload>();
   @Output() setOverclock = new EventEmitter<DefaultIdPayload<number>>();
+  @Output() setBeaconReceivers = new EventEmitter<string>();
   @Output() setBelt = new EventEmitter<DefaultPayload>();
   @Output() setPipe = new EventEmitter<DefaultPayload>();
   @Output() setFuel = new EventEmitter<DefaultPayload>();
@@ -263,5 +264,13 @@ export class SettingsComponent implements OnInit, OnChanges {
       return Rational.fromString(value).gt(Rational.zero);
     } catch {}
     return false;
+  }
+
+  toggleBeaconPower(): void {
+    if (this.settings.beaconReceivers) {
+      this.setBeaconReceivers.emit(null);
+    } else {
+      this.setBeaconReceivers.emit('1');
+    }
   }
 }

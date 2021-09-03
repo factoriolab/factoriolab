@@ -30,6 +30,8 @@ export const settingsState = (state: State): SettingsState =>
 const sPreset = (state: SettingsState): Preset => state.preset;
 const sBaseDatasetId = (state: SettingsState): string => state.baseId;
 const sExpensive = (state: SettingsState): boolean => state.expensive;
+const sBeaconReceivers = (state: SettingsState): string =>
+  state.beaconReceivers;
 const sFlowRate = (state: SettingsState): number => state.flowRate;
 const sDisplayRate = (state: SettingsState): DisplayRate => state.displayRate;
 const sMiningBonus = (state: SettingsState): number => state.miningBonus;
@@ -48,6 +50,7 @@ const sCostIgnored = (state: SettingsState): string => state.costIgnored;
 export const getPreset = compose(sPreset, settingsState);
 export const getBaseDatasetId = compose(sBaseDatasetId, settingsState);
 export const getExpensive = compose(sExpensive, settingsState);
+export const getBeaconReceivers = compose(sBeaconReceivers, settingsState);
 export const getFlowRate = compose(sFlowRate, settingsState);
 export const getDisplayRate = compose(sDisplayRate, settingsState);
 export const getMiningBonus = compose(sMiningBonus, settingsState);
@@ -144,6 +147,11 @@ export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
 export const getResearchFactor = createSelector(
   getResearchSpeed,
   (speed) => ResearchSpeedFactor[speed]
+);
+
+export const getRationalBeaconReceivers = createSelector(
+  getBeaconReceivers,
+  (total) => total && Rational.fromString(total)
 );
 
 export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>

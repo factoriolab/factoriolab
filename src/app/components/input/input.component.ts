@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
 } from '@angular/core';
 import { Rational } from '~/models';
@@ -13,22 +14,46 @@ import { Rational } from '~/models';
   styleUrls: ['./input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputComponent {
+export class InputComponent implements OnChanges {
+  static widthCache: { [x: number]: number } = {};
+
   @Input() title: string;
   @Input() placeholder: string;
   @Input() value: string;
-  @Input() narrow: boolean;
+  @Input() set minimum(value: string) {
+    this.min = Rational.fromString(value);
+  }
+  @Input() set digits(value: number) {
+    if (InputComponent.widthCache[value]) {
+      this.width = InputComponent.widthCache[value];
+    } else {
+      this.width = 0.75 + value * 0.625;
+      InputComponent.widthCache[value] = this.width;
+    }
+  }
 
   @Output() setValue = new EventEmitter<string>();
 
+  width: number;
+  min = Rational.zero;
+  isMinimum = false;
+
   constructor() {}
+
+  ngOnChanges(): void {
+    try {
+      this.isMinimum = Rational.fromString(this.value).eq(this.min);
+    } catch {
+      this.isMinimum = false;
+    }
+  }
 
   changeValue(event: Event): void {
     try {
       const target = event.target as HTMLInputElement;
       const value = target.value;
       const rational = Rational.fromString(value);
-      if (rational.gte(Rational.zero)) {
+      if (rational.gte(this.min)) {
         this.setValue.emit(value);
       }
     } catch {}
@@ -50,7 +75,7 @@ export class InputComponent {
       const newValue = rational.isInteger()
         ? rational.sub(Rational.one)
         : rational.floor();
-      if (newValue.gte(Rational.zero)) {
+      if (newValue.gte(this.min)) {
         this.setValue.emit(newValue.toString());
       }
     } catch {}

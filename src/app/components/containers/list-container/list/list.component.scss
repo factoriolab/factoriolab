@@ -150,6 +150,20 @@ th > div {
   &.end {
     justify-content: flex-end;
   }
+
+  .sub {
+    align-self: end;
+    font-size: medium;
+    flex-grow: 1;
+
+    &.left {
+      text-align: left;
+    }
+
+    &.right {
+      text-align: right;
+    }
+  }
 }
 
 td > div {

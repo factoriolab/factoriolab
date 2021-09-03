@@ -5,7 +5,7 @@ import { StoreModule, Store } from '@ngrx/store';
 
 import { Mocks, ItemId, RecipeId } from 'src/tests';
 import { ColumnsComponent, IconComponent, SelectComponent } from '~/components';
-import { DefaultIdPayload, DefaultPayload } from '~/models';
+import { DefaultIdPayload, DefaultPayload, IdPayload } from '~/models';
 import { RouterService } from '~/services';
 import { reducers, metaReducers, State } from '~/store';
 import * as Items from '~/store/items';
@@ -142,6 +142,17 @@ describe('ListContainerComponent', () => {
     component.child.setBeaconModules.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Recipes.SetBeaconModulesAction(data)
+    );
+  });
+
+  it('should set beacon total', () => {
+    const data: IdPayload = {
+      id: Mocks.Recipe1.id,
+      value: '8',
+    };
+    component.child.setBeaconTotal.emit(data);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Recipes.SetBeaconTotalAction(data)
     );
   });
 

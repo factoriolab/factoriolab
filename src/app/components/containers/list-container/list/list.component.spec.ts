@@ -245,6 +245,9 @@ describe('ListComponent', () => {
       expect(component.child.totalFactories).toEqual({
         [ItemId.AssemblingMachine3]: Rational.from(3),
       });
+      expect(component.child.totalBeacons).toEqual({
+        [ItemId.Beacon]: Rational.from(8),
+      });
       expect(component.child.totalPower).toEqual('1 kW');
       expect(component.child.totalPollution).toEqual('1');
     });

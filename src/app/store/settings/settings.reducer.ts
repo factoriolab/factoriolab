@@ -15,6 +15,7 @@ export interface SettingsState {
   expensive: boolean;
   displayRate: DisplayRate;
   preset: Preset;
+  beaconReceivers: string;
   belt: string;
   pipe: string;
   fuel: string;
@@ -37,6 +38,7 @@ export const initialSettingsState: SettingsState = {
   expensive: false,
   displayRate: DisplayRate.PerMinute,
   preset: Preset.Minimum,
+  beaconReceivers: null,
   belt: null,
   pipe: null,
   fuel: null,
@@ -92,6 +94,8 @@ export function settingsReducer(
       };
     case SettingsActionType.SET_EXPENSIVE:
       return { ...state, ...{ expensive: action.payload } };
+    case SettingsActionType.SET_BEACON_RECEIVERS:
+      return { ...state, ...{ beaconReceivers: action.payload } };
     case SettingsActionType.SET_BELT:
       return {
         ...state,

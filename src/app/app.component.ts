@@ -32,7 +32,7 @@ import { getDatasets, getGame } from './store/settings';
   animations: [
     trigger('slideLeftRight', [
       transition(':enter', [
-        style({ marginLeft: '-24.25rem', marginRight: '1rem', opacity: 0 }),
+        style({ marginLeft: '-23.25rem', marginRight: '1rem', opacity: 0 }),
         animate(
           '300ms ease',
           style({ marginLeft: '*', marginRight: '*', opacity: 1 })
@@ -42,7 +42,7 @@ import { getDatasets, getGame } from './store/settings';
         style({ marginLeft: '*', marginRight: '*', opacity: 1 }),
         animate(
           '300ms ease',
-          style({ marginLeft: '-24.25rem', marginRight: '1rem', opacity: 0 })
+          style({ marginLeft: '-23.25rem', marginRight: '1rem', opacity: 0 })
         ),
       ]),
     ]),
