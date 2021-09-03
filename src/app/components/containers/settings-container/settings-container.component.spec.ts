@@ -265,6 +265,14 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
+  it('should set the beacon receivers', () => {
+    const value = '1';
+    component.child.setBeaconReceivers.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetBeaconReceiversAction(value)
+    );
+  });
+
   it('should set the default belt', () => {
     const value: DefaultPayload = {
       value: ItemId.TransportBelt,

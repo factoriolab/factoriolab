@@ -149,6 +149,10 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Factories.SetOverclockAction(value));
   }
 
+  setBeaconReceivers(value: string): void {
+    this.store.dispatch(new Settings.SetBeaconReceiversAction(value));
+  }
+
   setBelt(value: DefaultPayload): void {
     this.store.dispatch(new Settings.SetBeltAction(value));
   }

@@ -61,6 +61,12 @@ export function recipesReducer(
         RecipeSettingsField.BeaconModules,
         action.payload
       );
+    case RecipesActionType.SET_BEACON_TOTAL:
+      return StoreUtility.assignValue(
+        state,
+        RecipeSettingsField.BeaconTotal,
+        action.payload
+      );
     case RecipesActionType.SET_OVERCLOCK:
       return StoreUtility.compareReset(
         state,
@@ -86,6 +92,7 @@ export function recipesReducer(
           RecipeSettingsField.BeaconCount,
           RecipeSettingsField.Beacon,
           RecipeSettingsField.BeaconModules,
+          RecipeSettingsField.BeaconTotal,
         ],
         action.payload
       );
@@ -96,12 +103,14 @@ export function recipesReducer(
         RecipeSettingsField.BeaconCount,
         RecipeSettingsField.Beacon,
         RecipeSettingsField.BeaconModules,
+        RecipeSettingsField.BeaconTotal,
       ]);
     case RecipesActionType.RESET_BEACONS:
       return StoreUtility.resetFields(state, [
         RecipeSettingsField.BeaconCount,
         RecipeSettingsField.Beacon,
         RecipeSettingsField.BeaconModules,
+        RecipeSettingsField.BeaconTotal,
       ]);
     case RecipesActionType.RESET_OVERCLOCK:
       return StoreUtility.resetFields(state, [RecipeSettingsField.Overclock]);

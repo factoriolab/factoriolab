@@ -6,6 +6,7 @@ import {
   Rational,
   DisplayRateVal,
   RationalRecipe,
+  RationalRecipeSettings,
 } from '~/models';
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
@@ -162,6 +163,35 @@ export class RateUtility {
         const val = recipe.out[id].mul(step.factories).div(recipe.time);
         const outStep = steps.find((s) => s.itemId === id);
         step.outputs[id] = val.div(outStep.items);
+      }
+    }
+    return steps;
+  }
+
+  static calculateBeacons(
+    steps: Step[],
+    beaconReceivers: Rational,
+    recipeSettings: Entities<RationalRecipeSettings>,
+    data: Dataset
+  ): Step[] {
+    if (beaconReceivers && beaconReceivers.nonzero()) {
+      for (const step of steps.filter(
+        (s) =>
+          s.factories?.nonzero() &&
+          recipeSettings[s.recipeId].beaconCount?.nonzero()
+      )) {
+        const settings = recipeSettings[step.recipeId];
+        if (settings.beaconTotal) {
+          step.beacons = settings.beaconTotal;
+        } else {
+          step.beacons = step.factories
+            .ceil()
+            .mul(settings.beaconCount)
+            .div(beaconReceivers);
+        }
+
+        const beacon = data.itemR[settings.beacon].beacon;
+        step.power = step.power.add(step.beacons.mul(beacon.usage));
       }
     }
     return steps;

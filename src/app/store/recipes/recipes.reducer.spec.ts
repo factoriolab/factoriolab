@@ -123,6 +123,19 @@ describe('Recipes Reducer', () => {
     });
   });
 
+  describe('SET_BEACON_TOTAL', () => {
+    it('should set the beacon total', () => {
+      const result = recipesReducer(
+        initialRecipesState,
+        new Actions.SetBeaconTotalAction({
+          id: Mocks.Recipe1.id,
+          value: '200',
+        })
+      );
+      expect(result[Mocks.Recipe1.id].beaconTotal).toEqual('200');
+    });
+  });
+
   describe('SET_OVERCLOCK', () => {
     it('should set the overclock', () => {
       const result = recipesReducer(
@@ -175,6 +188,7 @@ describe('Recipes Reducer', () => {
           RecipeSettingsField.BeaconCount,
           RecipeSettingsField.Beacon,
           RecipeSettingsField.BeaconModules,
+          RecipeSettingsField.BeaconTotal,
         ],
         Mocks.Recipe1.id
       );
@@ -191,6 +205,7 @@ describe('Recipes Reducer', () => {
         RecipeSettingsField.BeaconCount,
         RecipeSettingsField.Beacon,
         RecipeSettingsField.BeaconModules,
+        RecipeSettingsField.BeaconTotal,
       ]);
     });
   });
@@ -203,6 +218,7 @@ describe('Recipes Reducer', () => {
         RecipeSettingsField.BeaconCount,
         RecipeSettingsField.Beacon,
         RecipeSettingsField.BeaconModules,
+        RecipeSettingsField.BeaconTotal,
       ]);
     });
   });

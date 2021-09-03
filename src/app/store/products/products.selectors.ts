@@ -336,8 +336,22 @@ export const getNormalizedStepsWithOutputs = createSelector(
   (steps, data) => RateUtility.calculateOutputs(RateUtility.copy(steps), data)
 );
 
-export const getSteps = createSelector(
+export const getNormalizedStepsWithBeacons = createSelector(
   getNormalizedStepsWithOutputs,
+  Settings.getRationalBeaconReceivers,
+  Recipes.getRationalRecipeSettings,
+  Recipes.getAdjustedDataset,
+  (steps, beaconReceivers, recipeSettings, data) =>
+    RateUtility.calculateBeacons(
+      RateUtility.copy(steps),
+      beaconReceivers,
+      recipeSettings,
+      data
+    )
+);
+
+export const getSteps = createSelector(
+  getNormalizedStepsWithBeacons,
   Settings.getDisplayRate,
   (steps, displayRate) =>
     RateUtility.sortHierarchy(

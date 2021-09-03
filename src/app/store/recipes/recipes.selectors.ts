@@ -1,6 +1,11 @@
 import { createSelector } from '@ngrx/store';
 
-import { RecipeSettings, Entities, RationalRecipeSettings } from '~/models';
+import {
+  RecipeSettings,
+  Entities,
+  RationalRecipeSettings,
+  Rational,
+} from '~/models';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 import * as Items from '../items';
 import * as Factories from '../factories';
@@ -53,6 +58,14 @@ export const getRecipeSettings = createSelector(
           delete s.beaconCount;
           delete s.beacon;
           delete s.beaconModules;
+        }
+
+        if (
+          s.beaconTotal &&
+          (!s.beaconCount || Rational.fromString(s.beaconCount).isZero())
+        ) {
+          // No actual beacons, ignore the total beacons
+          delete s.beaconTotal;
         }
 
         s.overclock = s.overclock || def?.overclock;
@@ -122,7 +135,8 @@ export const getContainsBeacons = createSelector(recipesState, (state) =>
     (id) =>
       state[id].beacon ||
       state[id].beaconModules ||
-      state[id].beaconCount != null
+      state[id].beaconCount ||
+      state[id].beaconTotal
   )
 );
 

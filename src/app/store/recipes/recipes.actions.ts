@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { DefaultIdPayload } from '~/models';
+import { DefaultIdPayload, IdPayload } from '~/models';
 
 export const enum RecipesActionType {
   SET_FACTORY = '[Recipes] Set Factory',
@@ -8,6 +8,7 @@ export const enum RecipesActionType {
   SET_BEACON_COUNT = '[Recipes] Set Beacon Count',
   SET_BEACON = '[Recipes] Set Beacon',
   SET_BEACON_MODULES = '[Recipes] Set Beacon Modules',
+  SET_BEACON_TOTAL = '[Recipes] Set Beacon Total',
   SET_OVERCLOCK = '[Recipes] Set Overclock',
   SET_COST = '[Recipes] Set Cost',
   RESET_RECIPE = '[Recipes] Reset Recipe',
@@ -41,6 +42,11 @@ export class SetBeaconAction implements Action {
 export class SetBeaconModulesAction implements Action {
   readonly type = RecipesActionType.SET_BEACON_MODULES;
   constructor(public payload: DefaultIdPayload<string[]>) {}
+}
+
+export class SetBeaconTotalAction implements Action {
+  readonly type = RecipesActionType.SET_BEACON_TOTAL;
+  constructor(public payload: IdPayload) {}
 }
 
 export class SetOverclockAction implements Action {
@@ -85,6 +91,7 @@ export type RecipesAction =
   | SetBeaconCountAction
   | SetBeaconAction
   | SetBeaconModulesAction
+  | SetBeaconTotalAction
   | SetOverclockAction
   | SetCostAction
   | ResetRecipeAction
