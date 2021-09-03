@@ -1,6 +1,13 @@
 import { Mocks, CategoryId, ItemId, RecipeId } from 'src/tests';
 import { RateUtility } from './rate.utility';
-import { Step, Rational, DisplayRate, RationalRecipe } from '~/models';
+import {
+  Step,
+  Rational,
+  DisplayRate,
+  RationalRecipe,
+  Entities,
+  RationalRecipeSettings,
+} from '~/models';
 
 describe('RateUtility', () => {
   describe('addStepsFor', () => {
@@ -403,6 +410,78 @@ describe('RateUtility', () => {
       expect(result[0].outputs).toEqual({
         [ItemId.Coal]: Rational.from(1183, 200),
       });
+    });
+  });
+
+  describe('calculateBeacons', () => {
+    it('should skip if beacon receivers is null or zero', () => {
+      expect(RateUtility.calculateBeacons(null, null, null, null)).toBeNull();
+      expect(
+        RateUtility.calculateBeacons(null, Rational.zero, null, null)
+      ).toBeNull();
+    });
+
+    it('should ignore steps with no factories or beacons', () => {
+      const settings: Entities<RationalRecipeSettings> = {
+        [RecipeId.Coal]: { beaconCount: Rational.zero },
+        [RecipeId.IronOre]: {},
+      };
+      const steps = [
+        {},
+        { factories: Rational.zero },
+        { factories: Rational.one, recipeId: RecipeId.Coal },
+        { factories: Rational.one, recipeId: RecipeId.IronOre },
+      ] as any;
+      expect(
+        RateUtility.calculateBeacons(steps, Rational.one, settings, null)
+      ).toEqual(steps);
+    });
+
+    it('should calculate the number of beacons', () => {
+      const steps: Step[] = [
+        {
+          itemId: ItemId.Coal,
+          items: Rational.one,
+          recipeId: RecipeId.Coal,
+          factories: Rational.one,
+          power: Rational.zero,
+        },
+      ];
+      RateUtility.calculateBeacons(
+        steps,
+        Rational.one,
+        Mocks.RationalRecipeSettingsInitial,
+        Mocks.AdjustedData
+      );
+      expect(steps[0].beacons).toEqual(Rational.from(8));
+      expect(steps[0].power).toEqual(Rational.from(3840));
+    });
+
+    it('should override from recipe settings', () => {
+      const settings: Entities<RationalRecipeSettings> = {
+        [RecipeId.Coal]: {
+          beaconCount: Rational.from(8),
+          beacon: ItemId.Beacon,
+          beaconTotal: Rational.one,
+        },
+      };
+      const steps: Step[] = [
+        {
+          itemId: ItemId.Coal,
+          items: Rational.one,
+          recipeId: RecipeId.Coal,
+          factories: Rational.one,
+          power: Rational.zero,
+        },
+      ];
+      RateUtility.calculateBeacons(
+        steps,
+        Rational.one,
+        settings,
+        Mocks.AdjustedData
+      );
+      expect(steps[0].beacons).toEqual(Rational.one);
+      expect(steps[0].power).toEqual(Rational.from(480));
     });
   });
 

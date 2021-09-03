@@ -150,7 +150,7 @@ export class SettingsContainerComponent implements OnInit {
   }
 
   setBeaconReceivers(value: string): void {
-    this.store.dispatch(new Settings.SetBeaconReceivers(value));
+    this.store.dispatch(new Settings.SetBeaconReceiversAction(value));
   }
 
   setBelt(value: DefaultPayload): void {

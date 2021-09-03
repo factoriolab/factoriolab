@@ -64,6 +64,17 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('SET_BEACON_RECEIVERS', () => {
+    it('should set default beacon receivers', () => {
+      const value = '1';
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetBeaconReceiversAction(value)
+      );
+      expect(result.beaconReceivers).toEqual(value);
+    });
+  });
+
   describe('SET_BELT', () => {
     it('should set the default belt', () => {
       const value = ItemId.TransportBelt;

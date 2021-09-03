@@ -166,6 +166,13 @@ describe('Settings Selectors', () => {
     });
   });
 
+  describe('getRationalBeaconReceivers', () => {
+    it('should convert the string value to a Rational', () => {
+      const result = Selectors.getRationalBeaconReceivers.projector('1');
+      expect(result).toEqual(Rational.one);
+    });
+  });
+
   describe('getRationalFlowRate', () => {
     it('should convert the numeric value to a Rational', () => {
       const result = Selectors.getRationalFlowRate.projector(1);

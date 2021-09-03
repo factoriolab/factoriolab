@@ -134,6 +134,7 @@ export const Step1: Step = {
   factories: Rational.one,
   power: Rational.one,
   pollution: Rational.one,
+  beacons: Rational.from(4),
 };
 export const Step2: Step = {
   id: `${Item2.id}.${Item2.id}`,
@@ -145,6 +146,7 @@ export const Step2: Step = {
   factories: Rational.two,
   power: Rational.zero,
   pollution: Rational.zero,
+  beacons: Rational.from(4),
 };
 export const Steps = [Step1, Step2];
 export const BeltSpeed: Entities<Rational> = {

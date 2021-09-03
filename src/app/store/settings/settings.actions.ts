@@ -54,7 +54,7 @@ export class SetExpensiveAction implements Action {
   constructor(public payload: boolean) {}
 }
 
-export class SetBeaconReceivers implements Action {
+export class SetBeaconReceiversAction implements Action {
   readonly type = SettingsActionType.SET_BEACON_RECEIVERS;
   constructor(public payload: string) {}
 }
@@ -143,7 +143,7 @@ export type SettingsAction =
   | SetBaseAction
   | SetDisabledRecipesAction
   | SetExpensiveAction
-  | SetBeaconReceivers
+  | SetBeaconReceiversAction
   | SetBeltAction
   | SetPipeAction
   | SetFuelAction

@@ -55,6 +55,7 @@ enum DataTest {
       (setBeacon)="setBeacon($event)"
       (setBeaconModule)="setBeaconModule($event)"
       (setOverclock)="setOverclock($event)"
+      (setBeaconReceivers)="setBeaconReceivers($event)"
       (setBelt)="setBelt($event)"
       (setPipe)="setPipe($event)"
       (setFuel)="setFuel($event)"
@@ -96,6 +97,7 @@ class TestSettingsComponent {
   setBeacon(data): void {}
   setBeaconModule(data): void {}
   setOverclock(data): void {}
+  setBeaconReceivers(data): void {}
   setBelt(data): void {}
   setPipe(data): void {}
   setFuel(data): void {}
@@ -390,6 +392,24 @@ describe('SettingsComponent', () => {
 
     it('should handle invalid value', () => {
       expect(component.child.gtZero('x')).toBeFalse();
+    });
+  });
+
+  describe('toggleBeaconPower', () => {
+    it('should turn off beacon power estimation', () => {
+      component.child.settings = {
+        ...component.child.settings,
+        ...{ beaconReceivers: '1' },
+      };
+      spyOn(component, 'setBeaconReceivers');
+      component.child.toggleBeaconPower();
+      expect(component.setBeaconReceivers).toHaveBeenCalledWith(null);
+    });
+
+    it('should turn on beacon power estimation', () => {
+      spyOn(component, 'setBeaconReceivers');
+      component.child.toggleBeaconPower();
+      expect(component.setBeaconReceivers).toHaveBeenCalledWith('1');
     });
   });
 });

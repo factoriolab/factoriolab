@@ -102,11 +102,15 @@ describe('SankeyComponent', () => {
 
   it('should handle drag and drop', () => {
     TestUtility.dragAndDropSelector(fixture, 'rect', 100, 200);
-    expect(component.child.svg.select('rect').attr('transform')).toEqual(
-      'translate(100,200)'
+    checkTransform(
+      component.child.svg.select('rect').attr('transform'),
+      100,
+      200
     );
-    expect(component.child.svg.select('#image-0').attr('transform')).toEqual(
-      'translate(100,200)'
+    checkTransform(
+      component.child.svg.select('#image-0').attr('transform'),
+      100,
+      200
     );
   });
 
@@ -114,11 +118,23 @@ describe('SankeyComponent', () => {
     component.sankeyData = Mocks.SankeyCircular;
     fixture.detectChanges();
     TestUtility.dragAndDropSelector(fixture, 'rect', 100, 200);
-    expect(component.child.svg.select('rect').attr('transform')).toEqual(
-      'translate(100,200)'
+    checkTransform(
+      component.child.svg.select('rect').attr('transform'),
+      100,
+      200
     );
-    expect(component.child.svg.select('#image-0').attr('transform')).toEqual(
-      'translate(100,200)'
+    checkTransform(
+      component.child.svg.select('#image-0').attr('transform'),
+      100,
+      200
     );
   });
+
+  function checkTransform(value: string, x: number, y: number): void {
+    const match = /translate\((.+),(.+)\)/g.exec(value);
+    const xRound = Math.round(Number(match[1]));
+    const yRound = Math.round(Number(match[2]));
+    expect(xRound).toEqual(x);
+    expect(yRound).toEqual(y);
+  }
 });
