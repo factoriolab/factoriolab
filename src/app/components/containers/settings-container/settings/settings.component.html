@@ -16,7 +16,13 @@
 <div class="panel">
   <div class="hole">
     <div>
-      <div class="header">Saved states</div>
+      <div class="header">
+        <lab-info
+          text="Saved states"
+          tooltip="Click edit to name and save the current calculator state.
+Select a saved state from the dropdown to load it into the calculator."
+        ></lab-info>
+      </div>
       <div class="flex states">
         <ng-container *ngIf="!editState; else stateInput">
           <lab-options
@@ -153,7 +159,13 @@ Expensive difficulty recipes."
       <div class="header">Display</div>
       <table class="x-wide">
         <tr>
-          <td>Columns & precision</td>
+          <td>
+            <lab-info
+              text="Columns & precision"
+              tooltip="Click to select the visible columns and decimal
+or fractional precision for visible columns."
+            ></lab-info>
+          </td>
           <td>
             <lab-columns
               class="relative"
