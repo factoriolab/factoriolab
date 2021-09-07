@@ -57,7 +57,8 @@ describe('RecipeUtility', () => {
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
       expected.time = Rational.from(2, 3);
-      expected.consumption = Rational.from(155);
+      expected.drain = Rational.from(5);
+      expected.consumption = Rational.from(150);
       expected.pollution = Rational.from(1, 20);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
@@ -76,7 +77,8 @@ describe('RecipeUtility', () => {
         Mocks.Data.recipeEntities[RecipeId.CopperCable]
       );
       expected.time = Rational.from(2, 3);
-      expected.consumption = Rational.from(155);
+      expected.drain = Rational.from(5);
+      expected.consumption = Rational.from(150);
       expected.pollution = Rational.from(1, 20);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
@@ -99,10 +101,11 @@ describe('RecipeUtility', () => {
         Mocks.Data.recipeEntities[RecipeId.MiningProductivity]
       );
       expected.out = { [ItemId.MiningProductivity]: Rational.one };
-      expected.time = new Rational(BigInt(30));
+      expected.time = Rational.from(30);
       expected.adjustProd = true;
       expected.productivity = Rational.one;
-      expected.consumption = new Rational(BigInt(62));
+      expected.drain = Rational.from(2);
+      expected.consumption = Rational.from(60);
       expected.pollution = Rational.zero;
       expect(result).toEqual(expected);
     });
@@ -123,6 +126,7 @@ describe('RecipeUtility', () => {
       );
       expected.out = { [ItemId.IronOre]: Rational.from(3) };
       expected.time = Rational.two;
+      expected.drain = undefined;
       expected.consumption = Rational.from(90);
       expected.pollution = Rational.from(1, 6);
       expected.productivity = Rational.from(3);
@@ -183,7 +187,8 @@ describe('RecipeUtility', () => {
         [ItemId.SteelChest]: Rational.from(76, 25),
       };
       expected.time = Rational.from(40, 81);
-      expected.consumption = Rational.from(260);
+      expected.drain = Rational.from(5);
+      expected.consumption = Rational.from(255);
       expected.pollution = Rational.from(1037, 4000);
       expected.productivity = Rational.from(76, 25);
       expect(result).toEqual(expected);
@@ -231,7 +236,8 @@ describe('RecipeUtility', () => {
         [ItemId.SteelChest]: Rational.one,
       };
       expected.time = Rational.from(2, 3);
-      expected.consumption = Rational.from(155);
+      expected.drain = Rational.from(5);
+      expected.consumption = Rational.from(150);
       expected.pollution = Rational.from(1, 20);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
@@ -288,7 +294,8 @@ describe('RecipeUtility', () => {
         [ItemId.SteelChest]: Rational.one,
       };
       expected.time = Rational.from(10, 3);
-      expected.consumption = Rational.from(35);
+      expected.drain = Rational.from(5);
+      expected.consumption = Rational.from(30);
       expected.pollution = Rational.from(1, 500);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
@@ -313,6 +320,7 @@ describe('RecipeUtility', () => {
         [ItemId.IronOre]: Rational.one,
       };
       expected.time = Rational.from(4);
+      expected.drain = undefined;
       expected.consumption = Rational.zero;
       expected.pollution = Rational.from(1, 5);
       expected.productivity = Rational.one;
@@ -338,6 +346,7 @@ describe('RecipeUtility', () => {
         [ItemId.PlasticBar]: Rational.two,
       };
       expected.time = Rational.from(1, 2);
+      expected.drain = undefined;
       expected.consumption = Rational.zero;
       expected.pollution = Rational.from(1, 15);
       expected.productivity = Rational.one;
@@ -421,6 +430,7 @@ describe('RecipeUtility', () => {
         [ItemId.IronOre]: Rational.one,
       };
       expected.time = Rational.one;
+      expected.drain = undefined;
       expected.consumption = Rational.zero;
       expected.pollution = Rational.zero;
       expected.productivity = Rational.one;
@@ -443,7 +453,8 @@ describe('RecipeUtility', () => {
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
       expected.time = Rational.from(1, 3);
-      expected.consumption = Rational.from(919429939, 2000000);
+      expected.drain = Rational.from(5);
+      expected.consumption = Rational.from(909429939, 2000000);
       expected.pollution = Rational.from(1, 20);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
@@ -480,7 +491,8 @@ describe('RecipeUtility', () => {
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
       expected.time = Rational.from(2, 3);
-      expected.consumption = Rational.from(10005);
+      expected.drain = Rational.from(5);
+      expected.consumption = Rational.from(10000);
       expected.pollution = Rational.from(1, 20);
       expected.productivity = Rational.one;
       expected.usage = Rational.from(10000);

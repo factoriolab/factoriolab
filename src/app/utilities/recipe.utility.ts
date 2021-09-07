@@ -172,17 +172,16 @@ export class RecipeUtility {
     }
 
     // Power
-    recipe.consumption = factory.drain ? factory.drain : Rational.zero;
+    recipe.drain = factory.drain;
     let usage = recipe.usage ? recipe.usage : factory.usage;
     if (oc) {
       const factor = Math.pow(oc.toNumber(), 1.6);
       usage = usage.mul(Rational.fromNumber(factor));
     }
-    recipe.consumption = recipe.consumption.add(
+    recipe.consumption =
       factory.type === EnergyType.Electric
         ? usage.mul(consumption)
-        : Rational.zero
-    );
+        : Rational.zero;
 
     // Pollution
     recipe.pollution = factory.pollution
