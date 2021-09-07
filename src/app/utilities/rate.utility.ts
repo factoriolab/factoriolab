@@ -104,15 +104,18 @@ export class RateUtility {
 
   static adjustPowerPollution(step: Step, recipe: RationalRecipe): void {
     if (step.factories?.nonzero() && !recipe.part) {
-      // Calculate drain
-      if (recipe.drain?.nonzero()) {
-        step.power = step.factories.ceil().mul(recipe.drain);
-      }
-      // Calculate consumption
-      if (recipe.consumption?.nonzero()) {
-        step.power = (step.power || Rational.zero).add(
-          step.factories.mul(recipe.consumption)
-        );
+      if (recipe.drain?.nonzero() || recipe.consumption?.nonzero()) {
+        // Reset power
+        step.power = Rational.zero;
+
+        // Calculate drain
+        if (recipe.drain?.nonzero()) {
+          step.power = step.power.add(step.factories.ceil().mul(recipe.drain));
+        }
+        // Calculate consumption
+        if (recipe.consumption?.nonzero()) {
+          step.power = step.power.add(step.factories.mul(recipe.consumption));
+        }
       }
       // Calculate pollution
       if (recipe.pollution?.nonzero()) {

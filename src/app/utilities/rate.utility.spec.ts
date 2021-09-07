@@ -250,12 +250,27 @@ describe('RateUtility', () => {
       expect(result).toEqual(step);
     });
 
+    it('should handle only drain', () => {
+      const step: any = { factories: Rational.one };
+      const result = { ...step };
+      const recipe: any = {
+        drain: Rational.two,
+        consumption: null,
+        pollution: null,
+      };
+      RateUtility.adjustPowerPollution(result, recipe);
+      expect(result).toEqual({
+        factories: Rational.one,
+        power: Rational.two,
+      });
+    });
+
     it('should handle only consumption', () => {
       const step: any = { factories: Rational.one };
       const result = { ...step };
       const recipe: any = {
-        consumption: Rational.two,
         drain: null,
+        consumption: Rational.two,
         pollution: null,
       };
       RateUtility.adjustPowerPollution(result, recipe);
