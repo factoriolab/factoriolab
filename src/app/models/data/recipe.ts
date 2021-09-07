@@ -40,6 +40,7 @@ export class RationalRecipe {
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
   usage?: Rational;
+  drain?: Rational;
   consumption?: Rational;
   pollution?: Rational;
 

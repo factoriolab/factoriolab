@@ -17,7 +17,7 @@ describe('RateUtility', () => {
         recipeId: 'iron-chest',
         items: Rational.from(30),
         factories: Rational.from(12, 7),
-        power: Rational.from(42450, 7),
+        power: Rational.from(42475, 7),
         pollution: Rational.from(94, 175),
       },
       {
@@ -25,7 +25,7 @@ describe('RateUtility', () => {
         recipeId: 'iron-plate',
         items: Rational.from(240),
         factories: Rational.from(3200, 47),
-        power: Rational.from(4742400, 47),
+        power: Rational.from(4742658, 47),
         pollution: Rational.from(2624, 235),
         parents: { 'iron-chest': Rational.from(240) },
       },
@@ -242,25 +242,41 @@ describe('RateUtility', () => {
       expect(result).toEqual(step);
     });
 
-    it('should handle null power/pollution', () => {
+    it('should handle null drain/consumption/pollution', () => {
       const step: any = { factories: Rational.one };
       const result = { ...step };
-      const recipe: any = { power: null, pollution: null };
+      const recipe: any = { drain: null, consumption: null, pollution: null };
       RateUtility.adjustPowerPollution(result, recipe);
       expect(result).toEqual(step);
     });
 
-    it('should calculate power/pollution', () => {
-      const step: any = { factories: Rational.two };
+    it('should handle only consumption', () => {
+      const step: any = { factories: Rational.one };
+      const result = { ...step };
       const recipe: any = {
-        consumption: new Rational(BigInt(3)),
-        pollution: new Rational(BigInt(4)),
+        consumption: Rational.two,
+        drain: null,
+        pollution: null,
+      };
+      RateUtility.adjustPowerPollution(result, recipe);
+      expect(result).toEqual({
+        factories: Rational.one,
+        power: Rational.two,
+      });
+    });
+
+    it('should calculate power/pollution', () => {
+      const step: any = { factories: Rational.from(3, 2) };
+      const recipe: any = {
+        drain: Rational.from(3),
+        consumption: Rational.from(4),
+        pollution: Rational.from(5),
       };
       RateUtility.adjustPowerPollution(step, recipe);
       expect(step).toEqual({
-        factories: Rational.two,
-        power: new Rational(BigInt(6)),
-        pollution: new Rational(BigInt(8)),
+        factories: Rational.from(3, 2),
+        power: Rational.from(12),
+        pollution: Rational.from(15, 2),
       });
     });
   });
@@ -433,7 +449,12 @@ describe('RateUtility', () => {
         { factories: Rational.one, recipeId: RecipeId.IronOre },
       ] as any;
       expect(
-        RateUtility.calculateBeacons(steps, Rational.one, settings, null)
+        RateUtility.calculateBeacons(
+          steps,
+          Rational.one,
+          settings,
+          Mocks.AdjustedData
+        )
       ).toEqual(steps);
     });
 
