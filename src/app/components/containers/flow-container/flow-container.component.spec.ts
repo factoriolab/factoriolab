@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Store, StoreModule } from '@ngrx/store';
 
+import { TestUtility } from 'src/tests';
 import { OptionsComponent, ColumnsComponent } from '~/components';
 import { LinkValue, SankeyAlign } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
@@ -16,7 +17,6 @@ import { ListComponent, ListContainerComponent } from '../list-container';
 import { SankeyComponent } from './sankey/sankey.component';
 import { FlowContainerComponent } from './flow-container.component';
 import { ExportUtility } from '~/utilities';
-import { Mocks, TestUtility } from 'src/tests';
 
 enum DataTest {
   Export = 'lab-flow-container-export',

@@ -20,8 +20,13 @@ export class InputComponent implements OnChanges {
   @Input() title: string;
   @Input() placeholder: string;
   @Input() value: string;
+  _minimum = '0';
   @Input() set minimum(value: string) {
+    this._minimum = value;
     this.min = Rational.fromString(value);
+  }
+  get minimum(): string {
+    return this._minimum;
   }
   @Input() set digits(value: number) {
     if (InputComponent.widthCache[value]) {
