@@ -116,6 +116,10 @@ describe('IconComponent', () => {
       expect(component.child.power(500)).toEqual('500 kW');
       expect(component.child.power(5000)).toEqual('5 MW');
     });
+
+    it('should handle string for drain', () => {
+      expect(component.child.power('150/30')).toEqual('5 kW');
+    });
   });
 
   describe('toBonusPercent', () => {

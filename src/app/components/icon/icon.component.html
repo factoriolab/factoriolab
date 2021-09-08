@@ -135,17 +135,10 @@
         <td>Energy consumption</td>
         <td>{{ power(factory.usage) }}</td>
       </tr>
-      <tr
-        *ngIf="
-          factory.drain ||
-          (factory.type === EnergyType.Electric && factory.drain == null)
-        "
-      >
+      <tr *ngIf="factory.drain">
         <td>Drain</td>
         <td>
-          {{
-            power(factory.drain != null ? factory.drain : factory.usage / 30)
-          }}
+          {{ power(factory.drain) }}
         </td>
       </tr>
       <tr *ngIf="factory.pollution">

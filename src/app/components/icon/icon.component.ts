@@ -67,7 +67,11 @@ export class IconComponent implements OnChanges {
     return Number(value.toFixed(2));
   }
 
-  power(value: number): string {
+  power(value: number | string): string {
+    if (typeof value === 'string') {
+      // Simplify to number before rounding
+      value = Rational.fromString(value).toNumber();
+    }
     if (Math.abs(value) < 1000) {
       return `${this.round(value)} kW`;
     } else {
