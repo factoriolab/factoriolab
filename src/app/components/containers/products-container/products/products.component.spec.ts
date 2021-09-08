@@ -10,6 +10,7 @@ import {
   OptionsComponent,
 } from '~/components';
 import { DisplayRate, RateType } from '~/models';
+import { ValidateNumberDirective } from '~/support';
 import { ProductsComponent } from './products.component';
 
 @Component({
@@ -56,6 +57,7 @@ describe('ProductsComponent', () => {
         InputComponent,
         OptionsComponent,
         PickerComponent,
+        ValidateNumberDirective,
         ProductsComponent,
         TestProductsComponent,
       ],
