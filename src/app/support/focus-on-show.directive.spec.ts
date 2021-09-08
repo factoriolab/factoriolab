@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FocusOnShowDirective } from './focus-on-show';
+import { FocusOnShowDirective } from './focus-on-show.directive';
 
 @Component({
   template: `<input #input *ngIf="show" labFocus />`,
@@ -26,6 +26,10 @@ describe('FocusOnShowDirective', () => {
     fixture = TestBed.createComponent(TestFocusOnShowDirectiveComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 
   describe('ngOnInit', () => {

@@ -20,6 +20,7 @@ import { Game } from '~/models';
 import { RouterService } from '~/services';
 import { reducers, metaReducers } from '~/store';
 import { initialColumnsState } from '~/store/preferences';
+import { ValidateNumberDirective } from '~/support';
 import { BrowserUtility } from '~/utilities';
 import { SettingsComponent } from './settings.component';
 
@@ -137,6 +138,7 @@ describe('SettingsComponent', () => {
         RankerComponent,
         SelectComponent,
         ToggleComponent,
+        ValidateNumberDirective,
         SettingsComponent,
         TestSettingsComponent,
       ],
