@@ -104,7 +104,7 @@ describe('RecipeUtility', () => {
       expected.time = Rational.from(30);
       expected.adjustProd = true;
       expected.productivity = Rational.one;
-      expected.drain = Rational.from(2);
+      expected.drain = undefined;
       expected.consumption = Rational.from(60);
       expected.pollution = Rational.zero;
       expect(result).toEqual(expected);
