@@ -27,14 +27,14 @@ describe('RationalFactory', () => {
       expect(result.research).toBeTrue();
     });
 
-    it('should calculate drain for electric factories', () => {
+    it('should handle string for drain', () => {
       const result = new RationalFactory({
         speed: 1,
         modules: 2,
         type: EnergyType.Electric,
-        usage: 30,
+        drain: '60/30',
       });
-      expect(result.drain).toEqual(Rational.one);
+      expect(result.drain).toEqual(Rational.two);
     });
 
     it('should ignore undefined expensive fields', () => {
