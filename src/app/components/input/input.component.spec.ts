@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
 import { TestUtility } from 'src/tests';
+import { ValidateNumberDirective } from '~/support';
 import { InputComponent } from './input.component';
 
 enum DataTest {
@@ -38,7 +39,11 @@ describe('InputComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [InputComponent, TestInputComponent],
+      declarations: [
+        ValidateNumberDirective,
+        InputComponent,
+        TestInputComponent,
+      ],
       imports: [FormsModule],
     }).compileComponents();
   });

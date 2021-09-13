@@ -32,6 +32,7 @@ import {
 import { RouterService } from '~/services';
 import { reducers, metaReducers } from '~/store';
 import { initialColumnsState } from '~/store/preferences';
+import { ValidateNumberDirective } from '~/support';
 import { ExportUtility } from '~/utilities';
 import { ListComponent, StepDetailTab } from './list.component';
 
@@ -145,6 +146,7 @@ describe('ListComponent', () => {
         IconComponent,
         InputComponent,
         SelectComponent,
+        ValidateNumberDirective,
         ListComponent,
         TestListComponent,
       ],

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { Mocks, RecipeId } from 'src/tests';
 import { IconComponent, InputComponent, InfoComponent } from '~/components';
+import { ValidateNumberDirective } from '~/support';
 import { MatrixComponent } from './matrix.component';
 
 @Component({
@@ -58,6 +59,7 @@ describe('MatrixComponent', () => {
         IconComponent,
         InfoComponent,
         InputComponent,
+        ValidateNumberDirective,
         TestMatrixComponent,
         MatrixComponent,
       ],

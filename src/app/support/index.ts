@@ -1,4 +1,4 @@
-export * from './focus-on-show';
+export * from './focus-on-show.directive';
 export * from './lab-error-handler';
-export * from './number-validator';
-export * from './overclock-validator';
+export * from './validate-number.directive';
+export * from './validate-overclock.directive';

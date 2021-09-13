@@ -1,4 +1,3 @@
-import { EnergyType } from '../enum';
 import { Rational } from '../rational';
 import { RationalSilo, Silo } from './silo';
 
@@ -12,7 +11,7 @@ export interface Factory {
   /** Energy consumption in kW */
   usage?: number;
   /** Drain in kW */
-  drain?: number;
+  drain?: number | string;
   /** Pollution in #/m */
   pollution?: number;
   mining?: boolean;
@@ -48,9 +47,11 @@ export class RationalFactory {
       this.usage = Rational.fromNumber(data.usage);
     }
     if (data.drain != null) {
-      this.drain = Rational.fromNumber(data.drain);
-    } else if (data.type == EnergyType.Electric && this.usage && !data.mining) {
-      this.drain = this.usage.div(Rational.from(30));
+      if (typeof data.drain === 'string') {
+        this.drain = Rational.fromString(data.drain);
+      } else {
+        this.drain = Rational.fromNumber(data.drain);
+      }
     }
     if (data.pollution != null) {
       this.pollution = Rational.fromNumber(data.pollution);
