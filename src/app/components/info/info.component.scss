@@ -5,15 +5,14 @@
   user-select: none;
 }
 
-div {
-  display: flex;
-  align-items: flex-end;
+.icon {
+  position: relative;
 }
 
 .material-icons {
   font-size: 0.75rem;
   color: var(--color-link);
-  margin-left: 0.125rem;
+  vertical-align: middle;
 }
 
 .tooltip {
@@ -29,4 +28,6 @@ div {
   margin-top: 0.5rem;
   margin-left: 0.125rem;
   text-align: left;
+  color: var(--color-white);
+  font-weight: normal;
 }
