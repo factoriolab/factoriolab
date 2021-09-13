@@ -16,7 +16,13 @@
 <div class="panel">
   <div class="hole">
     <div>
-      <div class="header">Saved states</div>
+      <div class="header">
+        <lab-info
+          text="Saved states"
+          tooltip="Click edit to name and save the current calculator state.
+Select a saved state from the dropdown to load it into the calculator."
+        ></lab-info>
+      </div>
       <div class="flex states">
         <ng-container *ngIf="!editState; else stateInput">
           <lab-options
@@ -74,7 +80,13 @@
       </div>
       <table class="thin">
         <tr>
-          <td>Game</td>
+          <td>
+            <lab-info
+              text="Game"
+              tooltip="Select which game calculator to use,
+or use the links in the title bar."
+            ></lab-info>
+          </td>
           <td>
             <lab-options
               title="Select game"
@@ -85,7 +97,12 @@
           </td>
         </tr>
         <tr *ngIf="data.game === Game.Factorio">
-          <td>Mod set</td>
+          <td>
+            <lab-info
+              text="Mod set"
+              tooltip="Select which version or set of mods in Factorio to use."
+            ></lab-info>
+          </td>
           <td>
             <lab-options
               title="Select base recipe set"
@@ -96,7 +113,13 @@
           </td>
         </tr>
         <tr>
-          <td>Disabled</td>
+          <td>
+            <lab-info
+              text="Disabled"
+              tooltip="Click to modify which recipes are disabled.
+Disabled recipes will not be used in the solution."
+            ></lab-info>
+          </td>
           <td>
             <lab-toggle
               [data]="data"
@@ -112,7 +135,13 @@
           </td>
         </tr>
         <tr *ngIf="data.game === Game.Factorio">
-          <td>Difficulty</td>
+          <td>
+            <lab-info
+              text="Difficulty"
+              tooltip="Select whether to use Normal or
+Expensive difficulty recipes."
+            ></lab-info>
+          </td>
           <td>
             <lab-options
               title="Select recipe difficulty"
@@ -130,7 +159,13 @@
       <div class="header">Display</div>
       <table class="x-wide">
         <tr>
-          <td>Columns & precision</td>
+          <td>
+            <lab-info
+              text="Columns & precision"
+              tooltip="Click to select the visible columns and decimal
+or fractional precision for visible columns."
+            ></lab-info>
+          </td>
           <td>
             <lab-columns
               class="relative"
@@ -145,7 +180,12 @@
           </td>
         </tr>
         <tr>
-          <td>Display rates as</td>
+          <td>
+            <lab-info
+              text="Display rates as"
+              tooltip="Set the unit of time to use in rates."
+            ></lab-info>
+          </td>
           <td>
             <lab-options
               title="Select display rate"
@@ -168,7 +208,12 @@
       <div class="header">Factory</div>
       <table class="thin">
         <tr>
-          <td>Preset</td>
+          <td>
+            <lab-info
+              text="Preset"
+              tooltip="Select a default preset of factory settings to use."
+            ></lab-info>
+          </td>
           <td>
             <lab-options
               title="Select preset factory"
@@ -451,17 +496,28 @@
                   class="checkbox"
                   [class.checked]="settings.beaconReceivers"
                 ></div>
-                <span>Estimate beacon power usage</span>
+                <lab-info
+                  text="Estimate beacon power usage"
+                  tooltip="Enable to estimate power usage of beacons as well as factories.
+Requires an estimated average number of receivers per beacon."
+                ></lab-info>
               </div>
             </td>
           </tr>
           <tr *ngIf="settings.beaconReceivers">
-            <td>Average beacon receivers</td>
+            <td>
+              <lab-info
+                text="Average beacon receivers"
+                tooltip="The average number of factories affected by each beacon.
+Minimum possible value is 1."
+              ></lab-info>
+            </td>
             <td>
               <div>
                 <lab-input
                   title="Set average beacon receivers"
                   placeholder="# Receivers"
+                  [digits]="2"
                   [value]="settings.beaconReceivers"
                   minimum="1"
                   (setValue)="setBeaconReceivers.emit($event)"
@@ -472,7 +528,12 @@
           </tr>
         </ng-container>
         <tr>
-          <td>Default transport belt</td>
+          <td>
+            <lab-info
+              text="Default transport belt"
+              tooltip="Select the default belt to be used by all items."
+            ></lab-info>
+          </td>
           <td>
             <div>
               <lab-select
@@ -496,7 +557,12 @@
           </td>
         </tr>
         <tr *ngIf="data.pipeIds.length">
-          <td>Default pipe</td>
+          <td>
+            <lab-info
+              text="Default pipe"
+              tooltip="Select the default pipe to be used by all fluids."
+            ></lab-info>
+          </td>
           <td>
             <div>
               <lab-select
@@ -520,7 +586,12 @@
           </td>
         </tr>
         <tr *ngIf="data.cargoWagonIds.length > 1">
-          <td>Default cargo wagon</td>
+          <td>
+            <lab-info
+              text="Default cargo wagon"
+              tooltip="Select the default cargo wagon to be used by all items."
+            ></lab-info>
+          </td>
           <td>
             <div>
               <lab-select
@@ -546,7 +617,12 @@
           </td>
         </tr>
         <tr *ngIf="data.fluidWagonIds.length > 1">
-          <td>Default fluid wagon</td>
+          <td>
+            <lab-info
+              text="Default fluid wagon"
+              tooltip="Select the default fluid wagon to be used by all fluids."
+            ></lab-info>
+          </td>
           <td>
             <div>
               <lab-select
@@ -572,7 +648,13 @@
           </td>
         </tr>
         <tr *ngIf="sortedFuels.length && data.game !== Game.Satisfactory">
-          <td>Chemical fuel</td>
+          <td>
+            <lab-info
+              text="Chemical fuel"
+              tooltip="Select the default chemical to be used where applicable.
+This does not affect burners that use non-chemical fuels."
+            ></lab-info>
+          </td>
           <td>
             <div>
               <lab-select
@@ -648,7 +730,13 @@
       <div class="header">Bonuses</div>
       <table class="wide">
         <tr *ngIf="data.game === Game.Factorio">
-          <td>Mining productivity</td>
+          <td>
+            <lab-info
+              text="Mining productivity"
+              tooltip="Enter the current mining productivity bonus percent.
+Default is 0%."
+            ></lab-info>
+          </td>
           <td class="right">
             +
             <input
@@ -666,7 +754,13 @@
           </td>
         </tr>
         <tr *ngIf="data.game === Game.DysonSphereProgram">
-          <td>Mining speed</td>
+          <td>
+            <lab-info
+              text="Mining speed"
+              tooltip="Enter the current mining speed with bonus.
+Default is 100%."
+            ></lab-info>
+          </td>
           <td class="right">
             <input
               type="number"
@@ -683,7 +777,13 @@
           </td>
         </tr>
         <tr *ngIf="data.game === Game.Factorio">
-          <td>Research speed</td>
+          <td>
+            <lab-info
+              text="Research speed"
+              tooltip="Enter the current level of research speed bonus.
+This setting only affects research products."
+            ></lab-info>
+          </td>
           <td>
             <lab-options
               title="Select research speed bonus"
@@ -694,7 +794,13 @@
           </td>
         </tr>
         <tr *ngIf="data.game === Game.Factorio">
-          <td>Inserter capacity</td>
+          <td>
+            <lab-info
+              text="Inserter capacity"
+              tooltip="Enter the current level of inserter capacity bonus.
+This setting only affects inserter estimates."
+            ></lab-info>
+          </td>
           <td>
             <lab-options
               title="Select inserter capacity bonus"
@@ -712,7 +818,14 @@
       <div class="header">Advanced</div>
       <table class="wide">
         <tr>
-          <td>Simplex solver</td>
+          <td>
+            <lab-info
+              text="Simplex solver"
+              tooltip="Select to enable/disable the simplex solver.
+Disable simplex to more easily modify settings
+when simplex is slow and causes lag."
+            ></lab-info>
+          </td>
           <td>
             <lab-options
               title="Disable to get a faster but incomplete result"
