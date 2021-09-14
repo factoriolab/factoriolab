@@ -746,6 +746,10 @@
                   </div>
                 </td>
               </ng-container>
+              <td
+                colspan="2"
+                *ngIf="!recipeSettings[output.recipeId]?.factory"
+              ></td>
               <td class="split-column" colspan="100">
                 <div>
                   <div class="flex percent">
@@ -869,7 +873,7 @@
             </ng-container>
             <td
               colspan="2"
-              *ngIf="!recipeSettings[step.recipeId]?.factory as factory"
+              *ngIf="!recipeSettings[step.recipeId]?.factory"
             ></td>
             <td class="split-column" colspan="100">
               <div>
@@ -1017,7 +1021,48 @@
                     </div>
                   </ng-container>
                 </td>
-                <td colspan="2"></td>
+                <ng-container
+                  *ngIf="recipeSettings[inStep.recipeId]?.factory as factory"
+                >
+                  <td>
+                    <div class="flex" *ngIf="inStep.factories?.nonzero()">
+                      <span class="monospace">{{
+                        factoryRate(
+                          inStep.factories.mul(percent),
+                          effPrecision[Column.Factories],
+                          factory
+                        )
+                      }}</span>
+                    </div>
+                  </td>
+                  <td class="split-column">
+                    <div>
+                      <div class="flex">
+                        <lab-icon
+                          [data]="data"
+                          [iconId]="inStep.recipeId"
+                          [tooltip]="data.recipeEntities[inStep.recipeId].name"
+                          [recipe]="data.recipeEntities[inStep.recipeId]"
+                        >
+                        </lab-icon>
+                        <lab-icon
+                          *ngIf="
+                            data.game !== Game.DysonSphereProgram ||
+                            factory !== ItemId.MiningDrill
+                          "
+                          [data]="data"
+                          [iconId]="factory"
+                          [tooltip]="data.itemEntities[factory].name"
+                          [item]="data.itemEntities[factory]"
+                        ></lab-icon>
+                      </div>
+                    </div>
+                  </td>
+                </ng-container>
+                <td
+                  colspan="2"
+                  *ngIf="!recipeSettings[inStep.recipeId]?.factory"
+                ></td>
                 <td class="split-column" colspan="100">
                   <div>
                     <div class="flex percent">
@@ -1114,7 +1159,47 @@
                     </div>
                   </ng-container>
                 </td>
-                <td colspan="2"></td>
+                <ng-container
+                  *ngIf="recipeSettings[outStep.recipeId]?.factory as factory"
+                >
+                  <td>
+                    <div class="flex" *ngIf="outStep.factories?.nonzero()">
+                      <span class="monospace">{{
+                        factoryRate(
+                          outStep.factories,
+                          effPrecision[Column.Factories],
+                          factory
+                        )
+                      }}</span>
+                    </div>
+                  </td>
+                  <td class="split-column">
+                    <div>
+                      <div class="flex">
+                        <lab-icon
+                          [data]="data"
+                          [iconId]="outStep.recipeId"
+                          [tooltip]="data.recipeEntities[outStep.recipeId].name"
+                          [recipe]="data.recipeEntities[outStep.recipeId]"
+                        ></lab-icon>
+                        <lab-icon
+                          *ngIf="
+                            data.game !== Game.DysonSphereProgram ||
+                            factory !== ItemId.MiningDrill
+                          "
+                          [data]="data"
+                          [iconId]="factory"
+                          [tooltip]="data.itemEntities[factory].name"
+                          [item]="data.itemEntities[factory]"
+                        ></lab-icon>
+                      </div>
+                    </div>
+                  </td>
+                </ng-container>
+                <td
+                  colspan="2"
+                  *ngIf="!recipeSettings[outStep.recipeId]?.factory"
+                ></td>
                 <td class="split-column" colspan="100">
                   <div>
                     <div class="flex percent">
