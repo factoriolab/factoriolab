@@ -118,7 +118,7 @@ export class SankeyComponent {
     }
 
     const columns = Math.max(...skGraph.nodes.map((n) => n.depth));
-    const width = (columns + 1) * 32 + columns * 32 * 6;
+    const width = (columns + 1) * 32 + columns * 32 * 12;
     const height = Math.min(this.height, width * 0.75);
     skGraph = this.getLayout(circular, width, height);
 
