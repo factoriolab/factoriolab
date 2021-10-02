@@ -42,6 +42,7 @@
     "d3-sankey-circular": "https://github.com/tomshanley/d3-sankey-circular.git",
     "d3-selection": "^3.0.0",
     "file-saver": "^2.0.5",
+    "install": "^0.13.0",
     "material-design-icons": "~3.0.1",
     "pako": "^2.0.4",
     "rxjs": "~7.3.0",
@@ -86,8 +87,5 @@
     "ts-node": "~10.2.1",
     "typescript": "~4.3.5",
     "webpack-bundle-analyzer": "^4.4.2"
-  },
-  "engines": {
-    "node": ">=16"
   }
 }
