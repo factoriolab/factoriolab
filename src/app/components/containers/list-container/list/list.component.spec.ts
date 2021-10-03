@@ -18,6 +18,7 @@ import {
   InputComponent,
   SelectComponent,
   ColumnsComponent,
+  PowerUnit,
 } from '~/components';
 import {
   DisplayRate,
@@ -422,6 +423,34 @@ describe('ListComponent', () => {
         [Column.Pollution]: 0,
       });
     });
+
+    it('should determine what units to use for power', () => {
+      component.child.powerUnit = null;
+      component.child.setEffectivePrecision();
+      expect(component.child.powerUnit).toEqual(PowerUnit.kW);
+      component.steps = [
+        { itemId: ItemId.Coal, items: Rational.one, power: Rational.thousand },
+      ];
+      fixture.detectChanges();
+      component.child.setEffectivePrecision();
+      expect(component.child.powerUnit).toEqual(PowerUnit.MW);
+    });
+
+    it('should not calculate power unit if power column is disabled', () => {
+      component.child.powerUnit = null;
+      component.columns = {
+        ...component.columns,
+        ...{
+          [Column.Power]: {
+            ...component.columns[Column.Power],
+            ...{ show: false },
+          },
+        },
+      };
+      fixture.detectChanges();
+      component.child.setEffectivePrecision();
+      expect(component.child.powerUnit).toBeNull();
+    });
   });
 
   describe('effPrecFrom', () => {
@@ -674,6 +703,7 @@ describe('ListComponent', () => {
     });
 
     it('should return a value in MW', () => {
+      component.child.powerUnit = PowerUnit.MW;
       expect(component.child.power(Rational.thousand)).toEqual('1 MW');
     });
   });
