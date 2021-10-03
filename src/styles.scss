@@ -145,6 +145,8 @@ button,
     text-align: right;
 
     &:hover {
+      background-color: var(--color-green);
+      box-shadow: var(--shadow-button-gr);
       filter: brightness(1.3) drop-shadow(0 0 2px var(--color-green-alt));
     }
 
