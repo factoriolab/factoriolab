@@ -8,6 +8,7 @@ import { TestUtility, ItemId, RecipeId } from 'src/tests';
 import {
   ColumnsComponent,
   IconComponent,
+  InfoComponent,
   OptionsComponent,
   RankerComponent,
   SelectComponent,
@@ -49,6 +50,7 @@ describe('SettingsContainerComponent', () => {
       declarations: [
         ColumnsComponent,
         IconComponent,
+        InfoComponent,
         OptionsComponent,
         RankerComponent,
         SelectComponent,
