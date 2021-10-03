@@ -48,6 +48,11 @@ export enum StepDetailTab {
   Recipes,
 }
 
+export enum PowerUnit {
+  kW,
+  MW
+}
+
 export interface StepInserter {
   id: string;
   value: Rational;
@@ -159,6 +164,7 @@ export class ListComponent
   expanded: Entities<StepDetailTab> = {};
   leftSpan = 2;
   effPrecision: Entities<number> = {};
+  powerUnit = PowerUnit.kW;
   fragment: string;
   DisplayRateVal = DisplayRateVal;
   ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
@@ -309,6 +315,7 @@ export class ListComponent
         this.columns[Column.Items].precision,
         (s) => s[Column.Surplus.toLowerCase()]
       );
+
       for (const i of PrecisionColumns.filter((i) => this.columns[i].show)) {
         this.effPrecision[i] = this.effPrecFrom(
           this.columns[i].precision,
@@ -317,6 +324,17 @@ export class ListComponent
               ? (s.items || Rational.zero).sub(s.surplus || Rational.zero)
               : s[i.toLowerCase()]
         );
+      }
+
+      if (this.columns[Column.Power].show) {
+        let unit = PowerUnit.MW;
+        for (const step of this.steps) {
+          if (step.power?.lt(Rational.thousand)) {
+            unit = PowerUnit.kW;
+            break;
+          }
+        }
+        this.powerUnit = unit;
       }
     }
   }
@@ -458,7 +476,7 @@ export class ListComponent
   }
 
   power(value: Rational): string {
-    if (value.abs().lt(Rational.thousand)) {
+    if (this.powerUnit === PowerUnit.kW) {
       return `${this.rate(value, this.effPrecision[Column.Power])} kW`;
     } else {
       return `${this.rate(

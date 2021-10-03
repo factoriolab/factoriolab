@@ -207,6 +207,13 @@ describe('Rational', () => {
       });
     });
 
+    describe('abs', () => {
+      it('should deterine absolute value', () => {
+        expect(Rational.from(2).abs()).toEqual(Rational.two);
+        expect(Rational.from(-2).abs()).toEqual(Rational.two);
+      });
+    });
+
     describe('toNumber', () => {
       it('should convert to number', () => {
         expect(Rational.zero.toNumber()).toEqual(0);

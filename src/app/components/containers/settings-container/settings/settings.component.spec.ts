@@ -10,6 +10,7 @@ import { Mocks, TestUtility, ItemId } from 'src/tests';
 import {
   ColumnsComponent,
   IconComponent,
+  InfoComponent,
   InputComponent,
   OptionsComponent,
   RankerComponent,
@@ -133,6 +134,7 @@ describe('SettingsComponent', () => {
       declarations: [
         ColumnsComponent,
         IconComponent,
+        InfoComponent,
         InputComponent,
         OptionsComponent,
         RankerComponent,
