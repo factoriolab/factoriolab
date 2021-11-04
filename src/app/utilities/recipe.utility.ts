@@ -184,12 +184,13 @@ export class RecipeUtility {
         : Rational.zero;
 
     // Pollution
-    recipe.pollution = factory.pollution
-      ? factory.pollution
-          .div(this.POLLUTION_FACTOR)
-          .mul(pollution)
-          .mul(consumption)
-      : Rational.zero;
+    recipe.pollution =
+      factory.pollution && settings.factory !== ItemId.Pumpjack
+        ? factory.pollution
+            .div(this.POLLUTION_FACTOR)
+            .mul(pollution)
+            .mul(consumption)
+        : Rational.zero;
 
     // Calculate burner fuel inputs
     if (factory.type === EnergyType.Burner && usage.nonzero()) {
