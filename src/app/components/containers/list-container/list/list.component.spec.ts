@@ -184,6 +184,30 @@ describe('ListComponent', () => {
       tick();
       expect(component.child.steps[0].href).toEqual('test');
     }));
+
+    it('should adjust href to account for productivity if required', fakeAsync(() => {
+      spyOn(router, 'requestHash').and.returnValue(of(Mocks.Hash));
+      spyOn(router, 'stepHref').and.returnValue('test');
+      component.steps = [
+        {
+          items: Rational.one,
+          itemId: ItemId.MiningProductivity,
+          recipeId: RecipeId.MiningProductivity,
+        },
+      ] as any;
+      fixture.detectChanges();
+      tick();
+      expect(router.stepHref).toHaveBeenCalledWith(
+        {
+          items: Rational.from(5, 6),
+          itemId: ItemId.MiningProductivity,
+          recipeId: RecipeId.MiningProductivity,
+          indent: [],
+        } as any,
+        Mocks.Hash
+      );
+      expect(component.child.steps[0].href).toEqual('test');
+    }));
   });
 
   describe('columns', () => {
