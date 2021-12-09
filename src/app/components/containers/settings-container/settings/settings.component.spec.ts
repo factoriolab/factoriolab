@@ -318,7 +318,7 @@ describe('SettingsComponent', () => {
       spyOn(component, 'setMiningBonus');
       TestUtility.setTextDt(fixture, DataTest.MiningBonus, '-10');
       fixture.detectChanges();
-      expect(component.setMiningBonus).not.toHaveBeenCalled();
+      expect(component.setMiningBonus).toHaveBeenCalledWith(0);
     });
   });
 
