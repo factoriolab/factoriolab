@@ -50,7 +50,7 @@ export enum StepDetailTab {
 
 export enum PowerUnit {
   kW,
-  MW
+  MW,
 }
 
 export interface StepInserter {
@@ -83,7 +83,17 @@ export class ListComponent
     this.routerSvc.requestHash(this.settings.baseId).subscribe((hash) => {
       setTimeout(() => {
         this._steps.forEach((s) => {
-          s.href = this.routerSvc.stepHref(s, hash);
+          const recipe = this.data.recipeR[s.recipeId];
+          if (recipe?.adjustProd) {
+            // Adjust items to account for productivity bonus
+            const step: Step = {
+              ...s,
+              ...{ items: s.items.div(recipe.productivity) },
+            };
+            s.href = this.routerSvc.stepHref(step, hash);
+          } else {
+            s.href = this.routerSvc.stepHref(s, hash);
+          }
         });
         this.ref.detectChanges();
       });
