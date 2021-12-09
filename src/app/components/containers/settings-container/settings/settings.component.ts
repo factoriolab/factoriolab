@@ -139,7 +139,7 @@ export class SettingsComponent implements OnInit, OnChanges {
   ItemId = ItemId;
   Game = Game;
 
-  ctrlFlowRate = new FormControl('', Validators.min(0));
+  ctrlFlowRate = new FormControl('', Validators.min(1));
   ctrlMiningProductivity = new FormControl('', Validators.min(0));
   ctrlMiningSpeed = new FormControl('', Validators.min(100));
 
@@ -224,6 +224,8 @@ export class SettingsComponent implements OnInit, OnChanges {
     const value = Number(target.value) + offset;
     if (value >= min) {
       emitter.emit(value);
+    } else {
+      emitter.emit(min);
     }
   }
 
