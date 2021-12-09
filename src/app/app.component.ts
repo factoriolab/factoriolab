@@ -75,9 +75,16 @@ export class AppComponent implements OnInit {
     public store: Store<State>,
     public titleService: Title,
     public state: StateService // Included only to initialize the service
-  ) {}
+  ) {
+    console.log('AppComponent()');
+    console.log(location.search);
+    console.log(location.href);
+  }
 
   ngOnInit(): void {
+    console.log('AppComponent.ngOnInit()');
+    console.log(location.search);
+    console.log(location.href);
     this.datasets$ = this.store.select(getDatasets);
     this.products$ = this.store.select(getProducts);
     this.result$ = this.store.select(getSimplexResult);

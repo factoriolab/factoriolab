@@ -206,7 +206,7 @@ export class RouterService {
     const sections = zip.split('&');
     const substr = sections[0][1] === '=' ? 2 : 1;
     const params = sections.reduce((e: Entities<string>, v) => {
-      e[v[0]] = v.substr(substr);
+      e[v[0]] = v.substring(substr);
       return e;
     }, {});
     return params;
@@ -229,7 +229,7 @@ export class RouterService {
             if (zip.startsWith('z=')) {
               // Upgrade old query-unsafe zipped characters
               const z = zip
-                .substr(2)
+                .substring(2)
                 .replace(/\+/g, '-')
                 .replace(/\//g, '.')
                 .replace(/=/g, '_');
@@ -1137,7 +1137,7 @@ export class RouterService {
   getN(id: string): number {
     const n = INVERT[id[0]];
     if (id.length > 1) {
-      id = id.substr(1);
+      id = id.substring(1);
       return n * Math.pow(MAX, id.length) + this.getN(id);
     } else {
       return n;

@@ -78,6 +78,9 @@ export class DatasetsEffects {
 
   load(zip: string, stored: State, initial: Settings.SettingsState): void {
     if (!zip) {
+      console.log('DatasetEffects.load()');
+      console.log(location.search);
+      console.log(location.href);
       const id = stored?.settingsState?.baseId || initial.baseId;
       this.requestData(id).subscribe((value) => {
         this.loadModsForBase(value.defaults.modIds);
