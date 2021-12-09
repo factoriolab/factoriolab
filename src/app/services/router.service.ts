@@ -105,6 +105,10 @@ export class RouterService {
 
     this.store.select(Products.getZipState).subscribe((s) => {
       let skip = false;
+      console.log('RouterService getZipState.subscribe()');
+      console.log(location.search);
+      console.log(location.href);
+      console.log(this.first);
       if (this.first) {
         // First update: if there are no modified settings, leave base URL.
         if (
@@ -120,7 +124,9 @@ export class RouterService {
         // Don't check again later, always update.
         this.first = false;
       }
+      console.log(skip);
       if (!skip) {
+        console.log('updateUrl()...');
         this.updateUrl(s.products, s.items, s.recipes, s.factories, s.settings);
       }
     });

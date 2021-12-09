@@ -39,8 +39,13 @@ export class BrowserUtility {
 
   static mergeState(initial: State): State {
     const state = BrowserUtility.storedState;
+    console.log('BrowserUtility.mergeState()');
+    console.log(location.search);
+    console.log(location.href);
     if (state) {
+      console.log('found stored state');
       if (this.zip) {
+        console.log('location has zip');
         return {
           ...initial,
           ...{
@@ -51,6 +56,7 @@ export class BrowserUtility {
           },
         };
       } else {
+        console.log('no zip, merge state');
         const merge = { ...initial };
         for (const key of Object.keys(merge)) {
           merge[key] = {
@@ -61,6 +67,7 @@ export class BrowserUtility {
         return merge;
       }
     } else {
+      console.log('use initial value');
       return initial;
     }
   }
