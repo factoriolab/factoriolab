@@ -57,6 +57,9 @@
   <div *ngIf="recipe?.cost">
     <div>Cost: {{ recipe.cost }}</div>
   </div>
+  <div *ngIf="recipe?.usage">
+    <div>Usage: {{ power(recipe.usage) }}</div>
+  </div>
   <div *ngIf="item?.beacon as beacon">
     <table>
       <tr>
