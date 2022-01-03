@@ -141,7 +141,13 @@ export class RecipeUtility {
     // Overclock effects
     let oc: Rational;
     if (settings.overclock && !settings.overclock.eq(Rational.hundred)) {
-      oc = settings.overclock.div(Rational.hundred);
+      if (factory.overclockFactor) {
+        const ratio = Rational.hundred.div(settings.overclock);
+        const factor = Math.pow(ratio.toNumber(), 1 / factory.overclockFactor);
+        oc = Rational.fromNumber(factor).reciprocal();
+      } else {
+        oc = settings.overclock.div(Rational.hundred);
+      }
       speed = speed.mul(oc);
     }
 

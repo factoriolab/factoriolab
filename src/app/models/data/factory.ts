@@ -17,6 +17,7 @@ export interface Factory {
   mining?: boolean;
   research?: boolean;
   silo?: Silo;
+  overclockFactor?: number;
 }
 
 export class RationalFactory {
@@ -33,6 +34,7 @@ export class RationalFactory {
   mining?: boolean;
   research?: boolean;
   silo?: RationalSilo;
+  overclockFactor?: number;
 
   constructor(data: Factory) {
     this.speed = Rational.fromNumber(data.speed);
@@ -64,6 +66,9 @@ export class RationalFactory {
     }
     if (data.silo) {
       this.silo = new RationalSilo(data.silo);
+    }
+    if (data.overclockFactor) {
+      this.overclockFactor = data.overclockFactor;
     }
   }
 }
