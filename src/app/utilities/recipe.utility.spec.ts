@@ -460,6 +460,48 @@ describe('RecipeUtility', () => {
       expect(result).toEqual(expected);
     });
 
+    it('should account for factories with custom overclock factors', () => {
+      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
+      settings.overclock = Rational.from(200);
+      const data = {
+        ...Mocks.Data,
+        ...{
+          itemR: {
+            ...Mocks.Data.itemR,
+            ...{
+              [settings.factory]: new RationalItem({
+                ...Mocks.Data.itemEntities[settings.factory],
+                ...{
+                  factory: {
+                    ...Mocks.Data.itemEntities[settings.factory].factory,
+                    ...{ overclockFactor: 1.321928 },
+                  },
+                },
+              }),
+            },
+          },
+        },
+      };
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.SteelChest,
+        ItemId.Coal,
+        Rational.zero,
+        Rational.zero,
+        settings,
+        data
+      );
+      const expected = new RationalRecipe(
+        Mocks.Data.recipeEntities[RecipeId.SteelChest]
+      );
+      expected.out = { [ItemId.SteelChest]: Rational.one };
+      expected.time = Rational.from(29597129, 75000000);
+      expected.drain = Rational.from(5);
+      expected.consumption = Rational.from(694182921, 2000000);
+      expected.pollution = Rational.from(1, 20);
+      expected.productivity = Rational.one;
+      expect(result).toEqual(expected);
+    });
+
     it('should use a recipe specific usage', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
       const data = {

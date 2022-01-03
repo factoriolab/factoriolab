@@ -4,6 +4,7 @@ export enum ItemId {
   LongHandedInserter = 'long-handed-inserter',
   MiningDrill = 'mining-drill',
   Module = 'module',
+  NuclearPowerPlant = 'nuclear-power-plant',
   Pipe = 'pipe',
   ProductivityLimitation = 'productivity-module',
   Pumpjack = 'pumpjack',
