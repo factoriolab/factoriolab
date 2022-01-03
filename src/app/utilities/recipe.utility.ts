@@ -142,6 +142,9 @@ export class RecipeUtility {
     let oc: Rational;
     if (settings.overclock && !settings.overclock.eq(Rational.hundred)) {
       oc = settings.overclock.div(Rational.hundred);
+      if (settings.factory === ItemId.NuclearPowerPlant) {
+        oc = oc.mul(Rational.from(4, 5));
+      }
       speed = speed.mul(oc);
     }
 
