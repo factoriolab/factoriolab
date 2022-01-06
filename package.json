@@ -19,7 +19,6 @@
     "build-stats": "ng build --statsJson=true",
     "test": "ng test",
     "test-build": "ng test --no-watch --browsers=ChromeHeadless",
-    "codecov": "codecov",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -69,7 +68,6 @@
     "@types/pako": "^1.0.2",
     "@typescript-eslint/eslint-plugin": "5.9.0",
     "@typescript-eslint/parser": "5.9.0",
-    "codecov": "^3.8.3",
     "eslint": "^8.6.0",
     "jasmine-core": "~4.0.0",
     "jasmine-spec-reporter": "~7.0.0",
