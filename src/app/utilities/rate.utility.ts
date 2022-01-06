@@ -169,9 +169,11 @@ export class RateUtility {
       const recipe = data.recipeR[step.recipeId];
       step.outputs = {};
       for (const id of Object.keys(recipe.out)) {
-        const val = recipe.out[id].mul(step.factories).div(recipe.time);
-        const outStep = steps.find((s) => s.itemId === id);
-        step.outputs[id] = val.div(outStep.items);
+        if (recipe.out[id].nonzero()) {
+          const val = recipe.out[id].mul(step.factories).div(recipe.time);
+          const outStep = steps.find((s) => s.itemId === id);
+          step.outputs[id] = val.div(outStep.items);
+        }
       }
     }
     return steps;
