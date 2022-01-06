@@ -18,7 +18,6 @@ import {
   InputComponent,
   SelectComponent,
   ColumnsComponent,
-  PowerUnit,
 } from '~/components';
 import {
   DisplayRate,
@@ -29,6 +28,7 @@ import {
   InserterCapacity,
   Column,
   Game,
+  PowerUnit,
 } from '~/models';
 import { RouterService } from '~/services';
 import { reducers, metaReducers } from '~/store';

@@ -1,6 +1,6 @@
 import { compose, createSelector } from '@ngrx/store';
 
-import { Column, Game, LinkValue, Rational, SankeyAlign } from '~/models';
+import { Column, Game, LinkValue, PowerUnit, SankeyAlign } from '~/models';
 import { State } from '../';
 import * as Settings from '../settings';
 import {
@@ -17,12 +17,14 @@ const sLinkText = (state: PreferencesState): LinkValue => state.linkText;
 const sSankeyAlign = (state: PreferencesState): SankeyAlign =>
   state.sankeyAlign;
 const sSimplex = (state: PreferencesState): boolean => state.simplex;
+const sPowerUnit = (state: PreferencesState): PowerUnit => state.powerUnit;
 
 export const getColumns = compose(sColumns, preferencesState);
 export const getLinkSize = compose(sLinkSize, preferencesState);
 export const getLinkText = compose(sLinkText, preferencesState);
 export const getSankeyAlign = compose(sSankeyAlign, preferencesState);
 export const getSimplex = compose(sSimplex, preferencesState);
+export const getPowerUnit = compose(sPowerUnit, preferencesState);
 
 export const getColumnsState = createSelector(
   getColumns,

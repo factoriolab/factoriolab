@@ -23,6 +23,7 @@ import {
   InserterCapacity,
   DefaultIdPayload,
   PreviousPayload,
+  PowerUnit,
 } from '~/models';
 import { State } from '~/store';
 import { ResetAction } from '~/store/app.actions';
@@ -203,5 +204,9 @@ export class SettingsContainerComponent implements OnInit {
 
   setSimplex(value: boolean): void {
     this.store.dispatch(new Preferences.SetSimplexAction(value));
+  }
+
+  setPowerUnit(value: PowerUnit): void {
+    this.store.dispatch(new Preferences.SetPowerUnitAction(value));
   }
 }

@@ -20,6 +20,7 @@ import {
   InserterCapacity,
   DefaultPayload,
   IdPayload,
+  PowerUnit,
 } from '~/models';
 import { State } from '~/store';
 import * as Factories from '~/store/factories';
@@ -61,6 +62,7 @@ export class ListContainerComponent implements OnInit {
   inserterTarget$: Observable<InserterTarget>;
   inserterCapacity$: Observable<InserterCapacity>;
   columns$: Observable<Preferences.ColumnsState>;
+  powerUnit$: Observable<PowerUnit>;
   modifiedIgnore$: Observable<boolean>;
   modifiedBelt$: Observable<boolean>;
   modifiedWagon$: Observable<boolean>;
@@ -87,6 +89,7 @@ export class ListContainerComponent implements OnInit {
     this.inserterTarget$ = this.store.select(Settings.getInserterTarget);
     this.inserterCapacity$ = this.store.select(Settings.getInserterCapacity);
     this.columns$ = this.store.select(Preferences.getColumnsState);
+    this.powerUnit$ = this.store.select(Preferences.getPowerUnit);
     this.modifiedIgnore$ = this.store.select(Items.getContainsIgnore);
     this.modifiedBelt$ = this.store.select(Items.getContainsBelt);
     this.modifiedWagon$ = this.store.select(Items.getContainsWagon);
