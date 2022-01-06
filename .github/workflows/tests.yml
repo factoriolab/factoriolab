@@ -15,5 +15,4 @@ jobs:
         run: npm run lint
       - name: Run tests
         run: npm run test-build
-      - name: Run codecov
-        run: npm run codecov
+      - uses: codecov/codecov-action@v2

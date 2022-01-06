@@ -22,6 +22,7 @@ export const data: AppData = {
     { id: 'nls', name: 'Nullius', game: Game.Factorio },
     { id: 'pys', name: 'Pyanodons', game: Game.Factorio },
     { id: 'pysalf', name: 'Pyanodons + AL', game: Game.Factorio },
+    { id: 'qat', name: `Qatavin's More Stuff`, game: Game.Factorio },
     { id: 'sea', name: 'Sea Block', game: Game.Factorio },
     { id: 'sxp', name: 'Space Exploration', game: Game.Factorio },
     { id: 'xan', name: 'Xander Mod', game: Game.Factorio },
