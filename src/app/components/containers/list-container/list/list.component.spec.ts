@@ -63,6 +63,7 @@ enum DataTest {
       [inserterTarget]="inserterTarget"
       [inserterCapacity]="inserterCapacity"
       [columns]="columns"
+      [powerUnit]="powerUnit"
       [modifiedIgnore]="modifiedIgnore"
       [modifiedBelt]="modifiedBelt"
       [modifiedFactory]="modifiedFactory"
@@ -108,6 +109,7 @@ class TestListComponent {
   inserterTarget = InserterTarget.Chest;
   inserterCapacity = InserterCapacity.Capacity0;
   columns = initialColumnsState;
+  powerUnit = PowerUnit.Auto;
   modifiedIgnore = false;
   modifiedBelt = false;
   modifiedFactory = false;
@@ -449,15 +451,15 @@ describe('ListComponent', () => {
     });
 
     it('should determine what units to use for power', () => {
-      component.child.powerUnit = null;
+      component.child.effPowerUnit = null;
       component.child.setEffectivePrecision();
-      expect(component.child.powerUnit).toEqual(PowerUnit.kW);
+      expect(component.child.effPowerUnit).toEqual(PowerUnit.kW);
       component.steps = [
         { itemId: ItemId.Coal, items: Rational.one, power: Rational.thousand },
       ];
       fixture.detectChanges();
       component.child.setEffectivePrecision();
-      expect(component.child.powerUnit).toEqual(PowerUnit.MW);
+      expect(component.child.effPowerUnit).toEqual(PowerUnit.MW);
     });
 
     it('should not calculate power unit if power column is disabled', () => {
