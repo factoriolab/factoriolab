@@ -18,7 +18,6 @@ import {
   InputComponent,
   SelectComponent,
   ColumnsComponent,
-  PowerUnit,
 } from '~/components';
 import {
   DisplayRate,
@@ -29,6 +28,7 @@ import {
   InserterCapacity,
   Column,
   Game,
+  PowerUnit,
 } from '~/models';
 import { RouterService } from '~/services';
 import { reducers, metaReducers } from '~/store';
@@ -63,6 +63,7 @@ enum DataTest {
       [inserterTarget]="inserterTarget"
       [inserterCapacity]="inserterCapacity"
       [columns]="columns"
+      [powerUnit]="powerUnit"
       [modifiedIgnore]="modifiedIgnore"
       [modifiedBelt]="modifiedBelt"
       [modifiedFactory]="modifiedFactory"
@@ -108,6 +109,7 @@ class TestListComponent {
   inserterTarget = InserterTarget.Chest;
   inserterCapacity = InserterCapacity.Capacity0;
   columns = initialColumnsState;
+  powerUnit = PowerUnit.Auto;
   modifiedIgnore = false;
   modifiedBelt = false;
   modifiedFactory = false;
@@ -449,15 +451,21 @@ describe('ListComponent', () => {
     });
 
     it('should determine what units to use for power', () => {
-      component.child.powerUnit = null;
+      component.child.effPowerUnit = null;
       component.child.setEffectivePrecision();
-      expect(component.child.powerUnit).toEqual(PowerUnit.kW);
+      expect(component.child.effPowerUnit).toEqual(PowerUnit.kW);
       component.steps = [
         { itemId: ItemId.Coal, items: Rational.one, power: Rational.thousand },
       ];
       fixture.detectChanges();
       component.child.setEffectivePrecision();
-      expect(component.child.powerUnit).toEqual(PowerUnit.MW);
+      expect(component.child.effPowerUnit).toEqual(PowerUnit.MW);
+      component.steps = [
+        { itemId: ItemId.Coal, items: Rational.one, power: Rational.million },
+      ];
+      fixture.detectChanges();
+      component.child.setEffectivePrecision();
+      expect(component.child.effPowerUnit).toEqual(PowerUnit.GW);
     });
 
     it('should not calculate power unit if power column is disabled', () => {
@@ -474,6 +482,16 @@ describe('ListComponent', () => {
       fixture.detectChanges();
       component.child.setEffectivePrecision();
       expect(component.child.powerUnit).toBeNull();
+    });
+
+    it('should handle null power', () => {
+      component.child.effPowerUnit = null;
+      component.steps = [
+        { itemId: ItemId.Coal, items: Rational.one, power: undefined },
+      ];
+      fixture.detectChanges();
+      component.child.setEffectivePrecision();
+      expect(component.child.effPowerUnit).toEqual(PowerUnit.kW);
     });
   });
 
@@ -729,6 +747,11 @@ describe('ListComponent', () => {
     it('should return a value in MW', () => {
       component.child.powerUnit = PowerUnit.MW;
       expect(component.child.power(Rational.thousand)).toEqual('1 MW');
+    });
+
+    it('should return a value in GW', () => {
+      component.child.powerUnit = PowerUnit.GW;
+      expect(component.child.power(Rational.million)).toEqual('1 GW');
     });
   });
 

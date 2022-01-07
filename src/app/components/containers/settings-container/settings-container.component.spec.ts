@@ -24,6 +24,7 @@ import {
   DefaultPayload,
   IdPayload,
   PreviousPayload,
+  PowerUnit,
 } from '~/models';
 import { reducers, metaReducers, State } from '~/store';
 import { ResetAction } from '~/store/app.actions';
@@ -391,6 +392,14 @@ describe('SettingsContainerComponent', () => {
     component.child.setSimplex.emit(value);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Preferences.SetSimplexAction(value)
+    );
+  });
+
+  it('should set power unit', () => {
+    const value = PowerUnit.MW;
+    component.child.setPowerUnit.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Preferences.SetPowerUnitAction(value)
     );
   });
 });

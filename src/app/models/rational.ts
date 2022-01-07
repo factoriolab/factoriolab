@@ -13,6 +13,7 @@ export class Rational {
   static ten = new Rational(BigInt(10));
   static hundred = new Rational(BigInt(100));
   static thousand = new Rational(BigInt(1000));
+  static million = new Rational(BigInt(1000000));
 
   readonly p: bigint;
   readonly q: bigint;
