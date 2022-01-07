@@ -342,14 +342,20 @@ export class ListComponent
 
       if (this.columns[Column.Power].show) {
         if (this.powerUnit === PowerUnit.Auto) {
-          let unit = PowerUnit.MW;
-          for (const step of this.steps) {
-            if (step.power?.lt(Rational.thousand)) {
-              unit = PowerUnit.kW;
-              break;
+          let minPower: Rational = null;
+          for (const step of this.steps.filter((s) => s.power)) {
+            if (!minPower || step.power.lt(minPower)) {
+              minPower = step.power;
             }
           }
-          this.effPowerUnit = unit;
+          minPower = minPower ?? Rational.zero;
+          if (minPower.lt(Rational.thousand)) {
+            this.effPowerUnit = PowerUnit.kW;
+          } else if (minPower.lt(Rational.million)) {
+            this.effPowerUnit = PowerUnit.MW;
+          } else {
+            this.effPowerUnit = PowerUnit.GW;
+          }
         } else {
           this.effPowerUnit = this.powerUnit;
         }
@@ -494,13 +500,19 @@ export class ListComponent
   }
 
   power(value: Rational): string {
-    if (this.effPowerUnit === PowerUnit.kW) {
-      return `${this.rate(value, this.effPrecision[Column.Power])} kW`;
-    } else {
-      return `${this.rate(
-        value.div(Rational.thousand),
-        this.effPrecision[Column.Power]
-      )} MW`;
+    switch (this.effPowerUnit) {
+      case PowerUnit.kW:
+        return `${this.rate(value, this.effPrecision[Column.Power])} kW`;
+      case PowerUnit.MW:
+        return `${this.rate(
+          value.div(Rational.thousand),
+          this.effPrecision[Column.Power]
+        )} MW`;
+      case PowerUnit.GW:
+        return `${this.rate(
+          value.div(Rational.million),
+          this.effPrecision[Column.Power]
+        )} GW`;
     }
   }
 

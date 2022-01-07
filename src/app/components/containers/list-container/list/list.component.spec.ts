@@ -460,6 +460,12 @@ describe('ListComponent', () => {
       fixture.detectChanges();
       component.child.setEffectivePrecision();
       expect(component.child.effPowerUnit).toEqual(PowerUnit.MW);
+      component.steps = [
+        { itemId: ItemId.Coal, items: Rational.one, power: Rational.million },
+      ];
+      fixture.detectChanges();
+      component.child.setEffectivePrecision();
+      expect(component.child.effPowerUnit).toEqual(PowerUnit.GW);
     });
 
     it('should not calculate power unit if power column is disabled', () => {
@@ -476,6 +482,16 @@ describe('ListComponent', () => {
       fixture.detectChanges();
       component.child.setEffectivePrecision();
       expect(component.child.powerUnit).toBeNull();
+    });
+
+    it('should handle null power', () => {
+      component.child.effPowerUnit = null;
+      component.steps = [
+        { itemId: ItemId.Coal, items: Rational.one, power: undefined },
+      ];
+      fixture.detectChanges();
+      component.child.setEffectivePrecision();
+      expect(component.child.effPowerUnit).toEqual(PowerUnit.kW);
     });
   });
 
@@ -731,6 +747,11 @@ describe('ListComponent', () => {
     it('should return a value in MW', () => {
       component.child.powerUnit = PowerUnit.MW;
       expect(component.child.power(Rational.thousand)).toEqual('1 MW');
+    });
+
+    it('should return a value in GW', () => {
+      component.child.powerUnit = PowerUnit.GW;
+      expect(component.child.power(Rational.million)).toEqual('1 GW');
     });
   });
 
