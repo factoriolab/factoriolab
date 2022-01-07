@@ -5,6 +5,7 @@ import {
   Entities,
   IdPayload,
   LinkValue,
+  PowerUnit,
   SankeyAlign,
 } from '~/models';
 
@@ -16,6 +17,7 @@ export const enum PreferencesActionType {
   SET_LINK_TEXT = '[Preferences] Set Link Text',
   SET_SANKEY_ALIGN = '[Preferences] Set Sankey Align',
   SET_SIMPLEX = '[Preferences] Set Simplex Enabled',
+  SET_POWER_UNIT = '[Preferences] Set Power Unit',
 }
 
 export class SaveStateAction implements Action {
@@ -53,6 +55,11 @@ export class SetSimplexAction implements Action {
   constructor(public payload: boolean) {}
 }
 
+export class SetPowerUnitAction implements Action {
+  readonly type = PreferencesActionType.SET_POWER_UNIT;
+  constructor(public payload: PowerUnit) {}
+}
+
 export type PreferencesAction =
   | SaveStateAction
   | RemoveStateAction
@@ -60,4 +67,5 @@ export type PreferencesAction =
   | SetLinkSizeAction
   | SetLinkTextAction
   | SetSankeyAlignAction
-  | SetSimplexAction;
+  | SetSimplexAction
+  | SetPowerUnitAction;

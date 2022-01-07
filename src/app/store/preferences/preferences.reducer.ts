@@ -4,6 +4,7 @@ import {
   LinkValue,
   AllColumns,
   SankeyAlign,
+  PowerUnit,
 } from '~/models';
 import { AppAction, AppActionType } from '../app.actions';
 import {
@@ -20,6 +21,7 @@ export interface PreferencesState {
   linkText: LinkValue;
   sankeyAlign: SankeyAlign;
   simplex: boolean;
+  powerUnit: PowerUnit;
 }
 
 export const initialColumnsState: ColumnsState = AllColumns.reduce(
@@ -37,6 +39,7 @@ export const initialPreferencesState: PreferencesState = {
   linkText: LinkValue.Items,
   sankeyAlign: SankeyAlign.Justify,
   simplex: true,
+  powerUnit: PowerUnit.Auto,
 };
 
 export function preferencesReducer(
@@ -68,6 +71,8 @@ export function preferencesReducer(
       return { ...state, ...{ sankeyAlign: action.payload } };
     case PreferencesActionType.SET_SIMPLEX:
       return { ...state, ...{ simplex: action.payload } };
+    case PreferencesActionType.SET_POWER_UNIT:
+      return { ...state, ...{ powerUnit: action.payload } };
     default:
       return state;
   }

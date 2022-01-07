@@ -722,6 +722,17 @@ This does not affect burners that use non-chemical fuels."
             ></lab-options>
           </td>
         </tr>
+        <tr>
+          <td>Power units</td>
+          <td>
+            <lab-options
+              title="Select power units"
+              [selected]="preferences.powerUnit"
+              [options]="PowerUnitOptions"
+              (selectId)="setPowerUnit.emit($event)"
+            ></lab-options>
+          </td>
+        </tr>
       </table>
     </div>
   </div>

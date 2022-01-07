@@ -1,3 +1,4 @@
+import { PowerUnit } from '~/models';
 import { ResetAction } from '../app.actions';
 import * as Actions from './preferences.actions';
 import {
@@ -83,6 +84,16 @@ describe('Preferences Reducer', () => {
         new Actions.SetSimplexAction(false)
       );
       expect(result.simplex).toEqual(false);
+    });
+  });
+
+  describe('SET_POWER_UNIT', () => {
+    it('should set the power unit', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetPowerUnitAction(PowerUnit.MW)
+      );
+      expect(result.powerUnit).toEqual(PowerUnit.MW);
     });
   });
 

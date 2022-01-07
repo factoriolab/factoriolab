@@ -36,6 +36,8 @@ import {
   Game,
   GameOptions,
   PreviousPayload,
+  PowerUnit,
+  PowerUnitOptions,
 } from '~/models';
 import { RouterService } from '~/services';
 import { FactoriesState } from '~/store/factories';
@@ -97,6 +99,7 @@ export class SettingsComponent implements OnInit, OnChanges {
   @Output() setDisplayRate = new EventEmitter<PreviousPayload<DisplayRate>>();
   @Output() setColumns = new EventEmitter<ColumnsState>();
   @Output() setSimplex = new EventEmitter<boolean>();
+  @Output() setPowerUnit = new EventEmitter<PowerUnit>();
 
   initial = initialSettingsState;
   sortedFuels: string[] = [];
@@ -134,6 +137,7 @@ export class SettingsComponent implements OnInit, OnChanges {
   InserterCapacityOptions = InserterCapacityOptions;
   InserterTargetOptions = InserterTargetOptions;
   DisplayRateOptions = DisplayRateOptions;
+  PowerUnitOptions = PowerUnitOptions;
   BrowserUtility = BrowserUtility;
 
   ItemId = ItemId;

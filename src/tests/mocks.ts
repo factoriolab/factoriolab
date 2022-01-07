@@ -23,6 +23,7 @@ import {
   MatrixResultType,
   Game,
   SankeyAlign,
+  PowerUnit,
 } from '~/models';
 import { initialDatasetsState } from '~/store/datasets';
 import { getFactorySettings, initialFactoriesState } from '~/store/factories';
@@ -202,6 +203,7 @@ export const Preferences: PreferencesState = {
   linkText: LinkValue.Items,
   sankeyAlign: SankeyAlign.Justify,
   simplex: true,
+  powerUnit: PowerUnit.Auto,
 };
 
 function node(i: number): Node {
