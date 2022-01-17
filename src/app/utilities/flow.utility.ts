@@ -79,7 +79,9 @@ export class FlowUtility {
         }
 
         for (const outId of Object.keys(recipe.out).filter(
-          (id) => !match || (step.itemId !== id && !step.parents?.[id])
+          (id) =>
+            recipe.out[id].nonzero() &&
+            (!match || (step.itemId !== id && !step.parents?.[id]))
         )) {
           const outStep = steps.find((s) => s.itemId === outId);
           const outText = this.stepLinkValue(outStep, linkText);
