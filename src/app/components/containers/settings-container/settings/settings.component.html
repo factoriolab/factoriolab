@@ -200,6 +200,22 @@ or fractional precision for visible columns."
             ></lab-options>
           </td>
         </tr>
+        <tr *ngIf="columns[Column.Power].show">
+          <td>
+            <lab-info
+              text="Power units"
+              tooltip="Set the unit of power to use in the power column."
+            ></lab-info>
+          </td>
+          <td>
+            <lab-options
+              title="Select power units"
+              [selected]="preferences.powerUnit"
+              [options]="PowerUnitOptions"
+              (selectId)="setPowerUnit.emit($event)"
+            ></lab-options>
+          </td>
+        </tr>
       </table>
     </div>
   </div>
@@ -719,17 +735,6 @@ This does not affect burners that use non-chemical fuels."
               [selected]="settings.inserterTarget"
               [options]="InserterTargetOptions"
               (selectId)="setInserterTarget.emit($event)"
-            ></lab-options>
-          </td>
-        </tr>
-        <tr>
-          <td>Power units</td>
-          <td>
-            <lab-options
-              title="Select power units"
-              [selected]="preferences.powerUnit"
-              [options]="PowerUnitOptions"
-              (selectId)="setPowerUnit.emit($event)"
             ></lab-options>
           </td>
         </tr>
