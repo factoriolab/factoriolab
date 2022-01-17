@@ -5,6 +5,7 @@ import {
   AllColumns,
   SankeyAlign,
   PowerUnit,
+  Column,
 } from '~/models';
 import { AppAction, AppActionType } from '../app.actions';
 import {
@@ -62,7 +63,15 @@ export function preferencesReducer(
       return { ...state, ...{ states } };
     }
     case PreferencesActionType.SET_COLUMNS:
-      return { ...state, ...{ columns: action.payload } };
+      return {
+        ...state,
+        ...{
+          columns: action.payload,
+          powerUnit: action.payload[Column.Power].show
+            ? state.powerUnit
+            : PowerUnit.Auto,
+        },
+      };
     case PreferencesActionType.SET_LINK_SIZE:
       return { ...state, ...{ linkSize: action.payload } };
     case PreferencesActionType.SET_LINK_TEXT:

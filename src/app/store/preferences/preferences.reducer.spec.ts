@@ -1,4 +1,4 @@
-import { PowerUnit } from '~/models';
+import { Column, PowerUnit } from '~/models';
 import { ResetAction } from '../app.actions';
 import * as Actions from './preferences.actions';
 import {
@@ -39,11 +39,20 @@ describe('Preferences Reducer', () => {
 
   describe('SET_COLUMNS', () => {
     it('should set the columns state', () => {
+      const columns = { [Column.Power]: { show: true } } as any;
       const result = preferencesReducer(
         undefined,
-        new Actions.SetColumnsAction(value as any)
+        new Actions.SetColumnsAction(columns)
       );
-      expect(result.columns).toEqual(value as any);
+      expect(result.columns).toEqual(columns);
+    });
+
+    it('should reset power unit if power column is hidden', () => {
+      const result = preferencesReducer(
+        { powerUnit: PowerUnit.MW } as any,
+        new Actions.SetColumnsAction({ [Column.Power]: {} } as any)
+      );
+      expect(result.powerUnit).toEqual(PowerUnit.Auto);
     });
   });
 
