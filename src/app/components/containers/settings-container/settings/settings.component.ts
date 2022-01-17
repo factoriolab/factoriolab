@@ -38,6 +38,7 @@ import {
   PreviousPayload,
   PowerUnit,
   PowerUnitOptions,
+  Column,
 } from '~/models';
 import { RouterService } from '~/services';
 import { FactoriesState } from '~/store/factories';
@@ -142,6 +143,7 @@ export class SettingsComponent implements OnInit, OnChanges {
 
   ItemId = ItemId;
   Game = Game;
+  Column = Column;
 
   ctrlFlowRate = new FormControl('', Validators.min(1));
   ctrlMiningProductivity = new FormControl('', Validators.min(0));
