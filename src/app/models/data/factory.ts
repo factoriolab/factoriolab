@@ -39,10 +39,10 @@ export class RationalFactory {
   multi?: boolean;
 
   constructor(data: Factory) {
-    if (data.speed) {
+    if (data.speed != null) {
       this.speed = Rational.fromNumber(data.speed);
     }
-    if (data.modules) {
+    if (data.modules != null) {
       this.modules = Math.round(data.modules);
     }
     if (data.type) {

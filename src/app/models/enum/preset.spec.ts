@@ -8,7 +8,7 @@ describe('Preset', () => {
     });
 
     it('should return the correct options for Dyson Sphere Program', () => {
-      expect(presetOptions(Game.DysonSphereProgram).length).toEqual(2);
+      expect(presetOptions(Game.DysonSphereProgram).length).toEqual(3);
     });
   });
 });

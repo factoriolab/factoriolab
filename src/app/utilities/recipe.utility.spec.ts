@@ -47,9 +47,11 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Coal,
+        ItemId.Module,
         Rational.zero,
         Rational.zero,
         settings,
+        Mocks.ItemSettingsInitial,
         Mocks.Data
       );
       const expected = new RationalRecipe(
@@ -68,9 +70,11 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.CopperCable,
         ItemId.Coal,
+        ItemId.Module,
         Rational.zero,
         Rational.zero,
         Mocks.RationalRecipeSettings[RecipeId.CopperCable],
+        Mocks.ItemSettingsInitial,
         Mocks.Data
       );
       const expected = new RationalRecipe(
@@ -92,9 +96,11 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.MiningProductivity,
         ItemId.Coal,
+        ItemId.Module,
         Rational.zero,
         Rational.two,
         settings,
+        Mocks.ItemSettingsInitial,
         Mocks.Data
       );
       const expected = new RationalRecipe(
@@ -116,9 +122,11 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.IronOre,
         ItemId.Coal,
+        ItemId.Module,
         Rational.two,
         Rational.zero,
         settings,
+        Mocks.ItemSettingsInitial,
         Mocks.Data
       );
       const expected = new RationalRecipe(
@@ -175,9 +183,11 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Coal,
+        ItemId.Module,
         Rational.zero,
         Rational.zero,
         settings,
+        Mocks.ItemSettingsInitial,
         data
       );
       const expected = new RationalRecipe(
@@ -224,9 +234,11 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Coal,
+        ItemId.Module,
         Rational.zero,
         Rational.zero,
         settings,
+        Mocks.ItemSettingsInitial,
         data
       );
       const expected = new RationalRecipe(
@@ -282,9 +294,11 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Coal,
+        ItemId.Module,
         Rational.zero,
         Rational.zero,
         settings,
+        Mocks.ItemSettingsInitial,
         data
       );
       const expected = new RationalRecipe(
@@ -307,9 +321,11 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.IronOre,
         ItemId.Coal,
+        ItemId.Module,
         Rational.zero,
         Rational.zero,
         settings,
+        Mocks.ItemSettingsInitial,
         Mocks.Data
       );
       const expected = new RationalRecipe(
@@ -333,9 +349,11 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.PlasticBar,
         ItemId.Coal,
+        ItemId.Module,
         Rational.zero,
         Rational.zero,
         settings,
+        Mocks.ItemSettingsInitial,
         Mocks.Data
       );
       const expected = new RationalRecipe(
@@ -357,9 +375,11 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.UsedUpUraniumFuelCell,
         ItemId.UsedUpUraniumFuelCell,
+        ItemId.Module,
         Rational.zero,
         Rational.zero,
         Mocks.RationalRecipeSettingsInitial[RecipeId.UsedUpUraniumFuelCell],
+        Mocks.ItemSettingsInitial,
         Mocks.Data
       );
       expect(result.in[ItemId.UraniumFuelCell]).toEqual(Rational.from(1, 200));
@@ -383,9 +403,11 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.UsedUpUraniumFuelCell,
         ItemId.UsedUpUraniumFuelCell,
+        ItemId.Module,
         Rational.zero,
         Rational.zero,
         Mocks.RationalRecipeSettingsInitial[RecipeId.UsedUpUraniumFuelCell],
+        Mocks.ItemSettingsInitial,
         data
       );
       expect(result.in[ItemId.UraniumFuelCell]).toEqual(Rational.from(1, 200));
@@ -418,9 +440,11 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.IronOre,
         ItemId.Coal,
+        ItemId.Module,
         Rational.zero,
         Rational.zero,
         settings,
+        Mocks.ItemSettingsInitial,
         data
       );
       const expected = new RationalRecipe(
@@ -443,9 +467,11 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Coal,
+        ItemId.Module,
         Rational.zero,
         Rational.zero,
         settings,
+        Mocks.ItemSettingsInitial,
         Mocks.Data
       );
       const expected = new RationalRecipe(
@@ -485,9 +511,11 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Coal,
+        ItemId.Module,
         Rational.zero,
         Rational.zero,
         settings,
+        Mocks.ItemSettingsInitial,
         data
       );
       const expected = new RationalRecipe(
@@ -523,9 +551,11 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Coal,
+        ItemId.Module,
         Rational.zero,
         Rational.zero,
         settings,
+        Mocks.ItemSettingsInitial,
         data
       );
       const expected = new RationalRecipe(
@@ -551,9 +581,11 @@ describe('RecipeUtility', () => {
           e[i] = RecipeUtility.adjustRecipe(
             i,
             ItemId.Coal,
+            ItemId.Module,
             Rational.zero,
             Rational.one,
             Mocks.RationalRecipeSettingsInitial[i],
+            Mocks.ItemSettingsInitial,
             Mocks.Data
           );
           return e;
@@ -682,6 +714,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemSettingsInitial,
         Mocks.Defaults.disabledRecipes,
         ItemId.Coal,
+        ItemId.Module,
         Rational.zero,
         Rational.one,
         Rational.one,
@@ -710,6 +743,7 @@ describe('RecipeUtility', () => {
         itemSettings,
         Mocks.Defaults.disabledRecipes,
         ItemId.Coal,
+        ItemId.Module,
         Rational.zero,
         Rational.one,
         Rational.one,
@@ -727,6 +761,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemSettingsInitial,
         [RecipeId.SolidFuelFromHeavyOil, RecipeId.SolidFuelFromPetroleumGas],
         ItemId.Coal,
+        ItemId.Module,
         Rational.zero,
         Rational.one,
         Rational.one,
@@ -765,7 +800,9 @@ describe('RecipeUtility', () => {
     beforeEach(() => {
       recipeR = RecipeUtility.adjustRecipes(
         Mocks.RationalRecipeSettingsInitial,
+        Mocks.ItemSettingsInitial,
         ItemId.Coal,
+        ItemId.Module,
         Rational.zero,
         Rational.one,
         Mocks.Data
