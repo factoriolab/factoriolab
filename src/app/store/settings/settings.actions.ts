@@ -31,6 +31,7 @@ export const enum SettingsActionType {
   SET_COST_FACTORY = '[Settings] Set Factory Cost',
   SET_COST_INPUT = '[Settings] Set Input Cost',
   SET_COST_IGNORED = '[Settings] Set Ignored Cost',
+  SET_PROLIFERATOR_SPRAY = '[Settings] Set Proliferator Spray',
   RESET_COST = '[Settings] Reset Cost Modifiers',
 }
 
@@ -134,6 +135,11 @@ export class SetCostIgnoredAction implements Action {
   constructor(public payload: string) {}
 }
 
+export class SetProliferatorSprayAction implements Action {
+  readonly type = SettingsActionType.SET_PROLIFERATOR_SPRAY;
+  constructor(public payload: string) {}
+}
+
 export class ResetCostAction implements Action {
   readonly type = SettingsActionType.RESET_COST;
 }
@@ -159,4 +165,5 @@ export type SettingsAction =
   | SetCostFactoryAction
   | SetCostInputAction
   | SetCostIgnoredAction
+  | SetProliferatorSprayAction
   | ResetCostAction;

@@ -248,6 +248,7 @@ export const getNormalizedRatesByFactories = createSelector(
           customSettings,
           itemSettings,
           adj.fuel,
+          adj.proliferatorSpray,
           adj.miningBonus,
           adj.researchSpeed,
           adj.data

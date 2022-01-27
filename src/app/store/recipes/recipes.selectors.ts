@@ -114,6 +114,7 @@ export const getAdjustedDataset = createSelector(
       itemSettings,
       disabledRecipes,
       adj.fuel,
+      adj.proliferatorSpray,
       adj.miningBonus,
       adj.researchSpeed,
       adj.costFactor,

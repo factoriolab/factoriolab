@@ -50,6 +50,7 @@ export class RecipeUtility {
   static adjustRecipe(
     recipeId: string,
     fuelId: string,
+    proliferatorSpray: string,
     miningBonus: Rational,
     researchFactor: Rational,
     settings: RationalRecipeSettings,
@@ -120,12 +121,19 @@ export class RecipeUtility {
             pollution = pollution.add(module.pollution);
           }
           if (module.sprays) {
+            let sprays = module.sprays;
+            // If proliferator is applied to proliferator, apply productivity bonus to sprays
+            if (data.itemR[proliferatorSpray]) {
+              const pModule = data.itemR[proliferatorSpray].module;
+              sprays = sprays.mul(Rational.one.add(pModule.productivity));
+            }
+            // Calculate amount of proliferator required for this recipe
             const pId = module.proliferator;
             if (!proliferatorUses[pId]) {
               proliferatorUses[pId] = Rational.zero;
             }
             for (const id of Object.keys(recipe.in)) {
-              const amount = recipe.in[id].div(module.sprays);
+              const amount = recipe.in[id].div(sprays);
               proliferatorUses[pId] = proliferatorUses[pId].add(amount);
             }
           }
@@ -133,15 +141,35 @@ export class RecipeUtility {
       }
     }
 
-    // Add proliferator consumption
-    if (Object.keys(proliferatorUses).length > 0 && !recipe.in) {
-      recipe.in = {};
-    }
-    for (const pId of Object.keys(proliferatorUses)) {
-      if (!recipe.in[pId]) {
-        recipe.in[pId] = proliferatorUses[pId];
-      } else {
-        recipe.in[pId] = recipe.in[pId].add(proliferatorUses[pId]);
+    if (Object.keys(proliferatorUses).length > 0) {
+      // If proliferator spray is applied to proliferator, add its usage to inputs
+      if (data.itemR[proliferatorSpray]) {
+        const pModule = data.itemR[proliferatorSpray].module;
+        const sprays = pModule.sprays.mul(
+          Rational.one.add(pModule.productivity)
+        );
+        let usage = Rational.zero;
+        for (const id of Object.keys(proliferatorUses)) {
+          const amount = proliferatorUses[id].div(sprays);
+          usage = usage.add(amount);
+        }
+        const pId = pModule.proliferator;
+        if (!proliferatorUses[pId]) {
+          proliferatorUses[pId] = Rational.zero;
+        }
+        proliferatorUses[pId] = proliferatorUses[pId].add(usage);
+      }
+
+      // Add proliferator consumption to recipe inputs
+      if (!recipe.in) {
+        recipe.in = {};
+      }
+      for (const pId of Object.keys(proliferatorUses)) {
+        if (!recipe.in[pId]) {
+          recipe.in[pId] = proliferatorUses[pId];
+        } else {
+          recipe.in[pId] = recipe.in[pId].add(proliferatorUses[pId]);
+        }
       }
     }
 
@@ -329,6 +357,7 @@ export class RecipeUtility {
     itemSettings: Entities<ItemSettings>,
     disabledRecipes: string[],
     fuel: string,
+    proliferatorSpray: string,
     miningBonus: Rational,
     researchSpeed: Rational,
     costFactor: Rational,
@@ -339,6 +368,7 @@ export class RecipeUtility {
       recipeSettings,
       itemSettings,
       fuel,
+      proliferatorSpray,
       miningBonus,
       researchSpeed,
       data
@@ -391,6 +421,7 @@ export class RecipeUtility {
     recipeSettings: Entities<RationalRecipeSettings>,
     itemSettings: Entities<ItemSettings>,
     fuel: string,
+    proliferatorSpray: string,
     miningBonus: Rational,
     researchSpeed: Rational,
     data: Dataset
@@ -400,6 +431,7 @@ export class RecipeUtility {
         e[i] = this.adjustRecipe(
           i,
           fuel,
+          proliferatorSpray,
           miningBonus,
           researchSpeed,
           recipeSettings[i],

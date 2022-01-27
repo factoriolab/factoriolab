@@ -553,6 +553,33 @@ Minimum possible value is 1."
         <tr>
           <td>
             <lab-info
+              text="Proliferator self-spray"
+              tooltip="Select the proliferator spray applied to proliferator itself."
+            ></lab-info>
+          </td>
+          <td>
+            <div>
+              <lab-select
+                header="Select a proliferator"
+                [data]="data"
+                [selected]="settings.proliferatorSpray"
+                [options]="data.prodModuleIds"
+                [includeEmptyModule]="true"
+                (selectId)="setProliferatorSpray.emit($event)"
+              >
+                <lab-icon
+                  class="button"
+                  tooltip="Select proliferator spray"
+                  [data]="data"
+                  [iconId]="settings.proliferatorSpray"
+                ></lab-icon>
+              </lab-select>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <lab-info
               text="Default transport belt"
               tooltip="Select the default belt to be used by all items."
             ></lab-info>

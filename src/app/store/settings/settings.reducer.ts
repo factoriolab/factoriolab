@@ -31,6 +31,7 @@ export interface SettingsState {
   costFactory: string;
   costInput: string;
   costIgnored: string;
+  proliferatorSpray: string;
 }
 
 export const initialSettingsState: SettingsState = {
@@ -54,6 +55,7 @@ export const initialSettingsState: SettingsState = {
   costFactory: '1',
   costInput: '1000000',
   costIgnored: '0',
+  proliferatorSpray: ItemId.Module,
 };
 
 export function settingsReducer(
@@ -142,6 +144,8 @@ export function settingsReducer(
       return { ...state, ...{ costInput: action.payload } };
     case SettingsActionType.SET_COST_IGNORED:
       return { ...state, ...{ costIgnored: action.payload } };
+    case SettingsActionType.SET_PROLIFERATOR_SPRAY:
+      return { ...state, ...{ proliferatorSpray: action.payload } };
     case SettingsActionType.RESET_COST:
       return {
         ...state,
