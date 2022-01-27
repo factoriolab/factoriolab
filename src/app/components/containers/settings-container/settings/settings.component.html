@@ -550,7 +550,7 @@ Minimum possible value is 1."
             </div>
           </td>
         </tr>
-        <tr>
+        <tr *ngIf="data.game === Game.DysonSphereProgram">
           <td>
             <lab-info
               text="Proliferator self-spray"
