@@ -424,7 +424,7 @@
                   [data]="data"
                   [selected]="mod"
                   [options]="data.recipeModuleIds[step.recipeId]"
-                  [includeEmptyModule]="true"
+                  [includeEmptyModule]="data.game !== Game.Satisfactory"
                   [displayRate]="displayRate"
                   (selectId)="
                     changeFactoryModules(
