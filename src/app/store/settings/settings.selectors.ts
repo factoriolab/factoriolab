@@ -88,7 +88,7 @@ export const getDefaults = createSelector(
           break;
         }
         case Game.DysonSphereProgram: {
-          moduleRank = preset === Preset.Minimum ? [m.minBelt] : [m.maxBelt];
+          moduleRank = preset === Preset.Beacon8 ? m.moduleRank : [];
           break;
         }
         case Game.Satisfactory: {

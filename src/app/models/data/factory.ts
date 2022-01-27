@@ -2,8 +2,8 @@ import { Rational } from '../rational';
 import { RationalSilo, Silo } from './silo';
 
 export interface Factory {
-  speed: number;
-  modules: number;
+  speed?: number;
+  modules?: number;
   /** Energy type, e.g. electric or burner */
   type?: string;
   /** Fuel category, e.g. chemical or nuclear */
@@ -18,11 +18,12 @@ export interface Factory {
   research?: boolean;
   silo?: Silo;
   overclockFactor?: number;
+  multi?: boolean;
 }
 
 export class RationalFactory {
-  speed: Rational;
-  modules: number;
+  speed?: Rational;
+  modules?: number;
   /** Energy type, e.g. electric or burner */
   type?: string;
   /** Fuel category, e.g. chemical or nuclear */
@@ -35,10 +36,15 @@ export class RationalFactory {
   research?: boolean;
   silo?: RationalSilo;
   overclockFactor?: number;
+  multi?: boolean;
 
   constructor(data: Factory) {
-    this.speed = Rational.fromNumber(data.speed);
-    this.modules = Math.round(data.modules);
+    if (data.speed) {
+      this.speed = Rational.fromNumber(data.speed);
+    }
+    if (data.modules) {
+      this.modules = Math.round(data.modules);
+    }
     if (data.type) {
       this.type = data.type;
     }
@@ -69,6 +75,9 @@ export class RationalFactory {
     }
     if (data.overclockFactor) {
       this.overclockFactor = data.overclockFactor;
+    }
+    if (data.multi) {
+      this.multi = data.multi;
     }
   }
 }

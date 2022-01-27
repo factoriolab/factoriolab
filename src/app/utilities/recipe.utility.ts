@@ -53,6 +53,7 @@ export class RecipeUtility {
     miningBonus: Rational,
     researchFactor: Rational,
     settings: RationalRecipeSettings,
+    itemSettings: Entities<ItemSettings>,
     data: Dataset
   ): RationalRecipe {
     const recipe = new RationalRecipe(data.recipeEntities[recipeId]);
@@ -63,8 +64,25 @@ export class RecipeUtility {
       recipe.out = { [recipeId]: Rational.one };
     }
 
-    // Adjust for factory speed
-    recipe.time = recipe.time.div(factory.speed);
+    if (factory.speed) {
+      // Adjust for factory speed
+      recipe.time = recipe.time.div(factory.speed);
+    } else {
+      // Calculate based on belt speed
+      // Use minimum speed of all inputs/outputs in recipe
+      const ids = [
+        ...Object.keys(recipe.in).filter((i) => recipe.in[i].nonzero()),
+        ...Object.keys(recipe.out).filter((i) => recipe.out[i].nonzero()),
+      ];
+      const belts = ids.map((i) => data.itemR[itemSettings[i].belt].belt);
+      let minSpeed = Rational.zero;
+      for (const b of belts) {
+        if (minSpeed.lt(b.speed)) {
+          minSpeed = b.speed;
+        }
+      }
+      recipe.time = recipe.time.div(minSpeed);
+    }
 
     if (factory.research) {
       // Adjust for research factor
@@ -81,6 +99,8 @@ export class RecipeUtility {
       // Adjust for mining bonus
       prod = prod.add(miningBonus);
     }
+
+    const proliferatorUses: Entities<Rational> = {};
 
     // Modules
     if (settings.factoryModules && settings.factoryModules.length) {
@@ -99,7 +119,29 @@ export class RecipeUtility {
           if (module.pollution) {
             pollution = pollution.add(module.pollution);
           }
+          if (module.sprays) {
+            const pId = module.proliferator;
+            if (!proliferatorUses[pId]) {
+              proliferatorUses[pId] = Rational.zero;
+            }
+            for (const id of Object.keys(recipe.in)) {
+              const amount = recipe.in[id].div(module.sprays);
+              proliferatorUses[pId] = proliferatorUses[pId].add(amount);
+            }
+          }
         }
+      }
+    }
+
+    // Add proliferator consumption
+    if (Object.keys(proliferatorUses).length > 0 && !recipe.in) {
+      recipe.in = {};
+    }
+    for (const pId of Object.keys(proliferatorUses)) {
+      if (!recipe.in[pId]) {
+        recipe.in[pId] = proliferatorUses[pId];
+      } else {
+        recipe.in[pId] = recipe.in[pId].add(proliferatorUses[pId]);
       }
     }
 
@@ -295,6 +337,7 @@ export class RecipeUtility {
   ): Dataset {
     const recipeR = this.adjustRecipes(
       recipeSettings,
+      itemSettings,
       fuel,
       miningBonus,
       researchSpeed,
@@ -322,7 +365,7 @@ export class RecipeUtility {
 
     // Check for loops in default recipes
     for (const id of Object.keys(data.itemRecipeIds)) {
-      this.cleanCircularRecipes(id, data.recipeR, itemRecipeIds);
+      this.cleanCircularRecipes(id, recipeR, itemRecipeIds);
     }
 
     return { ...data, ...{ recipeR, itemRecipeIds } };
@@ -346,6 +389,7 @@ export class RecipeUtility {
 
   static adjustRecipes(
     recipeSettings: Entities<RationalRecipeSettings>,
+    itemSettings: Entities<ItemSettings>,
     fuel: string,
     miningBonus: Rational,
     researchSpeed: Rational,
@@ -359,6 +403,7 @@ export class RecipeUtility {
           miningBonus,
           researchSpeed,
           recipeSettings[i],
+          itemSettings,
           data
         );
         return e;
