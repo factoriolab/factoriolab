@@ -402,4 +402,12 @@ describe('SettingsContainerComponent', () => {
       new Preferences.SetPowerUnitAction(value)
     );
   });
+
+  it('should set proliferator spray', () => {
+    const value = ItemId.ProductivityModule;
+    component.child.setProliferatorSpray.emit(value);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetProliferatorSprayAction(value)
+    );
+  });
 });

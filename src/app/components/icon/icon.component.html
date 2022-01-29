@@ -118,11 +118,11 @@
   </div>
   <div *ngIf="item?.factory as factory">
     <table>
-      <tr>
+      <tr *ngIf="factory.speed">
         <td>Crafting speed</td>
         <td>{{ round(factory.speed) }}</td>
       </tr>
-      <tr *ngIf="factory.modules">
+      <tr *ngIf="factory.modules && data.game === Game.Factorio">
         <td>Modules</td>
         <td>{{ factory.modules }}</td>
       </tr>
@@ -189,6 +189,10 @@
       <tr *ngIf="module.pollution">
         <td>Pollution</td>
         <td>{{ toBonusPercent(module.pollution) }}</td>
+      </tr>
+      <tr *ngIf="module.sprays">
+        <td>Sprays</td>
+        <td>{{ round(module.sprays) }}</td>
       </tr>
     </table>
   </div>

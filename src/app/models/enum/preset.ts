@@ -18,6 +18,7 @@ export function presetOptions(game: Game): IdName<Preset>[] {
       ]
     : [
         { id: Preset.Minimum, name: 'Minimum' },
-        { id: Preset.Modules, name: 'Maximum' },
+        { id: Preset.Modules, name: 'Upgraded' },
+        { id: Preset.Beacon8, name: 'Proliferated' },
       ];
 }

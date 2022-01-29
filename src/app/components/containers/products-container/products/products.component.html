@@ -278,11 +278,17 @@
                 <div *ngIf="product.viaFactoryModules as modules" class="flex">
                   <lab-select
                     *ngFor="let mod of modules; index as i; first as first"
-                    header="Select a module"
+                    [header]="
+                      data.game === Game.Factorio
+                        ? 'Select a module'
+                        : data.game === Game.DysonSphereProgram
+                        ? 'Select a proliferator'
+                        : 'Select resource purity'
+                    "
                     [data]="data"
                     [selected]="mod"
                     [options]="data.recipeModuleIds[id]"
-                    [includeEmptyModule]="data.game === Game.Factorio"
+                    [includeEmptyModule]="data.game !== Game.Satisfactory"
                     [displayRate]="displayRate"
                     (selectId)="
                       changeFactoryModules(
@@ -298,7 +304,13 @@
                   >
                     <lab-icon
                       class="button"
-                      title="Change rate step factory module"
+                      [title]="
+                        data.game === Game.Factorio
+                          ? 'Change rate step factory module'
+                          : data.game === Game.DysonSphereProgram
+                          ? 'Change rate step proliferator'
+                          : 'Change rate step resource purity'
+                      "
                       [class.module]="!first"
                       [data]="data"
                       [iconId]="mod"

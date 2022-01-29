@@ -14,6 +14,7 @@ import {
   Rational,
   EnergyType,
   Icon,
+  Game,
 } from '~/models';
 
 @Component({
@@ -41,6 +42,7 @@ export class IconComponent implements OnChanges {
 
   DisplayRate = DisplayRate;
   EnergyType = EnergyType;
+  Game = Game;
 
   constructor() {}
 

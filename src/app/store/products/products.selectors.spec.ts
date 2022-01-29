@@ -360,7 +360,14 @@ describe('Products Selectors', () => {
         null,
         null,
         {},
-        { fuel: null, miningBonus: null, researchSpeed: null, data: null },
+        {},
+        {
+          fuel: null,
+          proliferatorSpray: null,
+          miningBonus: null,
+          researchSpeed: null,
+          data: null,
+        },
         null
       );
       expect(result).toBeUndefined();
@@ -371,7 +378,14 @@ describe('Products Selectors', () => {
         [Mocks.RationalProducts[3]],
         null,
         {},
-        { fuel: null, miningBonus: null, researchSpeed: null, data: null },
+        {},
+        {
+          fuel: null,
+          proliferatorSpray: null,
+          miningBonus: null,
+          researchSpeed: null,
+          data: null,
+        },
         Mocks.Data
       );
       expect(result[Mocks.Product4.id].nonzero()).toBeTrue();
@@ -389,7 +403,14 @@ describe('Products Selectors', () => {
         [product],
         null,
         {},
-        { fuel: null, miningBonus: null, researchSpeed: null, data: null },
+        {},
+        {
+          fuel: null,
+          proliferatorSpray: null,
+          miningBonus: null,
+          researchSpeed: null,
+          data: null,
+        },
         Mocks.AdjustedData
       );
       expect(result['0'].nonzero()).toBeTrue();
@@ -409,7 +430,14 @@ describe('Products Selectors', () => {
         ],
         null,
         {},
-        { fuel: null, miningBonus: null, researchSpeed: null, data: null },
+        {},
+        {
+          fuel: null,
+          proliferatorSpray: null,
+          miningBonus: null,
+          researchSpeed: null,
+          data: null,
+        },
         Mocks.AdjustedData
       );
       expect(RecipeUtility.getProductStepData).not.toHaveBeenCalled();
@@ -433,7 +461,14 @@ describe('Products Selectors', () => {
         ],
         { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
         {},
-        { fuel: null, miningBonus: null, researchSpeed: null, data: null },
+        {},
+        {
+          fuel: null,
+          proliferatorSpray: null,
+          miningBonus: null,
+          researchSpeed: null,
+          data: null,
+        },
         Mocks.AdjustedData
       );
       expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
@@ -454,7 +489,14 @@ describe('Products Selectors', () => {
         ],
         { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
         {},
-        { fuel: null, miningBonus: null, researchSpeed: null, data: null },
+        {},
+        {
+          fuel: null,
+          proliferatorSpray: null,
+          miningBonus: null,
+          researchSpeed: null,
+          data: null,
+        },
         Mocks.AdjustedData
       );
       expect(RecipeUtility.getProductStepData).toHaveBeenCalled();
@@ -479,8 +521,10 @@ describe('Products Selectors', () => {
         ],
         { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
         Mocks.RationalRecipeSettingsInitial,
+        {},
         {
           fuel: ItemId.Coal,
+          proliferatorSpray: ItemId.ProductivityModule,
           miningBonus: Rational.zero,
           researchSpeed: Rational.one,
           data: Mocks.Data,

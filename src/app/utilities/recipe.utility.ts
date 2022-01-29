@@ -50,9 +50,11 @@ export class RecipeUtility {
   static adjustRecipe(
     recipeId: string,
     fuelId: string,
+    proliferatorSpray: string,
     miningBonus: Rational,
     researchFactor: Rational,
     settings: RationalRecipeSettings,
+    itemSettings: Entities<ItemSettings>,
     data: Dataset
   ): RationalRecipe {
     const recipe = new RationalRecipe(data.recipeEntities[recipeId]);
@@ -63,8 +65,25 @@ export class RecipeUtility {
       recipe.out = { [recipeId]: Rational.one };
     }
 
-    // Adjust for factory speed
-    recipe.time = recipe.time.div(factory.speed);
+    if (factory.speed) {
+      // Adjust for factory speed
+      recipe.time = recipe.time.div(factory.speed);
+    } else {
+      // Calculate based on belt speed
+      // Use minimum speed of all inputs/outputs in recipe
+      const ids = [
+        ...Object.keys(recipe.in).filter((i) => recipe.in[i].nonzero()),
+        ...Object.keys(recipe.out).filter((i) => recipe.out[i].nonzero()),
+      ];
+      const belts = ids.map((i) => data.itemR[itemSettings[i].belt].belt);
+      let minSpeed = Rational.zero;
+      for (const b of belts) {
+        if (minSpeed.lt(b.speed)) {
+          minSpeed = b.speed;
+        }
+      }
+      recipe.time = recipe.time.div(minSpeed);
+    }
 
     if (factory.research) {
       // Adjust for research factor
@@ -81,6 +100,8 @@ export class RecipeUtility {
       // Adjust for mining bonus
       prod = prod.add(miningBonus);
     }
+
+    const proliferatorUses: Entities<Rational> = {};
 
     // Modules
     if (settings.factoryModules && settings.factoryModules.length) {
@@ -99,6 +120,53 @@ export class RecipeUtility {
           if (module.pollution) {
             pollution = pollution.add(module.pollution);
           }
+          if (module.sprays) {
+            let sprays = module.sprays;
+            // If proliferator is applied to proliferator, apply productivity bonus to sprays
+            if (data.itemR[proliferatorSpray]) {
+              const pModule = data.itemR[proliferatorSpray].module;
+              sprays = sprays.mul(Rational.one.add(pModule.productivity));
+            }
+            // Calculate amount of proliferator required for this recipe
+            const pId = module.proliferator;
+            if (!proliferatorUses[pId]) {
+              proliferatorUses[pId] = Rational.zero;
+            }
+            for (const id of Object.keys(recipe.in)) {
+              const amount = recipe.in[id].div(sprays);
+              proliferatorUses[pId] = proliferatorUses[pId].add(amount);
+            }
+          }
+        }
+      }
+    }
+
+    if (Object.keys(proliferatorUses).length > 0) {
+      // If proliferator spray is applied to proliferator, add its usage to inputs
+      if (data.itemR[proliferatorSpray]) {
+        const pModule = data.itemR[proliferatorSpray].module;
+        const sprays = pModule.sprays.mul(
+          Rational.one.add(pModule.productivity)
+        );
+        let usage = Rational.zero;
+        for (const id of Object.keys(proliferatorUses)) {
+          const amount = proliferatorUses[id].div(sprays);
+          usage = usage.add(amount);
+        }
+        const pId = pModule.proliferator;
+        if (!proliferatorUses[pId]) {
+          proliferatorUses[pId] = Rational.zero;
+        }
+        proliferatorUses[pId] = proliferatorUses[pId].add(usage);
+      }
+
+      // Add proliferator consumption to recipe inputs
+      // Assume recipe already has listed inputs, otherwise it could not be proliferated
+      for (const pId of Object.keys(proliferatorUses)) {
+        if (!recipe.in[pId]) {
+          recipe.in[pId] = proliferatorUses[pId];
+        } else {
+          recipe.in[pId] = recipe.in[pId].add(proliferatorUses[pId]);
         }
       }
     }
@@ -287,6 +355,7 @@ export class RecipeUtility {
     itemSettings: Entities<ItemSettings>,
     disabledRecipes: string[],
     fuel: string,
+    proliferatorSpray: string,
     miningBonus: Rational,
     researchSpeed: Rational,
     costFactor: Rational,
@@ -295,7 +364,9 @@ export class RecipeUtility {
   ): Dataset {
     const recipeR = this.adjustRecipes(
       recipeSettings,
+      itemSettings,
       fuel,
+      proliferatorSpray,
       miningBonus,
       researchSpeed,
       data
@@ -322,7 +393,7 @@ export class RecipeUtility {
 
     // Check for loops in default recipes
     for (const id of Object.keys(data.itemRecipeIds)) {
-      this.cleanCircularRecipes(id, data.recipeR, itemRecipeIds);
+      this.cleanCircularRecipes(id, recipeR, itemRecipeIds);
     }
 
     return { ...data, ...{ recipeR, itemRecipeIds } };
@@ -346,7 +417,9 @@ export class RecipeUtility {
 
   static adjustRecipes(
     recipeSettings: Entities<RationalRecipeSettings>,
+    itemSettings: Entities<ItemSettings>,
     fuel: string,
+    proliferatorSpray: string,
     miningBonus: Rational,
     researchSpeed: Rational,
     data: Dataset
@@ -356,9 +429,11 @@ export class RecipeUtility {
         e[i] = this.adjustRecipe(
           i,
           fuel,
+          proliferatorSpray,
           miningBonus,
           researchSpeed,
           recipeSettings[i],
+          itemSettings,
           data
         );
         return e;

@@ -6,7 +6,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { IdType, DisplayRate, Dataset, ItemId } from '~/models';
+import { IdType, DisplayRate, Dataset, ItemId, Game } from '~/models';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
@@ -43,6 +43,7 @@ export class SelectComponent extends DialogContainerComponent {
 
   IdType = IdType;
   ItemId = ItemId;
+  Game = Game;
 
   get width(): number {
     if (this.rows.length > 1) {

@@ -205,9 +205,10 @@ export const getNormalizedRatesByFactories = createSelector(
   getProductsByFactories,
   getProductSteps,
   Recipes.getRationalRecipeSettings,
+  Items.getItemSettings,
   Settings.getAdjustmentData,
   Recipes.getAdjustedDataset,
-  (products, productSteps, recipeSettings, adj, data) =>
+  (products, productSteps, recipeSettings, itemSettings, adj, data) =>
     products?.reduce((e: Entities<Rational>, p) => {
       let recipeId = data.itemRecipeIds[p.itemId];
       if (recipeId && p.viaId === recipeId) {
@@ -245,7 +246,9 @@ export const getNormalizedRatesByFactories = createSelector(
         };
         const recipeR = RecipeUtility.adjustRecipes(
           customSettings,
+          itemSettings,
           adj.fuel,
+          adj.proliferatorSpray,
           adj.miningBonus,
           adj.researchSpeed,
           adj.data
