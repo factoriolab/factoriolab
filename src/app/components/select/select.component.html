@@ -11,7 +11,9 @@
   <div #scroll class="panel scroll" [style.width.rem]="width">
     <div class="tile" *ngIf="includeEmptyModule">
       <lab-icon
-        tooltip="No Module"
+        [tooltip]="
+          data.game === Game.Factorio ? 'No module' : 'No proliferator'
+        "
         class="grid"
         [class.selected]="selected === ItemId.Module"
         data-test="lab-select-none"

@@ -414,11 +414,17 @@
               >
                 <lab-select
                   *ngFor="let mod of modules; index as i; first as first"
-                  header="Select a module"
+                  [header]="
+                    data.game === Game.Factorio
+                      ? 'Select a module'
+                      : data.game === Game.DysonSphereProgram
+                      ? 'Select a proliferator'
+                      : 'Select resource purity'
+                  "
                   [data]="data"
                   [selected]="mod"
                   [options]="data.recipeModuleIds[step.recipeId]"
-                  [includeEmptyModule]="data.game === Game.Factorio"
+                  [includeEmptyModule]="data.game !== Game.Satisfactory"
                   [displayRate]="displayRate"
                   (selectId)="
                     changeFactoryModules(
@@ -432,7 +438,13 @@
                 >
                   <lab-icon
                     class="button module"
-                    title="Click to change factory modules"
+                    [title]="
+                      data.game === Game.Factorio
+                        ? 'Click to change factory modules'
+                        : data.game === Game.DysonSphereProgram
+                        ? 'Click to change proliferator'
+                        : 'Click to change resource purity'
+                    "
                     [data]="data"
                     [iconId]="mod"
                     [tooltip]="data.itemEntities[mod]?.name"

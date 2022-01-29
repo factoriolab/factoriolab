@@ -747,7 +747,9 @@ export class RouterService {
             ids = [];
             id = '';
           } else {
-            id = this.parseNString(id, hash.factories);
+            if (id) {
+              id = this.parseNString(id, hash.factories);
+            }
             if (loadIds) {
               ids.push(id);
             }
@@ -793,6 +795,7 @@ export class RouterService {
         this.zipDiffString(state.costInput, init.costInput),
         this.zipDiffString(state.costIgnored, init.costIgnored),
         this.zipDiffString(state.beaconReceivers, init.beaconReceivers),
+        this.zipDiffString(state.proliferatorSpray, init.proliferatorSpray),
       ]),
       hash: this.zipFields([
         this.zipDiffDisplayRate(state.displayRate, init.displayRate),
@@ -818,6 +821,11 @@ export class RouterService {
         this.zipDiffString(state.costInput, init.costInput),
         this.zipDiffString(state.costIgnored, init.costIgnored),
         this.zipDiffString(state.beaconReceivers, init.beaconReceivers),
+        this.zipDiffNString(
+          state.proliferatorSpray,
+          init.proliferatorSpray,
+          hash.modules
+        ),
       ]),
     };
 
@@ -860,6 +868,7 @@ export class RouterService {
           costInput: this.parseString(s[i++]),
           costIgnored: this.parseString(s[i++]),
           beaconReceivers: this.parseString(s[i++]),
+          proliferatorSpray: this.parseString(s[i++]),
           preset: undefined,
         };
         break;
@@ -886,6 +895,7 @@ export class RouterService {
           costInput: this.parseString(s[i++]),
           costIgnored: this.parseString(s[i++]),
           beaconReceivers: this.parseString(s[i++]),
+          proliferatorSpray: this.parseString(s[i++]),
         };
         break;
       }
@@ -911,6 +921,7 @@ export class RouterService {
           costInput: this.parseString(s[i++]),
           costIgnored: this.parseString(s[i++]),
           beaconReceivers: this.parseString(s[i++]),
+          proliferatorSpray: this.parseNString(s[i++], hash.modules),
           baseId: undefined,
         };
         break;

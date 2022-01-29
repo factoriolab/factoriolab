@@ -356,11 +356,16 @@ or fractional precision for visible columns."
                 </lab-ranker>
                 <ng-template #moduleSelect>
                   <lab-select
-                    header="Select a module"
+                    [header]="
+                      data.game === Game.DysonSphereProgram
+                        ? 'Select a proliferator'
+                        : 'Select resource purity'
+                    "
                     [data]="data"
                     [selected]="factory.moduleRank[0]"
                     [options]="data.moduleIds"
                     [displayRate]="settings.displayRate"
+                    [includeEmptyModule]="data.game === Game.DysonSphereProgram"
                     (selectId)="
                       setModuleRank.emit({
                         id: f,
@@ -374,7 +379,11 @@ or fractional precision for visible columns."
                   >
                     <lab-icon
                       class="button"
-                      tooltip="Module preferences"
+                      [tooltip]="
+                        data.game === Game.DysonSphereProgram
+                          ? 'Proliferator preferences'
+                          : 'Resource node purity'
+                      "
                       [data]="data"
                       [iconId]="
                         factory.moduleRank.length
@@ -504,45 +513,70 @@ or fractional precision for visible columns."
         </ng-container>
       </table>
       <table class="icons">
-        <ng-container *ngIf="data.game === Game.Factorio">
-          <tr>
-            <td colspan="2">
-              <div class="flex option" (click)="toggleBeaconPower()">
-                <div
-                  class="checkbox"
-                  [class.checked]="settings.beaconReceivers"
-                ></div>
-                <lab-info
-                  text="Estimate beacon power usage"
-                  tooltip="Enable to estimate power usage of beacons as well as factories.
-Requires an estimated average number of receivers per beacon."
-                ></lab-info>
-              </div>
-            </td>
-          </tr>
-          <tr *ngIf="settings.beaconReceivers">
-            <td>
+        <tr *ngIf="data.game === Game.Factorio">
+          <td colspan="2">
+            <div class="flex option" (click)="toggleBeaconPower()">
+              <div
+                class="checkbox"
+                [class.checked]="settings.beaconReceivers"
+              ></div>
               <lab-info
-                text="Average beacon receivers"
-                tooltip="The average number of factories affected by each beacon.
-Minimum possible value is 1."
+                text="Estimate beacon power usage"
+                tooltip="Enable to estimate power usage of beacons as well as factories.
+Requires an estimated average number of receivers per beacon."
               ></lab-info>
-            </td>
-            <td>
-              <div>
-                <lab-input
-                  title="Set average beacon receivers"
-                  placeholder="# Receivers"
-                  [digits]="2"
-                  [value]="settings.beaconReceivers"
-                  minimum="1"
-                  (setValue)="setBeaconReceivers.emit($event)"
-                >
-                </lab-input>
-              </div>
-            </td>
-          </tr>
-        </ng-container>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="settings.beaconReceivers">
+          <td>
+            <lab-info
+              text="Average beacon receivers"
+              tooltip="The average number of factories affected by each beacon.
+Minimum possible value is 1."
+            ></lab-info>
+          </td>
+          <td>
+            <div>
+              <lab-input
+                title="Set average beacon receivers"
+                placeholder="# Receivers"
+                [digits]="2"
+                [value]="settings.beaconReceivers"
+                minimum="1"
+                (setValue)="setBeaconReceivers.emit($event)"
+              >
+              </lab-input>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="data.game === Game.DysonSphereProgram">
+          <td>
+            <lab-info
+              text="Proliferator self-spray"
+              tooltip="Select the proliferator spray applied to proliferator itself."
+            ></lab-info>
+          </td>
+          <td>
+            <div>
+              <lab-select
+                header="Select a proliferator"
+                [data]="data"
+                [selected]="settings.proliferatorSpray"
+                [options]="data.prodModuleIds"
+                [includeEmptyModule]="true"
+                (selectId)="setProliferatorSpray.emit($event)"
+              >
+                <lab-icon
+                  class="button"
+                  tooltip="Select proliferator spray"
+                  [data]="data"
+                  [iconId]="settings.proliferatorSpray"
+                ></lab-icon>
+              </lab-select>
+            </div>
+          </td>
+        </tr>
         <tr>
           <td>
             <lab-info

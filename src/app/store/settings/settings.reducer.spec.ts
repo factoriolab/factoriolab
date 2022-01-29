@@ -240,6 +240,17 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('SET_PROLIFERATOR_SPRAY', () => {
+    it('should set the proliferator spray', () => {
+      const value = ItemId.ProductivityModule;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetProliferatorSprayAction(value)
+      );
+      expect(result.proliferatorSpray).toEqual(value);
+    });
+  });
+
   describe('RESET_COST', () => {
     it('should reset the cost fields', () => {
       const result = settingsReducer(

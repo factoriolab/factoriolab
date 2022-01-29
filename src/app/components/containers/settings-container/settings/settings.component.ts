@@ -101,6 +101,7 @@ export class SettingsComponent implements OnInit, OnChanges {
   @Output() setColumns = new EventEmitter<ColumnsState>();
   @Output() setSimplex = new EventEmitter<boolean>();
   @Output() setPowerUnit = new EventEmitter<PowerUnit>();
+  @Output() setProliferatorSpray = new EventEmitter<string>();
 
   initial = initialSettingsState;
   sortedFuels: string[] = [];

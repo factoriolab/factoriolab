@@ -209,4 +209,8 @@ export class SettingsContainerComponent implements OnInit {
   setPowerUnit(value: PowerUnit): void {
     this.store.dispatch(new Preferences.SetPowerUnitAction(value));
   }
+
+  setProliferatorSpray(value: string): void {
+    this.store.dispatch(new Settings.SetProliferatorSprayAction(value));
+  }
 }

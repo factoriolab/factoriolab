@@ -67,15 +67,15 @@ describe('Settings Selectors', () => {
         ...Mocks.Base,
         ...{ game: Game.DysonSphereProgram },
       });
-      expect(result.moduleRank).toEqual([Mocks.Base.defaults.minBelt]);
+      expect(result.moduleRank).toEqual([]);
     });
 
     it('should handle DSP maximum module rank', () => {
-      const result = Selectors.getDefaults.projector(Preset.Modules, {
+      const result = Selectors.getDefaults.projector(Preset.Beacon8, {
         ...Mocks.Base,
         ...{ game: Game.DysonSphereProgram },
       });
-      expect(result.moduleRank).toEqual([Mocks.Base.defaults.maxBelt]);
+      expect(result.moduleRank).toEqual(Mocks.Base.defaults.moduleRank);
     });
 
     it('should handle Satisfactory module rank', () => {

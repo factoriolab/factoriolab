@@ -6,6 +6,8 @@ export interface Module {
   consumption?: number;
   pollution?: number;
   limitation?: string;
+  sprays?: number;
+  proliferator?: string;
 }
 
 export class RationalModule {
@@ -14,6 +16,8 @@ export class RationalModule {
   consumption?: Rational;
   pollution?: Rational;
   limitation?: string;
+  sprays?: Rational;
+  proliferator?: string;
 
   constructor(data: Module) {
     if (data.speed) {
@@ -30,6 +34,12 @@ export class RationalModule {
     }
     if (data.limitation) {
       this.limitation = data.limitation;
+    }
+    if (data.sprays) {
+      this.sprays = Rational.fromNumber(data.sprays);
+    }
+    if (data.proliferator) {
+      this.proliferator = data.proliferator;
     }
   }
 }

@@ -45,6 +45,8 @@ const sCostFactor = (state: SettingsState): string => state.costFactor;
 const sCostFactory = (state: SettingsState): string => state.costFactory;
 const sCostInput = (state: SettingsState): string => state.costInput;
 const sCostIgnored = (state: SettingsState): string => state.costIgnored;
+const sProliferatorSpray = (state: SettingsState): string =>
+  state.proliferatorSpray;
 
 /* Simple selectors */
 export const getPreset = compose(sPreset, settingsState);
@@ -61,6 +63,7 @@ export const getCostFactor = compose(sCostFactor, settingsState);
 export const getCostFactory = compose(sCostFactory, settingsState);
 export const getCostInput = compose(sCostInput, settingsState);
 export const getCostIgnored = compose(sCostIgnored, settingsState);
+export const getProliferatorSpray = compose(sProliferatorSpray, settingsState);
 
 /* Complex selectors */
 export const getBase = createSelector(
@@ -88,7 +91,7 @@ export const getDefaults = createSelector(
           break;
         }
         case Game.DysonSphereProgram: {
-          moduleRank = preset === Preset.Minimum ? [m.minBelt] : [m.maxBelt];
+          moduleRank = preset === Preset.Beacon8 ? m.moduleRank : [];
           break;
         }
         case Game.Satisfactory: {
@@ -370,6 +373,8 @@ export const getNormalDataset = createSelector(
       return e;
     }, {});
 
+    const prodModuleIds = moduleIds.filter((i) => itemR[i].module.productivity);
+
     // Calculate complex recipes
     const simpleRecipes = Object.keys(itemRecipeIds).map(
       (i) => itemRecipeIds[i]
@@ -403,6 +408,7 @@ export const getNormalDataset = createSelector(
       recipeEntities,
       recipeR,
       recipeModuleIds,
+      prodModuleIds,
       defaults,
     };
     return dataset;
@@ -459,13 +465,23 @@ export const getBeltSpeed = createSelector(
 
 export const getAdjustmentData = createSelector(
   getFuel,
+  getProliferatorSpray,
   getRationalMiningBonus,
   getResearchFactor,
   getRationalCostFactor,
   getRationalCostFactory,
   getDataset,
-  (fuel, miningBonus, researchSpeed, costFactor, costFactory, data) => ({
+  (
     fuel,
+    proliferatorSpray,
+    miningBonus,
+    researchSpeed,
+    costFactor,
+    costFactory,
+    data
+  ) => ({
+    fuel,
+    proliferatorSpray,
     miningBonus,
     researchSpeed,
     costFactor,
