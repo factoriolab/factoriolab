@@ -161,9 +161,7 @@ export class RecipeUtility {
       }
 
       // Add proliferator consumption to recipe inputs
-      if (!recipe.in) {
-        recipe.in = {};
-      }
+      // Assume recipe already has listed inputs, otherwise it could not be proliferated
       for (const pId of Object.keys(proliferatorUses)) {
         if (!recipe.in[pId]) {
           recipe.in[pId] = proliferatorUses[pId];
