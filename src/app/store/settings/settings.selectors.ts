@@ -242,7 +242,10 @@ export const getNormalDataset = createSelector(
       .map((i) => i.id);
     const beltIds = items
       .filter((i) => i.belt)
-      .sort((a, b) => a.belt.speed - b.belt.speed)
+      .sort((a, b) =>
+        /** Don't sort belts in DSP, leave based on stacks */
+        game === Game.DysonSphereProgram ? 0 : a.belt.speed - b.belt.speed
+      )
       .map((i) => i.id);
     const pipeIds = items
       .filter((i) => i.pipe)

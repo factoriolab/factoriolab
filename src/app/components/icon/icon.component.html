@@ -9,7 +9,9 @@
     [ngClass]="iconId"
     [class.scale]="scale"
   />
-  <div *ngIf="text" class="icon-text">{{ text }}</div>
+  <div *ngIf="text || item?.iconText" class="icon-text">
+    {{ text || item?.iconText }}
+  </div>
 </div>
 <div class="overlay" *ngIf="hover && hoverIcon">
   <i class="material-icons">{{ hoverIcon }}</i>
