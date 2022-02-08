@@ -23,6 +23,8 @@ export interface Item {
   fluidWagon?: FluidWagon;
   /** Used to link the item to an alternate icon id */
   icon?: string;
+  /** Used to add extra text to an already defined icon */
+  iconText?: string;
 }
 
 export class RationalItem {

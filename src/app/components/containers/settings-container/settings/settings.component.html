@@ -592,6 +592,9 @@ Minimum possible value is 1."
                 [selected]="settings.belt"
                 [options]="data.beltIds"
                 [displayRate]="settings.displayRate"
+                [columns]="
+                  data.game === Game.DysonSphereProgram ? 3 : undefined
+                "
                 (selectId)="
                   setBelt.emit({ value: $event, def: data.defaults.belt })
                 "

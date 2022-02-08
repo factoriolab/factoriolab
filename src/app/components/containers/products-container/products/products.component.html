@@ -118,6 +118,9 @@
                 [selected]="belt"
                 [options]="data.beltIds"
                 [displayRate]="displayRate"
+                [columns]="
+                  data.game === Game.DysonSphereProgram ? 3 : undefined
+                "
                 (selectId)="
                   setViaSetting.emit({
                     id: product.id,
@@ -131,6 +134,7 @@
                   tooltip="Change rate step belt"
                   [data]="data"
                   [iconId]="belt"
+                  [item]="data.itemEntities[belt]"
                 ></lab-icon>
               </lab-select>
               <ng-template #pipePicker>

@@ -205,6 +205,9 @@
                 [selected]="belt"
                 [options]="data.beltIds"
                 [displayRate]="displayRate"
+                [columns]="
+                  data.game === Game.DysonSphereProgram ? 3 : undefined
+                "
                 (selectId)="
                   setBelt.emit({
                     id: step.itemId,
