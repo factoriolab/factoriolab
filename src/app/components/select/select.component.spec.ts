@@ -22,6 +22,7 @@ enum DataTest {
       [selectType]="selectType"
       [displayRate]="displayRate"
       [includeEmptyModule]="includeEmptyModule"
+      [columns]="columns"
       (selectId)="selectId($event)"
     >
     </lab-select>
@@ -39,6 +40,7 @@ class TestSelectComponent {
   selectType = IdType.Item;
   displayRate = DisplayRate.PerMinute;
   includeEmptyModule = false;
+  columns: number | undefined;
   selectId(data): void {}
 }
 
@@ -67,15 +69,29 @@ describe('SelectComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('width', () => {
-    it('should calculate based on number of options', () => {
+  describe('ngOnChanges', () => {
+    it('should handle undefined options', () => {
+      component.options = undefined;
+      fixture.detectChanges();
+      expect(component.child.rows).toEqual([[]]);
+    });
+
+    it('should calculate width from specified number of columns', () => {
+      component.columns = 3;
+      fixture.detectChanges();
+      expect(component.child.width).toEqual(7.125);
+    });
+
+    it('should calculate width based on number of options', () => {
       component.options = ['1', '2', '3', '4', '5'];
       fixture.detectChanges();
       expect(component.child.width).toEqual(7.125);
     });
 
-    it('should calculate based maximum row size', () => {
-      component.child.rows = [[], ['1', '2', '3', '4', '5']];
+    it('should calculate width based maximum row size', () => {
+      component.options = ['a-1', 'a-2', 'a-3', 'a-4', 'a-5', 'b-1'];
+      component.includeEmptyModule = true;
+      fixture.detectChanges();
       expect(component.child.width).toEqual(11.875);
     });
   });

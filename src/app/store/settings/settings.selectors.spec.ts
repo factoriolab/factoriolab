@@ -372,6 +372,36 @@ describe('Settings Selectors', () => {
       ]);
     });
 
+    it('should not sort belts in DSP', () => {
+      const base = {
+        ...Mocks.Base,
+        ...{
+          items: [
+            ...Mocks.Base.items,
+            {
+              id: 'id',
+              name: 'Item',
+              category: 'logistics',
+              row: 0,
+              belt: { speed: 1 },
+            },
+          ],
+        },
+      };
+      const result = Selectors.getNormalDataset.projector(
+        Mocks.Raw.app,
+        [base, Mocks.Mod1],
+        Mocks.Defaults,
+        Game.DysonSphereProgram
+      );
+      expect(result.beltIds).toEqual([
+        ItemId.TransportBelt,
+        ItemId.FastTransportBelt,
+        ItemId.ExpressTransportBelt,
+        'id',
+      ]);
+    });
+
     it('should handle pipes when found', () => {
       const items = Mocks.Base.items.map((i) => {
         if (i.id === ItemId.Pipe) {
