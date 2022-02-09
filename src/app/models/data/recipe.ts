@@ -19,7 +19,7 @@ export interface Recipe {
   /** Used to link the item to an alternate icon id */
   icon?: string;
   /** Used to override the factory's usage for this recipe */
-  usage?: number;
+  usage?: number | string;
 }
 
 export class RationalRecipe {
@@ -92,7 +92,11 @@ export class RationalRecipe {
       this.part = data.part;
     }
     if (data.usage != null) {
-      this.usage = Rational.fromNumber(data.usage);
+      if (typeof data.usage === 'string') {
+        this.usage = Rational.fromString(data.usage);
+      } else {
+        this.usage = Rational.fromNumber(data.usage);
+      }
     }
   }
 

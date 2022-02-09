@@ -76,6 +76,17 @@ describe('RationalRecipe', () => {
       expect(result.cost).toBeUndefined();
       expect(result.expensive).toBeUndefined();
     });
+
+    it('should handle string for usage', () => {
+      const result = new RationalRecipe({
+        id: RecipeId.AdvancedOilProcessing,
+        name: 'name',
+        time: 1,
+        usage: '60/30',
+        producers: [ItemId.AssemblingMachine1],
+      });
+      expect(result.usage).toEqual(Rational.two);
+    });
   });
 
   describe('produces', () => {
