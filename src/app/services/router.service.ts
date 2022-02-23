@@ -206,7 +206,7 @@ export class RouterService {
     const sections = zip.split('&');
     const substr = sections[0][1] === '=' ? 2 : 1;
     const params = sections.reduce((e: Entities<string>, v) => {
-      e[v[0]] = v.substr(substr);
+      e[v[0]] = v.substring(substr);
       return e;
     }, {});
     return params;
@@ -229,11 +229,11 @@ export class RouterService {
             if (zip.startsWith('z=')) {
               // Upgrade old query-unsafe zipped characters
               const z = zip
-                .substr(2)
+                .substring(2)
                 .replace(/\+/g, '-')
                 .replace(/\//g, '.')
                 .replace(/=/g, '_');
-              zip = inflate(this.base64ToBytes(z), { to: 'string' });
+              zip = this.inflateSafe(z);
             }
             // Upgrade old query-unsafe delimiters
             zip = zip.replace(/,/g, LISTSEP).replace(/\+/g, ARRAYSEP);
@@ -338,8 +338,8 @@ export class RouterService {
         }
       }
     } catch (e) {
-      console.warn('Router: Failed to parse url');
       console.error(e);
+      throw new Error('Router failed to parse url');
     }
   }
 
@@ -1148,7 +1148,7 @@ export class RouterService {
   getN(id: string): number {
     const n = INVERT[id[0]];
     if (id.length > 1) {
-      id = id.substr(1);
+      id = id.substring(1);
       return n * Math.pow(MAX, id.length) + this.getN(id);
     } else {
       return n;
@@ -1190,6 +1190,33 @@ export class RouterService {
       result += '_';
     }
     return result;
+  }
+
+  inflateSafe(str: string): string {
+    try {
+      return this.inflate(str);
+    } catch {
+      console.warn(
+        'Router failed to parse url, checking for missing trailing characters...'
+      );
+    }
+    try {
+      return this.inflateMend(str, '-');
+    } catch {}
+    try {
+      return this.inflateMend(str, '.');
+    } catch {}
+    return this.inflateMend(str, '_');
+  }
+
+  inflateMend(str: string, char: string): string {
+    const z = this.inflate(str + char);
+    console.warn(`Router mended url by appending '${char}'`);
+    return z;
+  }
+
+  inflate(str: string): string {
+    return inflate(this.base64ToBytes(str), { to: 'string' });
   }
 
   base64ToBytes(str: string): Uint8Array {

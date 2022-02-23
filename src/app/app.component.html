@@ -34,8 +34,8 @@
     </div>
   </div>
 </div>
-<ng-container *ngIf="(datasets$ | async).length; else loading">
-  <main *ngIf="!error.message; else errorTile">
+<ng-container *ngIf="(error.message$ | async) == null; else errorTile">
+  <main *ngIf="(datasets$ | async).length; else loading">
     <lab-settings-container
       *ngIf="showSettings"
       @slideLeftRight
@@ -125,7 +125,7 @@
       <div class="panel invalid">
         <div>The application has encountered an error:</div>
         <br />
-        <div>{{ error.message }}</div>
+        <div>{{ error.message$ | async }}</div>
         <br />
         <a [href]="homeHref">Click here to reset</a>
       </div>
