@@ -8,11 +8,11 @@ export class BrowserUtility {
   }
 
   static get search(): string {
-    return location.search.substr(1);
+    return location.search.substring(1);
   }
 
   static get hash(): string {
-    return location.hash.substr(1);
+    return location.hash.substring(1);
   }
 
   static get href(): string {

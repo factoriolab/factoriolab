@@ -1,5 +1,10 @@
 import { trigger, transition, style, animate } from '@angular/animations';
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -48,7 +53,7 @@ import { getDatasets, getGame } from './store/settings';
     ]),
   ],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   datasets$: Observable<Mod[]>;
   products$: Observable<Product[]>;
   result$: Observable<MatrixResult>;
@@ -74,6 +79,7 @@ export class AppComponent implements OnInit {
     public error: ErrorService,
     public store: Store<State>,
     public titleService: Title,
+    private cd: ChangeDetectorRef,
     public state: StateService // Included only to initialize the service
   ) {}
 
@@ -102,6 +108,14 @@ export class AppComponent implements OnInit {
     if (this.lsHidePoll) {
       this.showPoll = false;
     }
+  }
+
+  /**
+   * This doesn't seem like it should be necessary,
+   * but error message sometimes does not render without it
+   * */
+  ngAfterViewInit(): void {
+    this.error.message$.subscribe(() => this.cd.detectChanges());
   }
 
   hidePoll(persist = false): void {

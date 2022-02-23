@@ -1079,6 +1079,24 @@ describe('RouterService', () => {
     });
   });
 
+  describe('inflateSafe', () => {
+    it('should attempt to mend a bad zip', () => {
+      spyOn(console, 'warn');
+      spyOn(service, 'inflateMend').and.callThrough();
+      expect(() => service.inflateSafe('abcde')).toThrow();
+      expect(console.warn).toHaveBeenCalled();
+      expect(service.inflateMend).toHaveBeenCalledTimes(3);
+    });
+  });
+
+  describe('inflateMend', () => {
+    it('should attempt to inflate the zip and warn if successful', () => {
+      spyOn(console, 'warn');
+      expect(service.inflateMend('eJxLTAQAASUAww_', '_')).toEqual('aa');
+      expect(console.warn).toHaveBeenCalled();
+    });
+  });
+
   describe('base64ToBytes', () => {
     it('should check for invalid string length', () => {
       expect(() => service.base64ToBytes('aaa')).toThrowError(

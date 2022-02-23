@@ -19,8 +19,10 @@ describe('LabErrorHandler', () => {
 
   it('should handle an error', () => {
     spyOn(console, 'error');
+    let message: string | undefined;
+    errorService.message$.subscribe((m) => (message = m));
     errorHandler.handleError('test');
     expect(console.error).toHaveBeenCalledWith('test');
-    expect(errorService.message).toEqual('test');
+    expect(message).toEqual('test');
   });
 });

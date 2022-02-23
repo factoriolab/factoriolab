@@ -7,6 +7,6 @@ export class LabErrorHandler implements ErrorHandler {
   constructor(public error: ErrorService) {}
   handleError(error: string): void {
     console.error(error);
-    this.error.message = error;
+    this.error.message$.next(error);
   }
 }
