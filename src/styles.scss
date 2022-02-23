@@ -274,6 +274,10 @@ img.icon {
   &.tween {
     justify-content: space-between;
   }
+
+  &.center {
+    justify-content: center;
+  }
 }
 
 .grow {
