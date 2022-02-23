@@ -105,12 +105,12 @@ defined cost, usually mining."
 </table>
 <table *ngIf="result.A">
   <tr>
-    <th [colSpan]="result.O.length + 1" class="header">
+    <th [colSpan]="result.O.length + 2" class="header">
       Simplex Canonical Tableau
     </th>
   </tr>
   <tr>
-    <td rowspan="2"></td>
+    <th rowspan="2"></th>
     <th class="header" rowspan="2">I</th>
     <th class="header" [colSpan]="result.items.length">Items/s</th>
     <th class="header" [colSpan]="result.recipes.length">Recipes</th>
@@ -133,6 +133,7 @@ defined cost, usually mining."
         </button>
       </div>
     </th>
+    <th rowspan="2"></th>
   </tr>
   <tr>
     <td *ngFor="let i of result.items">
@@ -162,22 +163,28 @@ defined cost, usually mining."
     <th class="header" *ngIf="i === 0; else notObj">Objective</th>
     <ng-template #notObj>
       <td>
-        <span *ngIf="result.recipes[i - 1] as id; else notRecipe">
+        <div
+          *ngIf="result.recipes[i - 1] as id; else notRecipe"
+          class="flex center"
+        >
           <lab-icon
             [data]="data"
             [iconId]="id"
             [tooltip]="data.recipeEntities[id].name"
             [recipe]="data.recipeEntities[id]"
-          ></lab-icon
-        ></span>
+          ></lab-icon>
+        </div>
         <ng-template #notRecipe>
-          <span *ngIf="result.inputs[i - 1 - result.recipes.length] as id">
+          <div
+            *ngIf="result.inputs[i - 1 - result.recipes.length] as id"
+            class="flex center"
+          >
             <lab-icon
               [data]="data"
               [iconId]="id"
               [tooltip]="data.itemEntities[id].name"
-            ></lab-icon
-          ></span>
+            ></lab-icon>
+          </div>
         </ng-template>
       </td>
     </ng-template>
@@ -204,9 +211,10 @@ defined cost, usually mining."
         <span>{{ c.toString() }}</span>
       </ng-template>
     </td>
+    <th class="header" *ngIf="i === 0; else notObj">Objective</th>
   </tr>
   <tr>
-    <th [colSpan]="result.O.length + 1" class="header">Solution</th>
+    <th [colSpan]="result.O.length + 2" class="header">Solution</th>
   </tr>
   <tr>
     <td rowspan="3"></td>
@@ -221,6 +229,7 @@ defined cost, usually mining."
       Inputs
     </th>
     <th class="header" rowspan="2">Cost</th>
+    <td rowspan="3"></td>
   </tr>
   <tr>
     <td *ngFor="let i of result.items">
