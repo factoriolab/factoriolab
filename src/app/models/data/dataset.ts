@@ -32,5 +32,5 @@ export interface Dataset {
   recipeR: Entities<RationalRecipe>;
   recipeModuleIds: Entities<string[]>;
   prodModuleIds: string[];
-  defaults: Defaults;
+  defaults?: Defaults;
 }

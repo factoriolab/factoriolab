@@ -4,6 +4,7 @@ import {
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
+  OnChanges,
 } from '@angular/core';
 
 import {
@@ -23,24 +24,28 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
   styleUrls: ['./columns.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColumnsComponent extends DialogContainerComponent {
-  @Input() game: Game;
-  @Input() columns: ColumnsState;
+export class ColumnsComponent
+  extends DialogContainerComponent
+  implements OnChanges
+{
+  @Input() game = Game.Factorio;
+  @Input() columns: ColumnsState = {};
 
   @Output() setColumns = new EventEmitter<ColumnsState>();
 
   PrecisionColumns = PrecisionColumns;
   edited = false;
-  editValue: ColumnsState;
+  editValue: ColumnsState = {};
+  options: IdName<Column>[] = [];
 
   Column = Column;
 
-  get columnOptions(): IdName<Column>[] {
-    return columnOptions(this.game);
-  }
-
   constructor() {
     super();
+  }
+
+  ngOnChanges(): void {
+    this.options = columnOptions(this.game);
   }
 
   clickOpen(): void {

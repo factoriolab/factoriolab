@@ -3,6 +3,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
 } from '@angular/core';
 import {
@@ -21,51 +22,42 @@ import { sankeyCircular } from 'd3-sankey-circular';
 import { select, Selection } from 'd3-selection';
 import { drag } from 'd3-drag';
 
-import { SankeyData, Node, Link, SankeyAlign } from '~/models';
+import { Node, Link, SankeyAlign } from '~/models';
 
 @Component({
   selector: 'lab-sankey',
   templateUrl: './sankey.component.html',
   styleUrls: ['./sankey.component.scss'],
 })
-export class SankeyComponent {
-  _sankeyData: SankeyData;
-  get sankeyData(): SankeyData {
-    return this._sankeyData;
-  }
-  @Input() set sankeyData(value: SankeyData) {
-    this._sankeyData = value;
-    this.rebuildChart();
-  }
-  _sankeyAlign: SankeyAlign;
-  get sankeyAlign(): SankeyAlign {
-    return this._sankeyAlign;
-  }
-  @Input() set sankeyAlign(value: SankeyAlign) {
-    this._sankeyAlign = value;
-    this.rebuildChart();
-  }
+export class SankeyComponent implements OnChanges {
+  @Input() nodes: Node[] = [];
+  @Input() links: Link[] = [];
+  @Input() align = SankeyAlign.Justify;
 
   @Output() selectNode = new EventEmitter<string>();
 
   height = window.innerHeight * 0.75;
-  svg: Selection<any, {}, null, undefined>;
-  private skLayout: SankeyLayout<SankeyGraph<Node, Link>, Node, Link>;
+  svg: Selection<SVGSVGElement, unknown, null, undefined> | undefined;
+  skLayout: SankeyLayout<SankeyGraph<Node, Link>, Node, Link> | undefined;
 
   get linkedNodes(): Node[] {
-    return this.sankeyData.nodes.filter((n) =>
-      this.sankeyData.links.some((l) => l.source === n.id || l.target === n.id)
+    return this.nodes.filter((n) =>
+      this.links.some((l) => l.source === n.id || l.target === n.id)
     );
   }
 
   constructor(private ref: ElementRef<HTMLElement>) {}
+
+  ngOnChanges(): void {
+    this.rebuildChart();
+  }
 
   rebuildChart(): void {
     if (this.svg) {
       select('svg').remove();
     }
 
-    if (this.sankeyData.nodes.length && this.sankeyData.links.length) {
+    if (this.nodes.length && this.links.length) {
       this.createChart();
     }
   }
@@ -75,12 +67,14 @@ export class SankeyComponent {
     width: number,
     height: number
   ): SankeyGraph<Node, Link> {
-    const fn = circular ? sankeyCircular : sankey;
+    const fn: () => SankeyLayout<SankeyGraph<Node, Link>, Node, Link> = circular
+      ? sankeyCircular
+      : sankey;
     this.skLayout = fn()
       .nodeId((d) => d.id)
       .nodeWidth(32)
       .nodePadding(8)
-      .nodeAlign(this.getAlign(this.sankeyAlign))
+      .nodeAlign(this.getAlign(this.align))
       .extent([
         [1, 5],
         [width - 1, height - 5],
@@ -88,12 +82,12 @@ export class SankeyComponent {
 
     return this.skLayout({
       nodes: this.linkedNodes.map((d) => ({ ...d })),
-      links: this.sankeyData.links.map((l) => ({ ...l })),
+      links: this.links.map((l) => ({ ...l })) ?? [],
     });
   }
 
   getAlign(
-    align: SankeyAlign
+    align: SankeyAlign | undefined
   ): (node: SankeyNodeMinimal<{}, {}>, n: number) => number {
     switch (align) {
       case SankeyAlign.Left:
@@ -117,7 +111,7 @@ export class SankeyComponent {
       skGraph = this.getLayout(circular, 800, this.height);
     }
 
-    const columns = Math.max(...skGraph.nodes.map((n) => n.depth));
+    const columns = Math.max(...skGraph.nodes.map((n) => n.depth ?? 0));
     const width = (columns + 1) * 32 + columns * 32 * 12;
     const height = Math.min(this.height, width * 0.75);
     skGraph = this.getLayout(circular, width, height);
@@ -150,13 +144,13 @@ export class SankeyComponent {
         circular ? (d): string => (d as any).path : sankeyLinkHorizontal()
       )
       .attr('stroke', (l) => l.color)
-      .attr('stroke-width', (l) => Math.max(1, l.width));
+      .attr('stroke-width', (l) => Math.max(1, l.width ?? 0));
 
     link.append('title').text((l) => l.name);
 
     const layout = this.skLayout;
     function dragMove(
-      this: SVGGElement,
+      this: SVGElement,
       event: any,
       d: SankeyNode<Node, Link>
     ): void {
@@ -165,14 +159,16 @@ export class SankeyComponent {
       d.y0 = d.y0 + event.dy;
       d.x0 = d.x0 + event.dx;
       d.x1 = d.x1 + event.dx;
-      const trX = d.x0 - rectX;
-      const trY = d.y0 - rectY;
+      const trX = d.x0 ?? 0 - rectX;
+      const trY = d.y0 ?? 0 - rectY;
       const transform = 'translate(' + trX + ',' + trY + ')';
       select(this).attr('transform', transform);
 
       // also move the image
       select(`[id='image-${d.id}']`).attr('transform', transform);
-      layout.update(skGraph);
+      if (layout) {
+        layout.update(skGraph);
+      }
 
       // force an update of the path
       path.attr(
@@ -192,23 +188,23 @@ export class SankeyComponent {
       .text((l) => `${l.text} ${l.name}`);
 
     // Draw rects for nodes
-    this.svg
+    const a = this.svg
       .append('g')
       .attr('stroke', 'var(--color-black)')
-      .selectAll('rect')
+      .selectAll<SVGRectElement, SankeyNode<Node, Link>>('rect')
       .data(skGraph.nodes)
       .join('rect')
-      .attr('x', (d) => d.x0)
-      .attr('y', (d) => d.y0)
-      .attr('height', (d) => d.y1 - d.y0)
-      .attr('width', (d) => d.x1 - d.x0)
+      .attr('x', (d) => d.x0 ?? 0)
+      .attr('y', (d) => d.y0 ?? 0)
+      .attr('height', (d) => this.rngY(d))
+      .attr('width', (d) => this.rngX(d))
       .attr('fill', (d) => d.color)
       .on('click', (e, d) => {
         if (e.defaultPrevented) return;
         this.selectNode.emit(d.id);
       })
       .call(
-        drag<SVGGElement, SankeyNode<Node, Link>>()
+        drag<SVGRectElement, SankeyNode<Node, Link>>()
           .subject((d) => d)
           .on('drag', dragMove)
       )
@@ -219,17 +215,33 @@ export class SankeyComponent {
     this.svg
       .append('g')
       .selectAll('svg')
-      .data(skGraph.nodes.filter((d) => d.y1 - d.y0 >= 16))
+      .data(skGraph.nodes.filter((d) => this.rngY(d) >= 16))
       .join('g')
       .attr('id', (d) => `image-${d.id}`)
       .append('svg')
       .attr('viewBox', (d) => d.viewBox)
-      .attr('width', (d) => Math.min(30, d.y1 - d.y0 - 2))
-      .attr('height', (d) => Math.min(30, d.y1 - d.y0 - 2))
-      .attr('x', (d) => (d.x1 + d.x0) / 2 - Math.min(30, d.y1 - d.y0 - 2) / 2)
-      .attr('y', (d) => (d.y1 + d.y0) / 2 - Math.min(30, d.y1 - d.y0 - 2) / 2)
+      .attr('width', (d) => Math.min(30, this.rngY(d) - 2))
+      .attr('height', (d) => Math.min(30, this.rngY(d) - 2))
+      .attr('x', (d) => this.midX(d) - Math.min(30, this.rngY(d) - 2) / 2)
+      .attr('y', (d) => this.midY(d) - Math.min(30, this.rngY(d) - 2) / 2)
       .style('pointer-events', 'none')
       .append('image')
       .attr('href', (d) => d.href);
+  }
+
+  rngY(d: SankeyNode<Node, Link>): number {
+    return (d.y1 ?? 0) - (d.y0 ?? 0);
+  }
+
+  rngX(d: SankeyNode<Node, Link>): number {
+    return (d.x1 ?? 0) - (d.x0 ?? 0);
+  }
+
+  midX(d: SankeyNode<Node, Link>): number {
+    return ((d.x1 ?? 0) + (d.x0 ?? 0)) / 2;
+  }
+
+  midY(d: SankeyNode<Node, Link>): number {
+    return ((d.y1 ?? 0) + (d.y0 ?? 0)) / 2;
   }
 }

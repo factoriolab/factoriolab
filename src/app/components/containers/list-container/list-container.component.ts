@@ -38,11 +38,11 @@ import { ListComponent } from './list/list.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListContainerComponent implements OnInit {
-  @ViewChild(ListComponent) child: ListComponent;
+  @ViewChild(ListComponent) child: ListComponent | undefined;
 
   @Input() mode = ListMode.All;
-  @Input() selected: string;
-  @Input() steps: Step[];
+  @Input() selected: string | undefined;
+  @Input() steps: Step[] | undefined;
 
   data$: Observable<Dataset>;
   itemSettings$: Observable<Items.ItemsState>;

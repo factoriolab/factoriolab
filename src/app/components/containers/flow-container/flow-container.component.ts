@@ -1,20 +1,17 @@
 import {
   Component,
-  OnInit,
   ChangeDetectionStrategy,
   ViewChild,
   ChangeDetectorRef,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { map } from 'rxjs';
 
 import {
   SankeyData,
-  Step,
   ListMode,
   LinkValue,
   linkValueOptions,
-  IdName,
   SankeyAlign,
   sankeyAlignOptions,
 } from '~/models';
@@ -31,33 +28,22 @@ import { SankeyComponent } from './sankey/sankey.component';
   styleUrls: ['./flow-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlowContainerComponent implements OnInit {
-  @ViewChild(SankeyComponent) child: SankeyComponent;
+export class FlowContainerComponent {
+  @ViewChild(SankeyComponent) child: SankeyComponent | undefined;
 
-  sankeyData$: Observable<SankeyData>;
-  steps$: Observable<Step[]>;
-  linkText$: Observable<LinkValue>;
-  linkSize$: Observable<LinkValue>;
-  sankeyAlign$: Observable<SankeyAlign>;
+  sankeyData$ = this.store.select(getSankey);
+  steps$ = this.store.select(getSteps);
+  linkText$ = this.store.select(Preferences.getLinkText);
+  linkSize$ = this.store.select(Preferences.getLinkSize);
+  sankeyAlign$ = this.store.select(Preferences.getSankeyAlign);
+  options$ = this.store.select(getGame).pipe(map((g) => linkValueOptions(g)));
 
-  selected: string;
-  options: IdName<LinkValue>[];
+  selected: string | undefined;
   sankeyAlignOptions = sankeyAlignOptions;
 
   ListMode = ListMode;
 
   constructor(private ref: ChangeDetectorRef, private store: Store<State>) {}
-
-  ngOnInit(): void {
-    this.store.select(getGame).subscribe((game) => {
-      this.options = linkValueOptions(game);
-    });
-    this.sankeyData$ = this.store.select(getSankey);
-    this.steps$ = this.store.select(getSteps);
-    this.linkText$ = this.store.select(Preferences.getLinkText);
-    this.linkSize$ = this.store.select(Preferences.getLinkSize);
-    this.sankeyAlign$ = this.store.select(Preferences.getSankeyAlign);
-  }
 
   setSelected(value: string): void {
     const split = value.split('|');

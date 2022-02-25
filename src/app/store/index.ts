@@ -21,7 +21,7 @@ export interface State {
   preferencesState: PreferencesState;
 }
 
-export const reducers: ActionReducerMap<State> = {
+export const reducers: ActionReducerMap<State, any> = {
   datasetsState: datasetsReducer,
   productsState: productsReducer,
   itemsState: itemsReducer,

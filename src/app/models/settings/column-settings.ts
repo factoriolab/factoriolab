@@ -1,4 +1,4 @@
 export interface ColumnSettings {
   show: boolean;
-  precision: number;
+  precision: number | null;
 }

@@ -5,9 +5,9 @@ import { State } from '.';
 
 export function storageMetaReducer(
   reducer: ActionReducer<State, Action>
-): (state: State, action: Action) => State {
+): (state: State | undefined, action: Action) => State {
   let onInit = true;
-  return function (state: State, action: Action): State {
+  return function (state: State | undefined, action: Action): State {
     const nextState = reducer(state, action);
 
     if (onInit) {

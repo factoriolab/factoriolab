@@ -12,16 +12,16 @@ import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
   baseId: string;
-  disabledRecipes: string[];
+  disabledRecipes?: string[];
   expensive: boolean;
   displayRate: DisplayRate;
   preset: Preset;
-  beaconReceivers: string;
-  belt: string;
-  pipe: string;
-  fuel: string;
-  cargoWagon: string;
-  fluidWagon: string;
+  beaconReceivers?: string;
+  belt?: string;
+  pipe?: string;
+  fuel?: string;
+  cargoWagon?: string;
+  fluidWagon?: string;
   flowRate: number;
   miningBonus: number;
   researchSpeed: ResearchSpeed;
@@ -36,16 +36,16 @@ export interface SettingsState {
 
 export const initialSettingsState: SettingsState = {
   baseId: '1.1',
-  disabledRecipes: null,
+  disabledRecipes: undefined,
   expensive: false,
   displayRate: DisplayRate.PerMinute,
   preset: Preset.Minimum,
-  beaconReceivers: null,
-  belt: null,
-  pipe: null,
-  fuel: null,
-  cargoWagon: null,
-  fluidWagon: null,
+  beaconReceivers: undefined,
+  belt: undefined,
+  pipe: undefined,
+  fuel: undefined,
+  cargoWagon: undefined,
+  fluidWagon: undefined,
   flowRate: 1500,
   miningBonus: 0,
   researchSpeed: ResearchSpeed.Speed6,
@@ -76,14 +76,14 @@ export function settingsReducer(
         ...state,
         ...{
           baseId: action.payload,
-          disabledRecipes: null,
+          disabledRecipes: undefined,
           expensive: false,
           preset: Preset.Minimum,
-          belt: null,
-          pipe: null,
-          fuel: null,
-          cargoWagon: null,
-          fluidWagon: null,
+          belt: undefined,
+          pipe: undefined,
+          fuel: undefined,
+          cargoWagon: undefined,
+          fluidWagon: undefined,
           miningBonus: 0,
           researchSpeed: ResearchSpeed.Speed6,
         },
