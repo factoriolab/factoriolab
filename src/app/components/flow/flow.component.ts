@@ -1,122 +1,105 @@
 import {
   Component,
+  ChangeDetectionStrategy,
+  ViewChild,
+  ChangeDetectorRef,
   ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
+  AfterViewInit,
 } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
+import { drag } from 'd3-drag';
 import {
-  SankeyNode,
-  SankeyGraph,
   sankey,
-  sankeyLinkHorizontal,
-  sankeyJustify,
   sankeyCenter,
-  sankeyLeft,
-  sankeyRight,
-  SankeyNodeMinimal,
+  SankeyGraph,
+  sankeyJustify,
   SankeyLayout,
+  sankeyLeft,
+  sankeyLinkHorizontal,
+  SankeyNode,
+  SankeyNodeMinimal,
+  sankeyRight,
 } from 'd3-sankey';
 import { sankeyCircular } from 'd3-sankey-circular';
 import { select, Selection } from 'd3-selection';
-import { drag } from 'd3-drag';
+import { combineLatest, map } from 'rxjs';
 
-import { Node, Link, SankeyAlign } from '~/models';
+import {
+  SankeyData,
+  ListMode,
+  LinkValue,
+  linkValueOptions,
+  SankeyAlign,
+  sankeyAlignOptions,
+  Link,
+  Node,
+} from '~/models';
+import { State } from '~/store';
+import * as Preferences from '~/store/preferences';
+import { getSankey, getSteps } from '~/store/products';
+import { getGame } from '~/store/settings';
+import { ExportUtility } from '~/utilities';
 
+@UntilDestroy()
 @Component({
-  selector: 'lab-sankey',
-  templateUrl: './sankey.component.html',
-  styleUrls: ['./sankey.component.scss'],
+  selector: 'lab-flow',
+  templateUrl: './flow.component.html',
+  styleUrls: ['./flow.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SankeyComponent implements OnChanges {
-  @Input() nodes: Node[] = [];
-  @Input() links: Link[] = [];
-  @Input() align = SankeyAlign.Justify;
+export class FlowComponent implements AfterViewInit {
+  @ViewChild('svg') svgElement: ElementRef | undefined;
 
-  @Output() selectNode = new EventEmitter<string>();
+  sankeyData$ = this.store.select(getSankey);
+  steps$ = this.store.select(getSteps);
+  linkText$ = this.store.select(Preferences.getLinkText);
+  linkSize$ = this.store.select(Preferences.getLinkSize);
+  sankeyAlign$ = this.store.select(Preferences.getSankeyAlign);
+  options$ = this.store.select(getGame).pipe(map((g) => linkValueOptions(g)));
 
+  selected: string | undefined;
   height = window.innerHeight * 0.75;
   svg: Selection<SVGSVGElement, unknown, null, undefined> | undefined;
   skLayout: SankeyLayout<SankeyGraph<Node, Link>, Node, Link> | undefined;
+  sankeyAlignOptions = sankeyAlignOptions;
 
-  get linkedNodes(): Node[] {
-    return this.nodes.filter((n) =>
-      this.links.some((l) => l.source === n.id || l.target === n.id)
-    );
+  ListMode = ListMode;
+
+  constructor(private ref: ChangeDetectorRef, private store: Store<State>) {}
+
+  ngAfterViewInit(): void {
+    combineLatest([this.sankeyData$, this.sankeyAlign$])
+      .pipe(untilDestroyed(this))
+      .subscribe(([data, align]) => this.rebuildChart(data, align));
   }
 
-  constructor(private ref: ElementRef<HTMLElement>) {}
-
-  ngOnChanges(): void {
-    this.rebuildChart();
-  }
-
-  rebuildChart(): void {
+  rebuildChart(data: SankeyData, align: SankeyAlign): void {
     if (this.svg) {
       select('svg').remove();
     }
 
-    if (this.nodes.length && this.links.length) {
-      this.createChart();
+    if (data.nodes.length && data.links.length) {
+      this.createChart(data, align);
     }
   }
 
-  getLayout(
-    circular: boolean,
-    width: number,
-    height: number
-  ): SankeyGraph<Node, Link> {
-    const fn: () => SankeyLayout<SankeyGraph<Node, Link>, Node, Link> = circular
-      ? sankeyCircular
-      : sankey;
-    this.skLayout = fn()
-      .nodeId((d) => d.id)
-      .nodeWidth(32)
-      .nodePadding(8)
-      .nodeAlign(this.getAlign(this.align))
-      .extent([
-        [1, 5],
-        [width - 1, height - 5],
-      ]);
-
-    return this.skLayout({
-      nodes: this.linkedNodes.map((d) => ({ ...d })),
-      links: this.links.map((l) => ({ ...l })) ?? [],
-    });
-  }
-
-  getAlign(
-    align: SankeyAlign | undefined
-  ): (node: SankeyNodeMinimal<{}, {}>, n: number) => number {
-    switch (align) {
-      case SankeyAlign.Left:
-        return sankeyLeft;
-      case SankeyAlign.Right:
-        return sankeyRight;
-      case SankeyAlign.Center:
-        return sankeyCenter;
-      default:
-        return sankeyJustify;
-    }
-  }
-
-  createChart(): void {
+  createChart(data: SankeyData, align: SankeyAlign): void {
     let circular = true;
-    let skGraph = this.getLayout(true, 800, this.height);
+    let skGraph = this.getLayout(data, align, true, 800, this.height);
 
     if (!skGraph.nodes.some((n: any) => n.partOfCycle === true)) {
       // No circular references, use built in sankey generator
       circular = false;
-      skGraph = this.getLayout(circular, 800, this.height);
+      skGraph = this.getLayout(data, align, circular, 800, this.height);
     }
 
     const columns = Math.max(...skGraph.nodes.map((n) => n.depth ?? 0));
     const width = (columns + 1) * 32 + columns * 32 * 12;
     const height = Math.min(this.height, width * 0.75);
-    skGraph = this.getLayout(circular, width, height);
+    skGraph = this.getLayout(data, align, circular, width, height);
 
-    this.svg = select(this.ref.nativeElement)
+    this.svg = select(this.svgElement.nativeElement)
       .append('svg')
       .attr('preserveAspectRatio', 'xMinYMin meet')
       .attr('width', `${width}px`)
@@ -159,8 +142,8 @@ export class SankeyComponent implements OnChanges {
       d.y0 = d.y0 + event.dy;
       d.x0 = d.x0 + event.dx;
       d.x1 = d.x1 + event.dx;
-      const trX = d.x0 ?? 0 - rectX;
-      const trY = d.y0 ?? 0 - rectY;
+      const trX = (d.x0 ?? 0) - rectX;
+      const trY = (d.y0 ?? 0) - rectY;
       const transform = 'translate(' + trX + ',' + trY + ')';
       select(this).attr('transform', transform);
 
@@ -188,7 +171,7 @@ export class SankeyComponent implements OnChanges {
       .text((l) => `${l.text} ${l.name}`);
 
     // Draw rects for nodes
-    const a = this.svg
+    this.svg
       .append('g')
       .attr('stroke', 'var(--color-black)')
       .selectAll<SVGRectElement, SankeyNode<Node, Link>>('rect')
@@ -201,7 +184,7 @@ export class SankeyComponent implements OnChanges {
       .attr('fill', (d) => d.color)
       .on('click', (e, d) => {
         if (e.defaultPrevented) return;
-        this.selectNode.emit(d.id);
+        this.setSelected(d.id);
       })
       .call(
         drag<SVGRectElement, SankeyNode<Node, Link>>()
@@ -229,6 +212,51 @@ export class SankeyComponent implements OnChanges {
       .attr('href', (d) => d.href);
   }
 
+  getLayout(
+    data: SankeyData,
+    align: SankeyAlign,
+    circular: boolean,
+    width: number,
+    height: number
+  ): SankeyGraph<Node, Link> {
+    const fn: () => SankeyLayout<SankeyGraph<Node, Link>, Node, Link> = circular
+      ? sankeyCircular
+      : sankey;
+    this.skLayout = fn()
+      .nodeId((d) => d.id)
+      .nodeWidth(32)
+      .nodePadding(8)
+      .nodeAlign(this.getAlign(align))
+      .extent([
+        [1, 5],
+        [width - 1, height - 5],
+      ]);
+
+    return this.skLayout({
+      nodes: data.nodes
+        .filter((n) =>
+          data.links.some((l) => l.source === n.id || l.target === n.id)
+        )
+        .map((d) => ({ ...d })),
+      links: data.links.map((l) => ({ ...l })) ?? [],
+    });
+  }
+
+  getAlign(
+    align: SankeyAlign | undefined
+  ): (node: SankeyNodeMinimal<{}, {}>, n: number) => number {
+    switch (align) {
+      case SankeyAlign.Left:
+        return sankeyLeft;
+      case SankeyAlign.Right:
+        return sankeyRight;
+      case SankeyAlign.Center:
+        return sankeyCenter;
+      default:
+        return sankeyJustify;
+    }
+  }
+
   rngY(d: SankeyNode<Node, Link>): number {
     return (d.y1 ?? 0) - (d.y0 ?? 0);
   }
@@ -243,5 +271,27 @@ export class SankeyComponent implements OnChanges {
 
   midY(d: SankeyNode<Node, Link>): number {
     return ((d.y1 ?? 0) + (d.y0 ?? 0)) / 2;
+  }
+
+  setSelected(value: string): void {
+    const split = value.split('|');
+    this.selected = split[split.length - 1];
+    this.ref.detectChanges();
+  }
+
+  setLinkSize(value: LinkValue): void {
+    this.store.dispatch(new Preferences.SetLinkSizeAction(value));
+  }
+
+  setLinkText(value: LinkValue): void {
+    this.store.dispatch(new Preferences.SetLinkTextAction(value));
+  }
+
+  setSankeyAlign(value: SankeyAlign): void {
+    this.store.dispatch(new Preferences.SetSankeyAlignAction(value));
+  }
+
+  export(data: SankeyData): void {
+    ExportUtility.saveAsJson(JSON.stringify(data));
   }
 }

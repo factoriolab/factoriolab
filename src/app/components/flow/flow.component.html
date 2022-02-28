@@ -32,28 +32,22 @@
       >
     </div>
     <lab-options
-      *ngIf="sankeyAlign$ | async as selected"
+      *ngIf="a.sankeyAlign"
       title="Select sankey alignment"
-      [selected]="selected"
+      [selected]="a.sankeyAlign"
       [options]="sankeyAlignOptions"
       (selectId)="setSankeyAlign($event)"
     ></lab-options>
     <button
-      *ngIf="sankeyData$ | async as data"
+      *ngIf="a.sankeyData"
       title="Export to JSON"
-      data-test="lab-flow-container-export"
-      (click)="export(data)"
+      data-test="lab-flow-export"
+      (click)="export(a.sankeyData)"
     >
       <i class="material-icons">file_download</i>
     </button>
   </div>
-  <lab-sankey
-    *ngIf="a.sankeyData"
-    [nodes]="a.sankeyData.nodes"
-    [links]="a.sankeyData.links"
-    [align]="a.sankeyAlign"
-    (selectNode)="setSelected($event)"
-  ></lab-sankey>
+  <div id="lab-flow-svg" #svg></div>
   <lab-list-container
     [mode]="ListMode.Focus"
     [steps]="a.steps ?? []"

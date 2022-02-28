@@ -36,16 +36,9 @@ export interface SettingsState {
 
 export const initialSettingsState: SettingsState = {
   baseId: '1.1',
-  disabledRecipes: undefined,
   expensive: false,
   displayRate: DisplayRate.PerMinute,
   preset: Preset.Minimum,
-  beaconReceivers: undefined,
-  belt: undefined,
-  pipe: undefined,
-  fuel: undefined,
-  cargoWagon: undefined,
-  fluidWagon: undefined,
   flowRate: 1500,
   miningBonus: 0,
   researchSpeed: ResearchSpeed.Speed6,

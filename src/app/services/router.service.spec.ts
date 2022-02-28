@@ -2,7 +2,7 @@ import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
@@ -90,7 +90,6 @@ const mockSettingsState: SettingsState = {
   preset: Preset.Modules,
   beaconReceivers: '1',
   belt: ItemId.TransportBelt,
-  pipe: null,
   fuel: ItemId.Coal,
   cargoWagon: ItemId.CargoWagon,
   fluidWagon: ItemId.FluidWagon,
@@ -218,7 +217,7 @@ describe('RouterService', () => {
     it('should return null for no items', () => {
       expect(
         service.stepHref({ itemId: ItemId.Wood, items: null }, null)
-      ).toBeNull();
+      ).toBeUndefined();
     });
 
     it('should return get the hash for a specific step', () => {
@@ -280,13 +279,18 @@ describe('RouterService', () => {
       expect(service.dispatch).not.toHaveBeenCalled();
     });
 
-    it('should log warning on bad zipped url', () => {
+    it('should log warning on bad zipped url', fakeAsync(() => {
       spyOn(console, 'warn');
       spyOn(console, 'error');
-      (router.events as any).next(new NavigationEnd(2, '/#z=test', '/#z=test'));
+      expect(() => {
+        (router.events as any).next(
+          new NavigationEnd(2, '/#z=test', '/#z=test')
+        );
+        tick();
+      }).toThrow();
       expect(console.warn).toHaveBeenCalledTimes(1);
       expect(console.error).toHaveBeenCalledTimes(1);
-    });
+    }));
 
     it('should unzip empty v0', () => {
       const url = '/#z=eJwrsAUAAR8Arg==';
@@ -641,7 +645,7 @@ describe('RouterService', () => {
         ZipVersion.Version1
       );
       expect(result).toEqual({
-        ids: null,
+        ids: undefined,
         entities: {},
       });
     });
@@ -653,7 +657,7 @@ describe('RouterService', () => {
         Mocks.Hash
       );
       expect(result).toEqual({
-        ids: null,
+        ids: undefined,
         entities: {},
       });
     });
@@ -902,7 +906,7 @@ describe('RouterService', () => {
     });
 
     it('should parse null', () => {
-      expect(service.parseString(NULL)).toBeNull();
+      expect(service.parseString(NULL)).toBeUndefined();
     });
 
     it('should parse value', () => {
@@ -918,7 +922,7 @@ describe('RouterService', () => {
     });
 
     it('should parse null', () => {
-      expect(service.parseBool(NULL)).toBeNull();
+      expect(service.parseBool(NULL)).toBeUndefined();
     });
 
     it('should parse false', () => {
@@ -938,7 +942,7 @@ describe('RouterService', () => {
     });
 
     it('should parse null', () => {
-      expect(service.parseNumber(NULL)).toBeNull();
+      expect(service.parseNumber(NULL)).toBeUndefined();
     });
 
     it('should parse value', () => {
@@ -954,7 +958,7 @@ describe('RouterService', () => {
     });
 
     it('should parse null', () => {
-      expect(service.parseDisplayRate(NULL)).toBeNull();
+      expect(service.parseDisplayRate(NULL)).toBeUndefined();
     });
 
     it('should parse value', () => {
@@ -972,7 +976,7 @@ describe('RouterService', () => {
     });
 
     it('should parse null', () => {
-      expect(service.parseArray(NULL)).toBeNull();
+      expect(service.parseArray(NULL)).toBeUndefined();
     });
 
     it('should parse empty', () => {
@@ -992,7 +996,7 @@ describe('RouterService', () => {
     });
 
     it('should parse null', () => {
-      expect(service.parseNString(NULL, [])).toBeNull();
+      expect(service.parseNString(NULL, [])).toBeUndefined();
     });
 
     it('should parse value', () => {
@@ -1008,7 +1012,7 @@ describe('RouterService', () => {
     });
 
     it('should parse null', () => {
-      expect(service.parseNNumber(NULL)).toBeNull();
+      expect(service.parseNNumber(NULL)).toBeUndefined();
     });
 
     it('should parse value', () => {
@@ -1024,7 +1028,7 @@ describe('RouterService', () => {
     });
 
     it('should parse null', () => {
-      expect(service.parseNArray(NULL, [])).toBeNull();
+      expect(service.parseNArray(NULL, [])).toBeUndefined();
     });
 
     it('should parse empty', () => {

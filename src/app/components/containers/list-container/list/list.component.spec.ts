@@ -290,8 +290,8 @@ describe('ListComponent', () => {
         wagons: null,
         factories: null,
       };
-      component.child.steps = [step];
-      component.child.ngOnChanges();
+      component.steps = [step];
+      fixture.detectChanges();
 
       expect(component.child.totalBelts).toEqual({});
       expect(component.child.totalWagons).toEqual({});
@@ -307,8 +307,8 @@ describe('ListComponent', () => {
         wagons: null,
         factories: Rational.one,
       };
-      component.child.steps = [step];
-      component.child.ngOnChanges();
+      component.steps = [step];
+      fixture.detectChanges();
 
       expect(component.child.totalBelts).toEqual({});
       expect(component.child.totalWagons).toEqual({});
@@ -316,11 +316,11 @@ describe('ListComponent', () => {
     });
 
     it('should use recipeId for DSP mining', () => {
-      component.child.data = {
+      component.data = {
         ...Mocks.Data,
         ...{ game: Game.DysonSphereProgram },
       };
-      component.child.recipeSettings = {
+      component.recipeSettings = {
         ...Mocks.RecipeSettingsInitial,
         ...{
           [RecipeId.Coal]: {
@@ -337,8 +337,8 @@ describe('ListComponent', () => {
         wagons: null,
         factories: Rational.one,
       };
-      component.child.steps = [step];
-      component.child.ngOnChanges();
+      component.steps = [step];
+      fixture.detectChanges();
 
       expect(component.child.totalFactories).toEqual({
         [RecipeId.Coal]: Rational.one,
@@ -346,7 +346,7 @@ describe('ListComponent', () => {
     });
 
     it('should set up indents', () => {
-      component.child.steps = [
+      component.steps = [
         {
           itemId: ItemId.IronOre,
           items: Rational.one,
@@ -367,7 +367,7 @@ describe('ListComponent', () => {
           parents: { [RecipeId.PlasticBar]: Rational.one },
         },
       ];
-      component.child.ngOnChanges();
+      fixture.detectChanges();
       expect(component.child.steps[0].itemId).toEqual(ItemId.IronOre);
       expect(component.child.steps[0].indent).toEqual([]);
       expect(component.child.steps[1].itemId).toEqual(ItemId.PlasticBar);
@@ -416,11 +416,14 @@ describe('ListComponent', () => {
       const element: any = { scrollIntoView: (): void => {} };
       spyOn(element, 'scrollIntoView');
       spyOn(document, 'querySelector').and.returnValue(element);
-      component.child.steps.push({
-        itemId: null,
-        items: null,
-        recipeId: 'test',
-      });
+      component.steps = [
+        ...Mocks.Steps,
+        {
+          itemId: null,
+          items: null,
+          recipeId: 'test',
+        },
+      ];
       component.child.fragment = 'test';
       component.child.ngAfterViewInit();
       expect(element.scrollIntoView).toHaveBeenCalled();
@@ -430,7 +433,7 @@ describe('ListComponent', () => {
 
   describe('setEffectivePrecision', () => {
     it('should wait until both steps and columns are defined', () => {
-      component.child._columns = null;
+      component.child.columns = null;
       component.child.effPrecision = null;
       component.child.setEffectivePrecision();
       expect(component.child.effPrecision).toBeNull();
@@ -745,12 +748,14 @@ describe('ListComponent', () => {
     });
 
     it('should return a value in MW', () => {
-      component.child.powerUnit = PowerUnit.MW;
+      component.powerUnit = PowerUnit.MW;
+      fixture.detectChanges();
       expect(component.child.power(Rational.thousand)).toEqual('1 MW');
     });
 
     it('should return a value in GW', () => {
-      component.child.powerUnit = PowerUnit.GW;
+      component.powerUnit = PowerUnit.GW;
+      fixture.detectChanges();
       expect(component.child.power(Rational.million)).toEqual('1 GW');
     });
   });
@@ -812,8 +817,8 @@ describe('ListComponent', () => {
       component.child.toggleDefaultRecipe(ItemId.Coal, RecipeId.Coal);
       expect(component.setDefaultRecipe).toHaveBeenCalledWith({
         id: ItemId.Coal,
-        value: null,
-        def: null,
+        value: undefined,
+        def: undefined,
       });
     });
 

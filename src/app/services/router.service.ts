@@ -337,8 +337,8 @@ export class RouterService {
           }
         }
       }
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error(err);
       throw new Error('Router failed to parse url');
     }
   }

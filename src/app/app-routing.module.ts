@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import {
   ListContainerComponent,
-  FlowContainerComponent,
+  FlowComponent,
   MatrixContainerComponent,
 } from './components';
 
@@ -14,7 +14,7 @@ const routes: Routes = [
   },
   {
     path: 'flow',
-    component: FlowContainerComponent,
+    component: FlowComponent,
   },
   {
     path: 'matrix',

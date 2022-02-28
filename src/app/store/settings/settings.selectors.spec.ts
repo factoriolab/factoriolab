@@ -23,7 +23,7 @@ describe('Settings Selectors', () => {
   describe('getDefaults', () => {
     it('should handle null base data', () => {
       const result = Selectors.getDefaults.projector(null, null);
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
     });
 
     it('should use minimum values', () => {
