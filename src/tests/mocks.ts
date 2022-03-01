@@ -150,7 +150,6 @@ export const Step2: Step = {
   beacons: Rational.from(4),
 };
 export const Steps = [Step1, Step2];
-Object.freeze(Steps);
 export const BeltSpeed: Entities<Rational> = {
   [ItemId.TransportBelt]: new Rational(BigInt(15)),
   [ItemId.Pipe]: new Rational(BigInt(1500)),

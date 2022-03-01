@@ -2,23 +2,29 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Store, StoreModule } from '@ngrx/store';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import {
+  sankeyCenter,
+  sankeyJustify,
+  sankeyLeft,
+  sankeyRight,
+} from 'd3-sankey';
 
-import { Mocks, TestUtility } from 'src/tests';
+import { Mocks, TestUtility, initialState } from 'src/tests';
 import { OptionsComponent, ColumnsComponent } from '~/components';
 import { LinkValue, SankeyAlign } from '~/models';
-import { reducers, metaReducers, State } from '~/store';
 import {
   SetLinkSizeAction,
   SetLinkTextAction,
   SetSankeyAlignAction,
 } from '~/store/preferences';
+import { getSankey } from '~/store/products';
+import { ExportUtility } from '~/utilities';
 import {
   ListComponent,
   ListContainerComponent,
 } from '../containers/list-container';
 import { FlowComponent } from './flow.component';
-import { ExportUtility } from '~/utilities';
 
 enum DataTest {
   Export = 'lab-flow-export',
@@ -27,7 +33,7 @@ enum DataTest {
 describe('FlowComponent', () => {
   let component: FlowComponent;
   let fixture: ComponentFixture<FlowComponent>;
-  let store: Store<State>;
+  let store: MockStore;
   let detectChanges: jasmine.Spy;
 
   beforeEach(async () => {
@@ -39,19 +45,18 @@ describe('FlowComponent', () => {
         ListContainerComponent,
         FlowComponent,
       ],
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
-        StoreModule.forRoot(reducers, { metaReducers }),
-      ],
+      imports: [HttpClientTestingModule, RouterTestingModule],
+      providers: [provideMockStore({ initialState })],
     }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FlowComponent);
     component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    getSankey.setResult(Mocks.Sankey);
+    store.refreshState();
     fixture.detectChanges();
-    store = TestBed.inject(Store);
     const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
     detectChanges = spyOn(ref.constructor.prototype, 'detectChanges');
     spyOn(store, 'dispatch');
@@ -61,131 +66,143 @@ describe('FlowComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('should handle sankey with circular links', () => {
-  //   spyOn(component, 'createChart').and.callThrough();
-  //   component.sankeyData = Mocks.SankeyCircular;
-  //   fixture.detectChanges();
-  //   expect(component.createChart).toHaveBeenCalled();
-  //   expect(component.svg).toBeTruthy();
-  // });
+  describe('ngAfterViewInit', () => {
+    it('should rebuild chart when data/align update', () => {
+      spyOn(component, 'rebuildChart');
+      getSankey.setResult(Mocks.SankeyCircular);
+      store.refreshState();
+      expect(component.rebuildChart).toHaveBeenCalledWith(
+        Mocks.SankeyCircular,
+        SankeyAlign.Justify
+      );
+    });
+  });
 
-  // describe('rebuildChart', () => {
-  //   it('should rebuild the chart', () => {
-  //     spyOn(component, 'createChart');
-  //     component.rebuildChart();
-  //     expect(component.createChart).toHaveBeenCalled();
-  //   });
+  describe('rebuildChart', () => {
+    it('should rebuild the chart', () => {
+      spyOn(component, 'createChart');
+      component.rebuildChart(Mocks.Sankey, SankeyAlign.Justify);
+      expect(component.createChart).toHaveBeenCalledWith(
+        Mocks.Sankey,
+        SankeyAlign.Justify
+      );
+    });
+  });
 
-  //   it('should ignore data with no nodes or links', () => {
-  //     spyOn(component.child, 'createChart');
-  //     component.child.sankeyData = { nodes: [], links: [] };
-  //     component.child.rebuildChart();
-  //     expect(component.child.createChart).not.toHaveBeenCalled();
-  //   });
-  // });
+  describe('createChart', () => {
+    it('should handle sankey with circular links', () => {
+      component.createChart(Mocks.SankeyCircular, SankeyAlign.Justify);
+      expect(component.svg).toBeTruthy();
+    });
 
-  // describe('selectNode', () => {
-  //   it('should emit when a rect is clicked', () => {
-  //     spyOn(component, 'selectNode');
-  //     fixture.detectChanges();
-  //     TestUtility.altClickSelector(fixture, 'rect');
-  //     expect(component.selectNode).toHaveBeenCalledWith(
-  //       Mocks.Sankey.nodes[0].id
-  //     );
-  //   });
+    it('should handle drag and drop', () => {
+      TestUtility.dragAndDropSelector(fixture, 'rect', 100, 200);
+      checkTransform(component.svg.select('rect').attr('transform'), 100, 200);
+      checkTransform(
+        component.svg.select('#image-0').attr('transform'),
+        100,
+        200
+      );
+    });
 
-  //   it('should not emit when default is prevented', () => {
-  //     spyOn(component, 'selectNode');
-  //     fixture.detectChanges();
-  //     TestUtility.altClickSelector(fixture, 'rect', 0, true);
-  //     expect(component.selectNode).not.toHaveBeenCalledWith(
-  //       Mocks.Sankey.nodes[0].id
-  //     );
-  //   });
-  // });
+    it('should handle drag and drop for sankey with circular links', () => {
+      component.rebuildChart(Mocks.SankeyCircular, SankeyAlign.Justify);
+      TestUtility.dragAndDropSelector(fixture, 'rect', 100, 200);
+      checkTransform(component.svg.select('rect').attr('transform'), 100, 200);
+      checkTransform(
+        component.svg.select('#image-0').attr('transform'),
+        100,
+        200
+      );
+    });
 
-  // describe('getAlign', () => {
-  //   it('should return the proper sankey alignment function', () => {
-  //     expect(component.child.getAlign(SankeyAlign.Justify)).toEqual(
-  //       sankeyJustify
-  //     );
-  //     expect(component.child.getAlign(SankeyAlign.Left)).toEqual(sankeyLeft);
-  //     expect(component.child.getAlign(SankeyAlign.Right)).toEqual(sankeyRight);
-  //     expect(component.child.getAlign(SankeyAlign.Center)).toEqual(
-  //       sankeyCenter
-  //     );
-  //   });
-  // });
+    it('should call setSelected when a rect is clicked', () => {
+      spyOn(component, 'setSelected');
+      TestUtility.altClickSelector(fixture, 'rect');
+      expect(component.setSelected).toHaveBeenCalledWith(
+        Mocks.Sankey.nodes[0].id
+      );
+    });
 
-  // it('should handle drag and drop', () => {
-  //   TestUtility.dragAndDropSelector(fixture, 'rect', 100, 200);
-  //   checkTransform(
-  //     component.child.svg.select('rect').attr('transform'),
-  //     100,
-  //     200
-  //   );
-  //   checkTransform(
-  //     component.child.svg.select('#image-0').attr('transform'),
-  //     100,
-  //     200
-  //   );
-  // });
+    it('should not call setSelected emit when default is prevented', () => {
+      spyOn(component, 'setSelected');
+      TestUtility.altClickSelector(fixture, 'rect', 0, true);
+      expect(component.setSelected).not.toHaveBeenCalled();
+    });
+  });
 
-  // it('should handle drag and drop for sankey with circular links', () => {
-  //   component.sankeyData = Mocks.SankeyCircular;
-  //   fixture.detectChanges();
-  //   TestUtility.dragAndDropSelector(fixture, 'rect', 100, 200);
-  //   checkTransform(
-  //     component.child.svg.select('rect').attr('transform'),
-  //     100,
-  //     200
-  //   );
-  //   checkTransform(
-  //     component.child.svg.select('#image-0').attr('transform'),
-  //     100,
-  //     200
-  //   );
-  // });
+  function checkTransform(value: string, x: number, y: number): void {
+    const match = /translate\((.+),(.+)\)/g.exec(value);
+    const xRound = Math.round(Number(match[1]));
+    const yRound = Math.round(Number(match[2]));
+    expect(xRound).toEqual(x);
+    expect(yRound).toEqual(y);
+  }
 
-  // function checkTransform(value: string, x: number, y: number): void {
-  //   const match = /translate\((.+),(.+)\)/g.exec(value);
-  //   const xRound = Math.round(Number(match[1]));
-  //   const yRound = Math.round(Number(match[2]));
-  //   expect(xRound).toEqual(x);
-  //   expect(yRound).toEqual(y);
-  // }
+  describe('getAlign', () => {
+    it('should return the proper sankey alignment function', () => {
+      expect(component.getAlign(SankeyAlign.Justify)).toEqual(sankeyJustify);
+      expect(component.getAlign(SankeyAlign.Left)).toEqual(sankeyLeft);
+      expect(component.getAlign(SankeyAlign.Right)).toEqual(sankeyRight);
+      expect(component.getAlign(SankeyAlign.Center)).toEqual(sankeyCenter);
+    });
+  });
 
-  // it('should set the selected node', () => {
-  //   component.setSelected('node');
-  //   expect(component.selected).toEqual('node');
-  //   expect(detectChanges).toHaveBeenCalled();
-  // });
+  describe('orZero', () => {
+    it('should return value or 0', () => {
+      expect(component.orZero(1)).toEqual(1);
+      expect(component.orZero()).toEqual(0);
+    });
+  });
 
-  // it('should set the link size', () => {
-  //   const value = LinkValue.Belts;
-  //   component.setLinkSize(value);
-  //   expect(store.dispatch).toHaveBeenCalledWith(new SetLinkSizeAction(value));
-  // });
+  describe('rngY', () => {
+    it('should return y1 - y0 or 0', () => {
+      expect(component.rngY({ y1: 2, y0: 1 } as any)).toEqual(1);
+      expect(component.rngY({} as any)).toEqual(0);
+    });
+  });
 
-  // it('should set the link text', () => {
-  //   const value = LinkValue.Belts;
-  //   component.setLinkText(value);
-  //   expect(store.dispatch).toHaveBeenCalledWith(new SetLinkTextAction(value));
-  // });
+  describe('setSelected', () => {
+    it('should set the selected node', () => {
+      component.setSelected('node');
+      expect(component.selected).toEqual('node');
+      expect(detectChanges).toHaveBeenCalled();
+    });
+  });
 
-  // it('should set the sankey alignment', () => {
-  //   const value = SankeyAlign.Left;
-  //   component.setSankeyAlign(value);
-  //   expect(store.dispatch).toHaveBeenCalledWith(
-  //     new SetSankeyAlignAction(value)
-  //   );
-  // });
+  describe('setLinkSize', () => {
+    it('should dispatch event', () => {
+      const value = LinkValue.Belts;
+      component.setLinkSize(value);
+      expect(store.dispatch).toHaveBeenCalledWith(new SetLinkSizeAction(value));
+    });
+  });
 
-  // it('should call the utility method to export JSON', () => {
-  //   spyOn(ExportUtility, 'saveAsJson');
-  //   TestUtility.clickDt(fixture, DataTest.Export);
-  //   expect(ExportUtility.saveAsJson).toHaveBeenCalledWith(
-  //     '{"nodes":[],"links":[]}'
-  //   );
-  // });
+  describe('setLinkText', () => {
+    it('should dispatch event', () => {
+      const value = LinkValue.Belts;
+      component.setLinkText(value);
+      expect(store.dispatch).toHaveBeenCalledWith(new SetLinkTextAction(value));
+    });
+  });
+
+  describe('setSankeyAlign', () => {
+    it('should dispatch event', () => {
+      const value = SankeyAlign.Left;
+      component.setSankeyAlign(value);
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new SetSankeyAlignAction(value)
+      );
+    });
+  });
+
+  describe('export', () => {
+    it('should call the utility method to export JSON', () => {
+      spyOn(ExportUtility, 'saveAsJson');
+      TestUtility.clickDt(fixture, DataTest.Export);
+      expect(ExportUtility.saveAsJson).toHaveBeenCalledWith(
+        JSON.stringify(Mocks.Sankey)
+      );
+    });
+  });
 });

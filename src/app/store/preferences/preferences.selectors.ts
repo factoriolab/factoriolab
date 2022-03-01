@@ -1,6 +1,6 @@
-import { compose, createSelector } from '@ngrx/store';
+import { createSelector } from '@ngrx/store';
 
-import { Column, Game, LinkValue, PowerUnit, SankeyAlign } from '~/models';
+import { Column, Game, LinkValue } from '~/models';
 import { State } from '../';
 import * as Settings from '../settings';
 import {
@@ -11,20 +11,31 @@ import {
 
 export const preferencesState = (state: State): PreferencesState =>
   state.preferencesState;
-const sColumns = (state: PreferencesState): ColumnsState => state.columns;
-const sLinkSize = (state: PreferencesState): LinkValue => state.linkSize;
-const sLinkText = (state: PreferencesState): LinkValue => state.linkText;
-const sSankeyAlign = (state: PreferencesState): SankeyAlign =>
-  state.sankeyAlign;
-const sSimplex = (state: PreferencesState): boolean => state.simplex;
-const sPowerUnit = (state: PreferencesState): PowerUnit => state.powerUnit;
 
-export const getColumns = compose(sColumns, preferencesState);
-export const getLinkSize = compose(sLinkSize, preferencesState);
-export const getLinkText = compose(sLinkText, preferencesState);
-export const getSankeyAlign = compose(sSankeyAlign, preferencesState);
-export const getSimplex = compose(sSimplex, preferencesState);
-export const getPowerUnit = compose(sPowerUnit, preferencesState);
+export const getColumns = createSelector(
+  preferencesState,
+  (state) => state.columns
+);
+export const getLinkSize = createSelector(
+  preferencesState,
+  (state) => state.linkSize
+);
+export const getLinkText = createSelector(
+  preferencesState,
+  (state) => state.linkText
+);
+export const getSankeyAlign = createSelector(
+  preferencesState,
+  (state) => state.sankeyAlign
+);
+export const getSimplex = createSelector(
+  preferencesState,
+  (state) => state.simplex
+);
+export const getPowerUnit = createSelector(
+  preferencesState,
+  (state) => state.powerUnit
+);
 
 export const getColumnsState = createSelector(
   getColumns,

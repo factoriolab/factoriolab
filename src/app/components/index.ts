@@ -1,6 +1,7 @@
 export * from './containers';
 export * from './columns/columns.component';
 export * from './dialog/dialog.component';
+export * from './flow/flow.component';
 export * from './icon/icon.component';
 export * from './info/info.component';
 export * from './input/input.component';

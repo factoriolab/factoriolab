@@ -94,7 +94,7 @@ export class FlowComponent implements AfterViewInit {
       skGraph = this.getLayout(data, align, circular, 800, this.height);
     }
 
-    const columns = Math.max(...skGraph.nodes.map((n) => n.depth ?? 0));
+    const columns = Math.max(...skGraph.nodes.map((d) => this.orZero(d.depth)));
     const width = (columns + 1) * 32 + columns * 32 * 12;
     const height = Math.min(this.height, width * 0.75);
     skGraph = this.getLayout(data, align, circular, width, height);
@@ -127,11 +127,12 @@ export class FlowComponent implements AfterViewInit {
         circular ? (d): string => (d as any).path : sankeyLinkHorizontal()
       )
       .attr('stroke', (l) => l.color)
-      .attr('stroke-width', (l) => Math.max(1, l.width ?? 0));
+      .attr('stroke-width', (l) => Math.max(1, this.orZero(l.width)));
 
     link.append('title').text((l) => l.name);
 
     const layout = this.skLayout;
+    const orZero = this.orZero;
     function dragMove(
       this: SVGElement,
       event: any,
@@ -142,8 +143,8 @@ export class FlowComponent implements AfterViewInit {
       d.y0 = d.y0 + event.dy;
       d.x0 = d.x0 + event.dx;
       d.x1 = d.x1 + event.dx;
-      const trX = (d.x0 ?? 0) - rectX;
-      const trY = (d.y0 ?? 0) - rectY;
+      const trX = orZero(d.x0) - rectX;
+      const trY = orZero(d.y0) - rectY;
       const transform = 'translate(' + trX + ',' + trY + ')';
       select(this).attr('transform', transform);
 
@@ -177,10 +178,10 @@ export class FlowComponent implements AfterViewInit {
       .selectAll<SVGRectElement, SankeyNode<Node, Link>>('rect')
       .data(skGraph.nodes)
       .join('rect')
-      .attr('x', (d) => d.x0 ?? 0)
-      .attr('y', (d) => d.y0 ?? 0)
+      .attr('x', (d) => this.orZero(d.x0))
+      .attr('y', (d) => this.orZero(d.y0))
       .attr('height', (d) => this.rngY(d))
-      .attr('width', (d) => this.rngX(d))
+      .attr('width', (d) => this.orZero(d.x1) - this.orZero(d.x0))
       .attr('fill', (d) => d.color)
       .on('click', (e, d) => {
         if (e.defaultPrevented) return;
@@ -205,8 +206,18 @@ export class FlowComponent implements AfterViewInit {
       .attr('viewBox', (d) => d.viewBox)
       .attr('width', (d) => Math.min(30, this.rngY(d) - 2))
       .attr('height', (d) => Math.min(30, this.rngY(d) - 2))
-      .attr('x', (d) => this.midX(d) - Math.min(30, this.rngY(d) - 2) / 2)
-      .attr('y', (d) => this.midY(d) - Math.min(30, this.rngY(d) - 2) / 2)
+      .attr(
+        'x',
+        (d) =>
+          (this.orZero(d.x1) + this.orZero(d.x0)) / 2 -
+          Math.min(30, this.rngY(d) - 2) / 2
+      )
+      .attr(
+        'y',
+        (d) =>
+          (this.orZero(d.y1) + this.orZero(d.y0)) / 2 -
+          Math.min(30, this.rngY(d) - 2) / 2
+      )
       .style('pointer-events', 'none')
       .append('image')
       .attr('href', (d) => d.href);
@@ -238,7 +249,7 @@ export class FlowComponent implements AfterViewInit {
           data.links.some((l) => l.source === n.id || l.target === n.id)
         )
         .map((d) => ({ ...d })),
-      links: data.links.map((l) => ({ ...l })) ?? [],
+      links: data.links.map((l) => ({ ...l })),
     });
   }
 
@@ -257,20 +268,12 @@ export class FlowComponent implements AfterViewInit {
     }
   }
 
+  orZero(n?: number): number {
+    return n ?? 0;
+  }
+
   rngY(d: SankeyNode<Node, Link>): number {
-    return (d.y1 ?? 0) - (d.y0 ?? 0);
-  }
-
-  rngX(d: SankeyNode<Node, Link>): number {
-    return (d.x1 ?? 0) - (d.x0 ?? 0);
-  }
-
-  midX(d: SankeyNode<Node, Link>): number {
-    return ((d.x1 ?? 0) + (d.x0 ?? 0)) / 2;
-  }
-
-  midY(d: SankeyNode<Node, Link>): number {
-    return ((d.y1 ?? 0) + (d.y0 ?? 0)) / 2;
+    return this.orZero(d.y1) - this.orZero(d.y0);
   }
 
   setSelected(value: string): void {
