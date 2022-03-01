@@ -97,6 +97,7 @@ describe('FlowComponent', () => {
 
     it('should handle drag and drop', () => {
       TestUtility.dragAndDropSelector(fixture, 'rect', 100, 200);
+      TestUtility.assert(component.svg != null);
       checkTransform(component.svg.select('rect').attr('transform'), 100, 200);
       checkTransform(
         component.svg.select('#image-0').attr('transform'),
@@ -108,6 +109,7 @@ describe('FlowComponent', () => {
     it('should handle drag and drop for sankey with circular links', () => {
       component.rebuildChart(Mocks.SankeyCircular, SankeyAlign.Justify);
       TestUtility.dragAndDropSelector(fixture, 'rect', 100, 200);
+      TestUtility.assert(component.svg != null);
       checkTransform(component.svg.select('rect').attr('transform'), 100, 200);
       checkTransform(
         component.svg.select('#image-0').attr('transform'),
@@ -133,6 +135,7 @@ describe('FlowComponent', () => {
 
   function checkTransform(value: string, x: number, y: number): void {
     const match = /translate\((.+),(.+)\)/g.exec(value);
+    TestUtility.assert(match != null);
     const xRound = Math.round(Number(match[1]));
     const yRound = Math.round(Number(match[2]));
     expect(xRound).toEqual(x);

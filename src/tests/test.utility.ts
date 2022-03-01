@@ -172,4 +172,10 @@ export class TestUtility {
     this.mouseEvent('mousemove', element, centerX + xOffset, centerY + yOffset);
     this.mouseEvent('mouseup', element, centerX + xOffset, centerY + yOffset);
   }
+
+  static assert(condition: boolean, msg?: string): asserts condition {
+    if (!condition) {
+      throw new Error(msg || 'Assertion error, condition is false.');
+    }
+  }
 }
