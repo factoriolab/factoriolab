@@ -432,6 +432,11 @@ export const getNormalDataset = createSelector(
   }
 );
 
+export const getIconEntities = createSelector(
+  getNormalDataset,
+  (data) => data.iconEntities
+);
+
 export const getDataset = createSelector(
   getNormalDataset,
   getExpensive,

@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 
 import { Dataset } from '~/models';
+import { TrackService } from '~/services';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
@@ -38,7 +39,7 @@ export class ToggleComponent extends DialogContainerComponent {
     );
   }
 
-  constructor() {
+  constructor(public track: TrackService) {
     super();
   }
 

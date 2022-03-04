@@ -40,7 +40,7 @@ import {
   PowerUnitOptions,
   Column,
 } from '~/models';
-import { RouterService } from '~/services';
+import { RouterService, TrackService } from '~/services';
 import { FactoriesState } from '~/store/factories';
 import { ColumnsState, PreferencesState } from '~/store/preferences';
 import { SettingsState, initialSettingsState } from '~/store/settings';
@@ -98,7 +98,6 @@ export class SettingsComponent implements OnInit, OnChanges {
   @Output() setInserterTarget = new EventEmitter<InserterTarget>();
   @Output() setInserterCapacity = new EventEmitter<InserterCapacity>();
   @Output() setDisplayRate = new EventEmitter<PreviousPayload<DisplayRate>>();
-  @Output() setColumns = new EventEmitter<ColumnsState>();
   @Output() setSimplex = new EventEmitter<boolean>();
   @Output() setPowerUnit = new EventEmitter<PowerUnit>();
   @Output() setProliferatorSpray = new EventEmitter<string>();
@@ -153,7 +152,8 @@ export class SettingsComponent implements OnInit, OnChanges {
   constructor(
     private ref: ChangeDetectorRef,
     private router: Router,
-    private routerSvc: RouterService
+    private routerSvc: RouterService,
+    public track: TrackService
   ) {}
 
   ngOnInit(): void {

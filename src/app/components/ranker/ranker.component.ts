@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 
 import { Dataset, DisplayRate, ItemId } from '~/models';
+import { TrackService } from '~/services';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
@@ -40,7 +41,7 @@ export class RankerComponent extends DialogContainerComponent {
     }
   }
 
-  constructor() {
+  constructor(public track: TrackService) {
     super();
   }
 

@@ -4,18 +4,23 @@ import {
   ChangeDetectionStrategy,
   HostListener,
   OnChanges,
+  SimpleChanges,
 } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { take } from 'rxjs';
 
 import {
   Recipe,
   Item,
   DisplayRate,
-  Dataset,
   Rational,
   EnergyType,
   Icon,
   Game,
 } from '~/models';
+import { TrackService } from '~/services';
+import { State } from '~/store';
+import { getGame, getIconEntities } from '~/store/settings';
 
 @Component({
   selector: 'lab-icon',
@@ -24,19 +29,20 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconComponent implements OnChanges {
-  @Input() data: Dataset;
-  @Input() iconId: string;
+  @Input() iconId: string = '';
   @Input() scale = true;
-  @Input() text: string;
+  @Input() text = '';
   @Input() scrollTop = 0;
-  @Input() scrollLeft: number;
-  @Input() tooltip: string;
-  @Input() recipe: Recipe;
-  @Input() item: Item;
-  @Input() displayRate: DisplayRate;
-  @Input() hoverIcon: string;
+  @Input() scrollLeft = 0;
+  @Input() tooltip = '';
+  @Input() recipe: Recipe | undefined;
+  @Input() item: Item | undefined;
+  @Input() displayRate = DisplayRate.PerMinute;
+  @Input() hoverIcon = '';
 
-  icon: Icon;
+  game$ = this.store.select(getGame);
+
+  icon: Icon | undefined;
   hover = false;
   tooltipMarginTop = 40;
 
@@ -44,18 +50,27 @@ export class IconComponent implements OnChanges {
   EnergyType = EnergyType;
   Game = Game;
 
-  constructor() {}
+  constructor(public track: TrackService, private store: Store<State>) {}
 
-  ngOnChanges(): void {
-    this.tooltipMarginTop = (this.scale ? 40 : 72) - this.scrollTop;
-    if (this.recipe) {
-      const rId = this.iconId + '|recipe';
-      if (this.data.iconEntities[rId]) {
-        this.icon = this.data.iconEntities[rId];
-        return;
-      }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['scale'] || changes['scrollTop']) {
+      this.tooltipMarginTop = (this.scale ? 40 : 72) - this.scrollTop;
     }
-    this.icon = this.data.iconEntities[this.iconId];
+    if (changes['recipe'] || changes['iconId']) {
+      this.store
+        .select(getIconEntities)
+        .pipe(take(1))
+        .subscribe((iconEntities) => {
+          if (this.recipe) {
+            const rId = this.iconId + '|recipe';
+            if (iconEntities[rId]) {
+              this.icon = iconEntities[rId];
+              return;
+            }
+          }
+          this.icon = iconEntities[this.iconId];
+        });
+    }
   }
 
   @HostListener('mouseenter') mouseenter(): void {
@@ -81,7 +96,7 @@ export class IconComponent implements OnChanges {
     }
   }
 
-  toBonusPercent(value: number): string {
+  toBonusPercent(value: number): string | undefined {
     const rational = this.round(
       Rational.fromNumber(value).mul(Rational.hundred).toNumber()
     );
@@ -90,7 +105,7 @@ export class IconComponent implements OnChanges {
     } else if (value < 0) {
       return `${rational}%`;
     } else {
-      return null;
+      return undefined;
     }
   }
 }

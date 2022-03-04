@@ -9,7 +9,6 @@ import { DefaultIdPayload, DefaultPayload, IdPayload } from '~/models';
 import { RouterService } from '~/services';
 import { reducers, metaReducers, State } from '~/store';
 import * as Items from '~/store/items';
-import * as Preferences from '~/store/preferences';
 import * as Recipes from '~/store/recipes';
 import { SetDisabledRecipesAction } from '~/store/settings';
 import { ListComponent } from './list/list.component';
@@ -165,14 +164,6 @@ describe('ListContainerComponent', () => {
     component.child.setOverclock.emit(data);
     expect(store.dispatch).toHaveBeenCalledWith(
       new Recipes.SetOverclockAction(data)
-    );
-  });
-
-  it('should set columns', () => {
-    const data = Preferences.initialColumnsState;
-    component.child.setColumns.emit(data);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Preferences.SetColumnsAction(data)
     );
   });
 

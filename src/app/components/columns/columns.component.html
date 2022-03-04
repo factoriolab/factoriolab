@@ -1,4 +1,8 @@
-<div data-test="lab-columns-open" (click)="clickOpen()">
+<div
+  *ngIf="columns$ | async as columns"
+  data-test="lab-columns-open"
+  (click)="clickOpen(columns)"
+>
   <ng-content></ng-content>
 </div>
 <lab-dialog *ngIf="open" (closeDialog)="close()">
@@ -22,7 +26,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let opt of options; trackBy: trackBy">
+        <tr *ngFor="let opt of options$ | async; trackBy: track.idName">
           <td>
             <div
               *ngIf="

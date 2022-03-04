@@ -4,11 +4,7 @@
       <!-- Expand -->
       <th>
         <div class="flex end">
-          <lab-columns
-            [game]="data.game"
-            [columns]="columns"
-            (setColumns)="setColumns.emit($event)"
-          >
+          <lab-columns>
             <button title="Set columns visibility and precision">
               <i class="material-icons">settings</i>
             </button></lab-columns
@@ -109,7 +105,7 @@
     </tr>
   </thead>
   <tbody>
-    <ng-container *ngFor="let step of displayedSteps; trackBy: trackBy">
+    <ng-container *ngFor="let step of displayedSteps; trackBy: track.step">
       <tr class="border row col">
         <td [id]="step.itemId">
           <div>
@@ -142,7 +138,6 @@
             </ng-container>
             <lab-icon
               *ngIf="step.itemId; else recipeIcon"
-              [data]="data"
               [iconId]="step.itemId"
               [tooltip]="data.itemEntities[step.itemId].name"
               [recipe]="data.recipeEntities[data.itemRecipeIds[step.itemId]]"
@@ -151,7 +146,6 @@
             <ng-template #recipeIcon>
               <lab-icon
                 *ngIf="step.recipeId"
-                [data]="data"
                 [iconId]="step.recipeId"
                 [tooltip]="data.recipeEntities[step.recipeId].name"
                 [recipe]="data.recipeEntities[step.recipeId]"
@@ -178,7 +172,6 @@
                   ? 'Click to include'
                   : 'Click to ignore'
               "
-              [data]="data"
               [iconId]="step.itemId"
               [class.ignored]="itemSettings[step.itemId].ignore"
               [tooltip]="data.itemEntities[step.itemId]?.name"
@@ -219,7 +212,6 @@
                 <lab-icon
                   class="button"
                   title="Click to change belt"
-                  [data]="data"
                   [iconId]="belt"
                   [tooltip]="data.itemEntities[belt].name"
                   [item]="data.itemEntities[belt]"
@@ -245,7 +237,6 @@
                   <lab-icon
                     class="button"
                     title="Click to change pipe"
-                    [data]="data"
                     [iconId]="belt"
                     [tooltip]="data.itemEntities[belt].name"
                     [item]="data.itemEntities[belt]"
@@ -257,7 +248,6 @@
                 <lab-icon
                   [iconId]="belt"
                   [tooltip]="data.itemEntities[belt]?.name || PIPE"
-                  [data]="data"
                 ></lab-icon>
               </ng-template>
             </div>
@@ -294,7 +284,6 @@
                     <lab-icon
                       class="button"
                       title="Click to change cargo wagon"
-                      [data]="data"
                       [iconId]="wagon"
                       [tooltip]="data.itemEntities[wagon].name"
                       [item]="data.itemEntities[wagon]"
@@ -322,7 +311,6 @@
                     <lab-icon
                       class="button"
                       title="Click to change fluid wagon"
-                      [data]="data"
                       [iconId]="wagon"
                       [tooltip]="data.itemEntities[wagon].name"
                       [item]="data.itemEntities[wagon]"
@@ -332,7 +320,6 @@
               </ng-template>
               <ng-template #wagonDefault>
                 <lab-icon
-                  [data]="data"
                   [iconId]="wagon"
                   [tooltip]="data.itemEntities[wagon].name"
                   [item]="data.itemEntities[wagon]"
@@ -357,7 +344,6 @@
             <div>
               <div class="flex">
                 <lab-icon
-                  [data]="data"
                   [iconId]="step.recipeId"
                   [tooltip]="data.recipeEntities[step.recipeId].name"
                   [recipe]="data.recipeEntities[step.recipeId]"
@@ -389,7 +375,6 @@
                         <lab-icon
                           class="button"
                           title="Click to change factory"
-                          [data]="data"
                           [iconId]="factory"
                           [tooltip]="data.itemEntities[factory].name"
                           [item]="data.itemEntities[factory]"
@@ -401,7 +386,6 @@
                         [iconId]="factory"
                         [tooltip]="data.itemEntities[factory].name"
                         [item]="data.itemEntities[factory]"
-                        [data]="data"
                       ></lab-icon>
                     </ng-template>
                   </ng-container>
@@ -416,7 +400,12 @@
                 class="flex mod"
               >
                 <lab-select
-                  *ngFor="let mod of modules; index as i; first as first"
+                  *ngFor="
+                    let mod of modules;
+                    index as i;
+                    first as first;
+                    trackBy: track.string
+                  "
                   [header]="
                     data.game === Game.Factorio
                       ? 'Select a module'
@@ -448,7 +437,6 @@
                         ? 'Click to change proliferator'
                         : 'Click to change resource purity'
                     "
-                    [data]="data"
                     [iconId]="mod"
                     [tooltip]="data.itemEntities[mod]?.name"
                     [item]="data.itemEntities[mod]"
@@ -504,7 +492,6 @@
                       [iconId]="beacon"
                       [tooltip]="data.itemEntities[beacon].name"
                       [item]="data.itemEntities[beacon]"
-                      [data]="data"
                     ></lab-icon
                   ></ng-container>
                   <ng-template #beaconPicker>
@@ -520,7 +507,6 @@
                       <lab-icon
                         class="button"
                         title="Click to change beacon"
-                        [data]="data"
                         [iconId]="beacon"
                         [tooltip]="data.itemEntities[beacon].name"
                         [item]="data.itemEntities[beacon]"
@@ -542,7 +528,12 @@
                     class="flex mod"
                   >
                     <lab-select
-                      *ngFor="let mod of modules; index as i; first as first"
+                      *ngFor="
+                        let mod of modules;
+                        index as i;
+                        first as first;
+                        trackBy: track.string
+                      "
                       header="Select a module"
                       [data]="data"
                       [selected]="mod"
@@ -561,7 +552,6 @@
                       <lab-icon
                         class="button module"
                         title="Click to change beacon modules"
-                        [data]="data"
                         [iconId]="mod"
                         [tooltip]="data.itemEntities[mod]?.name"
                         [item]="data.itemEntities[mod]"
@@ -671,7 +661,11 @@
             <td colspan="100"><span class="header">Sources</span></td>
           </tr>
           <tr
-            *ngFor="let output of outputs[step.id]; last as isLast"
+            *ngFor="
+              let output of outputs[step.id];
+              last as isLast;
+              trackBy: track.step
+            "
             class="details"
             [class.last]="isLast && !step.parents"
           >
@@ -683,7 +677,6 @@
                     rate(step.items.mul(value), effPrecision[Column.Items])
                   }}</span>
                   <lab-icon
-                    [data]="data"
                     [iconId]="step.itemId"
                     [tooltip]="data.itemEntities[step.itemId]?.name"
                     [recipe]="
@@ -700,7 +693,6 @@
                       rate(step.belts.mul(value), effPrecision[Column.Belts])
                     }}</span>
                     <lab-icon
-                      [data]="data"
                       [iconId]="belt"
                       [tooltip]="data.itemEntities[belt]?.name || PIPE"
                       [item]="data.itemEntities[belt]"
@@ -716,7 +708,6 @@
                       rate(step.wagons.mul(value), effPrecision[Column.Wagons])
                     }}</span>
                     <lab-icon
-                      [data]="data"
                       [iconId]="wagon"
                       [tooltip]="data.itemEntities[wagon].name"
                       [item]="data.itemEntities[wagon]"
@@ -742,7 +733,6 @@
                   <div>
                     <div class="flex">
                       <lab-icon
-                        [data]="data"
                         [iconId]="output.recipeId"
                         [tooltip]="data.recipeEntities[output.recipeId].name"
                         [recipe]="data.recipeEntities[output.recipeId]"
@@ -752,7 +742,6 @@
                           data.game !== Game.DysonSphereProgram ||
                           factory !== ItemId.MiningDrill
                         "
-                        [data]="data"
                         [iconId]="factory"
                         [tooltip]="data.itemEntities[factory].name"
                         [item]="data.itemEntities[factory]"
@@ -773,7 +762,6 @@
                       >{{ leftPad(rate(value, -2)) }}%</span
                     >
                     <lab-icon
-                      [data]="data"
                       [iconId]="step.itemId"
                       [tooltip]="data.itemEntities[step.itemId]?.name"
                       [item]="data.itemEntities[step.itemId]"
@@ -790,7 +778,8 @@
           <tr
             *ngFor="
               let parent of step.parents | keyvalue: sortKeyValue;
-              last as isLast
+              last as isLast;
+              trackBy: track.keyValue
             "
             class="details"
             [class.last]="isLast"
@@ -802,7 +791,6 @@
                   rate(step.items.mul(parent.value), effPrecision[Column.Items])
                 }}</span>
                 <lab-icon
-                  [data]="data"
                   [iconId]="step.itemId"
                   [tooltip]="data.itemEntities[step.itemId]?.name"
                   [recipe]="
@@ -822,7 +810,6 @@
                     )
                   }}</span>
                   <lab-icon
-                    [data]="data"
                     [iconId]="belt"
                     [tooltip]="data.itemEntities[belt]?.name || PIPE"
                     [item]="data.itemEntities[belt]"
@@ -841,7 +828,6 @@
                     )
                   }}</span>
                   <lab-icon
-                    [data]="data"
                     [iconId]="wagon"
                     [tooltip]="data.itemEntities[wagon].name"
                     [item]="data.itemEntities[wagon]"
@@ -867,7 +853,6 @@
                 <div>
                   <div class="flex">
                     <lab-icon
-                      [data]="data"
                       [iconId]="step.recipeId"
                       [tooltip]="data.recipeEntities[step.recipeId].name"
                       [recipe]="data.recipeEntities[step.recipeId]"
@@ -877,7 +862,6 @@
                         data.game !== Game.DysonSphereProgram ||
                         factory !== ItemId.MiningDrill
                       "
-                      [data]="data"
                       [iconId]="factory"
                       [tooltip]="data.itemEntities[factory].name"
                       [item]="data.itemEntities[factory]"
@@ -898,7 +882,6 @@
                   >
                   <i class="material-icons">arrow_forward</i>
                   <lab-icon
-                    [data]="data"
                     [iconId]="parent.key"
                     [tooltip]="data.recipeEntities[parent.key].name"
                     [recipe]="data.recipeEntities[parent.key]"
@@ -921,7 +904,10 @@
               <td colspan="100"><span class="header">Depletion</span></td>
             </tr>
             <ng-container
-              *ngFor="let output of step.outputs | keyvalue: sortKeyValue"
+              *ngFor="
+                let output of step.outputs | keyvalue: sortKeyValue;
+                trackBy: track.keyValue
+              "
             >
               <ng-container *ngIf="findStep(output.key) as outStep">
                 <tr *ngIf="step.outputs[output.key] as percent" class="details">
@@ -937,7 +923,6 @@
                         )
                       }}</span>
                       <lab-icon
-                        [data]="data"
                         [iconId]="output.key"
                         [tooltip]="data.itemEntities[output.key]?.name"
                         [recipe]="
@@ -967,7 +952,8 @@
           <ng-container
             *ngFor="
               let input of data.recipeR[step.recipeId].in
-                | keyvalue: sortKeyValue
+                | keyvalue: sortKeyValue;
+              trackBy: track.keyValue
             "
           >
             <ng-container *ngIf="findStep(input.key) as inStep">
@@ -985,7 +971,6 @@
                       )
                     }}</span>
                     <lab-icon
-                      [data]="data"
                       [iconId]="input.key"
                       [tooltip]="data.itemEntities[input.key]?.name"
                       [recipe]="
@@ -1007,7 +992,6 @@
                         )
                       }}</span>
                       <lab-icon
-                        [data]="data"
                         [iconId]="belt"
                         [tooltip]="data.itemEntities[belt]?.name || PIPE"
                         [item]="data.itemEntities[belt]"
@@ -1028,7 +1012,6 @@
                         )
                       }}</span>
                       <lab-icon
-                        [data]="data"
                         [iconId]="wagon"
                         [tooltip]="data.itemEntities[wagon].name"
                         [item]="data.itemEntities[wagon]"
@@ -1054,7 +1037,6 @@
                     <div>
                       <div class="flex">
                         <lab-icon
-                          [data]="data"
                           [iconId]="inStep.recipeId"
                           [tooltip]="data.recipeEntities[inStep.recipeId].name"
                           [recipe]="data.recipeEntities[inStep.recipeId]"
@@ -1065,7 +1047,6 @@
                             data.game !== Game.DysonSphereProgram ||
                             factory !== ItemId.MiningDrill
                           "
-                          [data]="data"
                           [iconId]="factory"
                           [tooltip]="data.itemEntities[factory].name"
                           [item]="data.itemEntities[factory]"
@@ -1086,7 +1067,6 @@
                       >
                       <i class="material-icons">arrow_forward</i>
                       <lab-icon
-                        [data]="data"
                         [iconId]="step.recipeId"
                         [tooltip]="data.recipeEntities[step.recipeId]?.name"
                         [recipe]="data.recipeEntities[step.recipeId]"
@@ -1104,7 +1084,8 @@
           <ng-container
             *ngFor="
               let output of step.outputs | keyvalue: sortKeyValue;
-              last as isLast
+              last as isLast;
+              trackBy: track.keyValue
             "
           >
             <ng-container *ngIf="findStep(output.key) as outStep">
@@ -1123,7 +1104,6 @@
                       )
                     }}</span>
                     <lab-icon
-                      [data]="data"
                       [iconId]="output.key"
                       [tooltip]="data.itemEntities[output.key]?.name"
                       [recipe]="
@@ -1145,7 +1125,6 @@
                         )
                       }}</span>
                       <lab-icon
-                        [data]="data"
                         [iconId]="belt"
                         [tooltip]="data.itemEntities[belt]?.name || PIPE"
                         [item]="data.itemEntities[belt]"
@@ -1166,7 +1145,6 @@
                         )
                       }}</span>
                       <lab-icon
-                        [data]="data"
                         [iconId]="wagon"
                         [tooltip]="data.itemEntities[wagon].name"
                         [item]="data.itemEntities[wagon]"
@@ -1192,7 +1170,6 @@
                     <div>
                       <div class="flex">
                         <lab-icon
-                          [data]="data"
                           [iconId]="outStep.recipeId"
                           [tooltip]="data.recipeEntities[outStep.recipeId].name"
                           [recipe]="data.recipeEntities[outStep.recipeId]"
@@ -1202,7 +1179,6 @@
                             data.game !== Game.DysonSphereProgram ||
                             factory !== ItemId.MiningDrill
                           "
-                          [data]="data"
                           [iconId]="factory"
                           [tooltip]="data.itemEntities[factory].name"
                           [item]="data.itemEntities[factory]"
@@ -1223,7 +1199,6 @@
                         >{{ leftPad(rate(percent, -2)) }}%</span
                       >
                       <lab-icon
-                        [data]="data"
                         [iconId]="output.key"
                         [tooltip]="data.itemEntities[output.key]?.name"
                         [item]="data.itemEntities[output.key]"
@@ -1245,7 +1220,8 @@
               <table>
                 <ng-container
                   *ngFor="
-                    let input of data.recipeR[step.recipeId].in | keyvalue
+                    let input of data.recipeR[step.recipeId].in | keyvalue;
+                    trackBy: track.keyValue
                   "
                 >
                   <ng-container *ngIf="findStep(input.key) as inStep">
@@ -1259,7 +1235,6 @@
                             )
                           }}</span>
                           <lab-icon
-                            [data]="data"
                             [iconId]="input.key"
                             [tooltip]="data.itemEntities[input.key]?.name"
                             [recipe]="
@@ -1287,7 +1262,6 @@
                               )
                             }}</span>
                             <lab-icon
-                              [data]="data"
                               [iconId]="belt"
                               [tooltip]="data.itemEntities[belt]?.name || PIPE"
                               [item]="data.itemEntities[belt]"
@@ -1314,7 +1288,6 @@
                               rate(ins.value, 1)
                             }}</span>
                             <lab-icon
-                              [data]="data"
                               [iconId]="ins.id"
                               [tooltip]="data.itemEntities[ins.id].name"
                               [item]="data.itemEntities[ins.id]"
@@ -1338,13 +1311,11 @@
                     >
                       <div class="flex">
                         <lab-icon
-                          [data]="data"
                           [iconId]="step.recipeId"
                           [tooltip]="data.recipeEntities[step.recipeId].name"
                           [recipe]="data.recipeEntities[step.recipeId]"
                         ></lab-icon>
                         <lab-icon
-                          [data]="data"
                           [iconId]="factory"
                           [tooltip]="data.itemEntities[factory].name"
                           [item]="data.itemEntities[factory]"
@@ -1358,7 +1329,8 @@
               <table>
                 <ng-container
                   *ngFor="
-                    let output of data.recipeR[step.recipeId].out | keyvalue
+                    let output of data.recipeR[step.recipeId].out | keyvalue;
+                    trackBy: track.keyValue
                   "
                 >
                   <tr
@@ -1377,7 +1349,6 @@
                             rate(ins.value, 1)
                           }}</span>
                           <lab-icon
-                            [data]="data"
                             [iconId]="ins.id"
                             [tooltip]="data.itemEntities[ins.id].name"
                             [item]="data.itemEntities[ins.id]"
@@ -1401,7 +1372,6 @@
                           )
                         }}</span>
                         <lab-icon
-                          [data]="data"
                           [iconId]="belt"
                           [tooltip]="data.itemEntities[belt]?.name || PIPE"
                           [item]="data.itemEntities[belt]"
@@ -1419,7 +1389,6 @@
                           )
                         }}</span>
                         <lab-icon
-                          [data]="data"
                           [iconId]="output.key"
                           [tooltip]="data.itemEntities[output.key]?.name"
                           [recipe]="
@@ -1472,7 +1441,12 @@
             <td [colSpan]="leftSpan"></td>
             <td colspan="100" class="recipes">
               <div class="list tile">
-                <ng-container *ngFor="let recipeId of recipes[step.id]">
+                <ng-container
+                  *ngFor="
+                    let recipeId of recipes[step.id];
+                    trackBy: track.string
+                  "
+                >
                   <ng-container *ngIf="data.recipeR[recipeId] as recipe">
                     <lab-icon
                       *ngIf="
@@ -1483,7 +1457,6 @@
                       [class.selected]="
                         data.itemRecipeIds[step.itemId] === recipeId
                       "
-                      [data]="data"
                       [iconId]="recipeId"
                       [tooltip]="recipe.name"
                       [recipe]="data.recipeEntities[recipeId]"
@@ -1512,10 +1485,12 @@
             <td colspan="100" class="recipes">
               <div class="list tile">
                 <lab-icon
-                  *ngFor="let recipeId of recipes[step.id]"
+                  *ngFor="
+                    let recipeId of recipes[step.id];
+                    trackBy: track.string
+                  "
                   class="button grid"
                   [class.ignored]="disabledRecipes.indexOf(recipeId) !== -1"
-                  [data]="data"
                   [iconId]="recipeId"
                   [tooltip]="data.recipeEntities[recipeId].name"
                   [recipe]="data.recipeEntities[recipeId]"
@@ -1539,12 +1514,14 @@
       <td *ngIf="columns[Column.Belts].show">
         <div
           class="flex"
-          *ngFor="let tot of totalBelts | keyvalue: sortKeyValue"
+          *ngFor="
+            let tot of totalBelts | keyvalue: sortKeyValue;
+            trackBy: track.keyValue
+          "
         >
           <span class="monospace">{{ tot.value }}</span>
           <lab-icon
             *ngIf="data.itemEntities[tot.key] as item"
-            [data]="data"
             [iconId]="tot.key"
             [tooltip]="item.name"
             [item]="item"
@@ -1556,12 +1533,14 @@
       <td *ngIf="columns[Column.Wagons].show">
         <div
           class="flex"
-          *ngFor="let tot of totalWagons | keyvalue: sortKeyValue"
+          *ngFor="
+            let tot of totalWagons | keyvalue: sortKeyValue;
+            trackBy: track.keyValue
+          "
         >
           <span class="monospace">{{ tot.value }}</span>
           <lab-icon
             *ngIf="data.itemEntities[tot.key] as item"
-            [data]="data"
             [iconId]="tot.key"
             [tooltip]="item.name"
             [item]="item"
@@ -1572,12 +1551,14 @@
       <td colspan="3">
         <div
           class="flex"
-          *ngFor="let tot of totalFactories | keyvalue: sortKeyValue"
+          *ngFor="
+            let tot of totalFactories | keyvalue: sortKeyValue;
+            trackBy: track.keyValue
+          "
         >
           <span class="monospace">{{ tot.value }}</span>
           <lab-icon
             *ngIf="data.itemEntities[tot.key] as item; else totalRecipe"
-            [data]="data"
             [iconId]="tot.key"
             [tooltip]="item.name"
             [item]="item"
@@ -1586,7 +1567,6 @@
           <ng-template #totalRecipe>
             <lab-icon
               *ngIf="data.recipeEntities[tot.key] as recipe"
-              [data]="data"
               [iconId]="tot.key"
               [tooltip]="recipe.name"
               [recipe]="recipe"
@@ -1599,12 +1579,14 @@
       <td colspan="3" *ngIf="columns[Column.Beacons].show">
         <div
           class="flex"
-          *ngFor="let tot of totalBeacons | keyvalue: sortKeyValue"
+          *ngFor="
+            let tot of totalBeacons | keyvalue: sortKeyValue;
+            trackBy: track.keyValue
+          "
         >
           <span class="monospace">{{ tot.value }}</span>
           <lab-icon
             *ngIf="data.itemEntities[tot.key] as item"
-            [data]="data"
             [iconId]="tot.key"
             [tooltip]="item.name"
             [item]="item"

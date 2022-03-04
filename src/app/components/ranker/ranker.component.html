@@ -16,7 +16,6 @@
         data-test="lab-ranker-none"
         [class.disabled]="!canAdd(ItemId.Module)"
         [class.selected]="!editValue.length"
-        [data]="data"
         [iconId]="ItemId.Module"
         [text]="text(ItemId.Module)"
         [scrollTop]="scroll.scrollTop"
@@ -26,12 +25,11 @@
     </div>
     <div class="tile" *ngFor="let row of rows">
       <lab-icon
-        *ngFor="let id of row"
+        *ngFor="let id of row; trackBy: track.string"
         class="grid"
         data-test="lab-ranker-option"
         [class.disabled]="!canAdd(id)"
         [class.selected]="editValue.indexOf(id) !== -1"
-        [data]="data"
         [iconId]="id"
         [text]="text(id)"
         [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"

@@ -4,7 +4,7 @@
 </button>
 <lab-dialog *ngIf="open" (closeDialog)="cancel()">
   <button
-    *ngFor="let opt of options"
+    *ngFor="let opt of options; trackBy: track.idName"
     [class.active]="opt.id === selected"
     (click)="selectId.emit(opt.id); open = false"
   >

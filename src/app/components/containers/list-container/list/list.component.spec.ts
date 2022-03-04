@@ -76,7 +76,6 @@ enum DataTest {
       (setBeaconCount)="setBeaconCount($event)"
       (setBeacon)="setBeacon($event)"
       (setBeaconModules)="setBeaconModules($event)"
-      (setColumns)="setColumns($event)"
       (setPrecision)="setPrecision($event)"
       (resetItem)="resetItem($event)"
       (resetRecipe)="resetRecipe($event)"

@@ -167,12 +167,7 @@ or fractional precision for visible columns."
             ></lab-info>
           </td>
           <td>
-            <lab-columns
-              class="relative"
-              [game]="data.game"
-              [columns]="columns"
-              (setColumns)="setColumns.emit($event)"
-            >
+            <lab-columns class="relative">
               <button class="grow" title="Set columns visibility and precision">
                 <span class="text">{{ columnsButton }}</span>
               </button>
@@ -242,7 +237,12 @@ or fractional precision for visible columns."
       </table>
       <table class="factories">
         <ng-container
-          *ngFor="let f of factoryRows; let i = index; let last = last"
+          *ngFor="
+            let f of factoryRows;
+            let i = index;
+            let last = last;
+            trackBy: track.string
+          "
         >
           <tr *ngIf="factories.entities[f] as factory">
             <td>
@@ -282,7 +282,6 @@ or fractional precision for visible columns."
               <lab-icon
                 *ngIf="f && !factoryOptions.length"
                 class="pad"
-                [data]="data"
                 [iconId]="f"
                 [tooltip]="data.itemEntities[f].name"
                 [item]="data.itemEntities[f]"
@@ -305,7 +304,6 @@ or fractional precision for visible columns."
               >
                 <lab-icon
                   class="button"
-                  [data]="data"
                   [iconId]="f"
                   [tooltip]="data.itemEntities[f].name"
                   [item]="data.itemEntities[f]"
@@ -317,7 +315,6 @@ or fractional precision for visible columns."
                 class="pad"
                 tooltip="Factory defaults"
                 iconId="production"
-                [data]="data"
               ></lab-icon>
             </td>
             <td>
@@ -341,7 +338,6 @@ or fractional precision for visible columns."
                   <lab-icon
                     class="button"
                     tooltip="Module preferences"
-                    [data]="data"
                     [iconId]="
                       factory.moduleRank.length
                         ? factory.moduleRank[0]
@@ -384,7 +380,6 @@ or fractional precision for visible columns."
                           ? 'Proliferator preferences'
                           : 'Resource node purity'
                       "
-                      [data]="data"
                       [iconId]="
                         factory.moduleRank.length
                           ? factory.moduleRank[0]
@@ -434,7 +429,6 @@ or fractional precision for visible columns."
                   >
                     <lab-icon
                       class="pad"
-                      [data]="data"
                       [iconId]="factory.beacon"
                       [tooltip]="data.itemEntities[factory.beacon].name"
                       [item]="data.itemEntities[factory.beacon]"
@@ -460,7 +454,6 @@ or fractional precision for visible columns."
                       <lab-icon
                         class="button"
                         tooltip="Select default beacon"
-                        [data]="data"
                         [iconId]="factory.beacon"
                       ></lab-icon>
                     </lab-select>
@@ -489,7 +482,6 @@ or fractional precision for visible columns."
                   <lab-icon
                     class="button"
                     tooltip="Beacon module"
-                    [data]="data"
                     [iconId]="factory.beaconModule"
                   ></lab-icon>
                 </lab-select>
@@ -570,7 +562,6 @@ Minimum possible value is 1."
                 <lab-icon
                   class="button"
                   tooltip="Select proliferator spray"
-                  [data]="data"
                   [iconId]="settings.proliferatorSpray"
                 ></lab-icon>
               </lab-select>
@@ -602,7 +593,6 @@ Minimum possible value is 1."
                 <lab-icon
                   class="button"
                   tooltip="Select default belt"
-                  [data]="data"
                   [iconId]="settings.belt"
                 ></lab-icon>
               </lab-select>
@@ -631,7 +621,6 @@ Minimum possible value is 1."
                 <lab-icon
                   class="button"
                   tooltip="Select default pipe"
-                  [data]="data"
                   [iconId]="settings.pipe"
                 ></lab-icon>
               </lab-select>
@@ -663,7 +652,6 @@ Minimum possible value is 1."
                   class="button"
                   tooltip="Select default cargo wagon"
                   [iconId]="settings.cargoWagon"
-                  [data]="data"
                 ></lab-icon>
               </lab-select>
             </div>
@@ -694,7 +682,6 @@ Minimum possible value is 1."
                   class="button"
                   tooltip="Select default fluid wagon"
                   [iconId]="settings.fluidWagon"
-                  [data]="data"
                 ></lab-icon>
               </lab-select>
             </div>
@@ -723,7 +710,6 @@ This does not affect burners that use non-chemical fuels."
                   class="button"
                   tooltip="Select fuel"
                   [iconId]="settings.fuel"
-                  [data]="data"
                 ></lab-icon>
               </lab-select>
             </div>

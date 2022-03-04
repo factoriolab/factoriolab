@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 
 import { IdName, NONE } from '~/models';
+import { TrackService } from '~/services';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
@@ -26,7 +27,7 @@ export class OptionsComponent<T> extends DialogContainerComponent {
     return this.options.find((o) => o.id === this.selected)?.name || NONE;
   }
 
-  constructor() {
+  constructor(public track: TrackService) {
     super();
   }
 }

@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 
 import { IdType, DisplayRate, Dataset, ItemId, Game } from '~/models';
+import { TrackService } from '~/services';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 const COL_WIDTH = 2.375;
@@ -39,7 +40,7 @@ export class SelectComponent
   ItemId = ItemId;
   Game = Game;
 
-  constructor() {
+  constructor(public track: TrackService) {
     super();
   }
 

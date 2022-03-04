@@ -27,39 +27,33 @@
     {{ tooltip }}
   </div>
   <div *ngIf="recipe" class="flex">
-    <lab-icon
-      iconId="time"
-      [text]="recipe.time.toString()"
-      [data]="data"
-    ></lab-icon>
-    <ng-container *ngFor="let ingredient of recipe.in | keyvalue">
+    <lab-icon iconId="time" [text]="recipe.time.toString()"></lab-icon>
+    <ng-container
+      *ngFor="let ingredient of recipe.in | keyvalue; trackBy: track.keyValue"
+    >
       <lab-icon
         [iconId]="ingredient.key"
         [text]="ingredient.value.toString()"
-        [data]="data"
       ></lab-icon>
     </ng-container>
     <i class="material-icons">arrow_forward</i>
     <ng-container *ngIf="recipe.out">
-      <ng-container *ngFor="let output of recipe.out | keyvalue" class="flex">
+      <ng-container
+        *ngFor="let output of recipe.out | keyvalue; trackBy: track.keyValue"
+        class="flex"
+      >
         <lab-icon
           [iconId]="output.key"
           [text]="output.value.toString()"
-          [data]="data"
         ></lab-icon>
       </ng-container>
     </ng-container>
-    <lab-icon
-      *ngIf="!recipe.out"
-      [iconId]="iconId"
-      text="1"
-      [data]="data"
-    ></lab-icon>
+    <lab-icon *ngIf="!recipe.out" [iconId]="iconId" text="1"></lab-icon>
   </div>
-  <div *ngIf="recipe?.cost">
+  <div *ngIf="recipe && recipe.cost">
     <div>Cost: {{ recipe.cost }}</div>
   </div>
-  <div *ngIf="recipe?.usage">
+  <div *ngIf="recipe && recipe.usage">
     <div>Usage: {{ power(recipe.usage) }}</div>
   </div>
   <div *ngIf="item?.beacon as beacon">
@@ -124,7 +118,7 @@
         <td>Crafting speed</td>
         <td>{{ round(factory.speed) }}</td>
       </tr>
-      <tr *ngIf="factory.modules && data.game === Game.Factorio">
+      <tr *ngIf="factory.modules && (game$ | async) === Game.Factorio">
         <td>Modules</td>
         <td>{{ factory.modules }}</td>
       </tr>

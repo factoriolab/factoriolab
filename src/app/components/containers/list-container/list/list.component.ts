@@ -34,9 +34,9 @@ import {
   IdPayload,
   PowerUnit,
 } from '~/models';
-import { RouterService } from '~/services';
+import { RouterService, TrackService } from '~/services';
 import { initialItemsState } from '~/store/items';
-import { ColumnsState, initialColumnsState } from '~/store/preferences';
+import { initialColumnsState } from '~/store/preferences';
 import { initialRecipesState } from '~/store/recipes';
 import { initialSettingsState } from '~/store/settings';
 import { ExportUtility, RecipeUtility } from '~/utilities';
@@ -96,7 +96,6 @@ export class ListComponent
   @Output() setBeaconModules = new EventEmitter<DefaultIdPayload<string[]>>();
   @Output() setBeaconTotal = new EventEmitter<IdPayload>();
   @Output() setOverclock = new EventEmitter<DefaultIdPayload<number>>();
-  @Output() setColumns = new EventEmitter<ColumnsState>();
   @Output() resetItem = new EventEmitter<string>();
   @Output() resetRecipe = new EventEmitter<string>();
   @Output() resetIgnore = new EventEmitter();
@@ -144,7 +143,8 @@ export class ListComponent
   constructor(
     private ref: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private routerSvc: RouterService
+    private routerSvc: RouterService,
+    public track: TrackService
   ) {
     super();
   }
@@ -488,10 +488,6 @@ export class ListComponent
         }
       }
     }
-  }
-
-  trackBy(i: number, step: Step): string {
-    return step.id ?? '';
   }
 
   link(step: Step): string {

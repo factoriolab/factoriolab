@@ -379,14 +379,6 @@ describe('SettingsContainerComponent', () => {
     );
   });
 
-  it('should set columns', () => {
-    const data = Preferences.initialColumnsState;
-    component.child.setColumns.emit(data);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Preferences.SetColumnsAction(data)
-    );
-  });
-
   it('should set simplex', () => {
     const value = false;
     component.child.setSimplex.emit(value);

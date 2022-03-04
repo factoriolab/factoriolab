@@ -138,10 +138,6 @@ export class ListContainerComponent implements OnInit {
     this.store.dispatch(new Recipes.SetOverclockAction(data));
   }
 
-  setColumns(value: Preferences.ColumnsState): void {
-    this.store.dispatch(new Preferences.SetColumnsAction(value));
-  }
-
   resetItem(value: string): void {
     this.store.dispatch(new Items.ResetItemAction(value));
   }

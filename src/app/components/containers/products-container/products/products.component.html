@@ -1,6 +1,9 @@
 <h2>Products</h2>
 <div class="panel">
-  <div class="product-row" *ngFor="let product of products; trackBy: trackBy">
+  <div
+    class="product-row"
+    *ngFor="let product of products; trackBy: track.product"
+  >
     <ng-container *ngIf="product && data.itemEntities[product.itemId]">
       <button title="Remove product" (click)="removeProduct.emit(product.id)">
         <i class="material-icons">remove</i>
@@ -15,7 +18,6 @@
           class="button"
           title="Change item"
           hoverIcon="settings"
-          [data]="data"
           [iconId]="product.itemId"
           [tooltip]="data.itemEntities[product.itemId].name"
           [item]="data.itemEntities[product.itemId]"
@@ -50,7 +52,6 @@
               [iconId]="id"
               [tooltip]="data.recipeEntities[id].name"
               [recipe]="data.recipeEntities[id]"
-              [data]="data"
             >
             </lab-icon>
             <ng-template #singleItem>
@@ -59,7 +60,6 @@
                 [iconId]="id"
                 [tooltip]="data.itemEntities[id].name"
                 [item]="data.itemEntities[id]"
-                [data]="data"
               >
               </lab-icon>
             </ng-template>
@@ -78,7 +78,6 @@
                 class="button"
                 title="Change rate step"
                 hoverIcon="settings"
-                [data]="data"
                 [iconId]="id"
                 [tooltip]="data.recipeEntities[id].name"
                 [recipe]="data.recipeEntities[id]"
@@ -97,7 +96,6 @@
                   class="button"
                   title="Change rate step"
                   hoverIcon="settings"
-                  [data]="data"
                   [iconId]="id"
                   [tooltip]="data.itemEntities[id].name"
                   [item]="data.itemEntities[id]"
@@ -132,7 +130,6 @@
                 <lab-icon
                   class="button"
                   tooltip="Change rate step belt"
-                  [data]="data"
                   [iconId]="belt"
                   [item]="data.itemEntities[belt]"
                 ></lab-icon>
@@ -156,7 +153,6 @@
                   <lab-icon
                     class="button"
                     tooltip="Change rate step pipe"
-                    [data]="data"
                     [iconId]="belt"
                   ></lab-icon>
                 </lab-select>
@@ -165,7 +161,6 @@
                 <lab-icon
                   [iconId]="belt"
                   [tooltip]="data.itemEntities[belt]?.name || PIPE"
-                  [data]="data"
                 ></lab-icon>
               </ng-template>
             </ng-container>
@@ -198,7 +193,6 @@
                     <lab-icon
                       class="button"
                       title="Change rate step wagon"
-                      [data]="data"
                       [iconId]="wagon"
                       [tooltip]="data.itemEntities[wagon].name"
                       [item]="data.itemEntities[wagon]"
@@ -225,7 +219,6 @@
                     <lab-icon
                       class="button"
                       title="Change rate step wagon"
-                      [data]="data"
                       [iconId]="wagon"
                       [tooltip]="data.itemEntities[wagon].name"
                       [item]="data.itemEntities[wagon]"
@@ -263,7 +256,6 @@
                       <lab-icon
                         class="button"
                         title="Change rate step factory"
-                        [data]="data"
                         [iconId]="factory"
                         [tooltip]="data.itemEntities[factory].name"
                         [item]="data.itemEntities[factory]"
@@ -275,13 +267,17 @@
                       [iconId]="factory"
                       [tooltip]="data.itemEntities[factory].name"
                       [item]="data.itemEntities[factory]"
-                      [data]="data"
                     ></lab-icon>
                   </ng-template>
                 </ng-container>
                 <div *ngIf="product.viaFactoryModules as modules" class="flex">
                   <lab-select
-                    *ngFor="let mod of modules; index as i; first as first"
+                    *ngFor="
+                      let mod of modules;
+                      index as i;
+                      first as first;
+                      trackBy: track.string
+                    "
                     [header]="
                       data.game === Game.Factorio
                         ? 'Select a module'
@@ -316,7 +312,6 @@
                           : 'Change rate step resource purity'
                       "
                       [class.module]="!first"
-                      [data]="data"
                       [iconId]="mod"
                       [tooltip]="data.itemEntities[mod]?.name"
                       [item]="data.itemEntities[mod]"
@@ -371,7 +366,6 @@
                         [iconId]="beacon"
                         [tooltip]="data.itemEntities[beacon].name"
                         [item]="data.itemEntities[beacon]"
-                        [data]="data"
                       ></lab-icon
                     ></ng-container>
                     <ng-template #beaconPicker>
@@ -393,7 +387,6 @@
                         <lab-icon
                           class="button"
                           title="Set rate step beacon"
-                          [data]="data"
                           [iconId]="beacon"
                           [tooltip]="data.itemEntities[beacon].name"
                           [item]="data.itemEntities[beacon]"
@@ -405,7 +398,12 @@
                       class="flex"
                     >
                       <lab-select
-                        *ngFor="let mod of modules; index as i; first as first"
+                        *ngFor="
+                          let mod of modules;
+                          index as i;
+                          first as first;
+                          trackBy: track.string
+                        "
                         header="Select a module"
                         [data]="data"
                         [selected]="mod"
@@ -428,7 +426,6 @@
                           class="button"
                           title="Change rate step beacon module"
                           [class.module]="!first"
-                          [data]="data"
                           [iconId]="mod"
                           [tooltip]="data.itemEntities[mod]?.name"
                           [item]="data.itemEntities[mod]"

@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 
 import { Dataset, DefaultIdPayload, MatrixResult } from '~/models';
+import { TrackService } from '~/services';
 import { RecipesState } from '~/store/recipes';
 
 @Component({
@@ -34,13 +35,5 @@ export class MatrixComponent {
   @Output() resetCost = new EventEmitter();
   @Output() resetRecipeCost = new EventEmitter();
 
-  constructor() {}
-
-  trackRowBy(i: number, v: any): string {
-    return this.result?.recipes?.[i - 1] || i.toString();
-  }
-
-  trackColBy(i: number, v: any): string {
-    return i.toString();
-  }
+  constructor(public track: TrackService) {}
 }

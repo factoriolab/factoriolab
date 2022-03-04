@@ -1,21 +1,16 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  ChangeDetectionStrategy,
-  OnChanges,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { map } from 'rxjs';
 
+import { Column, columnOptions, PrecisionColumns, Rational } from '~/models';
+import { TrackService } from '~/services';
+import { State } from '~/store';
 import {
-  Column,
-  columnOptions,
-  Game,
-  IdName,
-  PrecisionColumns,
-  Rational,
-} from '~/models';
-import { ColumnsState } from '~/store/preferences';
+  ColumnsState,
+  getColumnsState,
+  SetColumnsAction,
+} from '~/store/preferences';
+import { getGame } from '~/store/settings';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
@@ -24,42 +19,32 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
   styleUrls: ['./columns.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColumnsComponent
-  extends DialogContainerComponent
-  implements OnChanges
-{
-  @Input() game = Game.Factorio;
-  @Input() columns: ColumnsState = {};
-
-  @Output() setColumns = new EventEmitter<ColumnsState>();
+export class ColumnsComponent extends DialogContainerComponent {
+  columns$ = this.store.select(getColumnsState);
+  options$ = this.store.select(getGame).pipe(map((g) => columnOptions(g)));
 
   PrecisionColumns = PrecisionColumns;
   edited = false;
   editValue: ColumnsState = {};
-  options: IdName<Column>[] = [];
 
   Column = Column;
 
-  constructor() {
+  constructor(private store: Store<State>, public track: TrackService) {
     super();
   }
 
-  ngOnChanges(): void {
-    this.options = columnOptions(this.game);
-  }
-
-  clickOpen(): void {
+  clickOpen(columns: ColumnsState): void {
     this.open = true;
     this.edited = false;
-    this.editValue = Object.keys(this.columns).reduce((e: ColumnsState, c) => {
-      e[c] = { ...this.columns[c] };
+    this.editValue = Object.keys(columns).reduce((e: ColumnsState, c) => {
+      e[c] = { ...columns[c] };
       return e;
     }, {});
   }
 
   close(): void {
     if (this.edited) {
-      this.setColumns.emit(this.editValue);
+      this.store.dispatch(new SetColumnsAction(this.editValue));
     }
     this.open = false;
   }
@@ -89,9 +74,5 @@ export class ColumnsComponent
     const r = Rational.from(1, 3);
     const p = this.editValue[id].precision;
     return p != null ? r.toPrecision(p).toString() : r.toFraction();
-  }
-
-  trackBy(i: number, col: IdName<Column>): Column {
-    return col.id;
   }
 }

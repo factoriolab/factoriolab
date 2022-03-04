@@ -1,9 +1,8 @@
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
-import { TestUtility } from 'src/tests';
-import { Column, Game } from '~/models';
-import { initialColumnsState } from '~/store/preferences';
+import { TestUtility, initialState } from 'src/tests';
+import { Column } from '~/models';
 import { DialogComponent } from '../dialog/dialog.component';
 import { ColumnsComponent } from './columns.component';
 
@@ -15,38 +14,22 @@ enum DataTest {
   Confirm = 'lab-columns-confirm',
 }
 
-@Component({
-  selector: 'lab-test-columns',
-  template: `
-    <lab-columns
-      [game]="game"
-      [columns]="columns"
-      (setColumns)="setColumns($event)"
-    >
-    </lab-columns>
-  `,
-})
-class TestColumnsComponent {
-  @ViewChild(ColumnsComponent) child: ColumnsComponent;
-  game = Game.Factorio;
-  columns = initialColumnsState;
-  setColumns(data): void {}
-  constructor(public ref: ChangeDetectorRef) {}
-}
-
 describe('ColumnsComponent', () => {
-  let component: TestColumnsComponent;
-  let fixture: ComponentFixture<TestColumnsComponent>;
+  let component: ColumnsComponent;
+  let fixture: ComponentFixture<ColumnsComponent>;
+  let store: MockStore;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DialogComponent, ColumnsComponent, TestColumnsComponent],
+      declarations: [DialogComponent, ColumnsComponent],
+      providers: [provideMockStore({ initialState })],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TestColumnsComponent);
+    fixture = TestBed.createComponent(ColumnsComponent);
     component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
     fixture.detectChanges();
   });
 
@@ -56,34 +39,32 @@ describe('ColumnsComponent', () => {
 
   describe('clickOpen', () => {
     it('should set up edit objects', () => {
-      component.child.edited = true;
+      component.edited = true;
       TestUtility.clickDt(fixture, DataTest.Open);
-      expect(component.child.open).toBeTrue();
-      expect(component.child.edited).toBeFalse();
-      expect(component.child.editValue).toEqual(component.columns);
-      component.child.editValue[Column.Items].show = false;
-      expect(component.child.columns[Column.Items].show).toBeTrue();
+      expect(component.open).toBeTrue();
+      expect(component.edited).toBeFalse();
+      expect(component.editValue).not.toEqual({});
     });
   });
 
   describe('close', () => {
     beforeEach(() => {
-      spyOn(component, 'setColumns');
+      spyOn(store, 'dispatch');
       TestUtility.clickDt(fixture, DataTest.Open);
       fixture.detectChanges();
     });
 
     it('should close the dialog', () => {
       TestUtility.clickDt(fixture, DataTest.Confirm);
-      expect(component.setColumns).not.toHaveBeenCalled();
-      expect(component.child.open).toBeFalse();
+      expect(store.dispatch).not.toHaveBeenCalled();
+      expect(component.open).toBeFalse();
     });
 
     it('should emit edits', () => {
-      component.child.edited = true;
+      component.edited = true;
       TestUtility.clickDt(fixture, DataTest.Confirm);
-      expect(component.setColumns).toHaveBeenCalled();
-      expect(component.child.open).toBeFalse();
+      expect(store.dispatch).toHaveBeenCalled();
+      expect(component.open).toBeFalse();
     });
   });
 
@@ -93,8 +74,8 @@ describe('ColumnsComponent', () => {
       fixture.detectChanges();
       fixture.detectChanges();
       TestUtility.clickDt(fixture, DataTest.Visibility);
-      expect(component.child.edited).toBeTrue();
-      expect(component.child.editValue[Column.Tree].show).toBeFalse();
+      expect(component.edited).toBeTrue();
+      expect(component.editValue[Column.Tree].show).toBeFalse();
     });
   });
 
@@ -103,8 +84,8 @@ describe('ColumnsComponent', () => {
       TestUtility.clickDt(fixture, DataTest.Open);
       fixture.detectChanges();
       TestUtility.setTextDt(fixture, DataTest.Decimals, '0');
-      expect(component.child.edited).toBeTrue();
-      expect(component.child.editValue[Column.Items].precision).toEqual(0);
+      expect(component.edited).toBeTrue();
+      expect(component.editValue[Column.Items].precision).toEqual(0);
     });
   });
 
@@ -116,15 +97,15 @@ describe('ColumnsComponent', () => {
 
     it('should switch to using fractions', () => {
       TestUtility.clickDt(fixture, DataTest.Fractions);
-      expect(component.child.edited).toBeTrue();
-      expect(component.child.editValue[Column.Items].precision).toBeNull();
+      expect(component.edited).toBeTrue();
+      expect(component.editValue[Column.Items].precision).toBeNull();
     });
 
     it('should switch to using decimals', () => {
-      component.child.editValue[Column.Items].precision = null;
+      component.editValue[Column.Items].precision = null;
       TestUtility.clickDt(fixture, DataTest.Fractions);
-      expect(component.child.edited).toBeTrue();
-      expect(component.child.editValue[Column.Items].precision).toEqual(1);
+      expect(component.edited).toBeTrue();
+      expect(component.editValue[Column.Items].precision).toEqual(1);
     });
   });
 
@@ -135,13 +116,13 @@ describe('ColumnsComponent', () => {
     });
 
     it('should give an example of decimal precision', () => {
-      component.child.editValue[Column.Items].precision = 2;
-      expect(component.child.example(Column.Items)).toEqual('0.34');
+      component.editValue[Column.Items].precision = 2;
+      expect(component.example(Column.Items)).toEqual('0.34');
     });
 
     it('should give an example of fractional precision', () => {
-      component.child.editValue[Column.Items].precision = null;
-      expect(component.child.example(Column.Items)).toEqual('1/3');
+      component.editValue[Column.Items].precision = null;
+      expect(component.example(Column.Items)).toEqual('1/3');
     });
   });
 });

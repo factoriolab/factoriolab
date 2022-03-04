@@ -17,7 +17,6 @@
         class="grid"
         [class.selected]="selected === ItemId.Module"
         data-test="lab-select-none"
-        [data]="data"
         [iconId]="ItemId.Module"
         [scrollTop]="scroll.scrollTop"
         (click)="clickId(ItemId.Module)"
@@ -25,12 +24,11 @@
       </lab-icon>
     </div>
     <div class="tile" *ngFor="let row of rows">
-      <ng-container *ngFor="let id of row">
+      <ng-container *ngFor="let id of row; trackBy: track.string">
         <lab-icon
           class="grid"
           [class.selected]="id === selected"
           data-test="lab-select-option"
-          [data]="data"
           [iconId]="id"
           [tooltip]="
             data.itemEntities[id]?.name || data.recipeEntities[id]?.name || null

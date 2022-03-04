@@ -48,11 +48,10 @@
     </div>
     <div class="flex panel dark tile">
       <lab-icon
-        *ngFor="let id of complexRecipeIds"
+        *ngFor="let id of complexRecipeIds; trackBy: track.string"
         class="button grid"
         data-test="lab-toggle-recipe"
         [class.ignored]="editValue.indexOf(id) !== -1"
-        [data]="data"
         [iconId]="id"
         [scrollTop]="scrollTop"
         [tooltip]="data.recipeEntities[id].name"

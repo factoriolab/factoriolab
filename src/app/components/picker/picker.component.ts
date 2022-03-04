@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 
 import { Dataset, Entities } from '~/models';
+import { TrackService } from '~/services';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
@@ -41,7 +42,7 @@ export class PickerComponent extends DialogContainerComponent {
   categoryIds: string[];
   categoryItemRows: Entities<string[][]>;
 
-  constructor() {
+  constructor(public track: TrackService) {
     super();
   }
 

@@ -69,7 +69,6 @@ enum DataTest {
       (setInserterTarget)="setInserterTarget($event)"
       (setInserterCapacity)="setInserterCapacity($event)"
       (setDisplayRate)="setDisplayRate($event)"
-      (setColumns)="setColumns($event)"
     >
     </lab-settings>
   `,
@@ -111,7 +110,6 @@ class TestSettingsComponent {
   setInserterTarget(data): void {}
   setInserterCapacity(data): void {}
   setDisplayRate(data): void {}
-  setColumns(data): void {}
 }
 
 describe('SettingsComponent', () => {

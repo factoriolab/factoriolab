@@ -136,30 +136,21 @@ defined cost, usually mining."
     <th rowspan="2"></th>
   </tr>
   <tr>
-    <td *ngFor="let i of result.items">
-      <lab-icon
-        [data]="data"
-        [iconId]="i"
-        [tooltip]="data.itemEntities[i].name"
-      ></lab-icon>
+    <td *ngFor="let i of result.items; trackBy: track.string">
+      <lab-icon [iconId]="i" [tooltip]="data.itemEntities[i].name"></lab-icon>
     </td>
-    <td *ngFor="let i of result.recipes">
+    <td *ngFor="let i of result.recipes; trackBy: track.string">
       <lab-icon
-        [data]="data"
         [iconId]="i"
         [tooltip]="data.recipeEntities[i].name"
         [recipe]="data.recipeEntities[i]"
       ></lab-icon>
     </td>
-    <td *ngFor="let i of result.inputs">
-      <lab-icon
-        [data]="data"
-        [iconId]="i"
-        [tooltip]="data.itemEntities[i].name"
-      ></lab-icon>
+    <td *ngFor="let i of result.inputs; trackBy: track.string">
+      <lab-icon [iconId]="i" [tooltip]="data.itemEntities[i].name"></lab-icon>
     </td>
   </tr>
-  <tr *ngFor="let R of result.A; let i = index; trackBy: trackRowBy">
+  <tr *ngFor="let R of result.A; let i = index">
     <th class="header" *ngIf="i === 0; else notObj">Objective</th>
     <ng-template #notObj>
       <td>
@@ -168,7 +159,6 @@ defined cost, usually mining."
           class="flex center"
         >
           <lab-icon
-            [data]="data"
             [iconId]="id"
             [tooltip]="data.recipeEntities[id].name"
             [recipe]="data.recipeEntities[id]"
@@ -180,7 +170,6 @@ defined cost, usually mining."
             class="flex center"
           >
             <lab-icon
-              [data]="data"
               [iconId]="id"
               [tooltip]="data.itemEntities[id].name"
             ></lab-icon>
@@ -188,7 +177,7 @@ defined cost, usually mining."
         </ng-template>
       </td>
     </ng-template>
-    <td *ngFor="let c of R; last as last; trackBy: trackColBy">
+    <td *ngFor="let c of R; last as last">
       <div
         class="flex"
         *ngIf="last && result.recipes[i - 1] as id; else valueSpan"
@@ -232,27 +221,18 @@ defined cost, usually mining."
     <td rowspan="3"></td>
   </tr>
   <tr>
-    <td *ngFor="let i of result.items">
-      <lab-icon
-        [data]="data"
-        [iconId]="i"
-        [tooltip]="data.itemEntities[i].name"
-      ></lab-icon>
+    <td *ngFor="let i of result.items; trackBy: track.string">
+      <lab-icon [iconId]="i" [tooltip]="data.itemEntities[i].name"></lab-icon>
     </td>
-    <td *ngFor="let i of result.recipes">
+    <td *ngFor="let i of result.recipes; trackBy: track.string">
       <lab-icon
-        [data]="data"
         [iconId]="i"
         [tooltip]="data.recipeEntities[i].name"
         [recipe]="data.recipeEntities[i]"
       ></lab-icon>
     </td>
-    <td *ngFor="let i of result.inputs">
-      <lab-icon
-        [data]="data"
-        [iconId]="i"
-        [tooltip]="data.itemEntities[i].name"
-      ></lab-icon>
+    <td *ngFor="let i of result.inputs; trackBy: track.string">
+      <lab-icon [iconId]="i" [tooltip]="data.itemEntities[i].name"></lab-icon>
     </td>
   </tr>
   <tr>

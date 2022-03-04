@@ -27,11 +27,10 @@
   </div>
   <div class="panel">
     <div #tabsScroll class="tabs">
-      <ng-container *ngFor="let id of categoryIds">
+      <ng-container *ngFor="let id of categoryIds; trackBy: track.string">
         <lab-icon
           *ngIf="data.categoryEntities[id] as category"
           [class.selected]="id === tab"
-          [data]="data"
           [iconId]="id"
           [scale]="false"
           [scrollLeft]="tabsScroll.scrollLeft"
@@ -44,9 +43,8 @@
       <div class="tile">
         <div class="row" *ngFor="let row of categoryItemRows[tab]">
           <lab-icon
-            *ngFor="let id of row"
+            *ngFor="let id of row; trackBy: track.string"
             class="grid"
-            [data]="data"
             [iconId]="id"
             [scrollTop]="tabScroll.scrollTop"
             [tooltip]="data.itemEntities[id].name"

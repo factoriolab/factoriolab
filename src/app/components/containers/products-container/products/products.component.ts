@@ -24,6 +24,7 @@ import {
   PIPE,
   PreviousPayload,
 } from '~/models';
+import { TrackService } from '~/services';
 import { ItemsState } from '~/store/items';
 import { RecipeUtility } from '~/utilities';
 import { RecipeSettingsComponent } from '../../recipe-settings.component';
@@ -72,7 +73,7 @@ export class ProductsComponent
   RecipeUtility = RecipeUtility;
   PIPE = PIPE;
 
-  constructor() {
+  constructor(public track: TrackService) {
     super();
   }
 
@@ -82,10 +83,6 @@ export class ProductsComponent
     for (const p of this.products) {
       this.productOptions[p.id] = this.productSteps[p.itemId].map((r) => r[0]);
     }
-  }
-
-  trackBy(i: number, product: Product): string {
-    return product.id;
   }
 
   changeItem(product: Product, itemId: string): void {
