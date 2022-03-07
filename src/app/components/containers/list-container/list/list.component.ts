@@ -12,6 +12,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
 
 import {
   Step,
@@ -35,9 +36,12 @@ import {
   PowerUnit,
 } from '~/models';
 import { RouterService, TrackService } from '~/services';
-import { initialItemsState } from '~/store/items';
+import { State } from '~/store';
+import * as Items from '~/store/items';
+import { ItemsState } from '~/store/items';
 import { initialColumnsState } from '~/store/preferences';
-import { initialRecipesState } from '~/store/recipes';
+import * as Products from '~/store/products';
+import * as Recipes from '~/store/recipes';
 import { initialSettingsState } from '~/store/settings';
 import { ExportUtility, RecipeUtility } from '~/utilities';
 import { RecipeSettingsComponent } from '../../recipe-settings.component';
@@ -65,9 +69,14 @@ export class ListComponent
   extends RecipeSettingsComponent
   implements OnInit, OnChanges, AfterViewInit
 {
-  @Input() itemSettings = initialItemsState;
-  @Input() itemRaw = initialItemsState;
-  @Input() recipeRaw = initialRecipesState;
+  itemSettings$ = this.store.select(Items.getItemSettings);
+  itemsModified$ = this.store.select(Items.getItemsModified);
+  stepsModified$ = this.store.select(Products.getStepsModified);
+  itemTotals$ = this.store.select(Products.getItemTotals);
+  recipeTotals$ = this.store.select(Products.getRecipeTotals);
+  miscTotals$ = this.store.select(Products.getMiscTotals);
+  recipesModified$ = this.store.select(Recipes.getRecipesModified);
+
   @Input() settings = initialSettingsState;
   @Input() beltSpeed: Entities<Rational> = {};
   @Input() steps: Step[] = [];
@@ -77,12 +86,6 @@ export class ListComponent
   @Input() inserterCapacity = InserterCapacity.Capacity0;
   @Input() columns = initialColumnsState;
   @Input() powerUnit = PowerUnit.Auto;
-  @Input() modifiedIgnore = false;
-  @Input() modifiedBelt = false;
-  @Input() modifiedWagon = false;
-  @Input() modifiedFactory = false;
-  @Input() modifiedOverclock = false;
-  @Input() modifiedBeacons = false;
   @Input() mode = ListMode.All;
   @Input() selected: string | undefined;
 
@@ -124,13 +127,6 @@ export class ListComponent
   ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
   rateLabel: string | undefined;
 
-  totalBelts: Entities<Rational> = {};
-  totalWagons: Entities<Rational> = {};
-  totalFactories: Entities<Rational> = {};
-  totalBeacons: Entities<Rational> = {};
-  totalPower: string | undefined;
-  totalPollution: string | undefined;
-
   Column = Column;
   DisplayRate = DisplayRate;
   ItemId = ItemId;
@@ -144,7 +140,8 @@ export class ListComponent
     private ref: ChangeDetectorRef,
     private route: ActivatedRoute,
     private routerSvc: RouterService,
-    public track: TrackService
+    public track: TrackService,
+    private store: Store<State>
   ) {
     super();
   }
@@ -176,22 +173,6 @@ export class ListComponent
 
     if (changes['columns']) {
       this.leftSpan = this.columns[Column.Tree].show ? 2 : 1;
-    }
-
-    if (changes['steps'] || changes['itemSettings']) {
-      this.calculateItemTotals();
-    }
-
-    if (changes['steps'] || changes['data'] || changes['recipeSettings']) {
-      this.calculateFactoryTotals();
-    }
-
-    if (changes['steps'] || changes['recipeSettings']) {
-      this.calculateBeaconTotals();
-    }
-
-    if (changes['steps']) {
-      this.calculateGenericTotals();
     }
 
     if (changes['steps'] || changes['mode'] || changes['columns']) {
@@ -367,83 +348,6 @@ export class ListComponent
     return max;
   }
 
-  calculateItemTotals(): void {
-    // Total Belts
-    this.totalBelts = {};
-    for (const step of this.steps.filter((s) => s.belts?.nonzero())) {
-      const belt = this.itemSettings[step.itemId].belt ?? '';
-      if (!this.totalBelts[belt]) {
-        this.totalBelts[belt] = Rational.zero;
-      }
-      this.totalBelts[belt] = this.totalBelts[belt].add(step.belts!.ceil());
-    }
-
-    // Total Wagons
-    this.totalWagons = {};
-    for (const step of this.steps.filter((s) => s.wagons?.nonzero())) {
-      const wagon = this.itemSettings[step.itemId].wagon ?? '';
-      if (!this.totalWagons[wagon]) {
-        this.totalWagons[wagon] = Rational.zero;
-      }
-      this.totalWagons[wagon] = this.totalWagons[wagon].add(
-        step.wagons!.ceil()
-      );
-    }
-  }
-
-  calculateFactoryTotals(): void {
-    this.totalFactories = {};
-    for (const step of this.steps.filter((s) => s.factories?.nonzero())) {
-      const recipe = this.data.recipeEntities[step.recipeId ?? ''];
-      // Don't include silos from launch recipes
-      if (!recipe.part) {
-        let factory = this.recipeSettings[step.recipeId ?? ''].factory ?? '';
-        if (
-          this.data.game === Game.DysonSphereProgram &&
-          factory === ItemId.MiningDrill
-        ) {
-          // Use recipe id (vein type) in place of mining drill for DSP mining
-          factory = step.recipeId ?? '';
-        }
-        if (!this.totalFactories.hasOwnProperty(factory)) {
-          this.totalFactories[factory] = Rational.zero;
-        }
-        this.totalFactories[factory] = this.totalFactories[factory].add(
-          step.factories!.ceil()
-        );
-      }
-    }
-  }
-
-  calculateBeaconTotals(): void {
-    this.totalBeacons = {};
-    for (const step of this.steps.filter((s) => s.beacons?.nonzero())) {
-      const beacon = this.recipeSettings[step.recipeId ?? ''].beacon ?? '';
-      if (!this.totalBeacons.hasOwnProperty(beacon)) {
-        this.totalBeacons[beacon] = Rational.zero;
-      }
-      this.totalBeacons[beacon] = this.totalBeacons[beacon].add(
-        step.beacons!.ceil()
-      );
-    }
-  }
-
-  calculateGenericTotals(): void {
-    // Total Power
-    let value = Rational.zero;
-    for (const step of this.steps.filter((s) => s.power != null)) {
-      value = value.add(step.power!);
-    }
-    this.totalPower = this.power(value);
-
-    // Total Pollution
-    value = Rational.zero;
-    for (const step of this.steps.filter((s) => s.pollution != null)) {
-      value = value.add(step.pollution!);
-    }
-    this.totalPollution = this.rate(value, this.effPrecision[Column.Pollution]);
-  }
-
   calculateTree(): void {
     // Calculate Tree
     if (this.mode === ListMode.All && this.columns[Column.Tree].show) {
@@ -505,60 +409,6 @@ export class ListComponent
     return b.value.sub(a.value).toNumber();
   }
 
-  factoryRate(value: Rational, precision: number, factory: string): string {
-    if (factory === ItemId.Pumpjack) {
-      return `${this.rate(
-        value.mul(Rational.hundred),
-        precision != null ? Math.max(precision - 2, 0) : precision
-      )}%`;
-    } else {
-      return this.rate(value, precision);
-    }
-  }
-
-  rate(value: Rational, precision: number | null): string {
-    if (precision == null) {
-      return value.toFraction();
-    } else {
-      const num =
-        precision === -2
-          ? Math.round(value.mul(Rational.hundred).toNumber())
-          : value.toPrecision(precision);
-      const result = num.toString();
-      if (precision > 0) {
-        const split = result.split('.');
-        if (split.length > 1) {
-          if (split[1].length < precision) {
-            const spaces = precision - split[1].length;
-            return result + '0'.repeat(spaces);
-          }
-        } else if (value.isInteger()) {
-          return result + ' '.repeat(precision + 1);
-        } else {
-          return result + '.' + '0'.repeat(precision);
-        }
-      }
-      return result;
-    }
-  }
-
-  power(value: Rational): string {
-    switch (this.effPowerUnit) {
-      case PowerUnit.GW:
-        return `${this.rate(
-          value.div(Rational.million),
-          this.effPrecision[Column.Power]
-        )} GW`;
-      case PowerUnit.MW:
-        return `${this.rate(
-          value.div(Rational.thousand),
-          this.effPrecision[Column.Power]
-        )} MW`;
-      default:
-        return `${this.rate(value, this.effPrecision[Column.Power])} kW`;
-    }
-  }
-
   leftPad(value: string): string {
     return ' '.repeat(4 - value.length) + value;
   }
@@ -583,18 +433,22 @@ export class ListComponent
     this.resetRecipe.emit(step.recipeId);
   }
 
-  export(): void {
+  export(itemSettings: ItemsState): void {
     ExportUtility.stepsToCsv(
       this.steps,
       this.columns,
-      this.itemSettings,
+      itemSettings,
       this.recipeSettings,
       this.data
     );
   }
 
-  toggleDefaultRecipe(itemId: string, recipeId: string): void {
-    if (this.itemSettings[itemId].recipe === recipeId) {
+  toggleDefaultRecipe(
+    itemId: string,
+    recipeId: string,
+    itemSettings: ItemsState
+  ): void {
+    if (itemSettings[itemId].recipe === recipeId) {
       // Reset to null
       this.setDefaultRecipe.emit({
         id: itemId,

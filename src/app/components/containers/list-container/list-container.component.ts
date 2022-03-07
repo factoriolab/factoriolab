@@ -45,10 +45,7 @@ export class ListContainerComponent implements OnInit {
   @Input() steps: Step[] | undefined;
 
   data$: Observable<Dataset>;
-  itemSettings$: Observable<Items.ItemsState>;
-  itemRaw$: Observable<Items.ItemsState>;
   recipeSettings$: Observable<Recipes.RecipesState>;
-  recipeRaw$: Observable<Recipes.RecipesState>;
   settings$: Observable<Settings.SettingsState>;
   factories$: Observable<Factories.FactoriesState>;
   beltSpeed$: Observable<Entities<Rational>>;
@@ -63,12 +60,6 @@ export class ListContainerComponent implements OnInit {
   inserterCapacity$: Observable<InserterCapacity>;
   columns$: Observable<Preferences.ColumnsState>;
   powerUnit$: Observable<PowerUnit>;
-  modifiedIgnore$: Observable<boolean>;
-  modifiedBelt$: Observable<boolean>;
-  modifiedWagon$: Observable<boolean>;
-  modifiedFactory$: Observable<boolean>;
-  modifiedOverclock$: Observable<boolean>;
-  modifiedBeacons$: Observable<boolean>;
 
   constructor(private store: Store<State>) {}
 
@@ -77,10 +68,7 @@ export class ListContainerComponent implements OnInit {
       this.steps$ = this.store.select(Products.getSteps);
     }
     this.data$ = this.store.select(Recipes.getAdjustedDataset);
-    this.itemSettings$ = this.store.select(Items.getItemSettings);
-    this.itemRaw$ = this.store.select(Items.itemsState);
     this.recipeSettings$ = this.store.select(Recipes.getRecipeSettings);
-    this.recipeRaw$ = this.store.select(Recipes.recipesState);
     this.settings$ = this.store.select(Settings.getSettings);
     this.factories$ = this.store.select(Factories.getFactorySettings);
     this.beltSpeed$ = this.store.select(Settings.getBeltSpeed);
@@ -90,12 +78,6 @@ export class ListContainerComponent implements OnInit {
     this.inserterCapacity$ = this.store.select(Settings.getInserterCapacity);
     this.columns$ = this.store.select(Preferences.getColumnsState);
     this.powerUnit$ = this.store.select(Preferences.getPowerUnit);
-    this.modifiedIgnore$ = this.store.select(Items.getContainsIgnore);
-    this.modifiedBelt$ = this.store.select(Items.getContainsBelt);
-    this.modifiedWagon$ = this.store.select(Items.getContainsWagon);
-    this.modifiedFactory$ = this.store.select(Recipes.getContainsFactory);
-    this.modifiedOverclock$ = this.store.select(Recipes.getContainsOverclock);
-    this.modifiedBeacons$ = this.store.select(Recipes.getContainsBeacons);
   }
 
   ignoreItem(value: string): void {

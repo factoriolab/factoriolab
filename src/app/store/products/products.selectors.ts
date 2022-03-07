@@ -9,6 +9,8 @@ import {
   RationalProduct,
   Product,
   MatrixResultType,
+  Game,
+  ItemId,
 } from '~/models';
 import {
   RateUtility,
@@ -398,3 +400,106 @@ export const getZipState = createSelector(
     settings,
   })
 );
+
+export const getStepsModified = createSelector(
+  getSteps,
+  Items.itemsState,
+  Recipes.recipesState,
+  (steps, itemSettings, recipeSettings) => ({
+    items: steps.reduce((e: Entities<boolean>, s) => {
+      e[s.itemId] = itemSettings[s.itemId] != null;
+      return e;
+    }, {}),
+    recipes: steps.reduce((e: Entities<boolean>, s) => {
+      e[s.itemId] = recipeSettings[s.itemId] != null;
+      return e;
+    }, {}),
+  })
+);
+
+export const getItemTotals = createSelector(
+  getSteps,
+  Items.getItemSettings,
+  (steps, itemSettings) => {
+    const belts: Entities<Rational> = {};
+    const wagons: Entities<Rational> = {};
+
+    // Total Belts
+    for (const step of steps.filter((s) => s.belts?.nonzero())) {
+      const belt = itemSettings[step.itemId].belt ?? '';
+      if (!belts.hasOwnProperty(belt)) {
+        belts[belt] = Rational.zero;
+      }
+      belts[belt] = belts[belt].add(step.belts!.ceil());
+    }
+
+    // Total Wagons
+    for (const step of steps.filter((s) => s.wagons?.nonzero())) {
+      const wagon = itemSettings[step.itemId].wagon ?? '';
+      if (!wagons.hasOwnProperty(wagon)) {
+        wagons[wagon] = Rational.zero;
+      }
+      wagons[wagon] = wagons[wagon].add(step.wagons!.ceil());
+    }
+
+    return { belts, wagons };
+  }
+);
+
+export const getRecipeTotals = createSelector(
+  getSteps,
+  Recipes.getRecipeSettings,
+  Recipes.getAdjustedDataset,
+  (steps, recipeSettings, data) => {
+    const factories: Entities<Rational> = {};
+    const beacons: Entities<Rational> = {};
+
+    // Total Factories
+    for (const step of steps.filter((s) => s.factories?.nonzero())) {
+      const recipe = data.recipeEntities[step.recipeId ?? ''];
+      // Don't include silos from launch recipes
+      if (!recipe.part) {
+        let factory = recipeSettings[step.recipeId ?? ''].factory ?? '';
+        if (
+          data.game === Game.DysonSphereProgram &&
+          factory === ItemId.MiningDrill
+        ) {
+          // Use recipe id (vein type) in place of mining drill for DSP mining
+          factory = step.recipeId ?? '';
+        }
+        if (!factories.hasOwnProperty(factory)) {
+          factories[factory] = Rational.zero;
+        }
+        factories[factory] = factories[factory].add(step.factories!.ceil());
+      }
+    }
+
+    // Total Beacons
+    for (const step of steps.filter((s) => s.beacons?.nonzero())) {
+      const beacon = recipeSettings[step.recipeId ?? ''].beacon ?? '';
+      if (!beacons.hasOwnProperty(beacon)) {
+        beacons[beacon] = Rational.zero;
+      }
+      beacons[beacon] = beacons[beacon].add(step.beacons!.ceil());
+    }
+
+    return { factories, beacons };
+  }
+);
+
+export const getMiscTotals = createSelector(getSteps, (steps) => {
+  let power = Rational.zero;
+  let pollution = Rational.zero;
+
+  // Total Power
+  for (const step of steps.filter((s) => s.power != null)) {
+    power = power.add(step.power!);
+  }
+
+  // Total Pollution
+  for (const step of steps.filter((s) => s.pollution != null)) {
+    pollution = pollution.add(step.pollution!);
+  }
+
+  return { power, pollution };
+});

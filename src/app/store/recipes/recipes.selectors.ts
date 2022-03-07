@@ -123,24 +123,17 @@ export const getAdjustedDataset = createSelector(
     )
 );
 
-export const getContainsFactory = createSelector(recipesState, (state) =>
-  Object.keys(state).some((id) => state[id].factory || state[id].factoryModules)
-);
-
-export const getContainsOverclock = createSelector(recipesState, (state) =>
-  Object.keys(state).some((id) => state[id].overclock)
-);
-
-export const getContainsBeacons = createSelector(recipesState, (state) =>
-  Object.keys(state).some(
+export const getRecipesModified = createSelector(recipesState, (state) => ({
+  factories: Object.keys(state).some(
+    (id) => state[id].factory || state[id].factoryModules
+  ),
+  overclock: Object.keys(state).some((id) => state[id].overclock),
+  beacons: Object.keys(state).some(
     (id) =>
       state[id].beacon ||
       state[id].beaconModules ||
       state[id].beaconCount ||
       state[id].beaconTotal
-  )
-);
-
-export const getContainsCost = createSelector(recipesState, (state) =>
-  Object.keys(state).some((id) => state[id].cost)
-);
+  ),
+  cost: Object.keys(state).some((id) => state[id].cost),
+}));

@@ -32,6 +32,7 @@ import {
   InputComponent,
   InfoComponent,
 } from './components';
+import { PowerPipe, RatePipe, FactoryRatePipe } from './pipes';
 import {
   FocusOnShowDirective,
   LabErrorHandler,
@@ -68,6 +69,9 @@ import { FactoriesEffects } from './store/factories/factories.effects';
     MatrixComponent,
     InputComponent,
     InfoComponent,
+    PowerPipe,
+    RatePipe,
+    FactoryRatePipe,
   ],
   imports: [
     BrowserModule,
@@ -85,6 +89,9 @@ import { FactoriesEffects } from './store/factories/factories.effects';
   providers: [
     { provide: APP_BASE_HREF, useValue: environment.baseHref },
     { provide: ErrorHandler, useClass: LabErrorHandler },
+    PowerPipe,
+    RatePipe,
+    FactoryRatePipe,
   ],
   bootstrap: [AppComponent],
 })

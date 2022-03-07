@@ -24,13 +24,13 @@ enum DataTest {
   ></lab-input>`,
 })
 class TestInputComponent {
-  @ViewChild(InputComponent) child: InputComponent;
+  @ViewChild(InputComponent) child!: InputComponent;
   title = 'title';
   placeholder = 'placeholder';
   value = '10';
   minimum = '1';
   digits = '2';
-  setValue(data): void {}
+  setValue(data: string): void {}
 }
 
 describe('InputComponent', () => {

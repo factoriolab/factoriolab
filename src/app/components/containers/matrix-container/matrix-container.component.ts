@@ -30,8 +30,6 @@ export class MatrixContainerComponent implements OnInit {
   costInput$: Observable<string>;
   costIgnored$: Observable<string>;
   recipeRaw$: Observable<Recipes.RecipesState>;
-  modifiedCost$: Observable<boolean>;
-  modifiedRecipeCost$: Observable<boolean>;
 
   constructor(public store: Store<State>) {}
 
@@ -43,8 +41,6 @@ export class MatrixContainerComponent implements OnInit {
     this.costInput$ = this.store.select(Settings.getCostInput);
     this.costIgnored$ = this.store.select(Settings.getCostIgnored);
     this.recipeRaw$ = this.store.select(Recipes.recipesState);
-    this.modifiedCost$ = this.store.select(Settings.getModifiedCost);
-    this.modifiedRecipeCost$ = this.store.select(Recipes.getContainsCost);
   }
 
   setCostFactor(data: string): void {

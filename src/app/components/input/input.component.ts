@@ -5,6 +5,7 @@ import {
   Input,
   OnChanges,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { Rational } from '~/models';
 
@@ -15,41 +16,33 @@ import { Rational } from '~/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputComponent implements OnChanges {
-  static widthCache: { [x: number]: number } = {};
-
-  @Input() title: string;
-  @Input() placeholder: string;
-  @Input() value: string;
-  _minimum = '0';
-  @Input() set minimum(value: string) {
-    this._minimum = value;
-    this.min = Rational.fromString(value);
-  }
-  get minimum(): string {
-    return this._minimum;
-  }
-  @Input() set digits(value: number) {
-    if (InputComponent.widthCache[value]) {
-      this.width = InputComponent.widthCache[value];
-    } else {
-      this.width = 0.75 + value * 0.625;
-      InputComponent.widthCache[value] = this.width;
-    }
-  }
+  @Input() title = '';
+  @Input() placeholder = '';
+  @Input() value = '';
+  @Input() minimum = '0';
+  @Input() digits = 2;
 
   @Output() setValue = new EventEmitter<string>();
 
-  width: number;
+  width = 5;
   min = Rational.zero;
   isMinimum = false;
 
   constructor() {}
 
-  ngOnChanges(): void {
-    try {
-      this.isMinimum = Rational.fromString(this.value).eq(this.min);
-    } catch {
-      this.isMinimum = false;
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['minimum']) {
+      this.min = Rational.fromString(this.minimum);
+    }
+    if (changes['value'] || changes['minimum']) {
+      try {
+        this.isMinimum = Rational.fromString(this.value).lte(this.min);
+      } catch {
+        this.isMinimum = false;
+      }
+    }
+    if (changes['digits']) {
+      this.width = 0.75 + this.digits * 0.625;
     }
   }
 

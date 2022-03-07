@@ -17,7 +17,7 @@ enum DataTest {
   ></lab-info>`,
 })
 class TestInfoComponent {
-  @ViewChild(InfoComponent) child: InfoComponent;
+  @ViewChild(InfoComponent) child!: InfoComponent;
   text = 'text';
   tooltip = 'tooltip';
 }

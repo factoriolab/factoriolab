@@ -512,14 +512,13 @@ export const getAdjustmentData = createSelector(
   })
 );
 
-export const getModifiedCost = createSelector(
-  settingsState,
-  (state) =>
+export const getSettingsModified = createSelector(settingsState, (state) => ({
+  cost:
     state.costFactor !== initialSettingsState.costFactor ||
     state.costFactory !== initialSettingsState.costFactory ||
     state.costInput !== initialSettingsState.costInput ||
-    state.costIgnored !== initialSettingsState.costIgnored
-);
+    state.costIgnored !== initialSettingsState.costIgnored,
+}));
 
 export function getEntities<T extends { id: string }>(
   base: T[],

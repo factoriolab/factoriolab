@@ -12,12 +12,10 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoComponent {
-  @Input() text: string;
-  @Input() tooltip: string;
+  @Input() text = '';
+  @Input() tooltip = '';
 
   hover = false;
-
-  constructor() {}
 
   @HostListener('mouseenter') mouseenter(): void {
     this.hover = true;

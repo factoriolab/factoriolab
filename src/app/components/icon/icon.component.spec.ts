@@ -27,7 +27,7 @@ enum DataTest {
   ></lab-icon>`,
 })
 class TestIconComponent {
-  @ViewChild(IconComponent) child: IconComponent;
+  @ViewChild(IconComponent) child!: IconComponent;
   iconId = Mocks.Item1.id;
   scale = false;
   text = Mocks.Item1.name;

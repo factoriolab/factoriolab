@@ -5,10 +5,13 @@ import {
   Input,
   Output,
 } from '@angular/core';
+import { Store } from '@ngrx/store';
 
 import { Dataset, DefaultIdPayload, MatrixResult } from '~/models';
 import { TrackService } from '~/services';
-import { RecipesState } from '~/store/recipes';
+import { State } from '~/store';
+import { getRecipesModified, RecipesState } from '~/store/recipes';
+import { getSettingsModified } from '~/store/settings';
 
 @Component({
   selector: 'lab-matrix',
@@ -17,6 +20,9 @@ import { RecipesState } from '~/store/recipes';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatrixComponent {
+  recipesModified$ = this.store.select(getRecipesModified);
+  settingsModified$ = this.store.select(getSettingsModified);
+
   @Input() data: Dataset;
   @Input() result: MatrixResult;
   @Input() costFactor: string;
@@ -24,8 +30,6 @@ export class MatrixComponent {
   @Input() costInput: string;
   @Input() costIgnored: string;
   @Input() recipeRaw: RecipesState;
-  @Input() modifiedCost: boolean;
-  @Input() modifiedRecipeCost: boolean;
 
   @Output() setCostFactor = new EventEmitter<string>();
   @Output() setCostFactory = new EventEmitter<string>();
@@ -35,5 +39,5 @@ export class MatrixComponent {
   @Output() resetCost = new EventEmitter();
   @Output() resetRecipeCost = new EventEmitter();
 
-  constructor(public track: TrackService) {}
+  constructor(public track: TrackService, private store: Store<State>) {}
 }
