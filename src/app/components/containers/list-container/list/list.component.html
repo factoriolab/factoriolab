@@ -197,7 +197,6 @@
                 [data]="data"
                 [selected]="belt"
                 [options]="data.beltIds"
-                [displayRate]="displayRate"
                 [columns]="
                   data.game === Game.DysonSphereProgram ? 3 : undefined
                 "
@@ -215,7 +214,6 @@
                   [iconId]="belt"
                   [tooltip]="data.itemEntities[belt].name"
                   [item]="data.itemEntities[belt]"
-                  [displayRate]="displayRate"
                 ></lab-icon>
               </lab-select>
               <ng-template #pipePicker>
@@ -225,7 +223,6 @@
                   [data]="data"
                   [selected]="belt"
                   [options]="data.pipeIds"
-                  [displayRate]="displayRate"
                   (selectId)="
                     setBelt.emit({
                       id: step.itemId,
@@ -240,7 +237,6 @@
                     [iconId]="belt"
                     [tooltip]="data.itemEntities[belt].name"
                     [item]="data.itemEntities[belt]"
-                    [displayRate]="displayRate"
                   ></lab-icon>
                 </lab-select>
               </ng-template>
@@ -417,7 +413,6 @@
                   [selected]="mod"
                   [options]="data.recipeModuleIds[step.recipeId]"
                   [includeEmptyModule]="data.game !== Game.Satisfactory"
-                  [displayRate]="displayRate"
                   (selectId)="
                     changeFactoryModules(
                       step.recipeId,
@@ -440,7 +435,6 @@
                     [iconId]="mod"
                     [tooltip]="data.itemEntities[mod]?.name"
                     [item]="data.itemEntities[mod]"
-                    [displayRate]="displayRate"
                   ></lab-icon>
                 </lab-select>
               </div>
@@ -696,7 +690,6 @@
                       [iconId]="belt"
                       [tooltip]="data.itemEntities[belt]?.name || PIPE"
                       [item]="data.itemEntities[belt]"
-                      [displayRate]="displayRate"
                     ></lab-icon>
                   </div>
                 </ng-container>
@@ -813,7 +806,6 @@
                     [iconId]="belt"
                     [tooltip]="data.itemEntities[belt]?.name || PIPE"
                     [item]="data.itemEntities[belt]"
-                    [displayRate]="displayRate"
                   ></lab-icon>
                 </div>
               </ng-container>
@@ -995,7 +987,6 @@
                         [iconId]="belt"
                         [tooltip]="data.itemEntities[belt]?.name || PIPE"
                         [item]="data.itemEntities[belt]"
-                        [displayRate]="displayRate"
                       ></lab-icon>
                     </div>
                   </ng-container>
@@ -1128,7 +1119,6 @@
                         [iconId]="belt"
                         [tooltip]="data.itemEntities[belt]?.name || PIPE"
                         [item]="data.itemEntities[belt]"
-                        [displayRate]="displayRate"
                       ></lab-icon>
                     </div>
                   </ng-container>
@@ -1265,7 +1255,6 @@
                               [iconId]="belt"
                               [tooltip]="data.itemEntities[belt]?.name || PIPE"
                               [item]="data.itemEntities[belt]"
-                              [displayRate]="displayRate"
                             ></lab-icon>
                           </div>
                         </ng-container>
@@ -1375,7 +1364,6 @@
                           [iconId]="belt"
                           [tooltip]="data.itemEntities[belt]?.name || PIPE"
                           [item]="data.itemEntities[belt]"
-                          [displayRate]="displayRate"
                         >
                         </lab-icon>
                       </div>
@@ -1525,7 +1513,6 @@
             [iconId]="tot.key"
             [tooltip]="item.name"
             [item]="item"
-            [displayRate]="displayRate"
           >
           </lab-icon>
         </div>

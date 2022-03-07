@@ -1,8 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { provideMockStore } from '@ngrx/store/testing';
 
-import { Mocks, RecipeId } from 'src/tests';
+import { Mocks, initialState } from 'src/tests';
 import { IconComponent, InputComponent, InfoComponent } from '~/components';
 import { ValidateNumberDirective } from '~/support';
 import { MatrixComponent } from './matrix.component';
@@ -54,7 +55,6 @@ describe('MatrixComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormsModule],
       declarations: [
         IconComponent,
         InfoComponent,
@@ -63,6 +63,8 @@ describe('MatrixComponent', () => {
         TestMatrixComponent,
         MatrixComponent,
       ],
+      imports: [FormsModule],
+      providers: [provideMockStore({ initialState })],
     }).compileComponents();
   });
 
@@ -74,11 +76,5 @@ describe('MatrixComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('trackRowBy', () => {
-    it('should use recipe id', () => {
-      expect(component.child.trackRowBy(1, null)).toEqual(RecipeId.WoodenChest);
-    });
   });
 });

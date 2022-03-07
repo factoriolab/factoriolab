@@ -21,7 +21,6 @@
           [iconId]="product.itemId"
           [tooltip]="data.itemEntities[product.itemId].name"
           [item]="data.itemEntities[product.itemId]"
-          [displayRate]="displayRate"
         ></lab-icon
       ></lab-picker>
       <span>from</span>
@@ -115,7 +114,6 @@
                 [data]="data"
                 [selected]="belt"
                 [options]="data.beltIds"
-                [displayRate]="displayRate"
                 [columns]="
                   data.game === Game.DysonSphereProgram ? 3 : undefined
                 "
@@ -141,7 +139,6 @@
                   [data]="data"
                   [selected]="belt"
                   [options]="data.pipeIds"
-                  [displayRate]="displayRate"
                   (selectId)="
                     setViaSetting.emit({
                       id: product.id,
@@ -289,7 +286,6 @@
                     [selected]="mod"
                     [options]="data.recipeModuleIds[id]"
                     [includeEmptyModule]="data.game !== Game.Satisfactory"
-                    [displayRate]="displayRate"
                     (selectId)="
                       changeFactoryModules(
                         id,
@@ -315,7 +311,6 @@
                       [iconId]="mod"
                       [tooltip]="data.itemEntities[mod]?.name"
                       [item]="data.itemEntities[mod]"
-                      [displayRate]="displayRate"
                     ></lab-icon>
                   </lab-select>
                 </div>

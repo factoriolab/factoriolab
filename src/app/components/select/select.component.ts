@@ -27,7 +27,6 @@ export class SelectComponent
   @Input() selected: string;
   @Input() options: string[];
   @Input() selectType = IdType.Item;
-  @Input() displayRate: DisplayRate;
   @Input() includeEmptyModule: boolean;
   @Input() columns: number | undefined;
 

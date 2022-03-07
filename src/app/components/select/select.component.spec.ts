@@ -1,9 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 
-import { Mocks, TestUtility, ItemId } from 'src/tests';
+import { Mocks, TestUtility, ItemId, initialState } from 'src/tests';
 import { DialogComponent, IconComponent } from '~/components';
-import { IdType, DisplayRate, Dataset } from '~/models';
+import { IdType, Dataset } from '~/models';
 import { SelectComponent } from './select.component';
 
 enum DataTest {
@@ -20,7 +21,6 @@ enum DataTest {
       [selected]="selected"
       [options]="options"
       [selectType]="selectType"
-      [displayRate]="displayRate"
       [includeEmptyModule]="includeEmptyModule"
       [columns]="columns"
       (selectId)="selectId($event)"
@@ -38,7 +38,6 @@ class TestSelectComponent {
     ItemId.AssemblingMachine3,
   ];
   selectType = IdType.Item;
-  displayRate = DisplayRate.PerMinute;
   includeEmptyModule = false;
   columns: number | undefined;
   selectId(data): void {}
@@ -56,6 +55,7 @@ describe('SelectComponent', () => {
         SelectComponent,
         TestSelectComponent,
       ],
+      providers: [provideMockStore({ initialState })],
     }).compileComponents();
   });
 

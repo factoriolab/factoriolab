@@ -22,7 +22,6 @@ export class RankerComponent extends DialogContainerComponent {
   @Input() set options(value: string[]) {
     this.rows = this.moduleRows(value);
   }
-  @Input() displayRate: DisplayRate;
 
   @Output() selectIds = new EventEmitter<string[]>();
 

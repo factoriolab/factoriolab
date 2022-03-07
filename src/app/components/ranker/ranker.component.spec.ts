@@ -1,10 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Mocks, ItemId, TestUtility } from 'src/tests';
+import { Mocks, ItemId, TestUtility, initialState } from 'src/tests';
 import { Dataset } from '~/models';
 import { DialogComponent, IconComponent } from '~/components';
 import { RankerComponent } from './ranker.component';
+import { provideMockStore } from '@ngrx/store/testing';
 
 enum DataTest {
   Open = 'lab-ranker-open',
@@ -50,6 +51,7 @@ describe('RankerComponent', () => {
         RankerComponent,
         TestRankerComponent,
       ],
+      providers: [provideMockStore({ initialState })],
     }).compileComponents();
   });
 

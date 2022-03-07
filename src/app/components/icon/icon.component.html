@@ -84,26 +84,28 @@
       </tr>
     </table>
   </div>
-  <div *ngIf="item?.belt as belt" class="nowrap">
-    {{ round(belt.speed * displayRate) }}
-    {{
-      displayRate === DisplayRate.PerSecond
-        ? 'Items/s'
-        : displayRate === DisplayRate.PerMinute
-        ? 'Items/m'
-        : 'Items/h'
-    }}
-  </div>
-  <div *ngIf="item?.pipe as pipe" class="nowrap">
-    {{ round(pipe.speed * displayRate) }}
-    {{
-      displayRate === DisplayRate.PerSecond
-        ? 'Items/s'
-        : displayRate === DisplayRate.PerMinute
-        ? 'Items/m'
-        : 'Items/h'
-    }}
-  </div>
+  <ng-container *ngIf="displayRate$ | async as displayRate">
+    <div *ngIf="item?.belt as belt" class="nowrap">
+      {{ round(belt.speed * displayRate) }}
+      {{
+        displayRate === DisplayRate.PerSecond
+          ? 'Items/s'
+          : displayRate === DisplayRate.PerMinute
+          ? 'Items/m'
+          : 'Items/h'
+      }}
+    </div>
+    <div *ngIf="item?.pipe as pipe" class="nowrap">
+      {{ round(pipe.speed * displayRate) }}
+      {{
+        displayRate === DisplayRate.PerSecond
+          ? 'Items/s'
+          : displayRate === DisplayRate.PerMinute
+          ? 'Items/m'
+          : 'Items/h'
+      }}
+    </div>
+  </ng-container>
   <div *ngIf="item?.cargoWagon as wagon" class="nowrap">
     {{ round(wagon.size) }}
     Inventory stacks

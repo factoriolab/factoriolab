@@ -1,8 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
-import { Mocks, RecipeId, TestUtility } from 'src/tests';
-import { DisplayRate } from '~/models';
+import { Mocks, RecipeId, TestUtility, initialState } from 'src/tests';
+import { ItemId } from '~/models';
+import { getIconEntities } from '~/store/settings';
 import { IconComponent } from './icon.component';
 
 enum DataTest {
@@ -16,11 +18,12 @@ enum DataTest {
     [iconId]="iconId"
     [scale]="scale"
     [text]="text"
-    [data]="data"
     [tooltip]="tooltip"
+    [hoverIcon]="hoverIcon"
+    [scrollTop]="scrollTop"
+    [scrollLeft]="scrollLeft"
     [recipe]="recipe"
     [item]="item"
-    [displayRate]="displayRate"
   ></lab-icon>`,
 })
 class TestIconComponent {
@@ -28,26 +31,30 @@ class TestIconComponent {
   iconId = Mocks.Item1.id;
   scale = false;
   text = Mocks.Item1.name;
-  data = Mocks.Data;
   tooltip = 'This is a tooltip';
+  hoverIcon = '';
+  scrollTop = 0;
+  scrollLeft = 0;
   recipe = Mocks.Data.recipeEntities[Mocks.Item1.id];
   item = null;
-  displayRate = DisplayRate.PerSecond;
 }
 
 describe('IconComponent', () => {
   let component: TestIconComponent;
   let fixture: ComponentFixture<TestIconComponent>;
+  let store: MockStore;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [IconComponent, TestIconComponent],
+      providers: [provideMockStore({ initialState })],
     }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TestIconComponent);
     component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
     fixture.detectChanges();
   });
 
@@ -57,30 +64,27 @@ describe('IconComponent', () => {
 
   describe('ngOnChanges', () => {
     it('should handle scaled icons', () => {
-      component.child.scale = true;
-      component.child.scrollTop = 40;
-      component.child.ngOnChanges();
+      component.scale = true;
+      component.scrollTop = 40;
+      fixture.detectChanges();
       expect(component.child.tooltipMarginTop).toEqual(0);
     });
 
     it('should handle non-scaled icons', () => {
-      component.child.scale = false;
-      component.child.scrollTop = 72;
-      component.child.ngOnChanges();
+      component.scale = false;
+      component.scrollTop = 72;
+      fixture.detectChanges();
       expect(component.child.tooltipMarginTop).toEqual(0);
     });
 
     it('should switch to a recipe-specific icon', () => {
       const icon = Mocks.Data.iconEntities[RecipeId.Coal];
-      component.data = {
-        ...Mocks.Data,
-        ...{
-          iconEntities: {
-            ...Mocks.Data.iconEntities,
-            ...{ [Mocks.Item1.id + '|recipe']: icon },
-          },
-        },
-      };
+      component.iconId = ItemId.Inserter;
+      getIconEntities.setResult({
+        ...Mocks.Data.iconEntities,
+        ...{ [ItemId.Inserter + '|recipe']: icon },
+      });
+      store.refreshState();
       fixture.detectChanges();
       expect(component.child.icon).toEqual(icon);
     });
@@ -132,7 +136,7 @@ describe('IconComponent', () => {
     });
 
     it('should handle zero percentage bonus', () => {
-      expect(component.child.toBonusPercent(0)).toBeNull();
+      expect(component.child.toBonusPercent(0)).toBeUndefined();
     });
   });
 });

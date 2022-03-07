@@ -5,7 +5,7 @@ import { Component, HostBinding, Input } from '@angular/core';
   template: '',
 })
 export class DialogContainerComponent {
-  @Input() header: string | undefined;
+  @Input() header: string = '';
 
   open = false;
 

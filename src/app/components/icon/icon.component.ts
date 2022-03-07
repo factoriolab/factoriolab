@@ -20,7 +20,7 @@ import {
 } from '~/models';
 import { TrackService } from '~/services';
 import { State } from '~/store';
-import { getGame, getIconEntities } from '~/store/settings';
+import { getDisplayRate, getGame, getIconEntities } from '~/store/settings';
 
 @Component({
   selector: 'lab-icon',
@@ -32,15 +32,15 @@ export class IconComponent implements OnChanges {
   @Input() iconId: string = '';
   @Input() scale = true;
   @Input() text = '';
+  @Input() tooltip = '';
+  @Input() hoverIcon = '';
   @Input() scrollTop = 0;
   @Input() scrollLeft = 0;
-  @Input() tooltip = '';
   @Input() recipe: Recipe | undefined;
   @Input() item: Item | undefined;
-  @Input() displayRate = DisplayRate.PerMinute;
-  @Input() hoverIcon = '';
 
   game$ = this.store.select(getGame);
+  displayRate$ = this.store.select(getDisplayRate);
 
   icon: Icon | undefined;
   hover = false;

@@ -1,8 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { provideMockStore } from '@ngrx/store/testing';
 
-import { Mocks, ItemId } from 'src/tests';
+import { Mocks, ItemId, initialState } from 'src/tests';
 import {
   IconComponent,
   InputComponent,
@@ -51,7 +52,6 @@ describe('ProductsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormsModule],
       declarations: [
         IconComponent,
         InputComponent,
@@ -61,6 +61,8 @@ describe('ProductsComponent', () => {
         ProductsComponent,
         TestProductsComponent,
       ],
+      imports: [FormsModule],
+      providers: [provideMockStore({ initialState })],
     }).compileComponents();
   });
 
