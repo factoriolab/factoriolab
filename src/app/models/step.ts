@@ -16,5 +16,4 @@ export interface Step {
   recipeId?: string;
   parents?: Entities<Rational>;
   outputs?: Entities<Rational>;
-  href?: string;
 }

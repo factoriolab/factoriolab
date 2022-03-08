@@ -11,7 +11,6 @@ import { Observable } from 'rxjs';
 import {
   Step,
   DisplayRate,
-  Dataset,
   DefaultIdPayload,
   ListMode,
   Entities,
@@ -23,7 +22,6 @@ import {
   PowerUnit,
 } from '~/models';
 import { State } from '~/store';
-import * as Factories from '~/store/factories';
 import * as Items from '~/store/items';
 import * as Preferences from '~/store/preferences';
 import * as Products from '~/store/products';
@@ -44,10 +42,7 @@ export class ListContainerComponent implements OnInit {
   @Input() selected: string | undefined;
   @Input() steps: Step[] | undefined;
 
-  data$: Observable<Dataset>;
-  recipeSettings$: Observable<Recipes.RecipesState>;
   settings$: Observable<Settings.SettingsState>;
-  factories$: Observable<Factories.FactoriesState>;
   beltSpeed$: Observable<Entities<Rational>>;
   steps$: Observable<Step[]>;
   disabledRecipes$: Observable<string[]>;
@@ -67,10 +62,7 @@ export class ListContainerComponent implements OnInit {
     if (!this.steps) {
       this.steps$ = this.store.select(Products.getSteps);
     }
-    this.data$ = this.store.select(Recipes.getAdjustedDataset);
-    this.recipeSettings$ = this.store.select(Recipes.getRecipeSettings);
     this.settings$ = this.store.select(Settings.getSettings);
-    this.factories$ = this.store.select(Factories.getFactorySettings);
     this.beltSpeed$ = this.store.select(Settings.getBeltSpeed);
     this.disabledRecipes$ = this.store.select(Settings.getDisabledRecipes);
     this.displayRate$ = this.store.select(Settings.getDisplayRate);

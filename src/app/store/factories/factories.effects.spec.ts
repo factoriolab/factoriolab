@@ -4,7 +4,7 @@ import { Action, Store, StoreModule } from '@ngrx/store';
 
 import { RecipeId, ItemId, Mocks } from 'src/tests';
 import { metaReducers, reducers, State } from '..';
-import { LoadModAction } from '../datasets';
+import { LoadModDataAction } from '../datasets';
 import * as Recipes from '../recipes';
 import { RemoveAction } from './factories.actions';
 import { FactoriesEffects } from './factories.effects';
@@ -26,8 +26,8 @@ describe('FactoriesEffects', () => {
   });
 
   beforeEach(() => {
-    store.dispatch(new LoadModAction({ id: '1.1', value: Mocks.BaseData }));
-    store.dispatch(new LoadModAction({ id: 'res', value: Mocks.ModData1 }));
+    store.dispatch(new LoadModDataAction({ id: '1.1', value: Mocks.BaseData }));
+    store.dispatch(new LoadModDataAction({ id: 'res', value: Mocks.ModData1 }));
   });
 
   describe('resetRecipeSetting$', () => {

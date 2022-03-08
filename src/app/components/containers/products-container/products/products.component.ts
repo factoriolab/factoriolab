@@ -6,6 +6,8 @@ import {
   ChangeDetectionStrategy,
   OnChanges,
 } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { combineLatest, map } from 'rxjs';
 
 import {
   Product,
@@ -16,16 +18,18 @@ import {
   rateTypeOptions,
   DisplayRate,
   IdType,
-  IdName,
   DisplayRateOptions,
   DefaultIdPayload,
   ItemId,
   Game,
   PIPE,
   PreviousPayload,
+  Dataset,
 } from '~/models';
 import { TrackService } from '~/services';
-import { ItemsState } from '~/store/items';
+import { State } from '~/store';
+import * as Items from '~/store/items';
+import * as Settings from '~/store/settings';
 import { RecipeUtility } from '~/utilities';
 import { RecipeSettingsComponent } from '../../recipe-settings.component';
 
@@ -39,10 +43,15 @@ export class ProductsComponent
   extends RecipeSettingsComponent
   implements OnChanges
 {
+  displayRate$ = this.store.select(Settings.getDisplayRate);
+
+  rateTypeOptions$ = combineLatest([this.displayRate$, this.data$]).pipe(
+    map(([displayRate, data]) => rateTypeOptions(displayRate, data.game))
+  );
+
   @Input() productSteps: Entities<[string, Rational][]>;
   @Input() products: Product[] = [];
-  @Input() itemSettings: ItemsState;
-  @Input() displayRate: DisplayRate;
+  @Input() itemSettings: Items.ItemsState;
 
   @Output() removeProduct = new EventEmitter<string>();
   @Output() setItem = new EventEmitter<IdPayload>();
@@ -63,7 +72,6 @@ export class ProductsComponent
   @Output() setDisplayRate = new EventEmitter<PreviousPayload<DisplayRate>>();
 
   DisplayRateOptions = DisplayRateOptions;
-  rateTypeOptions: IdName<RateType>[];
   productOptions: Entities<string[]>;
 
   IdType = IdType;
@@ -73,22 +81,21 @@ export class ProductsComponent
   RecipeUtility = RecipeUtility;
   PIPE = PIPE;
 
-  constructor(public track: TrackService) {
-    super();
+  constructor(public track: TrackService, store: Store<State>) {
+    super(store);
   }
 
   ngOnChanges(): void {
-    this.rateTypeOptions = rateTypeOptions(this.displayRate, this.data.game);
     this.productOptions = {};
     for (const p of this.products) {
       this.productOptions[p.id] = this.productSteps[p.itemId].map((r) => r[0]);
     }
   }
 
-  changeItem(product: Product, itemId: string): void {
+  changeItem(product: Product, itemId: string, data: Dataset): void {
     if (
       product.rateType === RateType.Factories &&
-      !this.data.itemRecipeIds[itemId]
+      !data.itemRecipeIds[itemId]
     ) {
       // Reset rate type to items
       this.setRateType.emit({ id: product.id, value: RateType.Items });

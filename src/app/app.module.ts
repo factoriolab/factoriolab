@@ -32,7 +32,7 @@ import {
   InputComponent,
   InfoComponent,
 } from './components';
-import { PowerPipe, RatePipe, FactoryRatePipe } from './pipes';
+import { PowerPipe, RatePipe, FactoryRatePipe, StepHrefPipe } from './pipes';
 import {
   FocusOnShowDirective,
   LabErrorHandler,
@@ -72,6 +72,7 @@ import { FactoriesEffects } from './store/factories/factories.effects';
     PowerPipe,
     RatePipe,
     FactoryRatePipe,
+    StepHrefPipe,
   ],
   imports: [
     BrowserModule,

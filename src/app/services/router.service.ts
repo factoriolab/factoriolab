@@ -1,10 +1,9 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router, Event, NavigationEnd } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { deflate, inflate } from 'pako';
-import { Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, filter, take } from 'rxjs/operators';
 
 import { data } from 'src/data';
 import {
@@ -22,11 +21,16 @@ import {
 } from '~/models';
 import { State } from '~/store';
 import { LoadAction, PartialState } from '~/store/app.actions';
+import { getHashEntities } from '~/store/datasets';
 import { FactoriesState, initialFactoriesState } from '~/store/factories';
 import { ItemsState } from '~/store/items';
 import * as Products from '~/store/products';
 import { RecipesState } from '~/store/recipes';
-import { SettingsState, initialSettingsState } from '~/store/settings';
+import {
+  SettingsState,
+  initialSettingsState,
+  SetBaseAction,
+} from '~/store/settings';
 
 export const NULL = '?'; // Encoded, previously 'n'
 export const EMPTY = '='; // Encoded, previously 'e'
@@ -83,14 +87,9 @@ export class RouterService {
     bare: `&${Section.Version}=${this.bareVersion}`,
     hash: `&${Section.Version}${this.hashVersion}`,
   };
-  cache: Entities<ModHash> = {};
   first = true;
 
-  constructor(
-    private router: Router,
-    private store: Store<State>,
-    private http: HttpClient
-  ) {
+  constructor(private router: Router, private store: Store<State>) {
     const l = 256;
     this.base64codes = new Uint8Array(l);
     for (let i = 0; i < l; i++) {
@@ -153,7 +152,10 @@ export class RouterService {
     factories: FactoriesState,
     settings: SettingsState
   ): Observable<Zip> {
-    return this.requestHash(settings.baseId).pipe(
+    return this.store.select(getHashEntities).pipe(
+      map((hashEntities) => hashEntities[settings.baseId]),
+      filter((hash): hash is ModHash => hash != null),
+      take(1),
       map((hash) => {
         const zipPartial: Zip = { bare: '', hash: '' };
         // Base
@@ -301,36 +303,46 @@ export class RouterService {
               }
               case ZipVersion.Version2:
               case ZipVersion.Version3: {
-                const baseId = this.parseNString(
-                  params[Section.Base],
-                  data.hash
-                );
-                this.requestHash(
-                  baseId || initialSettingsState.baseId
-                ).subscribe((hash) => {
-                  if (params[Section.Products]) {
-                    state.productsState = this.unzipProducts(params, v, hash);
-                  }
-                  if (params[Section.Items]) {
-                    state.itemsState = this.unzipItems(params, v, hash);
-                  }
-                  if (params[Section.Recipes]) {
-                    state.recipesState = this.unzipRecipes(params, v, hash);
-                  }
-                  if (params[Section.Factories]) {
-                    state.factoriesState = this.unzipFactories(params, v, hash);
-                  }
-                  if (params[Section.Settings]) {
-                    state.settingsState = this.unzipSettings(params, v, hash);
-                  }
-                  if (baseId != null) {
-                    state.settingsState = {
-                      ...state.settingsState,
-                      ...{ baseId },
-                    };
-                  }
-                  this.dispatch(zip, state);
-                });
+                const baseId =
+                  this.parseNString(params[Section.Base], data.hash) ||
+                  initialSettingsState.baseId;
+
+                this.store.dispatch(new SetBaseAction(baseId));
+                this.store
+                  .select(getHashEntities)
+                  .pipe(
+                    map((hashEntities) => hashEntities[baseId]),
+                    filter((e): e is ModHash => e != null),
+                    take(1)
+                  )
+                  .subscribe((hash) => {
+                    if (params[Section.Products]) {
+                      state.productsState = this.unzipProducts(params, v, hash);
+                    }
+                    if (params[Section.Items]) {
+                      state.itemsState = this.unzipItems(params, v, hash);
+                    }
+                    if (params[Section.Recipes]) {
+                      state.recipesState = this.unzipRecipes(params, v, hash);
+                    }
+                    if (params[Section.Factories]) {
+                      state.factoriesState = this.unzipFactories(
+                        params,
+                        v,
+                        hash
+                      );
+                    }
+                    if (params[Section.Settings]) {
+                      state.settingsState = this.unzipSettings(params, v, hash);
+                    }
+                    if (baseId != null) {
+                      state.settingsState = {
+                        ...state.settingsState,
+                        ...{ baseId },
+                      };
+                    }
+                    this.dispatch(zip, state);
+                  });
                 break;
               }
             }
@@ -1254,14 +1266,5 @@ export class RouterService {
       result[j + 2] = buffer & 0xff;
     }
     return result.subarray(0, result.length - missingOctets);
-  }
-
-  requestHash(id: string): Observable<ModHash> {
-    return this.cache[id]
-      ? of(this.cache[id])
-      : this.http.get(`data/${id}/hash.json`).pipe(
-          map((response) => response as ModHash),
-          tap((data) => (this.cache[id] = data))
-        );
   }
 }

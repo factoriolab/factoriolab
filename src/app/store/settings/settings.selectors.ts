@@ -72,6 +72,12 @@ export const getBase = createSelector(
   (id, data) => data[id]
 );
 
+export const getHash = createSelector(
+  getBaseDatasetId,
+  Datasets.getHashEntities,
+  (id, hashEntities) => hashEntities[id]
+);
+
 export const getGame = createSelector(
   getBaseDatasetId,
   Datasets.getBaseInfoEntities,
@@ -203,7 +209,8 @@ export const getNormalDataset = createSelector(
   getDatasets,
   getDefaults,
   getGame,
-  (app, mods, defaults, game) => {
+  getHash,
+  (app, mods, defaults, game, hash) => {
     // Map out entities with mods
     const categoryEntities = getEntities(
       app.categories,
@@ -426,6 +433,7 @@ export const getNormalDataset = createSelector(
       recipeR,
       recipeModuleIds,
       prodModuleIds,
+      hash,
       defaults,
     };
     return dataset;

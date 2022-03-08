@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
+import { Store } from '@ngrx/store';
 
 import {
   Dataset,
@@ -8,7 +9,10 @@ import {
   Rational,
   RecipeSettings,
 } from '~/models';
+import { State } from '~/store';
+import * as Factories from '~/store/factories';
 import { FactoriesState } from '~/store/factories';
+import * as Recipes from '~/store/recipes';
 import { RecipesState } from '~/store/recipes';
 import { RecipeUtility } from '~/utilities';
 
@@ -23,15 +27,23 @@ class SettingsState {
   template: '',
 })
 export class RecipeSettingsComponent {
-  @Input() data: Dataset;
-  @Input() recipeSettings: RecipesState;
-  @Input() factories: FactoriesState;
+  data$ = this.store.select(Recipes.getAdjustedDataset);
+  recipeSettings$ = this.store.select(Recipes.getRecipeSettings);
+  factorySettings$ = this.store.select(Factories.getFactorySettings);
 
-  getState(id: string, recipeId: string, factoryId: string): SettingsState {
-    const recipe = this.recipeSettings[recipeId];
+  constructor(protected store: Store<State>) {}
+
+  getState(
+    id: string,
+    recipeId: string,
+    factoryId: string,
+    recipeSettings: RecipesState,
+    factorySettings: FactoriesState
+  ): SettingsState {
+    const recipe = recipeSettings[recipeId];
     return {
       recipe,
-      factory: this.factories.entities[factoryId],
+      factory: factorySettings.entities[factoryId],
       fMatch: id !== recipeId && factoryId === recipe.factory,
     };
   }
@@ -40,14 +52,16 @@ export class RecipeSettingsComponent {
     recipeId: string,
     value: string,
     emitter: EventEmitter<DefaultIdPayload>,
+    factorySettings: FactoriesState,
+    data: Dataset,
     id = recipeId
   ): void {
     emitter.emit({
       id,
       value,
       def: RecipeUtility.bestMatch(
-        this.data.recipeEntities[recipeId].producers,
-        this.factories.ids
+        data.recipeEntities[recipeId].producers,
+        factorySettings.ids
       ),
     });
   }
@@ -58,12 +72,24 @@ export class RecipeSettingsComponent {
     index: number,
     modules: string[],
     emitter: EventEmitter<DefaultIdPayload<string[]>>,
+    recipeSettings: RecipesState,
+    factorySettings: FactoriesState,
+    data: Dataset,
     id = recipeId,
-    factoryId = this.recipeSettings[recipeId].factory
+    factoryId?: string
   ): void {
+    if (factoryId == null) {
+      factoryId = recipeSettings[recipeId].factory;
+    }
     const count = modules.length;
-    const options = [...this.data.recipeModuleIds[recipeId], ItemId.Module];
-    const s = this.getState(id, recipeId, factoryId);
+    const options = [...data.recipeModuleIds[recipeId], ItemId.Module];
+    const s = this.getState(
+      id,
+      recipeId,
+      factoryId,
+      recipeSettings,
+      factorySettings
+    );
     const def = s.fMatch
       ? s.recipe.factoryModules
       : RecipeUtility.defaultModules(options, s.factory.moduleRank, count);
@@ -75,10 +101,21 @@ export class RecipeSettingsComponent {
     recipeId: string,
     value: string,
     emitter: EventEmitter<DefaultIdPayload>,
+    recipeSettings: RecipesState,
+    factorySettings: FactoriesState,
     id = recipeId,
-    factoryId = this.recipeSettings[recipeId].factory
+    factoryId?: string
   ): void {
-    const s = this.getState(id, recipeId, factoryId);
+    if (factoryId == null) {
+      factoryId = recipeSettings[recipeId].factory;
+    }
+    const s = this.getState(
+      id,
+      recipeId,
+      factoryId,
+      recipeSettings,
+      factorySettings
+    );
     const def = s.fMatch ? s.recipe.beaconCount : s.factory.beaconCount;
     emitter.emit({ id, value, def });
   }
@@ -87,10 +124,21 @@ export class RecipeSettingsComponent {
     recipeId: string,
     value: string,
     emitter: EventEmitter<DefaultIdPayload>,
+    recipeSettings: RecipesState,
+    factorySettings: FactoriesState,
     id = recipeId,
-    factoryId = this.recipeSettings[recipeId].factory
+    factoryId?: string
   ): void {
-    const s = this.getState(id, recipeId, factoryId);
+    if (factoryId == null) {
+      factoryId = recipeSettings[recipeId].factory;
+    }
+    const s = this.getState(
+      id,
+      recipeId,
+      factoryId,
+      recipeSettings,
+      factorySettings
+    );
     const def = s.fMatch ? s.recipe.beacon : s.factory.beacon;
     emitter.emit({ id, value, def });
   }
@@ -101,12 +149,23 @@ export class RecipeSettingsComponent {
     index: number,
     modules: string[],
     emitter: EventEmitter<DefaultIdPayload<string[]>>,
+    recipeSettings: RecipesState,
+    factorySettings: FactoriesState,
     id = recipeId,
-    factoryId = this.recipeSettings[recipeId].factory,
-    beaconId = null
+    factoryId?: string,
+    beaconId?: string
   ): void {
+    if (factoryId == null) {
+      factoryId = recipeSettings[recipeId].factory;
+    }
     const count = modules.length;
-    const s = this.getState(id, recipeId, factoryId);
+    const s = this.getState(
+      id,
+      recipeId,
+      factoryId,
+      recipeSettings,
+      factorySettings
+    );
     const bMatch = beaconId == null || beaconId === s.recipe.beacon;
     const def =
       s.fMatch && bMatch
@@ -120,13 +179,24 @@ export class RecipeSettingsComponent {
     recipeId: string,
     input: Event,
     emitter: EventEmitter<DefaultIdPayload<number>>,
+    recipeSettings: RecipesState,
+    factorySettings: FactoriesState,
     id = recipeId,
-    factoryId = this.recipeSettings[recipeId].factory
+    factoryId?: string
   ): void {
+    if (factoryId == null) {
+      factoryId = recipeSettings[recipeId].factory;
+    }
     const target = input.target as HTMLInputElement;
     const value = target.valueAsNumber;
     if (value >= 1 && value <= 250) {
-      const s = this.getState(id, recipeId, factoryId);
+      const s = this.getState(
+        id,
+        recipeId,
+        factoryId,
+        recipeSettings,
+        factorySettings
+      );
       const def = s.fMatch ? s.recipe.overclock : s.factory.overclock;
       emitter.emit({ id, value, def });
     }

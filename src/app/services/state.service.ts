@@ -7,13 +7,12 @@ import { FuelType } from '~/models';
 import { State } from '~/store';
 import { checkViaState, SetViaAction } from '~/store/products';
 import { getDataset, getDatasets } from '~/store/settings';
-import { RouterService } from './router.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StateService {
-  constructor(private router: RouterService, private store: Store<State>) {
+  constructor(private store: Store<State>) {
     this.store.select(checkViaState).subscribe((s) => {
       for (const product of s.products) {
         if (
@@ -50,70 +49,65 @@ export class StateService {
         map((d) => d[0].id)
       )
       .subscribe((id) => {
-        this.router
-          .requestHash(id)
+        this.store
+          .select(getDataset)
           .pipe(take(1))
-          .subscribe((h) => {
-            this.store
-              .select(getDataset)
-              .pipe(take(1))
-              .subscribe((d) => {
-                console.log(id);
-                console.log(
-                  JSON.stringify(
-                    d.complexRecipeIds.filter((i) => !d.itemEntities[i])
-                  )
-                );
-                const old = JSON.stringify(h);
-                for (const id of [...d.itemIds]
-                  .sort()
-                  .filter((i) => h.items.indexOf(i) === -1)) {
-                  h.items.push(id);
-                }
-                for (const id of [...d.beaconIds]
-                  .sort()
-                  .filter((i) => h.beacons.indexOf(i) === -1)) {
-                  h.beacons.push(id);
-                }
-                for (const id of [...d.beltIds, ...d.pipeIds]
-                  .sort()
-                  .filter((i) => h.belts.indexOf(i) === -1)) {
-                  h.belts.push(id);
-                }
-                if (d.fuelIds[FuelType.Chemical]) {
-                  for (const id of [...d.fuelIds[FuelType.Chemical]]
-                    .sort()
-                    .filter((i) => h.fuels.indexOf(i) === -1)) {
-                    h.fuels.push(id);
-                  }
-                }
-                for (const id of [...d.cargoWagonIds, ...d.fluidWagonIds]
-                  .sort()
-                  .filter((i) => h.wagons.indexOf(i) === -1)) {
-                  h.wagons.push(id);
-                }
-                for (const id of [...d.factoryIds]
-                  .sort()
-                  .filter((i) => h.factories.indexOf(i) === -1)) {
-                  h.factories.push(id);
-                }
-                for (const id of [...d.moduleIds]
-                  .sort()
-                  .filter((i) => h.modules.indexOf(i) === -1)) {
-                  h.modules.push(id);
-                }
-                for (const id of [...d.recipeIds]
-                  .sort()
-                  .filter((i) => h.recipes.indexOf(i) === -1)) {
-                  h.recipes.push(id);
-                }
-                if (old === JSON.stringify(h)) {
-                  console.log('No change in hash');
-                } else {
-                  console.log('New hash:');
-                  console.log(JSON.stringify(h));
-                }
-              });
+          .subscribe((d) => {
+            console.log(id);
+            console.log(
+              JSON.stringify(
+                d.complexRecipeIds.filter((i) => !d.itemEntities[i])
+              )
+            );
+            const old = JSON.stringify(d.hash);
+            for (const id of [...d.itemIds]
+              .sort()
+              .filter((i) => d.hash.items.indexOf(i) === -1)) {
+              d.hash.items.push(id);
+            }
+            for (const id of [...d.beaconIds]
+              .sort()
+              .filter((i) => d.hash.beacons.indexOf(i) === -1)) {
+              d.hash.beacons.push(id);
+            }
+            for (const id of [...d.beltIds, ...d.pipeIds]
+              .sort()
+              .filter((i) => d.hash.belts.indexOf(i) === -1)) {
+              d.hash.belts.push(id);
+            }
+            if (d.fuelIds[FuelType.Chemical]) {
+              for (const id of [...d.fuelIds[FuelType.Chemical]]
+                .sort()
+                .filter((i) => d.hash.fuels.indexOf(i) === -1)) {
+                d.hash.fuels.push(id);
+              }
+            }
+            for (const id of [...d.cargoWagonIds, ...d.fluidWagonIds]
+              .sort()
+              .filter((i) => d.hash.wagons.indexOf(i) === -1)) {
+              d.hash.wagons.push(id);
+            }
+            for (const id of [...d.factoryIds]
+              .sort()
+              .filter((i) => d.hash.factories.indexOf(i) === -1)) {
+              d.hash.factories.push(id);
+            }
+            for (const id of [...d.moduleIds]
+              .sort()
+              .filter((i) => d.hash.modules.indexOf(i) === -1)) {
+              d.hash.modules.push(id);
+            }
+            for (const id of [...d.recipeIds]
+              .sort()
+              .filter((i) => d.hash.recipes.indexOf(i) === -1)) {
+              d.hash.recipes.push(id);
+            }
+            if (old === JSON.stringify(d.hash)) {
+              console.log('No change in hash');
+            } else {
+              console.log('New hash:');
+              console.log(JSON.stringify(d.hash));
+            }
           });
       });
   }

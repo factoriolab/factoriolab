@@ -74,7 +74,7 @@ describe('DatasetsEffects', () => {
 
   describe('appReset$', () => {
     it('should return reset action if already loaded', () => {
-      effects.cache[Mocks.Base.id] = Mocks.BaseData;
+      effects.cacheData[Mocks.Base.id] = Mocks.BaseData;
       const effect: Action[] = [];
       effects.appReset$.subscribe((a) => effect.push(a));
       store.dispatch(new App.ResetAction());
@@ -96,7 +96,7 @@ describe('DatasetsEffects', () => {
 
   describe('setBaseId$', () => {
     it('should return reset action if already loaded', () => {
-      effects.cache[Mocks.Base.id] = Mocks.BaseData;
+      effects.cacheData[Mocks.Base.id] = Mocks.BaseData;
       const effect: Action[] = [];
       effects.setBaseId$.subscribe((a) => effect.push(a));
       store.dispatch(new SetBaseAction(Mocks.Base.id));

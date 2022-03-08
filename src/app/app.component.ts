@@ -22,7 +22,7 @@ import {
   MatrixResultType,
   Game,
 } from './models';
-import { ErrorService, StateService } from './services';
+import { ErrorService, RouterService, StateService } from './services';
 import { State } from './store';
 import {
   getProducts,
@@ -80,7 +80,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     public store: Store<State>,
     public titleService: Title,
     private cd: ChangeDetectorRef,
-    public state: StateService // Included only to initialize the service
+    router: RouterService, // Included only to initialize the service
+    state: StateService // Included only to initialize the service
   ) {}
 
   ngOnInit(): void {

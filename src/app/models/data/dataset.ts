@@ -4,6 +4,7 @@ import { Defaults } from '../defaults';
 import { Category } from './category';
 import { Icon } from './icon';
 import { Item, RationalItem } from './item';
+import { ModHash } from './mod-hash';
 import { Recipe, RationalRecipe } from './recipe';
 
 export interface Dataset {
@@ -32,5 +33,6 @@ export interface Dataset {
   recipeR: Entities<RationalRecipe>;
   recipeModuleIds: Entities<string[]>;
   prodModuleIds: string[];
+  hash: ModHash;
   defaults?: Defaults;
 }

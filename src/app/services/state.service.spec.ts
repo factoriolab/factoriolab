@@ -6,7 +6,7 @@ import { ItemId } from 'src/tests';
 
 import { Mocks } from 'src/tests';
 import { reducers, metaReducers, State } from '~/store';
-import { LoadModAction } from '~/store/datasets';
+import { LoadModDataAction } from '~/store/datasets';
 import { IgnoreItemAction } from '~/store/items';
 import { AddAction, SetViaAction } from '~/store/products';
 import { StateService } from './state.service';
@@ -33,8 +33,8 @@ describe('StateService', () => {
 
   it('should revert an invalid viaId', () => {
     // Load required data
-    store.dispatch(new LoadModAction({ id: '1.1', value: Mocks.BaseData }));
-    store.dispatch(new LoadModAction({ id: 'res', value: Mocks.ModData1 }));
+    store.dispatch(new LoadModDataAction({ id: '1.1', value: Mocks.BaseData }));
+    store.dispatch(new LoadModDataAction({ id: 'res', value: Mocks.ModData1 }));
 
     // Add product with valid viaId
     store.dispatch(new AddAction(ItemId.Pipe));

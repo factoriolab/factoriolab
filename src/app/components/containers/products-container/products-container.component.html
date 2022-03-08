@@ -1,11 +1,7 @@
 <lab-products
-  [data]="data$ | async"
   [productSteps]="productSteps$ | async"
   [products]="products$ | async"
   [itemSettings]="itemSettings$ | async"
-  [recipeSettings]="recipeSettings$ | async"
-  [factories]="factories$ | async"
-  [displayRate]="displayRate$ | async"
   (removeProduct)="removeProduct($event)"
   (setItem)="setItem($event)"
   (setRate)="setRate($event)"

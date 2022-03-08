@@ -11,7 +11,6 @@ import {
   Product,
   RateType,
   IdPayload,
-  Dataset,
   Rational,
   Entities,
   DisplayRate,
@@ -19,11 +18,9 @@ import {
   PreviousPayload,
 } from '~/models';
 import { State } from '~/store';
-import * as Factories from '~/store/factories';
 import * as Items from '~/store/items';
 import * as Products from '~/store/products';
-import * as Recipes from '~/store/recipes';
-import { getDisplayRate, SetDisplayRateAction } from '~/store/settings';
+import { SetDisplayRateAction } from '~/store/settings';
 import { ProductsComponent } from './products/products.component';
 
 @Component({
@@ -35,24 +32,16 @@ import { ProductsComponent } from './products/products.component';
 export class ProductsContainerComponent implements OnInit {
   @ViewChild(ProductsComponent) child: ProductsComponent;
 
-  data$: Observable<Dataset>;
   productSteps$: Observable<Entities<[string, Rational][]>>;
   products$: Observable<Product[]>;
   itemSettings$: Observable<Items.ItemsState>;
-  recipeSettings$: Observable<Recipes.RecipesState>;
-  factories$: Observable<Factories.FactoriesState>;
-  displayRate$: Observable<DisplayRate>;
 
   constructor(private store: Store<State>) {}
 
   ngOnInit(): void {
-    this.data$ = this.store.select(Recipes.getAdjustedDataset);
     this.productSteps$ = this.store.select(Products.getProductSteps);
     this.products$ = this.store.select(Products.getProducts);
     this.itemSettings$ = this.store.select(Items.getItemSettings);
-    this.recipeSettings$ = this.store.select(Recipes.getRecipeSettings);
-    this.factories$ = this.store.select(Factories.getFactorySettings);
-    this.displayRate$ = this.store.select(getDisplayRate);
   }
 
   removeProduct(id: string): void {

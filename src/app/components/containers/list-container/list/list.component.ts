@@ -34,14 +34,16 @@ import {
   PIPE,
   IdPayload,
   PowerUnit,
+  Dataset,
 } from '~/models';
-import { RouterService, TrackService } from '~/services';
+import { TrackService } from '~/services';
 import { State } from '~/store';
 import * as Items from '~/store/items';
 import { ItemsState } from '~/store/items';
 import { initialColumnsState } from '~/store/preferences';
 import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipes';
+import { RecipesState } from '~/store/recipes';
 import { initialSettingsState } from '~/store/settings';
 import { ExportUtility, RecipeUtility } from '~/utilities';
 import { RecipeSettingsComponent } from '../../recipe-settings.component';
@@ -139,11 +141,10 @@ export class ListComponent
   constructor(
     private ref: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private routerSvc: RouterService,
     public track: TrackService,
-    private store: Store<State>
+    store: Store<State>
   ) {
-    super();
+    super(store);
   }
 
   ngOnInit(): void {
@@ -155,7 +156,6 @@ export class ListComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['steps']) {
-      this.setStepHrefs();
       this.setDetailTabs();
     }
 
@@ -196,28 +196,6 @@ export class ListComponent
     } catch (e) {}
   }
 
-  setStepHrefs(): void {
-    this.routerSvc.requestHash(this.settings.baseId).subscribe((hash) => {
-      setTimeout(() => {
-        this.steps = this.steps.map((s) => {
-          let step = s;
-          if (s.recipeId) {
-            const recipe = this.data.recipeR[s.recipeId];
-            if (recipe.adjustProd && recipe.productivity) {
-              // Adjust items to account for productivity bonus
-              step = {
-                ...s,
-                ...{ items: s.items.div(recipe.productivity) },
-              };
-            }
-          }
-          return { ...s, ...{ href: this.routerSvc.stepHref(step, hash) } };
-        });
-        this.ref.detectChanges();
-      });
-    });
-  }
-
   setDetailTabs(): void {
     this.details = {};
     this.recipes = {};
@@ -242,9 +220,10 @@ export class ListComponent
           this.details[step.id].push(StepDetailTab.Factory);
         }
         if (step.itemId) {
-          const recipeIds = this.data.complexRecipeIds.filter((r) =>
-            this.data.recipeR[r].produces(step.itemId)
-          );
+          // const recipeIds = this.data.complexRecipeIds.filter((r) =>
+          //   this.data.recipeR[r].produces(step.itemId)
+          // );
+          const recipeIds = [];
           if (recipeIds.length) {
             this.details[step.id].push(StepDetailTab.Recipes);
             this.recipes[step.id] = recipeIds;
@@ -413,12 +392,12 @@ export class ListComponent
     return ' '.repeat(4 - value.length) + value;
   }
 
-  inserter(value: Rational): StepInserter | null {
+  inserter(value: Rational, data: Dataset): StepInserter | null {
     const inserter = InserterData[this.inserterTarget][
       this.inserterCapacity
     ].find((d) => d.value.gt(value) || d.id === ItemId.StackInserter);
 
-    if (inserter == null || this.data.itemEntities[inserter.id] == null) {
+    if (inserter == null || data.itemEntities[inserter.id] == null) {
       return null;
     }
 
@@ -433,20 +412,25 @@ export class ListComponent
     this.resetRecipe.emit(step.recipeId);
   }
 
-  export(itemSettings: ItemsState): void {
+  export(
+    itemSettings: ItemsState,
+    recipeSettings: RecipesState,
+    data: Dataset
+  ): void {
     ExportUtility.stepsToCsv(
       this.steps,
       this.columns,
       itemSettings,
-      this.recipeSettings,
-      this.data
+      recipeSettings,
+      data
     );
   }
 
   toggleDefaultRecipe(
     itemId: string,
     recipeId: string,
-    itemSettings: ItemsState
+    itemSettings: ItemsState,
+    data: Dataset
   ): void {
     if (itemSettings[itemId].recipe === recipeId) {
       // Reset to null
@@ -460,25 +444,21 @@ export class ListComponent
       this.setDefaultRecipe.emit({
         id: itemId,
         value: recipeId,
-        def: RecipeUtility.defaultRecipe(
-          itemId,
-          this.disabledRecipes,
-          this.data
-        ),
+        def: RecipeUtility.defaultRecipe(itemId, this.disabledRecipes, data),
       });
     }
   }
 
-  toggleRecipe(id: string): void {
+  toggleRecipe(id: string, data: Dataset): void {
     if (this.disabledRecipes.indexOf(id) === -1) {
       this.setDisabledRecipes.emit({
         value: [...this.disabledRecipes, id],
-        def: this.data.defaults?.disabledRecipes,
+        def: data.defaults?.disabledRecipes,
       });
     } else {
       this.setDisabledRecipes.emit({
         value: this.disabledRecipes.filter((i) => i !== id),
-        def: this.data.defaults?.disabledRecipes,
+        def: data.defaults?.disabledRecipes,
       });
     }
   }
