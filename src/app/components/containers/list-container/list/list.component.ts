@@ -1,4 +1,3 @@
-import { KeyValue } from '@angular/common';
 import {
   Component,
   Input,
@@ -13,7 +12,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { combineLatest, map } from 'rxjs';
+import { combineLatest, filter, map, take } from 'rxjs';
 
 import {
   Step,
@@ -207,9 +206,18 @@ export class ListComponent
         const step = this.steps.find(
           (s) => s.itemId === this.fragment || s.recipeId === this.fragment
         );
-        if (step?.id && this.details[step.id]?.length) {
-          this.expanded[step.id] = this.details[step.id][0];
-          this.ref.detectChanges();
+        if (step) {
+          this.store
+            .select(Products.getStepDetails)
+            .pipe(
+              take(1),
+              map((stepDetails) => stepDetails[step.id].tabs),
+              filter((tabs) => tabs.length > 0)
+            )
+            .subscribe((tabs) => {
+              this.expanded[step.id] = tabs[0];
+              this.ref.detectChanges();
+            });
         }
       }
     } catch (e) {}
@@ -217,17 +225,24 @@ export class ListComponent
 
   setDetailTabs(): void {
     // Hide any step details that are no longer valid
-    for (const id of Object.keys(this.expanded).filter(
-      (i) => this.expanded[i]
-    )) {
-      if (!this.details[id]?.length) {
-        // Collapse this step
-        delete this.expanded[id];
-      } else if (this.details[id].indexOf(this.expanded[id]) === -1) {
-        // Pick a different tab
-        this.expanded[id] = this.details[id][0];
-      }
-    }
+    this.store
+      .select(Products.getStepDetails)
+      .pipe(take(1))
+      .subscribe((stepDetails) => {
+        for (const id of Object.keys(this.expanded).filter(
+          (i) => this.expanded[i]
+        )) {
+          const tabs = stepDetails[id].tabs;
+          if (tabs.length) {
+            // Collapse this step
+            delete this.expanded[id];
+          } else if (tabs.indexOf(this.expanded[id]) === -1) {
+            // Pick a different tab
+            this.expanded[id] = tabs[0];
+          }
+        }
+        this.ref.detectChanges();
+      });
   }
 
   setDisplayedSteps(): void {
