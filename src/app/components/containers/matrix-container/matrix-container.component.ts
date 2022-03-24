@@ -8,7 +8,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { Dataset, DefaultIdPayload, MatrixResult } from '~/models';
-import { State } from '~/store';
+import { LabState } from '~/store';
 import { getMatrixResult } from '~/store/products';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
@@ -31,7 +31,7 @@ export class MatrixContainerComponent implements OnInit {
   costIgnored$: Observable<string>;
   recipeRaw$: Observable<Recipes.RecipesState>;
 
-  constructor(public store: Store<State>) {}
+  constructor(public store: Store<LabState>) {}
 
   ngOnInit(): void {
     this.data$ = this.store.select(Recipes.getAdjustedDataset);

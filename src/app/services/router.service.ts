@@ -19,7 +19,7 @@ import {
   DisplayRate,
   Preset,
 } from '~/models';
-import { State } from '~/store';
+import { LabState } from '~/store';
 import { LoadAction, PartialState } from '~/store/app.actions';
 import { getHashEntities } from '~/store/datasets';
 import { FactoriesState, initialFactoriesState } from '~/store/factories';
@@ -89,7 +89,7 @@ export class RouterService {
   };
   first = true;
 
-  constructor(private router: Router, private store: Store<State>) {
+  constructor(private router: Router, private store: Store<LabState>) {
     const l = 256;
     this.base64codes = new Uint8Array(l);
     for (let i = 0; i < l; i++) {

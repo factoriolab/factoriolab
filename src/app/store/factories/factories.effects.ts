@@ -4,7 +4,7 @@ import { Action, Store } from '@ngrx/store';
 import { combineLatest, switchMap, take } from 'rxjs';
 
 import { RecipeUtility } from '~/utilities';
-import { State } from '..';
+import { LabState } from '..';
 import * as Recipes from '../recipes';
 import { getNormalDataset } from '../settings';
 import { FactoriesActionType } from './factories.actions';
@@ -57,5 +57,5 @@ export class FactoriesEffects {
     )
   );
 
-  constructor(private actions$: Actions, private store: Store<State>) {}
+  constructor(private actions$: Actions, private store: Store<LabState>) {}
 }

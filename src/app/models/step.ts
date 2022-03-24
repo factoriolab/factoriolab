@@ -2,9 +2,9 @@ import { Entities } from './entities';
 import { Rational } from './rational';
 
 export interface Step {
-  id?: string;
+  id: string;
   indent?: boolean[];
-  itemId: string;
+  itemId?: string;
   items: Rational;
   surplus?: Rational;
   belts?: Rational;

@@ -9,7 +9,7 @@ import { Store } from '@ngrx/store';
 
 import { Dataset, DefaultIdPayload, MatrixResult } from '~/models';
 import { TrackService } from '~/services';
-import { State } from '~/store';
+import { LabState } from '~/store';
 import { getRecipesModified, RecipesState } from '~/store/recipes';
 import { getSettingsModified } from '~/store/settings';
 
@@ -39,5 +39,5 @@ export class MatrixComponent {
   @Output() resetCost = new EventEmitter();
   @Output() resetRecipeCost = new EventEmitter();
 
-  constructor(public track: TrackService, private store: Store<State>) {}
+  constructor(public track: TrackService, private store: Store<LabState>) {}
 }

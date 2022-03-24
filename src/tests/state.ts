@@ -1,4 +1,4 @@
-import { State } from '~/store';
+import { LabState } from '~/store';
 import { initialDatasetsState } from '~/store/datasets';
 import { initialFactoriesState } from '~/store/factories';
 import { initialItemsState } from '~/store/items';
@@ -7,7 +7,7 @@ import { initialProductsState } from '~/store/products';
 import { initialRecipesState } from '~/store/recipes';
 import { initialSettingsState } from '~/store/settings';
 
-export const initialState: State = {
+export const initialState: LabState = {
   datasetsState: initialDatasetsState,
   productsState: initialProductsState,
   itemsState: initialItemsState,

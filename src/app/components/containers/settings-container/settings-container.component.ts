@@ -25,7 +25,7 @@ import {
   PreviousPayload,
   PowerUnit,
 } from '~/models';
-import { State } from '~/store';
+import { LabState } from '~/store';
 import { ResetAction } from '~/store/app.actions';
 import { getBaseSets } from '~/store/datasets';
 import * as Factories from '~/store/factories';
@@ -61,7 +61,7 @@ export class SettingsContainerComponent implements OnInit {
 
   constructor(
     private ref: ElementRef<HTMLElement>,
-    private store: Store<State>
+    private store: Store<LabState>
   ) {}
 
   ngOnInit(): void {

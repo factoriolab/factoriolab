@@ -23,7 +23,7 @@ import {
   Game,
 } from './models';
 import { ErrorService, RouterService, StateService } from './services';
-import { State } from './store';
+import { LabState } from './store';
 import {
   getProducts,
   getMatrixResult as getSimplexResult,
@@ -77,7 +77,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   constructor(
     public error: ErrorService,
-    public store: Store<State>,
+    public store: Store<LabState>,
     public titleService: Title,
     private cd: ChangeDetectorRef,
     router: RouterService, // Included only to initialize the service

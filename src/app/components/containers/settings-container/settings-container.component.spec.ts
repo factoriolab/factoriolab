@@ -26,7 +26,7 @@ import {
   PreviousPayload,
   PowerUnit,
 } from '~/models';
-import { reducers, metaReducers, State } from '~/store';
+import { reducers, metaReducers, LabState } from '~/store';
 import { ResetAction } from '~/store/app.actions';
 import * as Factories from '~/store/factories';
 import * as Preferences from '~/store/preferences';
@@ -37,7 +37,7 @@ import { SettingsContainerComponent } from './settings-container.component';
 describe('SettingsContainerComponent', () => {
   let component: SettingsContainerComponent;
   let fixture: ComponentFixture<SettingsContainerComponent>;
-  let store: Store<State>;
+  let store: Store<LabState>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

@@ -21,7 +21,7 @@ import {
   Rational,
   ModHash,
 } from '~/models';
-import { reducers, metaReducers, State } from '~/store';
+import { reducers, metaReducers, LabState } from '~/store';
 import { LoadAction } from '~/store/app.actions';
 import { FactoriesState, initialFactoriesState } from '~/store/factories';
 import { IgnoreItemAction, initialItemsState, ItemsState } from '~/store/items';
@@ -115,7 +115,7 @@ const mockZipPartial: Zip = {
     'sport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid-wagon**2*10*0*100*1*productivity-module',
   hash: '&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B**2*10*0*100*1*D',
 };
-const mockState: State = {
+const mockState: LabState = {
   productsState: mockProductsState,
   itemsState: mockItemsState,
   recipesState: mockRecipesState,
@@ -125,7 +125,7 @@ const mockState: State = {
 
 describe('RouterService', () => {
   let service: RouterService;
-  let store: Store<State>;
+  let store: Store<LabState>;
   let router: Router;
   let http: HttpTestingController;
 

@@ -3,14 +3,14 @@ import { EffectsModule } from '@ngrx/effects';
 import { Action, Store, StoreModule } from '@ngrx/store';
 
 import { RecipeId, ItemId, Mocks } from 'src/tests';
-import { metaReducers, reducers, State } from '..';
+import { metaReducers, reducers, LabState } from '..';
 import { LoadModDataAction } from '../datasets';
 import * as Recipes from '../recipes';
 import { RemoveAction } from './factories.actions';
 import { FactoriesEffects } from './factories.effects';
 
 describe('FactoriesEffects', () => {
-  let store: Store<State>;
+  let store: Store<LabState>;
   let effects: FactoriesEffects;
 
   beforeEach(async () => {

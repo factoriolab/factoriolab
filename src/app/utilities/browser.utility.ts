@@ -1,9 +1,9 @@
 import { STATE_KEY } from '~/models';
-import { State } from '~/store';
+import { LabState } from '~/store';
 
 export class BrowserUtility {
   private static _storedState = BrowserUtility.loadState();
-  static get storedState(): State {
+  static get storedState(): LabState {
     return this._storedState;
   }
 
@@ -24,9 +24,9 @@ export class BrowserUtility {
     return this.search || (hash.length > 1 && hash[1] === '=' && hash);
   }
 
-  static loadState(): State {
+  static loadState(): LabState {
     try {
-      return JSON.parse(localStorage.getItem(STATE_KEY)) as State;
+      return JSON.parse(localStorage.getItem(STATE_KEY)) as LabState;
     } catch (e) {
       console.error('Failed to load state from local storage');
       console.error(e);
@@ -37,7 +37,7 @@ export class BrowserUtility {
     }
   }
 
-  static mergeState(initial: State): State {
+  static mergeState(initial: LabState): LabState {
     const state = BrowserUtility.storedState;
     if (state) {
       if (this.zip) {
@@ -65,7 +65,7 @@ export class BrowserUtility {
     }
   }
 
-  static saveState(state: State): void {
+  static saveState(state: LabState): void {
     const newState = { ...state };
     delete newState.datasetsState;
     localStorage.setItem(STATE_KEY, JSON.stringify(newState));

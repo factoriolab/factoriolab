@@ -7,7 +7,7 @@ import { switchMap, map, tap } from 'rxjs/operators';
 
 import { ModData, Entities, ModHash } from '~/models';
 import { BrowserUtility } from '~/utilities';
-import { State } from '..';
+import { LabState } from '..';
 import * as App from '../app.actions';
 import * as Products from '../products';
 import * as Settings from '../settings';
@@ -91,7 +91,7 @@ export class DatasetsEffects {
     return combineLatest([data$, hash$]);
   }
 
-  load(zip: string, stored: State, initial: Settings.SettingsState): void {
+  load(zip: string, stored: LabState, initial: Settings.SettingsState): void {
     if (!zip) {
       const id = stored?.settingsState?.baseId || initial.baseId;
       this.requestData(id).subscribe(([data, hash]) => {
@@ -106,7 +106,7 @@ export class DatasetsEffects {
   constructor(
     private actions$: Actions,
     private http: HttpClient,
-    private store: Store<State>
+    private store: Store<LabState>
   ) {
     this.load(
       BrowserUtility.zip,

@@ -1,14 +1,4 @@
-<ng-container
-  *ngIf="{
-    itemSettings: itemSettings$ | async,
-    itemsModified: itemsModified$ | async,
-    stepsModified: stepsModified$ | async,
-    recipesModified: recipesModified$ | async,
-    recipeSettings: recipeSettings$ | async,
-    factorySettings: factorySettings$ | async,
-    data: data$ | async
-  } as a"
->
+<ng-container *ngIf="route$ | async as a">
   <table *ngIf="steps && steps.length">
     <thead>
       <tr class="border col">
@@ -121,98 +111,107 @@
     </thead>
     <tbody>
       <ng-container *ngFor="let step of displayedSteps; trackBy: track.step">
-        <ng-container
-          *ngIf="{ itemSettings: a.itemSettings[step.itemId] } as s"
-        >
-          <tr class="border row col">
-            <td [id]="step.itemId">
-              <div>
+        <tr class="border row col">
+          <td [id]="step.itemId">
+            <div>
+              <ng-container *ngIf="a.stepDetails[step.id].tabs as tabs">
                 <button
-                  *ngIf="details[step.id]?.length && !expanded[step.id]"
+                  *ngIf="tabs.length && !expanded[step.id]"
                   title="Click to show details"
-                  (click)="expanded[step.id] = details[step.id][0]"
+                  (click)="expanded[step.id] = tabs[0]"
                 >
                   <i class="material-icons">expand_more</i>
                 </button>
-                <button
-                  *ngIf="mode === ListMode.All && expanded[step.id]"
-                  title="Click to hide details"
-                  (click)="expanded[step.id] = null"
-                >
-                  <i class="material-icons">expand_less</i>
-                </button>
-              </div>
-            </td>
-            <td *ngIf="columns[Column.Tree].show" class="tree">
-              <div class="flex links">
-                <ng-container *ngIf="step.indent?.length">
-                  <div
-                    *ngFor="let i of step.indent; last as last"
-                    class="connect"
-                    [class.trail]="i"
-                    [class.last]="last"
-                  ></div>
-                  <div class="indent"></div>
-                </ng-container>
+              </ng-container>
+              <button
+                *ngIf="mode === ListMode.All && expanded[step.id]"
+                title="Click to hide details"
+                (click)="expanded[step.id] = StepDetailTab.None"
+              >
+                <i class="material-icons">expand_less</i>
+              </button>
+            </div>
+          </td>
+          <td *ngIf="columns[Column.Tree].show" class="tree">
+            <div class="flex links">
+              <ng-container *ngIf="step.indent?.length">
+                <div
+                  *ngFor="let i of step.indent; last as last"
+                  class="connect"
+                  [class.trail]="i"
+                  [class.last]="last"
+                ></div>
+                <div class="indent"></div>
+              </ng-container>
+              <lab-icon
+                *ngIf="step.itemId; else recipeIcon"
+                [iconId]="step.itemId"
+                [tooltip]="a.data.itemEntities[step.itemId].name"
+                [recipe]="
+                  a.data.recipeEntities[a.data.itemRecipeIds[step.itemId]]
+                "
+              >
+              </lab-icon>
+              <ng-template #recipeIcon>
                 <lab-icon
-                  *ngIf="step.itemId; else recipeIcon"
-                  [iconId]="step.itemId"
-                  [tooltip]="a.data.itemEntities[step.itemId].name"
-                  [recipe]="
-                    a.data.recipeEntities[a.data.itemRecipeIds[step.itemId]]
-                  "
+                  *ngIf="step.recipeId"
+                  [iconId]="step.recipeId"
+                  [tooltip]="a.data.recipeEntities[step.recipeId].name"
+                  [recipe]="a.data.recipeEntities[step.recipeId]"
                 >
                 </lab-icon>
-                <ng-template #recipeIcon>
-                  <lab-icon
-                    *ngIf="step.recipeId"
-                    [iconId]="step.recipeId"
-                    [tooltip]="a.data.recipeEntities[step.recipeId].name"
-                    [recipe]="a.data.recipeEntities[step.recipeId]"
-                  >
-                  </lab-icon>
-                </ng-template>
-              </div>
-            </td>
-            <td>
-              <div class="flex" *ngIf="step.items">
-                <span *ngIf="step.surplus?.nonzero()" class="monospace"
-                  >(+{{
-                    step.surplus | labRate: effPrecision[Column.Surplus]
-                  }})</span
-                >
-                <span *ngIf="step.items" class="monospace">{{
-                  step.items.sub(step.surplus || Rational.zero)
-                    | labRate: effPrecision[Column.Items]
+              </ng-template>
+            </div>
+          </td>
+          <td>
+            <div class="flex" *ngIf="step.itemId && step.items">
+              <span
+                *ngIf="step.surplus && step.surplus.nonzero()"
+                class="monospace"
+                >(+{{
+                  step.surplus | labRate: effPrecision[Column.Surplus]
+                }})</span
+              >
+              <span *ngIf="step.items" class="monospace">{{
+                step.items.sub(step.surplus || Rational.zero)
+                  | labRate: effPrecision[Column.Items]
+              }}</span>
+              <lab-icon
+                class="button"
+                [title]="
+                  a.itemSettings[step.itemId].ignore
+                    ? 'Click to include'
+                    : 'Click to ignore'
+                "
+                [iconId]="step.itemId"
+                [class.ignored]="a.itemSettings[step.itemId].ignore"
+                [tooltip]="a.data.itemEntities[step.itemId].name"
+                [recipe]="
+                  a.data.recipeEntities[a.data.itemRecipeIds[step.itemId]]
+                "
+                [hoverIcon]="
+                  a.itemSettings[step.itemId].ignore
+                    ? 'visibility'
+                    : 'visibility_off'
+                "
+                (click)="ignoreItem.emit(step.itemId)"
+              ></lab-icon>
+            </div>
+          </td>
+          <td *ngIf="columns[Column.Belts].show">
+            <ng-container *ngIf="step.itemId && step.belts">
+              <div
+                *ngIf="a.itemSettings[step.itemId].belt as belt"
+                class="flex"
+              >
+                <span class="monospace">{{
+                  step.belts | labRate: effPrecision[Column.Belts]
                 }}</span>
-                <lab-icon
-                  class="button"
-                  [title]="
-                    s.itemSettings.ignore
-                      ? 'Click to include'
-                      : 'Click to ignore'
-                  "
-                  [iconId]="step.itemId"
-                  [class.ignored]="s.itemSettings.ignore"
-                  [tooltip]="a.data.itemEntities[step.itemId]?.name"
-                  [recipe]="
-                    a.data.recipeEntities[a.data.itemRecipeIds[step.itemId]]
-                  "
-                  [hoverIcon]="
-                    s.itemSettings.ignore ? 'visibility' : 'visibility_off'
-                  "
-                  (click)="ignoreItem.emit(step.itemId)"
-                ></lab-icon>
-              </div>
-            </td>
-            <td *ngIf="columns[Column.Belts].show">
-              <ng-container *ngIf="s.itemSettings.belt as belt">
-                <div *ngIf="step.belts" class="flex">
-                  <span class="monospace">{{
-                    step.belts | labRate: effPrecision[Column.Belts]
-                  }}</span>
+                <ng-container
+                  *ngIf="a.data.beltIds.indexOf(belt) !== -1; else pipePicker"
+                >
                   <lab-select
-                    *ngIf="a.data.beltIds.indexOf(belt) !== -1; else pipePicker"
+                    *ngIf="a.settings.belt"
                     header="Select a belt"
                     [data]="a.data"
                     [selected]="belt"
@@ -224,7 +223,7 @@
                       setBelt.emit({
                         id: step.itemId,
                         value: $event,
-                        def: settings.belt
+                        def: a.settings.belt
                       })
                     "
                   >
@@ -236,9 +235,13 @@
                       [item]="a.data.itemEntities[belt]"
                     ></lab-icon>
                   </lab-select>
-                  <ng-template #pipePicker>
+                </ng-container>
+                <ng-template #pipePicker>
+                  <ng-container
+                    *ngIf="a.data.pipeIds.indexOf(belt) !== -1; else pipeIcon"
+                  >
                     <lab-select
-                      *ngIf="a.data.pipeIds.indexOf(belt) !== -1; else pipeIcon"
+                      *ngIf="a.settings.pipe"
                       header="Select a pipe"
                       [data]="a.data"
                       [selected]="belt"
@@ -247,7 +250,7 @@
                         setBelt.emit({
                           id: step.itemId,
                           value: $event,
-                          def: settings.pipe
+                          def: a.settings.pipe
                         })
                       "
                     >
@@ -259,96 +262,106 @@
                         [item]="a.data.itemEntities[belt]"
                       ></lab-icon>
                     </lab-select>
-                  </ng-template>
-                  <ng-template #pipeIcon>
-                    <lab-icon
-                      [iconId]="belt"
-                      [tooltip]="a.data.itemEntities[belt]?.name || PIPE"
-                    ></lab-icon>
-                  </ng-template>
-                </div>
-              </ng-container>
-            </td>
-            <td *ngIf="columns[Column.Wagons].show">
-              <ng-container *ngIf="s.itemSettings.wagon as wagon">
-                <div *ngIf="step.wagons" class="flex">
-                  <span class="monospace">{{
-                    step.wagons | labRate: effPrecision[Column.Wagons]
-                  }}</span>
-                  <ng-container
-                    *ngIf="
-                      a.data.fluidWagonIds.indexOf(wagon) === -1;
-                      else fluidWagon
-                    "
-                  >
-                    <ng-container
-                      *ngIf="a.data.cargoWagonIds.length > 1; else wagonDefault"
-                    >
-                      <lab-select
-                        header="Select a cargo wagon"
-                        [data]="a.data"
-                        [selected]="wagon"
-                        [options]="a.data.cargoWagonIds"
-                        (selectId)="
-                          setWagon.emit({
-                            id: step.itemId,
-                            value: $event,
-                            def: settings.cargoWagon
-                          })
-                        "
-                      >
-                        <lab-icon
-                          class="button"
-                          title="Click to change cargo wagon"
-                          [iconId]="wagon"
-                          [tooltip]="a.data.itemEntities[wagon].name"
-                          [item]="a.data.itemEntities[wagon]"
-                        ></lab-icon>
-                      </lab-select>
-                    </ng-container>
                   </ng-container>
-                  <ng-template #fluidWagon>
-                    <ng-container
-                      *ngIf="a.data.fluidWagonIds.length > 1; else wagonDefault"
+                </ng-template>
+                <ng-template #pipeIcon>
+                  <lab-icon
+                    [iconId]="belt"
+                    [tooltip]="a.data.itemEntities[belt]?.name || PIPE"
+                  ></lab-icon>
+                </ng-template>
+              </div>
+            </ng-container>
+          </td>
+          <td *ngIf="columns[Column.Wagons].show">
+            <ng-container *ngIf="step.itemId && step.wagons">
+              <div
+                *ngIf="a.itemSettings[step.itemId].wagon as wagon"
+                class="flex"
+              >
+                <span class="monospace">{{
+                  step.wagons | labRate: effPrecision[Column.Wagons]
+                }}</span>
+                <ng-container
+                  *ngIf="
+                    a.data.fluidWagonIds.indexOf(wagon) === -1;
+                    else fluidWagon
+                  "
+                >
+                  <ng-container
+                    *ngIf="a.data.cargoWagonIds.length > 1; else wagonDefault"
+                  >
+                    <lab-select
+                      *ngIf="a.settings.cargoWagon"
+                      header="Select a cargo wagon"
+                      [data]="a.data"
+                      [selected]="wagon"
+                      [options]="a.data.cargoWagonIds"
+                      (selectId)="
+                        setWagon.emit({
+                          id: step.itemId,
+                          value: $event,
+                          def: a.settings.cargoWagon
+                        })
+                      "
                     >
-                      <lab-select
-                        header="Select a fluid wagon"
-                        [data]="a.data"
-                        [selected]="wagon"
-                        [options]="a.data.fluidWagonIds"
-                        (selectId)="
-                          setWagon.emit({
-                            id: step.itemId,
-                            value: $event,
-                            def: settings.fluidWagon
-                          })
-                        "
-                      >
-                        <lab-icon
-                          class="button"
-                          title="Click to change fluid wagon"
-                          [iconId]="wagon"
-                          [tooltip]="a.data.itemEntities[wagon].name"
-                          [item]="a.data.itemEntities[wagon]"
-                        ></lab-icon>
-                      </lab-select>
-                    </ng-container>
-                  </ng-template>
-                  <ng-template #wagonDefault>
-                    <lab-icon
-                      [iconId]="wagon"
-                      [tooltip]="a.data.itemEntities[wagon].name"
-                      [item]="a.data.itemEntities[wagon]"
-                    ></lab-icon>
-                  </ng-template>
-                </div>
-              </ng-container>
-            </td>
+                      <lab-icon
+                        class="button"
+                        title="Click to change cargo wagon"
+                        [iconId]="wagon"
+                        [tooltip]="a.data.itemEntities[wagon].name"
+                        [item]="a.data.itemEntities[wagon]"
+                      ></lab-icon>
+                    </lab-select>
+                  </ng-container>
+                </ng-container>
+                <ng-template #fluidWagon>
+                  <ng-container
+                    *ngIf="a.data.fluidWagonIds.length > 1; else wagonDefault"
+                  >
+                    <lab-select
+                      *ngIf="a.settings.fluidWagon"
+                      header="Select a fluid wagon"
+                      [data]="a.data"
+                      [selected]="wagon"
+                      [options]="a.data.fluidWagonIds"
+                      (selectId)="
+                        setWagon.emit({
+                          id: step.itemId,
+                          value: $event,
+                          def: a.settings.fluidWagon
+                        })
+                      "
+                    >
+                      <lab-icon
+                        class="button"
+                        title="Click to change fluid wagon"
+                        [iconId]="wagon"
+                        [tooltip]="a.data.itemEntities[wagon].name"
+                        [item]="a.data.itemEntities[wagon]"
+                      ></lab-icon>
+                    </lab-select>
+                  </ng-container>
+                </ng-template>
+                <ng-template #wagonDefault>
+                  <lab-icon
+                    [iconId]="wagon"
+                    [tooltip]="a.data.itemEntities[wagon].name"
+                    [item]="a.data.itemEntities[wagon]"
+                  ></lab-icon>
+                </ng-template>
+              </div>
+            </ng-container>
+          </td>
+          <ng-container *ngIf="step.recipeId; else noRecipeCell">
             <ng-container
-              *ngIf="a.recipeSettings[step.recipeId]?.factory as factory"
+              *ngIf="a.recipeSettings[step.recipeId].factory as factory"
             >
               <td class="num" [id]="step.recipeId">
-                <div *ngIf="step.factories?.nonzero()" class="flex">
+                <div
+                  *ngIf="step.factories && step.factories.nonzero()"
+                  class="flex"
+                >
                   <span class="monospace">{{
                     step.factories
                       | labFactoryRate: effPrecision[Column.Factories]:factory
@@ -418,7 +431,7 @@
                 <div class="flex">
                   <div
                     *ngIf="
-                      a.recipeSettings[step.recipeId]?.factoryModules as modules
+                      a.recipeSettings[step.recipeId].factoryModules as modules
                     "
                     class="flex mod"
                   >
@@ -445,7 +458,7 @@
                           step.recipeId,
                           $event,
                           i,
-                          a.recipeSettings[step.recipeId].factoryModules,
+                          modules,
                           setFactoryModules,
                           a.recipeSettings,
                           a.factorySettings,
@@ -463,7 +476,7 @@
                             : 'Click to change resource purity'
                         "
                         [iconId]="mod"
-                        [tooltip]="a.data.itemEntities[mod]?.name"
+                        [tooltip]="a.data.itemEntities[mod].name"
                         [item]="a.data.itemEntities[mod]"
                       ></lab-icon>
                     </lab-select>
@@ -471,45 +484,47 @@
                 </div>
               </td>
             </ng-container>
-            <td
-              colspan="3"
-              *ngIf="!a.recipeSettings[step.recipeId]?.factory"
-            ></td>
-            <td *ngIf="columns[Column.Overclock].show">
-              <ng-container *ngIf="a.recipeSettings[step.recipeId]">
-                <input
-                  type="number"
-                  title="Set overclock"
-                  placeholder="100"
-                  min="0"
-                  max="250"
-                  step="10"
-                  labValidateOverclock
-                  [ngModel]="a.recipeSettings[step.recipeId].overclock"
-                  (input)="
-                    changeOverclock(
-                      step.recipeId,
-                      $event,
-                      setOverclock,
-                      a.recipeSettings,
-                      a.factorySettings
-                    )
-                  "
-                />
-                %
-              </ng-container>
-            </td>
-            <ng-container *ngIf="columns[Column.Beacons].show">
+          </ng-container>
+          <td *ngIf="columns[Column.Overclock].show">
+            <ng-container *ngIf="step.recipeId">
+              <input
+                *ngIf="a.recipeSettings[step.recipeId]"
+                type="number"
+                title="Set overclock"
+                placeholder="100"
+                min="0"
+                max="250"
+                step="10"
+                labValidateOverclock
+                [ngModel]="a.recipeSettings[step.recipeId].overclock"
+                (input)="
+                  changeOverclock(
+                    step.recipeId,
+                    $event,
+                    setOverclock,
+                    a.recipeSettings,
+                    a.factorySettings
+                  )
+                "
+              />
+              %
+            </ng-container>
+          </td>
+          <ng-container *ngIf="columns[Column.Beacons].show">
+            <ng-container *ngIf="step.recipeId; else noRecipeCell">
               <ng-container
-                *ngIf="a.recipeSettings[step.recipeId]?.beacon as beacon"
+                *ngIf="a.recipeSettings[step.recipeId].beacon as beacon"
               >
                 <td>
-                  <div class="flex">
+                  <div
+                    *ngIf="a.recipeSettings[step.recipeId].beaconCount as count"
+                    class="flex"
+                  >
                     <lab-input
                       title="Set number of beacons"
                       placeholder="# Beacons"
                       [digits]="2"
-                      [value]="a.recipeSettings[step.recipeId].beaconCount"
+                      [value]="count"
                       (setValue)="
                         changeBeaconCount(
                           step.recipeId,
@@ -607,7 +622,7 @@
                             class="button module"
                             title="Click to change beacon modules"
                             [iconId]="mod"
-                            [tooltip]="a.data.itemEntities[mod]?.name"
+                            [tooltip]="a.data.itemEntities[mod].name"
                             [item]="a.data.itemEntities[mod]"
                           ></lab-icon>
                         </lab-select>
@@ -631,112 +646,128 @@
                   </ng-container>
                 </td>
               </ng-container>
-              <td
-                colspan="3"
-                *ngIf="!a.recipeSettings[step.recipeId]?.beacon"
-              ></td>
             </ng-container>
-            <td *ngIf="columns[Column.Power].show">
-              <div *ngIf="step.power?.nonzero()" class="flex">
-                <span class="monospace">{{
-                  step.power | labPower: effPrecision[Column.Power]:effPowerUnit
-                }}</span>
-              </div>
-            </td>
-            <td *ngIf="columns[Column.Pollution].show">
-              <div *ngIf="step.pollution?.nonzero()" class="flex">
-                <span class="monospace">{{
-                  step.pollution | labRate: effPrecision[Column.Pollution]
-                }}</span>
-              </div>
-            </td>
-            <td class="nowrap" *ngIf="columns[Column.Link].show">
-              <div class="flex links">
-                <a
-                  *ngIf="step.items"
-                  class="button"
-                  title="Click to open this step in a new tab"
-                  [href]="step | labStepHref: a.data"
-                  target="_blank"
-                >
-                  <i class="clickable material-icons">open_in_new</i>
+          </ng-container>
+          <ng-template #noRecipeCell>
+            <td colspan="3"></td>
+          </ng-template>
+          <td *ngIf="columns[Column.Power].show">
+            <div *ngIf="step.power && step.power.nonzero()" class="flex">
+              <span class="monospace">{{
+                step.power | labPower: effPrecision[Column.Power]:effPowerUnit
+              }}</span>
+            </div>
+          </td>
+          <td *ngIf="columns[Column.Pollution].show">
+            <div
+              *ngIf="step.pollution && step.pollution.nonzero()"
+              class="flex"
+            >
+              <span class="monospace">{{
+                step.pollution | labRate: effPrecision[Column.Pollution]
+              }}</span>
+            </div>
+          </td>
+          <td class="nowrap" *ngIf="columns[Column.Link].show">
+            <div class="flex links">
+              <a
+                *ngIf="step.items"
+                class="button"
+                title="Click to open this step in a new tab"
+                [href]="step | labStepHref: a.data"
+                target="_blank"
+              >
+                <i class="clickable material-icons">open_in_new</i>
+              </a>
+              <button
+                *ngIf="
+                  (step.recipeId && a.stepsModified.recipes[step.recipeId]) ||
+                  (step.itemId && a.stepsModified.items[step.itemId])
+                "
+                title="Undo modifications to this step"
+                data-test="lab-list-reset-step"
+                (click)="resetStep(step)"
+              >
+                <i class="material-icons">undo</i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <ng-container *ngIf="expanded[step.id]">
+          <tr class="detail-header">
+            <td [colSpan]="leftSpan">
+              <div class="flex">
+                <a class="button" [href]="link(step)">
+                  <i class="material-icons">link</i>
                 </a>
-                <button
-                  *ngIf="
-                    a.stepsModified.recipes[step.recipeId] ||
-                    a.stepsModified.items[step.itemId]
-                  "
-                  title="Undo modifications to this step"
-                  data-test="lab-list-reset-step"
-                  (click)="resetStep(step)"
-                >
-                  <i class="material-icons">undo</i>
-                </button>
               </div>
+            </td>
+            <td colspan="100" class="detail-tabs">
+              <ul class="tabs">
+                <li
+                  *ngIf="
+                    a.stepDetails[step.id].tabs.indexOf(StepDetailTab.Item) !==
+                    -1
+                  "
+                  [class.active]="expanded[step.id] === StepDetailTab.Item"
+                  (click)="expanded[step.id] = StepDetailTab.Item"
+                >
+                  <span>Item</span>
+                </li>
+                <li
+                  *ngIf="
+                    a.stepDetails[step.id].tabs.indexOf(
+                      StepDetailTab.Recipe
+                    ) !== -1
+                  "
+                  [class.active]="expanded[step.id] === StepDetailTab.Recipe"
+                  (click)="expanded[step.id] = StepDetailTab.Recipe"
+                >
+                  <span>Recipe</span>
+                </li>
+                <li
+                  *ngIf="
+                    a.stepDetails[step.id].tabs.indexOf(
+                      StepDetailTab.Factory
+                    ) !== -1
+                  "
+                  [class.active]="expanded[step.id] === StepDetailTab.Factory"
+                  (click)="expanded[step.id] = StepDetailTab.Factory"
+                >
+                  <span>Factory</span>
+                </li>
+                <li
+                  *ngIf="
+                    a.stepDetails[step.id].tabs.indexOf(
+                      StepDetailTab.Recipes
+                    ) !== -1
+                  "
+                  [class.active]="expanded[step.id] === StepDetailTab.Recipes"
+                  (click)="expanded[step.id] = StepDetailTab.Recipes"
+                >
+                  <span>Recipes</span>
+                </li>
+              </ul>
             </td>
           </tr>
-          <ng-container *ngIf="expanded[step.id]">
-            <tr class="detail-header">
-              <td [colSpan]="leftSpan">
-                <div class="flex">
-                  <a class="button" [href]="link(step)">
-                    <i class="material-icons">link</i>
-                  </a>
-                </div>
-              </td>
-              <td colspan="100" class="detail-tabs">
-                <ul class="tabs">
-                  <li
-                    *ngIf="details[step.id].indexOf(StepDetailTab.Item) !== -1"
-                    [class.active]="expanded[step.id] === StepDetailTab.Item"
-                    (click)="expanded[step.id] = StepDetailTab.Item"
-                  >
-                    <span>Item</span>
-                  </li>
-                  <li
-                    *ngIf="
-                      details[step.id].indexOf(StepDetailTab.Recipe) !== -1
-                    "
-                    [class.active]="expanded[step.id] === StepDetailTab.Recipe"
-                    (click)="expanded[step.id] = StepDetailTab.Recipe"
-                  >
-                    <span>Recipe</span>
-                  </li>
-                  <li
-                    *ngIf="
-                      details[step.id].indexOf(StepDetailTab.Factory) !== -1
-                    "
-                    [class.active]="expanded[step.id] === StepDetailTab.Factory"
-                    (click)="expanded[step.id] = StepDetailTab.Factory"
-                  >
-                    <span>Factory</span>
-                  </li>
-                  <li
-                    *ngIf="
-                      details[step.id].indexOf(StepDetailTab.Recipes) !== -1
-                    "
-                    [class.active]="expanded[step.id] === StepDetailTab.Recipes"
-                    (click)="expanded[step.id] = StepDetailTab.Recipes"
-                  >
-                    <span>Recipes</span>
-                  </li>
-                </ul>
-              </td>
+          <ng-container *ngIf="expanded[step.id] === StepDetailTab.Item">
+            <tr
+              class="details first"
+              *ngIf="a.stepDetails[step.id].outputs.length"
+            >
+              <td [colSpan]="leftSpan"></td>
+              <td colspan="100"><span class="header">Sources</span></td>
             </tr>
-            <ng-container *ngIf="expanded[step.id] === StepDetailTab.Item">
-              <tr class="details first" *ngIf="outputs[step.id].length">
-                <td [colSpan]="leftSpan"></td>
-                <td colspan="100"><span class="header">Sources</span></td>
-              </tr>
-              <tr
-                *ngFor="
-                  let output of outputs[step.id];
-                  last as isLast;
-                  trackBy: track.step
-                "
-                class="details"
-                [class.last]="isLast && !step.parents"
-              >
+            <tr
+              *ngFor="
+                let output of a.stepDetails[step.id].outputs;
+                last as isLast;
+                trackBy: track.step
+              "
+              class="details"
+              [class.last]="isLast && !step.parents"
+            >
+              <ng-container *ngIf="output.outputs && step.itemId">
                 <ng-container *ngIf="output.outputs[step.itemId] as value">
                   <td [colSpan]="leftSpan"></td>
                   <td>
@@ -747,7 +778,7 @@
                       }}</span>
                       <lab-icon
                         [iconId]="step.itemId"
-                        [tooltip]="a.data.itemEntities[step.itemId]?.name"
+                        [tooltip]="a.data.itemEntities[step.itemId].name"
                         [recipe]="
                           a.data.recipeEntities[
                             a.data.itemRecipeIds[step.itemId]
@@ -758,7 +789,9 @@
                     </div>
                   </td>
                   <td *ngIf="columns[Column.Belts].show">
-                    <ng-container *ngIf="s.itemSettings.belt as belt">
+                    <ng-container
+                      *ngIf="a.itemSettings[step.itemId].belt as belt"
+                    >
                       <div *ngIf="step.belts" class="flex">
                         <span class="monospace">{{
                           step.belts.mul(value)
@@ -773,7 +806,9 @@
                     </ng-container>
                   </td>
                   <td *ngIf="columns[Column.Wagons].show">
-                    <ng-container *ngIf="s.itemSettings.wagon as wagon">
+                    <ng-container
+                      *ngIf="a.itemSettings[step.itemId].wagon as wagon"
+                    >
                       <div *ngIf="step.wagons" class="flex">
                         <span class="monospace">{{
                           step.wagons.mul(value)
@@ -787,15 +822,143 @@
                       </div>
                     </ng-container>
                   </td>
+                  <ng-container *ngIf="output.recipeId; else noRecipeDetail">
+                    <ng-container
+                      *ngIf="
+                        a.recipeSettings[output.recipeId].factory as factory
+                      "
+                    >
+                      <td>
+                        <div
+                          class="flex"
+                          *ngIf="output.factories && output.factories.nonzero()"
+                        >
+                          <span class="monospace">{{
+                            output.factories
+                              | labFactoryRate
+                                : effPrecision[Column.Factories]
+                                : factory
+                          }}</span>
+                        </div>
+                      </td>
+                      <td class="split-column">
+                        <div>
+                          <div class="flex">
+                            <lab-icon
+                              [iconId]="output.recipeId"
+                              [tooltip]="
+                                a.data.recipeEntities[output.recipeId].name
+                              "
+                              [recipe]="a.data.recipeEntities[output.recipeId]"
+                            ></lab-icon>
+                            <lab-icon
+                              *ngIf="
+                                a.data.game !== Game.DysonSphereProgram ||
+                                factory !== ItemId.MiningDrill
+                              "
+                              [iconId]="factory"
+                              [tooltip]="a.data.itemEntities[factory].name"
+                              [item]="a.data.itemEntities[factory]"
+                            ></lab-icon>
+                          </div>
+                        </div>
+                      </td>
+                    </ng-container>
+                  </ng-container>
+                  <td class="split-column" colspan="100">
+                    <div>
+                      <div class="flex percent">
+                        <i class="material-icons">arrow_forward</i>
+                        <span class="monospace"
+                          >{{ leftPad(value | labRate: -2) }}%</span
+                        >
+                        <lab-icon
+                          [iconId]="step.itemId"
+                          [tooltip]="a.data.itemEntities[step.itemId].name"
+                          [item]="a.data.itemEntities[step.itemId]"
+                        ></lab-icon>
+                      </div>
+                    </div>
+                  </td>
+                </ng-container>
+              </ng-container>
+            </tr>
+            <tr class="details" *ngIf="step.parents">
+              <td [colSpan]="leftSpan"></td>
+              <td colspan="100"><span class="header">Destinations</span></td>
+            </tr>
+            <tr
+              *ngFor="
+                let parent of step.parents | keyvalue: sortKeyValue;
+                last as isLast;
+                trackBy: track.keyValue
+              "
+              class="details"
+              [class.last]="isLast"
+            >
+              <ng-container *ngIf="step.itemId">
+                <td [colSpan]="leftSpan"></td>
+                <td>
+                  <div class="flex">
+                    <span *ngIf="step.items" class="monospace">{{
+                      step.items.mul(parent.value)
+                        | labRate: effPrecision[Column.Items]
+                    }}</span>
+                    <lab-icon
+                      [iconId]="step.itemId"
+                      [tooltip]="a.data.itemEntities[step.itemId].name"
+                      [recipe]="
+                        a.data.recipeEntities[a.data.itemRecipeIds[step.itemId]]
+                      "
+                    >
+                    </lab-icon>
+                  </div>
+                </td>
+                <td *ngIf="columns[Column.Belts].show">
                   <ng-container
-                    *ngIf="
-                      a.recipeSettings[output.recipeId]?.factory as factory
-                    "
+                    *ngIf="a.itemSettings[step.itemId].belt as belt"
+                  >
+                    <div *ngIf="step.belts" class="flex">
+                      <span class="monospace">{{
+                        step.belts.mul(parent.value)
+                          | labRate: effPrecision[Column.Belts]
+                      }}</span>
+                      <lab-icon
+                        [iconId]="belt"
+                        [tooltip]="a.data.itemEntities[belt]?.name ?? PIPE"
+                        [item]="a.data.itemEntities[belt]"
+                      ></lab-icon>
+                    </div>
+                  </ng-container>
+                </td>
+                <td *ngIf="columns[Column.Wagons].show">
+                  <ng-container
+                    *ngIf="a.itemSettings[step.itemId].wagon as wagon"
+                  >
+                    <div *ngIf="step.wagons" class="flex">
+                      <span class="monospace">{{
+                        step.wagons.mul(parent.value)
+                          | labRate: effPrecision[Column.Wagons]
+                      }}</span>
+                      <lab-icon
+                        [iconId]="wagon"
+                        [tooltip]="a.data.itemEntities[wagon].name"
+                        [item]="a.data.itemEntities[wagon]"
+                      ></lab-icon>
+                    </div>
+                  </ng-container>
+                </td>
+                <ng-container *ngIf="step.recipeId; else noRecipeDetail">
+                  <ng-container
+                    *ngIf="a.recipeSettings[step.recipeId].factory as factory"
                   >
                     <td>
-                      <div class="flex" *ngIf="output.factories?.nonzero()">
+                      <div
+                        class="flex"
+                        *ngIf="step.factories && step.factories.nonzero()"
+                      >
                         <span class="monospace">{{
-                          output.factories
+                          step.factories.mul(parent.value)
                             | labFactoryRate
                               : effPrecision[Column.Factories]
                               : factory
@@ -806,11 +969,11 @@
                       <div>
                         <div class="flex">
                           <lab-icon
-                            [iconId]="output.recipeId"
+                            [iconId]="step.recipeId"
                             [tooltip]="
-                              a.data.recipeEntities[output.recipeId].name
+                              a.data.recipeEntities[step.recipeId].name
                             "
-                            [recipe]="a.data.recipeEntities[output.recipeId]"
+                            [recipe]="a.data.recipeEntities[step.recipeId]"
                           ></lab-icon>
                           <lab-icon
                             *ngIf="
@@ -825,125 +988,7 @@
                       </div>
                     </td>
                   </ng-container>
-                  <td
-                    colspan="2"
-                    *ngIf="!a.recipeSettings[output.recipeId]?.factory"
-                  ></td>
-                  <td class="split-column" colspan="100">
-                    <div>
-                      <div class="flex percent">
-                        <i class="material-icons">arrow_forward</i>
-                        <span class="monospace"
-                          >{{ leftPad(value | labRate: -2) }}%</span
-                        >
-                        <lab-icon
-                          [iconId]="step.itemId"
-                          [tooltip]="a.data.itemEntities[step.itemId]?.name"
-                          [item]="a.data.itemEntities[step.itemId]"
-                        ></lab-icon>
-                      </div>
-                    </div>
-                  </td>
                 </ng-container>
-              </tr>
-              <tr class="details" *ngIf="step.parents">
-                <td [colSpan]="leftSpan"></td>
-                <td colspan="100"><span class="header">Destinations</span></td>
-              </tr>
-              <tr
-                *ngFor="
-                  let parent of step.parents | keyvalue: sortKeyValue;
-                  last as isLast;
-                  trackBy: track.keyValue
-                "
-                class="details"
-                [class.last]="isLast"
-              >
-                <td [colSpan]="leftSpan"></td>
-                <td>
-                  <div class="flex">
-                    <span *ngIf="step.items" class="monospace">{{
-                      step.items.mul(parent.value)
-                        | labRate: effPrecision[Column.Items]
-                    }}</span>
-                    <lab-icon
-                      [iconId]="step.itemId"
-                      [tooltip]="a.data.itemEntities[step.itemId]?.name"
-                      [recipe]="
-                        a.data.recipeEntities[a.data.itemRecipeIds[step.itemId]]
-                      "
-                    >
-                    </lab-icon>
-                  </div>
-                </td>
-                <td *ngIf="columns[Column.Belts].show">
-                  <ng-container *ngIf="s.itemSettings.belt as belt">
-                    <div *ngIf="step.belts" class="flex">
-                      <span class="monospace">{{
-                        step.belts.mul(parent.value)
-                          | labRate: effPrecision[Column.Belts]
-                      }}</span>
-                      <lab-icon
-                        [iconId]="belt"
-                        [tooltip]="a.data.itemEntities[belt]?.name || PIPE"
-                        [item]="a.data.itemEntities[belt]"
-                      ></lab-icon>
-                    </div>
-                  </ng-container>
-                </td>
-                <td *ngIf="columns[Column.Wagons].show">
-                  <ng-container *ngIf="s.itemSettings.wagon as wagon">
-                    <div *ngIf="step.wagons" class="flex">
-                      <span class="monospace">{{
-                        step.wagons.mul(parent.value)
-                          | labRate: effPrecision[Column.Wagons]
-                      }}</span>
-                      <lab-icon
-                        [iconId]="wagon"
-                        [tooltip]="a.data.itemEntities[wagon].name"
-                        [item]="a.data.itemEntities[wagon]"
-                      ></lab-icon>
-                    </div>
-                  </ng-container>
-                </td>
-                <ng-container
-                  *ngIf="a.recipeSettings[step.recipeId]?.factory as factory"
-                >
-                  <td>
-                    <div class="flex" *ngIf="step.factories?.nonzero()">
-                      <span class="monospace">{{
-                        step.factories.mul(parent.value)
-                          | labFactoryRate
-                            : effPrecision[Column.Factories]
-                            : factory
-                      }}</span>
-                    </div>
-                  </td>
-                  <td class="split-column">
-                    <div>
-                      <div class="flex">
-                        <lab-icon
-                          [iconId]="step.recipeId"
-                          [tooltip]="a.data.recipeEntities[step.recipeId].name"
-                          [recipe]="a.data.recipeEntities[step.recipeId]"
-                        ></lab-icon>
-                        <lab-icon
-                          *ngIf="
-                            a.data.game !== Game.DysonSphereProgram ||
-                            factory !== ItemId.MiningDrill
-                          "
-                          [iconId]="factory"
-                          [tooltip]="a.data.itemEntities[factory].name"
-                          [item]="a.data.itemEntities[factory]"
-                        ></lab-icon>
-                      </div>
-                    </div>
-                  </td>
-                </ng-container>
-                <td
-                  colspan="2"
-                  *ngIf="!a.recipeSettings[step.recipeId]?.factory"
-                ></td>
                 <td class="split-column" colspan="100">
                   <div>
                     <div class="flex percent">
@@ -959,43 +1004,246 @@
                     </div>
                   </div>
                 </td>
-              </tr>
-            </ng-container>
-            <ng-container *ngIf="expanded[step.id] === StepDetailTab.Recipe">
+              </ng-container>
+            </tr>
+          </ng-container>
+          <ng-container *ngIf="expanded[step.id] === StepDetailTab.Recipe">
+            <ng-container *ngIf="step.recipeId">
               <ng-container
-                *ngIf="
-                  a.data.game === Game.Factorio &&
-                  a.data.itemEntities[a.recipeSettings[step.recipeId].factory]
-                    .factory.mining
-                "
+                *ngIf="a.recipeSettings[step.recipeId].factory as factory"
               >
-                <tr class="details first">
+                <ng-container *ngIf="a.data.game === Game.Factorio">
+                  <ng-container
+                    *ngIf="a.data.itemEntities[factory].factory?.mining"
+                  >
+                    <tr class="details first">
+                      <td [colSpan]="leftSpan"></td>
+                      <td colspan="100">
+                        <span class="header">Depletion</span>
+                      </td>
+                    </tr>
+                    <ng-container
+                      *ngFor="
+                        let output of step.outputs | keyvalue: sortKeyValue;
+                        trackBy: track.keyValue
+                      "
+                    >
+                      <ng-container *ngIf="findStep(output.key) as outStep">
+                        <tr
+                          *ngIf="step.outputs?.[output.key] as percent"
+                          class="details"
+                        >
+                          <td [colSpan]="leftSpan"></td>
+                          <td>
+                            <div class="flex">
+                              <span
+                                *ngIf="
+                                  a.data.recipeR[step.recipeId]
+                                    .productivity as productivity
+                                "
+                                class="monospace"
+                                >{{
+                                  outStep.items.mul(percent).div(productivity)
+                                    | labRate: effPrecision[Column.Items]
+                                }}</span
+                              >
+                              <lab-icon
+                                [iconId]="output.key"
+                                [tooltip]="a.data.itemEntities[output.key].name"
+                                [recipe]="
+                                  a.data.recipeEntities[
+                                    a.data.itemRecipeIds[output.key]
+                                  ]
+                                "
+                              >
+                              </lab-icon>
+                            </div>
+                          </td>
+                          <td colspan="100"></td>
+                        </tr>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+                <tr
+                  class="details"
+                  *ngIf="a.data.recipeR[step.recipeId].in"
+                  [class.first]="
+                    a.data.game !== Game.Factorio ||
+                    !a.data.itemEntities[factory].factory?.mining
+                  "
+                >
                   <td [colSpan]="leftSpan"></td>
-                  <td colspan="100"><span class="header">Depletion</span></td>
+                  <td colspan="100"><span class="header">Inputs</span></td>
                 </tr>
                 <ng-container
                   *ngFor="
-                    let output of step.outputs | keyvalue: sortKeyValue;
+                    let input of a.data.recipeR[step.recipeId].in
+                      | keyvalue: sortKeyValue;
                     trackBy: track.keyValue
                   "
                 >
-                  <ng-container *ngIf="findStep(output.key) as outStep">
+                  <ng-container *ngIf="findStep(input.key) as inStep">
                     <tr
-                      *ngIf="step.outputs[output.key] as percent"
+                      *ngIf="inStep.parents?.[step.recipeId] as percent"
                       class="details"
                     >
                       <td [colSpan]="leftSpan"></td>
                       <td>
                         <div class="flex">
+                          <span *ngIf="inStep.items" class="monospace">{{
+                            inStep.items.mul(percent)
+                              | labRate: effPrecision[Column.Items]
+                          }}</span>
+                          <lab-icon
+                            [iconId]="input.key"
+                            [tooltip]="a.data.itemEntities[input.key].name"
+                            [recipe]="
+                              a.data.recipeEntities[
+                                a.data.itemRecipeIds[input.key]
+                              ]
+                            "
+                          >
+                          </lab-icon>
+                        </div>
+                      </td>
+                      <td *ngIf="columns[Column.Belts].show">
+                        <ng-container *ngIf="inStep.itemId">
+                          <ng-container
+                            *ngIf="a.itemSettings[inStep.itemId].belt as belt"
+                          >
+                            <div *ngIf="inStep.belts" class="flex">
+                              <span class="monospace">{{
+                                inStep.belts.mul(percent)
+                                  | labRate: effPrecision[Column.Belts]
+                              }}</span>
+                              <lab-icon
+                                [iconId]="belt"
+                                [tooltip]="
+                                  a.data.itemEntities[belt]?.name || PIPE
+                                "
+                                [item]="a.data.itemEntities[belt]"
+                              ></lab-icon>
+                            </div>
+                          </ng-container>
+                        </ng-container>
+                      </td>
+                      <td *ngIf="columns[Column.Wagons].show">
+                        <ng-container *ngIf="inStep.itemId">
+                          <ng-container
+                            *ngIf="a.itemSettings[inStep.itemId].wagon as wagon"
+                          >
+                            <div *ngIf="inStep.wagons" class="flex">
+                              <span class="monospace">{{
+                                inStep.wagons.mul(percent)
+                                  | labRate: effPrecision[Column.Wagons]
+                              }}</span>
+                              <lab-icon
+                                [iconId]="wagon"
+                                [tooltip]="a.data.itemEntities[wagon].name"
+                                [item]="a.data.itemEntities[wagon]"
+                              ></lab-icon>
+                            </div>
+                          </ng-container>
+                        </ng-container>
+                      </td>
+                      <ng-container
+                        *ngIf="inStep.recipeId; else noRecipeDetail"
+                      >
+                        <ng-container
+                          *ngIf="
+                            a.recipeSettings[inStep.recipeId].factory as factory
+                          "
+                        >
+                          <td>
+                            <div
+                              class="flex"
+                              *ngIf="
+                                inStep.factories && inStep.factories.nonzero()
+                              "
+                            >
+                              <span class="monospace">{{
+                                inStep.factories.mul(percent)
+                                  | labFactoryRate
+                                    : effPrecision[Column.Factories]
+                                    : factory
+                              }}</span>
+                            </div>
+                          </td>
+                          <td class="split-column">
+                            <div>
+                              <div class="flex">
+                                <lab-icon
+                                  [iconId]="inStep.recipeId"
+                                  [tooltip]="
+                                    a.data.recipeEntities[inStep.recipeId].name
+                                  "
+                                  [recipe]="
+                                    a.data.recipeEntities[inStep.recipeId]
+                                  "
+                                >
+                                </lab-icon>
+                                <lab-icon
+                                  *ngIf="
+                                    a.data.game !== Game.DysonSphereProgram ||
+                                    factory !== ItemId.MiningDrill
+                                  "
+                                  [iconId]="factory"
+                                  [tooltip]="a.data.itemEntities[factory].name"
+                                  [item]="a.data.itemEntities[factory]"
+                                ></lab-icon>
+                              </div>
+                            </div>
+                          </td>
+                        </ng-container>
+                      </ng-container>
+                      <td class="split-column" colspan="100">
+                        <div>
+                          <div class="flex percent">
+                            <span class="monospace"
+                              >{{ leftPad(percent | labRate: -2) }}%</span
+                            >
+                            <i class="material-icons">arrow_forward</i>
+                            <lab-icon
+                              [iconId]="step.recipeId"
+                              [tooltip]="
+                                a.data.recipeEntities[step.recipeId].name
+                              "
+                              [recipe]="a.data.recipeEntities[step.recipeId]"
+                            ></lab-icon>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </ng-container>
+                <tr class="details">
+                  <td [colSpan]="leftSpan"></td>
+                  <td colspan="100"><span class="header">Outputs</span></td>
+                </tr>
+                <ng-container
+                  *ngFor="
+                    let output of step.outputs | keyvalue: sortKeyValue;
+                    last as isLast;
+                    trackBy: track.keyValue
+                  "
+                >
+                  <ng-container *ngIf="findStep(output.key) as outStep">
+                    <tr
+                      *ngIf="step.outputs?.[output.key] as percent"
+                      class="details"
+                      [class.last]="isLast"
+                    >
+                      <td [colSpan]="leftSpan"></td>
+                      <td>
+                        <div class="flex">
                           <span class="monospace">{{
-                            outStep.items
-                              .mul(percent)
-                              .div(a.data.recipeR[step.recipeId].productivity)
+                            outStep.items.mul(percent)
                               | labRate: effPrecision[Column.Items]
                           }}</span>
                           <lab-icon
                             [iconId]="output.key"
-                            [tooltip]="a.data.itemEntities[output.key]?.name"
+                            [tooltip]="a.data.itemEntities[output.key].name"
                             [recipe]="
                               a.data.recipeEntities[
                                 a.data.itemRecipeIds[output.key]
@@ -1005,426 +1253,192 @@
                           </lab-icon>
                         </div>
                       </td>
-                      <td colspan="100"></td>
+                      <td *ngIf="columns[Column.Belts].show">
+                        <ng-container *ngIf="outStep.itemId">
+                          <ng-container
+                            *ngIf="a.itemSettings[outStep.itemId].belt as belt"
+                          >
+                            <div *ngIf="outStep.belts" class="flex">
+                              <span class="monospace">{{
+                                outStep.belts.mul(percent)
+                                  | labRate: effPrecision[Column.Belts]
+                              }}</span>
+                              <lab-icon
+                                [iconId]="belt"
+                                [tooltip]="
+                                  a.data.itemEntities[belt]?.name || PIPE
+                                "
+                                [item]="a.data.itemEntities[belt]"
+                              ></lab-icon>
+                            </div>
+                          </ng-container>
+                        </ng-container>
+                      </td>
+                      <td *ngIf="columns[Column.Wagons].show">
+                        <ng-container *ngIf="outStep.itemId">
+                          <ng-container
+                            *ngIf="
+                              a.itemSettings[outStep.itemId]?.wagon as wagon
+                            "
+                          >
+                            <div *ngIf="outStep.wagons" class="flex">
+                              <span class="monospace">{{
+                                outStep.wagons.mul(percent)
+                                  | labRate: effPrecision[Column.Wagons]
+                              }}</span>
+                              <lab-icon
+                                [iconId]="wagon"
+                                [tooltip]="a.data.itemEntities[wagon].name"
+                                [item]="a.data.itemEntities[wagon]"
+                              ></lab-icon>
+                            </div>
+                          </ng-container>
+                        </ng-container>
+                      </td>
+                      <ng-container
+                        *ngIf="outStep.recipeId; else noRecipeDetail"
+                      >
+                        <ng-container
+                          *ngIf="
+                            a.recipeSettings[outStep.recipeId]
+                              .factory as factory
+                          "
+                        >
+                          <td>
+                            <div
+                              class="flex"
+                              *ngIf="
+                                outStep.factories && outStep.factories.nonzero()
+                              "
+                            >
+                              <span class="monospace">{{
+                                outStep.factories
+                                  | labFactoryRate
+                                    : effPrecision[Column.Factories]
+                                    : factory
+                              }}</span>
+                            </div>
+                          </td>
+                          <td class="split-column">
+                            <div>
+                              <div class="flex">
+                                <lab-icon
+                                  [iconId]="outStep.recipeId"
+                                  [tooltip]="
+                                    a.data.recipeEntities[outStep.recipeId].name
+                                  "
+                                  [recipe]="
+                                    a.data.recipeEntities[outStep.recipeId]
+                                  "
+                                ></lab-icon>
+                                <lab-icon
+                                  *ngIf="
+                                    a.data.game !== Game.DysonSphereProgram ||
+                                    factory !== ItemId.MiningDrill
+                                  "
+                                  [iconId]="factory"
+                                  [tooltip]="a.data.itemEntities[factory].name"
+                                  [item]="a.data.itemEntities[factory]"
+                                ></lab-icon>
+                              </div>
+                            </div>
+                          </td>
+                        </ng-container>
+                      </ng-container>
+                      <td class="split-column" colspan="100">
+                        <div>
+                          <div class="flex percent">
+                            <i class="material-icons">arrow_forward</i>
+                            <span class="monospace"
+                              >{{ leftPad(percent | labRate: -2) }}%</span
+                            >
+                            <lab-icon
+                              [iconId]="output.key"
+                              [tooltip]="a.data.itemEntities[output.key].name"
+                              [item]="a.data.itemEntities[output.key]"
+                            ></lab-icon>
+                          </div>
+                        </div>
+                      </td>
                     </tr>
                   </ng-container>
                 </ng-container>
               </ng-container>
-              <tr
-                class="details"
-                *ngIf="a.data.recipeR[step.recipeId].in"
-                [class.first]="
-                  a.data.game !== Game.Factorio ||
-                  !a.data.itemEntities[a.recipeSettings[step.recipeId].factory]
-                    .factory.mining
-                "
-              >
-                <td [colSpan]="leftSpan"></td>
-                <td colspan="100"><span class="header">Inputs</span></td>
-              </tr>
-              <ng-container
-                *ngFor="
-                  let input of a.data.recipeR[step.recipeId].in
-                    | keyvalue: sortKeyValue;
-                  trackBy: track.keyValue
-                "
-              >
-                <ng-container *ngIf="findStep(input.key) as inStep">
-                  <tr
-                    *ngIf="inStep.parents?.[step.recipeId] as percent"
-                    class="details"
+            </ng-container>
+          </ng-container>
+          <tr
+            *ngIf="expanded[step.id] === StepDetailTab.Factory"
+            class="details first last"
+          >
+            <td [colSpan]="leftSpan"></td>
+            <td colspan="100" class="factory">
+              <div *ngIf="step.recipeId && step.factories">
+                <table>
+                  <ng-container
+                    *ngFor="
+                      let input of a.data.recipeR[step.recipeId].in | keyvalue;
+                      trackBy: track.keyValue
+                    "
                   >
-                    <td [colSpan]="leftSpan"></td>
-                    <td>
-                      <div class="flex">
-                        <span *ngIf="inStep.items" class="monospace">{{
-                          inStep.items.mul(percent)
-                            | labRate: effPrecision[Column.Items]
-                        }}</span>
-                        <lab-icon
-                          [iconId]="input.key"
-                          [tooltip]="a.data.itemEntities[input.key]?.name"
-                          [recipe]="
-                            a.data.recipeEntities[
-                              a.data.itemRecipeIds[input.key]
-                            ]
-                          "
-                        >
-                        </lab-icon>
-                      </div>
-                    </td>
-                    <td *ngIf="columns[Column.Belts].show">
-                      <ng-container
-                        *ngIf="a.itemSettings[inStep.itemId].belt as belt"
-                      >
-                        <div *ngIf="inStep.belts" class="flex">
-                          <span class="monospace">{{
-                            inStep.belts.mul(percent)
-                              | labRate: effPrecision[Column.Belts]
-                          }}</span>
-                          <lab-icon
-                            [iconId]="belt"
-                            [tooltip]="a.data.itemEntities[belt]?.name || PIPE"
-                            [item]="a.data.itemEntities[belt]"
-                          ></lab-icon>
-                        </div>
-                      </ng-container>
-                    </td>
-                    <td *ngIf="columns[Column.Wagons].show">
-                      <ng-container
-                        *ngIf="a.itemSettings[inStep.itemId]?.wagon as wagon"
-                      >
-                        <div *ngIf="inStep.wagons" class="flex">
-                          <span class="monospace">{{
-                            inStep.wagons.mul(percent)
-                              | labRate: effPrecision[Column.Wagons]
-                          }}</span>
-                          <lab-icon
-                            [iconId]="wagon"
-                            [tooltip]="a.data.itemEntities[wagon].name"
-                            [item]="a.data.itemEntities[wagon]"
-                          ></lab-icon>
-                        </div>
-                      </ng-container>
-                    </td>
-                    <ng-container
-                      *ngIf="
-                        a.recipeSettings[inStep.recipeId]?.factory as factory
-                      "
-                    >
-                      <td>
-                        <div class="flex" *ngIf="inStep.factories?.nonzero()">
-                          <span class="monospace">{{
-                            inStep.factories.mul(percent)
-                              | labFactoryRate
-                                : effPrecision[Column.Factories]
-                                : factory
-                          }}</span>
-                        </div>
-                      </td>
-                      <td class="split-column">
-                        <div>
-                          <div class="flex">
+                    <ng-container *ngIf="findStep(input.key) as inStep">
+                      <tr *ngIf="inStep.parents?.[step.recipeId] as percent">
+                        <td>
+                          <div class="flex" *ngIf="inStep.items">
+                            <span class="monospace">{{
+                              inStep.items.mul(percent).div(step.factories)
+                                | labRate: effPrecision[Column.Items]
+                            }}</span>
                             <lab-icon
-                              [iconId]="inStep.recipeId"
-                              [tooltip]="
-                                a.data.recipeEntities[inStep.recipeId].name
+                              [iconId]="input.key"
+                              [tooltip]="a.data.itemEntities[input.key].name"
+                              [recipe]="
+                                a.data.recipeEntities[
+                                  a.data.itemRecipeIds[input.key]
+                                ]
                               "
-                              [recipe]="a.data.recipeEntities[inStep.recipeId]"
                             >
                             </lab-icon>
-                            <lab-icon
-                              *ngIf="
-                                a.data.game !== Game.DysonSphereProgram ||
-                                factory !== ItemId.MiningDrill
-                              "
-                              [iconId]="factory"
-                              [tooltip]="a.data.itemEntities[factory].name"
-                              [item]="a.data.itemEntities[factory]"
-                            ></lab-icon>
                           </div>
-                        </div>
-                      </td>
-                    </ng-container>
-                    <td
-                      colspan="2"
-                      *ngIf="!a.recipeSettings[inStep.recipeId]?.factory"
-                    ></td>
-                    <td class="split-column" colspan="100">
-                      <div>
-                        <div class="flex percent">
-                          <span class="monospace"
-                            >{{ leftPad(percent | labRate: -2) }}%</span
-                          >
-                          <i class="material-icons">arrow_forward</i>
-                          <lab-icon
-                            [iconId]="step.recipeId"
-                            [tooltip]="
-                              a.data.recipeEntities[step.recipeId]?.name
-                            "
-                            [recipe]="a.data.recipeEntities[step.recipeId]"
-                          ></lab-icon>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                </ng-container>
-              </ng-container>
-              <tr class="details">
-                <td [colSpan]="leftSpan"></td>
-                <td colspan="100"><span class="header">Outputs</span></td>
-              </tr>
-              <ng-container
-                *ngFor="
-                  let output of step.outputs | keyvalue: sortKeyValue;
-                  last as isLast;
-                  trackBy: track.keyValue
-                "
-              >
-                <ng-container *ngIf="findStep(output.key) as outStep">
-                  <tr
-                    *ngIf="step.outputs[output.key] as percent"
-                    class="details"
-                    [class.last]="isLast"
-                  >
-                    <td [colSpan]="leftSpan"></td>
-                    <td>
-                      <div class="flex">
-                        <span class="monospace">{{
-                          outStep.items.mul(percent)
-                            | labRate: effPrecision[Column.Items]
-                        }}</span>
-                        <lab-icon
-                          [iconId]="output.key"
-                          [tooltip]="a.data.itemEntities[output.key]?.name"
-                          [recipe]="
-                            a.data.recipeEntities[
-                              a.data.itemRecipeIds[output.key]
-                            ]
+                        </td>
+                        <td
+                          [colSpan]="
+                            a.itemSettings[input.key].belt === ItemId.Pipe
+                              ? 2
+                              : 0
                           "
                         >
-                        </lab-icon>
-                      </div>
-                    </td>
-                    <td *ngIf="columns[Column.Belts].show">
-                      <ng-container
-                        *ngIf="a.itemSettings[outStep.itemId].belt as belt"
-                      >
-                        <div *ngIf="outStep.belts" class="flex">
-                          <span class="monospace">{{
-                            outStep.belts.mul(percent)
-                              | labRate: effPrecision[Column.Belts]
-                          }}</span>
-                          <lab-icon
-                            [iconId]="belt"
-                            [tooltip]="a.data.itemEntities[belt]?.name || PIPE"
-                            [item]="a.data.itemEntities[belt]"
-                          ></lab-icon>
-                        </div>
-                      </ng-container>
-                    </td>
-                    <td *ngIf="columns[Column.Wagons].show">
-                      <ng-container
-                        *ngIf="a.itemSettings[outStep.itemId]?.wagon as wagon"
-                      >
-                        <div *ngIf="outStep.wagons" class="flex">
-                          <span class="monospace">{{
-                            outStep.wagons.mul(percent)
-                              | labRate: effPrecision[Column.Wagons]
-                          }}</span>
-                          <lab-icon
-                            [iconId]="wagon"
-                            [tooltip]="a.data.itemEntities[wagon].name"
-                            [item]="a.data.itemEntities[wagon]"
-                          ></lab-icon>
-                        </div>
-                      </ng-container>
-                    </td>
-                    <ng-container
-                      *ngIf="
-                        a.recipeSettings[outStep.recipeId]?.factory as factory
-                      "
-                    >
-                      <td>
-                        <div class="flex" *ngIf="outStep.factories?.nonzero()">
-                          <span class="monospace">{{
-                            outStep.factories
-                              | labFactoryRate
-                                : effPrecision[Column.Factories]
-                                : factory
-                          }}</span>
-                        </div>
-                      </td>
-                      <td class="split-column">
-                        <div>
-                          <div class="flex">
-                            <lab-icon
-                              [iconId]="outStep.recipeId"
-                              [tooltip]="
-                                a.data.recipeEntities[outStep.recipeId].name
-                              "
-                              [recipe]="a.data.recipeEntities[outStep.recipeId]"
-                            ></lab-icon>
-                            <lab-icon
-                              *ngIf="
-                                a.data.game !== Game.DysonSphereProgram ||
-                                factory !== ItemId.MiningDrill
-                              "
-                              [iconId]="factory"
-                              [tooltip]="a.data.itemEntities[factory].name"
-                              [item]="a.data.itemEntities[factory]"
-                            ></lab-icon>
-                          </div>
-                        </div>
-                      </td>
-                    </ng-container>
-                    <td
-                      colspan="2"
-                      *ngIf="!a.recipeSettings[outStep.recipeId]?.factory"
-                    ></td>
-                    <td class="split-column" colspan="100">
-                      <div>
-                        <div class="flex percent">
-                          <i class="material-icons">arrow_forward</i>
-                          <span class="monospace"
-                            >{{ leftPad(percent | labRate: -2) }}%</span
+                          <ng-container
+                            *ngIf="a.itemSettings[input.key].belt as belt"
                           >
-                          <lab-icon
-                            [iconId]="output.key"
-                            [tooltip]="a.data.itemEntities[output.key]?.name"
-                            [item]="a.data.itemEntities[output.key]"
-                          ></lab-icon>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                </ng-container>
-              </ng-container>
-            </ng-container>
-            <tr
-              *ngIf="expanded[step.id] === StepDetailTab.Factory"
-              class="details first last"
-            >
-              <td [colSpan]="leftSpan"></td>
-              <td colspan="100" class="factory">
-                <div>
-                  <table>
-                    <ng-container
-                      *ngFor="
-                        let input of a.data.recipeR[step.recipeId].in
-                          | keyvalue;
-                        trackBy: track.keyValue
-                      "
-                    >
-                      <ng-container *ngIf="findStep(input.key) as inStep">
-                        <tr *ngIf="inStep.parents[step.recipeId] as percent">
-                          <td>
-                            <div class="flex" *ngIf="step.items">
-                              <span *ngIf="inStep.items" class="monospace">{{
-                                inStep.items.mul(percent).div(step.factories)
-                                  | labRate: effPrecision[Column.Items]
+                            <div *ngIf="inStep.belts" class="flex">
+                              <span class="monospace">{{
+                                inStep.belts.mul(percent).div(step.factories)
+                                  | labRate: effPrecision[Column.Belts]
                               }}</span>
                               <lab-icon
-                                [iconId]="input.key"
-                                [tooltip]="a.data.itemEntities[input.key]?.name"
-                                [recipe]="
-                                  a.data.recipeEntities[
-                                    a.data.itemRecipeIds[input.key]
-                                  ]
+                                [iconId]="belt"
+                                [tooltip]="
+                                  a.data.itemEntities[belt]?.name || PIPE
                                 "
-                              >
-                              </lab-icon>
+                                [item]="a.data.itemEntities[belt]"
+                              ></lab-icon>
                             </div>
-                          </td>
-                          <td
-                            [colSpan]="
-                              a.itemSettings[inStep.itemId].belt === ItemId.Pipe
-                                ? 2
-                                : 0
-                            "
-                          >
-                            <ng-container
-                              *ngIf="a.itemSettings[inStep.itemId].belt as belt"
-                            >
-                              <div *ngIf="inStep.belts" class="flex">
-                                <span class="monospace">{{
-                                  inStep.belts.mul(percent).div(step.factories)
-                                    | labRate: effPrecision[Column.Belts]
-                                }}</span>
-                                <lab-icon
-                                  [iconId]="belt"
-                                  [tooltip]="
-                                    a.data.itemEntities[belt]?.name || PIPE
-                                  "
-                                  [item]="a.data.itemEntities[belt]"
-                                ></lab-icon>
-                              </div>
-                            </ng-container>
-                          </td>
-                          <ng-container
-                            *ngIf="
-                              a.itemSettings[inStep.itemId].belt !== ItemId.Pipe
-                            "
-                          >
-                            <td
-                              *ngIf="
-                                inserter(
-                                  inStep.items
-                                    .mul(percent)
-                                    .div(step.factories)
-                                    .div(DisplayRateVal[displayRate]),
-                                  a.data
-                                ) as ins
-                              "
-                            >
-                              <div class="flex">
-                                <span class="monospace">{{
-                                  ins.value | labRate: 1
-                                }}</span>
-                                <lab-icon
-                                  [iconId]="ins.id"
-                                  [tooltip]="a.data.itemEntities[ins.id].name"
-                                  [item]="a.data.itemEntities[ins.id]"
-                                ></lab-icon>
-                              </div>
-                            </td>
                           </ng-container>
-                        </tr>
-                      </ng-container>
-                    </ng-container>
-                  </table>
-                  <i class="material-icons">arrow_forward</i>
-                  <table>
-                    <tr>
-                      <td>
-                        <div class="flex"><span class="monospace">1</span></div>
-                      </td>
-                      <td class="split-column">
-                        <div
-                          *ngIf="
-                            a.recipeSettings[step.recipeId]?.factory as factory
-                          "
-                        >
-                          <div class="flex">
-                            <lab-icon
-                              [iconId]="step.recipeId"
-                              [tooltip]="
-                                a.data.recipeEntities[step.recipeId].name
-                              "
-                              [recipe]="a.data.recipeEntities[step.recipeId]"
-                            ></lab-icon>
-                            <lab-icon
-                              [iconId]="factory"
-                              [tooltip]="a.data.itemEntities[factory].name"
-                              [item]="a.data.itemEntities[factory]"
-                            ></lab-icon>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  </table>
-                  <i class="material-icons">arrow_forward</i>
-                  <table>
-                    <ng-container
-                      *ngFor="
-                        let output of a.data.recipeR[step.recipeId].out
-                          | keyvalue;
-                        trackBy: track.keyValue
-                      "
-                    >
-                      <tr
-                        *ngIf="
-                          output.value.div(
-                            a.data.recipeR[step.recipeId].time
-                          ) as items
-                        "
-                      >
+                        </td>
                         <ng-container
-                          *ngIf="
-                            a.itemSettings[output.key].belt !== ItemId.Pipe
-                          "
+                          *ngIf="a.itemSettings[input.key].belt !== ItemId.Pipe"
                         >
-                          <td *ngIf="inserter(items, a.data) as ins">
+                          <td
+                            *ngIf="
+                              inserter(
+                                inStep.items
+                                  .mul(percent)
+                                  .div(step.factories)
+                                  .div(DisplayRateVal[displayRate]),
+                                a.data
+                              ) as ins
+                            "
+                          >
                             <div class="flex">
                               <span class="monospace">{{
                                 ins.value | labRate: 1
@@ -1437,163 +1451,230 @@
                             </div>
                           </td>
                         </ng-container>
-                        <td
-                          [colSpan]="
-                            a.itemSettings[output.key].belt === ItemId.Pipe
-                              ? 2
-                              : 0
-                          "
-                        >
-                          <div
-                            *ngIf="a.itemSettings[output.key].belt as belt"
-                            class="flex"
-                          >
-                            <span class="monospace">{{
-                              items.div(beltSpeed[belt])
-                                | labRate: effPrecision[Column.Belts]
-                            }}</span>
-                            <lab-icon
-                              [iconId]="belt"
-                              [tooltip]="
-                                a.data.itemEntities[belt]?.name || PIPE
-                              "
-                              [item]="a.data.itemEntities[belt]"
-                            >
-                            </lab-icon>
-                          </div>
-                        </td>
-                        <td>
-                          <div class="flex">
-                            <span class="monospace">{{
-                              items.mul(DisplayRateVal[displayRate])
-                                | labRate: effPrecision[Column.Items]
-                            }}</span>
-                            <lab-icon
-                              [iconId]="output.key"
-                              [tooltip]="a.data.itemEntities[output.key]?.name"
-                              [recipe]="
-                                a.data.recipeEntities[
-                                  a.data.itemRecipeIds[output.key]
-                                ]
-                              "
-                            >
-                            </lab-icon>
-                          </div>
-                        </td>
                       </tr>
                     </ng-container>
-                  </table>
-                </div>
-                <div class="info" *ngIf="a.data.game === Game.Factorio">
-                  <span>
-                    * Inserters are calculated using target/capacity settings
-                    and 0.18 experimental data from the
-                    <a
-                      href="https://wiki.factorio.com/Inserters#Inserter_Throughput"
-                      >wiki.</a
+                  </ng-container>
+                </table>
+                <i class="material-icons">arrow_forward</i>
+                <table>
+                  <tr>
+                    <td>
+                      <div class="flex"><span class="monospace">1</span></div>
+                    </td>
+                    <td class="split-column">
+                      <div
+                        *ngIf="
+                          a.recipeSettings[step.recipeId]?.factory as factory
+                        "
+                      >
+                        <div class="flex">
+                          <lab-icon
+                            [iconId]="step.recipeId"
+                            [tooltip]="
+                              a.data.recipeEntities[step.recipeId].name
+                            "
+                            [recipe]="a.data.recipeEntities[step.recipeId]"
+                          ></lab-icon>
+                          <lab-icon
+                            [iconId]="factory"
+                            [tooltip]="a.data.itemEntities[factory].name"
+                            [item]="a.data.itemEntities[factory]"
+                          ></lab-icon>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+                <i class="material-icons">arrow_forward</i>
+                <table>
+                  <ng-container
+                    *ngFor="
+                      let output of a.data.recipeR[step.recipeId].out
+                        | keyvalue;
+                      trackBy: track.keyValue
+                    "
+                  >
+                    <tr
+                      *ngIf="
+                        output.value.div(
+                          a.data.recipeR[step.recipeId].time
+                        ) as items
+                      "
                     >
-                  </span>
+                      <ng-container
+                        *ngIf="a.itemSettings[output.key].belt !== ItemId.Pipe"
+                      >
+                        <td *ngIf="inserter(items, a.data) as ins">
+                          <div class="flex">
+                            <span class="monospace">{{
+                              ins.value | labRate: 1
+                            }}</span>
+                            <lab-icon
+                              [iconId]="ins.id"
+                              [tooltip]="a.data.itemEntities[ins.id].name"
+                              [item]="a.data.itemEntities[ins.id]"
+                            ></lab-icon>
+                          </div>
+                        </td>
+                      </ng-container>
+                      <td
+                        [colSpan]="
+                          a.itemSettings[output.key].belt === ItemId.Pipe
+                            ? 2
+                            : 0
+                        "
+                      >
+                        <div
+                          *ngIf="a.itemSettings[output.key].belt as belt"
+                          class="flex"
+                        >
+                          <span class="monospace">{{
+                            items.div(beltSpeed[belt])
+                              | labRate: effPrecision[Column.Belts]
+                          }}</span>
+                          <lab-icon
+                            [iconId]="belt"
+                            [tooltip]="a.data.itemEntities[belt]?.name || PIPE"
+                            [item]="a.data.itemEntities[belt]"
+                          >
+                          </lab-icon>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="flex">
+                          <span class="monospace">{{
+                            items.mul(DisplayRateVal[displayRate])
+                              | labRate: effPrecision[Column.Items]
+                          }}</span>
+                          <lab-icon
+                            [iconId]="output.key"
+                            [tooltip]="a.data.itemEntities[output.key].name"
+                            [recipe]="
+                              a.data.recipeEntities[
+                                a.data.itemRecipeIds[output.key]
+                              ]
+                            "
+                          >
+                          </lab-icon>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </table>
+              </div>
+              <div class="info" *ngIf="a.data.game === Game.Factorio">
+                <span>
+                  * Inserters are calculated using target/capacity settings and
+                  0.18 experimental data from the
+                  <a
+                    href="https://wiki.factorio.com/Inserters#Inserter_Throughput"
+                    >wiki.</a
+                  >
+                </span>
+              </div>
+            </td>
+          </tr>
+          <ng-container *ngIf="expanded[step.id] === StepDetailTab.Recipes">
+            <tr class="details first">
+              <td [colSpan]="leftSpan"></td>
+              <td colspan="100">
+                <div>
+                  <div class="header">Default Recipe</div>
+                  <div class="info">
+                    Click to set a recipe as the default for this item. If set,
+                    the default recipe is treated as the only way to produce
+                    this item.
+                  </div>
+                  <div class="info">
+                    The recipe must be enabled and must only produce this item.
+                  </div>
+                  <div
+                    class="info warn"
+                    *ngIf="
+                      step.itemId && a.data.itemRecipeIds[step.itemId] === null
+                    "
+                  >
+                    Default was ignored due to a detected circular loop.
+                  </div>
                 </div>
               </td>
             </tr>
-            <ng-container *ngIf="expanded[step.id] === StepDetailTab.Recipes">
-              <tr class="details first">
-                <td [colSpan]="leftSpan"></td>
-                <td colspan="100">
-                  <div>
-                    <div class="header">Default Recipe</div>
-                    <div class="info">
-                      Click to set a recipe as the default for this item. If
-                      set, the default recipe is treated as the only way to
-                      produce this item.
-                    </div>
-                    <div class="info">
-                      The recipe must be enabled and must only produce this
-                      item.
-                    </div>
-                    <div
-                      class="info warn"
-                      *ngIf="a.data.itemRecipeIds[step.itemId] === null"
-                    >
-                      Default was ignored due to a detected circular loop.
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr class="details">
-                <td [colSpan]="leftSpan"></td>
-                <td colspan="100" class="recipes">
-                  <div class="list tile">
-                    <ng-container
-                      *ngFor="
-                        let recipeId of recipes[step.id];
-                        trackBy: track.string
-                      "
-                    >
-                      <ng-container *ngIf="a.data.recipeR[recipeId] as recipe">
-                        <lab-icon
-                          *ngIf="
-                            disabledRecipes.indexOf(recipeId) === -1 &&
-                            recipe.producesOnly(step.itemId)
-                          "
-                          class="button grid"
-                          [class.selected]="
-                            a.data.itemRecipeIds[step.itemId] === recipeId
-                          "
-                          [iconId]="recipeId"
-                          [tooltip]="recipe.name"
-                          [recipe]="a.data.recipeEntities[recipeId]"
-                          (click)="
-                            toggleDefaultRecipe(
-                              step.itemId,
-                              recipeId,
-                              a.itemSettings,
-                              a.data
-                            )
-                          "
-                        >
-                        </lab-icon>
-                      </ng-container>
+            <tr class="details" *ngIf="step.itemId">
+              <td [colSpan]="leftSpan"></td>
+              <td colspan="100" class="recipes">
+                <div class="list tile">
+                  <ng-container
+                    *ngFor="
+                      let recipeId of a.stepDetails[step.id].recipes;
+                      trackBy: track.string
+                    "
+                  >
+                    <ng-container *ngIf="a.data.recipeR[recipeId] as recipe">
+                      <lab-icon
+                        *ngIf="
+                          disabledRecipes.indexOf(recipeId) === -1 &&
+                          recipe.producesOnly(step.itemId)
+                        "
+                        class="button grid"
+                        [class.selected]="
+                          a.data.itemRecipeIds[step.itemId] === recipeId
+                        "
+                        [iconId]="recipeId"
+                        [tooltip]="recipe.name"
+                        [recipe]="a.data.recipeEntities[recipeId]"
+                        (click)="
+                          toggleDefaultRecipe(
+                            step.itemId,
+                            recipeId,
+                            a.itemSettings,
+                            a.data
+                          )
+                        "
+                      >
+                      </lab-icon>
                     </ng-container>
+                  </ng-container>
+                </div>
+              </td>
+            </tr>
+            <tr class="details">
+              <td [colSpan]="leftSpan"></td>
+              <td colspan="100">
+                <div>
+                  <div class="header">Enabled Recipes</div>
+                  <div class="info">
+                    Click recipes to enable or disable them. Disabled recipes
+                    will not be used in the solution.
                   </div>
-                </td>
-              </tr>
-              <tr class="details">
-                <td [colSpan]="leftSpan"></td>
-                <td colspan="100">
-                  <div>
-                    <div class="header">Enabled Recipes</div>
-                    <div class="info">
-                      Click recipes to enable or disable them. Disabled recipes
-                      will not be used in the solution.
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr class="details last">
-                <td [colSpan]="leftSpan"></td>
-                <td colspan="100" class="recipes">
-                  <div class="list tile">
-                    <lab-icon
-                      *ngFor="
-                        let recipeId of recipes[step.id];
-                        trackBy: track.string
-                      "
-                      class="button grid"
-                      [class.ignored]="disabledRecipes.indexOf(recipeId) !== -1"
-                      [iconId]="recipeId"
-                      [tooltip]="a.data.recipeEntities[recipeId].name"
-                      [recipe]="a.data.recipeEntities[recipeId]"
-                      (click)="toggleRecipe(recipeId, a.data)"
-                    ></lab-icon>
-                  </div>
-                </td>
-              </tr>
-            </ng-container>
-            <tr class="spacer">
-              <td></td>
+                </div>
+              </td>
+            </tr>
+            <tr class="details last">
+              <td [colSpan]="leftSpan"></td>
+              <td colspan="100" class="recipes">
+                <div class="list tile">
+                  <lab-icon
+                    *ngFor="
+                      let recipeId of a.stepDetails[step.id].recipes;
+                      trackBy: track.string
+                    "
+                    class="button grid"
+                    [class.ignored]="disabledRecipes.indexOf(recipeId) !== -1"
+                    [iconId]="recipeId"
+                    [tooltip]="a.data.recipeEntities[recipeId].name"
+                    [recipe]="a.data.recipeEntities[recipeId]"
+                    (click)="toggleRecipe(recipeId, a.data)"
+                  ></lab-icon>
+                </div>
+              </td>
             </tr>
           </ng-container>
+          <ng-template #noRecipeDetail>
+            <td colspan="2"></td>
+          </ng-template>
+          <tr class="spacer">
+            <td></td>
+          </tr>
         </ng-container>
       </ng-container>
       <tr *ngIf="mode === ListMode.All" class="border row col">
@@ -1602,109 +1683,102 @@
             <span class="monospace">Total:</span>
           </div>
         </td>
-        <ng-container *ngIf="itemTotals$ | async as itemTotals">
-          <td *ngIf="columns[Column.Belts].show">
-            <div
-              class="flex"
-              *ngFor="
-                let tot of itemTotals.belts | keyvalue: sortKeyValue;
-                trackBy: track.keyValue
-              "
+        <td *ngIf="columns[Column.Belts].show">
+          <div
+            class="flex"
+            *ngFor="
+              let tot of a.totals.belts | keyvalue: sortKeyValue;
+              trackBy: track.keyValue
+            "
+          >
+            <span class="monospace">{{ tot.value }}</span>
+            <lab-icon
+              *ngIf="a.data.itemEntities[tot.key] as item"
+              [iconId]="tot.key"
+              [tooltip]="item.name"
+              [item]="item"
             >
-              <span class="monospace">{{ tot.value }}</span>
+            </lab-icon>
+          </div>
+        </td>
+        <td *ngIf="columns[Column.Wagons].show">
+          <div
+            class="flex"
+            *ngFor="
+              let tot of a.totals.wagons | keyvalue: sortKeyValue;
+              trackBy: track.keyValue
+            "
+          >
+            <span class="monospace">{{ tot.value }}</span>
+            <lab-icon
+              *ngIf="a.data.itemEntities[tot.key] as item"
+              [iconId]="tot.key"
+              [tooltip]="item.name"
+              [item]="item"
+            >
+            </lab-icon>
+          </div>
+        </td>
+        <td colspan="3">
+          <div
+            class="flex"
+            *ngFor="
+              let tot of a.totals.factories | keyvalue: sortKeyValue;
+              trackBy: track.keyValue
+            "
+          >
+            <span class="monospace">{{ tot.value }}</span>
+            <lab-icon
+              *ngIf="a.data.itemEntities[tot.key] as item; else totalRecipe"
+              [iconId]="tot.key"
+              [tooltip]="item.name"
+              [item]="item"
+            >
+            </lab-icon>
+            <ng-template #totalRecipe>
               <lab-icon
-                *ngIf="a.data.itemEntities[tot.key] as item"
+                *ngIf="a.data.recipeEntities[tot.key] as recipe"
                 [iconId]="tot.key"
-                [tooltip]="item.name"
-                [item]="item"
+                [tooltip]="recipe.name"
+                [recipe]="recipe"
               >
               </lab-icon>
-            </div>
-          </td>
-          <td *ngIf="columns[Column.Wagons].show">
-            <div
-              class="flex"
-              *ngFor="
-                let tot of itemTotals.wagons | keyvalue: sortKeyValue;
-                trackBy: track.keyValue
-              "
+            </ng-template>
+          </div>
+        </td>
+        <td *ngIf="columns[Column.Overclock].show"></td>
+        <td colspan="3" *ngIf="columns[Column.Beacons].show">
+          <div
+            class="flex"
+            *ngFor="
+              let tot of a.totals.beacons | keyvalue: sortKeyValue;
+              trackBy: track.keyValue
+            "
+          >
+            <span class="monospace">{{ tot.value }}</span>
+            <lab-icon
+              *ngIf="a.data.itemEntities[tot.key] as item"
+              [iconId]="tot.key"
+              [tooltip]="item.name"
+              [item]="item"
             >
-              <span class="monospace">{{ tot.value }}</span>
-              <lab-icon
-                *ngIf="a.data.itemEntities[tot.key] as item"
-                [iconId]="tot.key"
-                [tooltip]="item.name"
-                [item]="item"
-              >
-              </lab-icon>
-            </div>
-          </td>
-        </ng-container>
-        <ng-container *ngIf="recipeTotals$ | async as recipeTotals">
-          <td colspan="3">
-            <div
-              class="flex"
-              *ngFor="
-                let tot of recipeTotals.factories | keyvalue: sortKeyValue;
-                trackBy: track.keyValue
-              "
-            >
-              <span class="monospace">{{ tot.value }}</span>
-              <lab-icon
-                *ngIf="a.data.itemEntities[tot.key] as item; else totalRecipe"
-                [iconId]="tot.key"
-                [tooltip]="item.name"
-                [item]="item"
-              >
-              </lab-icon>
-              <ng-template #totalRecipe>
-                <lab-icon
-                  *ngIf="a.data.recipeEntities[tot.key] as recipe"
-                  [iconId]="tot.key"
-                  [tooltip]="recipe.name"
-                  [recipe]="recipe"
-                >
-                </lab-icon>
-              </ng-template>
-            </div>
-          </td>
-          <td *ngIf="columns[Column.Overclock].show"></td>
-          <td colspan="3" *ngIf="columns[Column.Beacons].show">
-            <div
-              class="flex"
-              *ngFor="
-                let tot of recipeTotals.beacons | keyvalue: sortKeyValue;
-                trackBy: track.keyValue
-              "
-            >
-              <span class="monospace">{{ tot.value }}</span>
-              <lab-icon
-                *ngIf="a.data.itemEntities[tot.key] as item"
-                [iconId]="tot.key"
-                [tooltip]="item.name"
-                [item]="item"
-              >
-              </lab-icon>
-            </div>
-          </td>
-        </ng-container>
-        <ng-container *ngIf="miscTotals$ | async as miscTotals">
-          <td *ngIf="columns[Column.Power].show">
-            <div class="flex">
-              <span class="monospace">{{
-                miscTotals.power
-                  | labPower: effPrecision[Column.Power]:effPowerUnit
-              }}</span>
-            </div>
-          </td>
-          <td *ngIf="columns[Column.Pollution].show">
-            <div class="flex">
-              <span class="monospace">{{
-                miscTotals.pollution | labRate: effPrecision[Column.Pollution]
-              }}</span>
-            </div>
-          </td>
-        </ng-container>
+            </lab-icon>
+          </div>
+        </td>
+        <td *ngIf="columns[Column.Power].show">
+          <div class="flex">
+            <span class="monospace">{{
+              a.totals.power | labPower: effPrecision[Column.Power]:effPowerUnit
+            }}</span>
+          </div>
+        </td>
+        <td *ngIf="columns[Column.Pollution].show">
+          <div class="flex">
+            <span class="monospace">{{
+              a.totals.pollution | labRate: effPrecision[Column.Pollution]
+            }}</span>
+          </div>
+        </td>
         <td *ngIf="columns[Column.Link].show"></td>
       </tr>
       <tr *ngIf="mode === ListMode.Focus && !selected">

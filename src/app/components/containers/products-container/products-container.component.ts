@@ -17,7 +17,7 @@ import {
   DefaultIdPayload,
   PreviousPayload,
 } from '~/models';
-import { State } from '~/store';
+import { LabState } from '~/store';
 import * as Items from '~/store/items';
 import * as Products from '~/store/products';
 import { SetDisplayRateAction } from '~/store/settings';
@@ -36,7 +36,7 @@ export class ProductsContainerComponent implements OnInit {
   products$: Observable<Product[]>;
   itemSettings$: Observable<Items.ItemsState>;
 
-  constructor(private store: Store<State>) {}
+  constructor(private store: Store<LabState>) {}
 
   ngOnInit(): void {
     this.productSteps$ = this.store.select(Products.getProductSteps);

@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
 
 import { Column, Game, LinkValue } from '~/models';
-import { State } from '../';
+import { LabState } from '../';
 import * as Settings from '../settings';
 import {
   ColumnsState,
@@ -9,7 +9,7 @@ import {
   PreferencesState,
 } from './preferences.reducer';
 
-export const preferencesState = (state: State): PreferencesState =>
+export const preferencesState = (state: LabState): PreferencesState =>
   state.preferencesState;
 
 export const getColumns = createSelector(

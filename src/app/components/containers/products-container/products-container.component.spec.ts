@@ -11,7 +11,7 @@ import {
   PreviousPayload,
   RateType,
 } from '~/models';
-import { reducers, metaReducers, State } from '~/store';
+import { reducers, metaReducers, LabState } from '~/store';
 import * as Products from '~/store/products';
 import { SetDisplayRateAction } from '~/store/settings';
 import { ProductsComponent } from './products/products.component';
@@ -20,7 +20,7 @@ import { ProductsContainerComponent } from './products-container.component';
 describe('ProductsContainerComponent', () => {
   let component: ProductsContainerComponent;
   let fixture: ComponentFixture<ProductsContainerComponent>;
-  let store: Store<State>;
+  let store: Store<LabState>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

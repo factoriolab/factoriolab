@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 
 import { DefaultIdPayload } from '~/models';
-import { reducers, State, metaReducers } from '~/store';
+import { reducers, LabState, metaReducers } from '~/store';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 import { MatrixComponent } from './matrix/matrix.component';
@@ -11,7 +11,7 @@ import { MatrixContainerComponent } from './matrix-container.component';
 describe('MatrixContainerComponent', () => {
   let component: MatrixContainerComponent;
   let fixture: ComponentFixture<MatrixContainerComponent>;
-  let store: Store<State>;
+  let store: Store<LabState>;
   const value = '5';
 
   beforeEach(async () => {

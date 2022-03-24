@@ -2,11 +2,11 @@ import { createSelector } from '@ngrx/store';
 
 import { Entities, FactorySettings, Game } from '~/models';
 import * as Settings from '../settings';
-import { State } from '..';
+import { LabState } from '..';
 import { FactoriesState } from './factories.reducer';
 
 /* Base selector functions */
-export const factoriesState = (state: State): FactoriesState =>
+export const factoriesState = (state: LabState): FactoriesState =>
   state.factoriesState;
 
 /* Complex selectors */

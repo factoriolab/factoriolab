@@ -15,3 +15,4 @@ export * from './preset';
 export * from './rate-type';
 export * from './research-speed';
 export * from './sankey-align';
+export * from './step-detail-tab';

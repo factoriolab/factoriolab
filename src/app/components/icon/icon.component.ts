@@ -19,7 +19,7 @@ import {
   Game,
 } from '~/models';
 import { TrackService } from '~/services';
-import { State } from '~/store';
+import { LabState } from '~/store';
 import { getDisplayRate, getGame, getIconEntities } from '~/store/settings';
 
 @Component({
@@ -50,7 +50,7 @@ export class IconComponent implements OnChanges {
   EnergyType = EnergyType;
   Game = Game;
 
-  constructor(public track: TrackService, private store: Store<State>) {}
+  constructor(public track: TrackService, private store: Store<LabState>) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['scale'] || changes['scrollTop']) {

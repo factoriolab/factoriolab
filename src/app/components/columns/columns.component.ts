@@ -4,7 +4,7 @@ import { map } from 'rxjs';
 
 import { Column, columnOptions, PrecisionColumns, Rational } from '~/models';
 import { TrackService } from '~/services';
-import { State } from '~/store';
+import { LabState } from '~/store';
 import {
   ColumnsState,
   getColumnsState,
@@ -29,7 +29,7 @@ export class ColumnsComponent extends DialogContainerComponent {
 
   Column = Column;
 
-  constructor(private store: Store<State>, public track: TrackService) {
+  constructor(private store: Store<LabState>, public track: TrackService) {
     super();
   }
 

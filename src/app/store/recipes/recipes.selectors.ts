@@ -10,11 +10,12 @@ import { RecipeUtility } from '~/utilities/recipe.utility';
 import * as Items from '../items';
 import * as Factories from '../factories';
 import * as Settings from '../settings';
-import { State } from '..';
+import { LabState } from '..';
 import { RecipesState } from './recipes.reducer';
 
 /* Base selector functions */
-export const recipesState = (state: State): RecipesState => state.recipesState;
+export const recipesState = (state: LabState): RecipesState =>
+  state.recipesState;
 
 /* Complex selectors */
 export const getRecipeSettings = createSelector(

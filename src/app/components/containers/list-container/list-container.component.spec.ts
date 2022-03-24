@@ -7,7 +7,7 @@ import { Mocks, ItemId, RecipeId } from 'src/tests';
 import { ColumnsComponent, IconComponent, SelectComponent } from '~/components';
 import { DefaultIdPayload, DefaultPayload, IdPayload } from '~/models';
 import { RouterService } from '~/services';
-import { reducers, metaReducers, State } from '~/store';
+import { reducers, metaReducers, LabState } from '~/store';
 import * as Items from '~/store/items';
 import * as Recipes from '~/store/recipes';
 import { SetDisabledRecipesAction } from '~/store/settings';
@@ -17,7 +17,7 @@ import { ListContainerComponent } from './list-container.component';
 describe('ListContainerComponent', () => {
   let component: ListContainerComponent;
   let fixture: ComponentFixture<ListContainerComponent>;
-  let store: Store<State>;
+  let store: Store<LabState>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

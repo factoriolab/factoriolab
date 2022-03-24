@@ -2,11 +2,11 @@ import { createSelector } from '@ngrx/store';
 
 import { Entities, ItemSettings, ItemId } from '~/models';
 import * as Settings from '../settings';
-import { State } from '..';
+import { LabState } from '..';
 import { ItemsState } from './items.reducer';
 
 /* Base selector functions */
-export const itemsState = (state: State): ItemsState => state.itemsState;
+export const itemsState = (state: LabState): ItemsState => state.itemsState;
 
 /* Complex selectors */
 export const getItemSettings = createSelector(

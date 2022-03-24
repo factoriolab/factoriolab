@@ -21,7 +21,7 @@ import {
   IdPayload,
   PowerUnit,
 } from '~/models';
-import { State } from '~/store';
+import { LabState } from '~/store';
 import * as Items from '~/store/items';
 import * as Preferences from '~/store/preferences';
 import * as Products from '~/store/products';
@@ -56,7 +56,7 @@ export class ListContainerComponent implements OnInit {
   columns$: Observable<Preferences.ColumnsState>;
   powerUnit$: Observable<PowerUnit>;
 
-  constructor(private store: Store<State>) {}
+  constructor(private store: Store<LabState>) {}
 
   ngOnInit(): void {
     if (!this.steps) {

@@ -20,12 +20,12 @@ import {
   InserterCapacity,
   Game,
 } from '~/models';
-import { State } from '../';
+import { LabState } from '../';
 import * as Datasets from '../datasets';
 import { initialSettingsState, SettingsState } from './settings.reducer';
 
 /* Base selector functions */
-export const settingsState = (state: State): SettingsState =>
+export const settingsState = (state: LabState): SettingsState =>
   state.settingsState;
 const sPreset = (state: SettingsState): Preset => state.preset;
 const sBaseDatasetId = (state: SettingsState): string => state.baseId;

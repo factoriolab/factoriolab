@@ -9,14 +9,14 @@ import {
   Rational,
   RecipeSettings,
 } from '~/models';
-import { State } from '~/store';
+import { LabState } from '~/store';
 import * as Factories from '~/store/factories';
 import { FactoriesState } from '~/store/factories';
 import * as Recipes from '~/store/recipes';
 import { RecipesState } from '~/store/recipes';
 import { RecipeUtility } from '~/utilities';
 
-class SettingsState {
+interface SettingsState {
   recipe: RecipeSettings;
   factory: FactorySettings;
   fMatch: boolean;
@@ -27,11 +27,7 @@ class SettingsState {
   template: '',
 })
 export class RecipeSettingsComponent {
-  data$ = this.store.select(Recipes.getAdjustedDataset);
-  recipeSettings$ = this.store.select(Recipes.getRecipeSettings);
-  factorySettings$ = this.store.select(Factories.getFactorySettings);
-
-  constructor(protected store: Store<State>) {}
+  constructor(protected store: Store<LabState>) {}
 
   getState(
     id: string,
@@ -211,10 +207,12 @@ export class RecipeSettingsComponent {
     return modules;
   }
 
-  gtZero(value: string): boolean {
-    try {
-      return Rational.fromString(value).gt(Rational.zero);
-    } catch {}
+  gtZero(value: string | undefined): boolean {
+    if (value != null) {
+      try {
+        return Rational.fromString(value).gt(Rational.zero);
+      } catch {}
+    }
     return false;
   }
 }

@@ -5,7 +5,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { ItemId } from 'src/tests';
 
 import { Mocks } from 'src/tests';
-import { reducers, metaReducers, State } from '~/store';
+import { reducers, metaReducers, LabState } from '~/store';
 import { LoadModDataAction } from '~/store/datasets';
 import { IgnoreItemAction } from '~/store/items';
 import { AddAction, SetViaAction } from '~/store/products';
@@ -13,7 +13,7 @@ import { StateService } from './state.service';
 
 describe('StateService', () => {
   let service: StateService;
-  let store: Store<State>;
+  let store: Store<LabState>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({

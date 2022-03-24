@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 
-import { State, reducers, metaReducers } from './store';
+import { LabState, reducers, metaReducers } from './store';
 import {
   IconComponent,
   SettingsContainerComponent,
@@ -25,7 +25,7 @@ import { SetBaseAction } from './store/settings';
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
-  let store: Store<State>;
+  let store: Store<LabState>;
   let title: Title;
 
   beforeEach(async () => {

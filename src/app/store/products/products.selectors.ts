@@ -11,6 +11,8 @@ import {
   MatrixResultType,
   Game,
   ItemId,
+  StepDetail,
+  StepDetailTab,
 } from '~/models';
 import {
   RateUtility,
@@ -23,11 +25,11 @@ import * as Items from '../items';
 import * as Preferences from '../preferences';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
-import { State } from '../';
+import { LabState } from '../';
 import { ProductsState } from './products.reducer';
 
 /* Base selector functions */
-const productsState = (state: State): ProductsState => state.productsState;
+const productsState = (state: LabState): ProductsState => state.productsState;
 const sIds = (state: ProductsState): string[] => state.ids;
 const sEntities = (state: ProductsState): Entities<Product> => state.entities;
 
@@ -417,12 +419,18 @@ export const getStepsModified = createSelector(
   })
 );
 
-export const getItemTotals = createSelector(
+export const getTotals = createSelector(
   getSteps,
   Items.getItemSettings,
-  (steps, itemSettings) => {
+  Recipes.getRecipeSettings,
+  Recipes.getAdjustedDataset,
+  (steps, itemSettings, recipeSettings, data) => {
     const belts: Entities<Rational> = {};
     const wagons: Entities<Rational> = {};
+    const factories: Entities<Rational> = {};
+    const beacons: Entities<Rational> = {};
+    let power = Rational.zero;
+    let pollution = Rational.zero;
 
     // Total Belts
     for (const step of steps.filter((s) => s.belts?.nonzero())) {
@@ -441,18 +449,6 @@ export const getItemTotals = createSelector(
       }
       wagons[wagon] = wagons[wagon].add(step.wagons!.ceil());
     }
-
-    return { belts, wagons };
-  }
-);
-
-export const getRecipeTotals = createSelector(
-  getSteps,
-  Recipes.getRecipeSettings,
-  Recipes.getAdjustedDataset,
-  (steps, recipeSettings, data) => {
-    const factories: Entities<Rational> = {};
-    const beacons: Entities<Rational> = {};
 
     // Total Factories
     for (const step of steps.filter((s) => s.factories?.nonzero())) {
@@ -483,23 +479,58 @@ export const getRecipeTotals = createSelector(
       beacons[beacon] = beacons[beacon].add(step.beacons!.ceil());
     }
 
-    return { factories, beacons };
+    // Total Power
+    for (const step of steps.filter((s) => s.power != null)) {
+      power = power.add(step.power!);
+    }
+
+    // Total Pollution
+    for (const step of steps.filter((s) => s.pollution != null)) {
+      pollution = pollution.add(step.pollution!);
+    }
+
+    return { belts, wagons, factories, beacons, power, pollution };
   }
 );
 
-export const getMiscTotals = createSelector(getSteps, (steps) => {
-  let power = Rational.zero;
-  let pollution = Rational.zero;
+export const getStepDetails = createSelector(
+  getSteps,
+  Recipes.getAdjustedDataset,
+  (steps, data) =>
+    steps.reduce((e: Entities<StepDetail>, s) => {
+      const tabs = [];
+      let outputs: Step[] = [];
+      let recipes: string[] = [];
+      if (s.itemId != null) {
+        const itemId = s.itemId; // Store null-checked id
+        tabs.push(StepDetailTab.Item);
+        outputs = steps
+          .filter((a) => a.outputs?.[itemId] != null)
+          .sort((a, b) =>
+            (b.outputs?.[itemId] || Rational.zero)
+              .sub(a.outputs?.[itemId] || Rational.zero)
+              .toNumber()
+          );
+      }
+      if (s.recipeId != null) {
+        tabs.push(StepDetailTab.Recipe);
+      }
+      if (s.factories?.nonzero()) {
+        tabs.push(StepDetailTab.Factory);
+      }
+      if (s.itemId != null) {
+        const itemId = s.itemId; // Store null-checked id
+        const recipeIds = data.complexRecipeIds.filter((r) =>
+          data.recipeR[r].produces(itemId)
+        );
+        if (recipeIds.length) {
+          tabs.push(StepDetailTab.Recipes);
+          recipes = recipeIds;
+        }
+      }
 
-  // Total Power
-  for (const step of steps.filter((s) => s.power != null)) {
-    power = power.add(step.power!);
-  }
+      e[s.id] = { tabs, outputs, recipes };
 
-  // Total Pollution
-  for (const step of steps.filter((s) => s.pollution != null)) {
-    pollution = pollution.add(step.pollution!);
-  }
-
-  return { power, pollution };
-});
+      return e;
+    }, {})
+);

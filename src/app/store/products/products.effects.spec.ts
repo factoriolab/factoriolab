@@ -3,13 +3,13 @@ import { EffectsModule } from '@ngrx/effects';
 import { Action, Store, StoreModule } from '@ngrx/store';
 import { DisplayRate } from '~/models';
 
-import { reducers, metaReducers, State } from '..';
+import { reducers, metaReducers, LabState } from '..';
 import * as Settings from '../settings';
 import { AdjustDisplayRateAction } from './products.actions';
 import { ProductsEffects } from './products.effects';
 
 describe('ProductsEffects', () => {
-  let store: Store<State>;
+  let store: Store<LabState>;
   let effects: ProductsEffects;
 
   beforeEach(async () => {

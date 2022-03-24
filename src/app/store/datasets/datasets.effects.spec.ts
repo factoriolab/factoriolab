@@ -9,14 +9,14 @@ import { StoreModule, Store, Action } from '@ngrx/store';
 import { of } from 'rxjs';
 
 import { Mocks } from 'src/tests';
-import { reducers, metaReducers, State } from '..';
+import { reducers, metaReducers, LabState } from '..';
 import * as App from '../app.actions';
 import { ResetAction } from '../products';
 import { SetBaseAction } from '../settings';
 import { DatasetsEffects } from './datasets.effects';
 
 describe('DatasetsEffects', () => {
-  let store: Store<State>;
+  let store: Store<LabState>;
   let effects: DatasetsEffects;
   let http: HttpTestingController;
 

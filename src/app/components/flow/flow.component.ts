@@ -35,7 +35,7 @@ import {
   Link,
   Node,
 } from '~/models';
-import { State } from '~/store';
+import { LabState } from '~/store';
 import * as Preferences from '~/store/preferences';
 import { getSankey, getSteps } from '~/store/products';
 import { getGame } from '~/store/settings';
@@ -66,7 +66,7 @@ export class FlowComponent implements AfterViewInit {
 
   ListMode = ListMode;
 
-  constructor(private ref: ChangeDetectorRef, private store: Store<State>) {}
+  constructor(private ref: ChangeDetectorRef, private store: Store<LabState>) {}
 
   ngAfterViewInit(): void {
     combineLatest([this.sankeyData$, this.sankeyAlign$])

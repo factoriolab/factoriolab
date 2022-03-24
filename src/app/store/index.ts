@@ -11,7 +11,7 @@ import { RecipesState, recipesReducer } from './recipes';
 import { SettingsState, settingsReducer } from './settings';
 import { storageMetaReducer } from './storage.reducer';
 
-export interface State {
+export interface LabState {
   datasetsState: DatasetsState;
   productsState: ProductsState;
   itemsState: ItemsState;
@@ -21,7 +21,7 @@ export interface State {
   preferencesState: PreferencesState;
 }
 
-export const reducers: ActionReducerMap<State, any> = {
+export const reducers: ActionReducerMap<LabState, any> = {
   datasetsState: datasetsReducer,
   productsState: productsReducer,
   itemsState: itemsReducer,
@@ -32,7 +32,7 @@ export const reducers: ActionReducerMap<State, any> = {
 };
 
 /* No need to test without storeFreeze, ignore that branch here. */
-export const metaReducers: MetaReducer<State>[] = environment.testing
+export const metaReducers: MetaReducer<LabState>[] = environment.testing
   ? [storeFreeze]
   : /* istanbul ignore next */
   environment.production

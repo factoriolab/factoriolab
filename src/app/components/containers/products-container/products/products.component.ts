@@ -27,7 +27,7 @@ import {
   Dataset,
 } from '~/models';
 import { TrackService } from '~/services';
-import { State } from '~/store';
+import { LabState } from '~/store';
 import * as Items from '~/store/items';
 import * as Settings from '~/store/settings';
 import { RecipeUtility } from '~/utilities';
@@ -81,7 +81,7 @@ export class ProductsComponent
   RecipeUtility = RecipeUtility;
   PIPE = PIPE;
 
-  constructor(public track: TrackService, store: Store<State>) {
+  constructor(public track: TrackService, store: Store<LabState>) {
     super(store);
   }
 

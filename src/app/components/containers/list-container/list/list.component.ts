@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { combineLatest, map } from 'rxjs';
 
 import {
   Step,
@@ -35,31 +36,18 @@ import {
   IdPayload,
   PowerUnit,
   Dataset,
+  StepDetailTab,
 } from '~/models';
 import { TrackService } from '~/services';
-import { State } from '~/store';
+import { LabState } from '~/store';
+import * as Factories from '~/store/factories';
 import * as Items from '~/store/items';
-import { ItemsState } from '~/store/items';
-import { initialColumnsState } from '~/store/preferences';
+import * as Preferences from '~/store/preferences';
 import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipes';
-import { RecipesState } from '~/store/recipes';
-import { initialSettingsState } from '~/store/settings';
+import * as Settings from '~/store/settings';
 import { ExportUtility, RecipeUtility } from '~/utilities';
 import { RecipeSettingsComponent } from '../../recipe-settings.component';
-
-export enum StepDetailTab {
-  None,
-  Item,
-  Recipe,
-  Factory,
-  Recipes,
-}
-
-export interface StepInserter {
-  id: string;
-  value: Rational;
-}
 
 @Component({
   selector: 'lab-list',
@@ -71,22 +59,56 @@ export class ListComponent
   extends RecipeSettingsComponent
   implements OnInit, OnChanges, AfterViewInit
 {
-  itemSettings$ = this.store.select(Items.getItemSettings);
-  itemsModified$ = this.store.select(Items.getItemsModified);
-  stepsModified$ = this.store.select(Products.getStepsModified);
-  itemTotals$ = this.store.select(Products.getItemTotals);
-  recipeTotals$ = this.store.select(Products.getRecipeTotals);
-  miscTotals$ = this.store.select(Products.getMiscTotals);
+  route$ = combineLatest([
+    this.store.select(Factories.getFactorySettings),
+    this.store.select(Items.getItemSettings),
+    this.store.select(Items.getItemsModified),
+    this.store.select(Products.getStepsModified),
+    this.store.select(Products.getTotals),
+    this.store.select(Products.getStepDetails),
+    this.store.select(Recipes.getRecipeSettings),
+    this.store.select(Recipes.getRecipesModified),
+    this.store.select(Recipes.getAdjustedDataset),
+    this.store.select(Settings.getSettings),
+  ]).pipe(
+    map(
+      ([
+        factorySettings,
+        itemSettings,
+        itemsModified,
+        stepsModified,
+        totals,
+        stepDetails,
+        recipeSettings,
+        recipesModified,
+        data,
+        settings,
+      ]) => ({
+        factorySettings,
+        itemSettings,
+        itemsModified,
+        stepsModified,
+        totals,
+        stepDetails,
+        recipeSettings,
+        recipesModified,
+        data,
+        settings,
+      })
+    )
+  );
+
+  stepDetails$ = this.store.select(Products.getStepDetails);
   recipesModified$ = this.store.select(Recipes.getRecipesModified);
 
-  @Input() settings = initialSettingsState;
+  @Input() settings = Settings.initialSettingsState;
   @Input() beltSpeed: Entities<Rational> = {};
   @Input() steps: Step[] = [];
   @Input() disabledRecipes: string[] = [];
   @Input() displayRate = DisplayRate.PerMinute;
   @Input() inserterTarget = InserterTarget.Chest;
   @Input() inserterCapacity = InserterCapacity.Capacity0;
-  @Input() columns = initialColumnsState;
+  @Input() columns = Preferences.initialColumnsState;
   @Input() powerUnit = PowerUnit.Auto;
   @Input() mode = ListMode.All;
   @Input() selected: string | undefined;
@@ -117,9 +139,6 @@ export class ListComponent
   >();
 
   displayedSteps: Step[] = [];
-  details: Entities<StepDetailTab[]> = {};
-  recipes: Entities<string[]> = {};
-  outputs: Entities<Step[]> = {};
   expanded: Entities<StepDetailTab> = {};
   leftSpan = 2;
   effPrecision: Entities<number | null> = {};
@@ -142,7 +161,7 @@ export class ListComponent
     private ref: ChangeDetectorRef,
     private route: ActivatedRoute,
     public track: TrackService,
-    store: Store<State>
+    store: Store<LabState>
   ) {
     super(store);
   }
@@ -197,41 +216,6 @@ export class ListComponent
   }
 
   setDetailTabs(): void {
-    this.details = {};
-    this.recipes = {};
-    this.outputs = {};
-    for (const step of this.steps) {
-      if (step.id) {
-        this.details[step.id] = [];
-        if (step.itemId) {
-          this.details[step.id].push(StepDetailTab.Item);
-          this.outputs[step.id] = this.steps
-            .filter((s) => s.outputs?.[step.itemId] != null)
-            .sort((a, b) =>
-              (b.outputs?.[step.itemId] || Rational.zero)
-                .sub(a.outputs?.[step.itemId] || Rational.zero)
-                .toNumber()
-            );
-        }
-        if (step.recipeId) {
-          this.details[step.id].push(StepDetailTab.Recipe);
-        }
-        if (step.factories?.nonzero()) {
-          this.details[step.id].push(StepDetailTab.Factory);
-        }
-        if (step.itemId) {
-          // const recipeIds = this.data.complexRecipeIds.filter((r) =>
-          //   this.data.recipeR[r].produces(step.itemId)
-          // );
-          const recipeIds = [];
-          if (recipeIds.length) {
-            this.details[step.id].push(StepDetailTab.Recipes);
-            this.recipes[step.id] = recipeIds;
-          }
-        }
-      }
-    }
-
     // Hide any step details that are no longer valid
     for (const id of Object.keys(this.expanded).filter(
       (i) => this.expanded[i]

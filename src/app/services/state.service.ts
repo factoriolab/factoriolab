@@ -4,7 +4,7 @@ import { filter, map, take } from 'rxjs/operators';
 import { environment } from 'src/environments';
 import { FuelType } from '~/models';
 
-import { State } from '~/store';
+import { LabState } from '~/store';
 import { checkViaState, SetViaAction } from '~/store/products';
 import { getDataset, getDatasets } from '~/store/settings';
 
@@ -12,7 +12,7 @@ import { getDataset, getDatasets } from '~/store/settings';
   providedIn: 'root',
 })
 export class StateService {
-  constructor(private store: Store<State>) {
+  constructor(private store: Store<LabState>) {
     this.store.select(checkViaState).subscribe((s) => {
       for (const product of s.products) {
         if (
