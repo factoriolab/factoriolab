@@ -42,7 +42,6 @@
     "d3-sankey-circular": "https://github.com/tomshanley/d3-sankey-circular.git",
     "d3-selection": "^3.0.0",
     "file-saver": "^2.0.5",
-    "install": "^0.13.0",
     "material-design-icons": "~3.0.1",
     "pako": "^2.0.4",
     "rxjs": "~7.4.0",
