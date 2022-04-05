@@ -27,10 +27,10 @@ export class RationalRecipe {
   name: string;
   time: Rational;
   producers: string[];
-  productivity?: Rational;
-  adjustProd?: boolean;
+  productivity = Rational.one;
+  adjustProd = false;
   in?: Entities<Rational>;
-  out?: Entities<Rational>;
+  out: Entities<Rational>;
   expensive?: {
     time?: Rational;
     in?: Entities<Rational>;
@@ -50,16 +50,20 @@ export class RationalRecipe {
     this.time = Rational.fromNumber(data.time);
     this.producers = data.producers;
     if (data.in) {
-      this.in = Object.keys(data.in).reduce((e: Entities<Rational>, i) => {
-        e[i] = Rational.fromNumber(data.in[i]);
+      const inputs = data.in;
+      this.in = Object.keys(inputs).reduce((e: Entities<Rational>, i) => {
+        e[i] = Rational.fromNumber(inputs[i]);
         return e;
       }, {});
     }
     if (data.out) {
-      this.out = Object.keys(data.out).reduce((e: Entities<Rational>, i) => {
-        e[i] = Rational.fromNumber(data.out[i]);
+      const outputs = data.out;
+      this.out = Object.keys(outputs).reduce((e: Entities<Rational>, i) => {
+        e[i] = Rational.fromNumber(outputs[i]);
         return e;
       }, {});
+    } else {
+      this.out = { [data.id]: Rational.one };
     }
     if (data.expensive) {
       this.expensive = {};
@@ -67,18 +71,20 @@ export class RationalRecipe {
         this.expensive.time = Rational.fromNumber(data.expensive.time);
       }
       if (data.expensive.in) {
-        this.expensive.in = Object.keys(data.expensive.in).reduce(
+        const inputs = data.expensive.in;
+        this.expensive.in = Object.keys(inputs).reduce(
           (e: Entities<Rational>, i) => {
-            e[i] = Rational.fromNumber(data.expensive.in[i]);
+            e[i] = Rational.fromNumber(inputs[i]);
             return e;
           },
           {}
         );
       }
       if (data.expensive.out) {
-        this.expensive.out = Object.keys(data.expensive.out).reduce(
+        const outputs = data.expensive.out;
+        this.expensive.out = Object.keys(outputs).reduce(
           (e: Entities<Rational>, i) => {
-            e[i] = Rational.fromNumber(data.expensive.out[i]);
+            e[i] = Rational.fromNumber(outputs[i]);
             return e;
           },
           {}

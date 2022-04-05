@@ -1,30 +1,20 @@
 import {
   Component,
-  OnInit,
   ViewChild,
   ChangeDetectionStrategy,
   Input,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 
 import {
   Step,
-  DisplayRate,
   DefaultIdPayload,
   ListMode,
-  Entities,
-  Rational,
-  InserterTarget,
-  InserterCapacity,
   DefaultPayload,
   IdPayload,
-  PowerUnit,
 } from '~/models';
 import { LabState } from '~/store';
 import * as Items from '~/store/items';
-import * as Preferences from '~/store/preferences';
-import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 import { ListComponent } from './list/list.component';
@@ -35,42 +25,14 @@ import { ListComponent } from './list/list.component';
   styleUrls: ['./list-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ListContainerComponent implements OnInit {
+export class ListContainerComponent {
   @ViewChild(ListComponent) child: ListComponent | undefined;
 
   @Input() mode = ListMode.All;
   @Input() selected: string | undefined;
   @Input() steps: Step[] | undefined;
 
-  settings$: Observable<Settings.SettingsState>;
-  beltSpeed$: Observable<Entities<Rational>>;
-  steps$: Observable<Step[]>;
-  disabledRecipes$: Observable<string[]>;
-  factoryRank$: Observable<string[]>;
-  moduleRank$: Observable<string[]>;
-  beaconModule$: Observable<string>;
-  displayRate$: Observable<DisplayRate>;
-  beaconCount$: Observable<number>;
-  inserterTarget$: Observable<InserterTarget>;
-  inserterCapacity$: Observable<InserterCapacity>;
-  columns$: Observable<Preferences.ColumnsState>;
-  powerUnit$: Observable<PowerUnit>;
-
   constructor(private store: Store<LabState>) {}
-
-  ngOnInit(): void {
-    if (!this.steps) {
-      this.steps$ = this.store.select(Products.getSteps);
-    }
-    this.settings$ = this.store.select(Settings.getSettings);
-    this.beltSpeed$ = this.store.select(Settings.getBeltSpeed);
-    this.disabledRecipes$ = this.store.select(Settings.getDisabledRecipes);
-    this.displayRate$ = this.store.select(Settings.getDisplayRate);
-    this.inserterTarget$ = this.store.select(Settings.getInserterTarget);
-    this.inserterCapacity$ = this.store.select(Settings.getInserterCapacity);
-    this.columns$ = this.store.select(Preferences.getColumnsState);
-    this.powerUnit$ = this.store.select(Preferences.getPowerUnit);
-  }
 
   ignoreItem(value: string): void {
     this.store.dispatch(new Items.IgnoreItemAction(value));

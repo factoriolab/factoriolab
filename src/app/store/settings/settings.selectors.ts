@@ -19,6 +19,7 @@ import {
   InserterTarget,
   InserterCapacity,
   Game,
+  InserterData,
 } from '~/models';
 import { LabState } from '../';
 import * as Datasets from '../datasets';
@@ -167,7 +168,7 @@ export const getResearchFactor = createSelector(
 
 export const getRationalBeaconReceivers = createSelector(
   getBeaconReceivers,
-  (total) => total && Rational.fromString(total)
+  (total) => (total ? Rational.fromString(total) : undefined)
 );
 
 export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
@@ -527,6 +528,12 @@ export const getSettingsModified = createSelector(settingsState, (state) => ({
     state.costInput !== initialSettingsState.costInput ||
     state.costIgnored !== initialSettingsState.costIgnored,
 }));
+
+export const getInserterData = createSelector(
+  getInserterTarget,
+  getInserterCapacity,
+  (target, capacity) => InserterData[target][capacity]
+);
 
 export function getEntities<T extends { id: string }>(
   base: T[],

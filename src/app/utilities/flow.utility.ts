@@ -13,7 +13,7 @@ export class FlowUtility {
     steps: Step[],
     linkSize: LinkValue,
     linkText: LinkValue,
-    linkPrecision: number,
+    linkPrecision: number | null,
     data: Dataset
   ): SankeyData {
     const sankey: SankeyData = {

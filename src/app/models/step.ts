@@ -3,7 +3,6 @@ import { Rational } from './rational';
 
 export interface Step {
   id: string;
-  indent?: boolean[];
   itemId?: string;
   items: Rational;
   surplus?: Rational;

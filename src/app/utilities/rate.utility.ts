@@ -181,7 +181,7 @@ export class RateUtility {
 
   static calculateBeacons(
     steps: Step[],
-    beaconReceivers: Rational,
+    beaconReceivers: Rational | undefined,
     recipeSettings: Entities<RationalRecipeSettings>,
     data: Dataset
   ): Step[] {

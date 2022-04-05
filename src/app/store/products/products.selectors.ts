@@ -1,4 +1,4 @@
-import { compose, createSelector } from '@ngrx/store';
+import { createSelector } from '@ngrx/store';
 
 import {
   Step,
@@ -7,7 +7,6 @@ import {
   Rational,
   DisplayRateVal,
   RationalProduct,
-  Product,
   MatrixResultType,
   Game,
   ItemId,
@@ -29,13 +28,13 @@ import { LabState } from '../';
 import { ProductsState } from './products.reducer';
 
 /* Base selector functions */
-const productsState = (state: LabState): ProductsState => state.productsState;
-const sIds = (state: ProductsState): string[] => state.ids;
-const sEntities = (state: ProductsState): Entities<Product> => state.entities;
-
-/* Simple selectors */
-export const getIds = compose(sIds, productsState);
-export const getEntities = compose(sEntities, productsState);
+export const productsState = (state: LabState): ProductsState =>
+  state.productsState;
+export const getIds = createSelector(productsState, (state) => state.ids);
+export const getEntities = createSelector(
+  productsState,
+  (state) => state.entities
+);
 
 /* Complex selectors */
 export const getBaseProducts = createSelector(
@@ -150,13 +149,13 @@ export const getNormalizedRatesByBelts = createSelector(
     products?.reduce((e: Entities<Rational>, p) => {
       if (p.viaId === p.itemId) {
         e[p.id] = p.rate.mul(
-          beltSpeed[p.viaSetting || itemSettings[p.itemId].belt]
+          beltSpeed[p.viaSetting ?? itemSettings[p.itemId].belt ?? '']
         );
       } else {
         const via = RecipeUtility.getProductStepData(productSteps, p);
         if (via) {
           e[p.id] = p.rate
-            .mul(beltSpeed[p.viaSetting || itemSettings[via[0]].belt])
+            .mul(beltSpeed[p.viaSetting ?? itemSettings[via[0]].belt ?? ''])
             .div(via[1]);
         } else {
           e[p.id] = Rational.zero;
@@ -176,27 +175,27 @@ export const getNormalizedRatesByWagons = createSelector(
     products?.reduce((e: Entities<Rational>, p) => {
       if (p.viaId === p.itemId) {
         const item = data.itemR[p.itemId];
-        const wagon = data.itemR[p.viaSetting || itemSettings[p.itemId].wagon];
-        e[p.id] = p.rate
-          .div(DisplayRateVal[displayRate])
-          .mul(
-            item.stack
-              ? item.stack.mul(wagon.cargoWagon.size)
-              : wagon.fluidWagon.capacity
-          );
+        const wagon =
+          data.itemR[p.viaSetting ?? itemSettings[p.itemId].wagon ?? ''];
+        e[p.id] = p.rate.div(DisplayRateVal[displayRate]);
+        if (item.stack && wagon.cargoWagon) {
+          e[p.id] = e[p.id].mul(item.stack.mul(wagon.cargoWagon.size));
+        } else if (wagon.fluidWagon) {
+          e[p.id] = e[p.id].mul(wagon.fluidWagon.capacity);
+        }
       } else {
         const via = RecipeUtility.getProductStepData(productSteps, p);
         if (via) {
           const item = data.itemR[via[0]];
-          const wagon = data.itemR[p.viaSetting || itemSettings[via[0]].wagon];
-          e[p.id] = p.rate
-            .div(DisplayRateVal[displayRate])
-            .mul(
-              item.stack
-                ? item.stack.mul(wagon.cargoWagon.size)
-                : wagon.fluidWagon.capacity
-            )
-            .div(via[1]);
+          const wagon =
+            data.itemR[p.viaSetting ?? itemSettings[via[0]].wagon ?? ''];
+          e[p.id] = p.rate.div(DisplayRateVal[displayRate]);
+          if (item.stack && wagon.cargoWagon) {
+            e[p.id] = e[p.id].mul(item.stack.mul(wagon.cargoWagon.size));
+          } else if (wagon.fluidWagon) {
+            e[p.id] = e[p.id].mul(wagon.fluidWagon.capacity);
+          }
+          e[p.id] = e[p.id].div(via[1]);
         } else {
           e[p.id] = Rational.zero;
         }
@@ -217,8 +216,11 @@ export const getNormalizedRatesByFactories = createSelector(
       let recipeId = data.itemRecipeIds[p.itemId];
       if (recipeId && p.viaId === recipeId) {
         const recipe = data.recipeR[recipeId];
-        e[p.id] = p.rate.div(recipe.time).mul(recipe.out[p.itemId]);
-        if (recipe.adjustProd) {
+        e[p.id] = p.rate.div(recipe.time);
+        if (recipe.out) {
+          e[p.id] = e[p.id].mul(recipe.out[p.itemId]);
+        }
+        if (recipe.adjustProd && recipe.productivity) {
           e[p.id] = e[p.id].div(recipe.productivity);
         }
       } else {
@@ -409,11 +411,15 @@ export const getStepsModified = createSelector(
   Recipes.recipesState,
   (steps, itemSettings, recipeSettings) => ({
     items: steps.reduce((e: Entities<boolean>, s) => {
-      e[s.itemId] = itemSettings[s.itemId] != null;
+      if (s.itemId) {
+        e[s.itemId] = itemSettings[s.itemId] != null;
+      }
       return e;
     }, {}),
     recipes: steps.reduce((e: Entities<boolean>, s) => {
-      e[s.itemId] = recipeSettings[s.itemId] != null;
+      if (s.recipeId) {
+        e[s.recipeId] = recipeSettings[s.recipeId] != null;
+      }
       return e;
     }, {}),
   })
@@ -434,20 +440,24 @@ export const getTotals = createSelector(
 
     // Total Belts
     for (const step of steps.filter((s) => s.belts?.nonzero())) {
-      const belt = itemSettings[step.itemId].belt ?? '';
-      if (!belts.hasOwnProperty(belt)) {
-        belts[belt] = Rational.zero;
+      if (step.itemId) {
+        const belt = itemSettings[step.itemId].belt ?? '';
+        if (!belts.hasOwnProperty(belt)) {
+          belts[belt] = Rational.zero;
+        }
+        belts[belt] = belts[belt].add(step.belts!.ceil());
       }
-      belts[belt] = belts[belt].add(step.belts!.ceil());
     }
 
     // Total Wagons
     for (const step of steps.filter((s) => s.wagons?.nonzero())) {
-      const wagon = itemSettings[step.itemId].wagon ?? '';
-      if (!wagons.hasOwnProperty(wagon)) {
-        wagons[wagon] = Rational.zero;
+      if (step.itemId) {
+        const wagon = itemSettings[step.itemId].wagon ?? '';
+        if (!wagons.hasOwnProperty(wagon)) {
+          wagons[wagon] = Rational.zero;
+        }
+        wagons[wagon] = wagons[wagon].add(step.wagons!.ceil());
       }
-      wagons[wagon] = wagons[wagon].add(step.wagons!.ceil());
     }
 
     // Total Factories
@@ -534,3 +544,52 @@ export const getStepDetails = createSelector(
       return e;
     }, {})
 );
+
+export const getStepEntities = createSelector(getSteps, (steps) =>
+  steps.reduce((e: Entities<Step>, s) => {
+    e[s.id] = s;
+    return e;
+  }, {})
+);
+
+export const getStepTree = createSelector(getSteps, (steps) => {
+  const tree: Entities<boolean[]> = {};
+  const indents: Entities<number> = {};
+  for (const step of steps) {
+    let indent: boolean[] = [];
+    if (step.parents) {
+      const keys = Object.keys(step.parents);
+      if (keys.length === 1 && indents[keys[0]] != null) {
+        indent = new Array(indents[keys[0]] + 1).fill(false);
+      }
+    }
+    if (step.recipeId) {
+      indents[step.recipeId] = indent.length;
+    }
+    tree[step.id] = indent;
+  }
+
+  for (let i = 0; i < steps.length; i++) {
+    const step = steps[i];
+    if (tree[step.id]?.length) {
+      for (let j = i + 1; j < steps.length; j++) {
+        const next = steps[j];
+        if (tree[next.id]) {
+          if (tree[next.id].length === tree[step.id].length) {
+            for (let k = i; k < j; k++) {
+              const trail = steps[k];
+              if (tree[trail.id]) {
+                tree[trail.id][tree[step.id].length - 1] = true;
+              }
+            }
+            break;
+          } else if (tree[next.id].length < tree[step.id].length) {
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  return tree;
+});

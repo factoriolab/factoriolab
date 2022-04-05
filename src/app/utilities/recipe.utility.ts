@@ -49,7 +49,7 @@ export class RecipeUtility {
 
   static adjustRecipe(
     recipeId: string,
-    fuelId: string,
+    fuelId: string | undefined,
     proliferatorSpray: string,
     miningBonus: Rational,
     researchFactor: Rational,
@@ -59,11 +59,6 @@ export class RecipeUtility {
   ): RationalRecipe {
     const recipe = new RationalRecipe(data.recipeEntities[recipeId]);
     const factory = data.itemR[settings.factory].factory;
-
-    if (!recipe.out) {
-      // Add implied outputs
-      recipe.out = { [recipeId]: Rational.one };
-    }
 
     if (factory.speed) {
       // Adjust for factory speed
@@ -428,7 +423,7 @@ export class RecipeUtility {
   static adjustRecipes(
     recipeSettings: Entities<RationalRecipeSettings>,
     itemSettings: Entities<ItemSettings>,
-    fuel: string,
+    fuel: string | undefined,
     proliferatorSpray: string,
     miningBonus: Rational,
     researchSpeed: Rational,
