@@ -1,8 +1,6 @@
 import {
   Component,
   Input,
-  Output,
-  EventEmitter,
   ChangeDetectionStrategy,
   AfterViewInit,
   OnInit,
@@ -19,16 +17,12 @@ import {
   DisplayRate,
   Entities,
   Rational,
-  DefaultIdPayload,
   Column,
   ItemId,
   ListMode,
   DisplayRateVal,
-  DefaultPayload,
   Game,
   PIPE,
-  IdPayload,
-  PowerUnit,
   Dataset,
   StepDetailTab,
 } from '~/models';
@@ -41,7 +35,7 @@ import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 import { ExportUtility, RecipeUtility } from '~/utilities';
-import { RecipeSettingsComponent } from '../../recipe-settings.component';
+import { RecipeSettingsComponent } from '../containers/recipe-settings.component';
 
 @UntilDestroy()
 @Component({
@@ -117,33 +111,7 @@ export class ListComponent
   @Input() mode = ListMode.All;
   @Input() selected: string | undefined;
 
-  @Output() ignoreItem = new EventEmitter<string>();
-  @Output() setBelt = new EventEmitter<DefaultIdPayload>();
-  @Output() setWagon = new EventEmitter<DefaultIdPayload>();
-  @Output() setFactory = new EventEmitter<DefaultIdPayload>();
-  @Output() setFactoryModules = new EventEmitter<DefaultIdPayload<string[]>>();
-  @Output() setBeaconCount = new EventEmitter<DefaultIdPayload<string>>();
-  @Output() setBeacon = new EventEmitter<DefaultIdPayload>();
-  @Output() setBeaconModules = new EventEmitter<DefaultIdPayload<string[]>>();
-  @Output() setBeaconTotal = new EventEmitter<IdPayload>();
-  @Output() setOverclock = new EventEmitter<DefaultIdPayload<number>>();
-  @Output() resetItem = new EventEmitter<string>();
-  @Output() resetRecipe = new EventEmitter<string>();
-  @Output() resetIgnore = new EventEmitter();
-  @Output() resetBelt = new EventEmitter();
-  @Output() resetWagon = new EventEmitter();
-  @Output() resetFactory = new EventEmitter();
-  @Output() resetOverclock = new EventEmitter();
-  @Output() resetBeacons = new EventEmitter();
-  @Output() setDisabledRecipes = new EventEmitter<
-    DefaultPayload<string[] | undefined>
-  >();
-  @Output() setDefaultRecipe = new EventEmitter<
-    DefaultIdPayload<string | undefined>
-  >();
-
   expanded: Entities<StepDetailTab> = {};
-  effPowerUnit = PowerUnit.kW;
   fragment: string | null = null;
   DisplayRateVal = DisplayRateVal;
   ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
@@ -234,8 +202,8 @@ export class ListComponent
   }
 
   resetStep(step: Step): void {
-    this.resetItem.emit(step.itemId);
-    this.resetRecipe.emit(step.recipeId);
+    this.resetItem(step.itemId);
+    this.resetRecipe(step.recipeId);
   }
 
   export(
@@ -263,22 +231,18 @@ export class ListComponent
   ): void {
     if (itemSettings[itemId].recipe === recipeId) {
       // Reset to null
-      this.setDefaultRecipe.emit({
-        id: itemId,
-        value: undefined,
-        def: undefined,
-      });
+      this.setDefaultRecipe(itemId, undefined, undefined);
     } else {
       // Set default recipe
-      this.setDefaultRecipe.emit({
-        id: itemId,
-        value: recipeId,
-        def: RecipeUtility.defaultRecipe(
+      this.setDefaultRecipe(
+        itemId,
+        recipeId,
+        RecipeUtility.defaultRecipe(
           itemId,
           settings.disabledRecipes ?? [],
           data
-        ),
-      });
+        )
+      );
     }
   }
 
@@ -289,15 +253,116 @@ export class ListComponent
   ): void {
     const disabledRecipes = settings.disabledRecipes ?? [];
     if (disabledRecipes.indexOf(id) === -1) {
-      this.setDisabledRecipes.emit({
-        value: [...disabledRecipes, id],
-        def: data.defaults?.disabledRecipes,
-      });
+      this.setDisabledRecipes(
+        [...disabledRecipes, id],
+        data.defaults?.disabledRecipes
+      );
     } else {
-      this.setDisabledRecipes.emit({
-        value: disabledRecipes.filter((i) => i !== id),
-        def: data.defaults?.disabledRecipes,
-      });
+      this.setDisabledRecipes(
+        disabledRecipes.filter((i) => i !== id),
+        data.defaults?.disabledRecipes
+      );
     }
+  }
+
+  /** Action Dispatch Methods */
+  ignoreItem(value: string | undefined): void {
+    if (value) {
+      this.store.dispatch(new Items.IgnoreItemAction(value));
+    }
+  }
+
+  setBelt(id: string, value: string, def: string): void {
+    this.store.dispatch(new Items.SetBeltAction({ id, value, def }));
+  }
+
+  setWagon(id: string, value: string, def: string): void {
+    this.store.dispatch(new Items.SetWagonAction({ id, value, def }));
+  }
+
+  setFactory(id: string, value: string, def: string): void {
+    this.store.dispatch(new Recipes.SetFactoryAction({ id, value, def }));
+  }
+
+  setFactoryModules(
+    id: string,
+    value: string[],
+    def: string[] | undefined
+  ): void {
+    this.store.dispatch(
+      new Recipes.SetFactoryModulesAction({ id, value, def })
+    );
+  }
+
+  setBeaconCount(id: string, value: string, def: string | undefined): void {
+    this.store.dispatch(new Recipes.SetBeaconCountAction({ id, value, def }));
+  }
+
+  setBeacon(id: string, value: string, def: string | undefined): void {
+    this.store.dispatch(new Recipes.SetBeaconAction({ id, value, def }));
+  }
+
+  setBeaconModules(
+    id: string,
+    value: string[],
+    def: string[] | undefined
+  ): void {
+    this.store.dispatch(new Recipes.SetBeaconModulesAction({ id, value, def }));
+  }
+
+  setBeaconTotal(id: string, value: string): void {
+    this.store.dispatch(new Recipes.SetBeaconTotalAction({ id, value }));
+  }
+
+  setOverclock(id: string, value: number, def: number | undefined): void {
+    this.store.dispatch(new Recipes.SetOverclockAction({ id, value, def }));
+  }
+
+  resetItem(value: string | undefined): void {
+    if (value != null) {
+      this.store.dispatch(new Items.ResetItemAction(value));
+    }
+  }
+
+  resetRecipe(value: string | undefined): void {
+    if (value != null) {
+      this.store.dispatch(new Recipes.ResetRecipeAction(value));
+    }
+  }
+
+  resetIgnore(): void {
+    this.store.dispatch(new Items.ResetIgnoreAction());
+  }
+
+  resetBelt(): void {
+    this.store.dispatch(new Items.ResetBeltAction());
+  }
+
+  resetWagon(): void {
+    this.store.dispatch(new Items.ResetWagonAction());
+  }
+
+  resetFactory(): void {
+    this.store.dispatch(new Recipes.ResetFactoryAction());
+  }
+
+  resetOverclock(): void {
+    this.store.dispatch(new Recipes.ResetOverclockAction());
+  }
+
+  resetBeacons(): void {
+    this.store.dispatch(new Recipes.ResetBeaconsAction());
+  }
+
+  setDisabledRecipes(value: string[], def: string[] | undefined): void {
+    this.store.dispatch(new Settings.SetDisabledRecipesAction({ value, def }));
+  }
+
+  setDefaultRecipe(
+    id: string,
+    value: string | undefined,
+    def: string | undefined
+  ): void {
+    this.store.dispatch(new Items.SetRecipeAction({ id, value, def }));
   }
 }

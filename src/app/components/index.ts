@@ -5,6 +5,7 @@ export * from './flow/flow.component';
 export * from './icon/icon.component';
 export * from './info/info.component';
 export * from './input/input.component';
+export * from './list/list.component';
 export * from './options/options.component';
 export * from './picker/picker.component';
 export * from './ranker/ranker.component';

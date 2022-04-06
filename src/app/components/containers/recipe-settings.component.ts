@@ -1,18 +1,15 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import {
   Dataset,
-  DefaultIdPayload,
   FactorySettings,
   ItemId,
   Rational,
   RecipeSettings,
 } from '~/models';
 import { LabState } from '~/store';
-import * as Factories from '~/store/factories';
 import { FactoriesState } from '~/store/factories';
-import * as Recipes from '~/store/recipes';
 import { RecipesState } from '~/store/recipes';
 import { RecipeUtility } from '~/utilities';
 
@@ -47,19 +44,19 @@ export class RecipeSettingsComponent {
   changeFactory(
     recipeId: string,
     value: string,
-    emitter: EventEmitter<DefaultIdPayload>,
+    emitter: (id: string, value: string, def: string) => void,
     factorySettings: FactoriesState,
     data: Dataset,
     id = recipeId
   ): void {
-    emitter.emit({
+    emitter(
       id,
       value,
-      def: RecipeUtility.bestMatch(
+      RecipeUtility.bestMatch(
         data.recipeEntities[recipeId].producers,
         factorySettings.ids
-      ),
-    });
+      )
+    );
   }
 
   changeFactoryModules(
@@ -67,125 +64,16 @@ export class RecipeSettingsComponent {
     input: string,
     index: number,
     modules: string[],
-    emitter: EventEmitter<DefaultIdPayload<string[]>>,
+    emitter: (id: string, value: string[], def: string[] | undefined) => void,
     recipeSettings: RecipesState,
     factorySettings: FactoriesState,
     data: Dataset,
     id = recipeId,
-    factoryId?: string
+    factoryId: string | undefined = recipeSettings[recipeId].factory
   ): void {
-    if (factoryId == null) {
-      factoryId = recipeSettings[recipeId].factory;
-    }
-    const count = modules.length;
-    const options = [...data.recipeModuleIds[recipeId], ItemId.Module];
-    const s = this.getState(
-      id,
-      recipeId,
-      factoryId,
-      recipeSettings,
-      factorySettings
-    );
-    const def = s.fMatch
-      ? s.recipe.factoryModules
-      : RecipeUtility.defaultModules(options, s.factory.moduleRank, count);
-    const value = this.generateModules(index, input, modules);
-    emitter.emit({ id, value, def });
-  }
-
-  changeBeaconCount(
-    recipeId: string,
-    value: string,
-    emitter: EventEmitter<DefaultIdPayload>,
-    recipeSettings: RecipesState,
-    factorySettings: FactoriesState,
-    id = recipeId,
-    factoryId?: string
-  ): void {
-    if (factoryId == null) {
-      factoryId = recipeSettings[recipeId].factory;
-    }
-    const s = this.getState(
-      id,
-      recipeId,
-      factoryId,
-      recipeSettings,
-      factorySettings
-    );
-    const def = s.fMatch ? s.recipe.beaconCount : s.factory.beaconCount;
-    emitter.emit({ id, value, def });
-  }
-
-  changeBeacon(
-    recipeId: string,
-    value: string,
-    emitter: EventEmitter<DefaultIdPayload>,
-    recipeSettings: RecipesState,
-    factorySettings: FactoriesState,
-    id = recipeId,
-    factoryId?: string
-  ): void {
-    if (factoryId == null) {
-      factoryId = recipeSettings[recipeId].factory;
-    }
-    const s = this.getState(
-      id,
-      recipeId,
-      factoryId,
-      recipeSettings,
-      factorySettings
-    );
-    const def = s.fMatch ? s.recipe.beacon : s.factory.beacon;
-    emitter.emit({ id, value, def });
-  }
-
-  changeBeaconModules(
-    recipeId: string,
-    input: string,
-    index: number,
-    modules: string[],
-    emitter: EventEmitter<DefaultIdPayload<string[]>>,
-    recipeSettings: RecipesState,
-    factorySettings: FactoriesState,
-    id = recipeId,
-    factoryId?: string,
-    beaconId?: string
-  ): void {
-    if (factoryId == null) {
-      factoryId = recipeSettings[recipeId].factory;
-    }
-    const count = modules.length;
-    const s = this.getState(
-      id,
-      recipeId,
-      factoryId,
-      recipeSettings,
-      factorySettings
-    );
-    const bMatch = beaconId == null || beaconId === s.recipe.beacon;
-    const def =
-      s.fMatch && bMatch
-        ? s.recipe.beaconModules
-        : new Array(count).fill(s.factory.beaconModule);
-    const value = this.generateModules(index, input, modules);
-    emitter.emit({ id, value, def });
-  }
-
-  changeOverclock(
-    recipeId: string,
-    input: Event,
-    emitter: EventEmitter<DefaultIdPayload<number>>,
-    recipeSettings: RecipesState,
-    factorySettings: FactoriesState,
-    id = recipeId,
-    factoryId?: string
-  ): void {
-    if (factoryId == null) {
-      factoryId = recipeSettings[recipeId].factory;
-    }
-    const target = input.target as HTMLInputElement;
-    const value = target.valueAsNumber;
-    if (value >= 1 && value <= 250) {
+    if (factoryId != null) {
+      const count = modules.length;
+      const options = [...data.recipeModuleIds[recipeId], ItemId.Module];
       const s = this.getState(
         id,
         recipeId,
@@ -193,8 +81,114 @@ export class RecipeSettingsComponent {
         recipeSettings,
         factorySettings
       );
-      const def = s.fMatch ? s.recipe.overclock : s.factory.overclock;
-      emitter.emit({ id, value, def });
+      if (s.factory.moduleRank) {
+        const def = s.fMatch
+          ? s.recipe.factoryModules
+          : RecipeUtility.defaultModules(options, s.factory.moduleRank, count);
+        const value = this.generateModules(index, input, modules);
+        emitter(id, value, def);
+      }
+    }
+  }
+
+  changeBeaconCount(
+    recipeId: string,
+    value: string,
+    emitter: (id: string, value: string, def: string | undefined) => void,
+    recipeSettings: RecipesState,
+    factorySettings: FactoriesState,
+    id = recipeId,
+    factoryId: string | undefined = recipeSettings[recipeId].factory
+  ): void {
+    if (factoryId != null) {
+      const s = this.getState(
+        id,
+        recipeId,
+        factoryId,
+        recipeSettings,
+        factorySettings
+      );
+      const def = s.fMatch ? s.recipe.beaconCount : s.factory.beaconCount;
+      emitter(id, value, def);
+    }
+  }
+
+  changeBeacon(
+    recipeId: string,
+    value: string,
+    emitter: (id: string, value: string, def: string | undefined) => void,
+    recipeSettings: RecipesState,
+    factorySettings: FactoriesState,
+    id = recipeId,
+    factoryId: string | undefined = recipeSettings[recipeId].factory
+  ): void {
+    if (factoryId != null) {
+      const s = this.getState(
+        id,
+        recipeId,
+        factoryId,
+        recipeSettings,
+        factorySettings
+      );
+      const def = s.fMatch ? s.recipe.beacon : s.factory.beacon;
+      emitter(id, value, def);
+    }
+  }
+
+  changeBeaconModules(
+    recipeId: string,
+    input: string,
+    index: number,
+    modules: string[],
+    emitter: (id: string, value: string[], def: string[] | undefined) => void,
+    recipeSettings: RecipesState,
+    factorySettings: FactoriesState,
+    id = recipeId,
+    factoryId: string | undefined = recipeSettings[recipeId].factory,
+    beaconId?: string
+  ): void {
+    if (factoryId) {
+      const count = modules.length;
+      const s = this.getState(
+        id,
+        recipeId,
+        factoryId,
+        recipeSettings,
+        factorySettings
+      );
+      const bMatch = beaconId == null || beaconId === s.recipe.beacon;
+      const def =
+        s.fMatch && bMatch
+          ? s.recipe.beaconModules
+          : new Array(count).fill(s.factory.beaconModule);
+      const value = this.generateModules(index, input, modules);
+      emitter(id, value, def);
+    }
+  }
+
+  changeOverclock(
+    recipeId: string,
+    input: Event,
+    emitter: (id: string, value: number, def: number | undefined) => void,
+    recipeSettings: RecipesState,
+    factorySettings: FactoriesState,
+    id = recipeId,
+    factoryId: string | undefined = recipeSettings[recipeId].factory
+  ): void {
+    if (factoryId != null) {
+      const target = input.target as HTMLInputElement;
+      const value = target.valueAsNumber;
+      if (value >= 1 && value <= 250) {
+        const s = this.getState(
+          id,
+          recipeId,
+          factoryId,
+          recipeSettings,
+          factorySettings
+        );
+        const def = s.fMatch ? s.recipe.overclock : s.factory.overclock;
+        emitter(id, value, def);
+      }
     }
   }
 

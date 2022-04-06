@@ -21,7 +21,7 @@
             <button
               *ngIf="vm.itemsModified.ignore"
               title="Undo all ignored steps"
-              (click)="resetIgnore.emit()"
+              (click)="resetIgnore()"
             >
               <i class="material-icons">undo</i>
             </button>
@@ -33,7 +33,7 @@
             <button
               *ngIf="vm.itemsModified.belts"
               title="Undo all belt modifications"
-              (click)="resetBelt.emit()"
+              (click)="resetBelt()"
             >
               <i class="material-icons">undo</i>
             </button>
@@ -45,7 +45,7 @@
             <button
               *ngIf="vm.itemsModified.wagons"
               title="Undo all wagon modifications"
-              (click)="resetWagon.emit()"
+              (click)="resetWagon()"
             >
               <i class="material-icons">undo</i>
             </button>
@@ -57,7 +57,7 @@
             <button
               *ngIf="vm.recipesModified.factories"
               title="Undo all factory modifications"
-              (click)="resetFactory.emit()"
+              (click)="resetFactory()"
             >
               <i class="material-icons">undo</i>
             </button>
@@ -69,7 +69,7 @@
             <button
               *ngIf="vm.recipesModified.overclock"
               title="Undo all overclock modifications"
-              (click)="resetOverclock.emit()"
+              (click)="resetOverclock()"
             >
               <i class="material-icons">undo</i>
             </button>
@@ -84,7 +84,7 @@
             <button
               *ngIf="vm.recipesModified.beacons"
               title="Undo all beacon modifications"
-              (click)="resetBeacons.emit()"
+              (click)="resetBeacons()"
             >
               <i class="material-icons">undo</i>
             </button>
@@ -212,7 +212,7 @@
                       ? 'visibility'
                       : 'visibility_off'
                   "
-                  (click)="ignoreItem.emit(step.itemId)"
+                  (click)="ignoreItem(step.itemId)"
                 ></lab-icon>
               </div>
             </td>
@@ -241,11 +241,7 @@
                         vm.data.game === Game.DysonSphereProgram ? 3 : undefined
                       "
                       (selectId)="
-                        setBelt.emit({
-                          id: step.itemId,
-                          value: $event,
-                          def: vm.settings.belt
-                        })
+                        setBelt(step.itemId, $event, vm.settings.belt)
                       "
                     >
                       <lab-icon
@@ -271,11 +267,7 @@
                         [selected]="belt"
                         [options]="vm.data.pipeIds"
                         (selectId)="
-                          setBelt.emit({
-                            id: step.itemId,
-                            value: $event,
-                            def: vm.settings.pipe
-                          })
+                          setBelt(step.itemId, $event, vm.settings.pipe)
                         "
                       >
                         <lab-icon
@@ -325,11 +317,7 @@
                         [selected]="wagon"
                         [options]="vm.data.cargoWagonIds"
                         (selectId)="
-                          setWagon.emit({
-                            id: step.itemId,
-                            value: $event,
-                            def: vm.settings.cargoWagon
-                          })
+                          setWagon(step.itemId, $event, vm.settings.cargoWagon)
                         "
                       >
                         <lab-icon
@@ -356,11 +344,7 @@
                         [selected]="wagon"
                         [options]="vm.data.fluidWagonIds"
                         (selectId)="
-                          setWagon.emit({
-                            id: step.itemId,
-                            value: $event,
-                            def: vm.settings.fluidWagon
-                          })
+                          setWagon(step.itemId, $event, vm.settings.fluidWagon)
                         "
                       >
                         <lab-icon
@@ -675,12 +659,7 @@
                             placeholder="# Beacons"
                             [digits]="4"
                             [value]="step.beacons.toString()"
-                            (setValue)="
-                              setBeaconTotal.emit({
-                                id: step.recipeId,
-                                value: $event
-                              })
-                            "
+                            (setValue)="setBeaconTotal(step.recipeId, $event)"
                           >
                           </lab-input>
                         </div>

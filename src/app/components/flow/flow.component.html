@@ -48,9 +48,5 @@
     </button>
   </div>
   <div id="lab-flow-svg" #svg></div>
-  <lab-list-container
-    [mode]="ListMode.Focus"
-    [steps]="a.steps ?? []"
-    [selected]="selected"
-  ></lab-list-container>
+  <lab-list [mode]="ListMode.Focus" [selected]="selected"></lab-list>
 </ng-container>
