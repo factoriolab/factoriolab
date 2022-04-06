@@ -10,7 +10,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, take } from 'rxjs';
+import { combineLatest, filter, map, take } from 'rxjs';
 
 import {
   Step,
@@ -25,6 +25,8 @@ import {
   PIPE,
   Dataset,
   StepDetailTab,
+  FactorySettings,
+  RecipeSettings,
 } from '~/models';
 import { TrackService } from '~/services';
 import { LabState } from '~/store';
@@ -35,7 +37,14 @@ import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 import { ExportUtility, RecipeUtility } from '~/utilities';
-import { RecipeSettingsComponent } from '../containers/recipe-settings.component';
+
+enum RecipeField {
+  FactoryModules,
+  BeaconCount,
+  Beacon,
+  BeaconModules,
+  Overclock,
+}
 
 @UntilDestroy()
 @Component({
@@ -44,10 +53,7 @@ import { RecipeSettingsComponent } from '../containers/recipe-settings.component
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ListComponent
-  extends RecipeSettingsComponent
-  implements OnInit, OnChanges, AfterViewInit
-{
+export class ListComponent implements OnInit, OnChanges, AfterViewInit {
   vm$ = combineLatest([
     this.store.select(Factories.getFactorySettings),
     this.store.select(Items.getItemSettings),
@@ -109,42 +115,47 @@ export class ListComponent
   );
 
   @Input() mode = ListMode.All;
-  @Input() selected: string | undefined;
+  @Input() selectedId: number | undefined;
 
   expanded: Entities<StepDetailTab> = {};
-  fragment: string | null = null;
-  DisplayRateVal = DisplayRateVal;
-  ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
+  fragmentId: number | undefined;
 
+  ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
+  DisplayRateVal = DisplayRateVal;
+  PIPE = PIPE;
   Column = Column;
   DisplayRate = DisplayRate;
   ItemId = ItemId;
   ListMode = ListMode;
   StepDetailTab = StepDetailTab;
   Game = Game;
+  RecipeField = RecipeField;
   Rational = Rational;
-  PIPE = PIPE;
 
   constructor(
     private ref: ChangeDetectorRef,
     private route: ActivatedRoute,
     public track: TrackService,
-    store: Store<LabState>
-  ) {
-    super(store);
-  }
+    public store: Store<LabState>
+  ) {}
 
   ngOnInit(): void {
-    this.route.fragment.subscribe((fragment) => {
-      // Store the fragment to navigate to it after the component loads
-      this.fragment = fragment;
-    });
+    this.route.fragment
+      .pipe(
+        take(1),
+        filter((f) => f != null),
+        map((f) => Number(f))
+      )
+      .subscribe((id) => {
+        // Store the fragment to navigate to it after the component loads
+        this.fragmentId = id;
+      });
   }
 
   ngOnChanges(): void {
     this.expanded = {};
-    if (this.selected != null) {
-      const selected = this.selected;
+    if (this.selectedId != null) {
+      const selected = this.selectedId;
       this.store
         .select(Products.getStepDetails)
         .pipe(take(1))
@@ -159,15 +170,15 @@ export class ListComponent
   ngAfterViewInit(): void {
     // Now that component is loaded, try navigating to the fragment
     try {
-      if (this.fragment) {
-        document.querySelector('#' + this.fragment)?.scrollIntoView();
+      if (this.fragmentId) {
+        document.querySelector('#' + this.fragmentId)?.scrollIntoView();
         combineLatest([
           this.store.select(Products.getSteps),
           this.store.select(Products.getStepDetails),
         ])
           .pipe(take(1))
           .subscribe(([steps, stepDetails]) => {
-            const step = steps.find((s) => s.id === this.fragment);
+            const step = steps.find((s) => s.id === this.fragmentId);
             if (step) {
               const tabs = stepDetails[step.id].tabs;
               if (tabs.length) {
@@ -263,6 +274,99 @@ export class ListComponent
         data.defaults?.disabledRecipes
       );
     }
+  }
+
+  changeFactory(
+    id: string,
+    value: string,
+    factorySettings: Factories.FactoriesState,
+    data: Dataset
+  ): void {
+    this.setFactory(
+      id,
+      value,
+      RecipeUtility.bestMatch(
+        data.recipeEntities[id].producers,
+        factorySettings.ids
+      )
+    );
+  }
+
+  changeRecipeField(
+    id: string,
+    event: string | Event,
+    recipeSettings: Recipes.RecipesState,
+    factorySettings: Factories.FactoriesState,
+    field: RecipeField,
+    index?: number,
+    data?: Dataset
+  ): void {
+    const recipe = recipeSettings[id];
+    const factory = factorySettings.entities[recipe.factory];
+    switch (field) {
+      case RecipeField.FactoryModules: {
+        if (
+          factory.moduleRank != null &&
+          data != null &&
+          typeof event === 'string'
+        ) {
+          const count = recipe.factoryModules.length;
+          const options = [...data.recipeModuleIds[id], ItemId.Module];
+          const def = RecipeUtility.defaultModules(
+            options,
+            factory.moduleRank,
+            count
+          );
+          const modules = this.generateModules(
+            index,
+            event,
+            recipe.factoryModules
+          );
+          this.setFactoryModules(id, modules, def);
+        }
+        break;
+      }
+      case RecipeField.BeaconCount: {
+        if (typeof event === 'string') {
+          const def = factory.beaconCount;
+          this.setBeaconCount(id, event, def);
+        }
+        break;
+      }
+      case RecipeField.BeaconModules: {
+        if (typeof event === 'string') {
+          const count = recipe.beaconModules.length;
+          const def = new Array(count).fill(factory.beaconModule);
+          const value = this.generateModules(
+            index,
+            event,
+            recipe.beaconModules
+          );
+          this.setBeaconModules(id, value, def);
+        }
+        break;
+      }
+      case RecipeField.Overclock: {
+        if (typeof event !== 'string') {
+          const target = event.target as HTMLInputElement;
+          const value = target.valueAsNumber;
+          if (value >= 1 && value <= 250) {
+            const def = factory.overclock;
+            this.setOverclock(id, value, def);
+          }
+        }
+        break;
+      }
+    }
+  }
+
+  generateModules(index: number, value: string, original: string[]): string[] {
+    const modules = [...original]; // Copy
+    // Fill in index to the right
+    for (let i = index; i < modules.length; i++) {
+      modules[i] = value;
+    }
+    return modules;
   }
 
   /** Action Dispatch Methods */

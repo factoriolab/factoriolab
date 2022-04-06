@@ -1,10 +1,10 @@
 export interface IdPayload<T = string> {
-  id: string;
+  id: string | number;
   value: T;
 }
 
 export interface DefaultIdPayload<T = string, D = T> {
-  id: string;
+  id: string | number;
   value: T;
   def: D | undefined;
 }

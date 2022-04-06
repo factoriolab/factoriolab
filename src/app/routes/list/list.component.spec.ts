@@ -239,7 +239,7 @@ describe('ListComponent', () => {
 
   describe('selected', () => {
     it('should get the selected value', () => {
-      expect(component.child.selected).toBeNull();
+      expect(component.child.selectedId).toBeNull();
     });
 
     it('should call setDisplayedSteps when changed', () => {
@@ -258,7 +258,7 @@ describe('ListComponent', () => {
     it('should save the fragment', () => {
       route.fragment = of('test');
       component.child.ngOnInit();
-      expect(component.child.fragment).toEqual('test');
+      expect(component.child.fragmentId).toEqual('test');
     });
   });
 
@@ -402,7 +402,7 @@ describe('ListComponent', () => {
       spyOn(element, 'scrollIntoView');
       spyOn(document, 'querySelector').and.returnValue(element);
 
-      component.child.fragment = Mocks.Steps[0].itemId;
+      component.child.fragmentId = Mocks.Steps[0].itemId;
       component.child.ngAfterViewInit();
       expect(element.scrollIntoView).toHaveBeenCalled();
       expect(component.child.expanded[component.child.steps[0].id]).toEqual(
@@ -423,7 +423,7 @@ describe('ListComponent', () => {
           recipeId: 'test',
         },
       ];
-      component.child.fragment = 'test';
+      component.child.fragmentId = 'test';
       component.child.ngAfterViewInit();
       expect(element.scrollIntoView).toHaveBeenCalled();
       expect(detectChanges).not.toHaveBeenCalled();

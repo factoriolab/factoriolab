@@ -13,14 +13,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {
   ProductsComponent,
-  ProductsContainerComponent,
   SettingsComponent,
   SettingsContainerComponent,
   IconComponent,
   PickerComponent,
   SelectComponent,
-  ListComponent,
-  FlowComponent,
   ToggleComponent,
   RankerComponent,
   OptionsComponent,
@@ -39,7 +36,9 @@ import {
   DisplayRateLabelPipe,
   InserterSpeedPipe,
   LeftPadPipe,
+  GtZeroPipe,
 } from './pipes';
+import { FlowComponent, ListComponent } from './routes';
 import {
   FocusOnShowDirective,
   LabErrorHandler,
@@ -61,7 +60,6 @@ import { FactoriesEffects } from './store/factories/factories.effects';
     ToggleComponent,
     ListComponent,
     FlowComponent,
-    ProductsContainerComponent,
     ProductsComponent,
     SettingsComponent,
     SettingsContainerComponent,
@@ -82,6 +80,7 @@ import { FactoriesEffects } from './store/factories/factories.effects';
     DisplayRateLabelPipe,
     InserterSpeedPipe,
     LeftPadPipe,
+    GtZeroPipe,
   ],
   imports: [
     BrowserModule,

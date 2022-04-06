@@ -51,28 +51,28 @@ import { ExportUtility } from '~/utilities';
 export class FlowComponent implements AfterViewInit {
   vm$ = combineLatest([
     this.store.select(Products.getSankey),
-    this.store.select(Settings.getGame).pipe(map((g) => linkValueOptions(g))),
+    this.store.select(Settings.getGame),
     this.store.select(Preferences.getLinkText),
     this.store.select(Preferences.getLinkSize),
     this.store.select(Preferences.getSankeyAlign),
   ]).pipe(
-    map(([sankey, options, linkText, linkSize, sankeyAlign]) => ({
+    map(([sankey, game, linkText, linkSize, sankeyAlign]) => ({
       sankey,
-      options,
       linkText,
       linkSize,
       sankeyAlign,
+      options: linkValueOptions(game),
     }))
   );
 
   @ViewChild('svg') svgElement: ElementRef | undefined;
 
-  selected: string | undefined;
+  selectedId: number | undefined;
   height = window.innerHeight * 0.75;
   svg: Selection<SVGSVGElement, unknown, null, undefined> | undefined;
   skLayout: SankeyLayout<SankeyGraph<Node, Link>, Node, Link> | undefined;
-  sankeyAlignOptions = sankeyAlignOptions;
 
+  sankeyAlignOptions = sankeyAlignOptions;
   ListMode = ListMode;
 
   constructor(private ref: ChangeDetectorRef, private store: Store<LabState>) {}
@@ -200,7 +200,7 @@ export class FlowComponent implements AfterViewInit {
         .attr('fill', (d) => d.color)
         .on('click', (e, d) => {
           if (e.defaultPrevented) return;
-          this.setSelected(d.id);
+          this.setSelected(d.stepId);
         })
         .call(
           drag<SVGRectElement, SankeyNode<Node, Link>>()
@@ -292,12 +292,16 @@ export class FlowComponent implements AfterViewInit {
     return this.orZero(d.y1) - this.orZero(d.y0);
   }
 
-  setSelected(value: string): void {
-    const split = value.split('|');
-    this.selected = split[split.length - 1];
+  setSelected(id: number): void {
+    this.selectedId = id;
     this.ref.detectChanges();
   }
 
+  export(data: SankeyData): void {
+    ExportUtility.saveAsJson(JSON.stringify(data));
+  }
+
+  /** Action Dispatch Methods */
   setLinkSize(value: LinkValue): void {
     this.store.dispatch(new Preferences.SetLinkSizeAction(value));
   }
@@ -308,9 +312,5 @@ export class FlowComponent implements AfterViewInit {
 
   setSankeyAlign(value: SankeyAlign): void {
     this.store.dispatch(new Preferences.SetSankeyAlignAction(value));
-  }
-
-  export(data: SankeyData): void {
-    ExportUtility.saveAsJson(JSON.stringify(data));
   }
 }

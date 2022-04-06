@@ -23,10 +23,10 @@ export class ColumnsComponent extends DialogContainerComponent {
   columns$ = this.store.select(getColumnsState);
   options$ = this.store.select(getGame).pipe(map((g) => columnOptions(g)));
 
-  PrecisionColumns = PrecisionColumns;
   edited = false;
   editValue: ColumnsState = {};
 
+  PrecisionColumns = PrecisionColumns;
   Column = Column;
 
   constructor(private store: Store<LabState>, public track: TrackService) {
@@ -36,7 +36,7 @@ export class ColumnsComponent extends DialogContainerComponent {
   clickOpen(columns: ColumnsState): void {
     this.open = true;
     this.edited = false;
-    this.editValue = Object.keys(columns).reduce((e: ColumnsState, c) => {
+    this.editValue = Object.keys(columns)((e: ColumnsState, c) => {
       e[c] = { ...columns[c] };
       return e;
     }, {});

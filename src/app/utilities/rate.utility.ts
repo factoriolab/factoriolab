@@ -11,6 +11,8 @@ import {
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
 
+const ROOT_ID = -1;
+
 export class RateUtility {
   static addStepsFor(
     itemId: string,
@@ -38,6 +40,7 @@ export class RateUtility {
     } else {
       // No existing step found, create a new one
       step = {
+        id: steps.length,
         itemId,
         items: Rational.zero,
       };
@@ -234,24 +237,19 @@ export class RateUtility {
   }
 
   static sortHierarchy(steps: Step[]): Step[] {
-    // Assign unique ids
-    for (const step of steps) {
-      step.id = `${step.itemId || ''}.${step.recipeId || ''}`;
-    }
-
     // Determine parents
-    const parents: Entities = {};
+    const parents: Record<number, number> = {};
     for (const step of steps) {
       if (step.parents && Object.keys(step.parents).length === 1) {
         const recipeId = Object.keys(step.parents)[0];
         const parent = steps.find((s) => s.recipeId === recipeId);
         if (step.id === parent.id) {
-          parents[step.id] = '';
+          parents[step.id] = ROOT_ID;
         } else {
           parents[step.id] = parent.id;
         }
       } else {
-        parents[step.id] = '';
+        parents[step.id] = ROOT_ID;
       }
     }
 
@@ -267,7 +265,7 @@ export class RateUtility {
     }
 
     // Perform recursive sort
-    const sorted = this.sortRecursive(groups, '', []);
+    const sorted = this.sortRecursive(groups, ROOT_ID, []);
 
     // Add back any steps left out (potentially circular loops)
     sorted.push(...steps.filter((s) => sorted.indexOf(s) === -1));
@@ -277,7 +275,7 @@ export class RateUtility {
 
   static sortRecursive(
     groups: Entities<Step[]>,
-    id: string,
+    id: number,
     result: Step[]
   ): Step[] {
     if (!groups[id]) {

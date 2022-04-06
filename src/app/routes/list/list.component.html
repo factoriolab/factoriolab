@@ -125,7 +125,8 @@
       <ng-container *ngFor="let step of vm.steps; trackBy: track.step">
         <ng-container
           *ngIf="
-            mode === ListMode.All || (selected != null && step.id === selected)
+            mode === ListMode.All ||
+            (selectedId != null && step.id === selectedId)
           "
         >
           <tr class="border row col">
@@ -416,7 +417,6 @@
                                 changeFactory(
                                   step.recipeId,
                                   $event,
-                                  setFactory,
                                   vm.factorySettings,
                                   vm.data
                                 )
@@ -473,15 +473,12 @@
                           vm.data.game !== Game.Satisfactory
                         "
                         (selectId)="
-                          changeFactoryModules(
+                          changeRecipeField(
                             step.recipeId,
                             $event,
-                            i,
-                            modules,
-                            setFactoryModules,
                             vm.recipeSettings,
                             vm.factorySettings,
-                            vm.data
+                            RecipeField.FactoryModules
                           )
                         "
                       >
@@ -517,12 +514,12 @@
                   labValidateOverclock
                   [ngModel]="vm.recipeSettings[step.recipeId].overclock"
                   (input)="
-                    changeOverclock(
+                    changeRecipeField(
                       step.recipeId,
                       $event,
-                      setOverclock,
                       vm.recipeSettings,
-                      vm.factorySettings
+                      vm.factorySettings,
+                      RecipeField.Overclock
                     )
                   "
                 />
@@ -547,12 +544,12 @@
                         [digits]="2"
                         [value]="count"
                         (setValue)="
-                          changeBeaconCount(
+                          changeRecipeField(
                             step.recipeId,
                             $event,
-                            setBeaconCount,
                             vm.recipeSettings,
-                            vm.factorySettings
+                            vm.factorySettings,
+                            RecipeField.BeaconCount
                           )
                         "
                       >
@@ -563,7 +560,8 @@
                     <div class="flex">
                       <ng-container
                         *ngIf="
-                          gtZero(vm.recipeSettings[step.recipeId].beaconCount)
+                          vm.recipeSettings[step.recipeId].beaconCount
+                            | labGtZero
                         "
                       >
                         <ng-container
@@ -585,12 +583,12 @@
                             [selected]="beacon"
                             [options]="vm.data.beaconIds"
                             (selectId)="
-                              changeBeacon(
+                              changeRecipeField(
                                 step.recipeId,
                                 $event,
-                                setBeacon,
                                 vm.recipeSettings,
-                                vm.factorySettings
+                                vm.factorySettings,
+                                RecipeField.Beacon
                               )
                             "
                           >
@@ -609,7 +607,7 @@
                   <td class="split-column">
                     <ng-container
                       *ngIf="
-                        gtZero(vm.recipeSettings[step.recipeId].beaconCount)
+                        vm.recipeSettings[step.recipeId].beaconCount | labGtZero
                       "
                     >
                       <div class="flex">
@@ -633,14 +631,14 @@
                             [options]="vm.data.beaconModuleIds"
                             [includeEmptyModule]="true"
                             (selectId)="
-                              changeBeaconModules(
+                              changeRecipeField(
                                 step.recipeId,
                                 $event,
-                                i,
-                                modules,
-                                setBeaconModules,
                                 vm.recipeSettings,
-                                vm.factorySettings
+                                vm.factorySettings,
+                                RecipeField.BeaconModules,
+                                i,
+                                vm.data
                               )
                             "
                           >
@@ -1866,7 +1864,7 @@
         </td>
         <td *ngIf="vm.columns[Column.Link].show"></td>
       </tr>
-      <tr *ngIf="mode === ListMode.Focus && !selected">
+      <tr *ngIf="mode === ListMode.Focus && selectedId == null">
         <td colspan="100" class="message">Select a node to see details</td>
       </tr>
     </tbody>

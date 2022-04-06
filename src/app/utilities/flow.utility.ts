@@ -46,6 +46,7 @@ export class FlowUtility {
 
         sankey.nodes.push({
           id: rId[step.recipeId],
+          stepId: step.id,
           viewBox: `${icon.position
             .replace(/px/g, '')
             .replace(/-/g, '')} 64 64`,
@@ -108,6 +109,7 @@ export class FlowUtility {
 
         sankey.nodes.push({
           id: iId[step.itemId],
+          stepId: step.id,
           viewBox: `${icon.position
             .replace(/px/g, '')
             .replace(/-/g, '')} 64 64`,

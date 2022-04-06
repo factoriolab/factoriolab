@@ -1,16 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import {
-  ListContainerComponent,
-  FlowComponent,
-  MatrixContainerComponent,
-} from './components';
+import { MatrixContainerComponent } from './components';
+import { FlowComponent, ListComponent } from './routes';
 
 const routes: Routes = [
   {
     path: 'list',
-    component: ListContainerComponent,
+    component: ListComponent,
   },
   {
     path: 'flow',

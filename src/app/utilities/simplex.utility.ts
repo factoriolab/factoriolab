@@ -645,6 +645,7 @@ export class SimplexUtility {
           recipes.some((r) => r.produces(s.itemId) && r.produces(itemId))
         );
         step = {
+          id: steps.length,
           itemId,
           items: output,
         };
@@ -715,6 +716,7 @@ export class SimplexUtility {
     if (!step) {
       const index = steps.findIndex((s) => recipe.produces(s.itemId));
       step = {
+        id: steps.length,
         itemId: null,
         items: null,
       };

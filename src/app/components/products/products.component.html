@@ -1,33 +1,27 @@
-<ng-container
-  *ngIf="{
-    recipeSettings: recipeSettings$ | async,
-    factorySettings: factorySettings$ | async,
-    data: data$ | async
-  } as a"
->
+<ng-container *ngIf="vm$ | async as vm">
   <h2>Products</h2>
   <div class="panel">
     <div
       class="product-row"
-      *ngFor="let product of products; trackBy: track.product"
+      *ngFor="let product of vm.products; trackBy: track.product"
     >
-      <ng-container *ngIf="product && a.data.itemEntities[product.itemId]">
-        <button title="Remove product" (click)="removeProduct.emit(product.id)">
+      <ng-container *ngIf="product && vm.data.itemEntities[product.itemId]">
+        <button title="Remove product" (click)="removeProduct(product.id)">
           <i class="material-icons">remove</i>
         </button>
         <span>Produce</span>
         <lab-picker
-          [data]="a.data"
+          [data]="vm.data"
           [selected]="product.itemId"
-          (selectId)="changeItem(product, $event, a.data)"
+          (selectId)="changeItem(product, $event, vm.data)"
         >
           <lab-icon
             class="button"
             title="Change item"
             hoverIcon="settings"
             [iconId]="product.itemId"
-            [tooltip]="a.data.itemEntities[product.itemId].name"
-            [item]="a.data.itemEntities[product.itemId]"
+            [tooltip]="vm.data.itemEntities[product.itemId].name"
+            [item]="vm.data.itemEntities[product.itemId]"
           ></lab-icon
         ></lab-picker>
         <span>from</span>
@@ -35,37 +29,40 @@
           title="Set output rate"
           placeholder="Rate"
           [value]="product.rate"
-          (setValue)="setRate.emit({ id: product.id, value: $event })"
+          (setValue)="setRate(product.id, $event)"
         ></lab-input>
         <lab-options
           class="ratetype"
           title="Change rate type"
           [selected]="product.rateType"
-          [options]="rateTypeOptions$ | async"
-          (selectId)="setRateType.emit({ id: product.id, value: $event })"
+          [options]="vm.rateTypeOptions"
+          (selectId)="setRateType(product.id, $event)"
         ></lab-options>
         <ng-container
-          *ngIf="productSteps[product.itemId].length > 0; else recipeNone"
+          *ngIf="vm.productSteps[product.itemId].length > 0; else recipeNone"
         >
           <ng-container *ngIf="product.viaId as id">
             <span>of</span>
             <ng-container
-              *ngIf="productSteps[product.itemId].length === 1; else viaPicker"
+              *ngIf="
+                vm.productSteps[product.itemId].length === 1;
+                else viaPicker
+              "
             >
               <lab-icon
                 *ngIf="product.rateType === RateType.Factories; else singleItem"
                 class="pad"
                 [iconId]="id"
-                [tooltip]="a.data.recipeEntities[id].name"
-                [recipe]="a.data.recipeEntities[id]"
+                [tooltip]="vm.data.recipeEntities[id].name"
+                [recipe]="vm.data.recipeEntities[id]"
               >
               </lab-icon>
               <ng-template #singleItem>
                 <lab-icon
                   class="pad"
                   [iconId]="id"
-                  [tooltip]="a.data.itemEntities[id].name"
-                  [item]="a.data.itemEntities[id]"
+                  [tooltip]="vm.data.itemEntities[id].name"
+                  [item]="vm.data.itemEntities[id]"
                 >
                 </lab-icon>
               </ng-template>
@@ -74,37 +71,37 @@
               <lab-select
                 *ngIf="product.rateType === RateType.Factories; else itemPicker"
                 header="Select a step to calculate by"
-                [data]="a.data"
+                [data]="vm.data"
                 [selected]="id"
-                [options]="productOptions[product.id]"
+                [options]="vm.productOptions[product.id]"
                 [selectType]="IdType.Recipe"
-                (selectId)="setVia.emit({ id: product.id, value: $event })"
+                (selectId)="setVia(product.id, $event)"
               >
                 <lab-icon
                   class="button"
                   title="Change rate step"
                   hoverIcon="settings"
                   [iconId]="id"
-                  [tooltip]="a.data.recipeEntities[id].name"
-                  [recipe]="a.data.recipeEntities[id]"
+                  [tooltip]="vm.data.recipeEntities[id].name"
+                  [recipe]="vm.data.recipeEntities[id]"
                 >
                 </lab-icon>
               </lab-select>
               <ng-template #itemPicker>
                 <lab-select
                   header="Select a step to calculate by"
-                  [data]="a.data"
+                  [data]="vm.data"
                   [selected]="id"
-                  [options]="productOptions[product.id]"
-                  (selectId)="setVia.emit({ id: product.id, value: $event })"
+                  [options]="vm.productOptions[product.id]"
+                  (selectId)="setVia(product.id, $event)"
                 >
                   <lab-icon
                     class="button"
                     title="Change rate step"
                     hoverIcon="settings"
                     [iconId]="id"
-                    [tooltip]="a.data.itemEntities[id].name"
-                    [item]="a.data.itemEntities[id]"
+                    [tooltip]="vm.data.itemEntities[id].name"
+                    [item]="vm.data.itemEntities[id]"
                   >
                   </lab-icon>
                 </lab-select>
@@ -113,45 +110,41 @@
             <ng-container *ngIf="product.rateType === RateType.Belts">
               <span>using</span>
               <ng-container
-                *ngIf="product.viaSetting || itemSettings[id].belt as belt"
+                *ngIf="product.viaSetting ?? vm.itemSettings[id].belt as belt"
               >
                 <lab-select
-                  *ngIf="a.data.beltIds.indexOf(belt) !== -1; else pipePicker"
+                  *ngIf="vm.data.beltIds.indexOf(belt) !== -1; else pipePicker"
                   header="Select a belt"
-                  [data]="a.data"
+                  [data]="vm.data"
                   [selected]="belt"
-                  [options]="a.data.beltIds"
+                  [options]="vm.data.beltIds"
                   [columns]="
-                    a.data.game === Game.DysonSphereProgram ? 3 : undefined
+                    vm.data.game === Game.DysonSphereProgram ? 3 : undefined
                   "
                   (selectId)="
-                    setViaSetting.emit({
-                      id: product.id,
-                      value: $event,
-                      def: itemSettings[id].belt
-                    })
+                    setViaSetting(product.id, $event, vm.itemSettings[id].belt)
                   "
                 >
                   <lab-icon
                     class="button"
                     tooltip="Change rate step belt"
                     [iconId]="belt"
-                    [item]="a.data.itemEntities[belt]"
+                    [item]="vm.data.itemEntities[belt]"
                   ></lab-icon>
                 </lab-select>
                 <ng-template #pipePicker>
                   <lab-select
-                    *ngIf="a.data.pipeIds.indexOf(belt) !== -1; else pipeIcon"
+                    *ngIf="vm.data.pipeIds.indexOf(belt) !== -1; else pipeIcon"
                     header="Select a pipe"
-                    [data]="a.data"
+                    [data]="vm.data"
                     [selected]="belt"
-                    [options]="a.data.pipeIds"
+                    [options]="vm.data.pipeIds"
                     (selectId)="
-                      setViaSetting.emit({
-                        id: product.id,
-                        value: $event,
-                        def: itemSettings[id].belt
-                      })
+                      setViaSetting(
+                        product.id,
+                        $event,
+                        vm.itemSettings[id].belt
+                      )
                     "
                   >
                     <lab-icon
@@ -164,68 +157,68 @@
                 <ng-template #pipeIcon>
                   <lab-icon
                     [iconId]="belt"
-                    [tooltip]="a.data.itemEntities[belt]?.name || PIPE"
+                    [tooltip]="vm.data.itemEntities[belt]?.name || PIPE"
                   ></lab-icon>
                 </ng-template>
               </ng-container>
             </ng-container>
             <ng-container *ngIf="product.rateType === RateType.Wagons">
               <ng-container
-                *ngIf="product.viaSetting || itemSettings[id].wagon as wagon"
+                *ngIf="product.viaSetting || vm.itemSettings[id].wagon as wagon"
               >
                 <ng-container
                   *ngIf="
-                    a.data.fluidWagonIds.indexOf(wagon) === -1;
+                    vm.data.fluidWagonIds.indexOf(wagon) === -1;
                     else fluidWagon
                   "
                 >
-                  <ng-container *ngIf="a.data.cargoWagonIds.length > 1">
+                  <ng-container *ngIf="vm.data.cargoWagonIds.length > 1">
                     <span>using</span>
                     <lab-select
                       header="Select a cargo wagon"
-                      [data]="a.data"
+                      [data]="vm.data"
                       [selected]="wagon"
-                      [options]="a.data.cargoWagonIds"
+                      [options]="vm.data.cargoWagonIds"
                       (selectId)="
-                        setViaSetting.emit({
-                          id: product.id,
-                          value: $event,
-                          def: itemSettings[id].wagon
-                        })
+                        setViaSetting(
+                          product.id,
+                          $event,
+                          vm.itemSettings[id].wagon
+                        )
                       "
                     >
                       <lab-icon
                         class="button"
                         title="Change rate step wagon"
                         [iconId]="wagon"
-                        [tooltip]="a.data.itemEntities[wagon].name"
-                        [item]="a.data.itemEntities[wagon]"
+                        [tooltip]="vm.data.itemEntities[wagon].name"
+                        [item]="vm.data.itemEntities[wagon]"
                       ></lab-icon>
                     </lab-select>
                   </ng-container>
                 </ng-container>
                 <ng-template #fluidWagon>
-                  <ng-container *ngIf="a.data.fluidWagonIds.length > 1">
+                  <ng-container *ngIf="vm.data.fluidWagonIds.length > 1">
                     <span>using</span>
                     <lab-select
                       header="Select a fluid wagon"
-                      [data]="a.data"
+                      [data]="vm.data"
                       [selected]="wagon"
-                      [options]="a.data.fluidWagonIds"
+                      [options]="vm.data.fluidWagonIds"
                       (selectId)="
-                        setViaSetting.emit({
-                          id: product.id,
-                          value: $event,
-                          def: itemSettings[id].wagon
-                        })
+                        setViaSetting(
+                          product.id,
+                          $event,
+                          vm.itemSettings[id].wagon
+                        )
                       "
                     >
                       <lab-icon
                         class="button"
                         title="Change rate step wagon"
                         [iconId]="wagon"
-                        [tooltip]="a.data.itemEntities[wagon].name"
-                        [item]="a.data.itemEntities[wagon]"
+                        [tooltip]="vm.data.itemEntities[wagon].name"
+                        [item]="vm.data.itemEntities[wagon]"
                       ></lab-icon>
                     </lab-select>
                   </ng-container>
@@ -234,10 +227,10 @@
             </ng-container>
             <ng-container *ngIf="product.rateType === RateType.Factories">
               <ng-container *ngIf="product.viaSetting as factory">
-                <ng-container *ngIf="a.data.recipeEntities[id] as recipe">
+                <ng-container *ngIf="vm.data.recipeEntities[id] as recipe">
                   <ng-container
                     *ngIf="
-                      a.data.game !== Game.DysonSphereProgram ||
+                      vm.data.game !== Game.DysonSphereProgram ||
                       factory !== ItemId.MiningDrill
                     "
                   >
@@ -250,17 +243,16 @@
                     >
                       <lab-select
                         header="Select a factory"
-                        [data]="a.data"
+                        [data]="vm.data"
                         [selected]="factory"
                         [options]="recipe.producers"
                         (selectId)="
                           changeFactory(
-                            id,
+                            product.id,
                             $event,
-                            setViaSetting,
-                            a.factorySettings,
-                            a.data,
-                            product.id
+                            id,
+                            vm.factorySettings,
+                            vm.data
                           )
                         "
                       >
@@ -268,16 +260,16 @@
                           class="button"
                           title="Change rate step factory"
                           [iconId]="factory"
-                          [tooltip]="a.data.itemEntities[factory].name"
-                          [item]="a.data.itemEntities[factory]"
+                          [tooltip]="vm.data.itemEntities[factory].name"
+                          [item]="vm.data.itemEntities[factory]"
                         ></lab-icon>
                       </lab-select>
                     </ng-container>
                     <ng-template #factoryDefault>
                       <lab-icon
                         [iconId]="factory"
-                        [tooltip]="a.data.itemEntities[factory].name"
-                        [item]="a.data.itemEntities[factory]"
+                        [tooltip]="vm.data.itemEntities[factory].name"
+                        [item]="vm.data.itemEntities[factory]"
                       ></lab-icon>
                     </ng-template>
                   </ng-container>
@@ -293,44 +285,42 @@
                         trackBy: track.string
                       "
                       [header]="
-                        a.data.game === Game.Factorio
+                        vm.data.game === Game.Factorio
                           ? 'Select a module'
-                          : a.data.game === Game.DysonSphereProgram
+                          : vm.data.game === Game.DysonSphereProgram
                           ? 'Select a proliferator'
                           : 'Select resource purity'
                       "
-                      [data]="a.data"
+                      [data]="vm.data"
                       [selected]="mod"
-                      [options]="a.data.recipeModuleIds[id]"
-                      [includeEmptyModule]="a.data.game !== Game.Satisfactory"
+                      [options]="vm.data.recipeModuleIds[id]"
+                      [includeEmptyModule]="vm.data.game !== Game.Satisfactory"
                       (selectId)="
-                        changeFactoryModules(
-                          id,
+                        changeRecipeField(
+                          product,
                           $event,
+                          id,
+                          vm.recipeSettings,
+                          vm.factorySettings,
+                          RecipeField.FactoryModules,
                           i,
-                          product.viaFactoryModules,
-                          setViaFactoryModules,
-                          a.recipeSettings,
-                          a.factorySettings,
-                          a.data,
-                          product.id,
-                          product.viaSetting
+                          vm.data
                         )
                       "
                     >
                       <lab-icon
                         class="button"
                         [title]="
-                          a.data.game === Game.Factorio
+                          vm.data.game === Game.Factorio
                             ? 'Change rate step factory module'
-                            : a.data.game === Game.DysonSphereProgram
+                            : vm.data.game === Game.DysonSphereProgram
                             ? 'Change rate step proliferator'
                             : 'Change rate step resource purity'
                         "
                         [class.module]="!first"
                         [iconId]="mod"
-                        [tooltip]="a.data.itemEntities[mod]?.name"
-                        [item]="a.data.itemEntities[mod]"
+                        [tooltip]="vm.data.itemEntities[mod]?.name"
+                        [item]="vm.data.itemEntities[mod]"
                       ></lab-icon>
                     </lab-select>
                   </div>
@@ -345,14 +335,13 @@
                       labValidateOverclock
                       [ngModel]="product.viaOverclock"
                       (input)="
-                        changeOverclock(
-                          id,
+                        changeRecipeField(
+                          product,
                           $event,
-                          setViaOverclock,
-                          a.recipeSettings,
-                          a.factorySettings,
-                          product.id,
-                          product.viaSetting
+                          id,
+                          vm.recipeSettings,
+                          vm.factorySettings,
+                          RecipeField.Overclock
                         )
                       "
                     />
@@ -365,43 +354,44 @@
                       [digits]="2"
                       [value]="product.viaBeaconCount"
                       (setValue)="
-                        changeBeaconCount(
-                          id,
+                        changeRecipeField(
+                          product,
                           $event,
-                          setViaBeaconCount,
-                          a.recipeSettings,
-                          a.factorySettings,
-                          product.id,
-                          product.viaSetting
+                          id,
+                          vm.recipeSettings,
+                          vm.factorySettings,
+                          RecipeField.BeaconCount
                         )
                       "
                     >
                     </lab-input>
-                    <ng-container *ngIf="gtZero(product.viaBeaconCount)">
+                    <ng-container *ngIf="product.viaBeaconCount | labGtZero">
                       <ng-container
-                        *ngIf="a.data.beaconIds.length === 1; else beaconPicker"
+                        *ngIf="
+                          vm.data.beaconIds.length === 1;
+                          else beaconPicker
+                        "
                       >
                         <lab-icon
                           [iconId]="beacon"
-                          [tooltip]="a.data.itemEntities[beacon].name"
-                          [item]="a.data.itemEntities[beacon]"
+                          [tooltip]="vm.data.itemEntities[beacon].name"
+                          [item]="vm.data.itemEntities[beacon]"
                         ></lab-icon
                       ></ng-container>
                       <ng-template #beaconPicker>
                         <lab-select
                           header="Select a beacon"
-                          [data]="a.data"
+                          [data]="vm.data"
                           [selected]="beacon"
-                          [options]="a.data.beaconIds"
+                          [options]="vm.data.beaconIds"
                           (selectId)="
-                            changeBeacon(
-                              id,
+                            changeRecipeField(
+                              product,
                               $event,
-                              setViaBeacon,
-                              a.recipeSettings,
-                              a.factorySettings,
-                              product.id,
-                              product.viaSetting
+                              id,
+                              vm.recipeSettings,
+                              vm.factorySettings,
+                              RecipeField.Beacon
                             )
                           "
                         >
@@ -409,8 +399,8 @@
                             class="button"
                             title="Set rate step beacon"
                             [iconId]="beacon"
-                            [tooltip]="a.data.itemEntities[beacon].name"
-                            [item]="a.data.itemEntities[beacon]"
+                            [tooltip]="vm.data.itemEntities[beacon].name"
+                            [item]="vm.data.itemEntities[beacon]"
                           ></lab-icon>
                         </lab-select>
                       </ng-template>
@@ -426,22 +416,19 @@
                             trackBy: track.string
                           "
                           header="Select a module"
-                          [data]="a.data"
+                          [data]="vm.data"
                           [selected]="mod"
-                          [options]="a.data.beaconModuleIds"
+                          [options]="vm.data.beaconModuleIds"
                           [includeEmptyModule]="true"
                           (selectId)="
-                            changeBeaconModules(
-                              id,
+                            changeRecipeField(
+                              product,
                               $event,
-                              i,
-                              modules,
-                              setViaBeaconModules,
-                              a.recipeSettings,
-                              a.factorySettings,
-                              product.id,
-                              product.viaSetting,
-                              product.viaBeacon
+                              id,
+                              vm.recipeSettings,
+                              vm.factorySettings,
+                              RecipeField.BeaconModules,
+                              i
                             )
                           "
                         >
@@ -450,8 +437,8 @@
                             title="Change rate step beacon module"
                             [class.module]="!first"
                             [iconId]="mod"
-                            [tooltip]="a.data.itemEntities[mod]?.name"
-                            [item]="a.data.itemEntities[mod]"
+                            [tooltip]="vm.data.itemEntities[mod]?.name"
+                            [item]="vm.data.itemEntities[mod]"
                           ></lab-icon>
                         </lab-select>
                       </div>
@@ -469,9 +456,9 @@
     </div>
     <div>
       <lab-picker
-        [data]="a.data"
-        [selected]="a.data.itemIds[0]"
-        (selectId)="addProduct.emit($event)"
+        [data]="vm.data"
+        [selected]="vm.data.itemIds[0]"
+        (selectId)="addProduct($event)"
       >
         <button title="Add a product">
           <i class="material-icons">add</i>
@@ -479,11 +466,10 @@
         </button></lab-picker
       >
       <lab-options
-        *ngIf="displayRate$ | async as displayRate"
         title="Select display rate"
-        [selected]="displayRate"
+        [selected]="vm.displayRate"
         [options]="DisplayRateOptions"
-        (selectId)="setDisplayRate.emit({ value: $event, prev: displayRate })"
+        (selectId)="setDisplayRate($event, vm.displayRate)"
       ></lab-options>
     </div>
   </div>
