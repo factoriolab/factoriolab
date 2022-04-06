@@ -37,8 +37,8 @@ import {
 } from '~/models';
 import { LabState } from '~/store';
 import * as Preferences from '~/store/preferences';
-import { getSankey, getSteps } from '~/store/products';
-import { getGame } from '~/store/settings';
+import * as Products from '~/store/products';
+import * as Settings from '~/store/settings';
 import { ExportUtility } from '~/utilities';
 
 @UntilDestroy()
@@ -49,14 +49,23 @@ import { ExportUtility } from '~/utilities';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowComponent implements AfterViewInit {
-  @ViewChild('svg') svgElement: ElementRef | undefined;
+  vm$ = combineLatest([
+    this.store.select(Products.getSankey),
+    this.store.select(Settings.getGame).pipe(map((g) => linkValueOptions(g))),
+    this.store.select(Preferences.getLinkText),
+    this.store.select(Preferences.getLinkSize),
+    this.store.select(Preferences.getSankeyAlign),
+  ]).pipe(
+    map(([sankey, options, linkText, linkSize, sankeyAlign]) => ({
+      sankey,
+      options,
+      linkText,
+      linkSize,
+      sankeyAlign,
+    }))
+  );
 
-  sankeyData$ = this.store.select(getSankey);
-  steps$ = this.store.select(getSteps);
-  linkText$ = this.store.select(Preferences.getLinkText);
-  linkSize$ = this.store.select(Preferences.getLinkSize);
-  sankeyAlign$ = this.store.select(Preferences.getSankeyAlign);
-  options$ = this.store.select(getGame).pipe(map((g) => linkValueOptions(g)));
+  @ViewChild('svg') svgElement: ElementRef | undefined;
 
   selected: string | undefined;
   height = window.innerHeight * 0.75;
@@ -69,7 +78,10 @@ export class FlowComponent implements AfterViewInit {
   constructor(private ref: ChangeDetectorRef, private store: Store<LabState>) {}
 
   ngAfterViewInit(): void {
-    combineLatest([this.sankeyData$, this.sankeyAlign$])
+    combineLatest([
+      this.store.select(Products.getSankey),
+      this.store.select(Preferences.getSankeyAlign),
+    ])
       .pipe(untilDestroyed(this))
       .subscribe(([data, align]) => this.rebuildChart(data, align));
   }

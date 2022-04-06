@@ -1,28 +1,17 @@
-<ng-container
-  *ngIf="{
-    linkText: linkText$ | async,
-    linkSize: linkSize$ | async,
-    options: options$ | async,
-    sankeyData: sankeyData$ | async,
-    sankeyAlign: sankeyAlign$ | async,
-    steps: steps$ | async
-  } as a"
->
+<ng-container *ngIf="vm$ | async as vm">
   <div class="flex">
     <div>Link text</div>
     <lab-options
-      *ngIf="a.linkText"
       title="Select flow link text"
-      [selected]="a.linkText"
-      [options]="a.options ?? []"
+      [selected]="vm.linkText"
+      [options]="vm.options"
       (selectId)="setLinkText($event)"
     ></lab-options>
     <div>Link size</div>
     <lab-options
-      *ngIf="a.linkSize"
       title="Select flow link size"
-      [selected]="a.linkSize"
-      [options]="a.options ?? []"
+      [selected]="vm.linkSize"
+      [options]="vm.options"
       (selectId)="setLinkSize($event)"
     ></lab-options>
     <div class="flex">
@@ -32,17 +21,16 @@
       >
     </div>
     <lab-options
-      *ngIf="a.sankeyAlign"
       title="Select sankey alignment"
-      [selected]="a.sankeyAlign"
+      [selected]="vm.sankeyAlign"
       [options]="sankeyAlignOptions"
       (selectId)="setSankeyAlign($event)"
     ></lab-options>
     <button
-      *ngIf="a.sankeyData"
+      *ngIf="vm.sankey"
       title="Export to JSON"
       data-test="lab-flow-export"
-      (click)="export(a.sankeyData)"
+      (click)="export(vm.sankey)"
     >
       <i class="material-icons">file_download</i>
     </button>
