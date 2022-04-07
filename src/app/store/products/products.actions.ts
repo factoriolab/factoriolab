@@ -31,7 +31,7 @@ export class AddAction implements Action {
 
 export class RemoveAction implements Action {
   readonly type = ProductsActionType.REMOVE;
-  constructor(public payload: number) {}
+  constructor(public payload: string) {}
 }
 
 export class SetItemAction implements Action {

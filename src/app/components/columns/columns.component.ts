@@ -36,7 +36,7 @@ export class ColumnsComponent extends DialogContainerComponent {
   clickOpen(columns: ColumnsState): void {
     this.open = true;
     this.edited = false;
-    this.editValue = Object.keys(columns)((e: ColumnsState, c) => {
+    this.editValue = Object.keys(columns).reduce((e: ColumnsState, c) => {
       e[c] = { ...columns[c] };
       return e;
     }, {});

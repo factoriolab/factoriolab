@@ -11,7 +11,7 @@ import {
 import { ItemsState } from '~/store/items';
 import { RecipesState } from '~/store/recipes';
 
-const ROOT_ID = -1;
+const ROOT_ID = '';
 
 export class RateUtility {
   static addStepsFor(
@@ -40,7 +40,7 @@ export class RateUtility {
     } else {
       // No existing step found, create a new one
       step = {
-        id: steps.length,
+        id: steps.length.toString(),
         itemId,
         items: Rational.zero,
       };
@@ -275,7 +275,7 @@ export class RateUtility {
 
   static sortRecursive(
     groups: Entities<Step[]>,
-    id: number,
+    id: string,
     result: Step[]
   ): Step[] {
     if (!groups[id]) {

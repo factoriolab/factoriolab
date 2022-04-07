@@ -61,7 +61,7 @@ export class ProductsComponent {
         productSteps,
         products,
         itemSettings,
-        factorySettings,
+        factories,
         recipeSettings,
         data,
         displayRate,
@@ -69,7 +69,7 @@ export class ProductsComponent {
         productSteps,
         products,
         itemSettings,
-        factorySettings,
+        factories,
         recipeSettings,
         data,
         displayRate,
@@ -106,10 +106,10 @@ export class ProductsComponent {
   }
 
   changeFactory(
-    id: number,
+    id: string,
     value: string,
     recipeId: string,
-    factorySettings: Factories.FactoriesState,
+    factories: Factories.FactoriesState,
     data: Dataset
   ): void {
     this.setViaSetting(
@@ -117,7 +117,7 @@ export class ProductsComponent {
       value,
       RecipeUtility.bestMatch(
         data.recipeEntities[recipeId].producers,
-        factorySettings.ids
+        factories.ids
       )
     );
   }
@@ -127,7 +127,7 @@ export class ProductsComponent {
     event: string | Event,
     recipeId: string,
     recipeSettings: Recipes.RecipesState,
-    factorySettings: Factories.FactoriesState,
+    factories: Factories.FactoriesState,
     field: RecipeField,
     index?: number,
     data?: Dataset
@@ -136,7 +136,7 @@ export class ProductsComponent {
       recipeId,
       product.viaSetting,
       recipeSettings,
-      factorySettings
+      factories
     );
     switch (field) {
       case RecipeField.FactoryModules: {
@@ -206,10 +206,10 @@ export class ProductsComponent {
     recipeId: string,
     factoryId: string,
     recipeSettings: Recipes.RecipesState,
-    factorySettings: Factories.FactoriesState
+    factories: Factories.FactoriesState
   ): AllSettingsState {
     const recipe = recipeSettings[recipeId];
-    const factory = factorySettings.entities[factoryId];
+    const factory = factories.entities[factoryId];
     return {
       recipe,
       factory,
@@ -227,32 +227,32 @@ export class ProductsComponent {
   }
 
   /** Action Dispatch Methods */
-  removeProduct(id: number): void {
+  removeProduct(id: string): void {
     this.store.dispatch(new Products.RemoveAction(id));
   }
 
-  setItem(id: number, value: string): void {
+  setItem(id: string, value: string): void {
     this.store.dispatch(new Products.SetItemAction({ id, value }));
   }
 
-  setRate(id: number, value: string): void {
+  setRate(id: string, value: string): void {
     this.store.dispatch(new Products.SetRateAction({ id, value }));
   }
 
-  setRateType(id: number, value: RateType): void {
+  setRateType(id: string, value: RateType): void {
     this.store.dispatch(new Products.SetRateTypeAction({ id, value }));
   }
 
-  setVia(id: number, value: string): void {
+  setVia(id: string, value: string): void {
     this.store.dispatch(new Products.SetViaAction({ id, value }));
   }
 
-  setViaSetting(id: number, value: string, def: string | undefined): void {
+  setViaSetting(id: string, value: string, def: string | undefined): void {
     this.store.dispatch(new Products.SetViaSettingAction({ id, value, def }));
   }
 
   setViaFactoryModules(
-    id: number,
+    id: string,
     value: string[],
     def: string[] | undefined
   ): void {
@@ -261,18 +261,18 @@ export class ProductsComponent {
     );
   }
 
-  setViaBeaconCount(id: number, value: string, def: string | undefined): void {
+  setViaBeaconCount(id: string, value: string, def: string | undefined): void {
     this.store.dispatch(
       new Products.SetViaBeaconCountAction({ id, value, def })
     );
   }
 
-  setViaBeacon(id: number, value: string, def: string | undefined): void {
+  setViaBeacon(id: string, value: string, def: string | undefined): void {
     this.store.dispatch(new Products.SetViaBeaconAction({ id, value, def }));
   }
 
   setViaBeaconModules(
-    id: number,
+    id: string,
     value: string[],
     def: string[] | undefined
   ): void {
@@ -281,7 +281,7 @@ export class ProductsComponent {
     );
   }
 
-  setViaOverclock(id: number, value: number, def: number | undefined): void {
+  setViaOverclock(id: string, value: number, def: number | undefined): void {
     this.store.dispatch(new Products.SetViaOverclockAction({ id, value, def }));
   }
 

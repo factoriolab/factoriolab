@@ -16,7 +16,7 @@ export enum ProductField {
 }
 
 export interface Product {
-  id: number;
+  id: string;
   itemId: string;
   rate: string;
   rateType: RateType;
@@ -30,7 +30,7 @@ export interface Product {
 }
 
 export class RationalProduct {
-  id: number;
+  id: string;
   itemId: string;
   rate: Rational;
   rateType: RateType;

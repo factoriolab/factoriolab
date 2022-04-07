@@ -2,7 +2,7 @@ import { Entities } from './entities';
 import { Rational } from './rational';
 
 export interface Step {
-  id: number;
+  id: string;
   itemId?: string;
   items: Rational;
   surplus?: Rational;

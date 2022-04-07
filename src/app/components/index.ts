@@ -9,4 +9,5 @@ export * from './picker/picker.component';
 export * from './products/products.component';
 export * from './ranker/ranker.component';
 export * from './select/select.component';
+export * from './settings/settings.component';
 export * from './toggle/toggle.component';

@@ -64,18 +64,18 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     this.store.select(Products.getStepDetails),
     this.store.select(Products.getStepEntities),
     this.store.select(Products.getStepTree),
+    this.store.select(Products.getEffectivePrecision),
+    this.store.select(Products.getEffectivePowerUnit),
     this.store.select(Recipes.getRecipeSettings),
     this.store.select(Recipes.getRecipesModified),
     this.store.select(Recipes.getAdjustedDataset),
     this.store.select(Settings.getSettings),
     this.store.select(Settings.getBeltSpeed),
     this.store.select(Preferences.getColumnsState),
-    this.store.select(Preferences.getEffectivePrecision),
-    this.store.select(Preferences.getEffectivePowerUnit),
   ]).pipe(
     map(
       ([
-        factorySettings,
+        factories,
         itemSettings,
         itemsModified,
         stepsModified,
@@ -84,16 +84,16 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
         stepDetails,
         stepEntities,
         stepTree,
+        effectivePrecision,
+        effectivePowerUnit,
         recipeSettings,
         recipesModified,
         data,
         settings,
         beltSpeed,
         columns,
-        effectivePrecision,
-        effectivePowerUnit,
       ]) => ({
-        factorySettings,
+        factories,
         itemSettings,
         itemsModified,
         stepsModified,
@@ -102,23 +102,23 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
         stepDetails,
         stepEntities,
         stepTree,
+        effectivePrecision,
+        effectivePowerUnit,
         recipeSettings,
         recipesModified,
         data,
         settings,
         beltSpeed,
         columns,
-        effectivePrecision,
-        effectivePowerUnit,
       })
     )
   );
 
   @Input() mode = ListMode.All;
-  @Input() selectedId: number | undefined;
+  @Input() selectedId: string | undefined;
 
   expanded: Entities<StepDetailTab> = {};
-  fragmentId: number | undefined;
+  fragmentId: string | undefined;
 
   ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
   DisplayRateVal = DisplayRateVal;
@@ -143,8 +143,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     this.route.fragment
       .pipe(
         take(1),
-        filter((f) => f != null),
-        map((f) => Number(f))
+        filter((f) => f != null)
       )
       .subscribe((id) => {
         // Store the fragment to navigate to it after the component loads
@@ -279,16 +278,13 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
   changeFactory(
     id: string,
     value: string,
-    factorySettings: Factories.FactoriesState,
+    factories: Factories.FactoriesState,
     data: Dataset
   ): void {
     this.setFactory(
       id,
       value,
-      RecipeUtility.bestMatch(
-        data.recipeEntities[id].producers,
-        factorySettings.ids
-      )
+      RecipeUtility.bestMatch(data.recipeEntities[id].producers, factories.ids)
     );
   }
 
@@ -296,13 +292,13 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     id: string,
     event: string | Event,
     recipeSettings: Recipes.RecipesState,
-    factorySettings: Factories.FactoriesState,
+    factories: Factories.FactoriesState,
     field: RecipeField,
     index?: number,
     data?: Dataset
   ): void {
     const recipe = recipeSettings[id];
-    const factory = factorySettings.entities[recipe.factory];
+    const factory = factories.entities[recipe.factory];
     switch (field) {
       case RecipeField.FactoryModules: {
         if (

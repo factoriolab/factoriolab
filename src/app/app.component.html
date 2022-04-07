@@ -57,7 +57,7 @@
           </div>
         </div>
       </div>
-      <lab-products-container></lab-products-container>
+      <lab-products></lab-products>
       <div *ngIf="(products$ | async).length">
         <ul role="navigation" class="tabs">
           <li
@@ -132,3 +132,4 @@
     </div>
   </div>
 </ng-template>
+<span>{{ error.message$ | async }}</span>

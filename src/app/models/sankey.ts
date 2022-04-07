@@ -10,7 +10,7 @@ export interface SankeyBase {
 
 export interface Node extends SankeyBase {
   id: string;
-  stepId: number;
+  stepId: string;
   viewBox: string;
   href: string;
 }

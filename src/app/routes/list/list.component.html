@@ -417,7 +417,7 @@
                                 changeFactory(
                                   step.recipeId,
                                   $event,
-                                  vm.factorySettings,
+                                  vm.factories,
                                   vm.data
                                 )
                               "
@@ -477,7 +477,7 @@
                             step.recipeId,
                             $event,
                             vm.recipeSettings,
-                            vm.factorySettings,
+                            vm.factories,
                             RecipeField.FactoryModules
                           )
                         "
@@ -518,7 +518,7 @@
                       step.recipeId,
                       $event,
                       vm.recipeSettings,
-                      vm.factorySettings,
+                      vm.factories,
                       RecipeField.Overclock
                     )
                   "
@@ -529,7 +529,10 @@
             <ng-container *ngIf="vm.columns[Column.Beacons].show">
               <ng-container *ngIf="step.recipeId; else noRecipeCell">
                 <ng-container
-                  *ngIf="vm.recipeSettings[step.recipeId].beacon as beacon"
+                  *ngIf="
+                    vm.recipeSettings[step.recipeId].beacon as beacon;
+                    else noRecipeCell
+                  "
                 >
                   <td>
                     <div
@@ -548,7 +551,7 @@
                             step.recipeId,
                             $event,
                             vm.recipeSettings,
-                            vm.factorySettings,
+                            vm.factories,
                             RecipeField.BeaconCount
                           )
                         "
@@ -587,7 +590,7 @@
                                 step.recipeId,
                                 $event,
                                 vm.recipeSettings,
-                                vm.factorySettings,
+                                vm.factories,
                                 RecipeField.Beacon
                               )
                             "
@@ -635,7 +638,7 @@
                                 step.recipeId,
                                 $event,
                                 vm.recipeSettings,
-                                vm.factorySettings,
+                                vm.factories,
                                 RecipeField.BeaconModules,
                                 i,
                                 vm.data

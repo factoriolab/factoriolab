@@ -67,7 +67,7 @@ export class FlowComponent implements AfterViewInit {
 
   @ViewChild('svg') svgElement: ElementRef | undefined;
 
-  selectedId: number | undefined;
+  selectedId: string | undefined;
   height = window.innerHeight * 0.75;
   svg: Selection<SVGSVGElement, unknown, null, undefined> | undefined;
   skLayout: SankeyLayout<SankeyGraph<Node, Link>, Node, Link> | undefined;
@@ -292,7 +292,7 @@ export class FlowComponent implements AfterViewInit {
     return this.orZero(d.y1) - this.orZero(d.y0);
   }
 
-  setSelected(id: number): void {
+  setSelected(id: string): void {
     this.selectedId = id;
     this.ref.detectChanges();
   }

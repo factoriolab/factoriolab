@@ -14,7 +14,6 @@ import { AppComponent } from './app.component';
 import {
   ProductsComponent,
   SettingsComponent,
-  SettingsContainerComponent,
   IconComponent,
   PickerComponent,
   SelectComponent,
@@ -29,6 +28,11 @@ import {
   InfoComponent,
 } from './components';
 import {
+  FocusOnShowDirective,
+  ValidateNumberDirective,
+  ValidateOverclockDirective,
+} from './directives';
+import {
   PowerPipe,
   RatePipe,
   FactoryRatePipe,
@@ -39,12 +43,7 @@ import {
   GtZeroPipe,
 } from './pipes';
 import { FlowComponent, ListComponent } from './routes';
-import {
-  FocusOnShowDirective,
-  LabErrorHandler,
-  ValidateNumberDirective,
-  ValidateOverclockDirective,
-} from './support';
+import { LabErrorHandler } from './services';
 import { reducers, metaReducers } from './store';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
 import { ProductsEffects } from './store/products/products.effects';
@@ -62,7 +61,6 @@ import { FactoriesEffects } from './store/factories/factories.effects';
     FlowComponent,
     ProductsComponent,
     SettingsComponent,
-    SettingsContainerComponent,
     OptionsComponent,
     DialogComponent,
     ColumnsComponent,

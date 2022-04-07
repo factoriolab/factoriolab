@@ -1,17 +1,7 @@
 import { createSelector } from '@ngrx/store';
 
-import {
-  Column,
-  Entities,
-  Game,
-  LinkValue,
-  PowerUnit,
-  PrecisionColumns,
-  Rational,
-  Step,
-} from '~/models';
+import { Column, Game, LinkValue } from '~/models';
 import { LabState } from '../';
-import * as Products from '../products';
 import * as Settings from '../settings';
 import {
   ColumnsState,
@@ -22,6 +12,10 @@ import {
 /* Base selector functions */
 export const preferencesState = (state: LabState): PreferencesState =>
   state.preferencesState;
+export const getStates = createSelector(
+  preferencesState,
+  (state) => state.states
+);
 export const getColumns = createSelector(
   preferencesState,
   (state) => state.columns
@@ -122,71 +116,3 @@ export const getSimplexModifiers = createSelector(
     costIgnored,
   })
 );
-
-export const getEffectivePrecision = createSelector(
-  getColumnsState,
-  Products.getSteps,
-  (columns, steps) => {
-    const effPrecision: Entities<number | null> = {};
-    effPrecision[Column.Surplus] = effPrecFrom(
-      steps,
-      columns[Column.Items].precision,
-      (s) => s.surplus
-    );
-
-    for (const i of PrecisionColumns.filter((i) => columns[i].show)) {
-      effPrecision[i] = effPrecFrom(steps, columns[i].precision, (s) =>
-        i === Column.Items
-          ? (s.items || Rational.zero).sub(s.surplus || Rational.zero)
-          : (s as Record<string, any>)[i.toLowerCase()]
-      );
-    }
-
-    return effPrecision;
-  }
-);
-
-export const getEffectivePowerUnit = createSelector(
-  getPowerUnit,
-  Products.getSteps,
-  (powerUnit, steps) => {
-    if (powerUnit === PowerUnit.Auto) {
-      let minPower: Rational | undefined;
-      for (const step of steps.filter((s) => s.power != null)) {
-        if (minPower == null || step.power!.lt(minPower)) {
-          minPower = step.power;
-        }
-      }
-      minPower = minPower ?? Rational.zero;
-      if (minPower.lt(Rational.thousand)) {
-        return PowerUnit.kW;
-      } else if (minPower.lt(Rational.million)) {
-        return PowerUnit.MW;
-      } else {
-        return PowerUnit.GW;
-      }
-    } else {
-      return powerUnit;
-    }
-  }
-);
-
-export function effPrecFrom(
-  steps: Step[],
-  precision: number | null,
-  fn: (step: Step) => Rational | undefined
-): number | null {
-  if (precision == null) {
-    return precision;
-  }
-  let max = 0;
-  for (const step of steps) {
-    const dec = fn(step)?.toDecimals() ?? 0;
-    if (dec >= precision) {
-      return precision;
-    } else if (dec > max) {
-      max = dec;
-    }
-  }
-  return max;
-}

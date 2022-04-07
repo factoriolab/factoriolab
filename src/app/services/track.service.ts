@@ -11,8 +11,8 @@ export class TrackService {
     return r.id;
   }
 
-  step(i: number, r: Step): number {
-    return r.id ?? -1;
+  step(i: number, r: Step): string {
+    return r.id ?? '';
   }
 
   product(i: number, r: Product): string {
