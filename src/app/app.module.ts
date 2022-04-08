@@ -22,8 +22,6 @@ import {
   OptionsComponent,
   DialogComponent,
   ColumnsComponent,
-  MatrixContainerComponent,
-  MatrixComponent,
   InputComponent,
   InfoComponent,
 } from './components';
@@ -42,7 +40,7 @@ import {
   LeftPadPipe,
   GtZeroPipe,
 } from './pipes';
-import { FlowComponent, ListComponent } from './routes';
+import { FlowComponent, ListComponent, MatrixComponent } from './routes';
 import { LabErrorHandler } from './services';
 import { reducers, metaReducers } from './store';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
@@ -67,7 +65,6 @@ import { FactoriesEffects } from './store/factories/factories.effects';
     ValidateNumberDirective,
     ValidateOverclockDirective,
     FocusOnShowDirective,
-    MatrixContainerComponent,
     MatrixComponent,
     InputComponent,
     InfoComponent,

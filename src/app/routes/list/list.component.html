@@ -478,7 +478,9 @@
                             $event,
                             vm.recipeSettings,
                             vm.factories,
-                            RecipeField.FactoryModules
+                            RecipeField.FactoryModules,
+                            i,
+                            vm.data
                           )
                         "
                       >
@@ -492,7 +494,7 @@
                               : 'Click to change resource purity'
                           "
                           [iconId]="mod"
-                          [tooltip]="vm.data.itemEntities[mod].name"
+                          [tooltip]="vm.data.itemEntities[mod]?.name"
                           [item]="vm.data.itemEntities[mod]"
                         ></lab-icon>
                       </lab-select>
@@ -649,7 +651,7 @@
                               class="button module"
                               title="Click to change beacon modules"
                               [iconId]="mod"
-                              [tooltip]="vm.data.itemEntities[mod].name"
+                              [tooltip]="vm.data.itemEntities[mod]?.name"
                               [item]="vm.data.itemEntities[mod]"
                             ></lab-icon>
                           </lab-select>
@@ -1773,7 +1775,9 @@
               trackBy: track.keyValue
             "
           >
-            <span class="monospace">{{ tot.value }}</span>
+            <span class="monospace">{{
+              tot.value | labRate: vm.effectivePrecision[Column.Belts]
+            }}</span>
             <lab-icon
               *ngIf="vm.data.itemEntities[tot.key] as item"
               [iconId]="tot.key"
@@ -1791,7 +1795,9 @@
               trackBy: track.keyValue
             "
           >
-            <span class="monospace">{{ tot.value }}</span>
+            <span class="monospace">{{
+              tot.value | labRate: vm.effectivePrecision[Column.Wagons]
+            }}</span>
             <lab-icon
               *ngIf="vm.data.itemEntities[tot.key] as item"
               [iconId]="tot.key"
@@ -1809,7 +1815,9 @@
               trackBy: track.keyValue
             "
           >
-            <span class="monospace">{{ tot.value }}</span>
+            <span class="monospace">{{
+              tot.value | labRate: vm.effectivePrecision[Column.Factories]
+            }}</span>
             <lab-icon
               *ngIf="vm.data.itemEntities[tot.key] as item; else totalRecipe"
               [iconId]="tot.key"
@@ -1837,7 +1845,7 @@
               trackBy: track.keyValue
             "
           >
-            <span class="monospace">{{ tot.value }}</span>
+            <span class="monospace">{{ tot.value | labRate: 0 }}</span>
             <lab-icon
               *ngIf="vm.data.itemEntities[tot.key] as item"
               [iconId]="tot.key"

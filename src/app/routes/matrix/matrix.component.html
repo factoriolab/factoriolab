@@ -1,28 +1,23 @@
-<ng-container
-  *ngIf="{
-    recipesModified: recipesModified$ | async,
-    settingsModified: settingsModified$ | async
-  } as a"
->
+<ng-container *ngIf="vm$ | async as vm">
   <table>
     <tr>
       <td class="header">Simplex Result</td>
-      <td>{{ result.result }}</td>
+      <td>{{ vm.result.result }}</td>
     </tr>
-    <tr *ngIf="result.time != null">
+    <tr *ngIf="vm.result.time != null">
       <td class="header">Runtime</td>
-      <td>{{ result.time }} ms</td>
+      <td>{{ vm.result.time }} ms</td>
     </tr>
-    <tr *ngIf="result.pivots != null">
+    <tr *ngIf="vm.result.pivots != null">
       <td class="header">Pivots</td>
-      <td>{{ result.pivots }}</td>
+      <td>{{ vm.result.pivots }}</td>
     </tr>
-    <tr *ngIf="result.A && result.O">
+    <tr *ngIf="vm.result.A && vm.result.O">
       <td class="header">Size</td>
-      <td>{{ result.A.length }} rows, {{ result.O.length }} cols</td>
+      <td>{{ vm.result.A.length }} rows, {{ vm.result.O.length }} cols</td>
     </tr>
   </table>
-  <table *ngIf="result.A">
+  <table *ngIf="vm.result.A">
     <tr>
       <th colspan="2">
         <div class="flex">
@@ -32,9 +27,9 @@
 each row in the simplex canonical tableau."
           ></lab-info>
           <button
-            *ngIf="a.settingsModified.cost"
+            *ngIf="vm.settingsModified.cost"
             title="Undo all cost modifiers"
-            (click)="resetCost.emit()"
+            (click)="resetCost()"
           >
             <i class="material-icons">undo</i>
           </button>
@@ -55,8 +50,8 @@ defined cost, usually mining."
         <lab-input
           title="Set recipe cost multipler"
           placeholder="Cost"
-          [value]="costFactor"
-          (setValue)="setCostFactor.emit($event)"
+          [value]="vm.settings.costFactor"
+          (setValue)="setCostFactor($event)"
         ></lab-input>
       </td>
     </tr>
@@ -71,8 +66,8 @@ defined cost, usually mining."
         <lab-input
           title="Set factory cost multipler"
           placeholder="Cost"
-          [value]="costFactory"
-          (setValue)="setCostFactory.emit($event)"
+          [value]="vm.settings.costFactory"
+          (setValue)="setCostFactory($event)"
         ></lab-input>
       </td>
     </tr>
@@ -87,8 +82,8 @@ defined cost, usually mining."
         <lab-input
           title="Set input item cost"
           placeholder="Cost"
-          [value]="costInput"
-          (setValue)="setCostInput.emit($event)"
+          [value]="vm.settings.costInput"
+          (setValue)="setCostInput($event)"
         ></lab-input>
       </td>
     </tr>
@@ -103,27 +98,27 @@ defined cost, usually mining."
         <lab-input
           title="Set ignored item cost"
           placeholder="Cost"
-          [value]="costIgnored"
-          (setValue)="setCostIgnored.emit($event)"
+          [value]="vm.settings.costIgnored"
+          (setValue)="setCostIgnored($event)"
         ></lab-input>
       </td>
     </tr>
   </table>
-  <table *ngIf="result.A">
+  <table *ngIf="vm.result.A">
     <tr>
-      <th [colSpan]="result.O.length + 2" class="header">
+      <th [colSpan]="vm.result.O.length + 2" class="header">
         Simplex Canonical Tableau
       </th>
     </tr>
     <tr>
       <th rowspan="2"></th>
       <th class="header" rowspan="2">I</th>
-      <th class="header" [colSpan]="result.items.length">Items/s</th>
-      <th class="header" [colSpan]="result.recipes.length">Recipes</th>
+      <th class="header" [colSpan]="vm.result.items.length">Items/s</th>
+      <th class="header" [colSpan]="vm.result.recipes.length">Recipes</th>
       <th
         class="header"
-        [colSpan]="result.inputs.length"
-        *ngIf="result.inputs.length"
+        [colSpan]="vm.result.inputs.length"
+        *ngIf="vm.result.inputs.length"
       >
         Inputs
       </th>
@@ -131,9 +126,9 @@ defined cost, usually mining."
         <div class="flex">
           <span>Cost</span>
           <button
-            *ngIf="a.recipesModified.cost"
+            *ngIf="vm.recipesModified.cost"
             title="Undo all cost modifications"
-            (click)="resetRecipeCost.emit()"
+            (click)="resetRecipeCost()"
           >
             <i class="material-icons">undo</i>
           </button>
@@ -142,42 +137,48 @@ defined cost, usually mining."
       <th rowspan="2"></th>
     </tr>
     <tr>
-      <td *ngFor="let i of result.items; trackBy: track.string">
-        <lab-icon [iconId]="i" [tooltip]="data.itemEntities[i].name"></lab-icon>
-      </td>
-      <td *ngFor="let i of result.recipes; trackBy: track.string">
+      <td *ngFor="let i of vm.result.items; trackBy: track.string">
         <lab-icon
           [iconId]="i"
-          [tooltip]="data.recipeEntities[i].name"
-          [recipe]="data.recipeEntities[i]"
+          [tooltip]="vm.data.itemEntities[i].name"
         ></lab-icon>
       </td>
-      <td *ngFor="let i of result.inputs; trackBy: track.string">
-        <lab-icon [iconId]="i" [tooltip]="data.itemEntities[i].name"></lab-icon>
+      <td *ngFor="let i of vm.result.recipes; trackBy: track.string">
+        <lab-icon
+          [iconId]="i"
+          [tooltip]="vm.data.recipeEntities[i].name"
+          [recipe]="vm.data.recipeEntities[i]"
+        ></lab-icon>
+      </td>
+      <td *ngFor="let i of vm.result.inputs; trackBy: track.string">
+        <lab-icon
+          [iconId]="i"
+          [tooltip]="vm.data.itemEntities[i].name"
+        ></lab-icon>
       </td>
     </tr>
-    <tr *ngFor="let R of result.A; let i = index">
+    <tr *ngFor="let R of vm.result.A; let i = index">
       <th class="header" *ngIf="i === 0; else notObj">Objective</th>
       <ng-template #notObj>
         <td>
           <div
-            *ngIf="result.recipes[i - 1] as id; else notRecipe"
+            *ngIf="vm.result.recipes[i - 1] as id; else notRecipe"
             class="flex center"
           >
             <lab-icon
               [iconId]="id"
-              [tooltip]="data.recipeEntities[id].name"
-              [recipe]="data.recipeEntities[id]"
+              [tooltip]="vm.data.recipeEntities[id].name"
+              [recipe]="vm.data.recipeEntities[id]"
             ></lab-icon>
           </div>
           <ng-template #notRecipe>
             <div
-              *ngIf="result.inputs[i - 1 - result.recipes.length] as id"
+              *ngIf="vm.result.inputs[i - 1 - vm.result.recipes.length] as id"
               class="flex center"
             >
               <lab-icon
                 [iconId]="id"
-                [tooltip]="data.itemEntities[id].name"
+                [tooltip]="vm.data.itemEntities[id].name"
               ></lab-icon>
             </div>
           </ng-template>
@@ -186,20 +187,18 @@ defined cost, usually mining."
       <td *ngFor="let c of R; last as last">
         <div
           class="flex"
-          *ngIf="last && result.recipes[i - 1] as id; else valueSpan"
+          *ngIf="last && vm.result.recipes[i - 1] as id; else valueSpan"
         >
           <lab-input
             title="Set cost"
             placeholder="Cost"
             [value]="c.toString()"
-            (setValue)="
-              setRecipeCost.emit({ id: id, value: $event, def: null })
-            "
+            (setValue)="setRecipeCost({ id: id, value: $event, def: null })"
           ></lab-input>
           <button
-            *ngIf="recipeRaw[id]?.cost"
+            *ngIf="vm.recipeRaw[id]?.cost"
             title="Undo recipe cost modification"
-            (click)="setRecipeCost.emit({ id: id, value: null, def: null })"
+            (click)="setRecipeCost({ id: id, value: null, def: null })"
           >
             <i class="material-icons">undo</i>
           </button>
@@ -211,17 +210,17 @@ defined cost, usually mining."
       <th class="header" *ngIf="i === 0; else notObj">Objective</th>
     </tr>
     <tr>
-      <th [colSpan]="result.O.length + 2" class="header">Solution</th>
+      <th [colSpan]="vm.result.O.length + 2" class="header">Solution</th>
     </tr>
     <tr>
       <td rowspan="3"></td>
       <th class="header" rowspan="2">I</th>
-      <th class="header" [colSpan]="result.items.length">Surplus/s</th>
-      <th class="header" [colSpan]="result.recipes.length">Recipes</th>
+      <th class="header" [colSpan]="vm.result.items.length">Surplus/s</th>
+      <th class="header" [colSpan]="vm.result.recipes.length">Recipes</th>
       <th
         class="header"
-        [colSpan]="result.inputs.length"
-        *ngIf="result.inputs.length"
+        [colSpan]="vm.result.inputs.length"
+        *ngIf="vm.result.inputs.length"
       >
         Inputs
       </th>
@@ -229,22 +228,28 @@ defined cost, usually mining."
       <td rowspan="3"></td>
     </tr>
     <tr>
-      <td *ngFor="let i of result.items; trackBy: track.string">
-        <lab-icon [iconId]="i" [tooltip]="data.itemEntities[i].name"></lab-icon>
-      </td>
-      <td *ngFor="let i of result.recipes; trackBy: track.string">
+      <td *ngFor="let i of vm.result.items; trackBy: track.string">
         <lab-icon
           [iconId]="i"
-          [tooltip]="data.recipeEntities[i].name"
-          [recipe]="data.recipeEntities[i]"
+          [tooltip]="vm.data.itemEntities[i].name"
         ></lab-icon>
       </td>
-      <td *ngFor="let i of result.inputs; trackBy: track.string">
-        <lab-icon [iconId]="i" [tooltip]="data.itemEntities[i].name"></lab-icon>
+      <td *ngFor="let i of vm.result.recipes; trackBy: track.string">
+        <lab-icon
+          [iconId]="i"
+          [tooltip]="vm.data.recipeEntities[i].name"
+          [recipe]="vm.data.recipeEntities[i]"
+        ></lab-icon>
+      </td>
+      <td *ngFor="let i of vm.result.inputs; trackBy: track.string">
+        <lab-icon
+          [iconId]="i"
+          [tooltip]="vm.data.itemEntities[i].name"
+        ></lab-icon>
       </td>
     </tr>
     <tr>
-      <td *ngFor="let c of result.O">{{ c.toString() }}</td>
+      <td *ngFor="let c of vm.result.O">{{ c.toString() }}</td>
     </tr>
   </table>
 </ng-container>

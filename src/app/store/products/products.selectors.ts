@@ -54,8 +54,10 @@ export const getProductSteps = createSelector(
   Settings.getDisabledRecipes,
   Recipes.getAdjustedDataset,
   Preferences.getSimplexModifiers,
-  (products, itemSettings, disabledRecipes, data, adj) =>
-    products?.reduce((e: Entities<[string, Rational][]>, p) => {
+  (products, itemSettings, disabledRecipes, data, adj) => {
+    console.log('getProductSteps');
+    console.log(products);
+    const a = products?.reduce((e: Entities<[string, Rational][]>, p) => {
       e[p.itemId] = SimplexUtility.getSteps(
         p.itemId,
         itemSettings,
@@ -67,7 +69,10 @@ export const getProductSteps = createSelector(
         adj.simplex
       );
       return e;
-    }, {})
+    }, {});
+    console.log(a);
+    return a;
+  }
 );
 
 export const getProducts = createSelector(
@@ -76,8 +81,10 @@ export const getProducts = createSelector(
   Recipes.getRecipeSettings,
   Factories.getFactorySettings,
   Settings.getNormalDataset,
-  (products, productSteps, recipeSettings, factories, data) =>
-    products?.map((p) =>
+  (products, productSteps, recipeSettings, factories, data) => {
+    console.log('getProducts');
+    console.log(products);
+    const a = products?.map((p) =>
       RecipeUtility.adjustProduct(
         p,
         productSteps,
@@ -85,7 +92,10 @@ export const getProducts = createSelector(
         factories,
         data
       )
-    )
+    );
+    console.log(a);
+    return a;
+  }
 );
 
 export const getRationalProducts = createSelector(getProducts, (products) =>

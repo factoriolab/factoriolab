@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, map } from 'rxjs';
+import { combineLatest, map, tap } from 'rxjs';
 
 import {
   Product,
@@ -74,12 +74,15 @@ export class ProductsComponent {
         data,
         displayRate,
         productOptions: products.reduce((e: Entities<string[]>, p) => {
+          console.log(products);
+          console.log(productSteps);
           e[p.id] = productSteps[p.itemId].map((r) => r[0]);
           return e;
         }, {}),
         rateTypeOptions: rateTypeOptions(displayRate, data.game),
       })
-    )
+    ),
+    tap((vm) => console.log(vm))
   );
 
   PIPE = PIPE;

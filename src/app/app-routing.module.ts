@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { MatrixContainerComponent } from './components';
-import { FlowComponent, ListComponent } from './routes';
+import { FlowComponent, ListComponent, MatrixComponent } from './routes';
 
 const routes: Routes = [
   {
@@ -15,7 +14,7 @@ const routes: Routes = [
   },
   {
     path: 'matrix',
-    component: MatrixContainerComponent,
+    component: MatrixComponent,
   },
   {
     path: 'factorio',

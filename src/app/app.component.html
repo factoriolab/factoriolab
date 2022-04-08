@@ -36,12 +36,10 @@
 </div>
 <ng-container *ngIf="(error.message$ | async) == null; else errorTile">
   <main *ngIf="(datasets$ | async).length; else loading">
-    <lab-settings
-      *ngIf="showSettings"
-      @slideLeftRight
-      (closeSettings)="showSettings = !showSettings"
-    >
-    </lab-settings>
+    <div *ngIf="showSettings" @slideLeftRight class="settings">
+      <lab-settings (closeSettings)="showSettings = !showSettings">
+      </lab-settings>
+    </div>
     <div class="view">
       <div *ngIf="showPoll" class="poll">
         <h2>Poll</h2>
@@ -132,4 +130,3 @@
     </div>
   </div>
 </ng-template>
-<span>{{ error.message$ | async }}</span>
