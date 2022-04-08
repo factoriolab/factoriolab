@@ -74,9 +74,9 @@ export class ProductsComponent {
         data,
         displayRate,
         productOptions: products.reduce((e: Entities<string[]>, p) => {
-          console.log(products);
-          console.log(productSteps);
-          e[p.id] = productSteps[p.itemId].map((r) => r[0]);
+          if (productSteps[p.itemId]) {
+            e[p.id] = productSteps[p.itemId].map((r) => r[0]);
+          }
           return e;
         }, {}),
         rateTypeOptions: rateTypeOptions(displayRate, data.game),
