@@ -1,6 +1,7 @@
 import { IdName } from '../id-name';
 
 export enum Game {
+  None,
   Factorio,
   DysonSphereProgram,
   Satisfactory,

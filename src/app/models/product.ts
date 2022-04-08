@@ -1,20 +1,6 @@
 import { RateType } from './enum/rate-type';
 import { Rational } from './rational';
 
-export enum ProductField {
-  Id = 'id',
-  ItemId = 'itemId',
-  Rate = 'rate',
-  RateType = 'rateType',
-  ViaId = 'viaId',
-  ViaSetting = 'viaSetting',
-  ViaFactoryModules = 'viaFactoryModules',
-  ViaBeaconCount = 'viaBeaconCount',
-  ViaBeacon = 'viaBeacon',
-  ViaBeaconModules = 'viaBeaconModules',
-  ViaOverclock = 'viaOverclock',
-}
-
 export interface Product {
   id: string;
   itemId: string;

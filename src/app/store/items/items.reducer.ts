@@ -1,10 +1,10 @@
-import { Entities, ItemSettings, ItemSettingsField } from '~/models';
+import { Entities, ItemSettings } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { AppActionType, AppAction } from '../app.actions';
 import { SetBaseAction, SettingsActionType } from '../settings';
 import { ItemsAction, ItemsActionType } from './items.actions';
 
-export type ItemsState = Entities<ItemSettings>;
+export type ItemsState = Entities<Partial<ItemSettings>>;
 
 export const initialItemsState: ItemsState = {};
 
@@ -19,40 +19,28 @@ export function itemsReducer(
     case SettingsActionType.SET_BASE:
       return initialItemsState;
     case ItemsActionType.IGNORE_ITEM:
-      return StoreUtility.compareReset(state, ItemSettingsField.Ignore, {
+      return StoreUtility.compareReset(state, 'ignore', {
         id: action.payload,
         value: !state[action.payload]?.ignore,
         def: false,
       });
     case ItemsActionType.SET_BELT:
-      return StoreUtility.compareReset(
-        state,
-        ItemSettingsField.Belt,
-        action.payload
-      );
+      return StoreUtility.compareReset(state, 'belt', action.payload);
     case ItemsActionType.SET_WAGON:
-      return StoreUtility.compareReset(
-        state,
-        ItemSettingsField.Wagon,
-        action.payload
-      );
+      return StoreUtility.compareReset(state, 'wagon', action.payload);
     case ItemsActionType.SET_RECIPE:
-      return StoreUtility.compareReset(
-        state,
-        ItemSettingsField.Recipe,
-        action.payload
-      );
+      return StoreUtility.compareReset(state, 'recipe', action.payload);
     case ItemsActionType.RESET_ITEM: {
       const newState = { ...state };
       delete newState[action.payload];
       return newState;
     }
     case ItemsActionType.RESET_IGNORE:
-      return StoreUtility.resetField(state, ItemSettingsField.Ignore);
+      return StoreUtility.resetField(state, 'ignore');
     case ItemsActionType.RESET_BELT:
-      return StoreUtility.resetField(state, ItemSettingsField.Belt);
+      return StoreUtility.resetField(state, 'belt');
     case ItemsActionType.RESET_WAGON:
-      return StoreUtility.resetField(state, ItemSettingsField.Wagon);
+      return StoreUtility.resetField(state, 'wagon');
     default:
       return state;
   }

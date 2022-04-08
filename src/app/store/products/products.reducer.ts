@@ -1,4 +1,4 @@
-import { Product, RateType, Entities, ProductField, Rational } from '~/models';
+import { Product, RateType, Entities, Rational } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { AppActionType, AppAction } from '../app.actions';
 import { ProductsAction, ProductsActionType } from './products.actions';
@@ -83,18 +83,14 @@ export function productsReducer(
         ...state,
         ...{
           entities: StoreUtility.resetFields(
-            StoreUtility.assignValue(
-              state.entities,
-              ProductField.ItemId,
-              action.payload
-            ),
+            StoreUtility.assignValue(state.entities, 'itemId', action.payload),
             [
-              ProductField.ViaId,
-              ProductField.ViaSetting,
-              ProductField.ViaFactoryModules,
-              ProductField.ViaBeaconCount,
-              ProductField.ViaBeacon,
-              ProductField.ViaBeaconModules,
+              'viaId',
+              'viaSetting',
+              'viaFactoryModules',
+              'viaBeaconCount',
+              'viaBeacon',
+              'viaBeaconModules',
             ],
             action.payload.id
           ),
@@ -106,7 +102,7 @@ export function productsReducer(
         ...{
           entities: StoreUtility.assignValue(
             state.entities,
-            ProductField.Rate,
+            'rate',
             action.payload
           ),
         },
@@ -118,16 +114,16 @@ export function productsReducer(
           entities: StoreUtility.resetFields(
             StoreUtility.assignValue(
               state.entities,
-              ProductField.RateType,
+              'rateType',
               action.payload
             ),
             [
-              ProductField.ViaId,
-              ProductField.ViaSetting,
-              ProductField.ViaFactoryModules,
-              ProductField.ViaBeaconCount,
-              ProductField.ViaBeacon,
-              ProductField.ViaBeaconModules,
+              'viaId',
+              'viaSetting',
+              'viaFactoryModules',
+              'viaBeaconCount',
+              'viaBeacon',
+              'viaBeaconModules',
             ],
             action.payload.id
           ),
@@ -138,17 +134,13 @@ export function productsReducer(
         ...state,
         ...{
           entities: StoreUtility.resetFields(
-            StoreUtility.assignValue(
-              state.entities,
-              ProductField.ViaId,
-              action.payload
-            ),
+            StoreUtility.assignValue(state.entities, 'viaId', action.payload),
             [
-              ProductField.ViaSetting,
-              ProductField.ViaFactoryModules,
-              ProductField.ViaBeaconCount,
-              ProductField.ViaBeacon,
-              ProductField.ViaBeaconModules,
+              'viaSetting',
+              'viaFactoryModules',
+              'viaBeaconCount',
+              'viaBeacon',
+              'viaBeaconModules',
             ],
             action.payload.id
           ),
@@ -161,14 +153,14 @@ export function productsReducer(
           entities: StoreUtility.resetFields(
             StoreUtility.compareReset(
               state.entities,
-              ProductField.ViaSetting,
+              'viaSetting',
               action.payload
             ),
             [
-              ProductField.ViaFactoryModules,
-              ProductField.ViaBeaconCount,
-              ProductField.ViaBeacon,
-              ProductField.ViaBeaconModules,
+              'viaFactoryModules',
+              'viaBeaconCount',
+              'viaBeacon',
+              'viaBeaconModules',
             ],
             action.payload.id
           ),
@@ -180,7 +172,7 @@ export function productsReducer(
         ...{
           entities: StoreUtility.compareReset(
             state.entities,
-            ProductField.ViaFactoryModules,
+            'viaFactoryModules',
             action.payload
           ),
         },
@@ -191,7 +183,7 @@ export function productsReducer(
         ...{
           entities: StoreUtility.compareReset(
             state.entities,
-            ProductField.ViaBeaconCount,
+            'viaBeaconCount',
             action.payload
           ),
         },
@@ -203,10 +195,10 @@ export function productsReducer(
           entities: StoreUtility.resetField(
             StoreUtility.compareReset(
               state.entities,
-              ProductField.ViaBeacon,
+              'viaBeacon',
               action.payload
             ),
-            ProductField.ViaBeaconModules,
+            'viaBeaconModules',
             action.payload.id
           ),
         },
@@ -217,7 +209,7 @@ export function productsReducer(
         ...{
           entities: StoreUtility.compareReset(
             state.entities,
-            ProductField.ViaBeaconModules,
+            'viaBeaconModules',
             action.payload
           ),
         },
@@ -228,7 +220,7 @@ export function productsReducer(
         ...{
           entities: StoreUtility.compareReset(
             state.entities,
-            ProductField.ViaOverclock,
+            'viaOverclock',
             action.payload
           ),
         },

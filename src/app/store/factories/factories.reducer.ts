@@ -1,4 +1,4 @@
-import { Entities, FactorySettings, FactorySettingsField } from '~/models';
+import { Entities, FactorySettings } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { AppAction, AppActionType } from '../app.actions';
 import {
@@ -9,8 +9,8 @@ import {
 import { FactoriesAction, FactoriesActionType } from './factories.actions';
 
 export type FactoriesState = {
-  ids: string[];
-  entities: Entities<FactorySettings>;
+  ids: string[] | null;
+  entities: Entities<Partial<FactorySettings>>;
 };
 
 export const initialFactoriesState: FactoriesState = {
@@ -31,14 +31,14 @@ export function factoriesReducer(
       return initialFactoriesState;
     case FactoriesActionType.ADD: {
       const value = [
-        ...(state.ids || action.payload.def),
+        ...(state.ids ?? action.payload.def ?? []),
         action.payload.value,
       ];
       const ids = StoreUtility.compareRank(value, action.payload.def);
       return { ...state, ...{ ids } };
     }
     case FactoriesActionType.REMOVE: {
-      const value = (state.ids || action.payload.def).filter(
+      const value = (state.ids ?? action.payload.def ?? []).filter(
         (i) => i !== action.payload.value
       );
       const ids = StoreUtility.compareRank(value, action.payload.def);
@@ -50,7 +50,7 @@ export function factoriesReducer(
       return newState;
     }
     case FactoriesActionType.RAISE: {
-      const value = [...(state.ids || action.payload.def)];
+      const value = [...(state.ids ?? action.payload.def ?? [])];
       const i = value.indexOf(action.payload.value);
       if (i !== -1 && i > 0) {
         value.splice(i - 1, 0, value.splice(i, 1)[0]);
@@ -60,7 +60,7 @@ export function factoriesReducer(
       return state;
     }
     case FactoriesActionType.SET_FACTORY: {
-      const value = [...(state.ids || action.payload.def)];
+      const value = [...(state.ids ?? action.payload.def ?? [])];
       const i = value.indexOf(action.payload.id);
       if (i !== -1) {
         value[i] = action.payload.value;
@@ -79,7 +79,7 @@ export function factoriesReducer(
     case FactoriesActionType.SET_MODULE_RANK: {
       const entities = StoreUtility.compareReset(
         state.entities,
-        FactorySettingsField.ModuleRank,
+        'moduleRank',
         action.payload,
         true
       );
@@ -88,7 +88,7 @@ export function factoriesReducer(
     case FactoriesActionType.SET_BEACON_COUNT: {
       const entities = StoreUtility.compareReset(
         state.entities,
-        FactorySettingsField.BeaconCount,
+        'beaconCount',
         action.payload
       );
       return { ...state, ...{ entities } };
@@ -96,7 +96,7 @@ export function factoriesReducer(
     case FactoriesActionType.SET_BEACON: {
       const entities = StoreUtility.compareReset(
         state.entities,
-        FactorySettingsField.Beacon,
+        'beacon',
         action.payload
       );
       return { ...state, ...{ entities } };
@@ -104,7 +104,7 @@ export function factoriesReducer(
     case FactoriesActionType.SET_BEACON_MODULE: {
       const entities = StoreUtility.compareReset(
         state.entities,
-        FactorySettingsField.BeaconModule,
+        'beaconModule',
         action.payload
       );
       return { ...state, ...{ entities } };
@@ -112,7 +112,7 @@ export function factoriesReducer(
     case FactoriesActionType.SET_OVERCLOCK: {
       const entities = StoreUtility.compareReset(
         state.entities,
-        FactorySettingsField.Overclock,
+        'overclock',
         action.payload
       );
       return { ...state, ...{ entities } };

@@ -29,7 +29,7 @@ export class RationalRecipe {
   producers: string[];
   productivity = Rational.one;
   adjustProd = false;
-  in?: Entities<Rational>;
+  in: Entities<Rational>;
   out: Entities<Rational>;
   expensive?: {
     time?: Rational;
@@ -55,6 +55,8 @@ export class RationalRecipe {
         e[i] = Rational.fromNumber(inputs[i]);
         return e;
       }, {});
+    } else {
+      this.in = {};
     }
     if (data.out) {
       const outputs = data.out;

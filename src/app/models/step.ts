@@ -1,18 +1,8 @@
-import { Entities } from './entities';
-import { Rational } from './rational';
+import { StepItem } from './step-item';
+import { StepRecipe } from './step-recipe';
 
 export interface Step {
   id: string;
-  itemId?: string;
-  items: Rational;
-  surplus?: Rational;
-  belts?: Rational;
-  wagons?: Rational;
-  factories?: Rational;
-  beacons?: Rational;
-  power?: Rational;
-  pollution?: Rational;
-  recipeId?: string;
-  parents?: Entities<Rational>;
-  outputs?: Entities<Rational>;
+  item?: StepItem;
+  recipe?: StepRecipe;
 }
