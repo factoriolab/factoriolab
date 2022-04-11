@@ -20,6 +20,13 @@ import {
   InserterCapacity,
   Game,
   InserterData,
+  RationalBeacon,
+  RationalBelt,
+  RationalCargoWagon,
+  RationalFluidWagon,
+  RationalFactory,
+  RationalFuel,
+  RationalModule,
 } from '~/models';
 import { LabState } from '../';
 import * as Datasets from '../datasets';
@@ -220,16 +227,16 @@ export const getNormalDataset = createSelector(
     const iconEntities = getEntities(
       app.icons.map((i) => ({
         ...i,
-        ...{ file: i.file || `data/${app.id}/icons.png` },
+        ...{ file: i.file ?? `data/${app.id}/icons.png` },
       })),
       mods.map((m) =>
         m.icons.map((i) => ({
           ...i,
-          ...{ file: i.file || `data/${m.id}/icons.png` },
+          ...{ file: i.file ?? `data/${m.id}/icons.png` },
         }))
       )
     );
-    const itemEntities = getEntities(
+    const itemData = getEntities(
       app.items,
       mods.map((m) => m.items)
     );
@@ -245,11 +252,11 @@ export const getNormalDataset = createSelector(
     // Convert to id arrays
     let categoryIds = Object.keys(categoryEntities);
     const iconIds = Object.keys(iconEntities);
-    const itemIds = Object.keys(itemEntities);
+    const itemIds = Object.keys(itemData);
     const recipeIds = Object.keys(recipeEntities);
 
     // Generate temporary object arrays
-    const items = itemIds.map((i) => itemEntities[i]);
+    const items = itemIds.map((i) => itemData[i]);
     const recipes = recipeIds.map((r) => recipeEntities[r]);
 
     // Filter for item types
@@ -331,8 +338,40 @@ export const getNormalDataset = createSelector(
     categoryIds = categoryIds.filter((c) => categoryItemRows[c]);
 
     // Convert to rationals
-    const itemR = itemIds.reduce((e: Entities<RationalItem>, i) => {
-      e[i] = new RationalItem(itemEntities[i]);
+    const beaconEntities: Entities<RationalBeacon> = {};
+    const beltEntities: Entities<RationalBelt> = {};
+    const cargoWagonEntities: Entities<RationalCargoWagon> = {};
+    const fluidWagonEntities: Entities<RationalFluidWagon> = {};
+    const factoryEntities: Entities<RationalFactory> = {};
+    const moduleEntities: Entities<RationalModule> = {};
+    const fuelEntities: Entities<RationalFuel> = {};
+    const itemEntities = itemIds.reduce((e: Entities<RationalItem>, i) => {
+      const item = new RationalItem(itemData[i]);
+      if (item.beacon) {
+        beaconEntities[i] = item.beacon;
+      }
+      if (item.belt) {
+        beltEntities[i] = item.belt;
+      } else if (item.pipe) {
+        beltEntities[i] = item.pipe;
+      }
+      if (item.cargoWagon) {
+        cargoWagonEntities[i] = item.cargoWagon;
+      }
+      if (item.fluidWagon) {
+        fluidWagonEntities[i] = item.fluidWagon;
+      }
+      if (item.factory) {
+        factoryEntities[i] = item.factory;
+      }
+      if (item.module) {
+        moduleEntities[i] = item.module;
+      }
+      if (item.fuel) {
+        fuelEntities[i] = item.fuel;
+      }
+
+      e[i] = item;
       return e;
     }, {});
     const recipeR = recipeIds.reduce((e: Entities<RationalRecipe>, r) => {
@@ -371,10 +410,10 @@ export const getNormalDataset = createSelector(
 
     // Fill in missing recipe names
     for (const id of recipeIds.filter((i) => !recipeEntities[i].name)) {
-      if (itemEntities[id]) {
+      if (itemData[id]) {
         recipeEntities[id] = {
           ...recipeEntities[id],
-          ...{ name: itemEntities[id].name },
+          ...{ name: itemData[id].name },
         };
       } else {
         // No item found, convert id to name
@@ -397,7 +436,7 @@ export const getNormalDataset = createSelector(
     }, {});
 
     const prodModuleIds = moduleIds.filter(
-      (i) => itemR[i].module?.productivity != null
+      (i) => itemEntities[i].module?.productivity != null
     );
 
     // Calculate complex recipes
@@ -416,18 +455,24 @@ export const getNormalDataset = createSelector(
       iconIds,
       iconEntities,
       itemIds,
+      itemEntities,
+      itemRecipeIds,
       beaconIds,
+      beaconEntities,
       beltIds,
       pipeIds,
+      beltEntities,
       cargoWagonIds,
+      cargoWagonEntities,
       fluidWagonIds,
+      fluidWagonEntities,
       factoryIds,
+      factoryEntities,
       moduleIds,
       beaconModuleIds,
+      moduleEntities,
       fuelIds,
-      itemEntities,
-      itemR,
-      itemRecipeIds,
+      fuelEntities,
       recipeIds,
       complexRecipeIds,
       recipeEntities,
@@ -439,11 +484,6 @@ export const getNormalDataset = createSelector(
     };
     return dataset;
   }
-);
-
-export const getIconEntities = createSelector(
-  getNormalDataset,
-  (data) => data.iconEntities
 );
 
 export const getDataset = createSelector(
@@ -458,10 +498,6 @@ export const getDataset = createSelector(
       )) {
         if (recipe.expensive) {
           const newRecipe = { ...recipe, ...recipe.expensive };
-          if (recipe.out && !recipe.expensive.out) {
-            // If expensive recipe specifies no outputs, reset to default
-            delete newRecipe.out;
-          }
           recipes.push(newRecipe);
         } else {
           recipes.push(recipe);
@@ -482,12 +518,12 @@ export const getBeltSpeed = createSelector(
     const value: Entities<Rational> = { [ItemId.Pipe]: flowRate };
     if (data.beltIds) {
       for (const id of data.beltIds) {
-        value[id] = data.itemR[id].belt!.speed;
+        value[id] = data.beltEntities[id].speed;
       }
     }
     if (data.pipeIds) {
       for (const id of data.pipeIds) {
-        value[id] = data.itemR[id].pipe!.speed;
+        value[id] = data.beltEntities[id].speed;
       }
     }
     return value;

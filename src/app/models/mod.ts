@@ -1,4 +1,4 @@
-import { ModData } from './data/mod-data';
+import { ModData, AppModData } from './data';
 import { Game } from './enum';
 
 export interface ModInfo {
@@ -13,3 +13,4 @@ export interface ModInfo {
 }
 
 export interface Mod extends ModData, ModInfo {}
+export interface AppMod extends AppModData, ModInfo {}

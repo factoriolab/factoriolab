@@ -9,12 +9,12 @@ import {
 import { FactoriesAction, FactoriesActionType } from './factories.actions';
 
 export type FactoriesState = {
-  ids: string[] | null;
-  entities: Entities<Partial<FactorySettings>>;
+  ids: string[] | undefined;
+  entities: Entities<FactorySettings>;
 };
 
 export const initialFactoriesState: FactoriesState = {
-  ids: null,
+  ids: undefined,
   entities: {},
 };
 

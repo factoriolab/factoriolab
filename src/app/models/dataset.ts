@@ -1,11 +1,21 @@
-import { Entities } from '../entities';
-import { Game } from '../enum';
-import { Defaults } from '../defaults';
-import { Category } from './category';
-import { Icon } from './icon';
-import { Item, RationalItem } from './item';
-import { ModHash } from './mod-hash';
-import { Recipe, RationalRecipe } from './recipe';
+import {
+  Category,
+  Icon,
+  RationalItem,
+  ModHash,
+  Recipe,
+  RationalRecipe,
+  RationalBeacon,
+  RationalBelt,
+  RationalCargoWagon,
+  RationalFactory,
+  RationalFluidWagon,
+  RationalModule,
+  RationalFuel,
+} from './data';
+import { Entities } from './entities';
+import { Game } from './enum';
+import { Defaults } from './defaults';
 
 export interface Dataset {
   game: Game;
@@ -15,17 +25,23 @@ export interface Dataset {
   iconIds: string[];
   iconEntities: Entities<Icon>;
   itemIds: string[];
+  itemEntities: Entities<RationalItem>;
   beaconIds: string[];
+  beaconEntities: Entities<RationalBeacon>;
   beltIds: string[];
   pipeIds: string[];
+  beltEntities: Entities<RationalBelt>;
   cargoWagonIds: string[];
+  cargoWagonEntities: Entities<RationalCargoWagon>;
   fluidWagonIds: string[];
+  fluidWagonEntities: Entities<RationalFluidWagon>;
   factoryIds: string[];
+  factoryEntities: Entities<RationalFactory>;
   moduleIds: string[];
   beaconModuleIds: string[];
+  moduleEntities: Entities<RationalModule>;
   fuelIds: Entities<string[]>;
-  itemEntities: Entities<Item>;
-  itemR: Entities<RationalItem>;
+  fuelEntities: Entities<RationalFuel>;
   itemRecipeIds: Entities<string>;
   recipeIds: string[];
   complexRecipeIds: string[];

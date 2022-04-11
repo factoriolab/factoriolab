@@ -57,7 +57,7 @@ export class DatasetsEffects {
       switchMap((a: Settings.SetBaseAction) =>
         this.requestData(a.payload).pipe(
           tap(([data, hash]) => this.loadModsForBase(data.defaults.modIds)),
-          map(([data, hash]) => new Products.ResetAction(data[0].items[0].id))
+          map(([data, hash]) => new Products.ResetAction(data.items[0].id))
         )
       )
     )

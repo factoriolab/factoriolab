@@ -7,7 +7,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { take } from 'rxjs';
+import { map, take } from 'rxjs';
 
 import {
   Recipe,
@@ -20,7 +20,7 @@ import {
 } from '~/models';
 import { TrackService } from '~/services';
 import { LabState } from '~/store';
-import { getDisplayRate, getGame, getIconEntities } from '~/store/settings';
+import * as Settings from '~/store/settings';
 
 @Component({
   selector: 'lab-icon',
@@ -39,8 +39,8 @@ export class IconComponent implements OnChanges {
   @Input() recipe: Recipe | undefined;
   @Input() item: Item | undefined;
 
-  game$ = this.store.select(getGame);
-  displayRate$ = this.store.select(getDisplayRate);
+  game$ = this.store.select(Settings.getGame);
+  displayRate$ = this.store.select(Settings.getDisplayRate);
 
   icon: Icon | undefined;
   hover = false;
@@ -58,8 +58,11 @@ export class IconComponent implements OnChanges {
     }
     if (changes['recipe'] || changes['iconId']) {
       this.store
-        .select(getIconEntities)
-        .pipe(take(1))
+        .select(Settings.getDataset)
+        .pipe(
+          take(1),
+          map((data) => data.iconEntities)
+        )
         .subscribe((iconEntities) => {
           if (this.recipe) {
             const rId = this.iconId + '|recipe';

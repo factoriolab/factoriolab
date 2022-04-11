@@ -40,8 +40,7 @@ export class FactoriesEffects {
               r.beaconModules != null)
           ) {
             // Check that these recipe settings are still valid
-            const factory =
-              data.itemEntities[recipeSettings[i].factory].factory;
+            const factory = data.factoryEntities[recipeSettings[i].factory];
             const recipe = data.recipeEntities[i];
             if (
               !RecipeUtility.allowsModules(recipe, factory) ||

@@ -34,7 +34,7 @@ export class RationalRecipe {
   expensive?: {
     time?: Rational;
     in?: Entities<Rational>;
-    out?: Entities<Rational>;
+    out: Entities<Rational>;
   };
   cost?: Rational;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
@@ -68,7 +68,7 @@ export class RationalRecipe {
       this.out = { [data.id]: Rational.one };
     }
     if (data.expensive) {
-      this.expensive = {};
+      this.expensive = { out: this.out };
       if (data.expensive.time) {
         this.expensive.time = Rational.fromNumber(data.expensive.time);
       }

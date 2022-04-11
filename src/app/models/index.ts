@@ -5,6 +5,7 @@ export * from './settings';
 export * from './app-data';
 export * from './defaults';
 export * from './constants';
+export * from './dataset';
 export * from './entities';
 export * from './id-name';
 export * from './inserter-data';

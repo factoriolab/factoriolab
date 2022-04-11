@@ -23,13 +23,20 @@ export class FlowUtility {
     const iId: Entities = {};
     const rId: Entities = {};
     for (const step of steps) {
-      const recipe = data.recipeR[step.recipeId];
-      if (step.itemId === step.recipeId && recipe.produces(step.itemId)) {
+      if (
+        step.recipeId != null &&
+        step.itemId === step.recipeId &&
+        data.recipeR[step.recipeId].produces(step.itemId)
+      ) {
         iId[step.itemId] = step.itemId;
         rId[step.recipeId] = step.recipeId;
       } else {
-        iId[step.itemId] = `i|${step.itemId}`;
-        rId[step.recipeId] = `r|${step.recipeId}`;
+        if (step.itemId != null) {
+          iId[step.itemId] = `i|${step.itemId}`;
+        }
+        if (step.recipeId != null) {
+          rId[step.recipeId] = `r|${step.recipeId}`;
+        }
       }
     }
 
@@ -50,12 +57,12 @@ export class FlowUtility {
           viewBox: `${icon.position
             .replace(/px/g, '')
             .replace(/-/g, '')} 64 64`,
-          href: icon.file,
+          href: icon.file ?? '',
           name: recipe.name,
           color: icon.color,
         });
 
-        if (match && step.parents) {
+        if (match && step.parents && step.itemId) {
           for (const i of Object.keys(step.parents)) {
             const item = data.itemEntities[step.itemId];
             sankey.links.push({
@@ -85,21 +92,25 @@ export class FlowUtility {
             (!match || (step.itemId !== id && !step.parents?.[id]))
         )) {
           const outStep = steps.find((s) => s.itemId === outId);
-          const outText = this.stepLinkValue(outStep, linkText);
-          const outValue =
-            linkText === linkSize
-              ? outText
-              : this.stepLinkValue(outStep, linkSize);
-          const percent = step.outputs[outId];
-          const item = data.itemEntities[outId];
-          sankey.links.push({
-            target: iId[outId],
-            source: rId[step.recipeId],
-            value: this.linkSize(outValue, percent, linkSize, item.stack),
-            text: this.linkText(outText, percent, linkText, linkPrecision),
-            name: item.name,
-            color: data.iconEntities[outId].color,
-          });
+          if (outStep) {
+            const outText = this.stepLinkValue(outStep, linkText);
+            const outValue =
+              linkText === linkSize
+                ? outText
+                : this.stepLinkValue(outStep, linkSize);
+            if (step.outputs) {
+              const percent = step.outputs[outId];
+              const item = data.itemEntities[outId];
+              sankey.links.push({
+                target: iId[outId],
+                source: rId[step.recipeId],
+                value: this.linkSize(outValue, percent, linkSize, item.stack),
+                text: this.linkText(outText, percent, linkText, linkPrecision),
+                name: item.name,
+                color: data.iconEntities[outId].color,
+              });
+            }
+          }
         }
       }
 
@@ -113,7 +124,7 @@ export class FlowUtility {
           viewBox: `${icon.position
             .replace(/px/g, '')
             .replace(/-/g, '')} 64 64`,
-          href: icon.file,
+          href: icon.file ?? '',
           name: item.name,
           color: icon.color,
         });
@@ -153,7 +164,7 @@ export class FlowUtility {
       return Rational.one;
     }
 
-    let value: Rational;
+    let value: Rational | undefined;
 
     switch (prop) {
       case LinkValue.Belts:
@@ -177,7 +188,7 @@ export class FlowUtility {
     value: Rational,
     percent: Rational,
     prop: LinkValue,
-    stack: number
+    stack: Rational | undefined
   ): number {
     if (prop === LinkValue.None) {
       return 1;
@@ -188,7 +199,7 @@ export class FlowUtility {
     }
 
     // Scale link size for fluids to 1/10
-    if (prop === LinkValue.Items && !stack) {
+    if (prop === LinkValue.Items && stack == null) {
       value = value.div(Rational.from(10));
     }
 
@@ -199,7 +210,7 @@ export class FlowUtility {
     value: Rational,
     percent: Rational,
     prop: LinkValue,
-    precision: number
+    precision: number | null
   ): string {
     switch (prop) {
       case LinkValue.None:

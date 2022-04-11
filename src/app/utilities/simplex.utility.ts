@@ -9,8 +9,6 @@ import {
   MatrixResult,
   MatrixResultType,
 } from '~/models';
-import { StepItem } from '~/models/step-item';
-import { StepRecipe } from '~/models/step-recipe';
 import { ItemsState } from '~/store/items';
 import { RateUtility } from './rate.utility';
 
@@ -161,20 +159,18 @@ export class SimplexUtility {
 
     if (recipes) {
       return steps
-        .map((s) => s.recipe)
-        .filter((r): r is StepRecipe => r != null)
+        .filter((s) => s.recipeId != null)
         .sort((a, b) =>
-          data.recipeR[b.id]
+          data.recipeR[b.recipeId!]
             .output(itemId)
-            .sub(data.recipeR[a.id].output(itemId))
+            .sub(data.recipeR[a.recipeId!].output(itemId))
             .toNumber()
         )
         .map((s) => [s.id!, s.factories!]);
     } else {
       return steps
-        .map((s) => s.item)
-        .filter((i): i is StepItem => i != null)
-        .map((i) => [i.id!, i.items]);
+        .filter((s) => s.itemId != null && s.items != null)
+        .map((s) => [s.itemId!, s.items!]);
     }
   }
 
@@ -209,8 +205,8 @@ export class SimplexUtility {
 
     // Add unsolved steps to matrix state
     for (const step of unsolved) {
-      if (step.id) {
-        state.items[step.id] = step.items;
+      if (step.itemId != null && step.items != null) {
+        state.items[step.itemId] = step.items;
       }
     }
 
@@ -229,16 +225,16 @@ export class SimplexUtility {
   }
 
   /** Determine which steps can be solved by the matrix */
-  static unsolvedSteps(steps: Step[], state: MatrixState): StepItem[] {
-    return steps
-      .filter((s) => s.recipe == null)
-      .map((s) => s.item)
-      .filter((i): i is StepItem => i != null)
-      .filter(
-        (i) =>
-          state.itemIds.indexOf(i.id) !== -1 &&
-          state.recipeIds.some((r) => state.data.recipeR[r].produces(i.id))
-      );
+  static unsolvedSteps(steps: Step[], state: MatrixState): Step[] {
+    return steps.filter(
+      (s) =>
+        s.recipeId == null &&
+        s.itemId != null &&
+        state.itemIds.indexOf(s.itemId) !== -1 &&
+        state.recipeIds.some(
+          (r) => s.itemId && state.data.recipeR[r].produces(s.itemId)
+        )
+    );
   }
 
   /** Find matching recipes for an item that have not yet been parsed */
@@ -641,38 +637,26 @@ export class SimplexUtility {
       output = output.add(solution.inputs[itemId]);
     }
     if (output.nonzero()) {
-      let stepItem = steps
-        .map((s) => s.item)
-        .filter((i): i is StepItem => i != null)
-        .find((i) => i.id === itemId);
-      if (stepItem) {
+      let step = steps.find((i) => i.itemId === itemId);
+      if (step != null) {
         if (state.items[itemId].nonzero()) {
-          stepItem.items = output;
+          step.items = output;
         } else {
-          stepItem.items = stepItem.items.add(output);
+          step.items = (step.items ?? Rational.zero).add(output);
         }
       } else {
         const recipes = state.data.recipeIds
           .map((r) => state.recipes[r])
           .filter((r) => r);
-        const index = steps
-          .map((s) => s.item)
-          .filter((i): i is StepItem => i != null)
-          .findIndex((i) =>
-            recipes.some((r) => r.produces(i.id) && r.produces(itemId))
-          );
-        stepItem = {
-          id: itemId,
-          items: output,
-          surplus: Rational.zero,
-          belts: Rational.zero,
-          wagons: Rational.zero,
-          parents: {},
-          outputs: {},
-        };
-        const step = {
+        const index = steps.findIndex((i) =>
+          recipes.some(
+            (r) => i.itemId && r.produces(i.itemId) && r.produces(itemId)
+          )
+        );
+        step = {
           id: steps.length.toString(),
-          item: stepItem,
+          itemId,
+          items: output,
         };
         if (index !== -1 && index < steps.length - 1) {
           steps.splice(index + 1, 0, step);
@@ -681,7 +665,7 @@ export class SimplexUtility {
         }
       }
       if (solution.surplus[itemId]?.nonzero()) {
-        stepItem.surplus = solution.surplus[itemId];
+        step.surplus = solution.surplus[itemId];
       }
     }
   }
@@ -695,35 +679,25 @@ export class SimplexUtility {
     const recipes = Object.keys(solution.recipes).map((r) => state.recipes[r]);
 
     // Check for exact id matches
-    for (const step of steps.filter((s) => s.recipe == null)) {
-      if (step.item) {
-        const stepItem = step.item;
-        const i = recipes.findIndex(
-          (r) => r.id === stepItem.id && r.produces(stepItem.id)
-        );
-        if (i !== -1) {
-          step.recipe = {
-            id: recipes[i].id,
-            factories: Rational.zero,
-            beacons: Rational.zero,
-            power: Rational.zero,
-            pollution: Rational.zero,
-          };
-          recipes.splice(i, 1);
-        }
+    for (const step of steps.filter((s) => s.recipeId == null)) {
+      const i = recipes.findIndex(
+        (r) => r.id === step.itemId && r.produces(step.itemId)
+      );
+      if (i !== -1) {
+        step.recipeId = recipes[i].id;
+        recipes.splice(i, 1);
       }
     }
 
     // Find best recipe match for remaining steps
     const potentials: Entities<string[]> = {};
-    for (const stepItem of steps
-      .filter((s) => s.recipe == null)
-      .map((s) => s.item)
-      .filter((i): i is StepItem => i != null)) {
-      potentials[stepItem.id] = recipes
-        .filter((r) => r.produces(stepItem.id))
-        .sort((a, b) => Object.keys(a.out).length - Object.keys(b.out).length)
-        .map((r) => r.id);
+    for (const step of steps.filter((s) => s.recipeId == null)) {
+      if (step.itemId) {
+        potentials[step.itemId] = recipes
+          .filter((r) => step.itemId && r.produces(step.itemId))
+          .sort((a, b) => Object.keys(a.out).length - Object.keys(b.out).length)
+          .map((r) => r.id);
+      }
     }
 
     const order = Object.keys(potentials).sort(
@@ -731,18 +705,12 @@ export class SimplexUtility {
     );
     for (const itemId of order) {
       for (const option of potentials[itemId]) {
-        if (!steps.some((s) => s.recipe && s.recipe.id === option)) {
-          const step = steps.find((s) => s.item && s.item.id === itemId);
+        if (!steps.some((s) => s.recipeId === option)) {
+          const step = steps.find((s) => s.itemId === itemId);
           if (step) {
-            step.recipe = {
-              id: option,
-              factories: Rational.zero,
-              beacons: Rational.zero,
-              power: Rational.zero,
-              pollution: Rational.zero,
-            };
+            step.recipeId = option;
+            break;
           }
-          break;
         }
       }
     }
@@ -754,15 +722,16 @@ export class SimplexUtility {
     steps: Step[],
     solution: MatrixSolution
   ): void {
-    let step = steps.find((s) => s.recipe && s.recipe.id === recipe.id);
+    let step = steps.find((s) => s.recipeId === recipe.id);
     if (!step) {
       step = steps.find(
-        (s) => s.recipe == null && s.item != null && recipe.produces(s.item.id)
+        (s) =>
+          s.recipeId == null && s.itemId != null && recipe.produces(s.itemId)
       );
     }
     if (!step) {
       const index = steps.findIndex(
-        (s) => s.item && recipe.produces(s.item.id)
+        (s) => s.itemId && recipe.produces(s.itemId)
       );
       step = {
         id: steps.length.toString(),
@@ -773,15 +742,10 @@ export class SimplexUtility {
         steps.push(step);
       }
     }
-    step.recipe = {
-      id: recipe.id,
-      factories: solution.recipes[recipe.id].add(
-        step.recipe?.factories || Rational.zero
-      ),
-      beacons: Rational.zero,
-      power: Rational.zero,
-      pollution: Rational.zero,
-    };
+    step.recipeId = recipe.id;
+    step.factories = solution.recipes[recipe.id].add(
+      step.factories || Rational.zero
+    );
     RateUtility.adjustPowerPollution(step, recipe);
   }
 
@@ -798,7 +762,7 @@ export class SimplexUtility {
       for (const itemId of Object.keys(recipe.in).filter((i) =>
         recipe.in[i].nonzero()
       )) {
-        const step = steps.find((s) => s.item && s.item.id === itemId);
+        const step = steps.find((s) => s.itemId === itemId);
         if (step) {
           const rate = recipe.in[itemId].mul(quantity);
           RateUtility.addParentValue(step, recipe.id, rate);
