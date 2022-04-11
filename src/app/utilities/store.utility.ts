@@ -115,18 +115,22 @@ export class StoreUtility {
     };
   }
 
-  static compareValue<T>(payload: DefaultPayload<T>): T | null {
-    return payload.value === payload.def ? null : payload.value;
+  static compareValue<T>(payload: DefaultPayload<T>): T | undefined {
+    return payload.value === payload.def ? undefined : payload.value;
   }
 
-  static compareValues(payload: DefaultPayload<string[]>): string[] | null {
-    return this.arrayEquals(payload.value, payload.def) ? null : payload.value;
+  static compareValues(
+    payload: DefaultPayload<string[]>
+  ): string[] | undefined {
+    return this.arrayEquals(payload.value, payload.def)
+      ? undefined
+      : payload.value;
   }
 
   static compareRank(
     value: string[],
     def: string[] | undefined
-  ): string[] | null {
-    return this.rankEquals(value, def) ? null : value;
+  ): string[] | undefined {
+    return this.rankEquals(value, def) ? undefined : value;
   }
 }

@@ -92,7 +92,7 @@ export const getDefaults = createSelector(
     if (base) {
       const m = base.defaults;
       if (m) {
-        let moduleRank: string[];
+        let moduleRank: string[] = [];
         switch (base.game) {
           case Game.Factorio: {
             moduleRank = preset === Preset.Minimum ? [] : m.moduleRank;

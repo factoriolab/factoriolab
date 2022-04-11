@@ -33,7 +33,9 @@ export const getBaseEntities = createSelector(
   getDataEntities,
   (base, entities) =>
     base.reduce((e: Entities<Mod>, b) => {
-      e[b.id] = entities[b.id] ? { ...b, ...entities[b.id] } : null;
+      if (entities[b.id]) {
+        e[b.id] = { ...b, ...entities[b.id] };
+      }
       return e;
     }, {})
 );
@@ -43,7 +45,9 @@ export const getModEntities = createSelector(
   getDataEntities,
   (mod, entities) =>
     mod.reduce((e: Entities<Mod>, m) => {
-      e[m.id] = entities[m.id] ? { ...m, ...entities[m.id] } : null;
+      if (entities[m.id]) {
+        e[m.id] = { ...m, ...entities[m.id] };
+      }
       return e;
     }, {})
 );

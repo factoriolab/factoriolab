@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { combineLatest, Observable, of } from 'rxjs';
+import { combineLatest, EMPTY, Observable, of } from 'rxjs';
 import { switchMap, map, tap } from 'rxjs/operators';
 
 import { ModData, Entities, ModHash } from '~/models';
@@ -87,7 +87,7 @@ export class DatasetsEffects {
               this.store.dispatch(new LoadModHashAction({ id, value }))
             )
           )
-      : of(null);
+      : EMPTY;
     return combineLatest([data$, hash$]);
   }
 
