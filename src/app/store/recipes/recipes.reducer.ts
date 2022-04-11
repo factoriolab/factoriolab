@@ -4,7 +4,7 @@ import { AppActionType, AppAction } from '../app.actions';
 import { SetBaseAction, SettingsActionType } from '../settings';
 import { RecipesAction, RecipesActionType } from './recipes.actions';
 
-export type RecipesState = Entities<Partial<RecipeSettings>>;
+export type RecipesState = Entities<RecipeSettings>;
 
 export const initialRecipesState: RecipesState = {};
 

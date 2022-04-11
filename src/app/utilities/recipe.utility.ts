@@ -60,10 +60,11 @@ export class RecipeUtility {
     data: Dataset
   ): RationalRecipe {
     const recipe = new RationalRecipe(data.recipeEntities[recipeId]);
-    const factory = data.factoryEntities[settings.factory];
 
-    if (factory) {
-      if (factory.speed) {
+    if (settings.factory != null) {
+      const factory = data.factoryEntities[settings.factory];
+
+      if (factory.speed != null) {
         // Adjust for factory speed
         recipe.time = recipe.time.div(factory.speed);
       } else {
@@ -73,7 +74,10 @@ export class RecipeUtility {
           ...Object.keys(recipe.in).filter((i) => recipe.in[i].nonzero()),
           ...Object.keys(recipe.out).filter((i) => recipe.out[i].nonzero()),
         ];
-        const belts = ids.map((i) => data.beltEntities[itemSettings[i].belt]);
+        const belts = ids
+          .map((i) => itemSettings[i].belt)
+          .filter((b): b is string => b != null)
+          .map((beltId) => data.beltEntities[beltId]);
         let minSpeed = Rational.zero;
         for (const b of belts.filter((b): b is RationalBelt => b != null)) {
           if (minSpeed.lt(b.speed)) {
@@ -142,7 +146,11 @@ export class RecipeUtility {
       const beaconModules = settings.beaconModules?.filter(
         (m) => m !== ItemId.Module && data.moduleEntities[m]
       );
-      if (beaconModules?.length && settings.beaconCount.nonzero()) {
+      if (
+        beaconModules?.length &&
+        settings.beacon &&
+        settings.beaconCount?.nonzero()
+      ) {
         for (const id of beaconModules) {
           const module = data.moduleEntities[id];
           const beacon = data.beaconEntities[settings.beacon];
@@ -327,24 +335,27 @@ export class RecipeUtility {
     data: Dataset
   ): Entities<RationalRecipe> {
     for (const partId of Object.keys(recipeR)) {
-      const rocketFactory = data.factoryEntities[settings[partId].factory];
-      const rocketRecipe = recipeR[partId];
-      if (rocketFactory?.silo && !rocketRecipe.part) {
-        const itemId = Object.keys(rocketRecipe.out)[0];
-        const factor = rocketFactory.silo.parts.div(rocketRecipe.out[itemId]);
-        for (const launchId of Object.keys(recipeR).filter(
-          (i) => recipeR[i].part === partId
-        )) {
-          if (settings[partId].factory === settings[launchId].factory) {
-            recipeR[launchId].time = rocketRecipe.time
-              .mul(factor)
-              .add(rocketFactory.silo.launch);
+      const partFactoryId = settings[partId].factory;
+      if (partFactoryId) {
+        const rocketFactory = data.factoryEntities[partFactoryId];
+        const rocketRecipe = recipeR[partId];
+        if (rocketFactory?.silo && !rocketRecipe.part) {
+          const itemId = Object.keys(rocketRecipe.out)[0];
+          const factor = rocketFactory.silo.parts.div(rocketRecipe.out[itemId]);
+          for (const launchId of Object.keys(recipeR).filter(
+            (i) => recipeR[i].part === partId
+          )) {
+            if (partFactoryId === settings[launchId].factory) {
+              recipeR[launchId].time = rocketRecipe.time
+                .mul(factor)
+                .add(rocketFactory.silo.launch);
+            }
           }
+          rocketRecipe.time = rocketRecipe.time
+            .mul(factor)
+            .add(rocketFactory.silo.launch)
+            .div(factor);
         }
-        rocketRecipe.time = rocketRecipe.time
-          .mul(factor)
-          .add(rocketFactory.silo.launch)
-          .div(factor);
       }
     }
 
@@ -380,7 +391,7 @@ export class RecipeUtility {
     recipeSettings: Entities<RationalRecipeSettings>,
     itemSettings: Entities<ItemSettings>,
     disabledRecipes: string[],
-    fuel: string,
+    fuel: string | undefined,
     proliferatorSpray: string,
     miningBonus: Rational,
     researchSpeed: Rational,
@@ -520,52 +531,59 @@ export class RecipeUtility {
           product.viaSetting = recipeSettings[product.viaId].factory;
         }
 
-        const recipe = data.recipeEntities[product.viaId];
-        const factory = data.factoryEntities[product.viaSetting];
-        const def = recipeSettings[recipe.id];
-        const fDef = factories.entities[product.viaSetting];
-        if (this.allowsModules(recipe, factory)) {
-          if (product.viaSetting === def.factory) {
-            product.viaFactoryModules =
-              product.viaFactoryModules || def.factoryModules;
-            product.viaBeaconCount = product.viaBeaconCount || def.beaconCount;
-            product.viaBeacon = product.viaBeacon || def.beacon;
-            const beacon = data.beaconEntities[product.viaBeacon];
-            if (beacon && !product.viaBeaconModules) {
-              if (product.viaBeacon === def.beacon) {
-                product.viaBeaconModules = def.beaconModules;
-              } else {
-                product.viaBeaconModules = new Array(beacon.modules).fill(
-                  fDef.beaconModule
+        if (product.viaSetting) {
+          const recipe = data.recipeEntities[product.viaId];
+          const factory = data.factoryEntities[product.viaSetting];
+          const def = recipeSettings[recipe.id];
+          const fDef = factories.entities[product.viaSetting];
+          if (this.allowsModules(recipe, factory)) {
+            if (product.viaSetting === def.factory) {
+              product.viaFactoryModules =
+                product.viaFactoryModules || def.factoryModules;
+              product.viaBeaconCount =
+                product.viaBeaconCount || def.beaconCount;
+              product.viaBeacon = product.viaBeacon || def.beacon;
+              if (product.viaBeacon) {
+                const beacon = data.beaconEntities[product.viaBeacon];
+                if (product.viaBeaconModules == null) {
+                  if (product.viaBeacon === def.beacon) {
+                    product.viaBeaconModules = def.beaconModules;
+                  } else {
+                    product.viaBeaconModules = new Array(beacon.modules).fill(
+                      fDef.beaconModule
+                    );
+                  }
+                }
+              }
+            } else {
+              if (product.viaFactoryModules == null) {
+                product.viaFactoryModules = this.defaultModules(
+                  data.recipeModuleIds[recipe.id],
+                  fDef.moduleRank ?? [],
+                  factory.modules ?? 0
                 );
               }
-            }
-          } else {
-            if (!product.viaFactoryModules) {
-              product.viaFactoryModules = this.defaultModules(
-                data.recipeModuleIds[recipe.id],
-                fDef.moduleRank ?? [],
-                factory.modules ?? 0
-              );
-            }
 
-            product.viaBeaconCount =
-              product.viaBeaconCount ?? fDef.beaconCount ?? def.beaconCount;
-            product.viaBeacon = product.viaBeacon ?? fDef.beacon ?? def.beacon;
+              product.viaBeaconCount =
+                product.viaBeaconCount ?? fDef.beaconCount;
+              product.viaBeacon = product.viaBeacon ?? fDef.beacon;
 
-            const beacon = data.beaconEntities[product.viaBeacon];
-            if (beacon && !product.viaBeaconModules) {
-              product.viaBeaconModules = new Array(beacon.modules).fill(
-                fDef.beaconModule
-              );
+              if (product.viaBeacon != null) {
+                const beacon = data.beaconEntities[product.viaBeacon];
+                if (product.viaBeaconModules == null) {
+                  product.viaBeaconModules = new Array(beacon.modules).fill(
+                    fDef.beaconModule
+                  );
+                }
+              }
             }
           }
-        }
 
-        if (product.viaSetting === def.factory) {
-          product.viaOverclock = product.viaOverclock || def.overclock;
-        } else {
-          product.viaOverclock = product.viaOverclock || fDef.overclock;
+          if (product.viaSetting === def.factory) {
+            product.viaOverclock = product.viaOverclock || def.overclock;
+          } else {
+            product.viaOverclock = product.viaOverclock || fDef.overclock;
+          }
         }
       }
     } else if (!product.viaId) {

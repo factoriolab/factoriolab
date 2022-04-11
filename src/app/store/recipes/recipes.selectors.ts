@@ -29,17 +29,20 @@ export const getRecipeSettings = createSelector(
         const s: RecipeSettings = { ...state[recipe.id] };
 
         if (!s.factory) {
-          s.factory = RecipeUtility.bestMatch(recipe.producers, factories.ids);
+          s.factory = RecipeUtility.bestMatch(
+            recipe.producers,
+            factories.ids ?? []
+          );
         }
 
-        const factory = data.itemEntities[s.factory]?.factory;
+        const factory = data.factoryEntities[s.factory];
         const def = factories.entities[s.factory];
         if (RecipeUtility.allowsModules(recipe, factory)) {
           if (!s.factoryModules) {
             s.factoryModules = RecipeUtility.defaultModules(
               data.recipeModuleIds[recipe.id],
-              def.moduleRank,
-              factory.modules
+              def.moduleRank ?? [],
+              factory.modules ?? 0
             );
           }
 
@@ -48,10 +51,13 @@ export const getRecipeSettings = createSelector(
           }
 
           s.beacon = s.beacon || def.beacon;
-
-          const beacon = data.itemEntities[s.beacon]?.beacon;
-          if (beacon && !s.beaconModules) {
-            s.beaconModules = new Array(beacon.modules).fill(def.beaconModule);
+          if (s.beacon) {
+            const beacon = data.beaconEntities[s.beacon];
+            if (beacon && !s.beaconModules) {
+              s.beaconModules = new Array(beacon.modules).fill(
+                def.beaconModule
+              );
+            }
           }
         } else {
           // Factory doesn't support modules, remove any

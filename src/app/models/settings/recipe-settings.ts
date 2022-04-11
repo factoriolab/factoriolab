@@ -1,34 +1,50 @@
 import { Rational } from '../rational';
 
 export interface RecipeSettings {
-  factory: string;
-  factoryModules: string[];
-  beaconCount: string;
-  beacon: string;
-  beaconModules: string[];
-  beaconTotal: string;
-  overclock: number;
-  cost: string;
+  factory?: string;
+  factoryModules?: string[];
+  beaconCount?: string;
+  beacon?: string;
+  beaconModules?: string[];
+  beaconTotal?: string;
+  overclock?: number;
+  cost?: string;
 }
 
 export class RationalRecipeSettings {
-  factory: string;
-  factoryModules: string[];
-  beaconCount: Rational;
-  beacon: string;
-  beaconModules: string[];
-  beaconTotal: Rational;
-  overclock: Rational;
-  cost: Rational;
+  factory?: string;
+  factoryModules?: string[];
+  beaconCount?: Rational;
+  beacon?: string;
+  beaconModules?: string[];
+  beaconTotal?: Rational;
+  overclock?: Rational;
+  cost?: Rational;
 
   constructor(data: RecipeSettings) {
-    this.factory = data.factory;
-    this.factoryModules = data.factoryModules;
-    this.beaconCount = Rational.fromString(data.beaconCount);
-    this.beacon = data.beacon;
-    this.beaconModules = data.beaconModules;
-    this.beaconTotal = Rational.fromString(data.beaconTotal);
-    this.overclock = Rational.fromNumber(data.overclock);
-    this.cost = Rational.fromString(data.cost);
+    if (data.factory != null) {
+      this.factory = data.factory;
+    }
+    if (data.factoryModules != null) {
+      this.factoryModules = data.factoryModules;
+    }
+    if (data.beaconCount != null) {
+      this.beaconCount = Rational.fromString(data.beaconCount);
+    }
+    if (data.beacon != null) {
+      this.beacon = data.beacon;
+    }
+    if (data.beaconModules != null) {
+      this.beaconModules = data.beaconModules;
+    }
+    if (data.beaconTotal != null) {
+      this.beaconTotal = Rational.fromString(data.beaconTotal);
+    }
+    if (data.overclock != null) {
+      this.overclock = Rational.fromNumber(data.overclock);
+    }
+    if (data.cost != null) {
+      this.cost = Rational.fromString(data.cost);
+    }
   }
 }

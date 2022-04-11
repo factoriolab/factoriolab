@@ -4,7 +4,7 @@ import { AppActionType, AppAction } from '../app.actions';
 import { SetBaseAction, SettingsActionType } from '../settings';
 import { ItemsAction, ItemsActionType } from './items.actions';
 
-export type ItemsState = Entities<Partial<ItemSettings>>;
+export type ItemsState = Entities<ItemSettings>;
 
 export const initialItemsState: ItemsState = {};
 
