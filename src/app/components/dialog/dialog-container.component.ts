@@ -7,9 +7,8 @@ import { Component, HostBinding, Input } from '@angular/core';
 export class DialogContainerComponent {
   @Input() header: string = '';
 
-  open = false;
-
   @HostBinding('class.relative') relative = true;
+  open = false;
 
   cancel(): void {
     this.open = false;

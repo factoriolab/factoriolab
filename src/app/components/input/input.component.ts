@@ -28,8 +28,6 @@ export class InputComponent implements OnChanges {
   min = Rational.zero;
   width = 5;
 
-  constructor() {}
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['minimum']) {
       this.min = Rational.fromString(this.minimum);

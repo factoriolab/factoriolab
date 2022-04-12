@@ -89,7 +89,6 @@ export class SettingsComponent implements OnInit {
   ctrlFlowRate = new FormControl('', Validators.min(1));
   ctrlMiningProductivity = new FormControl('', Validators.min(0));
   ctrlMiningSpeed = new FormControl('', Validators.min(100));
-
   state = '';
   tempState = '';
   editState = false;
@@ -116,10 +115,6 @@ export class SettingsComponent implements OnInit {
       name: 'Disabled',
     },
   ];
-
-  ItemId = ItemId;
-  Game = Game;
-  Column = Column;
   GameOptions = GameOptions;
   ResearchSpeedOptions = ResearchSpeedOptions;
   InserterCapacityOptions = InserterCapacityOptions;
@@ -127,6 +122,10 @@ export class SettingsComponent implements OnInit {
   DisplayRateOptions = DisplayRateOptions;
   PowerUnitOptions = PowerUnitOptions;
   BrowserUtility = BrowserUtility;
+
+  ItemId = ItemId;
+  Game = Game;
+  Column = Column;
 
   get isInOverlayMode(): boolean {
     return window

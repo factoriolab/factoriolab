@@ -18,14 +18,14 @@ export class DialogComponent {
 
   opening = true;
 
-  constructor(private ref: ElementRef<HTMLElement>) {}
+  constructor(private el: ElementRef<HTMLElement>) {}
 
   @HostListener('document:click', ['$event'])
   click(event: MouseEvent): void {
     if (this.opening) {
       this.opening = false;
     } else if (
-      !this.ref.nativeElement.contains(event.target as Node) &&
+      !this.el.nativeElement.contains(event.target as Node) &&
       document.contains(event.target as Node)
     ) {
       this.closeDialog.emit();

@@ -5,7 +5,6 @@ import {
   EventEmitter,
   ChangeDetectionStrategy,
   OnChanges,
-  SimpleChanges,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { first, map } from 'rxjs';
@@ -43,7 +42,7 @@ export class PickerComponent
     super();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     this.store
       .select(Recipes.getAdjustedDataset)
       .pipe(first())

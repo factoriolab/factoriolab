@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { map } from 'rxjs';
+import { combineLatest, map } from 'rxjs';
 
 import { Column, columnOptions, PrecisionColumns, Rational } from '~/models';
 import { TrackService } from '~/services';
@@ -16,15 +16,18 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnsComponent extends DialogContainerComponent {
-  columns$ = this.store.select(Preferences.getColumnsState);
-  options$ = this.store
-    .select(Settings.getGame)
-    .pipe(map((g) => columnOptions(g)));
+  vm$ = combineLatest([
+    this.store.select(Preferences.getColumnsState),
+    this.store.select(Settings.getGame),
+  ]).pipe(
+    map(([columns, game]) => ({ columns, options: columnOptions(game) }))
+  );
 
   edited = false;
   editValue: Preferences.ColumnsState = {};
 
   PrecisionColumns = PrecisionColumns;
+
   Column = Column;
 
   constructor(
