@@ -4,10 +4,15 @@ import {
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { map } from 'rxjs';
 
-import { Dataset, DisplayRate, ItemId } from '~/models';
-import { TrackService } from '~/services';
+import { Dataset, ItemId } from '~/models';
+import { LabState } from '~/store';
+import * as Recipes from '~/store/recipes';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
@@ -16,42 +21,50 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
   styleUrls: ['./ranker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RankerComponent extends DialogContainerComponent {
-  @Input() data: Dataset;
-  @Input() selected: string[];
-  @Input() set options(value: string[]) {
-    this.rows = this.moduleRows(value);
-  }
+export class RankerComponent
+  extends DialogContainerComponent
+  implements OnChanges
+{
+  @Input() selected: string[] = [];
+  @Input() options: string[] = [];
 
   @Output() selectIds = new EventEmitter<string[]>();
 
+  vm$ = this.store
+    .select(Recipes.getAdjustedDataset)
+    .pipe(map((data) => ({ data })));
+
   edited = false;
-  editValue: string[];
-  rows: string[][];
+  editValue: string[] = [];
+  rows: string[][] = [[]];
+  width = 0;
 
   ItemId = ItemId;
 
-  get width(): number {
-    const w = Math.max(...this.rows.map((r) => r.length)) * 2.375;
-    if (this.rows.length > 5) {
-      return w + 1.125; // Add in padding for scrollbar
-    } else {
-      return w;
-    }
-  }
-
-  constructor(public track: TrackService) {
+  constructor(private store: Store<LabState>) {
     super();
   }
 
-  text(id: string): string {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['options']) {
+      this.rows = this.moduleRows(this.options);
+      const w = Math.max(...this.rows.map((r) => r.length)) * 2.375;
+      if (this.rows.length > 5) {
+        this.width = w + 1.125; // Add in padding for scrollbar
+      } else {
+        this.width = w;
+      }
+    }
+  }
+
+  text(id: string): string | undefined {
     if (this.editValue.length > 0 && this.editValue.indexOf(id) !== -1) {
       return (this.editValue.indexOf(id) + 1).toString();
     }
-    return null;
+    return undefined;
   }
 
-  canAdd(id: string): boolean {
+  canAdd(id: string, data: Dataset): boolean {
     if (!this.edited || id === ItemId.Module) {
       return true;
     }
@@ -60,12 +73,10 @@ export class RankerComponent extends DialogContainerComponent {
       return false;
     }
 
-    const lim = this.data.itemEntities[id].module.limitation;
+    const lim = data.moduleEntities[id].limitation;
     return (
       !lim ||
-      !this.editValue.some(
-        (i) => this.data.itemEntities[i].module.limitation === lim
-      )
+      !this.editValue.some((i) => data.moduleEntities[i].limitation === lim)
     );
   }
 
@@ -82,7 +93,7 @@ export class RankerComponent extends DialogContainerComponent {
     this.open = false;
   }
 
-  clickId(id: string): void {
+  clickId(id: string, data: Dataset): void {
     if (id === ItemId.Module) {
       if (this.edited) {
         this.selectIds.emit(this.editValue);
@@ -90,14 +101,14 @@ export class RankerComponent extends DialogContainerComponent {
         this.selectIds.emit([]);
       }
       this.cancel();
-    } else if (this.canAdd(id)) {
+    } else if (this.canAdd(id, data)) {
       if (this.edited) {
         this.editValue.push(id);
       } else {
         this.edited = true;
         this.editValue = [id];
       }
-      if (!this.data.itemEntities[id].module.limitation) {
+      if (!data.moduleEntities[id].limitation) {
         this.selectIds.emit(this.editValue);
         this.cancel();
       }

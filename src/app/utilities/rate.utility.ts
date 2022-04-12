@@ -42,6 +42,7 @@ export class RateUtility {
       // No existing step found, create a new one
       step = {
         id: steps.length.toString(),
+        itemId,
         items: Rational.zero,
       };
 
@@ -136,23 +137,25 @@ export class RateUtility {
   ): Step[] {
     for (const step of steps) {
       let noItems = false;
-      if (step.recipeId) {
-        const factory =
-          data.factoryEntities[recipeSettings[step.recipeId].factory];
-        const recipe = data.recipeEntities[step.recipeId];
-        // No belts/wagons on research rows or rocket part rows
-        noItems = !!(factory.research || (factory.silo && !recipe.part));
+      if (step.recipeId != null) {
+        const factoryId = recipeSettings[step.recipeId].factory;
+        if (factoryId != null) {
+          const factory = data.factoryEntities[factoryId];
+          const recipe = data.recipeEntities[step.recipeId];
+          // No belts/wagons on research rows or rocket part rows
+          noItems = !!(factory.research || (factory.silo && !recipe.part));
+        }
       }
       if (noItems) {
         delete step.belts;
         delete step.wagons;
-      } else if (step.itemId) {
+      } else if (step.itemId != null) {
         const belt = itemSettings[step.itemId].belt;
-        if (step.items && belt) {
+        if (step.items != null && belt != null) {
           step.belts = step.items.div(beltSpeed[belt]);
         }
         const wagon = itemSettings[step.itemId]?.wagon;
-        if (step.items && wagon) {
+        if (step.items != null && wagon != null) {
           const item = data.itemEntities[step.itemId];
           if (item.stack) {
             step.wagons = step.items.div(
@@ -203,20 +206,22 @@ export class RateUtility {
           recipeSettings[step.recipeId].beaconCount?.nonzero()
         ) {
           const settings = recipeSettings[step.recipeId];
-          if (settings.beaconTotal) {
-            step.beacons = settings.beaconTotal;
-          } else {
-            step.beacons = step.factories
-              .ceil()
-              .mul(settings.beaconCount)
-              .div(beaconReceivers);
-          }
+          if (settings.beacon != null) {
+            if (settings.beaconTotal != null) {
+              step.beacons = settings.beaconTotal;
+            } else if (settings.beaconCount != null) {
+              step.beacons = step.factories
+                .ceil()
+                .mul(settings.beaconCount)
+                .div(beaconReceivers);
+            }
 
-          const beacon = data.beaconEntities[settings.beacon];
-          if (beacon.usage?.nonzero()) {
-            step.power = (step.power ?? Rational.zero).add(
-              step.beacons.mul(beacon.usage)
-            );
+            const beacon = data.beaconEntities[settings.beacon];
+            if (beacon.usage?.nonzero() && step.beacons != null) {
+              step.power = (step.power ?? Rational.zero).add(
+                step.beacons.mul(beacon.usage)
+              );
+            }
           }
         }
       }

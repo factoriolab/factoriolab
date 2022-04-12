@@ -12,7 +12,7 @@ export interface PartialState {
   productsState?: ProductsState;
   itemsState?: ItemsState;
   recipesState?: RecipesState;
-  factoriesState?: Partial<FactoriesState>;
+  factoriesState?: FactoriesState;
   settingsState?: Partial<SettingsState>;
 }
 

@@ -26,7 +26,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let opt of options$ | async; trackBy: track.idName">
+        <tr
+          *ngFor="let opt of options$ | async; trackBy: trackService.trackById"
+        >
           <td>
             <div
               *ngIf="

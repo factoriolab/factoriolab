@@ -91,7 +91,11 @@ export class DatasetsEffects {
     return combineLatest([data$, hash$]);
   }
 
-  load(zip: string, stored: LabState, initial: Settings.SettingsState): void {
+  load(
+    zip: string,
+    stored: Partial<LabState> | undefined,
+    initial: Settings.SettingsState
+  ): void {
     if (!zip) {
       const id = stored?.settingsState?.baseId || initial.baseId;
       this.requestData(id).subscribe(([data, hash]) => {

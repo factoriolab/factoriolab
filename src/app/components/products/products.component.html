@@ -3,7 +3,7 @@
   <div class="panel">
     <div
       class="product-row"
-      *ngFor="let product of vm.products; trackBy: track.product"
+      *ngFor="let product of vm.products; trackBy: trackService.trackById"
     >
       <ng-container *ngIf="product && vm.data.itemEntities[product.itemId]">
         <button title="Remove product" (click)="removeProduct(product.id)">
@@ -11,7 +11,6 @@
         </button>
         <span>Produce</span>
         <lab-picker
-          [data]="vm.data"
           [selected]="product.itemId"
           (selectId)="changeItem(product, $event, vm.data)"
         >
@@ -71,7 +70,6 @@
               <lab-select
                 *ngIf="product.rateType === RateType.Factories; else itemPicker"
                 header="Select a step to calculate by"
-                [data]="vm.data"
                 [selected]="id"
                 [options]="vm.productOptions[product.id]"
                 [selectType]="IdType.Recipe"
@@ -90,7 +88,6 @@
               <ng-template #itemPicker>
                 <lab-select
                   header="Select a step to calculate by"
-                  [data]="vm.data"
                   [selected]="id"
                   [options]="vm.productOptions[product.id]"
                   (selectId)="setVia(product.id, $event)"
@@ -115,7 +112,6 @@
                 <lab-select
                   *ngIf="vm.data.beltIds.indexOf(belt) !== -1; else pipePicker"
                   header="Select a belt"
-                  [data]="vm.data"
                   [selected]="belt"
                   [options]="vm.data.beltIds"
                   [columns]="
@@ -136,7 +132,6 @@
                   <lab-select
                     *ngIf="vm.data.pipeIds.indexOf(belt) !== -1; else pipeIcon"
                     header="Select a pipe"
-                    [data]="vm.data"
                     [selected]="belt"
                     [options]="vm.data.pipeIds"
                     (selectId)="
@@ -176,7 +171,6 @@
                     <span>using</span>
                     <lab-select
                       header="Select a cargo wagon"
-                      [data]="vm.data"
                       [selected]="wagon"
                       [options]="vm.data.cargoWagonIds"
                       (selectId)="
@@ -202,7 +196,6 @@
                     <span>using</span>
                     <lab-select
                       header="Select a fluid wagon"
-                      [data]="vm.data"
                       [selected]="wagon"
                       [options]="vm.data.fluidWagonIds"
                       (selectId)="
@@ -243,7 +236,6 @@
                     >
                       <lab-select
                         header="Select a factory"
-                        [data]="vm.data"
                         [selected]="factory"
                         [options]="recipe.producers"
                         (selectId)="
@@ -278,12 +270,7 @@
                     class="flex"
                   >
                     <lab-select
-                      *ngFor="
-                        let mod of modules;
-                        index as i;
-                        first as first;
-                        trackBy: track.string
-                      "
+                      *ngFor="let mod of modules; index as i; first as first"
                       [header]="
                         vm.data.game === Game.Factorio
                           ? 'Select a module'
@@ -291,7 +278,6 @@
                           ? 'Select a proliferator'
                           : 'Select resource purity'
                       "
-                      [data]="vm.data"
                       [selected]="mod"
                       [options]="vm.data.recipeModuleIds[id]"
                       [includeEmptyModule]="vm.data.game !== Game.Satisfactory"
@@ -352,7 +338,7 @@
                       title="Set rate step number of beacons"
                       placeholder="# Beacons"
                       [digits]="2"
-                      [value]="product.viaBeaconCount"
+                      [value]="product.viaBeaconCount ?? ''"
                       (setValue)="
                         changeRecipeField(
                           product,
@@ -381,7 +367,6 @@
                       <ng-template #beaconPicker>
                         <lab-select
                           header="Select a beacon"
-                          [data]="vm.data"
                           [selected]="beacon"
                           [options]="vm.data.beaconIds"
                           (selectId)="
@@ -412,11 +397,9 @@
                           *ngFor="
                             let mod of modules;
                             index as i;
-                            first as first;
-                            trackBy: track.string
+                            first as first
                           "
                           header="Select a module"
-                          [data]="vm.data"
                           [selected]="mod"
                           [options]="vm.data.beaconModuleIds"
                           [includeEmptyModule]="true"
@@ -456,7 +439,6 @@
     </div>
     <div>
       <lab-picker
-        [data]="vm.data"
         [selected]="vm.data.itemIds[0]"
         (selectId)="addProduct($event)"
       >

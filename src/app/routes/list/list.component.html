@@ -122,7 +122,9 @@
       </tr>
     </thead>
     <tbody *ngIf="vm.columns[Column.Tree].show ? 2 : 1 as leftSpan">
-      <ng-container *ngFor="let step of vm.steps; trackBy: track.step">
+      <ng-container
+        *ngFor="let step of vm.steps; trackBy: trackService.trackById"
+      >
         <ng-container
           *ngIf="
             mode === ListMode.All ||
@@ -235,7 +237,6 @@
                     <lab-select
                       *ngIf="vm.settings.belt"
                       header="Select a belt"
-                      [data]="vm.data"
                       [selected]="belt"
                       [options]="vm.data.beltIds"
                       [columns]="
@@ -264,7 +265,6 @@
                       <lab-select
                         *ngIf="vm.settings.pipe"
                         header="Select a pipe"
-                        [data]="vm.data"
                         [selected]="belt"
                         [options]="vm.data.pipeIds"
                         (selectId)="
@@ -314,7 +314,6 @@
                       <lab-select
                         *ngIf="vm.settings.cargoWagon"
                         header="Select a cargo wagon"
-                        [data]="vm.data"
                         [selected]="wagon"
                         [options]="vm.data.cargoWagonIds"
                         (selectId)="
@@ -341,7 +340,6 @@
                       <lab-select
                         *ngIf="vm.settings.fluidWagon"
                         header="Select a fluid wagon"
-                        [data]="vm.data"
                         [selected]="wagon"
                         [options]="vm.data.fluidWagonIds"
                         (selectId)="
@@ -410,7 +408,6 @@
                           >
                             <lab-select
                               header="Select a factory"
-                              [data]="vm.data"
                               [selected]="factory"
                               [options]="recipe.producers"
                               (selectId)="
@@ -453,12 +450,7 @@
                       class="flex mod"
                     >
                       <lab-select
-                        *ngFor="
-                          let mod of modules;
-                          index as i;
-                          first as first;
-                          trackBy: track.string
-                        "
+                        *ngFor="let mod of modules; index as i; first as first"
                         [header]="
                           vm.data.game === Game.Factorio
                             ? 'Select a module'
@@ -466,7 +458,6 @@
                             ? 'Select a proliferator'
                             : 'Select resource purity'
                         "
-                        [data]="vm.data"
                         [selected]="mod"
                         [options]="vm.data.recipeModuleIds[step.recipeId]"
                         [includeEmptyModule]="
@@ -584,7 +575,6 @@
                         <ng-template #beaconPicker>
                           <lab-select
                             header="Select a beacon"
-                            [data]="vm.data"
                             [selected]="beacon"
                             [options]="vm.data.beaconIds"
                             (selectId)="
@@ -627,11 +617,9 @@
                             *ngFor="
                               let mod of modules;
                               index as i;
-                              first as first;
-                              trackBy: track.string
+                              first as first
                             "
                             header="Select a module"
-                            [data]="vm.data"
                             [selected]="mod"
                             [options]="vm.data.beaconModuleIds"
                             [includeEmptyModule]="true"
@@ -792,7 +780,7 @@
                 *ngFor="
                   let output of vm.stepDetails[step.id].outputs;
                   last as isLast;
-                  trackBy: track.step
+                  trackBy: trackService.trackById
                 "
                 class="details"
                 [class.last]="isLast && !step.parents"
@@ -923,9 +911,10 @@
               </tr>
               <tr
                 *ngFor="
-                  let parent of step.parents | keyvalue: track.sortKeyValue;
+                  let parent of step.parents
+                    | keyvalue: trackService.sortByValue;
                   last as isLast;
-                  trackBy: track.keyValue
+                  trackBy: trackService.trackByKey
                 "
                 class="details"
                 [class.last]="isLast"
@@ -1063,12 +1052,12 @@
                       <ng-container
                         *ngFor="
                           let output of step.outputs
-                            | keyvalue: track.sortKeyValue;
-                          trackBy: track.keyValue
+                            | keyvalue: trackService.sortByValue;
+                          trackBy: trackService.trackByKey
                         "
                       >
                         <ng-container
-                          *ngIf="vm.stepEntities[output.key] as outStep"
+                          *ngIf="vm.stepByItemEntities[output.key] as outStep"
                         >
                           <tr
                             *ngIf="step.outputs?.[output.key] as percent"
@@ -1076,7 +1065,7 @@
                           >
                             <td [colSpan]="leftSpan"></td>
                             <td>
-                              <div class="flex">
+                              <div *ngIf="outStep.items" class="flex">
                                 <span
                                   *ngIf="
                                     vm.data.recipeR[step.recipeId]
@@ -1123,11 +1112,13 @@
                   <ng-container
                     *ngFor="
                       let input of vm.data.recipeR[step.recipeId].in
-                        | keyvalue: track.sortKeyValue;
-                      trackBy: track.keyValue
+                        | keyvalue: trackService.sortByValue;
+                      trackBy: trackService.trackByKey
                     "
                   >
-                    <ng-container *ngIf="vm.stepEntities[input.key] as inStep">
+                    <ng-container
+                      *ngIf="vm.stepByItemEntities[input.key] as inStep"
+                    >
                       <tr
                         *ngIf="inStep.parents?.[step.recipeId] as percent"
                         class="details"
@@ -1278,13 +1269,14 @@
                   </tr>
                   <ng-container
                     *ngFor="
-                      let output of step.outputs | keyvalue: track.sortKeyValue;
+                      let output of step.outputs
+                        | keyvalue: trackService.sortByValue;
                       last as isLast;
-                      trackBy: track.keyValue
+                      trackBy: trackService.trackByKey
                     "
                   >
                     <ng-container
-                      *ngIf="vm.stepEntities[output.key] as outStep"
+                      *ngIf="vm.stepByItemEntities[output.key] as outStep"
                     >
                       <tr
                         *ngIf="step.outputs?.[output.key] as percent"
@@ -1293,7 +1285,7 @@
                       >
                         <td [colSpan]="leftSpan"></td>
                         <td>
-                          <div class="flex">
+                          <div *ngIf="outStep.items" class="flex">
                             <span class="monospace">{{
                               outStep.items.mul(percent)
                                 | labRate: vm.effectivePrecision[Column.Items]
@@ -1445,12 +1437,12 @@
                     <ng-container
                       *ngFor="
                         let input of vm.data.recipeR[step.recipeId].in
-                          | keyvalue;
-                        trackBy: track.keyValue
+                          | keyvalue: trackService.sortByValue;
+                        trackBy: trackService.trackByKey
                       "
                     >
                       <ng-container
-                        *ngIf="vm.stepEntities[input.key] as inStep"
+                        *ngIf="vm.stepByItemEntities[input.key] as inStep"
                       >
                         <tr *ngIf="inStep.parents?.[step.recipeId] as percent">
                           <td>
@@ -1499,7 +1491,8 @@
                           </td>
                           <ng-container
                             *ngIf="
-                              vm.itemSettings[input.key].belt !== ItemId.Pipe
+                              vm.itemSettings[input.key].belt !== ItemId.Pipe &&
+                              inStep.items
                             "
                           >
                             <td
@@ -1562,8 +1555,8 @@
                     <ng-container
                       *ngFor="
                         let output of vm.data.recipeR[step.recipeId].out
-                          | keyvalue;
-                        trackBy: track.keyValue
+                          | keyvalue: trackService.sortByValue;
+                        trackBy: trackService.trackByKey
                       "
                     >
                       <tr
@@ -1684,10 +1677,7 @@
                 <td colspan="100" class="recipes">
                   <div class="list tile">
                     <ng-container
-                      *ngFor="
-                        let recipeId of vm.stepDetails[step.id].recipes;
-                        trackBy: track.string
-                      "
+                      *ngFor="let recipeId of vm.stepDetails[step.id].recipes"
                     >
                       <ng-container *ngIf="vm.data.recipeR[recipeId] as recipe">
                         <lab-icon
@@ -1735,10 +1725,7 @@
                 <td colspan="100" class="recipes">
                   <div class="list tile">
                     <lab-icon
-                      *ngFor="
-                        let recipeId of vm.stepDetails[step.id].recipes;
-                        trackBy: track.string
-                      "
+                      *ngFor="let recipeId of vm.stepDetails[step.id].recipes"
                       class="button grid"
                       [class.ignored]="
                         vm.settings.disabledRecipes.indexOf(recipeId) !== -1
@@ -1771,8 +1758,8 @@
           <div
             class="flex"
             *ngFor="
-              let tot of vm.totals.belts | keyvalue: track.sortKeyValue;
-              trackBy: track.keyValue
+              let tot of vm.totals.belts | keyvalue: trackService.sortByValue;
+              trackBy: trackService.trackByKey
             "
           >
             <span class="monospace">{{
@@ -1791,8 +1778,8 @@
           <div
             class="flex"
             *ngFor="
-              let tot of vm.totals.wagons | keyvalue: track.sortKeyValue;
-              trackBy: track.keyValue
+              let tot of vm.totals.wagons | keyvalue: trackService.sortByValue;
+              trackBy: trackService.trackByKey
             "
           >
             <span class="monospace">{{
@@ -1811,8 +1798,9 @@
           <div
             class="flex"
             *ngFor="
-              let tot of vm.totals.factories | keyvalue: track.sortKeyValue;
-              trackBy: track.keyValue
+              let tot of vm.totals.factories
+                | keyvalue: trackService.sortByValue;
+              trackBy: trackService.trackByKey
             "
           >
             <span class="monospace">{{
@@ -1841,8 +1829,8 @@
           <div
             class="flex"
             *ngFor="
-              let tot of vm.totals.beacons | keyvalue: track.sortKeyValue;
-              trackBy: track.keyValue
+              let tot of vm.totals.beacons | keyvalue: trackService.sortByValue;
+              trackBy: trackService.trackByKey
             "
           >
             <span class="monospace">{{ tot.value | labRate: 0 }}</span>

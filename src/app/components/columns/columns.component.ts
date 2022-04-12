@@ -5,12 +5,8 @@ import { map } from 'rxjs';
 import { Column, columnOptions, PrecisionColumns, Rational } from '~/models';
 import { TrackService } from '~/services';
 import { LabState } from '~/store';
-import {
-  ColumnsState,
-  getColumnsState,
-  SetColumnsAction,
-} from '~/store/preferences';
-import { getGame } from '~/store/settings';
+import * as Preferences from '~/store/preferences';
+import * as Settings from '~/store/settings';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
@@ -20,31 +16,39 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnsComponent extends DialogContainerComponent {
-  columns$ = this.store.select(getColumnsState);
-  options$ = this.store.select(getGame).pipe(map((g) => columnOptions(g)));
+  columns$ = this.store.select(Preferences.getColumnsState);
+  options$ = this.store
+    .select(Settings.getGame)
+    .pipe(map((g) => columnOptions(g)));
 
   edited = false;
-  editValue: ColumnsState = {};
+  editValue: Preferences.ColumnsState = {};
 
   PrecisionColumns = PrecisionColumns;
   Column = Column;
 
-  constructor(private store: Store<LabState>, public track: TrackService) {
+  constructor(
+    public trackService: TrackService,
+    private store: Store<LabState>
+  ) {
     super();
   }
 
-  clickOpen(columns: ColumnsState): void {
+  clickOpen(columns: Preferences.ColumnsState): void {
     this.open = true;
     this.edited = false;
-    this.editValue = Object.keys(columns).reduce((e: ColumnsState, c) => {
-      e[c] = { ...columns[c] };
-      return e;
-    }, {});
+    this.editValue = Object.keys(columns).reduce(
+      (e: Preferences.ColumnsState, c) => {
+        e[c] = { ...columns[c] };
+        return e;
+      },
+      {}
+    );
   }
 
   close(): void {
     if (this.edited) {
-      this.store.dispatch(new SetColumnsAction(this.editValue));
+      this.store.dispatch(new Preferences.SetColumnsAction(this.editValue));
     }
     this.open = false;
   }

@@ -7,9 +7,12 @@ import {
   ViewChild,
   ElementRef,
 } from '@angular/core';
-
+import { Store } from '@ngrx/store';
+import { map } from 'rxjs';
 import { Dataset } from '~/models';
-import { TrackService } from '~/services';
+
+import { LabState } from '~/store';
+import * as Recipes from '~/store/recipes';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 @Component({
@@ -19,36 +22,38 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToggleComponent extends DialogContainerComponent {
-  @ViewChild('scrollContainer') scrollContainer: ElementRef<HTMLElement>;
-
-  @Input() data: Dataset;
-  @Input() selected: string[];
+  @Input() selected: string[] = [];
 
   @Output() selectIds = new EventEmitter<string[]>();
 
+  @ViewChild('scrollContainer') scrollContainer:
+    | ElementRef<HTMLElement>
+    | undefined;
+
+  vm$ = this.store.select(Recipes.getAdjustedDataset).pipe(
+    map((data) => ({
+      data,
+      width: Math.ceil(Math.sqrt(data.complexRecipeIds.length) + 2) * 2.375 + 3,
+    }))
+  );
+
+  complexRecipeIds: string[] = [];
   edited = false;
-  editValue: string[];
-  search: boolean;
-  searchValue: string;
-  complexRecipeIds: string[];
+  editValue: string[] = [];
   scrollTop = 0;
+  search = false;
+  searchValue = '';
 
-  get width(): number {
-    return (
-      Math.ceil(Math.sqrt(this.data.complexRecipeIds.length) + 2) * 2.375 + 3
-    );
-  }
-
-  constructor(public track: TrackService) {
+  constructor(private store: Store<LabState>) {
     super();
   }
 
-  clickOpen(): void {
+  clickOpen(data: Dataset): void {
     this.open = true;
     this.edited = false;
     this.search = false;
     this.searchValue = '';
-    this.complexRecipeIds = this.data.complexRecipeIds;
+    this.complexRecipeIds = data.complexRecipeIds;
     this.editValue = [...this.selected];
   }
 
@@ -68,13 +73,13 @@ export class ToggleComponent extends DialogContainerComponent {
     }
   }
 
-  inputSearch(): void {
+  inputSearch(data: Dataset): void {
     // Filter for matching recipe ids
-    let recipeIds = this.data.complexRecipeIds;
+    let recipeIds = data.complexRecipeIds;
     for (const term of this.searchValue.split(' ')) {
       const regExp = new RegExp(term, 'i');
       recipeIds = recipeIds.filter(
-        (i) => this.data.recipeEntities[i].name.search(regExp) !== -1
+        (i) => data.recipeEntities[i].name.search(regExp) !== -1
       );
     }
     this.complexRecipeIds = recipeIds;
@@ -82,6 +87,8 @@ export class ToggleComponent extends DialogContainerComponent {
 
   /** Store scrollTop value on component to improve performance */
   scrollPanel(): void {
-    this.scrollTop = this.scrollContainer.nativeElement.scrollTop;
+    if (this.scrollContainer) {
+      this.scrollTop = this.scrollContainer.nativeElement.scrollTop;
+    }
   }
 }

@@ -3,7 +3,7 @@
     <div class="links">
       <div class="header">
         <a [href]="homeHref"
-          ><h1>{{ title }}</h1></a
+          ><h1>{{ pageTitle }}</h1></a
         >
       </div>
       <ng-container *ngIf="game !== Game.Factorio">
@@ -34,82 +34,86 @@
     </div>
   </div>
 </div>
-<ng-container *ngIf="(error.message$ | async) == null; else errorTile">
-  <main *ngIf="(datasets$ | async).length; else loading">
-    <div *ngIf="showSettings" @slideLeftRight class="settings">
-      <lab-settings (closeSettings)="showSettings = !showSettings">
-      </lab-settings>
-    </div>
-    <div class="view">
-      <div *ngIf="showPoll" class="poll">
-        <h2>Poll</h2>
-        <div class="panel">
-          <a target="_blank" [href]="poll">Have a minute to answer a poll?</a>
-          <div class="flex buttons">
-            <button (click)="hidePoll(true)">
-              <span class="text">Don't show again</span>
-            </button>
-            <button (click)="hidePoll()">
-              <span class="text">Close</span>
-            </button>
+<ng-container *ngIf="(errorService.message$ | async) == null; else errorTile">
+  <ng-container *ngIf="vm$ | async as vm">
+    <main *ngIf="vm.datasets.length; else loading">
+      <div *ngIf="showSettings" @slideLeftRight class="settings">
+        <lab-settings (closeSettings)="showSettings = !showSettings">
+        </lab-settings>
+      </div>
+      <div class="view">
+        <div *ngIf="showPoll" class="poll">
+          <h2>Poll</h2>
+          <div class="panel">
+            <a target="_blank" [href]="poll">Have a minute to answer a poll?</a>
+            <div class="flex buttons">
+              <button (click)="hidePoll(true)">
+                <span class="text">Don't show again</span>
+              </button>
+              <button (click)="hidePoll()">
+                <span class="text">Close</span>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <lab-products></lab-products>
-      <div *ngIf="(products$ | async).length">
-        <ul role="navigation" class="tabs">
-          <li
-            routerLink="/list"
-            routerLinkActive="active"
-            queryParamsHandling="preserve"
-          >
-            <span>List</span>
-          </li>
-          <li
-            routerLink="/flow"
-            routerLinkActive="active"
-            queryParamsHandling="preserve"
-          >
-            <span>Flow</span>
-          </li>
-          <li
-            routerLink="/matrix"
-            routerLinkActive="active"
-            queryParamsHandling="preserve"
-          >
-            <span>Matrix</span>
-          </li>
-          <li *ngIf="!showSettings" (click)="showSettings = true">
-            <span>Settings</span>
-          </li>
-        </ul>
-        <div class="panel">
-          <router-outlet></router-outlet>
+        <lab-products></lab-products>
+        <div *ngIf="vm.products.length">
+          <ul role="navigation" class="tabs">
+            <li
+              routerLink="/list"
+              routerLinkActive="active"
+              queryParamsHandling="preserve"
+            >
+              <span>List</span>
+            </li>
+            <li
+              routerLink="/flow"
+              routerLinkActive="active"
+              queryParamsHandling="preserve"
+            >
+              <span>Flow</span>
+            </li>
+            <li
+              routerLink="/matrix"
+              routerLinkActive="active"
+              queryParamsHandling="preserve"
+            >
+              <span>Matrix</span>
+            </li>
+            <li *ngIf="!showSettings" (click)="showSettings = true">
+              <span>Settings</span>
+            </li>
+          </ul>
+          <div class="panel">
+            <router-outlet></router-outlet>
+          </div>
         </div>
-      </div>
-      <div>
-        <div class="panel dark flex tween">
-          <div *ngIf="result$ | async as result">
-            <span
+        <div>
+          <div class="panel dark flex tween">
+            <ng-container
               *ngIf="
-                result.result === MatrixResultType.Solved ||
-                  result.result === MatrixResultType.Cached;
+                vm.result.result === MatrixResultType.Solved ||
+                  vm.result.result === MatrixResultType.Cached;
                 else notSolved
               "
-              >Simplex {{ result.result }}: {{ result.time }}ms,
-              {{ result.pivots }} pivots<br />
-              Size: {{ result.A.length }} x {{ result.A[0].length }}, Cost:
-              {{ result.O[result.O.length - 1].toPrecision(2) }}
-            </span>
+            >
+              <span *ngIf="vm.result.A && vm.result.O"
+                >Simplex {{ vm.result.result }}: {{ vm.result.time }}ms,
+                {{ vm.result.pivots }} pivots<br />
+                Size: {{ vm.result.A.length }} x {{ vm.result.A[0].length }},
+                Cost:
+                {{ vm.result.O[vm.result.O.length - 1].toPrecision(2) }}
+              </span>
+            </ng-container>
             <ng-template #notSolved>
-              <span>Simplex {{ result.result }}</span>
+              <span>Simplex {{ vm.result.result }}</span>
             </ng-template>
+            <span>{{ version }}</span>
           </div>
-          <span>{{ version }}</span>
         </div>
       </div>
-    </div>
-  </main>
+    </main>
+  </ng-container>
 </ng-container>
 <ng-template #loading>
   <div class="view msg load">
@@ -123,7 +127,7 @@
       <div class="panel invalid">
         <div>The application has encountered an error:</div>
         <br />
-        <div>{{ error.message$ | async }}</div>
+        <div>{{ errorService.message$ | async }}</div>
         <br />
         <a [href]="homeHref">Click here to reset</a>
       </div>

@@ -41,6 +41,10 @@ export class RationalItem {
   fuel?: RationalFuel;
   cargoWagon?: RationalCargoWagon;
   fluidWagon?: RationalFluidWagon;
+  /** Used to link the item to an alternate icon id */
+  icon?: string;
+  /** Used to add extra text to an already defined icon */
+  iconText?: string;
 
   constructor(data: Item) {
     this.id = data.id;
@@ -73,6 +77,12 @@ export class RationalItem {
     }
     if (data.fluidWagon) {
       this.fluidWagon = new RationalFluidWagon(data.fluidWagon);
+    }
+    if (data.icon) {
+      this.icon = data.icon;
+    }
+    if (data.iconText) {
+      this.iconText = data.iconText;
     }
   }
 }

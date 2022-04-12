@@ -3,7 +3,9 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 
 import { IdName, NONE } from '~/models';
@@ -16,18 +18,26 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
   styleUrls: ['./options.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OptionsComponent<T> extends DialogContainerComponent {
-  @Input() title: string;
-  @Input() selected: T;
-  @Input() options: IdName<T>[];
+export class OptionsComponent<T extends boolean | number | string>
+  extends DialogContainerComponent
+  implements OnChanges
+{
+  @Input() title: string | undefined;
+  @Input() selected: T | undefined;
+  @Input() options: IdName<T>[] = [];
 
   @Output() selectId = new EventEmitter<T>();
 
-  get text(): string {
-    return this.options.find((o) => o.id === this.selected)?.name || NONE;
+  text = '';
+
+  constructor(public trackService: TrackService) {
+    super();
   }
 
-  constructor(public track: TrackService) {
-    super();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['options'] || changes['selected']) {
+      this.text =
+        this.options.find((o) => o.id === this.selected)?.name || NONE;
+    }
   }
 }

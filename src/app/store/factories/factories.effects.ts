@@ -40,14 +40,18 @@ export class FactoriesEffects {
               r.beaconModules != null)
           ) {
             // Check that these recipe settings are still valid
-            const factory = data.factoryEntities[recipeSettings[i].factory];
-            const recipe = data.recipeEntities[i];
-            if (
-              !RecipeUtility.allowsModules(recipe, factory) ||
-              (r.factoryModules && r.factoryModules.length !== factory.modules)
-            ) {
-              // Factory does not support module effects, reset these settings
-              effects.push(new Recipes.ResetRecipeModulesAction(i));
+            const factoryId = recipeSettings[i].factory;
+            if (factoryId) {
+              const factory = data.factoryEntities[factoryId];
+              const recipe = data.recipeEntities[i];
+              if (
+                !RecipeUtility.allowsModules(recipe, factory) ||
+                (r.factoryModules &&
+                  r.factoryModules.length !== factory.modules)
+              ) {
+                // Factory does not support module effects, reset these settings
+                effects.push(new Recipes.ResetRecipeModulesAction(i));
+              }
             }
           }
         }

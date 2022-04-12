@@ -8,34 +8,40 @@
       <i class="material-icons">close</i>
     </button>
   </div>
-  <div #scroll class="panel scroll" [style.width.rem]="width">
+  <div
+    *ngIf="vm$ | async as vm"
+    #scroll
+    class="panel scroll"
+    [style.width.rem]="width"
+  >
     <div class="tile">
       <lab-icon
         tooltip="No module"
         class="grid"
         data-test="lab-ranker-none"
-        [class.disabled]="!canAdd(ItemId.Module)"
         [class.selected]="!editValue.length"
         [iconId]="ItemId.Module"
         [text]="text(ItemId.Module)"
         [scrollTop]="scroll.scrollTop"
-        (click)="clickId(ItemId.Module)"
+        (click)="clickId(ItemId.Module, vm.data)"
       >
       </lab-icon>
     </div>
     <div class="tile" *ngFor="let row of rows">
       <lab-icon
-        *ngFor="let id of row; trackBy: track.string"
+        *ngFor="let id of row"
         class="grid"
         data-test="lab-ranker-option"
-        [class.disabled]="!canAdd(id)"
+        [class.disabled]="!canAdd(id, vm.data)"
         [class.selected]="editValue.indexOf(id) !== -1"
         [iconId]="id"
         [text]="text(id)"
-        [tooltip]="data.itemEntities[id] ? data.itemEntities[id].name : null"
-        [item]="data.itemEntities[id]"
+        [tooltip]="
+          vm.data.itemEntities[id] ? vm.data.itemEntities[id].name : undefined
+        "
+        [item]="vm.data.itemEntities[id]"
         [scrollTop]="scroll.scrollTop"
-        (click)="clickId(id)"
+        (click)="clickId(id, vm.data)"
       ></lab-icon>
     </div>
   </div>

@@ -7,11 +7,11 @@ import { RouterService } from '~/services';
 export class StepHrefPipe implements PipeTransform {
   constructor(private router: RouterService) {}
 
-  transform(value: Step, data: Dataset): string {
+  transform(value: Step, data: Dataset): string | undefined {
     let step = value;
     if (step.recipeId) {
       const recipe = data.recipeR[step.recipeId];
-      if (recipe.adjustProd && recipe.productivity) {
+      if (recipe.adjustProd && recipe.productivity && value.items) {
         // Adjust items to account for productivity bonus
         step = {
           ...value,

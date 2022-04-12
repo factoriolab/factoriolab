@@ -104,7 +104,15 @@ defined cost, usually mining."
       </td>
     </tr>
   </table>
-  <table *ngIf="vm.result.A">
+  <table
+    *ngIf="
+      vm.result.A &&
+      vm.result.O &&
+      vm.result.items &&
+      vm.result.recipes &&
+      vm.result.inputs
+    "
+  >
     <tr>
       <th [colSpan]="vm.result.O.length + 2" class="header">
         Simplex Canonical Tableau
@@ -137,20 +145,20 @@ defined cost, usually mining."
       <th rowspan="2"></th>
     </tr>
     <tr>
-      <td *ngFor="let i of vm.result.items; trackBy: track.string">
+      <td *ngFor="let i of vm.result.items">
         <lab-icon
           [iconId]="i"
           [tooltip]="vm.data.itemEntities[i].name"
         ></lab-icon>
       </td>
-      <td *ngFor="let i of vm.result.recipes; trackBy: track.string">
+      <td *ngFor="let i of vm.result.recipes">
         <lab-icon
           [iconId]="i"
           [tooltip]="vm.data.recipeEntities[i].name"
           [recipe]="vm.data.recipeEntities[i]"
         ></lab-icon>
       </td>
-      <td *ngFor="let i of vm.result.inputs; trackBy: track.string">
+      <td *ngFor="let i of vm.result.inputs">
         <lab-icon
           [iconId]="i"
           [tooltip]="vm.data.itemEntities[i].name"
@@ -193,12 +201,12 @@ defined cost, usually mining."
             title="Set cost"
             placeholder="Cost"
             [value]="c.toString()"
-            (setValue)="setRecipeCost({ id: id, value: $event, def: null })"
+            (setValue)="setRecipeCost(id, $event)"
           ></lab-input>
           <button
             *ngIf="vm.recipeRaw[id]?.cost"
             title="Undo recipe cost modification"
-            (click)="setRecipeCost({ id: id, value: null, def: null })"
+            (click)="setRecipeCost(id, undefined)"
           >
             <i class="material-icons">undo</i>
           </button>
@@ -228,20 +236,20 @@ defined cost, usually mining."
       <td rowspan="3"></td>
     </tr>
     <tr>
-      <td *ngFor="let i of vm.result.items; trackBy: track.string">
+      <td *ngFor="let i of vm.result.items">
         <lab-icon
           [iconId]="i"
           [tooltip]="vm.data.itemEntities[i].name"
         ></lab-icon>
       </td>
-      <td *ngFor="let i of vm.result.recipes; trackBy: track.string">
+      <td *ngFor="let i of vm.result.recipes">
         <lab-icon
           [iconId]="i"
           [tooltip]="vm.data.recipeEntities[i].name"
           [recipe]="vm.data.recipeEntities[i]"
         ></lab-icon>
       </td>
-      <td *ngFor="let i of vm.result.inputs; trackBy: track.string">
+      <td *ngFor="let i of vm.result.inputs">
         <lab-icon
           [iconId]="i"
           [tooltip]="vm.data.itemEntities[i].name"

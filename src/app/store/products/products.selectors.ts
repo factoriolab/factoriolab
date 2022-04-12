@@ -55,8 +55,6 @@ export const getProductSteps = createSelector(
   Recipes.getAdjustedDataset,
   Preferences.getSimplexModifiers,
   (products, itemSettings, disabledRecipes, data, adj) => {
-    console.log('getProductSteps');
-    console.log(products);
     const a = products?.reduce((e: Entities<[string, Rational][]>, p) => {
       e[p.itemId] = SimplexUtility.getSteps(
         p.itemId,
@@ -70,7 +68,6 @@ export const getProductSteps = createSelector(
       );
       return e;
     }, {});
-    console.log(a);
     return a;
   }
 );
@@ -82,8 +79,6 @@ export const getProducts = createSelector(
   Factories.getFactorySettings,
   Settings.getNormalDataset,
   (products, productSteps, recipeSettings, factories, data) => {
-    console.log('getProducts');
-    console.log(products);
     const a = products?.map((p) =>
       RecipeUtility.adjustProduct(
         p,
@@ -93,7 +88,6 @@ export const getProducts = createSelector(
         data
       )
     );
-    console.log(a);
     return a;
   }
 );
@@ -187,9 +181,9 @@ export const getNormalizedRatesByWagons = createSelector(
   (products, productSteps, itemSettings, displayRate, data) =>
     products?.reduce((e: Entities<Rational>, p) => {
       if (p.viaId === p.itemId) {
-        const item = data.itemR[p.itemId];
+        const item = data.itemEntities[p.itemId];
         const wagon =
-          data.itemR[p.viaSetting ?? itemSettings[p.itemId].wagon ?? ''];
+          data.itemEntities[p.viaSetting ?? itemSettings[p.itemId].wagon ?? ''];
         e[p.id] = p.rate.div(DisplayRateVal[displayRate]);
         if (item.stack && wagon.cargoWagon) {
           e[p.id] = e[p.id].mul(item.stack.mul(wagon.cargoWagon.size));
@@ -199,9 +193,9 @@ export const getNormalizedRatesByWagons = createSelector(
       } else {
         const via = RecipeUtility.getProductStepData(productSteps, p);
         if (via) {
-          const item = data.itemR[via[0]];
+          const item = data.itemEntities[via[0]];
           const wagon =
-            data.itemR[p.viaSetting ?? itemSettings[via[0]].wagon ?? ''];
+            data.itemEntities[p.viaSetting ?? itemSettings[via[0]].wagon ?? ''];
           e[p.id] = p.rate.div(DisplayRateVal[displayRate]);
           if (item.stack && wagon.cargoWagon) {
             e[p.id] = e[p.id].mul(item.stack.mul(wagon.cargoWagon.size));
@@ -558,9 +552,11 @@ export const getStepDetails = createSelector(
     }, {})
 );
 
-export const getStepEntities = createSelector(getSteps, (steps) =>
+export const getStepByItemEntities = createSelector(getSteps, (steps) =>
   steps.reduce((e: Entities<Step>, s) => {
-    e[s.id] = s;
+    if (s.itemId != null) {
+      e[s.itemId] = s;
+    }
     return e;
   }, {})
 );

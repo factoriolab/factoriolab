@@ -1,14 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
-import { Dataset, DefaultIdPayload, MatrixResult } from '~/models';
+import { DefaultIdPayload } from '~/models';
 import { TrackService } from '~/services';
 import { LabState } from '~/store';
 import * as Products from '~/store/products';
@@ -49,7 +43,7 @@ export class MatrixComponent {
     )
   );
 
-  constructor(public track: TrackService, private store: Store<LabState>) {}
+  constructor(private store: Store<LabState>) {}
 
   /** Action Dispatch Methods */
   setCostFactor(data: string): void {
@@ -68,8 +62,10 @@ export class MatrixComponent {
     this.store.dispatch(new Settings.SetCostIgnoredAction(data));
   }
 
-  setRecipeCost(data: DefaultIdPayload): void {
-    this.store.dispatch(new Recipes.SetCostAction(data));
+  setRecipeCost(id: string, value: string | undefined): void {
+    this.store.dispatch(
+      new Recipes.SetCostAction({ id, value, def: undefined })
+    );
   }
 
   resetCost(): void {

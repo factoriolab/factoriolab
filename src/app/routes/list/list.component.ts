@@ -60,7 +60,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     this.store.select(Products.getTotals),
     this.store.select(Products.getSteps),
     this.store.select(Products.getStepDetails),
-    this.store.select(Products.getStepEntities),
+    this.store.select(Products.getStepByItemEntities),
     this.store.select(Products.getStepTree),
     this.store.select(Products.getEffectivePrecision),
     this.store.select(Products.getEffectivePowerUnit),
@@ -80,7 +80,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
         totals,
         steps,
         stepDetails,
-        stepEntities,
+        stepByItemEntities,
         stepTree,
         effectivePrecision,
         effectivePowerUnit,
@@ -98,7 +98,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
         totals,
         steps,
         stepDetails,
-        stepEntities,
+        stepByItemEntities,
         stepTree,
         effectivePrecision,
         effectivePowerUnit,
@@ -116,7 +116,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() selectedId: string | undefined;
 
   expanded: Entities<StepDetailTab> = {};
-  fragmentId: string | undefined;
+  fragmentId: string | null | undefined;
 
   ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
   DisplayRateVal = DisplayRateVal;
@@ -132,13 +132,13 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
 
   constructor(
     private ref: ChangeDetectorRef,
-    private route: ActivatedRoute,
-    public track: TrackService,
+    private activatedRoute: ActivatedRoute,
+    public trackService: TrackService,
     public store: Store<LabState>
   ) {}
 
   ngOnInit(): void {
-    this.route.fragment
+    this.activatedRoute.fragment
       .pipe(
         take(1),
         filter((f) => f != null)
@@ -282,7 +282,10 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     this.setFactory(
       id,
       value,
-      RecipeUtility.bestMatch(data.recipeEntities[id].producers, factories.ids)
+      RecipeUtility.bestMatch(
+        data.recipeEntities[id].producers,
+        factories.ids ?? []
+      )
     );
   }
 
@@ -296,60 +299,68 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     data?: Dataset
   ): void {
     const recipe = recipeSettings[id];
-    const factory = factories.entities[recipe.factory];
-    switch (field) {
-      case RecipeField.FactoryModules: {
-        if (
-          factory.moduleRank != null &&
-          data != null &&
-          typeof event === 'string'
-        ) {
-          const count = recipe.factoryModules.length;
-          const options = [...data.recipeModuleIds[id], ItemId.Module];
-          const def = RecipeUtility.defaultModules(
-            options,
-            factory.moduleRank,
-            count
-          );
-          const modules = this.generateModules(
-            index,
-            event,
-            recipe.factoryModules
-          );
-          this.setFactoryModules(id, modules, def);
-        }
-        break;
-      }
-      case RecipeField.BeaconCount: {
-        if (typeof event === 'string') {
-          const def = factory.beaconCount;
-          this.setBeaconCount(id, event, def);
-        }
-        break;
-      }
-      case RecipeField.BeaconModules: {
-        if (typeof event === 'string') {
-          const count = recipe.beaconModules.length;
-          const def = new Array(count).fill(factory.beaconModule);
-          const value = this.generateModules(
-            index,
-            event,
-            recipe.beaconModules
-          );
-          this.setBeaconModules(id, value, def);
-        }
-        break;
-      }
-      case RecipeField.Overclock: {
-        if (typeof event !== 'string') {
-          const target = event.target as HTMLInputElement;
-          const value = target.valueAsNumber;
-          if (value >= 1 && value <= 250) {
-            const def = factory.overclock;
-            this.setOverclock(id, value, def);
+    if (recipe.factory) {
+      const factory = factories.entities[recipe.factory];
+      switch (field) {
+        case RecipeField.FactoryModules: {
+          if (
+            factory.moduleRank != null &&
+            data != null &&
+            typeof event === 'string' &&
+            index != null &&
+            recipe.factoryModules != null
+          ) {
+            const count = recipe.factoryModules.length;
+            const options = [...data.recipeModuleIds[id], ItemId.Module];
+            const def = RecipeUtility.defaultModules(
+              options,
+              factory.moduleRank,
+              count
+            );
+            const modules = this.generateModules(
+              index,
+              event,
+              recipe.factoryModules
+            );
+            this.setFactoryModules(id, modules, def);
           }
+          break;
         }
-        break;
+        case RecipeField.BeaconCount: {
+          if (typeof event === 'string') {
+            const def = factory.beaconCount;
+            this.setBeaconCount(id, event, def);
+          }
+          break;
+        }
+        case RecipeField.BeaconModules: {
+          if (
+            typeof event === 'string' &&
+            index != null &&
+            recipe.beaconModules != null
+          ) {
+            const count = recipe.beaconModules.length;
+            const def = new Array(count).fill(factory.beaconModule);
+            const value = this.generateModules(
+              index,
+              event,
+              recipe.beaconModules
+            );
+            this.setBeaconModules(id, value, def);
+          }
+          break;
+        }
+        case RecipeField.Overclock: {
+          if (typeof event !== 'string') {
+            const target = event.target as HTMLInputElement;
+            const value = target.valueAsNumber;
+            if (value >= 1 && value <= 250) {
+              const def = factory.overclock;
+              this.setOverclock(id, value, def);
+            }
+          }
+          break;
+        }
       }
     }
   }

@@ -91,6 +91,7 @@ export function productsReducer(
               'viaBeaconCount',
               'viaBeacon',
               'viaBeaconModules',
+              'viaOverclock',
             ],
             action.payload.id
           ),
@@ -124,6 +125,7 @@ export function productsReducer(
               'viaBeaconCount',
               'viaBeacon',
               'viaBeaconModules',
+              'viaOverclock',
             ],
             action.payload.id
           ),
@@ -141,8 +143,28 @@ export function productsReducer(
               'viaBeaconCount',
               'viaBeacon',
               'viaBeaconModules',
+              'viaOverclock',
             ],
             action.payload.id
+          ),
+        },
+      };
+    case ProductsActionType.RESET_VIA:
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.resetFields(
+            state.entities,
+            [
+              'viaId',
+              'viaSetting',
+              'viaFactoryModules',
+              'viaBeaconCount',
+              'viaBeacon',
+              'viaBeaconModules',
+              'viaOverclock',
+            ],
+            action.payload
           ),
         },
       };
@@ -161,6 +183,7 @@ export function productsReducer(
               'viaBeaconCount',
               'viaBeacon',
               'viaBeaconModules',
+              'viaOverclock',
             ],
             action.payload.id
           ),

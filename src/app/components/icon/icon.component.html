@@ -1,6 +1,6 @@
 <div class="image">
   <img
-    *ngIf="icon"
+    *ngIf="iconId && icon"
     src="assets/transparent.gif"
     class="icon"
     [class.shadow]="hover && hoverIcon"
@@ -29,7 +29,10 @@
   <div *ngIf="recipe" class="flex">
     <lab-icon iconId="time" [text]="recipe.time.toString()"></lab-icon>
     <ng-container
-      *ngFor="let ingredient of recipe.in | keyvalue; trackBy: track.keyValue"
+      *ngFor="
+        let ingredient of recipe.in | keyvalue;
+        trackBy: trackService.trackByKey
+      "
     >
       <lab-icon
         [iconId]="ingredient.key"
@@ -39,7 +42,10 @@
     <i class="material-icons">arrow_forward</i>
     <ng-container *ngIf="recipe.out">
       <ng-container
-        *ngFor="let output of recipe.out | keyvalue; trackBy: track.keyValue"
+        *ngFor="
+          let output of recipe.out | keyvalue;
+          trackBy: trackService.trackByKey
+        "
         class="flex"
       >
         <lab-icon
@@ -86,7 +92,7 @@
   </div>
   <ng-container *ngIf="displayRate$ | async as displayRate">
     <div *ngIf="item?.belt as belt" class="nowrap">
-      {{ round(belt.speed * displayRate) }}
+      {{ round(belt.speed.mul(DisplayRateVal[displayRate])) }}
       {{
         displayRate === DisplayRate.PerSecond
           ? 'Items/s'
@@ -96,7 +102,7 @@
       }}
     </div>
     <div *ngIf="item?.pipe as pipe" class="nowrap">
-      {{ round(pipe.speed * displayRate) }}
+      {{ round(pipe.speed.mul(DisplayRateVal[displayRate])) }}
       {{
         displayRate === DisplayRate.PerSecond
           ? 'Items/s'

@@ -1,33 +1,24 @@
 import { KeyValue } from '@angular/common';
 import { Injectable } from '@angular/core';
 
-import { IdName, Product, Rational, Step } from '~/models';
+import { Rational } from '~/models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TrackService {
-  idName<T>(i: number, r: IdName<T>): T {
-    return r.id;
+  trackById<T extends boolean | number | string = string>(
+    i: number,
+    obj: { id: T }
+  ): T {
+    return obj.id;
   }
 
-  step(i: number, r: Step): string {
-    return r.id ?? '';
-  }
-
-  product(i: number, r: Product): string {
-    return r.id;
-  }
-
-  string(i: number, r: string): string {
-    return r;
-  }
-
-  keyValue<T>(i: number, r: KeyValue<string, T>): string {
+  trackByKey<T>(i: number, r: KeyValue<string, T>): string {
     return r.key;
   }
 
-  sortKeyValue(
+  sortByValue(
     a: KeyValue<string, Rational>,
     b: KeyValue<string, Rational>
   ): number {

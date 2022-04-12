@@ -115,43 +115,44 @@ export class ExportUtility {
       exp.Wagons = step.wagons ? '=' + step.wagons.toString() : '';
       exp.Wagon = step.itemId != null ? itemSettings[step.itemId].wagon : '';
     }
-    if (step.recipeId) {
+    if (step.recipeId != null) {
       exp.Recipe = step.recipeId;
       const recipe = data.recipeR[step.recipeId];
-      if (recipe.in) {
-        exp.Inputs = `"${Object.keys(recipe.in)
-          .map((i) => {
-            const inStep = steps.find((s) => s.itemId === i);
-            return [
-              i,
-              step.recipeId ? inStep?.parents?.[step.recipeId]?.toString() : '',
-            ];
-          })
-          .filter((v) => v[1])
-          .map((v) => `${v[0]}:${v[1]}`)
-          .join(',')}"`;
-      }
+      exp.Inputs = `"${Object.keys(recipe.in)
+        .map((i) => {
+          const inStep = steps.find((s) => s.itemId === i);
+          return [
+            i,
+            step.recipeId ? inStep?.parents?.[step.recipeId]?.toString() : '',
+          ];
+        })
+        .filter((v) => v[1])
+        .map((v) => `${v[0]}:${v[1]}`)
+        .join(',')}"`;
       const settings = recipeSettings[step.recipeId];
-
-      const factory = data.factoryEntities[settings.factory];
-      const allowsModules = RecipeUtility.allowsModules(recipe, factory);
-      if (columns[Column.Factories].show) {
-        exp.Factories = step.factories ? '=' + step.factories.toString() : '';
-        exp.Factory = settings.factory;
-        if (allowsModules) {
-          exp.FactoryModules = `"${settings.factoryModules.join(',')}"`;
+      if (settings.factory != null) {
+        const factory = data.factoryEntities[settings.factory];
+        const allowsModules = RecipeUtility.allowsModules(recipe, factory);
+        if (columns[Column.Factories].show) {
+          exp.Factories = step.factories ? '=' + step.factories.toString() : '';
+          exp.Factory = settings.factory;
+          if (allowsModules && settings.factoryModules != null) {
+            exp.FactoryModules = `"${settings.factoryModules.join(',')}"`;
+          }
         }
-      }
-      if (columns[Column.Beacons].show && allowsModules) {
-        exp.Beacons = settings.beaconCount;
-        exp.Beacon = settings.beacon;
-        exp.BeaconModules = `"${settings.beaconModules.join(',')}"`;
-      }
-      if (columns[Column.Power].show) {
-        exp.Power = step.power ? '=' + step.power.toString() : '';
-      }
-      if (columns[Column.Pollution].show) {
-        exp.Pollution = step.pollution ? '=' + step.pollution.toString() : '';
+        if (columns[Column.Beacons].show && allowsModules) {
+          exp.Beacons = settings.beaconCount;
+          exp.Beacon = settings.beacon;
+          if (settings.beaconModules != null) {
+            exp.BeaconModules = `"${settings.beaconModules.join(',')}"`;
+          }
+        }
+        if (columns[Column.Power].show) {
+          exp.Power = step.power ? '=' + step.power.toString() : '';
+        }
+        if (columns[Column.Pollution].show) {
+          exp.Pollution = step.pollution ? '=' + step.pollution.toString() : '';
+        }
       }
     }
     return exp;

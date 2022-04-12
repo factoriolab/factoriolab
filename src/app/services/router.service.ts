@@ -20,17 +20,13 @@ import {
   Preset,
 } from '~/models';
 import { LabState } from '~/store';
-import { LoadAction, PartialState } from '~/store/app.actions';
-import { getHashEntities } from '~/store/datasets';
-import { FactoriesState, initialFactoriesState } from '~/store/factories';
-import { ItemsState } from '~/store/items';
+import * as App from '~/store/app.actions';
+import * as Datasets from '~/store/datasets';
+import * as Factories from '~/store/factories';
+import * as Items from '~/store/items';
 import * as Products from '~/store/products';
-import { RecipesState } from '~/store/recipes';
-import {
-  SettingsState,
-  initialSettingsState,
-  SetBaseAction,
-} from '~/store/settings';
+import * as Recipes from '~/store/recipes';
+import * as Settings from '~/store/settings';
 
 export const NULL = '?'; // Encoded, previously 'n'
 export const EMPTY = '='; // Encoded, previously 'e'
@@ -110,8 +106,9 @@ export class RouterService {
           Object.keys(s.items).length === 0 &&
           Object.keys(s.recipes).length === 0 &&
           JSON.stringify(s.factories) ===
-            JSON.stringify(initialFactoriesState) &&
-          JSON.stringify(s.settings) === JSON.stringify(initialSettingsState)
+            JSON.stringify(Factories.initialFactoriesState) &&
+          JSON.stringify(s.settings) ===
+            JSON.stringify(Settings.initialSettingsState)
         ) {
           // No modified settings, skip first update.
           skip = true;
@@ -127,10 +124,10 @@ export class RouterService {
 
   updateUrl(
     products: Products.ProductsState,
-    items: ItemsState,
-    recipes: RecipesState,
-    factories: FactoriesState,
-    settings: SettingsState
+    items: Items.ItemsState,
+    recipes: Recipes.RecipesState,
+    factories: Factories.FactoriesState,
+    settings: Settings.SettingsState
   ): void {
     this.zipState(products, items, recipes, factories, settings).subscribe(
       (zState) => {
@@ -147,12 +144,12 @@ export class RouterService {
 
   zipState(
     products: Products.ProductsState,
-    items: ItemsState,
-    recipes: RecipesState,
-    factories: FactoriesState,
-    settings: SettingsState
+    items: Items.ItemsState,
+    recipes: Recipes.RecipesState,
+    factories: Factories.FactoriesState,
+    settings: Settings.SettingsState
   ): Observable<Zip> {
-    return this.store.select(getHashEntities).pipe(
+    return this.store.select(Datasets.getHashEntities).pipe(
       map((hashEntities) => hashEntities[settings.baseId]),
       filter((hash): hash is ModHash => hash != null),
       take(1),
@@ -161,7 +158,7 @@ export class RouterService {
         // Base
         const zBase = this.zipDiffString(
           settings.baseId,
-          initialSettingsState.baseId
+          Settings.initialSettingsState.baseId
         );
         if (zBase.length) {
           zipPartial.hash += `&${Section.Base}${this.getId(
@@ -183,7 +180,7 @@ export class RouterService {
   }
 
   stepHref(step: Step, hash: ModHash): string | undefined {
-    if (!step.items) {
+    if (step.items == null || step.itemId == null) {
       return undefined;
     }
     const products: Product[] = [
@@ -248,7 +245,7 @@ export class RouterService {
             if (params[Section.Version]) {
               v = params[Section.Version] as ZipVersion;
             }
-            const state: PartialState = {};
+            const state: App.PartialState = {};
             switch (v) {
               case ZipVersion.Version0: {
                 if (params[Section.Products]) {
@@ -305,11 +302,11 @@ export class RouterService {
               case ZipVersion.Version3: {
                 const baseId =
                   this.parseNString(params[Section.Base], data.hash) ||
-                  initialSettingsState.baseId;
+                  Settings.initialSettingsState.baseId;
 
-                this.store.dispatch(new SetBaseAction(baseId));
+                this.store.dispatch(new Settings.SetBaseAction(baseId));
                 this.store
-                  .select(getHashEntities)
+                  .select(Datasets.getHashEntities)
                   .pipe(
                     map((hashEntities) => hashEntities[baseId]),
                     filter((e): e is ModHash => e != null),
@@ -355,9 +352,9 @@ export class RouterService {
     }
   }
 
-  dispatch(zip: string, state: PartialState): void {
+  dispatch(zip: string, state: App.PartialState): void {
     this.zip = zip;
-    this.store.dispatch(new LoadAction(state));
+    this.store.dispatch(new App.LoadAction(state));
   }
 
   zipProducts(products: Product[], hash: ModHash): Zip {
@@ -494,7 +491,7 @@ export class RouterService {
     return { ids, index, entities };
   }
 
-  zipItems(partial: Zip, state: ItemsState, hash: ModHash): void {
+  zipItems(partial: Zip, state: Items.ItemsState, hash: ModHash): void {
     const z = this.zipList(
       Object.keys(state).map((i) => {
         const obj = state[i];
@@ -525,9 +522,13 @@ export class RouterService {
     }
   }
 
-  unzipItems(params: Entities, v: ZipVersion, hash?: ModHash): ItemsState {
+  unzipItems(
+    params: Entities,
+    v: ZipVersion,
+    hash?: ModHash
+  ): Items.ItemsState {
     const list = params[Section.Items].split(LISTSEP);
-    const entities: ItemsState = {};
+    const entities: Items.ItemsState = {};
     for (const item of list) {
       const s = item.split(FIELDSEP);
       let i = 0;
@@ -574,7 +575,7 @@ export class RouterService {
     return entities;
   }
 
-  zipRecipes(partial: Zip, state: RecipesState, hash: ModHash): void {
+  zipRecipes(partial: Zip, state: Recipes.RecipesState, hash: ModHash): void {
     const z = this.zipList(
       Object.keys(state).map((i) => {
         const obj = state[i];
@@ -612,9 +613,13 @@ export class RouterService {
     }
   }
 
-  unzipRecipes(params: Entities, v: ZipVersion, hash?: ModHash): RecipesState {
+  unzipRecipes(
+    params: Entities,
+    v: ZipVersion,
+    hash?: ModHash
+  ): Recipes.RecipesState {
     const list = params[Section.Recipes].split(LISTSEP);
-    const entities: RecipesState = {};
+    const entities: Recipes.RecipesState = {};
     for (const recipe of list) {
       const s = recipe.split(FIELDSEP);
       let i = 0;
@@ -672,7 +677,11 @@ export class RouterService {
     return entities;
   }
 
-  zipFactories(partial: Zip, state: FactoriesState, hash: ModHash): void {
+  zipFactories(
+    partial: Zip,
+    state: Factories.FactoriesState,
+    hash: ModHash
+  ): void {
     const ids = state.ids ? ['', ...state.ids] : Object.keys(state.entities);
     const z = this.zipList(
       ids.map((i) => {
@@ -713,7 +722,7 @@ export class RouterService {
     params: Entities,
     v: ZipVersion,
     hash?: ModHash
-  ): Partial<FactoriesState> {
+  ): Factories.FactoriesState {
     const list = params[Section.Factories].split(LISTSEP);
     let ids: string[] | undefined;
     const entities: Entities<FactorySettings> = {};
@@ -791,8 +800,12 @@ export class RouterService {
     return { ids, entities };
   }
 
-  zipSettings(partial: Zip, state: SettingsState, hash: ModHash): void {
-    const init = initialSettingsState;
+  zipSettings(
+    partial: Zip,
+    state: Settings.SettingsState,
+    hash: ModHash
+  ): void {
+    const init = Settings.initialSettingsState;
     const z: Zip = {
       bare: this.zipFields([
         this.zipDiffString(state.baseId, init.baseId),
@@ -859,11 +872,11 @@ export class RouterService {
     params: Entities,
     v: ZipVersion,
     hash?: ModHash
-  ): Partial<SettingsState> {
+  ): Partial<Settings.SettingsState> {
     const zip = params[Section.Settings];
     const s = zip.split(FIELDSEP);
     let i = 0;
-    let obj: Partial<SettingsState>;
+    let obj: Partial<Settings.SettingsState>;
 
     switch (v) {
       case ZipVersion.Version0: {
@@ -1000,7 +1013,7 @@ export class RouterService {
       : EMPTY;
   }
 
-  zipDiffString(value: string, init: string): string {
+  zipDiffString(value: string | undefined, init: string | undefined): string {
     return value === init ? '' : value == null ? NULL : value;
   }
 
@@ -1028,17 +1041,22 @@ export class RouterService {
     return value === init ? '' : value == null ? NULL : value ? TRUE : FALSE;
   }
 
-  zipDiffArray(value: string[], init: string[]): string {
-    const zVal = value
-      ? value.length
-        ? [...value].sort().join(ARRAYSEP)
-        : EMPTY
-      : NULL;
-    const zInit = init
-      ? init.length
-        ? [...init].sort().join(ARRAYSEP)
-        : EMPTY
-      : NULL;
+  zipDiffArray(
+    value: string[] | undefined,
+    init: string[] | undefined
+  ): string {
+    const zVal =
+      value != null
+        ? value.length > 0
+          ? [...value].sort().join(ARRAYSEP)
+          : EMPTY
+        : NULL;
+    const zInit =
+      init != null
+        ? init.length > 0
+          ? [...init].sort().join(ARRAYSEP)
+          : EMPTY
+        : NULL;
     return zVal === zInit ? '' : zVal;
   }
 
@@ -1048,7 +1066,11 @@ export class RouterService {
     return zVal === zInit ? '' : zVal;
   }
 
-  zipDiffNString(value: string, init: string, hash: string[]): string {
+  zipDiffNString(
+    value: string | undefined,
+    init: string | undefined,
+    hash: string[]
+  ): string {
     return value === init
       ? ''
       : value == null
@@ -1060,23 +1082,29 @@ export class RouterService {
     return value === init ? '' : value == null ? NULL : this.getId(value);
   }
 
-  zipDiffNArray(value: string[], init: string[], hash: string[]): string {
-    const zVal = value
-      ? value.length
-        ? value
-            .map((v) => this.getId(hash.indexOf(v)))
-            .sort()
-            .join(ARRAYSEP)
-        : EMPTY
-      : NULL;
-    const zInit = init
-      ? init.length
-        ? init
-            .map((v) => this.getId(hash.indexOf(v)))
-            .sort()
-            .join(ARRAYSEP)
-        : EMPTY
-      : NULL;
+  zipDiffNArray(
+    value: string[] | undefined,
+    init: string[] | undefined,
+    hash: string[]
+  ): string {
+    const zVal =
+      value != null
+        ? value.length > 0
+          ? value
+              .map((v) => this.getId(hash.indexOf(v)))
+              .sort()
+              .join(ARRAYSEP)
+          : EMPTY
+        : NULL;
+    const zInit =
+      init != null
+        ? init.length > 0
+          ? init
+              .map((v) => this.getId(hash.indexOf(v)))
+              .sort()
+              .join(ARRAYSEP)
+          : EMPTY
+        : NULL;
     return zVal === zInit ? '' : zVal;
   }
 

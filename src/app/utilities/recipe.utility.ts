@@ -440,7 +440,7 @@ export class RecipeUtility {
     itemId: string,
     disabledRecipes: string[],
     data: Dataset
-  ): string | null {
+  ): string | undefined {
     const recipes = data.recipeIds
       .map((r) => data.recipeR[r])
       .filter(
@@ -449,7 +449,7 @@ export class RecipeUtility {
     if (recipes.length === 1 && Object.keys(recipes[0].out).length === 1) {
       return recipes[0].id;
     }
-    return null;
+    return undefined;
   }
 
   static adjustRecipes(

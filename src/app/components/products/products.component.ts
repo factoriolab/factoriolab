@@ -81,20 +81,22 @@ export class ProductsComponent {
         }, {}),
         rateTypeOptions: rateTypeOptions(displayRate, data.game),
       })
-    ),
-    tap((vm) => console.log(vm))
+    )
   );
 
   PIPE = PIPE;
   DisplayRateOptions = DisplayRateOptions;
+
   IdType = IdType;
   ItemId = ItemId;
   RateType = RateType;
   Game = Game;
   RecipeField = RecipeField;
-  RecipeUtility = RecipeUtility;
 
-  constructor(public track: TrackService, public store: Store<LabState>) {}
+  constructor(
+    public trackService: TrackService,
+    private store: Store<LabState>
+  ) {}
 
   changeItem(product: Product, itemId: string, data: Dataset): void {
     if (
@@ -120,7 +122,7 @@ export class ProductsComponent {
       value,
       RecipeUtility.bestMatch(
         data.recipeEntities[recipeId].producers,
-        factories.ids
+        factories.ids ?? []
       )
     );
   }
@@ -135,72 +137,81 @@ export class ProductsComponent {
     index?: number,
     data?: Dataset
   ): void {
-    const s = this.getState(
-      recipeId,
-      product.viaSetting,
-      recipeSettings,
-      factories
-    );
-    switch (field) {
-      case RecipeField.FactoryModules: {
-        if (
-          s.factory.moduleRank != null &&
-          data != null &&
-          typeof event === 'string'
-        ) {
-          const count = product.viaFactoryModules.length;
-          const options = [...data.recipeModuleIds[recipeId], ItemId.Module];
-          const def = s.fMatch
-            ? s.recipe.factoryModules
-            : RecipeUtility.defaultModules(
-                options,
-                s.factory.moduleRank,
-                count
-              );
-          const modules = this.generateModules(
-            index,
-            event,
-            product.viaFactoryModules
-          );
-          this.setViaFactoryModules(product.id, modules, def);
-        }
-        break;
-      }
-      case RecipeField.BeaconCount: {
-        if (typeof event === 'string') {
-          const def = s.fMatch ? s.recipe.beaconCount : s.factory.beaconCount;
-          this.setViaBeaconCount(product.id, event, def);
-        }
-        break;
-      }
-      case RecipeField.BeaconModules: {
-        if (typeof event === 'string') {
-          const count = product.viaBeaconModules.length;
-          const bMatch =
-            product.viaBeacon == null || product.viaBeacon === s.recipe.beacon;
-          const def =
-            s.fMatch && bMatch
-              ? s.recipe.beaconModules
-              : new Array(count).fill(s.factory.beaconModule);
-          const value = this.generateModules(
-            index,
-            event,
-            product.viaBeaconModules
-          );
-          this.setViaBeaconModules(product.id, value, def);
-        }
-        break;
-      }
-      case RecipeField.Overclock: {
-        if (typeof event !== 'string') {
-          const target = event.target as HTMLInputElement;
-          const value = target.valueAsNumber;
-          if (value >= 1 && value <= 250) {
-            const def = s.fMatch ? s.recipe.overclock : s.factory.overclock;
-            this.setViaOverclock(product.id, value, def);
+    if (product.viaSetting != null) {
+      const s = this.getState(
+        recipeId,
+        product.viaSetting,
+        recipeSettings,
+        factories
+      );
+      switch (field) {
+        case RecipeField.FactoryModules: {
+          if (
+            s.factory.moduleRank != null &&
+            data != null &&
+            typeof event === 'string' &&
+            index != null &&
+            product.viaFactoryModules != null
+          ) {
+            const count = product.viaFactoryModules.length;
+            const options = [...data.recipeModuleIds[recipeId], ItemId.Module];
+            const def = s.fMatch
+              ? s.recipe.factoryModules
+              : RecipeUtility.defaultModules(
+                  options,
+                  s.factory.moduleRank,
+                  count
+                );
+            const modules = this.generateModules(
+              index,
+              event,
+              product.viaFactoryModules
+            );
+            this.setViaFactoryModules(product.id, modules, def);
           }
+          break;
         }
-        break;
+        case RecipeField.BeaconCount: {
+          if (typeof event === 'string') {
+            const def = s.fMatch ? s.recipe.beaconCount : s.factory.beaconCount;
+            this.setViaBeaconCount(product.id, event, def);
+          }
+          break;
+        }
+        case RecipeField.BeaconModules: {
+          if (
+            typeof event === 'string' &&
+            index != null &&
+            product.viaBeaconModules != null
+          ) {
+            const count = product.viaBeaconModules.length;
+            const bMatch =
+              product.viaBeacon == null ||
+              product.viaBeacon === s.recipe.beacon;
+            const def =
+              s.fMatch && bMatch
+                ? s.recipe.beaconModules
+                : new Array(count).fill(s.factory.beaconModule);
+            const value = this.generateModules(
+              index,
+              event,
+              product.viaBeaconModules
+            );
+            this.setViaBeaconModules(product.id, value, def);
+          }
+          break;
+        }
+        case RecipeField.Overclock: {
+          if (typeof event !== 'string') {
+            const target = event.target as HTMLInputElement;
+            const value = target.valueAsNumber;
+            if (value >= 1 && value <= 250) {
+              const def = s.fMatch ? s.recipe.overclock : s.factory.overclock;
+              this.setViaOverclock(product.id, value, def);
+            }
+          }
+          break;
+        }
       }
     }
   }

@@ -10,6 +10,7 @@ export const enum ProductsActionType {
   SET_RATE = '[Products] Set Rate',
   SET_RATE_TYPE = '[Products] Set Rate Type',
   SET_VIA = '[Products] Set Via',
+  RESET_VIA = '[Products] Reset Via',
   SET_VIA_SETTING = '[Products] Set Via Setting',
   SET_VIA_FACTORY_MODULES = '[Products] Set Via Factory Modules',
   SET_VIA_BEACON_COUNT = '[Products] Set Via Beacon Count',
@@ -84,6 +85,11 @@ export class SetViaOverclockAction implements Action {
   constructor(public payload: DefaultIdPayload<number>) {}
 }
 
+export class ResetViaAction implements Action {
+  readonly type = ProductsActionType.RESET_VIA;
+  constructor(public payload: string) {}
+}
+
 export class AdjustDisplayRateAction implements Action {
   readonly type = ProductsActionType.ADJUST_DISPLAY_RATE;
   constructor(public payload: string) {}
@@ -103,4 +109,5 @@ export type ProductsAction =
   | SetViaBeaconAction
   | SetViaBeaconModulesAction
   | SetViaOverclockAction
+  | ResetViaAction
   | AdjustDisplayRateAction;

@@ -24,9 +24,9 @@ export class InputComponent implements OnChanges {
 
   @Output() setValue = new EventEmitter<string>();
 
-  width = 5;
-  min = Rational.zero;
   isMinimum = false;
+  min = Rational.zero;
+  width = 5;
 
   constructor() {}
 

@@ -11,12 +11,13 @@ import { map, take } from 'rxjs';
 
 import {
   Recipe,
-  Item,
   DisplayRate,
   Rational,
   EnergyType,
   Icon,
   Game,
+  RationalItem,
+  DisplayRateVal,
 } from '~/models';
 import { TrackService } from '~/services';
 import { LabState } from '~/store';
@@ -29,15 +30,15 @@ import * as Settings from '~/store/settings';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconComponent implements OnChanges {
-  @Input() iconId: string = '';
+  @Input() iconId: string | undefined;
   @Input() scale = true;
-  @Input() text = '';
-  @Input() tooltip = '';
-  @Input() hoverIcon = '';
+  @Input() text: string | undefined;
+  @Input() tooltip: string | undefined;
+  @Input() hoverIcon: string | undefined;
   @Input() scrollTop = 0;
   @Input() scrollLeft = 0;
   @Input() recipe: Recipe | undefined;
-  @Input() item: Item | undefined;
+  @Input() item: RationalItem | undefined;
 
   game$ = this.store.select(Settings.getGame);
   displayRate$ = this.store.select(Settings.getDisplayRate);
@@ -46,11 +47,16 @@ export class IconComponent implements OnChanges {
   hover = false;
   tooltipMarginTop = 40;
 
+  DisplayRateVal = DisplayRateVal;
+
   DisplayRate = DisplayRate;
   EnergyType = EnergyType;
   Game = Game;
 
-  constructor(public track: TrackService, private store: Store<LabState>) {}
+  constructor(
+    public trackService: TrackService,
+    private store: Store<LabState>
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['scale'] || changes['scrollTop']) {
@@ -71,7 +77,11 @@ export class IconComponent implements OnChanges {
               return;
             }
           }
-          this.icon = iconEntities[this.iconId];
+          if (this.iconId) {
+            this.icon = iconEntities[this.iconId];
+          } else {
+            this.icon = undefined;
+          }
         });
     }
   }
@@ -83,29 +93,28 @@ export class IconComponent implements OnChanges {
     this.hover = false;
   }
 
-  round(value: number): number {
-    return Number(value.toFixed(2));
+  round(value: Rational): string {
+    return value.toNumber().toFixed(2);
   }
 
-  power(value: number | string): string {
+  power(value: Rational | string | number): string {
     if (typeof value === 'string') {
-      // Simplify to number before rounding
-      value = Rational.fromString(value).toNumber();
+      value = Rational.fromString(value);
+    } else if (typeof value === 'number') {
+      value = Rational.fromNumber(value);
     }
-    if (Math.abs(value) < 1000) {
+    if (value.abs().lt(Rational.thousand)) {
       return `${this.round(value)} kW`;
     } else {
-      return `${this.round(value / 1000)} MW`;
+      return `${this.round(value.div(Rational.thousand))} MW`;
     }
   }
 
-  toBonusPercent(value: number): string | undefined {
-    const rational = this.round(
-      Rational.fromNumber(value).mul(Rational.hundred).toNumber()
-    );
-    if (value > 0) {
+  toBonusPercent(value: Rational): string | undefined {
+    const rational = this.round(value.mul(Rational.hundred));
+    if (value.gt(Rational.zero)) {
       return `+${rational}%`;
-    } else if (value < 0) {
+    } else if (value.lt(Rational.zero)) {
       return `${rational}%`;
     } else {
       return undefined;

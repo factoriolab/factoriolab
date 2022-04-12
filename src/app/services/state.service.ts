@@ -5,15 +5,15 @@ import { environment } from 'src/environments';
 import { FuelType } from '~/models';
 
 import { LabState } from '~/store';
-import { checkViaState, SetViaAction } from '~/store/products';
-import { getDataset, getDatasets } from '~/store/settings';
+import * as Products from '~/store/products';
+import * as Settings from '~/store/settings';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StateService {
   constructor(private store: Store<LabState>) {
-    this.store.select(checkViaState).subscribe((s) => {
+    this.store.select(Products.checkViaState).subscribe((s) => {
       for (const product of s.products) {
         if (
           product.viaId &&
@@ -24,9 +24,7 @@ export class StateService {
           // Reset invalid viaId
           // This normally occurs when a chosen viaId no longer appears in the result steps
           // Usually due to some parent item/recipe being ignored or recipe disabled
-          this.store.dispatch(
-            new SetViaAction({ id: product.id, value: null })
-          );
+          this.store.dispatch(new Products.ResetViaAction(product.id));
         }
       }
     });
@@ -42,7 +40,7 @@ export class StateService {
   // istanbul ignore next
   checkHash(): void {
     this.store
-      .select(getDatasets)
+      .select(Settings.getDatasets)
       .pipe(
         filter((d) => !!d.length),
         take(1),
@@ -50,7 +48,7 @@ export class StateService {
       )
       .subscribe((id) => {
         this.store
-          .select(getDataset)
+          .select(Settings.getDataset)
           .pipe(take(1))
           .subscribe((d) => {
             console.log(id);

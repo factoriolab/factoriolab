@@ -23,7 +23,7 @@ export const getFactorySettings = createSelector(
     def.beaconCount =
       data.game === Game.Factorio
         ? def.beaconCount || defaults?.beaconCount
-        : null;
+        : undefined;
     def.beacon = def.beacon || defaults?.beacon;
     def.beaconModule = def.beaconModule || defaults?.beaconModule;
     def.overclock =
@@ -31,12 +31,12 @@ export const getFactorySettings = createSelector(
         ? def.overclock
           ? def.overclock
           : 100 // Default = 100%
-        : null;
+        : undefined;
     entities[''] = def;
 
     for (const id of data.factoryIds.filter((i) => data.itemEntities[i])) {
       const s: FactorySettings = { ...state.entities[id] };
-      const factory = data.itemEntities[id].factory;
+      const factory = data.factoryEntities[id];
 
       if (factory.modules) {
         s.moduleRank = s.moduleRank || def.moduleRank;

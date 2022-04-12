@@ -36,7 +36,7 @@ import {
   FuelType,
   Dataset,
 } from '~/models';
-import { RouterService, TrackService } from '~/services';
+import { RouterService } from '~/services';
 import { LabState } from '~/store';
 import * as App from '~/store/app.actions';
 import * as Datasets from '~/store/datasets';
@@ -73,9 +73,9 @@ export class SettingsComponent implements OnInit {
       sortedFuels: data.fuelIds[FuelType.Chemical] || [],
       presetOptions: presetOptions(data.game),
       factoryOptions: data.factoryIds.filter(
-        (f) => factories.ids.indexOf(f) === -1
+        (f) => (factories.ids ?? []).indexOf(f) === -1
       ),
-      factoryRows: ['', ...factories.ids],
+      factoryRows: ['', ...(factories.ids ?? [])],
       savedStates: Object.keys(preferences.states).map((i) => ({
         id: i,
         name: i,
@@ -138,9 +138,8 @@ export class SettingsComponent implements OnInit {
     private el: ElementRef<HTMLElement>,
     private ref: ChangeDetectorRef,
     private router: Router,
-    private store: Store<LabState>,
-    private routerSvc: RouterService,
-    public track: TrackService
+    private routerService: RouterService,
+    private store: Store<LabState>
   ) {}
 
   ngOnInit(): void {
@@ -243,7 +242,7 @@ export class SettingsComponent implements OnInit {
   setState(id: string, preferences: Preferences.PreferencesState): void {
     const query = preferences.states[id];
     if (query) {
-      const queryParams = this.routerSvc.getParams(query);
+      const queryParams = this.routerService.getParams(query);
       this.state = id;
       this.router.navigate([], { queryParams });
     }
@@ -274,7 +273,7 @@ export class SettingsComponent implements OnInit {
 
   toggleBeaconPower(settings: Settings.SettingsState): void {
     if (settings.beaconReceivers) {
-      this.setBeaconReceivers(null);
+      this.setBeaconReceivers(undefined);
     } else {
       this.setBeaconReceivers('1');
     }
@@ -347,7 +346,7 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Factories.SetOverclockAction({ id, value, def }));
   }
 
-  setBeaconReceivers(value: string): void {
+  setBeaconReceivers(value: string | undefined): void {
     this.store.dispatch(new Settings.SetBeaconReceiversAction(value));
   }
 

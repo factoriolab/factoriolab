@@ -5,10 +5,14 @@ import {
   EventEmitter,
   ChangeDetectionStrategy,
   OnChanges,
+  SimpleChanges,
 } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { map } from 'rxjs';
 
-import { IdType, DisplayRate, Dataset, ItemId, Game } from '~/models';
-import { TrackService } from '~/services';
+import { IdType, ItemId, Game } from '~/models';
+import { LabState } from '~/store';
+import * as Recipes from '~/store/recipes';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
 const COL_WIDTH = 2.375;
@@ -23,35 +27,40 @@ export class SelectComponent
   extends DialogContainerComponent
   implements OnChanges
 {
-  @Input() data: Dataset;
-  @Input() selected: string;
-  @Input() options: string[];
+  @Input() selected: string | undefined;
+  @Input() options: string[] = [];
   @Input() selectType = IdType.Item;
-  @Input() includeEmptyModule: boolean;
+  @Input() includeEmptyModule = false;
   @Input() columns: number | undefined;
 
   @Output() selectId = new EventEmitter<string>();
 
-  rows: string[][];
+  vm$ = this.store
+    .select(Recipes.getAdjustedDataset)
+    .pipe(map((data) => ({ data })));
+
+  rows: string[][] = [[]];
   width = 0;
 
   IdType = IdType;
   ItemId = ItemId;
   Game = Game;
 
-  constructor(public track: TrackService) {
+  constructor(private store: Store<LabState>) {
     super();
   }
 
-  ngOnChanges(): void {
-    if (this.options) {
-      if (this.includeEmptyModule) {
-        this.rows = this.moduleRows(this.options);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['options'] || changes['includeEmptyModule']) {
+      if (this.options) {
+        if (this.includeEmptyModule) {
+          this.rows = this.moduleRows(this.options);
+        } else {
+          this.rows = [this.options];
+        }
       } else {
-        this.rows = [this.options];
+        this.rows = [[]];
       }
-    } else {
-      this.rows = [[]];
     }
 
     if (this.columns != null) {

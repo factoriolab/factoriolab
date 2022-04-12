@@ -7,28 +7,18 @@ import {
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { combineLatest, map } from 'rxjs';
 
 import { environment } from 'src/environments';
-import {
-  ItemId,
-  Mod,
-  Product,
-  TITLE_DSP,
-  TITLE_LAB,
-  TITLE_SFY,
-  APP,
-  MatrixResult,
-  MatrixResultType,
-  Game,
-} from './models';
+import { ItemId, APP, MatrixResultType, Game } from './models';
 import { ErrorService, RouterService, StateService } from './services';
 import { LabState } from './store';
-import {
-  getProducts,
-  getMatrixResult as getSimplexResult,
-} from './store/products';
-import { getDatasets, getGame } from './store/settings';
+import * as Products from './store/products';
+import * as Settings from './store/settings';
+
+export const TITLE_LAB = 'Factorio Calculator';
+export const TITLE_DSP = 'Dyson Sphere Program Calculator';
+export const TITLE_SFY = 'Satisfactory Calculator';
 
 @Component({
   selector: 'lab-root',
@@ -54,57 +44,58 @@ import { getDatasets, getGame } from './store/settings';
   ],
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  datasets$: Observable<Mod[]>;
-  products$: Observable<Product[]>;
-  result$: Observable<MatrixResult>;
+  vm$ = combineLatest([
+    this.store.select(Settings.getDatasets),
+    this.store.select(Products.getProducts),
+    this.store.select(Products.getMatrixResult),
+  ]).pipe(
+    map(([datasets, products, result]) => ({ datasets, products, result }))
+  );
 
-  ItemId = ItemId;
-  MatrixResultType = MatrixResultType;
-  Game = Game;
-
-  title: string;
-  homeHref: string;
-  game: Game;
-  showSettings: boolean;
+  pageTitle = 'Factory Calculator';
+  homeHref: string | undefined;
+  game = Game.Factorio;
+  showSettings = false;
   poll = 'https://www.survey-maker.com/Q62LJFYVL';
   pollKey = 'poll1';
   showPoll = false;
   version = `${APP} ${environment.version}`;
+
+  ItemId = ItemId;
+  MatrixResultType = MatrixResultType;
+  Game = Game;
 
   get lsHidePoll(): boolean {
     return !!localStorage.getItem(this.pollKey);
   }
 
   constructor(
-    public error: ErrorService,
-    public store: Store<LabState>,
-    public titleService: Title,
-    private cd: ChangeDetectorRef,
-    router: RouterService, // Included only to initialize the service
-    state: StateService // Included only to initialize the service
+    public errorService: ErrorService,
+    private ref: ChangeDetectorRef,
+    private title: Title,
+    private store: Store<LabState>,
+    routerService: RouterService, // Included only to initialize the service
+    stateService: StateService // Included only to initialize the service
   ) {}
 
   ngOnInit(): void {
-    this.datasets$ = this.store.select(getDatasets);
-    this.products$ = this.store.select(getProducts);
-    this.result$ = this.store.select(getSimplexResult);
-    this.store.select(getGame).subscribe((game) => {
+    this.store.select(Settings.getGame).subscribe((game) => {
       this.game = game;
       switch (game) {
         case Game.Factorio:
-          this.title = TITLE_LAB;
+          this.pageTitle = TITLE_LAB;
           this.homeHref = 'factorio';
           break;
         case Game.DysonSphereProgram:
-          this.title = TITLE_DSP;
+          this.pageTitle = TITLE_DSP;
           this.homeHref = 'dsp';
           break;
         case Game.Satisfactory:
-          this.title = TITLE_SFY;
+          this.pageTitle = TITLE_SFY;
           this.homeHref = 'satisfactory';
           break;
       }
-      this.titleService.setTitle(`${APP} | ${this.title}`);
+      this.title.setTitle(`${APP} | ${this.pageTitle}`);
     });
     if (this.lsHidePoll) {
       this.showPoll = false;
@@ -116,7 +107,7 @@ export class AppComponent implements OnInit, AfterViewInit {
    * but error message sometimes does not render without it
    * */
   ngAfterViewInit(): void {
-    this.error.message$.subscribe(() => this.cd.detectChanges());
+    this.errorService.message$.subscribe(() => this.ref.detectChanges());
   }
 
   hidePoll(persist = false): void {
