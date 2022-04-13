@@ -14,14 +14,14 @@ import { OptionsComponent } from './options.component';
   ></lab-options>`,
 })
 class TestOptionsComponent {
-  @ViewChild(OptionsComponent) child: OptionsComponent<number>;
+  @ViewChild(OptionsComponent) child!: OptionsComponent<number>;
   title = 'title';
   selected = 1;
   options = [
     { id: 1, name: 'o1' },
     { id: 2, name: 'o2' },
   ];
-  selectId(data): void {}
+  selectId(data: number): void {}
 }
 
 describe('OptionsComponent', () => {

@@ -1,6 +1,6 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
 import { RateType } from '~/models';
-import { LoadAction } from '../app.actions';
+import * as App from '../app.actions';
 import * as Actions from './products.actions';
 import { productsReducer, ProductsState } from './products.reducer';
 
@@ -19,7 +19,7 @@ describe('Products Reducer', () => {
       };
       const result = productsReducer(
         undefined,
-        new LoadAction({ productsState } as any)
+        new App.LoadAction({ productsState } as any)
       );
       expect(result).toEqual(productsState);
     });
@@ -137,7 +137,7 @@ describe('Products Reducer', () => {
         new Actions.SetViaSettingAction({
           id: Mocks.Product1.id,
           value,
-          def: null,
+          def: undefined,
         })
       );
       expect(result.entities[Mocks.Product1.id].viaSetting).toEqual(value);
@@ -152,7 +152,7 @@ describe('Products Reducer', () => {
         new Actions.SetViaFactoryModulesAction({
           id: Mocks.Product1.id,
           value,
-          def: null,
+          def: undefined,
         })
       );
       expect(result.entities[Mocks.Product1.id].viaFactoryModules).toEqual(
@@ -184,7 +184,7 @@ describe('Products Reducer', () => {
         new Actions.SetViaBeaconAction({
           id: Mocks.Product1.id,
           value,
-          def: null,
+          def: undefined,
         })
       );
       expect(result.entities[Mocks.Product1.id].viaBeacon).toEqual(value);
@@ -199,7 +199,7 @@ describe('Products Reducer', () => {
         new Actions.SetViaBeaconModulesAction({
           id: Mocks.Product1.id,
           value,
-          def: null,
+          def: undefined,
         })
       );
       expect(result.entities[Mocks.Product1.id].viaBeaconModules).toEqual(
@@ -216,7 +216,7 @@ describe('Products Reducer', () => {
         new Actions.SetViaOverclockAction({
           id: Mocks.Product1.id,
           value,
-          def: null,
+          def: undefined,
         })
       );
       expect(result.entities[Mocks.Product1.id].viaOverclock).toEqual(value);

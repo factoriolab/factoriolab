@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { Action, Store, StoreModule } from '@ngrx/store';
-import { DisplayRate } from '~/models';
 
+import { DisplayRate } from '~/models';
 import { reducers, metaReducers, LabState } from '..';
 import * as Settings from '../settings';
 import { AdjustDisplayRateAction } from './products.actions';

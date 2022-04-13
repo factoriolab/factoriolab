@@ -1,5 +1,5 @@
 import { Column, PowerUnit } from '~/models';
-import { ResetAction } from '../app.actions';
+import * as App from '../app.actions';
 import * as Actions from './preferences.actions';
 import {
   initialPreferencesState,
@@ -12,7 +12,7 @@ describe('Preferences Reducer', () => {
 
   describe('RESET', () => {
     it('should return the initial state', () => {
-      const result = preferencesReducer(null, new ResetAction());
+      const result = preferencesReducer(undefined, new App.ResetAction());
       expect(result).toEqual(initialPreferencesState);
     });
   });

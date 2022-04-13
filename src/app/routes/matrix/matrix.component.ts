@@ -2,8 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
-import { DefaultIdPayload } from '~/models';
-import { TrackService } from '~/services';
 import { LabState } from '~/store';
 import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipes';

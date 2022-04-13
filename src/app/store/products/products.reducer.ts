@@ -1,6 +1,6 @@
 import { Product, RateType, Entities, Rational } from '~/models';
 import { StoreUtility } from '~/utilities';
-import { AppActionType, AppAction } from '../app.actions';
+import * as App from '../app.actions';
 import { ProductsAction, ProductsActionType } from './products.actions';
 
 export interface ProductsState {
@@ -17,10 +17,10 @@ export const initialProductsState: ProductsState = {
 
 export function productsReducer(
   state: ProductsState = initialProductsState,
-  action: ProductsAction | AppAction
+  action: ProductsAction | App.AppAction
 ): ProductsState {
   switch (action.type) {
-    case AppActionType.LOAD:
+    case App.AppActionType.LOAD:
       return action.payload.productsState
         ? action.payload.productsState
         : state;

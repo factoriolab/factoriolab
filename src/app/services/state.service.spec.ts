@@ -6,9 +6,9 @@ import { ItemId } from 'src/tests';
 
 import { Mocks } from 'src/tests';
 import { reducers, metaReducers, LabState } from '~/store';
-import { LoadModDataAction } from '~/store/datasets';
-import { IgnoreItemAction } from '~/store/items';
-import { AddAction, SetViaAction } from '~/store/products';
+import * as Datasets from '~/store/datasets';
+import * as Items from '~/store/items';
+import * as Products from '~/store/products';
 import { StateService } from './state.service';
 
 describe('StateService', () => {
@@ -33,20 +33,29 @@ describe('StateService', () => {
 
   it('should revert an invalid viaId', () => {
     // Load required data
-    store.dispatch(new LoadModDataAction({ id: '1.1', value: Mocks.BaseData }));
-    store.dispatch(new LoadModDataAction({ id: 'res', value: Mocks.ModData1 }));
+    store.dispatch(
+      new Datasets.LoadModDataAction({ id: '1.1', value: Mocks.BaseData })
+    );
+    store.dispatch(
+      new Datasets.LoadModDataAction({
+        id: 'res',
+        value: Mocks.ModData1,
+      })
+    );
 
     // Add product with valid viaId
-    store.dispatch(new AddAction(ItemId.Pipe));
-    store.dispatch(new SetViaAction({ id: '0', value: ItemId.IronOre }));
+    store.dispatch(new Products.AddAction(ItemId.Pipe));
+    store.dispatch(
+      new Products.SetViaAction({ id: '0', value: ItemId.IronOre })
+    );
 
     // Spy and invalidate viaId
     spyOn(store, 'dispatch').and.callThrough();
-    store.dispatch(new IgnoreItemAction(ItemId.Pipe));
+    store.dispatch(new Items.IgnoreItemAction(ItemId.Pipe));
 
     // Check viaId is auto-reset
     expect(store.dispatch).toHaveBeenCalledWith(
-      new SetViaAction({ id: '0', value: null })
+      new Products.ResetViaAction('0')
     );
   });
 });

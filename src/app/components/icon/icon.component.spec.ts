@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 import { Mocks, RecipeId, TestUtility, initialState } from 'src/tests';
-import { ItemId } from '~/models';
-import { getIconEntities } from '~/store/settings';
+import { ItemId, Rational } from '~/models';
+import * as Settings from '~/store/settings';
 import { IconComponent } from './icon.component';
 
 enum DataTest {
@@ -80,9 +80,14 @@ describe('IconComponent', () => {
     it('should switch to a recipe-specific icon', () => {
       const icon = Mocks.Data.iconEntities[RecipeId.Coal];
       component.iconId = ItemId.Inserter;
-      getIconEntities.setResult({
-        ...Mocks.Data.iconEntities,
-        ...{ [ItemId.Inserter + '|recipe']: icon },
+      Settings.getDataset.setResult({
+        ...Mocks.Data,
+        ...{
+          iconEntities: {
+            ...Mocks.Data.iconEntities,
+            ...{ [ItemId.Inserter + '|recipe']: icon },
+          },
+        },
       });
       store.refreshState();
       fixture.detectChanges();
@@ -110,8 +115,8 @@ describe('IconComponent', () => {
 
   describe('round', () => {
     it('should truncate long numbers', () => {
-      expect(component.child.round(0.333333)).toEqual(0.33);
-      expect(component.child.round(100)).toEqual(100);
+      expect(component.child.round(Rational.from(1, 3))).toEqual('0.33');
+      expect(component.child.round(Rational.hundred)).toEqual('100');
     });
   });
 
@@ -128,15 +133,19 @@ describe('IconComponent', () => {
 
   describe('toBonusPercent', () => {
     it('should handle positive percentage bonus', () => {
-      expect(component.child.toBonusPercent(0.1)).toEqual('+10%');
+      expect(component.child.toBonusPercent(Rational.from(1, 10))).toEqual(
+        '+10%'
+      );
     });
 
     it('should handle negative percentage bonus', () => {
-      expect(component.child.toBonusPercent(-0.1)).toEqual('-10%');
+      expect(component.child.toBonusPercent(Rational.from(-1, 10))).toEqual(
+        '-10%'
+      );
     });
 
     it('should handle zero percentage bonus', () => {
-      expect(component.child.toBonusPercent(0)).toBeUndefined();
+      expect(component.child.toBonusPercent(Rational.zero)).toBeUndefined();
     });
   });
 });

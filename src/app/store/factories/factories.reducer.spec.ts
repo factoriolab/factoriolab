@@ -1,5 +1,5 @@
 import { Mocks, ItemId } from 'src/tests';
-import { LoadAction, ResetAction } from '../app.actions';
+import * as App from '../app.actions';
 import * as Actions from './factories.actions';
 import { factoriesReducer, initialFactoriesState } from './factories.reducer';
 
@@ -12,7 +12,9 @@ describe('Factories Reducer', () => {
     it('should load factory settings', () => {
       const result = factoriesReducer(
         undefined,
-        new LoadAction({ factoriesState: Mocks.FactorySettingsInitial } as any)
+        new App.LoadAction({
+          factoriesState: Mocks.FactorySettingsInitial,
+        } as any)
       );
       expect(result).toEqual(Mocks.FactorySettingsInitial);
     });
@@ -20,7 +22,7 @@ describe('Factories Reducer', () => {
 
   describe('RESET', () => {
     it('should return the initial state', () => {
-      const result = factoriesReducer(null, new ResetAction());
+      const result = factoriesReducer(undefined, new App.ResetAction());
       expect(result).toEqual(initialFactoriesState);
     });
   });

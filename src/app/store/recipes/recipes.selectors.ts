@@ -6,7 +6,7 @@ import {
   RationalRecipeSettings,
   Rational,
 } from '~/models';
-import { RecipeUtility } from '~/utilities/recipe.utility';
+import { RecipeUtility } from '~/utilities';
 import * as Items from '../items';
 import * as Factories from '../factories';
 import * as Settings from '../settings';

@@ -1,4 +1,4 @@
-import { Mocks, ItemId, RecipeId } from 'src/tests';
+import { Mocks, ItemId, RecipeId, TestUtility } from 'src/tests';
 import {
   Rational,
   ResearchSpeed,
@@ -31,8 +31,9 @@ describe('Settings Selectors', () => {
         Preset.Minimum,
         Mocks.Base
       );
-      expect(result.belt).toEqual(Mocks.Base.defaults.minBelt);
-      expect(result.factoryRank).toEqual(Mocks.Base.defaults.minFactoryRank);
+      TestUtility.assert(result != null);
+      expect(result.belt).toEqual(Mocks.Base.defaults!.minBelt!);
+      expect(result.factoryRank).toEqual(Mocks.Base.defaults!.minFactoryRank!);
       expect(result.moduleRank).toEqual([]);
       expect(result.beaconModule).toEqual(ItemId.Module);
       expect(result.beaconCount).toEqual('0');
@@ -43,6 +44,7 @@ describe('Settings Selectors', () => {
         Preset.Beacon8,
         Mocks.Base
       );
+      TestUtility.assert(result != null);
       expect(result.beaconCount).toEqual('8');
     });
 
@@ -51,6 +53,7 @@ describe('Settings Selectors', () => {
         Preset.Beacon12,
         Mocks.Base
       );
+      TestUtility.assert(result != null);
       expect(result.beaconCount).toEqual('12');
     });
 
@@ -67,6 +70,7 @@ describe('Settings Selectors', () => {
         ...Mocks.Base,
         ...{ game: Game.DysonSphereProgram },
       });
+      TestUtility.assert(result != null);
       expect(result.moduleRank).toEqual([]);
     });
 
@@ -75,7 +79,8 @@ describe('Settings Selectors', () => {
         ...Mocks.Base,
         ...{ game: Game.DysonSphereProgram },
       });
-      expect(result.moduleRank).toEqual(Mocks.Base.defaults.moduleRank);
+      TestUtility.assert(result != null);
+      expect(result.moduleRank).toEqual(Mocks.Base.defaults!.moduleRank);
     });
 
     it('should handle Satisfactory module rank', () => {
@@ -83,6 +88,7 @@ describe('Settings Selectors', () => {
         ...Mocks.Base,
         ...{ game: Game.Satisfactory },
       });
+      TestUtility.assert(result != null);
       expect(result.moduleRank).toEqual(Mocks.Defaults.moduleRank);
     });
   });
@@ -146,7 +152,7 @@ describe('Settings Selectors', () => {
     it('should return disabledRecipes from settings', () => {
       const result =
         Selectors.getDisabledRecipes.projector(initialSettingsState);
-      expect(result).toEqual(initialSettingsState.disabledRecipes);
+      expect(result).toEqual(initialSettingsState.disabledRecipes!);
     });
   });
 
@@ -234,7 +240,6 @@ describe('Settings Selectors', () => {
       expect(Object.keys(result.itemEntities).length).toEqual(
         result.itemIds.length
       );
-      expect(Object.keys(result.itemR).length).toEqual(result.itemIds.length);
       expect(Object.keys(result.itemRecipeIds).length).toBeGreaterThan(0);
       expect(Object.keys(result.itemRecipeIds).length).toBeLessThan(
         result.itemIds.length
@@ -286,7 +291,6 @@ describe('Settings Selectors', () => {
       expect(Object.keys(result.itemEntities).length).toEqual(
         result.itemIds.length
       );
-      expect(Object.keys(result.itemR).length).toEqual(result.itemIds.length);
       expect(Object.keys(result.itemRecipeIds).length).toBeGreaterThan(0);
       expect(Object.keys(result.itemRecipeIds).length).toBeLessThan(
         result.itemIds.length
@@ -499,7 +503,7 @@ describe('Settings Selectors', () => {
     it('should return expensive recipes if expensive is true', () => {
       const result = Selectors.getDataset.projector(Mocks.Data, true);
       expect(result.recipeEntities[RecipeId.ElectronicCircuit]).not.toEqual(
-        Mocks.Data[RecipeId.ElectronicCircuit]
+        Mocks.Data.recipeEntities[RecipeId.ElectronicCircuit]
       );
     });
 
@@ -533,27 +537,27 @@ describe('Settings Selectors', () => {
       const flowRate = Rational.from(2000);
       const result = Selectors.getBeltSpeed.projector(Mocks.Data, flowRate);
       expect(result[ItemId.TransportBelt]).toEqual(
-        Mocks.Data.itemR[ItemId.TransportBelt].belt.speed
+        Mocks.Data.beltEntities[ItemId.TransportBelt].speed
       );
       expect(result[ItemId.Pipe]).toEqual(flowRate);
     });
 
-    it('should include pipe speeds', () => {
-      const pipe = {
-        ...Mocks.Data.itemEntities[ItemId.Pipe],
-        ...{ pipe: { speed: 10 } },
-      };
-      const rPipe = new RationalItem(pipe);
-      const data = {
-        ...Mocks.Data,
-        ...{
-          pipeIds: [ItemId.Pipe],
-          itemR: { ...Mocks.Data.itemR, ...{ [ItemId.Pipe]: rPipe } },
-        },
-      };
-      const result = Selectors.getBeltSpeed.projector(data, Rational.from(0));
-      expect(result[ItemId.Pipe]).toEqual(Rational.ten);
-    });
+    // it('should include pipe speeds', () => {
+    //   const pipe = {
+    //     ...Mocks.Data.itemEntities[ItemId.Pipe],
+    //     ...{ pipe: { speed: 10 } },
+    //   };
+    //   const rPipe = new RationalItem(pipe);
+    //   const data = {
+    //     ...Mocks.Data,
+    //     ...{
+    //       pipeIds: [ItemId.Pipe],
+    //       itemR: { ...Mocks.Data.itemR, ...{ [ItemId.Pipe]: rPipe } },
+    //     },
+    //   };
+    //   const result = Selectors.getBeltSpeed.projector(data, Rational.from(0));
+    //   expect(result[ItemId.Pipe]).toEqual(Rational.ten);
+    // });
   });
 
   describe('getEntities', () => {

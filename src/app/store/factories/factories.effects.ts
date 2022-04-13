@@ -6,7 +6,7 @@ import { combineLatest, switchMap, take } from 'rxjs';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '..';
 import * as Recipes from '../recipes';
-import { getNormalDataset } from '../settings';
+import * as Settings from '../settings';
 import { FactoriesActionType } from './factories.actions';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class FactoriesEffects {
         combineLatest([
           this.store.select(Recipes.recipesState),
           this.store.select(Recipes.getRecipeSettings),
-          this.store.select(getNormalDataset),
+          this.store.select(Settings.getNormalDataset),
         ]).pipe(take(1))
       ),
       switchMap(([rawSettings, recipeSettings, data]) => {

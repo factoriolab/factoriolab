@@ -32,9 +32,9 @@ describe('RationalRecipe', () => {
       expect(result.time).toEqual(Rational.one);
       expect(result.in[ItemId.Coal]).toEqual(Rational.one);
       expect(result.out[ItemId.PetroleumGas]).toEqual(Rational.two);
-      expect(result.expensive.time).toEqual(Rational.two);
-      expect(result.expensive.in[ItemId.Coal]).toEqual(Rational.two);
-      expect(result.expensive.out[ItemId.PetroleumGas]).toEqual(Rational.one);
+      expect(result.expensive?.time).toEqual(Rational.two);
+      expect(result.expensive?.in?.[ItemId.Coal]).toEqual(Rational.two);
+      expect(result.expensive?.out[ItemId.PetroleumGas]).toEqual(Rational.one);
       expect(result.cost).toEqual(Rational.hundred);
       expect(result.producers).toEqual([ItemId.AssemblingMachine1]);
     });
@@ -55,9 +55,9 @@ describe('RationalRecipe', () => {
       expect(result.producers).toEqual([ItemId.AssemblingMachine1]);
       expect(result.in).toBeUndefined();
       expect(result.out).toBeUndefined();
-      expect(result.expensive.time).toEqual(Rational.two);
-      expect(result.expensive.in).toBeUndefined();
-      expect(result.expensive.out).toBeUndefined();
+      expect(result.expensive?.time).toEqual(Rational.two);
+      expect(result.expensive?.in).toBeUndefined();
+      expect(result.expensive?.out).toBeUndefined();
     });
 
     it('should ignore undefined fields', () => {
@@ -152,9 +152,8 @@ describe('RationalRecipe', () => {
     it('should handle null values', () => {
       const recipe = new RationalRecipe({
         id,
+        name: 'name',
         time: 0,
-        in: null,
-        out: null,
         producers: [],
       });
       expect(recipe.output(id)).toEqual(Rational.zero);
@@ -163,6 +162,7 @@ describe('RationalRecipe', () => {
     it('should subtract input from output', () => {
       const recipe = new RationalRecipe({
         id,
+        name: 'name',
         time: 0,
         in: { [id]: 1 },
         out: { [id]: 2 },

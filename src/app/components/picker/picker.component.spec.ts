@@ -3,14 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { provideMockStore } from '@ngrx/store/testing';
 
-import {
-  Mocks,
-  CategoryId,
-  ItemId,
-  TestUtility,
-  initialState,
-} from 'src/tests';
-import { Dataset } from '~/models';
+import { CategoryId, ItemId, TestUtility, initialState } from 'src/tests';
 import { DialogComponent } from '../dialog/dialog.component';
 import { IconComponent } from '../icon/icon.component';
 import { PickerComponent } from './picker.component';
@@ -25,19 +18,15 @@ enum DataTest {
   selector: 'lab-test-picker',
   template: `
     <lab-picker
-      [data]="data"
       [selected]="selected"
       (selectId)="selectId($event)"
     ></lab-picker>
   `,
 })
 class TestPickerComponent {
-  @ViewChild(PickerComponent) child: PickerComponent;
-  data: Dataset = Mocks.Data;
-  selected: string = null;
-  cancel(): void {}
-  selectTab(data): void {}
-  selectId(data): void {}
+  @ViewChild(PickerComponent) child!: PickerComponent;
+  selected: string | undefined = undefined;
+  selectId(data: string): void {}
 }
 
 describe('PickerComponent', () => {
@@ -75,31 +64,8 @@ describe('PickerComponent', () => {
       expect(component.child.open).toBeTrue();
       expect(component.child.search).toBeFalse();
       expect(component.child.searchValue).toBe('');
-      expect(component.child.categoryIds).toEqual(component.data.categoryIds);
-      expect(component.child.categoryItemRows).toEqual(
-        component.data.categoryItemRows
-      );
-    });
-  });
-
-  describe('setTab', () => {
-    it('should do nothing if data is falsy', () => {
-      component.child.tab = null;
-      component.data = null;
-      fixture.detectChanges();
-      expect(component.child.tab).toBeNull();
-    });
-
-    it('should set to first category if selected is falsy', () => {
-      component.selected = null;
-      fixture.detectChanges();
-      expect(component.child.tab).toEqual(CategoryId.Logistics);
-    });
-
-    it('should set to a matching category', () => {
-      component.selected = ItemId.CopperCable;
-      fixture.detectChanges();
-      expect(component.child.tab).toEqual(CategoryId.Intermediate);
+      expect(component.child.categoryIds.length).toEqual(4);
+      expect(Object.keys(component.child.categoryItemRows).length).toEqual(4);
     });
   });
 

@@ -4,9 +4,9 @@ import { Action, Store, StoreModule } from '@ngrx/store';
 
 import { RecipeId, ItemId, Mocks } from 'src/tests';
 import { metaReducers, reducers, LabState } from '..';
-import { LoadModDataAction } from '../datasets';
+import * as Datasets from '../datasets';
 import * as Recipes from '../recipes';
-import { RemoveAction } from './factories.actions';
+import * as Factories from './factories.actions';
 import { FactoriesEffects } from './factories.effects';
 
 describe('FactoriesEffects', () => {
@@ -26,8 +26,12 @@ describe('FactoriesEffects', () => {
   });
 
   beforeEach(() => {
-    store.dispatch(new LoadModDataAction({ id: '1.1', value: Mocks.BaseData }));
-    store.dispatch(new LoadModDataAction({ id: 'res', value: Mocks.ModData1 }));
+    store.dispatch(
+      new Datasets.LoadModDataAction({ id: '1.1', value: Mocks.BaseData })
+    );
+    store.dispatch(
+      new Datasets.LoadModDataAction({ id: 'res', value: Mocks.ModData1 })
+    );
   });
 
   describe('resetRecipeSetting$', () => {
@@ -36,14 +40,14 @@ describe('FactoriesEffects', () => {
         new Recipes.SetCostAction({
           id: RecipeId.Coal,
           value: '100',
-          def: null,
+          def: undefined,
         })
       );
       spyOn(store, 'dispatch').and.callThrough();
       const effect: Action[] = [];
       effects.resetRecipeSettings$.subscribe((a) => effect.push(a));
       store.dispatch(
-        new RemoveAction({
+        new Factories.RemoveAction({
           value: ItemId.AssemblingMachine3,
           def: Mocks.Defaults.factoryRank,
         })
@@ -56,14 +60,14 @@ describe('FactoriesEffects', () => {
         new Recipes.SetBeaconCountAction({
           id: RecipeId.Coal,
           value: '1',
-          def: null,
+          def: undefined,
         })
       );
       spyOn(store, 'dispatch').and.callThrough();
       const effect: Action[] = [];
       effects.resetRecipeSettings$.subscribe((a) => effect.push(a));
       store.dispatch(
-        new RemoveAction({
+        new Factories.RemoveAction({
           value: ItemId.AssemblingMachine3,
           def: Mocks.Defaults.factoryRank,
         })
@@ -83,7 +87,7 @@ describe('FactoriesEffects', () => {
       const effect: Action[] = [];
       effects.resetRecipeSettings$.subscribe((a) => effect.push(a));
       store.dispatch(
-        new RemoveAction({
+        new Factories.RemoveAction({
           value: ItemId.ElectricMiningDrill,
           def: Mocks.Defaults.factoryRank,
         })
@@ -105,7 +109,7 @@ describe('FactoriesEffects', () => {
       const effect: Action[] = [];
       effects.resetRecipeSettings$.subscribe((a) => effect.push(a));
       store.dispatch(
-        new RemoveAction({
+        new Factories.RemoveAction({
           value: ItemId.AssemblingMachine3,
           def: Mocks.Defaults.factoryRank,
         })

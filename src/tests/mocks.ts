@@ -24,36 +24,29 @@ import {
   Game,
   SankeyAlign,
   PowerUnit,
+  ModData,
 } from '~/models';
-import { initialDatasetsState } from '~/store/datasets';
-import { getFactorySettings, initialFactoriesState } from '~/store/factories';
-import { getItemSettings } from '~/store/items';
-import { initialColumnsState, PreferencesState } from '~/store/preferences';
-import { getProductsBy, ProductsState } from '~/store/products';
-import {
-  getRecipeSettings,
-  getAdjustedDataset,
-  getRationalRecipeSettings,
-} from '~/store/recipes';
-import {
-  getNormalDataset,
-  initialSettingsState,
-  getDefaults,
-} from '~/store/settings';
+import * as Datasets from '~/store/datasets';
+import * as Factories from '~/store/factories';
+import * as Items from '~/store/items';
+import * as Preferences from '~/store/preferences';
+import * as Products from '~/store/products';
+import * as Recipes from '~/store/recipes';
+import * as Settings from '~/store/settings';
 import { ItemId } from './item-id';
 import { RecipeId } from './recipe-id';
 
 export const Raw = data;
-export const DataState = initialDatasetsState;
+export const DataState = Datasets.initialDatasetsState;
 export const BaseInfo = data.base[0];
-export const BaseData = base;
+export const BaseData = base as ModData;
 export const Hash: ModHash = hash;
-export const Base: Mod = { ...BaseInfo, ...BaseData };
-export const ModData1 = mod;
-export const Mod1: Mod = { ...data.mods[0], ...ModData1 };
+export const Base = { ...BaseInfo, ...BaseData } as Mod;
+export const ModData1 = mod as ModData;
+export const Mod1 = { ...data.mods[0], ...ModData1 } as Mod;
 export const ModInfo = [data.mods[0]];
-export const Defaults = getDefaults.projector(Preset.Beacon8, Base);
-export const Data = getNormalDataset.projector(
+export const Defaults = Settings.getDefaults.projector(Preset.Beacon8, Base)!;
+export const Data = Settings.getNormalDataset.projector(
   data.app,
   [Base, Mod1],
   Defaults,
@@ -87,19 +80,20 @@ export const Product4: Product = {
   rate: '4',
   rateType: RateType.Factories,
 };
-export const Products = [Product1, Product2, Product3, Product4];
-export const ProductsState1: ProductsState = {
-  ids: Products.map((p) => p.id),
-  entities: toEntities(Products),
-  index: Products.length + 1,
+export const ProductsList = [Product1, Product2, Product3, Product4];
+export const ProductsState: Products.ProductsState = {
+  ids: ProductsList.map((p) => p.id),
+  entities: toEntities(ProductsList),
+  index: ProductsList.length + 1,
 };
-export const RationalProducts = Products.map((p) => {
+export const RationalProducts = ProductsList.map((p) => {
   const rp = new RationalProduct(p);
   rp.viaId = rp.itemId;
   return rp;
 });
-export const ProductIds = Products.map((p) => p.id);
-export const ProductEntities = getProductsBy.projector(RationalProducts);
+export const ProductIds = ProductsList.map((p) => p.id);
+export const ProductEntities =
+  Products.getProductsBy.projector(RationalProducts);
 export const ProductSteps = {
   [Item1.id]: [],
   [Item2.id]: [],
@@ -162,31 +156,30 @@ export const RecipeSettingsEntities: Entities<RecipeSettings> = {};
 for (const recipe of Data.recipeIds.map((i) => Data.recipeEntities[i])) {
   RecipeSettingsEntities[recipe.id] = { ...RecipeSettings1 };
 }
-export const SettingsState1 = { ...initialSettingsState, ...Defaults };
-export const ItemSettingsInitial = getItemSettings.projector({}, Data, {
+export const SettingsState1 = { ...Settings.initialSettingsState, ...Defaults };
+export const ItemSettingsInitial = Items.getItemSettings.projector({}, Data, {
   belt: ItemId.TransportBelt,
   cargoWagon: ItemId.CargoWagon,
   fluidWagon: ItemId.FluidWagon,
 });
-export const FactorySettingsInitial = getFactorySettings.projector(
-  initialFactoriesState,
+export const FactorySettingsInitial = Factories.getFactorySettings.projector(
+  Factories.initialFactoriesState,
   Defaults,
   Data
 );
-export const RecipeSettingsInitial = getRecipeSettings.projector(
+export const RecipeSettingsInitial = Recipes.getRecipeSettings.projector(
   {},
   FactorySettingsInitial,
   Data
 );
-export const RationalRecipeSettings = getRationalRecipeSettings.projector(
-  RecipeSettingsEntities
-);
+export const RationalRecipeSettings =
+  Recipes.getRationalRecipeSettings.projector(RecipeSettingsEntities);
 export const RationalRecipeSettingsInitial =
-  getRationalRecipeSettings.projector(RecipeSettingsInitial);
-export const AdjustedData = getAdjustedDataset.projector(
+  Recipes.getRationalRecipeSettings.projector(RecipeSettingsInitial);
+export const AdjustedData = Recipes.getAdjustedDataset.projector(
   RationalRecipeSettingsInitial,
   ItemSettingsInitial,
-  Defaults.disabledRecipes,
+  Defaults!.disabledRecipes,
   {
     fuel: ItemId.Coal,
     miningBonus: Rational.zero,
@@ -196,9 +189,9 @@ export const AdjustedData = getAdjustedDataset.projector(
     data: Data,
   }
 );
-export const Preferences: PreferencesState = {
+export const PreferencesState: Preferences.PreferencesState = {
   states: { ['name']: 'z=zip' },
-  columns: initialColumnsState,
+  columns: Preferences.initialColumnsState,
   linkSize: LinkValue.Items,
   linkText: LinkValue.Items,
   sankeyAlign: SankeyAlign.Justify,
@@ -208,18 +201,19 @@ export const Preferences: PreferencesState = {
 
 function node(i: number): Node {
   return {
-    id: `${i}`,
+    id: i.toString(),
+    stepId: i.toString(),
     href: 'data/1.0/icons.png',
     viewBox: '0 0 64 64',
-    name: `${i}`,
+    name: i.toString(),
     color: 'black',
   };
 }
 
 function link(i: number, j: number): Link {
   return {
-    source: `${i}`,
-    target: `${j}`,
+    source: i.toString(),
+    target: j.toString(),
     value: Math.max(1, i),
     text: '1 items',
     name: `${i}->${j}`,

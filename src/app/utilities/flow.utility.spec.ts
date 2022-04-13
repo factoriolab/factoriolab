@@ -13,16 +13,23 @@ describe('FlowUtility', () => {
   describe('getSankey', () => {
     const node: Node = {
       id: ItemId.Coal,
+      stepId: 'id',
       name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
       color: Mocks.AdjustedData.iconEntities[ItemId.Coal].color,
       viewBox: '256 448 64 64',
-      href: Mocks.AdjustedData.iconEntities[ItemId.Coal].file,
+      href: Mocks.AdjustedData.iconEntities[ItemId.Coal].file!,
     };
     const iId = `i|${ItemId.Coal}`;
     const rId = `r|${RecipeId.Coal}`;
 
     it('should handle empty/null values', () => {
-      const result = FlowUtility.buildSankey([], null, null, null, null);
+      const result = FlowUtility.buildSankey(
+        [],
+        LinkValue.None,
+        LinkValue.None,
+        null,
+        Mocks.AdjustedData
+      );
       expect(result).toEqual({ nodes: [], links: [] });
     });
 
@@ -245,9 +252,10 @@ describe('FlowUtility', () => {
       const color =
         Mocks.AdjustedData.iconEntities[RecipeId.UraniumProcessing].color;
       const href =
-        Mocks.AdjustedData.iconEntities[RecipeId.UraniumProcessing].file;
+        Mocks.AdjustedData.iconEntities[RecipeId.UraniumProcessing].file!;
       const uNode: Node = {
         id: RecipeId.UraniumProcessing,
+        stepId: 'id',
         name,
         color,
         viewBox: '512 0 64 64',
@@ -255,6 +263,7 @@ describe('FlowUtility', () => {
       };
       const uNode1: Node = {
         id: `i|${ItemId.Uranium235}`,
+        stepId: 'id',
         name: Mocks.AdjustedData.itemEntities[ItemId.Uranium235].name,
         color: Mocks.AdjustedData.iconEntities[ItemId.Uranium235].color,
         viewBox: '512 576 64 64',
@@ -262,6 +271,7 @@ describe('FlowUtility', () => {
       };
       const uNode2: Node = {
         id: `i|${ItemId.Uranium238}`,
+        stepId: 'id',
         name: Mocks.AdjustedData.itemEntities[ItemId.Uranium238].name,
         color: Mocks.AdjustedData.iconEntities[ItemId.Uranium238].color,
         viewBox: '576 576 64 64',
@@ -292,6 +302,7 @@ describe('FlowUtility', () => {
 
   describe('stepLinkValue', () => {
     const step: Step = {
+      id: 'id',
       itemId: ItemId.IronOre,
       items: Rational.from(5),
       surplus: Rational.from(3),
@@ -351,30 +362,57 @@ describe('FlowUtility', () => {
 
   describe('linkValue', () => {
     it('should return correct value for none', () => {
-      expect(FlowUtility.linkSize(null, null, LinkValue.None, 100)).toEqual(1);
+      expect(
+        FlowUtility.linkSize(
+          Rational.zero,
+          Rational.zero,
+          LinkValue.None,
+          Rational.hundred
+        )
+      ).toEqual(1);
     });
 
     it('should return correct value for percent', () => {
       expect(
-        FlowUtility.linkSize(null, Rational.two, LinkValue.Percent, 100)
+        FlowUtility.linkSize(
+          Rational.zero,
+          Rational.two,
+          LinkValue.Percent,
+          Rational.hundred
+        )
       ).toEqual(2);
     });
 
     it('should return minimum value for percent', () => {
       expect(
-        FlowUtility.linkSize(null, Rational.zero, LinkValue.Percent, 100)
+        FlowUtility.linkSize(
+          Rational.zero,
+          Rational.zero,
+          LinkValue.Percent,
+          Rational.hundred
+        )
       ).toEqual(MIN_LINK_VALUE);
     });
 
     it('should multiply percent and value', () => {
       expect(
-        FlowUtility.linkSize(Rational.two, new Rational(BigInt(3)), null, 100)
+        FlowUtility.linkSize(
+          Rational.two,
+          new Rational(BigInt(3)),
+          LinkValue.Factories,
+          Rational.hundred
+        )
       ).toEqual(6);
     });
 
     it('should return minimum value', () => {
       expect(
-        FlowUtility.linkSize(Rational.zero, Rational.zero, null, 100)
+        FlowUtility.linkSize(
+          Rational.zero,
+          Rational.zero,
+          LinkValue.Factories,
+          Rational.hundred
+        )
       ).toEqual(MIN_LINK_VALUE);
     });
 
@@ -384,7 +422,7 @@ describe('FlowUtility', () => {
           Rational.hundred,
           Rational.one,
           LinkValue.Items,
-          null
+          undefined
         )
       ).toEqual(10);
     });
@@ -392,14 +430,19 @@ describe('FlowUtility', () => {
 
   describe('linkDisp', () => {
     it('should return correct value for none', () => {
-      expect(FlowUtility.linkText(null, null, LinkValue.None, null)).toEqual(
-        ''
-      );
+      expect(
+        FlowUtility.linkText(Rational.zero, Rational.zero, LinkValue.None, null)
+      ).toEqual('');
     });
 
     it('should return correct value for percent', () => {
       expect(
-        FlowUtility.linkText(null, Rational.one, LinkValue.Percent, null)
+        FlowUtility.linkText(
+          Rational.zero,
+          Rational.one,
+          LinkValue.Percent,
+          null
+        )
       ).toEqual('100%');
     });
 

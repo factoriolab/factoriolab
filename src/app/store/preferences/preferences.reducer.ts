@@ -7,7 +7,7 @@ import {
   PowerUnit,
   Column,
 } from '~/models';
-import { AppAction, AppActionType } from '../app.actions';
+import * as App from '../app.actions';
 import {
   PreferencesAction,
   PreferencesActionType,
@@ -45,10 +45,10 @@ export const initialPreferencesState: PreferencesState = {
 
 export function preferencesReducer(
   state: PreferencesState = initialPreferencesState,
-  action: PreferencesAction | AppAction
+  action: PreferencesAction | App.AppAction
 ): PreferencesState {
   switch (action.type) {
-    case AppActionType.RESET:
+    case App.AppActionType.RESET:
       return initialPreferencesState;
     case PreferencesActionType.SAVE_STATE: {
       const states = {

@@ -6,7 +6,7 @@ import {
   InserterTarget,
   InserterCapacity,
 } from '~/models';
-import { LoadAction } from '../app.actions';
+import * as App from '../app.actions';
 import * as Actions from './settings.actions';
 import { settingsReducer, initialSettingsState } from './settings.reducer';
 
@@ -15,7 +15,7 @@ describe('Settings Reducer', () => {
     it('should return state if settings state is not included', () => {
       const result = settingsReducer(
         initialSettingsState,
-        new LoadAction({} as any)
+        new App.LoadAction({} as any)
       );
       expect(result).toEqual(initialSettingsState);
     });
@@ -23,7 +23,7 @@ describe('Settings Reducer', () => {
     it('should load settings', () => {
       const result = settingsReducer(
         undefined,
-        new LoadAction({
+        new App.LoadAction({
           settingsState: { displayRate: DisplayRate.PerHour },
         } as any)
       );
@@ -80,7 +80,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.TransportBelt;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetBeltAction({ value, def: null })
+        new Actions.SetBeltAction({ value, def: undefined })
       );
       expect(result.belt).toEqual(value);
     });
@@ -91,7 +91,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.Pipe;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetPipeAction({ value, def: null })
+        new Actions.SetPipeAction({ value, def: undefined })
       );
       expect(result.pipe).toEqual(value);
     });
@@ -102,7 +102,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.Wood;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetFuelAction({ value, def: null })
+        new Actions.SetFuelAction({ value, def: undefined })
       );
       expect(result.fuel).toEqual(value);
     });
@@ -124,7 +124,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.CargoWagon;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetCargoWagonAction({ value, def: null })
+        new Actions.SetCargoWagonAction({ value, def: undefined })
       );
       expect(result.cargoWagon).toEqual(value);
     });
@@ -135,7 +135,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.FluidWagon;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetFluidWagonAction({ value, def: null })
+        new Actions.SetFluidWagonAction({ value, def: undefined })
       );
       expect(result.fluidWagon).toEqual(value);
     });

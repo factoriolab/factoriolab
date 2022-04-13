@@ -18,7 +18,7 @@ enum DataTest {
   />`,
 })
 class TestValidateOverclockDirectiveComponent {
-  @ViewChild('input') input: ElementRef<HTMLInputElement>;
+  @ViewChild('input') input!: ElementRef<HTMLInputElement>;
 
   model = null;
 }

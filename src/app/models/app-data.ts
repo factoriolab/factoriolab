@@ -1,7 +1,7 @@
-import { ModInfo, Mod, AppMod } from './mod';
+import { ModInfo, Mod } from './mod';
 
 export interface AppData {
-  app: AppMod;
+  app: Mod;
   base: ModInfo[];
   mods: ModInfo[];
   v0: string[];

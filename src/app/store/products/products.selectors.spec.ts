@@ -12,7 +12,7 @@ import {
   SimplexUtility,
   RecipeUtility,
 } from '~/utilities';
-import { initialSettingsState } from '../settings';
+import * as Settings from '../settings';
 import * as Selectors from './products.selectors';
 
 describe('Products Selectors', () => {
@@ -24,8 +24,8 @@ describe('Products Selectors', () => {
 
     it('should return the array of products', () => {
       const result = Selectors.getBaseProducts.projector(
-        Mocks.ProductsState1.ids,
-        Mocks.ProductsState1.entities,
+        Mocks.ProductsState.ids,
+        Mocks.ProductsState.entities,
         Mocks.Data
       );
       expect(result.length).toEqual(Mocks.ProductIds.length);
@@ -84,7 +84,9 @@ describe('Products Selectors', () => {
 
   describe('getRationalProducts', () => {
     it('should map products to rational products', () => {
-      const result = Selectors.getRationalProducts.projector(Mocks.Products);
+      const result = Selectors.getRationalProducts.projector(
+        Mocks.ProductsList
+      );
       expect(result[0].rate.nonzero()).toBeTrue();
     });
   });
@@ -221,7 +223,7 @@ describe('Products Selectors', () => {
         [Mocks.RationalProducts[1]],
         null,
         { [Mocks.Product2.itemId]: Mocks.ItemSettings1 },
-        { [Mocks.ItemSettings1.belt]: Rational.one }
+        { [Mocks.ItemSettings1.belt!]: Rational.one }
       );
       expect(result[Mocks.Product2.id].nonzero()).toBeTrue();
     });
@@ -648,11 +650,11 @@ describe('Products Selectors', () => {
 
   describe('getZipState', () => {
     it('should put together the required state parts', () => {
-      const products = Mocks.ProductsState1;
+      const products = Mocks.ProductsState;
       const items = Mocks.ItemSettingsEntities;
       const recipes = Mocks.RecipeSettingsEntities;
       const factories = Mocks.FactorySettingsInitial;
-      const settings = initialSettingsState;
+      const settings = Settings.initialSettingsState;
       const result = Selectors.getZipState.projector(
         products,
         items,

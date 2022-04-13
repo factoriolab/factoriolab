@@ -1,5 +1,5 @@
 import { STATE_KEY } from '~/models';
-import { initialSettingsState } from '~/store/settings';
+import * as Settings from '~/store/settings';
 import { BrowserUtility } from './browser.utility';
 
 describe('BrowserUtility', () => {
@@ -31,8 +31,13 @@ describe('BrowserUtility', () => {
 
   describe('loadState', () => {
     it('should return the state from local storage', () => {
-      localStorage.setItem(STATE_KEY, JSON.stringify(initialSettingsState));
-      expect(BrowserUtility.loadState()).toEqual(initialSettingsState as any);
+      localStorage.setItem(
+        STATE_KEY,
+        JSON.stringify(Settings.initialSettingsState)
+      );
+      expect(BrowserUtility.loadState()).toEqual(
+        Settings.initialSettingsState as any
+      );
     });
 
     it('should clean up if an error is encountered', () => {

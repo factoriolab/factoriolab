@@ -1017,27 +1017,30 @@ export class RouterService {
     return value === init ? '' : value == null ? NULL : value;
   }
 
-  zipDiffNumber(value: number, init: number): string {
+  zipDiffNumber(value: number | undefined, init: number | undefined): string {
     return value === init ? '' : value == null ? NULL : value.toString();
   }
 
-  zipDiffDisplayRate(value: DisplayRate, init: DisplayRate): string {
+  zipDiffDisplayRate(
+    value: DisplayRate | undefined,
+    init: DisplayRate | undefined
+  ): string {
     if (value === init) {
       return '';
     }
     switch (value) {
-      case null:
-        return NULL;
       case DisplayRate.PerSecond:
         return '0';
       case DisplayRate.PerMinute:
         return '1';
       case DisplayRate.PerHour:
         return '2';
+      default:
+        return NULL;
     }
   }
 
-  zipDiffBool(value: boolean, init: boolean): string {
+  zipDiffBool(value: boolean | undefined, init: boolean | undefined): string {
     return value === init ? '' : value == null ? NULL : value ? TRUE : FALSE;
   }
 
@@ -1060,7 +1063,7 @@ export class RouterService {
     return zVal === zInit ? '' : zVal;
   }
 
-  zipDiffRank(value: string[], init: string[]): string {
+  zipDiffRank(value: string[] | undefined, init: string[] | undefined): string {
     const zVal = value ? (value.length ? value.join(ARRAYSEP) : EMPTY) : NULL;
     const zInit = init ? (init.length ? init.join(ARRAYSEP) : EMPTY) : NULL;
     return zVal === zInit ? '' : zVal;
@@ -1078,7 +1081,7 @@ export class RouterService {
       : this.getId(hash.indexOf(value));
   }
 
-  zipDiffNNumber(value: number, init: number): string {
+  zipDiffNNumber(value: number | undefined, init: number | undefined): string {
     return value === init ? '' : value == null ? NULL : this.getId(value);
   }
 
@@ -1108,7 +1111,11 @@ export class RouterService {
     return zVal === zInit ? '' : zVal;
   }
 
-  zipDiffNRank(value: string[], init: string[], hash: string[]): string {
+  zipDiffNRank(
+    value: string[] | undefined,
+    init: string[] | undefined,
+    hash: string[]
+  ): string {
     const zVal = value
       ? value.length
         ? value.map((v) => this.getId(hash.indexOf(v))).join(ARRAYSEP)
@@ -1122,28 +1129,28 @@ export class RouterService {
     return zVal === zInit ? '' : zVal;
   }
 
-  parseString(value: string): string | undefined {
+  parseString(value: string | undefined): string | undefined {
     if (!value?.length || value === NULL) {
       return undefined;
     }
     return value;
   }
 
-  parseBool(value: string): boolean | undefined {
+  parseBool(value: string | undefined): boolean | undefined {
     if (!value?.length || value === NULL) {
       return undefined;
     }
     return value === TRUE;
   }
 
-  parseNumber(value: string): number | undefined {
+  parseNumber(value: string | undefined): number | undefined {
     if (!value?.length || value === NULL) {
       return undefined;
     }
     return Number(value);
   }
 
-  parseDisplayRate(value: string): DisplayRate | undefined {
+  parseDisplayRate(value: string | undefined): DisplayRate | undefined {
     if (!value?.length || value === NULL) {
       return undefined;
     }
@@ -1159,14 +1166,14 @@ export class RouterService {
     }
   }
 
-  parseArray(value: string): string[] | undefined {
+  parseArray(value: string | undefined): string[] | undefined {
     if (!value?.length || value === NULL) {
       return undefined;
     }
     return value === EMPTY ? [] : value.split(ARRAYSEP);
   }
 
-  parseNString(value: string, hash: string[]): string | undefined {
+  parseNString(value: string | undefined, hash: string[]): string | undefined {
     const v = this.parseString(value);
     if (v == null) {
       return v;
@@ -1174,14 +1181,14 @@ export class RouterService {
     return hash[this.getN(v)];
   }
 
-  parseNNumber(value: string): number | undefined {
+  parseNNumber(value: string | undefined): number | undefined {
     if (!value?.length || value === NULL) {
       return undefined;
     }
     return this.getN(value);
   }
 
-  parseNArray(value: string, hash: string[]): string[] | undefined {
+  parseNArray(value: string | undefined, hash: string[]): string[] | undefined {
     const v = this.parseArray(value);
     if (v == null) {
       return v;

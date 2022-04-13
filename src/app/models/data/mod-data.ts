@@ -11,13 +11,5 @@ export interface ModData {
   items: Item[];
   recipes: Recipe[];
   limitations: Entities<string[]>;
-  defaults: ModDefaults;
-}
-
-export interface AppModData {
-  categories: Category[];
-  icons: Icon[];
-  items: Item[];
-  recipes: Recipe[];
-  limitations: Entities<string[]>;
+  defaults?: ModDefaults;
 }

@@ -7,7 +7,7 @@ import { FocusOnShowDirective } from './focus-on-show.directive';
   template: `<input #input *ngIf="show" labFocus />`,
 })
 class TestFocusOnShowDirectiveComponent {
-  @ViewChild('input') input: ElementRef<HTMLInputElement>;
+  @ViewChild('input') input!: ElementRef<HTMLInputElement>;
 
   show = false;
 }

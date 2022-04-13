@@ -17,7 +17,6 @@ enum DataTest {
   selector: 'lab-test-select',
   template: `
     <lab-select
-      [data]="data"
       [selected]="selected"
       [options]="options"
       [selectType]="selectType"
@@ -29,7 +28,7 @@ enum DataTest {
   `,
 })
 class TestSelectComponent {
-  @ViewChild(SelectComponent) child: SelectComponent;
+  @ViewChild(SelectComponent) child!: SelectComponent;
   data: Dataset = Mocks.Data;
   selected = ItemId.AssemblingMachine1;
   options: string[] = [
@@ -40,7 +39,7 @@ class TestSelectComponent {
   selectType = IdType.Item;
   includeEmptyModule = false;
   columns: number | undefined;
-  selectId(data): void {}
+  selectId(data: string): void {}
 }
 
 describe('SelectComponent', () => {
@@ -70,12 +69,6 @@ describe('SelectComponent', () => {
   });
 
   describe('ngOnChanges', () => {
-    it('should handle undefined options', () => {
-      component.options = undefined;
-      fixture.detectChanges();
-      expect(component.child.rows).toEqual([[]]);
-    });
-
     it('should calculate width from specified number of columns', () => {
       component.columns = 3;
       fixture.detectChanges();

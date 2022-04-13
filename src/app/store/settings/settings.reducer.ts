@@ -7,7 +7,7 @@ import {
   ItemId,
 } from '~/models';
 import { StoreUtility } from '~/utilities';
-import { AppActionType, AppAction } from '../app.actions';
+import * as App from '../app.actions';
 import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
@@ -53,14 +53,14 @@ export const initialSettingsState: SettingsState = {
 
 export function settingsReducer(
   state: SettingsState = initialSettingsState,
-  action: SettingsAction | AppAction
+  action: SettingsAction | App.AppAction
 ): SettingsState {
   switch (action.type) {
-    case AppActionType.LOAD:
+    case App.AppActionType.LOAD:
       return action.payload.settingsState
         ? { ...initialSettingsState, ...action.payload.settingsState }
         : initialSettingsState;
-    case AppActionType.RESET:
+    case App.AppActionType.RESET:
       return initialSettingsState;
     case SettingsActionType.SET_PRESET:
       return { ...state, ...{ preset: action.payload } };

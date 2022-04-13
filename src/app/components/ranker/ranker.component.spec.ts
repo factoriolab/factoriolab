@@ -1,11 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 
-import { Mocks, ItemId, TestUtility, initialState } from 'src/tests';
-import { Dataset } from '~/models';
+import { ItemId, TestUtility, initialState, Mocks } from 'src/tests';
 import { DialogComponent, IconComponent } from '~/components';
 import { RankerComponent } from './ranker.component';
-import { provideMockStore } from '@ngrx/store/testing';
 
 enum DataTest {
   Open = 'lab-ranker-open',
@@ -17,7 +16,6 @@ enum DataTest {
   selector: 'lab-test-ranker',
   template: `
     <lab-ranker
-      [data]="data"
       [selected]="selected"
       [options]="options"
       (selectIds)="selectIds($event)"
@@ -26,8 +24,7 @@ enum DataTest {
   `,
 })
 class TestRankerComponent {
-  @ViewChild(RankerComponent) child: RankerComponent;
-  data: Dataset = Mocks.Data;
+  @ViewChild(RankerComponent) child!: RankerComponent;
   selected = [ItemId.SpeedModule];
   options: string[] = [
     ItemId.ProductivityModule,
@@ -36,7 +33,7 @@ class TestRankerComponent {
     ItemId.SpeedModule2,
     ItemId.SpeedModule3,
   ];
-  selectIds(data): void {}
+  selectIds(data: string[]): void {}
 }
 
 describe('RankerComponent', () => {
@@ -91,22 +88,28 @@ describe('RankerComponent', () => {
 
   describe('canAdd', () => {
     it('should return true if not edited or empty module', () => {
-      expect(component.child.canAdd(null)).toBeTrue();
+      expect(component.child.canAdd('', Mocks.AdjustedData)).toBeTrue();
       component.child.edited = true;
-      expect(component.child.canAdd(ItemId.Module)).toBeTrue();
+      expect(
+        component.child.canAdd(ItemId.Module, Mocks.AdjustedData)
+      ).toBeTrue();
     });
 
     it('should return false if already added', () => {
       component.child.edited = true;
       component.child.editValue = ['id'];
-      expect(component.child.canAdd('id')).toBeFalse();
+      expect(component.child.canAdd('id', Mocks.AdjustedData)).toBeFalse();
     });
 
     it('should check whether it matches a selected module limitation', () => {
       component.child.edited = true;
       component.child.editValue = [ItemId.ProductivityModule];
-      expect(component.child.canAdd(ItemId.ProductivityModule3)).toBeFalse();
-      expect(component.child.canAdd(ItemId.SpeedModule)).toBeTrue();
+      expect(
+        component.child.canAdd(ItemId.ProductivityModule3, Mocks.AdjustedData)
+      ).toBeFalse();
+      expect(
+        component.child.canAdd(ItemId.SpeedModule, Mocks.AdjustedData)
+      ).toBeTrue();
     });
   });
 

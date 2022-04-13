@@ -11,7 +11,7 @@ describe('Factories Selectors', () => {
         Mocks.Defaults,
         Mocks.AdjustedData
       );
-      expect(result.ids.length).toEqual(3);
+      expect(result.ids?.length).toEqual(3);
       expect(Object.keys(result.entities).length).toEqual(19);
     });
 
@@ -21,7 +21,7 @@ describe('Factories Selectors', () => {
         null,
         Mocks.AdjustedData
       );
-      expect(result.ids.length).toEqual(0);
+      expect(result.ids?.length).toEqual(0);
       expect(Object.keys(result.entities).length).toEqual(19);
     });
 
@@ -34,7 +34,7 @@ describe('Factories Selectors', () => {
         null,
         Mocks.AdjustedData
       );
-      expect(result.ids.length).toEqual(0);
+      expect(result.ids?.length).toEqual(0);
       expect(Object.keys(result.entities).length).toEqual(19);
       expect(result.entities[ItemId.AssemblingMachine2].beaconCount).toEqual(
         '0'

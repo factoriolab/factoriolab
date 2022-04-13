@@ -6,11 +6,11 @@ import {
   RecipeSettings,
   AllColumns,
 } from '~/models';
-import { initialColumnsState, ColumnsState } from '~/store/preferences';
+import * as Preferences from '~/store/preferences';
 import { ExportUtility } from './export.utility';
 
 describe('ExportUtility', () => {
-  const noCols = AllColumns.reduce((e: ColumnsState, c) => {
+  const noCols = AllColumns.reduce((e: Preferences.ColumnsState, c) => {
     e[c] = { show: false, precision: 1 };
     return e;
   }, {});
@@ -20,7 +20,7 @@ describe('ExportUtility', () => {
       spyOn(ExportUtility, 'saveAsCsv');
       ExportUtility.stepsToCsv(
         Mocks.Steps,
-        initialColumnsState,
+        Preferences.initialColumnsState,
         Mocks.ItemSettingsInitial,
         Mocks.RecipeSettingsInitial,
         Mocks.AdjustedData
@@ -33,6 +33,7 @@ describe('ExportUtility', () => {
     const itemId = ItemId.Coal;
     const recipeId = RecipeId.Coal;
     const fullStep: Step = {
+      id: 'id',
       itemId,
       items: Rational.from(3),
       surplus: Rational.two,
@@ -44,6 +45,7 @@ describe('ExportUtility', () => {
       recipeId,
     };
     const minStep: Step = {
+      id: 'id',
       itemId,
       items: Rational.one,
       recipeId,
@@ -69,7 +71,7 @@ describe('ExportUtility', () => {
       const result = ExportUtility.stepToJson(
         fullStep,
         [fullStep],
-        initialColumnsState,
+        Preferences.initialColumnsState,
         { [itemId]: itemS },
         { [recipeId]: fullRecipe },
         Mocks.AdjustedData
@@ -101,7 +103,7 @@ describe('ExportUtility', () => {
       const result = ExportUtility.stepToJson(
         minStep,
         [minStep],
-        initialColumnsState,
+        Preferences.initialColumnsState,
         { [itemId]: itemS },
         { [recipeId]: minRecipe },
         Mocks.AdjustedData
@@ -146,7 +148,7 @@ describe('ExportUtility', () => {
     });
 
     it('should handle no recipe', () => {
-      const step = { ...fullStep, ...{ recipeId: null } };
+      const step = { ...fullStep, ...{ recipeId: undefined } };
       const result = ExportUtility.stepToJson(
         step,
         [step],
@@ -166,7 +168,7 @@ describe('ExportUtility', () => {
     });
 
     it('should handle no items', () => {
-      const step = { ...minStep, ...{ items: null } };
+      const step = { ...minStep, ...{ items: undefined } };
       const result = ExportUtility.stepToJson(
         step,
         [step],
@@ -188,6 +190,7 @@ describe('ExportUtility', () => {
 
     it('should handle outputs and targets', () => {
       const step: Step = {
+        id: 'id',
         itemId: ItemId.PlasticBar,
         items: Rational.one,
         recipeId: RecipeId.PlasticBar,
@@ -195,6 +198,7 @@ describe('ExportUtility', () => {
         parents: { [RecipeId.AdvancedCircuit]: Rational.one },
       };
       const inStep: Step = {
+        id: 'id',
         itemId: ItemId.Coal,
         items: Rational.one,
         parents: { [RecipeId.PlasticBar]: Rational.one },

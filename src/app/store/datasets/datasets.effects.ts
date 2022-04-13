@@ -27,7 +27,9 @@ export class DatasetsEffects {
             a.payload.settingsState?.baseId ||
             Settings.initialSettingsState.baseId;
           return this.requestData(id).pipe(
-            tap(([data, hash]) => this.loadModsForBase(data.defaults.modIds)),
+            tap(([data, hash]) =>
+              this.loadModsForBase(data.defaults?.modIds ?? [])
+            ),
             tap(([data, hash]) => {
               if (!a.payload.productsState) {
                 this.store.dispatch(new Products.ResetAction(data.items[0].id));
@@ -44,7 +46,9 @@ export class DatasetsEffects {
       ofType(App.AppActionType.RESET),
       switchMap(() =>
         this.requestData(Settings.initialSettingsState.baseId).pipe(
-          tap(([data, hash]) => this.loadModsForBase(data.defaults.modIds)),
+          tap(([data, hash]) =>
+            this.loadModsForBase(data.defaults?.modIds ?? [])
+          ),
           map(([data, hash]) => new Products.ResetAction(data.items[0].id))
         )
       )
@@ -56,7 +60,9 @@ export class DatasetsEffects {
       ofType(Settings.SettingsActionType.SET_BASE),
       switchMap((a: Settings.SetBaseAction) =>
         this.requestData(a.payload).pipe(
-          tap(([data, hash]) => this.loadModsForBase(data.defaults.modIds)),
+          tap(([data, hash]) =>
+            this.loadModsForBase(data.defaults?.modIds ?? [])
+          ),
           map(([data, hash]) => new Products.ResetAction(data.items[0].id))
         )
       )
@@ -99,7 +105,7 @@ export class DatasetsEffects {
     if (!zip) {
       const id = stored?.settingsState?.baseId || initial.baseId;
       this.requestData(id).subscribe(([data, hash]) => {
-        this.loadModsForBase(data.defaults.modIds);
+        this.loadModsForBase(data.defaults?.modIds ?? []);
         if (!stored?.productsState) {
           this.store.dispatch(new Products.ResetAction(data.items[0].id));
         }

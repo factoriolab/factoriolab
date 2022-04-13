@@ -52,14 +52,10 @@ export class SelectComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['options'] || changes['includeEmptyModule']) {
-      if (this.options) {
-        if (this.includeEmptyModule) {
-          this.rows = this.moduleRows(this.options);
-        } else {
-          this.rows = [this.options];
-        }
+      if (this.includeEmptyModule) {
+        this.rows = this.moduleRows(this.options);
       } else {
-        this.rows = [[]];
+        this.rows = [this.options];
       }
     }
 

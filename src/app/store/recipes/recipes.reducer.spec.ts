@@ -1,7 +1,6 @@
 import { Mocks, ItemId } from 'src/tests';
-import { RecipeSettingsField } from '~/models';
 import { StoreUtility } from '~/utilities';
-import { LoadAction } from '../app.actions';
+import * as App from '../app.actions';
 import * as Actions from './recipes.actions';
 import { recipesReducer, initialRecipesState } from './recipes.reducer';
 
@@ -10,7 +9,9 @@ describe('Recipes Reducer', () => {
     it('should load recipe settings', () => {
       const result = recipesReducer(
         undefined,
-        new LoadAction({ recipesState: Mocks.RecipeSettingsEntities } as any)
+        new App.LoadAction({
+          recipesState: Mocks.RecipeSettingsEntities,
+        } as any)
       );
       expect(result).toEqual(Mocks.RecipeSettingsEntities);
     });
@@ -23,7 +24,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetFactoryAction({
           id: Mocks.Recipe1.id,
           value: Mocks.Item1.id,
-          def: null,
+          def: undefined,
         })
       );
       expect(result[Mocks.Recipe1.id].factory).toEqual(Mocks.Item1.id);
@@ -45,7 +46,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetFactoryAction({
           id: Mocks.Recipe1.id,
           value: Mocks.Item1.id,
-          def: null,
+          def: undefined,
         })
       );
       expect(result[Mocks.Recipe1.id]).toEqual({ factory: Mocks.Item1.id });
@@ -59,7 +60,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetFactoryModulesAction({
           id: Mocks.Recipe1.id,
           value: [Mocks.Item1.id],
-          def: null,
+          def: undefined,
         })
       );
       expect(result[Mocks.Recipe1.id].factoryModules).toEqual([Mocks.Item1.id]);
@@ -73,7 +74,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetBeaconCountAction({
           id: Mocks.Recipe1.id,
           value: '2',
-          def: null,
+          def: undefined,
         })
       );
       expect(result[Mocks.Recipe1.id].beaconCount).toEqual('2');
@@ -87,7 +88,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetBeaconAction({
           id: Mocks.Recipe1.id,
           value: ItemId.Beacon,
-          def: null,
+          def: undefined,
         })
       );
       expect(result[Mocks.Recipe1.id].beacon).toEqual(ItemId.Beacon);
@@ -102,7 +103,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetBeaconAction({
           id: Mocks.Recipe1.id,
           value: ItemId.Beacon,
-          def: null,
+          def: undefined,
         })
       );
       expect(result[Mocks.Recipe1.id]).toEqual({ beacon: ItemId.Beacon });
@@ -116,7 +117,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetBeaconModulesAction({
           id: Mocks.Recipe1.id,
           value: [Mocks.Item1.id],
-          def: null,
+          def: undefined,
         })
       );
       expect(result[Mocks.Recipe1.id].beaconModules).toEqual([Mocks.Item1.id]);
@@ -157,7 +158,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetCostAction({
           id: Mocks.Recipe1.id,
           value: '10',
-          def: null,
+          def: undefined,
         })
       );
       expect(result[Mocks.Recipe1.id].cost).toEqual('10');
@@ -178,17 +179,17 @@ describe('Recipes Reducer', () => {
     it(`should reset a recipe's modules`, () => {
       spyOn(StoreUtility, 'resetFields');
       recipesReducer(
-        null,
+        undefined,
         new Actions.ResetRecipeModulesAction(Mocks.Recipe1.id)
       );
       expect(StoreUtility.resetFields).toHaveBeenCalledWith(
         null,
         [
-          RecipeSettingsField.FactoryModules,
-          RecipeSettingsField.BeaconCount,
-          RecipeSettingsField.Beacon,
-          RecipeSettingsField.BeaconModules,
-          RecipeSettingsField.BeaconTotal,
+          'factoryModules',
+          'beaconCount',
+          'beacon',
+          'beaconModules',
+          'beaconTotal',
         ],
         Mocks.Recipe1.id
       );
@@ -198,14 +199,14 @@ describe('Recipes Reducer', () => {
   describe('RESET_FACTORY', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetFields');
-      recipesReducer(null, new Actions.ResetFactoryAction());
+      recipesReducer(undefined, new Actions.ResetFactoryAction());
       expect(StoreUtility.resetFields).toHaveBeenCalledWith(null, [
-        RecipeSettingsField.Factory,
-        RecipeSettingsField.FactoryModules,
-        RecipeSettingsField.BeaconCount,
-        RecipeSettingsField.Beacon,
-        RecipeSettingsField.BeaconModules,
-        RecipeSettingsField.BeaconTotal,
+        'factory',
+        'factoryModules',
+        'beaconCount',
+        'beacon',
+        'beaconModules',
+        'beaconTotal',
       ]);
     });
   });
@@ -213,12 +214,12 @@ describe('Recipes Reducer', () => {
   describe('RESET_BEACONS', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetFields');
-      recipesReducer(null, new Actions.ResetBeaconsAction());
+      recipesReducer(undefined, new Actions.ResetBeaconsAction());
       expect(StoreUtility.resetFields).toHaveBeenCalledWith(null, [
-        RecipeSettingsField.BeaconCount,
-        RecipeSettingsField.Beacon,
-        RecipeSettingsField.BeaconModules,
-        RecipeSettingsField.BeaconTotal,
+        'beaconCount',
+        'beacon',
+        'beaconModules',
+        'beaconTotal',
       ]);
     });
   });
@@ -226,9 +227,9 @@ describe('Recipes Reducer', () => {
   describe('RESET_OVERCLOCK', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetFields');
-      recipesReducer(null, new Actions.ResetOverclockAction());
+      recipesReducer(undefined, new Actions.ResetOverclockAction());
       expect(StoreUtility.resetFields).toHaveBeenCalledWith(null, [
-        RecipeSettingsField.Overclock,
+        'overclock',
       ]);
     });
   });
@@ -236,10 +237,8 @@ describe('Recipes Reducer', () => {
   describe('RESET_COST', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetFields');
-      recipesReducer(null, new Actions.ResetCostAction());
-      expect(StoreUtility.resetFields).toHaveBeenCalledWith(null, [
-        RecipeSettingsField.Cost,
-      ]);
+      recipesReducer(undefined, new Actions.ResetCostAction());
+      expect(StoreUtility.resetFields).toHaveBeenCalledWith(null, ['cost']);
     });
   });
 

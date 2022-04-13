@@ -13,17 +13,10 @@ import {
 import { Mocks, TestUtility, initialState } from 'src/tests';
 import { OptionsComponent, ColumnsComponent } from '~/components';
 import { LinkValue, SankeyAlign } from '~/models';
-import {
-  SetLinkSizeAction,
-  SetLinkTextAction,
-  SetSankeyAlignAction,
-} from '~/store/preferences';
-import { getSankey } from '~/store/products';
+import * as Preferences from '~/store/preferences';
+import * as Products from '~/store/products';
 import { ExportUtility } from '~/utilities';
-import {
-  ListComponent,
-  ListContainerComponent,
-} from '../containers/list-container';
+import { ListComponent } from '../list/list.component';
 import { FlowComponent } from './flow.component';
 
 enum DataTest {
@@ -42,7 +35,6 @@ describe('FlowComponent', () => {
         ColumnsComponent,
         OptionsComponent,
         ListComponent,
-        ListContainerComponent,
         FlowComponent,
       ],
       imports: [HttpClientTestingModule, RouterTestingModule],
@@ -54,7 +46,7 @@ describe('FlowComponent', () => {
     fixture = TestBed.createComponent(FlowComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
-    getSankey.setResult(Mocks.Sankey);
+    Products.getSankey.setResult(Mocks.Sankey);
     store.refreshState();
     fixture.detectChanges();
     const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
@@ -69,7 +61,7 @@ describe('FlowComponent', () => {
   describe('ngAfterViewInit', () => {
     it('should rebuild chart when data/align update', () => {
       spyOn(component, 'rebuildChart');
-      getSankey.setResult(Mocks.SankeyCircular);
+      Products.getSankey.setResult(Mocks.SankeyCircular);
       store.refreshState();
       expect(component.rebuildChart).toHaveBeenCalledWith(
         Mocks.SankeyCircular,
@@ -168,7 +160,7 @@ describe('FlowComponent', () => {
   describe('setSelected', () => {
     it('should set the selected node', () => {
       component.setSelected('node');
-      expect(component.selected).toEqual('node');
+      expect(component.selectedId).toEqual('node');
       expect(detectChanges).toHaveBeenCalled();
     });
   });
@@ -177,7 +169,9 @@ describe('FlowComponent', () => {
     it('should dispatch event', () => {
       const value = LinkValue.Belts;
       component.setLinkSize(value);
-      expect(store.dispatch).toHaveBeenCalledWith(new SetLinkSizeAction(value));
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new Preferences.SetLinkSizeAction(value)
+      );
     });
   });
 
@@ -185,7 +179,9 @@ describe('FlowComponent', () => {
     it('should dispatch event', () => {
       const value = LinkValue.Belts;
       component.setLinkText(value);
-      expect(store.dispatch).toHaveBeenCalledWith(new SetLinkTextAction(value));
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new Preferences.SetLinkTextAction(value)
+      );
     });
   });
 
@@ -194,7 +190,7 @@ describe('FlowComponent', () => {
       const value = SankeyAlign.Left;
       component.setSankeyAlign(value);
       expect(store.dispatch).toHaveBeenCalledWith(
-        new SetSankeyAlignAction(value)
+        new Preferences.SetSankeyAlignAction(value)
       );
     });
   });

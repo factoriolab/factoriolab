@@ -19,7 +19,7 @@ enum DataTest {
   />`,
 })
 class TestValidateNumberDirectiveComponent {
-  @ViewChild('input') input: ElementRef<HTMLInputElement>;
+  @ViewChild('input') input!: ElementRef<HTMLInputElement>;
 
   model = null;
   labValidateMinimum = '1';

@@ -1,11 +1,7 @@
 import { Entities, FactorySettings } from '~/models';
 import { StoreUtility } from '~/utilities';
-import { AppAction, AppActionType } from '../app.actions';
-import {
-  SetBaseAction,
-  SetPresetAction,
-  SettingsActionType,
-} from '../settings';
+import * as App from '../app.actions';
+import * as Settings from '../settings';
 import { FactoriesAction, FactoriesActionType } from './factories.actions';
 
 export type FactoriesState = {
@@ -20,14 +16,18 @@ export const initialFactoriesState: FactoriesState = {
 
 export function factoriesReducer(
   state: FactoriesState = initialFactoriesState,
-  action: FactoriesAction | AppAction | SetBaseAction | SetPresetAction
+  action:
+    | FactoriesAction
+    | App.AppAction
+    | Settings.SetBaseAction
+    | Settings.SetPresetAction
 ): FactoriesState {
   switch (action.type) {
-    case AppActionType.LOAD:
+    case App.AppActionType.LOAD:
       return { ...initialFactoriesState, ...action.payload.factoriesState };
-    case AppActionType.RESET:
-    case SettingsActionType.SET_BASE:
-    case SettingsActionType.SET_PRESET:
+    case App.AppActionType.RESET:
+    case Settings.SettingsActionType.SET_BASE:
+    case Settings.SettingsActionType.SET_PRESET:
       return initialFactoriesState;
     case FactoriesActionType.ADD: {
       const value = [
