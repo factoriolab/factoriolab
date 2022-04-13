@@ -43,7 +43,7 @@ describe('BrowserUtility', () => {
     it('should clean up if an error is encountered', () => {
       localStorage.setItem(STATE_KEY, 'test');
       spyOn(console, 'error');
-      expect(BrowserUtility.loadState()).toEqual(null);
+      expect(BrowserUtility.loadState()).toBeUndefined();
       expect(console.error).toHaveBeenCalledTimes(2);
       expect(localStorage.getItem(STATE_KEY)).toBeNull();
     });

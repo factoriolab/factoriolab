@@ -48,7 +48,7 @@ describe('DatasetsEffects', () => {
       spyOn(effects, 'loadModsForBase');
       store.dispatch(new App.LoadAction({} as any));
       expect(effects.loadModsForBase).toHaveBeenCalledWith(
-        Mocks.Base.defaults?.modIds
+        Mocks.Base.defaults!.modIds
       );
       expect(store.dispatch).toHaveBeenCalledWith(
         new Products.ResetAction(Mocks.Base.items[0].id)
@@ -68,7 +68,7 @@ describe('DatasetsEffects', () => {
         } as any)
       );
       expect(effects.loadModsForBase).toHaveBeenCalledWith(
-        Mocks.Base.defaults?.modIds
+        Mocks.Base.defaults!.modIds
       );
       expect(store.dispatch).not.toHaveBeenCalledWith(
         new Products.ResetAction(Mocks.Base.items[0].id)
@@ -96,7 +96,7 @@ describe('DatasetsEffects', () => {
       effects.appReset$.subscribe((a) => effect.push(a));
       store.dispatch(new App.ResetAction());
       expect(effects.loadModsForBase).toHaveBeenCalledWith(
-        Mocks.Base.defaults?.modIds
+        Mocks.Base.defaults!.modIds
       );
       expect(effect).toEqual([
         new Products.ResetAction(Mocks.Base.items[0].id),
@@ -124,7 +124,7 @@ describe('DatasetsEffects', () => {
       effects.setBaseId$.subscribe((a) => effect.push(a));
       store.dispatch(new Settings.SetBaseAction(Mocks.Base.id));
       expect(effects.loadModsForBase).toHaveBeenCalledWith(
-        Mocks.Base.defaults?.modIds
+        Mocks.Base.defaults!.modIds
       );
       expect(effect).toEqual([
         new Products.ResetAction(Mocks.Base.items[0].id),
@@ -152,7 +152,7 @@ describe('DatasetsEffects', () => {
       spyOn(effects, 'loadModsForBase');
       effects.load('', undefined, { baseId: Mocks.Base.id } as any);
       expect(effects.loadModsForBase).toHaveBeenCalledWith(
-        Mocks.Base.defaults?.modIds
+        Mocks.Base.defaults!.modIds
       );
       expect(store.dispatch).toHaveBeenCalledWith(
         new Products.ResetAction(Mocks.Base.items[0].id)
@@ -168,7 +168,7 @@ describe('DatasetsEffects', () => {
         Settings.initialSettingsState
       );
       expect(effects.loadModsForBase).toHaveBeenCalledWith(
-        Mocks.Base.defaults?.modIds ?? []
+        Mocks.Base.defaults!.modIds
       );
       expect(store.dispatch).not.toHaveBeenCalledWith(
         new Products.ResetAction(Mocks.Base.items[0].id)

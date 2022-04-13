@@ -183,14 +183,14 @@ describe('Recipes Reducer', () => {
         new Actions.ResetRecipeModulesAction(Mocks.Recipe1.id)
       );
       expect(StoreUtility.resetFields).toHaveBeenCalledWith(
-        null,
+        {},
         [
           'factoryModules',
           'beaconCount',
           'beacon',
           'beaconModules',
           'beaconTotal',
-        ],
+        ] as any,
         Mocks.Recipe1.id
       );
     });
@@ -200,14 +200,14 @@ describe('Recipes Reducer', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetFields');
       recipesReducer(undefined, new Actions.ResetFactoryAction());
-      expect(StoreUtility.resetFields).toHaveBeenCalledWith(null, [
+      expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
         'factory',
         'factoryModules',
         'beaconCount',
         'beacon',
         'beaconModules',
         'beaconTotal',
-      ]);
+      ] as any);
     });
   });
 
@@ -215,12 +215,12 @@ describe('Recipes Reducer', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetFields');
       recipesReducer(undefined, new Actions.ResetBeaconsAction());
-      expect(StoreUtility.resetFields).toHaveBeenCalledWith(null, [
+      expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
         'beaconCount',
         'beacon',
         'beaconModules',
         'beaconTotal',
-      ]);
+      ] as any);
     });
   });
 
@@ -228,9 +228,9 @@ describe('Recipes Reducer', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetFields');
       recipesReducer(undefined, new Actions.ResetOverclockAction());
-      expect(StoreUtility.resetFields).toHaveBeenCalledWith(null, [
+      expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
         'overclock',
-      ]);
+      ] as any);
     });
   });
 
@@ -238,7 +238,9 @@ describe('Recipes Reducer', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetFields');
       recipesReducer(undefined, new Actions.ResetCostAction());
-      expect(StoreUtility.resetFields).toHaveBeenCalledWith(null, ['cost']);
+      expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
+        'cost',
+      ] as any);
     });
   });
 

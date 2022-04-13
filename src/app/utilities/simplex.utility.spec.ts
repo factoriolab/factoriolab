@@ -345,8 +345,8 @@ describe('SimplexUtility', () => {
       expect(SimplexUtility.parseItemRecursively).toHaveBeenCalledTimes(1);
       expect(result).toEqual({
         recipes: {},
-        items: { [Mocks.Step1.itemId!]: Mocks.Step1.items },
-        inputs: [Mocks.Step1.itemId],
+        items: { [Mocks.Step1.itemId!]: Mocks.Step1.items! },
+        inputs: [Mocks.Step1.itemId!],
         recipeIds: Mocks.Data.recipeIds,
         itemIds: Mocks.Data.itemIds,
         data: Mocks.Data,
@@ -859,6 +859,7 @@ describe('SimplexUtility', () => {
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
       SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
       expect(step).toEqual({
+        id: 'id',
         itemId: ItemId.Coal,
         items: Rational.from(1183, 200),
       });
@@ -886,6 +887,7 @@ describe('SimplexUtility', () => {
       });
       SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
       expect(step).toEqual({
+        id: 'id',
         itemId: ItemId.Coal,
         items: Rational.from(3),
       });
@@ -907,6 +909,7 @@ describe('SimplexUtility', () => {
       state.recipes[ItemId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
       SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
       expect(step).toEqual({
+        id: 'id',
         itemId: ItemId.Coal,
         items: Rational.one,
       });
@@ -989,6 +992,7 @@ describe('SimplexUtility', () => {
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
       SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
       expect(step).toEqual({
+        id: 'id',
         itemId: ItemId.Coal,
         items: Rational.from(1183, 100),
         surplus: Rational.from(3),
@@ -1085,6 +1089,7 @@ describe('SimplexUtility', () => {
       );
       expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
       expect(step).toEqual({
+        id: 'id',
         itemId: ItemId.Coal,
         recipeId: RecipeId.Coal,
         items: Rational.one,
@@ -1111,7 +1116,7 @@ describe('SimplexUtility', () => {
       );
       expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
       expect(step).toEqual({
-        itemId: null,
+        id: 'id',
         recipeId: RecipeId.Coal,
         items: Rational.one,
         factories: Rational.one,

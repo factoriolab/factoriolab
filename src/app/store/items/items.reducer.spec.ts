@@ -100,7 +100,7 @@ describe('Items Reducer', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetField');
       itemsReducer(undefined, new Actions.ResetIgnoreAction());
-      expect(StoreUtility.resetField).toHaveBeenCalledWith(null, 'ignore');
+      expect(StoreUtility.resetField).toHaveBeenCalledWith({}, 'ignore' as any);
     });
   });
 
@@ -108,7 +108,7 @@ describe('Items Reducer', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetField');
       itemsReducer(undefined, new Actions.ResetBeltAction());
-      expect(StoreUtility.resetField).toHaveBeenCalledWith(null, 'belt');
+      expect(StoreUtility.resetField).toHaveBeenCalledWith({}, 'belt' as any);
     });
   });
 
@@ -116,7 +116,7 @@ describe('Items Reducer', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetField');
       itemsReducer(undefined, new Actions.ResetWagonAction());
-      expect(StoreUtility.resetField).toHaveBeenCalledWith(null, 'wagon');
+      expect(StoreUtility.resetField).toHaveBeenCalledWith({}, 'wagon' as any);
     });
   });
 

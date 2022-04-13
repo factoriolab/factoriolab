@@ -1178,7 +1178,7 @@ describe('RecipeUtility', () => {
         itemRecipeIds,
         [ItemId.Wood]
       );
-      expect(itemRecipeIds).toEqual({ [ItemId.Wood]: null });
+      expect(itemRecipeIds).toEqual({});
     });
   });
 });

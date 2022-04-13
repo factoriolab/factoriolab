@@ -37,11 +37,13 @@ describe('FlowUtility', () => {
       const result = FlowUtility.buildSankey(
         [
           {
+            id: '0',
             itemId: ItemId.Coal,
             recipeId: RecipeId.Coal,
             parents: { [ItemId.PlasticBar]: Rational.one },
           },
           {
+            id: '1',
             itemId: ItemId.PlasticBar,
             recipeId: RecipeId.PlasticBar,
           },
@@ -56,10 +58,11 @@ describe('FlowUtility', () => {
           node,
           {
             id: ItemId.PlasticBar,
+            stepId: 'id',
             name: Mocks.AdjustedData.itemEntities[ItemId.PlasticBar].name,
             color: Mocks.AdjustedData.iconEntities[ItemId.PlasticBar].color,
             viewBox: '896 448 64 64',
-            href: Mocks.AdjustedData.iconEntities[ItemId.PlasticBar].file,
+            href: Mocks.AdjustedData.iconEntities[ItemId.PlasticBar].file!,
           },
         ],
         links: [
@@ -171,7 +174,7 @@ describe('FlowUtility', () => {
         nodes: [{ ...node, ...{ id: iId } }],
         links: [
           {
-            target: undefined,
+            target: '',
             source: iId,
             value: 1,
             text: '',
