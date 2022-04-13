@@ -9,7 +9,7 @@ import {
   MatrixResult,
   MatrixResultType,
 } from '~/models';
-import { ItemsState } from '~/store/items';
+import * as Items from '~/store/items';
 import { RateUtility } from './rate.utility';
 
 export interface MatrixState {
@@ -65,7 +65,7 @@ export class SimplexUtility {
   /** Solve all remaining steps using simplex method, if necessary */
   static solve(
     steps: Step[],
-    itemSettings: ItemsState,
+    itemSettings: Items.ItemsState,
     disabledRecipes: string[],
     costInput: Rational,
     costIgnored: Rational,
@@ -134,7 +134,7 @@ export class SimplexUtility {
   /** Solve simplex for a given item id and return recipes or items in steps */
   static getSteps(
     itemId: string,
-    itemSettings: ItemsState,
+    itemSettings: Items.ItemsState,
     disabledRecipes: string[],
     costInput: Rational,
     costIgnored: Rational,
@@ -177,7 +177,7 @@ export class SimplexUtility {
   //#region Setup
   static getState(
     steps: Step[],
-    itemSettings: ItemsState,
+    itemSettings: Items.ItemsState,
     disabledRecipes: string[],
     costInput: Rational,
     costIgnored: Rational,

@@ -14,10 +14,9 @@ import {
   ItemSettings,
   RationalBelt,
   RationalFactory,
-  RecipeSettings,
 } from '~/models';
-import { FactoriesState } from '~/store/factories';
-import { RecipesState } from '~/store/recipes';
+import * as Factories from '~/store/factories';
+import * as Recipes from '~/store/recipes';
 
 export class RecipeUtility {
   static MIN_FACTOR = new Rational(BigInt(1), BigInt(5));
@@ -507,8 +506,8 @@ export class RecipeUtility {
   static adjustProduct(
     product: Product,
     productSteps: Entities<[string, Rational][]>,
-    recipeSettings: Entities<RecipeSettings>,
-    factories: FactoriesState,
+    recipeSettings: Recipes.RecipesState,
+    factories: Factories.FactoriesState,
     data: Dataset
   ): Product {
     if (product.rateType === RateType.Factories) {

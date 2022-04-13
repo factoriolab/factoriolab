@@ -166,7 +166,11 @@ describe('StoreUtility', () => {
 
     it('should delete entry when equal to default and no other entries', () => {
       const payload = { id, value: 'a', def: 'a' };
-      const result = StoreUtility.compareReset({ [id]: {} }, field, payload);
+      const result = StoreUtility.compareReset(
+        { [id]: { [field]: 'value' } },
+        field,
+        payload
+      );
       expect(result).toEqual({} as any);
     });
   });

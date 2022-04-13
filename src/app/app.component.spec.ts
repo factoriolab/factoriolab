@@ -9,17 +9,14 @@ import { StoreModule, Store } from '@ngrx/store';
 import { LabState, reducers, metaReducers } from './store';
 import {
   IconComponent,
-  SettingsContainerComponent,
   SettingsComponent,
-  ProductsContainerComponent,
   ProductsComponent,
-  ListContainerComponent,
-  ListComponent,
   OptionsComponent,
   PickerComponent,
 } from './components';
-import { AppComponent } from './app.component';
-import { APP, TITLE_DSP, TITLE_SFY } from './models';
+import { AppComponent, TITLE_DSP, TITLE_SFY } from './app.component';
+import { APP } from './models';
+import { ListComponent } from './routes';
 import { SetBaseAction } from './store/settings';
 
 describe('AppComponent', () => {
@@ -34,11 +31,8 @@ describe('AppComponent', () => {
         IconComponent,
         OptionsComponent,
         PickerComponent,
-        SettingsContainerComponent,
         SettingsComponent,
-        ProductsContainerComponent,
         ProductsComponent,
-        ListContainerComponent,
         ListComponent,
         AppComponent,
       ],

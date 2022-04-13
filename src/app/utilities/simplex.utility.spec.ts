@@ -92,7 +92,16 @@ describe('SimplexUtility', () => {
 
   describe('solve', () => {
     it('should handle empty list of steps', () => {
-      expect(SimplexUtility.solve([], null, null, null, null, null)).toEqual({
+      expect(
+        SimplexUtility.solve(
+          [],
+          {},
+          [],
+          Rational.zero,
+          Rational.zero,
+          Mocks.AdjustedData
+        )
+      ).toEqual({
         steps: [],
         result: MatrixResultType.Skipped,
       });
@@ -101,7 +110,14 @@ describe('SimplexUtility', () => {
     it('should handle fully solved steps', () => {
       spyOn(SimplexUtility, 'getState').and.returnValue(null);
       expect(
-        SimplexUtility.solve(Mocks.Steps, null, null, null, null, null)
+        SimplexUtility.solve(
+          Mocks.Steps,
+          {},
+          [],
+          Rational.zero,
+          Rational.zero,
+          Mocks.AdjustedData
+        )
       ).toEqual({
         steps: Mocks.Steps,
         result: MatrixResultType.Skipped,
@@ -117,7 +133,14 @@ describe('SimplexUtility', () => {
       spyOn(console, 'error');
       spyOn(window, 'alert');
       expect(
-        SimplexUtility.solve(Mocks.Steps, null, null, null, null, null)
+        SimplexUtility.solve(
+          Mocks.Steps,
+          {},
+          [],
+          Rational.zero,
+          Rational.zero,
+          Mocks.AdjustedData
+        )
       ).toEqual({
         steps: Mocks.Steps,
         result: MatrixResultType.Failed,
@@ -142,7 +165,14 @@ describe('SimplexUtility', () => {
       spyOn(console, 'error');
       spyOn(window, 'alert');
       expect(
-        SimplexUtility.solve(Mocks.Steps, null, null, null, null, null)
+        SimplexUtility.solve(
+          Mocks.Steps,
+          {},
+          [],
+          Rational.zero,
+          Rational.zero,
+          Mocks.AdjustedData
+        )
       ).toEqual({
         steps: Mocks.Steps,
         result: MatrixResultType.Cancelled,
@@ -167,7 +197,14 @@ describe('SimplexUtility', () => {
       ]);
       spyOn(SimplexUtility, 'updateSteps');
       expect(
-        SimplexUtility.solve(Mocks.Steps, null, null, null, null, null)
+        SimplexUtility.solve(
+          Mocks.Steps,
+          {},
+          [],
+          Rational.zero,
+          Rational.zero,
+          Mocks.AdjustedData
+        )
       ).toEqual({
         steps: Mocks.Steps,
         result: MatrixResultType.Solved,
@@ -188,6 +225,7 @@ describe('SimplexUtility', () => {
 
     it('should include heavy oil cracking', () => {
       const step: Step = {
+        id: 'id',
         itemId: ItemId.PetroleumGas,
         items: Rational.one,
       };
@@ -202,7 +240,7 @@ describe('SimplexUtility', () => {
       const hocStep = result.steps.find(
         (s) => s.recipeId === RecipeId.HeavyOilCracking
       );
-      expect(hocStep.factories.gt(Rational.zero)).toBeTrue();
+      expect(hocStep!.factories!.gt(Rational.zero)).toBeTrue();
     });
   });
 
@@ -290,7 +328,7 @@ describe('SimplexUtility', () => {
       );
       expect(SimplexUtility.parseItemRecursively).toHaveBeenCalledTimes(1);
       expect(SimplexUtility.addSurplusVariables).toHaveBeenCalledTimes(1);
-      expect(result.items[id]).toEqual(Rational.one);
+      expect(result!.items[id]).toEqual(Rational.one);
     });
 
     it('should build full state object', () => {
@@ -307,7 +345,7 @@ describe('SimplexUtility', () => {
       expect(SimplexUtility.parseItemRecursively).toHaveBeenCalledTimes(1);
       expect(result).toEqual({
         recipes: {},
-        items: { [Mocks.Step1.itemId]: Mocks.Step1.items },
+        items: { [Mocks.Step1.itemId!]: Mocks.Step1.items },
         inputs: [Mocks.Step1.itemId],
         recipeIds: Mocks.Data.recipeIds,
         itemIds: Mocks.Data.itemIds,
@@ -380,7 +418,7 @@ describe('SimplexUtility', () => {
       spyOn(SimplexUtility, 'parseItemRecursively');
       SimplexUtility.parseRecipeRecursively(
         Mocks.AdjustedData.recipeR[RecipeId.IronOre],
-        null
+        getState()
       );
       expect(SimplexUtility.parseItemRecursively).not.toHaveBeenCalled();
     });
@@ -556,7 +594,8 @@ describe('SimplexUtility', () => {
       state.recipes[RecipeId.CopperCable] =
         Mocks.AdjustedData.recipeR[RecipeId.CopperCable];
       state.recipes[ItemId.CopperPlate] = new RationalRecipe({
-        id: null,
+        id: 'id',
+        name: 'name',
         time: 1,
         out: { [ItemId.CopperPlate]: 1 },
         cost: 1,
@@ -806,6 +845,7 @@ describe('SimplexUtility', () => {
   describe('addItemStep', () => {
     it('should update an existing step with items', () => {
       const step: Step = {
+        id: 'id',
         itemId: ItemId.Coal,
         items: Rational.one,
       };
@@ -826,6 +866,7 @@ describe('SimplexUtility', () => {
 
     it('should add to an input step', () => {
       const step: Step = {
+        id: 'id',
         itemId: ItemId.Coal,
         items: Rational.one,
       };
@@ -837,7 +878,8 @@ describe('SimplexUtility', () => {
       const state = getState();
       state.items[ItemId.Coal] = Rational.zero;
       state.recipes[ItemId.Coal] = new RationalRecipe({
-        id: null,
+        id: 'id',
+        name: 'name',
         time: 1,
         out: { [ItemId.Coal]: 1 },
         producers: [],
@@ -851,6 +893,7 @@ describe('SimplexUtility', () => {
 
     it('should ignore an item with no output', () => {
       const step: Step = {
+        id: 'id',
         itemId: ItemId.Coal,
         items: Rational.one,
       };
@@ -882,6 +925,7 @@ describe('SimplexUtility', () => {
       SimplexUtility.addItemStep(ItemId.Coal, steps, solution, state);
       expect(steps).toEqual([
         {
+          id: 'id',
           itemId: ItemId.Coal,
           items: Rational.from(1183, 200),
         },
@@ -890,8 +934,16 @@ describe('SimplexUtility', () => {
 
     it('should place a new step next to related steps', () => {
       const steps: Step[] = [
-        { itemId: ItemId.PetroleumGas, items: Rational.zero },
-        { itemId: ItemId.Wood, items: Rational.zero },
+        {
+          id: 'id',
+          itemId: ItemId.PetroleumGas,
+          items: Rational.zero,
+        },
+        {
+          id: 'id',
+          itemId: ItemId.Wood,
+          items: Rational.zero,
+        },
       ];
       const solution: any = {
         surplus: {},
@@ -903,14 +955,27 @@ describe('SimplexUtility', () => {
         Mocks.AdjustedData.recipeR[RecipeId.AdvancedOilProcessing];
       SimplexUtility.addItemStep(ItemId.HeavyOil, steps, solution, state);
       expect(steps).toEqual([
-        { itemId: ItemId.PetroleumGas, items: Rational.zero },
-        { itemId: ItemId.HeavyOil, items: Rational.one },
-        { itemId: ItemId.Wood, items: Rational.zero },
+        {
+          id: 'id',
+          itemId: ItemId.PetroleumGas,
+          items: Rational.zero,
+        },
+        {
+          id: 'id',
+          itemId: ItemId.HeavyOil,
+          items: Rational.one,
+        },
+        {
+          id: 'id',
+          itemId: ItemId.Wood,
+          items: Rational.zero,
+        },
       ]);
     });
 
     it('should assign a surplus value', () => {
       const step: Step = {
+        id: 'id',
         itemId: ItemId.Coal,
         items: Rational.zero,
       };
@@ -935,18 +1000,22 @@ describe('SimplexUtility', () => {
     it('should assign recipes to appropriate steps', () => {
       const steps: Step[] = [
         {
+          id: '0',
           itemId: ItemId.CopperCable,
           items: Rational.zero,
         },
         {
+          id: '1',
           itemId: ItemId.HeavyOil,
           items: Rational.zero,
         },
         {
+          id: '2',
           itemId: ItemId.PetroleumGas,
           items: Rational.zero,
         },
         {
+          id: '3',
           itemId: ItemId.LightOil,
           items: Rational.zero,
         },
@@ -970,21 +1039,25 @@ describe('SimplexUtility', () => {
       SimplexUtility.assignRecipes(steps, solution, state);
       expect(steps).toEqual([
         {
+          id: '0',
           itemId: ItemId.CopperCable,
           recipeId: RecipeId.CopperCable,
           items: Rational.zero,
         },
         {
+          id: '1',
           itemId: ItemId.HeavyOil,
           recipeId: RecipeId.AdvancedOilProcessing,
           items: Rational.zero,
         },
         {
+          id: '2',
           itemId: ItemId.PetroleumGas,
           recipeId: RecipeId.BasicOilProcessing,
           items: Rational.zero,
         },
         {
+          id: '3',
           itemId: ItemId.LightOil,
           items: Rational.zero,
         },
@@ -996,6 +1069,7 @@ describe('SimplexUtility', () => {
     it('should update an existing step', () => {
       spyOn(RateUtility, 'adjustPowerPollution');
       const step: Step = {
+        id: 'id',
         itemId: ItemId.Coal,
         items: Rational.one,
       };
@@ -1021,7 +1095,7 @@ describe('SimplexUtility', () => {
     it('should find a matching step by recipe existing step', () => {
       spyOn(RateUtility, 'adjustPowerPollution');
       const step: Step = {
-        itemId: null,
+        id: 'id',
         recipeId: RecipeId.Coal,
         items: Rational.one,
       };
@@ -1060,8 +1134,7 @@ describe('SimplexUtility', () => {
       expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
       expect(steps).toEqual([
         {
-          itemId: null,
-          items: null,
+          id: 'id',
           recipeId: RecipeId.Coal,
           factories: Rational.one,
         },
@@ -1072,11 +1145,16 @@ describe('SimplexUtility', () => {
       spyOn(RateUtility, 'adjustPowerPollution');
       const steps: Step[] = [
         {
+          id: '0',
           itemId: ItemId.PetroleumGas,
           recipeId: RecipeId.BasicOilProcessing,
           items: Rational.zero,
         },
-        { itemId: ItemId.Wood, items: Rational.zero },
+        {
+          id: '1',
+          itemId: ItemId.Wood,
+          items: Rational.zero,
+        },
       ];
       const solution: any = {
         surplus: {},
@@ -1091,17 +1169,17 @@ describe('SimplexUtility', () => {
       expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
       expect(steps).toEqual([
         {
+          id: '0',
           itemId: ItemId.PetroleumGas,
           recipeId: RecipeId.BasicOilProcessing,
           items: Rational.zero,
         },
         {
-          itemId: null,
-          items: null,
+          id: '2',
           recipeId: RecipeId.AdvancedOilProcessing,
           factories: Rational.one,
         },
-        { itemId: ItemId.Wood, items: Rational.zero },
+        { id: '1', itemId: ItemId.Wood, items: Rational.zero },
       ]);
     });
   });
@@ -1110,6 +1188,7 @@ describe('SimplexUtility', () => {
     it('should update parents for steps solved by matrix', () => {
       spyOn(RateUtility, 'addParentValue');
       const step: Step = {
+        id: 'id',
         itemId: ItemId.Coal,
         items: Rational.one,
       };

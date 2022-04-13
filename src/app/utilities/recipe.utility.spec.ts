@@ -5,10 +5,10 @@ import {
   Product,
   RateType,
   Rational,
-  RationalItem,
   RationalRecipe,
   RationalRecipeSettings,
 } from '~/models';
+import * as Factories from '~/store/factories';
 import { RecipeUtility } from './recipe.utility';
 
 describe('RecipeUtility', () => {
@@ -43,7 +43,7 @@ describe('RecipeUtility', () => {
   describe('adjustRecipe', () => {
     it('should adjust a standard recipe', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
-      settings.factoryModules = null;
+      settings.factoryModules = undefined;
       settings.beaconModules = [ItemId.Module];
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
@@ -155,24 +155,25 @@ describe('RecipeUtility', () => {
         ...Mocks.Data,
         ...{
           itemR: {
-            ...Mocks.Data.itemR,
+            ...Mocks.Data.itemEntities,
             ...{
               // To verify all factors work in beacons
               [ItemId.SpeedModule]: {
-                ...Mocks.Data.itemR[ItemId.SpeedModule],
+                ...Mocks.Data.itemEntities[ItemId.SpeedModule],
                 ...{
                   module: {
-                    ...Mocks.Data.itemR[ItemId.SpeedModule].module,
+                    ...Mocks.Data.itemEntities[ItemId.SpeedModule].module,
                     ...{ productivity: Rational.one, pollution: Rational.one },
                   },
                 },
               },
               // To verify null consumption works
               [ItemId.ProductivityModule]: {
-                ...Mocks.Data.itemR[ItemId.ProductivityModule],
+                ...Mocks.Data.itemEntities[ItemId.ProductivityModule],
                 ...{
                   module: {
-                    ...Mocks.Data.itemR[ItemId.ProductivityModule].module,
+                    ...Mocks.Data.itemEntities[ItemId.ProductivityModule]
+                      .module,
                     ...{ consumption: null },
                   },
                 },
@@ -216,14 +217,14 @@ describe('RecipeUtility', () => {
         ...Mocks.Data,
         ...{
           itemR: {
-            ...Mocks.Data.itemR,
+            ...Mocks.Data.itemEntities,
             ...{
               // To verify all factors work in beacons
               [ItemId.EfficiencyModule]: {
-                ...Mocks.Data.itemR[ItemId.EfficiencyModule],
+                ...Mocks.Data.itemEntities[ItemId.EfficiencyModule],
                 ...{
                   module: {
-                    ...Mocks.Data.itemR[ItemId.EfficiencyModule].module,
+                    ...Mocks.Data.itemEntities[ItemId.EfficiencyModule].module,
                     ...{ consumption: null },
                   },
                 },
@@ -268,19 +269,19 @@ describe('RecipeUtility', () => {
         ...Mocks.Data,
         ...{
           itemR: {
-            ...Mocks.Data.itemR,
+            ...Mocks.Data.itemEntities,
             ...{
               [ItemId.EfficiencyModule3]: {
-                ...Mocks.Data.itemR[ItemId.EfficiencyModule3],
+                ...Mocks.Data.itemEntities[ItemId.EfficiencyModule3],
                 ...{
                   module: {
-                    ...Mocks.Data.itemR[ItemId.EfficiencyModule3].module,
+                    ...Mocks.Data.moduleEntities[ItemId.EfficiencyModule3],
                     ...{
                       speed:
-                        Mocks.Data.itemR[ItemId.EfficiencyModule3].module
+                        Mocks.Data.moduleEntities[ItemId.EfficiencyModule3]
                           .consumption,
                       pollution:
-                        Mocks.Data.itemR[ItemId.EfficiencyModule3].module
+                        Mocks.Data.moduleEntities[ItemId.EfficiencyModule3]
                           .consumption,
                     },
                   },
@@ -395,7 +396,7 @@ describe('RecipeUtility', () => {
             ...{
               [RecipeId.UsedUpUraniumFuelCell]: {
                 ...Mocks.Data.recipeEntities[RecipeId.UsedUpUraniumFuelCell],
-                ...{ in: null, out: {} },
+                ...{ in: undefined, out: {} },
               },
             },
           },
@@ -421,19 +422,19 @@ describe('RecipeUtility', () => {
         ...Mocks.Data,
         ...{
           itemR: {
-            ...Mocks.Data.itemR,
+            ...Mocks.Data.itemEntities,
             ...{
-              [ItemId.BurnerMiningDrill]: new RationalItem({
+              [ItemId.BurnerMiningDrill]: {
                 ...Mocks.Data.itemEntities[ItemId.BurnerMiningDrill],
                 ...{
                   factory: {
-                    speed: 1,
-                    modules: 0,
+                    speed: Rational.one,
+                    modules: Rational.zero,
                     type: EnergyType.Burner,
-                    usage: 0,
+                    usage: Rational.zero,
                   },
                 },
-              }),
+              },
             },
           },
         },
@@ -494,17 +495,17 @@ describe('RecipeUtility', () => {
         ...Mocks.Data,
         ...{
           itemR: {
-            ...Mocks.Data.itemR,
+            ...Mocks.Data.itemEntities,
             ...{
-              [settings.factory]: new RationalItem({
-                ...Mocks.Data.itemEntities[settings.factory],
+              [settings.factory!]: {
+                ...Mocks.Data.itemEntities[settings.factory!],
                 ...{
                   factory: {
-                    ...Mocks.Data.itemEntities[settings.factory].factory,
+                    ...Mocks.Data.itemEntities[settings.factory!].factory,
                     ...{ overclockFactor: 1.321928 },
                   },
                 },
-              }),
+              },
             },
           },
         },
@@ -578,9 +579,9 @@ describe('RecipeUtility', () => {
         ...Mocks.Data,
         ...{
           itemR: {
-            ...Mocks.Data.itemR,
+            ...Mocks.Data.itemEntities,
             ...{
-              [ItemId.AssemblingMachine2]: new RationalItem({
+              [ItemId.AssemblingMachine2]: {
                 ...Mocks.Data.itemEntities[ItemId.AssemblingMachine2],
                 ...{
                   factory: {
@@ -589,7 +590,7 @@ describe('RecipeUtility', () => {
                     ...{ speed: undefined },
                   },
                 },
-              }),
+              },
             },
           },
         },
@@ -640,9 +641,9 @@ describe('RecipeUtility', () => {
             },
           },
           itemR: {
-            ...Mocks.Data.itemR,
+            ...Mocks.Data.itemEntities,
             ...{
-              [ItemId.ProductivityModule3]: new RationalItem({
+              [ItemId.ProductivityModule3]: {
                 ...Mocks.Data.itemEntities[ItemId.ProductivityModule3],
                 ...{
                   module: {
@@ -651,8 +652,8 @@ describe('RecipeUtility', () => {
                     ...{ sprays: 10, proliferator: ItemId.ProductivityModule3 },
                   },
                 },
-              }),
-              [ItemId.ProductivityModule]: new RationalItem({
+              },
+              [ItemId.ProductivityModule]: {
                 ...Mocks.Data.itemEntities[ItemId.ProductivityModule],
                 ...{
                   module: {
@@ -661,7 +662,7 @@ describe('RecipeUtility', () => {
                     ...{ sprays: 10, proliferator: ItemId.ProductivityModule },
                   },
                 },
-              }),
+              },
             },
           },
         },
@@ -790,33 +791,26 @@ describe('RecipeUtility', () => {
       expect(
         RecipeUtility.allowsModules(
           Mocks.Data.recipeEntities[RecipeId.RocketPart],
-          Mocks.Data.itemEntities[ItemId.RocketSilo].factory
+          Mocks.Data.factoryEntities[ItemId.RocketSilo]
         )
       ).toBeTrue();
       expect(
         RecipeUtility.allowsModules(
           Mocks.Data.recipeEntities[RecipeId.SpaceSciencePack],
-          Mocks.Data.itemEntities[ItemId.RocketSilo].factory
+          Mocks.Data.factoryEntities[ItemId.RocketSilo]
         )
       ).toBeFalse();
       // Normal recipes
       expect(
         RecipeUtility.allowsModules(
           Mocks.Data.recipeEntities[ItemId.Coal],
-          Mocks.Data.itemEntities[ItemId.ElectricMiningDrill].factory
+          Mocks.Data.factoryEntities[ItemId.ElectricMiningDrill]
         )
       ).toBeTrue();
       expect(
         RecipeUtility.allowsModules(
           Mocks.Data.recipeEntities[ItemId.Coal],
-          Mocks.Data.itemEntities[ItemId.BurnerMiningDrill].factory
-        )
-      ).toBeFalse();
-      // Null factory
-      expect(
-        RecipeUtility.allowsModules(
-          Mocks.Data.recipeEntities[ItemId.Coal],
-          null
+          Mocks.Data.factoryEntities[ItemId.BurnerMiningDrill]
         )
       ).toBeFalse();
     });
@@ -969,17 +963,23 @@ describe('RecipeUtility', () => {
         ...{ viaId: Mocks.Product1.itemId },
       };
       expect(
-        RecipeUtility.adjustProduct(product, null, null, null, null)
+        RecipeUtility.adjustProduct(
+          product,
+          {},
+          {},
+          Factories.initialFactoriesState,
+          Mocks.AdjustedData
+        )
       ).toEqual(product);
     });
 
     it('should add viaId to products using rateType other than Factories', () => {
       const recipe = RecipeUtility.adjustProduct(
         Mocks.Product1,
-        null,
-        null,
-        null,
-        null
+        {},
+        {},
+        Factories.initialFactoriesState,
+        Mocks.AdjustedData
       );
       expect(recipe).toEqual({
         ...Mocks.Product1,
@@ -1004,7 +1004,7 @@ describe('RecipeUtility', () => {
       expect(
         RecipeUtility.adjustProduct(
           product,
-          null,
+          {},
           Mocks.RecipeSettingsInitial,
           Mocks.FactorySettingsInitial,
           Mocks.Data
@@ -1029,7 +1029,7 @@ describe('RecipeUtility', () => {
       expect(
         RecipeUtility.adjustProduct(
           product,
-          null,
+          {},
           Mocks.RecipeSettingsInitial,
           Mocks.FactorySettingsInitial,
           Mocks.Data
@@ -1040,7 +1040,7 @@ describe('RecipeUtility', () => {
     it('by factories, should set simple viaId', () => {
       const result = RecipeUtility.adjustProduct(
         { id, itemId, rate, rateType },
-        null,
+        {},
         Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
         Mocks.Data
@@ -1055,7 +1055,7 @@ describe('RecipeUtility', () => {
       ]);
       const result = RecipeUtility.adjustProduct(
         { id, itemId: ItemId.PetroleumGas, rate, rateType },
-        null,
+        {},
         Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
         Mocks.Data
@@ -1077,7 +1077,7 @@ describe('RecipeUtility', () => {
       };
       const result = RecipeUtility.adjustProduct(
         { id, itemId, rate, rateType, viaBeacon: ItemId.Beacon },
-        null,
+        {},
         recipeSettings,
         Mocks.FactorySettingsInitial,
         Mocks.Data
@@ -1092,9 +1092,9 @@ describe('RecipeUtility', () => {
       spyOn(RecipeUtility, 'getProductStepData').and.returnValue(null);
       const result = RecipeUtility.adjustProduct(
         { id, itemId: ItemId.PetroleumGas, rate, rateType },
-        null,
+        {},
         Mocks.RecipeSettingsInitial,
-        null,
+        Factories.initialFactoriesState,
         Mocks.Data
       );
       expect(result.viaId).toBeUndefined();
@@ -1104,7 +1104,7 @@ describe('RecipeUtility', () => {
       spyOn(RecipeUtility, 'allowsModules').and.returnValue(false);
       const result = RecipeUtility.adjustProduct(
         { id, itemId, rate, rateType },
-        null,
+        {},
         Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
         Mocks.Data
@@ -1118,7 +1118,7 @@ describe('RecipeUtility', () => {
     it('by factories, nondefault factory, should adjust modules', () => {
       const result = RecipeUtility.adjustProduct(
         { id, itemId, rate, rateType, viaSetting: ItemId.AssemblingMachine2 },
-        null,
+        {},
         Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
         Mocks.Data
@@ -1132,7 +1132,7 @@ describe('RecipeUtility', () => {
     it('by factories, should handle invalid viaBeacon', () => {
       const result = RecipeUtility.adjustProduct(
         { id, itemId, rate, rateType, viaBeacon: 'test' },
-        null,
+        {},
         Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
         Mocks.Data
@@ -1150,7 +1150,7 @@ describe('RecipeUtility', () => {
           viaSetting: ItemId.AssemblingMachine2,
           viaBeacon: 'test',
         },
-        null,
+        {},
         Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
         Mocks.Data
