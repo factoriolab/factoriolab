@@ -40,5 +40,10 @@ describe('DialogContainerComponent', () => {
         [ItemId.SpeedModule, ItemId.SpeedModule2],
       ]);
     });
+
+    it('should handle null match from regex', () => {
+      const result = component.moduleRows(['', ItemId.SpeedModule]);
+      expect(result).toEqual([[''], [ItemId.SpeedModule]]);
+    });
   });
 });

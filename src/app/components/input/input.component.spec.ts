@@ -58,6 +58,14 @@ describe('InputComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('ngOnChanges', () => {
+    it('should handle changes to minimum', () => {
+      component.minimum = '10';
+      fixture.detectChanges();
+      expect(component.child.isMinimum).toBeTrue();
+    });
+  });
+
   describe('changeValue', () => {
     it('should emit a valid value', () => {
       spyOn(component, 'setValue');

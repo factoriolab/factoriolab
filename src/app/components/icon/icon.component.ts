@@ -77,11 +77,7 @@ export class IconComponent implements OnChanges {
               return;
             }
           }
-          if (this.iconId) {
-            this.icon = iconEntities[this.iconId];
-          } else {
-            this.icon = undefined;
-          }
+          this.icon = this.iconId ? iconEntities[this.iconId] : undefined;
         });
     }
   }
@@ -93,8 +89,8 @@ export class IconComponent implements OnChanges {
     this.hover = false;
   }
 
-  round(value: Rational): string {
-    return value.toNumber().toFixed(2);
+  round(value: Rational): number {
+    return Number(value.toNumber().toFixed(2));
   }
 
   power(value: Rational | string | number): string {

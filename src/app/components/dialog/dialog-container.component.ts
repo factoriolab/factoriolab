@@ -21,18 +21,18 @@ export class DialogContainerComponent {
     let row: string[] = [];
     for (const o of sorted) {
       const m = /(.+?)(-\w*\d+)?$/g.exec(o);
-      if (m?.[1]) {
-        if (match == null) {
-          match = m[1];
-        }
+      if (match == null) {
+        match = m?.[1] ?? '';
+      }
 
-        if (match === m[1]) {
-          row.push(o);
-        } else {
-          match = m[1];
+      if (match === m?.[1]) {
+        row.push(o);
+      } else {
+        match = m?.[1] ?? '';
+        if (row.length) {
           rows.push(row);
-          row = [o];
         }
+        row = [o];
       }
     }
 

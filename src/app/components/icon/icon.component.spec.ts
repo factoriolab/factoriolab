@@ -28,7 +28,7 @@ enum DataTest {
 })
 class TestIconComponent {
   @ViewChild(IconComponent) child!: IconComponent;
-  iconId = Mocks.Item1.id;
+  iconId: string | undefined = Mocks.Item1.id;
   scale = false;
   text = Mocks.Item1.name;
   tooltip = 'This is a tooltip';
@@ -93,6 +93,12 @@ describe('IconComponent', () => {
       fixture.detectChanges();
       expect(component.child.icon).toEqual(icon);
     });
+
+    it('should handle undefined icon id', () => {
+      component.iconId = undefined;
+      fixture.detectChanges();
+      expect(component.child.icon).toBeUndefined();
+    });
   });
 
   describe('mouseenter', () => {
@@ -115,8 +121,8 @@ describe('IconComponent', () => {
 
   describe('round', () => {
     it('should truncate long numbers', () => {
-      expect(component.child.round(Rational.from(1, 3))).toEqual('0.33');
-      expect(component.child.round(Rational.hundred)).toEqual('100');
+      expect(component.child.round(Rational.from(1, 3))).toEqual(0.33);
+      expect(component.child.round(Rational.hundred)).toEqual(100);
     });
   });
 

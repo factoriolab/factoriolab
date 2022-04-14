@@ -56,6 +56,14 @@ describe('PickerComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('ngOnChanges', () => {
+    it('should select tab', () => {
+      component.selected = ItemId.BurnerMiningDrill;
+      fixture.detectChanges();
+      expect(component.child.tab).toEqual(CategoryId.Production);
+    });
+  });
+
   describe('clickOpen', () => {
     it('should set up the dialog', () => {
       component.child.search = true;
@@ -64,8 +72,8 @@ describe('PickerComponent', () => {
       expect(component.child.open).toBeTrue();
       expect(component.child.search).toBeFalse();
       expect(component.child.searchValue).toBe('');
-      expect(component.child.categoryIds.length).toEqual(4);
-      expect(Object.keys(component.child.categoryItemRows).length).toEqual(4);
+      expect(component.child.categoryIds.length).toEqual(6);
+      expect(Object.keys(component.child.categoryItemRows).length).toEqual(6);
     });
   });
 
