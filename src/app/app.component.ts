@@ -29,6 +29,7 @@ import {
   getMatrixResult as getSimplexResult,
 } from './store/products';
 import { getDatasets, getGame } from './store/settings';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'lab-root',
@@ -80,8 +81,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     public store: Store<State>,
     public titleService: Title,
     private cd: ChangeDetectorRef,
+    protected translate: TranslateService,
     public state: StateService // Included only to initialize the service
-  ) {}
+  ) {
+    translate.setDefaultLang('en');
+  }
 
   ngOnInit(): void {
     this.datasets$ = this.store.select(getDatasets);

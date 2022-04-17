@@ -206,6 +206,10 @@ export class SettingsContainerComponent implements OnInit {
     this.store.dispatch(new Preferences.SetSimplexAction(value));
   }
 
+  setLanguage(value: string): void {
+    this.store.dispatch(new Preferences.SetLanguageAction(value));
+  }
+
   setPowerUnit(value: PowerUnit): void {
     this.store.dispatch(new Preferences.SetPowerUnitAction(value));
   }

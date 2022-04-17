@@ -1,5 +1,5 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -43,6 +43,8 @@ import { reducers, metaReducers } from './store';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
 import { ProductsEffects } from './store/products/products.effects';
 import { FactoriesEffects } from './store/factories/factories.effects';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 @NgModule({
   declarations: [
@@ -75,6 +77,16 @@ import { FactoriesEffects } from './store/factories/factories.effects';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (http: HttpClient) => {
+          return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+        },
+        deps: [HttpClient]
+      },
+      defaultLanguage: 'en',
+    }),
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,

@@ -1,5 +1,5 @@
 <div class="flex">
-  <h2 class="header">Settings</h2>
+  <h2 class="header">{{'setting.name' | translate}}</h2>
   <div class="flex">
     <button
       class="dialog-button"
@@ -894,6 +894,22 @@ when simplex is slow and causes lag."
               >Disabling simplex improves performance but usually results in an
               incomplete solution.</span
             >
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <lab-info
+              text="Language"
+              tooltip="Switch current display language."
+            ></lab-info>
+          </td>
+          <td>
+            <lab-options
+              title="Select display language"
+              [selected]="preferences.language"
+              [options]="languageOptions"
+              (selectId)="changeLanguage($event)"
+            ></lab-options>
           </td>
         </tr>
       </table>

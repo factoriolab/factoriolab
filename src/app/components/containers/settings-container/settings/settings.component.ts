@@ -45,6 +45,8 @@ import { FactoriesState } from '~/store/factories';
 import { ColumnsState, PreferencesState } from '~/store/preferences';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 import { BrowserUtility } from '~/utilities';
+import { Language } from '~/models/language';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'lab-settings',
@@ -100,6 +102,7 @@ export class SettingsComponent implements OnInit, OnChanges {
   @Output() setDisplayRate = new EventEmitter<PreviousPayload<DisplayRate>>();
   @Output() setColumns = new EventEmitter<ColumnsState>();
   @Output() setSimplex = new EventEmitter<boolean>();
+  @Output() setLanguage = new EventEmitter<string>();
   @Output() setPowerUnit = new EventEmitter<PowerUnit>();
   @Output() setProliferatorSpray = new EventEmitter<string>();
 
@@ -128,6 +131,16 @@ export class SettingsComponent implements OnInit, OnChanges {
       name: 'Disabled',
     },
   ];
+  languageOptions: Language[] = [
+    {
+      id: 'en',
+      name: 'English',
+    },
+    {
+      id: 'cn',
+      name: '简体中文',
+    }
+  ];
   baseOptions: ModInfo[] = [];
   presetOptions: IdName<Preset>[];
   factoryOptions: string[];
@@ -153,7 +166,8 @@ export class SettingsComponent implements OnInit, OnChanges {
   constructor(
     private ref: ChangeDetectorRef,
     private router: Router,
-    private routerSvc: RouterService
+    private routerSvc: RouterService,
+    private translateSvc: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -281,5 +295,10 @@ export class SettingsComponent implements OnInit, OnChanges {
     } else {
       this.setBeaconReceivers.emit('1');
     }
+  }
+
+  changeLanguage($event: string): void {
+    this.translateSvc.use($event);
+    this.setLanguage.emit($event);
   }
 }
