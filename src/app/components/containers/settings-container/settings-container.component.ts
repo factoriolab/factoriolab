@@ -32,6 +32,8 @@ import * as Factories from '~/store/factories';
 import * as Preferences from '~/store/preferences';
 import * as Settings from '~/store/settings';
 import { SettingsComponent } from './settings/settings.component';
+import {getLanguageModifiers} from "~/store/preferences";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'lab-settings-container',
@@ -61,7 +63,8 @@ export class SettingsContainerComponent implements OnInit {
 
   constructor(
     private ref: ElementRef<HTMLElement>,
-    private store: Store<State>
+    private store: Store<State>,
+    private translateSvc: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -71,6 +74,9 @@ export class SettingsContainerComponent implements OnInit {
     this.settings$ = this.store.select(Settings.getSettings);
     this.preferences$ = this.store.select(Preferences.preferencesState);
     this.columns$ = this.store.select(Preferences.getColumnsState);
+    this.store.select(Preferences.getLanguageModifiers).subscribe(r => {
+      this.translateSvc.use(r.getLanguage);
+    });
   }
 
   @HostListener('document:click', ['$event'])
