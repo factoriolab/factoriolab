@@ -74,7 +74,7 @@
           class="small"
           href="https://github.com/factoriolab/factorio-lab/issues/new?assignees=&labels=mod+support&template=mod-request.md&title="
           target="_blank"
-        >Request a mod</a
+        >{{ 'setting.requestAMod' | translate }}</a
         >
       </div>
       <table class="thin">
@@ -157,9 +157,8 @@
         <tr>
           <td>
             <lab-info
-              text="Columns & precision"
-              tooltip="Click to select the visible columns and decimal
-or fractional precision for visible columns."
+              [text]="'setting.columnsAndPrecision' | translate"
+              [tooltip]="'setting.columnsAndPrecisionTooltip' | translate"
             ></lab-info>
           </td>
           <td>
@@ -169,7 +168,7 @@ or fractional precision for visible columns."
               [columns]="columns"
               (setColumns)="setColumns.emit($event)"
             >
-              <button class="grow" title="Set columns visibility and precision">
+              <button class="grow" [title]="'setting.columnsAndPrecisionTitle' | translate">
                 <span class="text">{{ columnsButton }}</span>
               </button>
             </lab-columns>

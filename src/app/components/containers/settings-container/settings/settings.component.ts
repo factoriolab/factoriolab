@@ -195,7 +195,9 @@ export class SettingsComponent implements OnInit, OnChanges {
     const numCols = Object.keys(this.columns).filter(
       (c) => this.columns[c].show
     ).length;
-    this.columnsButton = `${numCols} Visible`;
+    this.translateSvc.get('setting.visible').subscribe(r => {
+      this.columnsButton = `${numCols} ${r}`;
+    });
     this.baseOptions = this.base.filter((b) => b.game === this.data.game);
   }
 

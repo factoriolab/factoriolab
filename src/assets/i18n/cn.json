@@ -22,6 +22,7 @@
     "saveState": "保存状态",
     "cancel": "取消",
     "recipes": "配方",
+    "requestAMod": "Mod列表中没有我想要的mod",
     "game": "游戏",
     "gameTooltip": "请选择在哪个游戏中使用，\n以及标题栏中的链接。",
     "gameTitle": "选择游戏",
@@ -33,6 +34,10 @@
     "difficulty": "难度",
     "difficultyTooltip": "请选择是使用普通配方\n还是贵重的困难配方。",
     "difficultyTitle": "请选择配方的难度",
+    "columnsAndPrecision": "列 & 精度",
+    "columnsAndPrecisionTooltip": "点击选择哪些列可见，以及这些列的小数精度位。",
+    "columnsAndPrecisionTitle": "设置列的可见性以及列的精度",
+    "visible": "个列可见",
     "saveStatesTooltip": "点击编辑后输入名称，然后保存当前计算状态。\n在下拉框中选择已保存的状态后重新加载。",
     "selectSavedState": "选择已保存的状态",
     "deleteSavedState": "删除已保存的状态",
@@ -53,7 +58,29 @@
     "enableAll": "全部允许",
     "disableAll": "全部禁用",
     "cancel": "取消",
-    "confirm": "确认"
+    "confirm": "确定"
+  },
+  "columns": {
+    "selectColumns": "请选择列",
+    "visibility": "是否可见",
+    "precision": "精度",
+    "decimals": "小数位",
+    "decimalsPlaceholder": "小数位",
+    "fractions": "分数形式",
+    "example": "例",
+    "cancel": "取消",
+    "confirm": "确定",
+    "tree": "树结构",
+    "surplus": "剩余",
+    "items": "物品",
+    "belts": "传送带",
+    "wagons": "Wagons",
+    "factories": "工厂",
+    "overclock": "Overclock",
+    "beacons": "插件",
+    "power": "电量",
+    "pollution": "污染",
+    "link": "链接"
   },
   "products": {
     "title": "产物",
@@ -81,7 +108,7 @@
     }
   },
   "list": {
-    "tree": "树形结构",
+    "tree": "树结构",
     "belts": "传送带",
     "factories": "工厂",
     "power": "电量"
