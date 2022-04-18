@@ -8,6 +8,7 @@ import {
 import { Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { getLanguageModifiers } from './store/preferences';
 
 import { environment } from 'src/environments';
 import {
@@ -81,10 +82,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     public store: Store<State>,
     public titleService: Title,
     private cd: ChangeDetectorRef,
-    protected translate: TranslateService,
+    protected translateSvc: TranslateService,
     public state: StateService // Included only to initialize the service
   ) {
-    translate.setDefaultLang('en');
+    translateSvc.setDefaultLang('en');
   }
 
   ngOnInit(): void {
@@ -112,6 +113,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (this.lsHidePoll) {
       this.showPoll = false;
     }
+    this.store.select(getLanguageModifiers).subscribe(r => {
+      this.translateSvc.use(r.getLanguage);
+    });
   }
 
   /**
