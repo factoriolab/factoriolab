@@ -1,4 +1,14 @@
 {
+  "title": {
+    "lab": "Factorio Calculator",
+    "dsp": "Dyson Sphere Program Calculator",
+    "sfy": "Satisfactory Calculator"
+  },
+  "game": {
+    "Factorio": "Factorio",
+    "DysonSphereProgram": "Dyson Sphere Program",
+    "Satisfactory": "Satisfactory"
+  },
   "setting": {
     "name": "Setting"
   }

@@ -1,4 +1,14 @@
 {
+  "title": {
+    "lab": "异星工厂计算器",
+    "dsp": "戴森球计划计算器",
+    "sfy": "幸福工厂计算器"
+  },
+  "game": {
+    "Factorio": "异星工厂",
+    "DysonSphereProgram": "戴森球计划",
+    "Satisfactory": "幸福工厂"
+  },
   "setting": {
     "name": "设置"
   }
