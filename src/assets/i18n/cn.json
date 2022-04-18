@@ -4,6 +4,12 @@
     "dsp": "戴森球计划计算器",
     "sfy": "幸福工厂计算器"
   },
+  "app": {
+    "list": "列表",
+    "flow": "流线图",
+    "matrix": "矩形图",
+    "settings": "设置"
+  },
   "game": {
     "Factorio": "异星工厂",
     "DysonSphereProgram": "戴森球计划",
@@ -11,5 +17,32 @@
   },
   "setting": {
     "name": "设置"
+  },
+  "products": {
+    "title": "产物",
+    "produce": "生产",
+    "removeProduct": "移除该产物",
+    "changeRateType": "改变速率类型",
+    "from": "目标",
+    "of": "of",
+    "using": "using",
+    "addAProduct": "添加一个产物",
+    "selectDisplayRate": "选择显示速率"
+  },
+  "picker": {
+    "select": "请选择你要生产的物品"
+  },
+  "options": {
+    "DisplayRate": {
+      "PerSecond": "每秒几个",
+      "PerMinute": "每分钟几个",
+      "PerHour": "每小时几个"
+    }
+  },
+  "list": {
+    "tree": "树形结构",
+    "belts": "传送带",
+    "factories": "工厂",
+    "power": "电量"
   }
 }

@@ -4,6 +4,12 @@
     "dsp": "Dyson Sphere Program Calculator",
     "sfy": "Satisfactory Calculator"
   },
+  "app": {
+    "list": "List",
+    "flow": "Flow",
+    "matrix": "Matrix",
+    "settings": "Settings"
+  },
   "game": {
     "Factorio": "Factorio",
     "DysonSphereProgram": "Dyson Sphere Program",
@@ -11,5 +17,32 @@
   },
   "setting": {
     "name": "Setting"
+  },
+  "products": {
+    "title": "Products",
+    "produce": "Produce",
+    "removeProduct": "Remove product",
+    "changeRateType": "Change rate type",
+    "from": "from",
+    "of": "of",
+    "using": "using",
+    "addAProduct": "Add a product",
+    "selectDisplayRate": "Select display rate"
+  },
+  "picker": {
+    "select": "Select an item to produce"
+  },
+  "options": {
+    "DisplayRate": {
+      "PerSecond": "Units per second",
+      "PerMinute": "Units per minute",
+      "PerHour": "Units per hour"
+    }
+  },
+  "list": {
+    "tree": "Tree",
+    "belts": "Belts",
+    "factories": "Factories",
+    "power": "Power"
   }
 }

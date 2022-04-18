@@ -65,24 +65,24 @@
             routerLinkActive="active"
             queryParamsHandling="preserve"
           >
-            <span>List</span>
+            <span>{{ 'app.list' | translate }}</span>
           </li>
           <li
             routerLink="/flow"
             routerLinkActive="active"
             queryParamsHandling="preserve"
           >
-            <span>Flow</span>
+            <span>{{ 'app.flow' | translate }}</span>
           </li>
           <li
             routerLink="/matrix"
             routerLinkActive="active"
             queryParamsHandling="preserve"
           >
-            <span>Matrix</span>
+            <span>{{ 'app.matrix' | translate }}</span>
           </li>
           <li *ngIf="!showSettings" (click)="showSettings = true">
-            <span>Settings</span>
+            <span>{{ 'app.settings' | translate }}</span>
           </li>
         </ul>
         <div class="panel">

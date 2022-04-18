@@ -15,7 +15,7 @@
           >
         </div>
       </th>
-      <th *ngIf="columns[Column.Tree].show"><div class="header">Tree</div></th>
+      <th *ngIf="columns[Column.Tree].show"><div class="header">{{ 'list.tree' | translate }}</div></th>
       <th class="num-icon">
         <div class="header">
           Items{{ rateLabel }}
@@ -30,7 +30,7 @@
       </th>
       <th class="num-icon" *ngIf="columns[Column.Belts].show">
         <div class="header">
-          Belts
+          {{ 'list.belts' | translate }}
           <button
             *ngIf="modifiedBelt"
             title="Undo all belt modifications"
@@ -54,7 +54,7 @@
       </th>
       <th colspan="3">
         <div class="header">
-          Factories
+          {{ 'list.factories' | translate }}
           <button
             *ngIf="modifiedFactory"
             title="Undo all factory modifications"
@@ -91,7 +91,7 @@
         </div>
       </th>
       <th class="num-unit" *ngIf="columns[Column.Power].show">
-        <div class="header">Power</div>
+        <div class="header">{{ 'list.power' | translate }}</div>
       </th>
       <th *ngIf="columns[Column.Pollution].show">
         <div class="header">Pollution{{ rateLabel }}</div>
