@@ -2,17 +2,17 @@ import { IdName } from '../id-name';
 import { Game } from './game';
 
 export enum Column {
-  Tree = 'columns.tree',
-  Surplus = 'columns.surplus',
-  Items = 'columns.items',
-  Belts = 'columns.belts',
-  Wagons = 'columns.wagons',
-  Factories = 'columns.factories',
-  Overclock = 'columns.overclock',
-  Beacons = 'columns.beacons',
-  Power = 'columns.power',
-  Pollution = 'columns.pollution',
-  Link = 'columns.link',
+  Tree = 'Tree',
+  Surplus = 'Surplus',
+  Items = 'Items',
+  Belts = 'Belts',
+  Wagons = 'Wagons',
+  Factories = 'Factories',
+  Overclock = 'Overclock',
+  Beacons = 'Beacons',
+  Power = 'Power',
+  Pollution = 'Pollution',
+  Link = 'Link',
 }
 
 export const AllColumns = [
