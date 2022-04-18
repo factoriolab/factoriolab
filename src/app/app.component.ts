@@ -108,7 +108,9 @@ export class AppComponent implements OnInit, AfterViewInit {
           this.homeHref = 'satisfactory';
           break;
       }
-      this.titleService.setTitle(`${APP} | ${this.title}`);
+      this.translateSvc.get(this.title).subscribe(r => {
+        this.titleService.setTitle(`${APP} | ${r}`);
+      });
     });
     if (this.lsHidePoll) {
       this.showPoll = false;
