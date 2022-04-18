@@ -3,7 +3,7 @@
   <div class="flex">
     <button
       class="dialog-button"
-      title="Delete all settings"
+      [title]="'setting.deleteAllSettings' | translate"
       (click)="clickResetSettings()"
     >
       <i class="material-icons">delete</i>
@@ -18,29 +18,28 @@
     <div>
       <div class="header">
         <lab-info
-          text="Saved states"
-          tooltip="Click edit to name and save the current calculator state.
-Select a saved state from the dropdown to load it into the calculator."
+          [text]="'setting.saveStates' | translate"
+          [tooltip]="'setting.saveStatesTooltip' | translate"
         ></lab-info>
       </div>
       <div class="flex states">
         <ng-container *ngIf="!editState; else stateInput">
           <lab-options
-            title="Select saved state"
+            [title]="'setting.selectSavedState' | translate"
             [selected]="state"
             [options]="savedStates"
             (selectId)="setState($event)"
           ></lab-options>
           <button
             *ngIf="state"
-            title="Delete saved state"
+            [title]="'setting.deleteSavedState' | translate"
             (click)="clickRemoveState()"
           >
             <i class="material-icons">delete</i>
           </button>
           <button
             *ngIf="BrowserUtility.search"
-            title="Name and save state"
+            [title]="'setting.nameAndSaveState' | translate"
             (click)="toggleEditState()"
           >
             <i class="material-icons">edit</i>
@@ -49,17 +48,17 @@ Select a saved state from the dropdown to load it into the calculator."
         <ng-template #stateInput>
           <input
             type="text"
-            placeholder="Enter a name..."
+            [placeholder]="'setting.enterAName' | translate"
             [(ngModel)]="tempState"
           />
           <button
             *ngIf="tempState && BrowserUtility.search"
-            title="Save state"
+            [title]="'setting.saveState' | translate"
             (click)="clickSaveState()"
           >
             <i class="material-icons">save</i>
           </button>
-          <button title="Cancel" (click)="toggleEditState()">
+          <button [title]="'setting.cancel' | translate" (click)="toggleEditState()">
             <i class="material-icons">close</i>
           </button>
         </ng-template>
@@ -69,27 +68,26 @@ Select a saved state from the dropdown to load it into the calculator."
   <div class="hole">
     <div>
       <div class="flex tween">
-        <div class="header">Recipes</div>
+        <div class="header">{{ 'setting.recipes' | translate }}</div>
         <a
           *ngIf="data.game === Game.Factorio"
           class="small"
           href="https://github.com/factoriolab/factorio-lab/issues/new?assignees=&labels=mod+support&template=mod-request.md&title="
           target="_blank"
-          >Request a mod</a
+        >Request a mod</a
         >
       </div>
       <table class="thin">
         <tr>
           <td>
             <lab-info
-              text="Game"
-              tooltip="Select which game calculator to use,
-or use the links in the title bar."
+              [text]="'setting.game' | translate"
+              [tooltip]="'setting.gameTooltip' | translate"
             ></lab-info>
           </td>
           <td>
             <lab-options
-              title="Select game"
+              [title]="'setting.gameTitle' | translate"
               [selected]="data.game"
               [options]="GameOptions"
               (selectId)="setGame($event)"
@@ -99,13 +97,13 @@ or use the links in the title bar."
         <tr *ngIf="data.game === Game.Factorio">
           <td>
             <lab-info
-              text="Mod set"
-              tooltip="Select which version or set of mods in Factorio to use."
+              [text]="'setting.modSet' | translate"
+              [tooltip]="'setting.modSetTooltip' | translate"
             ></lab-info>
           </td>
           <td>
             <lab-options
-              title="Select base recipe set"
+              [title]="'setting.modSetTitle' | translate"
               [selected]="settings.baseId"
               [options]="baseOptions"
               (selectId)="setBase.emit($event)"
@@ -115,9 +113,8 @@ or use the links in the title bar."
         <tr>
           <td>
             <lab-info
-              text="Disabled"
-              tooltip="Click to modify which recipes are disabled.
-Disabled recipes will not be used in the solution."
+              [text]="'setting.disabled' | translate"
+              [tooltip]="'setting.disabledTooltip' | translate"
             ></lab-info>
           </td>
           <td>
@@ -137,14 +134,13 @@ Disabled recipes will not be used in the solution."
         <tr *ngIf="data.game === Game.Factorio">
           <td>
             <lab-info
-              text="Difficulty"
-              tooltip="Select whether to use Normal or
-Expensive difficulty recipes."
+              [text]="'setting.difficulty' | translate"
+              [tooltip]="'setting.difficultyTooltip' | translate"
             ></lab-info>
           </td>
           <td>
             <lab-options
-              title="Select recipe difficulty"
+              [title]="'setting.difficultyTitle' | translate"
               [selected]="settings.expensive"
               [options]="difficultyOptions"
               (selectId)="setExpensive.emit($event)"
@@ -156,7 +152,7 @@ Expensive difficulty recipes."
   </div>
   <div class="hole">
     <div>
-      <div class="header">Display</div>
+      <div class="header">{{ 'setting.display' | translate }}</div>
       <table class="x-wide">
         <tr>
           <td>
@@ -182,13 +178,13 @@ or fractional precision for visible columns."
         <tr>
           <td>
             <lab-info
-              text="Display rates as"
-              tooltip="Set the unit of time to use in rates."
+              [text]="'setting.displayRate' | translate"
+              [tooltip]="'setting.displayRateTooltip' | translate"
             ></lab-info>
           </td>
           <td>
             <lab-options
-              title="Select display rate"
+              [title]="'setting.displayRateTitle' | translate"
               [selected]="settings.displayRate"
               [options]="DisplayRateOptions"
               (selectId)="
@@ -203,13 +199,13 @@ or fractional precision for visible columns."
         <tr *ngIf="columns[Column.Power].show">
           <td>
             <lab-info
-              text="Power units"
-              tooltip="Set the unit of power to use in the power column."
+              [text]="'setting.powerUnit' | translate"
+              [tooltip]="'setting.powerUnitTooltip' | translate"
             ></lab-info>
           </td>
           <td>
             <lab-options
-              title="Select power units"
+              [title]="'setting.powerUnitTitle' | translate"
               [selected]="preferences.powerUnit"
               [options]="PowerUnitOptions"
               (selectId)="setPowerUnit.emit($event)"
@@ -751,7 +747,7 @@ This does not affect burners that use non-chemical fuels."
                 <a
                   href="https://wiki.factorio.com/Fluid_system#Pipelines"
                   target="_blank"
-                  >Wiki</a
+                >Wiki</a
                 >
               </div>
             </div>
@@ -763,7 +759,7 @@ This does not affect burners that use non-chemical fuels."
             <a
               href="https://wiki.factorio.com/Inserters#Inserter_Throughput"
               target="_blank"
-              >Wiki</a
+            >Wiki</a
             >
           </td>
           <td>
@@ -891,7 +887,7 @@ when simplex is slow and causes lag."
         <tr *ngIf="!preferences.simplex">
           <td colspan="2">
             <span class="invalid"
-              >Disabling simplex improves performance but usually results in an
+            >Disabling simplex improves performance but usually results in an
               incomplete solution.</span
             >
           </td>

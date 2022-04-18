@@ -114,11 +114,11 @@ export class SettingsComponent implements OnInit, OnChanges {
   difficultyOptions: IdName<boolean>[] = [
     {
       id: false,
-      name: 'Normal',
+      name: 'options.recipeDifficulty.normal',
     },
     {
       id: true,
-      name: 'Expensive',
+      name: 'options.recipeDifficulty.expensive',
     },
   ];
   enabledOptions: IdName<boolean>[] = [

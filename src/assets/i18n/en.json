@@ -16,7 +16,44 @@
     "Satisfactory": "Satisfactory"
   },
   "setting": {
-    "name": "Setting"
+    "name": "Setting",
+    "deleteAllSettings": "Delete all settings",
+    "saveStates": "Saved states",
+    "saveState": "Save state",
+    "cancel": "Cancel",
+    "recipes": "Recipes",
+    "game": "Game",
+    "gameTooltip": "Select which game calculator to use,\nor use the links in the title bar.",
+    "gameTitle": "Select game",
+    "modSet": "Mod set",
+    "modSetTooltip": "Select which version or set of mods in Factorio to use.",
+    "modSetTitle": "Select base recipe set",
+    "disabled": "Disabled",
+    "disabledTooltip": "Click to modify which recipes are disabled.\nDisabled recipes will not be used in the solution.",
+    "difficulty": "Difficulty",
+    "difficultyTooltip": "Select whether to use Normal or\nExpensive difficulty recipes.",
+    "difficultyTitle": "Select recipe difficulty",
+    "saveStatesTooltip": "Click edit to name and save the current calculator state.\nSelect a saved state from the dropdown to load it into the calculator.",
+    "selectSavedState": "Select saved state",
+    "deleteSavedState": "Delete saved state",
+    "nameAndSaveState": "Name and save state",
+    "enterAName": "Enter a name...",
+    "display": "Display",
+    "displayRate": "Display rates as",
+    "displayRateTooltip": "Set the unit of time to use in rates.",
+    "displayRateTitle": "Select display rate",
+    "powerUnit": "Power units",
+    "powerUnitTooltip": "Set the unit of power to use in the power column.",
+    "powerUnitTitle": "Select power units"
+  },
+  "toggle": {
+    "title": "Select disabled recipes",
+    "recipe": "Recipe",
+    "selectRecipes": "Select recipes",
+    "enableAll": "Enable all",
+    "disableAll": "Disable all",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
   },
   "products": {
     "title": "Products",
@@ -37,6 +74,10 @@
       "PerSecond": "Units per second",
       "PerMinute": "Units per minute",
       "PerHour": "Units per hour"
+    },
+    "recipeDifficulty": {
+      "normal": "Normal",
+      "expensive": "Expensive"
     }
   },
   "list": {
