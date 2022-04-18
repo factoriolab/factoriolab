@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
 import { Mocks, TestUtility, ItemId, RecipeId } from 'src/tests';
@@ -158,6 +159,7 @@ describe('ListComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         StoreModule.forRoot(reducers, { metaReducers }),
+        TranslateModule.forRoot(),
       ],
       providers: [RouterService],
     }).compileComponents();

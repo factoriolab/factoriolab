@@ -204,6 +204,7 @@ export const Preferences: PreferencesState = {
   sankeyAlign: SankeyAlign.Justify,
   simplex: true,
   powerUnit: PowerUnit.Auto,
+  language: 'en',
 };
 
 function node(i: number): Node {
