@@ -109,8 +109,28 @@
   },
   "list": {
     "tree": "Tree",
+    "items": "Items",
     "belts": "Belts",
+    "wagons": "Wagons",
     "factories": "Factories",
-    "power": "Power"
+    "beacons": "Beacons",
+    "beaconsTitle": "Undo all beacon modifications",
+    "power": "Power",
+    "pollution": "Pollution",
+    "each": "Each",
+    "total": "Total",
+    "selectABelt": "Select a belt",
+    "clickToChangeBelt": "Click to change belt",
+    "selectAPipe": "Select a pipe",
+    "clickToChangePipe": "Click to change pipe",
+    "selectACargoWagon": "Select a cargo wagon",
+    "clickToChangeCargoWagon": "Click to change cargo wagon",
+    "selectAFluidWagon": "Select a fluid wagon",
+    "clickToChangeFluidWagon": "Click to change fluid wagon",
+    "selectAFactory": "Select a factory",
+    "clickToChangeFactory": "Click to change factory",
+    "selectAModule": "Select a module",
+    "selectAProliferator": "Select a proliferator",
+    "selectResourcePurity": "Select resource purity"
   }
 }

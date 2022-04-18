@@ -109,8 +109,28 @@
   },
   "list": {
     "tree": "树结构",
+    "items": "物品",
     "belts": "传送带",
+    "wagons": "车厢",
     "factories": "工厂",
-    "power": "电量"
+    "beacons": "插件",
+    "beaconsTitle": "取消所有对插件的修改",
+    "power": "电量",
+    "pollution": "污染",
+    "each": "每",
+    "total": "总计",
+    "selectABelt": "选择一种传送带",
+    "clickToChangeBelt": "点击改变传送带",
+    "selectAPipe": "选择一种管道",
+    "clickToChangePipe": "点击改变管道",
+    "selectACargoWagon": "选择一种货运车厢",
+    "clickToChangeCargoWagon": "点击改变货运车厢",
+    "selectAFluidWagon": "选择一种液体车厢",
+    "clickToChangeFluidWagon": "点击改变液体车厢",
+    "selectAFactory": "选择一种工厂",
+    "clickToChangeFactory": "点击改变工厂",
+    "selectAModule": "选择一种插件",
+    "selectAProliferator": "选择一种增产剂",
+    "selectResourcePurity": "选择资源纯度"
   }
 }

@@ -18,7 +18,7 @@
       <th *ngIf="columns[Column.Tree].show"><div class="header">{{ 'list.tree' | translate }}</div></th>
       <th class="num-icon">
         <div class="header">
-          Items{{ rateLabel }}
+          {{ 'list.items' | translate }}{{ rateLabel }}
           <button
             *ngIf="modifiedIgnore"
             title="Undo all ignored steps"
@@ -42,7 +42,7 @@
       </th>
       <th class="num-icon" *ngIf="columns[Column.Wagons].show">
         <div class="header">
-          Wagons{{ rateLabel }}
+          {{ 'list.wagons' | translate }}{{ rateLabel }}
           <button
             *ngIf="modifiedWagon"
             title="Undo all wagon modifications"
@@ -78,23 +78,23 @@
       </th>
       <th *ngIf="columns[Column.Beacons].show" colspan="3">
         <div class="header">
-          <span *ngIf="settings.beaconReceivers" class="sub left">Each</span>
-          <span>Beacons</span>
+          <span *ngIf="settings.beaconReceivers" class="sub left">{{ 'list.each' | translate }}</span>
+          <span>{{ 'list.beacons' | translate }}</span>
           <button
             *ngIf="modifiedBeacons"
-            title="Undo all beacon modifications"
+            [title]="'list.beaconsTitle' | translate"
             (click)="resetBeacons.emit()"
           >
             <i class="material-icons">undo</i>
           </button>
-          <span *ngIf="settings.beaconReceivers" class="sub right">Total</span>
+          <span *ngIf="settings.beaconReceivers" class="sub right">{{ 'list.total' | translate }}</span>
         </div>
       </th>
       <th class="num-unit" *ngIf="columns[Column.Power].show">
         <div class="header">{{ 'list.power' | translate }}</div>
       </th>
       <th *ngIf="columns[Column.Pollution].show">
-        <div class="header">Pollution{{ rateLabel }}</div>
+        <div class="header">{{ 'list.pollution' | translate }}{{ rateLabel }}</div>
       </th>
       <!-- Reset / Link -->
       <th *ngIf="columns[Column.Link].show && mode === ListMode.All">
@@ -200,7 +200,7 @@
               }}</span>
               <lab-select
                 *ngIf="data.beltIds.indexOf(belt) !== -1; else pipePicker"
-                header="Select a belt"
+                [header]="'list.selectABelt' | translate"
                 [data]="data"
                 [selected]="belt"
                 [options]="data.beltIds"
@@ -218,7 +218,7 @@
               >
                 <lab-icon
                   class="button"
-                  title="Click to change belt"
+                  [title]="'list.clickToChangeBelt' | translate"
                   [data]="data"
                   [iconId]="belt"
                   [tooltip]="data.itemEntities[belt].name"
@@ -229,7 +229,7 @@
               <ng-template #pipePicker>
                 <lab-select
                   *ngIf="data.pipeIds.indexOf(belt) !== -1; else pipeIcon"
-                  header="Select a pipe"
+                  [header]="'list.selectAPipe' | translate"
                   [data]="data"
                   [selected]="belt"
                   [options]="data.pipeIds"
@@ -244,7 +244,7 @@
                 >
                   <lab-icon
                     class="button"
-                    title="Click to change pipe"
+                    [title]="'list.clickToChangePipe' | translate"
                     [data]="data"
                     [iconId]="belt"
                     [tooltip]="data.itemEntities[belt].name"
@@ -279,7 +279,7 @@
                   *ngIf="data.cargoWagonIds.length > 1; else wagonDefault"
                 >
                   <lab-select
-                    header="Select a cargo wagon"
+                    [header]="'list.selectACargoWagon' | translate"
                     [data]="data"
                     [selected]="wagon"
                     [options]="data.cargoWagonIds"
@@ -293,7 +293,7 @@
                   >
                     <lab-icon
                       class="button"
-                      title="Click to change cargo wagon"
+                      [title]="'list.clickToChangeCargoWagon' | translate"
                       [data]="data"
                       [iconId]="wagon"
                       [tooltip]="data.itemEntities[wagon].name"
@@ -307,7 +307,7 @@
                   *ngIf="data.fluidWagonIds.length > 1; else wagonDefault"
                 >
                   <lab-select
-                    header="Select a fluid wagon"
+                    [header]="'list.selectAFluidWagon' | translate"
                     [data]="data"
                     [selected]="wagon"
                     [options]="data.fluidWagonIds"
@@ -321,7 +321,7 @@
                   >
                     <lab-icon
                       class="button"
-                      title="Click to change fluid wagon"
+                      [title]="'list.clickToChangeFluidWagon' | translate"
                       [data]="data"
                       [iconId]="wagon"
                       [tooltip]="data.itemEntities[wagon].name"
@@ -378,7 +378,7 @@
                       "
                     >
                       <lab-select
-                        header="Select a factory"
+                        [header]="'list.selectAFactory' | translate"
                         [data]="data"
                         [selected]="factory"
                         [options]="recipe.producers"
@@ -388,7 +388,7 @@
                       >
                         <lab-icon
                           class="button"
-                          title="Click to change factory"
+                          [title]="'list.clickToChangeFactory' | translate"
                           [data]="data"
                           [iconId]="factory"
                           [tooltip]="data.itemEntities[factory].name"
@@ -418,11 +418,11 @@
                 <lab-select
                   *ngFor="let mod of modules; index as i; first as first"
                   [header]="
-                    data.game === Game.Factorio
-                      ? 'Select a module'
+                    (data.game === Game.Factorio
+                      ? 'list.selectAModule'
                       : data.game === Game.DysonSphereProgram
-                      ? 'Select a proliferator'
-                      : 'Select resource purity'
+                      ? 'list.selectAProliferator'
+                      : 'list.selectResourcePurity') | translate
                   "
                   [data]="data"
                   [selected]="mod"
