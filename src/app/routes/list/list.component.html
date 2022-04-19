@@ -17,7 +17,7 @@
         </th>
         <th class="num-icon">
           <div class="header">
-            Items{{ vm.settings.displayRate | labDisplayRateLabel }}
+            Items{{ vm.settings.displayRate | displayRateLabel }}
             <button
               *ngIf="vm.itemsModified.ignore"
               title="Undo all ignored steps"
@@ -41,7 +41,7 @@
         </th>
         <th class="num-icon" *ngIf="vm.columns[Column.Wagons].show">
           <div class="header">
-            Wagons{{ vm.settings.displayRate | labDisplayRateLabel }}
+            Wagons{{ vm.settings.displayRate | displayRateLabel }}
             <button
               *ngIf="vm.itemsModified.wagons"
               title="Undo all wagon modifications"
@@ -98,7 +98,7 @@
         </th>
         <th *ngIf="vm.columns[Column.Pollution].show">
           <div class="header">
-            Pollution{{ vm.settings.displayRate | labDisplayRateLabel }}
+            Pollution{{ vm.settings.displayRate | displayRateLabel }}
           </div>
         </th>
         <!-- Reset / Link -->
@@ -189,13 +189,12 @@
                   *ngIf="step.surplus && step.surplus.nonzero()"
                   class="monospace"
                   >(+{{
-                    step.surplus
-                      | labRate: vm.effectivePrecision[Column.Surplus]
+                    step.surplus | rate: vm.effectivePrecision[Column.Surplus]
                   }})</span
                 >
                 <span *ngIf="step.items" class="monospace">{{
                   step.items.sub(step.surplus || Rational.zero)
-                    | labRate: vm.effectivePrecision[Column.Items]
+                    | rate: vm.effectivePrecision[Column.Items]
                 }}</span>
                 <lab-icon
                   class="button"
@@ -226,7 +225,7 @@
                   class="flex"
                 >
                   <span class="monospace">{{
-                    step.belts | labRate: vm.effectivePrecision[Column.Belts]
+                    step.belts | rate: vm.effectivePrecision[Column.Belts]
                   }}</span>
                   <ng-container
                     *ngIf="
@@ -297,7 +296,7 @@
                   class="flex"
                 >
                   <span class="monospace">{{
-                    step.wagons | labRate: vm.effectivePrecision[Column.Wagons]
+                    step.wagons | rate: vm.effectivePrecision[Column.Wagons]
                   }}</span>
                   <ng-container
                     *ngIf="
@@ -377,7 +376,7 @@
                   >
                     <span class="monospace">{{
                       step.factories
-                        | labFactoryRate
+                        | factoryRate
                           : vm.effectivePrecision[Column.Factories]
                           : factory
                     }}</span>
@@ -556,8 +555,7 @@
                     <div class="flex">
                       <ng-container
                         *ngIf="
-                          vm.recipeSettings[step.recipeId].beaconCount
-                            | labGtZero
+                          vm.recipeSettings[step.recipeId].beaconCount | gtZero
                         "
                       >
                         <ng-container
@@ -602,7 +600,7 @@
                   <td class="split-column">
                     <ng-container
                       *ngIf="
-                        vm.recipeSettings[step.recipeId].beaconCount | labGtZero
+                        vm.recipeSettings[step.recipeId].beaconCount | gtZero
                       "
                     >
                       <div class="flex">
@@ -667,7 +665,7 @@
               <div *ngIf="step.power && step.power.nonzero()" class="flex">
                 <span class="monospace">{{
                   step.power
-                    | labPower
+                    | power
                       : vm.effectivePrecision[Column.Power]
                       : vm.effectivePowerUnit
                 }}</span>
@@ -679,8 +677,7 @@
                 class="flex"
               >
                 <span class="monospace">{{
-                  step.pollution
-                    | labRate: vm.effectivePrecision[Column.Pollution]
+                  step.pollution | rate: vm.effectivePrecision[Column.Pollution]
                 }}</span>
               </div>
             </td>
@@ -690,7 +687,7 @@
                   *ngIf="step.items"
                   class="button"
                   title="Click to open this step in a new tab"
-                  [href]="step | labStepHref: vm.data"
+                  [href]="step | stepHref: vm.data"
                   target="_blank"
                 >
                   <i class="clickable material-icons">open_in_new</i>
@@ -792,7 +789,7 @@
                       <div class="flex">
                         <span *ngIf="step.items" class="monospace">{{
                           step.items.mul(value)
-                            | labRate: vm.effectivePrecision[Column.Items]
+                            | rate: vm.effectivePrecision[Column.Items]
                         }}</span>
                         <lab-icon
                           [iconId]="step.itemId"
@@ -813,7 +810,7 @@
                         <div *ngIf="step.belts" class="flex">
                           <span class="monospace">{{
                             step.belts.mul(value)
-                              | labRate: vm.effectivePrecision[Column.Belts]
+                              | rate: vm.effectivePrecision[Column.Belts]
                           }}</span>
                           <lab-icon
                             [iconId]="belt"
@@ -830,7 +827,7 @@
                         <div *ngIf="step.wagons" class="flex">
                           <span class="monospace">{{
                             step.wagons.mul(value)
-                              | labRate: vm.effectivePrecision[Column.Wagons]
+                              | rate: vm.effectivePrecision[Column.Wagons]
                           }}</span>
                           <lab-icon
                             [iconId]="wagon"
@@ -855,7 +852,7 @@
                           >
                             <span class="monospace">{{
                               output.factories
-                                | labFactoryRate
+                                | factoryRate
                                   : vm.effectivePrecision[Column.Factories]
                                   : factory
                             }}</span>
@@ -892,7 +889,7 @@
                         <div class="flex percent">
                           <i class="material-icons">arrow_forward</i>
                           <span class="monospace"
-                            >{{ value | labRate: -2 | labLeftPad }}%</span
+                            >{{ value | rate: -2 | leftPad }}%</span
                           >
                           <lab-icon
                             [iconId]="step.itemId"
@@ -925,7 +922,7 @@
                     <div class="flex">
                       <span *ngIf="step.items" class="monospace">{{
                         step.items.mul(parent.value)
-                          | labRate: vm.effectivePrecision[Column.Items]
+                          | rate: vm.effectivePrecision[Column.Items]
                       }}</span>
                       <lab-icon
                         [iconId]="step.itemId"
@@ -946,7 +943,7 @@
                       <div *ngIf="step.belts" class="flex">
                         <span class="monospace">{{
                           step.belts.mul(parent.value)
-                            | labRate: vm.effectivePrecision[Column.Belts]
+                            | rate: vm.effectivePrecision[Column.Belts]
                         }}</span>
                         <lab-icon
                           [iconId]="belt"
@@ -963,7 +960,7 @@
                       <div *ngIf="step.wagons" class="flex">
                         <span class="monospace">{{
                           step.wagons.mul(parent.value)
-                            | labRate: vm.effectivePrecision[Column.Wagons]
+                            | rate: vm.effectivePrecision[Column.Wagons]
                         }}</span>
                         <lab-icon
                           [iconId]="wagon"
@@ -986,7 +983,7 @@
                         >
                           <span class="monospace">{{
                             step.factories.mul(parent.value)
-                              | labFactoryRate
+                              | factoryRate
                                 : vm.effectivePrecision[Column.Factories]
                                 : factory
                           }}</span>
@@ -1020,7 +1017,7 @@
                     <div>
                       <div class="flex percent">
                         <span class="monospace"
-                          >{{ parent.value | labRate: -2 | labLeftPad }}%</span
+                          >{{ parent.value | rate: -2 | leftPad }}%</span
                         >
                         <i class="material-icons">arrow_forward</i>
                         <lab-icon
@@ -1074,7 +1071,7 @@
                                   class="monospace"
                                   >{{
                                     outStep.items.mul(percent).div(productivity)
-                                      | labRate
+                                      | rate
                                         : vm.effectivePrecision[Column.Items]
                                   }}</span
                                 >
@@ -1128,7 +1125,7 @@
                           <div class="flex">
                             <span *ngIf="inStep.items" class="monospace">{{
                               inStep.items.mul(percent)
-                                | labRate: vm.effectivePrecision[Column.Items]
+                                | rate: vm.effectivePrecision[Column.Items]
                             }}</span>
                             <lab-icon
                               [iconId]="input.key"
@@ -1152,8 +1149,7 @@
                               <div *ngIf="inStep.belts" class="flex">
                                 <span class="monospace">{{
                                   inStep.belts.mul(percent)
-                                    | labRate
-                                      : vm.effectivePrecision[Column.Belts]
+                                    | rate: vm.effectivePrecision[Column.Belts]
                                 }}</span>
                                 <lab-icon
                                   [iconId]="belt"
@@ -1176,8 +1172,7 @@
                               <div *ngIf="inStep.wagons" class="flex">
                                 <span class="monospace">{{
                                   inStep.wagons.mul(percent)
-                                    | labRate
-                                      : vm.effectivePrecision[Column.Wagons]
+                                    | rate: vm.effectivePrecision[Column.Wagons]
                                 }}</span>
                                 <lab-icon
                                   [iconId]="wagon"
@@ -1206,7 +1201,7 @@
                               >
                                 <span class="monospace">{{
                                   inStep.factories.mul(percent)
-                                    | labFactoryRate
+                                    | factoryRate
                                       : vm.effectivePrecision[Column.Factories]
                                       : factory
                                 }}</span>
@@ -1247,7 +1242,7 @@
                           <div>
                             <div class="flex percent">
                               <span class="monospace"
-                                >{{ percent | labRate: -2 | labLeftPad }}%</span
+                                >{{ percent | rate: -2 | leftPad }}%</span
                               >
                               <i class="material-icons">arrow_forward</i>
                               <lab-icon
@@ -1288,7 +1283,7 @@
                           <div *ngIf="outStep.items" class="flex">
                             <span class="monospace">{{
                               outStep.items.mul(percent)
-                                | labRate: vm.effectivePrecision[Column.Items]
+                                | rate: vm.effectivePrecision[Column.Items]
                             }}</span>
                             <lab-icon
                               [iconId]="output.key"
@@ -1312,8 +1307,7 @@
                               <div *ngIf="outStep.belts" class="flex">
                                 <span class="monospace">{{
                                   outStep.belts.mul(percent)
-                                    | labRate
-                                      : vm.effectivePrecision[Column.Belts]
+                                    | rate: vm.effectivePrecision[Column.Belts]
                                 }}</span>
                                 <lab-icon
                                   [iconId]="belt"
@@ -1336,8 +1330,7 @@
                               <div *ngIf="outStep.wagons" class="flex">
                                 <span class="monospace">{{
                                   outStep.wagons.mul(percent)
-                                    | labRate
-                                      : vm.effectivePrecision[Column.Wagons]
+                                    | rate: vm.effectivePrecision[Column.Wagons]
                                 }}</span>
                                 <lab-icon
                                   [iconId]="wagon"
@@ -1367,7 +1360,7 @@
                               >
                                 <span class="monospace">{{
                                   outStep.factories
-                                    | labFactoryRate
+                                    | factoryRate
                                       : vm.effectivePrecision[Column.Factories]
                                       : factory
                                 }}</span>
@@ -1408,7 +1401,7 @@
                             <div class="flex percent">
                               <i class="material-icons">arrow_forward</i>
                               <span class="monospace"
-                                >{{ percent | labRate: -2 | labLeftPad }}%</span
+                                >{{ percent | rate: -2 | leftPad }}%</span
                               >
                               <lab-icon
                                 [iconId]="output.key"
@@ -1449,7 +1442,7 @@
                             <div class="flex" *ngIf="inStep.items">
                               <span class="monospace">{{
                                 inStep.items.mul(percent).div(step.factories)
-                                  | labRate: vm.effectivePrecision[Column.Items]
+                                  | rate: vm.effectivePrecision[Column.Items]
                               }}</span>
                               <lab-icon
                                 [iconId]="input.key"
@@ -1476,8 +1469,7 @@
                               <div *ngIf="inStep.belts" class="flex">
                                 <span class="monospace">{{
                                   inStep.belts.mul(percent).div(step.factories)
-                                    | labRate
-                                      : vm.effectivePrecision[Column.Belts]
+                                    | rate: vm.effectivePrecision[Column.Belts]
                                 }}</span>
                                 <lab-icon
                                   [iconId]="belt"
@@ -1501,12 +1493,12 @@
                                   .mul(percent)
                                   .div(step.factories)
                                   .div(DisplayRateVal[vm.settings.displayRate])
-                                  | labInserterSpeed: vm.settings as ins
+                                  | inserterSpeed: vm.settings as ins
                               "
                             >
                               <div class="flex">
                                 <span class="monospace">{{
-                                  ins.value | labRate: 1
+                                  ins.value | rate: 1
                                 }}</span>
                                 <lab-icon
                                   [iconId]="ins.id"
@@ -1571,12 +1563,10 @@
                             vm.itemSettings[output.key].belt !== ItemId.Pipe
                           "
                         >
-                          <td
-                            *ngIf="items | labInserterSpeed: vm.settings as ins"
-                          >
+                          <td *ngIf="items | inserterSpeed: vm.settings as ins">
                             <div class="flex">
                               <span class="monospace">{{
-                                ins.value | labRate: 1
+                                ins.value | rate: 1
                               }}</span>
                               <lab-icon
                                 [iconId]="ins.id"
@@ -1599,7 +1589,7 @@
                           >
                             <span class="monospace">{{
                               items.div(vm.beltSpeed[belt])
-                                | labRate: vm.effectivePrecision[Column.Belts]
+                                | rate: vm.effectivePrecision[Column.Belts]
                             }}</span>
                             <lab-icon
                               [iconId]="belt"
@@ -1615,7 +1605,7 @@
                           <div class="flex">
                             <span class="monospace">{{
                               items.mul(DisplayRateVal[vm.settings.displayRate])
-                                | labRate: vm.effectivePrecision[Column.Items]
+                                | rate: vm.effectivePrecision[Column.Items]
                             }}</span>
                             <lab-icon
                               [iconId]="output.key"
@@ -1763,7 +1753,7 @@
             "
           >
             <span class="monospace">{{
-              tot.value | labRate: vm.effectivePrecision[Column.Belts]
+              tot.value | rate: vm.effectivePrecision[Column.Belts]
             }}</span>
             <lab-icon
               *ngIf="vm.data.itemEntities[tot.key] as item"
@@ -1783,7 +1773,7 @@
             "
           >
             <span class="monospace">{{
-              tot.value | labRate: vm.effectivePrecision[Column.Wagons]
+              tot.value | rate: vm.effectivePrecision[Column.Wagons]
             }}</span>
             <lab-icon
               *ngIf="vm.data.itemEntities[tot.key] as item"
@@ -1804,7 +1794,7 @@
             "
           >
             <span class="monospace">{{
-              tot.value | labRate: vm.effectivePrecision[Column.Factories]
+              tot.value | rate: vm.effectivePrecision[Column.Factories]
             }}</span>
             <lab-icon
               *ngIf="vm.data.itemEntities[tot.key] as item; else totalRecipe"
@@ -1833,7 +1823,7 @@
               trackBy: trackService.trackByKey
             "
           >
-            <span class="monospace">{{ tot.value | labRate: 0 }}</span>
+            <span class="monospace">{{ tot.value | rate: 0 }}</span>
             <lab-icon
               *ngIf="vm.data.itemEntities[tot.key] as item"
               [iconId]="tot.key"
@@ -1847,7 +1837,7 @@
           <div class="flex">
             <span class="monospace">{{
               vm.totals.power
-                | labPower
+                | power
                   : vm.effectivePrecision[Column.Power]
                   : vm.effectivePowerUnit
             }}</span>
@@ -1857,7 +1847,7 @@
           <div class="flex">
             <span class="monospace">{{
               vm.totals.pollution
-                | labRate: vm.effectivePrecision[Column.Pollution]
+                | rate: vm.effectivePrecision[Column.Pollution]
             }}</span>
           </div>
         </td>

@@ -3,9 +3,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Dataset, Step } from '~/models';
 import { RouterService } from '~/services';
 
-@Pipe({ name: 'labStepHref' })
+@Pipe({ name: 'stepHref' })
 export class StepHrefPipe implements PipeTransform {
-  constructor(private router: RouterService) {}
+  constructor(private routerService: RouterService) {}
 
   transform(value: Step, data: Dataset): string | undefined {
     let step = value;
@@ -19,6 +19,6 @@ export class StepHrefPipe implements PipeTransform {
         };
       }
     }
-    return this.router.stepHref(step, data.hash);
+    return this.routerService.stepHref(step, data.hash);
   }
 }

@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 import { Rational } from '~/models';
 
-@Pipe({ name: 'labGtZero' })
+@Pipe({ name: 'gtZero' })
 export class GtZeroPipe implements PipeTransform {
   transform(value: string | undefined): boolean {
     if (value != null) {

@@ -3,7 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { PowerUnit, Rational } from '~/models';
 import { RatePipe } from './rate.pipe';
 
-@Pipe({ name: 'labPower' })
+@Pipe({ name: 'power' })
 export class PowerPipe implements PipeTransform {
   constructor(private rate: RatePipe) {}
 

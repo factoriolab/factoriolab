@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 import { Rational } from '~/models';
 
-@Pipe({ name: 'labRate' })
+@Pipe({ name: 'rate' })
 export class RatePipe implements PipeTransform {
   transform(value: Rational, precision: number | null): string {
     if (precision == null) {

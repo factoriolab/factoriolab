@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'labLeftPad' })
+@Pipe({ name: 'leftPad' })
 export class LeftPadPipe implements PipeTransform {
   transform(value: string | undefined): string {
     if (value != null) {

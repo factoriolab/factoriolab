@@ -396,7 +396,7 @@
                   </ng-container>
                 </td>
                 <td>
-                  <ng-container *ngIf="factory.beaconCount | labGtZero">
+                  <ng-container *ngIf="factory.beaconCount | gtZero">
                     <ng-container
                       *ngIf="vm.data.beaconIds.length === 1; else beaconPicker"
                     >
@@ -436,7 +436,7 @@
                 <td>
                   <lab-select
                     *ngIf="
-                      (factory.beaconCount | labGtZero) && factory.beaconModule
+                      (factory.beaconCount | gtZero) && factory.beaconModule
                     "
                     header="Select a module"
                     [selected]="factory.beaconModule"
