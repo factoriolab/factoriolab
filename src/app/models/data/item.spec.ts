@@ -31,6 +31,8 @@ describe('RationalItem', () => {
           category: FuelType.Chemical,
           value: 2,
         },
+        icon: 'icon',
+        iconText: '2',
       });
       expect(result.id).toEqual(ItemId.Wood);
       expect(result.name).toEqual('name');
@@ -46,6 +48,8 @@ describe('RationalItem', () => {
       expect(result.module?.consumption).toEqual(Rational.one);
       expect(result.fuel?.category).toEqual(FuelType.Chemical);
       expect(result.fuel?.value).toEqual(Rational.two);
+      expect(result.icon).toEqual('icon');
+      expect(result.iconText).toEqual('2');
     });
 
     it('should ignore undefined expensive fields', () => {
@@ -65,6 +69,8 @@ describe('RationalItem', () => {
       expect(result.factory).toBeUndefined();
       expect(result.module).toBeUndefined();
       expect(result.fuel).toBeUndefined();
+      expect(result.icon).toBeUndefined();
+      expect(result.iconText).toBeUndefined();
     });
   });
 });

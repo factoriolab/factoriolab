@@ -109,16 +109,9 @@ export class RationalRecipe {
   }
 
   produces(id: string): boolean {
-    if (this.out) {
-      if (this.out[id]) {
-        // Recipe declares this as output, check inputs
-        return this.in?.[id] == null || this.in[id].lt(this.out[id]);
-      }
-      // Recipe declares outputs but not this item
-      return false;
-    } else if (this.id === id) {
-      // Recipe matches item id, check inputs
-      return this.in?.[id] == null || this.in[id].lt(Rational.one);
+    if (this.out[id]) {
+      // Recipe declares this as output, check inputs
+      return this.in[id] == null || this.in[id].lt(this.out[id]);
     }
     return false;
   }
@@ -128,8 +121,6 @@ export class RationalRecipe {
   }
 
   output(id: string): Rational {
-    return (this.out?.[id] || Rational.zero).sub(
-      this.in?.[id] || Rational.zero
-    );
+    return (this.out[id] ?? Rational.zero).sub(this.in[id] ?? Rational.zero);
   }
 }

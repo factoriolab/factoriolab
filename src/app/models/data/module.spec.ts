@@ -10,12 +10,16 @@ describe('RationalModule', () => {
         consumption: 3,
         pollution: 4,
         limitation: 'productivity-module',
+        sprays: 5,
+        proliferator: 'proliferator',
       });
       expect(result.speed).toEqual(Rational.one);
       expect(result.productivity).toEqual(Rational.two);
-      expect(result.consumption).toEqual(new Rational(BigInt(3)));
-      expect(result.pollution).toEqual(new Rational(BigInt(4)));
+      expect(result.consumption).toEqual(Rational.from(3));
+      expect(result.pollution).toEqual(Rational.from(4));
       expect(result.limitation).toEqual('productivity-module');
+      expect(result.sprays).toEqual(Rational.from(5));
+      expect(result.proliferator).toEqual('proliferator');
     });
 
     it('should ignore undefined fields', () => {
@@ -25,6 +29,8 @@ describe('RationalModule', () => {
       expect(result.consumption).toBeUndefined();
       expect(result.pollution).toBeUndefined();
       expect(result.limitation).toBeUndefined();
+      expect(result.sprays).toBeUndefined();
+      expect(result.proliferator).toBeUndefined();
     });
   });
 });

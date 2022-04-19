@@ -15,16 +15,18 @@ describe('RationalFactory', () => {
         pollution: 4,
         mining: true,
         research: true,
+        overclockFactor: 1,
       });
       expect(result.speed).toEqual(Rational.one);
       expect(result.modules).toEqual(2);
       expect(result.type).toEqual(EnergyType.Burner);
       expect(result.category).toEqual(FuelType.Chemical);
-      expect(result.usage).toEqual(new Rational(BigInt(3)));
-      expect(result.drain).toEqual(new Rational(BigInt(5)));
-      expect(result.pollution).toEqual(new Rational(BigInt(4)));
+      expect(result.usage).toEqual(Rational.from(3));
+      expect(result.drain).toEqual(Rational.from(5));
+      expect(result.pollution).toEqual(Rational.from(4));
       expect(result.mining).toBeTrue();
       expect(result.research).toBeTrue();
+      expect(result.overclockFactor).toEqual(1);
     });
 
     it('should handle string for drain', () => {
@@ -51,6 +53,7 @@ describe('RationalFactory', () => {
       expect(result.pollution).toBeUndefined();
       expect(result.mining).toBeUndefined();
       expect(result.research).toBeUndefined();
+      expect(result.overclockFactor).toBeUndefined();
     });
   });
 });
