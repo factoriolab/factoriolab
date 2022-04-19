@@ -98,7 +98,16 @@
     "pipeFlowRate": "Pipe flow rate",
     "pipeFlowRateTitle": "Enter pipe flow rate",
     "inserterTarget": "Inserter target",
-    "inserterTargetTitle": "Select inserter target"
+    "inserterTargetTitle": "Select inserter target",
+    "bonuses": "Bonuses",
+    "miningProductivity": "Mining productivity",
+    "miningProductivityTooltip": "Enter the current mining productivity bonus percent.\nDefault is 0%.",
+    "miningProductivityTitle": "Enter mining productivity bonus",
+    "miningProductivityPlaceholder": "Mining productivity",
+    "miningSpeed": "Mining speed",
+    "miningSpeedTooltip": "Enter the current mining speed with bonus.\nDefault is 100%.",
+    "miningSpeedTitle": "Enter mining speed",
+    "miningSpeedPlaceholder": "Mining speed"
   },
   "input": {
     "increase1": "Increase 1",

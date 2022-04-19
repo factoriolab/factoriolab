@@ -770,22 +770,21 @@
   </div>
   <div class="hole" *ngIf="data.game !== Game.Satisfactory">
     <div>
-      <div class="header">Bonuses</div>
+      <div class="header">{{ 'setting.bonuses' | translate }}</div>
       <table class="wide">
         <tr *ngIf="data.game === Game.Factorio">
           <td>
             <lab-info
-              text="Mining productivity"
-              tooltip="Enter the current mining productivity bonus percent.
-Default is 0%."
+              [text]="'setting.miningProductivity' | translate"
+              [tooltip]="'setting.miningProductivityTooltip' | translate"
             ></lab-info>
           </td>
           <td class="right">
             +
             <input
               type="number"
-              title="Enter mining productivity bonus"
-              placeholder="Mining productivity"
+              [title]="'setting.miningProductivityTitle' | translate"
+              [placeholder]="'setting.miningProductivityPlaceholder' | translate"
               min="0"
               step="10"
               data-test="lab-settings-mining-bonus"
@@ -799,16 +798,15 @@ Default is 0%."
         <tr *ngIf="data.game === Game.DysonSphereProgram">
           <td>
             <lab-info
-              text="Mining speed"
-              tooltip="Enter the current mining speed with bonus.
-Default is 100%."
+              [text]="'setting.miningSpeed' | translate"
+              [tooltip]="'setting.miningSpeedTooltip' | translate"
             ></lab-info>
           </td>
           <td class="right">
             <input
               type="number"
-              title="Enter mining speed"
-              placeholder="Mining speed"
+              [title]="'setting.miningSpeedTitle' | translate"
+              [placeholder]="'setting.miningSpeedPlaceholder' | translate"
               min="100"
               step="10"
               data-test="lab-settings-mining-bonus"

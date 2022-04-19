@@ -98,7 +98,16 @@
     "pipeFlowRate": "管道流速",
     "pipeFlowRateTitle": "请输入管道流速",
     "inserterTarget": "机械臂目标",
-    "inserterTargetTitle": "选择机械臂目标"
+    "inserterTargetTitle": "选择机械臂目标",
+    "bonuses": "额外加成",
+    "miningProductivity": "采矿产能",
+    "miningProductivityTooltip": "输入当前采矿产能加成的百分比。\n默认0%。",
+    "miningProductivityTitle": "输入采矿产能加成",
+    "miningProductivityPlaceholder": "采矿产能",
+    "miningSpeed": "采矿速度",
+    "miningSpeedTooltip": "输入当前采矿速度加成。\n默认100%。",
+    "miningSpeedTitle": "输入采矿速度",
+    "miningSpeedPlaceholder": "采矿速度"
   },
   "input": {
     "increase1": "加1",
