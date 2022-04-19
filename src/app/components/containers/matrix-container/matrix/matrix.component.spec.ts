@@ -6,6 +6,7 @@ import { Mocks, RecipeId } from 'src/tests';
 import { IconComponent, InputComponent, InfoComponent } from '~/components';
 import { ValidateNumberDirective } from '~/support';
 import { MatrixComponent } from './matrix.component';
+import {TranslateModule} from "@ngx-translate/core";
 
 @Component({
   selector: 'lab-test-matrix',
@@ -54,7 +55,10 @@ describe('MatrixComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormsModule],
+      imports: [
+        FormsModule,
+        TranslateModule.forRoot(),
+      ],
       declarations: [
         IconComponent,
         InfoComponent,

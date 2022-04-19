@@ -11,14 +11,14 @@
 />
 <div>
   <button
-    title="Increase 1"
+    [title]="'input.increase1' | translate"
     data-test="lab-input-increase"
     (click)="increase()"
   >
     <i class="material-icons">arrow_drop_up</i>
   </button>
   <button
-    title="Decrease 1"
+    [title]="'input.decrease1' | translate"
     data-test="lab-input-decrease"
     [disabled]="isMinimum"
     (click)="decrease()"

@@ -8,8 +8,8 @@ export enum InserterTarget {
 }
 
 export const InserterTargetOptions: IdName<InserterTarget>[] = [
-  { id: InserterTarget.Chest, name: 'Chest' },
-  { id: InserterTarget.ExpressTransportBelt, name: 'Express transport belt' },
-  { id: InserterTarget.FastTransportBelt, name: 'Fast transport belt' },
-  { id: InserterTarget.TransportBelt, name: 'Transport belt' },
+  { id: InserterTarget.Chest, name: 'options.InserterTarget.Chest' },
+  { id: InserterTarget.ExpressTransportBelt, name: 'options.InserterTarget.ExpressTransportBelt' },
+  { id: InserterTarget.FastTransportBelt, name: 'options.InserterTarget.FastTransportBelt' },
+  { id: InserterTarget.TransportBelt, name: 'options.InserterTarget.TransportBelt' },
 ];
