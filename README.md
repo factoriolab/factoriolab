@@ -39,5 +39,3 @@ To run the automated unit tests:
 
 1. Install NodeJs and Angular CLI as described above
 2. Build and run the tests, using `npm test`
-
-Currently, this project does not include any end-to-end tests, though the Angular CLI automatically includes a skeleton in the [e2e](./e2e) folder.
