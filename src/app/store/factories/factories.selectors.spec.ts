@@ -6,7 +6,7 @@ import * as Selectors from './factories.selectors';
 describe('Factories Selectors', () => {
   describe('getFactorySettings', () => {
     it('should fill in factory settings', () => {
-      const result = Selectors.getFactorySettings.projector(
+      const result = Selectors.getFactories.projector(
         initialFactoriesState,
         Mocks.Defaults,
         Mocks.AdjustedData
@@ -16,7 +16,7 @@ describe('Factories Selectors', () => {
     });
 
     it('should handle null defaults', () => {
-      const result = Selectors.getFactorySettings.projector(
+      const result = Selectors.getFactories.projector(
         initialFactoriesState,
         null,
         Mocks.AdjustedData
@@ -26,7 +26,7 @@ describe('Factories Selectors', () => {
     });
 
     it('should read number of beacons', () => {
-      const result = Selectors.getFactorySettings.projector(
+      const result = Selectors.getFactories.projector(
         {
           ids: null,
           entities: { [ItemId.AssemblingMachine2]: { beaconCount: '0' } },
@@ -42,7 +42,7 @@ describe('Factories Selectors', () => {
     });
 
     it('should use null beaconCount for DSP', () => {
-      const result = Selectors.getFactorySettings.projector(
+      const result = Selectors.getFactories.projector(
         initialFactoriesState,
         Mocks.Defaults,
         { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } }
@@ -65,11 +65,10 @@ describe('Factories Selectors', () => {
           },
         },
       };
-      const result = Selectors.getFactorySettings.projector(
-        state,
-        Mocks.Defaults,
-        { ...Mocks.AdjustedData, ...{ game: Game.Satisfactory } }
-      );
+      const result = Selectors.getFactories.projector(state, Mocks.Defaults, {
+        ...Mocks.AdjustedData,
+        ...{ game: Game.Satisfactory },
+      });
       expect(result.entities[''].overclock).toEqual(200);
     });
 
@@ -88,11 +87,10 @@ describe('Factories Selectors', () => {
           },
         },
       };
-      const result = Selectors.getFactorySettings.projector(
-        state,
-        Mocks.Defaults,
-        { ...Mocks.AdjustedData, ...{ game: Game.Satisfactory } }
-      );
+      const result = Selectors.getFactories.projector(state, Mocks.Defaults, {
+        ...Mocks.AdjustedData,
+        ...{ game: Game.Satisfactory },
+      });
       expect(result.entities[''].overclock).toEqual(100);
     });
   });

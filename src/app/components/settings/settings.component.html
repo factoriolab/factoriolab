@@ -644,7 +644,9 @@
             </td>
           </tr>
           <tr
-            *ngIf="vm.sortedFuels.length && vm.data.game !== Game.Satisfactory"
+            *ngIf="
+              vm.chemicalFuels.length && vm.data.game !== Game.Satisfactory
+            "
           >
             <td>
               <lab-info
@@ -659,7 +661,7 @@
                   *ngIf="vm.settings.fuel"
                   header="Select a fuel"
                   [selected]="vm.settings.fuel"
-                  [options]="vm.sortedFuels"
+                  [options]="vm.chemicalFuels"
                   (selectId)="setFuel($event, vm.data.defaults?.fuel)"
                 >
                   <lab-icon

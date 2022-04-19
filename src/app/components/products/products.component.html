@@ -38,15 +38,12 @@
           (selectId)="setRateType(product.id, $event)"
         ></lab-options>
         <ng-container
-          *ngIf="vm.productSteps[product.itemId].length > 0; else recipeNone"
+          *ngIf="vm.productOptions[product.id].length > 0; else recipeNone"
         >
           <ng-container *ngIf="product.viaId as id">
             <span>of</span>
             <ng-container
-              *ngIf="
-                vm.productSteps[product.itemId].length === 1;
-                else viaPicker
-              "
+              *ngIf="vm.productOptions[product.id].length === 1; else viaPicker"
             >
               <lab-icon
                 *ngIf="product.rateType === RateType.Factories; else singleItem"

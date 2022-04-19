@@ -10,7 +10,7 @@ export const factoriesState = (state: LabState): FactoriesState =>
   state.factoriesState;
 
 /* Complex selectors */
-export const getFactorySettings = createSelector(
+export const getFactories = createSelector(
   factoriesState,
   Settings.getDefaults,
   Settings.getDataset,
@@ -53,3 +53,15 @@ export const getFactorySettings = createSelector(
     return { ids, entities };
   }
 );
+
+export const getFactoryOptions = createSelector(
+  getFactories,
+  Settings.getDataset,
+  (factories, data) =>
+    data.factoryIds.filter((f) => (factories.ids ?? []).indexOf(f) === -1)
+);
+
+export const getFactoryRows = createSelector(getFactories, (factories) => [
+  '',
+  ...(factories.ids ?? []),
+]);

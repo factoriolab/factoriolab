@@ -5,8 +5,6 @@ import { combineLatest, map } from 'rxjs';
 import {
   Product,
   RateType,
-  Entities,
-  rateTypeOptions,
   DisplayRate,
   IdType,
   DisplayRateOptions,
@@ -32,7 +30,7 @@ interface AllSettingsState {
   fMatch: boolean;
 }
 
-enum RecipeField {
+export enum RecipeField {
   FactoryModules,
   BeaconCount,
   Beacon,
@@ -48,38 +46,34 @@ enum RecipeField {
 })
 export class ProductsComponent {
   vm$ = combineLatest([
-    this.store.select(Products.getProductSteps),
     this.store.select(Products.getProducts),
+    this.store.select(Products.getProductOptions),
     this.store.select(Items.getItemSettings),
-    this.store.select(Factories.getFactorySettings),
+    this.store.select(Factories.getFactories),
     this.store.select(Recipes.getRecipeSettings),
     this.store.select(Recipes.getAdjustedDataset),
     this.store.select(Settings.getDisplayRate),
+    this.store.select(Settings.getRateTypeOptions),
   ]).pipe(
     map(
       ([
-        productSteps,
         products,
+        productOptions,
         itemSettings,
         factories,
         recipeSettings,
         data,
         displayRate,
+        rateTypeOptions,
       ]) => ({
-        productSteps,
         products,
+        productOptions,
         itemSettings,
         factories,
         recipeSettings,
         data,
         displayRate,
-        productOptions: products.reduce((e: Entities<string[]>, p) => {
-          if (productSteps[p.itemId]) {
-            e[p.id] = productSteps[p.itemId].map((r) => r[0]);
-          }
-          return e;
-        }, {}),
-        rateTypeOptions: rateTypeOptions(displayRate, data.game),
+        rateTypeOptions,
       })
     )
   );

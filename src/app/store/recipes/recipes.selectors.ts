@@ -20,7 +20,7 @@ export const recipesState = (state: LabState): RecipesState =>
 /* Complex selectors */
 export const getRecipeSettings = createSelector(
   recipesState,
-  Factories.getFactorySettings,
+  Factories.getFactories,
   Settings.getNormalDataset,
   (state, factories, data) => {
     const value: Entities<RecipeSettings> = {};

@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { provideMockStore } from '@ngrx/store/testing';
 
-import { TestUtility, ItemId, initialState } from 'src/tests';
+import { TestUtility, ItemId, initialState, Mocks } from 'src/tests';
 import {
   ColumnsComponent,
   IconComponent,
@@ -19,6 +19,7 @@ import {
 } from '~/components';
 import { ValidateNumberDirective } from '~/directives';
 import { Game } from '~/models';
+import { GtZeroPipe } from '~/pipes';
 import { RouterService } from '~/services';
 import * as Preferences from '~/store/preferences';
 import { BrowserUtility } from '~/utilities';
@@ -55,6 +56,7 @@ describe('SettingsComponent', () => {
         SelectComponent,
         ToggleComponent,
         ValidateNumberDirective,
+        GtZeroPipe,
         SettingsComponent,
       ],
       providers: [RouterService, provideMockStore({ initialState })],
@@ -99,54 +101,60 @@ describe('SettingsComponent', () => {
   //   });
   // });
 
-  // describe('scroll', () => {
-  //   it('should detect changes on scroll', () => {
-  //     component.child.scroll();
-  //     expect(detectChanges).toHaveBeenCalled();
-  //   });
-  // });
+  describe('scroll', () => {
+    it('should detect changes on scroll', () => {
+      component.scroll();
+      expect(detectChanges).toHaveBeenCalled();
+    });
+  });
 
-  // describe('setGame', () => {
-  //   it('should select the baseId for Factorio', () => {
-  //     spyOn(component, 'setBase');
-  //     component.child.setGame(Game.Factorio);
-  //     expect(component.setBase).toHaveBeenCalledWith('1.1');
-  //   });
+  describe('setGame', () => {
+    it('should select the baseId for Factorio', () => {
+      spyOn(component, 'setBase');
+      component.setGame(Game.Factorio);
+      expect(component.setBase).toHaveBeenCalledWith('1.1');
+    });
 
-  //   it('should select the baseId for Dyson Sphere Program', () => {
-  //     spyOn(component, 'setBase');
-  //     component.child.setGame(Game.DysonSphereProgram);
-  //     expect(component.setBase).toHaveBeenCalledWith('dsp');
-  //   });
+    it('should select the baseId for Dyson Sphere Program', () => {
+      spyOn(component, 'setBase');
+      component.setGame(Game.DysonSphereProgram);
+      expect(component.setBase).toHaveBeenCalledWith('dsp');
+    });
 
-  //   it('should select the baseId for Satisfactory', () => {
-  //     spyOn(component, 'setBase');
-  //     component.child.setGame(Game.Satisfactory);
-  //     expect(component.setBase).toHaveBeenCalledWith('sfy');
-  //   });
-  // });
+    it('should select the baseId for Satisfactory', () => {
+      spyOn(component, 'setBase');
+      component.setGame(Game.Satisfactory);
+      expect(component.setBase).toHaveBeenCalledWith('sfy');
+    });
+  });
 
-  // describe('changeBeaconCount', () => {
-  //   it('should emit beacon count', () => {
-  //     spyOn(component, 'setBeaconCount');
-  //     component.child.changeBeaconCount('', '3');
-  //     expect(component.setBeaconCount).toHaveBeenCalledWith({
-  //       id: '',
-  //       value: '3',
-  //       def: '8',
-  //     });
-  //   });
+  describe('changeBeaconCount', () => {
+    it('should emit beacon count', () => {
+      spyOn(component, 'setBeaconCount');
+      component.changeBeaconCount(
+        '',
+        '3',
+        Mocks.FactorySettingsInitial,
+        Mocks.AdjustedData
+      );
+      expect(component.setBeaconCount).toHaveBeenCalledWith('', '3', '8');
+    });
 
-  //   it('should emit beacon count on specific factory', () => {
-  //     spyOn(component, 'setBeaconCount');
-  //     component.child.changeBeaconCount(ItemId.AssemblingMachine3, '3');
-  //     expect(component.setBeaconCount).toHaveBeenCalledWith({
-  //       id: ItemId.AssemblingMachine3,
-  //       value: '3',
-  //       def: '8',
-  //     });
-  //   });
-  // });
+    it('should emit beacon count on specific factory', () => {
+      spyOn(component, 'setBeaconCount');
+      component.changeBeaconCount(
+        ItemId.AssemblingMachine3,
+        '3',
+        Mocks.FactorySettingsInitial,
+        Mocks.AdjustedData
+      );
+      expect(component.setBeaconCount).toHaveBeenCalledWith(
+        ItemId.AssemblingMachine3,
+        '3',
+        '8'
+      );
+    });
+  });
 
   // describe('changeOverclock', () => {
   //   it('should emit overclock', () => {

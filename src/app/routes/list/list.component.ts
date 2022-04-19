@@ -53,7 +53,7 @@ enum RecipeField {
 })
 export class ListComponent implements OnInit, OnChanges, AfterViewInit {
   vm$ = combineLatest([
-    this.store.select(Factories.getFactorySettings),
+    this.store.select(Factories.getFactories),
     this.store.select(Items.getItemSettings),
     this.store.select(Items.getItemsModified),
     this.store.select(Products.getStepsModified),

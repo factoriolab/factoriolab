@@ -76,7 +76,7 @@ export const getProducts = createSelector(
   getBaseProducts,
   getProductSteps,
   Recipes.getRecipeSettings,
-  Factories.getFactorySettings,
+  Factories.getFactories,
   Settings.getNormalDataset,
   (products, productSteps, recipeSettings, factories, data) => {
     const a = products?.map((p) =>
@@ -90,6 +90,18 @@ export const getProducts = createSelector(
     );
     return a;
   }
+);
+
+export const getProductOptions = createSelector(
+  getProducts,
+  getProductSteps,
+  (products, productSteps) =>
+    products.reduce((e: Entities<string[]>, p) => {
+      if (productSteps[p.itemId]) {
+        e[p.id] = productSteps[p.itemId].map((r) => r[0]);
+      }
+      return e;
+    }, {})
 );
 
 export const getRationalProducts = createSelector(getProducts, (products) =>

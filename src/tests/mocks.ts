@@ -162,7 +162,7 @@ export const ItemSettingsInitial = Items.getItemSettings.projector({}, Data, {
   cargoWagon: ItemId.CargoWagon,
   fluidWagon: ItemId.FluidWagon,
 });
-export const FactorySettingsInitial = Factories.getFactorySettings.projector(
+export const FactorySettingsInitial = Factories.getFactories.projector(
   Factories.initialFactoriesState,
   Defaults,
   Data

@@ -62,14 +62,11 @@ describe('RankerComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('width', () => {
-    it('should calculate based on maximum width row', () => {
-      component.child.rows = [['1', '2', '3']];
+  describe('ngOnChanges', () => {
+    it('should set and update width', () => {
       expect(component.child.width).toEqual(7.125);
-    });
-
-    it('should add room for scrollbar', () => {
-      component.child.rows = [['1'], ['2'], ['3'], ['4'], ['5'], ['6']];
+      component.options = ['0', '1', '2', '3', '4', '5'];
+      fixture.detectChanges();
       expect(component.child.width).toEqual(3.5);
     });
   });

@@ -74,7 +74,9 @@ describe('BrowserUtility', () => {
     });
 
     it('should return the initial state if nothing is stored', () => {
-      spyOnProperty(BrowserUtility, 'storedState', 'get').and.returnValue(null);
+      spyOnProperty(BrowserUtility, 'storedState', 'get').and.returnValue(
+        undefined
+      );
       const state: any = { a: 'a' };
       expect(BrowserUtility.mergeState(state)).toEqual(state);
     });

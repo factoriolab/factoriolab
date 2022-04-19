@@ -27,19 +27,16 @@ import {
   ResearchSpeedOptions,
   InserterTargetOptions,
   DisplayRateOptions,
-  presetOptions,
   Game,
   GameOptions,
   PowerUnit,
   PowerUnitOptions,
   Column,
-  FuelType,
   Dataset,
 } from '~/models';
 import { RouterService } from '~/services';
 import { LabState } from '~/store';
 import * as App from '~/store/app.actions';
-import * as Datasets from '~/store/datasets';
 import * as Factories from '~/store/factories';
 import * as Preferences from '~/store/preferences';
 import * as Settings from '~/store/settings';
@@ -56,34 +53,48 @@ export class SettingsComponent implements OnInit {
   @Output() closeSettings = new EventEmitter();
 
   vm$ = combineLatest([
-    this.store.select(Datasets.getBaseSets),
-    this.store.select(Factories.getFactorySettings),
+    this.store.select(Factories.getFactories),
+    this.store.select(Factories.getFactoryOptions),
+    this.store.select(Factories.getFactoryRows),
     this.store.select(Settings.getSettings),
     this.store.select(Settings.getDataset),
+    this.store.select(Settings.getChemicalFuels),
+    this.store.select(Settings.getPresetOptions),
+    this.store.select(Settings.getBaseOptions),
     this.store.select(Preferences.preferencesState),
     this.store.select(Preferences.getColumnsState),
+    this.store.select(Preferences.getSavedStates),
+    this.store.select(Preferences.getColumnsVisible),
   ]).pipe(
-    map(([base, factories, settings, data, preferences, columns]) => ({
-      base,
-      factories,
-      settings,
-      data,
-      preferences,
-      columns,
-      sortedFuels: data.fuelIds[FuelType.Chemical] || [],
-      presetOptions: presetOptions(data.game),
-      factoryOptions: data.factoryIds.filter(
-        (f) => (factories.ids ?? []).indexOf(f) === -1
-      ),
-      factoryRows: ['', ...(factories.ids ?? [])],
-      savedStates: Object.keys(preferences.states).map((i) => ({
-        id: i,
-        name: i,
-      })),
-      columnsVisible: Object.keys(columns).filter((c) => columns[c].show)
-        .length,
-      baseOptions: base.filter((b) => b.game === data.game),
-    }))
+    map(
+      ([
+        factories,
+        factoryOptions,
+        factoryRows,
+        settings,
+        data,
+        chemicalFuels,
+        presetOptions,
+        baseOptions,
+        preferences,
+        columns,
+        savedStates,
+        columnsVisible,
+      ]) => ({
+        factories,
+        factoryOptions,
+        factoryRows,
+        settings,
+        data,
+        preferences,
+        columns,
+        chemicalFuels,
+        presetOptions,
+        baseOptions,
+        savedStates,
+        columnsVisible,
+      })
+    )
   );
 
   ctrlFlowRate = new FormControl('', Validators.min(1));

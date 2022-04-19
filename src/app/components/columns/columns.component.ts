@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
-import { Column, columnOptions, PrecisionColumns, Rational } from '~/models';
+import { Column, PrecisionColumns, Rational } from '~/models';
 import { TrackService } from '~/services';
 import { LabState } from '~/store';
 import * as Preferences from '~/store/preferences';
@@ -18,10 +18,8 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
 export class ColumnsComponent extends DialogContainerComponent {
   vm$ = combineLatest([
     this.store.select(Preferences.getColumnsState),
-    this.store.select(Settings.getGame),
-  ]).pipe(
-    map(([columns, game]) => ({ columns, options: columnOptions(game) }))
-  );
+    this.store.select(Settings.getColumnOptions),
+  ]).pipe(map(([columns, columnOptions]) => ({ columns, columnOptions })));
 
   edited = false;
   editValue: Preferences.ColumnsState = {};

@@ -23,7 +23,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let opt of vm.options; trackBy: trackService.trackById">
+          <tr
+            *ngFor="
+              let opt of vm.columnOptions;
+              trackBy: trackService.trackById
+            "
+          >
             <td>
               <div
                 *ngIf="

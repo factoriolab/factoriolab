@@ -27,6 +27,10 @@ import {
   RationalFactory,
   RationalFuel,
   RationalModule,
+  columnOptions,
+  rateTypeOptions,
+  FuelType,
+  presetOptions,
 } from '~/models';
 import { LabState } from '../';
 import * as Datasets from '../datasets';
@@ -90,6 +94,26 @@ export const getGame = createSelector(
   getBaseDatasetId,
   Datasets.getBaseInfoEntities,
   (id, data) => data[id].game
+);
+
+export const getColumnOptions = createSelector(getGame, (game) =>
+  columnOptions(game)
+);
+
+export const getRateTypeOptions = createSelector(
+  getGame,
+  getDisplayRate,
+  (game, displayRate) => rateTypeOptions(displayRate, game)
+);
+
+export const getPresetOptions = createSelector(getGame, (game) =>
+  presetOptions(game)
+);
+
+export const getBaseOptions = createSelector(
+  getGame,
+  Datasets.getBaseSets,
+  (game, baseSets) => baseSets.filter((b) => b.game === game)
 );
 
 export const getDefaults = createSelector(
@@ -509,6 +533,11 @@ export const getDataset = createSelector(
       return data;
     }
   }
+);
+
+export const getChemicalFuels = createSelector(
+  getDataset,
+  (data) => data.fuelIds[FuelType.Chemical] ?? []
 );
 
 export const getBeltSpeed = createSelector(

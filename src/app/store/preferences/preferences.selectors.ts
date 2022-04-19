@@ -116,3 +116,15 @@ export const getSimplexModifiers = createSelector(
     costIgnored,
   })
 );
+
+export const getSavedStates = createSelector(getStates, (states) =>
+  Object.keys(states).map((i) => ({
+    id: i,
+    name: i,
+  }))
+);
+
+export const getColumnsVisible = createSelector(
+  getColumns,
+  (columns) => Object.keys(columns).filter((c) => columns[c].show).length
+);
