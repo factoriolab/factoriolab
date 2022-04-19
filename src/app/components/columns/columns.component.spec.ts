@@ -28,8 +28,8 @@ describe('ColumnsComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ColumnsComponent);
-    component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
+    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 

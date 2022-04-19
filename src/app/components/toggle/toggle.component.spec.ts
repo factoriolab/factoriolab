@@ -56,12 +56,6 @@ describe('ToggleComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // describe('width', () => {
-  //   it('should set width based on options', () => {
-  //     expect(component.child.width).toEqual(17.25);
-  //   });
-  // });
-
   describe('clickOpen', () => {
     it('should set up the dialog', () => {
       component.child.edited = true;

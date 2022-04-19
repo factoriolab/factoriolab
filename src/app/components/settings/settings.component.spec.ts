@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { provideMockStore } from '@ngrx/store/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 import { TestUtility, ItemId, initialState, Mocks } from 'src/tests';
 import {
@@ -18,10 +18,21 @@ import {
   ToggleComponent,
 } from '~/components';
 import { ValidateNumberDirective } from '~/directives';
-import { Game } from '~/models';
+import {
+  DisplayRate,
+  Game,
+  InserterCapacity,
+  InserterTarget,
+  PowerUnit,
+  Preset,
+  ResearchSpeed,
+} from '~/models';
 import { GtZeroPipe } from '~/pipes';
 import { RouterService } from '~/services';
+import * as App from '~/store/app.actions';
+import * as Factories from '~/store/factories';
 import * as Preferences from '~/store/preferences';
+import * as Settings from '~/store/settings';
 import { BrowserUtility } from '~/utilities';
 import { SettingsComponent } from './settings.component';
 
@@ -34,6 +45,7 @@ describe('SettingsComponent', () => {
   let component: SettingsComponent;
   let fixture: ComponentFixture<SettingsComponent>;
   let router: Router;
+  let store: MockStore;
   let detectChanges: jasmine.Spy;
   const id = 'id';
   const value = 'value';
@@ -65,46 +77,81 @@ describe('SettingsComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SettingsComponent);
-    component = fixture.componentInstance;
     router = TestBed.inject(Router);
+    store = TestBed.inject(MockStore);
     const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
     detectChanges = spyOn(ref.constructor.prototype, 'detectChanges');
+    component = fixture.componentInstance;
     fixture.detectChanges();
-    // window.history.replaceState(null, '', '');
   });
-
-  // afterEach(() => {
-  //   window.history.replaceState(null, '', '');
-  // });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  // describe('ngOnInit', () => {
-  //   it('should ignore if no matching state is found', () => {
-  //     expect(component.child.state).toEqual('');
-  //   });
+  describe('isInOverlayMode', () => {
+    it('should determine whether in overlay mode', () => {
+      expect(component.isInOverlayMode).toBeFalse();
+    });
+  });
 
-  //   it('should set state to matching saved state', () => {
-  //     spyOnProperty(BrowserUtility, 'search').and.returnValue('z=zip');
-  //     component.child.ngOnInit();
-  //     expect(component.child.state).toEqual('name');
-  //   });
+  describe('ngOnInit', () => {
+    it('should ignore if no matching state is found', () => {
+      expect(component.state).toEqual('');
+    });
 
-  //   it('should set up subscription to router', () => {
-  //     fixture.ngZone.run(() => {
-  //       router.navigate([]);
-  //     });
-  //     fixture.detectChanges();
-  //     expect(detectChanges).toHaveBeenCalled();
-  //   });
-  // });
+    it('should set state to matching saved state', () => {
+      Preferences.getStates.setResult(Mocks.PreferencesState.states);
+      spyOnProperty(BrowserUtility, 'search').and.returnValue('z=zip');
+      component.ngOnInit();
+      expect(component.state).toEqual('name');
+    });
+
+    it('should set up subscription to router', () => {
+      fixture.ngZone!.run(() => {
+        router.navigate([]);
+      });
+      fixture.detectChanges();
+      expect(detectChanges).toHaveBeenCalled();
+    });
+  });
 
   describe('scroll', () => {
     it('should detect changes on scroll', () => {
       component.scroll();
       expect(detectChanges).toHaveBeenCalled();
+    });
+  });
+
+  describe('click', () => {
+    it('should set opening to false on first click', () => {
+      spyOn(component.closeSettings, 'emit');
+      document.body.click();
+      expect(component.opening).toBeFalse();
+      expect(component.closeSettings.emit).not.toHaveBeenCalled();
+    });
+
+    it('should cancel when clicked away in overlay mode', () => {
+      spyOn(component.closeSettings, 'emit');
+      spyOnProperty(component, 'isInOverlayMode', 'get').and.returnValue(true);
+      component.opening = false;
+      document.body.click();
+      expect(component.closeSettings.emit).toHaveBeenCalled();
+    });
+
+    it('should not cancel when clicked away in wide screen mode', () => {
+      spyOn(component.closeSettings, 'emit');
+      spyOnProperty(component, 'isInOverlayMode', 'get').and.returnValue(false);
+      component.opening = false;
+      document.body.click();
+      expect(component.closeSettings.emit).not.toHaveBeenCalled();
+    });
+
+    it('should not cancel when clicked on', () => {
+      spyOn(component.closeSettings, 'emit');
+      component.opening = false;
+      TestUtility.clickSelector(fixture, '.panel');
+      expect(component.closeSettings.emit).not.toHaveBeenCalled();
     });
   });
 
@@ -156,155 +203,258 @@ describe('SettingsComponent', () => {
     });
   });
 
-  // describe('changeOverclock', () => {
-  //   it('should emit overclock', () => {
-  //     spyOn(component, 'setOverclock');
-  //     component.child.changeOverclock('', {
-  //       target: { valueAsNumber: 200 },
-  //     } as any);
-  //     expect(component.setOverclock).toHaveBeenCalledWith({
-  //       id: '',
-  //       value: 200,
-  //       def: 100,
-  //     });
-  //   });
+  describe('changeOverclock', () => {
+    it('should emit overclock', () => {
+      spyOn(component, 'setOverclock');
+      component.changeOverclock(
+        '',
+        {
+          target: { valueAsNumber: 200 },
+        } as any,
+        Mocks.FactorySettingsInitial
+      );
+      expect(component.setOverclock).toHaveBeenCalledWith('', 200, 100);
+    });
 
-  //   it('should emit overclock on specific factory', () => {
-  //     spyOn(component, 'setOverclock');
-  //     component.child.changeOverclock(ItemId.AssemblingMachine3, {
-  //       target: { valueAsNumber: 200 },
-  //     } as any);
-  //     expect(component.setOverclock).toHaveBeenCalledWith({
-  //       id: ItemId.AssemblingMachine3,
-  //       value: 200,
-  //       def: null,
-  //     });
-  //   });
+    it('should emit overclock on specific factory', () => {
+      spyOn(component, 'setOverclock');
+      component.changeOverclock(
+        ItemId.AssemblingMachine3,
+        {
+          target: { valueAsNumber: 200 },
+        } as any,
+        Mocks.FactorySettingsInitial
+      );
+      expect(component.setOverclock).toHaveBeenCalledWith(
+        ItemId.AssemblingMachine3,
+        200,
+        undefined
+      );
+    });
+  });
 
-  //   it('should ignore bad values', () => {
-  //     spyOn(component, 'setOverclock');
-  //     component.child.changeOverclock('', {
-  //       target: { valueAsNumber: 260 },
-  //     } as any);
-  //     expect(component.setOverclock).not.toHaveBeenCalled();
-  //   });
-  // });
+  describe('emitNumber', () => {
+    it('should emit a numeric value', () => {
+      spyOn(component, 'setFlowRate');
+      TestUtility.setTextDt(fixture, DataTest.FlowRate, '1000');
+      fixture.detectChanges();
+      expect(component.setFlowRate).toHaveBeenCalledWith(1000);
+    });
 
-  // describe('emitNumber', () => {
-  //   it('should emit flow rate', () => {
-  //     spyOn(component, 'setFlowRate');
-  //     TestUtility.setTextDt(fixture, DataTest.FlowRate, '1000');
-  //     fixture.detectChanges();
-  //     expect(component.setFlowRate).toHaveBeenCalledWith(1000);
-  //   });
+    it('should not emit a number less than the minimum', () => {
+      spyOn(component, 'setMiningBonus');
+      TestUtility.setTextDt(fixture, DataTest.MiningBonus, '-10');
+      fixture.detectChanges();
+      expect(component.setMiningBonus).toHaveBeenCalledWith(0);
+    });
+  });
 
-  //   it('should emit mining bonus', () => {
-  //     spyOn(component, 'setMiningBonus');
-  //     TestUtility.setTextDt(fixture, DataTest.MiningBonus, '100');
-  //     fixture.detectChanges();
-  //     expect(component.setMiningBonus).toHaveBeenCalledWith(100);
-  //   });
+  describe('setState', () => {
+    it('should call the router to navigate', () => {
+      spyOn(router, 'navigate');
+      component.setState('name', Mocks.PreferencesState);
+      expect(component.state).toEqual('name');
+      expect(router.navigate).toHaveBeenCalledWith([], {
+        queryParams: { z: 'zip' },
+      });
+    });
+  });
 
-  //   it('should not emit a number less than the minimum', () => {
-  //     spyOn(component, 'setMiningBonus');
-  //     TestUtility.setTextDt(fixture, DataTest.MiningBonus, '-10');
-  //     fixture.detectChanges();
-  //     expect(component.setMiningBonus).toHaveBeenCalledWith(0);
-  //   });
-  // });
+  describe('clickSaveState', () => {
+    it('should emit to save the state', () => {
+      spyOn(component, 'saveState');
+      component.tempState = id;
+      component.editState = true;
+      spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
+      component.clickSaveState();
+      expect(component.saveState).toHaveBeenCalledWith(id, value);
+      expect(component.editState).toBeFalse();
+    });
+  });
 
-  // describe('setState', () => {
-  //   it('should ignore falsy values', () => {
-  //     spyOn(router, 'navigate');
-  //     component.child.setState(null);
-  //     expect(router.navigate).not.toHaveBeenCalled();
-  //   });
+  describe('clickRemoveState', () => {
+    it('should emit to remove the state', () => {
+      spyOn(component, 'removeState');
+      component.state = id;
+      component.clickRemoveState();
+      expect(component.removeState).toHaveBeenCalledWith(id);
+      expect(component.state).toEqual('');
+    });
+  });
 
-  //   it('should call the router to navigate', () => {
-  //     spyOn(router, 'navigate');
-  //     component.child.setState('name');
-  //     expect(component.child.state).toEqual('name');
-  //     expect(router.navigate).toHaveBeenCalledWith([], {
-  //       queryParams: { z: 'zip' },
-  //     });
-  //   });
-  // });
+  describe('toggleEditState', () => {
+    it('should toggle the edit state', () => {
+      component.toggleEditState();
+      expect(component.editState).toBeTrue();
+      expect(component.tempState).toEqual(component.state);
+    });
+  });
 
-  // describe('clickSaveState', () => {
-  //   it('should emit to save the state', () => {
-  //     spyOn(component, 'saveState');
-  //     component.child.tempState = id;
-  //     component.child.editState = true;
-  //     spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
-  //     component.child.clickSaveState();
-  //     expect(component.saveState).toHaveBeenCalledWith({ id, value });
-  //     expect(component.child.editState).toBeFalse();
-  //   });
-  // });
+  describe('clickResetSettings', () => {
+    it('should emit to reset settings', () => {
+      spyOn(component, 'resetSettings');
+      spyOn(window, 'confirm').and.returnValue(true);
+      component.clickResetSettings();
+      expect(window.confirm).toHaveBeenCalled();
+      expect(component.resetSettings).toHaveBeenCalled();
+    });
+  });
 
-  // describe('clickRemoveState', () => {
-  //   it('should emit to remove the state', () => {
-  //     spyOn(component, 'removeState');
-  //     component.child.state = id;
-  //     component.child.state = id;
-  //     component.child.clickRemoveState();
-  //     expect(component.removeState).toHaveBeenCalledWith(id);
-  //     expect(component.child.state).toEqual('');
-  //   });
-  // });
+  describe('toggleBeaconPower', () => {
+    it('should turn off beacon power estimation', () => {
+      spyOn(component, 'setBeaconReceivers');
+      component.toggleBeaconPower({
+        ...Mocks.SettingsState1,
+        ...{ beaconReceivers: '1' },
+      });
+      expect(component.setBeaconReceivers).toHaveBeenCalledWith(undefined);
+    });
 
-  // describe('toggleEditState', () => {
-  //   it('should toggle the edit state', () => {
-  //     component.child.toggleEditState();
-  //     expect(component.child.editState).toBeTrue();
-  //     expect(component.child.tempState).toEqual(component.child.state);
-  //   });
-  // });
+    it('should turn on beacon power estimation', () => {
+      spyOn(component, 'setBeaconReceivers');
+      component.toggleBeaconPower(Mocks.SettingsState1);
+      expect(component.setBeaconReceivers).toHaveBeenCalledWith('1');
+    });
+  });
 
-  // describe('clickResetSettings', () => {
-  //   it('should cancel if user does not confirm', () => {
-  //     spyOn(component, 'resetSettings');
-  //     spyOn(window, 'confirm').and.returnValue(false);
-  //     component.child.clickResetSettings();
-  //     expect(window.confirm).toHaveBeenCalled();
-  //     expect(component.resetSettings).not.toHaveBeenCalled();
-  //   });
-
-  //   it('should emit to reset settings if user confirms', () => {
-  //     spyOn(component, 'resetSettings');
-  //     spyOn(window, 'confirm').and.returnValue(true);
-  //     component.child.clickResetSettings();
-  //     expect(window.confirm).toHaveBeenCalled();
-  //     expect(component.resetSettings).toHaveBeenCalled();
-  //   });
-  // });
-
-  // describe('gtZero', () => {
-  //   it('should handle valid values', () => {
-  //     expect(component.child.gtZero('0')).toBeFalse();
-  //     expect(component.child.gtZero('0.5')).toBeTrue();
-  //   });
-
-  //   it('should handle invalid value', () => {
-  //     expect(component.child.gtZero('x')).toBeFalse();
-  //   });
-  // });
-
-  // describe('toggleBeaconPower', () => {
-  //   it('should turn off beacon power estimation', () => {
-  //     component.child.settings = {
-  //       ...component.child.settings,
-  //       ...{ beaconReceivers: '1' },
-  //     };
-  //     spyOn(component, 'setBeaconReceivers');
-  //     component.child.toggleBeaconPower();
-  //     expect(component.setBeaconReceivers).toHaveBeenCalledWith(null);
-  //   });
-
-  //   it('should turn on beacon power estimation', () => {
-  //     spyOn(component, 'setBeaconReceivers');
-  //     component.child.toggleBeaconPower();
-  //     expect(component.setBeaconReceivers).toHaveBeenCalledWith('1');
-  //   });
-  // });
+  it('should dispatch actions', () => {
+    spyOn(store, 'dispatch');
+    component.resetSettings();
+    expect(store.dispatch).toHaveBeenCalledWith(new App.ResetAction());
+    component.saveState('id', 'value');
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Preferences.SaveStateAction({ id: 'id', value: 'value' })
+    );
+    component.removeState('value');
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Preferences.RemoveStateAction('value')
+    );
+    component.setPreset(Preset.Beacon12);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetPresetAction(Preset.Beacon12)
+    );
+    component.setBase('value');
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetBaseAction('value')
+    );
+    component.setDisabledRecipes(['value'], ['def']);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetDisabledRecipesAction({ value: ['value'], def: ['def'] })
+    );
+    component.setExpensive(true);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetExpensiveAction(true)
+    );
+    component.addFactory('value', ['def']);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Factories.AddAction({ value: 'value', def: ['def'] })
+    );
+    component.removeFactory('value', ['def']);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Factories.RemoveAction({ value: 'value', def: ['def'] })
+    );
+    component.raiseFactory('value', ['def']);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Factories.RaiseAction({ value: 'value', def: ['def'] })
+    );
+    component.setFactory('id', 'value', ['def']);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Factories.SetFactoryAction({ id: 'id', value: 'value', def: ['def'] })
+    );
+    component.setModuleRank('id', ['value'], ['def']);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Factories.SetModuleRankAction({
+        id: 'id',
+        value: ['value'],
+        def: ['def'],
+      })
+    );
+    component.setBeaconCount('id', 'value', 'def');
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Factories.SetBeaconCountAction({
+        id: 'id',
+        value: 'value',
+        def: 'def',
+      })
+    );
+    component.setBeacon('id', 'value', 'def');
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Factories.SetBeaconAction({ id: 'id', value: 'value', def: 'def' })
+    );
+    component.setBeaconModule('id', 'value', 'def');
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Factories.SetBeaconModuleAction({
+        id: 'id',
+        value: 'value',
+        def: 'def',
+      })
+    );
+    component.setOverclock('id', 0, 1);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Factories.SetOverclockAction({ id: 'id', value: 0, def: 1 })
+    );
+    component.setBeaconReceivers('value');
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetBeaconReceiversAction('value')
+    );
+    component.setBelt('value', 'def');
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetBeltAction({ value: 'value', def: 'def' })
+    );
+    component.setPipe('value', 'def');
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetPipeAction({ value: 'value', def: 'def' })
+    );
+    component.setFuel('value', 'def');
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetFuelAction({ value: 'value', def: 'def' })
+    );
+    component.setFlowRate(0);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetFlowRateAction(0)
+    );
+    component.setCargoWagon('value', 'def');
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetCargoWagonAction({ value: 'value', def: 'def' })
+    );
+    component.setFluidWagon('value', 'def');
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetFluidWagonAction({ value: 'value', def: 'def' })
+    );
+    component.setInserterTarget(InserterTarget.Chest);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetInserterTargetAction(InserterTarget.Chest)
+    );
+    component.setMiningBonus(0);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetMiningBonusAction(0)
+    );
+    component.setResearchSpeed(ResearchSpeed.Speed0);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetResearchSpeedAction(ResearchSpeed.Speed0)
+    );
+    component.setInserterCapacity(InserterCapacity.Capacity0);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetInserterCapacityAction(InserterCapacity.Capacity0)
+    );
+    component.setDisplayRate(DisplayRate.PerHour, DisplayRate.PerMinute);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetDisplayRateAction({
+        value: DisplayRate.PerHour,
+        prev: DisplayRate.PerMinute,
+      })
+    );
+    component.setSimplex(true);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Preferences.SetSimplexAction(true)
+    );
+    component.setPowerUnit(PowerUnit.GW);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Preferences.SetPowerUnitAction(PowerUnit.GW)
+    );
+    component.setProliferatorSpray('value');
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new Settings.SetProliferatorSprayAction('value')
+    );
+  });
 });

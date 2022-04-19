@@ -53,8 +53,8 @@ describe('IconComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TestIconComponent);
-    component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
+    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 

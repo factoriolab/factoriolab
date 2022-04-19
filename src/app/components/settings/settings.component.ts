@@ -214,11 +214,13 @@ export class SettingsComponent implements OnInit {
     factories: Factories.FactoriesState,
     data: Dataset
   ): void {
-    const def =
-      id === ''
-        ? data.defaults?.beaconCount
-        : factories.entities[''].beaconCount;
-    this.setBeaconCount(id, value, def);
+    if (data.defaults != null) {
+      const def =
+        id === ''
+          ? data.defaults.beaconCount
+          : factories.entities[''].beaconCount;
+      this.setBeaconCount(id, value, def);
+    }
   }
 
   changeOverclock(
