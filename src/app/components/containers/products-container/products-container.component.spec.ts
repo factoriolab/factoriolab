@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { StoreModule, Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { Mocks, ItemId, RecipeId } from 'src/tests';
 import { IconComponent, OptionsComponent, PickerComponent } from '~/components';
@@ -24,7 +25,11 @@ describe('ProductsContainerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormsModule, StoreModule.forRoot(reducers, { metaReducers })],
+      imports: [
+        FormsModule,
+        StoreModule.forRoot(reducers, { metaReducers }),
+        TranslateModule.forRoot(),
+      ],
       declarations: [
         IconComponent,
         OptionsComponent,

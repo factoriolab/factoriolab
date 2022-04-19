@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { getLanguageModifiers } from './store/preferences';
 
@@ -30,7 +31,6 @@ import {
   getMatrixResult as getSimplexResult,
 } from './store/products';
 import { getDatasets, getGame } from './store/settings';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'lab-root',
@@ -108,14 +108,14 @@ export class AppComponent implements OnInit, AfterViewInit {
           this.homeHref = 'satisfactory';
           break;
       }
-      this.translateSvc.get(this.title).subscribe(r => {
+      this.translateSvc.get(this.title).subscribe((r) => {
         this.titleService.setTitle(`${APP} | ${r}`);
       });
     });
     if (this.lsHidePoll) {
       this.showPoll = false;
     }
-    this.store.select(getLanguageModifiers).subscribe(r => {
+    this.store.select(getLanguageModifiers).subscribe((r) => {
       this.translateSvc.use(r.getLanguage);
     });
   }

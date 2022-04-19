@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { NONE } from '~/models';
 import { OptionsComponent } from './options.component';
@@ -31,6 +32,7 @@ describe('OptionsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [OptionsComponent, TestOptionsComponent],
+      imports: [TranslateModule.forRoot()],
     }).compileComponents();
   });
 

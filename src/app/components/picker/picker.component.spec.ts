@@ -1,6 +1,7 @@
 import { ViewChild, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { Mocks, CategoryId, ItemId, TestUtility } from 'src/tests';
 import { Dataset } from '~/models';
@@ -45,7 +46,7 @@ describe('PickerComponent', () => {
         PickerComponent,
         TestPickerComponent,
       ],
-      imports: [FormsModule],
+      imports: [FormsModule, TranslateModule.forRoot()],
     }).compileComponents();
   });
 

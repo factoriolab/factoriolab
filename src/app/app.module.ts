@@ -7,6 +7,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -43,8 +45,6 @@ import { reducers, metaReducers } from './store';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
 import { ProductsEffects } from './store/products/products.effects';
 import { FactoriesEffects } from './store/factories/factories.effects';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 @NgModule({
   declarations: [
@@ -83,7 +83,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
         useFactory: (http: HttpClient) => {
           return new TranslateHttpLoader(http, './assets/i18n/', '.json');
         },
-        deps: [HttpClient]
+        deps: [HttpClient],
       },
       defaultLanguage: 'en',
     }),

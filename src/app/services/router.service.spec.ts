@@ -2,7 +2,7 @@ import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
@@ -280,13 +280,18 @@ describe('RouterService', () => {
       expect(service.dispatch).not.toHaveBeenCalled();
     });
 
-    it('should log warning on bad zipped url', () => {
+    it('should log warning on bad zipped url', fakeAsync(() => {
       spyOn(console, 'warn');
       spyOn(console, 'error');
-      (router.events as any).next(new NavigationEnd(2, '/#z=test', '/#z=test'));
+      expect(() => {
+        (router.events as any).next(
+          new NavigationEnd(2, '/#z=test', '/#z=test')
+        );
+        tick();
+      }).toThrow();
       expect(console.warn).toHaveBeenCalledTimes(1);
       expect(console.error).toHaveBeenCalledTimes(1);
-    });
+    }));
 
     it('should unzip empty v0', () => {
       const url = '/#z=eJwrsAUAAR8Arg==';
