@@ -5,6 +5,7 @@ import { Mocks, TestUtility, ItemId } from 'src/tests';
 import { DialogComponent, IconComponent } from '~/components';
 import { IdType, DisplayRate, Dataset } from '~/models';
 import { SelectComponent } from './select.component';
+import { TranslateModule } from "@ngx-translate/core";
 
 enum DataTest {
   Open = 'lab-select-open',
@@ -55,6 +56,9 @@ describe('SelectComponent', () => {
         IconComponent,
         SelectComponent,
         TestSelectComponent,
+      ],
+      imports: [
+        TranslateModule.forRoot(),
       ],
     }).compileComponents();
   });

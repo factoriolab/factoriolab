@@ -107,7 +107,21 @@
     "miningSpeed": "Mining speed",
     "miningSpeedTooltip": "Enter the current mining speed with bonus.\nDefault is 100%.",
     "miningSpeedTitle": "Enter mining speed",
-    "miningSpeedPlaceholder": "Mining speed"
+    "miningSpeedPlaceholder": "Mining speed",
+    "researchSpeed": "Research speed",
+    "researchSpeedTooltip": "Enter the current level of research speed bonus.\nThis setting only affects research products.",
+    "researchSpeedTitle": "Select research speed bonus",
+    "inserterCapacity": "Inserter capacity",
+    "inserterCapacityTooltip": "Enter the current level of inserter capacity bonus.\nThis setting only affects inserter estimates.",
+    "inserterCapacityTitle": "Select inserter capacity bonus",
+    "advanced": "Advanced",
+    "simplexSolver": "Simplex solver",
+    "simplexSolverTooltip": "Select to enable/disable the simplex solver.\nDisable simplex to more easily modify settings\nwhen simplex is slow and causes lag.",
+    "simplexSolverTitle": "Disable to get a faster but incomplete result",
+    "simplexSolverInvalid": "Disabling simplex improves performance but usually results in an\n              incomplete solution.",
+    "language": "Language",
+    "languageTooltip": "Switch current display language.",
+    "languageTitle": "Select display language"
   },
   "input": {
     "increase1": "Increase 1",
@@ -166,6 +180,8 @@
     "select": "Select an item to produce"
   },
   "options": {
+    "enabled": "Enabled",
+    "disabled": "Disabled",
     "DisplayRate": {
       "PerSecond": "Units per second",
       "PerMinute": "Units per minute",
@@ -180,6 +196,31 @@
       "ExpressTransportBelt": "Express transport belt",
       "FastTransportBelt": "Fast transport belt",
       "TransportBelt": "Transport belt"
+    },
+    "ResearchSpeed": {
+      "Speed0": "No research bonus",
+      "Speed1": "Research speed 1",
+      "Speed2": "Research speed 2",
+      "Speed3": "Research speed 3",
+      "Speed4": "Research speed 4",
+      "Speed5": "Research speed 5",
+      "Speed6": "Research speed 6"
+    },
+    "InserterCapacity": {
+      "Capacity0": "No capacity bonus",
+      "Capacity2": "Capacity bonus 2",
+      "Capacity7": "Capacity bonus 7"
+    },
+    "Preset1": {
+      "Minimum": "Minimum",
+      "Modules": "Modules",
+      "Beacon8": "8 Beacons",
+      "Beacon12": "12 Beacons"
+    },
+    "Preset2": {
+      "Minimum": "Minimum",
+      "Modules": "Upgraded",
+      "Beacon8": "Proliferated"
     }
   },
   "list": {
@@ -207,5 +248,9 @@
     "selectAModule": "Select a module",
     "selectAProliferator": "Select a proliferator",
     "selectResourcePurity": "Select resource purity"
+  },
+  "select": {
+    "noModule": "No module",
+    "noProliferator": "No proliferator"
   }
 }

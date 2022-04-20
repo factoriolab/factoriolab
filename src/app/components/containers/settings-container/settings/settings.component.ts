@@ -124,11 +124,11 @@ export class SettingsComponent implements OnInit, OnChanges {
   enabledOptions: IdName<boolean>[] = [
     {
       id: true,
-      name: 'Enabled',
+      name: 'options.enabled',
     },
     {
       id: false,
-      name: 'Disabled',
+      name: 'options.disabled',
     },
   ];
   languageOptions: Language[] = [

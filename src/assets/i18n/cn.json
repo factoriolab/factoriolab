@@ -52,9 +52,9 @@
     "powerUnitTitle": "请选择电量单位",
     "factory": "工厂",
     "preset": "预设",
-    "presetTooltip": "请选择要使用的默认工厂预设。",
-    "presetTitle": "选择默认工厂",
-    "selectAFactory": "请选择一种工厂",
+    "presetTooltip": "请选择要使用的默认预设。",
+    "presetTitle": "选择默认预设",
+    "selectAFactory": "请选择一种预设",
     "addFactoryPreference": "添加工厂配置",
     "removeFactoryPreference": "删除工厂配置",
     "factoryDefaults": "默认工厂设置",
@@ -62,7 +62,7 @@
     "defaultNumberOfBeacons": "默认插件数量",
     "selectABeacon": "请选择一种插件",
     "selectDefaultBeacon": "选择默认插件",
-    "selectAModule": "请选择一种模块",
+    "selectAModule": "请选择一种插件",
     "beaconModule": "插件模块",
     "raiseFactoryRank": "提升工厂等级",
     "estimateBeaconPowerUsage": "预估插件的电量消耗",
@@ -107,15 +107,30 @@
     "miningSpeed": "采矿速度",
     "miningSpeedTooltip": "输入当前采矿速度加成。\n默认100%。",
     "miningSpeedTitle": "输入采矿速度",
-    "miningSpeedPlaceholder": "采矿速度"
+    "miningSpeedPlaceholder": "采矿速度",
+    "researchSpeed": "研发速度",
+    "researchSpeedTooltip": "请选择当前研发速度加成。\n该设置只影响产品的研发。",
+    "researchSpeedTitle": "选择研发速度加成",
+    "inserterCapacity": "机械臂运量",
+    "inserterCapacityTooltip": "输入机械臂当前运量加成等级。\n该设置只影响机械臂的计算。",
+    "inserterCapacityTitle": "选择机械臂运量加成",
+    "advanced": "高级",
+    "simplexSolver": "单纯形法",
+    "simplexSolverTooltip": "选择开启/关闭单纯形法解析器。\n建议在在计算缓慢或卡顿的时候关闭单纯形法。",
+    "simplexSolverTitle": "禁用可以让计算变得更快，但结果可能会不准确",
+    "simplexSolverInvalid": "禁用单纯形法来提高性能，但结果可能会不准确。",
+    "language": "语言",
+    "languageTooltip": "切换当前显示的语言。",
+    "languageTitle": "选择显示的语言"
   },
   "input": {
     "increase1": "加1",
     "decrease1": "减1"
   },
   "ranker": {
-    "selectModules": "选择模块",
-    "noModule": "无模块",
+    "selectModules": "选择插件",
+    "noModule": "无插件",
+    "rankerInfo": "(可选) 选择另外一种插件作为备用插件",
     "cancel": "取消",
     "confirm": "确定"
   },
@@ -125,7 +140,6 @@
     "selectRecipes": "请选择配方",
     "enableAll": "全部允许",
     "disableAll": "全部禁用",
-    "rankerInfo": "(可选) 选择另外一种模块作为备用模块",
     "cancel": "取消",
     "confirm": "确定"
   },
@@ -166,6 +180,8 @@
     "select": "请选择你要生产的物品"
   },
   "options": {
+    "enabled": "开启",
+    "disabled": "关闭",
     "DisplayRate": {
       "PerSecond": "每秒几个",
       "PerMinute": "每分钟几个",
@@ -180,6 +196,31 @@
       "ExpressTransportBelt": "急速传送带",
       "FastTransportBelt": "高速传送带",
       "TransportBelt": "基础传送带"
+    },
+    "ResearchSpeed": {
+      "Speed0": "无研发速度加成",
+      "Speed1": "研发速度 1",
+      "Speed2": "研发速度 2",
+      "Speed3": "研发速度 3",
+      "Speed4": "研发速度 4",
+      "Speed5": "研发速度 5",
+      "Speed6": "研发速度 6"
+    },
+    "InserterCapacity": {
+      "Capacity0": "无运量加成",
+      "Capacity2": "运量加成 2",
+      "Capacity7": "运量加成 7"
+    },
+    "Preset1": {
+      "Minimum": "最小化",
+      "Modules": "插件",
+      "Beacon8": "8 个影响",
+      "Beacon12": "12 个影响"
+    },
+    "Preset2": {
+      "Minimum": "最小化",
+      "Modules": "最高级",
+      "Beacon8": "增产剂"
     }
   },
   "list": {
@@ -207,5 +248,9 @@
     "selectAModule": "选择一种插件",
     "selectAProliferator": "选择一种增产剂",
     "selectResourcePurity": "选择资源纯度"
+  },
+  "select": {
+    "noModule": "无插件",
+    "noProliferator": "无增产剂"
   }
 }

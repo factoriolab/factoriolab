@@ -820,14 +820,13 @@
         <tr *ngIf="data.game === Game.Factorio">
           <td>
             <lab-info
-              text="Research speed"
-              tooltip="Enter the current level of research speed bonus.
-This setting only affects research products."
+              [text]="'setting.researchSpeed' | translate"
+              [tooltip]="'setting.researchSpeedTooltip' | translate"
             ></lab-info>
           </td>
           <td>
             <lab-options
-              title="Select research speed bonus"
+              [title]="'setting.researchSpeedTitle' | translate"
               [selected]="settings.researchSpeed"
               [options]="ResearchSpeedOptions"
               (selectId)="setResearchSpeed.emit($event)"
@@ -837,14 +836,13 @@ This setting only affects research products."
         <tr *ngIf="data.game === Game.Factorio">
           <td>
             <lab-info
-              text="Inserter capacity"
-              tooltip="Enter the current level of inserter capacity bonus.
-This setting only affects inserter estimates."
+              [text]="'setting.inserterCapacity' | translate"
+              [tooltip]="'setting.inserterCapacityTooltip' | translate"
             ></lab-info>
           </td>
           <td>
             <lab-options
-              title="Select inserter capacity bonus"
+              [title]="'setting.inserterCapacityTitle' | translate"
               [selected]="settings.inserterCapacity"
               [options]="InserterCapacityOptions"
               (selectId)="setInserterCapacity.emit($event)"
@@ -856,20 +854,18 @@ This setting only affects inserter estimates."
   </div>
   <div class="hole">
     <div>
-      <div class="header">Advanced</div>
+      <div class="header">{{ 'setting.advanced' | translate }}</div>
       <table class="wide">
         <tr>
           <td>
             <lab-info
-              text="Simplex solver"
-              tooltip="Select to enable/disable the simplex solver.
-Disable simplex to more easily modify settings
-when simplex is slow and causes lag."
+              [text]="'setting.simplexSolver' | translate"
+              [tooltip]="'setting.simplexSolverTooltip' | translate"
             ></lab-info>
           </td>
           <td>
             <lab-options
-              title="Disable to get a faster but incomplete result"
+              [title]="'setting.simplexSolverTitle' | translate"
               [selected]="preferences.simplex"
               [options]="enabledOptions"
               (selectId)="setSimplex.emit($event)"
@@ -879,21 +875,20 @@ when simplex is slow and causes lag."
         <tr *ngIf="!preferences.simplex">
           <td colspan="2">
             <span class="invalid"
-            >Disabling simplex improves performance but usually results in an
-              incomplete solution.</span
+            >{{ 'setting.simplexSolverInvalid' | translate }}</span
             >
           </td>
         </tr>
         <tr>
           <td>
             <lab-info
-              text="Language"
-              tooltip="Switch current display language."
+              [text]="'setting.language' | translate"
+              [tooltip]="'setting.languageTooltip' | translate"
             ></lab-info>
           </td>
           <td>
             <lab-options
-              title="Select display language"
+              [title]="'setting.languageTitle' | translate"
               [selected]="preferences.language"
               [options]="languageOptions"
               (selectId)="changeLanguage($event)"
