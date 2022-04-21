@@ -6,7 +6,7 @@ import { Mocks, RecipeId } from 'src/tests';
 import { IconComponent, InputComponent, InfoComponent } from '~/components';
 import { ValidateNumberDirective } from '~/support';
 import { MatrixComponent } from './matrix.component';
-import {TranslateModule} from "@ngx-translate/core";
+import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
   selector: 'lab-test-matrix',
