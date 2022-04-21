@@ -14,6 +14,7 @@ import {
   Dataset,
   RecipeSettings,
   FactorySettings,
+  RecipeField,
 } from '~/models';
 import { TrackService } from '~/services';
 import { LabState } from '~/store';
@@ -28,14 +29,6 @@ interface AllSettingsState {
   recipe: RecipeSettings;
   factory: FactorySettings;
   fMatch: boolean;
-}
-
-export enum RecipeField {
-  FactoryModules,
-  BeaconCount,
-  Beacon,
-  BeaconModules,
-  Overclock,
 }
 
 @Component({

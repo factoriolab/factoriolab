@@ -1,6 +1,6 @@
 import { ComponentFixture } from '@angular/core/testing';
 
-/* Don't care about coverage on test utility. */
+/* Don't care about coverage on test tools */
 /* istanbul ignore next */
 export class TestUtility {
   static getDt(

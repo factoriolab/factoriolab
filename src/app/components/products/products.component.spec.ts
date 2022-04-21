@@ -10,12 +10,12 @@ import {
   OptionsComponent,
 } from '~/components';
 import { ValidateNumberDirective } from '~/directives';
-import { DisplayRate, Product, RateType } from '~/models';
+import { DisplayRate, Product, RateType, RecipeField } from '~/models';
 import * as Factories from '~/store/factories';
 import * as Products from '~/store/products';
 import * as Settings from '~/store/settings';
 import { RecipeUtility } from '~/utilities';
-import { ProductsComponent, RecipeField } from './products.component';
+import { ProductsComponent } from './products.component';
 
 describe('ProductsComponent', () => {
   let component: ProductsComponent;

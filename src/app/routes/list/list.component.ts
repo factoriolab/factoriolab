@@ -25,6 +25,7 @@ import {
   PIPE,
   Dataset,
   StepDetailTab,
+  RecipeField,
 } from '~/models';
 import { TrackService } from '~/services';
 import { LabState } from '~/store';
@@ -35,14 +36,6 @@ import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 import { ExportUtility, RecipeUtility } from '~/utilities';
-
-enum RecipeField {
-  FactoryModules,
-  BeaconCount,
-  Beacon,
-  BeaconModules,
-  Overclock,
-}
 
 @UntilDestroy()
 @Component({
@@ -211,8 +204,12 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   resetStep(step: Step): void {
-    this.resetItem(step.itemId);
-    this.resetRecipe(step.recipeId);
+    if (step.itemId) {
+      this.resetItem(step.itemId);
+    }
+    if (step.recipeId) {
+      this.resetRecipe(step.recipeId);
+    }
   }
 
   export(
@@ -261,37 +258,35 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     data: Dataset
   ): void {
     const disabledRecipes = settings.disabledRecipes ?? [];
+    const def = data.defaults?.disabledRecipes;
     if (disabledRecipes.indexOf(id) === -1) {
-      this.setDisabledRecipes(
-        [...disabledRecipes, id],
-        data.defaults?.disabledRecipes
-      );
+      this.setDisabledRecipes([...disabledRecipes, id], def);
     } else {
       this.setDisabledRecipes(
         disabledRecipes.filter((i) => i !== id),
-        data.defaults?.disabledRecipes
+        def
       );
     }
   }
 
   changeFactory(
-    id: string,
+    recipeId: string,
     value: string,
     factories: Factories.FactoriesState,
     data: Dataset
   ): void {
     this.setFactory(
-      id,
+      recipeId,
       value,
       RecipeUtility.bestMatch(
-        data.recipeEntities[id].producers,
+        data.recipeEntities[recipeId].producers,
         factories.ids ?? []
       )
     );
   }
 
   changeRecipeField(
-    id: string,
+    recipeId: string,
     event: string | Event,
     recipeSettings: Recipes.RecipesState,
     factories: Factories.FactoriesState,
@@ -299,7 +294,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     index?: number,
     data?: Dataset
   ): void {
-    const recipe = recipeSettings[id];
+    const recipe = recipeSettings[recipeId];
     if (recipe.factory) {
       const factory = factories.entities[recipe.factory];
       switch (field) {
@@ -312,7 +307,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
             recipe.factoryModules != null
           ) {
             const count = recipe.factoryModules.length;
-            const options = [...data.recipeModuleIds[id], ItemId.Module];
+            const options = [...data.recipeModuleIds[recipeId], ItemId.Module];
             const def = RecipeUtility.defaultModules(
               options,
               factory.moduleRank,
@@ -323,14 +318,14 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
               event,
               recipe.factoryModules
             );
-            this.setFactoryModules(id, modules, def);
+            this.setFactoryModules(recipeId, modules, def);
           }
           break;
         }
         case RecipeField.BeaconCount: {
           if (typeof event === 'string') {
             const def = factory.beaconCount;
-            this.setBeaconCount(id, event, def);
+            this.setBeaconCount(recipeId, event, def);
           }
           break;
         }
@@ -347,7 +342,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
               event,
               recipe.beaconModules
             );
-            this.setBeaconModules(id, value, def);
+            this.setBeaconModules(recipeId, value, def);
           }
           break;
         }
@@ -357,7 +352,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
             const value = target.valueAsNumber;
             if (value >= 1 && value <= 250) {
               const def = factory.overclock;
-              this.setOverclock(id, value, def);
+              this.setOverclock(recipeId, value, def);
             }
           }
           break;
@@ -376,10 +371,8 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   /** Action Dispatch Methods */
-  ignoreItem(value: string | undefined): void {
-    if (value) {
-      this.store.dispatch(new Items.IgnoreItemAction(value));
-    }
+  ignoreItem(value: string): void {
+    this.store.dispatch(new Items.IgnoreItemAction(value));
   }
 
   setBelt(id: string, value: string, def: string): void {
@@ -428,16 +421,12 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     this.store.dispatch(new Recipes.SetOverclockAction({ id, value, def }));
   }
 
-  resetItem(value: string | undefined): void {
-    if (value != null) {
-      this.store.dispatch(new Items.ResetItemAction(value));
-    }
+  resetItem(value: string): void {
+    this.store.dispatch(new Items.ResetItemAction(value));
   }
 
-  resetRecipe(value: string | undefined): void {
-    if (value != null) {
-      this.store.dispatch(new Recipes.ResetRecipeAction(value));
-    }
+  resetRecipe(value: string): void {
+    this.store.dispatch(new Recipes.ResetRecipeAction(value));
   }
 
   resetIgnore(): void {
