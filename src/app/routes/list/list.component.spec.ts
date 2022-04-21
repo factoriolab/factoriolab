@@ -1,18 +1,20 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ChangeDetectorRef, Component, Type, ViewChild } from '@angular/core';
-import {
-  ComponentFixture,
-  TestBed,
-  tick,
-  fakeAsync,
-} from '@angular/core/testing';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Action, MemoizedSelector } from '@ngrx/store';
-import { MockState, MockStore, provideMockStore } from '@ngrx/store/testing';
+import { MemoizedSelector } from '@ngrx/store';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
-import { Mocks, TestUtility, ItemId, RecipeId, initialState } from 'src/tests';
+import {
+  Mocks,
+  TestUtility,
+  ItemId,
+  RecipeId,
+  initialState,
+  DispatchTest,
+} from 'src/tests';
 import {
   IconComponent,
   InputComponent,
@@ -21,12 +23,8 @@ import {
 } from '~/components';
 import { ValidateNumberDirective } from '~/directives';
 import {
-  Rational,
   Step,
   ListMode,
-  Column,
-  Game,
-  PowerUnit,
   StepDetailTab,
   Entities,
   StepDetail,
@@ -43,13 +41,11 @@ import { RouterService } from '~/services';
 import { LabState } from '~/store';
 import * as Items from '~/store/items';
 import * as Factories from '~/store/factories';
-import * as Preferences from '~/store/preferences';
 import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 import { ExportUtility, RecipeUtility } from '~/utilities';
 import { ListComponent } from './list.component';
-import { DispatchTest } from 'src/tests/dispatch-test';
 
 enum DataTest {
   Export = 'lab-list-export',
@@ -67,7 +63,7 @@ class TestListComponent {
   selectedId: string | undefined;
 }
 
-fdescribe('ListComponent', () => {
+describe('ListComponent', () => {
   let component: TestListComponent;
   let fixture: ComponentFixture<TestListComponent>;
   let route: ActivatedRoute;
@@ -428,12 +424,12 @@ fdescribe('ListComponent', () => {
     dispatch.idValDef('setBelt', Items.SetBeltAction);
     dispatch.idValDef('setWagon', Items.SetWagonAction);
     dispatch.idValDef('setFactory', Recipes.SetFactoryAction);
-    dispatch.idValDefArr('setFactoryModules', Recipes.SetFactoryModulesAction);
+    dispatch.idValDef('setFactoryModules', Recipes.SetFactoryModulesAction);
     dispatch.idValDef('setBeaconCount', Recipes.SetBeaconCountAction);
     dispatch.idValDef('setBeacon', Recipes.SetBeaconAction);
-    dispatch.idValDefArr('setBeaconModules', Recipes.SetBeaconModulesAction);
+    dispatch.idValDef('setBeaconModules', Recipes.SetBeaconModulesAction);
     dispatch.idVal('setBeaconTotal', Recipes.SetBeaconTotalAction);
-    dispatch.idValDefNum('setOverclock', Recipes.SetOverclockAction);
+    dispatch.idValDef('setOverclock', Recipes.SetOverclockAction);
     dispatch.val('resetItem', Items.ResetItemAction);
     dispatch.val('resetRecipe', Recipes.ResetRecipeAction);
     dispatch.void('resetIgnore', Items.ResetIgnoreAction);
@@ -442,7 +438,7 @@ fdescribe('ListComponent', () => {
     dispatch.void('resetFactory', Recipes.ResetFactoryAction);
     dispatch.void('resetOverclock', Recipes.ResetOverclockAction);
     dispatch.void('resetBeacons', Recipes.ResetBeaconsAction);
-    dispatch.valDefArr('setDisabledRecipes', Settings.SetDisabledRecipesAction);
+    dispatch.valDef('setDisabledRecipes', Settings.SetDisabledRecipesAction);
     dispatch.idValDef('setDefaultRecipe', Items.SetRecipeAction);
   });
 });

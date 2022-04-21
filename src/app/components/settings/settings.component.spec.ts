@@ -6,7 +6,13 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
-import { TestUtility, ItemId, initialState, Mocks } from 'src/tests';
+import {
+  TestUtility,
+  ItemId,
+  initialState,
+  Mocks,
+  DispatchTest,
+} from 'src/tests';
 import {
   ColumnsComponent,
   IconComponent,
@@ -18,15 +24,7 @@ import {
   ToggleComponent,
 } from '~/components';
 import { ValidateNumberDirective } from '~/directives';
-import {
-  DisplayRate,
-  Game,
-  InserterCapacity,
-  InserterTarget,
-  PowerUnit,
-  Preset,
-  ResearchSpeed,
-} from '~/models';
+import { Game } from '~/models';
 import { GtZeroPipe } from '~/pipes';
 import { RouterService } from '~/services';
 import * as App from '~/store/app.actions';
@@ -318,143 +316,37 @@ describe('SettingsComponent', () => {
   });
 
   it('should dispatch actions', () => {
-    spyOn(store, 'dispatch');
-    component.resetSettings();
-    expect(store.dispatch).toHaveBeenCalledWith(new App.ResetAction());
-    component.saveState('id', 'value');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Preferences.SaveStateAction({ id: 'id', value: 'value' })
-    );
-    component.removeState('value');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Preferences.RemoveStateAction('value')
-    );
-    component.setPreset(Preset.Beacon12);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetPresetAction(Preset.Beacon12)
-    );
-    component.setBase('value');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetBaseAction('value')
-    );
-    component.setDisabledRecipes(['value'], ['def']);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetDisabledRecipesAction({ value: ['value'], def: ['def'] })
-    );
-    component.setExpensive(true);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetExpensiveAction(true)
-    );
-    component.addFactory('value', ['def']);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Factories.AddAction({ value: 'value', def: ['def'] })
-    );
-    component.removeFactory('value', ['def']);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Factories.RemoveAction({ value: 'value', def: ['def'] })
-    );
-    component.raiseFactory('value', ['def']);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Factories.RaiseAction({ value: 'value', def: ['def'] })
-    );
-    component.setFactory('id', 'value', ['def']);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Factories.SetFactoryAction({ id: 'id', value: 'value', def: ['def'] })
-    );
-    component.setModuleRank('id', ['value'], ['def']);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Factories.SetModuleRankAction({
-        id: 'id',
-        value: ['value'],
-        def: ['def'],
-      })
-    );
-    component.setBeaconCount('id', 'value', 'def');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Factories.SetBeaconCountAction({
-        id: 'id',
-        value: 'value',
-        def: 'def',
-      })
-    );
-    component.setBeacon('id', 'value', 'def');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Factories.SetBeaconAction({ id: 'id', value: 'value', def: 'def' })
-    );
-    component.setBeaconModule('id', 'value', 'def');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Factories.SetBeaconModuleAction({
-        id: 'id',
-        value: 'value',
-        def: 'def',
-      })
-    );
-    component.setOverclock('id', 0, 1);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Factories.SetOverclockAction({ id: 'id', value: 0, def: 1 })
-    );
-    component.setBeaconReceivers('value');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetBeaconReceiversAction('value')
-    );
-    component.setBelt('value', 'def');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetBeltAction({ value: 'value', def: 'def' })
-    );
-    component.setPipe('value', 'def');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetPipeAction({ value: 'value', def: 'def' })
-    );
-    component.setFuel('value', 'def');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetFuelAction({ value: 'value', def: 'def' })
-    );
-    component.setFlowRate(0);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetFlowRateAction(0)
-    );
-    component.setCargoWagon('value', 'def');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetCargoWagonAction({ value: 'value', def: 'def' })
-    );
-    component.setFluidWagon('value', 'def');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetFluidWagonAction({ value: 'value', def: 'def' })
-    );
-    component.setInserterTarget(InserterTarget.Chest);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetInserterTargetAction(InserterTarget.Chest)
-    );
-    component.setMiningBonus(0);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetMiningBonusAction(0)
-    );
-    component.setResearchSpeed(ResearchSpeed.Speed0);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetResearchSpeedAction(ResearchSpeed.Speed0)
-    );
-    component.setInserterCapacity(InserterCapacity.Capacity0);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetInserterCapacityAction(InserterCapacity.Capacity0)
-    );
-    component.setDisplayRate(DisplayRate.PerHour, DisplayRate.PerMinute);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetDisplayRateAction({
-        value: DisplayRate.PerHour,
-        prev: DisplayRate.PerMinute,
-      })
-    );
-    component.setSimplex(true);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Preferences.SetSimplexAction(true)
-    );
-    component.setPowerUnit(PowerUnit.GW);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Preferences.SetPowerUnitAction(PowerUnit.GW)
-    );
-    component.setProliferatorSpray('value');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetProliferatorSprayAction('value')
-    );
+    const dispatch = new DispatchTest(store, component);
+    dispatch.void('resetSettings', App.ResetAction);
+    dispatch.idVal('saveState', Preferences.SaveStateAction);
+    dispatch.val('removeState', Preferences.RemoveStateAction);
+    dispatch.val('setPreset', Settings.SetPresetAction);
+    dispatch.val('setBase', Settings.SetBaseAction);
+    dispatch.val('setDisabledRecipes', Settings.SetDisabledRecipesAction);
+    dispatch.val('setExpensive', Settings.SetExpensiveAction);
+    dispatch.valDef('addFactory', Factories.AddAction);
+    dispatch.valDef('removeFactory', Factories.RemoveAction);
+    dispatch.valDef('raiseFactory', Factories.RaiseAction);
+    dispatch.idValDef('setFactory', Factories.SetFactoryAction);
+    dispatch.idValDef('setModuleRank', Factories.SetModuleRankAction);
+    dispatch.idValDef('setBeaconCount', Factories.SetBeaconCountAction);
+    dispatch.idValDef('setBeacon', Factories.SetBeaconAction);
+    dispatch.idValDef('setBeaconModule', Factories.SetBeaconModuleAction);
+    dispatch.idValDef('setOverclock', Factories.SetOverclockAction);
+    dispatch.val('setBeaconReceivers', Settings.SetBeaconReceiversAction);
+    dispatch.valDef('setBelt', Settings.SetBeltAction);
+    dispatch.valDef('setPipe', Settings.SetPipeAction);
+    dispatch.valDef('setFuel', Settings.SetFuelAction);
+    dispatch.val('setFlowRate', Settings.SetFlowRateAction);
+    dispatch.valDef('setCargoWagon', Settings.SetCargoWagonAction);
+    dispatch.valDef('setFluidWagon', Settings.SetFluidWagonAction);
+    dispatch.val('setInserterTarget', Settings.SetInserterTargetAction);
+    dispatch.val('setMiningBonus', Settings.SetMiningBonusAction);
+    dispatch.val('setResearchSpeed', Settings.SetResearchSpeedAction);
+    dispatch.val('setInserterCapacity', Settings.SetInserterCapacityAction);
+    dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
+    dispatch.val('setSimplex', Preferences.SetSimplexAction);
+    dispatch.val('setPowerUnit', Preferences.SetPowerUnitAction);
+    dispatch.val('setProliferatorSpray', Settings.SetProliferatorSprayAction);
   });
 });

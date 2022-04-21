@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
-import { Mocks, ItemId, initialState, RecipeId } from 'src/tests';
+import { Mocks, ItemId, initialState, RecipeId, DispatchTest } from 'src/tests';
 import {
   IconComponent,
   InputComponent,
@@ -10,7 +10,7 @@ import {
   OptionsComponent,
 } from '~/components';
 import { ValidateNumberDirective } from '~/directives';
-import { DisplayRate, Product, RateType, RecipeField } from '~/models';
+import { Product, RateType, RecipeField } from '~/models';
 import * as Factories from '~/store/factories';
 import * as Products from '~/store/products';
 import * as Settings from '~/store/settings';
@@ -269,77 +269,25 @@ describe('ProductsComponent', () => {
   });
 
   it('should dispatch actions', () => {
-    spyOn(store, 'dispatch');
-    component.removeProduct('id');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.RemoveAction('id')
+    const dispatch = new DispatchTest(store, component);
+    dispatch.val('removeProduct', Products.RemoveAction);
+    dispatch.idVal('setItem', Products.SetItemAction);
+    dispatch.idVal('setRate', Products.SetRateAction);
+    dispatch.idVal('setRateType', Products.SetRateTypeAction);
+    dispatch.idVal('setVia', Products.SetViaAction);
+    dispatch.idValDef('setViaSetting', Products.SetViaSettingAction);
+    dispatch.idValDef(
+      'setViaFactoryModules',
+      Products.SetViaFactoryModulesAction
     );
-    component.setItem('id', 'value');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.SetItemAction({ id: 'id', value: 'value' })
+    dispatch.idValDef('setViaBeaconCount', Products.SetViaBeaconCountAction);
+    dispatch.idValDef('setViaBeacon', Products.SetViaBeaconAction);
+    dispatch.idValDef(
+      'setViaBeaconModules',
+      Products.SetViaBeaconModulesAction
     );
-    component.setRate('id', 'value');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.SetRateAction({ id: 'id', value: 'value' })
-    );
-    component.setRateType('id', RateType.Belts);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.SetRateTypeAction({ id: 'id', value: RateType.Belts })
-    );
-    component.setVia('id', 'value');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.SetViaAction({ id: 'id', value: 'value' })
-    );
-    component.setViaSetting('id', 'value', 'def');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.SetViaSettingAction({
-        id: 'id',
-        value: 'value',
-        def: 'def',
-      })
-    );
-    component.setViaFactoryModules('id', ['value'], ['def']);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.SetViaFactoryModulesAction({
-        id: 'id',
-        value: ['value'],
-        def: ['def'],
-      })
-    );
-    component.setViaBeaconCount('id', 'value', 'def');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.SetViaBeaconCountAction({
-        id: 'id',
-        value: 'value',
-        def: 'def',
-      })
-    );
-    component.setViaBeacon('id', 'value', 'def');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.SetViaBeaconAction({ id: 'id', value: 'value', def: 'def' })
-    );
-    component.setViaBeaconModules('id', ['value'], ['def']);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.SetViaBeaconModulesAction({
-        id: 'id',
-        value: ['value'],
-        def: ['def'],
-      })
-    );
-    component.setViaOverclock('id', 0, 1);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.SetViaOverclockAction({ id: 'id', value: 0, def: 1 })
-    );
-    component.addProduct('value');
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Products.AddAction('value')
-    );
-    component.setDisplayRate(DisplayRate.PerHour, DisplayRate.PerMinute);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new Settings.SetDisplayRateAction({
-        value: DisplayRate.PerHour,
-        prev: DisplayRate.PerMinute,
-      })
-    );
+    dispatch.idValDef('setViaOverclock', Products.SetViaOverclockAction);
+    dispatch.val('addProduct', Products.AddAction);
+    dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
   });
 });

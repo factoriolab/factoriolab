@@ -40,7 +40,6 @@ describe('FactoriesEffects', () => {
         new Recipes.SetCostAction({
           id: RecipeId.Coal,
           value: '100',
-          def: undefined,
         })
       );
       spyOn(store, 'dispatch').and.callThrough();

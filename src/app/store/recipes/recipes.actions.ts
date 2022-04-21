@@ -56,7 +56,7 @@ export class SetOverclockAction implements Action {
 
 export class SetCostAction implements Action {
   readonly type = RecipesActionType.SET_COST;
-  constructor(public payload: DefaultIdPayload<string | undefined>) {}
+  constructor(public payload: IdPayload<string | undefined>) {}
 }
 
 export class ResetRecipeAction implements Action {

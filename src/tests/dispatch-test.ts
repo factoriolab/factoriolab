@@ -5,30 +5,46 @@ import { MockStore } from '@ngrx/store/testing';
 /* Don't care about coverage on test tools */
 /* istanbul ignore next */
 export class DispatchTest<T> {
-  constructor(public mockStore: MockStore, public component: T) {
-    spyOn(mockStore, 'dispatch');
-  }
+  spy = spyOn(this.mockStore, 'dispatch');
+
+  constructor(public mockStore: MockStore, public component: T) {}
 
   void(key: keyof T, action: Type<Action>): void {
+    this.spy.calls.reset();
     (this.component[key] as unknown as () => void)();
     expect(this.mockStore.dispatch).toHaveBeenCalledWith(new action());
   }
 
   val(key: keyof T, action: Type<Action>): void {
+    this.spy.calls.reset();
     (this.component[key] as unknown as (value: string) => void)('value');
     expect(this.mockStore.dispatch).toHaveBeenCalledWith(new action('value'));
   }
 
-  valDefArr(key: keyof T, action: Type<Action>): void {
-    (
-      this.component[key] as unknown as (value: [string], def: [string]) => void
-    )(['value'], ['def']);
+  valDef(key: keyof T, action: Type<Action>): void {
+    this.spy.calls.reset();
+    (this.component[key] as unknown as (value: string, def: string) => void)(
+      'value',
+      'def'
+    );
     expect(this.mockStore.dispatch).toHaveBeenCalledWith(
-      new action({ value: ['value'], def: ['def'] })
+      new action({ value: 'value', def: 'def' })
+    );
+  }
+
+  valPrev(key: keyof T, action: Type<Action>): void {
+    this.spy.calls.reset();
+    (this.component[key] as unknown as (value: string, prev: string) => void)(
+      'value',
+      'prev'
+    );
+    expect(this.mockStore.dispatch).toHaveBeenCalledWith(
+      new action({ value: 'value', prev: 'prev' })
     );
   }
 
   idVal(key: keyof T, action: Type<Action>): void {
+    this.spy.calls.reset();
     (this.component[key] as unknown as (id: string, value: string) => void)(
       'id',
       'value'
@@ -39,6 +55,7 @@ export class DispatchTest<T> {
   }
 
   idValDef(key: keyof T, action: Type<Action>): void {
+    this.spy.calls.reset();
     (
       this.component[key] as unknown as (
         id: string,
@@ -48,32 +65,6 @@ export class DispatchTest<T> {
     )('id', 'value', 'def');
     expect(this.mockStore.dispatch).toHaveBeenCalledWith(
       new action({ id: 'id', value: 'value', def: 'def' })
-    );
-  }
-
-  idValDefNum(key: keyof T, action: Type<Action>): void {
-    (
-      this.component[key] as unknown as (
-        id: string,
-        value: number,
-        def: number
-      ) => void
-    )('id', 0, 1);
-    expect(this.mockStore.dispatch).toHaveBeenCalledWith(
-      new action({ id: 'id', value: 0, def: 1 })
-    );
-  }
-
-  idValDefArr(key: keyof T, action: Type<Action>): void {
-    (
-      this.component[key] as unknown as (
-        id: string,
-        value: [string],
-        def: [string]
-      ) => void
-    )('id', ['value'], ['def']);
-    expect(this.mockStore.dispatch).toHaveBeenCalledWith(
-      new action({ id: 'id', value: ['value'], def: ['def'] })
     );
   }
 }

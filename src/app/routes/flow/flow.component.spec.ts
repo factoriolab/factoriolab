@@ -10,9 +10,9 @@ import {
   sankeyRight,
 } from 'd3-sankey';
 
-import { Mocks, TestUtility, initialState } from 'src/tests';
+import { Mocks, TestUtility, initialState, DispatchTest } from 'src/tests';
 import { OptionsComponent, ColumnsComponent } from '~/components';
-import { LinkValue, SankeyAlign } from '~/models';
+import { SankeyAlign } from '~/models';
 import * as Preferences from '~/store/preferences';
 import * as Products from '~/store/products';
 import { ExportUtility } from '~/utilities';
@@ -165,36 +165,6 @@ describe('FlowComponent', () => {
     });
   });
 
-  describe('setLinkSize', () => {
-    it('should dispatch event', () => {
-      const value = LinkValue.Belts;
-      component.setLinkSize(value);
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new Preferences.SetLinkSizeAction(value)
-      );
-    });
-  });
-
-  describe('setLinkText', () => {
-    it('should dispatch event', () => {
-      const value = LinkValue.Belts;
-      component.setLinkText(value);
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new Preferences.SetLinkTextAction(value)
-      );
-    });
-  });
-
-  describe('setSankeyAlign', () => {
-    it('should dispatch event', () => {
-      const value = SankeyAlign.Left;
-      component.setSankeyAlign(value);
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new Preferences.SetSankeyAlignAction(value)
-      );
-    });
-  });
-
   describe('export', () => {
     it('should call the utility method to export JSON', () => {
       spyOn(ExportUtility, 'saveAsJson');
@@ -203,5 +173,12 @@ describe('FlowComponent', () => {
         JSON.stringify(Mocks.Sankey)
       );
     });
+  });
+
+  it('should dispatch actions', () => {
+    const dispatch = new DispatchTest(store, component);
+    dispatch.val('setLinkSize', Preferences.SetLinkSizeAction);
+    dispatch.val('setLinkText', Preferences.SetLinkTextAction);
+    dispatch.val('setSankeyAlign', Preferences.SetSankeyAlignAction);
   });
 });

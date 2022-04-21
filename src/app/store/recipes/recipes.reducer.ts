@@ -41,7 +41,10 @@ export function recipesReducer(
     case RecipesActionType.SET_OVERCLOCK:
       return StoreUtility.compareReset(state, 'overclock', action.payload);
     case RecipesActionType.SET_COST:
-      return StoreUtility.compareReset(state, 'cost', action.payload);
+      return StoreUtility.compareReset(state, 'cost', {
+        ...action.payload,
+        ...{ def: undefined },
+      });
     case RecipesActionType.RESET_RECIPE: {
       const newState = { ...state };
       delete newState[action.payload];

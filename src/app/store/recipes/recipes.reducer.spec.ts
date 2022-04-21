@@ -158,7 +158,6 @@ describe('Recipes Reducer', () => {
         new Actions.SetCostAction({
           id: Mocks.Recipe1.id,
           value: '10',
-          def: undefined,
         })
       );
       expect(result[Mocks.Recipe1.id].cost).toEqual('10');
