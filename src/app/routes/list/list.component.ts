@@ -147,6 +147,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
         // Store the fragment to navigate to it after the component loads
         this.fragmentId = id;
       });
+    this.syncDetailTabs();
   }
 
   ngOnChanges(): void {
@@ -157,7 +158,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
         .select(Products.getStepDetails)
         .pipe(take(1))
         .subscribe((stepDetails) => {
-          if (stepDetails[selected].tabs.length) {
+          if (stepDetails[selected]?.tabs.length) {
             this.expanded[selected] = stepDetails[selected].tabs[0];
           }
         });
@@ -196,8 +197,8 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
         for (const id of Object.keys(this.expanded).filter(
           (i) => this.expanded[i]
         )) {
-          const tabs = stepDetails[id].tabs;
-          if (tabs.length) {
+          const tabs = stepDetails[id]?.tabs;
+          if (!tabs?.length) {
             // Collapse this step
             delete this.expanded[id];
           } else if (tabs.indexOf(this.expanded[id]) === -1) {

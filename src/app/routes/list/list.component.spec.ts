@@ -9,7 +9,8 @@ import {
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { provideMockStore } from '@ngrx/store/testing';
+import { MemoizedSelector } from '@ngrx/store';
+import { MockState, MockStore, provideMockStore } from '@ngrx/store/testing';
 import { of } from 'rxjs';
 
 import { Mocks, TestUtility, ItemId, RecipeId, initialState } from 'src/tests';
@@ -20,9 +21,28 @@ import {
   ColumnsComponent,
 } from '~/components';
 import { ValidateNumberDirective } from '~/directives';
-import { Rational, Step, ListMode, Column, Game, PowerUnit } from '~/models';
+import {
+  Rational,
+  Step,
+  ListMode,
+  Column,
+  Game,
+  PowerUnit,
+  StepDetailTab,
+  Entities,
+  StepDetail,
+} from '~/models';
+import {
+  DisplayRateLabelPipe,
+  FactoryRatePipe,
+  PowerPipe,
+  RatePipe,
+  StepHrefPipe,
+} from '~/pipes';
 import { RouterService } from '~/services';
+import { LabState } from '~/store';
 import * as Preferences from '~/store/preferences';
+import * as Products from '~/store/products';
 import { ExportUtility } from '~/utilities';
 import { ListComponent } from './list.component';
 
@@ -34,19 +54,22 @@ enum DataTest {
 
 @Component({
   selector: 'lab-test-list',
-  template: ` <lab-list [mode]="mode" [selectedId]="selectedId"> </lab-list> `,
+  template: `<lab-list [mode]="mode" [selectedId]="selectedId"></lab-list>`,
 })
 class TestListComponent {
   @ViewChild(ListComponent) child!: ListComponent;
   mode = ListMode.All;
-  selectedId = null;
+  selectedId: string | undefined;
 }
 
-describe('ListComponent', () => {
+fdescribe('ListComponent', () => {
   let component: TestListComponent;
   let fixture: ComponentFixture<TestListComponent>;
   let route: ActivatedRoute;
   let router: RouterService;
+  let mockStore: MockStore;
+  let mockGetSteps: MemoizedSelector<LabState, Step[]>;
+  let mockGetStepDetails: MemoizedSelector<LabState, Entities<StepDetail>>;
   let detectChanges: jasmine.Spy;
 
   beforeEach(async () => {
@@ -59,9 +82,14 @@ describe('ListComponent', () => {
         ValidateNumberDirective,
         ListComponent,
         TestListComponent,
+        DisplayRateLabelPipe,
+        RatePipe,
+        FactoryRatePipe,
+        PowerPipe,
+        StepHrefPipe,
       ],
       imports: [FormsModule, HttpClientTestingModule, RouterTestingModule],
-      providers: [RouterService, provideMockStore({ initialState })],
+      providers: [RouterService, RatePipe, provideMockStore({ initialState })],
     }).compileComponents();
   });
 
@@ -69,6 +97,23 @@ describe('ListComponent', () => {
     fixture = TestBed.createComponent(TestListComponent);
     route = TestBed.inject(ActivatedRoute);
     router = TestBed.inject(RouterService);
+    mockStore = TestBed.inject(MockStore);
+    mockGetSteps = mockStore.overrideSelector(Products.getSteps, Mocks.Steps);
+    mockGetStepDetails = mockStore.overrideSelector(
+      Products.getStepDetails,
+      Mocks.Steps.reduce((e: Entities<StepDetail>, s) => {
+        e[s.id] = {
+          tabs: [
+            StepDetailTab.Item,
+            StepDetailTab.Recipe,
+            StepDetailTab.Factory,
+          ],
+          outputs: [],
+          recipes: [],
+        };
+        return e;
+      }, {})
+    );
     const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
     detectChanges = spyOn(ref.constructor.prototype, 'detectChanges');
     component = fixture.componentInstance;
@@ -77,6 +122,77 @@ describe('ListComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('ngOnChanges', () => {
+    it('should expand the selected step', () => {
+      component.selectedId = Mocks.Step1.id;
+      fixture.detectChanges();
+      expect(component.child.expanded).toEqual({
+        [Mocks.Step1.id]: StepDetailTab.Item,
+      });
+    });
+  });
+
+  describe('ngAfterViewInit', () => {
+    it('should scroll to and expand the fragment id', () => {
+      const domEl = { scrollIntoView: (): void => {} };
+      spyOn(domEl, 'scrollIntoView');
+      spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
+      component.child.fragmentId = Mocks.Step1.id;
+      component.child.ngAfterViewInit();
+      expect(domEl.scrollIntoView).toHaveBeenCalled();
+      expect(component.child.expanded).toEqual({
+        [Mocks.Step1.id]: StepDetailTab.Item,
+      });
+    });
+
+    it('should handle element not found', () => {
+      component.child.fragmentId = Mocks.Step1.id;
+      expect(() => component.child.ngAfterViewInit()).not.toThrow();
+    });
+  });
+
+  describe('syncDetailTabs', () => {
+    it('should collapse a tab that no longer has details', () => {
+      component.child.expanded['id'] = StepDetailTab.Item;
+      mockGetSteps.setResult([]);
+      mockGetStepDetails.setResult({});
+      mockStore.refreshState();
+      fixture.detectChanges();
+      expect(component.child.expanded).toEqual({});
+      expect(detectChanges).toHaveBeenCalled();
+    });
+
+    it('should collapse a tab that no longer exists', () => {
+      component.child.expanded['id'] = StepDetailTab.Item;
+      mockGetSteps.setResult([]);
+      mockGetStepDetails.setResult({});
+      mockStore.refreshState();
+      fixture.detectChanges();
+      expect(component.child.expanded).toEqual({});
+      expect(detectChanges).toHaveBeenCalled();
+    });
+
+    it('should pick a different detail tab', () => {
+      component.child.expanded[Mocks.Step1.id] = StepDetailTab.Recipes;
+      mockGetStepDetails.setResult(
+        Mocks.Steps.reduce((e: Entities<StepDetail>, s) => {
+          e[s.id] = {
+            tabs: [StepDetailTab.Item],
+            outputs: [],
+            recipes: [],
+          };
+          return e;
+        }, {})
+      );
+      mockStore.refreshState();
+      fixture.detectChanges();
+      expect(component.child.expanded).toEqual({
+        [Mocks.Step1.id]: StepDetailTab.Item,
+      });
+      expect(detectChanges).toHaveBeenCalled();
+    });
   });
 
   // describe('steps', () => {
@@ -682,25 +798,24 @@ describe('ListComponent', () => {
   //   });
   // });
 
-  // describe('resetStep', () => {
-  //   it('should reset a step', () => {
-  //     spyOn(component, 'resetItem');
-  //     spyOn(component, 'resetRecipe');
-  //     TestUtility.clickDt(fixture, DataTest.ResetStep);
-  //     fixture.detectChanges();
-  //     expect(component.resetItem).toHaveBeenCalled();
-  //     expect(component.resetRecipe).toHaveBeenCalled();
-  //   });
-  // });
+  describe('resetStep', () => {
+    it('should reset a step', () => {
+      spyOn(component.child, 'resetItem');
+      spyOn(component.child, 'resetRecipe');
+      component.child.resetStep(Mocks.Step1);
+      expect(component.child.resetItem).toHaveBeenCalled();
+      expect(component.child.resetRecipe).toHaveBeenCalled();
+    });
+  });
 
-  // describe('export', () => {
-  //   it('should call the export utility', () => {
-  //     spyOn(ExportUtility, 'stepsToCsv');
-  //     TestUtility.clickDt(fixture, DataTest.Export);
-  //     fixture.detectChanges();
-  //     expect(ExportUtility.stepsToCsv).toHaveBeenCalled();
-  //   });
-  // });
+  describe('export', () => {
+    it('should call the export utility', () => {
+      spyOn(ExportUtility, 'stepsToCsv');
+      TestUtility.clickDt(fixture, DataTest.Export);
+      fixture.detectChanges();
+      expect(ExportUtility.stepsToCsv).toHaveBeenCalled();
+    });
+  });
 
   // describe('toggleDefaultRecipe', () => {
   //   it('should reset a default recipe to null', () => {
