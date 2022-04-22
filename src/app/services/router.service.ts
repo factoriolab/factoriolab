@@ -300,15 +300,19 @@ export class RouterService {
               }
               case ZipVersion.Version2:
               case ZipVersion.Version3: {
-                const baseId =
-                  this.parseNString(params[Section.Base], data.hash) ||
-                  Settings.initialSettingsState.baseId;
-
-                this.store.dispatch(new Settings.SetBaseAction(baseId));
+                const baseId = this.parseNString(
+                  params[Section.Base],
+                  data.hash
+                );
                 this.store
                   .select(Datasets.getHashEntities)
                   .pipe(
-                    map((hashEntities) => hashEntities[baseId]),
+                    map(
+                      (hashEntities) =>
+                        hashEntities[
+                          baseId || Settings.initialSettingsState.baseId
+                        ]
+                    ),
                     filter((e): e is ModHash => e != null),
                     take(1)
                   )
@@ -445,35 +449,34 @@ export class RouterService {
         }
         case ZipVersion.Version2:
         case ZipVersion.Version3: {
-          if (hash) {
-            obj = {
-              id,
-              itemId: this.parseNString(s[i++], hash.items) ?? '',
-              rate: s[i++],
-              rateType: Number(s[i++]) | RateType.Items,
-            };
-            obj.viaId = this.parseNString(
-              s[i++],
-              obj.rateType === RateType.Factories ? hash.recipes : hash.items
-            );
-            obj.viaSetting = this.parseNString(
-              s[i++],
-              obj.rateType === RateType.Belts
-                ? hash.belts
-                : obj.rateType === RateType.Wagons
-                ? hash.wagons
-                : obj.rateType === RateType.Factories
-                ? hash.factories
-                : hash.items
-            );
-            obj.viaFactoryModules = this.parseNArray(s[i++], hash.modules);
-            obj.viaBeaconCount = this.parseString(s[i++]);
-            obj.viaBeaconModules = this.parseNArray(s[i++], hash.modules);
-            obj.viaBeacon = this.parseNString(s[i++], hash.beacons);
-            obj.viaOverclock = this.parseNumber(s[i++]);
-          } else {
+          if (hash == null) {
             throw new Error('Attempted to parse zipped state without hash');
           }
+          obj = {
+            id,
+            itemId: this.parseNString(s[i++], hash.items) ?? '',
+            rate: s[i++],
+            rateType: Number(s[i++]) | RateType.Items,
+          };
+          obj.viaId = this.parseNString(
+            s[i++],
+            obj.rateType === RateType.Factories ? hash.recipes : hash.items
+          );
+          obj.viaSetting = this.parseNString(
+            s[i++],
+            obj.rateType === RateType.Belts
+              ? hash.belts
+              : obj.rateType === RateType.Wagons
+              ? hash.wagons
+              : obj.rateType === RateType.Factories
+              ? hash.factories
+              : hash.items
+          );
+          obj.viaFactoryModules = this.parseNArray(s[i++], hash.modules);
+          obj.viaBeaconCount = this.parseString(s[i++]);
+          obj.viaBeaconModules = this.parseNArray(s[i++], hash.modules);
+          obj.viaBeacon = this.parseNString(s[i++], hash.beacons);
+          obj.viaOverclock = this.parseNumber(s[i++]);
           break;
         }
       }
@@ -549,17 +552,16 @@ export class RouterService {
         }
         case ZipVersion.Version2:
         case ZipVersion.Version3: {
-          if (hash) {
-            id = this.parseNString(s[i++], hash.items) ?? '';
-            obj = {
-              ignore: this.parseBool(s[i++]),
-              belt: this.parseNString(s[i++], hash.belts),
-              wagon: this.parseNString(s[i++], hash.wagons),
-              recipe: this.parseNString(s[i++], hash.recipes),
-            };
-          } else {
+          if (hash == null) {
             throw new Error('Attempted to parse zipped state without hash');
           }
+          id = this.parseNString(s[i++], hash.items) ?? '';
+          obj = {
+            ignore: this.parseBool(s[i++]),
+            belt: this.parseNString(s[i++], hash.belts),
+            wagon: this.parseNString(s[i++], hash.wagons),
+            recipe: this.parseNString(s[i++], hash.recipes),
+          };
           break;
         }
       }
@@ -644,24 +646,23 @@ export class RouterService {
         }
         case ZipVersion.Version2:
         case ZipVersion.Version3: {
-          if (hash) {
-            id = this.parseNString(s[i++], hash.recipes) ?? '';
-            obj = {
-              factory: this.parseNString(s[i++], hash.factories),
-              factoryModules: this.parseNArray(s[i++], hash.modules),
-              beaconCount:
-                v === ZipVersion.Version2
-                  ? this.parseNNumber(s[i++])?.toString()
-                  : this.parseString(s[i++]),
-              beaconModules: this.parseNArray(s[i++], hash.modules),
-              beacon: this.parseNString(s[i++], hash.beacons),
-              overclock: this.parseNumber(s[i++]),
-              cost: this.parseString(s[i++]),
-              beaconTotal: this.parseString(s[i++]),
-            };
-          } else {
+          if (hash == null) {
             throw new Error('Attempted to parse zipped state without hash');
           }
+          id = this.parseNString(s[i++], hash.recipes) ?? '';
+          obj = {
+            factory: this.parseNString(s[i++], hash.factories),
+            factoryModules: this.parseNArray(s[i++], hash.modules),
+            beaconCount:
+              v === ZipVersion.Version2
+                ? this.parseNNumber(s[i++])?.toString()
+                : this.parseString(s[i++]),
+            beaconModules: this.parseNArray(s[i++], hash.modules),
+            beacon: this.parseNString(s[i++], hash.beacons),
+            overclock: this.parseNumber(s[i++]),
+            cost: this.parseString(s[i++]),
+            beaconTotal: this.parseString(s[i++]),
+          };
           break;
         }
       }
@@ -749,39 +750,38 @@ export class RouterService {
             loadIds = true;
             ids = [];
             id = '';
-          } else if (loadIds) {
-            ids?.push(id);
+          } else if (loadIds && ids != null) {
+            ids.push(id);
           }
           break;
         }
         case ZipVersion.Version2:
         case ZipVersion.Version3: {
-          if (hash) {
-            id = s[i++];
-            obj = {
-              moduleRank: this.parseNArray(s[i++], hash.modules),
-              beaconCount:
-                v === ZipVersion.Version2
-                  ? this.parseNNumber(s[i++])?.toString()
-                  : this.parseString(s[i++]),
-              beaconModule: this.parseNString(s[i++], hash.modules),
-              beacon: this.parseNString(s[i++], hash.beacons),
-              overclock: this.parseNumber(s[i++]),
-            };
-            if (z === 0 && id === TRUE) {
-              loadIds = true;
-              ids = [];
-              id = '';
-            } else {
-              if (id) {
-                id = this.parseNString(id, hash.factories);
-              }
-              if (loadIds) {
-                ids?.push(id ?? '');
-              }
-            }
-          } else {
+          if (hash == null) {
             throw new Error('Attempted to parse zipped state without hash');
+          }
+          id = s[i++];
+          obj = {
+            moduleRank: this.parseNArray(s[i++], hash.modules),
+            beaconCount:
+              v === ZipVersion.Version2
+                ? this.parseNNumber(s[i++])?.toString()
+                : this.parseString(s[i++]),
+            beaconModule: this.parseNString(s[i++], hash.modules),
+            beacon: this.parseNString(s[i++], hash.beacons),
+            overclock: this.parseNumber(s[i++]),
+          };
+          if (z === 0 && id === TRUE) {
+            loadIds = true;
+            ids = [];
+            id = '';
+          } else {
+            if (id) {
+              id = this.parseNString(id, hash.factories);
+            }
+            if (loadIds && ids != null) {
+              ids.push(id ?? '');
+            }
           }
           break;
         }
@@ -934,33 +934,32 @@ export class RouterService {
       }
       case ZipVersion.Version2:
       case ZipVersion.Version3: {
-        if (hash) {
-          obj = {
-            displayRate: this.parseDisplayRate(s[i++]),
-            preset: this.parseNumber(s[i++]),
-            disabledRecipes: this.parseNArray(s[i++], hash.recipes),
-            belt: this.parseNString(s[i++], hash.belts),
-            fuel: this.parseNString(s[i++], hash.fuels),
-            flowRate: this.parseNNumber(s[i++]),
-            miningBonus: this.parseNNumber(s[i++]),
-            researchSpeed: this.parseNNumber(s[i++]),
-            inserterCapacity: this.parseNumber(s[i++]),
-            inserterTarget: this.parseNumber(s[i++]),
-            expensive: this.parseBool(s[i++]),
-            cargoWagon: this.parseNString(s[i++], hash.wagons),
-            fluidWagon: this.parseNString(s[i++], hash.wagons),
-            pipe: this.parseNString(s[i++], hash.belts),
-            costFactor: this.parseString(s[i++]),
-            costFactory: this.parseString(s[i++]),
-            costInput: this.parseString(s[i++]),
-            costIgnored: this.parseString(s[i++]),
-            beaconReceivers: this.parseString(s[i++]),
-            proliferatorSpray: this.parseNString(s[i++], hash.modules),
-            baseId: undefined,
-          };
-        } else {
+        if (hash == null) {
           throw new Error('Attempted to parse zipped state without hash');
         }
+        obj = {
+          displayRate: this.parseDisplayRate(s[i++]),
+          preset: this.parseNumber(s[i++]),
+          disabledRecipes: this.parseNArray(s[i++], hash.recipes),
+          belt: this.parseNString(s[i++], hash.belts),
+          fuel: this.parseNString(s[i++], hash.fuels),
+          flowRate: this.parseNNumber(s[i++]),
+          miningBonus: this.parseNNumber(s[i++]),
+          researchSpeed: this.parseNNumber(s[i++]),
+          inserterCapacity: this.parseNumber(s[i++]),
+          inserterTarget: this.parseNumber(s[i++]),
+          expensive: this.parseBool(s[i++]),
+          cargoWagon: this.parseNString(s[i++], hash.wagons),
+          fluidWagon: this.parseNString(s[i++], hash.wagons),
+          pipe: this.parseNString(s[i++], hash.belts),
+          costFactor: this.parseString(s[i++]),
+          costFactory: this.parseString(s[i++]),
+          costInput: this.parseString(s[i++]),
+          costIgnored: this.parseString(s[i++]),
+          beaconReceivers: this.parseString(s[i++]),
+          proliferatorSpray: this.parseNString(s[i++], hash.modules),
+          baseId: undefined,
+        };
         break;
       }
     }

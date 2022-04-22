@@ -5,11 +5,12 @@ import {
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { StoreModule, Store } from '@ngrx/store';
+import { MemoizedSelector } from '@ngrx/store';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { deflate, inflate } from 'pako';
 import { of } from 'rxjs';
 
-import { Mocks, ItemId, RecipeId } from 'src/tests';
+import { Mocks, ItemId, RecipeId, initialState } from 'src/tests';
 import {
   RateType,
   Product,
@@ -20,6 +21,7 @@ import {
   InserterCapacity,
   Rational,
   ModHash,
+  Entities,
 } from '~/models';
 import { reducers, metaReducers, LabState } from '~/store';
 import * as App from '~/store/app.actions';
@@ -124,22 +126,41 @@ const mockState: LabState = {
   settingsState: mockSettingsState,
 } as any;
 
-xdescribe('RouterService', () => {
+describe('RouterService', () => {
   let service: RouterService;
-  let store: Store<LabState>;
+  let mockStore: MockStore<LabState>;
+  let mockGetHashEntities: MemoizedSelector<LabState, Entities<ModHash>>;
+  let mockGetZipState: MemoizedSelector<
+    LabState,
+    {
+      products: Products.ProductsState;
+      items: Items.ItemsState;
+      recipes: Recipes.RecipesState;
+      factories: Factories.FactoriesState;
+      settings: Settings.SettingsState;
+    }
+  >;
   let router: Router;
   let http: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
-        StoreModule.forRoot(reducers, { metaReducers }),
-      ],
+      imports: [HttpClientTestingModule, RouterTestingModule],
+      providers: [provideMockStore({ initialState })],
     });
     service = TestBed.inject(RouterService);
-    store = TestBed.inject(Store);
+    mockStore = TestBed.inject(MockStore);
+    mockGetHashEntities = mockStore.overrideSelector(Datasets.getHashEntities, {
+      [Settings.initialSettingsState.baseId]: Mocks.Hash,
+      [mockSettingsState.baseId]: Mocks.Hash,
+    });
+    mockGetZipState = mockStore.overrideSelector(Products.getZipState, {
+      products: Products.initialProductsState,
+      items: Items.initialItemsState,
+      recipes: Recipes.initialRecipesState,
+      factories: Factories.initialFactoriesState,
+      settings: Settings.initialSettingsState,
+    });
     router = TestBed.inject(Router);
     http = TestBed.inject(HttpTestingController);
   });
@@ -156,8 +177,15 @@ xdescribe('RouterService', () => {
 
   it('should run first update of url if settings modified', () => {
     spyOn(service, 'updateUrl');
+    mockGetZipState.setResult({
+      products: Products.initialProductsState,
+      items: { [ItemId.Wood]: { ignore: true } },
+      recipes: Recipes.initialRecipesState,
+      factories: Factories.initialFactoriesState,
+      settings: Settings.initialSettingsState,
+    });
+    mockStore.refreshState();
     service.first = true;
-    store.dispatch(new Items.IgnoreItemAction(ItemId.Wood));
     expect(service.updateUrl).toHaveBeenCalled();
   });
 
@@ -194,9 +222,6 @@ xdescribe('RouterService', () => {
 
   describe('zipState', () => {
     it('should zip state', () => {
-      Datasets.getHashEntities.setResult({
-        [Settings.initialSettingsState.baseId]: Mocks.Hash,
-      });
       let zip: Zip | undefined;
       service
         .zipState(
@@ -212,9 +237,6 @@ xdescribe('RouterService', () => {
     });
 
     it('should zip full state', () => {
-      Datasets.getHashEntities.setResult({
-        [Settings.initialSettingsState.baseId]: Mocks.Hash,
-      });
       let zip: Zip | undefined;
       service
         .zipState(
@@ -362,9 +384,6 @@ xdescribe('RouterService', () => {
 
     it('should unzip empty v2', () => {
       const url = '/?z=eJwrUCszAgADVAE.';
-      Datasets.getHashEntities.setResult({
-        [Settings.initialSettingsState.baseId]: Mocks.Hash,
-      });
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v2', {} as any);
     });
@@ -380,9 +399,6 @@ xdescribe('RouterService', () => {
       // );
       // console.log(newZip);
 
-      Datasets.getHashEntities.setResult({
-        [Settings.initialSettingsState.baseId]: Mocks.Hash,
-      });
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A*200*100*8&f1*D~G*B*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v2',
@@ -392,9 +408,6 @@ xdescribe('RouterService', () => {
 
     it('should unzip empty v3', () => {
       const url = '/?z=eJwrUCszBgADVQFA';
-      Datasets.getHashEntities.setResult({
-        [Settings.initialSettingsState.baseId]: Mocks.Hash,
-      });
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v3', {} as any);
     });
@@ -410,9 +423,6 @@ xdescribe('RouterService', () => {
       // );
       // console.log(newZip);
 
-      Datasets.getHashEntities.setResult({
-        [Settings.initialSettingsState.baseId]: Mocks.Hash,
-      });
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v3',
@@ -423,10 +433,10 @@ xdescribe('RouterService', () => {
 
   describe('dispatch', () => {
     it('should dispatch a state', () => {
-      spyOn(store, 'dispatch');
+      spyOn(mockStore, 'dispatch');
       service.dispatch('test', mockState);
       expect(service.zip).toEqual('test');
-      expect(store.dispatch).toHaveBeenCalledWith(
+      expect(mockStore.dispatch).toHaveBeenCalledWith(
         new App.LoadAction(mockState)
       );
     });
@@ -627,6 +637,33 @@ xdescribe('RouterService', () => {
         index: 1,
       });
     });
+
+    it('v2/v3 should throw error if hash is null', () => {
+      expect(() =>
+        service.unzipProducts({ ['p']: 'C6*1**Bd' }, ZipVersion.Version2)
+      ).toThrow();
+    });
+
+    it('v2/v3 should map values to empty strings if null', () => {
+      const result = service.unzipProducts(
+        { ['p']: '*1**Bd' },
+        ZipVersion.Version2,
+        Mocks.Hash
+      );
+      expect(result).toEqual({
+        ids: ['0'],
+        entities: {
+          ['0']: {
+            id: '0',
+            itemId: '',
+            rate: '1',
+            rateType: RateType.Items,
+            viaId: ItemId.IronOre,
+          },
+        },
+        index: 1,
+      });
+    });
   });
 
   describe('unzipItems', () => {
@@ -639,6 +676,23 @@ xdescribe('RouterService', () => {
         [ItemId.SteelChest]: { ignore: true, belt: ItemId.TransportBelt },
       });
     });
+
+    it('v2/v3 should throw error if hash is null', () => {
+      expect(() =>
+        service.unzipItems({ ['i']: 'A*1*A*' }, ZipVersion.Version2)
+      ).toThrow();
+    });
+
+    it('v2/v3 should map id to empty string if null', () => {
+      const result = service.unzipItems(
+        { ['i']: '*1*C*' },
+        ZipVersion.Version2,
+        Mocks.Hash
+      );
+      expect(result).toEqual({
+        ['']: { ignore: true, belt: ItemId.TransportBelt },
+      });
+    });
   });
 
   describe('unzipRecipes', () => {
@@ -649,6 +703,23 @@ xdescribe('RouterService', () => {
       );
       expect(result).toEqual({
         [RecipeId.SteelChest]: { factory: ItemId.AssemblingMachine2 },
+      });
+    });
+
+    it('v2/v3 should throw error if hash is null', () => {
+      expect(() =>
+        service.unzipRecipes({ ['r']: 'A*A*' }, ZipVersion.Version2)
+      ).toThrow();
+    });
+
+    it('v2/v3 should map values to empty strings if null', () => {
+      const result = service.unzipRecipes(
+        { ['r']: '*A*' },
+        ZipVersion.Version2,
+        Mocks.Hash
+      );
+      expect(result).toEqual({
+        ['']: { factory: ItemId.AssemblingMachine1 },
       });
     });
   });
@@ -690,6 +761,32 @@ xdescribe('RouterService', () => {
         ids: undefined,
         entities: {},
       });
+    });
+
+    it('v2/v3 should throw error if hash is null', () => {
+      expect(() =>
+        service.unzipFactories({ ['f']: '_' }, ZipVersion.Version2)
+      ).toThrow();
+    });
+
+    it('v2/v3 should map values to empty strings if null', () => {
+      const result = service.unzipFactories(
+        { ['f']: '1_?**B' },
+        ZipVersion.Version2,
+        Mocks.Hash
+      );
+      expect(result).toEqual({
+        ids: [''],
+        entities: { ['']: { beaconCount: '1' } },
+      });
+    });
+  });
+
+  describe('unzipSettings', () => {
+    it('v2/v3 should throw error if hash is null', () => {
+      expect(() =>
+        service.unzipSettings({ ['s']: '' }, ZipVersion.Version2)
+      ).toThrow();
     });
   });
 
@@ -992,6 +1089,10 @@ xdescribe('RouterService', () => {
       expect(service.parseDisplayRate('0')).toEqual(DisplayRate.PerSecond);
       expect(service.parseDisplayRate('1')).toEqual(DisplayRate.PerMinute);
       expect(service.parseDisplayRate('2')).toEqual(DisplayRate.PerHour);
+    });
+
+    it('should return null if unrecognized', () => {
+      expect(service.parseDisplayRate('3')).toBeUndefined();
     });
   });
 
