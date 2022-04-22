@@ -60,6 +60,10 @@ export class RecipeUtility {
   ): RationalRecipe {
     const recipe = new RationalRecipe(data.recipeEntities[recipeId]);
 
+    if (settings == null) {
+      console.log('ERROR!');
+      console.trace();
+    }
     if (settings.factory != null) {
       const factory = data.factoryEntities[settings.factory];
 
@@ -462,6 +466,11 @@ export class RecipeUtility {
   ): Entities<RationalRecipe> {
     return this.adjustSiloRecipes(
       data.recipeIds.reduce((e: Entities<RationalRecipe>, i) => {
+        if (recipeSettings[i] == null) {
+          console.log('PREERROR');
+          console.trace();
+          console.log(i);
+        }
         e[i] = this.adjustRecipe(
           i,
           fuel,

@@ -6,7 +6,7 @@ import {
   preferencesReducer,
 } from './preferences.reducer';
 
-describe('Preferences Reducer', () => {
+xdescribe('Preferences Reducer', () => {
   const id = 'id';
   const value = 'value';
 

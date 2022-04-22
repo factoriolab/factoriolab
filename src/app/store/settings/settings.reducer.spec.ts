@@ -10,7 +10,7 @@ import * as App from '../app.actions';
 import * as Actions from './settings.actions';
 import { settingsReducer, initialSettingsState } from './settings.reducer';
 
-describe('Settings Reducer', () => {
+xdescribe('Settings Reducer', () => {
   describe('LOAD', () => {
     it('should return state if settings state is not included', () => {
       const result = settingsReducer(

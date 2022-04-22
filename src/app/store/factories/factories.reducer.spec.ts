@@ -3,7 +3,7 @@ import * as App from '../app.actions';
 import * as Actions from './factories.actions';
 import { factoriesReducer, initialFactoriesState } from './factories.reducer';
 
-describe('Factories Reducer', () => {
+xdescribe('Factories Reducer', () => {
   const id = 'id';
   const value = 'value';
   const def = 'default';

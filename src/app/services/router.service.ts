@@ -179,8 +179,8 @@ export class RouterService {
     );
   }
 
-  stepHref(step: Step, hash: ModHash): string | undefined {
-    if (step.items == null || step.itemId == null) {
+  stepHref(step: Step, hash: ModHash | undefined): string | undefined {
+    if (step.items == null || step.itemId == null || hash == null) {
       return undefined;
     }
     const products: Product[] = [

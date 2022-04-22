@@ -3,6 +3,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 import { TestUtility, initialState } from 'src/tests';
 import { Column } from '~/models';
+import { LabState } from '~/store';
 import { DialogComponent } from '../dialog/dialog.component';
 import { ColumnsComponent } from './columns.component';
 
@@ -17,7 +18,7 @@ enum DataTest {
 describe('ColumnsComponent', () => {
   let component: ColumnsComponent;
   let fixture: ComponentFixture<ColumnsComponent>;
-  let store: MockStore;
+  let mockStore: MockStore<LabState>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -28,7 +29,7 @@ describe('ColumnsComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ColumnsComponent);
-    store = TestBed.inject(MockStore);
+    mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -49,21 +50,21 @@ describe('ColumnsComponent', () => {
 
   describe('close', () => {
     beforeEach(() => {
-      spyOn(store, 'dispatch');
+      spyOn(mockStore, 'dispatch');
       TestUtility.clickDt(fixture, DataTest.Open);
       fixture.detectChanges();
     });
 
     it('should close the dialog', () => {
       TestUtility.clickDt(fixture, DataTest.Confirm);
-      expect(store.dispatch).not.toHaveBeenCalled();
+      expect(mockStore.dispatch).not.toHaveBeenCalled();
       expect(component.open).toBeFalse();
     });
 
     it('should emit edits', () => {
       component.edited = true;
       TestUtility.clickDt(fixture, DataTest.Confirm);
-      expect(store.dispatch).toHaveBeenCalled();
+      expect(mockStore.dispatch).toHaveBeenCalled();
       expect(component.open).toBeFalse();
     });
   });

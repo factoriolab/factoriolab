@@ -9,7 +9,7 @@ import * as Recipes from '../recipes';
 import * as Factories from './factories.actions';
 import { FactoriesEffects } from './factories.effects';
 
-describe('FactoriesEffects', () => {
+xdescribe('FactoriesEffects', () => {
   let store: Store<LabState>;
   let effects: FactoriesEffects;
 

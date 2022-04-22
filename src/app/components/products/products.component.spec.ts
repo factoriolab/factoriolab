@@ -11,6 +11,7 @@ import {
 } from '~/components';
 import { ValidateNumberDirective } from '~/directives';
 import { Product, RateType, RecipeField } from '~/models';
+import { LabState } from '~/store';
 import * as Factories from '~/store/factories';
 import * as Products from '~/store/products';
 import * as Settings from '~/store/settings';
@@ -20,7 +21,7 @@ import { ProductsComponent } from './products.component';
 describe('ProductsComponent', () => {
   let component: ProductsComponent;
   let fixture: ComponentFixture<ProductsComponent>;
-  let store: MockStore;
+  let mockStore: MockStore<LabState>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -39,7 +40,7 @@ describe('ProductsComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ProductsComponent);
-    store = TestBed.inject(MockStore);
+    mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -269,7 +270,7 @@ describe('ProductsComponent', () => {
   });
 
   it('should dispatch actions', () => {
-    const dispatch = new DispatchTest(store, component);
+    const dispatch = new DispatchTest(mockStore, component);
     dispatch.val('removeProduct', Products.RemoveAction);
     dispatch.idVal('setItem', Products.SetItemAction);
     dispatch.idVal('setRate', Products.SetRateAction);

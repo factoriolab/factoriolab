@@ -4,7 +4,7 @@ import * as App from '../app.actions';
 import * as Actions from './recipes.actions';
 import { recipesReducer, initialRecipesState } from './recipes.reducer';
 
-describe('Recipes Reducer', () => {
+xdescribe('Recipes Reducer', () => {
   describe('LOAD', () => {
     it('should load recipe settings', () => {
       const result = recipesReducer(

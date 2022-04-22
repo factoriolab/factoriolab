@@ -5,6 +5,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { DispatchTest, initialState } from 'src/tests';
 import { IconComponent, InputComponent, InfoComponent } from '~/components';
 import { ValidateNumberDirective } from '~/directives';
+import { LabState } from '~/store';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 import { MatrixComponent } from './matrix.component';
@@ -12,7 +13,7 @@ import { MatrixComponent } from './matrix.component';
 describe('MatrixComponent', () => {
   let component: MatrixComponent;
   let fixture: ComponentFixture<MatrixComponent>;
-  let mockStore: MockStore;
+  let mockStore: MockStore<LabState>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

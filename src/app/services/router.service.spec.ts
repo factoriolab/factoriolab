@@ -124,7 +124,7 @@ const mockState: LabState = {
   settingsState: mockSettingsState,
 } as any;
 
-describe('RouterService', () => {
+xdescribe('RouterService', () => {
   let service: RouterService;
   let store: Store<LabState>;
   let router: Router;

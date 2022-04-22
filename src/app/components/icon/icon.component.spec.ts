@@ -4,6 +4,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 import { Mocks, RecipeId, TestUtility, initialState } from 'src/tests';
 import { ItemId, Rational } from '~/models';
+import { LabState } from '~/store';
 import * as Settings from '~/store/settings';
 import { IconComponent } from './icon.component';
 
@@ -42,7 +43,7 @@ class TestIconComponent {
 describe('IconComponent', () => {
   let component: TestIconComponent;
   let fixture: ComponentFixture<TestIconComponent>;
-  let store: MockStore;
+  let mockStore: MockStore<LabState>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -53,7 +54,7 @@ describe('IconComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TestIconComponent);
-    store = TestBed.inject(MockStore);
+    mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -89,7 +90,7 @@ describe('IconComponent', () => {
           },
         },
       });
-      store.refreshState();
+      mockStore.refreshState();
       fixture.detectChanges();
       expect(component.child.icon).toEqual(icon);
     });

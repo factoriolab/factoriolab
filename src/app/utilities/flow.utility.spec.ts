@@ -9,7 +9,7 @@ import {
 } from '~/models';
 import { FlowUtility } from './flow.utility';
 
-describe('FlowUtility', () => {
+xdescribe('FlowUtility', () => {
   describe('getSankey', () => {
     const node: Node = {
       id: ItemId.Coal,

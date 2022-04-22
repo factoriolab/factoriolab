@@ -3,7 +3,7 @@ import { Game } from '~/models';
 import { initialFactoriesState } from './factories.reducer';
 import * as Selectors from './factories.selectors';
 
-describe('Factories Selectors', () => {
+xdescribe('Factories Selectors', () => {
   describe('getFactorySettings', () => {
     it('should fill in factory settings', () => {
       const result = Selectors.getFactories.projector(

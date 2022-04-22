@@ -11,7 +11,7 @@ import {
 import * as Factories from '~/store/factories';
 import { RecipeUtility } from './recipe.utility';
 
-describe('RecipeUtility', () => {
+xdescribe('RecipeUtility', () => {
   describe('bestMatch', () => {
     it('should pick the first option if list only contains one', () => {
       const value = 'value';

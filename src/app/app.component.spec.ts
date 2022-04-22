@@ -4,9 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { StoreModule, Store } from '@ngrx/store';
+import { MemoizedSelector } from '@ngrx/store';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
-import { LabState, reducers, metaReducers } from './store';
+import { initialState } from 'src/tests';
+import { LabState } from './store';
 import {
   IconComponent,
   SettingsComponent,
@@ -14,15 +16,16 @@ import {
   OptionsComponent,
   PickerComponent,
 } from './components';
-import { AppComponent, TITLE_DSP, TITLE_SFY } from './app.component';
-import { APP } from './models';
+import { APP, Game } from './models';
 import { ListComponent } from './routes';
-import { SetBaseAction } from './store/settings';
+import * as Settings from './store/settings';
+import { AppComponent, TITLE_DSP, TITLE_SFY } from './app.component';
 
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
-  let store: Store<LabState>;
+  let mockStore: MockStore<LabState>;
+  let mockGetGame: MemoizedSelector<LabState, Game>;
   let title: Title;
 
   beforeEach(async () => {
@@ -41,14 +44,18 @@ describe('AppComponent', () => {
         FormsModule,
         HttpClientTestingModule,
         RouterTestingModule,
-        StoreModule.forRoot(reducers, { metaReducers }),
       ],
+      providers: [provideMockStore({ initialState })],
     })
       .compileComponents()
       .then(() => {
         fixture = TestBed.createComponent(AppComponent);
+        mockStore = TestBed.inject(MockStore);
+        mockGetGame = mockStore.overrideSelector(
+          Settings.getGame,
+          Game.Factorio
+        );
         component = fixture.componentInstance;
-        store = TestBed.inject(Store);
         title = TestBed.inject(Title);
       });
   });
@@ -59,14 +66,16 @@ describe('AppComponent', () => {
   });
 
   it('should update the title for Dyson Sphere Program', () => {
-    store.dispatch(new SetBaseAction('dsp'));
+    mockGetGame.setResult(Game.DysonSphereProgram);
+    mockStore.refreshState();
     spyOn(title, 'setTitle');
     fixture.detectChanges();
     expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_DSP}`);
   });
 
   it('should update the title for Satisfactory', () => {
-    store.dispatch(new SetBaseAction('sfy'));
+    mockGetGame.setResult(Game.Satisfactory);
+    mockStore.refreshState();
     spyOn(title, 'setTitle');
     fixture.detectChanges();
     expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_SFY}`);

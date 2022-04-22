@@ -3,7 +3,7 @@ import { MatrixResultType, Rational, RationalRecipe, Step } from '~/models';
 import { RateUtility } from './rate.utility';
 import { SimplexUtility, MatrixState, MatrixSolution } from './simplex.utility';
 
-describe('SimplexUtility', () => {
+xdescribe('SimplexUtility', () => {
   const getState = (): MatrixState => ({
     recipes: {},
     items: {},

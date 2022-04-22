@@ -68,7 +68,7 @@ describe('ListComponent', () => {
   let fixture: ComponentFixture<TestListComponent>;
   let route: ActivatedRoute;
   let router: RouterService;
-  let mockStore: MockStore;
+  let mockStore: MockStore<LabState>;
   let mockGetSteps: MemoizedSelector<LabState, Step[]>;
   let mockGetStepDetails: MemoizedSelector<LabState, Entities<StepDetail>>;
   let detectChanges: jasmine.Spy;
@@ -81,13 +81,13 @@ describe('ListComponent', () => {
         InputComponent,
         SelectComponent,
         ValidateNumberDirective,
-        ListComponent,
-        TestListComponent,
         DisplayRateLabelPipe,
         RatePipe,
         FactoryRatePipe,
         PowerPipe,
         StepHrefPipe,
+        ListComponent,
+        TestListComponent,
       ],
       imports: [FormsModule, HttpClientTestingModule, RouterTestingModule],
       providers: [RouterService, RatePipe, provideMockStore({ initialState })],

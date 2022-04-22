@@ -15,7 +15,7 @@ import {
 import * as Settings from '../settings';
 import * as Selectors from './products.selectors';
 
-describe('Products Selectors', () => {
+xdescribe('Products Selectors', () => {
   describe('getBaseProducts', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getBaseProducts.projector([], {}, {});

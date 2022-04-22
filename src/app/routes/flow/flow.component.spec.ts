@@ -13,6 +13,14 @@ import {
 import { Mocks, TestUtility, initialState, DispatchTest } from 'src/tests';
 import { OptionsComponent, ColumnsComponent } from '~/components';
 import { SankeyAlign } from '~/models';
+import {
+  DisplayRateLabelPipe,
+  FactoryRatePipe,
+  PowerPipe,
+  RatePipe,
+  StepHrefPipe,
+} from '~/pipes';
+import { LabState } from '~/store';
 import * as Preferences from '~/store/preferences';
 import * as Products from '~/store/products';
 import { ExportUtility } from '~/utilities';
@@ -26,7 +34,7 @@ enum DataTest {
 describe('FlowComponent', () => {
   let component: FlowComponent;
   let fixture: ComponentFixture<FlowComponent>;
-  let store: MockStore;
+  let mockStore: MockStore<LabState>;
   let detectChanges: jasmine.Spy;
 
   beforeEach(async () => {
@@ -34,24 +42,28 @@ describe('FlowComponent', () => {
       declarations: [
         ColumnsComponent,
         OptionsComponent,
+        DisplayRateLabelPipe,
+        RatePipe,
+        FactoryRatePipe,
+        PowerPipe,
+        StepHrefPipe,
         ListComponent,
         FlowComponent,
       ],
       imports: [HttpClientTestingModule, RouterTestingModule],
-      providers: [provideMockStore({ initialState })],
+      providers: [RatePipe, provideMockStore({ initialState })],
     }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FlowComponent);
     component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
+    mockStore = TestBed.inject(MockStore);
     Products.getSankey.setResult(Mocks.Sankey);
-    store.refreshState();
+    mockStore.refreshState();
     fixture.detectChanges();
     const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
     detectChanges = spyOn(ref.constructor.prototype, 'detectChanges');
-    spyOn(store, 'dispatch');
   });
 
   it('should create', () => {
@@ -62,7 +74,7 @@ describe('FlowComponent', () => {
     it('should rebuild chart when data/align update', () => {
       spyOn(component, 'rebuildChart');
       Products.getSankey.setResult(Mocks.SankeyCircular);
-      store.refreshState();
+      mockStore.refreshState();
       expect(component.rebuildChart).toHaveBeenCalledWith(
         Mocks.SankeyCircular,
         SankeyAlign.Justify
@@ -176,7 +188,7 @@ describe('FlowComponent', () => {
   });
 
   it('should dispatch actions', () => {
-    const dispatch = new DispatchTest(store, component);
+    const dispatch = new DispatchTest(mockStore, component);
     dispatch.val('setLinkSize', Preferences.SetLinkSizeAction);
     dispatch.val('setLinkText', Preferences.SetLinkTextAction);
     dispatch.val('setSankeyAlign', Preferences.SetSankeyAlignAction);

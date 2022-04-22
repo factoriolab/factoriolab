@@ -27,6 +27,7 @@ import { ValidateNumberDirective } from '~/directives';
 import { Game } from '~/models';
 import { GtZeroPipe } from '~/pipes';
 import { RouterService } from '~/services';
+import { LabState } from '~/store';
 import * as App from '~/store/app.actions';
 import * as Factories from '~/store/factories';
 import * as Preferences from '~/store/preferences';
@@ -43,7 +44,7 @@ describe('SettingsComponent', () => {
   let component: SettingsComponent;
   let fixture: ComponentFixture<SettingsComponent>;
   let router: Router;
-  let store: MockStore;
+  let mockStore: MockStore<LabState>;
   let detectChanges: jasmine.Spy;
   const id = 'id';
   const value = 'value';
@@ -76,7 +77,7 @@ describe('SettingsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SettingsComponent);
     router = TestBed.inject(Router);
-    store = TestBed.inject(MockStore);
+    mockStore = TestBed.inject(MockStore);
     const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
     detectChanges = spyOn(ref.constructor.prototype, 'detectChanges');
     component = fixture.componentInstance;
@@ -316,13 +317,13 @@ describe('SettingsComponent', () => {
   });
 
   it('should dispatch actions', () => {
-    const dispatch = new DispatchTest(store, component);
+    const dispatch = new DispatchTest(mockStore, component);
     dispatch.void('resetSettings', App.ResetAction);
     dispatch.idVal('saveState', Preferences.SaveStateAction);
     dispatch.val('removeState', Preferences.RemoveStateAction);
     dispatch.val('setPreset', Settings.SetPresetAction);
     dispatch.val('setBase', Settings.SetBaseAction);
-    dispatch.val('setDisabledRecipes', Settings.SetDisabledRecipesAction);
+    dispatch.valDef('setDisabledRecipes', Settings.SetDisabledRecipesAction);
     dispatch.val('setExpensive', Settings.SetExpensiveAction);
     dispatch.valDef('addFactory', Factories.AddAction);
     dispatch.valDef('removeFactory', Factories.RemoveAction);

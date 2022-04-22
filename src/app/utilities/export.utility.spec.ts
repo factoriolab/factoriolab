@@ -9,7 +9,7 @@ import {
 import * as Preferences from '~/store/preferences';
 import { ExportUtility } from './export.utility';
 
-describe('ExportUtility', () => {
+xdescribe('ExportUtility', () => {
   const noCols = AllColumns.reduce((e: Preferences.ColumnsState, c) => {
     e[c] = { show: false, precision: 1 };
     return e;

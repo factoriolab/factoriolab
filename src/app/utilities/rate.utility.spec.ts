@@ -9,7 +9,7 @@ import {
   RationalRecipeSettings,
 } from '~/models';
 
-describe('RateUtility', () => {
+xdescribe('RateUtility', () => {
   describe('addStepsFor', () => {
     const expected: Step[] = [
       {

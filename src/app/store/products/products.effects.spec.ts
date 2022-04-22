@@ -8,7 +8,7 @@ import * as Settings from '../settings';
 import { AdjustDisplayRateAction } from './products.actions';
 import { ProductsEffects } from './products.effects';
 
-describe('ProductsEffects', () => {
+xdescribe('ProductsEffects', () => {
   let store: Store<LabState>;
   let effects: ProductsEffects;
 

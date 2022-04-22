@@ -1,7 +1,7 @@
 import { Mocks, ItemId } from 'src/tests';
 import { StoreUtility } from './store.utility';
 
-describe('StoreUtility', () => {
+xdescribe('StoreUtility', () => {
   describe('rankEquals', () => {
     it('should check lengths', () => {
       expect(StoreUtility.rankEquals(['a'], ['a', 'b'])).toBeFalse();
