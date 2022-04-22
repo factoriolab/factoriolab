@@ -2,6 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { MemoizedSelector } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   sankeyCenter,
@@ -12,7 +13,7 @@ import {
 
 import { Mocks, TestUtility, initialState, DispatchTest } from 'src/tests';
 import { OptionsComponent, ColumnsComponent } from '~/components';
-import { SankeyAlign } from '~/models';
+import { SankeyAlign, SankeyData } from '~/models';
 import {
   DisplayRateLabelPipe,
   FactoryRatePipe,
@@ -35,6 +36,7 @@ describe('FlowComponent', () => {
   let component: FlowComponent;
   let fixture: ComponentFixture<FlowComponent>;
   let mockStore: MockStore<LabState>;
+  let mockGetSankey: MemoizedSelector<LabState, SankeyData>;
   let detectChanges: jasmine.Spy;
 
   beforeEach(async () => {
@@ -59,7 +61,10 @@ describe('FlowComponent', () => {
     fixture = TestBed.createComponent(FlowComponent);
     component = fixture.componentInstance;
     mockStore = TestBed.inject(MockStore);
-    Products.getSankey.setResult(Mocks.Sankey);
+    mockGetSankey = mockStore.overrideSelector(
+      Products.getSankey,
+      Mocks.Sankey
+    );
     mockStore.refreshState();
     fixture.detectChanges();
     const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
@@ -73,7 +78,7 @@ describe('FlowComponent', () => {
   describe('ngAfterViewInit', () => {
     it('should rebuild chart when data/align update', () => {
       spyOn(component, 'rebuildChart');
-      Products.getSankey.setResult(Mocks.SankeyCircular);
+      mockGetSankey.setResult(Mocks.SankeyCircular);
       mockStore.refreshState();
       expect(component.rebuildChart).toHaveBeenCalledWith(
         Mocks.SankeyCircular,

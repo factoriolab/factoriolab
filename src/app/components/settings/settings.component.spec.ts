@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { MemoizedSelector } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 import {
@@ -24,7 +25,7 @@ import {
   ToggleComponent,
 } from '~/components';
 import { ValidateNumberDirective } from '~/directives';
-import { Game } from '~/models';
+import { Entities, Game } from '~/models';
 import { GtZeroPipe } from '~/pipes';
 import { RouterService } from '~/services';
 import { LabState } from '~/store';
@@ -45,6 +46,7 @@ describe('SettingsComponent', () => {
   let fixture: ComponentFixture<SettingsComponent>;
   let router: Router;
   let mockStore: MockStore<LabState>;
+  let mockGetStates: MemoizedSelector<LabState, Entities>;
   let detectChanges: jasmine.Spy;
   const id = 'id';
   const value = 'value';
@@ -78,6 +80,10 @@ describe('SettingsComponent', () => {
     fixture = TestBed.createComponent(SettingsComponent);
     router = TestBed.inject(Router);
     mockStore = TestBed.inject(MockStore);
+    mockGetStates = mockStore.overrideSelector(
+      Preferences.getStates,
+      Mocks.PreferencesState.states
+    );
     const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
     detectChanges = spyOn(ref.constructor.prototype, 'detectChanges');
     component = fixture.componentInstance;
@@ -100,7 +106,6 @@ describe('SettingsComponent', () => {
     });
 
     it('should set state to matching saved state', () => {
-      Preferences.getStates.setResult(Mocks.PreferencesState.states);
       spyOnProperty(BrowserUtility, 'search').and.returnValue('z=zip');
       component.ngOnInit();
       expect(component.state).toEqual('name');

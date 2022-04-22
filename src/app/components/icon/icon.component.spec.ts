@@ -1,9 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MemoizedSelector } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 import { Mocks, RecipeId, TestUtility, initialState } from 'src/tests';
-import { ItemId, Rational } from '~/models';
+import { Dataset, ItemId, Rational } from '~/models';
 import { LabState } from '~/store';
 import * as Settings from '~/store/settings';
 import { IconComponent } from './icon.component';
@@ -44,6 +45,7 @@ describe('IconComponent', () => {
   let component: TestIconComponent;
   let fixture: ComponentFixture<TestIconComponent>;
   let mockStore: MockStore<LabState>;
+  let mockGetDataset: MemoizedSelector<LabState, Dataset>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -55,6 +57,10 @@ describe('IconComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TestIconComponent);
     mockStore = TestBed.inject(MockStore);
+    mockGetDataset = mockStore.overrideSelector(
+      Settings.getDataset,
+      Mocks.Data
+    );
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -81,7 +87,7 @@ describe('IconComponent', () => {
     it('should switch to a recipe-specific icon', () => {
       const icon = Mocks.Data.iconEntities[RecipeId.Coal];
       component.iconId = ItemId.Inserter;
-      Settings.getDataset.setResult({
+      mockGetDataset.setResult({
         ...Mocks.Data,
         ...{
           iconEntities: {
