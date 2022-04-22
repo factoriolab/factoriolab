@@ -2,7 +2,7 @@
   "categories": [
     {
       "id": "research",
-      "name": "Infinite Research"
+      "name": "无限研发"
     }
   ],
   "icons": [
@@ -60,62 +60,62 @@
   "items": [
     {
       "id": "mining-productivity",
-      "name": "Mining Productivity",
+      "name": "采矿产能",
       "category": "research",
       "row": 1,
       "stack": 200
     },
     {
       "id": "worker-robots-speed",
-      "name": "Worker Robot Speed",
+      "name": "作业机器人移动速度",
       "category": "research",
       "row": 1,
       "stack": 200
     },
     {
       "id": "follower-robot-count",
-      "name": "Follower Robot Count",
+      "name": "无人机跟随数量",
       "category": "research",
       "row": 1,
       "stack": 200
     },
     {
       "id": "energy-weapons-damage",
-      "name": "Energy Weapons Damage",
+      "name": "能量武器伤害",
       "category": "research",
       "row": 2
     },
     {
       "id": "physical-projectile-damage",
-      "name": "Physical Projectile Damage",
+      "name": "动能武器伤害",
       "category": "research",
       "row": 2,
       "stack": 200
     },
     {
       "id": "refined-flammables",
-      "name": "Refined Flammables",
+      "name": "精炼燃料制备",
       "category": "research",
       "row": 2,
       "stack": 200
     },
     {
       "id": "artillery-shell-range",
-      "name": "Artillery Shell Range",
+      "name": "重炮炮弹射程",
       "category": "research",
       "row": 3,
       "stack": 200
     },
     {
       "id": "artillery-shell-speed",
-      "name": "Artillery Shell Shooting Speed",
+      "name": "重炮炮弹射速度",
       "category": "research",
       "row": 3,
       "stack": 200
     },
     {
       "id": "stronger-explosives",
-      "name": "Stronger Explosives",
+      "name": "烈性炸药",
       "category": "research",
       "row": 3,
       "stack": 200
