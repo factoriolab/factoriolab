@@ -2425,434 +2425,434 @@
     {
       "category": "combat",
       "id": "pistol",
-      "name": "Pistol",
+      "name": "手枪",
       "row": 1,
       "stack": 5
     },
     {
       "category": "combat",
       "id": "submachine-gun",
-      "name": "Submachine gun",
+      "name": "冲锋枪",
       "row": 1,
       "stack": 5
     },
     {
       "category": "combat",
       "id": "shotgun",
-      "name": "Shotgun",
+      "name": "霰弹枪",
       "row": 1,
       "stack": 5
     },
     {
       "category": "combat",
       "id": "combat-shotgun",
-      "name": "Combat shotgun",
+      "name": "冲锋霰弹枪",
       "row": 1,
       "stack": 5
     },
     {
       "category": "combat",
       "id": "rocket-launcher",
-      "name": "Rocket launcher",
+      "name": "火箭筒",
       "row": 1,
       "stack": 5
     },
     {
       "category": "combat",
       "id": "flamethrower",
-      "name": "Flamethrower",
+      "name": "火箭喷射器",
       "row": 1,
       "stack": 5
     },
     {
       "category": "combat",
       "id": "land-mine",
-      "name": "Land mine",
+      "name": "地雷",
       "row": 1,
       "stack": 100
     },
     {
       "category": "combat",
       "id": "firearm-magazine",
-      "name": "Firearm magazine",
+      "name": "标准弹匣",
       "row": 2,
       "stack": 200
     },
     {
       "category": "combat",
       "id": "piercing-rounds-magazine",
-      "name": "Piercing rounds magazine",
+      "name": "穿甲弹匣",
       "row": 2,
       "stack": 200
     },
     {
       "category": "combat",
       "id": "uranium-rounds-magazine",
-      "name": "Uranium rounds magazine",
+      "name": "贫铀弹匣",
       "row": 2,
       "stack": 200
     },
     {
       "category": "combat",
       "id": "shotgun-shell",
-      "name": "Shotgun shells",
+      "name": "标准霰弹",
       "row": 2,
       "stack": 200
     },
     {
       "category": "combat",
       "id": "piercing-shotgun-shell",
-      "name": "Piercing shotgun shells",
+      "name": "穿甲霰弹",
       "row": 2,
       "stack": 200
     },
     {
       "category": "combat",
       "id": "cannon-shell",
-      "name": "Cannon shell",
+      "name": "标准炮弹",
       "row": 2,
       "stack": 200
     },
     {
       "category": "combat",
       "id": "explosive-cannon-shell",
-      "name": "Explosive cannon shell",
+      "name": "爆破炮弹",
       "row": 2,
       "stack": 200
     },
     {
       "category": "combat",
       "id": "uranium-cannon-shell",
-      "name": "Uranium cannon shell",
+      "name": "贫铀炮弹",
       "row": 2,
       "stack": 200
     },
     {
       "category": "combat",
       "id": "explosive-uranium-cannon-shell",
-      "name": "Explosive uranium cannon shell",
+      "name": "爆破贫铀炮弹",
       "row": 2,
       "stack": 200
     },
     {
       "category": "combat",
       "id": "artillery-shell",
-      "name": "Artillery shell",
+      "name": "重炮炮弹",
       "row": 2,
       "stack": 1
     },
     {
       "category": "combat",
       "id": "rocket",
-      "name": "Rocket",
+      "name": "标准火箭弹",
       "row": 3,
       "stack": 200
     },
     {
       "category": "combat",
       "id": "explosive-rocket",
-      "name": "Explosive rocket",
+      "name": "爆破火箭弹",
       "row": 3,
       "stack": 200
     },
     {
       "category": "combat",
       "id": "atomic-bomb",
-      "name": "Atomic bomb",
+      "name": "原子火箭弹",
       "row": 3,
       "stack": 10
     },
     {
       "category": "combat",
       "id": "flamethrower-ammo",
-      "name": "Flamethrower ammo",
+      "name": "油料储罐",
       "row": 3,
       "stack": 100
     },
     {
       "category": "combat",
       "id": "grenade",
-      "name": "Grenade",
+      "name": "标准手雷",
       "row": 4,
       "stack": 100
     },
     {
       "category": "combat",
       "id": "cluster-grenade",
-      "name": "Cluster grenade",
+      "name": "集束手雷",
       "row": 4,
       "stack": 100
     },
     {
       "category": "combat",
       "id": "poison-capsule",
-      "name": "Poison capsule",
+      "name": "剧毒胶囊",
       "row": 4,
       "stack": 100
     },
     {
       "category": "combat",
       "id": "slowdown-capsule",
-      "name": "Slowdown capsule",
+      "name": "减速胶囊",
       "row": 4,
       "stack": 100
     },
     {
       "category": "combat",
       "id": "defender-capsule",
-      "name": "Defender capsule",
+      "name": "防御无人机胶囊",
       "row": 4,
       "stack": 100
     },
     {
       "category": "combat",
       "id": "distractor-capsule",
-      "name": "Distractor capsule",
+      "name": "掩护无人机胶囊",
       "row": 4,
       "stack": 100
     },
     {
       "category": "combat",
       "id": "destroyer-capsule",
-      "name": "Destroyer capsule",
+      "name": "进攻无人机胶囊",
       "row": 4,
       "stack": 100
     },
     {
       "category": "combat",
       "id": "light-armor",
-      "name": "Light armor",
+      "name": "轻型护甲",
       "row": 5,
       "stack": 1
     },
     {
       "category": "combat",
       "id": "heavy-armor",
-      "name": "Heavy armor",
+      "name": "重型护甲",
       "row": 5,
       "stack": 1
     },
     {
       "category": "combat",
       "id": "modular-armor",
-      "name": "Modular armor",
+      "name": "模块装甲",
       "row": 5,
       "stack": 1
     },
     {
       "category": "combat",
       "id": "power-armor",
-      "name": "Power armor",
+      "name": "能量装甲",
       "row": 5,
       "stack": 1
     },
     {
       "category": "combat",
       "id": "power-armor-mk2",
-      "name": "Power armor MK2",
+      "name": "能量装甲MK2",
       "row": 5,
       "stack": 1
     },
     {
       "category": "combat",
       "id": "solar-panel-equipment",
-      "name": "Portable solar panel",
+      "name": "太阳能模块",
       "row": 6,
       "stack": 20
     },
     {
       "category": "combat",
       "id": "fusion-reactor-equipment",
-      "name": "Portable fusion reactor",
+      "name": "聚变堆模块",
       "row": 6,
       "stack": 20
     },
     {
       "category": "combat",
       "id": "battery-equipment",
-      "name": "Personal battery",
+      "name": "电池组模块",
       "row": 6,
       "stack": 20
     },
     {
       "category": "combat",
       "id": "battery-mk2-equipment",
-      "name": "Personal battery MK2",
+      "name": "电池组模块MK2",
       "row": 6,
       "stack": 20
     },
     {
       "category": "combat",
       "id": "belt-immunity-equipment",
-      "name": "Belt immunity equipment",
+      "name": "锚定模块",
       "row": 6,
       "stack": 20
     },
     {
       "category": "combat",
       "id": "exoskeleton-equipment",
-      "name": "Exoskeleton",
+      "name": "外骨骼模块",
       "row": 6,
       "stack": 20
     },
     {
       "category": "combat",
       "id": "personal-roboport-equipment",
-      "name": "Personal roboport",
+      "name": "机器人指令模块",
       "row": 6,
       "stack": 20
     },
     {
       "category": "combat",
       "id": "personal-roboport-mk2-equipment",
-      "name": "Personal roboport MK2",
+      "name": "机器人指令模块MK2",
       "row": 6,
       "stack": 20
     },
     {
       "category": "combat",
       "id": "night-vision-equipment",
-      "name": "Nightvision",
+      "name": "夜视模块",
       "row": 6,
       "stack": 20
     },
     {
       "category": "combat",
       "id": "energy-shield-equipment",
-      "name": "Energy shield",
+      "name": "能量盾模块",
       "row": 7,
       "stack": 20
     },
     {
       "category": "combat",
       "id": "energy-shield-mk2-equipment",
-      "name": "Energy shield MK2",
+      "name": "能量盾模块MK2",
       "row": 7,
       "stack": 20
     },
     {
       "category": "combat",
       "id": "personal-laser-defense-equipment",
-      "name": "Personal laser defense",
+      "name": "激光防御模块",
       "row": 7,
       "stack": 20
     },
     {
       "category": "combat",
       "id": "discharge-defense-equipment",
-      "name": "Discharge defense",
+      "name": "放电防御模块",
       "row": 7,
       "stack": 20
     },
     {
       "category": "combat",
       "id": "discharge-defense-remote",
-      "name": "Discharge defense remote",
+      "name": "放电防御瞄准器",
       "row": 7,
       "stack": 1
     },
     {
       "category": "combat",
       "id": "stone-wall",
-      "name": "Wall",
+      "name": "墙壁",
       "row": 8,
       "stack": 100
     },
     {
       "category": "combat",
       "id": "gate",
-      "name": "Gate",
+      "name": "闸门",
       "row": 8,
       "stack": 50
     },
     {
       "category": "combat",
       "id": "gun-turret",
-      "name": "Gun turret",
+      "name": "机枪炮塔",
       "row": 8,
       "stack": 50
     },
     {
       "category": "combat",
       "id": "laser-turret",
-      "name": "Laser turret",
+      "name": "激光炮塔",
       "row": 8,
       "stack": 50
     },
     {
       "category": "combat",
       "id": "flamethrower-turret",
-      "name": "Flamethrower turret",
+      "name": "火焰炮塔",
       "row": 8,
       "stack": 50
     },
     {
       "category": "combat",
       "id": "artillery-turret",
-      "name": "Artillery turret",
+      "name": "重炮炮塔",
       "row": 8,
       "stack": 10
     },
     {
       "category": "combat",
       "id": "artillery-targeting-remote",
-      "name": "Artillery targeting remote",
+      "name": "重炮袭击瞄准器",
       "row": 8,
       "stack": 1
     },
     {
       "category": "combat",
       "id": "radar",
-      "name": "Radar",
+      "name": "雷达",
       "row": 8,
       "stack": 50
     },
     {
       "category": "fluids",
       "id": "water",
-      "name": "Water",
+      "name": "水",
       "row": 1
     },
     {
       "category": "fluids",
       "id": "crude-oil",
-      "name": "Crude oil",
+      "name": "原油",
       "row": 1
     },
     {
       "category": "fluids",
       "id": "steam",
-      "name": "Steam",
+      "name": "蒸汽",
       "row": 1
     },
     {
       "category": "fluids",
       "id": "heavy-oil",
-      "name": "Heavy oil",
+      "name": "重油",
       "row": 1
     },
     {
       "category": "fluids",
       "id": "light-oil",
-      "name": "Light oil",
+      "name": "轻油",
       "row": 1
     },
     {
       "category": "fluids",
       "id": "petroleum-gas",
-      "name": "Petroleum gas",
+      "name": "石油气",
       "row": 1
     },
     {
       "category": "fluids",
       "id": "sulfuric-acid",
-      "name": "Sulfuric acid",
+      "name": "硫酸",
       "row": 1
     },
     {
       "category": "fluids",
       "id": "lubricant",
-      "name": "Lubricant",
+      "name": "润滑油",
       "row": 1
     }
   ],
