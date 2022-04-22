@@ -2068,7 +2068,7 @@
         "value": 2
       },
       "id": "wood",
-      "name": "Wood",
+      "name": "木材",
       "row": 1,
       "stack": 100
     },
@@ -2079,56 +2079,56 @@
         "value": 4
       },
       "id": "coal",
-      "name": "Coal",
+      "name": "煤矿",
       "row": 1,
       "stack": 50
     },
     {
       "category": "intermediate-products",
       "id": "stone",
-      "name": "Stone",
+      "name": "石矿",
       "row": 1,
       "stack": 50
     },
     {
       "category": "intermediate-products",
       "id": "iron-ore",
-      "name": "Iron ore",
+      "name": "铁矿",
       "row": 1,
       "stack": 50
     },
     {
       "category": "intermediate-products",
       "id": "copper-ore",
-      "name": "Copper ore",
+      "name": "铜矿",
       "row": 1,
       "stack": 50
     },
     {
       "category": "intermediate-products",
       "id": "uranium-ore",
-      "name": "Uranium ore",
+      "name": "铀矿",
       "row": 1,
       "stack": 50
     },
     {
       "category": "intermediate-products",
       "id": "raw-fish",
-      "name": "Raw fish",
+      "name": "鲜鱼",
       "row": 1,
       "stack": 100
     },
     {
       "category": "intermediate-products",
       "id": "iron-plate",
-      "name": "Iron plate",
+      "name": "铁板",
       "row": 2,
       "stack": 100
     },
     {
       "category": "intermediate-products",
       "id": "copper-plate",
-      "name": "Copper plate",
+      "name": "铜板",
       "row": 2,
       "stack": 100
     },
@@ -2139,175 +2139,175 @@
         "value": 12
       },
       "id": "solid-fuel",
-      "name": "Solid fuel",
+      "name": "固体燃料",
       "row": 2,
       "stack": 50
     },
     {
       "category": "intermediate-products",
       "id": "steel-plate",
-      "name": "Steel plate",
+      "name": "钢材",
       "row": 2,
       "stack": 100
     },
     {
       "category": "intermediate-products",
       "id": "plastic-bar",
-      "name": "Plastic bar",
+      "name": "塑料",
       "row": 2,
       "stack": 100
     },
     {
       "category": "intermediate-products",
       "id": "sulfur",
-      "name": "Sulfur",
+      "name": "硫磺",
       "row": 2,
       "stack": 50
     },
     {
       "category": "intermediate-products",
       "id": "battery",
-      "name": "Battery",
+      "name": "电池",
       "row": 2,
       "stack": 200
     },
     {
       "category": "intermediate-products",
       "id": "explosives",
-      "name": "Explosives",
+      "name": "炸药",
       "row": 2,
       "stack": 50
     },
     {
       "category": "intermediate-products",
       "id": "crude-oil-barrel",
-      "name": "Crude oil barrel",
+      "name": "灌装原油桶",
       "row": 3,
       "stack": 10
     },
     {
       "category": "intermediate-products",
       "id": "heavy-oil-barrel",
-      "name": "Heavy oil barrel",
+      "name": "灌装重油桶",
       "row": 3,
       "stack": 10
     },
     {
       "category": "intermediate-products",
       "id": "light-oil-barrel",
-      "name": "Light oil barrel",
+      "name": "灌装轻油桶",
       "row": 3,
       "stack": 10
     },
     {
       "category": "intermediate-products",
       "id": "lubricant-barrel",
-      "name": "Lubricant barrel",
+      "name": "灌装润滑油桶",
       "row": 3,
       "stack": 10
     },
     {
       "category": "intermediate-products",
       "id": "petroleum-gas-barrel",
-      "name": "Petroleum gas barrel",
+      "name": "灌装石油气桶",
       "row": 3,
       "stack": 10
     },
     {
       "category": "intermediate-products",
       "id": "sulfuric-acid-barrel",
-      "name": "Sulfuric acid barrel",
+      "name": "灌装硫酸桶",
       "row": 3,
       "stack": 10
     },
     {
       "category": "intermediate-products",
       "id": "water-barrel",
-      "name": "Water barrel",
+      "name": "水桶",
       "row": 3,
       "stack": 10
     },
     {
       "category": "intermediate-products",
       "id": "copper-cable",
-      "name": "Copper cable",
+      "name": "铜线",
       "row": 4,
       "stack": 200
     },
     {
       "category": "intermediate-products",
       "id": "iron-stick",
-      "name": "Iron stick",
+      "name": "铁棒",
       "row": 4,
       "stack": 100
     },
     {
       "category": "intermediate-products",
       "id": "iron-gear-wheel",
-      "name": "Iron gear wheel",
+      "name": "齿轮",
       "row": 4,
       "stack": 100
     },
     {
       "category": "intermediate-products",
       "id": "empty-barrel",
-      "name": "Empty barrel",
+      "name": "空桶",
       "row": 4,
       "stack": 10
     },
     {
       "category": "intermediate-products",
       "id": "electronic-circuit",
-      "name": "Electronic circuit",
+      "name": "电路板",
       "row": 4,
       "stack": 200
     },
     {
       "category": "intermediate-products",
       "id": "advanced-circuit",
-      "name": "Advanced circuit",
+      "name": "集成电路",
       "row": 4,
       "stack": 200
     },
     {
       "category": "intermediate-products",
       "id": "processing-unit",
-      "name": "Processing unit",
+      "name": "处理器",
       "row": 4,
       "stack": 100
     },
     {
       "category": "intermediate-products",
       "id": "engine-unit",
-      "name": "Engine unit",
+      "name": "内燃机",
       "row": 4,
       "stack": 50
     },
     {
       "category": "intermediate-products",
       "id": "electric-engine-unit",
-      "name": "Electric engine unit",
+      "name": "电动机",
       "row": 4,
       "stack": 50
     },
     {
       "category": "intermediate-products",
       "id": "flying-robot-frame",
-      "name": "Flying robot frame",
+      "name": "机器人构架",
       "row": 4,
       "stack": 50
     },
     {
       "category": "intermediate-products",
       "id": "rocket-control-unit",
-      "name": "Rocket control unit",
+      "name": "火箭控制器",
       "row": 5,
       "stack": 10
     },
     {
       "category": "intermediate-products",
       "id": "low-density-structure",
-      "name": "Low density structure",
+      "name": "轻质框架",
       "row": 5,
       "stack": 10
     },
@@ -2318,14 +2318,14 @@
         "value": 100
       },
       "id": "rocket-fuel",
-      "name": "Rocket fuel",
+      "name": "火箭燃料",
       "row": 5,
       "stack": 10
     },
     {
       "category": "intermediate-products",
       "id": "rocket-part",
-      "name": "Rocket part",
+      "name": "火箭组件",
       "row": 5,
       "stack": 5
     },
@@ -2336,21 +2336,21 @@
         "value": 1210
       },
       "id": "nuclear-fuel",
-      "name": "Nuclear fuel",
+      "name": "核能燃料",
       "row": 5,
       "stack": 1
     },
     {
       "category": "intermediate-products",
       "id": "uranium-235",
-      "name": "Uranium-235",
+      "name": "铀-235",
       "row": 5,
       "stack": 100
     },
     {
       "category": "intermediate-products",
       "id": "uranium-238",
-      "name": "Uranium-238",
+      "name": "铀-238",
       "row": 5,
       "stack": 100
     },
@@ -2362,63 +2362,63 @@
         "value": 8000
       },
       "id": "uranium-fuel-cell",
-      "name": "Uranium fuel cell",
+      "name": "铀燃料棒",
       "row": 5,
       "stack": 50
     },
     {
       "category": "intermediate-products",
       "id": "used-up-uranium-fuel-cell",
-      "name": "Used-up uranium fuel cell",
+      "name": "耗尽的铀燃料棒",
       "row": 5,
       "stack": 50
     },
     {
       "category": "intermediate-products",
       "id": "automation-science-pack",
-      "name": "Automation science pack",
+      "name": "机自研究包",
       "row": 6,
       "stack": 200
     },
     {
       "category": "intermediate-products",
       "id": "logistic-science-pack",
-      "name": "Logistic science pack",
+      "name": "物流研究包",
       "row": 6,
       "stack": 200
     },
     {
       "category": "intermediate-products",
       "id": "military-science-pack",
-      "name": "Military science pack",
+      "name": "军备研究包",
       "row": 6,
       "stack": 200
     },
     {
       "category": "intermediate-products",
       "id": "chemical-science-pack",
-      "name": "Chemical science pack",
+      "name": "化工研究包",
       "row": 6,
       "stack": 200
     },
     {
       "category": "intermediate-products",
       "id": "production-science-pack",
-      "name": "Production science pack",
+      "name": "生产研究包",
       "row": 6,
       "stack": 200
     },
     {
       "category": "intermediate-products",
       "id": "utility-science-pack",
-      "name": "Utility science pack",
+      "name": "效能研究包",
       "row": 6,
       "stack": 200
     },
     {
       "category": "intermediate-products",
       "id": "space-science-pack",
-      "name": "Space science pack",
+      "name": "太空研究包",
       "row": 6,
       "stack": 2000
     },
