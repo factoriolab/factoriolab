@@ -14,6 +14,7 @@ import * as App from '../app.actions';
 import { ResetAction } from '../products';
 import { SetBaseAction } from '../settings';
 import { DatasetsEffects } from './datasets.effects';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('DatasetsEffects', () => {
   let store: Store<State>;
@@ -27,6 +28,7 @@ describe('DatasetsEffects', () => {
         RouterTestingModule,
         StoreModule.forRoot(reducers, { metaReducers }),
         EffectsModule.forRoot([DatasetsEffects]),
+        TranslateModule.forRoot(),
       ],
     });
 
