@@ -137,7 +137,7 @@ export class SettingsComponent implements OnInit, OnChanges {
       name: 'English',
     },
     {
-      id: 'cn',
+      id: 'zh',
       name: '简体中文',
     }
   ];

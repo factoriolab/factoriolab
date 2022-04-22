@@ -12,7 +12,7 @@ import * as App from '../app.actions';
 import { ResetAction } from '../products';
 import * as Settings from '../settings';
 import { LoadModAction } from './datasets.actions';
-import { TranslateService } from '@ngx-translate/core';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class DatasetsEffects {
@@ -67,16 +67,11 @@ export class DatasetsEffects {
     modIds.forEach((id) => this.requestData(id).subscribe(() => {}));
   }
 
-  requestData(id: string): Observable<ModData> {
-    let currentLang = this.translateSvc.getBrowserLang();
-    if (!currentLang || 'en' === currentLang) {
-      currentLang = '';
-    } else {
-      currentLang = '-' + currentLang;
-    }
-    return this.cache[id]
+  requestData(id: string, lang?: string): Observable<ModData> {
+    const suffix = `${!lang || 'en' === this.translateSvc.currentLang ? '' : '-' + lang}`;
+    return this.cache[id] && !lang
       ? of(this.cache[id])
-      : this.http.get(`data/${id}/data${currentLang}.json`).pipe(
+      : this.http.get(`data/${id}/data${suffix}.json`).pipe(
           map((response) => response as ModData),
           tap((data) => (this.cache[id] = data)),
           tap((value) => this.store.dispatch(new LoadModAction({ id, value })))
@@ -106,5 +101,9 @@ export class DatasetsEffects {
       BrowserUtility.storedState,
       Settings.initialSettingsState
     );
+    this.translateSvc.onLangChange.subscribe((event: LangChangeEvent) => {
+      const id = BrowserUtility.storedState?.settingsState?.baseId || Settings.initialSettingsState.baseId;
+      this.requestData(id, event.lang).subscribe();
+    });
   }
 }
