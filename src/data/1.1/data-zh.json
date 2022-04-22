@@ -2,23 +2,23 @@
   "categories": [
     {
       "id": "logistics",
-      "name": "Logistics"
+      "name": "物流"
     },
     {
       "id": "production",
-      "name": "Production"
+      "name": "生产"
     },
     {
       "id": "intermediate-products",
-      "name": "Intermediate products"
+      "name": "零件"
     },
     {
       "id": "combat",
-      "name": "Combat"
+      "name": "武器"
     },
     {
       "id": "fluids",
-      "name": "Fluids"
+      "name": "液体"
     }
   ],
   "icons": [
@@ -1189,21 +1189,21 @@
     {
       "category": "logistics",
       "id": "iron-chest",
-      "name": "Iron chest",
+      "name": "铁制箱",
       "row": 1,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "steel-chest",
-      "name": "Steel chest",
+      "name": "钢制箱",
       "row": 1,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "storage-tank",
-      "name": "Storage tank",
+      "name": "储液罐",
       "row": 1,
       "stack": 50
     },
@@ -1213,7 +1213,7 @@
       },
       "category": "logistics",
       "id": "transport-belt",
-      "name": "Transport belt",
+      "name": "基础传送带",
       "row": 2,
       "stack": 100
     },
@@ -1223,7 +1223,7 @@
       },
       "category": "logistics",
       "id": "fast-transport-belt",
-      "name": "Fast transport belt",
+      "name": "高速传送带",
       "row": 2,
       "stack": 100
     },
@@ -1233,182 +1233,182 @@
       },
       "category": "logistics",
       "id": "express-transport-belt",
-      "name": "Express transport belt",
+      "name": "急速传送带",
       "row": 2,
       "stack": 100
     },
     {
       "category": "logistics",
       "id": "underground-belt",
-      "name": "Underground belt",
+      "name": "基础地下传送带",
       "row": 2,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "fast-underground-belt",
-      "name": "Fast underground belt",
+      "name": "高速地下传送带",
       "row": 2,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "express-underground-belt",
-      "name": "Express underground belt",
+      "name": "急速地下传送带",
       "row": 2,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "splitter",
-      "name": "Splitter",
+      "name": "基础分流器",
       "row": 2,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "fast-splitter",
-      "name": "Fast splitter",
+      "name": "高速分流器",
       "row": 2,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "express-splitter",
-      "name": "Express splitter",
+      "name": "急速分流器",
       "row": 2,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "burner-inserter",
-      "name": "Burner inserter",
+      "name": "热能机械臂",
       "row": 3,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "inserter",
-      "name": "Inserter",
+      "name": "电力机械臂",
       "row": 3,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "long-handed-inserter",
-      "name": "Long-handed inserter",
+      "name": "加长机械臂",
       "row": 3,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "fast-inserter",
-      "name": "Fast inserter",
+      "name": "高速机械臂",
       "row": 3,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "filter-inserter",
-      "name": "Filter inserter",
+      "name": "筛选机械臂",
       "row": 3,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "stack-inserter",
-      "name": "Stack inserter",
+      "name": "集装机械臂",
       "row": 3,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "stack-filter-inserter",
-      "name": "Stack filter inserter",
+      "name": "集装筛选机械臂",
       "row": 3,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "small-electric-pole",
-      "name": "Small electric pole",
+      "name": "小型电线杆",
       "row": 4,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "medium-electric-pole",
-      "name": "Medium electric pole",
+      "name": "中型电线杆",
       "row": 4,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "big-electric-pole",
-      "name": "Big electric pole",
+      "name": "远程输电塔",
       "row": 4,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "substation",
-      "name": "Substation",
+      "name": "广域配电站",
       "row": 4,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "pipe",
-      "name": "Pipe",
+      "name": "管道",
       "row": 4,
       "stack": 100
     },
     {
       "category": "logistics",
       "id": "pipe-to-ground",
-      "name": "Pipe to ground",
+      "name": "地下管道",
       "row": 4,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "pump",
-      "name": "Pump",
+      "name": "管道泵",
       "row": 4,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "rail",
-      "name": "Rail",
+      "name": "铁轨",
       "row": 5,
       "stack": 100
     },
     {
       "category": "logistics",
       "id": "train-stop",
-      "name": "Train stop",
+      "name": "火车站",
       "row": 5,
       "stack": 10
     },
     {
       "category": "logistics",
       "id": "rail-signal",
-      "name": "Rail signal",
+      "name": "常规铁路信号",
       "row": 5,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "rail-chain-signal",
-      "name": "Rail chain signal",
+      "name": "联锁铁路信号",
       "row": 5,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "locomotive",
-      "name": "Locomotive",
+      "name": "内燃机车",
       "row": 5,
       "stack": 5
     },
@@ -1418,7 +1418,7 @@
       },
       "category": "logistics",
       "id": "cargo-wagon",
-      "name": "Cargo wagon",
+      "name": "货运车厢",
       "row": 5,
       "stack": 5
     },
@@ -1428,203 +1428,203 @@
         "capacity": 25000
       },
       "id": "fluid-wagon",
-      "name": "Fluid wagon",
+      "name": "液罐车厢",
       "row": 5,
       "stack": 5
     },
     {
       "category": "logistics",
       "id": "artillery-wagon",
-      "name": "Artillery wagon",
+      "name": "重炮车厢",
       "row": 5,
       "stack": 5
     },
     {
       "category": "logistics",
       "id": "car",
-      "name": "Car",
+      "name": "车厢",
       "row": 6,
       "stack": 1
     },
     {
       "category": "logistics",
       "id": "tank",
-      "name": "Tank",
+      "name": "坦克",
       "row": 6,
       "stack": 1
     },
     {
       "category": "logistics",
       "id": "spidertron",
-      "name": "Spidertron",
+      "name": "蜘蛛机甲",
       "row": 6,
       "stack": 1
     },
     {
       "category": "logistics",
       "id": "spidertron-remote",
-      "name": "Spidertron remote",
+      "name": "蜘蛛机甲遥控器",
       "row": 6,
       "stack": 1
     },
     {
       "category": "logistics",
       "id": "logistic-robot",
-      "name": "Logistic robot",
+      "name": "物流机器人",
       "row": 7,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "construction-robot",
-      "name": "Construction robot",
+      "name": "建设机器人",
       "row": 7,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "logistic-chest-active-provider",
-      "name": "Active provider chest",
+      "name": "主动供应箱",
       "row": 7,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "logistic-chest-passive-provider",
-      "name": "Passive provider chest",
+      "name": "被动供应箱",
       "row": 7,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "logistic-chest-storage",
-      "name": "Storage chest",
+      "name": "被动存货箱",
       "row": 7,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "logistic-chest-buffer",
-      "name": "Buffer chest",
+      "name": "主动存货箱",
       "row": 7,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "logistic-chest-requester",
-      "name": "Requester chest",
+      "name": "优先急货箱",
       "row": 7,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "roboport",
-      "name": "Roboport",
+      "name": "机器人指令平台",
       "row": 7,
       "stack": 10
     },
     {
       "category": "logistics",
       "id": "small-lamp",
-      "name": "Lamp",
+      "name": "照明灯",
       "row": 8,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "red-wire",
-      "name": "Red wire",
+      "name": "红线缆",
       "row": 8,
       "stack": 200
     },
     {
       "category": "logistics",
       "id": "green-wire",
-      "name": "Green wire",
+      "name": "绿线缆",
       "row": 8,
       "stack": 200
     },
     {
       "category": "logistics",
       "id": "arithmetic-combinator",
-      "name": "Arithmetic combinator",
+      "name": "算数运算器",
       "row": 8,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "decider-combinator",
-      "name": "Decider combinator",
+      "name": "判断运算器",
       "row": 8,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "constant-combinator",
-      "name": "Constant combinator",
+      "name": "常量运算器",
       "row": 8,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "power-switch",
-      "name": "Power switch",
+      "name": "电闸",
       "row": 8,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "programmable-speaker",
-      "name": "Programmable speaker",
+      "name": "程控扬声器",
       "row": 8,
       "stack": 50
     },
     {
       "category": "logistics",
       "id": "stone-brick",
-      "name": "Stone brick",
+      "name": "石砖",
       "row": 9,
       "stack": 100
     },
     {
       "category": "logistics",
       "id": "concrete",
-      "name": "Concrete",
+      "name": "标准混凝土",
       "row": 9,
       "stack": 100
     },
     {
       "category": "logistics",
       "id": "hazard-concrete",
-      "name": "Hazard concrete",
+      "name": "标准混凝土（标识）",
       "row": 9,
       "stack": 100
     },
     {
       "category": "logistics",
       "id": "refined-concrete",
-      "name": "Refined concrete",
+      "name": "钢筋混凝土",
       "row": 9,
       "stack": 100
     },
     {
       "category": "logistics",
       "id": "refined-hazard-concrete",
-      "name": "Refined hazard concrete",
+      "name": "钢筋混凝土（标识）",
       "row": 9,
       "stack": 100
     },
     {
       "category": "logistics",
       "id": "landfill",
-      "name": "Landfill",
+      "name": "填海料",
       "row": 9,
       "stack": 100
     },
     {
       "category": "logistics",
       "id": "cliff-explosives",
-      "name": "Cliff explosives",
+      "name": "悬崖炸药",
       "row": 9,
       "stack": 20
     },
