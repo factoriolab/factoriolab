@@ -1631,7 +1631,7 @@
     {
       "category": "production",
       "id": "repair-pack",
-      "name": "Repair pack",
+      "name": "修理包",
       "row": 1,
       "stack": 100
     },
@@ -1646,28 +1646,28 @@
         "usage": 1800
       },
       "id": "boiler",
-      "name": "Boiler",
+      "name": "锅炉",
       "row": 2,
       "stack": 50
     },
     {
       "category": "production",
       "id": "steam-engine",
-      "name": "Steam engine",
+      "name": "蒸汽机",
       "row": 2,
       "stack": 10
     },
     {
       "category": "production",
       "id": "solar-panel",
-      "name": "Solar panel",
+      "name": "太阳能板",
       "row": 2,
       "stack": 50
     },
     {
       "category": "production",
       "id": "accumulator",
-      "name": "Accumulator",
+      "name": "蓄电器",
       "row": 2,
       "stack": 50
     },
@@ -1681,14 +1681,14 @@
         "usage": 40000
       },
       "id": "nuclear-reactor",
-      "name": "Nuclear reactor",
+      "name": "核反应堆",
       "row": 2,
       "stack": 10
     },
     {
       "category": "production",
       "id": "heat-pipe",
-      "name": "Heat pipe",
+      "name": "热管",
       "row": 2,
       "stack": 50
     },
@@ -1701,14 +1701,14 @@
         "usage": 10000
       },
       "id": "heat-exchanger",
-      "name": "Heat exchanger",
+      "name": "热换器",
       "row": 2,
       "stack": 50
     },
     {
       "category": "production",
       "id": "steam-turbine",
-      "name": "Steam turbine",
+      "name": "汽轮机",
       "row": 2,
       "stack": 10
     },
@@ -1724,7 +1724,7 @@
         "usage": 150
       },
       "id": "burner-mining-drill",
-      "name": "Burner mining drill",
+      "name": "热能采矿机",
       "row": 3,
       "stack": 50
     },
@@ -1739,7 +1739,7 @@
         "usage": 90
       },
       "id": "electric-mining-drill",
-      "name": "Electric mining drill",
+      "name": "电力采矿机",
       "row": 3,
       "stack": 50
     },
@@ -1750,7 +1750,7 @@
         "speed": 1200
       },
       "id": "offshore-pump",
-      "name": "Offshore pump",
+      "name": "供水泵",
       "row": 3,
       "stack": 20
     },
@@ -1765,7 +1765,7 @@
         "usage": 90
       },
       "id": "pumpjack",
-      "name": "Pumpjack",
+      "name": "抽油机",
       "row": 3,
       "stack": 20
     },
@@ -1780,7 +1780,7 @@
         "usage": 90
       },
       "id": "stone-furnace",
-      "name": "Stone furnace",
+      "name": "石炉",
       "row": 4,
       "stack": 50
     },
@@ -1795,7 +1795,7 @@
         "usage": 90
       },
       "id": "steel-furnace",
-      "name": "Steel furnace",
+      "name": "钢炉",
       "row": 4,
       "stack": 50
     },
@@ -1810,7 +1810,7 @@
         "usage": 180
       },
       "id": "electric-furnace",
-      "name": "Electric furnace",
+      "name": "电炉",
       "row": 4,
       "stack": 50
     },
@@ -1825,7 +1825,7 @@
         "usage": 75
       },
       "id": "assembling-machine-1",
-      "name": "Assembling machine 1",
+      "name": "组装机1型",
       "row": 5,
       "stack": 50
     },
@@ -1840,7 +1840,7 @@
         "usage": 150
       },
       "id": "assembling-machine-2",
-      "name": "Assembling machine 2",
+      "name": "组装机2型",
       "row": 5,
       "stack": 50
     },
@@ -1855,7 +1855,7 @@
         "usage": 375
       },
       "id": "assembling-machine-3",
-      "name": "Assembling machine 3",
+      "name": "组装机3型",
       "row": 5,
       "stack": 50
     },
@@ -1870,7 +1870,7 @@
         "usage": 420
       },
       "id": "oil-refinery",
-      "name": "Oil refinery",
+      "name": "炼油厂",
       "row": 5,
       "stack": 10
     },
@@ -1885,7 +1885,7 @@
         "usage": 210
       },
       "id": "chemical-plant",
-      "name": "Chemical plant",
+      "name": "化工厂",
       "row": 5,
       "stack": 10
     },
@@ -1900,7 +1900,7 @@
         "usage": 350
       },
       "id": "centrifuge",
-      "name": "Centrifuge",
+      "name": "离心机",
       "row": 5,
       "stack": 50
     },
@@ -1914,7 +1914,7 @@
         "usage": 60
       },
       "id": "lab",
-      "name": "Lab",
+      "name": "研究中心",
       "row": 5,
       "stack": 10
     },
@@ -1928,7 +1928,7 @@
       },
       "category": "production",
       "id": "beacon",
-      "name": "Beacon",
+      "name": "插件效果分享塔",
       "row": 6,
       "stack": 10
     },
@@ -1939,7 +1939,7 @@
         "consumption": 0.5,
         "speed": 0.2
       },
-      "name": "Speed module",
+      "name": "速度插件 1",
       "row": 6,
       "stack": 50
     },
@@ -1950,7 +1950,7 @@
         "consumption": 0.6,
         "speed": 0.3
       },
-      "name": "Speed module 2",
+      "name": "速度插件 2",
       "row": 6,
       "stack": 50
     },
@@ -1961,7 +1961,7 @@
         "consumption": 0.7,
         "speed": 0.5
       },
-      "name": "Speed module 3",
+      "name": "速度插件 3",
       "row": 6,
       "stack": 50
     },
@@ -1971,7 +1971,7 @@
       "module": {
         "consumption": -0.3
       },
-      "name": "Efficiency module",
+      "name": "节能插件 1",
       "row": 6,
       "stack": 50
     },
@@ -1981,7 +1981,7 @@
       "module": {
         "consumption": -0.4
       },
-      "name": "Efficiency module 2",
+      "name": "节能插件 2",
       "row": 6,
       "stack": 50
     },
@@ -1991,7 +1991,7 @@
       "module": {
         "consumption": -0.5
       },
-      "name": "Efficiency module 3",
+      "name": "节能插件 3",
       "row": 6,
       "stack": 50
     },
@@ -2005,7 +2005,7 @@
         "productivity": 0.04,
         "speed": -0.05
       },
-      "name": "Productivity module",
+      "name": "产能插件 1",
       "row": 6,
       "stack": 50
     },
@@ -2019,7 +2019,7 @@
         "productivity": 0.06,
         "speed": -0.1
       },
-      "name": "Productivity module 2",
+      "name": "产能插件 2",
       "row": 6,
       "stack": 50
     },
@@ -2033,7 +2033,7 @@
         "productivity": 0.1,
         "speed": -0.15
       },
-      "name": "Productivity module 3",
+      "name": "产能插件 3",
       "row": 6,
       "stack": 50
     },
@@ -2050,14 +2050,14 @@
         "usage": 250
       },
       "id": "rocket-silo",
-      "name": "Rocket silo",
+      "name": "火箭发射井",
       "row": 7,
       "stack": 1
     },
     {
       "category": "production",
       "id": "satellite",
-      "name": "Satellite",
+      "name": "卫星",
       "row": 7,
       "stack": 1
     },
