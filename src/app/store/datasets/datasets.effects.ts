@@ -68,14 +68,24 @@ export class DatasetsEffects {
   }
 
   requestData(id: string, lang?: string): Observable<ModData> {
-    const suffix = `${!lang || 'en' === this.translateSvc.currentLang ? '' : '-' + lang}`;
-    return this.cache[id] && !lang
-      ? of(this.cache[id])
-      : this.http.get(`data/${id}/data${suffix}.json`).pipe(
-          map((response) => response as ModData),
-          tap((data) => (this.cache[id] = data)),
-          tap((value) => this.store.dispatch(new LoadModAction({ id, value })))
-        );
+    let suffix;
+    if (lang && lang !== 'en') {
+      suffix = lang;
+    } else if (
+      (!lang && 'en' === this.translateSvc.currentLang)
+      || (lang && 'en' === lang)
+    ) {
+      suffix = 'en';
+    } else {
+      suffix = this.translateSvc.currentLang;
+    }
+    return this.cache[`${id}-${suffix}`]
+      ? of(this.cache[`${id}-${suffix}`])
+      : this.http.get(`data/${id}/data${!suffix || suffix === 'en' ? '' : '-' + suffix}.json`).pipe(
+        map((response) => response as ModData),
+        tap((data) => (this.cache[`${id}-${suffix}`] = data)),
+        tap((value) => this.store.dispatch(new LoadModAction({ id, value })))
+      );
   }
 
   load(zip: string, stored: State, initial: Settings.SettingsState): void {
