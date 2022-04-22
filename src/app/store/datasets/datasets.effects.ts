@@ -12,6 +12,7 @@ import * as App from '../app.actions';
 import { ResetAction } from '../products';
 import * as Settings from '../settings';
 import { LoadModAction } from './datasets.actions';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class DatasetsEffects {
@@ -67,9 +68,15 @@ export class DatasetsEffects {
   }
 
   requestData(id: string): Observable<ModData> {
+    let currentLang = this.translateSvc.getBrowserLang();
+    if (!currentLang || 'en' === currentLang) {
+      currentLang = '';
+    } else {
+      currentLang = '-' + currentLang;
+    }
     return this.cache[id]
       ? of(this.cache[id])
-      : this.http.get(`data/${id}/data.json`).pipe(
+      : this.http.get(`data/${id}/data${currentLang}.json`).pipe(
           map((response) => response as ModData),
           tap((data) => (this.cache[id] = data)),
           tap((value) => this.store.dispatch(new LoadModAction({ id, value })))
@@ -91,7 +98,8 @@ export class DatasetsEffects {
   constructor(
     private actions$: Actions,
     private http: HttpClient,
-    private store: Store<State>
+    private store: Store<State>,
+    private translateSvc: TranslateService,
   ) {
     this.load(
       BrowserUtility.zip,
