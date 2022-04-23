@@ -292,5 +292,28 @@
   "select": {
     "noModule": "无插件",
     "noProliferator": "无增产剂"
+  },
+  "icon": {
+    "cost": "消耗",
+    "usage": "工作功率  ",
+    "effectivity": "Effectivity",
+    "modules": "Modules",
+    "range": "Range",
+    "energyType": "Energy type",
+    "fuelCategory": "Fuel category",
+    "energyConsumption": "Energy consumption",
+    "inventoryStacks": "Inventory stacks",
+    "fluidCapacity": "Fluid capacity",
+    "craftingSpeed": "Crafting speed",
+    "drain": "待机功率",
+    "pollution": "Pollution",
+    "rocketPartsRequired": "Rocket Parts Required",
+    "launchTime": "Launch Time (ticks)",
+    "category": "Category",
+    "value": "Value",
+    "consumption": "Consumption",
+    "speed": "Speed",
+    "productivity": "Productivity",
+    "sprays": "Sprays"
   }
 }

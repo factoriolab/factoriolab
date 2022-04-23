@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Mocks, RecipeId, TestUtility } from 'src/tests';
 import { DisplayRate } from '~/models';
 import { IconComponent } from './icon.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 enum DataTest {
   LabIcon = 'lab-icon',
@@ -42,6 +43,7 @@ describe('IconComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [IconComponent, TestIconComponent],
+      imports: [TranslateModule.forRoot()],
     }).compileComponents();
   });
 

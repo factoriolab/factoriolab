@@ -292,5 +292,28 @@
   "select": {
     "noModule": "No module",
     "noProliferator": "No proliferator"
+  },
+  "icon": {
+    "cost": "Cost",
+    "usage": "Usage",
+    "effectivity": "Effectivity",
+    "modules": "Modules",
+    "range": "Range",
+    "energyType": "Energy type",
+    "fuelCategory": "Fuel category",
+    "energyConsumption": "Energy consumption",
+    "inventoryStacks": "Inventory stacks",
+    "fluidCapacity": "Fluid capacity",
+    "craftingSpeed": "Crafting speed",
+    "drain": "Drain",
+    "pollution": "Pollution",
+    "rocketPartsRequired": "Rocket Parts Required",
+    "launchTime": "Launch Time (ticks)",
+    "category": "Category",
+    "value": "Value",
+    "consumption": "Consumption",
+    "speed": "Speed",
+    "productivity": "Productivity",
+    "sprays": "Sprays"
   }
 }
