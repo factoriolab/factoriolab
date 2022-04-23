@@ -281,7 +281,7 @@
     "enabledRecipes": "启用配方",
     "enabledRecipesInfo": "点击配方来启用或是禁用它们。\n禁用配方的话将不会使用它来进行计算",
     "selectANodeToSeeDetails": "选择一个节点来查看详细信息",
-    "sources": "原材料",
+    "sources": "原料",
     "depletion": "消耗",
     "destinations": "成品",
     "item": "物品",
