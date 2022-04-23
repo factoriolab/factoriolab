@@ -2969,7 +2969,7 @@
         "iron-gear-wheel": 1,
         "iron-plate": 1
       },
-      "name": "Transport belt",
+      "name": "基础传送带",
       "out": {
         "transport-belt": 2
       },
@@ -2986,7 +2986,7 @@
         "iron-gear-wheel": 5,
         "transport-belt": 1
       },
-      "name": "Fast transport belt",
+      "name": "高速传送带",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3008,7 +3008,7 @@
         "iron-gear-wheel": 10,
         "lubricant": 20
       },
-      "name": "Express transport belt",
+      "name": "急速传送带",
       "producers": [
         "assembling-machine-2",
         "assembling-machine-3"
@@ -3021,7 +3021,7 @@
         "iron-plate": 10,
         "transport-belt": 5
       },
-      "name": "Underground belt",
+      "name": "基础地下传送带",
       "out": {
         "underground-belt": 2
       },
@@ -3038,7 +3038,7 @@
         "iron-gear-wheel": 40,
         "underground-belt": 2
       },
-      "name": "Fast underground belt",
+      "name": "高速地下传送带",
       "out": {
         "fast-underground-belt": 2
       },
@@ -3056,7 +3056,7 @@
         "iron-gear-wheel": 80,
         "lubricant": 40
       },
-      "name": "Express underground belt",
+      "name": "急速地下传送带",
       "out": {
         "express-underground-belt": 2
       },
@@ -3073,7 +3073,7 @@
         "iron-plate": 5,
         "transport-belt": 4
       },
-      "name": "Splitter",
+      "name": "基础分流器",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3088,7 +3088,7 @@
         "iron-gear-wheel": 10,
         "splitter": 1
       },
-      "name": "Fast splitter",
+      "name": "高速分流器",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3104,7 +3104,7 @@
         "iron-gear-wheel": 10,
         "lubricant": 80
       },
-      "name": "Express splitter",
+      "name": "急速分流器",
       "producers": [
         "assembling-machine-2",
         "assembling-machine-3"
@@ -3117,7 +3117,7 @@
         "iron-gear-wheel": 1,
         "iron-plate": 1
       },
-      "name": "Burner inserter",
+      "name": "热能机械臂",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3132,7 +3132,7 @@
         "iron-gear-wheel": 1,
         "iron-plate": 1
       },
-      "name": "Inserter",
+      "name": "电力机械臂",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3147,7 +3147,7 @@
         "iron-gear-wheel": 1,
         "iron-plate": 1
       },
-      "name": "Long-handed inserter",
+      "name": "加长机械臂",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3162,7 +3162,7 @@
         "inserter": 1,
         "iron-plate": 2
       },
-      "name": "Fast inserter",
+      "name": "高速机械臂",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3176,7 +3176,7 @@
         "electronic-circuit": 4,
         "fast-inserter": 1
       },
-      "name": "Filter inserter",
+      "name": "筛选机械臂",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3192,7 +3192,7 @@
         "fast-inserter": 1,
         "iron-gear-wheel": 15
       },
-      "name": "Stack inserter",
+      "name": "集装机械臂",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3206,7 +3206,7 @@
         "electronic-circuit": 5,
         "stack-inserter": 1
       },
-      "name": "Stack filter inserter",
+      "name": "集装筛选机械臂",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3220,7 +3220,7 @@
         "copper-cable": 2,
         "wood": 1
       },
-      "name": "Small electric pole",
+      "name": "小型电线杆",
       "out": {
         "small-electric-pole": 2
       },
@@ -3238,7 +3238,7 @@
         "iron-stick": 4,
         "steel-plate": 2
       },
-      "name": "Medium electric pole",
+      "name": "中型电线杆",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3253,7 +3253,7 @@
         "iron-stick": 8,
         "steel-plate": 5
       },
-      "name": "Big electric pole",
+      "name": "远程输电塔",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3268,7 +3268,7 @@
         "copper-plate": 5,
         "steel-plate": 10
       },
-      "name": "Substation",
+      "name": "广域配电站",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3286,7 +3286,7 @@
       "in": {
         "iron-plate": 1
       },
-      "name": "Pipe",
+      "name": "管道",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3300,7 +3300,7 @@
         "iron-plate": 5,
         "pipe": 10
       },
-      "name": "Pipe to ground",
+      "name": "地下管道",
       "out": {
         "pipe-to-ground": 2
       },
@@ -3318,7 +3318,7 @@
         "pipe": 1,
         "steel-plate": 1
       },
-      "name": "Pump",
+      "name": "管道泵",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3333,7 +3333,7 @@
         "steel-plate": 1,
         "stone": 1
       },
-      "name": "Rail",
+      "name": "铁轨",
       "out": {
         "rail": 2
       },
@@ -3352,7 +3352,7 @@
         "iron-stick": 6,
         "steel-plate": 3
       },
-      "name": "Train stop",
+      "name": "火车站",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3366,7 +3366,7 @@
         "electronic-circuit": 1,
         "iron-plate": 5
       },
-      "name": "Rail signal",
+      "name": "常规铁路信号",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3380,7 +3380,7 @@
         "electronic-circuit": 1,
         "iron-plate": 5
       },
-      "name": "Rail chain signal",
+      "name": "联锁铁路信号",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3395,7 +3395,7 @@
         "engine-unit": 20,
         "steel-plate": 30
       },
-      "name": "Locomotive",
+      "name": "内燃机车",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3410,7 +3410,7 @@
         "iron-plate": 20,
         "steel-plate": 20
       },
-      "name": "Cargo wagon",
+      "name": "货运车厢",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3426,7 +3426,7 @@
         "steel-plate": 16,
         "storage-tank": 1
       },
-      "name": "Fluid wagon",
+      "name": "液罐车厢",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3443,7 +3443,7 @@
         "pipe": 16,
         "steel-plate": 40
       },
-      "name": "Artillery wagon",
+      "name": "重炮车厢",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3458,7 +3458,7 @@
         "iron-plate": 20,
         "steel-plate": 5
       },
-      "name": "Car",
+      "name": "车厢",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3483,7 +3483,7 @@
         "iron-gear-wheel": 15,
         "steel-plate": 50
       },
-      "name": "Tank",
+      "name": "坦克",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3503,7 +3503,7 @@
         "rocket-control-unit": 16,
         "rocket-launcher": 4
       },
-      "name": "Spidertron",
+      "name": "蜘蛛机甲",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3517,7 +3517,7 @@
         "radar": 1,
         "rocket-control-unit": 1
       },
-      "name": "Spidertron remote",
+      "name": "蜘蛛机甲遥控器",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3531,7 +3531,7 @@
         "advanced-circuit": 2,
         "flying-robot-frame": 1
       },
-      "name": "Logistic robot",
+      "name": "物流机器人",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3545,7 +3545,7 @@
         "electronic-circuit": 2,
         "flying-robot-frame": 1
       },
-      "name": "Construction robot",
+      "name": "建设机器人",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3560,7 +3560,7 @@
         "electronic-circuit": 3,
         "steel-chest": 1
       },
-      "name": "Active provider chest",
+      "name": "主动供应箱",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3575,7 +3575,7 @@
         "electronic-circuit": 3,
         "steel-chest": 1
       },
-      "name": "Passive provider chest",
+      "name": "被动供应箱",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3590,7 +3590,7 @@
         "electronic-circuit": 3,
         "steel-chest": 1
       },
-      "name": "Storage chest",
+      "name": "被动存货箱",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3605,7 +3605,7 @@
         "electronic-circuit": 3,
         "steel-chest": 1
       },
-      "name": "Buffer chest",
+      "name": "主动存货箱",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3620,7 +3620,7 @@
         "electronic-circuit": 3,
         "steel-chest": 1
       },
-      "name": "Requester chest",
+      "name": "优先急货箱",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3635,7 +3635,7 @@
         "iron-gear-wheel": 45,
         "steel-plate": 45
       },
-      "name": "Roboport",
+      "name": "机器人指令平台",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3650,7 +3650,7 @@
         "electronic-circuit": 1,
         "iron-plate": 1
       },
-      "name": "Lamp",
+      "name": "照明灯",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3664,7 +3664,7 @@
         "copper-cable": 1,
         "electronic-circuit": 1
       },
-      "name": "Red wire",
+      "name": "红线缆",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3678,7 +3678,7 @@
         "copper-cable": 1,
         "electronic-circuit": 1
       },
-      "name": "Green wire",
+      "name": "绿线缆",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3692,7 +3692,7 @@
         "copper-cable": 5,
         "electronic-circuit": 5
       },
-      "name": "Arithmetic combinator",
+      "name": "算数运算器",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3706,7 +3706,7 @@
         "copper-cable": 5,
         "electronic-circuit": 5
       },
-      "name": "Decider combinator",
+      "name": "判断运算器",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3720,7 +3720,7 @@
         "copper-cable": 5,
         "electronic-circuit": 2
       },
-      "name": "Constant combinator",
+      "name": "常量运算器",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3735,7 +3735,7 @@
         "electronic-circuit": 2,
         "iron-plate": 5
       },
-      "name": "Power switch",
+      "name": "电闸",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3751,7 +3751,7 @@
         "iron-plate": 3,
         "iron-stick": 4
       },
-      "name": "Programmable speaker",
+      "name": "程控扬声器",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3764,7 +3764,7 @@
       "in": {
         "stone": 2
       },
-      "name": "Stone brick",
+      "name": "石砖",
       "producers": [
         "stone-furnace",
         "steel-furnace",
@@ -3779,7 +3779,7 @@
         "stone-brick": 5,
         "water": 100
       },
-      "name": "Concrete",
+      "name": "标准混凝土",
       "out": {
         "concrete": 10
       },
@@ -3794,7 +3794,7 @@
       "in": {
         "concrete": 10
       },
-      "name": "Hazard concrete",
+      "name": "标准混凝土（标识）",
       "out": {
         "hazard-concrete": 10
       },
@@ -3813,7 +3813,7 @@
         "steel-plate": 1,
         "water": 100
       },
-      "name": "Refined concrete",
+      "name": "钢筋混凝土",
       "out": {
         "refined-concrete": 10
       },
@@ -3828,7 +3828,7 @@
       "in": {
         "refined-concrete": 10
       },
-      "name": "Refined hazard concrete",
+      "name": "钢筋混凝土（标识）",
       "out": {
         "refined-hazard-concrete": 10
       },
@@ -3844,7 +3844,7 @@
       "in": {
         "stone": 20
       },
-      "name": "Landfill",
+      "name": "填海料",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3859,7 +3859,7 @@
         "explosives": 10,
         "grenade": 1
       },
-      "name": "Cliff explosives",
+      "name": "悬崖炸药",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3873,7 +3873,7 @@
         "electronic-circuit": 2,
         "iron-gear-wheel": 2
       },
-      "name": "Repair pack",
+      "name": "修理包",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3887,7 +3887,7 @@
         "pipe": 4,
         "stone-furnace": 1
       },
-      "name": "Boiler",
+      "name": "锅炉",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3909,7 +3909,7 @@
         "iron-plate": 10,
         "pipe": 5
       },
-      "name": "Steam engine",
+      "name": "蒸汽机",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3924,7 +3924,7 @@
         "electronic-circuit": 15,
         "steel-plate": 5
       },
-      "name": "Solar panel",
+      "name": "太阳能板",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3938,7 +3938,7 @@
         "battery": 5,
         "iron-plate": 2
       },
-      "name": "Accumulator",
+      "name": "蓄电器",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3954,7 +3954,7 @@
         "copper-plate": 500,
         "steel-plate": 500
       },
-      "name": "Nuclear reactor",
+      "name": "核反应堆",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3968,7 +3968,7 @@
         "copper-plate": 20,
         "steel-plate": 10
       },
-      "name": "Heat pipe",
+      "name": "热管",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3983,7 +3983,7 @@
         "pipe": 10,
         "steel-plate": 10
       },
-      "name": "Heat exchanger",
+      "name": "热换器",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -3998,7 +3998,7 @@
         "iron-gear-wheel": 50,
         "pipe": 20
       },
-      "name": "Steam turbine",
+      "name": "汽轮机",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4021,7 +4021,7 @@
         "iron-plate": 3,
         "stone-furnace": 1
       },
-      "name": "Burner mining drill",
+      "name": "热能采矿机",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4043,7 +4043,7 @@
         "iron-gear-wheel": 5,
         "iron-plate": 10
       },
-      "name": "Electric mining drill",
+      "name": "电力采矿机",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4058,7 +4058,7 @@
         "iron-gear-wheel": 1,
         "pipe": 1
       },
-      "name": "Offshore pump",
+      "name": "供水泵",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4074,7 +4074,7 @@
         "pipe": 10,
         "steel-plate": 5
       },
-      "name": "Pumpjack",
+      "name": "抽油机",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4087,7 +4087,7 @@
       "in": {
         "stone": 5
       },
-      "name": "Stone furnace",
+      "name": "石炉",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4101,7 +4101,7 @@
         "steel-plate": 6,
         "stone-brick": 10
       },
-      "name": "Steel furnace",
+      "name": "钢炉",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4116,7 +4116,7 @@
         "steel-plate": 10,
         "stone-brick": 10
       },
-      "name": "Electric furnace",
+      "name": "电炉",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4131,7 +4131,7 @@
         "iron-gear-wheel": 5,
         "iron-plate": 9
       },
-      "name": "Assembling machine 1",
+      "name": "组装机1型",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4155,7 +4155,7 @@
         "iron-gear-wheel": 5,
         "steel-plate": 2
       },
-      "name": "Assembling machine 2",
+      "name": "组装机2型",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4169,7 +4169,7 @@
         "assembling-machine-2": 2,
         "speed-module": 4
       },
-      "name": "Assembling machine 3",
+      "name": "组装机3型",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4186,7 +4186,7 @@
         "steel-plate": 15,
         "stone-brick": 10
       },
-      "name": "Oil refinery",
+      "name": "炼油厂",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4202,7 +4202,7 @@
         "pipe": 5,
         "steel-plate": 5
       },
-      "name": "Chemical plant",
+      "name": "化工厂",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4218,7 +4218,7 @@
         "iron-gear-wheel": 100,
         "steel-plate": 50
       },
-      "name": "Centrifuge",
+      "name": "离心机",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4233,7 +4233,7 @@
         "iron-gear-wheel": 10,
         "transport-belt": 4
       },
-      "name": "Lab",
+      "name": "研究中心",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4249,7 +4249,7 @@
         "electronic-circuit": 20,
         "steel-plate": 10
       },
-      "name": "Beacon",
+      "name": "插件效果分享塔",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4263,7 +4263,7 @@
         "advanced-circuit": 5,
         "electronic-circuit": 5
       },
-      "name": "Speed module",
+      "name": "速度插件 1",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4278,7 +4278,7 @@
         "processing-unit": 5,
         "speed-module": 4
       },
-      "name": "Speed module 2",
+      "name": "速度插件 2",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4293,7 +4293,7 @@
         "processing-unit": 5,
         "speed-module-2": 5
       },
-      "name": "Speed module 3",
+      "name": "速度插件 3",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4307,7 +4307,7 @@
         "advanced-circuit": 5,
         "electronic-circuit": 5
       },
-      "name": "Efficiency module",
+      "name": "节能插件 1",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4322,7 +4322,7 @@
         "effectivity-module": 4,
         "processing-unit": 5
       },
-      "name": "Efficiency module 2",
+      "name": "节能插件 2",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4337,7 +4337,7 @@
         "effectivity-module-2": 5,
         "processing-unit": 5
       },
-      "name": "Efficiency module 3",
+      "name": "节能插件 3",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4351,7 +4351,7 @@
         "advanced-circuit": 5,
         "electronic-circuit": 5
       },
-      "name": "Productivity module",
+      "name": "产能插件 1",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4366,7 +4366,7 @@
         "processing-unit": 5,
         "productivity-module": 4
       },
-      "name": "Productivity module 2",
+      "name": "产能插件 2",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4381,7 +4381,7 @@
         "processing-unit": 5,
         "productivity-module-2": 5
       },
-      "name": "Productivity module 3",
+      "name": "产能插件 3",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4398,7 +4398,7 @@
         "processing-unit": 200,
         "steel-plate": 1000
       },
-      "name": "Rocket silo",
+      "name": "火箭发射井",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4416,7 +4416,7 @@
         "rocket-fuel": 50,
         "solar-panel": 100
       },
-      "name": "Satellite",
+      "name": "卫星",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4431,7 +4431,7 @@
         "sulfur": 5,
         "water": 100
       },
-      "name": "Sulfuric acid",
+      "name": "硫酸",
       "out": {
         "sulfuric-acid": 50
       },
@@ -4566,7 +4566,7 @@
       "in": {
         "heavy-oil": 10
       },
-      "name": "Lubricant",
+      "name": "润滑油",
       "out": {
         "lubricant": 10
       },
@@ -4580,7 +4580,7 @@
       "in": {
         "iron-ore": 1
       },
-      "name": "Iron plate",
+      "name": "铁板",
       "producers": [
         "stone-furnace",
         "steel-furnace",
@@ -4593,7 +4593,7 @@
       "in": {
         "copper-ore": 1
       },
-      "name": "Copper plate",
+      "name": "铜板",
       "producers": [
         "stone-furnace",
         "steel-furnace",
@@ -4612,7 +4612,7 @@
       "in": {
         "iron-plate": 5
       },
-      "name": "Steel plate",
+      "name": "钢材",
       "producers": [
         "stone-furnace",
         "steel-furnace",
@@ -4626,7 +4626,7 @@
         "coal": 1,
         "petroleum-gas": 20
       },
-      "name": "Plastic bar",
+      "name": "塑料",
       "out": {
         "plastic-bar": 2
       },
@@ -4641,7 +4641,7 @@
         "petroleum-gas": 30,
         "water": 30
       },
-      "name": "Sulfur",
+      "name": "硫磺",
       "out": {
         "sulfur": 2
       },
@@ -4665,7 +4665,7 @@
         "iron-plate": 1,
         "sulfuric-acid": 20
       },
-      "name": "Battery",
+      "name": "电池",
       "producers": [
         "chemical-plant"
       ],
@@ -4689,7 +4689,7 @@
         "sulfur": 1,
         "water": 10
       },
-      "name": "Explosives",
+      "name": "炸药",
       "out": {
         "explosives": 2
       },
@@ -4830,7 +4830,7 @@
       "in": {
         "copper-plate": 1
       },
-      "name": "Copper cable",
+      "name": "铜线",
       "out": {
         "copper-cable": 2
       },
@@ -4846,7 +4846,7 @@
       "in": {
         "iron-plate": 1
       },
-      "name": "Iron stick",
+      "name": "铁棒",
       "out": {
         "iron-stick": 2
       },
@@ -4867,7 +4867,7 @@
       "in": {
         "iron-plate": 2
       },
-      "name": "Iron gear wheel",
+      "name": "齿轮",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4880,7 +4880,7 @@
       "in": {
         "steel-plate": 1
       },
-      "name": "Empty barrel",
+      "name": "空桶",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4900,7 +4900,7 @@
         "copper-cable": 3,
         "iron-plate": 1
       },
-      "name": "Electronic circuit",
+      "name": "电路板",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4922,7 +4922,7 @@
         "electronic-circuit": 2,
         "plastic-bar": 2
       },
-      "name": "Advanced circuit",
+      "name": "集成电路",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4944,7 +4944,7 @@
         "electronic-circuit": 20,
         "sulfuric-acid": 5
       },
-      "name": "Processing unit",
+      "name": "处理器",
       "producers": [
         "assembling-machine-2",
         "assembling-machine-3"
@@ -4958,7 +4958,7 @@
         "pipe": 2,
         "steel-plate": 1
       },
-      "name": "Engine unit",
+      "name": "内燃机",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -4973,7 +4973,7 @@
         "engine-unit": 1,
         "lubricant": 15
       },
-      "name": "Electric engine unit",
+      "name": "电动机",
       "producers": [
         "assembling-machine-2",
         "assembling-machine-3"
@@ -4988,7 +4988,7 @@
         "electronic-circuit": 3,
         "steel-plate": 1
       },
-      "name": "Flying robot frame",
+      "name": "机器人构架",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5002,7 +5002,7 @@
         "processing-unit": 1,
         "speed-module": 1
       },
-      "name": "Rocket control unit",
+      "name": "火箭控制器",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5024,7 +5024,7 @@
         "plastic-bar": 5,
         "steel-plate": 2
       },
-      "name": "Low density structure",
+      "name": "轻质框架",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5038,7 +5038,7 @@
         "light-oil": 10,
         "solid-fuel": 10
       },
-      "name": "Rocket fuel",
+      "name": "火箭燃料",
       "producers": [
         "assembling-machine-2",
         "assembling-machine-3"
@@ -5052,7 +5052,7 @@
         "rocket-control-unit": 10,
         "rocket-fuel": 10
       },
-      "name": "Rocket part",
+      "name": "火箭组件",
       "producers": [
         "rocket-silo"
       ],
@@ -5064,7 +5064,7 @@
         "rocket-part": 100,
         "satellite": 1
       },
-      "name": "Satellite launch",
+      "name": "太空研究包",
       "out": {
         "space-science-pack": 1000
       },
@@ -5080,7 +5080,7 @@
         "rocket-part": 100,
         "space-science-pack": 1
       },
-      "name": "Space science pack launch",
+      "name": "鲜鱼",
       "out": {
         "raw-fish": 1
       },
@@ -5096,7 +5096,7 @@
         "rocket-fuel": 1,
         "uranium-235": 1
       },
-      "name": "Nuclear fuel",
+      "name": "核能燃料",
       "producers": [
         "centrifuge"
       ],
@@ -5109,7 +5109,7 @@
         "uranium-235": 1,
         "uranium-238": 19
       },
-      "name": "Uranium fuel cell",
+      "name": "铀燃料棒",
       "out": {
         "uranium-fuel-cell": 10
       },
@@ -5156,7 +5156,7 @@
         "copper-plate": 1,
         "iron-gear-wheel": 1
       },
-      "name": "Automation science pack",
+      "name": "机自研究包",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5170,7 +5170,7 @@
         "inserter": 1,
         "transport-belt": 1
       },
-      "name": "Logistic science pack",
+      "name": "物流研究包",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5185,7 +5185,7 @@
         "piercing-rounds-magazine": 1,
         "stone-wall": 2
       },
-      "name": "Military science pack",
+      "name": "军备研究包",
       "out": {
         "military-science-pack": 2
       },
@@ -5203,7 +5203,7 @@
         "engine-unit": 2,
         "sulfur": 1
       },
-      "name": "Chemical science pack",
+      "name": "化工研究包",
       "out": {
         "chemical-science-pack": 2
       },
@@ -5221,7 +5221,7 @@
         "productivity-module": 1,
         "rail": 30
       },
-      "name": "Production science pack",
+      "name": "生产研究包",
       "out": {
         "production-science-pack": 3
       },
@@ -5239,7 +5239,7 @@
         "low-density-structure": 3,
         "processing-unit": 2
       },
-      "name": "Utility science pack",
+      "name": "效能研究包",
       "out": {
         "utility-science-pack": 3
       },
@@ -5256,7 +5256,7 @@
         "copper-plate": 5,
         "iron-plate": 5
       },
-      "name": "Pistol",
+      "name": "手枪",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5278,7 +5278,7 @@
         "iron-gear-wheel": 10,
         "iron-plate": 10
       },
-      "name": "Submachine gun",
+      "name": "冲锋枪",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5294,7 +5294,7 @@
         "iron-plate": 15,
         "wood": 5
       },
-      "name": "Shotgun",
+      "name": "霰弹枪",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5310,7 +5310,7 @@
         "steel-plate": 15,
         "wood": 10
       },
-      "name": "Combat shotgun",
+      "name": "冲锋霰弹枪",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5325,7 +5325,7 @@
         "iron-gear-wheel": 5,
         "iron-plate": 5
       },
-      "name": "Rocket launcher",
+      "name": "火箭筒",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5339,7 +5339,7 @@
         "iron-gear-wheel": 10,
         "steel-plate": 5
       },
-      "name": "Flamethrower",
+      "name": "火箭喷射器",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5353,7 +5353,7 @@
         "explosives": 2,
         "steel-plate": 1
       },
-      "name": "Land mine",
+      "name": "地雷",
       "out": {
         "land-mine": 4
       },
@@ -5369,7 +5369,7 @@
       "in": {
         "iron-plate": 4
       },
-      "name": "Firearm magazine",
+      "name": "标准弹匣",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5384,7 +5384,7 @@
         "firearm-magazine": 1,
         "steel-plate": 1
       },
-      "name": "Piercing rounds magazine",
+      "name": "穿甲弹匣",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5398,7 +5398,7 @@
         "piercing-rounds-magazine": 1,
         "uranium-238": 1
       },
-      "name": "Uranium rounds magazine",
+      "name": "贫铀弹匣",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5412,7 +5412,7 @@
         "copper-plate": 2,
         "iron-plate": 2
       },
-      "name": "Shotgun shells",
+      "name": "标准霰弹",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5427,7 +5427,7 @@
         "shotgun-shell": 2,
         "steel-plate": 2
       },
-      "name": "Piercing shotgun shells",
+      "name": "穿甲霰弹",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5449,7 +5449,7 @@
         "plastic-bar": 2,
         "steel-plate": 2
       },
-      "name": "Cannon shell",
+      "name": "标准炮弹",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5471,7 +5471,7 @@
         "plastic-bar": 2,
         "steel-plate": 2
       },
-      "name": "Explosive cannon shell",
+      "name": "爆破炮弹",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5485,7 +5485,7 @@
         "cannon-shell": 1,
         "uranium-238": 1
       },
-      "name": "Uranium cannon shell",
+      "name": "贫铀炮弹",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5499,7 +5499,7 @@
         "explosive-cannon-shell": 1,
         "uranium-238": 1
       },
-      "name": "Explosive uranium cannon shell",
+      "name": "爆破贫铀炮弹",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5514,7 +5514,7 @@
         "explosives": 8,
         "radar": 1
       },
-      "name": "Artillery shell",
+      "name": "重炮炮弹",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5529,7 +5529,7 @@
         "explosives": 1,
         "iron-plate": 2
       },
-      "name": "Rocket",
+      "name": "标准火箭弹",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5543,7 +5543,7 @@
         "explosives": 2,
         "rocket": 1
       },
-      "name": "Explosive rocket",
+      "name": "爆破火箭弹",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5558,7 +5558,7 @@
         "rocket-control-unit": 10,
         "uranium-235": 30
       },
-      "name": "Atomic bomb",
+      "name": "原子火箭弹",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5572,7 +5572,7 @@
         "crude-oil": 100,
         "steel-plate": 5
       },
-      "name": "Flamethrower ammo",
+      "name": "油料储罐",
       "producers": [
         "chemical-plant"
       ],
@@ -5584,7 +5584,7 @@
         "coal": 10,
         "iron-plate": 5
       },
-      "name": "Grenade",
+      "name": "标准手雷",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5599,7 +5599,7 @@
         "grenade": 7,
         "steel-plate": 5
       },
-      "name": "Cluster grenade",
+      "name": "集束手雷",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5614,7 +5614,7 @@
         "electronic-circuit": 3,
         "steel-plate": 3
       },
-      "name": "Poison capsule",
+      "name": "剧毒胶囊",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5629,7 +5629,7 @@
         "electronic-circuit": 2,
         "steel-plate": 2
       },
-      "name": "Slowdown capsule",
+      "name": "减速胶囊",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5644,7 +5644,7 @@
         "iron-gear-wheel": 3,
         "piercing-rounds-magazine": 3
       },
-      "name": "Defender capsule",
+      "name": "防御无人机胶囊",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5658,7 +5658,7 @@
         "advanced-circuit": 3,
         "defender-capsule": 4
       },
-      "name": "Distractor capsule",
+      "name": "掩护无人机胶囊",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5672,7 +5672,7 @@
         "distractor-capsule": 4,
         "speed-module": 1
       },
-      "name": "Destroyer capsule",
+      "name": "进攻无人机胶囊",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5685,7 +5685,7 @@
       "in": {
         "iron-plate": 40
       },
-      "name": "Light armor",
+      "name": "轻型护甲",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5699,7 +5699,7 @@
         "copper-plate": 100,
         "steel-plate": 50
       },
-      "name": "Heavy armor",
+      "name": "重型护甲",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5713,7 +5713,7 @@
         "advanced-circuit": 30,
         "steel-plate": 50
       },
-      "name": "Modular armor",
+      "name": "模块装甲",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5728,7 +5728,7 @@
         "processing-unit": 40,
         "steel-plate": 40
       },
-      "name": "Power armor",
+      "name": "能量装甲",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5745,7 +5745,7 @@
         "processing-unit": 60,
         "speed-module-2": 25
       },
-      "name": "Power armor MK2",
+      "name": "能量装甲MK2",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5760,7 +5760,7 @@
         "solar-panel": 1,
         "steel-plate": 5
       },
-      "name": "Portable solar panel",
+      "name": "太阳能模块",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5774,7 +5774,7 @@
         "low-density-structure": 50,
         "processing-unit": 200
       },
-      "name": "Portable fusion reactor",
+      "name": "聚变堆模块",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5788,7 +5788,7 @@
         "battery": 5,
         "steel-plate": 10
       },
-      "name": "Personal battery",
+      "name": "电池组模块",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5803,7 +5803,7 @@
         "low-density-structure": 5,
         "processing-unit": 15
       },
-      "name": "Personal battery MK2",
+      "name": "电池组模块MK2",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5817,7 +5817,7 @@
         "advanced-circuit": 5,
         "steel-plate": 10
       },
-      "name": "Belt immunity equipment",
+      "name": "锚定模块",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5832,7 +5832,7 @@
         "processing-unit": 10,
         "steel-plate": 20
       },
-      "name": "Exoskeleton",
+      "name": "外骨骼模块",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5848,7 +5848,7 @@
         "iron-gear-wheel": 40,
         "steel-plate": 20
       },
-      "name": "Personal roboport",
+      "name": "机器人指令模块",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5863,7 +5863,7 @@
         "personal-roboport-equipment": 5,
         "processing-unit": 100
       },
-      "name": "Personal roboport MK2",
+      "name": "机器人指令模块MK2",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5877,7 +5877,7 @@
         "advanced-circuit": 5,
         "steel-plate": 10
       },
-      "name": "Nightvision",
+      "name": "夜视模块",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5891,7 +5891,7 @@
         "advanced-circuit": 5,
         "steel-plate": 10
       },
-      "name": "Energy shield",
+      "name": "能量盾模块",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5906,7 +5906,7 @@
         "low-density-structure": 5,
         "processing-unit": 5
       },
-      "name": "Energy shield MK2",
+      "name": "能量盾模块MK2",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5921,7 +5921,7 @@
         "low-density-structure": 5,
         "processing-unit": 20
       },
-      "name": "Personal laser defense",
+      "name": "激光防御模块",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5936,7 +5936,7 @@
         "processing-unit": 5,
         "steel-plate": 20
       },
-      "name": "Discharge defense",
+      "name": "放电防御模块",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5949,7 +5949,7 @@
       "in": {
         "electronic-circuit": 1
       },
-      "name": "Discharge defense remote",
+      "name": "放电防御瞄准器",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5962,7 +5962,7 @@
       "in": {
         "stone-brick": 5
       },
-      "name": "Wall",
+      "name": "墙壁",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5977,7 +5977,7 @@
         "steel-plate": 2,
         "stone-wall": 1
       },
-      "name": "Gate",
+      "name": "闸门",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -5992,7 +5992,7 @@
         "iron-gear-wheel": 10,
         "iron-plate": 20
       },
-      "name": "Gun turret",
+      "name": "机枪炮塔",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -6007,7 +6007,7 @@
         "electronic-circuit": 20,
         "steel-plate": 20
       },
-      "name": "Laser turret",
+      "name": "激光炮塔",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -6023,7 +6023,7 @@
         "pipe": 10,
         "steel-plate": 30
       },
-      "name": "Flamethrower turret",
+      "name": "火焰炮塔",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -6039,7 +6039,7 @@
         "iron-gear-wheel": 40,
         "steel-plate": 60
       },
-      "name": "Artillery turret",
+      "name": "重炮炮塔",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -6053,7 +6053,7 @@
         "processing-unit": 1,
         "radar": 1
       },
-      "name": "Artillery targeting remote",
+      "name": "重炮袭击瞄准器",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -6068,7 +6068,7 @@
         "iron-gear-wheel": 5,
         "iron-plate": 10
       },
-      "name": "Radar",
+      "name": "雷达",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -6079,7 +6079,7 @@
     {
       "cost": 10000,
       "id": "coal",
-      "name": "Coal",
+      "name": "煤矿",
       "producers": [
         "burner-mining-drill",
         "electric-mining-drill"
@@ -6089,7 +6089,7 @@
     {
       "cost": 10000,
       "id": "stone",
-      "name": "Stone",
+      "name": "石矿",
       "producers": [
         "burner-mining-drill",
         "electric-mining-drill"
@@ -6099,7 +6099,7 @@
     {
       "cost": 10000,
       "id": "iron-ore",
-      "name": "Iron ore",
+      "name": "铁矿",
       "producers": [
         "burner-mining-drill",
         "electric-mining-drill"
@@ -6109,7 +6109,7 @@
     {
       "cost": 10000,
       "id": "copper-ore",
-      "name": "Copper ore",
+      "name": "铜矿",
       "producers": [
         "burner-mining-drill",
         "electric-mining-drill"
@@ -6122,7 +6122,7 @@
       "in": {
         "sulfuric-acid": 1
       },
-      "name": "Uranium ore",
+      "name": "铀矿",
       "producers": [
         "burner-mining-drill",
         "electric-mining-drill"
@@ -6132,7 +6132,7 @@
     {
       "cost": 1000,
       "id": "crude-oil",
-      "name": "Crude oil",
+      "name": "原油",
       "out": {
         "crude-oil": 10
       },
@@ -6146,7 +6146,7 @@
       "in": {
         "uranium-fuel-cell": 0
       },
-      "name": "Used-up uranium fuel cell",
+      "name": "耗尽的铀燃料棒",
       "out": {
         "used-up-uranium-fuel-cell": 0
       },
@@ -6160,7 +6160,7 @@
       "in": {
         "water": 1
       },
-      "name": "Steam",
+      "name": "蒸汽",
       "producers": [
         "boiler"
       ],
@@ -6169,7 +6169,7 @@
     {
       "cost": 100,
       "id": "water",
-      "name": "Water",
+      "name": "水",
       "producers": [
         "offshore-pump"
       ],
