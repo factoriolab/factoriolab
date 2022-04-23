@@ -2008,7 +2008,7 @@
     {
       "category": "buildings-alt",
       "id": "ray-receiver-pro",
-      "name": "Ray receiver (w/lens)",
+      "name": "射线接收站 (带引力透镜)",
       "row": 0,
       "stack": 10,
       "factory": {
@@ -2022,7 +2022,7 @@
     {
       "category": "effects",
       "id": "proliferator-prod-1",
-      "name": "Proliferator mk.I (Products)",
+      "name": "增产剂 mk.I (额外产出)",
       "module": {
         "consumption": 0.3,
         "productivity": 0.125,
@@ -2034,7 +2034,7 @@
     {
       "category": "effects",
       "id": "proliferator-speed-1",
-      "name": "Proliferator mk.I (Speedup)",
+      "name": "增产剂 mk.I (生产加速)",
       "module": {
         "consumption": 0.3,
         "speed": 0.25,
@@ -2045,7 +2045,7 @@
     {
       "category": "effects",
       "id": "proliferator-prod-2",
-      "name": "Proliferator mk.II (Products)",
+      "name": "增产剂 mk.II (额外产出)",
       "module": {
         "consumption": 0.7,
         "productivity": 0.2,
@@ -2057,7 +2057,7 @@
     {
       "category": "effects",
       "id": "proliferator-speed-2",
-      "name": "Proliferator mk.II (Speedup)",
+      "name": "增产剂 mk.II (生产加速)",
       "module": {
         "consumption": 0.7,
         "speed": 0.5,
@@ -2068,7 +2068,7 @@
     {
       "category": "effects",
       "id": "proliferator-prod-3",
-      "name": "Proliferator mk.III (Products)",
+      "name": "增产剂 mk.III (额外产出)",
       "module": {
         "consumption": 1.5,
         "productivity": 0.25,
@@ -2080,7 +2080,7 @@
     {
       "category": "effects",
       "id": "proliferator-speed-3",
-      "name": "Proliferator mk.III (Speedup)",
+      "name": "增产剂 mk.III (生产加速)",
       "module": {
         "consumption": 1.5,
         "speed": 1,
@@ -2091,7 +2091,7 @@
     {
       "category": "stacked-belts",
       "id": "belt-st2-1",
-      "name": "Conveyor belt mk.I (2-stack)",
+      "name": "传送带 (2层)",
       "row": 1,
       "stack": 200,
       "belt": {
@@ -2103,7 +2103,7 @@
     {
       "category": "stacked-belts",
       "id": "belt-st2-2",
-      "name": "Conveyor belt mk.II (2-stack)",
+      "name": "高速传送带 (2层)",
       "row": 1,
       "stack": 200,
       "belt": {
@@ -2115,7 +2115,7 @@
     {
       "category": "stacked-belts",
       "id": "belt-st2-3",
-      "name": "Conveyor belt mk.III (2-stack)",
+      "name": "急速传送带 (2层)",
       "row": 1,
       "stack": 200,
       "belt": {
@@ -2127,7 +2127,7 @@
     {
       "category": "stacked-belts",
       "id": "belt-st3-1",
-      "name": "Conveyor belt mk.I (3-stack)",
+      "name": "传送带 (3层)",
       "row": 1,
       "stack": 200,
       "belt": {
@@ -2139,7 +2139,7 @@
     {
       "category": "stacked-belts",
       "id": "belt-st3-2",
-      "name": "Conveyor belt mk.II (3-stack)",
+      "name": "高速传送带 (3层)",
       "row": 1,
       "stack": 200,
       "belt": {
@@ -2151,7 +2151,7 @@
     {
       "category": "stacked-belts",
       "id": "belt-st3-3",
-      "name": "Conveyor belt mk.III (3-stack)",
+      "name": "急速传送带 (3层)",
       "row": 1,
       "stack": 200,
       "belt": {
@@ -2163,7 +2163,7 @@
     {
       "category": "stacked-belts",
       "id": "belt-st4-1",
-      "name": "Conveyor belt mk.I (4-stack)",
+      "name": "传送带 (4层)",
       "row": 1,
       "stack": 200,
       "belt": {
@@ -2175,7 +2175,7 @@
     {
       "category": "stacked-belts",
       "id": "belt-st4-2",
-      "name": "Conveyor belt mk.II (4-stack)",
+      "name": "高速传送带 (4层)",
       "row": 1,
       "stack": 200,
       "belt": {
@@ -2187,7 +2187,7 @@
     {
       "category": "stacked-belts",
       "id": "belt-st4-3",
-      "name": "Conveyor belt mk.III (4-stack)",
+      "name": "急速传送带 (4层)",
       "row": 1,
       "stack": 200,
       "belt": {
