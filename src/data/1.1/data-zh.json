@@ -2915,7 +2915,7 @@
       "in": {
         "wood": 2
       },
-      "name": "Wooden chest",
+      "name": "木制箱",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -2928,7 +2928,7 @@
       "in": {
         "iron-plate": 8
       },
-      "name": "Iron chest",
+      "name": "铁制箱",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -2941,7 +2941,7 @@
       "in": {
         "steel-plate": 8
       },
-      "name": "Steel chest",
+      "name": "钢制箱",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
@@ -2955,7 +2955,7 @@
         "iron-plate": 20,
         "steel-plate": 5
       },
-      "name": "Storage tank",
+      "name": "储液罐",
       "producers": [
         "assembling-machine-1",
         "assembling-machine-2",
