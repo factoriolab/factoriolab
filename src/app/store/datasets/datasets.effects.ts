@@ -79,13 +79,13 @@ export class DatasetsEffects {
     } else {
       suffix = this.translateSvc.currentLang;
     }
-    return this.cache[`${id}-${suffix}`] && !lang
-      ? of(this.cache[`${id}-${suffix}`])
-      : this.http.get(`data/${id}/data${!suffix || suffix === 'en' ? '' : '-' + suffix}.json`).pipe(
-        map((response) => response as ModData),
-        tap((data) => (this.cache[`${id}-${suffix}`] = data)),
-        tap((value) => this.store.dispatch(new LoadModAction({ id, value })))
-      );
+    return (this.cache[`${id}-${suffix}`]
+      ? of(this.cache[`${id}-${suffix}`]).pipe()
+      : this.http.get(`data/${id}/data${!suffix || suffix === 'en' ? '' : '-' + suffix}.json`)).pipe(
+      map((response) => response as ModData),
+      tap((data) => (this.cache[`${id}-${suffix}`] = data)),
+      tap((value) => this.store.dispatch(new LoadModAction({ id, value })))
+    );
   }
 
   load(zip: string, stored: State, initial: Settings.SettingsState): void {
