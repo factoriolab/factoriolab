@@ -2369,7 +2369,7 @@
     {
       "category": "intermediate-products",
       "id": "used-up-uranium-fuel-cell",
-      "name": "耗尽的铀燃料棒",
+      "name": "乏燃料棒",
       "row": 5,
       "stack": 50
     },
@@ -4445,7 +4445,7 @@
       "in": {
         "crude-oil": 100
       },
-      "name": "Basic oil processing",
+      "name": "基础原油处理",
       "out": {
         "petroleum-gas": 45
       },
@@ -4460,7 +4460,7 @@
         "crude-oil": 100,
         "water": 50
       },
-      "name": "Advanced oil processing",
+      "name": "高等原油处理",
       "out": {
         "heavy-oil": 25,
         "light-oil": 45,
@@ -4478,7 +4478,7 @@
         "heavy-oil": 25,
         "steam": 50
       },
-      "name": "Coal liquefaction",
+      "name": "煤炭液化",
       "out": {
         "heavy-oil": 90,
         "light-oil": 20,
@@ -4495,7 +4495,7 @@
         "heavy-oil": 40,
         "water": 30
       },
-      "name": "Heavy oil cracking to light oil",
+      "name": "重油裂解",
       "out": {
         "light-oil": 30
       },
@@ -4510,7 +4510,7 @@
         "light-oil": 30,
         "water": 30
       },
-      "name": "Light oil cracking to petroleum gas",
+      "name": "轻油裂解",
       "out": {
         "petroleum-gas": 20
       },
@@ -4524,7 +4524,7 @@
       "in": {
         "light-oil": 10
       },
-      "name": "Solid fuel",
+      "name": "固体燃料",
       "out": {
         "solid-fuel": 1
       },
@@ -4538,7 +4538,7 @@
       "in": {
         "petroleum-gas": 20
       },
-      "name": "Solid fuel",
+      "name": "固体燃料",
       "out": {
         "solid-fuel": 1
       },
@@ -4552,7 +4552,7 @@
       "in": {
         "heavy-oil": 20
       },
-      "name": "Solid fuel",
+      "name": "固体燃料",
       "out": {
         "solid-fuel": 1
       },
@@ -4703,7 +4703,7 @@
       "in": {
         "uranium-ore": 10
       },
-      "name": "Uranium processing",
+      "name": "铀浓缩处理",
       "out": {
         "uranium-235": 0.007,
         "uranium-238": 0.993
@@ -4719,7 +4719,7 @@
         "crude-oil": 50,
         "empty-barrel": 1
       },
-      "name": "Fill Crude oil barrel",
+      "name": "灌装原油桶",
       "out": {
         "crude-oil-barrel": 1
       },
@@ -4735,7 +4735,7 @@
         "empty-barrel": 1,
         "heavy-oil": 50
       },
-      "name": "Fill Heavy oil barrel",
+      "name": "灌装重油桶",
       "out": {
         "heavy-oil-barrel": 1
       },
@@ -4751,7 +4751,7 @@
         "empty-barrel": 1,
         "light-oil": 50
       },
-      "name": "Fill Light oil barrel",
+      "name": "灌装轻油桶",
       "out": {
         "light-oil-barrel": 1
       },
@@ -4767,7 +4767,7 @@
         "empty-barrel": 1,
         "lubricant": 50
       },
-      "name": "Fill Lubricant barrel",
+      "name": "灌装润滑油桶",
       "out": {
         "lubricant-barrel": 1
       },
@@ -4783,7 +4783,7 @@
         "empty-barrel": 1,
         "petroleum-gas": 50
       },
-      "name": "Fill Petroleum gas barrel",
+      "name": "灌装石油气桶",
       "out": {
         "petroleum-gas-barrel": 1
       },
@@ -4799,7 +4799,7 @@
         "empty-barrel": 1,
         "sulfuric-acid": 50
       },
-      "name": "Fill Sulfuric acid barrel",
+      "name": "灌装硫酸桶",
       "out": {
         "sulfuric-acid-barrel": 1
       },
@@ -4815,7 +4815,7 @@
         "empty-barrel": 1,
         "water": 50
       },
-      "name": "Fill Water barrel",
+      "name": "灌装水桶",
       "out": {
         "water-barrel": 1
       },
@@ -5125,7 +5125,7 @@
       "in": {
         "used-up-uranium-fuel-cell": 5
       },
-      "name": "Nuclear fuel reprocessing",
+      "name": "乏燃料后处理",
       "out": {
         "uranium-238": 3
       },
@@ -5140,7 +5140,7 @@
         "uranium-235": 40,
         "uranium-238": 5
       },
-      "name": "Kovarex enrichment process",
+      "name": "铀增殖处理",
       "out": {
         "uranium-235": 41,
         "uranium-238": 2
@@ -6146,7 +6146,7 @@
       "in": {
         "uranium-fuel-cell": 0
       },
-      "name": "耗尽的铀燃料棒",
+      "name": "乏燃料棒",
       "out": {
         "used-up-uranium-fuel-cell": 0
       },
