@@ -189,7 +189,7 @@
     },
     "recipeDifficulty": {
       "normal": "普通",
-      "expensive": "贵重"
+      "expensive": "高成本"
     },
     "InserterTarget": {
       "Chest": "箱子",
