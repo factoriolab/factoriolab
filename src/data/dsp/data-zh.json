@@ -2322,7 +2322,7 @@
   "recipes": [
     {
       "id": "iron-plate",
-      "name": "Iron ingot",
+      "name": "铁块",
       "in": {
         "iron-ore": 1
       },
@@ -2334,7 +2334,7 @@
     },
     {
       "id": "magnet",
-      "name": "Magnet",
+      "name": "磁铁",
       "in": {
         "iron-ore": 1
       },
@@ -2346,7 +2346,7 @@
     },
     {
       "id": "copper-plate",
-      "name": "Copper ingot",
+      "name": "铜块",
       "in": {
         "copper-ore": 1
       },
@@ -2358,7 +2358,7 @@
     },
     {
       "id": "stone-brick",
-      "name": "Stone brick",
+      "name": "石材",
       "in": {
         "stone-ore": 1
       },
@@ -2370,7 +2370,7 @@
     },
     {
       "id": "gear-wheel",
-      "name": "Gear",
+      "name": "齿轮",
       "in": {
         "iron-plate": 1
       },
@@ -2383,7 +2383,7 @@
     },
     {
       "id": "magnetism-wire",
-      "name": "Magnetic coil",
+      "name": "磁线圈",
       "in": {
         "magnet": 2,
         "copper-plate": 1
@@ -2400,7 +2400,7 @@
     },
     {
       "id": "wind-turbine",
-      "name": "Wind turbine",
+      "name": "风力涡轮机",
       "in": {
         "iron-plate": 6,
         "gear-wheel": 1,
@@ -2415,7 +2415,7 @@
     },
     {
       "id": "tesla-coil",
-      "name": "Tesla tower",
+      "name": "电力感应塔",
       "in": {
         "iron-plate": 2,
         "magnetism-wire": 1
@@ -2429,7 +2429,7 @@
     },
     {
       "id": "t-matrix",
-      "name": "Electromagnetic matrix",
+      "name": "电磁矩阵",
       "in": {
         "magnetism-wire": 1,
         "circuit-board": 1
@@ -2441,7 +2441,7 @@
     },
     {
       "id": "lab",
-      "name": "Matrix lab",
+      "name": "矩阵研究站",
       "in": {
         "iron-plate": 8,
         "glass": 4,
@@ -2457,7 +2457,7 @@
     },
     {
       "id": "prism",
-      "name": "Prism",
+      "name": "棱镜",
       "in": {
         "glass": 3
       },
@@ -2473,7 +2473,7 @@
     },
     {
       "id": "plasma-generator",
-      "name": "Plasma exciter",
+      "name": "电浆激发器",
       "in": {
         "magnetism-wire": 4,
         "prism": 2
@@ -2487,7 +2487,7 @@
     },
     {
       "id": "charging-pole",
-      "name": "Wireless power tower",
+      "name": "无限输电塔",
       "in": {
         "tesla-coil": 1,
         "plasma-generator": 3
@@ -2501,7 +2501,7 @@
     },
     {
       "id": "oil-extractor",
-      "name": "Oil extractor",
+      "name": "原油萃取站",
       "in": {
         "steel-plate": 12,
         "stone-brick": 12,
@@ -2517,7 +2517,7 @@
     },
     {
       "id": "oil-refinery",
-      "name": "Oil refinery",
+      "name": "原油精炼厂",
       "in": {
         "steel-plate": 10,
         "stone-brick": 10,
@@ -2533,7 +2533,7 @@
     },
     {
       "id": "plasma-refining",
-      "name": "Plasma refining",
+      "name": "等离子精炼",
       "in": {
         "oil": 2
       },
@@ -2548,7 +2548,7 @@
     },
     {
       "id": "graphite",
-      "name": "Energetic graphite",
+      "name": "高能石墨",
       "in": {
         "coal-ore": 2
       },
@@ -2560,7 +2560,7 @@
     },
     {
       "id": "e-matrix",
-      "name": "Energy matrix",
+      "name": "能量矩阵",
       "in": {
         "graphite": 2,
         "hydrogen": 2
@@ -2572,7 +2572,7 @@
     },
     {
       "id": "hydrogen-energy-fuel",
-      "name": "Hydrogen fuel rod",
+      "name": "液氢燃料棒",
       "in": {
         "titanium-plate": 1,
         "hydrogen": 10
@@ -2589,7 +2589,7 @@
     },
     {
       "id": "fuel-thruster",
-      "name": "Thruster",
+      "name": "推进器",
       "in": {
         "steel-plate": 2,
         "copper-plate": 3
@@ -2603,7 +2603,7 @@
     },
     {
       "id": "ion-thruster",
-      "name": "Reinforced thruster",
+      "name": "加力推进器",
       "in": {
         "titanium-alloy": 5,
         "mag-turbine": 5
@@ -2617,7 +2617,7 @@
     },
     {
       "id": "chemical-plant",
-      "name": "Chemical plant",
+      "name": "化工厂",
       "in": {
         "steel-plate": 8,
         "stone-brick": 8,
@@ -2633,7 +2633,7 @@
     },
     {
       "id": "plastic",
-      "name": "Plastic",
+      "name": "塑料",
       "in": {
         "refined-oil": 2,
         "graphite": 1
@@ -2645,7 +2645,7 @@
     },
     {
       "id": "sulphuric-acid",
-      "name": "Sulfuric acid",
+      "name": "硫酸",
       "in": {
         "refined-oil": 6,
         "stone-ore": 8,
@@ -2661,7 +2661,7 @@
     },
     {
       "id": "crystal-rubber",
-      "name": "Organic crystal",
+      "name": "有机晶体",
       "in": {
         "plastic": 2,
         "refined-oil": 1,
@@ -2674,7 +2674,7 @@
     },
     {
       "id": "titan-crystal",
-      "name": "Titanium crystal",
+      "name": "钛晶石",
       "in": {
         "crystal-rubber": 1,
         "titanium-plate": 3
@@ -2688,7 +2688,7 @@
     },
     {
       "id": "c-matrix",
-      "name": "Structure matrix",
+      "name": "结构矩阵",
       "in": {
         "diamond": 1,
         "titan-crystal": 1
@@ -2700,7 +2700,7 @@
     },
     {
       "id": "casimir-crystal",
-      "name": "Casimir crystal",
+      "name": "卡西米尔晶体",
       "in": {
         "titan-crystal": 1,
         "graphene": 2,
@@ -2715,7 +2715,7 @@
     },
     {
       "id": "casimir-crystal-lv2",
-      "name": "Casimir crystal (advanced)",
+      "name": "卡西米尔晶体 (高效)",
       "in": {
         "grating-ore": 4,
         "graphene": 2,
@@ -2733,7 +2733,7 @@
     },
     {
       "id": "titan-glass",
-      "name": "Titanium glass",
+      "name": "钛化玻璃",
       "in": {
         "glass": 2,
         "titanium-plate": 2,
@@ -2751,7 +2751,7 @@
     },
     {
       "id": "graphene",
-      "name": "Graphene",
+      "name": "石墨烯",
       "in": {
         "graphite": 3,
         "sulphuric-acid": 1
@@ -2766,7 +2766,7 @@
     },
     {
       "id": "graphene-lv2",
-      "name": "Graphene (advanced)",
+      "name": "石墨烯 (高效)",
       "in": {
         "gas-hydrate": 2
       },
@@ -2781,7 +2781,7 @@
     },
     {
       "id": "nanotube",
-      "name": "Carbon nanotube",
+      "name": "碳纳米管",
       "in": {
         "graphene": 3,
         "titanium-plate": 1
@@ -2796,7 +2796,7 @@
     },
     {
       "id": "silicium-ore",
-      "name": "Silicon ore",
+      "name": "硅石",
       "in": {
         "stone-ore": 10
       },
@@ -2811,7 +2811,7 @@
     },
     {
       "id": "nanotube-lv2",
-      "name": "Carbon nanotube (advanced)",
+      "name": "碳纳米管 (高效)",
       "in": {
         "bamboo-crystal": 2
       },
@@ -2825,7 +2825,7 @@
     },
     {
       "id": "particle-wide-band",
-      "name": "Particle broadband",
+      "name": "粒子宽带",
       "in": {
         "nanotube": 2,
         "silicium-high-purity": 2,
@@ -2840,7 +2840,7 @@
     },
     {
       "id": "silicium-high-purity",
-      "name": "Crystal silicon",
+      "name": "晶格硅",
       "in": {
         "silicium-single-crystal": 1
       },
@@ -2852,7 +2852,7 @@
     },
     {
       "id": "plane-filter",
-      "name": "Plane filter",
+      "name": "位面过滤器",
       "in": {
         "casimir-crystal": 1,
         "titan-glass": 2
@@ -2866,7 +2866,7 @@
     },
     {
       "id": "hadron-collider",
-      "name": "Miniature particle collider",
+      "name": "微型粒子对撞机",
       "in": {
         "titanium-alloy": 20,
         "frame-material": 20,
@@ -2883,7 +2883,7 @@
     },
     {
       "id": "deuterium",
-      "name": "Deuterium",
+      "name": "重氢",
       "in": {
         "hydrogen": 10
       },
@@ -2897,7 +2897,7 @@
     },
     {
       "id": "deuterium-energy-fuel",
-      "name": "Deuteron fuel rod",
+      "name": "氘核燃料棒",
       "in": {
         "titanium-alloy": 1,
         "deuterium": 20,
@@ -2915,7 +2915,7 @@
     },
     {
       "id": "fusion-capacitor",
-      "name": "Annihilation constraint sphere",
+      "name": "湮灭约束球",
       "in": {
         "partical-capacitor": 1,
         "processor": 1
@@ -2929,7 +2929,7 @@
     },
     {
       "id": "fusion-reactor",
-      "name": "Artificial star",
+      "name": "人造恒星",
       "in": {
         "titanium-alloy": 20,
         "frame-material": 20,
@@ -2945,7 +2945,7 @@
     },
     {
       "id": "antimatter-energy-fuel",
-      "name": "Antimatter fuel rod",
+      "name": "反物质燃料棒",
       "in": {
         "anti-matter": 12,
         "hydrogen": 12,
@@ -2964,7 +2964,7 @@
     },
     {
       "id": "assembler-1",
-      "name": "Assembling machine mk.I",
+      "name": "制造台 mk.I",
       "in": {
         "iron-plate": 4,
         "gear-wheel": 8,
@@ -2979,7 +2979,7 @@
     },
     {
       "id": "assembler-2",
-      "name": "Assembling machine mk.II",
+      "name": "制造台 mk.II",
       "in": {
         "assembler-1": 1,
         "graphene": 8,
@@ -2994,7 +2994,7 @@
     },
     {
       "id": "assembler-3",
-      "name": "Assembling machine mk.III",
+      "name": "制造台 mk.III",
       "in": {
         "assembler-2": 1,
         "particle-wide-band": 8,
@@ -3009,7 +3009,7 @@
     },
     {
       "id": "mining-drill",
-      "name": "Mining machine",
+      "name": "采矿机",
       "in": {
         "iron-plate": 4,
         "circuit-board": 2,
@@ -3025,7 +3025,7 @@
     },
     {
       "id": "water-pump",
-      "name": "Water pump",
+      "name": "抽水站",
       "in": {
         "iron-plate": 8,
         "stone-brick": 4,
@@ -3041,7 +3041,7 @@
     },
     {
       "id": "circuit-board",
-      "name": "Circuit board",
+      "name": "电路板",
       "in": {
         "iron-plate": 2,
         "copper-plate": 1
@@ -3058,7 +3058,7 @@
     },
     {
       "id": "processor",
-      "name": "Processor",
+      "name": "处理器",
       "in": {
         "circuit-board": 2,
         "micro-component": 2
@@ -3072,7 +3072,7 @@
     },
     {
       "id": "quantum-processor",
-      "name": "Quantum chip",
+      "name": "量子芯片",
       "in": {
         "processor": 2,
         "plane-filter": 2
@@ -3086,7 +3086,7 @@
     },
     {
       "id": "micro-component",
-      "name": "Microcrystalline component",
+      "name": "微晶原件",
       "in": {
         "silicium-single-crystal": 2,
         "copper-plate": 1
@@ -3100,7 +3100,7 @@
     },
     {
       "id": "crystal-rubber-lv0",
-      "name": "Organic crystal (original)",
+      "name": "有机晶体 (高效)",
       "in": {
         "wood": 20,
         "plant-fuel": 30,
@@ -3118,7 +3118,7 @@
     },
     {
       "id": "i-matrix",
-      "name": "Information matrix",
+      "name": "信息矩阵",
       "in": {
         "processor": 2,
         "particle-wide-band": 1
@@ -3130,7 +3130,7 @@
     },
     {
       "id": "smelter",
-      "name": "Arc Smelter",
+      "name": "电磁熔炉",
       "in": {
         "iron-plate": 4,
         "stone-brick": 2,
@@ -3146,7 +3146,7 @@
     },
     {
       "id": "plane-smelter",
-      "name": "Plane Smelter",
+      "name": "位面熔炉",
       "in": {
         "smelter": 1,
         "frame-material": 5,
@@ -3162,7 +3162,7 @@
     },
     {
       "id": "glass",
-      "name": "Glass",
+      "name": "玻璃",
       "in": {
         "stone-ore": 2
       },
@@ -3174,7 +3174,7 @@
     },
     {
       "id": "x-ray",
-      "name": "X-ray cracking",
+      "name": "X射线裂解",
       "in": {
         "refined-oil": 1,
         "hydrogen": 2
@@ -3190,7 +3190,7 @@
     },
     {
       "id": "silicium-single-crystal",
-      "name": "High-purity silicon",
+      "name": "高纯硅块",
       "in": {
         "silicium-ore": 2
       },
@@ -3202,7 +3202,7 @@
     },
     {
       "id": "diamond",
-      "name": "Diamond",
+      "name": "金刚石",
       "in": {
         "graphite": 1
       },
@@ -3214,7 +3214,7 @@
     },
     {
       "id": "diamond-lv2",
-      "name": "Diamond (advanced)",
+      "name": "金刚石 (高效)",
       "in": {
         "diamond-ore": 1
       },
@@ -3229,7 +3229,7 @@
     },
     {
       "id": "silicium-high-purity-lv2",
-      "name": "Crystal silicon (advanced)",
+      "name": "晶格硅 (高效)",
       "in": {
         "fractal-silica": 1
       },
@@ -3245,7 +3245,7 @@
     },
     {
       "id": "steel-plate",
-      "name": "Steel",
+      "name": "钢",
       "in": {
         "iron-plate": 3
       },
@@ -3257,7 +3257,7 @@
     },
     {
       "id": "fuel-plant",
-      "name": "Thermal power plant",
+      "name": "火力发电厂",
       "in": {
         "iron-plate": 10,
         "stone-brick": 4,
@@ -3273,7 +3273,7 @@
     },
     {
       "id": "titanium-plate",
-      "name": "Titanium ingot",
+      "name": "钛块",
       "in": {
         "titanium-ore": 2
       },
@@ -3285,7 +3285,7 @@
     },
     {
       "id": "titanium-alloy",
-      "name": "Titanium alloy",
+      "name": "钛合金",
       "in": {
         "titanium-plate": 4,
         "steel-plate": 4,
@@ -3302,7 +3302,7 @@
     },
     {
       "id": "solar-panel",
-      "name": "Solar panel",
+      "name": "太阳能板",
       "in": {
         "copper-plate": 10,
         "silicium-single-crystal": 10,
@@ -3317,7 +3317,7 @@
     },
     {
       "id": "photo-shifter",
-      "name": "Photon combiner",
+      "name": "光子合并器",
       "in": {
         "prism": 2,
         "circuit-board": 1
@@ -3331,7 +3331,7 @@
     },
     {
       "id": "photo-shifter-lv2",
-      "name": "Photon combiner (advanced)",
+      "name": "光子合并器 (高效)",
       "in": {
         "grating-ore": 1,
         "circuit-board": 1
@@ -3348,7 +3348,7 @@
     },
     {
       "id": "solar-collector",
-      "name": "Solar sail",
+      "name": "太阳帆",
       "in": {
         "graphene": 1,
         "photo-shifter": 1
@@ -3365,7 +3365,7 @@
     },
     {
       "id": "em-rail-ejector",
-      "name": "EM-Rail ejector",
+      "name": "电磁轨道弹射器",
       "in": {
         "steel-plate": 20,
         "gear-wheel": 20,
@@ -3381,7 +3381,7 @@
     },
     {
       "id": "ray-receiver",
-      "name": "Ray receiver",
+      "name": "射线接收站",
       "in": {
         "steel-plate": 20,
         "silicium-single-crystal": 20,
@@ -3398,7 +3398,7 @@
     },
     {
       "id": "orbital-substation",
-      "name": "Satellite substation",
+      "name": "卫星配电站",
       "in": {
         "charging-pole": 1,
         "hyper-magnetism-ring": 10,
@@ -3413,7 +3413,7 @@
     },
     {
       "id": "photon-formula",
-      "name": "Mass-energy storage",
+      "name": "质能存储",
       "in": {
         "photon-capacitor-full": 2
       },
@@ -3428,7 +3428,7 @@
     },
     {
       "id": "u-matrix",
-      "name": "Universe matrix",
+      "name": "宇宙矩阵",
       "in": {
         "t-matrix": 1,
         "e-matrix": 1,
@@ -3444,7 +3444,7 @@
     },
     {
       "id": "accumulator",
-      "name": "Accumulator",
+      "name": "蓄电器",
       "in": {
         "iron-plate": 6,
         "hyper-magnetism-ring": 1,
@@ -3459,7 +3459,7 @@
     },
     {
       "id": "energy-exchanger",
-      "name": "Energy exchanger",
+      "name": "能量枢纽",
       "in": {
         "titanium-alloy": 40,
         "steel-plate": 40,
@@ -3475,7 +3475,7 @@
     },
     {
       "id": "space-warper",
-      "name": "Space warper",
+      "name": "空间翘曲器",
       "in": {
         "gravity-lens": 1
       },
@@ -3488,7 +3488,7 @@
     },
     {
       "id": "space-warper-lv2",
-      "name": "Space warper (advanced)",
+      "name": "空间翘曲器 (高级)",
       "in": {
         "g-matrix": 1
       },
@@ -3504,7 +3504,7 @@
     },
     {
       "id": "frame-material",
-      "name": "Frame material",
+      "name": "框架材料",
       "in": {
         "nanotube": 4,
         "titanium-alloy": 1,
@@ -3519,7 +3519,7 @@
     },
     {
       "id": "dyson-sphere-component",
-      "name": "Dyson sphere component",
+      "name": "戴森球组件",
       "in": {
         "frame-material": 3,
         "solar-collector": 3,
@@ -3534,7 +3534,7 @@
     },
     {
       "id": "vertical-launching-silo",
-      "name": "Vertical launching silo",
+      "name": "垂直发射井",
       "in": {
         "titanium-alloy": 80,
         "frame-material": 30,
@@ -3550,7 +3550,7 @@
     },
     {
       "id": "rocket",
-      "name": "Small carrier rocket",
+      "name": "小型运载火箭",
       "in": {
         "dyson-sphere-component": 2,
         "deuterium-energy-fuel": 4,
@@ -3565,7 +3565,7 @@
     },
     {
       "id": "belt-1",
-      "name": "Conveyor belt mk.I",
+      "name": "传送带",
       "in": {
         "iron-plate": 2,
         "gear-wheel": 1
@@ -3582,7 +3582,7 @@
     },
     {
       "id": "inserter-1",
-      "name": "Sorter mk.I",
+      "name": "分拣器",
       "in": {
         "iron-plate": 1,
         "circuit-board": 1
@@ -3596,7 +3596,7 @@
     },
     {
       "id": "storage-1",
-      "name": "Storage mk.I",
+      "name": "小型储物仓",
       "in": {
         "iron-plate": 4,
         "stone-brick": 4
@@ -3610,7 +3610,7 @@
     },
     {
       "id": "splitter-4dir",
-      "name": "Splitter(4-direction)",
+      "name": "四项分流器",
       "in": {
         "iron-plate": 3,
         "gear-wheel": 2,
@@ -3625,7 +3625,7 @@
     },
     {
       "id": "inserter-2",
-      "name": "Sorter mk.II",
+      "name": "高速分拣器",
       "in": {
         "inserter-1": 2,
         "electric-motor": 1
@@ -3642,7 +3642,7 @@
     },
     {
       "id": "belt-2",
-      "name": "Conveyor belt mk.II",
+      "name": "高速传送带",
       "in": {
         "belt-1": 3,
         "mag-turbine": 1
@@ -3659,7 +3659,7 @@
     },
     {
       "id": "inserter-3",
-      "name": "Sorter mk.III",
+      "name": "急速分拣器",
       "in": {
         "inserter-2": 2,
         "mag-turbine": 1
@@ -3676,7 +3676,7 @@
     },
     {
       "id": "storage-2",
-      "name": "Storage mk.II",
+      "name": "大型储物仓",
       "in": {
         "steel-plate": 8,
         "stone-brick": 8
@@ -3690,7 +3690,7 @@
     },
     {
       "id": "belt-3",
-      "name": "Conveyor belt mk.III",
+      "name": "急速传送带",
       "in": {
         "belt-2": 3,
         "hyper-magnetism-ring": 1,
@@ -3708,7 +3708,7 @@
     },
     {
       "id": "logistic-station",
-      "name": "Planetary logistics station",
+      "name": "行星内物流运输站",
       "in": {
         "steel-plate": 40,
         "titanium-plate": 40,
@@ -3724,7 +3724,7 @@
     },
     {
       "id": "logistic-drone",
-      "name": "Logistics drone",
+      "name": "物流运输机",
       "in": {
         "iron-plate": 5,
         "processor": 2,
@@ -3739,7 +3739,7 @@
     },
     {
       "id": "interstellar-logistic-station",
-      "name": "Interstellar logistics station",
+      "name": "星际物流运输站",
       "in": {
         "logistic-station": 1,
         "titanium-alloy": 40,
@@ -3754,7 +3754,7 @@
     },
     {
       "id": "logistic-vessel",
-      "name": "Logistics vessel",
+      "name": "星际物流运输船",
       "in": {
         "titanium-alloy": 10,
         "processor": 10,
@@ -3769,7 +3769,7 @@
     },
     {
       "id": "electric-motor",
-      "name": "Electric motor",
+      "name": "电动机",
       "in": {
         "iron-plate": 2,
         "gear-wheel": 1,
@@ -3784,7 +3784,7 @@
     },
     {
       "id": "mag-turbine",
-      "name": "Electromagnetic turbine",
+      "name": "电磁涡轮",
       "in": {
         "electric-motor": 2,
         "magnetism-wire": 2
@@ -3798,7 +3798,7 @@
     },
     {
       "id": "partical-capacitor",
-      "name": "Particle container",
+      "name": "粒子容器",
       "in": {
         "mag-turbine": 2,
         "copper-plate": 2,
@@ -3813,7 +3813,7 @@
     },
     {
       "id": "partical-capacitor-lv2",
-      "name": "Particle container (advanced)",
+      "name": "粒子容器 (高效)",
       "in": {
         "mono-mag-ore": 10,
         "copper-plate": 2
@@ -3830,7 +3830,7 @@
     },
     {
       "id": "gravity-lens",
-      "name": "Graviton lens",
+      "name": "引力透镜",
       "in": {
         "diamond": 4,
         "strange-matter-generator": 1
@@ -3844,7 +3844,7 @@
     },
     {
       "id": "g-matrix",
-      "name": "Gravity matrix",
+      "name": "引力矩阵",
       "in": {
         "gravity-lens": 1,
         "quantum-processor": 1
@@ -3859,7 +3859,7 @@
     },
     {
       "id": "hyper-magnetism-ring",
-      "name": "Super-magnetic ring",
+      "name": "超级磁场环",
       "in": {
         "mag-turbine": 2,
         "magnet": 3,
@@ -3874,7 +3874,7 @@
     },
     {
       "id": "strange-matter-generator",
-      "name": "Strange matter",
+      "name": "奇异物质",
       "in": {
         "partical-capacitor": 2,
         "iron-plate": 2,
@@ -3887,7 +3887,7 @@
     },
     {
       "id": "fractionator",
-      "name": "Fractionator",
+      "name": "分馏塔",
       "in": {
         "steel-plate": 8,
         "stone-brick": 4,
@@ -3903,7 +3903,7 @@
     },
     {
       "id": "orbital-collector",
-      "name": "Orbital collector",
+      "name": "轨道采集器",
       "in": {
         "interstellar-logistic-station": 1,
         "hyper-magnetism-ring": 50,
@@ -3919,7 +3919,7 @@
     },
     {
       "id": "terrain-tool",
-      "name": "Foundation",
+      "name": "地基",
       "in": {
         "stone-brick": 3,
         "steel-plate": 1
@@ -3933,7 +3933,7 @@
     },
     {
       "id": "fusion-power-station",
-      "name": "Mini fusion power plant",
+      "name": "微型聚变发电站",
       "in": {
         "titanium-alloy": 12,
         "hyper-magnetism-ring": 10,
@@ -3949,7 +3949,7 @@
     },
     {
       "id": "storage-tank",
-      "name": "Storage tank",
+      "name": "储液罐",
       "in": {
         "iron-plate": 8,
         "stone-brick": 4,
@@ -3964,7 +3964,7 @@
     },
     {
       "id": "deuterium-formula",
-      "name": "Deuterium fractionation",
+      "name": "重氢分馏",
       "in": {
         "hydrogen": 0.01
       },
@@ -3978,7 +3978,7 @@
     },
     {
       "id": "iron-vein",
-      "name": "Iron vein",
+      "name": "铁矿脉",
       "cost": 1000,
       "time": 2,
       "out": {
@@ -3990,7 +3990,7 @@
     },
     {
       "id": "copper-vein",
-      "name": "Copper vein",
+      "name": "铜矿脉",
       "cost": 1000,
       "time": 2,
       "out": {
@@ -4002,7 +4002,7 @@
     },
     {
       "id": "silicium-vein",
-      "name": "Silicon vein",
+      "name": "硅矿脉",
       "cost": 1000,
       "time": 2,
       "out": {
@@ -4014,7 +4014,7 @@
     },
     {
       "id": "titanium-vein",
-      "name": "Titanium vein",
+      "name": "钛矿脉",
       "cost": 1000,
       "time": 2,
       "out": {
@@ -4026,7 +4026,7 @@
     },
     {
       "id": "stone-vein",
-      "name": "Stone vein",
+      "name": "石矿脉",
       "cost": 1000,
       "time": 2,
       "out": {
@@ -4038,7 +4038,7 @@
     },
     {
       "id": "coal-vein",
-      "name": "Coal vein",
+      "name": "煤矿脉",
       "cost": 1000,
       "time": 2,
       "out": {
@@ -4050,7 +4050,7 @@
     },
     {
       "id": "fireice-vein",
-      "name": "Fire ice vein",
+      "name": "可燃冰矿",
       "cost": 2000,
       "time": 2,
       "out": {
@@ -4062,7 +4062,7 @@
     },
     {
       "id": "diamond-vein",
-      "name": "Diamond vein",
+      "name": "金伯利矿",
       "cost": 2000,
       "time": 2,
       "out": {
@@ -4074,7 +4074,7 @@
     },
     {
       "id": "fractal-vein",
-      "name": "Fractal silicon vein",
+      "name": "分形硅矿",
       "cost": 2000,
       "time": 2,
       "out": {
@@ -4086,7 +4086,7 @@
     },
     {
       "id": "crysrub-vein",
-      "name": "Organic crystal vein",
+      "name": "有机晶体矿",
       "cost": 2000,
       "time": 2,
       "out": {
@@ -4098,7 +4098,7 @@
     },
     {
       "id": "grat-vein",
-      "name": "Optical grating crystal vein",
+      "name": "光栅石矿",
       "cost": 2000,
       "time": 2,
       "out": {
@@ -4110,7 +4110,7 @@
     },
     {
       "id": "bamboo-vein",
-      "name": "Spiniform stalagmite crystal vein",
+      "name": "刺笋矿脉",
       "cost": 2000,
       "time": 2,
       "out": {
@@ -4122,7 +4122,7 @@
     },
     {
       "id": "mag-vein",
-      "name": "Unipolar magnet vein",
+      "name": "单极磁矿",
       "cost": 2000,
       "time": 2,
       "out": {
@@ -4134,7 +4134,7 @@
     },
     {
       "id": "oil-vein",
-      "name": "Crude oil seep",
+      "name": "原油涌泉",
       "cost": 1000,
       "time": 1,
       "out": {
@@ -4146,7 +4146,7 @@
     },
     {
       "id": "photon-capacitor-full",
-      "name": "Ray receiver photon generation",
+      "name": "临界光子",
       "cost": 1000,
       "out": {
         "photon-capacitor-full": 6
@@ -4158,7 +4158,7 @@
     },
     {
       "id": "photon-capacitor-graviton",
-      "name": "Ray receiver (graviton lens) photon generation",
+      "name": "射线接收站 (带引力透镜) 生成光子",
       "cost": 1000,
       "out": {
         "photon-capacitor-full": 12
@@ -4171,7 +4171,7 @@
     },
     {
       "id": "water-vein",
-      "name": "Ocean",
+      "name": "海洋",
       "cost": 100,
       "mining": true,
       "time": 1.2,
@@ -4184,7 +4184,7 @@
     },
     {
       "id": "sulphuric-acid-vein",
-      "name": "Sulphuric acid ocean",
+      "name": "硫酸海洋",
       "cost": 1000,
       "time": 1.2,
       "out": {
@@ -4196,7 +4196,7 @@
     },
     {
       "id": "gas-giant",
-      "name": "Gas giant",
+      "name": "气态巨星",
       "time": 8,
       "out": {
         "hydrogen": 4.08,
@@ -4208,7 +4208,7 @@
     },
     {
       "id": "ice-giant",
-      "name": "Ice giant",
+      "name": "冰巨星",
       "time": 8,
       "out": {
         "gas-hydrate": 1.95,
@@ -4220,7 +4220,7 @@
     },
     {
       "id": "accumulator-full",
-      "name": "Accumulator (full)",
+      "name": "蓄电器 (满)",
       "time": 2,
       "in": {
         "accumulator": 1
@@ -4231,7 +4231,7 @@
     },
     {
       "id": "traffic-monitor",
-      "name": "Traffic monitor",
+      "name": "流速监测器",
       "time": 2,
       "in": {
         "iron-plate": 3,
@@ -4247,7 +4247,7 @@
     },
     {
       "id": "proliferator-1",
-      "name": "Proliferator mk.I",
+      "name": "增产剂 mk.I",
       "time": 0.5,
       "in": {
         "coal-ore": 1
@@ -4260,7 +4260,7 @@
     },
     {
       "id": "proliferator-2",
-      "name": "Proliferator mk.II",
+      "name": "增产剂 mk.II",
       "time": 1,
       "in": {
         "proliferator-1": 2,
@@ -4274,7 +4274,7 @@
     },
     {
       "id": "proliferator-3",
-      "name": "Proliferator mk.III",
+      "name": "增产剂 mk.III",
       "time": 2,
       "in": {
         "proliferator-2": 2,
@@ -4288,7 +4288,7 @@
     },
     {
       "id": "spray-coater",
-      "name": "Spray coater",
+      "name": "喷涂机",
       "time": 3,
       "in": {
         "steel-plate": 4,
@@ -4304,7 +4304,7 @@
     },
     {
       "id": "advanced-mining-drill",
-      "name": "Advanced mining machine",
+      "name": "大型采矿机",
       "time": 20,
       "in": {
         "titanium-alloy": 20,
@@ -4321,7 +4321,7 @@
     },
     {
       "id": "automatic-piler",
-      "name": "Automatic piler",
+      "name": "自动集装机",
       "time": 4,
       "in": {
         "steel-plate": 3,
@@ -4337,7 +4337,7 @@
     },
     {
       "id": "geothermal-power-station",
-      "name": "Geothermal power station",
+      "name": "地热发电站",
       "time": 6,
       "in": {
         "steel-plate": 15,
@@ -4353,7 +4353,8 @@
     }
   ],
   "defaults": {
-    "modIds": [],
+    "modIds": [
+    ],
     "minBelt": "belt-1",
     "maxBelt": "belt-3",
     "fuel": "coal-ore",
