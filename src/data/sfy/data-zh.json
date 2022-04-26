@@ -2478,7 +2478,7 @@
   "recipes": [
     {
       "id": "bauxite",
-      "name": "Bauxite",
+      "name": "铝土矿",
       "producers": [
         "miner-mk1",
         "miner-mk2",
@@ -2489,7 +2489,7 @@
     },
     {
       "id": "caterium-ore",
-      "name": "Caterium Ore",
+      "name": "钦矿",
       "producers": [
         "miner-mk1",
         "miner-mk2",
@@ -2500,7 +2500,7 @@
     },
     {
       "id": "coal",
-      "name": "Coal",
+      "name": "煤",
       "producers": [
         "miner-mk1",
         "miner-mk2",
@@ -2511,7 +2511,7 @@
     },
     {
       "id": "copper-ore",
-      "name": "Copper Ore",
+      "name": "铜矿",
       "producers": [
         "miner-mk1",
         "miner-mk2",
@@ -2522,7 +2522,7 @@
     },
     {
       "id": "iron-ore",
-      "name": "Iron Ore",
+      "name": "铁矿",
       "producers": [
         "miner-mk1",
         "miner-mk2",
@@ -2533,7 +2533,7 @@
     },
     {
       "id": "limestone",
-      "name": "Limestone",
+      "name": "石灰石",
       "producers": [
         "miner-mk1",
         "miner-mk2",
@@ -2544,7 +2544,7 @@
     },
     {
       "id": "raw-quartz",
-      "name": "Raw Quartz",
+      "name": "原石英",
       "producers": [
         "miner-mk1",
         "miner-mk2",
@@ -2555,7 +2555,7 @@
     },
     {
       "id": "sam-ore",
-      "name": "SAM Ore",
+      "name": "S.A.M. 矿石",
       "producers": [
         "miner-mk1",
         "miner-mk2",
@@ -2566,7 +2566,7 @@
     },
     {
       "id": "sulfur",
-      "name": "Sulfur",
+      "name": "硫",
       "producers": [
         "miner-mk1",
         "miner-mk2",
@@ -2577,7 +2577,7 @@
     },
     {
       "id": "uranium",
-      "name": "Uranium",
+      "name": "铀",
       "producers": [
         "miner-mk1",
         "miner-mk2",
@@ -2588,7 +2588,7 @@
     },
     {
       "id": "crude-oil",
-      "name": "Crude Oil",
+      "name": "原油",
       "producers": [
         "oil-extractor",
         "resource-well-extractor"
@@ -2598,7 +2598,7 @@
     },
     {
       "id": "nitrogen-gas",
-      "name": "Nitrogen Gas",
+      "name": "氮气",
       "producers": [
         "resource-well-extractor"
       ],
@@ -2607,7 +2607,7 @@
     },
     {
       "id": "water",
-      "name": "Water",
+      "name": "水",
       "producers": [
         "water-extractor",
         "resource-well-extractor"
@@ -2617,7 +2617,7 @@
     },
     {
       "id": "packaged-oil",
-      "name": "Packaged Oil",
+      "name": "桶装石油",
       "producers": [
         "packager"
       ],
@@ -2632,7 +2632,7 @@
     },
     {
       "id": "packaged-nitrogen-gas",
-      "name": "Packaged Nitrogen Gas",
+      "name": "包装氮气",
       "producers": [
         "packager"
       ],
@@ -2644,7 +2644,7 @@
     },
     {
       "id": "packaged-water",
-      "name": "Packaged Water",
+      "name": "包装水",
       "producers": [
         "packager"
       ],
@@ -2659,7 +2659,7 @@
     },
     {
       "id": "biomass-leaves",
-      "name": "Biomass (Leaves)",
+      "name": "生物质 (叶子)",
       "producers": [
         "constructor"
       ],
@@ -2673,7 +2673,7 @@
     },
     {
       "id": "biomass-wood",
-      "name": "Biomass (Wood)",
+      "name": "生物质 (木材)",
       "producers": [
         "constructor"
       ],
@@ -2687,7 +2687,7 @@
     },
     {
       "id": "biomass-mycelia",
-      "name": "Biomass (Mycelia)",
+      "name": "生物质 (菌丝体)",
       "producers": [
         "constructor"
       ],
@@ -2701,7 +2701,7 @@
     },
     {
       "id": "biomass-alien-carapace",
-      "name": "Biomass (Alien Carapace)",
+      "name": "生物质 (外星甲壳)",
       "producers": [
         "constructor"
       ],
@@ -2715,7 +2715,7 @@
     },
     {
       "id": "biomass-alien-organs",
-      "name": "Biomass (Alien Organs)",
+      "name": "生物质 (外星器官)",
       "producers": [
         "constructor"
       ],
@@ -2729,7 +2729,7 @@
     },
     {
       "id": "cable",
-      "name": "Cable",
+      "name": "电缆",
       "producers": [
         "constructor"
       ],
@@ -2740,7 +2740,7 @@
     },
     {
       "id": "cable-coated",
-      "name": "Coated Cable",
+      "name": "电缆",
       "producers": [
         "refinery"
       ],
@@ -2755,7 +2755,7 @@
     },
     {
       "id": "cable-insulated",
-      "name": "Insulated Cable",
+      "name": "绝缘电缆",
       "producers": [
         "assembler"
       ],
@@ -2770,7 +2770,7 @@
     },
     {
       "id": "cable-quickwire",
-      "name": "Quickwire Cable",
+      "name": "快速线",
       "producers": [
         "assembler"
       ],
@@ -2785,7 +2785,7 @@
     },
     {
       "id": "concrete",
-      "name": "Concrete",
+      "name": "混凝土",
       "producers": [
         "constructor"
       ],
@@ -2796,7 +2796,7 @@
     },
     {
       "id": "concrete-rubber",
-      "name": "Rubber Concrete",
+      "name": "橡胶混凝土",
       "producers": [
         "assembler"
       ],
@@ -2811,7 +2811,7 @@
     },
     {
       "id": "concrete-wet",
-      "name": "Wet Concrete",
+      "name": "塑性混凝土",
       "producers": [
         "refinery"
       ],
@@ -2826,7 +2826,7 @@
     },
     {
       "id": "concrete-fine",
-      "name": "Fine Concrete",
+      "name": "优良的的混凝土",
       "producers": [
         "assembler"
       ],
@@ -2841,7 +2841,7 @@
     },
     {
       "id": "copper-ingot",
-      "name": "Copper Ingot",
+      "name": "铜锭",
       "producers": [
         "smelter"
       ],
@@ -2852,7 +2852,7 @@
     },
     {
       "id": "copper-ingot-alloy",
-      "name": "Copper Alloy Ingot",
+      "name": "铜锭",
       "producers": [
         "foundry"
       ],
@@ -2867,7 +2867,7 @@
     },
     {
       "id": "copper-ingot-pure",
-      "name": "Pure Copper Ingot",
+      "name": "纯铜锭",
       "producers": [
         "refinery"
       ],
@@ -2882,7 +2882,7 @@
     },
     {
       "id": "iron-ingot",
-      "name": "Iron Ingot",
+      "name": "铁锭",
       "producers": [
         "smelter"
       ],
@@ -2893,7 +2893,7 @@
     },
     {
       "id": "iron-ingot-alloy",
-      "name": "Iron Alloy Ingot",
+      "name": "铁锭",
       "producers": [
         "foundry"
       ],
@@ -2908,7 +2908,7 @@
     },
     {
       "id": "iron-ingot-pure",
-      "name": "Pure Iron Ingot",
+      "name": "纯铁锭",
       "producers": [
         "refinery"
       ],
@@ -2923,7 +2923,7 @@
     },
     {
       "id": "iron-plate",
-      "name": "Iron Plate",
+      "name": "铁板",
       "producers": [
         "constructor"
       ],
@@ -2937,7 +2937,7 @@
     },
     {
       "id": "iron-plate-coated",
-      "name": "Coated Iron Plate",
+      "name": "加强铁板",
       "producers": [
         "assembler"
       ],
@@ -2952,7 +2952,7 @@
     },
     {
       "id": "iron-plate-steel",
-      "name": "Steel Coated Plate",
+      "name": "铁板",
       "producers": [
         "assembler"
       ],
@@ -2967,7 +2967,7 @@
     },
     {
       "id": "iron-rod",
-      "name": "Iron Rod",
+      "name": "铁棒",
       "producers": [
         "constructor"
       ],
@@ -2978,7 +2978,7 @@
     },
     {
       "id": "iron-rod-steel",
-      "name": "Steel Rod",
+      "name": "铁棒",
       "producers": [
         "constructor"
       ],
@@ -2992,7 +2992,7 @@
     },
     {
       "id": "reinforced-iron-plate",
-      "name": "Reinforced Iron Plate",
+      "name": "加强铁板",
       "producers": [
         "assembler"
       ],
@@ -3049,7 +3049,7 @@
     },
     {
       "id": "screw",
-      "name": "Screw",
+      "name": "螺丝",
       "producers": [
         "constructor"
       ],
@@ -3100,7 +3100,8 @@
       },
       "out": {
         "wire": 2
-      }
+      },
+      "name": "电线"
     },
     {
       "id": "wire-fused",
@@ -3147,7 +3148,7 @@
     },
     {
       "id": "copper-sheet",
-      "name": "Copper Sheet",
+      "name": "铜板",
       "producers": [
         "constructor"
       ],
@@ -3173,7 +3174,7 @@
     },
     {
       "id": "solid-biofuel",
-      "name": "Solid Biofuel",
+      "name": "固体燃料",
       "producers": [
         "constructor"
       ],
@@ -3187,7 +3188,7 @@
     },
     {
       "id": "modular-frame",
-      "name": "Modular Frame",
+      "name": "模块化框架",
       "producers": [
         "assembler"
       ],
@@ -3232,7 +3233,7 @@
     },
     {
       "id": "rotor",
-      "name": "Rotor",
+      "name": "转子",
       "producers": [
         "assembler"
       ],
@@ -3274,7 +3275,7 @@
     },
     {
       "id": "smart-plating",
-      "name": "Smart Plating",
+      "name": "智能护板",
       "producers": [
         "assembler"
       ],
@@ -3302,7 +3303,7 @@
     },
     {
       "id": "steel-beam",
-      "name": "Steel Beam",
+      "name": "钢梁",
       "producers": [
         "constructor"
       ],
@@ -3313,7 +3314,7 @@
     },
     {
       "id": "steel-ingot",
-      "name": "Steel Ingot",
+      "name": "钢锭",
       "producers": [
         "foundry"
       ],
@@ -3373,7 +3374,7 @@
     },
     {
       "id": "steel-pipe",
-      "name": "Steel Pipe",
+      "name": "钢管",
       "producers": [
         "constructor"
       ],
@@ -3387,7 +3388,7 @@
     },
     {
       "id": "versatile-framework",
-      "name": "Versatile Framework",
+      "name": "多功能框架",
       "producers": [
         "assembler"
       ],
@@ -3418,7 +3419,7 @@
     },
     {
       "id": "automated-wiring",
-      "name": "Automated Wiring",
+      "name": "自动化线缆",
       "producers": [
         "assembler"
       ],
@@ -3446,7 +3447,7 @@
     },
     {
       "id": "encased-industrial-beam",
-      "name": "Encased Industrial Beam",
+      "name": "钢筋混凝土梁",
       "producers": [
         "assembler"
       ],
@@ -3473,7 +3474,7 @@
     },
     {
       "id": "heavy-modular-frame",
-      "name": "Heavy Modular Frame",
+      "name": "重型模块化框架",
       "producers": [
         "manufacturer"
       ],
@@ -3521,7 +3522,7 @@
     },
     {
       "id": "motor",
-      "name": "Motor",
+      "name": "电机",
       "producers": [
         "assembler"
       ],
@@ -3564,7 +3565,7 @@
     },
     {
       "id": "stator",
-      "name": "Stator",
+      "name": "定子",
       "producers": [
         "assembler"
       ],
@@ -3591,7 +3592,7 @@
     },
     {
       "id": "adaptive-control-unit",
-      "name": "Adaptive Control Unit",
+      "name": "自适应控制单元",
       "producers": [
         "manufacturer"
       ],
@@ -3608,7 +3609,7 @@
     },
     {
       "id": "circuit-board",
-      "name": "Circuit Board",
+      "name": "电路板",
       "producers": [
         "assembler"
       ],
@@ -3665,7 +3666,7 @@
     },
     {
       "id": "computer",
-      "name": "Computer",
+      "name": "计算机",
       "producers": [
         "manufacturer"
       ],
@@ -3710,7 +3711,7 @@
     },
     {
       "id": "empty-canister",
-      "name": "Empty Canister",
+      "name": "空罐",
       "producers": [
         "constructor"
       ],
@@ -3753,7 +3754,7 @@
     },
     {
       "id": "fuel",
-      "name": "Fuel",
+      "name": "燃料",
       "producers": [
         "refinery"
       ],
@@ -3797,7 +3798,7 @@
     },
     {
       "id": "packaged-fuel",
-      "name": "Packaged Fuel",
+      "name": "罐装燃料",
       "producers": [
         "packager"
       ],
@@ -3827,7 +3828,7 @@
     },
     {
       "id": "heavy-oil-residue",
-      "name": "Heavy Oil Residue",
+      "name": "重质渣油",
       "producers": [
         "refinery"
       ],
@@ -3842,7 +3843,7 @@
     },
     {
       "id": "packaged-heavy-oil-residue",
-      "name": "Packaged Heavy Oil Residue",
+      "name": "童装重质渣油",
       "producers": [
         "packager"
       ],
@@ -3857,7 +3858,7 @@
     },
     {
       "id": "liquid-biofuel",
-      "name": "Liquid Biofuel",
+      "name": "液体生物燃料",
       "producers": [
         "refinery"
       ],
@@ -3872,7 +3873,7 @@
     },
     {
       "id": "packaged-liquid-biofuel",
-      "name": "Packaged Liquid Biofuel",
+      "name": "罐装液体生物燃料",
       "producers": [
         "packager"
       ],
@@ -3887,7 +3888,7 @@
     },
     {
       "id": "modular-engine",
-      "name": "Modular Engine",
+      "name": "模块化引擎",
       "producers": [
         "manufacturer"
       ],
@@ -3900,7 +3901,7 @@
     },
     {
       "id": "petroleum-coke",
-      "name": "Petroleum Coke",
+      "name": "石油焦",
       "producers": [
         "refinery"
       ],
@@ -3914,7 +3915,7 @@
     },
     {
       "id": "plastic",
-      "name": "Plastic",
+      "name": "塑料",
       "producers": [
         "refinery"
       ],
@@ -3959,7 +3960,7 @@
     },
     {
       "id": "polymer-resin",
-      "name": "Polymer Resin",
+      "name": "聚酯纤维",
       "producers": [
         "refinery"
       ],
@@ -3974,7 +3975,7 @@
     },
     {
       "id": "rubber",
-      "name": "Rubber",
+      "name": "橡胶",
       "producers": [
         "refinery"
       ],
@@ -4019,7 +4020,7 @@
     },
     {
       "id": "alumina-solution",
-      "name": "Alumina Solution",
+      "name": "氧化铝溶液",
       "producers": [
         "refinery"
       ],
@@ -4050,7 +4051,7 @@
     },
     {
       "id": "packaged-alumina-solution",
-      "name": "Packaged Alumina Solution",
+      "name": "包装氧化铝溶液",
       "producers": [
         "packager"
       ],
@@ -4065,7 +4066,7 @@
     },
     {
       "id": "aluminum-casing",
-      "name": "Aluminum Casing",
+      "name": "铝外壳",
       "producers": [
         "constructor"
       ],
@@ -4094,7 +4095,7 @@
     },
     {
       "id": "alclad-aluminum-sheet",
-      "name": "Alclad Aluminum Sheet",
+      "name": "复合铝版",
       "producers": [
         "assembler"
       ],
@@ -4109,7 +4110,7 @@
     },
     {
       "id": "aluminum-ingot",
-      "name": "Aluminum Ingot",
+      "name": "铝锭",
       "producers": [
         "foundry"
       ],
@@ -4138,7 +4139,7 @@
     },
     {
       "id": "aluminum-scrap",
-      "name": "Aluminum Scrap",
+      "name": "铝碎片",
       "producers": [
         "refinery"
       ],
@@ -4188,7 +4189,7 @@
     },
     {
       "id": "assembly-director-system",
-      "name": "Assembly Director System",
+      "name": "装配总控系统",
       "producers": [
         "assembler"
       ],
@@ -4200,7 +4201,7 @@
     },
     {
       "id": "battery",
-      "name": "Battery",
+      "name": "电池",
       "producers": [
         "blender"
       ],
@@ -4234,7 +4235,7 @@
     },
     {
       "id": "radio-control-unit",
-      "name": "Radio Control Unit",
+      "name": "无线电控制单元",
       "producers": [
         "manufacturer"
       ],
@@ -4283,7 +4284,7 @@
     },
     {
       "id": "sulfuric-acid",
-      "name": "Sulfuric Acid",
+      "name": "硫酸",
       "producers": [
         "refinery"
       ],
@@ -4298,7 +4299,7 @@
     },
     {
       "id": "packaged-sulfuric-acid",
-      "name": "Packaged Sulfuric Acid",
+      "name": "包装硫酸",
       "producers": [
         "packager"
       ],
@@ -4313,7 +4314,7 @@
     },
     {
       "id": "cooling-system",
-      "name": "Cooling System",
+      "name": "冷却系统",
       "producers": [
         "blender"
       ],
@@ -4343,7 +4344,7 @@
     },
     {
       "id": "copper-powder",
-      "name": "Copper Powder",
+      "name": "铜粉",
       "producers": [
         "constructor"
       ],
@@ -4357,7 +4358,7 @@
     },
     {
       "id": "electromagnetic-control-rod",
-      "name": "Electromagnetic Control Rod",
+      "name": "电磁控制杆",
       "producers": [
         "assembler"
       ],
@@ -4387,7 +4388,7 @@
     },
     {
       "id": "empty-fluid-tank",
-      "name": "Empty Fluid Tank",
+      "name": "空流体储罐",
       "producers": [
         "constructor"
       ],
@@ -4398,7 +4399,7 @@
     },
     {
       "id": "encased-plutonium-cell",
-      "name": "Encased Plutonium Cell",
+      "name": "封装钚电池",
       "producers": [
         "assembler"
       ],
@@ -4426,7 +4427,7 @@
     },
     {
       "id": "encased-uranium-cell",
-      "name": "Encased Uranium Cell",
+      "name": "封装铀电池",
       "producers": [
         "blender"
       ],
@@ -4460,7 +4461,7 @@
     },
     {
       "id": "fused-modular-frame",
-      "name": "Fused Modular Frame",
+      "name": "熔接模块化框架",
       "producers": [
         "blender"
       ],
@@ -4490,7 +4491,7 @@
     },
     {
       "id": "heat-sink",
-      "name": "Heat Sink",
+      "name": "散热器",
       "producers": [
         "assembler"
       ],
@@ -4517,7 +4518,7 @@
     },
     {
       "id": "magnetic-field-generator",
-      "name": "Magnetic Field Generator",
+      "name": "磁场发生器",
       "producers": [
         "manufacturer"
       ],
@@ -4533,7 +4534,7 @@
     },
     {
       "id": "nitric-acid",
-      "name": "Nitric Acid",
+      "name": "硝酸",
       "producers": [
         "blender"
       ],
@@ -4549,7 +4550,7 @@
     },
     {
       "id": "packaged-nitric-acid",
-      "name": "Packaged Nitric Acid",
+      "name": "包装硝酸",
       "producers": [
         "packager"
       ],
@@ -4561,7 +4562,7 @@
     },
     {
       "id": "non-fissile-uranium",
-      "name": "Non-fissile Uranium",
+      "name": "非可裂变铀",
       "producers": [
         "blender"
       ],
@@ -4597,7 +4598,7 @@
     },
     {
       "id": "nuclear-pasta",
-      "name": "Nuclear Pasta",
+      "name": "核物质",
       "producers": [
         "particle-accelerator"
       ],
@@ -4610,7 +4611,7 @@
     },
     {
       "id": "plutonium-fuel-rod",
-      "name": "Plutonium Fuel Rod",
+      "name": "钸燃料棒",
       "producers": [
         "manufacturer"
       ],
@@ -4639,7 +4640,7 @@
     },
     {
       "id": "plutonium-pellet",
-      "name": "Plutonium Pellet",
+      "name": "钚丸",
       "producers": [
         "particle-accelerator"
       ],
@@ -4655,7 +4656,7 @@
     },
     {
       "id": "plutonium-waste",
-      "name": "Plutonium Waste",
+      "name": "钚废料",
       "producers": [
         "nuclear-power-plant"
       ],
@@ -4670,7 +4671,7 @@
     },
     {
       "id": "pressure-conversion-cube",
-      "name": "Pressure Conversion Cube",
+      "name": "压力转换立方体",
       "producers": [
         "assembler"
       ],
@@ -4682,7 +4683,7 @@
     },
     {
       "id": "thermal-propulsion-rocket",
-      "name": "Thermal Propulsion Rocket",
+      "name": "热推进火箭",
       "producers": [
         "manufacturer"
       ],
@@ -4699,7 +4700,7 @@
     },
     {
       "id": "turbo-motor",
-      "name": "Turbo Motor",
+      "name": "涡轮增压电机",
       "producers": [
         "manufacturer"
       ],
@@ -4747,7 +4748,7 @@
     },
     {
       "id": "uranium-fuel-rod",
-      "name": "Uranium Fuel Rod",
+      "name": "铀燃料棒",
       "producers": [
         "manufacturer"
       ],
@@ -4777,7 +4778,7 @@
     },
     {
       "id": "uranium-waste",
-      "name": "Uranium Waste",
+      "name": "铀废料",
       "producers": [
         "nuclear-power-plant"
       ],
@@ -4792,7 +4793,7 @@
     },
     {
       "id": "ai-limiter",
-      "name": "AI Limiter",
+      "name": "人工智能限制器",
       "producers": [
         "assembler"
       ],
@@ -4804,7 +4805,7 @@
     },
     {
       "id": "black-powder",
-      "name": "Black Powder",
+      "name": "黑火药",
       "producers": [
         "assembler"
       ],
@@ -4831,7 +4832,7 @@
     },
     {
       "id": "caterium-ingot",
-      "name": "Caterium Ingot",
+      "name": "钦锭",
       "producers": [
         "smelter"
       ],
@@ -4857,7 +4858,7 @@
     },
     {
       "id": "compacted-coal",
-      "name": "Compacted Coal",
+      "name": "压实煤",
       "producers": [
         "assembler"
       ],
@@ -4872,7 +4873,7 @@
     },
     {
       "id": "fabric",
-      "name": "Fabric",
+      "name": "织物",
       "producers": [
         "assembler"
       ],
@@ -4899,7 +4900,7 @@
     },
     {
       "id": "high-speed-connector",
-      "name": "High-Speed Connector",
+      "name": "高速连接器",
       "producers": [
         "manufacturer"
       ],
@@ -4928,7 +4929,7 @@
     },
     {
       "id": "quickwire",
-      "name": "Quickwire",
+      "name": "快速线",
       "producers": [
         "constructor"
       ],
@@ -4999,7 +5000,7 @@
     },
     {
       "id": "quartz-crystal",
-      "name": "Quartz Crystal",
+      "name": "石英晶体",
       "producers": [
         "constructor"
       ],
@@ -5028,7 +5029,7 @@
     },
     {
       "id": "silica",
-      "name": "Silica",
+      "name": "硅",
       "producers": [
         "constructor"
       ],
@@ -5057,7 +5058,7 @@
     },
     {
       "id": "crystal-oscillator",
-      "name": "Crystal Oscillator",
+      "name": "晶体振荡器",
       "producers": [
         "manufacturer"
       ],
@@ -5089,7 +5090,7 @@
     },
     {
       "id": "supercomputer",
-      "name": "Supercomputer",
+      "name": "超级计算机",
       "producers": [
         "manufacturer"
       ],
@@ -5135,7 +5136,7 @@
     },
     {
       "id": "turbofuel",
-      "name": "Turbofuel",
+      "name": "涡轮燃料",
       "producers": [
         "refinery"
       ],
@@ -5182,7 +5183,7 @@
     },
     {
       "id": "packaged-turbofuel",
-      "name": "Packaged Turbofuel",
+      "name": "包装涡轮燃料",
       "producers": [
         "packager"
       ],
@@ -5197,7 +5198,7 @@
     },
     {
       "id": "portable-miner",
-      "name": "Automated Miner",
+      "name": "便携式采矿器",
       "producers": [
         "manufacturer"
       ],
@@ -5211,7 +5212,7 @@
     },
     {
       "id": "beacon",
-      "name": "Beacon",
+      "name": "信标",
       "producers": [
         "manufacturer"
       ],
@@ -5241,7 +5242,7 @@
     },
     {
       "id": "gas-filter",
-      "name": "Gas Filter",
+      "name": "气体过滤器",
       "producers": [
         "manufacturer"
       ],
@@ -5254,7 +5255,7 @@
     },
     {
       "id": "iodine-infused-filter",
-      "name": "Iodine Infused Filter",
+      "name": "过滤器",
       "producers": [
         "manufacturer"
       ],
@@ -5267,7 +5268,7 @@
     },
     {
       "id": "color-cartridge",
-      "name": "Color Cartridge",
+      "name": "彩色子弹",
       "producers": [
         "constructor"
       ],
@@ -5281,7 +5282,7 @@
     },
     {
       "id": "nobelisk",
-      "name": "Nobelisk",
+      "name": "诺石",
       "producers": [
         "assembler"
       ],
@@ -5309,7 +5310,7 @@
     },
     {
       "id": "spiked-rebar",
-      "name": "Spiked Rebar",
+      "name": "尖刺钢筋",
       "producers": [
         "constructor"
       ],
@@ -5320,7 +5321,7 @@
     },
     {
       "id": "rifle-cartridge",
-      "name": "Rifle Cartridge",
+      "name": "步枪子弹",
       "producers": [
         "manufacturer"
       ],
@@ -5337,7 +5338,8 @@
     }
   ],
   "defaults": {
-    "modIds": [],
+    "modIds": [
+    ],
     "minBelt": "conveyor-belt-mk1",
     "maxBelt": "conveyor-belt-mk5",
     "minPipe": "pipeline-mk1",
@@ -5440,5 +5442,6 @@
       "purity-1"
     ]
   },
-  "limitations": {}
+  "limitations": {
+  }
 }
