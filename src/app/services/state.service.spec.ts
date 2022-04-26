@@ -1,30 +1,34 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Store, StoreModule } from '@ngrx/store';
-import { ItemId } from 'src/tests';
+import { MemoizedSelector } from '@ngrx/store';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
-import { Mocks } from 'src/tests';
-import { reducers, metaReducers, LabState } from '~/store';
-import * as Datasets from '~/store/datasets';
-import * as Items from '~/store/items';
+import { initialState, ItemId } from 'src/tests';
+import { Entities, RateType, Rational, RationalProduct } from '~/models';
+import { LabState } from '~/store';
 import * as Products from '~/store/products';
 import { StateService } from './state.service';
 
-xdescribe('StateService', () => {
+describe('StateService', () => {
   let service: StateService;
-  let store: Store<LabState>;
+  let mockStore: MockStore<LabState>;
+  let mockCheckViaState: MemoizedSelector<
+    LabState,
+    { products: RationalProduct[]; rates: Entities<Rational> }
+  >;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
-        StoreModule.forRoot(reducers, { metaReducers }),
-      ],
+      imports: [HttpClientTestingModule, RouterTestingModule],
+      providers: [provideMockStore({ initialState })],
     });
     service = TestBed.inject(StateService);
-    store = TestBed.inject(Store);
+    mockStore = TestBed.inject(MockStore);
+    mockCheckViaState = mockStore.overrideSelector(Products.checkViaState, {
+      products: [],
+      rates: {},
+    });
   });
 
   it('should be created', () => {
@@ -32,29 +36,21 @@ xdescribe('StateService', () => {
   });
 
   it('should revert an invalid viaId', () => {
-    // Load required data
-    store.dispatch(
-      new Datasets.LoadModDataAction({ id: '1.1', value: Mocks.BaseData })
-    );
-    store.dispatch(
-      new Datasets.LoadModDataAction({
-        id: 'res',
-        value: Mocks.ModData1,
-      })
-    );
-
-    // Add product with valid viaId
-    store.dispatch(new Products.AddAction(ItemId.Pipe));
-    store.dispatch(
-      new Products.SetViaAction({ id: '0', value: ItemId.IronOre })
-    );
-
-    // Spy and invalidate viaId
-    spyOn(store, 'dispatch').and.callThrough();
-    store.dispatch(new Items.IgnoreItemAction(ItemId.Pipe));
-
-    // Check viaId is auto-reset
-    expect(store.dispatch).toHaveBeenCalledWith(
+    spyOn(mockStore, 'dispatch');
+    mockCheckViaState.setResult({
+      products: [
+        new RationalProduct({
+          id: '0',
+          itemId: ItemId.Pipe,
+          rate: '1',
+          rateType: RateType.Items,
+          viaId: ItemId.IronOre,
+        }),
+      ],
+      rates: { ['0']: Rational.zero },
+    });
+    mockStore.refreshState();
+    expect(mockStore.dispatch).toHaveBeenCalledWith(
       new Products.ResetViaAction('0')
     );
   });

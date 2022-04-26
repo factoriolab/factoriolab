@@ -3,7 +3,7 @@ import { Game } from '~/models';
 import { initialFactoriesState } from './factories.reducer';
 import * as Selectors from './factories.selectors';
 
-xdescribe('Factories Selectors', () => {
+describe('Factories Selectors', () => {
   describe('getFactorySettings', () => {
     it('should fill in factory settings', () => {
       const result = Selectors.getFactories.projector(
@@ -47,7 +47,7 @@ xdescribe('Factories Selectors', () => {
         Mocks.Defaults,
         { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } }
       );
-      expect(result.entities[''].beaconCount).toBeNull();
+      expect(result.entities[''].beaconCount).toBeUndefined();
     });
 
     it('should include overclock in Satisfactory', () => {
@@ -92,6 +92,39 @@ xdescribe('Factories Selectors', () => {
         ...{ game: Game.Satisfactory },
       });
       expect(result.entities[''].overclock).toEqual(100);
+    });
+  });
+
+  describe('getFactoryOptions', () => {
+    it('should handle null ids', () => {
+      const result = Selectors.getFactoryOptions.projector(
+        initialFactoriesState,
+        Mocks.Data
+      );
+      expect(result).toEqual(Mocks.Data.factoryIds);
+    });
+
+    it('should filter ids', () => {
+      const result = Selectors.getFactoryOptions.projector(
+        { ids: [ItemId.AssemblingMachine1], entities: {} },
+        Mocks.Data
+      );
+      expect(result.length).toEqual(Mocks.Data.factoryIds.length - 1);
+    });
+  });
+
+  describe('getFactoryRows', () => {
+    it('should handle null ids', () => {
+      const result = Selectors.getFactoryRows.projector(initialFactoriesState);
+      expect(result).toEqual(['']);
+    });
+
+    it('should add empty option to beginning of list', () => {
+      const result = Selectors.getFactoryRows.projector({
+        ids: [ItemId.AssemblingMachine1],
+        entities: {},
+      });
+      expect(result).toEqual(['', ItemId.AssemblingMachine1]);
     });
   });
 });

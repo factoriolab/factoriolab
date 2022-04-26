@@ -3,7 +3,7 @@ import * as App from '../app.actions';
 import * as Actions from './factories.actions';
 import { factoriesReducer, initialFactoriesState } from './factories.reducer';
 
-xdescribe('Factories Reducer', () => {
+describe('Factories Reducer', () => {
   const id = 'id';
   const value = 'value';
   const def = 'default';
@@ -30,18 +30,52 @@ xdescribe('Factories Reducer', () => {
   describe('ADD', () => {
     it('should add a factory to the list', () => {
       const result = factoriesReducer(
+        { ids: [], entities: {} },
+        new Actions.AddAction({ value, def: [def] })
+      );
+      expect(result.ids).toEqual([value]);
+    });
+
+    it('should handle undefined ids', () => {
+      const result = factoriesReducer(
         undefined,
         new Actions.AddAction({ value, def: [def] })
       );
       expect(result.ids).toEqual([def, value]);
+    });
+
+    it('should handle undefined ids and default', () => {
+      const result = factoriesReducer(
+        undefined,
+        new Actions.AddAction({ value, def: undefined })
+      );
+      expect(result.ids).toEqual([value]);
     });
   });
 
   describe('REMOVE', () => {
     it('should remove a factory from the list', () => {
       const result = factoriesReducer(
-        { ids: null, entities: { [def]: {} } } as any,
+        { ids: [], entities: { [def]: {} } } as any,
         new Actions.RemoveAction({ value: def, def: [def] })
+      );
+      expect(result.ids).toEqual([]);
+      expect(result.entities[value]).toBeUndefined();
+    });
+
+    it('should handle undefined ids', () => {
+      const result = factoriesReducer(
+        { ids: undefined, entities: { [def]: {} } } as any,
+        new Actions.RemoveAction({ value: def, def: [def] })
+      );
+      expect(result.ids).toEqual([]);
+      expect(result.entities[value]).toBeUndefined();
+    });
+
+    it('should handle undefined ids and default', () => {
+      const result = factoriesReducer(
+        { ids: undefined, entities: { [def]: {} } } as any,
+        new Actions.RemoveAction({ value: def, def: undefined })
       );
       expect(result.ids).toEqual([]);
       expect(result.entities[value]).toBeUndefined();
@@ -51,7 +85,7 @@ xdescribe('Factories Reducer', () => {
   describe('RAISE', () => {
     it('should raise the rank of a factory', () => {
       const result = factoriesReducer(
-        { ids: null } as any,
+        { ids: undefined, entities: {} },
         new Actions.RaiseAction({ value: def, def: [value, def] })
       );
       expect(result.ids).toEqual([def, value]);
@@ -59,17 +93,33 @@ xdescribe('Factories Reducer', () => {
 
     it('should do nothing if rank is already highest', () => {
       const result = factoriesReducer(
-        { ids: null } as any,
+        { ids: undefined, entities: {} },
         new Actions.RaiseAction({ value, def: [value, def] })
       );
-      expect(result.ids).toBeNull();
+      expect(result.ids).toBeUndefined();
+    });
+
+    it('should handle no match in ids', () => {
+      const result = factoriesReducer(
+        { ids: [], entities: {} },
+        new Actions.RaiseAction({ value: def, def: [value, def] })
+      );
+      expect(result.ids).toEqual([]);
+    });
+
+    it('should handle undefined ids and default', () => {
+      const result = factoriesReducer(
+        { ids: undefined, entities: {} },
+        new Actions.RaiseAction({ value: def, def: undefined })
+      );
+      expect(result.ids).toBeUndefined();
     });
   });
 
   describe('SET_FACTORY', () => {
     it('should replace an id in the rank list', () => {
       const result = factoriesReducer(
-        { ids: null, entities: { [def]: 'test' } } as any,
+        { ids: undefined, entities: { [def]: 'test' } } as any,
         new Actions.SetFactoryAction({ id: def, value, def: [def] })
       );
       expect(result.ids).toEqual([value]);
@@ -78,10 +128,28 @@ xdescribe('Factories Reducer', () => {
 
     it('should do nothing if id is not found', () => {
       const result = factoriesReducer(
-        { ids: null, entities: { [def]: 'test' } } as any,
+        { ids: undefined, entities: { [def]: 'test' } } as any,
         new Actions.SetFactoryAction({ id, value, def: [def] })
       );
-      expect(result.ids).toBeNull();
+      expect(result.ids).toBeUndefined();
+      expect(result.entities[def]).toEqual('test' as any);
+    });
+
+    it('should handle no match in ids', () => {
+      const result = factoriesReducer(
+        { ids: [], entities: { [def]: 'test' } } as any,
+        new Actions.SetFactoryAction({ id, value, def: [def] })
+      );
+      expect(result.ids).toEqual([]);
+      expect(result.entities[def]).toEqual('test' as any);
+    });
+
+    it('should handle undefined ids and default', () => {
+      const result = factoriesReducer(
+        { ids: undefined, entities: { [def]: 'test' } } as any,
+        new Actions.SetFactoryAction({ id, value, def: undefined })
+      );
+      expect(result.ids).toBeUndefined();
       expect(result.entities[def]).toEqual('test' as any);
     });
   });

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { combineLatest, EMPTY, Observable, of } from 'rxjs';
-import { switchMap, map, tap } from 'rxjs/operators';
+import { switchMap, map, tap, filter } from 'rxjs/operators';
 
 import { ModData, Entities, ModHash } from '~/models';
 import { BrowserUtility } from '~/utilities';
@@ -18,27 +18,19 @@ export class DatasetsEffects {
   cacheData: Entities<ModData> = {};
   cacheHash: Entities<ModHash> = {};
 
-  appLoad$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(App.AppActionType.LOAD),
-        switchMap((a: App.LoadAction) => {
-          const id =
-            a.payload.settingsState?.baseId ||
-            Settings.initialSettingsState.baseId;
-          return this.requestData(id).pipe(
-            tap(([data, hash]) =>
-              this.loadModsForBase(data.defaults?.modIds ?? [])
-            ),
-            tap(([data, hash]) => {
-              if (!a.payload.productsState) {
-                this.store.dispatch(new Products.ResetAction(data.items[0].id));
-              }
-            })
-          );
-        })
-      ),
-    { dispatch: false }
+  appLoad$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(App.AppActionType.LOAD),
+      switchMap((a: App.LoadAction) => {
+        const id =
+          a.payload.settingsState?.baseId ||
+          Settings.initialSettingsState.baseId;
+        return this.requestData(id).pipe(
+          filter(([data, hash]) => !a.payload.productsState),
+          map(([data, hash]) => new Products.ResetAction(data.items[0].id))
+        );
+      })
+    )
   );
 
   appReset$ = createEffect(() =>
@@ -46,9 +38,6 @@ export class DatasetsEffects {
       ofType(App.AppActionType.RESET),
       switchMap(() =>
         this.requestData(Settings.initialSettingsState.baseId).pipe(
-          tap(([data, hash]) =>
-            this.loadModsForBase(data.defaults?.modIds ?? [])
-          ),
           map(([data, hash]) => new Products.ResetAction(data.items[0].id))
         )
       )
@@ -60,41 +49,39 @@ export class DatasetsEffects {
       ofType(Settings.SettingsActionType.SET_BASE),
       switchMap((a: Settings.SetBaseAction) =>
         this.requestData(a.payload).pipe(
-          tap(([data, hash]) =>
-            this.loadModsForBase(data.defaults?.modIds ?? [])
-          ),
           map(([data, hash]) => new Products.ResetAction(data.items[0].id))
         )
       )
     )
   );
 
-  loadModsForBase(modIds: string[]): void {
-    modIds.forEach((id) => this.requestData(id, false).subscribe(() => {}));
-  }
-
-  requestData(id: string, hash = true): Observable<[ModData, ModHash]> {
+  requestData(id: string, skipHash = false): Observable<[ModData, ModHash]> {
     const data$ = this.cacheData[id]
       ? of(this.cacheData[id])
       : this.http.get(`data/${id}/data.json`).pipe(
           map((response) => response as ModData),
-          tap((data) => (this.cacheData[id] = data)),
-          tap((value) =>
-            this.store.dispatch(new LoadModDataAction({ id, value }))
-          )
+          tap((value) => {
+            this.cacheData[id] = value;
+            this.store.dispatch(new LoadModDataAction({ id, value }));
+            this.loadModsForBase(value.defaults?.modIds ?? []);
+          })
         );
-    const hash$ = hash
-      ? this.cacheHash[id]
-        ? of(this.cacheHash[id])
-        : this.http.get(`data/${id}/hash.json`).pipe(
-            map((response) => response as ModHash),
-            tap((data) => (this.cacheHash[id] = data)),
-            tap((value) =>
-              this.store.dispatch(new LoadModHashAction({ id, value }))
-            )
-          )
-      : EMPTY;
+    const hash$ = skipHash
+      ? EMPTY
+      : this.cacheHash[id]
+      ? of(this.cacheHash[id])
+      : this.http.get(`data/${id}/hash.json`).pipe(
+          map((response) => response as ModHash),
+          tap((value) => {
+            this.cacheHash[id] = value;
+            this.store.dispatch(new LoadModHashAction({ id, value }));
+          })
+        );
     return combineLatest([data$, hash$]);
+  }
+
+  loadModsForBase(modIds: string[]): void {
+    modIds.forEach((id) => this.requestData(id, false).subscribe(() => {}));
   }
 
   load(
@@ -105,7 +92,6 @@ export class DatasetsEffects {
     if (!zip) {
       const id = stored?.settingsState?.baseId || initial.baseId;
       this.requestData(id).subscribe(([data, hash]) => {
-        this.loadModsForBase(data.defaults?.modIds ?? []);
         if (!stored?.productsState) {
           this.store.dispatch(new Products.ResetAction(data.items[0].id));
         }

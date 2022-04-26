@@ -2,7 +2,7 @@ import { Mocks } from 'src/tests';
 import * as Actions from './datasets.actions';
 import { datasetsReducer, initialDatasetsState } from './datasets.reducer';
 
-xdescribe('Dataset Reducer', () => {
+describe('Dataset Reducer', () => {
   describe('LOAD', () => {
     it('should load mod data', () => {
       const id = 'id';

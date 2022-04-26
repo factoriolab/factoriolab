@@ -4,7 +4,7 @@ import { BrowserUtility } from '~/utilities';
 import { LabState } from '.';
 import { storageMetaReducer } from './storage.reducer';
 
-xdescribe('Storage MetaReducer', () => {
+describe('Storage MetaReducer', () => {
   it('should merge with the stored state when first called', () => {
     spyOn(BrowserUtility, 'mergeState').and.returnValue('merged' as any);
     spyOn(BrowserUtility, 'saveState');
