@@ -10,7 +10,7 @@ import * as App from '../app.actions';
 import * as Actions from './settings.actions';
 import { settingsReducer, initialSettingsState } from './settings.reducer';
 
-xdescribe('Settings Reducer', () => {
+describe('Settings Reducer', () => {
   describe('LOAD', () => {
     it('should return state if settings state is not included', () => {
       const result = settingsReducer(
@@ -31,6 +31,13 @@ xdescribe('Settings Reducer', () => {
     });
   });
 
+  describe('RESET', () => {
+    it('should return the initial state', () => {
+      const result = settingsReducer(undefined, new App.ResetAction());
+      expect(result).toEqual(initialSettingsState);
+    });
+  });
+
   describe('SET_PRESET', () => {
     it('should set the preset', () => {
       const value = Preset.Modules;
@@ -39,6 +46,17 @@ xdescribe('Settings Reducer', () => {
         new Actions.SetPresetAction(value)
       );
       expect(result.preset).toEqual(value);
+    });
+  });
+
+  describe('SET_BASE', () => {
+    it('should set the base id', () => {
+      const value = 'dsp';
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetBaseAction(value)
+      );
+      expect(result.baseId).toEqual(value);
     });
   });
 

@@ -1,10 +1,15 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
 import {
+  Column,
   DisplayRate,
+  Game,
   MatrixResultType,
+  PowerUnit,
   RateType,
   Rational,
   RationalProduct,
+  Step,
+  StepDetailTab,
 } from '~/models';
 import {
   RateUtility,
@@ -821,6 +826,219 @@ describe('Products Selectors', () => {
       );
       expect(result.items[Mocks.Step1.itemId!]).toBeFalse();
       expect(result.recipes[Mocks.Step1.recipeId!]).toBeFalse();
+    });
+  });
+
+  describe('getTotals', () => {
+    it('should get totals for columns', () => {
+      const result = Selectors.getTotals.projector(
+        [
+          {
+            itemId: ItemId.Coal,
+            recipeId: RecipeId.Coal,
+          },
+          {
+            itemId: ItemId.Coal,
+            recipeId: RecipeId.Coal,
+            belts: Rational.one,
+            wagons: Rational.one,
+            factories: Rational.one,
+            beacons: Rational.one,
+            power: Rational.one,
+            pollution: Rational.one,
+          },
+        ],
+        Mocks.ItemSettingsInitial,
+        Mocks.RecipeSettingsInitial,
+        Mocks.AdjustedData
+      );
+      expect(result).toEqual({
+        belts: { [ItemId.TransportBelt]: Rational.one },
+        wagons: { [ItemId.CargoWagon]: Rational.one },
+        factories: { [ItemId.ElectricMiningDrill]: Rational.one },
+        beacons: { [ItemId.Beacon]: Rational.one },
+        power: Rational.one,
+        pollution: Rational.one,
+      });
+    });
+
+    it('calculate dsp mining total by recipe', () => {
+      const result = Selectors.getTotals.projector(
+        [
+          {
+            recipeId: RecipeId.Coal,
+            factories: Rational.one,
+          },
+        ],
+        Mocks.ItemSettingsInitial,
+        { [RecipeId.Coal]: { factory: ItemId.MiningDrill } },
+        { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } }
+      );
+      expect(result).toEqual({
+        belts: {},
+        wagons: {},
+        factories: { [RecipeId.Coal]: Rational.one },
+        beacons: {},
+        power: Rational.zero,
+        pollution: Rational.zero,
+      });
+    });
+  });
+
+  describe('getStepDetails', () => {
+    it('should determine detail tabs to display for steps', () => {
+      const steps: Step[] = [
+        {
+          id: '0',
+          itemId: ItemId.PetroleumGas,
+          recipeId: RecipeId.Coal,
+          factories: Rational.one,
+          outputs: { [ItemId.PetroleumGas]: Rational.two },
+        },
+        {
+          id: '1',
+          outputs: { [ItemId.PetroleumGas]: Rational.one },
+        },
+        {
+          id: '2',
+        },
+      ];
+      const result = Selectors.getStepDetails.projector(
+        steps,
+        Mocks.AdjustedData
+      );
+      expect(result).toEqual({
+        ['0']: {
+          tabs: [
+            StepDetailTab.Item,
+            StepDetailTab.Recipe,
+            StepDetailTab.Factory,
+            StepDetailTab.Recipes,
+          ],
+          outputs: [steps[0], steps[1]],
+          recipes: [
+            RecipeId.AdvancedOilProcessing,
+            RecipeId.BasicOilProcessing,
+            RecipeId.CoalLiquefaction,
+            RecipeId.LightOilCracking,
+          ],
+        },
+        ['1']: { tabs: [], outputs: [], recipes: [] },
+        ['2']: { tabs: [], outputs: [], recipes: [] },
+      });
+    });
+  });
+
+  describe('getStepByItemEntities', () => {
+    it('should create a map of item ids to steps', () => {
+      const result = Selectors.getStepByItemEntities.projector(Mocks.Steps);
+      expect(Object.keys(result).length).toEqual(Mocks.Steps.length);
+    });
+  });
+
+  describe('getStepTree', () => {
+    it('should map steps into a hierarchical tree', () => {
+      const steps: Step[] = [
+        {
+          id: '0',
+          recipeId: ItemId.PlasticBar,
+        },
+        {
+          id: '1',
+          recipeId: RecipeId.Coal,
+          parents: {
+            [RecipeId.PlasticBar]: Rational.one,
+          },
+        },
+        {
+          id: '2',
+          parents: { [RecipeId.Coal]: Rational.one },
+        },
+        {
+          id: '3',
+          parents: { [RecipeId.Coal]: Rational.one },
+        },
+        {
+          id: '4',
+          parents: {
+            [RecipeId.PlasticBar]: Rational.one,
+          },
+        },
+      ];
+      const result = Selectors.getStepTree.projector(steps);
+      expect(result).toEqual({
+        ['0']: [],
+        ['1']: [true],
+        ['2']: [true, true],
+        ['3']: [true, false],
+        ['4']: [false],
+      });
+    });
+  });
+
+  describe('getEffectivePrecision', () => {
+    it('should calculate the effective precision for columns', () => {
+      const result = Selectors.getEffectivePrecision.projector(
+        [{ id: '0' }],
+        Mocks.PreferencesState.columns
+      );
+      expect(result).toEqual({
+        [Column.Surplus]: 0,
+        [Column.Items]: 0,
+        [Column.Belts]: 0,
+        [Column.Wagons]: 0,
+        [Column.Factories]: 0,
+        [Column.Power]: 0,
+        [Column.Pollution]: 0,
+      });
+    });
+  });
+
+  describe('getEffectivePowerUnit', () => {
+    it('should calculate an auto power unit', () => {
+      expect(
+        Selectors.getEffectivePowerUnit.projector([], PowerUnit.Auto)
+      ).toEqual(PowerUnit.kW);
+      expect(
+        Selectors.getEffectivePowerUnit.projector(
+          [{ id: '0', power: Rational.thousand }],
+          PowerUnit.Auto
+        )
+      ).toEqual(PowerUnit.MW);
+      expect(
+        Selectors.getEffectivePowerUnit.projector(
+          [
+            { id: '0', power: Rational.million },
+            { id: '1', power: Rational.million },
+          ],
+          PowerUnit.Auto
+        )
+      ).toEqual(PowerUnit.GW);
+    });
+
+    it('should override with specified power unit', () => {
+      expect(
+        Selectors.getEffectivePowerUnit.projector([], PowerUnit.GW)
+      ).toEqual(PowerUnit.GW);
+    });
+  });
+
+  describe('effPrecFrom', () => {
+    it('should handle null precision', () => {
+      expect(Selectors.effPrecFrom([], null, () => undefined)).toBeNull();
+    });
+
+    it('should determine max decimals', () => {
+      expect(
+        Selectors.effPrecFrom(
+          [
+            { id: '0', items: Rational.from(1, 2) },
+            { id: '1', items: Rational.from(1, 3) },
+          ],
+          3,
+          (step) => step.items
+        )
+      ).toEqual(3);
     });
   });
 });

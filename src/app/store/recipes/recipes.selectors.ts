@@ -37,7 +37,7 @@ export const getRecipeSettings = createSelector(
 
         const factory = data.factoryEntities[s.factory];
         const def = factories.entities[s.factory];
-        if (RecipeUtility.allowsModules(recipe, factory)) {
+        if (factory != null && RecipeUtility.allowsModules(recipe, factory)) {
           if (!s.factoryModules) {
             s.factoryModules = RecipeUtility.defaultModules(
               data.recipeModuleIds[recipe.id],

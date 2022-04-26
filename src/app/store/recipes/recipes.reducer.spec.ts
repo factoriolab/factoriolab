@@ -4,7 +4,7 @@ import * as App from '../app.actions';
 import * as Actions from './recipes.actions';
 import { recipesReducer, initialRecipesState } from './recipes.reducer';
 
-xdescribe('Recipes Reducer', () => {
+describe('Recipes Reducer', () => {
   describe('LOAD', () => {
     it('should load recipe settings', () => {
       const result = recipesReducer(
@@ -14,6 +14,13 @@ xdescribe('Recipes Reducer', () => {
         } as any)
       );
       expect(result).toEqual(Mocks.RecipeSettingsEntities);
+    });
+  });
+
+  describe('RESET', () => {
+    it('should return the initial state', () => {
+      const result = recipesReducer(undefined, new App.ResetAction());
+      expect(result).toEqual(initialRecipesState);
     });
   });
 

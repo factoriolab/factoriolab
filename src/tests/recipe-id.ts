@@ -12,6 +12,7 @@ export enum RecipeId {
   HeavyOilCracking = 'heavy-oil-cracking',
   IronOre = 'iron-ore',
   KovarexEnrichmentProcess = 'kovarex-enrichment-process',
+  LightOilCracking = 'light-oil-cracking',
   MiningProductivity = 'mining-productivity',
   NuclearFuelReprocessing = 'nuclear-fuel-reprocessing',
   PlasticBar = 'plastic-bar',

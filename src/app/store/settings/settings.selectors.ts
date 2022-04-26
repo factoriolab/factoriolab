@@ -1,4 +1,4 @@
-import { compose, createSelector } from '@ngrx/store';
+import { createSelector } from '@ngrx/store';
 import { environment } from 'src/environments';
 
 import {
@@ -14,10 +14,6 @@ import {
   toBoolEntities,
   toEntities,
   ItemId,
-  DisplayRate,
-  ResearchSpeed,
-  InserterTarget,
-  InserterCapacity,
   Game,
   InserterData,
   RationalBeacon,
@@ -39,43 +35,64 @@ import { initialSettingsState, SettingsState } from './settings.reducer';
 /* Base selector functions */
 export const settingsState = (state: LabState): SettingsState =>
   state.settingsState;
-const sPreset = (state: SettingsState): Preset => state.preset;
-const sBaseDatasetId = (state: SettingsState): string => state.baseId;
-const sExpensive = (state: SettingsState): boolean => state.expensive;
-const sBeaconReceivers = (state: SettingsState): string | undefined =>
-  state.beaconReceivers;
-const sFlowRate = (state: SettingsState): number => state.flowRate;
-const sDisplayRate = (state: SettingsState): DisplayRate => state.displayRate;
-const sMiningBonus = (state: SettingsState): number => state.miningBonus;
-const sResearchSpeed = (state: SettingsState): ResearchSpeed =>
-  state.researchSpeed;
-const sInserterTarget = (state: SettingsState): InserterTarget =>
-  state.inserterTarget;
-const sInserterCapacity = (state: SettingsState): InserterCapacity =>
-  state.inserterCapacity;
-const sCostFactor = (state: SettingsState): string => state.costFactor;
-const sCostFactory = (state: SettingsState): string => state.costFactory;
-const sCostInput = (state: SettingsState): string => state.costInput;
-const sCostIgnored = (state: SettingsState): string => state.costIgnored;
-const sProliferatorSpray = (state: SettingsState): string =>
-  state.proliferatorSpray;
 
-/* Simple selectors */
-export const getPreset = compose(sPreset, settingsState);
-export const getBaseDatasetId = compose(sBaseDatasetId, settingsState);
-export const getExpensive = compose(sExpensive, settingsState);
-export const getBeaconReceivers = compose(sBeaconReceivers, settingsState);
-export const getFlowRate = compose(sFlowRate, settingsState);
-export const getDisplayRate = compose(sDisplayRate, settingsState);
-export const getMiningBonus = compose(sMiningBonus, settingsState);
-export const getResearchSpeed = compose(sResearchSpeed, settingsState);
-export const getInserterTarget = compose(sInserterTarget, settingsState);
-export const getInserterCapacity = compose(sInserterCapacity, settingsState);
-export const getCostFactor = compose(sCostFactor, settingsState);
-export const getCostFactory = compose(sCostFactory, settingsState);
-export const getCostInput = compose(sCostInput, settingsState);
-export const getCostIgnored = compose(sCostIgnored, settingsState);
-export const getProliferatorSpray = compose(sProliferatorSpray, settingsState);
+export const getPreset = createSelector(settingsState, (state) => state.preset);
+export const getBaseDatasetId = createSelector(
+  settingsState,
+  (state) => state.baseId
+);
+export const getExpensive = createSelector(
+  settingsState,
+  (state) => state.expensive
+);
+export const getBeaconReceivers = createSelector(
+  settingsState,
+  (state) => state.beaconReceivers
+);
+export const getFlowRate = createSelector(
+  settingsState,
+  (state) => state.flowRate
+);
+export const getDisplayRate = createSelector(
+  settingsState,
+  (state) => state.displayRate
+);
+export const getMiningBonus = createSelector(
+  settingsState,
+  (state) => state.miningBonus
+);
+export const getResearchSpeed = createSelector(
+  settingsState,
+  (state) => state.researchSpeed
+);
+export const getInserterTarget = createSelector(
+  settingsState,
+  (state) => state.inserterTarget
+);
+export const getInserterCapacity = createSelector(
+  settingsState,
+  (state) => state.inserterCapacity
+);
+export const getCostFactor = createSelector(
+  settingsState,
+  (state) => state.costFactor
+);
+export const getCostFactory = createSelector(
+  settingsState,
+  (state) => state.costFactory
+);
+export const getCostInput = createSelector(
+  settingsState,
+  (state) => state.costInput
+);
+export const getCostIgnored = createSelector(
+  settingsState,
+  (state) => state.costIgnored
+);
+export const getProliferatorSpray = createSelector(
+  settingsState,
+  (state) => state.proliferatorSpray
+);
 
 /* Complex selectors */
 export const getBase = createSelector(
@@ -311,7 +328,7 @@ export const getNormalDataset = createSelector(
     const modules = items.filter((i) => i.module);
     const moduleIds = modules.map((i) => i.id);
     const beaconModuleIds = modules
-      .filter((i) => i.module?.productivity == null)
+      .filter((i) => i.module!.productivity == null)
       .map((i) => i.id);
     const fuelIds = items
       .filter((i) => i.fuel)
@@ -407,7 +424,7 @@ export const getNormalDataset = createSelector(
     const recipeMatches = recipeIds.reduce(
       (e: Entities<RationalRecipe[]>, r) => {
         const recipe = recipeR[r];
-        const outputs = recipe.out ? Object.keys(recipe.out) : [recipe.id];
+        const outputs = Object.keys(recipe.out);
         for (const o of outputs.filter((i) => recipe.produces(i))) {
           if (!e[o]) {
             e[o] = [recipe];
@@ -432,35 +449,20 @@ export const getNormalDataset = createSelector(
       return e;
     }, {});
 
-    // Fill in missing recipe names
-    for (const id of recipeIds.filter((i) => !recipeEntities[i].name)) {
-      if (itemData[id]) {
-        recipeEntities[id] = {
-          ...recipeEntities[id],
-          ...{ name: itemData[id].name },
-        };
-      } else {
-        // No item found, convert id to name
-        const cap = id.charAt(0).toUpperCase() + id.slice(1);
-        const name = cap.replace(/-/g, ' ');
-        recipeEntities[id] = { ...recipeEntities[id], ...{ name } };
-      }
-    }
-
     // Calculate allowed modules for recipes
     const recipeModuleIds = recipes.reduce((e: Entities<string[]>, r) => {
       e[r.id] = modules
         .filter(
           (m) =>
-            m.module?.limitation == null ||
-            limitations[m.module.limitation][r.id]
+            m.module!.limitation == null ||
+            limitations[m.module!.limitation][r.id]
         )
         .map((m) => m.id);
       return e;
     }, {});
 
     const prodModuleIds = moduleIds.filter(
-      (i) => itemEntities[i].module?.productivity != null
+      (i) => itemEntities[i].module!.productivity != null
     );
 
     // Calculate complex recipes

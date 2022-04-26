@@ -12,6 +12,7 @@ import {
 /* Base selector functions */
 export const preferencesState = (state: LabState): PreferencesState =>
   state.preferencesState;
+
 export const getStates = createSelector(
   preferencesState,
   (state) => state.states

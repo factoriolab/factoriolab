@@ -1,10 +1,21 @@
-import { Mocks, ItemId } from 'src/tests';
+import { Mocks, ItemId, RecipeId } from 'src/tests';
 import { Rational } from '~/models';
+import { RecipeUtility } from '~/utilities';
 import { initialRecipesState } from './recipes.reducer';
 import * as Selectors from './recipes.selectors';
 
-xdescribe('Recipes Selectors', () => {
+describe('Recipes Selectors', () => {
   const stringValue = 'value';
+
+  describe('Base selector functions', () => {
+    it('should get slices of state', () => {
+      expect(
+        Selectors.recipesState({
+          recipesState: Mocks.RecipeSettingsInitial,
+        } as any)
+      ).toEqual(Mocks.RecipeSettingsInitial);
+    });
+  });
 
   describe('getRecipeSettings', () => {
     it('should handle null/empty values', () => {
@@ -26,6 +37,43 @@ xdescribe('Recipes Selectors', () => {
         Mocks.Data
       );
       expect(Object.keys(result).length).toEqual(Mocks.Data.recipeIds.length);
+    });
+
+    it('should handle null settings', () => {
+      const state = {
+        ...initialRecipesState,
+        ...{ [Mocks.Item1.id]: { factory: ItemId.AssemblingMachine3 } },
+      };
+      const data = {
+        ...Mocks.Data,
+        ...{
+          factoryEntities: {
+            ...Mocks.Data.factoryEntities,
+            ...{
+              [ItemId.AssemblingMachine3]: {
+                ...Mocks.Data.factoryEntities[ItemId.AssemblingMachine3],
+                ...{ modules: undefined },
+              },
+            },
+          },
+        },
+      };
+      spyOn(RecipeUtility, 'allowsModules').and.returnValue(true);
+      const result = Selectors.getRecipeSettings.projector(
+        state,
+        {
+          ...Mocks.FactorySettingsInitial,
+          ...{
+            ids: undefined,
+            entities: {
+              ...Mocks.FactorySettingsInitial.entities,
+              ...{ [ItemId.AssemblingMachine3]: {} },
+            },
+          },
+        },
+        data
+      );
+      expect(result[Mocks.Item1.id].factory).toEqual(ItemId.AssemblingMachine3);
     });
 
     it('should use factory override', () => {
@@ -121,6 +169,25 @@ xdescribe('Recipes Selectors', () => {
         researchSpeed: Rational.one,
         data: Mocks.Data,
       });
+    });
+  });
+
+  describe('getRecipesModified', () => {
+    it('should determine whether columns are modified', () => {
+      const result = Selectors.getRecipesModified.projector({
+        [RecipeId.Coal]: {
+          factory: undefined,
+          factoryModules: [],
+          beacon: undefined,
+          beaconModules: undefined,
+          beaconCount: undefined,
+          beaconTotal: true,
+        },
+      });
+      expect(result.factories).toBeTrue();
+      expect(result.overclock).toBeFalse();
+      expect(result.beacons).toBeTrue();
+      expect(result.cost).toBeFalse();
     });
   });
 });

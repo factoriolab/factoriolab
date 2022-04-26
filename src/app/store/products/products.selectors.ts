@@ -33,6 +33,7 @@ import { ProductsState } from './products.reducer';
 /* Base selector functions */
 export const productsState = (state: LabState): ProductsState =>
   state.productsState;
+
 export const getIds = createSelector(productsState, (state) => state.ids);
 export const getEntities = createSelector(
   productsState,
@@ -463,65 +464,77 @@ export const getTotals = createSelector(
     let power = Rational.zero;
     let pollution = Rational.zero;
 
-    // Total Belts
-    for (const step of steps.filter((s) => s.belts?.nonzero())) {
-      if (step.itemId) {
-        const belt = itemSettings[step.itemId].belt ?? '';
-        if (!belts.hasOwnProperty(belt)) {
-          belts[belt] = Rational.zero;
+    for (const step of steps) {
+      if (step.itemId != null) {
+        // Total Belts
+        if (step.belts?.nonzero()) {
+          const belt = itemSettings[step.itemId].belt;
+          if (belt != null) {
+            if (!belts.hasOwnProperty(belt)) {
+              belts[belt] = Rational.zero;
+            }
+            belts[belt] = belts[belt].add(step.belts.ceil());
+          }
         }
-        belts[belt] = belts[belt].add(step.belts!.ceil());
-      }
-    }
 
-    // Total Wagons
-    for (const step of steps.filter((s) => s.wagons?.nonzero())) {
-      if (step.itemId) {
-        const wagon = itemSettings[step.itemId].wagon ?? '';
-        if (!wagons.hasOwnProperty(wagon)) {
-          wagons[wagon] = Rational.zero;
+        // Total Wagons
+        if (step.wagons?.nonzero()) {
+          const wagon = itemSettings[step.itemId].wagon;
+          if (wagon != null) {
+            if (!wagons.hasOwnProperty(wagon)) {
+              wagons[wagon] = Rational.zero;
+            }
+            wagons[wagon] = wagons[wagon].add(step.wagons.ceil());
+          }
         }
-        wagons[wagon] = wagons[wagon].add(step.wagons!.ceil());
       }
-    }
 
-    // Total Factories
-    for (const step of steps.filter((s) => s.factories?.nonzero())) {
-      const recipe = data.recipeEntities[step.recipeId ?? ''];
-      // Don't include silos from launch recipes
-      if (!recipe.part) {
-        let factory = recipeSettings[step.recipeId ?? ''].factory ?? '';
-        if (
-          data.game === Game.DysonSphereProgram &&
-          factory === ItemId.MiningDrill
-        ) {
-          // Use recipe id (vein type) in place of mining drill for DSP mining
-          factory = step.recipeId ?? '';
+      if (step.recipeId != null) {
+        // Total Factories
+        if (step.factories?.nonzero()) {
+          const recipe = data.recipeEntities[step.recipeId];
+          // Don't include silos from launch recipes
+          if (!recipe.part) {
+            let factory = recipeSettings[step.recipeId].factory;
+            if (
+              data.game === Game.DysonSphereProgram &&
+              factory === ItemId.MiningDrill
+            ) {
+              // Use recipe id (vein type) in place of mining drill for DSP mining
+              factory = step.recipeId;
+            }
+            if (factory != null) {
+              if (!factories.hasOwnProperty(factory)) {
+                factories[factory] = Rational.zero;
+              }
+              factories[factory] = factories[factory].add(
+                step.factories.ceil()
+              );
+            }
+          }
         }
-        if (!factories.hasOwnProperty(factory)) {
-          factories[factory] = Rational.zero;
+
+        // Total Beacons
+        if (step.beacons?.nonzero()) {
+          const beacon = recipeSettings[step.recipeId].beacon;
+          if (beacon != null) {
+            if (!beacons.hasOwnProperty(beacon)) {
+              beacons[beacon] = Rational.zero;
+            }
+            beacons[beacon] = beacons[beacon].add(step.beacons.ceil());
+          }
         }
-        factories[factory] = factories[factory].add(step.factories!.ceil());
       }
-    }
 
-    // Total Beacons
-    for (const step of steps.filter((s) => s.beacons?.nonzero())) {
-      const beacon = recipeSettings[step.recipeId ?? ''].beacon ?? '';
-      if (!beacons.hasOwnProperty(beacon)) {
-        beacons[beacon] = Rational.zero;
+      // Total Power
+      if (step.power != null) {
+        power = power.add(step.power);
       }
-      beacons[beacon] = beacons[beacon].add(step.beacons!.ceil());
-    }
 
-    // Total Power
-    for (const step of steps.filter((s) => s.power != null)) {
-      power = power.add(step.power!);
-    }
-
-    // Total Pollution
-    for (const step of steps.filter((s) => s.pollution != null)) {
-      pollution = pollution.add(step.pollution!);
+      // Total Pollution
+      if (step.pollution != null) {
+        pollution = pollution.add(step.pollution);
+      }
     }
 
     return { belts, wagons, factories, beacons, power, pollution };
@@ -542,9 +555,7 @@ export const getStepDetails = createSelector(
         outputs = steps
           .filter((a) => a.outputs?.[itemId] != null)
           .sort((a, b) =>
-            (b.outputs?.[itemId] || Rational.zero)
-              .sub(a.outputs?.[itemId] || Rational.zero)
-              .toNumber()
+            b.outputs![itemId].sub(a.outputs![itemId]).toNumber()
           );
       }
       if (s.recipeId != null) {
@@ -598,7 +609,7 @@ export const getStepTree = createSelector(getSteps, (steps) => {
 
   for (let i = 0; i < steps.length; i++) {
     const step = steps[i];
-    if (tree[step.id]?.length) {
+    if (tree[step.id].length) {
       for (let j = i + 1; j < steps.length; j++) {
         const next = steps[j];
         if (tree[next.id]) {
@@ -650,9 +661,11 @@ export const getEffectivePowerUnit = createSelector(
   (steps, powerUnit) => {
     if (powerUnit === PowerUnit.Auto) {
       let minPower: Rational | undefined;
-      for (const step of steps.filter((s) => s.power != null)) {
-        if (minPower == null || step.power!.lt(minPower)) {
-          minPower = step.power;
+      for (const step of steps) {
+        if (step.power != null) {
+          if (minPower == null || step.power.lt(minPower)) {
+            minPower = step.power;
+          }
         }
       }
       minPower = minPower ?? Rational.zero;
