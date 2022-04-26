@@ -167,15 +167,17 @@ export const getNormalizedRatesByBelts = createSelector(
   (products, productSteps, itemSettings, beltSpeed) =>
     products?.reduce((e: Entities<Rational>, p) => {
       if (p.viaId === p.itemId) {
-        e[p.id] = p.rate.mul(
-          beltSpeed[p.viaSetting ?? itemSettings[p.itemId].belt ?? '']
-        );
+        const id = p.viaSetting ?? itemSettings[p.itemId].belt;
+        if (id) {
+          e[p.id] = p.rate.mul(beltSpeed[id]);
+        }
       } else {
         const via = RecipeUtility.getProductStepData(productSteps, p);
         if (via) {
-          e[p.id] = p.rate
-            .mul(beltSpeed[p.viaSetting ?? itemSettings[via[0]].belt ?? ''])
-            .div(via[1]);
+          const id = p.viaSetting ?? itemSettings[via[0]].belt;
+          if (id) {
+            e[p.id] = p.rate.mul(beltSpeed[id]).div(via[1]);
+          }
         } else {
           e[p.id] = Rational.zero;
         }
@@ -193,26 +195,30 @@ export const getNormalizedRatesByWagons = createSelector(
   (products, productSteps, itemSettings, displayRate, data) =>
     products?.reduce((e: Entities<Rational>, p) => {
       if (p.viaId === p.itemId) {
-        const item = data.itemEntities[p.itemId];
-        const wagon =
-          data.itemEntities[p.viaSetting ?? itemSettings[p.itemId].wagon ?? ''];
         e[p.id] = p.rate.div(DisplayRateVal[displayRate]);
-        if (item.stack && wagon.cargoWagon) {
-          e[p.id] = e[p.id].mul(item.stack.mul(wagon.cargoWagon.size));
-        } else if (wagon.fluidWagon) {
-          e[p.id] = e[p.id].mul(wagon.fluidWagon.capacity);
-        }
-      } else {
-        const via = RecipeUtility.getProductStepData(productSteps, p);
-        if (via) {
-          const item = data.itemEntities[via[0]];
-          const wagon =
-            data.itemEntities[p.viaSetting ?? itemSettings[via[0]].wagon ?? ''];
-          e[p.id] = p.rate.div(DisplayRateVal[displayRate]);
+        const wagonId = p.viaSetting ?? itemSettings[p.itemId].wagon;
+        if (wagonId) {
+          const item = data.itemEntities[p.itemId];
+          const wagon = data.itemEntities[wagonId];
           if (item.stack && wagon.cargoWagon) {
             e[p.id] = e[p.id].mul(item.stack.mul(wagon.cargoWagon.size));
           } else if (wagon.fluidWagon) {
             e[p.id] = e[p.id].mul(wagon.fluidWagon.capacity);
+          }
+        }
+      } else {
+        const via = RecipeUtility.getProductStepData(productSteps, p);
+        if (via) {
+          e[p.id] = p.rate.div(DisplayRateVal[displayRate]);
+          const wagonId = p.viaSetting ?? itemSettings[via[0]].wagon;
+          if (wagonId) {
+            const item = data.itemEntities[via[0]];
+            const wagon = data.itemEntities[wagonId];
+            if (item.stack && wagon.cargoWagon) {
+              e[p.id] = e[p.id].mul(item.stack.mul(wagon.cargoWagon.size));
+            } else if (wagon.fluidWagon) {
+              e[p.id] = e[p.id].mul(wagon.fluidWagon.capacity);
+            }
           }
           e[p.id] = e[p.id].div(via[1]);
         } else {

@@ -1,11 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Action, MemoizedSelector } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { ReplaySubject } from 'rxjs';
 
 import { RecipeId, ItemId, Mocks, initialState } from 'src/tests';
-import { Dataset, Entities, RecipeSettings } from '~/models';
 import { LabState } from '..';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
@@ -16,11 +15,6 @@ describe('FactoriesEffects', () => {
   let effects: FactoriesEffects;
   let actions: ReplaySubject<any>;
   let mockStore: MockStore<LabState>;
-  let mockGetRecipeSettings: MemoizedSelector<
-    LabState,
-    Entities<RecipeSettings>
-  >;
-  let mockGetNormalDataset: MemoizedSelector<LabState, Dataset>;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
@@ -35,14 +29,11 @@ describe('FactoriesEffects', () => {
 
     effects = TestBed.inject(FactoriesEffects);
     mockStore = TestBed.inject(MockStore);
-    mockGetRecipeSettings = mockStore.overrideSelector(
+    mockStore.overrideSelector(
       Recipes.getRecipeSettings,
       Mocks.RecipeSettingsInitial
     );
-    mockGetNormalDataset = mockStore.overrideSelector(
-      Settings.getNormalDataset,
-      Mocks.Data
-    );
+    mockStore.overrideSelector(Settings.getNormalDataset, Mocks.Data);
     mockStore.refreshState();
   });
 

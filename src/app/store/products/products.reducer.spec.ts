@@ -2,9 +2,13 @@ import { Mocks, ItemId, RecipeId } from 'src/tests';
 import { RateType } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './products.actions';
-import { productsReducer, ProductsState } from './products.reducer';
+import {
+  initialProductsState,
+  productsReducer,
+  ProductsState,
+} from './products.reducer';
 
-xdescribe('Products Reducer', () => {
+describe('Products Reducer', () => {
   const state = productsReducer(
     undefined,
     new Actions.AddAction(ItemId.WoodenChest)
@@ -19,9 +23,14 @@ xdescribe('Products Reducer', () => {
       };
       const result = productsReducer(
         undefined,
-        new App.LoadAction({ productsState } as any)
+        new App.LoadAction({ productsState })
       );
       expect(result).toEqual(productsState);
+    });
+
+    it('should skip loading products state if null', () => {
+      const result = productsReducer(undefined, new App.LoadAction({}));
+      expect(result).toEqual(initialProductsState);
     });
   });
 
@@ -126,6 +135,23 @@ xdescribe('Products Reducer', () => {
         new Actions.SetViaAction({ id: Mocks.Product1.id, value })
       );
       expect(result.entities[Mocks.Product1.id].viaId).toEqual(value);
+    });
+  });
+
+  describe('RESET_VIA', () => {
+    it('should reset the via of a product', () => {
+      let result = productsReducer(
+        state,
+        new Actions.SetViaAction({
+          id: Mocks.Product1.id,
+          value: RecipeId.AdvancedOilProcessing,
+        })
+      );
+      result = productsReducer(
+        result,
+        new Actions.ResetViaAction(Mocks.Product1.id)
+      );
+      expect(result.entities[Mocks.Product1.id].viaId).toBeUndefined();
     });
   });
 

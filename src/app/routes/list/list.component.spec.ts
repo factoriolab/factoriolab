@@ -33,6 +33,7 @@ import {
 import {
   DisplayRateLabelPipe,
   FactoryRatePipe,
+  GtZeroPipe,
   PowerPipe,
   RatePipe,
   StepHrefPipe,
@@ -86,6 +87,7 @@ describe('ListComponent', () => {
         FactoryRatePipe,
         PowerPipe,
         StepHrefPipe,
+        GtZeroPipe,
         ListComponent,
         TestListComponent,
       ],

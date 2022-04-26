@@ -47,6 +47,6 @@ export const getItemSettings = createSelector(
 
 export const getItemsModified = createSelector(itemsState, (state) => ({
   ignore: Object.keys(state).some((id) => state[id].ignore != null),
-  belts: Object.keys(state).some((id) => state[id].belt),
-  wagons: Object.keys(state).some((id) => state[id].wagon),
+  belts: Object.keys(state).some((id) => state[id].belt != null),
+  wagons: Object.keys(state).some((id) => state[id].wagon != null),
 }));

@@ -12,10 +12,26 @@ import {
   SimplexUtility,
   RecipeUtility,
 } from '~/utilities';
+import * as Items from '../items';
+import * as Recipes from '../recipes';
 import * as Settings from '../settings';
 import * as Selectors from './products.selectors';
 
-xdescribe('Products Selectors', () => {
+describe('Products Selectors', () => {
+  describe('Base selector functions', () => {
+    it('should get slices of state', () => {
+      expect(
+        Selectors.productsState({ productsState: Mocks.ProductsState } as any)
+      ).toEqual(Mocks.ProductsState);
+      expect(Selectors.getIds.projector(Mocks.ProductsState)).toEqual(
+        Mocks.ProductsState.ids
+      );
+      expect(Selectors.getEntities.projector(Mocks.ProductsState)).toEqual(
+        Mocks.ProductsState.entities
+      );
+    });
+  });
+
   describe('getBaseProducts', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getBaseProducts.projector([], {}, {});
@@ -79,6 +95,16 @@ xdescribe('Products Selectors', () => {
         null
       );
       expect(RecipeUtility.adjustProduct).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('getProductOptions', () => {
+    it('should map product steps to a list of options', () => {
+      const result = Selectors.getProductOptions.projector(
+        Mocks.ProductsList,
+        Mocks.ProductSteps
+      );
+      expect(Object.keys(result).length).toEqual(Mocks.ProductsList.length);
     });
   });
 
@@ -228,6 +254,21 @@ xdescribe('Products Selectors', () => {
       expect(result[Mocks.Product2.id].nonzero()).toBeTrue();
     });
 
+    it('should return the rate entities by via setting', () => {
+      const result = Selectors.getNormalizedRatesByBelts.projector(
+        [
+          {
+            ...Mocks.RationalProducts[1],
+            ...{ viaSetting: ItemId.TransportBelt },
+          },
+        ],
+        null,
+        { [Mocks.Product2.itemId]: Mocks.ItemSettings1 },
+        { [Mocks.ItemSettings1.belt!]: Rational.one }
+      );
+      expect(result[Mocks.Product2.id].nonzero()).toBeTrue();
+    });
+
     it('should calculate using via step', () => {
       const result = Selectors.getNormalizedRatesByBelts.projector(
         [
@@ -237,6 +278,27 @@ xdescribe('Products Selectors', () => {
             rate: Rational.one,
             rateType: RateType.Belts,
             viaId: RecipeId.IronOre,
+          },
+        ],
+        {
+          [ItemId.Coal]: [[ItemId.IronOre, Rational.two]],
+        },
+        Mocks.ItemSettingsInitial,
+        Mocks.BeltSpeed
+      );
+      expect(result['0']).toEqual(Rational.from(15, 2));
+    });
+
+    it('should calculate using via step and setting', () => {
+      const result = Selectors.getNormalizedRatesByBelts.projector(
+        [
+          {
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Belts,
+            viaId: RecipeId.IronOre,
+            viaSetting: ItemId.TransportBelt,
           },
         ],
         {
@@ -291,6 +353,22 @@ xdescribe('Products Selectors', () => {
       expect(result[Mocks.Product3.id].nonzero()).toBeTrue();
     });
 
+    it('should return the rate entities by via setting', () => {
+      const result = Selectors.getNormalizedRatesByWagons.projector(
+        [
+          {
+            ...Mocks.RationalProducts[2],
+            ...{ viaSetting: ItemId.CargoWagon },
+          },
+        ],
+        null,
+        Mocks.ItemSettingsInitial,
+        DisplayRate.PerHour,
+        Mocks.Data
+      );
+      expect(result[Mocks.Product3.id].nonzero()).toBeTrue();
+    });
+
     it('should return the rate entities for items', () => {
       const result = Selectors.getNormalizedRatesByWagons.projector(
         [Mocks.RationalProducts[0]],
@@ -311,6 +389,39 @@ xdescribe('Products Selectors', () => {
             rate: Rational.one,
             rateType: RateType.Wagons,
             viaId: RecipeId.IronOre,
+          },
+          {
+            id: '1',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Wagons,
+            viaId: ItemId.PetroleumGas,
+          },
+        ],
+        {
+          [ItemId.Coal]: [
+            [ItemId.IronOre, Rational.two],
+            [ItemId.PetroleumGas, Rational.one],
+          ],
+        },
+        Mocks.ItemSettingsInitial,
+        DisplayRate.PerMinute,
+        Mocks.AdjustedData
+      );
+      expect(result['0']).toEqual(Rational.from(50, 3));
+      expect(result['1']).toEqual(Rational.from(1250, 3));
+    });
+
+    it('should calculate using via step and setting', () => {
+      const result = Selectors.getNormalizedRatesByWagons.projector(
+        [
+          {
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Wagons,
+            viaId: RecipeId.IronOre,
+            viaSetting: ItemId.CargoWagon,
           },
           {
             id: '1',
@@ -620,6 +731,30 @@ xdescribe('Products Selectors', () => {
     });
   });
 
+  describe('getNormalizedStepsWithOutputs', () => {
+    it('should call utility to calculate outputs', () => {
+      spyOn(RateUtility, 'calculateOutputs');
+      Selectors.getNormalizedStepsWithOutputs.projector(
+        Mocks.Steps,
+        Mocks.AdjustedData
+      );
+      expect(RateUtility.calculateOutputs).toHaveBeenCalled();
+    });
+  });
+
+  describe('getNormalizedStepsWithBeacons', () => {
+    it('should call utility to calculate beacons', () => {
+      spyOn(RateUtility, 'calculateBeacons');
+      Selectors.getNormalizedStepsWithBeacons.projector(
+        Mocks.Steps,
+        Rational.one,
+        {},
+        Mocks.AdjustedData
+      );
+      expect(RateUtility.calculateBeacons).toHaveBeenCalled();
+    });
+  });
+
   describe('getSteps', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getSteps.projector([], null);
@@ -648,6 +783,13 @@ xdescribe('Products Selectors', () => {
     });
   });
 
+  describe('checkViaState', () => {
+    it('should select products and rates', () => {
+      const result = Selectors.checkViaState.projector([], {});
+      expect(result).toEqual({ products: [], rates: {} });
+    });
+  });
+
   describe('getZipState', () => {
     it('should put together the required state parts', () => {
       const products = Mocks.ProductsState;
@@ -667,6 +809,18 @@ xdescribe('Products Selectors', () => {
       expect(result.recipes).toBe(recipes);
       expect(result.factories).toBe(factories);
       expect(result.settings).toBe(settings);
+    });
+  });
+
+  describe('getStepsModified', () => {
+    it('should determine which steps have modified item or recipe settings', () => {
+      const result = Selectors.getStepsModified.projector(
+        Mocks.Steps,
+        Items.initialItemsState,
+        Recipes.initialRecipesState
+      );
+      expect(result.items[Mocks.Step1.itemId!]).toBeFalse();
+      expect(result.recipes[Mocks.Step1.recipeId!]).toBeFalse();
     });
   });
 });

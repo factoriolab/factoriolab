@@ -3,7 +3,7 @@ import * as Settings from '../settings';
 import { initialItemsState } from './items.reducer';
 import * as Selectors from './items.selectors';
 
-xdescribe('Items Selectors', () => {
+describe('Items Selectors', () => {
   const stringValue = 'value';
 
   describe('getItemSettings', () => {
@@ -51,6 +51,17 @@ xdescribe('Items Selectors', () => {
         { ...Settings.initialSettingsState, ...{ pipe: 'pipeValue' } }
       );
       expect(result[ItemId.CrudeOil].belt).toEqual('pipeValue');
+    });
+  });
+
+  describe('getItemsModified', () => {
+    it('should determine whether columns are modified', () => {
+      const result = Selectors.getItemsModified.projector(
+        Mocks.ItemSettingsInitial
+      );
+      expect(result.ignore).toBeTrue();
+      expect(result.belts).toBeTrue();
+      expect(result.wagons).toBeTrue();
     });
   });
 });

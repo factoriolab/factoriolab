@@ -1,41 +1,37 @@
 import { TestBed } from '@angular/core/testing';
-import { EffectsModule } from '@ngrx/effects';
-import { Action, Store, StoreModule } from '@ngrx/store';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { Action } from '@ngrx/store';
+import { ReplaySubject } from 'rxjs';
 
 import { DisplayRate } from '~/models';
-import { reducers, metaReducers, LabState } from '..';
 import * as Settings from '../settings';
-import { AdjustDisplayRateAction } from './products.actions';
+import * as Actions from './products.actions';
 import { ProductsEffects } from './products.effects';
 
-xdescribe('ProductsEffects', () => {
-  let store: Store<LabState>;
+describe('ProductsEffects', () => {
   let effects: ProductsEffects;
+  let actions: ReplaySubject<any>;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [
-        StoreModule.forRoot(reducers, { metaReducers }),
-        EffectsModule.forRoot([ProductsEffects]),
-      ],
+      providers: [provideMockActions(() => actions), ProductsEffects],
     });
 
-    store = TestBed.inject(Store);
     effects = TestBed.inject(ProductsEffects);
   });
 
   describe('adjustDisplayRate$', () => {
     it('should dispatch an action to adjust product rates', () => {
-      spyOn(store, 'dispatch').and.callThrough();
-      const effect: Action[] = [];
-      effects.adjustDisplayRate$.subscribe((a) => effect.push(a));
-      store.dispatch(
+      actions = new ReplaySubject(1);
+      actions.next(
         new Settings.SetDisplayRateAction({
           value: DisplayRate.PerSecond,
           prev: DisplayRate.PerMinute,
         })
       );
-      expect(effect).toEqual([new AdjustDisplayRateAction('1/60')]);
+      const results: Action[] = [];
+      effects.adjustDisplayRate$.subscribe((a) => results.push(a));
+      expect(results).toEqual([new Actions.AdjustDisplayRateAction('1/60')]);
     });
   });
 });
