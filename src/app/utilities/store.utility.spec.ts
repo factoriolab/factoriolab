@@ -1,7 +1,7 @@
 import { Mocks, ItemId } from 'src/tests';
 import { StoreUtility } from './store.utility';
 
-xdescribe('StoreUtility', () => {
+describe('StoreUtility', () => {
   describe('rankEquals', () => {
     it('should check lengths', () => {
       expect(StoreUtility.rankEquals(['a'], ['a', 'b'])).toBeFalse();
@@ -13,6 +13,10 @@ xdescribe('StoreUtility', () => {
 
     it('should check equal ranks', () => {
       expect(StoreUtility.rankEquals(['a', 'b'], ['a', 'b'])).toBeTrue();
+    });
+
+    it('should handle null comparison value', () => {
+      expect(StoreUtility.rankEquals(['a'], undefined)).toBeFalse();
     });
   });
 
@@ -27,6 +31,10 @@ xdescribe('StoreUtility', () => {
 
     it('should check equal arrays', () => {
       expect(StoreUtility.arrayEquals(['a', 'b'], ['a', 'b'])).toBeTrue();
+    });
+
+    it('should handle null comparison value', () => {
+      expect(StoreUtility.arrayEquals(['a'], undefined)).toBeFalse();
     });
   });
 
@@ -177,7 +185,9 @@ xdescribe('StoreUtility', () => {
 
   describe('compareValue', () => {
     it('should return null if equal to default', () => {
-      expect(StoreUtility.compareValue({ value: 'a', def: 'a' })).toBeNull();
+      expect(
+        StoreUtility.compareValue({ value: 'a', def: 'a' })
+      ).toBeUndefined();
     });
 
     it('should return value if not equal to default', () => {
@@ -189,7 +199,7 @@ xdescribe('StoreUtility', () => {
     it('should return null if equal to default', () => {
       expect(
         StoreUtility.compareValues({ value: ['a', 'b'], def: ['b', 'a'] })
-      ).toBeNull();
+      ).toBeUndefined();
     });
 
     it('should return value if not equal to default', () => {
@@ -201,7 +211,7 @@ xdescribe('StoreUtility', () => {
 
   describe('compareRank', () => {
     it('should return null if equal to default', () => {
-      expect(StoreUtility.compareRank(['a', 'b'], ['a', 'b'])).toBeNull();
+      expect(StoreUtility.compareRank(['a', 'b'], ['a', 'b'])).toBeUndefined();
     });
 
     it('should return value if not equal to default', () => {

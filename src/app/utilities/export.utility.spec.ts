@@ -1,20 +1,9 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import {
-  Step,
-  Rational,
-  ItemSettings,
-  RecipeSettings,
-  AllColumns,
-} from '~/models';
+import { Step, Rational, ItemSettings, RecipeSettings } from '~/models';
 import * as Preferences from '~/store/preferences';
 import { ExportUtility } from './export.utility';
 
-xdescribe('ExportUtility', () => {
-  const noCols = AllColumns.reduce((e: Preferences.ColumnsState, c) => {
-    e[c] = { show: false, precision: 1 };
-    return e;
-  }, {});
-
+describe('ExportUtility', () => {
   describe('saveAsCsv', () => {
     it('should save the csv', () => {
       spyOn(ExportUtility, 'saveAsCsv');
@@ -30,10 +19,15 @@ xdescribe('ExportUtility', () => {
   });
 
   describe('stepToJson', () => {
-    const itemId = ItemId.Coal;
-    const recipeId = RecipeId.Coal;
+    const itemId = ItemId.IronPlate;
+    const recipeId = RecipeId.IronPlate;
+    const inStep: Step = {
+      id: '0',
+      itemId: ItemId.IronOre,
+      parents: { [recipeId]: Rational.one },
+    };
     const fullStep: Step = {
-      id: 'id',
+      id: '1',
       itemId,
       items: Rational.from(3),
       surplus: Rational.two,
@@ -42,13 +36,14 @@ xdescribe('ExportUtility', () => {
       factories: Rational.from(5),
       power: Rational.from(6),
       pollution: Rational.from(7),
+      outputs: { [itemId]: Rational.from(8) },
+      parents: { [RecipeId.ElectronicCircuit]: Rational.from(9) },
       recipeId,
     };
     const minStep: Step = {
-      id: 'id',
-      itemId,
-      items: Rational.one,
-      recipeId,
+      id: '2',
+      itemId: itemId,
+      recipeId: recipeId,
     };
     const itemS: ItemSettings = {
       belt: 'belt',
@@ -61,16 +56,11 @@ xdescribe('ExportUtility', () => {
       beacon: 'beacon',
       beaconModules: ['c', 'd'],
     };
-    const minRecipe: RecipeSettings = {
-      factory: ItemId.AssemblingMachine1,
-      beaconCount: '8',
-      beacon: 'beacon',
-    };
 
     it('should fill in all fields', () => {
       const result = ExportUtility.stepToJson(
         fullStep,
-        [fullStep],
+        [inStep, fullStep],
         Preferences.initialColumnsState,
         { [itemId]: itemS },
         { [recipeId]: fullRecipe },
@@ -80,9 +70,9 @@ xdescribe('ExportUtility', () => {
         Item: itemId,
         Items: '=1',
         Surplus: '=2',
-        Inputs: '',
-        Outputs: '',
-        Targets: '',
+        Inputs: '"iron-ore:1"',
+        Outputs: '"iron-plate:8"',
+        Targets: '"electronic-circuit:9"',
         Belts: '=3',
         Belt: itemS.belt,
         Wagons: '=4',
@@ -105,120 +95,19 @@ xdescribe('ExportUtility', () => {
         [minStep],
         Preferences.initialColumnsState,
         { [itemId]: itemS },
-        { [recipeId]: minRecipe },
-        Mocks.AdjustedData
-      );
-      expect(result).toEqual({
-        Item: itemId,
-        Items: '=1',
-        Surplus: '',
-        Inputs: '',
-        Outputs: '',
-        Targets: '',
-        Belts: '',
-        Belt: itemS.belt,
-        Wagons: '',
-        Wagon: itemS.wagon,
-        Recipe: recipeId,
-        Factories: '',
-        Factory: minRecipe.factory,
-        Power: '',
-        Pollution: '',
-      });
-    });
-
-    it('should handle minimum columns', () => {
-      const result = ExportUtility.stepToJson(
-        fullStep,
-        [fullStep],
-        noCols,
-        { [itemId]: itemS },
         { [recipeId]: fullRecipe },
         Mocks.AdjustedData
       );
       expect(result).toEqual({
         Item: itemId,
-        Items: '=1',
-        Surplus: '=2',
-        Inputs: '',
-        Outputs: '',
-        Targets: '',
+        Belt: 'belt',
+        Wagon: 'wagon',
         Recipe: recipeId,
-      });
-    });
-
-    it('should handle no recipe', () => {
-      const step = { ...fullStep, ...{ recipeId: undefined } };
-      const result = ExportUtility.stepToJson(
-        step,
-        [step],
-        noCols,
-        { [itemId]: itemS },
-        { [recipeId]: fullRecipe },
-        Mocks.AdjustedData
-      );
-      expect(result).toEqual({
-        Item: itemId,
-        Items: '=1',
-        Surplus: '=2',
-        Inputs: '',
-        Outputs: '',
-        Targets: '',
-      });
-    });
-
-    it('should handle no items', () => {
-      const step = { ...minStep, ...{ items: undefined } };
-      const result = ExportUtility.stepToJson(
-        step,
-        [step],
-        noCols,
-        { [itemId]: itemS },
-        { [recipeId]: fullRecipe },
-        Mocks.AdjustedData
-      );
-      expect(result).toEqual({
-        Item: itemId,
-        Items: '',
-        Surplus: '',
-        Inputs: '',
-        Outputs: '',
-        Targets: '',
-        Recipe: recipeId,
-      });
-    });
-
-    it('should handle outputs and targets', () => {
-      const step: Step = {
-        id: 'id',
-        itemId: ItemId.PlasticBar,
-        items: Rational.one,
-        recipeId: RecipeId.PlasticBar,
-        outputs: { [ItemId.PlasticBar]: Rational.one },
-        parents: { [RecipeId.AdvancedCircuit]: Rational.one },
-      };
-      const inStep: Step = {
-        id: 'id',
-        itemId: ItemId.Coal,
-        items: Rational.one,
-        parents: { [RecipeId.PlasticBar]: Rational.one },
-      };
-      const result = ExportUtility.stepToJson(
-        step,
-        [step, inStep],
-        noCols,
-        { [itemId]: itemS },
-        { [RecipeId.PlasticBar]: fullRecipe },
-        Mocks.AdjustedData
-      );
-      expect(result).toEqual({
-        Item: ItemId.PlasticBar,
-        Items: '=1',
-        Surplus: '',
-        Inputs: `"${ItemId.Coal}:1"`,
-        Outputs: `"${ItemId.PlasticBar}:1"`,
-        Targets: `"${ItemId.AdvancedCircuit}:1"`,
-        Recipe: RecipeId.PlasticBar,
+        Factory: ItemId.AssemblingMachine2,
+        FactoryModules: '"a,b"',
+        Beacons: '8',
+        Beacon: ItemId.Beacon,
+        BeaconModules: '"c,d"',
       });
     });
   });

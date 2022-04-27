@@ -19,12 +19,12 @@ const JSON_TYPE = 'text/json;charset=UTF-8';
 const JSON_EXTENSION = '.json';
 
 export interface StepExport {
-  Item: string;
-  Items: string;
-  Surplus: string;
-  Inputs: string;
-  Outputs: string;
-  Targets: string;
+  Item?: string;
+  Items?: string;
+  Surplus?: string;
+  Inputs?: string;
+  Outputs?: string;
+  Targets?: string;
   Belts?: string;
   Belt?: string;
   Wagons?: string;
@@ -84,55 +84,53 @@ export class ExportUtility {
     recipeSettings: Entities<RecipeSettings>,
     data: Dataset
   ): StepExport {
-    const exp: StepExport = {
-      Item: step.itemId ?? '',
-      Items:
-        step.items != null
-          ? '=' + step.items.sub(step.surplus || Rational.zero).toString()
-          : '',
-      Surplus: step.surplus != null ? '=' + step.surplus.toString() : '',
-      Inputs: '',
-      Outputs:
-        step.outputs != null
-          ? `"${Object.keys(step.outputs)
-              .map((o) => `${o}:${step.outputs?.[o].toString()}`)
-              .join(',')}"`
-          : '',
-      Targets:
-        step.parents != null
-          ? `"${Object.keys(step.parents)
-              .map((p) => `${p}:${step.parents?.[p].toString()}`)
-              .join(',')}"`
-          : '',
-    };
-    if (columns[Column.Belts].show) {
-      exp.Belts = step.belts ? '=' + step.belts.toString() : '';
-      exp.Belt = step.itemId != null ? itemSettings[step.itemId].belt : '';
-    }
-    if (columns[Column.Wagons].show) {
-      exp.Wagons = step.wagons ? '=' + step.wagons.toString() : '';
-      exp.Wagon = step.itemId != null ? itemSettings[step.itemId].wagon : '';
+    const exp: StepExport = {};
+    if (step.itemId != null) {
+      exp.Item = step.itemId;
+      const settings = itemSettings[step.itemId];
+      if (step.items != null) {
+        exp.Items =
+          '=' + step.items.sub(step.surplus ?? Rational.zero).toString();
+      }
+      if (step.surplus != null) {
+        exp.Surplus = '=' + step.surplus.toString();
+      }
+      if (columns[Column.Belts].show) {
+        if (step.belts != null) {
+          exp.Belts = '=' + step.belts.toString();
+        }
+        exp.Belt = settings.belt;
+      }
+      if (columns[Column.Wagons].show) {
+        if (step.wagons != null) {
+          exp.Wagons = '=' + step.wagons.toString();
+        }
+        exp.Wagon = settings.wagon;
+      }
     }
     if (step.recipeId != null) {
+      const recipeId = step.recipeId; // Store non-null
       exp.Recipe = step.recipeId;
       const recipe = data.recipeR[step.recipeId];
-      exp.Inputs = `"${Object.keys(recipe.in)
+      const settings = recipeSettings[step.recipeId];
+      const inputs = Object.keys(recipe.in)
         .map((i) => {
           const inStep = steps.find((s) => s.itemId === i);
-          return [
-            i,
-            step.recipeId ? inStep?.parents?.[step.recipeId]?.toString() : '',
-          ];
+          return [i, inStep?.parents?.[recipeId]?.toString()];
         })
         .filter((v) => v[1])
         .map((v) => `${v[0]}:${v[1]}`)
-        .join(',')}"`;
-      const settings = recipeSettings[step.recipeId];
+        .join(',');
+      if (inputs) {
+        exp.Inputs = `"${inputs}"`;
+      }
       if (settings.factory != null) {
         const factory = data.factoryEntities[settings.factory];
         const allowsModules = RecipeUtility.allowsModules(recipe, factory);
         if (columns[Column.Factories].show) {
-          exp.Factories = step.factories ? '=' + step.factories.toString() : '';
+          if (step.factories != null) {
+            exp.Factories = '=' + step.factories.toString();
+          }
           exp.Factory = settings.factory;
           if (allowsModules && settings.factoryModules != null) {
             exp.FactoryModules = `"${settings.factoryModules.join(',')}"`;
@@ -146,12 +144,30 @@ export class ExportUtility {
           }
         }
         if (columns[Column.Power].show) {
-          exp.Power = step.power ? '=' + step.power.toString() : '';
+          if (step.power != null) {
+            exp.Power = '=' + step.power.toString();
+          }
         }
         if (columns[Column.Pollution].show) {
-          exp.Pollution = step.pollution ? '=' + step.pollution.toString() : '';
+          if (step.pollution != null) {
+            exp.Pollution = '=' + step.pollution.toString();
+          }
         }
       }
+    }
+    if (step.outputs != null) {
+      const outputs = step.outputs; // Store as non-null
+      const outputsStr = Object.keys(outputs)
+        .map((o) => `${o}:${outputs[o].toString()}`)
+        .join(',');
+      exp.Outputs = `"${outputsStr}"`;
+    }
+    if (step.parents != null) {
+      const parents = step.parents; // Store as non-null
+      const parentsStr = Object.keys(parents)
+        .map((p) => `${p}:${parents[p].toString()}`)
+        .join(',');
+      exp.Targets = `"${parentsStr}"`;
     }
     return exp;
   }

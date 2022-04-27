@@ -2,9 +2,23 @@ import { STATE_KEY } from '~/models';
 import * as Settings from '~/store/settings';
 import { BrowserUtility } from './browser.utility';
 
-xdescribe('BrowserUtility', () => {
+describe('BrowserUtility', () => {
   afterEach(() => {
     localStorage.clear();
+  });
+
+  describe('storedState', () => {
+    it('should get the local property', () => {
+      expect(BrowserUtility.storedState).toEqual(
+        BrowserUtility['_storedState']
+      );
+    });
+  });
+
+  describe('href', () => {
+    it('should get the window property', () => {
+      expect(BrowserUtility.href).toEqual(location.href);
+    });
   });
 
   describe('zip', () => {
@@ -15,12 +29,12 @@ xdescribe('BrowserUtility', () => {
 
     it('should check for hash length', () => {
       spyOnProperty(BrowserUtility, 'hash').and.returnValue('z');
-      expect(BrowserUtility.zip).toBeFalse();
+      expect(BrowserUtility.zip).toEqual('');
     });
 
     it('should check for = in hash', () => {
       spyOnProperty(BrowserUtility, 'hash').and.returnValue('zz');
-      expect(BrowserUtility.zip).toBeFalse();
+      expect(BrowserUtility.zip).toEqual('');
     });
 
     it('should use valid hash as zip state', () => {
