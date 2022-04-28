@@ -206,7 +206,7 @@ defined cost, usually mining."
           <button
             *ngIf="vm.recipeRaw[id]?.cost"
             title="Undo recipe cost modification"
-            (click)="setRecipeCost(id, undefined)"
+            (click)="setRecipeCost(id)"
           >
             <i class="material-icons">undo</i>
           </button>

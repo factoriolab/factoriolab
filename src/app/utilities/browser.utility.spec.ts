@@ -57,7 +57,7 @@ describe('BrowserUtility', () => {
     it('should clean up if an error is encountered', () => {
       localStorage.setItem(STATE_KEY, 'test');
       spyOn(console, 'error');
-      expect(BrowserUtility.loadState()).toBeUndefined();
+      expect(BrowserUtility.loadState()).toBeNull();
       expect(console.error).toHaveBeenCalledTimes(2);
       expect(localStorage.getItem(STATE_KEY)).toBeNull();
     });
@@ -88,9 +88,7 @@ describe('BrowserUtility', () => {
     });
 
     it('should return the initial state if nothing is stored', () => {
-      spyOnProperty(BrowserUtility, 'storedState', 'get').and.returnValue(
-        undefined
-      );
+      spyOnProperty(BrowserUtility, 'storedState', 'get').and.returnValue(null);
       const state: any = { a: 'a' };
       expect(BrowserUtility.mergeState(state)).toEqual(state);
     });

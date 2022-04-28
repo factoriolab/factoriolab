@@ -256,7 +256,7 @@ describe('RouterService', () => {
     it('should return null for no items', () => {
       expect(
         service.stepHref({ id: '', itemId: ItemId.Wood }, Mocks.Hash)
-      ).toBeUndefined();
+      ).toBeNull();
     });
 
     it('should return get the hash for a specific step', () => {

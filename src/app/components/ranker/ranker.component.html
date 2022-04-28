@@ -37,7 +37,7 @@
         [iconId]="id"
         [text]="text(id)"
         [tooltip]="
-          vm.data.itemEntities[id] ? vm.data.itemEntities[id].name : undefined
+          vm.data.itemEntities[id] ? vm.data.itemEntities[id].name : null
         "
         [item]="vm.data.itemEntities[id]"
         [scrollTop]="scroll.scrollTop"

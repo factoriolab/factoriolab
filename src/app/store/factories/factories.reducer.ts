@@ -5,12 +5,11 @@ import * as Settings from '../settings';
 import { FactoriesAction, FactoriesActionType } from './factories.actions';
 
 export type FactoriesState = {
-  ids: string[] | undefined;
+  ids?: string[];
   entities: Entities<FactorySettings>;
 };
 
 export const initialFactoriesState: FactoriesState = {
-  ids: undefined,
   entities: {},
 };
 

@@ -285,7 +285,7 @@ export class SettingsComponent implements OnInit {
 
   toggleBeaconPower(settings: Settings.SettingsState): void {
     if (settings.beaconReceivers) {
-      this.setBeaconReceivers(undefined);
+      this.setBeaconReceivers(null);
     } else {
       this.setBeaconReceivers('1');
     }
@@ -358,7 +358,7 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Factories.SetOverclockAction({ id, value, def }));
   }
 
-  setBeaconReceivers(value: string | undefined): void {
+  setBeaconReceivers(value: string | null): void {
     this.store.dispatch(new Settings.SetBeaconReceiversAction(value));
   }
 

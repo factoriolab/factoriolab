@@ -57,11 +57,11 @@ export class RankerComponent
     }
   }
 
-  text(id: string): string | undefined {
+  text(id: string): string | null {
     if (this.editValue.length > 0 && this.editValue.indexOf(id) !== -1) {
       return (this.editValue.indexOf(id) + 1).toString();
     }
-    return undefined;
+    return null;
   }
 
   canAdd(id: string, data: Dataset): boolean {

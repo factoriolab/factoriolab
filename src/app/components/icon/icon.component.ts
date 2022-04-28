@@ -33,17 +33,17 @@ export class IconComponent implements OnChanges {
   @Input() iconId: string | undefined;
   @Input() scale = true;
   @Input() text: string | undefined;
-  @Input() tooltip: string | undefined;
+  @Input() tooltip: string | null | undefined;
   @Input() hoverIcon: string | undefined;
   @Input() scrollTop = 0;
   @Input() scrollLeft = 0;
-  @Input() recipe: Recipe | undefined;
-  @Input() item: RationalItem | undefined;
+  @Input() recipe: Recipe | null | undefined;
+  @Input() item: RationalItem | null | undefined;
 
   game$ = this.store.select(Settings.getGame);
   displayRate$ = this.store.select(Settings.getDisplayRate);
 
-  icon: Icon | undefined;
+  icon: Icon | null | undefined;
   hover = false;
   tooltipMarginTop = 40;
 
@@ -77,7 +77,7 @@ export class IconComponent implements OnChanges {
               return;
             }
           }
-          this.icon = this.iconId ? iconEntities[this.iconId] : undefined;
+          this.icon = this.iconId ? iconEntities[this.iconId] : null;
         });
     }
   }
@@ -106,14 +106,14 @@ export class IconComponent implements OnChanges {
     }
   }
 
-  toBonusPercent(value: Rational): string | undefined {
+  toBonusPercent(value: Rational): string | null {
     const rational = this.round(value.mul(Rational.hundred));
     if (value.gt(Rational.zero)) {
       return `+${rational}%`;
     } else if (value.lt(Rational.zero)) {
       return `${rational}%`;
     } else {
-      return undefined;
+      return null;
     }
   }
 }

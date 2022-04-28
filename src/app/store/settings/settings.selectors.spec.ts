@@ -51,7 +51,7 @@ describe('Settings Selectors', () => {
   describe('getDefaults', () => {
     it('should handle null base data', () => {
       const result = Selectors.getDefaults.projector(null, null);
-      expect(result).toBeUndefined();
+      expect(result).toBeNull();
     });
 
     it('should use minimum values', () => {
@@ -208,7 +208,7 @@ describe('Settings Selectors', () => {
 
     it('should handle null setting', () => {
       const result = Selectors.getRationalBeaconReceivers.projector(undefined);
-      expect(result).toBeUndefined();
+      expect(result).toBeNull();
     });
   });
 

@@ -439,15 +439,16 @@ export class RecipeUtility {
     disabledRecipes: string[],
     data: Dataset
   ): string | undefined {
+    let recipeId: string | undefined;
     const recipes = data.recipeIds
       .map((r) => data.recipeR[r])
       .filter(
         (r) => r.produces(itemId) && disabledRecipes.indexOf(r.id) === -1
       );
     if (recipes.length === 1 && Object.keys(recipes[0].out).length === 1) {
-      return recipes[0].id;
+      recipeId = recipes[0].id;
     }
-    return undefined;
+    return recipeId;
   }
 
   static adjustRecipes(

@@ -86,7 +86,7 @@ export class DatasetsEffects {
 
   load(
     zip: string,
-    stored: Partial<LabState> | undefined,
+    stored: Partial<LabState> | null,
     initial: Settings.SettingsState
   ): void {
     if (!zip) {

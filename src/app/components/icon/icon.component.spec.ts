@@ -104,7 +104,7 @@ describe('IconComponent', () => {
     it('should handle undefined icon id', () => {
       component.iconId = undefined;
       fixture.detectChanges();
-      expect(component.child.icon).toBeUndefined();
+      expect(component.child.icon).toBeNull();
     });
   });
 
@@ -158,7 +158,7 @@ describe('IconComponent', () => {
     });
 
     it('should handle zero percentage bonus', () => {
-      expect(component.child.toBonusPercent(Rational.zero)).toBeUndefined();
+      expect(component.child.toBonusPercent(Rational.zero)).toBeNull();
     });
   });
 });

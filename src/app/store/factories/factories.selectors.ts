@@ -20,18 +20,15 @@ export const getFactories = createSelector(
     const entities: Entities<FactorySettings> = {};
     const def: FactorySettings = { ...state.entities[''] };
     def.moduleRank = def.moduleRank || defaults?.moduleRank || [];
-    def.beaconCount =
-      data.game === Game.Factorio
-        ? def.beaconCount || defaults?.beaconCount
-        : undefined;
+    if (data.game === Game.Factorio) {
+      def.beaconCount = def.beaconCount || defaults?.beaconCount;
+    }
     def.beacon = def.beacon || defaults?.beacon;
     def.beaconModule = def.beaconModule || defaults?.beaconModule;
-    def.overclock =
-      data.game === Game.Satisfactory
-        ? def.overclock
-          ? def.overclock
-          : 100 // Default = 100%
-        : undefined;
+    if (data.game === Game.Satisfactory) {
+      // Default = 100%
+      def.overclock = def.overclock || 100;
+    }
     entities[''] = def;
 
     for (const id of data.factoryIds.filter((i) => data.itemEntities[i])) {

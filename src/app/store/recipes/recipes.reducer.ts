@@ -1,4 +1,4 @@
-import { Entities, RecipeSettings } from '~/models';
+import { DefaultIdPayload, Entities, RecipeSettings } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Settings from '../settings';
@@ -41,10 +41,11 @@ export function recipesReducer(
     case RecipesActionType.SET_OVERCLOCK:
       return StoreUtility.compareReset(state, 'overclock', action.payload);
     case RecipesActionType.SET_COST:
-      return StoreUtility.compareReset(state, 'cost', {
-        ...action.payload,
-        ...{ def: undefined },
-      });
+      return StoreUtility.compareReset(
+        state,
+        'cost',
+        action.payload as DefaultIdPayload
+      );
     case RecipesActionType.RESET_RECIPE: {
       const newState = { ...state };
       delete newState[action.payload];

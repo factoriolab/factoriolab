@@ -79,7 +79,7 @@ describe('RankerComponent', () => {
 
     it('should return for null for mismatched id', () => {
       component.child.editValue = [];
-      expect(component.child.text('id')).toBeUndefined();
+      expect(component.child.text('id')).toBeNull();
     });
   });
 

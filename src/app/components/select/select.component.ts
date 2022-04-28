@@ -31,7 +31,7 @@ export class SelectComponent
   @Input() options: string[] = [];
   @Input() selectType = IdType.Item;
   @Input() includeEmptyModule = false;
-  @Input() columns: number | undefined;
+  @Input() columns: number | null | undefined;
 
   @Output() selectId = new EventEmitter<string>();
 

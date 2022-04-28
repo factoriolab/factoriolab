@@ -312,7 +312,7 @@ describe('SettingsComponent', () => {
         ...Mocks.SettingsState1,
         ...{ beaconReceivers: '1' },
       });
-      expect(component.setBeaconReceivers).toHaveBeenCalledWith(undefined);
+      expect(component.setBeaconReceivers).toHaveBeenCalledWith(null);
     });
 
     it('should turn on beacon power estimation', () => {

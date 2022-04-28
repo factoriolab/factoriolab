@@ -179,9 +179,9 @@ export class RouterService {
     );
   }
 
-  stepHref(step: Step, hash: ModHash | undefined): string | undefined {
+  stepHref(step: Step, hash: ModHash | undefined): string | null {
     if (step.items == null || step.itemId == null || hash == null) {
-      return undefined;
+      return null;
     }
     const products: Product[] = [
       {
@@ -902,7 +902,6 @@ export class RouterService {
           costIgnored: this.parseString(s[i++]),
           beaconReceivers: this.parseString(s[i++]),
           proliferatorSpray: this.parseString(s[i++]),
-          preset: undefined,
         };
         break;
       }
@@ -958,7 +957,6 @@ export class RouterService {
           costIgnored: this.parseString(s[i++]),
           beaconReceivers: this.parseString(s[i++]),
           proliferatorSpray: this.parseNString(s[i++], hash.modules),
-          baseId: undefined,
         };
         break;
       }
@@ -1012,7 +1010,10 @@ export class RouterService {
       : EMPTY;
   }
 
-  zipDiffString(value: string | undefined, init: string | undefined): string {
+  zipDiffString(
+    value: string | null | undefined,
+    init: string | null | undefined
+  ): string {
     return value === init ? '' : value == null ? NULL : value;
   }
 

@@ -237,7 +237,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
   ): void {
     if (itemSettings[itemId].recipe === recipeId) {
       // Reset to null
-      this.setDefaultRecipe(itemId, undefined, undefined);
+      this.setDefaultRecipe(itemId);
     } else {
       // Set default recipe
       this.setDefaultRecipe(
@@ -457,11 +457,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     this.store.dispatch(new Settings.SetDisabledRecipesAction({ value, def }));
   }
 
-  setDefaultRecipe(
-    id: string,
-    value: string | undefined,
-    def: string | undefined
-  ): void {
+  setDefaultRecipe(id: string, value?: string, def?: string): void {
     this.store.dispatch(new Items.SetRecipeAction({ id, value, def }));
   }
 }

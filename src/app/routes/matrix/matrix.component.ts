@@ -60,7 +60,7 @@ export class MatrixComponent {
     this.store.dispatch(new Settings.SetCostIgnoredAction(data));
   }
 
-  setRecipeCost(id: string, value: string | undefined): void {
+  setRecipeCost(id: string, value?: string): void {
     this.store.dispatch(new Recipes.SetCostAction({ id, value }));
   }
 

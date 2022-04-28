@@ -245,9 +245,7 @@ describe('ListComponent', () => {
         Mocks.AdjustedData
       );
       expect(component.child.setDefaultRecipe).toHaveBeenCalledWith(
-        ItemId.Coal,
-        undefined,
-        undefined
+        ItemId.Coal
       );
     });
 

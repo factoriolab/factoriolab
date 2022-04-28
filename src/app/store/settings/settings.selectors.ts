@@ -178,7 +178,7 @@ export const getDefaults = createSelector(
         return defaults;
       }
     }
-    return undefined;
+    return null;
   }
 );
 
@@ -216,7 +216,7 @@ export const getResearchFactor = createSelector(
 
 export const getRationalBeaconReceivers = createSelector(
   getBeaconReceivers,
-  (total) => (total ? Rational.fromString(total) : undefined)
+  (total) => (total ? Rational.fromString(total) : null)
 );
 
 export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>

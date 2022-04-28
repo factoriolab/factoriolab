@@ -50,5 +50,5 @@ export interface Dataset {
   recipeModuleIds: Entities<string[]>;
   prodModuleIds: string[];
   hash?: ModHash;
-  defaults?: Defaults;
+  defaults?: Defaults | null;
 }

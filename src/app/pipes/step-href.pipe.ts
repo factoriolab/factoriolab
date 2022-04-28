@@ -7,7 +7,7 @@ import { RouterService } from '~/services';
 export class StepHrefPipe implements PipeTransform {
   constructor(private routerService: RouterService) {}
 
-  transform(value: Step, data: Dataset): string | undefined {
+  transform(value: Step, data: Dataset): string | null {
     let step = value;
     if (step.recipeId) {
       const recipe = data.recipeR[step.recipeId];

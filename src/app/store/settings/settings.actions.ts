@@ -57,7 +57,7 @@ export class SetExpensiveAction implements Action {
 
 export class SetBeaconReceiversAction implements Action {
   readonly type = SettingsActionType.SET_BEACON_RECEIVERS;
-  constructor(public payload: string | undefined) {}
+  constructor(public payload: string | null) {}
 }
 
 export class SetBeltAction implements Action {

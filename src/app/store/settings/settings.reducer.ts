@@ -16,7 +16,7 @@ export interface SettingsState {
   expensive: boolean;
   displayRate: DisplayRate;
   preset: Preset;
-  beaconReceivers?: string;
+  beaconReceivers: string | null;
   belt?: string;
   pipe?: string;
   fuel?: string;
@@ -39,6 +39,7 @@ export const initialSettingsState: SettingsState = {
   expensive: false,
   displayRate: DisplayRate.PerMinute,
   preset: Preset.Minimum,
+  beaconReceivers: null,
   flowRate: 1500,
   miningBonus: 0,
   researchSpeed: ResearchSpeed.Speed6,
@@ -65,22 +66,23 @@ export function settingsReducer(
     case SettingsActionType.SET_PRESET:
       return { ...state, ...{ preset: action.payload } };
     case SettingsActionType.SET_BASE:
-      return {
+      const newState = {
         ...state,
         ...{
           baseId: action.payload,
-          disabledRecipes: undefined,
           expensive: false,
           preset: Preset.Minimum,
-          belt: undefined,
-          pipe: undefined,
-          fuel: undefined,
-          cargoWagon: undefined,
-          fluidWagon: undefined,
           miningBonus: 0,
           researchSpeed: ResearchSpeed.Speed6,
         },
       };
+      delete newState.disabledRecipes;
+      delete newState.belt;
+      delete newState.pipe;
+      delete newState.fuel;
+      delete newState.cargoWagon;
+      delete newState.fluidWagon;
+      return newState;
     case SettingsActionType.SET_DISABLED_RECIPES:
       return {
         ...state,

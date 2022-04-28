@@ -23,13 +23,13 @@ export class RateUtility {
     data: Dataset,
     parentId?: string
   ): void {
-    let recipe: RationalRecipe | undefined;
+    let recipe: RationalRecipe | null | undefined;
 
     if (!itemSettings[itemId].ignore) {
       recipe = data.recipeR[data.itemRecipeIds[itemId]];
 
       if (recipe && !recipe.produces(itemId)) {
-        recipe = undefined;
+        recipe = null;
       }
     }
 
@@ -196,7 +196,7 @@ export class RateUtility {
 
   static calculateBeacons(
     steps: Step[],
-    beaconReceivers: Rational | undefined,
+    beaconReceivers: Rational | null,
     recipeSettings: Entities<RationalRecipeSettings>,
     data: Dataset
   ): Step[] {

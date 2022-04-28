@@ -551,7 +551,7 @@
                   [selected]="vm.settings.belt"
                   [options]="vm.data.beltIds"
                   [columns]="
-                    vm.data.game === Game.DysonSphereProgram ? 3 : undefined
+                    vm.data.game === Game.DysonSphereProgram ? 3 : null
                   "
                   (selectId)="setBelt($event, vm.data.defaults?.belt)"
                 >

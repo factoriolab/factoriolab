@@ -3,7 +3,7 @@ import { LabState } from '~/store';
 
 export class BrowserUtility {
   private static _storedState = BrowserUtility.loadState();
-  static get storedState(): Partial<LabState> | undefined {
+  static get storedState(): Partial<LabState> | null {
     return this._storedState;
   }
 
@@ -24,7 +24,7 @@ export class BrowserUtility {
     return this.search || (hash.length > 1 && hash[1] === '=' && hash) || '';
   }
 
-  static loadState(): Partial<LabState> | undefined {
+  static loadState(): Partial<LabState> | null {
     try {
       const stored = localStorage.getItem(STATE_KEY);
       if (stored) {
@@ -37,7 +37,7 @@ export class BrowserUtility {
       // Delete local storage to repair
       localStorage.removeItem(STATE_KEY);
     }
-    return undefined;
+    return null;
   }
 
   static mergeState(initial: LabState): LabState {

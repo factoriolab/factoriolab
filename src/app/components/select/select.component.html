@@ -38,13 +38,9 @@
           [tooltip]="
             vm.data.itemEntities[id]?.name ?? vm.data.recipeEntities[id]?.name
           "
-          [item]="
-            selectType === IdType.Item ? vm.data.itemEntities[id] : undefined
-          "
+          [item]="selectType === IdType.Item ? vm.data.itemEntities[id] : null"
           [recipe]="
-            selectType === IdType.Recipe
-              ? vm.data.recipeEntities[id]
-              : undefined
+            selectType === IdType.Recipe ? vm.data.recipeEntities[id] : null
           "
           [scrollTop]="scroll.scrollTop"
           (click)="clickId(id)"

@@ -112,7 +112,7 @@
                   [selected]="belt"
                   [options]="vm.data.beltIds"
                   [columns]="
-                    vm.data.game === Game.DysonSphereProgram ? 3 : undefined
+                    vm.data.game === Game.DysonSphereProgram ? 3 : null
                   "
                   (selectId)="
                     setViaSetting(product.id, $event, vm.itemSettings[id].belt)
