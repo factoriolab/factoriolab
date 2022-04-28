@@ -3,7 +3,7 @@ import { Router, Event, NavigationEnd } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { deflate, inflate } from 'pako';
 import { Observable } from 'rxjs';
-import { map, filter, take } from 'rxjs/operators';
+import { map, filter, first } from 'rxjs/operators';
 
 import { data } from 'src/data';
 import {
@@ -152,7 +152,7 @@ export class RouterService {
     return this.store.select(Datasets.getHashEntities).pipe(
       map((hashEntities) => hashEntities[settings.baseId]),
       filter((hash): hash is ModHash => hash != null),
-      take(1),
+      first(),
       map((hash) => {
         const zipPartial: Zip = { bare: '', hash: '' };
         // Base
@@ -314,7 +314,7 @@ export class RouterService {
                         ]
                     ),
                     filter((e): e is ModHash => e != null),
-                    take(1)
+                    first()
                   )
                   .subscribe((hash) => {
                     if (params[Section.Products]) {

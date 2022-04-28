@@ -7,7 +7,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { map, take } from 'rxjs';
+import { first, map } from 'rxjs';
 
 import {
   Recipe,
@@ -66,7 +66,7 @@ export class IconComponent implements OnChanges {
       this.store
         .select(Settings.getDataset)
         .pipe(
-          take(1),
+          first(),
           map((data) => data.iconEntities)
         )
         .subscribe((iconEntities) => {

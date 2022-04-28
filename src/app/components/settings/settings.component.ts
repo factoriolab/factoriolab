@@ -12,7 +12,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, take } from 'rxjs';
+import { combineLatest, first, map } from 'rxjs';
 
 import {
   DisplayRate,
@@ -155,7 +155,7 @@ export class SettingsComponent implements OnInit {
   ngOnInit(): void {
     this.store
       .select(Preferences.getStates)
-      .pipe(take(1))
+      .pipe(first())
       .subscribe((states) => {
         this.state =
           Object.keys(states).find(

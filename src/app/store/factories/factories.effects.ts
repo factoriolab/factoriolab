@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import { combineLatest, switchMap, take } from 'rxjs';
+import { combineLatest, first, switchMap } from 'rxjs';
 
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '..';
@@ -25,7 +25,7 @@ export class FactoriesEffects {
           this.store.select(Recipes.recipesState),
           this.store.select(Recipes.getRecipeSettings),
           this.store.select(Settings.getNormalDataset),
-        ]).pipe(take(1))
+        ]).pipe(first())
       ),
       switchMap(([rawSettings, recipeSettings, data]) => {
         const effects: Action[] = [];

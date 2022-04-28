@@ -10,7 +10,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { combineLatest, filter, map, take } from 'rxjs';
+import { combineLatest, filter, first, map } from 'rxjs';
 
 import {
   Step,
@@ -133,7 +133,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
   ngOnInit(): void {
     this.activatedRoute.fragment
       .pipe(
-        take(1),
+        first(),
         filter((f) => f != null)
       )
       .subscribe((id) => {
@@ -149,7 +149,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
       const selected = this.selectedId;
       this.store
         .select(Products.getStepDetails)
-        .pipe(take(1))
+        .pipe(first())
         .subscribe((stepDetails) => {
           if (stepDetails[selected]?.tabs.length) {
             this.expanded[selected] = stepDetails[selected].tabs[0];
@@ -167,7 +167,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
           this.store.select(Products.getSteps),
           this.store.select(Products.getStepDetails),
         ])
-          .pipe(take(1))
+          .pipe(first())
           .subscribe(([steps, stepDetails]) => {
             const step = steps.find((s) => s.id === this.fragmentId);
             if (step) {
