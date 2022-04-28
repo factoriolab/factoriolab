@@ -418,7 +418,7 @@ export class SimplexUtility {
       // Add item columns
       for (const itemId of itemIds) {
         let val = Rational.zero;
-        if (recipe.in?.[itemId]) {
+        if (recipe.in[itemId]) {
           val = val.sub(recipe.in[itemId]);
         }
         if (recipe.out[itemId]) {
