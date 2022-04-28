@@ -57,32 +57,34 @@ export class FlowUtility {
           viewBox: `${icon.position
             .replace(/px/g, '')
             .replace(/-/g, '')} 64 64`,
-          href: icon.file ?? '',
+          href: icon.file,
           name: recipe.name,
           color: icon.color,
         });
 
         if (match && step.parents && step.itemId) {
           for (const i of Object.keys(step.parents)) {
-            const item = data.itemEntities[step.itemId];
-            sankey.links.push({
-              target: rId[i],
-              source: rId[step.recipeId],
-              value: this.linkSize(
-                value,
-                step.parents[i],
-                linkSize,
-                item.stack
-              ),
-              text: this.linkText(
-                text,
-                step.parents[i],
-                linkText,
-                linkPrecision
-              ),
-              name: item.name,
-              color: icon.color,
-            });
+            if (rId[i]) {
+              const item = data.itemEntities[step.itemId];
+              sankey.links.push({
+                target: rId[i],
+                source: rId[step.recipeId],
+                value: this.linkSize(
+                  value,
+                  step.parents[i],
+                  linkSize,
+                  item.stack
+                ),
+                text: this.linkText(
+                  text,
+                  step.parents[i],
+                  linkText,
+                  linkPrecision
+                ),
+                name: item.name,
+                color: icon.color,
+              });
+            }
           }
         }
 
@@ -98,7 +100,7 @@ export class FlowUtility {
               linkText === linkSize
                 ? outText
                 : this.stepLinkValue(outStep, linkSize);
-            if (step.outputs) {
+            if (step.outputs && iId[outId]) {
               const percent = step.outputs[outId];
               const item = data.itemEntities[outId];
               sankey.links.push({
@@ -124,32 +126,34 @@ export class FlowUtility {
           viewBox: `${icon.position
             .replace(/px/g, '')
             .replace(/-/g, '')} 64 64`,
-          href: icon.file ?? '',
+          href: icon.file,
           name: item.name,
           color: icon.color,
         });
         if (step.parents) {
           for (const i of Object.keys(step.parents)) {
-            const recipe = data.recipeR[i];
-            if (recipe.in?.[step.itemId]) {
-              sankey.links.push({
-                target: rId[i],
-                source: iId[step.itemId],
-                value: this.linkSize(
-                  value,
-                  step.parents[i],
-                  linkSize,
-                  item.stack
-                ),
-                text: this.linkText(
-                  text,
-                  step.parents[i],
-                  linkText,
-                  linkPrecision
-                ),
-                name: item.name,
-                color: icon.color,
-              });
+            if (rId[i]) {
+              const recipe = data.recipeR[i];
+              if (recipe.in[step.itemId]) {
+                sankey.links.push({
+                  target: rId[i],
+                  source: iId[step.itemId],
+                  value: this.linkSize(
+                    value,
+                    step.parents[i],
+                    linkSize,
+                    item.stack
+                  ),
+                  text: this.linkText(
+                    text,
+                    step.parents[i],
+                    linkText,
+                    linkPrecision
+                  ),
+                  name: item.name,
+                  color: icon.color,
+                });
+              }
             }
           }
         }

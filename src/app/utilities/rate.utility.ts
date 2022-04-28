@@ -67,7 +67,7 @@ export class RateUtility {
 
     if (recipe) {
       // Calculate number of outputs from recipe
-      const out = recipe.out[itemId].sub(recipe.in?.[itemId] || Rational.zero);
+      const out = recipe.out[itemId].sub(recipe.in[itemId] ?? Rational.zero);
 
       // Calculate factories
       step.factories = step.items.mul(recipe.time).div(out);
@@ -154,7 +154,7 @@ export class RateUtility {
         if (step.items != null && belt != null) {
           step.belts = step.items.div(beltSpeed[belt]);
         }
-        const wagon = itemSettings[step.itemId]?.wagon;
+        const wagon = itemSettings[step.itemId].wagon;
         if (step.items != null && wagon != null) {
           const item = data.itemEntities[step.itemId];
           if (item.stack) {
@@ -174,17 +174,20 @@ export class RateUtility {
 
   static calculateOutputs(steps: Step[], data: Dataset): Step[] {
     for (const step of steps) {
-      if (step.recipeId) {
+      if (step.recipeId && step.factories?.nonzero()) {
         const recipe = data.recipeR[step.recipeId];
-        step.outputs = {};
+        const outputs: Entities<Rational> = {};
         for (const id of Object.keys(recipe.out)) {
-          if (recipe.out[id].nonzero() && step.factories?.nonzero()) {
+          if (recipe.out[id].nonzero()) {
             const val = recipe.out[id].mul(step.factories).div(recipe.time);
             const outStep = steps.find((s) => s.itemId === id);
             if (outStep?.items?.nonzero()) {
-              step.outputs[id] = val.div(outStep.items);
+              outputs[id] = val.div(outStep.items);
             }
           }
+        }
+        if (Object.keys(outputs).length > 0) {
+          step.outputs = outputs;
         }
       }
     }

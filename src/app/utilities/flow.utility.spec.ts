@@ -9,11 +9,11 @@ import {
 } from '~/models';
 import { FlowUtility } from './flow.utility';
 
-xdescribe('FlowUtility', () => {
+describe('FlowUtility', () => {
   describe('getSankey', () => {
     const node: Node = {
       id: ItemId.Coal,
-      stepId: 'id',
+      stepId: '0',
       name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
       color: Mocks.AdjustedData.iconEntities[ItemId.Coal].color,
       viewBox: '256 448 64 64',
@@ -21,17 +21,6 @@ xdescribe('FlowUtility', () => {
     };
     const iId = `i|${ItemId.Coal}`;
     const rId = `r|${RecipeId.Coal}`;
-
-    it('should handle empty/null values', () => {
-      const result = FlowUtility.buildSankey(
-        [],
-        LinkValue.None,
-        LinkValue.None,
-        null,
-        Mocks.AdjustedData
-      );
-      expect(result).toEqual({ nodes: [], links: [] });
-    });
 
     it('should handle normal steps', () => {
       const result = FlowUtility.buildSankey(
@@ -58,7 +47,7 @@ xdescribe('FlowUtility', () => {
           node,
           {
             id: ItemId.PlasticBar,
-            stepId: 'id',
+            stepId: '1',
             name: Mocks.AdjustedData.itemEntities[ItemId.PlasticBar].name,
             color: Mocks.AdjustedData.iconEntities[ItemId.PlasticBar].color,
             viewBox: '896 448 64 64',
@@ -78,27 +67,16 @@ xdescribe('FlowUtility', () => {
       });
     });
 
-    it('should handle normal step with no parents', () => {
-      const result = FlowUtility.buildSankey(
-        [
-          {
-            itemId: ItemId.Coal,
-            recipeId: RecipeId.Coal,
-          },
-        ] as any[],
-        LinkValue.None,
-        LinkValue.None,
-        null,
-        Mocks.AdjustedData
-      );
-      expect(result).toEqual({ nodes: [node], links: [] });
-    });
-
     it('should handle mismatched step', () => {
       const result = FlowUtility.buildSankey(
         [
-          { itemId: ItemId.Coal, items: Rational.one },
-          { recipeId: RecipeId.Coal, factories: Rational.one, outputs: {} },
+          { id: '0', itemId: ItemId.Coal, items: Rational.one },
+          {
+            id: '1',
+            recipeId: RecipeId.Coal,
+            factories: Rational.one,
+            outputs: {},
+          },
         ] as any[],
         LinkValue.None,
         LinkValue.None,
@@ -108,7 +86,7 @@ xdescribe('FlowUtility', () => {
       expect(result).toEqual({
         nodes: [
           { ...node, ...{ id: iId } },
-          { ...node, ...{ id: rId } },
+          { ...node, ...{ id: rId, stepId: '1' } },
         ],
         links: [
           {
@@ -126,8 +104,9 @@ xdescribe('FlowUtility', () => {
     it('should handle different text and size', () => {
       const result = FlowUtility.buildSankey(
         [
-          { itemId: ItemId.Coal, items: Rational.one },
+          { id: '0', itemId: ItemId.Coal, items: Rational.one },
           {
+            id: '1',
             recipeId: RecipeId.Coal,
             factories: Rational.one,
             outputs: { [ItemId.Coal]: Rational.one },
@@ -142,7 +121,7 @@ xdescribe('FlowUtility', () => {
       expect(result).toEqual({
         nodes: [
           { ...node, ...{ id: iId } },
-          { ...node, ...{ id: rId } },
+          { ...node, ...{ id: rId, stepId: '1' } },
         ],
         links: [
           {
@@ -161,8 +140,13 @@ xdescribe('FlowUtility', () => {
       const result = FlowUtility.buildSankey(
         [
           {
+            id: '0',
             itemId: ItemId.Coal,
-            parents: { [ItemId.PlasticBar]: Rational.one },
+            parents: { [RecipeId.PlasticBar]: Rational.one },
+          },
+          {
+            id: '1',
+            recipeId: RecipeId.PlasticBar,
           },
         ] as any[],
         LinkValue.None,
@@ -171,10 +155,20 @@ xdescribe('FlowUtility', () => {
         Mocks.AdjustedData
       );
       expect(result).toEqual({
-        nodes: [{ ...node, ...{ id: iId } }],
+        nodes: [
+          { ...node, ...{ id: iId } },
+          {
+            id: `r|${RecipeId.PlasticBar}`,
+            stepId: '1',
+            viewBox: '896 448 64 64',
+            name: Mocks.AdjustedData.recipeEntities[RecipeId.PlasticBar].name,
+            color: Mocks.AdjustedData.iconEntities[RecipeId.PlasticBar].color,
+            href: Mocks.AdjustedData.iconEntities[RecipeId.PlasticBar].file!,
+          },
+        ],
         links: [
           {
-            target: '',
+            target: `r|${RecipeId.PlasticBar}`,
             source: iId,
             value: 1,
             text: '',
@@ -185,51 +179,20 @@ xdescribe('FlowUtility', () => {
       });
     });
 
-    it('should handle steps with no recipe and no-input parent', () => {
-      const result = FlowUtility.buildSankey(
-        [
-          {
-            itemId: ItemId.Coal,
-            parents: { [ItemId.IronOre]: Rational.one },
-          },
-        ] as any[],
-        LinkValue.None,
-        LinkValue.None,
-        null,
-        Mocks.AdjustedData
-      );
-      expect(result).toEqual({
-        nodes: [{ ...node, ...{ id: iId } }],
-        links: [],
-      });
-    });
-
-    it('should handle steps with no recipe or parents', () => {
-      const result = FlowUtility.buildSankey(
-        [{ itemId: ItemId.Coal }] as any[],
-        LinkValue.None,
-        LinkValue.None,
-        null,
-        Mocks.AdjustedData
-      );
-      expect(result).toEqual({
-        nodes: [{ ...node, ...{ id: iId } }],
-        links: [],
-      });
-    });
-
     it('should handle recipe that matches id with extra outputs', () => {
       const recipe = Mocks.AdjustedData.recipeR[RecipeId.UraniumProcessing];
       spyOn(recipe, 'produces').and.returnValue(true);
       const result = FlowUtility.buildSankey(
         [
           {
+            id: '0',
             itemId: RecipeId.UraniumProcessing,
             recipeId: RecipeId.UraniumProcessing,
             factories: Rational.one,
             outputs: {},
           },
           {
+            id: '1',
             itemId: RecipeId.UraniumProcessing,
             recipeId: RecipeId.UraniumProcessing,
             factories: Rational.one,
@@ -237,10 +200,12 @@ xdescribe('FlowUtility', () => {
             outputs: {},
           },
           {
+            id: '2',
             itemId: ItemId.Uranium235,
             items: Rational.zero,
           },
           {
+            id: '3',
             itemId: ItemId.Uranium238,
             items: Rational.zero,
           },
@@ -256,25 +221,26 @@ xdescribe('FlowUtility', () => {
         Mocks.AdjustedData.iconEntities[RecipeId.UraniumProcessing].color;
       const href =
         Mocks.AdjustedData.iconEntities[RecipeId.UraniumProcessing].file!;
-      const uNode: Node = {
+      const uNode1: Node = {
         id: RecipeId.UraniumProcessing,
-        stepId: 'id',
+        stepId: '0',
         name,
         color,
         viewBox: '512 0 64 64',
         href,
       };
-      const uNode1: Node = {
+      const uNode2: Node = { ...uNode1, ...{ stepId: '1' } };
+      const uNode3: Node = {
         id: `i|${ItemId.Uranium235}`,
-        stepId: 'id',
+        stepId: '2',
         name: Mocks.AdjustedData.itemEntities[ItemId.Uranium235].name,
         color: Mocks.AdjustedData.iconEntities[ItemId.Uranium235].color,
         viewBox: '512 576 64 64',
         href,
       };
-      const uNode2: Node = {
+      const uNode4: Node = {
         id: `i|${ItemId.Uranium238}`,
-        stepId: 'id',
+        stepId: '3',
         name: Mocks.AdjustedData.itemEntities[ItemId.Uranium238].name,
         color: Mocks.AdjustedData.iconEntities[ItemId.Uranium238].color,
         viewBox: '576 576 64 64',
@@ -297,7 +263,7 @@ xdescribe('FlowUtility', () => {
         color: Mocks.AdjustedData.iconEntities[ItemId.Uranium238].color,
       };
       expect(result).toEqual({
-        nodes: [uNode, uNode, uNode1, uNode2],
+        nodes: [uNode1, uNode2, uNode3, uNode4],
         links: [uLink1, uLink2, uLink1, uLink2],
       });
     });

@@ -1,6 +1,5 @@
 import { Mocks, ItemId, RecipeId } from 'src/tests';
 import {
-  EnergyType,
   Entities,
   Product,
   RateType,
@@ -11,7 +10,7 @@ import {
 import * as Factories from '~/store/factories';
 import { RecipeUtility } from './recipe.utility';
 
-xdescribe('RecipeUtility', () => {
+describe('RecipeUtility', () => {
   describe('bestMatch', () => {
     it('should pick the first option if list only contains one', () => {
       const value = 'value';
@@ -44,7 +43,8 @@ xdescribe('RecipeUtility', () => {
     it('should adjust a standard recipe', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
       settings.factoryModules = undefined;
-      settings.beaconModules = [ItemId.Module];
+      settings.beaconModules = [ItemId.SpeedModule];
+      settings.beaconCount = undefined;
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Coal,
@@ -154,29 +154,18 @@ xdescribe('RecipeUtility', () => {
       const data = {
         ...Mocks.Data,
         ...{
-          itemR: {
-            ...Mocks.Data.itemEntities,
+          moduleEntities: {
+            ...Mocks.Data.moduleEntities,
             ...{
               // To verify all factors work in beacons
               [ItemId.SpeedModule]: {
-                ...Mocks.Data.itemEntities[ItemId.SpeedModule],
-                ...{
-                  module: {
-                    ...Mocks.Data.itemEntities[ItemId.SpeedModule].module,
-                    ...{ productivity: Rational.one, pollution: Rational.one },
-                  },
-                },
+                ...Mocks.Data.moduleEntities[ItemId.SpeedModule],
+                ...{ productivity: Rational.one, pollution: Rational.one },
               },
               // To verify null consumption works
               [ItemId.ProductivityModule]: {
-                ...Mocks.Data.itemEntities[ItemId.ProductivityModule],
-                ...{
-                  module: {
-                    ...Mocks.Data.itemEntities[ItemId.ProductivityModule]
-                      .module,
-                    ...{ consumption: null },
-                  },
-                },
+                ...Mocks.Data.moduleEntities[ItemId.ProductivityModule],
+                ...{ consumption: undefined },
               },
             },
           },
@@ -206,57 +195,6 @@ xdescribe('RecipeUtility', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should handle beacon with no effect', () => {
-      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
-      settings.beaconCount = Rational.one;
-      settings.beaconModules = [
-        ItemId.EfficiencyModule,
-        ItemId.EfficiencyModule,
-      ];
-      const data = {
-        ...Mocks.Data,
-        ...{
-          itemR: {
-            ...Mocks.Data.itemEntities,
-            ...{
-              // To verify all factors work in beacons
-              [ItemId.EfficiencyModule]: {
-                ...Mocks.Data.itemEntities[ItemId.EfficiencyModule],
-                ...{
-                  module: {
-                    ...Mocks.Data.itemEntities[ItemId.EfficiencyModule].module,
-                    ...{ consumption: null },
-                  },
-                },
-              },
-            },
-          },
-        },
-      };
-      const result = RecipeUtility.adjustRecipe(
-        RecipeId.SteelChest,
-        ItemId.Coal,
-        ItemId.Module,
-        Rational.zero,
-        Rational.zero,
-        settings,
-        Mocks.ItemSettingsInitial,
-        data
-      );
-      const expected = new RationalRecipe(
-        Mocks.Data.recipeEntities[RecipeId.SteelChest]
-      );
-      expected.out = {
-        [ItemId.SteelChest]: Rational.one,
-      };
-      expected.time = Rational.from(2, 3);
-      expected.drain = Rational.from(5);
-      expected.consumption = Rational.from(150);
-      expected.pollution = Rational.from(1, 20);
-      expected.productivity = Rational.one;
-      expect(result).toEqual(expected);
-    });
-
     it('should use minimum 20% effects', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
       settings.factoryModules = [
@@ -268,23 +206,18 @@ xdescribe('RecipeUtility', () => {
       const data = {
         ...Mocks.Data,
         ...{
-          itemR: {
-            ...Mocks.Data.itemEntities,
+          moduleEntities: {
+            ...Mocks.Data.moduleEntities,
             ...{
               [ItemId.EfficiencyModule3]: {
-                ...Mocks.Data.itemEntities[ItemId.EfficiencyModule3],
+                ...Mocks.Data.moduleEntities[ItemId.EfficiencyModule3],
                 ...{
-                  module: {
-                    ...Mocks.Data.moduleEntities[ItemId.EfficiencyModule3],
-                    ...{
-                      speed:
-                        Mocks.Data.moduleEntities[ItemId.EfficiencyModule3]
-                          .consumption,
-                      pollution:
-                        Mocks.Data.moduleEntities[ItemId.EfficiencyModule3]
-                          .consumption,
-                    },
-                  },
+                  speed:
+                    Mocks.Data.moduleEntities[ItemId.EfficiencyModule3]
+                      .consumption,
+                  pollution:
+                    Mocks.Data.moduleEntities[ItemId.EfficiencyModule3]
+                      .consumption,
                 },
               },
             },
@@ -415,54 +348,6 @@ xdescribe('RecipeUtility', () => {
       expect(result.in[ItemId.UraniumFuelCell]).toEqual(Rational.from(1, 200));
     });
 
-    it('should ignore burner with no usage', () => {
-      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.IronOre] };
-      settings.factory = ItemId.BurnerMiningDrill;
-      const data = {
-        ...Mocks.Data,
-        ...{
-          itemR: {
-            ...Mocks.Data.itemEntities,
-            ...{
-              [ItemId.BurnerMiningDrill]: {
-                ...Mocks.Data.itemEntities[ItemId.BurnerMiningDrill],
-                ...{
-                  factory: {
-                    speed: Rational.one,
-                    modules: Rational.zero,
-                    type: EnergyType.Burner,
-                    usage: Rational.zero,
-                  },
-                },
-              },
-            },
-          },
-        },
-      };
-      const result = RecipeUtility.adjustRecipe(
-        RecipeId.IronOre,
-        ItemId.Coal,
-        ItemId.Module,
-        Rational.zero,
-        Rational.zero,
-        settings,
-        Mocks.ItemSettingsInitial,
-        data
-      );
-      const expected = new RationalRecipe(
-        Mocks.Data.recipeEntities[RecipeId.IronOre]
-      );
-      expected.out = {
-        [ItemId.IronOre]: Rational.one,
-      };
-      expected.time = Rational.one;
-      expected.drain = undefined;
-      expected.consumption = Rational.zero;
-      expected.pollution = Rational.zero;
-      expected.productivity = Rational.one;
-      expect(result).toEqual(expected);
-    });
-
     it('should adjust based on overclock', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
       settings.overclock = Rational.from(200);
@@ -494,17 +379,12 @@ xdescribe('RecipeUtility', () => {
       const data = {
         ...Mocks.Data,
         ...{
-          itemR: {
-            ...Mocks.Data.itemEntities,
+          factoryEntities: {
+            ...Mocks.Data.factoryEntities,
             ...{
               [settings.factory!]: {
-                ...Mocks.Data.itemEntities[settings.factory!],
-                ...{
-                  factory: {
-                    ...Mocks.Data.itemEntities[settings.factory!].factory,
-                    ...{ overclockFactor: 1.321928 },
-                  },
-                },
+                ...Mocks.Data.factoryEntities[settings.factory!],
+                ...{ overclockFactor: 1.321928 },
               },
             },
           },
@@ -578,17 +458,14 @@ xdescribe('RecipeUtility', () => {
       const data = {
         ...Mocks.Data,
         ...{
-          itemR: {
-            ...Mocks.Data.itemEntities,
+          factoryEntities: {
+            ...Mocks.Data.factoryEntities,
             ...{
               [ItemId.AssemblingMachine2]: {
-                ...Mocks.Data.itemEntities[ItemId.AssemblingMachine2],
+                ...Mocks.Data.factoryEntities[ItemId.AssemblingMachine2],
                 ...{
-                  factory: {
-                    ...Mocks.Data.itemEntities[ItemId.AssemblingMachine2]
-                      .factory,
-                    ...{ speed: undefined },
-                  },
+                  ...Mocks.Data.factoryEntities[ItemId.AssemblingMachine2],
+                  ...{ speed: undefined },
                 },
               },
             },
@@ -640,27 +517,21 @@ xdescribe('RecipeUtility', () => {
               [RecipeId.SteelChest]: recipe,
             },
           },
-          itemR: {
-            ...Mocks.Data.itemEntities,
+          moduleEntities: {
+            ...Mocks.Data.moduleEntities,
             ...{
               [ItemId.ProductivityModule3]: {
-                ...Mocks.Data.itemEntities[ItemId.ProductivityModule3],
+                ...Mocks.Data.moduleEntities[ItemId.ProductivityModule3],
                 ...{
-                  module: {
-                    ...Mocks.Data.itemEntities[ItemId.ProductivityModule3]
-                      .module,
-                    ...{ sprays: 10, proliferator: ItemId.ProductivityModule3 },
-                  },
+                  sprays: Rational.ten,
+                  proliferator: ItemId.ProductivityModule3,
                 },
               },
               [ItemId.ProductivityModule]: {
-                ...Mocks.Data.itemEntities[ItemId.ProductivityModule],
+                ...Mocks.Data.moduleEntities[ItemId.ProductivityModule],
                 ...{
-                  module: {
-                    ...Mocks.Data.itemEntities[ItemId.ProductivityModule]
-                      .module,
-                    ...{ sprays: 10, proliferator: ItemId.ProductivityModule },
-                  },
+                  sprays: Rational.ten,
+                  proliferator: ItemId.ProductivityModule,
                 },
               },
             },
@@ -680,6 +551,72 @@ xdescribe('RecipeUtility', () => {
       const expected = new RationalRecipe(recipe);
       expected.in[ItemId.ProductivityModule] = Rational.from(2929, 2704);
       expected.in[ItemId.ProductivityModule3] = Rational.from(45, 52);
+      expected.out = { [ItemId.SteelChest]: Rational.from(11, 10) };
+      expected.time = Rational.from(8, 97);
+      expected.drain = Rational.from(25, 2);
+      expected.consumption = Rational.from(2775);
+      expected.pollution = Rational.from(407, 1500);
+      expected.productivity = Rational.from(11, 10);
+      expect(result).toEqual(expected);
+    });
+
+    it('should ignore proliferator self-spray with no productivity bonus', () => {
+      const settings = new RationalRecipeSettings({
+        ...Mocks.RecipeSettingsInitial[ItemId.SteelChest],
+        ...{ factoryModules: [ItemId.ProductivityModule3] },
+      });
+      const recipe = {
+        ...Mocks.Data.recipeEntities[RecipeId.SteelChest],
+        ...{
+          in: {
+            ...Mocks.Data.recipeEntities[RecipeId.SteelChest].in,
+            ...{ [ItemId.ProductivityModule]: 1 },
+          },
+        },
+      };
+      const data = {
+        ...Mocks.Data,
+        ...{
+          recipeEntities: {
+            ...Mocks.Data.recipeEntities,
+            ...{
+              [RecipeId.SteelChest]: recipe,
+            },
+          },
+          moduleEntities: {
+            ...Mocks.Data.moduleEntities,
+            ...{
+              [ItemId.ProductivityModule3]: {
+                ...Mocks.Data.moduleEntities[ItemId.ProductivityModule3],
+                ...{
+                  sprays: Rational.ten,
+                  proliferator: ItemId.ProductivityModule3,
+                },
+              },
+              [ItemId.SpeedModule]: {
+                ...Mocks.Data.moduleEntities[ItemId.SpeedModule],
+                ...{
+                  sprays: Rational.ten,
+                  proliferator: ItemId.SpeedModule,
+                },
+              },
+            },
+          },
+        },
+      };
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.SteelChest,
+        ItemId.Coal,
+        ItemId.SpeedModule,
+        Rational.zero,
+        Rational.zero,
+        settings,
+        Mocks.ItemSettingsInitial,
+        data
+      );
+      const expected = new RationalRecipe(recipe);
+      expected.in[ItemId.SpeedModule] = Rational.from(9, 100);
+      expected.in[ItemId.ProductivityModule3] = Rational.from(9, 10);
       expected.out = { [ItemId.SteelChest]: Rational.from(11, 10) };
       expected.time = Rational.from(8, 97);
       expected.drain = Rational.from(25, 2);
@@ -772,7 +709,7 @@ xdescribe('RecipeUtility', () => {
         { [RecipeId.Coal]: [data] },
         { itemId: RecipeId.Coal, viaId: RecipeId.AdvancedOilProcessing } as any
       );
-      expect(result).toBeUndefined();
+      expect(result).toBeNull();
     });
 
     it('should handle no recipe specified', () => {
@@ -901,7 +838,7 @@ xdescribe('RecipeUtility', () => {
         [RecipeId.Coal],
         Mocks.AdjustedData
       );
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
     });
   });
 
@@ -1129,33 +1066,30 @@ xdescribe('RecipeUtility', () => {
       ]);
     });
 
-    it('by factories, should handle invalid viaBeacon', () => {
-      const result = RecipeUtility.adjustProduct(
-        { id, itemId, rate, rateType, viaBeacon: 'test' },
-        {},
-        Mocks.RecipeSettingsInitial,
-        Mocks.FactorySettingsInitial,
-        Mocks.Data
-      );
-      expect(result.viaBeaconModules).toBeUndefined();
-    });
-
-    it('by factories, nondefault factory, should handle invalid viaBeacon', () => {
-      const result = RecipeUtility.adjustProduct(
-        {
-          id,
-          itemId,
-          rate,
-          rateType,
-          viaSetting: ItemId.AssemblingMachine2,
-          viaBeacon: 'test',
+    it('by factories, nondefault factory, handle null settings', () => {
+      spyOn(RecipeUtility, 'allowsModules').and.returnValue(true);
+      const data = {
+        ...Mocks.Data,
+        ...{
+          factoryEntities: {
+            ...Mocks.Data.factoryEntities,
+            ...{
+              [ItemId.AssemblingMachine1]: {
+                ...Mocks.Data.factoryEntities[ItemId.AssemblingMachine1],
+                ...{ modules: undefined },
+              },
+            },
+          },
         },
+      };
+      const result = RecipeUtility.adjustProduct(
+        { id, itemId, rate, rateType, viaSetting: ItemId.AssemblingMachine1 },
         {},
         Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
-        Mocks.Data
+        data
       );
-      expect(result.viaBeaconModules).toBeUndefined();
+      expect(result.viaFactoryModules).toEqual([]);
     });
   });
 

@@ -59,11 +59,6 @@ export class RecipeUtility {
     data: Dataset
   ): RationalRecipe {
     const recipe = new RationalRecipe(data.recipeEntities[recipeId]);
-
-    if (settings == null) {
-      console.log('ERROR!');
-      console.trace();
-    }
     if (settings.factory != null) {
       const factory = data.factoryEntities[settings.factory];
 
@@ -130,7 +125,7 @@ export class RecipeUtility {
               // If proliferator is applied to proliferator, apply productivity bonus to sprays
               const pModule = data.moduleEntities[proliferatorSpray];
               sprays = sprays.mul(
-                Rational.one.add(pModule?.productivity ?? Rational.zero)
+                Rational.one.add(pModule.productivity ?? Rational.zero)
               );
               // Calculate amount of proliferator required for this recipe
               const pId = module.proliferator;
@@ -466,11 +461,6 @@ export class RecipeUtility {
   ): Entities<RationalRecipe> {
     return this.adjustSiloRecipes(
       data.recipeIds.reduce((e: Entities<RationalRecipe>, i) => {
-        if (recipeSettings[i] == null) {
-          console.log('PREERROR');
-          console.trace();
-          console.log(i);
-        }
         e[i] = this.adjustRecipe(
           i,
           fuel,

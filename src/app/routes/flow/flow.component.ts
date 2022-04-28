@@ -235,7 +235,7 @@ export class FlowComponent implements AfterViewInit {
         )
         .style('pointer-events', 'none')
         .append('image')
-        .attr('href', (d) => d.href);
+        .attr('href', (d) => d.href ?? '');
     }
   }
 
