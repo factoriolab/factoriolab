@@ -199,11 +199,11 @@ export const PreferencesState: Preferences.PreferencesState = {
   powerUnit: PowerUnit.Auto,
 };
 
-function node(i: number): Node {
+function node(i: number, noHref = false): Node {
   return {
     id: i.toString(),
     stepId: i.toString(),
-    href: 'data/1.0/icons.png',
+    href: noHref ? undefined : 'data/1.0/icons.png',
     viewBox: '0 0 64 64',
     name: i.toString(),
     color: 'black',
@@ -232,7 +232,7 @@ export const Sankey: SankeyData = {
     node(6),
     node(7),
     node(8),
-    node(9),
+    node(9, true),
   ],
   links: [
     link(1, 0),

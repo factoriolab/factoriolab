@@ -166,7 +166,7 @@ export class SimplexUtility {
             .sub(data.recipeR[a.recipeId!].output(itemId))
             .toNumber()
         )
-        .map((s) => [s.id!, s.factories!]);
+        .map((s) => [s.recipeId!, s.factories!]);
     } else {
       return steps
         .filter((s) => s.itemId != null && s.items != null)
@@ -212,7 +212,9 @@ export class SimplexUtility {
 
     // Parse unsolved items for recipes
     for (const step of unsolved) {
-      this.parseItemRecursively(step.id, state);
+      if (step.itemId) {
+        this.parseItemRecursively(step.itemId, state);
+      }
     }
 
     // Include any output-only items to calculate surplus

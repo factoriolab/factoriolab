@@ -87,6 +87,7 @@ describe('SettingsComponent', () => {
     const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
     detectChanges = spyOn(ref.constructor.prototype, 'detectChanges');
     component = fixture.componentInstance;
+    mockStore.refreshState();
     fixture.detectChanges();
   });
 

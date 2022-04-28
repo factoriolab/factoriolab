@@ -223,7 +223,7 @@ describe('SimplexUtility', () => {
       );
     });
 
-    xit('should include heavy oil cracking', () => {
+    it('should include heavy oil cracking', () => {
       const step: Step = {
         id: 'id',
         itemId: ItemId.PetroleumGas,
@@ -245,24 +245,6 @@ describe('SimplexUtility', () => {
   });
 
   describe('getSteps', () => {
-    xit('should get recipe step information for an item', () => {
-      expect(
-        SimplexUtility.getSteps(
-          ItemId.CopperPlate,
-          Mocks.ItemSettingsInitial,
-          [],
-          Rational.from(1000000),
-          Rational.zero,
-          Mocks.AdjustedData,
-          true,
-          true
-        )
-      ).toEqual([
-        [ItemId.CopperPlate, Rational.from(40, 141)],
-        [ItemId.CopperOre, Rational.from(1000, 3549)],
-      ]);
-    });
-
     it('should get item step information for an item', () => {
       expect(
         SimplexUtility.getSteps(
@@ -492,6 +474,9 @@ describe('SimplexUtility', () => {
       state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
       state.items[ItemId.Wood] = Rational.one;
       state.items[ItemId.Coal] = Rational.one;
+      state.recipes = {
+        [RecipeId.Coal]: Mocks.Data.recipeR[RecipeId.Coal],
+      };
       SimplexUtility.parseInputs(state);
       expect(state.inputs).toEqual([ItemId.Wood, ItemId.Coal]);
     });
@@ -598,7 +583,6 @@ describe('SimplexUtility', () => {
         name: 'name',
         time: 1,
         out: { [ItemId.CopperPlate]: 1 },
-        cost: 1,
         producers: [],
       });
       state.recipes[ItemId.Water] = Mocks.AdjustedData.recipeR[RecipeId.Water];
@@ -650,7 +634,7 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
-          Rational.one,
+          Rational.zero,
         ],
         [
           Rational.zero,
@@ -935,15 +919,15 @@ describe('SimplexUtility', () => {
       ]);
     });
 
-    xit('should place a new step next to related steps', () => {
+    it('should place a new step next to related steps', () => {
       const steps: Step[] = [
         {
-          id: 'id',
+          id: '0',
           itemId: ItemId.PetroleumGas,
           items: Rational.zero,
         },
         {
-          id: 'id',
+          id: '1',
           itemId: ItemId.Wood,
           items: Rational.zero,
         },
@@ -959,17 +943,17 @@ describe('SimplexUtility', () => {
       SimplexUtility.addItemStep(ItemId.HeavyOil, steps, solution, state);
       expect(steps).toEqual([
         {
-          id: 'id',
+          id: '0',
           itemId: ItemId.PetroleumGas,
           items: Rational.zero,
         },
         {
-          id: 'id',
+          id: '2',
           itemId: ItemId.HeavyOil,
           items: Rational.one,
         },
         {
-          id: 'id',
+          id: '1',
           itemId: ItemId.Wood,
           items: Rational.zero,
         },
@@ -980,7 +964,6 @@ describe('SimplexUtility', () => {
       const step: Step = {
         id: 'id',
         itemId: ItemId.Coal,
-        items: Rational.zero,
       };
       const solution: any = {
         surplus: { [ItemId.Coal]: Rational.from(3) },
