@@ -2,12 +2,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
-import { Mocks, ItemId, initialState, RecipeId, DispatchTest } from 'src/tests';
+import { DispatchTest, initialState, ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   IconComponent,
   InputComponent,
-  PickerComponent,
   OptionsComponent,
+  PickerComponent,
 } from '~/components';
 import { ValidateNumberDirective } from '~/directives';
 import { Product, RateType, RecipeField } from '~/models';

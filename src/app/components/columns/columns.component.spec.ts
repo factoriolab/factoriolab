@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
-import { TestUtility, initialState } from 'src/tests';
+import { initialState, TestUtility } from 'src/tests';
 import { Column } from '~/models';
 import { LabState } from '~/store';
 import { DialogComponent } from '../dialog/dialog.component';

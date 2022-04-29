@@ -1,10 +1,10 @@
 import {
   DisplayRate,
-  ResearchSpeed,
-  Preset,
-  InserterTarget,
   InserterCapacity,
+  InserterTarget,
   ItemId,
+  Preset,
+  ResearchSpeed,
 } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';

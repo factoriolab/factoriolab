@@ -1,8 +1,8 @@
 import { createSelector } from '@ngrx/store';
 
 import { Entities, FactorySettings, Game } from '~/models';
+import { LabState } from '../';
 import * as Settings from '../settings';
-import { LabState } from '..';
 import { FactoriesState } from './factories.reducer';
 
 /* Base selector functions */

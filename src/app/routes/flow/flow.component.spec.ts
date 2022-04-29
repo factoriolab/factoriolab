@@ -11,8 +11,8 @@ import {
   sankeyRight,
 } from 'd3-sankey';
 
-import { Mocks, TestUtility, initialState, DispatchTest } from 'src/tests';
-import { OptionsComponent, ColumnsComponent } from '~/components';
+import { DispatchTest, initialState, Mocks, TestUtility } from 'src/tests';
+import { ColumnsComponent, OptionsComponent } from '~/components';
 import { SankeyAlign, SankeyData } from '~/models';
 import {
   DisplayRateLabelPipe,

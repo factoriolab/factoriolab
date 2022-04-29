@@ -1,7 +1,7 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EffectsModule } from '@ngrx/effects';
@@ -12,18 +12,18 @@ import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {
-  ProductsComponent,
-  SettingsComponent,
-  IconComponent,
-  PickerComponent,
-  SelectComponent,
-  ToggleComponent,
-  RankerComponent,
-  OptionsComponent,
-  DialogComponent,
   ColumnsComponent,
-  InputComponent,
+  DialogComponent,
+  IconComponent,
   InfoComponent,
+  InputComponent,
+  OptionsComponent,
+  PickerComponent,
+  ProductsComponent,
+  RankerComponent,
+  SelectComponent,
+  SettingsComponent,
+  ToggleComponent,
 } from './components';
 import {
   FocusOnShowDirective,
@@ -31,21 +31,21 @@ import {
   ValidateOverclockDirective,
 } from './directives';
 import {
-  PowerPipe,
-  RatePipe,
-  FactoryRatePipe,
-  StepHrefPipe,
   DisplayRateLabelPipe,
+  FactoryRatePipe,
+  GtZeroPipe,
   InserterSpeedPipe,
   LeftPadPipe,
-  GtZeroPipe,
+  PowerPipe,
+  RatePipe,
+  StepHrefPipe,
 } from './pipes';
 import { FlowComponent, ListComponent, MatrixComponent } from './routes';
 import { LabErrorHandler } from './services';
-import { reducers, metaReducers } from './store';
+import { metaReducers, reducers } from './store';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
-import { ProductsEffects } from './store/products/products.effects';
 import { FactoriesEffects } from './store/factories/factories.effects';
+import { ProductsEffects } from './store/products/products.effects';
 
 @NgModule({
   declarations: [

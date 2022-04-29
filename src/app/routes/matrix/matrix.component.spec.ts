@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 import { DispatchTest, initialState } from 'src/tests';
-import { IconComponent, InputComponent, InfoComponent } from '~/components';
+import { IconComponent, InfoComponent, InputComponent } from '~/components';
 import { ValidateNumberDirective } from '~/directives';
 import { LabState } from '~/store';
 import * as Recipes from '~/store/recipes';

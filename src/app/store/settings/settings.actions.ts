@@ -1,13 +1,13 @@
 import { Action } from '@ngrx/store';
 
 import {
-  DisplayRate,
-  ResearchSpeed,
   DefaultPayload,
-  Preset,
-  InserterTarget,
+  DisplayRate,
   InserterCapacity,
+  InserterTarget,
+  Preset,
   PreviousPayload,
+  ResearchSpeed,
 } from '~/models';
 
 export const enum SettingsActionType {

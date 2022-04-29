@@ -1,21 +1,21 @@
 import {
   Category,
   Icon,
-  RationalItem,
   ModHash,
-  Recipe,
-  RationalRecipe,
   RationalBeacon,
   RationalBelt,
   RationalCargoWagon,
   RationalFactory,
   RationalFluidWagon,
-  RationalModule,
   RationalFuel,
+  RationalItem,
+  RationalModule,
+  RationalRecipe,
+  Recipe,
 } from './data';
+import { Defaults } from './defaults';
 import { Entities } from './entities';
 import { Game } from './enum';
-import { Defaults } from './defaults';
 
 export interface Dataset {
   game: Game;

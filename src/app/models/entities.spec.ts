@@ -1,4 +1,4 @@
-import { toEntities, toBoolEntities } from './entities';
+import { toBoolEntities, toEntities } from './entities';
 
 const id = 'id';
 

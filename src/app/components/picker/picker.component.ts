@@ -1,10 +1,10 @@
 import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
   ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
   OnChanges,
+  Output,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { first, map } from 'rxjs';

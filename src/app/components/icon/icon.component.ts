@@ -1,8 +1,8 @@
 import {
-  Component,
-  Input,
   ChangeDetectionStrategy,
+  Component,
   HostListener,
+  Input,
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
@@ -10,14 +10,14 @@ import { Store } from '@ngrx/store';
 import { first, map } from 'rxjs';
 
 import {
-  Recipe,
   DisplayRate,
-  Rational,
-  EnergyType,
-  Icon,
-  Game,
-  RationalItem,
   DisplayRateVal,
+  EnergyType,
+  Game,
+  Icon,
+  Rational,
+  RationalItem,
+  Recipe,
 } from '~/models';
 import { TrackService } from '~/services';
 import { LabState } from '~/store';

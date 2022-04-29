@@ -1,11 +1,11 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
+  Link,
   LinkValue,
   MIN_LINK_VALUE,
+  Node,
   Rational,
   Step,
-  Node,
-  Link,
 } from '~/models';
 import { FlowUtility } from './flow.utility';
 

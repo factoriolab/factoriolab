@@ -1,16 +1,16 @@
 import { createSelector } from '@ngrx/store';
 
 import {
-  RecipeSettings,
   Entities,
-  RationalRecipeSettings,
   Rational,
+  RationalRecipeSettings,
+  RecipeSettings,
 } from '~/models';
 import { RecipeUtility } from '~/utilities';
-import * as Items from '../items';
+import { LabState } from '../';
 import * as Factories from '../factories';
+import * as Items from '../items';
 import * as Settings from '../settings';
-import { LabState } from '..';
 import { RecipesState } from './recipes.reducer';
 
 /* Base selector functions */

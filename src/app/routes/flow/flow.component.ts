@@ -1,10 +1,10 @@
 import {
-  Component,
-  ChangeDetectionStrategy,
-  ViewChild,
-  ChangeDetectorRef,
-  ElementRef,
   AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  ViewChild,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -26,14 +26,14 @@ import { select, Selection } from 'd3-selection';
 import { combineLatest, map } from 'rxjs';
 
 import {
-  SankeyData,
-  ListMode,
+  Link,
   LinkValue,
   linkValueOptions,
+  ListMode,
+  Node,
   SankeyAlign,
   sankeyAlignOptions,
-  Link,
-  Node,
+  SankeyData,
 } from '~/models';
 import { LabState } from '~/store';
 import * as Preferences from '~/store/preferences';

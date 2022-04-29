@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
+
 import { environment } from 'src/environments';
 import { FuelType } from '~/models';
-
 import { LabState } from '~/store';
 import * as Products from '~/store/products';
 import * as Settings from '~/store/settings';

@@ -1,13 +1,13 @@
-import { Mocks, CategoryId, ItemId, RecipeId } from 'src/tests';
-import { RateUtility } from './rate.utility';
+import { CategoryId, ItemId, Mocks, RecipeId } from 'src/tests';
 import {
-  Step,
-  Rational,
   DisplayRate,
-  RationalRecipe,
   Entities,
+  Rational,
+  RationalRecipe,
   RationalRecipeSettings,
+  Step,
 } from '~/models';
+import { RateUtility } from './rate.utility';
 
 describe('RateUtility', () => {
   describe('addStepsFor', () => {

@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideMockStore } from '@ngrx/store/testing';
 
-import { ItemId, TestUtility, initialState, Mocks } from 'src/tests';
+import { initialState, ItemId, Mocks, TestUtility } from 'src/tests';
 import { DialogComponent, IconComponent } from '~/components';
 import { RankerComponent } from './ranker.component';
 

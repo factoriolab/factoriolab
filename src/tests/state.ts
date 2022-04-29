@@ -6,7 +6,7 @@ import { initialPreferencesState } from '~/store/preferences';
 import { initialProductsState } from '~/store/products';
 import { initialRecipesState } from '~/store/recipes';
 import { initialSettingsState } from '~/store/settings';
-import { Mocks } from '.';
+import { Mocks } from './';
 
 let datasetsState = Datasets.datasetsReducer(
   undefined,

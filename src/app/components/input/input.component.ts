@@ -7,6 +7,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+
 import { Rational } from '~/models';
 
 @Component({

@@ -1,4 +1,4 @@
-import { Mocks, ItemId, RecipeId } from 'src/tests';
+import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   Column,
   DisplayRate,
@@ -12,10 +12,10 @@ import {
   StepDetailTab,
 } from '~/models';
 import {
-  RateUtility,
   FlowUtility,
-  SimplexUtility,
+  RateUtility,
   RecipeUtility,
+  SimplexUtility,
 } from '~/utilities';
 import * as Items from '../items';
 import * as Recipes from '../recipes';

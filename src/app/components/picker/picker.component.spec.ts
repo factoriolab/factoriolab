@@ -1,9 +1,9 @@
-import { ViewChild, Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { provideMockStore } from '@ngrx/store/testing';
 
-import { CategoryId, ItemId, TestUtility, initialState } from 'src/tests';
+import { CategoryId, initialState, ItemId, TestUtility } from 'src/tests';
 import { DialogComponent } from '../dialog/dialog.component';
 import { IconComponent } from '../icon/icon.component';
 import { PickerComponent } from './picker.component';

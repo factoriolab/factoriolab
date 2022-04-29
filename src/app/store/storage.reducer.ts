@@ -1,7 +1,7 @@
-import { ActionReducer, Action } from '@ngrx/store';
+import { Action, ActionReducer } from '@ngrx/store';
 
 import { BrowserUtility } from '~/utilities';
-import { LabState } from '.';
+import { LabState } from './';
 
 export function storageMetaReducer(
   reducer: ActionReducer<LabState, Action>

@@ -8,9 +8,9 @@ import { Action } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { of, ReplaySubject } from 'rxjs';
 
-import { Mocks, initialState } from 'src/tests';
+import { initialState, Mocks } from 'src/tests';
 import { ModData, ModHash } from '~/models';
-import { LabState } from '..';
+import { LabState } from '../';
 import * as App from '../app.actions';
 import * as Products from '../products';
 import * as Settings from '../settings';

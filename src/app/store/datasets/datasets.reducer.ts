@@ -1,5 +1,5 @@
 import { data } from 'src/data';
-import { Entities, ModData, AppData, ModHash } from '~/models';
+import { AppData, Entities, ModData, ModHash } from '~/models';
 import { DatasetsAction, DatasetsActionType } from './datasets.actions';
 
 export interface DatasetsState extends AppData {

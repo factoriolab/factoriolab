@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { provideMockStore } from '@ngrx/store/testing';
 
-import { RecipeId, TestUtility, initialState } from 'src/tests';
+import { initialState, RecipeId, TestUtility } from 'src/tests';
 import { DialogComponent } from '../dialog/dialog.component';
 import { IconComponent } from '../icon/icon.component';
 import { ToggleComponent } from './toggle.component';

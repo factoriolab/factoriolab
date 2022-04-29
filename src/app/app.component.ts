@@ -1,4 +1,4 @@
-import { trigger, transition, style, animate } from '@angular/animations';
+import { animate, style, transition, trigger } from '@angular/animations';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -10,7 +10,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
 import { environment } from 'src/environments';
-import { ItemId, APP, MatrixResultType, Game } from './models';
+import { APP, Game, ItemId, MatrixResultType } from './models';
 import { ErrorService, RouterService, StateService } from './services';
 import { LabState } from './store';
 import * as Products from './store/products';

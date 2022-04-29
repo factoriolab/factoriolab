@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
 import { TestUtility } from 'src/tests';
-import { ValidateNumberDirective } from '.';
+import { ValidateNumberDirective } from './';
 
 enum DataTest {
   Input = 'lab-validate-number-input',

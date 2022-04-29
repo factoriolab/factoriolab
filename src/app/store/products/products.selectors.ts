@@ -1,33 +1,33 @@
 import { createSelector } from '@ngrx/store';
 
 import {
-  Step,
-  RateType,
-  Entities,
-  Rational,
+  Column,
   DisplayRateVal,
-  RationalProduct,
-  MatrixResultType,
+  Entities,
   Game,
   ItemId,
+  MatrixResultType,
+  PowerUnit,
+  PrecisionColumns,
+  RateType,
+  Rational,
+  RationalProduct,
+  Step,
   StepDetail,
   StepDetailTab,
-  Column,
-  PrecisionColumns,
-  PowerUnit,
 } from '~/models';
 import {
-  RateUtility,
-  SimplexUtility,
   FlowUtility,
+  RateUtility,
   RecipeUtility,
+  SimplexUtility,
 } from '~/utilities';
+import { LabState } from '../';
 import * as Factories from '../factories';
 import * as Items from '../items';
 import * as Preferences from '../preferences';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
-import { LabState } from '../';
 import { ProductsState } from './products.reducer';
 
 /* Base selector functions */

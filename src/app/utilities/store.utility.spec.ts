@@ -1,4 +1,4 @@
-import { Mocks, ItemId } from 'src/tests';
+import { ItemId, Mocks } from 'src/tests';
 import { StoreUtility } from './store.utility';
 
 describe('StoreUtility', () => {

@@ -1,7 +1,7 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import { MatrixResultType, Rational, RationalRecipe, Step } from '~/models';
 import { RateUtility } from './rate.utility';
-import { SimplexUtility, MatrixState, MatrixSolution } from './simplex.utility';
+import { MatrixSolution, MatrixState, SimplexUtility } from './simplex.utility';
 
 describe('SimplexUtility', () => {
   const getState = (): MatrixState => ({

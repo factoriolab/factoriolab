@@ -1,5 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -8,18 +8,18 @@ import { MemoizedSelector } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 import { initialState } from 'src/tests';
-import { LabState } from './store';
+import { AppComponent, TITLE_DSP, TITLE_SFY } from './app.component';
 import {
   IconComponent,
-  SettingsComponent,
-  ProductsComponent,
   OptionsComponent,
   PickerComponent,
+  ProductsComponent,
+  SettingsComponent,
 } from './components';
 import { APP, Game } from './models';
 import { ListComponent } from './routes';
+import { LabState } from './store';
 import * as Settings from './store/settings';
-import { AppComponent, TITLE_DSP, TITLE_SFY } from './app.component';
 
 describe('AppComponent', () => {
   let component: AppComponent;

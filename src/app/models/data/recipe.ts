@@ -1,5 +1,5 @@
-import { Rational } from '../rational';
 import { Entities } from '../entities';
+import { Rational } from '../rational';
 
 export interface Recipe {
   id: string;

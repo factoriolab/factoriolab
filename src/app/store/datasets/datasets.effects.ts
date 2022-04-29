@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Actions, ofType, createEffect } from '@ngrx/effects';
+import { Injectable } from '@angular/core';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { combineLatest, EMPTY, Observable, of } from 'rxjs';
-import { switchMap, map, tap, filter } from 'rxjs/operators';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 
-import { ModData, Entities, ModHash } from '~/models';
+import { Entities, ModData, ModHash } from '~/models';
 import { BrowserUtility } from '~/utilities';
-import { LabState } from '..';
+import { LabState } from '../';
 import * as App from '../app.actions';
 import * as Products from '../products';
 import * as Settings from '../settings';

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MemoizedSelector } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
-import { Mocks, RecipeId, TestUtility, initialState } from 'src/tests';
+import { initialState, Mocks, RecipeId, TestUtility } from 'src/tests';
 import { Dataset, ItemId, Rational } from '~/models';
 import { LabState } from '~/store';
 import * as Settings from '~/store/settings';

@@ -1,12 +1,12 @@
 import {
-  Component,
-  Output,
-  EventEmitter,
   ChangeDetectionStrategy,
-  HostListener,
   ChangeDetectorRef,
-  OnInit,
+  Component,
   ElementRef,
+  EventEmitter,
+  HostListener,
+  OnInit,
+  Output,
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -15,24 +15,24 @@ import { Store } from '@ngrx/store';
 import { combineLatest, first, map } from 'rxjs';
 
 import {
+  Column,
+  Dataset,
   DisplayRate,
-  ResearchSpeed,
-  Preset,
-  ItemId,
-  WARNING_RESET,
-  InserterTarget,
-  InserterCapacity,
-  IdName,
-  InserterCapacityOptions,
-  ResearchSpeedOptions,
-  InserterTargetOptions,
   DisplayRateOptions,
   Game,
   GameOptions,
+  IdName,
+  InserterCapacity,
+  InserterCapacityOptions,
+  InserterTarget,
+  InserterTargetOptions,
+  ItemId,
   PowerUnit,
   PowerUnitOptions,
-  Column,
-  Dataset,
+  Preset,
+  ResearchSpeed,
+  ResearchSpeedOptions,
+  WARNING_RESET,
 } from '~/models';
 import { RouterService } from '~/services';
 import { LabState } from '~/store';

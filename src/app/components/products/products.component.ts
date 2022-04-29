@@ -1,20 +1,20 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
 import {
+  Dataset,
+  DisplayRate,
+  DisplayRateOptions,
+  FactorySettings,
+  Game,
+  IdType,
+  ItemId,
+  PIPE,
   Product,
   RateType,
-  DisplayRate,
-  IdType,
-  DisplayRateOptions,
-  ItemId,
-  Game,
-  PIPE,
-  Dataset,
-  RecipeSettings,
-  FactorySettings,
   RecipeField,
+  RecipeSettings,
 } from '~/models';
 import { TrackService } from '~/services';
 import { LabState } from '~/store';

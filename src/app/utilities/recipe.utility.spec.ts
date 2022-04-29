@@ -1,4 +1,4 @@
-import { Mocks, ItemId, RecipeId } from 'src/tests';
+import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   Entities,
   Product,

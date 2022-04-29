@@ -1,14 +1,14 @@
 import { ItemId, RecipeId } from 'src/tests';
 import {
   DisplayRate,
-  ResearchSpeed,
-  Preset,
-  InserterTarget,
   InserterCapacity,
+  InserterTarget,
+  Preset,
+  ResearchSpeed,
 } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './settings.actions';
-import { settingsReducer, initialSettingsState } from './settings.reducer';
+import { initialSettingsState, settingsReducer } from './settings.reducer';
 
 describe('Settings Reducer', () => {
   describe('LOAD', () => {

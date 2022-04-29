@@ -1,19 +1,19 @@
 import {
-  Rational,
-  RationalRecipe,
-  RationalRecipeSettings,
   Dataset,
-  ItemId,
-  Entities,
-  RationalProduct,
-  Product,
   EnergyType,
+  Entities,
   FuelType,
-  Recipe,
-  RateType,
+  ItemId,
   ItemSettings,
+  Product,
+  RateType,
+  Rational,
   RationalBelt,
   RationalFactory,
+  RationalProduct,
+  RationalRecipe,
+  RationalRecipeSettings,
+  Recipe,
 } from '~/models';
 import * as Factories from '~/store/factories';
 import * as Recipes from '~/store/recipes';

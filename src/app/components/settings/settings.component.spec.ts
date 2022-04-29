@@ -8,11 +8,11 @@ import { MemoizedSelector } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 import {
-  TestUtility,
-  ItemId,
-  initialState,
-  Mocks,
   DispatchTest,
+  initialState,
+  ItemId,
+  Mocks,
+  TestUtility,
 } from 'src/tests';
 import {
   ColumnsComponent,

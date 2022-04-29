@@ -1,11 +1,11 @@
 import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
-  ChangeDetectionStrategy,
-  AfterViewInit,
-  OnInit,
-  ChangeDetectorRef,
   OnChanges,
+  OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -13,19 +13,19 @@ import { Store } from '@ngrx/store';
 import { combineLatest, filter, first, map } from 'rxjs';
 
 import {
-  Step,
-  DisplayRate,
-  Entities,
-  Rational,
   Column,
+  Dataset,
+  DisplayRate,
+  DisplayRateVal,
+  Entities,
+  Game,
   ItemId,
   ListMode,
-  DisplayRateVal,
-  Game,
   PIPE,
-  Dataset,
-  StepDetailTab,
+  Rational,
   RecipeField,
+  Step,
+  StepDetailTab,
 } from '~/models';
 import { TrackService } from '~/services';
 import { LabState } from '~/store';

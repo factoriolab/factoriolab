@@ -1,4 +1,4 @@
-import { Mocks, ItemId, RecipeId } from 'src/tests';
+import { ItemId, Mocks, RecipeId } from 'src/tests';
 import { RateType } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './products.actions';

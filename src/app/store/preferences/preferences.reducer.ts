@@ -1,11 +1,11 @@
 import {
+  AllColumns,
+  Column,
   ColumnSettings,
   Entities,
   LinkValue,
-  AllColumns,
-  SankeyAlign,
   PowerUnit,
-  Column,
+  SankeyAlign,
 } from '~/models';
 import * as App from '../app.actions';
 import {

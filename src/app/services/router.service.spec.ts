@@ -3,27 +3,27 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { Router, NavigationEnd, NavigationStart } from '@angular/router';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MemoizedSelector } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { deflate, inflate } from 'pako';
 import { of } from 'rxjs';
 
-import { Mocks, ItemId, RecipeId, initialState } from 'src/tests';
+import { initialState, ItemId, Mocks, RecipeId } from 'src/tests';
 import {
-  RateType,
-  Product,
   DisplayRate,
-  ResearchSpeed,
-  Preset,
-  InserterTarget,
-  InserterCapacity,
-  Rational,
-  ModHash,
   Entities,
+  InserterCapacity,
+  InserterTarget,
+  ModHash,
+  Preset,
+  Product,
+  RateType,
+  Rational,
+  ResearchSpeed,
 } from '~/models';
-import { reducers, metaReducers, LabState } from '~/store';
+import { LabState, metaReducers, reducers } from '~/store';
 import * as App from '~/store/app.actions';
 import * as Datasets from '~/store/datasets';
 import * as Factories from '~/store/factories';
@@ -32,13 +32,13 @@ import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 import {
-  RouterService,
   EMPTY,
-  NULL,
-  TRUE,
   FALSE,
-  Zip,
   MIN_ZIP,
+  NULL,
+  RouterService,
+  TRUE,
+  Zip,
   ZipVersion,
 } from './router.service';
 

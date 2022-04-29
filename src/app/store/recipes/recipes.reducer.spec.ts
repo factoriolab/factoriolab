@@ -1,8 +1,8 @@
-import { Mocks, ItemId } from 'src/tests';
+import { ItemId, Mocks } from 'src/tests';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Actions from './recipes.actions';
-import { recipesReducer, initialRecipesState } from './recipes.reducer';
+import { initialRecipesState, recipesReducer } from './recipes.reducer';
 
 describe('Recipes Reducer', () => {
   describe('LOAD', () => {

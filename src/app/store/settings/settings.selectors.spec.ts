@@ -1,13 +1,13 @@
-import { Mocks, ItemId, RecipeId, TestUtility } from 'src/tests';
+import { ItemId, Mocks, RecipeId, TestUtility } from 'src/tests';
 import {
-  Rational,
-  ResearchSpeed,
-  Preset,
   FuelType,
   Game,
-  InserterTarget,
   InserterCapacity,
   InserterData,
+  InserterTarget,
+  Preset,
+  Rational,
+  ResearchSpeed,
 } from '~/models';
 import { initialSettingsState } from './settings.reducer';
 import * as Selectors from './settings.selectors';

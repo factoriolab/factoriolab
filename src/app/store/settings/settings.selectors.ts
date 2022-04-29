@@ -1,32 +1,32 @@
 import { createSelector } from '@ngrx/store';
-import { environment } from 'src/environments';
 
+import { environment } from 'src/environments';
 import {
-  ResearchSpeedFactor,
-  Rational,
-  Entities,
-  Recipe,
-  RationalItem,
-  RationalRecipe,
+  columnOptions,
   Dataset,
-  Preset,
   Defaults,
-  toBoolEntities,
-  toEntities,
-  ItemId,
+  Entities,
+  FuelType,
   Game,
   InserterData,
+  ItemId,
+  Preset,
+  presetOptions,
+  rateTypeOptions,
+  Rational,
   RationalBeacon,
   RationalBelt,
   RationalCargoWagon,
-  RationalFluidWagon,
   RationalFactory,
+  RationalFluidWagon,
   RationalFuel,
+  RationalItem,
   RationalModule,
-  columnOptions,
-  rateTypeOptions,
-  FuelType,
-  presetOptions,
+  RationalRecipe,
+  Recipe,
+  ResearchSpeedFactor,
+  toBoolEntities,
+  toEntities,
 } from '~/models';
 import { LabState } from '../';
 import * as Datasets from '../datasets';

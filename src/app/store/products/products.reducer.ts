@@ -1,4 +1,4 @@
-import { Product, RateType, Entities, Rational } from '~/models';
+import { Entities, Product, RateType, Rational } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import { ProductsAction, ProductsActionType } from './products.actions';

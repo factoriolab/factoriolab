@@ -2,9 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideMockStore } from '@ngrx/store/testing';
 
-import { Mocks, TestUtility, ItemId, initialState } from 'src/tests';
+import { initialState, ItemId, Mocks, TestUtility } from 'src/tests';
 import { DialogComponent, IconComponent } from '~/components';
-import { IdType, Dataset } from '~/models';
+import { Dataset, IdType } from '~/models';
 import { SelectComponent } from './select.component';
 
 enum DataTest {

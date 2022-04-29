@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { RateType, IdPayload, DefaultIdPayload } from '~/models';
+import { DefaultIdPayload, IdPayload, RateType } from '~/models';
 
 export const enum ProductsActionType {
   RESET = '[Products] Reset',

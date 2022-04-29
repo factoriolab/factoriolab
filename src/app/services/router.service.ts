@@ -1,23 +1,23 @@
 import { Injectable } from '@angular/core';
-import { Router, Event, NavigationEnd } from '@angular/router';
+import { Event, NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { deflate, inflate } from 'pako';
 import { Observable } from 'rxjs';
-import { map, filter, first } from 'rxjs/operators';
+import { filter, first, map } from 'rxjs/operators';
 
 import { data } from 'src/data';
 import {
-  Product,
-  RecipeSettings,
-  Step,
-  RateType,
-  ItemSettings,
+  DisplayRate,
   Entities,
   FactorySettings,
-  Rational,
+  ItemSettings,
   ModHash,
-  DisplayRate,
   Preset,
+  Product,
+  RateType,
+  Rational,
+  RecipeSettings,
+  Step,
 } from '~/models';
 import { LabState } from '~/store';
 import * as App from '~/store/app.actions';

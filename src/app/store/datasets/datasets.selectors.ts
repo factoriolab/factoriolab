@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
 
 import { Entities, Mod, ModInfo } from '~/models';
-import { LabState } from '..';
+import { LabState } from '../';
 import { DatasetsState } from './datasets.reducer';
 
 /* Base selector functions */

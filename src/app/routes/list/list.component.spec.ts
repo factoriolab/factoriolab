@@ -8,27 +8,27 @@ import { MemoizedSelector } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 import {
-  Mocks,
-  TestUtility,
-  ItemId,
-  RecipeId,
-  initialState,
   DispatchTest,
+  initialState,
+  ItemId,
+  Mocks,
+  RecipeId,
+  TestUtility,
 } from 'src/tests';
 import {
+  ColumnsComponent,
   IconComponent,
   InputComponent,
   SelectComponent,
-  ColumnsComponent,
 } from '~/components';
 import { ValidateNumberDirective } from '~/directives';
 import {
-  Step,
-  ListMode,
-  StepDetailTab,
   Entities,
-  StepDetail,
+  ListMode,
   RecipeField,
+  Step,
+  StepDetail,
+  StepDetailTab,
 } from '~/models';
 import {
   DisplayRateLabelPipe,
@@ -40,8 +40,8 @@ import {
 } from '~/pipes';
 import { RouterService } from '~/services';
 import { LabState } from '~/store';
-import * as Items from '~/store/items';
 import * as Factories from '~/store/factories';
+import * as Items from '~/store/items';
 import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';

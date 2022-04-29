@@ -2,12 +2,12 @@ import {
   Dataset,
   Entities,
   ERROR_SIMPLEX,
+  MatrixResult,
+  MatrixResultType,
   Rational,
   RationalRecipe,
   Step,
   WARNING_HANG,
-  MatrixResult,
-  MatrixResultType,
 } from '~/models';
 import * as Items from '~/store/items';
 import { RateUtility } from './rate.utility';

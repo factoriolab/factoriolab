@@ -1,16 +1,16 @@
 import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
   ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
   OnChanges,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs';
 
-import { IdType, ItemId, Game } from '~/models';
+import { Game, IdType, ItemId } from '~/models';
 import { LabState } from '~/store';
 import * as Recipes from '~/store/recipes';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';

@@ -1,5 +1,6 @@
 import pkg from 'package.json';
-import { Environment } from '.';
+
+import { Environment } from './';
 
 export const environment: Environment = {
   production: false,

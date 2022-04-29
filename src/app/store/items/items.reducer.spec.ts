@@ -2,7 +2,7 @@ import { Mocks } from 'src/tests';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Actions from './items.actions';
-import { itemsReducer, initialItemsState } from './items.reducer';
+import { initialItemsState, itemsReducer } from './items.reducer';
 
 describe('Items Reducer', () => {
   describe('LOAD', () => {

@@ -1,4 +1,4 @@
-import { Mocks, ItemId } from 'src/tests';
+import { ItemId, Mocks } from 'src/tests';
 import * as App from '../app.actions';
 import * as Actions from './factories.actions';
 import { factoriesReducer, initialFactoriesState } from './factories.reducer';

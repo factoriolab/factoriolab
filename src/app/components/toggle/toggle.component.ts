@@ -1,11 +1,11 @@
 import {
+  ChangeDetectionStrategy,
   Component,
+  ElementRef,
+  EventEmitter,
   Input,
   Output,
-  EventEmitter,
-  ChangeDetectionStrategy,
   ViewChild,
-  ElementRef,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs';
