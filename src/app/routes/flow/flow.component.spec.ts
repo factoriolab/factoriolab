@@ -12,15 +12,8 @@ import {
 } from 'd3-sankey';
 
 import { DispatchTest, initialState, Mocks, TestUtility } from 'src/tests';
-import { ColumnsComponent, OptionsComponent } from '~/components';
 import { SankeyAlign, SankeyData } from '~/models';
-import {
-  DisplayRateLabelPipe,
-  FactoryRatePipe,
-  PowerPipe,
-  RatePipe,
-  StepHrefPipe,
-} from '~/pipes';
+import { SharedModule } from '~/shared/shared.module';
 import { LabState } from '~/store';
 import * as Preferences from '~/store/preferences';
 import * as Products from '~/store/products';
@@ -41,19 +34,9 @@ describe('FlowComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        ColumnsComponent,
-        OptionsComponent,
-        DisplayRateLabelPipe,
-        RatePipe,
-        FactoryRatePipe,
-        PowerPipe,
-        StepHrefPipe,
-        ListComponent,
-        FlowComponent,
-      ],
-      imports: [HttpClientTestingModule, RouterTestingModule],
-      providers: [RatePipe, provideMockStore({ initialState })],
+      declarations: [ListComponent, FlowComponent],
+      imports: [HttpClientTestingModule, RouterTestingModule, SharedModule],
+      providers: [provideMockStore({ initialState })],
     }).compileComponents();
   });
 

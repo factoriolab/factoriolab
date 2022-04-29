@@ -89,7 +89,7 @@ export const getCostIgnored = createSelector(
   settingsState,
   (state) => state.costIgnored
 );
-export const getProliferatorSpray = createSelector(
+export const getProliferatorSprayId = createSelector(
   settingsState,
   (state) => state.proliferatorSprayId
 );
@@ -188,21 +188,21 @@ export const getSettings = createSelector(
   (s, d) => ({
     ...s,
     ...{
-      belt: s.beltId ?? d?.beltId,
-      pipe: s.pipeId ?? d?.pipeId,
-      fuel: s.fuelId ?? d?.fuelId,
-      cargoWagon: s.cargoWagonId ?? d?.cargoWagonId,
-      fluidWagon: s.fluidWagonId ?? d?.fluidWagonId,
-      disabledRecipes: s.disabledRecipeIds ?? d?.disabledRecipeIds ?? [],
+      beltId: s.beltId ?? d?.beltId,
+      pipeId: s.pipeId ?? d?.pipeId,
+      fuelId: s.fuelId ?? d?.fuelId,
+      cargoWagonId: s.cargoWagonId ?? d?.cargoWagonId,
+      fluidWagonId: s.fluidWagonId ?? d?.fluidWagonId,
+      disabledRecipeIds: s.disabledRecipeIds ?? d?.disabledRecipeIds ?? [],
     },
   })
 );
 
-export const getFuel = createSelector(getSettings, (s) => s.fuel);
+export const getFuelId = createSelector(getSettings, (s) => s.fuelId);
 
-export const getDisabledRecipes = createSelector(
+export const getDisabledRecipeIds = createSelector(
   getSettings,
-  (s) => s.disabledRecipes
+  (s) => s.disabledRecipeIds
 );
 
 export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
@@ -537,7 +537,7 @@ export const getDataset = createSelector(
   }
 );
 
-export const getChemicalFuels = createSelector(
+export const getChemicalFuelIds = createSelector(
   getDataset,
   (data) => data.fuelIds[FuelType.Chemical] ?? []
 );
@@ -562,24 +562,24 @@ export const getBeltSpeed = createSelector(
 );
 
 export const getAdjustmentData = createSelector(
-  getFuel,
-  getProliferatorSpray,
+  getFuelId,
+  getProliferatorSprayId,
   getRationalMiningBonus,
   getResearchFactor,
   getRationalCostFactor,
   getRationalCostFactory,
   getDataset,
   (
-    fuel,
-    proliferatorSpray,
+    fuelId,
+    proliferatorSprayId,
     miningBonus,
     researchSpeed,
     costFactor,
     costFactory,
     data
   ) => ({
-    fuel,
-    proliferatorSpray,
+    fuelId,
+    proliferatorSprayId,
     miningBonus,
     researchSpeed,
     costFactor,

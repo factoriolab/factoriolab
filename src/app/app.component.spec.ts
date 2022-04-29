@@ -9,15 +9,10 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 import { initialState } from 'src/tests';
 import { AppComponent, TITLE_DSP, TITLE_SFY } from './app.component';
-import {
-  IconComponent,
-  OptionsComponent,
-  PickerComponent,
-  ProductsComponent,
-  SettingsComponent,
-} from './components';
+import { ProductsComponent, SettingsComponent } from './components';
 import { APP, Game } from './models';
 import { ListComponent } from './routes';
+import { SharedModule } from './shared/shared.module';
 import { LabState } from './store';
 import * as Settings from './store/settings';
 
@@ -31,9 +26,6 @@ describe('AppComponent', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [
-        IconComponent,
-        OptionsComponent,
-        PickerComponent,
         SettingsComponent,
         ProductsComponent,
         ListComponent,
@@ -44,6 +36,7 @@ describe('AppComponent', () => {
         FormsModule,
         HttpClientTestingModule,
         RouterTestingModule,
+        SharedModule,
       ],
       providers: [provideMockStore({ initialState })],
     })

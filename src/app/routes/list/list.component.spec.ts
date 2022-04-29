@@ -16,13 +16,6 @@ import {
   TestUtility,
 } from 'src/tests';
 import {
-  ColumnsComponent,
-  IconComponent,
-  InputComponent,
-  SelectComponent,
-} from '~/components';
-import { ValidateNumberDirective } from '~/directives';
-import {
   Entities,
   ListMode,
   RecipeField,
@@ -30,15 +23,8 @@ import {
   StepDetail,
   StepDetailTab,
 } from '~/models';
-import {
-  DisplayRateLabelPipe,
-  FactoryRatePipe,
-  GtZeroPipe,
-  PowerPipe,
-  RatePipe,
-  StepHrefPipe,
-} from '~/pipes';
 import { RouterService } from '~/services';
+import { SharedModule } from '~/shared/shared.module';
 import { LabState } from '~/store';
 import * as Factories from '~/store/factories';
 import * as Items from '~/store/items';
@@ -76,23 +62,14 @@ describe('ListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        ColumnsComponent,
-        IconComponent,
-        InputComponent,
-        SelectComponent,
-        ValidateNumberDirective,
-        DisplayRateLabelPipe,
-        RatePipe,
-        FactoryRatePipe,
-        PowerPipe,
-        StepHrefPipe,
-        GtZeroPipe,
-        ListComponent,
-        TestListComponent,
+      declarations: [ListComponent, TestListComponent],
+      imports: [
+        FormsModule,
+        HttpClientTestingModule,
+        RouterTestingModule,
+        SharedModule,
       ],
-      imports: [FormsModule, HttpClientTestingModule, RouterTestingModule],
-      providers: [RouterService, RatePipe, provideMockStore({ initialState })],
+      providers: [RouterService, provideMockStore({ initialState })],
     }).compileComponents();
   });
 
@@ -232,7 +209,7 @@ describe('ListComponent', () => {
           [ItemId.Coal]: {
             ...Mocks.ItemSettingsInitial[ItemId.Coal],
             ...{
-              recipe: RecipeId.Coal,
+              recipeId: RecipeId.Coal,
             },
           },
         },
@@ -287,7 +264,7 @@ describe('ListComponent', () => {
       spyOn(component.child, 'setDisabledRecipes');
       const settings = {
         ...Settings.initialSettingsState,
-        ...{ disabledRecipes: [RecipeId.AdvancedOilProcessing] },
+        ...{ disabledRecipeIds: [RecipeId.AdvancedOilProcessing] },
       };
       const data = { ...Mocks.AdjustedData, ...{ defaults: undefined } };
       component.child.toggleRecipe(

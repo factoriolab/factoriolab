@@ -14,20 +14,9 @@ import {
   Mocks,
   TestUtility,
 } from 'src/tests';
-import {
-  ColumnsComponent,
-  IconComponent,
-  InfoComponent,
-  InputComponent,
-  OptionsComponent,
-  RankerComponent,
-  SelectComponent,
-  ToggleComponent,
-} from '~/components';
-import { ValidateNumberDirective } from '~/directives';
 import { Entities, Game } from '~/models';
-import { GtZeroPipe } from '~/pipes';
 import { RouterService } from '~/services';
+import { SharedModule } from '~/shared/shared.module';
 import { LabState } from '~/store';
 import * as App from '~/store/app.actions';
 import * as Factories from '~/store/factories';
@@ -53,24 +42,13 @@ describe('SettingsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      declarations: [SettingsComponent],
       imports: [
         FormsModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
         RouterTestingModule,
-      ],
-      declarations: [
-        ColumnsComponent,
-        IconComponent,
-        InfoComponent,
-        InputComponent,
-        OptionsComponent,
-        RankerComponent,
-        SelectComponent,
-        ToggleComponent,
-        ValidateNumberDirective,
-        GtZeroPipe,
-        SettingsComponent,
+        SharedModule,
       ],
       providers: [RouterService, provideMockStore({ initialState })],
     }).compileComponents();

@@ -158,9 +158,9 @@ for (const recipe of Data.recipeIds.map((i) => Data.recipeEntities[i])) {
 }
 export const SettingsState1 = { ...Settings.initialSettingsState, ...Defaults };
 export const ItemSettingsInitial = Items.getItemSettings.projector({}, Data, {
-  belt: ItemId.TransportBelt,
-  cargoWagon: ItemId.CargoWagon,
-  fluidWagon: ItemId.FluidWagon,
+  beltId: ItemId.TransportBelt,
+  cargoWagonId: ItemId.CargoWagon,
+  fluidWagonId: ItemId.FluidWagon,
 });
 export const FactorySettingsInitial = Factories.getFactories.projector(
   Factories.initialFactoriesState,
@@ -181,7 +181,7 @@ export const AdjustedData = Recipes.getAdjustedDataset.projector(
   ItemSettingsInitial,
   Defaults!.disabledRecipeIds,
   {
-    fuel: ItemId.Coal,
+    fuelId: ItemId.Coal,
     miningBonus: Rational.zero,
     researchSpeed: Rational.one,
     costFactor: Rational.one,

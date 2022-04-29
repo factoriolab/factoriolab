@@ -668,7 +668,7 @@ describe('RecipeUtility', () => {
         ...Mocks.RationalRecipeSettingsInitial,
         ...{
           [RecipeId.SpaceSciencePack]: {
-            factory: 'id',
+            factoryId: 'id',
           },
         },
       };
@@ -781,7 +781,7 @@ describe('RecipeUtility', () => {
           [ItemId.PetroleumGas]: {
             ...Mocks.ItemSettingsInitial[ItemId.PetroleumGas],
             ...{
-              recipe: RecipeId.CoalLiquefaction,
+              recipeId: RecipeId.CoalLiquefaction,
             },
           },
         },
@@ -1007,7 +1007,7 @@ describe('RecipeUtility', () => {
           [RecipeId.Coal]: {
             ...Mocks.RecipeSettingsInitial[RecipeId.Coal],
             ...{
-              beacon: 'beacon-2',
+              beaconId: 'beacon-2',
             },
           },
         },

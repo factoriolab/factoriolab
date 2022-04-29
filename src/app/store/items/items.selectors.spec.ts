@@ -33,7 +33,7 @@ describe('Items Selectors', () => {
     it('should use the passed overrides', () => {
       const state = {
         ...initialItemsState,
-        ...{ [Mocks.Item1.id]: { belt: stringValue, wagon: stringValue } },
+        ...{ [Mocks.Item1.id]: { beltId: stringValue, wagonId: stringValue } },
       };
       const result = Selectors.getItemSettings.projector(
         state,
@@ -48,7 +48,7 @@ describe('Items Selectors', () => {
       const result = Selectors.getItemSettings.projector(
         initialItemsState,
         Mocks.Data,
-        { ...Settings.initialSettingsState, ...{ pipe: 'pipeValue' } }
+        { ...Settings.initialSettingsState, ...{ pipeId: 'pipeValue' } }
       );
       expect(result[ItemId.CrudeOil].beltId).toEqual('pipeValue');
     });

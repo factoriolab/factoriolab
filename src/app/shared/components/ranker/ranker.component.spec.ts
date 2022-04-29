@@ -3,7 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideMockStore } from '@ngrx/store/testing';
 
 import { initialState, ItemId, Mocks, TestUtility } from 'src/tests';
-import { DialogComponent, IconComponent } from '~/components';
+import { DialogComponent } from '../dialog/dialog.component';
+import { IconComponent } from '../icon/icon.component';
 import { RankerComponent } from './ranker.component';
 
 enum DataTest {

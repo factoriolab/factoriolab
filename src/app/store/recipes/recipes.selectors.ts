@@ -98,12 +98,12 @@ export const getRationalRecipeSettings = createSelector(
 );
 
 export const getSrc = createSelector(
-  Settings.getFuel,
+  Settings.getFuelId,
   Settings.getRationalMiningBonus,
   Settings.getResearchFactor,
   Settings.getDataset,
-  (fuel, miningBonus, researchSpeed, data) => ({
-    fuel,
+  (fuelId, miningBonus, researchSpeed, data) => ({
+    fuelId,
     miningBonus,
     researchSpeed,
     data,
@@ -113,15 +113,15 @@ export const getSrc = createSelector(
 export const getAdjustedDataset = createSelector(
   getRationalRecipeSettings,
   Items.getItemSettings,
-  Settings.getDisabledRecipes,
+  Settings.getDisabledRecipeIds,
   Settings.getAdjustmentData,
-  (recipeSettings, itemSettings, disabledRecipes, adj) =>
+  (recipeSettings, itemSettings, disabledRecipeIds, adj) =>
     RecipeUtility.adjustDataset(
       recipeSettings,
       itemSettings,
-      disabledRecipes,
-      adj.fuel,
-      adj.proliferatorSpray,
+      disabledRecipeIds,
+      adj.fuelId,
+      adj.proliferatorSprayId,
       adj.miningBonus,
       adj.researchSpeed,
       adj.costFactor,

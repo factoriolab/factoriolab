@@ -37,13 +37,13 @@ export class RecipeUtility {
 
   /** Determines default array of modules for a given recipe */
   static defaultModules(
-    allowedModules: string[],
-    moduleRank: string[],
+    allowedModuleIds: string[],
+    moduleRankIds: string[],
     count: number
   ): string[] {
     const module = this.bestMatch(
-      [ItemId.Module, ...allowedModules],
-      moduleRank
+      [ItemId.Module, ...allowedModuleIds],
+      moduleRankIds
     );
     return new Array(count).fill(module);
   }
@@ -51,7 +51,7 @@ export class RecipeUtility {
   static adjustRecipe(
     recipeId: string,
     fuelId: string | undefined,
-    proliferatorSpray: string,
+    proliferatorSprayId: string,
     miningBonus: Rational,
     researchFactor: Rational,
     settings: RationalRecipeSettings,
@@ -123,7 +123,7 @@ export class RecipeUtility {
             if (module.sprays) {
               let sprays = module.sprays;
               // If proliferator is applied to proliferator, apply productivity bonus to sprays
-              const pModule = data.moduleEntities[proliferatorSpray];
+              const pModule = data.moduleEntities[proliferatorSprayId];
               sprays = sprays.mul(
                 Rational.one.add(pModule.productivity ?? Rational.zero)
               );
@@ -292,7 +292,7 @@ export class RecipeUtility {
         }
 
         // If proliferator spray is applied to proliferator, add its usage to inputs
-        const pModule = data.moduleEntities[proliferatorSpray];
+        const pModule = data.moduleEntities[proliferatorSprayId];
         if (pModule && pModule.sprays) {
           const sprays = pModule.sprays.mul(
             Rational.one.add(pModule.productivity ?? Rational.zero)
@@ -388,9 +388,9 @@ export class RecipeUtility {
   static adjustDataset(
     recipeSettings: Entities<RationalRecipeSettings>,
     itemSettings: Entities<ItemSettings>,
-    disabledRecipes: string[],
-    fuel: string | undefined,
-    proliferatorSpray: string,
+    disabledRecipeIds: string[],
+    fuelId: string | undefined,
+    proliferatorSprayId: string,
     miningBonus: Rational,
     researchSpeed: Rational,
     costFactor: Rational,
@@ -400,8 +400,8 @@ export class RecipeUtility {
     const recipeR = this.adjustRecipes(
       recipeSettings,
       itemSettings,
-      fuel,
-      proliferatorSpray,
+      fuelId,
+      proliferatorSprayId,
       miningBonus,
       researchSpeed,
       data
@@ -412,13 +412,13 @@ export class RecipeUtility {
     // Check for calculated default recipe ids
     for (const id of data.itemIds.filter((i) => !data.itemRecipeIds[i])) {
       const rec = itemSettings[id].recipeId;
-      if (rec && disabledRecipes.indexOf(rec) === -1) {
+      if (rec && disabledRecipeIds.indexOf(rec) === -1) {
         itemRecipeIds[id] = rec;
       } else {
         const recipes = data.recipeIds
           .map((r) => recipeR[r])
           .filter(
-            (r) => r.produces(id) && disabledRecipes.indexOf(r.id) === -1
+            (r) => r.produces(id) && disabledRecipeIds.indexOf(r.id) === -1
           );
         if (recipes.length === 1 && Object.keys(recipes[0].out).length === 1) {
           itemRecipeIds[id] = recipes[0].id;
@@ -436,14 +436,14 @@ export class RecipeUtility {
 
   static defaultRecipe(
     itemId: string,
-    disabledRecipes: string[],
+    disabledRecipeIds: string[],
     data: Dataset
   ): string | undefined {
     let recipeId: string | undefined;
     const recipes = data.recipeIds
       .map((r) => data.recipeR[r])
       .filter(
-        (r) => r.produces(itemId) && disabledRecipes.indexOf(r.id) === -1
+        (r) => r.produces(itemId) && disabledRecipeIds.indexOf(r.id) === -1
       );
     if (recipes.length === 1 && Object.keys(recipes[0].out).length === 1) {
       recipeId = recipes[0].id;
@@ -454,8 +454,8 @@ export class RecipeUtility {
   static adjustRecipes(
     recipeSettings: Entities<RationalRecipeSettings>,
     itemSettings: Entities<ItemSettings>,
-    fuel: string | undefined,
-    proliferatorSpray: string,
+    fuelId: string | undefined,
+    proliferatorSprayId: string,
     miningBonus: Rational,
     researchSpeed: Rational,
     data: Dataset
@@ -464,8 +464,8 @@ export class RecipeUtility {
       data.recipeIds.reduce((e: Entities<RationalRecipe>, i) => {
         e[i] = this.adjustRecipe(
           i,
-          fuel,
-          proliferatorSpray,
+          fuelId,
+          proliferatorSprayId,
           miningBonus,
           researchSpeed,
           recipeSettings[i],

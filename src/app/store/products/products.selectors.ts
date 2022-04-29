@@ -52,15 +52,15 @@ export const getBaseProducts = createSelector(
 export const getProductSteps = createSelector(
   getBaseProducts,
   Items.getItemSettings,
-  Settings.getDisabledRecipes,
+  Settings.getDisabledRecipeIds,
   Recipes.getAdjustedDataset,
   Preferences.getSimplexModifiers,
-  (products, itemSettings, disabledRecipes, data, adj) => {
+  (products, itemSettings, disabledRecipeIds, data, adj) => {
     const a = products?.reduce((e: Entities<[string, Rational][]>, p) => {
       e[p.itemId] = SimplexUtility.getSteps(
         p.itemId,
         itemSettings,
-        disabledRecipes,
+        disabledRecipeIds,
         adj.costInput,
         adj.costIgnored,
         data,
@@ -266,11 +266,11 @@ export const getNormalizedRatesByFactories = createSelector(
           ...{
             [recipeId]: {
               ...{
-                factory: p.viaSetting,
-                factoryModules: p.viaFactoryModuleIds,
+                factoryId: p.viaSetting,
+                factoryModuleIds: p.viaFactoryModuleIds,
                 beaconCount: p.viaBeaconCount,
-                beacon: p.viaBeaconId,
-                beaconModules: p.viaBeaconModuleIds,
+                beaconId: p.viaBeaconId,
+                beaconModuleIds: p.viaBeaconModuleIds,
                 overclock: p.viaOverclock,
               },
             },
@@ -279,8 +279,8 @@ export const getNormalizedRatesByFactories = createSelector(
         const recipeR = RecipeUtility.adjustRecipes(
           customSettings,
           itemSettings,
-          adj.fuel,
-          adj.proliferatorSpray,
+          adj.fuelId,
+          adj.proliferatorSprayId,
           adj.miningBonus,
           adj.researchSpeed,
           adj.data
@@ -333,15 +333,15 @@ export const getNormalizedSteps = createSelector(
 export const getMatrixResult = createSelector(
   getNormalizedSteps,
   Items.getItemSettings,
-  Settings.getDisabledRecipes,
+  Settings.getDisabledRecipeIds,
   Recipes.getAdjustedDataset,
   Preferences.getSimplexModifiers,
-  (steps, itemSettings, disabledRecipes, data, adj) =>
+  (steps, itemSettings, disabledRecipeIds, data, adj) =>
     adj.simplex
       ? SimplexUtility.solve(
           RateUtility.copy(steps),
           itemSettings,
-          disabledRecipes,
+          disabledRecipeIds,
           adj.costInput,
           adj.costIgnored,
           data

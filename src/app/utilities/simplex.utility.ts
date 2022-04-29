@@ -66,7 +66,7 @@ export class SimplexUtility {
   static solve(
     steps: Step[],
     itemSettings: Items.ItemsState,
-    disabledRecipes: string[],
+    disabledRecipeIds: string[],
     costInput: Rational,
     costIgnored: Rational,
     data: Dataset,
@@ -80,7 +80,7 @@ export class SimplexUtility {
     const state = this.getState(
       steps,
       itemSettings,
-      disabledRecipes,
+      disabledRecipeIds,
       costInput,
       costIgnored,
       data
@@ -135,7 +135,7 @@ export class SimplexUtility {
   static getSteps(
     itemId: string,
     itemSettings: Items.ItemsState,
-    disabledRecipes: string[],
+    disabledRecipeIds: string[],
     costInput: Rational,
     costIgnored: Rational,
     data: Dataset,
@@ -149,7 +149,7 @@ export class SimplexUtility {
       steps = this.solve(
         steps,
         itemSettings,
-        disabledRecipes,
+        disabledRecipeIds,
         costInput,
         costIgnored,
         data,
@@ -178,7 +178,7 @@ export class SimplexUtility {
   static getState(
     steps: Step[],
     itemSettings: Items.ItemsState,
-    disabledRecipes: string[],
+    disabledRecipeIds: string[],
     costInput: Rational,
     costIgnored: Rational,
     data: Dataset
@@ -189,7 +189,7 @@ export class SimplexUtility {
       items: {},
       inputs: [],
       recipeIds: data.recipeIds.filter(
-        (r) => disabledRecipes.indexOf(r) === -1
+        (r) => disabledRecipeIds.indexOf(r) === -1
       ),
       itemIds: data.itemIds.filter((i) => !itemSettings[i].ignore),
       costInput,

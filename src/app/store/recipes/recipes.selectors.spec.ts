@@ -42,7 +42,7 @@ describe('Recipes Selectors', () => {
     it('should handle null settings', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { factory: ItemId.AssemblingMachine3 } },
+        ...{ [Mocks.Item1.id]: { factoryId: ItemId.AssemblingMachine3 } },
       };
       const data = {
         ...Mocks.Data,
@@ -81,7 +81,7 @@ describe('Recipes Selectors', () => {
     it('should use factory override', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { factory: stringValue } },
+        ...{ [Mocks.Item1.id]: { factoryId: stringValue } },
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
@@ -94,7 +94,7 @@ describe('Recipes Selectors', () => {
     it('should use module override', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { factoryModules: [stringValue] } },
+        ...{ [Mocks.Item1.id]: { factoryModuleIds: [stringValue] } },
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
@@ -120,7 +120,7 @@ describe('Recipes Selectors', () => {
     it('should use beacon override', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { beacon: stringValue } },
+        ...{ [Mocks.Item1.id]: { beaconId: stringValue } },
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
@@ -133,7 +133,7 @@ describe('Recipes Selectors', () => {
     it('should use beacon module override', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { beaconModules: [stringValue] } },
+        ...{ [Mocks.Item1.id]: { beaconModuleIds: [stringValue] } },
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
@@ -166,7 +166,7 @@ describe('Recipes Selectors', () => {
         Mocks.Data
       );
       expect(result).toEqual({
-        fuel: ItemId.Coal,
+        fuelId: ItemId.Coal,
         miningBonus: Rational.zero,
         researchSpeed: Rational.one,
         data: Mocks.Data,
@@ -178,10 +178,10 @@ describe('Recipes Selectors', () => {
     it('should determine whether columns are modified', () => {
       const result = Selectors.getRecipesModified.projector({
         [RecipeId.Coal]: {
-          factory: undefined,
-          factoryModules: [],
-          beacon: undefined,
-          beaconModules: undefined,
+          factoryId: undefined,
+          factoryModuleIds: [],
+          beaconId: undefined,
+          beaconModuleIds: undefined,
           beaconCount: undefined,
           beaconTotal: true,
         },

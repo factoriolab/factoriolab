@@ -3,14 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 import { DispatchTest, initialState, ItemId, Mocks, RecipeId } from 'src/tests';
-import {
-  IconComponent,
-  InputComponent,
-  OptionsComponent,
-  PickerComponent,
-} from '~/components';
-import { ValidateNumberDirective } from '~/directives';
 import { Product, RateType, RecipeField } from '~/models';
+import { SharedModule } from '~/shared/shared.module';
 import { LabState } from '~/store';
 import * as Factories from '~/store/factories';
 import * as Products from '~/store/products';
@@ -25,15 +19,8 @@ describe('ProductsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        IconComponent,
-        InputComponent,
-        OptionsComponent,
-        PickerComponent,
-        ValidateNumberDirective,
-        ProductsComponent,
-      ],
-      imports: [FormsModule],
+      declarations: [ProductsComponent],
+      imports: [FormsModule, SharedModule],
       providers: [provideMockStore({ initialState })],
     }).compileComponents();
   });
@@ -130,7 +117,7 @@ describe('ProductsComponent', () => {
       ...productMatch,
       ...{
         viaSetting: ItemId.AssemblingMachine2,
-        viaFactoryModules: new Array(2).fill(ItemId.SpeedModule2),
+        viaFactoryModuleIds: new Array(2).fill(ItemId.SpeedModule2),
       },
     };
 

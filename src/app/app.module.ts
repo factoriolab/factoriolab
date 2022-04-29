@@ -11,37 +11,10 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {
-  ColumnsComponent,
-  DialogComponent,
-  IconComponent,
-  InfoComponent,
-  InputComponent,
-  OptionsComponent,
-  PickerComponent,
-  ProductsComponent,
-  RankerComponent,
-  SelectComponent,
-  SettingsComponent,
-  ToggleComponent,
-} from './components';
-import {
-  FocusOnShowDirective,
-  ValidateNumberDirective,
-  ValidateOverclockDirective,
-} from './directives';
-import {
-  DisplayRateLabelPipe,
-  FactoryRatePipe,
-  GtZeroPipe,
-  InserterSpeedPipe,
-  LeftPadPipe,
-  PowerPipe,
-  RatePipe,
-  StepHrefPipe,
-} from './pipes';
+import { ProductsComponent, SettingsComponent } from './components';
 import { FlowComponent, ListComponent, MatrixComponent } from './routes';
 import { LabErrorHandler } from './services';
+import { SharedModule } from './shared/shared.module';
 import { metaReducers, reducers } from './store';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
 import { FactoriesEffects } from './store/factories/factories.effects';
@@ -50,32 +23,11 @@ import { ProductsEffects } from './store/products/products.effects';
 @NgModule({
   declarations: [
     AppComponent,
-    IconComponent,
-    PickerComponent,
-    RankerComponent,
-    SelectComponent,
-    ToggleComponent,
     ListComponent,
     FlowComponent,
     ProductsComponent,
     SettingsComponent,
-    OptionsComponent,
-    DialogComponent,
-    ColumnsComponent,
-    ValidateNumberDirective,
-    ValidateOverclockDirective,
-    FocusOnShowDirective,
     MatrixComponent,
-    InputComponent,
-    InfoComponent,
-    PowerPipe,
-    RatePipe,
-    FactoryRatePipe,
-    StepHrefPipe,
-    DisplayRateLabelPipe,
-    InserterSpeedPipe,
-    LeftPadPipe,
-    GtZeroPipe,
   ],
   imports: [
     BrowserModule,
@@ -89,13 +41,11 @@ import { ProductsEffects } from './store/products/products.effects';
       logOnly: environment.production,
     }),
     EffectsModule.forRoot([DatasetsEffects, ProductsEffects, FactoriesEffects]),
+    SharedModule,
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: environment.baseHref },
     { provide: ErrorHandler, useClass: LabErrorHandler },
-    PowerPipe,
-    RatePipe,
-    FactoryRatePipe,
   ],
   bootstrap: [AppComponent],
 })

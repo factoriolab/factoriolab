@@ -3,8 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 import { DispatchTest, initialState } from 'src/tests';
-import { IconComponent, InfoComponent, InputComponent } from '~/components';
-import { ValidateNumberDirective } from '~/directives';
+import { SharedModule } from '~/shared/shared.module';
 import { LabState } from '~/store';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
@@ -17,14 +16,8 @@ describe('MatrixComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        IconComponent,
-        InfoComponent,
-        InputComponent,
-        ValidateNumberDirective,
-        MatrixComponent,
-      ],
-      imports: [FormsModule],
+      declarations: [MatrixComponent],
+      imports: [FormsModule, SharedModule],
       providers: [provideMockStore({ initialState })],
     }).compileComponents();
   });

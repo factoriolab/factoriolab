@@ -24,9 +24,9 @@ export const getItemSettings = createSelector(
         // Belt (or Pipe)
         if (!itemSettings.beltId) {
           if (item.stack) {
-            itemSettings.beltId = settings.belt;
-          } else if (settings.pipe) {
-            itemSettings.beltId = settings.pipe;
+            itemSettings.beltId = settings.beltId;
+          } else if (settings.pipeId) {
+            itemSettings.beltId = settings.pipeId;
           } else {
             itemSettings.beltId = ItemId.Pipe;
           }
@@ -34,8 +34,8 @@ export const getItemSettings = createSelector(
 
         if (!itemSettings.wagonId) {
           itemSettings.wagonId = item.stack
-            ? settings.cargoWagon
-            : settings.fluidWagon;
+            ? settings.cargoWagonId
+            : settings.fluidWagonId;
         }
 
         value[item.id] = itemSettings;

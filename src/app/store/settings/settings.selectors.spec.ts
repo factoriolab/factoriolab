@@ -127,17 +127,17 @@ describe('Settings Selectors', () => {
     it('should overwrite defaults when specified', () => {
       const value: any = {
         modIds: 'modDatasetIds',
-        belt: 'belt',
-        pipe: 'pipe',
-        fuel: 'fuel',
-        cargoWagon: 'cargoWagon',
-        fluidWagon: 'fluidWagon',
-        disabledRecipes: 'disabledRecipes',
-        factoryRank: 'factoryRank',
-        moduleRank: 'moduleRank',
+        beltId: 'belt',
+        pipeId: 'pipe',
+        fuelId: 'fuel',
+        cargoWagonId: 'cargoWagon',
+        fluidWagonId: 'fluidWagon',
+        disabledRecipeIds: 'disabledRecipes',
+        factoryRankIds: 'factoryRank',
+        moduleRankIds: 'moduleRank',
         beaconCount: 'beaconCount',
-        beacon: 'beacon',
-        beaconModule: 'beaconModule',
+        beaconId: 'beacon',
+        beaconModuleId: 'beaconModule',
       };
       const result = Selectors.getSettings.projector(
         value,
@@ -149,31 +149,31 @@ describe('Settings Selectors', () => {
     it('should use defaults', () => {
       const result = Selectors.getSettings.projector({}, Mocks.Defaults);
       expect(result).toEqual({
-        belt: Mocks.Defaults.beltId,
-        pipe: undefined,
-        fuel: Mocks.Defaults.fuelId,
-        cargoWagon: Mocks.Defaults.cargoWagonId,
-        fluidWagon: Mocks.Defaults.fluidWagonId,
-        disabledRecipes: Mocks.Defaults.disabledRecipeIds,
+        beltId: Mocks.Defaults.beltId,
+        pipeId: undefined,
+        fuelId: Mocks.Defaults.fuelId,
+        cargoWagonId: Mocks.Defaults.cargoWagonId,
+        fluidWagonId: Mocks.Defaults.fluidWagonId,
+        disabledRecipeIds: Mocks.Defaults.disabledRecipeIds,
       } as any);
     });
 
     it('should handle null defaults', () => {
       const result = Selectors.getSettings.projector({}, null);
       expect(result).toEqual({
-        belt: undefined,
-        pipe: undefined,
-        fuel: undefined,
-        cargoWagon: undefined,
-        fluidWagon: undefined,
-        disabledRecipes: [],
+        beltId: undefined,
+        pipeId: undefined,
+        fuelId: undefined,
+        cargoWagonId: undefined,
+        fluidWagonId: undefined,
+        disabledRecipeIds: [],
       } as any);
     });
   });
 
   describe('getFuel', () => {
     it('should return fuel from settings', () => {
-      const result = Selectors.getFuel.projector(initialSettingsState);
+      const result = Selectors.getFuelId.projector(initialSettingsState);
       expect(result).toEqual(initialSettingsState.fuelId);
     });
   });
@@ -181,7 +181,7 @@ describe('Settings Selectors', () => {
   describe('getDisabledRecipes', () => {
     it('should return disabledRecipes from settings', () => {
       const result =
-        Selectors.getDisabledRecipes.projector(initialSettingsState);
+        Selectors.getDisabledRecipeIds.projector(initialSettingsState);
       expect(result).toEqual(initialSettingsState.disabledRecipeIds!);
     });
   });
@@ -571,7 +571,7 @@ describe('Settings Selectors', () => {
 
   describe('getChemicalFuels', () => {
     it('should handle no matching fuels', () => {
-      const result = Selectors.getChemicalFuels.projector({ fuelIds: {} });
+      const result = Selectors.getChemicalFuelIds.projector({ fuelIds: {} });
       expect(result).toEqual([]);
     });
   });
