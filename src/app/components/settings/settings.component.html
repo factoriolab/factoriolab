@@ -125,7 +125,10 @@
               <lab-toggle
                 [selected]="vm.settings.disabledRecipes"
                 (selectIds)="
-                  setDisabledRecipes($event, vm.data.defaults?.disabledRecipes)
+                  setDisabledRecipes(
+                    $event,
+                    vm.data.defaults?.disabledRecipeIds
+                  )
                 "
               >
               </lab-toggle>
@@ -242,7 +245,7 @@
                     header="Select a factory"
                     [options]="vm.factoryOptions"
                     (selectId)="
-                      addFactory($event, vm.data.defaults?.factoryRank)
+                      addFactory($event, vm.data.defaults?.factoryRankIds)
                     "
                   >
                     <button title="Add factory preference">
@@ -253,7 +256,7 @@
                 <button
                   *ngIf="f"
                   title="Remove factory preference"
-                  (click)="removeFactory(f, vm.data.defaults?.factoryRank)"
+                  (click)="removeFactory(f, vm.data.defaults?.factoryRankIds)"
                 >
                   <i class="material-icons">remove</i>
                 </button>
@@ -273,7 +276,7 @@
                   [selected]="f"
                   [options]="vm.factoryOptions"
                   (selectId)="
-                    setFactory(f, $event, vm.data.defaults?.factoryRank)
+                    setFactory(f, $event, vm.data.defaults?.factoryRankIds)
                   "
                 >
                   <lab-icon
@@ -292,18 +295,18 @@
                 ></lab-icon>
               </td>
               <td>
-                <ng-container *ngIf="factory.moduleRank">
+                <ng-container *ngIf="factory.moduleRankIds">
                   <lab-ranker
                     *ngIf="vm.data.game === Game.Factorio; else moduleSelect"
-                    [selected]="factory.moduleRank"
+                    [selected]="factory.moduleRankIds"
                     [options]="vm.data.moduleIds"
                     (selectIds)="
                       setModuleRank(
                         f,
                         $event,
                         f === ''
-                          ? vm.data.defaults?.moduleRank
-                          : vm.factories.entities[''].moduleRank
+                          ? vm.data.defaults?.moduleRankIds
+                          : vm.factories.entities[''].moduleRankIds
                       )
                     "
                   >
@@ -311,13 +314,13 @@
                       class="button"
                       tooltip="Module preferences"
                       [iconId]="
-                        factory.moduleRank.length
-                          ? factory.moduleRank[0]
+                        factory.moduleRankIds.length
+                          ? factory.moduleRankIds[0]
                           : ItemId.Module
                       "
                       [text]="
-                        factory.moduleRank.length > 1
-                          ? factory.moduleRank.length.toString()
+                        factory.moduleRankIds.length > 1
+                          ? factory.moduleRankIds.length.toString()
                           : ''
                       "
                     ></lab-icon>
@@ -329,7 +332,7 @@
                           ? 'Select a proliferator'
                           : 'Select resource purity'
                       "
-                      [selected]="factory.moduleRank[0]"
+                      [selected]="factory.moduleRankIds[0]"
                       [options]="vm.data.moduleIds"
                       [includeEmptyModule]="
                         vm.data.game === Game.DysonSphereProgram
@@ -339,8 +342,8 @@
                           f,
                           [$event],
                           f === ''
-                            ? vm.data.defaults?.moduleRank
-                            : vm.factories.entities[''].moduleRank
+                            ? vm.data.defaults?.moduleRankIds
+                            : vm.factories.entities[''].moduleRankIds
                         )
                       "
                     >
@@ -352,13 +355,13 @@
                             : 'Resource node purity'
                         "
                         [iconId]="
-                          factory.moduleRank.length
-                            ? factory.moduleRank[0]
+                          factory.moduleRankIds.length
+                            ? factory.moduleRankIds[0]
                             : ItemId.Module
                         "
                         [text]="
-                          factory.moduleRank.length > 1
-                            ? factory.moduleRank.length.toString()
+                          factory.moduleRankIds.length > 1
+                            ? factory.moduleRankIds.length.toString()
                             : ''
                         "
                       ></lab-icon>
@@ -401,33 +404,33 @@
                       *ngIf="vm.data.beaconIds.length === 1; else beaconPicker"
                     >
                       <lab-icon
-                        *ngIf="factory.beacon"
+                        *ngIf="factory.beaconId"
                         class="pad"
-                        [iconId]="factory.beacon"
-                        [tooltip]="vm.data.itemEntities[factory.beacon].name"
-                        [item]="vm.data.itemEntities[factory.beacon]"
+                        [iconId]="factory.beaconId"
+                        [tooltip]="vm.data.itemEntities[factory.beaconId].name"
+                        [item]="vm.data.itemEntities[factory.beaconId]"
                       ></lab-icon>
                     </ng-container>
                     <ng-template #beaconPicker>
                       <lab-select
-                        *ngIf="factory.beacon"
+                        *ngIf="factory.beaconId"
                         header="Select a beacon"
-                        [selected]="factory.beacon"
+                        [selected]="factory.beaconId"
                         [options]="vm.data.beaconIds"
                         (selectId)="
                           setBeacon(
                             f,
                             $event,
                             f === ''
-                              ? vm.data.defaults?.beacon
-                              : vm.factories.entities[''].beacon
+                              ? vm.data.defaults?.beaconId
+                              : vm.factories.entities[''].beaconId
                           )
                         "
                       >
                         <lab-icon
                           class="button"
                           tooltip="Select default beacon"
-                          [iconId]="factory.beacon"
+                          [iconId]="factory.beaconId"
                         ></lab-icon>
                       </lab-select>
                     </ng-template>
@@ -436,10 +439,10 @@
                 <td>
                   <lab-select
                     *ngIf="
-                      (factory.beaconCount | gtZero) && factory.beaconModule
+                      (factory.beaconCount | gtZero) && factory.beaconModuleId
                     "
                     header="Select a module"
-                    [selected]="factory.beaconModule"
+                    [selected]="factory.beaconModuleId"
                     [options]="vm.data.beaconModuleIds"
                     [includeEmptyModule]="true"
                     (selectId)="
@@ -448,15 +451,15 @@
                         $event,
 
                         f === ''
-                          ? vm.data.defaults?.beaconModule
-                          : vm.factories.entities[''].beaconModule
+                          ? vm.data.defaults?.beaconModuleId
+                          : vm.factories.entities[''].beaconModuleId
                       )
                     "
                   >
                     <lab-icon
                       class="button"
                       tooltip="Beacon module"
-                      [iconId]="factory.beaconModule"
+                      [iconId]="factory.beaconModuleId"
                     ></lab-icon>
                   </lab-select>
                 </td>
@@ -465,7 +468,7 @@
                 <button
                   *ngIf="i > 1"
                   title="Raise factory rank"
-                  (click)="raiseFactory(f, vm.data.defaults?.factoryRank)"
+                  (click)="raiseFactory(f, vm.data.defaults?.factoryRankIds)"
                 >
                   <i class="material-icons">arrow_drop_up</i>
                 </button>
@@ -522,7 +525,7 @@
               <div>
                 <lab-select
                   header="Select a proliferator"
-                  [selected]="vm.settings.proliferatorSpray"
+                  [selected]="vm.settings.proliferatorSprayId"
                   [options]="vm.data.prodModuleIds"
                   [includeEmptyModule]="true"
                   (selectId)="setProliferatorSpray($event)"
@@ -530,7 +533,7 @@
                   <lab-icon
                     class="button"
                     tooltip="Select proliferator spray"
-                    [iconId]="vm.settings.proliferatorSpray"
+                    [iconId]="vm.settings.proliferatorSprayId"
                   ></lab-icon>
                 </lab-select>
               </div>
@@ -553,7 +556,7 @@
                   [columns]="
                     vm.data.game === Game.DysonSphereProgram ? 3 : null
                   "
-                  (selectId)="setBelt($event, vm.data.defaults?.belt)"
+                  (selectId)="setBelt($event, vm.data.defaults?.beltId)"
                 >
                   <lab-icon
                     class="button"
@@ -578,7 +581,7 @@
                   header="Select a pipe"
                   [selected]="vm.settings.pipe"
                   [options]="vm.data.pipeIds"
-                  (selectId)="setPipe($event, vm.data.defaults?.pipe)"
+                  (selectId)="setPipe($event, vm.data.defaults?.pipeId)"
                 >
                   <lab-icon
                     class="button"
@@ -604,7 +607,7 @@
                   [selected]="vm.settings.cargoWagon"
                   [options]="vm.data.cargoWagonIds"
                   (selectId)="
-                    setCargoWagon($event, vm.data.defaults?.cargoWagon)
+                    setCargoWagon($event, vm.data.defaults?.cargoWagonId)
                   "
                 >
                   <lab-icon
@@ -631,7 +634,7 @@
                   [selected]="vm.settings.fluidWagon"
                   [options]="vm.data.fluidWagonIds"
                   (selectId)="
-                    setFluidWagon($event, vm.data.defaults?.fluidWagon)
+                    setFluidWagon($event, vm.data.defaults?.fluidWagonId)
                   "
                 >
                   <lab-icon
@@ -662,7 +665,7 @@
                   header="Select a fuel"
                   [selected]="vm.settings.fuel"
                   [options]="vm.chemicalFuels"
-                  (selectId)="setFuel($event, vm.data.defaults?.fuel)"
+                  (selectId)="setFuel($event, vm.data.defaults?.fuelId)"
                 >
                   <lab-icon
                     class="button"

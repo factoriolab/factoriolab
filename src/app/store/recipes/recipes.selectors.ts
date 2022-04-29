@@ -28,20 +28,20 @@ export const getRecipeSettings = createSelector(
       for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
         const s: RecipeSettings = { ...state[recipe.id] };
 
-        if (!s.factory) {
-          s.factory = RecipeUtility.bestMatch(
+        if (!s.factoryId) {
+          s.factoryId = RecipeUtility.bestMatch(
             recipe.producers,
             factories.ids ?? []
           );
         }
 
-        const factory = data.factoryEntities[s.factory];
-        const def = factories.entities[s.factory];
+        const factory = data.factoryEntities[s.factoryId];
+        const def = factories.entities[s.factoryId];
         if (factory != null && RecipeUtility.allowsModules(recipe, factory)) {
-          if (!s.factoryModules) {
-            s.factoryModules = RecipeUtility.defaultModules(
+          if (!s.factoryModuleIds) {
+            s.factoryModuleIds = RecipeUtility.defaultModules(
               data.recipeModuleIds[recipe.id],
-              def.moduleRank ?? [],
+              def.moduleRankIds ?? [],
               factory.modules ?? 0
             );
           }
@@ -50,21 +50,21 @@ export const getRecipeSettings = createSelector(
             s.beaconCount = def.beaconCount;
           }
 
-          s.beacon = s.beacon || def.beacon;
-          if (s.beacon) {
-            const beacon = data.beaconEntities[s.beacon];
-            if (beacon && !s.beaconModules) {
-              s.beaconModules = new Array(beacon.modules).fill(
-                def.beaconModule
+          s.beaconId = s.beaconId || def.beaconId;
+          if (s.beaconId) {
+            const beacon = data.beaconEntities[s.beaconId];
+            if (beacon && !s.beaconModuleIds) {
+              s.beaconModuleIds = new Array(beacon.modules).fill(
+                def.beaconModuleId
               );
             }
           }
         } else {
           // Factory doesn't support modules, remove any
-          delete s.factoryModules;
+          delete s.factoryModuleIds;
           delete s.beaconCount;
-          delete s.beacon;
-          delete s.beaconModules;
+          delete s.beaconId;
+          delete s.beaconModuleIds;
         }
 
         if (
@@ -132,13 +132,13 @@ export const getAdjustedDataset = createSelector(
 
 export const getRecipesModified = createSelector(recipesState, (state) => ({
   factories: Object.keys(state).some(
-    (id) => state[id].factory || state[id].factoryModules
+    (id) => state[id].factoryId || state[id].factoryModuleIds
   ),
   overclock: Object.keys(state).some((id) => state[id].overclock),
   beacons: Object.keys(state).some(
     (id) =>
-      state[id].beacon ||
-      state[id].beaconModules ||
+      state[id].beaconId ||
+      state[id].beaconModuleIds ||
       state[id].beaconCount ||
       state[id].beaconTotal
   ),

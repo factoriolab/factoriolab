@@ -102,21 +102,21 @@ export const ProductSteps = {
 };
 export const ItemSettings1: ItemSettings = {
   ignore: false,
-  belt: ItemId.TransportBelt,
-  wagon: ItemId.CargoWagon,
+  beltId: ItemId.TransportBelt,
+  wagonId: ItemId.CargoWagon,
 };
 export const RecipeSettings1: RecipeSettings = {
-  factory: ItemId.AssemblingMachine2,
-  factoryModules: [ItemId.Module, ItemId.Module],
-  beacon: ItemId.Beacon,
-  beaconModules: [ItemId.SpeedModule, ItemId.SpeedModule],
+  factoryId: ItemId.AssemblingMachine2,
+  factoryModuleIds: [ItemId.Module, ItemId.Module],
+  beaconId: ItemId.Beacon,
+  beaconModuleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
   beaconCount: '0',
 };
 export const RecipeSettings2: RecipeSettings = {
-  factory: ItemId.AssemblingMachine2,
-  factoryModules: [ItemId.Module, ItemId.Module],
-  beacon: ItemId.Beacon,
-  beaconModules: [ItemId.SpeedModule, ItemId.SpeedModule],
+  factoryId: ItemId.AssemblingMachine2,
+  factoryModuleIds: [ItemId.Module, ItemId.Module],
+  beaconId: ItemId.Beacon,
+  beaconModuleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
   beaconCount: '0',
 };
 export const Step1: Step = {
@@ -179,7 +179,7 @@ export const RationalRecipeSettingsInitial =
 export const AdjustedData = Recipes.getAdjustedDataset.projector(
   RationalRecipeSettingsInitial,
   ItemSettingsInitial,
-  Defaults!.disabledRecipes,
+  Defaults!.disabledRecipeIds,
   {
     fuel: ItemId.Coal,
     miningBonus: Rational.zero,
@@ -262,7 +262,7 @@ export const MatrixResultSolved: MatrixResult = {
     [Rational.zero, Rational.one, Rational.one, Rational.one],
   ],
   O: [Rational.one, Rational.one, Rational.one, Rational.one],
-  items: [ItemId.Wood],
-  recipes: [RecipeId.WoodenChest],
-  inputs: [],
+  itemIds: [ItemId.Wood],
+  recipeIds: [RecipeId.WoodenChest],
+  inputIds: [],
 };

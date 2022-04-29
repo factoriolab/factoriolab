@@ -34,7 +34,7 @@ describe('Recipes Reducer', () => {
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].factory).toEqual(Mocks.Item1.id);
+      expect(result[Mocks.Recipe1.id].factoryId).toEqual(Mocks.Item1.id);
     });
 
     it('should reset all other recipe settings', () => {
@@ -43,10 +43,10 @@ describe('Recipes Reducer', () => {
           ...initialRecipesState,
           ...{
             [Mocks.Recipe1.id]: {
-              factoryModules: ['test'],
+              factoryModuleIds: ['test'],
               beaconCount: '20',
-              beacon: 'test',
-              beaconModules: ['test'],
+              beaconId: 'test',
+              beaconModuleIds: ['test'],
             },
           },
         },
@@ -56,7 +56,7 @@ describe('Recipes Reducer', () => {
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id]).toEqual({ factory: Mocks.Item1.id });
+      expect(result[Mocks.Recipe1.id]).toEqual({ factoryId: Mocks.Item1.id });
     });
   });
 
@@ -70,7 +70,9 @@ describe('Recipes Reducer', () => {
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].factoryModules).toEqual([Mocks.Item1.id]);
+      expect(result[Mocks.Recipe1.id].factoryModuleIds).toEqual([
+        Mocks.Item1.id,
+      ]);
     });
   });
 
@@ -98,14 +100,14 @@ describe('Recipes Reducer', () => {
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].beacon).toEqual(ItemId.Beacon);
+      expect(result[Mocks.Recipe1.id].beaconId).toEqual(ItemId.Beacon);
     });
 
     it('should reset the beacon modules', () => {
       const result = recipesReducer(
         {
           ...initialRecipesState,
-          ...{ [Mocks.Recipe1.id]: { beaconModules: ['test'] } },
+          ...{ [Mocks.Recipe1.id]: { beaconModuleIds: ['test'] } },
         },
         new Actions.SetBeaconAction({
           id: Mocks.Recipe1.id,
@@ -113,7 +115,7 @@ describe('Recipes Reducer', () => {
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id]).toEqual({ beacon: ItemId.Beacon });
+      expect(result[Mocks.Recipe1.id]).toEqual({ beaconId: ItemId.Beacon });
     });
   });
 
@@ -127,7 +129,9 @@ describe('Recipes Reducer', () => {
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].beaconModules).toEqual([Mocks.Item1.id]);
+      expect(result[Mocks.Recipe1.id].beaconModuleIds).toEqual([
+        Mocks.Item1.id,
+      ]);
     });
   });
 

@@ -91,7 +91,7 @@ export const getCostIgnored = createSelector(
 );
 export const getProliferatorSpray = createSelector(
   settingsState,
-  (state) => state.proliferatorSpray
+  (state) => state.proliferatorSprayId
 );
 
 /* Complex selectors */
@@ -156,23 +156,23 @@ export const getDefaults = createSelector(
         }
         const defaults: Defaults = {
           modIds: m.modIds,
-          belt: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
-          pipe: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
-          fuel: m.fuel,
-          cargoWagon: m.cargoWagon,
-          fluidWagon: m.fluidWagon,
-          disabledRecipes: m.disabledRecipes,
-          factoryRank:
+          beltId: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
+          pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
+          fuelId: m.fuel,
+          cargoWagonId: m.cargoWagon,
+          fluidWagonId: m.fluidWagon,
+          disabledRecipeIds: m.disabledRecipes,
+          factoryRankIds:
             preset === Preset.Minimum ? m.minFactoryRank : m.maxFactoryRank,
-          moduleRank,
+          moduleRankIds: moduleRank,
           beaconCount:
             preset < Preset.Beacon8
               ? '0'
               : preset < Preset.Beacon12
               ? '8'
               : '12',
-          beacon: m.beacon,
-          beaconModule:
+          beaconId: m.beacon,
+          beaconModuleId:
             preset < Preset.Beacon8 ? ItemId.Module : m.beaconModule,
         };
         return defaults;
@@ -188,12 +188,12 @@ export const getSettings = createSelector(
   (s, d) => ({
     ...s,
     ...{
-      belt: s.belt ?? d?.belt,
-      pipe: s.pipe ?? d?.pipe,
-      fuel: s.fuel ?? d?.fuel,
-      cargoWagon: s.cargoWagon ?? d?.cargoWagon,
-      fluidWagon: s.fluidWagon ?? d?.fluidWagon,
-      disabledRecipes: s.disabledRecipes ?? d?.disabledRecipes ?? [],
+      belt: s.beltId ?? d?.beltId,
+      pipe: s.pipeId ?? d?.pipeId,
+      fuel: s.fuelId ?? d?.fuelId,
+      cargoWagon: s.cargoWagonId ?? d?.cargoWagonId,
+      fluidWagon: s.fluidWagonId ?? d?.fluidWagonId,
+      disabledRecipes: s.disabledRecipeIds ?? d?.disabledRecipeIds ?? [],
     },
   })
 );

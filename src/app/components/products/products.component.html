@@ -104,63 +104,77 @@
             <ng-container *ngIf="product.rateType === RateType.Belts">
               <span>using</span>
               <ng-container
-                *ngIf="product.viaSetting ?? vm.itemSettings[id].belt as belt"
+                *ngIf="
+                  product.viaSetting ?? vm.itemSettings[id].beltId as beltId
+                "
               >
                 <lab-select
-                  *ngIf="vm.data.beltIds.indexOf(belt) !== -1; else pipePicker"
+                  *ngIf="
+                    vm.data.beltIds.indexOf(beltId) !== -1;
+                    else pipePicker
+                  "
                   header="Select a belt"
-                  [selected]="belt"
+                  [selected]="beltId"
                   [options]="vm.data.beltIds"
                   [columns]="
                     vm.data.game === Game.DysonSphereProgram ? 3 : null
                   "
                   (selectId)="
-                    setViaSetting(product.id, $event, vm.itemSettings[id].belt)
+                    setViaSetting(
+                      product.id,
+                      $event,
+                      vm.itemSettings[id].beltId
+                    )
                   "
                 >
                   <lab-icon
                     class="button"
                     tooltip="Change rate step belt"
-                    [iconId]="belt"
-                    [item]="vm.data.itemEntities[belt]"
+                    [iconId]="beltId"
+                    [item]="vm.data.itemEntities[beltId]"
                   ></lab-icon>
                 </lab-select>
                 <ng-template #pipePicker>
                   <lab-select
-                    *ngIf="vm.data.pipeIds.indexOf(belt) !== -1; else pipeIcon"
+                    *ngIf="
+                      vm.data.pipeIds.indexOf(beltId) !== -1;
+                      else pipeIcon
+                    "
                     header="Select a pipe"
-                    [selected]="belt"
+                    [selected]="beltId"
                     [options]="vm.data.pipeIds"
                     (selectId)="
                       setViaSetting(
                         product.id,
                         $event,
-                        vm.itemSettings[id].belt
+                        vm.itemSettings[id].beltId
                       )
                     "
                   >
                     <lab-icon
                       class="button"
                       tooltip="Change rate step pipe"
-                      [iconId]="belt"
+                      [iconId]="beltId"
                     ></lab-icon>
                   </lab-select>
                 </ng-template>
                 <ng-template #pipeIcon>
                   <lab-icon
-                    [iconId]="belt"
-                    [tooltip]="vm.data.itemEntities[belt]?.name || PIPE"
+                    [iconId]="beltId"
+                    [tooltip]="vm.data.itemEntities[beltId]?.name || PIPE"
                   ></lab-icon>
                 </ng-template>
               </ng-container>
             </ng-container>
             <ng-container *ngIf="product.rateType === RateType.Wagons">
               <ng-container
-                *ngIf="product.viaSetting || vm.itemSettings[id].wagon as wagon"
+                *ngIf="
+                  product.viaSetting || vm.itemSettings[id].wagonId as wagonId
+                "
               >
                 <ng-container
                   *ngIf="
-                    vm.data.fluidWagonIds.indexOf(wagon) === -1;
+                    vm.data.fluidWagonIds.indexOf(wagonId) === -1;
                     else fluidWagon
                   "
                 >
@@ -168,22 +182,22 @@
                     <span>using</span>
                     <lab-select
                       header="Select a cargo wagon"
-                      [selected]="wagon"
+                      [selected]="wagonId"
                       [options]="vm.data.cargoWagonIds"
                       (selectId)="
                         setViaSetting(
                           product.id,
                           $event,
-                          vm.itemSettings[id].wagon
+                          vm.itemSettings[id].wagonId
                         )
                       "
                     >
                       <lab-icon
                         class="button"
                         title="Change rate step wagon"
-                        [iconId]="wagon"
-                        [tooltip]="vm.data.itemEntities[wagon].name"
-                        [item]="vm.data.itemEntities[wagon]"
+                        [iconId]="wagonId"
+                        [tooltip]="vm.data.itemEntities[wagonId].name"
+                        [item]="vm.data.itemEntities[wagonId]"
                       ></lab-icon>
                     </lab-select>
                   </ng-container>
@@ -193,22 +207,22 @@
                     <span>using</span>
                     <lab-select
                       header="Select a fluid wagon"
-                      [selected]="wagon"
+                      [selected]="wagonId"
                       [options]="vm.data.fluidWagonIds"
                       (selectId)="
                         setViaSetting(
                           product.id,
                           $event,
-                          vm.itemSettings[id].wagon
+                          vm.itemSettings[id].wagonId
                         )
                       "
                     >
                       <lab-icon
                         class="button"
                         title="Change rate step wagon"
-                        [iconId]="wagon"
-                        [tooltip]="vm.data.itemEntities[wagon].name"
-                        [item]="vm.data.itemEntities[wagon]"
+                        [iconId]="wagonId"
+                        [tooltip]="vm.data.itemEntities[wagonId].name"
+                        [item]="vm.data.itemEntities[wagonId]"
                       ></lab-icon>
                     </lab-select>
                   </ng-container>
@@ -263,11 +277,11 @@
                     </ng-template>
                   </ng-container>
                   <div
-                    *ngIf="product.viaFactoryModules as modules"
+                    *ngIf="product.viaFactoryModuleIds as moduleIds"
                     class="flex"
                   >
                     <lab-select
-                      *ngFor="let mod of modules; index as i; first as first"
+                      *ngFor="let mod of moduleIds; index as i; first as first"
                       [header]="
                         vm.data.game === Game.Factorio
                           ? 'Select a module'
@@ -330,7 +344,7 @@
                     />
                     <span style="margin-left: 0.25rem">%</span>
                   </div>
-                  <ng-container *ngIf="product.viaBeacon as beacon">
+                  <ng-container *ngIf="product.viaBeaconId as beaconId">
                     <lab-input
                       title="Set rate step number of beacons"
                       placeholder="# Beacons"
@@ -356,15 +370,15 @@
                         "
                       >
                         <lab-icon
-                          [iconId]="beacon"
-                          [tooltip]="vm.data.itemEntities[beacon].name"
-                          [item]="vm.data.itemEntities[beacon]"
+                          [iconId]="beaconId"
+                          [tooltip]="vm.data.itemEntities[beaconId].name"
+                          [item]="vm.data.itemEntities[beaconId]"
                         ></lab-icon
                       ></ng-container>
                       <ng-template #beaconPicker>
                         <lab-select
                           header="Select a beacon"
-                          [selected]="beacon"
+                          [selected]="beaconId"
                           [options]="vm.data.beaconIds"
                           (selectId)="
                             changeRecipeField(
@@ -380,14 +394,14 @@
                           <lab-icon
                             class="button"
                             title="Set rate step beacon"
-                            [iconId]="beacon"
-                            [tooltip]="vm.data.itemEntities[beacon].name"
-                            [item]="vm.data.itemEntities[beacon]"
+                            [iconId]="beaconId"
+                            [tooltip]="vm.data.itemEntities[beaconId].name"
+                            [item]="vm.data.itemEntities[beaconId]"
                           ></lab-icon>
                         </lab-select>
                       </ng-template>
                       <div
-                        *ngIf="product.viaBeaconModules as modules"
+                        *ngIf="product.viaBeaconModuleIds as modules"
                         class="flex"
                       >
                         <lab-select

@@ -25,11 +25,11 @@ export function itemsReducer(
         def: false,
       });
     case ItemsActionType.SET_BELT:
-      return StoreUtility.compareReset(state, 'belt', action.payload);
+      return StoreUtility.compareReset(state, 'beltId', action.payload);
     case ItemsActionType.SET_WAGON:
-      return StoreUtility.compareReset(state, 'wagon', action.payload);
+      return StoreUtility.compareReset(state, 'wagonId', action.payload);
     case ItemsActionType.SET_RECIPE:
-      return StoreUtility.compareReset(state, 'recipe', action.payload);
+      return StoreUtility.compareReset(state, 'recipeId', action.payload);
     case ItemsActionType.RESET_ITEM: {
       const newState = { ...state };
       delete newState[action.payload];
@@ -38,9 +38,9 @@ export function itemsReducer(
     case ItemsActionType.RESET_IGNORE:
       return StoreUtility.resetField(state, 'ignore');
     case ItemsActionType.RESET_BELT:
-      return StoreUtility.resetField(state, 'belt');
+      return StoreUtility.resetField(state, 'beltId');
     case ItemsActionType.RESET_WAGON:
-      return StoreUtility.resetField(state, 'wagon');
+      return StoreUtility.resetField(state, 'wagonId');
     default:
       return state;
   }

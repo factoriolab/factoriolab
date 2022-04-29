@@ -73,7 +73,9 @@ describe('Recipes Selectors', () => {
         },
         data
       );
-      expect(result[Mocks.Item1.id].factory).toEqual(ItemId.AssemblingMachine3);
+      expect(result[Mocks.Item1.id].factoryId).toEqual(
+        ItemId.AssemblingMachine3
+      );
     });
 
     it('should use factory override', () => {
@@ -86,7 +88,7 @@ describe('Recipes Selectors', () => {
         Mocks.FactorySettingsInitial,
         Mocks.Data
       );
-      expect(result[Mocks.Item1.id].factory).toEqual(stringValue);
+      expect(result[Mocks.Item1.id].factoryId).toEqual(stringValue);
     });
 
     it('should use module override', () => {
@@ -99,7 +101,7 @@ describe('Recipes Selectors', () => {
         Mocks.FactorySettingsInitial,
         Mocks.Data
       );
-      expect(result[Mocks.Item1.id].factoryModules).toEqual([stringValue]);
+      expect(result[Mocks.Item1.id].factoryModuleIds).toEqual([stringValue]);
     });
 
     it('should use beacon count override', () => {
@@ -125,7 +127,7 @@ describe('Recipes Selectors', () => {
         Mocks.FactorySettingsInitial,
         Mocks.Data
       );
-      expect(result[Mocks.Item1.id].beacon).toEqual(stringValue);
+      expect(result[Mocks.Item1.id].beaconId).toEqual(stringValue);
     });
 
     it('should use beacon module override', () => {
@@ -138,7 +140,7 @@ describe('Recipes Selectors', () => {
         Mocks.FactorySettingsInitial,
         Mocks.Data
       );
-      expect(result[Mocks.Item1.id].beaconModules).toEqual([stringValue]);
+      expect(result[Mocks.Item1.id].beaconModuleIds).toEqual([stringValue]);
     });
 
     it('should reset invalid beacon totals', () => {

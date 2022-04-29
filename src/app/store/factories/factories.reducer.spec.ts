@@ -160,7 +160,7 @@ describe('Factories Reducer', () => {
         undefined,
         new Actions.SetModuleRankAction({ id, value: [value], def: [] })
       );
-      expect(result.entities[id].moduleRank).toEqual([value]);
+      expect(result.entities[id].moduleRankIds).toEqual([value]);
     });
   });
 
@@ -180,7 +180,7 @@ describe('Factories Reducer', () => {
         undefined,
         new Actions.SetBeaconAction({ id, value, def: ItemId.Beacon })
       );
-      expect(result.entities[id].beacon).toEqual(value);
+      expect(result.entities[id].beaconId).toEqual(value);
     });
   });
 
@@ -194,7 +194,7 @@ describe('Factories Reducer', () => {
           def: ItemId.SpeedModule,
         })
       );
-      expect(result.entities[id].beaconModule).toEqual(value);
+      expect(result.entities[id].beaconModuleId).toEqual(value);
     });
   });
 

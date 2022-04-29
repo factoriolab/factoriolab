@@ -235,7 +235,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     settings: Settings.SettingsState,
     data: Dataset
   ): void {
-    if (itemSettings[itemId].recipe === recipeId) {
+    if (itemSettings[itemId].recipeId === recipeId) {
       // Reset to null
       this.setDefaultRecipe(itemId);
     } else {
@@ -245,7 +245,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
         recipeId,
         RecipeUtility.defaultRecipe(
           itemId,
-          settings.disabledRecipes ?? [],
+          settings.disabledRecipeIds ?? [],
           data
         )
       );
@@ -257,8 +257,8 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     settings: Settings.SettingsState,
     data: Dataset
   ): void {
-    const disabledRecipes = settings.disabledRecipes ?? [];
-    const def = data.defaults?.disabledRecipes;
+    const disabledRecipes = settings.disabledRecipeIds ?? [];
+    const def = data.defaults?.disabledRecipeIds;
     if (disabledRecipes.indexOf(id) === -1) {
       this.setDisabledRecipes([...disabledRecipes, id], def);
     } else {
@@ -295,28 +295,28 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     data?: Dataset
   ): void {
     const recipe = recipeSettings[recipeId];
-    if (recipe.factory) {
-      const factory = factories.entities[recipe.factory];
+    if (recipe.factoryId) {
+      const factory = factories.entities[recipe.factoryId];
       switch (field) {
         case RecipeField.FactoryModules: {
           if (
-            factory.moduleRank != null &&
+            factory.moduleRankIds != null &&
             data != null &&
             typeof event === 'string' &&
             index != null &&
-            recipe.factoryModules != null
+            recipe.factoryModuleIds != null
           ) {
-            const count = recipe.factoryModules.length;
+            const count = recipe.factoryModuleIds.length;
             const options = [...data.recipeModuleIds[recipeId], ItemId.Module];
             const def = RecipeUtility.defaultModules(
               options,
-              factory.moduleRank,
+              factory.moduleRankIds,
               count
             );
             const modules = this.generateModules(
               index,
               event,
-              recipe.factoryModules
+              recipe.factoryModuleIds
             );
             this.setFactoryModules(recipeId, modules, def);
           }
@@ -333,14 +333,14 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
           if (
             typeof event === 'string' &&
             index != null &&
-            recipe.beaconModules != null
+            recipe.beaconModuleIds != null
           ) {
-            const count = recipe.beaconModules.length;
-            const def = new Array(count).fill(factory.beaconModule);
+            const count = recipe.beaconModuleIds.length;
+            const def = new Array(count).fill(factory.beaconModuleId);
             const value = this.generateModules(
               index,
               event,
-              recipe.beaconModules
+              recipe.beaconModuleIds
             );
             this.setBeaconModules(recipeId, value, def);
           }

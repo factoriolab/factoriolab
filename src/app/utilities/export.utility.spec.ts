@@ -46,15 +46,15 @@ describe('ExportUtility', () => {
       recipeId: recipeId,
     };
     const itemS: ItemSettings = {
-      belt: 'belt',
-      wagon: 'wagon',
+      beltId: 'belt',
+      wagonId: 'wagon',
     };
     const fullRecipe: RecipeSettings = {
-      factory: ItemId.AssemblingMachine2,
-      factoryModules: ['a', 'b'],
+      factoryId: ItemId.AssemblingMachine2,
+      factoryModuleIds: ['a', 'b'],
       beaconCount: '8',
-      beacon: 'beacon',
-      beaconModules: ['c', 'd'],
+      beaconId: 'beacon',
+      beaconModuleIds: ['c', 'd'],
     };
 
     it('should fill in all fields', () => {
@@ -74,15 +74,15 @@ describe('ExportUtility', () => {
         Outputs: '"iron-plate:8"',
         Targets: '"electronic-circuit:9"',
         Belts: '=3',
-        Belt: itemS.belt,
+        Belt: itemS.beltId,
         Wagons: '=4',
-        Wagon: itemS.wagon,
+        Wagon: itemS.wagonId,
         Recipe: recipeId,
         Factories: '=5',
-        Factory: fullRecipe.factory,
+        Factory: fullRecipe.factoryId,
         FactoryModules: '"a,b"',
         Beacons: '8',
-        Beacon: fullRecipe.beacon,
+        Beacon: fullRecipe.beaconId,
         BeaconModules: '"c,d"',
         Power: '=6',
         Pollution: '=7',

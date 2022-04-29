@@ -54,7 +54,7 @@ describe('Items Reducer', () => {
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].belt).toEqual(Mocks.Item1.id);
+      expect(result[Mocks.Recipe1.id].beltId).toEqual(Mocks.Item1.id);
     });
   });
 
@@ -68,7 +68,7 @@ describe('Items Reducer', () => {
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].wagon).toEqual(Mocks.Item1.id);
+      expect(result[Mocks.Recipe1.id].wagonId).toEqual(Mocks.Item1.id);
     });
   });
 
@@ -82,7 +82,7 @@ describe('Items Reducer', () => {
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].recipe).toEqual(Mocks.Item1.id);
+      expect(result[Mocks.Recipe1.id].recipeId).toEqual(Mocks.Item1.id);
     });
   });
 

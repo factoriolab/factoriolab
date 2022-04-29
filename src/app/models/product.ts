@@ -8,10 +8,10 @@ export interface Product {
   rateType: RateType;
   viaId?: string;
   viaSetting?: string;
-  viaFactoryModules?: string[];
+  viaFactoryModuleIds?: string[];
   viaBeaconCount?: string;
-  viaBeacon?: string;
-  viaBeaconModules?: string[];
+  viaBeaconId?: string;
+  viaBeaconModuleIds?: string[];
   viaOverclock?: number;
 }
 
@@ -22,10 +22,10 @@ export class RationalProduct {
   rateType: RateType;
   viaId?: string;
   viaSetting?: string;
-  viaFactoryModules?: string[];
+  viaFactoryModuleIds?: string[];
   viaBeaconCount?: Rational;
-  viaBeacon?: string;
-  viaBeaconModules?: string[];
+  viaBeaconId?: string;
+  viaBeaconModuleIds?: string[];
   viaOverclock?: Rational;
 
   constructor(data: Product) {
@@ -39,17 +39,17 @@ export class RationalProduct {
     if (data.viaSetting) {
       this.viaSetting = data.viaSetting;
     }
-    if (data.viaFactoryModules) {
-      this.viaFactoryModules = data.viaFactoryModules;
+    if (data.viaFactoryModuleIds) {
+      this.viaFactoryModuleIds = data.viaFactoryModuleIds;
     }
     if (data.viaBeaconCount != null) {
       this.viaBeaconCount = Rational.fromString(data.viaBeaconCount);
     }
-    if (data.viaBeacon != null) {
-      this.viaBeacon = data.viaBeacon;
+    if (data.viaBeaconId != null) {
+      this.viaBeaconId = data.viaBeaconId;
     }
-    if (data.viaBeaconModules != null) {
-      this.viaBeaconModules = data.viaBeaconModules;
+    if (data.viaBeaconModuleIds != null) {
+      this.viaBeaconModuleIds = data.viaBeaconModuleIds;
     }
     if (data.viaOverclock != null) {
       this.viaOverclock = Rational.fromNumber(data.viaOverclock);

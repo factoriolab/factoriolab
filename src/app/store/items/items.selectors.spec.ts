@@ -40,8 +40,8 @@ describe('Items Selectors', () => {
         Mocks.Data,
         Settings.initialSettingsState
       );
-      expect(result[Mocks.Item1.id].belt).toEqual(stringValue);
-      expect(result[Mocks.Item1.id].wagon).toEqual(stringValue);
+      expect(result[Mocks.Item1.id].beltId).toEqual(stringValue);
+      expect(result[Mocks.Item1.id].wagonId).toEqual(stringValue);
     });
 
     it('should override using the pipe from settings', () => {
@@ -50,7 +50,7 @@ describe('Items Selectors', () => {
         Mocks.Data,
         { ...Settings.initialSettingsState, ...{ pipe: 'pipeValue' } }
       );
-      expect(result[ItemId.CrudeOil].belt).toEqual('pipeValue');
+      expect(result[ItemId.CrudeOil].beltId).toEqual('pipeValue');
     });
   });
 

@@ -60,10 +60,12 @@ describe('Settings Selectors', () => {
         Mocks.Base
       );
       TestUtility.assert(result != null);
-      expect(result.belt).toEqual(Mocks.Base.defaults!.minBelt!);
-      expect(result.factoryRank).toEqual(Mocks.Base.defaults!.minFactoryRank!);
-      expect(result.moduleRank).toEqual([]);
-      expect(result.beaconModule).toEqual(ItemId.Module);
+      expect(result.beltId).toEqual(Mocks.Base.defaults!.minBelt!);
+      expect(result.factoryRankIds).toEqual(
+        Mocks.Base.defaults!.minFactoryRank!
+      );
+      expect(result.moduleRankIds).toEqual([]);
+      expect(result.beaconModuleId).toEqual(ItemId.Module);
       expect(result.beaconCount).toEqual('0');
     });
 
@@ -99,7 +101,7 @@ describe('Settings Selectors', () => {
         ...{ game: Game.DysonSphereProgram },
       });
       TestUtility.assert(result != null);
-      expect(result.moduleRank).toEqual([]);
+      expect(result.moduleRankIds).toEqual([]);
     });
 
     it('should handle DSP maximum module rank', () => {
@@ -108,7 +110,7 @@ describe('Settings Selectors', () => {
         ...{ game: Game.DysonSphereProgram },
       });
       TestUtility.assert(result != null);
-      expect(result.moduleRank).toEqual(Mocks.Base.defaults!.moduleRank);
+      expect(result.moduleRankIds).toEqual(Mocks.Base.defaults!.moduleRank);
     });
 
     it('should handle Satisfactory module rank', () => {
@@ -117,7 +119,7 @@ describe('Settings Selectors', () => {
         ...{ game: Game.Satisfactory },
       });
       TestUtility.assert(result != null);
-      expect(result.moduleRank).toEqual(Mocks.Defaults.moduleRank);
+      expect(result.moduleRankIds).toEqual(Mocks.Defaults.moduleRankIds);
     });
   });
 
@@ -147,12 +149,12 @@ describe('Settings Selectors', () => {
     it('should use defaults', () => {
       const result = Selectors.getSettings.projector({}, Mocks.Defaults);
       expect(result).toEqual({
-        belt: Mocks.Defaults.belt,
+        belt: Mocks.Defaults.beltId,
         pipe: undefined,
-        fuel: Mocks.Defaults.fuel,
-        cargoWagon: Mocks.Defaults.cargoWagon,
-        fluidWagon: Mocks.Defaults.fluidWagon,
-        disabledRecipes: Mocks.Defaults.disabledRecipes,
+        fuel: Mocks.Defaults.fuelId,
+        cargoWagon: Mocks.Defaults.cargoWagonId,
+        fluidWagon: Mocks.Defaults.fluidWagonId,
+        disabledRecipes: Mocks.Defaults.disabledRecipeIds,
       } as any);
     });
 
@@ -172,7 +174,7 @@ describe('Settings Selectors', () => {
   describe('getFuel', () => {
     it('should return fuel from settings', () => {
       const result = Selectors.getFuel.projector(initialSettingsState);
-      expect(result).toEqual(initialSettingsState.fuel);
+      expect(result).toEqual(initialSettingsState.fuelId);
     });
   });
 
@@ -180,7 +182,7 @@ describe('Settings Selectors', () => {
     it('should return disabledRecipes from settings', () => {
       const result =
         Selectors.getDisabledRecipes.projector(initialSettingsState);
-      expect(result).toEqual(initialSettingsState.disabledRecipes!);
+      expect(result).toEqual(initialSettingsState.disabledRecipeIds!);
     });
   });
 

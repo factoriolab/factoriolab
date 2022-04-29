@@ -43,14 +43,14 @@ describe('FactoriesEffects', () => {
       actions.next(
         new Actions.RemoveAction({
           value: ItemId.AssemblingMachine3,
-          def: Mocks.Defaults.factoryRank,
+          def: Mocks.Defaults.factoryRankIds,
         })
       );
       mockStore.setState({
         ...initialState,
         ...{
           recipesState: {
-            [RecipeId.Coal]: { factoryModules: [ItemId.SpeedModule] },
+            [RecipeId.Coal]: { factoryModuleIds: [ItemId.SpeedModule] },
           },
         },
       });
@@ -66,14 +66,14 @@ describe('FactoriesEffects', () => {
       actions.next(
         new Actions.RemoveAction({
           value: ItemId.AssemblingMachine3,
-          def: Mocks.Defaults.factoryRank,
+          def: Mocks.Defaults.factoryRankIds,
         })
       );
       mockStore.setState({
         ...initialState,
         ...{
           recipesState: {
-            [RecipeId.Coal]: { beaconModules: [ItemId.SpeedModule] },
+            [RecipeId.Coal]: { beaconModuleIds: [ItemId.SpeedModule] },
           },
         },
       });

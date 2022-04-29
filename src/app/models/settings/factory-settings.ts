@@ -1,7 +1,7 @@
 export interface FactorySettings {
-  moduleRank?: string[];
+  moduleRankIds?: string[];
   beaconCount?: string;
-  beacon?: string;
-  beaconModule?: string;
+  beaconId?: string;
+  beaconModuleId?: string;
   overclock?: number;
 }

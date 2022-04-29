@@ -181,7 +181,7 @@ describe('Products Reducer', () => {
           def: undefined,
         })
       );
-      expect(result.entities[Mocks.Product1.id].viaFactoryModules).toEqual(
+      expect(result.entities[Mocks.Product1.id].viaFactoryModuleIds).toEqual(
         value
       );
     });
@@ -213,7 +213,7 @@ describe('Products Reducer', () => {
           def: undefined,
         })
       );
-      expect(result.entities[Mocks.Product1.id].viaBeacon).toEqual(value);
+      expect(result.entities[Mocks.Product1.id].viaBeaconId).toEqual(value);
     });
   });
 
@@ -228,7 +228,7 @@ describe('Products Reducer', () => {
           def: undefined,
         })
       );
-      expect(result.entities[Mocks.Product1.id].viaBeaconModules).toEqual(
+      expect(result.entities[Mocks.Product1.id].viaBeaconModuleIds).toEqual(
         value
       );
     });

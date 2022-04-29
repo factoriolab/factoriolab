@@ -122,9 +122,9 @@ describe('ProductsComponent', () => {
       rateType: RateType.Items,
       viaId: ItemId.Wood,
       viaSetting: ItemId.AssemblingMachine3,
-      viaFactoryModules: new Array(4).fill(ItemId.SpeedModule2),
-      viaBeacon: ItemId.Beacon,
-      viaBeaconModules: new Array(2).fill(ItemId.SpeedModule2),
+      viaFactoryModuleIds: new Array(4).fill(ItemId.SpeedModule2),
+      viaBeaconId: ItemId.Beacon,
+      viaBeaconModuleIds: new Array(2).fill(ItemId.SpeedModule2),
     };
     const productMismatch = {
       ...productMatch,

@@ -108,9 +108,9 @@ defined cost, usually mining."
     *ngIf="
       vm.result.A &&
       vm.result.O &&
-      vm.result.items &&
-      vm.result.recipes &&
-      vm.result.inputs
+      vm.result.itemIds &&
+      vm.result.recipeIds &&
+      vm.result.inputIds
     "
   >
     <tr>
@@ -121,12 +121,12 @@ defined cost, usually mining."
     <tr>
       <th rowspan="2"></th>
       <th class="header" rowspan="2">I</th>
-      <th class="header" [colSpan]="vm.result.items.length">Items/s</th>
-      <th class="header" [colSpan]="vm.result.recipes.length">Recipes</th>
+      <th class="header" [colSpan]="vm.result.itemIds.length">Items/s</th>
+      <th class="header" [colSpan]="vm.result.recipeIds.length">Recipes</th>
       <th
         class="header"
-        [colSpan]="vm.result.inputs.length"
-        *ngIf="vm.result.inputs.length"
+        [colSpan]="vm.result.inputIds.length"
+        *ngIf="vm.result.inputIds.length"
       >
         Inputs
       </th>
@@ -145,20 +145,20 @@ defined cost, usually mining."
       <th rowspan="2"></th>
     </tr>
     <tr>
-      <td *ngFor="let i of vm.result.items">
+      <td *ngFor="let i of vm.result.itemIds">
         <lab-icon
           [iconId]="i"
           [tooltip]="vm.data.itemEntities[i].name"
         ></lab-icon>
       </td>
-      <td *ngFor="let i of vm.result.recipes">
+      <td *ngFor="let i of vm.result.recipeIds">
         <lab-icon
           [iconId]="i"
           [tooltip]="vm.data.recipeEntities[i].name"
           [recipe]="vm.data.recipeEntities[i]"
         ></lab-icon>
       </td>
-      <td *ngFor="let i of vm.result.inputs">
+      <td *ngFor="let i of vm.result.inputIds">
         <lab-icon
           [iconId]="i"
           [tooltip]="vm.data.itemEntities[i].name"
@@ -170,7 +170,7 @@ defined cost, usually mining."
       <ng-template #notObj>
         <td>
           <div
-            *ngIf="vm.result.recipes[i - 1] as id; else notRecipe"
+            *ngIf="vm.result.recipeIds[i - 1] as id; else notRecipe"
             class="flex center"
           >
             <lab-icon
@@ -181,7 +181,9 @@ defined cost, usually mining."
           </div>
           <ng-template #notRecipe>
             <div
-              *ngIf="vm.result.inputs[i - 1 - vm.result.recipes.length] as id"
+              *ngIf="
+                vm.result.inputIds[i - 1 - vm.result.recipeIds.length] as id
+              "
               class="flex center"
             >
               <lab-icon
@@ -195,7 +197,7 @@ defined cost, usually mining."
       <td *ngFor="let c of R; last as last">
         <div
           class="flex"
-          *ngIf="last && vm.result.recipes[i - 1] as id; else valueSpan"
+          *ngIf="last && vm.result.recipeIds[i - 1] as id; else valueSpan"
         >
           <lab-input
             title="Set cost"
@@ -223,12 +225,12 @@ defined cost, usually mining."
     <tr>
       <td rowspan="3"></td>
       <th class="header" rowspan="2">I</th>
-      <th class="header" [colSpan]="vm.result.items.length">Surplus/s</th>
-      <th class="header" [colSpan]="vm.result.recipes.length">Recipes</th>
+      <th class="header" [colSpan]="vm.result.itemIds.length">Surplus/s</th>
+      <th class="header" [colSpan]="vm.result.recipeIds.length">Recipes</th>
       <th
         class="header"
-        [colSpan]="vm.result.inputs.length"
-        *ngIf="vm.result.inputs.length"
+        [colSpan]="vm.result.inputIds.length"
+        *ngIf="vm.result.inputIds.length"
       >
         Inputs
       </th>
@@ -236,20 +238,20 @@ defined cost, usually mining."
       <td rowspan="3"></td>
     </tr>
     <tr>
-      <td *ngFor="let i of vm.result.items">
+      <td *ngFor="let i of vm.result.itemIds">
         <lab-icon
           [iconId]="i"
           [tooltip]="vm.data.itemEntities[i].name"
         ></lab-icon>
       </td>
-      <td *ngFor="let i of vm.result.recipes">
+      <td *ngFor="let i of vm.result.recipeIds">
         <lab-icon
           [iconId]="i"
           [tooltip]="vm.data.recipeEntities[i].name"
           [recipe]="vm.data.recipeEntities[i]"
         ></lab-icon>
       </td>
-      <td *ngFor="let i of vm.result.inputs">
+      <td *ngFor="let i of vm.result.inputIds">
         <lab-icon
           [iconId]="i"
           [tooltip]="vm.data.itemEntities[i].name"

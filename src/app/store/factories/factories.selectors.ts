@@ -15,16 +15,16 @@ export const getFactories = createSelector(
   Settings.getDefaults,
   Settings.getDataset,
   (state, defaults, data): FactoriesState => {
-    const ids = state.ids || defaults?.factoryRank || [];
+    const ids = state.ids || defaults?.factoryRankIds || [];
 
     const entities: Entities<FactorySettings> = {};
     const def: FactorySettings = { ...state.entities[''] };
-    def.moduleRank = def.moduleRank || defaults?.moduleRank || [];
+    def.moduleRankIds = def.moduleRankIds || defaults?.moduleRankIds || [];
     if (data.game === Game.Factorio) {
       def.beaconCount = def.beaconCount || defaults?.beaconCount;
     }
-    def.beacon = def.beacon || defaults?.beacon;
-    def.beaconModule = def.beaconModule || defaults?.beaconModule;
+    def.beaconId = def.beaconId || defaults?.beaconId;
+    def.beaconModuleId = def.beaconModuleId || defaults?.beaconModuleId;
     if (data.game === Game.Satisfactory) {
       // Default = 100%
       def.overclock = def.overclock || 100;
@@ -36,10 +36,10 @@ export const getFactories = createSelector(
       const factory = data.factoryEntities[id];
 
       if (factory.modules) {
-        s.moduleRank = s.moduleRank || def.moduleRank;
+        s.moduleRankIds = s.moduleRankIds || def.moduleRankIds;
         s.beaconCount = s.beaconCount != null ? s.beaconCount : def.beaconCount;
-        s.beacon = s.beacon || def.beacon;
-        s.beaconModule = s.beaconModule || def.beaconModule;
+        s.beaconId = s.beaconId || def.beaconId;
+        s.beaconModuleId = s.beaconModuleId || def.beaconModuleId;
       }
 
       s.overclock = s.overclock || def.overclock;

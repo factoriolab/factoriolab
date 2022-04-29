@@ -138,7 +138,7 @@ export class RateUtility {
     for (const step of steps) {
       let noItems = false;
       if (step.recipeId != null) {
-        const factoryId = recipeSettings[step.recipeId].factory;
+        const factoryId = recipeSettings[step.recipeId].factoryId;
         if (factoryId != null) {
           const factory = data.factoryEntities[factoryId];
           const recipe = data.recipeEntities[step.recipeId];
@@ -150,11 +150,11 @@ export class RateUtility {
         delete step.belts;
         delete step.wagons;
       } else if (step.itemId != null) {
-        const belt = itemSettings[step.itemId].belt;
+        const belt = itemSettings[step.itemId].beltId;
         if (step.items != null && belt != null) {
           step.belts = step.items.div(beltSpeed[belt]);
         }
-        const wagon = itemSettings[step.itemId].wagon;
+        const wagon = itemSettings[step.itemId].wagonId;
         if (step.items != null && wagon != null) {
           const item = data.itemEntities[step.itemId];
           if (item.stack) {
@@ -209,7 +209,7 @@ export class RateUtility {
           recipeSettings[step.recipeId].beaconCount?.nonzero()
         ) {
           const settings = recipeSettings[step.recipeId];
-          if (settings.beacon != null) {
+          if (settings.beaconId != null) {
             if (settings.beaconTotal != null) {
               step.beacons = settings.beaconTotal;
             } else if (settings.beaconCount != null) {
@@ -219,7 +219,7 @@ export class RateUtility {
                 .div(beaconReceivers);
             }
 
-            const beacon = data.beaconEntities[settings.beacon];
+            const beacon = data.beaconEntities[settings.beaconId];
             if (beacon.usage?.nonzero() && step.beacons != null) {
               step.power = (step.power ?? Rational.zero).add(
                 step.beacons.mul(beacon.usage)

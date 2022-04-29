@@ -22,18 +22,18 @@ export const getItemSettings = createSelector(
           : { ignore: false };
 
         // Belt (or Pipe)
-        if (!itemSettings.belt) {
+        if (!itemSettings.beltId) {
           if (item.stack) {
-            itemSettings.belt = settings.belt;
+            itemSettings.beltId = settings.belt;
           } else if (settings.pipe) {
-            itemSettings.belt = settings.pipe;
+            itemSettings.beltId = settings.pipe;
           } else {
-            itemSettings.belt = ItemId.Pipe;
+            itemSettings.beltId = ItemId.Pipe;
           }
         }
 
-        if (!itemSettings.wagon) {
-          itemSettings.wagon = item.stack
+        if (!itemSettings.wagonId) {
+          itemSettings.wagonId = item.stack
             ? settings.cargoWagon
             : settings.fluidWagon;
         }
@@ -47,6 +47,6 @@ export const getItemSettings = createSelector(
 
 export const getItemsModified = createSelector(itemsState, (state) => ({
   ignore: Object.keys(state).some((id) => state[id].ignore != null),
-  belts: Object.keys(state).some((id) => state[id].belt != null),
-  wagons: Object.keys(state).some((id) => state[id].wagon != null),
+  belts: Object.keys(state).some((id) => state[id].beltId != null),
+  wagons: Object.keys(state).some((id) => state[id].wagonId != null),
 }));

@@ -221,7 +221,7 @@
             <td *ngIf="vm.columns[Column.Belts].show">
               <ng-container *ngIf="step.itemId && step.belts">
                 <div
-                  *ngIf="vm.itemSettings[step.itemId].belt as belt"
+                  *ngIf="vm.itemSettings[step.itemId].beltId as beltId"
                   class="flex"
                 >
                   <span class="monospace">{{
@@ -229,14 +229,14 @@
                   }}</span>
                   <ng-container
                     *ngIf="
-                      vm.data.beltIds.indexOf(belt) !== -1;
+                      vm.data.beltIds.indexOf(beltId) !== -1;
                       else pipePicker
                     "
                   >
                     <lab-select
                       *ngIf="vm.settings.belt"
                       header="Select a belt"
-                      [selected]="belt"
+                      [selected]="beltId"
                       [options]="vm.data.beltIds"
                       [columns]="
                         vm.data.game === Game.DysonSphereProgram ? 3 : null
@@ -248,23 +248,23 @@
                       <lab-icon
                         class="button"
                         title="Click to change belt"
-                        [iconId]="belt"
-                        [tooltip]="vm.data.itemEntities[belt].name"
-                        [item]="vm.data.itemEntities[belt]"
+                        [iconId]="beltId"
+                        [tooltip]="vm.data.itemEntities[beltId].name"
+                        [item]="vm.data.itemEntities[beltId]"
                       ></lab-icon>
                     </lab-select>
                   </ng-container>
                   <ng-template #pipePicker>
                     <ng-container
                       *ngIf="
-                        vm.data.pipeIds.indexOf(belt) !== -1;
+                        vm.data.pipeIds.indexOf(beltId) !== -1;
                         else pipeIcon
                       "
                     >
                       <lab-select
                         *ngIf="vm.settings.pipe"
                         header="Select a pipe"
-                        [selected]="belt"
+                        [selected]="beltId"
                         [options]="vm.data.pipeIds"
                         (selectId)="
                           setBelt(step.itemId, $event, vm.settings.pipe)
@@ -273,17 +273,17 @@
                         <lab-icon
                           class="button"
                           title="Click to change pipe"
-                          [iconId]="belt"
-                          [tooltip]="vm.data.itemEntities[belt].name"
-                          [item]="vm.data.itemEntities[belt]"
+                          [iconId]="beltId"
+                          [tooltip]="vm.data.itemEntities[beltId].name"
+                          [item]="vm.data.itemEntities[beltId]"
                         ></lab-icon>
                       </lab-select>
                     </ng-container>
                   </ng-template>
                   <ng-template #pipeIcon>
                     <lab-icon
-                      [iconId]="belt"
-                      [tooltip]="vm.data.itemEntities[belt]?.name || PIPE"
+                      [iconId]="beltId"
+                      [tooltip]="vm.data.itemEntities[beltId]?.name || PIPE"
                     ></lab-icon>
                   </ng-template>
                 </div>
@@ -292,7 +292,7 @@
             <td *ngIf="vm.columns[Column.Wagons].show">
               <ng-container *ngIf="step.itemId && step.wagons">
                 <div
-                  *ngIf="vm.itemSettings[step.itemId].wagon as wagon"
+                  *ngIf="vm.itemSettings[step.itemId].wagonId as wagonId"
                   class="flex"
                 >
                   <span class="monospace">{{
@@ -300,7 +300,7 @@
                   }}</span>
                   <ng-container
                     *ngIf="
-                      vm.data.fluidWagonIds.indexOf(wagon) === -1;
+                      vm.data.fluidWagonIds.indexOf(wagonId) === -1;
                       else fluidWagon
                     "
                   >
@@ -313,7 +313,7 @@
                       <lab-select
                         *ngIf="vm.settings.cargoWagon"
                         header="Select a cargo wagon"
-                        [selected]="wagon"
+                        [selected]="wagonId"
                         [options]="vm.data.cargoWagonIds"
                         (selectId)="
                           setWagon(step.itemId, $event, vm.settings.cargoWagon)
@@ -322,9 +322,9 @@
                         <lab-icon
                           class="button"
                           title="Click to change cargo wagon"
-                          [iconId]="wagon"
-                          [tooltip]="vm.data.itemEntities[wagon].name"
-                          [item]="vm.data.itemEntities[wagon]"
+                          [iconId]="wagonId"
+                          [tooltip]="vm.data.itemEntities[wagonId].name"
+                          [item]="vm.data.itemEntities[wagonId]"
                         ></lab-icon>
                       </lab-select>
                     </ng-container>
@@ -339,7 +339,7 @@
                       <lab-select
                         *ngIf="vm.settings.fluidWagon"
                         header="Select a fluid wagon"
-                        [selected]="wagon"
+                        [selected]="wagonId"
                         [options]="vm.data.fluidWagonIds"
                         (selectId)="
                           setWagon(step.itemId, $event, vm.settings.fluidWagon)
@@ -348,18 +348,18 @@
                         <lab-icon
                           class="button"
                           title="Click to change fluid wagon"
-                          [iconId]="wagon"
-                          [tooltip]="vm.data.itemEntities[wagon].name"
-                          [item]="vm.data.itemEntities[wagon]"
+                          [iconId]="wagonId"
+                          [tooltip]="vm.data.itemEntities[wagonId].name"
+                          [item]="vm.data.itemEntities[wagonId]"
                         ></lab-icon>
                       </lab-select>
                     </ng-container>
                   </ng-template>
                   <ng-template #wagonDefault>
                     <lab-icon
-                      [iconId]="wagon"
-                      [tooltip]="vm.data.itemEntities[wagon].name"
-                      [item]="vm.data.itemEntities[wagon]"
+                      [iconId]="wagonId"
+                      [tooltip]="vm.data.itemEntities[wagonId].name"
+                      [item]="vm.data.itemEntities[wagonId]"
                     ></lab-icon>
                   </ng-template>
                 </div>
@@ -367,7 +367,7 @@
             </td>
             <ng-container *ngIf="step.recipeId; else noRecipeCell">
               <ng-container
-                *ngIf="vm.recipeSettings[step.recipeId].factory as factory"
+                *ngIf="vm.recipeSettings[step.recipeId].factoryId as factory"
               >
                 <td class="num" [id]="step.recipeId">
                   <div
@@ -444,12 +444,16 @@
                     <div
                       *ngIf="
                         vm.recipeSettings[step.recipeId]
-                          .factoryModules as modules
+                          .factoryModuleIds as moduleIds
                       "
                       class="flex mod"
                     >
                       <lab-select
-                        *ngFor="let mod of modules; index as i; first as first"
+                        *ngFor="
+                          let mod of moduleIds;
+                          index as i;
+                          first as first
+                        "
                         [header]="
                           vm.data.game === Game.Factorio
                             ? 'Select a module'
@@ -522,7 +526,7 @@
               <ng-container *ngIf="step.recipeId; else noRecipeCell">
                 <ng-container
                   *ngIf="
-                    vm.recipeSettings[step.recipeId].beacon as beacon;
+                    vm.recipeSettings[step.recipeId].beaconId as beaconId;
                     else noRecipeCell
                   "
                 >
@@ -565,15 +569,15 @@
                           "
                         >
                           <lab-icon
-                            [iconId]="beacon"
-                            [tooltip]="vm.data.itemEntities[beacon].name"
-                            [item]="vm.data.itemEntities[beacon]"
+                            [iconId]="beaconId"
+                            [tooltip]="vm.data.itemEntities[beaconId].name"
+                            [item]="vm.data.itemEntities[beaconId]"
                           ></lab-icon
                         ></ng-container>
                         <ng-template #beaconPicker>
                           <lab-select
                             header="Select a beacon"
-                            [selected]="beacon"
+                            [selected]="beaconId"
                             [options]="vm.data.beaconIds"
                             (selectId)="
                               changeRecipeField(
@@ -588,9 +592,9 @@
                             <lab-icon
                               class="button"
                               title="Click to change beacon"
-                              [iconId]="beacon"
-                              [tooltip]="vm.data.itemEntities[beacon].name"
-                              [item]="vm.data.itemEntities[beacon]"
+                              [iconId]="beaconId"
+                              [tooltip]="vm.data.itemEntities[beaconId].name"
+                              [item]="vm.data.itemEntities[beaconId]"
                             ></lab-icon>
                           </lab-select>
                         </ng-template>
@@ -607,13 +611,13 @@
                         <div
                           *ngIf="
                             vm.recipeSettings[step.recipeId]
-                              ?.beaconModules as modules
+                              ?.beaconModuleIds as moduleIds
                           "
                           class="flex mod"
                         >
                           <lab-select
                             *ngFor="
-                              let mod of modules;
+                              let mod of moduleIds;
                               index as i;
                               first as first
                             "
@@ -805,7 +809,7 @@
                     </td>
                     <td *ngIf="vm.columns[Column.Belts].show">
                       <ng-container
-                        *ngIf="vm.itemSettings[step.itemId].belt as belt"
+                        *ngIf="vm.itemSettings[step.itemId].beltId as beltId"
                       >
                         <div *ngIf="step.belts" class="flex">
                           <span class="monospace">{{
@@ -813,16 +817,18 @@
                               | rate: vm.effectivePrecision[Column.Belts]
                           }}</span>
                           <lab-icon
-                            [iconId]="belt"
-                            [tooltip]="vm.data.itemEntities[belt]?.name || PIPE"
-                            [item]="vm.data.itemEntities[belt]"
+                            [iconId]="beltId"
+                            [tooltip]="
+                              vm.data.itemEntities[beltId]?.name || PIPE
+                            "
+                            [item]="vm.data.itemEntities[beltId]"
                           ></lab-icon>
                         </div>
                       </ng-container>
                     </td>
                     <td *ngIf="vm.columns[Column.Wagons].show">
                       <ng-container
-                        *ngIf="vm.itemSettings[step.itemId].wagon as wagon"
+                        *ngIf="vm.itemSettings[step.itemId].wagonId as wagonId"
                       >
                         <div *ngIf="step.wagons" class="flex">
                           <span class="monospace">{{
@@ -830,9 +836,9 @@
                               | rate: vm.effectivePrecision[Column.Wagons]
                           }}</span>
                           <lab-icon
-                            [iconId]="wagon"
-                            [tooltip]="vm.data.itemEntities[wagon].name"
-                            [item]="vm.data.itemEntities[wagon]"
+                            [iconId]="wagonId"
+                            [tooltip]="vm.data.itemEntities[wagonId].name"
+                            [item]="vm.data.itemEntities[wagonId]"
                           ></lab-icon>
                         </div>
                       </ng-container>
@@ -840,7 +846,8 @@
                     <ng-container *ngIf="output.recipeId; else noRecipeDetail">
                       <ng-container
                         *ngIf="
-                          vm.recipeSettings[output.recipeId].factory as factory
+                          vm.recipeSettings[output.recipeId]
+                            .factoryId as factoryId
                         "
                       >
                         <td>
@@ -854,7 +861,7 @@
                               output.factories
                                 | factoryRate
                                   : vm.effectivePrecision[Column.Factories]
-                                  : factory
+                                  : factoryId
                             }}</span>
                           </div>
                         </td>
@@ -873,11 +880,11 @@
                               <lab-icon
                                 *ngIf="
                                   vm.data.game !== Game.DysonSphereProgram ||
-                                  factory !== ItemId.MiningDrill
+                                  factoryId !== ItemId.MiningDrill
                                 "
-                                [iconId]="factory"
-                                [tooltip]="vm.data.itemEntities[factory].name"
-                                [item]="vm.data.itemEntities[factory]"
+                                [iconId]="factoryId"
+                                [tooltip]="vm.data.itemEntities[factoryId].name"
+                                [item]="vm.data.itemEntities[factoryId]"
                               ></lab-icon>
                             </div>
                           </div>
@@ -938,7 +945,7 @@
                   </td>
                   <td *ngIf="vm.columns[Column.Belts].show">
                     <ng-container
-                      *ngIf="vm.itemSettings[step.itemId].belt as belt"
+                      *ngIf="vm.itemSettings[step.itemId].beltId as beltId"
                     >
                       <div *ngIf="step.belts" class="flex">
                         <span class="monospace">{{
@@ -946,16 +953,16 @@
                             | rate: vm.effectivePrecision[Column.Belts]
                         }}</span>
                         <lab-icon
-                          [iconId]="belt"
-                          [tooltip]="vm.data.itemEntities[belt]?.name ?? PIPE"
-                          [item]="vm.data.itemEntities[belt]"
+                          [iconId]="beltId"
+                          [tooltip]="vm.data.itemEntities[beltId]?.name ?? PIPE"
+                          [item]="vm.data.itemEntities[beltId]"
                         ></lab-icon>
                       </div>
                     </ng-container>
                   </td>
                   <td *ngIf="vm.columns[Column.Wagons].show">
                     <ng-container
-                      *ngIf="vm.itemSettings[step.itemId].wagon as wagon"
+                      *ngIf="vm.itemSettings[step.itemId].wagonId as wagonId"
                     >
                       <div *ngIf="step.wagons" class="flex">
                         <span class="monospace">{{
@@ -963,9 +970,9 @@
                             | rate: vm.effectivePrecision[Column.Wagons]
                         }}</span>
                         <lab-icon
-                          [iconId]="wagon"
-                          [tooltip]="vm.data.itemEntities[wagon].name"
-                          [item]="vm.data.itemEntities[wagon]"
+                          [iconId]="wagonId"
+                          [tooltip]="vm.data.itemEntities[wagonId].name"
+                          [item]="vm.data.itemEntities[wagonId]"
                         ></lab-icon>
                       </div>
                     </ng-container>
@@ -973,7 +980,7 @@
                   <ng-container *ngIf="step.recipeId; else noRecipeDetail">
                     <ng-container
                       *ngIf="
-                        vm.recipeSettings[step.recipeId].factory as factory
+                        vm.recipeSettings[step.recipeId].factoryId as factoryId
                       "
                     >
                       <td>
@@ -985,7 +992,7 @@
                             step.factories.mul(parent.value)
                               | factoryRate
                                 : vm.effectivePrecision[Column.Factories]
-                                : factory
+                                : factoryId
                           }}</span>
                         </div>
                       </td>
@@ -1002,11 +1009,11 @@
                             <lab-icon
                               *ngIf="
                                 vm.data.game !== Game.DysonSphereProgram ||
-                                factory !== ItemId.MiningDrill
+                                factoryId !== ItemId.MiningDrill
                               "
-                              [iconId]="factory"
-                              [tooltip]="vm.data.itemEntities[factory].name"
-                              [item]="vm.data.itemEntities[factory]"
+                              [iconId]="factoryId"
+                              [tooltip]="vm.data.itemEntities[factoryId].name"
+                              [item]="vm.data.itemEntities[factoryId]"
                             ></lab-icon>
                           </div>
                         </div>
@@ -1034,11 +1041,13 @@
             <ng-container *ngIf="expanded[step.id] === StepDetailTab.Recipe">
               <ng-container *ngIf="step.recipeId">
                 <ng-container
-                  *ngIf="vm.recipeSettings[step.recipeId].factory as factory"
+                  *ngIf="
+                    vm.recipeSettings[step.recipeId].factoryId as factoryId
+                  "
                 >
                   <ng-container *ngIf="vm.data.game === Game.Factorio">
                     <ng-container
-                      *ngIf="vm.data.itemEntities[factory].factory?.mining"
+                      *ngIf="vm.data.itemEntities[factoryId].factory?.mining"
                     >
                       <tr class="details first">
                         <td [colSpan]="leftSpan"></td>
@@ -1100,7 +1109,7 @@
                     *ngIf="vm.data.recipeR[step.recipeId].in"
                     [class.first]="
                       vm.data.game !== Game.Factorio ||
-                      !vm.data.itemEntities[factory].factory?.mining
+                      !vm.data.itemEntities[factoryId].factory?.mining
                     "
                   >
                     <td [colSpan]="leftSpan"></td>
@@ -1143,7 +1152,7 @@
                           <ng-container *ngIf="inStep.itemId">
                             <ng-container
                               *ngIf="
-                                vm.itemSettings[inStep.itemId].belt as belt
+                                vm.itemSettings[inStep.itemId].beltId as beltId
                               "
                             >
                               <div *ngIf="inStep.belts" class="flex">
@@ -1152,11 +1161,11 @@
                                     | rate: vm.effectivePrecision[Column.Belts]
                                 }}</span>
                                 <lab-icon
-                                  [iconId]="belt"
+                                  [iconId]="beltId"
                                   [tooltip]="
-                                    vm.data.itemEntities[belt]?.name || PIPE
+                                    vm.data.itemEntities[beltId]?.name || PIPE
                                   "
-                                  [item]="vm.data.itemEntities[belt]"
+                                  [item]="vm.data.itemEntities[beltId]"
                                 ></lab-icon>
                               </div>
                             </ng-container>
@@ -1166,7 +1175,8 @@
                           <ng-container *ngIf="inStep.itemId">
                             <ng-container
                               *ngIf="
-                                vm.itemSettings[inStep.itemId].wagon as wagon
+                                vm.itemSettings[inStep.itemId]
+                                  .wagonId as wagonId
                               "
                             >
                               <div *ngIf="inStep.wagons" class="flex">
@@ -1175,9 +1185,9 @@
                                     | rate: vm.effectivePrecision[Column.Wagons]
                                 }}</span>
                                 <lab-icon
-                                  [iconId]="wagon"
-                                  [tooltip]="vm.data.itemEntities[wagon].name"
-                                  [item]="vm.data.itemEntities[wagon]"
+                                  [iconId]="wagonId"
+                                  [tooltip]="vm.data.itemEntities[wagonId].name"
+                                  [item]="vm.data.itemEntities[wagonId]"
                                 ></lab-icon>
                               </div>
                             </ng-container>
@@ -1189,7 +1199,7 @@
                           <ng-container
                             *ngIf="
                               vm.recipeSettings[inStep.recipeId]
-                                .factory as factory
+                                .factoryId as factoryId
                             "
                           >
                             <td>
@@ -1203,7 +1213,7 @@
                                   inStep.factories.mul(percent)
                                     | factoryRate
                                       : vm.effectivePrecision[Column.Factories]
-                                      : factory
+                                      : factoryId
                                 }}</span>
                               </div>
                             </td>
@@ -1225,13 +1235,13 @@
                                     *ngIf="
                                       vm.data.game !==
                                         Game.DysonSphereProgram ||
-                                      factory !== ItemId.MiningDrill
+                                      factoryId !== ItemId.MiningDrill
                                     "
-                                    [iconId]="factory"
+                                    [iconId]="factoryId"
                                     [tooltip]="
-                                      vm.data.itemEntities[factory].name
+                                      vm.data.itemEntities[factoryId].name
                                     "
-                                    [item]="vm.data.itemEntities[factory]"
+                                    [item]="vm.data.itemEntities[factoryId]"
                                   ></lab-icon>
                                 </div>
                               </div>
@@ -1301,7 +1311,7 @@
                           <ng-container *ngIf="outStep.itemId">
                             <ng-container
                               *ngIf="
-                                vm.itemSettings[outStep.itemId].belt as belt
+                                vm.itemSettings[outStep.itemId].beltId as beltId
                               "
                             >
                               <div *ngIf="outStep.belts" class="flex">
@@ -1310,11 +1320,11 @@
                                     | rate: vm.effectivePrecision[Column.Belts]
                                 }}</span>
                                 <lab-icon
-                                  [iconId]="belt"
+                                  [iconId]="beltId"
                                   [tooltip]="
-                                    vm.data.itemEntities[belt]?.name || PIPE
+                                    vm.data.itemEntities[beltId]?.name || PIPE
                                   "
-                                  [item]="vm.data.itemEntities[belt]"
+                                  [item]="vm.data.itemEntities[beltId]"
                                 ></lab-icon>
                               </div>
                             </ng-container>
@@ -1324,7 +1334,8 @@
                           <ng-container *ngIf="outStep.itemId">
                             <ng-container
                               *ngIf="
-                                vm.itemSettings[outStep.itemId]?.wagon as wagon
+                                vm.itemSettings[outStep.itemId]
+                                  ?.wagonId as wagonId
                               "
                             >
                               <div *ngIf="outStep.wagons" class="flex">
@@ -1333,9 +1344,9 @@
                                     | rate: vm.effectivePrecision[Column.Wagons]
                                 }}</span>
                                 <lab-icon
-                                  [iconId]="wagon"
-                                  [tooltip]="vm.data.itemEntities[wagon].name"
-                                  [item]="vm.data.itemEntities[wagon]"
+                                  [iconId]="wagonId"
+                                  [tooltip]="vm.data.itemEntities[wagonId].name"
+                                  [item]="vm.data.itemEntities[wagonId]"
                                 ></lab-icon>
                               </div>
                             </ng-container>
@@ -1347,7 +1358,7 @@
                           <ng-container
                             *ngIf="
                               vm.recipeSettings[outStep.recipeId]
-                                .factory as factory
+                                .factoryId as factoryId
                             "
                           >
                             <td>
@@ -1362,7 +1373,7 @@
                                   outStep.factories
                                     | factoryRate
                                       : vm.effectivePrecision[Column.Factories]
-                                      : factory
+                                      : factoryId
                                 }}</span>
                               </div>
                             </td>
@@ -1383,13 +1394,13 @@
                                     *ngIf="
                                       vm.data.game !==
                                         Game.DysonSphereProgram ||
-                                      factory !== ItemId.MiningDrill
+                                      factoryId !== ItemId.MiningDrill
                                     "
-                                    [iconId]="factory"
+                                    [iconId]="factoryId"
                                     [tooltip]="
-                                      vm.data.itemEntities[factory].name
+                                      vm.data.itemEntities[factoryId].name
                                     "
-                                    [item]="vm.data.itemEntities[factory]"
+                                    [item]="vm.data.itemEntities[factoryId]"
                                   ></lab-icon>
                                 </div>
                               </div>
@@ -1458,13 +1469,13 @@
                           </td>
                           <td
                             [colSpan]="
-                              vm.itemSettings[input.key].belt === ItemId.Pipe
+                              vm.itemSettings[input.key].beltId === ItemId.Pipe
                                 ? 2
                                 : 0
                             "
                           >
                             <ng-container
-                              *ngIf="vm.itemSettings[input.key].belt as belt"
+                              *ngIf="vm.itemSettings[input.key].beltId as belt"
                             >
                               <div *ngIf="inStep.belts" class="flex">
                                 <span class="monospace">{{
@@ -1483,8 +1494,8 @@
                           </td>
                           <ng-container
                             *ngIf="
-                              vm.itemSettings[input.key].belt !== ItemId.Pipe &&
-                              inStep.items
+                              vm.itemSettings[input.key].beltId !==
+                                ItemId.Pipe && inStep.items
                             "
                           >
                             <td
@@ -1521,7 +1532,8 @@
                       <td class="split-column">
                         <div
                           *ngIf="
-                            vm.recipeSettings[step.recipeId]?.factory as factory
+                            vm.recipeSettings[step.recipeId]
+                              ?.factoryId as factory
                           "
                         >
                           <div class="flex">
@@ -1560,7 +1572,7 @@
                       >
                         <ng-container
                           *ngIf="
-                            vm.itemSettings[output.key].belt !== ItemId.Pipe
+                            vm.itemSettings[output.key].beltId !== ItemId.Pipe
                           "
                         >
                           <td *ngIf="items | inserterSpeed: vm.settings as ins">
@@ -1578,13 +1590,13 @@
                         </ng-container>
                         <td
                           [colSpan]="
-                            vm.itemSettings[output.key].belt === ItemId.Pipe
+                            vm.itemSettings[output.key].beltId === ItemId.Pipe
                               ? 2
                               : 0
                           "
                         >
                           <div
-                            *ngIf="vm.itemSettings[output.key].belt as belt"
+                            *ngIf="vm.itemSettings[output.key].beltId as belt"
                             class="flex"
                           >
                             <span class="monospace">{{

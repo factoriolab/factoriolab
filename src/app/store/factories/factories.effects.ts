@@ -34,20 +34,20 @@ export class FactoriesEffects {
           const r = rawSettings[i];
           if (
             r &&
-            (r.factoryModules != null ||
+            (r.factoryModuleIds != null ||
               r.beaconCount != null ||
-              r.beacon != null ||
-              r.beaconModules != null)
+              r.beaconId != null ||
+              r.beaconModuleIds != null)
           ) {
             // Check that these recipe settings are still valid
-            const factoryId = recipeSettings[i].factory;
+            const factoryId = recipeSettings[i].factoryId;
             if (factoryId) {
               const factory = data.factoryEntities[factoryId];
               const recipe = data.recipeEntities[i];
               if (
                 !RecipeUtility.allowsModules(recipe, factory) ||
-                (r.factoryModules &&
-                  r.factoryModules.length !== factory.modules)
+                (r.factoryModuleIds &&
+                  r.factoryModuleIds.length !== factory.modules)
               ) {
                 // Factory does not support module effects, reset these settings
                 effects.push(new Recipes.ResetRecipeModulesAction(i));

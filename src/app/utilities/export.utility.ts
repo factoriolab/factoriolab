@@ -99,13 +99,13 @@ export class ExportUtility {
         if (step.belts != null) {
           exp.Belts = '=' + step.belts.toString();
         }
-        exp.Belt = settings.belt;
+        exp.Belt = settings.beltId;
       }
       if (columns[Column.Wagons].show) {
         if (step.wagons != null) {
           exp.Wagons = '=' + step.wagons.toString();
         }
-        exp.Wagon = settings.wagon;
+        exp.Wagon = settings.wagonId;
       }
     }
     if (step.recipeId != null) {
@@ -124,23 +124,23 @@ export class ExportUtility {
       if (inputs) {
         exp.Inputs = `"${inputs}"`;
       }
-      if (settings.factory != null) {
-        const factory = data.factoryEntities[settings.factory];
+      if (settings.factoryId != null) {
+        const factory = data.factoryEntities[settings.factoryId];
         const allowsModules = RecipeUtility.allowsModules(recipe, factory);
         if (columns[Column.Factories].show) {
           if (step.factories != null) {
             exp.Factories = '=' + step.factories.toString();
           }
-          exp.Factory = settings.factory;
-          if (allowsModules && settings.factoryModules != null) {
-            exp.FactoryModules = `"${settings.factoryModules.join(',')}"`;
+          exp.Factory = settings.factoryId;
+          if (allowsModules && settings.factoryModuleIds != null) {
+            exp.FactoryModules = `"${settings.factoryModuleIds.join(',')}"`;
           }
         }
         if (columns[Column.Beacons].show && allowsModules) {
           exp.Beacons = settings.beaconCount;
-          exp.Beacon = settings.beacon;
-          if (settings.beaconModules != null) {
-            exp.BeaconModules = `"${settings.beaconModules.join(',')}"`;
+          exp.Beacon = settings.beaconId;
+          if (settings.beaconModuleIds != null) {
+            exp.BeaconModules = `"${settings.beaconModuleIds.join(',')}"`;
           }
         }
         if (columns[Column.Power].show) {

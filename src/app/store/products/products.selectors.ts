@@ -168,14 +168,14 @@ export const getNormalizedRatesByBelts = createSelector(
   (products, productSteps, itemSettings, beltSpeed) =>
     products?.reduce((e: Entities<Rational>, p) => {
       if (p.viaId === p.itemId) {
-        const id = p.viaSetting ?? itemSettings[p.itemId].belt;
+        const id = p.viaSetting ?? itemSettings[p.itemId].beltId;
         if (id) {
           e[p.id] = p.rate.mul(beltSpeed[id]);
         }
       } else {
         const via = RecipeUtility.getProductStepData(productSteps, p);
         if (via) {
-          const id = p.viaSetting ?? itemSettings[via[0]].belt;
+          const id = p.viaSetting ?? itemSettings[via[0]].beltId;
           if (id) {
             e[p.id] = p.rate.mul(beltSpeed[id]).div(via[1]);
           }
@@ -197,7 +197,7 @@ export const getNormalizedRatesByWagons = createSelector(
     products?.reduce((e: Entities<Rational>, p) => {
       if (p.viaId === p.itemId) {
         e[p.id] = p.rate.div(DisplayRateVal[displayRate]);
-        const wagonId = p.viaSetting ?? itemSettings[p.itemId].wagon;
+        const wagonId = p.viaSetting ?? itemSettings[p.itemId].wagonId;
         if (wagonId) {
           const item = data.itemEntities[p.itemId];
           const wagon = data.itemEntities[wagonId];
@@ -211,7 +211,7 @@ export const getNormalizedRatesByWagons = createSelector(
         const via = RecipeUtility.getProductStepData(productSteps, p);
         if (via) {
           e[p.id] = p.rate.div(DisplayRateVal[displayRate]);
-          const wagonId = p.viaSetting ?? itemSettings[via[0]].wagon;
+          const wagonId = p.viaSetting ?? itemSettings[via[0]].wagonId;
           if (wagonId) {
             const item = data.itemEntities[via[0]];
             const wagon = data.itemEntities[wagonId];
@@ -267,10 +267,10 @@ export const getNormalizedRatesByFactories = createSelector(
             [recipeId]: {
               ...{
                 factory: p.viaSetting,
-                factoryModules: p.viaFactoryModules,
+                factoryModules: p.viaFactoryModuleIds,
                 beaconCount: p.viaBeaconCount,
-                beacon: p.viaBeacon,
-                beaconModules: p.viaBeaconModules,
+                beacon: p.viaBeaconId,
+                beaconModules: p.viaBeaconModuleIds,
                 overclock: p.viaOverclock,
               },
             },
@@ -468,7 +468,7 @@ export const getTotals = createSelector(
       if (step.itemId != null) {
         // Total Belts
         if (step.belts?.nonzero()) {
-          const belt = itemSettings[step.itemId].belt;
+          const belt = itemSettings[step.itemId].beltId;
           if (belt != null) {
             if (!belts.hasOwnProperty(belt)) {
               belts[belt] = Rational.zero;
@@ -479,7 +479,7 @@ export const getTotals = createSelector(
 
         // Total Wagons
         if (step.wagons?.nonzero()) {
-          const wagon = itemSettings[step.itemId].wagon;
+          const wagon = itemSettings[step.itemId].wagonId;
           if (wagon != null) {
             if (!wagons.hasOwnProperty(wagon)) {
               wagons[wagon] = Rational.zero;
@@ -495,7 +495,7 @@ export const getTotals = createSelector(
           const recipe = data.recipeEntities[step.recipeId];
           // Don't include silos from launch recipes
           if (!recipe.part) {
-            let factory = recipeSettings[step.recipeId].factory;
+            let factory = recipeSettings[step.recipeId].factoryId;
             if (
               data.game === Game.DysonSphereProgram &&
               factory === ItemId.MiningDrill
@@ -516,7 +516,7 @@ export const getTotals = createSelector(
 
         // Total Beacons
         if (step.beacons?.nonzero()) {
-          const beacon = recipeSettings[step.recipeId].beacon;
+          const beacon = recipeSettings[step.recipeId].beaconId;
           if (beacon != null) {
             if (!beacons.hasOwnProperty(beacon)) {
               beacons[beacon] = Rational.zero;

@@ -581,7 +581,7 @@ describe('RateUtility', () => {
       const settings: Entities<RationalRecipeSettings> = {
         [RecipeId.Coal]: {
           beaconCount: Rational.from(8),
-          beacon: ItemId.Beacon,
+          beaconId: ItemId.Beacon,
           beaconTotal: Rational.one,
         },
       };

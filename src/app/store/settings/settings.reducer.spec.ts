@@ -67,7 +67,7 @@ describe('Settings Reducer', () => {
         initialSettingsState,
         new Actions.SetDisabledRecipesAction({ value, def: [] })
       );
-      expect(result.disabledRecipes).toEqual(value);
+      expect(result.disabledRecipeIds).toEqual(value);
     });
   });
 
@@ -100,7 +100,7 @@ describe('Settings Reducer', () => {
         initialSettingsState,
         new Actions.SetBeltAction({ value, def: undefined })
       );
-      expect(result.belt).toEqual(value);
+      expect(result.beltId).toEqual(value);
     });
   });
 
@@ -111,7 +111,7 @@ describe('Settings Reducer', () => {
         initialSettingsState,
         new Actions.SetPipeAction({ value, def: undefined })
       );
-      expect(result.pipe).toEqual(value);
+      expect(result.pipeId).toEqual(value);
     });
   });
 
@@ -122,7 +122,7 @@ describe('Settings Reducer', () => {
         initialSettingsState,
         new Actions.SetFuelAction({ value, def: undefined })
       );
-      expect(result.fuel).toEqual(value);
+      expect(result.fuelId).toEqual(value);
     });
   });
 
@@ -144,7 +144,7 @@ describe('Settings Reducer', () => {
         initialSettingsState,
         new Actions.SetCargoWagonAction({ value, def: undefined })
       );
-      expect(result.cargoWagon).toEqual(value);
+      expect(result.cargoWagonId).toEqual(value);
     });
   });
 
@@ -155,7 +155,7 @@ describe('Settings Reducer', () => {
         initialSettingsState,
         new Actions.SetFluidWagonAction({ value, def: undefined })
       );
-      expect(result.fluidWagon).toEqual(value);
+      expect(result.fluidWagonId).toEqual(value);
     });
   });
 
@@ -265,7 +265,7 @@ describe('Settings Reducer', () => {
         initialSettingsState,
         new Actions.SetProliferatorSprayAction(value)
       );
-      expect(result.proliferatorSpray).toEqual(value);
+      expect(result.proliferatorSprayId).toEqual(value);
     });
   });
 

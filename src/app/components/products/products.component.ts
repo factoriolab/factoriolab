@@ -134,25 +134,25 @@ export class ProductsComponent {
       switch (field) {
         case RecipeField.FactoryModules: {
           if (
-            s.factory.moduleRank != null &&
+            s.factory.moduleRankIds != null &&
             data != null &&
             typeof event === 'string' &&
             index != null &&
-            product.viaFactoryModules != null
+            product.viaFactoryModuleIds != null
           ) {
-            const count = product.viaFactoryModules.length;
+            const count = product.viaFactoryModuleIds.length;
             const options = [...data.recipeModuleIds[recipeId], ItemId.Module];
             const def = s.fMatch
-              ? s.recipe.factoryModules
+              ? s.recipe.factoryModuleIds
               : RecipeUtility.defaultModules(
                   options,
-                  s.factory.moduleRank,
+                  s.factory.moduleRankIds,
                   count
                 );
             const modules = this.generateModules(
               index,
               event,
-              product.viaFactoryModules
+              product.viaFactoryModuleIds
             );
             this.setViaFactoryModules(product.id, modules, def);
           }
@@ -169,20 +169,20 @@ export class ProductsComponent {
           if (
             typeof event === 'string' &&
             index != null &&
-            product.viaBeaconModules != null
+            product.viaBeaconModuleIds != null
           ) {
-            const count = product.viaBeaconModules.length;
+            const count = product.viaBeaconModuleIds.length;
             const bMatch =
-              product.viaBeacon == null ||
-              product.viaBeacon === s.recipe.beacon;
+              product.viaBeaconId == null ||
+              product.viaBeaconId === s.recipe.beaconId;
             const def =
               s.fMatch && bMatch
-                ? s.recipe.beaconModules
-                : new Array(count).fill(s.factory.beaconModule);
+                ? s.recipe.beaconModuleIds
+                : new Array(count).fill(s.factory.beaconModuleId);
             const value = this.generateModules(
               index,
               event,
-              product.viaBeaconModules
+              product.viaBeaconModuleIds
             );
             this.setViaBeaconModules(product.id, value, def);
           }
@@ -214,7 +214,7 @@ export class ProductsComponent {
     return {
       recipe,
       factory,
-      fMatch: factoryId === recipe.factory,
+      fMatch: factoryId === recipe.factoryId,
     };
   }
 

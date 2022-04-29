@@ -254,7 +254,7 @@ describe('Products Selectors', () => {
         [Mocks.RationalProducts[1]],
         null,
         { [Mocks.Product2.itemId]: Mocks.ItemSettings1 },
-        { [Mocks.ItemSettings1.belt!]: Rational.one }
+        { [Mocks.ItemSettings1.beltId!]: Rational.one }
       );
       expect(result[Mocks.Product2.id].nonzero()).toBeTrue();
     });
@@ -269,7 +269,7 @@ describe('Products Selectors', () => {
         ],
         null,
         { [Mocks.Product2.itemId]: Mocks.ItemSettings1 },
-        { [Mocks.ItemSettings1.belt!]: Rational.one }
+        { [Mocks.ItemSettings1.beltId!]: Rational.one }
       );
       expect(result[Mocks.Product2.id].nonzero()).toBeTrue();
     });

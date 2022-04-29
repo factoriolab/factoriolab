@@ -12,16 +12,16 @@ import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
   baseId: string;
-  disabledRecipes?: string[];
+  disabledRecipeIds?: string[];
   expensive: boolean;
   displayRate: DisplayRate;
   preset: Preset;
   beaconReceivers: string | null;
-  belt?: string;
-  pipe?: string;
-  fuel?: string;
-  cargoWagon?: string;
-  fluidWagon?: string;
+  beltId?: string;
+  pipeId?: string;
+  fuelId?: string;
+  cargoWagonId?: string;
+  fluidWagonId?: string;
   flowRate: number;
   miningBonus: number;
   researchSpeed: ResearchSpeed;
@@ -31,7 +31,7 @@ export interface SettingsState {
   costFactory: string;
   costInput: string;
   costIgnored: string;
-  proliferatorSpray: string;
+  proliferatorSprayId: string;
 }
 
 export const initialSettingsState: SettingsState = {
@@ -49,7 +49,7 @@ export const initialSettingsState: SettingsState = {
   costFactory: '1',
   costInput: '1000000',
   costIgnored: '0',
-  proliferatorSpray: ItemId.Module,
+  proliferatorSprayId: ItemId.Module,
 };
 
 export function settingsReducer(
@@ -76,18 +76,18 @@ export function settingsReducer(
           researchSpeed: ResearchSpeed.Speed6,
         },
       };
-      delete newState.disabledRecipes;
-      delete newState.belt;
-      delete newState.pipe;
-      delete newState.fuel;
-      delete newState.cargoWagon;
-      delete newState.fluidWagon;
+      delete newState.disabledRecipeIds;
+      delete newState.beltId;
+      delete newState.pipeId;
+      delete newState.fuelId;
+      delete newState.cargoWagonId;
+      delete newState.fluidWagonId;
       return newState;
     case SettingsActionType.SET_DISABLED_RECIPES:
       return {
         ...state,
         ...{
-          disabledRecipes: StoreUtility.compareValues(action.payload),
+          disabledRecipeIds: StoreUtility.compareValues(action.payload),
         },
       };
     case SettingsActionType.SET_EXPENSIVE:
@@ -97,29 +97,29 @@ export function settingsReducer(
     case SettingsActionType.SET_BELT:
       return {
         ...state,
-        ...{ belt: StoreUtility.compareValue(action.payload) },
+        ...{ beltId: StoreUtility.compareValue(action.payload) },
       };
     case SettingsActionType.SET_PIPE:
       return {
         ...state,
-        ...{ pipe: StoreUtility.compareValue(action.payload) },
+        ...{ pipeId: StoreUtility.compareValue(action.payload) },
       };
     case SettingsActionType.SET_FUEL:
       return {
         ...state,
-        ...{ fuel: StoreUtility.compareValue(action.payload) },
+        ...{ fuelId: StoreUtility.compareValue(action.payload) },
       };
     case SettingsActionType.SET_FLOW_RATE:
       return { ...state, ...{ flowRate: action.payload } };
     case SettingsActionType.SET_CARGO_WAGON:
       return {
         ...state,
-        ...{ cargoWagon: StoreUtility.compareValue(action.payload) },
+        ...{ cargoWagonId: StoreUtility.compareValue(action.payload) },
       };
     case SettingsActionType.SET_FLUID_WAGON:
       return {
         ...state,
-        ...{ fluidWagon: StoreUtility.compareValue(action.payload) },
+        ...{ fluidWagonId: StoreUtility.compareValue(action.payload) },
       };
     case SettingsActionType.SET_DISPLAY_RATE:
       return { ...state, ...{ displayRate: action.payload.value } };
@@ -140,7 +140,7 @@ export function settingsReducer(
     case SettingsActionType.SET_COST_IGNORED:
       return { ...state, ...{ costIgnored: action.payload } };
     case SettingsActionType.SET_PROLIFERATOR_SPRAY:
-      return { ...state, ...{ proliferatorSpray: action.payload } };
+      return { ...state, ...{ proliferatorSprayId: action.payload } };
     case SettingsActionType.RESET_COST:
       return {
         ...state,

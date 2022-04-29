@@ -108,9 +108,9 @@ export class SimplexUtility {
         time: solution.time,
         A: solution.A,
         O: solution.O,
-        items: solution.itemIds,
-        recipes: solution.recipeIds,
-        inputs: solution.inputIds,
+        itemIds: solution.itemIds,
+        recipeIds: solution.recipeIds,
+        inputIds: solution.inputIds,
       };
     } else {
       if (result === MatrixResultType.Failed && error) {
@@ -124,9 +124,9 @@ export class SimplexUtility {
         time: solution.time,
         A: solution.A,
         O: solution.O,
-        items: solution.itemIds,
-        recipes: solution.recipeIds,
-        inputs: solution.inputIds,
+        itemIds: solution.itemIds,
+        recipeIds: solution.recipeIds,
+        inputIds: solution.inputIds,
       };
     }
   }

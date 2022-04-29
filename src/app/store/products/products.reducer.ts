@@ -87,10 +87,10 @@ export function productsReducer(
             [
               'viaId',
               'viaSetting',
-              'viaFactoryModules',
+              'viaFactoryModuleIds',
               'viaBeaconCount',
-              'viaBeacon',
-              'viaBeaconModules',
+              'viaBeaconId',
+              'viaBeaconModuleIds',
               'viaOverclock',
             ],
             action.payload.id
@@ -121,10 +121,10 @@ export function productsReducer(
             [
               'viaId',
               'viaSetting',
-              'viaFactoryModules',
+              'viaFactoryModuleIds',
               'viaBeaconCount',
-              'viaBeacon',
-              'viaBeaconModules',
+              'viaBeaconId',
+              'viaBeaconModuleIds',
               'viaOverclock',
             ],
             action.payload.id
@@ -139,10 +139,10 @@ export function productsReducer(
             StoreUtility.assignValue(state.entities, 'viaId', action.payload),
             [
               'viaSetting',
-              'viaFactoryModules',
+              'viaFactoryModuleIds',
               'viaBeaconCount',
-              'viaBeacon',
-              'viaBeaconModules',
+              'viaBeaconId',
+              'viaBeaconModuleIds',
               'viaOverclock',
             ],
             action.payload.id
@@ -158,10 +158,10 @@ export function productsReducer(
             [
               'viaId',
               'viaSetting',
-              'viaFactoryModules',
+              'viaFactoryModuleIds',
               'viaBeaconCount',
-              'viaBeacon',
-              'viaBeaconModules',
+              'viaBeaconId',
+              'viaBeaconModuleIds',
               'viaOverclock',
             ],
             action.payload
@@ -179,10 +179,10 @@ export function productsReducer(
               action.payload
             ),
             [
-              'viaFactoryModules',
+              'viaFactoryModuleIds',
               'viaBeaconCount',
-              'viaBeacon',
-              'viaBeaconModules',
+              'viaBeaconId',
+              'viaBeaconModuleIds',
               'viaOverclock',
             ],
             action.payload.id
@@ -195,7 +195,7 @@ export function productsReducer(
         ...{
           entities: StoreUtility.compareReset(
             state.entities,
-            'viaFactoryModules',
+            'viaFactoryModuleIds',
             action.payload
           ),
         },
@@ -218,10 +218,10 @@ export function productsReducer(
           entities: StoreUtility.resetField(
             StoreUtility.compareReset(
               state.entities,
-              'viaBeacon',
+              'viaBeaconId',
               action.payload
             ),
-            'viaBeaconModules',
+            'viaBeaconModuleIds',
             action.payload.id
           ),
         },
@@ -232,7 +232,7 @@ export function productsReducer(
         ...{
           entities: StoreUtility.compareReset(
             state.entities,
-            'viaBeaconModules',
+            'viaBeaconModuleIds',
             action.payload
           ),
         },

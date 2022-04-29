@@ -20,22 +20,30 @@ export function recipesReducer(
       return initialRecipesState;
     case RecipesActionType.SET_FACTORY:
       return StoreUtility.resetFields(
-        StoreUtility.compareReset(state, 'factory', action.payload),
-        ['factoryModules', 'beaconCount', 'beacon', 'beaconModules'],
+        StoreUtility.compareReset(state, 'factoryId', action.payload),
+        ['factoryModuleIds', 'beaconCount', 'beaconId', 'beaconModuleIds'],
         action.payload.id
       );
     case RecipesActionType.SET_FACTORY_MODULES:
-      return StoreUtility.compareReset(state, 'factoryModules', action.payload);
+      return StoreUtility.compareReset(
+        state,
+        'factoryModuleIds',
+        action.payload
+      );
     case RecipesActionType.SET_BEACON_COUNT:
       return StoreUtility.compareReset(state, 'beaconCount', action.payload);
     case RecipesActionType.SET_BEACON:
       return StoreUtility.resetField(
-        StoreUtility.compareReset(state, 'beacon', action.payload),
-        'beaconModules',
+        StoreUtility.compareReset(state, 'beaconId', action.payload),
+        'beaconModuleIds',
         action.payload.id
       );
     case RecipesActionType.SET_BEACON_MODULES:
-      return StoreUtility.compareReset(state, 'beaconModules', action.payload);
+      return StoreUtility.compareReset(
+        state,
+        'beaconModuleIds',
+        action.payload
+      );
     case RecipesActionType.SET_BEACON_TOTAL:
       return StoreUtility.assignValue(state, 'beaconTotal', action.payload);
     case RecipesActionType.SET_OVERCLOCK:
@@ -55,28 +63,28 @@ export function recipesReducer(
       return StoreUtility.resetFields(
         state,
         [
-          'factoryModules',
+          'factoryModuleIds',
           'beaconCount',
-          'beacon',
-          'beaconModules',
+          'beaconId',
+          'beaconModuleIds',
           'beaconTotal',
         ],
         action.payload
       );
     case RecipesActionType.RESET_FACTORY:
       return StoreUtility.resetFields(state, [
-        'factory',
-        'factoryModules',
+        'factoryId',
+        'factoryModuleIds',
         'beaconCount',
-        'beacon',
-        'beaconModules',
+        'beaconId',
+        'beaconModuleIds',
         'beaconTotal',
       ]);
     case RecipesActionType.RESET_BEACONS:
       return StoreUtility.resetFields(state, [
         'beaconCount',
-        'beacon',
-        'beaconModules',
+        'beaconId',
+        'beaconModuleIds',
         'beaconTotal',
       ]);
     case RecipesActionType.RESET_OVERCLOCK:

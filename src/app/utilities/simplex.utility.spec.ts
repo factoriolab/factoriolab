@@ -148,9 +148,9 @@ describe('SimplexUtility', () => {
         time: 2,
         A: [],
         O: [],
-        items: [],
-        recipes: [],
-        inputs: [],
+        itemIds: [],
+        recipeIds: [],
+        inputIds: [],
       });
       expect(console.error).toHaveBeenCalled();
       expect(window.alert).toHaveBeenCalled();
@@ -180,9 +180,9 @@ describe('SimplexUtility', () => {
         time: 2,
         A: [],
         O: [],
-        items: [],
-        recipes: [],
-        inputs: [],
+        itemIds: [],
+        recipeIds: [],
+        inputIds: [],
       });
       expect(console.error).not.toHaveBeenCalled();
       expect(window.alert).not.toHaveBeenCalled();
@@ -212,9 +212,9 @@ describe('SimplexUtility', () => {
         time: 2,
         A: [],
         O: [],
-        items: [],
-        recipes: [],
-        inputs: [],
+        itemIds: [],
+        recipeIds: [],
+        inputIds: [],
       });
       expect(SimplexUtility.updateSteps).toHaveBeenCalledWith(
         Mocks.Steps,

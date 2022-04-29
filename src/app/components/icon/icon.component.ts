@@ -32,7 +32,7 @@ import * as Settings from '~/store/settings';
 export class IconComponent implements OnChanges {
   @Input() iconId: string | undefined;
   @Input() scale = true;
-  @Input() text: string | undefined;
+  @Input() text: string | null | undefined;
   @Input() tooltip: string | null | undefined;
   @Input() hoverIcon: string | undefined;
   @Input() scrollTop = 0;

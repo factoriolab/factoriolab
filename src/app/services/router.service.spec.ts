@@ -58,17 +58,17 @@ const mockProductsState: Products.ProductsState = {
 const mockItemsState: Items.ItemsState = {
   [ItemId.SteelChest]: {
     ignore: true,
-    belt: ItemId.TransportBelt,
-    wagon: ItemId.CargoWagon,
+    beltId: ItemId.TransportBelt,
+    wagonId: ItemId.CargoWagon,
   },
 };
 const mockRecipesState: Recipes.RecipesState = {
   [RecipeId.SteelChest]: {
-    factory: ItemId.AssemblingMachine2,
-    factoryModules: [ItemId.EfficiencyModule, ItemId.EfficiencyModule],
+    factoryId: ItemId.AssemblingMachine2,
+    factoryModuleIds: [ItemId.EfficiencyModule, ItemId.EfficiencyModule],
     beaconCount: '1',
-    beacon: ItemId.Beacon,
-    beaconModules: [ItemId.SpeedModule, ItemId.SpeedModule],
+    beaconId: ItemId.Beacon,
+    beaconModuleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
     overclock: 200,
     cost: '100',
     beaconTotal: '8',
@@ -78,24 +78,24 @@ const mockFactoriesState: Factories.FactoriesState = {
   ids: [ItemId.AssemblingMachine2, ItemId.SteelFurnace],
   entities: {
     ['']: {
-      moduleRank: [ItemId.ProductivityModule, ItemId.SpeedModule],
+      moduleRankIds: [ItemId.ProductivityModule, ItemId.SpeedModule],
       beaconCount: '1',
-      beacon: ItemId.Beacon,
-      beaconModule: ItemId.SpeedModule,
+      beaconId: ItemId.Beacon,
+      beaconModuleId: ItemId.SpeedModule,
     },
   },
 };
 const mockSettingsState: Settings.SettingsState = {
   baseId: '1.0',
-  disabledRecipes: [],
+  disabledRecipeIds: [],
   expensive: true,
   displayRate: DisplayRate.PerHour,
   preset: Preset.Modules,
   beaconReceivers: '1',
-  belt: ItemId.TransportBelt,
-  fuel: ItemId.Coal,
-  cargoWagon: ItemId.CargoWagon,
-  fluidWagon: ItemId.FluidWagon,
+  beltId: ItemId.TransportBelt,
+  fuelId: ItemId.Coal,
+  cargoWagonId: ItemId.CargoWagon,
+  fluidWagonId: ItemId.FluidWagon,
   flowRate: 1200,
   miningBonus: 100,
   researchSpeed: ResearchSpeed.Speed0,
@@ -105,7 +105,7 @@ const mockSettingsState: Settings.SettingsState = {
   costFactory: '10',
   costInput: '0',
   costIgnored: '100',
-  proliferatorSpray: ItemId.ProductivityModule,
+  proliferatorSprayId: ItemId.ProductivityModule,
 };
 const mockZip: Zip = {
   bare: 'p=steel-chest*1*1',
@@ -513,10 +513,10 @@ describe('RouterService', () => {
             rateType: RateType.Factories,
             viaId: ItemId.IronOre,
             viaSetting: ItemId.AssemblingMachine2,
-            viaFactoryModules: [],
+            viaFactoryModuleIds: [],
             viaBeaconCount: '1',
-            viaBeaconModules: [],
-            viaBeacon: ItemId.Beacon,
+            viaBeaconModuleIds: [],
+            viaBeaconId: ItemId.Beacon,
           },
         ],
         Mocks.Hash
@@ -673,7 +673,7 @@ describe('RouterService', () => {
         ZipVersion.Version0
       );
       expect(result).toEqual({
-        [ItemId.SteelChest]: { ignore: true, belt: ItemId.TransportBelt },
+        [ItemId.SteelChest]: { ignore: true, beltId: ItemId.TransportBelt },
       });
     });
 
@@ -690,7 +690,7 @@ describe('RouterService', () => {
         Mocks.Hash
       );
       expect(result).toEqual({
-        ['']: { ignore: true, belt: ItemId.TransportBelt },
+        ['']: { ignore: true, beltId: ItemId.TransportBelt },
       });
     });
   });
@@ -702,7 +702,7 @@ describe('RouterService', () => {
         ZipVersion.Version0
       );
       expect(result).toEqual({
-        [RecipeId.SteelChest]: { factory: ItemId.AssemblingMachine2 },
+        [RecipeId.SteelChest]: { factoryId: ItemId.AssemblingMachine2 },
       });
     });
 
@@ -719,7 +719,7 @@ describe('RouterService', () => {
         Mocks.Hash
       );
       expect(result).toEqual({
-        ['']: { factory: ItemId.AssemblingMachine1 },
+        ['']: { factoryId: ItemId.AssemblingMachine1 },
       });
     });
   });
