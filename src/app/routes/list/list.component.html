@@ -234,7 +234,7 @@
                     "
                   >
                     <lab-select
-                      *ngIf="vm.settings.belt"
+                      *ngIf="vm.settings.beltId"
                       header="Select a belt"
                       [selected]="beltId"
                       [options]="vm.data.beltIds"
@@ -242,7 +242,7 @@
                         vm.data.game === Game.DysonSphereProgram ? 3 : null
                       "
                       (selectId)="
-                        setBelt(step.itemId, $event, vm.settings.belt)
+                        setBelt(step.itemId, $event, vm.settings.beltId)
                       "
                     >
                       <lab-icon
@@ -262,12 +262,12 @@
                       "
                     >
                       <lab-select
-                        *ngIf="vm.settings.pipe"
+                        *ngIf="vm.settings.pipeId"
                         header="Select a pipe"
                         [selected]="beltId"
                         [options]="vm.data.pipeIds"
                         (selectId)="
-                          setBelt(step.itemId, $event, vm.settings.pipe)
+                          setBelt(step.itemId, $event, vm.settings.pipeId)
                         "
                       >
                         <lab-icon
@@ -311,12 +311,16 @@
                       "
                     >
                       <lab-select
-                        *ngIf="vm.settings.cargoWagon"
+                        *ngIf="vm.settings.cargoWagonId"
                         header="Select a cargo wagon"
                         [selected]="wagonId"
                         [options]="vm.data.cargoWagonIds"
                         (selectId)="
-                          setWagon(step.itemId, $event, vm.settings.cargoWagon)
+                          setWagon(
+                            step.itemId,
+                            $event,
+                            vm.settings.cargoWagonId
+                          )
                         "
                       >
                         <lab-icon
@@ -337,12 +341,16 @@
                       "
                     >
                       <lab-select
-                        *ngIf="vm.settings.fluidWagon"
+                        *ngIf="vm.settings.fluidWagonId"
                         header="Select a fluid wagon"
                         [selected]="wagonId"
                         [options]="vm.data.fluidWagonIds"
                         (selectId)="
-                          setWagon(step.itemId, $event, vm.settings.fluidWagon)
+                          setWagon(
+                            step.itemId,
+                            $event,
+                            vm.settings.fluidWagonId
+                          )
                         "
                       >
                         <lab-icon
@@ -1684,7 +1692,7 @@
                       <ng-container *ngIf="vm.data.recipeR[recipeId] as recipe">
                         <lab-icon
                           *ngIf="
-                            vm.settings.disabledRecipes.indexOf(recipeId) ===
+                            vm.settings.disabledRecipeIds.indexOf(recipeId) ===
                               -1 && recipe.producesOnly(step.itemId)
                           "
                           class="button grid"
@@ -1730,7 +1738,7 @@
                       *ngFor="let recipeId of vm.stepDetails[step.id].recipes"
                       class="button grid"
                       [class.ignored]="
-                        vm.settings.disabledRecipes.indexOf(recipeId) !== -1
+                        vm.settings.disabledRecipeIds.indexOf(recipeId) !== -1
                       "
                       [iconId]="recipeId"
                       [tooltip]="vm.data.recipeEntities[recipeId].name"
