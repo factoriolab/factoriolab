@@ -223,7 +223,7 @@ function link(i: number, j: number): Link {
 
 export const Sankey: SankeyData = {
   nodes: [
-    node(0),
+    node(0, true),
     node(1),
     node(2),
     node(3),
@@ -232,7 +232,7 @@ export const Sankey: SankeyData = {
     node(6),
     node(7),
     node(8),
-    node(9, true),
+    node(9),
   ],
   links: [
     link(1, 0),
