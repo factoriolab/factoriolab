@@ -3,7 +3,7 @@
 </div>
 <lab-dialog *ngIf="open" (closeDialog)="close()">
   <div class="dialog-title">
-    <div class="header">Select modules</div>
+    <div class="header">{{ 'ranker.selectModules' | translate }}</div>
     <button (click)="cancel()">
       <i class="material-icons">close</i>
     </button>
@@ -16,7 +16,7 @@
   >
     <div class="tile">
       <lab-icon
-        tooltip="No module"
+        [tooltip]="'ranker.noModule' | translate"
         class="grid"
         data-test="lab-ranker-none"
         [class.selected]="!editValue.length"
@@ -47,11 +47,15 @@
   </div>
   <ng-container *ngIf="edited">
     <div class="info">
-      (Optional) Select another module to use as a fallback
+      {{ 'ranker.rankerInfo' | translate }}
     </div>
     <div class="dialog-buttons">
-      <button (click)="cancel()"><span class="text">Cancel</span></button>
-      <button class="green" (click)="close()">Confirm</button>
+      <button (click)="cancel()">
+        <span class="text">{{ 'ranker.cancel' | translate }}</span>
+      </button>
+      <button class="green" (click)="close()">
+        {{ 'ranker.confirm' | translate }}
+      </button>
     </div>
   </ng-container>
 </lab-dialog>

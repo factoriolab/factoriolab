@@ -197,6 +197,7 @@ export const PreferencesState: Preferences.PreferencesState = {
   sankeyAlign: SankeyAlign.Justify,
   simplex: true,
   powerUnit: PowerUnit.Auto,
+  language: 'en',
 };
 
 function node(i: number, noHref = false): Node {

@@ -12,6 +12,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, first, map } from 'rxjs';
 
 import {
@@ -27,6 +28,7 @@ import {
   InserterTarget,
   InserterTargetOptions,
   ItemId,
+  Language,
   PowerUnit,
   PowerUnitOptions,
   Preset,
@@ -109,21 +111,31 @@ export class SettingsComponent implements OnInit {
   difficultyOptions: IdName<boolean>[] = [
     {
       id: false,
-      name: 'Normal',
+      name: 'options.recipeDifficulty.normal',
     },
     {
       id: true,
-      name: 'Expensive',
+      name: 'options.recipeDifficulty.expensive',
     },
   ];
   enabledOptions: IdName<boolean>[] = [
     {
       id: true,
-      name: 'Enabled',
+      name: 'options.enabled',
     },
     {
       id: false,
-      name: 'Disabled',
+      name: 'options.disabled',
+    },
+  ];
+  languageOptions: Language[] = [
+    {
+      id: 'en',
+      name: 'English',
+    },
+    {
+      id: 'zh',
+      name: '简体中文',
     },
   ];
   GameOptions = GameOptions;
@@ -148,7 +160,8 @@ export class SettingsComponent implements OnInit {
     private el: ElementRef<HTMLElement>,
     private ref: ChangeDetectorRef,
     private router: Router,
-    private routerService: RouterService,
+    private translateSvc: TranslateService,
+    private routerSvc: RouterService,
     private store: Store<LabState>
   ) {}
 
@@ -254,7 +267,7 @@ export class SettingsComponent implements OnInit {
   setState(id: string, preferences: Preferences.PreferencesState): void {
     const query = preferences.states[id];
     if (query) {
-      const queryParams = this.routerService.getParams(query);
+      const queryParams = this.routerSvc.getParams(query);
       this.state = id;
       this.router.navigate([], { queryParams });
     }
@@ -289,6 +302,11 @@ export class SettingsComponent implements OnInit {
     } else {
       this.setBeaconReceivers('1');
     }
+  }
+
+  changeLanguage(value: string): void {
+    this.translateSvc.use(value);
+    this.setLanguage(value);
   }
 
   /** Action Dispatch Methods */
@@ -408,6 +426,10 @@ export class SettingsComponent implements OnInit {
 
   setSimplex(value: boolean): void {
     this.store.dispatch(new Preferences.SetSimplexAction(value));
+  }
+
+  setLanguage(value: string): void {
+    this.store.dispatch(new Preferences.SetLanguageAction(value));
   }
 
   setPowerUnit(value: PowerUnit): void {

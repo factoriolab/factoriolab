@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { MockStore } from '@ngrx/store/testing';
 
-import { initialState, TestUtility } from 'src/tests';
+import { TestModule, TestUtility } from 'src/tests';
 import { Column } from '~/models';
 import { LabState } from '~/store';
 import { DialogComponent } from '../dialog/dialog.component';
@@ -23,7 +23,7 @@ describe('ColumnsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DialogComponent, ColumnsComponent],
-      providers: [provideMockStore({ initialState })],
+      imports: [TestModule],
     }).compileComponents();
   });
 

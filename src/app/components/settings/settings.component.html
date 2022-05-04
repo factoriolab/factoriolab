@@ -1,10 +1,10 @@
 <ng-container *ngIf="vm$ | async as vm">
   <div class="flex">
-    <h2 class="header">Settings</h2>
+    <h2 class="header">{{ 'setting.name' | translate }}</h2>
     <div class="flex">
       <button
         class="dialog-button"
-        title="Delete all settings"
+        [title]="'setting.deleteAllSettings' | translate"
         (click)="clickResetSettings()"
       >
         <i class="material-icons">delete</i>
@@ -19,29 +19,28 @@
       <div>
         <div class="header">
           <lab-info
-            text="Saved states"
-            tooltip="Click edit to name and save the current calculator state.
-  Select a saved state from the dropdown to load it into the calculator."
+            [text]="'setting.saveStates' | translate"
+            [tooltip]="'setting.saveStatesTooltip' | translate"
           ></lab-info>
         </div>
         <div class="flex states">
           <ng-container *ngIf="!editState; else stateInput">
             <lab-options
-              title="Select saved state"
+              [title]="'setting.selectSavedState' | translate"
               [selected]="state"
               [options]="vm.savedStates"
               (selectId)="setState($event, vm.preferences)"
             ></lab-options>
             <button
               *ngIf="state"
-              title="Delete saved state"
+              [title]="'setting.deleteSavedState' | translate"
               (click)="clickRemoveState()"
             >
               <i class="material-icons">delete</i>
             </button>
             <button
               *ngIf="BrowserUtility.search"
-              title="Name and save state"
+              [title]="'setting.nameAndSaveState' | translate"
               (click)="toggleEditState()"
             >
               <i class="material-icons">edit</i>
@@ -50,17 +49,20 @@
           <ng-template #stateInput>
             <input
               type="text"
-              placeholder="Enter a name..."
+              [placeholder]="'setting.enterAName' | translate"
               [(ngModel)]="tempState"
             />
             <button
               *ngIf="tempState && BrowserUtility.search"
-              title="Save state"
+              [title]="'setting.saveState' | translate"
               (click)="clickSaveState()"
             >
               <i class="material-icons">save</i>
             </button>
-            <button title="Cancel" (click)="toggleEditState()">
+            <button
+              [title]="'setting.cancel' | translate"
+              (click)="toggleEditState()"
+            >
               <i class="material-icons">close</i>
             </button>
           </ng-template>
@@ -70,27 +72,26 @@
     <div class="hole">
       <div>
         <div class="flex tween">
-          <div class="header">Recipes</div>
+          <div class="header">{{ 'setting.recipes' | translate }}</div>
           <a
             *ngIf="vm.data.game === Game.Factorio"
             class="small"
             href="https://github.com/factoriolab/factorio-lab/issues/new?assignees=&labels=mod+support&template=mod-request.md&title="
             target="_blank"
-            >Request a mod</a
+            >{{ 'setting.requestAMod' | translate }}</a
           >
         </div>
         <table class="thin">
           <tr>
             <td>
               <lab-info
-                text="Game"
-                tooltip="Select which game calculator to use,
-  or use the links in the title bar."
+                [text]="'setting.game' | translate"
+                [tooltip]="'setting.gameTooltip' | translate"
               ></lab-info>
             </td>
             <td>
               <lab-options
-                title="Select game"
+                [title]="'setting.gameTitle' | translate"
                 [selected]="vm.data.game"
                 [options]="GameOptions"
                 (selectId)="setGame($event)"
@@ -100,13 +101,13 @@
           <tr *ngIf="vm.data.game === Game.Factorio">
             <td>
               <lab-info
-                text="Mod set"
-                tooltip="Select which version or set of mods in Factorio to use."
+                [text]="'setting.modSet' | translate"
+                [tooltip]="'setting.modSetTooltip' | translate"
               ></lab-info>
             </td>
             <td>
               <lab-options
-                title="Select base recipe set"
+                [title]="'setting.modSetTitle' | translate"
                 [selected]="vm.settings.baseId"
                 [options]="vm.baseOptions"
                 (selectId)="setBase($event)"
@@ -116,9 +117,8 @@
           <tr>
             <td>
               <lab-info
-                text="Disabled"
-                tooltip="Click to modify which recipes are disabled.
-  Disabled recipes will not be used in the solution."
+                [text]="'setting.disabled' | translate"
+                [tooltip]="'setting.disabledTooltip' | translate"
               ></lab-info>
             </td>
             <td>
@@ -137,14 +137,13 @@
           <tr *ngIf="vm.data.game === Game.Factorio">
             <td>
               <lab-info
-                text="Difficulty"
-                tooltip="Select whether to use Normal or
-  Expensive difficulty recipes."
+                [text]="'setting.difficulty' | translate"
+                [tooltip]="'setting.difficultyTooltip' | translate"
               ></lab-info>
             </td>
             <td>
               <lab-options
-                title="Select recipe difficulty"
+                [title]="'setting.difficultyTitle' | translate"
                 [selected]="vm.settings.expensive"
                 [options]="difficultyOptions"
                 (selectId)="setExpensive($event)"
@@ -156,23 +155,25 @@
     </div>
     <div class="hole">
       <div>
-        <div class="header">Display</div>
+        <div class="header">{{ 'setting.display' | translate }}</div>
         <table class="x-wide">
           <tr>
             <td>
               <lab-info
-                text="Columns & precision"
-                tooltip="Click to select the visible columns and decimal
-  or fractional precision for visible columns."
+                [text]="'setting.columnsAndPrecision' | translate"
+                [tooltip]="'setting.columnsAndPrecisionTooltip' | translate"
               ></lab-info>
             </td>
             <td>
               <lab-columns class="relative">
                 <button
                   class="grow"
-                  title="Set columns visibility and precision"
+                  [title]="'setting.columnsAndPrecisionTitle' | translate"
                 >
-                  <span class="text">{{ vm.columnsVisible }} Visible</span>
+                  <span class="text"
+                    >{{ vm.columnsVisible }}
+                    {{ 'setting.visible' | translate }}</span
+                  >
                 </button>
               </lab-columns>
             </td>
@@ -180,13 +181,13 @@
           <tr>
             <td>
               <lab-info
-                text="Display rates as"
-                tooltip="Set the unit of time to use in rates."
+                [text]="'setting.displayRate' | translate"
+                [tooltip]="'setting.displayRateTooltip' | translate"
               ></lab-info>
             </td>
             <td>
               <lab-options
-                title="Select display rate"
+                [title]="'setting.displayRateTitle' | translate"
                 [selected]="vm.settings.displayRate"
                 [options]="DisplayRateOptions"
                 (selectId)="setDisplayRate($event, vm.settings.displayRate)"
@@ -196,13 +197,13 @@
           <tr *ngIf="vm.columns[Column.Power].show">
             <td>
               <lab-info
-                text="Power units"
-                tooltip="Set the unit of power to use in the power column."
+                [text]="'setting.powerUnit' | translate"
+                [tooltip]="'setting.powerUnitTooltip' | translate"
               ></lab-info>
             </td>
             <td>
               <lab-options
-                title="Select power units"
+                [title]="'setting.powerUnitTitle' | translate"
                 [selected]="vm.preferences.powerUnit"
                 [options]="PowerUnitOptions"
                 (selectId)="setPowerUnit($event)"
@@ -214,18 +215,18 @@
     </div>
     <div class="hole">
       <div>
-        <div class="header">Factory</div>
+        <div class="header">{{ 'setting.factory' | translate }}</div>
         <table class="thin">
           <tr>
             <td>
               <lab-info
-                text="Preset"
-                tooltip="Select a default preset of factory settings to use."
+                [text]="'setting.preset' | translate"
+                [tooltip]="'setting.presetTooltip' | translate"
               ></lab-info>
             </td>
             <td>
               <lab-options
-                title="Select preset factory"
+                [title]="'setting.presetTitle' | translate"
                 [selected]="vm.settings.preset"
                 [options]="vm.presetOptions"
                 (selectId)="setPreset($event)"
@@ -242,20 +243,22 @@
                 <ng-container *ngIf="!f">
                   <lab-select
                     *ngIf="vm.factoryOptionIds.length"
-                    header="Select a factory"
+                    [header]="'setting.selectAFactory' | translate"
                     [options]="vm.factoryOptionIds"
                     (selectId)="
                       addFactory($event, vm.data.defaults?.factoryRankIds)
                     "
                   >
-                    <button title="Add factory preference">
+                    <button
+                      [title]="'setting.addFactoryPreference' | translate"
+                    >
                       <i class="material-icons">add</i>
                     </button>
                   </lab-select>
                 </ng-container>
                 <button
                   *ngIf="f"
-                  title="Remove factory preference"
+                  [title]="'setting.removeFactoryPreference' | translate"
                   (click)="removeFactory(f, vm.data.defaults?.factoryRankIds)"
                 >
                   <i class="material-icons">remove</i>
@@ -272,7 +275,7 @@
                 </lab-icon>
                 <lab-select
                   *ngIf="f && vm.factoryOptionIds.length"
-                  header="Select a factory"
+                  [header]="'setting.selectAFactory' | translate"
                   [selected]="f"
                   [options]="vm.factoryOptionIds"
                   (selectId)="
@@ -290,7 +293,7 @@
                 <lab-icon
                   *ngIf="!f"
                   class="pad"
-                  tooltip="Factory defaults"
+                  [tooltip]="'setting.factoryDefaults' | translate"
                   iconId="production"
                 ></lab-icon>
               </td>
@@ -312,7 +315,7 @@
                   >
                     <lab-icon
                       class="button"
-                      tooltip="Module preferences"
+                      [tooltip]="'setting.modulePreferences' | translate"
                       [iconId]="
                         factory.moduleRankIds.length
                           ? factory.moduleRankIds[0]
@@ -387,7 +390,7 @@
                 <td>
                   <ng-container *ngIf="factory.beaconCount != null">
                     <lab-input
-                      title="Default number of beacons"
+                      [title]="'setting.defaultNumberOfBeacons' | translate"
                       placeholder="# Beacons"
                       [digits]="2"
                       [value]="factory.beaconCount"
@@ -414,7 +417,7 @@
                     <ng-template #beaconPicker>
                       <lab-select
                         *ngIf="factory.beaconId"
-                        header="Select a beacon"
+                        [header]="'setting.selectABeacon' | translate"
                         [selected]="factory.beaconId"
                         [options]="vm.data.beaconIds"
                         (selectId)="
@@ -429,7 +432,7 @@
                       >
                         <lab-icon
                           class="button"
-                          tooltip="Select default beacon"
+                          [tooltip]="'setting.selectDefaultBeacon' | translate"
                           [iconId]="factory.beaconId"
                         ></lab-icon>
                       </lab-select>
@@ -441,7 +444,7 @@
                     *ngIf="
                       (factory.beaconCount | gtZero) && factory.beaconModuleId
                     "
-                    header="Select a module"
+                    [header]="'setting.selectAModule' | translate"
                     [selected]="factory.beaconModuleId"
                     [options]="vm.data.beaconModuleIds"
                     [includeEmptyModule]="true"
@@ -458,7 +461,7 @@
                   >
                     <lab-icon
                       class="button"
-                      tooltip="Beacon module"
+                      [tooltip]="'setting.beaconModule' | translate"
                       [iconId]="factory.beaconModuleId"
                     ></lab-icon>
                   </lab-select>
@@ -467,7 +470,7 @@
               <td>
                 <button
                   *ngIf="i > 1"
-                  title="Raise factory rank"
+                  [title]="'setting.raiseFactoryRank' | translate"
                   (click)="raiseFactory(f, vm.data.defaults?.factoryRankIds)"
                 >
                   <i class="material-icons">arrow_drop_up</i>
@@ -485,9 +488,10 @@
                   [class.checked]="vm.settings.beaconReceivers"
                 ></div>
                 <lab-info
-                  text="Estimate beacon power usage"
-                  tooltip="Enable to estimate power usage of beacons as well as factories.
-  Requires an estimated average number of receivers per beacon."
+                  [text]="'setting.estimateBeaconPowerUsage' | translate"
+                  [tooltip]="
+                    'setting.estimateBeaconPowerUsageTooltip' | translate
+                  "
                 ></lab-info>
               </div>
             </td>
@@ -495,15 +499,14 @@
           <tr *ngIf="vm.settings.beaconReceivers">
             <td>
               <lab-info
-                text="Average beacon receivers"
-                tooltip="The average number of factories affected by each beacon.
-  Minimum possible value is 1."
+                [text]="'setting.averageBeaconReceivers' | translate"
+                [tooltip]="'setting.averageBeaconReceiversTooltip' | translate"
               ></lab-info>
             </td>
             <td>
               <div>
                 <lab-input
-                  title="Set average beacon receivers"
+                  [title]="'setting.setAverageBeaconReceivers' | translate"
                   placeholder="# Receivers"
                   [digits]="2"
                   [value]="vm.settings.beaconReceivers"
@@ -517,14 +520,14 @@
           <tr *ngIf="vm.data.game === Game.DysonSphereProgram">
             <td>
               <lab-info
-                text="Proliferator self-spray"
-                tooltip="Select the proliferator spray applied to proliferator itself."
+                [text]="'setting.proliferatorSelfSpray' | translate"
+                [tooltip]="'setting.proliferatorSelfSprayTooltip' | translate"
               ></lab-info>
             </td>
             <td>
               <div>
                 <lab-select
-                  header="Select a proliferator"
+                  [header]="'setting.selectAProliferator' | translate"
                   [selected]="vm.settings.proliferatorSprayId"
                   [options]="vm.data.prodModuleIds"
                   [includeEmptyModule]="true"
@@ -532,7 +535,7 @@
                 >
                   <lab-icon
                     class="button"
-                    tooltip="Select proliferator spray"
+                    [tooltip]="'setting.selectAProliferatorTooltip' | translate"
                     [iconId]="vm.settings.proliferatorSprayId"
                   ></lab-icon>
                 </lab-select>
@@ -542,15 +545,15 @@
           <tr>
             <td>
               <lab-info
-                text="Default transport belt"
-                tooltip="Select the default belt to be used by all items."
+                [text]="'setting.defaultTransportBelt' | translate"
+                [tooltip]="'setting.defaultTransportBeltTooltip' | translate"
               ></lab-info>
             </td>
             <td>
               <div>
                 <lab-select
                   *ngIf="vm.settings.beltId"
-                  header="Select a belt"
+                  [header]="'setting.defaultTransportBeltHeader' | translate"
                   [selected]="vm.settings.beltId"
                   [options]="vm.data.beltIds"
                   [columns]="
@@ -560,7 +563,9 @@
                 >
                   <lab-icon
                     class="button"
-                    tooltip="Select default belt"
+                    [tooltip]="
+                      'setting.defaultTransportBeltHeaderTooltip' | translate
+                    "
                     [iconId]="vm.settings.beltId"
                   ></lab-icon>
                 </lab-select>
@@ -570,22 +575,22 @@
           <tr *ngIf="vm.data.pipeIds.length">
             <td>
               <lab-info
-                text="Default pipe"
-                tooltip="Select the default pipe to be used by all fluids."
+                [text]="'setting.defaultPipe' | translate"
+                [tooltip]="'setting.defaultPipeTooltip' | translate"
               ></lab-info>
             </td>
             <td>
               <div>
                 <lab-select
                   *ngIf="vm.settings.pipeId"
-                  header="Select a pipe"
+                  [header]="'setting.defaultPipeHeader' | translate"
                   [selected]="vm.settings.pipeId"
                   [options]="vm.data.pipeIds"
                   (selectId)="setPipe($event, vm.data.defaults?.pipeId)"
                 >
                   <lab-icon
                     class="button"
-                    tooltip="Select default pipe"
+                    [tooltip]="'setting.defaultPipeHeaderTooltip' | translate"
                     [iconId]="vm.settings.pipeId"
                   ></lab-icon>
                 </lab-select>
@@ -595,15 +600,15 @@
           <tr *ngIf="vm.data.cargoWagonIds.length > 1">
             <td>
               <lab-info
-                text="Default cargo wagon"
-                tooltip="Select the default cargo wagon to be used by all items."
+                [text]="'setting.defaultCargoWagon' | translate"
+                [tooltip]="'setting.defaultCargoWagonTooltip' | translate"
               ></lab-info>
             </td>
             <td>
               <div>
                 <lab-select
                   *ngIf="vm.settings.cargoWagonId"
-                  header="Select a cargo wagon"
+                  [header]="'setting.defaultCargoWagonHeader' | translate"
                   [selected]="vm.settings.cargoWagonId"
                   [options]="vm.data.cargoWagonIds"
                   (selectId)="
@@ -612,7 +617,9 @@
                 >
                   <lab-icon
                     class="button"
-                    tooltip="Select default cargo wagon"
+                    [tooltip]="
+                      'setting.defaultCargoWagonHeaderTooltip' | translate
+                    "
                     [iconId]="vm.settings.cargoWagonId"
                   ></lab-icon>
                 </lab-select>
@@ -622,15 +629,15 @@
           <tr *ngIf="vm.data.fluidWagonIds.length > 1">
             <td>
               <lab-info
-                text="Default fluid wagon"
-                tooltip="Select the default fluid wagon to be used by all fluids."
+                [text]="'setting.defaultFluidWagon' | translate"
+                [tooltip]="'setting.defaultFluidWagonTooltip' | translate"
               ></lab-info>
             </td>
             <td>
               <div>
                 <lab-select
                   *ngIf="vm.settings.fluidWagonId"
-                  header="Select a fluid wagon"
+                  [header]="'setting.defaultFluidWagonHeader' | translate"
                   [selected]="vm.settings.fluidWagonId"
                   [options]="vm.data.fluidWagonIds"
                   (selectId)="
@@ -639,7 +646,9 @@
                 >
                   <lab-icon
                     class="button"
-                    tooltip="Select default fluid wagon"
+                    [tooltip]="
+                      'setting.defaultFluidWagonHeaderTooltip' | translate
+                    "
                     [iconId]="vm.settings.fluidWagonId"
                   ></lab-icon>
                 </lab-select>
@@ -653,23 +662,22 @@
           >
             <td>
               <lab-info
-                text="Chemical fuel"
-                tooltip="Select the default chemical to be used where applicable.
-  This does not affect burners that use non-chemical fuels."
+                [text]="'setting.chemicalFuel' | translate"
+                [tooltip]="'setting.chemicalFuelTooltip' | translate"
               ></lab-info>
             </td>
             <td>
               <div>
                 <lab-select
                   *ngIf="vm.settings.fuelId"
-                  header="Select a fuel"
+                  [header]="'setting.chemicalFuelHeader' | translate"
                   [selected]="vm.settings.fuelId"
                   [options]="vm.chemicalFuelIds"
                   (selectId)="setFuel($event, vm.data.defaults?.fuelId)"
                 >
                   <lab-icon
                     class="button"
-                    tooltip="Select fuel"
+                    [tooltip]="'setting.chemicalFuelHeaderTooltip' | translate"
                     [iconId]="vm.settings.fuelId"
                   ></lab-icon>
                 </lab-select>
@@ -679,12 +687,12 @@
         </table>
         <table class="thin" *ngIf="vm.data.game === Game.Factorio">
           <tr>
-            <td>Pipe flow rate</td>
+            <td>{{ 'setting.pipeFlowRate' | translate }}</td>
             <td>
               <div class="flex">
                 <input
                   type="number"
-                  title="Enter pipe flow rate"
+                  [title]="'setting.pipeFlowRateTitle' | translate"
                   placeholder="1500"
                   min="1"
                   step="1"
@@ -694,7 +702,7 @@
                   (input)="emitNumber(setFlowRate, $event, 1)"
                 />
                 <div>
-                  u/sec
+                  {{ 'setting.flowRateUnit' | translate }}
                   <a
                     href="https://wiki.factorio.com/Fluid_system#Pipelines"
                     target="_blank"
@@ -706,7 +714,7 @@
           </tr>
           <tr>
             <td>
-              Inserter target
+              {{ 'setting.inserterTarget' | translate }}
               <a
                 href="https://wiki.factorio.com/Inserters#Inserter_Throughput"
                 target="_blank"
@@ -715,7 +723,7 @@
             </td>
             <td>
               <lab-options
-                title="Select inserter target"
+                [title]="'setting.inserterTargetTitle' | translate"
                 [selected]="vm.settings.inserterTarget"
                 [options]="InserterTargetOptions"
                 (selectId)="setInserterTarget($event)"
@@ -727,22 +735,23 @@
     </div>
     <div class="hole" *ngIf="vm.data.game !== Game.Satisfactory">
       <div>
-        <div class="header">Bonuses</div>
+        <div class="header">{{ 'setting.bonuses' | translate }}</div>
         <table class="wide">
           <tr *ngIf="vm.data.game === Game.Factorio">
             <td>
               <lab-info
-                text="Mining productivity"
-                tooltip="Enter the current mining productivity bonus percent.
-  Default is 0%."
+                [text]="'setting.miningProductivity' | translate"
+                [tooltip]="'setting.miningProductivityTooltip' | translate"
               ></lab-info>
             </td>
             <td class="right">
               +
               <input
                 type="number"
-                title="Enter mining productivity bonus"
-                placeholder="Mining productivity"
+                [title]="'setting.miningProductivityTitle' | translate"
+                [placeholder]="
+                  'setting.miningProductivityPlaceholder' | translate
+                "
                 min="0"
                 step="10"
                 data-test="lab-settings-mining-bonus"
@@ -756,16 +765,15 @@
           <tr *ngIf="vm.data.game === Game.DysonSphereProgram">
             <td>
               <lab-info
-                text="Mining speed"
-                tooltip="Enter the current mining speed with bonus.
-  Default is 100%."
+                [text]="'setting.miningSpeed' | translate"
+                [tooltip]="'setting.miningSpeedTooltip' | translate"
               ></lab-info>
             </td>
             <td class="right">
               <input
                 type="number"
-                title="Enter mining speed"
-                placeholder="Mining speed"
+                [title]="'setting.miningSpeedTitle' | translate"
+                [placeholder]="'setting.miningSpeedPlaceholder' | translate"
                 min="100"
                 step="10"
                 data-test="lab-settings-mining-bonus"
@@ -779,14 +787,13 @@
           <tr *ngIf="vm.data.game === Game.Factorio">
             <td>
               <lab-info
-                text="Research speed"
-                tooltip="Enter the current level of research speed bonus.
-  This setting only affects research products."
+                [text]="'setting.researchSpeed' | translate"
+                [tooltip]="'setting.researchSpeedTooltip' | translate"
               ></lab-info>
             </td>
             <td>
               <lab-options
-                title="Select research speed bonus"
+                [title]="'setting.researchSpeedTitle' | translate"
                 [selected]="vm.settings.researchSpeed"
                 [options]="ResearchSpeedOptions"
                 (selectId)="setResearchSpeed($event)"
@@ -796,14 +803,13 @@
           <tr *ngIf="vm.data.game === Game.Factorio">
             <td>
               <lab-info
-                text="Inserter capacity"
-                tooltip="Enter the current level of inserter capacity bonus.
-  This setting only affects inserter estimates."
+                [text]="'setting.inserterCapacity' | translate"
+                [tooltip]="'setting.inserterCapacityTooltip' | translate"
               ></lab-info>
             </td>
             <td>
               <lab-options
-                title="Select inserter capacity bonus"
+                [title]="'setting.inserterCapacityTitle' | translate"
                 [selected]="vm.settings.inserterCapacity"
                 [options]="InserterCapacityOptions"
                 (selectId)="setInserterCapacity($event)"
@@ -815,20 +821,18 @@
     </div>
     <div class="hole">
       <div>
-        <div class="header">Advanced</div>
+        <div class="header">{{ 'setting.advanced' | translate }}</div>
         <table class="wide">
           <tr>
             <td>
               <lab-info
-                text="Simplex solver"
-                tooltip="Select to enable/disable the simplex solver.
-  Disable simplex to more easily modify settings
-  when simplex is slow and causes lag."
+                [text]="'setting.simplexSolver' | translate"
+                [tooltip]="'setting.simplexSolverTooltip' | translate"
               ></lab-info>
             </td>
             <td>
               <lab-options
-                title="Disable to get a faster but incomplete result"
+                [title]="'setting.simplexSolverTitle' | translate"
                 [selected]="vm.preferences.simplex"
                 [options]="enabledOptions"
                 (selectId)="setSimplex($event)"
@@ -837,10 +841,25 @@
           </tr>
           <tr *ngIf="!vm.preferences.simplex">
             <td colspan="2">
-              <span class="invalid"
-                >Disabling simplex improves performance but usually results in
-                an incomplete solution.</span
-              >
+              <span class="invalid">{{
+                'setting.simplexSolverInvalid' | translate
+              }}</span>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <lab-info
+                [text]="'setting.language' | translate"
+                [tooltip]="'setting.languageTooltip' | translate"
+              ></lab-info>
+            </td>
+            <td>
+              <lab-options
+                [title]="'setting.languageTitle' | translate"
+                [selected]="vm.preferences.language"
+                [options]="languageOptions"
+                (selectId)="changeLanguage($event)"
+              ></lab-options>
             </td>
           </tr>
         </table>

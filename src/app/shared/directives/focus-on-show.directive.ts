@@ -4,10 +4,10 @@ import { Directive, ElementRef, OnInit } from '@angular/core';
   selector: '[labFocus]',
 })
 export class FocusOnShowDirective implements OnInit {
-  constructor(private el: ElementRef) {}
+  constructor(private el: ElementRef<HTMLInputElement>) {}
 
   ngOnInit(): void {
-    const input: HTMLInputElement = this.el.nativeElement as HTMLInputElement;
+    const input = this.el.nativeElement;
     input.focus();
     input.select();
   }

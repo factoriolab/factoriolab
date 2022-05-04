@@ -8,9 +8,9 @@ export enum DisplayRate {
 }
 
 export const DisplayRateOptions: IdName<DisplayRate>[] = [
-  { id: DisplayRate.PerSecond, name: 'Units per second' },
-  { id: DisplayRate.PerMinute, name: 'Units per minute' },
-  { id: DisplayRate.PerHour, name: 'Units per hour' },
+  { id: DisplayRate.PerSecond, name: 'options.DisplayRate.PerSecond' },
+  { id: DisplayRate.PerMinute, name: 'options.DisplayRate.PerMinute' },
+  { id: DisplayRate.PerHour, name: 'options.DisplayRate.PerHour' },
 ];
 
 export const DisplayRateVal = {

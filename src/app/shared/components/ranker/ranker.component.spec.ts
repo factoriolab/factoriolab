@@ -1,8 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideMockStore } from '@ngrx/store/testing';
 
-import { initialState, ItemId, Mocks, TestUtility } from 'src/tests';
+import { ItemId, Mocks, TestModule, TestUtility } from 'src/tests';
 import { DialogComponent } from '../dialog/dialog.component';
 import { IconComponent } from '../icon/icon.component';
 import { RankerComponent } from './ranker.component';
@@ -49,7 +48,7 @@ describe('RankerComponent', () => {
         RankerComponent,
         TestRankerComponent,
       ],
-      providers: [provideMockStore({ initialState })],
+      imports: [TestModule],
     }).compileComponents();
   });
 

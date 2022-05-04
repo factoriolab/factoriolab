@@ -30,7 +30,7 @@ export class OptionsComponent<T extends boolean | number | string>
 
   text = '';
 
-  constructor(public trackService: TrackService) {
+  constructor(public trackSvc: TrackService) {
     super();
   }
 

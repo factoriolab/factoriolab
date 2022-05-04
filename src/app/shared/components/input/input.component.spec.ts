@@ -1,8 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
 
-import { TestUtility } from 'src/tests';
+import { TestModule, TestUtility } from 'src/tests';
 import { ValidateNumberDirective } from '~/shared/directives';
 import { InputComponent } from './input.component';
 
@@ -44,7 +43,7 @@ describe('InputComponent', () => {
         InputComponent,
         TestInputComponent,
       ],
-      imports: [FormsModule],
+      imports: [TestModule],
     }).compileComponents();
   });
 

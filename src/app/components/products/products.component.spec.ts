@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { MockStore } from '@ngrx/store/testing';
 
-import { DispatchTest, initialState, ItemId, Mocks, RecipeId } from 'src/tests';
+import { DispatchTest, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import { Product, RateType, RecipeField } from '~/models';
 import { SharedModule } from '~/shared/shared.module';
 import { LabState } from '~/store';
@@ -20,8 +19,7 @@ describe('ProductsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ProductsComponent],
-      imports: [FormsModule, SharedModule],
-      providers: [provideMockStore({ initialState })],
+      imports: [SharedModule, TestModule],
     }).compileComponents();
   });
 

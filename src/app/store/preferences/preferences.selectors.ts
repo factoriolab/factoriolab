@@ -41,6 +41,10 @@ export const getPowerUnit = createSelector(
   preferencesState,
   (state) => state.powerUnit
 );
+export const getLanguage = createSelector(
+  preferencesState,
+  (state) => state.language
+);
 
 /** Complex selectors */
 export const getColumnsState = createSelector(
@@ -128,4 +132,11 @@ export const getSavedStates = createSelector(getStates, (states) =>
 export const getColumnsVisible = createSelector(
   getColumns,
   (columns) => Object.keys(columns).filter((c) => columns[c].show).length
+);
+
+export const getLanguageModifiers = createSelector(
+  getLanguage,
+  (getLanguage) => ({
+    getLanguage,
+  })
 );

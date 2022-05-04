@@ -17,7 +17,9 @@
     <div class="tile" *ngIf="includeEmptyModule">
       <lab-icon
         [tooltip]="
-          vm.data.game === Game.Factorio ? 'No module' : 'No proliferator'
+          vm.data.game === Game.Factorio
+            ? 'select.noModule'
+            : ('select.noProliferator' | translate)
         "
         class="grid"
         [class.selected]="selected === ItemId.Module"

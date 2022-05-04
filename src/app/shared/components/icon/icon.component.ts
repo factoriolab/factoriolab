@@ -53,10 +53,7 @@ export class IconComponent implements OnChanges {
   EnergyType = EnergyType;
   Game = Game;
 
-  constructor(
-    public trackService: TrackService,
-    private store: Store<LabState>
-  ) {}
+  constructor(public trackSvc: TrackService, private store: Store<LabState>) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['scale'] || changes['scrollTop']) {

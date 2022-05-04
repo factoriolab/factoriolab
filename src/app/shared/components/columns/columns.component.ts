@@ -28,10 +28,7 @@ export class ColumnsComponent extends DialogContainerComponent {
 
   Column = Column;
 
-  constructor(
-    public trackService: TrackService,
-    private store: Store<LabState>
-  ) {
+  constructor(public trackSvc: TrackService, private store: Store<LabState>) {
     super();
   }
 

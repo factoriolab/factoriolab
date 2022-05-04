@@ -5,7 +5,7 @@ import { RouterService } from '~/services';
 
 @Pipe({ name: 'stepHref' })
 export class StepHrefPipe implements PipeTransform {
-  constructor(private routerService: RouterService) {}
+  constructor(private routerSvc: RouterService) {}
 
   transform(value: Step, data: Dataset): string | null {
     let step = value;
@@ -19,6 +19,6 @@ export class StepHrefPipe implements PipeTransform {
         };
       }
     }
-    return this.routerService.stepHref(step, data.hash);
+    return this.routerSvc.stepHref(step, data.hash);
   }
 }

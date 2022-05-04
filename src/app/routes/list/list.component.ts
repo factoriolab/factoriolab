@@ -125,13 +125,13 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
 
   constructor(
     private ref: ChangeDetectorRef,
-    private activatedRoute: ActivatedRoute,
-    public trackService: TrackService,
+    private route: ActivatedRoute,
+    public trackSvc: TrackService,
     public store: Store<LabState>
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.fragment
+    this.route.fragment
       .pipe(
         first(),
         filter((f) => f != null)

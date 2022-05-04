@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 import {
   ColumnsComponent,
@@ -61,9 +62,9 @@ export const SHARED_PIPES = [
 ];
 
 @NgModule({
-  imports: [CommonModule, FormsModule],
   declarations: [SHARED_COMPONENTS, SHARED_DIRECTIVES, SHARED_PIPES],
   exports: [SHARED_COMPONENTS, SHARED_DIRECTIVES, SHARED_PIPES],
+  imports: [CommonModule, FormsModule, TranslateModule],
   providers: [PowerPipe, RatePipe, FactoryRatePipe],
 })
 export class SharedModule {}

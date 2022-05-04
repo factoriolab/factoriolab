@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { TestModule } from 'src/tests';
 import { NONE } from '~/models';
 import { OptionsComponent } from './options.component';
 
@@ -31,6 +32,7 @@ describe('OptionsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [OptionsComponent, TestOptionsComponent],
+      imports: [TestModule],
     }).compileComponents();
   });
 

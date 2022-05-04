@@ -1,16 +1,17 @@
 <ng-container *ngIf="vm$ | async as vm">
   <button
-    title="Select disabled recipes"
+    [title]="'toggle.title' | translate"
     data-test="lab-toggle-open"
     (click)="clickOpen(vm.data)"
   >
     <span class="text"
-      >{{ selected.length }} Recipe{{ selected.length === 1 ? '' : 's' }}</span
+      >{{ selected.length }} {{ 'toggle.recipe' | translate
+      }}{{ selected.length === 1 ? '' : 's' }}</span
     >
   </button>
   <lab-dialog *ngIf="open" [style.width.rem]="vm.width" (closeDialog)="close()">
     <div class="dialog-title">
-      <div class="header">Select recipes</div>
+      <div class="header">{{ 'toggle.selectRecipes' | translate }}</div>
       <div class="dialog-menu">
         <input
           class="search"
@@ -38,13 +39,13 @@
           [disabled]="!editValue.length"
           (click)="edited = true; editValue = []"
         >
-          <span class="text">Enable all</span>
+          <span class="text">{{ 'toggle.enableAll' | translate }}</span>
         </button>
         <button
           [disabled]="editValue.length === vm.data.complexRecipeIds.length"
           (click)="edited = true; editValue = vm.data.complexRecipeIds"
         >
-          <span class="text">Disable all</span>
+          <span class="text">{{ 'toggle.disableAll' | translate }}</span>
         </button>
       </div>
       <div class="flex panel dark tile">
@@ -62,9 +63,11 @@
       </div>
     </div>
     <div class="dialog-buttons">
-      <button (click)="cancel()"><span class="text">Cancel</span></button>
+      <button (click)="cancel()">
+        <span class="text">{{ 'toggle.cancel' | translate }}</span>
+      </button>
       <button class="green" data-test="lab-toggle-close" (click)="close()">
-        Confirm
+        {{ 'toggle.confirm' | translate }}
       </button>
     </div>
   </lab-dialog>

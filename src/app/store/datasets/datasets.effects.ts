@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { combineLatest, EMPTY, Observable, of } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 
@@ -55,17 +56,39 @@ export class DatasetsEffects {
     )
   );
 
-  requestData(id: string, skipHash = false): Observable<[ModData, ModHash]> {
-    const data$ = this.cacheData[id]
-      ? of(this.cacheData[id])
-      : this.http.get(`data/${id}/data.json`).pipe(
-          map((response) => response as ModData),
-          tap((value) => {
-            this.cacheData[id] = value;
-            this.store.dispatch(new LoadModDataAction({ id, value }));
-            this.loadModsForBase(value.defaults?.modIds ?? []);
-          })
-        );
+  requestData(
+    id: string,
+    lang?: string,
+    skipHash = false
+  ): Observable<[ModData, ModHash]> {
+    let suffix;
+    if (lang && lang !== 'en') {
+      suffix = lang;
+    } else if (
+      (!lang && 'en' === this.translateSvc.currentLang) ||
+      (lang && 'en' === lang)
+    ) {
+      suffix = 'en';
+    } else {
+      suffix = this.translateSvc.currentLang;
+    }
+    const key = `${id}-${suffix}`;
+    const data$ = this.cacheData[key]
+      ? of(this.cacheData[key])
+      : this.http
+          .get(
+            `data/${id}/data${
+              !suffix || suffix === 'en' ? '' : '-' + suffix
+            }.json`
+          )
+          .pipe(
+            map((response) => response as ModData),
+            tap((value) => {
+              this.cacheData[key] = value;
+              this.store.dispatch(new LoadModDataAction({ id, value }));
+              this.loadModsForBase(value.defaults?.modIds ?? []);
+            })
+          );
     const hash$ = skipHash
       ? EMPTY
       : this.cacheHash[id]
@@ -81,7 +104,9 @@ export class DatasetsEffects {
   }
 
   loadModsForBase(modIds: string[]): void {
-    modIds.forEach((id) => this.requestData(id, false).subscribe(() => {}));
+    modIds.forEach((id) =>
+      this.requestData(id, undefined, true).subscribe(() => {})
+    );
   }
 
   load(
@@ -102,12 +127,19 @@ export class DatasetsEffects {
   constructor(
     private actions$: Actions,
     private http: HttpClient,
-    private store: Store<LabState>
+    private store: Store<LabState>,
+    private translateSvc: TranslateService
   ) {
     this.load(
       BrowserUtility.zip,
       BrowserUtility.storedState,
       Settings.initialSettingsState
     );
+    this.translateSvc.onLangChange.subscribe((event: LangChangeEvent) => {
+      const id =
+        BrowserUtility.storedState?.settingsState?.baseId ||
+        Settings.initialSettingsState.baseId;
+      this.requestData(id, event.lang).subscribe();
+    });
   }
 }

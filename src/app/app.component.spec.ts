@@ -1,13 +1,9 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MemoizedSelector } from '@ngrx/store';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { MockStore } from '@ngrx/store/testing';
 
-import { initialState } from 'src/tests';
+import { TestModule } from 'src/tests';
 import { AppComponent, TITLE_DSP, TITLE_SFY } from './app.component';
 import { ProductsComponent, SettingsComponent } from './components';
 import { APP, Game } from './models';
@@ -31,14 +27,7 @@ describe('AppComponent', () => {
         ListComponent,
         AppComponent,
       ],
-      imports: [
-        NoopAnimationsModule,
-        FormsModule,
-        HttpClientTestingModule,
-        RouterTestingModule,
-        SharedModule,
-      ],
-      providers: [provideMockStore({ initialState })],
+      imports: [TestModule, SharedModule],
     })
       .compileComponents()
       .then(() => {

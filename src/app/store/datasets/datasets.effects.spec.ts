@@ -1,14 +1,11 @@
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Action } from '@ngrx/store';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { MockStore } from '@ngrx/store/testing';
 import { of, ReplaySubject } from 'rxjs';
 
-import { initialState, Mocks } from 'src/tests';
+import { Mocks, TestModule } from 'src/tests';
 import { ModData, ModHash } from '~/models';
 import { LabState } from '../';
 import * as App from '../app.actions';
@@ -25,12 +22,8 @@ describe('DatasetsEffects', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
-        provideMockStore({ initialState }),
-        provideMockActions(() => actions),
-        DatasetsEffects,
-      ],
+      imports: [TestModule],
+      providers: [provideMockActions(() => actions), DatasetsEffects],
     });
 
     effects = TestBed.inject(DatasetsEffects);
@@ -120,17 +113,17 @@ describe('DatasetsEffects', () => {
     });
 
     it('should get values from cache', () => {
-      effects.cacheData['id'] = Mocks.BaseData;
+      effects.cacheData['id-en'] = Mocks.BaseData;
       effects.cacheHash['id'] = Mocks.Hash;
       let data: [ModData, ModHash] | undefined;
-      effects.requestData('id').subscribe((d) => (data = d));
+      effects.requestData('id', 'en').subscribe((d) => (data = d));
       expect(data).toEqual([Mocks.BaseData, Mocks.Hash]);
     });
 
     it('should handle null defaults and skip hash', () => {
       spyOn(effects, 'loadModsForBase');
       let data: [ModData, ModHash] | undefined;
-      effects.requestData('id', true).subscribe((d) => (data = d));
+      effects.requestData('id', 'en', true).subscribe((d) => (data = d));
       http
         .expectOne('data/id/data.json')
         .flush({ ...Mocks.BaseData, ...{ defaults: undefined } });

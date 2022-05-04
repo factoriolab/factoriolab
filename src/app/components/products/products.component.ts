@@ -80,10 +80,7 @@ export class ProductsComponent {
   Game = Game;
   RecipeField = RecipeField;
 
-  constructor(
-    public trackService: TrackService,
-    private store: Store<LabState>
-  ) {}
+  constructor(public trackSvc: TrackService, private store: Store<LabState>) {}
 
   changeItem(product: Product, itemId: string, data: Dataset): void {
     if (

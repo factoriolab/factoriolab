@@ -22,6 +22,7 @@ export interface PreferencesState {
   linkText: LinkValue;
   sankeyAlign: SankeyAlign;
   simplex: boolean;
+  language: string;
   powerUnit: PowerUnit;
 }
 
@@ -40,6 +41,7 @@ export const initialPreferencesState: PreferencesState = {
   linkText: LinkValue.Items,
   sankeyAlign: SankeyAlign.Justify,
   simplex: true,
+  language: 'en',
   powerUnit: PowerUnit.Auto,
 };
 
@@ -80,6 +82,8 @@ export function preferencesReducer(
       return { ...state, ...{ sankeyAlign: action.payload } };
     case PreferencesActionType.SET_SIMPLEX:
       return { ...state, ...{ simplex: action.payload } };
+    case PreferencesActionType.SET_LANGUAGE:
+      return { ...state, ...{ language: action.payload } };
     case PreferencesActionType.SET_POWER_UNIT:
       return { ...state, ...{ powerUnit: action.payload } };
     default:

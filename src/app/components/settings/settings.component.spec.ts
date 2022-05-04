@@ -1,21 +1,17 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MemoizedSelector } from '@ngrx/store';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { MockStore } from '@ngrx/store/testing';
 
 import {
   DispatchTest,
-  initialState,
   ItemId,
   Mocks,
+  TestModule,
   TestUtility,
 } from 'src/tests';
 import { Entities, Game } from '~/models';
-import { RouterService } from '~/services';
 import { SharedModule } from '~/shared/shared.module';
 import { LabState } from '~/store';
 import * as App from '~/store/app.actions';
@@ -43,14 +39,7 @@ describe('SettingsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [SettingsComponent],
-      imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-        RouterTestingModule,
-        SharedModule,
-      ],
-      providers: [RouterService, provideMockStore({ initialState })],
+      imports: [TestModule, SharedModule],
     }).compileComponents();
   });
 
