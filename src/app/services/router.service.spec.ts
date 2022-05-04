@@ -3,39 +3,42 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { Router, NavigationEnd, NavigationStart } from '@angular/router';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { StoreModule, Store } from '@ngrx/store';
+import { MemoizedSelector } from '@ngrx/store';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { deflate, inflate } from 'pako';
 import { of } from 'rxjs';
 
-import { Mocks, ItemId, RecipeId } from 'src/tests';
+import { initialState, ItemId, Mocks, RecipeId } from 'src/tests';
 import {
-  RateType,
-  Product,
   DisplayRate,
-  ResearchSpeed,
-  Preset,
-  InserterTarget,
+  Entities,
   InserterCapacity,
-  Rational,
+  InserterTarget,
   ModHash,
+  Preset,
+  Product,
+  RateType,
+  Rational,
+  ResearchSpeed,
 } from '~/models';
-import { reducers, metaReducers, State } from '~/store';
-import { LoadAction } from '~/store/app.actions';
-import { FactoriesState, initialFactoriesState } from '~/store/factories';
-import { IgnoreItemAction, initialItemsState, ItemsState } from '~/store/items';
-import { initialProductsState, ProductsState } from '~/store/products';
-import { initialRecipesState, RecipesState } from '~/store/recipes';
-import { initialSettingsState, SettingsState } from '~/store/settings';
+import { LabState, metaReducers, reducers } from '~/store';
+import * as App from '~/store/app.actions';
+import * as Datasets from '~/store/datasets';
+import * as Factories from '~/store/factories';
+import * as Items from '~/store/items';
+import * as Products from '~/store/products';
+import * as Recipes from '~/store/recipes';
+import * as Settings from '~/store/settings';
 import {
-  RouterService,
   EMPTY,
-  NULL,
-  TRUE,
   FALSE,
-  Zip,
   MIN_ZIP,
+  NULL,
+  RouterService,
+  TRUE,
+  Zip,
   ZipVersion,
 } from './router.service';
 
@@ -45,55 +48,54 @@ const mockProduct: Product = {
   rate: '1',
   rateType: RateType.Belts,
 };
-const mockProductsState: ProductsState = {
+const mockProductsState: Products.ProductsState = {
   ids: ['0'],
   entities: {
     ['0']: mockProduct,
   },
   index: 1,
 };
-const mockItemsState: ItemsState = {
+const mockItemsState: Items.ItemsState = {
   [ItemId.SteelChest]: {
     ignore: true,
-    belt: ItemId.TransportBelt,
-    wagon: ItemId.CargoWagon,
+    beltId: ItemId.TransportBelt,
+    wagonId: ItemId.CargoWagon,
   },
 };
-const mockRecipesState: RecipesState = {
+const mockRecipesState: Recipes.RecipesState = {
   [RecipeId.SteelChest]: {
-    factory: ItemId.AssemblingMachine2,
-    factoryModules: [ItemId.EfficiencyModule, ItemId.EfficiencyModule],
+    factoryId: ItemId.AssemblingMachine2,
+    factoryModuleIds: [ItemId.EfficiencyModule, ItemId.EfficiencyModule],
     beaconCount: '1',
-    beacon: ItemId.Beacon,
-    beaconModules: [ItemId.SpeedModule, ItemId.SpeedModule],
+    beaconId: ItemId.Beacon,
+    beaconModuleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
     overclock: 200,
     cost: '100',
     beaconTotal: '8',
   },
 };
-const mockFactoriesState: FactoriesState = {
+const mockFactoriesState: Factories.FactoriesState = {
   ids: [ItemId.AssemblingMachine2, ItemId.SteelFurnace],
   entities: {
     ['']: {
-      moduleRank: [ItemId.ProductivityModule, ItemId.SpeedModule],
+      moduleRankIds: [ItemId.ProductivityModule, ItemId.SpeedModule],
       beaconCount: '1',
-      beacon: ItemId.Beacon,
-      beaconModule: ItemId.SpeedModule,
+      beaconId: ItemId.Beacon,
+      beaconModuleId: ItemId.SpeedModule,
     },
   },
 };
-const mockSettingsState: SettingsState = {
+const mockSettingsState: Settings.SettingsState = {
   baseId: '1.0',
-  disabledRecipes: [],
+  disabledRecipeIds: [],
   expensive: true,
   displayRate: DisplayRate.PerHour,
   preset: Preset.Modules,
   beaconReceivers: '1',
-  belt: ItemId.TransportBelt,
-  pipe: null,
-  fuel: ItemId.Coal,
-  cargoWagon: ItemId.CargoWagon,
-  fluidWagon: ItemId.FluidWagon,
+  beltId: ItemId.TransportBelt,
+  fuelId: ItemId.Coal,
+  cargoWagonId: ItemId.CargoWagon,
+  fluidWagonId: ItemId.FluidWagon,
   flowRate: 1200,
   miningBonus: 100,
   researchSpeed: ResearchSpeed.Speed0,
@@ -103,7 +105,7 @@ const mockSettingsState: SettingsState = {
   costFactory: '10',
   costInput: '0',
   costIgnored: '100',
-  proliferatorSpray: ItemId.ProductivityModule,
+  proliferatorSprayId: ItemId.ProductivityModule,
 };
 const mockZip: Zip = {
   bare: 'p=steel-chest*1*1',
@@ -116,7 +118,7 @@ const mockZipPartial: Zip = {
     'sport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid-wagon**2*10*0*100*1*productivity-module',
   hash: '&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B**2*10*0*100*1*D',
 };
-const mockState: State = {
+const mockState: LabState = {
   productsState: mockProductsState,
   itemsState: mockItemsState,
   recipesState: mockRecipesState,
@@ -126,20 +128,39 @@ const mockState: State = {
 
 describe('RouterService', () => {
   let service: RouterService;
-  let store: Store<State>;
+  let mockStore: MockStore<LabState>;
+  let mockGetHashEntities: MemoizedSelector<LabState, Entities<ModHash>>;
+  let mockGetZipState: MemoizedSelector<
+    LabState,
+    {
+      products: Products.ProductsState;
+      items: Items.ItemsState;
+      recipes: Recipes.RecipesState;
+      factories: Factories.FactoriesState;
+      settings: Settings.SettingsState;
+    }
+  >;
   let router: Router;
   let http: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
-        StoreModule.forRoot(reducers, { metaReducers }),
-      ],
+      imports: [HttpClientTestingModule, RouterTestingModule],
+      providers: [provideMockStore({ initialState })],
     });
     service = TestBed.inject(RouterService);
-    store = TestBed.inject(Store);
+    mockStore = TestBed.inject(MockStore);
+    mockGetHashEntities = mockStore.overrideSelector(Datasets.getHashEntities, {
+      [Settings.initialSettingsState.baseId]: Mocks.Hash,
+      [mockSettingsState.baseId]: Mocks.Hash,
+    });
+    mockGetZipState = mockStore.overrideSelector(Products.getZipState, {
+      products: Products.initialProductsState,
+      items: Items.initialItemsState,
+      recipes: Recipes.initialRecipesState,
+      factories: Factories.initialFactoriesState,
+      settings: Settings.initialSettingsState,
+    });
     router = TestBed.inject(Router);
     http = TestBed.inject(HttpTestingController);
   });
@@ -156,41 +177,59 @@ describe('RouterService', () => {
 
   it('should run first update of url if settings modified', () => {
     spyOn(service, 'updateUrl');
+    mockGetZipState.setResult({
+      products: Products.initialProductsState,
+      items: { [ItemId.Wood]: { ignore: true } },
+      recipes: Recipes.initialRecipesState,
+      factories: Factories.initialFactoriesState,
+      settings: Settings.initialSettingsState,
+    });
+    mockStore.refreshState();
     service.first = true;
-    store.dispatch(new IgnoreItemAction(ItemId.Wood));
     expect(service.updateUrl).toHaveBeenCalled();
   });
 
   describe('updateUrl', () => {
     it('should update url with products', () => {
-      spyOn(service, 'zipState').and.returnValue(of(null));
+      spyOn(service, 'zipState').and.returnValue(of({ bare: '', hash: '' }));
       spyOn(service, 'getHash').and.returnValue('test');
       spyOn(router, 'navigateByUrl');
-      service.updateUrl(null, null, null, null, null);
+      service.updateUrl(
+        Products.initialProductsState,
+        Items.initialItemsState,
+        Recipes.initialRecipesState,
+        Factories.initialFactoriesState,
+        Settings.initialSettingsState
+      );
       expect(router.navigateByUrl).toHaveBeenCalledWith('/?test');
     });
 
     it('should preserve a hash', () => {
-      spyOn(service, 'zipState').and.returnValue(of(null));
+      spyOn(service, 'zipState').and.returnValue(of({ bare: '', hash: '' }));
       spyOn(service, 'getHash').and.returnValue('test');
       spyOn(router, 'navigateByUrl');
       spyOnProperty(router, 'url').and.returnValue('path#hash');
-      service.updateUrl(null, null, null, null, null);
+      service.updateUrl(
+        Products.initialProductsState,
+        Items.initialItemsState,
+        Recipes.initialRecipesState,
+        Factories.initialFactoriesState,
+        Settings.initialSettingsState
+      );
       expect(router.navigateByUrl).toHaveBeenCalledWith('path?test#hash');
     });
   });
 
   describe('zipState', () => {
     it('should zip state', () => {
-      spyOn(service, 'requestHash').and.returnValue(of(Mocks.Hash));
-      let zip: Zip;
+      let zip: Zip | undefined;
       service
         .zipState(
-          initialProductsState,
-          initialItemsState,
-          initialRecipesState,
-          initialFactoriesState,
-          initialSettingsState
+          Products.initialProductsState,
+          Items.initialItemsState,
+          Recipes.initialRecipesState,
+          Factories.initialFactoriesState,
+          Settings.initialSettingsState
         )
         .subscribe((z) => (zip = z));
       expect(zip).toEqual({ bare: 'p=', hash: 'p' });
@@ -198,8 +237,7 @@ describe('RouterService', () => {
     });
 
     it('should zip full state', () => {
-      spyOn(service, 'requestHash').and.returnValue(of(Mocks.Hash));
-      let zip: Zip;
+      let zip: Zip | undefined;
       service
         .zipState(
           mockProductsState,
@@ -217,15 +255,18 @@ describe('RouterService', () => {
   describe('stepHref', () => {
     it('should return null for no items', () => {
       expect(
-        service.stepHref({ itemId: ItemId.Wood, items: null }, null)
+        service.stepHref({ id: '', itemId: ItemId.Wood }, Mocks.Hash)
       ).toBeNull();
     });
 
     it('should return get the hash for a specific step', () => {
-      spyOn(service, 'zipProducts').and.returnValue(null);
+      spyOn(service, 'zipProducts').and.returnValue({ bare: '', hash: '' });
       spyOn(service, 'getHash').and.returnValue('test');
       expect(
-        service.stepHref({ itemId: ItemId.Wood, items: Rational.one }, null)
+        service.stepHref(
+          { id: '', itemId: ItemId.Wood, items: Rational.one },
+          Mocks.Hash
+        )
       ).toEqual('?test');
     });
   });
@@ -264,7 +305,7 @@ describe('RouterService', () => {
     });
 
     it('should skip unless event is NavigationEnd', () => {
-      (router.events as any).next(new NavigationStart(2, null));
+      (router.events as any).next(new NavigationStart(2, ''));
       expect(service.dispatch).not.toHaveBeenCalled();
     });
 
@@ -343,7 +384,6 @@ describe('RouterService', () => {
 
     it('should unzip empty v2', () => {
       const url = '/?z=eJwrUCszAgADVAE.';
-      spyOn(service, 'requestHash').and.returnValue(of(Mocks.Hash));
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v2', {} as any);
     });
@@ -359,7 +399,6 @@ describe('RouterService', () => {
       // );
       // console.log(newZip);
 
-      spyOn(service, 'requestHash').and.returnValue(of(Mocks.Hash));
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A*200*100*8&f1*D~G*B*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v2',
@@ -369,7 +408,6 @@ describe('RouterService', () => {
 
     it('should unzip empty v3', () => {
       const url = '/?z=eJwrUCszBgADVQFA';
-      spyOn(service, 'requestHash').and.returnValue(of(Mocks.Hash));
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v3', {} as any);
     });
@@ -385,7 +423,6 @@ describe('RouterService', () => {
       // );
       // console.log(newZip);
 
-      spyOn(service, 'requestHash').and.returnValue(of(Mocks.Hash));
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v3',
@@ -396,10 +433,12 @@ describe('RouterService', () => {
 
   describe('dispatch', () => {
     it('should dispatch a state', () => {
-      spyOn(store, 'dispatch');
+      spyOn(mockStore, 'dispatch');
       service.dispatch('test', mockState);
       expect(service.zip).toEqual('test');
-      expect(store.dispatch).toHaveBeenCalledWith(new LoadAction(mockState));
+      expect(mockStore.dispatch).toHaveBeenCalledWith(
+        new App.LoadAction(mockState)
+      );
     });
   });
 
@@ -474,10 +513,10 @@ describe('RouterService', () => {
             rateType: RateType.Factories,
             viaId: ItemId.IronOre,
             viaSetting: ItemId.AssemblingMachine2,
-            viaFactoryModules: [],
+            viaFactoryModuleIds: [],
             viaBeaconCount: '1',
-            viaBeaconModules: [],
-            viaBeacon: ItemId.Beacon,
+            viaBeaconModuleIds: [],
+            viaBeaconId: ItemId.Beacon,
           },
         ],
         Mocks.Hash
@@ -598,6 +637,33 @@ describe('RouterService', () => {
         index: 1,
       });
     });
+
+    it('v2/v3 should throw error if hash is null', () => {
+      expect(() =>
+        service.unzipProducts({ ['p']: 'C6*1**Bd' }, ZipVersion.Version2)
+      ).toThrow();
+    });
+
+    it('v2/v3 should map values to empty strings if null', () => {
+      const result = service.unzipProducts(
+        { ['p']: '*1**Bd' },
+        ZipVersion.Version2,
+        Mocks.Hash
+      );
+      expect(result).toEqual({
+        ids: ['0'],
+        entities: {
+          ['0']: {
+            id: '0',
+            itemId: '',
+            rate: '1',
+            rateType: RateType.Items,
+            viaId: ItemId.IronOre,
+          },
+        },
+        index: 1,
+      });
+    });
   });
 
   describe('unzipItems', () => {
@@ -607,7 +673,24 @@ describe('RouterService', () => {
         ZipVersion.Version0
       );
       expect(result).toEqual({
-        [ItemId.SteelChest]: { ignore: true, belt: ItemId.TransportBelt },
+        [ItemId.SteelChest]: { ignore: true, beltId: ItemId.TransportBelt },
+      });
+    });
+
+    it('v2/v3 should throw error if hash is null', () => {
+      expect(() =>
+        service.unzipItems({ ['i']: 'A*1*A*' }, ZipVersion.Version2)
+      ).toThrow();
+    });
+
+    it('v2/v3 should map id to empty string if null', () => {
+      const result = service.unzipItems(
+        { ['i']: '*1*C*' },
+        ZipVersion.Version2,
+        Mocks.Hash
+      );
+      expect(result).toEqual({
+        ['']: { ignore: true, beltId: ItemId.TransportBelt },
       });
     });
   });
@@ -619,7 +702,24 @@ describe('RouterService', () => {
         ZipVersion.Version0
       );
       expect(result).toEqual({
-        [RecipeId.SteelChest]: { factory: ItemId.AssemblingMachine2 },
+        [RecipeId.SteelChest]: { factoryId: ItemId.AssemblingMachine2 },
+      });
+    });
+
+    it('v2/v3 should throw error if hash is null', () => {
+      expect(() =>
+        service.unzipRecipes({ ['r']: 'A*A*' }, ZipVersion.Version2)
+      ).toThrow();
+    });
+
+    it('v2/v3 should map values to empty strings if null', () => {
+      const result = service.unzipRecipes(
+        { ['r']: '*A*' },
+        ZipVersion.Version2,
+        Mocks.Hash
+      );
+      expect(result).toEqual({
+        ['']: { factoryId: ItemId.AssemblingMachine1 },
       });
     });
   });
@@ -630,7 +730,7 @@ describe('RouterService', () => {
       service.zipFactories(
         zip,
         {
-          ids: null,
+          ids: undefined,
           entities: { ['']: {} },
         },
         Mocks.Hash
@@ -646,7 +746,7 @@ describe('RouterService', () => {
         ZipVersion.Version1
       );
       expect(result).toEqual({
-        ids: null,
+        ids: undefined,
         entities: {},
       });
     });
@@ -658,9 +758,35 @@ describe('RouterService', () => {
         Mocks.Hash
       );
       expect(result).toEqual({
-        ids: null,
+        ids: undefined,
         entities: {},
       });
+    });
+
+    it('v2/v3 should throw error if hash is null', () => {
+      expect(() =>
+        service.unzipFactories({ ['f']: '_' }, ZipVersion.Version2)
+      ).toThrow();
+    });
+
+    it('v2/v3 should map values to empty strings if null', () => {
+      const result = service.unzipFactories(
+        { ['f']: '1_?**B' },
+        ZipVersion.Version2,
+        Mocks.Hash
+      );
+      expect(result).toEqual({
+        ids: [''],
+        entities: { ['']: { beaconCount: '1' } },
+      });
+    });
+  });
+
+  describe('unzipSettings', () => {
+    it('v2/v3 should throw error if hash is null', () => {
+      expect(() =>
+        service.unzipSettings({ ['s']: '' }, ZipVersion.Version2)
+      ).toThrow();
     });
   });
 
@@ -681,7 +807,7 @@ describe('RouterService', () => {
 
   describe('zipTruthyString', () => {
     it('should handle falsy', () => {
-      expect(service.zipTruthyString(null)).toEqual('');
+      expect(service.zipTruthyString(undefined)).toEqual('');
     });
 
     it('should handle truthy', () => {
@@ -691,7 +817,7 @@ describe('RouterService', () => {
 
   describe('zipTruthyNum', () => {
     it('should handle falsy', () => {
-      expect(service.zipTruthyNumber(null)).toEqual('');
+      expect(service.zipTruthyNumber(undefined)).toEqual('');
     });
 
     it('should handle truthy', () => {
@@ -701,7 +827,7 @@ describe('RouterService', () => {
 
   describe('zipTruthyBool', () => {
     it('should handle falsy', () => {
-      expect(service.zipTruthyBool(null)).toEqual('');
+      expect(service.zipTruthyBool(undefined)).toEqual('');
     });
 
     it('should handle false', () => {
@@ -715,7 +841,7 @@ describe('RouterService', () => {
 
   describe('zipTruthyArray', () => {
     it('should handle falsy', () => {
-      expect(service.zipTruthyArray(null)).toEqual('');
+      expect(service.zipTruthyArray(undefined)).toEqual('');
     });
 
     it('should handle empty', () => {
@@ -729,7 +855,7 @@ describe('RouterService', () => {
 
   describe('zipTruthyNArray', () => {
     it('should handle falsy', () => {
-      expect(service.zipTruthyNArray(null, [])).toEqual('');
+      expect(service.zipTruthyNArray(undefined, [])).toEqual('');
     });
 
     it('should handle empty', () => {
@@ -747,7 +873,7 @@ describe('RouterService', () => {
     });
 
     it('should handle falsy', () => {
-      expect(service.zipDiffString(null, 'a')).toEqual(NULL);
+      expect(service.zipDiffString(undefined, 'a')).toEqual(NULL);
     });
 
     it('should handle truthy', () => {
@@ -761,7 +887,7 @@ describe('RouterService', () => {
     });
 
     it('should handle falsy', () => {
-      expect(service.zipDiffNumber(null, 0)).toEqual(NULL);
+      expect(service.zipDiffNumber(undefined, 0)).toEqual(NULL);
     });
 
     it('should handle truthy', () => {
@@ -777,9 +903,9 @@ describe('RouterService', () => {
     });
 
     it('should handle falsy', () => {
-      expect(service.zipDiffDisplayRate(null, DisplayRate.PerMinute)).toEqual(
-        NULL
-      );
+      expect(
+        service.zipDiffDisplayRate(undefined, DisplayRate.PerMinute)
+      ).toEqual(NULL);
     });
 
     it('should handle truthy', () => {
@@ -799,7 +925,7 @@ describe('RouterService', () => {
     });
 
     it('should handle falsy', () => {
-      expect(service.zipDiffBool(null, false)).toEqual(NULL);
+      expect(service.zipDiffBool(undefined, false)).toEqual(NULL);
     });
 
     it('should handle truthy', () => {
@@ -813,8 +939,8 @@ describe('RouterService', () => {
     });
 
     it('should handle falsy', () => {
-      expect(service.zipDiffArray(null, [])).toEqual(NULL);
-      expect(service.zipDiffArray([], null)).toEqual(EMPTY);
+      expect(service.zipDiffArray(undefined, [])).toEqual(NULL);
+      expect(service.zipDiffArray([], undefined)).toEqual(EMPTY);
     });
 
     it('should handle truthy', () => {
@@ -828,8 +954,8 @@ describe('RouterService', () => {
     });
 
     it('should handle falsy', () => {
-      expect(service.zipDiffRank(null, [])).toEqual(NULL);
-      expect(service.zipDiffRank([], null)).toEqual(EMPTY);
+      expect(service.zipDiffRank(undefined, [])).toEqual(NULL);
+      expect(service.zipDiffRank([], undefined)).toEqual(EMPTY);
     });
 
     it('should handle truthy', () => {
@@ -843,7 +969,7 @@ describe('RouterService', () => {
     });
 
     it('should handle falsy', () => {
-      expect(service.zipDiffNString(null, 'a', [])).toEqual(NULL);
+      expect(service.zipDiffNString(undefined, 'a', [])).toEqual(NULL);
     });
 
     it('should handle truthy', () => {
@@ -857,7 +983,7 @@ describe('RouterService', () => {
     });
 
     it('should handle falsy', () => {
-      expect(service.zipDiffNNumber(null, 0)).toEqual(NULL);
+      expect(service.zipDiffNNumber(undefined, 0)).toEqual(NULL);
     });
 
     it('should handle truthy', () => {
@@ -871,8 +997,8 @@ describe('RouterService', () => {
     });
 
     it('should handle falsy', () => {
-      expect(service.zipDiffNArray(null, [], [])).toEqual(NULL);
-      expect(service.zipDiffNArray([], null, [])).toEqual(EMPTY);
+      expect(service.zipDiffNArray(undefined, [], [])).toEqual(NULL);
+      expect(service.zipDiffNArray([], undefined, [])).toEqual(EMPTY);
     });
 
     it('should handle truthy', () => {
@@ -888,8 +1014,8 @@ describe('RouterService', () => {
     });
 
     it('should handle falsy', () => {
-      expect(service.zipDiffNRank(null, [], [])).toEqual(NULL);
-      expect(service.zipDiffNRank([], null, [])).toEqual(EMPTY);
+      expect(service.zipDiffNRank(undefined, [], [])).toEqual(NULL);
+      expect(service.zipDiffNRank([], undefined, [])).toEqual(EMPTY);
     });
 
     it('should handle truthy', () => {
@@ -902,12 +1028,12 @@ describe('RouterService', () => {
   describe('parseString', () => {
     it('should handle undefined', () => {
       expect(service.parseString(undefined)).toBeUndefined();
-      expect(service.parseString(null)).toBeUndefined();
+      expect(service.parseString(undefined)).toBeUndefined();
       expect(service.parseString('')).toBeUndefined();
     });
 
     it('should parse null', () => {
-      expect(service.parseString(NULL)).toBeNull();
+      expect(service.parseString(NULL)).toBeUndefined();
     });
 
     it('should parse value', () => {
@@ -918,12 +1044,11 @@ describe('RouterService', () => {
   describe('parseBool', () => {
     it('should handle undefined', () => {
       expect(service.parseBool(undefined)).toBeUndefined();
-      expect(service.parseBool(null)).toBeUndefined();
       expect(service.parseBool('')).toBeUndefined();
     });
 
     it('should parse null', () => {
-      expect(service.parseBool(NULL)).toBeNull();
+      expect(service.parseBool(NULL)).toBeUndefined();
     });
 
     it('should parse false', () => {
@@ -938,12 +1063,11 @@ describe('RouterService', () => {
   describe('parseNumber', () => {
     it('should handle undefined', () => {
       expect(service.parseNumber(undefined)).toBeUndefined();
-      expect(service.parseNumber(null)).toBeUndefined();
       expect(service.parseNumber('')).toBeUndefined();
     });
 
     it('should parse null', () => {
-      expect(service.parseNumber(NULL)).toBeNull();
+      expect(service.parseNumber(NULL)).toBeUndefined();
     });
 
     it('should parse value', () => {
@@ -954,12 +1078,11 @@ describe('RouterService', () => {
   describe('parseDisplayRate', () => {
     it('should handle undefined', () => {
       expect(service.parseDisplayRate(undefined)).toBeUndefined();
-      expect(service.parseDisplayRate(null)).toBeUndefined();
       expect(service.parseDisplayRate('')).toBeUndefined();
     });
 
     it('should parse null', () => {
-      expect(service.parseDisplayRate(NULL)).toBeNull();
+      expect(service.parseDisplayRate(NULL)).toBeUndefined();
     });
 
     it('should parse value', () => {
@@ -967,17 +1090,20 @@ describe('RouterService', () => {
       expect(service.parseDisplayRate('1')).toEqual(DisplayRate.PerMinute);
       expect(service.parseDisplayRate('2')).toEqual(DisplayRate.PerHour);
     });
+
+    it('should return null if unrecognized', () => {
+      expect(service.parseDisplayRate('3')).toBeUndefined();
+    });
   });
 
   describe('parseArray', () => {
     it('should handle undefined', () => {
       expect(service.parseArray(undefined)).toBeUndefined();
-      expect(service.parseArray(null)).toBeUndefined();
       expect(service.parseArray('')).toBeUndefined();
     });
 
     it('should parse null', () => {
-      expect(service.parseArray(NULL)).toBeNull();
+      expect(service.parseArray(NULL)).toBeUndefined();
     });
 
     it('should parse empty', () => {
@@ -992,12 +1118,11 @@ describe('RouterService', () => {
   describe('parseNString', () => {
     it('should handle undefined', () => {
       expect(service.parseNString(undefined, [])).toBeUndefined();
-      expect(service.parseNString(null, [])).toBeUndefined();
       expect(service.parseNString('', [])).toBeUndefined();
     });
 
     it('should parse null', () => {
-      expect(service.parseNString(NULL, [])).toBeNull();
+      expect(service.parseNString(NULL, [])).toBeUndefined();
     });
 
     it('should parse value', () => {
@@ -1008,12 +1133,11 @@ describe('RouterService', () => {
   describe('parseNNumber', () => {
     it('should handle undefined', () => {
       expect(service.parseNNumber(undefined)).toBeUndefined();
-      expect(service.parseNNumber(null)).toBeUndefined();
       expect(service.parseNNumber('')).toBeUndefined();
     });
 
     it('should parse null', () => {
-      expect(service.parseNNumber(NULL)).toBeNull();
+      expect(service.parseNNumber(NULL)).toBeUndefined();
     });
 
     it('should parse value', () => {
@@ -1024,12 +1148,11 @@ describe('RouterService', () => {
   describe('parseNArray', () => {
     it('should handle undefined', () => {
       expect(service.parseNArray(undefined, [])).toBeUndefined();
-      expect(service.parseNArray(null, [])).toBeUndefined();
       expect(service.parseNArray('', [])).toBeUndefined();
     });
 
     it('should parse null', () => {
-      expect(service.parseNArray(NULL, [])).toBeNull();
+      expect(service.parseNArray(NULL, [])).toBeUndefined();
     });
 
     it('should parse empty', () => {
@@ -1130,24 +1253,6 @@ describe('RouterService', () => {
         { to: 'string' }
       );
       expect(result).toEqual('abcdefghij');
-    });
-  });
-
-  describe('requestHash', () => {
-    it('should return from the cache', () => {
-      service.cache['test'] = true as any;
-      let result: any;
-      service.requestHash('test').subscribe((r) => (result = r));
-      expect(result).toBeTrue();
-    });
-
-    it('should request the hash', () => {
-      let result: ModHash;
-      service
-        .requestHash(initialSettingsState.baseId)
-        .subscribe((r) => (result = r));
-      http.expectOne('data/1.1/hash.json').flush(Mocks.Hash);
-      expect(result).toEqual(Mocks.Hash);
     });
   });
 });

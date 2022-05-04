@@ -22,6 +22,7 @@ export enum ItemId {
   HeavyOil = 'heavy-oil',
   Inserter = 'inserter',
   IronOre = 'iron-ore',
+  IronPlate = 'iron-plate',
   Lab = 'lab',
   LightOil = 'light-oil',
   LongHandedInserter = 'long-handed-inserter',

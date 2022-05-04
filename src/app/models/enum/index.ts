@@ -13,5 +13,7 @@ export * from './matrix-result-type';
 export * from './power-unit';
 export * from './preset';
 export * from './rate-type';
+export * from './recipe-field';
 export * from './research-speed';
 export * from './sankey-align';
+export * from './step-detail-tab';

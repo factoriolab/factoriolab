@@ -1,11 +1,28 @@
-import { DefaultPayload, DefaultIdPayload, IdPayload } from '~/models';
+import {
+  DefaultIdPayload,
+  DefaultPayload,
+  Entities,
+  IdPayload,
+} from '~/models';
 
 export class StoreUtility {
-  static rankEquals<T extends number | string>(a: T[], b: T[]): boolean {
+  static rankEquals<T extends number | string>(
+    a: T[],
+    b: T[] | undefined
+  ): boolean {
+    if (b == null) {
+      return false;
+    }
     return a.length === b.length && a.every((v, i) => v === b[i]);
   }
 
-  static arrayEquals<T extends number | string>(a: T[], b: T[]): boolean {
+  static arrayEquals<T extends number | string>(
+    a: T[],
+    b: T[] | undefined
+  ): boolean {
+    if (b == null) {
+      return false;
+    }
     return this.rankEquals([...a].sort(), [...b].sort());
   }
 
@@ -24,7 +41,11 @@ export class StoreUtility {
   }
 
   /** Resets a passed fields of the state */
-  static resetFields<T>(state: T, fields: string[], id: string = null): T {
+  static resetFields<T>(
+    state: Entities<T>,
+    fields: (keyof T)[],
+    id?: string
+  ): Entities<T> {
     // Spread into new state
     let newState = { ...state };
     for (const field of fields) {
@@ -34,7 +55,11 @@ export class StoreUtility {
   }
 
   /** Resets a passed field of the state */
-  static resetField<T>(state: T, field: string, id: string = null): T {
+  static resetField<T>(
+    state: Entities<T>,
+    field: keyof T,
+    id?: string
+  ): Entities<T> {
     // Spread into new state
     const newState = { ...state };
     for (const i of Object.keys(newState).filter(
@@ -52,11 +77,11 @@ export class StoreUtility {
   }
 
   static compareReset<T, P>(
-    state: T,
-    field: string,
+    state: Entities<T>,
+    field: keyof T,
     payload: DefaultIdPayload<P>,
     rank = false
-  ): T {
+  ): Entities<T> {
     // Spread into new state
     if (this.payloadEquals(payload, rank)) {
       // Resetting to null
@@ -77,7 +102,11 @@ export class StoreUtility {
     }
   }
 
-  static assignValue<T, P>(state: T, field: string, payload: IdPayload<P>): T {
+  static assignValue<T, P>(
+    state: Entities<T>,
+    field: keyof T,
+    payload: IdPayload<P>
+  ): Entities<T> {
     return {
       ...state,
       ...{
@@ -86,15 +115,22 @@ export class StoreUtility {
     };
   }
 
-  static compareValue<T>(payload: DefaultPayload<T>): T {
-    return payload.value === payload.def ? null : payload.value;
+  static compareValue<T>(payload: DefaultPayload<T>): T | undefined {
+    return payload.value === payload.def ? undefined : payload.value;
   }
 
-  static compareValues(payload: DefaultPayload<string[]>): string[] {
-    return this.arrayEquals(payload.value, payload.def) ? null : payload.value;
+  static compareValues(
+    payload: DefaultPayload<string[]>
+  ): string[] | undefined {
+    return this.arrayEquals(payload.value, payload.def)
+      ? undefined
+      : payload.value;
   }
 
-  static compareRank(value: string[], def: string[]): string[] {
-    return this.rankEquals(value, def) ? null : value;
+  static compareRank(
+    value: string[],
+    def: string[] | undefined
+  ): string[] | undefined {
+    return this.rankEquals(value, def) ? undefined : value;
   }
 }

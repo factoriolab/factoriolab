@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ErrorHandler, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -6,4 +6,14 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class ErrorService {
   message$ = new BehaviorSubject<string | null>(null);
+}
+
+@Injectable()
+export class LabErrorHandler implements ErrorHandler {
+  constructor(private error: ErrorService) {}
+
+  handleError(error: string): void {
+    console.error(error);
+    this.error.message$.next(error);
+  }
 }

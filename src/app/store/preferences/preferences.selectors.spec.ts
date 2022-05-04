@@ -1,8 +1,17 @@
-import { Column, Game, LinkValue } from '~/models';
+import { Mocks } from 'src/tests';
+import { Column, Game, LinkValue, Rational } from '~/models';
 import { initialColumnsState } from './preferences.reducer';
 import * as Selectors from './preferences.selectors';
 
 describe('Preferences Selectors', () => {
+  describe('Base selector functions', () => {
+    it('should get slices of state', () => {
+      expect(Selectors.getStates.projector(Mocks.PreferencesState)).toEqual(
+        Mocks.PreferencesState.states
+      );
+    });
+  });
+
   describe('getColumnsState', () => {
     it('should override Overclock for Factorio', () => {
       const state = initialColumnsState;
@@ -70,6 +79,37 @@ describe('Preferences Selectors', () => {
         [Column.Factories]: { precision: 1 },
       });
       expect(result).toEqual(1);
+    });
+  });
+
+  describe('getSimplexModifiers', () => {
+    it('should create an object to be used by simplex calcs', () => {
+      const result = Selectors.getSimplexModifiers.projector(
+        true,
+        Rational.one,
+        Rational.one
+      );
+      expect(result).toEqual({
+        simplex: true,
+        costInput: Rational.one,
+        costIgnored: Rational.one,
+      });
+    });
+  });
+
+  describe('getSavedStates', () => {
+    it('should map saved states to an array of id-only options', () => {
+      const result = Selectors.getSavedStates.projector({ ['id']: 'url' });
+      expect(result).toEqual([{ id: 'id', name: 'id' }]);
+    });
+  });
+
+  describe('getColumnsVisible', () => {
+    it('should get the number of visible columns', () => {
+      const result = Selectors.getColumnsVisible.projector(
+        Mocks.PreferencesState.columns
+      );
+      expect(result).toEqual(10);
     });
   });
 });

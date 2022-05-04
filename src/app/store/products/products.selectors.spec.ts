@@ -1,21 +1,42 @@
-import { Mocks, ItemId, RecipeId } from 'src/tests';
+import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
+  Column,
   DisplayRate,
+  Game,
   MatrixResultType,
+  PowerUnit,
   RateType,
   Rational,
   RationalProduct,
+  Step,
+  StepDetailTab,
 } from '~/models';
 import {
-  RateUtility,
   FlowUtility,
-  SimplexUtility,
+  RateUtility,
   RecipeUtility,
+  SimplexUtility,
 } from '~/utilities';
-import { initialSettingsState } from '../settings';
+import * as Items from '../items';
+import * as Recipes from '../recipes';
+import * as Settings from '../settings';
 import * as Selectors from './products.selectors';
 
 describe('Products Selectors', () => {
+  describe('Base selector functions', () => {
+    it('should get slices of state', () => {
+      expect(
+        Selectors.productsState({ productsState: Mocks.ProductsState } as any)
+      ).toEqual(Mocks.ProductsState);
+      expect(Selectors.getIds.projector(Mocks.ProductsState)).toEqual(
+        Mocks.ProductsState.ids
+      );
+      expect(Selectors.getEntities.projector(Mocks.ProductsState)).toEqual(
+        Mocks.ProductsState.entities
+      );
+    });
+  });
+
   describe('getBaseProducts', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getBaseProducts.projector([], {}, {});
@@ -24,8 +45,8 @@ describe('Products Selectors', () => {
 
     it('should return the array of products', () => {
       const result = Selectors.getBaseProducts.projector(
-        Mocks.ProductsState1.ids,
-        Mocks.ProductsState1.entities,
+        Mocks.ProductsState.ids,
+        Mocks.ProductsState.entities,
         Mocks.Data
       );
       expect(result.length).toEqual(Mocks.ProductIds.length);
@@ -82,9 +103,21 @@ describe('Products Selectors', () => {
     });
   });
 
+  describe('getProductOptions', () => {
+    it('should map product steps to a list of options', () => {
+      const result = Selectors.getProductOptions.projector(
+        Mocks.ProductsList,
+        Mocks.ProductSteps
+      );
+      expect(Object.keys(result).length).toEqual(Mocks.ProductsList.length);
+    });
+  });
+
   describe('getRationalProducts', () => {
     it('should map products to rational products', () => {
-      const result = Selectors.getRationalProducts.projector(Mocks.Products);
+      const result = Selectors.getRationalProducts.projector(
+        Mocks.ProductsList
+      );
       expect(result[0].rate.nonzero()).toBeTrue();
     });
   });
@@ -221,7 +254,22 @@ describe('Products Selectors', () => {
         [Mocks.RationalProducts[1]],
         null,
         { [Mocks.Product2.itemId]: Mocks.ItemSettings1 },
-        { [Mocks.ItemSettings1.belt]: Rational.one }
+        { [Mocks.ItemSettings1.beltId!]: Rational.one }
+      );
+      expect(result[Mocks.Product2.id].nonzero()).toBeTrue();
+    });
+
+    it('should return the rate entities by via setting', () => {
+      const result = Selectors.getNormalizedRatesByBelts.projector(
+        [
+          {
+            ...Mocks.RationalProducts[1],
+            ...{ viaSetting: ItemId.TransportBelt },
+          },
+        ],
+        null,
+        { [Mocks.Product2.itemId]: Mocks.ItemSettings1 },
+        { [Mocks.ItemSettings1.beltId!]: Rational.one }
       );
       expect(result[Mocks.Product2.id].nonzero()).toBeTrue();
     });
@@ -235,6 +283,27 @@ describe('Products Selectors', () => {
             rate: Rational.one,
             rateType: RateType.Belts,
             viaId: RecipeId.IronOre,
+          },
+        ],
+        {
+          [ItemId.Coal]: [[ItemId.IronOre, Rational.two]],
+        },
+        Mocks.ItemSettingsInitial,
+        Mocks.BeltSpeed
+      );
+      expect(result['0']).toEqual(Rational.from(15, 2));
+    });
+
+    it('should calculate using via step and setting', () => {
+      const result = Selectors.getNormalizedRatesByBelts.projector(
+        [
+          {
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Belts,
+            viaId: RecipeId.IronOre,
+            viaSetting: ItemId.TransportBelt,
           },
         ],
         {
@@ -289,6 +358,22 @@ describe('Products Selectors', () => {
       expect(result[Mocks.Product3.id].nonzero()).toBeTrue();
     });
 
+    it('should return the rate entities by via setting', () => {
+      const result = Selectors.getNormalizedRatesByWagons.projector(
+        [
+          {
+            ...Mocks.RationalProducts[2],
+            ...{ viaSetting: ItemId.CargoWagon },
+          },
+        ],
+        null,
+        Mocks.ItemSettingsInitial,
+        DisplayRate.PerHour,
+        Mocks.Data
+      );
+      expect(result[Mocks.Product3.id].nonzero()).toBeTrue();
+    });
+
     it('should return the rate entities for items', () => {
       const result = Selectors.getNormalizedRatesByWagons.projector(
         [Mocks.RationalProducts[0]],
@@ -309,6 +394,39 @@ describe('Products Selectors', () => {
             rate: Rational.one,
             rateType: RateType.Wagons,
             viaId: RecipeId.IronOre,
+          },
+          {
+            id: '1',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Wagons,
+            viaId: ItemId.PetroleumGas,
+          },
+        ],
+        {
+          [ItemId.Coal]: [
+            [ItemId.IronOre, Rational.two],
+            [ItemId.PetroleumGas, Rational.one],
+          ],
+        },
+        Mocks.ItemSettingsInitial,
+        DisplayRate.PerMinute,
+        Mocks.AdjustedData
+      );
+      expect(result['0']).toEqual(Rational.from(50, 3));
+      expect(result['1']).toEqual(Rational.from(1250, 3));
+    });
+
+    it('should calculate using via step and setting', () => {
+      const result = Selectors.getNormalizedRatesByWagons.projector(
+        [
+          {
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: Rational.one,
+            rateType: RateType.Wagons,
+            viaId: RecipeId.IronOre,
+            viaSetting: ItemId.CargoWagon,
           },
           {
             id: '1',
@@ -362,8 +480,8 @@ describe('Products Selectors', () => {
         {},
         {},
         {
-          fuel: null,
-          proliferatorSpray: null,
+          fuelId: null,
+          proliferatorSprayId: null,
           miningBonus: null,
           researchSpeed: null,
           data: null,
@@ -380,8 +498,8 @@ describe('Products Selectors', () => {
         {},
         {},
         {
-          fuel: null,
-          proliferatorSpray: null,
+          fuelId: null,
+          proliferatorSprayId: null,
           miningBonus: null,
           researchSpeed: null,
           data: null,
@@ -405,8 +523,8 @@ describe('Products Selectors', () => {
         {},
         {},
         {
-          fuel: null,
-          proliferatorSpray: null,
+          fuelId: null,
+          proliferatorSprayId: null,
           miningBonus: null,
           researchSpeed: null,
           data: null,
@@ -432,8 +550,8 @@ describe('Products Selectors', () => {
         {},
         {},
         {
-          fuel: null,
-          proliferatorSpray: null,
+          fuelId: null,
+          proliferatorSprayId: null,
           miningBonus: null,
           researchSpeed: null,
           data: null,
@@ -463,8 +581,8 @@ describe('Products Selectors', () => {
         {},
         {},
         {
-          fuel: null,
-          proliferatorSpray: null,
+          fuelId: null,
+          proliferatorSprayId: null,
           miningBonus: null,
           researchSpeed: null,
           data: null,
@@ -491,8 +609,8 @@ describe('Products Selectors', () => {
         {},
         {},
         {
-          fuel: null,
-          proliferatorSpray: null,
+          fuelId: null,
+          proliferatorSprayId: null,
           miningBonus: null,
           researchSpeed: null,
           data: null,
@@ -513,18 +631,18 @@ describe('Products Selectors', () => {
             rateType: RateType.Factories,
             viaId: RecipeId.Coal,
             viaSetting: ItemId.AssemblingMachine2,
-            viaFactoryModules: [],
+            viaFactoryModuleIds: [],
             viaBeaconCount: Rational.zero,
-            viaBeacon: ItemId.Beacon,
-            viaBeaconModules: [],
+            viaBeaconId: ItemId.Beacon,
+            viaBeaconModuleIds: [],
           },
         ],
         { [ItemId.Coal]: [[RecipeId.IronOre, Rational.two]] },
         Mocks.RationalRecipeSettingsInitial,
         {},
         {
-          fuel: ItemId.Coal,
-          proliferatorSpray: ItemId.ProductivityModule,
+          fuelId: ItemId.Coal,
+          proliferatorSprayId: ItemId.ProductivityModule,
           miningBonus: Rational.zero,
           researchSpeed: Rational.one,
           data: Mocks.Data,
@@ -618,6 +736,30 @@ describe('Products Selectors', () => {
     });
   });
 
+  describe('getNormalizedStepsWithOutputs', () => {
+    it('should call utility to calculate outputs', () => {
+      spyOn(RateUtility, 'calculateOutputs');
+      Selectors.getNormalizedStepsWithOutputs.projector(
+        Mocks.Steps,
+        Mocks.AdjustedData
+      );
+      expect(RateUtility.calculateOutputs).toHaveBeenCalled();
+    });
+  });
+
+  describe('getNormalizedStepsWithBeacons', () => {
+    it('should call utility to calculate beacons', () => {
+      spyOn(RateUtility, 'calculateBeacons');
+      Selectors.getNormalizedStepsWithBeacons.projector(
+        Mocks.Steps,
+        Rational.one,
+        {},
+        Mocks.AdjustedData
+      );
+      expect(RateUtility.calculateBeacons).toHaveBeenCalled();
+    });
+  });
+
   describe('getSteps', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getSteps.projector([], null);
@@ -646,13 +788,20 @@ describe('Products Selectors', () => {
     });
   });
 
+  describe('checkViaState', () => {
+    it('should select products and rates', () => {
+      const result = Selectors.checkViaState.projector([], {});
+      expect(result).toEqual({ products: [], rates: {} });
+    });
+  });
+
   describe('getZipState', () => {
     it('should put together the required state parts', () => {
-      const products = Mocks.ProductsState1;
+      const products = Mocks.ProductsState;
       const items = Mocks.ItemSettingsEntities;
       const recipes = Mocks.RecipeSettingsEntities;
       const factories = Mocks.FactorySettingsInitial;
-      const settings = initialSettingsState;
+      const settings = Settings.initialSettingsState;
       const result = Selectors.getZipState.projector(
         products,
         items,
@@ -665,6 +814,231 @@ describe('Products Selectors', () => {
       expect(result.recipes).toBe(recipes);
       expect(result.factories).toBe(factories);
       expect(result.settings).toBe(settings);
+    });
+  });
+
+  describe('getStepsModified', () => {
+    it('should determine which steps have modified item or recipe settings', () => {
+      const result = Selectors.getStepsModified.projector(
+        Mocks.Steps,
+        Items.initialItemsState,
+        Recipes.initialRecipesState
+      );
+      expect(result.items[Mocks.Step1.itemId!]).toBeFalse();
+      expect(result.recipes[Mocks.Step1.recipeId!]).toBeFalse();
+    });
+  });
+
+  describe('getTotals', () => {
+    it('should get totals for columns', () => {
+      const result = Selectors.getTotals.projector(
+        [
+          {
+            itemId: ItemId.Coal,
+            recipeId: RecipeId.Coal,
+          },
+          {
+            itemId: ItemId.Coal,
+            recipeId: RecipeId.Coal,
+            belts: Rational.one,
+            wagons: Rational.one,
+            factories: Rational.one,
+            beacons: Rational.one,
+            power: Rational.one,
+            pollution: Rational.one,
+          },
+        ],
+        Mocks.ItemSettingsInitial,
+        Mocks.RecipeSettingsInitial,
+        Mocks.AdjustedData
+      );
+      expect(result).toEqual({
+        belts: { [ItemId.TransportBelt]: Rational.one },
+        wagons: { [ItemId.CargoWagon]: Rational.one },
+        factories: { [ItemId.ElectricMiningDrill]: Rational.one },
+        beacons: { [ItemId.Beacon]: Rational.one },
+        power: Rational.one,
+        pollution: Rational.one,
+      });
+    });
+
+    it('calculate dsp mining total by recipe', () => {
+      const result = Selectors.getTotals.projector(
+        [
+          {
+            recipeId: RecipeId.Coal,
+            factories: Rational.one,
+          },
+        ],
+        Mocks.ItemSettingsInitial,
+        { [RecipeId.Coal]: { factoryId: ItemId.MiningDrill } },
+        { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } }
+      );
+      expect(result).toEqual({
+        belts: {},
+        wagons: {},
+        factories: { [RecipeId.Coal]: Rational.one },
+        beacons: {},
+        power: Rational.zero,
+        pollution: Rational.zero,
+      });
+    });
+  });
+
+  describe('getStepDetails', () => {
+    it('should determine detail tabs to display for steps', () => {
+      const steps: Step[] = [
+        {
+          id: '0',
+          itemId: ItemId.PetroleumGas,
+          recipeId: RecipeId.Coal,
+          factories: Rational.one,
+          outputs: { [ItemId.PetroleumGas]: Rational.two },
+        },
+        {
+          id: '1',
+          outputs: { [ItemId.PetroleumGas]: Rational.one },
+        },
+        {
+          id: '2',
+        },
+      ];
+      const result = Selectors.getStepDetails.projector(
+        steps,
+        Mocks.AdjustedData
+      );
+      expect(result).toEqual({
+        ['0']: {
+          tabs: [
+            StepDetailTab.Item,
+            StepDetailTab.Recipe,
+            StepDetailTab.Factory,
+            StepDetailTab.Recipes,
+          ],
+          outputs: [steps[0], steps[1]],
+          recipes: [
+            RecipeId.AdvancedOilProcessing,
+            RecipeId.BasicOilProcessing,
+            RecipeId.CoalLiquefaction,
+            RecipeId.LightOilCracking,
+          ],
+        },
+        ['1']: { tabs: [], outputs: [], recipes: [] },
+        ['2']: { tabs: [], outputs: [], recipes: [] },
+      });
+    });
+  });
+
+  describe('getStepByItemEntities', () => {
+    it('should create a map of item ids to steps', () => {
+      const result = Selectors.getStepByItemEntities.projector(Mocks.Steps);
+      expect(Object.keys(result).length).toEqual(Mocks.Steps.length);
+    });
+  });
+
+  describe('getStepTree', () => {
+    it('should map steps into a hierarchical tree', () => {
+      const steps: Step[] = [
+        {
+          id: '0',
+          recipeId: ItemId.PlasticBar,
+        },
+        {
+          id: '1',
+          recipeId: RecipeId.Coal,
+          parents: {
+            [RecipeId.PlasticBar]: Rational.one,
+          },
+        },
+        {
+          id: '2',
+          parents: { [RecipeId.Coal]: Rational.one },
+        },
+        {
+          id: '3',
+          parents: { [RecipeId.Coal]: Rational.one },
+        },
+        {
+          id: '4',
+          parents: {
+            [RecipeId.PlasticBar]: Rational.one,
+          },
+        },
+      ];
+      const result = Selectors.getStepTree.projector(steps);
+      expect(result).toEqual({
+        ['0']: [],
+        ['1']: [true],
+        ['2']: [true, true],
+        ['3']: [true, false],
+        ['4']: [false],
+      });
+    });
+  });
+
+  describe('getEffectivePrecision', () => {
+    it('should calculate the effective precision for columns', () => {
+      const result = Selectors.getEffectivePrecision.projector(
+        [{ id: '0' }],
+        Mocks.PreferencesState.columns
+      );
+      expect(result).toEqual({
+        [Column.Surplus]: 0,
+        [Column.Items]: 0,
+        [Column.Belts]: 0,
+        [Column.Wagons]: 0,
+        [Column.Factories]: 0,
+        [Column.Power]: 0,
+        [Column.Pollution]: 0,
+      });
+    });
+  });
+
+  describe('getEffectivePowerUnit', () => {
+    it('should calculate an auto power unit', () => {
+      expect(
+        Selectors.getEffectivePowerUnit.projector([], PowerUnit.Auto)
+      ).toEqual(PowerUnit.kW);
+      expect(
+        Selectors.getEffectivePowerUnit.projector(
+          [{ id: '0', power: Rational.thousand }],
+          PowerUnit.Auto
+        )
+      ).toEqual(PowerUnit.MW);
+      expect(
+        Selectors.getEffectivePowerUnit.projector(
+          [
+            { id: '0', power: Rational.million },
+            { id: '1', power: Rational.million },
+          ],
+          PowerUnit.Auto
+        )
+      ).toEqual(PowerUnit.GW);
+    });
+
+    it('should override with specified power unit', () => {
+      expect(
+        Selectors.getEffectivePowerUnit.projector([], PowerUnit.GW)
+      ).toEqual(PowerUnit.GW);
+    });
+  });
+
+  describe('effPrecFrom', () => {
+    it('should handle null precision', () => {
+      expect(Selectors.effPrecFrom([], null, () => undefined)).toBeNull();
+    });
+
+    it('should determine max decimals', () => {
+      expect(
+        Selectors.effPrecFrom(
+          [
+            { id: '0', items: Rational.from(1, 2) },
+            { id: '1', items: Rational.from(1, 3) },
+          ],
+          3,
+          (step) => step.items
+        )
+      ).toEqual(3);
     });
   });
 });

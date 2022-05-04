@@ -1,0 +1,111 @@
+<ng-container *ngIf="vm$ | async as vm">
+  <div data-test="lab-columns-open" (click)="clickOpen(vm.columns)">
+    <ng-content></ng-content>
+  </div>
+  <lab-dialog *ngIf="open" (closeDialog)="close()">
+    <div class="dialog-title">
+      <div class="header">{{ 'columns.selectColumns' | translate }}</div>
+      <button (click)="cancel()">
+        <i class="material-icons">close</i>
+      </button>
+    </div>
+    <div class="panel">
+      <table>
+        <thead>
+          <tr>
+            <th rowspan="2" class="header">
+              {{ 'columns.visibility' | translate }}
+            </th>
+            <th colspan="3" class="header">
+              {{ 'columns.precision' | translate }}
+            </th>
+          </tr>
+          <tr>
+            <td>{{ 'columns.decimals' | translate }}</td>
+            <td>{{ 'columns.fractions' | translate }}</td>
+            <td>{{ 'columns.example' | translate }}</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let opt of vm.columnOptions; trackBy: trackSvc.trackById">
+            <td>
+              <div
+                *ngIf="
+                  opt.id === Column.Items || opt.id === Column.Factories;
+                  else colCheckbox
+                "
+              >
+                {{ opt.name | translate }}
+              </div>
+              <ng-template #colCheckbox>
+                <div
+                  class="flex option"
+                  data-test="lab-columns-visibility"
+                  (click)="clickId(opt.id)"
+                >
+                  <div
+                    class="checkbox"
+                    [class.checked]="editValue[opt.id].show"
+                  ></div>
+                  <div>{{ opt.name | translate }}</div>
+                </div>
+              </ng-template>
+            </td>
+            <ng-container *ngIf="editValue[opt.id].show; else noShow">
+              <ng-container
+                *ngIf="
+                  PrecisionColumns.indexOf(opt.id) !== -1;
+                  else noPrecision
+                "
+              >
+                <td>
+                  <input
+                    *ngIf="editValue[opt.id].precision != null; else noInput"
+                    type="number"
+                    placeholder="Decimals"
+                    min="0"
+                    step="1"
+                    data-test="lab-columns-decimals"
+                    [value]="editValue[opt.id].precision"
+                    (input)="changePrecision(opt.id, $event)"
+                  />
+                  <ng-template #noInput>---</ng-template>
+                </td>
+                <td>
+                  <div
+                    class="flex option"
+                    data-test="lab-columns-fractions"
+                    (click)="clickFraction(opt.id)"
+                  >
+                    <div
+                      class="checkbox"
+                      [class.checked]="editValue[opt.id].precision == null"
+                    ></div>
+                    <div>Fractions</div>
+                  </div>
+                </td>
+                <td>
+                  {{ example(opt.id) }}
+                </td>
+              </ng-container>
+              <ng-template #noPrecision>
+                <td colspan="3">n/a</td>
+              </ng-template>
+            </ng-container>
+            <ng-template #noShow>
+              <td colspan="3"></td>
+            </ng-template>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="dialog-buttons">
+      <button (click)="cancel()">
+        <span class="text">{{ 'columns.cancel' | translate }}</span>
+      </button>
+      <button class="green" data-test="lab-columns-confirm" (click)="close()">
+        {{ 'columns.confirm' | translate }}
+      </button>
+    </div>
+  </lab-dialog>
+</ng-container>

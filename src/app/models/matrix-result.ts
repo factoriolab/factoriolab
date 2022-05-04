@@ -14,9 +14,9 @@ export interface MatrixResult {
   /** Simplex objective solution */
   O?: Rational[];
   /** Items in tableau */
-  items?: string[];
+  itemIds?: string[];
   /** Recipes in tableau */
-  recipes?: string[];
+  recipeIds?: string[];
   /** Items identified as inputs in tableau */
-  inputs?: string[];
+  inputIds?: string[];
 }

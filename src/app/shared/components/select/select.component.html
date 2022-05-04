@@ -1,0 +1,53 @@
+<div data-test="lab-select-open" (click)="open = true">
+  <ng-content></ng-content>
+</div>
+<lab-dialog *ngIf="open" (closeDialog)="cancel()">
+  <div class="dialog-title">
+    <div class="header">{{ header }}</div>
+    <button (click)="cancel()">
+      <i class="material-icons">close</i>
+    </button>
+  </div>
+  <div
+    *ngIf="vm$ | async as vm"
+    #scroll
+    class="panel scroll"
+    [style.width.rem]="width"
+  >
+    <div class="tile" *ngIf="includeEmptyModule">
+      <lab-icon
+        [tooltip]="
+          vm.data.game === Game.Factorio
+            ? 'select.noModule'
+            : ('select.noProliferator' | translate)
+        "
+        class="grid"
+        [class.selected]="selected === ItemId.Module"
+        data-test="lab-select-none"
+        [iconId]="ItemId.Module"
+        [scrollTop]="scroll.scrollTop"
+        (click)="clickId(ItemId.Module)"
+      >
+      </lab-icon>
+    </div>
+    <div class="tile" *ngFor="let row of rows">
+      <ng-container *ngFor="let id of row">
+        <lab-icon
+          class="grid"
+          [class.selected]="id === selected"
+          data-test="lab-select-option"
+          [iconId]="id"
+          [tooltip]="
+            vm.data.itemEntities[id]?.name ?? vm.data.recipeEntities[id]?.name
+          "
+          [item]="selectType === IdType.Item ? vm.data.itemEntities[id] : null"
+          [recipe]="
+            selectType === IdType.Recipe ? vm.data.recipeEntities[id] : null
+          "
+          [scrollTop]="scroll.scrollTop"
+          (click)="clickId(id)"
+        ></lab-icon>
+      </ng-container>
+    </div>
+  </div>
+</lab-dialog>

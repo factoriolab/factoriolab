@@ -1,4 +1,4 @@
-import { ModData } from './data/mod-data';
+import { ModData } from './data';
 import { Game } from './enum';
 
 export interface ModInfo {

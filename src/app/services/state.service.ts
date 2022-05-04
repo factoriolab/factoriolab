@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { filter, map, take } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { filter, first } from 'rxjs/operators';
+
 import { environment } from 'src/environments';
 import { FuelType } from '~/models';
-
-import { State } from '~/store';
-import { checkViaState, SetViaAction } from '~/store/products';
-import { getDataset, getDatasets } from '~/store/settings';
-import { RouterService } from './router.service';
+import { LabState } from '~/store';
+import * as Products from '~/store/products';
+import * as Settings from '~/store/settings';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StateService {
-  constructor(private router: RouterService, private store: Store<State>) {
-    this.store.select(checkViaState).subscribe((s) => {
+  constructor(private store: Store<LabState>) {
+    this.store.select(Products.checkViaState).subscribe((s) => {
       for (const product of s.products) {
         if (
           product.viaId &&
@@ -25,9 +25,7 @@ export class StateService {
           // Reset invalid viaId
           // This normally occurs when a chosen viaId no longer appears in the result steps
           // Usually due to some parent item/recipe being ignored or recipe disabled
-          this.store.dispatch(
-            new SetViaAction({ id: product.id, value: null })
-          );
+          this.store.dispatch(new Products.ResetViaAction(product.id));
         }
       }
     });
@@ -42,79 +40,73 @@ export class StateService {
   // Used only in development to update hash files
   // istanbul ignore next
   checkHash(): void {
-    this.store
-      .select(getDatasets)
+    combineLatest([
+      this.store.select(Settings.getDatasets),
+      this.store.select(Settings.getDataset),
+    ])
       .pipe(
-        filter((d) => !!d.length),
-        take(1),
-        map((d) => d[0].id)
+        filter(([sets, data]) => sets.length > 0 && data.hash != null),
+        first()
       )
-      .subscribe((id) => {
-        this.router
-          .requestHash(id)
-          .pipe(take(1))
-          .subscribe((h) => {
-            this.store
-              .select(getDataset)
-              .pipe(take(1))
-              .subscribe((d) => {
-                console.log(id);
-                console.log(
-                  JSON.stringify(
-                    d.complexRecipeIds.filter((i) => !d.itemEntities[i])
-                  )
-                );
-                const old = JSON.stringify(h);
-                for (const id of [...d.itemIds]
-                  .sort()
-                  .filter((i) => h.items.indexOf(i) === -1)) {
-                  h.items.push(id);
-                }
-                for (const id of [...d.beaconIds]
-                  .sort()
-                  .filter((i) => h.beacons.indexOf(i) === -1)) {
-                  h.beacons.push(id);
-                }
-                for (const id of [...d.beltIds, ...d.pipeIds]
-                  .sort()
-                  .filter((i) => h.belts.indexOf(i) === -1)) {
-                  h.belts.push(id);
-                }
-                if (d.fuelIds[FuelType.Chemical]) {
-                  for (const id of [...d.fuelIds[FuelType.Chemical]]
-                    .sort()
-                    .filter((i) => h.fuels.indexOf(i) === -1)) {
-                    h.fuels.push(id);
-                  }
-                }
-                for (const id of [...d.cargoWagonIds, ...d.fluidWagonIds]
-                  .sort()
-                  .filter((i) => h.wagons.indexOf(i) === -1)) {
-                  h.wagons.push(id);
-                }
-                for (const id of [...d.factoryIds]
-                  .sort()
-                  .filter((i) => h.factories.indexOf(i) === -1)) {
-                  h.factories.push(id);
-                }
-                for (const id of [...d.moduleIds]
-                  .sort()
-                  .filter((i) => h.modules.indexOf(i) === -1)) {
-                  h.modules.push(id);
-                }
-                for (const id of [...d.recipeIds]
-                  .sort()
-                  .filter((i) => h.recipes.indexOf(i) === -1)) {
-                  h.recipes.push(id);
-                }
-                if (old === JSON.stringify(h)) {
-                  console.log('No change in hash');
-                } else {
-                  console.log('New hash:');
-                  console.log(JSON.stringify(h));
-                }
-              });
-          });
+      .subscribe(([sets, data]) => {
+        console.log(sets[0].id);
+        console.log(
+          JSON.stringify(
+            data.complexRecipeIds.filter((i) => !data.itemEntities[i])
+          )
+        );
+        if (data.hash) {
+          const hash = data.hash;
+          const old = JSON.stringify(data.hash);
+          for (const id of [...data.itemIds]
+            .sort()
+            .filter((i) => hash.items.indexOf(i) === -1)) {
+            data.hash.items.push(id);
+          }
+          for (const id of [...data.beaconIds]
+            .sort()
+            .filter((i) => hash.beacons.indexOf(i) === -1)) {
+            data.hash.beacons.push(id);
+          }
+          for (const id of [...data.beltIds, ...data.pipeIds]
+            .sort()
+            .filter((i) => hash.belts.indexOf(i) === -1)) {
+            data.hash.belts.push(id);
+          }
+          if (data.fuelIds[FuelType.Chemical]) {
+            for (const id of [...data.fuelIds[FuelType.Chemical]]
+              .sort()
+              .filter((i) => hash.fuels.indexOf(i) === -1)) {
+              data.hash.fuels.push(id);
+            }
+          }
+          for (const id of [...data.cargoWagonIds, ...data.fluidWagonIds]
+            .sort()
+            .filter((i) => hash.wagons.indexOf(i) === -1)) {
+            data.hash.wagons.push(id);
+          }
+          for (const id of [...data.factoryIds]
+            .sort()
+            .filter((i) => hash.factories.indexOf(i) === -1)) {
+            data.hash.factories.push(id);
+          }
+          for (const id of [...data.moduleIds]
+            .sort()
+            .filter((i) => hash.modules.indexOf(i) === -1)) {
+            data.hash.modules.push(id);
+          }
+          for (const id of [...data.recipeIds]
+            .sort()
+            .filter((i) => hash.recipes.indexOf(i) === -1)) {
+            data.hash.recipes.push(id);
+          }
+          if (old === JSON.stringify(data.hash)) {
+            console.log('No change in hash');
+          } else {
+            console.log('New hash:');
+            console.log(JSON.stringify(data.hash));
+          }
+        }
       });
   }
 }

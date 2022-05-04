@@ -1,0 +1,24 @@
+:host {
+  > .panel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    > div {
+      display: flex;
+      align-items: center;
+
+      + * {
+        margin-top: 0.5rem;
+      }
+
+      > * + * {
+        margin-left: 0.5rem;
+      }
+    }
+  }
+}
+
+.ratetype {
+  width: 7.5rem;
+}

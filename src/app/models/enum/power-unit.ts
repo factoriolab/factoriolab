@@ -1,4 +1,4 @@
-import { IdName } from '..';
+import { IdName } from '../';
 
 export enum PowerUnit {
   Auto,

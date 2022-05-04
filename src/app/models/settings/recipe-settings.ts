@@ -1,52 +1,41 @@
 import { Rational } from '../rational';
 
-export enum RecipeSettingsField {
-  Factory = 'factory',
-  FactoryModules = 'factoryModules',
-  BeaconCount = 'beaconCount',
-  Beacon = 'beacon',
-  BeaconModules = 'beaconModules',
-  BeaconTotal = 'beaconTotal',
-  Overclock = 'overclock',
-  Cost = 'cost',
-}
-
 export interface RecipeSettings {
-  factory?: string;
-  factoryModules?: string[];
+  factoryId?: string;
+  factoryModuleIds?: string[];
   beaconCount?: string;
-  beacon?: string;
-  beaconModules?: string[];
+  beaconId?: string;
+  beaconModuleIds?: string[];
   beaconTotal?: string;
   overclock?: number;
   cost?: string;
 }
 
 export class RationalRecipeSettings {
-  factory?: string;
-  factoryModules?: string[];
+  factoryId?: string;
+  factoryModuleIds?: string[];
   beaconCount?: Rational;
-  beacon?: string;
-  beaconModules?: string[];
+  beaconId?: string;
+  beaconModuleIds?: string[];
   beaconTotal?: Rational;
   overclock?: Rational;
   cost?: Rational;
 
   constructor(data: RecipeSettings) {
-    if (data.factory != null) {
-      this.factory = data.factory;
+    if (data.factoryId != null) {
+      this.factoryId = data.factoryId;
     }
-    if (data.factoryModules != null) {
-      this.factoryModules = data.factoryModules;
+    if (data.factoryModuleIds != null) {
+      this.factoryModuleIds = data.factoryModuleIds;
     }
     if (data.beaconCount != null) {
       this.beaconCount = Rational.fromString(data.beaconCount);
     }
-    if (data.beacon != null) {
-      this.beacon = data.beacon;
+    if (data.beaconId != null) {
+      this.beaconId = data.beaconId;
     }
-    if (data.beaconModules != null) {
-      this.beaconModules = data.beaconModules;
+    if (data.beaconModuleIds != null) {
+      this.beaconModuleIds = data.beaconModuleIds;
     }
     if (data.beaconTotal != null) {
       this.beaconTotal = Rational.fromString(data.beaconTotal);

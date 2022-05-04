@@ -1,9 +1,9 @@
 import { STATE_KEY } from '~/models';
-import { State } from '~/store';
+import { LabState } from '~/store';
 
 export class BrowserUtility {
   private static _storedState = BrowserUtility.loadState();
-  static get storedState(): State {
+  static get storedState(): Partial<LabState> | null {
     return this._storedState;
   }
 
@@ -21,23 +21,26 @@ export class BrowserUtility {
 
   static get zip(): string {
     const hash = this.hash;
-    return this.search || (hash.length > 1 && hash[1] === '=' && hash);
+    return this.search || (hash.length > 1 && hash[1] === '=' && hash) || '';
   }
 
-  static loadState(): State {
+  static loadState(): Partial<LabState> | null {
     try {
-      return JSON.parse(localStorage.getItem(STATE_KEY)) as State;
+      const stored = localStorage.getItem(STATE_KEY);
+      if (stored) {
+        return JSON.parse(stored) as Partial<LabState>;
+      }
     } catch (e) {
       console.error('Failed to load state from local storage');
       console.error(e);
 
       // Delete local storage to repair
       localStorage.removeItem(STATE_KEY);
-      return null;
     }
+    return null;
   }
 
-  static mergeState(initial: State): State {
+  static mergeState(initial: LabState): LabState {
     const state = BrowserUtility.storedState;
     if (state) {
       if (this.zip) {
@@ -52,10 +55,10 @@ export class BrowserUtility {
         };
       } else {
         const merge = { ...initial };
-        for (const key of Object.keys(merge)) {
+        for (const key of Object.keys(merge) as (keyof LabState)[]) {
           merge[key] = {
             ...merge[key],
-            ...state[key],
+            ...(state[key] as any),
           };
         }
         return merge;
@@ -65,8 +68,8 @@ export class BrowserUtility {
     }
   }
 
-  static saveState(state: State): void {
-    const newState = { ...state };
+  static saveState(state: LabState): void {
+    const newState = { ...state } as Partial<LabState>;
     delete newState.datasetsState;
     localStorage.setItem(STATE_KEY, JSON.stringify(newState));
   }

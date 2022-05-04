@@ -1,7 +1,7 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EffectsModule } from '@ngrx/effects';
@@ -13,65 +13,23 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {
-  ProductsComponent,
-  ProductsContainerComponent,
-  SettingsComponent,
-  SettingsContainerComponent,
-  IconComponent,
-  PickerComponent,
-  SelectComponent,
-  ListContainerComponent,
-  ListComponent,
-  FlowContainerComponent,
-  ToggleComponent,
-  RankerComponent,
-  SankeyComponent,
-  OptionsComponent,
-  DialogComponent,
-  ColumnsComponent,
-  MatrixContainerComponent,
-  MatrixComponent,
-  InputComponent,
-  InfoComponent,
-} from './components';
-import {
-  FocusOnShowDirective,
-  LabErrorHandler,
-  ValidateNumberDirective,
-  ValidateOverclockDirective,
-} from './support';
-import { reducers, metaReducers } from './store';
+import { ProductsComponent, SettingsComponent } from './components';
+import { FlowComponent, ListComponent, MatrixComponent } from './routes';
+import { LabErrorHandler } from './services';
+import { SharedModule } from './shared/shared.module';
+import { metaReducers, reducers } from './store';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
-import { ProductsEffects } from './store/products/products.effects';
 import { FactoriesEffects } from './store/factories/factories.effects';
+import { ProductsEffects } from './store/products/products.effects';
 
 @NgModule({
   declarations: [
     AppComponent,
-    IconComponent,
-    PickerComponent,
-    RankerComponent,
-    SelectComponent,
-    ToggleComponent,
-    ListContainerComponent,
     ListComponent,
-    FlowContainerComponent,
-    ProductsContainerComponent,
+    FlowComponent,
     ProductsComponent,
     SettingsComponent,
-    SettingsContainerComponent,
-    SankeyComponent,
-    OptionsComponent,
-    DialogComponent,
-    ColumnsComponent,
-    ValidateNumberDirective,
-    ValidateOverclockDirective,
-    FocusOnShowDirective,
-    MatrixContainerComponent,
     MatrixComponent,
-    InputComponent,
-    InfoComponent,
   ],
   imports: [
     BrowserModule,
@@ -95,6 +53,7 @@ import { FactoriesEffects } from './store/factories/factories.effects';
       logOnly: environment.production,
     }),
     EffectsModule.forRoot([DatasetsEffects, ProductsEffects, FactoriesEffects]),
+    SharedModule,
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: environment.baseHref },

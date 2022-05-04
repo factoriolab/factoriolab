@@ -1,10 +1,24 @@
 import { STATE_KEY } from '~/models';
-import { initialSettingsState } from '~/store/settings';
+import * as Settings from '~/store/settings';
 import { BrowserUtility } from './browser.utility';
 
 describe('BrowserUtility', () => {
   afterEach(() => {
     localStorage.clear();
+  });
+
+  describe('storedState', () => {
+    it('should get the local property', () => {
+      expect(BrowserUtility.storedState).toEqual(
+        BrowserUtility['_storedState']
+      );
+    });
+  });
+
+  describe('href', () => {
+    it('should get the window property', () => {
+      expect(BrowserUtility.href).toEqual(location.href);
+    });
   });
 
   describe('zip', () => {
@@ -15,12 +29,12 @@ describe('BrowserUtility', () => {
 
     it('should check for hash length', () => {
       spyOnProperty(BrowserUtility, 'hash').and.returnValue('z');
-      expect(BrowserUtility.zip).toBeFalse();
+      expect(BrowserUtility.zip).toEqual('');
     });
 
     it('should check for = in hash', () => {
       spyOnProperty(BrowserUtility, 'hash').and.returnValue('zz');
-      expect(BrowserUtility.zip).toBeFalse();
+      expect(BrowserUtility.zip).toEqual('');
     });
 
     it('should use valid hash as zip state', () => {
@@ -31,14 +45,19 @@ describe('BrowserUtility', () => {
 
   describe('loadState', () => {
     it('should return the state from local storage', () => {
-      localStorage.setItem(STATE_KEY, JSON.stringify(initialSettingsState));
-      expect(BrowserUtility.loadState()).toEqual(initialSettingsState as any);
+      localStorage.setItem(
+        STATE_KEY,
+        JSON.stringify(Settings.initialSettingsState)
+      );
+      expect(BrowserUtility.loadState()).toEqual(
+        Settings.initialSettingsState as any
+      );
     });
 
     it('should clean up if an error is encountered', () => {
       localStorage.setItem(STATE_KEY, 'test');
       spyOn(console, 'error');
-      expect(BrowserUtility.loadState()).toEqual(null);
+      expect(BrowserUtility.loadState()).toBeNull();
       expect(console.error).toHaveBeenCalledTimes(2);
       expect(localStorage.getItem(STATE_KEY)).toBeNull();
     });

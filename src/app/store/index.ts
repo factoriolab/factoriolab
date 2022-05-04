@@ -2,16 +2,16 @@ import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { storeFreeze } from 'ngrx-store-freeze';
 
 import { environment } from 'src/environments/environment';
-import { DatasetsState, datasetsReducer } from './datasets';
+import { datasetsReducer, DatasetsState } from './datasets';
 import { factoriesReducer, FactoriesState } from './factories';
-import { ItemsState, itemsReducer } from './items';
+import { itemsReducer, ItemsState } from './items';
 import { preferencesReducer, PreferencesState } from './preferences';
-import { ProductsState, productsReducer } from './products';
-import { RecipesState, recipesReducer } from './recipes';
-import { SettingsState, settingsReducer } from './settings';
+import { productsReducer, ProductsState } from './products';
+import { recipesReducer, RecipesState } from './recipes';
+import { settingsReducer, SettingsState } from './settings';
 import { storageMetaReducer } from './storage.reducer';
 
-export interface State {
+export interface LabState {
   datasetsState: DatasetsState;
   productsState: ProductsState;
   itemsState: ItemsState;
@@ -21,7 +21,7 @@ export interface State {
   preferencesState: PreferencesState;
 }
 
-export const reducers: ActionReducerMap<State> = {
+export const reducers: ActionReducerMap<LabState, any> = {
   datasetsState: datasetsReducer,
   productsState: productsReducer,
   itemsState: itemsReducer,
@@ -32,7 +32,7 @@ export const reducers: ActionReducerMap<State> = {
 };
 
 /* No need to test without storeFreeze, ignore that branch here. */
-export const metaReducers: MetaReducer<State>[] = environment.testing
+export const metaReducers: MetaReducer<LabState>[] = environment.testing
   ? [storeFreeze]
   : /* istanbul ignore next */
   environment.production

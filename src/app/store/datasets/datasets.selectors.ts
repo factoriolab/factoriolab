@@ -1,23 +1,24 @@
-import { compose, createSelector } from '@ngrx/store';
+import { createSelector } from '@ngrx/store';
 
-import { Entities, Mod, ModData, ModInfo } from '~/models';
-import { State } from '..';
+import { Entities, Mod, ModInfo } from '~/models';
+import { LabState } from '../';
 import { DatasetsState } from './datasets.reducer';
 
 /* Base selector functions */
-export const datasetsState = (state: State): DatasetsState =>
+export const datasetsState = (state: LabState): DatasetsState =>
   state.datasetsState;
-const sAppData = (state: DatasetsState): Mod => state.app;
-const sBaseSets = (state: DatasetsState): ModInfo[] => state.base;
-const sModSets = (state: DatasetsState): ModInfo[] => state.mods;
-const sDataEntities = (state: DatasetsState): Entities<ModData> =>
-  state.dataEntities;
 
-/* Simple selectors */
-export const getAppData = compose(sAppData, datasetsState);
-export const getBaseSets = compose(sBaseSets, datasetsState);
-export const getModSets = compose(sModSets, datasetsState);
-export const getDataEntities = compose(sDataEntities, datasetsState);
+export const getAppData = createSelector(datasetsState, (state) => state.app);
+export const getBaseSets = createSelector(datasetsState, (state) => state.base);
+export const getModSets = createSelector(datasetsState, (state) => state.mods);
+export const getDataEntities = createSelector(
+  datasetsState,
+  (state) => state.dataEntities
+);
+export const getHashEntities = createSelector(
+  datasetsState,
+  (state) => state.hashEntities
+);
 
 /* Complex selectors */
 export const getBaseInfoEntities = createSelector(getBaseSets, (base) =>
@@ -32,7 +33,9 @@ export const getBaseEntities = createSelector(
   getDataEntities,
   (base, entities) =>
     base.reduce((e: Entities<Mod>, b) => {
-      e[b.id] = entities[b.id] ? { ...b, ...entities[b.id] } : null;
+      if (entities[b.id]) {
+        e[b.id] = { ...b, ...entities[b.id] };
+      }
       return e;
     }, {})
 );
@@ -42,7 +45,9 @@ export const getModEntities = createSelector(
   getDataEntities,
   (mod, entities) =>
     mod.reduce((e: Entities<Mod>, m) => {
-      e[m.id] = entities[m.id] ? { ...m, ...entities[m.id] } : null;
+      if (entities[m.id]) {
+        e[m.id] = { ...m, ...entities[m.id] };
+      }
       return e;
     }, {})
 );

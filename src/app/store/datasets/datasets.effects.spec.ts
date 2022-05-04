@@ -1,171 +1,182 @@
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { EffectsModule } from '@ngrx/effects';
-import { StoreModule, Store, Action } from '@ngrx/store';
-import { of } from 'rxjs';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { Action } from '@ngrx/store';
+import { MockStore } from '@ngrx/store/testing';
+import { TranslateService } from '@ngx-translate/core';
+import { EMPTY, of, ReplaySubject } from 'rxjs';
 
-import { Mocks } from 'src/tests';
-import { reducers, metaReducers, State } from '..';
+import { Mocks, TestModule } from 'src/tests';
+import { ModData, ModHash } from '~/models';
+import { BrowserUtility } from '~/utilities';
+import { LabState } from '../';
 import * as App from '../app.actions';
-import { ResetAction } from '../products';
-import { SetBaseAction } from '../settings';
+import * as Products from '../products';
+import * as Settings from '../settings';
+import * as Actions from './datasets.actions';
 import { DatasetsEffects } from './datasets.effects';
-import { TranslateModule } from '@ngx-translate/core';
 
 describe('DatasetsEffects', () => {
-  let store: Store<State>;
   let effects: DatasetsEffects;
+  let actions: ReplaySubject<any>;
   let http: HttpTestingController;
+  let mockStore: MockStore<LabState>;
+  let translateSvc: TranslateService;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
-        StoreModule.forRoot(reducers, { metaReducers }),
-        EffectsModule.forRoot([DatasetsEffects]),
-        TranslateModule.forRoot(),
-      ],
+      imports: [TestModule],
+      providers: [provideMockActions(() => actions), DatasetsEffects],
     });
 
-    store = TestBed.inject(Store);
     effects = TestBed.inject(DatasetsEffects);
     http = TestBed.inject(HttpTestingController);
+    mockStore = TestBed.inject(MockStore);
+    translateSvc = TestBed.inject(TranslateService);
   });
 
-  afterEach(() => {
-    history.replaceState(null, null, '');
+  describe('constructor', () => {
+    it('should watch for language changes', () => {
+      spyOn(effects, 'requestData').and.returnValue(EMPTY);
+      translateSvc.use('test');
+      expect(effects.requestData).toHaveBeenCalledWith('1.1', 'test');
+    });
+
+    it('should use base id from stored state', () => {
+      spyOnProperty(BrowserUtility, 'storedState').and.returnValue({
+        settingsState: { baseId: 'baseId' },
+      } as any);
+      spyOn(effects, 'requestData').and.returnValue(EMPTY);
+      translateSvc.use('test');
+      expect(effects.requestData).toHaveBeenCalledWith('baseId', 'test');
+    });
   });
 
   describe('appLoad$', () => {
     it('should load the default base mod', () => {
-      spyOn(store, 'dispatch').and.callThrough();
-      spyOn(effects, 'requestData').and.returnValue(of(Mocks.BaseData));
-      spyOn(effects, 'loadModsForBase');
-      store.dispatch(new App.LoadAction({} as any));
-      expect(effects.loadModsForBase).toHaveBeenCalledWith(
-        Mocks.Base.defaults.modIds
+      spyOn(effects, 'requestData').and.returnValue(
+        of([Mocks.BaseData, Mocks.Hash])
       );
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new ResetAction(Mocks.Base.items[0].id)
-      );
+      actions = new ReplaySubject(1);
+      actions.next(new App.LoadAction({}));
+      const result: Action[] = [];
+      effects.appLoad$.subscribe((r) => result.push(r));
+      expect(result).toEqual([
+        new Products.ResetAction(Mocks.Base.items[0].id),
+      ]);
     });
 
     it('should load from state', () => {
-      spyOn(store, 'dispatch').and.callThrough();
-      spyOn(effects, 'requestData').and.returnValue(of(Mocks.BaseData));
-      spyOn(effects, 'loadModsForBase');
-      store.dispatch(
+      spyOn(effects, 'requestData').and.returnValue(
+        of([Mocks.BaseData, Mocks.Hash])
+      );
+      actions = new ReplaySubject(1);
+      actions.next(
         new App.LoadAction({
           settingsState: { baseId: Mocks.Base.id },
-          productsState: {},
-        } as any)
+          productsState: Products.initialProductsState,
+        })
       );
-      expect(effects.loadModsForBase).toHaveBeenCalledWith(
-        Mocks.Base.defaults.modIds
-      );
-      expect(store.dispatch).not.toHaveBeenCalledWith(
-        new ResetAction(Mocks.Base.items[0].id)
-      );
+      const result: Action[] = [];
+      effects.appLoad$.subscribe((r) => result.push(r));
+      expect(result).toEqual([]);
     });
   });
 
   describe('appReset$', () => {
-    it('should return reset action if already loaded', () => {
-      spyOn(effects, 'requestData').and.returnValue(of(Mocks.BaseData));
-      const effect: Action[] = [];
-      effects.appReset$.subscribe((a) => effect.push(a));
-      store.dispatch(new App.ResetAction());
-      expect(effect).toEqual([new ResetAction(Mocks.Base.items[0].id)]);
-    });
-
     it('should reset and load mod for new mod', () => {
-      spyOn(effects, 'requestData').and.returnValue(of(Mocks.BaseData));
-      spyOn(effects, 'loadModsForBase');
-      const effect: Action[] = [];
-      effects.appReset$.subscribe((a) => effect.push(a));
-      store.dispatch(new App.ResetAction());
-      expect(effects.loadModsForBase).toHaveBeenCalledWith(
-        Mocks.Base.defaults.modIds
+      spyOn(effects, 'requestData').and.returnValue(
+        of([Mocks.BaseData, Mocks.Hash])
       );
-      expect(effect).toEqual([new ResetAction(Mocks.Base.items[0].id)]);
+      actions = new ReplaySubject(1);
+      actions.next(new App.ResetAction());
+      const result: Action[] = [];
+      effects.appReset$.subscribe((r) => result.push(r));
+      expect(result).toEqual([
+        new Products.ResetAction(Mocks.Base.items[0].id),
+      ]);
     });
   });
 
   describe('setBaseId$', () => {
-    it('should return reset action if already loaded', () => {
-      spyOn(effects, 'requestData').and.returnValue(of(Mocks.BaseData));
-      const effect: Action[] = [];
-      effects.setBaseId$.subscribe((a) => effect.push(a));
-      store.dispatch(new SetBaseAction(Mocks.Base.id));
-      expect(effect).toEqual([new ResetAction(Mocks.Base.items[0].id)]);
+    it('should reset and load mod for new mod', () => {
+      spyOn(effects, 'requestData').and.returnValue(
+        of([Mocks.BaseData, Mocks.Hash])
+      );
+      actions = new ReplaySubject(1);
+      actions.next(new Settings.SetBaseAction(Mocks.Base.id));
+      const result: Action[] = [];
+      effects.setBaseId$.subscribe((r) => result.push(r));
+      expect(result).toEqual([
+        new Products.ResetAction(Mocks.Base.items[0].id),
+      ]);
+    });
+  });
+
+  describe('requestData', () => {
+    it('should set up http requests for data', () => {
+      spyOn(mockStore, 'dispatch');
+      spyOn(effects, 'loadModsForBase');
+      http.expectOne(`data/${Mocks.Base.id}/data.json`).flush(Mocks.BaseData);
+      http.expectOne(`data/${Mocks.Base.id}/hash.json`).flush(Mocks.Hash);
+      expect(mockStore.dispatch).toHaveBeenCalledWith(
+        new Actions.LoadModDataAction({
+          id: Mocks.Base.id,
+          value: Mocks.BaseData,
+        })
+      );
+      expect(mockStore.dispatch).toHaveBeenCalledWith(
+        new Actions.LoadModHashAction({ id: Mocks.Base.id, value: Mocks.Hash })
+      );
+      expect(effects.loadModsForBase).toHaveBeenCalledWith(
+        Mocks.BaseData.defaults!.modIds
+      );
     });
 
-    it('should reset and load mod for new mod', () => {
-      spyOn(effects, 'requestData').and.returnValue(of(Mocks.BaseData));
+    it('should get values from cache', () => {
+      effects.cacheData['id-en'] = Mocks.BaseData;
+      effects.cacheHash['id'] = Mocks.Hash;
+      let data: [ModData, ModHash] | undefined;
+      effects.requestData('id', 'en').subscribe((d) => (data = d));
+      expect(data).toEqual([Mocks.BaseData, Mocks.Hash]);
+    });
+
+    it('should handle null defaults and skip hash', () => {
       spyOn(effects, 'loadModsForBase');
-      const effect: Action[] = [];
-      effects.setBaseId$.subscribe((a) => effect.push(a));
-      store.dispatch(new SetBaseAction(Mocks.Base.id));
-      expect(effects.loadModsForBase).toHaveBeenCalledWith(
-        Mocks.Base.defaults.modIds
-      );
-      expect(effect).toEqual([new ResetAction(Mocks.Base.items[0].id)]);
+      let data: [ModData, ModHash] | undefined;
+      effects.requestData('id', 'lang', true).subscribe((d) => (data = d));
+      http
+        .expectOne('data/id/data-lang.json')
+        .flush({ ...Mocks.BaseData, ...{ defaults: undefined } });
+      expect(effects.loadModsForBase).toHaveBeenCalledWith([]);
+      expect(data).toBeUndefined();
     });
   });
 
   describe('loadModsForBase', () => {
     it('should load a list of mods', () => {
-      spyOn(effects, 'requestData').and.returnValue(of(null));
+      spyOn(effects, 'requestData').and.returnValue(
+        of([Mocks.BaseData, Mocks.Hash])
+      );
       effects.loadModsForBase([Mocks.Mod1.id]);
-      expect(effects.requestData).toHaveBeenCalled();
+      expect(effects.requestData).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('load', () => {
-    beforeEach(() => {
-      http.expectOne(`data/${Mocks.Base.id}/data.json`).flush(Mocks.BaseData);
-    });
-
-    it('should request data via HTTP and load base mod', () => {
-      spyOn(store, 'dispatch');
-      spyOn(effects, 'loadModsForBase');
-      effects.load(null, null, { baseId: Mocks.Base.id } as any);
-      expect(effects.loadModsForBase).toHaveBeenCalledWith(
-        Mocks.Base.defaults.modIds
+    it('should load stored mod', () => {
+      spyOn(effects, 'requestData').and.returnValue(
+        of([Mocks.BaseData, Mocks.Hash])
       );
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new ResetAction(Mocks.Base.items[0].id)
-      );
-    });
-
-    it('should load from storage', () => {
-      spyOn(store, 'dispatch');
-      spyOn(effects, 'loadModsForBase');
+      spyOn(mockStore, 'dispatch');
       effects.load(
-        null,
-        { settingsState: { baseId: Mocks.Base.id }, productsState: {} } as any,
-        null
+        '',
+        { settingsState: { baseId: Mocks.Base.id } as any },
+        Settings.initialSettingsState
       );
-      expect(effects.loadModsForBase).toHaveBeenCalledWith(
-        Mocks.Base.defaults.modIds
+      expect(mockStore.dispatch).toHaveBeenCalledWith(
+        new Products.ResetAction(Mocks.Base.items[0].id)
       );
-      expect(store.dispatch).not.toHaveBeenCalledWith(
-        new ResetAction(Mocks.Base.items[0].id)
-      );
-    });
-
-    it('should skip request if url contains a hash', () => {
-      spyOn(store, 'dispatch');
-      spyOn(effects, 'loadModsForBase');
-      effects.load('test', null, { baseId: Mocks.Base.id } as any);
-      http.expectNone(`data/${Mocks.Base.id}/data.json`);
-      expect(effects.loadModsForBase).not.toHaveBeenCalled();
-      expect(store.dispatch).not.toHaveBeenCalled();
     });
   });
 });

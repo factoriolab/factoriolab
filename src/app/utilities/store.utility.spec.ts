@@ -1,4 +1,4 @@
-import { Mocks, ItemId } from 'src/tests';
+import { ItemId, Mocks } from 'src/tests';
 import { StoreUtility } from './store.utility';
 
 describe('StoreUtility', () => {
@@ -14,6 +14,10 @@ describe('StoreUtility', () => {
     it('should check equal ranks', () => {
       expect(StoreUtility.rankEquals(['a', 'b'], ['a', 'b'])).toBeTrue();
     });
+
+    it('should handle null comparison value', () => {
+      expect(StoreUtility.rankEquals(['a'], undefined)).toBeFalse();
+    });
   });
 
   describe('arrayEquals', () => {
@@ -27,6 +31,10 @@ describe('StoreUtility', () => {
 
     it('should check equal arrays', () => {
       expect(StoreUtility.arrayEquals(['a', 'b'], ['a', 'b'])).toBeTrue();
+    });
+
+    it('should handle null comparison value', () => {
+      expect(StoreUtility.arrayEquals(['a'], undefined)).toBeFalse();
     });
   });
 
@@ -166,14 +174,20 @@ describe('StoreUtility', () => {
 
     it('should delete entry when equal to default and no other entries', () => {
       const payload = { id, value: 'a', def: 'a' };
-      const result = StoreUtility.compareReset({ [id]: {} }, field, payload);
+      const result = StoreUtility.compareReset(
+        { [id]: { [field]: 'value' } },
+        field,
+        payload
+      );
       expect(result).toEqual({} as any);
     });
   });
 
   describe('compareValue', () => {
     it('should return null if equal to default', () => {
-      expect(StoreUtility.compareValue({ value: 'a', def: 'a' })).toBeNull();
+      expect(
+        StoreUtility.compareValue({ value: 'a', def: 'a' })
+      ).toBeUndefined();
     });
 
     it('should return value if not equal to default', () => {
@@ -185,7 +199,7 @@ describe('StoreUtility', () => {
     it('should return null if equal to default', () => {
       expect(
         StoreUtility.compareValues({ value: ['a', 'b'], def: ['b', 'a'] })
-      ).toBeNull();
+      ).toBeUndefined();
     });
 
     it('should return value if not equal to default', () => {
@@ -197,7 +211,7 @@ describe('StoreUtility', () => {
 
   describe('compareRank', () => {
     it('should return null if equal to default', () => {
-      expect(StoreUtility.compareRank(['a', 'b'], ['a', 'b'])).toBeNull();
+      expect(StoreUtility.compareRank(['a', 'b'], ['a', 'b'])).toBeUndefined();
     });
 
     it('should return value if not equal to default', () => {

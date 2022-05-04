@@ -1,118 +1,85 @@
 import { TestBed } from '@angular/core/testing';
-import { EffectsModule } from '@ngrx/effects';
-import { Action, Store, StoreModule } from '@ngrx/store';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { Action } from '@ngrx/store';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { ReplaySubject } from 'rxjs';
 
-import { RecipeId, ItemId, Mocks } from 'src/tests';
-import { metaReducers, reducers, State } from '..';
-import { LoadModAction } from '../datasets';
+import { initialState, ItemId, Mocks, RecipeId } from 'src/tests';
+import { LabState } from '../';
 import * as Recipes from '../recipes';
-import { RemoveAction } from './factories.actions';
+import * as Settings from '../settings';
+import * as Actions from './factories.actions';
 import { FactoriesEffects } from './factories.effects';
 
 describe('FactoriesEffects', () => {
-  let store: Store<State>;
   let effects: FactoriesEffects;
+  let actions: ReplaySubject<any>;
+  let mockStore: MockStore<LabState>;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [
-        StoreModule.forRoot(reducers, { metaReducers }),
-        EffectsModule.forRoot([FactoriesEffects]),
+      providers: [
+        provideMockStore({
+          initialState,
+        }),
+        provideMockActions(() => actions),
+        FactoriesEffects,
       ],
     });
 
-    store = TestBed.inject(Store);
     effects = TestBed.inject(FactoriesEffects);
-  });
-
-  beforeEach(() => {
-    store.dispatch(new LoadModAction({ id: '1.1', value: Mocks.BaseData }));
-    store.dispatch(new LoadModAction({ id: 'res', value: Mocks.ModData1 }));
+    mockStore = TestBed.inject(MockStore);
+    mockStore.overrideSelector(
+      Recipes.getRecipeSettings,
+      Mocks.RecipeSettingsInitial
+    );
+    mockStore.overrideSelector(Settings.getNormalDataset, Mocks.Data);
+    mockStore.refreshState();
   });
 
   describe('resetRecipeSetting$', () => {
-    it('should ignore unaffected recipe settings', () => {
-      store.dispatch(
-        new Recipes.SetCostAction({
-          id: RecipeId.Coal,
-          value: '100',
-          def: null,
-        })
-      );
-      spyOn(store, 'dispatch').and.callThrough();
-      const effect: Action[] = [];
-      effects.resetRecipeSettings$.subscribe((a) => effect.push(a));
-      store.dispatch(
-        new RemoveAction({
-          value: ItemId.AssemblingMachine3,
-          def: Mocks.Defaults.factoryRank,
-        })
-      );
-      expect(effect).toEqual([]);
-    });
-
-    it('should ignore unaffected module settings', () => {
-      store.dispatch(
-        new Recipes.SetBeaconCountAction({
-          id: RecipeId.Coal,
-          value: '1',
-          def: null,
-        })
-      );
-      spyOn(store, 'dispatch').and.callThrough();
-      const effect: Action[] = [];
-      effects.resetRecipeSettings$.subscribe((a) => effect.push(a));
-      store.dispatch(
-        new RemoveAction({
-          value: ItemId.AssemblingMachine3,
-          def: Mocks.Defaults.factoryRank,
-        })
-      );
-      expect(effect).toEqual([]);
-    });
-
-    it('should reset when factory does not support modules', () => {
-      store.dispatch(
-        new Recipes.SetBeaconModulesAction({
-          id: RecipeId.Coal,
-          value: [ItemId.SpeedModule],
-          def: [],
-        })
-      );
-      spyOn(store, 'dispatch').and.callThrough();
-      const effect: Action[] = [];
-      effects.resetRecipeSettings$.subscribe((a) => effect.push(a));
-      store.dispatch(
-        new RemoveAction({
-          value: ItemId.ElectricMiningDrill,
-          def: Mocks.Defaults.factoryRank,
-        })
-      );
-      expect(effect).toEqual([
-        new Recipes.ResetRecipeModulesAction(RecipeId.Coal),
-      ]);
-    });
-
     it('should reset when factory modules do not match', () => {
-      store.dispatch(
-        new Recipes.SetFactoryModulesAction({
-          id: RecipeId.Coal,
-          value: [ItemId.SpeedModule],
-          def: [],
-        })
-      );
-      spyOn(store, 'dispatch').and.callThrough();
-      const effect: Action[] = [];
-      effects.resetRecipeSettings$.subscribe((a) => effect.push(a));
-      store.dispatch(
-        new RemoveAction({
+      actions = new ReplaySubject(1);
+      actions.next(
+        new Actions.RemoveAction({
           value: ItemId.AssemblingMachine3,
-          def: Mocks.Defaults.factoryRank,
+          def: Mocks.Defaults.factoryRankIds,
         })
       );
-      expect(effect).toEqual([
+      mockStore.setState({
+        ...initialState,
+        ...{
+          recipesState: {
+            [RecipeId.Coal]: { factoryModuleIds: [ItemId.SpeedModule] },
+          },
+        },
+      });
+      const results: Action[] = [];
+      effects.resetRecipeSettings$.subscribe((a) => results.push(a));
+      expect(results).toEqual([
         new Recipes.ResetRecipeModulesAction(RecipeId.Coal),
       ]);
+    });
+
+    it('should ignore unaffected settings', () => {
+      actions = new ReplaySubject(1);
+      actions.next(
+        new Actions.RemoveAction({
+          value: ItemId.AssemblingMachine3,
+          def: Mocks.Defaults.factoryRankIds,
+        })
+      );
+      mockStore.setState({
+        ...initialState,
+        ...{
+          recipesState: {
+            [RecipeId.Coal]: { beaconModuleIds: [ItemId.SpeedModule] },
+          },
+        },
+      });
+      const results: Action[] = [];
+      effects.resetRecipeSettings$.subscribe((a) => results.push(a));
+      expect(results).toEqual([]);
     });
   });
 });

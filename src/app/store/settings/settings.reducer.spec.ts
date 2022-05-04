@@ -1,21 +1,21 @@
 import { ItemId, RecipeId } from 'src/tests';
 import {
   DisplayRate,
-  ResearchSpeed,
-  Preset,
-  InserterTarget,
   InserterCapacity,
+  InserterTarget,
+  Preset,
+  ResearchSpeed,
 } from '~/models';
-import { LoadAction } from '../app.actions';
+import * as App from '../app.actions';
 import * as Actions from './settings.actions';
-import { settingsReducer, initialSettingsState } from './settings.reducer';
+import { initialSettingsState, settingsReducer } from './settings.reducer';
 
 describe('Settings Reducer', () => {
   describe('LOAD', () => {
     it('should return state if settings state is not included', () => {
       const result = settingsReducer(
         initialSettingsState,
-        new LoadAction({} as any)
+        new App.LoadAction({} as any)
       );
       expect(result).toEqual(initialSettingsState);
     });
@@ -23,11 +23,18 @@ describe('Settings Reducer', () => {
     it('should load settings', () => {
       const result = settingsReducer(
         undefined,
-        new LoadAction({
+        new App.LoadAction({
           settingsState: { displayRate: DisplayRate.PerHour },
         } as any)
       );
       expect(result.displayRate).toEqual(DisplayRate.PerHour);
+    });
+  });
+
+  describe('RESET', () => {
+    it('should return the initial state', () => {
+      const result = settingsReducer(undefined, new App.ResetAction());
+      expect(result).toEqual(initialSettingsState);
     });
   });
 
@@ -42,6 +49,17 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('SET_BASE', () => {
+    it('should set the base id', () => {
+      const value = 'dsp';
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetBaseAction(value)
+      );
+      expect(result.baseId).toEqual(value);
+    });
+  });
+
   describe('SET_DISABLED_RECIPES', () => {
     it('should set the list of disabled recipes', () => {
       const value = [RecipeId.AdvancedOilProcessing];
@@ -49,7 +67,7 @@ describe('Settings Reducer', () => {
         initialSettingsState,
         new Actions.SetDisabledRecipesAction({ value, def: [] })
       );
-      expect(result.disabledRecipes).toEqual(value);
+      expect(result.disabledRecipeIds).toEqual(value);
     });
   });
 
@@ -80,9 +98,9 @@ describe('Settings Reducer', () => {
       const value = ItemId.TransportBelt;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetBeltAction({ value, def: null })
+        new Actions.SetBeltAction({ value, def: undefined })
       );
-      expect(result.belt).toEqual(value);
+      expect(result.beltId).toEqual(value);
     });
   });
 
@@ -91,9 +109,9 @@ describe('Settings Reducer', () => {
       const value = ItemId.Pipe;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetPipeAction({ value, def: null })
+        new Actions.SetPipeAction({ value, def: undefined })
       );
-      expect(result.pipe).toEqual(value);
+      expect(result.pipeId).toEqual(value);
     });
   });
 
@@ -102,9 +120,9 @@ describe('Settings Reducer', () => {
       const value = ItemId.Wood;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetFuelAction({ value, def: null })
+        new Actions.SetFuelAction({ value, def: undefined })
       );
-      expect(result.fuel).toEqual(value);
+      expect(result.fuelId).toEqual(value);
     });
   });
 
@@ -124,9 +142,9 @@ describe('Settings Reducer', () => {
       const value = ItemId.CargoWagon;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetCargoWagonAction({ value, def: null })
+        new Actions.SetCargoWagonAction({ value, def: undefined })
       );
-      expect(result.cargoWagon).toEqual(value);
+      expect(result.cargoWagonId).toEqual(value);
     });
   });
 
@@ -135,9 +153,9 @@ describe('Settings Reducer', () => {
       const value = ItemId.FluidWagon;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetFluidWagonAction({ value, def: null })
+        new Actions.SetFluidWagonAction({ value, def: undefined })
       );
-      expect(result.fluidWagon).toEqual(value);
+      expect(result.fluidWagonId).toEqual(value);
     });
   });
 
@@ -247,7 +265,7 @@ describe('Settings Reducer', () => {
         initialSettingsState,
         new Actions.SetProliferatorSprayAction(value)
       );
-      expect(result.proliferatorSpray).toEqual(value);
+      expect(result.proliferatorSprayId).toEqual(value);
     });
   });
 

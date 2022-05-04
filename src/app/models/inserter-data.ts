@@ -1,7 +1,15 @@
 import { InserterCapacity, InserterTarget, ItemId } from './enum';
 import { Rational } from './rational';
 
-export const InserterData = {
+export interface InserterSpeed {
+  id: ItemId;
+  value: Rational;
+}
+
+export const InserterData: Record<
+  InserterTarget,
+  Record<InserterCapacity, InserterSpeed[]>
+> = {
   [InserterTarget.Chest]: {
     [InserterCapacity.Capacity0]: [
       {
