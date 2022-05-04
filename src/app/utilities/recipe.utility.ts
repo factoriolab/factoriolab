@@ -124,9 +124,11 @@ export class RecipeUtility {
               let sprays = module.sprays;
               // If proliferator is applied to proliferator, apply productivity bonus to sprays
               const pModule = data.moduleEntities[proliferatorSprayId];
-              sprays = sprays.mul(
-                Rational.one.add(pModule.productivity ?? Rational.zero)
-              );
+              if (pModule) {
+                sprays = sprays.mul(
+                  Rational.one.add(pModule.productivity ?? Rational.zero)
+                );
+              }
               // Calculate amount of proliferator required for this recipe
               const pId = module.proliferator;
               if (pId) {
