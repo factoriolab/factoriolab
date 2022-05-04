@@ -5,6 +5,7 @@ import { Title } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { State, reducers, metaReducers } from './store';
 import {
@@ -48,6 +49,7 @@ describe('AppComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         StoreModule.forRoot(reducers, { metaReducers }),
+        TranslateModule.forRoot(),
       ],
     })
       .compileComponents()

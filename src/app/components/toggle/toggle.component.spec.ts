@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { Mocks, RecipeId, TestUtility } from 'src/tests';
 import { DialogComponent } from '../dialog/dialog.component';
@@ -45,7 +46,7 @@ describe('ToggleComponent', () => {
         ToggleComponent,
         TestToggleComponent,
       ],
-      imports: [FormsModule],
+      imports: [FormsModule, TranslateModule.forRoot()],
     }).compileComponents();
   });
 

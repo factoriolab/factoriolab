@@ -11,14 +11,14 @@ export enum Preset {
 export function presetOptions(game: Game): IdName<Preset>[] {
   return game === Game.Factorio
     ? [
-        { id: Preset.Minimum, name: 'Minimum' },
-        { id: Preset.Modules, name: 'Modules' },
-        { id: Preset.Beacon8, name: '8 Beacons' },
-        { id: Preset.Beacon12, name: '12 Beacons' },
+        { id: Preset.Minimum, name: 'options.Preset1.Minimum' },
+        { id: Preset.Modules, name: 'options.Preset1.Modules' },
+        { id: Preset.Beacon8, name: 'options.Preset1.Beacon8' },
+        { id: Preset.Beacon12, name: 'options.Preset1.Beacon12' },
       ]
     : [
-        { id: Preset.Minimum, name: 'Minimum' },
-        { id: Preset.Modules, name: 'Upgraded' },
-        { id: Preset.Beacon8, name: 'Proliferated' },
+        { id: Preset.Minimum, name: 'options.Preset2.Minimum' },
+        { id: Preset.Modules, name: 'options.Preset2.Modules' },
+        { id: Preset.Beacon8, name: 'options.Preset2.Beacon8' },
       ];
 }

@@ -3,9 +3,9 @@ export const MIN_LINK_VALUE = 1e-10;
 export const STATE_KEY = 'state';
 export const NONE = '<None>';
 export const APP = 'FactorioLab';
-export const TITLE_LAB = 'Factorio Calculator';
-export const TITLE_DSP = 'Dyson Sphere Program Calculator';
-export const TITLE_SFY = 'Satisfactory Calculator';
+export const TITLE_LAB = 'title.lab';
+export const TITLE_DSP = 'title.dsp';
+export const TITLE_SFY = 'title.sfy';
 export const ERROR_SIMPLEX = `No solution found. Check your disabled recipes to ensure a solution is feasible.
 
 E.G.: If one iron plate requires two gears, and one gear requires two iron plates, a solution for iron plates is not feasible.`;

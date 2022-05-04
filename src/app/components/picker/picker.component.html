@@ -3,7 +3,7 @@
 </div>
 <lab-dialog *ngIf="open" (closeDialog)="cancel()">
   <div class="dialog-title">
-    <div class="header">Select an item to produce</div>
+    <div class="header">{{ 'picker.select' | translate}}</div>
     <div class="dialog-menu">
       <input
         class="search"

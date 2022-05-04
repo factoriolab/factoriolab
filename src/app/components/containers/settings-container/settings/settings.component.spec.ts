@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { Mocks, TestUtility, ItemId } from 'src/tests';
 import {
@@ -130,6 +131,7 @@ describe('SettingsComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         StoreModule.forRoot(reducers, { metaReducers }),
+        TranslateModule.forRoot(),
       ],
       declarations: [
         ColumnsComponent,

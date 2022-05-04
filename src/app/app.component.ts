@@ -7,7 +7,9 @@ import {
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
+import { getLanguageModifiers } from './store/preferences';
 
 import { environment } from 'src/environments';
 import {
@@ -80,8 +82,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     public store: Store<State>,
     public titleService: Title,
     private cd: ChangeDetectorRef,
+    protected translateSvc: TranslateService,
     public state: StateService // Included only to initialize the service
-  ) {}
+  ) {
+    translateSvc.setDefaultLang('en');
+  }
 
   ngOnInit(): void {
     this.datasets$ = this.store.select(getDatasets);
@@ -103,11 +108,16 @@ export class AppComponent implements OnInit, AfterViewInit {
           this.homeHref = 'satisfactory';
           break;
       }
-      this.titleService.setTitle(`${APP} | ${this.title}`);
+      this.translateSvc.get(this.title).subscribe((r) => {
+        this.titleService.setTitle(`${APP} | ${r}`);
+      });
     });
     if (this.lsHidePoll) {
       this.showPoll = false;
     }
+    this.store.select(getLanguageModifiers).subscribe((r) => {
+      this.translateSvc.use(r.getLanguage);
+    });
   }
 
   /**

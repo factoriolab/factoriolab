@@ -7,7 +7,7 @@ export enum Game {
 }
 
 export const GameOptions: IdName<Game>[] = [
-  { id: Game.Factorio, name: 'Factorio' },
-  { id: Game.DysonSphereProgram, name: 'Dyson Sphere Program' },
-  { id: Game.Satisfactory, name: 'Satisfactory' },
+  { id: Game.Factorio, name: 'game.Factorio' },
+  { id: Game.DysonSphereProgram, name: 'game.DysonSphereProgram' },
+  { id: Game.Satisfactory, name: 'game.Satisfactory' },
 ];

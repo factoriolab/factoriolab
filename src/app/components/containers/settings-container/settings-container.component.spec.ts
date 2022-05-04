@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { TestUtility, ItemId, RecipeId } from 'src/tests';
 import {
@@ -47,6 +48,7 @@ describe('SettingsContainerComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         StoreModule.forRoot(reducers, { metaReducers }),
+        TranslateModule.forRoot(),
       ],
       declarations: [
         ColumnsComponent,

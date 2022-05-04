@@ -17,6 +17,7 @@ const sLinkText = (state: PreferencesState): LinkValue => state.linkText;
 const sSankeyAlign = (state: PreferencesState): SankeyAlign =>
   state.sankeyAlign;
 const sSimplex = (state: PreferencesState): boolean => state.simplex;
+const sLanguage = (state: PreferencesState): string => state.language;
 const sPowerUnit = (state: PreferencesState): PowerUnit => state.powerUnit;
 
 export const getColumns = compose(sColumns, preferencesState);
@@ -24,6 +25,7 @@ export const getLinkSize = compose(sLinkSize, preferencesState);
 export const getLinkText = compose(sLinkText, preferencesState);
 export const getSankeyAlign = compose(sSankeyAlign, preferencesState);
 export const getSimplex = compose(sSimplex, preferencesState);
+export const getLanguage = compose(sLanguage, preferencesState);
 export const getPowerUnit = compose(sPowerUnit, preferencesState);
 
 export const getColumnsState = createSelector(
@@ -98,5 +100,12 @@ export const getSimplexModifiers = createSelector(
     simplex,
     costInput,
     costIgnored,
+  })
+);
+
+export const getLanguageModifiers = createSelector(
+  getLanguage,
+  (getLanguage) => ({
+    getLanguage,
   })
 );
