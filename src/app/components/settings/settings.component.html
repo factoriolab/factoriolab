@@ -699,7 +699,7 @@
                   data-test="lab-settings-flow-rate"
                   [formControl]="ctrlFlowRate"
                   [value]="vm.settings.flowRate"
-                  (input)="emitNumber(setFlowRate, $event, 1)"
+                  (input)="emitNumber('flowRate', $event, 1)"
                 />
                 <div>
                   {{ 'setting.flowRateUnit' | translate }}
@@ -757,7 +757,7 @@
                 data-test="lab-settings-mining-bonus"
                 [formControl]="ctrlMiningProductivity"
                 [value]="vm.settings.miningBonus"
-                (input)="emitNumber(setMiningBonus, $event, 0)"
+                (input)="emitNumber('miningBonus', $event, 0)"
               />
               %
             </td>
@@ -779,7 +779,7 @@
                 data-test="lab-settings-mining-bonus"
                 [formControl]="ctrlMiningSpeed"
                 [value]="vm.settings.miningBonus + 100"
-                (input)="emitNumber(setMiningBonus, $event, 0, -100)"
+                (input)="emitNumber('miningBonus', $event, 0, -100)"
               />
               %
             </td>

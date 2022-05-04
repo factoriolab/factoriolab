@@ -183,7 +183,6 @@ export class SettingsComponent implements OnInit {
         this.ctrlFlowRate.setValue(settings.flowRate);
         this.ctrlMiningProductivity.setValue(settings.miningBonus);
         this.ctrlMiningSpeed.setValue(settings.miningBonus + 100);
-        // TODO: Verify whether detectchanges needed here
       });
 
     this.router.events.subscribe(() => this.ref.detectChanges());
@@ -250,17 +249,18 @@ export class SettingsComponent implements OnInit {
   }
 
   emitNumber(
-    emitter: (value: number) => void,
+    field: 'miningBonus' | 'flowRate',
     event: Event,
     min: number,
     offset = 0
   ): void {
     const target = event.target as HTMLInputElement;
-    const value = Number(target.value) + offset;
-    if (value >= min) {
-      emitter(value);
+    let value = Number(target.value) + offset;
+    value = Math.max(value, min);
+    if (field === 'miningBonus') {
+      this.setMiningBonus(value);
     } else {
-      emitter(min);
+      this.setFlowRate(value);
     }
   }
 
