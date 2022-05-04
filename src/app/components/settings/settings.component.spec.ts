@@ -209,14 +209,11 @@ describe('SettingsComponent', () => {
   });
 
   describe('emitNumber', () => {
-    it('should emit a numeric value', (done) => {
+    it('should emit a numeric value', () => {
       spyOn(component, 'setFlowRate');
-      fixture.whenStable().then(() => {
-        TestUtility.setTextDt(fixture, DataTest.FlowRate, '1000');
-        fixture.detectChanges();
-        expect(component.setFlowRate).toHaveBeenCalledWith(1000);
-        done();
-      });
+      TestUtility.setTextDt(fixture, DataTest.FlowRate, '1000');
+      fixture.detectChanges();
+      expect(component.setFlowRate).toHaveBeenCalledWith(1000);
     });
 
     it('should not emit a number less than the minimum', () => {
