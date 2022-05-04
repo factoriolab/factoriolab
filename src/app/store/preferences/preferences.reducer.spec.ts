@@ -1,5 +1,5 @@
 import { Column, PowerUnit } from '~/models';
-import { ResetAction } from '../app.actions';
+import * as App from '../app.actions';
 import * as Actions from './preferences.actions';
 import {
   initialPreferencesState,
@@ -12,7 +12,7 @@ describe('Preferences Reducer', () => {
 
   describe('RESET', () => {
     it('should return the initial state', () => {
-      const result = preferencesReducer(null, new ResetAction());
+      const result = preferencesReducer(undefined, new App.ResetAction());
       expect(result).toEqual(initialPreferencesState);
     });
   });
@@ -93,6 +93,16 @@ describe('Preferences Reducer', () => {
         new Actions.SetSimplexAction(false)
       );
       expect(result.simplex).toEqual(false);
+    });
+  });
+
+  describe('SET_LANGUAGE', () => {
+    it('should set the language', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetLanguageAction(value)
+      );
+      expect(result.language).toEqual(value);
     });
   });
 

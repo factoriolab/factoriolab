@@ -1,69 +1,98 @@
-import { compose, createSelector } from '@ngrx/store';
-import { environment } from 'src/environments';
+import { createSelector } from '@ngrx/store';
 
+import { environment } from 'src/environments';
 import {
-  ResearchSpeedFactor,
-  Rational,
-  Entities,
-  Recipe,
-  RationalItem,
-  RationalRecipe,
+  columnOptions,
   Dataset,
-  Preset,
   Defaults,
+  Entities,
+  FuelType,
+  Game,
+  InserterData,
+  ItemId,
+  Preset,
+  presetOptions,
+  rateTypeOptions,
+  Rational,
+  RationalBeacon,
+  RationalBelt,
+  RationalCargoWagon,
+  RationalFactory,
+  RationalFluidWagon,
+  RationalFuel,
+  RationalItem,
+  RationalModule,
+  RationalRecipe,
+  Recipe,
+  ResearchSpeedFactor,
   toBoolEntities,
   toEntities,
-  ItemId,
-  DisplayRate,
-  ResearchSpeed,
-  InserterTarget,
-  InserterCapacity,
-  Game,
 } from '~/models';
-import { State } from '../';
+import { LabState } from '../';
 import * as Datasets from '../datasets';
 import { initialSettingsState, SettingsState } from './settings.reducer';
 
 /* Base selector functions */
-export const settingsState = (state: State): SettingsState =>
+export const settingsState = (state: LabState): SettingsState =>
   state.settingsState;
-const sPreset = (state: SettingsState): Preset => state.preset;
-const sBaseDatasetId = (state: SettingsState): string => state.baseId;
-const sExpensive = (state: SettingsState): boolean => state.expensive;
-const sBeaconReceivers = (state: SettingsState): string =>
-  state.beaconReceivers;
-const sFlowRate = (state: SettingsState): number => state.flowRate;
-const sDisplayRate = (state: SettingsState): DisplayRate => state.displayRate;
-const sMiningBonus = (state: SettingsState): number => state.miningBonus;
-const sResearchSpeed = (state: SettingsState): ResearchSpeed =>
-  state.researchSpeed;
-const sInserterTarget = (state: SettingsState): InserterTarget =>
-  state.inserterTarget;
-const sInserterCapacity = (state: SettingsState): InserterCapacity =>
-  state.inserterCapacity;
-const sCostFactor = (state: SettingsState): string => state.costFactor;
-const sCostFactory = (state: SettingsState): string => state.costFactory;
-const sCostInput = (state: SettingsState): string => state.costInput;
-const sCostIgnored = (state: SettingsState): string => state.costIgnored;
-const sProliferatorSpray = (state: SettingsState): string =>
-  state.proliferatorSpray;
 
-/* Simple selectors */
-export const getPreset = compose(sPreset, settingsState);
-export const getBaseDatasetId = compose(sBaseDatasetId, settingsState);
-export const getExpensive = compose(sExpensive, settingsState);
-export const getBeaconReceivers = compose(sBeaconReceivers, settingsState);
-export const getFlowRate = compose(sFlowRate, settingsState);
-export const getDisplayRate = compose(sDisplayRate, settingsState);
-export const getMiningBonus = compose(sMiningBonus, settingsState);
-export const getResearchSpeed = compose(sResearchSpeed, settingsState);
-export const getInserterTarget = compose(sInserterTarget, settingsState);
-export const getInserterCapacity = compose(sInserterCapacity, settingsState);
-export const getCostFactor = compose(sCostFactor, settingsState);
-export const getCostFactory = compose(sCostFactory, settingsState);
-export const getCostInput = compose(sCostInput, settingsState);
-export const getCostIgnored = compose(sCostIgnored, settingsState);
-export const getProliferatorSpray = compose(sProliferatorSpray, settingsState);
+export const getPreset = createSelector(settingsState, (state) => state.preset);
+export const getBaseDatasetId = createSelector(
+  settingsState,
+  (state) => state.baseId
+);
+export const getExpensive = createSelector(
+  settingsState,
+  (state) => state.expensive
+);
+export const getBeaconReceivers = createSelector(
+  settingsState,
+  (state) => state.beaconReceivers
+);
+export const getFlowRate = createSelector(
+  settingsState,
+  (state) => state.flowRate
+);
+export const getDisplayRate = createSelector(
+  settingsState,
+  (state) => state.displayRate
+);
+export const getMiningBonus = createSelector(
+  settingsState,
+  (state) => state.miningBonus
+);
+export const getResearchSpeed = createSelector(
+  settingsState,
+  (state) => state.researchSpeed
+);
+export const getInserterTarget = createSelector(
+  settingsState,
+  (state) => state.inserterTarget
+);
+export const getInserterCapacity = createSelector(
+  settingsState,
+  (state) => state.inserterCapacity
+);
+export const getCostFactor = createSelector(
+  settingsState,
+  (state) => state.costFactor
+);
+export const getCostFactory = createSelector(
+  settingsState,
+  (state) => state.costFactory
+);
+export const getCostInput = createSelector(
+  settingsState,
+  (state) => state.costInput
+);
+export const getCostIgnored = createSelector(
+  settingsState,
+  (state) => state.costIgnored
+);
+export const getProliferatorSprayId = createSelector(
+  settingsState,
+  (state) => state.proliferatorSprayId
+);
 
 /* Complex selectors */
 export const getBase = createSelector(
@@ -72,10 +101,36 @@ export const getBase = createSelector(
   (id, data) => data[id]
 );
 
+export const getHash = createSelector(
+  getBaseDatasetId,
+  Datasets.getHashEntities,
+  (id, hashEntities) => hashEntities[id]
+);
+
 export const getGame = createSelector(
   getBaseDatasetId,
   Datasets.getBaseInfoEntities,
   (id, data) => data[id].game
+);
+
+export const getColumnOptions = createSelector(getGame, (game) =>
+  columnOptions(game)
+);
+
+export const getRateTypeOptions = createSelector(
+  getGame,
+  getDisplayRate,
+  (game, displayRate) => rateTypeOptions(displayRate, game)
+);
+
+export const getPresetOptions = createSelector(getGame, (game) =>
+  presetOptions(game)
+);
+
+export const getBaseOptions = createSelector(
+  getGame,
+  Datasets.getBaseSets,
+  (game, baseSets) => baseSets.filter((b) => b.game === game)
 );
 
 export const getDefaults = createSelector(
@@ -84,37 +139,44 @@ export const getDefaults = createSelector(
   (preset, base) => {
     if (base) {
       const m = base.defaults;
-      let moduleRank: string[];
-      switch (base.game) {
-        case Game.Factorio: {
-          moduleRank = preset === Preset.Minimum ? [] : m.moduleRank;
-          break;
+      if (m) {
+        let moduleRank: string[] = [];
+        switch (base.game) {
+          case Game.Factorio: {
+            moduleRank = preset === Preset.Minimum ? [] : m.moduleRank;
+            break;
+          }
+          case Game.DysonSphereProgram: {
+            moduleRank = preset === Preset.Beacon8 ? m.moduleRank : [];
+            break;
+          }
+          case Game.Satisfactory: {
+            moduleRank = m.moduleRank;
+          }
         }
-        case Game.DysonSphereProgram: {
-          moduleRank = preset === Preset.Beacon8 ? m.moduleRank : [];
-          break;
-        }
-        case Game.Satisfactory: {
-          moduleRank = m.moduleRank;
-        }
+        const defaults: Defaults = {
+          modIds: m.modIds,
+          beltId: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
+          pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
+          fuelId: m.fuel,
+          cargoWagonId: m.cargoWagon,
+          fluidWagonId: m.fluidWagon,
+          disabledRecipeIds: m.disabledRecipes,
+          factoryRankIds:
+            preset === Preset.Minimum ? m.minFactoryRank : m.maxFactoryRank,
+          moduleRankIds: moduleRank,
+          beaconCount:
+            preset < Preset.Beacon8
+              ? '0'
+              : preset < Preset.Beacon12
+              ? '8'
+              : '12',
+          beaconId: m.beacon,
+          beaconModuleId:
+            preset < Preset.Beacon8 ? ItemId.Module : m.beaconModule,
+        };
+        return defaults;
       }
-      const defaults: Defaults = {
-        modIds: m.modIds,
-        belt: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
-        pipe: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
-        fuel: m.fuel,
-        cargoWagon: m.cargoWagon,
-        fluidWagon: m.fluidWagon,
-        disabledRecipes: m.disabledRecipes,
-        factoryRank:
-          preset === Preset.Minimum ? m.minFactoryRank : m.maxFactoryRank,
-        moduleRank,
-        beaconCount:
-          preset < Preset.Beacon8 ? '0' : preset < Preset.Beacon12 ? '8' : '12',
-        beacon: m.beacon,
-        beaconModule: preset < Preset.Beacon8 ? ItemId.Module : m.beaconModule,
-      };
-      return defaults;
     }
     return null;
   }
@@ -126,21 +188,21 @@ export const getSettings = createSelector(
   (s, d) => ({
     ...s,
     ...{
-      belt: s.belt || d?.belt,
-      pipe: s.pipe || d?.pipe,
-      fuel: s.fuel || d?.fuel,
-      cargoWagon: s.cargoWagon || d?.cargoWagon,
-      fluidWagon: s.fluidWagon || d?.fluidWagon,
-      disabledRecipes: s.disabledRecipes || d?.disabledRecipes || [],
+      beltId: s.beltId ?? d?.beltId,
+      pipeId: s.pipeId ?? d?.pipeId,
+      fuelId: s.fuelId ?? d?.fuelId,
+      cargoWagonId: s.cargoWagonId ?? d?.cargoWagonId,
+      fluidWagonId: s.fluidWagonId ?? d?.fluidWagonId,
+      disabledRecipeIds: s.disabledRecipeIds ?? d?.disabledRecipeIds ?? [],
     },
   })
 );
 
-export const getFuel = createSelector(getSettings, (s) => s.fuel);
+export const getFuelId = createSelector(getSettings, (s) => s.fuelId);
 
-export const getDisabledRecipes = createSelector(
+export const getDisabledRecipeIds = createSelector(
   getSettings,
-  (s) => s.disabledRecipes
+  (s) => s.disabledRecipeIds
 );
 
 export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
@@ -154,7 +216,7 @@ export const getResearchFactor = createSelector(
 
 export const getRationalBeaconReceivers = createSelector(
   getBeaconReceivers,
-  (total) => total && Rational.fromString(total)
+  (total) => (total ? Rational.fromString(total) : null)
 );
 
 export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
@@ -186,7 +248,9 @@ export const getMods = createSelector(
 
 // Return list only if base and all mods have been loaded
 export const getDatasets = createSelector(getBase, getMods, (base, mods) =>
-  base && base.defaults.modIds.length === mods.length ? [base, ...mods] : []
+  base?.defaults && base.defaults.modIds.length === mods.length
+    ? [base, ...mods]
+    : []
 );
 
 export const getNormalDataset = createSelector(
@@ -194,7 +258,8 @@ export const getNormalDataset = createSelector(
   getDatasets,
   getDefaults,
   getGame,
-  (app, mods, defaults, game) => {
+  getHash,
+  (app, mods, defaults, game, hash) => {
     // Map out entities with mods
     const categoryEntities = getEntities(
       app.categories,
@@ -203,16 +268,16 @@ export const getNormalDataset = createSelector(
     const iconEntities = getEntities(
       app.icons.map((i) => ({
         ...i,
-        ...{ file: i.file || `data/${app.id}/icons.png` },
+        ...{ file: i.file ?? `data/${app.id}/icons.png` },
       })),
       mods.map((m) =>
         m.icons.map((i) => ({
           ...i,
-          ...{ file: i.file || `data/${m.id}/icons.png` },
+          ...{ file: i.file ?? `data/${m.id}/icons.png` },
         }))
       )
     );
-    const itemEntities = getEntities(
+    const itemData = getEntities(
       app.items,
       mods.map((m) => m.items)
     );
@@ -228,68 +293,69 @@ export const getNormalDataset = createSelector(
     // Convert to id arrays
     let categoryIds = Object.keys(categoryEntities);
     const iconIds = Object.keys(iconEntities);
-    const itemIds = Object.keys(itemEntities);
+    const itemIds = Object.keys(itemData);
     const recipeIds = Object.keys(recipeEntities);
 
     // Generate temporary object arrays
-    const items = itemIds.map((i) => itemEntities[i]);
+    const items = itemIds.map((i) => itemData[i]);
     const recipes = recipeIds.map((r) => recipeEntities[r]);
 
     // Filter for item types
     const beaconIds = items
-      .filter((i) => i.beacon)
-      .sort((a, b) => a.beacon.modules - b.beacon.modules)
+      .filter((i) => i.beacon != null)
+      .sort((a, b) => a.beacon!.modules - b.beacon!.modules)
       .map((i) => i.id);
     const beltIds = items
       .filter((i) => i.belt)
       .sort((a, b) =>
         /** Don't sort belts in DSP, leave based on stacks */
-        game === Game.DysonSphereProgram ? 0 : a.belt.speed - b.belt.speed
+        game === Game.DysonSphereProgram ? 0 : a.belt!.speed - b.belt!.speed
       )
       .map((i) => i.id);
     const pipeIds = items
       .filter((i) => i.pipe)
-      .sort((a, b) => a.pipe.speed - b.pipe.speed)
+      .sort((a, b) => a.pipe!.speed - b.pipe!.speed)
       .map((i) => i.id);
     const cargoWagonIds = items
       .filter((i) => i.cargoWagon)
-      .sort((a, b) => a.cargoWagon.size - b.cargoWagon.size)
+      .sort((a, b) => a.cargoWagon!.size - b.cargoWagon!.size)
       .map((i) => i.id);
     const fluidWagonIds = items
       .filter((i) => i.fluidWagon)
-      .sort((a, b) => a.fluidWagon.capacity - b.fluidWagon.capacity)
+      .sort((a, b) => a.fluidWagon!.capacity - b.fluidWagon!.capacity)
       .map((i) => i.id);
     const factoryIds = items.filter((i) => i.factory).map((i) => i.id);
     const modules = items.filter((i) => i.module);
     const moduleIds = modules.map((i) => i.id);
     const beaconModuleIds = modules
-      .filter((i) => !i.module.productivity)
+      .filter((i) => i.module!.productivity == null)
       .map((i) => i.id);
     const fuelIds = items
       .filter((i) => i.fuel)
-      .sort((a, b) => a.fuel.value - b.fuel.value)
+      .sort((a, b) => a.fuel!.value - b.fuel!.value)
       .reduce((e: Entities<string[]>, f) => {
-        if (!e[f.fuel.category]) {
-          e[f.fuel.category] = [];
+        const cat = f.fuel!.category;
+        if (!e[cat]) {
+          e[cat] = [];
         }
-        e[f.fuel.category].push(f.id);
+        e[cat].push(f.id);
         return e;
       }, {});
 
     // Apply icon references
     items
       .filter((i) => i.icon)
-      .forEach((i) => (iconEntities[i.id] = iconEntities[i.icon]));
+      .forEach((i) => (iconEntities[i.id] = iconEntities[i.icon!]));
     recipes
       .filter((r) => r.icon)
-      .forEach((r) => (iconEntities[r.id] = iconEntities[r.icon]));
+      .forEach((r) => (iconEntities[r.id] = iconEntities[r.icon!]));
 
     // Calculate missing implicit recipe icons
     // For recipes with no icon, use icon of first output product
     recipes
       .filter((r) => !iconEntities[r.id] && r.out)
       .forEach(
-        (r) => (iconEntities[r.id] = iconEntities[Object.keys(r.out)[0]])
+        (r) => (iconEntities[r.id] = iconEntities[Object.keys(r.out!)[0]])
       );
     // Calculate category item rows
     const categoryItemRows: Entities<string[][]> = {};
@@ -313,8 +379,40 @@ export const getNormalDataset = createSelector(
     categoryIds = categoryIds.filter((c) => categoryItemRows[c]);
 
     // Convert to rationals
-    const itemR = itemIds.reduce((e: Entities<RationalItem>, i) => {
-      e[i] = new RationalItem(itemEntities[i]);
+    const beaconEntities: Entities<RationalBeacon> = {};
+    const beltEntities: Entities<RationalBelt> = {};
+    const cargoWagonEntities: Entities<RationalCargoWagon> = {};
+    const fluidWagonEntities: Entities<RationalFluidWagon> = {};
+    const factoryEntities: Entities<RationalFactory> = {};
+    const moduleEntities: Entities<RationalModule> = {};
+    const fuelEntities: Entities<RationalFuel> = {};
+    const itemEntities = itemIds.reduce((e: Entities<RationalItem>, i) => {
+      const item = new RationalItem(itemData[i]);
+      if (item.beacon) {
+        beaconEntities[i] = item.beacon;
+      }
+      if (item.belt) {
+        beltEntities[i] = item.belt;
+      } else if (item.pipe) {
+        beltEntities[i] = item.pipe;
+      }
+      if (item.cargoWagon) {
+        cargoWagonEntities[i] = item.cargoWagon;
+      }
+      if (item.fluidWagon) {
+        fluidWagonEntities[i] = item.fluidWagon;
+      }
+      if (item.factory) {
+        factoryEntities[i] = item.factory;
+      }
+      if (item.module) {
+        moduleEntities[i] = item.module;
+      }
+      if (item.fuel) {
+        fuelEntities[i] = item.fuel;
+      }
+
+      e[i] = item;
       return e;
     }, {});
     const recipeR = recipeIds.reduce((e: Entities<RationalRecipe>, r) => {
@@ -326,7 +424,7 @@ export const getNormalDataset = createSelector(
     const recipeMatches = recipeIds.reduce(
       (e: Entities<RationalRecipe[]>, r) => {
         const recipe = recipeR[r];
-        const outputs = recipe.out ? Object.keys(recipe.out) : [recipe.id];
+        const outputs = Object.keys(recipe.out);
         for (const o of outputs.filter((i) => recipe.produces(i))) {
           if (!e[o]) {
             e[o] = [recipe];
@@ -338,7 +436,7 @@ export const getNormalDataset = createSelector(
       },
       {}
     );
-    const itemRecipeIds = itemIds.reduce((e: Entities<string>, i) => {
+    const itemRecipeIds = itemIds.reduce((e: Entities, i) => {
       const matches = recipeMatches.hasOwnProperty(i) ? recipeMatches[i] : [];
       if (
         matches.length === 1 &&
@@ -351,32 +449,21 @@ export const getNormalDataset = createSelector(
       return e;
     }, {});
 
-    // Fill in missing recipe names
-    for (const id of recipeIds.filter((i) => !recipeEntities[i].name)) {
-      if (itemEntities[id]) {
-        recipeEntities[id] = {
-          ...recipeEntities[id],
-          ...{ name: itemEntities[id].name },
-        };
-      } else {
-        // No item found, convert id to name
-        const cap = id.charAt(0).toUpperCase() + id.slice(1);
-        const name = cap.replace(/-/g, ' ');
-        recipeEntities[id] = { ...recipeEntities[id], ...{ name } };
-      }
-    }
-
     // Calculate allowed modules for recipes
     const recipeModuleIds = recipes.reduce((e: Entities<string[]>, r) => {
       e[r.id] = modules
         .filter(
-          (m) => !m.module.limitation || limitations[m.module.limitation][r.id]
+          (m) =>
+            m.module!.limitation == null ||
+            limitations[m.module!.limitation][r.id]
         )
         .map((m) => m.id);
       return e;
     }, {});
 
-    const prodModuleIds = moduleIds.filter((i) => itemR[i].module.productivity);
+    const prodModuleIds = moduleIds.filter(
+      (i) => itemEntities[i].module!.productivity != null
+    );
 
     // Calculate complex recipes
     const simpleRecipes = Object.keys(itemRecipeIds).map(
@@ -394,24 +481,31 @@ export const getNormalDataset = createSelector(
       iconIds,
       iconEntities,
       itemIds,
+      itemEntities,
+      itemRecipeIds,
       beaconIds,
+      beaconEntities,
       beltIds,
       pipeIds,
+      beltEntities,
       cargoWagonIds,
+      cargoWagonEntities,
       fluidWagonIds,
+      fluidWagonEntities,
       factoryIds,
+      factoryEntities,
       moduleIds,
       beaconModuleIds,
+      moduleEntities,
       fuelIds,
-      itemEntities,
-      itemR,
-      itemRecipeIds,
+      fuelEntities,
       recipeIds,
       complexRecipeIds,
       recipeEntities,
       recipeR,
       recipeModuleIds,
       prodModuleIds,
+      hash,
       defaults,
     };
     return dataset;
@@ -430,10 +524,6 @@ export const getDataset = createSelector(
       )) {
         if (recipe.expensive) {
           const newRecipe = { ...recipe, ...recipe.expensive };
-          if (recipe.out && !recipe.expensive.out) {
-            // If expensive recipe specifies no outputs, reset to default
-            delete newRecipe.out;
-          }
           recipes.push(newRecipe);
         } else {
           recipes.push(recipe);
@@ -447,6 +537,11 @@ export const getDataset = createSelector(
   }
 );
 
+export const getChemicalFuelIds = createSelector(
+  getDataset,
+  (data) => data.fuelIds[FuelType.Chemical] ?? []
+);
+
 export const getBeltSpeed = createSelector(
   getDataset,
   getRationalFlowRate,
@@ -454,12 +549,12 @@ export const getBeltSpeed = createSelector(
     const value: Entities<Rational> = { [ItemId.Pipe]: flowRate };
     if (data.beltIds) {
       for (const id of data.beltIds) {
-        value[id] = data.itemR[id].belt.speed;
+        value[id] = data.beltEntities[id].speed;
       }
     }
     if (data.pipeIds) {
       for (const id of data.pipeIds) {
-        value[id] = data.itemR[id].pipe.speed;
+        value[id] = data.beltEntities[id].speed;
       }
     }
     return value;
@@ -467,24 +562,24 @@ export const getBeltSpeed = createSelector(
 );
 
 export const getAdjustmentData = createSelector(
-  getFuel,
-  getProliferatorSpray,
+  getFuelId,
+  getProliferatorSprayId,
   getRationalMiningBonus,
   getResearchFactor,
   getRationalCostFactor,
   getRationalCostFactory,
   getDataset,
   (
-    fuel,
-    proliferatorSpray,
+    fuelId,
+    proliferatorSprayId,
     miningBonus,
     researchSpeed,
     costFactor,
     costFactory,
     data
   ) => ({
-    fuel,
-    proliferatorSpray,
+    fuelId,
+    proliferatorSprayId,
     miningBonus,
     researchSpeed,
     costFactor,
@@ -493,13 +588,18 @@ export const getAdjustmentData = createSelector(
   })
 );
 
-export const getModifiedCost = createSelector(
-  settingsState,
-  (state) =>
+export const getSettingsModified = createSelector(settingsState, (state) => ({
+  cost:
     state.costFactor !== initialSettingsState.costFactor ||
     state.costFactory !== initialSettingsState.costFactory ||
     state.costInput !== initialSettingsState.costInput ||
-    state.costIgnored !== initialSettingsState.costIgnored
+    state.costIgnored !== initialSettingsState.costIgnored,
+}));
+
+export const getInserterData = createSelector(
+  getInserterTarget,
+  getInserterCapacity,
+  (target, capacity) => InserterData[target][capacity]
 );
 
 export function getEntities<T extends { id: string }>(

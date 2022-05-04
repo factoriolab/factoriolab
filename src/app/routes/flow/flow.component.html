@@ -1,0 +1,40 @@
+<ng-container *ngIf="vm$ | async as vm">
+  <div class="flex">
+    <div>Link text</div>
+    <lab-options
+      title="Select flow link text"
+      [selected]="vm.linkText"
+      [options]="vm.options"
+      (selectId)="setLinkText($event)"
+    ></lab-options>
+    <div>Link size</div>
+    <lab-options
+      title="Select flow link size"
+      [selected]="vm.linkSize"
+      [options]="vm.options"
+      (selectId)="setLinkSize($event)"
+    ></lab-options>
+    <div class="flex">
+      <span>Sankey align</span>
+      <a href="https://github.com/d3/d3-sankey#alignments" target="_blank"
+        ><i class="material-icons small">help</i></a
+      >
+    </div>
+    <lab-options
+      title="Select sankey alignment"
+      [selected]="vm.sankeyAlign"
+      [options]="sankeyAlignOptions"
+      (selectId)="setSankeyAlign($event)"
+    ></lab-options>
+    <button
+      *ngIf="vm.sankey"
+      title="Export to JSON"
+      data-test="lab-flow-export"
+      (click)="export(vm.sankey)"
+    >
+      <i class="material-icons">file_download</i>
+    </button>
+  </div>
+  <div id="lab-flow-svg" #svg></div>
+  <lab-list [mode]="ListMode.Focus" [selectedId]="selectedId"></lab-list>
+</ng-container>

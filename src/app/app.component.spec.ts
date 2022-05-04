@@ -1,62 +1,43 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
-import { StoreModule, Store } from '@ngrx/store';
-import { TranslateModule } from '@ngx-translate/core';
+import { MemoizedSelector } from '@ngrx/store';
+import { MockStore } from '@ngrx/store/testing';
 
-import { State, reducers, metaReducers } from './store';
-import {
-  IconComponent,
-  SettingsContainerComponent,
-  SettingsComponent,
-  ProductsContainerComponent,
-  ProductsComponent,
-  ListContainerComponent,
-  ListComponent,
-  OptionsComponent,
-  PickerComponent,
-} from './components';
-import { AppComponent } from './app.component';
-import { APP, TITLE_DSP, TITLE_SFY } from './models';
-import { SetBaseAction } from './store/settings';
+import { TestModule } from 'src/tests';
+import { AppComponent, TITLE_DSP, TITLE_SFY } from './app.component';
+import { ProductsComponent, SettingsComponent } from './components';
+import { APP, Game } from './models';
+import { ListComponent } from './routes';
+import { SharedModule } from './shared/shared.module';
+import { LabState } from './store';
+import * as Settings from './store/settings';
 
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
-  let store: Store<State>;
+  let mockStore: MockStore<LabState>;
+  let mockGetGame: MemoizedSelector<LabState, Game>;
   let title: Title;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [
-        IconComponent,
-        OptionsComponent,
-        PickerComponent,
-        SettingsContainerComponent,
         SettingsComponent,
-        ProductsContainerComponent,
         ProductsComponent,
-        ListContainerComponent,
         ListComponent,
         AppComponent,
       ],
-      imports: [
-        NoopAnimationsModule,
-        FormsModule,
-        HttpClientTestingModule,
-        RouterTestingModule,
-        StoreModule.forRoot(reducers, { metaReducers }),
-        TranslateModule.forRoot(),
-      ],
+      imports: [TestModule, SharedModule],
     })
       .compileComponents()
       .then(() => {
         fixture = TestBed.createComponent(AppComponent);
+        mockStore = TestBed.inject(MockStore);
+        mockGetGame = mockStore.overrideSelector(
+          Settings.getGame,
+          Game.Factorio
+        );
         component = fixture.componentInstance;
-        store = TestBed.inject(Store);
         title = TestBed.inject(Title);
       });
   });
@@ -67,14 +48,16 @@ describe('AppComponent', () => {
   });
 
   it('should update the title for Dyson Sphere Program', () => {
-    store.dispatch(new SetBaseAction('dsp'));
+    mockGetGame.setResult(Game.DysonSphereProgram);
+    mockStore.refreshState();
     spyOn(title, 'setTitle');
     fixture.detectChanges();
     expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_DSP}`);
   });
 
   it('should update the title for Satisfactory', () => {
-    store.dispatch(new SetBaseAction('sfy'));
+    mockGetGame.setResult(Game.Satisfactory);
+    mockStore.refreshState();
     spyOn(title, 'setTitle');
     fixture.detectChanges();
     expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_SFY}`);

@@ -30,7 +30,7 @@ export class SetWagonAction implements Action {
 
 export class SetRecipeAction implements Action {
   readonly type = ItemsActionType.SET_RECIPE;
-  constructor(public payload: DefaultIdPayload) {}
+  constructor(public payload: DefaultIdPayload<string | undefined>) {}
 }
 
 export class ResetItemAction implements Action {

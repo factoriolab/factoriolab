@@ -1,6 +1,6 @@
 import { ComponentFixture } from '@angular/core/testing';
 
-/* Don't care about coverage on test utility. */
+/* Don't care about coverage on test tools */
 /* istanbul ignore next */
 export class TestUtility {
   static getDt(
@@ -171,5 +171,11 @@ export class TestUtility {
     this.mouseEvent('mousedown', element, centerX, centerY);
     this.mouseEvent('mousemove', element, centerX + xOffset, centerY + yOffset);
     this.mouseEvent('mouseup', element, centerX + xOffset, centerY + yOffset);
+  }
+
+  static assert(condition: boolean, msg?: string): asserts condition {
+    if (!condition) {
+      throw new Error(msg || 'Assertion error, condition is false.');
+    }
   }
 }

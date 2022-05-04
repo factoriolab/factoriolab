@@ -1,0 +1,15 @@
+<button [title]="title" (click)="open = !open" [class.active]="open">
+  <div class="text">{{ text | translate }}</div>
+  <i class="material-icons">arrow_drop_down</i>
+</button>
+<lab-dialog *ngIf="open" (closeDialog)="cancel()">
+  <button
+    *ngFor="let opt of options; trackBy: trackSvc.trackById"
+    [class.active]="opt.id === selected"
+    (click)="selectId.emit(opt.id); open = false"
+  >
+    <div class="text">
+      {{ opt.name | translate }}
+    </div>
+  </button>
+</lab-dialog>

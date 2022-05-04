@@ -67,10 +67,23 @@ main {
 }
 
 .view > *,
-lab-settings-container {
+.settings {
   background-color: var(--color-back);
   box-shadow: var(--shadow-main);
   padding: 0.75rem;
+}
+
+.settings {
+  z-index: 3;
+  display: flex;
+  margin: 0.75rem 0 1rem 1rem;
+  align-self: flex-start;
+}
+
+@media screen and (max-width: 1000px) {
+  .settings {
+    margin-right: -23.25rem;
+  }
 }
 
 .msg {
@@ -93,8 +106,3 @@ lab-settings-container {
   }
 }
 
-@media screen and (max-width: 1000px) {
-  lab-settings-container {
-    margin-right: -23.25rem;
-  }
-}

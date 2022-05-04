@@ -1,15 +1,15 @@
 import { Mocks } from 'src/tests';
 import { StoreUtility } from '~/utilities';
-import { LoadAction, ResetAction } from '../app.actions';
+import * as App from '../app.actions';
 import * as Actions from './items.actions';
-import { itemsReducer, initialItemsState } from './items.reducer';
+import { initialItemsState, itemsReducer } from './items.reducer';
 
 describe('Items Reducer', () => {
   describe('LOAD', () => {
     it('should load item settings', () => {
       const result = itemsReducer(
         undefined,
-        new LoadAction({ itemsState: Mocks.ItemSettingsEntities } as any)
+        new App.LoadAction({ itemsState: Mocks.ItemSettingsEntities } as any)
       );
       expect(result).toEqual(Mocks.ItemSettingsEntities);
     });
@@ -17,7 +17,7 @@ describe('Items Reducer', () => {
 
   describe('RESET', () => {
     it('should return the initial state', () => {
-      const result = itemsReducer(null, new ResetAction());
+      const result = itemsReducer(undefined, new App.ResetAction());
       expect(result).toEqual(initialItemsState);
     });
   });
@@ -51,10 +51,10 @@ describe('Items Reducer', () => {
         new Actions.SetBeltAction({
           id: Mocks.Item1.id,
           value: Mocks.Item1.id,
-          def: null,
+          def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].belt).toEqual(Mocks.Item1.id);
+      expect(result[Mocks.Recipe1.id].beltId).toEqual(Mocks.Item1.id);
     });
   });
 
@@ -65,10 +65,10 @@ describe('Items Reducer', () => {
         new Actions.SetWagonAction({
           id: Mocks.Item1.id,
           value: Mocks.Item1.id,
-          def: null,
+          def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].wagon).toEqual(Mocks.Item1.id);
+      expect(result[Mocks.Recipe1.id].wagonId).toEqual(Mocks.Item1.id);
     });
   });
 
@@ -79,10 +79,10 @@ describe('Items Reducer', () => {
         new Actions.SetRecipeAction({
           id: Mocks.Item1.id,
           value: Mocks.Item1.id,
-          def: null,
+          def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].recipe).toEqual(Mocks.Item1.id);
+      expect(result[Mocks.Recipe1.id].recipeId).toEqual(Mocks.Item1.id);
     });
   });
 
@@ -99,24 +99,27 @@ describe('Items Reducer', () => {
   describe('RESET_IGNORE', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetField');
-      itemsReducer(null, new Actions.ResetIgnoreAction());
-      expect(StoreUtility.resetField).toHaveBeenCalledWith(null, 'ignore');
+      itemsReducer(undefined, new Actions.ResetIgnoreAction());
+      expect(StoreUtility.resetField).toHaveBeenCalledWith({}, 'ignore' as any);
     });
   });
 
   describe('RESET_BELT', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetField');
-      itemsReducer(null, new Actions.ResetBeltAction());
-      expect(StoreUtility.resetField).toHaveBeenCalledWith(null, 'belt');
+      itemsReducer(undefined, new Actions.ResetBeltAction());
+      expect(StoreUtility.resetField).toHaveBeenCalledWith({}, 'beltId' as any);
     });
   });
 
   describe('RESET_WAGON', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetField');
-      itemsReducer(null, new Actions.ResetWagonAction());
-      expect(StoreUtility.resetField).toHaveBeenCalledWith(null, 'wagon');
+      itemsReducer(undefined, new Actions.ResetWagonAction());
+      expect(StoreUtility.resetField).toHaveBeenCalledWith(
+        {},
+        'wagonId' as any
+      );
     });
   });
 

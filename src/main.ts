@@ -9,7 +9,7 @@ if (environment.production) {
   enableProdMode();
 }
 
-console.log(`${APP} ${environment.version}`);
+console.info(`${APP} ${environment.version}`);
 
 platformBrowserDynamic()
   .bootstrapModule(AppModule)

@@ -1,0 +1,18 @@
+:host {
+  display: flex;
+  flex-direction: column;
+
+  > .flex > * + * {
+    margin-left: 1rem;
+  }
+
+  > * + * {
+    margin-top: 0.75rem;
+  }
+}
+
+#lab-flow-svg {
+  display: flex;
+  resize: both;
+  overflow: auto;
+}

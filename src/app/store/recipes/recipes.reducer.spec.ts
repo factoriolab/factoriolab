@@ -1,18 +1,26 @@
-import { Mocks, ItemId } from 'src/tests';
-import { RecipeSettingsField } from '~/models';
+import { ItemId, Mocks } from 'src/tests';
 import { StoreUtility } from '~/utilities';
-import { LoadAction } from '../app.actions';
+import * as App from '../app.actions';
 import * as Actions from './recipes.actions';
-import { recipesReducer, initialRecipesState } from './recipes.reducer';
+import { initialRecipesState, recipesReducer } from './recipes.reducer';
 
 describe('Recipes Reducer', () => {
   describe('LOAD', () => {
     it('should load recipe settings', () => {
       const result = recipesReducer(
         undefined,
-        new LoadAction({ recipesState: Mocks.RecipeSettingsEntities } as any)
+        new App.LoadAction({
+          recipesState: Mocks.RecipeSettingsEntities,
+        } as any)
       );
       expect(result).toEqual(Mocks.RecipeSettingsEntities);
+    });
+  });
+
+  describe('RESET', () => {
+    it('should return the initial state', () => {
+      const result = recipesReducer(undefined, new App.ResetAction());
+      expect(result).toEqual(initialRecipesState);
     });
   });
 
@@ -23,10 +31,10 @@ describe('Recipes Reducer', () => {
         new Actions.SetFactoryAction({
           id: Mocks.Recipe1.id,
           value: Mocks.Item1.id,
-          def: null,
+          def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].factory).toEqual(Mocks.Item1.id);
+      expect(result[Mocks.Recipe1.id].factoryId).toEqual(Mocks.Item1.id);
     });
 
     it('should reset all other recipe settings', () => {
@@ -35,20 +43,20 @@ describe('Recipes Reducer', () => {
           ...initialRecipesState,
           ...{
             [Mocks.Recipe1.id]: {
-              factoryModules: ['test'],
+              factoryModuleIds: ['test'],
               beaconCount: '20',
-              beacon: 'test',
-              beaconModules: ['test'],
+              beaconId: 'test',
+              beaconModuleIds: ['test'],
             },
           },
         },
         new Actions.SetFactoryAction({
           id: Mocks.Recipe1.id,
           value: Mocks.Item1.id,
-          def: null,
+          def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id]).toEqual({ factory: Mocks.Item1.id });
+      expect(result[Mocks.Recipe1.id]).toEqual({ factoryId: Mocks.Item1.id });
     });
   });
 
@@ -59,10 +67,12 @@ describe('Recipes Reducer', () => {
         new Actions.SetFactoryModulesAction({
           id: Mocks.Recipe1.id,
           value: [Mocks.Item1.id],
-          def: null,
+          def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].factoryModules).toEqual([Mocks.Item1.id]);
+      expect(result[Mocks.Recipe1.id].factoryModuleIds).toEqual([
+        Mocks.Item1.id,
+      ]);
     });
   });
 
@@ -73,7 +83,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetBeaconCountAction({
           id: Mocks.Recipe1.id,
           value: '2',
-          def: null,
+          def: undefined,
         })
       );
       expect(result[Mocks.Recipe1.id].beaconCount).toEqual('2');
@@ -87,25 +97,25 @@ describe('Recipes Reducer', () => {
         new Actions.SetBeaconAction({
           id: Mocks.Recipe1.id,
           value: ItemId.Beacon,
-          def: null,
+          def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].beacon).toEqual(ItemId.Beacon);
+      expect(result[Mocks.Recipe1.id].beaconId).toEqual(ItemId.Beacon);
     });
 
     it('should reset the beacon modules', () => {
       const result = recipesReducer(
         {
           ...initialRecipesState,
-          ...{ [Mocks.Recipe1.id]: { beaconModules: ['test'] } },
+          ...{ [Mocks.Recipe1.id]: { beaconModuleIds: ['test'] } },
         },
         new Actions.SetBeaconAction({
           id: Mocks.Recipe1.id,
           value: ItemId.Beacon,
-          def: null,
+          def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id]).toEqual({ beacon: ItemId.Beacon });
+      expect(result[Mocks.Recipe1.id]).toEqual({ beaconId: ItemId.Beacon });
     });
   });
 
@@ -116,10 +126,12 @@ describe('Recipes Reducer', () => {
         new Actions.SetBeaconModulesAction({
           id: Mocks.Recipe1.id,
           value: [Mocks.Item1.id],
-          def: null,
+          def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].beaconModules).toEqual([Mocks.Item1.id]);
+      expect(result[Mocks.Recipe1.id].beaconModuleIds).toEqual([
+        Mocks.Item1.id,
+      ]);
     });
   });
 
@@ -157,7 +169,6 @@ describe('Recipes Reducer', () => {
         new Actions.SetCostAction({
           id: Mocks.Recipe1.id,
           value: '10',
-          def: null,
         })
       );
       expect(result[Mocks.Recipe1.id].cost).toEqual('10');
@@ -178,18 +189,18 @@ describe('Recipes Reducer', () => {
     it(`should reset a recipe's modules`, () => {
       spyOn(StoreUtility, 'resetFields');
       recipesReducer(
-        null,
+        undefined,
         new Actions.ResetRecipeModulesAction(Mocks.Recipe1.id)
       );
       expect(StoreUtility.resetFields).toHaveBeenCalledWith(
-        null,
+        {},
         [
-          RecipeSettingsField.FactoryModules,
-          RecipeSettingsField.BeaconCount,
-          RecipeSettingsField.Beacon,
-          RecipeSettingsField.BeaconModules,
-          RecipeSettingsField.BeaconTotal,
-        ],
+          'factoryModuleIds',
+          'beaconCount',
+          'beaconId',
+          'beaconModuleIds',
+          'beaconTotal',
+        ] as any,
         Mocks.Recipe1.id
       );
     });
@@ -198,48 +209,48 @@ describe('Recipes Reducer', () => {
   describe('RESET_FACTORY', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetFields');
-      recipesReducer(null, new Actions.ResetFactoryAction());
-      expect(StoreUtility.resetFields).toHaveBeenCalledWith(null, [
-        RecipeSettingsField.Factory,
-        RecipeSettingsField.FactoryModules,
-        RecipeSettingsField.BeaconCount,
-        RecipeSettingsField.Beacon,
-        RecipeSettingsField.BeaconModules,
-        RecipeSettingsField.BeaconTotal,
-      ]);
+      recipesReducer(undefined, new Actions.ResetFactoryAction());
+      expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
+        'factoryId',
+        'factoryModuleIds',
+        'beaconCount',
+        'beaconId',
+        'beaconModuleIds',
+        'beaconTotal',
+      ] as any);
     });
   });
 
   describe('RESET_BEACONS', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetFields');
-      recipesReducer(null, new Actions.ResetBeaconsAction());
-      expect(StoreUtility.resetFields).toHaveBeenCalledWith(null, [
-        RecipeSettingsField.BeaconCount,
-        RecipeSettingsField.Beacon,
-        RecipeSettingsField.BeaconModules,
-        RecipeSettingsField.BeaconTotal,
-      ]);
+      recipesReducer(undefined, new Actions.ResetBeaconsAction());
+      expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
+        'beaconCount',
+        'beaconId',
+        'beaconModuleIds',
+        'beaconTotal',
+      ] as any);
     });
   });
 
   describe('RESET_OVERCLOCK', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetFields');
-      recipesReducer(null, new Actions.ResetOverclockAction());
-      expect(StoreUtility.resetFields).toHaveBeenCalledWith(null, [
-        RecipeSettingsField.Overclock,
-      ]);
+      recipesReducer(undefined, new Actions.ResetOverclockAction());
+      expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
+        'overclock',
+      ] as any);
     });
   });
 
   describe('RESET_COST', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetFields');
-      recipesReducer(null, new Actions.ResetCostAction());
-      expect(StoreUtility.resetFields).toHaveBeenCalledWith(null, [
-        RecipeSettingsField.Cost,
-      ]);
+      recipesReducer(undefined, new Actions.ResetCostAction());
+      expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
+        'cost',
+      ] as any);
     });
   });
 

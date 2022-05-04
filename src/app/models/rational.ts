@@ -215,17 +215,44 @@ export class Rational {
     return `${this.p}/${this.q}`;
   }
 
+  toLocaleFraction(): string {
+    if (this.isInteger()) {
+      return this.p.toLocaleString();
+    }
+
+    if (Rational.abs(this.p) > Rational.abs(this.q)) {
+      const whole = this.p / this.q;
+      const mod = this.p % this.q;
+      return `${whole.toLocaleString()} + ${mod.toLocaleString()}/${this.q.toLocaleString()}`;
+    }
+
+    return `${this.p.toLocaleString()}/${this.q.toLocaleString()}`;
+  }
+
   toString(): string {
     if (this.isInteger()) {
       return this.p.toString();
     }
 
-    const num = this.toNumber().toString();
-    if (this.eq(Rational.fromString(num))) {
-      return num;
+    const num = this.toNumber();
+    if (this.eq(Rational.fromNumber(num))) {
+      return num.toString();
     }
 
-    return `${this.p}/${this.q}`;
+    return `${this.p.toString()}/${this.q.toString()}`;
+  }
+
+  toLocaleString(): string {
+    if (this.isInteger()) {
+      return this.p.toLocaleString();
+    }
+
+    const num = this.toNumber();
+    if (this.eq(Rational.fromNumber(num))) {
+      return num.toLocaleString();
+    }
+
+    return `${this.p.toLocaleString()}/${this.q.toString()}`;
   }
 
   toDecimals(): number {

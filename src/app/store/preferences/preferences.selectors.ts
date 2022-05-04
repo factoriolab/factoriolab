@@ -1,7 +1,7 @@
-import { compose, createSelector } from '@ngrx/store';
+import { createSelector } from '@ngrx/store';
 
-import { Column, Game, LinkValue, PowerUnit, SankeyAlign } from '~/models';
-import { State } from '../';
+import { Column, Game, LinkValue } from '~/models';
+import { LabState } from '../';
 import * as Settings from '../settings';
 import {
   ColumnsState,
@@ -9,25 +9,44 @@ import {
   PreferencesState,
 } from './preferences.reducer';
 
-export const preferencesState = (state: State): PreferencesState =>
+/* Base selector functions */
+export const preferencesState = (state: LabState): PreferencesState =>
   state.preferencesState;
-const sColumns = (state: PreferencesState): ColumnsState => state.columns;
-const sLinkSize = (state: PreferencesState): LinkValue => state.linkSize;
-const sLinkText = (state: PreferencesState): LinkValue => state.linkText;
-const sSankeyAlign = (state: PreferencesState): SankeyAlign =>
-  state.sankeyAlign;
-const sSimplex = (state: PreferencesState): boolean => state.simplex;
-const sLanguage = (state: PreferencesState): string => state.language;
-const sPowerUnit = (state: PreferencesState): PowerUnit => state.powerUnit;
 
-export const getColumns = compose(sColumns, preferencesState);
-export const getLinkSize = compose(sLinkSize, preferencesState);
-export const getLinkText = compose(sLinkText, preferencesState);
-export const getSankeyAlign = compose(sSankeyAlign, preferencesState);
-export const getSimplex = compose(sSimplex, preferencesState);
-export const getLanguage = compose(sLanguage, preferencesState);
-export const getPowerUnit = compose(sPowerUnit, preferencesState);
+export const getStates = createSelector(
+  preferencesState,
+  (state) => state.states
+);
+export const getColumns = createSelector(
+  preferencesState,
+  (state) => state.columns
+);
+export const getLinkSize = createSelector(
+  preferencesState,
+  (state) => state.linkSize
+);
+export const getLinkText = createSelector(
+  preferencesState,
+  (state) => state.linkText
+);
+export const getSankeyAlign = createSelector(
+  preferencesState,
+  (state) => state.sankeyAlign
+);
+export const getSimplex = createSelector(
+  preferencesState,
+  (state) => state.simplex
+);
+export const getPowerUnit = createSelector(
+  preferencesState,
+  (state) => state.powerUnit
+);
+export const getLanguage = createSelector(
+  preferencesState,
+  (state) => state.language
+);
 
+/** Complex selectors */
 export const getColumnsState = createSelector(
   getColumns,
   Settings.getGame,
@@ -101,6 +120,18 @@ export const getSimplexModifiers = createSelector(
     costInput,
     costIgnored,
   })
+);
+
+export const getSavedStates = createSelector(getStates, (states) =>
+  Object.keys(states).map((i) => ({
+    id: i,
+    name: i,
+  }))
+);
+
+export const getColumnsVisible = createSelector(
+  getColumns,
+  (columns) => Object.keys(columns).filter((c) => columns[c].show).length
 );
 
 export const getLanguageModifiers = createSelector(

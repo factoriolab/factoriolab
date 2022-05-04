@@ -1,7 +1,7 @@
-import { Entities, ItemSettings, ItemSettingsField } from '~/models';
+import { Entities, ItemSettings } from '~/models';
 import { StoreUtility } from '~/utilities';
-import { AppActionType, AppAction } from '../app.actions';
-import { SetBaseAction, SettingsActionType } from '../settings';
+import * as App from '../app.actions';
+import * as Settings from '../settings';
 import { ItemsAction, ItemsActionType } from './items.actions';
 
 export type ItemsState = Entities<ItemSettings>;
@@ -10,49 +10,37 @@ export const initialItemsState: ItemsState = {};
 
 export function itemsReducer(
   state: ItemsState = initialItemsState,
-  action: ItemsAction | AppAction | SetBaseAction
+  action: ItemsAction | App.AppAction | Settings.SetBaseAction
 ): ItemsState {
   switch (action.type) {
-    case AppActionType.LOAD:
+    case App.AppActionType.LOAD:
       return { ...initialItemsState, ...action.payload.itemsState };
-    case AppActionType.RESET:
-    case SettingsActionType.SET_BASE:
+    case App.AppActionType.RESET:
+    case Settings.SettingsActionType.SET_BASE:
       return initialItemsState;
     case ItemsActionType.IGNORE_ITEM:
-      return StoreUtility.compareReset(state, ItemSettingsField.Ignore, {
+      return StoreUtility.compareReset(state, 'ignore', {
         id: action.payload,
         value: !state[action.payload]?.ignore,
         def: false,
       });
     case ItemsActionType.SET_BELT:
-      return StoreUtility.compareReset(
-        state,
-        ItemSettingsField.Belt,
-        action.payload
-      );
+      return StoreUtility.compareReset(state, 'beltId', action.payload);
     case ItemsActionType.SET_WAGON:
-      return StoreUtility.compareReset(
-        state,
-        ItemSettingsField.Wagon,
-        action.payload
-      );
+      return StoreUtility.compareReset(state, 'wagonId', action.payload);
     case ItemsActionType.SET_RECIPE:
-      return StoreUtility.compareReset(
-        state,
-        ItemSettingsField.Recipe,
-        action.payload
-      );
+      return StoreUtility.compareReset(state, 'recipeId', action.payload);
     case ItemsActionType.RESET_ITEM: {
       const newState = { ...state };
       delete newState[action.payload];
       return newState;
     }
     case ItemsActionType.RESET_IGNORE:
-      return StoreUtility.resetField(state, ItemSettingsField.Ignore);
+      return StoreUtility.resetField(state, 'ignore');
     case ItemsActionType.RESET_BELT:
-      return StoreUtility.resetField(state, ItemSettingsField.Belt);
+      return StoreUtility.resetField(state, 'beltId');
     case ItemsActionType.RESET_WAGON:
-      return StoreUtility.resetField(state, ItemSettingsField.Wagon);
+      return StoreUtility.resetField(state, 'wagonId');
     default:
       return state;
   }

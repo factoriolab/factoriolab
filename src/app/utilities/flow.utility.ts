@@ -13,7 +13,7 @@ export class FlowUtility {
     steps: Step[],
     linkSize: LinkValue,
     linkText: LinkValue,
-    linkPrecision: number,
+    linkPrecision: number | null,
     data: Dataset
   ): SankeyData {
     const sankey: SankeyData = {
@@ -23,13 +23,20 @@ export class FlowUtility {
     const iId: Entities = {};
     const rId: Entities = {};
     for (const step of steps) {
-      const recipe = data.recipeR[step.recipeId];
-      if (step.itemId === step.recipeId && recipe.produces(step.itemId)) {
+      if (
+        step.recipeId != null &&
+        step.itemId === step.recipeId &&
+        data.recipeR[step.recipeId].produces(step.itemId)
+      ) {
         iId[step.itemId] = step.itemId;
         rId[step.recipeId] = step.recipeId;
       } else {
-        iId[step.itemId] = `i|${step.itemId}`;
-        rId[step.recipeId] = `r|${step.recipeId}`;
+        if (step.itemId != null) {
+          iId[step.itemId] = `i|${step.itemId}`;
+        }
+        if (step.recipeId != null) {
+          rId[step.recipeId] = `r|${step.recipeId}`;
+        }
       }
     }
 
@@ -46,6 +53,7 @@ export class FlowUtility {
 
         sankey.nodes.push({
           id: rId[step.recipeId],
+          stepId: step.id,
           viewBox: `${icon.position
             .replace(/px/g, '')
             .replace(/-/g, '')} 64 64`,
@@ -54,74 +62,13 @@ export class FlowUtility {
           color: icon.color,
         });
 
-        if (match && step.parents) {
+        if (match && step.parents && step.itemId) {
           for (const i of Object.keys(step.parents)) {
-            const item = data.itemEntities[step.itemId];
-            sankey.links.push({
-              target: rId[i],
-              source: rId[step.recipeId],
-              value: this.linkSize(
-                value,
-                step.parents[i],
-                linkSize,
-                item.stack
-              ),
-              text: this.linkText(
-                text,
-                step.parents[i],
-                linkText,
-                linkPrecision
-              ),
-              name: item.name,
-              color: icon.color,
-            });
-          }
-        }
-
-        for (const outId of Object.keys(recipe.out).filter(
-          (id) =>
-            recipe.out[id].nonzero() &&
-            (!match || (step.itemId !== id && !step.parents?.[id]))
-        )) {
-          const outStep = steps.find((s) => s.itemId === outId);
-          const outText = this.stepLinkValue(outStep, linkText);
-          const outValue =
-            linkText === linkSize
-              ? outText
-              : this.stepLinkValue(outStep, linkSize);
-          const percent = step.outputs[outId];
-          const item = data.itemEntities[outId];
-          sankey.links.push({
-            target: iId[outId],
-            source: rId[step.recipeId],
-            value: this.linkSize(outValue, percent, linkSize, item.stack),
-            text: this.linkText(outText, percent, linkText, linkPrecision),
-            name: item.name,
-            color: data.iconEntities[outId].color,
-          });
-        }
-      }
-
-      if (step.itemId && !match) {
-        const item = data.itemEntities[step.itemId];
-        const icon = data.iconEntities[step.itemId];
-
-        sankey.nodes.push({
-          id: iId[step.itemId],
-          viewBox: `${icon.position
-            .replace(/px/g, '')
-            .replace(/-/g, '')} 64 64`,
-          href: icon.file,
-          name: item.name,
-          color: icon.color,
-        });
-        if (step.parents) {
-          for (const i of Object.keys(step.parents)) {
-            const recipe = data.recipeR[i];
-            if (recipe.in?.[step.itemId]) {
+            if (rId[i]) {
+              const item = data.itemEntities[step.itemId];
               sankey.links.push({
                 target: rId[i],
-                source: iId[step.itemId],
+                source: rId[step.recipeId],
                 value: this.linkSize(
                   value,
                   step.parents[i],
@@ -140,6 +87,76 @@ export class FlowUtility {
             }
           }
         }
+
+        for (const outId of Object.keys(recipe.out).filter(
+          (id) =>
+            recipe.out[id].nonzero() &&
+            (!match || (step.itemId !== id && !step.parents?.[id]))
+        )) {
+          const outStep = steps.find((s) => s.itemId === outId);
+          if (outStep) {
+            const outText = this.stepLinkValue(outStep, linkText);
+            const outValue =
+              linkText === linkSize
+                ? outText
+                : this.stepLinkValue(outStep, linkSize);
+            if (step.outputs && iId[outId]) {
+              const percent = step.outputs[outId];
+              const item = data.itemEntities[outId];
+              sankey.links.push({
+                target: iId[outId],
+                source: rId[step.recipeId],
+                value: this.linkSize(outValue, percent, linkSize, item.stack),
+                text: this.linkText(outText, percent, linkText, linkPrecision),
+                name: item.name,
+                color: data.iconEntities[outId].color,
+              });
+            }
+          }
+        }
+      }
+
+      if (step.itemId && !match) {
+        const item = data.itemEntities[step.itemId];
+        const icon = data.iconEntities[step.itemId];
+
+        sankey.nodes.push({
+          id: iId[step.itemId],
+          stepId: step.id,
+          viewBox: `${icon.position
+            .replace(/px/g, '')
+            .replace(/-/g, '')} 64 64`,
+          href: icon.file,
+          name: item.name,
+          color: icon.color,
+        });
+        if (step.parents) {
+          for (const i of Object.keys(step.parents)) {
+            if (rId[i]) {
+              const recipe = data.recipeR[i];
+              if (recipe.in[step.itemId]) {
+                sankey.links.push({
+                  target: rId[i],
+                  source: iId[step.itemId],
+                  value: this.linkSize(
+                    value,
+                    step.parents[i],
+                    linkSize,
+                    item.stack
+                  ),
+                  text: this.linkText(
+                    text,
+                    step.parents[i],
+                    linkText,
+                    linkPrecision
+                  ),
+                  name: item.name,
+                  color: icon.color,
+                });
+              }
+            }
+          }
+        }
       }
     }
 
@@ -151,7 +168,7 @@ export class FlowUtility {
       return Rational.one;
     }
 
-    let value: Rational;
+    let value: Rational | undefined;
 
     switch (prop) {
       case LinkValue.Belts:
@@ -175,7 +192,7 @@ export class FlowUtility {
     value: Rational,
     percent: Rational,
     prop: LinkValue,
-    stack: number
+    stack: Rational | undefined
   ): number {
     if (prop === LinkValue.None) {
       return 1;
@@ -186,7 +203,7 @@ export class FlowUtility {
     }
 
     // Scale link size for fluids to 1/10
-    if (prop === LinkValue.Items && !stack) {
+    if (prop === LinkValue.Items && stack == null) {
       value = value.div(Rational.from(10));
     }
 
@@ -197,7 +214,7 @@ export class FlowUtility {
     value: Rational,
     percent: Rational,
     prop: LinkValue,
-    precision: number
+    precision: number | null
   ): string {
     switch (prop) {
       case LinkValue.None:

@@ -1,0 +1,203 @@
+<div class="image">
+  <img
+    *ngIf="iconId && icon"
+    src="assets/transparent.gif"
+    class="icon"
+    [class.shadow]="hover && hoverIcon"
+    [style.background-position]="icon.position"
+    [style.background-image]="icon.file ? 'url(' + icon.file + ')' : ''"
+    [ngClass]="iconId"
+    [class.scale]="scale"
+  />
+  <div *ngIf="text || item?.iconText" class="icon-text">
+    {{ text || item?.iconText }}
+  </div>
+</div>
+<div class="overlay" *ngIf="hover && hoverIcon">
+  <i class="material-icons">{{ hoverIcon }}</i>
+</div>
+<div
+  *ngIf="hover && (recipe || item || tooltip)"
+  [style.marginTop.px]="tooltipMarginTop"
+  [style.marginLeft.px]="-scrollLeft"
+  class="tooltip panel dark"
+  (mouseenter)="hover = false"
+>
+  <div *ngIf="tooltip" class="header nowrap">
+    {{ tooltip }}
+  </div>
+  <div *ngIf="recipe" class="flex">
+    <lab-icon iconId="time" [text]="recipe.time.toString()"></lab-icon>
+    <ng-container
+      *ngFor="
+        let ingredient of recipe.in | keyvalue;
+        trackBy: trackSvc.trackByKey
+      "
+    >
+      <lab-icon
+        [iconId]="ingredient.key"
+        [text]="ingredient.value.toString()"
+      ></lab-icon>
+    </ng-container>
+    <i class="material-icons">arrow_forward</i>
+    <ng-container *ngIf="recipe.out">
+      <ng-container
+        *ngFor="
+          let output of recipe.out | keyvalue;
+          trackBy: trackSvc.trackByKey
+        "
+        class="flex"
+      >
+        <lab-icon
+          [iconId]="output.key"
+          [text]="output.value.toString()"
+        ></lab-icon>
+      </ng-container>
+    </ng-container>
+    <lab-icon *ngIf="!recipe.out" [iconId]="iconId" text="1"></lab-icon>
+  </div>
+  <div *ngIf="recipe && recipe.cost">
+    <div>{{ 'icon.cost' | translate }}: {{ recipe.cost }}</div>
+  </div>
+  <div *ngIf="recipe && recipe.usage">
+    <div>{{ 'icon.usage' | translate }}: {{ power(recipe.usage) }}</div>
+  </div>
+  <div *ngIf="item?.beacon as beacon">
+    <table>
+      <tr>
+        <td>{{ 'icon.effectivity' | translate }}</td>
+        <td>{{ round(beacon.effectivity) }}</td>
+      </tr>
+      <tr>
+        <td>{{ 'icon.modules' | translate }}</td>
+        <td>{{ beacon.modules }}</td>
+      </tr>
+      <tr>
+        <td>{{ 'icon.range' | translate }}</td>
+        <td>{{ beacon.range }}</td>
+      </tr>
+      <tr *ngIf="beacon.type">
+        <td>{{ 'icon.energyType' | translate }}</td>
+        <td>{{ beacon.type }}</td>
+      </tr>
+      <tr *ngIf="beacon.category">
+        <td>{{ 'icon.fuelCategory' | translate }}</td>
+        <td>{{ beacon.category }}</td>
+      </tr>
+      <tr *ngIf="beacon.usage">
+        <td>{{ 'icon.energyConsumption' | translate }}</td>
+        <td>{{ power(beacon.usage) }}</td>
+      </tr>
+    </table>
+  </div>
+  <ng-container *ngIf="displayRate$ | async as displayRate">
+    <div *ngIf="item?.belt as belt" class="nowrap">
+      {{ round(belt.speed.mul(DisplayRateVal[displayRate])) }}
+      {{
+        displayRate === DisplayRate.PerSecond
+          ? 'Items/s'
+          : displayRate === DisplayRate.PerMinute
+          ? 'Items/m'
+          : 'Items/h'
+      }}
+    </div>
+    <div *ngIf="item?.pipe as pipe" class="nowrap">
+      {{ round(pipe.speed.mul(DisplayRateVal[displayRate])) }}
+      {{
+        displayRate === DisplayRate.PerSecond
+          ? 'Items/s'
+          : displayRate === DisplayRate.PerMinute
+          ? 'Items/m'
+          : 'Items/h'
+      }}
+    </div>
+  </ng-container>
+  <div *ngIf="item?.cargoWagon as wagon" class="nowrap">
+    {{ round(wagon.size) }}
+    {{ 'icon.inventoryStacks' | translate }}
+  </div>
+  <div *ngIf="item?.fluidWagon as wagon" class="nowrap">
+    {{ round(wagon.capacity) }}
+    {{ 'icon.fluidCapacity' | translate }}
+  </div>
+  <div *ngIf="item?.factory as factory">
+    <table>
+      <tr *ngIf="factory.speed">
+        <td>{{ 'icon.craftingSpeed' | translate }}</td>
+        <td>{{ round(factory.speed) }}</td>
+      </tr>
+      <tr *ngIf="factory.modules && (game$ | async) === Game.Factorio">
+        <td>{{ 'icon.modules' | translate }}</td>
+        <td>{{ factory.modules }}</td>
+      </tr>
+      <tr *ngIf="factory.type">
+        <td>{{ 'icon.energyType' | translate }}</td>
+        <td>{{ factory.type }}</td>
+      </tr>
+      <tr *ngIf="factory.category">
+        <td>{{ 'icon.fuelCategory' | translate }}</td>
+        <td>{{ factory.category }}</td>
+      </tr>
+      <tr *ngIf="factory.usage">
+        <td>{{ 'icon.energyConsumption' | translate }}</td>
+        <td>{{ power(factory.usage) }}</td>
+      </tr>
+      <tr *ngIf="factory.drain">
+        <td>{{ 'icon.drain' | translate }}</td>
+        <td>
+          {{ power(factory.drain) }}
+        </td>
+      </tr>
+      <tr *ngIf="factory.pollution">
+        <td>{{ 'icon.drain' | translate }}</td>
+        <td>{{ round(factory.pollution) }}/m</td>
+      </tr>
+      <ng-container *ngIf="factory.silo as silo">
+        <tr>
+          <td>{{ 'icon.rocketPartsRequired' | translate }}</td>
+          <td>{{ silo.parts }}</td>
+        </tr>
+        <tr>
+          <td>{{ 'icon.launchTime' | translate }}</td>
+          <td>{{ silo.launch }}</td>
+        </tr>
+      </ng-container>
+    </table>
+  </div>
+  <div *ngIf="item?.fuel as fuel">
+    <table>
+      <tr>
+        <td>{{ 'icon.category' | translate }}</td>
+        <td>{{ fuel.category }}</td>
+      </tr>
+      <tr>
+        <td>{{ 'icon.value' | translate }}</td>
+        <td>{{ round(fuel.value) }} MJ</td>
+      </tr>
+    </table>
+  </div>
+  <div *ngIf="item?.module as module">
+    <table>
+      <tr *ngIf="module.consumption">
+        <td>{{ 'icon.consumption' | translate }}</td>
+        <td>{{ toBonusPercent(module.consumption) }}</td>
+      </tr>
+      <tr *ngIf="module.speed">
+        <td>{{ 'icon.speed' | translate }}</td>
+        <td>{{ toBonusPercent(module.speed) }}</td>
+      </tr>
+      <tr *ngIf="module.productivity">
+        <td>{{ 'icon.productivity' | translate }}</td>
+        <td>{{ toBonusPercent(module.productivity) }}</td>
+      </tr>
+      <tr *ngIf="module.pollution">
+        <td>{{ 'icon.pollution' | translate }}</td>
+        <td>{{ toBonusPercent(module.pollution) }}</td>
+      </tr>
+      <tr *ngIf="module.sprays">
+        <td>{{ 'icon.sprays' | translate }}</td>
+        <td>{{ round(module.sprays) }}</td>
+      </tr>
+    </table>
+  </div>
+</div>

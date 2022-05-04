@@ -1,10 +1,21 @@
-import { Mocks, ItemId } from 'src/tests';
+import { ItemId, Mocks, RecipeId } from 'src/tests';
 import { Rational } from '~/models';
+import { RecipeUtility } from '~/utilities';
 import { initialRecipesState } from './recipes.reducer';
 import * as Selectors from './recipes.selectors';
 
 describe('Recipes Selectors', () => {
   const stringValue = 'value';
+
+  describe('Base selector functions', () => {
+    it('should get slices of state', () => {
+      expect(
+        Selectors.recipesState({
+          recipesState: Mocks.RecipeSettingsInitial,
+        } as any)
+      ).toEqual(Mocks.RecipeSettingsInitial);
+    });
+  });
 
   describe('getRecipeSettings', () => {
     it('should handle null/empty values', () => {
@@ -28,30 +39,69 @@ describe('Recipes Selectors', () => {
       expect(Object.keys(result).length).toEqual(Mocks.Data.recipeIds.length);
     });
 
+    it('should handle null settings', () => {
+      const state = {
+        ...initialRecipesState,
+        ...{ [Mocks.Item1.id]: { factoryId: ItemId.AssemblingMachine3 } },
+      };
+      const data = {
+        ...Mocks.Data,
+        ...{
+          factoryEntities: {
+            ...Mocks.Data.factoryEntities,
+            ...{
+              [ItemId.AssemblingMachine3]: {
+                ...Mocks.Data.factoryEntities[ItemId.AssemblingMachine3],
+                ...{ modules: undefined },
+              },
+            },
+          },
+        },
+      };
+      spyOn(RecipeUtility, 'allowsModules').and.returnValue(true);
+      const result = Selectors.getRecipeSettings.projector(
+        state,
+        {
+          ...Mocks.FactorySettingsInitial,
+          ...{
+            ids: undefined,
+            entities: {
+              ...Mocks.FactorySettingsInitial.entities,
+              ...{ [ItemId.AssemblingMachine3]: {} },
+            },
+          },
+        },
+        data
+      );
+      expect(result[Mocks.Item1.id].factoryId).toEqual(
+        ItemId.AssemblingMachine3
+      );
+    });
+
     it('should use factory override', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { factory: stringValue } },
+        ...{ [Mocks.Item1.id]: { factoryId: stringValue } },
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
         Mocks.FactorySettingsInitial,
         Mocks.Data
       );
-      expect(result[Mocks.Item1.id].factory).toEqual(stringValue);
+      expect(result[Mocks.Item1.id].factoryId).toEqual(stringValue);
     });
 
     it('should use module override', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { factoryModules: [stringValue] } },
+        ...{ [Mocks.Item1.id]: { factoryModuleIds: [stringValue] } },
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
         Mocks.FactorySettingsInitial,
         Mocks.Data
       );
-      expect(result[Mocks.Item1.id].factoryModules).toEqual([stringValue]);
+      expect(result[Mocks.Item1.id].factoryModuleIds).toEqual([stringValue]);
     });
 
     it('should use beacon count override', () => {
@@ -70,27 +120,27 @@ describe('Recipes Selectors', () => {
     it('should use beacon override', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { beacon: stringValue } },
+        ...{ [Mocks.Item1.id]: { beaconId: stringValue } },
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
         Mocks.FactorySettingsInitial,
         Mocks.Data
       );
-      expect(result[Mocks.Item1.id].beacon).toEqual(stringValue);
+      expect(result[Mocks.Item1.id].beaconId).toEqual(stringValue);
     });
 
     it('should use beacon module override', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { beaconModules: [stringValue] } },
+        ...{ [Mocks.Item1.id]: { beaconModuleIds: [stringValue] } },
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
         Mocks.FactorySettingsInitial,
         Mocks.Data
       );
-      expect(result[Mocks.Item1.id].beaconModules).toEqual([stringValue]);
+      expect(result[Mocks.Item1.id].beaconModuleIds).toEqual([stringValue]);
     });
 
     it('should reset invalid beacon totals', () => {
@@ -116,7 +166,7 @@ describe('Recipes Selectors', () => {
         Mocks.Data
       );
       expect(result).toEqual({
-        fuel: ItemId.Coal,
+        fuelId: ItemId.Coal,
         miningBonus: Rational.zero,
         researchSpeed: Rational.one,
         data: Mocks.Data,
@@ -124,87 +174,22 @@ describe('Recipes Selectors', () => {
     });
   });
 
-  describe('getContainsFactory', () => {
-    it('should handle null/empty values', () => {
-      const result = Selectors.getContainsFactory.projector({});
-      expect(result).toBeFalse();
-    });
-
-    it('should find a relevant step by factory', () => {
-      const result = Selectors.getContainsFactory.projector({
-        ['id']: { factory: ItemId.AssemblingMachine1 },
+  describe('getRecipesModified', () => {
+    it('should determine whether columns are modified', () => {
+      const result = Selectors.getRecipesModified.projector({
+        [RecipeId.Coal]: {
+          factoryId: undefined,
+          factoryModuleIds: [],
+          beaconId: undefined,
+          beaconModuleIds: undefined,
+          beaconCount: undefined,
+          beaconTotal: true,
+        },
       });
-      expect(result).toBeTrue();
-    });
-
-    it('should find a relevant step by factory modules', () => {
-      const result = Selectors.getContainsFactory.projector({
-        ['id']: { factoryModules: [ItemId.SpeedModule] },
-      });
-      expect(result).toBeTrue();
-    });
-  });
-
-  describe('getContainsOverclock', () => {
-    it('should handle null/empty values', () => {
-      const result = Selectors.getContainsOverclock.projector({});
-      expect(result).toBeFalse();
-    });
-
-    it('should find a relevant step by overclock', () => {
-      const result = Selectors.getContainsOverclock.projector({
-        ['id']: { overclock: 100 },
-      });
-      expect(result).toBeTrue();
-    });
-  });
-
-  describe('getContainsBeacons', () => {
-    it('should handle null/empty values', () => {
-      const result = Selectors.getContainsBeacons.projector({});
-      expect(result).toBeFalse();
-    });
-
-    it('should find a relevant step by beacon count', () => {
-      const result = Selectors.getContainsBeacons.projector({
-        ['id']: { beaconCount: '0' },
-      });
-      expect(result).toBeTrue();
-    });
-
-    it('should find a relevant step by beacon', () => {
-      const result = Selectors.getContainsBeacons.projector({
-        ['id']: { beacon: 'beacon' },
-      });
-      expect(result).toBeTrue();
-    });
-
-    it('should find a relevant step by beacon modules', () => {
-      const result = Selectors.getContainsBeacons.projector({
-        ['id']: { beaconModules: [ItemId.SpeedModule] },
-      });
-      expect(result).toBeTrue();
-    });
-
-    it('should find a relevant step by beacon total', () => {
-      const result = Selectors.getContainsBeacons.projector({
-        ['id']: { beaconTotal: '8' },
-      });
-      expect(result).toBeTrue();
-    });
-  });
-
-  describe('getContainsCost', () => {
-    it('should handle null/empty values', () => {
-      const result = Selectors.getContainsCost.projector({});
-      expect(result).toBeFalse();
-    });
-
-    it('should find a relevant step', () => {
-      const result = Selectors.getContainsCost.projector({
-        ['id']: { cost: '1' },
-      });
-      expect(result).toBeTrue();
+      expect(result.factories).toBeTrue();
+      expect(result.overclock).toBeFalse();
+      expect(result.beacons).toBeTrue();
+      expect(result.cost).toBeFalse();
     });
   });
 });

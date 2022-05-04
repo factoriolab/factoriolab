@@ -1,13 +1,13 @@
-import { ActionReducer, Action } from '@ngrx/store';
+import { Action, ActionReducer } from '@ngrx/store';
 
 import { BrowserUtility } from '~/utilities';
-import { State } from '.';
+import { LabState } from './';
 
 export function storageMetaReducer(
-  reducer: ActionReducer<State, Action>
-): (state: State, action: Action) => State {
+  reducer: ActionReducer<LabState, Action>
+): (state: LabState | undefined, action: Action) => LabState {
   let onInit = true;
-  return function (state: State, action: Action): State {
+  return function (state: LabState | undefined, action: Action): LabState {
     const nextState = reducer(state, action);
 
     if (onInit) {

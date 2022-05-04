@@ -6,12 +6,12 @@ export interface IdPayload<T = string> {
 export interface DefaultIdPayload<T = string, D = T> {
   id: string;
   value: T;
-  def: D;
+  def: D | undefined;
 }
 
 export interface DefaultPayload<T = string, D = T> {
   value: T;
-  def: D;
+  def: D | undefined;
 }
 
 export interface PreviousPayload<T = string> {

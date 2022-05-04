@@ -1,4 +1,4 @@
-import { trigger, transition, style, animate } from '@angular/animations';
+import { animate, style, transition, trigger } from '@angular/animations';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -8,29 +8,19 @@ import {
 import { Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
-import { getLanguageModifiers } from './store/preferences';
+import { combineLatest, map } from 'rxjs';
 
 import { environment } from 'src/environments';
-import {
-  ItemId,
-  Mod,
-  Product,
-  TITLE_DSP,
-  TITLE_LAB,
-  TITLE_SFY,
-  APP,
-  MatrixResult,
-  MatrixResultType,
-  Game,
-} from './models';
-import { ErrorService, StateService } from './services';
-import { State } from './store';
-import {
-  getProducts,
-  getMatrixResult as getSimplexResult,
-} from './store/products';
-import { getDatasets, getGame } from './store/settings';
+import { APP, Game, ItemId, MatrixResultType } from './models';
+import { ErrorService, RouterService, StateService } from './services';
+import { LabState } from './store';
+import { getLanguageModifiers } from './store/preferences';
+import * as Products from './store/products';
+import * as Settings from './store/settings';
+
+export const TITLE_LAB = 'title.lab';
+export const TITLE_DSP = 'title.dsp';
+export const TITLE_SFY = 'title.sfy';
 
 @Component({
   selector: 'lab-root',
@@ -56,43 +46,45 @@ import { getDatasets, getGame } from './store/settings';
   ],
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  datasets$: Observable<Mod[]>;
-  products$: Observable<Product[]>;
-  result$: Observable<MatrixResult>;
+  vm$ = combineLatest([
+    this.store.select(Settings.getDatasets),
+    this.store.select(Products.getProducts),
+    this.store.select(Products.getMatrixResult),
+  ]).pipe(
+    map(([datasets, products, result]) => ({ datasets, products, result }))
+  );
 
-  ItemId = ItemId;
-  MatrixResultType = MatrixResultType;
-  Game = Game;
-
-  title: string;
-  homeHref: string;
-  game: Game;
-  showSettings: boolean;
+  title = 'Factory Calculator';
+  homeHref: string | undefined;
+  game = Game.Factorio;
+  showSettings = false;
   poll = 'https://www.survey-maker.com/Q62LJFYVL';
   pollKey = 'poll1';
   showPoll = false;
   version = `${APP} ${environment.version}`;
+
+  ItemId = ItemId;
+  MatrixResultType = MatrixResultType;
+  Game = Game;
 
   get lsHidePoll(): boolean {
     return !!localStorage.getItem(this.pollKey);
   }
 
   constructor(
-    public error: ErrorService,
-    public store: Store<State>,
-    public titleService: Title,
-    private cd: ChangeDetectorRef,
-    protected translateSvc: TranslateService,
-    public state: StateService // Included only to initialize the service
+    private ref: ChangeDetectorRef,
+    private titleSvc: Title,
+    private translateSvc: TranslateService,
+    public errorSvc: ErrorService,
+    private store: Store<LabState>,
+    routerSvc: RouterService, // Included only to initialize the service
+    stateSvc: StateService // Included only to initialize the service
   ) {
     translateSvc.setDefaultLang('en');
   }
 
   ngOnInit(): void {
-    this.datasets$ = this.store.select(getDatasets);
-    this.products$ = this.store.select(getProducts);
-    this.result$ = this.store.select(getSimplexResult);
-    this.store.select(getGame).subscribe((game) => {
+    this.store.select(Settings.getGame).subscribe((game) => {
       this.game = game;
       switch (game) {
         case Game.Factorio:
@@ -109,7 +101,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           break;
       }
       this.translateSvc.get(this.title).subscribe((r) => {
-        this.titleService.setTitle(`${APP} | ${r}`);
+        this.titleSvc.setTitle(`${APP} | ${r}`);
       });
     });
     if (this.lsHidePoll) {
@@ -125,7 +117,7 @@ export class AppComponent implements OnInit, AfterViewInit {
    * but error message sometimes does not render without it
    * */
   ngAfterViewInit(): void {
-    this.error.message$.subscribe(() => this.cd.detectChanges());
+    this.errorSvc.message$.subscribe(() => this.ref.detectChanges());
   }
 
   hidePoll(persist = false): void {

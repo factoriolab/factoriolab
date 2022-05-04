@@ -1,13 +1,13 @@
 import { Action } from '@ngrx/store';
 
 import {
-  DisplayRate,
-  ResearchSpeed,
   DefaultPayload,
-  Preset,
-  InserterTarget,
+  DisplayRate,
   InserterCapacity,
+  InserterTarget,
+  Preset,
   PreviousPayload,
+  ResearchSpeed,
 } from '~/models';
 
 export const enum SettingsActionType {
@@ -57,7 +57,7 @@ export class SetExpensiveAction implements Action {
 
 export class SetBeaconReceiversAction implements Action {
   readonly type = SettingsActionType.SET_BEACON_RECEIVERS;
-  constructor(public payload: string) {}
+  constructor(public payload: string | null) {}
 }
 
 export class SetBeltAction implements Action {

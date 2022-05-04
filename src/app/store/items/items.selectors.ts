@@ -1,12 +1,12 @@
 import { createSelector } from '@ngrx/store';
 
-import { Entities, ItemSettings, ItemId } from '~/models';
+import { Entities, ItemId, ItemSettings } from '~/models';
+import { LabState } from '../';
 import * as Settings from '../settings';
-import { State } from '..';
 import { ItemsState } from './items.reducer';
 
 /* Base selector functions */
-export const itemsState = (state: State): ItemsState => state.itemsState;
+export const itemsState = (state: LabState): ItemsState => state.itemsState;
 
 /* Complex selectors */
 export const getItemSettings = createSelector(
@@ -22,20 +22,20 @@ export const getItemSettings = createSelector(
           : { ignore: false };
 
         // Belt (or Pipe)
-        if (!itemSettings.belt) {
+        if (!itemSettings.beltId) {
           if (item.stack) {
-            itemSettings.belt = settings.belt;
-          } else if (settings.pipe) {
-            itemSettings.belt = settings.pipe;
+            itemSettings.beltId = settings.beltId;
+          } else if (settings.pipeId) {
+            itemSettings.beltId = settings.pipeId;
           } else {
-            itemSettings.belt = ItemId.Pipe;
+            itemSettings.beltId = ItemId.Pipe;
           }
         }
 
-        if (!itemSettings.wagon) {
-          itemSettings.wagon = item.stack
-            ? settings.cargoWagon
-            : settings.fluidWagon;
+        if (!itemSettings.wagonId) {
+          itemSettings.wagonId = item.stack
+            ? settings.cargoWagonId
+            : settings.fluidWagonId;
         }
 
         value[item.id] = itemSettings;
@@ -45,14 +45,8 @@ export const getItemSettings = createSelector(
   }
 );
 
-export const getContainsIgnore = createSelector(itemsState, (state) =>
-  Object.keys(state).some((id) => state[id].ignore != null)
-);
-
-export const getContainsBelt = createSelector(itemsState, (state) =>
-  Object.keys(state).some((id) => state[id].belt)
-);
-
-export const getContainsWagon = createSelector(itemsState, (state) =>
-  Object.keys(state).some((id) => state[id].wagon)
-);
+export const getItemsModified = createSelector(itemsState, (state) => ({
+  ignore: Object.keys(state).some((id) => state[id].ignore != null),
+  belts: Object.keys(state).some((id) => state[id].beltId != null),
+  wagons: Object.keys(state).some((id) => state[id].wagonId != null),
+}));

@@ -13,10 +13,10 @@ describe('RationalProduct', () => {
         rateType: RateType.Belts,
         viaId: RecipeId.AdvancedOilProcessing,
         viaSetting: ItemId.ArtilleryShellRange,
-        viaFactoryModules: [ItemId.ProductivityModule],
+        viaFactoryModuleIds: [ItemId.ProductivityModule],
         viaBeaconCount: '1',
-        viaBeacon: ItemId.Beacon,
-        viaBeaconModules: [ItemId.SpeedModule],
+        viaBeaconId: ItemId.Beacon,
+        viaBeaconModuleIds: [ItemId.SpeedModule],
         viaOverclock: 200,
       });
       expect(result.id).toEqual('1');
@@ -25,10 +25,10 @@ describe('RationalProduct', () => {
       expect(result.rateType).toEqual(RateType.Belts);
       expect(result.viaId).toEqual(RecipeId.AdvancedOilProcessing);
       expect(result.viaSetting).toEqual(ItemId.ArtilleryShellRange);
-      expect(result.viaFactoryModules).toEqual([ItemId.ProductivityModule]);
+      expect(result.viaFactoryModuleIds).toEqual([ItemId.ProductivityModule]);
       expect(result.viaBeaconCount).toEqual(Rational.one);
-      expect(result.viaBeacon).toEqual(ItemId.Beacon);
-      expect(result.viaBeaconModules).toEqual([ItemId.SpeedModule]);
+      expect(result.viaBeaconId).toEqual(ItemId.Beacon);
+      expect(result.viaBeaconModuleIds).toEqual([ItemId.SpeedModule]);
       expect(result.viaOverclock).toEqual(Rational.from(200));
     });
 
@@ -45,10 +45,10 @@ describe('RationalProduct', () => {
       expect(result.rateType).toEqual(RateType.Belts);
       expect(result.viaId).toBeUndefined();
       expect(result.viaSetting).toBeUndefined();
-      expect(result.viaFactoryModules).toBeUndefined();
+      expect(result.viaFactoryModuleIds).toBeUndefined();
       expect(result.viaBeaconCount).toBeUndefined();
-      expect(result.viaBeacon).toBeUndefined();
-      expect(result.viaBeaconModules).toBeUndefined();
+      expect(result.viaBeaconId).toBeUndefined();
+      expect(result.viaBeaconModuleIds).toBeUndefined();
       expect(result.viaOverclock).toBeUndefined();
     });
   });

@@ -1,0 +1,74 @@
+<ng-container *ngIf="vm$ | async as vm">
+  <button
+    [title]="'toggle.title' | translate"
+    data-test="lab-toggle-open"
+    (click)="clickOpen(vm.data)"
+  >
+    <span class="text"
+      >{{ selected.length }} {{ 'toggle.recipe' | translate
+      }}{{ selected.length === 1 ? '' : 's' }}</span
+    >
+  </button>
+  <lab-dialog *ngIf="open" [style.width.rem]="vm.width" (closeDialog)="close()">
+    <div class="dialog-title">
+      <div class="header">{{ 'toggle.selectRecipes' | translate }}</div>
+      <div class="dialog-menu">
+        <input
+          class="search"
+          *ngIf="search"
+          data-test="lab-toggle-search-value"
+          labFocus
+          [(ngModel)]="searchValue"
+          (input)="inputSearch(vm.data)"
+        />
+        <button
+          *ngIf="!search"
+          data-test="lab-toggle-search"
+          (click)="search = true"
+        >
+          <i class="material-icons">search</i>
+        </button>
+        <button (click)="cancel()">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+    </div>
+    <div #scrollContainer class="panel scroll" (scroll)="scrollPanel()">
+      <div class="flex buttons">
+        <button
+          [disabled]="!editValue.length"
+          (click)="edited = true; editValue = []"
+        >
+          <span class="text">{{ 'toggle.enableAll' | translate }}</span>
+        </button>
+        <button
+          [disabled]="editValue.length === vm.data.complexRecipeIds.length"
+          (click)="edited = true; editValue = vm.data.complexRecipeIds"
+        >
+          <span class="text">{{ 'toggle.disableAll' | translate }}</span>
+        </button>
+      </div>
+      <div class="flex panel dark tile">
+        <lab-icon
+          *ngFor="let id of complexRecipeIds"
+          class="button grid"
+          data-test="lab-toggle-recipe"
+          [class.ignored]="editValue.indexOf(id) !== -1"
+          [iconId]="id"
+          [scrollTop]="scrollTop"
+          [tooltip]="vm.data.recipeEntities[id].name"
+          [recipe]="vm.data.recipeEntities[id]"
+          (click)="clickId(id)"
+        ></lab-icon>
+      </div>
+    </div>
+    <div class="dialog-buttons">
+      <button (click)="cancel()">
+        <span class="text">{{ 'toggle.cancel' | translate }}</span>
+      </button>
+      <button class="green" data-test="lab-toggle-close" (click)="close()">
+        {{ 'toggle.confirm' | translate }}
+      </button>
+    </div>
+  </lab-dialog>
+</ng-container>

@@ -59,4 +59,6 @@ export function columnOptions(game: Game): IdName<Column>[] {
         (i) => i.id !== Column.Beacons && i.id !== Column.Pollution
       );
   }
+
+  return [];
 }

@@ -1,18 +1,19 @@
-import { Mocks, CategoryId, ItemId, RecipeId } from 'src/tests';
-import { RateUtility } from './rate.utility';
+import { CategoryId, ItemId, Mocks, RecipeId } from 'src/tests';
 import {
-  Step,
-  Rational,
   DisplayRate,
-  RationalRecipe,
   Entities,
+  Rational,
+  RationalRecipe,
   RationalRecipeSettings,
+  Step,
 } from '~/models';
+import { RateUtility } from './rate.utility';
 
 describe('RateUtility', () => {
   describe('addStepsFor', () => {
     const expected: Step[] = [
       {
+        id: '0',
         itemId: 'iron-chest',
         recipeId: 'iron-chest',
         items: Rational.from(30),
@@ -21,6 +22,7 @@ describe('RateUtility', () => {
         pollution: Rational.from(94, 175),
       },
       {
+        id: '1',
         itemId: 'iron-plate',
         recipeId: 'iron-plate',
         items: Rational.from(240),
@@ -30,6 +32,7 @@ describe('RateUtility', () => {
         parents: { 'iron-chest': Rational.from(240) },
       },
       {
+        id: '2',
         itemId: 'iron-ore',
         recipeId: 'iron-ore',
         items: Rational.from(200),
@@ -81,11 +84,11 @@ describe('RateUtility', () => {
         {
           ...Mocks.AdjustedData,
           ...{
-            itemR: {
-              ...Mocks.AdjustedData.itemR,
+            itemEntities: {
+              ...Mocks.AdjustedData.itemEntities,
               ...{
                 ['iron-chest']: {
-                  ...Mocks.AdjustedData.itemR['iron-chest'],
+                  ...Mocks.AdjustedData.itemEntities['iron-chest'],
                   ...{ category: CategoryId.Research },
                 } as any,
               },
@@ -99,7 +102,6 @@ describe('RateUtility', () => {
     it('should adjust for consumption instead of production for research recipes', () => {
       const steps: Step[] = [];
       Mocks.AdjustedData.recipeR[Mocks.Item2.id].adjustProd = true;
-      Mocks.AdjustedData.recipeR[Mocks.Item2.id].productivity = Rational.one;
       RateUtility.addStepsFor(
         Mocks.Item2.id,
         Rational.from(30),
@@ -107,8 +109,7 @@ describe('RateUtility', () => {
         Mocks.ItemSettingsEntities,
         Mocks.AdjustedData
       );
-      delete Mocks.AdjustedData.recipeR[Mocks.Item2.id].adjustProd;
-      delete Mocks.AdjustedData.recipeR[Mocks.Item2.id].productivity;
+      Mocks.AdjustedData.recipeR[Mocks.Item2.id].adjustProd = false;
       expect(steps as any).toEqual(expected as any);
     });
 
@@ -123,6 +124,7 @@ describe('RateUtility', () => {
       );
       expect(steps).toEqual([
         {
+          id: '0',
           itemId: ItemId.Uranium235,
           items: new Rational(BigInt(30)),
         },
@@ -144,6 +146,7 @@ describe('RateUtility', () => {
       );
       expect(steps).toEqual([
         {
+          id: '0',
           itemId: ItemId.Coal,
           items: Rational.one,
         },
@@ -170,6 +173,7 @@ describe('RateUtility', () => {
       );
       expect(steps).toEqual([
         {
+          id: '0',
           itemId: Mocks.Item2.id,
           items: Rational.from(30),
         },
@@ -201,6 +205,7 @@ describe('RateUtility', () => {
       );
       expect(steps).toEqual([
         {
+          id: '0',
           itemId: ItemId.Coal,
           items: Rational.one,
           recipeId: RecipeId.Coal,
@@ -209,15 +214,30 @@ describe('RateUtility', () => {
         },
       ]);
     });
+
+    it('should handle adding items onto matching step with null items', () => {
+      const steps: Step[] = [{ id: '0', itemId: ItemId.IronOre }];
+      RateUtility.addStepsFor(
+        ItemId.IronOre,
+        Rational.one,
+        steps,
+        Mocks.ItemSettingsEntities,
+        Mocks.AdjustedData
+      );
+      expect(steps).toEqual([
+        {
+          id: '0',
+          itemId: ItemId.IronOre,
+          items: Rational.one,
+          factories: Rational.from(400, 1183),
+          power: Rational.from(324000, 1183),
+          pollution: Rational.from(60, 91),
+        },
+      ]);
+    });
   });
 
   describe('addParentValue', () => {
-    it('should handle null parent', () => {
-      const step = { ...Mocks.Step1 };
-      RateUtility.addParentValue(step, null, null);
-      expect(step).toEqual(Mocks.Step1);
-    });
-
     it('should add parents field to step', () => {
       const step = { ...Mocks.Step1 };
       RateUtility.addParentValue(step, ItemId.Coal, Rational.one);
@@ -238,7 +258,10 @@ describe('RateUtility', () => {
     it('should handle no factories', () => {
       const step: any = { factories: null };
       const result = { ...step };
-      RateUtility.adjustPowerPollution(result, null);
+      RateUtility.adjustPowerPollution(
+        result,
+        Mocks.AdjustedData.recipeR[RecipeId.WoodenChest]
+      );
       expect(result).toEqual(step);
     });
 
@@ -297,32 +320,11 @@ describe('RateUtility', () => {
   });
 
   describe('calculateBelts', () => {
-    it('should skip steps with no settings', () => {
-      const steps: Step[] = [
-        {
-          itemId: null,
-          recipeId: null,
-          items: null,
-          belts: null,
-        },
-      ];
-      const result = RateUtility.calculateBelts(
-        steps,
-        Mocks.ItemSettingsInitial,
-        Mocks.RecipeSettingsInitial,
-        Mocks.BeltSpeed,
-        Mocks.AdjustedData
-      );
-      expect(result[0].belts).toBeNull();
-    });
-
     it('should skip steps with no items', () => {
       const steps: Step[] = [
         {
+          id: 'id',
           itemId: Mocks.Item1.id,
-          recipeId: null,
-          items: null,
-          belts: null,
         },
       ];
       const result = RateUtility.calculateBelts(
@@ -332,14 +334,14 @@ describe('RateUtility', () => {
         Mocks.BeltSpeed,
         Mocks.AdjustedData
       );
-      expect(result[0].belts).toBeNull();
+      expect(result[0].belts).toBeUndefined();
     });
 
     it('should calculate required belts & wagons for steps', () => {
       const steps: Step[] = [
         {
+          id: 'id',
           itemId: Mocks.Item1.id,
-          recipeId: null,
           items: Mocks.BeltSpeed[ItemId.TransportBelt],
           belts: Rational.zero,
         },
@@ -358,8 +360,8 @@ describe('RateUtility', () => {
     it('should calculate required wagons for fluids', () => {
       const steps: Step[] = [
         {
+          id: 'id',
           itemId: ItemId.CrudeOil,
-          recipeId: null,
           items: Rational.from(25000),
           belts: Rational.zero,
         },
@@ -377,6 +379,7 @@ describe('RateUtility', () => {
     it('should set to null for research recipes', () => {
       const steps: Step[] = [
         {
+          id: 'id',
           itemId: ItemId.ArtilleryShellRange,
           recipeId: RecipeId.ArtilleryShellRange,
           items: Rational.one,
@@ -391,13 +394,14 @@ describe('RateUtility', () => {
         Mocks.BeltSpeed,
         Mocks.AdjustedData
       );
-      expect(result[0].belts).toBeNull();
-      expect(result[0].wagons).toBeNull();
+      expect(result[0].belts).toBeUndefined();
+      expect(result[0].wagons).toBeUndefined();
     });
 
     it('should set to null for rocket part recipes', () => {
       const steps: Step[] = [
         {
+          id: 'id',
           itemId: ItemId.RocketPart,
           recipeId: RecipeId.RocketPart,
           items: Rational.one,
@@ -412,15 +416,21 @@ describe('RateUtility', () => {
         Mocks.BeltSpeed,
         Mocks.AdjustedData
       );
-      expect(result[0].belts).toBeNull();
-      expect(result[0].wagons).toBeNull();
+      expect(result[0].belts).toBeUndefined();
+      expect(result[0].wagons).toBeUndefined();
     });
   });
 
   describe('calculateOutputs', () => {
     it('should ignore steps with no recipe', () => {
       const result = RateUtility.calculateOutputs(
-        [{ itemId: ItemId.Coal, items: Rational.one }],
+        [
+          {
+            id: '0',
+            itemId: ItemId.Coal,
+            items: Rational.one,
+          },
+        ],
         Mocks.AdjustedData
       );
       expect(result[0].outputs).toBeUndefined();
@@ -430,6 +440,7 @@ describe('RateUtility', () => {
       const result = RateUtility.calculateOutputs(
         [
           {
+            id: '0',
             itemId: ItemId.Coal,
             items: Rational.one,
             factories: Rational.two,
@@ -442,27 +453,44 @@ describe('RateUtility', () => {
         [ItemId.Coal]: Rational.from(1183, 200),
       });
     });
+
+    it('should ignore steps with no factories or matching output step', () => {
+      const result = RateUtility.calculateOutputs(
+        [
+          {
+            id: '0',
+            recipeId: RecipeId.ElectronicCircuit,
+          },
+          {
+            id: '1',
+            itemId: ItemId.Coal,
+            recipeId: RecipeId.Coal,
+            factories: Rational.one,
+          },
+          {
+            id: '2',
+            recipeId: RecipeId.IronOre,
+            factories: Rational.one,
+          },
+        ],
+        Mocks.AdjustedData
+      );
+      expect(result[0].outputs).toBeUndefined();
+    });
   });
 
   describe('calculateBeacons', () => {
-    it('should skip if beacon receivers is null or zero', () => {
-      expect(RateUtility.calculateBeacons(null, null, null, null)).toBeNull();
-      expect(
-        RateUtility.calculateBeacons(null, Rational.zero, null, null)
-      ).toBeNull();
-    });
-
     it('should ignore steps with no factories or beacons', () => {
       const settings: Entities<RationalRecipeSettings> = {
         [RecipeId.Coal]: { beaconCount: Rational.zero },
         [RecipeId.IronOre]: {},
       };
-      const steps = [
-        {},
-        { factories: Rational.zero },
-        { factories: Rational.one, recipeId: RecipeId.Coal },
-        { factories: Rational.one, recipeId: RecipeId.IronOre },
-      ] as any;
+      const steps: Step[] = [
+        { id: '0', recipeId: RecipeId.ElectronicCircuit },
+        { id: '1', factories: Rational.zero },
+        { id: '2', factories: Rational.one, recipeId: RecipeId.Coal },
+        { id: '3', factories: Rational.one, recipeId: RecipeId.IronOre },
+      ];
       expect(
         RateUtility.calculateBeacons(
           steps,
@@ -476,6 +504,7 @@ describe('RateUtility', () => {
     it('should calculate the number of beacons', () => {
       const steps: Step[] = [
         {
+          id: 'id',
           itemId: ItemId.Coal,
           items: Rational.one,
           recipeId: RecipeId.Coal,
@@ -493,16 +522,72 @@ describe('RateUtility', () => {
       expect(steps[0].power).toEqual(Rational.from(3840));
     });
 
+    it('should handle undefined step power', () => {
+      const steps: Step[] = [
+        {
+          id: 'id',
+          itemId: ItemId.Coal,
+          items: Rational.one,
+          recipeId: RecipeId.Coal,
+          factories: Rational.one,
+        },
+      ];
+      RateUtility.calculateBeacons(
+        steps,
+        Rational.one,
+        Mocks.RationalRecipeSettingsInitial,
+        Mocks.AdjustedData
+      );
+      expect(steps[0].beacons).toEqual(Rational.from(8));
+      expect(steps[0].power).toEqual(Rational.from(3840));
+    });
+
+    it('should skip beacon power with no usage', () => {
+      const steps: Step[] = [
+        {
+          id: 'id',
+          itemId: ItemId.Coal,
+          items: Rational.one,
+          recipeId: RecipeId.Coal,
+          factories: Rational.one,
+          power: Rational.zero,
+        },
+      ];
+      const data = {
+        ...Mocks.AdjustedData,
+        ...{
+          beaconEntities: {
+            ...Mocks.AdjustedData.beaconEntities,
+            ...{
+              [ItemId.Beacon]: {
+                ...Mocks.AdjustedData.beaconEntities[ItemId.Beacon],
+                ...{ usage: undefined },
+              },
+            },
+          },
+        },
+      };
+      RateUtility.calculateBeacons(
+        steps,
+        Rational.one,
+        Mocks.RationalRecipeSettingsInitial,
+        data
+      );
+      expect(steps[0].beacons).toEqual(Rational.from(8));
+      expect(steps[0].power).toEqual(Rational.zero);
+    });
+
     it('should override from recipe settings', () => {
       const settings: Entities<RationalRecipeSettings> = {
         [RecipeId.Coal]: {
           beaconCount: Rational.from(8),
-          beacon: ItemId.Beacon,
+          beaconId: ItemId.Beacon,
           beaconTotal: Rational.one,
         },
       };
       const steps: Step[] = [
         {
+          id: 'id',
           itemId: ItemId.Coal,
           items: Rational.one,
           recipeId: RecipeId.Coal,
@@ -525,14 +610,12 @@ describe('RateUtility', () => {
     it('should skip steps with no items', () => {
       const steps: Step[] = [
         {
+          id: 'id',
           itemId: Mocks.Item1.id,
-          recipeId: null,
-          items: null,
-          belts: null,
         },
       ];
       RateUtility.displayRate(steps, 3 as any);
-      expect(steps[0].items).toBeNull();
+      expect(steps[0].items).toBeUndefined();
     });
 
     it('should apply the display rate to the given steps', () => {
@@ -569,39 +652,23 @@ describe('RateUtility', () => {
         [{ items: Rational.two, parents: { id: Rational.one } }] as any,
         DisplayRate.PerMinute
       );
-      expect(result[0].parents.id).toEqual(Rational.from(1, 2));
+      expect(result[0].parents?.['id']).toEqual(Rational.from(1, 2));
     });
   });
 
   describe('sortHierarchy', () => {
-    it('should assign ids', () => {
-      const steps: Step[] = [
-        {
-          itemId: ItemId.IronOre,
-          recipeId: null,
-          items: Rational.one,
-        },
-        {
-          itemId: null,
-          recipeId: RecipeId.Coal,
-          items: Rational.one,
-        },
-      ];
-      const result = RateUtility.sortHierarchy(steps);
-      expect(result[0].id).toEqual(`${ItemId.IronOre}.`);
-      expect(result[1].id).toEqual(`.${RecipeId.Coal}`);
-    });
-
     it('should set up groups by parents', () => {
       spyOn(RateUtility, 'sortRecursive').and.returnValue([]);
       const steps: Step[] = [
         {
+          id: '0',
           itemId: ItemId.Coal,
           recipeId: RecipeId.Coal,
           items: Rational.one,
           parents: { [RecipeId.PlasticBar]: Rational.one },
         },
         {
+          id: '1',
           itemId: ItemId.IronOre,
           recipeId: RecipeId.IronOre,
           items: Rational.one,
@@ -611,6 +678,7 @@ describe('RateUtility', () => {
           },
         },
         {
+          id: '2',
           itemId: ItemId.PlasticBar,
           recipeId: RecipeId.PlasticBar,
           items: Rational.one,
@@ -619,7 +687,7 @@ describe('RateUtility', () => {
       RateUtility.sortHierarchy(steps);
       expect(RateUtility.sortRecursive).toHaveBeenCalledWith(
         {
-          [`${ItemId.PlasticBar}.${RecipeId.PlasticBar}`]: [steps[0]],
+          ['2']: [steps[0]],
           ['']: [steps[1], steps[2]],
         },
         '',
@@ -631,6 +699,7 @@ describe('RateUtility', () => {
       spyOn(RateUtility, 'sortRecursive').and.returnValue([]);
       const steps: Step[] = [
         {
+          id: 'id',
           itemId: ItemId.Coal,
           recipeId: RecipeId.Coal,
           items: Rational.one,
@@ -648,12 +717,14 @@ describe('RateUtility', () => {
     it('should handle steps not connected to root', () => {
       const steps: Step[] = [
         {
+          id: 'id',
           itemId: ItemId.Coal,
           recipeId: RecipeId.Coal,
           items: Rational.one,
           parents: { [RecipeId.PlasticBar]: Rational.one },
         },
         {
+          id: 'id',
           itemId: ItemId.PlasticBar,
           recipeId: RecipeId.PlasticBar,
           items: Rational.one,
@@ -713,10 +784,12 @@ describe('RateUtility', () => {
     it('should create a copy of steps', () => {
       const steps: Step[] = [
         {
+          id: 'id',
           itemId: ItemId.Coal,
           items: Rational.one,
         },
         {
+          id: 'id',
           itemId: ItemId.Coal,
           items: Rational.one,
           parents: {
@@ -725,8 +798,8 @@ describe('RateUtility', () => {
         },
       ];
       const result = RateUtility.copy(steps);
-      steps[1].parents[RecipeId.CrudeOil] = Rational.one;
-      expect(result[1].parents[RecipeId.CrudeOil]).toBeUndefined();
+      steps[1].parents![RecipeId.CrudeOil] = Rational.one;
+      expect(result[1].parents?.[RecipeId.CrudeOil]).toBeUndefined();
     });
   });
 });

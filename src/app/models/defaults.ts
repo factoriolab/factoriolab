@@ -1,14 +1,14 @@
 export interface Defaults {
   modIds: string[];
-  belt: string;
-  pipe: string;
-  fuel: string;
-  cargoWagon: string;
-  fluidWagon: string;
-  disabledRecipes: string[];
-  factoryRank: string[];
-  moduleRank: string[];
+  beltId: string;
+  pipeId?: string;
+  fuelId: string;
+  cargoWagonId: string;
+  fluidWagonId: string;
+  disabledRecipeIds: string[];
+  factoryRankIds: string[];
+  moduleRankIds: string[];
   beaconCount: string;
-  beacon: string;
-  beaconModule: string;
+  beaconId: string;
+  beaconModuleId: string;
 }

@@ -1,6 +1,6 @@
-import { Product, RateType, Entities, ProductField, Rational } from '~/models';
+import { Entities, Product, RateType, Rational } from '~/models';
 import { StoreUtility } from '~/utilities';
-import { AppActionType, AppAction } from '../app.actions';
+import * as App from '../app.actions';
 import { ProductsAction, ProductsActionType } from './products.actions';
 
 export interface ProductsState {
@@ -17,10 +17,10 @@ export const initialProductsState: ProductsState = {
 
 export function productsReducer(
   state: ProductsState = initialProductsState,
-  action: ProductsAction | AppAction
+  action: ProductsAction | App.AppAction
 ): ProductsState {
   switch (action.type) {
-    case AppActionType.LOAD:
+    case App.AppActionType.LOAD:
       return action.payload.productsState
         ? action.payload.productsState
         : state;
@@ -83,18 +83,15 @@ export function productsReducer(
         ...state,
         ...{
           entities: StoreUtility.resetFields(
-            StoreUtility.assignValue(
-              state.entities,
-              ProductField.ItemId,
-              action.payload
-            ),
+            StoreUtility.assignValue(state.entities, 'itemId', action.payload),
             [
-              ProductField.ViaId,
-              ProductField.ViaSetting,
-              ProductField.ViaFactoryModules,
-              ProductField.ViaBeaconCount,
-              ProductField.ViaBeacon,
-              ProductField.ViaBeaconModules,
+              'viaId',
+              'viaSetting',
+              'viaFactoryModuleIds',
+              'viaBeaconCount',
+              'viaBeaconId',
+              'viaBeaconModuleIds',
+              'viaOverclock',
             ],
             action.payload.id
           ),
@@ -106,7 +103,7 @@ export function productsReducer(
         ...{
           entities: StoreUtility.assignValue(
             state.entities,
-            ProductField.Rate,
+            'rate',
             action.payload
           ),
         },
@@ -118,16 +115,17 @@ export function productsReducer(
           entities: StoreUtility.resetFields(
             StoreUtility.assignValue(
               state.entities,
-              ProductField.RateType,
+              'rateType',
               action.payload
             ),
             [
-              ProductField.ViaId,
-              ProductField.ViaSetting,
-              ProductField.ViaFactoryModules,
-              ProductField.ViaBeaconCount,
-              ProductField.ViaBeacon,
-              ProductField.ViaBeaconModules,
+              'viaId',
+              'viaSetting',
+              'viaFactoryModuleIds',
+              'viaBeaconCount',
+              'viaBeaconId',
+              'viaBeaconModuleIds',
+              'viaOverclock',
             ],
             action.payload.id
           ),
@@ -138,19 +136,35 @@ export function productsReducer(
         ...state,
         ...{
           entities: StoreUtility.resetFields(
-            StoreUtility.assignValue(
-              state.entities,
-              ProductField.ViaId,
-              action.payload
-            ),
+            StoreUtility.assignValue(state.entities, 'viaId', action.payload),
             [
-              ProductField.ViaSetting,
-              ProductField.ViaFactoryModules,
-              ProductField.ViaBeaconCount,
-              ProductField.ViaBeacon,
-              ProductField.ViaBeaconModules,
+              'viaSetting',
+              'viaFactoryModuleIds',
+              'viaBeaconCount',
+              'viaBeaconId',
+              'viaBeaconModuleIds',
+              'viaOverclock',
             ],
             action.payload.id
+          ),
+        },
+      };
+    case ProductsActionType.RESET_VIA:
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.resetFields(
+            state.entities,
+            [
+              'viaId',
+              'viaSetting',
+              'viaFactoryModuleIds',
+              'viaBeaconCount',
+              'viaBeaconId',
+              'viaBeaconModuleIds',
+              'viaOverclock',
+            ],
+            action.payload
           ),
         },
       };
@@ -161,14 +175,15 @@ export function productsReducer(
           entities: StoreUtility.resetFields(
             StoreUtility.compareReset(
               state.entities,
-              ProductField.ViaSetting,
+              'viaSetting',
               action.payload
             ),
             [
-              ProductField.ViaFactoryModules,
-              ProductField.ViaBeaconCount,
-              ProductField.ViaBeacon,
-              ProductField.ViaBeaconModules,
+              'viaFactoryModuleIds',
+              'viaBeaconCount',
+              'viaBeaconId',
+              'viaBeaconModuleIds',
+              'viaOverclock',
             ],
             action.payload.id
           ),
@@ -180,7 +195,7 @@ export function productsReducer(
         ...{
           entities: StoreUtility.compareReset(
             state.entities,
-            ProductField.ViaFactoryModules,
+            'viaFactoryModuleIds',
             action.payload
           ),
         },
@@ -191,7 +206,7 @@ export function productsReducer(
         ...{
           entities: StoreUtility.compareReset(
             state.entities,
-            ProductField.ViaBeaconCount,
+            'viaBeaconCount',
             action.payload
           ),
         },
@@ -203,10 +218,10 @@ export function productsReducer(
           entities: StoreUtility.resetField(
             StoreUtility.compareReset(
               state.entities,
-              ProductField.ViaBeacon,
+              'viaBeaconId',
               action.payload
             ),
-            ProductField.ViaBeaconModules,
+            'viaBeaconModuleIds',
             action.payload.id
           ),
         },
@@ -217,7 +232,7 @@ export function productsReducer(
         ...{
           entities: StoreUtility.compareReset(
             state.entities,
-            ProductField.ViaBeaconModules,
+            'viaBeaconModuleIds',
             action.payload
           ),
         },
@@ -228,7 +243,7 @@ export function productsReducer(
         ...{
           entities: StoreUtility.compareReset(
             state.entities,
-            ProductField.ViaOverclock,
+            'viaOverclock',
             action.payload
           ),
         },

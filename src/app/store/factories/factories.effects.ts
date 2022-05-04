@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import { combineLatest, switchMap, take } from 'rxjs';
+import { combineLatest, first, switchMap } from 'rxjs';
 
 import { RecipeUtility } from '~/utilities';
-import { State } from '..';
+import { LabState } from '../';
 import * as Recipes from '../recipes';
-import { getNormalDataset } from '../settings';
+import * as Settings from '../settings';
 import { FactoriesActionType } from './factories.actions';
 
 @Injectable()
@@ -24,8 +24,8 @@ export class FactoriesEffects {
         combineLatest([
           this.store.select(Recipes.recipesState),
           this.store.select(Recipes.getRecipeSettings),
-          this.store.select(getNormalDataset),
-        ]).pipe(take(1))
+          this.store.select(Settings.getNormalDataset),
+        ]).pipe(first())
       ),
       switchMap(([rawSettings, recipeSettings, data]) => {
         const effects: Action[] = [];
@@ -34,21 +34,24 @@ export class FactoriesEffects {
           const r = rawSettings[i];
           if (
             r &&
-            (r.factoryModules != null ||
+            (r.factoryModuleIds != null ||
               r.beaconCount != null ||
-              r.beacon != null ||
-              r.beaconModules != null)
+              r.beaconId != null ||
+              r.beaconModuleIds != null)
           ) {
             // Check that these recipe settings are still valid
-            const factory =
-              data.itemEntities[recipeSettings[i].factory].factory;
-            const recipe = data.recipeEntities[i];
-            if (
-              !RecipeUtility.allowsModules(recipe, factory) ||
-              (r.factoryModules && r.factoryModules.length !== factory.modules)
-            ) {
-              // Factory does not support module effects, reset these settings
-              effects.push(new Recipes.ResetRecipeModulesAction(i));
+            const factoryId = recipeSettings[i].factoryId;
+            if (factoryId) {
+              const factory = data.factoryEntities[factoryId];
+              const recipe = data.recipeEntities[i];
+              if (
+                !RecipeUtility.allowsModules(recipe, factory) ||
+                (r.factoryModuleIds &&
+                  r.factoryModuleIds.length !== factory.modules)
+              ) {
+                // Factory does not support module effects, reset these settings
+                effects.push(new Recipes.ResetRecipeModulesAction(i));
+              }
             }
           }
         }
@@ -57,5 +60,5 @@ export class FactoriesEffects {
     )
   );
 
-  constructor(private actions$: Actions, private store: Store<State>) {}
+  constructor(private actions$: Actions, private store: Store<LabState>) {}
 }
