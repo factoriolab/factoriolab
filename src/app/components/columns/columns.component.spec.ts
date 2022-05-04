@@ -6,6 +6,7 @@ import { Column, Game } from '~/models';
 import { initialColumnsState } from '~/store/preferences';
 import { DialogComponent } from '../dialog/dialog.component';
 import { ColumnsComponent } from './columns.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 enum DataTest {
   Open = 'lab-columns-open',
@@ -41,6 +42,7 @@ describe('ColumnsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DialogComponent, ColumnsComponent, TestColumnsComponent],
+      imports: [TranslateModule.forRoot()],
     }).compileComponents();
   });
 

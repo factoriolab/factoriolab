@@ -5,6 +5,7 @@ import { Mocks, ItemId, TestUtility } from 'src/tests';
 import { Dataset } from '~/models';
 import { DialogComponent, IconComponent } from '~/components';
 import { RankerComponent } from './ranker.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 enum DataTest {
   Open = 'lab-ranker-open',
@@ -49,6 +50,9 @@ describe('RankerComponent', () => {
         IconComponent,
         RankerComponent,
         TestRankerComponent,
+      ],
+      imports: [
+        TranslateModule.forRoot(),
       ],
     }).compileComponents();
   });

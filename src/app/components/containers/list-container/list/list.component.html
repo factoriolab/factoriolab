@@ -9,19 +9,19 @@
             [columns]="columns"
             (setColumns)="setColumns.emit($event)"
           >
-            <button title="Set columns visibility and precision">
+            <button [title]="'list.setColumnsVisibilityAndPrecision' | translate">
               <i class="material-icons">settings</i>
             </button></lab-columns
           >
         </div>
       </th>
-      <th *ngIf="columns[Column.Tree].show"><div class="header">Tree</div></th>
+      <th *ngIf="columns[Column.Tree].show"><div class="header">{{ 'list.tree' | translate }}</div></th>
       <th class="num-icon">
         <div class="header">
-          Items{{ rateLabel }}
+          {{ 'list.items' | translate }}{{ rateLabel }}
           <button
             *ngIf="modifiedIgnore"
-            title="Undo all ignored steps"
+            [title]="'list.itemsTitle' | translate"
             (click)="resetIgnore.emit()"
           >
             <i class="material-icons">undo</i>
@@ -30,10 +30,10 @@
       </th>
       <th class="num-icon" *ngIf="columns[Column.Belts].show">
         <div class="header">
-          Belts
+          {{ 'list.belts' | translate }}
           <button
             *ngIf="modifiedBelt"
-            title="Undo all belt modifications"
+            [title]="'list.beltsTitle' | translate"
             (click)="resetBelt.emit()"
           >
             <i class="material-icons">undo</i>
@@ -42,10 +42,10 @@
       </th>
       <th class="num-icon" *ngIf="columns[Column.Wagons].show">
         <div class="header">
-          Wagons{{ rateLabel }}
+          {{ 'list.wagons' | translate }}{{ rateLabel }}
           <button
             *ngIf="modifiedWagon"
-            title="Undo all wagon modifications"
+            [title]="'list.wagonsTitle' | translate"
             (click)="resetWagon.emit()"
           >
             <i class="material-icons">undo</i>
@@ -54,10 +54,10 @@
       </th>
       <th colspan="3">
         <div class="header">
-          Factories
+          {{ 'list.factories' | translate }}
           <button
             *ngIf="modifiedFactory"
-            title="Undo all factory modifications"
+            [title]="'list.factoriesTitle' | translate"
             (click)="resetFactory.emit()"
           >
             <i class="material-icons">undo</i>
@@ -66,10 +66,10 @@
       </th>
       <th *ngIf="columns[Column.Overclock].show">
         <div class="header">
-          Overclock
+          {{ 'list.overclock' | translate }}
           <button
             *ngIf="modifiedOverclock"
-            title="Undo all overclock modifications"
+            [title]="'list.overclockTitle' | translate"
             (click)="resetOverclock.emit()"
           >
             <i class="material-icons">undo</i>
@@ -78,28 +78,28 @@
       </th>
       <th *ngIf="columns[Column.Beacons].show" colspan="3">
         <div class="header">
-          <span *ngIf="settings.beaconReceivers" class="sub left">Each</span>
-          <span>Beacons</span>
+          <span *ngIf="settings.beaconReceivers" class="sub left">{{ 'list.each' | translate }}</span>
+          <span>{{ 'list.beacons' | translate }}</span>
           <button
             *ngIf="modifiedBeacons"
-            title="Undo all beacon modifications"
+            [title]="'list.beaconsTitle' | translate"
             (click)="resetBeacons.emit()"
           >
             <i class="material-icons">undo</i>
           </button>
-          <span *ngIf="settings.beaconReceivers" class="sub right">Total</span>
+          <span *ngIf="settings.beaconReceivers" class="sub right">{{ 'list.total' | translate }}</span>
         </div>
       </th>
       <th class="num-unit" *ngIf="columns[Column.Power].show">
-        <div class="header">Power</div>
+        <div class="header">{{ 'list.power' | translate }}</div>
       </th>
       <th *ngIf="columns[Column.Pollution].show">
-        <div class="header">Pollution{{ rateLabel }}</div>
+        <div class="header">{{ 'list.pollution' | translate }}{{ rateLabel }}</div>
       </th>
       <!-- Reset / Link -->
       <th *ngIf="columns[Column.Link].show && mode === ListMode.All">
         <button
-          title="Export to CSV"
+          [title]="'list.downloadTitle' | translate"
           data-test="lab-list-export"
           (click)="export()"
         >
@@ -115,14 +115,14 @@
           <div>
             <button
               *ngIf="details[step.id]?.length && !expanded[step.id]"
-              title="Click to show details"
+              [title]="'list.clickToShowDetails' | translate"
               (click)="expanded[step.id] = details[step.id][0]"
             >
               <i class="material-icons">expand_more</i>
             </button>
             <button
               *ngIf="mode === ListMode.All && expanded[step.id]"
-              title="Click to hide details"
+              [title]="'list.clickToHideDetails' | translate"
               (click)="expanded[step.id] = null"
             >
               <i class="material-icons">expand_less</i>
@@ -175,8 +175,8 @@
               class="button"
               [title]="
                 itemSettings[step.itemId].ignore
-                  ? 'Click to include'
-                  : 'Click to ignore'
+                  ? 'list.clickToInclude'
+                  : 'list.clickToIgnore' | translate
               "
               [data]="data"
               [iconId]="step.itemId"
@@ -200,7 +200,7 @@
               }}</span>
               <lab-select
                 *ngIf="data.beltIds.indexOf(belt) !== -1; else pipePicker"
-                header="Select a belt"
+                [header]="'list.selectABelt' | translate"
                 [data]="data"
                 [selected]="belt"
                 [options]="data.beltIds"
@@ -218,7 +218,7 @@
               >
                 <lab-icon
                   class="button"
-                  title="Click to change belt"
+                  [title]="'list.clickToChangeBelt' | translate"
                   [data]="data"
                   [iconId]="belt"
                   [tooltip]="data.itemEntities[belt].name"
@@ -229,7 +229,7 @@
               <ng-template #pipePicker>
                 <lab-select
                   *ngIf="data.pipeIds.indexOf(belt) !== -1; else pipeIcon"
-                  header="Select a pipe"
+                  [header]="'list.selectAPipe' | translate"
                   [data]="data"
                   [selected]="belt"
                   [options]="data.pipeIds"
@@ -244,7 +244,7 @@
                 >
                   <lab-icon
                     class="button"
-                    title="Click to change pipe"
+                    [title]="'list.clickToChangePipe' | translate"
                     [data]="data"
                     [iconId]="belt"
                     [tooltip]="data.itemEntities[belt].name"
@@ -279,7 +279,7 @@
                   *ngIf="data.cargoWagonIds.length > 1; else wagonDefault"
                 >
                   <lab-select
-                    header="Select a cargo wagon"
+                    [header]="'list.selectACargoWagon' | translate"
                     [data]="data"
                     [selected]="wagon"
                     [options]="data.cargoWagonIds"
@@ -293,7 +293,7 @@
                   >
                     <lab-icon
                       class="button"
-                      title="Click to change cargo wagon"
+                      [title]="'list.clickToChangeCargoWagon' | translate"
                       [data]="data"
                       [iconId]="wagon"
                       [tooltip]="data.itemEntities[wagon].name"
@@ -307,7 +307,7 @@
                   *ngIf="data.fluidWagonIds.length > 1; else wagonDefault"
                 >
                   <lab-select
-                    header="Select a fluid wagon"
+                    [header]="'list.selectAFluidWagon' | translate"
                     [data]="data"
                     [selected]="wagon"
                     [options]="data.fluidWagonIds"
@@ -321,7 +321,7 @@
                   >
                     <lab-icon
                       class="button"
-                      title="Click to change fluid wagon"
+                      [title]="'list.clickToChangeFluidWagon' | translate"
                       [data]="data"
                       [iconId]="wagon"
                       [tooltip]="data.itemEntities[wagon].name"
@@ -378,7 +378,7 @@
                       "
                     >
                       <lab-select
-                        header="Select a factory"
+                        [header]="'list.selectAFactory' | translate"
                         [data]="data"
                         [selected]="factory"
                         [options]="recipe.producers"
@@ -388,7 +388,7 @@
                       >
                         <lab-icon
                           class="button"
-                          title="Click to change factory"
+                          [title]="'list.clickToChangeFactory' | translate"
                           [data]="data"
                           [iconId]="factory"
                           [tooltip]="data.itemEntities[factory].name"
@@ -418,11 +418,11 @@
                 <lab-select
                   *ngFor="let mod of modules; index as i; first as first"
                   [header]="
-                    data.game === Game.Factorio
-                      ? 'Select a module'
+                    (data.game === Game.Factorio
+                      ? 'list.selectAModule'
                       : data.game === Game.DysonSphereProgram
-                      ? 'Select a proliferator'
-                      : 'Select resource purity'
+                      ? 'list.selectAProliferator'
+                      : 'list.selectResourcePurity') | translate
                   "
                   [data]="data"
                   [selected]="mod"
@@ -442,11 +442,11 @@
                   <lab-icon
                     class="button module"
                     [title]="
-                      data.game === Game.Factorio
-                        ? 'Click to change factory modules'
+                      (data.game === Game.Factorio
+                        ? 'list.clickToChangeFactoryModules'
                         : data.game === Game.DysonSphereProgram
-                        ? 'Click to change proliferator'
-                        : 'Click to change resource purity'
+                        ? 'list.clickToChangeProliferator'
+                        : 'list.clickToChangeResourcePurity') | translate
                     "
                     [data]="data"
                     [iconId]="mod"
@@ -464,7 +464,7 @@
           <ng-container *ngIf="recipeSettings[step.recipeId]">
             <input
               type="number"
-              title="Set overclock"
+              [title]="'list.setOverclock' | translate"
               placeholder="100"
               min="0"
               max="250"
@@ -481,7 +481,7 @@
             <td>
               <div class="flex">
                 <lab-input
-                  title="Set number of beacons"
+                  [title]="'list.setNumberOfBeacons' | translate"
                   placeholder="# Beacons"
                   [digits]="2"
                   [value]="recipeSettings[step.recipeId].beaconCount"
@@ -509,7 +509,7 @@
                   ></ng-container>
                   <ng-template #beaconPicker>
                     <lab-select
-                      header="Select a beacon"
+                      [header]="'list.selectABeacon' | translate"
                       [data]="data"
                       [selected]="beacon"
                       [options]="data.beaconIds"
@@ -519,7 +519,7 @@
                     >
                       <lab-icon
                         class="button"
-                        title="Click to change beacon"
+                        [title]="'list.clickToChangeBeacon' | translate"
                         [data]="data"
                         [iconId]="beacon"
                         [tooltip]="data.itemEntities[beacon].name"
@@ -543,7 +543,7 @@
                   >
                     <lab-select
                       *ngFor="let mod of modules; index as i; first as first"
-                      header="Select a module"
+                      [header]="'list.selectAModule' | translate"
                       [data]="data"
                       [selected]="mod"
                       [options]="data.beaconModuleIds"
@@ -560,7 +560,7 @@
                     >
                       <lab-icon
                         class="button module"
-                        title="Click to change beacon modules"
+                        [title]="'list.clickToChangeBeaconModules' | translate"
                         [data]="data"
                         [iconId]="mod"
                         [tooltip]="data.itemEntities[mod]?.name"
@@ -570,7 +570,7 @@
                   </div>
                   <div *ngIf="step.beacons">
                     <lab-input
-                      title="Set total beacons"
+                      [title]="'list.setTotalBeacons' | translate"
                       placeholder="# Beacons"
                       [digits]="4"
                       [value]="step.beacons.toString()"
@@ -606,7 +606,7 @@
             <a
               *ngIf="step.items"
               class="button"
-              title="Click to open this step in a new tab"
+              [title]="'list.clickToOpenThisStepInANewTab' | translate"
               [href]="step.href"
               target="_blank"
             >
@@ -614,7 +614,7 @@
             </a>
             <button
               *ngIf="recipeRaw[step.recipeId] || itemRaw[step.itemId]"
-              title="Undo modifications to this step"
+              [title]="'list.undoModificationsToThisStep' | translate"
               data-test="lab-list-reset-step"
               (click)="resetStep(step)"
             >
@@ -639,28 +639,28 @@
                 [class.active]="expanded[step.id] === StepDetailTab.Item"
                 (click)="expanded[step.id] = StepDetailTab.Item"
               >
-                <span>Item</span>
+                <span>{{ 'list.item' | translate }}</span>
               </li>
               <li
                 *ngIf="details[step.id].indexOf(StepDetailTab.Recipe) !== -1"
                 [class.active]="expanded[step.id] === StepDetailTab.Recipe"
                 (click)="expanded[step.id] = StepDetailTab.Recipe"
               >
-                <span>Recipe</span>
+                <span>{{ 'list.recipe' | translate }}</span>
               </li>
               <li
                 *ngIf="details[step.id].indexOf(StepDetailTab.Factory) !== -1"
                 [class.active]="expanded[step.id] === StepDetailTab.Factory"
                 (click)="expanded[step.id] = StepDetailTab.Factory"
               >
-                <span>Factory</span>
+                <span>{{ 'list.factory' | translate }}</span>
               </li>
               <li
                 *ngIf="details[step.id].indexOf(StepDetailTab.Recipes) !== -1"
                 [class.active]="expanded[step.id] === StepDetailTab.Recipes"
                 (click)="expanded[step.id] = StepDetailTab.Recipes"
               >
-                <span>Recipes</span>
+                <span>{{ 'list.recipes' | translate }}</span>
               </li>
             </ul>
           </td>
@@ -668,7 +668,7 @@
         <ng-container *ngIf="expanded[step.id] === StepDetailTab.Item">
           <tr class="details first" *ngIf="outputs[step.id].length">
             <td [colSpan]="leftSpan"></td>
-            <td colspan="100"><span class="header">Sources</span></td>
+            <td colspan="100"><span class="header">{{ 'list.sources' | translate }}</span></td>
           </tr>
           <tr
             *ngFor="let output of outputs[step.id]; last as isLast"
@@ -785,7 +785,7 @@
           </tr>
           <tr class="details" *ngIf="step.parents">
             <td [colSpan]="leftSpan"></td>
-            <td colspan="100"><span class="header">Destinations</span></td>
+            <td colspan="100"><span class="header">{{ 'list.destinations' | translate }}</span></td>
           </tr>
           <tr
             *ngFor="
@@ -918,7 +918,7 @@
           >
             <tr class="details first">
               <td [colSpan]="leftSpan"></td>
-              <td colspan="100"><span class="header">Depletion</span></td>
+              <td colspan="100"><span class="header">{{ 'list.depletion' | translate }}</span></td>
             </tr>
             <ng-container
               *ngFor="let output of step.outputs | keyvalue: sortKeyValue"
@@ -962,7 +962,7 @@
             "
           >
             <td [colSpan]="leftSpan"></td>
-            <td colspan="100"><span class="header">Inputs</span></td>
+            <td colspan="100"><span class="header">{{ 'list.inputs' | translate }}</span></td>
           </tr>
           <ng-container
             *ngFor="
@@ -1099,7 +1099,7 @@
           </ng-container>
           <tr class="details">
             <td [colSpan]="leftSpan"></td>
-            <td colspan="100"><span class="header">Outputs</span></td>
+            <td colspan="100"><span class="header">{{ 'list.outputs' | translate }}</span></td>
           </tr>
           <ng-container
             *ngFor="
@@ -1435,8 +1435,7 @@
             </div>
             <div class="info" *ngIf="data.game === Game.Factorio">
               <span>
-                * Inserters are calculated using target/capacity settings and
-                0.18 experimental data from the
+                {{ 'list.insertCalculateRemark' | translate }}
                 <a
                   href="https://wiki.factorio.com/Inserters#Inserter_Throughput"
                   >wiki.</a
@@ -1450,20 +1449,18 @@
             <td [colSpan]="leftSpan"></td>
             <td colspan="100">
               <div>
-                <div class="header">Default Recipe</div>
+                <div class="header">{{ 'list.defaultRecipe' | translate }}</div>
                 <div class="info">
-                  Click to set a recipe as the default for this item. If set,
-                  the default recipe is treated as the only way to produce this
-                  item.
+                  {{ 'list.defaultRecipeInfo1' | translate }}
                 </div>
                 <div class="info">
-                  The recipe must be enabled and must only produce this item.
+                  {{ 'list.defaultRecipeInfo2' | translate }}
                 </div>
                 <div
                   class="info warn"
                   *ngIf="data.itemRecipeIds[step.itemId] === null"
                 >
-                  Default was ignored due to a detected circular loop.
+                  {{ 'list.defaultRecipeInfo3' | translate }}
                 </div>
               </div>
             </td>
@@ -1499,10 +1496,9 @@
             <td [colSpan]="leftSpan"></td>
             <td colspan="100">
               <div>
-                <div class="header">Enabled Recipes</div>
+                <div class="header">{{ 'list.enabledRecipes' | translate }}</div>
                 <div class="info">
-                  Click recipes to enable or disable them. Disabled recipes will
-                  not be used in the solution.
+                  {{ 'list.enabledRecipesInfo' | translate }}
                 </div>
               </div>
             </td>
@@ -1533,7 +1529,7 @@
     <tr *ngIf="mode === ListMode.All" class="border row col">
       <td [colSpan]="leftSpan + 1">
         <div class="flex summary-label">
-          <span class="monospace">Total:</span>
+          <span class="monospace">{{ 'list.total' | translate }}:</span>
         </div>
       </td>
       <td *ngIf="columns[Column.Belts].show">
@@ -1625,7 +1621,7 @@
       <td *ngIf="columns[Column.Link].show"></td>
     </tr>
     <tr *ngIf="mode === ListMode.Focus && !selected">
-      <td colspan="100" class="message">Select a node to see details</td>
+      <td colspan="100" class="message">{{ 'list.selectANodeToSeeDetails' | translate }}</td>
     </tr>
   </tbody>
 </table>

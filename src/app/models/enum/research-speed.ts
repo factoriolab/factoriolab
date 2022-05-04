@@ -12,13 +12,13 @@ export enum ResearchSpeed {
 }
 
 export const ResearchSpeedOptions: IdName<ResearchSpeed>[] = [
-  { id: ResearchSpeed.Speed0, name: 'No research bonus' },
-  { id: ResearchSpeed.Speed1, name: 'Research speed 1' },
-  { id: ResearchSpeed.Speed2, name: 'Research speed 2' },
-  { id: ResearchSpeed.Speed3, name: 'Research speed 3' },
-  { id: ResearchSpeed.Speed4, name: 'Research speed 4' },
-  { id: ResearchSpeed.Speed5, name: 'Research speed 5' },
-  { id: ResearchSpeed.Speed6, name: 'Research speed 6' },
+  { id: ResearchSpeed.Speed0, name: 'options.ResearchSpeed.Speed0' },
+  { id: ResearchSpeed.Speed1, name: 'options.ResearchSpeed.Speed1' },
+  { id: ResearchSpeed.Speed2, name: 'options.ResearchSpeed.Speed2' },
+  { id: ResearchSpeed.Speed3, name: 'options.ResearchSpeed.Speed3' },
+  { id: ResearchSpeed.Speed4, name: 'options.ResearchSpeed.Speed4' },
+  { id: ResearchSpeed.Speed5, name: 'options.ResearchSpeed.Speed5' },
+  { id: ResearchSpeed.Speed6, name: 'options.ResearchSpeed.Speed6' },
 ];
 
 export const ResearchSpeedVal = {

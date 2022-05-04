@@ -12,6 +12,7 @@ import * as App from '../app.actions';
 import { ResetAction } from '../products';
 import * as Settings from '../settings';
 import { LoadModAction } from './datasets.actions';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class DatasetsEffects {
@@ -66,14 +67,25 @@ export class DatasetsEffects {
     modIds.forEach((id) => this.requestData(id).subscribe(() => {}));
   }
 
-  requestData(id: string): Observable<ModData> {
-    return this.cache[id]
-      ? of(this.cache[id])
-      : this.http.get(`data/${id}/data.json`).pipe(
-          map((response) => response as ModData),
-          tap((data) => (this.cache[id] = data)),
-          tap((value) => this.store.dispatch(new LoadModAction({ id, value })))
-        );
+  requestData(id: string, lang?: string): Observable<ModData> {
+    let suffix;
+    if (lang && lang !== 'en') {
+      suffix = lang;
+    } else if (
+      (!lang && 'en' === this.translateSvc.currentLang)
+      || (lang && 'en' === lang)
+    ) {
+      suffix = 'en';
+    } else {
+      suffix = this.translateSvc.currentLang;
+    }
+    return (this.cache[`${id}-${suffix}`]
+      ? of(this.cache[`${id}-${suffix}`]).pipe()
+      : this.http.get(`data/${id}/data${!suffix || suffix === 'en' ? '' : '-' + suffix}.json`)).pipe(
+      map((response) => response as ModData),
+      tap((data) => (this.cache[`${id}-${suffix}`] = data)),
+      tap((value) => this.store.dispatch(new LoadModAction({ id, value })))
+    );
   }
 
   load(zip: string, stored: State, initial: Settings.SettingsState): void {
@@ -91,12 +103,17 @@ export class DatasetsEffects {
   constructor(
     private actions$: Actions,
     private http: HttpClient,
-    private store: Store<State>
+    private store: Store<State>,
+    private translateSvc: TranslateService,
   ) {
     this.load(
       BrowserUtility.zip,
       BrowserUtility.storedState,
       Settings.initialSettingsState
     );
+    this.translateSvc.onLangChange.subscribe((event: LangChangeEvent) => {
+      const id = BrowserUtility.storedState?.settingsState?.baseId || Settings.initialSettingsState.baseId;
+      this.requestData(id, event.lang).subscribe();
+    });
   }
 }

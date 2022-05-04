@@ -45,6 +45,8 @@ import { FactoriesState } from '~/store/factories';
 import { ColumnsState, PreferencesState } from '~/store/preferences';
 import { SettingsState, initialSettingsState } from '~/store/settings';
 import { BrowserUtility } from '~/utilities';
+import { Language } from '~/models/language';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'lab-settings',
@@ -100,6 +102,7 @@ export class SettingsComponent implements OnInit, OnChanges {
   @Output() setDisplayRate = new EventEmitter<PreviousPayload<DisplayRate>>();
   @Output() setColumns = new EventEmitter<ColumnsState>();
   @Output() setSimplex = new EventEmitter<boolean>();
+  @Output() setLanguage = new EventEmitter<string>();
   @Output() setPowerUnit = new EventEmitter<PowerUnit>();
   @Output() setProliferatorSpray = new EventEmitter<string>();
 
@@ -111,22 +114,32 @@ export class SettingsComponent implements OnInit, OnChanges {
   difficultyOptions: IdName<boolean>[] = [
     {
       id: false,
-      name: 'Normal',
+      name: 'options.recipeDifficulty.normal',
     },
     {
       id: true,
-      name: 'Expensive',
+      name: 'options.recipeDifficulty.expensive',
     },
   ];
   enabledOptions: IdName<boolean>[] = [
     {
       id: true,
-      name: 'Enabled',
+      name: 'options.enabled',
     },
     {
       id: false,
-      name: 'Disabled',
+      name: 'options.disabled',
     },
+  ];
+  languageOptions: Language[] = [
+    {
+      id: 'en',
+      name: 'English',
+    },
+    {
+      id: 'zh',
+      name: '简体中文',
+    }
   ];
   baseOptions: ModInfo[] = [];
   presetOptions: IdName<Preset>[];
@@ -153,7 +166,8 @@ export class SettingsComponent implements OnInit, OnChanges {
   constructor(
     private ref: ChangeDetectorRef,
     private router: Router,
-    private routerSvc: RouterService
+    private routerSvc: RouterService,
+    private translateSvc: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -181,7 +195,9 @@ export class SettingsComponent implements OnInit, OnChanges {
     const numCols = Object.keys(this.columns).filter(
       (c) => this.columns[c].show
     ).length;
-    this.columnsButton = `${numCols} Visible`;
+    this.translateSvc.get('setting.visible').subscribe(r => {
+      this.columnsButton = `${numCols} ${r}`;
+    });
     this.baseOptions = this.base.filter((b) => b.game === this.data.game);
   }
 
@@ -281,5 +297,10 @@ export class SettingsComponent implements OnInit, OnChanges {
     } else {
       this.setBeaconReceivers.emit('1');
     }
+  }
+
+  changeLanguage($event: string): void {
+    this.translateSvc.use($event);
+    this.setLanguage.emit($event);
   }
 }

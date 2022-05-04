@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { TestUtility } from 'src/tests';
 import { ValidateNumberDirective } from '~/support';
 import { InputComponent } from './input.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 enum DataTest {
   Input = 'lab-input-input',
@@ -44,7 +45,10 @@ describe('InputComponent', () => {
         InputComponent,
         TestInputComponent,
       ],
-      imports: [FormsModule],
+      imports: [
+        FormsModule,
+        TranslateModule.forRoot(),
+      ],
     }).compileComponents();
   });
 

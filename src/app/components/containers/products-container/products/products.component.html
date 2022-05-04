@@ -1,11 +1,11 @@
-<h2>Products</h2>
+<h2>{{ 'products.title' | translate }}</h2>
 <div class="panel">
   <div class="product-row" *ngFor="let product of products; trackBy: trackBy">
     <ng-container *ngIf="product && data.itemEntities[product.itemId]">
-      <button title="Remove product" (click)="removeProduct.emit(product.id)">
+      <button [title]="'products.removeProduct' | translate" (click)="removeProduct.emit(product.id)">
         <i class="material-icons">remove</i>
       </button>
-      <span>Produce</span>
+      <span>{{ 'products.produce' | translate }}</span>
       <lab-picker
         [data]="data"
         [selected]="product.itemId"
@@ -22,7 +22,7 @@
           [displayRate]="displayRate"
         ></lab-icon
       ></lab-picker>
-      <span>from</span>
+      <span>{{ 'products.from' | translate }}</span>
       <lab-input
         title="Set output rate"
         placeholder="Rate"
@@ -31,7 +31,7 @@
       ></lab-input>
       <lab-options
         class="ratetype"
-        title="Change rate type"
+        [title]="'products.changeRateType' | translate"
         [selected]="product.rateType"
         [options]="rateTypeOptions"
         (selectId)="setRateType.emit({ id: product.id, value: $event })"
@@ -40,7 +40,7 @@
         *ngIf="productSteps[product.itemId].length > 0; else recipeNone"
       >
         <ng-container *ngIf="product.viaId as id">
-          <span>of</span>
+          <span>{{ 'products.of' | translate }}</span>
           <ng-container
             *ngIf="productSteps[product.itemId].length === 1; else viaPicker"
           >
@@ -107,7 +107,7 @@
             </ng-template>
           </ng-template>
           <ng-container *ngIf="product.rateType === RateType.Belts">
-            <span>using</span>
+            <span>{{ 'products.using' | translate}}</span>
             <ng-container
               *ngIf="product.viaSetting || itemSettings[id].belt as belt"
             >
@@ -453,13 +453,13 @@
       [selected]="data.itemIds[0]"
       (selectId)="addProduct.emit($event)"
     >
-      <button title="Add a product">
+      <button [title]="'products.addAProduct' | translate">
         <i class="material-icons">add</i>
-        <div class="text">Add a product</div>
+        <div class="text">{{ 'products.addAProduct' | translate }}</div>
       </button></lab-picker
     >
     <lab-options
-      title="Select display rate"
+      [title]="'products.selectDisplayRate' | translate"
       [selected]="displayRate"
       [options]="DisplayRateOptions"
       (selectId)="setDisplayRate.emit({ value: $event, prev: displayRate })"

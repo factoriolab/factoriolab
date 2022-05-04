@@ -3,20 +3,20 @@
     <div class="links">
       <div class="header">
         <a [href]="homeHref"
-          ><h1>{{ title }}</h1></a
+          ><h1>{{ title | translate }}</h1></a
         >
       </div>
       <ng-container *ngIf="game !== Game.Factorio">
         <span class="separator">|</span>
-        <a href="factorio">Factorio</a>
+        <a href="factorio">{{'game.Factorio' | translate}}</a>
       </ng-container>
       <ng-container *ngIf="game !== Game.DysonSphereProgram">
         <span class="separator">|</span>
-        <a href="dsp">Dyson Sphere Program</a>
+        <a href="dsp">{{'game.DysonSphereProgram' | translate}}</a>
       </ng-container>
       <ng-container *ngIf="game !== Game.Satisfactory">
         <span class="separator">|</span>
-        <a href="satisfactory">Satisfactory</a>
+        <a href="satisfactory">{{'game.Satisfactory' | translate}}</a>
       </ng-container>
     </div>
     <div class="links">
@@ -65,24 +65,24 @@
             routerLinkActive="active"
             queryParamsHandling="preserve"
           >
-            <span>List</span>
+            <span>{{ 'app.list' | translate }}</span>
           </li>
           <li
             routerLink="/flow"
             routerLinkActive="active"
             queryParamsHandling="preserve"
           >
-            <span>Flow</span>
+            <span>{{ 'app.flow' | translate }}</span>
           </li>
           <li
             routerLink="/matrix"
             routerLinkActive="active"
             queryParamsHandling="preserve"
           >
-            <span>Matrix</span>
+            <span>{{ 'app.matrix' | translate }}</span>
           </li>
           <li *ngIf="!showSettings" (click)="showSettings = true">
-            <span>Settings</span>
+            <span>{{ 'app.settings' | translate }}</span>
           </li>
         </ul>
         <div class="panel">
