@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { MemoizedSelector } from '@ngrx/store';
 import { MockStore } from '@ngrx/store/testing';
+import { TranslateService } from '@ngx-translate/core';
 
 import {
   DispatchTest,
@@ -33,6 +34,7 @@ describe('SettingsComponent', () => {
   let mockStore: MockStore<LabState>;
   let mockGetStates: MemoizedSelector<LabState, Entities>;
   let detectChanges: jasmine.Spy;
+  let translateSvc: TranslateService;
   const id = 'id';
   const value = 'value';
 
@@ -53,6 +55,7 @@ describe('SettingsComponent', () => {
     );
     const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
     detectChanges = spyOn(ref.constructor.prototype, 'detectChanges');
+    translateSvc = TestBed.inject(TranslateService);
     component = fixture.componentInstance;
     mockStore.refreshState();
     fixture.detectChanges();
@@ -292,6 +295,16 @@ describe('SettingsComponent', () => {
     });
   });
 
+  describe('changeLanguage', () => {
+    it('should set the language in the translate service and emit', () => {
+      spyOn(translateSvc, 'use');
+      spyOn(component, 'setLanguage');
+      component.changeLanguage('lang');
+      expect(translateSvc.use).toHaveBeenCalledWith('lang');
+      expect(component.setLanguage).toHaveBeenCalledWith('lang');
+    });
+  });
+
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
     dispatch.void('resetSettings', App.ResetAction);
@@ -323,6 +336,7 @@ describe('SettingsComponent', () => {
     dispatch.val('setInserterCapacity', Settings.SetInserterCapacityAction);
     dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
     dispatch.val('setSimplex', Preferences.SetSimplexAction);
+    dispatch.val('setLanguage', Preferences.SetLanguageAction);
     dispatch.val('setPowerUnit', Preferences.SetPowerUnitAction);
     dispatch.val('setProliferatorSpray', Settings.SetProliferatorSprayAction);
   });

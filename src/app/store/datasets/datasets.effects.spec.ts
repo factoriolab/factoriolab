@@ -3,10 +3,12 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Action } from '@ngrx/store';
 import { MockStore } from '@ngrx/store/testing';
-import { of, ReplaySubject } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { EMPTY, of, ReplaySubject } from 'rxjs';
 
 import { Mocks, TestModule } from 'src/tests';
 import { ModData, ModHash } from '~/models';
+import { BrowserUtility } from '~/utilities';
 import { LabState } from '../';
 import * as App from '../app.actions';
 import * as Products from '../products';
@@ -19,6 +21,7 @@ describe('DatasetsEffects', () => {
   let actions: ReplaySubject<any>;
   let http: HttpTestingController;
   let mockStore: MockStore<LabState>;
+  let translateSvc: TranslateService;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
@@ -29,6 +32,24 @@ describe('DatasetsEffects', () => {
     effects = TestBed.inject(DatasetsEffects);
     http = TestBed.inject(HttpTestingController);
     mockStore = TestBed.inject(MockStore);
+    translateSvc = TestBed.inject(TranslateService);
+  });
+
+  describe('constructor', () => {
+    it('should watch for language changes', () => {
+      spyOn(effects, 'requestData').and.returnValue(EMPTY);
+      translateSvc.use('test');
+      expect(effects.requestData).toHaveBeenCalledWith('1.1', 'test');
+    });
+
+    it('should use base id from stored state', () => {
+      spyOnProperty(BrowserUtility, 'storedState').and.returnValue({
+        settingsState: { baseId: 'baseId' },
+      } as any);
+      spyOn(effects, 'requestData').and.returnValue(EMPTY);
+      translateSvc.use('test');
+      expect(effects.requestData).toHaveBeenCalledWith('baseId', 'test');
+    });
   });
 
   describe('appLoad$', () => {
@@ -123,9 +144,9 @@ describe('DatasetsEffects', () => {
     it('should handle null defaults and skip hash', () => {
       spyOn(effects, 'loadModsForBase');
       let data: [ModData, ModHash] | undefined;
-      effects.requestData('id', 'en', true).subscribe((d) => (data = d));
+      effects.requestData('id', 'lang', true).subscribe((d) => (data = d));
       http
-        .expectOne('data/id/data.json')
+        .expectOne('data/id/data-lang.json')
         .flush({ ...Mocks.BaseData, ...{ defaults: undefined } });
       expect(effects.loadModsForBase).toHaveBeenCalledWith([]);
       expect(data).toBeUndefined();

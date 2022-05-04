@@ -96,6 +96,16 @@ describe('Preferences Reducer', () => {
     });
   });
 
+  describe('SET_LANGUAGE', () => {
+    it('should set the language', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetLanguageAction(value)
+      );
+      expect(result.language).toEqual(value);
+    });
+  });
+
   describe('SET_POWER_UNIT', () => {
     it('should set the power unit', () => {
       const result = preferencesReducer(
