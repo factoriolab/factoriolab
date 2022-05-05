@@ -62,7 +62,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     this.store.select(Recipes.getAdjustedDataset),
     this.store.select(Settings.getSettings),
     this.store.select(Settings.getBeltSpeed),
-    this.store.select(Preferences.getColumnsState),
+    this.store.select(Settings.getColumnsState),
   ]).pipe(
     map(
       ([

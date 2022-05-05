@@ -15,6 +15,10 @@ export const getDataEntities = createSelector(
   datasetsState,
   (state) => state.dataEntities
 );
+export const getI18nEntities = createSelector(
+  datasetsState,
+  (state) => state.i18nEntities
+);
 export const getHashEntities = createSelector(
   datasetsState,
   (state) => state.hashEntities

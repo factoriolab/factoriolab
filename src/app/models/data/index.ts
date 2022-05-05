@@ -11,5 +11,6 @@ export * from './item';
 export * from './mod-data';
 export * from './mod-defaults';
 export * from './mod-hash';
+export * from './mod-i18n';
 export * from './module';
 export * from './recipe';
