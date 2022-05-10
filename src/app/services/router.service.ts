@@ -27,6 +27,7 @@ import * as Items from '~/store/items';
 import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
+import { DataService } from './data.service';
 
 export const NULL = '?'; // Encoded, previously 'n'
 export const EMPTY = '='; // Encoded, previously 'e'
@@ -85,7 +86,11 @@ export class RouterService {
   };
   first = true;
 
-  constructor(private router: Router, private store: Store<LabState>) {
+  constructor(
+    private router: Router,
+    private store: Store<LabState>,
+    private dataSvc: DataService
+  ) {
     const l = 256;
     this.base64codes = new Uint8Array(l);
     for (let i = 0; i < l; i++) {
@@ -304,19 +309,12 @@ export class RouterService {
                   params[Section.Base],
                   data.hash
                 );
-                this.store
-                  .select(Datasets.getHashEntities)
-                  .pipe(
-                    map(
-                      (hashEntities) =>
-                        hashEntities[
-                          baseId || Settings.initialSettingsState.baseId
-                        ]
-                    ),
-                    filter((e): e is ModHash => e != null),
-                    first()
-                  )
-                  .subscribe((hash) => {
+                this.dataSvc
+                  .requestData(baseId || Settings.initialSettingsState.baseId)
+                  .subscribe(([data, i18n, hash]) => {
+                    if (hash == null) {
+                      throw new Error('RouterService failed to load hash');
+                    }
                     if (params[Section.Products]) {
                       state.productsState = this.unzipProducts(params, v, hash);
                     }
@@ -352,7 +350,7 @@ export class RouterService {
       }
     } catch (err) {
       console.error(err);
-      throw new Error('Router failed to parse url');
+      throw new Error('RouterService failed to parse url');
     }
   }
 
