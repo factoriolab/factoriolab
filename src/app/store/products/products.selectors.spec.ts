@@ -71,8 +71,8 @@ describe('Products Selectors', () => {
         [Mocks.Product4],
         null,
         null,
-        null,
-        {}
+        {},
+        null
       );
       expect(SimplexUtility.getSteps).toHaveBeenCalled();
     });
@@ -706,8 +706,8 @@ describe('Products Selectors', () => {
         [Mocks.Step1],
         {},
         [],
-        {},
-        { simplex: true }
+        { simplex: true },
+        {}
       );
       expect(SimplexUtility.solve).toHaveBeenCalled();
     });

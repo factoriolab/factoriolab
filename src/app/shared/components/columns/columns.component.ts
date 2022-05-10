@@ -17,7 +17,7 @@ import { DialogContainerComponent } from '../dialog/dialog-container.component';
 })
 export class ColumnsComponent extends DialogContainerComponent {
   vm$ = combineLatest([
-    this.store.select(Preferences.getColumnsState),
+    this.store.select(Settings.getColumnsState),
     this.store.select(Settings.getColumnOptions),
   ]).pipe(map(([columns, columnOptions]) => ({ columns, columnOptions })));
 

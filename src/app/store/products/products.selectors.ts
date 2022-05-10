@@ -53,9 +53,9 @@ export const getProductSteps = createSelector(
   getBaseProducts,
   Items.getItemSettings,
   Settings.getDisabledRecipeIds,
+  Settings.getSimplexModifiers,
   Recipes.getAdjustedDataset,
-  Preferences.getSimplexModifiers,
-  (products, itemSettings, disabledRecipeIds, data, adj) => {
+  (products, itemSettings, disabledRecipeIds, adj, data) => {
     const a = products?.reduce((e: Entities<[string, Rational][]>, p) => {
       e[p.itemId] = SimplexUtility.getSteps(
         p.itemId,
@@ -334,9 +334,9 @@ export const getMatrixResult = createSelector(
   getNormalizedSteps,
   Items.getItemSettings,
   Settings.getDisabledRecipeIds,
+  Settings.getSimplexModifiers,
   Recipes.getAdjustedDataset,
-  Preferences.getSimplexModifiers,
-  (steps, itemSettings, disabledRecipeIds, data, adj) =>
+  (steps, itemSettings, disabledRecipeIds, adj, data) =>
     adj.simplex
       ? SimplexUtility.solve(
           RateUtility.copy(steps),
@@ -634,7 +634,7 @@ export const getStepTree = createSelector(getSteps, (steps) => {
 
 export const getEffectivePrecision = createSelector(
   getSteps,
-  Preferences.getColumnsState,
+  Settings.getColumnsState,
   (steps, columns) => {
     const effPrecision: Entities<number | null> = {};
     effPrecision[Column.Surplus] = effPrecFrom(

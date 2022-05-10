@@ -14,7 +14,7 @@ import { environment } from 'src/environments';
 import { APP, Game, ItemId, MatrixResultType } from './models';
 import { ErrorService, RouterService, StateService } from './services';
 import { LabState } from './store';
-import { getLanguageModifiers } from './store/preferences';
+import * as Preferences from './store/preferences';
 import * as Products from './store/products';
 import * as Settings from './store/settings';
 
@@ -107,8 +107,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (this.lsHidePoll) {
       this.showPoll = false;
     }
-    this.store.select(getLanguageModifiers).subscribe((r) => {
-      this.translateSvc.use(r.getLanguage);
+    this.store.select(Preferences.getLanguage).subscribe((lang) => {
+      this.translateSvc.use(lang);
     });
   }
 

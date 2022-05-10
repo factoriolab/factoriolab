@@ -1,6 +1,7 @@
 import { data } from 'src/data';
 import base from 'src/data/1.1/data.json';
 import hash from 'src/data/1.1/hash.json';
+import i18n from 'src/data/1.1/i18n/zh.json';
 import mod from 'src/data/res/data.json';
 import {
   Entities,
@@ -13,6 +14,7 @@ import {
   Mod,
   ModData,
   ModHash,
+  ModI18n,
   Node,
   PowerUnit,
   Preset,
@@ -41,6 +43,7 @@ export const DataState = Datasets.initialDatasetsState;
 export const BaseInfo = data.base[0];
 export const BaseData = base as ModData;
 export const Hash: ModHash = hash;
+export const I18n: ModI18n = i18n;
 export const Base = { ...BaseInfo, ...BaseData } as Mod;
 export const ModData1 = mod as ModData;
 export const Mod1 = { ...data.mods[0], ...ModData1 } as Mod;
@@ -49,6 +52,8 @@ export const Defaults = Settings.getDefaults.projector(Preset.Beacon8, Base)!;
 export const Data = Settings.getNormalDataset.projector(
   data.app,
   [Base, Mod1],
+  [],
+  null,
   Defaults,
   Game.Factorio
 );

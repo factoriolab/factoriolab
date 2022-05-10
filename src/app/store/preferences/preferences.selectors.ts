@@ -1,13 +1,8 @@
 import { createSelector } from '@ngrx/store';
 
-import { Column, Game, LinkValue } from '~/models';
+import { Column, LinkValue } from '~/models';
 import { LabState } from '../';
-import * as Settings from '../settings';
-import {
-  ColumnsState,
-  initialColumnsState,
-  PreferencesState,
-} from './preferences.reducer';
+import { PreferencesState } from './preferences.reducer';
 
 /* Base selector functions */
 export const preferencesState = (state: LabState): PreferencesState =>
@@ -47,51 +42,6 @@ export const getLanguage = createSelector(
 );
 
 /** Complex selectors */
-export const getColumnsState = createSelector(
-  getColumns,
-  Settings.getGame,
-  (col, game): ColumnsState =>
-    game === Game.DysonSphereProgram
-      ? {
-          ...initialColumnsState,
-          ...col,
-          ...{
-            [Column.Wagons]: { ...col[Column.Wagons], ...{ show: false } },
-            [Column.Overclock]: {
-              ...col[Column.Overclock],
-              ...{ show: false },
-            },
-            [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
-            [Column.Pollution]: {
-              ...col[Column.Pollution],
-              ...{ show: false },
-            },
-          },
-        }
-      : game === Game.Satisfactory
-      ? {
-          ...initialColumnsState,
-          ...col,
-          ...{
-            [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
-            [Column.Pollution]: {
-              ...col[Column.Pollution],
-              ...{ show: false },
-            },
-          },
-        }
-      : {
-          ...initialColumnsState,
-          ...col,
-          ...{
-            [Column.Overclock]: {
-              ...col[Column.Overclock],
-              ...{ show: false },
-            },
-          },
-        }
-);
-
 export const getLinkPrecision = createSelector(
   getLinkText,
   getColumns,
@@ -111,17 +61,6 @@ export const getLinkPrecision = createSelector(
   }
 );
 
-export const getSimplexModifiers = createSelector(
-  getSimplex,
-  Settings.getRationalCostInput,
-  Settings.getRationalCostIgnored,
-  (simplex, costInput, costIgnored) => ({
-    simplex,
-    costInput,
-    costIgnored,
-  })
-);
-
 export const getSavedStates = createSelector(getStates, (states) =>
   Object.keys(states).map((i) => ({
     id: i,
@@ -132,11 +71,4 @@ export const getSavedStates = createSelector(getStates, (states) =>
 export const getColumnsVisible = createSelector(
   getColumns,
   (columns) => Object.keys(columns).filter((c) => columns[c].show).length
-);
-
-export const getLanguageModifiers = createSelector(
-  getLanguage,
-  (getLanguage) => ({
-    getLanguage,
-  })
 );
