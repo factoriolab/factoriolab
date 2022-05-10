@@ -304,7 +304,7 @@ describe('Settings Selectors', () => {
       const result = Selectors.getNormalDataset.projector(
         Mocks.Raw.app,
         [Mocks.Base, Mocks.Mod1],
-        [],
+        [Mocks.I18n],
         null,
         Mocks.Defaults,
         Game.Factorio

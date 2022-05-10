@@ -132,6 +132,38 @@ describe('DatasetsEffects', () => {
       effects.requestData('id').subscribe((d) => (data = d));
       expect(data).toEqual([Mocks.BaseData, Mocks.I18n, Mocks.Hash]);
     });
+
+    it('should handle null defaults and skip hash', () => {
+      spyOn(effects, 'loadModsForBase');
+      let data: [ModData, ModI18n | null, ModHash | null] | undefined;
+      effects.requestData('id', true).subscribe((d) => (data = d));
+      const baseData = { ...Mocks.BaseData, ...{ defaults: undefined } };
+      http.expectOne('data/id/data.json').flush(baseData);
+      expect(effects.loadModsForBase).toHaveBeenCalledWith([]);
+      expect(data).toEqual([baseData, null, null]);
+    });
+
+    it('should handle missing translations', () => {
+      spyOn(console, 'warn');
+      translateSvc.use('err');
+      effects.cacheData['id'] = Mocks.BaseData;
+      effects.cacheHash['id'] = Mocks.Hash;
+      let data: [ModData, ModI18n | null, ModHash | null] | undefined;
+      effects.requestData('id').subscribe((d) => (data = d));
+      http.expectOne('data/id/i18n/err.json').error(new ProgressEvent('error'));
+      expect(data).toEqual([Mocks.BaseData, null, Mocks.Hash]);
+      expect(console.warn).toHaveBeenCalled();
+    });
+
+    it('should load translation data', () => {
+      translateSvc.use('zh');
+      effects.cacheData['id'] = Mocks.BaseData;
+      effects.cacheHash['id'] = Mocks.Hash;
+      let data: [ModData, ModI18n | null, ModHash | null] | undefined;
+      effects.requestData('id').subscribe((d) => (data = d));
+      http.expectOne('data/id/i18n/zh.json').flush(Mocks.I18n);
+      expect(data).toEqual([Mocks.BaseData, Mocks.I18n, Mocks.Hash]);
+    });
   });
 
   describe('loadModsForBase', () => {
