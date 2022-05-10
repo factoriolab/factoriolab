@@ -1,5 +1,6 @@
 import { ItemId, Mocks, RecipeId, TestUtility } from 'src/tests';
 import {
+  Column,
   FuelType,
   Game,
   InserterCapacity,
@@ -9,6 +10,7 @@ import {
   Rational,
   ResearchSpeed,
 } from '~/models';
+import * as Preferences from '../preferences';
 import { initialSettingsState } from './settings.reducer';
 import * as Selectors from './settings.selectors';
 
@@ -45,6 +47,41 @@ describe('Settings Selectors', () => {
         test: Mocks.Hash,
       });
       expect(result).toEqual(Mocks.Hash);
+    });
+  });
+
+  describe('getColumnsState', () => {
+    it('should override Overclock for Factorio', () => {
+      const result = Selectors.getColumnsState.projector(
+        Game.Factorio,
+        Preferences.initialColumnsState
+      );
+      expect(result[Column.Wagons].show).toBeTrue();
+      expect(result[Column.Overclock].show).toBeFalse();
+      expect(result[Column.Beacons].show).toBeTrue();
+      expect(result[Column.Pollution].show).toBeTrue();
+    });
+
+    it('should override Wagons/Beacons/Pollution for Dyson Sphere Program', () => {
+      const result = Selectors.getColumnsState.projector(
+        Game.DysonSphereProgram,
+        Preferences.initialColumnsState
+      );
+      expect(result[Column.Wagons].show).toBeFalse();
+      expect(result[Column.Overclock].show).toBeFalse();
+      expect(result[Column.Beacons].show).toBeFalse();
+      expect(result[Column.Pollution].show).toBeFalse();
+    });
+
+    it('should override Beacons/Pollution for Satisfactory', () => {
+      const result = Selectors.getColumnsState.projector(
+        Game.Satisfactory,
+        Preferences.initialColumnsState
+      );
+      expect(result[Column.Wagons].show).toBeTrue();
+      expect(result[Column.Overclock].show).toBeTrue();
+      expect(result[Column.Beacons].show).toBeFalse();
+      expect(result[Column.Pollution].show).toBeFalse();
     });
   });
 
@@ -171,14 +208,14 @@ describe('Settings Selectors', () => {
     });
   });
 
-  describe('getFuel', () => {
+  describe('getFuelId', () => {
     it('should return fuel from settings', () => {
       const result = Selectors.getFuelId.projector(initialSettingsState);
       expect(result).toEqual(initialSettingsState.fuelId);
     });
   });
 
-  describe('getDisabledRecipes', () => {
+  describe('getDisabledRecipeIds', () => {
     it('should return disabledRecipes from settings', () => {
       const result =
         Selectors.getDisabledRecipeIds.projector(initialSettingsState);
@@ -221,6 +258,21 @@ describe('Settings Selectors', () => {
     });
   });
 
+  describe('getSimplexModifiers', () => {
+    it('should create an object to be used by simplex calcs', () => {
+      const result = Selectors.getSimplexModifiers.projector(
+        Rational.one,
+        Rational.one,
+        true
+      );
+      expect(result).toEqual({
+        costInput: Rational.one,
+        costIgnored: Rational.one,
+        simplex: true,
+      });
+    });
+  });
+
   describe('getMods', () => {
     it('should handle nulls', () => {
       const result = Selectors.getMods.projector(null, null);
@@ -252,6 +304,8 @@ describe('Settings Selectors', () => {
       const result = Selectors.getNormalDataset.projector(
         Mocks.Raw.app,
         [Mocks.Base, Mocks.Mod1],
+        [],
+        null,
         Mocks.Defaults,
         Game.Factorio
       );
@@ -304,6 +358,8 @@ describe('Settings Selectors', () => {
       const result = Selectors.getNormalDataset.projector(
         data,
         [Mocks.Base, Mocks.Mod1],
+        [],
+        null,
         Mocks.Defaults,
         Game.Factorio
       );
@@ -369,6 +425,8 @@ describe('Settings Selectors', () => {
       const result = Selectors.getNormalDataset.projector(
         Mocks.Raw.app,
         [base, Mocks.Mod1],
+        [],
+        null,
         Mocks.Defaults,
         Game.Factorio
       );
@@ -409,6 +467,8 @@ describe('Settings Selectors', () => {
       const result = Selectors.getNormalDataset.projector(
         Mocks.Raw.app,
         [base, Mocks.Mod1],
+        [],
+        null,
         Mocks.Defaults,
         Game.DysonSphereProgram
       );
@@ -440,6 +500,8 @@ describe('Settings Selectors', () => {
       const result = Selectors.getNormalDataset.projector(
         Mocks.Raw.app,
         [base, Mocks.Mod1],
+        [],
+        null,
         Mocks.Defaults,
         Game.Factorio
       );
@@ -472,6 +534,8 @@ describe('Settings Selectors', () => {
       const result = Selectors.getNormalDataset.projector(
         Mocks.Raw.app,
         [base, Mocks.Mod1],
+        [],
+        null,
         Mocks.Defaults,
         Game.Factorio
       );
@@ -497,6 +561,8 @@ describe('Settings Selectors', () => {
       const result = Selectors.getNormalDataset.projector(
         Mocks.Raw.app,
         [base, Mocks.Mod1],
+        [],
+        null,
         Mocks.Defaults,
         Game.Factorio
       );
@@ -518,6 +584,8 @@ describe('Settings Selectors', () => {
             ...{ icons: [...Mocks.Base.icons, { id: '1', file: 'file1' }] },
           },
         ],
+        [],
+        null,
         Mocks.Defaults,
         Game.Factorio
       );

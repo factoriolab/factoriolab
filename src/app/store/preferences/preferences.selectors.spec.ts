@@ -1,6 +1,5 @@
 import { Mocks } from 'src/tests';
-import { Column, Game, LinkValue, Rational } from '~/models';
-import { initialColumnsState } from './preferences.reducer';
+import { Column, LinkValue } from '~/models';
 import * as Selectors from './preferences.selectors';
 
 describe('Preferences Selectors', () => {
@@ -9,41 +8,6 @@ describe('Preferences Selectors', () => {
       expect(Selectors.getStates.projector(Mocks.PreferencesState)).toEqual(
         Mocks.PreferencesState.states
       );
-    });
-  });
-
-  describe('getColumnsState', () => {
-    it('should override Overclock for Factorio', () => {
-      const state = initialColumnsState;
-      const result = Selectors.getColumnsState.projector(state, Game.Factorio);
-      expect(result[Column.Wagons].show).toBeTrue();
-      expect(result[Column.Overclock].show).toBeFalse();
-      expect(result[Column.Beacons].show).toBeTrue();
-      expect(result[Column.Pollution].show).toBeTrue();
-    });
-
-    it('should override Wagons/Beacons/Pollution for Dyson Sphere Program', () => {
-      const state = initialColumnsState;
-      const result = Selectors.getColumnsState.projector(
-        state,
-        Game.DysonSphereProgram
-      );
-      expect(result[Column.Wagons].show).toBeFalse();
-      expect(result[Column.Overclock].show).toBeFalse();
-      expect(result[Column.Beacons].show).toBeFalse();
-      expect(result[Column.Pollution].show).toBeFalse();
-    });
-
-    it('should override Beacons/Pollution for Satisfactory', () => {
-      const state = initialColumnsState;
-      const result = Selectors.getColumnsState.projector(
-        state,
-        Game.Satisfactory
-      );
-      expect(result[Column.Wagons].show).toBeTrue();
-      expect(result[Column.Overclock].show).toBeTrue();
-      expect(result[Column.Beacons].show).toBeFalse();
-      expect(result[Column.Pollution].show).toBeFalse();
     });
   });
 
@@ -79,21 +43,6 @@ describe('Preferences Selectors', () => {
         [Column.Factories]: { precision: 1 },
       });
       expect(result).toEqual(1);
-    });
-  });
-
-  describe('getSimplexModifiers', () => {
-    it('should create an object to be used by simplex calcs', () => {
-      const result = Selectors.getSimplexModifiers.projector(
-        true,
-        Rational.one,
-        Rational.one
-      );
-      expect(result).toEqual({
-        simplex: true,
-        costInput: Rational.one,
-        costIgnored: Rational.one,
-      });
     });
   });
 

@@ -322,10 +322,10 @@ export const getNormalDataset = createSelector(
   Datasets.getAppData,
   getDatasets,
   getI18n,
+  getHash,
   getDefaults,
   getGame,
-  getHash,
-  (app, mods, i18n, defaults, game, hash) => {
+  (app, mods, i18n, hash, defaults, game) => {
     // Map out entities with mods
     const categoryEntities = getEntities(
       app.categories,
