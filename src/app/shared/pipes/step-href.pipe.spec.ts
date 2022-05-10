@@ -1,8 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { provideMockStore } from '@ngrx/store/testing';
 
-import { initialState, Mocks } from 'src/tests';
+import { Mocks, TestModule } from 'src/tests';
 import { Rational } from '~/models';
 import { RouterService } from '~/services';
 import { StepHrefPipe } from './step-href.pipe';
@@ -13,8 +11,8 @@ describe('StepHrefPipe', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-      providers: [provideMockStore({ initialState }), StepHrefPipe],
+      imports: [TestModule],
+      providers: [StepHrefPipe],
     });
     pipe = TestBed.inject(StepHrefPipe);
     routerService = TestBed.inject(RouterService);
