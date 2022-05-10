@@ -41,15 +41,17 @@ export class StateService {
   // istanbul ignore next
   checkHash(): void {
     combineLatest([
-      this.store.select(Settings.getDatasets),
-      this.store.select(Settings.getDataset),
+      this.store.select(Settings.getBaseDatasetId),
+      this.store.select(Settings.getNormalDataset),
     ])
       .pipe(
-        filter(([sets, data]) => sets.length > 0 && data.hash != null),
+        filter(
+          ([baseId, data]) => data.categoryIds.length > 0 && data.hash != null
+        ),
         first()
       )
-      .subscribe(([sets, data]) => {
-        console.log(sets[0].id);
+      .subscribe(([baseId, data]) => {
+        console.log(baseId);
         console.log(
           JSON.stringify(
             data.complexRecipeIds.filter((i) => !data.itemEntities[i])

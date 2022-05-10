@@ -7,8 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { EMPTY, of, ReplaySubject } from 'rxjs';
 
 import { Mocks, TestModule } from 'src/tests';
-import { ModData, ModHash } from '~/models';
-import { BrowserUtility } from '~/utilities';
+import { ModData, ModHash, ModI18n } from '~/models';
 import { LabState } from '../';
 import * as App from '../app.actions';
 import * as Products from '../products';
@@ -39,23 +38,14 @@ describe('DatasetsEffects', () => {
     it('should watch for language changes', () => {
       spyOn(effects, 'requestData').and.returnValue(EMPTY);
       translateSvc.use('test');
-      expect(effects.requestData).toHaveBeenCalledWith('1.1', 'test');
-    });
-
-    it('should use base id from stored state', () => {
-      spyOnProperty(BrowserUtility, 'storedState').and.returnValue({
-        settingsState: { baseId: 'baseId' },
-      } as any);
-      spyOn(effects, 'requestData').and.returnValue(EMPTY);
-      translateSvc.use('test');
-      expect(effects.requestData).toHaveBeenCalledWith('baseId', 'test');
+      expect(effects.requestData).toHaveBeenCalledWith('1.1');
     });
   });
 
   describe('appLoad$', () => {
     it('should load the default base mod', () => {
       spyOn(effects, 'requestData').and.returnValue(
-        of([Mocks.BaseData, Mocks.Hash])
+        of([Mocks.BaseData, Mocks.I18n, Mocks.Hash])
       );
       actions = new ReplaySubject(1);
       actions.next(new App.LoadAction({}));
@@ -68,7 +58,7 @@ describe('DatasetsEffects', () => {
 
     it('should load from state', () => {
       spyOn(effects, 'requestData').and.returnValue(
-        of([Mocks.BaseData, Mocks.Hash])
+        of([Mocks.BaseData, Mocks.I18n, Mocks.Hash])
       );
       actions = new ReplaySubject(1);
       actions.next(
@@ -86,7 +76,7 @@ describe('DatasetsEffects', () => {
   describe('appReset$', () => {
     it('should reset and load mod for new mod', () => {
       spyOn(effects, 'requestData').and.returnValue(
-        of([Mocks.BaseData, Mocks.Hash])
+        of([Mocks.BaseData, Mocks.I18n, Mocks.Hash])
       );
       actions = new ReplaySubject(1);
       actions.next(new App.ResetAction());
@@ -101,7 +91,7 @@ describe('DatasetsEffects', () => {
   describe('setBaseId$', () => {
     it('should reset and load mod for new mod', () => {
       spyOn(effects, 'requestData').and.returnValue(
-        of([Mocks.BaseData, Mocks.Hash])
+        of([Mocks.BaseData, Mocks.I18n, Mocks.Hash])
       );
       actions = new ReplaySubject(1);
       actions.next(new Settings.SetBaseAction(Mocks.Base.id));
@@ -134,29 +124,52 @@ describe('DatasetsEffects', () => {
     });
 
     it('should get values from cache', () => {
-      effects.cacheData['id-en'] = Mocks.BaseData;
+      translateSvc.use('zh');
+      effects.cacheData['id'] = Mocks.BaseData;
+      effects.cacheI18n['id-zh'] = Mocks.I18n;
       effects.cacheHash['id'] = Mocks.Hash;
-      let data: [ModData, ModHash] | undefined;
-      effects.requestData('id', 'en').subscribe((d) => (data = d));
-      expect(data).toEqual([Mocks.BaseData, Mocks.Hash]);
+      let data: [ModData, ModI18n | null, ModHash | null] | undefined;
+      effects.requestData('id').subscribe((d) => (data = d));
+      expect(data).toEqual([Mocks.BaseData, Mocks.I18n, Mocks.Hash]);
     });
 
     it('should handle null defaults and skip hash', () => {
       spyOn(effects, 'loadModsForBase');
-      let data: [ModData, ModHash] | undefined;
-      effects.requestData('id', 'lang', true).subscribe((d) => (data = d));
-      http
-        .expectOne('data/id/data-lang.json')
-        .flush({ ...Mocks.BaseData, ...{ defaults: undefined } });
+      let data: [ModData, ModI18n | null, ModHash | null] | undefined;
+      effects.requestData('id', true).subscribe((d) => (data = d));
+      const baseData = { ...Mocks.BaseData, ...{ defaults: undefined } };
+      http.expectOne('data/id/data.json').flush(baseData);
       expect(effects.loadModsForBase).toHaveBeenCalledWith([]);
-      expect(data).toBeUndefined();
+      expect(data).toEqual([baseData, null, null]);
+    });
+
+    it('should handle missing translations', () => {
+      spyOn(console, 'warn');
+      translateSvc.use('err');
+      effects.cacheData['id'] = Mocks.BaseData;
+      effects.cacheHash['id'] = Mocks.Hash;
+      let data: [ModData, ModI18n | null, ModHash | null] | undefined;
+      effects.requestData('id').subscribe((d) => (data = d));
+      http.expectOne('data/id/i18n/err.json').error(new ProgressEvent('error'));
+      expect(data).toEqual([Mocks.BaseData, null, Mocks.Hash]);
+      expect(console.warn).toHaveBeenCalled();
+    });
+
+    it('should load translation data', () => {
+      translateSvc.use('zh');
+      effects.cacheData['id'] = Mocks.BaseData;
+      effects.cacheHash['id'] = Mocks.Hash;
+      let data: [ModData, ModI18n | null, ModHash | null] | undefined;
+      effects.requestData('id').subscribe((d) => (data = d));
+      http.expectOne('data/id/i18n/zh.json').flush(Mocks.I18n);
+      expect(data).toEqual([Mocks.BaseData, Mocks.I18n, Mocks.Hash]);
     });
   });
 
   describe('loadModsForBase', () => {
     it('should load a list of mods', () => {
       spyOn(effects, 'requestData').and.returnValue(
-        of([Mocks.BaseData, Mocks.Hash])
+        of([Mocks.BaseData, Mocks.I18n, Mocks.Hash])
       );
       effects.loadModsForBase([Mocks.Mod1.id]);
       expect(effects.requestData).toHaveBeenCalledTimes(1);
@@ -166,7 +179,7 @@ describe('DatasetsEffects', () => {
   describe('load', () => {
     it('should load stored mod', () => {
       spyOn(effects, 'requestData').and.returnValue(
-        of([Mocks.BaseData, Mocks.Hash])
+        of([Mocks.BaseData, Mocks.I18n, Mocks.Hash])
       );
       spyOn(mockStore, 'dispatch');
       effects.load(

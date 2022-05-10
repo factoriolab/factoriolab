@@ -2,6 +2,7 @@ import { createSelector } from '@ngrx/store';
 
 import { environment } from 'src/environments';
 import {
+  Column,
   columnOptions,
   Dataset,
   Defaults,
@@ -30,6 +31,7 @@ import {
 } from '~/models';
 import { LabState } from '../';
 import * as Datasets from '../datasets';
+import * as Preferences from '../preferences';
 import { initialSettingsState, SettingsState } from './settings.reducer';
 
 /* Base selector functions */
@@ -131,6 +133,51 @@ export const getBaseOptions = createSelector(
   getGame,
   Datasets.getBaseSets,
   (game, baseSets) => baseSets.filter((b) => b.game === game)
+);
+
+export const getColumnsState = createSelector(
+  getGame,
+  Preferences.getColumns,
+  (game, col): Preferences.ColumnsState =>
+    game === Game.DysonSphereProgram
+      ? {
+          ...Preferences.initialColumnsState,
+          ...col,
+          ...{
+            [Column.Wagons]: { ...col[Column.Wagons], ...{ show: false } },
+            [Column.Overclock]: {
+              ...col[Column.Overclock],
+              ...{ show: false },
+            },
+            [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
+            [Column.Pollution]: {
+              ...col[Column.Pollution],
+              ...{ show: false },
+            },
+          },
+        }
+      : game === Game.Satisfactory
+      ? {
+          ...Preferences.initialColumnsState,
+          ...col,
+          ...{
+            [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
+            [Column.Pollution]: {
+              ...col[Column.Pollution],
+              ...{ show: false },
+            },
+          },
+        }
+      : {
+          ...Preferences.initialColumnsState,
+          ...col,
+          ...{
+            [Column.Overclock]: {
+              ...col[Column.Overclock],
+              ...{ show: false },
+            },
+          },
+        }
 );
 
 export const getDefaults = createSelector(
@@ -239,6 +286,17 @@ export const getRationalCostIgnored = createSelector(getCostIgnored, (cost) =>
   Rational.fromString(cost)
 );
 
+export const getSimplexModifiers = createSelector(
+  getRationalCostInput,
+  getRationalCostIgnored,
+  Preferences.getSimplex,
+  (costInput, costIgnored, simplex) => ({
+    costInput,
+    costIgnored,
+    simplex,
+  })
+);
+
 export const getMods = createSelector(
   getBase,
   Datasets.getModEntities,
@@ -253,13 +311,21 @@ export const getDatasets = createSelector(getBase, getMods, (base, mods) =>
     : []
 );
 
+export const getI18n = createSelector(
+  getDatasets,
+  Datasets.getI18nEntities,
+  Preferences.getLanguage,
+  (mods, i18n, lang) => mods.map((m) => i18n[`${m.id}-${lang}`])
+);
+
 export const getNormalDataset = createSelector(
   Datasets.getAppData,
   getDatasets,
+  getI18n,
+  getHash,
   getDefaults,
   getGame,
-  getHash,
-  (app, mods, defaults, game, hash) => {
+  (app, mods, i18n, hash, defaults, game) => {
     // Map out entities with mods
     const categoryEntities = getEntities(
       app.categories,
@@ -289,6 +355,36 @@ export const getNormalDataset = createSelector(
       app.limitations,
       mods.map((m) => m.limitations)
     );
+
+    // Apply localization
+    for (const locale of i18n) {
+      if (locale) {
+        for (const i of Object.keys(locale.categories)) {
+          categoryEntities[i] = {
+            ...categoryEntities[i],
+            ...{
+              name: locale.categories[i],
+            },
+          };
+        }
+        for (const i of Object.keys(locale.items)) {
+          itemData[i] = {
+            ...itemData[i],
+            ...{
+              name: locale.items[i],
+            },
+          };
+        }
+        for (const i of Object.keys(locale.recipes)) {
+          recipeEntities[i] = {
+            ...recipeEntities[i],
+            ...{
+              name: locale.recipes[i],
+            },
+          };
+        }
+      }
+    }
 
     // Convert to id arrays
     let categoryIds = Object.keys(categoryEntities);
