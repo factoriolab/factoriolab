@@ -1,16 +1,11 @@
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MemoizedSelector } from '@ngrx/store';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { MockStore } from '@ngrx/store/testing';
 import { deflate, inflate } from 'pako';
 import { of } from 'rxjs';
 
-import { initialState, ItemId, Mocks, RecipeId } from 'src/tests';
+import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import {
   DisplayRate,
   Entities,
@@ -23,7 +18,7 @@ import {
   Rational,
   ResearchSpeed,
 } from '~/models';
-import { LabState, metaReducers, reducers } from '~/store';
+import { LabState } from '~/store';
 import * as App from '~/store/app.actions';
 import * as Datasets from '~/store/datasets';
 import * as Factories from '~/store/factories';
@@ -31,6 +26,7 @@ import * as Items from '~/store/items';
 import * as Products from '~/store/products';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
+import { DataService } from './data.service';
 import {
   EMPTY,
   FALSE,
@@ -141,12 +137,11 @@ describe('RouterService', () => {
     }
   >;
   let router: Router;
-  let http: HttpTestingController;
+  let dataSvc: DataService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
-      providers: [provideMockStore({ initialState })],
+      imports: [TestModule],
     });
     service = TestBed.inject(RouterService);
     mockStore = TestBed.inject(MockStore);
@@ -162,7 +157,7 @@ describe('RouterService', () => {
       settings: Settings.initialSettingsState,
     });
     router = TestBed.inject(Router);
-    http = TestBed.inject(HttpTestingController);
+    dataSvc = TestBed.inject(DataService);
   });
 
   it('should be created', () => {
@@ -384,6 +379,9 @@ describe('RouterService', () => {
 
     it('should unzip empty v2', () => {
       const url = '/?z=eJwrUCszAgADVAE.';
+      spyOn(dataSvc, 'requestData').and.returnValue(
+        of([Mocks.BaseData, null, Mocks.Hash])
+      );
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v2', {} as any);
     });
@@ -399,6 +397,9 @@ describe('RouterService', () => {
       // );
       // console.log(newZip);
 
+      spyOn(dataSvc, 'requestData').and.returnValue(
+        of([Mocks.BaseData, null, Mocks.Hash])
+      );
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A*200*100*8&f1*D~G*B*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v2',
@@ -408,6 +409,9 @@ describe('RouterService', () => {
 
     it('should unzip empty v3', () => {
       const url = '/?z=eJwrUCszBgADVQFA';
+      spyOn(dataSvc, 'requestData').and.returnValue(
+        of([Mocks.BaseData, null, Mocks.Hash])
+      );
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v3', {} as any);
     });
@@ -423,12 +427,27 @@ describe('RouterService', () => {
       // );
       // console.log(newZip);
 
+      spyOn(dataSvc, 'requestData').and.returnValue(
+        of([Mocks.BaseData, null, Mocks.Hash])
+      );
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v3',
         mockState
       );
     });
+
+    it('should log warning on missing hash', fakeAsync(() => {
+      const url = '/?z=eJwrUCszBgADVQFA';
+
+      spyOn(dataSvc, 'requestData').and.returnValue(
+        of([Mocks.BaseData, null, null])
+      );
+      expect(() => {
+        (router.events as any).next(new NavigationEnd(2, url, url));
+        tick();
+      }).toThrow();
+    }));
   });
 
   describe('dispatch', () => {
