@@ -23,7 +23,7 @@ export function productsReducer(
     case App.AppActionType.LOAD:
       return action.payload.productsState
         ? action.payload.productsState
-        : state;
+        : initialProductsState;
     case ProductsActionType.RESET: {
       const id = '0';
       return {
