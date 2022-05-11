@@ -10,6 +10,7 @@ import {
   Rational,
   RationalBelt,
   RationalFactory,
+  RationalModule,
   RationalProduct,
   RationalRecipe,
   RationalRecipeSettings,
@@ -125,9 +126,9 @@ export class RecipeUtility {
               // If proliferator is applied to proliferator, apply productivity bonus to sprays
               const pModule = data.moduleEntities[proliferatorSprayId];
               if (pModule) {
-                sprays = sprays.mul(
-                  Rational.one.add(pModule.productivity ?? Rational.zero)
-                );
+                sprays = sprays
+                  .mul(Rational.one.add(pModule.productivity ?? Rational.zero))
+                  .floor(); // DSP rounds down # of sprays
               }
               // Calculate amount of proliferator required for this recipe
               const pId = module.proliferator;
@@ -296,9 +297,10 @@ export class RecipeUtility {
         // If proliferator spray is applied to proliferator, add its usage to inputs
         const pModule = data.moduleEntities[proliferatorSprayId];
         if (pModule && pModule.sprays) {
-          const sprays = pModule.sprays.mul(
-            Rational.one.add(pModule.productivity ?? Rational.zero)
-          );
+          const sprays = pModule.sprays
+            .mul(Rational.one.add(pModule.productivity ?? Rational.zero))
+            .floor() // DSP rounds down # of sprays
+            .sub(Rational.one); // Subtract one spray of self
           let usage = Rational.zero;
           for (const id of Object.keys(proliferatorUses)) {
             const amount = proliferatorUses[id].div(sprays);
