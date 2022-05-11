@@ -6,11 +6,11 @@ import { Rational } from '~/models';
 export class RatePipe implements PipeTransform {
   transform(value: Rational, precision: number | null): string {
     if (precision == null) {
-      return value.toLocaleFraction();
+      return value.toFraction();
     } else {
       if (precision === -2) {
         const num = Math.round(value.mul(Rational.hundred).toNumber());
-        return num.toLocaleString();
+        return num.toString();
       }
       const num = value.toPrecision(precision);
       if (precision > 0) {
@@ -19,15 +19,15 @@ export class RatePipe implements PipeTransform {
         if (split.length > 1) {
           if (split[1].length < precision) {
             const spaces = precision - split[1].length;
-            return num.toLocaleString() + '0'.repeat(spaces);
+            return num.toString() + '0'.repeat(spaces);
           }
         } else if (value.isInteger()) {
-          return num.toLocaleString() + ' '.repeat(precision + 1);
+          return num.toString() + ' '.repeat(precision + 1);
         } else {
-          return num.toLocaleString() + '.' + '0'.repeat(precision);
+          return num.toString() + '.' + '0'.repeat(precision);
         }
       }
-      return num.toLocaleString();
+      return num.toString();
     }
   }
 }

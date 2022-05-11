@@ -250,24 +250,6 @@ describe('Rational', () => {
       });
     });
 
-    describe('toLocaleFraction', () => {
-      it('should handle integers', () => {
-        expect(Rational.thousand.toLocaleFraction()).toEqual('1,000');
-      });
-
-      it('should handle mixed', () => {
-        expect(Rational.from(1999001, 1999).toLocaleFraction()).toEqual(
-          '1,000 + 1/1,999'
-        );
-      });
-
-      it('should handle fractions', () => {
-        expect(Rational.from(1999, 20000).toLocaleFraction()).toEqual(
-          '1,999/20,000'
-        );
-      });
-    });
-
     describe('toString', () => {
       it('should handle integers', () => {
         expect(Rational.one.toString()).toEqual('1');
@@ -279,20 +261,6 @@ describe('Rational', () => {
 
       it('should handle fractions', () => {
         expect(Rational.from(1, 3).toString()).toEqual('1/3');
-      });
-    });
-
-    describe('toLocaleString', () => {
-      it('should handle integers', () => {
-        expect(Rational.thousand.toLocaleString()).toEqual('1,000');
-      });
-
-      it('should simplify a trivial fraction', () => {
-        expect(Rational.from(10001, 10).toLocaleString()).toEqual('1,000.1');
-      });
-
-      it('should handle fractions', () => {
-        expect(Rational.from(1000, 3).toLocaleString()).toEqual('1,000/3');
       });
     });
 
