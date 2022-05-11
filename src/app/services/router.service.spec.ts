@@ -170,8 +170,11 @@ describe('RouterService', () => {
     expect(service.updateState).toHaveBeenCalled();
   });
 
-  it('should run first update of url if settings modified', () => {
-    spyOn(service, 'updateUrl');
+  it('should run first update of url if settings modified', (done) => {
+    spyOn(service, 'updateUrl').and.callFake(() => {
+      expect(service.updateUrl).toHaveBeenCalled();
+      done();
+    });
     mockGetZipState.setResult({
       products: Products.initialProductsState,
       items: { [ItemId.Wood]: { ignore: true } },
@@ -181,7 +184,6 @@ describe('RouterService', () => {
     });
     mockStore.refreshState();
     service.first = true;
-    expect(service.updateUrl).toHaveBeenCalled();
   });
 
   describe('updateUrl', () => {

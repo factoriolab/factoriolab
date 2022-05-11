@@ -549,8 +549,8 @@ describe('RecipeUtility', () => {
         data
       );
       const expected = new RationalRecipe(recipe);
-      expected.in[ItemId.ProductivityModule] = Rational.from(2929, 2704);
-      expected.in[ItemId.ProductivityModule3] = Rational.from(45, 52);
+      expected.in[ItemId.ProductivityModule] = Rational.from(10, 9);
+      expected.in[ItemId.ProductivityModule3] = Rational.from(1, 1);
       expected.out = { [ItemId.SteelChest]: Rational.from(11, 10) };
       expected.time = Rational.from(8, 97);
       expected.drain = Rational.from(25, 2);
@@ -615,8 +615,8 @@ describe('RecipeUtility', () => {
         data
       );
       const expected = new RationalRecipe(recipe);
-      expected.in[ItemId.SpeedModule] = Rational.from(9, 100);
-      expected.in[ItemId.ProductivityModule3] = Rational.from(9, 10);
+      expected.in[ItemId.SpeedModule] = Rational.from(1, 9);
+      expected.in[ItemId.ProductivityModule3] = Rational.from(1, 1);
       expected.out = { [ItemId.SteelChest]: Rational.from(11, 10) };
       expected.time = Rational.from(8, 97);
       expected.drain = Rational.from(25, 2);
