@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { deflate, inflate } from 'pako';
-import { Observable } from 'rxjs';
+import { debounceTime, Observable } from 'rxjs';
 import { filter, first, map } from 'rxjs/operators';
 
 import { data } from 'src/data';
@@ -103,28 +103,37 @@ export class RouterService {
 
     this.router.events.subscribe((e) => this.updateState(e));
 
-    this.store.select(Products.getZipState).subscribe((s) => {
-      let skip = false;
-      if (this.first) {
-        // First update: if there are no modified settings, leave base URL.
-        if (
-          Object.keys(s.items).length === 0 &&
-          Object.keys(s.recipes).length === 0 &&
-          JSON.stringify(s.factories) ===
-            JSON.stringify(Factories.initialFactoriesState) &&
-          JSON.stringify(s.settings) ===
-            JSON.stringify(Settings.initialSettingsState)
-        ) {
-          // No modified settings, skip first update.
-          skip = true;
+    this.store
+      .select(Products.getZipState)
+      .pipe(debounceTime(0))
+      .subscribe((s) => {
+        let skip = false;
+        if (this.first) {
+          // First update: if there are no modified settings, leave base URL.
+          if (
+            Object.keys(s.items).length === 0 &&
+            Object.keys(s.recipes).length === 0 &&
+            JSON.stringify(s.factories) ===
+              JSON.stringify(Factories.initialFactoriesState) &&
+            JSON.stringify(s.settings) ===
+              JSON.stringify(Settings.initialSettingsState)
+          ) {
+            // No modified settings, skip first update.
+            skip = true;
+          }
+          // Don't check again later, always update.
+          this.first = false;
         }
-        // Don't check again later, always update.
-        this.first = false;
-      }
-      if (!skip) {
-        this.updateUrl(s.products, s.items, s.recipes, s.factories, s.settings);
-      }
-    });
+        if (!skip) {
+          this.updateUrl(
+            s.products,
+            s.items,
+            s.recipes,
+            s.factories,
+            s.settings
+          );
+        }
+      });
   }
 
   updateUrl(
@@ -138,11 +147,10 @@ export class RouterService {
       (zState) => {
         this.zip = this.getHash(zState);
         const hash = this.router.url.split('#');
-        this.router.navigateByUrl(
-          `${hash[0].split('?')[0]}?${this.zip}${
-            (hash[1] && `#${hash[1]}`) || ''
-          }`
-        );
+        const url = `${hash[0].split('?')[0]}?${this.zip}${
+          (hash[1] && `#${hash[1]}`) || ''
+        }`;
+        this.router.navigateByUrl(url);
       }
     );
   }
