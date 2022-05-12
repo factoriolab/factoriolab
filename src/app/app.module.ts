@@ -22,6 +22,7 @@ import { FlowComponent, ListComponent, MatrixComponent } from './routes';
 import { LabErrorHandler } from './services';
 import { SharedModule } from './shared/shared.module';
 import { metaReducers, reducers } from './store';
+import { AnalyticsEffects } from './store/analytics.effects';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
 import { FactoriesEffects } from './store/factories/factories.effects';
 import { ProductsEffects } from './store/products/products.effects';
@@ -47,7 +48,12 @@ import { ProductsEffects } from './store/products/products.effects';
     StoreDevtoolsModule.instrument({
       logOnly: environment.production,
     }),
-    EffectsModule.forRoot([DatasetsEffects, ProductsEffects, FactoriesEffects]),
+    EffectsModule.forRoot([
+      DatasetsEffects,
+      ProductsEffects,
+      FactoriesEffects,
+      AnalyticsEffects,
+    ]),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

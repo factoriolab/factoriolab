@@ -1,41 +1,43 @@
-<div class="top-bar">
-  <div>
-    <div class="links">
-      <div class="header">
-        <a [href]="homeHref"
-          ><h1>{{ title | translate }}</h1></a
-        >
+<ng-container *ngIf="vm$ | async as vm">
+  <div class="top-bar">
+    <div>
+      <div class="links">
+        <div class="header">
+          <a [href]="homeHref"
+            ><h1>{{ title | translate }}</h1></a
+          >
+        </div>
+        <ng-container *ngIf="vm.game !== Game.Factorio">
+          <span class="separator">|</span>
+          <a href="factorio">{{ 'game.Factorio' | translate }}</a>
+        </ng-container>
+        <ng-container *ngIf="vm.game !== Game.DysonSphereProgram">
+          <span class="separator">|</span>
+          <a href="dsp">{{ 'game.DysonSphereProgram' | translate }}</a>
+        </ng-container>
+        <ng-container *ngIf="vm.game !== Game.Satisfactory">
+          <span class="separator">|</span>
+          <a href="satisfactory">{{ 'game.Satisfactory' | translate }}</a>
+        </ng-container>
       </div>
-      <ng-container *ngIf="game !== Game.Factorio">
+      <div class="links">
+        <a
+          target="_blank"
+          href="https://github.com/factoriolab/factorio-lab/wiki"
+          >Wiki</a
+        >
         <span class="separator">|</span>
-        <a href="factorio">{{ 'game.Factorio' | translate }}</a>
-      </ng-container>
-      <ng-container *ngIf="game !== Game.DysonSphereProgram">
+        <a target="_blank" href="https://github.com/factoriolab/factorio-lab"
+          >Source</a
+        >
         <span class="separator">|</span>
-        <a href="dsp">{{ 'game.DysonSphereProgram' | translate }}</a>
-      </ng-container>
-      <ng-container *ngIf="game !== Game.Satisfactory">
+        <a target="_blank" href="https://discord.gg/N4FKV687x2">Discord</a>
         <span class="separator">|</span>
-        <a href="satisfactory">{{ 'game.Satisfactory' | translate }}</a>
-      </ng-container>
-    </div>
-    <div class="links">
-      <a target="_blank" href="https://github.com/factoriolab/factorio-lab/wiki"
-        >Wiki</a
-      >
-      <span class="separator">|</span>
-      <a target="_blank" href="https://github.com/factoriolab/factorio-lab"
-        >Source</a
-      >
-      <span class="separator">|</span>
-      <a target="_blank" href="https://discord.gg/N4FKV687x2">Discord</a>
-      <span class="separator">|</span>
-      <a target="_blank" href="https://ko-fi.com/dcbroad3">Support</a>
+        <a target="_blank" href="https://ko-fi.com/dcbroad3">Support</a>
+      </div>
     </div>
   </div>
-</div>
-<ng-container *ngIf="(errorSvc.message$ | async) == null; else errorTile">
-  <ng-container *ngIf="vm$ | async as vm">
+  <ng-container *ngIf="(errorSvc.message$ | async) == null; else errorTile">
     <main *ngIf="vm.datasets.length; else loading">
       <div *ngIf="showSettings" @slideLeftRight class="settings">
         <lab-settings (closeSettings)="showSettings = !showSettings">
@@ -114,23 +116,23 @@
       </div>
     </main>
   </ng-container>
-</ng-container>
-<ng-template #loading>
-  <div class="view msg load">
-    <div><div class="panel">Loading data, please wait...</div></div>
-  </div>
-</ng-template>
-<ng-template #errorTile>
-  <div class="view msg err">
-    <div>
-      <h2>Error</h2>
-      <div class="panel invalid">
-        <div>The application has encountered an error:</div>
-        <br />
-        <div>{{ errorSvc.message$ | async }}</div>
-        <br />
-        <a [href]="homeHref">Click here to reset</a>
+  <ng-template #loading>
+    <div class="view msg load">
+      <div><div class="panel">Loading data, please wait...</div></div>
+    </div>
+  </ng-template>
+  <ng-template #errorTile>
+    <div class="view msg err">
+      <div>
+        <h2>Error</h2>
+        <div class="panel invalid">
+          <div>The application has encountered an error:</div>
+          <br />
+          <div>{{ errorSvc.message$ | async }}</div>
+          <br />
+          <a [href]="homeHref">Click here to reset</a>
+        </div>
       </div>
     </div>
-  </div>
-</ng-template>
+  </ng-template>
+</ng-container>
