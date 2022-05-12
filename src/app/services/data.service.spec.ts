@@ -75,7 +75,7 @@ describe('DataService', () => {
       );
     });
 
-    fit('should get values from cache', () => {
+    it('should get values from cache', () => {
       translateSvc.use('zh');
       service.cacheData['id'] = of(Mocks.BaseData);
       service.cacheI18n['id-zh'] = of(Mocks.I18n);
