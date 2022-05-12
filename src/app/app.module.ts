@@ -9,6 +9,10 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import {
+  NgxGoogleAnalyticsModule,
+  NgxGoogleAnalyticsRouterModule,
+} from 'ngx-google-analytics';
 
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -32,9 +36,18 @@ import { ProductsEffects } from './store/products/products.effects';
     MatrixComponent,
   ],
   imports: [
+    /** Angular modules */
     BrowserModule,
     BrowserAnimationsModule,
-    AppRoutingModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    /** Vendor modules */
+    StoreModule.forRoot(reducers, { metaReducers }),
+    StoreDevtoolsModule.instrument({
+      logOnly: environment.production,
+    }),
+    EffectsModule.forRoot([DatasetsEffects, ProductsEffects, FactoriesEffects]),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -45,14 +58,10 @@ import { ProductsEffects } from './store/products/products.effects';
       },
       defaultLanguage: 'en',
     }),
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    StoreModule.forRoot(reducers, { metaReducers }),
-    StoreDevtoolsModule.instrument({
-      logOnly: environment.production,
-    }),
-    EffectsModule.forRoot([DatasetsEffects, ProductsEffects, FactoriesEffects]),
+    NgxGoogleAnalyticsModule.forRoot('G-TFR5Z43GPH'),
+    NgxGoogleAnalyticsRouterModule,
+    /** App modules */
+    AppRoutingModule,
     SharedModule,
   ],
   providers: [
