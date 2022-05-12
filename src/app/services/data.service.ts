@@ -83,8 +83,8 @@ export class DataService {
     if (skipI18n) {
       i18n$ = of(null);
     } else {
-      if (!this.cacheI18n[id]) {
-        this.cacheI18n[id] = this.http
+      if (!this.cacheI18n[i18nKey]) {
+        this.cacheI18n[i18nKey] = this.http
           .get<ModI18n>(`data/${id}/i18n/${i18nLang}.json`)
           .pipe(
             catchError(() => {
@@ -101,7 +101,7 @@ export class DataService {
             shareReplay()
           );
       }
-      i18n$ = this.cacheI18n[id];
+      i18n$ = this.cacheI18n[i18nKey];
     }
 
     /** Setup observable for hash */
