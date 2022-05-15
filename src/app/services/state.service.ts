@@ -4,7 +4,7 @@ import { combineLatest } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
 
 import { environment } from 'src/environments';
-import { FuelType } from '~/models';
+import { FuelType, ModHash } from '~/models';
 import { LabState } from '~/store';
 import * as Products from '~/store/products';
 import * as Settings from '~/store/settings';
@@ -52,61 +52,89 @@ export class StateService {
       )
       .subscribe(([baseId, data]) => {
         console.log(baseId);
-        console.log(
-          JSON.stringify(
-            data.complexRecipeIds.filter((i) => !data.itemEntities[i])
-          )
+        const suggestedDisabledIds = data.complexRecipeIds.filter(
+          (i) => !data.itemEntities[i]
         );
+        console.log(
+          `Suggested disabled recipes (${suggestedDisabledIds.length}):`
+        );
+        console.log(JSON.stringify(suggestedDisabledIds));
         if (data.hash) {
-          const hash = data.hash;
-          const old = JSON.stringify(data.hash);
+          const hash: ModHash = {
+            items: [...data.hash.items],
+            beacons: [...data.hash.beacons],
+            belts: [...data.hash.belts],
+            fuels: [...data.hash.fuels],
+            wagons: [...data.hash.wagons],
+            factories: [...data.hash.factories],
+            modules: [...data.hash.modules],
+            recipes: [...data.hash.recipes],
+          };
+          const old = JSON.stringify(hash);
           for (const id of [...data.itemIds]
             .sort()
             .filter((i) => hash.items.indexOf(i) === -1)) {
-            data.hash.items.push(id);
+            hash.items.push(id);
           }
           for (const id of [...data.beaconIds]
             .sort()
             .filter((i) => hash.beacons.indexOf(i) === -1)) {
-            data.hash.beacons.push(id);
+            hash.beacons.push(id);
           }
           for (const id of [...data.beltIds, ...data.pipeIds]
             .sort()
             .filter((i) => hash.belts.indexOf(i) === -1)) {
-            data.hash.belts.push(id);
+            hash.belts.push(id);
           }
           if (data.fuelIds[FuelType.Chemical]) {
             for (const id of [...data.fuelIds[FuelType.Chemical]]
               .sort()
               .filter((i) => hash.fuels.indexOf(i) === -1)) {
-              data.hash.fuels.push(id);
+              hash.fuels.push(id);
             }
           }
           for (const id of [...data.cargoWagonIds, ...data.fluidWagonIds]
             .sort()
             .filter((i) => hash.wagons.indexOf(i) === -1)) {
-            data.hash.wagons.push(id);
+            hash.wagons.push(id);
           }
           for (const id of [...data.factoryIds]
             .sort()
             .filter((i) => hash.factories.indexOf(i) === -1)) {
-            data.hash.factories.push(id);
+            hash.factories.push(id);
           }
           for (const id of [...data.moduleIds]
             .sort()
             .filter((i) => hash.modules.indexOf(i) === -1)) {
-            data.hash.modules.push(id);
+            hash.modules.push(id);
           }
           for (const id of [...data.recipeIds]
             .sort()
             .filter((i) => hash.recipes.indexOf(i) === -1)) {
-            data.hash.recipes.push(id);
+            hash.recipes.push(id);
           }
-          if (old === JSON.stringify(data.hash)) {
+          if (old === JSON.stringify(hash)) {
             console.log('No change in hash');
           } else {
             console.log('New hash:');
-            console.log(JSON.stringify(data.hash));
+            console.log(JSON.stringify(hash));
+          }
+        }
+        if (data.defaults) {
+          const filteredDisabledRecipeIds =
+            data.defaults.disabledRecipeIds.filter((a) =>
+              data.recipeIds.some((b) => b === a)
+            );
+          if (
+            filteredDisabledRecipeIds.length !==
+            data.defaults.disabledRecipeIds.length
+          ) {
+            console.log(
+              `Filtered disabled recipes ${filteredDisabledRecipeIds.length}:`
+            );
+            console.log(JSON.stringify(filteredDisabledRecipeIds));
+          } else {
+            console.log('No unrecognized disabled recipes');
           }
         }
       });
