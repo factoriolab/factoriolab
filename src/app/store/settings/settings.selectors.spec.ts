@@ -50,6 +50,15 @@ describe('Settings Selectors', () => {
     });
   });
 
+  describe('getGame', () => {
+    it('should get the game', () => {
+      const result = Selectors.getGame.projector(initialSettingsState.baseId, {
+        [initialSettingsState.baseId]: Mocks.BaseInfo,
+      });
+      expect(result).toEqual(Game.Factorio);
+    });
+  });
+
   describe('getColumnsState', () => {
     it('should override Overclock for Factorio', () => {
       const result = Selectors.getColumnsState.projector(
@@ -296,6 +305,17 @@ describe('Settings Selectors', () => {
     it('should return empty if base is not loaded', () => {
       const result = Selectors.getDatasets.projector(null, [Mocks.Mod1]);
       expect(result).toEqual([]);
+    });
+  });
+
+  describe('getI18n', () => {
+    it('should map mods to i18n data', () => {
+      const result = Selectors.getI18n.projector(
+        [Mocks.Mod1],
+        { [`${Mocks.Mod1.id}-zh`]: Mocks.I18n },
+        'zh'
+      );
+      expect(result).toEqual([Mocks.I18n]);
     });
   });
 

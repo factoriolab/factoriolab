@@ -1,6 +1,7 @@
-import { AppData, Game } from '~/models';
-import app from './app/data.json';
+import { AppData, Game, Mod } from '~/models';
+import appJson from './app/data.json';
 
+const app = appJson as Mod;
 export { app };
 export const data: AppData = {
   app,

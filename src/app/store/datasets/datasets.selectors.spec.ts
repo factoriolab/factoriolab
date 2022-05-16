@@ -12,6 +12,9 @@ describe('Datasets Selectors', () => {
       expect(Selectors.getDataEntities.projector(initialDatasetsState)).toEqual(
         initialDatasetsState.dataEntities
       );
+      expect(Selectors.getI18nEntities.projector(initialDatasetsState)).toEqual(
+        initialDatasetsState.i18nEntities
+      );
       expect(Selectors.getHashEntities.projector(initialDatasetsState)).toEqual(
         initialDatasetsState.hashEntities
       );
