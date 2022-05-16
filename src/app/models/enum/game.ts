@@ -1,10 +1,10 @@
 import { IdName } from '../id-name';
 
 export enum Game {
-  None,
-  Factorio,
-  DysonSphereProgram,
-  Satisfactory,
+  None = 'None',
+  Factorio = 'Factorio',
+  DysonSphereProgram = 'DysonSphereProgram',
+  Satisfactory = 'Satisfactory',
 }
 
 export const GameOptions: IdName<Game>[] = [

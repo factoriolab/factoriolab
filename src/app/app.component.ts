@@ -6,8 +6,10 @@ import {
   OnInit,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
+import { GoogleAnalyticsService } from 'ngx-google-analytics';
 import { combineLatest, map } from 'rxjs';
 
 import { environment } from 'src/environments';
@@ -22,6 +24,7 @@ export const TITLE_LAB = 'title.lab';
 export const TITLE_DSP = 'title.dsp';
 export const TITLE_SFY = 'title.sfy';
 
+@UntilDestroy()
 @Component({
   selector: 'lab-root',
   templateUrl: './app.component.html',
@@ -47,16 +50,21 @@ export const TITLE_SFY = 'title.sfy';
 })
 export class AppComponent implements OnInit, AfterViewInit {
   vm$ = combineLatest([
+    this.store.select(Settings.getGame),
     this.store.select(Settings.getDatasets),
     this.store.select(Products.getProducts),
     this.store.select(Products.getMatrixResult),
   ]).pipe(
-    map(([datasets, products, result]) => ({ datasets, products, result }))
+    map(([game, datasets, products, result]) => ({
+      game,
+      datasets,
+      products,
+      result,
+    }))
   );
 
   title = 'Factory Calculator';
   homeHref: string | undefined;
-  game = Game.Factorio;
   showSettings = false;
   poll = 'https://www.survey-maker.com/Q62LJFYVL';
   pollKey = 'poll1';
@@ -74,6 +82,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(
     private ref: ChangeDetectorRef,
     private titleSvc: Title,
+    private gaSvc: GoogleAnalyticsService,
     private translateSvc: TranslateService,
     public errorSvc: ErrorService,
     private store: Store<LabState>,
@@ -84,26 +93,29 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.store.select(Settings.getGame).subscribe((game) => {
-      this.game = game;
-      switch (game) {
-        case Game.Factorio:
-          this.title = TITLE_LAB;
-          this.homeHref = 'factorio';
-          break;
-        case Game.DysonSphereProgram:
-          this.title = TITLE_DSP;
-          this.homeHref = 'dsp';
-          break;
-        case Game.Satisfactory:
-          this.title = TITLE_SFY;
-          this.homeHref = 'satisfactory';
-          break;
-      }
-      this.translateSvc.get(this.title).subscribe((r) => {
-        this.titleSvc.setTitle(`${APP} | ${r}`);
+    this.store
+      .select(Settings.getGame)
+      .pipe(untilDestroyed(this))
+      .subscribe((game) => {
+        this.gaSvc.event('set_game', game);
+        switch (game) {
+          case Game.Factorio:
+            this.title = TITLE_LAB;
+            this.homeHref = 'factorio';
+            break;
+          case Game.DysonSphereProgram:
+            this.title = TITLE_DSP;
+            this.homeHref = 'dsp';
+            break;
+          case Game.Satisfactory:
+            this.title = TITLE_SFY;
+            this.homeHref = 'satisfactory';
+            break;
+        }
+        this.translateSvc.get(this.title).subscribe((r) => {
+          this.titleSvc.setTitle(`${APP} | ${r}`);
+        });
       });
-    });
     if (this.lsHidePoll) {
       this.showPoll = false;
     }

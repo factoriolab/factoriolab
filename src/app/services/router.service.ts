@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { GoogleAnalyticsService } from 'ngx-google-analytics';
 import { deflate, inflate } from 'pako';
 import { debounceTime, Observable } from 'rxjs';
 import { filter, first, map } from 'rxjs/operators';
@@ -88,6 +89,7 @@ export class RouterService {
 
   constructor(
     private router: Router,
+    private gaSvc: GoogleAnalyticsService,
     private store: Store<LabState>,
     private dataSvc: DataService
   ) {
@@ -259,6 +261,7 @@ export class RouterService {
               v = params[Section.Version] as ZipVersion;
             }
             const state: App.PartialState = {};
+            this.gaSvc.event('unzip_version', v);
             switch (v) {
               case ZipVersion.Version0: {
                 if (params[Section.Products]) {

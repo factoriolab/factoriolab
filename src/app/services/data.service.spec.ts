@@ -77,9 +77,9 @@ describe('DataService', () => {
 
     it('should get values from cache', () => {
       translateSvc.use('zh');
-      service.cacheData['id'] = Mocks.BaseData;
-      service.cacheI18n['id-zh'] = Mocks.I18n;
-      service.cacheHash['id'] = Mocks.Hash;
+      service.cacheData['id'] = of(Mocks.BaseData);
+      service.cacheI18n['id-zh'] = of(Mocks.I18n);
+      service.cacheHash['id'] = of(Mocks.Hash);
       let data: [ModData, ModI18n | null, ModHash | null] | undefined;
       service.requestData('id').subscribe((d) => (data = d));
       expect(data).toEqual([Mocks.BaseData, Mocks.I18n, Mocks.Hash]);
@@ -98,8 +98,8 @@ describe('DataService', () => {
     it('should handle missing translations', () => {
       spyOn(console, 'warn');
       translateSvc.use('err');
-      service.cacheData['id'] = Mocks.BaseData;
-      service.cacheHash['id'] = Mocks.Hash;
+      service.cacheData['id'] = of(Mocks.BaseData);
+      service.cacheHash['id'] = of(Mocks.Hash);
       let data: [ModData, ModI18n | null, ModHash | null] | undefined;
       service.requestData('id').subscribe((d) => (data = d));
       http.expectOne('data/id/i18n/err.json').error(new ProgressEvent('error'));
@@ -109,8 +109,8 @@ describe('DataService', () => {
 
     it('should load translation data', () => {
       translateSvc.use('zh');
-      service.cacheData['id'] = Mocks.BaseData;
-      service.cacheHash['id'] = Mocks.Hash;
+      service.cacheData['id'] = of(Mocks.BaseData);
+      service.cacheHash['id'] = of(Mocks.Hash);
       let data: [ModData, ModI18n | null, ModHash | null] | undefined;
       service.requestData('id').subscribe((d) => (data = d));
       http.expectOne('data/id/i18n/zh.json').flush(Mocks.I18n);
