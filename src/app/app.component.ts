@@ -121,6 +121,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
     this.store.select(Preferences.getLanguage).subscribe((lang) => {
       this.translateSvc.use(lang);
+      this.gaSvc.event('set_lang', lang);
+    });
+    this.store.select(Settings.getBaseDatasetId).subscribe((baseId) => {
+      this.gaSvc.event('set_base_id', baseId);
     });
   }
 
