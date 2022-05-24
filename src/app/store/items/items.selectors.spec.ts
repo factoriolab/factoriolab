@@ -24,10 +24,10 @@ describe('Items Selectors', () => {
     it('should return the item settings', () => {
       const result = Selectors.getItemSettings.projector(
         initialItemsState,
-        Mocks.Data,
+        Mocks.Dataset,
         Settings.initialSettingsState
       );
-      expect(Object.keys(result).length).toEqual(Mocks.Data.itemIds.length);
+      expect(Object.keys(result).length).toEqual(Mocks.Dataset.itemIds.length);
     });
 
     it('should use the passed overrides', () => {
@@ -37,7 +37,7 @@ describe('Items Selectors', () => {
       };
       const result = Selectors.getItemSettings.projector(
         state,
-        Mocks.Data,
+        Mocks.Dataset,
         Settings.initialSettingsState
       );
       expect(result[Mocks.Item1.id].beltId).toEqual(stringValue);
@@ -47,7 +47,7 @@ describe('Items Selectors', () => {
     it('should override using the pipe from settings', () => {
       const result = Selectors.getItemSettings.projector(
         initialItemsState,
-        Mocks.Data,
+        Mocks.Dataset,
         { ...Settings.initialSettingsState, ...{ pipeId: 'pipeValue' } }
       );
       expect(result[ItemId.CrudeOil].beltId).toEqual('pipeValue');

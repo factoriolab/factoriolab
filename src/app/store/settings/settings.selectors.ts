@@ -24,7 +24,6 @@ import {
   RationalItem,
   RationalModule,
   RationalRecipe,
-  Recipe,
   ResearchSpeedFactor,
   toBoolEntities,
   toEntities,
@@ -40,10 +39,6 @@ export const settingsState = (state: LabState): SettingsState =>
 
 export const getPreset = createSelector(settingsState, (state) => state.preset);
 export const getModId = createSelector(settingsState, (state) => state.modId);
-export const getExpensive = createSelector(
-  settingsState,
-  (state) => state.expensive
-);
 export const getBeaconReceivers = createSelector(
   settingsState,
   (state) => state.beaconReceivers
@@ -292,7 +287,7 @@ export const getI18n = createSelector(
   (base, i18n, lang) => (base ? i18n[`${base.id}-${lang}`] : null)
 );
 
-export const getNormalDataset = createSelector(
+export const getDataset = createSelector(
   Datasets.getAppData,
   getMod,
   getI18n,
@@ -569,31 +564,6 @@ export const getNormalDataset = createSelector(
       defaults,
     };
     return dataset;
-  }
-);
-
-export const getDataset = createSelector(
-  getNormalDataset,
-  getExpensive,
-  (data, expensive) => {
-    if (expensive) {
-      const newData = { ...data };
-      const recipes: Recipe[] = [];
-      for (const recipe of data.recipeIds.map(
-        (id) => data.recipeEntities[id]
-      )) {
-        if (recipe.expensive) {
-          const newRecipe = { ...recipe, ...recipe.expensive };
-          recipes.push(newRecipe);
-        } else {
-          recipes.push(recipe);
-        }
-      }
-      newData.recipeEntities = toEntities(recipes);
-      return newData;
-    } else {
-      return data;
-    }
   }
 );
 

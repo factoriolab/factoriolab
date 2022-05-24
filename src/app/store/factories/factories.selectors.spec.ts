@@ -99,17 +99,17 @@ describe('Factories Selectors', () => {
     it('should handle null ids', () => {
       const result = Selectors.getFactoryOptions.projector(
         initialFactoriesState,
-        Mocks.Data
+        Mocks.Dataset
       );
-      expect(result).toEqual(Mocks.Data.factoryIds);
+      expect(result).toEqual(Mocks.Dataset.factoryIds);
     });
 
     it('should filter ids', () => {
       const result = Selectors.getFactoryOptions.projector(
         { ids: [ItemId.AssemblingMachine1], entities: {} },
-        Mocks.Data
+        Mocks.Dataset
       );
-      expect(result.length).toEqual(Mocks.Data.factoryIds.length - 1);
+      expect(result.length).toEqual(Mocks.Dataset.factoryIds.length - 1);
     });
   });
 

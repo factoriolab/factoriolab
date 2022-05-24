@@ -310,7 +310,6 @@ describe('SettingsComponent', () => {
     dispatch.val('setPreset', Settings.SetPresetAction);
     dispatch.val('setMod', Settings.SetModAction);
     dispatch.valDef('setDisabledRecipes', Settings.SetDisabledRecipesAction);
-    dispatch.val('setExpensive', Settings.SetExpensiveAction);
     dispatch.valDef('addFactory', Factories.AddAction);
     dispatch.valDef('removeFactory', Factories.RemoveAction);
     dispatch.valDef('raiseFactory', Factories.RaiseAction);

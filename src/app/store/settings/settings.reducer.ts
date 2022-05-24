@@ -13,7 +13,6 @@ import { SettingsAction, SettingsActionType } from './settings.actions';
 export interface SettingsState {
   modId: string;
   disabledRecipeIds?: string[];
-  expensive: boolean;
   displayRate: DisplayRate;
   preset: Preset;
   beaconReceivers: string | null;
@@ -36,7 +35,6 @@ export interface SettingsState {
 
 export const initialSettingsState: SettingsState = {
   modId: '1.1',
-  expensive: false,
   displayRate: DisplayRate.PerMinute,
   preset: Preset.Minimum,
   beaconReceivers: null,
@@ -70,7 +68,6 @@ export function settingsReducer(
         ...state,
         ...{
           modId: action.payload,
-          expensive: false,
           preset: Preset.Minimum,
           miningBonus: 0,
           researchSpeed: ResearchSpeed.Speed6,
@@ -90,8 +87,6 @@ export function settingsReducer(
           disabledRecipeIds: StoreUtility.compareValues(action.payload),
         },
       };
-    case SettingsActionType.SET_EXPENSIVE:
-      return { ...state, ...{ expensive: action.payload } };
     case SettingsActionType.SET_BEACON_RECEIVERS:
       return { ...state, ...{ beaconReceivers: action.payload } };
     case SettingsActionType.SET_BELT:

@@ -134,22 +134,6 @@
               </lab-toggle>
             </td>
           </tr>
-          <tr *ngIf="vm.data.game === Game.Factorio">
-            <td>
-              <lab-info
-                [text]="'setting.difficulty' | translate"
-                [tooltip]="'setting.difficultyTooltip' | translate"
-              ></lab-info>
-            </td>
-            <td>
-              <lab-options
-                [title]="'setting.difficultyTitle' | translate"
-                [selected]="vm.settings.expensive"
-                [options]="difficultyOptions"
-                (selectId)="setExpensive($event)"
-              ></lab-options>
-            </td>
-          </tr>
         </table>
       </div>
     </div>

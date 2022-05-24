@@ -21,7 +21,7 @@ export const recipesState = (state: LabState): RecipesState =>
 export const getRecipeSettings = createSelector(
   recipesState,
   Factories.getFactories,
-  Settings.getNormalDataset,
+  Settings.getDataset,
   (state, factories, data) => {
     const value: Entities<RecipeSettings> = {};
     if (data?.recipeIds?.length) {

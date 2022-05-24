@@ -71,17 +71,6 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_EXPENSIVE', () => {
-    it('should set expensive flag', () => {
-      const value = true;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetExpensiveAction(value)
-      );
-      expect(result.expensive).toEqual(value);
-    });
-  });
-
   describe('SET_BEACON_RECEIVERS', () => {
     it('should set default beacon receivers', () => {
       const value = '1';

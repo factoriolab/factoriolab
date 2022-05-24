@@ -108,16 +108,6 @@ export class SettingsComponent implements OnInit {
   opening = true;
 
   initial = Settings.initialSettingsState;
-  difficultyOptions: IdName<boolean>[] = [
-    {
-      id: false,
-      name: 'options.recipeDifficulty.normal',
-    },
-    {
-      id: true,
-      name: 'options.recipeDifficulty.expensive',
-    },
-  ];
   enabledOptions: IdName<boolean>[] = [
     {
       id: true,
@@ -332,10 +322,6 @@ export class SettingsComponent implements OnInit {
 
   setDisabledRecipes(value: string[], def: string[] | undefined): void {
     this.store.dispatch(new Settings.SetDisabledRecipesAction({ value, def }));
-  }
-
-  setExpensive(value: boolean): void {
-    this.store.dispatch(new Settings.SetExpensiveAction(value));
   }
 
   addFactory(value: string, def: string[] | undefined): void {

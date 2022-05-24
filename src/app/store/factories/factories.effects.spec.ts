@@ -33,7 +33,7 @@ describe('FactoriesEffects', () => {
       Recipes.getRecipeSettings,
       Mocks.RecipeSettingsInitial
     );
-    mockStore.overrideSelector(Settings.getNormalDataset, Mocks.Data);
+    mockStore.overrideSelector(Settings.getDataset, Mocks.Dataset);
     mockStore.refreshState();
   });
 

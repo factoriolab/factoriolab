@@ -14,7 +14,6 @@ export const enum SettingsActionType {
   SET_PRESET = '[Settings] Set Preset',
   SET_MOD = '[Settings] Set Mod',
   SET_DISABLED_RECIPES = '[Settings] Set Disabled Recipes',
-  SET_EXPENSIVE = '[Settings] Set Expensive',
   SET_BEACON_RECEIVERS = '[Settings] Set Beacon Receivers',
   SET_BELT = '[Settings] Set Belt',
   SET_PIPE = '[Settings] Set Pipe',
@@ -48,11 +47,6 @@ export class SetModAction implements Action {
 export class SetDisabledRecipesAction implements Action {
   readonly type = SettingsActionType.SET_DISABLED_RECIPES;
   constructor(public payload: DefaultPayload<string[]>) {}
-}
-
-export class SetExpensiveAction implements Action {
-  readonly type = SettingsActionType.SET_EXPENSIVE;
-  constructor(public payload: boolean) {}
 }
 
 export class SetBeaconReceiversAction implements Action {
@@ -148,7 +142,6 @@ export type SettingsAction =
   | SetPresetAction
   | SetModAction
   | SetDisabledRecipesAction
-  | SetExpensiveAction
   | SetBeaconReceiversAction
   | SetBeltAction
   | SetPipeAction

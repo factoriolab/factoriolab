@@ -52,7 +52,7 @@ describe('RationalItem', () => {
       expect(result.iconText).toEqual('2');
     });
 
-    it('should ignore undefined expensive fields', () => {
+    it('should ignore undefined fields', () => {
       const result = new RationalItem({
         id: ItemId.Wood,
         name: 'name',

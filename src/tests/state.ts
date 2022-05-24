@@ -12,14 +12,7 @@ let datasetsState = Datasets.datasetsReducer(
   undefined,
   new Datasets.LoadModDataAction({
     id: initialSettingsState.modId,
-    value: Mocks.BaseData,
-  })
-);
-datasetsState = Datasets.datasetsReducer(
-  datasetsState,
-  new Datasets.LoadModDataAction({
-    id: Mocks.Mod1.id,
-    value: Mocks.ModData1,
+    value: Mocks.Data,
   })
 );
 datasetsState = Datasets.datasetsReducer(

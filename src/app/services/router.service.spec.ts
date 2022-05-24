@@ -84,7 +84,6 @@ const mockFactoriesState: Factories.FactoriesState = {
 const mockSettingsState: Settings.SettingsState = {
   modId: '1.0',
   disabledRecipeIds: [],
-  expensive: true,
   displayRate: DisplayRate.PerHour,
   preset: Preset.Modules,
   beaconReceivers: '1',
@@ -392,7 +391,7 @@ describe('RouterService', () => {
     it('should unzip empty v2', () => {
       const url = '/?z=eJwrUCszAgADVAE.';
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.BaseData, null, Mocks.Hash])
+        of([Mocks.Data, null, Mocks.Hash])
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v2', {} as any);
@@ -410,7 +409,7 @@ describe('RouterService', () => {
       // console.log(newZip);
 
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.BaseData, null, Mocks.Hash])
+        of([Mocks.Data, null, Mocks.Hash])
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(
@@ -422,7 +421,7 @@ describe('RouterService', () => {
     it('should unzip empty v3', () => {
       const url = '/?z=eJwrUCszBgADVQFA';
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.BaseData, null, Mocks.Hash])
+        of([Mocks.Data, null, Mocks.Hash])
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v3', {} as any);
@@ -440,7 +439,7 @@ describe('RouterService', () => {
       // console.log(newZip);
 
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.BaseData, null, Mocks.Hash])
+        of([Mocks.Data, null, Mocks.Hash])
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(
@@ -453,7 +452,7 @@ describe('RouterService', () => {
       const url = '/?z=eJwrUCszBgADVQFA';
 
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.BaseData, null, null])
+        of([Mocks.Data, null, null])
       );
       expect(() => {
         (router.events as any).next(new NavigationEnd(2, url, url));
@@ -475,22 +474,28 @@ describe('RouterService', () => {
 
   describe('migrateV0', () => {
     it('should handle unrecognized/null baseid', () => {
-      const params = service.migrateV0({ [Section.Settings]: '---' });
+      const [params, warnings] = service.migrateV0(
+        { [Section.Settings]: '---' },
+        []
+      );
       expect(params[Section.Settings]).toEqual(NULL);
     });
 
     it('should handle preset without other settings', () => {
-      const params = service.migrateV0({ [Section.Mod]: '0' });
+      const [params, warnings] = service.migrateV0({ [Section.Mod]: '0' }, []);
       expect(params[Section.Settings]).toEqual('?*?*0');
     });
   });
 
   describe('migrateV2', () => {
     it('should handle undefined beaconCount', () => {
-      const params = service.migrateV2({
-        [Section.Recipes]: '***?',
-        [Section.Factories]: '**?',
-      });
+      const [params, warnings] = service.migrateV2(
+        {
+          [Section.Recipes]: '***?',
+          [Section.Factories]: '**?',
+        },
+        []
+      );
       expect(params[Section.Recipes]).toEqual('');
       expect(params[Section.Factories]).toEqual('');
     });

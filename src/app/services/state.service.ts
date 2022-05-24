@@ -42,7 +42,7 @@ export class StateService {
   checkHash(): void {
     combineLatest([
       this.store.select(Settings.getModId),
-      this.store.select(Settings.getNormalDataset),
+      this.store.select(Settings.getDataset),
     ])
       .pipe(
         filter(
