@@ -82,7 +82,7 @@ const mockFactoriesState: Factories.FactoriesState = {
   },
 };
 const mockSettingsState: Settings.SettingsState = {
-  baseId: '1.0',
+  modId: '1.0',
   disabledRecipeIds: [],
   expensive: true,
   displayRate: DisplayRate.PerHour,
@@ -146,8 +146,8 @@ describe('RouterService', () => {
     service = TestBed.inject(RouterService);
     mockStore = TestBed.inject(MockStore);
     mockGetHashEntities = mockStore.overrideSelector(Datasets.getHashEntities, {
-      [Settings.initialSettingsState.baseId]: Mocks.Hash,
-      [mockSettingsState.baseId]: Mocks.Hash,
+      [Settings.initialSettingsState.modId]: Mocks.Hash,
+      [mockSettingsState.modId]: Mocks.Hash,
     });
     mockGetZipState = mockStore.overrideSelector(Products.getZipState, {
       products: Products.initialProductsState,

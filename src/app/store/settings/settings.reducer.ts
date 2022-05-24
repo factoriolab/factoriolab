@@ -11,7 +11,7 @@ import * as App from '../app.actions';
 import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
-  baseId: string;
+  modId: string;
   disabledRecipeIds?: string[];
   expensive: boolean;
   displayRate: DisplayRate;
@@ -35,7 +35,7 @@ export interface SettingsState {
 }
 
 export const initialSettingsState: SettingsState = {
-  baseId: '1.1',
+  modId: '1.1',
   expensive: false,
   displayRate: DisplayRate.PerMinute,
   preset: Preset.Minimum,
@@ -65,11 +65,11 @@ export function settingsReducer(
       return initialSettingsState;
     case SettingsActionType.SET_PRESET:
       return { ...state, ...{ preset: action.payload } };
-    case SettingsActionType.SET_BASE:
+    case SettingsActionType.SET_MOD:
       const newState = {
         ...state,
         ...{
-          baseId: action.payload,
+          modId: action.payload,
           expensive: false,
           preset: Preset.Minimum,
           miningBonus: 0,

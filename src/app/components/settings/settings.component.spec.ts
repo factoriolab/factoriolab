@@ -131,22 +131,22 @@ describe('SettingsComponent', () => {
   });
 
   describe('setGame', () => {
-    it('should select the baseId for Factorio', () => {
-      spyOn(component, 'setBase');
+    it('should select the modId for Factorio', () => {
+      spyOn(component, 'setMod');
       component.setGame(Game.Factorio);
-      expect(component.setBase).toHaveBeenCalledWith('1.1');
+      expect(component.setMod).toHaveBeenCalledWith('1.1');
     });
 
-    it('should select the baseId for Dyson Sphere Program', () => {
-      spyOn(component, 'setBase');
+    it('should select the modId for Dyson Sphere Program', () => {
+      spyOn(component, 'setMod');
       component.setGame(Game.DysonSphereProgram);
-      expect(component.setBase).toHaveBeenCalledWith('dsp');
+      expect(component.setMod).toHaveBeenCalledWith('dsp');
     });
 
-    it('should select the baseId for Satisfactory', () => {
-      spyOn(component, 'setBase');
+    it('should select the modId for Satisfactory', () => {
+      spyOn(component, 'setMod');
       component.setGame(Game.Satisfactory);
-      expect(component.setBase).toHaveBeenCalledWith('sfy');
+      expect(component.setMod).toHaveBeenCalledWith('sfy');
     });
   });
 
@@ -308,7 +308,7 @@ describe('SettingsComponent', () => {
     dispatch.idVal('saveState', Preferences.SaveStateAction);
     dispatch.val('removeState', Preferences.RemoveStateAction);
     dispatch.val('setPreset', Settings.SetPresetAction);
-    dispatch.val('setBase', Settings.SetBaseAction);
+    dispatch.val('setMod', Settings.SetModAction);
     dispatch.valDef('setDisabledRecipes', Settings.SetDisabledRecipesAction);
     dispatch.val('setExpensive', Settings.SetExpensiveAction);
     dispatch.valDef('addFactory', Factories.AddAction);

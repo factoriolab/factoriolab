@@ -39,10 +39,7 @@ export const settingsState = (state: LabState): SettingsState =>
   state.settingsState;
 
 export const getPreset = createSelector(settingsState, (state) => state.preset);
-export const getBaseDatasetId = createSelector(
-  settingsState,
-  (state) => state.baseId
-);
+export const getModId = createSelector(settingsState, (state) => state.modId);
 export const getExpensive = createSelector(
   settingsState,
   (state) => state.expensive
@@ -97,21 +94,21 @@ export const getProliferatorSprayId = createSelector(
 );
 
 /* Complex selectors */
-export const getBase = createSelector(
-  getBaseDatasetId,
-  Datasets.getBaseEntities,
+export const getMod = createSelector(
+  getModId,
+  Datasets.getModEntities,
   (id, data) => data[id]
 );
 
 export const getHash = createSelector(
-  getBaseDatasetId,
+  getModId,
   Datasets.getHashEntities,
   (id, hashEntities) => hashEntities[id]
 );
 
 export const getGame = createSelector(
-  getBaseDatasetId,
-  Datasets.getBaseInfoEntities,
+  getModId,
+  Datasets.getModInfoEntities,
   (id, data) => data[id].game
 );
 
@@ -129,10 +126,10 @@ export const getPresetOptions = createSelector(getGame, (game) =>
   presetOptions(game)
 );
 
-export const getBaseOptions = createSelector(
+export const getModOptions = createSelector(
   getGame,
-  Datasets.getBaseSets,
-  (game, baseSets) => baseSets.filter((b) => b.game === game)
+  Datasets.getModSets,
+  (game, modSets) => modSets.filter((b) => b.game === game)
 );
 
 export const getColumnsState = createSelector(
@@ -180,54 +177,45 @@ export const getColumnsState = createSelector(
         }
 );
 
-export const getDefaults = createSelector(
-  getPreset,
-  getBase,
-  (preset, base) => {
-    if (base) {
-      const m = base.defaults;
-      if (m) {
-        let moduleRank: string[] = [];
-        switch (base.game) {
-          case Game.Factorio: {
-            moduleRank = preset === Preset.Minimum ? [] : m.moduleRank;
-            break;
-          }
-          case Game.DysonSphereProgram: {
-            moduleRank = preset === Preset.Beacon8 ? m.moduleRank : [];
-            break;
-          }
-          case Game.Satisfactory: {
-            moduleRank = m.moduleRank;
-          }
+export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
+  if (base) {
+    const m = base.defaults;
+    if (m) {
+      let moduleRank: string[] = [];
+      switch (base.game) {
+        case Game.Factorio: {
+          moduleRank = preset === Preset.Minimum ? [] : m.moduleRank;
+          break;
         }
-        const defaults: Defaults = {
-          modIds: m.modIds,
-          beltId: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
-          pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
-          fuelId: m.fuel,
-          cargoWagonId: m.cargoWagon,
-          fluidWagonId: m.fluidWagon,
-          disabledRecipeIds: m.disabledRecipes,
-          factoryRankIds:
-            preset === Preset.Minimum ? m.minFactoryRank : m.maxFactoryRank,
-          moduleRankIds: moduleRank,
-          beaconCount:
-            preset < Preset.Beacon8
-              ? '0'
-              : preset < Preset.Beacon12
-              ? '8'
-              : '12',
-          beaconId: m.beacon,
-          beaconModuleId:
-            preset < Preset.Beacon8 ? ItemId.Module : m.beaconModule,
-        };
-        return defaults;
+        case Game.DysonSphereProgram: {
+          moduleRank = preset === Preset.Beacon8 ? m.moduleRank : [];
+          break;
+        }
+        case Game.Satisfactory: {
+          moduleRank = m.moduleRank;
+        }
       }
+      const defaults: Defaults = {
+        beltId: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
+        pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
+        fuelId: m.fuel,
+        cargoWagonId: m.cargoWagon,
+        fluidWagonId: m.fluidWagon,
+        disabledRecipeIds: m.disabledRecipes,
+        factoryRankIds:
+          preset === Preset.Minimum ? m.minFactoryRank : m.maxFactoryRank,
+        moduleRankIds: moduleRank,
+        beaconCount:
+          preset < Preset.Beacon8 ? '0' : preset < Preset.Beacon12 ? '8' : '12',
+        beaconId: m.beacon,
+        beaconModuleId:
+          preset < Preset.Beacon8 ? ItemId.Module : m.beaconModule,
+      };
+      return defaults;
     }
-    return null;
   }
-);
+  return null;
+});
 
 export const getSettings = createSelector(
   settingsState,
@@ -297,92 +285,68 @@ export const getSimplexModifiers = createSelector(
   })
 );
 
-export const getMods = createSelector(
-  getBase,
-  Datasets.getModEntities,
-  (base, data) =>
-    base?.defaults?.modIds?.filter((i) => data[i]).map((i) => data[i]) || []
-);
-
-// Return list only if base and all mods have been loaded
-export const getDatasets = createSelector(getBase, getMods, (base, mods) =>
-  base?.defaults && base.defaults.modIds.length === mods.length
-    ? [base, ...mods]
-    : []
-);
-
 export const getI18n = createSelector(
-  getDatasets,
+  getMod,
   Datasets.getI18nEntities,
   Preferences.getLanguage,
-  (mods, i18n, lang) => mods.map((m) => i18n[`${m.id}-${lang}`])
+  (base, i18n, lang) => (base ? i18n[`${base.id}-${lang}`] : null)
 );
 
 export const getNormalDataset = createSelector(
   Datasets.getAppData,
-  getDatasets,
+  getMod,
   getI18n,
   getHash,
   getDefaults,
   getGame,
-  (app, mods, i18n, hash, defaults, game) => {
+  (app, mod, i18n, hash, defaults, game) => {
     // Map out entities with mods
-    const categoryEntities = getEntities(
-      app.categories,
-      mods.map((m) => m.categories)
-    );
+    const categoryEntities = getEntities(app.categories, mod?.categories ?? []);
+    const appIconPath = `data/${app.id}/icons.png`;
+    const modIconPath = `data/${mod?.id}/icons.png`;
     const iconEntities = getEntities(
       app.icons.map((i) => ({
         ...i,
-        ...{ file: i.file ?? `data/${app.id}/icons.png` },
+        ...{ file: i.file ?? appIconPath },
       })),
-      mods.map((m) =>
-        m.icons.map((i) => ({
-          ...i,
-          ...{ file: i.file ?? `data/${m.id}/icons.png` },
-        }))
-      )
+
+      (mod?.icons ?? []).map((i) => ({
+        ...i,
+        ...{ file: i.file ?? modIconPath },
+      }))
     );
-    const itemData = getEntities(
-      app.items,
-      mods.map((m) => m.items)
-    );
-    const recipeEntities = getEntities(
-      app.recipes,
-      mods.map((m) => m.recipes)
-    );
+    const itemData = getEntities(app.items, mod?.items ?? []);
+    const recipeEntities = getEntities(app.recipes, mod?.recipes ?? []);
     const limitations = getArrayEntities(
       app.limitations,
-      mods.map((m) => m.limitations)
+      mod?.limitations ?? []
     );
 
     // Apply localization
-    for (const locale of i18n) {
-      if (locale) {
-        for (const i of Object.keys(locale.categories)) {
-          categoryEntities[i] = {
-            ...categoryEntities[i],
-            ...{
-              name: locale.categories[i],
-            },
-          };
-        }
-        for (const i of Object.keys(locale.items)) {
-          itemData[i] = {
-            ...itemData[i],
-            ...{
-              name: locale.items[i],
-            },
-          };
-        }
-        for (const i of Object.keys(locale.recipes)) {
-          recipeEntities[i] = {
-            ...recipeEntities[i],
-            ...{
-              name: locale.recipes[i],
-            },
-          };
-        }
+    if (i18n) {
+      for (const i of Object.keys(i18n.categories)) {
+        categoryEntities[i] = {
+          ...categoryEntities[i],
+          ...{
+            name: i18n.categories[i],
+          },
+        };
+      }
+      for (const i of Object.keys(i18n.items)) {
+        itemData[i] = {
+          ...itemData[i],
+          ...{
+            name: i18n.items[i],
+          },
+        };
+      }
+      for (const i of Object.keys(i18n.recipes)) {
+        recipeEntities[i] = {
+          ...recipeEntities[i],
+          ...{
+            name: i18n.recipes[i],
+          },
+        };
       }
     }
 
@@ -699,31 +663,27 @@ export const getInserterData = createSelector(
 );
 
 export function getEntities<T extends { id: string }>(
-  base: T[],
-  mods: T[][]
+  app: T[],
+  mod: T[]
 ): Entities<T> {
-  const entities = toEntities(base);
-  for (const mod of mods.filter((m) => m)) {
-    for (const i of mod) {
-      // Used only in development to validate data files
-      // istanbul ignore next
-      if (environment.debug && mod.filter((m) => m.id === i.id).length > 1) {
-        console.warn(`Duplicate id: ${i.id}`);
-      }
-      entities[i.id] = i;
+  const entities = toEntities(app);
+  for (const i of mod) {
+    // Used only in development to validate data files
+    // istanbul ignore next
+    if (environment.debug && mod.filter((m) => m.id === i.id).length > 1) {
+      console.warn(`Duplicate id: ${i.id}`);
     }
+    entities[i.id] = i;
   }
   return entities;
 }
 
 export function getArrayEntities(
-  base: Entities<string[]>,
-  mods: Entities<string[]>[]
+  app: Entities<string[]>,
+  mod: Entities<string[]>
 ): Entities<Entities<boolean>> {
-  let entities = reduceEntities(base);
-  for (const mod of mods.filter((m) => m)) {
-    entities = reduceEntities(mod, entities);
-  }
+  let entities = reduceEntities(app);
+  entities = reduceEntities(mod, entities);
   return entities;
 }
 

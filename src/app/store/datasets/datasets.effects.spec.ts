@@ -50,7 +50,7 @@ describe('DatasetsEffects', () => {
       actions = new ReplaySubject(1);
       actions.next(
         new App.LoadAction({
-          settingsState: { baseId: Mocks.Base.id },
+          settingsState: { modId: Mocks.Base.id },
           productsState: Products.initialProductsState,
         })
       );
@@ -75,15 +75,15 @@ describe('DatasetsEffects', () => {
     });
   });
 
-  describe('setBaseId$', () => {
+  describe('setModId$', () => {
     it('should reset and load mod for new mod', () => {
       spyOn(dataSvc, 'requestData').and.returnValue(
         of([Mocks.BaseData, Mocks.I18n, Mocks.Hash])
       );
       actions = new ReplaySubject(1);
-      actions.next(new Settings.SetBaseAction(Mocks.Base.id));
+      actions.next(new Settings.SetModAction(Mocks.Base.id));
       const result: Action[] = [];
-      effects.setBaseId$.subscribe((r) => result.push(r));
+      effects.setModId$.subscribe((r) => result.push(r));
       expect(result).toEqual([
         new Products.ResetAction(Mocks.Base.items[0].id),
       ]);

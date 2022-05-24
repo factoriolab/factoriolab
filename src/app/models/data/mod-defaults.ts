@@ -1,5 +1,4 @@
 export interface ModDefaults {
-  modIds: string[];
   beacon: string;
   minBelt: string;
   maxBelt: string;

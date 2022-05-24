@@ -34,7 +34,7 @@ describe('Settings Selectors', () => {
 
   describe('getBase', () => {
     it('should get the base dataset', () => {
-      const result = Selectors.getBase.projector('test', {
+      const result = Selectors.getMod.projector('test', {
         test: Mocks.Base,
       });
       expect(result).toEqual(Mocks.Base);
@@ -52,8 +52,8 @@ describe('Settings Selectors', () => {
 
   describe('getGame', () => {
     it('should get the game', () => {
-      const result = Selectors.getGame.projector(initialSettingsState.baseId, {
-        [initialSettingsState.baseId]: Mocks.BaseInfo,
+      const result = Selectors.getGame.projector(initialSettingsState.modId, {
+        [initialSettingsState.modId]: Mocks.BaseInfo,
       });
       expect(result).toEqual(Game.Factorio);
     });

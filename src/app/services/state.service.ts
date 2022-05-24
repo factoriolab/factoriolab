@@ -41,17 +41,17 @@ export class StateService {
   // istanbul ignore next
   checkHash(): void {
     combineLatest([
-      this.store.select(Settings.getBaseDatasetId),
+      this.store.select(Settings.getModId),
       this.store.select(Settings.getNormalDataset),
     ])
       .pipe(
         filter(
-          ([baseId, data]) => data.categoryIds.length > 0 && data.hash != null
+          ([modId, data]) => data.categoryIds.length > 0 && data.hash != null
         ),
         first()
       )
-      .subscribe(([baseId, data]) => {
-        console.log(baseId);
+      .subscribe(([modId, data]) => {
+        console.log(modId);
         const suggestedDisabledIds = data.complexRecipeIds.filter(
           (i) => !data.itemEntities[i]
         );

@@ -62,7 +62,7 @@ export class SettingsComponent implements OnInit {
     this.store.select(Settings.getDataset),
     this.store.select(Settings.getChemicalFuelIds),
     this.store.select(Settings.getPresetOptions),
-    this.store.select(Settings.getBaseOptions),
+    this.store.select(Settings.getModOptions),
     this.store.select(Settings.getColumnsState),
     this.store.select(Preferences.preferencesState),
     this.store.select(Preferences.getSavedStates),
@@ -77,7 +77,7 @@ export class SettingsComponent implements OnInit {
         data,
         chemicalFuelIds,
         presetOptions,
-        baseOptions,
+        modOptions,
         columns,
         preferences,
         savedStates,
@@ -92,7 +92,7 @@ export class SettingsComponent implements OnInit {
         presetOptions,
         columns,
         preferences,
-        baseOptions,
+        modOptions,
         savedStates,
         columnsVisible,
       })
@@ -209,13 +209,13 @@ export class SettingsComponent implements OnInit {
   setGame(game: Game): void {
     switch (game) {
       case Game.Factorio:
-        this.setBase(Settings.initialSettingsState.baseId);
+        this.setMod(Settings.initialSettingsState.modId);
         break;
       case Game.DysonSphereProgram:
-        this.setBase('dsp');
+        this.setMod('dsp');
         break;
       case Game.Satisfactory:
-        this.setBase('sfy');
+        this.setMod('sfy');
         break;
     }
   }
@@ -326,8 +326,8 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetPresetAction(value));
   }
 
-  setBase(value: string): void {
-    this.store.dispatch(new Settings.SetBaseAction(value));
+  setMod(value: string): void {
+    this.store.dispatch(new Settings.SetModAction(value));
   }
 
   setDisabledRecipes(value: string[], def: string[] | undefined): void {

@@ -76,7 +76,7 @@
           <a
             *ngIf="vm.data.game === Game.Factorio"
             class="small"
-            href="https://github.com/factoriolab/factorio-lab/issues/new?assignees=&labels=mod+support&template=mod-request.md&title="
+            href="https://github.com/factoriolab/factoriolab/issues/new?assignees=&labels=mod+support&template=mod-request.md&title="
             target="_blank"
             >{{ 'setting.requestAMod' | translate }}</a
           >
@@ -108,9 +108,9 @@
             <td>
               <lab-options
                 [title]="'setting.modSetTitle' | translate"
-                [selected]="vm.settings.baseId"
-                [options]="vm.baseOptions"
-                (selectId)="setBase($event)"
+                [selected]="vm.settings.modId"
+                [options]="vm.modOptions"
+                (selectId)="setMod($event)"
               ></lab-options>
             </td>
           </tr>

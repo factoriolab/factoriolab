@@ -1,5 +1,5 @@
 {
-  "name": "factorio-lab",
+  "name": "factoriolab",
   "description": "Angular-based calculator for the game Factorio",
   "version": "2.0.7",
   "private": true,
@@ -8,7 +8,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/factoriolab/factorio-lab.git"
+    "url": "https://github.com/factoriolab/factoriolab.git"
   },
   "homepage": "https://factoriolab.github.io",
   "license": "MIT",
@@ -20,6 +20,7 @@
     "test": "ng test",
     "test-build": "ng test --no-watch --browsers=ChromeHeadless",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
+    "process-mod": "ts-node scripts/process-mod.ts",
     "lint": "ng lint"
   },
   "dependencies": {
@@ -71,6 +72,7 @@
     "@typescript-eslint/eslint-plugin": "~5.20.0",
     "@typescript-eslint/parser": "~5.20.0",
     "eslint": "^8.13.0",
+    "fast-average-color-node": "^2.2.0",
     "jasmine-core": "~4.1.0",
     "jasmine-spec-reporter": "~7.0.0",
     "karma": "~6.3.16",
@@ -79,6 +81,7 @@
     "karma-jasmine": "^5.0.0",
     "karma-jasmine-html-reporter": "^1.7.0",
     "ngrx-store-freeze": "~0.2.4",
+    "ts-node": "^10.8.0",
     "typescript": "~4.6.2",
     "webpack-bundle-analyzer": "^4.5.0"
   }

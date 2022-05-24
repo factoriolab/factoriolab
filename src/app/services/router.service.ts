@@ -165,15 +165,15 @@ export class RouterService {
     settings: Settings.SettingsState
   ): Observable<Zip> {
     return this.store.select(Datasets.getHashEntities).pipe(
-      map((hashEntities) => hashEntities[settings.baseId]),
+      map((hashEntities) => hashEntities[settings.modId]),
       filter((hash): hash is ModHash => hash != null),
       first(),
       map((hash) => {
         const zipPartial: Zip = { bare: '', hash: '' };
         // Base
         const zBase = this.zipDiffString(
-          settings.baseId,
-          Settings.initialSettingsState.baseId
+          settings.modId,
+          Settings.initialSettingsState.modId
         );
         if (zBase.length) {
           zipPartial.hash += `&${Section.Base}${this.getId(
@@ -316,12 +316,12 @@ export class RouterService {
               }
               case ZipVersion.Version2:
               case ZipVersion.Version3: {
-                const baseId = this.parseNString(
+                const modId = this.parseNString(
                   params[Section.Base],
                   data.hash
                 );
                 this.dataSvc
-                  .requestData(baseId || Settings.initialSettingsState.baseId)
+                  .requestData(modId || Settings.initialSettingsState.modId)
                   .subscribe(([data, i18n, hash]) => {
                     if (hash == null) {
                       throw new Error('RouterService failed to load hash');
@@ -345,10 +345,10 @@ export class RouterService {
                     if (params[Section.Settings]) {
                       state.settingsState = this.unzipSettings(params, v, hash);
                     }
-                    if (baseId != null) {
+                    if (modId != null) {
                       state.settingsState = {
                         ...state.settingsState,
-                        ...{ baseId },
+                        ...{ modId: modId },
                       };
                     }
                     this.dispatch(zip, state);
@@ -817,7 +817,7 @@ export class RouterService {
     const init = Settings.initialSettingsState;
     const z: Zip = {
       bare: this.zipFields([
-        this.zipDiffString(state.baseId, init.baseId),
+        this.zipDiffString(state.modId, init.modId),
         this.zipDiffDisplayRate(state.displayRate, init.displayRate),
         this.zipDiffNumber(state.preset, init.preset),
         this.zipDiffArray(state.disabledRecipeIds, init.disabledRecipeIds),
@@ -889,9 +889,9 @@ export class RouterService {
 
     switch (v) {
       case ZipVersion.Version0: {
-        const baseId = this.parseString(s[i++]);
+        const modId = this.parseString(s[i++]);
         obj = {
-          baseId: baseId && data.hash[data.v0.indexOf(baseId)],
+          modId: modId && data.hash[data.v0.indexOf(modId)],
           disabledRecipeIds: this.parseArray(s[i++]),
           expensive: this.parseBool(s[i++]),
           beltId: this.parseString(s[i++]),
@@ -916,7 +916,7 @@ export class RouterService {
       }
       case ZipVersion.Version1: {
         obj = {
-          baseId: this.parseString(s[i++]),
+          modId: this.parseString(s[i++]),
           displayRate: this.parseDisplayRate(s[i++]),
           preset: this.parseNumber(s[i++]),
           disabledRecipeIds: this.parseArray(s[i++]),

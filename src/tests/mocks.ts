@@ -40,7 +40,7 @@ import { RecipeId } from './recipe-id';
 
 export const Raw = data;
 export const DataState = Datasets.initialDatasetsState;
-export const BaseInfo = data.base[0];
+export const BaseInfo = data.mods[0];
 export const BaseData = base as ModData;
 export const Hash: ModHash = hash;
 export const I18n: ModI18n = i18n;

@@ -10,13 +10,13 @@ export const initialRecipesState: RecipesState = {};
 
 export function recipesReducer(
   state: RecipesState = initialRecipesState,
-  action: RecipesAction | App.AppAction | Settings.SetBaseAction
+  action: RecipesAction | App.AppAction | Settings.SetModAction
 ): RecipesState {
   switch (action.type) {
     case App.AppActionType.LOAD:
       return { ...initialRecipesState, ...action.payload.recipesState };
     case App.AppActionType.RESET:
-    case Settings.SettingsActionType.SET_BASE:
+    case Settings.SettingsActionType.SET_MOD:
       return initialRecipesState;
     case RecipesActionType.SET_FACTORY:
       return StoreUtility.resetFields(

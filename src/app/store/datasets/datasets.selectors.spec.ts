@@ -23,7 +23,7 @@ describe('Datasets Selectors', () => {
 
   describe('getBaseEntities', () => {
     it('should convert base list to entities', () => {
-      const result = Selectors.getBaseEntities.projector(data.base, {
+      const result = Selectors.getBaseEntities.projector(data.mods, {
         [Mocks.Base.id]: Mocks.BaseData,
       });
       expect(result[Mocks.Base.id]).toEqual(Mocks.Base);
@@ -32,7 +32,7 @@ describe('Datasets Selectors', () => {
 
   describe('getModEntities', () => {
     it('should convert mod list to entities', () => {
-      const result = Selectors.getModEntities.projector(data.base, {
+      const result = Selectors.getModEntities.projector(data.mods, {
         [Mocks.Base.id]: Mocks.BaseData,
       });
       expect(result[Mocks.Base.id]).toEqual(Mocks.Base);

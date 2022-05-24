@@ -46,7 +46,7 @@ describe('DataService', () => {
       spyOn(mockStore, 'dispatch');
       service.initialize(
         '',
-        { settingsState: { baseId: Mocks.Base.id } as any },
+        { settingsState: { modId: Mocks.Base.id } as any },
         Settings.initialSettingsState
       );
       expect(mockStore.dispatch).toHaveBeenCalledWith(
@@ -58,7 +58,6 @@ describe('DataService', () => {
   describe('requestData', () => {
     it('should set up http requests for data', () => {
       spyOn(mockStore, 'dispatch');
-      spyOn(service, 'loadModsForBase');
       http.expectOne(`data/${Mocks.Base.id}/data.json`).flush(Mocks.BaseData);
       http.expectOne(`data/${Mocks.Base.id}/hash.json`).flush(Mocks.Hash);
       expect(mockStore.dispatch).toHaveBeenCalledWith(
@@ -69,9 +68,6 @@ describe('DataService', () => {
       );
       expect(mockStore.dispatch).toHaveBeenCalledWith(
         new Datasets.LoadModHashAction({ id: Mocks.Base.id, value: Mocks.Hash })
-      );
-      expect(service.loadModsForBase).toHaveBeenCalledWith(
-        Mocks.BaseData.defaults!.modIds
       );
     });
 
@@ -86,12 +82,10 @@ describe('DataService', () => {
     });
 
     it('should handle null defaults and skip hash', () => {
-      spyOn(service, 'loadModsForBase');
       let data: [ModData, ModI18n | null, ModHash | null] | undefined;
       service.requestData('id', true).subscribe((d) => (data = d));
       const baseData = { ...Mocks.BaseData, ...{ defaults: undefined } };
       http.expectOne('data/id/data.json').flush(baseData);
-      expect(service.loadModsForBase).toHaveBeenCalledWith([]);
       expect(data).toEqual([baseData, null, null]);
     });
 
@@ -115,16 +109,6 @@ describe('DataService', () => {
       service.requestData('id').subscribe((d) => (data = d));
       http.expectOne('data/id/i18n/zh.json').flush(Mocks.I18n);
       expect(data).toEqual([Mocks.BaseData, Mocks.I18n, Mocks.Hash]);
-    });
-  });
-
-  describe('loadModsForBase', () => {
-    it('should load a list of mods', () => {
-      spyOn(service, 'requestData').and.returnValue(
-        of([Mocks.BaseData, Mocks.I18n, Mocks.Hash])
-      );
-      service.loadModsForBase([Mocks.Mod1.id]);
-      expect(service.requestData).toHaveBeenCalledTimes(1);
     });
   });
 });

@@ -54,9 +54,9 @@ describe('Settings Reducer', () => {
       const value = 'dsp';
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetBaseAction(value)
+        new Actions.SetModAction(value)
       );
-      expect(result.baseId).toEqual(value);
+      expect(result.modId).toEqual(value);
     });
   });
 
