@@ -11,6 +11,7 @@ if (!mod) {
   );
 }
 
+// Load mod data at specified path, and update icons with new calculated average color
 const iconsPath = `./src/data/${mod}/icons.png`;
 const dataPath = `./src/data/${mod}/data.json`;
 const rawData = fs.readFileSync(dataPath).toString();
