@@ -338,8 +338,6 @@ export class RouterService {
 
   /** Migrates V0 bare zip to latest bare format */
   migrateV0(params: Entities<string>): Entities<string> {
-    // Get preset from base section
-    const preset = params[Section.Base] ?? NULL;
     if (params[Section.Settings]) {
       // Reorganize settings
       const zip = params[Section.Settings];
@@ -348,10 +346,17 @@ export class RouterService {
       let baseId = this.parseString(s[0]);
       baseId = baseId && data.hash[data.v0.indexOf(baseId)];
       baseId = baseId ?? NULL;
+      // Convert displayRate to V1
+      const displayRateV0 =
+        this.parseNumber(s[6]) ?? Settings.initialSettingsState.displayRate;
+      const displayRateV1 = this.zipDiffDisplayRate(
+        displayRateV0,
+        Settings.initialSettingsState.displayRate
+      );
       params[Section.Settings] = this.zipFields([
         baseId,
-        s[6], // displayRate
-        preset,
+        displayRateV1,
+        params[Section.Base], // preset
         s[1], // disabledRecipeIds
         s[3], // beltId
         s[4], // fuelId
@@ -364,8 +369,12 @@ export class RouterService {
         s[11], // cargoWagonId
         s[12], // fluidWagonId
       ]);
-    } else {
-      params[Section.Settings] = this.zipFields([NULL, NULL, preset]);
+    } else if (params[Section.Base]) {
+      params[Section.Settings] = this.zipFields([
+        NULL,
+        NULL,
+        params[Section.Base],
+      ]);
     }
     params[Section.Version] = ZipVersion.Version1;
     return params;
@@ -378,12 +387,13 @@ export class RouterService {
       const zip = params[Section.Recipes];
       const list = zip.split(LISTSEP);
       const migrated = [];
+      const index = 3; // Index of beaconCount field
       for (const recipe of list) {
         const s = recipe.split(FIELDSEP);
-        if (s.length > 2) {
+        if (s.length > index) {
           // Convert beaconCount from number to string format
-          const asString = this.parseNNumber(s[3])?.toString();
-          s[3] = this.zipTruthyString(asString);
+          const asString = this.parseNNumber(s[index])?.toString();
+          s[index] = this.zipTruthyString(asString);
         }
         migrated.push(this.zipFields(s));
       }
@@ -394,12 +404,13 @@ export class RouterService {
       const zip = params[Section.Factories];
       const list = zip.split(LISTSEP);
       const migrated = [];
+      const index = 2; // Index of beaconCount field
       for (const factory of list) {
         const s = factory.split(FIELDSEP);
-        if (s.length > 2) {
+        if (s.length > index) {
           // Convert beaconCount from number to string format
-          const asString = this.parseNNumber(s[3])?.toString();
-          s[3] = this.zipTruthyString(asString);
+          const asString = this.parseNNumber(s[index])?.toString();
+          s[index] = this.zipTruthyString(asString);
         }
         migrated.push(this.zipFields(s));
       }
