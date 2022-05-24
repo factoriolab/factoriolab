@@ -480,7 +480,7 @@ describe('RouterService', () => {
     });
 
     it('should handle preset without other settings', () => {
-      const params = service.migrateV0({ [Section.Base]: '0' });
+      const params = service.migrateV0({ [Section.Mod]: '0' });
       expect(params[Section.Settings]).toEqual('?*?*0');
     });
   });
