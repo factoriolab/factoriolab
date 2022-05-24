@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "factorio-lab": {
+    "factoriolab": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -103,18 +103,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "factorio-lab:build"
+            "browserTarget": "factoriolab:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "factorio-lab:build:production"
+              "browserTarget": "factoriolab:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "factorio-lab:build"
+            "browserTarget": "factoriolab:build"
           }
         },
         "test": {
@@ -151,7 +151,7 @@
       }
     }
   },
-  "defaultProject": "factorio-lab",
+  "defaultProject": "factoriolab",
   "cli": {
     "analytics": "d77293c4-7d34-44a7-879c-a57e1cd6821e"
   }
