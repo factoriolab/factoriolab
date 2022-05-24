@@ -33,9 +33,9 @@ import {
   MIN_ZIP,
   NULL,
   RouterService,
+  Section,
   TRUE,
   Zip,
-  ZipVersion,
 } from './router.service';
 
 const mockProduct: Product = {
@@ -339,7 +339,7 @@ describe('RouterService', () => {
 
     it('should unzip v0', () => {
       const url =
-        '/#z=eJxtUNsKwyAM.RsfAo7awdiL7FNGtLEVrIrajb3s2-doB21XQiCXk5OTRJkLkeN6oFxAgGBKCmZ31ZLQ5xhS4YpcAY2pD.yJffAsbaCYM43KWd.zEfVgPfEWyBjSxT5sefExdJOj93-pbsmRqPsh1gkoQh08tE0DovqVGSkgptrc8W6mtowLyf1I4n2-wUzJoyaWpTg1IA8OD-hAfGWcL4uW2VYfAeMm2y3xDdqKghl6KPkDcQGG1A__';
+        '/#z=eJxtUFEKgzAMvU0.Ah3WwdhP2VEkrakWalva6tjPzj6HDtRJCCQvyctLosyFyHHdUy4gQDAlBbMHtCT0OYZUuCJXQGPqAn9iFzxLu1bMmQblrO.4gLq3nngNZAzpYidbXnwI7ejo.Q.NW3Ikan8d2wQUoQ4e6qoCMfudGSkgprl44N1N7RlXkuZMYrPcYMbkURPLUlwqkCeHB3QgvjKut1XLYpuPgHGjbdf48QHTzHxq';
       (router.events as any).next(new NavigationEnd(2, url, url));
 
       // const newZip = service.bytesToBase64(
@@ -347,17 +347,27 @@ describe('RouterService', () => {
       //     mockZip.bare +
       //       '&b=1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectiv' +
       //       'ity-module*1*speed-module~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2' +
-      //       '_steel-furnace&s=1.0*=*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon*?*2*10*0*100*1*productivity-module'
+      //       '_steel-furnace&s=1.0*=*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon*?'
       //   )
       // );
       // console.log(newZip);
 
+      const mockStateV0: App.PartialState = {
+        ...mockState,
+        ...{ settingsState: { ...mockState.settingsState } },
+      };
+      delete mockStateV0.settingsState?.beaconReceivers;
+      delete mockStateV0.settingsState?.costFactor;
+      delete mockStateV0.settingsState?.costFactory;
+      delete mockStateV0.settingsState?.costInput;
+      delete mockStateV0.settingsState?.costIgnored;
+      delete mockStateV0.settingsState?.proliferatorSprayId;
       expect(service.dispatch).toHaveBeenCalledWith(
         mockZip.bare +
           '&b=1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectiv' +
           'ity-module*1*speed-module~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2' +
-          '_steel-furnace&s=1.0*=*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon*?*2*10*0*100*1*productivity-module',
-        mockState
+          '_steel-furnace&s=1.0*=*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon*?',
+        mockStateV0
       );
     });
 
@@ -463,6 +473,29 @@ describe('RouterService', () => {
     });
   });
 
+  describe('migrateV0', () => {
+    it('should handle unrecognized/null baseid', () => {
+      const params = service.migrateV0({ [Section.Settings]: '---' });
+      expect(params[Section.Settings]).toEqual(NULL);
+    });
+
+    it('should handle preset without other settings', () => {
+      const params = service.migrateV0({ [Section.Base]: '0' });
+      expect(params[Section.Settings]).toEqual('?*?*0');
+    });
+  });
+
+  describe('migrateV2', () => {
+    it('should handle undefined beaconCount', () => {
+      const params = service.migrateV2({
+        [Section.Recipes]: '***?',
+        [Section.Factories]: '**?',
+      });
+      expect(params[Section.Recipes]).toEqual('');
+      expect(params[Section.Factories]).toEqual('');
+    });
+  });
+
   describe('zipProducts', () => {
     it('should handle RateType Items', () => {
       const result = service.zipProducts(
@@ -550,14 +583,10 @@ describe('RouterService', () => {
   });
 
   describe('unzipProducts', () => {
-    it('v1 should unzip', () => {
-      const result = service.unzipProducts(
-        {
-          ['p']: 'steel-chest*1*3*iron-ore',
-        },
-        ZipVersion.Version0,
-        Mocks.Hash
-      );
+    it('bare should unzip', () => {
+      const result = service.unzipProducts({
+        ['p']: 'steel-chest*1*3*iron-ore',
+      });
       expect(result).toEqual({
         ids: ['0'],
         entities: {
@@ -573,12 +602,8 @@ describe('RouterService', () => {
       });
     });
 
-    it('v2 should handle RateType Items', () => {
-      const result = service.unzipProducts(
-        { ['p']: 'C6*1**Bd' },
-        ZipVersion.Version2,
-        Mocks.Hash
-      );
+    it('hash should handle RateType Items', () => {
+      const result = service.unzipProducts({ ['p']: 'C6*1**Bd' }, Mocks.Hash);
       expect(result).toEqual({
         ids: ['0'],
         entities: {
@@ -594,10 +619,9 @@ describe('RouterService', () => {
       });
     });
 
-    it('v2 should handle RateType Belts', () => {
+    it('hash should handle RateType Belts', () => {
       const result = service.unzipProducts(
         { ['p']: 'C6*1*1*Bd*C' },
-        ZipVersion.Version2,
         Mocks.Hash
       );
       expect(result).toEqual({
@@ -616,10 +640,9 @@ describe('RouterService', () => {
       });
     });
 
-    it('v2 should handle RateType Wagons', () => {
+    it('hash should handle RateType Wagons', () => {
       const result = service.unzipProducts(
         { ['p']: 'C6*1*2*Bd*A' },
-        ZipVersion.Version2,
         Mocks.Hash
       );
       expect(result).toEqual({
@@ -638,12 +661,8 @@ describe('RouterService', () => {
       });
     });
 
-    it('v2 should handle RateType Factories', () => {
-      const result = service.unzipProducts(
-        { ['p']: 'C6*1*3*Bl' },
-        ZipVersion.Version2,
-        Mocks.Hash
-      );
+    it('hash should handle RateType Factories', () => {
+      const result = service.unzipProducts({ ['p']: 'C6*1*3*Bl' }, Mocks.Hash);
       expect(result).toEqual({
         ids: ['0'],
         entities: {
@@ -659,18 +678,8 @@ describe('RouterService', () => {
       });
     });
 
-    it('v2/v3 should throw error if hash is null', () => {
-      expect(() =>
-        service.unzipProducts({ ['p']: 'C6*1**Bd' }, ZipVersion.Version2)
-      ).toThrow();
-    });
-
-    it('v2/v3 should map values to empty strings if null', () => {
-      const result = service.unzipProducts(
-        { ['p']: '*1**Bd' },
-        ZipVersion.Version2,
-        Mocks.Hash
-      );
+    it('hash should map values to empty strings if null', () => {
+      const result = service.unzipProducts({ ['p']: '*1**Bd' }, Mocks.Hash);
       expect(result).toEqual({
         ids: ['0'],
         entities: {
@@ -689,27 +698,16 @@ describe('RouterService', () => {
 
   describe('unzipItems', () => {
     it('should remove unspecified fields', () => {
-      const result = service.unzipItems(
-        { ['i']: 'steel-chest*1*transport-belt*' },
-        ZipVersion.Version0
-      );
+      const result = service.unzipItems({
+        ['i']: 'steel-chest*1*transport-belt*',
+      });
       expect(result).toEqual({
         [ItemId.SteelChest]: { ignore: true, beltId: ItemId.TransportBelt },
       });
     });
 
-    it('v2/v3 should throw error if hash is null', () => {
-      expect(() =>
-        service.unzipItems({ ['i']: 'A*1*A*' }, ZipVersion.Version2)
-      ).toThrow();
-    });
-
-    it('v2/v3 should map id to empty string if null', () => {
-      const result = service.unzipItems(
-        { ['i']: '*1*C*' },
-        ZipVersion.Version2,
-        Mocks.Hash
-      );
+    it('hash should map id to empty string if null', () => {
+      const result = service.unzipItems({ ['i']: '*1*C*' }, Mocks.Hash);
       expect(result).toEqual({
         ['']: { ignore: true, beltId: ItemId.TransportBelt },
       });
@@ -718,27 +716,16 @@ describe('RouterService', () => {
 
   describe('unzipRecipes', () => {
     it('should remove unspecified fields', () => {
-      const result = service.unzipRecipes(
-        { ['r']: 'steel-chest*assembling-machine-2*' },
-        ZipVersion.Version0
-      );
+      const result = service.unzipRecipes({
+        ['r']: 'steel-chest*assembling-machine-2*',
+      });
       expect(result).toEqual({
         [RecipeId.SteelChest]: { factoryId: ItemId.AssemblingMachine2 },
       });
     });
 
-    it('v2/v3 should throw error if hash is null', () => {
-      expect(() =>
-        service.unzipRecipes({ ['r']: 'A*A*' }, ZipVersion.Version2)
-      ).toThrow();
-    });
-
-    it('v2/v3 should map values to empty strings if null', () => {
-      const result = service.unzipRecipes(
-        { ['r']: '*A*' },
-        ZipVersion.Version2,
-        Mocks.Hash
-      );
+    it('hash should map values to empty strings if null', () => {
+      const result = service.unzipRecipes({ ['r']: '*A*' }, Mocks.Hash);
       expect(result).toEqual({
         ['']: { factoryId: ItemId.AssemblingMachine1 },
       });
@@ -761,53 +748,28 @@ describe('RouterService', () => {
   });
 
   describe('unzipFactories', () => {
-    it('v1 should unzip empty ids', () => {
-      const result = service.unzipFactories(
-        { ['f']: '_' },
-        ZipVersion.Version1
-      );
+    it('bare should unzip empty ids', () => {
+      const result = service.unzipFactories({ ['f']: '_' });
       expect(result).toEqual({
         ids: undefined,
         entities: {},
       });
     });
 
-    it('v2 should unzip empty ids', () => {
-      const result = service.unzipFactories(
-        { ['f']: '_' },
-        ZipVersion.Version2,
-        Mocks.Hash
-      );
+    it('hash should unzip empty ids', () => {
+      const result = service.unzipFactories({ ['f']: '_' }, Mocks.Hash);
       expect(result).toEqual({
         ids: undefined,
         entities: {},
       });
     });
 
-    it('v2/v3 should throw error if hash is null', () => {
-      expect(() =>
-        service.unzipFactories({ ['f']: '_' }, ZipVersion.Version2)
-      ).toThrow();
-    });
-
-    it('v2/v3 should map values to empty strings if null', () => {
-      const result = service.unzipFactories(
-        { ['f']: '1_?**B' },
-        ZipVersion.Version2,
-        Mocks.Hash
-      );
+    it('hash should map values to empty strings if null', () => {
+      const result = service.unzipFactories({ ['f']: '1_?**1' }, Mocks.Hash);
       expect(result).toEqual({
         ids: [''],
         entities: { ['']: { beaconCount: '1' } },
       });
-    });
-  });
-
-  describe('unzipSettings', () => {
-    it('v2/v3 should throw error if hash is null', () => {
-      expect(() =>
-        service.unzipSettings({ ['s']: '' }, ZipVersion.Version2)
-      ).toThrow();
     });
   });
 
