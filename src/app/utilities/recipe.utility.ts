@@ -63,6 +63,9 @@ export class RecipeUtility {
     if (settings.factoryId != null) {
       const factory = data.factoryEntities[settings.factoryId];
 
+      if (factory == null) {
+        console.log(recipeId + ' ' + settings.factoryId);
+      }
       if (factory.speed != null) {
         // Adjust for factory speed
         recipe.time = recipe.time.div(factory.speed);

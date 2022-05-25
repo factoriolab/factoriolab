@@ -5,7 +5,6 @@
     "dbaeumer.vscode-eslint",
     "eamodio.gitlens",
     "davidanson.vscode-markdownlint",
-    "esbenp.prettier-vscode",
-    "eriklynd.json-tools"
+    "esbenp.prettier-vscode"
   ]
 }

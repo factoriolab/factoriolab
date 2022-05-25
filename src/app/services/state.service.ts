@@ -130,12 +130,24 @@ export class StateService {
             data.defaults.disabledRecipeIds.length
           ) {
             console.log(
-              `Filtered disabled recipes ${filteredDisabledRecipeIds.length}:`
+              `Filtered disabled recipes (${filteredDisabledRecipeIds.length}):`
             );
             console.log(JSON.stringify(filteredDisabledRecipeIds));
           } else {
             console.log('No unrecognized disabled recipes');
           }
+        }
+        const invalidRecipes: string[] = [];
+        for (const id of data.recipeIds) {
+          if (!data.recipeEntities[id].producers?.length) {
+            invalidRecipes.push(id);
+          }
+        }
+        if (invalidRecipes.length) {
+          console.log(
+            `Found recipes with no producers: (${invalidRecipes.length}):`
+          );
+          console.log(JSON.stringify(invalidRecipes));
         }
       });
   }
