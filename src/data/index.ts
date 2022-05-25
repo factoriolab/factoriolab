@@ -6,7 +6,7 @@ export { app };
 export const data: AppData = {
   app,
   mods: [
-    { id: '1.1', name: '1.1.39', game: Game.Factorio },
+    { id: '1.1', name: '1.1.x', game: Game.Factorio },
     { id: '1.0', name: '1.0.0', game: Game.Factorio },
     { id: '017', name: '0.17.79', game: Game.Factorio },
     { id: '016', name: '0.16.51', game: Game.Factorio },

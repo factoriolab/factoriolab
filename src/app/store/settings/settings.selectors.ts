@@ -530,6 +530,7 @@ export const getDataset = createSelector(
 
     const dataset: Dataset = {
       game,
+      version: mod?.version,
       categoryIds,
       categoryEntities,
       categoryItemRows,

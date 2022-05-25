@@ -6,6 +6,7 @@ import { ModDefaults } from './mod-defaults';
 import { Recipe } from './recipe';
 
 export interface ModData {
+  version: Entities<string>;
   categories: Category[];
   icons: Icon[];
   items: Item[];

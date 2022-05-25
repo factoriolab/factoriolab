@@ -19,6 +19,7 @@ import { Game } from './enum';
 
 export interface Dataset {
   game: Game;
+  version: Entities<string>;
   categoryIds: string[];
   categoryEntities: Entities<Category>;
   categoryItemRows: Entities<string[][]>;

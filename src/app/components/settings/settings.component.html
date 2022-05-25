@@ -117,6 +117,25 @@
           <tr>
             <td>
               <lab-info
+                [text]="'setting.modVersions' | translate"
+                [tooltip]="'setting.modVersionsTooltip' | translate"
+              ></lab-info>
+            </td>
+            <td>
+              <div class="version-scroll">
+                <div
+                  *ngFor="let mod of vm.data.version | keyvalue"
+                  class="flex tween"
+                >
+                  <span>{{ mod.key }}</span
+                  ><span> {{ mod.value }}</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <lab-info
                 [text]="'setting.disabled' | translate"
                 [tooltip]="'setting.disabledTooltip' | translate"
               ></lab-info>
