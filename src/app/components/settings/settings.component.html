@@ -123,13 +123,14 @@
             </td>
             <td>
               <div class="version-scroll">
-                <div
-                  *ngFor="let mod of vm.data.version | keyvalue"
-                  class="flex tween"
-                >
-                  <span>{{ mod.key }}</span
-                  ><span> {{ mod.value }}</span>
-                </div>
+                <table>
+                  <tr *ngFor="let mod of vm.data.version | keyvalue">
+                    <td>
+                      <div>{{ mod.key }}</div>
+                    </td>
+                    <td>{{ mod.value }}</td>
+                  </tr>
+                </table>
               </div>
             </td>
           </tr>
