@@ -52,9 +52,11 @@ export class StateService {
       )
       .subscribe(([modId, data]) => {
         console.log(modId);
-        const suggestedDisabledIds = data.complexRecipeIds.filter(
-          (i) => !data.itemEntities[i]
-        );
+        const defaultDisabled = data.defaults?.disabledRecipeIds ?? [];
+        const suggestedDisabledIds = [
+          ...defaultDisabled,
+          ...data.complexRecipeIds.filter((i) => !data.itemEntities[i]),
+        ];
         console.log(
           `Suggested disabled recipes (${suggestedDisabledIds.length}):`
         );

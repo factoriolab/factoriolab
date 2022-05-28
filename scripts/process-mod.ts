@@ -18,6 +18,8 @@ const rawData = fs.readFileSync(dataPath).toString();
 const data: ModData = JSON.parse(rawData);
 
 async function processMod(): Promise<void> {
+  let start = Date.now();
+  let i = 0;
   for (const icon of data.icons) {
     const match = /^-?(\d+)px -?(\d+)px$/.exec(icon.position);
     if (match?.length == 3) {
@@ -30,6 +32,13 @@ async function processMod(): Promise<void> {
       });
       icon.color = color.hex;
     }
+    const now = Date.now();
+    const time = now - start;
+    if (time > 1000) {
+      start = now;
+      console.log(`Processing ${i} of ${data.icons.length}...`);
+    }
+    i++;
   }
 
   fs.writeFileSync(dataPath, JSON.stringify(data));
