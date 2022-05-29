@@ -4,7 +4,7 @@ import { combineLatest } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
 
 import { environment } from 'src/environments';
-import { FuelType, ModHash } from '~/models';
+import { Entities, FuelType, ModHash } from '~/models';
 import { LabState } from '~/store';
 import * as Products from '~/store/products';
 import * as Settings from '~/store/settings';
@@ -52,15 +52,27 @@ export class StateService {
       )
       .subscribe(([modId, data]) => {
         console.log(modId);
-        const defaultDisabled = data.defaults?.disabledRecipeIds ?? [];
-        const suggestedDisabledIds = [
-          ...defaultDisabled,
+        const oldDisabled = data.defaults?.disabledRecipeIds ?? [];
+        const allDisabled = [
+          ...oldDisabled,
           ...data.complexRecipeIds.filter((i) => !data.itemEntities[i]),
         ];
-        console.log(
-          `Suggested disabled recipes (${suggestedDisabledIds.length}):`
+        const disabledEntities = allDisabled.reduce(
+          (e: Entities<boolean>, d) => {
+            e[d] = true;
+            return e;
+          },
+          {}
         );
-        console.log(JSON.stringify(suggestedDisabledIds));
+        const suggestedDisabled = Object.keys(disabledEntities);
+        if (JSON.stringify(oldDisabled) !== JSON.stringify(suggestedDisabled)) {
+          console.log(
+            `Suggested disabled recipes (${suggestedDisabled.length}):`
+          );
+          console.log(JSON.stringify(suggestedDisabled));
+        } else {
+          console.log('No suggested changes to default disabled recipes');
+        }
         if (data.hash) {
           const hash: ModHash = {
             items: [...data.hash.items],
