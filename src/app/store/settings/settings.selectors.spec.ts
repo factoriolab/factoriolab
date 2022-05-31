@@ -288,7 +288,6 @@ describe('Settings Selectors', () => {
         Mocks.Defaults,
         Game.Factorio
       );
-      TestUtility.assert(result != null);
       expect(result.categoryIds.length).toBeGreaterThan(0);
       expect(Object.keys(result.categoryEntities).length).toEqual(
         result.categoryIds.length
@@ -342,7 +341,6 @@ describe('Settings Selectors', () => {
         Mocks.Defaults,
         Game.Factorio
       );
-      TestUtility.assert(result != null);
       expect(result.categoryIds.length).toBeGreaterThan(0);
       expect(
         Object.keys(result.categoryEntities).length
@@ -409,7 +407,6 @@ describe('Settings Selectors', () => {
         Mocks.Defaults,
         Game.Factorio
       );
-      TestUtility.assert(result != null);
       expect(result.beaconIds).toEqual(['id', 'beacon']);
       expect(result.beltIds).toEqual([
         ItemId.TransportBelt,
@@ -451,7 +448,6 @@ describe('Settings Selectors', () => {
         Mocks.Defaults,
         Game.DysonSphereProgram
       );
-      TestUtility.assert(result != null);
       expect(result.beltIds).toEqual([
         ItemId.TransportBelt,
         ItemId.FastTransportBelt,
@@ -484,7 +480,6 @@ describe('Settings Selectors', () => {
         Mocks.Defaults,
         Game.Factorio
       );
-      TestUtility.assert(result != null);
       expect(result.pipeIds).toEqual([ItemId.CopperCable, ItemId.Pipe]);
     });
 
@@ -518,7 +513,6 @@ describe('Settings Selectors', () => {
         Mocks.Defaults,
         Game.Factorio
       );
-      TestUtility.assert(result != null);
       expect(result.iconEntities[ItemId.Pipe]).toEqual(
         result.iconEntities[ItemId.Beacon]
       );
@@ -545,7 +539,6 @@ describe('Settings Selectors', () => {
         Mocks.Defaults,
         Game.Factorio
       );
-      TestUtility.assert(result != null);
       expect(result.iconEntities[RecipeId.AdvancedOilProcessing]).toEqual(
         result.iconEntities[ItemId.HeavyOil]
       );
@@ -557,18 +550,17 @@ describe('Settings Selectors', () => {
           ...Mocks.Raw.app,
           ...{ icons: [...Mocks.Raw.app.icons, { id: '0', file: 'file0' }] },
         },
-        [
-          {
-            ...Mocks.Mod,
-            ...{ icons: [...Mocks.Mod.icons, { id: '1', file: 'file1' }] },
-          },
-        ],
-        [],
+
+        {
+          ...Mocks.Mod,
+          ...{ icons: [...Mocks.Mod.icons, { id: '1', file: 'file1' }] },
+        },
+
+        null,
         null,
         Mocks.Defaults,
         Game.Factorio
       );
-      TestUtility.assert(result != null);
       expect(result.iconEntities['0'].file).toEqual('file0');
       expect(result.iconEntities['1'].file).toEqual('file1');
     });

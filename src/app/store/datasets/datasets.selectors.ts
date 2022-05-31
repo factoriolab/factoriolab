@@ -24,9 +24,9 @@ export const getHashEntities = createSelector(
 );
 
 /* Complex selectors */
-export const getModInfoEntities = createSelector(getModSets, (base) =>
-  base.reduce((e: Entities<ModInfo>, b) => {
-    e[b.id] = b;
+export const getModInfoEntities = createSelector(getModSets, (mods) =>
+  mods.reduce((e: Entities<ModInfo>, m) => {
+    e[m.id] = m;
     return e;
   }, {})
 );
@@ -34,8 +34,8 @@ export const getModInfoEntities = createSelector(getModSets, (base) =>
 export const getModEntities = createSelector(
   getModSets,
   getDataEntities,
-  (mod, entities) =>
-    mod.reduce((e: Entities<Mod>, m) => {
+  (mods, entities) =>
+    mods.reduce((e: Entities<Mod>, m) => {
       if (entities[m.id]) {
         e[m.id] = { ...m, ...entities[m.id] };
       }
