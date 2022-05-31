@@ -276,6 +276,11 @@ describe('Settings Selectors', () => {
       );
       expect(result).toEqual(Mocks.I18n);
     });
+
+    it('should handle data not loaded yet', () => {
+      const result = Selectors.getI18n.projector(null, null, null);
+      expect(result).toBeNull();
+    });
   });
 
   describe('getDataset', () => {
@@ -563,6 +568,18 @@ describe('Settings Selectors', () => {
       );
       expect(result.iconEntities['0'].file).toEqual('file0');
       expect(result.iconEntities['1'].file).toEqual('file1');
+    });
+
+    it('should handle data not loaded yet', () => {
+      const result = Selectors.getDataset.projector(
+        Mocks.Raw.app,
+        null,
+        null,
+        null,
+        Mocks.Defaults,
+        Game.Factorio
+      );
+      expect(result.categoryIds.length).toEqual(0);
     });
   });
 

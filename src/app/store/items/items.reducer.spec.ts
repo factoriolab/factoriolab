@@ -40,7 +40,7 @@ describe('Items Reducer', () => {
         result,
         new Actions.IgnoreItemAction(Mocks.Item1.id)
       );
-      expect(result[Mocks.Recipe1.id]).toBeUndefined();
+      expect(result[Mocks.Item1.id]).toBeUndefined();
     });
   });
 
@@ -54,7 +54,7 @@ describe('Items Reducer', () => {
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].beltId).toEqual(Mocks.Item1.id);
+      expect(result[Mocks.Item1.id].beltId).toEqual(Mocks.Item1.id);
     });
   });
 
@@ -68,7 +68,7 @@ describe('Items Reducer', () => {
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].wagonId).toEqual(Mocks.Item1.id);
+      expect(result[Mocks.Item1.id].wagonId).toEqual(Mocks.Item1.id);
     });
   });
 
@@ -82,7 +82,7 @@ describe('Items Reducer', () => {
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].recipeId).toEqual(Mocks.Item1.id);
+      expect(result[Mocks.Item1.id].recipeId).toEqual(Mocks.Item1.id);
     });
   });
 
@@ -92,7 +92,7 @@ describe('Items Reducer', () => {
         initialItemsState,
         new Actions.ResetItemAction(Mocks.Item1.id)
       );
-      expect(result[Mocks.Recipe1.id]).toBeUndefined();
+      expect(result[Mocks.Item1.id]).toBeUndefined();
     });
   });
 

@@ -111,7 +111,7 @@ describe('RecipeUtility', () => {
       expected.time = Rational.from(30);
       expected.adjustProd = true;
       expected.productivity = Rational.one;
-      expected.drain = undefined;
+      expected.drain = Rational.zero;
       expected.consumption = Rational.from(60);
       expected.pollution = Rational.zero;
       expect(result).toEqual(expected);
@@ -135,7 +135,7 @@ describe('RecipeUtility', () => {
       );
       expected.out = { [ItemId.IronOre]: Rational.from(3) };
       expected.time = Rational.two;
-      expected.drain = undefined;
+      expected.drain = Rational.zero;
       expected.consumption = Rational.from(90);
       expected.pollution = Rational.from(1, 6);
       expected.productivity = Rational.from(3);
@@ -771,7 +771,7 @@ describe('RecipeUtility', () => {
       );
       expect(result).toBeTruthy();
       expect(RecipeUtility.adjustSiloRecipes).toHaveBeenCalledTimes(1);
-      expect(RecipeUtility.adjustRecipe).toHaveBeenCalledTimes(221);
+      expect(RecipeUtility.adjustRecipe).toHaveBeenCalledTimes(228);
     });
 
     it('should use specified item recipe', () => {

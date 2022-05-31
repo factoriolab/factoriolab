@@ -36,6 +36,7 @@ import {
   Section,
   TRUE,
   Zip,
+  ZipVersion,
 } from './router.service';
 
 const mockProduct: Product = {
@@ -477,6 +478,14 @@ describe('RouterService', () => {
       expect(mockStore.dispatch).toHaveBeenCalledWith(
         new App.LoadAction(mockState)
       );
+    });
+  });
+
+  describe('migrate', () => {
+    it('should return latest version without alteration', () => {
+      const originalParams = { [Section.Version]: ZipVersion.Version4 };
+      const [params, warnings] = service.migrate({ ...originalParams });
+      expect(params).toEqual(originalParams);
     });
   });
 
@@ -924,8 +933,9 @@ describe('RouterService', () => {
       expect(service.zipDiffBool(undefined, false)).toEqual(NULL);
     });
 
-    it('should handle truthy', () => {
+    it('should handle true/false', () => {
       expect(service.zipDiffBool(false, true)).toEqual(FALSE);
+      expect(service.zipDiffBool(true, false)).toEqual(TRUE);
     });
   });
 

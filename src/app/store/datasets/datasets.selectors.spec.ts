@@ -1,4 +1,4 @@
-import { app, data } from 'src/data';
+import { data } from 'src/data';
 import { Mocks } from 'src/tests';
 import { initialDatasetsState } from './datasets.reducer';
 import * as Selectors from './datasets.selectors';
@@ -18,13 +18,6 @@ describe('Datasets Selectors', () => {
       expect(Selectors.getHashEntities.projector(initialDatasetsState)).toEqual(
         initialDatasetsState.hashEntities
       );
-    });
-  });
-
-  describe('getModInfoEntities', () => {
-    it('should convert mod list to entities', () => {
-      const result = Selectors.getModInfoEntities.projector(data.mods);
-      expect(result[Mocks.Mod.id]).toEqual(Mocks.Mod);
     });
   });
 

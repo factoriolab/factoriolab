@@ -16,7 +16,7 @@ describe('FlowUtility', () => {
       stepId: '0',
       name: Mocks.AdjustedData.itemEntities[ItemId.Coal].name,
       color: Mocks.AdjustedData.iconEntities[ItemId.Coal].color,
-      viewBox: '256 448 64 64',
+      viewBox: '128 384 64 64',
       href: Mocks.AdjustedData.iconEntities[ItemId.Coal].file!,
     };
     const iId = `i|${ItemId.Coal}`;
@@ -50,7 +50,7 @@ describe('FlowUtility', () => {
             stepId: '1',
             name: Mocks.AdjustedData.itemEntities[ItemId.PlasticBar].name,
             color: Mocks.AdjustedData.iconEntities[ItemId.PlasticBar].color,
-            viewBox: '896 448 64 64',
+            viewBox: '768 384 64 64',
             href: Mocks.AdjustedData.iconEntities[ItemId.PlasticBar].file!,
           },
         ],
@@ -160,7 +160,7 @@ describe('FlowUtility', () => {
           {
             id: `r|${RecipeId.PlasticBar}`,
             stepId: '1',
-            viewBox: '896 448 64 64',
+            viewBox: '768 384 64 64',
             name: Mocks.AdjustedData.recipeEntities[RecipeId.PlasticBar].name,
             color: Mocks.AdjustedData.iconEntities[RecipeId.PlasticBar].color,
             href: Mocks.AdjustedData.iconEntities[RecipeId.PlasticBar].file!,
@@ -226,7 +226,7 @@ describe('FlowUtility', () => {
         stepId: '0',
         name,
         color,
-        viewBox: '512 0 64 64',
+        viewBox: '384 896 64 64',
         href,
       };
       const uNode2: Node = { ...uNode1, ...{ stepId: '1' } };
@@ -235,7 +235,7 @@ describe('FlowUtility', () => {
         stepId: '2',
         name: Mocks.AdjustedData.itemEntities[ItemId.Uranium235].name,
         color: Mocks.AdjustedData.iconEntities[ItemId.Uranium235].color,
-        viewBox: '512 576 64 64',
+        viewBox: '384 512 64 64',
         href,
       };
       const uNode4: Node = {
@@ -243,7 +243,7 @@ describe('FlowUtility', () => {
         stepId: '3',
         name: Mocks.AdjustedData.itemEntities[ItemId.Uranium238].name,
         color: Mocks.AdjustedData.iconEntities[ItemId.Uranium238].color,
-        viewBox: '576 576 64 64',
+        viewBox: '448 512 64 64',
         href,
       };
       const uLink1: Link = {
