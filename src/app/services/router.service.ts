@@ -406,7 +406,7 @@ export class RouterService {
     if (params[Section.Settings]) {
       const zip = params[Section.Settings];
       const s = zip.split(FIELDSEP);
-      const index = 10; // Index of expensive field
+      const index = 11; // Index of expensive field
       if (s.length > index) {
         // Remove expensive field
         const val = s.splice(index, 1);
@@ -464,7 +464,7 @@ export class RouterService {
     return this.migrateV3(params, warnings);
   }
 
-  /** Migrates V3 hash zip to latest bare format */
+  /** Migrates V3 hash zip to latest hash format */
   migrateV3(
     params: Entities<string>,
     warnings: string[]

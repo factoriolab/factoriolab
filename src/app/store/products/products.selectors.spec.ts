@@ -920,6 +920,7 @@ describe('Products Selectors', () => {
             RecipeId.AdvancedOilProcessing,
             RecipeId.BasicOilProcessing,
             RecipeId.CoalLiquefaction,
+            RecipeId.EmptyPetroleumGasBarrel,
             RecipeId.LightOilCracking,
           ],
         },

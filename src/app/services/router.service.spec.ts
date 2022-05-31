@@ -110,8 +110,8 @@ const mockZipPartial: Zip = {
   bare:
     '&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectivity-module*1*speed-module' +
     '~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2_steel-furnace&s=1.0*2*1*=*tran' +
-    'sport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid-wagon**2*10*0*100*1*productivity-module',
-  hash: '&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B**2*10*0*100*1*D',
+    'sport-belt*coal*1200*100*0*0*0*cargo-wagon*fluid-wagon**2*10*0*100*1*productivity-module',
+  hash: '&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D',
 };
 const mockState: LabState = {
   productsState: mockProductsState,
@@ -268,10 +268,10 @@ describe('RouterService', () => {
   });
 
   describe('getHash', () => {
-    it('should preseve a small state', () => {
+    it('should preserve a small state', () => {
       spyOn(service, 'bytesToBase64').and.returnValue('');
       const result = service.getHash(mockZip);
-      expect(result).toEqual(mockZip.bare + '&v=1');
+      expect(result).toEqual(`${mockZip.bare}&v=${service.bareVersion}`);
     });
 
     it('should zip a large state', () => {
@@ -337,6 +337,7 @@ describe('RouterService', () => {
     });
 
     it('should unzip v0', () => {
+      spyOn(window, 'alert');
       const url =
         '/#z=eJxtUFEKgzAMvU0.Ah3WwdhP2VEkrakWalva6tjPzj6HDtRJCCQvyctLosyFyHHdUy4gQDAlBbMHtCT0OYZUuCJXQGPqAn9iFzxLu1bMmQblrO.4gLq3nngNZAzpYidbXnwI7ejo.Q.NW3Ikan8d2wQUoQ4e6qoCMfudGSkgprl44N1N7RlXkuZMYrPcYMbkURPLUlwqkCeHB3QgvjKut1XLYpuPgHGjbdf48QHTzHxq';
       (router.events as any).next(new NavigationEnd(2, url, url));
@@ -368,6 +369,7 @@ describe('RouterService', () => {
           '_steel-furnace&s=1.0*=*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon*?',
         mockStateV0
       );
+      expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
     });
 
     it('should unzip empty v1', () => {
@@ -378,14 +380,16 @@ describe('RouterService', () => {
     });
 
     it('should unzip v1', () => {
+      spyOn(window, 'alert');
       const v1Full =
-        mockZip.bare +
-        // Replace empty with explicit null
-        mockZipPartial.bare.replace('fluid-wagon**', 'fluid-wagon*?*') +
-        '&v=1';
+        'p=steel-chest*1*1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectivity-module*1*speed-module' +
+        '~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2_steel-furnace&s=1.0*2*1*=*tran' +
+        'sport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid-wagon*?*2*10*0*100*1*productivity-module&v=1';
       const url = `/?${v1Full}`;
       (router.events as any).next(new NavigationEnd(2, url, url));
+
       expect(service.dispatch).toHaveBeenCalledWith(v1Full, mockState);
+      expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
     });
 
     it('should unzip empty v2', () => {
@@ -398,6 +402,7 @@ describe('RouterService', () => {
     });
 
     it('should unzip v2', () => {
+      spyOn(window, 'alert');
       const url =
         '/?z=eJwdjLEKgDAMRP8mw01NB3ERSVpwFj-g4CCIiyjo1m.3KuGSXI6XM3VQqKwu-78mmFzZ4bBq7FOdYIghQKleNkXmiQGseJnljqSGxmF54QdnYCkaPYLpb9sDZHniBxSMGkU_';
 
@@ -416,6 +421,7 @@ describe('RouterService', () => {
         'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A*200*100*8&f1*D~G*B*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v2',
         mockState
       );
+      expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
     });
 
     it('should unzip empty v3', () => {
@@ -428,6 +434,7 @@ describe('RouterService', () => {
     });
 
     it('should unzip v3', () => {
+      spyOn(window, 'alert');
       const url =
         '/?z=eJwdjLEKgDAMRP8mw02NgriIJC04ix8gOAjiIgq69du9lhAu747LFTsoVDaXo54RJndyOCwbecoTDE0IUG4vuyLRYgBbfZ3laQhD6WH54Cc1cJTqGMG0YnmAJG.7AwswGiQ_';
 
@@ -446,6 +453,7 @@ describe('RouterService', () => {
         'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v3',
         mockState
       );
+      expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
     });
 
     it('should log warning on missing hash', fakeAsync(() => {
