@@ -8,9 +8,9 @@ describe('Dataset Reducer', () => {
       const id = 'id';
       const result = datasetsReducer(
         initialDatasetsState,
-        new Actions.LoadModDataAction({ id, value: Mocks.BaseData })
+        new Actions.LoadModDataAction({ id, value: Mocks.Data })
       );
-      expect(result.dataEntities[id]).toEqual(Mocks.BaseData);
+      expect(result.dataEntities[id]).toEqual(Mocks.Data);
     });
   });
 

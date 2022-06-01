@@ -9,7 +9,6 @@ export interface ModInfo {
   id: string;
   name: string;
   game: Game;
-  compatibleIds?: string[];
 }
 
 export interface Mod extends ModData, ModInfo {}

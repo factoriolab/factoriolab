@@ -50,7 +50,7 @@ export const MIN_ZIP = 75;
 
 export enum Section {
   Version = 'v',
-  Base = 'b',
+  Mod = 'b',
   Products = 'p',
   Items = 'i',
   Recipes = 'r',
@@ -63,6 +63,12 @@ export enum ZipVersion {
   Version1 = '1',
   Version2 = '2',
   Version3 = '3',
+  Version4 = '4',
+  Version5 = '5',
+}
+
+export enum MigrationWarning {
+  ExpensiveDeprecation = 'Deprecated: The expensive setting has been removed. Please use or request an expensive data set instead.',
 }
 
 export interface Zip {
@@ -78,8 +84,8 @@ export class RouterService {
   zipPartial: Zip = { bare: '', hash: '' };
   base64codes: Uint8Array;
   // Intended to denote hashing algorithm version
-  bareVersion = ZipVersion.Version1;
-  hashVersion = ZipVersion.Version3;
+  bareVersion = ZipVersion.Version4;
+  hashVersion = ZipVersion.Version5;
   zipTail: Zip = {
     bare: `&${Section.Version}=${this.bareVersion}`,
     hash: `&${Section.Version}${this.hashVersion}`,
@@ -164,19 +170,19 @@ export class RouterService {
     settings: Settings.SettingsState
   ): Observable<Zip> {
     return this.store.select(Datasets.getHashEntities).pipe(
-      map((hashEntities) => hashEntities[settings.baseId]),
+      map((hashEntities) => hashEntities[settings.modId]),
       filter((hash): hash is ModHash => hash != null),
       first(),
       map((hash) => {
         const zipPartial: Zip = { bare: '', hash: '' };
-        // Base
-        const zBase = this.zipDiffString(
-          settings.baseId,
-          Settings.initialSettingsState.baseId
+        // Mod
+        const zMod = this.zipDiffString(
+          settings.modId,
+          Settings.initialSettingsState.modId
         );
-        if (zBase.length) {
-          zipPartial.hash += `&${Section.Base}${this.getId(
-            data.hash.indexOf(zBase)
+        if (zMod.length) {
+          zipPartial.hash += `&${Section.Mod}${this.getId(
+            data.hash.indexOf(zMod)
           )}`;
         }
         // Products
@@ -255,7 +261,9 @@ export class RouterService {
               .replace(/\*n\*/g, `*${NULL}*`)
               .replace(/\*e\*/g, `*${EMPTY}*`);
             let params = this.getParams(zip);
-            params = this.migrate(params);
+            let warnings: string[] = [];
+            [params, warnings] = this.migrate(params);
+            this.displayWarnings(warnings);
             const v = params[Section.Version] as ZipVersion;
             const state: App.PartialState = {};
             if (v == this.bareVersion) {
@@ -279,9 +287,9 @@ export class RouterService {
               }
               this.dispatch(zip, state);
             } else {
-              const baseId = this.parseNString(params[Section.Base], data.hash);
+              const modId = this.parseNString(params[Section.Mod], data.hash);
               this.dataSvc
-                .requestData(baseId || Settings.initialSettingsState.baseId)
+                .requestData(modId || Settings.initialSettingsState.modId)
                 .subscribe(([data, i18n, hash]) => {
                   if (hash == null) {
                     throw new Error('RouterService failed to load hash');
@@ -301,10 +309,10 @@ export class RouterService {
                   if (params[Section.Settings]) {
                     state.settingsState = this.unzipSettings(params, hash);
                   }
-                  if (baseId != null) {
+                  if (modId != null) {
                     state.settingsState = {
                       ...state.settingsState,
-                      ...{ baseId },
+                      ...{ modId },
                     };
                   }
                   this.dispatch(zip, state);
@@ -325,27 +333,37 @@ export class RouterService {
   }
 
   /** Migrates older zip params to latest bare/hash formats */
-  migrate(params: Entities<string>): Entities<string> {
+  migrate(params: Entities<string>): [Entities<string>, string[]] {
+    const warnings: string[] = [];
     const v = (params[Section.Version] as ZipVersion) ?? ZipVersion.Version0;
     this.gaSvc.event('unzip_version', v);
-    if (v == ZipVersion.Version0) {
-      return this.migrateV0(params);
-    } else if (v == ZipVersion.Version2) {
-      return this.migrateV2(params);
+    switch (v) {
+      case ZipVersion.Version0:
+        return this.migrateV0(params, warnings);
+      case ZipVersion.Version1:
+        return this.migrateV1(params, warnings);
+      case ZipVersion.Version2:
+        return this.migrateV2(params, warnings);
+      case ZipVersion.Version3:
+        return this.migrateV3(params, warnings);
+      default:
+        return [params, warnings];
     }
-    return params;
   }
 
   /** Migrates V0 bare zip to latest bare format */
-  migrateV0(params: Entities<string>): Entities<string> {
+  migrateV0(
+    params: Entities<string>,
+    warnings: string[]
+  ): [Entities<string>, string[]] {
     if (params[Section.Settings]) {
       // Reorganize settings
       const zip = params[Section.Settings];
       const s = zip.split(FIELDSEP);
-      // Convert baseId to V1
-      let baseId = this.parseString(s[0]);
-      baseId = baseId && data.hash[data.v0.indexOf(baseId)];
-      baseId = baseId ?? NULL;
+      // Convert modId to V1
+      let modId = this.parseString(s[0]);
+      modId = modId && data.hash[data.v0.indexOf(modId)];
+      modId = modId ?? NULL;
       // Convert displayRate to V1
       const displayRateV0 =
         this.parseNumber(s[6]) ?? Settings.initialSettingsState.displayRate;
@@ -354,9 +372,9 @@ export class RouterService {
         Settings.initialSettingsState.displayRate
       );
       params[Section.Settings] = this.zipFields([
-        baseId,
+        modId,
         displayRateV1,
-        params[Section.Base], // preset
+        params[Section.Mod], // Legacy preset
         s[1], // disabledRecipeIds
         s[3], // beltId
         s[4], // fuelId
@@ -369,19 +387,45 @@ export class RouterService {
         s[11], // cargoWagonId
         s[12], // fluidWagonId
       ]);
-    } else if (params[Section.Base]) {
+    } else if (params[Section.Mod]) {
       params[Section.Settings] = this.zipFields([
         NULL,
         NULL,
-        params[Section.Base],
+        params[Section.Mod], // Legacy preset
       ]);
     }
     params[Section.Version] = ZipVersion.Version1;
-    return params;
+    return this.migrateV1(params, warnings);
+  }
+
+  /** Migrates V1 bare zip to latest bare format */
+  migrateV1(
+    params: Entities<string>,
+    warnings: string[]
+  ): [Entities<string>, string[]] {
+    if (params[Section.Settings]) {
+      const zip = params[Section.Settings];
+      const s = zip.split(FIELDSEP);
+      const index = 11; // Index of expensive field
+      if (s.length > index) {
+        // Remove expensive field
+        const val = s.splice(index, 1);
+        const expensive = this.parseBool(val[0]);
+        if (expensive) {
+          warnings.push(MigrationWarning.ExpensiveDeprecation);
+        }
+      }
+      params[Section.Settings] = this.zipFields(s);
+    }
+    params[Section.Version] = ZipVersion.Version4;
+    return [params, warnings];
   }
 
   /** Migrates V2 hash zip to latest hash format */
-  migrateV2(params: Entities<string>): Entities<string> {
+  migrateV2(
+    params: Entities<string>,
+    warnings: string[]
+  ): [Entities<string>, string[]] {
     if (params[Section.Recipes]) {
       // Convert recipe settings
       const zip = params[Section.Recipes];
@@ -417,7 +461,36 @@ export class RouterService {
       params[Section.Factories] = migrated.join(LISTSEP);
     }
     params[Section.Version] = ZipVersion.Version3;
-    return params;
+    return this.migrateV3(params, warnings);
+  }
+
+  /** Migrates V3 hash zip to latest hash format */
+  migrateV3(
+    params: Entities<string>,
+    warnings: string[]
+  ): [Entities<string>, string[]] {
+    if (params[Section.Settings]) {
+      const zip = params[Section.Settings];
+      const s = zip.split(FIELDSEP);
+      const index = 10; // Index of expensive field
+      if (s.length > index) {
+        // Remove expensive field
+        const val = s.splice(index, 1);
+        const expensive = this.parseBool(val[0]);
+        if (expensive) {
+          warnings.push(MigrationWarning.ExpensiveDeprecation);
+        }
+      }
+      params[Section.Settings] = this.zipFields(s);
+    }
+    params[Section.Version] = ZipVersion.Version5;
+    return [params, warnings];
+  }
+
+  displayWarnings(warnings: string[]): void {
+    if (warnings.length) {
+      window.alert(warnings.join('\r\n'));
+    }
   }
 
   zipProducts(products: Product[], hash: ModHash): Zip {
@@ -805,7 +878,7 @@ export class RouterService {
     const init = Settings.initialSettingsState;
     const z: Zip = {
       bare: this.zipFields([
-        this.zipDiffString(state.baseId, init.baseId),
+        this.zipDiffString(state.modId, init.modId),
         this.zipDiffDisplayRate(state.displayRate, init.displayRate),
         this.zipDiffNumber(state.preset, init.preset),
         this.zipDiffArray(state.disabledRecipeIds, init.disabledRecipeIds),
@@ -816,7 +889,6 @@ export class RouterService {
         this.zipDiffNumber(state.researchSpeed, init.researchSpeed),
         this.zipDiffNumber(state.inserterCapacity, init.inserterCapacity),
         this.zipDiffNumber(state.inserterTarget, init.inserterTarget),
-        this.zipDiffBool(state.expensive, init.expensive),
         this.zipDiffString(state.cargoWagonId, init.cargoWagonId),
         this.zipDiffString(state.fluidWagonId, init.fluidWagonId),
         this.zipDiffString(state.pipeId, init.pipeId),
@@ -842,7 +914,6 @@ export class RouterService {
         this.zipDiffNNumber(state.researchSpeed, init.researchSpeed),
         this.zipDiffNumber(state.inserterCapacity, init.inserterCapacity),
         this.zipDiffNumber(state.inserterTarget, init.inserterTarget),
-        this.zipDiffBool(state.expensive, init.expensive),
         this.zipDiffNString(state.cargoWagonId, init.cargoWagonId, hash.wagons),
         this.zipDiffNString(state.fluidWagonId, init.fluidWagonId, hash.wagons),
         this.zipDiffNString(state.pipeId, init.pipeId, hash.belts),
@@ -886,7 +957,6 @@ export class RouterService {
         researchSpeed: this.parseNNumber(s[i++]),
         inserterCapacity: this.parseNumber(s[i++]),
         inserterTarget: this.parseNumber(s[i++]),
-        expensive: this.parseBool(s[i++]),
         cargoWagonId: this.parseNString(s[i++], hash.wagons),
         fluidWagonId: this.parseNString(s[i++], hash.wagons),
         pipeId: this.parseNString(s[i++], hash.belts),
@@ -899,7 +969,7 @@ export class RouterService {
       };
     } else {
       obj = {
-        baseId: this.parseString(s[i++]),
+        modId: this.parseString(s[i++]),
         displayRate: this.parseDisplayRate(s[i++]),
         preset: this.parseNumber(s[i++]),
         disabledRecipeIds: this.parseArray(s[i++]),
@@ -910,7 +980,6 @@ export class RouterService {
         researchSpeed: this.parseNumber(s[i++]),
         inserterCapacity: this.parseNumber(s[i++]),
         inserterTarget: this.parseNumber(s[i++]),
-        expensive: this.parseBool(s[i++]),
         cargoWagonId: this.parseString(s[i++]),
         fluidWagonId: this.parseString(s[i++]),
         pipeId: this.parseString(s[i++]),

@@ -8,8 +8,8 @@ describe('SimplexUtility', () => {
     recipes: {},
     items: {},
     inputs: [],
-    recipeIds: Mocks.Data.recipeIds,
-    itemIds: Mocks.Data.itemIds,
+    recipeIds: Mocks.Dataset.recipeIds,
+    itemIds: Mocks.Dataset.itemIds,
     data: Mocks.AdjustedData,
     costInput: Rational.from(1000000),
     costIgnored: Rational.zero,
@@ -289,7 +289,7 @@ describe('SimplexUtility', () => {
           [],
           Rational.from(1000000),
           Rational.zero,
-          Mocks.Data
+          Mocks.Dataset
         )
       ).toBeNull();
     });
@@ -306,7 +306,7 @@ describe('SimplexUtility', () => {
         [],
         Rational.from(1000000),
         Rational.zero,
-        Mocks.Data
+        Mocks.Dataset
       );
       expect(SimplexUtility.parseItemRecursively).toHaveBeenCalledTimes(1);
       expect(SimplexUtility.addSurplusVariables).toHaveBeenCalledTimes(1);
@@ -322,16 +322,16 @@ describe('SimplexUtility', () => {
         [],
         Rational.from(1000000),
         Rational.zero,
-        Mocks.Data
+        Mocks.Dataset
       );
       expect(SimplexUtility.parseItemRecursively).toHaveBeenCalledTimes(1);
       expect(result).toEqual({
         recipes: {},
         items: { [Mocks.Step1.itemId!]: Mocks.Step1.items! },
         inputs: [Mocks.Step1.itemId!],
-        recipeIds: Mocks.Data.recipeIds,
-        itemIds: Mocks.Data.itemIds,
-        data: Mocks.Data,
+        recipeIds: Mocks.Dataset.recipeIds,
+        itemIds: Mocks.Dataset.itemIds,
+        data: Mocks.Dataset,
         costInput: Rational.from(1000000),
         costIgnored: Rational.zero,
       });
@@ -475,7 +475,7 @@ describe('SimplexUtility', () => {
       state.items[ItemId.Wood] = Rational.one;
       state.items[ItemId.Coal] = Rational.one;
       state.recipes = {
-        [RecipeId.Coal]: Mocks.Data.recipeR[RecipeId.Coal],
+        [RecipeId.Coal]: Mocks.Dataset.recipeR[RecipeId.Coal],
       };
       SimplexUtility.parseInputs(state);
       expect(state.inputs).toEqual([ItemId.Wood, ItemId.Coal]);

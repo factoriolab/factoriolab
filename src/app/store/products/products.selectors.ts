@@ -44,7 +44,7 @@ export const getEntities = createSelector(
 export const getBaseProducts = createSelector(
   getIds,
   getEntities,
-  Settings.getNormalDataset,
+  Settings.getDataset,
   (ids, entities, data) =>
     ids.map((i) => entities[i]).filter((p) => data.itemEntities[p.itemId])
 );
@@ -78,7 +78,7 @@ export const getProducts = createSelector(
   getProductSteps,
   Recipes.getRecipeSettings,
   Factories.getFactories,
-  Settings.getNormalDataset,
+  Settings.getDataset,
   (products, productSteps, recipeSettings, factories, data) => {
     const a = products?.map((p) =>
       RecipeUtility.adjustProduct(

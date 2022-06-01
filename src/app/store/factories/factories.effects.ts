@@ -24,7 +24,7 @@ export class FactoriesEffects {
         combineLatest([
           this.store.select(Recipes.recipesState),
           this.store.select(Recipes.getRecipeSettings),
-          this.store.select(Settings.getNormalDataset),
+          this.store.select(Settings.getDataset),
         ]).pipe(first())
       ),
       switchMap(([rawSettings, recipeSettings, data]) => {

@@ -8,11 +8,6 @@ export interface Recipe {
   producers: string[];
   in?: Entities<number>;
   out?: Entities<number>;
-  expensive?: {
-    time?: number;
-    in?: Entities<number>;
-    out?: Entities<number>;
-  };
   cost?: number;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
@@ -31,11 +26,6 @@ export class RationalRecipe {
   adjustProd = false;
   in: Entities<Rational>;
   out: Entities<Rational>;
-  expensive?: {
-    time?: Rational;
-    in?: Entities<Rational>;
-    out: Entities<Rational>;
-  };
   cost?: Rational;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
@@ -66,32 +56,6 @@ export class RationalRecipe {
       }, {});
     } else {
       this.out = { [data.id]: Rational.one };
-    }
-    if (data.expensive) {
-      this.expensive = { out: this.out };
-      if (data.expensive.time) {
-        this.expensive.time = Rational.fromNumber(data.expensive.time);
-      }
-      if (data.expensive.in) {
-        const inputs = data.expensive.in;
-        this.expensive.in = Object.keys(inputs).reduce(
-          (e: Entities<Rational>, i) => {
-            e[i] = Rational.fromNumber(inputs[i]);
-            return e;
-          },
-          {}
-        );
-      }
-      if (data.expensive.out) {
-        const outputs = data.expensive.out;
-        this.expensive.out = Object.keys(outputs).reduce(
-          (e: Entities<Rational>, i) => {
-            e[i] = Rational.fromNumber(outputs[i]);
-            return e;
-          },
-          {}
-        );
-      }
     }
     if (data.cost) {
       this.cost = Rational.fromNumber(data.cost);

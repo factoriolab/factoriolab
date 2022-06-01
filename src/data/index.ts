@@ -5,11 +5,15 @@ const app = appJson as Mod;
 export { app };
 export const data: AppData = {
   app,
-  base: [
-    { id: '1.1', name: '1.1.39', game: Game.Factorio },
+  mods: [
+    { id: '1.1', name: '1.1.x', game: Game.Factorio },
+    { id: '1.1e', name: '1.1.x Expensive', game: Game.Factorio },
     { id: '1.0', name: '1.0.0', game: Game.Factorio },
     { id: '017', name: '0.17.79', game: Game.Factorio },
     { id: '016', name: '0.16.51', game: Game.Factorio },
+    { id: '248', name: '248k', game: Game.Factorio },
+    { id: '248kr2sxp', name: '248k + Krastorio 2 + SE', game: Game.Factorio },
+    { id: 'aai', name: 'AAI Industry', game: Game.Factorio },
     { id: 'ang', name: `Angel's Industries`, game: Game.Factorio },
     { id: 'bio', name: 'Bio Industries', game: Game.Factorio },
     { id: 'bob', name: `Bob's Mods`, game: Game.Factorio },
@@ -29,13 +33,6 @@ export const data: AppData = {
     { id: 'xan', name: 'Xander Mod', game: Game.Factorio },
     { id: 'dsp', name: 'Dyson Sphere Program', game: Game.DysonSphereProgram },
     { id: 'sfy', name: 'Satisfactory', game: Game.Satisfactory },
-  ],
-  mods: [
-    {
-      id: 'res',
-      name: 'Infinite Research',
-      game: Game.Factorio,
-    },
   ],
   v0: [
     '1.1',

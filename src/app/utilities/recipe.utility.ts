@@ -10,7 +10,6 @@ import {
   Rational,
   RationalBelt,
   RationalFactory,
-  RationalModule,
   RationalProduct,
   RationalRecipe,
   RationalRecipeSettings,

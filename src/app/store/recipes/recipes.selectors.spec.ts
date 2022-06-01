@@ -34,9 +34,11 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipeSettings.projector(
         initialRecipesState,
         Mocks.FactorySettingsInitial,
-        Mocks.Data
+        Mocks.Dataset
       );
-      expect(Object.keys(result).length).toEqual(Mocks.Data.recipeIds.length);
+      expect(Object.keys(result).length).toEqual(
+        Mocks.Dataset.recipeIds.length
+      );
     });
 
     it('should handle null settings', () => {
@@ -45,13 +47,13 @@ describe('Recipes Selectors', () => {
         ...{ [Mocks.Item1.id]: { factoryId: ItemId.AssemblingMachine3 } },
       };
       const data = {
-        ...Mocks.Data,
+        ...Mocks.Dataset,
         ...{
           factoryEntities: {
-            ...Mocks.Data.factoryEntities,
+            ...Mocks.Dataset.factoryEntities,
             ...{
               [ItemId.AssemblingMachine3]: {
-                ...Mocks.Data.factoryEntities[ItemId.AssemblingMachine3],
+                ...Mocks.Dataset.factoryEntities[ItemId.AssemblingMachine3],
                 ...{ modules: undefined },
               },
             },
@@ -86,7 +88,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipeSettings.projector(
         state,
         Mocks.FactorySettingsInitial,
-        Mocks.Data
+        Mocks.Dataset
       );
       expect(result[Mocks.Item1.id].factoryId).toEqual(stringValue);
     });
@@ -99,7 +101,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipeSettings.projector(
         state,
         Mocks.FactorySettingsInitial,
-        Mocks.Data
+        Mocks.Dataset
       );
       expect(result[Mocks.Item1.id].factoryModuleIds).toEqual([stringValue]);
     });
@@ -112,7 +114,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipeSettings.projector(
         state,
         Mocks.FactorySettingsInitial,
-        Mocks.Data
+        Mocks.Dataset
       );
       expect(result[Mocks.Item1.id].beaconCount).toEqual(stringValue);
     });
@@ -125,7 +127,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipeSettings.projector(
         state,
         Mocks.FactorySettingsInitial,
-        Mocks.Data
+        Mocks.Dataset
       );
       expect(result[Mocks.Item1.id].beaconId).toEqual(stringValue);
     });
@@ -138,7 +140,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipeSettings.projector(
         state,
         Mocks.FactorySettingsInitial,
-        Mocks.Data
+        Mocks.Dataset
       );
       expect(result[Mocks.Item1.id].beaconModuleIds).toEqual([stringValue]);
     });
@@ -151,7 +153,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipeSettings.projector(
         state,
         Mocks.FactorySettingsInitial,
-        Mocks.Data
+        Mocks.Dataset
       );
       expect(result[Mocks.Item1.id].beaconTotal).toBeUndefined();
     });
@@ -163,13 +165,13 @@ describe('Recipes Selectors', () => {
         ItemId.Coal,
         Rational.zero,
         Rational.one,
-        Mocks.Data
+        Mocks.Dataset
       );
       expect(result).toEqual({
         fuelId: ItemId.Coal,
         miningBonus: Rational.zero,
         researchSpeed: Rational.one,
-        data: Mocks.Data,
+        data: Mocks.Dataset,
       });
     });
   });

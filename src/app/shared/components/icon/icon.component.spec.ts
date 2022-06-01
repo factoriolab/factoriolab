@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MemoizedSelector } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { TranslateModule } from '@ngx-translate/core';
 
 import { initialState, Mocks, RecipeId, TestUtility } from 'src/tests';
 import { Dataset, ItemId, Rational } from '~/models';
@@ -38,7 +37,7 @@ class TestIconComponent {
   hoverIcon = '';
   scrollTop = 0;
   scrollLeft = 0;
-  recipe = Mocks.Data.recipeEntities[Mocks.Item1.id];
+  recipe = Mocks.Dataset.recipeEntities[Mocks.Item1.id];
   item = null;
 }
 
@@ -60,7 +59,7 @@ describe('IconComponent', () => {
     mockStore = TestBed.inject(MockStore);
     mockGetDataset = mockStore.overrideSelector(
       Settings.getDataset,
-      Mocks.Data
+      Mocks.Dataset
     );
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -86,13 +85,13 @@ describe('IconComponent', () => {
     });
 
     it('should switch to a recipe-specific icon', () => {
-      const icon = Mocks.Data.iconEntities[RecipeId.Coal];
+      const icon = Mocks.Dataset.iconEntities[RecipeId.Coal];
       component.iconId = ItemId.Inserter;
       mockGetDataset.setResult({
-        ...Mocks.Data,
+        ...Mocks.Dataset,
         ...{
           iconEntities: {
-            ...Mocks.Data.iconEntities,
+            ...Mocks.Dataset.iconEntities,
             ...{ [ItemId.Inserter + '|recipe']: icon },
           },
         },

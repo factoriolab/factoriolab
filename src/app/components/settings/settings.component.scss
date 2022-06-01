@@ -116,3 +116,30 @@ table + table {
     margin-left: 0.375rem;
   }
 }
+
+.version-scroll {
+  max-height: 10rem;
+  max-width: 13rem;
+  overflow-y: auto;
+  margin: 0.25rem 0;
+  padding: 0.25rem 0;
+
+
+  td {
+    padding-bottom: 0.5rem;
+  }
+
+  tr:last-child {
+    td {
+      padding-bottom: 0;
+    }
+  }
+
+  td:first-child {
+    hyphens: auto;
+  }
+
+  td:last-child {
+    text-align: right;
+  }
+}

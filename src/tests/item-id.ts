@@ -1,6 +1,6 @@
 export enum ItemId {
   AdvancedCircuit = 'advanced-circuit',
-  ArtilleryShellRange = 'artillery-shell-range',
+  ArtilleryShellRange = 'artillery-shell-range-1',
   AssemblingMachine1 = 'assembling-machine-1',
   AssemblingMachine2 = 'assembling-machine-2',
   AssemblingMachine3 = 'assembling-machine-3',
@@ -27,7 +27,7 @@ export enum ItemId {
   LightOil = 'light-oil',
   LongHandedInserter = 'long-handed-inserter',
   MiningDrill = 'mining-drill',
-  MiningProductivity = 'mining-productivity',
+  MiningProductivity = 'mining-productivity-4',
   Module = 'module',
   OilRefinery = 'oil-refinery',
   PetroleumGas = 'petroleum-gas',

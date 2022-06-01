@@ -37,7 +37,7 @@ export class DataService {
       Settings.initialSettingsState
     );
     combineLatest([
-      this.store.select(Settings.getBaseDatasetId),
+      this.store.select(Settings.getModId),
       this.translateSvc.onLangChange,
     ]).subscribe(([id]) => {
       this.requestData(id).subscribe();
@@ -50,7 +50,7 @@ export class DataService {
     initial: Settings.SettingsState
   ): void {
     if (!zip) {
-      const id = stored?.settingsState?.baseId || initial.baseId;
+      const id = stored?.settingsState?.modId || initial.modId;
       this.requestData(id).subscribe(([data, hash]) => {
         if (!stored?.productsState) {
           this.store.dispatch(new Products.ResetAction(data.items[0].id));
@@ -68,7 +68,6 @@ export class DataService {
       this.cacheData[id] = this.http.get<ModData>(`data/${id}/data.json`).pipe(
         tap((value) => {
           this.store.dispatch(new Datasets.LoadModDataAction({ id, value }));
-          this.loadModsForBase(value.defaults?.modIds ?? []);
         }),
         shareReplay()
       );
@@ -125,9 +124,5 @@ export class DataService {
     }
 
     return combineLatest([data$, i18n$, hash$]);
-  }
-
-  loadModsForBase(modIds: string[]): void {
-    modIds.forEach((id) => this.requestData(id, true).subscribe(() => {}));
   }
 }

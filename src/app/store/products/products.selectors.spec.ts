@@ -47,7 +47,7 @@ describe('Products Selectors', () => {
       const result = Selectors.getBaseProducts.projector(
         Mocks.ProductsState.ids,
         Mocks.ProductsState.entities,
-        Mocks.Data
+        Mocks.Dataset
       );
       expect(result.length).toEqual(Mocks.ProductIds.length);
     });
@@ -353,7 +353,7 @@ describe('Products Selectors', () => {
         null,
         Mocks.ItemSettingsInitial,
         DisplayRate.PerHour,
-        Mocks.Data
+        Mocks.Dataset
       );
       expect(result[Mocks.Product3.id].nonzero()).toBeTrue();
     });
@@ -369,7 +369,7 @@ describe('Products Selectors', () => {
         null,
         Mocks.ItemSettingsInitial,
         DisplayRate.PerHour,
-        Mocks.Data
+        Mocks.Dataset
       );
       expect(result[Mocks.Product3.id].nonzero()).toBeTrue();
     });
@@ -380,7 +380,7 @@ describe('Products Selectors', () => {
         null,
         Mocks.ItemSettingsInitial,
         DisplayRate.PerHour,
-        Mocks.Data
+        Mocks.Dataset
       );
       expect(result[Mocks.Product1.id].nonzero()).toBeTrue();
     });
@@ -504,7 +504,7 @@ describe('Products Selectors', () => {
           researchSpeed: null,
           data: null,
         },
-        Mocks.Data
+        Mocks.Dataset
       );
       expect(result[Mocks.Product4.id].nonzero()).toBeTrue();
     });
@@ -645,7 +645,7 @@ describe('Products Selectors', () => {
           proliferatorSprayId: ItemId.ProductivityModule,
           miningBonus: Rational.zero,
           researchSpeed: Rational.one,
-          data: Mocks.Data,
+          data: Mocks.Dataset,
         },
         Mocks.AdjustedData
       );
@@ -920,6 +920,7 @@ describe('Products Selectors', () => {
             RecipeId.AdvancedOilProcessing,
             RecipeId.BasicOilProcessing,
             RecipeId.CoalLiquefaction,
+            RecipeId.EmptyPetroleumGasBarrel,
             RecipeId.LightOilCracking,
           ],
         },

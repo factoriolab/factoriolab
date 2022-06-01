@@ -18,14 +18,14 @@ export function factoriesReducer(
   action:
     | FactoriesAction
     | App.AppAction
-    | Settings.SetBaseAction
+    | Settings.SetModAction
     | Settings.SetPresetAction
 ): FactoriesState {
   switch (action.type) {
     case App.AppActionType.LOAD:
       return { ...initialFactoriesState, ...action.payload.factoriesState };
     case App.AppActionType.RESET:
-    case Settings.SettingsActionType.SET_BASE:
+    case Settings.SettingsActionType.SET_MOD:
     case Settings.SettingsActionType.SET_PRESET:
       return initialFactoriesState;
     case FactoriesActionType.ADD: {

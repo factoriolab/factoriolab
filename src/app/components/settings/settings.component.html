@@ -108,10 +108,30 @@
             <td>
               <lab-options
                 [title]="'setting.modSetTitle' | translate"
-                [selected]="vm.settings.baseId"
-                [options]="vm.baseOptions"
-                (selectId)="setBase($event)"
+                [selected]="vm.settings.modId"
+                [options]="vm.modOptions"
+                (selectId)="setMod($event)"
               ></lab-options>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <lab-info
+                [text]="'setting.modVersions' | translate"
+                [tooltip]="'setting.modVersionsTooltip' | translate"
+              ></lab-info>
+            </td>
+            <td>
+              <div class="version-scroll">
+                <table>
+                  <tr *ngFor="let mod of vm.data.version | keyvalue">
+                    <td>
+                      <div>{{ mod.key }}</div>
+                    </td>
+                    <td>{{ mod.value }}</td>
+                  </tr>
+                </table>
+              </div>
             </td>
           </tr>
           <tr>
@@ -132,22 +152,6 @@
                 "
               >
               </lab-toggle>
-            </td>
-          </tr>
-          <tr *ngIf="vm.data.game === Game.Factorio">
-            <td>
-              <lab-info
-                [text]="'setting.difficulty' | translate"
-                [tooltip]="'setting.difficultyTooltip' | translate"
-              ></lab-info>
-            </td>
-            <td>
-              <lab-options
-                [title]="'setting.difficultyTitle' | translate"
-                [selected]="vm.settings.expensive"
-                [options]="difficultyOptions"
-                (selectId)="setExpensive($event)"
-              ></lab-options>
             </td>
           </tr>
         </table>

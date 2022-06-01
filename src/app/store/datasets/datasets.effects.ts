@@ -14,8 +14,7 @@ export class DatasetsEffects {
       ofType(App.AppActionType.LOAD),
       switchMap((a: App.LoadAction) => {
         const id =
-          a.payload.settingsState?.baseId ||
-          Settings.initialSettingsState.baseId;
+          a.payload.settingsState?.modId || Settings.initialSettingsState.modId;
         return this.dataSvc.requestData(id).pipe(
           filter(() => !a.payload.productsState),
           map(([data]) => new Products.ResetAction(data.items[0].id))
@@ -29,16 +28,16 @@ export class DatasetsEffects {
       ofType(App.AppActionType.RESET),
       switchMap(() =>
         this.dataSvc
-          .requestData(Settings.initialSettingsState.baseId)
+          .requestData(Settings.initialSettingsState.modId)
           .pipe(map(([data]) => new Products.ResetAction(data.items[0].id)))
       )
     )
   );
 
-  setBaseId$ = createEffect(() =>
+  setModId$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(Settings.SettingsActionType.SET_BASE),
-      switchMap((a: Settings.SetBaseAction) =>
+      ofType(Settings.SettingsActionType.SET_MOD),
+      switchMap((a: Settings.SetModAction) =>
         this.dataSvc
           .requestData(a.payload)
           .pipe(map(([data]) => new Products.ResetAction(data.items[0].id)))

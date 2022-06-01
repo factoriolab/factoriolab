@@ -54,9 +54,9 @@ describe('Settings Reducer', () => {
       const value = 'dsp';
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetBaseAction(value)
+        new Actions.SetModAction(value)
       );
-      expect(result.baseId).toEqual(value);
+      expect(result.modId).toEqual(value);
     });
   });
 
@@ -68,17 +68,6 @@ describe('Settings Reducer', () => {
         new Actions.SetDisabledRecipesAction({ value, def: [] })
       );
       expect(result.disabledRecipeIds).toEqual(value);
-    });
-  });
-
-  describe('SET_EXPENSIVE', () => {
-    it('should set expensive flag', () => {
-      const value = true;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetExpensiveAction(value)
-      );
-      expect(result.expensive).toEqual(value);
     });
   });
 
