@@ -9,7 +9,6 @@ export const datasetsState = (state: LabState): DatasetsState =>
   state.datasetsState;
 
 export const getAppData = createSelector(datasetsState, (state) => state.app);
-export const getBaseSets = createSelector(datasetsState, (state) => state.base);
 export const getModSets = createSelector(datasetsState, (state) => state.mods);
 export const getDataEntities = createSelector(
   datasetsState,
@@ -25,30 +24,18 @@ export const getHashEntities = createSelector(
 );
 
 /* Complex selectors */
-export const getBaseInfoEntities = createSelector(getBaseSets, (base) =>
-  base.reduce((e: Entities<ModInfo>, b) => {
-    e[b.id] = b;
+export const getModInfoEntities = createSelector(getModSets, (mods) =>
+  mods.reduce((e: Entities<ModInfo>, m) => {
+    e[m.id] = m;
     return e;
   }, {})
-);
-
-export const getBaseEntities = createSelector(
-  getBaseSets,
-  getDataEntities,
-  (base, entities) =>
-    base.reduce((e: Entities<Mod>, b) => {
-      if (entities[b.id]) {
-        e[b.id] = { ...b, ...entities[b.id] };
-      }
-      return e;
-    }, {})
 );
 
 export const getModEntities = createSelector(
   getModSets,
   getDataEntities,
-  (mod, entities) =>
-    mod.reduce((e: Entities<Mod>, m) => {
+  (mods, entities) =>
+    mods.reduce((e: Entities<Mod>, m) => {
       if (entities[m.id]) {
         e[m.id] = { ...m, ...entities[m.id] };
       }

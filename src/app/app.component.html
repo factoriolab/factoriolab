@@ -38,7 +38,7 @@
     </div>
   </div>
   <ng-container *ngIf="(errorSvc.message$ | async) == null; else errorTile">
-    <main *ngIf="vm.datasets.length; else loading">
+    <main *ngIf="vm.mod != null; else loading">
       <div *ngIf="showSettings" @slideLeftRight class="settings">
         <lab-settings (closeSettings)="showSettings = !showSettings">
         </lab-settings>

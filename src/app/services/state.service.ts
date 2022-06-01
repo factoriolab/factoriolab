@@ -4,7 +4,7 @@ import { combineLatest } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
 
 import { environment } from 'src/environments';
-import { FuelType, ModHash } from '~/models';
+import { Entities, FuelType, ModHash } from '~/models';
 import { LabState } from '~/store';
 import * as Products from '~/store/products';
 import * as Settings from '~/store/settings';
@@ -41,24 +41,38 @@ export class StateService {
   // istanbul ignore next
   checkHash(): void {
     combineLatest([
-      this.store.select(Settings.getBaseDatasetId),
-      this.store.select(Settings.getNormalDataset),
+      this.store.select(Settings.getModId),
+      this.store.select(Settings.getDataset),
     ])
       .pipe(
         filter(
-          ([baseId, data]) => data.categoryIds.length > 0 && data.hash != null
+          ([modId, data]) => data.categoryIds.length > 0 && data.hash != null
         ),
         first()
       )
-      .subscribe(([baseId, data]) => {
-        console.log(baseId);
-        const suggestedDisabledIds = data.complexRecipeIds.filter(
-          (i) => !data.itemEntities[i]
+      .subscribe(([modId, data]) => {
+        console.log(modId);
+        const oldDisabled = data.defaults?.disabledRecipeIds ?? [];
+        const allDisabled = [
+          ...oldDisabled,
+          ...data.complexRecipeIds.filter((i) => !data.itemEntities[i]),
+        ];
+        const disabledEntities = allDisabled.reduce(
+          (e: Entities<boolean>, d) => {
+            e[d] = true;
+            return e;
+          },
+          {}
         );
-        console.log(
-          `Suggested disabled recipes (${suggestedDisabledIds.length}):`
-        );
-        console.log(JSON.stringify(suggestedDisabledIds));
+        const suggestedDisabled = Object.keys(disabledEntities);
+        if (JSON.stringify(oldDisabled) !== JSON.stringify(suggestedDisabled)) {
+          console.log(
+            `Suggested disabled recipes (${suggestedDisabled.length}):`
+          );
+          console.log(JSON.stringify(suggestedDisabled));
+        } else {
+          console.log('No suggested changes to default disabled recipes');
+        }
         if (data.hash) {
           const hash: ModHash = {
             items: [...data.hash.items],
@@ -130,12 +144,24 @@ export class StateService {
             data.defaults.disabledRecipeIds.length
           ) {
             console.log(
-              `Filtered disabled recipes ${filteredDisabledRecipeIds.length}:`
+              `Filtered disabled recipes (${filteredDisabledRecipeIds.length}):`
             );
             console.log(JSON.stringify(filteredDisabledRecipeIds));
           } else {
             console.log('No unrecognized disabled recipes');
           }
+        }
+        const invalidRecipes: string[] = [];
+        for (const id of data.recipeIds) {
+          if (!data.recipeEntities[id].producers?.length) {
+            invalidRecipes.push(id);
+          }
+        }
+        if (invalidRecipes.length) {
+          console.log(
+            `Found recipes with no producers: (${invalidRecipes.length}):`
+          );
+          console.log(JSON.stringify(invalidRecipes));
         }
       });
   }

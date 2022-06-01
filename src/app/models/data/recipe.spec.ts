@@ -15,15 +15,6 @@ describe('RationalRecipe', () => {
         out: {
           [ItemId.PetroleumGas]: 2,
         },
-        expensive: {
-          time: 2,
-          in: {
-            [ItemId.Coal]: 2,
-          },
-          out: {
-            [ItemId.PetroleumGas]: 1,
-          },
-        },
         cost: 100,
         usage: 10,
         producers: [ItemId.AssemblingMachine1],
@@ -33,37 +24,9 @@ describe('RationalRecipe', () => {
       expect(result.time).toEqual(Rational.one);
       expect(result.in[ItemId.Coal]).toEqual(Rational.one);
       expect(result.out[ItemId.PetroleumGas]).toEqual(Rational.two);
-      expect(result.expensive?.time).toEqual(Rational.two);
-      expect(result.expensive?.in?.[ItemId.Coal]).toEqual(Rational.two);
-      expect(result.expensive?.out[ItemId.PetroleumGas]).toEqual(Rational.one);
       expect(result.cost).toEqual(Rational.hundred);
       expect(result.producers).toEqual([ItemId.AssemblingMachine1]);
       expect(result.usage).toEqual(Rational.ten);
-    });
-
-    it('should ignore undefined expensive fields', () => {
-      const result = new RationalRecipe({
-        id: RecipeId.AdvancedOilProcessing,
-        name: 'name',
-        time: 1,
-        expensive: {
-          time: 2,
-        },
-        producers: [ItemId.AssemblingMachine1],
-      });
-      expect(result.id).toEqual(RecipeId.AdvancedOilProcessing);
-      expect(result.name).toEqual('name');
-      expect(result.time).toEqual(Rational.one);
-      expect(result.producers).toEqual([ItemId.AssemblingMachine1]);
-      expect(result.in).toEqual({});
-      expect(result.out).toEqual({
-        [RecipeId.AdvancedOilProcessing]: Rational.one,
-      });
-      expect(result.expensive?.time).toEqual(Rational.two);
-      expect(result.expensive?.in).toBeUndefined();
-      expect(result.expensive?.out).toEqual({
-        [RecipeId.AdvancedOilProcessing]: Rational.one,
-      });
     });
 
     it('should ignore undefined fields', () => {
@@ -82,7 +45,6 @@ describe('RationalRecipe', () => {
         [RecipeId.AdvancedOilProcessing]: Rational.one,
       });
       expect(result.cost).toBeUndefined();
-      expect(result.expensive).toBeUndefined();
     });
 
     it('should handle string for usage', () => {

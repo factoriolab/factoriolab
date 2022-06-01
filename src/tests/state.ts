@@ -11,21 +11,14 @@ import { Mocks } from './';
 let datasetsState = Datasets.datasetsReducer(
   undefined,
   new Datasets.LoadModDataAction({
-    id: initialSettingsState.baseId,
-    value: Mocks.BaseData,
-  })
-);
-datasetsState = Datasets.datasetsReducer(
-  datasetsState,
-  new Datasets.LoadModDataAction({
-    id: Mocks.Mod1.id,
-    value: Mocks.ModData1,
+    id: initialSettingsState.modId,
+    value: Mocks.Data,
   })
 );
 datasetsState = Datasets.datasetsReducer(
   datasetsState,
   new Datasets.LoadModHashAction({
-    id: initialSettingsState.baseId,
+    id: initialSettingsState.modId,
     value: Mocks.Hash,
   })
 );

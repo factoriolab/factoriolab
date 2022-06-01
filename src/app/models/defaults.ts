@@ -1,5 +1,4 @@
 export interface Defaults {
-  modIds: string[];
   beltId: string;
   pipeId?: string;
   fuelId: string;

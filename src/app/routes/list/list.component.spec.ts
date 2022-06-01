@@ -278,7 +278,7 @@ describe('ListComponent', () => {
       );
       expect(component.child.setDisabledRecipes).toHaveBeenCalledWith(
         [RecipeId.AdvancedOilProcessing],
-        [RecipeId.NuclearFuelReprocessing]
+        Mocks.AdjustedData.defaults?.disabledRecipeIds
       );
     });
   });

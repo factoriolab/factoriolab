@@ -51,13 +51,13 @@ export const TITLE_SFY = 'title.sfy';
 export class AppComponent implements OnInit, AfterViewInit {
   vm$ = combineLatest([
     this.store.select(Settings.getGame),
-    this.store.select(Settings.getDatasets),
+    this.store.select(Settings.getMod),
     this.store.select(Products.getProducts),
     this.store.select(Products.getMatrixResult),
   ]).pipe(
-    map(([game, datasets, products, result]) => ({
+    map(([game, mod, products, result]) => ({
       game,
-      datasets,
+      mod,
       products,
       result,
     }))
@@ -123,8 +123,8 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.translateSvc.use(lang);
       this.gaSvc.event('set_lang', lang);
     });
-    this.store.select(Settings.getBaseDatasetId).subscribe((baseId) => {
-      this.gaSvc.event('set_base_id', baseId);
+    this.store.select(Settings.getModId).subscribe((modId) => {
+      this.gaSvc.event('set_mod_id', modId);
     });
   }
 

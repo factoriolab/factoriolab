@@ -32,25 +32,23 @@ describe('DatasetsEffects', () => {
   describe('appLoad$', () => {
     it('should load the default base mod', () => {
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.BaseData, Mocks.I18n, Mocks.Hash])
+        of([Mocks.Data, Mocks.I18n, Mocks.Hash])
       );
       actions = new ReplaySubject(1);
       actions.next(new App.LoadAction({}));
       const result: Action[] = [];
       effects.appLoad$.subscribe((r) => result.push(r));
-      expect(result).toEqual([
-        new Products.ResetAction(Mocks.Base.items[0].id),
-      ]);
+      expect(result).toEqual([new Products.ResetAction(Mocks.Mod.items[0].id)]);
     });
 
     it('should load from state', () => {
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.BaseData, Mocks.I18n, Mocks.Hash])
+        of([Mocks.Data, Mocks.I18n, Mocks.Hash])
       );
       actions = new ReplaySubject(1);
       actions.next(
         new App.LoadAction({
-          settingsState: { baseId: Mocks.Base.id },
+          settingsState: { modId: Mocks.Mod.id },
           productsState: Products.initialProductsState,
         })
       );
@@ -63,30 +61,26 @@ describe('DatasetsEffects', () => {
   describe('appReset$', () => {
     it('should reset and load mod for new mod', () => {
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.BaseData, Mocks.I18n, Mocks.Hash])
+        of([Mocks.Data, Mocks.I18n, Mocks.Hash])
       );
       actions = new ReplaySubject(1);
       actions.next(new App.ResetAction());
       const result: Action[] = [];
       effects.appReset$.subscribe((r) => result.push(r));
-      expect(result).toEqual([
-        new Products.ResetAction(Mocks.Base.items[0].id),
-      ]);
+      expect(result).toEqual([new Products.ResetAction(Mocks.Mod.items[0].id)]);
     });
   });
 
-  describe('setBaseId$', () => {
+  describe('setModId$', () => {
     it('should reset and load mod for new mod', () => {
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.BaseData, Mocks.I18n, Mocks.Hash])
+        of([Mocks.Data, Mocks.I18n, Mocks.Hash])
       );
       actions = new ReplaySubject(1);
-      actions.next(new Settings.SetBaseAction(Mocks.Base.id));
+      actions.next(new Settings.SetModAction(Mocks.Mod.id));
       const result: Action[] = [];
-      effects.setBaseId$.subscribe((r) => result.push(r));
-      expect(result).toEqual([
-        new Products.ResetAction(Mocks.Base.items[0].id),
-      ]);
+      effects.setModId$.subscribe((r) => result.push(r));
+      expect(result).toEqual([new Products.ResetAction(Mocks.Mod.items[0].id)]);
     });
   });
 });

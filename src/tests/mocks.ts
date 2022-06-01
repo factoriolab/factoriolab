@@ -1,8 +1,7 @@
 import { data } from 'src/data';
-import base from 'src/data/1.1/data.json';
+import mod from 'src/data/1.1/data.json';
 import hash from 'src/data/1.1/hash.json';
 import i18n from 'src/data/1.1/i18n/zh.json';
-import mod from 'src/data/res/data.json';
 import {
   Entities,
   Game,
@@ -11,7 +10,7 @@ import {
   LinkValue,
   MatrixResult,
   MatrixResultType,
-  Mod,
+  Mod as _Mod,
   ModData,
   ModHash,
   ModI18n,
@@ -40,27 +39,25 @@ import { RecipeId } from './recipe-id';
 
 export const Raw = data;
 export const DataState = Datasets.initialDatasetsState;
-export const BaseInfo = data.base[0];
-export const BaseData = base as ModData;
+export const App = data.app;
+export const ModInfo = data.mods[0];
+export const Data = mod as unknown as ModData;
 export const Hash: ModHash = hash;
 export const I18n: ModI18n = i18n;
-export const Base = { ...BaseInfo, ...BaseData } as Mod;
-export const ModData1 = mod as ModData;
-export const Mod1 = { ...data.mods[0], ...ModData1 } as Mod;
-export const ModInfo = [data.mods[0]];
-export const Defaults = Settings.getDefaults.projector(Preset.Beacon8, Base)!;
-export const Data = Settings.getNormalDataset.projector(
+export const Mod = { ...ModInfo, ...Data } as _Mod;
+export const Defaults = Settings.getDefaults.projector(Preset.Beacon8, Mod)!;
+export const Dataset = Settings.getDataset.projector(
   data.app,
-  [Base, Mod1],
-  [],
+  Mod,
+  null,
   null,
   Defaults,
   Game.Factorio
 );
-export const CategoryId = Data.categoryIds[0];
-export const Item1 = Data.itemEntities[Data.itemIds[0]];
-export const Item2 = Data.itemEntities[Data.itemIds[1]];
-export const Recipe1 = Data.recipeEntities[Data.recipeIds[0]];
+export const CategoryId = Dataset.categoryIds[0];
+export const Item1 = Dataset.itemEntities[Dataset.itemIds[0]];
+export const Item2 = Dataset.itemEntities[Dataset.itemIds[1]];
+export const Recipe1 = Dataset.recipeEntities[Dataset.recipeIds[0]];
 export const Product1: Product = {
   id: '0',
   itemId: Item1.id,
@@ -154,28 +151,32 @@ export const BeltSpeed: Entities<Rational> = {
   [ItemId.Pipe]: new Rational(BigInt(1500)),
 };
 export const ItemSettingsEntities: Entities<ItemSettings> = {};
-for (const item of Data.itemIds.map((i) => Data.itemEntities[i])) {
+for (const item of Dataset.itemIds.map((i) => Dataset.itemEntities[i])) {
   ItemSettingsEntities[item.id] = { ...ItemSettings1 };
 }
 export const RecipeSettingsEntities: Entities<RecipeSettings> = {};
-for (const recipe of Data.recipeIds.map((i) => Data.recipeEntities[i])) {
+for (const recipe of Dataset.recipeIds.map((i) => Dataset.recipeEntities[i])) {
   RecipeSettingsEntities[recipe.id] = { ...RecipeSettings1 };
 }
 export const SettingsState1 = { ...Settings.initialSettingsState, ...Defaults };
-export const ItemSettingsInitial = Items.getItemSettings.projector({}, Data, {
-  beltId: ItemId.TransportBelt,
-  cargoWagonId: ItemId.CargoWagon,
-  fluidWagonId: ItemId.FluidWagon,
-});
+export const ItemSettingsInitial = Items.getItemSettings.projector(
+  {},
+  Dataset,
+  {
+    beltId: ItemId.TransportBelt,
+    cargoWagonId: ItemId.CargoWagon,
+    fluidWagonId: ItemId.FluidWagon,
+  }
+);
 export const FactorySettingsInitial = Factories.getFactories.projector(
   Factories.initialFactoriesState,
   Defaults,
-  Data
+  Dataset
 );
 export const RecipeSettingsInitial = Recipes.getRecipeSettings.projector(
   {},
   FactorySettingsInitial,
-  Data
+  Dataset
 );
 export const RationalRecipeSettings =
   Recipes.getRationalRecipeSettings.projector(RecipeSettingsEntities);
@@ -191,7 +192,7 @@ export const AdjustedData = Recipes.getAdjustedDataset.projector(
     researchSpeed: Rational.one,
     costFactor: Rational.one,
     costFactory: Rational.one,
-    data: Data,
+    data: Dataset,
   }
 );
 export const PreferencesState: Preferences.PreferencesState = {

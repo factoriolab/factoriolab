@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideMockStore } from '@ngrx/store/testing';
-import { TranslateModule } from '@ngx-translate/core';
 
 import { initialState, ItemId, Mocks, TestUtility } from 'src/tests';
 import { Dataset, IdType } from '~/models';
@@ -31,7 +30,7 @@ enum DataTest {
 })
 class TestSelectComponent {
   @ViewChild(SelectComponent) child!: SelectComponent;
-  data: Dataset = Mocks.Data;
+  data: Dataset = Mocks.Dataset;
   selected = ItemId.AssemblingMachine1;
   options: string[] = [
     ItemId.AssemblingMachine1,

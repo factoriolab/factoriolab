@@ -10,13 +10,13 @@ export const initialItemsState: ItemsState = {};
 
 export function itemsReducer(
   state: ItemsState = initialItemsState,
-  action: ItemsAction | App.AppAction | Settings.SetBaseAction
+  action: ItemsAction | App.AppAction | Settings.SetModAction
 ): ItemsState {
   switch (action.type) {
     case App.AppActionType.LOAD:
       return { ...initialItemsState, ...action.payload.itemsState };
     case App.AppActionType.RESET:
-    case Settings.SettingsActionType.SET_BASE:
+    case Settings.SettingsActionType.SET_MOD:
       return initialItemsState;
     case ItemsActionType.IGNORE_ITEM:
       return StoreUtility.compareReset(state, 'ignore', {

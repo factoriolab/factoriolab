@@ -39,7 +39,7 @@ describe('RationalFactory', () => {
       expect(result.drain).toEqual(Rational.two);
     });
 
-    it('should ignore undefined expensive fields', () => {
+    it('should ignore undefined fields', () => {
       const result = new RationalFactory({
         speed: 1,
         modules: 2,
