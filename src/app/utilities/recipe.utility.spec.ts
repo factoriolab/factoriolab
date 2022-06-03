@@ -798,7 +798,7 @@ describe('RecipeUtility', () => {
         Rational.one,
         Mocks.Dataset
       );
-      expect(result.itemRecipeIds[ItemId.PetroleumGas]).toEqual(
+      expect(result.itemRecipeId[ItemId.PetroleumGas]).toEqual(
         RecipeId.CoalLiquefaction
       );
     });
@@ -816,7 +816,7 @@ describe('RecipeUtility', () => {
         Rational.one,
         Mocks.Dataset
       );
-      expect(result.itemRecipeIds[ItemId.SolidFuel]).toEqual(
+      expect(result.itemRecipeId[ItemId.SolidFuel]).toEqual(
         RecipeId.SolidFuelFromLightOil
       );
     });

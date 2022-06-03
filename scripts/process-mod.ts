@@ -41,9 +41,29 @@ async function processMod(): Promise<void> {
     i++;
   }
 
+  let no_in = 0;
+  let no_out = 0;
+
+  for (const recipe of data.recipes) {
+    if (recipe.in == null) {
+      recipe.in = {};
+      no_in++;
+    }
+
+    if (recipe.out == null) {
+      recipe.out = { [recipe.id]: 1 };
+      no_out++;
+    }
+  }
+
   fs.writeFileSync(dataPath, JSON.stringify(data));
 
-  console.log(`Successfully updated color for ${data.icons.length} icons.`);
+  console.log(`Updated color for ${data.icons.length} icons.`);
+  if (no_in > 0 || no_out > 0) {
+    console.log(
+      `Fixed recipes: ${no_in} with no inputs and ${no_out} with no outputs.`
+    );
+  }
 }
 
 processMod();

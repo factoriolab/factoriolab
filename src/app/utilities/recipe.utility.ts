@@ -410,31 +410,31 @@ export class RecipeUtility {
       data
     );
     this.adjustCost(recipeR, recipeSettings, costFactor, costFactory);
-    const itemRecipeIds = { ...data.itemRecipeIds };
+    const itemRecipeId = { ...data.itemRecipeId };
 
     // Check for calculated default recipe ids
-    for (const id of data.itemIds.filter((i) => !data.itemRecipeIds[i])) {
+    for (const id of data.itemIds.filter((i) => !data.itemRecipeId[i])) {
       const rec = itemSettings[id].recipeId;
       if (rec && disabledRecipeIds.indexOf(rec) === -1) {
-        itemRecipeIds[id] = rec;
+        itemRecipeId[id] = rec;
       } else {
         const recipes = data.recipeIds
           .map((r) => recipeR[r])
           .filter(
             (r) => r.produces(id) && disabledRecipeIds.indexOf(r.id) === -1
           );
-        if (recipes.length === 1 && Object.keys(recipes[0].out).length === 1) {
-          itemRecipeIds[id] = recipes[0].id;
+        if (recipes.length === 1) {
+          itemRecipeId[id] = recipes[0].id;
         }
       }
     }
 
     // Check for loops in default recipes
-    for (const id of Object.keys(data.itemRecipeIds)) {
-      this.cleanCircularRecipes(id, recipeR, itemRecipeIds);
+    for (const id of Object.keys(data.itemRecipeId)) {
+      this.cleanCircularRecipes(id, recipeR, itemRecipeId);
     }
 
-    return { ...data, ...{ recipeR, itemRecipeIds } };
+    return { ...data, ...{ recipeR, itemRecipeId } };
   }
 
   static defaultRecipe(
@@ -517,7 +517,7 @@ export class RecipeUtility {
       product = { ...product };
 
       if (!product.viaId) {
-        const simpleRecipeId = data.itemRecipeIds[product.itemId];
+        const simpleRecipeId = data.itemRecipeId[product.itemId];
         if (simpleRecipeId) {
           product.viaId = simpleRecipeId;
         } else {
@@ -598,14 +598,14 @@ export class RecipeUtility {
   static cleanCircularRecipes(
     itemId: string,
     recipeR: Entities<RationalRecipe>,
-    itemRecipeIds: Entities,
+    itemRecipeId: Entities,
     itemIds: string[] = []
   ): void {
-    const recipeId = itemRecipeIds[itemId];
+    const recipeId = itemRecipeId[itemId];
     if (recipeId) {
       if (itemIds.indexOf(itemId) !== -1) {
         // Found a circular loop
-        delete itemRecipeIds[itemId];
+        delete itemRecipeId[itemId];
       } else {
         const recipe = recipeR[recipeId];
         if (recipe.produces(itemId) && recipe.in) {
@@ -617,7 +617,7 @@ export class RecipeUtility {
             this.cleanCircularRecipes(
               ingredient,
               recipeR,
-              itemRecipeIds,
+              itemRecipeId,
               itemIds
             );
           }

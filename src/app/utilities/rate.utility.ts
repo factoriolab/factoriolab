@@ -26,9 +26,14 @@ export class RateUtility {
     let recipe: RationalRecipe | null | undefined;
 
     if (!itemSettings[itemId].ignore) {
-      recipe = data.recipeR[data.itemRecipeIds[itemId]];
+      recipe = data.recipeR[data.itemRecipeId[itemId]];
 
-      if (recipe && !recipe.produces(itemId)) {
+      if (
+        recipe &&
+        (Object.keys(recipe.out).length > 1 || !recipe.produces(itemId))
+      ) {
+        // Ignore dedicated recipe if it has multiple outputs
+        // or does not produce a net-output of the item
         recipe = null;
       }
     }

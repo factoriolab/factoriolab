@@ -290,7 +290,7 @@ export class RouterService {
               const modId = this.parseNString(params[Section.Mod], data.hash);
               this.dataSvc
                 .requestData(modId || Settings.initialSettingsState.modId)
-                .subscribe(([data, i18n, hash]) => {
+                .subscribe(([_, hash]) => {
                   if (hash == null) {
                     throw new Error('RouterService failed to load hash');
                   }

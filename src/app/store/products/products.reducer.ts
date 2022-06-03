@@ -1,6 +1,7 @@
 import { Entities, Product, RateType, Rational } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
+import * as Settings from '../settings';
 import { ProductsAction, ProductsActionType } from './products.actions';
 
 export interface ProductsState {
@@ -17,13 +18,16 @@ export const initialProductsState: ProductsState = {
 
 export function productsReducer(
   state: ProductsState = initialProductsState,
-  action: ProductsAction | App.AppAction
+  action: ProductsAction | App.AppAction | Settings.SetModAction
 ): ProductsState {
   switch (action.type) {
     case App.AppActionType.LOAD:
       return action.payload.productsState
         ? action.payload.productsState
         : initialProductsState;
+    case App.AppActionType.RESET:
+    case Settings.SettingsActionType.SET_MOD:
+      return initialProductsState;
     case ProductsActionType.RESET: {
       const id = '0';
       return {

@@ -171,7 +171,7 @@
                   [iconId]="step.itemId"
                   [tooltip]="vm.data.itemEntities[step.itemId].name"
                   [recipe]="
-                    vm.data.recipeEntities[vm.data.itemRecipeIds[step.itemId]]
+                    vm.data.recipeEntities[vm.data.itemRecipeId[step.itemId]]
                   "
                 >
                 </lab-icon>
@@ -210,7 +210,7 @@
                   [class.ignored]="vm.itemSettings[step.itemId].ignore"
                   [tooltip]="vm.data.itemEntities[step.itemId].name"
                   [recipe]="
-                    vm.data.recipeEntities[vm.data.itemRecipeIds[step.itemId]]
+                    vm.data.recipeEntities[vm.data.itemRecipeId[step.itemId]]
                   "
                   [hoverIcon]="
                     vm.itemSettings[step.itemId].ignore
@@ -819,7 +819,7 @@
                           [tooltip]="vm.data.itemEntities[step.itemId].name"
                           [recipe]="
                             vm.data.recipeEntities[
-                              vm.data.itemRecipeIds[step.itemId]
+                              vm.data.itemRecipeId[step.itemId]
                             ]
                           "
                         >
@@ -958,7 +958,7 @@
                         [tooltip]="vm.data.itemEntities[step.itemId].name"
                         [recipe]="
                           vm.data.recipeEntities[
-                            vm.data.itemRecipeIds[step.itemId]
+                            vm.data.itemRecipeId[step.itemId]
                           ]
                         "
                       >
@@ -1115,7 +1115,7 @@
                                   "
                                   [recipe]="
                                     vm.data.recipeEntities[
-                                      vm.data.itemRecipeIds[output.key]
+                                      vm.data.itemRecipeId[output.key]
                                     ]
                                   "
                                 >
@@ -1169,7 +1169,7 @@
                               [tooltip]="vm.data.itemEntities[input.key].name"
                               [recipe]="
                                 vm.data.recipeEntities[
-                                  vm.data.itemRecipeIds[input.key]
+                                  vm.data.itemRecipeId[input.key]
                                 ]
                               "
                             >
@@ -1332,7 +1332,7 @@
                               [tooltip]="vm.data.itemEntities[output.key].name"
                               [recipe]="
                                 vm.data.recipeEntities[
-                                  vm.data.itemRecipeIds[output.key]
+                                  vm.data.itemRecipeId[output.key]
                                 ]
                               "
                             >
@@ -1492,7 +1492,7 @@
                                 [tooltip]="vm.data.itemEntities[input.key].name"
                                 [recipe]="
                                   vm.data.recipeEntities[
-                                    vm.data.itemRecipeIds[input.key]
+                                    vm.data.itemRecipeId[input.key]
                                   ]
                                 "
                               >
@@ -1656,7 +1656,7 @@
                               [tooltip]="vm.data.itemEntities[output.key].name"
                               [recipe]="
                                 vm.data.recipeEntities[
-                                  vm.data.itemRecipeIds[output.key]
+                                  vm.data.itemRecipeId[output.key]
                                 ]
                               "
                             >
@@ -1696,7 +1696,7 @@
                       class="info warn"
                       *ngIf="
                         step.itemId &&
-                        vm.data.itemRecipeIds[step.itemId] === null
+                        vm.data.itemRecipeId[step.itemId] === null
                       "
                     >
                       {{ 'list.defaultRecipeInfo3' | translate }}
@@ -1719,7 +1719,7 @@
                           "
                           class="button grid"
                           [class.selected]="
-                            vm.data.itemRecipeIds[step.itemId] === recipeId
+                            vm.data.itemRecipeId[step.itemId] === recipeId
                           "
                           [iconId]="recipeId"
                           [tooltip]="recipe.name"

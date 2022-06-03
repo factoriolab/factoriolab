@@ -55,8 +55,8 @@ export const getProductSteps = createSelector(
   Settings.getDisabledRecipeIds,
   Settings.getSimplexModifiers,
   Recipes.getAdjustedDataset,
-  (products, itemSettings, disabledRecipeIds, adj, data) => {
-    const a = products?.reduce((e: Entities<[string, Rational][]>, p) => {
+  (products, itemSettings, disabledRecipeIds, adj, data) =>
+    products?.reduce((e: Entities<[string, Rational][]>, p) => {
       e[p.itemId] = SimplexUtility.getSteps(
         p.itemId,
         itemSettings,
@@ -68,9 +68,7 @@ export const getProductSteps = createSelector(
         adj.simplex
       );
       return e;
-    }, {});
-    return a;
-  }
+    }, {})
 );
 
 export const getProducts = createSelector(
@@ -79,8 +77,8 @@ export const getProducts = createSelector(
   Recipes.getRecipeSettings,
   Factories.getFactories,
   Settings.getDataset,
-  (products, productSteps, recipeSettings, factories, data) => {
-    const a = products?.map((p) =>
+  (products, productSteps, recipeSettings, factories, data) =>
+    products?.map((p) =>
       RecipeUtility.adjustProduct(
         p,
         productSteps,
@@ -88,9 +86,7 @@ export const getProducts = createSelector(
         factories,
         data
       )
-    );
-    return a;
-  }
+    )
 );
 
 export const getProductOptions = createSelector(
@@ -239,7 +235,7 @@ export const getNormalizedRatesByFactories = createSelector(
   Recipes.getAdjustedDataset,
   (products, productSteps, recipeSettings, itemSettings, adj, data) =>
     products?.reduce((e: Entities<Rational>, p) => {
-      let recipeId = data.itemRecipeIds[p.itemId];
+      let recipeId = data.itemRecipeId[p.itemId];
       if (recipeId && p.viaId === recipeId) {
         const recipe = data.recipeR[recipeId];
         e[p.id] = p.rate.div(recipe.time);
@@ -566,7 +562,7 @@ export const getStepDetails = createSelector(
       }
       if (s.itemId != null) {
         const itemId = s.itemId; // Store null-checked id
-        const recipeIds = data.complexRecipeIds.filter((r) =>
+        const recipeIds = data.optionalRecipeIds.filter((r) =>
           data.recipeR[r].produces(itemId)
         );
         if (recipeIds.length) {

@@ -277,7 +277,7 @@ export class SimplexUtility {
 
   /** Look for recipes that output a passed item, recursively */
   static parseItemRecursively(itemId: string, state: MatrixState): void {
-    const simpleRecipeId = state.data.itemRecipeIds[itemId];
+    const simpleRecipeId = state.data.itemRecipeId[itemId];
     if (simpleRecipeId) {
       if (!state.recipes[simpleRecipeId]) {
         const recipe = state.data.recipeR[simpleRecipeId];
@@ -306,6 +306,7 @@ export class SimplexUtility {
   static parseInputs(state: MatrixState): void {
     const itemIds = Object.keys(state.items);
     const recipeIds = Object.keys(state.recipes);
+    // state.inputs = itemIds;
     state.inputs = itemIds.filter(
       (i) =>
         !recipeIds.some((r) => state.data.recipeR[r].produces(i)) ||

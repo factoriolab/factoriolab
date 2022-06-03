@@ -82,11 +82,8 @@ export class ProductsComponent {
 
   constructor(public trackSvc: TrackService, private store: Store<LabState>) {}
 
-  changeItem(product: Product, itemId: string, data: Dataset): void {
-    if (
-      product.rateType === RateType.Factories &&
-      !data.itemRecipeIds[itemId]
-    ) {
+  changeItem(product: Product, itemId: string): void {
+    if (product.rateType === RateType.Factories) {
       // Reset rate type to items
       this.setRateType(product.id, RateType.Items);
     }

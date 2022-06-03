@@ -491,14 +491,9 @@ export const getDataset = createSelector(
       },
       {}
     );
-    const itemRecipeIds = itemIds.reduce((e: Entities, i) => {
+    const itemRecipeId = itemIds.reduce((e: Entities, i) => {
       const matches = recipeMatches.hasOwnProperty(i) ? recipeMatches[i] : [];
-      if (
-        matches.length === 1 &&
-        (!matches[0].out || Object.keys(matches[0].out).length === 1)
-      ) {
-        // Ensure recipe produces this item and this item only
-        // If so, use this recipe as a direct mapping
+      if (matches.length === 1) {
         e[i] = matches[0].id;
       }
       return e;
@@ -520,12 +515,12 @@ export const getDataset = createSelector(
       (i) => itemEntities[i].module!.productivity != null
     );
 
-    // Calculate complex recipes
-    const simpleRecipes = Object.keys(itemRecipeIds).map(
-      (i) => itemRecipeIds[i]
+    // Calculate optional recipes
+    const requiredRecipes = Object.keys(itemRecipeId).map(
+      (i) => itemRecipeId[i]
     );
-    const complexRecipeIds = recipeIds
-      .filter((r) => simpleRecipes.indexOf(r) === -1)
+    const optionalRecipeIds = recipeIds
+      .filter((r) => requiredRecipes.indexOf(r) === -1)
       .sort();
 
     const dataset: Dataset = {
@@ -538,7 +533,7 @@ export const getDataset = createSelector(
       iconEntities,
       itemIds,
       itemEntities,
-      itemRecipeIds,
+      itemRecipeId,
       beaconIds,
       beaconEntities,
       beltIds,
@@ -556,7 +551,7 @@ export const getDataset = createSelector(
       fuelIds,
       fuelEntities,
       recipeIds,
-      complexRecipeIds,
+      optionalRecipeIds,
       recipeEntities,
       recipeR,
       recipeModuleIds,

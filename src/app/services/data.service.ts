@@ -8,6 +8,7 @@ import {
   Observable,
   of,
   shareReplay,
+  skip,
   tap,
 } from 'rxjs';
 
@@ -23,8 +24,8 @@ import { BrowserUtility } from '~/utilities';
 })
 export class DataService {
   cacheData: Entities<Observable<ModData>> = {};
-  cacheI18n: Entities<Observable<ModI18n | null>> = {};
   cacheHash: Entities<Observable<ModHash>> = {};
+  cacheI18n: Entities<Observable<ModI18n | null>> = {};
 
   constructor(
     private http: HttpClient,
@@ -39,9 +40,11 @@ export class DataService {
     combineLatest([
       this.store.select(Settings.getModId),
       this.translateSvc.onLangChange,
-    ]).subscribe(([id]) => {
-      this.requestData(id).subscribe();
-    });
+    ])
+      .pipe(skip(1))
+      .subscribe(([id]) => {
+        this.requestData(id).subscribe();
+      });
   }
 
   initialize(
@@ -51,7 +54,7 @@ export class DataService {
   ): void {
     if (!zip) {
       const id = stored?.settingsState?.modId || initial.modId;
-      this.requestData(id).subscribe(([data, hash]) => {
+      this.requestData(id).subscribe(([data]) => {
         if (!stored?.productsState) {
           this.store.dispatch(new Products.ResetAction(data.items[0].id));
         }
@@ -59,20 +62,34 @@ export class DataService {
     }
   }
 
-  requestData(
-    id: string,
-    skipHash = false
-  ): Observable<[ModData, ModI18n | null, ModHash | null]> {
+  requestData(id: string): Observable<[ModData, ModHash, ModI18n | null]> {
+    const payload: Datasets.DatasetPayload = {
+      data: null,
+      hash: null,
+      i18n: null,
+    };
+
     /** Setup observable for data */
     if (!this.cacheData[id]) {
       this.cacheData[id] = this.http.get<ModData>(`data/${id}/data.json`).pipe(
         tap((value) => {
-          this.store.dispatch(new Datasets.LoadModDataAction({ id, value }));
+          payload.data = { id, value };
         }),
         shareReplay()
       );
     }
     const data$ = this.cacheData[id];
+
+    /** Setup observable for hash */
+    if (!this.cacheHash[id]) {
+      this.cacheHash[id] = this.http.get<ModHash>(`data/${id}/hash.json`).pipe(
+        tap((value) => {
+          payload.hash = { id, value };
+        }),
+        shareReplay()
+      );
+    }
+    const hash$ = this.cacheHash[id];
 
     /** Setup observable for i18n */
     const i18nLang = this.translateSvc.currentLang ?? 'en';
@@ -92,9 +109,7 @@ export class DataService {
             }),
             tap((value) => {
               if (value) {
-                this.store.dispatch(
-                  new Datasets.LoadModI18nAction({ id: i18nKey, value })
-                );
+                payload.i18n = { id: i18nKey, value };
               }
             }),
             shareReplay()
@@ -103,26 +118,12 @@ export class DataService {
       i18n$ = this.cacheI18n[i18nKey];
     }
 
-    /** Setup observable for hash */
-    let hash$: Observable<ModHash | null>;
-    if (skipHash) {
-      hash$ = of(null);
-    } else {
-      if (!this.cacheHash[id]) {
-        this.cacheHash[id] = this.http
-          .get<ModHash>(`data/${id}/hash.json`)
-          .pipe(
-            tap((value) => {
-              this.store.dispatch(
-                new Datasets.LoadModHashAction({ id, value })
-              );
-            }),
-            shareReplay()
-          );
-      }
-      hash$ = this.cacheHash[id];
-    }
-
-    return combineLatest([data$, i18n$, hash$]);
+    return combineLatest([data$, hash$, i18n$]).pipe(
+      tap(() => {
+        if (payload.data || payload.hash || payload.i18n) {
+          this.store.dispatch(new Datasets.LoadModAction(payload));
+        }
+      })
+    );
   }
 }
