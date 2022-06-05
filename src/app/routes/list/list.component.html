@@ -1709,7 +1709,7 @@
                 <td colspan="100" class="recipes">
                   <div class="list tile">
                     <ng-container
-                      *ngFor="let recipeId of vm.stepDetails[step.id].recipes"
+                      *ngFor="let recipeId of vm.stepDetails[step.id].recipeIds"
                     >
                       <ng-container *ngIf="vm.data.recipeR[recipeId] as recipe">
                         <lab-icon
@@ -1758,7 +1758,7 @@
                 <td colspan="100" class="recipes">
                   <div class="list tile">
                     <lab-icon
-                      *ngFor="let recipeId of vm.stepDetails[step.id].recipes"
+                      *ngFor="let recipeId of vm.stepDetails[step.id].recipeIds"
                       class="button grid"
                       [class.ignored]="
                         vm.settings.disabledRecipeIds.indexOf(recipeId) !== -1
@@ -1767,6 +1767,35 @@
                       [tooltip]="vm.data.recipeEntities[recipeId].name"
                       [recipe]="vm.data.recipeEntities[recipeId]"
                       (click)="toggleRecipe(recipeId, vm.settings, vm.data)"
+                    ></lab-icon>
+                  </div>
+                </td>
+              </tr>
+              <tr class="details">
+                <td [colSpan]="leftSpan"></td>
+                <td colspan="100">
+                  <div>
+                    <div class="header">
+                      {{ 'list.requiredRecipes' | translate }}
+                    </div>
+                    <div class="info">
+                      {{ 'list.requiredRecipesInfo' | translate }}
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr class="details last">
+                <td [colSpan]="leftSpan"></td>
+                <td colspan="100" class="recipes">
+                  <div class="list tile">
+                    <lab-icon
+                      *ngFor="
+                        let recipeId of vm.stepDetails[step.id]
+                          .requiredRecipeIds
+                      "
+                      [iconId]="recipeId"
+                      [tooltip]="vm.data.recipeEntities[recipeId].name"
+                      [recipe]="vm.data.recipeEntities[recipeId]"
                     ></lab-icon>
                   </div>
                 </td>

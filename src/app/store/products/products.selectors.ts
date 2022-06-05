@@ -544,7 +544,8 @@ export const getStepDetails = createSelector(
     steps.reduce((e: Entities<StepDetail>, s) => {
       const tabs = [];
       let outputs: Step[] = [];
-      let recipes: string[] = [];
+      const recipeIds: string[] = [];
+      const requiredRecipeIds: string[] = [];
       if (s.itemId != null) {
         const itemId = s.itemId; // Store null-checked id
         tabs.push(StepDetailTab.Item);
@@ -561,17 +562,21 @@ export const getStepDetails = createSelector(
         tabs.push(StepDetailTab.Factory);
       }
       if (s.itemId != null) {
-        const itemId = s.itemId; // Store null-checked id
-        const recipeIds = data.optionalRecipeIds.filter((r) =>
-          data.recipeR[r].produces(itemId)
-        );
+        for (const recipe of data.recipeIds.map((r) => data.recipeR[r])) {
+          if (recipe.produces(s.itemId)) {
+            if (data.optionalRecipeIds.indexOf(recipe.id) === -1) {
+              requiredRecipeIds.push(recipe.id);
+            } else {
+              recipeIds.push(recipe.id);
+            }
+          }
+        }
         if (recipeIds.length) {
           tabs.push(StepDetailTab.Recipes);
-          recipes = recipeIds;
         }
       }
 
-      e[s.id] = { tabs, outputs, recipes };
+      e[s.id] = { tabs, outputs, recipeIds, requiredRecipeIds };
 
       return e;
     }, {})

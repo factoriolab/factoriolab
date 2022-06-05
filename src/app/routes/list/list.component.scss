@@ -289,3 +289,8 @@ lab-select:hover ~ lab-select .button.module {
   box-shadow: var(--shadow-hover);
   filter: drop-shadow(0 0 2px var(--color-brand-sha));
 }
+
+.tile lab-icon {
+  padding: 0.125rem;
+  margin: 1px;
+}

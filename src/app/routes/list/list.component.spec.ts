@@ -80,7 +80,7 @@ describe('ListComponent', () => {
             StepDetailTab.Factory,
           ],
           outputs: [],
-          recipes: [],
+          recipeIds: [],
         };
         return e;
       }, {})
@@ -158,7 +158,7 @@ describe('ListComponent', () => {
           e[s.id] = {
             tabs: [StepDetailTab.Item],
             outputs: [],
-            recipes: [],
+            recipeIds: [],
           };
           return e;
         }, {})

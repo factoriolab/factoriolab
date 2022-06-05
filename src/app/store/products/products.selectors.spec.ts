@@ -916,16 +916,17 @@ describe('Products Selectors', () => {
             StepDetailTab.Recipes,
           ],
           outputs: [steps[0], steps[1]],
-          recipes: [
+          recipeIds: [
             RecipeId.AdvancedOilProcessing,
             RecipeId.BasicOilProcessing,
             RecipeId.CoalLiquefaction,
             RecipeId.EmptyPetroleumGasBarrel,
             RecipeId.LightOilCracking,
           ],
+          requiredRecipeIds: [],
         },
-        ['1']: { tabs: [], outputs: [], recipes: [] },
-        ['2']: { tabs: [], outputs: [], recipes: [] },
+        ['1']: { tabs: [], outputs: [], recipeIds: [], requiredRecipeIds: [] },
+        ['2']: { tabs: [], outputs: [], recipeIds: [], requiredRecipeIds: [] },
       });
     });
   });
