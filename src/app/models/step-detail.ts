@@ -5,5 +5,6 @@ export interface StepDetail {
   tabs: StepDetailTab[];
   outputs: Step[];
   recipeIds: string[];
+  defaultableRecipeIds: string[];
   requiredRecipeIds: string[];
 }
