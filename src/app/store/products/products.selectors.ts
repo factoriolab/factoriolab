@@ -540,11 +540,13 @@ export const getTotals = createSelector(
 export const getStepDetails = createSelector(
   getSteps,
   Recipes.getAdjustedDataset,
-  (steps, data) =>
+  Settings.getDisabledRecipeIds,
+  (steps, data, disabledRecipeIds) =>
     steps.reduce((e: Entities<StepDetail>, s) => {
       const tabs = [];
       let outputs: Step[] = [];
       const recipeIds: string[] = [];
+      const defaultableRecipeIds: string[] = [];
       const requiredRecipeIds: string[] = [];
       if (s.itemId != null) {
         const itemId = s.itemId; // Store null-checked id
@@ -568,6 +570,12 @@ export const getStepDetails = createSelector(
               requiredRecipeIds.push(recipe.id);
             } else {
               recipeIds.push(recipe.id);
+              if (
+                disabledRecipeIds.indexOf(recipe.id) === -1 &&
+                recipe.producesOnly(s.itemId)
+              ) {
+                defaultableRecipeIds.push(recipe.id);
+              }
             }
           }
         }
@@ -576,7 +584,13 @@ export const getStepDetails = createSelector(
         }
       }
 
-      e[s.id] = { tabs, outputs, recipeIds, requiredRecipeIds };
+      e[s.id] = {
+        tabs,
+        outputs,
+        recipeIds,
+        defaultableRecipeIds,
+        requiredRecipeIds,
+      };
 
       return e;
     }, {})
