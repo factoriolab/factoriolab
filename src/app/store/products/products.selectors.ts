@@ -55,8 +55,8 @@ export const getProductSteps = createSelector(
   Settings.getDisabledRecipeIds,
   Settings.getSimplexModifiers,
   Recipes.getAdjustedDataset,
-  (products, itemSettings, disabledRecipeIds, adj, data) => {
-    const a = products?.reduce((e: Entities<[string, Rational][]>, p) => {
+  (products, itemSettings, disabledRecipeIds, adj, data) =>
+    products?.reduce((e: Entities<[string, Rational][]>, p) => {
       e[p.itemId] = SimplexUtility.getSteps(
         p.itemId,
         itemSettings,
@@ -68,9 +68,7 @@ export const getProductSteps = createSelector(
         adj.simplex
       );
       return e;
-    }, {});
-    return a;
-  }
+    }, {})
 );
 
 export const getProducts = createSelector(
@@ -79,8 +77,8 @@ export const getProducts = createSelector(
   Recipes.getRecipeSettings,
   Factories.getFactories,
   Settings.getDataset,
-  (products, productSteps, recipeSettings, factories, data) => {
-    const a = products?.map((p) =>
+  (products, productSteps, recipeSettings, factories, data) =>
+    products?.map((p) =>
       RecipeUtility.adjustProduct(
         p,
         productSteps,
@@ -88,9 +86,7 @@ export const getProducts = createSelector(
         factories,
         data
       )
-    );
-    return a;
-  }
+    )
 );
 
 export const getProductOptions = createSelector(
@@ -239,7 +235,7 @@ export const getNormalizedRatesByFactories = createSelector(
   Recipes.getAdjustedDataset,
   (products, productSteps, recipeSettings, itemSettings, adj, data) =>
     products?.reduce((e: Entities<Rational>, p) => {
-      let recipeId = data.itemRecipeIds[p.itemId];
+      let recipeId = data.itemRecipeId[p.itemId];
       if (recipeId && p.viaId === recipeId) {
         const recipe = data.recipeR[recipeId];
         e[p.id] = p.rate.div(recipe.time);
@@ -544,11 +540,14 @@ export const getTotals = createSelector(
 export const getStepDetails = createSelector(
   getSteps,
   Recipes.getAdjustedDataset,
-  (steps, data) =>
+  Settings.getDisabledRecipeIds,
+  (steps, data, disabledRecipeIds) =>
     steps.reduce((e: Entities<StepDetail>, s) => {
       const tabs = [];
       let outputs: Step[] = [];
-      let recipes: string[] = [];
+      const recipeIds: string[] = [];
+      const defaultableRecipeIds: string[] = [];
+      const requiredRecipeIds: string[] = [];
       if (s.itemId != null) {
         const itemId = s.itemId; // Store null-checked id
         tabs.push(StepDetailTab.Item);
@@ -565,17 +564,33 @@ export const getStepDetails = createSelector(
         tabs.push(StepDetailTab.Factory);
       }
       if (s.itemId != null) {
-        const itemId = s.itemId; // Store null-checked id
-        const recipeIds = data.complexRecipeIds.filter((r) =>
-          data.recipeR[r].produces(itemId)
-        );
+        for (const recipe of data.recipeIds.map((r) => data.recipeR[r])) {
+          if (recipe.produces(s.itemId)) {
+            if (data.optionalRecipeIds.indexOf(recipe.id) === -1) {
+              requiredRecipeIds.push(recipe.id);
+            } else {
+              recipeIds.push(recipe.id);
+              if (
+                disabledRecipeIds.indexOf(recipe.id) === -1 &&
+                recipe.producesOnly(s.itemId)
+              ) {
+                defaultableRecipeIds.push(recipe.id);
+              }
+            }
+          }
+        }
         if (recipeIds.length) {
           tabs.push(StepDetailTab.Recipes);
-          recipes = recipeIds;
         }
       }
 
-      e[s.id] = { tabs, outputs, recipes };
+      e[s.id] = {
+        tabs,
+        outputs,
+        recipeIds,
+        defaultableRecipeIds,
+        requiredRecipeIds,
+      };
 
       return e;
     }, {})

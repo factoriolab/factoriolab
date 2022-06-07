@@ -277,7 +277,7 @@ export class SimplexUtility {
 
   /** Look for recipes that output a passed item, recursively */
   static parseItemRecursively(itemId: string, state: MatrixState): void {
-    const simpleRecipeId = state.data.itemRecipeIds[itemId];
+    const simpleRecipeId = state.data.itemRecipeId[itemId];
     if (simpleRecipeId) {
       if (!state.recipes[simpleRecipeId]) {
         const recipe = state.data.recipeR[simpleRecipeId];

@@ -582,6 +582,7 @@ describe('SimplexUtility', () => {
         id: 'id',
         name: 'name',
         time: 1,
+        in: {},
         out: { [ItemId.CopperPlate]: 1 },
         producers: [],
       });
@@ -866,6 +867,7 @@ describe('SimplexUtility', () => {
         id: 'id',
         name: 'name',
         time: 1,
+        in: {},
         out: { [ItemId.Coal]: 1 },
         producers: [],
       });

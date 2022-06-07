@@ -313,13 +313,13 @@ describe('Settings Selectors', () => {
       expect(Object.keys(result.itemEntities).length).toEqual(
         result.itemIds.length
       );
-      expect(Object.keys(result.itemRecipeIds).length).toBeGreaterThan(0);
-      expect(Object.keys(result.itemRecipeIds).length).toBeLessThan(
+      expect(Object.keys(result.itemRecipeId).length).toBeGreaterThan(0);
+      expect(Object.keys(result.itemRecipeId).length).toBeLessThan(
         result.itemIds.length
       );
       expect(result.recipeIds.length).toBeGreaterThan(0);
-      expect(result.complexRecipeIds.length).toBeGreaterThan(0);
-      expect(result.complexRecipeIds.length).toBeLessThan(
+      expect(result.optionalRecipeIds.length).toBeGreaterThan(0);
+      expect(result.optionalRecipeIds.length).toBeLessThan(
         result.recipeIds.length
       );
       expect(Object.keys(result.recipeEntities).length).toEqual(
@@ -366,8 +366,8 @@ describe('Settings Selectors', () => {
       expect(Object.keys(result.itemEntities).length).toEqual(
         result.itemIds.length
       );
-      expect(Object.keys(result.itemRecipeIds).length).toBeGreaterThan(0);
-      expect(Object.keys(result.itemRecipeIds).length).toBeLessThan(
+      expect(Object.keys(result.itemRecipeId).length).toBeGreaterThan(0);
+      expect(Object.keys(result.itemRecipeId).length).toBeLessThan(
         result.itemIds.length
       );
       expect(result.recipeIds.length).toBeGreaterThan(0);

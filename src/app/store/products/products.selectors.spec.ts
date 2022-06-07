@@ -903,10 +903,16 @@ describe('Products Selectors', () => {
           id: '2',
         },
       ];
-      const result = Selectors.getStepDetails.projector(
-        steps,
-        Mocks.AdjustedData
-      );
+      const data = {
+        ...Mocks.AdjustedData,
+        ...{
+          // Manually test with one recipe which should be listed as required
+          optionalRecipeIds: Mocks.AdjustedData.optionalRecipeIds.filter(
+            (i) => i !== RecipeId.CoalLiquefaction
+          ),
+        },
+      };
+      const result = Selectors.getStepDetails.projector(steps, data, []);
       expect(result).toEqual({
         ['0']: {
           tabs: [
@@ -916,16 +922,32 @@ describe('Products Selectors', () => {
             StepDetailTab.Recipes,
           ],
           outputs: [steps[0], steps[1]],
-          recipes: [
-            RecipeId.AdvancedOilProcessing,
+          recipeIds: [
             RecipeId.BasicOilProcessing,
-            RecipeId.CoalLiquefaction,
+            RecipeId.AdvancedOilProcessing,
+            RecipeId.LightOilCracking,
             RecipeId.EmptyPetroleumGasBarrel,
+          ],
+          defaultableRecipeIds: [
+            RecipeId.BasicOilProcessing,
             RecipeId.LightOilCracking,
           ],
+          requiredRecipeIds: [RecipeId.CoalLiquefaction],
         },
-        ['1']: { tabs: [], outputs: [], recipes: [] },
-        ['2']: { tabs: [], outputs: [], recipes: [] },
+        ['1']: {
+          tabs: [],
+          outputs: [],
+          recipeIds: [],
+          defaultableRecipeIds: [],
+          requiredRecipeIds: [],
+        },
+        ['2']: {
+          tabs: [],
+          outputs: [],
+          recipeIds: [],
+          defaultableRecipeIds: [],
+          requiredRecipeIds: [],
+        },
       });
     });
   });

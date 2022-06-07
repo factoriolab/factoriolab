@@ -37,7 +37,7 @@ describe('ProductsComponent', () => {
   describe('changeItem', () => {
     it('should edit a product item', () => {
       spyOn(component, 'setItem');
-      component.changeItem(Mocks.Product1, ItemId.Coal, Mocks.AdjustedData);
+      component.changeItem(Mocks.Product1, ItemId.Coal);
       expect(component.setItem).toHaveBeenCalledWith(
         Mocks.Product1.id,
         ItemId.Coal
@@ -47,11 +47,7 @@ describe('ProductsComponent', () => {
     it('should reset the rate type when changing a product that has no simple recipe', () => {
       spyOn(component, 'setRateType');
       spyOn(component, 'setItem');
-      component.changeItem(
-        Mocks.Product4,
-        ItemId.PetroleumGas,
-        Mocks.AdjustedData
-      );
+      component.changeItem(Mocks.Product4, ItemId.PetroleumGas);
       expect(component.setRateType).toHaveBeenCalledWith(
         Mocks.Product4.id,
         RateType.Items

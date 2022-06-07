@@ -32,7 +32,7 @@ describe('DatasetsEffects', () => {
   describe('appLoad$', () => {
     it('should load the default base mod', () => {
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.I18n, Mocks.Hash])
+        of([Mocks.Data, Mocks.Hash, Mocks.I18n])
       );
       actions = new ReplaySubject(1);
       actions.next(new App.LoadAction({}));
@@ -43,7 +43,7 @@ describe('DatasetsEffects', () => {
 
     it('should load from state', () => {
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.I18n, Mocks.Hash])
+        of([Mocks.Data, Mocks.Hash, Mocks.I18n])
       );
       actions = new ReplaySubject(1);
       actions.next(
@@ -61,7 +61,7 @@ describe('DatasetsEffects', () => {
   describe('appReset$', () => {
     it('should reset and load mod for new mod', () => {
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.I18n, Mocks.Hash])
+        of([Mocks.Data, Mocks.Hash, Mocks.I18n])
       );
       actions = new ReplaySubject(1);
       actions.next(new App.ResetAction());
@@ -74,7 +74,7 @@ describe('DatasetsEffects', () => {
   describe('setModId$', () => {
     it('should reset and load mod for new mod', () => {
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.I18n, Mocks.Hash])
+        of([Mocks.Data, Mocks.Hash, Mocks.I18n])
       );
       actions = new ReplaySubject(1);
       actions.next(new Settings.SetModAction(Mocks.Mod.id));

@@ -171,7 +171,7 @@
                   [iconId]="step.itemId"
                   [tooltip]="vm.data.itemEntities[step.itemId].name"
                   [recipe]="
-                    vm.data.recipeEntities[vm.data.itemRecipeIds[step.itemId]]
+                    vm.data.recipeEntities[vm.data.itemRecipeId[step.itemId]]
                   "
                 >
                 </lab-icon>
@@ -210,7 +210,7 @@
                   [class.ignored]="vm.itemSettings[step.itemId].ignore"
                   [tooltip]="vm.data.itemEntities[step.itemId].name"
                   [recipe]="
-                    vm.data.recipeEntities[vm.data.itemRecipeIds[step.itemId]]
+                    vm.data.recipeEntities[vm.data.itemRecipeId[step.itemId]]
                   "
                   [hoverIcon]="
                     vm.itemSettings[step.itemId].ignore
@@ -819,7 +819,7 @@
                           [tooltip]="vm.data.itemEntities[step.itemId].name"
                           [recipe]="
                             vm.data.recipeEntities[
-                              vm.data.itemRecipeIds[step.itemId]
+                              vm.data.itemRecipeId[step.itemId]
                             ]
                           "
                         >
@@ -958,7 +958,7 @@
                         [tooltip]="vm.data.itemEntities[step.itemId].name"
                         [recipe]="
                           vm.data.recipeEntities[
-                            vm.data.itemRecipeIds[step.itemId]
+                            vm.data.itemRecipeId[step.itemId]
                           ]
                         "
                       >
@@ -1115,7 +1115,7 @@
                                   "
                                   [recipe]="
                                     vm.data.recipeEntities[
-                                      vm.data.itemRecipeIds[output.key]
+                                      vm.data.itemRecipeId[output.key]
                                     ]
                                   "
                                 >
@@ -1169,7 +1169,7 @@
                               [tooltip]="vm.data.itemEntities[input.key].name"
                               [recipe]="
                                 vm.data.recipeEntities[
-                                  vm.data.itemRecipeIds[input.key]
+                                  vm.data.itemRecipeId[input.key]
                                 ]
                               "
                             >
@@ -1332,7 +1332,7 @@
                               [tooltip]="vm.data.itemEntities[output.key].name"
                               [recipe]="
                                 vm.data.recipeEntities[
-                                  vm.data.itemRecipeIds[output.key]
+                                  vm.data.itemRecipeId[output.key]
                                 ]
                               "
                             >
@@ -1492,7 +1492,7 @@
                                 [tooltip]="vm.data.itemEntities[input.key].name"
                                 [recipe]="
                                   vm.data.recipeEntities[
-                                    vm.data.itemRecipeIds[input.key]
+                                    vm.data.itemRecipeId[input.key]
                                   ]
                                 "
                               >
@@ -1656,7 +1656,7 @@
                               [tooltip]="vm.data.itemEntities[output.key].name"
                               [recipe]="
                                 vm.data.recipeEntities[
-                                  vm.data.itemRecipeIds[output.key]
+                                  vm.data.itemRecipeId[output.key]
                                 ]
                               "
                             >
@@ -1679,50 +1679,51 @@
               </td>
             </tr>
             <ng-container *ngIf="expanded[step.id] === StepDetailTab.Recipes">
-              <tr class="details first">
-                <td [colSpan]="leftSpan"></td>
-                <td colspan="100">
-                  <div>
-                    <div class="header">
-                      {{ 'list.defaultRecipe' | translate }}
+              <ng-container
+                *ngIf="vm.stepDetails[step.id].defaultableRecipeIds.length"
+              >
+                <tr class="details first">
+                  <td [colSpan]="leftSpan"></td>
+                  <td colspan="100">
+                    <div>
+                      <div class="header">
+                        {{ 'list.defaultRecipe' | translate }}
+                      </div>
+                      <div class="info">
+                        {{ 'list.defaultRecipeInfo1' | translate }}
+                      </div>
+                      <div class="info">
+                        {{ 'list.defaultRecipeInfo2' | translate }}
+                      </div>
+                      <div
+                        class="info warn"
+                        *ngIf="
+                          step.itemId &&
+                          vm.data.itemRecipeId[step.itemId] === null
+                        "
+                      >
+                        {{ 'list.defaultRecipeInfo3' | translate }}
+                      </div>
                     </div>
-                    <div class="info">
-                      {{ 'list.defaultRecipeInfo1' | translate }}
-                    </div>
-                    <div class="info">
-                      {{ 'list.defaultRecipeInfo2' | translate }}
-                    </div>
-                    <div
-                      class="info warn"
-                      *ngIf="
-                        step.itemId &&
-                        vm.data.itemRecipeIds[step.itemId] === null
-                      "
-                    >
-                      {{ 'list.defaultRecipeInfo3' | translate }}
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr class="details" *ngIf="step.itemId">
-                <td [colSpan]="leftSpan"></td>
-                <td colspan="100" class="recipes">
-                  <div class="list tile">
-                    <ng-container
-                      *ngFor="let recipeId of vm.stepDetails[step.id].recipes"
-                    >
-                      <ng-container *ngIf="vm.data.recipeR[recipeId] as recipe">
+                  </td>
+                </tr>
+                <tr class="details" *ngIf="step.itemId">
+                  <td [colSpan]="leftSpan"></td>
+                  <td colspan="100" class="recipes">
+                    <div class="list tile">
+                      <ng-container
+                        *ngFor="
+                          let recipeId of vm.stepDetails[step.id]
+                            .defaultableRecipeIds
+                        "
+                      >
                         <lab-icon
-                          *ngIf="
-                            vm.settings.disabledRecipeIds.indexOf(recipeId) ===
-                              -1 && recipe.producesOnly(step.itemId)
-                          "
                           class="button grid"
                           [class.selected]="
-                            vm.data.itemRecipeIds[step.itemId] === recipeId
+                            vm.data.itemRecipeId[step.itemId] === recipeId
                           "
                           [iconId]="recipeId"
-                          [tooltip]="recipe.name"
+                          [tooltip]="vm.data.recipeEntities[recipeId].name"
                           [recipe]="vm.data.recipeEntities[recipeId]"
                           (click)="
                             toggleDefaultRecipe(
@@ -1736,10 +1737,10 @@
                         >
                         </lab-icon>
                       </ng-container>
-                    </ng-container>
-                  </div>
-                </td>
-              </tr>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
               <tr class="details">
                 <td [colSpan]="leftSpan"></td>
                 <td colspan="100">
@@ -1753,12 +1754,15 @@
                   </div>
                 </td>
               </tr>
-              <tr class="details last">
+              <tr
+                class="details"
+                [class.last]="!vm.stepDetails[step.id].requiredRecipeIds.length"
+              >
                 <td [colSpan]="leftSpan"></td>
                 <td colspan="100" class="recipes">
                   <div class="list tile">
                     <lab-icon
-                      *ngFor="let recipeId of vm.stepDetails[step.id].recipes"
+                      *ngFor="let recipeId of vm.stepDetails[step.id].recipeIds"
                       class="button grid"
                       [class.ignored]="
                         vm.settings.disabledRecipeIds.indexOf(recipeId) !== -1
@@ -1771,6 +1775,39 @@
                   </div>
                 </td>
               </tr>
+              <ng-container
+                *ngIf="vm.stepDetails[step.id].requiredRecipeIds.length"
+              >
+                <tr class="details">
+                  <td [colSpan]="leftSpan"></td>
+                  <td colspan="100">
+                    <div>
+                      <div class="header">
+                        {{ 'list.requiredRecipes' | translate }}
+                      </div>
+                      <div class="info">
+                        {{ 'list.requiredRecipesInfo' | translate }}
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="details last">
+                  <td [colSpan]="leftSpan"></td>
+                  <td colspan="100" class="recipes">
+                    <div class="list tile">
+                      <lab-icon
+                        *ngFor="
+                          let recipeId of vm.stepDetails[step.id]
+                            .requiredRecipeIds
+                        "
+                        [iconId]="recipeId"
+                        [tooltip]="vm.data.recipeEntities[recipeId].name"
+                        [recipe]="vm.data.recipeEntities[recipeId]"
+                      ></lab-icon>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
             </ng-container>
             <ng-template #noRecipeDetail>
               <td colspan="2"></td>

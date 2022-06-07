@@ -55,7 +55,7 @@ export class StateService {
         const oldDisabled = data.defaults?.disabledRecipeIds ?? [];
         const allDisabled = [
           ...oldDisabled,
-          ...data.complexRecipeIds.filter((i) => !data.itemEntities[i]),
+          ...data.optionalRecipeIds.filter((i) => !data.itemEntities[i]),
         ];
         const disabledEntities = allDisabled.reduce(
           (e: Entities<boolean>, d) => {
@@ -137,7 +137,7 @@ export class StateService {
         if (data.defaults) {
           const filteredDisabledRecipeIds =
             data.defaults.disabledRecipeIds.filter((a) =>
-              data.recipeIds.some((b) => b === a)
+              data.optionalRecipeIds.some((b) => b === a)
             );
           if (
             filteredDisabledRecipeIds.length !==

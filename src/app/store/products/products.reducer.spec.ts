@@ -34,6 +34,13 @@ describe('Products Reducer', () => {
     });
   });
 
+  describe('App RESET', () => {
+    it('should return the initial state', () => {
+      const result = productsReducer(undefined, new App.ResetAction());
+      expect(result).toEqual(initialProductsState);
+    });
+  });
+
   describe('RESET', () => {
     it('should reset the reducer', () => {
       const result = productsReducer(
