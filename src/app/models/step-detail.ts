@@ -4,5 +4,7 @@ import { Step } from './step';
 export interface StepDetail {
   tabs: StepDetailTab[];
   outputs: Step[];
-  recipes: string[];
+  recipeIds: string[];
+  defaultableRecipeIds: string[];
+  requiredRecipeIds: string[];
 }

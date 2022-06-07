@@ -49,7 +49,7 @@
               [iconId]="id"
               [scrollTop]="tabScroll.scrollTop"
               [tooltip]="vm.data.itemEntities[id].name"
-              [recipe]="vm.data.recipeEntities[vm.data.itemRecipeIds[id]]"
+              [recipe]="vm.data.recipeEntities[vm.data.itemRecipeId[id]]"
               (click)="selectId.emit(id); open = false"
             ></lab-icon>
           </div>

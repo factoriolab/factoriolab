@@ -4,15 +4,15 @@ import { DatasetsAction, DatasetsActionType } from './datasets.actions';
 
 export interface DatasetsState extends AppData {
   dataEntities: Entities<ModData>;
-  i18nEntities: Entities<ModI18n>;
   hashEntities: Entities<ModHash>;
+  i18nEntities: Entities<ModI18n>;
 }
 
 export const initialDatasetsState: DatasetsState = {
   ...data,
   dataEntities: {},
-  i18nEntities: {},
   hashEntities: {},
+  i18nEntities: {},
 };
 
 export function datasetsReducer(
@@ -20,34 +20,28 @@ export function datasetsReducer(
   action: DatasetsAction
 ): DatasetsState {
   switch (action.type) {
-    case DatasetsActionType.LOAD_MOD_DATA:
+    case DatasetsActionType.LOAD_MOD:
       return {
         ...state,
         ...{
-          dataEntities: {
-            ...state.dataEntities,
-            ...{ [action.payload.id]: action.payload.value },
-          },
-        },
-      };
-    case DatasetsActionType.LOAD_MOD_I18N:
-      return {
-        ...state,
-        ...{
-          i18nEntities: {
-            ...state.i18nEntities,
-            ...{ [action.payload.id]: action.payload.value },
-          },
-        },
-      };
-    case DatasetsActionType.LOAD_MOD_HASH:
-      return {
-        ...state,
-        ...{
-          hashEntities: {
-            ...state.hashEntities,
-            ...{ [action.payload.id]: action.payload.value },
-          },
+          dataEntities: action.payload.data
+            ? {
+                ...state.dataEntities,
+                ...{ [action.payload.data.id]: action.payload.data.value },
+              }
+            : state.dataEntities,
+          hashEntities: action.payload.hash
+            ? {
+                ...state.hashEntities,
+                ...{ [action.payload.hash.id]: action.payload.hash.value },
+              }
+            : state.hashEntities,
+          i18nEntities: action.payload.i18n
+            ? {
+                ...state.i18nEntities,
+                ...{ [action.payload.i18n.id]: action.payload.i18n.value },
+              }
+            : state.i18nEntities,
         },
       };
     default:

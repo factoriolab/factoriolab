@@ -80,7 +80,9 @@ describe('ListComponent', () => {
             StepDetailTab.Factory,
           ],
           outputs: [],
-          recipes: [],
+          recipeIds: [],
+          defaultableRecipeIds: [],
+          requiredRecipeIds: [],
         };
         return e;
       }, {})
@@ -158,7 +160,9 @@ describe('ListComponent', () => {
           e[s.id] = {
             tabs: [StepDetailTab.Item],
             outputs: [],
-            recipes: [],
+            recipeIds: [],
+            defaultableRecipeIds: [],
+            requiredRecipeIds: [],
           };
           return e;
         }, {})

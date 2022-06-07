@@ -8,18 +8,18 @@ import { initialRecipesState } from '~/store/recipes';
 import { initialSettingsState } from '~/store/settings';
 import { Mocks } from './';
 
-let datasetsState = Datasets.datasetsReducer(
+const datasetsState = Datasets.datasetsReducer(
   undefined,
-  new Datasets.LoadModDataAction({
-    id: initialSettingsState.modId,
-    value: Mocks.Data,
-  })
-);
-datasetsState = Datasets.datasetsReducer(
-  datasetsState,
-  new Datasets.LoadModHashAction({
-    id: initialSettingsState.modId,
-    value: Mocks.Hash,
+  new Datasets.LoadModAction({
+    data: {
+      id: initialSettingsState.modId,
+      value: Mocks.Data,
+    },
+    hash: {
+      id: initialSettingsState.modId,
+      value: Mocks.Hash,
+    },
+    i18n: null,
   })
 );
 
