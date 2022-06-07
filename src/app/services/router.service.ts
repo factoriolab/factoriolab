@@ -291,9 +291,6 @@ export class RouterService {
               this.dataSvc
                 .requestData(modId || Settings.initialSettingsState.modId)
                 .subscribe(([_, hash]) => {
-                  if (hash == null) {
-                    throw new Error('RouterService failed to load hash');
-                  }
                   if (params[Section.Products]) {
                     state.productsState = this.unzipProducts(params, hash);
                   }

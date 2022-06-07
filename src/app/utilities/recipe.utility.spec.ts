@@ -329,7 +329,7 @@ describe('RecipeUtility', () => {
             ...{
               [RecipeId.UsedUpUraniumFuelCell]: {
                 ...Mocks.Dataset.recipeEntities[RecipeId.UsedUpUraniumFuelCell],
-                ...{ in: undefined, out: {} },
+                ...{ in: {}, out: {} },
               },
             },
           },

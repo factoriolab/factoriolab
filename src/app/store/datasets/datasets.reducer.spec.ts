@@ -4,35 +4,33 @@ import { datasetsReducer, initialDatasetsState } from './datasets.reducer';
 
 describe('Dataset Reducer', () => {
   describe('LOAD_MOD_DATA', () => {
+    it('should handle null values', () => {
+      const result = datasetsReducer(
+        initialDatasetsState,
+        new Actions.LoadModAction({
+          data: null,
+          hash: null,
+          i18n: null,
+        })
+      );
+      expect(result.dataEntities).toEqual({});
+      expect(result.hashEntities).toEqual({});
+      expect(result.i18nEntities).toEqual({});
+    });
+
     it('should load mod data', () => {
       const id = 'id';
       const result = datasetsReducer(
         initialDatasetsState,
-        new Actions.LoadModDataAction({ id, value: Mocks.Data })
+        new Actions.LoadModAction({
+          data: { id, value: Mocks.Data },
+          hash: { id, value: Mocks.Hash },
+          i18n: { id, value: Mocks.I18n },
+        })
       );
       expect(result.dataEntities[id]).toEqual(Mocks.Data);
-    });
-  });
-
-  describe('LOAD_MOD_I18N', () => {
-    it('should load mod i18n', () => {
-      const id = 'id';
-      const result = datasetsReducer(
-        initialDatasetsState,
-        new Actions.LoadModI18nAction({ id, value: Mocks.I18n })
-      );
-      expect(result.i18nEntities[id]).toEqual(Mocks.I18n);
-    });
-  });
-
-  describe('LOAD_MOD_HASH', () => {
-    it('should load mod hash', () => {
-      const id = 'id';
-      const result = datasetsReducer(
-        initialDatasetsState,
-        new Actions.LoadModHashAction({ id, value: Mocks.Hash })
-      );
       expect(result.hashEntities[id]).toEqual(Mocks.Hash);
+      expect(result.i18nEntities[id]).toEqual(Mocks.I18n);
     });
   });
 

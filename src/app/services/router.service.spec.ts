@@ -396,7 +396,7 @@ describe('RouterService', () => {
     it('should unzip empty v2', () => {
       const url = '/?z=eJwrUCszAgADVAE.';
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, null, Mocks.Hash])
+        of([Mocks.Data, Mocks.Hash, null])
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v2', {} as any);
@@ -415,7 +415,7 @@ describe('RouterService', () => {
       // console.log(newZip);
 
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, null, Mocks.Hash])
+        of([Mocks.Data, Mocks.Hash, null])
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(
@@ -428,7 +428,7 @@ describe('RouterService', () => {
     it('should unzip empty v3', () => {
       const url = '/?z=eJwrUCszBgADVQFA';
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, null, Mocks.Hash])
+        of([Mocks.Data, Mocks.Hash, null])
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v3', {} as any);
@@ -447,7 +447,7 @@ describe('RouterService', () => {
       // console.log(newZip);
 
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, null, Mocks.Hash])
+        of([Mocks.Data, Mocks.Hash, null])
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(
@@ -456,18 +456,6 @@ describe('RouterService', () => {
       );
       expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
     });
-
-    it('should log warning on missing hash', fakeAsync(() => {
-      const url = '/?z=eJwrUCszBgADVQFA';
-
-      spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, null, null])
-      );
-      expect(() => {
-        (router.events as any).next(new NavigationEnd(2, url, url));
-        tick();
-      }).toThrow();
-    }));
   });
 
   describe('dispatch', () => {

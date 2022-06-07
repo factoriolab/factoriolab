@@ -34,6 +34,8 @@ describe('RationalRecipe', () => {
         id: RecipeId.AdvancedOilProcessing,
         name: 'name',
         time: 1,
+        in: {},
+        out: {},
         producers: [ItemId.AssemblingMachine1],
       });
       expect(result.id).toEqual(RecipeId.AdvancedOilProcessing);
@@ -41,9 +43,7 @@ describe('RationalRecipe', () => {
       expect(result.time).toEqual(Rational.one);
       expect(result.producers).toEqual([ItemId.AssemblingMachine1]);
       expect(result.in).toEqual({});
-      expect(result.out).toEqual({
-        [RecipeId.AdvancedOilProcessing]: Rational.one,
-      });
+      expect(result.out).toEqual({});
       expect(result.cost).toBeUndefined();
     });
 
@@ -53,6 +53,8 @@ describe('RationalRecipe', () => {
         name: 'name',
         time: 1,
         usage: '60/30',
+        in: {},
+        out: {},
         producers: [ItemId.AssemblingMachine1],
       });
       expect(result.usage).toEqual(Rational.two);
@@ -74,23 +76,17 @@ describe('RationalRecipe', () => {
     it('should handle a recipe that contains other outputs', () => {
       const recipe = new RationalRecipe({
         time: 0,
+        in: {},
         out: { ['test']: 2 },
       } as any);
       expect(recipe.produces(id)).toBeFalse();
     });
 
-    it('should handle a recipe that matches by id', () => {
-      const recipe = new RationalRecipe({
-        id,
-        time: 0,
-        in: { [id]: 0.5 },
-      } as any);
-      expect(recipe.produces(id)).toBeTrue();
-    });
-
     it('should handle a recipe that does not match', () => {
       const recipe = new RationalRecipe({
         time: 0,
+        in: {},
+        out: {},
       } as any);
       expect(recipe.produces(id)).toBeFalse();
     });
@@ -102,6 +98,7 @@ describe('RationalRecipe', () => {
     it('handle recipe with multiple outputs', () => {
       const recipe = new RationalRecipe({
         time: 0,
+        in: {},
         out: { [id]: 1, ['other']: 1 },
       } as any);
       expect(recipe.producesOnly(id)).toBeFalse();
@@ -110,6 +107,7 @@ describe('RationalRecipe', () => {
     it('handle recipe with single output', () => {
       const recipe = new RationalRecipe({
         time: 0,
+        in: {},
         out: { [id]: 1 },
       } as any);
       expect(recipe.producesOnly(id)).toBeTrue();
@@ -125,6 +123,7 @@ describe('RationalRecipe', () => {
         name: 'name',
         time: 0,
         producers: [],
+        in: {},
         out: {},
       });
       expect(recipe.output(id)).toEqual(Rational.zero);
