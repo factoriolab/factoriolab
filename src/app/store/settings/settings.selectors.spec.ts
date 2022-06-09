@@ -1,4 +1,4 @@
-import { ItemId, Mocks, RecipeId, TestUtility } from 'src/tests';
+import { CategoryId, ItemId, Mocks, RecipeId, TestUtility } from 'src/tests';
 import {
   Column,
   FuelType,
@@ -489,6 +489,13 @@ describe('Settings Selectors', () => {
     });
 
     it('should copy icons', () => {
+      const categories = Mocks.Mod.categories.map((c) => {
+        if (c.id === CategoryId.Research) {
+          return { ...c, ...{ icon: ItemId.ArtilleryShellRange } };
+        } else {
+          return { ...c };
+        }
+      });
       const items = Mocks.Mod.items.map((i) => {
         if (i.id === ItemId.Pipe) {
           return { ...i, ...{ icon: ItemId.Beacon } };
@@ -506,6 +513,7 @@ describe('Settings Selectors', () => {
       const mod = {
         ...Mocks.Mod,
         ...{
+          categories,
           items,
           recipes,
         },
@@ -517,6 +525,9 @@ describe('Settings Selectors', () => {
         null,
         Mocks.Defaults,
         Game.Factorio
+      );
+      expect(result.iconEntities[CategoryId.Research]).toEqual(
+        result.iconEntities[RecipeId.ArtilleryShellRange]
       );
       expect(result.iconEntities[ItemId.Pipe]).toEqual(
         result.iconEntities[ItemId.Beacon]
