@@ -8,10 +8,12 @@ export interface Recipe {
   producers: string[];
   in: Entities<number>;
   out: Entities<number>;
+  /** Denotes amount of output that is not affected by productivity */
+  catalyst?: Entities<number>;
   cost?: number;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
-  /** Used to link the item to an alternate icon id */
+  /** Used to link the recipe to an alternate icon id */
   icon?: string;
   /** Used to override the factory's usage for this recipe */
   usage?: number | string;
@@ -26,6 +28,8 @@ export class RationalRecipe {
   adjustProd = false;
   in: Entities<Rational>;
   out: Entities<Rational>;
+  /** Denotes amount of output that is not affected by productivity */
+  catalyst?: Entities<Rational>;
   cost?: Rational;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
@@ -48,6 +52,16 @@ export class RationalRecipe {
       return e;
     }, {});
 
+    if (data.catalyst) {
+      const catalyst = data.catalyst; // Store null-checked value
+      this.catalyst = Object.keys(catalyst).reduce(
+        (e: Entities<Rational>, i) => {
+          e[i] = Rational.fromNumber(catalyst[i]);
+          return e;
+        },
+        {}
+      );
+    }
     if (data.cost) {
       this.cost = Rational.fromNumber(data.cost);
     }

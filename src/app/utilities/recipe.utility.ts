@@ -203,14 +203,13 @@ export class RecipeUtility {
 
       // Productivity
       for (const outId of Object.keys(recipe.out)) {
-        if (recipe.in && recipe.in[outId]) {
-          // Recipe takes output as input, prod only applies to difference
-          if (recipe.in[outId].lt(recipe.out[outId])) {
-            // Only matters when output > input
-            // (Does not apply to U-238 in Kovarex)
-            recipe.out[outId] = recipe.in[outId].add(
-              recipe.out[outId].sub(recipe.in[outId]).mul(prod)
-            );
+        if (recipe.catalyst?.[outId]) {
+          // Catalyst - only multiply prod by extra produced
+          const catalyst = recipe.catalyst[outId];
+          const affected = recipe.out[outId].sub(catalyst);
+          // Only change output if affected amount > 0
+          if (affected.gt(Rational.zero)) {
+            recipe.out[outId] = catalyst.add(affected.mul(prod));
           }
         } else {
           recipe.out[outId] = recipe.out[outId].mul(prod);

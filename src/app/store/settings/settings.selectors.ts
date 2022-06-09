@@ -352,6 +352,7 @@ export const getDataset = createSelector(
     const recipeIds = Object.keys(recipeEntities);
 
     // Generate temporary object arrays
+    const categories = categoryIds.map((i) => categoryEntities[i]);
     const items = itemIds.map((i) => itemData[i]);
     const recipes = recipeIds.map((r) => recipeEntities[r]);
 
@@ -398,6 +399,9 @@ export const getDataset = createSelector(
       }, {});
 
     // Apply icon references
+    categories
+      .filter((c) => c.icon)
+      .forEach((c) => (iconEntities[c.id] = iconEntities[c.icon!]));
     items
       .filter((i) => i.icon)
       .forEach((i) => (iconEntities[i.id] = iconEntities[i.icon!]));
