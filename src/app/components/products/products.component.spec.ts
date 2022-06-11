@@ -179,6 +179,32 @@ describe('ProductsComponent', () => {
       expect(component.setViaBeaconCount).toHaveBeenCalledWith('0', '4', '8');
     });
 
+    it('should set up default for beacon (factory match)', () => {
+      spyOn(component, 'setViaBeacon');
+      component.changeRecipeField(
+        productMatch,
+        ItemId.Beacon,
+        RecipeId.WoodenChest,
+        Mocks.RecipeSettingsInitial,
+        Mocks.FactorySettingsInitial,
+        RecipeField.Beacon
+      );
+      expect(component.setViaBeacon).toHaveBeenCalledWith('0', ItemId.Beacon, ItemId.Beacon);
+    });
+
+    it('should set up default for beacon (factory mismatch)', () => {
+      spyOn(component, 'setViaBeacon');
+      component.changeRecipeField(
+        productMismatch,
+        ItemId.Beacon,
+        RecipeId.WoodenChest,
+        Mocks.RecipeSettingsInitial,
+        Mocks.FactorySettingsInitial,
+        RecipeField.Beacon
+      );
+      expect(component.setViaBeacon).toHaveBeenCalledWith('0', ItemId.Beacon, ItemId.Beacon);
+    });
+
     it('should set up default for beacon modules (factory match)', () => {
       spyOn(component, 'setViaBeaconModules');
       component.changeRecipeField(
