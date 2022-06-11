@@ -356,6 +356,22 @@ describe('ListComponent', () => {
       );
     });
 
+    it('should set up default for beacon', () => {
+      spyOn(component.child, 'setBeacon');
+      component.child.changeRecipeField(
+        RecipeId.WoodenChest,
+        ItemId.Beacon,
+        Mocks.RecipeSettingsInitial,
+        Mocks.FactorySettingsInitial,
+        RecipeField.Beacon
+      );
+      expect(component.child.setBeacon).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        ItemId.Beacon,
+        ItemId.Beacon
+      );
+    });
+
     it('should set up default for beacon modules', () => {
       spyOn(component.child, 'setBeaconModules');
       component.child.changeRecipeField(
