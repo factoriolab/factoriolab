@@ -152,17 +152,17 @@ export class ProductsComponent {
           }
           break;
         }
-        case RecipeField.Beacon: {
-          if (typeof event === 'string') {
-            const def = s.fMatch ? s.recipe.beacon : s.factory.beacon;
-            this.setViaBeacon(product.id, event, def);
-          }
-          break;
-        }
         case RecipeField.BeaconCount: {
           if (typeof event === 'string') {
             const def = s.fMatch ? s.recipe.beaconCount : s.factory.beaconCount;
             this.setViaBeaconCount(product.id, event, def);
+          }
+          break;
+        }
+        case RecipeField.Beacon: {
+          if (typeof event === 'string') {
+            const def = s.fMatch ? s.recipe.beaconId : s.factory.beaconId;
+            this.setViaBeacon(product.id, event, def);
           }
           break;
         }
