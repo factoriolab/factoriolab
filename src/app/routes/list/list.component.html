@@ -1526,8 +1526,10 @@
                           </td>
                           <ng-container
                             *ngIf="
+                              vm.data.game === Game.Factorio &&
                               vm.itemSettings[input.key].beltId !==
-                                ItemId.Pipe && inStep.items
+                                ItemId.Pipe &&
+                              inStep.items
                             "
                           >
                             <td
@@ -1604,6 +1606,7 @@
                       >
                         <ng-container
                           *ngIf="
+                            vm.data.game === Game.Factorio &&
                             vm.itemSettings[output.key].beltId !== ItemId.Pipe
                           "
                         >
