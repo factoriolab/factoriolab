@@ -666,8 +666,16 @@ export class SimplexUtility {
           steps.push(step);
         }
       }
+
       if (solution.surplus[itemId]?.nonzero()) {
-        step.surplus = solution.surplus[itemId];
+        if (state.inputs.indexOf(itemId) === -1) {
+          step.surplus = solution.surplus[itemId];
+        } else {
+          // Don't add surplus to input items
+          // TODO: Check that step.items > solution.surplus
+          // Items should not be negative
+          step.items = step.items?.sub(solution.surplus[itemId]);
+        }
       }
     }
   }
