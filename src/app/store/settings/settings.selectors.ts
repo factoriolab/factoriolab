@@ -319,7 +319,9 @@ export const getDataset = createSelector(
 
     // Apply localization
     if (i18n) {
-      for (const i of Object.keys(i18n.categories)) {
+      for (const i of Object.keys(i18n.categories).filter(
+        (i) => categoryEntities[i]
+      )) {
         categoryEntities[i] = {
           ...categoryEntities[i],
           ...{
@@ -327,7 +329,7 @@ export const getDataset = createSelector(
           },
         };
       }
-      for (const i of Object.keys(i18n.items)) {
+      for (const i of Object.keys(i18n.items).filter((i) => itemData[i])) {
         itemData[i] = {
           ...itemData[i],
           ...{
@@ -335,7 +337,9 @@ export const getDataset = createSelector(
           },
         };
       }
-      for (const i of Object.keys(i18n.recipes)) {
+      for (const i of Object.keys(i18n.recipes).filter(
+        (i) => recipeEntities[i]
+      )) {
         recipeEntities[i] = {
           ...recipeEntities[i],
           ...{
