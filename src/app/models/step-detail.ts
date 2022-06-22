@@ -6,5 +6,4 @@ export interface StepDetail {
   outputs: Step[];
   recipeIds: string[];
   defaultableRecipeIds: string[];
-  requiredRecipeIds: string[];
 }

@@ -33,8 +33,7 @@ export class ToggleComponent extends DialogContainerComponent {
   vm$ = this.store.select(Recipes.getAdjustedDataset).pipe(
     map((data) => ({
       data,
-      width:
-        Math.ceil(Math.sqrt(data.optionalRecipeIds.length) + 2) * 2.375 + 3,
+      width: Math.ceil(Math.sqrt(data.complexRecipeIds.length) + 2) * 2.375 + 3,
     }))
   );
 
@@ -54,7 +53,7 @@ export class ToggleComponent extends DialogContainerComponent {
     this.edited = false;
     this.search = false;
     this.searchValue = '';
-    this.complexRecipeIds = data.optionalRecipeIds;
+    this.complexRecipeIds = data.complexRecipeIds;
     this.editValue = [...this.selected];
   }
 
@@ -76,7 +75,7 @@ export class ToggleComponent extends DialogContainerComponent {
 
   inputSearch(data: Dataset): void {
     // Filter for matching recipe ids
-    let recipeIds = data.optionalRecipeIds;
+    let recipeIds = data.complexRecipeIds;
     for (const term of this.searchValue.split(' ')) {
       const regExp = new RegExp(term, 'i');
       recipeIds = recipeIds.filter(
