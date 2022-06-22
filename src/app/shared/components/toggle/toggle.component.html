@@ -42,8 +42,8 @@
           <span class="text">{{ 'toggle.enableAll' | translate }}</span>
         </button>
         <button
-          [disabled]="editValue.length === vm.data.optionalRecipeIds.length"
-          (click)="edited = true; editValue = vm.data.optionalRecipeIds"
+          [disabled]="editValue.length === vm.data.complexRecipeIds.length"
+          (click)="edited = true; editValue = vm.data.complexRecipeIds"
         >
           <span class="text">{{ 'toggle.disableAll' | translate }}</span>
         </button>

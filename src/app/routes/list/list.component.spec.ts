@@ -82,7 +82,6 @@ describe('ListComponent', () => {
           outputs: [],
           recipeIds: [],
           defaultableRecipeIds: [],
-          requiredRecipeIds: [],
         };
         return e;
       }, {})
@@ -162,7 +161,6 @@ describe('ListComponent', () => {
             outputs: [],
             recipeIds: [],
             defaultableRecipeIds: [],
-            requiredRecipeIds: [],
           };
           return e;
         }, {})

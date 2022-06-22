@@ -318,8 +318,8 @@ describe('Settings Selectors', () => {
         result.itemIds.length
       );
       expect(result.recipeIds.length).toBeGreaterThan(0);
-      expect(result.optionalRecipeIds.length).toBeGreaterThan(0);
-      expect(result.optionalRecipeIds.length).toBeLessThan(
+      expect(result.complexRecipeIds.length).toBeGreaterThan(0);
+      expect(result.complexRecipeIds.length).toBeLessThan(
         result.recipeIds.length
       );
       expect(Object.keys(result.recipeEntities).length).toEqual(
