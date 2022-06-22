@@ -12,7 +12,7 @@ import {
   TestModule,
   TestUtility,
 } from 'src/tests';
-import { Entities, Game } from '~/models';
+import { Dataset, Entities, Game } from '~/models';
 import { SharedModule } from '~/shared/shared.module';
 import { LabState } from '~/store';
 import * as App from '~/store/app.actions';
@@ -33,6 +33,7 @@ describe('SettingsComponent', () => {
   let router: Router;
   let mockStore: MockStore<LabState>;
   let mockGetStates: MemoizedSelector<LabState, Entities>;
+  let mockGetDataset: MemoizedSelector<LabState, Dataset>;
   let detectChanges: jasmine.Spy;
   let translateSvc: TranslateService;
   const id = 'id';
@@ -52,6 +53,10 @@ describe('SettingsComponent', () => {
     mockGetStates = mockStore.overrideSelector(
       Preferences.getStates,
       Mocks.PreferencesState.states
+    );
+    mockGetDataset = mockStore.overrideSelector(
+      Settings.getDataset,
+      Mocks.Dataset
     );
     const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
     detectChanges = spyOn(ref.constructor.prototype, 'detectChanges');
