@@ -523,12 +523,16 @@ export const getDataset = createSelector(
       (i) => itemEntities[i].module!.productivity != null
     );
 
-    // Calculate optional recipes
-    const requiredRecipes = Object.keys(itemRecipeId).map(
+    // Calculate complex recipes
+    const simpleRecipeIds = Object.keys(itemRecipeId).map(
       (i) => itemRecipeId[i]
     );
-    const optionalRecipeIds = recipeIds
-      .filter((r) => requiredRecipes.indexOf(r) === -1)
+    const complexRecipeIds = recipeIds
+      .filter(
+        (r) =>
+          simpleRecipeIds.indexOf(r) === -1 ||
+          Object.keys(recipeEntities[r].out).length > 1
+      )
       .sort();
 
     const dataset: Dataset = {
@@ -559,7 +563,7 @@ export const getDataset = createSelector(
       fuelIds,
       fuelEntities,
       recipeIds,
-      optionalRecipeIds,
+      complexRecipeIds,
       recipeEntities,
       recipeR,
       recipeModuleIds,

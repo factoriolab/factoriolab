@@ -1757,10 +1757,7 @@
                   </div>
                 </td>
               </tr>
-              <tr
-                class="details"
-                [class.last]="!vm.stepDetails[step.id].requiredRecipeIds.length"
-              >
+              <tr class="details last">
                 <td [colSpan]="leftSpan"></td>
                 <td colspan="100" class="recipes">
                   <div class="list tile">
@@ -1778,39 +1775,6 @@
                   </div>
                 </td>
               </tr>
-              <ng-container
-                *ngIf="vm.stepDetails[step.id].requiredRecipeIds.length"
-              >
-                <tr class="details">
-                  <td [colSpan]="leftSpan"></td>
-                  <td colspan="100">
-                    <div>
-                      <div class="header">
-                        {{ 'list.requiredRecipes' | translate }}
-                      </div>
-                      <div class="info">
-                        {{ 'list.requiredRecipesInfo' | translate }}
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr class="details last">
-                  <td [colSpan]="leftSpan"></td>
-                  <td colspan="100" class="recipes">
-                    <div class="list tile">
-                      <lab-icon
-                        *ngFor="
-                          let recipeId of vm.stepDetails[step.id]
-                            .requiredRecipeIds
-                        "
-                        [iconId]="recipeId"
-                        [tooltip]="vm.data.recipeEntities[recipeId].name"
-                        [recipe]="vm.data.recipeEntities[recipeId]"
-                      ></lab-icon>
-                    </div>
-                  </td>
-                </tr>
-              </ng-container>
             </ng-container>
             <ng-template #noRecipeDetail>
               <td colspan="2"></td>
