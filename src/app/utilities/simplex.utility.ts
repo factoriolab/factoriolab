@@ -666,8 +666,20 @@ export class SimplexUtility {
           steps.push(step);
         }
       }
+
       if (solution.surplus[itemId]?.nonzero()) {
-        step.surplus = solution.surplus[itemId];
+        if (step.items == null || state.itemIds.indexOf(itemId) !== -1) {
+          // If step has no items or item is enabled, just assign surplus
+          step.surplus = solution.surplus[itemId];
+        } else {
+          // Don't add surplus to disabled items, instead reduce items
+          step.items = step.items.sub(solution.surplus[itemId]);
+          if (step.items.lt(Rational.zero)) {
+            // If this lowers items below zero, allow displaying as surplus
+            step.surplus = step.items.inverse();
+            step.items = Rational.zero;
+          }
+        }
       }
     }
   }

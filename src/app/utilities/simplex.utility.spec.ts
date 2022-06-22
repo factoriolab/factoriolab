@@ -983,6 +983,29 @@ describe('SimplexUtility', () => {
         surplus: Rational.from(3),
       });
     });
+
+    it('should negate a surplus for a disabled item', () => {
+      const step: Step = {
+        id: 'id',
+        itemId: ItemId.Coal,
+      };
+      const solution: any = {
+        surplus: { [ItemId.Coal]: Rational.from(3) },
+        inputs: {},
+        recipes: { [RecipeId.Coal]: Rational.from(1) },
+      };
+      const state = getState();
+      state.items[ItemId.Coal] = Rational.zero;
+      state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
+      state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
+      SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
+      expect(step).toEqual({
+        id: 'id',
+        itemId: ItemId.Coal,
+        items: Rational.zero,
+        surplus: Rational.from(17, 400),
+      });
+    });
   });
 
   describe('assignRecipes', () => {
