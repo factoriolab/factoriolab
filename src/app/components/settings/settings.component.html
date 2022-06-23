@@ -304,7 +304,16 @@
               <td>
                 <ng-container *ngIf="factory.moduleRankIds">
                   <lab-ranker
-                    *ngIf="vm.data.game === Game.Factorio; else moduleSelect"
+                    *ngIf="
+                      vm.data.game !== Game.Satisfactory;
+                      else moduleSelect
+                    "
+                    [header]="
+                      (vm.data.game === Game.Factorio
+                        ? 'setting.selectAModule'
+                        : 'setting.selectAProliferator'
+                      ) | translate
+                    "
                     [selected]="factory.moduleRankIds"
                     [options]="vm.data.moduleIds"
                     (selectIds)="
@@ -319,7 +328,12 @@
                   >
                     <lab-icon
                       class="button"
-                      [tooltip]="'setting.modulePreferences' | translate"
+                      [tooltip]="
+                        (vm.data.game === Game.Factorio
+                          ? 'setting.modulePreferences'
+                          : 'setting.proliferatorPreferences'
+                        ) | translate
+                      "
                       [iconId]="
                         factory.moduleRankIds.length
                           ? factory.moduleRankIds[0]
@@ -334,11 +348,7 @@
                   </lab-ranker>
                   <ng-template #moduleSelect>
                     <lab-select
-                      [header]="
-                        vm.data.game === Game.DysonSphereProgram
-                          ? 'Select a proliferator'
-                          : 'Select resource purity'
-                      "
+                      [header]="'setting.resourcePurityPreferences' | translate"
                       [selected]="factory.moduleRankIds[0]"
                       [options]="vm.data.moduleIds"
                       [includeEmptyModule]="
@@ -356,11 +366,7 @@
                     >
                       <lab-icon
                         class="button"
-                        [tooltip]="
-                          vm.data.game === Game.DysonSphereProgram
-                            ? 'Proliferator preferences'
-                            : 'Resource node purity'
-                        "
+                        [tooltip]="'setting.selectResourcePurity' | translate"
                         [iconId]="
                           factory.moduleRankIds.length
                             ? factory.moduleRankIds[0]
