@@ -10,7 +10,7 @@ import {
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs';
 
-import { Dataset, ItemId } from '~/models';
+import { Dataset, Game, ItemId } from '~/models';
 import { LabState } from '~/store';
 import * as Recipes from '~/store/recipes';
 import { DialogContainerComponent } from '../dialog/dialog-container.component';
@@ -40,6 +40,7 @@ export class RankerComponent
   width = 0;
 
   ItemId = ItemId;
+  Game = Game;
 
   constructor(private store: Store<LabState>) {
     super();

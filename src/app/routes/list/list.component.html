@@ -999,7 +999,13 @@
                       </div>
                     </ng-container>
                   </td>
-                  <ng-container *ngIf="step.recipeId; else noRecipeDetail">
+                  <ng-container
+                    *ngIf="
+                      step.recipeId &&
+                        vm.stepDetails[step.id].outputs.length === 1;
+                      else noRecipeDetail
+                    "
+                  >
                     <ng-container
                       *ngIf="
                         vm.recipeSettings[step.recipeId].factoryId as factoryId
