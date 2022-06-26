@@ -907,7 +907,7 @@ describe('Products Selectors', () => {
         ...Mocks.AdjustedData,
         ...{
           // Manually test with one recipe which should be listed as required
-          optionalRecipeIds: Mocks.AdjustedData.optionalRecipeIds.filter(
+          optionalRecipeIds: Mocks.AdjustedData.complexRecipeIds.filter(
             (i) => i !== RecipeId.CoalLiquefaction
           ),
         },
@@ -925,6 +925,7 @@ describe('Products Selectors', () => {
           recipeIds: [
             RecipeId.BasicOilProcessing,
             RecipeId.AdvancedOilProcessing,
+            RecipeId.CoalLiquefaction,
             RecipeId.LightOilCracking,
             RecipeId.EmptyPetroleumGasBarrel,
           ],
@@ -932,21 +933,18 @@ describe('Products Selectors', () => {
             RecipeId.BasicOilProcessing,
             RecipeId.LightOilCracking,
           ],
-          requiredRecipeIds: [RecipeId.CoalLiquefaction],
         },
         ['1']: {
           tabs: [],
           outputs: [],
           recipeIds: [],
           defaultableRecipeIds: [],
-          requiredRecipeIds: [],
         },
         ['2']: {
           tabs: [],
           outputs: [],
           recipeIds: [],
           defaultableRecipeIds: [],
-          requiredRecipeIds: [],
         },
       });
     });

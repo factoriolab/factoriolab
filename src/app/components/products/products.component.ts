@@ -159,6 +159,13 @@ export class ProductsComponent {
           }
           break;
         }
+        case RecipeField.Beacon: {
+          if (typeof event === 'string') {
+            const def = s.fMatch ? s.recipe.beaconId : s.factory.beaconId;
+            this.setViaBeacon(product.id, event, def);
+          }
+          break;
+        }
         case RecipeField.BeaconModules: {
           if (
             typeof event === 'string' &&

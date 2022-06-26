@@ -319,7 +319,9 @@ export const getDataset = createSelector(
 
     // Apply localization
     if (i18n) {
-      for (const i of Object.keys(i18n.categories)) {
+      for (const i of Object.keys(i18n.categories).filter(
+        (i) => categoryEntities[i]
+      )) {
         categoryEntities[i] = {
           ...categoryEntities[i],
           ...{
@@ -327,7 +329,7 @@ export const getDataset = createSelector(
           },
         };
       }
-      for (const i of Object.keys(i18n.items)) {
+      for (const i of Object.keys(i18n.items).filter((i) => itemData[i])) {
         itemData[i] = {
           ...itemData[i],
           ...{
@@ -335,7 +337,9 @@ export const getDataset = createSelector(
           },
         };
       }
-      for (const i of Object.keys(i18n.recipes)) {
+      for (const i of Object.keys(i18n.recipes).filter(
+        (i) => recipeEntities[i]
+      )) {
         recipeEntities[i] = {
           ...recipeEntities[i],
           ...{
@@ -519,12 +523,16 @@ export const getDataset = createSelector(
       (i) => itemEntities[i].module!.productivity != null
     );
 
-    // Calculate optional recipes
-    const requiredRecipes = Object.keys(itemRecipeId).map(
+    // Calculate complex recipes
+    const simpleRecipeIds = Object.keys(itemRecipeId).map(
       (i) => itemRecipeId[i]
     );
-    const optionalRecipeIds = recipeIds
-      .filter((r) => requiredRecipes.indexOf(r) === -1)
+    const complexRecipeIds = recipeIds
+      .filter(
+        (r) =>
+          simpleRecipeIds.indexOf(r) === -1 ||
+          Object.keys(recipeEntities[r].out).length > 1
+      )
       .sort();
 
     const dataset: Dataset = {
@@ -555,7 +563,7 @@ export const getDataset = createSelector(
       fuelIds,
       fuelEntities,
       recipeIds,
-      optionalRecipeIds,
+      complexRecipeIds,
       recipeEntities,
       recipeR,
       recipeModuleIds,

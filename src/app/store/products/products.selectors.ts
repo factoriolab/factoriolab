@@ -547,7 +547,6 @@ export const getStepDetails = createSelector(
       let outputs: Step[] = [];
       const recipeIds: string[] = [];
       const defaultableRecipeIds: string[] = [];
-      const requiredRecipeIds: string[] = [];
       if (s.itemId != null) {
         const itemId = s.itemId; // Store null-checked id
         tabs.push(StepDetailTab.Item);
@@ -566,16 +565,12 @@ export const getStepDetails = createSelector(
       if (s.itemId != null) {
         for (const recipe of data.recipeIds.map((r) => data.recipeR[r])) {
           if (recipe.produces(s.itemId)) {
-            if (data.optionalRecipeIds.indexOf(recipe.id) === -1) {
-              requiredRecipeIds.push(recipe.id);
-            } else {
-              recipeIds.push(recipe.id);
-              if (
-                disabledRecipeIds.indexOf(recipe.id) === -1 &&
-                recipe.producesOnly(s.itemId)
-              ) {
-                defaultableRecipeIds.push(recipe.id);
-              }
+            recipeIds.push(recipe.id);
+            if (
+              disabledRecipeIds.indexOf(recipe.id) === -1 &&
+              recipe.producesOnly(s.itemId)
+            ) {
+              defaultableRecipeIds.push(recipe.id);
             }
           }
         }
@@ -589,7 +584,6 @@ export const getStepDetails = createSelector(
         outputs,
         recipeIds,
         defaultableRecipeIds,
-        requiredRecipeIds,
       };
 
       return e;

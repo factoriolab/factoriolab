@@ -329,6 +329,13 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
           }
           break;
         }
+        case RecipeField.Beacon: {
+          if (typeof event === 'string') {
+            const def = factory.beaconId;
+            this.setBeacon(recipeId, event, def);
+          }
+          break;
+        }
         case RecipeField.BeaconModules: {
           if (
             typeof event === 'string' &&

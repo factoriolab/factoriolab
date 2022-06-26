@@ -82,7 +82,6 @@ describe('ListComponent', () => {
           outputs: [],
           recipeIds: [],
           defaultableRecipeIds: [],
-          requiredRecipeIds: [],
         };
         return e;
       }, {})
@@ -162,7 +161,6 @@ describe('ListComponent', () => {
             outputs: [],
             recipeIds: [],
             defaultableRecipeIds: [],
-            requiredRecipeIds: [],
           };
           return e;
         }, {})
@@ -353,6 +351,22 @@ describe('ListComponent', () => {
         RecipeId.WoodenChest,
         '4',
         '8'
+      );
+    });
+
+    it('should set up default for beacon', () => {
+      spyOn(component.child, 'setBeacon');
+      component.child.changeRecipeField(
+        RecipeId.WoodenChest,
+        ItemId.Beacon,
+        Mocks.RecipeSettingsInitial,
+        Mocks.FactorySettingsInitial,
+        RecipeField.Beacon
+      );
+      expect(component.child.setBeacon).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        ItemId.Beacon,
+        ItemId.Beacon
       );
     });
 
