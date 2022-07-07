@@ -40,15 +40,54 @@ export class Rational {
     return new Rational(BigInt(p), BigInt(q));
   }
 
+  /**
+   * Source: https://www.ics.uci.edu/%7Eeppstein/numth/frap.c
+   */
+  private static parseFloat(startx: number, maxden = 1000): Rational {
+    let ai = startx,
+      x = startx;
+
+    /** initialize matrix */
+    const m = [
+      [1, 0],
+      [0, 1],
+    ];
+
+    /** loop finding terms until denom gets too big */
+    while (m[1][0] * (ai = Math.floor(x)) + m[1][1] <= maxden) {
+      let t = m[0][0] * ai + m[0][1];
+      m[0][1] = m[0][0];
+      m[0][0] = t;
+      t = m[1][0] * ai + m[1][1];
+      m[1][1] = m[1][0];
+      m[1][0] = t;
+      if (x === ai) break; // AF: division by zero
+      x = 1 / (x - ai);
+    }
+
+    const optA = Rational.from(m[0][0], m[1][0]);
+    const errA = Math.abs(startx - optA.toNumber());
+
+    ai = Math.floor((maxden - m[1][1]) / m[1][0]);
+    m[0][0] = m[0][0] * ai + m[0][1];
+    m[1][0] = m[1][0] * ai + m[1][1];
+
+    const optB = Rational.from(m[0][0], m[1][0]);
+    const errB = Math.abs(startx - optB.toNumber());
+
+    if (errA < errB) {
+      return optA;
+    } else {
+      return optB;
+    }
+  }
+
   static fromNumber(x: number): Rational {
     if (Number.isInteger(x)) {
       return new Rational(BigInt(x), bigOne);
     }
 
-    return new Rational(
-      BigInt(Math.round(x * FLOAT_PRECISION)),
-      BigInt(FLOAT_PRECISION)
-    );
+    return this.parseFloat(x);
   }
 
   static fromString(x: string): Rational {

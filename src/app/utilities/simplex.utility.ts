@@ -10,6 +10,7 @@ import {
   WARNING_HANG,
 } from '~/models';
 import * as Items from '~/store/items';
+import * as wasm from '../../wasm/pkg';
 import { RateUtility } from './rate.utility';
 
 export interface MatrixState {
@@ -352,13 +353,45 @@ export class SimplexUtility {
     } else {
       // Cache original tableau
       const A0 = A.map((R) => [...R]);
-      // Solve tableau using simplex method
-      const [result, pivots, time] = this.simplex(A, error);
+
+      const tableau = new Float64Array(
+        A.flatMap((r) => r.map((c) => c.toNumber()))
+      );
+      console.time('wasm');
+      const start = Date.now();
+      const wasmResult = wasm.simplex(tableau, A.length);
+      const time = Date.now() - start;
+      console.timeEnd('wasm');
+      console.log(tableau);
+      console.log(wasmResult);
+      const result =
+        wasmResult[0] === 0 ? MatrixResultType.Failed : MatrixResultType.Solved;
+      const pivots = wasmResult[0];
+      wasmResult[0] = 1;
+      const solution = wasmResult.slice(0, A[0].length);
+      const S: Rational[] = [];
+      solution.forEach((s) => S.push(Rational.fromNumber(s)));
+      console.log(solution);
+      console.log(S);
+
+      // const f64_tableau = new Float64Array(
+      //   A.flatMap((r) => r.map((c) => c.toNumber()))
+      // );
+      // console.time('f64');
+      // const f64Result = this.f64_simplex(f64_tableau, A.length);
+      // console.timeEnd('f64');
+      // console.log(f64Result);
+
+      // // Solve tableau using simplex method
+      // console.time('orig');
+      // const [result, pivots, time] = this.simplex(A, error);
+      // console.timeEnd('orig');
+      // console.log(A[0].map((v) => v.toNumber()));
 
       if (result === MatrixResultType.Solved) {
         // Parse solution into usable state
-        this.cacheResult(O, H, A[0], pivots, time);
-        const [surplus, recipes, inputs] = this.parseSolution(A[0], state);
+        this.cacheResult(O, H, S, pivots, time);
+        const [surplus, recipes, inputs] = this.parseSolution(S, state);
         return [
           result,
           {
@@ -368,7 +401,7 @@ export class SimplexUtility {
             pivots,
             time,
             A: A0,
-            O: A[0],
+            O: S,
             itemIds,
             recipeIds,
             inputIds,
@@ -385,7 +418,7 @@ export class SimplexUtility {
             pivots,
             time,
             A: A0,
-            O: A[0],
+            O: S,
             itemIds,
             recipeIds,
             inputIds,
@@ -866,4 +899,95 @@ export class SimplexUtility {
     return ratio;
   }
   //#endregion
+
+  static f64_pivot(
+    tableau: Float64Array,
+    cols: number,
+    rows: number,
+    col_num: number,
+    row_num: number
+  ): boolean {
+    // Multiply pivot row by reciprocal of pivot element
+    const row_start = row_num * cols;
+    const cell_pivot = row_start + col_num;
+    const val = tableau[cell_pivot];
+    const reciprocal = 1.0 / val;
+    for (let cell_mult = row_start; cell_mult < row_start + cols; cell_mult++) {
+      tableau[cell_mult] = tableau[cell_mult] * reciprocal;
+    }
+
+    // Subtract multiples of pivot row to other rows to change pivot column to 0
+    for (let r = 0; r < rows; r++) {
+      const row_iter_start = r * cols;
+      const cell_row = row_iter_start + col_num;
+      if (r != row_num && tableau[cell_row] != 0.0) {
+        const factor = tableau[cell_row];
+        for (let c = 0; c < cols; c++) {
+          const cell_mult = row_start + c;
+          const cell_sub = row_iter_start + c;
+          const sub_amt = tableau[cell_mult] * factor;
+          tableau[cell_sub] = tableau[cell_sub] - sub_amt;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  static f64_pivot_col(
+    tableau: Float64Array,
+    cols: number,
+    rows: number,
+    col_num: number
+  ): boolean {
+    const col_cost = cols - 1;
+    let row_unset = true;
+    let row_num = 0;
+    let row_val = 0.0;
+    for (let r = 0; r < rows; r++) {
+      const row_start = r * cols;
+      const cell_comp = row_start + col_num;
+      if (tableau[cell_comp] > 0.0) {
+        const cell_cost = row_start + col_cost;
+        const ratio = tableau[cell_cost] / tableau[cell_comp];
+        if (row_unset || ratio < row_val) {
+          row_unset = false;
+          row_num = r;
+          row_val = ratio;
+        }
+      }
+    }
+
+    if (row_unset) {
+      return false;
+    }
+
+    return this.f64_pivot(tableau, cols, rows, col_num, row_num);
+  }
+
+  static f64_simplex(tableau: Float64Array, rows: number): number {
+    const cols = tableau.length / rows;
+
+    let pivots = 0;
+    while (true) {
+      pivots += 1;
+
+      let col_num = 0;
+      for (let c = 1; c < cols; c++) {
+        if (tableau[c] < tableau[col_num]) {
+          col_num = c;
+        }
+      }
+
+      if (tableau[col_num] >= 0.0) {
+        break;
+      }
+
+      if (!this.f64_pivot_col(tableau, cols, rows, col_num)) {
+        break;
+      }
+    }
+
+    return pivots;
+  }
 }
