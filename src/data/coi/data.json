@@ -1,0 +1,907 @@
+{
+  "version": { "Captain of Industry": "0.4.7" },
+  "categories": [
+    {
+      "id": "natural-resources",
+      "name": "Natural resources",
+      "icon": "wood"
+    },
+    {
+      "id": "semi-processed-resources",
+      "name": "Semi-processed resources",
+      "icon": "iron-ore-crushed"
+    },
+    {
+      "id": "crafted-materials",
+      "name": "Crafted materials",
+      "icon": "cement"
+    },
+    { "id": "petrochemical", "name": "Petrochemical", "icon": "medium-oil" },
+    {
+      "id": "power-pollution",
+      "name": "Power and pollution",
+      "icon": "carbon-dioxide"
+    },
+    { "id": "buildings", "name": "Buildings", "icon": "boiler-coal" }
+  ],
+  "icons": [
+    { "id": "acid", "color": "#bc7d7d", "position": "-0px -0px" },
+    { "id": "air-pollution", "color": "#bfccd7", "position": "-64px -0px" },
+    { "id": "air-separator", "color": "#86898e", "position": "-128px -0px" },
+    { "id": "ammonia", "color": "#a69fa9", "position": "-192px -0px" },
+    {
+      "id": "anaerobic-digester",
+      "color": "#797a7a",
+      "position": "-256px -0px"
+    },
+    { "id": "arc-furnace", "color": "#575b5b", "position": "-384px -0px" },
+    { "id": "arc-furnace-2", "color": "#605c54", "position": "-320px -0px" },
+    {
+      "id": "assembly-electric",
+      "color": "#7b7677",
+      "position": "-512px -0px"
+    },
+    {
+      "id": "assembly-electric-2",
+      "color": "#676870",
+      "position": "-448px -0px"
+    },
+    { "id": "assembly-manual", "color": "#75706f", "position": "-576px -0px" },
+    { "id": "assembly-robotic", "color": "#7c7b7a", "position": "-704px -0px" },
+    {
+      "id": "assembly-robotic-2",
+      "color": "#87806c",
+      "position": "-640px -0px"
+    },
+    { "id": "baking-unit", "color": "#92918f", "position": "-768px -0px" },
+    { "id": "basic-distiller", "color": "#62615c", "position": "-832px -0px" },
+    { "id": "biomass", "color": "#a9c351", "position": "-896px -0px" },
+    { "id": "blast-furnace", "color": "#8a7b71", "position": "-64px -64px" },
+    { "id": "blast-furnace-2", "color": "#807368", "position": "-0px -64px" },
+    { "id": "boiler-coal", "color": "#6b6964", "position": "-128px -64px" },
+    { "id": "boiler-electric", "color": "#787672", "position": "-192px -64px" },
+    { "id": "boiler-gas", "color": "#847c69", "position": "-256px -64px" },
+    { "id": "brine", "color": "#b7e8fa", "position": "-320px -64px" },
+    { "id": "burner-solid", "color": "#505963", "position": "-384px -64px" },
+    { "id": "carbon-dioxide", "color": "#7d7d7d", "position": "-448px -64px" },
+    { "id": "cement", "color": "#d2b9a6", "position": "-512px -64px" },
+    { "id": "chemical-plant", "color": "#5e6268", "position": "-640px -64px" },
+    {
+      "id": "chemical-plant-2",
+      "color": "#68635e",
+      "position": "-576px -64px"
+    },
+    { "id": "chlorine", "color": "#afba4c", "position": "-704px -64px" },
+    { "id": "coal", "color": "#676565", "position": "-832px -64px" },
+    { "id": "coal-maker", "color": "#5d5957", "position": "-768px -64px" },
+    { "id": "compost", "color": "#8c684a", "position": "-896px -64px" },
+    { "id": "concrete-mixer", "color": "#92918d", "position": "-128px -128px" },
+    { "id": "concrete-mixer-2", "color": "#969284", "position": "-0px -128px" },
+    {
+      "id": "concrete-mixer-3",
+      "color": "#978b84",
+      "position": "-64px -128px"
+    },
+    { "id": "concrete-slab", "color": "#b0b4b4", "position": "-192px -128px" },
+    {
+      "id": "construction-parts",
+      "color": "#e0e0e0",
+      "position": "-448px -128px"
+    },
+    {
+      "id": "construction-parts-2",
+      "color": "#e0c038",
+      "position": "-256px -128px"
+    },
+    {
+      "id": "construction-parts-3",
+      "color": "#e04939",
+      "position": "-320px -128px"
+    },
+    {
+      "id": "construction-parts-4",
+      "color": "#8a64d5",
+      "position": "-384px -128px"
+    },
+    {
+      "id": "consumer-electronics",
+      "color": "#94b4d3",
+      "position": "-512px -128px"
+    },
+    { "id": "cooled-caster", "color": "#848787", "position": "-640px -128px" },
+    {
+      "id": "cooled-caster-2",
+      "color": "#7c776a",
+      "position": "-576px -128px"
+    },
+    { "id": "cooling-tower", "color": "#8d8a85", "position": "-768px -128px" },
+    {
+      "id": "cooling-tower-large",
+      "color": "#88867f",
+      "position": "-704px -128px"
+    },
+    { "id": "copper", "color": "#cd8958", "position": "-64px -192px" },
+    {
+      "id": "copper-electrolysis",
+      "color": "#7d7d78",
+      "position": "-832px -128px"
+    },
+    { "id": "copper-ore", "color": "#327130", "position": "-0px -192px" },
+    {
+      "id": "copper-ore-crushed",
+      "color": "#3c5b58",
+      "position": "-896px -128px"
+    },
+    { "id": "corn", "color": "#abbc41", "position": "-128px -192px" },
+    { "id": "cracking-unit", "color": "#6f716d", "position": "-192px -192px" },
+    { "id": "crude-oil", "color": "#6b7282", "position": "-256px -192px" },
+    { "id": "crusher", "color": "#717172", "position": "-320px -192px" },
+    { "id": "data-center", "color": "#858f97", "position": "-384px -192px" },
+    { "id": "diesel", "color": "#d36c44", "position": "-512px -192px" },
+    {
+      "id": "diesel-generator",
+      "color": "#4e545c",
+      "position": "-448px -192px"
+    },
+    { "id": "dirt", "color": "#ad8958", "position": "-576px -192px" },
+    {
+      "id": "distillation-stage-1",
+      "color": "#8a7f78",
+      "position": "-640px -192px"
+    },
+    {
+      "id": "distillation-stage-2",
+      "color": "#8b7d73",
+      "position": "-704px -192px"
+    },
+    {
+      "id": "distillation-stage-3",
+      "color": "#8f8173",
+      "position": "-768px -192px"
+    },
+    { "id": "electricity", "color": "#fed01f", "position": "-832px -192px" },
+    { "id": "electrolyzer", "color": "#766c6a", "position": "-896px -192px" },
+    { "id": "electronics", "color": "#c6a380", "position": "-0px -256px" },
+    {
+      "id": "enrichment-plant",
+      "color": "#737575",
+      "position": "-64px -256px"
+    },
+    {
+      "id": "evaporation-pond",
+      "color": "#5f6d7c",
+      "position": "-192px -256px"
+    },
+    {
+      "id": "evaporation-pond-heated",
+      "color": "#5d6a78",
+      "position": "-128px -256px"
+    },
+    { "id": "exhaust", "color": "#a9a7a6", "position": "-320px -256px" },
+    {
+      "id": "exhaust-scrubber",
+      "color": "#7c7b78",
+      "position": "-256px -256px"
+    },
+    { "id": "farm", "color": "#706b47", "position": "-384px -256px" },
+    {
+      "id": "fermentation-tank",
+      "color": "#6d6e70",
+      "position": "-448px -256px"
+    },
+    { "id": "fertilizer-1", "color": "#c8ab79", "position": "-512px -256px" },
+    { "id": "fertilizer-2", "color": "#d3d059", "position": "-576px -256px" },
+    {
+      "id": "fertilizer-organic",
+      "color": "#a4b77e",
+      "position": "-640px -256px"
+    },
+    { "id": "filter-media", "color": "#c7ac7c", "position": "-704px -256px" },
+    { "id": "flare", "color": "#61575e", "position": "-768px -256px" },
+    { "id": "flat-conveyor", "color": "#67696e", "position": "-0px -320px" },
+    {
+      "id": "flat-conveyor-2",
+      "color": "#6a6f77",
+      "position": "-832px -256px"
+    },
+    {
+      "id": "flat-conveyor-3",
+      "color": "#7e7373",
+      "position": "-896px -256px"
+    },
+    { "id": "food", "color": "#9c5c38", "position": "-128px -320px" },
+    { "id": "food-processor", "color": "#7c8691", "position": "-64px -320px" },
+    { "id": "fuel-gas", "color": "#d27e33", "position": "-192px -320px" },
+    {
+      "id": "gas-injection-pump",
+      "color": "#6b645a",
+      "position": "-256px -320px"
+    },
+    { "id": "glass", "color": "#87cdc9", "position": "-512px -320px" },
+    { "id": "glass-maker", "color": "#586065", "position": "-384px -320px" },
+    { "id": "glass-maker-2", "color": "#586065", "position": "-320px -320px" },
+    { "id": "glass-mix", "color": "#d0bb83", "position": "-448px -320px" },
+    { "id": "gold-furnace", "color": "#766e63", "position": "-576px -320px" },
+    { "id": "gold-ore", "color": "#826c4d", "position": "-640px -320px" },
+    { "id": "graphite", "color": "#6a6868", "position": "-704px -320px" },
+    { "id": "gravel", "color": "#9e9088", "position": "-768px -320px" },
+    { "id": "green-manure", "color": "#1f922a", "position": "-832px -320px" },
+    { "id": "greenhouse", "color": "#5d5d5f", "position": "-0px -384px" },
+    { "id": "greenhouse-2", "color": "#4a525e", "position": "-896px -320px" },
+    {
+      "id": "groundwater-pump",
+      "color": "#63666a",
+      "position": "-64px -384px"
+    },
+    { "id": "heavy-oil", "color": "#9e8e79", "position": "-128px -384px" },
+    {
+      "id": "high-pressure-turbine",
+      "color": "#5b6471",
+      "position": "-256px -384px"
+    },
+    {
+      "id": "high-pressure-turbine-2",
+      "color": "#5b707f",
+      "position": "-192px -384px"
+    },
+    {
+      "id": "household-appliances",
+      "color": "#cad1d6",
+      "position": "-320px -384px"
+    },
+    {
+      "id": "household-goods",
+      "color": "#9d9f52",
+      "position": "-384px -384px"
+    },
+    { "id": "hydrogen", "color": "#c1c0c0", "position": "-512px -384px" },
+    {
+      "id": "hydrogen-reformer",
+      "color": "#878786",
+      "position": "-448px -384px"
+    },
+    { "id": "impure-copper", "color": "#bc653f", "position": "-576px -384px" },
+    { "id": "iron", "color": "#757575", "position": "-768px -384px" },
+    { "id": "iron-ore", "color": "#a95439", "position": "-704px -384px" },
+    {
+      "id": "iron-ore-crushed",
+      "color": "#774d59",
+      "position": "-640px -384px"
+    },
+    { "id": "irrigated-farm", "color": "#6e6947", "position": "-832px -384px" },
+    { "id": "light-oil", "color": "#afb989", "position": "-896px -384px" },
+    { "id": "limestone", "color": "#c9c99b", "position": "-0px -448px" },
+    { "id": "liquid-dump", "color": "#6d6b69", "position": "-64px -448px" },
+    {
+      "id": "low-pressure-turbine",
+      "color": "#5a636f",
+      "position": "-192px -448px"
+    },
+    {
+      "id": "low-pressure-turbine-2",
+      "color": "#5c707f",
+      "position": "-128px -448px"
+    },
+    { "id": "maintenance-1", "color": "#dcdcdc", "position": "-256px -448px" },
+    { "id": "maintenance-2", "color": "#dcbc37", "position": "-384px -448px" },
+    {
+      "id": "maintenance-2-depot",
+      "color": "#6e6056",
+      "position": "-320px -448px"
+    },
+    { "id": "maintenance-3", "color": "#dc4738", "position": "-512px -448px" },
+    {
+      "id": "maintenance-3-depot",
+      "color": "#73564f",
+      "position": "-448px -448px"
+    },
+    {
+      "id": "maintenance-depot",
+      "color": "#675e60",
+      "position": "-640px -448px"
+    },
+    {
+      "id": "maintenance-depot-basic",
+      "color": "#736965",
+      "position": "-576px -448px"
+    },
+    {
+      "id": "mechanical-power",
+      "color": "#e1cea6",
+      "position": "-704px -448px"
+    },
+    { "id": "medium-oil", "color": "#a895bc", "position": "-768px -448px" },
+    { "id": "metal-caster", "color": "#737473", "position": "-896px -448px" },
+    { "id": "metal-caster-2", "color": "#7a7465", "position": "-832px -448px" },
+    {
+      "id": "microchip-machine",
+      "color": "#a9a5a2",
+      "position": "-64px -512px"
+    },
+    {
+      "id": "microchip-machine-2",
+      "color": "#a6a5aa",
+      "position": "-0px -512px"
+    },
+    { "id": "mill", "color": "#7a7e85", "position": "-128px -512px" },
+    { "id": "mixer", "color": "#847868", "position": "-192px -512px" },
+    { "id": "molten-channel", "color": "#4f504e", "position": "-256px -512px" },
+    { "id": "molten-copper", "color": "#ddab42", "position": "-320px -512px" },
+    { "id": "molten-glass", "color": "#c2c490", "position": "-384px -512px" },
+    { "id": "molten-iron", "color": "#ce8a50", "position": "-448px -512px" },
+    { "id": "molten-silicon", "color": "#dcc58b", "position": "-512px -512px" },
+    { "id": "molten-steel", "color": "#d7b664", "position": "-576px -512px" },
+    { "id": "naphtha", "color": "#d0ca88", "position": "-640px -512px" },
+    { "id": "nitrogen", "color": "#678bc4", "position": "-704px -512px" },
+    {
+      "id": "nuclear-reactor",
+      "color": "#737679",
+      "position": "-768px -512px"
+    },
+    { "id": "oil-pump", "color": "#635f58", "position": "-832px -512px" },
+    { "id": "oxygen", "color": "#c55b5b", "position": "-64px -576px" },
+    { "id": "oxygen-furnace", "color": "#7b8286", "position": "-0px -576px" },
+    {
+      "id": "oxygen-furnace-2",
+      "color": "#7e7864",
+      "position": "-896px -512px"
+    },
+    { "id": "pcb", "color": "#46b676", "position": "-128px -576px" },
+    { "id": "pipe", "color": "#606367", "position": "-320px -576px" },
+    { "id": "pipe-2", "color": "#637385", "position": "-192px -576px" },
+    { "id": "pipe-3", "color": "#84706d", "position": "-256px -576px" },
+    { "id": "plastic", "color": "#a3c2c5", "position": "-384px -576px" },
+    {
+      "id": "polymerization-plant",
+      "color": "#7b787b",
+      "position": "-448px -576px"
+    },
+    { "id": "potato", "color": "#653a0e", "position": "-512px -576px" },
+    {
+      "id": "power-generator",
+      "color": "#7d715d",
+      "position": "-640px -576px"
+    },
+    {
+      "id": "power-generator-2",
+      "color": "#8b7350",
+      "position": "-576px -576px"
+    },
+    { "id": "quartz", "color": "#c0bec1", "position": "-704px -576px" },
+    {
+      "id": "rainwater-harvester",
+      "color": "#3a79a7",
+      "position": "-768px -576px"
+    },
+    { "id": "rock", "color": "#978982", "position": "-832px -576px" },
+    { "id": "rotary-kiln", "color": "#565554", "position": "-0px -640px" },
+    {
+      "id": "rotary-kiln-gas",
+      "color": "#5d5d5b",
+      "position": "-896px -576px"
+    },
+    { "id": "rubber", "color": "#5d6066", "position": "-128px -640px" },
+    { "id": "rubber-maker", "color": "#777679", "position": "-64px -640px" },
+    { "id": "salt", "color": "#f5f7fa", "position": "-192px -640px" },
+    { "id": "sand", "color": "#cdb058", "position": "-256px -640px" },
+    { "id": "seawater", "color": "#59d8fe", "position": "-448px -640px" },
+    { "id": "seawater-pump", "color": "#8a8c8c", "position": "-384px -640px" },
+    {
+      "id": "seawater-pump-tall",
+      "color": "#6c6e70",
+      "position": "-320px -640px"
+    },
+    { "id": "settling-tank", "color": "#73716e", "position": "-512px -640px" },
+    {
+      "id": "silicon-crystallizer",
+      "color": "#9a9796",
+      "position": "-576px -640px"
+    },
+    { "id": "silicon-poly", "color": "#c3d0d3", "position": "-640px -640px" },
+    {
+      "id": "silicon-reactor",
+      "color": "#697074",
+      "position": "-704px -640px"
+    },
+    { "id": "slag", "color": "#acaba7", "position": "-832px -640px" },
+    { "id": "slag-crushed", "color": "#777a85", "position": "-768px -640px" },
+    { "id": "sludge", "color": "#6c5238", "position": "-896px -640px" },
+    { "id": "smoke-stack", "color": "#626463", "position": "-64px -704px" },
+    {
+      "id": "smoke-stack-large",
+      "color": "#86827f",
+      "position": "-0px -704px"
+    },
+    { "id": "solar-panel", "color": "#6a73a2", "position": "-192px -704px" },
+    {
+      "id": "solar-panel-mono",
+      "color": "#393e64",
+      "position": "-128px -704px"
+    },
+    { "id": "sour-water", "color": "#64e5c5", "position": "-320px -704px" },
+    {
+      "id": "sour-water-stripper",
+      "color": "#867e75",
+      "position": "-256px -704px"
+    },
+    { "id": "spent-fuel", "color": "#d6b053", "position": "-384px -704px" },
+    { "id": "steam-depleted", "color": "#a6d4fa", "position": "-448px -704px" },
+    { "id": "steam-hi", "color": "#b1d6f5", "position": "-512px -704px" },
+    { "id": "steam-lo", "color": "#abd4f7", "position": "-576px -704px" },
+    { "id": "steel", "color": "#b3b4b3", "position": "-640px -704px" },
+    { "id": "sulfur", "color": "#899071", "position": "-704px -704px" },
+    {
+      "id": "thermal-desalinator",
+      "color": "#787977",
+      "position": "-768px -704px"
+    },
+    { "id": "toxic-slurry", "color": "#bbbe3a", "position": "-832px -704px" },
+    {
+      "id": "u-shape-conveyor",
+      "color": "#666566",
+      "position": "-64px -768px"
+    },
+    {
+      "id": "u-shape-conveyor-2",
+      "color": "#5d6064",
+      "position": "-896px -704px"
+    },
+    {
+      "id": "u-shape-conveyor-3",
+      "color": "#665f5d",
+      "position": "-0px -768px"
+    },
+    { "id": "uranium-ore", "color": "#96b594", "position": "-192px -768px" },
+    {
+      "id": "uranium-ore-crushed",
+      "color": "#6b7681",
+      "position": "-128px -768px"
+    },
+    {
+      "id": "uranium-pellets",
+      "color": "#919191",
+      "position": "-256px -768px"
+    },
+    { "id": "uranium-rod", "color": "#999999", "position": "-320px -768px" },
+    { "id": "vegetables", "color": "#8d9661", "position": "-384px -768px" },
+    { "id": "waste", "color": "#a5b8bd", "position": "-576px -768px" },
+    {
+      "id": "waste-sorting-plant",
+      "color": "#6f6661",
+      "position": "-448px -768px"
+    },
+    { "id": "waste-water", "color": "#bb773a", "position": "-512px -768px" },
+    {
+      "id": "wastewater-treatment",
+      "color": "#6d6e6a",
+      "position": "-640px -768px"
+    },
+    { "id": "water", "color": "#47d0fa", "position": "-832px -768px" },
+    { "id": "water-chiller", "color": "#9d9283", "position": "-704px -768px" },
+    {
+      "id": "water-pollution",
+      "color": "#c0ccd8",
+      "position": "-768px -768px"
+    },
+    { "id": "wheat", "color": "#fdd840", "position": "-896px -768px" },
+    { "id": "wood", "color": "#a4692b", "position": "-0px -832px" },
+    { "id": "yellow-cake", "color": "#777e60", "position": "-64px -832px" }
+  ],
+  "items": [
+    {
+      "id": "coal",
+      "name": "Coal",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 0
+    },
+    {
+      "id": "copper-ore",
+      "name": "Copper ore",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 0
+    },
+    {
+      "id": "dirt",
+      "name": "Dirt",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 0
+    },
+    {
+      "id": "gold-ore",
+      "name": "Gold ore",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 0
+    },
+    {
+      "id": "iron-ore",
+      "name": "Iron ore",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 0
+    },
+    {
+      "id": "limestone",
+      "name": "Limestone",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 0
+    },
+    {
+      "id": "rock",
+      "name": "Rock",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 0
+    },
+    {
+      "id": "sand",
+      "name": "Sand",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 0
+    },
+    {
+      "id": "quartz",
+      "name": "Quartz",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 1
+    },
+    {
+      "id": "sulfur",
+      "name": "Sulfur",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 1
+    },
+    {
+      "id": "uranium-ore",
+      "name": "Uranium ore",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 1
+    },
+    {
+      "id": "wood",
+      "name": "Wood",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 1
+    },
+    {
+      "id": "water",
+      "name": "Water",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 1
+    },
+    {
+      "id": "seawater",
+      "name": "Seawater",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 1
+    },
+    {
+      "id": "green-manure",
+      "name": "Green manure",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 2
+    },
+    {
+      "id": "potato",
+      "name": "Potato",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 2
+    },
+    {
+      "id": "corn",
+      "name": "Corn",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 2
+    },
+    {
+      "id": "wheat",
+      "name": "Wheat",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 2
+    },
+    {
+      "id": "vegetables",
+      "name": "Vegetables",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 2
+    },
+    {
+      "id": "copper-ore-crushed",
+      "name": "Copper Ore Crushed",
+      "stack": 1,
+      "category": "semi-processed-resources",
+      "row": 0
+    },
+    {
+      "id": "iron-ore-crushed",
+      "name": "Iron Ore Crushed",
+      "stack": 1,
+      "category": "semi-processed-resources",
+      "row": 0
+    },
+    {
+      "id": "slag-crushed",
+      "name": "Slag Crushed",
+      "stack": 1,
+      "category": "semi-processed-resources",
+      "row": 0
+    },
+    {
+      "id": "uranium-ore-crushed",
+      "name": "Uranium Ore Crushed",
+      "stack": 1,
+      "category": "semi-processed-resources",
+      "row": 0
+    },
+    {
+      "id": "molten-copper",
+      "name": "Molten copper",
+      "stack": 1,
+      "category": "semi-processed-resources",
+      "row": 1
+    },
+    {
+      "id": "molten-glass",
+      "name": "Molten glass",
+      "stack": 1,
+      "category": "semi-processed-resources",
+      "row": 1
+    },
+    {
+      "id": "molten-iron",
+      "name": "Molten iron",
+      "stack": 1,
+      "category": "semi-processed-resources",
+      "row": 1
+    },
+    {
+      "id": "molten-silicon",
+      "name": "Molten silicon",
+      "stack": 1,
+      "category": "semi-processed-resources",
+      "row": 1
+    },
+    {
+      "id": "molten-steel",
+      "name": "Molten steel",
+      "stack": 1,
+      "category": "semi-processed-resources",
+      "row": 1
+    },
+    {
+      "id": "brine",
+      "name": "Brine",
+      "stack": 1,
+      "category": "semi-processed-resources",
+      "row": 2
+    },
+    {
+      "id": "glass-mix",
+      "name": "Glass Mix",
+      "stack": 1,
+      "category": "semi-processed-resources",
+      "row": 2
+    },
+    {
+      "id": "graphite",
+      "name": "Graphite",
+      "stack": 1,
+      "category": "semi-processed-resources",
+      "row": 2
+    },
+    {
+      "id": "gravel",
+      "name": "Gravel",
+      "stack": 1,
+      "category": "semi-processed-resources",
+      "row": 2
+    },
+    {
+      "id": "salt",
+      "name": "Salt",
+      "stack": 1,
+      "category": "semi-processed-resources",
+      "row": 2
+    },
+    {
+      "id": "copper",
+      "name": "Copper",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 0
+    },
+    {
+      "id": "impure-copper",
+      "name": "Impure copper",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 0
+    },
+    {
+      "id": "iron",
+      "name": "Iron",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 0
+    },
+    {
+      "id": "glass",
+      "name": "Glass",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 0
+    },
+    {
+      "id": "steel",
+      "name": "Steel",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 0
+    },
+    {
+      "id": "acid",
+      "name": "Acid",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 1
+    },
+    {
+      "id": "cement",
+      "name": "Cement",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 1
+    },
+    {
+      "id": "concrete-slab",
+      "name": "Concrete slab",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 1
+    },
+    {
+      "id": "fertilizer-organic",
+      "name": "Fertilizer (Organic)",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 1
+    },
+    {
+      "id": "filter-media",
+      "name": "Filter Media",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 1
+    },
+    {
+      "id": "food",
+      "name": "Food",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 1
+    },
+    {
+      "id": "consumer-electronics",
+      "name": "Consumer electronics",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 2
+    },
+    {
+      "id": "electronics",
+      "name": "Electronics",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 2
+    },
+    {
+      "id": "household-appliances",
+      "name": "Household appliances",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 2
+    },
+    {
+      "id": "household-goods",
+      "name": "Household goods",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 2
+    },
+    {
+      "id": "pcb",
+      "name": "PCB",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 2
+    },
+    {
+      "id": "silicon-poly",
+      "name": "Silicon (Poly)",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 2
+    },
+    {
+      "id": "maintenance-1",
+      "name": "Maintenance I",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 3
+    },
+    {
+      "id": "maintenance-2",
+      "name": "Maintenance II",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 3
+    },
+    {
+      "id": "maintenance-3",
+      "name": "Maintenance III",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 3
+    },
+    {
+      "id": "construction-parts",
+      "name": "Construction parts",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 3
+    },
+    {
+      "id": "construction-parts-2",
+      "name": "Construction parts II",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 3
+    },
+    {
+      "id": "construction-parts-3",
+      "name": "Construction parts III",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 3
+    },
+    {
+      "id": "construction-parts-4",
+      "name": "Construction parts IV",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 3
+    }
+  ],
+  "recipes": [],
+  "limitations": {},
+  "defaults": {
+    "beacon": null,
+    "minBelt": null,
+    "maxBelt": null,
+    "minPipe": null,
+    "maxPipe": null,
+    "fuel": null,
+    "cargoWagon": null,
+    "fluidWagon": null,
+    "disabledRecipes": [],
+    "minFactoryRank": [],
+    "maxFactoryRank": [],
+    "moduleRank": []
+  }
+}

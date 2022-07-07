@@ -130,9 +130,11 @@ export const getModOptions = createSelector(
 export const getColumnsState = createSelector(
   getGame,
   Preferences.getColumns,
-  (game, col): Preferences.ColumnsState =>
-    game === Game.DysonSphereProgram
-      ? {
+  (game, col): Preferences.ColumnsState => {
+    switch (game) {
+      case Game.CaptainOfIndustry:
+      case Game.DysonSphereProgram:
+        return {
           ...Preferences.initialColumnsState,
           ...col,
           ...{
@@ -147,9 +149,9 @@ export const getColumnsState = createSelector(
               ...{ show: false },
             },
           },
-        }
-      : game === Game.Satisfactory
-      ? {
+        };
+      case Game.Satisfactory:
+        return {
           ...Preferences.initialColumnsState,
           ...col,
           ...{
@@ -159,8 +161,9 @@ export const getColumnsState = createSelector(
               ...{ show: false },
             },
           },
-        }
-      : {
+        };
+      default:
+        return {
           ...Preferences.initialColumnsState,
           ...col,
           ...{
@@ -169,7 +172,9 @@ export const getColumnsState = createSelector(
               ...{ show: false },
             },
           },
-        }
+        };
+    }
+  }
 );
 
 export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {

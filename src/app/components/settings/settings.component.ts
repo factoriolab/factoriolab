@@ -201,6 +201,9 @@ export class SettingsComponent implements OnInit {
       case Game.Factorio:
         this.setMod(Settings.initialSettingsState.modId);
         break;
+      case Game.CaptainOfIndustry:
+        this.setMod('coi');
+        break;
       case Game.DysonSphereProgram:
         this.setMod('dsp');
         break;

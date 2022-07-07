@@ -46,13 +46,14 @@ export function columnOptions(game: Game): IdName<Column>[] {
   switch (game) {
     case Game.Factorio:
       return result.filter((i) => i.id !== Column.Overclock);
+    case Game.CaptainOfIndustry:
     case Game.DysonSphereProgram:
       return result.filter(
         (i) =>
-          i.id !== Column.Wagons &&
-          i.id !== Column.Overclock &&
           i.id !== Column.Beacons &&
-          i.id !== Column.Pollution
+          i.id !== Column.Overclock &&
+          i.id !== Column.Pollution &&
+          i.id !== Column.Wagons
       );
     case Game.Satisfactory:
       return result.filter(
