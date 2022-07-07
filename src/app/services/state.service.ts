@@ -53,18 +53,29 @@ export class StateService {
       .subscribe(([modId, data]) => {
         console.log(modId);
         const oldDisabled = data.defaults?.disabledRecipeIds ?? [];
-        const allDisabled = [
-          ...oldDisabled,
-          ...data.complexRecipeIds.filter((i) => !data.itemEntities[i]),
-        ];
-        const disabledEntities = allDisabled.reduce(
-          (e: Entities<boolean>, d) => {
-            e[d] = true;
-            return e;
-          },
-          {}
+        const neededRecipes = Object.keys(data.itemRecipeId).map(
+          (i) => data.itemRecipeId[i]
         );
-        const suggestedDisabled = Object.keys(disabledEntities);
+        const suggestedDisabled = data.complexRecipeIds.filter(
+          (i) => neededRecipes.indexOf(i) === -1 && !data.itemEntities[i]
+        );
+        // const allDisabled = [
+        //   ...oldDisabled,
+        //   ...data.complexRecipeIds.filter((i) => !data.itemEntities[i]),
+        // ];
+        // const disabledEntities = allDisabled.reduce(
+        //   (e: Entities<boolean>, d) => {
+        //     e[d] = true;
+        //     return e;
+        //   },
+        //   {}
+        // );
+        // for (const i of newDisabled) {
+        //   if (!disabledEntities[i]) {
+        //     console.log(i);
+        //   }
+        // }
+        // const suggestedDisabled = Object.keys(disabledEntities);
         if (JSON.stringify(oldDisabled) !== JSON.stringify(suggestedDisabled)) {
           console.log(
             `Suggested disabled recipes (${suggestedDisabled.length}):`
