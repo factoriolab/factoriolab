@@ -21,8 +21,7 @@
       "id": "power-pollution",
       "name": "Power and pollution",
       "icon": "carbon-dioxide"
-    },
-    { "id": "buildings", "name": "Buildings", "icon": "boiler-coal" }
+    }
   ],
   "icons": [
     { "id": "acid", "color": "#bc7d7d", "position": "-0px -0px" },
@@ -497,7 +496,7 @@
     },
     {
       "id": "copper-ore",
-      "name": "Copper ore",
+      "name": "Copper Ore",
       "stack": 1,
       "category": "natural-resources",
       "row": 0
@@ -511,14 +510,14 @@
     },
     {
       "id": "gold-ore",
-      "name": "Gold ore",
+      "name": "Gold Ore",
       "stack": 1,
       "category": "natural-resources",
       "row": 0
     },
     {
       "id": "iron-ore",
-      "name": "Iron ore",
+      "name": "Iron Ore",
       "stack": 1,
       "category": "natural-resources",
       "row": 0
@@ -560,7 +559,7 @@
     },
     {
       "id": "uranium-ore",
-      "name": "Uranium ore",
+      "name": "Uranium Ore",
       "stack": 1,
       "category": "natural-resources",
       "row": 1
@@ -588,7 +587,7 @@
     },
     {
       "id": "green-manure",
-      "name": "Green manure",
+      "name": "Green Manure",
       "stack": 1,
       "category": "natural-resources",
       "row": 2
@@ -651,35 +650,35 @@
     },
     {
       "id": "molten-copper",
-      "name": "Molten copper",
+      "name": "Molten Copper",
       "stack": 1,
       "category": "semi-processed-resources",
       "row": 1
     },
     {
       "id": "molten-glass",
-      "name": "Molten glass",
+      "name": "Molten Glass",
       "stack": 1,
       "category": "semi-processed-resources",
       "row": 1
     },
     {
       "id": "molten-iron",
-      "name": "Molten iron",
+      "name": "Molten Iron",
       "stack": 1,
       "category": "semi-processed-resources",
       "row": 1
     },
     {
       "id": "molten-silicon",
-      "name": "Molten silicon",
+      "name": "Molten Silicon",
       "stack": 1,
       "category": "semi-processed-resources",
       "row": 1
     },
     {
       "id": "molten-steel",
-      "name": "Molten steel",
+      "name": "Molten Steel",
       "stack": 1,
       "category": "semi-processed-resources",
       "row": 1
@@ -728,7 +727,7 @@
     },
     {
       "id": "impure-copper",
-      "name": "Impure copper",
+      "name": "Impure Copper",
       "stack": 1,
       "category": "crafted-materials",
       "row": 0
@@ -770,7 +769,7 @@
     },
     {
       "id": "concrete-slab",
-      "name": "Concrete slab",
+      "name": "Concrete Slab",
       "stack": 1,
       "category": "crafted-materials",
       "row": 1
@@ -798,7 +797,7 @@
     },
     {
       "id": "consumer-electronics",
-      "name": "Consumer electronics",
+      "name": "Consumer Electronics",
       "stack": 1,
       "category": "crafted-materials",
       "row": 2
@@ -812,14 +811,14 @@
     },
     {
       "id": "household-appliances",
-      "name": "Household appliances",
+      "name": "Household Appliances",
       "stack": 1,
       "category": "crafted-materials",
       "row": 2
     },
     {
       "id": "household-goods",
-      "name": "Household goods",
+      "name": "Household Goods",
       "stack": 1,
       "category": "crafted-materials",
       "row": 2
@@ -861,34 +860,879 @@
     },
     {
       "id": "construction-parts",
-      "name": "Construction parts",
+      "name": "Construction Parts",
       "stack": 1,
       "category": "crafted-materials",
       "row": 3
     },
     {
       "id": "construction-parts-2",
-      "name": "Construction parts II",
+      "name": "Construction Parts II",
       "stack": 1,
       "category": "crafted-materials",
       "row": 3
     },
     {
       "id": "construction-parts-3",
-      "name": "Construction parts III",
+      "name": "Construction Parts III",
       "stack": 1,
       "category": "crafted-materials",
       "row": 3
     },
     {
       "id": "construction-parts-4",
-      "name": "Construction parts IV",
+      "name": "Construction Parts IV",
       "stack": 1,
       "category": "crafted-materials",
       "row": 3
+    },
+    {
+      "id": "crude-oil",
+      "name": "Crude Oil",
+      "stack": 1,
+      "category": "petrochemical",
+      "row": 0
+    },
+    {
+      "id": "light-oil",
+      "name": "Light Oil",
+      "stack": 1,
+      "category": "petrochemical",
+      "row": 0
+    },
+    {
+      "id": "medium-oil",
+      "name": "Medium Oil",
+      "stack": 1,
+      "category": "petrochemical",
+      "row": 0
+    },
+    {
+      "id": "heavy-oil",
+      "name": "Heavy Oil",
+      "stack": 1,
+      "category": "petrochemical",
+      "row": 0
+    },
+    {
+      "id": "naphtha",
+      "name": "Naphtha",
+      "stack": 1,
+      "category": "petrochemical",
+      "row": 0
+    },
+    {
+      "id": "diesel",
+      "name": "Diesel",
+      "stack": 1,
+      "category": "petrochemical",
+      "row": 0
+    },
+    {
+      "id": "ammonia",
+      "name": "Ammonia",
+      "stack": 1,
+      "category": "petrochemical",
+      "row": 1
+    },
+    {
+      "id": "chlorine",
+      "name": "Chlorine",
+      "stack": 1,
+      "category": "petrochemical",
+      "row": 1
+    },
+    {
+      "id": "fuel-gas",
+      "name": "Fuel Gas",
+      "stack": 1,
+      "category": "petrochemical",
+      "row": 1
+    },
+    {
+      "id": "hydrogen",
+      "name": "Hydrogen",
+      "stack": 1,
+      "category": "petrochemical",
+      "row": 1
+    },
+    {
+      "id": "nitrogen",
+      "name": "Nitrogen",
+      "stack": 1,
+      "category": "petrochemical",
+      "row": 1
+    },
+    {
+      "id": "oxygen",
+      "name": "Oxygen",
+      "stack": 1,
+      "category": "petrochemical",
+      "row": 1
+    },
+    {
+      "id": "biomass",
+      "name": "Biomass",
+      "stack": 1,
+      "category": "petrochemical",
+      "row": 2
+    },
+    {
+      "id": "fertilizer-1",
+      "name": "Fertilizer I",
+      "stack": 1,
+      "category": "petrochemical",
+      "row": 2
+    },
+    {
+      "id": "fertilizer-2",
+      "name": "Fertilizer II",
+      "stack": 1,
+      "category": "petrochemical",
+      "row": 2
+    },
+    {
+      "id": "plastic",
+      "name": "Plastic",
+      "stack": 1,
+      "category": "petrochemical",
+      "row": 2
+    },
+    {
+      "id": "rubber",
+      "name": "Rubber",
+      "stack": 1,
+      "category": "petrochemical",
+      "row": 2
+    },
+    {
+      "id": "sour-water",
+      "name": "Sour Water",
+      "stack": 1,
+      "category": "petrochemical",
+      "row": 2
+    },
+    {
+      "id": "electricity",
+      "name": "Electricity",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 0
+    },
+    {
+      "id": "mechanical-power",
+      "name": "Mechanical Power",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 0
+    },
+    {
+      "id": "steam-hi",
+      "name": "Steam Hi",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 0
+    },
+    {
+      "id": "steam-lo",
+      "name": "Steam Lo",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 0
+    },
+    {
+      "id": "steam-depleted",
+      "name": "Steam Depleted",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 0
+    },
+    {
+      "id": "spent-fuel",
+      "name": "Spent Fuel",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 1
+    },
+    {
+      "id": "uranium-pellets",
+      "name": "Uranium Pellets",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 1
+    },
+    {
+      "id": "uranium-rod",
+      "name": "Uranium Rod",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 1
+    },
+    {
+      "id": "yellow-cake",
+      "name": "Yellow Cake",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 1
+    },
+    {
+      "id": "air-pollution",
+      "name": "Air Pollution",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 2
+    },
+    {
+      "id": "exhaust",
+      "name": "Exhaust",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 2
+    },
+    {
+      "id": "toxic-slurry",
+      "name": "Toxic Slurry",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 2
+    },
+    {
+      "id": "waste-water",
+      "name": "Waste Water",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 2
+    },
+    {
+      "id": "water-pollution",
+      "name": "Water Pollution",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 2
+    },
+    {
+      "id": "carbon-dioxide",
+      "name": "Carbon Dioxide",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 3
+    },
+    {
+      "id": "compost",
+      "name": "Compost",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 3
+    },
+    {
+      "id": "slag",
+      "name": "Slag",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 3
+    },
+    {
+      "id": "sludge",
+      "name": "Sludge",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 3
+    },
+    {
+      "id": "waste",
+      "name": "Waste",
+      "stack": 1,
+      "category": "power-pollution",
+      "row": 3
+    },
+    {
+      "id": "coal-mine",
+      "icon": "coal",
+      "name": "Coal Mine",
+      "category": "buildings",
+      "factory": { "speed": 1 }
+    },
+    {
+      "id": "groundwater-well",
+      "icon": "water",
+      "name": "Grounwater Well",
+      "category": "buildings",
+      "factory": { "speed": 1 }
+    },
+    {
+      "id": "limestone-quarry",
+      "icon": "limestone",
+      "name": "Limestone Quarry",
+      "category": "buildings",
+      "factory": { "speed": 1 }
+    },
+    {
+      "id": "oil-rig",
+      "icon": "crude-oil",
+      "name": "Oil Rig",
+      "category": "buildings",
+      "factory": { "speed": 1 }
+    },
+    {
+      "id": "quartz-mine",
+      "icon": "quartz",
+      "name": "Quartz Mine",
+      "category": "buildings",
+      "factory": { "speed": 1 }
+    },
+    {
+      "id": "rock-mine",
+      "icon": "rock",
+      "name": "Rock Mine",
+      "category": "buildings",
+      "factory": { "speed": 1 }
+    },
+    {
+      "id": "sawmill",
+      "icon": "wood",
+      "name": "Sawmill",
+      "category": "buildings",
+      "factory": { "speed": 1 }
+    },
+    {
+      "id": "sulfur-mine",
+      "icon": "sulfur",
+      "name": "Sulfur Mine",
+      "category": "buildings",
+      "factory": { "speed": 1 }
+    },
+    {
+      "id": "uranium-mine",
+      "icon": "uranium-ore",
+      "name": "Uranium Mine",
+      "category": "buildings",
+      "factory": { "speed": 1 }
+    },
+    {
+      "id": "air-separator",
+      "name": "Air Separator",
+      "category": "buildings"
+    },
+    {
+      "id": "assembly-electric",
+      "name": "Assembly (Electric)",
+      "category": "buildings"
+    },
+    {
+      "id": "assembly-electric-2",
+      "name": "Assembly (Electric) II",
+      "category": "buildings"
+    },
+    {
+      "id": "assembly-manual",
+      "name": "Assembly (Manual)",
+      "category": "buildings"
+    },
+    {
+      "id": "assembly-robotic",
+      "name": "Assembly (Robotic)",
+      "category": "buildings"
+    },
+    {
+      "id": "assembly-robotic-2",
+      "name": "Assembly (Robotic) II",
+      "category": "buildings"
+    },
+    {
+      "id": "concrete-mixer",
+      "name": "Concrete Mixer",
+      "category": "buildings"
+    },
+    {
+      "id": "concrete-mixer-2",
+      "name": "Concrete Mixer II",
+      "category": "buildings"
+    },
+    {
+      "id": "concrete-mixer-3",
+      "name": "Concrete Mixer III",
+      "category": "buildings"
+    },
+    {
+      "id": "data-center",
+      "name": "Data Center",
+      "category": "buildings"
+    },
+    {
+      "id": "electrolyzer",
+      "name": "Electrolyzer",
+      "category": "buildings"
+    },
+    {
+      "id": "fermentation-tank",
+      "name": "Fermentation Tank",
+      "category": "buildings"
+    },
+    {
+      "id": "microchip-machine",
+      "name": "Microchip Machine",
+      "category": "buildings"
+    },
+    {
+      "id": "microchip-machine-2",
+      "name": "Microchip Machine II",
+      "category": "buildings"
+    },
+    {
+      "id": "mixer",
+      "name": "Mixer",
+      "category": "buildings"
+    },
+    {
+      "id": "settling-tank",
+      "name": "Settling Tank",
+      "category": "buildings"
+    },
+    {
+      "id": "basic-distiller",
+      "name": "Basic Distiller",
+      "category": "buildings"
+    },
+    {
+      "id": "chemical-plant",
+      "name": "Chemical Plant",
+      "category": "buildings"
+    },
+    {
+      "id": "chemical-plant-2",
+      "name": "Chemical Plant II",
+      "category": "buildings"
+    },
+    {
+      "id": "cracking-unit",
+      "name": "Cracking Unit",
+      "category": "buildings"
+    },
+    {
+      "id": "distillation-stage-1",
+      "name": "Distillation (Stage I)",
+      "category": "buildings"
+    },
+    {
+      "id": "distillation-stage-2",
+      "name": "Distillation (Stage II)",
+      "category": "buildings"
+    },
+    {
+      "id": "distillation-stage-3",
+      "name": "Distillation (Stage III)",
+      "category": "buildings"
+    },
+    {
+      "id": "hydrogen-reformer",
+      "name": "Hydrogen Reformer",
+      "category": "buildings"
+    },
+    {
+      "id": "oil-pump",
+      "name": "Oil Pump",
+      "category": "buildings"
+    },
+    {
+      "id": "polymerization-plant",
+      "name": "Polymerization Plant",
+      "category": "buildings"
+    },
+    {
+      "id": "rubber-maker",
+      "name": "Rubber Maker",
+      "category": "buildings"
+    },
+    {
+      "id": "sour-water-stripper",
+      "name": "Sour Water Stripper",
+      "category": "buildings"
+    },
+    {
+      "id": "boiler-coal",
+      "name": "Boiler (Coal)",
+      "category": "buildings"
+    },
+    {
+      "id": "boiler-electric",
+      "name": "Boiler (Electric)",
+      "category": "buildings"
+    },
+    {
+      "id": "boiler-gas",
+      "name": "Boiler (Gas)",
+      "category": "buildings"
+    },
+    {
+      "id": "cooling-tower",
+      "name": "Cooling Tower",
+      "category": "buildings"
+    },
+    {
+      "id": "cooling-tower-large",
+      "name": "Cooling Tower (Large)",
+      "category": "buildings"
+    },
+    {
+      "id": "evaporation-pond",
+      "name": "Evaporation Pond",
+      "category": "buildings"
+    },
+    {
+      "id": "evaporation-pond-heated",
+      "name": "Evaporation Pond (Heated)",
+      "category": "buildings"
+    },
+    {
+      "id": "groundwater-pump",
+      "name": "Groundwater Pump",
+      "category": "buildings"
+    },
+    {
+      "id": "rainwater-harvester",
+      "name": "Rainwater Harvester",
+      "category": "buildings"
+    },
+    {
+      "id": "seawater-pump",
+      "name": "Seawater Pump",
+      "category": "buildings"
+    },
+    {
+      "id": "seawater-pump-tall",
+      "name": "Seawater Pump (Tall)",
+      "category": "buildings"
+    },
+    {
+      "id": "thermal-desalinator",
+      "name": "Thermal Desalinator",
+      "category": "buildings"
+    },
+    {
+      "id": "water-chiller",
+      "name": "Water Chiller",
+      "category": "buildings"
+    },
+    {
+      "id": "anaerobic-digester",
+      "name": "Anaerobic Digester",
+      "category": "buildings"
+    },
+    {
+      "id": "burner-solid",
+      "name": "Burner (Solid)",
+      "category": "buildings"
+    },
+    {
+      "id": "exhaust-scrubber",
+      "name": "Exhaust Scrubber",
+      "category": "buildings"
+    },
+    {
+      "id": "flare",
+      "name": "Flare",
+      "category": "buildings"
+    },
+    {
+      "id": "gas-injection-pump",
+      "name": "Gas Injection Pump",
+      "category": "buildings"
+    },
+    {
+      "id": "liquid-dump",
+      "name": "Liquid Dump",
+      "category": "buildings"
+    },
+    {
+      "id": "smoke-stack",
+      "name": "Smoke Stack",
+      "category": "buildings"
+    },
+    {
+      "id": "smoke-stack-large",
+      "name": "Smoke Stack (Large)",
+      "category": "buildings"
+    },
+    {
+      "id": "waste-sorting-plant",
+      "name": "Waste Sorting Plant",
+      "category": "buildings"
+    },
+    {
+      "id": "wastewater-treatment",
+      "name": "Wastewater Treatment",
+      "category": "buildings"
+    },
+    {
+      "id": "baking-unit",
+      "name": "Baking Unit",
+      "category": "buildings"
+    },
+    {
+      "id": "farm",
+      "name": "Farm",
+      "category": "buildings"
+    },
+    {
+      "id": "food-processor",
+      "name": "Food Processor",
+      "category": "buildings"
+    },
+    {
+      "id": "greenhouse",
+      "name": "Greenhouse",
+      "category": "buildings"
+    },
+    {
+      "id": "greenhouse-2",
+      "name": "Greenhouse II",
+      "category": "buildings"
+    },
+    {
+      "id": "irrigated-farm",
+      "name": "Irrigated Farm",
+      "category": "buildings"
+    },
+    {
+      "id": "mill",
+      "name": "Mill",
+      "category": "buildings"
+    },
+    {
+      "id": "flat-conveyor",
+      "name": "Flat Conveyor",
+      "category": "buildings"
+    },
+    {
+      "id": "flat-conveyor-2",
+      "name": "Flat Conveyor II",
+      "category": "buildings"
+    },
+    {
+      "id": "flat-conveyor-3",
+      "name": "Flat Conveyor III",
+      "category": "buildings"
+    },
+    {
+      "id": "molten-channel",
+      "name": "Molten Channel",
+      "category": "buildings"
+    },
+    {
+      "id": "pipe",
+      "name": "Pipe",
+      "category": "buildings"
+    },
+    {
+      "id": "pipe-2",
+      "name": "Pipe II",
+      "category": "buildings"
+    },
+    {
+      "id": "pipe-3",
+      "name": "Pipe III",
+      "category": "buildings"
+    },
+    {
+      "id": "u-shape-conveyor",
+      "name": "U-shape Conveyor",
+      "category": "buildings"
+    },
+    {
+      "id": "u-shape-conveyor-2",
+      "name": "U-shape Conveyor II",
+      "category": "buildings"
+    },
+    {
+      "id": "u-shape-conveyor-3",
+      "name": "U-shape Conveyor III",
+      "category": "buildings"
+    },
+    {
+      "id": "arc-furnace",
+      "name": "Arc Furnace",
+      "category": "buildings"
+    },
+    {
+      "id": "arc-furnace-2",
+      "name": "Arc Furnace II",
+      "category": "buildings"
+    },
+    {
+      "id": "blast-furnace",
+      "name": "Blast Furnace",
+      "category": "buildings"
+    },
+    {
+      "id": "blast-furnace-2",
+      "name": "Blast Furnace II",
+      "category": "buildings"
+    },
+    {
+      "id": "coal-maker",
+      "name": "Coal Maker",
+      "category": "buildings",
+      "factory": { "speed": 1 }
+    },
+    {
+      "id": "cooled-caster",
+      "name": "Cooled Caster",
+      "category": "buildings"
+    },
+    {
+      "id": "cooled-caster-2",
+      "name": "Cooled Caster II",
+      "category": "buildings"
+    },
+    {
+      "id": "copper-electrolysis",
+      "name": "Copper Electrolysis",
+      "category": "buildings"
+    },
+    {
+      "id": "crusher",
+      "name": "Crusher",
+      "category": "buildings"
+    },
+    {
+      "id": "glass-maker",
+      "name": "Glass Maker",
+      "category": "buildings"
+    },
+    {
+      "id": "glass-maker-2",
+      "name": "Glass Maker II",
+      "category": "buildings"
+    },
+    {
+      "id": "gold-furnace",
+      "name": "Gold Furnace",
+      "category": "buildings"
+    },
+    {
+      "id": "metal-caster",
+      "name": "Metal Caster",
+      "category": "buildings"
+    },
+    {
+      "id": "metal-caster-2",
+      "name": "Metal Caster II",
+      "category": "buildings"
+    },
+    {
+      "id": "oxygen-furnace",
+      "name": "Oxygen Furnace",
+      "category": "buildings"
+    },
+    {
+      "id": "oxygen-furnace-2",
+      "name": "Oxygen Furnace II",
+      "category": "buildings"
+    },
+    {
+      "id": "rotary-kiln",
+      "name": "Rotary Kiln",
+      "category": "buildings"
+    },
+    {
+      "id": "rotary-kiln-gas",
+      "name": "Rotary Kiln (Gas)",
+      "category": "buildings"
+    },
+    {
+      "id": "silicon-crystallizer",
+      "name": "Silicon Crystallizer",
+      "category": "buildings"
+    },
+    {
+      "id": "silicon-reactor",
+      "name": "Silicon Reactor",
+      "category": "buildings"
+    },
+    {
+      "id": "diesel-generator",
+      "name": "Diesel Generator",
+      "category": "buildings"
+    },
+    {
+      "id": "enrichment-plant",
+      "name": "Enrichment Plant",
+      "category": "buildings"
+    },
+    {
+      "id": "high-pressure-turbine",
+      "name": "High-Pressure Turbine",
+      "category": "buildings"
+    },
+    {
+      "id": "high-pressure-turbine-2",
+      "name": "High-Pressure Turbine II",
+      "category": "buildings"
+    },
+    {
+      "id": "low-pressure-turbine",
+      "name": "Low-Pressure Turbine",
+      "category": "buildings"
+    },
+    {
+      "id": "low-pressure-turbine-2",
+      "name": "Low-Pressure Turbine II",
+      "category": "buildings"
+    },
+    {
+      "id": "nuclear-reactor",
+      "name": "Nuclear Reactor",
+      "category": "buildings"
+    },
+    {
+      "id": "power-generator",
+      "name": "Power Generator",
+      "category": "buildings"
+    },
+    {
+      "id": "power-generator-2",
+      "name": "Power Generator II",
+      "category": "buildings"
+    },
+    {
+      "id": "solar-panel",
+      "name": "Solar Panel",
+      "category": "buildings"
+    },
+    {
+      "id": "solar-panel-mono",
+      "name": "Solar Panel (Mono)",
+      "category": "buildings"
     }
   ],
-  "recipes": [],
+  "recipes": [
+    {
+      "id": "crude-oil",
+      "name": "Oil Rig",
+      "time": 20,
+      "in": {},
+      "out": { "crude-oil": 9 },
+      "producers": ["oil-rig"],
+      "cost": 10000
+    },
+    {
+      "id": "coal",
+      "name": "Coal Mine",
+      "time": 20,
+      "in": {},
+      "out": { "coal": 9 },
+      "producers": ["coal-mine"],
+      "cost": 10000
+    },
+    {
+      "id": "coal-maker",
+      "name": "Coal Maker",
+      "time": 60,
+      "in": { "wood": 20 },
+      "out": { "coal": 4, "exhaust": 16 },
+      "producers": ["coal-maker"]
+    }
+  ],
   "limitations": {},
   "defaults": {
     "beacon": null,
