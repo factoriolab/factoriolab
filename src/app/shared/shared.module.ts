@@ -23,6 +23,8 @@ import {
 import {
   DisplayRateLabelPipe,
   FactoryRatePipe,
+  FactoryShowPipe,
+  FactoryShowRatePipe,
   GtZeroPipe,
   InserterSpeedPipe,
   LeftPadPipe,
@@ -53,6 +55,8 @@ export const SHARED_DIRECTIVES = [
 export const SHARED_PIPES = [
   DisplayRateLabelPipe,
   FactoryRatePipe,
+  FactoryShowPipe,
+  FactoryShowRatePipe,
   GtZeroPipe,
   InserterSpeedPipe,
   LeftPadPipe,

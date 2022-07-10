@@ -1,11 +1,7 @@
 {
   "version": { "Captain of Industry": "0.4.7" },
   "categories": [
-    {
-      "id": "natural-resources",
-      "name": "Natural resources",
-      "icon": "wood"
-    },
+    { "id": "natural-resources", "name": "Natural resources", "icon": "wood" },
     {
       "id": "semi-processed-resources",
       "name": "Semi-processed resources",
@@ -21,470 +17,1053 @@
       "id": "power-pollution",
       "name": "Power and pollution",
       "icon": "carbon-dioxide"
-    }
+    },
+    { "id": "other", "name": "Other", "icon": "unity" }
   ],
   "icons": [
     { "id": "acid", "color": "#bc7d7d", "position": "-0px -0px" },
     { "id": "air-pollution", "color": "#bfccd7", "position": "-64px -0px" },
     { "id": "air-separator", "color": "#86898e", "position": "-128px -0px" },
-    { "id": "ammonia", "color": "#a69fa9", "position": "-192px -0px" },
+    { "id": "aluminum", "color": "#c9c9c8", "position": "-192px -0px" },
+    { "id": "ammonia", "color": "#a69fa9", "position": "-256px -0px" },
     {
       "id": "anaerobic-digester",
       "color": "#797a7a",
-      "position": "-256px -0px"
+      "position": "-320px -0px"
     },
-    { "id": "arc-furnace", "color": "#575b5b", "position": "-384px -0px" },
-    { "id": "arc-furnace-2", "color": "#605c54", "position": "-320px -0px" },
+    { "id": "anesthetics", "color": "#c1ccd0", "position": "-384px -0px" },
+    { "id": "animal-feed", "color": "#7e7d9e", "position": "-448px -0px" },
+    { "id": "antibiotics", "color": "#bcbcbc", "position": "-512px -0px" },
+    { "id": "arc-furnace", "color": "#575b5b", "position": "-640px -0px" },
+    { "id": "arc-furnace-2", "color": "#605c54", "position": "-576px -0px" },
     {
       "id": "assembly-electric",
-      "color": "#7b7677",
-      "position": "-512px -0px"
+      "color": "#8b8482",
+      "position": "-768px -0px"
     },
     {
       "id": "assembly-electric-2",
-      "color": "#676870",
-      "position": "-448px -0px"
+      "color": "#6f6f79",
+      "position": "-704px -0px"
     },
-    { "id": "assembly-manual", "color": "#75706f", "position": "-576px -0px" },
-    { "id": "assembly-robotic", "color": "#7c7b7a", "position": "-704px -0px" },
+    { "id": "assembly-manual", "color": "#857d78", "position": "-832px -0px" },
+    { "id": "assembly-robotic", "color": "#868480", "position": "-960px -0px" },
     {
       "id": "assembly-robotic-2",
       "color": "#87806c",
-      "position": "-640px -0px"
+      "position": "-896px -0px"
     },
-    { "id": "baking-unit", "color": "#92918f", "position": "-768px -0px" },
-    { "id": "basic-distiller", "color": "#62615c", "position": "-832px -0px" },
-    { "id": "biomass", "color": "#a9c351", "position": "-896px -0px" },
-    { "id": "blast-furnace", "color": "#8a7b71", "position": "-64px -64px" },
-    { "id": "blast-furnace-2", "color": "#807368", "position": "-0px -64px" },
-    { "id": "boiler-coal", "color": "#6b6964", "position": "-128px -64px" },
-    { "id": "boiler-electric", "color": "#787672", "position": "-192px -64px" },
-    { "id": "boiler-gas", "color": "#847c69", "position": "-256px -64px" },
-    { "id": "brine", "color": "#b7e8fa", "position": "-320px -64px" },
-    { "id": "burner-solid", "color": "#505963", "position": "-384px -64px" },
-    { "id": "carbon-dioxide", "color": "#7d7d7d", "position": "-448px -64px" },
-    { "id": "cement", "color": "#d2b9a6", "position": "-512px -64px" },
-    { "id": "chemical-plant", "color": "#5e6268", "position": "-640px -64px" },
+    { "id": "baking-unit", "color": "#92918f", "position": "-1024px -0px" },
+    { "id": "barrier-corner", "color": "#908c7a", "position": "-1088px -0px" },
+    { "id": "barrier-cross", "color": "#8d8b7e", "position": "-1152px -0px" },
+    { "id": "barrier-end", "color": "#9f9c87", "position": "-1216px -0px" },
+    {
+      "id": "barrier-straight-1",
+      "color": "#a6a38e",
+      "position": "-0px -64px"
+    },
+    { "id": "barrier-tree", "color": "#89877b", "position": "-64px -64px" },
+    {
+      "id": "basic-diesel-distiller",
+      "color": "#69665e",
+      "position": "-128px -64px"
+    },
+    {
+      "id": "basic-server-rack",
+      "color": "#bcbcbc",
+      "position": "-192px -64px"
+    },
+    { "id": "battleship", "color": "#ffffff", "position": "-256px -64px" },
+    { "id": "bauxite", "color": "#af502a", "position": "-320px -64px" },
+    { "id": "beacon", "color": "#6e5a59", "position": "-384px -64px" },
+    { "id": "bedrock", "color": "#908f96", "position": "-448px -64px" },
+    { "id": "biomass", "color": "#a9c351", "position": "-512px -64px" },
+    { "id": "blueprint", "color": "#ffffff", "position": "-576px -64px" },
+    { "id": "boiler-coal", "color": "#726f68", "position": "-640px -64px" },
+    { "id": "boiler-electric", "color": "#8b8883", "position": "-704px -64px" },
+    { "id": "boiler-gas", "color": "#9a9075", "position": "-768px -64px" },
+    { "id": "bread", "color": "#eb9c3a", "position": "-832px -64px" },
+    { "id": "brine", "color": "#b7e8fa", "position": "-896px -64px" },
+    { "id": "broken-glass", "color": "#a3a0ae", "position": "-960px -64px" },
+    { "id": "build", "color": "#fefefe", "position": "-1024px -64px" },
+    { "id": "buildings", "color": "#ffffff", "position": "-1088px -64px" },
+    { "id": "bulldoze", "color": "#ffffff", "position": "-1152px -64px" },
+    { "id": "burner", "color": "#505963", "position": "-1216px -64px" },
+    { "id": "cake", "color": "#f8cd91", "position": "-0px -128px" },
+    { "id": "canola", "color": "#cdb928", "position": "-64px -128px" },
+    { "id": "carbon-dioxide", "color": "#7d7d7d", "position": "-128px -128px" },
+    { "id": "cargo-depot-1", "color": "#73736d", "position": "-192px -128px" },
+    { "id": "cargo-depot-2", "color": "#6f6f6a", "position": "-256px -128px" },
+    { "id": "cargo-depot-3", "color": "#6d6c68", "position": "-320px -128px" },
+    { "id": "cargo-depot-4", "color": "#6b6b66", "position": "-384px -128px" },
+    {
+      "id": "cargo-depot-module-fluid-1",
+      "color": "#9f9d9b",
+      "position": "-448px -128px"
+    },
+    {
+      "id": "cargo-depot-module-fluid-2",
+      "color": "#9e9b9a",
+      "position": "-512px -128px"
+    },
+    {
+      "id": "cargo-depot-module-fluid-3",
+      "color": "#a7a2a1",
+      "position": "-576px -128px"
+    },
+    {
+      "id": "cargo-depot-module-loose-1",
+      "color": "#a2a4a5",
+      "position": "-640px -128px"
+    },
+    {
+      "id": "cargo-depot-module-loose-2",
+      "color": "#aaa9a7",
+      "position": "-704px -128px"
+    },
+    {
+      "id": "cargo-depot-module-loose-3",
+      "color": "#a39d98",
+      "position": "-768px -128px"
+    },
+    {
+      "id": "cargo-depot-module-unit-1",
+      "color": "#7a7c71",
+      "position": "-832px -128px"
+    },
+    {
+      "id": "cargo-depot-module-unit-2",
+      "color": "#7e8278",
+      "position": "-896px -128px"
+    },
+    {
+      "id": "cargo-depot-module-unit-3",
+      "color": "#7f7f76",
+      "position": "-960px -128px"
+    },
+    { "id": "cargo-ship", "color": "#ffffff", "position": "-1024px -128px" },
+    { "id": "caster", "color": "#7b817e", "position": "-0px -192px" },
+    { "id": "caster-2", "color": "#8a846f", "position": "-1088px -128px" },
+    { "id": "caster-cooled", "color": "#7e8482", "position": "-1216px -128px" },
+    {
+      "id": "caster-cooled-2",
+      "color": "#8b8775",
+      "position": "-1152px -128px"
+    },
+    { "id": "cement", "color": "#d2b9a6", "position": "-64px -192px" },
+    { "id": "charcoal-maker", "color": "#615955", "position": "-128px -192px" },
+    { "id": "chemical-plant", "color": "#5e6268", "position": "-256px -192px" },
     {
       "id": "chemical-plant-2",
       "color": "#68635e",
-      "position": "-576px -64px"
+      "position": "-192px -192px"
     },
-    { "id": "chlorine", "color": "#afba4c", "position": "-704px -64px" },
-    { "id": "coal", "color": "#676565", "position": "-832px -64px" },
-    { "id": "coal-maker", "color": "#5d5957", "position": "-768px -64px" },
-    { "id": "compost", "color": "#8c684a", "position": "-896px -64px" },
-    { "id": "concrete-mixer", "color": "#92918d", "position": "-128px -128px" },
-    { "id": "concrete-mixer-2", "color": "#969284", "position": "-0px -128px" },
+    { "id": "chicken", "color": "#ebd8ce", "position": "-448px -192px" },
+    {
+      "id": "chicken-carcass",
+      "color": "#fbe8d0",
+      "position": "-320px -192px"
+    },
+    { "id": "chicken-farm", "color": "#a1a3a6", "position": "-384px -192px" },
+    { "id": "chilled-water", "color": "#90ddfb", "position": "-512px -192px" },
+    { "id": "chlorine", "color": "#afba4c", "position": "-576px -192px" },
+    { "id": "coal", "color": "#676565", "position": "-640px -192px" },
+    { "id": "company-tree", "color": "#ffffff", "position": "-704px -192px" },
+    { "id": "compost", "color": "#8c684a", "position": "-768px -192px" },
+    { "id": "computing", "color": "#ffffff", "position": "-832px -192px" },
+    { "id": "concrete", "color": "#ffffff", "position": "-1216px -192px" },
+    {
+      "id": "concrete-crushed",
+      "color": "#b0a9a5",
+      "position": "-896px -192px"
+    },
+    {
+      "id": "concrete-mixer",
+      "color": "#92918d",
+      "position": "-1088px -192px"
+    },
+    {
+      "id": "concrete-mixer-2",
+      "color": "#969284",
+      "position": "-960px -192px"
+    },
     {
       "id": "concrete-mixer-3",
       "color": "#978b84",
-      "position": "-64px -128px"
+      "position": "-1024px -192px"
     },
-    { "id": "concrete-slab", "color": "#b0b4b4", "position": "-192px -128px" },
+    { "id": "concrete-slab", "color": "#b0b4b4", "position": "-1152px -192px" },
     {
       "id": "construction-parts",
       "color": "#e0e0e0",
-      "position": "-448px -128px"
+      "position": "-192px -256px"
     },
     {
       "id": "construction-parts-2",
       "color": "#e0c038",
-      "position": "-256px -128px"
+      "position": "-0px -256px"
     },
     {
       "id": "construction-parts-3",
       "color": "#e04939",
-      "position": "-320px -128px"
+      "position": "-64px -256px"
     },
     {
       "id": "construction-parts-4",
       "color": "#8a64d5",
-      "position": "-384px -128px"
+      "position": "-128px -256px"
     },
     {
       "id": "consumer-electronics",
       "color": "#94b4d3",
-      "position": "-512px -128px"
+      "position": "-256px -256px"
     },
-    { "id": "cooled-caster", "color": "#848787", "position": "-640px -128px" },
+    { "id": "cooking-oil", "color": "#f7c331", "position": "-320px -256px" },
+    { "id": "cooling-ower-1", "color": "#8d8a85", "position": "-384px -256px" },
     {
-      "id": "cooled-caster-2",
-      "color": "#7c776a",
-      "position": "-576px -128px"
+      "id": "cooling-tower-2",
+      "color": "#a09e95",
+      "position": "-448px -256px"
     },
-    { "id": "cooling-tower", "color": "#8d8a85", "position": "-768px -128px" },
-    {
-      "id": "cooling-tower-large",
-      "color": "#88867f",
-      "position": "-704px -128px"
-    },
-    { "id": "copper", "color": "#cd8958", "position": "-64px -192px" },
+    { "id": "copper", "color": "#cd8958", "position": "-768px -256px" },
     {
       "id": "copper-electrolysis",
-      "color": "#7d7d78",
-      "position": "-832px -128px"
+      "color": "#81847b",
+      "position": "-512px -256px"
     },
-    { "id": "copper-ore", "color": "#327130", "position": "-0px -192px" },
+    { "id": "copper-ore", "color": "#327130", "position": "-640px -256px" },
     {
       "id": "copper-ore-crushed",
       "color": "#3c5b58",
-      "position": "-896px -128px"
+      "position": "-576px -256px"
     },
-    { "id": "corn", "color": "#abbc41", "position": "-128px -192px" },
-    { "id": "cracking-unit", "color": "#6f716d", "position": "-192px -192px" },
-    { "id": "crude-oil", "color": "#6b7282", "position": "-256px -192px" },
-    { "id": "crusher", "color": "#717172", "position": "-320px -192px" },
-    { "id": "data-center", "color": "#858f97", "position": "-384px -192px" },
-    { "id": "diesel", "color": "#d36c44", "position": "-512px -192px" },
+    { "id": "copper-scrap", "color": "#c67647", "position": "-704px -256px" },
+    { "id": "corn", "color": "#abbc41", "position": "-896px -256px" },
+    { "id": "corn-mash", "color": "#d0ca8a", "position": "-832px -256px" },
+    { "id": "crude-oil", "color": "#6b7282", "position": "-960px -256px" },
+    { "id": "crusher", "color": "#797a7c", "position": "-1024px -256px" },
+    { "id": "data-center", "color": "#858f97", "position": "-1088px -256px" },
+    { "id": "diesel", "color": "#d36c44", "position": "-1216px -256px" },
     {
       "id": "diesel-generator",
-      "color": "#4e545c",
-      "position": "-448px -192px"
+      "color": "#4a5461",
+      "position": "-1152px -256px"
     },
-    { "id": "dirt", "color": "#ad8958", "position": "-576px -192px" },
+    { "id": "dirt", "color": "#ad8958", "position": "-0px -320px" },
+    { "id": "disinfectant", "color": "#a7c6f0", "position": "-64px -320px" },
     {
-      "id": "distillation-stage-1",
-      "color": "#8a7f78",
-      "position": "-640px -192px"
-    },
-    {
-      "id": "distillation-stage-2",
-      "color": "#8b7d73",
-      "position": "-704px -192px"
+      "id": "distillation-tower-1",
+      "color": "#948d8d",
+      "position": "-128px -320px"
     },
     {
-      "id": "distillation-stage-3",
-      "color": "#8f8173",
-      "position": "-768px -192px"
+      "id": "distillation-tower-2",
+      "color": "#9a8d81",
+      "position": "-192px -320px"
     },
-    { "id": "electricity", "color": "#fed01f", "position": "-832px -192px" },
-    { "id": "electrolyzer", "color": "#766c6a", "position": "-896px -192px" },
-    { "id": "electronics", "color": "#c6a380", "position": "-0px -256px" },
     {
-      "id": "enrichment-plant",
-      "color": "#737575",
-      "position": "-64px -256px"
+      "id": "distillation-tower-3",
+      "color": "#958373",
+      "position": "-256px -320px"
     },
+    { "id": "drugs", "color": "#b5bbb9", "position": "-320px -320px" },
+    { "id": "dumping", "color": "#ffffff", "position": "-384px -320px" },
+    { "id": "eggs", "color": "#d9bea8", "position": "-448px -320px" },
+    { "id": "electricity", "color": "#fed01f", "position": "-512px -320px" },
+    { "id": "electrolyzer", "color": "#7c7070", "position": "-576px -320px" },
+    { "id": "electronics", "color": "#c6a380", "position": "-768px -320px" },
+    { "id": "electronics-2", "color": "#40a262", "position": "-640px -320px" },
+    { "id": "electronics-3", "color": "#8b4d47", "position": "-704px -320px" },
+    { "id": "ethanol", "color": "#bfc7db", "position": "-832px -320px" },
     {
       "id": "evaporation-pond",
-      "color": "#5f6d7c",
-      "position": "-192px -256px"
+      "color": "#6a7d90",
+      "position": "-960px -320px"
     },
     {
       "id": "evaporation-pond-heated",
-      "color": "#5d6a78",
-      "position": "-128px -256px"
+      "color": "#657688",
+      "position": "-896px -320px"
     },
-    { "id": "exhaust", "color": "#a9a7a6", "position": "-320px -256px" },
+    { "id": "exhaust", "color": "#a9a7a6", "position": "-1088px -320px" },
     {
       "id": "exhaust-scrubber",
-      "color": "#7c7b78",
-      "position": "-256px -256px"
+      "color": "#878785",
+      "position": "-1024px -320px"
     },
-    { "id": "farm", "color": "#706b47", "position": "-384px -256px" },
+    { "id": "farm-1", "color": "#292725", "position": "-1152px -320px" },
+    { "id": "farm-2", "color": "#2c2b2b", "position": "-1216px -320px" },
+    { "id": "farm-3", "color": "#636165", "position": "-0px -384px" },
+    { "id": "farm-4", "color": "#4c5668", "position": "-64px -384px" },
+    { "id": "farms", "color": "#ffffff", "position": "-128px -384px" },
     {
       "id": "fermentation-tank",
       "color": "#6d6e70",
-      "position": "-448px -256px"
+      "position": "-192px -384px"
     },
-    { "id": "fertilizer-1", "color": "#c8ab79", "position": "-512px -256px" },
-    { "id": "fertilizer-2", "color": "#d3d059", "position": "-576px -256px" },
+    { "id": "fertility", "color": "#626427", "position": "-256px -384px" },
+    { "id": "fertilizer-1", "color": "#c8ab79", "position": "-320px -384px" },
+    { "id": "fertilizer-2", "color": "#d3d059", "position": "-384px -384px" },
     {
       "id": "fertilizer-organic",
       "color": "#a4b77e",
-      "position": "-640px -256px"
+      "position": "-448px -384px"
     },
-    { "id": "filter-media", "color": "#c7ac7c", "position": "-704px -256px" },
-    { "id": "flare", "color": "#61575e", "position": "-768px -256px" },
-    { "id": "flat-conveyor", "color": "#67696e", "position": "-0px -320px" },
+    { "id": "filter-media", "color": "#c7ac7c", "position": "-512px -384px" },
+    { "id": "flare", "color": "#60575e", "position": "-576px -384px" },
     {
-      "id": "flat-conveyor-2",
-      "color": "#6a6f77",
-      "position": "-832px -256px"
+      "id": "flat-conveyor-sorter",
+      "color": "#686f76",
+      "position": "-640px -384px"
     },
+    { "id": "flour", "color": "#aac7ee", "position": "-704px -384px" },
+    { "id": "flowers", "color": "#b0b480", "position": "-768px -384px" },
+    { "id": "flywheel", "color": "#937c5e", "position": "-832px -384px" },
+    { "id": "food", "color": "#ffffff", "position": "-1088px -384px" },
+    { "id": "mill", "color": "#7a7e85", "position": "-896px -384px" },
+    { "id": "food-pack", "color": "#e0994a", "position": "-960px -384px" },
     {
-      "id": "flat-conveyor-3",
-      "color": "#7e7373",
-      "position": "-896px -256px"
+      "id": "food-processor",
+      "color": "#7c8691",
+      "position": "-1024px -384px"
     },
-    { "id": "food", "color": "#9c5c38", "position": "-128px -320px" },
-    { "id": "food-processor", "color": "#7c8691", "position": "-64px -320px" },
-    { "id": "fuel-gas", "color": "#d27e33", "position": "-192px -320px" },
+    { "id": "fruit", "color": "#f09f54", "position": "-1152px -384px" },
+    { "id": "fuel-gas", "color": "#d27e33", "position": "-1216px -384px" },
+    { "id": "fuel-station-1", "color": "#7a7575", "position": "-0px -448px" },
+    { "id": "fuel-station-2", "color": "#88817c", "position": "-64px -448px" },
+    { "id": "fuel-station-3", "color": "#99978c", "position": "-128px -448px" },
     {
       "id": "gas-injection-pump",
       "color": "#6b645a",
-      "position": "-256px -320px"
+      "position": "-192px -448px"
     },
-    { "id": "glass", "color": "#87cdc9", "position": "-512px -320px" },
-    { "id": "glass-maker", "color": "#586065", "position": "-384px -320px" },
-    { "id": "glass-maker-2", "color": "#586065", "position": "-320px -320px" },
-    { "id": "glass-mix", "color": "#d0bb83", "position": "-448px -320px" },
-    { "id": "gold-furnace", "color": "#766e63", "position": "-576px -320px" },
-    { "id": "gold-ore", "color": "#826c4d", "position": "-640px -320px" },
-    { "id": "graphite", "color": "#6a6868", "position": "-704px -320px" },
-    { "id": "gravel", "color": "#9e9088", "position": "-768px -320px" },
-    { "id": "green-manure", "color": "#1f922a", "position": "-832px -320px" },
-    { "id": "greenhouse", "color": "#5d5d5f", "position": "-0px -384px" },
-    { "id": "greenhouse-2", "color": "#4a525e", "position": "-896px -320px" },
+    { "id": "glass", "color": "#87cdc9", "position": "-448px -448px" },
+    { "id": "glass-maker-1", "color": "#546470", "position": "-256px -448px" },
+    { "id": "glass-maker-2", "color": "#566167", "position": "-320px -448px" },
+    { "id": "glass-mix", "color": "#d0bb83", "position": "-384px -448px" },
+    { "id": "gold", "color": "#edba5a", "position": "-896px -448px" },
+    { "id": "gold-furnace", "color": "#766e63", "position": "-512px -448px" },
+    { "id": "gold-ore", "color": "#826c4d", "position": "-768px -448px" },
     {
-      "id": "groundwater-pump",
-      "color": "#63666a",
-      "position": "-64px -384px"
-    },
-    { "id": "heavy-oil", "color": "#9e8e79", "position": "-128px -384px" },
-    {
-      "id": "high-pressure-turbine",
-      "color": "#5b6471",
-      "position": "-256px -384px"
+      "id": "gold-ore-concentrate",
+      "color": "#665e58",
+      "position": "-576px -448px"
     },
     {
-      "id": "high-pressure-turbine-2",
-      "color": "#5b707f",
-      "position": "-192px -384px"
+      "id": "gold-ore-crushed",
+      "color": "#56545f",
+      "position": "-640px -448px"
     },
+    {
+      "id": "gold-ore-powder",
+      "color": "#53525f",
+      "position": "-704px -448px"
+    },
+    { "id": "gold-scrap", "color": "#c1a041", "position": "-832px -448px" },
+    { "id": "graphite", "color": "#6a6868", "position": "-960px -448px" },
+    { "id": "gravel", "color": "#9e9088", "position": "-1024px -448px" },
+    { "id": "green-manure", "color": "#1f922a", "position": "-1088px -448px" },
+    { "id": "health", "color": "#ffffff", "position": "-1152px -448px" },
+    { "id": "healthcare", "color": "#ef7d85", "position": "-1216px -448px" },
+    { "id": "heavy-oil", "color": "#9e8e79", "position": "-0px -512px" },
+    { "id": "hospital", "color": "#8f9191", "position": "-64px -512px" },
     {
       "id": "household-appliances",
       "color": "#cad1d6",
-      "position": "-320px -384px"
+      "position": "-128px -512px"
     },
     {
       "id": "household-goods",
       "color": "#9d9f52",
-      "position": "-384px -384px"
+      "position": "-192px -512px"
     },
-    { "id": "hydrogen", "color": "#c1c0c0", "position": "-512px -384px" },
+    { "id": "housing", "color": "#604e50", "position": "-384px -512px" },
+    { "id": "housing-2", "color": "#6b696a", "position": "-256px -512px" },
+    { "id": "housing-3", "color": "#66615f", "position": "-320px -512px" },
+    {
+      "id": "hydro-cracker-1",
+      "color": "#747972",
+      "position": "-448px -512px"
+    },
+    { "id": "hydrogen", "color": "#c1c0c0", "position": "-640px -512px" },
+    {
+      "id": "hydrogen-fluoride",
+      "color": "#bdb941",
+      "position": "-512px -512px"
+    },
     {
       "id": "hydrogen-reformer",
-      "color": "#878786",
-      "position": "-448px -384px"
+      "color": "#919190",
+      "position": "-576px -512px"
     },
-    { "id": "impure-copper", "color": "#bc653f", "position": "-576px -384px" },
-    { "id": "iron", "color": "#757575", "position": "-768px -384px" },
-    { "id": "iron-ore", "color": "#a95439", "position": "-704px -384px" },
+    { "id": "impure-copper", "color": "#bc653f", "position": "-704px -512px" },
+    {
+      "id": "industrial-mixer",
+      "color": "#847868",
+      "position": "-768px -512px"
+    },
+    { "id": "iron", "color": "#757575", "position": "-1024px -512px" },
+    { "id": "iron-ore", "color": "#a95439", "position": "-896px -512px" },
     {
       "id": "iron-ore-crushed",
       "color": "#774d59",
-      "position": "-640px -384px"
+      "position": "-832px -512px"
     },
-    { "id": "irrigated-farm", "color": "#6e6947", "position": "-832px -384px" },
-    { "id": "light-oil", "color": "#afb989", "position": "-896px -384px" },
-    { "id": "limestone", "color": "#c9c99b", "position": "-0px -448px" },
-    { "id": "liquid-dump", "color": "#6d6b69", "position": "-64px -448px" },
+    { "id": "iron-scrap", "color": "#8e726d", "position": "-960px -512px" },
+    { "id": "lab-equipment", "color": "#d7d7d7", "position": "-0px -576px" },
     {
-      "id": "low-pressure-turbine",
-      "color": "#5a636f",
-      "position": "-192px -448px"
+      "id": "lab-equipment-2",
+      "color": "#e0be38",
+      "position": "-1088px -512px"
     },
     {
-      "id": "low-pressure-turbine-2",
-      "color": "#5c707f",
-      "position": "-128px -448px"
+      "id": "lab-equipment-3",
+      "color": "#df4939",
+      "position": "-1152px -512px"
     },
-    { "id": "maintenance-1", "color": "#dcdcdc", "position": "-256px -448px" },
-    { "id": "maintenance-2", "color": "#dcbc37", "position": "-384px -448px" },
     {
-      "id": "maintenance-2-depot",
-      "color": "#6e6056",
-      "position": "-320px -448px"
+      "id": "lab-equipment-4",
+      "color": "#8462cf",
+      "position": "-1216px -512px"
     },
-    { "id": "maintenance-3", "color": "#dc4738", "position": "-512px -448px" },
+    { "id": "land-rest", "color": "#c08d45", "position": "-64px -576px" },
     {
-      "id": "maintenance-3-depot",
-      "color": "#73564f",
-      "position": "-448px -448px"
+      "id": "land-water-pump",
+      "color": "#62686e",
+      "position": "-128px -576px"
     },
+    { "id": "light-oil", "color": "#afb989", "position": "-192px -576px" },
+    { "id": "limestone", "color": "#c9c99b", "position": "-256px -576px" },
+    {
+      "id": "liquid-nitrogen",
+      "color": "#bdc8e1",
+      "position": "-320px -576px"
+    },
+    {
+      "id": "loose-conveyor-sorter",
+      "color": "#61686c",
+      "position": "-384px -576px"
+    },
+    { "id": "machines", "color": "#ffffff", "position": "-448px -576px" },
+    { "id": "maintenance", "color": "#ffffff", "position": "-960px -576px" },
+    { "id": "maintenance-1", "color": "#dcdcdc", "position": "-512px -576px" },
+    { "id": "maintenance-2", "color": "#dcbc37", "position": "-576px -576px" },
+    { "id": "maintenance-3", "color": "#dc4738", "position": "-640px -576px" },
     {
       "id": "maintenance-depot",
-      "color": "#675e60",
-      "position": "-640px -448px"
+      "color": "#867872",
+      "position": "-896px -576px"
     },
     {
-      "id": "maintenance-depot-basic",
-      "color": "#736965",
-      "position": "-576px -448px"
+      "id": "maintenance-depot-1",
+      "color": "#6c5b5b",
+      "position": "-704px -576px"
+    },
+    {
+      "id": "maintenance-depot-2",
+      "color": "#755e4e",
+      "position": "-768px -576px"
+    },
+    {
+      "id": "maintenance-depot-3",
+      "color": "#73564f",
+      "position": "-832px -576px"
+    },
+    { "id": "meat", "color": "#e26d74", "position": "-1088px -576px" },
+    {
+      "id": "meat-trimmings",
+      "color": "#ef7d8d",
+      "position": "-1024px -576px"
+    },
+    {
+      "id": "mechanical-parts",
+      "color": "#b4a9ac",
+      "position": "-1152px -576px"
     },
     {
       "id": "mechanical-power",
       "color": "#e1cea6",
-      "position": "-704px -448px"
+      "position": "-1216px -576px"
     },
-    { "id": "medium-oil", "color": "#a895bc", "position": "-768px -448px" },
-    { "id": "metal-caster", "color": "#737473", "position": "-896px -448px" },
-    { "id": "metal-caster-2", "color": "#7a7465", "position": "-832px -448px" },
+    {
+      "id": "medical-equipment",
+      "color": "#bfd0f3",
+      "position": "-0px -640px"
+    },
+    {
+      "id": "medical-supplies",
+      "color": "#eaeaea",
+      "position": "-192px -640px"
+    },
+    {
+      "id": "medical-supplies-2",
+      "color": "#eac83b",
+      "position": "-64px -640px"
+    },
+    {
+      "id": "medical-supplies-3",
+      "color": "#ea4c3c",
+      "position": "-128px -640px"
+    },
+    { "id": "medium-oil", "color": "#a895bc", "position": "-256px -640px" },
+    { "id": "metallurgy", "color": "#ffffff", "position": "-320px -640px" },
     {
       "id": "microchip-machine",
       "color": "#a9a5a2",
-      "position": "-64px -512px"
+      "position": "-448px -640px"
     },
     {
       "id": "microchip-machine-2",
       "color": "#a6a5aa",
-      "position": "-0px -512px"
+      "position": "-384px -640px"
     },
-    { "id": "mill", "color": "#7a7e85", "position": "-128px -512px" },
-    { "id": "mixer", "color": "#847868", "position": "-192px -512px" },
-    { "id": "molten-channel", "color": "#4f504e", "position": "-256px -512px" },
-    { "id": "molten-copper", "color": "#ddab42", "position": "-320px -512px" },
-    { "id": "molten-glass", "color": "#c2c490", "position": "-384px -512px" },
-    { "id": "molten-iron", "color": "#ce8a50", "position": "-448px -512px" },
-    { "id": "molten-silicon", "color": "#dcc58b", "position": "-512px -512px" },
-    { "id": "molten-steel", "color": "#d7b664", "position": "-576px -512px" },
-    { "id": "naphtha", "color": "#d0ca88", "position": "-640px -512px" },
-    { "id": "nitrogen", "color": "#678bc4", "position": "-704px -512px" },
+    { "id": "microchips", "color": "#9e867c", "position": "-1216px -640px" },
+    {
+      "id": "microchips-stage-1a",
+      "color": "#e2bbeb",
+      "position": "-512px -640px"
+    },
+    {
+      "id": "microchips-stage-1b",
+      "color": "#ebcfbd",
+      "position": "-576px -640px"
+    },
+    {
+      "id": "microchips-stage-1c",
+      "color": "#d8bfcf",
+      "position": "-640px -640px"
+    },
+    {
+      "id": "microchips-stage-2a",
+      "color": "#dea6eb",
+      "position": "-704px -640px"
+    },
+    {
+      "id": "microchips-stage-2b",
+      "color": "#ebc1a5",
+      "position": "-768px -640px"
+    },
+    {
+      "id": "microchips-stage-2c",
+      "color": "#d3aec8",
+      "position": "-832px -640px"
+    },
+    {
+      "id": "microchips-stage-3a",
+      "color": "#da8eeb",
+      "position": "-896px -640px"
+    },
+    {
+      "id": "microchips-stage-3b",
+      "color": "#ebb38e",
+      "position": "-960px -640px"
+    },
+    {
+      "id": "microchips-stage-3c",
+      "color": "#cf9ec2",
+      "position": "-1024px -640px"
+    },
+    {
+      "id": "microchips-stage-4a",
+      "color": "#d576eb",
+      "position": "-1088px -640px"
+    },
+    {
+      "id": "microchips-stage-4b",
+      "color": "#eba576",
+      "position": "-1152px -640px"
+    },
+    {
+      "id": "mine-control-tower",
+      "color": "#8e8378",
+      "position": "-0px -704px"
+    },
+    { "id": "mining", "color": "#ffffff", "position": "-64px -704px" },
+    {
+      "id": "molten-aluminum",
+      "color": "#e0c485",
+      "position": "-128px -704px"
+    },
+    { "id": "molten-copper", "color": "#ddab42", "position": "-192px -704px" },
+    { "id": "molten-glass", "color": "#c2c490", "position": "-256px -704px" },
+    { "id": "molten-iron", "color": "#ce8a50", "position": "-320px -704px" },
+    { "id": "molten-silicon", "color": "#dcc58b", "position": "-384px -704px" },
+    { "id": "molten-steel", "color": "#d7b664", "position": "-448px -704px" },
+    { "id": "mono-wafer", "color": "#edebe9", "position": "-512px -704px" },
+    { "id": "morphine", "color": "#9fe4ee", "position": "-576px -704px" },
+    { "id": "naphtha", "color": "#d0ca88", "position": "-640px -704px" },
+    { "id": "nitrogen", "color": "#678bc4", "position": "-704px -704px" },
     {
       "id": "nuclear-reactor",
-      "color": "#737679",
-      "position": "-768px -512px"
+      "color": "#7e8287",
+      "position": "-768px -704px"
     },
-    { "id": "oil-pump", "color": "#635f58", "position": "-832px -512px" },
-    { "id": "oxygen", "color": "#c55b5b", "position": "-64px -576px" },
-    { "id": "oxygen-furnace", "color": "#7b8286", "position": "-0px -576px" },
+    {
+      "id": "nuclear-waste-storage",
+      "color": "#585859",
+      "position": "-832px -704px"
+    },
+    {
+      "id": "ocean-water-pump",
+      "color": "#757777",
+      "position": "-960px -704px"
+    },
+    {
+      "id": "ocean-water-pump-large",
+      "color": "#73777a",
+      "position": "-896px -704px"
+    },
+    { "id": "oil", "color": "#ffffff", "position": "-1088px -704px" },
+    { "id": "oil-pump", "color": "#5d5852", "position": "-1024px -704px" },
+    { "id": "oxygen", "color": "#c55b5b", "position": "-0px -768px" },
+    {
+      "id": "oxygen-furnace",
+      "color": "#798284",
+      "position": "-1216px -704px"
+    },
     {
       "id": "oxygen-furnace-2",
-      "color": "#7e7864",
-      "position": "-896px -512px"
+      "color": "#8e896f",
+      "position": "-1152px -704px"
     },
-    { "id": "pcb", "color": "#46b676", "position": "-128px -576px" },
-    { "id": "pipe", "color": "#606367", "position": "-320px -576px" },
-    { "id": "pipe-2", "color": "#637385", "position": "-192px -576px" },
-    { "id": "pipe-3", "color": "#84706d", "position": "-256px -576px" },
-    { "id": "plastic", "color": "#a3c2c5", "position": "-384px -576px" },
+    { "id": "pcb", "color": "#46b676", "position": "-64px -768px" },
+    { "id": "penicillin", "color": "#92dde0", "position": "-128px -768px" },
+    { "id": "placeholder", "color": "#bcbcbc", "position": "-192px -768px" },
+    { "id": "plastic", "color": "#a3c2c5", "position": "-256px -768px" },
     {
       "id": "polymerization-plant",
-      "color": "#7b787b",
-      "position": "-448px -576px"
+      "color": "#858084",
+      "position": "-320px -768px"
     },
-    { "id": "potato", "color": "#653a0e", "position": "-512px -576px" },
+    { "id": "poppy", "color": "#63cb53", "position": "-384px -768px" },
+    { "id": "population", "color": "#ffffff", "position": "-512px -768px" },
     {
-      "id": "power-generator",
-      "color": "#7d715d",
-      "position": "-640px -576px"
+      "id": "population-small",
+      "color": "#ffffff",
+      "position": "-448px -768px"
+    },
+    { "id": "potato", "color": "#653a0e", "position": "-576px -768px" },
+    { "id": "power", "color": "#ffffff", "position": "-832px -768px" },
+    { "id": "power-gauge", "color": "#b68b48", "position": "-640px -768px" },
+    {
+      "id": "power-generator-1",
+      "color": "#897a5e",
+      "position": "-704px -768px"
     },
     {
       "id": "power-generator-2",
-      "color": "#8b7350",
-      "position": "-576px -576px"
+      "color": "#957848",
+      "position": "-768px -768px"
     },
-    { "id": "quartz", "color": "#c0bec1", "position": "-704px -576px" },
+    { "id": "quartz", "color": "#c0bec1", "position": "-896px -768px" },
+    { "id": "radiation", "color": "#ffffff", "position": "-960px -768px" },
     {
-      "id": "rainwater-harvester",
-      "color": "#3a79a7",
-      "position": "-768px -576px"
+      "id": "rainwater-arvester",
+      "color": "#418fc6",
+      "position": "-1024px -768px"
     },
-    { "id": "rock", "color": "#978982", "position": "-832px -576px" },
-    { "id": "rotary-kiln", "color": "#565554", "position": "-0px -640px" },
+    { "id": "recipes", "color": "#ffffff", "position": "-1088px -768px" },
+    { "id": "recyclables", "color": "#5e4b39", "position": "-1152px -768px" },
+    { "id": "research", "color": "#ffffff", "position": "-256px -832px" },
+    {
+      "id": "research-lab-1",
+      "color": "#868380",
+      "position": "-1216px -768px"
+    },
+    { "id": "research-lab-2", "color": "#8e8b88", "position": "-0px -832px" },
+    { "id": "research-lab-3", "color": "#767e8c", "position": "-64px -832px" },
+    { "id": "research-lab-4", "color": "#76808b", "position": "-128px -832px" },
+    { "id": "research-lab-5", "color": "#828286", "position": "-192px -832px" },
+    { "id": "resources", "color": "#ffffff", "position": "-320px -832px" },
+    {
+      "id": "retaining-wall-Tee",
+      "color": "#8f8b88",
+      "position": "-640px -832px"
+    },
+    {
+      "id": "retaining-wall-corner",
+      "color": "#8e8987",
+      "position": "-384px -832px"
+    },
+    {
+      "id": "retaining-wall-cross",
+      "color": "#86817e",
+      "position": "-448px -832px"
+    },
+    {
+      "id": "retaining-wall-straight-1",
+      "color": "#777371",
+      "position": "-512px -832px"
+    },
+    {
+      "id": "retaining-wall-straight-4",
+      "color": "#95908e",
+      "position": "-576px -832px"
+    },
+    { "id": "rock", "color": "#978982", "position": "-704px -832px" },
+    {
+      "id": "rocket-assembly-depot",
+      "color": "#96999d",
+      "position": "-768px -832px"
+    },
+    {
+      "id": "rocket-launch-pad",
+      "color": "#817c7b",
+      "position": "-832px -832px"
+    },
+    { "id": "rotary-kiln", "color": "#595757", "position": "-960px -832px" },
     {
       "id": "rotary-kiln-gas",
       "color": "#5d5d5b",
-      "position": "-896px -576px"
+      "position": "-896px -832px"
     },
-    { "id": "rubber", "color": "#5d6066", "position": "-128px -640px" },
-    { "id": "rubber-maker", "color": "#777679", "position": "-64px -640px" },
-    { "id": "salt", "color": "#f5f7fa", "position": "-192px -640px" },
-    { "id": "sand", "color": "#cdb058", "position": "-256px -640px" },
-    { "id": "seawater", "color": "#59d8fe", "position": "-448px -640px" },
-    { "id": "seawater-pump", "color": "#8a8c8c", "position": "-384px -640px" },
+    { "id": "rubber", "color": "#5d6066", "position": "-1024px -832px" },
+    { "id": "ruins", "color": "#6d5e56", "position": "-1088px -832px" },
+    { "id": "sailor", "color": "#ffffff", "position": "-1152px -832px" },
+    { "id": "salt", "color": "#f5f7fa", "position": "-1216px -832px" },
+    { "id": "sand", "color": "#cdb058", "position": "-0px -896px" },
+    { "id": "sandstone", "color": "#e26c20", "position": "-64px -896px" },
+    { "id": "sausage", "color": "#e77e49", "position": "-128px -896px" },
+    { "id": "sea-water", "color": "#59d8fe", "position": "-192px -896px" },
+    { "id": "server", "color": "#677c89", "position": "-256px -896px" },
+    { "id": "settlement", "color": "#ffffff", "position": "-0px -960px" },
     {
-      "id": "seawater-pump-tall",
-      "color": "#6c6e70",
-      "position": "-320px -640px"
+      "id": "settlement-biomass-module",
+      "color": "#696b6b",
+      "position": "-320px -896px"
     },
-    { "id": "settling-tank", "color": "#73716e", "position": "-512px -640px" },
+    {
+      "id": "settlement-consumer-electronics-module",
+      "color": "#939292",
+      "position": "-384px -896px"
+    },
+    {
+      "id": "settlement-food-module",
+      "color": "#777a7e",
+      "position": "-512px -896px"
+    },
+    {
+      "id": "settlement-food-module-2",
+      "color": "#645551",
+      "position": "-448px -896px"
+    },
+    {
+      "id": "settlement-fountain",
+      "color": "#999b9a",
+      "position": "-576px -896px"
+    },
+    {
+      "id": "settlement-household-appliances-module",
+      "color": "#787e83",
+      "position": "-640px -896px"
+    },
+    {
+      "id": "settlement-household-electronics-module",
+      "color": "#6d7173",
+      "position": "-704px -896px"
+    },
+    {
+      "id": "settlement-household-goods-module",
+      "color": "#636a6f",
+      "position": "-768px -896px"
+    },
+    {
+      "id": "settlement-landfill-module",
+      "color": "#6e7275",
+      "position": "-832px -896px"
+    },
+    {
+      "id": "settlement-pillar",
+      "color": "#7f7f7e",
+      "position": "-896px -896px"
+    },
+    {
+      "id": "settlement-power-module",
+      "color": "#7b6d64",
+      "position": "-960px -896px"
+    },
+    {
+      "id": "settlement-recyclables-module",
+      "color": "#686c6b",
+      "position": "-1024px -896px"
+    },
+    {
+      "id": "settlement-square-1",
+      "color": "#a7a7a1",
+      "position": "-1088px -896px"
+    },
+    {
+      "id": "settlement-square-2",
+      "color": "#7e7e79",
+      "position": "-1152px -896px"
+    },
+    {
+      "id": "settlement-water-module",
+      "color": "#495256",
+      "position": "-1216px -896px"
+    },
+    { "id": "settling-tank", "color": "#7a7874", "position": "-64px -960px" },
+    { "id": "shipyard", "color": "#79736c", "position": "-192px -960px" },
+    { "id": "shipyard-2", "color": "#7a736e", "position": "-128px -960px" },
+    { "id": "silicon", "color": "#c3d0d3", "position": "-512px -960px" },
     {
       "id": "silicon-crystallizer",
       "color": "#9a9796",
-      "position": "-576px -640px"
+      "position": "-256px -960px"
     },
-    { "id": "silicon-poly", "color": "#c3d0d3", "position": "-640px -640px" },
+    { "id": "silicon-poly", "color": "#c3d0d3", "position": "-320px -960px" },
     {
       "id": "silicon-reactor",
-      "color": "#697074",
-      "position": "-704px -640px"
+      "color": "#6a757c",
+      "position": "-384px -960px"
     },
-    { "id": "slag", "color": "#acaba7", "position": "-832px -640px" },
-    { "id": "slag-crushed", "color": "#777a85", "position": "-768px -640px" },
-    { "id": "sludge", "color": "#6c5238", "position": "-896px -640px" },
-    { "id": "smoke-stack", "color": "#626463", "position": "-64px -704px" },
+    { "id": "silicon-wafer", "color": "#bcbcbc", "position": "-448px -960px" },
+    { "id": "slag", "color": "#acaba7", "position": "-640px -960px" },
+    { "id": "slag-crushed", "color": "#777a85", "position": "-576px -960px" },
+    { "id": "sludge", "color": "#6c5238", "position": "-704px -960px" },
+    {
+      "id": "smelting-furnace",
+      "color": "#837163",
+      "position": "-832px -960px"
+    },
+    {
+      "id": "smelting-furnace-2",
+      "color": "#8a796a",
+      "position": "-768px -960px"
+    },
+    { "id": "smoke-stack", "color": "#626463", "position": "-960px -960px" },
     {
       "id": "smoke-stack-large",
       "color": "#86827f",
-      "position": "-0px -704px"
+      "position": "-896px -960px"
     },
-    { "id": "solar-panel", "color": "#6a73a2", "position": "-192px -704px" },
+    { "id": "snack", "color": "#dfa9a0", "position": "-1024px -960px" },
+    { "id": "solar-cell", "color": "#6faadf", "position": "-1152px -960px" },
+    {
+      "id": "solar-cell-mono",
+      "color": "#6b7a8b",
+      "position": "-1088px -960px"
+    },
+    { "id": "solar-panel", "color": "#4a548d", "position": "-0px -1024px" },
     {
       "id": "solar-panel-mono",
       "color": "#393e64",
-      "position": "-128px -704px"
+      "position": "-1216px -960px"
     },
-    { "id": "sour-water", "color": "#64e5c5", "position": "-320px -704px" },
+    { "id": "sour-water", "color": "#64e5c5", "position": "-128px -1024px" },
     {
       "id": "sour-water-stripper",
-      "color": "#867e75",
-      "position": "-256px -704px"
+      "color": "#91887c",
+      "position": "-64px -1024px"
     },
-    { "id": "spent-fuel", "color": "#d6b053", "position": "-384px -704px" },
-    { "id": "steam-depleted", "color": "#a6d4fa", "position": "-448px -704px" },
-    { "id": "steam-hi", "color": "#b1d6f5", "position": "-512px -704px" },
-    { "id": "steam-lo", "color": "#abd4f7", "position": "-576px -704px" },
-    { "id": "steel", "color": "#b3b4b3", "position": "-640px -704px" },
-    { "id": "sulfur", "color": "#899071", "position": "-704px -704px" },
+    { "id": "soybean", "color": "#a0c680", "position": "-192px -1024px" },
+    { "id": "space-station", "color": "#ffffff", "position": "-256px -1024px" },
+    { "id": "spent-fuel", "color": "#d6b053", "position": "-320px -1024px" },
+    {
+      "id": "statue-of-maintenance",
+      "color": "#808570",
+      "position": "-448px -1024px"
+    },
+    {
+      "id": "statue-of-maintenance-golden",
+      "color": "#8e7856",
+      "position": "-384px -1024px"
+    },
+    {
+      "id": "steam-depleted",
+      "color": "#a6d4fa",
+      "position": "-512px -1024px"
+    },
+    { "id": "steam-hi", "color": "#b1d6f5", "position": "-576px -1024px" },
+    { "id": "steam-lo", "color": "#abd4f7", "position": "-640px -1024px" },
+    { "id": "steel", "color": "#b3b4b3", "position": "-704px -1024px" },
+    { "id": "storage-fluid", "color": "#908c82", "position": "-960px -1024px" },
+    {
+      "id": "storage-fluid-2",
+      "color": "#838078",
+      "position": "-768px -1024px"
+    },
+    {
+      "id": "storage-fluid-3",
+      "color": "#9c978b",
+      "position": "-832px -1024px"
+    },
+    {
+      "id": "storage-fluid-4",
+      "color": "#938e82",
+      "position": "-896px -1024px"
+    },
+    {
+      "id": "storage-loose",
+      "color": "#595b5f",
+      "position": "-1216px -1024px"
+    },
+    {
+      "id": "storage-loose-2",
+      "color": "#5c5e63",
+      "position": "-1024px -1024px"
+    },
+    {
+      "id": "storage-loose-3",
+      "color": "#55575b",
+      "position": "-1088px -1024px"
+    },
+    {
+      "id": "storage-loose-4",
+      "color": "#57595d",
+      "position": "-1152px -1024px"
+    },
+    { "id": "storage-unit", "color": "#909190", "position": "-192px -1088px" },
+    { "id": "storage-unit-2", "color": "#868687", "position": "-0px -1088px" },
+    { "id": "storage-unit-3", "color": "#9a9a95", "position": "-64px -1088px" },
+    {
+      "id": "storage-unit-4",
+      "color": "#94938f",
+      "position": "-128px -1088px"
+    },
+    { "id": "storages", "color": "#ffffff", "position": "-256px -1088px" },
+    { "id": "sugar", "color": "#ddb090", "position": "-448px -1088px" },
+    { "id": "sugar-beet", "color": "#d6daab", "position": "-320px -1088px" },
+    { "id": "sugar-cane", "color": "#cbc459", "position": "-384px -1088px" },
+    { "id": "sulfur", "color": "#899071", "position": "-512px -1088px" },
+    { "id": "temperature", "color": "#ba94a2", "position": "-576px -1088px" },
     {
       "id": "thermal-desalinator",
-      "color": "#787977",
-      "position": "-768px -704px"
+      "color": "#898b87",
+      "position": "-640px -1088px"
     },
-    { "id": "toxic-slurry", "color": "#bbbe3a", "position": "-832px -704px" },
+    { "id": "time", "color": "#ffffff", "position": "-704px -1088px" },
+    { "id": "tofu", "color": "#fae1c1", "position": "-768px -1088px" },
     {
-      "id": "u-shape-conveyor",
-      "color": "#666566",
-      "position": "-64px -768px"
+      "id": "tomb-of-captains",
+      "color": "#9d8b77",
+      "position": "-832px -1088px"
+    },
+    { "id": "toxic-slurry", "color": "#bbbe3a", "position": "-896px -1088px" },
+    { "id": "tradable", "color": "#ffffff", "position": "-960px -1088px" },
+    { "id": "trade-dock", "color": "#585341", "position": "-1024px -1088px" },
+    { "id": "transports", "color": "#ffffff", "position": "-1088px -1088px" },
+    {
+      "id": "tree-harvesting",
+      "color": "#ffffff",
+      "position": "-1152px -1088px"
     },
     {
-      "id": "u-shape-conveyor-2",
-      "color": "#5d6064",
-      "position": "-896px -704px"
+      "id": "turbine-high-press",
+      "color": "#5f6e81",
+      "position": "-0px -1152px"
     },
     {
-      "id": "u-shape-conveyor-3",
-      "color": "#665f5d",
-      "position": "-0px -768px"
+      "id": "turbine-high-press-2",
+      "color": "#5f7e93",
+      "position": "-1216px -1088px"
     },
-    { "id": "uranium-ore", "color": "#96b594", "position": "-192px -768px" },
+    {
+      "id": "turbine-low-press",
+      "color": "#5c6a7b",
+      "position": "-128px -1152px"
+    },
+    {
+      "id": "turbine-low-press-2",
+      "color": "#607d90",
+      "position": "-64px -1152px"
+    },
+    { "id": "unity", "color": "#ffffff", "position": "-256px -1152px" },
+    { "id": "unity-small", "color": "#ffffff", "position": "-192px -1152px" },
+    {
+      "id": "uranium-enrichment-plant",
+      "color": "#828585",
+      "position": "-320px -1152px"
+    },
+    { "id": "uranium-ore", "color": "#96b594", "position": "-448px -1152px" },
     {
       "id": "uranium-ore-crushed",
       "color": "#6b7681",
-      "position": "-128px -768px"
+      "position": "-384px -1152px"
     },
     {
       "id": "uranium-pellets",
       "color": "#919191",
-      "position": "-256px -768px"
+      "position": "-512px -1152px"
     },
-    { "id": "uranium-rod", "color": "#999999", "position": "-320px -768px" },
-    { "id": "vegetables", "color": "#8d9661", "position": "-384px -768px" },
-    { "id": "waste", "color": "#a5b8bd", "position": "-576px -768px" },
+    { "id": "uranium-rod", "color": "#999999", "position": "-576px -1152px" },
+    {
+      "id": "vacuum-distillation-tower",
+      "color": "#7e7c7c",
+      "position": "-640px -1152px"
+    },
+    { "id": "vegetables", "color": "#8d9661", "position": "-704px -1152px" },
+    { "id": "vehicle-parts", "color": "#cbcbcb", "position": "-896px -1152px" },
+    {
+      "id": "vehicle-parts-2",
+      "color": "#c5a830",
+      "position": "-768px -1152px"
+    },
+    {
+      "id": "vehicle-parts-3",
+      "color": "#c43f31",
+      "position": "-832px -1152px"
+    },
+    { "id": "vehicle-ramp", "color": "#646462", "position": "-1088px -1152px" },
+    {
+      "id": "vehicle-ramp-2",
+      "color": "#636261",
+      "position": "-960px -1152px"
+    },
+    {
+      "id": "vehicle-ramp-3",
+      "color": "#626261",
+      "position": "-1024px -1152px"
+    },
+    { "id": "vehicles", "color": "#ffffff", "position": "-64px -1216px" },
+    { "id": "vehicles-depot", "color": "#a19d97", "position": "-0px -1216px" },
+    {
+      "id": "vehicles-depot-2",
+      "color": "#a89d8d",
+      "position": "-1152px -1152px"
+    },
+    {
+      "id": "vehicles-depot-3",
+      "color": "#7a7876",
+      "position": "-1216px -1152px"
+    },
+    { "id": "waste", "color": "#a5b8bd", "position": "-320px -1216px" },
+    { "id": "waste-dump", "color": "#5f564b", "position": "-128px -1216px" },
     {
       "id": "waste-sorting-plant",
       "color": "#6f6661",
-      "position": "-448px -768px"
+      "position": "-192px -1216px"
     },
-    { "id": "waste-water", "color": "#bb773a", "position": "-512px -768px" },
+    { "id": "waste-water", "color": "#bb773a", "position": "-256px -1216px" },
+    { "id": "water", "color": "#47d0fa", "position": "-704px -1216px" },
+    { "id": "water-chiller", "color": "#b0a796", "position": "-384px -1216px" },
     {
-      "id": "wastewater-treatment",
-      "color": "#6d6e6a",
-      "position": "-640px -768px"
+      "id": "water-desalination-plant",
+      "color": "#5f5d5d",
+      "position": "-448px -1216px"
     },
-    { "id": "water", "color": "#47d0fa", "position": "-832px -768px" },
-    { "id": "water-chiller", "color": "#9d9283", "position": "-704px -768px" },
+    {
+      "id": "water-machines",
+      "color": "#ffffff",
+      "position": "-512px -1216px"
+    },
     {
       "id": "water-pollution",
       "color": "#c0ccd8",
-      "position": "-768px -768px"
+      "position": "-576px -1216px"
     },
-    { "id": "wheat", "color": "#fdd840", "position": "-896px -768px" },
-    { "id": "wood", "color": "#a4692b", "position": "-0px -832px" },
-    { "id": "yellow-cake", "color": "#777e60", "position": "-64px -832px" }
+    {
+      "id": "water-treatment-plant",
+      "color": "#737571",
+      "position": "-640px -1216px"
+    },
+    { "id": "wheat", "color": "#fdd840", "position": "-768px -1216px" },
+    { "id": "wood", "color": "#a4692b", "position": "-832px -1216px" },
+    { "id": "worker", "color": "#ffffff", "position": "-896px -1216px" },
+    { "id": "workers", "color": "#ffffff", "position": "-960px -1216px" },
+    { "id": "working", "color": "#ffffff", "position": "-1024px -1216px" },
+    { "id": "world-map", "color": "#ffffff", "position": "-1088px -1216px" },
+    { "id": "yellow-cake", "color": "#777e60", "position": "-1152px -1216px" }
   ],
   "items": [
     {
@@ -586,6 +1165,13 @@
       "row": 1
     },
     {
+      "id": "corn",
+      "name": "Corn",
+      "stack": 1,
+      "category": "natural-resources",
+      "row": 2
+    },
+    {
       "id": "green-manure",
       "name": "Green Manure",
       "stack": 1,
@@ -600,8 +1186,8 @@
       "row": 2
     },
     {
-      "id": "corn",
-      "name": "Corn",
+      "id": "vegetables",
+      "name": "Vegetables",
       "stack": 1,
       "category": "natural-resources",
       "row": 2
@@ -609,13 +1195,6 @@
     {
       "id": "wheat",
       "name": "Wheat",
-      "stack": 1,
-      "category": "natural-resources",
-      "row": 2
-    },
-    {
-      "id": "vegetables",
-      "name": "Vegetables",
       "stack": 1,
       "category": "natural-resources",
       "row": 2
@@ -887,6 +1466,27 @@
       "row": 3
     },
     {
+      "id": "animal-feed",
+      "name": "Animal Feed",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 4
+    },
+    {
+      "id": "bread",
+      "name": "Bread",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 4
+    },
+    {
+      "id": "flour",
+      "name": "Flour",
+      "stack": 1,
+      "category": "crafted-materials",
+      "row": 4
+    },
+    {
       "id": "crude-oil",
       "name": "Crude Oil",
       "stack": 1,
@@ -1146,73 +1746,92 @@
       "row": 3
     },
     {
+      "id": "maintenance",
+      "name": "Maintenance",
+      "category": "other",
+      "row": 0
+    },
+    { "id": "unity", "name": "Unity", "category": "other", "row": 0 },
+    { "id": "worker", "name": "Worker", "category": "other", "row": 0 },
+    {
       "id": "coal-mine",
-      "icon": "coal",
       "name": "Coal Mine",
       "category": "buildings",
-      "factory": { "speed": 1 }
+      "factory": {
+        "speed": 1,
+        "consumption": { "worker": 25, "unity": 0.5, "maintenance": 12 }
+      }
     },
     {
       "id": "groundwater-well",
-      "icon": "water",
       "name": "Grounwater Well",
       "category": "buildings",
-      "factory": { "speed": 1 }
+      "factory": { "speed": 1, "consumption": { "worker": 8, "unity": 0.2 } }
     },
     {
       "id": "limestone-quarry",
-      "icon": "limestone",
       "name": "Limestone Quarry",
       "category": "buildings",
-      "factory": { "speed": 1 }
+      "factory": {
+        "speed": 1,
+        "consumption": { "worker": 25, "unity": 0.4, "maintenance": 8 }
+      }
     },
     {
       "id": "oil-rig",
-      "icon": "crude-oil",
       "name": "Oil Rig",
       "category": "buildings",
-      "factory": { "speed": 1 }
+      "factory": {
+        "speed": 1,
+        "consumption": { "worker": 18, "unity": 0.4, "maintenance": 8 }
+      }
     },
     {
       "id": "quartz-mine",
-      "icon": "quartz",
       "name": "Quartz Mine",
       "category": "buildings",
-      "factory": { "speed": 1 }
+      "factory": {
+        "speed": 1,
+        "consumption": { "worker": 25, "unity": 0.5 }
+      }
     },
     {
       "id": "rock-mine",
-      "icon": "rock",
       "name": "Rock Mine",
       "category": "buildings",
-      "factory": { "speed": 1 }
+      "factory": {
+        "speed": 1,
+        "consumption": { "worker": 25, "unity": 0.2, "maintenance": 8 }
+      }
     },
     {
       "id": "sawmill",
-      "icon": "wood",
       "name": "Sawmill",
       "category": "buildings",
-      "factory": { "speed": 1 }
+      "factory": {
+        "speed": 1,
+        "consumption": { "worker": 12, "unity": 0.2, "maintenance": 6 }
+      }
     },
     {
       "id": "sulfur-mine",
-      "icon": "sulfur",
       "name": "Sulfur Mine",
       "category": "buildings",
-      "factory": { "speed": 1 }
+      "factory": {
+        "speed": 1,
+        "consumption": { "worker": 12, "unity": 0.2, "maintenance": 10 }
+      }
     },
     {
       "id": "uranium-mine",
-      "icon": "uranium-ore",
       "name": "Uranium Mine",
       "category": "buildings",
-      "factory": { "speed": 1 }
+      "factory": {
+        "speed": 1,
+        "consumption": { "worker": 25, "unity": 0.4 }
+      }
     },
-    {
-      "id": "air-separator",
-      "name": "Air Separator",
-      "category": "buildings"
-    },
+    { "id": "air-separator", "name": "Air Separator", "category": "buildings" },
     {
       "id": "assembly-electric",
       "name": "Assembly (Electric)",
@@ -1253,16 +1872,8 @@
       "name": "Concrete Mixer III",
       "category": "buildings"
     },
-    {
-      "id": "data-center",
-      "name": "Data Center",
-      "category": "buildings"
-    },
-    {
-      "id": "electrolyzer",
-      "name": "Electrolyzer",
-      "category": "buildings"
-    },
+    { "id": "data-center", "name": "Data Center", "category": "buildings" },
+    { "id": "electrolyzer", "name": "Electrolyzer", "category": "buildings" },
     {
       "id": "fermentation-tank",
       "name": "Fermentation Tank",
@@ -1278,16 +1889,8 @@
       "name": "Microchip Machine II",
       "category": "buildings"
     },
-    {
-      "id": "mixer",
-      "name": "Mixer",
-      "category": "buildings"
-    },
-    {
-      "id": "settling-tank",
-      "name": "Settling Tank",
-      "category": "buildings"
-    },
+    { "id": "mixer", "name": "Mixer", "category": "buildings" },
+    { "id": "settling-tank", "name": "Settling Tank", "category": "buildings" },
     {
       "id": "basic-distiller",
       "name": "Basic Distiller",
@@ -1303,11 +1906,7 @@
       "name": "Chemical Plant II",
       "category": "buildings"
     },
-    {
-      "id": "cracking-unit",
-      "name": "Cracking Unit",
-      "category": "buildings"
-    },
+    { "id": "cracking-unit", "name": "Cracking Unit", "category": "buildings" },
     {
       "id": "distillation-stage-1",
       "name": "Distillation (Stage I)",
@@ -1328,46 +1927,26 @@
       "name": "Hydrogen Reformer",
       "category": "buildings"
     },
-    {
-      "id": "oil-pump",
-      "name": "Oil Pump",
-      "category": "buildings"
-    },
+    { "id": "oil-pump", "name": "Oil Pump", "category": "buildings" },
     {
       "id": "polymerization-plant",
       "name": "Polymerization Plant",
       "category": "buildings"
     },
-    {
-      "id": "rubber-maker",
-      "name": "Rubber Maker",
-      "category": "buildings"
-    },
+    { "id": "rubber-maker", "name": "Rubber Maker", "category": "buildings" },
     {
       "id": "sour-water-stripper",
       "name": "Sour Water Stripper",
       "category": "buildings"
     },
-    {
-      "id": "boiler-coal",
-      "name": "Boiler (Coal)",
-      "category": "buildings"
-    },
+    { "id": "boiler-coal", "name": "Boiler (Coal)", "category": "buildings" },
     {
       "id": "boiler-electric",
       "name": "Boiler (Electric)",
       "category": "buildings"
     },
-    {
-      "id": "boiler-gas",
-      "name": "Boiler (Gas)",
-      "category": "buildings"
-    },
-    {
-      "id": "cooling-tower",
-      "name": "Cooling Tower",
-      "category": "buildings"
-    },
+    { "id": "boiler-gas", "name": "Boiler (Gas)", "category": "buildings" },
+    { "id": "cooling-tower", "name": "Cooling Tower", "category": "buildings" },
     {
       "id": "cooling-tower-large",
       "name": "Cooling Tower (Large)",
@@ -1393,11 +1972,7 @@
       "name": "Rainwater Harvester",
       "category": "buildings"
     },
-    {
-      "id": "seawater-pump",
-      "name": "Seawater Pump",
-      "category": "buildings"
-    },
+    { "id": "seawater-pump", "name": "Seawater Pump", "category": "buildings" },
     {
       "id": "seawater-pump-tall",
       "name": "Seawater Pump (Tall)",
@@ -1408,46 +1983,26 @@
       "name": "Thermal Desalinator",
       "category": "buildings"
     },
-    {
-      "id": "water-chiller",
-      "name": "Water Chiller",
-      "category": "buildings"
-    },
+    { "id": "water-chiller", "name": "Water Chiller", "category": "buildings" },
     {
       "id": "anaerobic-digester",
       "name": "Anaerobic Digester",
       "category": "buildings"
     },
-    {
-      "id": "burner-solid",
-      "name": "Burner (Solid)",
-      "category": "buildings"
-    },
+    { "id": "burner-solid", "name": "Burner (Solid)", "category": "buildings" },
     {
       "id": "exhaust-scrubber",
       "name": "Exhaust Scrubber",
       "category": "buildings"
     },
-    {
-      "id": "flare",
-      "name": "Flare",
-      "category": "buildings"
-    },
+    { "id": "flare", "name": "Flare", "category": "buildings" },
     {
       "id": "gas-injection-pump",
       "name": "Gas Injection Pump",
       "category": "buildings"
     },
-    {
-      "id": "liquid-dump",
-      "name": "Liquid Dump",
-      "category": "buildings"
-    },
-    {
-      "id": "smoke-stack",
-      "name": "Smoke Stack",
-      "category": "buildings"
-    },
+    { "id": "liquid-dump", "name": "Liquid Dump", "category": "buildings" },
+    { "id": "smoke-stack", "name": "Smoke Stack", "category": "buildings" },
     {
       "id": "smoke-stack-large",
       "name": "Smoke Stack (Large)",
@@ -1466,28 +2021,20 @@
     {
       "id": "baking-unit",
       "name": "Baking Unit",
-      "category": "buildings"
+      "category": "buildings",
+      "factory": {
+        "speed": 1,
+        "consumption": { "worker": 8, "electricity": 50, "maintenance": 4 }
+      }
     },
-    {
-      "id": "farm",
-      "name": "Farm",
-      "category": "buildings"
-    },
+    { "id": "farm", "name": "Farm", "category": "buildings" },
     {
       "id": "food-processor",
       "name": "Food Processor",
       "category": "buildings"
     },
-    {
-      "id": "greenhouse",
-      "name": "Greenhouse",
-      "category": "buildings"
-    },
-    {
-      "id": "greenhouse-2",
-      "name": "Greenhouse II",
-      "category": "buildings"
-    },
+    { "id": "greenhouse", "name": "Greenhouse", "category": "buildings" },
+    { "id": "greenhouse-2", "name": "Greenhouse II", "category": "buildings" },
     {
       "id": "irrigated-farm",
       "name": "Irrigated Farm",
@@ -1496,13 +2043,13 @@
     {
       "id": "mill",
       "name": "Mill",
-      "category": "buildings"
+      "category": "buildings",
+      "factory": {
+        "speed": 1,
+        "consumption": { "worker": 5, "electricity": 30, "maintenance": 2 }
+      }
     },
-    {
-      "id": "flat-conveyor",
-      "name": "Flat Conveyor",
-      "category": "buildings"
-    },
+    { "id": "flat-conveyor", "name": "Flat Conveyor", "category": "buildings" },
     {
       "id": "flat-conveyor-2",
       "name": "Flat Conveyor II",
@@ -1518,21 +2065,9 @@
       "name": "Molten Channel",
       "category": "buildings"
     },
-    {
-      "id": "pipe",
-      "name": "Pipe",
-      "category": "buildings"
-    },
-    {
-      "id": "pipe-2",
-      "name": "Pipe II",
-      "category": "buildings"
-    },
-    {
-      "id": "pipe-3",
-      "name": "Pipe III",
-      "category": "buildings"
-    },
+    { "id": "pipe", "name": "Pipe", "category": "buildings" },
+    { "id": "pipe-2", "name": "Pipe II", "category": "buildings" },
+    { "id": "pipe-3", "name": "Pipe III", "category": "buildings" },
     {
       "id": "u-shape-conveyor",
       "name": "U-shape Conveyor",
@@ -1548,21 +2083,13 @@
       "name": "U-shape Conveyor III",
       "category": "buildings"
     },
-    {
-      "id": "arc-furnace",
-      "name": "Arc Furnace",
-      "category": "buildings"
-    },
+    { "id": "arc-furnace", "name": "Arc Furnace", "category": "buildings" },
     {
       "id": "arc-furnace-2",
       "name": "Arc Furnace II",
       "category": "buildings"
     },
-    {
-      "id": "blast-furnace",
-      "name": "Blast Furnace",
-      "category": "buildings"
-    },
+    { "id": "blast-furnace", "name": "Blast Furnace", "category": "buildings" },
     {
       "id": "blast-furnace-2",
       "name": "Blast Furnace II",
@@ -1574,11 +2101,7 @@
       "category": "buildings",
       "factory": { "speed": 1 }
     },
-    {
-      "id": "cooled-caster",
-      "name": "Cooled Caster",
-      "category": "buildings"
-    },
+    { "id": "cooled-caster", "name": "Cooled Caster", "category": "buildings" },
     {
       "id": "cooled-caster-2",
       "name": "Cooled Caster II",
@@ -1589,31 +2112,15 @@
       "name": "Copper Electrolysis",
       "category": "buildings"
     },
-    {
-      "id": "crusher",
-      "name": "Crusher",
-      "category": "buildings"
-    },
-    {
-      "id": "glass-maker",
-      "name": "Glass Maker",
-      "category": "buildings"
-    },
+    { "id": "crusher", "name": "Crusher", "category": "buildings" },
+    { "id": "glass-maker", "name": "Glass Maker", "category": "buildings" },
     {
       "id": "glass-maker-2",
       "name": "Glass Maker II",
       "category": "buildings"
     },
-    {
-      "id": "gold-furnace",
-      "name": "Gold Furnace",
-      "category": "buildings"
-    },
-    {
-      "id": "metal-caster",
-      "name": "Metal Caster",
-      "category": "buildings"
-    },
+    { "id": "gold-furnace", "name": "Gold Furnace", "category": "buildings" },
+    { "id": "metal-caster", "name": "Metal Caster", "category": "buildings" },
     {
       "id": "metal-caster-2",
       "name": "Metal Caster II",
@@ -1629,11 +2136,7 @@
       "name": "Oxygen Furnace II",
       "category": "buildings"
     },
-    {
-      "id": "rotary-kiln",
-      "name": "Rotary Kiln",
-      "category": "buildings"
-    },
+    { "id": "rotary-kiln", "name": "Rotary Kiln", "category": "buildings" },
     {
       "id": "rotary-kiln-gas",
       "name": "Rotary Kiln (Gas)",
@@ -1694,21 +2197,50 @@
       "name": "Power Generator II",
       "category": "buildings"
     },
-    {
-      "id": "solar-panel",
-      "name": "Solar Panel",
-      "category": "buildings"
-    },
+    { "id": "solar-panel", "name": "Solar Panel", "category": "buildings" },
     {
       "id": "solar-panel-mono",
       "name": "Solar Panel (Mono)",
       "category": "buildings"
+    },
+    {
+      "id": "mine-control-tower",
+      "name": "Mine Control Tower",
+      "category": "buildings",
+      "factory": { "speed": 1 }
     }
   ],
   "recipes": [
     {
-      "id": "crude-oil",
-      "name": "Oil Rig",
+      "id": "coal-mine-shift",
+      "name": "Coal Mine Shift",
+      "time": 20,
+      "in": {},
+      "out": { "coal": 9 },
+      "producers": ["coal-mine"],
+      "cost": 10000
+    },
+    {
+      "id": "groundwater-well-shift",
+      "name": "Groundwater Well Shift",
+      "time": 20,
+      "in": {},
+      "out": { "water": 9 },
+      "producers": ["groundwater-well"],
+      "cost": 10000
+    },
+    {
+      "id": "limestone-quarry-shift",
+      "name": "Limestone Quarry Shift",
+      "time": 20,
+      "in": {},
+      "out": { "limestone": 6 },
+      "producers": ["limestone-quarry"],
+      "cost": 10000
+    },
+    {
+      "id": "oil-rig-shift",
+      "name": "Oil Rig Shift",
       "time": 20,
       "in": {},
       "out": { "crude-oil": 9 },
@@ -1716,12 +2248,138 @@
       "cost": 10000
     },
     {
-      "id": "coal",
-      "name": "Coal Mine",
+      "id": "quartz-mine-shift",
+      "name": "Quartz Mine Shift",
       "time": 20,
       "in": {},
-      "out": { "coal": 9 },
-      "producers": ["coal-mine"],
+      "out": { "quartz": 8 },
+      "producers": ["quartz-mine"],
+      "cost": 10000
+    },
+    {
+      "id": "rock-mine-shift",
+      "name": "Rock Mine Shift",
+      "time": 20,
+      "in": {},
+      "out": { "rock": 6 },
+      "producers": ["oil-rig"],
+      "cost": 10000
+    },
+    {
+      "id": "sawmill-shift",
+      "name": "Sawmill Shift",
+      "time": 20,
+      "in": {},
+      "out": { "wood": 8 },
+      "producers": ["sawmill"],
+      "cost": 10000
+    },
+    {
+      "id": "sulfur-mine-shift",
+      "name": "Sulfur Mine Shift",
+      "time": 20,
+      "in": {},
+      "out": { "sulfur": 6 },
+      "producers": ["sulfur-mine"],
+      "cost": 10000
+    },
+    {
+      "id": "uranium-mine-shift",
+      "name": "Uranium Mine Shift",
+      "time": 20,
+      "in": {},
+      "out": { "uranium-ore": 6 },
+      "producers": ["uranium-mine"],
+      "cost": 10000
+    },
+    {
+      "id": "coal",
+      "name": "Coal Mining Designation",
+      "time": 1,
+      "in": {},
+      "out": { "coal": 1 },
+      "producers": ["mine-control-tower"],
+      "cost": 10000
+    },
+    {
+      "id": "copper-ore",
+      "name": "Copper Ore Mining Designation",
+      "time": 1,
+      "in": {},
+      "out": { "copper-ore": 1 },
+      "producers": ["mine-control-tower"],
+      "cost": 10000
+    },
+    {
+      "id": "dirt",
+      "name": "Dirt Mining Designation",
+      "time": 1,
+      "in": {},
+      "out": { "dirt": 1 },
+      "producers": ["mine-control-tower"],
+      "cost": 10000
+    },
+    {
+      "id": "gold-ore",
+      "name": "Gold Ore Mining Designation",
+      "time": 1,
+      "in": {},
+      "out": { "gold-ore": 1 },
+      "producers": ["mine-control-tower"],
+      "cost": 10000
+    },
+    {
+      "id": "iron-ore",
+      "name": "Iron Ore Mining Designation",
+      "time": 1,
+      "in": {},
+      "out": { "iron-ore": 1 },
+      "producers": ["mine-control-tower"],
+      "cost": 10000
+    },
+    {
+      "id": "limestone",
+      "name": "Limestone Mining Designation",
+      "time": 1,
+      "in": {},
+      "out": { "limestone": 1 },
+      "producers": ["mine-control-tower"],
+      "cost": 10000
+    },
+    {
+      "id": "rock",
+      "name": "Rock Mining Designation",
+      "time": 1,
+      "in": {},
+      "out": { "rock": 1 },
+      "producers": ["mine-control-tower"],
+      "cost": 10000
+    },
+    {
+      "id": "sand",
+      "name": "Sand Mining Designation",
+      "time": 1,
+      "in": {},
+      "out": { "sand": 1 },
+      "producers": ["mine-control-tower"],
+      "cost": 10000
+    },
+    {
+      "id": "sand",
+      "name": "Sand Mining Designation",
+      "time": 1,
+      "in": {},
+      "out": { "sand": 1 },
+      "producers": ["mine-control-tower"],
+      "cost": 10000
+    },
+    {
+      "id": "wood",
+      "name": "Tree Harvesting",
+      "time": 1,
+      "in": {},
+      "out": { "wood": 1 },
+      "producers": ["mine-control-tower"],
       "cost": 10000
     },
     {
@@ -1731,6 +2389,27 @@
       "in": { "wood": 20 },
       "out": { "coal": 4, "exhaust": 16 },
       "producers": ["coal-maker"]
+    },
+    {
+      "id": "bread",
+      "name": "Bread",
+      "time": 30,
+      "in": {
+        "flour": 8,
+        "water": 4
+      },
+      "out": { "bread": 12 },
+      "producers": ["baking-unit"]
+    },
+    {
+      "id": "flour",
+      "name": "Flour",
+      "time": 30,
+      "in": {
+        "wheat": 8
+      },
+      "out": { "flour": 8, "animal-feed": 1 },
+      "producers": ["mill"]
     }
   ],
   "limitations": {},

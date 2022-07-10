@@ -378,18 +378,22 @@
             </td>
             <ng-container *ngIf="step.recipeId; else noRecipeCell">
               <ng-container
-                *ngIf="vm.recipeSettings[step.recipeId].factoryId as factory"
+                *ngIf="vm.recipeSettings[step.recipeId].factoryId as factoryId"
               >
                 <td class="num" [id]="step.recipeId">
                   <div
-                    *ngIf="step.factories && step.factories.nonzero()"
+                    *ngIf="
+                      step.factories &&
+                      step.factories.nonzero() &&
+                      (factoryId | factoryShowRate: vm.data.game)
+                    "
                     class="flex"
                   >
                     <span class="monospace">{{
                       step.factories
                         | factoryRate
                           : vm.effectivePrecision[Column.Factories]
-                          : factory
+                          : factoryId
                     }}</span>
                   </div>
                 </td>
@@ -405,10 +409,7 @@
                         *ngIf="vm.data.recipeEntities[step.recipeId] as recipe"
                       >
                         <ng-container
-                          *ngIf="
-                            vm.data.game !== Game.DysonSphereProgram ||
-                            factory !== ItemId.MiningDrill
-                          "
+                          *ngIf="factoryId | factoryShow: vm.data.game"
                         >
                           <ng-container
                             *ngIf="
@@ -418,7 +419,7 @@
                           >
                             <lab-select
                               [header]="'list.selectAFactory' | translate"
-                              [selected]="factory"
+                              [selected]="factoryId"
                               [options]="recipe.producers"
                               (selectId)="
                                 changeFactory(
@@ -434,17 +435,17 @@
                                 [title]="
                                   'list.clickToChangeFactory' | translate
                                 "
-                                [iconId]="factory"
-                                [tooltip]="vm.data.itemEntities[factory].name"
-                                [item]="vm.data.itemEntities[factory]"
+                                [iconId]="factoryId"
+                                [tooltip]="vm.data.itemEntities[factoryId].name"
+                                [item]="vm.data.itemEntities[factoryId]"
                               ></lab-icon>
                             </lab-select>
                           </ng-container>
                           <ng-template #factoryDefault>
                             <lab-icon
-                              [iconId]="factory"
-                              [tooltip]="vm.data.itemEntities[factory].name"
-                              [item]="vm.data.itemEntities[factory]"
+                              [iconId]="factoryId"
+                              [tooltip]="vm.data.itemEntities[factoryId].name"
+                              [item]="vm.data.itemEntities[factoryId]"
                             ></lab-icon>
                           </ng-template>
                         </ng-container>
@@ -873,7 +874,9 @@
                           <div
                             class="flex"
                             *ngIf="
-                              output.factories && output.factories.nonzero()
+                              output.factories &&
+                              output.factories.nonzero() &&
+                              (factoryId | factoryShowRate: vm.data.game)
                             "
                           >
                             <span class="monospace">{{
@@ -897,10 +900,7 @@
                                 "
                               ></lab-icon>
                               <lab-icon
-                                *ngIf="
-                                  vm.data.game !== Game.DysonSphereProgram ||
-                                  factoryId !== ItemId.MiningDrill
-                                "
+                                *ngIf="factoryId | factoryShow: vm.data.game"
                                 [iconId]="factoryId"
                                 [tooltip]="vm.data.itemEntities[factoryId].name"
                                 [item]="vm.data.itemEntities[factoryId]"
@@ -1014,7 +1014,11 @@
                       <td>
                         <div
                           class="flex"
-                          *ngIf="step.factories && step.factories.nonzero()"
+                          *ngIf="
+                            step.factories &&
+                            step.factories.nonzero() &&
+                            (factoryId | factoryShowRate: vm.data.game)
+                          "
                         >
                           <span class="monospace">{{
                             step.factories.mul(parent.value)
@@ -1035,10 +1039,7 @@
                               [recipe]="vm.data.recipeEntities[step.recipeId]"
                             ></lab-icon>
                             <lab-icon
-                              *ngIf="
-                                vm.data.game !== Game.DysonSphereProgram ||
-                                factoryId !== ItemId.MiningDrill
-                              "
+                              *ngIf="factoryId | factoryShow: vm.data.game"
                               [iconId]="factoryId"
                               [tooltip]="vm.data.itemEntities[factoryId].name"
                               [item]="vm.data.itemEntities[factoryId]"
@@ -1240,7 +1241,9 @@
                               <div
                                 class="flex"
                                 *ngIf="
-                                  inStep.factories && inStep.factories.nonzero()
+                                  inStep.factories &&
+                                  inStep.factories.nonzero() &&
+                                  (factoryId | factoryShowRate: vm.data.game)
                                 "
                               >
                                 <span class="monospace">{{
@@ -1267,9 +1270,7 @@
                                   </lab-icon>
                                   <lab-icon
                                     *ngIf="
-                                      vm.data.game !==
-                                        Game.DysonSphereProgram ||
-                                      factoryId !== ItemId.MiningDrill
+                                      factoryId | factoryShow: vm.data.game
                                     "
                                     [iconId]="factoryId"
                                     [tooltip]="
@@ -1404,7 +1405,8 @@
                                 class="flex"
                                 *ngIf="
                                   outStep.factories &&
-                                  outStep.factories.nonzero()
+                                  outStep.factories.nonzero() &&
+                                  (factoryId | factoryShowRate: vm.data.game)
                                 "
                               >
                                 <span class="monospace">{{
@@ -1430,9 +1432,7 @@
                                   ></lab-icon>
                                   <lab-icon
                                     *ngIf="
-                                      vm.data.game !==
-                                        Game.DysonSphereProgram ||
-                                      factoryId !== ItemId.MiningDrill
+                                      factoryId | factoryShow: vm.data.game
                                     "
                                     [iconId]="factoryId"
                                     [tooltip]="
@@ -1838,33 +1838,34 @@
           </div>
         </td>
         <td colspan="3">
-          <div
-            class="flex"
+          <ng-container
             *ngFor="
               let tot of vm.totals.factories | keyvalue: trackSvc.sortByValue;
               trackBy: trackSvc.trackByKey
             "
           >
-            <span class="monospace">{{
-              tot.value | rate: vm.effectivePrecision[Column.Factories]
-            }}</span>
-            <lab-icon
-              *ngIf="vm.data.itemEntities[tot.key] as item; else totalRecipe"
-              [iconId]="tot.key"
-              [tooltip]="item.name"
-              [item]="item"
-            >
-            </lab-icon>
-            <ng-template #totalRecipe>
+            <div *ngIf="tot.key | factoryShowRate: vm.data.game" class="flex">
+              <span class="monospace">{{
+                tot.value | rate: vm.effectivePrecision[Column.Factories]
+              }}</span>
               <lab-icon
-                *ngIf="vm.data.recipeEntities[tot.key] as recipe"
+                *ngIf="vm.data.itemEntities[tot.key] as item; else totalRecipe"
                 [iconId]="tot.key"
-                [tooltip]="recipe.name"
-                [recipe]="recipe"
+                [tooltip]="item.name"
+                [item]="item"
               >
               </lab-icon>
-            </ng-template>
-          </div>
+              <ng-template #totalRecipe>
+                <lab-icon
+                  *ngIf="vm.data.recipeEntities[tot.key] as recipe"
+                  [iconId]="tot.key"
+                  [tooltip]="recipe.name"
+                  [recipe]="recipe"
+                >
+                </lab-icon>
+              </ng-template>
+            </div>
+          </ng-container>
         </td>
         <td *ngIf="vm.columns[Column.Overclock].show"></td>
         <td colspan="3" *ngIf="vm.columns[Column.Beacons].show">
