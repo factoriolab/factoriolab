@@ -146,7 +146,7 @@ describe('SettingsComponent', () => {
     it('should select the modId for Captain Of Industry', () => {
       spyOn(component, 'setMod');
       component.setGame(Game.CaptainOfIndustry);
-      expect(component.setMod).toHaveBeenCalledWith('capt');
+      expect(component.setMod).toHaveBeenCalledWith('coi');
     });
 
     it('should select the modId for Satisfactory', () => {

@@ -22,7 +22,7 @@ import * as Settings from './store/settings';
 
 export const TITLE_LAB = 'title.lab';
 export const TITLE_DSP = 'title.dsp';
-export const TITLE_CAPT = 'title.capt';
+export const TITLE_COI = 'title.coi';
 export const TITLE_SFY = 'title.sfy';
 
 @UntilDestroy()
@@ -109,8 +109,8 @@ export class AppComponent implements OnInit, AfterViewInit {
             this.homeHref = 'dsp';
             break;
             case Game.CaptainOfIndustry:
-              this.title = TITLE_CAPT;
-              this.homeHref = 'capt';
+              this.title = TITLE_COI;
+              this.homeHref = 'coi';
               break;
           case Game.Satisfactory:
             this.title = TITLE_SFY;

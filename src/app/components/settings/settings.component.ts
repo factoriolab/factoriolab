@@ -205,7 +205,7 @@ export class SettingsComponent implements OnInit {
         this.setMod('dsp');
         break;
       case Game.CaptainOfIndustry:
-          this.setMod('capt');
+          this.setMod('coi');
           break;
       case Game.Satisfactory:
         this.setMod('sfy');
