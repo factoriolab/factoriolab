@@ -12,7 +12,7 @@ describe('Column', () => {
     });
 
     it('should return the correct options for Captain Of Industry', () => {
-      expect(columnOptions(Game.CaptainOfIndustry).length).toEqual(6);
+      expect(columnOptions(Game.CaptainOfIndustry).length).toEqual(7);
     });
 
     it('should return the correct options for Satisfactory', () => {

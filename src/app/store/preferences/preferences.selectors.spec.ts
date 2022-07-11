@@ -58,7 +58,7 @@ describe('Preferences Selectors', () => {
       const result = Selectors.getColumnsVisible.projector(
         Mocks.PreferencesState.columns
       );
-      expect(result).toEqual(10);
+      expect(result).toEqual(11);
     });
   });
 });
