@@ -20,7 +20,7 @@ export function linkValueOptions(game: Game): IdName<LinkValue>[] {
     { id: LinkValue.Factories, name: 'Factories' },
   ];
 
-  if (game === Game.DysonSphereProgram) {
+  if (game === Game.DysonSphereProgram || game === Game.CaptainOfIndustry) {
     return result.filter((i) => i.id !== LinkValue.Wagons);
   }
 

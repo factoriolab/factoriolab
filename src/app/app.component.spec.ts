@@ -4,7 +4,12 @@ import { MemoizedSelector } from '@ngrx/store';
 import { MockStore } from '@ngrx/store/testing';
 
 import { TestModule } from 'src/tests';
-import { AppComponent, TITLE_DSP, TITLE_SFY } from './app.component';
+import {
+  AppComponent,
+  TITLE_CAPT,
+  TITLE_DSP,
+  TITLE_SFY,
+} from './app.component';
 import { ProductsComponent, SettingsComponent } from './components';
 import { APP, Game } from './models';
 import { ListComponent } from './routes';
@@ -53,6 +58,14 @@ describe('AppComponent', () => {
     spyOn(title, 'setTitle');
     fixture.detectChanges();
     expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_DSP}`);
+  });
+
+  it('should update the title for Captain Of Industry', () => {
+    mockGetGame.setResult(Game.CaptainOfIndustry);
+    mockStore.refreshState();
+    spyOn(title, 'setTitle');
+    fixture.detectChanges();
+    expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_CAPT}`);
   });
 
   it('should update the title for Satisfactory', () => {

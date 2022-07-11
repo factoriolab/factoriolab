@@ -21,6 +21,10 @@ const routes: Routes = [
     redirectTo: '/list?s=&v=1',
   },
   {
+    path: 'capt',
+    redirectTo: '/list?s=capt&v=1',
+  },
+  {
     path: 'dsp',
     redirectTo: '/list?s=dsp&v=1',
   },

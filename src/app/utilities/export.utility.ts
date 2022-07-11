@@ -37,6 +37,9 @@ export interface StepExport {
   Beacon?: string;
   BeaconModules?: string;
   Power?: string;
+  Maintenance1?: string;
+  Maintenance2?: string;
+  Maintenance3?: string;
   Pollution?: string;
 }
 
@@ -146,6 +149,21 @@ export class ExportUtility {
         if (columns[Column.Power].show) {
           if (step.power != null) {
             exp.Power = '=' + step.power.toString();
+          }
+        }
+        if (columns[Column.Maintenance].show) {
+          if (step.maintenance1 != null) {
+            exp.Maintenance1 = '=' + step.maintenance1.toString();
+          }
+        }        
+        if (columns[Column.Maintenance].show) {
+          if (step.maintenance2 != null) {
+            exp.Maintenance2 = '=' + step.maintenance2.toString();
+          }
+        }
+        if (columns[Column.Maintenance].show) {
+          if (step.maintenance3 != null) {
+            exp.Maintenance3 = '=' + step.maintenance3.toString();
           }
         }
         if (columns[Column.Pollution].show) {
