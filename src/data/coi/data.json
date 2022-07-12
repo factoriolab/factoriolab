@@ -5,22 +5,9 @@
     { "id": "loose", "name": "Loose materials", "icon": "iron-ore-crushed" },
     { "id": "crafted", "name": "Crafted materials", "icon": "cement" },
     { "id": "goods", "name": "Goods", "icon": "construction-parts" },
-    {
-      "id": "semi-processed-resources",
-      "name": "Semi-processed resources",
-      "icon": "iron-ore-crushed"
-    },
-    {
-      "id": "crafted-materials",
-      "name": "Crafted materials",
-      "icon": "cement"
-    },
+    { "id": "fluids", "name": "Fluids", "icon": "carbon-dioxide" },
     { "id": "petrochemical", "name": "Petrochemical", "icon": "medium-oil" },
-    {
-      "id": "power-pollution",
-      "name": "Power and pollution",
-      "icon": "carbon-dioxide"
-    },
+    { "id": "virtual", "name": "Virtual", "icon": "maintenance-1" },
     { "id": "other", "name": "Other", "icon": "unity" }
   ],
   "icons": [
@@ -1627,292 +1614,429 @@
       "row": 0
     },
     {
-      "id": "brine",
-      "name": "Brine",
+      "id": "chicken-carcass",
+      "name": "Chicken Carcass",
       "stack": 1,
-      "category": "semi-processed-resources",
+      "category": "goods",
+      "row": 1
+    },
+    {
+      "id": "flour",
+      "name": "Flour",
+      "stack": 1,
+      "category": "goods",
+      "row": 1
+    },
+    {
+      "id": "food-pack",
+      "name": "Food Pack",
+      "stack": 1,
+      "category": "goods",
+      "row": 1
+    },
+    {
+      "id": "bread",
+      "name": "Bread",
+      "stack": 1,
+      "category": "goods",
       "row": 2
     },
     {
-      "id": "acid",
-      "name": "Acid",
+      "id": "cake",
+      "name": "Cake",
       "stack": 1,
-      "category": "crafted-materials",
-      "row": 1
+      "category": "goods",
+      "row": 2
     },
     {
-      "id": "food",
-      "name": "Food",
+      "id": "eggs",
+      "name": "Eggs",
       "stack": 1,
-      "category": "crafted-materials",
-      "row": 1
+      "category": "goods",
+      "row": 2
     },
     {
-      "id": "maintenance-1",
-      "name": "Maintenance I",
+      "id": "meat",
+      "name": "Meat",
       "stack": 1,
-      "category": "crafted-materials",
-      "row": 3
+      "category": "goods",
+      "row": 2
     },
     {
-      "id": "maintenance-2",
-      "name": "Maintenance II",
+      "id": "sausage",
+      "name": "Sausage",
       "stack": 1,
-      "category": "crafted-materials",
-      "row": 3
+      "category": "goods",
+      "row": 2
     },
     {
-      "id": "maintenance-3",
-      "name": "Maintenance III",
+      "id": "snack",
+      "name": "Snack",
       "stack": 1,
-      "category": "crafted-materials",
-      "row": 3
+      "category": "goods",
+      "row": 2
+    },
+    {
+      "id": "tofu",
+      "name": "Tofu",
+      "stack": 1,
+      "category": "goods",
+      "row": 2
     },
     {
       "id": "construction-parts",
       "name": "Construction Parts",
       "stack": 1,
-      "category": "crafted-materials",
+      "category": "goods",
       "row": 3
     },
     {
       "id": "construction-parts-2",
       "name": "Construction Parts II",
       "stack": 1,
-      "category": "crafted-materials",
+      "category": "goods",
       "row": 3
     },
     {
       "id": "construction-parts-3",
       "name": "Construction Parts III",
       "stack": 1,
-      "category": "crafted-materials",
+      "category": "goods",
       "row": 3
     },
     {
       "id": "construction-parts-4",
       "name": "Construction Parts IV",
       "stack": 1,
-      "category": "crafted-materials",
+      "category": "goods",
       "row": 3
     },
     {
-      "id": "bread",
-      "name": "Bread",
+      "id": "lab-equipment",
+      "name": "Lab Equipment",
       "stack": 1,
-      "category": "crafted-materials",
+      "category": "goods",
+      "row": 3
+    },
+    {
+      "id": "lab-equipment-2",
+      "name": "Lab Equipment II",
+      "stack": 1,
+      "category": "goods",
+      "row": 3
+    },
+    {
+      "id": "lab-equipment-3",
+      "name": "Lab Equipment III",
+      "stack": 1,
+      "category": "goods",
+      "row": 3
+    },
+    {
+      "id": "lab-equipment-4",
+      "name": "Lab Equipment IV",
+      "stack": 1,
+      "category": "goods",
+      "row": 3
+    },
+    {
+      "id": "medical-supplies",
+      "name": "Medical Supplies",
+      "stack": 1,
+      "category": "goods",
       "row": 4
     },
     {
-      "id": "fertilizer-organic",
-      "name": "Fertilizer (Organic)",
+      "id": "medical-supplies-2",
+      "name": "Medical Supplies II",
       "stack": 1,
-      "category": "crafted-materials",
+      "category": "goods",
       "row": 4
     },
     {
-      "id": "fertilizer-1",
-      "name": "Fertilizer I",
+      "id": "medical-supplies-3",
+      "name": "Medical Supplies III",
       "stack": 1,
-      "category": "crafted-materials",
+      "category": "goods",
       "row": 4
     },
     {
-      "id": "fertilizer-2",
-      "name": "Fertilizer II",
+      "id": "vehicle-parts",
+      "name": "Vehicle Parts",
       "stack": 1,
-      "category": "crafted-materials",
+      "category": "goods",
       "row": 4
     },
     {
-      "id": "flour",
-      "name": "Flour",
+      "id": "vehicle-parts-2",
+      "name": "Vehicle Parts II",
       "stack": 1,
-      "category": "crafted-materials",
+      "category": "goods",
       "row": 4
     },
     {
-      "id": "light-oil",
-      "name": "Light Oil",
+      "id": "vehicle-parts-3",
+      "name": "Vehicle Parts III",
       "stack": 1,
-      "category": "petrochemical",
+      "category": "goods",
+      "row": 4
+    },
+    {
+      "id": "ammonia",
+      "name": "Ammonia",
+      "stack": 1,
+      "category": "fluids",
       "row": 0
     },
     {
-      "id": "medium-oil",
-      "name": "Medium Oil",
+      "id": "carbon-dioxide",
+      "name": "Carbon Dioxide",
       "stack": 1,
-      "category": "petrochemical",
+      "category": "fluids",
       "row": 0
     },
     {
-      "id": "heavy-oil",
-      "name": "Heavy Oil",
+      "id": "chlorine",
+      "name": "Chlorine",
       "stack": 1,
-      "category": "petrochemical",
-      "row": 0
-    },
-    {
-      "id": "naphtha",
-      "name": "Naphtha",
-      "stack": 1,
-      "category": "petrochemical",
+      "category": "fluids",
       "row": 0
     },
     {
       "id": "diesel",
       "name": "Diesel",
       "stack": 1,
-      "category": "petrochemical",
+      "category": "fluids",
       "row": 0
-    },
-    {
-      "id": "ammonia",
-      "name": "Ammonia",
-      "stack": 1,
-      "category": "petrochemical",
-      "row": 1
-    },
-    {
-      "id": "chlorine",
-      "name": "Chlorine",
-      "stack": 1,
-      "category": "petrochemical",
-      "row": 1
     },
     {
       "id": "fuel-gas",
       "name": "Fuel Gas",
       "stack": 1,
-      "category": "petrochemical",
-      "row": 1
+      "category": "fluids",
+      "row": 0
     },
     {
       "id": "hydrogen",
       "name": "Hydrogen",
       "stack": 1,
-      "category": "petrochemical",
-      "row": 1
+      "category": "fluids",
+      "row": 0
+    },
+    {
+      "id": "hydrogen-fluoride",
+      "name": "Hydrogen Fluoride",
+      "stack": 1,
+      "category": "fluids",
+      "row": 0
+    },
+    {
+      "id": "liquid-nitrogen",
+      "name": "Liquid Nitrogen",
+      "stack": 1,
+      "category": "fluids",
+      "row": 0
     },
     {
       "id": "nitrogen",
       "name": "Nitrogen",
       "stack": 1,
-      "category": "petrochemical",
-      "row": 1
+      "category": "fluids",
+      "row": 0
     },
     {
       "id": "oxygen",
       "name": "Oxygen",
       "stack": 1,
-      "category": "petrochemical",
+      "category": "fluids",
+      "row": 0
+    },
+    {
+      "id": "acid",
+      "name": "Acid",
+      "stack": 1,
+      "category": "fluids",
       "row": 1
     },
     {
-      "id": "sour-water",
-      "name": "Sour Water",
+      "id": "brine",
+      "name": "Brine",
       "stack": 1,
-      "category": "petrochemical",
-      "row": 2
+      "category": "fluids",
+      "row": 1
     },
     {
-      "id": "electricity",
-      "name": "Electricity",
+      "id": "chilled-water",
+      "name": "Chilled Water",
       "stack": 1,
-      "category": "power-pollution",
-      "row": 0
+      "category": "fluids",
+      "row": 1
     },
     {
-      "id": "mechanical-power",
-      "name": "Mechanical Power",
+      "id": "heavy-oil",
+      "name": "Heavy Oil",
       "stack": 1,
-      "category": "power-pollution",
-      "row": 0
+      "category": "fluids",
+      "row": 1
     },
     {
-      "id": "steam-hi",
-      "name": "Steam Hi",
+      "id": "light-oil",
+      "name": "Light Oil",
       "stack": 1,
-      "category": "power-pollution",
-      "row": 0
+      "category": "fluids",
+      "row": 1
     },
     {
-      "id": "steam-lo",
-      "name": "Steam Lo",
+      "id": "medium-oil",
+      "name": "Medium Oil",
       "stack": 1,
-      "category": "power-pollution",
-      "row": 0
+      "category": "fluids",
+      "row": 1
+    },
+    {
+      "id": "naphtha",
+      "name": "Naphtha",
+      "stack": 1,
+      "category": "fluids",
+      "row": 1
     },
     {
       "id": "steam-depleted",
       "name": "Steam Depleted",
       "stack": 1,
-      "category": "power-pollution",
-      "row": 0
+      "category": "fluids",
+      "row": 1
     },
     {
-      "id": "air-pollution",
-      "name": "Air Pollution",
+      "id": "steam-hi",
+      "name": "Steam Hi",
       "stack": 1,
-      "category": "power-pollution",
-      "row": 2
+      "category": "fluids",
+      "row": 1
+    },
+    {
+      "id": "steam-lo",
+      "name": "Steam Lo",
+      "stack": 1,
+      "category": "fluids",
+      "row": 1
     },
     {
       "id": "exhaust",
       "name": "Exhaust",
       "stack": 1,
-      "category": "power-pollution",
+      "category": "fluids",
+      "row": 2
+    },
+    {
+      "id": "sour-water",
+      "name": "Sour Water",
+      "stack": 1,
+      "category": "fluids",
       "row": 2
     },
     {
       "id": "toxic-slurry",
       "name": "Toxic Slurry",
       "stack": 1,
-      "category": "power-pollution",
+      "category": "fluids",
       "row": 2
     },
     {
       "id": "waste-water",
       "name": "Waste Water",
       "stack": 1,
-      "category": "power-pollution",
+      "category": "fluids",
       "row": 2
     },
     {
-      "id": "water-pollution",
-      "name": "Water Pollution",
+      "id": "cooking-oil",
+      "name": "Cooking Oil",
       "stack": 1,
-      "category": "power-pollution",
-      "row": 2
-    },
-    {
-      "id": "carbon-dioxide",
-      "name": "Carbon Dioxide",
-      "stack": 1,
-      "category": "power-pollution",
+      "category": "fluids",
       "row": 3
     },
-    { "id": "computing", "name": "Computing", "category": "other", "row": 0 },
+    {
+      "id": "corn-mash",
+      "name": "Corn Mash",
+      "stack": 1,
+      "category": "fluids",
+      "row": 3
+    },
+    {
+      "id": "ethanol",
+      "name": "Ethanol",
+      "stack": 1,
+      "category": "fluids",
+      "row": 3
+    },
+    {
+      "id": "fertilizer-1",
+      "name": "Fertilizer I",
+      "stack": 1,
+      "category": "fluids",
+      "row": 3
+    },
+    {
+      "id": "fertilizer-2",
+      "name": "Fertilizer II",
+      "stack": 1,
+      "category": "fluids",
+      "row": 3
+    },
+    {
+      "id": "fertilizer-organic",
+      "name": "Fertilizer (Organic)",
+      "stack": 1,
+      "category": "fluids",
+      "row": 3
+    },
+    {
+      "id": "electricity",
+      "name": "Electricity",
+      "category": "virtual",
+      "row": 0
+    },
     {
       "id": "maintenance-1",
       "name": "Maintenance I",
-      "category": "other",
+      "category": "virtual",
       "row": 0
     },
     {
       "id": "maintenance-2",
       "name": "Maintenance II",
-      "category": "other",
+      "category": "virtual",
       "row": 0
     },
     {
       "id": "maintenance-3",
       "name": "Maintenance III",
-      "category": "other",
+      "category": "virtual",
       "row": 0
     },
-    { "id": "unity", "name": "Unity", "category": "other", "row": 0 },
-    { "id": "worker", "name": "Worker", "category": "other", "row": 0 },
+    {
+      "id": "mechanical-power",
+      "name": "Mechanical Power",
+      "category": "virtual",
+      "row": 0
+    },
+    {
+      "id": "air-pollution",
+      "name": "Air Pollution",
+      "category": "virtual",
+      "row": 1
+    },
+    {
+      "id": "water-pollution",
+      "name": "Water Pollution",
+      "category": "virtual",
+      "row": 1
+    },
+    { "id": "computing", "name": "Computing", "category": "virtual", "row": 2 },
+    { "id": "fertility", "name": "Fertility", "category": "virtual", "row": 2 },
+    { "id": "unity", "name": "Unity", "category": "virtual", "row": 2 },
+    { "id": "worker", "name": "Worker", "category": "virtual", "row": 2 },
     {
       "id": "coal-mine",
       "name": "Coal Mine",
