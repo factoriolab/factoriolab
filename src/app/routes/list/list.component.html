@@ -100,9 +100,6 @@
         <th class="num-unit" *ngIf="vm.columns[Column.Power].show">
           <div class="header">{{ 'list.power' | translate }}</div>
         </th>
-        <th class="num-unit" *ngIf="vm.columns[Column.Maintenance].show">
-          <div class="header">{{ 'list.maintenance' | translate }}</div>
-        </th>
         <th *ngIf="vm.columns[Column.Pollution].show">
           <div class="header">
             {{ 'list.pollution' | translate
@@ -694,35 +691,6 @@
                       : vm.effectivePrecision[Column.Power]
                       : vm.effectivePowerUnit
                 }}</span>
-              </div>
-            </td>
-            <td *ngIf="vm.columns[Column.Maintenance].show">
-              <div *ngIf="step.maintenance1 && step.maintenance1.nonzero()" class="flex">
-                <span class="monospace">{{
-                  step.maintenance1
-                }}</span>
-                <lab-icon
-                        [iconId]="'maintenance1'"
-                        [tooltip]=""
-                      ></lab-icon>
-              </div>
-              <div *ngIf="step.maintenance2 && step.maintenance2.nonzero()" class="flex">
-                <span class="monospace">{{
-                  step.maintenance2
-                }}</span>
-                <lab-icon
-                        [iconId]="'maintenance2'"
-                        [tooltip]=""
-                      ></lab-icon>
-              </div>
-              <div *ngIf="step.maintenance3 && step.maintenance3.nonzero()" class="flex">
-                <span class="monospace">{{
-                  step.maintenance3
-                }}</span>
-                <lab-icon
-                        [iconId]="'maintenance3'"
-                        [tooltip]=""
-                      ></lab-icon>
               </div>
             </td>
             <td *ngIf="vm.columns[Column.Pollution].show">
@@ -1926,28 +1894,6 @@
                   : vm.effectivePrecision[Column.Power]
                   : vm.effectivePowerUnit
             }}</span>
-          </div>
-        </td>
-        <td *ngIf="vm.columns[Column.Maintenance].show">
-          <div class="flex">
-            <span class="monospace">{{
-              vm.totals.maintenance1
-            }}</span>
-            <lab-icon 
-            [iconId]="'maintenance1'" 
-            [tooltip]=""></lab-icon>
-            <span class="monospace">{{
-              vm.totals.maintenance2
-            }}</span>
-            <lab-icon 
-            [iconId]="'maintenance2'"
-            [tooltip]=""></lab-icon>
-            <span class="monospace">{{
-              vm.totals.maintenance3
-            }}</span>
-            <lab-icon 
-            [iconId]="'maintenance3'"
-            [tooltip]=""></lab-icon>
           </div>
         </td>
         <td *ngIf="vm.columns[Column.Pollution].show">

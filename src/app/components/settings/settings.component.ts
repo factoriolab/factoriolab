@@ -207,9 +207,6 @@ export class SettingsComponent implements OnInit {
       case Game.DysonSphereProgram:
         this.setMod('dsp');
         break;
-      case Game.CaptainOfIndustry:
-          this.setMod('coi');
-          break;
       case Game.Satisfactory:
         this.setMod('sfy');
         break;

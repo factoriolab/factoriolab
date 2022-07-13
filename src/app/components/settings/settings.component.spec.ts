@@ -137,16 +137,16 @@ describe('SettingsComponent', () => {
       expect(component.setMod).toHaveBeenCalledWith('1.1');
     });
 
+    it('should select the modId for Captain of Industry', () => {
+      spyOn(component, 'setMod');
+      component.setGame(Game.CaptainOfIndustry);
+      expect(component.setMod).toHaveBeenCalledWith('coi');
+    });
+
     it('should select the modId for Dyson Sphere Program', () => {
       spyOn(component, 'setMod');
       component.setGame(Game.DysonSphereProgram);
       expect(component.setMod).toHaveBeenCalledWith('dsp');
-    });
-
-    it('should select the modId for Captain Of Industry', () => {
-      spyOn(component, 'setMod');
-      component.setGame(Game.CaptainOfIndustry);
-      expect(component.setMod).toHaveBeenCalledWith('coi');
     });
 
     it('should select the modId for Satisfactory', () => {
