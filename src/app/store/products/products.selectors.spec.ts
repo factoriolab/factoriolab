@@ -846,6 +846,9 @@ describe('Products Selectors', () => {
             beacons: Rational.one,
             power: Rational.one,
             pollution: Rational.one,
+            maintenance1: Rational.zero,
+            maintenance2: Rational.zero,
+            maintenance3: Rational.zero,
           },
         ],
         Mocks.ItemSettingsInitial,
@@ -857,6 +860,9 @@ describe('Products Selectors', () => {
         wagons: { [ItemId.CargoWagon]: Rational.one },
         factories: { [ItemId.ElectricMiningDrill]: Rational.one },
         beacons: { [ItemId.Beacon]: Rational.one },
+        maintenance1: Rational.zero,
+        maintenance2: Rational.zero,
+        maintenance3: Rational.zero,
         power: Rational.one,
         pollution: Rational.one,
       });
@@ -881,6 +887,9 @@ describe('Products Selectors', () => {
         beacons: {},
         power: Rational.zero,
         pollution: Rational.zero,
+        maintenance1: Rational.zero,
+        maintenance2: Rational.zero,
+        maintenance3: Rational.zero,
       });
     });
   });
@@ -1011,6 +1020,7 @@ describe('Products Selectors', () => {
         [Column.Factories]: 0,
         [Column.Power]: 0,
         [Column.Pollution]: 0,
+        [Column.Maintenance]: 0
       });
     });
   });

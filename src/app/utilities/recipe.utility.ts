@@ -235,6 +235,19 @@ export class RecipeUtility {
           ? usage.mul(consumption)
           : Rational.zero;
 
+       // Maintenance
+       const maint1 =
+        (recipe.maintenance1 ? recipe.maintenance1 : factory.maintenance1) || Rational.zero;
+      recipe.maintenance1 = maint1;
+
+      const maint2 =
+        (recipe.maintenance2 ? recipe.maintenance2 : factory.maintenance2) || Rational.zero;
+      recipe.maintenance2 = maint2;  
+
+      const maint3 =
+        (recipe.maintenance3 ? recipe.maintenance3 : factory.maintenance3) || Rational.zero;
+      recipe.maintenance3 = maint3;   
+      
       // Pollution
       recipe.pollution =
         factory.pollution && settings.factoryId !== ItemId.Pumpjack

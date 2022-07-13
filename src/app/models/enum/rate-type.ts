@@ -20,7 +20,7 @@ export function rateTypeOptions(
     { id: RateType.Factories, name: 'Factories' },
   ];
 
-  if (game === Game.DysonSphereProgram) {
+  if (game === Game.DysonSphereProgram || game === Game.CaptainOfIndustry) {
     return result.filter((i) => i.id !== RateType.Wagons);
   }
 
