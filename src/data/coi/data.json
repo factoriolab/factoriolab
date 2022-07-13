@@ -1110,13 +1110,6 @@
       "row": 0
     },
     {
-      "id": "copper-scrap",
-      "name": "Copper Scrap",
-      "stack": 1,
-      "category": "loose",
-      "row": 0
-    },
-    {
       "id": "gold-ore-concentrate",
       "name": "Gold Ore Concentrate",
       "stack": 1,
@@ -1138,13 +1131,6 @@
       "row": 0
     },
     {
-      "id": "gold-scrap",
-      "name": "Gold Scrap",
-      "stack": 1,
-      "category": "loose",
-      "row": 0
-    },
-    {
       "id": "iron-ore-crushed",
       "name": "Iron Ore Crushed",
       "stack": 1,
@@ -1152,8 +1138,8 @@
       "row": 0
     },
     {
-      "id": "iron-scrap",
-      "name": "Iron Scrap",
+      "id": "slag-crushed",
+      "name": "Slag Crushed",
       "stack": 1,
       "category": "loose",
       "row": 0
@@ -1173,102 +1159,123 @@
       "row": 0
     },
     {
+      "id": "broken-glass",
+      "name": "Broken Glass",
+      "stack": 1,
+      "category": "loose",
+      "row": 1
+    },
+    {
+      "id": "copper-scrap",
+      "name": "Copper Scrap",
+      "stack": 1,
+      "category": "loose",
+      "row": 1
+    },
+    {
+      "id": "gold-scrap",
+      "name": "Gold Scrap",
+      "stack": 1,
+      "category": "loose",
+      "row": 1
+    },
+    {
+      "id": "iron-scrap",
+      "name": "Iron Scrap",
+      "stack": 1,
+      "category": "loose",
+      "row": 1
+    },
+    {
       "id": "filter-media",
       "name": "Filter Media",
       "stack": 1,
       "category": "loose",
-      "row": 1
+      "row": 2
     },
     {
       "id": "glass-mix",
       "name": "Glass Mix",
       "stack": 1,
       "category": "loose",
-      "row": 1
+      "row": 2
     },
     {
       "id": "gravel",
       "name": "Gravel",
       "stack": 1,
       "category": "loose",
-      "row": 1
+      "row": 2
     },
     {
       "id": "recyclables",
       "name": "Recyclables",
       "stack": 1,
       "category": "loose",
-      "row": 1
+      "row": 2
     },
     {
       "id": "salt",
       "name": "Salt",
       "stack": 1,
       "category": "loose",
-      "row": 1
+      "row": 2
     },
     {
       "id": "slag",
       "name": "Slag",
       "stack": 1,
       "category": "loose",
-      "row": 1
-    },
-    {
-      "id": "slag-crushed",
-      "name": "Slag Crushed",
-      "stack": 1,
-      "category": "loose",
-      "row": 1
+      "row": 2
     },
     {
       "id": "sludge",
       "name": "Sludge",
       "stack": 1,
       "category": "loose",
-      "row": 1
+      "row": 2
     },
     {
       "id": "waste",
       "name": "Waste",
       "stack": 1,
       "category": "loose",
-      "row": 1
+      "row": 2
     },
     {
       "id": "animal-feed",
       "name": "Animal Feed",
       "stack": 1,
       "category": "loose",
-      "row": 2
+      "row": 3
     },
     {
       "id": "biomass",
       "name": "Biomass",
       "stack": 1,
       "category": "loose",
-      "row": 2
+      "row": 3
     },
     {
       "id": "compost",
       "name": "Compost",
       "stack": 1,
       "category": "loose",
-      "row": 2
+      "row": 3
     },
     {
       "id": "meat-trimmings",
       "name": "Meat Trimmings",
       "stack": 1,
       "category": "loose",
-      "row": 2
+      "row": 3
     },
     {
       "id": "sugar",
       "name": "Sugar",
       "stack": 1,
       "category": "loose",
-      "row": 2
+      "row": 3
     },
     {
       "id": "copper",
@@ -2926,7 +2933,7 @@
   ],
   "recipes": [
     {
-      "id": "coal-mine-shift",
+      "id": "coal-mine",
       "name": "Coal Mine Shift",
       "time": 20,
       "in": {},
@@ -2935,7 +2942,7 @@
       "cost": 10000
     },
     {
-      "id": "groundwater-well-shift",
+      "id": "groundwater-well",
       "name": "Groundwater Well Shift",
       "time": 20,
       "in": {},
@@ -2944,7 +2951,7 @@
       "cost": 10000
     },
     {
-      "id": "limestone-quarry-shift",
+      "id": "limestone-quarry",
       "name": "Limestone Quarry Shift",
       "time": 20,
       "in": {},
@@ -2953,7 +2960,7 @@
       "cost": 10000
     },
     {
-      "id": "oil-rig-shift",
+      "id": "oil-rig",
       "name": "Oil Rig Shift",
       "time": 20,
       "in": {},
@@ -2962,7 +2969,7 @@
       "cost": 10000
     },
     {
-      "id": "quartz-mine-shift",
+      "id": "quartz-mine",
       "name": "Quartz Mine Shift",
       "time": 20,
       "in": {},
@@ -2971,7 +2978,7 @@
       "cost": 10000
     },
     {
-      "id": "rock-mine-shift",
+      "id": "rock-mine",
       "name": "Rock Mine Shift",
       "time": 20,
       "in": {},
@@ -2980,7 +2987,7 @@
       "cost": 10000
     },
     {
-      "id": "sawmill-shift",
+      "id": "sawmill",
       "name": "Sawmill Shift",
       "time": 20,
       "in": {},
@@ -2989,7 +2996,7 @@
       "cost": 10000
     },
     {
-      "id": "sulfur-mine-shift",
+      "id": "sulfur-mine",
       "name": "Sulfur Mine Shift",
       "time": 20,
       "in": {},
@@ -2998,7 +3005,7 @@
       "cost": 10000
     },
     {
-      "id": "uranium-mine-shift",
+      "id": "uranium-mine",
       "name": "Uranium Mine Shift",
       "time": 20,
       "in": {},
@@ -3088,6 +3095,900 @@
       "cost": 10000
     },
     {
+      "id": "air-separator",
+      "name": "Air Separator",
+      "time": 20,
+      "in": {},
+      "out": { "nitrogen": 12, "oxygen": 12 },
+      "producers": ["air-separator"]
+    },
+    {
+      "id": "anaerobic-digester-meat-trimmings",
+      "icon": "meat-trimmings",
+      "name": "Anaerobic Digester - Meat Trimmings",
+      "time": 120,
+      "in": { "meat-trimmings": 8 },
+      "out": { "fuel-gas": 4, "compost": 2 },
+      "producers": ["anaerobic-digester"]
+    },
+    {
+      "id": "anaerobic-digester-potato",
+      "icon": "potato",
+      "name": "Anaerobic Digester - Potato",
+      "time": 60,
+      "in": { "potato": 14 },
+      "out": { "fuel-gas": 5, "compost": 1 },
+      "producers": ["anaerobic-digester"]
+    },
+    {
+      "id": "anaerobic-digester-sludge",
+      "icon": "sludge",
+      "name": "Anaerobic Digester - Sludge",
+      "time": 60,
+      "in": { "sludge": 12 },
+      "out": { "fuel-gas": 5, "compost": 1 },
+      "producers": ["anaerobic-digester"]
+    },
+    {
+      "id": "anaerobic-digester-wheat",
+      "icon": "wheat",
+      "name": "Anaerobic Digester - Wheat",
+      "time": 90,
+      "in": { "wheat": 11 },
+      "out": { "fuel-gas": 9, "compost": 1 },
+      "producers": ["anaerobic-digester"]
+    },
+    {
+      "id": "arc-furnace",
+      "name": "Arc Furnace",
+      "time": 20,
+      "in": { "quartz": 8, "coal": 2, "graphite": 1 },
+      "out": { "molten-silicon": 8, "slag": 3, "exhaust": 6 },
+      "producers": ["arc-furnace"]
+    },
+    {
+      "id": "arc-furnace-2-broken-glass",
+      "icon": "broken-glass",
+      "name": "Arc Furnace II - Broken Glass",
+      "time": 20,
+      "in": { "broken-glass": 24, "graphite": 1, "water": 4 },
+      "out": { "molten-glass": 16, "steam-lo": 4, "exhaust": 2 },
+      "producers": ["arc-furnace-2"]
+    },
+    {
+      "id": "arc-furnace-2-copper-ore-crushed",
+      "icon": "copper-ore-crushed",
+      "name": "Arc Furnace II - Copper Ore Crushed",
+      "time": 20,
+      "in": { "copper-ore-crushed": 12, "sand": 2, "graphite": 1, "water": 4 },
+      "out": { "molten-copper": 16, "slag": 6, "steam-lo": 4, "exhaust": 4 },
+      "producers": ["arc-furnace-2"]
+    },
+    {
+      "id": "arc-furnace-2-copper-scrap",
+      "icon": "copper-scrap",
+      "name": "Arc Furnace II - Copper Scrap",
+      "time": 20,
+      "in": { "copper-scrap": 16, "graphite": 1, "water": 4 },
+      "out": { "molten-copper": 16, "slag": 6, "steam-lo": 4, "exhaust": 2 },
+      "producers": ["arc-furnace-2"]
+    },
+    {
+      "id": "arc-furnace-2-glass-mix",
+      "icon": "glass-mix",
+      "name": "Arc Furnace II - Glass Mix",
+      "time": 20,
+      "in": { "glass-mix": 16, "graphite": 1, "water": 4 },
+      "out": { "molten-glass": 16, "slag": 4, "steam-lo": 4, "exhaust": 4 },
+      "producers": ["arc-furnace-2"]
+    },
+    {
+      "id": "arc-furnace-2-iron-ore-crushed",
+      "icon": "iron-ore-crushed",
+      "name": "Arc Furnace II - Iron Ore Crushed",
+      "time": 20,
+      "in": {
+        "iron-ore-crushed": 12,
+        "limestone": 1,
+        "graphite": 1,
+        "water": 4
+      },
+      "out": { "molten-iron": 16, "slag": 6, "steam-lo": 4, "exhaust": 4 },
+      "producers": ["arc-furnace-2"]
+    },
+    {
+      "id": "arc-furnace-2-iron-ore-scrap",
+      "icon": "iron-scrap",
+      "name": "Arc Furnace II - Iron Scrap",
+      "time": 20,
+      "in": {
+        "iron-scrap": 16,
+        "graphite": 1,
+        "water": 4
+      },
+      "out": { "molten-iron": 16, "slag": 6, "steam-lo": 4, "exhaust": 2 },
+      "producers": ["arc-furnace-2"]
+    },
+    {
+      "id": "arc-furnace-2-quartz",
+      "icon": "quartz",
+      "name": "Arc Furnace II - Quartz",
+      "time": 20,
+      "in": {
+        "quartz": 16,
+        "coal": 4,
+        "graphite": 1,
+        "water": 4
+      },
+      "out": { "molten-silicon": 16, "slag": 6, "steam-lo": 4, "exhaust": 12 },
+      "producers": ["arc-furnace-2"]
+    },
+    {
+      "id": "assembly-manual-construction-parts",
+      "name": "Assembly (Manual) - Construction Parts",
+      "time": 40,
+      "in": {
+        "iron": 3,
+        "wood": 4,
+        "concrete-slab": 4
+      },
+      "out": { "construction-parts": 4 },
+      "producers": ["assembly-manual"]
+    },
+    {
+      "id": "assembly-manual-construction-parts-2",
+      "name": "Assembly (Manual) - Construction Parts II",
+      "time": 80,
+      "in": {
+        "construction-parts": 8,
+        "electronics": 4
+      },
+      "out": { "construction-parts-2": 4 },
+      "producers": ["assembly-manual"]
+    },
+    {
+      "id": "assembly-manual-electronics",
+      "name": "Assembly (Manual) - Electronics",
+      "time": 60,
+      "in": { "rubber": 1, "copper": 4 },
+      "out": { "electronics": 4 },
+      "producers": ["assembly-manual"]
+    },
+    {
+      "id": "assembly-mechanical-parts",
+      "name": "Assembly (Manual) - Mechanical Parts",
+      "time": 40,
+      "in": {
+        "iron": 5
+      },
+      "out": { "mechanical-parts": 4 },
+      "producers": ["assembly-manual"]
+    },
+    {
+      "id": "assembly-vehicle-parts",
+      "name": "Assembly (Manual) - Vehicle Parts",
+      "time": 40,
+      "in": {
+        "iron": 4,
+        "mechanical-parts": 2,
+        "electronics": 2
+      },
+      "out": { "vehicle-parts": 4 },
+      "producers": ["assembly-manual"]
+    },
+    {
+      "id": "assembly-electric-construction-parts",
+      "name": "Assembly (Electric) - Construction Parts",
+      "time": 20,
+      "in": {
+        "iron": 3,
+        "wood": 4,
+        "concrete-slab": 4
+      },
+      "out": { "construction-parts": 4 },
+      "producers": ["assembly-electric"]
+    },
+    {
+      "id": "assembly-electric-construction-parts-2",
+      "name": "Assembly (Electric) - Construction Parts II",
+      "time": 40,
+      "in": {
+        "construction-parts": 8,
+        "electronics": 4
+      },
+      "out": { "construction-parts-2": 4 },
+      "producers": ["assembly-electric"]
+    },
+    {
+      "id": "assembly-electric-construction-parts-3",
+      "name": "Assembly (Electric) - Construction Parts III",
+      "time": 80,
+      "in": {
+        "construction-parts-2": 8,
+        "steel": 4
+      },
+      "out": { "construction-parts-3": 4 },
+      "producers": ["assembly-electric"]
+    },
+    {
+      "id": "assembly-electric-electronics",
+      "name": "Assembly (Electric) - Electronics",
+      "time": 20,
+      "in": { "rubber": 1, "copper": 4 },
+      "out": { "electronics": 4 },
+      "producers": ["assembly-electric"]
+    },
+    {
+      "id": "assembly-electric-household-goods",
+      "name": "Assembly (Electric) - Household Goods",
+      "time": 60,
+      "in": {
+        "glass": 10,
+        "steel": 2,
+        "wood": 2
+      },
+      "out": { "household-goods": 8 },
+      "producers": ["assembly-electric"]
+    },
+    {
+      "id": "assembly-electric-lab-equipment",
+      "name": "Assembly (Electric) - Lab Equipment",
+      "time": 40,
+      "in": { "mechanical-parts": 4, "electronics": 4 },
+      "out": { "lab-equipment": 8 },
+      "producers": ["assembly-electric"]
+    },
+    {
+      "id": "assembly-electric-mechanical-parts",
+      "name": "Assembly (Electric) - Mechanical Parts",
+      "time": 20,
+      "in": {
+        "iron": 5
+      },
+      "out": { "mechanical-parts": 4 },
+      "producers": ["assembly-electric"]
+    },
+    {
+      "id": "assembly-electric-vehicle-parts",
+      "name": "Assembly (Electric) - Vehicle Parts",
+      "time": 40,
+      "in": {
+        "iron": 4,
+        "mechanical-parts": 2,
+        "electronics": 2
+      },
+      "out": { "vehicle-parts": 4 },
+      "producers": ["assembly-electric"]
+    },
+    {
+      "id": "assembly-electric-2-construction-parts",
+      "name": "Assembly (Electric) II - Construction Parts",
+      "time": 10,
+      "in": {
+        "iron": 3,
+        "wood": 4,
+        "concrete-slab": 4
+      },
+      "out": { "construction-parts": 4 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-construction-parts-2",
+      "name": "Assembly (Electric) II - Construction Parts II",
+      "time": 20,
+      "in": {
+        "construction-parts": 8,
+        "electronics": 4
+      },
+      "out": { "construction-parts-2": 4 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-construction-parts-3",
+      "name": "Assembly (Electric) II - Construction Parts III",
+      "time": 40,
+      "in": {
+        "construction-parts-2": 8,
+        "steel": 4
+      },
+      "out": { "construction-parts-3": 4 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-electronics",
+      "name": "Assembly (Electric) II - Electronics",
+      "time": 10,
+      "in": { "rubber": 1, "copper": 4 },
+      "out": { "electronics": 4 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-electronics-2",
+      "name": "Assembly (Electric) II - Electronics II",
+      "time": 40,
+      "in": { "pcb": 2, "electronics": 4, "silicon-poly": 4 },
+      "out": { "electronics-2": 2 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-electronics-3",
+      "name": "Assembly (Electric) II - Electronics III",
+      "time": 80,
+      "in": { "microchips": 2, "electronics-2": 2 },
+      "out": { "electronics-3": 2 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-food-pack-eggs",
+      "name": "Assembly (Electric) II - Food Pack (Eggs)",
+      "time": 20,
+      "in": { "eggs": 2, "bread": 4, "snack": 6 },
+      "out": { "food-pack": 4 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-food-pack-meat",
+      "name": "Assembly (Electric) II - Food Pack (Meat)",
+      "time": 20,
+      "in": { "meat": 2, "bread": 4, "snack": 6 },
+      "out": { "food-pack": 4 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-household-appliances",
+      "name": "Assembly (Electric) II - Household Appliances",
+      "time": 30,
+      "in": {
+        "electronics": 8,
+        "electronics-2": 2,
+        "steel": 2
+      },
+      "out": { "household-appliances": 8 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-household-goods",
+      "name": "Assembly (Electric) II - Household Goods",
+      "time": 30,
+      "in": {
+        "glass": 10,
+        "steel": 2,
+        "wood": 2
+      },
+      "out": { "household-goods": 8 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-lab-equipment",
+      "name": "Assembly (Electric) II - Lab Equipment",
+      "time": 10,
+      "in": { "mechanical-parts": 4, "electronics": 4 },
+      "out": { "lab-equipment": 8 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-lab-equipment-2",
+      "name": "Assembly (Electric) II - Lab Equipment II",
+      "time": 20,
+      "in": { "lab-equipment": 8, "liquid-nitrogen": 2 },
+      "out": { "lab-equipment-2": 4 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-lab-equipment-3",
+      "name": "Assembly (Electric) II - Lab Equipment III",
+      "time": 40,
+      "in": { "lab-equipment-2": 8, "glass": 8 },
+      "out": { "lab-equipment-3": 4 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-lab-equipment-4",
+      "name": "Assembly (Electric) II - Lab Equipment IV",
+      "time": 40,
+      "in": { "lab-equipment-3": 8, "pcb": 2 },
+      "out": { "lab-equipment-4": 4 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-mechanical-parts",
+      "name": "Assembly (Electric) II - Mechanical Parts",
+      "time": 20,
+      "in": {
+        "iron": 5
+      },
+      "out": { "mechanical-parts": 4 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-steel-mechanical-parts",
+      "name": "Assembly (Electric) II - Mechanical Parts (Steel)",
+      "time": 20,
+      "in": { "steel": 4 },
+      "out": { "mechanical-parts": 8 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-medical-equipment",
+      "name": "Assembly (Electric) II - Medical Equipment",
+      "time": 40,
+      "in": {
+        "steel": 4,
+        "plastic": 4
+      },
+      "out": { "medical-equipment": 8 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-medical-supplies",
+      "name": "Assembly (Electric) II - Medical Supplies",
+      "time": 20,
+      "in": {
+        "medical-equipment": 4,
+        "disinfectant": 4
+      },
+      "out": { "medical-supplies": 8 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-medical-supplies-2",
+      "name": "Assembly (Electric) II - Medical Supplies II",
+      "time": 20,
+      "in": {
+        "medical-supplies": 8,
+        "antibiotics": 4
+      },
+      "out": { "medical-supplies-2": 8 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-medical-supplies-3",
+      "name": "Assembly (Electric) II - Medical Supplies III",
+      "time": 20,
+      "in": {
+        "medical-supplies-2": 8,
+        "anesthetics": 4,
+        "morphine": 4
+      },
+      "out": { "medical-supplies-3": 8 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-pcb",
+      "name": "Assembly (Electric) II - PCB",
+      "time": 40,
+      "in": {
+        "glass": 2,
+        "plastic": 2,
+        "copper": 1
+      },
+      "out": { "pcb": 4 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-server",
+      "name": "Assembly (Electric) II - Server",
+      "time": 160,
+      "in": {
+        "steel": 1,
+        "electronics-3": 4
+      },
+      "out": { "server": 4 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-solar-cell",
+      "name": "Assembly (Electric) II - Solar Cell",
+      "time": 120,
+      "in": {
+        "steel": 1,
+        "silicon-poly": 12,
+        "glass": 4
+      },
+      "out": { "solar-cell": 8 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-uranium-rod",
+      "name": "Assembly (Electric) II - Uranium Rod",
+      "time": 180,
+      "in": {
+        "uranium-pellets": 36,
+        "steel": 1
+      },
+      "out": { "uranium-rod": 6 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-vehicle-parts",
+      "name": "Assembly (Electric) II - Vehicle Parts",
+      "time": 20,
+      "in": {
+        "iron": 4,
+        "mechanical-parts": 2,
+        "electronics": 2
+      },
+      "out": { "vehicle-parts": 4 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-vehicle-parts-2",
+      "name": "Assembly (Electric) II - Vehicle Parts II",
+      "time": 40,
+      "in": {
+        "vehicle-parts": 4,
+        "steel": 2,
+        "glass": 2
+      },
+      "out": { "vehicle-parts-2": 4 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-electric-2-vehicle-parts-3",
+      "name": "Assembly (Electric) II - Vehicle Parts III",
+      "time": 40,
+      "in": {
+        "vehicle-parts-2": 4,
+        "electronics-2": 1
+      },
+      "out": { "vehicle-parts-3": 4 },
+      "producers": ["assembly-electric-2"]
+    },
+    {
+      "id": "assembly-robotic-construction-parts",
+      "name": "Assembly (Robotic) - Construction Parts",
+      "time": 10,
+      "in": {
+        "iron": 6,
+        "wood": 8,
+        "concrete-slab": 8
+      },
+      "out": { "construction-parts": 8 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-construction-parts-2",
+      "name": "Assembly (Robotic) - Construction Parts II",
+      "time": 10,
+      "in": {
+        "construction-parts": 8,
+        "electronics": 4
+      },
+      "out": { "construction-parts-2": 4 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-construction-parts-3",
+      "name": "Assembly (Robotic) - Construction Parts III",
+      "time": 20,
+      "in": {
+        "construction-parts-2": 8,
+        "steel": 4
+      },
+      "out": { "construction-parts-3": 4 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-construction-parts-4",
+      "name": "Assembly (Robotic) - Construction Parts IV",
+      "time": 60,
+      "in": {
+        "construction-parts-3": 4,
+        "electronics-2": 4
+      },
+      "out": { "construction-parts-4": 2 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-electronics",
+      "name": "Assembly (Robotic) - Electronics",
+      "time": 10,
+      "in": { "rubber": 2, "copper": 8 },
+      "out": { "electronics": 8 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-electronics-2",
+      "name": "Assembly (Robotic) - Electronics II",
+      "time": 20,
+      "in": { "pcb": 2, "electronics": 4, "silicon-poly": 4 },
+      "out": { "electronics-2": 2 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-electronics-3",
+      "name": "Assembly (Robotic) - Electronics III",
+      "time": 40,
+      "in": { "microchips": 2, "electronics-2": 2 },
+      "out": { "electronics-3": 2 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-household-appliances",
+      "name": "Assembly (Robotic) - Household Appliances",
+      "time": 20,
+      "in": {
+        "electronics": 8,
+        "electronics-2": 2,
+        "steel": 2
+      },
+      "out": { "household-appliances": 8 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-household-goods",
+      "name": "Assembly (Robotic) - Household Goods",
+      "time": 15,
+      "in": {
+        "glass": 10,
+        "steel": 2,
+        "wood": 2
+      },
+      "out": { "household-goods": 8 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-lab-equipment",
+      "name": "Assembly (Robotic) - Lab Equipment",
+      "time": 10,
+      "in": { "mechanical-parts": 8, "electronics": 8 },
+      "out": { "lab-equipment": 16 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-lab-equipment-2",
+      "name": "Assembly (Robotic) - Lab Equipment II",
+      "time": 10,
+      "in": { "lab-equipment": 8, "liquid-nitrogen": 2 },
+      "out": { "lab-equipment-2": 4 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-lab-equipment-3",
+      "name": "Assembly (Robotic) - Lab Equipment III",
+      "time": 20,
+      "in": { "lab-equipment-2": 8, "glass": 8 },
+      "out": { "lab-equipment-3": 4 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-lab-equipment-4",
+      "name": "Assembly (Robotic) - Lab Equipment IV",
+      "time": 20,
+      "in": { "lab-equipment-3": 8, "pcb": 2 },
+      "out": { "lab-equipment-4": 4 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-mechanical-parts",
+      "name": "Assembly (Robotic) - Mechanical Parts",
+      "time": 10,
+      "in": { "steel": 4 },
+      "out": { "mechanical-parts": 8 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-medical-equipment",
+      "name": "Assembly (Robotic) - Medical Equipment",
+      "time": 20,
+      "in": {
+        "steel": 4,
+        "plastic": 4
+      },
+      "out": { "medical-equipment": 8 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-medical-supplies",
+      "name": "Assembly (Robotic) - Medical Supplies",
+      "time": 10,
+      "in": {
+        "medical-equipment": 4,
+        "disinfectant": 4
+      },
+      "out": { "medical-supplies": 8 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-medical-supplies-2",
+      "name": "Assembly (Robotic) - Medical Supplies II",
+      "time": 10,
+      "in": {
+        "medical-supplies": 8,
+        "antibiotics": 4
+      },
+      "out": { "medical-supplies-2": 8 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-medical-supplies-3",
+      "name": "Assembly (Robotic) - Medical Supplies III",
+      "time": 10,
+      "in": {
+        "medical-supplies-2": 8,
+        "anesthetics": 4,
+        "morphine": 4
+      },
+      "out": { "medical-supplies-3": 8 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-pcb",
+      "name": "Assembly (Robotic) - PCB",
+      "time": 20,
+      "in": {
+        "glass": 2,
+        "plastic": 2,
+        "copper": 1
+      },
+      "out": { "pcb": 4 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-server",
+      "name": "Assembly (Robotic) - Server",
+      "time": 80,
+      "in": {
+        "steel": 1,
+        "electronics-3": 4
+      },
+      "out": { "server": 4 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-solar-cell",
+      "name": "Assembly (Robotic) - Solar Cell",
+      "time": 60,
+      "in": {
+        "steel": 1,
+        "silicon-poly": 12,
+        "glass": 4
+      },
+      "out": { "solar-cell": 8 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-vehicle-parts",
+      "name": "Assembly (Robotic) - Vehicle Parts",
+      "time": 10,
+      "in": {
+        "iron": 4,
+        "mechanical-parts": 2,
+        "electronics": 2
+      },
+      "out": { "vehicle-parts": 4 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-vehicle-parts-2",
+      "name": "Assembly (Robotic) - Vehicle Parts II",
+      "time": 20,
+      "in": {
+        "vehicle-parts": 4,
+        "steel": 2,
+        "glass": 2
+      },
+      "out": { "vehicle-parts-2": 4 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-vehicle-parts-3",
+      "name": "Assembly (Robotic) - Vehicle Parts III",
+      "time": 20,
+      "in": {
+        "vehicle-parts-2": 4,
+        "electronics-2": 1
+      },
+      "out": { "vehicle-parts-3": 4 },
+      "producers": ["assembly-robotic"]
+    },
+    {
+      "id": "assembly-robotic-2-construction-parts-4",
+      "name": "Assembly (Robotic) II - Construction Parts IV",
+      "time": 40,
+      "in": {
+        "construction-parts-3": 4,
+        "electronics-2": 4
+      },
+      "out": { "construction-parts-4": 2 },
+      "producers": ["assembly-robotic-2"]
+    },
+    {
+      "id": "assembly-robotic-2-consumer-electronics",
+      "name": "Assembly (Robotic) II - Consumer Electronics",
+      "time": 60,
+      "in": {
+        "electronics-3": 2,
+        "plastic": 2,
+        "steel": 2
+      },
+      "out": { "consumer-electronics": 4 },
+      "producers": ["assembly-robotic-2"]
+    },
+    {
+      "id": "assembly-robotic-2-electronics",
+      "name": "Assembly (Robotic) II - Electronics",
+      "time": 10,
+      "in": { "rubber": 4, "copper": 16 },
+      "out": { "electronics": 16 },
+      "producers": ["assembly-robotic-2"]
+    },
+    {
+      "id": "assembly-robotic-2-electronics-2",
+      "name": "Assembly (Robotic) II - Electronics II",
+      "time": 10,
+      "in": { "pcb": 2, "electronics": 4, "silicon-poly": 4 },
+      "out": { "electronics-2": 2 },
+      "producers": ["assembly-robotic-2"]
+    },
+    {
+      "id": "assembly-robotic-2-electronics-3",
+      "name": "Assembly (Robotic) II - Electronics III",
+      "time": 20,
+      "in": { "microchips": 2, "electronics-2": 2 },
+      "out": { "electronics-3": 2 },
+      "producers": ["assembly-robotic-2"]
+    },
+    {
+      "id": "assembly-robotic-2-household-appliances",
+      "name": "Assembly (Robotic) II - Household Appliances",
+      "time": 10,
+      "in": {
+        "electronics": 8,
+        "electronics-2": 2,
+        "steel": 2
+      },
+      "out": { "household-appliances": 8 },
+      "producers": ["assembly-robotic-2"]
+    },
+    {
+      "id": "assembly-robotic-2-pcb",
+      "name": "Assembly (Robotic) II - PCB",
+      "time": 10,
+      "in": {
+        "glass": 2,
+        "plastic": 2,
+        "copper": 1
+      },
+      "out": { "pcb": 4 },
+      "producers": ["assembly-robotic-2"]
+    },
+    {
+      "id": "assembly-robotic-2-server",
+      "name": "Assembly (Robotic) II - Server",
+      "time": 40,
+      "in": {
+        "steel": 1,
+        "electronics-3": 4
+      },
+      "out": { "server": 4 },
+      "producers": ["assembly-robotic-2"]
+    },
+    {
+      "id": "assembly-robotic-2-solar-cell",
+      "name": "Assembly (Robotic) II - Solar Cell",
+      "time": 40,
+      "in": {
+        "steel": 1,
+        "silicon-poly": 12,
+        "glass": 4
+      },
+      "out": { "solar-cell": 8 },
+      "producers": ["assembly-robotic-2"]
+    },
+    {
+      "id": "assembly-robotic-2-solar-cell-mono",
+      "name": "Assembly (Robotic) II - Solar Cell Mono",
+      "time": 60,
+      "in": {
+        "steel": 1,
+        "silicon-wafer": 12,
+        "glass": 4
+      },
+      "out": { "solar-cell-mono": 8 },
+      "producers": ["assembly-robotic-2"]
+    },
+    {
       "id": "coal-maker",
       "name": "Coal Maker",
       "time": 60,
@@ -3166,38 +4067,6 @@
       "in": { "flour": 8, "water": 4 },
       "out": { "bread": 12 },
       "producers": ["baking-unit"]
-    },
-    {
-      "id": "meat-trimmings-anaerobic-digester",
-      "name": "Meat Trimmings Anaerobic Digester",
-      "time": 120,
-      "in": { "meat-trimmings": 8 },
-      "out": { "fuel-gas": 4, "compost": 2 },
-      "producers": ["anaerobic-digester"]
-    },
-    {
-      "id": "potatoes-anaerobic-digester",
-      "name": "Potatoes Anaerobic Digester",
-      "time": 60,
-      "in": { "potatoes": 14 },
-      "out": { "fuel-gas": 5, "compost": 1 },
-      "producers": ["anaerobic-digester"]
-    },
-    {
-      "id": "sludge-anaerobic-digester",
-      "name": "Sludge Anaerobic Digester",
-      "time": 60,
-      "in": { "sludge": 12 },
-      "out": { "fuel-gas": 5, "compost": 1 },
-      "producers": ["anaerobic-digester"]
-    },
-    {
-      "id": "wheat-anaerobic-digester",
-      "name": "Wheat Anaerobic Digester",
-      "time": 90,
-      "in": { "wheat": 11 },
-      "out": { "fuel-gas": 9, "compost": 1 },
-      "producers": ["anaerobic-digester"]
     },
     {
       "id": "animal-feed-compost",
