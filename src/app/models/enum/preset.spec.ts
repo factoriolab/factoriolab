@@ -10,5 +10,9 @@ describe('Preset', () => {
     it('should return the correct options for Dyson Sphere Program', () => {
       expect(presetOptions(Game.DysonSphereProgram).length).toEqual(3);
     });
+
+    it('should return the correct options for Captain Of Industry', () => {
+      expect(presetOptions(Game.CaptainOfIndustry).length).toEqual(3);
+    });
   });
 });

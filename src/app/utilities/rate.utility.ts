@@ -126,6 +126,38 @@ export class RateUtility {
           step.power = step.power.add(step.factories.mul(recipe.consumption));
         }
       }
+
+      if (recipe.maintenance1?.nonzero()) {
+        // Reset maintenance
+        step.maintenance1 = Rational.zero;
+
+        // Calculate maintenance
+        if (recipe.maintenance1?.nonzero()) {
+          step.maintenance1 = step.maintenance1.add(step.factories.ceil().mul(recipe.maintenance1));
+        }
+      
+      }      
+      if (recipe.maintenance2?.nonzero()) {
+        // Reset maintenance
+        step.maintenance2 = Rational.zero;
+
+        // Calculate maintenance
+        if (recipe.maintenance2?.nonzero()) {
+          step.maintenance2 = step.maintenance2.add(step.factories.ceil().mul(recipe.maintenance2));
+        }
+      
+      }
+      if (recipe.maintenance3?.nonzero()) {
+        // Reset maintenance
+        step.maintenance3 = Rational.zero;
+
+        // Calculate maintenance
+        if (recipe.maintenance3?.nonzero()) {
+          step.maintenance3 = step.maintenance3.add(step.factories.ceil().mul(recipe.maintenance3));
+        }
+      
+      }
+ 
       // Calculate pollution
       if (recipe.pollution?.nonzero()) {
         step.pollution = step.factories.mul(recipe.pollution);

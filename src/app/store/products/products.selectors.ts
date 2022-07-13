@@ -458,6 +458,9 @@ export const getTotals = createSelector(
     const factories: Entities<Rational> = {};
     const beacons: Entities<Rational> = {};
     let power = Rational.zero;
+    let maintenance1 = Rational.zero;
+    let maintenance2 = Rational.zero;
+    let maintenance3 = Rational.zero;
     let pollution = Rational.zero;
 
     for (const step of steps) {
@@ -527,13 +530,24 @@ export const getTotals = createSelector(
         power = power.add(step.power);
       }
 
+      // Total Maintenance
+      if (step.maintenance1 != null) {
+        maintenance1 = maintenance1.add(step.maintenance1);
+      }
+      if (step.maintenance2 != null) {
+        maintenance2 = maintenance2.add(step.maintenance2);
+      }
+      if (step.maintenance3 != null) {
+        maintenance3 = maintenance3.add(step.maintenance3);
+      }
+
       // Total Pollution
       if (step.pollution != null) {
         pollution = pollution.add(step.pollution);
       }
     }
 
-    return { belts, wagons, factories, beacons, power, pollution };
+    return { belts, wagons, factories, beacons, power, maintenance1, maintenance2, maintenance3, pollution };
   }
 );
 

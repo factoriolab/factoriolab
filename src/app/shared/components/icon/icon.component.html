@@ -148,6 +148,18 @@
           {{ power(factory.drain) }}
         </td>
       </tr>
+      <tr *ngIf="factory.maintenance1">
+        <td>{{ 'icon.maintenance1' | translate }}</td>
+        <td>{{ factory.maintenance1 }}</td>
+      </tr>
+      <tr *ngIf="factory.maintenance2">
+        <td>{{ 'icon.maintenance2' | translate }}</td>
+        <td>{{ factory.maintenance2 }}</td>
+      </tr>
+      <tr *ngIf="factory.maintenance3">
+        <td>{{ 'icon.maintenance3' | translate }}</td>
+        <td>{{ factory.maintenance3 }}</td>
+      </tr>
       <tr *ngIf="factory.pollution">
         <td>{{ 'icon.drain' | translate }}</td>
         <td>{{ round(factory.pollution) }}/m</td>

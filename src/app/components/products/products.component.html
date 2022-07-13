@@ -138,10 +138,10 @@
                   ></lab-icon>
                 </lab-select>
                 <ng-template #pipePicker>
-                  <lab-select
-                    *ngIf="
-                      vm.data.pipeIds.indexOf(beltId) !== -1;
-                      else pipeIcon
+                  
+                  <lab-select 
+                    *ngIf="vm.data.pipeIds.indexOf(beltId) !== -1;
+                    else pipeIcon
                     "
                     header="Select a pipe"
                     [selected]="beltId"

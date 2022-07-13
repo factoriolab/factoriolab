@@ -36,6 +36,9 @@ export class RationalRecipe {
   usage?: Rational;
   drain?: Rational;
   consumption?: Rational;
+  maintenance1?: Rational;
+  maintenance2?: Rational;
+  maintenance3?: Rational;
   pollution?: Rational;
 
   constructor(data: Recipe) {

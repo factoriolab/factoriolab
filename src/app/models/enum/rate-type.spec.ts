@@ -15,5 +15,11 @@ describe('RateType', () => {
         rateTypeOptions(DisplayRate.PerMinute, Game.DysonSphereProgram).length
       ).toEqual(3);
     });
+
+    it('should return the correct options for Captain Of Industry', () => {
+      expect(
+        rateTypeOptions(DisplayRate.PerMinute, Game.CaptainOfIndustry).length
+      ).toEqual(3);
+    });
   });
 });

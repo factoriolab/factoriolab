@@ -136,6 +136,7 @@ export const getColumnsState = createSelector(
           ...Preferences.initialColumnsState,
           ...col,
           ...{
+            [Column.Maintenance]: { ...col[Column.Maintenance], ...{ show: false } },
             [Column.Wagons]: { ...col[Column.Wagons], ...{ show: false } },
             [Column.Overclock]: {
               ...col[Column.Overclock],
@@ -148,11 +149,12 @@ export const getColumnsState = createSelector(
             },
           },
         }
-      : game === Game.Satisfactory
+      : game === Game.Satisfactory 
       ? {
           ...Preferences.initialColumnsState,
           ...col,
           ...{
+            [Column.Maintenance]: { ...col[Column.Maintenance], ...{ show: false } },
             [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
             [Column.Pollution]: {
               ...col[Column.Pollution],
@@ -160,10 +162,22 @@ export const getColumnsState = createSelector(
             },
           },
         }
-      : {
+      : game === Game.CaptainOfIndustry 
+      ? {
+        ...Preferences.initialColumnsState,
+        ...col,
+        ...{
+          [Column.Maintenance]: { ...col[Column.Maintenance], ...{ show: true } },
+          [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
+          [Column.Pollution]: {...col[Column.Pollution], ...{ show: false },},
+          [Column.Overclock]: {...col[Column.Overclock], ...{ show: false },},
+          [Column.Wagons]: { ...col[Column.Wagons], ...{ show: false } },
+        },
+      } : {
           ...Preferences.initialColumnsState,
           ...col,
           ...{
+            [Column.Maintenance]: { ...col[Column.Maintenance], ...{ show: false } },
             [Column.Overclock]: {
               ...col[Column.Overclock],
               ...{ show: false },
