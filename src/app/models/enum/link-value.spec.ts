@@ -10,5 +10,9 @@ describe('LinkValue', () => {
     it('should return the correct options for Dyson Sphere Program', () => {
       expect(linkValueOptions(Game.DysonSphereProgram).length).toEqual(5);
     });
+
+    it('should return the correct options for Captain Of Industry', () => {
+      expect(linkValueOptions(Game.CaptainOfIndustry).length).toEqual(5);
+    });
   });
 });

@@ -13,6 +13,9 @@ export interface Factory {
   usage?: number;
   /** Drain in kW */
   drain?: number | string;
+  maintenance1?: number;
+  maintenance2?: number;
+  maintenance3?: number;
   /** Pollution in #/m */
   pollution?: number;
   mining?: boolean;
@@ -32,6 +35,9 @@ export class RationalFactory {
   /** Energy consumption in kW */
   usage?: Rational;
   drain?: Rational;
+  maintenance1?: Rational;
+  maintenance2?: Rational;
+  maintenance3?: Rational;
   pollution?: Rational;
   mining?: boolean;
   research?: boolean;
@@ -61,6 +67,15 @@ export class RationalFactory {
       } else {
         this.drain = Rational.fromNumber(data.drain);
       }
+    }
+    if (data.maintenance1 != null) {
+      this.maintenance1 = Rational.fromNumber(data.maintenance1);
+    }    
+    if (data.maintenance2 != null) {
+      this.maintenance2 = Rational.fromNumber(data.maintenance2);
+    }    
+    if (data.maintenance3 != null) {
+      this.maintenance3 = Rational.fromNumber(data.maintenance3);
     }
     if (data.pollution != null) {
       this.pollution = Rational.fromNumber(data.pollution);

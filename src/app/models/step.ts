@@ -14,5 +14,8 @@ export interface Step {
   factories?: Rational;
   beacons?: Rational;
   power?: Rational;
+  maintenance1?: Rational;
+  maintenance2?: Rational;
+  maintenance3?: Rational;
   pollution?: Rational;
 }
