@@ -374,12 +374,20 @@ export const getDataset = createSelector(
       .filter((i) => i.belt)
       .sort((a, b) =>
         /** Don't sort belts in DSP, leave based on stacks */
-        game === Game.DysonSphereProgram ? 0 : a.belt!.speed - b.belt!.speed
+        game === Game.DysonSphereProgram
+          ? 0
+          : Rational.fromJson(a.belt!.speed)
+              .sub(Rational.fromJson(b.belt!.speed))
+              .toNumber()
       )
       .map((i) => i.id);
     const pipeIds = items
       .filter((i) => i.pipe)
-      .sort((a, b) => a.pipe!.speed - b.pipe!.speed)
+      .sort((a, b) =>
+        Rational.fromJson(a.pipe!.speed)
+          .sub(Rational.fromJson(b.pipe!.speed))
+          .toNumber()
+      )
       .map((i) => i.id);
     const cargoWagonIds = items
       .filter((i) => i.cargoWagon)

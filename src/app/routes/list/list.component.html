@@ -202,9 +202,10 @@
                 <lab-icon
                   class="button"
                   [title]="
-                    vm.itemSettings[step.itemId].ignore
+                    (vm.itemSettings[step.itemId].ignore
                       ? 'list.clickToInclude'
-                      : ('list.clickToIgnore' | translate)
+                      : 'list.clickToIgnore'
+                    ) | translate
                   "
                   [iconId]="step.itemId"
                   [class.ignored]="vm.itemSettings[step.itemId].ignore"
