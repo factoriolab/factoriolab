@@ -133,6 +133,23 @@ export const getColumnsState = createSelector(
   (game, col): Preferences.ColumnsState => {
     switch (game) {
       case Game.CaptainOfIndustry:
+        return {
+          ...Preferences.initialColumnsState,
+          ...col,
+          ...{
+            [Column.Wagons]: { ...col[Column.Wagons], ...{ show: false } },
+            [Column.Overclock]: {
+              ...col[Column.Overclock],
+              ...{ show: false },
+            },
+            [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
+            [Column.Power]: { ...col[Column.Power], ...{ show: false } },
+            [Column.Pollution]: {
+              ...col[Column.Pollution],
+              ...{ show: false },
+            },
+          },
+        };
       case Game.DysonSphereProgram:
         return {
           ...Preferences.initialColumnsState,

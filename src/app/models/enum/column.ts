@@ -47,6 +47,14 @@ export function columnOptions(game: Game): IdName<Column>[] {
     case Game.Factorio:
       return result.filter((i) => i.id !== Column.Overclock);
     case Game.CaptainOfIndustry:
+      return result.filter(
+        (i) =>
+          i.id !== Column.Beacons &&
+          i.id !== Column.Overclock &&
+          i.id !== Column.Power &&
+          i.id !== Column.Pollution &&
+          i.id !== Column.Wagons
+      );
     case Game.DysonSphereProgram:
       return result.filter(
         (i) =>

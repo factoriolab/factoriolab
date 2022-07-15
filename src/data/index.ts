@@ -33,7 +33,6 @@ export const data: AppData = {
     { id: 'sxp', name: 'Space Exploration', game: Game.Factorio },
     { id: 'xan', name: 'Xander Mod', game: Game.Factorio },
     { id: 'dsp', name: 'Dyson Sphere Program', game: Game.DysonSphereProgram },
-    { id: 'coi', name: 'Captain Of Industry', game: Game.CaptainOfIndustry },
     { id: 'sfy', name: 'Satisfactory', game: Game.Satisfactory },
     { id: 'coi', name: 'Captain of Industry', game: Game.CaptainOfIndustry },
   ],
@@ -79,5 +78,6 @@ export const data: AppData = {
     'ang',
     'msc',
     'sfy',
+    'coi',
   ],
 };
