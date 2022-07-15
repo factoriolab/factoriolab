@@ -8,7 +8,7 @@ describe('Column', () => {
     });
 
     it('should return the correct options for Captain of Industry', () => {
-      expect(columnOptions(Game.CaptainOfIndustry).length).toEqual(7);
+      expect(columnOptions(Game.CaptainOfIndustry).length).toEqual(5);
     });
 
     it('should return the correct options for Dyson Sphere Program', () => {
