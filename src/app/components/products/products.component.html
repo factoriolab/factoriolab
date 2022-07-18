@@ -15,7 +15,7 @@
         <span>{{ 'products.produce' | translate }}</span>
         <lab-picker
           [selected]="product.itemId"
-          (selectId)="changeItem(product, $event)"
+          (selectId)="setItem(product.id, $event)"
         >
           <lab-icon
             class="button"

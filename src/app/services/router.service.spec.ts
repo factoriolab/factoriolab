@@ -1217,6 +1217,11 @@ describe('RouterService', () => {
       expect(service.inflateMend('eJxLTAQAASUAww_', '_')).toEqual('aa');
       expect(console.warn).toHaveBeenCalled();
     });
+
+    it('should assume failure if return is empty/null', () => {
+      spyOn(service, 'inflate').and.returnValue('');
+      expect(() => service.inflateMend('eJxLTAQAASUAww_', '_')).toThrow();
+    });
   });
 
   describe('base64ToBytes', () => {
