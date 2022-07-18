@@ -375,7 +375,7 @@ export class RecipeUtility {
     productSteps: Entities<[string, Rational][]>,
     product: Product | RationalProduct
   ): [string, Rational] | null {
-    const steps = productSteps[product.itemId];
+    const steps = productSteps[product.id];
     if (steps.length === 0) {
       return null;
     } else if (product.viaId) {
