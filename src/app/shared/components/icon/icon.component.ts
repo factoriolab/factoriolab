@@ -7,7 +7,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { first, map } from 'rxjs';
+import { combineLatest, first, map } from 'rxjs';
 
 import {
   DisplayRate,
@@ -40,8 +40,10 @@ export class IconComponent implements OnChanges {
   @Input() recipe: Recipe | null | undefined;
   @Input() item: RationalItem | null | undefined;
 
-  game$ = this.store.select(Settings.getGame);
-  displayRate$ = this.store.select(Settings.getDisplayRate);
+  vm$ = combineLatest([
+    this.store.select(Settings.getGame),
+    this.store.select(Settings.getDisplayRate),
+  ]).pipe(map(([game, displayRate]) => ({ game, displayRate })));
 
   icon: Icon | null | undefined;
   hover = false;

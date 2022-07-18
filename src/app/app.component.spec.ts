@@ -47,20 +47,20 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should update the title for Dyson Sphere Program', () => {
-    mockGetGame.setResult(Game.DysonSphereProgram);
-    mockStore.refreshState();
-    spyOn(title, 'setTitle');
-    fixture.detectChanges();
-    expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_DSP}`);
-  });
-
   it('should update the title for Captain Of Industry', () => {
     mockGetGame.setResult(Game.CaptainOfIndustry);
     mockStore.refreshState();
     spyOn(title, 'setTitle');
     fixture.detectChanges();
     expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_COI}`);
+  });
+
+  it('should update the title for Dyson Sphere Program', () => {
+    mockGetGame.setResult(Game.DysonSphereProgram);
+    mockStore.refreshState();
+    spyOn(title, 'setTitle');
+    fixture.detectChanges();
+    expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_DSP}`);
   });
 
   it('should update the title for Satisfactory', () => {

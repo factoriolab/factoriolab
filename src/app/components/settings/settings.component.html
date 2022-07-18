@@ -214,22 +214,6 @@
               ></lab-options>
             </td>
           </tr>
-          <tr *ngIf="vm.columns[Column.Maintenance].show">
-            <td>
-              <lab-info
-                [text]="'setting.powerUnit' | translate"
-                [tooltip]="'setting.powerUnitTooltip' | translate"
-              ></lab-info>
-            </td>
-            <td>
-              <lab-options
-                [title]="'setting.powerUnitTitle' | translate"
-                [selected]="vm.preferences.powerUnit"
-                [options]="PowerUnitOptions"
-                (selectId)="setPowerUnit($event)"
-              ></lab-options>
-            </td>
-          </tr>
         </table>
       </div>
     </div>
@@ -254,7 +238,10 @@
             </td>
           </tr>
         </table>
-        <table class="factories">
+        <table
+          *ngIf="vm.data.game !== Game.CaptainOfIndustry"
+          class="factories"
+        >
           <ng-container
             *ngFor="let f of vm.factoryRows; let i = index; let last = last"
           >
@@ -759,8 +746,7 @@
         </table>
       </div>
     </div>
-    <div class="hole" *ngIf="vm.data.game !== Game.Satisfactory 
-    && vm.data.game !== Game.CaptainOfIndustry">
+    <div class="hole" *ngIf="vm.data.game !== Game.Satisfactory">
       <div>
         <div class="header">{{ 'setting.bonuses' | translate }}</div>
         <table class="wide">

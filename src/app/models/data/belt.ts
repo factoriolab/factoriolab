@@ -1,13 +1,13 @@
 import { Rational } from '../rational';
 
 export interface Belt {
-  speed: number;
+  speed: number | string;
 }
 
 export class RationalBelt {
   speed: Rational;
 
   constructor(data: Belt) {
-    this.speed = Rational.fromNumber(data.speed);
+    this.speed = Rational.fromJson(data.speed);
   }
 }

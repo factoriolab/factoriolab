@@ -33,8 +33,8 @@ export const data: AppData = {
     { id: 'sxp', name: 'Space Exploration', game: Game.Factorio },
     { id: 'xan', name: 'Xander Mod', game: Game.Factorio },
     { id: 'dsp', name: 'Dyson Sphere Program', game: Game.DysonSphereProgram },
-    { id: 'coi', name: 'Captain Of Industry', game: Game.CaptainOfIndustry },
     { id: 'sfy', name: 'Satisfactory', game: Game.Satisfactory },
+    { id: 'coi', name: 'Captain of Industry', game: Game.CaptainOfIndustry },
   ],
   v0: [
     '1.1',
@@ -45,7 +45,6 @@ export const data: AppData = {
     'bobs',
     'bobs-angels',
     'dsp',
-    'capt',
     'factorio-extended-plus',
     'industrial-revolution',
     'krastorio2',
@@ -65,7 +64,6 @@ export const data: AppData = {
     'bob',
     'bobang',
     'dsp',
-    'capt',
     'fep',
     'ir2',
     'kr2',
@@ -80,5 +78,6 @@ export const data: AppData = {
     'ang',
     'msc',
     'sfy',
+    'coi',
   ],
 };
