@@ -34,31 +34,6 @@ describe('ProductsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('changeItem', () => {
-    it('should edit a product item', () => {
-      spyOn(component, 'setItem');
-      component.changeItem(Mocks.Product1, ItemId.Coal);
-      expect(component.setItem).toHaveBeenCalledWith(
-        Mocks.Product1.id,
-        ItemId.Coal
-      );
-    });
-
-    it('should reset the rate type when changing a product that has no simple recipe', () => {
-      spyOn(component, 'setRateType');
-      spyOn(component, 'setItem');
-      component.changeItem(Mocks.Product4, ItemId.PetroleumGas);
-      expect(component.setRateType).toHaveBeenCalledWith(
-        Mocks.Product4.id,
-        RateType.Items
-      );
-      expect(component.setItem).toHaveBeenCalledWith(
-        Mocks.Product4.id,
-        ItemId.PetroleumGas
-      );
-    });
-  });
-
   describe('changeFactory', () => {
     it('should set up default for factory', () => {
       spyOn(RecipeUtility, 'bestMatch').and.returnValue('default');
@@ -189,7 +164,11 @@ describe('ProductsComponent', () => {
         Mocks.FactorySettingsInitial,
         RecipeField.Beacon
       );
-      expect(component.setViaBeacon).toHaveBeenCalledWith('0', ItemId.Beacon, ItemId.Beacon);
+      expect(component.setViaBeacon).toHaveBeenCalledWith(
+        '0',
+        ItemId.Beacon,
+        ItemId.Beacon
+      );
     });
 
     it('should set up default for beacon (factory mismatch)', () => {
@@ -202,7 +181,11 @@ describe('ProductsComponent', () => {
         Mocks.FactorySettingsInitial,
         RecipeField.Beacon
       );
-      expect(component.setViaBeacon).toHaveBeenCalledWith('0', ItemId.Beacon, ItemId.Beacon);
+      expect(component.setViaBeacon).toHaveBeenCalledWith(
+        '0',
+        ItemId.Beacon,
+        ItemId.Beacon
+      );
     });
 
     it('should set up default for beacon modules (factory match)', () => {

@@ -110,6 +110,26 @@ describe('Products Reducer', () => {
         Mocks.Product2.itemId
       );
     });
+
+    it('should reset Factories RateType', () => {
+      let result = productsReducer(
+        state,
+        new Actions.SetRateTypeAction({
+          id: Mocks.Product1.id,
+          value: RateType.Factories,
+        })
+      );
+      result = productsReducer(
+        result,
+        new Actions.SetItemAction({
+          id: Mocks.Product1.id,
+          value: Mocks.Product2.itemId,
+        })
+      );
+      expect(result.entities[Mocks.Product1.id].rateType).toEqual(
+        RateType.Items
+      );
+    });
   });
 
   describe('SET_RATE', () => {

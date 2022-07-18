@@ -1297,6 +1297,7 @@ export class RouterService {
 
   inflateMend(str: string, char: string): string {
     const z = this.inflate(str + char);
+    if (!z) throw new Error('Failed to parse, generated empty string');
     console.warn(`Router mended url by appending '${char}'`);
     return z;
   }

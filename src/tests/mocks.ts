@@ -97,10 +97,10 @@ export const ProductIds = ProductsList.map((p) => p.id);
 export const ProductEntities =
   Products.getProductsBy.projector(RationalProducts);
 export const ProductSteps = {
-  [Item1.id]: [],
-  [Item2.id]: [],
-  [ItemId.PetroleumGas]: [],
-  [ItemId.TransportBelt]: [[RecipeId.TransportBelt, Rational.one]],
+  [Product1.id]: [],
+  [Product2.id]: [],
+  [Product3.id]: [],
+  [Product4.id]: [[RecipeId.TransportBelt, Rational.one]],
 };
 export const ItemSettings1: ItemSettings = {
   ignore: false,
