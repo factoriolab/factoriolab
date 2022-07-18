@@ -728,8 +728,11 @@ describe('RecipeUtility', () => {
   });
 
   describe('getProductStepData', () => {
+    const productId = '0';
+
     it('should handle no recipes available', () => {
-      const result = RecipeUtility.getProductStepData({ [RecipeId.Coal]: [] }, {
+      const result = RecipeUtility.getProductStepData({ [productId]: [] }, {
+        id: productId,
         itemId: RecipeId.Coal,
       } as any);
       expect(result).toBeNull();
@@ -737,28 +740,30 @@ describe('RecipeUtility', () => {
 
     it('should find matching data', () => {
       const data: [string, Rational] = [RecipeId.Coal, Rational.one];
-      const result = RecipeUtility.getProductStepData(
-        { [RecipeId.Coal]: [data] },
-        { itemId: RecipeId.Coal, viaId: RecipeId.Coal } as any
-      );
+      const result = RecipeUtility.getProductStepData({ [productId]: [data] }, {
+        id: productId,
+        itemId: RecipeId.Coal,
+        viaId: RecipeId.Coal,
+      } as any);
       expect(result).toEqual(data);
     });
 
     it('should fail to find matching data', () => {
       const data: [string, Rational] = [RecipeId.Coal, Rational.one];
-      const result = RecipeUtility.getProductStepData(
-        { [RecipeId.Coal]: [data] },
-        { itemId: RecipeId.Coal, viaId: RecipeId.AdvancedOilProcessing } as any
-      );
+      const result = RecipeUtility.getProductStepData({ [productId]: [data] }, {
+        id: productId,
+        itemId: RecipeId.Coal,
+        viaId: RecipeId.AdvancedOilProcessing,
+      } as any);
       expect(result).toBeNull();
     });
 
     it('should handle no recipe specified', () => {
       const data: [string, Rational] = [RecipeId.Coal, Rational.one];
-      const result = RecipeUtility.getProductStepData(
-        { [RecipeId.Coal]: [data] },
-        { itemId: RecipeId.Coal } as any
-      );
+      const result = RecipeUtility.getProductStepData({ [productId]: [data] }, {
+        id: productId,
+        itemId: RecipeId.Coal,
+      } as any);
       expect(result).toEqual(data);
     });
   });
