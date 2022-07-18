@@ -26,6 +26,7 @@ export enum ItemId {
   Lab = 'lab',
   LightOil = 'light-oil',
   LongHandedInserter = 'long-handed-inserter',
+  MineControlTower = 'mine-control-tower',
   MiningDrill = 'mining-drill',
   MiningProductivity = 'mining-productivity-4',
   Module = 'module',

@@ -18,19 +18,19 @@ const routes: Routes = [
   },
   {
     path: 'factorio',
-    redirectTo: '/list?s=&v=1',
+    redirectTo: '/list?s=&v=4',
   },
   {
     path: 'coi',
-    redirectTo: '/list?s=coi&v=1',
+    redirectTo: '/list?s=coi&v=4',
   },
   {
     path: 'dsp',
-    redirectTo: '/list?s=dsp&v=1',
+    redirectTo: '/list?s=dsp&v=4',
   },
   {
     path: 'satisfactory',
-    redirectTo: '/list?s=sfy&v=1',
+    redirectTo: '/list?s=sfy&v=4',
   },
   {
     path: '**',

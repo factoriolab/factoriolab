@@ -10,9 +10,9 @@ export class FactoryRatePipe implements PipeTransform {
   transform(
     value: Rational,
     precision: number | null,
-    factory: string
+    factoryId: string
   ): string {
-    if (factory === ItemId.Pumpjack) {
+    if (factoryId === ItemId.Pumpjack) {
       return `${this.rate.transform(
         value.mul(Rational.hundred),
         precision != null ? Math.max(precision - 2, 0) : precision

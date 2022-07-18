@@ -63,10 +63,7 @@ describe('RecipeUtility', () => {
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(150);
       expected.pollution = Rational.from(1, 20);
-      expected.productivity = Rational.one;      
-      expected.maintenance1 = Rational.zero;
-      expected.maintenance2 = Rational.zero;
-      expected.maintenance3 = Rational.zero;
+      expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
 
@@ -89,9 +86,6 @@ describe('RecipeUtility', () => {
       expected.consumption = Rational.from(150);
       expected.pollution = Rational.from(1, 20);
       expected.productivity = Rational.one;
-      expected.maintenance1 = Rational.zero;
-      expected.maintenance2 = Rational.zero;
-      expected.maintenance3 = Rational.zero;
       expect(result).toEqual(expected);
     });
 
@@ -120,9 +114,6 @@ describe('RecipeUtility', () => {
       expected.drain = Rational.zero;
       expected.consumption = Rational.from(60);
       expected.pollution = Rational.zero;
-      expected.maintenance1 = Rational.zero;
-      expected.maintenance2 = Rational.zero;
-      expected.maintenance3 = Rational.zero;
       expect(result).toEqual(expected);
     });
 
@@ -147,9 +138,6 @@ describe('RecipeUtility', () => {
       expected.drain = Rational.zero;
       expected.consumption = Rational.from(90);
       expected.pollution = Rational.from(1, 6);
-      expected.maintenance1 = Rational.zero;
-      expected.maintenance2 = Rational.zero;
-      expected.maintenance3 = Rational.zero;
       expected.productivity = Rational.from(3);
       expect(result).toEqual(expected);
     });
@@ -204,9 +192,6 @@ describe('RecipeUtility', () => {
       expected.consumption = Rational.from(255);
       expected.pollution = Rational.from(1037, 4000);
       expected.productivity = Rational.from(76, 25);
-      expected.maintenance1 = Rational.zero;
-      expected.maintenance2 = Rational.zero;
-      expected.maintenance3 = Rational.zero;
       expect(result).toEqual(expected);
     });
 
@@ -262,9 +247,6 @@ describe('RecipeUtility', () => {
       expected.consumption = Rational.from(30);
       expected.pollution = Rational.from(1, 500);
       expected.productivity = Rational.one;
-      expected.maintenance1 = Rational.zero;
-      expected.maintenance2 = Rational.zero;
-      expected.maintenance3 = Rational.zero;
       expect(result).toEqual(expected);
     });
 
@@ -293,9 +275,6 @@ describe('RecipeUtility', () => {
       expected.consumption = Rational.zero;
       expected.pollution = Rational.from(1, 5);
       expected.productivity = Rational.one;
-      expected.maintenance1 = Rational.zero;
-      expected.maintenance2 = Rational.zero;
-      expected.maintenance3 = Rational.zero;
       expect(result).toEqual(expected);
     });
 
@@ -324,9 +303,6 @@ describe('RecipeUtility', () => {
       expected.consumption = Rational.zero;
       expected.pollution = Rational.from(1, 15);
       expected.productivity = Rational.one;
-      expected.maintenance1 = Rational.zero;
-      expected.maintenance2 = Rational.zero;
-      expected.maintenance3 = Rational.zero;
       expect(result).toEqual(expected);
     });
 
@@ -393,9 +369,6 @@ describe('RecipeUtility', () => {
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(909429939, 2000000);
       expected.pollution = Rational.from(1, 20);
-      expected.maintenance1 = Rational.zero;
-      expected.maintenance2 = Rational.zero;
-      expected.maintenance3 = Rational.zero;
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
@@ -435,9 +408,6 @@ describe('RecipeUtility', () => {
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(694182921, 2000000);
       expected.pollution = Rational.from(1, 20);
-      expected.maintenance1 = Rational.zero;
-      expected.maintenance2 = Rational.zero;
-      expected.maintenance3 = Rational.zero;
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
@@ -479,9 +449,6 @@ describe('RecipeUtility', () => {
       expected.consumption = Rational.from(10000);
       expected.pollution = Rational.from(1, 20);
       expected.productivity = Rational.one;
-      expected.maintenance1 = Rational.zero;
-      expected.maintenance2 = Rational.zero;
-      expected.maintenance3 = Rational.zero;
       expected.usage = Rational.from(10000);
       expect(result).toEqual(expected);
     });
@@ -524,9 +491,6 @@ describe('RecipeUtility', () => {
       expected.consumption = Rational.from(150);
       expected.pollution = Rational.from(1, 20);
       expected.productivity = Rational.one;
-      expected.maintenance1 = Rational.zero;
-      expected.maintenance2 = Rational.zero;
-      expected.maintenance3 = Rational.zero;
       expect(result).toEqual(expected);
     });
 
@@ -593,9 +557,6 @@ describe('RecipeUtility', () => {
       expected.consumption = Rational.from(2775);
       expected.pollution = Rational.from(407, 1500);
       expected.productivity = Rational.from(11, 10);
-      expected.maintenance1 = Rational.zero;
-      expected.maintenance2 = Rational.zero;
-      expected.maintenance3 = Rational.zero;
       expect(result).toEqual(expected);
     });
 
@@ -662,9 +623,47 @@ describe('RecipeUtility', () => {
       expected.consumption = Rational.from(2775);
       expected.pollution = Rational.from(407, 1500);
       expected.productivity = Rational.from(11, 10);
-      expected.maintenance1 = Rational.zero;
-      expected.maintenance2 = Rational.zero;
-      expected.maintenance3 = Rational.zero;
+      expect(result).toEqual(expected);
+    });
+
+    it('should add factory consumption', () => {
+      const data = {
+        ...Mocks.Dataset,
+        ...{
+          factoryEntities: {
+            ...Mocks.Dataset.factoryEntities,
+            ...{
+              [ItemId.AssemblingMachine2]: {
+                ...Mocks.Dataset.factoryEntities[ItemId.AssemblingMachine2],
+                ...{
+                  consumption: {
+                    [ItemId.Coal]: Rational.one,
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.CopperCable,
+        ItemId.Coal,
+        ItemId.Module,
+        Rational.zero,
+        Rational.zero,
+        Mocks.RationalRecipeSettings[RecipeId.CopperCable],
+        Mocks.ItemSettingsInitial,
+        data
+      );
+      const expected = new RationalRecipe(
+        Mocks.Dataset.recipeEntities[RecipeId.CopperCable]
+      );
+      expected.time = Rational.from(2, 3);
+      expected.drain = Rational.from(5);
+      expected.consumption = Rational.from(150);
+      expected.pollution = Rational.from(1, 20);
+      expected.productivity = Rational.one;
+      expected.in[ItemId.Coal] = Rational.from(1, 90);
       expect(result).toEqual(expected);
     });
   });

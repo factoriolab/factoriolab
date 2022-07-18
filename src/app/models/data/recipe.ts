@@ -6,10 +6,10 @@ export interface Recipe {
   name: string;
   time: number;
   producers: string[];
-  in: Entities<number>;
-  out: Entities<number>;
+  in: Entities<number | string>;
+  out: Entities<number | string>;
   /** Denotes amount of output that is not affected by productivity */
-  catalyst?: Entities<number>;
+  catalyst?: Entities<number | string>;
   cost?: number;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
@@ -36,9 +36,6 @@ export class RationalRecipe {
   usage?: Rational;
   drain?: Rational;
   consumption?: Rational;
-  maintenance1?: Rational;
-  maintenance2?: Rational;
-  maintenance3?: Rational;
   pollution?: Rational;
 
   constructor(data: Recipe) {
@@ -47,11 +44,11 @@ export class RationalRecipe {
     this.time = Rational.fromNumber(data.time);
     this.producers = data.producers;
     this.in = Object.keys(data.in).reduce((e: Entities<Rational>, i) => {
-      e[i] = Rational.fromNumber(data.in[i]);
+      e[i] = Rational.fromJson(data.in[i]);
       return e;
     }, {});
     this.out = Object.keys(data.out).reduce((e: Entities<Rational>, i) => {
-      e[i] = Rational.fromNumber(data.out[i]);
+      e[i] = Rational.fromJson(data.out[i]);
       return e;
     }, {});
 
@@ -59,7 +56,7 @@ export class RationalRecipe {
       const catalyst = data.catalyst; // Store null-checked value
       this.catalyst = Object.keys(catalyst).reduce(
         (e: Entities<Rational>, i) => {
-          e[i] = Rational.fromNumber(catalyst[i]);
+          e[i] = Rational.fromJson(catalyst[i]);
           return e;
         },
         {}

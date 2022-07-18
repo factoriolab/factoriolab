@@ -11,13 +11,13 @@
           <span class="separator">|</span>
           <a href="factorio">{{ 'game.Factorio' | translate }}</a>
         </ng-container>
-        <ng-container *ngIf="vm.game !== Game.DysonSphereProgram">
-          <span class="separator">|</span>
-          <a href="dsp">{{ 'game.DysonSphereProgram' | translate }}</a>
-        </ng-container>
         <ng-container *ngIf="vm.game !== Game.CaptainOfIndustry">
           <span class="separator">|</span>
           <a href="coi">{{ 'game.CaptainOfIndustry' | translate }}</a>
+        </ng-container>
+        <ng-container *ngIf="vm.game !== Game.DysonSphereProgram">
+          <span class="separator">|</span>
+          <a href="dsp">{{ 'game.DysonSphereProgram' | translate }}</a>
         </ng-container>
         <ng-container *ngIf="vm.game !== Game.Satisfactory">
           <span class="separator">|</span>
