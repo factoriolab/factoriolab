@@ -25,6 +25,16 @@ describe('Rational', () => {
       });
     });
 
+    describe('fromJson', () => {
+      it('should handle numbers', () => {
+        expect(Rational.fromJson(0.5)).toEqual(Rational.from(1, 2));
+      });
+
+      it('should handle fractional strings', () => {
+        expect(Rational.fromJson('1/3')).toEqual(Rational.from(1, 3));
+      });
+    });
+
     describe('fromNumber', () => {
       it('should generate a Rational from integer', () => {
         expect(Rational.fromNumber(2)).toEqual(new Rational(BigInt(2)));

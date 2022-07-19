@@ -21,6 +21,7 @@ import * as Products from './store/products';
 import * as Settings from './store/settings';
 
 export const TITLE_LAB = 'title.lab';
+export const TITLE_COI = 'title.coi';
 export const TITLE_DSP = 'title.dsp';
 export const TITLE_SFY = 'title.sfy';
 
@@ -102,6 +103,10 @@ export class AppComponent implements OnInit, AfterViewInit {
           case Game.Factorio:
             this.title = TITLE_LAB;
             this.homeHref = 'factorio';
+            break;
+          case Game.CaptainOfIndustry:
+            this.title = TITLE_COI;
+            this.homeHref = 'coi';
             break;
           case Game.DysonSphereProgram:
             this.title = TITLE_DSP;

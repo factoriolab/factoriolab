@@ -45,7 +45,7 @@ export interface Dataset {
   fuelEntities: Entities<RationalFuel>;
   itemRecipeId: Entities<string>;
   recipeIds: string[];
-  optionalRecipeIds: string[];
+  complexRecipeIds: string[];
   recipeEntities: Entities<Recipe>;
   recipeR: Entities<RationalRecipe>;
   recipeModuleIds: Entities<string[]>;

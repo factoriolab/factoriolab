@@ -4,7 +4,7 @@ import { MemoizedSelector } from '@ngrx/store';
 import { MockStore } from '@ngrx/store/testing';
 
 import { TestModule } from 'src/tests';
-import { AppComponent, TITLE_DSP, TITLE_SFY } from './app.component';
+import { AppComponent, TITLE_COI, TITLE_DSP, TITLE_SFY } from './app.component';
 import { ProductsComponent, SettingsComponent } from './components';
 import { APP, Game } from './models';
 import { ListComponent } from './routes';
@@ -45,6 +45,14 @@ describe('AppComponent', () => {
   it('should create the app', () => {
     fixture.detectChanges();
     expect(component).toBeTruthy();
+  });
+
+  it('should update the title for Captain Of Industry', () => {
+    mockGetGame.setResult(Game.CaptainOfIndustry);
+    mockStore.refreshState();
+    spyOn(title, 'setTitle');
+    fixture.detectChanges();
+    expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_COI}`);
   });
 
   it('should update the title for Dyson Sphere Program', () => {

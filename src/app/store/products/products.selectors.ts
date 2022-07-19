@@ -57,7 +57,7 @@ export const getProductSteps = createSelector(
   Recipes.getAdjustedDataset,
   (products, itemSettings, disabledRecipeIds, adj, data) =>
     products?.reduce((e: Entities<[string, Rational][]>, p) => {
-      e[p.itemId] = SimplexUtility.getSteps(
+      e[p.id] = SimplexUtility.getSteps(
         p.itemId,
         itemSettings,
         disabledRecipeIds,
@@ -94,8 +94,8 @@ export const getProductOptions = createSelector(
   getProductSteps,
   (products, productSteps) =>
     products.reduce((e: Entities<string[]>, p) => {
-      if (productSteps[p.itemId]) {
-        e[p.id] = productSteps[p.itemId].map((r) => r[0]);
+      if (productSteps[p.id]) {
+        e[p.id] = productSteps[p.id].map((r) => r[0]);
       }
       return e;
     }, {})
@@ -547,7 +547,6 @@ export const getStepDetails = createSelector(
       let outputs: Step[] = [];
       const recipeIds: string[] = [];
       const defaultableRecipeIds: string[] = [];
-      const requiredRecipeIds: string[] = [];
       if (s.itemId != null) {
         const itemId = s.itemId; // Store null-checked id
         tabs.push(StepDetailTab.Item);
@@ -566,16 +565,12 @@ export const getStepDetails = createSelector(
       if (s.itemId != null) {
         for (const recipe of data.recipeIds.map((r) => data.recipeR[r])) {
           if (recipe.produces(s.itemId)) {
-            if (data.optionalRecipeIds.indexOf(recipe.id) === -1) {
-              requiredRecipeIds.push(recipe.id);
-            } else {
-              recipeIds.push(recipe.id);
-              if (
-                disabledRecipeIds.indexOf(recipe.id) === -1 &&
-                recipe.producesOnly(s.itemId)
-              ) {
-                defaultableRecipeIds.push(recipe.id);
-              }
+            recipeIds.push(recipe.id);
+            if (
+              disabledRecipeIds.indexOf(recipe.id) === -1 &&
+              recipe.producesOnly(s.itemId)
+            ) {
+              defaultableRecipeIds.push(recipe.id);
             }
           }
         }
@@ -589,7 +584,6 @@ export const getStepDetails = createSelector(
         outputs,
         recipeIds,
         defaultableRecipeIds,
-        requiredRecipeIds,
       };
 
       return e;

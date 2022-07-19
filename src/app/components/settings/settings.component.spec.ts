@@ -142,6 +142,12 @@ describe('SettingsComponent', () => {
       expect(component.setMod).toHaveBeenCalledWith('1.1');
     });
 
+    it('should select the modId for Captain of Industry', () => {
+      spyOn(component, 'setMod');
+      component.setGame(Game.CaptainOfIndustry);
+      expect(component.setMod).toHaveBeenCalledWith('coi');
+    });
+
     it('should select the modId for Dyson Sphere Program', () => {
       spyOn(component, 'setMod');
       component.setGame(Game.DysonSphereProgram);
@@ -216,15 +222,17 @@ describe('SettingsComponent', () => {
   describe('emitNumber', () => {
     it('should emit a numeric value', () => {
       spyOn(component, 'setFlowRate');
-      TestUtility.setTextDt(fixture, DataTest.FlowRate, '1000');
-      fixture.detectChanges();
+      component.emitNumber('flowRate', { target: { value: '1000' } } as any, 0);
       expect(component.setFlowRate).toHaveBeenCalledWith(1000);
     });
 
     it('should not emit a number less than the minimum', () => {
       spyOn(component, 'setMiningBonus');
-      TestUtility.setTextDt(fixture, DataTest.MiningBonus, '-10');
-      fixture.detectChanges();
+      component.emitNumber(
+        'miningBonus',
+        { target: { value: '-10' } } as any,
+        0
+      );
       expect(component.setMiningBonus).toHaveBeenCalledWith(0);
     });
   });

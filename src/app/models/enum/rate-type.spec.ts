@@ -10,6 +10,12 @@ describe('RateType', () => {
       ).toEqual(4);
     });
 
+    it('should return the correct options for Captain of Industry', () => {
+      expect(
+        rateTypeOptions(DisplayRate.PerMinute, Game.CaptainOfIndustry).length
+      ).toEqual(3);
+    });
+
     it('should return the correct options for Dyson Sphere Program', () => {
       expect(
         rateTypeOptions(DisplayRate.PerMinute, Game.DysonSphereProgram).length
