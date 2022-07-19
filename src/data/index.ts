@@ -78,6 +78,12 @@ export const data: AppData = {
     'ang',
     'msc',
     'sfy',
+    'qat',
+    '1.1e',
+    '248',
+    '248o',
+    '248kr2sxp',
+    'aai',
     'coi',
   ],
 };
