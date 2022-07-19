@@ -11,6 +11,7 @@ export class Rational {
   static one = new Rational(bigOne);
   static two = new Rational(BigInt(2));
   static ten = new Rational(BigInt(10));
+  static sixty = new Rational(BigInt(60));
   static hundred = new Rational(BigInt(100));
   static thousand = new Rational(BigInt(1000));
   static million = new Rational(BigInt(1000000));
@@ -80,6 +81,14 @@ export class Rational {
     } else {
       return optB;
     }
+  }
+
+  static fromJson(x: number | string): Rational {
+    if (typeof x === 'number') {
+      return this.fromNumber(x);
+    }
+
+    return this.fromString(x);
   }
 
   static fromNumber(x: number): Rational {

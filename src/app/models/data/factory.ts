@@ -1,3 +1,4 @@
+import { Entities } from '../entities';
 import { Rational } from '../rational';
 import { RationalSilo, Silo } from './silo';
 
@@ -18,6 +19,7 @@ export interface Factory {
   research?: boolean;
   silo?: Silo;
   overclockFactor?: number;
+  consumption?: Entities<number | string>;
 }
 
 export class RationalFactory {
@@ -35,6 +37,7 @@ export class RationalFactory {
   research?: boolean;
   silo?: RationalSilo;
   overclockFactor?: number;
+  consumption?: Entities<Rational>;
 
   constructor(data: Factory) {
     if (data.speed != null) {
@@ -73,6 +76,16 @@ export class RationalFactory {
     }
     if (data.overclockFactor) {
       this.overclockFactor = data.overclockFactor;
+    }
+    if (data.consumption) {
+      const consumption = data.consumption;
+      this.consumption = Object.keys(consumption).reduce(
+        (e: Entities<Rational>, i) => {
+          e[i] = Rational.fromJson(consumption[i]);
+          return e;
+        },
+        {}
+      );
     }
   }
 }

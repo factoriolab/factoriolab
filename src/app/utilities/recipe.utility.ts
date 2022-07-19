@@ -244,6 +244,15 @@ export class RecipeUtility {
               .mul(consumption)
           : Rational.zero;
 
+      // Add factory consumption
+      if (factory.consumption) {
+        const consumption = factory.consumption;
+        for (const id of Object.keys(consumption)) {
+          const amount = recipe.time.div(Rational.sixty).mul(consumption[id]);
+          recipe.in[id] = (recipe.in[id] || Rational.zero).add(amount);
+        }
+      }
+
       // Calculate burner fuel inputs
       if (factory.type === EnergyType.Burner && usage.nonzero()) {
         let rFuelId = fuelId;
@@ -366,7 +375,7 @@ export class RecipeUtility {
     productSteps: Entities<[string, Rational][]>,
     product: Product | RationalProduct
   ): [string, Rational] | null {
-    const steps = productSteps[product.itemId];
+    const steps = productSteps[product.id];
     if (steps.length === 0) {
       return null;
     } else if (product.viaId) {

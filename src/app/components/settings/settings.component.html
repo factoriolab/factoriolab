@@ -238,7 +238,10 @@
             </td>
           </tr>
         </table>
-        <table class="factories">
+        <table
+          *ngIf="vm.data.game !== Game.CaptainOfIndustry"
+          class="factories"
+        >
           <ng-container
             *ngFor="let f of vm.factoryRows; let i = index; let last = last"
           >

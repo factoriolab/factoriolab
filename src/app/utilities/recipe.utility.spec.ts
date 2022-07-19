@@ -625,6 +625,47 @@ describe('RecipeUtility', () => {
       expected.productivity = Rational.from(11, 10);
       expect(result).toEqual(expected);
     });
+
+    it('should add factory consumption', () => {
+      const data = {
+        ...Mocks.Dataset,
+        ...{
+          factoryEntities: {
+            ...Mocks.Dataset.factoryEntities,
+            ...{
+              [ItemId.AssemblingMachine2]: {
+                ...Mocks.Dataset.factoryEntities[ItemId.AssemblingMachine2],
+                ...{
+                  consumption: {
+                    [ItemId.Coal]: Rational.one,
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.CopperCable,
+        ItemId.Coal,
+        ItemId.Module,
+        Rational.zero,
+        Rational.zero,
+        Mocks.RationalRecipeSettings[RecipeId.CopperCable],
+        Mocks.ItemSettingsInitial,
+        data
+      );
+      const expected = new RationalRecipe(
+        Mocks.Dataset.recipeEntities[RecipeId.CopperCable]
+      );
+      expected.time = Rational.from(2, 3);
+      expected.drain = Rational.from(5);
+      expected.consumption = Rational.from(150);
+      expected.pollution = Rational.from(1, 20);
+      expected.productivity = Rational.one;
+      expected.in[ItemId.Coal] = Rational.from(1, 90);
+      expect(result).toEqual(expected);
+    });
   });
 
   describe('adjustSiloRecipes', () => {
@@ -687,8 +728,11 @@ describe('RecipeUtility', () => {
   });
 
   describe('getProductStepData', () => {
+    const productId = '0';
+
     it('should handle no recipes available', () => {
-      const result = RecipeUtility.getProductStepData({ [RecipeId.Coal]: [] }, {
+      const result = RecipeUtility.getProductStepData({ [productId]: [] }, {
+        id: productId,
         itemId: RecipeId.Coal,
       } as any);
       expect(result).toBeNull();
@@ -696,28 +740,30 @@ describe('RecipeUtility', () => {
 
     it('should find matching data', () => {
       const data: [string, Rational] = [RecipeId.Coal, Rational.one];
-      const result = RecipeUtility.getProductStepData(
-        { [RecipeId.Coal]: [data] },
-        { itemId: RecipeId.Coal, viaId: RecipeId.Coal } as any
-      );
+      const result = RecipeUtility.getProductStepData({ [productId]: [data] }, {
+        id: productId,
+        itemId: RecipeId.Coal,
+        viaId: RecipeId.Coal,
+      } as any);
       expect(result).toEqual(data);
     });
 
     it('should fail to find matching data', () => {
       const data: [string, Rational] = [RecipeId.Coal, Rational.one];
-      const result = RecipeUtility.getProductStepData(
-        { [RecipeId.Coal]: [data] },
-        { itemId: RecipeId.Coal, viaId: RecipeId.AdvancedOilProcessing } as any
-      );
+      const result = RecipeUtility.getProductStepData({ [productId]: [data] }, {
+        id: productId,
+        itemId: RecipeId.Coal,
+        viaId: RecipeId.AdvancedOilProcessing,
+      } as any);
       expect(result).toBeNull();
     });
 
     it('should handle no recipe specified', () => {
       const data: [string, Rational] = [RecipeId.Coal, Rational.one];
-      const result = RecipeUtility.getProductStepData(
-        { [RecipeId.Coal]: [data] },
-        { itemId: RecipeId.Coal } as any
-      );
+      const result = RecipeUtility.getProductStepData({ [productId]: [data] }, {
+        id: productId,
+        itemId: RecipeId.Coal,
+      } as any);
       expect(result).toEqual(data);
     });
   });

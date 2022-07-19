@@ -57,7 +57,7 @@ describe('Settings Selectors', () => {
   });
 
   describe('getColumnsState', () => {
-    it('should override Overclock for Factorio', () => {
+    it('should override columns for Factorio', () => {
       const result = Selectors.getColumnsState.projector(
         Game.Factorio,
         Preferences.initialColumnsState
@@ -68,7 +68,19 @@ describe('Settings Selectors', () => {
       expect(result[Column.Pollution].show).toBeTrue();
     });
 
-    it('should override Wagons/Beacons/Pollution for Dyson Sphere Program', () => {
+    it('should override columns for Dyson Sphere Program', () => {
+      const result = Selectors.getColumnsState.projector(
+        Game.CaptainOfIndustry,
+        Preferences.initialColumnsState
+      );
+      expect(result[Column.Wagons].show).toBeFalse();
+      expect(result[Column.Overclock].show).toBeFalse();
+      expect(result[Column.Beacons].show).toBeFalse();
+      expect(result[Column.Power].show).toBeFalse();
+      expect(result[Column.Pollution].show).toBeFalse();
+    });
+
+    it('should override columns for Dyson Sphere Program', () => {
       const result = Selectors.getColumnsState.projector(
         Game.DysonSphereProgram,
         Preferences.initialColumnsState
@@ -79,7 +91,7 @@ describe('Settings Selectors', () => {
       expect(result[Column.Pollution].show).toBeFalse();
     });
 
-    it('should override Beacons/Pollution for Satisfactory', () => {
+    it('should override columns for Satisfactory', () => {
       const result = Selectors.getColumnsState.projector(
         Game.Satisfactory,
         Preferences.initialColumnsState

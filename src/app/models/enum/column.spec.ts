@@ -7,6 +7,10 @@ describe('Column', () => {
       expect(columnOptions(Game.Factorio).length).toEqual(9);
     });
 
+    it('should return the correct options for Captain of Industry', () => {
+      expect(columnOptions(Game.CaptainOfIndustry).length).toEqual(5);
+    });
+
     it('should return the correct options for Dyson Sphere Program', () => {
       expect(columnOptions(Game.DysonSphereProgram).length).toEqual(6);
     });

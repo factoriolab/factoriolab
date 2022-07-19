@@ -126,6 +126,7 @@ export class RateUtility {
           step.power = step.power.add(step.factories.mul(recipe.consumption));
         }
       }
+
       // Calculate pollution
       if (recipe.pollution?.nonzero()) {
         step.pollution = step.factories.mul(recipe.pollution);

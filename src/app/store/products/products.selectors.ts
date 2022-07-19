@@ -57,7 +57,7 @@ export const getProductSteps = createSelector(
   Recipes.getAdjustedDataset,
   (products, itemSettings, disabledRecipeIds, adj, data) =>
     products?.reduce((e: Entities<[string, Rational][]>, p) => {
-      e[p.itemId] = SimplexUtility.getSteps(
+      e[p.id] = SimplexUtility.getSteps(
         p.itemId,
         itemSettings,
         disabledRecipeIds,
@@ -94,8 +94,8 @@ export const getProductOptions = createSelector(
   getProductSteps,
   (products, productSteps) =>
     products.reduce((e: Entities<string[]>, p) => {
-      if (productSteps[p.itemId]) {
-        e[p.id] = productSteps[p.itemId].map((r) => r[0]);
+      if (productSteps[p.id]) {
+        e[p.id] = productSteps[p.id].map((r) => r[0]);
       }
       return e;
     }, {})

@@ -286,7 +286,7 @@ describe('Products Selectors', () => {
           },
         ],
         {
-          [ItemId.Coal]: [[ItemId.IronOre, Rational.two]],
+          ['0']: [[ItemId.IronOre, Rational.two]],
         },
         Mocks.ItemSettingsInitial,
         Mocks.BeltSpeed
@@ -307,7 +307,7 @@ describe('Products Selectors', () => {
           },
         ],
         {
-          [ItemId.Coal]: [[ItemId.IronOre, Rational.two]],
+          ['0']: [[ItemId.IronOre, Rational.two]],
         },
         Mocks.ItemSettingsInitial,
         Mocks.BeltSpeed
@@ -404,7 +404,11 @@ describe('Products Selectors', () => {
           },
         ],
         {
-          [ItemId.Coal]: [
+          ['0']: [
+            [ItemId.IronOre, Rational.two],
+            [ItemId.PetroleumGas, Rational.one],
+          ],
+          ['1']: [
             [ItemId.IronOre, Rational.two],
             [ItemId.PetroleumGas, Rational.one],
           ],
@@ -437,7 +441,11 @@ describe('Products Selectors', () => {
           },
         ],
         {
-          [ItemId.Coal]: [
+          ['0']: [
+            [ItemId.IronOre, Rational.two],
+            [ItemId.PetroleumGas, Rational.one],
+          ],
+          ['1']: [
             [ItemId.IronOre, Rational.two],
             [ItemId.PetroleumGas, Rational.one],
           ],

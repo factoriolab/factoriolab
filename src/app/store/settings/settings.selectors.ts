@@ -130,9 +130,28 @@ export const getModOptions = createSelector(
 export const getColumnsState = createSelector(
   getGame,
   Preferences.getColumns,
-  (game, col): Preferences.ColumnsState =>
-    game === Game.DysonSphereProgram
-      ? {
+  (game, col): Preferences.ColumnsState => {
+    switch (game) {
+      case Game.CaptainOfIndustry:
+        return {
+          ...Preferences.initialColumnsState,
+          ...col,
+          ...{
+            [Column.Wagons]: { ...col[Column.Wagons], ...{ show: false } },
+            [Column.Overclock]: {
+              ...col[Column.Overclock],
+              ...{ show: false },
+            },
+            [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
+            [Column.Power]: { ...col[Column.Power], ...{ show: false } },
+            [Column.Pollution]: {
+              ...col[Column.Pollution],
+              ...{ show: false },
+            },
+          },
+        };
+      case Game.DysonSphereProgram:
+        return {
           ...Preferences.initialColumnsState,
           ...col,
           ...{
@@ -147,9 +166,9 @@ export const getColumnsState = createSelector(
               ...{ show: false },
             },
           },
-        }
-      : game === Game.Satisfactory
-      ? {
+        };
+      case Game.Satisfactory:
+        return {
           ...Preferences.initialColumnsState,
           ...col,
           ...{
@@ -159,8 +178,9 @@ export const getColumnsState = createSelector(
               ...{ show: false },
             },
           },
-        }
-      : {
+        };
+      default:
+        return {
           ...Preferences.initialColumnsState,
           ...col,
           ...{
@@ -169,7 +189,9 @@ export const getColumnsState = createSelector(
               ...{ show: false },
             },
           },
-        }
+        };
+    }
+  }
 );
 
 export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
@@ -369,12 +391,20 @@ export const getDataset = createSelector(
       .filter((i) => i.belt)
       .sort((a, b) =>
         /** Don't sort belts in DSP, leave based on stacks */
-        game === Game.DysonSphereProgram ? 0 : a.belt!.speed - b.belt!.speed
+        game === Game.DysonSphereProgram
+          ? 0
+          : Rational.fromJson(a.belt!.speed)
+              .sub(Rational.fromJson(b.belt!.speed))
+              .toNumber()
       )
       .map((i) => i.id);
     const pipeIds = items
       .filter((i) => i.pipe)
-      .sort((a, b) => a.pipe!.speed - b.pipe!.speed)
+      .sort((a, b) =>
+        Rational.fromJson(a.pipe!.speed)
+          .sub(Rational.fromJson(b.pipe!.speed))
+          .toNumber()
+      )
       .map((i) => i.id);
     const cargoWagonIds = items
       .filter((i) => i.cargoWagon)

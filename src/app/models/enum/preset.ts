@@ -16,6 +16,11 @@ export function presetOptions(game: Game): IdName<Preset>[] {
         { id: Preset.Beacon8, name: 'options.Preset1.Beacon8' },
         { id: Preset.Beacon12, name: 'options.Preset1.Beacon12' },
       ]
+    : game === Game.CaptainOfIndustry
+    ? [
+        { id: Preset.Minimum, name: 'options.Preset2.Minimum' },
+        { id: Preset.Modules, name: 'options.Preset2.Modules' },
+      ]
     : [
         { id: Preset.Minimum, name: 'options.Preset2.Minimum' },
         { id: Preset.Modules, name: 'options.Preset2.Modules' },

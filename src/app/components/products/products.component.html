@@ -15,7 +15,7 @@
         <span>{{ 'products.produce' | translate }}</span>
         <lab-picker
           [selected]="product.itemId"
-          (selectId)="changeItem(product, $event)"
+          (selectId)="setItem(product.id, $event)"
         >
           <lab-icon
             class="button"
@@ -233,14 +233,9 @@
               </ng-container>
             </ng-container>
             <ng-container *ngIf="product.rateType === RateType.Factories">
-              <ng-container *ngIf="product.viaSetting as factory">
+              <ng-container *ngIf="product.viaSetting as factoryId">
                 <ng-container *ngIf="vm.data.recipeEntities[id] as recipe">
-                  <ng-container
-                    *ngIf="
-                      vm.data.game !== Game.DysonSphereProgram ||
-                      factory !== ItemId.MiningDrill
-                    "
-                  >
+                  <ng-container *ngIf="factoryId | factoryShow: vm.data.game">
                     <span>using</span>
                     <ng-container
                       *ngIf="
@@ -250,7 +245,7 @@
                     >
                       <lab-select
                         header="Select a factory"
-                        [selected]="factory"
+                        [selected]="factoryId"
                         [options]="recipe.producers"
                         (selectId)="
                           changeFactory(
@@ -265,17 +260,17 @@
                         <lab-icon
                           class="button"
                           title="Change rate step factory"
-                          [iconId]="factory"
-                          [tooltip]="vm.data.itemEntities[factory].name"
-                          [item]="vm.data.itemEntities[factory]"
+                          [iconId]="factoryId"
+                          [tooltip]="vm.data.itemEntities[factoryId].name"
+                          [item]="vm.data.itemEntities[factoryId]"
                         ></lab-icon>
                       </lab-select>
                     </ng-container>
                     <ng-template #factoryDefault>
                       <lab-icon
-                        [iconId]="factory"
-                        [tooltip]="vm.data.itemEntities[factory].name"
-                        [item]="vm.data.itemEntities[factory]"
+                        [iconId]="factoryId"
+                        [tooltip]="vm.data.itemEntities[factoryId].name"
+                        [item]="vm.data.itemEntities[factoryId]"
                       ></lab-icon>
                     </ng-template>
                   </ng-container>
