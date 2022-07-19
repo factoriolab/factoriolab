@@ -99,9 +99,18 @@ export class SettingsComponent implements OnInit {
     )
   );
 
-  ctrlFlowRate = new FormControl('', Validators.min(1));
-  ctrlMiningProductivity = new FormControl('', Validators.min(0));
-  ctrlMiningSpeed = new FormControl('', Validators.min(100));
+  ctrlFlowRate = new FormControl(
+    Settings.initialSettingsState.flowRate,
+    Validators.min(1)
+  );
+  ctrlMiningProductivity = new FormControl(
+    Settings.initialSettingsState.miningBonus,
+    Validators.min(0)
+  );
+  ctrlMiningSpeed = new FormControl(
+    Settings.initialSettingsState.miningBonus + 100,
+    Validators.min(100)
+  );
   state = '';
   tempState = '';
   editState = false;
