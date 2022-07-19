@@ -79,5 +79,11 @@ export const data: AppData = {
     'msc',
     'sfy',
     'coi',
+    'qat',
+    '1.1e',
+    '248',
+    '248o',
+    '248kr2sxp',
+    'aai',
   ],
 };
