@@ -10,7 +10,7 @@ import {
   WARNING_HANG,
 } from '~/models';
 import * as Items from '~/store/items';
-import * as wasm from '../../wasm/pkg';
+import * as wasm from '../vendor/factoriolab_simplex';
 import { RateUtility } from './rate.utility';
 
 export interface MatrixState {
@@ -362,17 +362,22 @@ export class SimplexUtility {
       const wasmResult = wasm.simplex(tableau, A.length);
       const time = Date.now() - start;
       console.timeEnd('wasm');
-      console.log(tableau);
-      console.log(wasmResult);
+      // console.log(tableau);
+      // console.log(wasmResult);
       const result =
-        wasmResult[0] === 0 ? MatrixResultType.Failed : MatrixResultType.Solved;
-      const pivots = wasmResult[0];
-      wasmResult[0] = 1;
-      const solution = wasmResult.slice(0, A[0].length);
+        wasmResult.result_type === 0
+          ? MatrixResultType.Solved
+          : wasmResult.result_type === 1
+          ? MatrixResultType.Failed
+          : MatrixResultType.Cancelled;
+      // console.log('result_type', wasmResult.result_type);
+      // console.log('pivots', wasmResult.pivots);
+      const pivots = wasmResult.pivots;
+      const solution = wasmResult.tableau.slice(0, A[0].length);
       const S: Rational[] = [];
       solution.forEach((s) => S.push(Rational.fromNumber(s)));
-      console.log(solution);
-      console.log(S);
+      // console.log(solution);
+      // console.log(S);
 
       // const f64_tableau = new Float64Array(
       //   A.flatMap((r) => r.map((c) => c.toNumber()))

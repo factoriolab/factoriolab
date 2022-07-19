@@ -1,3 +1,5 @@
+use js_sys::Date;
+
 fn pivot(
     tableau: &mut Box<[f64]>,
     cols: usize,
@@ -61,8 +63,10 @@ fn pivot_col(tableau: &mut Box<[f64]>, cols: usize, rows: usize, col_num: usize)
     return pivot(tableau, cols, rows, col_num, row_num);
 }
 
-pub fn simplex(tableau: &mut Box<[f64]>, cols: usize, rows: usize) -> usize {
+pub fn simplex(tableau: &mut Box<[f64]>, cols: usize, rows: usize) -> (usize, usize, f64) {
     let mut pivots = 0;
+    let start_time = Date::now();
+
     loop {
         pivots += 1;
 
@@ -81,9 +85,14 @@ pub fn simplex(tableau: &mut Box<[f64]>, cols: usize, rows: usize) -> usize {
 
         if !pivot_col(tableau, cols, rows, col_num) {
             // Failed to pivot column
-            return 0;
+            return (1, pivots, Date::now() - start_time);
+        }
+
+        let time = Date::now() - start_time;
+        if time >= 5000.0 {
+            return (2, pivots, time);
         }
     }
 
-    return pivots;
+    return (0, pivots, Date::now() - start_time);
 }

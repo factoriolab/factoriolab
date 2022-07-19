@@ -1,8 +1,11 @@
 [package]
 name = "factoriolab-simplex"
+description = "Simplex WASM implementation for FactorioLab calculator"
 version = "0.1.0"
-authors = ["dcbroad3"]
 edition = "2018"
+authors = ["dcbroad3"]
+repository = "https://github.com/factoriolab/factoriolab"
+license = "MIT"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
@@ -12,6 +15,7 @@ default = ["console_error_panic_hook"]
 
 [dependencies]
 wasm-bindgen = "0.2.63"
+js-sys = "0.3.58"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
