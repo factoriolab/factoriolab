@@ -49,12 +49,13 @@ function passArrayF64ToWasm0(arg, malloc) {
 /**
 * @param {Float64Array} tableau
 * @param {number} rows
+* @param {number} timeout
 * @returns {SimplexResult}
 */
-export function simplex(tableau, rows) {
+export function simplex(tableau, rows, timeout) {
     const ptr0 = passArrayF64ToWasm0(tableau, wasm.__wbindgen_malloc);
     const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.simplex(ptr0, len0, rows);
+    const ret = wasm.simplex(ptr0, len0, rows, timeout);
     return SimplexResult.__wrap(ret);
 }
 

@@ -3,9 +3,10 @@
 /**
 * @param {Float64Array} tableau
 * @param {number} rows
+* @param {number} timeout
 * @returns {SimplexResult}
 */
-export function simplex(tableau: Float64Array, rows: number): SimplexResult;
+export function simplex(tableau: Float64Array, rows: number, timeout: number): SimplexResult;
 /**
 */
 export class SimplexResult {

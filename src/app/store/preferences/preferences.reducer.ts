@@ -6,6 +6,7 @@ import {
   LinkValue,
   PowerUnit,
   SankeyAlign,
+  SimplexType,
 } from '~/models';
 import * as App from '../app.actions';
 import {
@@ -21,7 +22,7 @@ export interface PreferencesState {
   linkSize: LinkValue;
   linkText: LinkValue;
   sankeyAlign: SankeyAlign;
-  simplex: boolean;
+  simplexType: SimplexType;
   language: string;
   powerUnit: PowerUnit;
 }
@@ -40,7 +41,7 @@ export const initialPreferencesState: PreferencesState = {
   linkSize: LinkValue.Items,
   linkText: LinkValue.Items,
   sankeyAlign: SankeyAlign.Justify,
-  simplex: true,
+  simplexType: SimplexType.JsBigIntRational,
   language: 'en',
   powerUnit: PowerUnit.Auto,
 };
@@ -80,8 +81,8 @@ export function preferencesReducer(
       return { ...state, ...{ linkText: action.payload } };
     case PreferencesActionType.SET_SANKEY_ALIGN:
       return { ...state, ...{ sankeyAlign: action.payload } };
-    case PreferencesActionType.SET_SIMPLEX:
-      return { ...state, ...{ simplex: action.payload } };
+    case PreferencesActionType.SET_SIMPLEX_TYPE:
+      return { ...state, ...{ simplexType: action.payload } };
     case PreferencesActionType.SET_LANGUAGE:
       return { ...state, ...{ language: action.payload } };
     case PreferencesActionType.SET_POWER_UNIT:

@@ -7,6 +7,7 @@ import {
   LinkValue,
   PowerUnit,
   SankeyAlign,
+  SimplexType,
 } from '~/models';
 
 export const enum PreferencesActionType {
@@ -16,7 +17,7 @@ export const enum PreferencesActionType {
   SET_LINK_SIZE = '[Preferences] Set Link Size',
   SET_LINK_TEXT = '[Preferences] Set Link Text',
   SET_SANKEY_ALIGN = '[Preferences] Set Sankey Align',
-  SET_SIMPLEX = '[Preferences] Set Simplex Enabled',
+  SET_SIMPLEX_TYPE = '[Preferences] Set Simplex Type',
   SET_LANGUAGE = '[Preferences] Set Display Language',
   SET_POWER_UNIT = '[Preferences] Set Power Unit',
 }
@@ -51,9 +52,9 @@ export class SetSankeyAlignAction implements Action {
   constructor(public payload: SankeyAlign) {}
 }
 
-export class SetSimplexAction implements Action {
-  readonly type = PreferencesActionType.SET_SIMPLEX;
-  constructor(public payload: boolean) {}
+export class SetSimplexTypeAction implements Action {
+  readonly type = PreferencesActionType.SET_SIMPLEX_TYPE;
+  constructor(public payload: SimplexType) {}
 }
 
 export class SetLanguageAction implements Action {
@@ -73,6 +74,6 @@ export type PreferencesAction =
   | SetLinkSizeAction
   | SetLinkTextAction
   | SetSankeyAlignAction
-  | SetSimplexAction
+  | SetSimplexTypeAction
   | SetLanguageAction
   | SetPowerUnitAction;

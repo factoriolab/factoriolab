@@ -63,8 +63,14 @@ fn pivot_col(tableau: &mut Box<[f64]>, cols: usize, rows: usize, col_num: usize)
     return pivot(tableau, cols, rows, col_num, row_num);
 }
 
-pub fn simplex(tableau: &mut Box<[f64]>, cols: usize, rows: usize) -> (usize, usize, f64) {
+pub fn simplex(
+    tableau: &mut Box<[f64]>,
+    cols: usize,
+    rows: usize,
+    timeout: f64,
+) -> (usize, usize, f64) {
     let mut pivots = 0;
+    let check = timeout > 0.0;
     let start_time = Date::now();
 
     loop {
@@ -88,9 +94,11 @@ pub fn simplex(tableau: &mut Box<[f64]>, cols: usize, rows: usize) -> (usize, us
             return (1, pivots, Date::now() - start_time);
         }
 
-        let time = Date::now() - start_time;
-        if time >= 5000.0 {
-            return (2, pivots, time);
+        if check {
+            let time = Date::now() - start_time;
+            if time >= timeout {
+                return (2, pivots, time);
+            }
         }
     }
 
