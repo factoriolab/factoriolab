@@ -9,6 +9,7 @@ import {
   Preset,
   Rational,
   ResearchSpeed,
+  SimplexType,
 } from '~/models';
 import * as Preferences from '../preferences';
 import { initialSettingsState } from './settings.reducer';
@@ -269,12 +270,12 @@ describe('Settings Selectors', () => {
       const result = Selectors.getSimplexModifiers.projector(
         Rational.one,
         Rational.one,
-        true
+        SimplexType.JsBigIntRational
       );
       expect(result).toEqual({
         costInput: Rational.one,
         costIgnored: Rational.one,
-        simplex: true,
+        simplexType: SimplexType.JsBigIntRational,
       });
     });
   });
