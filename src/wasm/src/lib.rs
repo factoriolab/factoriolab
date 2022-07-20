@@ -18,15 +18,20 @@ pub struct SimplexResult {
 }
 
 #[wasm_bindgen]
-pub fn simplex(mut tableau: Box<[f64]>, rows: usize, timeout: f64) -> SimplexResult {
+pub fn simplex(tableau: Box<[f64]>, rows: usize, timeout: f64) -> SimplexResult {
     let cols = tableau.len() / rows;
-    let (result_type, pivots, time) = simplex::simplex(&mut tableau, cols, rows, timeout);
+    let mut matrix = simplex::Matrix {
+        tableau,
+        rows,
+        cols,
+    };
+    let (result_type, pivots, time) = simplex::simplex(&mut matrix, timeout);
 
     let result = SimplexResult {
         result_type: result_type,
         pivots: pivots,
         time: time,
-        tableau: tableau.clone(),
+        tableau: matrix.tableau,
     };
 
     return result;
