@@ -27,6 +27,7 @@ export class Rational {
       y = x % y;
       x = t;
     }
+
     return x;
   }
 
@@ -38,7 +39,50 @@ export class Rational {
     if (q === 0) {
       throw Error(DIVIDE_BY_ZERO);
     }
+
     return new Rational(BigInt(p), BigInt(q));
+  }
+
+  /**
+   * Source: https://www.ics.uci.edu/%7Eeppstein/numth/frap.c
+   */
+  private static parseFloat(startx: number, maxden = 1000): Rational {
+    let ai = startx,
+      x = startx;
+
+    /** initialize matrix */
+    const m = [
+      [1, 0],
+      [0, 1],
+    ];
+
+    /** loop finding terms until denom gets too big */
+    while (m[1][0] * (ai = Math.floor(x)) + m[1][1] <= maxden) {
+      let t = m[0][0] * ai + m[0][1];
+      m[0][1] = m[0][0];
+      m[0][0] = t;
+      t = m[1][0] * ai + m[1][1];
+      m[1][1] = m[1][0];
+      m[1][0] = t;
+      if (x === ai) break; // AF: division by zero
+      x = 1 / (x - ai);
+    }
+
+    const optA = Rational.from(m[0][0], m[1][0]);
+    const errA = Math.abs(startx - optA.toNumber());
+
+    ai = Math.floor((maxden - m[1][1]) / m[1][0]);
+    m[0][0] = m[0][0] * ai + m[0][1];
+    m[1][0] = m[1][0] * ai + m[1][1];
+
+    const optB = Rational.from(m[0][0], m[1][0]);
+    const errB = Math.abs(startx - optB.toNumber());
+
+    if (errA < errB) {
+      return optA;
+    } else {
+      return optB;
+    }
   }
 
   static fromJson(x: number | string): Rational {
@@ -54,16 +98,14 @@ export class Rational {
       return new Rational(BigInt(x), bigOne);
     }
 
-    return new Rational(
-      BigInt(Math.round(x * FLOAT_PRECISION)),
-      BigInt(FLOAT_PRECISION)
-    );
+    return this.parseFloat(x);
   }
 
   static fromString(x: string): Rational {
     if (x.length === 0) {
       throw new Error('Empty string');
     }
+
     if (typeof x === 'number' || x.indexOf('/') === -1) {
       return Rational.fromNumber(Number(x));
     } else {
@@ -71,6 +113,7 @@ export class Rational {
       if (f.length > 2) {
         throw new Error('Too many /');
       }
+
       if (f[0].indexOf(' ') === -1) {
         const p = Number(f[0]);
         const q = Number(f[1]);
@@ -80,6 +123,7 @@ export class Rational {
         if (g.length > 2) {
           throw new Error('Too many spaces');
         }
+
         const n = Number(g[0]);
         const p = Number(g[1]);
         const q = Number(f[1]);
@@ -148,6 +192,7 @@ export class Rational {
     if (x.isZero()) {
       return this;
     }
+
     return new Rational(this.p * x.q + this.q * x.p, this.q * x.q);
   }
 
@@ -155,6 +200,7 @@ export class Rational {
     if (x.isZero()) {
       return this;
     }
+
     return new Rational(this.p * x.q - this.q * x.p, this.q * x.q);
   }
 
@@ -162,12 +208,15 @@ export class Rational {
     if (this.isOne()) {
       return x;
     }
+
     if (x.isOne()) {
       return this;
     }
+
     if (this.isZero() || x.isZero()) {
       return Rational.zero;
     }
+
     return new Rational(this.p * x.p, this.q * x.q);
   }
 
@@ -175,9 +224,11 @@ export class Rational {
     if (x.isOne()) {
       return this;
     }
+
     if (this.eq(x)) {
       return Rational.one;
     }
+
     return new Rational(this.p * x.q, this.q * x.p);
   }
 
@@ -225,22 +276,20 @@ export class Rational {
   }
 
   toString(): string {
-    if (this.isInteger()) {
-      return this.p.toString();
+    if (this.toDecimals() > 2) {
+      return `${this.p.toString()}/${this.q.toString()}`;
+    } else {
+      return this.toNumber().toString();
     }
-
-    const num = this.toNumber();
-    if (this.eq(Rational.fromNumber(num))) {
-      return num.toString();
-    }
-
-    return `${this.p.toString()}/${this.q.toString()}`;
   }
+
   toDecimals(): number {
-    if (this.isInteger()) {
-      return 0;
+    const num = this.toNumber();
+    if (num % 1 !== 0) {
+      return num.toString().split('.')[1].length;
     }
-    return this.toNumber().toString().split('.')[1]?.length || 0;
+
+    return 0;
   }
 
   constructor(p: bigint, q: bigint = bigOne) {
@@ -248,11 +297,13 @@ export class Rational {
       p = -p;
       q = -q;
     }
+
     const gcd = Rational.gcd(Rational.abs(p), q);
     if (gcd > bigOne) {
       p = p / gcd;
       q = q / gcd;
     }
+
     this.p = p;
     this.q = q;
   }

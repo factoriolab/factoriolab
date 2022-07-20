@@ -344,7 +344,7 @@ describe('SettingsComponent', () => {
     dispatch.val('setResearchSpeed', Settings.SetResearchSpeedAction);
     dispatch.val('setInserterCapacity', Settings.SetInserterCapacityAction);
     dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
-    dispatch.val('setSimplex', Preferences.SetSimplexAction);
+    dispatch.val('setSimplexType', Preferences.SetSimplexTypeAction);
     dispatch.val('setLanguage', Preferences.SetLanguageAction);
     dispatch.val('setPowerUnit', Preferences.SetPowerUnitAction);
     dispatch.val('setProliferatorSpray', Settings.SetProliferatorSprayAction);

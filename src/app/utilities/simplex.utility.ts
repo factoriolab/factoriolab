@@ -6,11 +6,13 @@ import {
   MatrixResultType,
   Rational,
   RationalRecipe,
+  SimplexType,
   Step,
   WARNING_HANG,
 } from '~/models';
 import * as Items from '~/store/items';
 import { RateUtility } from './rate.utility';
+import { WasmUtility } from './wasm.utility';
 
 export interface MatrixState {
   /** Recipes used in the matrix */
@@ -26,6 +28,7 @@ export interface MatrixState {
   data: Dataset;
   costInput: Rational;
   costIgnored: Rational;
+  simplexType: SimplexType;
 }
 
 export interface MatrixSolution {
@@ -52,6 +55,13 @@ export interface MatrixSolution {
   recipes: Entities<Rational>;
 }
 
+export interface SimplexResult {
+  type: MatrixResultType;
+  pivots: number;
+  time: number;
+  O: Rational[];
+}
+
 export interface MatrixCache {
   O: Rational[];
   R: Rational[];
@@ -69,10 +79,11 @@ export class SimplexUtility {
     disabledRecipeIds: string[],
     costInput: Rational,
     costIgnored: Rational,
+    simplexType: SimplexType,
     data: Dataset,
     error = true
   ): MatrixResult {
-    if (!steps.length) {
+    if (simplexType === SimplexType.Disabled || !steps.length) {
       return { steps, result: MatrixResultType.Skipped };
     }
 
@@ -83,6 +94,7 @@ export class SimplexUtility {
       disabledRecipeIds,
       costInput,
       costIgnored,
+      simplexType,
       data
     );
 
@@ -138,24 +150,23 @@ export class SimplexUtility {
     disabledRecipeIds: string[],
     costInput: Rational,
     costIgnored: Rational,
+    simplexType: SimplexType,
     data: Dataset,
-    recipes: boolean,
-    simplex: boolean
+    recipes: boolean
   ): [string, Rational][] {
     let steps: Step[] = [];
     RateUtility.addStepsFor(itemId, Rational.one, steps, itemSettings, data);
 
-    if (simplex) {
-      steps = this.solve(
-        steps,
-        itemSettings,
-        disabledRecipeIds,
-        costInput,
-        costIgnored,
-        data,
-        false
-      ).steps;
-    }
+    steps = this.solve(
+      steps,
+      itemSettings,
+      disabledRecipeIds,
+      costInput,
+      costIgnored,
+      simplexType,
+      data,
+      false
+    ).steps;
 
     if (recipes) {
       return steps
@@ -181,6 +192,7 @@ export class SimplexUtility {
     disabledRecipeIds: string[],
     costInput: Rational,
     costIgnored: Rational,
+    simplexType: SimplexType,
     data: Dataset
   ): MatrixState | null {
     // Set up state object
@@ -194,6 +206,7 @@ export class SimplexUtility {
       itemIds: data.itemIds.filter((i) => !itemSettings[i].ignore),
       costInput,
       costIgnored,
+      simplexType,
       data,
     };
 
@@ -352,23 +365,23 @@ export class SimplexUtility {
     } else {
       // Cache original tableau
       const A0 = A.map((R) => [...R]);
-      // Solve tableau using simplex method
-      const [result, pivots, time] = this.simplex(A, error);
 
-      if (result === MatrixResultType.Solved) {
+      const result = this.simplexType(A, state.simplexType, error);
+
+      if (result.type === MatrixResultType.Solved) {
         // Parse solution into usable state
-        this.cacheResult(O, H, A[0], pivots, time);
-        const [surplus, recipes, inputs] = this.parseSolution(A[0], state);
+        this.cacheResult(O, H, result);
+        const [surplus, recipes, inputs] = this.parseSolution(result.O, state);
         return [
-          result,
+          result.type,
           {
             surplus,
             recipes,
             inputs,
-            pivots,
-            time,
+            pivots: result.pivots,
+            time: result.time,
             A: A0,
-            O: A[0],
+            O: result.O,
             itemIds,
             recipeIds,
             inputIds,
@@ -377,15 +390,15 @@ export class SimplexUtility {
       } else {
         // No solution found
         return [
-          result,
+          result.type,
           {
             surplus: {},
             recipes: {},
             inputs: {},
-            pivots,
-            time,
+            pivots: result.pivots,
+            time: result.time,
             A: A0,
-            O: A[0],
+            O: result.O,
             itemIds,
             recipeIds,
             inputIds,
@@ -474,14 +487,87 @@ export class SimplexUtility {
     return A;
   }
 
-  /** Solve the canonical tableau using the simplex method */
-  static simplex(
+  /** Solve the canonical tableau using the selected simplex type */
+  static simplexType(
     A: Rational[][],
+    simplexType: SimplexType,
     error = true
-  ): [MatrixResultType, number, number] {
-    const timeout = error ? 5000 : 1000;
-    const start = Date.now();
+  ): SimplexResult {
+    if (simplexType === SimplexType.JsBigIntRational) {
+      return this.simplex(A, error);
+    } else {
+      return this.simplexWasm(A, error);
+    }
+  }
+
+  /** Solve the canonical tableau using the WASM simplex method */
+  static simplexWasm(A: Rational[][], error = true): SimplexResult {
+    let tableau = new Float64Array(
+      A.flatMap((r) => r.map((c) => c.toNumber()))
+    );
+    let time = 0;
     let check = true;
+
+    while (true) {
+      const wasmResult = WasmUtility.simplex(
+        tableau,
+        A.length,
+        error ? 5000 : 1000
+      );
+      const O: Rational[] = [];
+      const solution = wasmResult.tableau.slice(0, A[0].length);
+      solution.forEach((s) => O.push(Rational.fromNumber(s)));
+
+      tableau = wasmResult.tableau;
+
+      switch (wasmResult.result_type) {
+        case 0:
+          // Solved
+          return {
+            type: MatrixResultType.Solved,
+            pivots: wasmResult.pivots,
+            time: time + wasmResult.time,
+            O,
+          };
+        case 1:
+          // Error
+          return {
+            type: MatrixResultType.Failed,
+            pivots: wasmResult.pivots,
+            time: time + wasmResult.time,
+            O,
+          };
+        case 2: {
+          // Hang
+          tableau = wasmResult.tableau;
+          if (check) {
+            // Hang detected
+            const warn =
+              WARNING_HANG +
+              `\n\nmatrix size: ${A.length} x ${A[0].length}, pivots: ${wasmResult.pivots}, time: ${wasmResult.time}ms`;
+            if (error && confirm(warn)) {
+              time = wasmResult.time;
+              check = false;
+            } else {
+              return {
+                type: MatrixResultType.Cancelled,
+                pivots: wasmResult.pivots,
+                time: wasmResult.time,
+                O: O,
+              };
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /** Solve the canonical tableau using the simplex method */
+  static simplex(A: Rational[][], error = true): SimplexResult {
+    const timeout = error ? 5000 : 1000;
+    let time = 0;
+    let check = true;
+    let start = Date.now();
 
     let p = 0;
 
@@ -496,22 +582,41 @@ export class SimplexUtility {
       }
 
       if (!O[c].lt(Rational.zero)) {
-        return [MatrixResultType.Solved, p, Date.now() - start];
+        return {
+          type: MatrixResultType.Solved,
+          pivots: p,
+          time: time + Date.now() - start,
+          O: A[0],
+        };
       }
 
       if (!this.pivotCol(A, c)) {
-        return [MatrixResultType.Failed, p, Date.now() - start];
+        return {
+          type: MatrixResultType.Failed,
+          pivots: p,
+          time: time + Date.now() - start,
+          O: A[0],
+        };
       }
 
-      const time = Date.now() - start;
-      if (check && time > timeout) {
-        const warn =
-          WARNING_HANG +
-          `\n\nmatrix size: ${A.length} x ${A[0].length}, pivots: ${p}, time: ${time}ms`;
-        if (error && confirm(warn)) {
-          check = false;
-        } else {
-          return [MatrixResultType.Cancelled, p, time];
+      if (check) {
+        const time_check = Date.now() - start;
+        if (time_check > timeout) {
+          const warn =
+            WARNING_HANG +
+            `\n\nmatrix size: ${A.length} x ${A[0].length}, pivots: ${p}, time: ${time_check}ms`;
+          if (error && confirm(warn)) {
+            start = Date.now();
+            time = time_check;
+            check = false;
+          } else {
+            return {
+              type: MatrixResultType.Cancelled,
+              pivots: p,
+              time: time_check,
+              O: A[0],
+            };
+          }
         }
       }
     }
@@ -794,21 +899,15 @@ export class SimplexUtility {
     return [O, H];
   }
 
-  static cacheResult(
-    O: Rational[],
-    H: string,
-    R: Rational[],
-    pivots: number,
-    time: number
-  ): void {
+  static cacheResult(O: Rational[], H: string, result: SimplexResult): void {
     if (!this.cache[H]) {
       this.cache[H] = [];
     }
     this.cache[H].push({
       O,
-      R,
-      pivots,
-      time,
+      R: result.O,
+      pivots: result.pivots,
+      time: result.time,
     });
   }
 

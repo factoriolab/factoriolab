@@ -1,4 +1,4 @@
-import { Column, PowerUnit } from '~/models';
+import { Column, PowerUnit, SimplexType } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './preferences.actions';
 import {
@@ -86,13 +86,13 @@ describe('Preferences Reducer', () => {
     });
   });
 
-  describe('SET_SIMPLEX', () => {
-    it('should set the simplex flag', () => {
+  describe('SET_SIMPLEX_TYPE', () => {
+    it('should set the simplex type', () => {
       const result = preferencesReducer(
         undefined,
-        new Actions.SetSimplexAction(false)
+        new Actions.SetSimplexTypeAction(SimplexType.Disabled)
       );
-      expect(result.simplex).toEqual(false);
+      expect(result.simplexType).toEqual(SimplexType.Disabled);
     });
   });
 

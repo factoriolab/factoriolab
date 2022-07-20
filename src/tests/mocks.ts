@@ -24,6 +24,7 @@ import {
   RecipeSettings,
   SankeyAlign,
   SankeyData,
+  SimplexType,
   Step,
   toEntities,
 } from '~/models';
@@ -201,7 +202,7 @@ export const PreferencesState: Preferences.PreferencesState = {
   linkSize: LinkValue.Items,
   linkText: LinkValue.Items,
   sankeyAlign: SankeyAlign.Justify,
-  simplex: true,
+  simplexType: SimplexType.JsBigIntRational,
   powerUnit: PowerUnit.Auto,
   language: 'en',
 };

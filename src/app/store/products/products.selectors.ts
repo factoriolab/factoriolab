@@ -6,7 +6,6 @@ import {
   Entities,
   Game,
   ItemId,
-  MatrixResultType,
   PowerUnit,
   PrecisionColumns,
   RateType,
@@ -63,9 +62,9 @@ export const getProductSteps = createSelector(
         disabledRecipeIds,
         adj.costInput,
         adj.costIgnored,
+        adj.simplexType,
         data,
-        p.rateType === RateType.Factories,
-        adj.simplex
+        p.rateType === RateType.Factories
       );
       return e;
     }, {})
@@ -333,16 +332,15 @@ export const getMatrixResult = createSelector(
   Settings.getSimplexModifiers,
   Recipes.getAdjustedDataset,
   (steps, itemSettings, disabledRecipeIds, adj, data) =>
-    adj.simplex
-      ? SimplexUtility.solve(
-          RateUtility.copy(steps),
-          itemSettings,
-          disabledRecipeIds,
-          adj.costInput,
-          adj.costIgnored,
-          data
-        )
-      : { steps, result: MatrixResultType.Skipped }
+    SimplexUtility.solve(
+      RateUtility.copy(steps),
+      itemSettings,
+      disabledRecipeIds,
+      adj.costInput,
+      adj.costIgnored,
+      adj.simplexType,
+      data
+    )
 );
 
 export const getNormalizedStepsWithBelts = createSelector(

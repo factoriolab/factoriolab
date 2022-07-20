@@ -124,6 +124,10 @@
               {
                 "replace": "src/environments/environment.ts",
                 "with": "src/environments/environment.test.ts"
+              },
+              {
+                "replace": "src/app/utilities/wasm.utility.ts",
+                "with": "src/app/utilities/wasm.utility.mock.ts"
               }
             ],
             "main": "src/test.ts",

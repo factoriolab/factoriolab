@@ -28,9 +28,9 @@ export const getSankeyAlign = createSelector(
   preferencesState,
   (state) => state.sankeyAlign
 );
-export const getSimplex = createSelector(
+export const getSimplexType = createSelector(
   preferencesState,
-  (state) => state.simplex
+  (state) => state.simplexType
 );
 export const getPowerUnit = createSelector(
   preferencesState,
