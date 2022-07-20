@@ -8,6 +8,7 @@ import {
 } from '~/models';
 import { RateUtility } from './rate.utility';
 import { MatrixSolution, MatrixState, SimplexUtility } from './simplex.utility';
+import { WasmUtility } from './wasm.utility';
 
 describe('SimplexUtility', () => {
   const getState = (): MatrixState => ({
@@ -714,6 +715,84 @@ describe('SimplexUtility', () => {
           Rational.zero,
         ],
       ]);
+    });
+  });
+
+  describe('simplexType', () => {
+    it('should call simplexWasm when selected', () => {
+      spyOn(SimplexUtility, 'simplexWasm');
+      SimplexUtility.simplexType([], SimplexType.WasmFloat64);
+      expect(SimplexUtility.simplexWasm).toHaveBeenCalled();
+    });
+  });
+
+  describe('simplexWasm', () => {
+    it('should solve a canonical tableau', () => {
+      spyOn(WasmUtility, 'simplex').and.returnValue({
+        free: () => {},
+        tableau: new Float64Array([0, 1, 2]),
+        time: 0,
+        pivots: 0,
+        result_type: 0,
+      });
+      const result = SimplexUtility.simplexWasm([
+        new Array(3).fill(Rational.zero),
+      ]);
+      expect(result.type).toEqual(MatrixResultType.Solved);
+    });
+
+    it('should handle a failed pivot', () => {
+      spyOn(WasmUtility, 'simplex').and.returnValue({
+        free: () => {},
+        tableau: new Float64Array([0, 1, 2]),
+        time: 0,
+        pivots: 0,
+        result_type: 1,
+      });
+      const result = SimplexUtility.simplexWasm([
+        new Array(3).fill(Rational.zero),
+      ]);
+      expect(result.type).toEqual(MatrixResultType.Failed);
+    });
+
+    it('should prompt on timeout and continue', () => {
+      spyOn(WasmUtility, 'simplex').and.returnValues(
+        {
+          free: () => {},
+          tableau: new Float64Array([0, 1, 2]),
+          time: 0,
+          pivots: 0,
+          result_type: 2,
+        },
+        {
+          free: () => {},
+          tableau: new Float64Array([0, 1, 2]),
+          time: 0,
+          pivots: 0,
+          result_type: 0,
+        }
+      );
+      spyOn(window, 'confirm').and.returnValue(true);
+      const result = SimplexUtility.simplexWasm([
+        new Array(3).fill(Rational.zero),
+      ]);
+      expect(result.type).toEqual(MatrixResultType.Solved);
+    });
+
+    it('should quit one timeout with error = false', () => {
+      spyOn(WasmUtility, 'simplex').and.returnValue({
+        free: () => {},
+        tableau: new Float64Array([0, 1, 2]),
+        time: 0,
+        pivots: 0,
+        result_type: 2,
+      });
+      spyOn(window, 'confirm').and.returnValue(false);
+      const result = SimplexUtility.simplexWasm(
+        [new Array(3).fill(Rational.zero)],
+        false
+      );
+      expect(result.type).toEqual(MatrixResultType.Cancelled);
     });
   });
 

@@ -487,6 +487,7 @@ export class SimplexUtility {
     return A;
   }
 
+  /** Solve the canonical tableau using the selected simplex type */
   static simplexType(
     A: Rational[][],
     simplexType: SimplexType,
@@ -499,6 +500,7 @@ export class SimplexUtility {
     }
   }
 
+  /** Solve the canonical tableau using the WASM simplex method */
   static simplexWasm(A: Rational[][], error = true): SimplexResult {
     let tableau = new Float64Array(
       A.flatMap((r) => r.map((c) => c.toNumber()))
