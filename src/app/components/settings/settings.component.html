@@ -846,16 +846,25 @@
             <td>
               <lab-options
                 [title]="'setting.simplexSolverTitle' | translate"
-                [selected]="vm.preferences.simplex"
-                [options]="enabledOptions"
-                (selectId)="setSimplex($event)"
+                [selected]="vm.preferences.simplexType"
+                [options]="simplexTypeOptions"
+                (selectId)="setSimplexType($event)"
               ></lab-options>
             </td>
           </tr>
-          <tr *ngIf="!vm.preferences.simplex">
-            <td colspan="2">
-              <span class="invalid">{{
-                'setting.simplexSolverInvalid' | translate
+          <tr
+            *ngIf="vm.preferences.simplexType !== SimplexType.JsBigIntRational"
+          >
+            <td
+              [ngSwitch]="vm.preferences.simplexType"
+              colspan="2"
+              class="message"
+            >
+              <span *ngSwitchCase="SimplexType.Disabled" class="invalid">{{
+                'setting.simplexSolverDisabled' | translate
+              }}</span>
+              <span *ngSwitchCase="SimplexType.WasmFloat64" class="invalid">{{
+                'setting.simplexSolverWasmFloat64' | translate
               }}</span>
             </td>
           </tr>

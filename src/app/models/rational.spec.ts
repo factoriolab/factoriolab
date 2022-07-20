@@ -94,7 +94,7 @@ describe('Rational', () => {
     });
   });
 
-  describe('Class', () => {
+  describe('Static', () => {
     describe('isZero', () => {
       it('should determine whether Rational is zero', () => {
         expect(Rational.zero.isZero()).toBeTrue();
@@ -281,10 +281,6 @@ describe('Rational', () => {
 
       it('should determine number of decimals', () => {
         expect(Rational.one.div(Rational.two).toDecimals()).toEqual(1);
-      });
-
-      it('should handle invalid Rational', () => {
-        expect(new Rational(BigInt(1), BigInt(0)).toDecimals()).toEqual(0);
       });
     });
 

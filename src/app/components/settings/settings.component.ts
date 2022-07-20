@@ -28,12 +28,12 @@ import {
   InserterTarget,
   InserterTargetOptions,
   ItemId,
-  Language,
   PowerUnit,
   PowerUnitOptions,
   Preset,
   ResearchSpeed,
   ResearchSpeedOptions,
+  SimplexType,
   WARNING_RESET,
 } from '~/models';
 import { RouterService } from '~/services';
@@ -117,17 +117,21 @@ export class SettingsComponent implements OnInit {
   opening = true;
 
   initial = Settings.initialSettingsState;
-  enabledOptions: IdName<boolean>[] = [
+  simplexTypeOptions: IdName<SimplexType>[] = [
     {
-      id: true,
-      name: 'options.enabled',
+      id: SimplexType.Disabled,
+      name: 'options.simplexTypeDisabled',
     },
     {
-      id: false,
-      name: 'options.disabled',
+      id: SimplexType.JsBigIntRational,
+      name: 'options.simplexTypeJsBigIntRational',
+    },
+    {
+      id: SimplexType.WasmFloat64,
+      name: 'options.simplexTypeWasmFloat64',
     },
   ];
-  languageOptions: Language[] = [
+  languageOptions: IdName[] = [
     {
       id: 'en',
       name: 'English',
@@ -137,12 +141,14 @@ export class SettingsComponent implements OnInit {
       name: '简体中文',
     },
   ];
+
   GameOptions = GameOptions;
   ResearchSpeedOptions = ResearchSpeedOptions;
   InserterCapacityOptions = InserterCapacityOptions;
   InserterTargetOptions = InserterTargetOptions;
   DisplayRateOptions = DisplayRateOptions;
   PowerUnitOptions = PowerUnitOptions;
+  SimplexType = SimplexType;
   BrowserUtility = BrowserUtility;
 
   ItemId = ItemId;
@@ -422,8 +428,8 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
   }
 
-  setSimplex(value: boolean): void {
-    this.store.dispatch(new Preferences.SetSimplexAction(value));
+  setSimplexType(value: SimplexType): void {
+    this.store.dispatch(new Preferences.SetSimplexTypeAction(value));
   }
 
   setLanguage(value: string): void {
