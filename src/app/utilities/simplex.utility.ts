@@ -11,8 +11,8 @@ import {
   WARNING_HANG,
 } from '~/models';
 import * as Items from '~/store/items';
-import * as wasm from '../vendor/factoriolab_simplex';
 import { RateUtility } from './rate.utility';
+import { WasmUtility } from './wasm.utility';
 
 export interface MatrixState {
   /** Recipes used in the matrix */
@@ -507,7 +507,11 @@ export class SimplexUtility {
     let check = true;
 
     while (true) {
-      const wasmResult = wasm.simplex(tableau, A.length, error ? 5000 : 1000);
+      const wasmResult = WasmUtility.simplex(
+        tableau,
+        A.length,
+        error ? 5000 : 1000
+      );
       const O: Rational[] = [];
       const solution = wasmResult.tableau.slice(0, A[0].length);
       solution.forEach((s) => O.push(Rational.fromNumber(s)));
