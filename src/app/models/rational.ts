@@ -276,23 +276,20 @@ export class Rational {
   }
 
   toString(): string {
-    if (this.isInteger()) {
-      return this.p.toString();
+    if (this.toDecimals() > 2) {
+      return `${this.p.toString()}/${this.q.toString()}`;
+    } else {
+      return this.toNumber().toString();
     }
-
-    const num = this.toNumber();
-    if (this.eq(Rational.fromNumber(num))) {
-      return num.toString();
-    }
-
-    return `${this.p.toString()}/${this.q.toString()}`;
   }
 
   toDecimals(): number {
-    if (this.isInteger()) {
-      return 0;
+    const num = this.toNumber();
+    if (num % 1 !== 0) {
+      return num.toString().split('.')[1].length;
     }
-    return this.toNumber().toString().split('.')[1]?.length || 0;
+
+    return 0;
   }
 
   constructor(p: bigint, q: bigint = bigOne) {
