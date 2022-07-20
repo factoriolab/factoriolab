@@ -277,7 +277,7 @@ describe('SimplexUtility', () => {
     });
 
     it('should not call simplex solver when disabled', () => {
-      spyOn(SimplexUtility, 'solve');
+      spyOn(SimplexUtility, 'getSolution');
       SimplexUtility.getSteps(
         ItemId.CopperPlate,
         Mocks.ItemSettingsInitial,
@@ -288,7 +288,7 @@ describe('SimplexUtility', () => {
         Mocks.AdjustedData,
         true
       );
-      expect(SimplexUtility.solve).not.toHaveBeenCalled();
+      expect(SimplexUtility.getSolution).not.toHaveBeenCalled();
     });
   });
 
@@ -552,7 +552,7 @@ describe('SimplexUtility', () => {
         type: MatrixResultType.Solved,
         pivots: 0,
         time: 0,
-        O: [],
+        O: [Rational.one],
       });
       spyOn(SimplexUtility, 'parseSolution').and.returnValue([{}, {}, {}]);
       const state = getState();

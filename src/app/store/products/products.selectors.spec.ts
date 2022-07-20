@@ -8,6 +8,7 @@ import {
   RateType,
   Rational,
   RationalProduct,
+  SimplexType,
   Step,
   StepDetailTab,
 } from '~/models';
@@ -698,13 +699,6 @@ describe('Products Selectors', () => {
   });
 
   describe('getMatrixResult', () => {
-    it('should handle empty/null values', () => {
-      spyOn(SimplexUtility, 'solve');
-      const result = Selectors.getMatrixResult.projector([], {}, [], {}, {});
-      expect(SimplexUtility.solve).not.toHaveBeenCalled();
-      expect(result).toEqual({ steps: [], result: MatrixResultType.Skipped });
-    });
-
     it('should calculate rates using utility method', () => {
       spyOn(SimplexUtility, 'solve').and.returnValue({
         steps: [],
@@ -714,7 +708,7 @@ describe('Products Selectors', () => {
         [Mocks.Step1],
         {},
         [],
-        { simplex: true },
+        { simplexType: SimplexType.JsBigIntRational },
         {}
       );
       expect(SimplexUtility.solve).toHaveBeenCalled();
