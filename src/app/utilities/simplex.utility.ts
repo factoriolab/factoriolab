@@ -497,6 +497,36 @@ export class SimplexUtility {
       return this.simplex(A, error);
     } else {
       return this.simplexWasm(A, error);
+      // if (ibfs.type === MatrixResultType.Solved) {
+      //   const cols = A[0].length;
+      //   const rows = A.length;
+      //   const start = cols - rows - 1;
+      //   const O = ibfs.O.slice(start, ibfs.O.length);
+      //   for (let r = 1; r < rows; r++) {
+      //     console.log(r, O[r]);
+      //     if (O[r].nonzero()) {
+      //       for (let c = 0; c < cols; c++) {
+      //         if (A[r][c].nonzero()) {
+      //           A[r][c] = A[r][c].mul(O[r]);
+      //         }
+      //       }
+      //     }
+      //   }
+
+      //   console.table(A.map((R) => R.map((c) => c.toString())));
+
+      //   const alt = this.simplex(A, error);
+
+      //   console.log('IBFS TIME', ibfs.time);
+      //   console.log('RAT TIME', alt.time);
+      //   console.log('TOTAL TIME', alt.time + ibfs.time);
+      //   console.log(alt.pivots);
+      //   console.table(alt.O.map((o) => o.toString()));
+
+      //   return ibfs;
+      // } else {
+      //   return ibfs;
+      // }
     }
   }
 
