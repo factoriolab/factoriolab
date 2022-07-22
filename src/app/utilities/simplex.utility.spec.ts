@@ -14,7 +14,7 @@ describe('SimplexUtility', () => {
   const getState = (): MatrixState => ({
     recipes: {},
     items: {},
-    inputs: [],
+    inputIds: [],
     recipeIds: Mocks.Dataset.recipeIds,
     itemIds: Mocks.Dataset.itemIds,
     data: Mocks.AdjustedData,
@@ -345,7 +345,7 @@ describe('SimplexUtility', () => {
       expect(result).toEqual({
         recipes: {},
         items: { [Mocks.Step1.itemId!]: Mocks.Step1.items! },
-        inputs: [Mocks.Step1.itemId!],
+        inputIds: [Mocks.Step1.itemId!],
         recipeIds: Mocks.Dataset.recipeIds,
         itemIds: Mocks.Dataset.itemIds,
         data: Mocks.Dataset,
@@ -496,7 +496,7 @@ describe('SimplexUtility', () => {
         [RecipeId.Coal]: Mocks.Dataset.recipeR[RecipeId.Coal],
       };
       SimplexUtility.parseInputs(state);
-      expect(state.inputs).toEqual([ItemId.Wood, ItemId.Coal]);
+      expect(state.inputIds).toEqual([ItemId.Wood, ItemId.Coal]);
     });
   });
 
@@ -596,7 +596,7 @@ describe('SimplexUtility', () => {
       const state = getState();
       // Coal = ignored input, Wood = normal input
       state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
-      state.inputs = [ItemId.Wood, ItemId.Coal];
+      state.inputIds = [ItemId.Wood, ItemId.Coal];
       state.recipes[RecipeId.CopperCable] =
         Mocks.AdjustedData.recipeR[RecipeId.CopperCable];
       state.recipes[ItemId.CopperPlate] = new RationalRecipe({
@@ -880,7 +880,7 @@ describe('SimplexUtility', () => {
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
       state.recipes[RecipeId.IronOre] =
         Mocks.AdjustedData.recipeR[RecipeId.IronOre];
-      state.inputs = [ItemId.Coal, ItemId.IronOre];
+      state.inputIds = [ItemId.Coal, ItemId.IronOre];
       const O = [
         Rational.one,
         Rational.zero,

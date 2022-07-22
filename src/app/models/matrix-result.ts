@@ -1,3 +1,5 @@
+import { Simplex } from 'glpk-ts';
+
 import { MatrixResultType } from './enum';
 import { Rational } from './rational';
 import { Step } from './step';
@@ -5,6 +7,7 @@ import { Step } from './step';
 export interface MatrixResult {
   steps: Step[];
   result: MatrixResultType;
+  glpkResult?: Simplex.ReturnCode;
   /** Final number of simplex pivots */
   pivots?: number;
   /** Runtime in ms */
