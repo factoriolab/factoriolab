@@ -1,3 +1,5 @@
+import { Model, Variable } from 'glpk-ts';
+
 import {
   Dataset,
   Entities,
@@ -366,6 +368,52 @@ export class SimplexUtility {
       // Cache original tableau
       const A0 = A.map((R) => [...R]);
 
+      const m = new Model({ sense: 'min' });
+
+      const vars: Variable[] = [];
+      for (const r of recipeIds) {
+        // console.log('var for', r);
+        const config = {
+          obj: (state.recipes[r].cost ?? Rational.zero).toNumber(),
+          lb: 0,
+          name: r,
+        };
+        vars.push(m.addVar(config));
+      }
+
+      for (const a of itemIds) {
+        const coeffs: [Variable, number][] = [];
+        for (let i = 0; i < recipeIds.length; i++) {
+          const r = recipeIds[i];
+          let val = Rational.zero;
+          const recipe = state.recipes[r];
+          if (recipe.in[a]) {
+            val = val.sub(recipe.in[a]);
+          }
+          if (recipe.out[a]) {
+            val = val.add(recipe.out[a]);
+          }
+          if (val.nonzero()) {
+            coeffs.push([vars[i], val.div(recipe.time).toNumber()]);
+          }
+        }
+        if (state.items[a].nonzero()) {
+          // console.log('lb for', a);
+          const config = { coeffs, lb: state.items[a].toNumber() };
+          // console.log(config);
+          m.addConstr(config);
+        } else {
+          // console.log('constr for', a);
+          const config = { coeffs, lb: 0 };
+          // console.log(config);
+          m.addConstr(config);
+        }
+      }
+
+      console.time('glpk');
+      m.simplex();
+      console.timeEnd('glpk');
+
       const result = this.simplexType(A, state.simplexType, error);
 
       if (result.type === MatrixResultType.Solved) {
@@ -497,20 +545,30 @@ export class SimplexUtility {
       return this.simplex(A, error);
     } else {
       return this.simplexWasm(A, error);
+
+      // const ibfs = this.simplexWasm(A, error);
       // if (ibfs.type === MatrixResultType.Solved) {
       //   const cols = A[0].length;
       //   const rows = A.length;
       //   const start = cols - rows - 1;
       //   const O = ibfs.O.slice(start, ibfs.O.length);
+      //   const remove: number[] = [];
       //   for (let r = 1; r < rows; r++) {
       //     console.log(r, O[r]);
       //     if (O[r].nonzero()) {
       //       for (let c = 0; c < cols; c++) {
       //         if (A[r][c].nonzero()) {
       //           A[r][c] = A[r][c].mul(O[r]);
+      //           A[0][c] = A[0][c].add(A[r][c]);
       //         }
       //       }
+      //     } else {
+      //       remove.push(r);
       //     }
+      //   }
+
+      //   for (let i = remove.length - 1; i >= 0; i--) {
+      //     A.splice(remove[i], 1);
       //   }
 
       //   console.table(A.map((R) => R.map((c) => c.toString())));
@@ -520,6 +578,7 @@ export class SimplexUtility {
       //   console.log('IBFS TIME', ibfs.time);
       //   console.log('RAT TIME', alt.time);
       //   console.log('TOTAL TIME', alt.time + ibfs.time);
+      //   console.log(ibfs.O.length, 'vs', alt.O.length);
       //   console.log(alt.pivots);
       //   console.table(alt.O.map((o) => o.toString()));
 

@@ -22,7 +22,16 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets", "src/data"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              "src/data",
+              {
+                "glob": "glpk.all.wasm",
+                "input": "node_modules/glpk-wasm/dist/",
+                "output": "/assets/glpk-wasm/"
+              }
+            ],
             "styles": [
               "node_modules/material-design-icons/iconfont/material-icons.css",
               "src/styles.scss"
@@ -32,9 +41,8 @@
             },
             "scripts": [],
             "allowedCommonJsDependencies": [
-              "pako",
-              "file-saver",
-              "elementary-circuits-directed-graph"
+              "elementary-circuits-directed-graph",
+              "glpk-ts"
             ],
             "vendorChunk": true,
             "extractLicenses": false,
