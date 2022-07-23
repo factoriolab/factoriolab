@@ -1,5 +1,6 @@
 import { Constraint, Model, Simplex, Variable } from 'glpk-ts';
 
+import { environment } from 'src/environments';
 import {
   Dataset,
   Entities,
@@ -14,7 +15,10 @@ import {
 } from '~/models';
 import * as Items from '~/store/items';
 import { RateUtility } from './rate.utility';
-import { WasmUtility } from './wasm.utility';
+
+const simplexConfig: Simplex.Options = environment.debug
+  ? {}
+  : { msgLevel: 'off' };
 
 export interface MatrixState {
   /** Recipes used in the matrix */
@@ -458,19 +462,10 @@ export class SimplexUtility {
 
       const config = { coeffs, lb: state.items[itemId].toNumber() };
       itemConstrEntities[itemId] = m.addConstr(config);
-
-      // Likely unnecessary..
-      // if (state.items[a].nonzero()) {
-      //   const config = { coeffs, lb: state.items[a].toNumber() };
-      //   m.addConstr(config);
-      // } else {
-      //   const config = { coeffs, lb: 0 };
-      //   m.addConstr(config);
-      // }
     }
 
     const start = Date.now();
-    const result = m.simplex();
+    const result = m.simplex(simplexConfig);
     const time = Date.now() - start;
 
     if (result !== 'ok') {
@@ -480,13 +475,30 @@ export class SimplexUtility {
     // Set up IBFS
     const O = [Rational.zero];
     for (const itemId of itemIds) {
-      O.push(Rational.fromNumber(itemConstrEntities[itemId].value));
+      if (
+        recipeIds.some(
+          (r) =>
+            recipeVarEntities[r].value !== 0 &&
+            (state.recipes[r].in[itemId] || state.recipes[r].out[itemId])
+        )
+      ) {
+        // Recipes for this item are part of the solution, include result
+        O.push(Rational.fromNumber(itemConstrEntities[itemId].value));
+      } else {
+        // Item is not part of the solution, remove it
+        delete state.items[itemId];
+      }
     }
+
+    // Clean up inputs
+    state.inputIds = state.inputIds.filter((i) => state.items[i] != null);
 
     for (const recipeId of recipeIds) {
       if (recipeVarEntities[recipeId].value === 0) {
+        // Recipe is not part of the solution, remove it
         delete state.recipes[recipeId];
       } else {
+        // Recipe is part of the solution, include result
         O.push(Rational.fromNumber(recipeVarEntities[recipeId].value));
       }
     }
@@ -587,118 +599,16 @@ export class SimplexUtility {
     error = true
   ): SimplexResult {
     if (simplexType === SimplexType.JsBigIntRational) {
-      return this.simplex(A, error);
+      const result = this.simplex(A, error);
+      result.time += glpkResult.time;
+      return result;
     } else {
       return {
         type: MatrixResultType.Solved,
         pivots: 0,
-        time: 0,
+        time: glpkResult.time,
         O: glpkResult.O,
       };
-      // return this.simplexWasm(A, error);
-
-      // const ibfs = this.simplexWasm(A, error);
-      // if (ibfs.type === MatrixResultType.Solved) {
-      //   const cols = A[0].length;
-      //   const rows = A.length;
-      //   const start = cols - rows - 1;
-      //   const O = ibfs.O.slice(start, ibfs.O.length);
-      //   const remove: number[] = [];
-      //   for (let r = 1; r < rows; r++) {
-      //     console.log(r, O[r]);
-      //     if (O[r].nonzero()) {
-      //       for (let c = 0; c < cols; c++) {
-      //         if (A[r][c].nonzero()) {
-      //           A[r][c] = A[r][c].mul(O[r]);
-      //           A[0][c] = A[0][c].add(A[r][c]);
-      //         }
-      //       }
-      //     } else {
-      //       remove.push(r);
-      //     }
-      //   }
-
-      //   for (let i = remove.length - 1; i >= 0; i--) {
-      //     A.splice(remove[i], 1);
-      //   }
-
-      //   console.table(A.map((R) => R.map((c) => c.toString())));
-
-      //   const alt = this.simplex(A, error);
-
-      //   console.log('IBFS TIME', ibfs.time);
-      //   console.log('RAT TIME', alt.time);
-      //   console.log('TOTAL TIME', alt.time + ibfs.time);
-      //   console.log(ibfs.O.length, 'vs', alt.O.length);
-      //   console.log(alt.pivots);
-      //   console.table(alt.O.map((o) => o.toString()));
-
-      //   return ibfs;
-      // } else {
-      //   return ibfs;
-      // }
-    }
-  }
-
-  /** Solve the canonical tableau using the WASM simplex method */
-  static simplexWasm(A: Rational[][], error = true): SimplexResult {
-    let tableau = new Float64Array(
-      A.flatMap((r) => r.map((c) => c.toNumber()))
-    );
-    let time = 0;
-    let check = true;
-
-    while (true) {
-      const wasmResult = WasmUtility.simplex(
-        tableau,
-        A.length,
-        error ? 5000 : 1000
-      );
-      const O: Rational[] = [];
-      const solution = wasmResult.tableau.slice(0, A[0].length);
-      solution.forEach((s) => O.push(Rational.fromNumber(s)));
-
-      tableau = wasmResult.tableau;
-
-      switch (wasmResult.result_type) {
-        case 0:
-          // Solved
-          return {
-            type: MatrixResultType.Solved,
-            pivots: wasmResult.pivots,
-            time: time + wasmResult.time,
-            O,
-          };
-        case 1:
-          // Error
-          return {
-            type: MatrixResultType.Failed,
-            pivots: wasmResult.pivots,
-            time: time + wasmResult.time,
-            O,
-          };
-        case 2: {
-          // Hang
-          tableau = wasmResult.tableau;
-          if (check) {
-            // Hang detected
-            const warn =
-              WARNING_HANG +
-              `\n\nmatrix size: ${A.length} x ${A[0].length}, pivots: ${wasmResult.pivots}, time: ${wasmResult.time}ms`;
-            if (error && confirm(warn)) {
-              time = wasmResult.time;
-              check = false;
-            } else {
-              return {
-                type: MatrixResultType.Cancelled,
-                pivots: wasmResult.pivots,
-                time: wasmResult.time,
-                O: O,
-              };
-            }
-          }
-        }
-      }
     }
   }
 
