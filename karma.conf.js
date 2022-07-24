@@ -29,7 +29,7 @@ module.exports = function (config) {
     },
     files: [
       {
-        pattern: 'node_modules/glpk-wasm/dist/**/*',
+        pattern: 'node_modules/glpk-wasm/dist/glpk.all.wasm',
         watched: true,
         included: false,
         served: true,
