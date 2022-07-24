@@ -591,6 +591,34 @@ describe('SimplexUtility', () => {
     });
   });
 
+  describe('glpk', () => {
+    it('should run the glpk wasm module to presolve', () => {
+      const state = getState();
+      // Coal = ignored input, Wood = normal input
+      state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
+      state.inputIds = [ItemId.Wood, ItemId.Coal];
+      state.recipes[ItemId.CopperPlate] = new RationalRecipe({
+        id: 'id',
+        name: 'name',
+        time: 1,
+        in: {},
+        out: { [ItemId.CopperPlate]: 1 },
+        producers: [],
+      });
+      state.items[ItemId.Wood] = Rational.one;
+      state.items[ItemId.Coal] = Rational.one;
+      const result = SimplexUtility.glpk(state);
+      expect(result.returnCode).toEqual('ok');
+    });
+
+    it('should handle glpk failure', () => {
+      spyOn(SimplexUtility, 'glpkSimplex').and.returnValue('failure');
+      const state = getState();
+      const result = SimplexUtility.glpk(state);
+      expect(result.returnCode).toEqual('failure');
+    });
+  });
+
   describe('canonical', () => {
     it('should get a canonical matrix', () => {
       const state = getState();
@@ -715,6 +743,17 @@ describe('SimplexUtility', () => {
           Rational.zero,
         ],
       ]);
+    });
+  });
+
+  describe('simplexType', () => {
+    it('should return presolve result', () => {
+      const result = SimplexUtility.simplexType([[]], SimplexType.WasmFloat64, {
+        returnCode: 'ok',
+        time: 0,
+        O: [],
+      });
+      expect(result.type).toEqual(MatrixResultType.Solved);
     });
   });
 

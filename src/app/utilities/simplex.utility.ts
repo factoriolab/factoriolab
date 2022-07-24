@@ -17,7 +17,9 @@ import * as Items from '~/store/items';
 import { RateUtility } from './rate.utility';
 
 const simplexConfig: Simplex.Options = environment.debug
-  ? {}
+  ? // Don't test debug environment level
+    // istanbul ignore next
+    {}
   : { msgLevel: 'off' };
 
 export interface MatrixState {
@@ -72,7 +74,7 @@ export interface SimplexResult {
 
 export interface GlpkResult {
   O: Rational[];
-  result: Simplex.ReturnCode;
+  returnCode: Simplex.ReturnCode;
   time: number;
 }
 
@@ -467,17 +469,20 @@ export class SimplexUtility {
 
     // Run GLPK simplex
     const start = Date.now();
-    const result = m.simplex(simplexConfig);
+    const result = this.glpkSimplex(m);
     const time = Date.now() - start;
 
     if (result !== 'ok') {
-      return { result, time, O: [] };
+      return { returnCode: result, time, O: [] };
     }
 
     // Set up IBFS
     const O = [Rational.zero];
     for (const itemId of itemIds) {
       if (
+        // Include item if it is an input
+        (inputVarEntities[itemId] && inputVarEntities[itemId].value !== 0) ||
+        // Include item if it is part of solution recipes
         recipeIds.some(
           (r) =>
             recipeVarEntities[r].value !== 0 &&
@@ -509,7 +514,12 @@ export class SimplexUtility {
       O.push(Rational.fromNumber(inputVarEntities[inputId].value));
     }
 
-    return { result, time, O };
+    return { returnCode: result, time, O };
+  }
+
+  /** Simplex method wrapper mainly for test mocking */
+  static glpkSimplex(model: Model): Simplex.ReturnCode {
+    return model.simplex(simplexConfig);
   }
 
   /** Convert state into canonical tableau */
