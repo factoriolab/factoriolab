@@ -110,7 +110,7 @@ const mockZip: Zip = {
 const mockZipPartial: Zip = {
   bare:
     '&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectivity-module*1*speed-module' +
-    '~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2_steel-furnace&s=1.0*2*1*=*tran' +
+    '~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2_steel-furnace&s=1.0*2*1*%3D*tran' +
     'sport-belt*coal*1200*100*0*0*0*cargo-wagon*fluid-wagon**2*10*0*100*1*productivity-module',
   hash: '&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D',
 };
@@ -340,7 +340,7 @@ describe('RouterService', () => {
     it('should unzip v0', () => {
       spyOn(window, 'alert');
       const url =
-        '/#z=eJxtUFEKgzAMvU0.Ah3WwdhP2VEkrakWalva6tjPzj6HDtRJCCQvyctLosyFyHHdUy4gQDAlBbMHtCT0OYZUuCJXQGPqAn9iFzxLu1bMmQblrO.4gLq3nngNZAzpYidbXnwI7ejo.Q.NW3Ikan8d2wQUoQ4e6qoCMfudGSkgprl44N1N7RlXkuZMYrPcYMbkURPLUlwqkCeHB3QgvjKut1XLYpuPgHGjbdf48QHTzHxq';
+        '/#z=eJxtUMEKgzAM.Zr1EOiwCmOXssv-Q9KaaqG20taNXfbtc-hAnYRA8pK8vGSQKRM5rjtKGQQIpqRgdofmiD4NIWauyGXQGNvAn9gGz-KmFVOiXjnrW96j7qwnXgIZQzrbh80v3odmdPT-h6YtaSBqfh3rBBShDh7KogAx-ZUZKWCIU3HHu5naMi4k9ZHEer7BjNGjJpakOBdwqu4Hpwd0IL5CqsuiZrbVT8C40TZLfPsAu.98yQ__';
       (router.events as any).next(new NavigationEnd(2, url, url));
 
       // const newZip = service.bytesToBase64(
@@ -348,7 +348,7 @@ describe('RouterService', () => {
       //     mockZip.bare +
       //       '&b=1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectiv' +
       //       'ity-module*1*speed-module~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2' +
-      //       '_steel-furnace&s=1.0*=*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon*?'
+      //       '_steel-furnace&s=1.0*%3D*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon*?'
       //   )
       // );
       // console.log(newZip);
@@ -367,7 +367,7 @@ describe('RouterService', () => {
         mockZip.bare +
           '&b=1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectiv' +
           'ity-module*1*speed-module~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2' +
-          '_steel-furnace&s=1.0*=*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon*?',
+          '_steel-furnace&s=1.0*%3D*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon*?',
         mockStateV0
       );
       expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
