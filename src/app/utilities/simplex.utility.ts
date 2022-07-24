@@ -38,7 +38,7 @@ export interface MatrixState {
 }
 
 export interface MatrixSolution {
-  result: MatrixResultType;
+  resultType: MatrixResultType;
   // glpkResult: Simplex.ReturnCode;
   /** Final number of simplex pivots */
   pivots: number;
@@ -98,7 +98,7 @@ export class SimplexUtility {
     error = true
   ): MatrixResult {
     if (simplexType === SimplexType.Disabled || !steps.length) {
-      return { steps, result: MatrixResultType.Skipped };
+      return { steps, resultType: MatrixResultType.Skipped };
     }
 
     // Get matrix state
@@ -114,33 +114,34 @@ export class SimplexUtility {
 
     if (state == null) {
       // Matrix solution is not required
-      return { steps, result: MatrixResultType.Skipped };
+      return { steps, resultType: MatrixResultType.Skipped };
     }
 
     // Get solution for matrix state
     const solution = this.getSolution(state, error);
 
     if (
-      solution.result === MatrixResultType.Solved ||
-      solution.result === MatrixResultType.Cached
+      solution.resultType === MatrixResultType.Solved ||
+      solution.resultType === MatrixResultType.Cached
     ) {
       // Update steps with solution
       this.updateSteps(steps, solution, state);
-
-      return {
-        ...solution,
-        ...{ steps },
-      };
-    } else {
-      if (solution.result === MatrixResultType.Failed && error) {
-        alert(ERROR_SIMPLEX);
-        console.error('Failed to solve matrix using simplex method');
-      }
-      return {
-        ...solution,
-        ...{ steps },
-      };
+    } else if (solution.resultType === MatrixResultType.Failed && error) {
+      alert(ERROR_SIMPLEX);
+      console.error('Failed to solve matrix using simplex method');
     }
+
+    return {
+      steps,
+      resultType: solution.resultType,
+      pivots: solution.pivots,
+      time: solution.time,
+      A: solution.A,
+      O: solution.O,
+      itemIds: solution.itemIds,
+      recipeIds: solution.recipeIds,
+      inputIds: solution.inputIds,
+    };
   }
 
   /** Solve simplex for a given item id and return recipes or items in steps */
@@ -348,7 +349,7 @@ export class SimplexUtility {
       const [surplus, recipes, inputs] = this.parseSolution(cache.R, state);
       // Found cached result
       return {
-        result: MatrixResultType.Cached,
+        resultType: MatrixResultType.Cached,
         surplus,
         recipes,
         inputs,
@@ -371,7 +372,7 @@ export class SimplexUtility {
         this.cacheResult(O, H, result);
         const [surplus, recipes, inputs] = this.parseSolution(result.O, state);
         return {
-          result: result.type,
+          resultType: result.type,
           surplus,
           recipes,
           inputs,
@@ -386,7 +387,7 @@ export class SimplexUtility {
       } else {
         // No solution found
         return {
-          result: result.type,
+          resultType: result.type,
           surplus: {},
           recipes: {},
           inputs: {},

@@ -27,6 +27,17 @@ module.exports = function (config) {
         { type: 'text-summary' },
       ],
     },
+    files: [
+      {
+        pattern: 'node_modules/glpk-wasm/dist/**/*',
+        watched: true,
+        included: false,
+        served: true,
+      },
+    ],
+    proxies: {
+      '/node_modules': '/base/node_modules',
+    },
     reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,

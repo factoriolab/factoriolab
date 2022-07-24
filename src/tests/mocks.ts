@@ -262,7 +262,7 @@ export const SankeyCircular: SankeyData = {
 
 export const MatrixResultSolved: MatrixResult = {
   steps: Steps,
-  result: MatrixResultType.Solved,
+  resultType: MatrixResultType.Solved,
   pivots: 9,
   time: 20,
   A: [
