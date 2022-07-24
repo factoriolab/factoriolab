@@ -98,13 +98,13 @@
           <div class="panel dark flex tween">
             <ng-container
               *ngIf="
-                vm.result.result === MatrixResultType.Solved ||
-                  vm.result.result === MatrixResultType.Cached;
+                vm.result.resultType === MatrixResultType.Solved ||
+                  vm.result.resultType === MatrixResultType.Cached;
                 else notSolved
               "
             >
               <span *ngIf="vm.result.A && vm.result.O"
-                >Simplex {{ vm.result.result }}: {{ vm.result.time }}ms,
+                >Simplex {{ vm.result.resultType }}: {{ vm.result.time }}ms,
                 {{ vm.result.pivots }} pivots<br />
                 Size: {{ vm.result.A.length }} x {{ vm.result.A[0].length }},
                 Cost:
@@ -112,7 +112,7 @@
               </span>
             </ng-container>
             <ng-template #notSolved>
-              <span>Simplex {{ vm.result.result }}</span>
+              <span>Simplex {{ vm.result.resultType }}</span>
             </ng-template>
             <span>{{ version }}</span>
           </div>

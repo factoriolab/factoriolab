@@ -702,7 +702,7 @@ describe('Products Selectors', () => {
     it('should calculate rates using utility method', () => {
       spyOn(SimplexUtility, 'solve').and.returnValue({
         steps: [],
-        result: MatrixResultType.Skipped,
+        resultType: MatrixResultType.Skipped,
       });
       Selectors.getMatrixResult.projector(
         [Mocks.Step1],

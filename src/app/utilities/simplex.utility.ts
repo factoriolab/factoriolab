@@ -1,3 +1,6 @@
+import { Constraint, Model, Simplex, Variable } from 'glpk-ts';
+
+import { environment } from 'src/environments';
 import {
   Dataset,
   Entities,
@@ -12,7 +15,12 @@ import {
 } from '~/models';
 import * as Items from '~/store/items';
 import { RateUtility } from './rate.utility';
-import { WasmUtility } from './wasm.utility';
+
+const simplexConfig: Simplex.Options = environment.debug
+  ? // Don't test debug environment level
+    // istanbul ignore next
+    {}
+  : { msgLevel: 'off' };
 
 export interface MatrixState {
   /** Recipes used in the matrix */
@@ -20,7 +28,7 @@ export interface MatrixState {
   /** Items used in the matrix */
   items: Entities<Rational>;
   /** Items that have no enabled recipe */
-  inputs: string[];
+  inputIds: string[];
   /** All recipes that are not disabled */
   recipeIds: string[];
   /** All items that are not disabled */
@@ -32,6 +40,8 @@ export interface MatrixState {
 }
 
 export interface MatrixSolution {
+  resultType: MatrixResultType;
+  // glpkResult: Simplex.ReturnCode;
   /** Final number of simplex pivots */
   pivots: number;
   /** Runtime in ms */
@@ -62,6 +72,12 @@ export interface SimplexResult {
   O: Rational[];
 }
 
+export interface GlpkResult {
+  O: Rational[];
+  returnCode: Simplex.ReturnCode;
+  time: number;
+}
+
 export interface MatrixCache {
   O: Rational[];
   R: Rational[];
@@ -84,7 +100,7 @@ export class SimplexUtility {
     error = true
   ): MatrixResult {
     if (simplexType === SimplexType.Disabled || !steps.length) {
-      return { steps, result: MatrixResultType.Skipped };
+      return { steps, resultType: MatrixResultType.Skipped };
     }
 
     // Get matrix state
@@ -100,47 +116,34 @@ export class SimplexUtility {
 
     if (state == null) {
       // Matrix solution is not required
-      return { steps, result: MatrixResultType.Skipped };
+      return { steps, resultType: MatrixResultType.Skipped };
     }
 
     // Get solution for matrix state
-    const [result, solution] = this.getSolution(state, error);
+    const solution = this.getSolution(state, error);
 
     if (
-      result === MatrixResultType.Solved ||
-      result === MatrixResultType.Cached
+      solution.resultType === MatrixResultType.Solved ||
+      solution.resultType === MatrixResultType.Cached
     ) {
       // Update steps with solution
       this.updateSteps(steps, solution, state);
-
-      return {
-        steps,
-        result,
-        pivots: solution.pivots,
-        time: solution.time,
-        A: solution.A,
-        O: solution.O,
-        itemIds: solution.itemIds,
-        recipeIds: solution.recipeIds,
-        inputIds: solution.inputIds,
-      };
-    } else {
-      if (result === MatrixResultType.Failed && error) {
-        alert(ERROR_SIMPLEX);
-        console.error('Failed to solve matrix using simplex method');
-      }
-      return {
-        steps,
-        result,
-        pivots: solution.pivots,
-        time: solution.time,
-        A: solution.A,
-        O: solution.O,
-        itemIds: solution.itemIds,
-        recipeIds: solution.recipeIds,
-        inputIds: solution.inputIds,
-      };
+    } else if (solution.resultType === MatrixResultType.Failed && error) {
+      alert(ERROR_SIMPLEX);
+      console.error('Failed to solve matrix using simplex method');
     }
+
+    return {
+      steps,
+      resultType: solution.resultType,
+      pivots: solution.pivots,
+      time: solution.time,
+      A: solution.A,
+      O: solution.O,
+      itemIds: solution.itemIds,
+      recipeIds: solution.recipeIds,
+      inputIds: solution.inputIds,
+    };
   }
 
   /** Solve simplex for a given item id and return recipes or items in steps */
@@ -199,7 +202,7 @@ export class SimplexUtility {
     const state: MatrixState = {
       recipes: {},
       items: {},
-      inputs: [],
+      inputIds: [],
       recipeIds: data.recipeIds.filter(
         (r) => disabledRecipeIds.indexOf(r) === -1
       ),
@@ -319,7 +322,7 @@ export class SimplexUtility {
   static parseInputs(state: MatrixState): void {
     const itemIds = Object.keys(state.items);
     const recipeIds = Object.keys(state.recipes);
-    state.inputs = itemIds.filter(
+    state.inputIds = itemIds.filter(
       (i) =>
         !recipeIds.some((r) => state.data.recipeR[r].produces(i)) ||
         state.itemIds.indexOf(i) === -1
@@ -329,10 +332,10 @@ export class SimplexUtility {
 
   //#region Simplex
   /** Convert state to canonical tableau, solve using simplex, and parse solution */
-  static getSolution(
-    state: MatrixState,
-    error = true
-  ): [MatrixResultType, MatrixSolution] {
+  static getSolution(state: MatrixState, error = true): MatrixSolution {
+    // Get glpk-wasm presolve solution
+    const glpkResult = this.glpk(state);
+
     // Convert state to canonical tableau
     const A = this.canonical(state);
 
@@ -340,72 +343,183 @@ export class SimplexUtility {
 
     const itemIds = Object.keys(state.items);
     const recipeIds = Object.keys(state.recipes);
-    const inputIds = state.inputs;
+    const inputIds = state.inputIds;
 
     // Check cache
     const cache = this.checkCache(O, H);
     if (cache) {
       const [surplus, recipes, inputs] = this.parseSolution(cache.R, state);
       // Found cached result
-      return [
-        MatrixResultType.Cached,
-        {
-          surplus,
-          recipes,
-          inputs,
-          pivots: cache.pivots,
-          time: cache.time,
-          A,
-          O: cache.R,
-          itemIds,
-          recipeIds,
-          inputIds,
-        },
-      ];
+      return {
+        resultType: MatrixResultType.Cached,
+        surplus,
+        recipes,
+        inputs,
+        pivots: cache.pivots,
+        time: cache.time,
+        A,
+        O: cache.R,
+        itemIds,
+        recipeIds,
+        inputIds,
+      };
     } else {
       // Cache original tableau
       const A0 = A.map((R) => [...R]);
 
-      const result = this.simplexType(A, state.simplexType, error);
+      const result = this.simplexType(A, state.simplexType, glpkResult, error);
 
       if (result.type === MatrixResultType.Solved) {
         // Parse solution into usable state
         this.cacheResult(O, H, result);
         const [surplus, recipes, inputs] = this.parseSolution(result.O, state);
-        return [
-          result.type,
-          {
-            surplus,
-            recipes,
-            inputs,
-            pivots: result.pivots,
-            time: result.time,
-            A: A0,
-            O: result.O,
-            itemIds,
-            recipeIds,
-            inputIds,
-          },
-        ];
+        return {
+          resultType: result.type,
+          surplus,
+          recipes,
+          inputs,
+          pivots: result.pivots,
+          time: result.time,
+          A: A0,
+          O: result.O,
+          itemIds,
+          recipeIds,
+          inputIds,
+        };
       } else {
         // No solution found
-        return [
-          result.type,
-          {
-            surplus: {},
-            recipes: {},
-            inputs: {},
-            pivots: result.pivots,
-            time: result.time,
-            A: A0,
-            O: result.O,
-            itemIds,
-            recipeIds,
-            inputIds,
-          },
-        ];
+        return {
+          resultType: result.type,
+          surplus: {},
+          recipes: {},
+          inputs: {},
+          pivots: result.pivots,
+          time: result.time,
+          A: A0,
+          O: result.O,
+          itemIds,
+          recipeIds,
+          inputIds,
+        };
       }
     }
+  }
+
+  static glpk(state: MatrixState): GlpkResult {
+    const itemIds = Object.keys(state.items);
+    const recipeIds = Object.keys(state.recipes);
+
+    const m = new Model({ sense: 'min' });
+    const recipeVarEntities: Entities<Variable> = {};
+    const inputVarEntities: Entities<Variable> = {};
+    const itemConstrEntities: Entities<Constraint> = {};
+
+    // Add recipe vars to model
+    for (const recipeId of recipeIds) {
+      const config = {
+        obj: (state.recipes[recipeId].cost ?? Rational.zero).toNumber(),
+        lb: 0,
+        name: recipeId,
+      };
+      recipeVarEntities[recipeId] = m.addVar(config);
+    }
+
+    // Add input vars to model
+    for (const inputId of state.inputIds) {
+      const cost =
+        state.itemIds.indexOf(inputId) === -1
+          ? state.costIgnored
+          : state.costInput;
+      const config = {
+        obj: cost.toNumber(),
+        lb: 0,
+        name: inputId,
+      };
+      inputVarEntities[inputId] = m.addVar(config);
+    }
+
+    // Add item constraints to model
+    for (const itemId of itemIds) {
+      const coeffs: [Variable, number][] = [];
+      for (const recipeId of recipeIds) {
+        let val = Rational.zero;
+        const recipe = state.recipes[recipeId];
+        if (recipe.in[itemId]) {
+          val = val.sub(recipe.in[itemId]);
+        }
+        if (recipe.out[itemId]) {
+          val = val.add(recipe.out[itemId]);
+        }
+        if (val.nonzero()) {
+          coeffs.push([
+            recipeVarEntities[recipeId],
+            val.div(recipe.time).toNumber(),
+          ]);
+        }
+      }
+
+      // Add input coeff
+      if (state.inputIds.indexOf(itemId) !== -1) {
+        coeffs.push([inputVarEntities[itemId], 1]);
+      }
+
+      const config = { coeffs, lb: state.items[itemId].toNumber() };
+      itemConstrEntities[itemId] = m.addConstr(config);
+    }
+
+    // Run GLPK simplex
+    const start = Date.now();
+    const result = this.glpkSimplex(m);
+    const time = Date.now() - start;
+
+    if (result !== 'ok') {
+      return { returnCode: result, time, O: [] };
+    }
+
+    // Set up IBFS
+    const O = [Rational.zero];
+    for (const itemId of itemIds) {
+      if (
+        // Include item if it is an input
+        (inputVarEntities[itemId] && inputVarEntities[itemId].value !== 0) ||
+        // Include item if it is part of solution recipes
+        recipeIds.some(
+          (r) =>
+            recipeVarEntities[r].value !== 0 &&
+            (state.recipes[r].in[itemId] || state.recipes[r].out[itemId])
+        )
+      ) {
+        // Recipes for this item are part of the solution, include result
+        O.push(Rational.fromNumber(itemConstrEntities[itemId].value));
+      } else {
+        // Item is not part of the solution, remove it
+        delete state.items[itemId];
+      }
+    }
+
+    // Clean up inputs
+    state.inputIds = state.inputIds.filter((i) => state.items[i] != null);
+
+    for (const recipeId of recipeIds) {
+      if (recipeVarEntities[recipeId].value === 0) {
+        // Recipe is not part of the solution, remove it
+        delete state.recipes[recipeId];
+      } else {
+        // Recipe is part of the solution, include result
+        O.push(Rational.fromNumber(recipeVarEntities[recipeId].value));
+      }
+    }
+
+    for (const inputId of state.inputIds) {
+      O.push(Rational.fromNumber(inputVarEntities[inputId].value));
+    }
+
+    return { returnCode: result, time, O };
+  }
+
+  /** Simplex method wrapper mainly for test mocking */
+  static glpkSimplex(model: Model): Simplex.ReturnCode {
+    return model.simplex(simplexConfig);
   }
 
   /** Convert state into canonical tableau */
@@ -422,7 +536,9 @@ export class SimplexUtility {
     }
     // Add recipe columns, input columns, and cost
     O.push(
-      ...new Array(recipes.length + state.inputs.length + 1).fill(Rational.zero)
+      ...new Array(recipes.length + state.inputIds.length + 1).fill(
+        Rational.zero
+      )
     );
     A.push(O);
 
@@ -448,7 +564,7 @@ export class SimplexUtility {
       }
 
       // Add input columns
-      R.push(...new Array(state.inputs.length).fill(Rational.zero));
+      R.push(...new Array(state.inputIds.length).fill(Rational.zero));
 
       // Add cost column
       R.push(recipe.cost ?? Rational.zero);
@@ -457,7 +573,7 @@ export class SimplexUtility {
     }
 
     // Build input rows
-    for (const itemId of state.inputs) {
+    for (const itemId of state.inputIds) {
       const R: Rational[] = [Rational.zero]; // C
 
       // Add item columns
@@ -469,7 +585,7 @@ export class SimplexUtility {
       R.push(...new Array(recipes.length).fill(Rational.zero));
 
       // Add input columns
-      for (const other of state.inputs) {
+      for (const other of state.inputIds) {
         R.push(itemId === other ? Rational.one : Rational.zero);
       }
 
@@ -491,74 +607,20 @@ export class SimplexUtility {
   static simplexType(
     A: Rational[][],
     simplexType: SimplexType,
+    glpkResult: GlpkResult,
     error = true
   ): SimplexResult {
     if (simplexType === SimplexType.JsBigIntRational) {
-      return this.simplex(A, error);
+      const result = this.simplex(A, error);
+      result.time += glpkResult.time;
+      return result;
     } else {
-      return this.simplexWasm(A, error);
-    }
-  }
-
-  /** Solve the canonical tableau using the WASM simplex method */
-  static simplexWasm(A: Rational[][], error = true): SimplexResult {
-    let tableau = new Float64Array(
-      A.flatMap((r) => r.map((c) => c.toNumber()))
-    );
-    let time = 0;
-    let check = true;
-
-    while (true) {
-      const wasmResult = WasmUtility.simplex(
-        tableau,
-        A.length,
-        error ? 5000 : 1000
-      );
-      const O: Rational[] = [];
-      const solution = wasmResult.tableau.slice(0, A[0].length);
-      solution.forEach((s) => O.push(Rational.fromNumber(s)));
-
-      tableau = wasmResult.tableau;
-
-      switch (wasmResult.result_type) {
-        case 0:
-          // Solved
-          return {
-            type: MatrixResultType.Solved,
-            pivots: wasmResult.pivots,
-            time: time + wasmResult.time,
-            O,
-          };
-        case 1:
-          // Error
-          return {
-            type: MatrixResultType.Failed,
-            pivots: wasmResult.pivots,
-            time: time + wasmResult.time,
-            O,
-          };
-        case 2: {
-          // Hang
-          tableau = wasmResult.tableau;
-          if (check) {
-            // Hang detected
-            const warn =
-              WARNING_HANG +
-              `\n\nmatrix size: ${A.length} x ${A[0].length}, pivots: ${wasmResult.pivots}, time: ${wasmResult.time}ms`;
-            if (error && confirm(warn)) {
-              time = wasmResult.time;
-              check = false;
-            } else {
-              return {
-                type: MatrixResultType.Cancelled,
-                pivots: wasmResult.pivots,
-                time: wasmResult.time,
-                O: O,
-              };
-            }
-          }
-        }
-      }
+      return {
+        type: MatrixResultType.Solved,
+        pivots: 0,
+        time: glpkResult.time,
+        O: glpkResult.O,
+      };
     }
   }
 
@@ -695,10 +757,10 @@ export class SimplexUtility {
     }
 
     // Parse inputs
-    for (let i = 0; i < state.inputs.length; i++) {
+    for (let i = 0; i < state.inputIds.length; i++) {
       const c = i + itemIds.length + recipeIds.length + 1;
       if (O[c].gt(Rational.zero)) {
-        inputs[state.inputs[i]] = O[c];
+        inputs[state.inputIds[i]] = O[c];
       }
     }
 
