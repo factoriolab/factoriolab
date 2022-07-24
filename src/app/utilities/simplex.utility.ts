@@ -39,7 +39,7 @@ export interface MatrixState {
 
 export interface MatrixSolution {
   result: MatrixResultType;
-  glpkResult: Simplex.ReturnCode;
+  // glpkResult: Simplex.ReturnCode;
   /** Final number of simplex pivots */
   pivots: number;
   /** Runtime in ms */
@@ -349,7 +349,6 @@ export class SimplexUtility {
       // Found cached result
       return {
         result: MatrixResultType.Cached,
-        glpkResult: glpkResult.result,
         surplus,
         recipes,
         inputs,
@@ -373,7 +372,6 @@ export class SimplexUtility {
         const [surplus, recipes, inputs] = this.parseSolution(result.O, state);
         return {
           result: result.type,
-          glpkResult: glpkResult.result,
           surplus,
           recipes,
           inputs,
@@ -389,7 +387,6 @@ export class SimplexUtility {
         // No solution found
         return {
           result: result.type,
-          glpkResult: glpkResult.result,
           surplus: {},
           recipes: {},
           inputs: {},
@@ -410,11 +407,11 @@ export class SimplexUtility {
     const recipeIds = Object.keys(state.recipes);
 
     const m = new Model({ sense: 'min' });
-
     const recipeVarEntities: Entities<Variable> = {};
     const inputVarEntities: Entities<Variable> = {};
     const itemConstrEntities: Entities<Constraint> = {};
 
+    // Add recipe vars to model
     for (const recipeId of recipeIds) {
       const config = {
         obj: (state.recipes[recipeId].cost ?? Rational.zero).toNumber(),
@@ -424,6 +421,7 @@ export class SimplexUtility {
       recipeVarEntities[recipeId] = m.addVar(config);
     }
 
+    // Add input vars to model
     for (const inputId of state.inputIds) {
       const cost =
         state.itemIds.indexOf(inputId) === -1
@@ -437,6 +435,7 @@ export class SimplexUtility {
       inputVarEntities[inputId] = m.addVar(config);
     }
 
+    // Add item constraints to model
     for (const itemId of itemIds) {
       const coeffs: [Variable, number][] = [];
       for (const recipeId of recipeIds) {
@@ -456,6 +455,7 @@ export class SimplexUtility {
         }
       }
 
+      // Add input coeff
       if (state.inputIds.indexOf(itemId) !== -1) {
         coeffs.push([inputVarEntities[itemId], 1]);
       }
@@ -464,6 +464,7 @@ export class SimplexUtility {
       itemConstrEntities[itemId] = m.addConstr(config);
     }
 
+    // Run GLPK simplex
     const start = Date.now();
     const result = m.simplex(simplexConfig);
     const time = Date.now() - start;
