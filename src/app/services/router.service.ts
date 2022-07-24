@@ -928,7 +928,7 @@ export class RouterService {
     };
 
     if (z.bare.length) {
-      partial.bare += `&${Section.Settings}=${z.bare}`;
+      partial.bare += `&${Section.Settings}=${encodeURIComponent(z.bare)}`;
       partial.hash += `&${Section.Settings}${z.hash}`;
     }
   }
