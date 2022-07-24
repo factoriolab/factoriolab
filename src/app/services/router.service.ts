@@ -29,8 +29,8 @@ import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 import { DataService } from './data.service';
 
-export const NULL = '?'; // Encoded, previously 'n'
-export const EMPTY = '='; // Encoded, previously 'e'
+export const NULL = encodeURIComponent('?'); // Encoded, previously 'n'
+export const EMPTY = encodeURIComponent('='); // Encoded, previously 'e'
 export const LISTSEP = '_'; // Unreserved, previously ','
 export const ARRAYSEP = '~'; // Unreserved, previously '+'
 export const FIELDSEP = '*'; // Reserved, unescaped by encoding
