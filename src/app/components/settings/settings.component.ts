@@ -119,16 +119,16 @@ export class SettingsComponent implements OnInit {
   initial = Settings.initialSettingsState;
   simplexTypeOptions: IdName<SimplexType>[] = [
     {
-      id: SimplexType.Disabled,
-      name: 'options.simplexTypeDisabled',
-    },
-    {
       id: SimplexType.JsBigIntRational,
       name: 'options.simplexTypeJsBigIntRational',
     },
     {
       id: SimplexType.WasmFloat64,
       name: 'options.simplexTypeWasmFloat64',
+    },
+    {
+      id: SimplexType.Disabled,
+      name: 'options.simplexTypeDisabled',
     },
   ];
   languageOptions: IdName[] = [

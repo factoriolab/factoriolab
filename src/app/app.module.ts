@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ErrorHandler, NgModule } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -9,6 +9,7 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { loadModule } from 'glpk-ts';
 import {
   NgxGoogleAnalyticsModule,
   NgxGoogleAnalyticsRouterModule,
@@ -26,6 +27,11 @@ import { AnalyticsEffects } from './store/analytics.effects';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
 import { FactoriesEffects } from './store/factories/factories.effects';
 import { ProductsEffects } from './store/products/products.effects';
+
+function initializeApp(): Promise<any> {
+  // Load glpk-wasm
+  return loadModule('assets/glpk-wasm/glpk.all.wasm');
+}
 
 @NgModule({
   declarations: [
@@ -73,6 +79,11 @@ import { ProductsEffects } from './store/products/products.effects';
   providers: [
     { provide: APP_BASE_HREF, useValue: environment.baseHref },
     { provide: ErrorHandler, useClass: LabErrorHandler },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (): (() => Promise<any>) => initializeApp,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })
