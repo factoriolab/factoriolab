@@ -29,8 +29,8 @@ import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 import { DataService } from './data.service';
 
-export const NULL = encodeURIComponent('?'); // Encoded, previously 'n'
-export const EMPTY = encodeURIComponent('='); // Encoded, previously 'e'
+export const NULL = '?'; // Encoded, previously 'n'
+export const EMPTY = '='; // Encoded, previously 'e'
 export const LISTSEP = '_'; // Unreserved, previously ','
 export const ARRAYSEP = '~'; // Unreserved, previously '+'
 export const FIELDSEP = '*'; // Reserved, unescaped by encoding
@@ -928,7 +928,7 @@ export class RouterService {
     };
 
     if (z.bare.length) {
-      partial.bare += `&${Section.Settings}=${z.bare}`;
+      partial.bare += `&${Section.Settings}=${encodeURIComponent(z.bare)}`;
       partial.hash += `&${Section.Settings}${z.hash}`;
     }
   }
