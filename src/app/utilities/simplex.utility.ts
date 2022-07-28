@@ -16,6 +16,8 @@ import {
 import * as Items from '~/store/items';
 import { RateUtility } from './rate.utility';
 
+const FLOAT_TOLERANCE = 1e-10;
+
 const simplexConfig: Simplex.Options = environment.debug
   ? // Don't test debug environment level
     // istanbul ignore next
@@ -481,11 +483,12 @@ export class SimplexUtility {
     for (const itemId of itemIds) {
       if (
         // Include item if it is an input
-        (inputVarEntities[itemId] && inputVarEntities[itemId].value !== 0) ||
+        (inputVarEntities[itemId] &&
+          !this.isFloatZero(inputVarEntities[itemId].value)) ||
         // Include item if it is part of solution recipes
         recipeIds.some(
           (r) =>
-            recipeVarEntities[r].value !== 0 &&
+            !this.isFloatZero(recipeVarEntities[r].value) &&
             (state.recipes[r].in[itemId] || state.recipes[r].out[itemId])
         )
       ) {
@@ -501,7 +504,7 @@ export class SimplexUtility {
     state.inputIds = state.inputIds.filter((i) => state.items[i] != null);
 
     for (const recipeId of recipeIds) {
-      if (recipeVarEntities[recipeId].value === 0) {
+      if (this.isFloatZero(recipeVarEntities[recipeId].value)) {
         // Recipe is not part of the solution, remove it
         delete state.recipes[recipeId];
       } else {
@@ -515,6 +518,10 @@ export class SimplexUtility {
     }
 
     return { returnCode: result, time, O };
+  }
+
+  static isFloatZero(val: number): boolean {
+    return Math.abs(val) < FLOAT_TOLERANCE;
   }
 
   /** Simplex method wrapper mainly for test mocking */
