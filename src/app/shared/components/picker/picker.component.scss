@@ -1,65 +1,30 @@
-lab-dialog {
-  > .panel {
-    padding: 0;
-    padding-bottom: 0.75rem;
-  }
-}
+::ng-deep .picker-overlay {
+  // Large enough to fit 10 columns of icon buttons, up to 100vw
+  width: calc(32.5rem + 2px);
+  max-width: 100vw;
 
-.tabs {
-  display: flex;
-  max-width: 27rem;
-  overflow-x: auto;
-
-  > * {
-    height: inherit;
-    padding: 0.25rem;
+  // No extra padding inside panels, already enough from overlay panel
+  .p-tabview-panels {
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 0;
   }
 
-  > .selected {
-    background-color: var(--color-light);
-    margin: 0.25rem;
-    padding: 0;
-  }
+  .p-tabview-nav {
+    // Scale tab icons to be larger (32px -> 48px)
+    .lab-icon {
+      margin: -0.75rem;
+      width: 3rem;
+      height: 3rem;
 
-  > :not(.selected) {
-    cursor: pointer;
-    background-color: var(--color-button);
-    box-shadow: var(--shadow-button);
-
-    &:hover {
-      background-color: var(--color-brand);
-      box-shadow: var(--shadow-hover);
+      &::before {
+        transform: scale(0.75);
+      }
     }
   }
 }
 
-.tab {
-  max-height: 27rem;
-  overflow-y: auto;
-  margin: 0.75rem;
-  margin-bottom: 0;
-  padding: 0;
-}
-
-.row {
-  display: flex;
-
-  lab-icon {
-    padding: 0.125rem;
-    border-radius: 0.25rem;
-    background-color: var(--color-back);
-    margin: 1px;
-
-    cursor: pointer;
-    box-shadow: var(--shadow-item);
-
-    &:hover {
-      background-color: var(--color-brand-drk);
-      box-shadow: var(--shadow-hover);
-    }
-  }
-}
-
-lab-icon {
-  position: static;
+.picker-title {
+  font-size: 1.25rem;
+  font-weight: 700;
 }

@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { VendorModule } from '~/shared/vendor.module';
 import {
   ColumnsComponent,
   DialogComponent,
@@ -26,11 +27,13 @@ import {
   FactoryShowPipe,
   FactoryShowRatePipe,
   GtZeroPipe,
+  IconClassPipe,
   InserterSpeedPipe,
   LeftPadPipe,
   PowerPipe,
   RatePipe,
   StepHrefPipe,
+  UrlPipe,
 } from './pipes';
 
 export const SHARED_COMPONENTS = [
@@ -58,17 +61,25 @@ export const SHARED_PIPES = [
   FactoryShowPipe,
   FactoryShowRatePipe,
   GtZeroPipe,
+  IconClassPipe,
   InserterSpeedPipe,
   LeftPadPipe,
   PowerPipe,
   RatePipe,
   StepHrefPipe,
+  UrlPipe,
 ];
 
 @NgModule({
   declarations: [SHARED_COMPONENTS, SHARED_DIRECTIVES, SHARED_PIPES],
-  exports: [SHARED_COMPONENTS, SHARED_DIRECTIVES, SHARED_PIPES],
-  imports: [CommonModule, FormsModule, TranslateModule],
+  exports: [VendorModule, SHARED_COMPONENTS, SHARED_DIRECTIVES, SHARED_PIPES],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    VendorModule,
+  ],
   providers: [PowerPipe, RatePipe, FactoryRatePipe],
 })
 export class SharedModule {}

@@ -1,5 +1,62 @@
 <ng-container *ngIf="vm$ | async as vm">
-  <div data-test="lab-picker-open" (click)="clickOpen(vm.data)">
+  <div (click)="clickOpen(picker, vm.data, $event)">
+    <ng-content></ng-content>
+  </div>
+  <p-overlayPanel #picker styleClass="picker-overlay">
+    <div class="row">
+      <div class="col-12 col-sm-7 d-flex align-items-center mb-3">
+        <div class="picker-title">{{ 'picker.select' | translate }}</div>
+      </div>
+      <div class="col-12 col-sm-5 mb-3">
+        <span class="p-input-icon-left">
+          <i class="fa-solid fa-search"></i>
+          <input
+            type="text"
+            class="w-100"
+            pInputText
+            [placeholder]="'picker.search' | translate"
+            [formControl]="searchCtrl"
+          />
+        </span>
+      </div>
+    </div>
+    <p-tabView
+      [scrollable]="categoryIds.length > 6 || vm.width < Breakpoint.Small"
+      [(activeIndex)]="activeIndex"
+    >
+      <ng-container *ngFor="let id of categoryIds; let i = index">
+        <p-tabPanel
+          *ngIf="vm.data.categoryEntities[id] as category"
+          [tooltip]="category.name"
+          [selected]="i === activeIndex"
+        >
+          <ng-template pTemplate="header">
+            <i [class]="id | iconClass"></i>
+          </ng-template>
+          <ng-template pTemplate="content">
+            <div
+              *ngFor="let itemIds of categoryItemRows[id]"
+              class="d-flex flex-wrap"
+            >
+              <ng-container *ngFor="let itemId of itemIds">
+                <button
+                  pButton
+                  pRipple
+                  [class.p-button-text]="itemId !== selectedId"
+                  [icon]="itemId | iconClass"
+                  (click)="clickItem(picker, itemId)"
+                ></button>
+              </ng-container>
+            </div>
+          </ng-template>
+        </p-tabPanel>
+      </ng-container>
+    </p-tabView>
+  </p-overlayPanel>
+</ng-container>
+
+<!-- <ng-container *ngIf="vm$ | async as vm">
+  <div (click)="clickOpen(vm.data)">
     <ng-content></ng-content>
   </div>
   <lab-dialog *ngIf="open" (closeDialog)="cancel()">
@@ -57,4 +114,4 @@
       </div>
     </div>
   </lab-dialog>
-</ng-container>
+</ng-container> -->

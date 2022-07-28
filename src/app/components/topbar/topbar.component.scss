@@ -1,0 +1,65 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins/_breakpoints';
+
+:host {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 300px;
+
+  width: calc(100% - 300px);
+  height: 5rem;
+  padding: 0 3rem;
+
+  @include media-breakpoint-down(xl) {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    left: 0;
+
+    width: 100%;
+    height: 8rem;
+    padding: 0;
+  }
+}
+
+.topbar-menu {
+  display: flex;
+
+  margin: 0 0 0 auto;
+
+  > li {
+    position: relative;
+
+    + li {
+      margin-left: 0.5rem;
+    }
+  }
+
+  @include media-breakpoint-down(xl) {
+    margin: 0;
+    width: 100%;
+    height: 3rem;
+
+    > li {
+      width: 25%;
+
+      + li {
+        margin: 0;
+      }
+    }
+  }
+}
+
+:host ::ng-deep {
+  @include media-breakpoint-down(sm) {
+    .topbar-menu .p-button-icon {
+      display: none;
+    }
+  }
+}
+
+a {
+  text-decoration: none;
+}

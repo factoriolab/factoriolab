@@ -107,7 +107,9 @@ export class RouterService {
       this.base64codes[BASE64ABC.charCodeAt(i)] = i;
     }
     this.base64codes['_'.charCodeAt(0)] = 0;
+  }
 
+  initialize(): void {
     this.router.events.subscribe((e) => this.updateState(e));
 
     this.store

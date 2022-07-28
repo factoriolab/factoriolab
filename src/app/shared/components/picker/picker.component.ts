@@ -3,70 +3,92 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   Output,
 } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { first, map } from 'rxjs';
+import { OverlayPanel } from 'primeng/overlaypanel';
+import { combineLatest, map } from 'rxjs';
 
-import { Dataset, Entities } from '~/models';
+import { Breakpoint, Dataset, Entities } from '~/models';
+import { ResponsiveService } from '~/services';
 import { LabState } from '~/store';
 import * as Recipes from '~/store/recipes';
-import { DialogContainerComponent } from '../dialog/dialog-container.component';
 
+@UntilDestroy()
 @Component({
   selector: 'lab-picker',
   templateUrl: './picker.component.html',
   styleUrls: ['./picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PickerComponent
-  extends DialogContainerComponent
-  implements OnChanges
-{
-  @Input() selected: string | undefined;
+export class PickerComponent {
+  @Input() selectedId: string | undefined;
 
   @Output() selectId = new EventEmitter<string>();
 
-  vm$ = this.store
-    .select(Recipes.getAdjustedDataset)
-    .pipe(map((data) => ({ data })));
+  vm$ = combineLatest([
+    this.store.select(Recipes.getAdjustedDataset),
+    this.responsiveSvc.width$,
+  ]).pipe(map(([data, width]) => ({ data, width })));
+
+  searchCtrl = new FormControl('');
 
   categoryIds: string[] = [];
   categoryItemRows: Entities<string[][]> = {};
-  search = false;
-  searchValue = '';
-  tab = '';
+  activeIndex = 0;
 
-  constructor(private store: Store<LabState>) {
-    super();
-  }
+  Breakpoint = Breakpoint;
 
-  ngOnChanges(): void {
-    this.store
-      .select(Recipes.getAdjustedDataset)
-      .pipe(first())
-      .subscribe((data) => {
-        if (this.selected != null) {
-          this.tab = data.itemEntities[this.selected].category;
-        } else {
-          this.tab = data.categoryIds[0];
-        }
+  constructor(
+    public responsiveSvc: ResponsiveService,
+    private store: Store<LabState>
+  ) {}
+
+  ngOnInit(): void {
+    combineLatest([
+      this.store.select(Recipes.getAdjustedDataset),
+      this.searchCtrl.valueChanges,
+    ])
+      .pipe(untilDestroyed(this))
+      .subscribe(([data, search]) => {
+        this.inputSearch(data, search);
       });
   }
 
-  clickOpen(data: Dataset): void {
-    this.open = true;
-    this.search = false;
-    this.searchValue = '';
+  clickOpen(overlay: OverlayPanel, data: Dataset, event: any): void {
+    this.searchCtrl.setValue('');
     this.categoryIds = data.categoryIds;
     this.categoryItemRows = data.categoryItemRows;
+    if (this.selectedId) {
+      const index = this.categoryIds.indexOf(
+        data.itemEntities[this.selectedId].category
+      );
+      // Must set active index after timeout
+      // https://github.com/primefaces/primeng/issues/10587
+      setTimeout(() => {
+        this.activeIndex = index;
+      }, 1);
+    }
+    overlay.show(event);
   }
 
-  inputSearch(data: Dataset): void {
+  clickItem(overlay: OverlayPanel, itemId: string) {
+    this.selectId.emit(itemId);
+    overlay.hide();
+  }
+
+  inputSearch(data: Dataset, search: string | null): void {
+    if (!search) {
+      this.categoryIds = data.categoryIds;
+      this.categoryItemRows = data.categoryItemRows;
+      return;
+    }
+
     // Filter for matching item ids
     let itemIds = data.itemIds;
-    for (const term of this.searchValue.split(' ')) {
+    for (const term of search.split(' ')) {
       const regExp = new RegExp(term, 'i');
       itemIds = itemIds.filter(
         (i) => data.itemEntities[i].name.search(regExp) !== -1
@@ -77,11 +99,6 @@ export class PickerComponent
     this.categoryIds = data.categoryIds.filter((c) =>
       itemIds.some((i) => data.itemEntities[i].category === c)
     );
-
-    // Pick new tab if old tab is no longer in filtered results
-    if (this.categoryIds.indexOf(this.tab) === -1) {
-      this.tab = this.categoryIds[0];
-    }
 
     // Filter category item rows
     this.categoryItemRows = {};

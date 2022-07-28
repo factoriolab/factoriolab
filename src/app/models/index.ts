@@ -7,6 +7,7 @@ export * from './defaults';
 export * from './constants';
 export * from './dataset';
 export * from './entities';
+export * from './game-info';
 export * from './id-name';
 export * from './inserter-data';
 export * from './matrix-result';

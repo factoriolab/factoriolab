@@ -1,4 +1,11 @@
-<ng-container *ngIf="vm$ | async as vm">
+<img
+  *ngIf="icon"
+  src="assets/transparent.gif"
+  [style.background-position]="icon.position"
+  [style.background-image]="icon.file | url"
+/>
+
+<!-- <ng-container *ngIf="vm$ | async as vm">
   <div class="image">
     <img
       *ngIf="iconId && icon"
@@ -220,4 +227,4 @@
       </table>
     </div>
   </div>
-</ng-container>
+</ng-container> -->

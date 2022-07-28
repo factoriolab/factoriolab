@@ -1,4 +1,45 @@
-<ng-container *ngIf="vm$ | async as vm"
+<p-card *ngIf="vm$ | async as vm" [header]="'products.title' | translate">
+  <div
+    *ngFor="let product of vm.products"
+    class="d-flex align-items-center mb-4"
+  >
+    <button
+      pButton
+      pRipple
+      icon="fa-solid fa-minus"
+      class="p-button-rounded"
+      (click)="removeProduct(product.id)"
+    ></button>
+    <span class="mx-3">{{ 'products.produce' | translate }}</span>
+    <lab-picker
+      [selectedId]="product.itemId"
+      (selectId)="setItem(product.id, $event)"
+    >
+      <button pButton pRipple [icon]="product.itemId | iconClass"></button>
+    </lab-picker>
+    <span class="mx-3">{{ 'products.from' | translate }}</span>
+    <input type="text" pInputText [value]="product.rate" />
+  </div>
+  <div class="d-flex">
+    <lab-picker (selectId)="addProduct($event)">
+      <button
+        pButton
+        pRipple
+        icon="fa-solid fa-plus"
+        [label]="'products.addAProduct' | translate"
+      ></button>
+    </lab-picker>
+  </div>
+</p-card>
+
+<!-- <p-overlayPanel #picker>
+  <span>Items picker</span>
+</p-overlayPanel>
+<p-overlayPanel #picker2>
+  <span>Items picker</span>
+</p-overlayPanel> -->
+
+<!-- <ng-container *ngIf="vm$ | async as vm"
   ><h2>{{ 'products.title' | translate }}</h2>
   <div class="panel">
     <div
@@ -464,4 +505,4 @@
       ></lab-options>
     </div>
   </div>
-</ng-container>
+</ng-container> -->

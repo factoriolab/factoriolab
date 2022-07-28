@@ -1,0 +1,27 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins/_breakpoints';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  left: 0;
+
+  transition: transform 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99);
+
+  width: 300px;
+  height: 100%;
+
+  background-color: var(--surface-overlay);
+
+  @include media-breakpoint-down(xl) {
+    transform: translate(-100%);
+
+    &.active {
+      transform: translate(0);
+    }
+  }
+}

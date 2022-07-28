@@ -8,6 +8,13 @@ export enum Game {
   Satisfactory = 'Satisfactory',
 }
 
+export const Games = [
+  Game.Factorio,
+  Game.CaptainOfIndustry,
+  Game.DysonSphereProgram,
+  Game.Satisfactory,
+];
+
 export const GameOptions: IdName<Game>[] = [
   { id: Game.Factorio, name: 'game.Factorio' },
   { id: Game.CaptainOfIndustry, name: 'game.CaptainOfIndustry' },

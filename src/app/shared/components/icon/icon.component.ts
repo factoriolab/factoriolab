@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  HostListener,
+  HostBinding,
   Input,
   OnChanges,
   SimpleChanges,
@@ -31,14 +31,14 @@ import * as Settings from '~/store/settings';
 })
 export class IconComponent implements OnChanges {
   @Input() iconId: string | undefined;
-  @Input() scale = true;
   @Input() text: string | null | undefined;
   @Input() tooltip: string | null | undefined;
   @Input() hoverIcon: string | undefined;
-  @Input() scrollTop = 0;
-  @Input() scrollLeft = 0;
+  // @Input() scrollTop = 0;
+  // @Input() scrollLeft = 0;
   @Input() recipe: Recipe | null | undefined;
   @Input() item: RationalItem | null | undefined;
+  @HostBinding('class.scale') @Input() scale = true;
 
   vm$ = combineLatest([
     this.store.select(Settings.getGame),
@@ -46,8 +46,8 @@ export class IconComponent implements OnChanges {
   ]).pipe(map(([game, displayRate]) => ({ game, displayRate })));
 
   icon: Icon | null | undefined;
-  hover = false;
-  tooltipMarginTop = 40;
+  // hover = false;
+  // tooltipMarginTop = 40;
 
   DisplayRateVal = DisplayRateVal;
 
@@ -58,9 +58,9 @@ export class IconComponent implements OnChanges {
   constructor(public trackSvc: TrackService, private store: Store<LabState>) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['scale'] || changes['scrollTop']) {
-      this.tooltipMarginTop = (this.scale ? 40 : 72) - this.scrollTop;
-    }
+    // if (changes['scale'] || changes['scrollTop']) {
+    //   this.tooltipMarginTop = (this.scale ? 40 : 72) - this.scrollTop;
+    // }
     if (changes['recipe'] || changes['iconId']) {
       this.store
         .select(Settings.getDataset)
@@ -81,12 +81,12 @@ export class IconComponent implements OnChanges {
     }
   }
 
-  @HostListener('mouseenter') mouseenter(): void {
-    this.hover = true;
-  }
-  @HostListener('mouseleave') mouseleave(): void {
-    this.hover = false;
-  }
+  // @HostListener('mouseenter') mouseenter(): void {
+  //   this.hover = true;
+  // }
+  // @HostListener('mouseleave') mouseleave(): void {
+  //   this.hover = false;
+  // }
 
   round(value: Rational): number {
     return Number(value.toNumber().toFixed(2));

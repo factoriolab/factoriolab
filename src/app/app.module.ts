@@ -14,32 +14,43 @@ import {
   NgxGoogleAnalyticsModule,
   NgxGoogleAnalyticsRouterModule,
 } from 'ngx-google-analytics';
+import { PrimeNGConfig } from 'primeng/api';
 
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ProductsComponent, SettingsComponent } from './components';
+import { MenuComponent } from './components/menu/menu.component';
+import { TopbarComponent } from './components/topbar/topbar.component';
 import { FlowComponent, ListComponent, MatrixComponent } from './routes';
 import { LabErrorHandler } from './services';
 import { SharedModule } from './shared/shared.module';
+import { VendorModule } from './shared/vendor.module';
 import { metaReducers, reducers } from './store';
 import { AnalyticsEffects } from './store/analytics.effects';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
 import { FactoriesEffects } from './store/factories/factories.effects';
 import { ProductsEffects } from './store/products/products.effects';
 
-function initializeApp(): Promise<any> {
-  // Load glpk-wasm
-  return loadModule('assets/glpk-wasm/glpk.all.wasm');
+function initializeApp(primengConfig: PrimeNGConfig): () => Promise<any> {
+  return () => {
+    // Enable ripple
+    primengConfig.ripple = true;
+
+    // Load glpk-wasm
+    return loadModule('assets/glpk-wasm/glpk.all.wasm');
+  };
 }
 
 @NgModule({
   declarations: [
     AppComponent,
+    TopbarComponent,
+    MenuComponent,
+    SettingsComponent,
+    ProductsComponent,
     ListComponent,
     FlowComponent,
-    ProductsComponent,
-    SettingsComponent,
     MatrixComponent,
   ],
   imports: [
@@ -81,7 +92,8 @@ function initializeApp(): Promise<any> {
     { provide: ErrorHandler, useClass: LabErrorHandler },
     {
       provide: APP_INITIALIZER,
-      useFactory: (): (() => Promise<any>) => initializeApp,
+      deps: [PrimeNGConfig],
+      useFactory: initializeApp,
       multi: true,
     },
   ],

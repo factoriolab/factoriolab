@@ -1,0 +1,4 @@
+.p-button.p-button-icon-only {
+  // Original 0.75rem does not account for 1px border
+  padding: calc(0.75rem - 1px) 0;
+}

@@ -13,7 +13,9 @@ import * as Settings from '~/store/settings';
   providedIn: 'root',
 })
 export class StateService {
-  constructor(private store: Store<LabState>) {
+  constructor(private store: Store<LabState>) {}
+
+  initialize(): void {
     this.store.select(Products.checkViaState).subscribe((s) => {
       for (const product of s.products) {
         if (

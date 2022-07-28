@@ -1,108 +1,34 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins/_breakpoints';
+
 :host {
   display: flex;
   flex-direction: column;
-  min-width: max-content;
+
+  height: 100%;
 }
 
-.top-bar {
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 1rem;
-  font-size: 110%;
+.layout-content {
+  margin-left: 300px;
+  padding-top: 5rem;
 
-  > * {
-    padding: 0 1rem;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-
-  lab-icon {
-    margin: -0.5rem 0.5rem -0.5rem 0;
-  }
-
-  .header {
-    h1 {
-      font-size: larger;
-    }
-
-    a,
-    a:hover {
-      color: var(--color-header);
-      text-decoration: none;
-    }
-  }
-
-  .links {
-    display: flex;
-    align-items: center;
-
-    + .links {
-      margin-left: 1rem;
-    }
-  }
-
-  .separator {
-    color: var(--color-link);
-    margin: 0 0.5rem;
+  @include media-breakpoint-down(xl) {
+    margin-left: 0;
+    padding-top: 8rem;
   }
 }
 
-main {
-  flex-grow: 1;
-  display: flex;
-  margin: 0 auto;
-  margin-bottom: 5rem;
-}
+@include media-breakpoint-down(xl) {
+  .layout-mask.active {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
 
-.view {
-  margin-top: 0.75rem;
-  padding: 0 1rem;
+    width: 100%;
+    height: 100%;
 
-  > * {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 0.75rem;
+    background-color: var(--maskbg);
   }
 }
-
-.view > *,
-.settings {
-  background-color: var(--color-back);
-  box-shadow: var(--shadow-main);
-  padding: 0.75rem;
-}
-
-.settings {
-  z-index: 3;
-  display: flex;
-  margin: 0.75rem 0 1rem 1rem;
-  align-self: flex-start;
-}
-
-@media screen and (max-width: 1000px) {
-  .settings {
-    margin-right: -23.25rem;
-  }
-}
-
-.msg {
-  align-self: center;
-
-  &.load {
-    width: 20rem;
-  }
-}
-
-.poll {
-  width: fit-content;
-}
-
-.buttons {
-  margin-top: 0.5rem;
-
-  > * + * {
-    margin-left: 0.5rem;
-  }
-}
-

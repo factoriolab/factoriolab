@@ -1,0 +1,31 @@
+<div class="d-block d-xl-none ms-1 ms-sm-4">
+  <button
+    pButton
+    pRipple
+    icon="pi pi-bars"
+    (click)="toggleMenu.emit()"
+  ></button>
+</div>
+<p-selectButton
+  styleClass="me-1 me-sm-4 me-xl-0"
+  [options]="gameOptions"
+  [formControl]="gameCtrl"
+  (onOptionClick)="selectGame($event)"
+>
+  <ng-template let-item>
+    <img class="m-n1" height="32px" [src]="item.icon" />
+  </ng-template>
+</p-selectButton>
+<ul class="topbar-menu px-0 px-sm-4 px-xl-0">
+  <li *ngFor="let link of links">
+    <a class="w-100" target="_blank" [href]="link.href">
+      <button
+        pButton
+        pRipple
+        class="p-button-text p-button-secondary p-button-sm d-flex justify-content-center w-100"
+        [icon]="link.icon"
+        [label]="link.label"
+      ></button>
+    </a>
+  </li>
+</ul>
