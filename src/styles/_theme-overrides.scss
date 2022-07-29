@@ -2,3 +2,19 @@
   // Original 0.75rem does not account for 1px border
   padding: calc(0.75rem - 1px) 0;
 }
+
+// InputGroup fixes
+.p-inputgroup > .p-inputwrapper {
+  display: inline-flex;
+
+  > .p-dropdown {
+    border-radius: 0;
+  }
+
+  > .p-component
+    > .p-inputnumber-buttons-stacked
+    > .p-inputnumber-button-group
+    > .p-button {
+    border-radius: 0;
+  }
+}

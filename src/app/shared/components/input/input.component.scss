@@ -1,12 +1,28 @@
 :host {
-  display: flex;
+  display: inline-flex;
 }
 
-button {
-  height: 1.125rem;
-  width: 1.75rem;
+// Use InputNumber styles
+:host ::ng-deep {
+  .p-inputnumber {
+    display: inline-flex;
+  }
 
-  .material-icons {
-    margin: 0;
+  .p-inputnumber-buttons-stacked .p-inputnumber-button-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .p-inputnumber-buttons-stacked
+    .p-inputnumber-button-group
+    .p-button.p-inputnumber-button {
+    flex: 1 1 auto;
+  }
+
+  .p-inputnumber-buttons-stacked .p-button {
+    &.p-inputnumber-button-up,
+    &.p-inputnumber-button-down {
+      padding: 0;
+    }
   }
 }

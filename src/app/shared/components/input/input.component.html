@@ -1,28 +1,33 @@
-<input
-  type="text"
-  [style.width.rem]="width"
-  [title]="title"
-  [placeholder]="placeholder"
-  [ngModel]="value"
-  labValidateNumber
-  [labValidateMinimum]="minimum"
-  data-test="lab-input-input"
-  (input)="changeValue($event)"
-/>
-<div>
-  <button
-    [title]="'input.increase1' | translate"
-    data-test="lab-input-increase"
-    (click)="increase()"
-  >
-    <i class="material-icons">arrow_drop_up</i>
-  </button>
-  <button
-    [title]="'input.decrease1' | translate"
-    data-test="lab-input-decrease"
-    [disabled]="isMinimum"
-    (click)="decrease()"
-  >
-    <i class="material-icons">arrow_drop_down</i>
-  </button>
-</div>
+<span class="p-inputnumber p-component p-inputnumber-buttons-stacked">
+  <input
+    type="text"
+    pInputText
+    [placeholder]="placeholder"
+    [ngModel]="value"
+    labValidateNumber
+    [labValidateMinimum]="minimum"
+    data-test="lab-input-input"
+    (input)="changeValue($event)"
+  />
+  <span class="p-inputnumber p-inputnumber-buttons-stacked">
+    <span class="p-inputnumber-button-group">
+      <button
+        pButton
+        pRipple
+        class="p-inputnumber-button p-inputnumber-button-up"
+        icon="pi pi-angle-up"
+        [title]="'input.increase1' | translate"
+        (click)="increase()"
+      ></button>
+      <button
+        pButton
+        pRipple
+        class="p-inputnumber-button p-inputnumber-button-down"
+        icon="pi pi-angle-down"
+        [title]="'input.decrease1' | translate"
+        [disabled]="isMinimum"
+        (click)="decrease()"
+      ></button>
+    </span>
+  </span>
+</span>

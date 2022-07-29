@@ -1,8 +1,5 @@
-<ng-container *ngIf="vm$ | async as vm">
-  <div (click)="clickOpen(picker, vm.data, $event)">
-    <ng-content></ng-content>
-  </div>
-  <p-overlayPanel #picker styleClass="picker-overlay">
+<p-overlayPanel #picker styleClass="picker-overlay">
+  <ng-container *ngIf="vm$ | async as vm">
     <div class="row">
       <div class="col-12 col-sm-7 d-flex align-items-center mb-3">
         <div class="picker-title">{{ 'picker.select' | translate }}</div>
@@ -52,8 +49,8 @@
         </p-tabPanel>
       </ng-container>
     </p-tabView>
-  </p-overlayPanel>
-</ng-container>
+  </ng-container>
+</p-overlayPanel>
 
 <!-- <ng-container *ngIf="vm$ | async as vm">
   <div (click)="clickOpen(vm.data)">

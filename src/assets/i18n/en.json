@@ -178,12 +178,14 @@
     "title": "Products",
     "produce": "Produce",
     "removeProduct": "Remove product",
+    "setRate": "Set output rate",
     "changeRateType": "Change rate type",
     "from": "from",
     "of": "of",
     "using": "using",
     "addAProduct": "Add a product",
-    "selectDisplayRate": "Select display rate"
+    "selectDisplayRate": "Select display rate",
+    "noEnabledRecipes": "No matching enabled recipes"
   },
   "picker": { "select": "Select an item to produce", "search": "Search" },
   "options": {

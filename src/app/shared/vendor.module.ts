@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
-import { InputNumberModule } from 'primeng/inputnumber';
+import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -17,7 +17,7 @@ const modules = [
   ButtonModule,
   CardModule,
   DialogModule,
-  InputNumberModule,
+  DropdownModule,
   InputTextModule,
   OverlayPanelModule,
   ProgressSpinnerModule,

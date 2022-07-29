@@ -2,8 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
   Output,
+  ViewChild,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -24,7 +24,7 @@ import * as Recipes from '~/store/recipes';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PickerComponent {
-  @Input() selectedId: string | undefined;
+  @ViewChild(OverlayPanel) overlayPanel: OverlayPanel | undefined;
 
   @Output() selectId = new EventEmitter<string>();
 
@@ -35,6 +35,7 @@ export class PickerComponent {
 
   searchCtrl = new FormControl('');
 
+  selectedId: string | undefined;
   categoryIds: string[] = [];
   categoryItemRows: Entities<string[][]> = {};
   activeIndex = 0;
@@ -57,21 +58,24 @@ export class PickerComponent {
       });
   }
 
-  clickOpen(overlay: OverlayPanel, data: Dataset, event: any): void {
-    this.searchCtrl.setValue('');
-    this.categoryIds = data.categoryIds;
-    this.categoryItemRows = data.categoryItemRows;
-    if (this.selectedId) {
-      const index = this.categoryIds.indexOf(
-        data.itemEntities[this.selectedId].category
-      );
-      // Must set active index after timeout
-      // https://github.com/primefaces/primeng/issues/10587
-      setTimeout(() => {
-        this.activeIndex = index;
-      }, 1);
+  clickOpen(data: Dataset, event: any, selectedId?: string): void {
+    if (this.overlayPanel) {
+      this.selectedId = selectedId;
+      this.searchCtrl.setValue('');
+      this.categoryIds = data.categoryIds;
+      this.categoryItemRows = data.categoryItemRows;
+      if (this.selectedId) {
+        const index = this.categoryIds.indexOf(
+          data.itemEntities[this.selectedId].category
+        );
+        // Must set active index after timeout
+        // https://github.com/primefaces/primeng/issues/10587
+        setTimeout(() => {
+          this.activeIndex = index;
+        }, 1);
+      }
+      this.overlayPanel.show(event);
     }
-    overlay.show(event);
   }
 
   clickItem(overlay: OverlayPanel, itemId: string) {

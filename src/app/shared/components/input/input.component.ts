@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  HostBinding,
   Input,
   OnChanges,
   Output,
@@ -17,17 +18,17 @@ import { Rational } from '~/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputComponent implements OnChanges {
-  @Input() title = '';
-  @Input() placeholder = '';
   @Input() value = '';
+  @Input() placeholder = '';
   @Input() minimum = '0';
-  @Input() digits = 2;
+  @Input() digits = 0; // TODO: Remove this input
 
   @Output() setValue = new EventEmitter<string>();
 
+  @HostBinding('class.p-inputwrapper') class = true;
+
   isMinimum = false;
   min = Rational.zero;
-  width = 5;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['minimum']) {
@@ -39,9 +40,6 @@ export class InputComponent implements OnChanges {
       } catch {
         this.isMinimum = false;
       }
-    }
-    if (changes['digits']) {
-      this.width = 0.75 + this.digits * 0.625;
     }
   }
 

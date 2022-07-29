@@ -3,32 +3,75 @@
     *ngFor="let product of vm.products"
     class="d-flex align-items-center mb-4"
   >
-    <button
-      pButton
-      pRipple
-      icon="fa-solid fa-minus"
-      class="p-button-rounded"
-      (click)="removeProduct(product.id)"
-    ></button>
-    <span class="mx-3">{{ 'products.produce' | translate }}</span>
-    <lab-picker
-      [selectedId]="product.itemId"
-      (selectId)="setItem(product.id, $event)"
-    >
-      <button pButton pRipple [icon]="product.itemId | iconClass"></button>
-    </lab-picker>
-    <span class="mx-3">{{ 'products.from' | translate }}</span>
-    <input type="text" pInputText [value]="product.rate" />
-  </div>
-  <div class="d-flex">
-    <lab-picker (selectId)="addProduct($event)">
+    <div class="p-inputgroup">
       <button
         pButton
         pRipple
-        icon="fa-solid fa-plus"
-        [label]="'products.addAProduct' | translate"
+        icon="fa-solid fa-minus"
+        [pTooltip]="'products.removeProduct' | translate"
+        (click)="removeProduct(product.id)"
       ></button>
-    </lab-picker>
+      <span class="p-inputgroup-addon">{{
+        'products.produce' | translate
+      }}</span>
+      <button
+        pButton
+        pRipple
+        [pTooltip]="vm.data.itemEntities[product.itemId].name"
+        tooltipPosition="bottom"
+        [icon]="product.itemId | iconClass"
+        (click)="editPicker.clickOpen(vm.data, $event, product.itemId)"
+      >
+        <lab-picker #editPicker (selectId)="setItem(product.id, $event)">
+        </lab-picker>
+      </button>
+      <span class="p-inputgroup-addon">{{ 'products.from' | translate }}</span>
+      <lab-input
+        [pTooltip]="'products.setRate' | translate"
+        tooltipPosition="bottom"
+        [value]="product.rate"
+        (setValue)="setRate(product.id, $event)"
+      ></lab-input>
+      <p-dropdown
+        [pTooltip]="'products.changeRateType' | translate"
+        tooltipPosition="bottom"
+        [options]="vm.rateTypeOptions"
+        [(ngModel)]="product.rateType"
+      ></p-dropdown>
+      <ng-container
+        *ngIf="vm.productOptions[product.id].length > 0; else recipeNone"
+      >
+        <ng-container *ngIf="product.viaId as id">
+          <span class="p-inputgroup-addon">{{
+            'products.of' | translate
+          }}</span>
+          <button
+            pButton
+            pRipple
+            [pTooltip]="vm.data.itemEntities[product.itemId].name"
+            tooltipPosition="bottom"
+            [icon]="id | iconClass"
+            [disabled]="vm.productOptions[product.id].length === 1"
+          ></button>
+        </ng-container>
+      </ng-container>
+      <ng-template #recipeNone>
+        <span class="p-inputgroup-addon p-error">{{
+          'products.noEnabledRecipes' | translate
+        }}</span>
+      </ng-template>
+    </div>
+  </div>
+  <div class="d-flex">
+    <button
+      pButton
+      pRipple
+      icon="fa-solid fa-plus"
+      [label]="'products.addAProduct' | translate"
+      (click)="addPicker.clickOpen(vm.data, $event)"
+    >
+      <lab-picker #addPicker (selectId)="addProduct($event)"></lab-picker>
+    </button>
   </div>
 </p-card>
 
