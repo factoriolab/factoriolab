@@ -1,7 +1,7 @@
 import {
   Dataset,
   DisplayRate,
-  DisplayRateVal,
+  displayRateVal,
   Entities,
   ItemSettings,
   Rational,
@@ -239,7 +239,7 @@ export class RateUtility {
   }
 
   static displayRate(steps: Step[], displayRate: DisplayRate): Step[] {
-    const displayRateVal = DisplayRateVal[displayRate];
+    const val = displayRateVal[displayRate];
     for (const step of steps) {
       if (step.items) {
         if (step.parents) {
@@ -247,16 +247,16 @@ export class RateUtility {
             step.parents[key] = step.parents[key].div(step.items);
           }
         }
-        step.items = step.items.mul(displayRateVal);
+        step.items = step.items.mul(val);
       }
       if (step.surplus) {
-        step.surplus = step.surplus.mul(displayRateVal);
+        step.surplus = step.surplus.mul(val);
       }
       if (step.wagons) {
-        step.wagons = step.wagons.mul(displayRateVal);
+        step.wagons = step.wagons.mul(val);
       }
       if (step.pollution) {
-        step.pollution = step.pollution.mul(displayRateVal);
+        step.pollution = step.pollution.mul(val);
       }
     }
     return steps;

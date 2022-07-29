@@ -4,17 +4,37 @@
 }
 
 // InputGroup fixes
-.p-inputgroup > .p-inputwrapper {
-  display: inline-flex;
+.p-inputgroup {
+  > .p-inputwrapper {
+    display: inline-flex;
 
-  > .p-dropdown {
-    border-radius: 0;
-  }
+    > .p-dropdown {
+      border-radius: 0;
+    }
 
-  > .p-component
-    > .p-inputnumber-buttons-stacked
-    > .p-inputnumber-button-group
-    > .p-button {
-    border-radius: 0;
+    .p-dropdown-panel .p-dropdown-header {
+      display: flex;
+
+      .p-dropdown-filter {
+        margin-right: 0;
+      }
+    }
+
+    .p-dropdown-filter-container {
+      display: inline-flex;
+      flex-grow: 1;
+    }
+
+    > .p-component
+      > .p-inputnumber-buttons-stacked
+      > .p-inputnumber-button-group
+      > .p-button {
+      border-radius: 0;
+      height: 1.5rem;
+    }
   }
+}
+
+.p-dropdown-panel .p-dropdown-items {
+  max-width: 100%;
 }

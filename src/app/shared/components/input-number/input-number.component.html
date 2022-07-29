@@ -6,7 +6,6 @@
     [ngModel]="value"
     labValidateNumber
     [labValidateMinimum]="minimum"
-    data-test="lab-input-input"
     (input)="changeValue($event)"
   />
   <span class="p-inputnumber p-inputnumber-buttons-stacked">
@@ -15,16 +14,14 @@
         pButton
         pRipple
         class="p-inputnumber-button p-inputnumber-button-up"
-        icon="pi pi-angle-up"
-        [title]="'input.increase1' | translate"
+        icon="fa-solid fa-angle-up"
         (click)="increase()"
       ></button>
       <button
         pButton
         pRipple
         class="p-inputnumber-button p-inputnumber-button-down"
-        icon="pi pi-angle-down"
-        [title]="'input.decrease1' | translate"
+        icon="fa-solid fa-angle-down"
         [disabled]="isMinimum"
         (click)="decrease()"
       ></button>

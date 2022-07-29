@@ -1,4 +1,5 @@
 import { createSelector } from '@ngrx/store';
+import { SelectItem } from 'primeng/api';
 
 import { environment } from 'src/environments';
 import {
@@ -668,6 +669,15 @@ export const getInserterData = createSelector(
   getInserterTarget,
   getInserterCapacity,
   (target, capacity) => InserterData[target][capacity]
+);
+
+export const getItemOptions = createSelector(getDataset, (data) =>
+  data.itemIds.map(
+    (i): SelectItem => ({
+      label: data.itemEntities[i].name,
+      value: i,
+    })
+  )
 );
 
 export function getEntities<T extends { id: string }>(

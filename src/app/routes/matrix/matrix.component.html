@@ -47,12 +47,12 @@ defined cost, usually mining."
         </div>
       </td>
       <td>
-        <lab-input
+        <lab-input-number
           title="Set recipe cost multipler"
           placeholder="Cost"
           [value]="vm.settings.costFactor"
           (setValue)="setCostFactor($event)"
-        ></lab-input>
+        ></lab-input-number>
       </td>
     </tr>
     <tr>
@@ -63,12 +63,12 @@ defined cost, usually mining."
         ></lab-info>
       </td>
       <td>
-        <lab-input
+        <lab-input-number
           title="Set factory cost multipler"
           placeholder="Cost"
           [value]="vm.settings.costFactory"
           (setValue)="setCostFactory($event)"
-        ></lab-input>
+        ></lab-input-number>
       </td>
     </tr>
     <tr>
@@ -79,12 +79,12 @@ defined cost, usually mining."
         ></lab-info>
       </td>
       <td>
-        <lab-input
+        <lab-input-number
           title="Set input item cost"
           placeholder="Cost"
           [value]="vm.settings.costInput"
           (setValue)="setCostInput($event)"
-        ></lab-input>
+        ></lab-input-number>
       </td>
     </tr>
     <tr>
@@ -95,12 +95,12 @@ defined cost, usually mining."
         ></lab-info>
       </td>
       <td>
-        <lab-input
+        <lab-input-number
           title="Set ignored item cost"
           placeholder="Cost"
           [value]="vm.settings.costIgnored"
           (setValue)="setCostIgnored($event)"
-        ></lab-input>
+        ></lab-input-number>
       </td>
     </tr>
   </table>
@@ -199,12 +199,12 @@ defined cost, usually mining."
           class="flex"
           *ngIf="last && vm.result.recipeIds[i - 1] as id; else valueSpan"
         >
-          <lab-input
+          <lab-input-number
             title="Set cost"
             placeholder="Cost"
             [value]="c.toString()"
             (setValue)="setRecipeCost(id, $event)"
-          ></lab-input>
+          ></lab-input-number>
           <button
             *ngIf="vm.recipeRaw[id]?.cost"
             title="Undo recipe cost modification"

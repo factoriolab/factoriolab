@@ -1,6 +1,6 @@
 <p-card *ngIf="vm$ | async as vm" [header]="'products.title' | translate">
   <div
-    *ngFor="let product of vm.products"
+    *ngFor="let product of vm.products; let i = index"
     class="d-flex align-items-center mb-4"
   >
     <div class="p-inputgroup">
@@ -14,29 +14,49 @@
       <span class="p-inputgroup-addon">{{
         'products.produce' | translate
       }}</span>
-      <button
-        pButton
-        pRipple
-        [pTooltip]="vm.data.itemEntities[product.itemId].name"
-        tooltipPosition="bottom"
-        [icon]="product.itemId | iconClass"
-        (click)="editPicker.clickOpen(vm.data, $event, product.itemId)"
+      <p-dropdown
+        [filter]="true"
+        filterBy="label"
+        scrollHeight="400px"
+        [virtualScroll]="true"
+        [virtualScrollItemSize]="48"
+        [panelStyle]="{ width: '19rem' }"
+        [tooltip]="'products.changeItem' | translate"
+        tooltipPosition="top"
+        [options]="vm.itemOptions"
+        [ngModel]="product.itemId"
+        (onChange)="setItem(product.id, $event.value)"
       >
-        <lab-picker #editPicker (selectId)="setItem(product.id, $event)">
-        </lab-picker>
-      </button>
+        <ng-template pTemplate="selectedItem" let-item>
+          <div class="d-flex align-items-center">
+            <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+            <div class="ms-3 text-truncate">
+              {{ item.label }}
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="item" let-item>
+          <div class="d-flex align-items-center">
+            <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+            <div class="ms-3 text-truncate">
+              {{ item.label }}
+            </div>
+          </div>
+        </ng-template>
+      </p-dropdown>
       <span class="p-inputgroup-addon">{{ 'products.from' | translate }}</span>
-      <lab-input
-        [pTooltip]="'products.setRate' | translate"
-        tooltipPosition="bottom"
+      <lab-input-number
+        [pTooltip]="'products.changeRate' | translate"
+        tooltipPosition="top"
         [value]="product.rate"
         (setValue)="setRate(product.id, $event)"
-      ></lab-input>
+      ></lab-input-number>
       <p-dropdown
-        [pTooltip]="'products.changeRateType' | translate"
-        tooltipPosition="bottom"
+        [tooltip]="'products.changeRateType' | translate"
+        tooltipPosition="top"
         [options]="vm.rateTypeOptions"
-        [(ngModel)]="product.rateType"
+        [ngModel]="product.rateType"
+        (onChange)="setRateType(product.id, $event.value)"
       ></p-dropdown>
       <ng-container
         *ngIf="vm.productOptions[product.id].length > 0; else recipeNone"
@@ -45,14 +65,35 @@
           <span class="p-inputgroup-addon">{{
             'products.of' | translate
           }}</span>
-          <button
-            pButton
-            pRipple
-            [pTooltip]="vm.data.itemEntities[product.itemId].name"
-            tooltipPosition="bottom"
-            [icon]="id | iconClass"
-            [disabled]="vm.productOptions[product.id].length === 1"
-          ></button>
+          <p-dropdown
+            [filter]="true"
+            filterBy="label"
+            scrollHeight="400px"
+            [virtualScroll]="true"
+            [virtualScrollItemSize]="48"
+            [tooltip]="'products.changeVia' | translate"
+            tooltipPosition="top"
+            [options]="vm.productOptions[product.id]"
+            [ngModel]="product.viaId"
+            (onChange)="setVia(product.id, $event.value)"
+          >
+            <ng-template pTemplate="selectedItem" let-item>
+              <div class="d-flex align-items-center">
+                <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+                <div class="ms-3 text-truncate">
+                  {{ item.label }}
+                </div>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="item" let-item>
+              <div class="d-flex align-items-center">
+                <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+                <div class="ms-3 text-truncate">
+                  {{ item.label }}
+                </div>
+              </div>
+            </ng-template>
+          </p-dropdown>
         </ng-container>
       </ng-container>
       <ng-template #recipeNone>
@@ -62,490 +103,46 @@
       </ng-template>
     </div>
   </div>
-  <div class="d-flex">
-    <button
-      pButton
-      pRipple
-      icon="fa-solid fa-plus"
-      [label]="'products.addAProduct' | translate"
-      (click)="addPicker.clickOpen(vm.data, $event)"
-    >
-      <lab-picker #addPicker (selectId)="addProduct($event)"></lab-picker>
-    </button>
+  <div class="row">
+    <div class="col-auto mb-3">
+      <p-dropdown
+        [filter]="true"
+        filterBy="label"
+        scrollHeight="400px"
+        [virtualScroll]="true"
+        [virtualScrollItemSize]="48"
+        [panelStyle]="{ width: '19rem' }"
+        [options]="vm.itemOptions"
+        (onChange)="addProduct($event.value)"
+      >
+        <ng-template pTemplate="selectedItem" let-item>
+          <span>{{ 'products.addAProduct' | translate }}</span>
+        </ng-template>
+        <ng-template pTemplate="item" let-item>
+          <div class="d-flex align-items-center">
+            <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+            <div class="ms-3 text-truncate">
+              {{ item.label }}
+            </div>
+          </div>
+        </ng-template>
+      </p-dropdown>
+    </div>
+    <div class="col-auto mb-3">
+      <p-dropdown
+        styleClass="h-100"
+        [tooltip]="'products.selectDisplayRate' | translate"
+        [options]="displayRateOptions"
+        [ngModel]="vm.displayRate"
+        (onChange)="setDisplayRate($event.value, vm.displayRate)"
+      >
+        <ng-template pTemplate="selectedItem" let-opt>
+          <span>{{ opt.label | translate }}</span>
+        </ng-template>
+        <ng-template pTemplate="item" let-opt>
+          <span>{{ opt.label | translate }}</span>
+        </ng-template>
+      </p-dropdown>
+    </div>
   </div>
 </p-card>
-
-<!-- <p-overlayPanel #picker>
-  <span>Items picker</span>
-</p-overlayPanel>
-<p-overlayPanel #picker2>
-  <span>Items picker</span>
-</p-overlayPanel> -->
-
-<!-- <ng-container *ngIf="vm$ | async as vm"
-  ><h2>{{ 'products.title' | translate }}</h2>
-  <div class="panel">
-    <div
-      class="product-row"
-      *ngFor="let product of vm.products; trackBy: trackSvc.trackById"
-    >
-      <ng-container *ngIf="product && vm.data.itemEntities[product.itemId]">
-        <button
-          [title]="'products.removeProduct' | translate"
-          (click)="removeProduct(product.id)"
-        >
-          <i class="material-icons">remove</i>
-        </button>
-        <span>{{ 'products.produce' | translate }}</span>
-        <lab-picker
-          [selected]="product.itemId"
-          (selectId)="setItem(product.id, $event)"
-        >
-          <lab-icon
-            class="button"
-            title="Change item"
-            hoverIcon="settings"
-            [iconId]="product.itemId"
-            [tooltip]="vm.data.itemEntities[product.itemId].name"
-            [item]="vm.data.itemEntities[product.itemId]"
-          ></lab-icon
-        ></lab-picker>
-        <span>{{ 'products.from' | translate }}</span>
-        <lab-input
-          title="Set output rate"
-          placeholder="Rate"
-          [value]="product.rate"
-          (setValue)="setRate(product.id, $event)"
-        ></lab-input>
-        <lab-options
-          class="ratetype"
-          [title]="'products.changeRateType' | translate"
-          [selected]="product.rateType"
-          [options]="vm.rateTypeOptions"
-          (selectId)="setRateType(product.id, $event)"
-        ></lab-options>
-        <ng-container
-          *ngIf="vm.productOptions[product.id].length > 0; else recipeNone"
-        >
-          <ng-container *ngIf="product.viaId as id">
-            <span>{{ 'products.of' | translate }}</span>
-            <ng-container
-              *ngIf="vm.productOptions[product.id].length === 1; else viaPicker"
-            >
-              <lab-icon
-                *ngIf="product.rateType === RateType.Factories; else singleItem"
-                class="pad"
-                [iconId]="id"
-                [tooltip]="vm.data.recipeEntities[id].name"
-                [recipe]="vm.data.recipeEntities[id]"
-              >
-              </lab-icon>
-              <ng-template #singleItem>
-                <lab-icon
-                  class="pad"
-                  [iconId]="id"
-                  [tooltip]="vm.data.itemEntities[id].name"
-                  [item]="vm.data.itemEntities[id]"
-                >
-                </lab-icon>
-              </ng-template>
-            </ng-container>
-            <ng-template #viaPicker>
-              <lab-select
-                *ngIf="product.rateType === RateType.Factories; else itemPicker"
-                header="Select a step to calculate by"
-                [selected]="id"
-                [options]="vm.productOptions[product.id]"
-                [selectType]="IdType.Recipe"
-                (selectId)="setVia(product.id, $event)"
-              >
-                <lab-icon
-                  class="button"
-                  title="Change rate step"
-                  hoverIcon="settings"
-                  [iconId]="id"
-                  [tooltip]="vm.data.recipeEntities[id].name"
-                  [recipe]="vm.data.recipeEntities[id]"
-                >
-                </lab-icon>
-              </lab-select>
-              <ng-template #itemPicker>
-                <lab-select
-                  header="Select a step to calculate by"
-                  [selected]="id"
-                  [options]="vm.productOptions[product.id]"
-                  (selectId)="setVia(product.id, $event)"
-                >
-                  <lab-icon
-                    class="button"
-                    title="Change rate step"
-                    hoverIcon="settings"
-                    [iconId]="id"
-                    [tooltip]="vm.data.itemEntities[id].name"
-                    [item]="vm.data.itemEntities[id]"
-                  >
-                  </lab-icon>
-                </lab-select>
-              </ng-template>
-            </ng-template>
-            <ng-container *ngIf="product.rateType === RateType.Belts">
-              <span>{{ 'products.using' | translate }}</span>
-              <ng-container
-                *ngIf="
-                  product.viaSetting ?? vm.itemSettings[id].beltId as beltId
-                "
-              >
-                <lab-select
-                  *ngIf="
-                    vm.data.beltIds.indexOf(beltId) !== -1;
-                    else pipePicker
-                  "
-                  header="Select a belt"
-                  [selected]="beltId"
-                  [options]="vm.data.beltIds"
-                  [columns]="
-                    vm.data.game === Game.DysonSphereProgram ? 3 : null
-                  "
-                  (selectId)="
-                    setViaSetting(
-                      product.id,
-                      $event,
-                      vm.itemSettings[id].beltId
-                    )
-                  "
-                >
-                  <lab-icon
-                    class="button"
-                    tooltip="Change rate step belt"
-                    [iconId]="beltId"
-                    [item]="vm.data.itemEntities[beltId]"
-                  ></lab-icon>
-                </lab-select>
-                <ng-template #pipePicker>
-                  <lab-select
-                    *ngIf="
-                      vm.data.pipeIds.indexOf(beltId) !== -1;
-                      else pipeIcon
-                    "
-                    header="Select a pipe"
-                    [selected]="beltId"
-                    [options]="vm.data.pipeIds"
-                    (selectId)="
-                      setViaSetting(
-                        product.id,
-                        $event,
-                        vm.itemSettings[id].beltId
-                      )
-                    "
-                  >
-                    <lab-icon
-                      class="button"
-                      tooltip="Change rate step pipe"
-                      [iconId]="beltId"
-                    ></lab-icon>
-                  </lab-select>
-                </ng-template>
-                <ng-template #pipeIcon>
-                  <lab-icon
-                    [iconId]="beltId"
-                    [tooltip]="vm.data.itemEntities[beltId]?.name || PIPE"
-                  ></lab-icon>
-                </ng-template>
-              </ng-container>
-            </ng-container>
-            <ng-container *ngIf="product.rateType === RateType.Wagons">
-              <ng-container
-                *ngIf="
-                  product.viaSetting || vm.itemSettings[id].wagonId as wagonId
-                "
-              >
-                <ng-container
-                  *ngIf="
-                    vm.data.fluidWagonIds.indexOf(wagonId) === -1;
-                    else fluidWagon
-                  "
-                >
-                  <ng-container *ngIf="vm.data.cargoWagonIds.length > 1">
-                    <span>using</span>
-                    <lab-select
-                      header="Select a cargo wagon"
-                      [selected]="wagonId"
-                      [options]="vm.data.cargoWagonIds"
-                      (selectId)="
-                        setViaSetting(
-                          product.id,
-                          $event,
-                          vm.itemSettings[id].wagonId
-                        )
-                      "
-                    >
-                      <lab-icon
-                        class="button"
-                        title="Change rate step wagon"
-                        [iconId]="wagonId"
-                        [tooltip]="vm.data.itemEntities[wagonId].name"
-                        [item]="vm.data.itemEntities[wagonId]"
-                      ></lab-icon>
-                    </lab-select>
-                  </ng-container>
-                </ng-container>
-                <ng-template #fluidWagon>
-                  <ng-container *ngIf="vm.data.fluidWagonIds.length > 1">
-                    <span>using</span>
-                    <lab-select
-                      header="Select a fluid wagon"
-                      [selected]="wagonId"
-                      [options]="vm.data.fluidWagonIds"
-                      (selectId)="
-                        setViaSetting(
-                          product.id,
-                          $event,
-                          vm.itemSettings[id].wagonId
-                        )
-                      "
-                    >
-                      <lab-icon
-                        class="button"
-                        title="Change rate step wagon"
-                        [iconId]="wagonId"
-                        [tooltip]="vm.data.itemEntities[wagonId].name"
-                        [item]="vm.data.itemEntities[wagonId]"
-                      ></lab-icon>
-                    </lab-select>
-                  </ng-container>
-                </ng-template>
-              </ng-container>
-            </ng-container>
-            <ng-container *ngIf="product.rateType === RateType.Factories">
-              <ng-container *ngIf="product.viaSetting as factoryId">
-                <ng-container *ngIf="vm.data.recipeEntities[id] as recipe">
-                  <ng-container *ngIf="factoryId | factoryShow: vm.data.game">
-                    <span>using</span>
-                    <ng-container
-                      *ngIf="
-                        recipe.producers && recipe.producers.length > 1;
-                        else factoryDefault
-                      "
-                    >
-                      <lab-select
-                        header="Select a factory"
-                        [selected]="factoryId"
-                        [options]="recipe.producers"
-                        (selectId)="
-                          changeFactory(
-                            product.id,
-                            $event,
-                            id,
-                            vm.factories,
-                            vm.data
-                          )
-                        "
-                      >
-                        <lab-icon
-                          class="button"
-                          title="Change rate step factory"
-                          [iconId]="factoryId"
-                          [tooltip]="vm.data.itemEntities[factoryId].name"
-                          [item]="vm.data.itemEntities[factoryId]"
-                        ></lab-icon>
-                      </lab-select>
-                    </ng-container>
-                    <ng-template #factoryDefault>
-                      <lab-icon
-                        [iconId]="factoryId"
-                        [tooltip]="vm.data.itemEntities[factoryId].name"
-                        [item]="vm.data.itemEntities[factoryId]"
-                      ></lab-icon>
-                    </ng-template>
-                  </ng-container>
-                  <div
-                    *ngIf="product.viaFactoryModuleIds as moduleIds"
-                    class="flex"
-                  >
-                    <lab-select
-                      *ngFor="let mod of moduleIds; index as i; first as first"
-                      [header]="
-                        vm.data.game === Game.Factorio
-                          ? 'Select a module'
-                          : vm.data.game === Game.DysonSphereProgram
-                          ? 'Select a proliferator'
-                          : 'Select resource purity'
-                      "
-                      [selected]="mod"
-                      [options]="vm.data.recipeModuleIds[id]"
-                      [includeEmptyModule]="vm.data.game !== Game.Satisfactory"
-                      (selectId)="
-                        changeRecipeField(
-                          product,
-                          $event,
-                          id,
-                          vm.recipeSettings,
-                          vm.factories,
-                          RecipeField.FactoryModules,
-                          i,
-                          vm.data
-                        )
-                      "
-                    >
-                      <lab-icon
-                        class="button"
-                        [title]="
-                          vm.data.game === Game.Factorio
-                            ? 'Change rate step factory module'
-                            : vm.data.game === Game.DysonSphereProgram
-                            ? 'Change rate step proliferator'
-                            : 'Change rate step resource purity'
-                        "
-                        [class.module]="!first"
-                        [iconId]="mod"
-                        [tooltip]="vm.data.itemEntities[mod]?.name"
-                        [item]="vm.data.itemEntities[mod]"
-                      ></lab-icon>
-                    </lab-select>
-                  </div>
-                  <div *ngIf="product.viaOverclock as overclock" class="flex">
-                    <input
-                      type="number"
-                      title="Set rate step overclock"
-                      placeholder="100"
-                      min="0"
-                      max="250"
-                      step="10"
-                      labValidateOverclock
-                      [ngModel]="product.viaOverclock"
-                      (input)="
-                        changeRecipeField(
-                          product,
-                          $event,
-                          id,
-                          vm.recipeSettings,
-                          vm.factories,
-                          RecipeField.Overclock
-                        )
-                      "
-                    />
-                    <span style="margin-left: 0.25rem">%</span>
-                  </div>
-                  <ng-container *ngIf="product.viaBeaconId as beaconId">
-                    <lab-input
-                      title="Set rate step number of beacons"
-                      placeholder="# Beacons"
-                      [digits]="2"
-                      [value]="product.viaBeaconCount ?? ''"
-                      (setValue)="
-                        changeRecipeField(
-                          product,
-                          $event,
-                          id,
-                          vm.recipeSettings,
-                          vm.factories,
-                          RecipeField.BeaconCount
-                        )
-                      "
-                    >
-                    </lab-input>
-                    <ng-container *ngIf="product.viaBeaconCount | gtZero">
-                      <ng-container
-                        *ngIf="
-                          vm.data.beaconIds.length === 1;
-                          else beaconPicker
-                        "
-                      >
-                        <lab-icon
-                          [iconId]="beaconId"
-                          [tooltip]="vm.data.itemEntities[beaconId].name"
-                          [item]="vm.data.itemEntities[beaconId]"
-                        ></lab-icon
-                      ></ng-container>
-                      <ng-template #beaconPicker>
-                        <lab-select
-                          header="Select a beacon"
-                          [selected]="beaconId"
-                          [options]="vm.data.beaconIds"
-                          (selectId)="
-                            changeRecipeField(
-                              product,
-                              $event,
-                              id,
-                              vm.recipeSettings,
-                              vm.factories,
-                              RecipeField.Beacon
-                            )
-                          "
-                        >
-                          <lab-icon
-                            class="button"
-                            title="Set rate step beacon"
-                            [iconId]="beaconId"
-                            [tooltip]="vm.data.itemEntities[beaconId].name"
-                            [item]="vm.data.itemEntities[beaconId]"
-                          ></lab-icon>
-                        </lab-select>
-                      </ng-template>
-                      <div
-                        *ngIf="product.viaBeaconModuleIds as modules"
-                        class="flex"
-                      >
-                        <lab-select
-                          *ngFor="
-                            let mod of modules;
-                            index as i;
-                            first as first
-                          "
-                          header="Select a module"
-                          [selected]="mod"
-                          [options]="vm.data.beaconModuleIds"
-                          [includeEmptyModule]="true"
-                          (selectId)="
-                            changeRecipeField(
-                              product,
-                              $event,
-                              id,
-                              vm.recipeSettings,
-                              vm.factories,
-                              RecipeField.BeaconModules,
-                              i
-                            )
-                          "
-                        >
-                          <lab-icon
-                            class="button"
-                            title="Change rate step beacon module"
-                            [class.module]="!first"
-                            [iconId]="mod"
-                            [tooltip]="vm.data.itemEntities[mod]?.name"
-                            [item]="vm.data.itemEntities[mod]"
-                          ></lab-icon>
-                        </lab-select>
-                      </div>
-                    </ng-container>
-                  </ng-container>
-                </ng-container>
-              </ng-container>
-            </ng-container>
-          </ng-container>
-        </ng-container>
-        <ng-template #recipeNone>
-          <div class="invalid">No matching enabled recipes</div>
-        </ng-template>
-      </ng-container>
-    </div>
-    <div>
-      <lab-picker
-        [selected]="vm.data.itemIds[0]"
-        (selectId)="addProduct($event)"
-      >
-        <button [title]="'products.addAProduct' | translate">
-          <i class="material-icons">add</i>
-          <div class="text">{{ 'products.addAProduct' | translate }}</div>
-        </button></lab-picker
-      >
-      <lab-options
-        [title]="'products.selectDisplayRate' | translate"
-        [selected]="vm.displayRate"
-        [options]="DisplayRateOptions"
-        (selectId)="setDisplayRate($event, vm.displayRate)"
-      ></lab-options>
-    </div>
-  </div>
-</ng-container> -->

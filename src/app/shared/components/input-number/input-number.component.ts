@@ -12,12 +12,12 @@ import {
 import { Rational } from '~/models';
 
 @Component({
-  selector: 'lab-input',
-  templateUrl: './input.component.html',
-  styleUrls: ['./input.component.scss'],
+  selector: 'lab-input-number',
+  templateUrl: './input-number.component.html',
+  styleUrls: ['./input-number.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputComponent implements OnChanges {
+export class InputNumberComponent implements OnChanges {
   @Input() value = '';
   @Input() placeholder = '';
   @Input() minimum = '0';

@@ -1,24 +1,12 @@
-:host {
-  > .panel {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+.p-inputgroup {
+  flex-wrap: wrap;
 
-    > div {
-      display: flex;
-      align-items: center;
-
-      + * {
-        margin-top: 0.5rem;
-      }
-
-      > * + * {
-        margin-left: 0.5rem;
-      }
-    }
+  > * {
+    max-height: 3rem;
   }
-}
 
-.ratetype {
-  width: 7.5rem;
+  > lab-input-number,
+  > p-dropdown {
+    min-width: 8rem;
+  }
 }

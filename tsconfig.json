@@ -30,7 +30,7 @@
     "strictTemplates": true,
     "extendedDiagnostics": {
       "checks": {
-        "optionalChainNonNullable": "suppress"
+        "optionalChainNotNullable": "suppress"
       }
     }
   }

@@ -16,8 +16,8 @@ export const Games = [
 ];
 
 export const GameOptions: IdName<Game>[] = [
-  { id: Game.Factorio, name: 'game.Factorio' },
-  { id: Game.CaptainOfIndustry, name: 'game.CaptainOfIndustry' },
-  { id: Game.DysonSphereProgram, name: 'game.DysonSphereProgram' },
-  { id: Game.Satisfactory, name: 'game.Satisfactory' },
+  { id: Game.Factorio, name: 'game.factorio' },
+  { id: Game.CaptainOfIndustry, name: 'game.captainOfIndustry' },
+  { id: Game.DysonSphereProgram, name: 'game.dysonSphereProgram' },
+  { id: Game.Satisfactory, name: 'game.satisfactory' },
 ];

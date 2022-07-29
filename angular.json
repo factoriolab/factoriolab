@@ -45,6 +45,7 @@
             },
             "scripts": [],
             "allowedCommonJsDependencies": [
+              "file-saver",
               "elementary-circuits-directed-graph",
               "glpk-ts"
             ],

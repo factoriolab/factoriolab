@@ -11,7 +11,7 @@ import { combineLatest, first, map } from 'rxjs';
 
 import {
   DisplayRate,
-  DisplayRateVal,
+  displayRateVal,
   EnergyType,
   Game,
   Icon,
@@ -49,7 +49,7 @@ export class IconComponent implements OnChanges {
   // hover = false;
   // tooltipMarginTop = 40;
 
-  DisplayRateVal = DisplayRateVal;
+  DisplayRateVal = displayRateVal;
 
   DisplayRate = DisplayRate;
   EnergyType = EnergyType;

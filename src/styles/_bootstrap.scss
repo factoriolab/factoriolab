@@ -14,7 +14,8 @@ $enable-negative-margins: true;
 // 4. Include any optional Bootstrap components as you like
 @import '~bootstrap/scss/root';
 @import '~bootstrap/scss/reboot';
-@import '~bootstrap/scss/utilities/api';
 @import '~bootstrap/scss/grid';
+@import '~bootstrap/scss/helpers';
+@import '~bootstrap/scss/utilities/api';
 
 // 5. Add additional custom code here

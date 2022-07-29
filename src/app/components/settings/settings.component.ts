@@ -19,7 +19,7 @@ import {
   Column,
   Dataset,
   DisplayRate,
-  DisplayRateOptions,
+  displayRateOptions,
   Game,
   GameOptions,
   IdName,
@@ -146,7 +146,7 @@ export class SettingsComponent implements OnInit {
   ResearchSpeedOptions = ResearchSpeedOptions;
   InserterCapacityOptions = InserterCapacityOptions;
   InserterTargetOptions = InserterTargetOptions;
-  DisplayRateOptions = DisplayRateOptions;
+  DisplayRateOptions = displayRateOptions;
   PowerUnitOptions = PowerUnitOptions;
   SimplexType = SimplexType;
   BrowserUtility = BrowserUtility;

@@ -16,7 +16,7 @@ import {
   Column,
   Dataset,
   DisplayRate,
-  DisplayRateVal,
+  displayRateVal,
   Entities,
   Game,
   ItemId,
@@ -112,7 +112,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
   fragmentId: string | null | undefined;
 
   ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
-  DisplayRateVal = DisplayRateVal;
+  DisplayRateVal = displayRateVal;
   PIPE = PIPE;
   Column = Column;
   DisplayRate = DisplayRate;

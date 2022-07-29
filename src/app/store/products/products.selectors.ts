@@ -1,8 +1,9 @@
 import { createSelector } from '@ngrx/store';
+import { SelectItem } from 'primeng/api';
 
 import {
   Column,
-  DisplayRateVal,
+  displayRateVal,
   Entities,
   Game,
   ItemId,
@@ -73,28 +74,29 @@ export const getProductSteps = createSelector(
 export const getProducts = createSelector(
   getBaseProducts,
   getProductSteps,
-  Recipes.getRecipeSettings,
-  Factories.getFactories,
   Settings.getDataset,
-  (products, productSteps, recipeSettings, factories, data) =>
-    products?.map((p) =>
-      RecipeUtility.adjustProduct(
-        p,
-        productSteps,
-        recipeSettings,
-        factories,
-        data
-      )
-    )
+  (products, productSteps, data) =>
+    products?.map((p) => RecipeUtility.adjustProduct(p, productSteps, data))
 );
 
 export const getProductOptions = createSelector(
   getProducts,
   getProductSteps,
-  (products, productSteps) =>
-    products.reduce((e: Entities<string[]>, p) => {
+  Settings.getDataset,
+  (products, productSteps, data) =>
+    products.reduce((e: Entities<SelectItem[]>, p) => {
       if (productSteps[p.id]) {
-        e[p.id] = productSteps[p.id].map((r) => r[0]);
+        e[p.id] = productSteps[p.id]
+          .map((r) => r[0])
+          .map(
+            (r): SelectItem => ({
+              label:
+                p.rateType === RateType.Factories
+                  ? data.recipeEntities[r].name
+                  : data.itemEntities[r].name,
+              value: r,
+            })
+          );
       }
       return e;
     }, {})
@@ -140,7 +142,7 @@ export const getNormalizedRatesByItems = createSelector(
   Settings.getDisplayRate,
   (products, productSteps, displayRate) =>
     products?.reduce((e: Entities<Rational>, p) => {
-      const rate = p.rate.div(DisplayRateVal[displayRate]);
+      const rate = p.rate.div(displayRateVal[displayRate]);
       if (p.viaId === p.itemId) {
         e[p.id] = rate;
       } else {
@@ -163,14 +165,14 @@ export const getNormalizedRatesByBelts = createSelector(
   (products, productSteps, itemSettings, beltSpeed) =>
     products?.reduce((e: Entities<Rational>, p) => {
       if (p.viaId === p.itemId) {
-        const id = p.viaSetting ?? itemSettings[p.itemId].beltId;
+        const id = itemSettings[p.itemId].beltId;
         if (id) {
           e[p.id] = p.rate.mul(beltSpeed[id]);
         }
       } else {
         const via = RecipeUtility.getProductStepData(productSteps, p);
         if (via) {
-          const id = p.viaSetting ?? itemSettings[via[0]].beltId;
+          const id = itemSettings[via[0]].beltId;
           if (id) {
             e[p.id] = p.rate.mul(beltSpeed[id]).div(via[1]);
           }
@@ -191,8 +193,8 @@ export const getNormalizedRatesByWagons = createSelector(
   (products, productSteps, itemSettings, displayRate, data) =>
     products?.reduce((e: Entities<Rational>, p) => {
       if (p.viaId === p.itemId) {
-        e[p.id] = p.rate.div(DisplayRateVal[displayRate]);
-        const wagonId = p.viaSetting ?? itemSettings[p.itemId].wagonId;
+        e[p.id] = p.rate.div(displayRateVal[displayRate]);
+        const wagonId = itemSettings[p.itemId].wagonId;
         if (wagonId) {
           const item = data.itemEntities[p.itemId];
           const wagon = data.itemEntities[wagonId];
@@ -205,8 +207,8 @@ export const getNormalizedRatesByWagons = createSelector(
       } else {
         const via = RecipeUtility.getProductStepData(productSteps, p);
         if (via) {
-          e[p.id] = p.rate.div(DisplayRateVal[displayRate]);
-          const wagonId = p.viaSetting ?? itemSettings[via[0]].wagonId;
+          e[p.id] = p.rate.div(displayRateVal[displayRate]);
+          const wagonId = itemSettings[via[0]].wagonId;
           if (wagonId) {
             const item = data.itemEntities[via[0]];
             const wagon = data.itemEntities[wagonId];
@@ -254,40 +256,6 @@ export const getNormalizedRatesByFactories = createSelector(
         }
       }
 
-      // Adjust based on product recipe settings
-      if (recipeId && p.viaSetting) {
-        const customSettings = {
-          ...recipeSettings,
-          ...{
-            [recipeId]: {
-              ...{
-                factoryId: p.viaSetting,
-                factoryModuleIds: p.viaFactoryModuleIds,
-                beaconCount: p.viaBeaconCount,
-                beaconId: p.viaBeaconId,
-                beaconModuleIds: p.viaBeaconModuleIds,
-                overclock: p.viaOverclock,
-              },
-            },
-          },
-        };
-        const recipeR = RecipeUtility.adjustRecipes(
-          customSettings,
-          itemSettings,
-          adj.fuelId,
-          adj.proliferatorSprayId,
-          adj.miningBonus,
-          adj.researchSpeed,
-          adj.data
-        );
-        const oldRecipe = data.recipeR[recipeId];
-        const newRecipe = recipeR[recipeId];
-        const ratio = newRecipe.productivity
-          .div(newRecipe.time)
-          .div(oldRecipe.productivity)
-          .mul(oldRecipe.time);
-        e[p.id] = e[p.id].mul(ratio);
-      }
       return e;
     }, {})
 );

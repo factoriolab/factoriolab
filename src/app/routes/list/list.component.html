@@ -554,7 +554,7 @@
                       "
                       class="flex"
                     >
-                      <lab-input
+                      <lab-input-number
                         [title]="'list.setNumberOfBeacons' | translate"
                         placeholder="# Beacons"
                         [digits]="2"
@@ -569,7 +569,7 @@
                           )
                         "
                       >
-                      </lab-input>
+                      </lab-input-number>
                     </div>
                   </td>
                   <td class="split-column">
@@ -666,14 +666,14 @@
                           </lab-select>
                         </div>
                         <div *ngIf="step.beacons">
-                          <lab-input
+                          <lab-input-number
                             [title]="'list.setTotalBeacons' | translate"
                             placeholder="# Beacons"
                             [digits]="4"
                             [value]="step.beacons.toString()"
                             (setValue)="setBeaconTotal(step.recipeId, $event)"
                           >
-                          </lab-input>
+                          </lab-input-number>
                         </div>
                       </div>
                     </ng-container>

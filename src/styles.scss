@@ -1,5 +1,6 @@
 @import 'styles/bootstrap';
 @import 'styles/theme-overrides';
+@import 'styles/typography';
 
 // @import './styles/values';
 
@@ -30,9 +31,9 @@ ul {
 .lab-icon {
   position: relative;
 
-  margin: -0.25rem;
   width: 2rem;
   height: 2rem;
+  margin: -0.25rem;
 
   &::before {
     content: '';

@@ -2,6 +2,7 @@ import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { storeFreeze } from 'ngrx-store-freeze';
 
 import { environment } from 'src/environments/environment';
+import * as App from './app.actions';
 import * as Datasets from './datasets';
 import * as Factories from './factories';
 import * as Items from './items';
@@ -39,4 +40,13 @@ export const metaReducers: MetaReducer<LabState>[] = environment.testing
   ? [storageMetaReducer]
   : [storeFreeze, storageMetaReducer];
 
-export { Datasets, Factories, Items, Preferences, Products, Recipes, Settings };
+export {
+  App,
+  Datasets,
+  Factories,
+  Items,
+  Preferences,
+  Products,
+  Recipes,
+  Settings,
+};

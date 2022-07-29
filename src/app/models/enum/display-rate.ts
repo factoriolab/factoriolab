@@ -1,4 +1,5 @@
-import { IdName } from '../id-name';
+import { SelectItem } from 'primeng/api';
+
 import { Rational } from '../rational';
 
 export enum DisplayRate {
@@ -7,19 +8,19 @@ export enum DisplayRate {
   PerHour = 3600,
 }
 
-export const DisplayRateOptions: IdName<DisplayRate>[] = [
-  { id: DisplayRate.PerSecond, name: 'options.DisplayRate.PerSecond' },
-  { id: DisplayRate.PerMinute, name: 'options.DisplayRate.PerMinute' },
-  { id: DisplayRate.PerHour, name: 'options.DisplayRate.PerHour' },
+export const displayRateOptions: SelectItem<DisplayRate>[] = [
+  { value: DisplayRate.PerSecond, label: 'options.DisplayRate.PerSecond' },
+  { value: DisplayRate.PerMinute, label: 'options.DisplayRate.PerMinute' },
+  { value: DisplayRate.PerHour, label: 'options.DisplayRate.PerHour' },
 ];
 
-export const DisplayRateVal = {
+export const displayRateVal = {
   [DisplayRate.PerSecond]: new Rational(BigInt(DisplayRate.PerSecond)),
   [DisplayRate.PerMinute]: new Rational(BigInt(DisplayRate.PerMinute)),
   [DisplayRate.PerHour]: new Rational(BigInt(DisplayRate.PerHour)),
 };
 
-export const DisplayRateLabel = {
+export const displayRateLabel = {
   [DisplayRate.PerHour]: '/h',
   [DisplayRate.PerMinute]: '/m',
   [DisplayRate.PerSecond]: '/s',

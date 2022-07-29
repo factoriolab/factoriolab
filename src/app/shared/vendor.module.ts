@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
@@ -16,6 +17,7 @@ import { TooltipModule } from 'primeng/tooltip';
 const modules = [
   ButtonModule,
   CardModule,
+  ConfirmDialogModule,
   DialogModule,
   DropdownModule,
   InputTextModule,

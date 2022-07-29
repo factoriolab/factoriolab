@@ -1,4 +1,6 @@
 {
+  "yes": "Yes",
+  "cancel": "Cancel",
   "title": {
     "lab": "Factorio Calculator",
     "dsp": "Dyson Sphere Program Calculator",
@@ -15,13 +17,16 @@
     "reset": "Reset"
   },
   "game": {
-    "Factorio": "Factorio",
-    "DysonSphereProgram": "Dyson Sphere Program",
-    "Satisfactory": "Satisfactory",
-    "CaptainOfIndustry": "Captain of Industry"
+    "factorio": "Factorio",
+    "dysonSphereProgram": "Dyson Sphere Program",
+    "satisfactory": "Satisfactory",
+    "captainOfIndustry": "Captain of Industry"
   },
-  "setting": {
-    "name": "Setting",
+  "settings": {
+    "title": "Settings",
+    "reset": "Reset all settings",
+    "resetWarning": "This will delete all saved FactorioLab settings in this browser, are you sure you want to continue?",
+
     "deleteAllSettings": "Delete all settings",
     "saveStates": "Saved states",
     "saveState": "Save state",
@@ -134,7 +139,6 @@
     "languageTooltip": "Switch current display language.",
     "languageTitle": "Select display language"
   },
-  "input": { "increase1": "Increase 1", "decrease1": "Decrease 1" },
   "ranker": {
     "selectModules": "Select modules",
     "noModule": "No module",
@@ -178,11 +182,12 @@
     "title": "Products",
     "produce": "Produce",
     "removeProduct": "Remove product",
-    "setRate": "Set output rate",
-    "changeRateType": "Change rate type",
+    "changeItem": "Select product item",
     "from": "from",
+    "changeRate": "Set output rate",
+    "changeRateType": "Select rate type",
     "of": "of",
-    "using": "using",
+    "changeVia": "Select via step",
     "addAProduct": "Add a product",
     "selectDisplayRate": "Select display rate",
     "noEnabledRecipes": "No matching enabled recipes"

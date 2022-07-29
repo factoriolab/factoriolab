@@ -190,12 +190,12 @@
               ></lab-info>
             </td>
             <td>
-              <lab-options
+              <!-- <lab-options
                 [title]="'setting.displayRateTitle' | translate"
                 [selected]="vm.settings.displayRate"
                 [options]="DisplayRateOptions"
                 (selectId)="setDisplayRate($event, vm.settings.displayRate)"
-              ></lab-options>
+              ></lab-options> -->
             </td>
           </tr>
           <tr *ngIf="vm.columns[Column.Power].show">
@@ -402,7 +402,7 @@
               <ng-container *ngIf="vm.data.game === Game.Factorio">
                 <td>
                   <ng-container *ngIf="factory.beaconCount != null">
-                    <lab-input
+                    <lab-input-number
                       [title]="'setting.defaultNumberOfBeacons' | translate"
                       placeholder="# Beacons"
                       [digits]="2"
@@ -411,7 +411,7 @@
                         changeBeaconCount(f, $event, vm.factories, vm.data)
                       "
                     >
-                    </lab-input>
+                    </lab-input-number>
                   </ng-container>
                 </td>
                 <td>
@@ -518,7 +518,7 @@
             </td>
             <td>
               <div>
-                <lab-input
+                <lab-input-number
                   [title]="'setting.setAverageBeaconReceivers' | translate"
                   placeholder="# Receivers"
                   [digits]="2"
@@ -526,7 +526,7 @@
                   minimum="1"
                   (setValue)="setBeaconReceivers($event)"
                 >
-                </lab-input>
+                </lab-input-number>
               </div>
             </td>
           </tr>

@@ -1,5 +1,5 @@
 <lab-topbar (toggleMenu)="toggleMenu()"></lab-topbar>
-<lab-menu [active]="menuActive"></lab-menu>
+<lab-menu [active]="menuActive" (toggleMenu)="toggleMenu()"></lab-menu>
 <div
   class="layout-mask"
   [class.active]="menuActive"

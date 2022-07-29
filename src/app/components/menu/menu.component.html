@@ -1,1 +1,24 @@
-<p>menu works!</p>
+<div class="d-flex align-items-center justify-content-between p-3">
+  <h2>{{ 'settings.title' | translate }}</h2>
+  <div>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-rounded p-button-text"
+      icon="fa-solid fa-trash"
+      [pTooltip]="'settings.reset' | translate"
+      tooltipPosition="bottom"
+      (click)="clickResetSettings()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-rounded p-button-text d-inline-block d-sm-none"
+      icon="fa-solid fa-times"
+      (click)="toggleMenu.emit()"
+    ></button>
+  </div>
+</div>
+<p-confirmDialog></p-confirmDialog>
