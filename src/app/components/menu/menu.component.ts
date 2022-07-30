@@ -84,7 +84,7 @@ export class MenuComponent implements OnInit {
         this.state =
           Object.keys(states).find(
             (s) => states[s] === BrowserUtility.search
-          ) || '';
+          ) ?? '';
       });
   }
 
@@ -111,6 +111,19 @@ export class MenuComponent implements OnInit {
     }
   }
 
+  clickSaveState(): void {
+    if (this.stateCtrl.value) {
+      this.saveState(this.stateCtrl.value, BrowserUtility.search);
+      this.editState = false;
+      this.state = this.stateCtrl.value;
+    }
+  }
+
+  clickDeleteState(): void {
+    this.removeState(this.state);
+    this.state = '';
+  }
+
   openEditState(): void {
     this.stateCtrl.setValue(this.state);
     this.stateCtrl.markAsPristine();
@@ -124,6 +137,14 @@ export class MenuComponent implements OnInit {
   /** Action Dispatch Methods */
   resetSettings(): void {
     this.store.dispatch(new App.ResetAction());
+  }
+
+  saveState(id: string, value: string): void {
+    this.store.dispatch(new Preferences.SaveStateAction({ id, value }));
+  }
+
+  removeState(value: string): void {
+    this.store.dispatch(new Preferences.RemoveStateAction(value));
   }
 
   setMod(value: string): void {

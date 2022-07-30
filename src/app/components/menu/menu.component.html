@@ -57,6 +57,7 @@
           icon="fa-solid fa-floppy-disk"
           [pTooltip]="'settings.saveSavedState' | translate"
           [disabled]="!stateCtrl.valid"
+          (click)="clickSaveState()"
         ></button>
       </ng-container>
     </div>
@@ -70,7 +71,7 @@
         (click)="openEditState()"
       ></button>
       <p-dropdown
-        [placeholder]="'settings.savedStatesEmpty' | translate"
+        [placeholder]="'settings.selectSavedState' | translate"
         [pTooltip]="'settings.selectSavedState' | translate"
         tooltipPosition="top"
         [ngModel]="state"
@@ -84,6 +85,7 @@
         icon="fa-solid fa-trash"
         [pTooltip]="'settings.deleteSavedState' | translate"
         [disabled]="!state"
+        (click)="clickDeleteState()"
       ></button>
     </ng-template>
   </div>

@@ -27,7 +27,6 @@
     "reset": "Reset all settings",
     "resetWarning": "This will delete all saved FactorioLab settings in this browser, are you sure you want to continue?",
     "savedStates": "Saved states",
-    "savedStatesEmpty": "No saved states",
     "editSavedState": "New saved state",
     "selectSavedState": "Select saved state",
     "deleteSavedState": "Delete saved state",
