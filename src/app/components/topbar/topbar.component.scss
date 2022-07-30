@@ -8,10 +8,15 @@
   position: fixed;
   top: 0;
   left: 320px;
+  z-index: 1;
 
   width: calc(100% - 320px);
   height: 5rem;
   padding: 0 3rem;
+
+  &.sticky {
+    background-color: var(--surface-overlay);
+  }
 
   @include media-breakpoint-down(xl) {
     flex-wrap: wrap;

@@ -1,4 +1,4 @@
-import { IdName } from '../id-name';
+import { SelectItem } from 'primeng/api';
 
 export enum Game {
   None = 'None',
@@ -8,16 +8,16 @@ export enum Game {
   Satisfactory = 'Satisfactory',
 }
 
-export const Games = [
+export const games = [
   Game.Factorio,
   Game.CaptainOfIndustry,
   Game.DysonSphereProgram,
   Game.Satisfactory,
 ];
 
-export const GameOptions: IdName<Game>[] = [
-  { id: Game.Factorio, name: 'game.factorio' },
-  { id: Game.CaptainOfIndustry, name: 'game.captainOfIndustry' },
-  { id: Game.DysonSphereProgram, name: 'game.dysonSphereProgram' },
-  { id: Game.Satisfactory, name: 'game.satisfactory' },
+export const gameOptions: SelectItem<Game>[] = [
+  { value: Game.Factorio, label: 'game.factorio' },
+  { value: Game.CaptainOfIndustry, label: 'game.captainOfIndustry' },
+  { value: Game.DysonSphereProgram, label: 'game.dysonSphereProgram' },
+  { value: Game.Satisfactory, label: 'game.satisfactory' },
 ];

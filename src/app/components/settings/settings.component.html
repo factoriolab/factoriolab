@@ -25,12 +25,12 @@
         </div>
         <div class="flex states">
           <ng-container *ngIf="!editState; else stateInput">
-            <lab-options
+            <!-- <lab-options
               [title]="'setting.selectSavedState' | translate"
               [selected]="state"
               [options]="vm.savedStates"
               (selectId)="setState($event, vm.preferences)"
-            ></lab-options>
+            ></lab-options> -->
             <button
               *ngIf="state"
               [title]="'setting.deleteSavedState' | translate"
@@ -90,12 +90,12 @@
               ></lab-info>
             </td>
             <td>
-              <lab-options
+              <!-- <lab-options
                 [title]="'setting.gameTitle' | translate"
                 [selected]="vm.data.game"
                 [options]="GameOptions"
                 (selectId)="setGame($event)"
-              ></lab-options>
+              ></lab-options> -->
             </td>
           </tr>
           <tr *ngIf="vm.data.game === Game.Factorio">
@@ -106,12 +106,12 @@
               ></lab-info>
             </td>
             <td>
-              <lab-options
+              <!-- <lab-options
                 [title]="'setting.modSetTitle' | translate"
                 [selected]="vm.settings.modId"
                 [options]="vm.modOptions"
                 (selectId)="setMod($event)"
-              ></lab-options>
+              ></lab-options> -->
             </td>
           </tr>
           <tr>

@@ -6,9 +6,10 @@
   display: flex;
   flex-direction: column;
   position: fixed;
-  z-index: 2;
+  z-index: 3;
   top: 0;
   left: 0;
+  padding: 1rem 0.75rem 1rem 1rem;
 
   transition: transform 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99);
 

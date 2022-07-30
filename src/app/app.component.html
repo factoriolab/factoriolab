@@ -1,4 +1,7 @@
-<lab-topbar (toggleMenu)="toggleMenu()"></lab-topbar>
+<lab-topbar
+  [sticky]="((responsiveSvc.scrollTop$ | async) ?? 0) > 16"
+  (toggleMenu)="toggleMenu()"
+></lab-topbar>
 <lab-menu [active]="menuActive" (toggleMenu)="toggleMenu()"></lab-menu>
 <div
   class="layout-mask"

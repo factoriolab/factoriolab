@@ -8,8 +8,13 @@ import { GoogleAnalyticsService } from 'ngx-google-analytics';
 import { combineLatest, map } from 'rxjs';
 
 import { environment } from 'src/environments';
-import { APP, Game, GameInfo, ItemId, MatrixResultType } from './models';
-import { ErrorService, RouterService, StateService } from './services';
+import { APP, Game, gameInfo, ItemId, MatrixResultType } from './models';
+import {
+  ErrorService,
+  ResponsiveService,
+  RouterService,
+  StateService,
+} from './services';
 import { LabState, Preferences, Products, Settings } from './store';
 import { ResetAction } from './store/app.actions';
 
@@ -45,6 +50,7 @@ export class AppComponent implements OnInit {
   Game = Game;
 
   constructor(
+    public responsiveSvc: ResponsiveService,
     @Inject(DOCUMENT) private document: Document,
     private meta: Meta,
     private router: Router,
@@ -65,7 +71,7 @@ export class AppComponent implements OnInit {
       this.gaSvc.event('set_game', game);
       this.meta.updateTag({
         name: 'description',
-        content: `A feature-rich production calculator for ${GameInfo[game].meta} and similar games.
+        content: `A feature-rich production calculator for ${gameInfo[game].meta} and similar games.
 Determine resource and factory requirements for your desired output products.`,
       });
     });
@@ -104,7 +110,7 @@ Determine resource and factory requirements for your desired output products.`,
 
   reset(game: Game): void {
     this.errorSvc.message$.next(null);
-    this.router.navigateByUrl(GameInfo[game].route);
+    this.router.navigateByUrl(gameInfo[game].route);
     this.store.dispatch(new ResetAction());
   }
 }

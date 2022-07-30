@@ -9,4 +9,8 @@ export class ResponsiveService {
     map((ev: any) => ev.target.innerWidth),
     startWith(window.innerWidth)
   );
+  scrollTop$ = fromEvent(window, 'scroll').pipe(
+    map((ev) => window.scrollY),
+    startWith(window.scrollY)
+  );
 }

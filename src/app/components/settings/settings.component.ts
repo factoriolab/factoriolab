@@ -21,7 +21,7 @@ import {
   DisplayRate,
   displayRateOptions,
   Game,
-  GameOptions,
+  gameOptions,
   IdName,
   InserterCapacity,
   InserterCapacityOptions,
@@ -142,7 +142,7 @@ export class SettingsComponent implements OnInit {
     },
   ];
 
-  GameOptions = GameOptions;
+  GameOptions = gameOptions;
   ResearchSpeedOptions = ResearchSpeedOptions;
   InserterCapacityOptions = InserterCapacityOptions;
   InserterTargetOptions = InserterTargetOptions;

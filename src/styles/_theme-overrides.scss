@@ -38,3 +38,11 @@
 .p-dropdown-panel .p-dropdown-items {
   max-width: 100%;
 }
+
+// Imitate .p-float-label without using input field
+.p-static-label {
+  font-size: 0.75rem;
+  margin-left: 0.75rem;
+  padding-bottom: 0.5rem;
+  color: var(--text-color-secondary);
+}

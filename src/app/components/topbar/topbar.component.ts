@@ -3,6 +3,8 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  HostBinding,
+  Input,
   OnInit,
   Output,
 } from '@angular/core';
@@ -15,7 +17,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';
 import { combineLatest, startWith } from 'rxjs';
 
-import { APP, Game, GameInfo, Games } from '~/models';
+import { APP, Game, gameInfo, games } from '~/models';
 import { LabState, Settings } from '~/store';
 
 interface MenuLink {
@@ -32,14 +34,16 @@ interface MenuLink {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TopbarComponent implements OnInit {
+  @HostBinding('class.sticky') @Input() sticky = false;
+
   @Output() toggleMenu = new EventEmitter();
 
   gameCtrl = this.fb.control<Game>(Game.Factorio);
-  gameOptions: SelectItem<Game>[] = Games.map((g) => ({
-    icon: GameInfo[g].icon,
+  gameOptions: SelectItem<Game>[] = games.map((g) => ({
+    icon: gameInfo[g].icon,
     value: g,
-    label: GameInfo[g].route,
-    title: this.translateSvc.instant(GameInfo[g].title),
+    label: gameInfo[g].route,
+    title: this.translateSvc.instant(gameInfo[g].title),
   }));
 
   links: MenuLink[] = [
@@ -85,20 +89,20 @@ export class TopbarComponent implements OnInit {
     this.lang$.subscribe(() => {
       this.gameOptions.forEach(
         (opt) =>
-          (opt.title = this.translateSvc.instant(GameInfo[opt.value].title))
+          (opt.title = this.translateSvc.instant(gameInfo[opt.value].title))
       );
       this.ref.markForCheck();
     });
 
     combineLatest([this.game$, this.lang$.pipe(startWith('en'))]).subscribe(
       ([game, lang]) => {
-        const title = this.translateSvc.instant(GameInfo[game].title);
+        const title = this.translateSvc.instant(gameInfo[game].title);
         this.titleSvc.setTitle(`${APP} | ${title}`);
       }
     );
   }
 
-  selectGame(event: { option: SelectItem<Game> }) {
+  selectGame(event: { option: SelectItem<Game> }): void {
     this.router.navigateByUrl(event.option.label ?? '');
   }
 }

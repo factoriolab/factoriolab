@@ -1,4 +1,5 @@
 import { createSelector } from '@ngrx/store';
+import { SelectItem } from 'primeng/api';
 
 import { Column, LinkValue } from '~/models';
 import { LabState } from '../';
@@ -62,10 +63,12 @@ export const getLinkPrecision = createSelector(
 );
 
 export const getSavedStates = createSelector(getStates, (states) =>
-  Object.keys(states).map((i) => ({
-    id: i,
-    name: i,
-  }))
+  Object.keys(states).map(
+    (i): SelectItem => ({
+      label: i,
+      value: i,
+    })
+  )
 );
 
 export const getColumnsVisible = createSelector(

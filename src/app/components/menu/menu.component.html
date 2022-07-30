@@ -1,24 +1,196 @@
-<div class="d-flex align-items-center justify-content-between p-3">
-  <h2>{{ 'settings.title' | translate }}</h2>
-  <div>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="p-button-rounded p-button-text"
-      icon="fa-solid fa-trash"
-      [pTooltip]="'settings.reset' | translate"
-      tooltipPosition="bottom"
-      (click)="clickResetSettings()"
-    ></button>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="p-button-rounded p-button-text d-inline-block d-sm-none"
-      icon="fa-solid fa-times"
-      (click)="toggleMenu.emit()"
-    ></button>
+<p-scrollPanel
+  styleClass="pe-1"
+  [style]="{ height: '100vh' }"
+  *ngIf="vm$ | async as vm"
+>
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h2 class="mb-0">{{ 'settings.title' | translate }}</h2>
+    <div>
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="p-button-rounded p-button-text"
+        icon="fa-solid fa-trash"
+        [pTooltip]="'settings.reset' | translate"
+        tooltipPosition="bottom"
+        (click)="clickResetSettings()"
+      ></button>
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="p-button-rounded p-button-text d-inline-flex d-sm-none"
+        icon="fa-solid fa-xmark"
+        (click)="toggleMenu.emit()"
+      ></button>
+    </div>
   </div>
-</div>
+  <div class="mb-3">
+    <h3 [pTooltip]="'settings.savedStatesTooltip' | translate">
+      {{ 'settings.savedStates' | translate }}
+      <i class="fa-solid fa-info-circle"></i>
+    </h3>
+    <div class="p-inputgroup">
+      <ng-container *ngIf="editState; else selectState">
+        <button
+          pButton
+          pRipple
+          type="button"
+          icon="fa-solid fa-xmark"
+          [pTooltip]="'cancel' | translate"
+          (click)="editState = false"
+        ></button>
+        <input
+          type="text"
+          pInputText
+          labFocus
+          [placeholder]="'settings.nameSavedState' | translate"
+          [pTooltip]="'settings.savedStateName' | translate"
+          tooltipPosition="top"
+          [formControl]="stateCtrl"
+        />
+        <button
+          pButton
+          pRipple
+          type="button"
+          icon="fa-solid fa-floppy-disk"
+          [pTooltip]="'settings.saveSavedState' | translate"
+          [disabled]="!stateCtrl.valid"
+        ></button>
+      </ng-container>
+    </div>
+    <ng-template #selectState>
+      <button
+        pButton
+        pRipple
+        type="button"
+        icon="fa-solid fa-pen-to-square"
+        [pTooltip]="'settings.editSavedState' | translate"
+        (click)="openEditState()"
+      ></button>
+      <p-dropdown
+        [placeholder]="'settings.savedStatesEmpty' | translate"
+        [pTooltip]="'settings.selectSavedState' | translate"
+        tooltipPosition="top"
+        [ngModel]="state"
+        [options]="vm.savedStates"
+        (onChange)="setState($event.value, vm.preferences)"
+      ></p-dropdown>
+      <button
+        pButton
+        pRipple
+        type="button"
+        icon="fa-solid fa-trash"
+        [pTooltip]="'settings.deleteSavedState' | translate"
+        [disabled]="!state"
+      ></button>
+    </ng-template>
+  </div>
+  <div class="mb-3">
+    <div class="d-flex align-items-center justify-content-between mb-2">
+      <h3 class="mb-0">{{ 'settings.recipes' | translate }}</h3>
+      <a
+        *ngIf="vm.data.game === Game.Factorio"
+        target="_blank"
+        href="https://github.com/factoriolab/factoriolab/issues/new?assignees=&labels=mod+support&template=mod-request.md&title="
+        ><small>{{ 'settings.requestMod' | translate }}</small></a
+      >
+    </div>
+    <div class="mt-4 py-2">
+      <span class="p-float-label">
+        <p-dropdown
+          inputId="game"
+          styleClass="w-100"
+          [pTooltip]="'settings.gameTooltip' | translate"
+          [ngModel]="vm.data.game"
+          [options]="gameOptions"
+          (onChange)="setGame($event.value)"
+        >
+          <ng-template pTemplate="selectedItem" let-item>
+            {{ item.label | translate }}
+          </ng-template>
+          <ng-template pTemplate="item" let-item>
+            {{ item.label | translate }}
+          </ng-template>
+        </p-dropdown>
+        <label for="game">{{ 'settings.game' | translate }}</label>
+      </span>
+    </div>
+    <div *ngIf="vm.data.game === Game.Factorio" class="mt-4 py-2">
+      <span class="p-float-label">
+        <p-dropdown
+          inputId="mod"
+          styleClass="w-100"
+          [pTooltip]="'settings.modSetTooltip' | translate"
+          [filter]="true"
+          [ngModel]="vm.settings.modId"
+          [options]="vm.modOptions"
+          (onChange)="setMod($event.value)"
+        >
+        </p-dropdown>
+        <label for="mod">{{ 'settings.modSet' | translate }}</label>
+      </span>
+    </div>
+    <div class="ps-2">
+      <label class="p-static-label">{{
+        'settings.modVersions' | translate
+      }}</label>
+      <p-scrollPanel
+        *ngIf="vm.data.version"
+        [style]="{ maxHeight: '200px' }"
+        [pTooltip]="'settings.modVersionsTooltip' | translate"
+      >
+        <ul class="ps-3 mb-0">
+          <li
+            class="d-flex justify-content-between"
+            *ngFor="let mod of vm.data.version | keyvalue"
+          >
+            <span>{{ mod.key }}</span
+            ><span>{{ mod.value }}</span>
+          </li>
+        </ul>
+      </p-scrollPanel>
+    </div>
+    <div class="mt-4 py-2">
+      <span class="p-float-label">
+        <p-multiSelect
+          inputId="disabled-recipes"
+          styleClass="w-100"
+          scrollHeight="400px"
+          [virtualScroll]="true"
+          [virtualScrollItemSize]="48"
+          [tooltip]="'settings.disabledRecipesTooltip' | translate"
+          [ngModel]="vm.settings.disabledRecipeIds"
+          [options]="vm.disabledRecipeOptions"
+          (onChange)="
+            setDisabledRecipes(
+              $event.value,
+              vm.data.defaults?.disabledRecipeIds
+            )
+          "
+        >
+          <ng-template pTemplate="selectedItems" let-items>
+            {{ items?.length ?? 0 }}
+            {{ 'settings.recipesDisabled' | translate }}
+          </ng-template>
+          <ng-template pTemplate="item" let-item>
+            <div class="d-flex align-items-center">
+              <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+              <div class="ms-3 text-truncate">
+                {{ item.label }}
+              </div>
+            </div>
+          </ng-template>
+        </p-multiSelect>
+        <label for="disabled-recipes">{{
+          'settings.disabledRecipes' | translate
+        }}</label>
+      </span>
+    </div>
+  </div>
+  <div class="mb-3">
+    <h3>{{ 'settings.display' | translate }}</h3>
+  </div>
+</p-scrollPanel>
 <p-confirmDialog></p-confirmDialog>

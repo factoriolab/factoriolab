@@ -125,7 +125,15 @@ export const getPresetOptions = createSelector(getGame, (game) =>
 export const getModOptions = createSelector(
   getGame,
   Datasets.getModSets,
-  (game, modSets) => modSets.filter((b) => b.game === game)
+  (game, modSets) =>
+    modSets
+      .filter((b) => b.game === game)
+      .map(
+        (m): SelectItem => ({
+          label: m.name,
+          value: m.id,
+        })
+      )
 );
 
 export const getColumnsState = createSelector(
@@ -675,6 +683,15 @@ export const getItemOptions = createSelector(getDataset, (data) =>
   data.itemIds.map(
     (i): SelectItem => ({
       label: data.itemEntities[i].name,
+      value: i,
+    })
+  )
+);
+
+export const getDisabledRecipeOptions = createSelector(getDataset, (data) =>
+  data.complexRecipeIds.map(
+    (i): SelectItem => ({
+      label: data.recipeEntities[i].name,
       value: i,
     })
   )
