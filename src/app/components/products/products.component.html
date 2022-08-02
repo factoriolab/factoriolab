@@ -1,6 +1,10 @@
 <p-card *ngIf="vm$ | async as vm" [header]="'products.title' | translate">
   <div
-    *ngFor="let product of vm.products; let i = index"
+    *ngFor="
+      let product of vm.products;
+      let i = index;
+      trackBy: trackSvc.trackById
+    "
     class="d-flex align-items-center mb-4"
   >
     <div class="p-inputgroup">

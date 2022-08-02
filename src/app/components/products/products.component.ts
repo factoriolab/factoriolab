@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
 import { DisplayRate, displayRateOptions, RateType } from '~/models';
+import { TrackService } from '~/services';
 import {
   Factories,
   Items,
@@ -57,7 +58,7 @@ export class ProductsComponent {
 
   displayRateOptions = displayRateOptions;
 
-  constructor(private store: Store<LabState>) {}
+  constructor(public trackSvc: TrackService, private store: Store<LabState>) {}
 
   /** Action Dispatch Methods */
   removeProduct(id: string): void {

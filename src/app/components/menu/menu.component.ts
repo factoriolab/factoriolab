@@ -9,18 +9,16 @@ import {
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from 'primeng/api';
 import { combineLatest, first, map } from 'rxjs';
 
 import { Game, gameInfo, gameOptions } from '~/models';
-import { RouterService } from '~/services';
+import { DialogService, RouterService } from '~/services';
 import { App, LabState, Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
-@UntilDestroy()
 @Component({
   selector: 'lab-menu',
   templateUrl: './menu.component.html',
@@ -69,9 +67,10 @@ export class MenuComponent implements OnInit {
   Game = Game;
 
   constructor(
-    private confirmationSvc: ConfirmationService,
+    public dialogSvc: DialogService,
     private router: Router,
     private store: Store<LabState>,
+    private confirmationSvc: ConfirmationService,
     private translateSvc: TranslateService,
     private routerSvc: RouterService
   ) {}
