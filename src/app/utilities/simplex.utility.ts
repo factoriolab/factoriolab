@@ -493,7 +493,11 @@ export class SimplexUtility {
         )
       ) {
         // Recipes for this item are part of the solution, include result
-        O.push(Rational.fromNumber(itemConstrEntities[itemId].value));
+        O.push(
+          Rational.fromNumber(itemConstrEntities[itemId].value).sub(
+            state.items[itemId]
+          )
+        );
       } else {
         // Item is not part of the solution, remove it
         delete state.items[itemId];
@@ -516,6 +520,8 @@ export class SimplexUtility {
     for (const inputId of state.inputIds) {
       O.push(Rational.fromNumber(inputVarEntities[inputId].value));
     }
+
+    O.push(Rational.fromNumber(m.value));
 
     return { returnCode: result, time, O };
   }
