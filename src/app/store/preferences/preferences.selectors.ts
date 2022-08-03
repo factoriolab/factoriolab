@@ -70,8 +70,3 @@ export const getSavedStates = createSelector(getStates, (states) =>
     })
   )
 );
-
-export const getColumnsVisible = createSelector(
-  getColumns,
-  (columns) => Object.keys(columns).filter((c) => columns[c].show).length
-);

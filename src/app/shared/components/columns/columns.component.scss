@@ -1,45 +1,7 @@
-:host {
-  display: flex;
-
-  > div {
-    flex-grow: 1;
-    display: flex;
-
-    > * {
-      flex-grow: 1;
-    }
-  }
-}
-
-.option {
-  cursor: pointer;
-  padding: 0.375rem 0;
-  user-select: none;
-
-  > * + * {
-    margin-left: 0.375rem;
-  }
-}
-
-table {
-  td,
-  th {
-    padding: 0.25rem;
-    text-align: center;
-
-    &:not(:last-child) {
-      border-right: 1px solid var(--color-back);
-    }
-  }
-
-  thead th:last-child {
-    border-left: 1px solid var(--color-back);
-  }
-
-  tbody {
-    tr {
-      border-top: 1px solid var(--color-back);
-      height: 45px;
-    }
+th,
+td {
+  min-width: 125px;
+  .small {
+    min-width: 100px;
   }
 }

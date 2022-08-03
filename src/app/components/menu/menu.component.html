@@ -1,7 +1,7 @@
 <p-scrollPanel *ngIf="vm$ | async as vm" [style]="{ height: '100vh' }">
-  <div class="p-3">
+  <div class="p-3 overflow-hidden">
     <div class="d-flex align-items-center justify-content-between mb-3">
-      <h2 class="mb-0">{{ 'settings.title' | translate }}</h2>
+      <h2 class="mb-0">{{ 'menu.header' | translate }}</h2>
       <div>
         <button
           pButton
@@ -9,7 +9,7 @@
           type="button"
           class="p-button-rounded p-button-text"
           icon="fa-solid fa-trash"
-          [pTooltip]="'settings.reset' | translate"
+          [pTooltip]="'menu.reset' | translate"
           tooltipPosition="bottom"
           (click)="clickResetSettings()"
         ></button>
@@ -24,8 +24,8 @@
       </div>
     </div>
     <div class="mb-3">
-      <h3 [pTooltip]="'settings.savedStatesTooltip' | translate">
-        {{ 'settings.savedStates' | translate }}
+      <h3 [pTooltip]="'menu.savedStatesTooltip' | translate">
+        {{ 'menu.savedStates' | translate }}
         <i class="fa-solid fa-info-circle"></i>
       </h3>
       <div class="p-inputgroup">
@@ -42,8 +42,8 @@
             type="text"
             pInputText
             labFocus
-            [placeholder]="'settings.nameSavedState' | translate"
-            [pTooltip]="'settings.savedStateName' | translate"
+            [placeholder]="'menu.nameSavedState' | translate"
+            [pTooltip]="'menu.savedStateName' | translate"
             tooltipPosition="top"
             [formControl]="stateCtrl"
           />
@@ -52,7 +52,7 @@
             pRipple
             type="button"
             icon="fa-solid fa-floppy-disk"
-            [pTooltip]="'settings.saveSavedState' | translate"
+            [pTooltip]="'menu.saveSavedState' | translate"
             [disabled]="!stateCtrl.valid"
             (click)="clickSaveState()"
           ></button>
@@ -64,12 +64,12 @@
           pRipple
           type="button"
           icon="fa-solid fa-pen-to-square"
-          [pTooltip]="'settings.editSavedState' | translate"
+          [pTooltip]="'menu.editSavedState' | translate"
           (click)="openEditState()"
         ></button>
         <p-dropdown
-          [placeholder]="'settings.selectSavedState' | translate"
-          [pTooltip]="'settings.selectSavedState' | translate"
+          [placeholder]="'menu.selectSavedState' | translate"
+          [pTooltip]="'menu.selectSavedState' | translate"
           tooltipPosition="top"
           [ngModel]="state"
           [options]="vm.savedStates"
@@ -80,7 +80,7 @@
           pRipple
           type="button"
           icon="fa-solid fa-trash"
-          [pTooltip]="'settings.deleteSavedState' | translate"
+          [pTooltip]="'menu.deleteSavedState' | translate"
           [disabled]="!state"
           (click)="clickDeleteState()"
         ></button>
@@ -88,12 +88,12 @@
     </div>
     <div class="mb-3">
       <div class="d-flex align-items-center justify-content-between mb-2">
-        <h3 class="mb-0">{{ 'settings.recipes' | translate }}</h3>
+        <h3 class="mb-0">{{ 'menu.recipes' | translate }}</h3>
         <a
           *ngIf="vm.data.game === Game.Factorio"
           target="_blank"
           href="https://github.com/factoriolab/factoriolab/issues/new?assignees=&labels=mod+support&template=mod-request.md&title="
-          ><small>{{ 'settings.requestMod' | translate }}</small></a
+          ><small>{{ 'menu.requestMod' | translate }}</small></a
         >
       </div>
       <div class="mt-4 py-2">
@@ -101,7 +101,7 @@
           <p-dropdown
             inputId="game"
             styleClass="w-100"
-            [pTooltip]="'settings.gameTooltip' | translate"
+            [pTooltip]="'menu.gameTooltip' | translate"
             [ngModel]="vm.data.game"
             [options]="gameOptions"
             (onChange)="setGame($event.value)"
@@ -113,7 +113,7 @@
               {{ item.label | translate }}
             </ng-template>
           </p-dropdown>
-          <label for="game">{{ 'settings.game' | translate }}</label>
+          <label for="game">{{ 'menu.game' | translate }}</label>
         </span>
       </div>
       <div *ngIf="vm.data.game === Game.Factorio" class="mt-4 py-2">
@@ -121,26 +121,26 @@
           <p-dropdown
             inputId="mod"
             styleClass="w-100"
-            [pTooltip]="'settings.modSetTooltip' | translate"
+            [pTooltip]="'menu.modSetTooltip' | translate"
             [filter]="true"
             [ngModel]="vm.settings.modId"
             [options]="vm.modOptions"
             (onChange)="setMod($event.value)"
           >
           </p-dropdown>
-          <label for="mod">{{ 'settings.modSet' | translate }}</label>
+          <label for="mod">{{ 'menu.modSet' | translate }}</label>
         </span>
       </div>
       <div class="ps-2">
         <label class="p-static-label">{{
-          'settings.modVersions' | translate
+          'menu.modVersions' | translate
         }}</label>
         <p-scrollPanel
           *ngIf="vm.data.version"
           [style]="{ maxHeight: '200px' }"
-          [pTooltip]="'settings.modVersionsTooltip' | translate"
+          [pTooltip]="'menu.modVersionsTooltip' | translate"
         >
-          <ul class="ps-3 mb-0">
+          <ul class="ps-0 mb-0">
             <li
               class="d-flex justify-content-between"
               *ngFor="let mod of vm.data.version | keyvalue"
@@ -159,7 +159,7 @@
             scrollHeight="400px"
             [virtualScroll]="true"
             [virtualScrollItemSize]="48"
-            [tooltip]="'settings.disabledRecipesTooltip' | translate"
+            [tooltip]="'menu.disabledRecipesTooltip' | translate"
             [ngModel]="vm.settings.disabledRecipeIds"
             [options]="vm.disabledRecipeOptions"
             (onChange)="
@@ -171,7 +171,7 @@
           >
             <ng-template pTemplate="selectedItems" let-items>
               {{ items?.length ?? 0 }}
-              {{ 'settings.recipesDisabled' | translate }}
+              {{ 'menu.recipesDisabled' | translate }}
             </ng-template>
             <ng-template pTemplate="item" let-item>
               <div class="d-flex align-items-center">
@@ -183,28 +183,285 @@
             </ng-template>
           </p-multiSelect>
           <label for="disabled-recipes">{{
-            'settings.disabledRecipes' | translate
+            'menu.disabledRecipes' | translate
           }}</label>
         </span>
       </div>
     </div>
     <div class="mb-3">
-      <h3>{{ 'settings.display' | translate }}</h3>
-      <div>
-        <label class="p-static-label">{{
-          'settings.columnsAndPrecision' | translate
-        }}</label>
-        <div>
-          <button
-            pButton
-            pRipple
-            class="w-100"
-            (click)="dialogSvc.showColumns$.next()"
+      <h3>{{ 'menu.display' | translate }}</h3>
+      <button
+        pButton
+        pRipple
+        class="w-100 my-2"
+        icon="fa-solid fa-table-columns"
+        [label]="'menu.openColumnSettings' | translate"
+        (click)="dialogSvc.showColumns$.next()"
+      ></button>
+      <div class="mt-4 py-2">
+        <span class="p-float-label">
+          <p-dropdown
+            inputId="display-rate"
+            styleClass="w-100"
+            [pTooltip]="'menu.displayRateTooltip' | translate"
+            [ngModel]="vm.settings.displayRate"
+            [options]="displayRateOptions"
+            (onChange)="setDisplayRate($event.value, vm.settings.displayRate)"
           >
-            show
-          </button>
-        </div>
+            <ng-template pTemplate="selectedItem" let-item>
+              {{ item.label | translate }}
+            </ng-template>
+            <ng-template pTemplate="item" let-item>
+              {{ item.label | translate }}
+            </ng-template>
+          </p-dropdown>
+          <label for="display-rate">{{ 'menu.displayRate' | translate }}</label>
+        </span>
       </div>
+      <div *ngIf="vm.columns[Column.Power].show" class="mt-4 py-2">
+        <span class="p-float-label">
+          <p-dropdown
+            inputId="power-unit"
+            styleClass="w-100"
+            [pTooltip]="'menu.powerUnitTooltip' | translate"
+            [ngModel]="vm.preferences.powerUnit"
+            [options]="powerUnitOptions"
+            (onChange)="setPowerUnit($event.value)"
+          >
+            <ng-template pTemplate="selectedItem" let-item>
+              {{ item.label | translate }}
+            </ng-template>
+            <ng-template pTemplate="item" let-item>
+              {{ item.label | translate }}
+            </ng-template>
+          </p-dropdown>
+          <label for="power-unit">{{ 'menu.powerUnit' | translate }}</label>
+        </span>
+      </div>
+    </div>
+    <div class="mb-3">
+      <h3>{{ 'menu.factory' | translate }}</h3>
+      <div class="mt-4 py-2">
+        <span class="p-float-label">
+          <p-dropdown
+            inputId="preset"
+            styleClass="w-100"
+            [pTooltip]="'menu.presetTooltip' | translate"
+            [ngModel]="vm.settings.preset"
+            [options]="vm.presetOptions"
+            (onChange)="setPreset($event.value)"
+          >
+            <ng-template pTemplate="selectedItem" let-item>
+              {{ item.label | translate }}
+            </ng-template>
+            <ng-template pTemplate="item" let-item>
+              {{ item.label | translate }}
+            </ng-template>
+          </p-dropdown>
+          <label for="preset">{{ 'menu.preset' | translate }}</label>
+        </span>
+      </div>
+      <ng-container *ngIf="vm.data.game !== Game.CaptainOfIndustry">
+        <p-table [value]="vm.factoryRows">
+          <ng-template pTemplate="body" let-factoryId>
+            <tr *ngIf="vm.factories.entities[factoryId] as factory">
+              <td
+                [pTooltip]="
+                  factoryId
+                    ? vm.data.itemEntities[factoryId].name
+                    : ('menu.factoryDefaults' | translate)
+                "
+              >
+                <div class="d-flex align-items-center">
+                  <i
+                    [class]="
+                      factoryId
+                        ? (factoryId | iconClass)
+                        : 'fa-solid fa-industry'
+                    "
+                  ></i>
+                </div>
+              </td>
+              <td
+                [pTooltip]="
+                  factory.moduleRankIds != null
+                    ? factory.moduleRankIds.length
+                      ? (factory.moduleRankIds
+                        | listNames: vm.data.itemEntities)
+                      : ('menu.noModifiers' | translate)
+                    : ''
+                "
+              >
+                <div
+                  *ngIf="factory.moduleRankIds != null"
+                  class="d-flex align-items-center"
+                >
+                  <i
+                    *ngIf="factory.moduleRankIds.length; else emptyModule"
+                    [class]="factory.moduleRankIds[0] | iconClass"
+                  >
+                    <span *ngIf="factory.moduleRankIds.length > 1"
+                      >+{{ factory.moduleRankIds.length - 1 }}</span
+                    >
+                  </i>
+                  <ng-template #emptyModule>
+                    <i class="lab-icon module"></i>
+                  </ng-template>
+                </div>
+              </td>
+              <td *ngIf="vm.data.game === Game.Satisfactory">
+                {{ factory.overclock }}%
+              </td>
+              <ng-container *ngIf="vm.data.game === Game.Factorio">
+                <td
+                  [pTooltip]="
+                    factory.beaconCount != null
+                      ? factory.beaconCount !== '0' && factory.beaconId
+                        ? factory.beaconCount +
+                          ' ' +
+                          vm.data.itemEntities[factory.beaconId].name
+                        : ('menu.noBeacons' | translate)
+                      : ''
+                  "
+                >
+                  <div
+                    *ngIf="factory.beaconCount != null"
+                    class="d-flex align-items-center"
+                  >
+                    <i class="ms-2" [class]="factory.beaconId | iconClass">
+                      <span>{{ factory.beaconCount }}</span>
+                    </i>
+                    <i
+                      class="ms-2"
+                      [class]="factory.beaconModuleId | iconClass"
+                    ></i>
+                  </div>
+                </td>
+              </ng-container>
+            </tr>
+          </ng-template>
+        </p-table>
+
+        <!-- <div *ngFor="let f of vm.factoryRows" class="p-inputgroup">
+          <ng-container *ngIf="f; else defaultFactory">
+            <span class="p-inputgroup-addon">
+              <i [class]="f | iconClass"></i>
+            </span>
+          </ng-container>
+          <ng-template #defaultFactory>
+            <span class="p-inputgroup-addon">
+              <i class="p-1 fa-solid fa-industry"></i>
+            </span>
+          </ng-template>
+        </div>-->
+      </ng-container>
+      <button
+        pButton
+        pRipple
+        class="w-100 my-2"
+        icon="fa-solid fa-industry"
+        [label]="'menu.openFactorySettings' | translate"
+        (click)="dialogSvc.showFactories$.next()"
+      ></button>
+      <!-- <div *ngIf="vm.data.game !== Game.CaptainOfIndustry" class="py-2">
+        <div
+          *ngFor="let f of vm.factoryRows; let i = index; let last = last"
+          class="mb-3"
+        >
+          <ng-container *ngIf="f; else defaultFactory">
+            <div class="p-inputgroup">
+              <button pButton pRipple icon="fa-solid fa-minus"></button>
+              <p-dropdown
+                [ngModel]="f"
+                [options]="vm.factoryOptions"
+                appendTo="body"
+              >
+                <ng-template pTemplate="selectedItem" let-item>
+                  <div class="d-flex align-items-center">
+                    <i
+                      class="flex-shrink-0"
+                      [class]="item.value | iconClass"
+                    ></i>
+                    <div class="ms-3 text-truncate">
+                      {{ item.label }}
+                    </div>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="item" let-item>
+                  <div class="d-flex align-items-center">
+                    <i
+                      class="flex-shrink-0"
+                      [class]="item.value | iconClass"
+                    ></i>
+                    <div class="ms-3 text-truncate">
+                      {{ item.label }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+            <div class="p-inputgroup">
+              <span class="p-inputgroup-addon">Modifier</span>
+              <p-dropdown
+                [ngModel]="f"
+                [options]="vm.factoryOptions"
+                appendTo="body"
+              >
+                <ng-template pTemplate="selectedItem" let-item>
+                  <div class="d-flex align-items-center">
+                    <i
+                      class="flex-shrink-0"
+                      [class]="item.value | iconClass"
+                    ></i>
+                    <div class="ms-3 text-truncate">
+                      {{ item.label }}
+                    </div>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="item" let-item>
+                  <div class="d-flex align-items-center">
+                    <i
+                      class="flex-shrink-0"
+                      [class]="item.value | iconClass"
+                    ></i>
+                    <div class="ms-3 text-truncate">
+                      {{ item.label }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+          </ng-container>
+          <ng-template #defaultFactory>
+            <div class="p-inputgroup">
+              <span class="p-inputgroup-addon">
+                <i class="p-1 fa-solid fa-industry"></i>
+                <span class="ms-3">{{
+                  'menu.factoryDefaults' | translate
+                }}</span>
+              </span>
+            </div>
+          </ng-template>
+        </div>
+        <p-dropdown
+          [options]="vm.factoryOptions"
+          [filter]="true"
+          filterBy="label"
+          appendTo="body"
+        >
+          <ng-template pTemplate="selectedItem" let-item>
+            <span>{{ 'menu.addFactoryPreference' | translate }}</span>
+          </ng-template>
+          <ng-template pTemplate="item" let-item>
+            <div class="d-flex align-items-center">
+              <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+              <div class="ms-3 text-truncate">
+                {{ item.label }}
+              </div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div> -->
     </div>
   </div>
 </p-scrollPanel>

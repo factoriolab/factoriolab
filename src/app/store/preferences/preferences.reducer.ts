@@ -1,5 +1,5 @@
 import {
-  AllColumns,
+  allColumns,
   Column,
   ColumnSettings,
   Entities,
@@ -27,7 +27,7 @@ export interface PreferencesState {
   powerUnit: PowerUnit;
 }
 
-export const initialColumnsState: ColumnsState = AllColumns.reduce(
+export const initialColumnsState: ColumnsState = allColumns.reduce(
   (e: ColumnsState, c) => {
     e[c] = { show: true, precision: 1 };
     return e;

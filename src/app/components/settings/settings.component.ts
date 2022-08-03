@@ -29,7 +29,7 @@ import {
   InserterTargetOptions,
   ItemId,
   PowerUnit,
-  PowerUnitOptions,
+  powerUnitOptions,
   Preset,
   ResearchSpeed,
   ResearchSpeedOptions,
@@ -147,7 +147,7 @@ export class SettingsComponent implements OnInit {
   InserterCapacityOptions = InserterCapacityOptions;
   InserterTargetOptions = InserterTargetOptions;
   DisplayRateOptions = displayRateOptions;
-  PowerUnitOptions = PowerUnitOptions;
+  PowerUnitOptions = powerUnitOptions;
   SimplexType = SimplexType;
   BrowserUtility = BrowserUtility;
 

@@ -48,6 +48,20 @@ ul {
     width: 4rem;
     height: 4rem;
   }
+
+  > span {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    font-weight: 700;
+    font-style: normal;
+    color: white;
+    text-shadow: 0px 2px 2px black, 0px -2px 2px black, 2px 0px 2px black,
+      -2px 0px 2px black;
+    pointer-events: none;
+    font-size: 1.125rem;
+    line-height: 1rem;
+  }
 }
 
 // input:focus,

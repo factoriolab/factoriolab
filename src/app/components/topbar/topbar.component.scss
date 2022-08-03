@@ -15,7 +15,10 @@
   padding: 0 3rem;
 
   &.sticky {
-    background-color: var(--surface-overlay);
+    // background-color: var(--surface-overlay);
+    // TODO: Determine bg color based on theme
+    background-color: #0000004d;
+    backdrop-filter: blur(12px);
   }
 
   @include media-breakpoint-down(xl) {

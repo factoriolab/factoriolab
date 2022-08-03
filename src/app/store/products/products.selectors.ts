@@ -8,7 +8,7 @@ import {
   Game,
   ItemId,
   PowerUnit,
-  PrecisionColumns,
+  precisionColumns,
   RateType,
   Rational,
   RationalProduct,
@@ -618,7 +618,7 @@ export const getEffectivePrecision = createSelector(
       (s) => s.surplus
     );
 
-    for (const i of PrecisionColumns.filter((i) => columns[i].show)) {
+    for (const i of precisionColumns.filter((i) => columns[i].show)) {
       effPrecision[i] = effPrecFrom(steps, columns[i].precision, (s) =>
         i === Column.Items
           ? (s.items || Rational.zero).sub(s.surplus || Rational.zero)

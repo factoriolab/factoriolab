@@ -6,4 +6,5 @@ import { Subject } from 'rxjs';
 })
 export class DialogService {
   showColumns$ = new Subject<void>();
+  showFactories$ = new Subject<void>();
 }

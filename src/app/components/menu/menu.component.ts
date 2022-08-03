@@ -14,9 +14,19 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from 'primeng/api';
 import { combineLatest, first, map } from 'rxjs';
 
-import { Game, gameInfo, gameOptions } from '~/models';
+import {
+  Column,
+  DisplayRate,
+  displayRateOptions,
+  Game,
+  gameInfo,
+  gameOptions,
+  PowerUnit,
+  powerUnitOptions,
+  Preset,
+} from '~/models';
 import { DialogService, RouterService } from '~/services';
-import { App, LabState, Preferences, Settings } from '~/store';
+import { App, Factories, LabState, Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
 @Component({
@@ -32,25 +42,37 @@ export class MenuComponent implements OnInit {
   @Output() toggleMenu = new EventEmitter();
 
   vm$ = combineLatest([
+    this.store.select(Factories.getFactories),
+    this.store.select(Factories.getFactoryRows),
     this.store.select(Settings.getSettings),
+    this.store.select(Settings.getColumnsState),
     this.store.select(Settings.getDataset),
     this.store.select(Settings.getModOptions),
+    this.store.select(Settings.getPresetOptions),
     this.store.select(Settings.getDisabledRecipeOptions),
     this.store.select(Preferences.preferencesState),
     this.store.select(Preferences.getSavedStates),
   ]).pipe(
     map(
       ([
+        factories,
+        factoryRows,
         settings,
+        columns,
         data,
         modOptions,
+        presetOptions,
         disabledRecipeOptions,
         preferences,
         savedStates,
       ]) => ({
+        factories,
+        factoryRows,
         settings,
+        columns,
         data,
         modOptions,
+        presetOptions,
         disabledRecipeOptions,
         preferences,
         savedStates,
@@ -62,8 +84,11 @@ export class MenuComponent implements OnInit {
   stateCtrl = new FormControl('', Validators.required);
   editState = false;
 
+  displayRateOptions = displayRateOptions;
   gameOptions = gameOptions;
+  powerUnitOptions = powerUnitOptions;
 
+  Column = Column;
   Game = Game;
 
   constructor(
@@ -152,5 +177,17 @@ export class MenuComponent implements OnInit {
 
   setDisabledRecipes(value: string[], def: string[] | undefined): void {
     this.store.dispatch(new Settings.SetDisabledRecipesAction({ value, def }));
+  }
+
+  setDisplayRate(value: DisplayRate, prev: DisplayRate): void {
+    this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
+  }
+
+  setPowerUnit(value: PowerUnit): void {
+    this.store.dispatch(new Preferences.SetPowerUnitAction(value));
+  }
+
+  setPreset(value: Preset): void {
+    this.store.dispatch(new Settings.SetPresetAction(value));
   }
 }

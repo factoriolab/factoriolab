@@ -21,6 +21,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {
   ColumnsDialogComponent,
+  FactoriesDialogComponent,
   MenuComponent,
   ProductsComponent,
   TopbarComponent,
@@ -54,6 +55,7 @@ function initializeApp(primengConfig: PrimeNGConfig): () => Promise<any> {
     FlowComponent,
     MatrixComponent,
     ColumnsDialogComponent,
+    FactoriesDialogComponent,
   ],
   imports: [
     /** Angular modules */

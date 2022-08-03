@@ -1,4 +1,5 @@
-import { IdName } from '../id-name';
+import { SelectItem } from 'primeng/api';
+
 import { Game } from './game';
 
 export enum Preset {
@@ -8,22 +9,22 @@ export enum Preset {
   Beacon12,
 }
 
-export function presetOptions(game: Game): IdName<Preset>[] {
+export function presetOptions(game: Game): SelectItem<Preset>[] {
   return game === Game.Factorio
     ? [
-        { id: Preset.Minimum, name: 'options.Preset1.Minimum' },
-        { id: Preset.Modules, name: 'options.Preset1.Modules' },
-        { id: Preset.Beacon8, name: 'options.Preset1.Beacon8' },
-        { id: Preset.Beacon12, name: 'options.Preset1.Beacon12' },
+        { value: Preset.Minimum, label: 'options.Preset1.Minimum' },
+        { value: Preset.Modules, label: 'options.Preset1.Modules' },
+        { value: Preset.Beacon8, label: 'options.Preset1.Beacon8' },
+        { value: Preset.Beacon12, label: 'options.Preset1.Beacon12' },
       ]
     : game === Game.CaptainOfIndustry
     ? [
-        { id: Preset.Minimum, name: 'options.Preset2.Minimum' },
-        { id: Preset.Modules, name: 'options.Preset2.Modules' },
+        { value: Preset.Minimum, label: 'options.Preset2.Minimum' },
+        { value: Preset.Modules, label: 'options.Preset2.Modules' },
       ]
     : [
-        { id: Preset.Minimum, name: 'options.Preset2.Minimum' },
-        { id: Preset.Modules, name: 'options.Preset2.Modules' },
-        { id: Preset.Beacon8, name: 'options.Preset2.Beacon8' },
+        { value: Preset.Minimum, label: 'options.Preset2.Minimum' },
+        { value: Preset.Modules, label: 'options.Preset2.Modules' },
+        { value: Preset.Beacon8, label: 'options.Preset2.Beacon8' },
       ];
 }

@@ -1,5 +1,6 @@
 {
   "cancel": "Cancel",
+  "ok": "OK",
   "yes": "Yes",
   "title": {
     "lab": "Factorio Calculator",
@@ -22,8 +23,8 @@
     "satisfactory": "Satisfactory",
     "captainOfIndustry": "Captain of Industry"
   },
-  "settings": {
-    "title": "Settings",
+  "menu": {
+    "header": "Settings",
     "reset": "Reset all settings",
     "resetWarning": "This will delete all saved FactorioLab settings in this browser, are you sure you want to continue?",
     "savedStates": "Saved states",
@@ -47,6 +48,19 @@
     "disabledRecipesTooltip": "Click to modify which recipes are disabled. Disabled recipes will not be used in the solution.",
     "noRecipesDisabled": "No recipes disabled",
     "display": "Display",
+    "openColumnSettings": "Open column settings",
+    "displayRate": "Display rate units",
+    "displayRateTooltip": "Set the unit of time to use in rates",
+    "factory": "Factory",
+    "preset": "Preset",
+    "presetTooltip": "Select a default preset of factory settings to use",
+    "powerUnit": "Power units",
+    "powerUnitTooltip": "Set the unit of power to use in the power column.",
+    "openFactorySettings": "Open factory settings",
+    "noModifiers": "No modifiers",
+    "noBeacons": "No beacons",
+
+    "addFactoryPreference": "Add factory preference",
 
     "deleteAllSettings": "Delete all settings",
     "gameTitle": "Select game",
@@ -54,25 +68,16 @@
     "difficulty": "Difficulty",
     "difficultyTooltip": "Select whether to use Normal or\nExpensive difficulty recipes.",
     "difficultyTitle": "Select recipe difficulty",
-
+    "displayRateTitle": "Select display rate",
     "columnsAndPrecision": "Columns & precision",
     "columnsAndPrecisionTooltip": "Click to select the visible columns and decimal\nor fractional precision for visible columns.",
     "columnsAndPrecisionTitle": "Set columns visibility and precision",
-    "visible": "Visible",
-    "displayRate": "Display rates as",
-    "displayRateTooltip": "Set the unit of time to use in rates.",
-    "displayRateTitle": "Select display rate",
-    "powerUnit": "Power units",
-    "powerUnitTooltip": "Set the unit of power to use in the power column.",
     "powerUnitTitle": "Select power units",
-    "factory": "Factory",
-    "preset": "Preset",
-    "presetTooltip": "Select a default preset of factory settings to use.",
     "presetTitle": "Select preset factory",
-    "selectAFactory": "Select a factory",
-    "addFactoryPreference": "Add factory preference",
-    "removeFactoryPreference": "Remove factory preference",
+
     "factoryDefaults": "Factory defaults",
+    "selectAFactory": "Select a factory",
+    "removeFactoryPreference": "Remove factory preference",
     "modulePreferences": "Module preferences",
     "resourcePurityPreferences": "Resource node purity",
     "proliferatorPreferences": "Proliferator preferences",
@@ -160,26 +165,23 @@
     "confirm": "Confirm"
   },
   "columns": {
-    "selectColumns": "Select columns",
+    "header": "Column settings",
     "visibility": "Visibility",
     "precision": "Precision",
     "decimals": "Decimals",
-    "decimalsPlaceholder": "Decimals",
     "fractions": "Fractions",
     "example": "Example",
-    "cancel": "Cancel",
-    "confirm": "Confirm",
-    "tree": "Tree",
-    "surplus": "Surplus",
-    "items": "Items",
-    "belts": "Belts",
-    "wagons": "Wagons",
-    "factories": "Factories",
+    "notApplicable": "N/A"
+  },
+  "factories": {
+    "header": "Factory settings",
+    "factory": "Factory",
+    "modifiers": "Modifiers",
     "overclock": "Overclock",
     "beacons": "Beacons",
-    "power": "Power",
-    "pollution": "Pollution",
-    "link": "Link"
+    "default": "Default",
+    "noModifiers": "No modifiers",
+    "noBeacons": "No beacons"
   },
   "products": {
     "title": "Products",

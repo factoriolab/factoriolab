@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
-import { Column, PrecisionColumns, Rational } from '~/models';
+import { Column, precisionColumns, Rational } from '~/models';
 import { TrackService } from '~/services';
 import { LabState } from '~/store';
 import * as Preferences from '~/store/preferences';
@@ -24,7 +24,7 @@ export class ColumnsComponent extends DialogContainerComponent {
   edited = false;
   editValue: Preferences.ColumnsState = {};
 
-  PrecisionColumns = PrecisionColumns;
+  PrecisionColumns = precisionColumns;
 
   Column = Column;
 

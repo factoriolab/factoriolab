@@ -42,7 +42,26 @@
 // Imitate .p-float-label without using input field
 .p-static-label {
   font-size: 0.75rem;
-  margin-left: 0.75rem;
+  margin-left: 0.25rem;
   padding-bottom: 0.5rem;
   color: var(--text-color-secondary);
 }
+
+.p-inputgroup p-dropdown.p-dropdown-icon-only.p-inputwrapper {
+  flex-grow: 0;
+  width: 6rem;
+
+  > .p-dropdown {
+    width: 6rem;
+  }
+}
+
+// p-dropdown.p-dropdown-icon-only {
+//   > .p-dropdown {
+//     width: 3rem;
+
+//     > .p-dropdown-trigger {
+//       display: none;
+//     }
+//   }
+// }

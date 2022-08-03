@@ -688,6 +688,15 @@ export const getItemOptions = createSelector(getDataset, (data) =>
   )
 );
 
+export const getModuleOptions = createSelector(getDataset, (data) =>
+  data.moduleIds.map(
+    (i): SelectItem => ({
+      label: data.itemEntities[i].name,
+      value: i,
+    })
+  )
+);
+
 export const getDisabledRecipeOptions = createSelector(getDataset, (data) =>
   data.complexRecipeIds.map(
     (i): SelectItem => ({
