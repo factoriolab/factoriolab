@@ -1,0 +1,8 @@
+th,
+td {
+  width: 125px;
+  
+  &.colspan-3 {
+    width: 375px;
+  }
+}

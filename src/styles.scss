@@ -31,6 +31,8 @@ ul {
 .lab-icon {
   position: relative;
 
+  display: inline-block;
+
   width: 2rem;
   height: 2rem;
   margin: -0.25rem;
@@ -50,17 +52,20 @@ ul {
   }
 
   > span {
-    position: absolute;
+    // Styles for text overlay
+    position: absolute;    
     bottom: 2px;
     right: 2px;
+
+    font-size: 1.125rem;
+    line-height: 1rem;
     font-weight: 700;
-    font-style: normal;
+    font-style: normal;    
     color: white;
+
     text-shadow: 0px 2px 2px black, 0px -2px 2px black, 2px 0px 2px black,
       -2px 0px 2px black;
     pointer-events: none;
-    font-size: 1.125rem;
-    line-height: 1rem;
   }
 }
 

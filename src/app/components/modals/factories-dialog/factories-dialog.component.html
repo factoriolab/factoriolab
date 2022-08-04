@@ -6,19 +6,24 @@
   [draggable]="false"
   [resizable]="false"
   [contentStyle]="{ height: '500px' }"
-  [style]="{ width: '576px' }"
+  [style]="{ width: '786px' }"
   [breakpoints]="{ '576px': '100vw' }"
   [header]="'factories.header' | translate"
 >
-  <p-table [value]="vm.factoryRows" styleClass="w-100">
+  <p-table
+    [value]="vm.factoryRows"
+    [scrollable]="true"
+    scrollDirection="both"
+    responsiveLayout="scroll"
+  >
     <ng-template pTemplate="header">
       <tr>
-        <th style="max-width: 200px">{{ 'factories.factory' | translate }}</th>
+        <th>{{ 'factories.factory' | translate }}</th>
         <th>{{ 'factories.modifiers' | translate }}</th>
         <th *ngIf="vm.data.game === Game.Satisfactory">
           {{ 'factories.overclock' | translate }}
         </th>
-        <th *ngIf="vm.data.game === Game.Factorio">
+        <th *ngIf="vm.data.game === Game.Factorio" class="beacons">
           {{ 'factories.beacons' | translate }}
         </th>
         <th></th>
@@ -26,51 +31,57 @@
     </ng-template>
     <ng-template pTemplate="body" let-factoryId>
       <tr *ngIf="vm.factories.entities[factoryId] as factory">
-        <td style="max-width: 200px">
-          <p-dropdown
-            *ngIf="factoryId; else defaultLabel"
-            styleClass="w-100"
-            [ngModel]="factoryId"
-            [options]="vm.factoryOptions"
-            appendTo="body"
-          >
-            <ng-template pTemplate="selectedItem" let-item>
-              <div class="d-flex align-items-center">
-                <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-                <div class="ms-3 text-truncate">
-                  {{ item.label }}
+        <td>
+          <div class="p-inputgroup">
+            <p-dropdown
+              *ngIf="factoryId; else defaultLabel"
+              class="p-lab-icon-only"
+              appendTo="body"
+              scrollHeight="400px"
+              [ngModel]="factoryId"
+              [options]="vm.factoryOptions"
+            >
+              <ng-template pTemplate="selectedItem" let-item>
+                <div class="d-flex align-items-center">
+                  <i [class]="item.value | iconClass"></i>
                 </div>
-              </div>
-            </ng-template>
-            <ng-template pTemplate="item" let-item>
-              <div class="d-flex align-items-center">
-                <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-                <div class="ms-3 text-truncate">
-                  {{ item.label }}
+              </ng-template>
+              <ng-template pTemplate="item" let-item>
+                <div class="d-flex align-items-center">
+                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+                  <div class="ms-3 text-truncate">
+                    {{ item.label }}
+                  </div>
                 </div>
-              </div>
-            </ng-template>
-          </p-dropdown>
+              </ng-template>
+            </p-dropdown>
+          </div>
           <ng-template #defaultLabel
             ><span>{{ 'factories.default' | translate }}</span>
           </ng-template>
         </td>
         <td>
-          <p-dropdown
-            *ngIf="vm.data.game === Game.Satisfactory; else multiselectModifier"
-          ></p-dropdown>
-          <ng-template #multiselectModifier>
+          <div class="p-inputgroup">
             <p-multiSelect
-              [ngModel]="factory.moduleRankIds"
-              placeholder="unused - breaks without this"
-              [options]="vm.moduleOptions"
+              class="p-lab-icon-only"
               appendTo="body"
+              placeholder="unused"
+              scrollHeight="400px"
+              [selectionLimit]="vm.data.game === Game.Satisfactory ? 1 : 2"
+              [ngModel]="factory.moduleRankIds"
+              [options]="vm.moduleOptions"
             >
-              <ng-template pTemplate="empty">
-                <span>{{ 'factories.noModifiers' | translate }}</span>
-              </ng-template>
               <ng-template pTemplate="selectedItems" let-items>
-                <div *ngIf="items && items.length; else noModifiers">items</div>
+                <div
+                  *ngIf="items && items.length; else noModifiers"
+                  class="d-flex align-items-center"
+                >
+                  <i [class]="items[0] | iconClass">
+                    <span *ngIf="items.length > 1"
+                      >+{{ items.length - 1 }}</span
+                    >
+                  </i>
+                </div>
                 <ng-template #noModifiers>
                   <span>{{ 'factories.noModifiers' | translate }}</span>
                 </ng-template>
@@ -84,9 +95,86 @@
                 </div>
               </ng-template>
             </p-multiSelect>
-          </ng-template>
+          </div>
+        </td>
+        <td *ngIf="vm.data.game === Game.Satisfactory">
+          <div class="p-inputgroup">
+            <p-inputNumber
+              suffix="%"
+              [min]="1"
+              [max]="250"
+              [step]="10"
+              [showButtons]="true"
+              [ngModel]="factory.overclock"
+            >
+            </p-inputNumber>
+          </div>
+        </td>
+        <td *ngIf="vm.data.game === Game.Factorio" class="beacons">
+          <div *ngIf="factory.beaconCount != null" class="p-inputgroup">
+            <lab-input-number [value]="factory.beaconCount"></lab-input-number>
+            <p-dropdown
+              class="p-lab-icon-only"
+              appendTo="body"
+              scrollHeight="400px"
+              [ngModel]="factory.beaconId"
+              [options]="vm.beaconOptions"
+            >
+              <ng-template pTemplate="selectedItem" let-item>
+                <div class="d-flex align-items-center">
+                  <i [class]="item.value | iconClass"></i>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="item" let-item>
+                <div class="d-flex align-items-center">
+                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+                  <div class="ms-3 text-truncate">
+                    {{ item.label }}
+                  </div>
+                </div>
+              </ng-template>
+            </p-dropdown>
+            <p-dropdown
+              class="p-lab-icon-only"
+              appendTo="body"
+              scrollHeight="400px"
+              [ngModel]="factory.beaconModuleId"
+              [options]="vm.moduleOptions"
+            >
+              <ng-template pTemplate="selectedItem" let-item>
+                <div class="d-flex align-items-center">
+                  <i [class]="item.value | iconClass"></i>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="item" let-item>
+                <div class="d-flex align-items-center">
+                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+                  <div class="ms-3 text-truncate">
+                    {{ item.label }}
+                  </div>
+                </div>
+              </ng-template>
+            </p-dropdown>
+          </div>
+        </td>
+        <td>
+          <div class="p-inputgroup">
+            <button pButton pRipple icon="fa-solid fa-arrow-up"></button>
+            <button pButton pRipple icon="fa-solid fa-trash"></button>
+          </div>
         </td>
       </tr>
     </ng-template>
   </p-table>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-text"
+      icon="fa-solid fa-check"
+      [label]="'ok' | translate"
+      (click)="visible = false"
+    ></button>
+  </ng-template>
 </p-dialog>

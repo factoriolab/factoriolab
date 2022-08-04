@@ -24,16 +24,27 @@ export class FactoriesDialogComponent implements OnInit {
     this.store.select(Factories.getFactories),
     this.store.select(Factories.getFactoryRows),
     this.store.select(Factories.getFactoryOptions),
+    this.store.select(Settings.getBeaconOptions),
     this.store.select(Settings.getModuleOptions),
     this.store.select(Settings.getDataset),
   ]).pipe(
-    map(([factories, factoryRows, factoryOptions, moduleOptions, data]) => ({
-      factories,
-      factoryRows,
-      factoryOptions,
-      moduleOptions,
-      data,
-    }))
+    map(
+      ([
+        factories,
+        factoryRows,
+        factoryOptions,
+        beaconOptions,
+        moduleOptions,
+        data,
+      ]) => ({
+        factories,
+        factoryRows,
+        factoryOptions,
+        beaconOptions,
+        moduleOptions,
+        data,
+      })
+    )
   );
 
   visible = false;

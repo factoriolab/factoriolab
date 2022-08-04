@@ -688,6 +688,15 @@ export const getItemOptions = createSelector(getDataset, (data) =>
   )
 );
 
+export const getBeaconOptions = createSelector(getDataset, (data) =>
+  data.beaconIds.map(
+    (i): SelectItem => ({
+      label: data.itemEntities[i].name,
+      value: i,
+    })
+  )
+);
+
 export const getModuleOptions = createSelector(getDataset, (data) =>
   data.moduleIds.map(
     (i): SelectItem => ({

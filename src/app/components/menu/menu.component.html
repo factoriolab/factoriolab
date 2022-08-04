@@ -262,7 +262,7 @@
         </span>
       </div>
       <ng-container *ngIf="vm.data.game !== Game.CaptainOfIndustry">
-        <p-table [value]="vm.factoryRows">
+        <p-table [value]="vm.factoryRows" responsiveLayout="scroll">
           <ng-template pTemplate="body" let-factoryId>
             <tr *ngIf="vm.factories.entities[factoryId] as factory">
               <td

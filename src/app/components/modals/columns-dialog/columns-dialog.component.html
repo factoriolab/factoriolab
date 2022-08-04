@@ -14,15 +14,15 @@
   <p-table
     [value]="vm.columnOptions"
     [scrollable]="true"
-    scrollHeight="flex"
+    scrollDirection="both"
     responsiveLayout="scroll"
   >
     <ng-template pTemplate="header">
       <tr>
         <th>{{ 'columns.visibility' | translate }}</th>
         <th>{{ 'columns.decimals' | translate }}</th>
-        <th class="small">{{ 'columns.fractions' | translate }}</th>
-        <th class="small">{{ 'columns.example' | translate }}</th>
+        <th>{{ 'columns.fractions' | translate }}</th>
+        <th>{{ 'columns.example' | translate }}</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-column>
@@ -50,7 +50,7 @@
               [disabled]="!editValue[column.value].show"
             ></p-inputNumber>
           </td>
-          <td class="justify-content-center small">
+          <td class="justify-content-center">
             <p-checkbox
               [ngModel]="editValue[column.value].precision == null"
               [binary]="true"
@@ -58,12 +58,12 @@
               (onChange)="changeFraction(column.value, $event.checked)"
             ></p-checkbox>
           </td>
-          <td class="small">
+          <td>
             {{ editValue[column.value].precision | precisionExample }}
           </td>
         </ng-container>
         <ng-template #noPrecision>
-          <td colspan="3" class="text-center">
+          <td colspan="3" class="text-center colspan-3">
             {{ 'columns.notApplicable' | translate }}
           </td>
         </ng-template>
