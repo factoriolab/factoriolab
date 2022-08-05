@@ -8,7 +8,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
-import { Game } from '~/models';
+import { Game, ItemId } from '~/models';
 import { DialogService } from '~/services';
 import { Factories, LabState, Settings } from '~/store';
 
@@ -24,32 +24,20 @@ export class FactoriesDialogComponent implements OnInit {
     this.store.select(Factories.getFactories),
     this.store.select(Factories.getFactoryRows),
     this.store.select(Factories.getFactoryOptions),
-    this.store.select(Settings.getBeaconOptions),
-    this.store.select(Settings.getModuleOptions),
     this.store.select(Settings.getDataset),
   ]).pipe(
-    map(
-      ([
-        factories,
-        factoryRows,
-        factoryOptions,
-        beaconOptions,
-        moduleOptions,
-        data,
-      ]) => ({
-        factories,
-        factoryRows,
-        factoryOptions,
-        beaconOptions,
-        moduleOptions,
-        data,
-      })
-    )
+    map(([factories, factoryRows, factoryOptions, data]) => ({
+      factories,
+      factoryRows,
+      factoryOptions,
+      data,
+    }))
   );
 
   visible = false;
 
   Game = Game;
+  ItemId = ItemId;
 
   constructor(
     private ref: ChangeDetectorRef,
@@ -62,5 +50,43 @@ export class FactoriesDialogComponent implements OnInit {
       this.visible = true;
       this.ref.markForCheck();
     });
+  }
+
+  setFactory(id: string, value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Factories.SetFactoryAction({ id, value, def }));
+  }
+
+  setModuleRank(id: string, value: string[], def: string[] | undefined): void {
+    this.store.dispatch(new Factories.SetModuleRankAction({ id, value, def }));
+  }
+
+  setOverclock(id: string, value: number, def: number | undefined): void {
+    this.store.dispatch(new Factories.SetOverclockAction({ id, value, def }));
+  }
+
+  setBeaconCount(id: string, value: string, def: string | undefined): void {
+    this.store.dispatch(new Factories.SetBeaconCountAction({ id, value, def }));
+  }
+
+  setBeacon(id: string, value: string, def: string | undefined): void {
+    this.store.dispatch(new Factories.SetBeaconAction({ id, value, def }));
+  }
+
+  setBeaconModule(id: string, value: string, def: string | undefined): void {
+    this.store.dispatch(
+      new Factories.SetBeaconModuleAction({ id, value, def })
+    );
+  }
+
+  removeFactory(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Factories.RemoveAction({ value, def }));
+  }
+
+  raiseFactory(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Factories.RaiseAction({ value, def }));
+  }
+
+  addFactory(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Factories.AddAction({ value, def }));
   }
 }

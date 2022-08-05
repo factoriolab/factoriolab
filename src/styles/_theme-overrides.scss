@@ -8,8 +8,15 @@
   > .p-inputwrapper {
     display: inline-flex;
 
-    > .p-dropdown {
+    > .p-dropdown,
+    .p-multiselect {
       border-radius: 0;
+    }
+
+    > .p-inputnumber,
+    > .p-inputnumber > .p-inputtext {
+      border-top-right-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
     }
 
     .p-dropdown-panel .p-dropdown-header {
@@ -42,7 +49,7 @@
 // Imitate .p-float-label without using input field
 .p-static-label {
   font-size: 0.75rem;
-  margin-left: 0.25rem;
+  margin-left: 0.75rem;
   padding-bottom: 0.5rem;
   color: var(--text-color-secondary);
 }

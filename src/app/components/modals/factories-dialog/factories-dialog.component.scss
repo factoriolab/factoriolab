@@ -2,6 +2,10 @@ th,
 td {
   width: 8rem;
 
+  &.overclock {
+    width: 12rem;
+  }
+
   &.beacons {
     width: 22rem;
   }

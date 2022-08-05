@@ -55,7 +55,7 @@
               [ngModel]="editValue[column.value].precision == null"
               [binary]="true"
               [disabled]="!editValue[column.value].show"
-              (onChange)="changeFraction(column.value, $event.checked)"
+              (onChange)="changeFraction($event.checked, column.value)"
             ></p-checkbox>
           </td>
           <td>

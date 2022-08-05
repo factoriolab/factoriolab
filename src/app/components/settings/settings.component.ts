@@ -24,15 +24,15 @@ import {
   gameOptions,
   IdName,
   InserterCapacity,
-  InserterCapacityOptions,
+  inserterCapacityOptions,
   InserterTarget,
-  InserterTargetOptions,
+  inserterTargetOptions,
   ItemId,
   PowerUnit,
   powerUnitOptions,
   Preset,
   ResearchSpeed,
-  ResearchSpeedOptions,
+  researchSpeedOptions,
   SimplexType,
   WARNING_RESET,
 } from '~/models';
@@ -143,9 +143,9 @@ export class SettingsComponent implements OnInit {
   ];
 
   GameOptions = gameOptions;
-  ResearchSpeedOptions = ResearchSpeedOptions;
-  InserterCapacityOptions = InserterCapacityOptions;
-  InserterTargetOptions = InserterTargetOptions;
+  ResearchSpeedOptions = researchSpeedOptions;
+  InserterCapacityOptions = inserterCapacityOptions;
+  InserterTargetOptions = inserterTargetOptions;
   DisplayRateOptions = displayRateOptions;
   PowerUnitOptions = powerUnitOptions;
   SimplexType = SimplexType;

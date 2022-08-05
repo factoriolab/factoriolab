@@ -25,7 +25,7 @@ import {
   RationalItem,
   RationalModule,
   RationalRecipe,
-  ResearchSpeedFactor,
+  researchSpeedFactor,
   toBoolEntities,
   toEntities,
 } from '~/models';
@@ -272,7 +272,7 @@ export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
 
 export const getResearchFactor = createSelector(
   getResearchSpeed,
-  (speed) => ResearchSpeedFactor[speed]
+  (speed) => researchSpeedFactor[speed]
 );
 
 export const getRationalBeaconReceivers = createSelector(
@@ -677,42 +677,6 @@ export const getInserterData = createSelector(
   getInserterTarget,
   getInserterCapacity,
   (target, capacity) => InserterData[target][capacity]
-);
-
-export const getItemOptions = createSelector(getDataset, (data) =>
-  data.itemIds.map(
-    (i): SelectItem => ({
-      label: data.itemEntities[i].name,
-      value: i,
-    })
-  )
-);
-
-export const getBeaconOptions = createSelector(getDataset, (data) =>
-  data.beaconIds.map(
-    (i): SelectItem => ({
-      label: data.itemEntities[i].name,
-      value: i,
-    })
-  )
-);
-
-export const getModuleOptions = createSelector(getDataset, (data) =>
-  data.moduleIds.map(
-    (i): SelectItem => ({
-      label: data.itemEntities[i].name,
-      value: i,
-    })
-  )
-);
-
-export const getDisabledRecipeOptions = createSelector(getDataset, (data) =>
-  data.complexRecipeIds.map(
-    (i): SelectItem => ({
-      label: data.recipeEntities[i].name,
-      value: i,
-    })
-  )
 );
 
 export function getEntities<T extends { id: string }>(

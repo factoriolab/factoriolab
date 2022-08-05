@@ -18,12 +18,20 @@ import {
   Column,
   DisplayRate,
   displayRateOptions,
+  FuelType,
   Game,
   gameInfo,
   gameOptions,
+  InserterCapacity,
+  inserterCapacityOptions,
+  InserterTarget,
+  inserterTargetOptions,
+  ItemId,
   PowerUnit,
   powerUnitOptions,
   Preset,
+  ResearchSpeed,
+  researchSpeedOptions,
 } from '~/models';
 import { DialogService, RouterService } from '~/services';
 import { App, Factories, LabState, Preferences, Settings } from '~/store';
@@ -44,12 +52,12 @@ export class MenuComponent implements OnInit {
   vm$ = combineLatest([
     this.store.select(Factories.getFactories),
     this.store.select(Factories.getFactoryRows),
+    this.store.select(Factories.getFactoryOptions),
     this.store.select(Settings.getSettings),
     this.store.select(Settings.getColumnsState),
     this.store.select(Settings.getDataset),
     this.store.select(Settings.getModOptions),
     this.store.select(Settings.getPresetOptions),
-    this.store.select(Settings.getDisabledRecipeOptions),
     this.store.select(Preferences.preferencesState),
     this.store.select(Preferences.getSavedStates),
   ]).pipe(
@@ -57,23 +65,23 @@ export class MenuComponent implements OnInit {
       ([
         factories,
         factoryRows,
+        factoryOptions,
         settings,
         columns,
         data,
         modOptions,
         presetOptions,
-        disabledRecipeOptions,
         preferences,
         savedStates,
       ]) => ({
         factories,
         factoryRows,
+        factoryOptions,
         settings,
         columns,
         data,
         modOptions,
         presetOptions,
-        disabledRecipeOptions,
         preferences,
         savedStates,
       })
@@ -86,10 +94,15 @@ export class MenuComponent implements OnInit {
 
   displayRateOptions = displayRateOptions;
   gameOptions = gameOptions;
+  inserterCapacityOptions = inserterCapacityOptions;
+  inserterTargetOptions = inserterTargetOptions;
   powerUnitOptions = powerUnitOptions;
+  researchSpeedOptions = researchSpeedOptions;
 
   Column = Column;
+  FuelType = FuelType;
   Game = Game;
+  ItemId = ItemId;
 
   constructor(
     public dialogSvc: DialogService,
@@ -158,6 +171,10 @@ export class MenuComponent implements OnInit {
     this.setMod(gameInfo[game].modId);
   }
 
+  toggleBeaconReceivers(value: boolean): void {
+    this.setBeaconReceivers(value ? '1' : null);
+  }
+
   /** Action Dispatch Methods */
   resetSettings(): void {
     this.store.dispatch(new App.ResetAction());
@@ -183,11 +200,97 @@ export class MenuComponent implements OnInit {
     this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
   }
 
+  setPreset(value: Preset): void {
+    this.store.dispatch(new Settings.SetPresetAction(value));
+  }
+
   setPowerUnit(value: PowerUnit): void {
     this.store.dispatch(new Preferences.SetPowerUnitAction(value));
   }
 
-  setPreset(value: Preset): void {
-    this.store.dispatch(new Settings.SetPresetAction(value));
+  removeFactory(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Factories.RemoveAction({ value, def }));
+  }
+
+  setFactory(id: string, value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Factories.SetFactoryAction({ id, value, def }));
+  }
+
+  setModuleRank(id: string, value: string[], def: string[] | undefined): void {
+    this.store.dispatch(new Factories.SetModuleRankAction({ id, value, def }));
+  }
+
+  setOverclock(id: string, value: number, def: number | undefined): void {
+    this.store.dispatch(new Factories.SetOverclockAction({ id, value, def }));
+  }
+
+  setBeaconCount(id: string, value: string, def: string | undefined): void {
+    this.store.dispatch(new Factories.SetBeaconCountAction({ id, value, def }));
+  }
+
+  setBeacon(id: string, value: string, def: string | undefined): void {
+    this.store.dispatch(new Factories.SetBeaconAction({ id, value, def }));
+  }
+
+  setBeaconModule(id: string, value: string, def: string | undefined): void {
+    this.store.dispatch(
+      new Factories.SetBeaconModuleAction({ id, value, def })
+    );
+  }
+
+  raiseFactory(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Factories.RaiseAction({ value, def }));
+  }
+
+  addFactory(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Factories.AddAction({ value, def }));
+  }
+
+  setBeaconReceivers(value: string | null): void {
+    this.store.dispatch(new Settings.SetBeaconReceiversAction(value));
+  }
+
+  setProliferatorSpray(value: string): void {
+    this.store.dispatch(new Settings.SetProliferatorSprayAction(value));
+  }
+
+  setBelt(value: string, def: string | undefined): void {
+    this.store.dispatch(new Settings.SetBeltAction({ value, def }));
+  }
+
+  setPipe(value: string, def: string | undefined): void {
+    this.store.dispatch(new Settings.SetPipeAction({ value, def }));
+  }
+
+  setCargoWagon(value: string, def: string | undefined): void {
+    this.store.dispatch(new Settings.SetCargoWagonAction({ value, def }));
+  }
+
+  setFluidWagon(value: string, def: string | undefined): void {
+    this.store.dispatch(new Settings.SetFluidWagonAction({ value, def }));
+  }
+
+  setFuel(value: string, def: string | undefined): void {
+    this.store.dispatch(new Settings.SetFuelAction({ value, def }));
+  }
+
+  setFlowRate(value: number): void {
+    this.store.dispatch(new Settings.SetFlowRateAction(value));
+  }
+
+  setInserterTarget(value: InserterTarget): void {
+    this.store.dispatch(new Settings.SetInserterTargetAction(value));
+  }
+
+  setMiningBonus(value: number): void {
+    this.store.dispatch(new Settings.SetMiningBonusAction(value));
+  }
+
+  setResearchSpeed(value: ResearchSpeed): void {
+    this.store.dispatch(new Settings.SetResearchSpeedAction(value));
+  }
+
+  setInserterCapacity(value: InserterCapacity): void {
+    this.store.dispatch(new Settings.SetInserterCapacityAction(value));
   }
 }

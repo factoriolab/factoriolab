@@ -69,6 +69,7 @@ export function settingsReducer(
         ...{
           modId: action.payload,
           preset: Preset.Minimum,
+          beaconReceivers: null,
           miningBonus: 0,
           researchSpeed: ResearchSpeed.Speed6,
         },

@@ -68,11 +68,14 @@ export function factoriesReducer(
           ...state,
           ...{ ids, entities: { ...state.entities } },
         };
-        newState.entities[action.payload.value] =
-          newState.entities[action.payload.id];
-        delete newState.entities[action.payload.id];
+        if (newState.entities[action.payload.id]) {
+          newState.entities[action.payload.value] =
+            newState.entities[action.payload.id];
+          delete newState.entities[action.payload.id];
+        }
         return newState;
       }
+      console.log('reducer old', JSON.stringify(state));
       return state;
     }
     case FactoriesActionType.SET_MODULE_RANK: {

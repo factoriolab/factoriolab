@@ -1,4 +1,4 @@
-import { IdName } from '../id-name';
+import { SelectItem } from 'primeng/api';
 
 export enum InserterTarget {
   Chest,
@@ -7,9 +7,18 @@ export enum InserterTarget {
   TransportBelt,
 }
 
-export const InserterTargetOptions: IdName<InserterTarget>[] = [
-  { id: InserterTarget.Chest, name: 'options.InserterTarget.Chest' },
-  { id: InserterTarget.ExpressTransportBelt, name: 'options.InserterTarget.ExpressTransportBelt' },
-  { id: InserterTarget.FastTransportBelt, name: 'options.InserterTarget.FastTransportBelt' },
-  { id: InserterTarget.TransportBelt, name: 'options.InserterTarget.TransportBelt' },
+export const inserterTargetOptions: SelectItem<InserterTarget>[] = [
+  { label: 'options.InserterTarget.Chest', value: InserterTarget.Chest },
+  {
+    label: 'options.InserterTarget.ExpressTransportBelt',
+    value: InserterTarget.ExpressTransportBelt,
+  },
+  {
+    label: 'options.InserterTarget.FastTransportBelt',
+    value: InserterTarget.FastTransportBelt,
+  },
+  {
+    label: 'options.InserterTarget.TransportBelt',
+    value: InserterTarget.TransportBelt,
+  },
 ];

@@ -4,6 +4,11 @@
 
 // Use InputNumber styles
 :host ::ng-deep {
+  .p-inputtext {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
   .p-inputnumber {
     display: inline-flex;
   }

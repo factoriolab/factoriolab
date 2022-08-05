@@ -54,12 +54,11 @@ export class ColumnsDialogComponent implements OnInit {
     );
   }
 
-  changeFraction(column: Column, value: boolean): void {
+  changeFraction(value: boolean, column: Column): void {
     this.editValue[column].precision = value ? null : 1;
   }
 
   save(): void {
     this.store.dispatch(new Preferences.SetColumnsAction(this.editValue));
-    this.visible = false;
   }
 }

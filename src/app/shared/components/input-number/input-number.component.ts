@@ -22,6 +22,7 @@ export class InputNumberComponent implements OnChanges {
   @Input() placeholder = '';
   @Input() minimum = '0';
   @Input() digits = 0; // TODO: Remove this input
+  @Input() inputId: string | undefined;
 
   @Output() setValue = new EventEmitter<string>();
 

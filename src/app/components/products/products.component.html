@@ -27,7 +27,7 @@
         [panelStyle]="{ width: '19rem' }"
         [tooltip]="'products.changeItem' | translate"
         tooltipPosition="top"
-        [options]="vm.itemOptions"
+        [options]="vm.data.itemIds | options: vm.data.itemEntities"
         [ngModel]="product.itemId"
         (onChange)="setItem(product.id, $event.value)"
       >
@@ -116,7 +116,7 @@
         [virtualScroll]="true"
         [virtualScrollItemSize]="48"
         [panelStyle]="{ width: '19rem' }"
-        [options]="vm.itemOptions"
+        [options]="vm.data.itemIds | options: vm.data.itemEntities"
         (onChange)="addProduct($event.value)"
       >
         <ng-template pTemplate="selectedItem" let-item>

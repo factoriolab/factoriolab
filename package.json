@@ -63,7 +63,7 @@
     "@angular-eslint/eslint-plugin-template": "~14.0.0-alpha.3",
     "@angular-eslint/schematics": "~14.0.0-alpha.3",
     "@angular-eslint/template-parser": "~14.0.0-alpha.3",
-    "@angular/cli": "^14.1.0",
+    "@angular/cli": "^14.1.1",
     "@angular/compiler-cli": "^14.1.0",
     "@angular/language-service": "^14.1.0",
     "@types/d3-drag": "^3.0.1",

@@ -7,6 +7,7 @@ export * from './icon-class.pipe';
 export * from './inserter-speed.pipe';
 export * from './left-pad.pipe';
 export * from './list-names.pipe';
+export * from './options.pipe';
 export * from './power.pipe';
 export * from './precision-example.pipe';
 export * from './rate.pipe';
