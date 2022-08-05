@@ -9,7 +9,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, map, tap } from 'rxjs';
 
 import { Column, precisionColumns } from '~/models';
-import { DialogService } from '~/services';
+import { ContentService } from '~/services';
 import { LabState, Preferences, Settings } from '~/store';
 
 @UntilDestroy()
@@ -34,11 +34,11 @@ export class ColumnsDialogComponent implements OnInit {
   constructor(
     private ref: ChangeDetectorRef,
     private store: Store<LabState>,
-    private dialogSvc: DialogService
+    private contentSvc: ContentService
   ) {}
 
   ngOnInit(): void {
-    this.dialogSvc.showColumns$.pipe(untilDestroyed(this)).subscribe(() => {
+    this.contentSvc.showColumns$.pipe(untilDestroyed(this)).subscribe(() => {
       this.visible = true;
       this.ref.markForCheck();
     });

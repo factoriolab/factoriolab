@@ -8,15 +8,15 @@ export enum InserterCapacity {
 
 export const inserterCapacityOptions: SelectItem<InserterCapacity>[] = [
   {
-    label: 'options.InserterCapacity.Capacity0',
+    label: 'options.inserterCapacity.capacity0',
     value: InserterCapacity.Capacity0,
   },
   {
-    label: 'options.InserterCapacity.Capacity2',
+    label: 'options.inserterCapacity.capacity2',
     value: InserterCapacity.Capacity2,
   },
   {
-    label: 'options.InserterCapacity.Capacity7',
+    label: 'options.inserterCapacity.capacity7',
     value: InserterCapacity.Capacity7,
   },
 ];

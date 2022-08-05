@@ -12,19 +12,19 @@ export enum Preset {
 export function presetOptions(game: Game): SelectItem<Preset>[] {
   return game === Game.Factorio
     ? [
-        { value: Preset.Minimum, label: 'options.Preset1.Minimum' },
-        { value: Preset.Modules, label: 'options.Preset1.Modules' },
-        { value: Preset.Beacon8, label: 'options.Preset1.Beacon8' },
-        { value: Preset.Beacon12, label: 'options.Preset1.Beacon12' },
+        { value: Preset.Minimum, label: 'options.preset.minimum' },
+        { value: Preset.Modules, label: 'options.preset.modules' },
+        { value: Preset.Beacon8, label: 'options.preset.beacon8' },
+        { value: Preset.Beacon12, label: 'options.preset.beacon12' },
       ]
     : game === Game.CaptainOfIndustry
     ? [
-        { value: Preset.Minimum, label: 'options.Preset2.Minimum' },
-        { value: Preset.Modules, label: 'options.Preset2.Modules' },
+        { value: Preset.Minimum, label: 'options.preset.minimum' },
+        { value: Preset.Modules, label: 'options.preset.upgraded' },
       ]
     : [
-        { value: Preset.Minimum, label: 'options.Preset2.Minimum' },
-        { value: Preset.Modules, label: 'options.Preset2.Modules' },
-        { value: Preset.Beacon8, label: 'options.Preset2.Beacon8' },
+        { value: Preset.Minimum, label: 'options.preset.minimum' },
+        { value: Preset.Modules, label: 'options.preset.upgraded' },
+        { value: Preset.Beacon8, label: 'options.preset.proliferated' },
       ];
 }

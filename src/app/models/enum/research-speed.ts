@@ -13,13 +13,13 @@ export enum ResearchSpeed {
 }
 
 export const researchSpeedOptions: SelectItem<ResearchSpeed>[] = [
-  { label: 'options.ResearchSpeed.Speed0', value: ResearchSpeed.Speed0 },
-  { label: 'options.ResearchSpeed.Speed1', value: ResearchSpeed.Speed1 },
-  { label: 'options.ResearchSpeed.Speed2', value: ResearchSpeed.Speed2 },
-  { label: 'options.ResearchSpeed.Speed3', value: ResearchSpeed.Speed3 },
-  { label: 'options.ResearchSpeed.Speed4', value: ResearchSpeed.Speed4 },
-  { label: 'options.ResearchSpeed.Speed5', value: ResearchSpeed.Speed5 },
-  { label: 'options.ResearchSpeed.Speed6', value: ResearchSpeed.Speed6 },
+  { label: 'options.researchSpeed.speed0', value: ResearchSpeed.Speed0 },
+  { label: 'options.researchSpeed.speed1', value: ResearchSpeed.Speed1 },
+  { label: 'options.researchSpeed.speed2', value: ResearchSpeed.Speed2 },
+  { label: 'options.researchSpeed.speed3', value: ResearchSpeed.Speed3 },
+  { label: 'options.researchSpeed.speed4', value: ResearchSpeed.Speed4 },
+  { label: 'options.researchSpeed.speed5', value: ResearchSpeed.Speed5 },
+  { label: 'options.researchSpeed.speed6', value: ResearchSpeed.Speed6 },
 ];
 
 export const researchSpeedVal = {

@@ -23,7 +23,7 @@
     "satisfactory": "Satisfactory",
     "captainOfIndustry": "Captain of Industry"
   },
-  "menu": {
+  "settings": {
     "header": "Settings",
     "reset": "Reset all settings",
     "resetWarning": "This will delete all saved FactorioLab settings in this browser, are you sure you want to continue?",
@@ -99,6 +99,13 @@
     "inserterCapacityTooltip": "Enter the current level of inserter capacity bonus; this setting only affects inserter estimates",
     "miningSpeed": "Mining speed",
     "miningSpeedTooltip": "Enter the current mining speed with bonus; Default is 100%",
+    "advanced": "Advanced",
+    "simplexSolver": "Simplex solver",
+    "simplexSolverTooltip": "Select the simplex solver algorithm, or disable simplex to more easily modify settings when simplex is slow and causes lag",
+    "simplexSolverDisabledInfo": "Disabling simplex improves performance but usually results in a partial solution",
+    "simplexSolverWasmFloat64Info": "WebAssembly Float64 is less precise than Rationals, but runs significantly faster",
+    "language": "Language",
+    "languageTooltip": "Select display language",
 
     "addFactoryPreference": "Add factory preference",
     "deleteAllSettings": "Delete all settings",
@@ -144,15 +151,7 @@
     "inserterCapacityTitle": "Select inserter capacity bonus",
     "miningSpeedTitle": "Enter mining speed",
     "miningSpeedPlaceholder": "Mining speed",
-
-    "advanced": "Advanced",
-    "simplexSolver": "Simplex solver",
-    "simplexSolverTooltip": "Select the simplex solver algorithm.\nDisable simplex to more easily modify settings\nwhen simplex is slow and causes lag.",
     "simplexSolverTitle": "Disable to get a faster but incomplete result",
-    "simplexSolverDisabled": "Disabling simplex improves performance but usually results in a partial solution.",
-    "simplexSolverWasmFloat64": "WebAssembly Float64 is less precise than Rationals, but runs significantly faster.",
-    "language": "Language",
-    "languageTooltip": "Switch current display language.",
     "languageTitle": "Select display language"
   },
   "ranker": {
@@ -214,45 +213,43 @@
   },
   "picker": { "select": "Select an item to produce", "search": "Search" },
   "options": {
-    "simplexTypeDisabled": "Disabled",
-    "simplexTypeJsBigIntRational": "JS BigInt Rational",
-    "simplexTypeWasmFloat64": "WASM Float64",
-    "DisplayRate": {
-      "PerSecond": "Units per second",
-      "PerMinute": "Units per minute",
-      "PerHour": "Units per hour"
+    "simplexType": {
+      "disabled": "Disabled",
+      "jsBigIntRational": "JS BigInt Rational",
+      "wasmFloat64": "WASM Float64"
     },
-    "recipeDifficulty": { "normal": "Normal", "expensive": "Expensive" },
-    "InserterTarget": {
-      "Chest": "Chest",
-      "ExpressTransportBelt": "Express transport belt",
-      "FastTransportBelt": "Fast transport belt",
-      "TransportBelt": "Transport belt"
+    "displayRate": {
+      "perSecond": "Units per second",
+      "perMinute": "Units per minute",
+      "perHour": "Units per hour"
     },
-    "ResearchSpeed": {
-      "Speed0": "No research bonus",
-      "Speed1": "Research speed 1",
-      "Speed2": "Research speed 2",
-      "Speed3": "Research speed 3",
-      "Speed4": "Research speed 4",
-      "Speed5": "Research speed 5",
-      "Speed6": "Research speed 6"
+    "inserterTarget": {
+      "chest": "Chest",
+      "expressTransportBelt": "Express transport belt",
+      "fastTransportBelt": "Fast transport belt",
+      "transportBelt": "Transport belt"
     },
-    "InserterCapacity": {
-      "Capacity0": "No capacity bonus",
-      "Capacity2": "Capacity bonus 2",
-      "Capacity7": "Capacity bonus 7"
+    "researchSpeed": {
+      "speed0": "No research bonus",
+      "speed1": "Research speed 1",
+      "speed2": "Research speed 2",
+      "speed3": "Research speed 3",
+      "speed4": "Research speed 4",
+      "speed5": "Research speed 5",
+      "speed6": "Research speed 6"
     },
-    "Preset1": {
-      "Minimum": "Minimum",
-      "Modules": "Modules",
-      "Beacon8": "8 Beacons",
-      "Beacon12": "12 Beacons"
+    "inserterCapacity": {
+      "capacity0": "No capacity bonus",
+      "capacity2": "Capacity bonus 2",
+      "capacity7": "Capacity bonus 7"
     },
-    "Preset2": {
-      "Minimum": "Minimum",
-      "Modules": "Upgraded",
-      "Beacon8": "Proliferated"
+    "preset": {
+      "minimum": "Minimum",
+      "modules": "Modules",
+      "beacon8": "8 Beacons",
+      "beacon12": "12 Beacons",
+      "upgraded": "Upgraded",
+      "proliferated": "Proliferated"
     }
   },
   "list": {

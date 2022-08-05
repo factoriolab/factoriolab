@@ -9,9 +9,9 @@ export enum DisplayRate {
 }
 
 export const displayRateOptions: SelectItem<DisplayRate>[] = [
-  { value: DisplayRate.PerSecond, label: 'options.DisplayRate.PerSecond' },
-  { value: DisplayRate.PerMinute, label: 'options.DisplayRate.PerMinute' },
-  { value: DisplayRate.PerHour, label: 'options.DisplayRate.PerHour' },
+  { value: DisplayRate.PerSecond, label: 'options.displayRate.perSecond' },
+  { value: DisplayRate.PerMinute, label: 'options.displayRate.perMinute' },
+  { value: DisplayRate.PerHour, label: 'options.displayRate.perHour' },
 ];
 
 export const displayRateVal = {

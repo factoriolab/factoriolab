@@ -16,6 +16,8 @@ import {
   ToggleComponent,
 } from './components';
 import {
+  DropdownIconDirective,
+  DropdownTranslateDirective,
   FocusOnShowDirective,
   ValidateNumberDirective,
   ValidateOverclockDirective,
@@ -51,6 +53,8 @@ export const SHARED_COMPONENTS = [
 ];
 
 export const SHARED_DIRECTIVES = [
+  DropdownIconDirective,
+  DropdownTranslateDirective,
   FocusOnShowDirective,
   ValidateNumberDirective,
   ValidateOverclockDirective,

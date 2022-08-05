@@ -11,7 +11,6 @@ import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfirmationService } from 'primeng/api';
 import { combineLatest, first, map } from 'rxjs';
 
 import {
@@ -27,13 +26,17 @@ import {
   InserterTarget,
   inserterTargetOptions,
   ItemId,
+  Language,
+  languageOptions,
   PowerUnit,
   powerUnitOptions,
   Preset,
   ResearchSpeed,
   researchSpeedOptions,
+  SimplexType,
+  simplexTypeOptions,
 } from '~/models';
-import { DialogService, RouterService } from '~/services';
+import { ContentService, RouterService } from '~/services';
 import { App, Factories, LabState, Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
@@ -42,7 +45,6 @@ import { BrowserUtility } from '~/utilities';
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ConfirmationService],
 })
 export class MenuComponent implements OnInit {
   @HostBinding('class.active') @Input() active = false;
@@ -96,19 +98,21 @@ export class MenuComponent implements OnInit {
   gameOptions = gameOptions;
   inserterCapacityOptions = inserterCapacityOptions;
   inserterTargetOptions = inserterTargetOptions;
+  languageOptions = languageOptions;
   powerUnitOptions = powerUnitOptions;
   researchSpeedOptions = researchSpeedOptions;
+  simplexTypeOptions = simplexTypeOptions;
 
   Column = Column;
   FuelType = FuelType;
   Game = Game;
   ItemId = ItemId;
+  SimplexType = SimplexType;
 
   constructor(
-    public dialogSvc: DialogService,
+    public contentSvc: ContentService,
     private router: Router,
     private store: Store<LabState>,
-    private confirmationSvc: ConfirmationService,
     private translateSvc: TranslateService,
     private routerSvc: RouterService
   ) {}
@@ -126,7 +130,7 @@ export class MenuComponent implements OnInit {
   }
 
   clickResetSettings(): void {
-    this.confirmationSvc.confirm({
+    this.contentSvc.confirm({
       icon: 'fa-solid fa-exclamation-triangle',
       header: this.translateSvc.instant('settings.reset'),
       message: this.translateSvc.instant('settings.resetWarning'),
@@ -292,5 +296,14 @@ export class MenuComponent implements OnInit {
 
   setInserterCapacity(value: InserterCapacity): void {
     this.store.dispatch(new Settings.SetInserterCapacityAction(value));
+  }
+
+  setSimplexType(value: SimplexType): void {
+    this.store.dispatch(new Preferences.SetSimplexTypeAction(value));
+  }
+
+  setLanguage(value: Language): void {
+    this.translateSvc.use(value);
+    this.store.dispatch(new Preferences.SetLanguageAction(value));
   }
 }

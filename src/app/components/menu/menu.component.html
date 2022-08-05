@@ -1,6 +1,6 @@
 <div class="p-3">
   <div class="d-flex align-items-center justify-content-between">
-    <h2 class="mb-0">{{ 'menu.header' | translate }}</h2>
+    <h2 class="mb-0">{{ 'settings.header' | translate }}</h2>
     <div>
       <button
         pButton
@@ -8,7 +8,7 @@
         type="button"
         class="p-button-rounded p-button-text"
         icon="fa-solid fa-trash"
-        [pTooltip]="'menu.reset' | translate"
+        [pTooltip]="'settings.reset' | translate"
         tooltipPosition="bottom"
         (click)="clickResetSettings()"
       ></button>
@@ -27,8 +27,8 @@
   <p-scrollPanel [style]="{ height: '100%' }">
     <div class="p-3 overflow-hidden">
       <div class="mb-3">
-        <h3 [pTooltip]="'menu.savedStatesTooltip' | translate">
-          {{ 'menu.savedStates' | translate }}
+        <h3 [pTooltip]="'settings.savedStatesTooltip' | translate">
+          {{ 'settings.savedStates' | translate }}
           <i class="fa-solid fa-info-circle"></i>
         </h3>
         <div class="p-inputgroup">
@@ -42,11 +42,11 @@
               (click)="editState = false"
             ></button>
             <input
-              type="text"
               pInputText
               labFocus
-              [placeholder]="'menu.nameSavedState' | translate"
-              [pTooltip]="'menu.savedStateName' | translate"
+              type="text"
+              [placeholder]="'settings.nameSavedState' | translate"
+              [pTooltip]="'settings.savedStateName' | translate"
               tooltipPosition="top"
               [formControl]="stateCtrl"
             />
@@ -55,7 +55,7 @@
               pRipple
               type="button"
               icon="fa-solid fa-floppy-disk"
-              [pTooltip]="'menu.saveSavedState' | translate"
+              [pTooltip]="'settings.saveSavedState' | translate"
               [disabled]="!stateCtrl.valid"
               (click)="clickSaveState()"
             ></button>
@@ -67,12 +67,12 @@
             pRipple
             type="button"
             icon="fa-solid fa-pen-to-square"
-            [pTooltip]="'menu.editSavedState' | translate"
+            [pTooltip]="'settings.editSavedState' | translate"
             (click)="openEditState()"
           ></button>
           <p-dropdown
-            [placeholder]="'menu.selectSavedState' | translate"
-            [pTooltip]="'menu.selectSavedState' | translate"
+            [placeholder]="'settings.selectSavedState' | translate"
+            [pTooltip]="'settings.selectSavedState' | translate"
             tooltipPosition="top"
             [ngModel]="state"
             [options]="vm.savedStates"
@@ -83,7 +83,7 @@
             pRipple
             type="button"
             icon="fa-solid fa-trash"
-            [pTooltip]="'menu.deleteSavedState' | translate"
+            [pTooltip]="'settings.deleteSavedState' | translate"
             [disabled]="!state"
             (click)="clickDeleteState()"
           ></button>
@@ -91,57 +91,56 @@
       </div>
       <div class="mb-3">
         <div class="d-flex align-items-center justify-content-between mb-2">
-          <h3 class="mb-0">{{ 'menu.recipes' | translate }}</h3>
+          <h3 class="mb-0">{{ 'settings.recipes' | translate }}</h3>
           <a
             *ngIf="vm.data.game === Game.Factorio"
             target="_blank"
             href="https://github.com/factoriolab/factoriolab/issues/new?assignees=&labels=mod+support&template=mod-request.md&title="
-            ><small>{{ 'menu.requestMod' | translate }}</small></a
+            ><small>{{ 'settings.requestMod' | translate }}</small></a
           >
         </div>
         <div class="mt-4 py-2">
-          <span class="p-float-label">
+          <span
+            class="p-float-label"
+            [pTooltip]="'settings.gameTooltip' | translate"
+          >
             <p-dropdown
+              labDropdownTranslate
               inputId="game"
               styleClass="w-100"
-              [pTooltip]="'menu.gameTooltip' | translate"
               [ngModel]="vm.data.game"
               [options]="gameOptions"
               (onChange)="setGame($event.value)"
             >
-              <ng-template pTemplate="selectedItem" let-item>
-                {{ item.label | translate }}
-              </ng-template>
-              <ng-template pTemplate="item" let-item>
-                {{ item.label | translate }}
-              </ng-template>
             </p-dropdown>
-            <label for="game">{{ 'menu.game' | translate }}</label>
+            <label for="game">{{ 'settings.game' | translate }}</label>
           </span>
         </div>
         <div *ngIf="vm.data.game === Game.Factorio" class="mt-4 py-2">
-          <span class="p-float-label">
+          <span
+            class="p-float-label"
+            [pTooltip]="'settings.modSetTooltip' | translate"
+          >
             <p-dropdown
               inputId="mod"
               styleClass="w-100"
-              [pTooltip]="'menu.modSetTooltip' | translate"
               [filter]="true"
               [ngModel]="vm.settings.modId"
               [options]="vm.modOptions"
               (onChange)="setMod($event.value)"
             >
             </p-dropdown>
-            <label for="mod">{{ 'menu.modSet' | translate }}</label>
+            <label for="mod">{{ 'settings.modSet' | translate }}</label>
           </span>
         </div>
         <div class="pt-2">
           <label class="p-static-label">{{
-            'menu.modVersions' | translate
+            'settings.modVersions' | translate
           }}</label>
           <p-scrollPanel
             *ngIf="vm.data.version"
             [style]="{ maxHeight: '200px' }"
-            [pTooltip]="'menu.modVersionsTooltip' | translate"
+            [pTooltip]="'settings.modVersionsTooltip' | translate"
           >
             <ul class="ps-2 mb-0">
               <li
@@ -155,14 +154,16 @@
           </p-scrollPanel>
         </div>
         <div class="mt-4 py-2">
-          <span class="p-float-label">
+          <span
+            class="p-float-label"
+            [pTooltip]="'settings.disabledRecipesTooltip' | translate"
+          >
             <p-multiSelect
               inputId="disabled-recipes"
               styleClass="w-100"
               scrollHeight="400px"
               [virtualScroll]="true"
               [virtualScrollItemSize]="48"
-              [tooltip]="'menu.disabledRecipesTooltip' | translate"
               [ngModel]="vm.settings.disabledRecipeIds"
               [options]="
                 vm.data.complexRecipeIds | options: vm.data.recipeEntities
@@ -176,7 +177,7 @@
             >
               <ng-template pTemplate="selectedItems" let-items>
                 {{ items?.length ?? 0 }}
-                {{ 'menu.recipesDisabled' | translate }}
+                {{ 'settings.recipesDisabled' | translate }}
               </ng-template>
               <ng-template pTemplate="item" let-item>
                 <div class="d-flex align-items-center">
@@ -188,84 +189,77 @@
               </ng-template>
             </p-multiSelect>
             <label for="disabled-recipes">{{
-              'menu.disabledRecipes' | translate
+              'settings.disabledRecipes' | translate
             }}</label>
           </span>
         </div>
       </div>
       <div class="mb-3">
-        <h3>{{ 'menu.display' | translate }}</h3>
+        <h3>{{ 'settings.display' | translate }}</h3>
         <button
           pButton
           pRipple
           class="w-100 my-2"
           icon="fa-solid fa-table-columns"
-          [label]="'menu.openColumnSettings' | translate"
-          (click)="dialogSvc.showColumns$.next()"
+          [label]="'settings.openColumnSettings' | translate"
+          (click)="contentSvc.showColumns$.next()"
         ></button>
         <div class="mt-4 py-2">
-          <span class="p-float-label">
+          <span
+            class="p-float-label"
+            [pTooltip]="'settings.displayRateTooltip' | translate"
+          >
             <p-dropdown
+              labDropdownTranslate
               inputId="display-rate"
               styleClass="w-100"
-              [pTooltip]="'menu.displayRateTooltip' | translate"
               [ngModel]="vm.settings.displayRate"
               [options]="displayRateOptions"
               (onChange)="setDisplayRate($event.value, vm.settings.displayRate)"
             >
-              <ng-template pTemplate="selectedItem" let-item>
-                {{ item.label | translate }}
-              </ng-template>
-              <ng-template pTemplate="item" let-item>
-                {{ item.label | translate }}
-              </ng-template>
             </p-dropdown>
             <label for="display-rate">{{
-              'menu.displayRate' | translate
+              'settings.displayRate' | translate
             }}</label>
           </span>
         </div>
         <div *ngIf="vm.columns[Column.Power].show" class="mt-4 py-2">
-          <span class="p-float-label">
+          <span
+            class="p-float-label"
+            [pTooltip]="'settings.powerUnitTooltip' | translate"
+          >
             <p-dropdown
+              labDropdownTranslate
               inputId="power-unit"
               styleClass="w-100"
-              [pTooltip]="'menu.powerUnitTooltip' | translate"
               [ngModel]="vm.preferences.powerUnit"
               [options]="powerUnitOptions"
               (onChange)="setPowerUnit($event.value)"
             >
-              <ng-template pTemplate="selectedItem" let-item>
-                {{ item.label | translate }}
-              </ng-template>
-              <ng-template pTemplate="item" let-item>
-                {{ item.label | translate }}
-              </ng-template>
             </p-dropdown>
-            <label for="power-unit">{{ 'menu.powerUnit' | translate }}</label>
+            <label for="power-unit">{{
+              'settings.powerUnit' | translate
+            }}</label>
           </span>
         </div>
       </div>
       <div class="mb-3">
-        <h3>{{ 'menu.factory' | translate }}</h3>
+        <h3>{{ 'settings.factory' | translate }}</h3>
         <div class="mt-4 py-2">
-          <span class="p-float-label">
+          <span
+            class="p-float-label"
+            [pTooltip]="'settings.presetTooltip' | translate"
+          >
             <p-dropdown
+              labDropdownTranslate
               inputId="preset"
               styleClass="w-100"
-              [pTooltip]="'menu.presetTooltip' | translate"
               [ngModel]="vm.settings.preset"
               [options]="vm.presetOptions"
               (onChange)="setPreset($event.value)"
             >
-              <ng-template pTemplate="selectedItem" let-item>
-                {{ item.label | translate }}
-              </ng-template>
-              <ng-template pTemplate="item" let-item>
-                {{ item.label | translate }}
-              </ng-template>
             </p-dropdown>
-            <label for="preset">{{ 'menu.preset' | translate }}</label>
+            <label for="preset">{{ 'settings.preset' | translate }}</label>
           </span>
         </div>
         <ng-container *ngIf="vm.data.game !== Game.CaptainOfIndustry">
@@ -281,8 +275,10 @@
               } as factory"
             >
               <p-divider>{{
-                (index === 0 ? 'menu.factoryDefaults' : 'menu.factorySelection')
-                  | translate: { index: index }
+                (index === 0
+                  ? 'settings.factoryDefaults'
+                  : 'settings.factorySelection'
+                ) | translate: { index: index }
               }}</p-divider>
               <div class="p-inputgroup flex-wrap my-3">
                 <!-- Remove factory button -->
@@ -290,8 +286,8 @@
                   *ngIf="index > 0"
                   pButton
                   pRipple
-                  [pTooltip]="'menu.removeFactoryTooltip' | translate"
                   icon="fa-solid fa-trash"
+                  [pTooltip]="'settings.removeFactoryTooltip' | translate"
                   (click)="
                     removeFactory(factoryId, vm.data.defaults?.factoryRankIds)
                   "
@@ -299,9 +295,8 @@
                 <!-- Factory dropdown -->
                 <p-dropdown
                   *ngIf="factoryId"
-                  appendTo="body"
-                  scrollHeight="400px"
-                  [pTooltip]="'menu.factoryTooltip' | translate"
+                  labDropdownIcon
+                  [pTooltip]="'settings.factoryTooltip' | translate"
                   [ngModel]="factoryId"
                   [options]="vm.factoryOptions"
                   (onChange)="
@@ -312,28 +307,6 @@
                     )
                   "
                 >
-                  <ng-template pTemplate="selectedItem" let-item>
-                    <div class="d-flex align-items-center h-100">
-                      <i
-                        class="flex-shrink-0"
-                        [class]="item.value | iconClass"
-                      ></i>
-                      <div class="ms-3 text-truncate">
-                        {{ item.label }}
-                      </div>
-                    </div>
-                  </ng-template>
-                  <ng-template pTemplate="item" let-item>
-                    <div class="d-flex align-items-center h-100">
-                      <i
-                        class="flex-shrink-0"
-                        [class]="item.value | iconClass"
-                      ></i>
-                      <div class="ms-3 text-truncate">
-                        {{ item.label }}
-                      </div>
-                    </div>
-                  </ng-template>
                 </p-dropdown>
                 <!-- Modifiers multiselect -->
                 <p-multiSelect
@@ -342,7 +315,7 @@
                   placeholder="unused"
                   scrollHeight="400px"
                   [selectionLimit]="vm.data.game === Game.Satisfactory ? 1 : 2"
-                  [pTooltip]="'menu.modifierTooltip' | translate"
+                  [pTooltip]="'settings.modifierTooltip' | translate"
                   [ngModel]="factory.settings.moduleRankIds"
                   [options]="vm.data.moduleIds | options: vm.data.itemEntities"
                   (onChange)="
@@ -376,7 +349,7 @@
                           [class]="ItemId.Module | iconClass"
                         ></i>
                         <div class="ms-3 text-truncate">
-                          {{ 'menu.noModifiers' | translate }}
+                          {{ 'settings.noModifiers' | translate }}
                         </div>
                       </ng-template>
                     </div>
@@ -401,7 +374,7 @@
                     [max]="250"
                     [step]="10"
                     [showButtons]="true"
-                    [pTooltip]="'menu.overclockTooltip' | translate"
+                    [pTooltip]="'settings.overclockTooltip' | translate"
                     [ngModel]="factory.settings.overclock"
                     (onInput)="
                       setOverclock(
@@ -417,7 +390,7 @@
                   <ng-container *ngIf="factory.settings.beaconCount != null">
                     <!-- Beacon count input -->
                     <lab-input-number
-                      [pTooltip]="'menu.beaconCountTooltip' | translate"
+                      [pTooltip]="'settings.beaconCountTooltip' | translate"
                       tooltipPosition="top"
                       [value]="factory.settings.beaconCount"
                       (setValue)="
@@ -430,9 +403,8 @@
                     ></lab-input-number>
                     <!-- Beacon dropdown -->
                     <p-dropdown
-                      appendTo="body"
-                      scrollHeight="400px"
-                      [pTooltip]="'menu.beaconTooltip' | translate"
+                      labDropdownIcon
+                      [pTooltip]="'settings.beaconTooltip' | translate"
                       tooltipPosition="top"
                       [ngModel]="factory.settings.beaconId"
                       [options]="
@@ -446,36 +418,13 @@
                         )
                       "
                     >
-                      <ng-template pTemplate="selectedItem" let-item>
-                        <div class="d-flex align-items-center h-100">
-                          <i
-                            class="flex-shrink-0"
-                            [class]="item.value | iconClass"
-                          ></i>
-                          <div class="ms-3 text-truncate">
-                            {{ item.label }}
-                          </div>
-                        </div>
-                      </ng-template>
-                      <ng-template pTemplate="item" let-item>
-                        <div class="d-flex align-items-center">
-                          <i
-                            class="flex-shrink-0"
-                            [class]="item.value | iconClass"
-                          ></i>
-                          <div class="ms-3 text-truncate">
-                            {{ item.label }}
-                          </div>
-                        </div>
-                      </ng-template>
                     </p-dropdown>
                     <!-- Beacon module dropdown -->
                     <p-dropdown
-                      appendTo="body"
-                      scrollHeight="400px"
+                      labDropdownIcon
                       [autoDisplayFirst]="false"
-                      [placeholder]="'menu.noBeaconModule' | translate"
-                      [pTooltip]="'menu.beaconModuleTooltip' | translate"
+                      [placeholder]="'settings.noBeaconModule' | translate"
+                      [pTooltip]="'settings.beaconModuleTooltip' | translate"
                       tooltipPosition="top"
                       [ngModel]="factory.settings.beaconModuleId"
                       [options]="
@@ -489,28 +438,6 @@
                         )
                       "
                     >
-                      <ng-template pTemplate="selectedItem" let-item>
-                        <div class="d-flex align-items-center h-100">
-                          <i
-                            class="flex-shrink-0"
-                            [class]="item.value | iconClass"
-                          ></i>
-                          <div class="ms-3 text-truncate">
-                            {{ item.label }}
-                          </div>
-                        </div>
-                      </ng-template>
-                      <ng-template pTemplate="item" let-item>
-                        <div class="d-flex align-items-center">
-                          <i
-                            class="flex-shrink-0"
-                            [class]="item.value | iconClass"
-                          ></i>
-                          <div class="ms-3 text-truncate">
-                            {{ item.label }}
-                          </div>
-                        </div>
-                      </ng-template>
                     </p-dropdown>
                   </ng-container>
                 </ng-container>
@@ -519,8 +446,8 @@
                   *ngIf="index > 1"
                   pButton
                   pRipple
-                  [pTooltip]="'menu.raiseFactoryTooltip' | translate"
                   icon="fa-solid fa-arrow-up"
+                  [pTooltip]="'settings.raiseFactoryTooltip' | translate"
                   (click)="
                     raiseFactory(factoryId, vm.data.defaults?.factoryRankIds)
                   "
@@ -531,16 +458,16 @@
           <p-divider></p-divider>
           <div class="py-2">
             <p-dropdown
-              styleClass="w-100"
               appendTo="body"
               scrollHeight="400px"
+              styleClass="w-100"
               [options]="vm.factoryOptions"
               (onChange)="
                 addFactory($event.value, vm.data.defaults?.factoryRankIds)
               "
             >
               <ng-template pTemplate="selectedItem" let-item>
-                {{ 'menu.addFactory' | translate }}
+                {{ 'settings.addFactory' | translate }}
               </ng-template>
               <ng-template pTemplate="item" let-item>
                 <div class="d-flex align-items-center h-100">
@@ -557,189 +484,119 @@
           <p-checkbox
             [ngModel]="vm.settings.beaconReceivers != null"
             [binary]="true"
-            [label]="'menu.estimateBeaconPowerUsage' | translate"
-            [pTooltip]="'menu.estimateBeaconPowerUsageTooltip' | translate"
+            [label]="'settings.estimateBeaconPowerUsage' | translate"
+            [pTooltip]="'settings.estimateBeaconPowerUsageTooltip' | translate"
             (onChange)="toggleBeaconReceivers($event.checked)"
           ></p-checkbox>
         </div>
         <div *ngIf="vm.settings.beaconReceivers" class="py-2">
           <label class="p-static-label" for="display-rate">{{
-            'menu.averageBeaconReceivers' | translate
+            'settings.averageBeaconReceivers' | translate
           }}</label>
           <lab-input-number
             inputId="display-rate"
-            [pTooltip]="'menu.averageBeaconReceiversTooltip' | translate"
+            [pTooltip]="'settings.averageBeaconReceiversTooltip' | translate"
             [value]="vm.settings.beaconReceivers"
             (setValue)="setBeaconReceivers($event)"
           ></lab-input-number>
         </div>
         <div *ngIf="vm.data.game === Game.DysonSphereProgram" class="mt-4 py-2">
-          <div class="p-float-label">
+          <div
+            class="p-float-label"
+            [pTooltip]="'settings.proliferatorSelfSprayTooltip' | translate"
+          >
             <p-dropdown
+              labDropdownIcon
               inputId="proliferator-self-spray"
               styleClass="w-100"
-              scrollHeight="400px"
               [autoDisplayFirst]="false"
-              [pTooltip]="'menu.proliferatorSelfSprayTooltip' | translate"
               [ngModel]="vm.settings.proliferatorSprayId"
               [options]="vm.data.prodModuleIds | options: vm.data.itemEntities"
               (onChange)="setProliferatorSpray($event.value)"
             >
-              <ng-template pTemplate="selectedItem" let-item>
-                <div class="d-flex align-items-center">
-                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-                  <div class="ms-3 text-truncate">
-                    {{ item.label }}
-                  </div>
-                </div>
-              </ng-template>
-              <ng-template pTemplate="item" let-item>
-                <div class="d-flex align-items-center">
-                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-                  <div class="ms-3 text-truncate">
-                    {{ item.label }}
-                  </div>
-                </div>
-              </ng-template>
             </p-dropdown>
             <label for="proliferator-self-spray">{{
-              'menu.proliferatorSelfSpray' | translate
+              'settings.proliferatorSelfSpray' | translate
             }}</label>
           </div>
         </div>
         <div class="mt-4 py-2">
-          <div class="p-float-label">
+          <div
+            class="p-float-label"
+            [pTooltip]="'settings.defaultTransportBeltTooltip' | translate"
+          >
             <p-dropdown
+              labDropdownIcon
               inputId="default-transport-belt"
               styleClass="w-100"
-              scrollHeight="400px"
-              [pTooltip]="'menu.defaultTransportBeltTooltip' | translate"
               [ngModel]="vm.settings.beltId"
               [options]="vm.data.beltIds | options: vm.data.itemEntities"
               (onChange)="setBelt($event.value, vm.data.defaults?.beltId)"
             >
-              <ng-template pTemplate="selectedItem" let-item>
-                <div class="d-flex align-items-center">
-                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-                  <div class="ms-3 text-truncate">
-                    {{ item.label }}
-                  </div>
-                </div>
-              </ng-template>
-              <ng-template pTemplate="item" let-item>
-                <div class="d-flex align-items-center">
-                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-                  <div class="ms-3 text-truncate">
-                    {{ item.label }}
-                  </div>
-                </div>
-              </ng-template>
             </p-dropdown>
             <label for="default-transport-belt">{{
-              'menu.defaultTransportBelt' | translate
+              'settings.defaultTransportBelt' | translate
             }}</label>
           </div>
         </div>
         <div *ngIf="vm.data.pipeIds.length > 1" class="mt-4 py-2">
-          <div class="p-float-label">
+          <div
+            class="p-float-label"
+            [pTooltip]="'settings.defaultPipeTooltip' | translate"
+          >
             <p-dropdown
+              labDropdownIcon
               inputId="default-pipe"
               styleClass="w-100"
-              scrollHeight="400px"
-              [pTooltip]="'menu.defaultPipeTooltip' | translate"
               [ngModel]="vm.settings.pipeId"
               [options]="vm.data.pipeIds | options: vm.data.itemEntities"
               (onChange)="setPipe($event.value, vm.data.defaults?.pipeId)"
             >
-              <ng-template pTemplate="selectedItem" let-item>
-                <div class="d-flex align-items-center">
-                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-                  <div class="ms-3 text-truncate">
-                    {{ item.label }}
-                  </div>
-                </div>
-              </ng-template>
-              <ng-template pTemplate="item" let-item>
-                <div class="d-flex align-items-center">
-                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-                  <div class="ms-3 text-truncate">
-                    {{ item.label }}
-                  </div>
-                </div>
-              </ng-template>
             </p-dropdown>
             <label for="default-pipe">{{
-              'menu.defaultPipe' | translate
+              'settings.defaultPipe' | translate
             }}</label>
           </div>
         </div>
         <div *ngIf="vm.data.cargoWagonIds.length > 1" class="mt-4 py-2">
-          <div class="p-float-label">
+          <div
+            class="p-float-label"
+            [pTooltip]="'settings.defaultCargoWagonTooltip' | translate"
+          >
             <p-dropdown
+              labDropdownIcon
               inputId="default-cargo-wagon"
               styleClass="w-100"
-              scrollHeight="400px"
-              [pTooltip]="'menu.defaultCargoWagonTooltip' | translate"
               [ngModel]="vm.settings.cargoWagonId"
               [options]="vm.data.cargoWagonIds | options: vm.data.itemEntities"
               (onChange)="
                 setCargoWagon($event.value, vm.data.defaults?.cargoWagonId)
               "
             >
-              <ng-template pTemplate="selectedItem" let-item>
-                <div class="d-flex align-items-center">
-                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-                  <div class="ms-3 text-truncate">
-                    {{ item.label }}
-                  </div>
-                </div>
-              </ng-template>
-              <ng-template pTemplate="item" let-item>
-                <div class="d-flex align-items-center">
-                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-                  <div class="ms-3 text-truncate">
-                    {{ item.label }}
-                  </div>
-                </div>
-              </ng-template>
             </p-dropdown>
             <label for="default-cargo-wagon">{{
-              'menu.defaultCargoWagon' | translate
+              'settings.defaultCargoWagon' | translate
             }}</label>
           </div>
         </div>
         <div *ngIf="vm.data.fluidWagonIds.length > 1" class="mt-4 py-2">
-          <div class="p-float-label">
+          <div
+            class="p-float-label"
+            [pTooltip]="'settings.defaultFluidWagonTooltip' | translate"
+          >
             <p-dropdown
+              labDropdownIcon
               inputId="default-fluid-wagon"
               styleClass="w-100"
-              scrollHeight="400px"
-              [pTooltip]="'menu.defaultFluidWagonTooltip' | translate"
               [ngModel]="vm.settings.fluidWagonId"
               [options]="vm.data.fluidWagonIds | options: vm.data.itemEntities"
               (onChange)="
                 setFluidWagon($event.value, vm.data.defaults?.fluidWagonId)
               "
             >
-              <ng-template pTemplate="selectedItem" let-item>
-                <div class="d-flex align-items-center">
-                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-                  <div class="ms-3 text-truncate">
-                    {{ item.label }}
-                  </div>
-                </div>
-              </ng-template>
-              <ng-template pTemplate="item" let-item>
-                <div class="d-flex align-items-center">
-                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-                  <div class="ms-3 text-truncate">
-                    {{ item.label }}
-                  </div>
-                </div>
-              </ng-template>
             </p-dropdown>
             <label for="default-fluid-wagon">{{
-              'menu.defaultFluidWagon' | translate
+              'settings.defaultFluidWagon' | translate
             }}</label>
           </div>
         </div>
@@ -751,12 +608,14 @@
           "
           class="mt-4 py-2"
         >
-          <div class="p-float-label">
+          <div
+            class="p-float-label"
+            [pTooltip]="'settings.chemicalFuelTooltip' | translate"
+          >
             <p-dropdown
+              labDropdownIcon
               inputId="chemical-fuel"
               styleClass="w-100"
-              scrollHeight="400px"
-              [pTooltip]="'menu.chemicalFuelTooltip' | translate"
               [ngModel]="vm.settings.fuelId"
               [options]="
                 vm.data.fuelIds[FuelType.Chemical]
@@ -764,25 +623,9 @@
               "
               (onChange)="setFuel($event.value, vm.data.defaults?.fuelId)"
             >
-              <ng-template pTemplate="selectedItem" let-item>
-                <div class="d-flex align-items-center">
-                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-                  <div class="ms-3 text-truncate">
-                    {{ item.label }}
-                  </div>
-                </div>
-              </ng-template>
-              <ng-template pTemplate="item" let-item>
-                <div class="d-flex align-items-center">
-                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-                  <div class="ms-3 text-truncate">
-                    {{ item.label }}
-                  </div>
-                </div>
-              </ng-template>
             </p-dropdown>
             <label for="chemical-fuel">{{
-              'menu.chemicalFuel' | translate
+              'settings.chemicalFuel' | translate
             }}</label>
           </div>
         </div>
@@ -797,42 +640,40 @@
                 >
               </small>
             </div>
-            <div class="p-float-label">
+            <div
+              class="p-float-label"
+              [pTooltip]="'settings.pipeFlowRateTooltip' | translate"
+            >
               <p-inputNumber
                 inputId="pipe-flow-rate"
-                [suffix]="' ' + ('menu.flowRateUnit' | translate)"
+                [suffix]="' ' + ('settings.flowRateUnit' | translate)"
                 [min]="1"
                 [step]="100"
                 [showButtons]="true"
-                [pTooltip]="'menu.pipeFlowRateTooltip' | translate"
                 [ngModel]="vm.settings.flowRate"
                 (onInput)="setFlowRate($event.value)"
               ></p-inputNumber>
               <label for="pipe-flow-rate">{{
-                'menu.pipeFlowRate' | translate
+                'settings.pipeFlowRate' | translate
               }}</label>
             </div>
           </div>
           <div class="mt-4 py-2">
-            <div class="p-float-label">
+            <div
+              class="p-float-label"
+              [pTooltip]="'settings.inserterTargetTooltip' | translate"
+            >
               <p-dropdown
+                labDropdownTranslate
                 inputId="inserter-target"
                 styleClass="w-100"
-                scrollHeight="400px"
-                [pTooltip]="'menu.inserterTargetTooltip' | translate"
                 [ngModel]="vm.settings.inserterTarget"
                 [options]="inserterTargetOptions"
                 (onChange)="setInserterTarget($event.value)"
               >
-                <ng-template pTemplate="selectedItem" let-item>
-                  {{ item.label | translate }}
-                </ng-template>
-                <ng-template pTemplate="item" let-item>
-                  {{ item.label | translate }}
-                </ng-template>
               </p-dropdown>
               <label for="inserter-target">{{
-                'menu.inserterTarget' | translate
+                'settings.inserterTarget' | translate
               }}</label>
             </div>
           </div>
@@ -845,10 +686,34 @@
         "
         class="mb-3"
       >
-        <h3>{{ 'menu.bonuses' | translate }}</h3>
+        <h3>{{ 'settings.bonuses' | translate }}</h3>
+        <ng-container *ngIf="vm.data.game === Game.DysonSphereProgram">
+          <div class="mt-4 py-2">
+            <div
+              class="p-float-label"
+              [pTooltip]="'settings.miningSpeedTooltip' | translate"
+            >
+              <p-inputNumber
+                inputId="mining-speed"
+                suffix="%"
+                [min]="100"
+                [step]="10"
+                [showButtons]="true"
+                [ngModel]="vm.settings.miningBonus + 100"
+                (onInput)="setMiningBonus($event.value - 100)"
+              ></p-inputNumber>
+              <label for="mining-speed">{{
+                'settings.miningSpeed' | translate
+              }}</label>
+            </div>
+          </div>
+        </ng-container>
         <ng-container *ngIf="vm.data.game === Game.Factorio">
           <div class="mt-4 py-2">
-            <div class="p-float-label">
+            <div
+              class="p-float-label"
+              [pTooltip]="'settings.miningProductivityTooltip' | translate"
+            >
               <p-inputNumber
                 inputId="mining-productivity"
                 prefix="+"
@@ -856,83 +721,103 @@
                 [min]="0"
                 [step]="10"
                 [showButtons]="true"
-                [pTooltip]="'menu.miningProductivityTooltip' | translate"
                 [ngModel]="vm.settings.miningBonus"
                 (onInput)="setMiningBonus($event.value)"
               ></p-inputNumber>
               <label for="mining-productivity">{{
-                'menu.miningProductivity' | translate
+                'settings.miningProductivity' | translate
               }}</label>
             </div>
           </div>
           <div class="mt-4 py-2">
-            <div class="p-float-label">
+            <div
+              class="p-float-label"
+              [pTooltip]="'settings.researchSpeedTooltip' | translate"
+            >
               <p-dropdown
+                labDropdownTranslate
                 inputId="research-speed"
                 styleClass="w-100"
-                scrollHeight="400px"
-                [pTooltip]="'menu.researchSpeedTooltip' | translate"
                 [ngModel]="vm.settings.researchSpeed"
                 [options]="researchSpeedOptions"
                 (onChange)="setResearchSpeed($event.value)"
               >
-                <ng-template pTemplate="selectedItem" let-item>
-                  {{ item.label | translate }}
-                </ng-template>
-                <ng-template pTemplate="item" let-item>
-                  {{ item.label | translate }}
-                </ng-template>
               </p-dropdown>
               <label for="research-speed">{{
-                'menu.researchSpeed' | translate
+                'settings.researchSpeed' | translate
               }}</label>
             </div>
           </div>
           <div class="mt-4 py-2">
-            <div class="p-float-label">
+            <div
+              class="p-float-label"
+              [pTooltip]="'settings.inserterCapacityTooltip' | translate"
+            >
               <p-dropdown
+                labDropdownTranslate
                 inputId="inserter-capacity"
                 styleClass="w-100"
-                scrollHeight="400px"
-                [pTooltip]="'menu.inserterCapacityTooltip' | translate"
                 [ngModel]="vm.settings.inserterCapacity"
                 [options]="inserterCapacityOptions"
                 (onChange)="setInserterCapacity($event.value)"
               >
-                <ng-template pTemplate="selectedItem" let-item>
-                  {{ item.label | translate }}
-                </ng-template>
-                <ng-template pTemplate="item" let-item>
-                  {{ item.label | translate }}
-                </ng-template>
               </p-dropdown>
               <label for="inserter-capacity">{{
-                'menu.inserterCapacity' | translate
-              }}</label>
-            </div>
-          </div>
-        </ng-container>
-        <ng-container *ngIf="vm.data.game === Game.DysonSphereProgram">
-          <div class="mt-4 py-2">
-            <div class="p-float-label">
-              <p-inputNumber
-                inputId="mining-speed"
-                suffix="%"
-                [min]="100"
-                [step]="10"
-                [showButtons]="true"
-                [pTooltip]="'menu.miningSpeedTooltip' | translate"
-                [ngModel]="vm.settings.miningBonus + 100"
-                (onInput)="setMiningBonus($event.value - 100)"
-              ></p-inputNumber>
-              <label for="mining-speed">{{
-                'menu.miningSpeed' | translate
+                'settings.inserterCapacity' | translate
               }}</label>
             </div>
           </div>
         </ng-container>
       </div>
+      <div class="mb-3">
+        <h3>{{ 'settings.advanced' | translate }}</h3>
+        <div class="mt-4 py-2">
+          <div
+            class="p-float-label"
+            [pTooltip]="'settings.simplexSolverTooltip' | translate"
+          >
+            <p-dropdown
+              labDropdownTranslate
+              inputId="simplex-solver"
+              styleClass="w-100"
+              [ngModel]="vm.preferences.simplexType"
+              [options]="simplexTypeOptions"
+              (onChange)="setSimplexType($event.value)"
+            >
+            </p-dropdown>
+            <label for="inserter-capacity">{{
+              'settings.simplexSolver' | translate
+            }}</label>
+          </div>
+          <div class="p-error">
+            <small *ngIf="vm.preferences.simplexType === SimplexType.Disabled">
+              {{ 'settings.simplexSolverDisabledInfo' | translate }}
+            </small>
+            <small
+              *ngIf="vm.preferences.simplexType === SimplexType.WasmFloat64"
+            >
+              {{ 'settings.simplexSolverWasmFloat64Info' | translate }}
+            </small>
+          </div>
+        </div>
+        <div class="mt-4 py-2">
+          <div
+            class="p-float-label"
+            [pTooltip]="'settings.languageTooltip' | translate"
+          >
+            <p-dropdown
+              labDropdownTranslate
+              inputId="language"
+              styleClass="w-100"
+              [ngModel]="vm.preferences.language"
+              [options]="languageOptions"
+              (onChange)="setLanguage($event.value)"
+            >
+            </p-dropdown>
+            <label for="language">{{ 'settings.language' | translate }}</label>
+          </div>
+        </div>
+      </div>
     </div>
   </p-scrollPanel>
 </div>
-<p-confirmDialog></p-confirmDialog>

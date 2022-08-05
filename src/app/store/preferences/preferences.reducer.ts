@@ -3,6 +3,7 @@ import {
   Column,
   ColumnSettings,
   Entities,
+  Language,
   LinkValue,
   PowerUnit,
   SankeyAlign,
@@ -23,7 +24,7 @@ export interface PreferencesState {
   linkText: LinkValue;
   sankeyAlign: SankeyAlign;
   simplexType: SimplexType;
-  language: string;
+  language: Language;
   powerUnit: PowerUnit;
 }
 
@@ -42,7 +43,7 @@ export const initialPreferencesState: PreferencesState = {
   linkText: LinkValue.Items,
   sankeyAlign: SankeyAlign.Justify,
   simplexType: SimplexType.JsBigIntRational,
-  language: 'en',
+  language: Language.English,
   powerUnit: PowerUnit.Auto,
 };
 

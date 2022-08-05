@@ -8,6 +8,7 @@ export * from './id-type';
 export * from './inserter-capacity';
 export * from './inserter-target';
 export * from './item-id';
+export * from './language';
 export * from './link-value';
 export * from './list-mode';
 export * from './matrix-result-type';

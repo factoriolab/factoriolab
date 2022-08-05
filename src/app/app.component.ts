@@ -10,8 +10,8 @@ import { combineLatest, map } from 'rxjs';
 import { environment } from 'src/environments';
 import { APP, Game, gameInfo, ItemId, MatrixResultType } from './models';
 import {
+  ContentService,
   ErrorService,
-  ResponsiveService,
   RouterService,
   StateService,
 } from './services';
@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
   Game = Game;
 
   constructor(
-    public responsiveSvc: ResponsiveService,
+    public contentSvc: ContentService,
     @Inject(DOCUMENT) private document: Document,
     private meta: Meta,
     private router: Router,

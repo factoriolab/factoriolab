@@ -8,17 +8,17 @@ export enum InserterTarget {
 }
 
 export const inserterTargetOptions: SelectItem<InserterTarget>[] = [
-  { label: 'options.InserterTarget.Chest', value: InserterTarget.Chest },
+  { label: 'options.inserterTarget.chest', value: InserterTarget.Chest },
   {
-    label: 'options.InserterTarget.ExpressTransportBelt',
+    label: 'options.inserterTarget.expressTransportBelt',
     value: InserterTarget.ExpressTransportBelt,
   },
   {
-    label: 'options.InserterTarget.FastTransportBelt',
+    label: 'options.inserterTarget.fastTransportBelt',
     value: InserterTarget.FastTransportBelt,
   },
   {
-    label: 'options.InserterTarget.TransportBelt',
+    label: 'options.inserterTarget.transportBelt',
     value: InserterTarget.TransportBelt,
   },
 ];

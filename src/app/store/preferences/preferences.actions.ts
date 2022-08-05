@@ -4,6 +4,7 @@ import {
   ColumnSettings,
   Entities,
   IdPayload,
+  Language,
   LinkValue,
   PowerUnit,
   SankeyAlign,
@@ -59,7 +60,7 @@ export class SetSimplexTypeAction implements Action {
 
 export class SetLanguageAction implements Action {
   readonly type = PreferencesActionType.SET_LANGUAGE;
-  constructor(public payload: string) {}
+  constructor(public payload: Language) {}
 }
 
 export class SetPowerUnitAction implements Action {

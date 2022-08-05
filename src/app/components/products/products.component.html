@@ -19,34 +19,16 @@
         'products.produce' | translate
       }}</span>
       <p-dropdown
-        [filter]="true"
-        filterBy="label"
-        scrollHeight="400px"
+        labDropdownIcon
         [virtualScroll]="true"
         [virtualScrollItemSize]="48"
-        [panelStyle]="{ width: '19rem' }"
+        [panelStyle]="{ width: '18rem' }"
         [tooltip]="'products.changeItem' | translate"
         tooltipPosition="top"
         [options]="vm.data.itemIds | options: vm.data.itemEntities"
         [ngModel]="product.itemId"
         (onChange)="setItem(product.id, $event.value)"
       >
-        <ng-template pTemplate="selectedItem" let-item>
-          <div class="d-flex align-items-center">
-            <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-            <div class="ms-3 text-truncate">
-              {{ item.label }}
-            </div>
-          </div>
-        </ng-template>
-        <ng-template pTemplate="item" let-item>
-          <div class="d-flex align-items-center">
-            <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-            <div class="ms-3 text-truncate">
-              {{ item.label }}
-            </div>
-          </div>
-        </ng-template>
       </p-dropdown>
       <span class="p-inputgroup-addon">{{ 'products.from' | translate }}</span>
       <lab-input-number
@@ -70,9 +52,7 @@
             'products.of' | translate
           }}</span>
           <p-dropdown
-            [filter]="true"
-            filterBy="label"
-            scrollHeight="400px"
+            labDropdownIcon
             [virtualScroll]="true"
             [virtualScrollItemSize]="48"
             [tooltip]="'products.changeVia' | translate"
@@ -81,22 +61,6 @@
             [ngModel]="product.viaId"
             (onChange)="setVia(product.id, $event.value)"
           >
-            <ng-template pTemplate="selectedItem" let-item>
-              <div class="d-flex align-items-center">
-                <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-                <div class="ms-3 text-truncate">
-                  {{ item.label }}
-                </div>
-              </div>
-            </ng-template>
-            <ng-template pTemplate="item" let-item>
-              <div class="d-flex align-items-center">
-                <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-                <div class="ms-3 text-truncate">
-                  {{ item.label }}
-                </div>
-              </div>
-            </ng-template>
           </p-dropdown>
         </ng-container>
       </ng-container>
@@ -110,42 +74,27 @@
   <div class="row">
     <div class="col-auto mb-3">
       <p-dropdown
-        [filter]="true"
-        filterBy="label"
-        scrollHeight="400px"
+        labDropdownIcon
         [virtualScroll]="true"
         [virtualScrollItemSize]="48"
-        [panelStyle]="{ width: '19rem' }"
+        [panelStyle]="{ width: '18rem' }"
         [options]="vm.data.itemIds | options: vm.data.itemEntities"
         (onChange)="addProduct($event.value)"
       >
         <ng-template pTemplate="selectedItem" let-item>
           <span>{{ 'products.addAProduct' | translate }}</span>
         </ng-template>
-        <ng-template pTemplate="item" let-item>
-          <div class="d-flex align-items-center">
-            <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
-            <div class="ms-3 text-truncate">
-              {{ item.label }}
-            </div>
-          </div>
-        </ng-template>
       </p-dropdown>
     </div>
     <div class="col-auto mb-3">
       <p-dropdown
+        labDropdownTranslate
         styleClass="h-100"
         [tooltip]="'products.selectDisplayRate' | translate"
-        [options]="displayRateOptions"
         [ngModel]="vm.displayRate"
+        [options]="displayRateOptions"
         (onChange)="setDisplayRate($event.value, vm.displayRate)"
       >
-        <ng-template pTemplate="selectedItem" let-opt>
-          <span>{{ opt.label | translate }}</span>
-        </ng-template>
-        <ng-template pTemplate="item" let-opt>
-          <span>{{ opt.label | translate }}</span>
-        </ng-template>
       </p-dropdown>
     </div>
   </div>

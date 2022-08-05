@@ -1,5 +1,5 @@
 <lab-topbar
-  [sticky]="((responsiveSvc.scrollTop$ | async) ?? 0) > 16"
+  [sticky]="((contentSvc.scrollTop$ | async) ?? 0) > 16"
   (toggleMenu)="toggleMenu()"
 ></lab-topbar>
 <lab-menu [active]="menuActive" (toggleMenu)="toggleMenu()"></lab-menu>
@@ -49,8 +49,8 @@
     </p-dialog>
   </main>
 </div>
-<lab-columns-dialog></lab-columns-dialog>
-<lab-factories-dialog></lab-factories-dialog>
+
+<lab-content></lab-content>
 
 <!-- <ng-container *ngIf="vm$ | async as vm">
   <ng-container *ngIf="(errorSvc.message$ | async) == null; else errorTile">
