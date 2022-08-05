@@ -22,9 +22,9 @@ import { AppComponent } from './app.component';
 import {
   ColumnsDialogComponent,
   ContentComponent,
-  MenuComponent,
+  HeaderComponent,
   ProductsComponent,
-  TopbarComponent,
+  SettingsComponent,
 } from './components';
 import { FlowComponent, ListComponent, MatrixComponent } from './routes';
 import { LabErrorHandler } from './services';
@@ -49,13 +49,13 @@ function initializeApp(primengConfig: PrimeNGConfig): () => Promise<any> {
   declarations: [
     AppComponent,
     ContentComponent,
-    TopbarComponent,
-    MenuComponent,
+    HeaderComponent,
+    SettingsComponent,
+    ColumnsDialogComponent,
     ProductsComponent,
     ListComponent,
     FlowComponent,
     MatrixComponent,
-    ColumnsDialogComponent,
   ],
   imports: [
     /** Angular modules */

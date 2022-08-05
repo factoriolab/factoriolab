@@ -43,7 +43,7 @@ export class AppComponent implements OnInit {
     }))
   );
 
-  menuActive = false;
+  settingsActive = false;
   version = `${APP} ${environment.version}`;
   tabItems: MenuItem[] = [
     { label: 'app.list', icon: 'fa-solid fa-list', routerLink: 'list' },
@@ -119,7 +119,7 @@ Determine resource and factory requirements for your desired output products.`,
   }
 
   toggleMenu(): void {
-    this.menuActive = !this.menuActive;
+    this.settingsActive = !this.settingsActive;
   }
 
   reset(game: Game): void {

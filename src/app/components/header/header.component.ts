@@ -28,12 +28,12 @@ interface MenuLink {
 
 @UntilDestroy()
 @Component({
-  selector: 'lab-topbar',
-  templateUrl: './topbar.component.html',
-  styleUrls: ['./topbar.component.scss'],
+  selector: 'lab-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TopbarComponent implements OnInit {
+export class HeaderComponent implements OnInit {
   @HostBinding('class.sticky') @Input() sticky = false;
 
   @Output() toggleMenu = new EventEmitter();

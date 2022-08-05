@@ -32,7 +32,7 @@
   }
 }
 
-.topbar-menu {
+.header-menu {
   display: flex;
 
   margin: 0 0 0 auto;
@@ -62,7 +62,7 @@
 
 :host ::ng-deep {
   @include media-breakpoint-down(sm) {
-    .topbar-menu .p-button-icon {
+    .header-menu .p-button-icon {
       display: none;
     }
   }

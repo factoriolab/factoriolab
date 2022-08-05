@@ -1,11 +1,14 @@
-<lab-topbar
+<lab-header
   [sticky]="((contentSvc.scrollTop$ | async) ?? 0) > 16"
   (toggleMenu)="toggleMenu()"
-></lab-topbar>
-<lab-menu [active]="menuActive" (toggleMenu)="toggleMenu()"></lab-menu>
+></lab-header>
+<lab-settings
+  [active]="settingsActive"
+  (toggleMenu)="toggleMenu()"
+></lab-settings>
 <div
   class="layout-mask"
-  [class.active]="menuActive"
+  [class.active]="settingsActive"
   (click)="toggleMenu()"
 ></div>
 <div class="layout-content">

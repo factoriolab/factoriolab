@@ -41,12 +41,12 @@ import { App, Factories, LabState, Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
 @Component({
-  selector: 'lab-menu',
-  templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.scss'],
+  selector: 'lab-settings',
+  templateUrl: './settings.component.html',
+  styleUrls: ['./settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MenuComponent implements OnInit {
+export class SettingsComponent implements OnInit {
   @HostBinding('class.active') @Input() active = false;
 
   @Output() toggleMenu = new EventEmitter();
