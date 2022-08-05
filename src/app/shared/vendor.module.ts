@@ -17,6 +17,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { SidebarModule } from 'primeng/sidebar';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { TableModule } from 'primeng/table';
+import { TabMenuModule } from 'primeng/tabmenu';
 import { TabViewModule } from 'primeng/tabview';
 import { TooltipModule } from 'primeng/tooltip';
 
@@ -38,6 +39,7 @@ const modules = [
   SidebarModule,
   SplitButtonModule,
   TableModule,
+  TabMenuModule,
   TabViewModule,
   TooltipModule,
 ];

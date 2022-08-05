@@ -9,19 +9,16 @@
     "coi": "Captain of Industry Calculator"
   },
   "app": {
+    "solution": "Solution",
     "list": "List",
     "flow": "Flow",
     "matrix": "Matrix",
-    "settings": "Settings",
     "error": "Error",
     "errorDetail": "The application has encountered an error:",
-    "reset": "Reset"
-  },
-  "game": {
-    "factorio": "Factorio",
-    "dysonSphereProgram": "Dyson Sphere Program",
-    "satisfactory": "Satisfactory",
-    "captainOfIndustry": "Captain of Industry"
+    "reset": "Reset",
+    "simplexSolved1": "Simplex {{ resultType }}: {{ time }}ms, {{ pivots }} pivots",
+    "simplexSolved2": "Size {{ rows }} x {{ cols }}, Cost: {{ cost }}",
+    "simplexUnsolved": "Simplex {{ resultType }}"
   },
   "settings": {
     "header": "Settings",
@@ -105,54 +102,76 @@
     "simplexSolverDisabledInfo": "Disabling simplex improves performance but usually results in a partial solution",
     "simplexSolverWasmFloat64Info": "WebAssembly Float64 is less precise than Rationals, but runs significantly faster",
     "language": "Language",
-    "languageTooltip": "Select display language",
-
-    "addFactoryPreference": "Add factory preference",
-    "deleteAllSettings": "Delete all settings",
-    "gameTitle": "Select game",
-    "modSetTitle": "Select mod data set",
-    "difficulty": "Difficulty",
-    "difficultyTooltip": "Select whether to use Normal or\nExpensive difficulty recipes.",
-    "difficultyTitle": "Select recipe difficulty",
-    "displayRateTitle": "Select display rate",
-    "columnsAndPrecision": "Columns & precision",
-    "columnsAndPrecisionTooltip": "Click to select the visible columns and decimal\nor fractional precision for visible columns.",
-    "columnsAndPrecisionTitle": "Set columns visibility and precision",
-    "powerUnitTitle": "Select power units",
-    "presetTitle": "Select preset factory",
-    "selectAFactory": "Select a factory",
-    "removeFactoryPreference": "Remove factory preference",
-    "modulePreferences": "Module preferences",
-    "resourcePurityPreferences": "Resource node purity",
-    "proliferatorPreferences": "Proliferator preferences",
-    "defaultNumberOfBeacons": "Default number of beacons",
-    "selectABeacon": "Select a beacon",
-    "selectDefaultBeacon": "Select default beacon",
-    "selectAModule": "Select a module",
-    "beaconModule": "Beacon module",
-    "raiseFactoryRank": "Raise factory rank",
-    "setAverageBeaconReceivers": "Set average beacon receivers",
-    "selectAProliferator": "Select a proliferator",
-    "selectAProliferatorTooltip": "Select proliferator self-spray",
-    "selectResourcePurity": "Select resource purity",
-    "defaultTransportBeltHeader": "Select a belt",
-    "defaultTransportBeltHeaderTooltip": "Select default belt",
-    "defaultPipeHeader": "Select a pipe",
-    "defaultPipeHeaderTooltip": "Select default pipe",
-    "defaultCargoWagonHeader": "Select a cargo wagon",
-    "defaultCargoWagonHeaderTooltip": "Select default cargo wagon",
-    "defaultFluidWagonHeader": "Select a fluid wagon",
-    "defaultFluidWagonHeaderTooltip": "Select default fluid wagon",
-    "chemicalFuelHeader": "Select a fuel",
-    "chemicalFuelHeaderTooltip": "Select fuel",
-    "miningProductivityTitle": "Enter mining productivity bonus",
-    "miningProductivityPlaceholder": "Mining productivity",
-    "researchSpeedTitle": "Select research speed bonus",
-    "inserterCapacityTitle": "Select inserter capacity bonus",
-    "miningSpeedTitle": "Enter mining speed",
-    "miningSpeedPlaceholder": "Mining speed",
-    "simplexSolverTitle": "Disable to get a faster but incomplete result",
-    "languageTitle": "Select display language"
+    "languageTooltip": "Select display language"
+  },
+  "columns": {
+    "header": "Column settings",
+    "visibility": "Visibility",
+    "precision": "Precision",
+    "decimals": "Decimals",
+    "fractions": "Fractions",
+    "example": "Example",
+    "notApplicable": "N/A"
+  },
+  "products": {
+    "title": "Products",
+    "produce": "Produce",
+    "removeProduct": "Remove product",
+    "changeItem": "Select product item",
+    "from": "from",
+    "changeRate": "Set output rate",
+    "changeRateType": "Select rate type",
+    "of": "of",
+    "changeVia": "Select via step",
+    "noEnabledRecipes": "No matching enabled recipes",
+    "addAProduct": "Add a product",
+    "selectDisplayRate": "Select display rate"
+  },
+  "options": {
+    "displayRate": {
+      "perSecond": "Units per second",
+      "perMinute": "Units per minute",
+      "perHour": "Units per hour"
+    },
+    "game": {
+      "factorio": "Factorio",
+      "dysonSphereProgram": "Dyson Sphere Program",
+      "satisfactory": "Satisfactory",
+      "captainOfIndustry": "Captain of Industry"
+    },
+    "inserterCapacity": {
+      "capacity0": "No capacity bonus",
+      "capacity2": "Capacity bonus 2",
+      "capacity7": "Capacity bonus 7"
+    },
+    "inserterTarget": {
+      "chest": "Chest",
+      "expressTransportBelt": "Express transport belt",
+      "fastTransportBelt": "Fast transport belt",
+      "transportBelt": "Transport belt"
+    },
+    "preset": {
+      "minimum": "Minimum",
+      "modules": "Modules",
+      "beacon8": "8 Beacons",
+      "beacon12": "12 Beacons",
+      "upgraded": "Upgraded",
+      "proliferated": "Proliferated"
+    },
+    "researchSpeed": {
+      "speed0": "No research bonus",
+      "speed1": "Research speed 1",
+      "speed2": "Research speed 2",
+      "speed3": "Research speed 3",
+      "speed4": "Research speed 4",
+      "speed5": "Research speed 5",
+      "speed6": "Research speed 6"
+    },
+    "simplexType": {
+      "disabled": "Disabled",
+      "jsBigIntRational": "JS BigInt Rational",
+      "wasmFloat64": "WASM Float64"
+    }
   },
   "ranker": {
     "selectModules": "Select modules",
@@ -171,15 +190,6 @@
     "cancel": "Cancel",
     "confirm": "Confirm"
   },
-  "columns": {
-    "header": "Column settings",
-    "visibility": "Visibility",
-    "precision": "Precision",
-    "decimals": "Decimals",
-    "fractions": "Fractions",
-    "example": "Example",
-    "notApplicable": "N/A"
-  },
   "factories": {
     "header": "Factory settings",
     "factory": "Factory",
@@ -197,61 +207,7 @@
     "raiseFactoryTooltip": "Raise factory preference",
     "addFactory": "Add a factory preference"
   },
-  "products": {
-    "title": "Products",
-    "produce": "Produce",
-    "removeProduct": "Remove product",
-    "changeItem": "Select product item",
-    "from": "from",
-    "changeRate": "Set output rate",
-    "changeRateType": "Select rate type",
-    "of": "of",
-    "changeVia": "Select via step",
-    "addAProduct": "Add a product",
-    "selectDisplayRate": "Select display rate",
-    "noEnabledRecipes": "No matching enabled recipes"
-  },
   "picker": { "select": "Select an item to produce", "search": "Search" },
-  "options": {
-    "simplexType": {
-      "disabled": "Disabled",
-      "jsBigIntRational": "JS BigInt Rational",
-      "wasmFloat64": "WASM Float64"
-    },
-    "displayRate": {
-      "perSecond": "Units per second",
-      "perMinute": "Units per minute",
-      "perHour": "Units per hour"
-    },
-    "inserterTarget": {
-      "chest": "Chest",
-      "expressTransportBelt": "Express transport belt",
-      "fastTransportBelt": "Fast transport belt",
-      "transportBelt": "Transport belt"
-    },
-    "researchSpeed": {
-      "speed0": "No research bonus",
-      "speed1": "Research speed 1",
-      "speed2": "Research speed 2",
-      "speed3": "Research speed 3",
-      "speed4": "Research speed 4",
-      "speed5": "Research speed 5",
-      "speed6": "Research speed 6"
-    },
-    "inserterCapacity": {
-      "capacity0": "No capacity bonus",
-      "capacity2": "Capacity bonus 2",
-      "capacity7": "Capacity bonus 7"
-    },
-    "preset": {
-      "minimum": "Minimum",
-      "modules": "Modules",
-      "beacon8": "8 Beacons",
-      "beacon12": "12 Beacons",
-      "upgraded": "Upgraded",
-      "proliferated": "Proliferated"
-    }
-  },
   "list": {
     "tree": "Tree",
     "items": "Items",

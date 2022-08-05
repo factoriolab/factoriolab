@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
+import { MenuItem } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 
 import { environment } from 'src/environments';
@@ -44,6 +45,19 @@ export class AppComponent implements OnInit {
 
   menuActive = false;
   version = `${APP} ${environment.version}`;
+  tabItems: MenuItem[] = [
+    { label: 'app.list', icon: 'fa-solid fa-list', routerLink: 'list' },
+    {
+      label: 'app.flow',
+      icon: 'fa-solid fa-diagram-project',
+      routerLink: 'flow',
+    },
+    {
+      label: 'app.matrix',
+      icon: 'fa-solid fa-table-cells',
+      routerLink: 'matrix',
+    },
+  ];
 
   ItemId = ItemId;
   MatrixResultType = MatrixResultType;

@@ -12,6 +12,62 @@
   <main *ngIf="vm$ | async as vm" class="px-1 px-sm-4 px-xl-5 py-4">
     <ng-container *ngIf="vm.mod != null; else loading">
       <lab-products></lab-products>
+
+      <p-card styleClass="mt-5" [header]="'app.solution' | translate">
+        <p-tabMenu [model]="tabItems">
+          <ng-template pTemplate="item" let-item>
+            <span class="p-menuitem-icon" [class]="item.icon"></span>
+            <span class="p-menuitem-text">{{ item.label | translate }}</span>
+          </ng-template>
+        </p-tabMenu>
+        <router-outlet></router-outlet>
+        <ng-template pTemplate="footer">
+          <p-divider></p-divider>
+          <div class="d-flex align-items-center justify-content-between">
+            <ng-container
+              *ngIf="
+                vm.result.resultType === MatrixResultType.Solved ||
+                  vm.result.resultType === MatrixResultType.Cached;
+                else notSolved
+              "
+            >
+              <div *ngIf="vm.result.A && vm.result.O">
+                <div>
+                  {{
+                    'app.simplexSolved1'
+                      | translate
+                        : {
+                            resultType: vm.result.resultType,
+                            time: vm.result.time,
+                            pivots: vm.result.pivots
+                          }
+                  }}
+                </div>
+                <div>
+                  {{
+                    'app.simplexSolved2'
+                      | translate
+                        : {
+                            rows: vm.result.A.length,
+                            cols: vm.result.A[0].length,
+                            cost: vm.result.O[
+                              vm.result.O.length - 1
+                            ].toPrecision(2)
+                          }
+                  }}
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #notSolved>
+              <span>{{
+                'app.simplexUnsolved'
+                  | translate: { resultType: vm.result.resultType }
+              }}</span>
+            </ng-template>
+            <span>{{ version }}</span>
+          </div>
+        </ng-template>
+      </p-card>
     </ng-container>
     <ng-template #loading>
       <div class="d-flex flex-column align-items-center">
@@ -49,106 +105,4 @@
     </p-dialog>
   </main>
 </div>
-
 <lab-content></lab-content>
-
-<!-- <ng-container *ngIf="vm$ | async as vm">
-  <ng-container *ngIf="(errorSvc.message$ | async) == null; else errorTile">
-    <main *ngIf="vm.mod != null; else loading">
-      <div *ngIf="showSettings" @slideLeftRight class="settings">
-        <lab-settings (closeSettings)="showSettings = !showSettings">
-        </lab-settings>
-      </div>
-      <div class="view">
-        <div *ngIf="showPoll" class="poll">
-          <h2>Poll</h2>
-          <div class="panel">
-            <a target="_blank" [href]="poll">Have a minute to answer a poll?</a>
-            <div class="flex buttons">
-              <button (click)="hidePoll(true)">
-                <span class="text">Don't show again</span>
-              </button>
-              <button (click)="hidePoll()">
-                <span class="text">Close</span>
-              </button>
-            </div>
-          </div>
-        </div>
-        <lab-products></lab-products>
-        <div *ngIf="vm.products.length">
-          <ul role="navigation" class="tabs">
-            <li
-              routerLink="/list"
-              routerLinkActive="active"
-              queryParamsHandling="preserve"
-            >
-              <span>{{ 'app.list' | translate }}</span>
-            </li>
-            <li
-              routerLink="/flow"
-              routerLinkActive="active"
-              queryParamsHandling="preserve"
-            >
-              <span>{{ 'app.flow' | translate }}</span>
-            </li>
-            <li
-              routerLink="/matrix"
-              routerLinkActive="active"
-              queryParamsHandling="preserve"
-            >
-              <span>{{ 'app.matrix' | translate }}</span>
-            </li>
-            <li *ngIf="!showSettings" (click)="showSettings = true">
-              <span>{{ 'app.settings' | translate }}</span>
-            </li>
-          </ul>
-          <div class="panel">
-            <router-outlet></router-outlet>
-          </div>
-        </div>
-        <div>
-          <div class="panel dark flex tween">
-            <ng-container
-              *ngIf="
-                vm.result.resultType === MatrixResultType.Solved ||
-                  vm.result.resultType === MatrixResultType.Cached;
-                else notSolved
-              "
-            >
-              <span *ngIf="vm.result.A && vm.result.O"
-                >Simplex {{ vm.result.resultType }}: {{ vm.result.time }}ms,
-                {{ vm.result.pivots }} pivots<br />
-                Size: {{ vm.result.A.length }} x {{ vm.result.A[0].length }},
-                Cost:
-                {{ vm.result.O[vm.result.O.length - 1].toPrecision(2) }}
-              </span>
-            </ng-container>
-            <ng-template #notSolved>
-              <span>Simplex {{ vm.result.resultType }}</span>
-            </ng-template>
-            <span>{{ version }}</span>
-          </div>
-        </div>
-      </div>
-    </main>
-  </ng-container>
-  <ng-template #loading>
-    <div class="view msg load">
-      <div><div class="panel">Loading data, please wait...</div></div>
-    </div>
-  </ng-template>
-  <ng-template #errorTile>
-    <div class="view msg err">
-      <div>
-        <h2>Error</h2>
-        <div class="panel invalid">
-          <div>The application has encountered an error:</div>
-          <br />
-          <div>{{ errorSvc.message$ | async }}</div>
-          <br />
-          <a [href]="homeHref">Click here to reset</a>
-        </div>
-      </div>
-    </div>
-  </ng-template>
-</ng-container> -->

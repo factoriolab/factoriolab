@@ -16,8 +16,8 @@ export const games = [
 ];
 
 export const gameOptions: SelectItem<Game>[] = [
-  { value: Game.Factorio, label: 'game.factorio' },
-  { value: Game.CaptainOfIndustry, label: 'game.captainOfIndustry' },
-  { value: Game.DysonSphereProgram, label: 'game.dysonSphereProgram' },
-  { value: Game.Satisfactory, label: 'game.satisfactory' },
+  { value: Game.Factorio, label: 'options.game.factorio' },
+  { value: Game.CaptainOfIndustry, label: 'options.game.captainOfIndustry' },
+  { value: Game.DysonSphereProgram, label: 'options.game.dysonSphereProgram' },
+  { value: Game.Satisfactory, label: 'options.game.satisfactory' },
 ];
