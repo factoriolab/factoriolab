@@ -11,12 +11,7 @@
   [header]="'columns.header' | translate"
   (onHide)="save()"
 >
-  <p-table
-    [value]="vm.columnOptions"
-    [scrollable]="true"
-    scrollDirection="both"
-    responsiveLayout="scroll"
-  >
+  <p-table responsiveLayout="scroll" [value]="vm.columnOptions">
     <ng-template pTemplate="header">
       <tr>
         <th>{{ 'columns.visibility' | translate }}</th>

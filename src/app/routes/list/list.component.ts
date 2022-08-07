@@ -16,6 +16,7 @@ import {
   Column,
   Dataset,
   DisplayRate,
+  displayRateLabel,
   displayRateVal,
   Entities,
   Game,
@@ -27,7 +28,7 @@ import {
   Step,
   StepDetailTab,
 } from '~/models';
-import { TrackService } from '~/services';
+import { ContentService, TrackService } from '~/services';
 import { LabState } from '~/store';
 import * as Factories from '~/store/factories';
 import * as Items from '~/store/items';
@@ -111,6 +112,8 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
   expanded: Entities<StepDetailTab> = {};
   fragmentId: string | null | undefined;
 
+  displayRateLabel = displayRateLabel;
+
   ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
   DisplayRateVal = displayRateVal;
   PIPE = PIPE;
@@ -124,6 +127,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
   Rational = Rational;
 
   constructor(
+    public contentSvc: ContentService,
     private ref: ChangeDetectorRef,
     private route: ActivatedRoute,
     public trackSvc: TrackService,
@@ -436,24 +440,24 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     this.store.dispatch(new Recipes.ResetRecipeAction(value));
   }
 
-  resetIgnore(): void {
-    this.store.dispatch(new Items.ResetIgnoreAction());
+  resetIgnores(): void {
+    this.store.dispatch(new Items.ResetIgnoresAction());
   }
 
-  resetBelt(): void {
-    this.store.dispatch(new Items.ResetBeltAction());
+  resetBelts(): void {
+    this.store.dispatch(new Items.ResetBeltsAction());
   }
 
-  resetWagon(): void {
-    this.store.dispatch(new Items.ResetWagonAction());
+  resetWagons(): void {
+    this.store.dispatch(new Items.ResetWagonsAction());
   }
 
-  resetFactory(): void {
-    this.store.dispatch(new Recipes.ResetFactoryAction());
+  resetFactories(): void {
+    this.store.dispatch(new Recipes.ResetFactoriesAction());
   }
 
-  resetOverclock(): void {
-    this.store.dispatch(new Recipes.ResetOverclockAction());
+  resetOverclocks(): void {
+    this.store.dispatch(new Recipes.ResetOverclocksAction());
   }
 
   resetBeacons(): void {

@@ -8,9 +8,9 @@ export const enum ItemsActionType {
   SET_WAGON = '[Items] Set Wagon',
   SET_RECIPE = '[Items] Set Recipe',
   RESET_ITEM = '[Items] Reset Item',
-  RESET_IGNORE = '[Items] Reset Ignore',
-  RESET_BELT = '[Items] Reset Belt',
-  RESET_WAGON = '[Items] Reset Wagon',
+  RESET_IGNORES = '[Items] Reset Ignores',
+  RESET_BELTS = '[Items] Reset Belts',
+  RESET_WAGONS = '[Items] Reset Wagon',
 }
 
 export class IgnoreItemAction implements Action {
@@ -38,16 +38,16 @@ export class ResetItemAction implements Action {
   constructor(public payload: string) {}
 }
 
-export class ResetIgnoreAction implements Action {
-  readonly type = ItemsActionType.RESET_IGNORE;
+export class ResetIgnoresAction implements Action {
+  readonly type = ItemsActionType.RESET_IGNORES;
 }
 
-export class ResetBeltAction implements Action {
-  readonly type = ItemsActionType.RESET_BELT;
+export class ResetBeltsAction implements Action {
+  readonly type = ItemsActionType.RESET_BELTS;
 }
 
-export class ResetWagonAction implements Action {
-  readonly type = ItemsActionType.RESET_WAGON;
+export class ResetWagonsAction implements Action {
+  readonly type = ItemsActionType.RESET_WAGONS;
 }
 
 export type ItemsAction =
@@ -56,6 +56,6 @@ export type ItemsAction =
   | SetWagonAction
   | SetRecipeAction
   | ResetItemAction
-  | ResetIgnoreAction
-  | ResetBeltAction
-  | ResetWagonAction;
+  | ResetIgnoresAction
+  | ResetBeltsAction
+  | ResetWagonsAction;

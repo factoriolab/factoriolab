@@ -2,6 +2,8 @@
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/_breakpoints';
 
+$width: 320px;
+
 :host {
   display: flex;
   flex-direction: column;
@@ -12,7 +14,7 @@
 
   transition: transform 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99);
 
-  width: 320px;
+  width: $width;
   height: 100%;
 
   background-color: var(--surface-overlay);
@@ -26,13 +28,25 @@
   }
 }
 
+/** Avoid changing width to accomodate scrollbar */
+:host ::ng-deep {
+  .p-scrollpanel .p-scrollpanel-content {
+    overflow-y: scroll;
+  }
+}
+
+.settings-container {
+  width: $width;
+}
+
+/** Factory InputGroup styles */
 .p-inputgroup.flex-wrap {
   p-dropdown {
-    min-width: 6rem;
+    min-width: 8rem;
   }
 
   p-multiselect {
-    min-width: 12rem;
+    min-width: 14rem;
   }
 
   lab-input-number,

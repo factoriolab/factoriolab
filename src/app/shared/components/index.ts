@@ -1,4 +1,3 @@
-export * from './columns/columns.component';
 export * from './dialog/dialog.component';
 export * from './icon/icon.component';
 export * from './info/info.component';

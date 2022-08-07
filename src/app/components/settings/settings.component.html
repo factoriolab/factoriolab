@@ -25,7 +25,7 @@
 </div>
 <div *ngIf="vm$ | async as vm" class="flex-grow-1 overflow-hidden">
   <p-scrollPanel [style]="{ height: '100%' }">
-    <div class="p-3 overflow-hidden">
+    <div class="p-3 overflow-hidden settings-container">
       <div class="mb-3">
         <h3 [pTooltip]="'settings.savedStatesTooltip' | translate">
           {{ 'settings.savedStates' | translate }}
@@ -308,6 +308,17 @@
                   "
                 >
                 </p-dropdown>
+                <!-- Raise factory button -->
+                <button
+                  *ngIf="index > 1"
+                  pButton
+                  pRipple
+                  icon="fa-solid fa-arrow-up"
+                  [pTooltip]="'settings.raiseFactoryTooltip' | translate"
+                  (click)="
+                    raiseFactory(factoryId, vm.data.defaults?.factoryRankIds)
+                  "
+                ></button>
                 <!-- Modifiers multiselect -->
                 <p-multiSelect
                   *ngIf="factory.settings.moduleRankIds"
@@ -441,17 +452,6 @@
                     </p-dropdown>
                   </ng-container>
                 </ng-container>
-                <!-- Raise factory button -->
-                <button
-                  *ngIf="index > 1"
-                  pButton
-                  pRipple
-                  icon="fa-solid fa-arrow-up"
-                  [pTooltip]="'settings.raiseFactoryTooltip' | translate"
-                  (click)="
-                    raiseFactory(factoryId, vm.data.defaults?.factoryRankIds)
-                  "
-                ></button>
               </div>
             </ng-container>
           </ng-container>

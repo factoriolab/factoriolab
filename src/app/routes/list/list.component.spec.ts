@@ -418,11 +418,11 @@ describe('ListComponent', () => {
     dispatch.idValDef('setOverclock', Recipes.SetOverclockAction);
     dispatch.val('resetItem', Items.ResetItemAction);
     dispatch.val('resetRecipe', Recipes.ResetRecipeAction);
-    dispatch.void('resetIgnore', Items.ResetIgnoreAction);
-    dispatch.void('resetBelt', Items.ResetBeltAction);
-    dispatch.void('resetWagon', Items.ResetWagonAction);
-    dispatch.void('resetFactory', Recipes.ResetFactoryAction);
-    dispatch.void('resetOverclock', Recipes.ResetOverclockAction);
+    dispatch.void('resetIgnore', Items.ResetIgnoresAction);
+    dispatch.void('resetBelt', Items.ResetBeltsAction);
+    dispatch.void('resetWagon', Items.ResetWagonsAction);
+    dispatch.void('resetFactory', Recipes.ResetFactoriesAction);
+    dispatch.void('resetOverclock', Recipes.ResetOverclocksAction);
     dispatch.void('resetBeacons', Recipes.ResetBeaconsAction);
     dispatch.valDef('setDisabledRecipes', Settings.SetDisabledRecipesAction);
     dispatch.idValDef('setDefaultRecipe', Items.SetRecipeAction);

@@ -209,7 +209,7 @@ describe('Recipes Reducer', () => {
   describe('RESET_FACTORY', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetFields');
-      recipesReducer(undefined, new Actions.ResetFactoryAction());
+      recipesReducer(undefined, new Actions.ResetFactoriesAction());
       expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
         'factoryId',
         'factoryModuleIds',
@@ -237,7 +237,7 @@ describe('Recipes Reducer', () => {
   describe('RESET_OVERCLOCK', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetFields');
-      recipesReducer(undefined, new Actions.ResetOverclockAction());
+      recipesReducer(undefined, new Actions.ResetOverclocksAction());
       expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
         'overclock',
       ] as any);

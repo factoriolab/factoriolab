@@ -1,8 +1,200 @@
 <ng-container *ngIf="vm$ | async as vm">
-  <table *ngIf="vm.steps.length">
+  <p-table *ngIf="vm.steps" responsiveLayout="scroll" [value]="vm.steps">
+    <ng-template pTemplate="header">
+      <tr>
+        <!-- Expand row -->
+        <th class="button-col">
+          <button
+            pButton
+            pRipple
+            icon="fa-solid fa-table-columns"
+            [pTooltip]="'list.openColumnSettings' | translate"
+            (click)="contentSvc.showColumns$.next()"
+          ></button>
+        </th>
+        <!-- Tree -->
+        <th *ngIf="vm.columns[Column.Tree].show">
+          {{ 'list.tree' | translate }}
+        </th>
+        <!-- Items -->
+        <th>
+          <div class="d-flex align-items-center">
+            <span>{{
+              ('list.items' | translate) +
+                displayRateLabel[vm.settings.displayRate]
+            }}</span>
+            <button
+              *ngIf="vm.itemsModified.ignore"
+              pButton
+              pRipple
+              class="ms-3"
+              icon="fa-solid fa-rotate-left"
+              [pTooltip]="'list.itemsUndoTooltip' | translate"
+              (click)="resetIgnores()"
+            ></button>
+          </div>
+        </th>
+        <!-- Belts -->
+        <th *ngIf="vm.columns[Column.Belts].show">
+          <div class="d-flex align-items-center">
+            <span>{{ 'list.belts' | translate }}</span>
+            <button
+              *ngIf="vm.itemsModified.belts"
+              pButton
+              pRipple
+              class="ms-3"
+              icon="fa-solid fa-rotate-left"
+              [pTooltip]="'list.beltsUndoTooltip' | translate"
+              (click)="resetBelts()"
+            ></button>
+          </div>
+        </th>
+        <!-- Wagons -->
+        <th *ngIf="vm.columns[Column.Wagons].show">
+          <div class="d-flex align-items-center">
+            <span>{{
+              ('list.wagons' | translate) +
+                displayRateLabel[vm.settings.displayRate]
+            }}</span>
+            <button
+              *ngIf="vm.itemsModified.wagons"
+              pButton
+              pRipple
+              class="ms-3"
+              icon="fa-solid fa-rotate-left"
+              [pTooltip]="'list.wagonsUndoTooltip' | translate"
+              (click)="resetWagons()"
+            ></button>
+          </div>
+        </th>
+        <!-- Factories -->
+        <th>
+          <div class="d-flex align-items-center">
+            <span>{{ 'list.factories' | translate }}</span>
+            <button
+              *ngIf="vm.recipesModified.factories"
+              pButton
+              pRipple
+              class="ms-3"
+              icon="fa-solid fa-rotate-left"
+              [pTooltip]="'list.factoriesUndoTooltip' | translate"
+              (click)="resetFactories()"
+            ></button>
+          </div>
+        </th>
+        <!-- Overclock -->
+        <th *ngIf="vm.columns[Column.Overclock].show">
+          <div class="d-flex align-items-center">
+            <span>{{ 'list.overclock' | translate }}</span>
+            <button
+              *ngIf="vm.recipesModified.overclock"
+              pButton
+              pRipple
+              class="ms-3"
+              icon="fa-solid fa-rotate-left"
+              [pTooltip]="'list.overclockUndoTooltip' | translate"
+              (click)="resetOverclocks()"
+            ></button>
+          </div>
+        </th>
+        <!-- Beacons -->
+        <!-- TODO: Each / total labels with beacon receivers -->
+        <th *ngIf="vm.columns[Column.Beacons].show">
+          <div class="d-flex align-items-center">
+            <span>{{ 'list.beacons' | translate }}</span>
+            <button
+              *ngIf="vm.recipesModified.beacons"
+              pButton
+              pRipple
+              class="ms-3"
+              icon="fa-solid fa-rotate-left"
+              [pTooltip]="'list.beaconsUndoTooltip' | translate"
+              (click)="resetBeacons()"
+            ></button>
+          </div>
+        </th>
+        <!-- Power -->
+        <th *ngIf="vm.columns[Column.Power].show">
+          <span>{{ 'list.power' | translate }}</span>
+        </th>
+        <!-- Pollution -->
+        <th *ngIf="vm.columns[Column.Pollution].show">
+          <span>{{
+            ('list.pollution' | translate) +
+              displayRateLabel[vm.settings.displayRate]
+          }}</span>
+        </th>
+        <!-- Link -->
+        <th *ngIf="vm.columns[Column.Link].show" class="button-col">
+          <button
+            *ngIf="mode === ListMode.All"
+            pButton
+            pRipple
+            icon="fa-solid fa-file-arrow-down"
+            [pTooltip]="'list.downloadTooltip' | translate"
+            tooltipPosition="left"
+            (click)="
+              export(
+                vm.steps,
+                vm.itemSettings,
+                vm.recipeSettings,
+                vm.columns,
+                vm.data
+              )
+            "
+          ></button>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-step>
+      <!-- TODO: Handle ListMode.Focus -->
+      <tr>
+        <!-- Expand row -->
+        <!-- TODO: Row expansion -->
+        <td>row</td>
+        <!-- Tree -->
+        <td *ngIf="vm.columns[Column.Tree].show"></td>
+        <!-- Items -->
+        <td>
+          <div
+            *ngIf="step.itemId && step.items"
+            class="d-flex align-items-center"
+          >
+            <span
+              *ngIf="step.surplus && step.surplus.nonzero()"
+              class="monospace"
+              >(+{{
+                step.surplus | rate: vm.effectivePrecision[Column.Surplus]
+              }})</span
+            >
+            <span class="monospace">{{
+              step.items.sub(step.surplus || Rational.zero)
+                | rate: vm.effectivePrecision[Column.Items]
+            }}</span>
+          </div>
+        </td>
+        <!-- Belts -->
+        <td *ngIf="vm.columns[Column.Belts].show"></td>
+        <!-- Wagons -->
+        <td *ngIf="vm.columns[Column.Wagons].show"></td>
+        <!-- Factories -->
+        <td></td>
+        <!-- Overclock -->
+        <td *ngIf="vm.columns[Column.Overclock].show"></td>
+        <!-- Beacons -->
+        <td *ngIf="vm.columns[Column.Beacons].show"></td>
+        <!-- Power -->
+        <td *ngIf="vm.columns[Column.Power].show"></td>
+        <!-- Pollution -->
+        <td *ngIf="vm.columns[Column.Pollution].show"></td>
+        <!-- Link -->
+        <td *ngIf="vm.columns[Column.Link].show"></td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <!-- <table *ngIf="vm.steps.length">
     <thead>
       <tr class="border col">
-        <!-- Expand -->
         <th>
           <div class="flex end">
             <lab-columns>
@@ -106,7 +298,6 @@
             }}{{ vm.settings.displayRate | displayRateLabel }}
           </div>
         </th>
-        <!-- Reset / Link -->
         <th *ngIf="vm.columns[Column.Link].show && mode === ListMode.All">
           <button
             [title]="'list.downloadTitle' | translate"
@@ -1913,5 +2104,5 @@
         </td>
       </tr>
     </tbody>
-  </table>
+  </table> -->
 </ng-container>

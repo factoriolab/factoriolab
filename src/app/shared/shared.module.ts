@@ -5,7 +5,6 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { VendorModule } from '~/shared/vendor.module';
 import {
-  ColumnsComponent,
   DialogComponent,
   IconComponent,
   InfoComponent,
@@ -41,7 +40,6 @@ import {
 } from './pipes';
 
 export const SHARED_COMPONENTS = [
-  ColumnsComponent,
   DialogComponent,
   IconComponent,
   InfoComponent,

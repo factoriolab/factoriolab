@@ -1,291 +1,295 @@
-:host {
-  display: block;
+.button-col {
+  width: 5rem;
 }
 
-table {
-  th,
-  td {
-    padding: 0.25rem 0.5rem;
+// :host {
+//   display: block;
+// }
 
-    &.num {
-      width: 5.25rem;
-    }
+// table {
+//   th,
+//   td {
+//     padding: 0.25rem 0.5rem;
 
-    &.num-unit {
-      width: 7rem;
-    }
+//     &.num {
+//       width: 5.25rem;
+//     }
 
-    &.num-icon {
-      width: 8rem;
-    }
+//     &.num-unit {
+//       width: 7rem;
+//     }
 
-    &.split-column {
-      padding-left: 0;
+//     &.num-icon {
+//       width: 8rem;
+//     }
 
-      > .flex {
-        justify-content: flex-start;
-      }
-    }
+//     &.split-column {
+//       padding-left: 0;
 
-    &.tree {
-      padding: 0 0.25rem;
-    }
-  }
+//       > .flex {
+//         justify-content: flex-start;
+//       }
+//     }
 
-  tr.border {
-    &.row {
-      border-top: 1px solid var(--color-back);
-    }
+//     &.tree {
+//       padding: 0 0.25rem;
+//     }
+//   }
 
-    &.col {
-      > *:not(:first-child):not(.split-column) {
-        border-left: 1px solid var(--color-back);
-      }
-    }
-  }
-}
+//   tr.border {
+//     &.row {
+//       border-top: 1px solid var(--color-back);
+//     }
 
-tr.detail-header {
-  > * {
-    &:not(:first-child) {
-      background-color: var(--color-back);
-    }
+//     &.col {
+//       > *:not(:first-child):not(.split-column) {
+//         border-left: 1px solid var(--color-back);
+//       }
+//     }
+//   }
+// }
 
-    &:nth-child(2) {
-      border-top-left-radius: 0.375rem;
-    }
+// tr.detail-header {
+//   > * {
+//     &:not(:first-child) {
+//       background-color: var(--color-back);
+//     }
 
-    &:last-child {
-      border-top-right-radius: 0.375rem;
-    }
-  }
-}
+//     &:nth-child(2) {
+//       border-top-left-radius: 0.375rem;
+//     }
 
-tr.details {
-  > :first-child {
-    background-color: var(--color-light);
-  }
+//     &:last-child {
+//       border-top-right-radius: 0.375rem;
+//     }
+//   }
+// }
 
-  > :not(:first-child) {
-    background-color: var(--color-dark);
-  }
+// tr.details {
+//   > :first-child {
+//     background-color: var(--color-light);
+//   }
 
-  > *:not(:first-child):not(:nth-child(2)):not(.split-column) {
-    border-left: 1px solid var(--color-back);
-  }
+//   > :not(:first-child) {
+//     background-color: var(--color-dark);
+//   }
 
-  &:not(.first) > td:not(:first-child) {
-    border-top: 1px solid var(--color-back);
-  }
+//   > *:not(:first-child):not(:nth-child(2)):not(.split-column) {
+//     border-left: 1px solid var(--color-back);
+//   }
 
-  &.last {
-    > :nth-child(2) {
-      border-bottom-left-radius: 0.375rem;
-    }
+//   &:not(.first) > td:not(:first-child) {
+//     border-top: 1px solid var(--color-back);
+//   }
 
-    > :last-child {
-      border-bottom-right-radius: 0.375rem;
-    }
-  }
+//   &.last {
+//     > :nth-child(2) {
+//       border-bottom-left-radius: 0.375rem;
+//     }
 
-  .factory {
-    padding: 0;
+//     > :last-child {
+//       border-bottom-right-radius: 0.375rem;
+//     }
+//   }
 
-    > div {
-      padding: 0 0.5rem;
+//   .factory {
+//     padding: 0;
 
-      > * {
-        margin-left: 0;
-      }
-    }
+//     > div {
+//       padding: 0 0.5rem;
 
-    .monospace {
-      white-space: normal;
-    }
+//       > * {
+//         margin-left: 0;
+//       }
+//     }
 
-    > div {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-    }
-  }
+//     .monospace {
+//       white-space: normal;
+//     }
 
-  .recipes {
-    padding: 0.5rem;
+//     > div {
+//       display: flex;
+//       justify-content: flex-start;
+//       align-items: center;
+//     }
+//   }
 
-    > .list {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      flex-wrap: wrap;
-      max-width: 38rem;
+//   .recipes {
+//     padding: 0.5rem;
 
-      > * {
-        margin-left: 1px;
-      }
-    }
-  }
+//     > .list {
+//       display: flex;
+//       align-items: center;
+//       justify-content: flex-start;
+//       flex-wrap: wrap;
+//       max-width: 38rem;
 
-  .header {
-    margin-left: 0.5rem;
-  }
+//       > * {
+//         margin-left: 1px;
+//       }
+//     }
+//   }
 
-  > :not(:first-child) {
-    background-color: var(--color-dark);
-  }
-}
+//   .header {
+//     margin-left: 0.5rem;
+//   }
 
-th > div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 2rem;
-  padding: 0 0.25rem;
-  margin: 0 -0.25rem;
+//   > :not(:first-child) {
+//     background-color: var(--color-dark);
+//   }
+// }
 
-  &.header button {
-    margin-left: 0.5rem;
-  }
+// th > div {
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   height: 2rem;
+//   padding: 0 0.25rem;
+//   margin: 0 -0.25rem;
 
-  &.end {
-    justify-content: flex-end;
-  }
+//   &.header button {
+//     margin-left: 0.5rem;
+//   }
 
-  .sub {
-    align-self: end;
-    font-size: medium;
-    flex-grow: 1;
+//   &.end {
+//     justify-content: flex-end;
+//   }
 
-    &.left {
-      text-align: left;
-    }
+//   .sub {
+//     align-self: end;
+//     font-size: medium;
+//     flex-grow: 1;
 
-    &.right {
-      text-align: right;
-    }
-  }
-}
+//     &.left {
+//       text-align: left;
+//     }
 
-td > div {
-  justify-content: flex-end;
+//     &.right {
+//       text-align: right;
+//     }
+//   }
+// }
 
-  &.links {
-    justify-content: flex-start;
+// td > div {
+//   justify-content: flex-end;
 
-    > * + * {
-      margin-left: 0;
-    }
+//   &.links {
+//     justify-content: flex-start;
 
-    .connect {
-      margin-left: 1rem;
-      height: 2.75rem;
-      border-left: 2px dotted transparent;
+//     > * + * {
+//       margin-left: 0;
+//     }
 
-      &.trail {
-        border-color: var(--color-dark);
-      }
+//     .connect {
+//       margin-left: 1rem;
+//       height: 2.75rem;
+//       border-left: 2px dotted transparent;
 
-      &.last:not(.trail) {
-        height: 1.5rem;
-        margin-bottom: 1.25rem;
-        border-color: var(--color-dark);
-      }
+//       &.trail {
+//         border-color: var(--color-dark);
+//       }
 
-      & + .connect {
-        margin-left: 1.5rem;
-      }
-    }
+//       &.last:not(.trail) {
+//         height: 1.5rem;
+//         margin-bottom: 1.25rem;
+//         border-color: var(--color-dark);
+//       }
 
-    .indent {
-      margin-left: 0;
-      width: 0.625rem;
-      border-top: 2px dotted var(--color-dark);
-    }
+//       & + .connect {
+//         margin-left: 1.5rem;
+//       }
+//     }
 
-    lab-icon {
-      padding: 0;
-    }
-  }
+//     .indent {
+//       margin-left: 0;
+//       width: 0.625rem;
+//       border-top: 2px dotted var(--color-dark);
+//     }
 
-  &.mod,
-  > .mod {
-    justify-content: flex-start;
+//     lab-icon {
+//       padding: 0;
+//     }
+//   }
 
-    > :first-child > lab-icon {
-      border-radius: 0.25rem;
+//   &.mod,
+//   > .mod {
+//     justify-content: flex-start;
 
-      &:not(:hover) {
-        background-color: var(--color-gray-1);
-      }
-    }
+//     > :first-child > lab-icon {
+//       border-radius: 0.25rem;
 
-    > * + * {
-      margin-left: 0;
-    }
-  }
+//       &:not(:hover) {
+//         background-color: var(--color-gray-1);
+//       }
+//     }
 
-  > * + * {
-    margin-left: 0.5rem;
+//     > * + * {
+//       margin-left: 0;
+//     }
+//   }
 
-    &.percent {
-      margin-left: 0;
-    }
-  }
-}
+//   > * + * {
+//     margin-left: 0.5rem;
 
-.summary-label {
-  text-align: right;
-}
+//     &.percent {
+//       margin-left: 0;
+//     }
+//   }
+// }
 
-td.nowrap {
-  white-space: nowrap;
-}
+// .summary-label {
+//   text-align: right;
+// }
 
-.recipe {
-  margin-left: -0.5rem;
-  padding: 0;
-}
+// td.nowrap {
+//   white-space: nowrap;
+// }
 
-.message {
-  color: var(--color-header);
-  font-size: large;
-  text-align: center;
-  padding: 1rem;
-}
+// .recipe {
+//   margin-left: -0.5rem;
+//   padding: 0;
+// }
 
-tr {
-  &.spacer {
-    height: 0.25rem;
-  }
+// .message {
+//   color: var(--color-header);
+//   font-size: large;
+//   text-align: center;
+//   padding: 1rem;
+// }
 
-  td.detail-tabs {
-    padding: 0;
+// tr {
+//   &.spacer {
+//     height: 0.25rem;
+//   }
 
-    ul.tabs li {
-      &.active {
-        background-color: var(--color-dark);
-        box-shadow: var(--shadow-button-dk);
-      }
-    }
-  }
-}
+//   td.detail-tabs {
+//     padding: 0;
 
-.info {
-  font-size: small;
-  margin-bottom: 0.25rem;
+//     ul.tabs li {
+//       &.active {
+//         background-color: var(--color-dark);
+//         box-shadow: var(--shadow-button-dk);
+//       }
+//     }
+//   }
+// }
 
-  &.warn {
-    color: var(--color-red);
-  }
-}
+// .info {
+//   font-size: small;
+//   margin-bottom: 0.25rem;
 
-lab-icon:not(.button) {
-  padding: 0.125rem;
-}
+//   &.warn {
+//     color: var(--color-red);
+//   }
+// }
 
-// Highlight modules to the right of the hovered module
-lab-select:hover ~ lab-select .button.module {
-  background-color: var(--color-brand);
-  box-shadow: var(--shadow-hover);
-  filter: drop-shadow(0 0 2px var(--color-brand-sha));
-}
+// lab-icon:not(.button) {
+//   padding: 0.125rem;
+// }
+
+// // Highlight modules to the right of the hovered module
+// lab-select:hover ~ lab-select .button.module {
+//   background-color: var(--color-brand);
+//   box-shadow: var(--shadow-hover);
+//   filter: drop-shadow(0 0 2px var(--color-brand-sha));
+// }
