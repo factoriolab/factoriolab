@@ -151,14 +151,14 @@
       <tr>
         <!-- Expand row -->
         <!-- TODO: Row expansion -->
-        <td>row</td>
+        <td></td>
         <!-- Tree -->
         <td *ngIf="vm.columns[Column.Tree].show"></td>
         <!-- Items -->
         <td>
           <div
             *ngIf="step.itemId && step.items"
-            class="d-flex align-items-center"
+            class="d-flex align-items-center justify-content-end"
           >
             <span
               *ngIf="step.surplus && step.surplus.nonzero()"
@@ -171,6 +171,24 @@
               step.items.sub(step.surplus || Rational.zero)
                 | rate: vm.effectivePrecision[Column.Items]
             }}</span>
+            <button
+              pButton
+              pRipple
+              class="ms-3"
+              [class.p-button-outlined]="vm.itemSettings[step.itemId].ignore"
+              [pTooltip]="
+                vm.data.itemEntities[step.itemId].name +
+                '\n<small>' +
+                ((vm.itemSettings[step.itemId].ignore
+                  ? 'list.clickToInclude'
+                  : 'list.clickToIgnore'
+                ) | translate) +
+                '</small>'
+              "
+              [escape]="false"
+              [icon]="step.itemId | iconClass"
+              (click)="ignoreItem(step.itemId)"
+            ></button>
           </div>
         </td>
         <!-- Belts -->
@@ -178,7 +196,36 @@
         <!-- Wagons -->
         <td *ngIf="vm.columns[Column.Wagons].show"></td>
         <!-- Factories -->
-        <td></td>
+        <td>
+          <div
+            *ngIf="
+              step.recipeId &&
+              vm.recipeSettings[step.recipeId].factoryId as factoryId
+            "
+            class="d-flex align-items-center justify-content-end"
+          >
+            <span
+              *ngIf="
+                step.factories &&
+                step.factories.nonzero() &&
+                (factoryId | factoryShowRate: vm.data.game)
+              "
+              class="monospace"
+              >{{
+                step.factories
+                  | factoryRate
+                    : vm.effectivePrecision[Column.Factories]
+                    : factoryId
+              }}</span
+            >
+            <button
+              pButton
+              pRipple
+              class="ms-3"
+              [icon]="factoryId | iconClass"
+            ></button>
+          </div>
+        </td>
         <!-- Overclock -->
         <td *ngIf="vm.columns[Column.Overclock].show"></td>
         <!-- Beacons -->
