@@ -10,15 +10,11 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { SelectButtonModule } from 'primeng/selectbutton';
-import { SidebarModule } from 'primeng/sidebar';
-import { SplitButtonModule } from 'primeng/splitbutton';
 import { TableModule } from 'primeng/table';
 import { TabMenuModule } from 'primeng/tabmenu';
-import { TabViewModule } from 'primeng/tabview';
 import { TooltipModule } from 'primeng/tooltip';
 
 const modules = [
@@ -32,15 +28,11 @@ const modules = [
   InputNumberModule,
   InputTextModule,
   MultiSelectModule,
-  OverlayPanelModule,
   ProgressSpinnerModule,
   ScrollPanelModule,
   SelectButtonModule,
-  SidebarModule,
-  SplitButtonModule,
   TableModule,
   TabMenuModule,
-  TabViewModule,
   TooltipModule,
 ];
 

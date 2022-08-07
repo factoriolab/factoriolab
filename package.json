@@ -16,7 +16,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build-stats": "ng build --statsJson=true",
+    "build-stats": "ng build --stats-json",
     "test": "ng test",
     "test-build": "ng test --no-watch --browsers=ChromeHeadless",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
