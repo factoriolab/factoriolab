@@ -1,5 +1,45 @@
-.button-col {
-  width: 5rem;
+.links {
+  // Tree container
+  height: 5rem;
+
+  // One width segment of the tree
+  .connect {
+    position: relative;
+
+    margin-left: 1.5rem;
+    height: 100%;
+
+    // Segment contains trail
+    &.last,
+    &.trail {
+      border-left: 2px dotted var(--text-color-secondary);
+    }
+
+    // Segment ends at this row
+    &.last:not(.trail) {
+      height: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    // Segments should pad between
+    & + .connect {
+      margin-left: 2.5rem;
+    }
+  }
+
+  .indent {
+    margin-left: 0;
+    width: 1rem;
+    border-top: 2px dotted var(--text-color-secondary);
+  }
+
+  .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+  }
 }
 
 // :host {

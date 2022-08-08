@@ -1,12 +1,18 @@
 <ng-container *ngIf="vm$ | async as vm">
-  <p-table *ngIf="vm.steps" responsiveLayout="scroll" [value]="vm.steps">
+  <p-table
+    *ngIf="vm.steps"
+    dataKey="id"
+    responsiveLayout="scroll"
+    [value]="vm.steps"
+  >
     <ng-template pTemplate="header">
       <tr>
-        <!-- Expand row -->
-        <th class="button-col">
+        <!-- Row actions -->
+        <th class="w-0">
           <button
             pButton
             pRipple
+            class="p-button-outlined p-button-rounded"
             icon="fa-solid fa-table-columns"
             [pTooltip]="'list.openColumnSettings' | translate"
             (click)="contentSvc.showColumns$.next()"
@@ -16,8 +22,8 @@
         <th *ngIf="vm.columns[Column.Tree].show">
           {{ 'list.tree' | translate }}
         </th>
-        <!-- Items -->
-        <th>
+        <!-- Items (Value / Icon)-->
+        <th colspan="2">
           <div class="d-flex align-items-center">
             <span>{{
               ('list.items' | translate) +
@@ -27,7 +33,7 @@
               *ngIf="vm.itemsModified.ignore"
               pButton
               pRipple
-              class="ms-3"
+              class="ms-3 p-button-outlined p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.itemsUndoTooltip' | translate"
               (click)="resetIgnores()"
@@ -35,14 +41,14 @@
           </div>
         </th>
         <!-- Belts -->
-        <th *ngIf="vm.columns[Column.Belts].show">
+        <th *ngIf="vm.columns[Column.Belts].show" colspan="2">
           <div class="d-flex align-items-center">
             <span>{{ 'list.belts' | translate }}</span>
             <button
               *ngIf="vm.itemsModified.belts"
               pButton
               pRipple
-              class="ms-3"
+              class="ms-3 p-button-outlined p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.beltsUndoTooltip' | translate"
               (click)="resetBelts()"
@@ -50,7 +56,7 @@
           </div>
         </th>
         <!-- Wagons -->
-        <th *ngIf="vm.columns[Column.Wagons].show">
+        <th *ngIf="vm.columns[Column.Wagons].show" colspan="2">
           <div class="d-flex align-items-center">
             <span>{{
               ('list.wagons' | translate) +
@@ -60,7 +66,7 @@
               *ngIf="vm.itemsModified.wagons"
               pButton
               pRipple
-              class="ms-3"
+              class="ms-3 p-button-outlined p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.wagonsUndoTooltip' | translate"
               (click)="resetWagons()"
@@ -68,14 +74,14 @@
           </div>
         </th>
         <!-- Factories -->
-        <th>
+        <th colspan="2">
           <div class="d-flex align-items-center">
             <span>{{ 'list.factories' | translate }}</span>
             <button
               *ngIf="vm.recipesModified.factories"
               pButton
               pRipple
-              class="ms-3"
+              class="ms-3 p-button-outlined p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.factoriesUndoTooltip' | translate"
               (click)="resetFactories()"
@@ -90,7 +96,7 @@
               *ngIf="vm.recipesModified.overclock"
               pButton
               pRipple
-              class="ms-3"
+              class="ms-3 p-button-outlined p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.overclockUndoTooltip' | translate"
               (click)="resetOverclocks()"
@@ -106,7 +112,7 @@
               *ngIf="vm.recipesModified.beacons"
               pButton
               pRipple
-              class="ms-3"
+              class="ms-3 p-button-outlined p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.beaconsUndoTooltip' | translate"
               (click)="resetBeacons()"
@@ -125,11 +131,12 @@
           }}</span>
         </th>
         <!-- Link -->
-        <th *ngIf="vm.columns[Column.Link].show" class="button-col">
+        <th *ngIf="vm.columns[Column.Link].show" class="w-0">
           <button
             *ngIf="mode === ListMode.All"
             pButton
             pRipple
+            class="p-button-outlined p-button-rounded"
             icon="fa-solid fa-file-arrow-down"
             [pTooltip]="'list.downloadTooltip' | translate"
             tooltipPosition="left"
@@ -146,20 +153,80 @@
         </th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-step>
-      <!-- TODO: Handle ListMode.Focus -->
-      <tr>
+    <ng-template pTemplate="body" let-step let-expanded="expanded">
+      <tr
+        *ngIf="
+          mode === ListMode.All ||
+          (selectedId != null && step.id === selectedId)
+        "
+      >
         <!-- Expand row -->
-        <!-- TODO: Row expansion -->
-        <td></td>
-        <!-- Tree -->
-        <td *ngIf="vm.columns[Column.Tree].show"></td>
-        <!-- Items -->
         <td>
-          <div
-            *ngIf="step.itemId && step.items"
-            class="d-flex align-items-center justify-content-end"
-          >
+          <div class="d-flex">
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="p-button-text p-button-rounded p-button-plain"
+              [icon]="
+                expanded ? 'fa-solid fa-angle-down' : 'fa-solid fa-angle-right'
+              "
+              [pTooltip]="
+                (expanded ? 'list.hideDetails' : 'list.showDetails') | translate
+              "
+              [pRowToggler]="step"
+            ></button>
+            <button
+              *ngIf="step.itemId"
+              pButton
+              pRipple
+              type="button"
+              class="p-button-text p-button-rounded p-button-plain"
+              [icon]="
+                vm.itemSettings[step.itemId].ignore
+                  ? 'fa-solid fa-eye-slash'
+                  : 'fa-solid fa-eye'
+              "
+              [pTooltip]="
+                (vm.itemSettings[step.itemId].ignore
+                  ? 'list.includeItem'
+                  : 'list.excludeItem'
+                ) | translate
+              "
+              (click)="ignoreItem(step.itemId)"
+            ></button>
+          </div>
+        </td>
+        <!-- Tree -->
+        <td *ngIf="vm.columns[Column.Tree].show" class="p-0">
+          <div class="d-flex align-items-center links">
+            <ng-container *ngIf="vm.stepTree[step.id]?.length">
+              <div
+                *ngFor="let i of vm.stepTree[step.id]; last as last"
+                class="connect"
+                [class.trail]="i"
+                [class.last]="last"
+              ></div>
+              <div class="indent"></div>
+            </ng-container>
+            <div class="icon">
+              <i
+                *ngIf="step.itemId; else recipeIcon"
+                [class]="step.itemId | iconClass"
+                [pTooltip]="vm.data.itemEntities[step.itemId].name"
+              ></i>
+              <ng-template #recipeIcon>
+                <i
+                  [class]="step.recipeId | iconClass"
+                  [pTooltip]="vm.data.recipeEntities[step.recipeId].name"
+                ></i>
+              </ng-template>
+            </div>
+          </div>
+        </td>
+        <!-- Items (Value / Icon) -->
+        <ng-container *ngIf="step.itemId && step.items; else emptyCol2">
+          <td class="text-end">
             <span
               *ngIf="step.surplus && step.surplus.nonzero()"
               class="monospace"
@@ -171,39 +238,75 @@
               step.items.sub(step.surplus || Rational.zero)
                 | rate: vm.effectivePrecision[Column.Items]
             }}</span>
-            <button
-              pButton
-              pRipple
-              class="ms-3"
-              [class.p-button-outlined]="vm.itemSettings[step.itemId].ignore"
-              [pTooltip]="
-                vm.data.itemEntities[step.itemId].name +
-                '\n<small>' +
-                ((vm.itemSettings[step.itemId].ignore
-                  ? 'list.clickToInclude'
-                  : 'list.clickToIgnore'
-                ) | translate) +
-                '</small>'
-              "
-              [escape]="false"
-              [icon]="step.itemId | iconClass"
-              (click)="ignoreItem(step.itemId)"
-            ></button>
-          </div>
-        </td>
+          </td>
+          <td class="w-0 ps-0">
+            <div class="d-flex align-items-center">
+              <i
+                [class]="step.itemId | iconClass"
+                [pTooltip]="vm.data.itemEntities[step.itemId].name"
+              ></i>
+            </div>
+          </td>
+        </ng-container>
         <!-- Belts -->
-        <td *ngIf="vm.columns[Column.Belts].show"></td>
-        <!-- Wagons -->
-        <td *ngIf="vm.columns[Column.Wagons].show"></td>
-        <!-- Factories -->
-        <td>
-          <div
+        <ng-container *ngIf="vm.columns[Column.Belts].show">
+          <ng-container
             *ngIf="
-              step.recipeId &&
-              vm.recipeSettings[step.recipeId].factoryId as factoryId
+              step.itemId &&
+                step.belts &&
+                vm.itemSettings[step.itemId].beltId as beltId;
+              else emptyCol2
             "
-            class="d-flex align-items-center justify-content-end"
           >
+            <td class="text-end">
+              <span class="monospace">{{
+                step.belts | rate: vm.effectivePrecision[Column.Belts]
+              }}</span>
+            </td>
+            <td class="w-0 ps-0">
+              <div class="d-flex align-items-center">
+                <i
+                  [class]="beltId | iconClass"
+                  [pTooltip]="vm.data.itemEntities[beltId].name"
+                ></i>
+              </div>
+            </td>
+          </ng-container>
+        </ng-container>
+        <!-- Wagons -->
+        <ng-container *ngIf="vm.columns[Column.Wagons].show">
+          <ng-container
+            *ngIf="
+              step.itemId &&
+                step.wagons &&
+                vm.itemSettings[step.itemId].wagonId as wagonId;
+              else emptyCol2
+            "
+          >
+            <td class="text-end">
+              <span class="monospace">{{
+                step.wagons | rate: vm.effectivePrecision[Column.Wagons]
+              }}</span>
+            </td>
+            <td class="w-0 ps-0">
+              <div class="d-flex align-items-center">
+                <i
+                  [class]="wagonId | iconClass"
+                  [pTooltip]="vm.data.itemEntities[wagonId].name"
+                ></i>
+              </div>
+            </td>
+          </ng-container>
+        </ng-container>
+        <!-- Factories -->
+        <ng-container
+          *ngIf="
+            step.recipeId &&
+              vm.recipeSettings[step.recipeId].factoryId as factoryId;
+            else emptyCol2
+          "
+        >
+          <td class="text-end">
             <span
               *ngIf="
                 step.factories &&
@@ -218,16 +321,36 @@
                     : factoryId
               }}</span
             >
-            <button
-              pButton
-              pRipple
-              class="ms-3"
-              [icon]="factoryId | iconClass"
-            ></button>
-          </div>
-        </td>
+          </td>
+          <td class="w-0 ps-0">
+            <div class="d-flex align-items-center">
+              <i [class]="step.recipeId | iconClass"></i>
+              <i class="ms-3" [class]="factoryId | iconClass"></i>
+              <ng-container
+                *ngIf="
+                  vm.recipeSettings[step.recipeId].factoryModuleIds as moduleIds
+                "
+              >
+                <i
+                  *ngFor="let moduleId of moduleIds"
+                  class="ms-3"
+                  [class]="moduleId | iconClass"
+                ></i>
+              </ng-container>
+            </div>
+          </td>
+        </ng-container>
         <!-- Overclock -->
-        <td *ngIf="vm.columns[Column.Overclock].show"></td>
+        <td *ngIf="vm.columns[Column.Overclock].show">
+          <ng-container
+            *ngIf="step.recipeId && vm.recipeSettings[step.recipeId]"
+          >
+            <p-inputNumber
+              [ngModel]="vm.recipeSettings[step.recipeId].overclock"
+            >
+            </p-inputNumber>
+          </ng-container>
+        </td>
         <!-- Beacons -->
         <td *ngIf="vm.columns[Column.Beacons].show"></td>
         <!-- Power -->
@@ -237,6 +360,14 @@
         <!-- Link -->
         <td *ngIf="vm.columns[Column.Link].show"></td>
       </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-step>
+      <tr>
+        <td>expanded</td>
+      </tr>
+    </ng-template>
+    <ng-template #emptyCol2>
+      <td colspan="2"></td>
     </ng-template>
   </p-table>
   <!-- <table *ngIf="vm.steps.length">
