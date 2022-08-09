@@ -30,7 +30,11 @@ ul {
 
   width: 2rem;
   height: 2rem;
-  margin: -0.25rem;
+
+  // Make sure icon fits in button
+  &.p-button-icon {
+    margin: -0.25rem;
+  }
 
   &::before {
     content: '';
@@ -61,5 +65,19 @@ ul {
     text-shadow: 0px 2px 2px black, 0px -2px 2px black, 2px 0px 2px black,
       -2px 0px 2px black;
     pointer-events: none;
+  }
+}
+
+// Hover icon styles for exclude button
+button {
+  > .hover-icon {
+    visibility: hidden;
+    position: absolute;
+    z-index: 1;
+  }
+
+  &:hover > .hover-icon,
+  &.hover-active > .hover-icon {
+    visibility: visible;
   }
 }

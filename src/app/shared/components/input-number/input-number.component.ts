@@ -21,6 +21,7 @@ export class InputNumberComponent implements OnChanges {
   @Input() value = '';
   @Input() placeholder = '';
   @Input() minimum = '0';
+  @Input() width = '';
   @Input() digits = 0; // TODO: Remove this input
   @Input() inputId: string | undefined;
 

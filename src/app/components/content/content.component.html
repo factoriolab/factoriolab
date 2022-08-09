@@ -3,7 +3,7 @@
 
 <ng-template #dropdownIconSelectedItem pTemplate="selectedItem" let-item>
   <div class="d-flex align-items-center h-100">
-    <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+    <i class="flex-shrink-0 m-n1" [class]="item.value | iconClass"></i>
     <div class="ms-3 text-truncate">
       {{ item.label }}
     </div>
@@ -11,7 +11,7 @@
 </ng-template>
 <ng-template #dropdownIconItem pTemplate="item" let-item>
   <div class="d-flex align-items-center h-100">
-    <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+    <i class="flex-shrink-0 m-n1" [class]="item.value | iconClass"></i>
     <div class="ms-3 text-truncate">
       {{ item.label }}
     </div>

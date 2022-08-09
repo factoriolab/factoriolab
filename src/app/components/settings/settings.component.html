@@ -181,7 +181,10 @@
               </ng-template>
               <ng-template pTemplate="item" let-item>
                 <div class="d-flex align-items-center">
-                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+                  <i
+                    class="flex-shrink-0 m-n1"
+                    [class]="item.value | iconClass"
+                  ></i>
                   <div class="ms-3 text-truncate">
                     {{ item.label }}
                   </div>
@@ -342,7 +345,10 @@
                       <ng-container
                         *ngIf="items && items.length; else noModifiers"
                       >
-                        <i class="flex-shrink-0" [class]="items[0] | iconClass">
+                        <i
+                          class="flex-shrink-0 m-n1"
+                          [class]="items[0] | iconClass"
+                        >
                           <span *ngIf="items.length > 1"
                             >+{{ items.length - 1 }}</span
                           >
@@ -356,7 +362,7 @@
                       </ng-container>
                       <ng-template #noModifiers>
                         <i
-                          class="flex-shrink-0"
+                          class="flex-shrink-0 m-n1"
                           [class]="ItemId.Module | iconClass"
                         ></i>
                         <div class="ms-3 text-truncate">
@@ -368,7 +374,7 @@
                   <ng-template pTemplate="item" let-item>
                     <div class="d-flex align-items-center h-100">
                       <i
-                        class="flex-shrink-0"
+                        class="flex-shrink-0 m-n1"
                         [class]="item.value | iconClass"
                       ></i>
                       <div class="ms-3 text-truncate">
@@ -471,7 +477,10 @@
               </ng-template>
               <ng-template pTemplate="item" let-item>
                 <div class="d-flex align-items-center h-100">
-                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+                  <i
+                    class="flex-shrink-0 m-n1"
+                    [class]="item.value | iconClass"
+                  ></i>
                   <div class="ms-3 text-truncate">
                     {{ item.label }}
                   </div>

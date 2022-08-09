@@ -3,12 +3,13 @@
     *ngIf="vm.steps"
     dataKey="id"
     responsiveLayout="scroll"
+    styleClass="p-datatable-sm"
     [value]="vm.steps"
   >
     <ng-template pTemplate="header">
       <tr>
         <!-- Row actions -->
-        <th class="w-0">
+        <th>
           <button
             pButton
             pRipple
@@ -176,25 +177,6 @@
               "
               [pRowToggler]="step"
             ></button>
-            <button
-              *ngIf="step.itemId"
-              pButton
-              pRipple
-              type="button"
-              class="p-button-text p-button-rounded p-button-plain"
-              [icon]="
-                vm.itemSettings[step.itemId].ignore
-                  ? 'fa-solid fa-eye-slash'
-                  : 'fa-solid fa-eye'
-              "
-              [pTooltip]="
-                (vm.itemSettings[step.itemId].ignore
-                  ? 'list.includeItem'
-                  : 'list.excludeItem'
-                ) | translate
-              "
-              (click)="ignoreItem(step.itemId)"
-            ></button>
           </div>
         </td>
         <!-- Tree -->
@@ -226,26 +208,40 @@
         </td>
         <!-- Items (Value / Icon) -->
         <ng-container *ngIf="step.itemId && step.items; else emptyCol2">
-          <td class="text-end">
+          <td class="w-0 text-end">
             <span
               *ngIf="step.surplus && step.surplus.nonzero()"
               class="monospace"
               >(+{{
                 step.surplus | rate: vm.effectivePrecision[Column.Surplus]
-              }})</span
-            >
+              }})
+            </span>
             <span class="monospace">{{
               step.items.sub(step.surplus || Rational.zero)
                 | rate: vm.effectivePrecision[Column.Items]
             }}</span>
           </td>
-          <td class="w-0 ps-0">
-            <div class="d-flex align-items-center">
-              <i
-                [class]="step.itemId | iconClass"
-                [pTooltip]="vm.data.itemEntities[step.itemId].name"
-              ></i>
-            </div>
+          <td class="ps-0">
+            <button
+              pButton
+              pRipple
+              class="hover-fade p-button-rounded p-button-text"
+              [class.hover-active]="vm.itemSettings[step.itemId].ignore"
+              [pTooltip]="
+                vm.data.itemEntities[step.itemId].name +
+                '\n<small>' +
+                ((vm.itemSettings[step.itemId].ignore
+                  ? 'list.includeTooltip'
+                  : 'list.excludeTooltip'
+                ) | translate) +
+                '</small>'
+              "
+              [escape]="false"
+              [icon]="step.itemId | iconClass"
+              (click)="ignoreItem(step.itemId)"
+            >
+              <i class="hover-icon fa-solid fa-eye-slash"></i>
+            </button>
           </td>
         </ng-container>
         <!-- Belts -->
@@ -258,12 +254,12 @@
               else emptyCol2
             "
           >
-            <td class="text-end">
+            <td class="w-0 text-end">
               <span class="monospace">{{
                 step.belts | rate: vm.effectivePrecision[Column.Belts]
               }}</span>
             </td>
-            <td class="w-0 ps-0">
+            <td class="ps-0">
               <div class="d-flex align-items-center">
                 <i
                   [class]="beltId | iconClass"
@@ -306,7 +302,7 @@
             else emptyCol2
           "
         >
-          <td class="text-end">
+          <td class="w-0 text-end">
             <span
               *ngIf="
                 step.factories &&
@@ -322,10 +318,17 @@
               }}</span
             >
           </td>
-          <td class="w-0 ps-0">
+          <td class="ps-0">
             <div class="d-flex align-items-center">
-              <i [class]="step.recipeId | iconClass"></i>
-              <i class="ms-3" [class]="factoryId | iconClass"></i>
+              <i
+                [class]="step.recipeId | iconClass"
+                [pTooltip]="vm.data.recipeEntities[step.recipeId].name"
+              ></i>
+              <i
+                class="mx-3"
+                [class]="factoryId | iconClass"
+                [pTooltip]="vm.data.itemEntities[factoryId].name"
+              ></i>
               <ng-container
                 *ngIf="
                   vm.recipeSettings[step.recipeId].factoryModuleIds as moduleIds
@@ -333,8 +336,8 @@
               >
                 <i
                   *ngFor="let moduleId of moduleIds"
-                  class="ms-3"
                   [class]="moduleId | iconClass"
+                  [pTooltip]="vm.data.itemEntities[moduleId]?.name ?? ''"
                 ></i>
               </ng-container>
             </div>
@@ -346,24 +349,96 @@
             *ngIf="step.recipeId && vm.recipeSettings[step.recipeId]"
           >
             <p-inputNumber
+              suffix="%"
+              [min]="1"
+              [max]="250"
+              [step]="10"
+              [showButtons]="true"
+              [pTooltip]="'list.overclockTooltip' | translate"
               [ngModel]="vm.recipeSettings[step.recipeId].overclock"
             >
             </p-inputNumber>
           </ng-container>
         </td>
         <!-- Beacons -->
-        <td *ngIf="vm.columns[Column.Beacons].show"></td>
+        <td *ngIf="vm.columns[Column.Beacons].show">
+          <ng-container
+            *ngIf="
+              step.recipeId && vm.recipeSettings[step.recipeId] as settings
+            "
+          >
+            <div
+              *ngIf="settings.beaconId && settings.beaconCount"
+              class="d-flex align-items-center"
+            >
+              <lab-input-number
+                width="3rem"
+                [value]="settings.beaconCount"
+              ></lab-input-number>
+              <i
+                class="mx-3"
+                [class]="settings.beaconId | iconClass"
+                [pTooltip]="vm.data.itemEntities[settings.beaconId].name"
+              ></i>
+              <i
+                *ngFor="let moduleId of settings.beaconModuleIds"
+                [class]="moduleId | iconClass"
+                [pTooltip]="vm.data.itemEntities[moduleId]?.name ?? ''"
+              ></i>
+            </div>
+          </ng-container>
+        </td>
         <!-- Power -->
-        <td *ngIf="vm.columns[Column.Power].show"></td>
+        <td *ngIf="vm.columns[Column.Power].show" class="text-end">
+          <span *ngIf="step.power && step.power.nonzero()" class="monospace">{{
+            step.power
+              | power: vm.effectivePrecision[Column.Power]:vm.effectivePowerUnit
+          }}</span>
+        </td>
         <!-- Pollution -->
-        <td *ngIf="vm.columns[Column.Pollution].show"></td>
+        <td *ngIf="vm.columns[Column.Pollution].show" class="text-end">
+          <span
+            *ngIf="step.pollution && step.pollution.nonzero()"
+            class="monospace"
+            >{{
+              step.pollution | rate: vm.effectivePrecision[Column.Pollution]
+            }}</span
+          >
+        </td>
         <!-- Link -->
-        <td *ngIf="vm.columns[Column.Link].show"></td>
+        <td *ngIf="vm.columns[Column.Link].show">
+          <div class="d-flex">
+            <a [href]="step | stepHref: vm.data" target="_blank">
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="p-button-text p-button-rounded p-button-plain"
+                icon="fa-solid fa-arrow-up-right-from-square"
+                [pTooltip]="'list.openNewTabTooltip' | translate"
+                tooltipPosition="left"
+              ></button>
+            </a>
+            <button
+              *ngIf="
+                (step.recipeId && vm.stepsModified.recipes[step.recipeId]) ||
+                (step.itemId && vm.stepsModified.items[step.itemId])
+              "
+              pButton
+              pRipple
+              class="p-button-text p-button-rounded p-button-plain"
+              icon="fa-solid fa-rotate-left"
+              [pTooltip]="'list.stepUndoTooltip' | translate"
+              tooltipPosition="left"
+              (click)="resetStep(step)"
+            ></button>
+          </div>
+        </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="rowexpansion" let-step>
       <tr>
-        <td>expanded</td>
+        <td colspan="100">TODO: expanded details</td>
       </tr>
     </ng-template>
     <ng-template #emptyCol2>
