@@ -40,17 +40,10 @@ $width: 320px;
 }
 
 /** Factory InputGroup styles */
-.p-inputgroup.flex-wrap {
+.p-inputgroup.factory-preference {
   p-dropdown {
-    min-width: 8rem;
-  }
-
-  p-multiselect {
-    min-width: 14rem;
-  }
-
-  lab-input-number,
-  p-inputNumber {
-    min-width: 6rem;
+    flex-basis: 3rem;
+    flex-grow: 0;
+    flex-shrink: 0;
   }
 }

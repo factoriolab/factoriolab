@@ -1,0 +1,53 @@
+// Hover icon button styles (e.g. item exclude button)
+.p-button.hover-action {
+  > .p-button-icon {
+    transition: all 300ms ease;
+  }
+
+  > .hover-icon {
+    position: absolute;
+    opacity: 0;
+    z-index: 1;
+    transition: opacity 300ms ease;
+  }
+
+  &:hover,
+  &.hover-active {
+    > .p-button-icon {
+      opacity: 0.3;
+    }
+
+    > .hover-icon {
+      opacity: 1;
+    }
+  }
+}
+
+// Icon / masked dropdown styles
+.p-dropdown.icon {
+  &.masked:not(:hover) {
+    border-color: transparent;
+    background-color: transparent;
+  }
+
+  .lab-icon {
+    transition: opacity 300ms ease;
+  }
+
+  .p-dropdown-trigger {
+    position: absolute;
+    bottom: 1rem;
+    opacity: 0;
+    transition: opacity 300ms ease;
+  }
+
+  &:hover {
+    .lab-icon {
+      opacity: 0.3;
+    }
+
+    .p-dropdown-trigger {
+      opacity: 1;
+    }
+  }
+}

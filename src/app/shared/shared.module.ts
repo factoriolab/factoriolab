@@ -16,6 +16,7 @@ import {
 } from './components';
 import {
   DropdownIconDirective,
+  DropdownIconTextDirective,
   DropdownTranslateDirective,
   FocusOnShowDirective,
   ValidateNumberDirective,
@@ -52,6 +53,7 @@ export const SHARED_COMPONENTS = [
 
 export const SHARED_DIRECTIVES = [
   DropdownIconDirective,
+  DropdownIconTextDirective,
   DropdownTranslateDirective,
   FocusOnShowDirective,
   ValidateNumberDirective,

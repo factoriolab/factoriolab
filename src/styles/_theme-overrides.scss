@@ -48,7 +48,7 @@
 }
 
 .p-dropdown-panel .p-dropdown-items {
-  max-width: 100%;
+  max-width: 100%; // Prevent horizontal scroll in virtual scroll dropdown
 }
 
 // Imitate .p-float-label without using input field
@@ -59,20 +59,6 @@
   color: var(--text-color-secondary);
 }
 
-.p-inputgroup p-dropdown.p-lab-icon-only.p-inputwrapper {
-  flex-grow: 0;
-  width: 6rem;
-
-  > .p-dropdown {
-    width: 6rem;
-  }
-}
-
-.p-inputgroup p-multiSelect.p-lab-icon-only.p-inputwrapper {
-  flex-grow: 0;
-  width: 6rem;
-
-  > .p-multiselect {
-    width: 6rem;
-  }
+table p-dropdown {
+  max-height: 3rem; // Prevents icon dropdown from expanding table cell size
 }

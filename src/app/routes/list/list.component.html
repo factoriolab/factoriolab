@@ -2,6 +2,7 @@
   <p-table
     *ngIf="vm.steps"
     dataKey="id"
+    [rowTrackBy]="trackSvc.trackById"
     responsiveLayout="scroll"
     styleClass="p-datatable-sm"
     [value]="vm.steps"
@@ -168,10 +169,9 @@
               pButton
               pRipple
               type="button"
-              class="p-button-text p-button-rounded p-button-plain"
-              [icon]="
-                expanded ? 'fa-solid fa-angle-down' : 'fa-solid fa-angle-right'
-              "
+              class="p-button-text p-button-rounded p-button-plain transition-ease"
+              [class.fa-rotate-90]="expanded"
+              icon="fa-solid fa-angle-right"
               [pTooltip]="
                 (expanded ? 'list.hideDetails' : 'list.showDetails') | translate
               "
@@ -225,19 +225,16 @@
             <button
               pButton
               pRipple
-              class="hover-fade p-button-rounded p-button-text"
+              class="hover-action p-button-rounded p-button-text"
               [class.hover-active]="vm.itemSettings[step.itemId].ignore"
+              [icon]="step.itemId | iconClass"
               [pTooltip]="
-                vm.data.itemEntities[step.itemId].name +
-                '\n<small>' +
-                ((vm.itemSettings[step.itemId].ignore
+                (vm.itemSettings[step.itemId].ignore
                   ? 'list.includeTooltip'
                   : 'list.excludeTooltip'
-                ) | translate) +
-                '</small>'
+                ) | translate: { name: vm.data.itemEntities[step.itemId].name }
               "
               [escape]="false"
-              [icon]="step.itemId | iconClass"
               (click)="ignoreItem(step.itemId)"
             >
               <i class="hover-icon fa-solid fa-eye-slash"></i>
@@ -261,10 +258,73 @@
             </td>
             <td class="ps-0">
               <div class="d-flex align-items-center">
-                <i
-                  [class]="beltId | iconClass"
-                  [pTooltip]="vm.data.itemEntities[beltId].name"
-                ></i>
+                <!-- Belt dropdown -->
+                <p-dropdown
+                  *ngIf="
+                    vm.data.beltIds.indexOf(beltId) !== -1 &&
+                      vm.settings.beltId;
+                    else pipesDropdown
+                  "
+                  labDropdownIcon="masked"
+                  [pTooltip]="
+                    'list.changeBeltTooltip'
+                      | translate
+                        : {
+                            name: vm.data.itemEntities[beltId].name,
+                            speed: vm.beltSpeedTxt[beltId]
+                          }
+                  "
+                  [escape]="false"
+                  [ngModel]="beltId"
+                  [options]="vm.options.belts"
+                  (onChange)="
+                    setBelt(step.itemId, $event.value, vm.settings.beltId)
+                  "
+                >
+                </p-dropdown>
+                <!-- Pipes dropdown -->
+                <ng-template #pipesDropdown>
+                  <p-dropdown
+                    *ngIf="
+                      vm.data.pipeIds.indexOf(beltId) !== -1 &&
+                        vm.settings.pipeId;
+                      else pipeIcon
+                    "
+                    labDropdownIcon="masked"
+                    [pTooltip]="
+                      'list.changePipeTooltip'
+                        | translate
+                          : {
+                              name: vm.data.itemEntities[beltId].name,
+                              speed: vm.beltSpeedTxt[beltId]
+                            }
+                    "
+                    [escape]="false"
+                    [ngModel]="beltId"
+                    [options]="vm.options.pipes"
+                    (onChange)="
+                      setBelt(step.itemId, $event.value, vm.settings.pipeId)
+                    "
+                  >
+                  </p-dropdown>
+                </ng-template>
+                <!-- Pipe icon only -->
+                <ng-template #pipeIcon>
+                  <div
+                    class="m-1 p-2"
+                    [pTooltip]="
+                      'list.pipeTooltip'
+                        | translate
+                          : {
+                              name: vm.data.itemEntities[beltId].name,
+                              speed: vm.beltSpeedTxt[beltId]
+                            }
+                    "
+                    [escape]="false"
+                  >
+                    <i [class]="beltId | iconClass"></i>
+                  </div>
+                </ng-template>
               </div>
             </td>
           </ng-container>
@@ -279,17 +339,70 @@
               else emptyCol2
             "
           >
-            <td class="text-end">
+            <td class="w-0 text-end">
               <span class="monospace">{{
                 step.wagons | rate: vm.effectivePrecision[Column.Wagons]
               }}</span>
             </td>
-            <td class="w-0 ps-0">
+            <td class="ps-0">
               <div class="d-flex align-items-center">
-                <i
-                  [class]="wagonId | iconClass"
-                  [pTooltip]="vm.data.itemEntities[wagonId].name"
-                ></i>
+                <!-- Cargo wagon dropdown -->
+                <p-dropdown
+                  *ngIf="
+                    vm.data.cargoWagonIds.indexOf(wagonId) !== -1 &&
+                      vm.settings.cargoWagonId;
+                    else fluidWagonsDropdown
+                  "
+                  labDropdownIcon="masked"
+                  [pTooltip]="
+                    'list.changeCargoWagonTooltip'
+                      | translate
+                        : {
+                            name: vm.data.itemEntities[wagonId].name,
+                            size: vm.data.cargoWagonEntities[wagonId].size
+                          }
+                  "
+                  [escape]="false"
+                  [ngModel]="wagonId"
+                  [options]="vm.options.cargoWagons"
+                  (onChange)="
+                    setWagon(
+                      step.itemId,
+                      $event.value,
+                      vm.settings.cargoWagonId
+                    )
+                  "
+                >
+                </p-dropdown>
+                <!-- Fluid wagon dropdown -->
+                <ng-template #fluidWagonsDropdown>
+                  <p-dropdown
+                    *ngIf="
+                      vm.data.fluidWagonIds.indexOf(wagonId) !== -1 &&
+                      vm.settings.fluidWagonId
+                    "
+                    labDropdownIcon="masked"
+                    [pTooltip]="
+                      'list.changeFluidWagonTooltip'
+                        | translate
+                          : {
+                              name: vm.data.itemEntities[wagonId].name,
+                              size: vm.data.fluidWagonEntities[wagonId].capacity
+                            }
+                    "
+                    [escape]="false"
+                    [ngModel]="wagonId"
+                    [options]="vm.options.fluidWagons"
+                    (onChange)="
+                      setWagon(
+                        step.itemId,
+                        $event.value,
+                        vm.settings.fluidWagonId
+                      )
+                    "
+                  >
+                  </p-dropdown>
+                </ng-template>
               </div>
             </td>
           </ng-container>

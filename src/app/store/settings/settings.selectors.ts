@@ -7,6 +7,8 @@ import {
   columnOptions,
   Dataset,
   Defaults,
+  displayRateLabel,
+  displayRateVal,
   Entities,
   FuelType,
   Game,
@@ -29,6 +31,7 @@ import {
   toBoolEntities,
   toEntities,
 } from '~/models';
+import { Options } from '~/models/options';
 import { LabState } from '../';
 import * as Datasets from '../datasets';
 import * as Preferences from '../preferences';
@@ -429,6 +432,9 @@ export const getDataset = createSelector(
     const beaconModuleIds = modules
       .filter((i) => i.module!.productivity == null)
       .map((i) => i.id);
+    const prodModuleIds = modules
+      .filter((i) => i.module!.productivity != null)
+      .map((i) => i.id);
     const fuelIds = items
       .filter((i) => i.fuel)
       .sort((a, b) => a.fuel!.value - b.fuel!.value)
@@ -558,10 +564,6 @@ export const getDataset = createSelector(
       return e;
     }, {});
 
-    const prodModuleIds = moduleIds.filter(
-      (i) => itemEntities[i].module!.productivity != null
-    );
-
     // Calculate complex recipes
     const simpleRecipeIds = Object.keys(itemRecipeId).map(
       (i) => itemRecipeId[i]
@@ -598,6 +600,7 @@ export const getDataset = createSelector(
       factoryEntities,
       moduleIds,
       beaconModuleIds,
+      prodModuleIds,
       moduleEntities,
       fuelIds,
       fuelEntities,
@@ -606,7 +609,6 @@ export const getDataset = createSelector(
       recipeEntities,
       recipeR,
       recipeModuleIds,
-      prodModuleIds,
       hash,
       defaults,
     };
@@ -614,9 +616,24 @@ export const getDataset = createSelector(
   }
 );
 
-export const getChemicalFuelIds = createSelector(
+export const getOptions = createSelector(
   getDataset,
-  (data) => data.fuelIds[FuelType.Chemical] ?? []
+  (data): Options => ({
+    items: getIdOptions(data.itemIds, data.itemEntities),
+    beacons: getIdOptions(data.beaconIds, data.itemEntities),
+    belts: getIdOptions(data.beltIds, data.itemEntities),
+    pipes: getIdOptions(data.pipeIds, data.itemEntities),
+    cargoWagons: getIdOptions(data.cargoWagonIds, data.itemEntities),
+    fluidWagons: getIdOptions(data.fluidWagonIds, data.itemEntities),
+    modules: getIdOptions(data.moduleIds, data.itemEntities),
+    beaconModules: getIdOptions(data.beaconModuleIds, data.itemEntities),
+    prodModules: getIdOptions(data.prodModuleIds, data.itemEntities),
+    chemicalFuels: getIdOptions(
+      data.fuelIds[FuelType.Chemical] ?? [],
+      data.itemEntities
+    ),
+    complexRecipes: getIdOptions(data.complexRecipeIds, data.recipeEntities),
+  })
 );
 
 export const getBeltSpeed = createSelector(
@@ -636,6 +653,19 @@ export const getBeltSpeed = createSelector(
     }
     return value;
   }
+);
+
+export const getBeltSpeedTxt = createSelector(
+  getBeltSpeed,
+  getDisplayRate,
+  (beltSpeed, displayRate) =>
+    Object.keys(beltSpeed).reduce((e: Entities<string>, beltId) => {
+      const speed = beltSpeed[beltId].mul(displayRateVal[displayRate]);
+      const speedTxt = Number(speed.toNumber().toFixed(2));
+      const rateTxt = displayRateLabel[displayRate];
+      e[beltId] = speedTxt + rateTxt;
+      return e;
+    }, {})
 );
 
 export const getAdjustmentData = createSelector(
@@ -712,4 +742,11 @@ export function reduceEntities(
     e[x] = toBoolEntities(value[x], init[x]);
     return e;
   }, init);
+}
+
+export function getIdOptions(
+  ids: string[],
+  entities: Record<string, { name: string }>
+): SelectItem[] {
+  return ids.map((i): SelectItem => ({ label: entities[i].name, value: i }));
 }

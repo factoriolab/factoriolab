@@ -1,15 +1,13 @@
-import { Directive, Input, OnInit, Self, TemplateRef } from '@angular/core';
+import { Directive, OnInit, Self, TemplateRef } from '@angular/core';
 import { Dropdown } from 'primeng/dropdown';
 import { combineLatest, filter, first } from 'rxjs';
 
 import { ContentService } from '~/services';
 
 @Directive({
-  selector: '[labDropdownIcon]',
+  selector: '[labDropdownIconText]',
 })
-export class DropdownIconDirective implements OnInit {
-  @Input() labDropdownIcon: 'masked' | '' = '';
-
+export class DropdownIconTextDirective implements OnInit {
   constructor(
     @Self() private readonly pDropdown: Dropdown,
     private contentSvc: ContentService
@@ -19,9 +17,8 @@ export class DropdownIconDirective implements OnInit {
     this.pDropdown.appendTo = 'body';
     this.pDropdown.filter = true;
     this.pDropdown.scrollHeight = '400px';
-    this.pDropdown.styleClass = `icon ${this.labDropdownIcon}`;
     combineLatest([
-      this.contentSvc.iconSelectedItem$.pipe(
+      this.contentSvc.iconTextSelectedItem$.pipe(
         filter((t): t is TemplateRef<any> => t != null)
       ),
       this.contentSvc.iconTextItem$.pipe(

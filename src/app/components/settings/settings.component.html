@@ -165,9 +165,7 @@
               [virtualScroll]="true"
               [virtualScrollItemSize]="48"
               [ngModel]="vm.settings.disabledRecipeIds"
-              [options]="
-                vm.data.complexRecipeIds | options: vm.data.recipeEntities
-              "
+              [options]="vm.options.complexRecipes"
               (onChange)="
                 setDisabledRecipes(
                   $event.value,
@@ -181,10 +179,7 @@
               </ng-template>
               <ng-template pTemplate="item" let-item>
                 <div class="d-flex align-items-center">
-                  <i
-                    class="flex-shrink-0 m-n1"
-                    [class]="item.value | iconClass"
-                  ></i>
+                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
                   <div class="ms-3 text-truncate">
                     {{ item.label }}
                   </div>
@@ -283,13 +278,13 @@
                   : 'settings.factorySelection'
                 ) | translate: { index: index }
               }}</p-divider>
-              <div class="p-inputgroup flex-wrap my-3">
+              <div class="p-inputgroup factory-preference">
                 <!-- Remove factory button -->
                 <button
                   *ngIf="index > 0"
                   pButton
                   pRipple
-                  icon="fa-solid fa-trash"
+                  icon="fa-solid fa-minus"
                   [pTooltip]="'settings.removeFactoryTooltip' | translate"
                   (click)="
                     removeFactory(factoryId, vm.data.defaults?.factoryRankIds)
@@ -311,17 +306,6 @@
                   "
                 >
                 </p-dropdown>
-                <!-- Raise factory button -->
-                <button
-                  *ngIf="index > 1"
-                  pButton
-                  pRipple
-                  icon="fa-solid fa-arrow-up"
-                  [pTooltip]="'settings.raiseFactoryTooltip' | translate"
-                  (click)="
-                    raiseFactory(factoryId, vm.data.defaults?.factoryRankIds)
-                  "
-                ></button>
                 <!-- Modifiers multiselect -->
                 <p-multiSelect
                   *ngIf="factory.settings.moduleRankIds"
@@ -331,7 +315,7 @@
                   [selectionLimit]="vm.data.game === Game.Satisfactory ? 1 : 2"
                   [pTooltip]="'settings.modifierTooltip' | translate"
                   [ngModel]="factory.settings.moduleRankIds"
-                  [options]="vm.data.moduleIds | options: vm.data.itemEntities"
+                  [options]="vm.options.modules"
                   (onChange)="
                     setModuleRank(
                       factoryId,
@@ -341,14 +325,11 @@
                   "
                 >
                   <ng-template pTemplate="selectedItems" let-items>
-                    <div class="d-flex align-items-center h-100">
+                    <div class="d-flex">
                       <ng-container
                         *ngIf="items && items.length; else noModifiers"
                       >
-                        <i
-                          class="flex-shrink-0 m-n1"
-                          [class]="items[0] | iconClass"
-                        >
+                        <i class="flex-shrink-0" [class]="items[0] | iconClass">
                           <span *ngIf="items.length > 1"
                             >+{{ items.length - 1 }}</span
                           >
@@ -361,10 +342,7 @@
                         </div>
                       </ng-container>
                       <ng-template #noModifiers>
-                        <i
-                          class="flex-shrink-0 m-n1"
-                          [class]="ItemId.Module | iconClass"
-                        ></i>
+                        <i [class]="ItemId.Module | iconClass"></i>
                         <div class="ms-3 text-truncate">
                           {{ 'settings.noModifiers' | translate }}
                         </div>
@@ -374,7 +352,7 @@
                   <ng-template pTemplate="item" let-item>
                     <div class="d-flex align-items-center h-100">
                       <i
-                        class="flex-shrink-0 m-n1"
+                        class="flex-shrink-0"
                         [class]="item.value | iconClass"
                       ></i>
                       <div class="ms-3 text-truncate">
@@ -403,6 +381,19 @@
                   >
                   </p-inputNumber>
                 </ng-container>
+                <!-- Raise factory button -->
+                <button
+                  *ngIf="index > 1"
+                  pButton
+                  pRipple
+                  icon="fa-solid fa-arrow-up"
+                  [pTooltip]="'settings.raiseFactoryTooltip' | translate"
+                  (click)="
+                    raiseFactory(factoryId, vm.data.defaults?.factoryRankIds)
+                  "
+                ></button>
+              </div>
+              <div class="p-inputgroup factory-preference">
                 <ng-container *ngIf="vm.data.game === Game.Factorio">
                   <ng-container *ngIf="factory.settings.beaconCount != null">
                     <!-- Beacon count input -->
@@ -424,9 +415,7 @@
                       [pTooltip]="'settings.beaconTooltip' | translate"
                       tooltipPosition="top"
                       [ngModel]="factory.settings.beaconId"
-                      [options]="
-                        vm.data.beaconIds | options: vm.data.itemEntities
-                      "
+                      [options]="vm.options.beacons"
                       (onChange)="
                         setBeacon(
                           factoryId,
@@ -444,9 +433,7 @@
                       [pTooltip]="'settings.beaconModuleTooltip' | translate"
                       tooltipPosition="top"
                       [ngModel]="factory.settings.beaconModuleId"
-                      [options]="
-                        vm.data.beaconModuleIds | options: vm.data.itemEntities
-                      "
+                      [options]="vm.options.beaconModules"
                       (onChange)="
                         setBeaconModule(
                           factoryId,
@@ -477,10 +464,7 @@
               </ng-template>
               <ng-template pTemplate="item" let-item>
                 <div class="d-flex align-items-center h-100">
-                  <i
-                    class="flex-shrink-0 m-n1"
-                    [class]="item.value | iconClass"
-                  ></i>
+                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
                   <div class="ms-3 text-truncate">
                     {{ item.label }}
                   </div>
@@ -515,12 +499,12 @@
             [pTooltip]="'settings.proliferatorSelfSprayTooltip' | translate"
           >
             <p-dropdown
-              labDropdownIcon
+              labDropdownIconText
               inputId="proliferator-self-spray"
               styleClass="w-100"
               [autoDisplayFirst]="false"
               [ngModel]="vm.settings.proliferatorSprayId"
-              [options]="vm.data.prodModuleIds | options: vm.data.itemEntities"
+              [options]="vm.options.prodModules"
               (onChange)="setProliferatorSpray($event.value)"
             >
             </p-dropdown>
@@ -535,11 +519,11 @@
             [pTooltip]="'settings.defaultTransportBeltTooltip' | translate"
           >
             <p-dropdown
-              labDropdownIcon
+              labDropdownIconText
               inputId="default-transport-belt"
               styleClass="w-100"
               [ngModel]="vm.settings.beltId"
-              [options]="vm.data.beltIds | options: vm.data.itemEntities"
+              [options]="vm.options.belts"
               (onChange)="setBelt($event.value, vm.data.defaults?.beltId)"
             >
             </p-dropdown>
@@ -554,11 +538,11 @@
             [pTooltip]="'settings.defaultPipeTooltip' | translate"
           >
             <p-dropdown
-              labDropdownIcon
+              labDropdownIconText
               inputId="default-pipe"
               styleClass="w-100"
               [ngModel]="vm.settings.pipeId"
-              [options]="vm.data.pipeIds | options: vm.data.itemEntities"
+              [options]="vm.options.pipes"
               (onChange)="setPipe($event.value, vm.data.defaults?.pipeId)"
             >
             </p-dropdown>
@@ -573,11 +557,11 @@
             [pTooltip]="'settings.defaultCargoWagonTooltip' | translate"
           >
             <p-dropdown
-              labDropdownIcon
+              labDropdownIconText
               inputId="default-cargo-wagon"
               styleClass="w-100"
               [ngModel]="vm.settings.cargoWagonId"
-              [options]="vm.data.cargoWagonIds | options: vm.data.itemEntities"
+              [options]="vm.options.cargoWagons"
               (onChange)="
                 setCargoWagon($event.value, vm.data.defaults?.cargoWagonId)
               "
@@ -594,11 +578,11 @@
             [pTooltip]="'settings.defaultFluidWagonTooltip' | translate"
           >
             <p-dropdown
-              labDropdownIcon
+              labDropdownIconText
               inputId="default-fluid-wagon"
               styleClass="w-100"
               [ngModel]="vm.settings.fluidWagonId"
-              [options]="vm.data.fluidWagonIds | options: vm.data.itemEntities"
+              [options]="vm.options.fluidWagons"
               (onChange)="
                 setFluidWagon($event.value, vm.data.defaults?.fluidWagonId)
               "
@@ -622,14 +606,11 @@
             [pTooltip]="'settings.chemicalFuelTooltip' | translate"
           >
             <p-dropdown
-              labDropdownIcon
+              labDropdownIconText
               inputId="chemical-fuel"
               styleClass="w-100"
               [ngModel]="vm.settings.fuelId"
-              [options]="
-                vm.data.fuelIds[FuelType.Chemical]
-                  | options: vm.data.itemEntities
-              "
+              [options]="vm.options.chemicalFuels"
               (onChange)="setFuel($event.value, vm.data.defaults?.fuelId)"
             >
             </p-dropdown>

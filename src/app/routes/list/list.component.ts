@@ -61,9 +61,11 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     this.store.select(Recipes.getRecipeSettings),
     this.store.select(Recipes.getRecipesModified),
     this.store.select(Recipes.getAdjustedDataset),
-    this.store.select(Settings.getSettings),
-    this.store.select(Settings.getBeltSpeed),
     this.store.select(Settings.getColumnsState),
+    this.store.select(Settings.getSettings),
+    this.store.select(Settings.getOptions),
+    this.store.select(Settings.getBeltSpeed),
+    this.store.select(Settings.getBeltSpeedTxt),
   ]).pipe(
     map(
       ([
@@ -81,9 +83,11 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
         recipeSettings,
         recipesModified,
         data,
-        settings,
-        beltSpeed,
         columns,
+        settings,
+        options,
+        beltSpeed,
+        beltSpeedTxt,
       ]) => ({
         factories,
         itemSettings,
@@ -99,9 +103,11 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
         recipeSettings,
         recipesModified,
         data,
-        settings,
-        beltSpeed,
         columns,
+        settings,
+        options,
+        beltSpeed,
+        beltSpeedTxt,
       })
     )
   );

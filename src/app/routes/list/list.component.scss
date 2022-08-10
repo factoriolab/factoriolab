@@ -42,15 +42,21 @@
   }
 }
 
-// Fade icon in exclude button
-:host ::ng-deep {
-  button.hover-fade:hover,
-  button.hover-fade.hover-active {
-    > .p-button-icon.lab-icon {
-      opacity: 0.3;
-    }
-  }
-}
+// // Fade icon in exclude button
+// :host ::ng-deep {
+//   button.hover-fade {
+//     > .p-button-icon.lab-icon {
+//       transition: all 300ms ease;
+//     }
+//   }
+
+//   button.hover-fade:hover,
+//   button.hover-fade.hover-active {
+//     > .p-button-icon.lab-icon {
+//       opacity: 0.3;
+//     }
+//   }
+// }
 
 // :host {
 //   display: block;

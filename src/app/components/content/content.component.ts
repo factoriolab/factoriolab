@@ -20,16 +20,15 @@ import { ContentService } from '~/services';
   providers: [ConfirmationService],
 })
 export class ContentComponent implements OnInit, AfterViewInit {
-  @ViewChild('dropdownIconSelectedItem') dropdownIconSelectedItem:
+  @ViewChild('iconTextSelectedItem') iconTextSelectedItem:
     | TemplateRef<any>
     | undefined;
-  @ViewChild('dropdownIconItem') dropdownIconItem: TemplateRef<any> | undefined;
-  @ViewChild('dropdownTranslateSelectedItem') dropdownTranslateSelectedItem:
+  @ViewChild('iconTextItem') iconTextItem: TemplateRef<any> | undefined;
+  @ViewChild('iconSelectedItem') iconSelectedItem: TemplateRef<any> | undefined;
+  @ViewChild('translateSelectedItem') translateSelectedItem:
     | TemplateRef<any>
     | undefined;
-  @ViewChild('dropdownTranslateItem') dropdownTranslateItem:
-    | TemplateRef<any>
-    | undefined;
+  @ViewChild('translateItem') translateItem: TemplateRef<any> | undefined;
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -43,13 +42,10 @@ export class ContentComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.contentSvc.dropdownIconSelectedItem$.next(
-      this.dropdownIconSelectedItem
-    );
-    this.contentSvc.dropdownIconItem$.next(this.dropdownIconItem);
-    this.contentSvc.dropdownTranslateSelectedItem$.next(
-      this.dropdownTranslateSelectedItem
-    );
-    this.contentSvc.dropdownTranslateItem$.next(this.dropdownTranslateItem);
+    this.contentSvc.iconTextSelectedItem$.next(this.iconTextSelectedItem);
+    this.contentSvc.iconTextItem$.next(this.iconTextItem);
+    this.contentSvc.iconSelectedItem$.next(this.iconSelectedItem);
+    this.contentSvc.translateSelectedItem$.next(this.translateSelectedItem);
+    this.contentSvc.translateItem$.next(this.translateItem);
   }
 }

@@ -25,16 +25,15 @@ export class ContentService {
   }
 
   // Templates
-  dropdownIconSelectedItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(
+  iconTextSelectedItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(
     undefined
   );
-  dropdownIconItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(
+  iconTextItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(undefined);
+  iconSelectedItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(
     undefined
   );
-  dropdownTranslateSelectedItem$ = new BehaviorSubject<
-    TemplateRef<any> | undefined
-  >(undefined);
-  dropdownTranslateItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(
+  translateSelectedItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(
     undefined
   );
+  translateItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(undefined);
 }

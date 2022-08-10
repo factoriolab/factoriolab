@@ -16,10 +16,10 @@ export class DropdownTranslateDirective implements OnInit {
   ngOnInit(): void {
     this.pDropdown.appendTo = 'body';
     combineLatest([
-      this.contentSvc.dropdownTranslateSelectedItem$.pipe(
+      this.contentSvc.translateSelectedItem$.pipe(
         filter((t): t is TemplateRef<any> => t != null)
       ),
-      this.contentSvc.dropdownTranslateItem$.pipe(
+      this.contentSvc.translateItem$.pipe(
         filter((t): t is TemplateRef<any> => t != null)
       ),
     ])

@@ -1,3 +1,4 @@
+export * from './dropdown-icon-text.directive';
 export * from './dropdown-icon.directive';
 export * from './dropdown-translate.directive';
 export * from './focus-on-show.directive';
