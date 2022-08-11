@@ -8,8 +8,15 @@ export class DisplayService {
     return `<i class="m-1 me-2 lab-icon ${id}"><span>${num}</span></i>`;
   }
 
-  round(value: Rational): number {
-    return Number(value.toNumber().toFixed(2));
+  table(rows: [string, string][]): string {
+    let html = `<table class="w-100">`;
+    rows.forEach((r) => (html += `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`));
+    html += `</table>`;
+    return html;
+  }
+
+  round(value: Rational): string {
+    return Number(value.toNumber().toFixed(2)).toString();
   }
 
   power(value: Rational | string | number): string {

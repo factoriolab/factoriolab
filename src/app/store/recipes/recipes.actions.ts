@@ -15,7 +15,6 @@ export const enum RecipesActionType {
   RESET_RECIPE_MODULES = '[Recipes] Reset Recipe Modules',
   RESET_FACTORIES = '[Recipes] Reset Factories',
   RESET_BEACONS = '[Recipes] Reset Beacons',
-  RESET_OVERCLOCKS = '[Recipes] Reset Overclocks',
   RESET_COST = '[Recipes] Reset Cost',
 }
 
@@ -77,10 +76,6 @@ export class ResetBeaconsAction implements Action {
   readonly type = RecipesActionType.RESET_BEACONS;
 }
 
-export class ResetOverclocksAction implements Action {
-  readonly type = RecipesActionType.RESET_OVERCLOCKS;
-}
-
 export class ResetCostAction implements Action {
   readonly type = RecipesActionType.RESET_COST;
 }
@@ -98,5 +93,4 @@ export type RecipesAction =
   | ResetRecipeModulesAction
   | ResetFactoriesAction
   | ResetBeaconsAction
-  | ResetOverclocksAction
   | ResetCostAction;

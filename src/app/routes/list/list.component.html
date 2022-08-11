@@ -90,21 +90,6 @@
             ></button>
           </div>
         </th>
-        <!-- Overclock -->
-        <th *ngIf="vm.columns[Column.Overclock].show">
-          <div class="d-flex align-items-center">
-            <span>{{ 'list.overclock' | translate }}</span>
-            <button
-              *ngIf="vm.recipesModified.overclock"
-              pButton
-              pRipple
-              class="ms-3 p-button-outlined p-button-rounded"
-              icon="fa-solid fa-rotate-left"
-              [pTooltip]="'list.overclockUndoTooltip' | translate"
-              (click)="resetOverclocks()"
-            ></button>
-          </div>
-        </th>
         <!-- Beacons -->
         <!-- TODO: Each / total labels with beacon receivers -->
         <th *ngIf="vm.columns[Column.Beacons].show">
@@ -228,12 +213,7 @@
               class="hover-action p-button-rounded p-button-text"
               [class.hover-active]="vm.itemSettings[step.itemId].ignore"
               [icon]="step.itemId | iconClass"
-              [pTooltip]="
-                (vm.itemSettings[step.itemId].ignore
-                  ? 'list.includeTooltip'
-                  : 'list.excludeTooltip'
-                ) | translate: { name: vm.data.itemEntities[step.itemId].name }
-              "
+              [pTooltip]="vm.data.itemEntities[step.itemId].name"
               [escape]="false"
               (click)="ignoreItem(step.itemId)"
             >
@@ -243,56 +223,25 @@
         </ng-container>
         <!-- Belts -->
         <ng-container *ngIf="vm.columns[Column.Belts].show">
-          <ng-container
-            *ngIf="
-              step.itemId &&
-                step.belts &&
-                vm.itemSettings[step.itemId].beltId as beltId;
-              else emptyCol2
-            "
-          >
-            <td class="w-0 text-end">
-              <span class="monospace">{{
-                step.belts | rate: vm.effectivePrecision[Column.Belts]
-              }}</span>
-            </td>
-            <td class="ps-0">
-              <div class="d-flex align-items-center">
-                <!-- Belt dropdown -->
-                <p-dropdown
-                  *ngIf="
-                    vm.data.beltIds.indexOf(beltId) !== -1 &&
-                      vm.settings.beltId;
-                    else pipesDropdown
-                  "
-                  labDropdownIcon
-                  [pTooltip]="
-                    'list.changeBeltTooltip'
-                      | translate
-                        : {
-                            name: vm.data.itemEntities[beltId].name,
-                            speed: vm.beltSpeedTxt[beltId]
-                          }
-                  "
-                  [escape]="false"
-                  [ngModel]="beltId"
-                  [options]="vm.options.belts"
-                  (onChange)="
-                    setBelt(step.itemId, $event.value, vm.settings.beltId)
-                  "
-                >
-                </p-dropdown>
-                <!-- Pipes dropdown -->
-                <ng-template #pipesDropdown>
+          <ng-container *ngIf="step.itemId && step.belts; else emptyCol2">
+            <ng-container *ngIf="vm.itemSettings[step.itemId].beltId as beltId">
+              <td class="w-0 text-end">
+                <span class="monospace">{{
+                  step.belts | rate: vm.effectivePrecision[Column.Belts]
+                }}</span>
+              </td>
+              <td class="ps-0">
+                <div class="d-flex align-items-center">
+                  <!-- Belt dropdown -->
                   <p-dropdown
                     *ngIf="
-                      vm.data.pipeIds.indexOf(beltId) !== -1 &&
-                        vm.settings.pipeId;
-                      else pipeIcon
+                      vm.data.beltIds.indexOf(beltId) !== -1 &&
+                        vm.settings.beltId;
+                      else pipesDropdown
                     "
                     labDropdownIcon
                     [pTooltip]="
-                      'list.changePipeTooltip'
+                      'list.beltTooltip'
                         | translate
                           : {
                               name: vm.data.itemEntities[beltId].name,
@@ -301,32 +250,58 @@
                     "
                     [escape]="false"
                     [ngModel]="beltId"
-                    [options]="vm.options.pipes"
+                    [options]="vm.options.belts"
                     (onChange)="
-                      setBelt(step.itemId, $event.value, vm.settings.pipeId)
+                      setBelt(step.itemId, $event.value, vm.settings.beltId)
                     "
                   >
                   </p-dropdown>
-                </ng-template>
-                <!-- Pipe icon only -->
-                <ng-template #pipeIcon>
-                  <div
-                    class="m-1 p-2"
-                    [pTooltip]="
-                      'list.pipeTooltip'
-                        | translate
-                          : {
-                              name: vm.data.itemEntities[beltId].name,
-                              speed: vm.beltSpeedTxt[beltId]
-                            }
-                    "
-                    [escape]="false"
-                  >
-                    <i [class]="beltId | iconClass"></i>
-                  </div>
-                </ng-template>
-              </div>
-            </td>
+                  <!-- Pipes dropdown -->
+                  <ng-template #pipesDropdown>
+                    <p-dropdown
+                      *ngIf="
+                        vm.data.pipeIds.indexOf(beltId) !== -1 &&
+                          vm.settings.pipeId;
+                        else pipeIcon
+                      "
+                      labDropdownIcon
+                      [pTooltip]="
+                        'list.pipeTooltip'
+                          | translate
+                            : {
+                                name: vm.data.itemEntities[beltId].name,
+                                speed: vm.beltSpeedTxt[beltId]
+                              }
+                      "
+                      [escape]="false"
+                      [ngModel]="beltId"
+                      [options]="vm.options.pipes"
+                      (onChange)="
+                        setBelt(step.itemId, $event.value, vm.settings.pipeId)
+                      "
+                    >
+                    </p-dropdown>
+                  </ng-template>
+                  <!-- Pipe icon only -->
+                  <ng-template #pipeIcon>
+                    <div
+                      class="m-1 p-2"
+                      [pTooltip]="
+                        'list.pipeTooltip'
+                          | translate
+                            : {
+                                name: vm.data.itemEntities[beltId].name,
+                                speed: vm.beltSpeedTxt[beltId]
+                              }
+                      "
+                      [escape]="false"
+                    >
+                      <i [class]="beltId | iconClass"></i>
+                    </div>
+                  </ng-template>
+                </div>
+              </td>
+            </ng-container>
           </ng-container>
         </ng-container>
         <!-- Wagons -->
@@ -355,7 +330,7 @@
                   "
                   labDropdownIcon
                   [pTooltip]="
-                    'list.changeCargoWagonTooltip'
+                    'list.cargoWagonTooltip'
                       | translate
                         : {
                             name: vm.data.itemEntities[wagonId].name,
@@ -383,7 +358,7 @@
                     "
                     labDropdownIcon
                     [pTooltip]="
-                      'list.changeFluidWagonTooltip'
+                      'list.fluidWagonTooltip'
                         | translate
                           : {
                               name: vm.data.itemEntities[wagonId].name,
@@ -460,6 +435,27 @@
                 "
               >
               </p-dropdown>
+              <p-inputNumber
+                *ngIf="vm.data.game === Game.Satisfactory"
+                #overclockInput
+                suffix="%"
+                [min]="1"
+                [max]="250"
+                [step]="10"
+                [size]="2"
+                [pTooltip]="'list.overclockTooltip' | translate"
+                [ngModel]="vm.recipeSettings[step.recipeId].overclock"
+                (onBlur)="
+                  changeRecipeField(
+                    step.recipeId,
+                    overclockInput.value,
+                    vm.recipeSettings,
+                    vm.factories,
+                    RecipeField.Overclock
+                  )
+                "
+              >
+              </p-inputNumber>
               <ng-container
                 *ngIf="
                   vm.recipeSettings[step.recipeId].factoryModuleIds as moduleIds
@@ -474,23 +470,6 @@
             </div>
           </td>
         </ng-container>
-        <!-- Overclock -->
-        <td *ngIf="vm.columns[Column.Overclock].show">
-          <ng-container
-            *ngIf="step.recipeId && vm.recipeSettings[step.recipeId]"
-          >
-            <p-inputNumber
-              suffix="%"
-              [min]="1"
-              [max]="250"
-              [step]="10"
-              [showButtons]="true"
-              [pTooltip]="'list.overclockTooltip' | translate"
-              [ngModel]="vm.recipeSettings[step.recipeId].overclock"
-            >
-            </p-inputNumber>
-          </ng-container>
-        </td>
         <!-- Beacons -->
         <td *ngIf="vm.columns[Column.Beacons].show">
           <ng-container

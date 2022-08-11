@@ -44,9 +44,10 @@
 }
 
 :host ::ng-deep {
-  // Mask icon dropdowns
-  .p-dropdown.icon {
-    &:not(:hover) {
+  // Mask input fields
+  .p-dropdown,
+  .p-inputtext {
+    &:not(:hover):not(:focus) {
       border-color: transparent;
 
       background-color: transparent;

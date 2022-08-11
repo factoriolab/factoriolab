@@ -9,7 +9,6 @@ export enum Column {
   Belts = 'Belts',
   Wagons = 'Wagons',
   Factories = 'Factories',
-  Overclock = 'Overclock',
   Beacons = 'Beacons',
   Power = 'Power',
   Pollution = 'Pollution',
@@ -22,7 +21,6 @@ export const allColumns = [
   Column.Belts,
   Column.Wagons,
   Column.Factories,
-  Column.Overclock,
   Column.Beacons,
   Column.Power,
   Column.Pollution,
@@ -49,12 +47,11 @@ export function columnOptions(game: Game): SelectItem<Column>[] {
 
   switch (game) {
     case Game.Factorio:
-      return result.filter((i) => i.value !== Column.Overclock);
+      return result;
     case Game.CaptainOfIndustry:
       return result.filter(
         (i) =>
           i.value !== Column.Beacons &&
-          i.value !== Column.Overclock &&
           i.value !== Column.Power &&
           i.value !== Column.Pollution &&
           i.value !== Column.Wagons
@@ -63,7 +60,6 @@ export function columnOptions(game: Game): SelectItem<Column>[] {
       return result.filter(
         (i) =>
           i.value !== Column.Beacons &&
-          i.value !== Column.Overclock &&
           i.value !== Column.Pollution &&
           i.value !== Column.Wagons
       );

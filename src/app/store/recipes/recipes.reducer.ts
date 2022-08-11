@@ -74,6 +74,7 @@ export function recipesReducer(
     case RecipesActionType.RESET_FACTORIES:
       return StoreUtility.resetFields(state, [
         'factoryId',
+        'overclock',
         'factoryModuleIds',
         'beaconCount',
         'beaconId',
@@ -87,8 +88,6 @@ export function recipesReducer(
         'beaconModuleIds',
         'beaconTotal',
       ]);
-    case RecipesActionType.RESET_OVERCLOCKS:
-      return StoreUtility.resetFields(state, ['overclock']);
     case RecipesActionType.RESET_COST:
       return StoreUtility.resetFields(state, ['cost']);
     default:

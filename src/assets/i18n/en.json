@@ -184,8 +184,6 @@
     "wagonsUndoTooltip": "Undo all wagon modifications",
     "factories": "Factories",
     "factoriesUndoTooltip": "Undo all factory modifications",
-    "overclock": "Overclock",
-    "overclockUndoTooltip": "Undo all overclock modifications",
     "beacons": "Beacons",
     "beaconsUndoTooltip": "Undo all beacon modifications",
     "power": "Power",
@@ -193,13 +191,10 @@
     "downloadTooltip": "Download list as CSV",
     "showDetails": "Show details",
     "hideDetails": "Hide details",
-    "includeTooltip": "{{ name }}\n<small>Click to include</small>",
-    "excludeTooltip": "{{ name }}\n<small>Click to exclude</small>",
-    "changeBeltTooltip": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Speed</td><td>{{ speed }}</td></tr></table>Click to change belt</small>",
-    "changePipeTooltip": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Flow rate</td><td>{{ speed }}</td></tr></table>Click to change pipe</small>",
+    "beltTooltip": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Speed</td><td>{{ speed }}</td></tr></table></small>",
     "pipeTooltip": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Flow rate</td><td>{{ speed }}</td></tr></table></small>",
-    "changeCargoWagonTooltip": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Inventory</td><td>{{ size }} stacks</td></tr></table>Click to change wagon</small>",
-    "changeFluidWagonTooltip": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Capacity</td><td>{{ size }} stacks</td></tr></table>Click to change wagon</small>",
+    "cargoWagonTooltip": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Inventory</td><td>{{ size }} stacks</td></tr></table></small>",
+    "fluidWagonTooltip": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Capacity</td><td>{{ size }} stacks</td></tr></table></small>",
     "overclockTooltip": "Set overclock percentage",
     "openNewTabTooltip": "Open in a new tab",
     "stepUndoTooltip": "Undo modifications to this step",
@@ -243,11 +238,11 @@
     "item": "Item",
     "recipe": "Recipe",
     "factory": "Factory",
-    "recipes": "Recipes",
-    "requiredRecipes": "Required Recipes",
-    "requiredRecipesInfo": "Recipes that produce this item but cannot be disabled because they are required to produce another item."
+    "recipes": "Recipes"
   },
   "tooltip": {
+    "speed": "Speed",
+    "flowRate": "Flow rate",
     "craftingSpeed": "Crafting speed",
     "modules": "Modules",
     "energyType": "Energy type",
@@ -256,8 +251,7 @@
     "drain": "Drain",
     "pollution": "Pollution",
     "rocketPartsRequired": "Rocket parts req'd",
-    "launchTime": "Launch time",
-    "changeFactory": "Click to change factory"
+    "launchTime": "Launch time"
   },
   "ranker": {
     "selectModules": "Select modules",

@@ -19,59 +19,69 @@ export class FactoryTooltipPipe implements PipeTransform {
 
     if (item == null || factory == null) return '';
 
-    let html = item.name + '\n<small><table class="w-100">';
+    let html = item.name + '\n<small>';
+    const tableRows: [string, string][] = [];
     if (factory.speed && data.game !== Game.CaptainOfIndustry) {
-      html += `<tr><td>${this.translateSvc.instant(
-        'tooltip.craftingSpeed'
-      )}</td><td>${this.displaySvc.round(factory.speed)}</td></tr>`;
+      tableRows.push([
+        this.translateSvc.instant('tooltip.craftingSpeed'),
+        this.displaySvc.round(factory.speed),
+      ]);
     }
 
     if (factory.modules && data.game === Game.Factorio) {
-      html += `<tr><td>${this.translateSvc.instant(
-        'tooltip.modules'
-      )}</td><td>${factory.modules}</td></tr>`;
+      tableRows.push([
+        this.translateSvc.instant('tooltip.modules'),
+        factory.modules.toString(),
+      ]);
     }
 
     if (factory.type) {
-      html += `<tr><td>${this.translateSvc.instant(
-        'tooltip.energyType'
-      )}</td><td>${factory.type}</td></tr>`;
+      tableRows.push([
+        this.translateSvc.instant('tooltip.energyType'),
+        factory.type,
+      ]);
     }
 
     if (factory.category) {
-      html += `<tr><td>${this.translateSvc.instant(
-        'tooltip.fuelCategory'
-      )}</td><td>${factory.category}</td></tr>`;
+      tableRows.push([
+        this.translateSvc.instant('tooltip.fuelCategory'),
+        factory.category,
+      ]);
     }
 
     if (factory.usage?.nonzero()) {
-      html += `<tr><td>${this.translateSvc.instant(
-        'tooltip.energyUsage'
-      )}</td><td>${this.displaySvc.power(factory.usage)}</td></tr>`;
+      tableRows.push([
+        this.translateSvc.instant('tooltip.energyUsage'),
+        this.displaySvc.power(factory.usage),
+      ]);
     }
 
     if (factory.drain?.nonzero()) {
-      html += `<tr><td>${this.translateSvc.instant(
-        'tooltip.drain'
-      )}</td><td>${this.displaySvc.power(factory.drain)}</td></tr>`;
+      tableRows.push([
+        this.translateSvc.instant('tooltip.drain'),
+        this.displaySvc.power(factory.drain),
+      ]);
     }
 
     if (factory.pollution?.nonzero()) {
-      html += `<tr><td>${this.translateSvc.instant(
-        'tooltip.pollution'
-      )}</td><td>${this.displaySvc.round(factory.pollution)}/m</td></tr>`;
+      tableRows.push([
+        this.translateSvc.instant('tooltip.pollution'),
+        this.displaySvc.round(factory.pollution) + '/m',
+      ]);
     }
 
     if (factory.silo) {
-      html += `<tr><td>${this.translateSvc.instant(
-        'tooltip.rocketPartsRequired'
-      )}</td><td>${factory.silo.parts}</td></tr>`;
-      html += `<tr><td>${this.translateSvc.instant(
-        'tooltip.launchTime'
-      )}</td><td>${this.displaySvc.round(factory.silo.launch)}s</td></tr>`;
+      tableRows.push([
+        this.translateSvc.instant('tooltip.rocketPartsRequired'),
+        this.displaySvc.round(factory.silo.parts),
+      ]);
+      tableRows.push([
+        this.translateSvc.instant('tooltip.launchTime'),
+        this.displaySvc.round(factory.silo.launch) + 's',
+      ]);
     }
 
-    html += '</table>';
+    html += this.displaySvc.table(tableRows);
 
     if (factory.consumption) {
       html +=
@@ -85,9 +95,7 @@ export class FactoryTooltipPipe implements PipeTransform {
       html += '</div>';
     }
 
-    html += `<span class="mt-2">${this.translateSvc.instant(
-      'tooltip.changeFactory'
-    )}</span></small>`;
+    html += '</small>';
 
     return html;
   }

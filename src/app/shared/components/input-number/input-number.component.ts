@@ -23,11 +23,11 @@ export class InputNumberComponent implements OnChanges {
   @Input() minimum = '0';
   @Input() width = '';
   @Input() digits = 0; // TODO: Remove this input
-  @Input() inputId: string | undefined;
+  @Input() inputId = 'inputnumber';
 
   @Output() setValue = new EventEmitter<string>();
 
-  @HostBinding('class.p-inputwrapper') class = true;
+  @HostBinding('class') classAttr = 'p-element p-inputwrapper';
 
   isMinimum = false;
   min = Rational.zero;
@@ -45,10 +45,8 @@ export class InputNumberComponent implements OnChanges {
     }
   }
 
-  changeValue(event: Event): void {
+  changeValue(value: string): void {
     try {
-      const target = event.target as HTMLInputElement;
-      const value = target.value;
       const rational = Rational.fromString(value);
       if (rational.gte(this.min)) {
         this.setValue.emit(value);

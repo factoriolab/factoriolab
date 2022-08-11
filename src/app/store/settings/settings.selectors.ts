@@ -150,10 +150,6 @@ export const getColumnsState = createSelector(
           ...col,
           ...{
             [Column.Wagons]: { ...col[Column.Wagons], ...{ show: false } },
-            [Column.Overclock]: {
-              ...col[Column.Overclock],
-              ...{ show: false },
-            },
             [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
             [Column.Power]: { ...col[Column.Power], ...{ show: false } },
             [Column.Pollution]: {
@@ -168,10 +164,6 @@ export const getColumnsState = createSelector(
           ...col,
           ...{
             [Column.Wagons]: { ...col[Column.Wagons], ...{ show: false } },
-            [Column.Overclock]: {
-              ...col[Column.Overclock],
-              ...{ show: false },
-            },
             [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
             [Column.Pollution]: {
               ...col[Column.Pollution],
@@ -195,12 +187,6 @@ export const getColumnsState = createSelector(
         return {
           ...Preferences.initialColumnsState,
           ...col,
-          ...{
-            [Column.Overclock]: {
-              ...col[Column.Overclock],
-              ...{ show: false },
-            },
-          },
         };
     }
   }

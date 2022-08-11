@@ -297,7 +297,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
 
   changeRecipeField(
     recipeId: string,
-    event: string | Event,
+    event: string | number | Event,
     recipeSettings: Recipes.RecipesState,
     factories: Factories.FactoriesState,
     field: RecipeField,
@@ -364,13 +364,10 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
           break;
         }
         case RecipeField.Overclock: {
-          if (typeof event !== 'string') {
-            const target = event.target as HTMLInputElement;
-            const value = target.valueAsNumber;
-            if (value >= 1 && value <= 250) {
-              const def = factory.overclock;
-              this.setOverclock(recipeId, value, def);
-            }
+          if (typeof event === 'number') {
+            const def = factory.overclock;
+            const value = Math.min(1, Math.max(250, event));
+            this.setOverclock(recipeId, value, def);
           }
           break;
         }
@@ -460,10 +457,6 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
 
   resetFactories(): void {
     this.store.dispatch(new Recipes.ResetFactoriesAction());
-  }
-
-  resetOverclocks(): void {
-    this.store.dispatch(new Recipes.ResetOverclocksAction());
   }
 
   resetBeacons(): void {

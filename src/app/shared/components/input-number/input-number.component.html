@@ -1,6 +1,8 @@
 <span class="p-inputnumber p-component p-inputnumber-buttons-stacked">
   <input
+    #input
     [id]="inputId"
+    class=""
     type="text"
     [style.width]="width"
     pInputText
@@ -8,25 +10,23 @@
     [ngModel]="value"
     labValidateNumber
     [labValidateMinimum]="minimum"
-    (input)="changeValue($event)"
+    (blur)="changeValue(input.value)"
   />
-  <span class="p-inputnumber p-inputnumber-buttons-stacked">
-    <span class="p-inputnumber-button-group">
-      <button
-        pButton
-        pRipple
-        class="p-inputnumber-button p-inputnumber-button-up"
-        icon="fa-solid fa-angle-up"
-        (click)="increase()"
-      ></button>
-      <button
-        pButton
-        pRipple
-        class="p-inputnumber-button p-inputnumber-button-down"
-        icon="fa-solid fa-angle-down"
-        [disabled]="isMinimum"
-        (click)="decrease()"
-      ></button>
-    </span>
+  <span class="p-inputnumber-button-group">
+    <button
+      pButton
+      pRipple
+      class="p-inputnumber-button p-inputnumber-button-up"
+      icon="fa-solid fa-angle-up"
+      (click)="increase()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      class="p-inputnumber-button p-inputnumber-button-down"
+      icon="fa-solid fa-angle-down"
+      [disabled]="isMinimum"
+      (click)="decrease()"
+    ></button>
   </span>
 </span>

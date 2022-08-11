@@ -37,12 +37,14 @@
       flex-grow: 1;
     }
 
-    > .p-component
-      > .p-inputnumber-buttons-stacked
-      > .p-inputnumber-button-group
-      > .p-button {
-      border-radius: 0;
-      height: 1.5rem;
+    &:not(:last-child) {
+      > .p-component
+        > .p-inputnumber-buttons-stacked
+        > .p-inputnumber-button-group
+        > .p-button,
+      > .p-component > .p-inputnumber-button-group > .p-button {
+        border-radius: 0;
+      }
     }
   }
 }
