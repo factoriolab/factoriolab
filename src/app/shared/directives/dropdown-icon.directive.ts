@@ -8,8 +8,6 @@ import { ContentService } from '~/services';
   selector: '[labDropdownIcon]',
 })
 export class DropdownIconDirective implements OnInit {
-  @Input() labDropdownIcon: 'masked' | '' = '';
-
   constructor(
     @Self() private readonly pDropdown: Dropdown,
     private contentSvc: ContentService
@@ -19,7 +17,7 @@ export class DropdownIconDirective implements OnInit {
     this.pDropdown.appendTo = 'body';
     this.pDropdown.filter = true;
     this.pDropdown.scrollHeight = '400px';
-    this.pDropdown.styleClass = `icon ${this.labDropdownIcon}`;
+    this.pDropdown.styleClass = `icon`;
     combineLatest([
       this.contentSvc.iconSelectedItem$.pipe(
         filter((t): t is TemplateRef<any> => t != null)

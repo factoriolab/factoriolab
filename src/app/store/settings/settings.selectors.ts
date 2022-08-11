@@ -625,9 +625,9 @@ export const getOptions = createSelector(
     pipes: getIdOptions(data.pipeIds, data.itemEntities),
     cargoWagons: getIdOptions(data.cargoWagonIds, data.itemEntities),
     fluidWagons: getIdOptions(data.fluidWagonIds, data.itemEntities),
-    modules: getIdOptions(data.moduleIds, data.itemEntities),
-    beaconModules: getIdOptions(data.beaconModuleIds, data.itemEntities),
-    prodModules: getIdOptions(data.prodModuleIds, data.itemEntities),
+    modules: getIdOptions(data.moduleIds, data.itemEntities, true),
+    beaconModules: getIdOptions(data.beaconModuleIds, data.itemEntities, true),
+    prodModules: getIdOptions(data.prodModuleIds, data.itemEntities, true),
     chemicalFuels: getIdOptions(
       data.fuelIds[FuelType.Chemical] ?? [],
       data.itemEntities
@@ -746,7 +746,15 @@ export function reduceEntities(
 
 export function getIdOptions(
   ids: string[],
-  entities: Record<string, { name: string }>
+  entities: Record<string, { name: string }>,
+  emptyModule = false
 ): SelectItem[] {
-  return ids.map((i): SelectItem => ({ label: entities[i].name, value: i }));
+  const list = ids.map(
+    (i): SelectItem => ({ label: entities[i].name, value: i })
+  );
+  if (emptyModule) {
+    list.unshift({ label: 'None', value: ItemId.Module });
+  }
+
+  return list;
 }

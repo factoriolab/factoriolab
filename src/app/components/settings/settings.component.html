@@ -342,7 +342,10 @@
                         </div>
                       </ng-container>
                       <ng-template #noModifiers>
-                        <i [class]="ItemId.Module | iconClass"></i>
+                        <i
+                          class="flex-shrink-0"
+                          [class]="ItemId.Module | iconClass"
+                        ></i>
                         <div class="ms-3 text-truncate">
                           {{ 'settings.noModifiers' | translate }}
                         </div>
@@ -364,6 +367,8 @@
                 <!-- Overclock input -->
                 <ng-container *ngIf="vm.data.game === Game.Satisfactory">
                   <p-inputNumber
+                    class="d-block"
+                    styleClass="w-100"
                     suffix="%"
                     [min]="1"
                     [max]="250"
@@ -636,6 +641,8 @@
             >
               <p-inputNumber
                 inputId="pipe-flow-rate"
+                class="d-block"
+                styleClass="w-100"
                 [suffix]="' ' + ('settings.flowRateUnit' | translate)"
                 [min]="1"
                 [step]="100"
@@ -684,6 +691,8 @@
               [pTooltip]="'settings.miningSpeedTooltip' | translate"
             >
               <p-inputNumber
+                class="d-block"
+                styleClass="w-100"
                 inputId="mining-speed"
                 suffix="%"
                 [min]="100"
@@ -705,6 +714,8 @@
               [pTooltip]="'settings.miningProductivityTooltip' | translate"
             >
               <p-inputNumber
+                class="d-block"
+                styleClass="w-100"
                 inputId="mining-productivity"
                 prefix="+"
                 suffix="%"

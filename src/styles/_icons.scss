@@ -23,15 +23,16 @@
   > span {
     // Styles for text overlay
     position: absolute;
-    bottom: 2px;
-    right: 2px;
+    bottom: -2px;
+    right: -2px;
 
-    font-size: 1.125rem;
+    font-size: 1rem;
     line-height: 1rem;
     font-weight: 700;
     font-style: normal;
     color: white;
 
+    white-space: nowrap;
     text-shadow: 0px 2px 2px black, 0px -2px 2px black, 2px 0px 2px black,
       -2px 0px 2px black;
     pointer-events: none;

@@ -6,8 +6,8 @@
   .connect {
     position: relative;
 
-    margin-left: 1rem;
     height: 100%;
+    margin-left: 1rem;
 
     // Segment contains trail
     &.last,
@@ -17,8 +17,8 @@
 
     // Segment ends at this row
     &.last:not(.trail) {
-      height: 2rem;
       margin-bottom: 2rem;
+      height: 2rem;
     }
 
     // Segments should pad between
@@ -29,16 +29,28 @@
 
   .indent {
     margin-left: 0;
-    width: 1rem;
     border-top: 2px dotted var(--text-color-secondary);
+    width: 1rem;
   }
 
   .icon {
     display: flex;
     align-items: center;
     justify-content: center;
+
     width: 2rem;
     height: 2rem;
+  }
+}
+
+:host ::ng-deep {
+  // Mask icon dropdowns
+  .p-dropdown.icon {
+    &:not(:hover) {
+      border-color: transparent;
+
+      background-color: transparent;
+    }
   }
 }
 

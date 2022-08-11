@@ -27,6 +27,7 @@ import {
   FactoryRatePipe,
   FactoryShowPipe,
   FactoryShowRatePipe,
+  FactoryTooltipPipe,
   GtZeroPipe,
   IconClassPipe,
   InserterSpeedPipe,
@@ -36,6 +37,7 @@ import {
   PowerPipe,
   PrecisionExamplePipe,
   RatePipe,
+  RecipeTooltipPipe,
   StepHrefPipe,
   UrlPipe,
 } from './pipes';
@@ -65,6 +67,7 @@ export const SHARED_PIPES = [
   FactoryRatePipe,
   FactoryShowPipe,
   FactoryShowRatePipe,
+  FactoryTooltipPipe,
   GtZeroPipe,
   IconClassPipe,
   InserterSpeedPipe,
@@ -74,6 +77,7 @@ export const SHARED_PIPES = [
   PowerPipe,
   PrecisionExamplePipe,
   RatePipe,
+  RecipeTooltipPipe,
   StepHrefPipe,
   UrlPipe,
 ];

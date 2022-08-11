@@ -265,7 +265,7 @@
                       vm.settings.beltId;
                     else pipesDropdown
                   "
-                  labDropdownIcon="masked"
+                  labDropdownIcon
                   [pTooltip]="
                     'list.changeBeltTooltip'
                       | translate
@@ -290,7 +290,7 @@
                         vm.settings.pipeId;
                       else pipeIcon
                     "
-                    labDropdownIcon="masked"
+                    labDropdownIcon
                     [pTooltip]="
                       'list.changePipeTooltip'
                         | translate
@@ -353,7 +353,7 @@
                       vm.settings.cargoWagonId;
                     else fluidWagonsDropdown
                   "
-                  labDropdownIcon="masked"
+                  labDropdownIcon
                   [pTooltip]="
                     'list.changeCargoWagonTooltip'
                       | translate
@@ -381,7 +381,7 @@
                       vm.data.fluidWagonIds.indexOf(wagonId) !== -1 &&
                       vm.settings.fluidWagonId
                     "
-                    labDropdownIcon="masked"
+                    labDropdownIcon
                     [pTooltip]="
                       'list.changeFluidWagonTooltip'
                         | translate
@@ -431,17 +431,35 @@
               }}</span
             >
           </td>
-          <td class="ps-0">
-            <div class="d-flex align-items-center">
-              <i
-                [class]="step.recipeId | iconClass"
-                [pTooltip]="vm.data.recipeEntities[step.recipeId].name"
-              ></i>
-              <i
-                class="mx-3"
-                [class]="factoryId | iconClass"
-                [pTooltip]="vm.data.itemEntities[factoryId].name"
-              ></i>
+          <td *ngIf="factoryId | factoryShow: vm.data.game" class="ps-0">
+            <div
+              *ngIf="vm.data.recipeEntities[step.recipeId] as recipe"
+              class="d-flex align-items-center"
+            >
+              <div class="m-1 p-2">
+                <i
+                  [class]="step.recipeId | iconClass"
+                  [pTooltip]="step.recipeId | recipeTooltip: vm.data"
+                  [escape]="false"
+                ></i>
+              </div>
+              <p-dropdown
+                *ngIf="vm.data.factoryEntities[factoryId] as factory"
+                labDropdownIcon
+                [pTooltip]="factoryId | factoryTooltip: vm.data"
+                [escape]="false"
+                [options]="recipe.producers | options: vm.data.itemEntities"
+                [ngModel]="factoryId"
+                (onChange)="
+                  changeFactory(
+                    step.recipeId,
+                    $event.value,
+                    vm.factories,
+                    vm.data
+                  )
+                "
+              >
+              </p-dropdown>
               <ng-container
                 *ngIf="
                   vm.recipeSettings[step.recipeId].factoryModuleIds as moduleIds

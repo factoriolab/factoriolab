@@ -6,8 +6,10 @@
 
   > .hover-icon {
     position: absolute;
-    opacity: 0;
     z-index: 1;
+
+    opacity: 0;
+
     transition: opacity 300ms ease;
   }
 
@@ -23,13 +25,8 @@
   }
 }
 
-// Icon / masked dropdown styles
+// Icon dropdown styles
 .p-dropdown.icon {
-  &.masked:not(:hover) {
-    border-color: transparent;
-    background-color: transparent;
-  }
-
   .lab-icon {
     transition: opacity 300ms ease;
   }
@@ -37,7 +34,9 @@
   .p-dropdown-trigger {
     position: absolute;
     bottom: 1rem;
+
     opacity: 0;
+
     transition: opacity 300ms ease;
   }
 
