@@ -23,6 +23,7 @@ import {
   ValidateOverclockDirective,
 } from './directives';
 import {
+  BeaconTooltipPipe,
   DisplayRateLabelPipe,
   FactoryRatePipe,
   FactoryShowPipe,
@@ -33,6 +34,7 @@ import {
   InserterSpeedPipe,
   LeftPadPipe,
   ListNamesPipe,
+  ModuleTooltipPipe,
   OptionsPipe,
   PowerPipe,
   PrecisionExamplePipe,
@@ -63,11 +65,14 @@ export const SHARED_DIRECTIVES = [
 ];
 
 export const SHARED_PIPES = [
+  BeaconTooltipPipe,
+  FactoryTooltipPipe,
+  ModuleTooltipPipe,
+  RecipeTooltipPipe,
   DisplayRateLabelPipe,
   FactoryRatePipe,
   FactoryShowPipe,
   FactoryShowRatePipe,
-  FactoryTooltipPipe,
   GtZeroPipe,
   IconClassPipe,
   InserterSpeedPipe,
@@ -77,7 +82,6 @@ export const SHARED_PIPES = [
   PowerPipe,
   PrecisionExamplePipe,
   RatePipe,
-  RecipeTooltipPipe,
   StepHrefPipe,
   UrlPipe,
 ];

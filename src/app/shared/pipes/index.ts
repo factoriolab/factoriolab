@@ -1,8 +1,8 @@
+export * from './tooltips';
 export * from './display-rate-label.pipe';
 export * from './factory-rate.pipe';
 export * from './factory-show-rate.pipe';
 export * from './factory-show.pipe';
-export * from './factory-tooltip.pipe';
 export * from './gt-zero.pipe';
 export * from './icon-class.pipe';
 export * from './inserter-speed.pipe';
@@ -12,6 +12,5 @@ export * from './options.pipe';
 export * from './power.pipe';
 export * from './precision-example.pipe';
 export * from './rate.pipe';
-export * from './recipe-tooltip.pipe';
 export * from './step-href.pipe';
 export * from './url.pipe';

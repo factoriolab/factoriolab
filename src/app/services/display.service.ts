@@ -32,14 +32,14 @@ export class DisplayService {
     }
   }
 
-  toBonusPercent(value: Rational): string | null {
+  toBonusPercent(value: Rational): string {
     const rational = this.round(value.mul(Rational.hundred));
     if (value.gt(Rational.zero)) {
       return `+${rational}%`;
     } else if (value.lt(Rational.zero)) {
       return `${rational}%`;
     } else {
-      return null;
+      return '';
     }
   }
 }

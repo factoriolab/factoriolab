@@ -411,7 +411,7 @@
               *ngIf="vm.data.recipeEntities[step.recipeId] as recipe"
               class="d-flex align-items-center"
             >
-              <div class="m-1 p-2">
+              <div class="d-flex mx-1 p-2">
                 <i
                   [class]="step.recipeId | iconClass"
                   [pTooltip]="step.recipeId | recipeTooltip: vm.data"
@@ -461,11 +461,31 @@
                   vm.recipeSettings[step.recipeId].factoryModuleIds as moduleIds
                 "
               >
-                <i
-                  *ngFor="let moduleId of moduleIds"
-                  [class]="moduleId | iconClass"
-                  [pTooltip]="vm.data.itemEntities[moduleId]?.name ?? ''"
-                ></i>
+                <p-dropdown
+                  *ngFor="let moduleId of moduleIds; index as i"
+                  labDropdownIcon
+                  class="module-dropdown me-n3"
+                  [pTooltip]="moduleId | moduleTooltip: vm.data"
+                  tooltipPosition="top"
+                  [escape]="false"
+                  [options]="
+                    vm.data.recipeModuleIds[step.recipeId]
+                      | options: vm.data.itemEntities
+                  "
+                  [ngModel]="moduleId"
+                  (onChange)="
+                    changeRecipeField(
+                      step.recipeId,
+                      $event.value,
+                      vm.recipeSettings,
+                      vm.factories,
+                      RecipeField.FactoryModules,
+                      i,
+                      vm.data
+                    )
+                  "
+                >
+                </p-dropdown>
               </ng-container>
             </div>
           </td>
@@ -482,19 +502,59 @@
               class="d-flex align-items-center"
             >
               <lab-input-number
+                class="text-end"
                 width="3rem"
                 [value]="settings.beaconCount"
+                [hideButtons]="true"
+                (setValue)="
+                  changeRecipeField(
+                    step.recipeId,
+                    $event,
+                    vm.recipeSettings,
+                    vm.factories,
+                    RecipeField.BeaconCount
+                  )
+                "
               ></lab-input-number>
-              <i
-                class="mx-3"
-                [class]="settings.beaconId | iconClass"
-                [pTooltip]="vm.data.itemEntities[settings.beaconId].name"
-              ></i>
-              <i
-                *ngFor="let moduleId of settings.beaconModuleIds"
-                [class]="moduleId | iconClass"
-                [pTooltip]="vm.data.itemEntities[moduleId]?.name ?? ''"
-              ></i>
+              <p-dropdown
+                labDropdownIcon
+                [pTooltip]="settings.beaconId | beaconTooltip: vm.data"
+                [escape]="false"
+                [options]="vm.options.beacons"
+                [ngModel]="settings.beaconId"
+                (onChange)="
+                  changeRecipeField(
+                    step.recipeId,
+                    $event.value,
+                    vm.recipeSettings,
+                    vm.factories,
+                    RecipeField.Beacon
+                  )
+                "
+              >
+              </p-dropdown>
+              <p-dropdown
+                *ngFor="let moduleId of settings.beaconModuleIds; index as i"
+                labDropdownIcon
+                class="module-dropdown me-n3"
+                [pTooltip]="moduleId | moduleTooltip: vm.data"
+                tooltipPosition="top"
+                [escape]="false"
+                [options]="vm.options.beaconModules"
+                [ngModel]="moduleId"
+                (onChange)="
+                  changeRecipeField(
+                    step.recipeId,
+                    $event.value,
+                    vm.recipeSettings,
+                    vm.factories,
+                    RecipeField.BeaconModules,
+                    i,
+                    vm.data
+                  )
+                "
+              >
+              </p-dropdown>
             </div>
           </ng-container>
         </td>
@@ -548,7 +608,10 @@
     </ng-template>
     <ng-template pTemplate="rowexpansion" let-step>
       <tr>
-        <td colspan="100">TODO: expanded details</td>
+        <td></td>
+        <td colspan="100">
+          <p-tabMenu> </p-tabMenu>
+        </td>
       </tr>
     </ng-template>
     <ng-template #emptyCol2>

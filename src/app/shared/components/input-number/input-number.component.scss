@@ -4,7 +4,7 @@
 
 // Use InputNumber styles
 :host ::ng-deep {
-  .p-inputtext {
+  .p-inputtext:not(.rounded) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
@@ -29,5 +29,9 @@
     &.p-inputnumber-button-down {
       padding: 0;
     }
+  }
+
+  .p-inputtext {
+    text-align: inherit;
   }
 }

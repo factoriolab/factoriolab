@@ -24,6 +24,7 @@ export class InputNumberComponent implements OnChanges {
   @Input() width = '';
   @Input() digits = 0; // TODO: Remove this input
   @Input() inputId = 'inputnumber';
+  @Input() hideButtons = false;
 
   @Output() setValue = new EventEmitter<string>();
 

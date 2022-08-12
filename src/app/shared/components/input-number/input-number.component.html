@@ -2,7 +2,7 @@
   <input
     #input
     [id]="inputId"
-    class=""
+    [class.rounded]="hideButtons"
     type="text"
     [style.width]="width"
     pInputText
@@ -12,7 +12,7 @@
     [labValidateMinimum]="minimum"
     (blur)="changeValue(input.value)"
   />
-  <span class="p-inputnumber-button-group">
+  <span *ngIf="!hideButtons" class="p-inputnumber-button-group">
     <button
       pButton
       pRipple

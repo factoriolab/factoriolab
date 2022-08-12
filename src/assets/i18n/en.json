@@ -171,6 +171,12 @@
       "disabled": "Disabled",
       "jsBigIntRational": "JS BigInt Rational",
       "wasmFloat64": "WASM Float64"
+    },
+    "stepDetailTab": {
+      "item": "Item",
+      "recipe": "Recipe",
+      "factory": "Factory",
+      "recipes": "Recipes"
     }
   },
   "list": {
@@ -251,7 +257,12 @@
     "drain": "Drain",
     "pollution": "Pollution",
     "rocketPartsRequired": "Rocket parts req'd",
-    "launchTime": "Launch time"
+    "launchTime": "Launch time",
+    "consumption": "Consumption",
+    "productivity": "Productivity",
+    "sprays": "Sprays",
+    "effectivity": "Effectivity",
+    "range": "Range"
   },
   "ranker": {
     "selectModules": "Select modules",
