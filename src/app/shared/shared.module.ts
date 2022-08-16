@@ -4,21 +4,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { VendorModule } from '~/shared/vendor.module';
-import {
-  DialogComponent,
-  IconComponent,
-  InfoComponent,
-  InputNumberComponent,
-  OptionsComponent,
-  RankerComponent,
-  SelectComponent,
-  ToggleComponent,
-} from './components';
+import { InputNumberComponent } from './components';
 import {
   DropdownIconDirective,
   DropdownIconTextDirective,
   DropdownTranslateDirective,
-  FocusOnShowDirective,
   ValidateNumberDirective,
   ValidateOverclockDirective,
 } from './directives';
@@ -44,22 +34,12 @@ import {
   UrlPipe,
 } from './pipes';
 
-export const SHARED_COMPONENTS = [
-  DialogComponent,
-  IconComponent,
-  InfoComponent,
-  InputNumberComponent,
-  OptionsComponent,
-  RankerComponent,
-  SelectComponent,
-  ToggleComponent,
-];
+export const SHARED_COMPONENTS = [InputNumberComponent];
 
 export const SHARED_DIRECTIVES = [
   DropdownIconDirective,
   DropdownIconTextDirective,
   DropdownTranslateDirective,
-  FocusOnShowDirective,
   ValidateNumberDirective,
   ValidateOverclockDirective,
 ];
