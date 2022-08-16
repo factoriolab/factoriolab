@@ -2,10 +2,11 @@
   <div
     *ngFor="
       let product of vm.products;
-      let i = index;
+      last as last;
       trackBy: trackSvc.trackById
     "
-    class="d-flex align-items-center mb-4"
+    class="d-flex align-items-center"
+    [class.mb-4]="!last"
   >
     <div class="p-inputgroup">
       <button
@@ -71,8 +72,8 @@
       </ng-template>
     </div>
   </div>
-  <div class="row">
-    <div class="col-auto mb-3">
+  <div class="row mt-3">
+    <div class="col-auto mt-2">
       <p-dropdown
         labDropdownIconText
         [virtualScroll]="true"
@@ -86,7 +87,7 @@
         </ng-template>
       </p-dropdown>
     </div>
-    <div class="col-auto mb-3">
+    <div class="col-auto mt-2">
       <p-dropdown
         labDropdownTranslate
         styleClass="h-100"
