@@ -10,14 +10,14 @@ export enum Game {
 
 export const games = [
   Game.Factorio,
-  Game.CaptainOfIndustry,
   Game.DysonSphereProgram,
   Game.Satisfactory,
+  Game.CaptainOfIndustry,
 ];
 
 export const gameOptions: SelectItem<Game>[] = [
   { value: Game.Factorio, label: 'options.game.factorio' },
-  { value: Game.CaptainOfIndustry, label: 'options.game.captainOfIndustry' },
   { value: Game.DysonSphereProgram, label: 'options.game.dysonSphereProgram' },
   { value: Game.Satisfactory, label: 'options.game.satisfactory' },
+  { value: Game.CaptainOfIndustry, label: 'options.game.captainOfIndustry' },
 ];
