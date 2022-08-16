@@ -496,72 +496,73 @@
         </ng-container>
         <!-- Beacons -->
         <ng-container *ngIf="vm.columns[Column.Beacons].show">
-          <ng-container
-            *ngIf="
-              step.recipeId && vm.recipeSettings[step.recipeId] as settings
-            "
-          >
-            <td class="w-0">
-              <lab-input-number
-                *ngIf="settings.beaconId && settings.beaconCount"
-                class="text-end"
-                width="3rem"
-                [value]="settings.beaconCount"
-                [hideButtons]="true"
-                (setValue)="
-                  changeRecipeField(
-                    step.recipeId,
-                    $event,
-                    vm.recipeSettings,
-                    vm.factories,
-                    RecipeField.BeaconCount
-                  )
-                "
-              ></lab-input-number>
-            </td>
-            <td class="ps-0">
-              <div class="d-flex">
-                <p-dropdown
-                  labDropdownIcon
-                  [pTooltip]="settings.beaconId | beaconTooltip: vm.data"
-                  [escape]="false"
-                  [options]="vm.options.beacons"
-                  [ngModel]="settings.beaconId"
-                  (onChange)="
+          <ng-container *ngIf="step.recipeId; else emptyCol2">
+            <ng-container *ngIf="vm.recipeSettings[step.recipeId] as settings">
+              <td class="w-0">
+                <lab-input-number
+                  *ngIf="settings.beaconId && settings.beaconCount"
+                  class="text-end"
+                  width="3rem"
+                  [value]="settings.beaconCount"
+                  [hideButtons]="true"
+                  (setValue)="
                     changeRecipeField(
                       step.recipeId,
-                      $event.value,
+                      $event,
                       vm.recipeSettings,
                       vm.factories,
-                      RecipeField.Beacon
+                      RecipeField.BeaconCount
                     )
                   "
-                >
-                </p-dropdown>
-                <p-dropdown
-                  *ngFor="let moduleId of settings.beaconModuleIds; index as i"
-                  labDropdownIcon
-                  class="module-dropdown me-n3"
-                  [pTooltip]="moduleId | moduleTooltip: vm.data"
-                  tooltipPosition="top"
-                  [escape]="false"
-                  [options]="vm.options.beaconModules"
-                  [ngModel]="moduleId"
-                  (onChange)="
-                    changeRecipeField(
-                      step.recipeId,
-                      $event.value,
-                      vm.recipeSettings,
-                      vm.factories,
-                      RecipeField.BeaconModules,
-                      i,
-                      vm.data
-                    )
-                  "
-                >
-                </p-dropdown>
-              </div>
-            </td>
+                ></lab-input-number>
+              </td>
+              <td class="ps-0">
+                <div class="d-flex">
+                  <p-dropdown
+                    labDropdownIcon
+                    [pTooltip]="settings.beaconId | beaconTooltip: vm.data"
+                    [escape]="false"
+                    [options]="vm.options.beacons"
+                    [ngModel]="settings.beaconId"
+                    (onChange)="
+                      changeRecipeField(
+                        step.recipeId,
+                        $event.value,
+                        vm.recipeSettings,
+                        vm.factories,
+                        RecipeField.Beacon
+                      )
+                    "
+                  >
+                  </p-dropdown>
+                  <p-dropdown
+                    *ngFor="
+                      let moduleId of settings.beaconModuleIds;
+                      index as i
+                    "
+                    labDropdownIcon
+                    class="module-dropdown me-n3"
+                    [pTooltip]="moduleId | moduleTooltip: vm.data"
+                    tooltipPosition="top"
+                    [escape]="false"
+                    [options]="vm.options.beaconModules"
+                    [ngModel]="moduleId"
+                    (onChange)="
+                      changeRecipeField(
+                        step.recipeId,
+                        $event.value,
+                        vm.recipeSettings,
+                        vm.factories,
+                        RecipeField.BeaconModules,
+                        i,
+                        vm.data
+                      )
+                    "
+                  >
+                  </p-dropdown>
+                </div>
+              </td>
+            </ng-container>
           </ng-container>
         </ng-container>
         <!-- Power -->

@@ -85,15 +85,55 @@
       </ng-template>
       <div class="p-error">
         <div>{{ 'app.errorDetail' | translate }}</div>
-        <br />
-        <div>{{ vm.errorMsg }}</div>
-        <br />
-        <div class="text-end">
+        <div class="mt-4">{{ vm.errorMsg }}</div>
+        <div class="text-end mt-4">
           <button
             pButton
             pRipple
             [label]="'app.reset' | translate"
             (click)="reset(vm.game)"
+          ></button>
+        </div>
+      </div>
+    </p-dialog>
+    <p-dialog
+      [(visible)]="showSimplexErr"
+      [modal]="true"
+      [draggable]="false"
+      [resizable]="false"
+      [style]="{ width: '576px' }"
+      [breakpoints]="{ '576px': '100%' }"
+    >
+      <ng-template pTemplate="header">
+        <div class="p-dialog-title">
+          <i class="fa-solid fa-triangle-exclamation me-2"></i>
+          <span>{{ 'app.simplexError' | translate }}</span>
+        </div>
+      </ng-template>
+      <div>
+        <div [innerText]="'app.simplexErrorDetail' | translate"></div>
+        <div class="text-end mt-2">
+          <button
+            pButton
+            pRipple
+            class="mt-2 p-button-outlined"
+            [label]="'app.dontShowAgain' | translate"
+            (click)="showSimplexErr = false; simplexErrSub.unsubscribe()"
+          ></button>
+          <button
+            pButton
+            pRipple
+            class="mt-2 ms-2 p-button-outlined"
+            [label]="'app.trySuggestedFix' | translate"
+            [loading]="fixLoading"
+            (click)="tryFixSimplex()"
+          ></button>
+          <button
+            pButton
+            pRipple
+            class="mt-2 ms-2"
+            [label]="'ok' | translate"
+            (click)="showSimplexErr = false"
           ></button>
         </div>
       </div>

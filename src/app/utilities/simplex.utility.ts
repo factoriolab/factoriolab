@@ -4,7 +4,6 @@ import { environment } from 'src/environments';
 import {
   Dataset,
   Entities,
-  ERROR_SIMPLEX,
   MatrixResult,
   MatrixResultType,
   Rational,
@@ -132,9 +131,6 @@ export class SimplexUtility {
     ) {
       // Update steps with solution
       this.updateSteps(steps, solution, state);
-    } else if (solution.resultType === MatrixResultType.Failed && error) {
-      alert(ERROR_SIMPLEX);
-      console.error('Failed to solve matrix using simplex method');
     }
 
     return {
