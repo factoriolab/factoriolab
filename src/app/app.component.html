@@ -1,74 +1,125 @@
-<lab-header
-  [sticky]="((contentSvc.scrollTop$ | async) ?? 0) > 16"
-  (toggleMenu)="toggleMenu()"
-></lab-header>
-<lab-settings
-  [active]="settingsActive"
-  (toggleMenu)="toggleMenu()"
-></lab-settings>
-<div
-  class="layout-mask"
-  [class.active]="settingsActive"
-  (click)="toggleMenu()"
-></div>
-<div class="layout-content">
-  <main *ngIf="vm$ | async as vm" class="px-1 px-sm-4 px-xl-5 py-4">
-    <ng-container *ngIf="vm.mod != null; else loading">
-      <lab-products></lab-products>
+<ng-container *ngIf="vm$ | async as vm">
+  <ng-container *ngIf="vm.errorMsg == null; else errorDialog"
+    ><lab-header
+      [sticky]="((contentSvc.scrollTop$ | async) ?? 0) > 16"
+      (toggleMenu)="toggleMenu()"
+    ></lab-header>
+    <lab-settings
+      [active]="settingsActive"
+      (toggleMenu)="toggleMenu()"
+    ></lab-settings>
+    <div
+      class="layout-mask"
+      [class.active]="settingsActive"
+      (click)="toggleMenu()"
+    ></div>
+    <div class="layout-content">
+      <main class="px-1 px-sm-4 px-xl-5 py-4">
+        <ng-container *ngIf="vm.mod != null; else loading">
+          <lab-products></lab-products>
 
-      <p-card styleClass="mt-5" [header]="'app.factory' | translate">
-        <p-tabMenu [model]="tabItems">
-          <ng-template pTemplate="item" let-item>
-            <span class="p-menuitem-icon" [class]="item.icon"></span>
-            <span class="p-menuitem-text">{{ item.label | translate }}</span>
-          </ng-template>
-        </p-tabMenu>
-        <router-outlet></router-outlet>
-        <ng-template pTemplate="footer">
-          <div class="d-flex align-items-center justify-content-between">
-            <ng-container
-              *ngIf="
-                vm.result.resultType === MatrixResultType.Solved ||
-                  vm.result.resultType === MatrixResultType.Cached;
-                else notSolved
-              "
-            >
-              <div *ngIf="vm.result.A && vm.result.O">
-                <div>
-                  {{
-                    'app.simplexSolved'
+          <p-card styleClass="mt-5" [header]="'app.factory' | translate">
+            <p-tabMenu [model]="tabItems">
+              <ng-template pTemplate="item" let-item>
+                <span class="p-menuitem-icon" [class]="item.icon"></span>
+                <span class="p-menuitem-text">{{
+                  item.label | translate
+                }}</span>
+              </ng-template>
+            </p-tabMenu>
+            <router-outlet></router-outlet>
+            <ng-template pTemplate="footer">
+              <div class="d-flex align-items-center justify-content-between">
+                <ng-container
+                  *ngIf="
+                    vm.result.resultType === MatrixResultType.Solved ||
+                      vm.result.resultType === MatrixResultType.Cached;
+                    else notSolved
+                  "
+                >
+                  <div *ngIf="vm.result.A && vm.result.O">
+                    <div>
+                      {{
+                        'app.simplexSolved'
+                          | translate
+                            : {
+                                resultType: vm.result.resultType.toLowerCase(),
+                                time: vm.result.time,
+                                pivots: vm.result.pivots,
+                                rows: vm.result.A.length,
+                                cols: vm.result.A[0].length,
+                                cost: vm.result.O[
+                                  vm.result.O.length - 1
+                                ].toPrecision(2)
+                              }
+                      }}
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-template #notSolved>
+                  <span>{{
+                    'app.simplexUnsolved'
                       | translate
-                        : {
-                            resultType: vm.result.resultType.toLowerCase(),
-                            time: vm.result.time,
-                            pivots: vm.result.pivots,
-                            rows: vm.result.A.length,
-                            cols: vm.result.A[0].length,
-                            cost: vm.result.O[
-                              vm.result.O.length - 1
-                            ].toPrecision(2)
-                          }
-                  }}
-                </div>
+                        : { resultType: vm.result.resultType.toLowerCase() }
+                  }}</span>
+                </ng-template>
+                <span>{{ version }}</span>
               </div>
-            </ng-container>
-            <ng-template #notSolved>
-              <span>{{
-                'app.simplexUnsolved'
-                  | translate
-                    : { resultType: vm.result.resultType.toLowerCase() }
-              }}</span>
             </ng-template>
-            <span>{{ version }}</span>
+          </p-card>
+        </ng-container>
+        <ng-template #loading>
+          <div class="d-flex flex-column align-items-center">
+            <p-progressSpinner></p-progressSpinner>
           </div>
         </ng-template>
-      </p-card>
-    </ng-container>
-    <ng-template #loading>
-      <div class="d-flex flex-column align-items-center">
-        <p-progressSpinner></p-progressSpinner>
-      </div>
-    </ng-template>
+        <p-dialog
+          [(visible)]="showSimplexErr"
+          [modal]="true"
+          [draggable]="false"
+          [resizable]="false"
+          [style]="{ width: '576px' }"
+          [breakpoints]="{ '576px': '100%' }"
+        >
+          <ng-template pTemplate="header">
+            <div class="p-dialog-title">
+              <i class="fa-solid fa-triangle-exclamation me-2"></i>
+              <span>{{ 'app.simplexError' | translate }}</span>
+            </div>
+          </ng-template>
+          <div>
+            <div [innerText]="'app.simplexErrorDetail' | translate"></div>
+            <div class="text-end mt-2">
+              <button
+                pButton
+                pRipple
+                class="mt-2 p-button-outlined"
+                [label]="'app.dontShowAgain' | translate"
+                (click)="showSimplexErr = false; simplexErrSub.unsubscribe()"
+              ></button>
+              <button
+                pButton
+                pRipple
+                class="mt-2 ms-2 p-button-outlined"
+                [label]="'app.trySuggestedFix' | translate"
+                [loading]="fixLoading"
+                (click)="tryFixSimplex()"
+              ></button>
+              <button
+                pButton
+                pRipple
+                class="mt-2 ms-2"
+                [label]="'ok' | translate"
+                (click)="showSimplexErr = false"
+              ></button>
+            </div>
+          </div>
+        </p-dialog>
+      </main>
+    </div>
+    <lab-content></lab-content>
+  </ng-container>
+  <ng-template #errorDialog>
     <p-dialog
       [visible]="vm.errorMsg != null"
       [modal]="true"
@@ -96,48 +147,5 @@
         </div>
       </div>
     </p-dialog>
-    <p-dialog
-      [(visible)]="showSimplexErr"
-      [modal]="true"
-      [draggable]="false"
-      [resizable]="false"
-      [style]="{ width: '576px' }"
-      [breakpoints]="{ '576px': '100%' }"
-    >
-      <ng-template pTemplate="header">
-        <div class="p-dialog-title">
-          <i class="fa-solid fa-triangle-exclamation me-2"></i>
-          <span>{{ 'app.simplexError' | translate }}</span>
-        </div>
-      </ng-template>
-      <div>
-        <div [innerText]="'app.simplexErrorDetail' | translate"></div>
-        <div class="text-end mt-2">
-          <button
-            pButton
-            pRipple
-            class="mt-2 p-button-outlined"
-            [label]="'app.dontShowAgain' | translate"
-            (click)="showSimplexErr = false; simplexErrSub.unsubscribe()"
-          ></button>
-          <button
-            pButton
-            pRipple
-            class="mt-2 ms-2 p-button-outlined"
-            [label]="'app.trySuggestedFix' | translate"
-            [loading]="fixLoading"
-            (click)="tryFixSimplex()"
-          ></button>
-          <button
-            pButton
-            pRipple
-            class="mt-2 ms-2"
-            [label]="'ok' | translate"
-            (click)="showSimplexErr = false"
-          ></button>
-        </div>
-      </div>
-    </p-dialog>
-  </main>
-</div>
-<lab-content></lab-content>
+  </ng-template>
+</ng-container>

@@ -1,5 +1,12 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  NgZone,
+  OnInit,
+} from '@angular/core';
 import { Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -33,19 +40,21 @@ const LAB_ICON_STYLE_ID = 'lab-icon-css';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   vm$ = combineLatest([
     this.store.select(Settings.getGame),
     this.store.select(Settings.getMod),
     this.store.select(Products.getProducts),
     this.store.select(Products.getMatrixResult),
+    this.contentSvc.scrollTop$,
     this.errorSvc.message$,
   ]).pipe(
-    map(([game, mod, products, result, errorMsg]) => ({
+    map(([game, mod, products, result, scrollTop, errorMsg]) => ({
       game,
       mod,
       products,
       result,
+      scrollTop,
       errorMsg,
     }))
   );
@@ -83,6 +92,8 @@ export class AppComponent implements OnInit {
     @Inject(DOCUMENT) private document: Document,
     private meta: Meta,
     private router: Router,
+    private ref: ChangeDetectorRef,
+    private ngZone: NgZone,
     private gaSvc: GoogleAnalyticsService,
     private store: Store<LabState>,
     private translateSvc: TranslateService,
@@ -133,6 +144,14 @@ Determine resource and factory requirements for your desired output products.`,
     });
   }
 
+  /**
+   * This doesn't seem like it should be necessary,
+   * but error message sometimes does not render without it
+   * */
+  ngAfterViewInit(): void {
+    this.errorSvc.message$.subscribe(() => this.ref.detectChanges());
+  }
+
   toggleMenu(): void {
     this.settingsActive = !this.settingsActive;
   }
@@ -160,8 +179,10 @@ Determine resource and factory requirements for your desired output products.`,
   }
 
   reset(game: Game): void {
-    this.errorSvc.message$.next(null);
-    this.router.navigateByUrl(gameInfo[game].route);
-    this.store.dispatch(new ResetAction());
+    this.ngZone.run(() => {
+      this.errorSvc.message$.next(null);
+      this.router.navigateByUrl(gameInfo[game].route);
+      this.store.dispatch(new ResetAction());
+    });
   }
 }

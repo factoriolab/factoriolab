@@ -211,11 +211,11 @@
             <button
               pButton
               pRipple
+              type="button"
               class="hover-action p-button-rounded p-button-text"
               [class.hover-active]="vm.itemSettings[step.itemId].ignore"
               [icon]="step.itemId | iconSmClass"
               [pTooltip]="vm.data.itemEntities[step.itemId].name"
-              [escape]="false"
               (click)="ignoreItem(step.itemId)"
             >
               <i class="hover-icon fa-solid fa-eye-slash"></i>
@@ -611,6 +611,7 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="rowexpansion" let-step>
+      <!-- Details row tab menu -->
       <tr>
         <td>
           <a [href]="'#' + step.id">
@@ -637,6 +638,7 @@
         </td>
       </tr>
       <ng-container [ngSwitch]="expandTabMenu.activeItem.label">
+        <!-- Item row details -->
         <ng-container *ngSwitchCase="StepDetailTab.Item">
           <tr *ngIf="vm.stepDetails[step.id].outputs.length" class="detail">
             <ng-template *ngTemplateOutlet="leftPad"></ng-template>
@@ -655,9 +657,9 @@
                     context: {
                       items: step.items.mul(value),
                       itemId: step.itemId,
-                      belts: step.belts.mul(value),
+                      belts: step.belts?.mul(value),
                       beltId: vm.itemSettings[step.itemId].beltId,
-                      wagons: step.wagons.mul(value),
+                      wagons: step.wagons?.mul(value),
                       wagonId: vm.itemSettings[step.itemId].wagonId,
                       factories: output.factories,
                       factoryId: vm.recipeSettings[output.recipeId].factoryId,
@@ -686,15 +688,15 @@
                 *ngTemplateOutlet="
                   detailRow;
                   context: {
-                    items: step.items.mul(parent.value),
+                    items: step.items?.mul(parent.value),
                     itemId: step.itemId,
-                    belts: step.belts.mul(parent.value),
+                    belts: step.belts?.mul(parent.value),
                     beltId: vm.itemSettings[step.itemId].beltId,
-                    wagons: step.wagons.mul(parent.value),
+                    wagons: step.wagons?.mul(parent.value),
                     wagonId: vm.itemSettings[step.itemId].wagonId,
                     factories:
                       vm.stepDetails[step.id].outputs.length === 1
-                        ? step.factories.mul(parent.value)
+                        ? step.factories?.mul(parent.value)
                         : null,
                     factoryId:
                       vm.stepDetails[step.id].outputs.length === 1
@@ -711,6 +713,7 @@
             </ng-container>
           </ng-container>
         </ng-container>
+        <!-- Recipe row details -->
         <ng-container *ngSwitchCase="StepDetailTab.Recipe">
           <ng-container *ngIf="vm.recipeSettings[step.recipeId] as settings">
             <ng-container
@@ -851,6 +854,7 @@
             </ng-container>
           </ng-container>
         </ng-container>
+        <!-- Factory row details -->
         <tr *ngSwitchCase="StepDetailTab.Factory" class="detail">
           <td></td>
           <td colspan="100">
@@ -1063,9 +1067,105 @@
             </div>
           </td>
         </tr>
-        <tr *ngSwitchCase="StepDetailTab.Recipes">
-          <td colspan="100">recipes details...</td>
-        </tr>
+        <!-- Recipes row details -->
+        <ng-container *ngSwitchCase="StepDetailTab.Recipes">
+          <ng-container *ngIf="step.itemId">
+            <ng-container
+              *ngIf="vm.stepDetails[step.id].defaultableRecipeIds.length"
+            >
+              <tr class="detail">
+                <td></td>
+                <td colspan="100">
+                  <div>
+                    <div class="fw-bold">
+                      {{ 'list.defaultRecipe' | translate }}
+                    </div>
+                    <div>
+                      <small>{{ 'list.defaultRecipeInfo1' | translate }}</small>
+                    </div>
+                    <div>
+                      <small>{{ 'list.defaultRecipeInfo2' | translate }}</small>
+                    </div>
+                    <div
+                      class="p-error"
+                      *ngIf="vm.data.itemRecipeId[step.itemId] === null"
+                    >
+                      <small>{{ 'list.defaultRecipeInfo3' | translate }}</small>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr class="detail">
+                <td></td>
+                <td colspan="100">
+                  <div class="d-flex flex-wrap">
+                    <button
+                      *ngFor="
+                        let recipeId of vm.stepDetails[step.id]
+                          .defaultableRecipeIds
+                      "
+                      pButton
+                      pRipple
+                      type="button"
+                      class="p-button-rounded me-2"
+                      [class.p-button-text]="
+                        vm.data.itemRecipeId[step.itemId] !== recipeId
+                      "
+                      [icon]="recipeId | iconSmClass"
+                      [pTooltip]="recipeId | recipeTooltip: vm.data"
+                      [escape]="false"
+                      (click)="
+                        toggleDefaultRecipe(
+                          step.itemId,
+                          recipeId,
+                          vm.itemSettings,
+                          vm.settings,
+                          vm.data
+                        )
+                      "
+                    ></button>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+            <tr class="detail">
+              <td></td>
+              <td colspan="100">
+                <div>
+                  <div class="fw-bold">
+                    {{ 'list.enabledRecipes' | translate }}
+                  </div>
+                  <div>
+                    <small>{{ 'list.enabledRecipesInfo' | translate }}</small>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr class="detail">
+              <td></td>
+              <td colspan="100">
+                <div class="d-flex flex-wrap">
+                  <button
+                    *ngFor="let recipeId of vm.stepDetails[step.id].recipeIds"
+                    pButton
+                    pRipple
+                    type="button"
+                    class="hover-action p-button-rounded p-button-text me-2"
+                    [class.hover-active]="
+                      vm.settings.disabledRecipeIds.indexOf(recipeId) !== -1
+                    "
+                    [icon]="recipeId | iconSmClass"
+                    [pTooltip]="recipeId | recipeTooltip: vm.data"
+                    [escape]="false"
+                    (click)="toggleRecipe(recipeId, vm.settings, vm.data)"
+                  >
+                    <i class="hover-icon fa-solid fa-eye-slash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
       </ng-container>
     </ng-template>
     <ng-template #emptyCol2>

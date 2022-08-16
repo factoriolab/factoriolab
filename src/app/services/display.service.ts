@@ -5,7 +5,7 @@ import { Rational } from '~/models';
 @Injectable({ providedIn: 'root' })
 export class DisplayService {
   icon(id: string, num: string | number): string {
-    return `<i class="m-1 me-2 lab-icon ${id}"><span>${num}</span></i>`;
+    return `<i class="m-1 me-2 lab-icon-sm ${id}"><span>${num}</span></i>`;
   }
 
   table(rows: [string, string][]): string {

@@ -529,7 +529,9 @@ export const getStepDetails = createSelector(
         tabs.push(StepDetailTab.Factory);
       }
       if (s.itemId != null) {
-        for (const recipe of data.recipeIds.map((r) => data.recipeR[r])) {
+        for (const recipe of data.complexRecipeIds.map(
+          (r) => data.recipeR[r]
+        )) {
           if (recipe.produces(s.itemId)) {
             recipeIds.push(recipe.id);
             if (
