@@ -877,43 +877,43 @@
                   >
                     <tr *ngIf="row.percent">
                       <td>
-                        <div
-                          *ngIf="row.step.items"
-                          class="d-flex align-items-center justify-content-end"
-                        >
-                          <span class="monospace">{{
-                            row.step.items.mul(row.percent).div(step.factories)
-                              | rate: vm.effectivePrecision[Column.Items]
-                          }}</span>
-                          <div
-                            class="d-flex m-1 p-2"
-                            [pTooltip]="vm.data.itemEntities[input.key].name"
+                        <ng-container *ngIf="row.step.items">
+                          <ng-container
+                            *ngTemplateOutlet="
+                              factoryValueCell;
+                              context: {
+                                value:
+                                  row.step.items
+                                    .mul(row.percent)
+                                    .div(step.factories)
+                                  | rate: vm.effectivePrecision[Column.Items],
+                                itemId: input.key
+                              }
+                            "
                           >
-                            <i [class]="input.key | iconClass"></i>
-                          </div>
-                        </div>
+                          </ng-container>
+                        </ng-container>
                       </td>
                       <td *ngIf="vm.columns[Column.Belts].show">
-                        <ng-container
-                          *ngIf="vm.itemSettings[input.key].beltId as beltId"
-                        >
-                          <div
-                            *ngIf="row.step.belts"
-                            class="d-flex align-items-center justify-content-end"
+                        <ng-container *ngIf="row.step.belts">
+                          <ng-container
+                            *ngIf="vm.itemSettings[input.key].beltId as beltId"
                           >
-                            <span class="monospace">{{
-                              row.step.belts
-                                .mul(row.percent)
-                                .div(step.factories)
-                                | rate: vm.effectivePrecision[Column.Belts]
-                            }}</span>
-                            <div
-                              class="d-flex m-1 p-2"
-                              [pTooltip]="vm.data.itemEntities[beltId].name"
+                            <ng-container
+                              *ngTemplateOutlet="
+                                factoryValueCell;
+                                context: {
+                                  value:
+                                    row.step.belts
+                                      .mul(row.percent)
+                                      .div(step.factories)
+                                    | rate: vm.effectivePrecision[Column.Belts],
+                                  itemId: beltId
+                                }
+                              "
                             >
-                              <i [class]="beltId | iconClass"></i>
-                            </div>
-                          </div>
+                            </ng-container>
+                          </ng-container>
                         </ng-container>
                       </td>
                       <ng-container *ngIf="vm.data.game === Game.Factorio">
@@ -924,7 +924,7 @@
                                 ItemId.Pipe && row.step.items
                             "
                           >
-                            <div
+                            <ng-container
                               *ngIf="
                                 row.step.items
                                   .mul(row.percent)
@@ -932,18 +932,18 @@
                                   .div(DisplayRateVal[vm.settings.displayRate])
                                   | inserterSpeed: vm.settings as ins
                               "
-                              class="d-flex align-items-center justify-content-end"
                             >
-                              <span class="monospace">{{
-                                ins.value | rate: 1
-                              }}</span>
-                              <div
-                                class="d-flex m-1 p-2"
-                                [pTooltip]="vm.data.itemEntities[ins.id].name"
+                              <ng-container
+                                *ngTemplateOutlet="
+                                  factoryValueCell;
+                                  context: {
+                                    value: ins.value | rate: 1,
+                                    itemId: ins.id
+                                  }
+                                "
                               >
-                                <i [class]="ins.id | iconClass"></i>
-                              </div>
-                            </div>
+                              </ng-container>
+                            </ng-container>
                           </ng-container>
                         </td>
                       </ng-container>
@@ -1000,59 +1000,73 @@
                             vm.itemSettings[output.key].beltId !== ItemId.Pipe
                           "
                         >
-                          <div
+                          <ng-container
                             *ngIf="items | inserterSpeed: vm.settings as ins"
-                            class="d-flex align-items-center justify-content-end"
                           >
-                            <span class="monospace">{{
-                              ins.value | rate: 1
-                            }}</span>
-                            <div
-                              class="d-flex m-1 p-2"
-                              [pTooltip]="vm.data.itemEntities[ins.id].name"
+                            <ng-container
+                              *ngTemplateOutlet="
+                                factoryValueCell;
+                                context: {
+                                  value: ins.value | rate: 1,
+                                  itemId: ins.id
+                                }
+                              "
                             >
-                              <i [class]="ins.id | iconClass"></i>
-                            </div>
-                          </div>
+                            </ng-container>
+                          </ng-container>
                         </ng-container>
                       </td>
                     </ng-container>
                     <td *ngIf="vm.columns[Column.Belts].show">
-                      <div
+                      <ng-container
                         *ngIf="vm.itemSettings[output.key].beltId as beltId"
-                        class="d-flex align-items-center justify-content-end"
                       >
-                        <span class="monospace">{{
-                          items.div(vm.beltSpeed[beltId])
-                            | rate: vm.effectivePrecision[Column.Belts]
-                        }}</span>
-                        <div
-                          class="d-flex m-1 p-2"
-                          [pTooltip]="vm.data.itemEntities[beltId].name"
+                        <ng-container
+                          *ngTemplateOutlet="
+                            factoryValueCell;
+                            context: {
+                              value:
+                                items.div(vm.beltSpeed[beltId])
+                                | rate: vm.effectivePrecision[Column.Belts],
+                              itemId: beltId
+                            }
+                          "
                         >
-                          <i [class]="beltId | iconClass"></i>
-                        </div>
-                      </div>
+                        </ng-container>
+                      </ng-container>
                     </td>
                     <td>
-                      <div
-                        class="d-flex align-items-center justify-content-end"
+                      <ng-container
+                        *ngTemplateOutlet="
+                          factoryValueCell;
+                          context: {
+                            value:
+                              items.mul(DisplayRateVal[vm.settings.displayRate])
+                              | rate: vm.effectivePrecision[Column.Items],
+                            itemId: output.key
+                          }
+                        "
                       >
-                        <span class="monospace">{{
-                          items.mul(DisplayRateVal[vm.settings.displayRate])
-                            | rate: vm.effectivePrecision[Column.Items]
-                        }}</span>
-                        <div
-                          class="d-flex m-1 p-2"
-                          [pTooltip]="vm.data.itemEntities[output.key].name"
-                        >
-                          <i [class]="output.key | iconClass"></i>
-                        </div>
-                      </div>
+                      </ng-container>
                     </td>
                   </tr>
                 </ng-container>
               </table>
+              <ng-template
+                #factoryValueCell
+                let-value="value"
+                let-itemId="itemId"
+              >
+                <div class="d-flex align-items-center justify-content-end">
+                  <span class="monospace">{{ value }}</span>
+                  <div
+                    class="d-flex m-1 p-2"
+                    [pTooltip]="vm.data.itemEntities[itemId].name"
+                  >
+                    <i [class]="itemId | iconClass"></i>
+                  </div>
+                </div>
+              </ng-template>
             </div>
             <div *ngIf="vm.data.game === Game.Factorio">
               <small [innerHTML]="'list.inserterCountInfo' | translate"></small>
