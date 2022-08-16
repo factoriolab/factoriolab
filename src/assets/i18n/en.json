@@ -16,8 +16,7 @@
     "error": "Error",
     "errorDetail": "The application has encountered an error:",
     "reset": "Reset",
-    "simplexSolved1": "Simplex {{ resultType }}: {{ time }}ms, {{ pivots }} pivots",
-    "simplexSolved2": "Size {{ rows }} x {{ cols }}, Cost: {{ cost }}",
+    "simplexSolved": "Simplex {{ resultType }}: {{ time }}ms, {{ pivots }} pivots, size: {{ rows }} x {{ cols }}, cost: {{ cost }}",
     "simplexUnsolved": "Simplex {{ resultType }}"
   },
   "settings": {
@@ -204,6 +203,11 @@
     "overclockTooltip": "Set overclock percentage",
     "openNewTabTooltip": "Open in a new tab",
     "stepUndoTooltip": "Undo modifications to this step",
+    "sources": "Sources",
+    "destinations": "Destinations",
+    "depletion": "Depletion",
+    "inputs": "Inputs",
+    "outputs": "Outputs",
 
     "each": "Each",
     "total": "Total",
@@ -228,8 +232,6 @@
     "clickToChangeBeacon": "Click to change beacon",
     "clickToChangeBeaconModules": "Click to change beacon modules",
     "setTotalBeacons": "Set total beacons",
-    "inputs": "Inputs",
-    "outputs": "Outputs",
     "insertCalculateRemark": "* Inserters are calculated using target/capacity settings and\n0.18 experimental data from the",
     "defaultRecipe": "Default Recipe",
     "defaultRecipeInfo1": "Click to set a recipe as the default for this item. If set,\nthe default recipe is treated as the only way to produce this\nitem.",
@@ -237,14 +239,7 @@
     "defaultRecipeInfo3": "Default was ignored due to a detected circular loop.",
     "enabledRecipes": "Enabled Recipes",
     "enabledRecipesInfo": "Click recipes to enable or disable them. Disabled recipes will\nnot be used in the solution.",
-    "selectANodeToSeeDetails": "Select a node to see details",
-    "sources": "Sources",
-    "depletion": "Depletion",
-    "destinations": "Destinations",
-    "item": "Item",
-    "recipe": "Recipe",
-    "factory": "Factory",
-    "recipes": "Recipes"
+    "selectANodeToSeeDetails": "Select a node to see details"
   },
   "tooltip": {
     "speed": "Speed",

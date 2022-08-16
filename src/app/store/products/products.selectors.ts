@@ -509,7 +509,7 @@ export const getStepDetails = createSelector(
   Settings.getDisabledRecipeIds,
   (steps, data, disabledRecipeIds) =>
     steps.reduce((e: Entities<StepDetail>, s) => {
-      const tabs = [];
+      const tabs: StepDetailTab[] = [];
       let outputs: Step[] = [];
       const recipeIds: string[] = [];
       const defaultableRecipeIds: string[] = [];
@@ -546,7 +546,7 @@ export const getStepDetails = createSelector(
       }
 
       e[s.id] = {
-        tabs,
+        tabs: tabs.map((t) => ({ label: t })),
         outputs,
         recipeIds,
         defaultableRecipeIds,

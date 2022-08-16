@@ -1,15 +1,14 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   Input,
-  OnChanges,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { Table } from 'primeng/table';
 import { combineLatest, filter, first, map } from 'rxjs';
 
 import {
@@ -18,7 +17,6 @@ import {
   DisplayRate,
   displayRateLabel,
   displayRateVal,
-  Entities,
   Game,
   ItemId,
   ListMode,
@@ -38,14 +36,14 @@ import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 import { ExportUtility, RecipeUtility } from '~/utilities';
 
-@UntilDestroy()
+// @UntilDestroy()
 @Component({
   selector: 'lab-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ListComponent implements OnInit, OnChanges, AfterViewInit {
+export class ListComponent implements OnInit, AfterViewInit {
   vm$ = combineLatest([
     this.store.select(Factories.getFactories),
     this.store.select(Items.getItemSettings),
@@ -112,10 +110,11 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     )
   );
 
+  @ViewChild('stepsTable') stepsTable: Table | undefined;
+
   @Input() mode = ListMode.All;
   @Input() selectedId: string | undefined;
 
-  expanded: Entities<StepDetailTab> = {};
   fragmentId: string | null | undefined;
 
   displayRateLabel = displayRateLabel;
@@ -134,7 +133,6 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
 
   constructor(
     public contentSvc: ContentService,
-    private ref: ChangeDetectorRef,
     private route: ActivatedRoute,
     public trackSvc: TrackService,
     public store: Store<LabState>
@@ -150,29 +148,13 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
         // Store the fragment to navigate to it after the component loads
         this.fragmentId = id;
       });
-    this.syncDetailTabs();
-  }
-
-  ngOnChanges(): void {
-    this.expanded = {};
-    if (this.selectedId != null) {
-      const selected = this.selectedId;
-      this.store
-        .select(Products.getStepDetails)
-        .pipe(first())
-        .subscribe((stepDetails) => {
-          if (stepDetails[selected]?.tabs.length) {
-            this.expanded[selected] = stepDetails[selected].tabs[0];
-          }
-        });
-    }
   }
 
   ngAfterViewInit(): void {
     // Now that component is loaded, try navigating to the fragment
     try {
       if (this.fragmentId) {
-        document.querySelector('#' + this.fragmentId)?.scrollIntoView();
+        document.querySelector('#\\' + this.fragmentId)?.scrollIntoView();
         combineLatest([
           this.store.select(Products.getSteps),
           this.store.select(Products.getStepDetails),
@@ -183,34 +165,14 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
             if (step) {
               const tabs = stepDetails[step.id].tabs;
               if (tabs.length) {
-                this.expanded[step.id] = tabs[0];
+                if (this.stepsTable) {
+                  this.stepsTable.toggleRow(step);
+                }
               }
             }
           });
       }
     } catch (e) {}
-  }
-
-  syncDetailTabs(): void {
-    this.store
-      .select(Products.getStepDetails)
-      .pipe(untilDestroyed(this))
-      .subscribe((stepDetails) => {
-        // Hide any step details that are no longer valid
-        for (const id of Object.keys(this.expanded).filter(
-          (i) => this.expanded[i]
-        )) {
-          const tabs = stepDetails[id]?.tabs;
-          if (!tabs?.length) {
-            // Collapse this step
-            delete this.expanded[id];
-          } else if (tabs.indexOf(this.expanded[id]) === -1) {
-            // Pick a different tab
-            this.expanded[id] = tabs[0];
-          }
-        }
-        this.ref.detectChanges();
-      });
   }
 
   resetStep(step: Step): void {

@@ -47,7 +47,7 @@
   // Mask input fields
   .p-dropdown,
   .p-inputtext {
-    &:not(:hover):not(:focus) {
+    &:not(:hover):not(:focus):not(.ng-invalid) {
       border-color: transparent;
 
       background-color: transparent;
@@ -65,16 +65,17 @@
     &:not(:last-child) .p-dropdown {
       border-top-color: var(--primary-color);
       border-bottom-color: var(--primary-color);
-      border-radius: 0;
     }
 
     &:last-child .p-dropdown {
       border-color: var(--primary-color);
       border-left-color: transparent;
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
     }
   }
+}
+
+tr.detail {
+  background-color: var(--surface-ground);
 }
 
 // // Fade icon in exclude button

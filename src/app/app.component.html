@@ -25,7 +25,6 @@
         </p-tabMenu>
         <router-outlet></router-outlet>
         <ng-template pTemplate="footer">
-          <p-divider></p-divider>
           <div class="d-flex align-items-center justify-content-between">
             <ng-container
               *ngIf="
@@ -37,20 +36,12 @@
               <div *ngIf="vm.result.A && vm.result.O">
                 <div>
                   {{
-                    'app.simplexSolved1'
+                    'app.simplexSolved'
                       | translate
                         : {
-                            resultType: vm.result.resultType,
+                            resultType: vm.result.resultType.toLowerCase(),
                             time: vm.result.time,
-                            pivots: vm.result.pivots
-                          }
-                  }}
-                </div>
-                <div>
-                  {{
-                    'app.simplexSolved2'
-                      | translate
-                        : {
+                            pivots: vm.result.pivots,
                             rows: vm.result.A.length,
                             cols: vm.result.A[0].length,
                             cost: vm.result.O[
@@ -64,7 +55,8 @@
             <ng-template #notSolved>
               <span>{{
                 'app.simplexUnsolved'
-                  | translate: { resultType: vm.result.resultType }
+                  | translate
+                    : { resultType: vm.result.resultType.toLowerCase() }
               }}</span>
             </ng-template>
             <span>{{ version }}</span>
