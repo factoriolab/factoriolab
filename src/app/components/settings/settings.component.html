@@ -176,7 +176,7 @@
               </ng-template>
               <ng-template pTemplate="item" let-item>
                 <div class="d-flex align-items-center">
-                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+                  <i [class]="item.value | iconSmClass"></i>
                   <div class="ms-3 text-truncate">
                     {{ item.label }}
                   </div>
@@ -325,10 +325,7 @@
                         <ng-container
                           *ngIf="items && items.length; else noModifiers"
                         >
-                          <i
-                            class="flex-shrink-0"
-                            [class]="items[0] | iconClass"
-                          >
+                          <i [class]="items[0] | iconSmClass">
                             <span *ngIf="items.length > 1"
                               >+{{ items.length - 1 }}</span
                             >
@@ -341,10 +338,7 @@
                           </div>
                         </ng-container>
                         <ng-template #noModifiers>
-                          <i
-                            class="flex-shrink-0"
-                            [class]="ItemId.Module | iconClass"
-                          ></i>
+                          <i [class]="ItemId.Module | iconSmClass"></i>
                           <div class="ms-3 text-truncate">
                             {{ 'settings.noModifiers' | translate }}
                           </div>
@@ -353,10 +347,7 @@
                     </ng-template>
                     <ng-template pTemplate="item" let-item>
                       <div class="d-flex align-items-center h-100">
-                        <i
-                          class="flex-shrink-0"
-                          [class]="item.value | iconClass"
-                        ></i>
+                        <i [class]="item.value | iconSmClass"></i>
                         <div class="ms-3 text-truncate">
                           {{ item.label }}
                         </div>
@@ -463,7 +454,7 @@
               </ng-template>
               <ng-template pTemplate="item" let-item>
                 <div class="d-flex align-items-center h-100">
-                  <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+                  <i [class]="item.value | iconSmClass"></i>
                   <div class="ms-3 text-truncate">
                     {{ item.label }}
                   </div>

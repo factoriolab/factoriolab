@@ -180,12 +180,12 @@
             <div class="icon">
               <i
                 *ngIf="step.itemId; else recipeIcon"
-                [class]="step.itemId | iconClass"
+                [class]="step.itemId | iconSmClass"
                 [pTooltip]="vm.data.itemEntities[step.itemId].name"
               ></i>
               <ng-template #recipeIcon>
                 <i
-                  [class]="step.recipeId | iconClass"
+                  [class]="step.recipeId | iconSmClass"
                   [pTooltip]="vm.data.recipeEntities[step.recipeId].name"
                 ></i>
               </ng-template>
@@ -213,7 +213,7 @@
               pRipple
               class="hover-action p-button-rounded p-button-text"
               [class.hover-active]="vm.itemSettings[step.itemId].ignore"
-              [icon]="step.itemId | iconClass"
+              [icon]="step.itemId | iconSmClass"
               [pTooltip]="vm.data.itemEntities[step.itemId].name"
               [escape]="false"
               (click)="ignoreItem(step.itemId)"
@@ -285,8 +285,8 @@
                   </ng-template>
                   <!-- Pipe icon only -->
                   <ng-template #pipeIcon>
-                    <div
-                      class="d-flex m-1 p-2"
+                    <i
+                      [class]="beltId | iconClass"
                       [pTooltip]="
                         'list.pipeTooltip'
                           | translate
@@ -296,9 +296,7 @@
                               }
                       "
                       [escape]="false"
-                    >
-                      <i [class]="beltId | iconClass"></i>
-                    </div>
+                    ></i>
                   </ng-template>
                 </div>
               </td>
@@ -413,13 +411,11 @@
                 *ngIf="vm.data.recipeEntities[step.recipeId] as recipe"
                 class="d-flex align-items-center"
               >
-                <div
-                  class="d-flex m-1 p-2"
+                <i
+                  [class]="step.recipeId | iconClass"
                   [pTooltip]="step.recipeId | recipeTooltip: vm.data"
                   [escape]="false"
-                >
-                  <i [class]="step.recipeId | iconClass"></i>
-                </div>
+                ></i>
                 <p-dropdown
                   *ngIf="vm.data.factoryEntities[factoryId] as factory"
                   labDropdownIcon
@@ -962,18 +958,14 @@
                       "
                       class="d-flex align-items-center"
                     >
-                      <div
-                        class="d-flex m-1 p-2"
+                      <i
+                        [class]="step.recipeId | iconClass"
                         [pTooltip]="vm.data.recipeEntities[step.recipeId].name"
-                      >
-                        <i [class]="step.recipeId | iconClass"></i>
-                      </div>
-                      <div
-                        class="d-flex m-1 p-2"
+                      ></i>
+                      <i
+                        [class]="factoryId | iconClass"
                         [pTooltip]="vm.data.itemEntities[factoryId].name"
-                      >
-                        <i [class]="factoryId | iconClass"></i>
-                      </div>
+                      ></i>
                     </div>
                   </td>
                 </tr>
@@ -1059,12 +1051,10 @@
               >
                 <div class="d-flex align-items-center justify-content-end">
                   <span class="monospace">{{ value }}</span>
-                  <div
-                    class="d-flex m-1 p-2"
+                  <i
+                    [class]="itemId | iconClass"
                     [pTooltip]="vm.data.itemEntities[itemId].name"
-                  >
-                    <i [class]="itemId | iconClass"></i>
-                  </div>
+                  ></i>
                 </div>
               </ng-template>
             </div>
@@ -1110,12 +1100,10 @@
             }}</span>
           </td>
           <td class="ps-0">
-            <div
-              class="d-flex m-1 p-2"
+            <i
+              [class]="itemId | iconClass"
               [pTooltip]="vm.data.itemEntities[itemId].name"
-            >
-              <i [class]="itemId | iconClass"></i>
-            </div>
+            ></i>
           </td>
           <ng-container *ngIf="vm.columns[Column.Belts].show">
             <ng-container *ngIf="belts && beltId">
@@ -1125,12 +1113,10 @@
                 }}</span>
               </td>
               <td class="ps-0">
-                <div
-                  class="d-flex m-1 p-2"
+                <i
+                  [class]="beltId | iconClass"
                   [pTooltip]="vm.data.itemEntities[beltId].name"
-                >
-                  <i [class]="beltId | iconClass"></i>
-                </div>
+                ></i>
               </td>
             </ng-container>
           </ng-container>
@@ -1142,12 +1128,10 @@
                 }}</span>
               </td>
               <td class="ps-0">
-                <div
-                  class="d-flex m-1 p-2"
+                <i
+                  [class]="wagonId | iconClass"
                   [pTooltip]="vm.data.itemEntities[wagonId].name"
-                >
-                  <i [class]="wagonId | iconClass"></i>
-                </div>
+                ></i>
               </td>
             </ng-container>
           </ng-container>
@@ -1172,18 +1156,14 @@
               <ng-container
                 *ngIf="factoryId | factoryShow: vm.data.game; else factoryFill"
               >
-                <div
-                  class="d-flex p-2 m-1"
+                <i
+                  [class]="recipeId | iconClass"
                   [pTooltip]="vm.data.recipeEntities[recipeId].name"
-                >
-                  <i [class]="recipeId | iconClass"></i>
-                </div>
-                <div
-                  class="d-flex m-1 p-2"
+                ></i>
+                <i
+                  [class]="factoryId | iconClass"
                   [pTooltip]="vm.data.recipeEntities[factoryId].name"
-                >
-                  <i [class]="factoryId | iconClass"></i>
-                </div>
+                ></i>
               </ng-container>
               <ng-template #factoryFill>
                 <div class="d-flex m-1 p-2 invisible">
@@ -1205,16 +1185,14 @@
                   class="m-1 p-2 fa-solid fa-arrow-right"
                   *ngIf="!percentOnDest"
                 ></i>
-                <div
-                  class="d-flex m-1 p-2"
+                <i
+                  [class]="destId | iconClass"
                   [pTooltip]="
                     (destIsRecipe
                       ? vm.data.recipeEntities
                       : vm.data.itemEntities)[destId].name
                   "
-                >
-                  <i [class]="destId | iconClass"></i>
-                </div>
+                ></i>
               </ng-container>
             </div>
           </td>
@@ -1282,20 +1260,15 @@
             </div>
           </td>
           <td class="ps-0 inherit">
-            <div
+            <i
               *ngFor="let tot of totals | keyvalue: trackSvc.sortByValue"
-              class="d-flex m-1"
-            >
-              <div
-                class="d-flex p-2"
-                [pTooltip]="
-                  vm.data.itemEntities[tot.key]?.name ||
-                  vm.data.recipeEntities[tot.key].name
-                "
-              >
-                <i [class]="tot.key | iconClass"></i>
-              </div>
-            </div>
+              class="d-block"
+              [class]="tot.key | iconClass"
+              [pTooltip]="
+                vm.data.itemEntities[tot.key]?.name ||
+                vm.data.recipeEntities[tot.key].name
+              "
+            ></i>
           </td>
         </ng-container>
       </ng-template>

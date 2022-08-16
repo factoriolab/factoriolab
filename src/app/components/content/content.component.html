@@ -3,7 +3,7 @@
 
 <ng-template #iconTextSelectedItem pTemplate="selectedItem" let-item>
   <div class="d-flex align-items-center h-100">
-    <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+    <i [class]="item.value | iconSmClass"></i>
     <div class="ms-3 text-truncate">
       {{ item.label }}
     </div>
@@ -11,7 +11,7 @@
 </ng-template>
 <ng-template #iconTextItem pTemplate="item" let-item>
   <div class="d-flex align-items-center h-100">
-    <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+    <i [class]="item.value | iconSmClass"></i>
     <div class="ms-3 text-truncate">
       {{ item.label }}
     </div>
@@ -19,7 +19,7 @@
 </ng-template>
 <ng-template #iconSelectedItem pTemplate="selectedItem" let-item>
   <div class="d-flex">
-    <i class="flex-shrink-0" [class]="item.value | iconClass"></i>
+    <i [class]="item.value | iconSmClass"></i>
   </div>
 </ng-template>
 <ng-template #translateSelectedItem pTemplate="selectedItem" let-item>
