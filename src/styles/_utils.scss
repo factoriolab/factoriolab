@@ -3,5 +3,9 @@
 }
 
 .w-0 {
-  width: 0;
+  width: 0 !important;
+}
+
+.mw-0 {
+  min-width: 0 !important;
 }

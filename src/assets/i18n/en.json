@@ -212,6 +212,7 @@
     "depletion": "Depletion",
     "inputs": "Inputs",
     "outputs": "Outputs",
+    "inserterCountInfo": "* Inserters are calculated using target/capacity settings and\n0.18 experimental data from the <a href=\"https://wiki.factorio.com/Inserters#Inserter_Throughput\" target=\"_blank\">wiki.</a>",
 
     "each": "Each",
     "total": "Total",
@@ -236,7 +237,6 @@
     "clickToChangeBeacon": "Click to change beacon",
     "clickToChangeBeaconModules": "Click to change beacon modules",
     "setTotalBeacons": "Set total beacons",
-    "insertCalculateRemark": "* Inserters are calculated using target/capacity settings and\n0.18 experimental data from the",
     "defaultRecipe": "Default Recipe",
     "defaultRecipeInfo1": "Click to set a recipe as the default for this item. If set,\nthe default recipe is treated as the only way to produce this\nitem.",
     "defaultRecipeInfo2": "The recipe must be enabled and must only produce this item.",

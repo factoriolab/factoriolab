@@ -855,8 +855,209 @@
             </ng-container>
           </ng-container>
         </ng-container>
-        <tr *ngSwitchCase="StepDetailTab.Factory">
-          <td colspan="100">factory details...</td>
+        <tr *ngSwitchCase="StepDetailTab.Factory" class="detail">
+          <td></td>
+          <td colspan="100">
+            <div
+              *ngIf="step.recipeId && step.factories"
+              class="d-flex align-items-center"
+            >
+              <table class="mw-0">
+                <ng-container
+                  *ngFor="
+                    let input of vm.data.recipeR[step.recipeId].in
+                      | keyvalue: trackSvc.sortByValue
+                  "
+                >
+                  <ng-container
+                    *ngIf="{
+                      step: vm.stepByItemEntities[input.key],
+                      percent: vm.stepByItemEntities[input.key].parents?.[step.recipeId]
+                    } as row"
+                  >
+                    <tr *ngIf="row.percent">
+                      <td>
+                        <div
+                          *ngIf="row.step.items"
+                          class="d-flex align-items-center justify-content-end"
+                        >
+                          <span class="monospace">{{
+                            row.step.items.mul(row.percent).div(step.factories)
+                              | rate: vm.effectivePrecision[Column.Items]
+                          }}</span>
+                          <div
+                            class="d-flex m-1 p-2"
+                            [pTooltip]="vm.data.itemEntities[input.key].name"
+                          >
+                            <i [class]="input.key | iconClass"></i>
+                          </div>
+                        </div>
+                      </td>
+                      <td *ngIf="vm.columns[Column.Belts].show">
+                        <ng-container
+                          *ngIf="vm.itemSettings[input.key].beltId as beltId"
+                        >
+                          <div
+                            *ngIf="row.step.belts"
+                            class="d-flex align-items-center justify-content-end"
+                          >
+                            <span class="monospace">{{
+                              row.step.belts
+                                .mul(row.percent)
+                                .div(step.factories)
+                                | rate: vm.effectivePrecision[Column.Belts]
+                            }}</span>
+                            <div
+                              class="d-flex m-1 p-2"
+                              [pTooltip]="vm.data.itemEntities[beltId].name"
+                            >
+                              <i [class]="beltId | iconClass"></i>
+                            </div>
+                          </div>
+                        </ng-container>
+                      </td>
+                      <ng-container *ngIf="vm.data.game === Game.Factorio">
+                        <td>
+                          <ng-container
+                            *ngIf="
+                              vm.itemSettings[input.key].beltId !==
+                                ItemId.Pipe && row.step.items
+                            "
+                          >
+                            <div
+                              *ngIf="
+                                row.step.items
+                                  .mul(row.percent)
+                                  .div(step.factories)
+                                  .div(DisplayRateVal[vm.settings.displayRate])
+                                  | inserterSpeed: vm.settings as ins
+                              "
+                              class="d-flex align-items-center justify-content-end"
+                            >
+                              <span class="monospace">{{
+                                ins.value | rate: 1
+                              }}</span>
+                              <div
+                                class="d-flex m-1 p-2"
+                                [pTooltip]="vm.data.itemEntities[ins.id].name"
+                              >
+                                <i [class]="ins.id | iconClass"></i>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </td>
+                      </ng-container>
+                    </tr>
+                  </ng-container>
+                </ng-container>
+              </table>
+              <i class="fa-solid fa-arrow-right mx-3"></i>
+              <table class="mw-0">
+                <tr>
+                  <td class="monospace">1</td>
+                  <td>
+                    <div
+                      *ngIf="
+                        vm.recipeSettings[step.recipeId]?.factoryId as factoryId
+                      "
+                      class="d-flex align-items-center"
+                    >
+                      <div
+                        class="d-flex m-1 p-2"
+                        [pTooltip]="vm.data.recipeEntities[step.recipeId].name"
+                      >
+                        <i [class]="step.recipeId | iconClass"></i>
+                      </div>
+                      <div
+                        class="d-flex m-1 p-2"
+                        [pTooltip]="vm.data.itemEntities[factoryId].name"
+                      >
+                        <i [class]="factoryId | iconClass"></i>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+              <i class="fa-solid fa-arrow-right mx-3"></i>
+              <table class="mw-0">
+                <ng-container
+                  *ngFor="
+                    let output of vm.data.recipeR[step.recipeId].out
+                      | keyvalue: trackSvc.sortByValue
+                  "
+                >
+                  <tr
+                    *ngIf="
+                      output.value.div(
+                        vm.data.recipeR[step.recipeId].time
+                      ) as items
+                    "
+                  >
+                    <ng-container *ngIf="vm.data.game === Game.Factorio">
+                      <td>
+                        <ng-container
+                          *ngIf="
+                            vm.itemSettings[output.key].beltId !== ItemId.Pipe
+                          "
+                        >
+                          <div
+                            *ngIf="items | inserterSpeed: vm.settings as ins"
+                            class="d-flex align-items-center justify-content-end"
+                          >
+                            <span class="monospace">{{
+                              ins.value | rate: 1
+                            }}</span>
+                            <div
+                              class="d-flex m-1 p-2"
+                              [pTooltip]="vm.data.itemEntities[ins.id].name"
+                            >
+                              <i [class]="ins.id | iconClass"></i>
+                            </div>
+                          </div>
+                        </ng-container>
+                      </td>
+                    </ng-container>
+                    <td *ngIf="vm.columns[Column.Belts].show">
+                      <div
+                        *ngIf="vm.itemSettings[output.key].beltId as beltId"
+                        class="d-flex align-items-center justify-content-end"
+                      >
+                        <span class="monospace">{{
+                          items.div(vm.beltSpeed[beltId])
+                            | rate: vm.effectivePrecision[Column.Belts]
+                        }}</span>
+                        <div
+                          class="d-flex m-1 p-2"
+                          [pTooltip]="vm.data.itemEntities[beltId].name"
+                        >
+                          <i [class]="beltId | iconClass"></i>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div
+                        class="d-flex align-items-center justify-content-end"
+                      >
+                        <span class="monospace">{{
+                          items.mul(DisplayRateVal[vm.settings.displayRate])
+                            | rate: vm.effectivePrecision[Column.Items]
+                        }}</span>
+                        <div
+                          class="d-flex m-1 p-2"
+                          [pTooltip]="vm.data.itemEntities[output.key].name"
+                        >
+                          <i [class]="output.key | iconClass"></i>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-container>
+              </table>
+            </div>
+            <div *ngIf="vm.data.game === Game.Factorio">
+              <small [innerHTML]="'list.inserterCountInfo' | translate"></small>
+            </div>
+          </td>
         </tr>
         <tr *ngSwitchCase="StepDetailTab.Recipes">
           <td colspan="100">recipes details...</td>
