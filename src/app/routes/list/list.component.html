@@ -699,7 +699,8 @@
                         ? step.factories?.mul(parent.value)
                         : null,
                     factoryId:
-                      vm.stepDetails[step.id].outputs.length === 1
+                      vm.stepDetails[step.id].outputs.length === 1 &&
+                      step.recipeId
                         ? vm.recipeSettings[step.recipeId].factoryId
                         : null,
                     recipeId: step.recipeId,

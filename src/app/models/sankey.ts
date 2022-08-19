@@ -1,3 +1,5 @@
+import { Recipe } from './data';
+
 export interface SankeyData {
   nodes: Node[];
   links: Link[];
@@ -13,6 +15,10 @@ export interface Node extends SankeyBase {
   stepId: string;
   viewBox: string;
   href: string | undefined;
+  subtext: string;
+  recipe?: Recipe;
+  factories?: string;
+  factoryId?: string;
 }
 
 export interface Link extends SankeyBase {

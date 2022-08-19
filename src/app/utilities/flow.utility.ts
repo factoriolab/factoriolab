@@ -1,158 +1,187 @@
 import {
+  Column,
   Dataset,
+  DisplayRate,
+  displayRateLabel,
   Entities,
   LinkValue,
   MIN_LINK_VALUE,
   Rational,
+  RecipeSettings,
   SankeyData,
   Step,
 } from '~/models';
+import { ColumnsState } from '~/store/preferences';
 
 export class FlowUtility {
-  static buildSankey(
+  static buildGraph(
     steps: Step[],
+    displayRate: DisplayRate,
     linkSize: LinkValue,
     linkText: LinkValue,
     linkPrecision: number | null,
+    columns: ColumnsState,
+    recipeSettings: Entities<RecipeSettings>,
     data: Dataset
   ): SankeyData {
     const sankey: SankeyData = {
       nodes: [],
       links: [],
     };
-    const iId: Entities = {};
-    const rId: Entities = {};
-    for (const step of steps) {
-      if (
-        step.recipeId != null &&
-        step.itemId === step.recipeId &&
-        data.recipeR[step.recipeId].produces(step.itemId)
-      ) {
-        iId[step.itemId] = step.itemId;
-        rId[step.recipeId] = step.recipeId;
-      } else {
-        if (step.itemId != null) {
-          iId[step.itemId] = `i|${step.itemId}`;
-        }
-        if (step.recipeId != null) {
-          rId[step.recipeId] = `r|${step.recipeId}`;
-        }
-      }
-    }
 
     for (const step of steps) {
-      const text = this.stepLinkValue(step, linkText);
-      const value =
-        linkText === linkSize ? text : this.stepLinkValue(step, linkSize);
-      let match = false;
-
-      if (step.recipeId) {
-        const recipe = data.recipeR[step.recipeId];
+      if (step.recipeId && step.factories) {
+        const recipe = data.recipeEntities[step.recipeId];
+        const settings = recipeSettings[step.recipeId];
         const icon = data.iconEntities[step.recipeId];
-        match = step.itemId === step.recipeId && recipe.produces(step.itemId);
 
+        if (settings.factoryId == null) break;
+        const factory = data.itemEntities[settings.factoryId];
         sankey.nodes.push({
-          id: rId[step.recipeId],
+          id: `r|${step.recipeId}`,
           stepId: step.id,
-          viewBox: `${icon.position
-            .replace(/px/g, '')
-            .replace(/-/g, '')} 64 64`,
-          href: icon.file,
+          viewBox: '',
+          href: recipe.id,
           name: recipe.name,
-          color: icon.color,
+          subtext:
+            step.factories.toString(columns[Column.Factories].precision) +
+            ' ' +
+            factory.name,
+          color: Object.keys(recipe.in).length === 0 ? '#CBD5E1' : '#93C5FD',
+          recipe,
+          factoryId: settings.factoryId,
+          factories: step.factories.toString(
+            columns[Column.Factories].precision
+          ),
         });
-
-        if (match && step.parents && step.itemId) {
-          for (const i of Object.keys(step.parents)) {
-            if (rId[i]) {
-              const item = data.itemEntities[step.itemId];
-              sankey.links.push({
-                target: rId[i],
-                source: rId[step.recipeId],
-                value: this.linkSize(
-                  value,
-                  step.parents[i],
-                  linkSize,
-                  item.stack
-                ),
-                text: this.linkText(
-                  text,
-                  step.parents[i],
-                  linkText,
-                  linkPrecision
-                ),
-                name: item.name,
-                color: icon.color,
-              });
-            }
-          }
-        }
-
-        for (const outId of Object.keys(recipe.out).filter(
-          (id) =>
-            recipe.out[id].nonzero() &&
-            (!match || (step.itemId !== id && !step.parents?.[id]))
-        )) {
-          const outStep = steps.find((s) => s.itemId === outId);
-          if (outStep) {
-            const outText = this.stepLinkValue(outStep, linkText);
-            const outValue =
-              linkText === linkSize
-                ? outText
-                : this.stepLinkValue(outStep, linkSize);
-            if (step.outputs && iId[outId]) {
-              const percent = step.outputs[outId];
-              const item = data.itemEntities[outId];
-              sankey.links.push({
-                target: iId[outId],
-                source: rId[step.recipeId],
-                value: this.linkSize(outValue, percent, linkSize, item.stack),
-                text: this.linkText(outText, percent, linkText, linkPrecision),
-                name: item.name,
-                color: data.iconEntities[outId].color,
-              });
-            }
-          }
-        }
       }
 
-      if (step.itemId && !match) {
+      if (step.itemId) {
         const item = data.itemEntities[step.itemId];
         const icon = data.iconEntities[step.itemId];
-
-        sankey.nodes.push({
-          id: iId[step.itemId],
-          stepId: step.id,
-          viewBox: `${icon.position
-            .replace(/px/g, '')
-            .replace(/-/g, '')} 64 64`,
-          href: icon.file,
-          name: item.name,
-          color: icon.color,
-        });
-        if (step.parents) {
-          for (const i of Object.keys(step.parents)) {
-            if (rId[i]) {
-              const recipe = data.recipeR[i];
-              if (recipe.in[step.itemId]) {
+        if (step.surplus) {
+          // need to create a surplus node
+          sankey.nodes.push({
+            id: `s|${step.itemId}`,
+            stepId: step.id,
+            viewBox: '',
+            href: 'aaaa',
+            name: item.name + ' surplus..',
+            subtext: '...',
+            color: '#FCA5A5',
+          });
+          // need to draw lines from each recipe
+          for (const sourceStep of steps) {
+            if (sourceStep.recipeId && sourceStep.outputs) {
+              if (sourceStep.outputs[step.itemId]) {
+                const sourceAmount = step.surplus.mul(
+                  sourceStep.outputs[step.itemId]
+                );
                 sankey.links.push({
-                  target: rId[i],
-                  source: iId[step.itemId],
-                  value: this.linkSize(
-                    value,
-                    step.parents[i],
-                    linkSize,
-                    item.stack
-                  ),
-                  text: this.linkText(
-                    text,
-                    step.parents[i],
-                    linkText,
-                    linkPrecision
-                  ),
+                  source: `r|${sourceStep.recipeId}`,
+                  target: `s|${step.itemId}`,
                   name: item.name,
                   color: icon.color,
+                  value: sourceAmount.toNumber(),
+                  text: 'surplus',
                 });
+              }
+            }
+          }
+        }
+
+        if (step.items) {
+          let itemAmt = step.items;
+          if (step.parents) {
+            // need to draw lines to each requested recipe
+            for (const targetId of Object.keys(step.parents)) {
+              // this is how much is requested by that recipe, but need recipe source
+              const targetAmount = step.items.mul(step.parents[targetId]);
+              let amount = targetAmount;
+              itemAmt = itemAmt.sub(amount);
+              for (const sourceStep of steps) {
+                if (sourceStep.recipeId && sourceStep.outputs) {
+                  if (sourceStep.outputs[step.itemId]) {
+                    // this source step produces this item
+                    const sourceAmount = targetAmount.mul(
+                      sourceStep.outputs[step.itemId]
+                    );
+                    amount = amount.sub(sourceAmount);
+                    sankey.links.push({
+                      source: `r|${sourceStep.recipeId}`,
+                      target: `r|${targetId}`,
+                      name: item.name,
+                      color: icon.color,
+                      value: sourceAmount.toNumber(),
+                      text:
+                        sourceAmount.toString(columns[Column.Items].precision) +
+                        displayRateLabel[displayRate],
+                    });
+                  }
+                }
+              }
+
+              if (amount.gt(Rational.zero)) {
+                // need input node
+                sankey.nodes.push({
+                  id: `i|${step.itemId}`,
+                  stepId: step.id,
+                  viewBox: 'aa',
+                  href: 'aa',
+                  name: item.name + ' input..',
+                  subtext: '...',
+                  color: 'red',
+                });
+                // need to draw lines TO each recipe
+                for (const targetId of Object.keys(step.parents)) {
+                  // how much is requested by this recipe? not sure yet.
+                  const targetAmount = step.items.mul(step.parents[targetId]);
+                  sankey.links.push({
+                    source: `i|${step.itemId}`,
+                    target: `r|${targetId}`,
+                    name: item.name,
+                    color: icon.color,
+                    value: 1,
+                    text: 'inputtt',
+                  });
+                }
+              }
+            }
+          }
+
+          if (itemAmt.gt(step.surplus || Rational.zero)) {
+            // need output node
+            sankey.nodes.push({
+              id: `o|${step.itemId}`,
+              stepId: step.id,
+              viewBox: 'aa',
+              href: 'aa',
+              name: item.name + ' output..',
+              subtext:
+                itemAmt
+                  .sub(step.surplus || Rational.zero)
+                  .toString(columns[Column.Items].precision) +
+                displayRateLabel[displayRate],
+              color: '#86EFAC',
+            });
+            for (const sourceStep of steps) {
+              if (sourceStep.recipeId && sourceStep.outputs) {
+                if (sourceStep.outputs[step.itemId]) {
+                  console.log(step.itemId, sourceStep.recipeId);
+                  sankey.links.push({
+                    source: `r|${sourceStep.recipeId}`,
+                    target: `o|${step.itemId}`,
+                    name: item.name,
+                    color: icon.color,
+                    value: 1,
+                    text:
+                      itemAmt
+                        .sub(step.surplus || Rational.zero)
+                        .mul(sourceStep.outputs[step.itemId])
+                        .toString(columns[Column.Items].precision) +
+                      displayRateLabel[displayRate],
+                  });
+                }
               }
             }
           }

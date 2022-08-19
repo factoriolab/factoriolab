@@ -38,6 +38,7 @@
               "node_modules/primeicons/primeicons.css",
               "node_modules/primeng/resources/themes/lara-dark-blue/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/vis-network/styles/vis-network.min.css",
               "src/styles.scss"
             ],
             "stylePreprocessorOptions": {

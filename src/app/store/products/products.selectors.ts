@@ -356,18 +356,33 @@ export const getSteps = createSelector(
     )
 );
 
-export const getSankey = createSelector(
+export const getGraph = createSelector(
   getSteps,
+  Settings.getDisplayRate,
   Preferences.getLinkSize,
   Preferences.getLinkText,
   Preferences.getLinkPrecision,
+  Preferences.getColumns,
+  Recipes.getRecipeSettings,
   Recipes.getAdjustedDataset,
-  (steps, linkSize, linkText, linkPrecision, data) =>
-    FlowUtility.buildSankey(
+  (
+    steps,
+    displayRate,
+    linkSize,
+    linkText,
+    linkPrecision,
+    columns,
+    recipeSettings,
+    data
+  ) =>
+    FlowUtility.buildGraph(
       RateUtility.copy(steps),
+      displayRate,
       linkSize,
       linkText,
       linkPrecision,
+      columns,
+      recipeSettings,
       data
     )
 );

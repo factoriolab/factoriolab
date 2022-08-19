@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 
-import { Rational } from '~/models';
+import { Rational, Recipe } from '~/models';
 
 @Injectable({ providedIn: 'root' })
 export class DisplayService {
-  icon(id: string, num: string | number): string {
-    return `<i class="m-1 me-2 lab-icon-sm ${id}"><span>${num}</span></i>`;
+  icon(id: string, num?: string | number): string {
+    return `<i class="m-1 me-2 lab-icon-sm ${id}"><span>${
+      num ?? ''
+    }</span></i>`;
   }
 
   table(rows: [string, string][]): string {
@@ -41,5 +43,16 @@ export class DisplayService {
     } else {
       return '';
     }
+  }
+
+  recipeProcess(recipe: Recipe): string {
+    const timeHtml = this.icon('time', recipe.time);
+    const inHtml = Object.keys(recipe.in)
+      .map((i) => this.icon(i, recipe.in[i]))
+      .join('');
+    const outHtml = Object.keys(recipe.out)
+      .map((i) => this.icon(i, recipe.out[i]))
+      .join('');
+    return `${timeHtml}${inHtml}<i class="m-1 me-2 fa-solid fa-arrow-right"></i>${outHtml}`;
   }
 }
