@@ -1,3 +1,11 @@
-export * from './columns-dialog/columns-dialog.component';
-export * from './products/products.component';
-export * from './settings/settings.component';
+import { ColumnsDialogComponent } from './columns-dialog/columns-dialog.component';
+import { InputNumberComponent } from './input-number/input-number.component';
+import { ProductsComponent } from './products/products.component';
+import { SettingsComponent } from './settings/settings.component';
+
+export const components = [
+  ColumnsDialogComponent,
+  InputNumberComponent,
+  ProductsComponent,
+  SettingsComponent,
+];

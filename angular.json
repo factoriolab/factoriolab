@@ -46,8 +46,9 @@
             },
             "scripts": [],
             "allowedCommonJsDependencies": [
+              "component-emitter",
+              "elkjs/lib/elk.bundled",
               "file-saver",
-              "elementary-circuits-directed-graph",
               "glpk-ts"
             ],
             "vendorChunk": true,
@@ -75,7 +76,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500mb",
+                  "maximumWarning": "500kb",
                   "maximumError": "2mb"
                 },
                 {
@@ -102,7 +103,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500mb",
+                  "maximumWarning": "500kb",
                   "maximumError": "2mb"
                 },
                 {

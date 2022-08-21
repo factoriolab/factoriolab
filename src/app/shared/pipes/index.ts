@@ -1,13 +1,3 @@
-export * from './tooltips';
-export * from './factory-rate.pipe';
-export * from './factory-show-rate.pipe';
-export * from './factory-show.pipe';
-export * from './icon-class.pipe';
-export * from './inserter-speed.pipe';
-export * from './left-pad.pipe';
-export * from './options.pipe';
-export * from './power.pipe';
-export * from './precision-example.pipe';
-export * from './rate.pipe';
-export * from './step-href.pipe';
-export * from './url.pipe';
+import { IconClassPipe, IconSmClassPipe } from './icon-class.pipe';
+
+export const pipes = [IconClassPipe, IconSmClassPipe];
