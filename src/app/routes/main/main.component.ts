@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
 import { combineLatest, first, map } from 'rxjs';
@@ -9,30 +8,30 @@ import { APP, MatrixResultType, SimplexType } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Preferences, Products, Settings } from '~/store';
 
-@UntilDestroy()
 @Component({
   selector: 'lab-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MainComponent implements OnInit {
+export class MainComponent {
   vm$ = combineLatest([
     this.store.select(Settings.getGame),
     this.store.select(Settings.getMod),
     this.store.select(Products.getProducts),
     this.store.select(Products.getMatrixResult),
+    this.contentSvc.settingsActive$,
   ]).pipe(
-    map(([game, mod, products, result]) => ({
+    map(([game, mod, products, result, settingsActive]) => ({
       game,
       mod,
       products,
       result,
+      settingsActive,
     }))
   );
 
   version = `${APP} ${environment.version}`;
-  settingsActive = false;
   showSimplexErr = false;
   fixLoading = false;
   simplexErrSub = this.store
@@ -61,13 +60,6 @@ export class MainComponent implements OnInit {
     public contentSvc: ContentService,
     private store: Store<LabState>
   ) {}
-
-  ngOnInit(): void {
-    console.log('init main');
-    this.contentSvc.toggleMenu$.pipe(untilDestroyed(this)).subscribe(() => {
-      this.settingsActive = !this.settingsActive;
-    });
-  }
 
   tryFixSimplex(): void {
     this.fixLoading = true;

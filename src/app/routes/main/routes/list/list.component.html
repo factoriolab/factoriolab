@@ -185,7 +185,7 @@
               ></i>
               <ng-template #recipeIcon>
                 <i
-                  [class]="step.recipeId | iconSmClass"
+                  [class]="step.recipeId | iconSmClass: 'recipe'"
                   [pTooltip]="vm.data.recipeEntities[step.recipeId].name"
                 ></i>
               </ng-template>
@@ -412,7 +412,7 @@
                 class="d-flex align-items-center"
               >
                 <i
-                  [class]="step.recipeId | iconClass"
+                  [class]="step.recipeId | iconClass: 'recipe'"
                   [pTooltip]="step.recipeId | recipeTooltip: vm.data"
                   [escape]="false"
                 ></i>
@@ -964,7 +964,7 @@
                       class="d-flex align-items-center"
                     >
                       <i
-                        [class]="step.recipeId | iconClass"
+                        [class]="step.recipeId | iconClass: 'recipe'"
                         [pTooltip]="vm.data.recipeEntities[step.recipeId].name"
                       ></i>
                       <i
@@ -1112,7 +1112,7 @@
                       [class.p-button-text]="
                         vm.data.itemRecipeId[step.itemId] !== recipeId
                       "
-                      [icon]="recipeId | iconSmClass"
+                      [icon]="recipeId | iconSmClass: 'recipe'"
                       [pTooltip]="recipeId | recipeTooltip: vm.data"
                       [escape]="false"
                       (click)="
@@ -1155,7 +1155,7 @@
                     [class.hover-active]="
                       vm.settings.disabledRecipeIds.indexOf(recipeId) !== -1
                     "
-                    [icon]="recipeId | iconSmClass"
+                    [icon]="recipeId | iconSmClass: 'recipe'"
                     [pTooltip]="recipeId | recipeTooltip: vm.data"
                     [escape]="false"
                     (click)="toggleRecipe(recipeId, vm.settings, vm.data)"
@@ -1258,7 +1258,7 @@
                 *ngIf="factoryId | factoryShow: vm.data.game; else factoryFill"
               >
                 <i
-                  [class]="recipeId | iconClass"
+                  [class]="recipeId | iconClass: 'recipe'"
                   [pTooltip]="vm.data.recipeEntities[recipeId].name"
                 ></i>
                 <i
@@ -1287,7 +1287,9 @@
                   *ngIf="!percentOnDest"
                 ></i>
                 <i
-                  [class]="destId | iconClass"
+                  [class]="
+                    destId | iconClass: (destIsRecipe ? 'recipe' : 'item')
+                  "
                   [pTooltip]="
                     (destIsRecipe
                       ? vm.data.recipeEntities
@@ -1364,7 +1366,7 @@
             <i
               *ngFor="let tot of totals | keyvalue: trackSvc.sortByValue"
               class="d-block"
-              [class]="tot.key | iconClass"
+              [class]="tot.key | iconClass: 'item'"
               [pTooltip]="
                 vm.data.itemEntities[tot.key]?.name ||
                 vm.data.recipeEntities[tot.key].name

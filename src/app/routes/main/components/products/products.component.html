@@ -53,7 +53,9 @@
             'products.of' | translate
           }}</span>
           <p-dropdown
-            labDropdownIconText
+            [labDropdownIconText]="
+              product.rateType === RateType.Factories ? 'recipe' : 'item'
+            "
             [virtualScroll]="true"
             [virtualScrollItemSize]="48"
             [tooltip]="'products.changeVia' | translate"

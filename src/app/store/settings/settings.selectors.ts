@@ -433,23 +433,12 @@ export const getDataset = createSelector(
         return e;
       }, {});
 
-    // Apply icon references
-    categories
-      .filter((c) => c.icon)
-      .forEach((c) => (iconEntities[c.id] = iconEntities[c.icon!]));
-    items
-      .filter((i) => i.icon)
-      .forEach((i) => (iconEntities[i.id] = iconEntities[i.icon!]));
-    recipes
-      .filter((r) => r.icon)
-      .forEach((r) => (iconEntities[r.id] = iconEntities[r.icon!]));
-
     // Calculate missing implicit recipe icons
     // For recipes with no icon, use icon of first output product
     recipes
-      .filter((r) => !iconEntities[r.id] && r.out)
+      .filter((r) => !iconEntities[r.id])
       .forEach(
-        (r) => (iconEntities[r.id] = iconEntities[Object.keys(r.out!)[0]])
+        (r) => (iconEntities[r.id] = iconEntities[Object.keys(r.out)[0]])
       );
     // Calculate category item rows
     const categoryItemRows: Entities<string[][]> = {};

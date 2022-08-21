@@ -18,7 +18,7 @@
         type="button"
         class="p-button-rounded p-button-text d-inline-flex d-sm-none"
         icon="fa-solid fa-xmark"
-        (click)="contentSvc.toggleMenu$.next()"
+        (click)="contentSvc.toggleMenu()"
       ></button>
     </div>
   </div>
@@ -176,7 +176,7 @@
               </ng-template>
               <ng-template pTemplate="item" let-item>
                 <div class="d-flex align-items-center">
-                  <i [class]="item.value | iconSmClass"></i>
+                  <i [class]="item.value | iconSmClass: 'recipe'"></i>
                   <div class="ms-3 text-truncate">
                     {{ item.label }}
                   </div>

@@ -14,8 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
 import { combineLatest, map } from 'rxjs';
 
-import { environment } from 'src/environments';
-import { APP, Game, gameInfo, ItemId, MatrixResultType } from './models';
+import { Game, gameInfo, ItemId } from './models';
 import {
   ContentService,
   ErrorService,
@@ -51,10 +50,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     }))
   );
 
-  settingsActive = false;
-
   ItemId = ItemId;
-  MatrixResultType = MatrixResultType;
   Game = Game;
 
   constructor(
@@ -109,13 +105,6 @@ Determine resource and factory requirements for your desired output products.`,
         const icon = data.iconEntities[i];
         css += `.${i}::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
       });
-      // TODO: VERIFY FIX?
-      data.categoryIds
-        .filter((i) => data.categoryEntities[i].icon)
-        .forEach((i) => {
-          const icon = data.iconEntities[data.categoryEntities[i].icon!];
-          css += `.${i}.category::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
-        });
       data.itemIds
         .filter((i) => data.itemEntities[i].icon)
         .forEach((i) => {

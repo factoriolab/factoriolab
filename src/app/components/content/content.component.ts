@@ -25,6 +25,13 @@ export class ContentComponent implements OnInit, AfterViewInit {
     | undefined;
   @ViewChild('iconTextItem') iconTextItem: TemplateRef<any> | undefined;
   @ViewChild('iconSelectedItem') iconSelectedItem: TemplateRef<any> | undefined;
+  @ViewChild('iconTextSelectedRecipe') iconTextSelectedRecipe:
+    | TemplateRef<any>
+    | undefined;
+  @ViewChild('iconTextRecipe') iconTextRecipe: TemplateRef<any> | undefined;
+  @ViewChild('iconSelectedRecipe') iconSelectedRecipe:
+    | TemplateRef<any>
+    | undefined;
   @ViewChild('translateSelectedItem') translateSelectedItem:
     | TemplateRef<any>
     | undefined;

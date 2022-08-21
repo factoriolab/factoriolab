@@ -55,6 +55,8 @@ export class ProductsComponent {
 
   displayRateOptions = displayRateOptions;
 
+  RateType = RateType;
+
   constructor(public trackSvc: TrackService, private store: Store<LabState>) {}
 
   /** Action Dispatch Methods */

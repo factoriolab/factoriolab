@@ -32,11 +32,24 @@ export class ContentService {
   iconSelectedItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(
     undefined
   );
+  iconTextSelectedRecipe$ = new BehaviorSubject<TemplateRef<any> | undefined>(
+    undefined
+  );
+  iconTextRecipe$ = new BehaviorSubject<TemplateRef<any> | undefined>(
+    undefined
+  );
+  iconSelectedRecipe$ = new BehaviorSubject<TemplateRef<any> | undefined>(
+    undefined
+  );
   translateSelectedItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(
     undefined
   );
   translateItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(undefined);
 
   // Header
-  toggleMenu$ = new Subject<void>();
+  settingsActive$ = new BehaviorSubject(false);
+
+  toggleMenu(): void {
+    this.settingsActive$.next(!this.settingsActive$.value);
+  }
 }

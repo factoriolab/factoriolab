@@ -1,9 +1,9 @@
 <ng-container *ngIf="vm$ | async as vm">
-  <lab-settings [active]="settingsActive"></lab-settings>
+  <lab-settings [active]="vm.settingsActive"></lab-settings>
   <div
     class="layout-mask"
-    [class.active]="settingsActive"
-    (click)="contentSvc.toggleMenu$.next()"
+    [class.active]="vm.settingsActive"
+    (click)="contentSvc.toggleMenu()"
   ></div>
   <div class="layout-content">
     <main class="px-1 px-sm-4 px-xl-5 py-4">

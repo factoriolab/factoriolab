@@ -3,6 +3,7 @@
     ><lab-header
       [sticky]="((contentSvc.scrollTop$ | async) ?? 0) > 16"
     ></lab-header>
+    <router-outlet></router-outlet>
   </ng-container>
   <ng-template #errorDialog>
     <p-dialog

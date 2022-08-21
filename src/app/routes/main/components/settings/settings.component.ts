@@ -1,11 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   HostBinding,
   Input,
   OnInit,
-  Output,
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
