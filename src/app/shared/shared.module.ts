@@ -64,14 +64,15 @@ export const SHARED_PIPES = [
 
 @NgModule({
   declarations: [SHARED_COMPONENTS, SHARED_DIRECTIVES, SHARED_PIPES],
-  exports: [VendorModule, SHARED_COMPONENTS, SHARED_DIRECTIVES, SHARED_PIPES],
-  imports: [
-    CommonModule,
+  exports: [
+    VendorModule,
     FormsModule,
     ReactiveFormsModule,
-    TranslateModule,
-    VendorModule,
+    SHARED_COMPONENTS,
+    SHARED_DIRECTIVES,
+    SHARED_PIPES,
   ],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, VendorModule],
   providers: [PowerPipe, RatePipe, FactoryRatePipe],
 })
 export class SharedModule {}

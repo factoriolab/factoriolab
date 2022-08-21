@@ -18,7 +18,7 @@
         type="button"
         class="p-button-rounded p-button-text d-inline-flex d-sm-none"
         icon="fa-solid fa-xmark"
-        (click)="toggleMenu.emit()"
+        (click)="contentSvc.toggleMenu$.next()"
       ></button>
     </div>
   </div>

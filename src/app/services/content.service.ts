@@ -36,4 +36,7 @@ export class ContentService {
     undefined
   );
   translateItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(undefined);
+
+  // Header
+  toggleMenu$ = new Subject<void>();
 }

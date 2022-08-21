@@ -1,40 +1,20 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { FlowComponent, ListComponent, MatrixComponent } from './routes';
-
 const routes: Routes = [
   {
-    path: 'list',
-    component: ListComponent,
+    path: 'error',
+    loadChildren: () =>
+      import('./routes/error/error.module').then((m) => m.ErrorModule),
   },
   {
-    path: 'flow',
-    component: FlowComponent,
-  },
-  {
-    path: 'matrix',
-    component: MatrixComponent,
-  },
-  {
-    path: 'factorio',
-    redirectTo: '/list?s=&v=4',
-  },
-  {
-    path: 'coi',
-    redirectTo: '/list?s=coi&v=4',
-  },
-  {
-    path: 'dsp',
-    redirectTo: '/list?s=dsp&v=4',
-  },
-  {
-    path: 'satisfactory',
-    redirectTo: '/list?s=sfy&v=4',
+    path: '',
+    loadChildren: () =>
+      import('./routes/main/main.module').then((m) => m.MainModule),
   },
   {
     path: '**',
-    redirectTo: 'list',
+    redirectTo: '',
   },
 ];
 

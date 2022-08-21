@@ -3,7 +3,7 @@
     pButton
     pRipple
     icon="fa-solid fa-bars"
-    (click)="toggleMenu.emit()"
+    (click)="contentSvc.toggleMenu$.next()"
   ></button>
 </div>
 <p-selectButton

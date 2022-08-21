@@ -49,8 +49,6 @@ import { BrowserUtility } from '~/utilities';
 export class SettingsComponent implements OnInit {
   @HostBinding('class.active') @Input() active = false;
 
-  @Output() toggleMenu = new EventEmitter();
-
   vm$ = combineLatest([
     this.store.select(Factories.getFactories),
     this.store.select(Factories.getFactoryRows),

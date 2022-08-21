@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -39,7 +40,7 @@ const modules = [
 ];
 
 @NgModule({
-  imports: [CommonModule, ...modules],
-  exports: [...modules],
+  imports: [CommonModule, TranslateModule, ...modules],
+  exports: [TranslateModule, ...modules],
 })
 export class VendorModule {}

@@ -18,6 +18,7 @@ import { SelectItem } from 'primeng/api';
 import { combineLatest, startWith } from 'rxjs';
 
 import { APP, Game, gameInfo, games } from '~/models';
+import { ContentService } from '~/services';
 import { LabState, Settings } from '~/store';
 
 interface MenuLink {
@@ -35,8 +36,6 @@ interface MenuLink {
 })
 export class HeaderComponent implements OnInit {
   @HostBinding('class.sticky') @Input() sticky = false;
-
-  @Output() toggleMenu = new EventEmitter();
 
   gameCtrl = this.fb.control<Game>(Game.Factorio);
   gameOptions: SelectItem<Game>[] = games.map((g) => ({
@@ -73,6 +72,7 @@ export class HeaderComponent implements OnInit {
   lang$ = this.translateSvc.onLangChange.pipe(untilDestroyed(this));
 
   constructor(
+    public contentSvc: ContentService,
     private fb: FormBuilder,
     private ref: ChangeDetectorRef,
     private router: Router,

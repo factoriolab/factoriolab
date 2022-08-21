@@ -1,3 +1,2 @@
-export * from './flow/flow.component';
-export * from './list/list.component';
-export * from './matrix/matrix.component';
+export * from './error/error.module';
+export * from './main/main.module';

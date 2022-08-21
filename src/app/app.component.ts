@@ -12,18 +12,10 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
-import { MenuItem } from 'primeng/api';
-import { combineLatest, first, map } from 'rxjs';
+import { combineLatest, map } from 'rxjs';
 
 import { environment } from 'src/environments';
-import {
-  APP,
-  Game,
-  gameInfo,
-  ItemId,
-  MatrixResultType,
-  SimplexType,
-} from './models';
+import { APP, Game, gameInfo, ItemId, MatrixResultType } from './models';
 import {
   ContentService,
   ErrorService,
@@ -59,29 +51,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     }))
   );
 
-  showSimplexErr = false;
-  fixLoading = false;
-  simplexErrSub = this.store
-    .select(Products.getMatrixResult)
-    .subscribe(
-      (result) =>
-        (this.showSimplexErr = result.resultType === MatrixResultType.Failed)
-    );
   settingsActive = false;
-  version = `${APP} ${environment.version}`;
-  tabItems: MenuItem[] = [
-    { label: 'app.list', icon: 'fa-solid fa-list', routerLink: 'list' },
-    {
-      label: 'app.flow',
-      icon: 'fa-solid fa-diagram-project',
-      routerLink: 'flow',
-    },
-    {
-      label: 'app.matrix',
-      icon: 'fa-solid fa-table-cells',
-      routerLink: 'matrix',
-    },
-  ];
 
   ItemId = ItemId;
   MatrixResultType = MatrixResultType;
@@ -150,32 +120,6 @@ Determine resource and factory requirements for your desired output products.`,
    * */
   ngAfterViewInit(): void {
     this.errorSvc.message$.subscribe(() => this.ref.detectChanges());
-  }
-
-  toggleMenu(): void {
-    this.settingsActive = !this.settingsActive;
-  }
-
-  tryFixSimplex(): void {
-    this.fixLoading = true;
-    setTimeout(() => {
-      this.store
-        .select(Settings.getDefaults)
-        .pipe(first())
-        .subscribe((def) => {
-          this.store.dispatch(
-            new Preferences.SetSimplexTypeAction(SimplexType.WasmFloat64)
-          );
-          this.store.dispatch(
-            new Settings.SetDisabledRecipesAction({
-              value: [],
-              def: def?.disabledRecipeIds,
-            })
-          );
-        });
-      this.showSimplexErr = false;
-      this.fixLoading = false;
-    }, 10);
   }
 
   reset(game: Game): void {

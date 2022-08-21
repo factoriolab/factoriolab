@@ -19,14 +19,7 @@ import { PrimeNGConfig } from 'primeng/api';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {
-  ColumnsDialogComponent,
-  ContentComponent,
-  HeaderComponent,
-  ProductsComponent,
-  SettingsComponent,
-} from './components';
-import { FlowComponent, ListComponent, MatrixComponent } from './routes';
+import { ContentComponent, HeaderComponent } from './components';
 import { LabErrorHandler } from './services';
 import { SharedModule } from './shared/shared.module';
 import { metaReducers, reducers } from './store';
@@ -46,17 +39,7 @@ function initializeApp(primengConfig: PrimeNGConfig): () => Promise<any> {
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ContentComponent,
-    HeaderComponent,
-    SettingsComponent,
-    ColumnsDialogComponent,
-    ProductsComponent,
-    ListComponent,
-    FlowComponent,
-    MatrixComponent,
-  ],
+  declarations: [AppComponent, ContentComponent, HeaderComponent],
   imports: [
     /** Angular modules */
     BrowserModule,
