@@ -3,9 +3,15 @@ import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogModule } from 'primeng/dialog';
 import { SelectButtonModule } from 'primeng/selectbutton';
 
-const modules = [ButtonModule, ConfirmDialogModule, SelectButtonModule];
+const modules = [
+  ButtonModule,
+  ConfirmDialogModule,
+  DialogModule,
+  SelectButtonModule,
+];
 
 @NgModule({
   imports: [CommonModule, TranslateModule, ...modules],

@@ -1,6 +1,7 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
@@ -42,6 +43,8 @@ function initializeApp(primengConfig: PrimeNGConfig): () => Promise<any> {
     /** Angular modules */
     BrowserModule,
     HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
     /** Vendor modules */
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreDevtoolsModule.instrument({

@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
-import { DialogModule } from 'primeng/dialog';
 import { DividerModule } from 'primeng/divider';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -19,7 +18,6 @@ const modules = [
   AutoFocusModule,
   CardModule,
   CheckboxModule,
-  DialogModule,
   DividerModule,
   DropdownModule,
   InputNumberModule,
