@@ -139,6 +139,25 @@ Determine resource and factory requirements for your desired output products.`,
         const icon = data.iconEntities[i];
         css += `.${i}::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
       });
+      // TODO: VERIFY FIX?
+      data.categoryIds
+        .filter((i) => data.categoryEntities[i].icon)
+        .forEach((i) => {
+          const icon = data.iconEntities[data.categoryEntities[i].icon!];
+          css += `.${i}.category::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+        });
+      data.itemIds
+        .filter((i) => data.itemEntities[i].icon)
+        .forEach((i) => {
+          const icon = data.iconEntities[data.itemEntities[i].icon!];
+          css += `.${i}.item::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+        });
+      data.recipeIds
+        .filter((i) => data.recipeEntities[i].icon)
+        .forEach((i) => {
+          const icon = data.iconEntities[data.recipeEntities[i].icon!];
+          css += `.${i}.recipe::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+        });
       style.innerText = css;
       head.appendChild(style);
     });
