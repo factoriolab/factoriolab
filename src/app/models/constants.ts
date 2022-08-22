@@ -1,5 +1,4 @@
 export const DEFAULT_PRECISION = 1;
-export const MIN_LINK_VALUE = 1e-10;
 export const STATE_KEY = 'state';
 export const APP = 'FactorioLab';
 export const WARNING_HANG = `No solution found in 5 seconds. Continue trying to solve?

@@ -4,9 +4,7 @@ import {
   ColumnSettings,
   Entities,
   Language,
-  LinkValue,
   PowerUnit,
-  SankeyAlign,
   SimplexType,
 } from '~/models';
 import * as App from '../app.actions';
@@ -20,9 +18,6 @@ export type ColumnsState = Entities<ColumnSettings>;
 export interface PreferencesState {
   states: Entities<string>;
   columns: ColumnsState;
-  linkSize: LinkValue;
-  linkText: LinkValue;
-  sankeyAlign: SankeyAlign;
   simplexType: SimplexType;
   language: Language;
   powerUnit: PowerUnit;
@@ -39,9 +34,6 @@ export const initialColumnsState: ColumnsState = allColumns.reduce(
 export const initialPreferencesState: PreferencesState = {
   states: {},
   columns: initialColumnsState,
-  linkSize: LinkValue.Items,
-  linkText: LinkValue.Items,
-  sankeyAlign: SankeyAlign.Justify,
   simplexType: SimplexType.JsBigIntRational,
   language: Language.English,
   powerUnit: PowerUnit.Auto,
@@ -76,12 +68,6 @@ export function preferencesReducer(
             : PowerUnit.Auto,
         },
       };
-    case PreferencesActionType.SET_LINK_SIZE:
-      return { ...state, ...{ linkSize: action.payload } };
-    case PreferencesActionType.SET_LINK_TEXT:
-      return { ...state, ...{ linkText: action.payload } };
-    case PreferencesActionType.SET_SANKEY_ALIGN:
-      return { ...state, ...{ sankeyAlign: action.payload } };
     case PreferencesActionType.SET_SIMPLEX_TYPE:
       return { ...state, ...{ simplexType: action.payload } };
     case PreferencesActionType.SET_LANGUAGE:

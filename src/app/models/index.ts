@@ -16,6 +16,6 @@ export * from './options';
 export * from './payload';
 export * from './product';
 export * from './rational';
-export * from './sankey';
+export * from './flow';
 export * from './step-detail';
 export * from './step';

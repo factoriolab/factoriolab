@@ -57,7 +57,7 @@ export class FlowComponent implements AfterViewInit {
             }
             return {
               id: n.id,
-              label: `<b>${n.name}</b>\n${n.subtext}`,
+              label: `<b>${n.name}</b>\n${n.text}`,
               title: el,
               color: n.color,
             };
@@ -134,7 +134,6 @@ export class FlowComponent implements AfterViewInit {
               minimum: 50,
               maximum: 250,
             },
-            // chosen: { node: this.clickNode, label: false },
           },
           layout: {
             improvedLayout: false,
@@ -166,7 +165,6 @@ export class FlowComponent implements AfterViewInit {
               'org.eclipse.elk.spacing.nodeNode': '40',
             },
           };
-          // this.loading$.next(false);
 
           const elk = new ELK();
 
@@ -188,17 +186,4 @@ export class FlowComponent implements AfterViewInit {
         }
       });
   }
-
-  // clickNode<T>(
-  //   values: T,
-  //   id: IdType,
-  //   selected: boolean,
-  //   hovered: boolean
-  // ): void {
-  //   if (selected) {
-  //     console.log(values, id);
-  //   } else {
-  //     console.log('unselected');
-  //   }
-  // }
 }
