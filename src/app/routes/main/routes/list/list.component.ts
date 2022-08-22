@@ -2,25 +2,19 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  Input,
   OnInit,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Table } from 'primeng/table';
-import { combineLatest, filter, first, map } from 'rxjs';
+import { combineLatest, filter, first, map, tap } from 'rxjs';
 
 import {
   Column,
   Dataset,
-  DisplayRate,
-  displayRateLabel,
-  displayRateVal,
   Game,
   ItemId,
-  ListMode,
-  PIPE,
   Rational,
   RecipeField,
   Step,
@@ -60,6 +54,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.select(Recipes.getAdjustedDataset),
     this.store.select(Settings.getColumnsState),
     this.store.select(Settings.getSettings),
+    this.store.select(Settings.getDisplayRateInfo),
     this.store.select(Settings.getOptions),
     this.store.select(Settings.getBeltSpeed),
     this.store.select(Settings.getBeltSpeedTxt),
@@ -82,6 +77,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         data,
         columns,
         settings,
+        dispRateInfo,
         options,
         beltSpeed,
         beltSpeedTxt,
@@ -102,29 +98,21 @@ export class ListComponent implements OnInit, AfterViewInit {
         data,
         columns,
         settings,
+        dispRateInfo,
         options,
         beltSpeed,
         beltSpeedTxt,
       })
-    )
+    ),
+    tap(() => console.log('redraw'))
   );
 
   @ViewChild('stepsTable') stepsTable: Table | undefined;
 
-  @Input() mode = ListMode.All;
-  @Input() selectedId: string | undefined;
-
   fragmentId: string | null | undefined;
 
-  displayRateLabel = displayRateLabel;
-
-  ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
-  DisplayRateVal = displayRateVal;
-  PIPE = PIPE;
   Column = Column;
-  DisplayRate = DisplayRate;
   ItemId = ItemId;
-  ListMode = ListMode;
   StepDetailTab = StepDetailTab;
   Game = Game;
   RecipeField = RecipeField;
@@ -132,9 +120,9 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   constructor(
     public contentSvc: ContentService,
-    private route: ActivatedRoute,
     public trackSvc: TrackService,
-    public store: Store<LabState>
+    private route: ActivatedRoute,
+    private store: Store<LabState>
   ) {}
 
   ngOnInit(): void {

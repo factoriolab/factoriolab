@@ -14,14 +14,26 @@ export const displayRateOptions: SelectItem<DisplayRate>[] = [
   { value: DisplayRate.PerHour, label: 'options.displayRate.perHour' },
 ];
 
-export const displayRateVal = {
-  [DisplayRate.PerSecond]: new Rational(BigInt(DisplayRate.PerSecond)),
-  [DisplayRate.PerMinute]: new Rational(BigInt(DisplayRate.PerMinute)),
-  [DisplayRate.PerHour]: new Rational(BigInt(DisplayRate.PerHour)),
-};
+export interface DisplayRateInfo {
+  option: DisplayRate;
+  label: string;
+  value: Rational;
+}
 
-export const displayRateLabel = {
-  [DisplayRate.PerHour]: '/h',
-  [DisplayRate.PerMinute]: '/m',
-  [DisplayRate.PerSecond]: '/s',
+export const displayRateInfo: Record<DisplayRate, DisplayRateInfo> = {
+  [DisplayRate.PerSecond]: {
+    option: DisplayRate.PerSecond,
+    label: '/s',
+    value: Rational.from(DisplayRate.PerSecond),
+  },
+  [DisplayRate.PerMinute]: {
+    option: DisplayRate.PerMinute,
+    label: '/m',
+    value: Rational.from(DisplayRate.PerMinute),
+  },
+  [DisplayRate.PerHour]: {
+    option: DisplayRate.PerHour,
+    label: '/h',
+    value: Rational.from(DisplayRate.PerHour),
+  },
 };

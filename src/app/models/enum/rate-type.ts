@@ -1,6 +1,6 @@
 import { SelectItem } from 'primeng/api';
 
-import { DisplayRate, displayRateLabel } from './display-rate';
+import { DisplayRateInfo } from './display-rate';
 import { Game } from './game';
 
 export enum RateType {
@@ -11,13 +11,13 @@ export enum RateType {
 }
 
 export function rateTypeOptions(
-  displayRate: DisplayRate,
+  dispRateInfo: DisplayRateInfo,
   game: Game
 ): SelectItem<RateType>[] {
   const result = [
-    { value: RateType.Items, label: `Items${displayRateLabel[displayRate]}` },
+    { value: RateType.Items, label: `Items${dispRateInfo.label}` },
     { value: RateType.Belts, label: 'Belts' },
-    { value: RateType.Wagons, label: `Wagons${displayRateLabel[displayRate]}` },
+    { value: RateType.Wagons, label: `Wagons${dispRateInfo.label}` },
     { value: RateType.Factories, label: 'Factories' },
   ];
 

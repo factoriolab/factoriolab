@@ -6,4 +6,3 @@ To avoid this issue, try the WASM Float64 simplex solver, or disable recycling r
 \u26a0 Warning: The browser may hang if you choose to continue.
 
 (Click "OK" to keep trying, click "Cancel" to quit)`;
-export const PIPE = 'Pipe';

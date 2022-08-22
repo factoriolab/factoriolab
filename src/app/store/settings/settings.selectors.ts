@@ -7,8 +7,7 @@ import {
   columnOptions,
   Dataset,
   Defaults,
-  displayRateLabel,
-  displayRateVal,
+  displayRateInfo,
   Entities,
   FuelType,
   Game,
@@ -115,10 +114,15 @@ export const getColumnOptions = createSelector(getGame, (game) =>
   columnOptions(game)
 );
 
+export const getDisplayRateInfo = createSelector(
+  getDisplayRate,
+  (displayRate) => displayRateInfo[displayRate]
+);
+
 export const getRateTypeOptions = createSelector(
   getGame,
-  getDisplayRate,
-  (game, displayRate) => rateTypeOptions(displayRate, game)
+  getDisplayRateInfo,
+  (game, dispRateInfo) => rateTypeOptions(dispRateInfo, game)
 );
 
 export const getPresetOptions = createSelector(getGame, (game) =>
@@ -632,12 +636,12 @@ export const getBeltSpeed = createSelector(
 
 export const getBeltSpeedTxt = createSelector(
   getBeltSpeed,
-  getDisplayRate,
-  (beltSpeed, displayRate) =>
+  getDisplayRateInfo,
+  (beltSpeed, dispRateInfo) =>
     Object.keys(beltSpeed).reduce((e: Entities<string>, beltId) => {
-      const speed = beltSpeed[beltId].mul(displayRateVal[displayRate]);
+      const speed = beltSpeed[beltId].mul(dispRateInfo.value);
       const speedTxt = Number(speed.toNumber().toFixed(2));
-      const rateTxt = displayRateLabel[displayRate];
+      const rateTxt = dispRateInfo.label;
       e[beltId] = speedTxt + rateTxt;
       return e;
     }, {})

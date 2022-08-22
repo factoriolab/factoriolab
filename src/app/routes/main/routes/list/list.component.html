@@ -1,6 +1,5 @@
 <ng-container *ngIf="vm$ | async as vm">
   <p-table
-    *ngIf="vm.steps"
     #stepsTable
     dataKey="id"
     [rowTrackBy]="trackSvc.trackById"
@@ -29,8 +28,7 @@
         <th colspan="2">
           <div class="d-flex align-items-center">
             <span>{{
-              ('list.items' | translate) +
-                displayRateLabel[vm.settings.displayRate]
+              ('list.items' | translate) + vm.dispRateInfo.label
             }}</span>
             <button
               *ngIf="vm.itemsModified.ignore"
@@ -62,8 +60,7 @@
         <th *ngIf="vm.columns[Column.Wagons].show" colspan="2">
           <div class="d-flex align-items-center">
             <span>{{
-              ('list.wagons' | translate) +
-                displayRateLabel[vm.settings.displayRate]
+              ('list.wagons' | translate) + vm.dispRateInfo.label
             }}</span>
             <button
               *ngIf="vm.itemsModified.wagons"
@@ -114,14 +111,12 @@
         <!-- Pollution -->
         <th *ngIf="vm.columns[Column.Pollution].show">
           <span>{{
-            ('list.pollution' | translate) +
-              displayRateLabel[vm.settings.displayRate]
+            ('list.pollution' | translate) + vm.dispRateInfo.label
           }}</span>
         </th>
         <!-- Link -->
         <th *ngIf="vm.columns[Column.Link].show" class="w-0">
           <button
-            *ngIf="mode === ListMode.All"
             pButton
             pRipple
             class="p-button-outlined p-button-rounded"
@@ -142,12 +137,7 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-step let-expanded="expanded">
-      <tr
-        *ngIf="
-          mode === ListMode.All ||
-          (selectedId != null && step.id === selectedId)
-        "
-      >
+      <tr>
         <!-- Expand row -->
         <td [id]="step.id">
           <div class="d-flex">
@@ -581,7 +571,11 @@
         <!-- Link -->
         <td *ngIf="vm.columns[Column.Link].show">
           <div class="d-flex">
-            <a [href]="step | stepHref: vm.data" target="_blank">
+            <a
+              class="text-decoration-none"
+              target="_blank"
+              [href]="step | stepHref: vm.data"
+            >
               <button
                 pButton
                 pRipple
@@ -614,7 +608,7 @@
       <!-- Details row tab menu -->
       <tr>
         <td>
-          <a [href]="'#' + step.id">
+          <a class="text-decoration-none" [href]="'#' + step.id">
             <button
               pButton
               pRipple
@@ -930,7 +924,7 @@
                                 row.step.items
                                   .mul(row.percent)
                                   .div(step.factories)
-                                  .div(DisplayRateVal[vm.settings.displayRate])
+                                  .div(vm.dispRateInfo.value)
                                   | inserterSpeed: vm.settings as ins
                               "
                             >
@@ -1038,7 +1032,7 @@
                           factoryValueCell;
                           context: {
                             value:
-                              items.mul(DisplayRateVal[vm.settings.displayRate])
+                              items.mul(vm.dispRateInfo.value)
                               | rate: vm.effectivePrecision[Column.Items],
                             itemId: output.key
                           }
@@ -1303,7 +1297,7 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="footer">
-      <tr *ngIf="mode === ListMode.All">
+      <tr>
         <td></td>
         <td *ngIf="vm.columns[Column.Tree].show"></td>
         <td colspan="2">

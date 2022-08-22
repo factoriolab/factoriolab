@@ -8,7 +8,6 @@ export * from './inserter-capacity';
 export * from './inserter-target';
 export * from './item-id';
 export * from './language';
-export * from './list-mode';
 export * from './matrix-result-type';
 export * from './power-unit';
 export * from './preset';

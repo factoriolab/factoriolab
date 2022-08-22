@@ -1,8 +1,7 @@
 import {
   Column,
   Dataset,
-  DisplayRate,
-  displayRateLabel,
+  DisplayRateInfo,
   Entities,
   FlowData,
   Rational,
@@ -19,7 +18,7 @@ const COLOR_OUTPUT = '#86EFAC'; // success color
 export class FlowUtility {
   static buildGraph(
     steps: Step[],
-    displayRate: DisplayRate,
+    dispRateInfo: DisplayRateInfo,
     columns: ColumnsState,
     recipeSettings: Entities<RecipeSettings>,
     data: Dataset
@@ -30,7 +29,7 @@ export class FlowUtility {
     };
 
     const itemPrec = columns[Column.Items].precision;
-    const rateLbl = displayRateLabel[displayRate];
+    const rateLbl = dispRateInfo.label;
 
     for (const step of steps) {
       if (step.recipeId && step.factories) {

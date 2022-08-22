@@ -3,7 +3,6 @@ import { SelectItem } from 'primeng/api';
 
 import {
   Column,
-  displayRateVal,
   Entities,
   Game,
   ItemId,
@@ -139,10 +138,10 @@ export const getProductsByFactories = createSelector(
 export const getNormalizedRatesByItems = createSelector(
   getProductsByItems,
   getProductSteps,
-  Settings.getDisplayRate,
-  (products, productSteps, displayRate) =>
+  Settings.getDisplayRateInfo,
+  (products, productSteps, dispRateInfo) =>
     products?.reduce((e: Entities<Rational>, p) => {
-      const rate = p.rate.div(displayRateVal[displayRate]);
+      const rate = p.rate.div(dispRateInfo.value);
       if (p.viaId === p.itemId) {
         e[p.id] = rate;
       } else {
@@ -188,12 +187,12 @@ export const getNormalizedRatesByWagons = createSelector(
   getProductsByWagons,
   getProductSteps,
   Items.getItemSettings,
-  Settings.getDisplayRate,
+  Settings.getDisplayRateInfo,
   Settings.getDataset,
-  (products, productSteps, itemSettings, displayRate, data) =>
+  (products, productSteps, itemSettings, dispRateInfo, data) =>
     products?.reduce((e: Entities<Rational>, p) => {
       if (p.viaId === p.itemId) {
-        e[p.id] = p.rate.div(displayRateVal[displayRate]);
+        e[p.id] = p.rate.div(dispRateInfo.value);
         const wagonId = itemSettings[p.itemId].wagonId;
         if (wagonId) {
           const item = data.itemEntities[p.itemId];
@@ -207,7 +206,7 @@ export const getNormalizedRatesByWagons = createSelector(
       } else {
         const via = RecipeUtility.getProductStepData(productSteps, p);
         if (via) {
-          e[p.id] = p.rate.div(displayRateVal[displayRate]);
+          e[p.id] = p.rate.div(dispRateInfo.value);
           const wagonId = itemSettings[via[0]].wagonId;
           if (wagonId) {
             const item = data.itemEntities[via[0]];
@@ -349,23 +348,23 @@ export const getNormalizedStepsWithBeacons = createSelector(
 
 export const getSteps = createSelector(
   getNormalizedStepsWithBeacons,
-  Settings.getDisplayRate,
-  (steps, displayRate) =>
+  Settings.getDisplayRateInfo,
+  (steps, dispRateInfo) =>
     RateUtility.sortHierarchy(
-      RateUtility.displayRate(RateUtility.copy(steps), displayRate)
+      RateUtility.displayRate(RateUtility.copy(steps), dispRateInfo)
     )
 );
 
 export const getGraph = createSelector(
   getSteps,
-  Settings.getDisplayRate,
+  Settings.getDisplayRateInfo,
   Preferences.getColumns,
   Recipes.getRecipeSettings,
   Recipes.getAdjustedDataset,
-  (steps, displayRate, columns, recipeSettings, data) =>
+  (steps, dispRateInfo, columns, recipeSettings, data) =>
     FlowUtility.buildGraph(
       RateUtility.copy(steps),
-      displayRate,
+      dispRateInfo,
       columns,
       recipeSettings,
       data
