@@ -22,7 +22,6 @@ export class LabErrorHandler implements ErrorHandler {
       this.ngZone.run(() => {
         console.error(error);
         this.error.message$.next(error);
-        this.router.navigateByUrl('error');
       });
     }
   }

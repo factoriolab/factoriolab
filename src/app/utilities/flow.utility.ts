@@ -167,7 +167,6 @@ export class FlowUtility {
             for (const sourceStep of steps) {
               if (sourceStep.recipeId && sourceStep.outputs) {
                 if (sourceStep.outputs[step.itemId]) {
-                  console.log(step.itemId, sourceStep.recipeId);
                   sankey.links.push({
                     source: `r|${sourceStep.recipeId}`,
                     target: `o|${step.itemId}`,

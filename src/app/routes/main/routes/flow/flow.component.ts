@@ -8,7 +8,6 @@ import { Store } from '@ngrx/store';
 import ELK, { ElkNode } from 'elkjs/lib/elk.bundled';
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { DataSet } from 'vis-data/esnext';
-import { IdType } from 'vis-network';
 import { Data, Edge, Network, Node, Options } from 'vis-network/esnext';
 
 import { DisplayService } from '~/services/display.service';
@@ -66,21 +65,38 @@ export class FlowComponent implements AfterViewInit {
         );
 
         const edges = new DataSet<Edge>();
+        const duplicateMap: Record<string, number> = {};
         edges.add(
-          sankey.links.map((l) => ({
-            from: l.source,
-            to: l.target,
-            label: l.text + '\n' + l.name,
-            title: l.text + '\n' + l.name,
-            smooth: sankey.links.some(
-              (a) => a.target === l.source && l.target === a.source
-            )
-              ? { enabled: true, type: 'curvedCW', roundness: 0.2 }
-              : { enabled: false },
-            font: {
-              color: 'white',
-            },
-          }))
+          sankey.links.map((l) => {
+            const id = `${l.source}|${l.target}`;
+            duplicateMap[id] = (duplicateMap[id] ?? 0) + 1;
+
+            return {
+              from: l.source,
+              to: l.target,
+              label: l.text + '\n' + l.name,
+              title: l.text + '\n' + l.name,
+              smooth: sankey.links.some(
+                (a) =>
+                  (a.target === l.source && l.target === a.source) ||
+                  (a.target === l.target &&
+                    a.source === l.source &&
+                    a.name !== l.name)
+              )
+                ? {
+                    enabled: true,
+                    type: 'curvedCW',
+                    roundness: duplicateMap[id] * 0.3,
+                  }
+                : { enabled: false },
+              selfReference: {
+                size: duplicateMap[id] * 50,
+              },
+              font: {
+                color: 'white',
+              },
+            };
+          })
         );
         const container = document.getElementById('lab-flow-svg');
         const data: Data = {
@@ -118,11 +134,10 @@ export class FlowComponent implements AfterViewInit {
               minimum: 50,
               maximum: 250,
             },
-            chosen: { node: this.clickNode, label: false },
+            // chosen: { node: this.clickNode, label: false },
           },
           layout: {
             improvedLayout: false,
-            hierarchical: false,
           },
           physics: {
             enabled: false,
@@ -151,6 +166,7 @@ export class FlowComponent implements AfterViewInit {
               'org.eclipse.elk.spacing.nodeNode': '40',
             },
           };
+          // this.loading$.next(false);
 
           const elk = new ELK();
 
@@ -173,16 +189,16 @@ export class FlowComponent implements AfterViewInit {
       });
   }
 
-  clickNode<T>(
-    values: T,
-    id: IdType,
-    selected: boolean,
-    hovered: boolean
-  ): void {
-    if (selected) {
-      console.log(values, id);
-    } else {
-      console.log('unselected');
-    }
-  }
+  // clickNode<T>(
+  //   values: T,
+  //   id: IdType,
+  //   selected: boolean,
+  //   hovered: boolean
+  // ): void {
+  //   if (selected) {
+  //     console.log(values, id);
+  //   } else {
+  //     console.log('unselected');
+  //   }
+  // }
 }
