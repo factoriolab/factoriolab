@@ -21,8 +21,7 @@ import {
   RouterService,
   StateService,
 } from './services';
-import { LabState, Preferences, Products, Settings } from './store';
-import { ResetAction } from './store/app.actions';
+import { App, LabState, Preferences, Settings } from './store';
 
 const LAB_ICON_STYLE_ID = 'lab-icon-css';
 
@@ -34,21 +33,19 @@ const LAB_ICON_STYLE_ID = 'lab-icon-css';
 export class AppComponent implements OnInit, AfterViewInit {
   vm$ = combineLatest([
     this.store.select(Settings.getGame),
-    this.store.select(Settings.getMod),
-    this.store.select(Products.getProducts),
-    this.store.select(Products.getMatrixResult),
     this.contentSvc.scrollTop$,
+    this.contentSvc.routerLoading$,
     this.errorSvc.message$,
   ]).pipe(
-    map(([game, mod, products, result, scrollTop, errorMsg]) => ({
+    map(([game, scrollTop, routerLoading, errorMsg]) => ({
       game,
-      mod,
-      products,
-      result,
       scrollTop,
+      routerLoading,
       errorMsg,
     }))
   );
+
+  isResetting = false;
 
   ItemId = ItemId;
   Game = Game;
@@ -57,9 +54,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     public contentSvc: ContentService,
     @Inject(DOCUMENT) private document: Document,
     private meta: Meta,
-    private router: Router,
-    private ref: ChangeDetectorRef,
     private ngZone: NgZone,
+    private ref: ChangeDetectorRef,
+    private router: Router,
     private gaSvc: GoogleAnalyticsService,
     private store: Store<LabState>,
     private translateSvc: TranslateService,
@@ -131,10 +128,14 @@ Determine resource and factory requirements for your desired output products.`,
   }
 
   reset(game: Game): void {
-    this.ngZone.run(() => {
-      this.errorSvc.message$.next(null);
-      this.router.navigateByUrl(gameInfo[game].route);
-      this.store.dispatch(new ResetAction());
+    this.isResetting = true;
+    setTimeout(() => {
+      this.ngZone.run(() => {
+        this.errorSvc.message$.next(null);
+        this.router.navigateByUrl(gameInfo[game].route);
+        this.store.dispatch(new App.ResetAction());
+        this.isResetting = false;
+      });
     });
   }
 }

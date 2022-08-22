@@ -21,7 +21,7 @@ import {
   StepDetailTab,
 } from '~/models';
 import { RouterService } from '~/services';
-import { SharedModule } from '~/shared/shared.module';
+import { SharedModule } from '~/shared.module';
 import { LabState } from '~/store';
 import * as Factories from '~/store/factories';
 import * as Items from '~/store/items';

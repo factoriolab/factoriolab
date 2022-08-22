@@ -11,7 +11,7 @@ import {
 
 import { DispatchTest, Mocks, TestModule, TestUtility } from 'src/tests';
 import { SankeyAlign, SankeyData } from '~/models';
-import { SharedModule } from '~/shared/shared.module';
+import { SharedModule } from '~/shared.module';
 import { LabState } from '~/store';
 import * as Preferences from '~/store/preferences';
 import * as Products from '~/store/products';

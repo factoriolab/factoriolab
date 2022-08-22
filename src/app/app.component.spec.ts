@@ -8,7 +8,7 @@ import { AppComponent, TITLE_COI, TITLE_DSP, TITLE_SFY } from './app.component';
 import { ProductsComponent, SettingsComponent } from './components';
 import { APP, Game } from './models';
 import { ListComponent } from './routes';
-import { SharedModule } from './shared/shared.module';
+import { SharedModule } from './shared.module';
 import { LabState } from './store';
 import * as Settings from './store/settings';
 

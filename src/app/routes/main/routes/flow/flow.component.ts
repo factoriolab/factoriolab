@@ -1,7 +1,6 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -23,12 +22,11 @@ import { LabState, Products } from '~/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowComponent implements AfterViewInit {
-  loading$ = new BehaviorSubject(false);
+  loading$ = new BehaviorSubject(true);
 
   vm$ = combineLatest([this.loading$]).pipe(map(([loading]) => ({ loading })));
 
   constructor(
-    private ref: ChangeDetectorRef,
     private store: Store<LabState>,
     private displaySvc: DisplayService
   ) {}
@@ -38,6 +36,8 @@ export class FlowComponent implements AfterViewInit {
       .select(Products.getGraph)
       .pipe(untilDestroyed(this))
       .subscribe((sankey) => {
+        this.loading$.next(true);
+
         const nodes = new DataSet<Node>();
 
         nodes.add(
@@ -129,7 +129,6 @@ export class FlowComponent implements AfterViewInit {
           },
         };
 
-        this.loading$.next(true);
         if (container) {
           const network = new Network(container, data, options);
 

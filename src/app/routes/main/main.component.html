@@ -59,7 +59,7 @@
         </p-card>
       </ng-container>
       <ng-template #loading>
-        <div class="d-flex flex-column align-items-center">
+        <div class="d-flex flex-column align-items-center mt-5">
           <p-progressSpinner></p-progressSpinner>
         </div>
       </ng-template>
@@ -92,7 +92,7 @@
               pRipple
               class="mt-2 ms-2 p-button-outlined"
               [label]="'app.trySuggestedFix' | translate"
-              [loading]="fixLoading"
+              [loading]="isFixingSimplex"
               (click)="tryFixSimplex()"
             ></button>
             <button
@@ -108,3 +108,5 @@
     </main>
   </div>
 </ng-container>
+
+<lab-content></lab-content>

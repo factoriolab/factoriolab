@@ -3,7 +3,7 @@ import { MockStore } from '@ngrx/store/testing';
 
 import { DispatchTest, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import { Product, RateType, RecipeField } from '~/models';
-import { SharedModule } from '~/shared/shared.module';
+import { SharedModule } from '~/shared.module';
 import { LabState } from '~/store';
 import * as Factories from '~/store/factories';
 import * as Products from '~/store/products';

@@ -33,7 +33,7 @@ export class MainComponent {
 
   version = `${APP} ${environment.version}`;
   showSimplexErr = false;
-  fixLoading = false;
+  isFixingSimplex = false;
   simplexErrSub = this.store
     .select(Products.getMatrixResult)
     .subscribe(
@@ -41,16 +41,23 @@ export class MainComponent {
         (this.showSimplexErr = result.resultType === MatrixResultType.Failed)
     );
   tabItems: MenuItem[] = [
-    { label: 'app.list', icon: 'fa-solid fa-list', routerLink: 'list' },
+    {
+      label: 'app.list',
+      icon: 'fa-solid fa-list',
+      routerLink: 'list',
+      queryParamsHandling: 'preserve',
+    },
     {
       label: 'app.flow',
       icon: 'fa-solid fa-diagram-project',
       routerLink: 'flow',
+      queryParamsHandling: 'preserve',
     },
     {
       label: 'app.matrix',
       icon: 'fa-solid fa-table-cells',
       routerLink: 'matrix',
+      queryParamsHandling: 'preserve',
     },
   ];
 
@@ -62,7 +69,7 @@ export class MainComponent {
   ) {}
 
   tryFixSimplex(): void {
-    this.fixLoading = true;
+    this.isFixingSimplex = true;
     setTimeout(() => {
       this.store
         .select(Settings.getDefaults)
@@ -79,7 +86,7 @@ export class MainComponent {
           );
         });
       this.showSimplexErr = false;
-      this.fixLoading = false;
+      this.isFixingSimplex = false;
     }, 10);
   }
 }

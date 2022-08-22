@@ -1,6 +1,20 @@
 import { Injectable, TemplateRef } from '@angular/core';
+import {
+  NavigationCancel,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router,
+} from '@angular/router';
 import { Confirmation } from 'primeng/api';
-import { BehaviorSubject, fromEvent, map, startWith, Subject } from 'rxjs';
+import {
+  BehaviorSubject,
+  filter,
+  fromEvent,
+  map,
+  startWith,
+  Subject,
+} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -52,4 +66,18 @@ export class ContentService {
   toggleMenu(): void {
     this.settingsActive$.next(!this.settingsActive$.value);
   }
+
+  // Router loading
+  routerLoading$ = this.router.events.pipe(
+    filter(
+      (e) =>
+        e instanceof NavigationStart ||
+        e instanceof NavigationEnd ||
+        e instanceof NavigationCancel ||
+        e instanceof NavigationError
+    ),
+    map((e) => e instanceof NavigationStart)
+  );
+
+  constructor(private router: Router) {}
 }

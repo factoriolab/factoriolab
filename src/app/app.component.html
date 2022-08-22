@@ -1,13 +1,20 @@
 <ng-container *ngIf="vm$ | async as vm">
-  <ng-container *ngIf="vm.errorMsg == null; else errorDialog"
-    ><lab-header
-      [sticky]="((contentSvc.scrollTop$ | async) ?? 0) > 16"
-    ></lab-header>
+  <lab-header [sticky]="vm.scrollTop > 16"></lab-header>
+
+  <ng-container *ngIf="vm.errorMsg == null; else errorDialog">
     <router-outlet></router-outlet>
+
+    <div
+      *ngIf="vm.routerLoading"
+      class="position-absolute d-flex justify-content-center align-items-center vw-100 vh-100"
+    >
+      <p-progressSpinner></p-progressSpinner>
+    </div>
   </ng-container>
+
   <ng-template #errorDialog>
     <p-dialog
-      [visible]="vm.errorMsg != null"
+      [visible]="true"
       [modal]="true"
       [draggable]="false"
       [resizable]="false"
@@ -28,6 +35,7 @@
             pButton
             pRipple
             [label]="'app.reset' | translate"
+            [loading]="isResetting"
             (click)="reset(vm.game)"
           ></button>
         </div>
@@ -35,5 +43,3 @@
     </p-dialog>
   </ng-template>
 </ng-container>
-
-<lab-content></lab-content>

@@ -1,20 +1,24 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectButtonModule } from 'primeng/selectbutton';
 
 const modules = [
+  FormsModule,
+  ReactiveFormsModule,
   ButtonModule,
-  ConfirmDialogModule,
   DialogModule,
+  ProgressSpinnerModule,
   SelectButtonModule,
+  TranslateModule,
 ];
 
 @NgModule({
-  imports: [CommonModule, TranslateModule, ...modules],
-  exports: [TranslateModule, ...modules],
+  exports: [...modules],
+  imports: [CommonModule, ...modules],
 })
-export class VendorModule {}
+export class SharedModule {}

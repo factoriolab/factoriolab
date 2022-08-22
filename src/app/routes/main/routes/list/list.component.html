@@ -644,6 +644,7 @@
             <ng-template *ngTemplateOutlet="leftPad"></ng-template>
             <td colspan="100" class="fw-bold">
               {{ 'list.sources' | translate }}
+              <span>{{ vm.data.itemEntities['null'].name }}</span>
             </td>
           </tr>
           <ng-container *ngFor="let output of vm.stepDetails[step.id].outputs">

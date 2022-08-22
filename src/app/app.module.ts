@@ -1,8 +1,8 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -18,9 +18,9 @@ import { PrimeNGConfig } from 'primeng/api';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ContentComponent, HeaderComponent } from './components';
+import { HeaderComponent } from './components';
 import { LabErrorHandler } from './services';
-import { SharedModule } from './shared/shared.module';
+import { SharedModule } from './shared.module';
 import { metaReducers, reducers } from './store';
 import { AnalyticsEffects } from './store/analytics.effects';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
@@ -38,13 +38,12 @@ function initializeApp(primengConfig: PrimeNGConfig): () => Promise<any> {
 }
 
 @NgModule({
-  declarations: [AppComponent, ContentComponent, HeaderComponent],
+  declarations: [AppComponent, HeaderComponent],
   imports: [
     /** Angular modules */
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
     /** Vendor modules */
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreDevtoolsModule.instrument({

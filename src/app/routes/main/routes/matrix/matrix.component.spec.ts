@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 import { DispatchTest, initialState } from 'src/tests';
-import { SharedModule } from '~/shared/shared.module';
+import { SharedModule } from '~/shared.module';
 import { LabState } from '~/store';
 import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
