@@ -10,8 +10,8 @@ import {
 } from 'd3-sankey';
 
 import { DispatchTest, Mocks, TestModule, TestUtility } from 'src/tests';
+import { AppSharedModule } from '~/app-shared.module';
 import { SankeyAlign, SankeyData } from '~/models';
-import { SharedModule } from '~/shared.module';
 import { LabState } from '~/store';
 import * as Preferences from '~/store/preferences';
 import * as Products from '~/store/products';
@@ -33,7 +33,7 @@ describe('FlowComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ListComponent, FlowComponent],
-      imports: [TestModule, SharedModule],
+      imports: [TestModule, AppSharedModule],
     }).compileComponents();
   });
 

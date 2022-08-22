@@ -15,6 +15,12 @@ import { TableModule } from 'primeng/table';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { TooltipModule } from 'primeng/tooltip';
 
+import { AppSharedModule } from '~/app-shared.module';
+import { components } from './components';
+import { directives } from './directives';
+import { pipes } from './pipes';
+import { RatePipe } from './pipes/rate.pipe';
+
 const modules = [
   AutoFocusModule,
   CardModule,
@@ -33,7 +39,9 @@ const modules = [
 ];
 
 @NgModule({
-  imports: [CommonModule, ...modules],
-  exports: [...modules],
+  imports: [CommonModule, AppSharedModule, ...modules],
+  declarations: [...components, ...directives, ...pipes],
+  exports: [...modules, ...components, ...directives, ...pipes],
+  providers: [RatePipe],
 })
-export class VendorModule {}
+export class MainSharedModule {}

@@ -17,10 +17,10 @@ import { PrimeNGConfig } from 'primeng/api';
 
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
+import { AppSharedModule } from './app-shared.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components';
 import { LabErrorHandler } from './services';
-import { SharedModule } from './shared.module';
 import { metaReducers, reducers } from './store';
 import { AnalyticsEffects } from './store/analytics.effects';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
@@ -69,7 +69,7 @@ function initializeApp(primengConfig: PrimeNGConfig): () => Promise<any> {
     NgxGoogleAnalyticsRouterModule,
     /** App modules */
     AppRoutingModule,
-    SharedModule,
+    AppSharedModule,
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: environment.baseHref },

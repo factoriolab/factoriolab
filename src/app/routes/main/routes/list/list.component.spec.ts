@@ -12,6 +12,7 @@ import {
   TestModule,
   TestUtility,
 } from 'src/tests';
+import { AppSharedModule } from '~/app-shared.module';
 import {
   Entities,
   ListMode,
@@ -21,7 +22,6 @@ import {
   StepDetailTab,
 } from '~/models';
 import { RouterService } from '~/services';
-import { SharedModule } from '~/shared.module';
 import { LabState } from '~/store';
 import * as Factories from '~/store/factories';
 import * as Items from '~/store/items';
@@ -60,7 +60,7 @@ describe('ListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ListComponent, TestListComponent],
-      imports: [TestModule, SharedModule],
+      imports: [TestModule, AppSharedModule],
     }).compileComponents();
   });
 

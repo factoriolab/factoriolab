@@ -36,7 +36,6 @@ import * as Recipes from '~/store/recipes';
 import * as Settings from '~/store/settings';
 import { ExportUtility, RecipeUtility } from '~/utilities';
 
-// @UntilDestroy()
 @Component({
   selector: 'lab-list',
   templateUrl: './list.component.html',

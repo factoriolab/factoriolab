@@ -1,11 +1,7 @@
-import { ModuleWithProviders } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { MainComponent } from './main.component';
-import { MainModule } from './main.module';
-import { FlowComponent } from './routes/flow/flow.component';
-import { ListComponent } from './routes/list/list.component';
-import { MatrixComponent } from './routes/matrix/matrix.component';
 
 const routes: Routes = [
   {
@@ -14,15 +10,18 @@ const routes: Routes = [
     children: [
       {
         path: 'list',
-        component: ListComponent,
+        loadChildren: () =>
+          import('./routes/list/list.module').then((m) => m.ListModule),
       },
       {
         path: 'flow',
-        component: FlowComponent,
+        loadChildren: () =>
+          import('./routes/flow/flow.module').then((m) => m.FlowModule),
       },
       {
         path: 'matrix',
-        component: MatrixComponent,
+        loadChildren: () =>
+          import('./routes/matrix/matrix.module').then((m) => m.MatrixModule),
       },
       {
         path: 'factorio',
@@ -48,5 +47,8 @@ const routes: Routes = [
   },
 ];
 
-export const MainRouting: ModuleWithProviders<MainModule> =
-  RouterModule.forChild(routes);
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
+})
+export class MainRouting {}

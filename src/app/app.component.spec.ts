@@ -4,11 +4,11 @@ import { MemoizedSelector } from '@ngrx/store';
 import { MockStore } from '@ngrx/store/testing';
 
 import { TestModule } from 'src/tests';
+import { AppSharedModule } from './app-shared.module';
 import { AppComponent, TITLE_COI, TITLE_DSP, TITLE_SFY } from './app.component';
 import { ProductsComponent, SettingsComponent } from './components';
 import { APP, Game } from './models';
 import { ListComponent } from './routes';
-import { SharedModule } from './shared.module';
 import { LabState } from './store';
 import * as Settings from './store/settings';
 
@@ -27,7 +27,7 @@ describe('AppComponent', () => {
         ListComponent,
         AppComponent,
       ],
-      imports: [TestModule, SharedModule],
+      imports: [TestModule, AppSharedModule],
     })
       .compileComponents()
       .then(() => {
