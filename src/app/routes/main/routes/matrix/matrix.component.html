@@ -1,110 +1,91 @@
-<!-- <ng-container *ngIf="vm$ | async as vm">
-  <table>
+<ng-container *ngIf="vm$ | async as vm">
+  <table class="result-info my-3">
     <tr>
-      <td class="header">Simplex Result</td>
+      <th colspan="2">{{ 'matrix.statistics' | translate }}</th>
+    </tr>
+    <tr>
+      <th>{{ 'matrix.simplexResult' | translate }}</th>
       <td>{{ vm.result.resultType }}</td>
     </tr>
     <tr *ngIf="vm.result.time != null">
-      <td class="header">Runtime</td>
-      <td>{{ vm.result.time }} ms</td>
+      <th>{{ 'matrix.runtime' | translate }}</th>
+      <td>
+        {{ 'matrix.runtimeValue' | translate: { value: vm.result.time } }}
+      </td>
     </tr>
     <tr *ngIf="vm.result.pivots != null">
-      <td class="header">Pivots</td>
+      <th>{{ 'matrix.pivots' | translate }}</th>
       <td>{{ vm.result.pivots }}</td>
     </tr>
     <tr *ngIf="vm.result.A && vm.result.O">
-      <td class="header">Size</td>
-      <td>{{ vm.result.A.length }} rows, {{ vm.result.O.length }} cols</td>
+      <th>{{ 'matrix.size' | translate }}</th>
+      <td>
+        {{
+          'matrix.sizeValue'
+            | translate: { rows: vm.result.A.length, cols: vm.result.O.length }
+        }}
+      </td>
     </tr>
   </table>
-  <table *ngIf="vm.result.A">
+  <table class="result-info my-3" *ngIf="vm.result.A">
     <tr>
       <th colspan="2">
-        <div class="flex">
-          <lab-info
-            text="Cost Modifiers"
-            tooltip="These values determine the default costs of
-each row in the simplex canonical tableau."
-          ></lab-info>
+        <div class="d-flex align-items-center justify-content-between">
+          <span>{{ 'matrix.costModifiers' | translate }}</span>
           <button
-            *ngIf="vm.settingsModified.cost"
-            title="Undo all cost modifiers"
+            pButton
+            pRipple
+            class="ms-3 p-button-outlined p-button-rounded"
+            [class.invisible]="!vm.settingsModified.cost"
+            icon="fa-solid fa-rotate-left"
+            [pTooltip]="'matrix.costUndoTooltip' | translate"
             (click)="resetCost()"
-          >
-            <i class="material-icons">undo</i>
-          </button>
+          ></button>
         </div>
       </th>
     </tr>
-    <tr>
-      <td>
-        <div class="flex">
-          <lab-info
-            text="Recipe"
-            tooltip="Multiplies cost of recipes with a
-defined cost, usually mining."
-          ></lab-info>
-        </div>
-      </td>
+    <tr [pTooltip]="'matrix.recipeCostTooltip' | translate">
+      <th>{{ 'matrix.recipe' | translate }}</th>
       <td>
         <lab-input-number
-          title="Set recipe cost multipler"
-          placeholder="Cost"
+          width="8rem"
           [value]="vm.settings.costFactor"
           (setValue)="setCostFactor($event)"
         ></lab-input-number>
       </td>
     </tr>
-    <tr>
-      <td>
-        <lab-info
-          text="Factory"
-          tooltip="Multiplies cost of physical factories running recipes."
-        ></lab-info>
-      </td>
+    <tr [pTooltip]="'matrix.factoryCostTooltip' | translate">
+      <th>{{ 'matrix.factory' | translate }}</th>
       <td>
         <lab-input-number
-          title="Set factory cost multipler"
-          placeholder="Cost"
+          width="8rem"
           [value]="vm.settings.costFactory"
           (setValue)="setCostFactory($event)"
         ></lab-input-number>
       </td>
     </tr>
-    <tr>
-      <td>
-        <lab-info
-          text="Input"
-          tooltip="Cost of input items that are produced by no recipes."
-        ></lab-info>
-      </td>
+    <tr [pTooltip]="'matrix.inputCostTooltip' | translate">
+      <th>{{ 'matrix.input' | translate }}</th>
       <td>
         <lab-input-number
-          title="Set input item cost"
-          placeholder="Cost"
+          width="8rem"
           [value]="vm.settings.costInput"
           (setValue)="setCostInput($event)"
         ></lab-input-number>
       </td>
     </tr>
-    <tr>
-      <td>
-        <lab-info
-          text="Ignored"
-          tooltip="Cost of items that have been explicitly ignored."
-        ></lab-info>
-      </td>
+    <tr [pTooltip]="'matrix.ignoredCostTooltip' | translate">
+      <th>{{ 'matrix.ignored' | translate }}</th>
       <td>
         <lab-input-number
-          title="Set ignored item cost"
-          placeholder="Cost"
+          width="8rem"
           [value]="vm.settings.costIgnored"
           (setValue)="setCostIgnored($event)"
         ></lab-input-number>
       </td>
     </tr>
   </table>
-  <table
+  <p-table
     *ngIf="
       vm.result.A &&
       vm.result.O &&
@@ -112,154 +93,172 @@ defined cost, usually mining."
       vm.result.recipeIds &&
       vm.result.inputIds
     "
+    responsiveLayout="scroll"
+    styleClass="p-datatable-sm"
+    [value]="vm.result.A"
   >
-    <tr>
-      <th [colSpan]="vm.result.O.length + 2" class="header">
-        Simplex Canonical Tableau
-      </th>
-    </tr>
-    <tr>
-      <th rowspan="2"></th>
-      <th class="header" rowspan="2">I</th>
-      <th class="header" [colSpan]="vm.result.itemIds.length">Items/s</th>
-      <th class="header" [colSpan]="vm.result.recipeIds.length">Recipes</th>
-      <th
-        class="header"
-        [colSpan]="vm.result.inputIds.length"
-        *ngIf="vm.result.inputIds.length"
-      >
-        Inputs
-      </th>
-      <th class="header" rowspan="2">
-        <div class="flex">
-          <span>Cost</span>
-          <button
-            *ngIf="vm.recipesModified.cost"
-            title="Undo all cost modifications"
-            (click)="resetRecipeCost()"
-          >
-            <i class="material-icons">undo</i>
-          </button>
-        </div>
-      </th>
-      <th rowspan="2"></th>
-    </tr>
-    <tr>
-      <td *ngFor="let i of vm.result.itemIds">
-        <lab-icon
-          [iconId]="i"
-          [tooltip]="vm.data.itemEntities[i].name"
-        ></lab-icon>
-      </td>
-      <td *ngFor="let i of vm.result.recipeIds">
-        <lab-icon
-          [iconId]="i"
-          [tooltip]="vm.data.recipeEntities[i].name"
-          [recipe]="vm.data.recipeEntities[i]"
-        ></lab-icon>
-      </td>
-      <td *ngFor="let i of vm.result.inputIds">
-        <lab-icon
-          [iconId]="i"
-          [tooltip]="vm.data.itemEntities[i].name"
-        ></lab-icon>
-      </td>
-    </tr>
-    <tr *ngFor="let R of vm.result.A; let i = index">
-      <th class="header" *ngIf="i === 0; else notObj">Objective</th>
-      <ng-template #notObj>
-        <td>
-          <div
-            *ngIf="vm.result.recipeIds[i - 1] as id; else notRecipe"
-            class="flex center"
-          >
-            <lab-icon
-              [iconId]="id"
-              [tooltip]="vm.data.recipeEntities[id].name"
-              [recipe]="vm.data.recipeEntities[id]"
-            ></lab-icon>
+    <ng-template pTemplate="header">
+      <tr>
+        <th [colSpan]="vm.result.O.length + 1">
+          {{ 'matrix.simplexCanonicalTableau' | translate }}
+        </th>
+      </tr>
+      <tr>
+        <th rowspan="2"></th>
+        <th rowspan="2">I</th>
+        <th [colSpan]="vm.result.itemIds.length">
+          {{ 'matrix.items' | translate }}
+        </th>
+        <th [colSpan]="vm.result.recipeIds.length">
+          {{ 'matrix.recipes' | translate }}
+        </th>
+        <th
+          *ngIf="vm.result.inputIds.length"
+          [colSpan]="vm.result.inputIds.length"
+        >
+          {{ 'matrix.inputs' | translate }}
+        </th>
+        <th rowspan="2">
+          <div class="d-flex align-items-center justify-content-between">
+            <span>{{ 'matrix.cost' | translate }}</span>
+            <button
+              pButton
+              pRipple
+              class="ms-3 p-button-outlined p-button-rounded"
+              [class.invisible]="!vm.recipesModified.cost"
+              icon="fa-solid fa-rotate-left"
+              [pTooltip]="'matrix.costUndoTooltip' | translate"
+              (click)="resetRecipeCost()"
+            ></button>
           </div>
+        </th>
+      </tr>
+      <tr>
+        <th *ngFor="let i of vm.result.itemIds">
+          <i
+            [class]="i | iconClass"
+            [pTooltip]="vm.data.itemEntities[i].name"
+          ></i>
+        </th>
+        <th *ngFor="let i of vm.result.recipeIds">
+          <i
+            [class]="i | iconClass"
+            [pTooltip]="vm.data.recipeEntities[i].name"
+          ></i>
+        </th>
+        <th *ngFor="let i of vm.result.inputIds">
+          <i
+            [class]="i | iconClass"
+            [pTooltip]="vm.data.itemEntities[i].name"
+          ></i>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+      <tr>
+        <td *ngIf="rowIndex !== 0; else objectiveRow">
+          <ng-container
+            *ngIf="vm.result.recipeIds[rowIndex - 1] as id; else notRecipe"
+          >
+            <i
+              [class]="id | iconClass"
+              [pTooltip]="vm.data.recipeEntities[id].name"
+            ></i>
+          </ng-container>
           <ng-template #notRecipe>
-            <div
+            <i
               *ngIf="
-                vm.result.inputIds[i - 1 - vm.result.recipeIds.length] as id
+                vm.result.inputIds[
+                  rowIndex - 1 - vm.result.recipeIds.length
+                ] as id
               "
-              class="flex center"
-            >
-              <lab-icon
-                [iconId]="id"
-                [tooltip]="vm.data.itemEntities[id].name"
-              ></lab-icon>
-            </div>
+              [class]="id | iconClass"
+              [pTooltip]="vm.data.itemEntities[id].name"
+            ></i
+          ></ng-template>
+        </td>
+        <ng-template #objectiveRow>
+          <td class="fw-bold">{{ 'matrix.objective' | translate }}</td>
+        </ng-template>
+        <td *ngFor="let c of row; last as last">
+          <div
+            *ngIf="
+              last && vm.result.recipeIds[rowIndex - 1] as id;
+              else valueCell
+            "
+            class="d-flex align-items-center justify-content-between"
+          >
+            <lab-input-number
+              [pTooltip]="'matrix.recipeCost' | translate"
+              tooltipPosition="left"
+              width="6rem"
+              [hideButtons]="true"
+              [value]="c.toString()"
+              (setValue)="setRecipeCost(id, $event)"
+            ></lab-input-number>
+            <button
+              pButton
+              pRipple
+              class="ms-3 p-button-outlined p-button-rounded"
+              [class.invisible]="!vm.recipeRaw[id]?.cost"
+              icon="fa-solid fa-rotate-left"
+              [pTooltip]="'matrix.recipeCostUndoTooltip' | translate"
+              tooltipPosition="left"
+              (click)="setRecipeCost(id)"
+            ></button>
+          </div>
+          <ng-template #valueCell>
+            {{ c.toString() }}
           </ng-template>
         </td>
-      </ng-template>
-      <td *ngFor="let c of R; last as last">
-        <div
-          class="flex"
-          *ngIf="last && vm.result.recipeIds[i - 1] as id; else valueSpan"
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <tr>
+        <th [colSpan]="vm.result.O.length + 1">
+          {{ 'matrix.solution' | translate }}
+        </th>
+      </tr>
+      <tr>
+        <th rowspan="3"></th>
+        <th rowspan="2">I</th>
+        <th [colSpan]="vm.result.itemIds.length">
+          {{ 'matrix.surplus' | translate }}
+        </th>
+        <th [colSpan]="vm.result.recipeIds.length">
+          {{ 'matrix.recipes' | translate }}
+        </th>
+        <th
+          *ngIf="vm.result.inputIds.length"
+          [colSpan]="vm.result.inputIds.length"
         >
-          <lab-input-number
-            title="Set cost"
-            placeholder="Cost"
-            [value]="c.toString()"
-            (setValue)="setRecipeCost(id, $event)"
-          ></lab-input-number>
-          <button
-            *ngIf="vm.recipeRaw[id]?.cost"
-            title="Undo recipe cost modification"
-            (click)="setRecipeCost(id)"
-          >
-            <i class="material-icons">undo</i>
-          </button>
-        </div>
-        <ng-template #valueSpan>
-          <span>{{ c.toString() }}</span>
-        </ng-template>
-      </td>
-      <th class="header" *ngIf="i === 0; else notObj">Objective</th>
-    </tr>
-    <tr>
-      <th [colSpan]="vm.result.O.length + 2" class="header">Solution</th>
-    </tr>
-    <tr>
-      <td rowspan="3"></td>
-      <th class="header" rowspan="2">I</th>
-      <th class="header" [colSpan]="vm.result.itemIds.length">Surplus/s</th>
-      <th class="header" [colSpan]="vm.result.recipeIds.length">Recipes</th>
-      <th
-        class="header"
-        [colSpan]="vm.result.inputIds.length"
-        *ngIf="vm.result.inputIds.length"
-      >
-        Inputs
-      </th>
-      <th class="header" rowspan="2">Cost</th>
-      <td rowspan="3"></td>
-    </tr>
-    <tr>
-      <td *ngFor="let i of vm.result.itemIds">
-        <lab-icon
-          [iconId]="i"
-          [tooltip]="vm.data.itemEntities[i].name"
-        ></lab-icon>
-      </td>
-      <td *ngFor="let i of vm.result.recipeIds">
-        <lab-icon
-          [iconId]="i"
-          [tooltip]="vm.data.recipeEntities[i].name"
-          [recipe]="vm.data.recipeEntities[i]"
-        ></lab-icon>
-      </td>
-      <td *ngFor="let i of vm.result.inputIds">
-        <lab-icon
-          [iconId]="i"
-          [tooltip]="vm.data.itemEntities[i].name"
-        ></lab-icon>
-      </td>
-    </tr>
-    <tr>
-      <td *ngFor="let c of vm.result.O">{{ c.toString() }}</td>
-    </tr>
-  </table>
-</ng-container> -->
+          {{ 'matrix.inputs' | translate }}
+        </th>
+        <th rowspan="2">{{ 'matrix.cost' | translate }}</th>
+      </tr>
+      <tr>
+        <th *ngFor="let i of vm.result.itemIds">
+          <i
+            [class]="i | iconClass"
+            [pTooltip]="vm.data.itemEntities[i].name"
+          ></i>
+        </th>
+        <th *ngFor="let i of vm.result.recipeIds">
+          <i
+            [class]="i | iconClass"
+            [pTooltip]="vm.data.recipeEntities[i].name"
+          ></i>
+        </th>
+        <th *ngFor="let i of vm.result.inputIds">
+          <i
+            [class]="i | iconClass"
+            [pTooltip]="vm.data.itemEntities[i].name"
+          ></i>
+        </th>
+      </tr>
+      <tr>
+        <td *ngFor="let c of vm.result.O">{{ c.toString() }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</ng-container>

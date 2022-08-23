@@ -23,6 +23,85 @@
     "dontShowAgain": "Don't show again",
     "trySuggestedFix": "Try suggested fix"
   },
+  "options": {
+    "displayRate": {
+      "perSecond": "Units per second",
+      "perMinute": "Units per minute",
+      "perHour": "Units per hour"
+    },
+    "game": {
+      "factorio": "Factorio",
+      "dysonSphereProgram": "Dyson Sphere Program",
+      "satisfactory": "Satisfactory",
+      "captainOfIndustry": "Captain of Industry"
+    },
+    "inserterCapacity": {
+      "capacity0": "No capacity bonus",
+      "capacity2": "Capacity bonus 2",
+      "capacity7": "Capacity bonus 7"
+    },
+    "inserterTarget": {
+      "chest": "Chest",
+      "expressTransportBelt": "Express transport belt",
+      "fastTransportBelt": "Fast transport belt",
+      "transportBelt": "Transport belt"
+    },
+    "preset": {
+      "minimum": "Minimum",
+      "modules": "Modules",
+      "beacon8": "8 Beacons",
+      "beacon12": "12 Beacons",
+      "upgraded": "Upgraded",
+      "proliferated": "Proliferated"
+    },
+    "researchSpeed": {
+      "speed0": "No research bonus",
+      "speed1": "Research speed 1",
+      "speed2": "Research speed 2",
+      "speed3": "Research speed 3",
+      "speed4": "Research speed 4",
+      "speed5": "Research speed 5",
+      "speed6": "Research speed 6"
+    },
+    "simplexType": {
+      "disabled": "Disabled",
+      "jsBigIntRational": "JS BigInt Rational",
+      "wasmFloat64": "WASM Float64"
+    },
+    "stepDetailTab": {
+      "item": "Item",
+      "recipe": "Recipe",
+      "factory": "Factory",
+      "recipes": "Recipes"
+    }
+  },
+  "tooltip": {
+    "speed": "Speed",
+    "flowRate": "Flow rate",
+    "craftingSpeed": "Crafting speed",
+    "modules": "Modules",
+    "energyType": "Energy type",
+    "fuelCategory": "Fuel category",
+    "energyUsage": "Energy usage",
+    "drain": "Drain",
+    "pollution": "Pollution",
+    "rocketPartsRequired": "Rocket parts req'd",
+    "launchTime": "Launch time",
+    "consumption": "Consumption",
+    "productivity": "Productivity",
+    "sprays": "Sprays",
+    "effectivity": "Effectivity",
+    "range": "Range"
+  },
+  "columns": {
+    "header": "Column settings",
+    "visibility": "Visibility",
+    "precision": "Precision",
+    "decimals": "Decimals",
+    "fractions": "Fractions",
+    "example": "Example",
+    "notApplicable": "N/A"
+  },
   "settings": {
     "header": "Settings",
     "reset": "Reset all settings",
@@ -107,15 +186,6 @@
     "language": "Language",
     "languageTooltip": "Select display language"
   },
-  "columns": {
-    "header": "Column settings",
-    "visibility": "Visibility",
-    "precision": "Precision",
-    "decimals": "Decimals",
-    "fractions": "Fractions",
-    "example": "Example",
-    "notApplicable": "N/A"
-  },
   "products": {
     "title": "Products",
     "produce": "Produce",
@@ -129,58 +199,6 @@
     "noEnabledRecipes": "No matching enabled recipes",
     "addAProduct": "Add a product",
     "selectDisplayRate": "Select display rate"
-  },
-  "options": {
-    "displayRate": {
-      "perSecond": "Units per second",
-      "perMinute": "Units per minute",
-      "perHour": "Units per hour"
-    },
-    "game": {
-      "factorio": "Factorio",
-      "dysonSphereProgram": "Dyson Sphere Program",
-      "satisfactory": "Satisfactory",
-      "captainOfIndustry": "Captain of Industry"
-    },
-    "inserterCapacity": {
-      "capacity0": "No capacity bonus",
-      "capacity2": "Capacity bonus 2",
-      "capacity7": "Capacity bonus 7"
-    },
-    "inserterTarget": {
-      "chest": "Chest",
-      "expressTransportBelt": "Express transport belt",
-      "fastTransportBelt": "Fast transport belt",
-      "transportBelt": "Transport belt"
-    },
-    "preset": {
-      "minimum": "Minimum",
-      "modules": "Modules",
-      "beacon8": "8 Beacons",
-      "beacon12": "12 Beacons",
-      "upgraded": "Upgraded",
-      "proliferated": "Proliferated"
-    },
-    "researchSpeed": {
-      "speed0": "No research bonus",
-      "speed1": "Research speed 1",
-      "speed2": "Research speed 2",
-      "speed3": "Research speed 3",
-      "speed4": "Research speed 4",
-      "speed5": "Research speed 5",
-      "speed6": "Research speed 6"
-    },
-    "simplexType": {
-      "disabled": "Disabled",
-      "jsBigIntRational": "JS BigInt Rational",
-      "wasmFloat64": "WASM Float64"
-    },
-    "stepDetailTab": {
-      "item": "Item",
-      "recipe": "Recipe",
-      "factory": "Factory",
-      "recipes": "Recipes"
-    }
   },
   "list": {
     "openColumnSettings": "Open column settings",
@@ -223,22 +241,33 @@
     "enabledRecipesInfo": "Click recipes to enable or disable them. Disabled recipes will not be used in the solution.",
     "total": "Total"
   },
-  "tooltip": {
-    "speed": "Speed",
-    "flowRate": "Flow rate",
-    "craftingSpeed": "Crafting speed",
-    "modules": "Modules",
-    "energyType": "Energy type",
-    "fuelCategory": "Fuel category",
-    "energyUsage": "Energy usage",
-    "drain": "Drain",
-    "pollution": "Pollution",
-    "rocketPartsRequired": "Rocket parts req'd",
-    "launchTime": "Launch time",
-    "consumption": "Consumption",
-    "productivity": "Productivity",
-    "sprays": "Sprays",
-    "effectivity": "Effectivity",
-    "range": "Range"
+  "matrix": {
+    "statistics": "Statistics",
+    "simplexResult": "Simplex result",
+    "runtime": "Runtime",
+    "runtimeValue": "{{ value }} ms",
+    "pivots": "Pivots",
+    "size": "Size",
+    "sizeValue": "{{ rows }} rows, {{ cols }} cols",
+    "costModifiers": "Cost modifiers",
+    "costUndoTooltip": "Undo all cost modifications",
+    "recipeCostTooltip": "Multiplies cost of recipes with a defined cost, usually mining",
+    "recipe": "Recipe",
+    "factoryCostTooltip": "Multiplies cost of physical factories running recipes",
+    "factory": "Factory",
+    "inputCostTooltip": "Cost of input items that are produced by no recipes",
+    "input": "Input",
+    "ignoredCostTooltip": "Cost of items that have been explicitly ignored",
+    "ignored": "Ignored",
+    "simplexCanonicalTableau": "Simplex canonical tableau",
+    "items": "Items/s",
+    "recipes": "Recipes",
+    "inputs": "Inputs",
+    "cost": "Cost",
+    "objective": "Objective",
+    "recipeCost": "Recipe cost",
+    "recipeCostUndoTooltip": "Undo recipe cost modification",
+    "solution": "Solution",
+    "surplus": "Surplus/s"
   }
 }

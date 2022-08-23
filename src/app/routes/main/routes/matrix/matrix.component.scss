@@ -1,26 +1,19 @@
-table {
+table.result-info {
   td,
   th {
-    border: 1px solid var(--color-back);
-  }
-
-  th {
     padding: 0.5rem;
+  }
+}
 
-    .flex {
-      justify-content: center;
-
-      > * + button {
-        margin-left: 0.5rem;
-      }
+:host ::ng-deep {
+  .p-datatable-tfoot {
+    th {
+      border-bottom: 1px solid var(--surface-border);
     }
-  }
 
-  td {
-    padding: 0.25rem;
-  }
-
-  + table {
-    margin-top: 1rem;
+    th,
+    td {
+      padding: 0.5rem;
+    }
   }
 }
