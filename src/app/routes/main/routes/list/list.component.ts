@@ -8,7 +8,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Table } from 'primeng/table';
-import { combineLatest, filter, first, map, tap } from 'rxjs';
+import { combineLatest, filter, first, map } from 'rxjs';
 
 import {
   Column,
@@ -103,8 +103,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         beltSpeed,
         beltSpeedTxt,
       })
-    ),
-    tap(() => console.log('redraw'))
+    )
   );
 
   @ViewChild('stepsTable') stepsTable: Table | undefined;
