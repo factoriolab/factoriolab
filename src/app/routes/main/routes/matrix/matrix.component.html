@@ -141,7 +141,7 @@
         </th>
         <th *ngFor="let i of vm.result.recipeIds" style="width: 4rem">
           <i
-            [class]="i | iconClass"
+            [class]="i | iconClass: 'recipe'"
             [pTooltip]="vm.data.recipeEntities[i].name"
           ></i>
         </th>
@@ -178,7 +178,7 @@
             *ngIf="vm.result.recipeIds[rowIndex - 1] as id; else notRecipe"
           >
             <i
-              [class]="id | iconClass"
+              [class]="id | iconClass: 'recipe'"
               [pTooltip]="vm.data.recipeEntities[id].name"
             ></i>
           </ng-container>
@@ -282,7 +282,7 @@
         </th>
         <th *ngFor="let i of vm.result.recipeIds">
           <i
-            [class]="i | iconClass"
+            [class]="i | iconClass: 'recipe'"
             [pTooltip]="vm.data.recipeEntities[i].name"
           ></i>
         </th>
