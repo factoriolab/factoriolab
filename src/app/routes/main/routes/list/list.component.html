@@ -451,9 +451,10 @@
                   "
                 >
                   <p-dropdown
-                    *ngFor="let moduleId of moduleIds; index as i"
+                    *ngFor="let moduleId of moduleIds; index as i; last as last"
                     labDropdownIcon
-                    class="module-dropdown me-n3"
+                    class="module-dropdown"
+                    [class.last]="last"
                     [pTooltip]="moduleId | moduleTooltip: vm.data"
                     tooltipPosition="top"
                     [escape]="false"
@@ -487,6 +488,8 @@
               <td class="w-0">
                 <lab-input-number
                   *ngIf="settings.beaconId && settings.beaconCount"
+                  [pTooltip]="'list.beaconEachTooltip' | translate"
+                  tooltipPosition="left"
                   class="text-end"
                   width="3rem"
                   [value]="settings.beaconCount"
@@ -505,6 +508,7 @@
               <td class="ps-0">
                 <div class="d-flex">
                   <p-dropdown
+                    *ngIf="settings.beaconId"
                     labDropdownIcon
                     [pTooltip]="settings.beaconId | beaconTooltip: vm.data"
                     [escape]="false"
@@ -524,10 +528,12 @@
                   <p-dropdown
                     *ngFor="
                       let moduleId of settings.beaconModuleIds;
-                      index as i
+                      index as i;
+                      last as last
                     "
                     labDropdownIcon
-                    class="module-dropdown me-n3"
+                    class="module-dropdown"
+                    [class.last]="last"
                     [pTooltip]="moduleId | moduleTooltip: vm.data"
                     tooltipPosition="top"
                     [escape]="false"
@@ -546,6 +552,15 @@
                     "
                   >
                   </p-dropdown>
+                  <lab-input-number
+                    *ngIf="step.beacons"
+                    [pTooltip]="'list.beaconTotalTooltip' | translate"
+                    class="text-end"
+                    width="4rem"
+                    [value]="step.beacons.toString()"
+                    [hideButtons]="true"
+                    (setValue)="setBeaconTotal(step.recipeId, $event)"
+                  ></lab-input-number>
                 </div>
               </td>
             </ng-container>

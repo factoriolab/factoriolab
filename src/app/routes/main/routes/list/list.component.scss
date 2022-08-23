@@ -55,19 +55,23 @@
   }
 
   // Highlight modules to right of the hovered module
-  .module-dropdown:not(:last-child) .p-dropdown {
-    border-right-color: transparent;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+  .module-dropdown:not(.last) {
+    margin-right: -1rem;
+
+    .p-dropdown {
+      border-right-color: transparent;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
   }
 
   .module-dropdown:hover ~ .module-dropdown {
-    &:not(:last-child) .p-dropdown {
+    &:not(.last) .p-dropdown {
       border-top-color: var(--primary-color);
       border-bottom-color: var(--primary-color);
     }
 
-    &:last-child .p-dropdown {
+    &.last .p-dropdown {
       border-color: var(--primary-color);
       border-left-color: transparent;
     }

@@ -222,6 +222,10 @@ export class RateUtility {
                 .ceil()
                 .mul(settings.beaconCount)
                 .div(beaconReceivers);
+              if (step.beacons.lt(settings.beaconCount)) {
+                // Can't be less than beacon count
+                step.beacons = settings.beaconCount;
+              }
             }
 
             const beacon = data.beaconEntities[settings.beaconId];
