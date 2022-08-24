@@ -1,24 +1,24 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { SelectButtonModule } from 'primeng/selectbutton';
+import { SplitButtonModule } from 'primeng/splitbutton';
+
+import { pipes } from './pipes';
 
 const modules = [
-  FormsModule,
-  ReactiveFormsModule,
   ButtonModule,
   DialogModule,
   ProgressSpinnerModule,
-  SelectButtonModule,
+  SplitButtonModule,
   TranslateModule,
 ];
 
 @NgModule({
   imports: [CommonModule, ...modules],
-  exports: [...modules],
+  declarations: [...pipes],
+  exports: [...modules, ...pipes],
 })
 export class AppSharedModule {}

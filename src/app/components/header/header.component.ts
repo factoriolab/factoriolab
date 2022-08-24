@@ -1,23 +1,19 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  EventEmitter,
   HostBinding,
   Input,
   OnInit,
-  Output,
 } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { SelectItem } from 'primeng/api';
-import { combineLatest, startWith } from 'rxjs';
+import { MenuItem } from 'primeng/api';
+import { combineLatest, map, startWith } from 'rxjs';
 
-import { APP, Game, gameInfo, games } from '~/models';
+import { APP, gameInfo, games } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Settings } from '~/store';
 
@@ -36,14 +32,30 @@ interface MenuLink {
 })
 export class HeaderComponent implements OnInit {
   @HostBinding('class.sticky') @Input() sticky = false;
+  game$ = this.store.select(Settings.getGame).pipe(untilDestroyed(this));
+  lang$ = this.translateSvc.onLangChange.pipe(
+    untilDestroyed(this),
+    startWith('')
+  );
 
-  gameCtrl = this.fb.control<Game>(Game.Factorio);
-  gameOptions: SelectItem<Game>[] = games.map((g) => ({
-    icon: gameInfo[g].icon,
-    value: g,
-    label: gameInfo[g].route,
-    title: this.translateSvc.instant(gameInfo[g].title),
-  }));
+  gameInfo$ = this.game$.pipe(map((g) => gameInfo[g]));
+  gameOptions$ = combineLatest([this.game$, this.lang$]).pipe(
+    map(([game]) =>
+      games
+        .filter((g) => g !== game)
+        .map(
+          (g): MenuItem => ({
+            icon: 'lab-icon-sm ' + gameInfo[g].icon,
+            label: this.translateSvc.instant(gameInfo[g].label),
+            command: () => this.selectGame(gameInfo[g].route),
+          })
+        )
+    )
+  );
+
+  vm$ = combineLatest([this.gameInfo$, this.gameOptions$]).pipe(
+    map(([gameInfo, gameOptions]) => ({ gameInfo, gameOptions }))
+  );
 
   links: MenuLink[] = [
     {
@@ -68,13 +80,8 @@ export class HeaderComponent implements OnInit {
     },
   ];
 
-  game$ = this.store.select(Settings.getGame).pipe(untilDestroyed(this));
-  lang$ = this.translateSvc.onLangChange.pipe(untilDestroyed(this));
-
   constructor(
     public contentSvc: ContentService,
-    private fb: FormBuilder,
-    private ref: ChangeDetectorRef,
     private router: Router,
     private titleSvc: Title,
     private store: Store<LabState>,
@@ -82,27 +89,13 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.game$.subscribe((game) => {
-      this.gameCtrl.setValue(game, { emitEvent: false });
+    combineLatest([this.game$, this.lang$]).subscribe(([game]) => {
+      const title = this.translateSvc.instant(gameInfo[game].title);
+      this.titleSvc.setTitle(`${APP} | ${title}`);
     });
-
-    this.lang$.subscribe(() => {
-      this.gameOptions.forEach(
-        (opt) =>
-          (opt.title = this.translateSvc.instant(gameInfo[opt.value].title))
-      );
-      this.ref.markForCheck();
-    });
-
-    combineLatest([this.game$, this.lang$.pipe(startWith('en'))]).subscribe(
-      ([game, lang]) => {
-        const title = this.translateSvc.instant(gameInfo[game].title);
-        this.titleSvc.setTitle(`${APP} | ${title}`);
-      }
-    );
   }
 
-  selectGame(event: { option: SelectItem<Game> }): void {
-    this.router.navigateByUrl(event.option.label ?? '');
+  selectGame(route: string): void {
+    this.router.navigateByUrl(route);
   }
 }

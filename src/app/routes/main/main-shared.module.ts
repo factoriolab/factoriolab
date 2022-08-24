@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -22,6 +23,8 @@ import { pipes } from './pipes';
 import { RatePipe } from './pipes/rate.pipe';
 
 const modules = [
+  FormsModule,
+  ReactiveFormsModule,
   AutoFocusModule,
   CardModule,
   CheckboxModule,

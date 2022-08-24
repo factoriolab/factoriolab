@@ -6,16 +6,14 @@
     (click)="contentSvc.toggleMenu()"
   ></button>
 </div>
-<p-selectButton
+<p-splitButton
+  *ngIf="vm$ | async as vm"
   styleClass="me-1 me-sm-4 me-xl-0"
-  [options]="gameOptions"
-  [formControl]="gameCtrl"
-  (onOptionClick)="selectGame($event)"
+  [icon]="vm.gameInfo.icon | iconSmClass"
+  [model]="(gameOptions$ | async) ?? []"
+  (onClick)="selectGame(vm.gameInfo.route)"
 >
-  <ng-template let-item>
-    <img class="m-n1" height="32px" width="32px" [src]="item.icon" />
-  </ng-template>
-</p-selectButton>
+</p-splitButton>
 <ul class="header-menu px-0 px-sm-4 px-xl-0">
   <li *ngFor="let link of links">
     <a class="w-100" target="_blank" [href]="link.href">

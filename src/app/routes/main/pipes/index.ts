@@ -1,7 +1,6 @@
 import { FactoryRatePipe } from './factory-rate.pipe';
 import { FactoryShowRatePipe } from './factory-show-rate.pipe';
 import { FactoryShowPipe } from './factory-show.pipe';
-import { IconClassPipe, IconSmClassPipe } from './icon-class.pipe';
 import { InserterSpeedPipe } from './inserter-speed.pipe';
 import { LeftPadPipe } from './left-pad.pipe';
 import { OptionsPipe } from './options.pipe';
@@ -25,8 +24,6 @@ export const pipes = [
   FactoryRatePipe,
   FactoryShowRatePipe,
   FactoryShowPipe,
-  IconClassPipe,
-  IconSmClassPipe,
   InserterSpeedPipe,
   LeftPadPipe,
   OptionsPipe,
