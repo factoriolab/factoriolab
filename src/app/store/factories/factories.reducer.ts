@@ -75,7 +75,6 @@ export function factoriesReducer(
         }
         return newState;
       }
-      console.log('reducer old', JSON.stringify(state));
       return state;
     }
     case FactoriesActionType.SET_MODULE_RANK: {

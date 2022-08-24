@@ -259,6 +259,7 @@
     "input": "Input",
     "ignoredCostTooltip": "Cost of items that have been explicitly ignored",
     "ignored": "Ignored",
+    "tableauPrecisionNote": "Note: This table uses the precision of the items column",
     "simplexCanonicalTableau": "Simplex canonical tableau",
     "items": "Items/s",
     "recipes": "Recipes",

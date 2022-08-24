@@ -6,14 +6,23 @@ table.result-info {
 }
 
 :host ::ng-deep {
-  .p-datatable-tfoot {
-    th {
-      border-bottom: 1px solid var(--surface-border);
+  .p-datatable {
+    .p-datatable-thead {
+      th {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 5rem;
+      }
     }
+    .p-datatable-tfoot {
+      th {
+        border-bottom: 1px solid var(--surface-border);
+      }
 
-    th,
-    td {
-      padding: 0.5rem;
+      th,
+      td {
+        padding: 0.5rem;
+      }
     }
   }
 }
