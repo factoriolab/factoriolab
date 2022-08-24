@@ -8,6 +8,7 @@ import {
   PowerUnit,
   SimplexType,
 } from '~/models';
+import { Theme } from '~/models/enum/theme';
 
 export const enum PreferencesActionType {
   SAVE_STATE = '[Preferences] Save State',
@@ -16,6 +17,7 @@ export const enum PreferencesActionType {
   SET_SIMPLEX_TYPE = '[Preferences] Set Simplex Type',
   SET_LANGUAGE = '[Preferences] Set Display Language',
   SET_POWER_UNIT = '[Preferences] Set Power Unit',
+  SET_THEME = '[Preferences] Set Theme',
 }
 
 export class SaveStateAction implements Action {
@@ -48,10 +50,16 @@ export class SetPowerUnitAction implements Action {
   constructor(public payload: PowerUnit) {}
 }
 
+export class SetThemeAction implements Action {
+  readonly type = PreferencesActionType.SET_THEME;
+  constructor(public payload: Theme) {}
+}
+
 export type PreferencesAction =
   | SaveStateAction
   | RemoveStateAction
   | SetColumnsAction
   | SetSimplexTypeAction
   | SetLanguageAction
-  | SetPowerUnitAction;
+  | SetPowerUnitAction
+  | SetThemeAction;

@@ -7,6 +7,7 @@ import {
   PowerUnit,
   SimplexType,
 } from '~/models';
+import { Theme } from '~/models/enum/theme';
 import * as App from '../app.actions';
 import {
   PreferencesAction,
@@ -21,6 +22,7 @@ export interface PreferencesState {
   simplexType: SimplexType;
   language: Language;
   powerUnit: PowerUnit;
+  theme: Theme;
 }
 
 export const initialColumnsState: ColumnsState = allColumns.reduce(
@@ -37,6 +39,7 @@ export const initialPreferencesState: PreferencesState = {
   simplexType: SimplexType.JsBigIntRational,
   language: Language.English,
   powerUnit: PowerUnit.Auto,
+  theme: Theme.System,
 };
 
 export function preferencesReducer(
@@ -74,6 +77,8 @@ export function preferencesReducer(
       return { ...state, ...{ language: action.payload } };
     case PreferencesActionType.SET_POWER_UNIT:
       return { ...state, ...{ powerUnit: action.payload } };
+    case PreferencesActionType.SET_THEME:
+      return { ...state, ...{ theme: action.payload } };
     default:
       return state;
   }

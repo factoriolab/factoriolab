@@ -28,6 +28,10 @@ export const getLanguage = createSelector(
   preferencesState,
   (state) => state.language
 );
+export const getTheme = createSelector(
+  preferencesState,
+  (state) => state.theme
+);
 
 /** Complex selectors */
 export const getSavedStates = createSelector(getStates, (states) =>

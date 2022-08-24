@@ -1,9 +1,7 @@
-import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  Inject,
   NgZone,
   OnInit,
 } from '@angular/core';
@@ -21,9 +19,8 @@ import {
   RouterService,
   StateService,
 } from './services';
+import { ThemeService } from './services/theme.service';
 import { App, LabState, Preferences, Settings } from './store';
-
-const LAB_ICON_STYLE_ID = 'lab-icon-css';
 
 @Component({
   selector: 'lab-root',
@@ -52,7 +49,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   constructor(
     public contentSvc: ContentService,
-    @Inject(DOCUMENT) private document: Document,
     private meta: Meta,
     private ngZone: NgZone,
     private ref: ChangeDetectorRef,
@@ -62,13 +58,15 @@ export class AppComponent implements OnInit, AfterViewInit {
     private translateSvc: TranslateService,
     private errorSvc: ErrorService,
     private routerSvc: RouterService,
-    private stateSvc: StateService
+    private stateSvc: StateService,
+    private themeSvc: ThemeService
   ) {}
 
   ngOnInit(): void {
     this.translateSvc.setDefaultLang('en');
     this.routerSvc.initialize();
     this.stateSvc.initialize();
+    this.themeSvc.initialize();
 
     this.store.select(Settings.getGame).subscribe((game) => {
       this.gaSvc.event('set_game', game);
@@ -86,36 +84,6 @@ Determine resource and factory requirements for your desired output products.`,
 
     this.store.select(Settings.getModId).subscribe((modId) => {
       this.gaSvc.event('set_mod_id', modId);
-    });
-
-    this.store.select(Settings.getDataset).subscribe((data) => {
-      // Generate .lab-icon::before css rules stylesheet
-      const head = this.document.getElementsByTagName('head')[0];
-      const old = this.document.getElementById(LAB_ICON_STYLE_ID);
-      if (old) {
-        head.removeChild(old);
-      }
-      const style = this.document.createElement('style');
-      style.id = LAB_ICON_STYLE_ID;
-      let css = '';
-      data.iconIds.forEach((i) => {
-        const icon = data.iconEntities[i];
-        css += `.${i}::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
-      });
-      data.itemIds
-        .filter((i) => data.itemEntities[i].icon)
-        .forEach((i) => {
-          const icon = data.iconEntities[data.itemEntities[i].icon!];
-          css += `.${i}.item::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
-        });
-      data.recipeIds
-        .filter((i) => data.recipeEntities[i].icon)
-        .forEach((i) => {
-          const icon = data.iconEntities[data.recipeEntities[i].icon!];
-          css += `.${i}.recipe::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
-        });
-      style.innerText = css;
-      head.appendChild(style);
     });
   }
 
