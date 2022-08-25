@@ -1,5 +1,5 @@
 import { ItemId, Mocks } from 'src/tests';
-import { Settings } from '../';
+import * as Settings from '../settings';
 import { initialItemsState } from './items.reducer';
 import * as Selectors from './items.selectors';
 

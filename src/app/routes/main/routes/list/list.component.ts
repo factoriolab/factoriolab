@@ -25,6 +25,7 @@ import {
   Factories,
   Items,
   LabState,
+  Preferences,
   Products,
   Recipes,
   Settings,

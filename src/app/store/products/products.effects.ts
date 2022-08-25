@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { map } from 'rxjs/operators';
 
 import { displayRateInfo } from '~/models';
-import { Settings } from '../';
+import * as Settings from '../settings';
 import { AdjustDisplayRateAction } from './products.actions';
 
 @Injectable()

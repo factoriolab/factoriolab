@@ -1,6 +1,7 @@
 import { Entities, Product, RateType, Rational } from '~/models';
 import { StoreUtility } from '~/utilities';
-import { App, Settings } from '../';
+import * as App from '../app.actions';
+import * as Settings from '../settings';
 import { ProductsAction, ProductsActionType } from './products.actions';
 
 export interface ProductsState {

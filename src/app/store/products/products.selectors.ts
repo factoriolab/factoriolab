@@ -16,14 +16,12 @@ import {
   StepDetailTab,
 } from '~/models';
 import { RateUtility, RecipeUtility, SimplexUtility } from '~/utilities';
-import {
-  Factories,
-  Items,
-  LabState,
-  Preferences,
-  Recipes,
-  Settings,
-} from '../';
+import { LabState } from '../';
+import * as Factories from '../factories';
+import * as Items from '../items';
+import * as Preferences from '../preferences';
+import * as Recipes from '../recipes';
+import * as Settings from '../settings';
 import { ProductsState } from './products.reducer';
 
 /* Base selector functions */

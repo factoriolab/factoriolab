@@ -1,7 +1,8 @@
 import { createSelector } from '@ngrx/store';
 
 import { Entities, ItemId, ItemSettings } from '~/models';
-import { LabState, Settings } from '../';
+import { LabState } from '../';
+import * as Settings from '../settings';
 import { ItemsState } from './items.reducer';
 
 /* Base selector functions */

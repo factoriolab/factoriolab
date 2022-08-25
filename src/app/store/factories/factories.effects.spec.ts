@@ -5,7 +5,9 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { ReplaySubject } from 'rxjs';
 
 import { initialState, ItemId, Mocks, RecipeId } from 'src/tests';
-import { LabState, Recipes, Settings } from '../';
+import { LabState } from '../';
+import * as Recipes from '../recipes';
+import * as Settings from '../settings';
 import * as Actions from './factories.actions';
 import { FactoriesEffects } from './factories.effects';
 

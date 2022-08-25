@@ -1,6 +1,6 @@
 import { Mocks } from 'src/tests';
 import { StoreUtility } from '~/utilities';
-import { App } from '../';
+import * as App from '../app.actions';
 import * as Actions from './items.actions';
 import { initialItemsState, itemsReducer } from './items.reducer';
 

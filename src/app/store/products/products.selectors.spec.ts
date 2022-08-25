@@ -13,7 +13,9 @@ import {
   StepDetailTab,
 } from '~/models';
 import { RateUtility, RecipeUtility, SimplexUtility } from '~/utilities';
-import { Items, Recipes, Settings } from '../';
+import * as Items from '../items';
+import * as Recipes from '../recipes';
+import * as Settings from '../settings';
 import * as Selectors from './products.selectors';
 
 describe('Products Selectors', () => {

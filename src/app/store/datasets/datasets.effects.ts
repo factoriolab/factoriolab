@@ -3,7 +3,9 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { filter, map, switchMap } from 'rxjs/operators';
 
 import { DataService } from '~/services';
-import { App, Products, Settings } from '../';
+import * as App from '../app.actions';
+import * as Products from '../products';
+import * as Settings from '../settings';
 
 @Injectable()
 export class DatasetsEffects {

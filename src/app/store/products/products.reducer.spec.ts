@@ -1,6 +1,6 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import { RateType } from '~/models';
-import { App } from '../';
+import * as App from '../app.actions';
 import * as Actions from './products.actions';
 import {
   initialProductsState,

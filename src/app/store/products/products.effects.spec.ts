@@ -4,7 +4,7 @@ import { Action } from '@ngrx/store';
 import { ReplaySubject } from 'rxjs';
 
 import { DisplayRate } from '~/models';
-import { Settings } from '../';
+import * as Settings from '../settings';
 import * as Actions from './products.actions';
 import { ProductsEffects } from './products.effects';
 

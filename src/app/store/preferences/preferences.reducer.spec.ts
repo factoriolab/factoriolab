@@ -1,5 +1,5 @@
 import { Column, Language, PowerUnit, SimplexType } from '~/models';
-import { App } from '../';
+import * as App from '../app.actions';
 import * as Actions from './preferences.actions';
 import {
   initialPreferencesState,

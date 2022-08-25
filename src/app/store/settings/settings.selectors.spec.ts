@@ -11,7 +11,7 @@ import {
   ResearchSpeed,
   SimplexType,
 } from '~/models';
-import { Preferences } from '../';
+import * as Preferences from '../preferences';
 import { initialSettingsState } from './settings.reducer';
 import * as Selectors from './settings.selectors';
 

@@ -1,6 +1,7 @@
 import { Entities, FactorySettings } from '~/models';
 import { StoreUtility } from '~/utilities';
-import { App, Settings } from '../';
+import * as App from '../app.actions';
+import * as Settings from '../settings';
 import { FactoriesAction, FactoriesActionType } from './factories.actions';
 
 export type FactoriesState = {
