@@ -26,7 +26,7 @@
         [panelStyle]="{ width: '18rem' }"
         [tooltip]="'products.changeItem' | translate"
         tooltipPosition="top"
-        [options]="vm.options.items"
+        [options]="vm.productOptions"
         [ngModel]="product.itemId"
         (onChange)="setItem(product.id, $event.value)"
       >
@@ -46,7 +46,7 @@
         (onChange)="setRateType(product.id, $event.value)"
       ></p-dropdown>
       <ng-container
-        *ngIf="vm.productOptions[product.id].length > 0; else recipeNone"
+        *ngIf="vm.viaOptions[product.id].length > 0; else recipeNone"
       >
         <ng-container *ngIf="product.viaId as id">
           <span class="p-inputgroup-addon">{{
@@ -60,7 +60,7 @@
             [virtualScrollItemSize]="48"
             [tooltip]="'products.changeVia' | translate"
             tooltipPosition="top"
-            [options]="vm.productOptions[product.id]"
+            [options]="vm.viaOptions[product.id]"
             [ngModel]="product.viaId"
             (onChange)="setVia(product.id, $event.value)"
           >
@@ -81,7 +81,7 @@
         [virtualScroll]="true"
         [virtualScrollItemSize]="48"
         [panelStyle]="{ width: '18rem' }"
-        [options]="vm.options.items"
+        [options]="vm.productOptions"
         (onChange)="addProduct($event.value)"
       >
         <ng-template pTemplate="selectedItem" let-item>

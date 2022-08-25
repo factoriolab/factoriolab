@@ -559,7 +559,7 @@
         <ng-container *ngIf="vm.data.game === Game.Factorio">
           <div class="py-2">
             <div class="text-end">
-              <small>
+              <small class="me-1">
                 <a
                   href="https://wiki.factorio.com/Fluid_system#Pipelines"
                   target="_blank"
@@ -742,7 +742,16 @@
             }}</label>
           </span>
         </div>
-        <div class="mt-4 py-2">
+        <div class="py-2">
+          <div class="text-end">
+            <small class="me-1">
+              <a
+                href="https://github.com/factoriolab/factoriolab/wiki/Translating-FactorioLab"
+                target="_blank"
+                >{{ 'settings.helpTranslate' | translate }}</a
+              >
+            </small>
+          </div>
           <div
             class="p-float-label"
             [pTooltip]="'settings.languageTooltip' | translate"

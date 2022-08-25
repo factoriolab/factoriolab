@@ -9,12 +9,20 @@ import {
   Entities,
   FlowData,
   FlowStyle,
+  ItemSettings,
   Rational,
   RecipeSettings,
   Step,
   themeMap,
 } from '~/models';
-import { LabState, Preferences, Products, Recipes, Settings } from '~/store';
+import {
+  Items,
+  LabState,
+  Preferences,
+  Products,
+  Recipes,
+  Settings,
+} from '~/store';
 import { ColumnsState } from '~/store/preferences';
 import { ThemeService } from './theme.service';
 
@@ -27,27 +35,39 @@ export class FlowService {
   constructor(private store: Store<LabState>, private theme: ThemeService) {
     this.flowData$ = combineLatest([
       this.store.select(Products.getSteps),
+      this.store.select(Items.getItemSettings),
       this.store.select(Recipes.getRecipeSettings),
       this.store.select(Recipes.getAdjustedDataset),
       this.store.select(Settings.getDisplayRateInfo),
       this.store.select(Preferences.getColumns),
       this.theme.theme$,
     ]).pipe(
-      map(([steps, recipeSettings, data, dispRateInfo, columns, theme]) =>
-        this.buildGraph(
+      map(
+        ([
           steps,
+          itemSettings,
           recipeSettings,
           data,
           dispRateInfo,
           columns,
-          themeMap[theme]
-        )
+          theme,
+        ]) =>
+          this.buildGraph(
+            steps,
+            itemSettings,
+            recipeSettings,
+            data,
+            dispRateInfo,
+            columns,
+            themeMap[theme]
+          )
       )
     );
   }
 
   buildGraph(
     steps: Step[],
+    itemSettings: Entities<ItemSettings>,
     recipeSettings: Entities<RecipeSettings>,
     data: Dataset,
     dispRateInfo: DisplayRateInfo,
@@ -150,7 +170,10 @@ export class FlowService {
                 }
               }
 
-              if (amount.gt(Rational.zero)) {
+              if (
+                !itemSettings[step.itemId].ignore &&
+                amount.gt(Rational.zero)
+              ) {
                 inputAmount = inputAmount.add(amount);
                 // CREATE LINK: Input -> Recipe
                 flow.links.push({
@@ -162,7 +185,10 @@ export class FlowService {
               }
             }
 
-            if (inputAmount.gt(Rational.zero)) {
+            if (
+              !itemSettings[step.itemId].ignore &&
+              inputAmount.gt(Rational.zero)
+            ) {
               // CREATE NODE: Input
               flow.nodes.push({
                 id: `i|${step.itemId}`,

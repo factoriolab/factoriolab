@@ -73,7 +73,7 @@ export const getProducts = createSelector(
     products?.map((p) => RecipeUtility.adjustProduct(p, productSteps, data))
 );
 
-export const getProductOptions = createSelector(
+export const getViaOptions = createSelector(
   getProducts,
   getProductSteps,
   Settings.getDataset,

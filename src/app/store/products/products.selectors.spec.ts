@@ -106,7 +106,7 @@ describe('Products Selectors', () => {
 
   describe('getProductOptions', () => {
     it('should map product steps to a list of options', () => {
-      const result = Selectors.getProductOptions.projector(
+      const result = Selectors.getViaOptions.projector(
         Mocks.ProductsList,
         Mocks.ProductSteps
       );

@@ -22,33 +22,36 @@ import {
 export class ProductsComponent {
   vm$ = combineLatest([
     this.store.select(Products.getProducts),
-    this.store.select(Products.getProductOptions),
+    this.store.select(Products.getViaOptions),
     this.store.select(Items.getItemSettings),
     this.store.select(Factories.getFactories),
     this.store.select(Recipes.getRecipeSettings),
     this.store.select(Settings.getDisplayRate),
     this.store.select(Settings.getRateTypeOptions),
     this.store.select(Settings.getOptions),
+    this.store.select(Settings.getProductOptions),
   ]).pipe(
     map(
       ([
         products,
-        productOptions,
+        viaOptions,
         itemSettings,
         factories,
         recipeSettings,
         displayRate,
         rateTypeOptions,
         options,
+        productOptions,
       ]) => ({
         products,
-        productOptions,
+        viaOptions,
         itemSettings,
         factories,
         recipeSettings,
         displayRate,
         rateTypeOptions,
         options,
+        productOptions,
       })
     )
   );
