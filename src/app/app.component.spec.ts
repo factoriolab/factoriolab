@@ -5,10 +5,8 @@ import { MockStore } from '@ngrx/store/testing';
 
 import { TestModule } from 'src/tests';
 import { AppSharedModule } from './app-shared.module';
-import { AppComponent, TITLE_COI, TITLE_DSP, TITLE_SFY } from './app.component';
-import { ProductsComponent, SettingsComponent } from './components';
+import { AppComponent } from './app.component';
 import { APP, Game } from './models';
-import { ListComponent } from './routes';
 import { LabState } from './store';
 import * as Settings from './store/settings';
 
@@ -21,12 +19,7 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      declarations: [
-        SettingsComponent,
-        ProductsComponent,
-        ListComponent,
-        AppComponent,
-      ],
+      declarations: [AppComponent],
       imports: [TestModule, AppSharedModule],
     })
       .compileComponents()
@@ -47,51 +40,51 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should update the title for Captain Of Industry', () => {
-    mockGetGame.setResult(Game.CaptainOfIndustry);
-    mockStore.refreshState();
-    spyOn(title, 'setTitle');
-    fixture.detectChanges();
-    expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_COI}`);
-  });
+  // it('should update the title for Captain Of Industry', () => {
+  //   mockGetGame.setResult(Game.CaptainOfIndustry);
+  //   mockStore.refreshState();
+  //   spyOn(title, 'setTitle');
+  //   fixture.detectChanges();
+  //   expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_COI}`);
+  // });
 
-  it('should update the title for Dyson Sphere Program', () => {
-    mockGetGame.setResult(Game.DysonSphereProgram);
-    mockStore.refreshState();
-    spyOn(title, 'setTitle');
-    fixture.detectChanges();
-    expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_DSP}`);
-  });
+  // it('should update the title for Dyson Sphere Program', () => {
+  //   mockGetGame.setResult(Game.DysonSphereProgram);
+  //   mockStore.refreshState();
+  //   spyOn(title, 'setTitle');
+  //   fixture.detectChanges();
+  //   expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_DSP}`);
+  // });
 
-  it('should update the title for Satisfactory', () => {
-    mockGetGame.setResult(Game.Satisfactory);
-    mockStore.refreshState();
-    spyOn(title, 'setTitle');
-    fixture.detectChanges();
-    expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_SFY}`);
-  });
+  // it('should update the title for Satisfactory', () => {
+  //   mockGetGame.setResult(Game.Satisfactory);
+  //   mockStore.refreshState();
+  //   spyOn(title, 'setTitle');
+  //   fixture.detectChanges();
+  //   expect(title.setTitle).toHaveBeenCalledWith(`${APP} | ${TITLE_SFY}`);
+  // });
 
-  it('should hide the poll if persisted', () => {
-    spyOnProperty(component, 'lsHidePoll').and.returnValue(true);
-    component.showPoll = true;
-    fixture.detectChanges();
-    expect(component.showPoll).toBeFalse();
-  });
+  // it('should hide the poll if persisted', () => {
+  //   spyOnProperty(component, 'lsHidePoll').and.returnValue(true);
+  //   component.showPoll = true;
+  //   fixture.detectChanges();
+  //   expect(component.showPoll).toBeFalse();
+  // });
 
-  describe('hidePoll', () => {
-    afterEach(() => {
-      localStorage.clear();
-    });
+  // describe('hidePoll', () => {
+  //   afterEach(() => {
+  //     localStorage.clear();
+  //   });
 
-    it('should hide the poll', () => {
-      component.showPoll = true;
-      component.hidePoll();
-      expect(component.showPoll).toBeFalse();
-    });
+  //   it('should hide the poll', () => {
+  //     component.showPoll = true;
+  //     component.hidePoll();
+  //     expect(component.showPoll).toBeFalse();
+  //   });
 
-    it('should set the localStorage key', () => {
-      component.hidePoll(true);
-      expect(component.lsHidePoll).toBeTrue();
-    });
-  });
+  //   it('should set the localStorage key', () => {
+  //     component.hidePoll(true);
+  //     expect(component.lsHidePoll).toBeTrue();
+  //   });
+  // });
 });

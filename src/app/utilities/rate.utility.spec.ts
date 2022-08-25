@@ -1,6 +1,7 @@
 import { CategoryId, ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   DisplayRate,
+  displayRateInfo,
   Entities,
   Rational,
   RationalRecipe,
@@ -628,7 +629,7 @@ describe('RateUtility', () => {
             pollution: Rational.from(4),
           },
         ] as any,
-        DisplayRate.PerMinute
+        displayRateInfo[DisplayRate.PerMinute]
       );
       expect(result[0].items).toEqual(Rational.from(60));
       expect(result[0].surplus).toEqual(Rational.from(120));
@@ -639,7 +640,7 @@ describe('RateUtility', () => {
     it('should apply the display rate to partial steps', () => {
       const result = RateUtility.displayRate(
         [{ items: Rational.two }] as any,
-        DisplayRate.PerMinute
+        displayRateInfo[DisplayRate.PerMinute]
       );
       expect(result[0].items).toEqual(Rational.from(120));
       expect(result[0].surplus).toBeUndefined();
@@ -650,7 +651,7 @@ describe('RateUtility', () => {
     it('should calculate parent percentages', () => {
       const result = RateUtility.displayRate(
         [{ items: Rational.two, parents: { id: Rational.one } }] as any,
-        DisplayRate.PerMinute
+        displayRateInfo[DisplayRate.PerMinute]
       );
       expect(result[0].parents?.['id']).toEqual(Rational.from(1, 2));
     });

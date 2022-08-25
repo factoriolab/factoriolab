@@ -612,7 +612,10 @@ describe('SimplexUtility', () => {
     });
 
     it('should handle glpk failure', () => {
-      spyOn(SimplexUtility, 'glpkSimplex').and.returnValue('failure');
+      spyOn(SimplexUtility, 'glpkSimplex').and.returnValue([
+        'failure',
+        'infeasible',
+      ]);
       const state = getState();
       const result = SimplexUtility.glpk(state);
       expect(result.returnCode).toEqual('failure');
@@ -750,6 +753,8 @@ describe('SimplexUtility', () => {
     it('should return presolve result', () => {
       const result = SimplexUtility.simplexType([[]], SimplexType.WasmFloat64, {
         returnCode: 'ok',
+        status: 'optimal',
+        error: false,
         time: 0,
         O: [],
       });

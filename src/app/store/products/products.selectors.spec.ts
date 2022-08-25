@@ -12,12 +12,7 @@ import {
   Step,
   StepDetailTab,
 } from '~/models';
-import {
-  FlowUtility,
-  RateUtility,
-  RecipeUtility,
-  SimplexUtility,
-} from '~/utilities';
+import { RateUtility, RecipeUtility, SimplexUtility } from '~/utilities';
 import * as Items from '../items';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
@@ -777,19 +772,6 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getSankey', () => {
-    it('should handle empty/null values', () => {
-      const result = Selectors.getSankey.projector([], null, null, null);
-      expect(result).toEqual({ nodes: [], links: [] });
-    });
-
-    it('should build sankey model using utility method', () => {
-      spyOn(FlowUtility, 'buildSankey');
-      Selectors.getSankey.projector([], null, null, null);
-      expect(FlowUtility.buildSankey).toHaveBeenCalled();
-    });
-  });
-
   describe('checkViaState', () => {
     it('should select products and rates', () => {
       const result = Selectors.checkViaState.projector([], {});
@@ -918,10 +900,10 @@ describe('Products Selectors', () => {
       expect(result).toEqual({
         ['0']: {
           tabs: [
-            StepDetailTab.Item,
-            StepDetailTab.Recipe,
-            StepDetailTab.Factory,
-            StepDetailTab.Recipes,
+            { label: StepDetailTab.Item },
+            { label: StepDetailTab.Recipe },
+            { label: StepDetailTab.Factory },
+            { label: StepDetailTab.Recipes },
           ],
           outputs: [steps[0], steps[1]],
           recipeIds: [

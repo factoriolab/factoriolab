@@ -6,15 +6,13 @@ import {
   Entities,
   Game,
   ItemSettings,
-  Link,
-  LinkValue,
+  Language,
   MatrixResult,
   MatrixResultType,
   Mod as _Mod,
   ModData,
   ModHash,
   ModI18n,
-  Node,
   PowerUnit,
   Preset,
   Product,
@@ -22,12 +20,11 @@ import {
   Rational,
   RationalProduct,
   RecipeSettings,
-  SankeyAlign,
-  SankeyData,
   SimplexType,
   Step,
   toEntities,
 } from '~/models';
+import { Theme } from '~/models/enum/theme';
 import * as Datasets from '~/store/datasets';
 import * as Factories from '~/store/factories';
 import * as Items from '~/store/items';
@@ -199,65 +196,10 @@ export const AdjustedData = Recipes.getAdjustedDataset.projector(
 export const PreferencesState: Preferences.PreferencesState = {
   states: { ['name']: 'z=zip' },
   columns: Preferences.initialColumnsState,
-  linkSize: LinkValue.Items,
-  linkText: LinkValue.Items,
-  sankeyAlign: SankeyAlign.Justify,
   simplexType: SimplexType.JsBigIntRational,
   powerUnit: PowerUnit.Auto,
-  language: 'en',
-};
-
-function node(i: number, noHref = false): Node {
-  return {
-    id: i.toString(),
-    stepId: i.toString(),
-    href: noHref ? undefined : 'data/1.0/icons.png',
-    viewBox: '0 0 64 64',
-    name: i.toString(),
-    color: 'black',
-  };
-}
-
-function link(i: number, j: number): Link {
-  return {
-    source: i.toString(),
-    target: j.toString(),
-    value: Math.max(1, i),
-    text: '1 items',
-    name: `${i}->${j}`,
-    color: 'white',
-  };
-}
-
-export const Sankey: SankeyData = {
-  nodes: [
-    node(0, true),
-    node(1),
-    node(2),
-    node(3),
-    node(4),
-    node(5),
-    node(6),
-    node(7),
-    node(8),
-    node(9),
-  ],
-  links: [
-    link(1, 0),
-    link(2, 0),
-    link(3, 0),
-    link(4, 0),
-    link(5, 0),
-    link(6, 0),
-    link(7, 0),
-    link(8, 0),
-    link(0, 9),
-  ],
-};
-
-export const SankeyCircular: SankeyData = {
-  nodes: [node(0), node(1), node(2)],
-  links: [link(0, 1), link(1, 2), link(2, 0)],
+  language: Language.English,
+  theme: Theme.System,
 };
 
 export const MatrixResultSolved: MatrixResult = {

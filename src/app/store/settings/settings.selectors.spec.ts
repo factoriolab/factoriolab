@@ -11,7 +11,7 @@ import {
   ResearchSpeed,
   SimplexType,
 } from '~/models';
-import * as Preferences from '../preferences';
+import { Preferences } from '../';
 import { initialSettingsState } from './settings.reducer';
 import * as Selectors from './settings.selectors';
 
@@ -64,18 +64,16 @@ describe('Settings Selectors', () => {
         Preferences.initialColumnsState
       );
       expect(result[Column.Wagons].show).toBeTrue();
-      expect(result[Column.Overclock].show).toBeFalse();
       expect(result[Column.Beacons].show).toBeTrue();
       expect(result[Column.Pollution].show).toBeTrue();
     });
 
-    it('should override columns for Dyson Sphere Program', () => {
+    it('should override columns for Captain of Industry', () => {
       const result = Selectors.getColumnsState.projector(
         Game.CaptainOfIndustry,
         Preferences.initialColumnsState
       );
       expect(result[Column.Wagons].show).toBeFalse();
-      expect(result[Column.Overclock].show).toBeFalse();
       expect(result[Column.Beacons].show).toBeFalse();
       expect(result[Column.Power].show).toBeFalse();
       expect(result[Column.Pollution].show).toBeFalse();
@@ -87,7 +85,6 @@ describe('Settings Selectors', () => {
         Preferences.initialColumnsState
       );
       expect(result[Column.Wagons].show).toBeFalse();
-      expect(result[Column.Overclock].show).toBeFalse();
       expect(result[Column.Beacons].show).toBeFalse();
       expect(result[Column.Pollution].show).toBeFalse();
     });
@@ -98,7 +95,6 @@ describe('Settings Selectors', () => {
         Preferences.initialColumnsState
       );
       expect(result[Column.Wagons].show).toBeTrue();
-      expect(result[Column.Overclock].show).toBeTrue();
       expect(result[Column.Beacons].show).toBeFalse();
       expect(result[Column.Pollution].show).toBeFalse();
     });
@@ -604,13 +600,6 @@ describe('Settings Selectors', () => {
         Game.Factorio
       );
       expect(result.categoryIds.length).toEqual(0);
-    });
-  });
-
-  describe('getChemicalFuels', () => {
-    it('should handle no matching fuels', () => {
-      const result = Selectors.getChemicalFuelIds.projector({ fuelIds: {} });
-      expect(result).toEqual([]);
     });
   });
 

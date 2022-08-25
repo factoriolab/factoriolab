@@ -234,16 +234,6 @@ describe('Recipes Reducer', () => {
     });
   });
 
-  describe('RESET_OVERCLOCK', () => {
-    it('should call resetField', () => {
-      spyOn(StoreUtility, 'resetFields');
-      recipesReducer(undefined, new Actions.ResetOverclocksAction());
-      expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
-        'overclock',
-      ] as any);
-    });
-  });
-
   describe('RESET_COST', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetFields');

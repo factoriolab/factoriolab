@@ -516,14 +516,13 @@ describe('RouterService', () => {
             rate: '1',
             rateType: RateType.Items,
             viaId: ItemId.IronOre,
-            viaSetting: ItemId.IronOre,
           },
         ],
         Mocks.Hash
       );
       expect(result).toEqual({
-        bare: 'p=steel-chest*1**iron-ore*iron-ore',
-        hash: 'pC6*1**Bd*Bd',
+        bare: 'p=steel-chest*1**iron-ore',
+        hash: 'pC6*1**Bd',
       });
     });
 
@@ -536,14 +535,13 @@ describe('RouterService', () => {
             rate: '1',
             rateType: RateType.Belts,
             viaId: ItemId.IronOre,
-            viaSetting: ItemId.TransportBelt,
           },
         ],
         Mocks.Hash
       );
       expect(result).toEqual({
-        bare: 'p=steel-chest*1*1*iron-ore*transport-belt',
-        hash: 'pC6*1*1*Bd*C',
+        bare: 'p=steel-chest*1*1*iron-ore',
+        hash: 'pC6*1*1*Bd',
       });
     });
 
@@ -556,14 +554,13 @@ describe('RouterService', () => {
             rate: '1',
             rateType: RateType.Wagons,
             viaId: ItemId.IronOre,
-            viaSetting: ItemId.CargoWagon,
           },
         ],
         Mocks.Hash
       );
       expect(result).toEqual({
-        bare: 'p=steel-chest*1*2*iron-ore*cargo-wagon',
-        hash: 'pC6*1*2*Bd*A',
+        bare: 'p=steel-chest*1*2*iron-ore',
+        hash: 'pC6*1*2*Bd',
       });
     });
 
@@ -576,18 +573,13 @@ describe('RouterService', () => {
             rate: '1',
             rateType: RateType.Factories,
             viaId: ItemId.IronOre,
-            viaSetting: ItemId.AssemblingMachine2,
-            viaFactoryModuleIds: [],
-            viaBeaconCount: '1',
-            viaBeaconModuleIds: [],
-            viaBeaconId: ItemId.Beacon,
           },
         ],
         Mocks.Hash
       );
       expect(result).toEqual({
-        bare: 'p=steel-chest*1*3*iron-ore*assembling-machine-2*%3D*1*%3D*beacon',
-        hash: 'pC6*1*3*Bl*B*=*1*=*A',
+        bare: 'p=steel-chest*1*3*iron-ore',
+        hash: 'pC6*1*3*Bl',
       });
     });
   });
@@ -630,10 +622,7 @@ describe('RouterService', () => {
     });
 
     it('hash should handle RateType Belts', () => {
-      const result = service.unzipProducts(
-        { ['p']: 'C6*1*1*Bd*C' },
-        Mocks.Hash
-      );
+      const result = service.unzipProducts({ ['p']: 'C6*1*1*Bd' }, Mocks.Hash);
       expect(result).toEqual({
         ids: ['0'],
         entities: {
@@ -643,7 +632,6 @@ describe('RouterService', () => {
             rate: '1',
             rateType: RateType.Belts,
             viaId: ItemId.IronOre,
-            viaSetting: ItemId.TransportBelt,
           },
         },
         index: 1,
@@ -651,10 +639,7 @@ describe('RouterService', () => {
     });
 
     it('hash should handle RateType Wagons', () => {
-      const result = service.unzipProducts(
-        { ['p']: 'C6*1*2*Bd*A' },
-        Mocks.Hash
-      );
+      const result = service.unzipProducts({ ['p']: 'C6*1*2*Bd' }, Mocks.Hash);
       expect(result).toEqual({
         ids: ['0'],
         entities: {
@@ -664,7 +649,6 @@ describe('RouterService', () => {
             rate: '1',
             rateType: RateType.Wagons,
             viaId: ItemId.IronOre,
-            viaSetting: ItemId.CargoWagon,
           },
         },
         index: 1,

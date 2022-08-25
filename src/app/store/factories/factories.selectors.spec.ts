@@ -101,7 +101,7 @@ describe('Factories Selectors', () => {
         initialFactoriesState,
         Mocks.Dataset
       );
-      expect(result).toEqual(Mocks.Dataset.factoryIds);
+      expect(result.length).toEqual(Mocks.Dataset.factoryIds.length);
     });
 
     it('should filter ids', () => {
