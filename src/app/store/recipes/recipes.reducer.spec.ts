@@ -1,6 +1,6 @@
 import { ItemId, Mocks } from 'src/tests';
 import { StoreUtility } from '~/utilities';
-import * as App from '../app.actions';
+import { App } from '../';
 import * as Actions from './recipes.actions';
 import { initialRecipesState, recipesReducer } from './recipes.reducer';
 
@@ -212,6 +212,7 @@ describe('Recipes Reducer', () => {
       recipesReducer(undefined, new Actions.ResetFactoriesAction());
       expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
         'factoryId',
+        'overclock',
         'factoryModuleIds',
         'beaconCount',
         'beaconId',

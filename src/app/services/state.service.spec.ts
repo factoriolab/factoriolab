@@ -6,8 +6,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 import { initialState, ItemId } from 'src/tests';
 import { Entities, RateType, Rational, RationalProduct } from '~/models';
-import { LabState } from '~/store';
-import * as Products from '~/store/products';
+import { LabState, Products } from '~/store';
 import { StateService } from './state.service';
 
 describe('StateService', () => {
@@ -24,6 +23,7 @@ describe('StateService', () => {
       providers: [provideMockStore({ initialState })],
     });
     service = TestBed.inject(StateService);
+    service.initialize();
     mockStore = TestBed.inject(MockStore);
     mockCheckViaState = mockStore.overrideSelector(Products.checkViaState, {
       products: [],

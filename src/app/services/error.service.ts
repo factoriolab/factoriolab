@@ -1,5 +1,4 @@
 import { ErrorHandler, Injectable, NgZone } from '@angular/core';
-import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -11,11 +10,7 @@ export class ErrorService {
 
 @Injectable()
 export class LabErrorHandler implements ErrorHandler {
-  constructor(
-    private router: Router,
-    private ngZone: NgZone,
-    private error: ErrorService
-  ) {}
+  constructor(private ngZone: NgZone, private error: ErrorService) {}
 
   handleError(error: string): void {
     if (this.error.message$.value == null) {

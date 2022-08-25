@@ -306,9 +306,6 @@ describe('Settings Selectors', () => {
       expect(Object.keys(result.categoryEntities).length).toEqual(
         result.categoryIds.length
       );
-      expect(Object.keys(result.categoryItemRows).length).toEqual(
-        result.categoryIds.length
-      );
       expect(result.iconIds.length).toBeGreaterThan(0);
       expect(Object.keys(result.iconEntities).length).toEqual(
         result.iconIds.length
@@ -359,9 +356,6 @@ describe('Settings Selectors', () => {
       expect(
         Object.keys(result.categoryEntities).length
       ).toBeGreaterThanOrEqual(result.categoryIds.length);
-      expect(Object.keys(result.categoryItemRows).length).toEqual(
-        result.categoryIds.length
-      );
       expect(result.iconIds.length).toBeGreaterThan(0);
       expect(Object.keys(result.iconEntities).length).toEqual(
         result.iconIds.length
@@ -497,77 +491,28 @@ describe('Settings Selectors', () => {
       expect(result.pipeIds).toEqual([ItemId.CopperCable, ItemId.Pipe]);
     });
 
-    it('should copy icons', () => {
-      const categories = Mocks.Mod.categories.map((c) => {
-        if (c.id === CategoryId.Research) {
-          return { ...c, ...{ icon: ItemId.ArtilleryShellRange } };
-        } else {
-          return { ...c };
-        }
-      });
-      const items = Mocks.Mod.items.map((i) => {
-        if (i.id === ItemId.Pipe) {
-          return { ...i, ...{ icon: ItemId.Beacon } };
-        } else {
-          return { ...i };
-        }
-      });
-      const recipes = Mocks.Mod.recipes.map((r) => {
-        if (r.id === RecipeId.Coal) {
-          return { ...r, ...{ icon: RecipeId.PlasticBar } };
-        } else {
-          return { ...r };
-        }
-      });
-      const mod = {
-        ...Mocks.Mod,
-        ...{
-          categories,
-          items,
-          recipes,
-        },
-      };
-      const result = Selectors.getDataset.projector(
-        Mocks.Raw.app,
-        mod,
-        null,
-        null,
-        Mocks.Defaults,
-        Game.Factorio
-      );
-      expect(result.iconEntities[CategoryId.Research]).toEqual(
-        result.iconEntities[RecipeId.ArtilleryShellRange]
-      );
-      expect(result.iconEntities[ItemId.Pipe]).toEqual(
-        result.iconEntities[ItemId.Beacon]
-      );
-      expect(result.iconEntities[RecipeId.Coal]).toEqual(
-        result.iconEntities[RecipeId.PlasticBar]
-      );
-    });
-
-    it('should calculate missing recipe icons', () => {
-      const icons = Mocks.Mod.icons.filter(
-        (i) => i.id !== RecipeId.AdvancedOilProcessing
-      );
-      const mod = {
-        ...Mocks.Mod,
-        ...{
-          icons,
-        },
-      };
-      const result = Selectors.getDataset.projector(
-        Mocks.Raw.app,
-        mod,
-        null,
-        null,
-        Mocks.Defaults,
-        Game.Factorio
-      );
-      expect(result.iconEntities[RecipeId.AdvancedOilProcessing]).toEqual(
-        result.iconEntities[ItemId.HeavyOil]
-      );
-    });
+    // it('should calculate missing recipe icons', () => {
+    //   const icons = Mocks.Mod.icons.filter(
+    //     (i) => i.id !== RecipeId.AdvancedOilProcessing
+    //   );
+    //   const mod = {
+    //     ...Mocks.Mod,
+    //     ...{
+    //       icons,
+    //     },
+    //   };
+    //   const result = Selectors.getDataset.projector(
+    //     Mocks.Raw.app,
+    //     mod,
+    //     null,
+    //     null,
+    //     Mocks.Defaults,
+    //     Game.Factorio
+    //   );
+    //   expect(result.iconEntities[RecipeId.AdvancedOilProcessing]).toEqual(
+    //     result.iconEntities[ItemId.HeavyOil]
+    //   );
+    // });
 
     it('should handle specified icon files', () => {
       const result = Selectors.getDataset.projector(

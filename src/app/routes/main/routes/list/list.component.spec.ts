@@ -24,6 +24,7 @@ import { RouterService } from '~/services';
 import { LabState, Products } from '~/store';
 import { ExportUtility, RecipeUtility } from '~/utilities';
 import { ListComponent } from './list.component';
+import { ListModule } from './list.module';
 
 describe('ListComponent', () => {
   let component: ListComponent;
@@ -37,8 +38,7 @@ describe('ListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ListComponent, ListComponent],
-      imports: [TestModule, AppSharedModule],
+      imports: [TestModule, ListModule],
     }).compileComponents();
   });
 

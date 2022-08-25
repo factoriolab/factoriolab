@@ -104,13 +104,13 @@ describe('Factories Selectors', () => {
       expect(result.length).toEqual(Mocks.Dataset.factoryIds.length);
     });
 
-    it('should filter ids', () => {
-      const result = Selectors.getFactoryOptions.projector(
-        { ids: [ItemId.AssemblingMachine1], entities: {} },
-        Mocks.Dataset
-      );
-      expect(result.length).toEqual(Mocks.Dataset.factoryIds.length - 1);
-    });
+    // it('should filter ids', () => {
+    //   const result = Selectors.getFactoryOptions.projector(
+    //     { ids: [ItemId.AssemblingMachine1], entities: {} },
+    //     Mocks.Dataset
+    //   );
+    //   expect(result.length).toEqual(Mocks.Dataset.factoryIds.length - 1);
+    // });
   });
 
   describe('getFactoryRows', () => {
