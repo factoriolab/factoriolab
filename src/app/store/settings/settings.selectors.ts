@@ -374,7 +374,7 @@ export const getDataset = createSelector(
     }
 
     // Convert to id arrays
-    const categoryIds = Object.keys(categoryEntities);
+    let categoryIds = Object.keys(categoryEntities);
     const iconIds = Object.keys(iconEntities);
     const itemIds = Object.keys(itemData);
     const recipeIds = Object.keys(recipeEntities);
@@ -446,6 +446,27 @@ export const getDataset = createSelector(
           ...{ icon: Object.keys(r.out)[0] },
         };
       });
+
+    // Calculate category item rows
+    const categoryItemRows: Entities<string[][]> = {};
+    for (const id of categoryIds) {
+      const rows: string[][] = [[]];
+      const rowItems = items
+        .filter((i) => i.category === id)
+        .sort((a, b) => a.row - b.row);
+      if (rowItems.length) {
+        let index = rowItems[0].row;
+        for (const item of rowItems) {
+          if (item.row > index) {
+            rows.push([]);
+            index = item.row;
+          }
+          rows[rows.length - 1].push(item.id);
+        }
+        categoryItemRows[id] = rows;
+      }
+    }
+    categoryIds = categoryIds.filter((c) => categoryItemRows[c]);
 
     // Convert to rationals
     const beaconEntities: Entities<RationalBeacon> = {};
@@ -542,6 +563,7 @@ export const getDataset = createSelector(
       version: mod?.version,
       categoryIds,
       categoryEntities,
+      categoryItemRows,
       iconIds,
       iconEntities,
       itemIds,

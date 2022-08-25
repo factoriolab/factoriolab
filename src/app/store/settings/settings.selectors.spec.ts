@@ -306,6 +306,9 @@ describe('Settings Selectors', () => {
       expect(Object.keys(result.categoryEntities).length).toEqual(
         result.categoryIds.length
       );
+      expect(Object.keys(result.categoryItemRows).length).toEqual(
+        result.categoryIds.length
+      );
       expect(result.iconIds.length).toBeGreaterThan(0);
       expect(Object.keys(result.iconEntities).length).toEqual(
         result.iconIds.length
@@ -356,6 +359,9 @@ describe('Settings Selectors', () => {
       expect(
         Object.keys(result.categoryEntities).length
       ).toBeGreaterThanOrEqual(result.categoryIds.length);
+      expect(Object.keys(result.categoryItemRows).length).toEqual(
+        result.categoryIds.length
+      );
       expect(result.iconIds.length).toBeGreaterThan(0);
       expect(Object.keys(result.iconEntities).length).toEqual(
         result.iconIds.length

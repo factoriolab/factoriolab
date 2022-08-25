@@ -10,10 +10,12 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { TableModule } from 'primeng/table';
 import { TabMenuModule } from 'primeng/tabmenu';
+import { TabViewModule } from 'primeng/tabview';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { AppSharedModule } from '~/app-shared.module';
@@ -34,10 +36,12 @@ const modules = [
   InputNumberModule,
   InputTextModule,
   MultiSelectModule,
+  OverlayPanelModule,
   ProgressSpinnerModule,
   ScrollPanelModule,
   TableModule,
   TabMenuModule,
+  TabViewModule,
   TooltipModule,
 ];
 
