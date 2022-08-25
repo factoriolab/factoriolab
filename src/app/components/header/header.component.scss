@@ -15,9 +15,7 @@
   padding: 0 3rem;
 
   &.sticky {
-    // background-color: var(--surface-overlay);
-    // TODO: Determine bg color based on theme
-    background-color: #0000004d;
+    background-color: var(--header-sticky-color);
     backdrop-filter: blur(12px);
   }
 

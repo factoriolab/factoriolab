@@ -85,9 +85,6 @@
       </td>
     </tr>
   </table>
-  <div>
-    <small>{{ 'matrix.tableauPrecisionNote' | translate }}</small>
-  </div>
   <ng-container
     *ngIf="
       vm.result.A &&
@@ -97,6 +94,9 @@
       vm.result.inputIds
     "
   >
+    <div>
+      <small>{{ 'matrix.tableauPrecisionNote' | translate }}</small>
+    </div>
     <p-table
       [scrollable]="true"
       scrollDirection="both"

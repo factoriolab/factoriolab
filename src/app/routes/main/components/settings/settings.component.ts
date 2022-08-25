@@ -34,6 +34,7 @@ import {
   SimplexType,
   simplexTypeOptions,
 } from '~/models';
+import { Theme, themeOptions } from '~/models/enum/theme';
 import { ContentService, RouterService } from '~/services';
 import { App, Factories, LabState, Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
@@ -101,6 +102,7 @@ export class SettingsComponent implements OnInit {
   powerUnitOptions = powerUnitOptions;
   researchSpeedOptions = researchSpeedOptions;
   simplexTypeOptions = simplexTypeOptions;
+  themeOptions = themeOptions;
 
   Column = Column;
   FuelType = FuelType;
@@ -211,6 +213,15 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Preferences.SetPowerUnitAction(value));
   }
 
+  setLanguage(value: Language): void {
+    this.translateSvc.use(value);
+    this.store.dispatch(new Preferences.SetLanguageAction(value));
+  }
+
+  setTheme(value: Theme): void {
+    this.store.dispatch(new Preferences.SetThemeAction(value));
+  }
+
   removeFactory(value: string, def: string[] | undefined): void {
     this.store.dispatch(new Factories.RemoveAction({ value, def }));
   }
@@ -299,10 +310,5 @@ export class SettingsComponent implements OnInit {
 
   setSimplexType(value: SimplexType): void {
     this.store.dispatch(new Preferences.SetSimplexTypeAction(value));
-  }
-
-  setLanguage(value: Language): void {
-    this.translateSvc.use(value);
-    this.store.dispatch(new Preferences.SetLanguageAction(value));
   }
 }

@@ -1,29 +1,61 @@
+import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { combineLatest, map, Observable } from 'rxjs';
+
 import {
   Column,
   Dataset,
   DisplayRateInfo,
   Entities,
   FlowData,
+  FlowStyle,
   Rational,
   RecipeSettings,
   Step,
+  themeMap,
 } from '~/models';
+import { LabState, Preferences, Products, Recipes, Settings } from '~/store';
 import { ColumnsState } from '~/store/preferences';
+import { ThemeService } from './theme.service';
 
-const COLOR_INPUT = '#CBD5E1'; // secondary color
-const COLOR_RECIPE = '#93C5FD'; // primary color
-const COLOR_SURPLUS = '#FCD34D'; // warn color
-const COLOR_OUTPUT = '#86EFAC'; // success color
+@Injectable({
+  providedIn: 'root',
+})
+export class FlowService {
+  flowData$: Observable<FlowData>;
 
-export class FlowUtility {
-  static buildGraph(
+  constructor(private store: Store<LabState>, private theme: ThemeService) {
+    this.flowData$ = combineLatest([
+      this.store.select(Products.getSteps),
+      this.store.select(Recipes.getRecipeSettings),
+      this.store.select(Recipes.getAdjustedDataset),
+      this.store.select(Settings.getDisplayRateInfo),
+      this.store.select(Preferences.getColumns),
+      this.theme.theme$,
+    ]).pipe(
+      map(([steps, recipeSettings, data, dispRateInfo, columns, theme]) =>
+        this.buildGraph(
+          steps,
+          recipeSettings,
+          data,
+          dispRateInfo,
+          columns,
+          themeMap[theme]
+        )
+      )
+    );
+  }
+
+  buildGraph(
     steps: Step[],
+    recipeSettings: Entities<RecipeSettings>,
+    data: Dataset,
     dispRateInfo: DisplayRateInfo,
     columns: ColumnsState,
-    recipeSettings: Entities<RecipeSettings>,
-    data: Dataset
+    theme: FlowStyle
   ): FlowData {
     const flow: FlowData = {
+      theme,
       nodes: [],
       links: [],
     };
@@ -38,13 +70,17 @@ export class FlowUtility {
 
         if (settings.factoryId == null) break;
         const factory = data.itemEntities[settings.factoryId];
+        const nodeTheme =
+          Object.keys(recipe.in).length === 0
+            ? theme.node.input
+            : theme.node.recipe;
         // CREATE NODE: Standard recipe
         flow.nodes.push({
           id: `r|${step.recipeId}`,
           name: recipe.name,
           text: `${step.factories.toString(itemPrec)} ${factory.name}`,
-          color:
-            Object.keys(recipe.in).length === 0 ? COLOR_INPUT : COLOR_RECIPE,
+          color: nodeTheme.color,
+          background: nodeTheme.background,
           recipe,
           factoryId: settings.factoryId,
           factories: step.factories.toString(
@@ -61,7 +97,8 @@ export class FlowUtility {
             id: `s|${step.itemId}`,
             name: item.name,
             text: `${step.surplus.toString(itemPrec)}${rateLbl}`,
-            color: COLOR_SURPLUS,
+            color: theme.node.surplus.color,
+            background: theme.node.surplus.background,
           });
           // Links to surplus node
           for (const sourceStep of steps) {
@@ -131,7 +168,8 @@ export class FlowUtility {
                 id: `i|${step.itemId}`,
                 name: item.name,
                 text: `${inputAmount.toString(itemPrec)}${rateLbl}`,
-                color: COLOR_INPUT,
+                color: theme.node.output.color,
+                background: theme.node.input.background,
               });
             }
           }
@@ -144,7 +182,8 @@ export class FlowUtility {
               text: `${itemAmount
                 .sub(step.surplus || Rational.zero)
                 .toString(itemPrec)}${rateLbl}`,
-              color: COLOR_OUTPUT,
+              color: theme.node.output.color,
+              background: theme.node.output.background,
             });
             for (const sourceStep of steps) {
               if (sourceStep.recipeId && sourceStep.outputs) {

@@ -190,53 +190,6 @@
         </div>
       </div>
       <div class="mb-3">
-        <h3>{{ 'settings.display' | translate }}</h3>
-        <button
-          pButton
-          pRipple
-          class="my-2"
-          icon="fa-solid fa-table-columns"
-          [label]="'settings.openColumnSettings' | translate"
-          (click)="contentSvc.showColumns$.next()"
-        ></button>
-        <div class="mt-4 py-2">
-          <span
-            class="p-float-label"
-            [pTooltip]="'settings.displayRateTooltip' | translate"
-          >
-            <p-dropdown
-              labDropdownTranslate
-              inputId="display-rate"
-              [ngModel]="vm.settings.displayRate"
-              [options]="displayRateOptions"
-              (onChange)="setDisplayRate($event.value, vm.settings.displayRate)"
-            >
-            </p-dropdown>
-            <label for="display-rate">{{
-              'settings.displayRate' | translate
-            }}</label>
-          </span>
-        </div>
-        <div *ngIf="vm.columns[Column.Power].show" class="mt-4 py-2">
-          <span
-            class="p-float-label"
-            [pTooltip]="'settings.powerUnitTooltip' | translate"
-          >
-            <p-dropdown
-              labDropdownTranslate
-              inputId="power-unit"
-              [ngModel]="vm.preferences.powerUnit"
-              [options]="powerUnitOptions"
-              (onChange)="setPowerUnit($event.value)"
-            >
-            </p-dropdown>
-            <label for="power-unit">{{
-              'settings.powerUnit' | translate
-            }}</label>
-          </span>
-        </div>
-      </div>
-      <div class="mb-3">
         <h3>{{ 'settings.factory' | translate }}</h3>
         <div class="mt-4 py-2">
           <span
@@ -744,6 +697,85 @@
         </ng-container>
       </div>
       <div class="mb-3">
+        <h3>{{ 'settings.display' | translate }}</h3>
+        <button
+          pButton
+          pRipple
+          class="my-2"
+          icon="fa-solid fa-table-columns"
+          [label]="'settings.openColumnSettings' | translate"
+          (click)="contentSvc.showColumns$.next()"
+        ></button>
+        <div class="mt-4 py-2">
+          <span
+            class="p-float-label"
+            [pTooltip]="'settings.displayRateTooltip' | translate"
+          >
+            <p-dropdown
+              labDropdownTranslate
+              inputId="display-rate"
+              [ngModel]="vm.settings.displayRate"
+              [options]="displayRateOptions"
+              (onChange)="setDisplayRate($event.value, vm.settings.displayRate)"
+            >
+            </p-dropdown>
+            <label for="display-rate">{{
+              'settings.displayRate' | translate
+            }}</label>
+          </span>
+        </div>
+        <div *ngIf="vm.columns[Column.Power].show" class="mt-4 py-2">
+          <span
+            class="p-float-label"
+            [pTooltip]="'settings.powerUnitTooltip' | translate"
+          >
+            <p-dropdown
+              labDropdownTranslate
+              inputId="power-unit"
+              [ngModel]="vm.preferences.powerUnit"
+              [options]="powerUnitOptions"
+              (onChange)="setPowerUnit($event.value)"
+            >
+            </p-dropdown>
+            <label for="power-unit">{{
+              'settings.powerUnit' | translate
+            }}</label>
+          </span>
+        </div>
+        <div class="mt-4 py-2">
+          <div
+            class="p-float-label"
+            [pTooltip]="'settings.languageTooltip' | translate"
+          >
+            <p-dropdown
+              labDropdownTranslate
+              inputId="language"
+              [ngModel]="vm.preferences.language"
+              [options]="languageOptions"
+              (onChange)="setLanguage($event.value)"
+            >
+            </p-dropdown>
+            <label for="language">{{ 'settings.language' | translate }}</label>
+          </div>
+        </div>
+        <div class="mt-4 py-2">
+          <div
+            class="p-float-label"
+            [pTooltip]="'settings.themeTooltip' | translate"
+          >
+            <p-dropdown
+              labDropdownTranslate
+              inputId="theme"
+              [ngModel]="vm.preferences.theme"
+              [options]="themeOptions"
+              (onChange)="setTheme($event.value)"
+            >
+            </p-dropdown>
+            <label for="theme">{{ 'settings.theme' | translate }}</label>
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
         <h3>{{ 'settings.advanced' | translate }}</h3>
         <div class="mt-4 py-2">
           <div
@@ -771,22 +803,6 @@
             >
               {{ 'settings.simplexSolverWasmFloat64Info' | translate }}
             </small>
-          </div>
-        </div>
-        <div class="mt-4 py-2">
-          <div
-            class="p-float-label"
-            [pTooltip]="'settings.languageTooltip' | translate"
-          >
-            <p-dropdown
-              labDropdownTranslate
-              inputId="language"
-              [ngModel]="vm.preferences.language"
-              [options]="languageOptions"
-              (onChange)="setLanguage($event.value)"
-            >
-            </p-dropdown>
-            <label for="language">{{ 'settings.language' | translate }}</label>
           </div>
         </div>
       </div>

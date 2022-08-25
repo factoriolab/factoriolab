@@ -73,6 +73,11 @@
       "recipe": "Recipe",
       "factory": "Factory",
       "recipes": "Recipes"
+    },
+    "theme": {
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
     }
   },
   "tooltip": {
@@ -126,12 +131,6 @@
     "recipesDisabled": "recipe(s) disabled",
     "disabledRecipesTooltip": "Click to modify which recipes are disabled. Disabled recipes will not be used in the solution.",
     "noRecipesDisabled": "No recipes disabled",
-    "display": "Display",
-    "openColumnSettings": "Open column settings",
-    "displayRate": "Display rate units",
-    "displayRateTooltip": "Set the unit of time to use in rates",
-    "powerUnit": "Power units",
-    "powerUnitTooltip": "Set the unit of power to use in the power column.",
     "factory": "Factory",
     "preset": "Preset",
     "presetTooltip": "Select a default preset of factory settings to use",
@@ -178,13 +177,21 @@
     "inserterCapacityTooltip": "Enter the current level of inserter capacity bonus; this setting only affects inserter estimates",
     "miningSpeed": "Mining speed",
     "miningSpeedTooltip": "Enter the current mining speed with bonus; Default is 100%",
+    "display": "Display",
+    "openColumnSettings": "Open column settings",
+    "displayRate": "Display rate units",
+    "displayRateTooltip": "Set the unit of time to use in rates",
+    "powerUnit": "Power units",
+    "powerUnitTooltip": "Set the unit of power to use in the power column",
+    "language": "Language",
+    "languageTooltip": "Select language",
+    "theme": "Theme",
+    "themeTooltip": "Select theme",
     "advanced": "Advanced",
     "simplexSolver": "Simplex solver",
     "simplexSolverTooltip": "Select the simplex solver algorithm, or disable simplex to more easily modify settings when simplex is slow and causes lag",
     "simplexSolverDisabledInfo": "Disabling simplex improves performance but usually results in a partial solution",
-    "simplexSolverWasmFloat64Info": "WebAssembly Float64 is less precise than Rationals, but runs significantly faster",
-    "language": "Language",
-    "languageTooltip": "Select display language"
+    "simplexSolverWasmFloat64Info": "WebAssembly Float64 is less precise than Rationals, but runs significantly faster"
   },
   "products": {
     "title": "Products",
