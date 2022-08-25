@@ -19,14 +19,16 @@ import {
   RecipeSettings,
   Step,
 } from '~/models';
-import { LabState } from '~/store';
-import * as App from '~/store/app.actions';
-import * as Datasets from '~/store/datasets';
-import * as Factories from '~/store/factories';
-import * as Items from '~/store/items';
-import * as Products from '~/store/products';
-import * as Recipes from '~/store/recipes';
-import * as Settings from '~/store/settings';
+import {
+  App,
+  Datasets,
+  Factories,
+  Items,
+  LabState,
+  Products,
+  Recipes,
+  Settings,
+} from '~/store';
 import { DataService } from './data.service';
 
 export const NULL = '?'; // Encoded, previously 'n'

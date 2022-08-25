@@ -12,7 +12,7 @@ import {
   Step,
   WARNING_HANG,
 } from '~/models';
-import * as Items from '~/store/items';
+import { Items } from '~/store';
 import { RateUtility } from './rate.utility';
 
 const FLOAT_TOLERANCE = 1e-10;

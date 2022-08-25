@@ -6,7 +6,7 @@ import {
   Preset,
   ResearchSpeed,
 } from '~/models';
-import * as App from '../app.actions';
+import { App } from '../';
 import * as Actions from './settings.actions';
 import { initialSettingsState, settingsReducer } from './settings.reducer';
 

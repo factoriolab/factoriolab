@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 import { InserterData, InserterSpeed, ItemId, Rational } from '~/models';
-import * as Settings from '~/store/settings';
+import { Settings } from '~/store';
 
 @Pipe({ name: 'inserterSpeed' })
 export class InserterSpeedPipe implements PipeTransform {

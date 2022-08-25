@@ -8,7 +8,7 @@ import {
   SimplexType,
 } from '~/models';
 import { Theme } from '~/models/enum/theme';
-import * as App from '../app.actions';
+import { App } from '../';
 import {
   PreferencesAction,
   PreferencesActionType,

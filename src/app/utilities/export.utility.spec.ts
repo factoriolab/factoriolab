@@ -1,6 +1,6 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import { ItemSettings, Rational, RecipeSettings, Step } from '~/models';
-import * as Preferences from '~/store/preferences';
+import { Preferences } from '~/store';
 import { ExportUtility } from './export.utility';
 
 describe('ExportUtility', () => {

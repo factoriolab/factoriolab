@@ -7,7 +7,7 @@ import {
   ResearchSpeed,
 } from '~/models';
 import { StoreUtility } from '~/utilities';
-import * as App from '../app.actions';
+import { App } from '../';
 import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {

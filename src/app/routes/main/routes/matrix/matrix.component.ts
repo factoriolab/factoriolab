@@ -3,10 +3,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
 import { Column } from '~/models';
-import { LabState, Preferences } from '~/store';
-import * as Products from '~/store/products';
-import * as Recipes from '~/store/recipes';
-import * as Settings from '~/store/settings';
+import { LabState, Preferences, Products, Recipes, Settings } from '~/store';
 
 @Component({
   selector: 'lab-matrix',

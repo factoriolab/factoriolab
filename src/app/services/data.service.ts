@@ -13,10 +13,7 @@ import {
 } from 'rxjs';
 
 import { Entities, ModData, ModHash, ModI18n } from '~/models';
-import { LabState } from '~/store';
-import * as Datasets from '~/store/datasets';
-import * as Products from '~/store/products';
-import * as Settings from '~/store/settings';
+import { Datasets, LabState, Products, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
 @Injectable({

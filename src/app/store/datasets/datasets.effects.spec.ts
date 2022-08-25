@@ -6,10 +6,7 @@ import { of, ReplaySubject } from 'rxjs';
 
 import { Mocks, TestModule } from 'src/tests';
 import { DataService } from '~/services';
-import { LabState } from '../';
-import * as App from '../app.actions';
-import * as Products from '../products';
-import * as Settings from '../settings';
+import { App, LabState, Products, Settings } from '../';
 import { DatasetsEffects } from './datasets.effects';
 
 describe('DatasetsEffects', () => {

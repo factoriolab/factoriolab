@@ -1,7 +1,6 @@
 import { DefaultIdPayload, Entities, RecipeSettings } from '~/models';
 import { StoreUtility } from '~/utilities';
-import * as App from '../app.actions';
-import * as Settings from '../settings';
+import { App, Settings } from '../';
 import { RecipesAction, RecipesActionType } from './recipes.actions';
 
 export type RecipesState = Entities<RecipeSettings>;

@@ -4,9 +4,7 @@ import { Action, Store } from '@ngrx/store';
 import { combineLatest, first, switchMap } from 'rxjs';
 
 import { RecipeUtility } from '~/utilities';
-import { LabState } from '../';
-import * as Recipes from '../recipes';
-import * as Settings from '../settings';
+import { LabState, Recipes, Settings } from '../';
 import { FactoriesActionType } from './factories.actions';
 
 @Injectable()

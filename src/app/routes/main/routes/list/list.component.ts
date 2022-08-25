@@ -21,13 +21,14 @@ import {
   StepDetailTab,
 } from '~/models';
 import { ContentService, TrackService } from '~/services';
-import { LabState } from '~/store';
-import * as Factories from '~/store/factories';
-import * as Items from '~/store/items';
-import * as Preferences from '~/store/preferences';
-import * as Products from '~/store/products';
-import * as Recipes from '~/store/recipes';
-import * as Settings from '~/store/settings';
+import {
+  Factories,
+  Items,
+  LabState,
+  Products,
+  Recipes,
+  Settings,
+} from '~/store';
 import { ExportUtility, RecipeUtility } from '~/utilities';
 
 @Component({
@@ -245,7 +246,7 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   changeRecipeField(
     recipeId: string,
-    event: string | number | Event,
+    event: string | number,
     recipeSettings: Recipes.RecipesState,
     factories: Factories.FactoriesState,
     field: RecipeField,
@@ -314,7 +315,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         case RecipeField.Overclock: {
           if (typeof event === 'number') {
             const def = factory.overclock;
-            const value = Math.min(1, Math.max(250, event));
+            const value = Math.max(1, Math.min(250, event));
             this.setOverclock(recipeId, value, def);
           }
           break;

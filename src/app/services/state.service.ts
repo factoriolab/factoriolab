@@ -5,9 +5,7 @@ import { filter, first } from 'rxjs/operators';
 
 import { environment } from 'src/environments';
 import { FuelType, ModHash } from '~/models';
-import { LabState } from '~/store';
-import * as Products from '~/store/products';
-import * as Settings from '~/store/settings';
+import { LabState, Products, Settings } from '~/store';
 
 @Injectable({
   providedIn: 'root',

@@ -31,9 +31,7 @@ import {
   toEntities,
 } from '~/models';
 import { Options } from '~/models/options';
-import { LabState } from '../';
-import * as Datasets from '../datasets';
-import * as Preferences from '../preferences';
+import { Datasets, LabState, Preferences } from '../';
 import { initialSettingsState, SettingsState } from './settings.reducer';
 
 /* Base selector functions */

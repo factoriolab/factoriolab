@@ -25,13 +25,15 @@ import {
   toEntities,
 } from '~/models';
 import { Theme } from '~/models/enum/theme';
-import * as Datasets from '~/store/datasets';
-import * as Factories from '~/store/factories';
-import * as Items from '~/store/items';
-import * as Preferences from '~/store/preferences';
-import * as Products from '~/store/products';
-import * as Recipes from '~/store/recipes';
-import * as Settings from '~/store/settings';
+import {
+  Datasets,
+  Factories,
+  Items,
+  Preferences,
+  Products,
+  Recipes,
+  Settings,
+} from '~/store';
 import { ItemId } from './item-id';
 import { RecipeId } from './recipe-id';
 

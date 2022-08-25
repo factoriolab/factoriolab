@@ -201,25 +201,8 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetDisabledRecipesAction({ value, def }));
   }
 
-  setDisplayRate(value: DisplayRate, prev: DisplayRate): void {
-    this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
-  }
-
   setPreset(value: Preset): void {
     this.store.dispatch(new Settings.SetPresetAction(value));
-  }
-
-  setPowerUnit(value: PowerUnit): void {
-    this.store.dispatch(new Preferences.SetPowerUnitAction(value));
-  }
-
-  setLanguage(value: Language): void {
-    this.translateSvc.use(value);
-    this.store.dispatch(new Preferences.SetLanguageAction(value));
-  }
-
-  setTheme(value: Theme): void {
-    this.store.dispatch(new Preferences.SetThemeAction(value));
   }
 
   removeFactory(value: string, def: string[] | undefined): void {
@@ -238,6 +221,10 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Factories.SetOverclockAction({ id, value, def }));
   }
 
+  raiseFactory(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Factories.RaiseAction({ value, def }));
+  }
+
   setBeaconCount(id: string, value: string, def: string | undefined): void {
     this.store.dispatch(new Factories.SetBeaconCountAction({ id, value, def }));
   }
@@ -250,10 +237,6 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(
       new Factories.SetBeaconModuleAction({ id, value, def })
     );
-  }
-
-  raiseFactory(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Factories.RaiseAction({ value, def }));
   }
 
   addFactory(value: string, def: string[] | undefined): void {
@@ -306,6 +289,23 @@ export class SettingsComponent implements OnInit {
 
   setInserterCapacity(value: InserterCapacity): void {
     this.store.dispatch(new Settings.SetInserterCapacityAction(value));
+  }
+
+  setDisplayRate(value: DisplayRate, prev: DisplayRate): void {
+    this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
+  }
+
+  setPowerUnit(value: PowerUnit): void {
+    this.store.dispatch(new Preferences.SetPowerUnitAction(value));
+  }
+
+  setLanguage(value: Language): void {
+    this.translateSvc.use(value);
+    this.store.dispatch(new Preferences.SetLanguageAction(value));
+  }
+
+  setTheme(value: Theme): void {
+    this.store.dispatch(new Preferences.SetThemeAction(value));
   }
 
   setSimplexType(value: SimplexType): void {

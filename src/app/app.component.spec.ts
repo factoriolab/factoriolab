@@ -6,9 +6,8 @@ import { MockStore } from '@ngrx/store/testing';
 import { TestModule } from 'src/tests';
 import { AppSharedModule } from './app-shared.module';
 import { AppComponent } from './app.component';
-import { APP, Game } from './models';
-import { LabState } from './store';
-import * as Settings from './store/settings';
+import { Game } from './models';
+import { LabState, Settings } from './store';
 
 describe('AppComponent', () => {
   let component: AppComponent;

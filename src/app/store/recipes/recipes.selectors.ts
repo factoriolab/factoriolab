@@ -7,10 +7,7 @@ import {
   RecipeSettings,
 } from '~/models';
 import { RecipeUtility } from '~/utilities';
-import { LabState } from '../';
-import * as Factories from '../factories';
-import * as Items from '../items';
-import * as Settings from '../settings';
+import { Factories, Items, LabState, Settings } from '../';
 import { RecipesState } from './recipes.reducer';
 
 /* Base selector functions */
