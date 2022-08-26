@@ -9,10 +9,12 @@ import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
+import { MenuItem } from 'primeng/api';
 import { combineLatest, first, map } from 'rxjs';
 
 import {
   Column,
+  Dataset,
   DisplayRate,
   displayRateOptions,
   FuelType,
@@ -60,6 +62,7 @@ export class SettingsComponent implements OnInit {
     this.store.select(Settings.getPresetOptions),
     this.store.select(Preferences.preferencesState),
     this.store.select(Preferences.getSavedStates),
+    this.contentSvc.lang$,
   ]).pipe(
     map(
       ([
@@ -86,6 +89,7 @@ export class SettingsComponent implements OnInit {
         presetOptions,
         preferences,
         savedStates,
+        factoryMenuItems: this.buildFactoryMenus(factoryRows, data),
       })
     )
   );
@@ -128,6 +132,35 @@ export class SettingsComponent implements OnInit {
             (s) => states[s] === BrowserUtility.search
           ) ?? '';
       });
+  }
+
+  buildFactoryMenus(factoryRows: string[], data: Dataset): MenuItem[][] {
+    return factoryRows.map((factoryId, index): MenuItem[] => {
+      if (!factoryId) return [];
+      const items: MenuItem[] = [
+        {
+          label: this.translateSvc.instant('settings.remove'),
+          icon: 'fa-solid fa-minus',
+          command: () =>
+            this.removeFactory(factoryId, data.defaults?.factoryRankIds),
+        },
+      ];
+      if (index > 1)
+        items.push({
+          label: this.translateSvc.instant('settings.moveUp'),
+          icon: 'fa-solid fa-arrow-up',
+          command: () =>
+            this.raiseFactory(factoryId, data.defaults?.factoryRankIds),
+        });
+      if (index < factoryRows.length - 1)
+        items.push({
+          label: this.translateSvc.instant('settings.moveDown'),
+          icon: 'fa-solid fa-arrow-down',
+          command: () =>
+            this.lowerFactory(factoryId, data.defaults?.factoryRankIds),
+        });
+      return items;
+    });
   }
 
   clickResetSettings(): void {
@@ -205,8 +238,20 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetPresetAction(value));
   }
 
+  addFactory(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Factories.AddAction({ value, def }));
+  }
+
   removeFactory(value: string, def: string[] | undefined): void {
     this.store.dispatch(new Factories.RemoveAction({ value, def }));
+  }
+
+  raiseFactory(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Factories.RaiseAction({ value, def }));
+  }
+
+  lowerFactory(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Factories.LowerAction({ value, def }));
   }
 
   setFactory(id: string, value: string, def: string[] | undefined): void {
@@ -221,10 +266,6 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Factories.SetOverclockAction({ id, value, def }));
   }
 
-  raiseFactory(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Factories.RaiseAction({ value, def }));
-  }
-
   setBeaconCount(id: string, value: string, def: string | undefined): void {
     this.store.dispatch(new Factories.SetBeaconCountAction({ id, value, def }));
   }
@@ -237,10 +278,6 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(
       new Factories.SetBeaconModuleAction({ id, value, def })
     );
-  }
-
-  addFactory(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Factories.AddAction({ value, def }));
   }
 
   setBeaconReceivers(value: string | null): void {

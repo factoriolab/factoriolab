@@ -41,14 +41,11 @@ $width: 320px;
 
 /** Factory InputGroup styles */
 .p-inputgroup.factory-preference {
-  p-dropdown {
+  p-dropdown,
+  p-multiselect {
     flex-basis: 3rem;
     flex-grow: 0;
     flex-shrink: 0;
-  }
-
-  p-multiSelect {
-    min-width: 6rem;
   }
 
   p-inputNumber {

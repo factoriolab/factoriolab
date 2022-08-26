@@ -11,9 +11,9 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
-import { combineLatest, map, startWith } from 'rxjs';
+import { combineLatest, map } from 'rxjs';
 
-import { APP, gameInfo, games } from '~/models';
+import { APP, Game, gameInfo, games } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Products, Settings } from '~/store';
 
@@ -32,29 +32,12 @@ interface MenuLink {
 })
 export class HeaderComponent implements OnInit {
   @HostBinding('class.sticky') @Input() sticky = false;
-  game$ = this.store.select(Settings.getGame).pipe(untilDestroyed(this));
-  lang$ = this.translateSvc.onLangChange.pipe(
-    untilDestroyed(this),
-    startWith('')
-  );
 
-  gameInfo$ = this.game$.pipe(map((g) => gameInfo[g]));
-  gameOptions$ = combineLatest([this.game$, this.lang$]).pipe(
-    map(([game]) =>
-      games
-        .filter((g) => g !== game)
-        .map(
-          (g): MenuItem => ({
-            icon: 'lab-icon-sm ' + gameInfo[g].icon,
-            label: this.translateSvc.instant(gameInfo[g].label),
-            command: () => this.selectGame(gameInfo[g].route),
-          })
-        )
-    )
-  );
-
-  vm$ = combineLatest([this.gameInfo$, this.gameOptions$]).pipe(
-    map(([gameInfo, gameOptions]) => ({ gameInfo, gameOptions }))
+  vm$ = this.store.select(Settings.getGame).pipe(
+    map((game) => ({
+      gameInfo: gameInfo[game],
+      gameOptions: this.buildGameOptions(game),
+    }))
   );
 
   links: MenuLink[] = [
@@ -90,20 +73,33 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     combineLatest([
-      this.game$,
-      this.lang$,
       this.store.select(Products.getBaseProducts),
       this.store.select(Settings.getDataset),
-    ]).subscribe(([game, lang, products, data]) => {
-      const title = this.translateSvc.instant(gameInfo[game].title);
-      if (products.length && data.itemEntities[products[0].itemId]) {
-        this.title.setTitle(
-          `${data.itemEntities[products[0].itemId].name} | ${title}`
-        );
-      } else {
-        this.title.setTitle(`${APP} | ${title}`);
-      }
-    });
+      this.contentSvc.lang$,
+    ])
+      .pipe(untilDestroyed(this))
+      .subscribe(([products, data]) => {
+        const title = this.translateSvc.instant(gameInfo[data.game].title);
+        if (products.length && data.itemEntities[products[0].itemId]) {
+          this.title.setTitle(
+            `${data.itemEntities[products[0].itemId].name} | ${title}`
+          );
+        } else {
+          this.title.setTitle(`${APP} | ${title}`);
+        }
+      });
+  }
+
+  buildGameOptions(game: Game): MenuItem[] {
+    return games
+      .filter((g) => g !== game)
+      .map(
+        (g): MenuItem => ({
+          icon: 'lab-icon-sm ' + gameInfo[g].icon,
+          label: this.translateSvc.instant(gameInfo[g].label),
+          command: () => this.selectGame(gameInfo[g].route),
+        })
+      );
   }
 
   selectGame(route: string): void {

@@ -26,12 +26,16 @@
 }
 
 // Icon dropdown styles
-.p-dropdown.icon {
-  .lab-icon {
+.p-dropdown.icon,
+.p-multiselect.icon {
+  .lab-icon,
+  .lab-icon-sm,
+  .fa-solid {
     transition: opacity 300ms ease;
   }
 
-  .p-dropdown-trigger {
+  .p-dropdown-trigger,
+  .p-multiselect-trigger {
     position: absolute;
     bottom: 1rem;
 
@@ -41,11 +45,14 @@
   }
 
   &:hover {
-    .lab-icon {
+    .lab-icon,
+    .lab-icon-sm,
+    .fa-solid {
       opacity: 0.3;
     }
 
-    .p-dropdown-trigger {
+    .p-dropdown-trigger,
+    .p-multiselect-trigger {
       opacity: 1;
     }
   }

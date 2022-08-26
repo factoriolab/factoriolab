@@ -25,8 +25,8 @@
 </div>
 <div *ngIf="vm$ | async as vm" class="flex-grow-1 overflow-hidden">
   <p-scrollPanel [style]="{ height: '100%' }">
-    <div class="p-fluid p-3 overflow-hidden settings-container">
-      <div class="mb-3">
+    <div class="p-fluid px-3 overflow-hidden settings-container">
+      <div class="mb-2">
         <h3 [pTooltip]="'settings.savedStatesTooltip' | translate">
           {{ 'settings.savedStates' | translate }}
           <i class="fa-solid fa-info-circle"></i>
@@ -89,7 +89,7 @@
           ></button>
         </ng-template>
       </div>
-      <div class="mb-3">
+      <div class="mb-2">
         <div class="d-flex align-items-center justify-content-between mb-2">
           <h3 class="mb-0">{{ 'settings.recipes' | translate }}</h3>
           <a
@@ -99,7 +99,7 @@
             ><small>{{ 'settings.requestMod' | translate }}</small></a
           >
         </div>
-        <div class="mt-4 py-2">
+        <div class="mt-3 py-2">
           <span
             class="p-float-label"
             [pTooltip]="'settings.gameTooltip' | translate"
@@ -115,7 +115,7 @@
             <label for="game">{{ 'settings.game' | translate }}</label>
           </span>
         </div>
-        <div *ngIf="vm.data.game === Game.Factorio" class="mt-4 py-2">
+        <div *ngIf="vm.data.game === Game.Factorio" class="mt-3 py-2">
           <span
             class="p-float-label"
             [pTooltip]="'settings.modSetTooltip' | translate"
@@ -131,7 +131,7 @@
             <label for="mod">{{ 'settings.modSet' | translate }}</label>
           </span>
         </div>
-        <div class="pt-2">
+        <div>
           <label class="p-static-label">{{
             'settings.modVersions' | translate
           }}</label>
@@ -151,7 +151,7 @@
             </ul>
           </p-scrollPanel>
         </div>
-        <div class="mt-4 py-2">
+        <div class="mt-3 py-2">
           <span
             class="p-float-label"
             [pTooltip]="'settings.disabledRecipesTooltip' | translate"
@@ -189,9 +189,9 @@
           </span>
         </div>
       </div>
-      <div class="mb-3">
+      <div class="mb-2">
         <h3>{{ 'settings.factory' | translate }}</h3>
-        <div class="mt-4 py-2">
+        <div class="mt-3 py-2">
           <span
             class="p-float-label"
             [pTooltip]="'settings.presetTooltip' | translate"
@@ -219,27 +219,53 @@
                     : vm.data.defaults as defaults
                 "
               >
-                <p-divider>{{
-                  (index === 0
-                    ? 'settings.factoryDefaults'
-                    : 'settings.factorySelection'
-                  ) | translate: { index: index }
-                }}</p-divider>
                 <div class="p-inputgroup flex-wrap factory-preference">
                   <!-- Remove factory button -->
-                  <button
-                    *ngIf="index > 0"
-                    pButton
-                    pRipple
-                    icon="fa-solid fa-minus"
-                    [pTooltip]="'settings.removeFactoryTooltip' | translate"
-                    (click)="
-                      removeFactory(factoryId, vm.data.defaults?.factoryRankIds)
+                  <p-dropdown
+                    *ngIf="index === 0; else factoryGear"
+                    appendTo="body"
+                    scrollHeight="400px"
+                    styleClass="icon"
+                    [pTooltip]="'settings.addFactoryTooltip' | translate"
+                    [options]="vm.factoryOptions"
+                    (onChange)="
+                      addFactory($event.value, vm.data.defaults?.factoryRankIds)
                     "
-                  ></button>
+                  >
+                    <ng-template pTemplate="selectedItem" let-item>
+                      <div
+                        class="d-flex justify-content-center align-items-center h-100 w-100"
+                      >
+                        <i class="fa-solid fa-plus"></i>
+                      </div>
+                    </ng-template>
+                    <ng-template pTemplate="item" let-item>
+                      <div class="d-flex align-items-center h-100">
+                        <i [class]="item.value | iconSmClass"></i>
+                        <div class="ms-3 text-truncate">
+                          {{ item.label }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                  <ng-template #factoryGear>
+                    <button
+                      pButton
+                      pRipple
+                      type="button"
+                      icon="fa-solid fa-ellipsis-vertical"
+                      (click)="factoryMenu.toggle($event)"
+                    ></button>
+                    <p-menu
+                      #factoryMenu
+                      appendTo="body"
+                      [popup]="true"
+                      [model]="vm.factoryMenuItems[index]"
+                    ></p-menu>
+                  </ng-template>
                   <!-- Factory dropdown -->
                   <p-dropdown
-                    *ngIf="factoryId"
+                    *ngIf="factoryId; else factoryIcon"
                     labDropdownIcon
                     [pTooltip]="'settings.factoryTooltip' | translate"
                     [ngModel]="factoryId"
@@ -253,10 +279,19 @@
                     "
                   >
                   </p-dropdown>
+                  <ng-template #factoryIcon>
+                    <span
+                      class="p-inputgroup-addon"
+                      [pTooltip]="'settings.factoryDefaults' | translate"
+                    >
+                      <i class="fa-solid fa-industry"></i>
+                    </span>
+                  </ng-template>
                   <!-- Modifiers multiselect -->
                   <p-multiSelect
                     *ngIf="settings.moduleRankIds"
                     appendTo="body"
+                    styleClass="icon"
                     placeholder="unused"
                     scrollHeight="400px"
                     [selectionLimit]="
@@ -275,26 +310,16 @@
                   >
                     <ng-template pTemplate="selectedItems" let-items>
                       <div class="d-flex">
-                        <ng-container
+                        <i
                           *ngIf="items && items.length; else noModifiers"
+                          [class]="items[0] | iconSmClass"
                         >
-                          <i [class]="items[0] | iconSmClass">
-                            <span *ngIf="items.length > 1"
-                              >+{{ items.length - 1 }}</span
-                            >
-                          </i>
-                          <div
-                            *ngIf="items?.[0] as moduleId"
-                            class="ms-3 text-truncate"
+                          <span *ngIf="items.length > 1"
+                            >+{{ items.length - 1 }}</span
                           >
-                            {{ vm.data.itemEntities[moduleId]?.name }}
-                          </div>
-                        </ng-container>
+                        </i>
                         <ng-template #noModifiers>
                           <i [class]="ItemId.Module | iconSmClass"></i>
-                          <div class="ms-3 text-truncate">
-                            {{ 'settings.noModifiers' | translate }}
-                          </div>
                         </ng-template>
                       </div>
                     </ng-template>
@@ -328,25 +353,13 @@
                     >
                     </p-inputNumber>
                   </ng-container>
-                  <!-- Raise factory button -->
-                  <button
-                    *ngIf="index > 1"
-                    pButton
-                    pRipple
-                    icon="fa-solid fa-arrow-up"
-                    [pTooltip]="'settings.raiseFactoryTooltip' | translate"
-                    (click)="
-                      raiseFactory(factoryId, vm.data.defaults?.factoryRankIds)
-                    "
-                  ></button>
-                </div>
-                <div class="p-inputgroup factory-preference">
                   <ng-container *ngIf="vm.data.game === Game.Factorio">
                     <ng-container *ngIf="settings.beaconCount != null">
                       <!-- Beacon count input -->
                       <lab-input-number
                         [pTooltip]="'settings.beaconCountTooltip' | translate"
                         tooltipPosition="top"
+                        [hideButtons]="true"
                         [value]="settings.beaconCount"
                         (setValue)="
                           setBeaconCount(
@@ -392,29 +405,7 @@
               </ng-container>
             </ng-container>
           </ng-container>
-          <p-divider></p-divider>
-          <div class="py-2">
-            <p-dropdown
-              appendTo="body"
-              scrollHeight="400px"
-              [options]="vm.factoryOptions"
-              (onChange)="
-                addFactory($event.value, vm.data.defaults?.factoryRankIds)
-              "
-            >
-              <ng-template pTemplate="selectedItem" let-item>
-                {{ 'settings.addFactory' | translate }}
-              </ng-template>
-              <ng-template pTemplate="item" let-item>
-                <div class="d-flex align-items-center h-100">
-                  <i [class]="item.value | iconSmClass"></i>
-                  <div class="ms-3 text-truncate">
-                    {{ item.label }}
-                  </div>
-                </div>
-              </ng-template>
-            </p-dropdown>
-          </div>
+          <div class="py-2"></div>
         </ng-container>
         <div *ngIf="vm.data.game === Game.Factorio" class="mt-2 py-2">
           <p-checkbox
@@ -436,7 +427,7 @@
             (setValue)="setBeaconReceivers($event)"
           ></lab-input-number>
         </div>
-        <div *ngIf="vm.data.game === Game.DysonSphereProgram" class="mt-4 py-2">
+        <div *ngIf="vm.data.game === Game.DysonSphereProgram" class="mt-3 py-2">
           <div
             class="p-float-label"
             [pTooltip]="'settings.proliferatorSelfSprayTooltip' | translate"
@@ -455,7 +446,7 @@
             }}</label>
           </div>
         </div>
-        <div class="mt-4 py-2">
+        <div class="mt-3 py-2">
           <div
             class="p-float-label"
             [pTooltip]="'settings.defaultTransportBeltTooltip' | translate"
@@ -473,7 +464,7 @@
             }}</label>
           </div>
         </div>
-        <div *ngIf="vm.data.pipeIds.length > 1" class="mt-4 py-2">
+        <div *ngIf="vm.data.pipeIds.length > 1" class="mt-3 py-2">
           <div
             class="p-float-label"
             [pTooltip]="'settings.defaultPipeTooltip' | translate"
@@ -491,7 +482,7 @@
             }}</label>
           </div>
         </div>
-        <div *ngIf="vm.data.cargoWagonIds.length > 1" class="mt-4 py-2">
+        <div *ngIf="vm.data.cargoWagonIds.length > 1" class="mt-3 py-2">
           <div
             class="p-float-label"
             [pTooltip]="'settings.defaultCargoWagonTooltip' | translate"
@@ -511,7 +502,7 @@
             }}</label>
           </div>
         </div>
-        <div *ngIf="vm.data.fluidWagonIds.length > 1" class="mt-4 py-2">
+        <div *ngIf="vm.data.fluidWagonIds.length > 1" class="mt-3 py-2">
           <div
             class="p-float-label"
             [pTooltip]="'settings.defaultFluidWagonTooltip' | translate"
@@ -537,7 +528,7 @@
             vm.data.fuelIds[FuelType.Chemical].length > 1 &&
             vm.data.game !== Game.Satisfactory
           "
-          class="mt-4 py-2"
+          class="mt-3 py-2"
         >
           <div
             class="p-float-label"
@@ -557,16 +548,7 @@
           </div>
         </div>
         <ng-container *ngIf="vm.data.game === Game.Factorio">
-          <div class="py-2">
-            <div class="text-end">
-              <small class="me-1">
-                <a
-                  href="https://wiki.factorio.com/Fluid_system#Pipelines"
-                  target="_blank"
-                  >Wiki</a
-                >
-              </small>
-            </div>
+          <div class="mt-3 py-2">
             <div
               class="p-float-label"
               [pTooltip]="'settings.pipeFlowRateTooltip' | translate"
@@ -584,9 +566,16 @@
               <label for="pipe-flow-rate">{{
                 'settings.pipeFlowRate' | translate
               }}</label>
+              <small class="position-absolute end-0 bottom-100 me-1 mb-1">
+                <a
+                  href="https://wiki.factorio.com/Fluid_system#Pipelines"
+                  target="_blank"
+                  >Wiki</a
+                >
+              </small>
             </div>
           </div>
-          <div class="mt-4 py-2">
+          <div class="mt-3 py-2">
             <div
               class="p-float-label"
               [pTooltip]="'settings.inserterTargetTooltip' | translate"
@@ -611,11 +600,11 @@
           vm.data.game === Game.Factorio ||
           vm.data.game === Game.DysonSphereProgram
         "
-        class="mb-3"
+        class="mb-2"
       >
         <h3>{{ 'settings.bonuses' | translate }}</h3>
         <ng-container *ngIf="vm.data.game === Game.DysonSphereProgram">
-          <div class="mt-4 py-2">
+          <div class="mt-3 py-2">
             <div
               class="p-float-label"
               [pTooltip]="'settings.miningSpeedTooltip' | translate"
@@ -637,7 +626,7 @@
           </div>
         </ng-container>
         <ng-container *ngIf="vm.data.game === Game.Factorio">
-          <div class="mt-4 py-2">
+          <div class="mt-3 py-2">
             <div
               class="p-float-label"
               [pTooltip]="'settings.miningProductivityTooltip' | translate"
@@ -658,7 +647,7 @@
               }}</label>
             </div>
           </div>
-          <div class="mt-4 py-2">
+          <div class="mt-3 py-2">
             <div
               class="p-float-label"
               [pTooltip]="'settings.researchSpeedTooltip' | translate"
@@ -676,7 +665,7 @@
               }}</label>
             </div>
           </div>
-          <div class="mt-4 py-2">
+          <div class="mt-3 py-2">
             <div
               class="p-float-label"
               [pTooltip]="'settings.inserterCapacityTooltip' | translate"
@@ -696,7 +685,7 @@
           </div>
         </ng-container>
       </div>
-      <div class="mb-3">
+      <div class="mb-2">
         <h3>{{ 'settings.display' | translate }}</h3>
         <button
           pButton
@@ -706,7 +695,7 @@
           [label]="'settings.openColumnSettings' | translate"
           (click)="contentSvc.showColumns$.next()"
         ></button>
-        <div class="mt-4 py-2">
+        <div class="mt-3 py-2">
           <span
             class="p-float-label"
             [pTooltip]="'settings.displayRateTooltip' | translate"
@@ -724,7 +713,7 @@
             }}</label>
           </span>
         </div>
-        <div *ngIf="vm.columns[Column.Power].show" class="mt-4 py-2">
+        <div *ngIf="vm.columns[Column.Power].show" class="mt-3 py-2">
           <span
             class="p-float-label"
             [pTooltip]="'settings.powerUnitTooltip' | translate"
@@ -742,16 +731,8 @@
             }}</label>
           </span>
         </div>
-        <div class="py-2">
-          <div class="text-end">
-            <small class="me-1">
-              <a
-                href="https://github.com/factoriolab/factoriolab/wiki/Translating-FactorioLab"
-                target="_blank"
-                >{{ 'settings.helpTranslate' | translate }}</a
-              >
-            </small>
-          </div>
+        <div class="mt-3 py-2">
+          <div class="text-end"></div>
           <div
             class="p-float-label"
             [pTooltip]="'settings.languageTooltip' | translate"
@@ -765,9 +746,16 @@
             >
             </p-dropdown>
             <label for="language">{{ 'settings.language' | translate }}</label>
+            <small class="position-absolute end-0 bottom-100 me-1 mb-1">
+              <a
+                href="https://github.com/factoriolab/factoriolab/wiki/Translating-FactorioLab"
+                target="_blank"
+                >{{ 'settings.helpTranslate' | translate }}</a
+              >
+            </small>
           </div>
         </div>
-        <div class="mt-4 py-2">
+        <div class="mt-3 py-2">
           <div
             class="p-float-label"
             [pTooltip]="'settings.themeTooltip' | translate"
@@ -784,9 +772,9 @@
           </div>
         </div>
       </div>
-      <div class="mb-3">
+      <div class="mb-2">
         <h3>{{ 'settings.advanced' | translate }}</h3>
-        <div class="mt-4 py-2">
+        <div class="mt-3 py-2">
           <div
             class="p-float-label"
             [pTooltip]="'settings.simplexSolverTooltip' | translate"

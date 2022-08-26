@@ -9,6 +9,10 @@
 @import 'styles/spinner';
 @import 'styles/utils';
 
+html {
+  font-size: 16px;
+}
+
 body {
   overflow-x: hidden;
   overflow-y: auto;
@@ -18,7 +22,6 @@ body {
   background-color: var(--surface-ground);
 
   font-family: var(--font-family);
-  font-size: 16px;
   color: var(--text-color);
 }
 

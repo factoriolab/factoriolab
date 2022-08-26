@@ -10,7 +10,7 @@
   *ngIf="vm$ | async as vm"
   styleClass="me-1 me-sm-4 me-xl-0"
   [icon]="vm.gameInfo.icon | iconSmClass"
-  [model]="(gameOptions$ | async) ?? []"
+  [model]="vm.gameOptions"
   (onClick)="selectGame(vm.gameInfo.route)"
 >
 </p-splitButton>

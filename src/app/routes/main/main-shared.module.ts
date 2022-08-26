@@ -9,6 +9,7 @@ import { DividerModule } from 'primeng/divider';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
+import { MenuModule } from 'primeng/menu';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -35,6 +36,7 @@ const modules = [
   DropdownModule,
   InputNumberModule,
   InputTextModule,
+  MenuModule,
   MultiSelectModule,
   OverlayPanelModule,
   ProgressSpinnerModule,

@@ -6,6 +6,7 @@ import {
   NavigationStart,
   Router,
 } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { Confirmation } from 'primeng/api';
 import {
   BehaviorSubject,
@@ -79,5 +80,8 @@ export class ContentService {
     map((e) => e instanceof NavigationStart)
   );
 
-  constructor(private router: Router) {}
+  // Watch all language changes
+  lang$ = this.translateSvc.onLangChange.pipe(startWith(''));
+
+  constructor(private router: Router, private translateSvc: TranslateService) {}
 }
