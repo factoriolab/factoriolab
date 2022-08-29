@@ -201,6 +201,7 @@
     "addAProduct": "Add a product",
     "selectDisplayRate": "Select display rate"
   },
+  "picker": {},
   "list": {
     "openColumnSettings": "Open column settings",
     "tree": "Tree",

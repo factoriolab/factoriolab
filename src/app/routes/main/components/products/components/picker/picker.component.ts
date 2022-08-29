@@ -1,6 +1,8 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   OnInit,
   Output,
@@ -9,11 +11,10 @@ import {
 import { FormControl } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { OverlayPanel } from 'primeng/overlaypanel';
-import { combineLatest, map } from 'rxjs';
+import { FilterService, SelectItem } from 'primeng/api';
+import { combineLatest } from 'rxjs';
 
-import { Dataset, Entities } from '~/models';
-// import { ResponsiveService } from '~/services';
+import { Category, Dataset, Entities } from '~/models';
 import { LabState } from '~/store';
 import * as Recipes from '~/store/recipes';
 
@@ -25,26 +26,24 @@ import * as Recipes from '~/store/recipes';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PickerComponent implements OnInit {
-  @ViewChild(OverlayPanel) overlayPanel: OverlayPanel | undefined;
+  @ViewChild('inputFilter') inputFilter:
+    | ElementRef<HTMLInputElement>
+    | undefined;
 
   @Output() selectId = new EventEmitter<string>();
 
-  vm$ = combineLatest([
-    this.store.select(Recipes.getAdjustedDataset),
-    // this.responsiveSvc.width$,
-  ]).pipe(map(([data]) => ({ data })));
-
   searchCtrl = new FormControl('');
 
+  visible = false;
   selectedId: string | undefined;
+  categoryEntities: Entities<Category> = {};
   categoryIds: string[] = [];
   categoryItemRows: Entities<string[][]> = {};
   activeIndex = 0;
 
-  // Breakpoint = Breakpoint;
-
   constructor(
-    // public responsiveSvc: ResponsiveService,
+    private ref: ChangeDetectorRef,
+    private filterService: FilterService,
     private store: Store<LabState>
   ) {}
 
@@ -59,29 +58,28 @@ export class PickerComponent implements OnInit {
       });
   }
 
-  clickOpen(data: Dataset, event: any, selectedId?: string): void {
-    if (this.overlayPanel) {
-      this.selectedId = selectedId;
-      this.searchCtrl.setValue('');
-      this.categoryIds = data.categoryIds;
-      this.categoryItemRows = data.categoryItemRows;
-      if (this.selectedId) {
-        const index = this.categoryIds.indexOf(
-          data.itemEntities[this.selectedId].category
-        );
-        // Must set active index after timeout
-        // https://github.com/primefaces/primeng/issues/10587
-        setTimeout(() => {
-          this.activeIndex = index;
-        }, 1);
-      }
-      this.overlayPanel.show(event);
+  clickOpen(data: Dataset, selectedId?: string): void {
+    this.selectedId = selectedId;
+    this.searchCtrl.setValue('');
+    setTimeout(() => {
+      this.inputFilter?.nativeElement.focus();
+    });
+    this.categoryEntities = data.categoryEntities;
+    this.categoryIds = data.categoryIds;
+    this.categoryItemRows = data.categoryItemRows;
+    if (this.selectedId) {
+      const index = data.categoryIds.indexOf(
+        data.itemEntities[this.selectedId].category
+      );
+      this.activeIndex = index;
     }
+    this.visible = true;
+    this.ref.markForCheck();
   }
 
-  clickItem(overlay: OverlayPanel, itemId: string): void {
+  clickItem(itemId: string): void {
     this.selectId.emit(itemId);
-    overlay.hide();
+    this.visible = false;
   }
 
   inputSearch(data: Dataset, search: string | null): void {
@@ -92,13 +90,16 @@ export class PickerComponent implements OnInit {
     }
 
     // Filter for matching item ids
-    let itemIds = data.itemIds;
-    for (const term of search.split(' ')) {
-      const regExp = new RegExp(term, 'i');
-      itemIds = itemIds.filter(
-        (i) => data.itemEntities[i].name.search(regExp) !== -1
-      );
-    }
+    const selectItems = data.itemIds.map(
+      (i): SelectItem => ({ label: data.itemEntities[i].name, value: i })
+    );
+    const filteredItems = this.filterService.filter(
+      selectItems,
+      ['label'],
+      search,
+      'contains'
+    );
+    const itemIds = filteredItems.map((i) => i.value);
 
     // Filter for matching category ids
     this.categoryIds = data.categoryIds.filter((c) =>

@@ -10,7 +10,7 @@
   left: 320px;
   z-index: 2;
 
-  width: calc(100% - 320px);
+  width: calc(100vw - 320px);
   height: 5rem;
   padding: 0 3rem;
 
@@ -24,7 +24,7 @@
     justify-content: space-between;
     left: 0;
 
-    width: 100%;
+    width: 100vw;
     height: 7rem;
     padding: 0;
   }

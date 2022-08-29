@@ -30,6 +30,7 @@ export class ProductsComponent {
     this.store.select(Settings.getRateTypeOptions),
     this.store.select(Settings.getOptions),
     this.store.select(Settings.getProductOptions),
+    this.store.select(Settings.getDataset),
   ]).pipe(
     map(
       ([
@@ -42,6 +43,7 @@ export class ProductsComponent {
         rateTypeOptions,
         options,
         productOptions,
+        data,
       ]) => ({
         products,
         viaOptions,
@@ -52,6 +54,7 @@ export class ProductsComponent {
         rateTypeOptions,
         options,
         productOptions,
+        data,
       })
     )
   );

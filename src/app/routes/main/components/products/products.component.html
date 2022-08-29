@@ -12,36 +12,30 @@
       <button
         pButton
         pRipple
+        class="p-button-outlined"
         icon="fa-solid fa-minus"
         [pTooltip]="'products.removeProduct' | translate"
         (click)="removeProduct(product.id)"
       ></button>
-      <p-dropdown
-        class="d-inline-flex d-sm-none icon"
-        labDropdownIcon
-        [virtualScroll]="true"
-        [virtualScrollItemSize]="48"
-        [panelStyle]="{ width: '18rem' }"
-        [tooltip]="'products.changeItem' | translate"
-        tooltipPosition="top"
-        [options]="vm.productOptions"
-        [ngModel]="product.itemId"
-        (onChange)="setItem(product.id, $event.value)"
-      >
-      </p-dropdown>
-      <p-dropdown
+      <button
+        pButton
+        pRipple
+        class="d-inline-flex d-sm-none"
+        [icon]="product.itemId | iconSmClass"
+        (click)="editPicker.clickOpen(vm.data, product.itemId)"
+      ></button>
+      <button
+        pButton
+        pRipple
         class="d-none d-sm-inline-flex"
-        labDropdownIconText
-        [virtualScroll]="true"
-        [virtualScrollItemSize]="48"
-        [panelStyle]="{ width: '18rem' }"
-        [tooltip]="'products.changeItem' | translate"
-        tooltipPosition="top"
-        [options]="vm.productOptions"
-        [ngModel]="product.itemId"
-        (onChange)="setItem(product.id, $event.value)"
-      >
-      </p-dropdown>
+        [icon]="product.itemId | iconSmClass"
+        [label]="vm.data.itemEntities[product.itemId].name"
+        (click)="editPicker.clickOpen(vm.data, product.itemId)"
+      ></button>
+      <lab-picker
+        #editPicker
+        (selectId)="setItem(product.id, $event)"
+      ></lab-picker>
       <span class="d-none d-md-block p-inputgroup-addon">{{
         'products.limitTo' | translate
       }}</span>
@@ -116,18 +110,15 @@
   </div>
   <div class="row mt-3">
     <div class="col-auto mt-2">
-      <p-dropdown
-        labDropdownIconText
-        [virtualScroll]="true"
-        [virtualScrollItemSize]="48"
-        [panelStyle]="{ width: '18rem' }"
-        [options]="vm.productOptions"
-        (onChange)="addProduct($event.value)"
+      <button
+        pButton
+        pRipple
+        icon="fa-solid fa-plus"
+        [label]="'products.addAProduct' | translate"
+        (click)="addPicker.clickOpen(vm.data)"
       >
-        <ng-template pTemplate="selectedItem" let-item>
-          <span>{{ 'products.addAProduct' | translate }}</span>
-        </ng-template>
-      </p-dropdown>
+        <lab-picker #addPicker (selectId)="addProduct($event)"></lab-picker>
+      </button>
     </div>
     <div class="col-auto mt-2">
       <p-dropdown
