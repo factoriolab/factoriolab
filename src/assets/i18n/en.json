@@ -191,14 +191,12 @@
   },
   "products": {
     "title": "Products",
-    "produce": "Produce",
     "removeProduct": "Remove product",
     "changeItem": "Select product item",
-    "from": "from",
+    "limitTo": "limit to",
     "changeRate": "Set output rate",
     "changeRateType": "Select rate type",
-    "of": "of",
-    "changeVia": "Select via step",
+    "changeVia": "Select limit step",
     "noEnabledRecipes": "No matching enabled recipes",
     "addAProduct": "Add a product",
     "selectDisplayRate": "Select display rate"

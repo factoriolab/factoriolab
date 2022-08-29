@@ -158,7 +158,7 @@
           >
             <p-multiSelect
               inputId="disabled-recipes"
-              scrollHeight="400px"
+              scrollHeight="40vh"
               [virtualScroll]="true"
               [virtualScrollItemSize]="48"
               [ngModel]="vm.settings.disabledRecipeIds"
@@ -224,7 +224,7 @@
                   <p-dropdown
                     *ngIf="index === 0; else factoryGear"
                     appendTo="body"
-                    scrollHeight="400px"
+                    scrollHeight="40vh"
                     styleClass="icon"
                     [pTooltip]="'settings.addFactoryTooltip' | translate"
                     [options]="vm.factoryOptions"
@@ -293,7 +293,7 @@
                     appendTo="body"
                     styleClass="icon"
                     placeholder="unused"
-                    scrollHeight="400px"
+                    scrollHeight="40vh"
                     [selectionLimit]="
                       vm.data.game === Game.Satisfactory ? 1 : 2
                     "

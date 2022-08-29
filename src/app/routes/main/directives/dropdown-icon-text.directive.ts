@@ -19,7 +19,7 @@ export class DropdownIconTextDirective implements OnInit {
   ngOnInit(): void {
     this.pDropdown.appendTo = 'body';
     this.pDropdown.filter = true;
-    this.pDropdown.scrollHeight = '400px';
+    this.pDropdown.scrollHeight = '40vh';
     const templates$ =
       this.labDropdownIconText === 'recipe'
         ? [

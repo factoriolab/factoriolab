@@ -19,7 +19,7 @@ export class DropdownIconDirective implements OnInit {
   ngOnInit(): void {
     this.pDropdown.appendTo = 'body';
     this.pDropdown.filter = true;
-    this.pDropdown.scrollHeight = '400px';
+    this.pDropdown.scrollHeight = '40vh';
     this.pDropdown.styleClass = `icon`;
     const templates$ =
       this.labDropdownIcon === 'recipe'

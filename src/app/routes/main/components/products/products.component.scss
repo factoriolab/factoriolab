@@ -6,7 +6,13 @@
   }
 
   > lab-input-number,
-  > p-dropdown {
+  > p-dropdown:not(.icon) {
     min-width: 8rem;
+  }
+
+  p-dropdown.icon {
+    flex-basis: 3rem;
+    flex-grow: 0;
+    flex-shrink: 0;
   }
 }
