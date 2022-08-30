@@ -22,12 +22,12 @@ import {
 })
 export class ContentService {
   // Responsive
-  width$ = fromEvent(window, 'resize').pipe(
-    map((ev: any) => ev.target.innerWidth),
-    startWith(window.innerWidth)
-  );
   scrollTop$ = fromEvent(window, 'scroll').pipe(
-    map((ev) => window.scrollY),
+    map(
+      // Don't test fromEvent
+      // istanbul ignore next
+      () => window.scrollY
+    ),
     startWith(window.scrollY)
   );
 
@@ -64,7 +64,7 @@ export class ContentService {
   // Header
   settingsActive$ = new BehaviorSubject(false);
 
-  toggleMenu(): void {
+  toggleSettings(): void {
     this.settingsActive$.next(!this.settingsActive$.value);
   }
 
