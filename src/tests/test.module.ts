@@ -8,7 +8,6 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { AppSharedModule } from '~/app-shared.module';
-import { MainSharedModule } from '~/routes/main/main-shared.module';
 import { initialState } from './state';
 
 @NgModule({
@@ -21,15 +20,8 @@ import { initialState } from './state';
     NoopAnimationsModule,
     TranslateModule.forRoot(),
     AppSharedModule,
-    MainSharedModule,
   ],
-  exports: [
-    FormsModule,
-    ReactiveFormsModule,
-    TranslateModule,
-    AppSharedModule,
-    MainSharedModule,
-  ],
+  exports: [FormsModule, ReactiveFormsModule, TranslateModule, AppSharedModule],
   providers: [provideMockStore({ initialState })],
 })
 export class TestModule {}

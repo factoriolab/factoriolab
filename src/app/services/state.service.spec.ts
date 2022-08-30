@@ -1,10 +1,8 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MemoizedSelector } from '@ngrx/store';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { MockStore } from '@ngrx/store/testing';
 
-import { initialState, ItemId } from 'src/tests';
+import { ItemId, TestModule } from 'src/tests';
 import { Entities, RateType, Rational, RationalProduct } from '~/models';
 import { LabState, Products } from '~/store';
 import { StateService } from './state.service';
@@ -19,8 +17,7 @@ describe('StateService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
-      providers: [provideMockStore({ initialState })],
+      imports: [TestModule],
     });
     service = TestBed.inject(StateService);
     service.initialize();

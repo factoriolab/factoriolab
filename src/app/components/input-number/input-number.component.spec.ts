@@ -1,8 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TestModule, TestUtility } from 'src/tests';
-import { MainSharedModule } from '../../main-shared.module';
+import { TestModule } from 'src/tests';
 import { InputNumberComponent } from './input-number.component';
 
 @Component({
@@ -33,7 +32,7 @@ describe('InputNumberComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [InputNumberComponent, TestInputNumberComponent],
-      imports: [TestModule, MainSharedModule],
+      imports: [TestModule],
     }).compileComponents();
   });
 
