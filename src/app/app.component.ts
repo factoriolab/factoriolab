@@ -10,9 +10,18 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
-import { combineLatest, map } from 'rxjs';
+import { MenuItem } from 'primeng/api';
+import { combineLatest, first, map } from 'rxjs';
 
-import { Game, gameInfo, ItemId } from './models';
+import { environment } from 'src/environments';
+import {
+  APP,
+  Game,
+  gameInfo,
+  ItemId,
+  MatrixResultType,
+  SimplexType,
+} from './models';
 import {
   ContentService,
   ErrorService,
@@ -20,7 +29,7 @@ import {
   StateService,
 } from './services';
 import { ThemeService } from './services/theme.service';
-import { App, LabState, Preferences, Settings } from './store';
+import { App, LabState, Preferences, Products, Settings } from './store';
 
 @Component({
   selector: 'lab-root',
@@ -30,22 +39,68 @@ import { App, LabState, Preferences, Settings } from './store';
 export class AppComponent implements OnInit, AfterViewInit {
   vm$ = combineLatest([
     this.store.select(Settings.getGame),
+    this.store.select(Settings.getMod),
+    this.store.select(Products.getMatrixResult),
+    this.contentSvc.settingsActive$,
     this.contentSvc.scrollTop$,
     this.contentSvc.routerLoading$,
     this.errorSvc.message$,
   ]).pipe(
-    map(([game, scrollTop, routerLoading, errorMsg]) => ({
-      game,
-      scrollTop,
-      routerLoading,
-      errorMsg,
-    }))
+    map(
+      ([
+        game,
+        mod,
+        result,
+        settingsActive,
+        scrollTop,
+        routerLoading,
+        errorMsg,
+      ]) => ({
+        game,
+        mod,
+        result,
+        settingsActive,
+        scrollTop,
+        routerLoading,
+        errorMsg,
+      })
+    )
   );
 
+  version = `${APP} ${environment.version}`;
   isResetting = false;
+  showSimplexErr = false;
+  isFixingSimplex = false;
+  simplexErrSub = this.store
+    .select(Products.getMatrixResult)
+    .subscribe(
+      (result) =>
+        (this.showSimplexErr = result.resultType === MatrixResultType.Failed)
+    );
+  tabItems: MenuItem[] = [
+    {
+      label: 'app.list',
+      icon: 'fa-solid fa-list',
+      routerLink: 'list',
+      queryParamsHandling: 'preserve',
+    },
+    {
+      label: 'app.flow',
+      icon: 'fa-solid fa-diagram-project',
+      routerLink: 'flow',
+      queryParamsHandling: 'preserve',
+    },
+    {
+      label: 'app.matrix',
+      icon: 'fa-solid fa-table-cells',
+      routerLink: 'matrix',
+      queryParamsHandling: 'preserve',
+    },
+  ];
 
-  ItemId = ItemId;
   Game = Game;
+  ItemId = ItemId;
+  MatrixResultType = MatrixResultType;
 
   constructor(
     public contentSvc: ContentService,
@@ -93,6 +148,28 @@ Determine resource and factory requirements for your desired output products.`,
    * */
   ngAfterViewInit(): void {
     this.errorSvc.message$.subscribe(() => this.ref.detectChanges());
+  }
+
+  tryFixSimplex(): void {
+    this.isFixingSimplex = true;
+    setTimeout(() => {
+      this.store
+        .select(Settings.getDefaults)
+        .pipe(first())
+        .subscribe((def) => {
+          this.store.dispatch(
+            new Preferences.SetSimplexTypeAction(SimplexType.WasmFloat64)
+          );
+          this.store.dispatch(
+            new Settings.SetDisabledRecipesAction({
+              value: [],
+              def: def?.disabledRecipeIds,
+            })
+          );
+        });
+      this.showSimplexErr = false;
+      this.isFixingSimplex = false;
+    }, 10);
   }
 
   reset(game: Game): void {

@@ -5,7 +5,7 @@ import { RatePipe } from './rate.pipe';
 
 @Pipe({ name: 'factoryRate' })
 export class FactoryRatePipe implements PipeTransform {
-  constructor(private rate: RatePipe) {}
+  rate = new RatePipe();
 
   transform(
     value: Rational,

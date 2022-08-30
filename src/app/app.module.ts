@@ -19,7 +19,6 @@ import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppSharedModule } from './app-shared.module';
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './components';
 import { LabErrorHandler } from './services';
 import { metaReducers, reducers } from './store';
 import { AnalyticsEffects } from './store/analytics.effects';
@@ -38,7 +37,7 @@ function initializeApp(primengConfig: PrimeNGConfig): () => Promise<any> {
 }
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent],
+  declarations: [AppComponent],
   imports: [
     /** Angular modules */
     BrowserModule,

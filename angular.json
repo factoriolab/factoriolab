@@ -84,7 +84,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "baseline": "1mb",
+                  "baseline": "1.4mb",
                   "maximumWarning": "100kb",
                   "maximumError": "200kb"
                 },
@@ -112,7 +112,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "baseline": "1mb",
+                  "baseline": "1.4mb",
                   "maximumWarning": "100kb",
                   "maximumError": "200kb"
                 },

@@ -3,13 +3,39 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'list',
     loadChildren: () =>
-      import('./routes/main/main.module').then((m) => m.MainModule),
+      import('./routes/list/list.module').then((m) => m.ListModule),
+  },
+  {
+    path: 'flow',
+    loadChildren: () =>
+      import('./routes/flow/flow.module').then((m) => m.FlowModule),
+  },
+  {
+    path: 'matrix',
+    loadChildren: () =>
+      import('./routes/matrix/matrix.module').then((m) => m.MatrixModule),
+  },
+  {
+    path: 'factorio',
+    redirectTo: '/list?s=&v=4',
+  },
+  {
+    path: 'coi',
+    redirectTo: '/list?s=coi&v=4',
+  },
+  {
+    path: 'dsp',
+    redirectTo: '/list?s=dsp&v=4',
+  },
+  {
+    path: 'satisfactory',
+    redirectTo: '/list?s=sfy&v=4',
   },
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'list',
   },
 ];
 
