@@ -3,7 +3,9 @@ import mod from 'src/data/1.1/data.json';
 import hash from 'src/data/1.1/hash.json';
 import i18n from 'src/data/1.1/i18n/zh.json';
 import {
+  Dataset as _Dataset,
   Entities,
+  FlowData,
   Game,
   ItemSettings,
   Language,
@@ -22,6 +24,7 @@ import {
   RecipeSettings,
   SimplexType,
   Step,
+  themeMap,
   toEntities,
 } from '~/models';
 import { Theme } from '~/models/enum/theme';
@@ -46,14 +49,17 @@ export const Hash: ModHash = hash;
 export const I18n: ModI18n = i18n;
 export const Mod = { ...ModInfo, ...Data } as _Mod;
 export const Defaults = Settings.getDefaults.projector(Preset.Beacon8, Mod)!;
-export const Dataset = Settings.getDataset.projector(
-  data.app,
-  Mod,
-  null,
-  null,
-  Defaults,
-  Game.Factorio
-);
+export function getDataset(): _Dataset {
+  return Settings.getDataset.projector(
+    data.app,
+    Mod,
+    null,
+    null,
+    Defaults,
+    Game.Factorio
+  );
+}
+export const Dataset = getDataset();
 export const CategoryId = Dataset.categoryIds[0];
 export const Item1 = Dataset.itemEntities[Dataset.itemIds[0]];
 export const Item2 = Dataset.itemEntities[Dataset.itemIds[1]];
@@ -217,4 +223,41 @@ export const MatrixResultSolved: MatrixResult = {
   itemIds: [ItemId.Wood],
   recipeIds: [RecipeId.WoodenChest],
   inputIds: [],
+};
+
+export const Flow: FlowData = {
+  theme: themeMap[Theme.Light],
+  nodes: [
+    {
+      name: 'a-name',
+      text: 'a-text',
+      id: 'a',
+      color: 'black',
+      background: 'red',
+    },
+    {
+      name: 'b-name',
+      text: 'b-text',
+      id: 'b',
+      color: 'black',
+      background: 'blue',
+      recipe: Data.recipes[0],
+      factories: '1',
+      factoryId: 'factoryId',
+    },
+  ],
+  links: [
+    {
+      name: 'a-b',
+      text: 'a-b-text',
+      source: 'a',
+      target: 'b',
+    },
+    {
+      name: 'b-b',
+      text: 'b-b-text',
+      source: 'b',
+      target: 'b',
+    },
+  ],
 };

@@ -7,21 +7,19 @@ import { InputNumberComponent } from './input-number.component';
 @Component({
   selector: 'lab-test-input',
   template: `<lab-input-number
-    [title]="title"
-    [placeholder]="placeholder"
     [value]="value"
     [minimum]="minimum"
-    [digits]="digits"
+    [width]="width"
+    [inputId]="inputId"
     (setValue)="setValue($event)"
   ></lab-input-number>`,
 })
 class TestInputNumberComponent {
   @ViewChild(InputNumberComponent) child!: InputNumberComponent;
-  title = 'title';
-  placeholder = 'placeholder';
   value = '10';
   minimum = '1';
-  digits = '2';
+  width = '';
+  inputId = '';
   setValue(data: string): void {}
 }
 
@@ -46,106 +44,57 @@ describe('InputNumberComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // describe('ngOnChanges', () => {
-  //   it('should handle changes to minimum', () => {
-  //     component.minimum = '10';
-  //     fixture.detectChanges();
-  //     expect(component.child.isMinimum).toBeTrue();
-  //   });
-  // });
+  describe('ngOnChanges', () => {
+    it('should handle changes to minimum', () => {
+      component.minimum = '10';
+      fixture.detectChanges();
+      expect(component.child.isMinimum).toBeTrue();
+    });
 
-  // describe('changeValue', () => {
-  //   it('should emit a valid value', () => {
-  //     spyOn(component, 'setValue');
-  //     TestUtility.setTextDt(fixture, DataTest.Input, '1 1/3');
-  //     fixture.detectChanges();
-  //     expect(component.setValue).toHaveBeenCalledWith('1 1/3');
-  //   });
+    it('should handle invalid values', () => {
+      component.value = 'err';
+      fixture.detectChanges();
+      expect(component.child.isMinimum).toBeFalse();
+    });
+  });
 
-  //   it('should ignore invalid events', () => {
-  //     spyOn(component, 'setValue');
-  //     TestUtility.setTextDt(fixture, DataTest.Input, '1 1');
-  //     fixture.detectChanges();
-  //     expect(component.setValue).not.toHaveBeenCalled();
-  //   });
+  describe('changeValue', () => {
+    it('should emit a value', () => {
+      spyOn(component, 'setValue');
+      component.child.changeValue('1 1/3');
+      expect(component.setValue).toHaveBeenCalledWith('1 1/3');
+    });
+  });
 
-  //   it('should ignore negative rates', () => {
-  //     spyOn(component, 'setValue');
-  //     TestUtility.setTextDt(fixture, DataTest.Input, '-1');
-  //     fixture.detectChanges();
-  //     expect(component.setValue).not.toHaveBeenCalled();
-  //   });
-  // });
+  describe('increase', () => {
+    it('should emit a value', () => {
+      spyOn(component, 'setValue');
+      component.child.increase();
+      expect(component.setValue).toHaveBeenCalledWith('11');
+    });
 
-  // describe('increase', () => {
-  //   it('should emit a valid value', () => {
-  //     spyOn(component, 'setValue');
-  //     TestUtility.clickDt(fixture, DataTest.Increase);
-  //     fixture.detectChanges();
-  //     expect(component.setValue).toHaveBeenCalledWith('11');
-  //   });
+    it('should round up a fractional value', () => {
+      component.value = '1.5';
+      fixture.detectChanges();
+      spyOn(component, 'setValue');
+      component.child.increase();
+      expect(component.setValue).toHaveBeenCalledWith('2');
+    });
+  });
 
-  //   it('should ignore invalid events', () => {
-  //     component.value = '1 1';
-  //     fixture.detectChanges();
-  //     spyOn(component, 'setValue');
-  //     TestUtility.clickDt(fixture, DataTest.Increase);
-  //     fixture.detectChanges();
-  //     expect(component.setValue).not.toHaveBeenCalled();
-  //   });
+  describe('decrease', () => {
+    it('should emit a value', () => {
+      spyOn(component, 'setValue');
+      component.child.decrease();
+      expect(component.setValue).toHaveBeenCalledWith('9');
+    });
 
-  //   it('should round up a fractional value', () => {
-  //     component.value = '1.5';
-  //     fixture.detectChanges();
-  //     spyOn(component, 'setValue');
-  //     TestUtility.clickDt(fixture, DataTest.Increase);
-  //     fixture.detectChanges();
-  //     expect(component.setValue).toHaveBeenCalledWith('2');
-  //   });
-  // });
-
-  // describe('decrease', () => {
-  //   it('should emit a valid value', () => {
-  //     spyOn(component, 'setValue');
-  //     TestUtility.clickDt(fixture, DataTest.Decrease);
-  //     fixture.detectChanges();
-  //     expect(component.setValue).toHaveBeenCalledWith('9');
-  //   });
-
-  //   it('should ignore invalid events', () => {
-  //     component.value = '1 1';
-  //     fixture.detectChanges();
-  //     spyOn(component, 'setValue');
-  //     TestUtility.clickDt(fixture, DataTest.Decrease);
-  //     fixture.detectChanges();
-  //     expect(component.setValue).not.toHaveBeenCalled();
-  //   });
-
-  //   it('should round down a fractional value', () => {
-  //     component.value = '1.5';
-  //     fixture.detectChanges();
-  //     spyOn(component, 'setValue');
-  //     TestUtility.clickDt(fixture, DataTest.Decrease);
-  //     fixture.detectChanges();
-  //     expect(component.setValue).toHaveBeenCalledWith('1');
-  //   });
-
-  //   it('should not decrease below minimum (click)', () => {
-  //     component.value = '1';
-  //     fixture.detectChanges();
-  //     spyOn(component.child, 'decrease');
-  //     TestUtility.clickDt(fixture, DataTest.Decrease);
-  //     fixture.detectChanges();
-  //     expect(component.child.decrease).not.toHaveBeenCalled();
-  //   });
-
-  //   it('should not decrease below minimum (function)', () => {
-  //     component.value = '1';
-  //     fixture.detectChanges();
-  //     spyOn(component, 'setValue');
-  //     component.child.decrease();
-  //     fixture.detectChanges();
-  //     expect(component.setValue).not.toHaveBeenCalled();
-  //   });
-  // });
+    it('should round down a fractional value', () => {
+      component.value = '1.5';
+      fixture.detectChanges();
+      spyOn(component, 'setValue');
+      component.child.decrease();
+      expect(component.setValue).toHaveBeenCalledWith('1');
+    });
+  });
 });

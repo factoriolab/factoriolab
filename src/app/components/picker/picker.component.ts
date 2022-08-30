@@ -61,6 +61,7 @@ export class PickerComponent implements OnInit {
   clickOpen(data: Dataset, selectedId?: string): void {
     this.selectedId = selectedId;
     this.searchCtrl.setValue('');
+    // Wait for input field to appear before attempting to focus
     setTimeout(() => {
       this.inputFilter?.nativeElement.focus();
     });

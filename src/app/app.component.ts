@@ -111,6 +111,7 @@ export class AppComponent implements AfterViewInit {
 
   tryFixSimplex(): void {
     this.isFixingSimplex = true;
+    // Give button loading indicator a chance to start
     setTimeout(() => {
       this.store
         .select(Settings.getDefaults)
@@ -125,14 +126,15 @@ export class AppComponent implements AfterViewInit {
               def: def?.disabledRecipeIds,
             })
           );
+          this.showSimplexErr = false;
+          this.isFixingSimplex = false;
         });
-      this.showSimplexErr = false;
-      this.isFixingSimplex = false;
     }, 10);
   }
 
   reset(game: Game): void {
     this.isResetting = true;
+    // Give button loading indicator a chance to start
     setTimeout(() => {
       this.ngZone.run(() => {
         this.errorSvc.message$.next(null);
@@ -140,6 +142,6 @@ export class AppComponent implements AfterViewInit {
         this.store.dispatch(new App.ResetAction());
         this.isResetting = false;
       });
-    });
+    }, 10);
   }
 }

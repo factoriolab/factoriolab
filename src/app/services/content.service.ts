@@ -77,7 +77,8 @@ export class ContentService {
         e instanceof NavigationCancel ||
         e instanceof NavigationError
     ),
-    map((e) => e instanceof NavigationStart)
+    map((e) => e instanceof NavigationStart),
+    startWith(false)
   );
 
   // Watch all language changes
