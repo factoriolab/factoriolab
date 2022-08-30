@@ -78,7 +78,7 @@ export class ThemeService {
         console.log('set');
         if (theme === Theme.Dark) {
           // Dark theme
-          //   themeLink.href = 'lara-dark-blue.css';
+          themeLink.href = 'lara-dark-blue.css';
         } else {
           // Light theme
           themeLink.href = 'lara-light-blue.css';

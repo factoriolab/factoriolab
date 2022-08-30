@@ -6,7 +6,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import {
+  TranslateLoader,
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { loadModule } from 'glpk-ts';
 import {
@@ -19,17 +23,30 @@ import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppSharedModule } from './app-shared.module';
 import { AppComponent } from './app.component';
-import { LabErrorHandler } from './services';
+import { LabErrorHandler, RouterService, StateService } from './services';
+import { ThemeService } from './services/theme.service';
 import { metaReducers, reducers } from './store';
 import { AnalyticsEffects } from './store/analytics.effects';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
 import { FactoriesEffects } from './store/factories/factories.effects';
 import { ProductsEffects } from './store/products/products.effects';
 
-function initializeApp(primengConfig: PrimeNGConfig): () => Promise<any> {
+function initializeApp(
+  primengConfig: PrimeNGConfig,
+  translateSvc: TranslateService,
+  routerSvc: RouterService,
+  stateSvc: StateService,
+  themeSvc: ThemeService
+): () => Promise<any> {
   return () => {
     // Enable ripple
     primengConfig.ripple = true;
+
+    // Initialize services
+    translateSvc.setDefaultLang('en');
+    routerSvc.initialize();
+    stateSvc.initialize();
+    themeSvc.initialize();
 
     // Load glpk-wasm
     return loadModule('assets/glpk-wasm/glpk.all.wasm');
@@ -75,7 +92,13 @@ function initializeApp(primengConfig: PrimeNGConfig): () => Promise<any> {
     { provide: ErrorHandler, useClass: LabErrorHandler },
     {
       provide: APP_INITIALIZER,
-      deps: [PrimeNGConfig],
+      deps: [
+        PrimeNGConfig,
+        TranslateService,
+        RouterService,
+        StateService,
+        ThemeService,
+      ],
       useFactory: initializeApp,
       multi: true,
     },
