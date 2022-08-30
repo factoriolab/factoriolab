@@ -83,6 +83,7 @@
             <button
               pButton
               pRipple
+              type="button"
               class="mt-2 p-button-outlined"
               [label]="'app.dontShowAgain' | translate"
               (click)="showSimplexErr = false; simplexErrSub.unsubscribe()"
@@ -90,6 +91,7 @@
             <button
               pButton
               pRipple
+              type="button"
               class="mt-2 ms-2 p-button-outlined"
               [label]="'app.trySuggestedFix' | translate"
               [loading]="isFixingSimplex"
@@ -98,6 +100,7 @@
             <button
               pButton
               pRipple
+              type="button"
               class="mt-2 ms-2"
               [label]="'ok' | translate"
               (click)="showSimplexErr = false"

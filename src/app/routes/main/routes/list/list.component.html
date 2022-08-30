@@ -14,6 +14,7 @@
           <button
             pButton
             pRipple
+            type="button"
             class="p-button-outlined p-button-rounded"
             icon="fa-solid fa-table-columns"
             [pTooltip]="'list.openColumnSettings' | translate"
@@ -34,6 +35,7 @@
               *ngIf="vm.itemsModified.ignore"
               pButton
               pRipple
+              type="button"
               class="ms-3 p-button-outlined p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.itemsUndoTooltip' | translate"
@@ -49,6 +51,7 @@
               *ngIf="vm.itemsModified.belts"
               pButton
               pRipple
+              type="button"
               class="ms-3 p-button-outlined p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.beltsUndoTooltip' | translate"
@@ -66,6 +69,7 @@
               *ngIf="vm.itemsModified.wagons"
               pButton
               pRipple
+              type="button"
               class="ms-3 p-button-outlined p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.wagonsUndoTooltip' | translate"
@@ -81,6 +85,7 @@
               *ngIf="vm.recipesModified.factories"
               pButton
               pRipple
+              type="button"
               class="ms-3 p-button-outlined p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.factoriesUndoTooltip' | translate"
@@ -97,6 +102,7 @@
               *ngIf="vm.recipesModified.beacons"
               pButton
               pRipple
+              type="button"
               class="ms-3 p-button-outlined p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.beaconsUndoTooltip' | translate"
@@ -119,6 +125,7 @@
           <button
             pButton
             pRipple
+            type="button"
             class="p-button-outlined p-button-rounded"
             icon="fa-solid fa-file-arrow-down"
             data-test="lab-list-export"

@@ -1,11 +1,11 @@
 <span class="p-inputnumber p-component p-inputnumber-buttons-stacked">
   <input
     #input
-    [id]="inputId"
-    [class.hidden-buttons]="hideButtons"
-    type="text"
-    [style.width]="width"
     pInputText
+    [id]="inputId"
+    type="text"
+    [class.hidden-buttons]="hideButtons"
+    [style.width]="width"
     [placeholder]="placeholder"
     [ngModel]="value"
     labValidateNumber
@@ -16,6 +16,7 @@
     <button
       pButton
       pRipple
+      type="button"
       class="p-inputnumber-button p-inputnumber-button-up"
       icon="fa-solid fa-angle-up"
       (click)="increase()"
@@ -23,6 +24,7 @@
     <button
       pButton
       pRipple
+      type="button"
       class="p-inputnumber-button p-inputnumber-button-down"
       icon="fa-solid fa-angle-down"
       [disabled]="isMinimum"

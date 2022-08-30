@@ -12,6 +12,7 @@
       <button
         pButton
         pRipple
+        type="button"
         class="p-button-outlined"
         icon="fa-solid fa-minus"
         [pTooltip]="'products.removeProduct' | translate"
@@ -20,16 +21,21 @@
       <button
         pButton
         pRipple
+        type="button"
         class="d-inline-flex d-sm-none"
         [icon]="product.itemId | iconSmClass"
+        [pTooltip]="'products.changeItem' | translate"
         (click)="editPicker.clickOpen(vm.data, product.itemId)"
       ></button>
       <button
         pButton
         pRipple
+        type="button"
         class="d-none d-sm-inline-flex"
         [icon]="product.itemId | iconSmClass"
         [label]="vm.data.itemEntities[product.itemId].name"
+        [pTooltip]="'products.changeItem' | translate"
+        tooltipPosition="top"
         (click)="editPicker.clickOpen(vm.data, product.itemId)"
       ></button>
       <lab-picker
@@ -112,6 +118,7 @@
     <div class="col-auto mt-2">
       <button
         pButton
+        type="button"
         pRipple
         icon="fa-solid fa-plus"
         [label]="'products.addAProduct' | translate"
