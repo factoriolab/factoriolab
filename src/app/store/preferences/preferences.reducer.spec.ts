@@ -1,4 +1,4 @@
-import { Column, Language, PowerUnit, SimplexType } from '~/models';
+import { Column, Language, PowerUnit, SimplexType, Theme } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './preferences.actions';
 import {
@@ -83,6 +83,16 @@ describe('Preferences Reducer', () => {
         new Actions.SetPowerUnitAction(PowerUnit.MW)
       );
       expect(result.powerUnit).toEqual(PowerUnit.MW);
+    });
+  });
+
+  describe('SET_THEME', () => {
+    it('should set the power unit', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetThemeAction(Theme.Dark)
+      );
+      expect(result.theme).toEqual(Theme.Dark);
     });
   });
 

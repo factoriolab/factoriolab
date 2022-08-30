@@ -37,9 +37,7 @@ describe('ValidateNumberDirective', () => {
       ],
       imports: [FormsModule],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TestValidateNumberDirectiveComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

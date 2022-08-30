@@ -6,8 +6,8 @@ import {
   Language,
   PowerUnit,
   SimplexType,
+  Theme,
 } from '~/models';
-import { Theme } from '~/models/enum/theme';
 import * as App from '../app.actions';
 import {
   PreferencesAction,

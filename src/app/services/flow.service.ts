@@ -88,25 +88,26 @@ export class FlowService {
         const recipe = data.recipeEntities[step.recipeId];
         const settings = recipeSettings[step.recipeId];
 
-        if (settings.factoryId == null) break;
-        const factory = data.itemEntities[settings.factoryId];
-        const nodeTheme =
-          Object.keys(recipe.in).length === 0
-            ? theme.node.input
-            : theme.node.recipe;
-        // CREATE NODE: Standard recipe
-        flow.nodes.push({
-          id: `r|${step.recipeId}`,
-          name: recipe.name,
-          text: `${step.factories.toString(itemPrec)} ${factory.name}`,
-          color: nodeTheme.color,
-          background: nodeTheme.background,
-          recipe,
-          factoryId: settings.factoryId,
-          factories: step.factories.toString(
-            columns[Column.Factories].precision
-          ),
-        });
+        if (settings.factoryId != null) {
+          const factory = data.itemEntities[settings.factoryId];
+          const nodeTheme =
+            Object.keys(recipe.in).length === 0
+              ? theme.node.input
+              : theme.node.recipe;
+          // CREATE NODE: Standard recipe
+          flow.nodes.push({
+            id: `r|${step.recipeId}`,
+            name: recipe.name,
+            text: `${step.factories.toString(itemPrec)} ${factory.name}`,
+            color: nodeTheme.color,
+            background: nodeTheme.background,
+            recipe,
+            factoryId: settings.factoryId,
+            factories: step.factories.toString(
+              columns[Column.Factories].precision
+            ),
+          });
+        }
       }
 
       if (step.itemId) {

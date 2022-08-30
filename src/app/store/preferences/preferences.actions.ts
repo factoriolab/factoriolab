@@ -7,8 +7,8 @@ import {
   Language,
   PowerUnit,
   SimplexType,
+  Theme,
 } from '~/models';
-import { Theme } from '~/models/enum/theme';
 
 export const enum PreferencesActionType {
   SAVE_STATE = '[Preferences] Save State',

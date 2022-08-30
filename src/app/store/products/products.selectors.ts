@@ -350,22 +350,6 @@ export const getSteps = createSelector(
     )
 );
 
-// export const getGraph = createSelector(
-//   getSteps,
-//   Settings.getDisplayRateInfo,
-//   Preferences.getColumns,
-//   Recipes.getRecipeSettings,
-//   Recipes.getAdjustedDataset,
-//   (steps, dispRateInfo, columns, recipeSettings, data) =>
-//     FlowUtility.buildGraph(
-//       RateUtility.copy(steps),
-//       dispRateInfo,
-//       columns,
-//       recipeSettings,
-//       data
-//     )
-// );
-
 export const checkViaState = createSelector(
   getRationalProducts,
   getNormalizedRates,

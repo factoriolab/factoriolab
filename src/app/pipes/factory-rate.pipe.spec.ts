@@ -1,9 +1,19 @@
-import { ItemId } from 'src/tests';
+import { TestBed } from '@angular/core/testing';
+
+import { ItemId, TestModule } from 'src/tests';
 import { Rational } from '~/models';
 import { FactoryRatePipe } from './factory-rate.pipe';
 
 describe('FactoryRatePipe', () => {
-  const pipe = new FactoryRatePipe();
+  let pipe: FactoryRatePipe;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [TestModule],
+      providers: [FactoryRatePipe],
+    });
+    pipe = TestBed.inject(FactoryRatePipe);
+  });
 
   it('should be created', () => {
     expect(pipe).toBeTruthy();
@@ -20,9 +30,12 @@ describe('FactoryRatePipe', () => {
     });
 
     it('should transform values using rate pipe', () => {
-      spyOn(pipe.rate, 'transform');
+      spyOn(pipe['ratePipe'], 'transform');
       pipe.transform(Rational.one, null, ItemId.AssemblingMachine1);
-      expect(pipe.rate.transform).toHaveBeenCalledWith(Rational.one, null);
+      expect(pipe['ratePipe'].transform).toHaveBeenCalledWith(
+        Rational.one,
+        null
+      );
     });
   });
 });

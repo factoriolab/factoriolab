@@ -1,14 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 
+import { TestModule } from 'src/tests';
 import { PowerUnit, Rational } from '~/models';
 import { PowerPipe } from './power.pipe';
-import { RatePipe } from './rate.pipe';
 
 describe('PowerPipe', () => {
   let pipe: PowerPipe;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ providers: [RatePipe, PowerPipe] });
+    TestBed.configureTestingModule({
+      imports: [TestModule],
+      providers: [PowerPipe],
+    });
     pipe = TestBed.inject(PowerPipe);
   });
 

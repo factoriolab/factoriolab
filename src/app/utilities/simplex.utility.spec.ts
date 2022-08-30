@@ -98,9 +98,8 @@ describe('SimplexUtility', () => {
     inputIds: [],
   });
 
-  beforeEach(async () => {
+  beforeEach(() => {
     SimplexUtility.cache = {};
-    await loadModule('node_modules/glpk-wasm/dist/glpk.all.wasm');
   });
 
   describe('solve', () => {

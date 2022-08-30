@@ -5,7 +5,7 @@ import { RatePipe } from './rate.pipe';
 
 @Pipe({ name: 'power' })
 export class PowerPipe implements PipeTransform {
-  rate = new RatePipe();
+  constructor(private ratePipe: RatePipe) {}
 
   transform(
     value: Rational,
@@ -14,17 +14,17 @@ export class PowerPipe implements PipeTransform {
   ): string {
     switch (unit) {
       case PowerUnit.GW:
-        return `${this.rate.transform(
+        return `${this.ratePipe.transform(
           value.div(Rational.million),
           precision
         )} GW`;
       case PowerUnit.MW:
-        return `${this.rate.transform(
+        return `${this.ratePipe.transform(
           value.div(Rational.thousand),
           precision
         )} MW`;
       default:
-        return `${this.rate.transform(value, precision)} kW`;
+        return `${this.ratePipe.transform(value, precision)} kW`;
     }
   }
 }

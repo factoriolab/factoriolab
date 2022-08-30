@@ -18,6 +18,7 @@ import {
   NgxGoogleAnalyticsRouterModule,
 } from 'ngx-google-analytics';
 import { PrimeNGConfig } from 'primeng/api';
+import { from, Observable, tap } from 'rxjs';
 
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -37,19 +38,23 @@ function initializeApp(
   routerSvc: RouterService,
   stateSvc: StateService,
   themeSvc: ThemeService
-): () => Promise<any> {
+): () => Observable<any> {
   return () => {
     // Enable ripple
     primengConfig.ripple = true;
 
     // Initialize services
     translateSvc.setDefaultLang('en');
-    routerSvc.initialize();
     stateSvc.initialize();
     themeSvc.initialize();
 
     // Load glpk-wasm
-    return loadModule('assets/glpk-wasm/glpk.all.wasm');
+    return from(loadModule('assets/glpk-wasm/glpk.all.wasm')).pipe(
+      tap(() => {
+        // Wait to initialize router
+        routerSvc.initialize();
+      })
+    );
   };
 }
 

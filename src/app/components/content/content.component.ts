@@ -38,14 +38,14 @@ export class ContentComponent implements OnInit, AfterViewInit {
   @ViewChild('translateItem') translateItem: TemplateRef<any> | undefined;
 
   constructor(
-    private confirmationService: ConfirmationService,
+    private confirmationSvc: ConfirmationService,
     private contentSvc: ContentService
   ) {}
 
   ngOnInit(): void {
     this.contentSvc.showConfirm$
       .pipe(untilDestroyed(this))
-      .subscribe((c) => this.confirmationService.confirm(c));
+      .subscribe((c) => this.confirmationSvc.confirm(c));
   }
 
   ngAfterViewInit(): void {

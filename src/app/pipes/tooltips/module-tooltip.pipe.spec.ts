@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TestModule } from 'src/tests';
+import { ItemId, Mocks, TestModule } from 'src/tests';
+import { Rational } from '~/models';
 import { ModuleTooltipPipe } from './module-tooltip.pipe';
 
 describe('ModuleTooltipPipe', () => {
@@ -16,5 +17,20 @@ describe('ModuleTooltipPipe', () => {
 
   it('should be created', () => {
     expect(pipe).toBeTruthy();
+  });
+
+  describe('transform', () => {
+    it('should generate a module tooltip', () => {
+      const data = Mocks.getDataset();
+      data.itemEntities[ItemId.ProductivityModule].module!.sprays =
+        Rational.one;
+      const result = pipe.transform(ItemId.ProductivityModule, data);
+      expect(result).toBeTruthy();
+    });
+
+    it('should handle null values', () => {
+      expect(pipe.transform(null, Mocks.Dataset)).toEqual('');
+      expect(pipe.transform('null', Mocks.Dataset)).toEqual('');
+    });
   });
 });

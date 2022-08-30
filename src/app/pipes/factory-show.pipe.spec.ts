@@ -21,5 +21,9 @@ describe('FactoryShowPipe', () => {
         pipe.transform(ItemId.MiningDrill, Game.DysonSphereProgram)
       ).toBeFalse();
     });
+
+    it('should handle null values', () => {
+      expect(pipe.transform(null, Game.Factorio)).toBeFalse();
+    });
   });
 });

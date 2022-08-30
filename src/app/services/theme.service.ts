@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, fromEvent, map, Observable, startWith } from 'rxjs';
 
-import { Theme } from '~/models/enum/theme';
+import { Theme } from '~/models';
 import { LabState, Preferences, Settings } from '~/store';
 
 const LAB_ICON_STYLE_ID = 'lab-icon-css';
@@ -31,6 +31,8 @@ export class ThemeService {
     ]).pipe(
       map(([theme, prefersDark]) => {
         if (theme === Theme.System) {
+          // Don't need to test media query specifically
+          // istanbul ignore next
           return prefersDark ? Theme.Dark : Theme.Light;
         }
 
@@ -75,7 +77,6 @@ export class ThemeService {
         LAB_THEME_STYLE_ID
       ) as HTMLLinkElement | null;
       if (themeLink) {
-        console.log('set');
         if (theme === Theme.Dark) {
           // Dark theme
           themeLink.href = 'lara-dark-blue.css';

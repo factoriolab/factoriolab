@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { components } from './components';
 import { directives } from './directives';
 import { pipes } from './pipes';
+import { RatePipe } from './pipes/rate.pipe';
 import { VendorModule } from './vendor.module';
 
 @NgModule({
@@ -18,5 +19,6 @@ import { VendorModule } from './vendor.module';
     ...directives,
     ...pipes,
   ],
+  providers: [RatePipe],
 })
 export class AppSharedModule {}

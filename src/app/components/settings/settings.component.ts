@@ -35,8 +35,9 @@ import {
   researchSpeedOptions,
   SimplexType,
   simplexTypeOptions,
+  Theme,
+  themeOptions,
 } from '~/models';
-import { Theme, themeOptions } from '~/models/enum/theme';
 import { ContentService, RouterService } from '~/services';
 import { App, Factories, LabState, Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';

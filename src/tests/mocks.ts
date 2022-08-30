@@ -24,10 +24,10 @@ import {
   RecipeSettings,
   SimplexType,
   Step,
+  Theme,
   themeMap,
   toEntities,
 } from '~/models';
-import { Theme } from '~/models/enum/theme';
 import {
   Datasets,
   Factories,
@@ -50,6 +50,7 @@ export const I18n: ModI18n = i18n;
 export const Mod = { ...ModInfo, ...Data } as _Mod;
 export const Defaults = Settings.getDefaults.projector(Preset.Beacon8, Mod)!;
 export function getDataset(): _Dataset {
+  Settings.getDataset.release();
   return Settings.getDataset.projector(
     data.app,
     Mod,
@@ -105,7 +106,7 @@ export const ProductEntities =
 export const ProductSteps = {
   [Product1.id]: [],
   [Product2.id]: [],
-  [Product3.id]: [],
+  [Product3.id]: [[ItemId.PetroleumGas, Rational.one]],
   [Product4.id]: [[RecipeId.TransportBelt, Rational.one]],
 };
 export const ItemSettings1: ItemSettings = {

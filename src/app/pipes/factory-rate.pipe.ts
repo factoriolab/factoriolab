@@ -5,7 +5,7 @@ import { RatePipe } from './rate.pipe';
 
 @Pipe({ name: 'factoryRate' })
 export class FactoryRatePipe implements PipeTransform {
-  rate = new RatePipe();
+  constructor(private ratePipe: RatePipe) {}
 
   transform(
     value: Rational,
@@ -13,12 +13,12 @@ export class FactoryRatePipe implements PipeTransform {
     factoryId: string
   ): string {
     if (factoryId === ItemId.Pumpjack) {
-      return `${this.rate.transform(
+      return `${this.ratePipe.transform(
         value.mul(Rational.hundred),
         precision != null ? Math.max(precision - 2, 0) : precision
       )}%`;
     } else {
-      return this.rate.transform(value, precision);
+      return this.ratePipe.transform(value, precision);
     }
   }
 }

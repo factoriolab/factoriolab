@@ -618,15 +618,6 @@ export const getOptions = createSelector(
   })
 );
 
-export const getProductOptions = createSelector(getDataset, (data) =>
-  getIdOptions(
-    data.itemIds.filter(
-      (i) => data.categoryEntities[data.itemEntities[i].category]
-    ),
-    data.itemEntities
-  )
-);
-
 export const getBeltSpeed = createSelector(
   getDataset,
   getRationalFlowRate,

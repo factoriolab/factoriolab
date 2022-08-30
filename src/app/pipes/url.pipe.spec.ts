@@ -13,4 +13,14 @@ describe('UrlPipe', () => {
   it('should be created', () => {
     expect(pipe).toBeTruthy();
   });
+
+  describe('transform', () => {
+    it('should convert a url to a valid css background', () => {
+      expect(pipe.transform('test')).toEqual('url(test)');
+    });
+
+    it('should handle null values', () => {
+      expect(pipe.transform(null)).toEqual('');
+    });
+  });
 });

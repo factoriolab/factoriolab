@@ -16,3 +16,4 @@ export * from './recipe-field';
 export * from './research-speed';
 export * from './simplex-type';
 export * from './step-detail-tab';
+export * from './theme';
