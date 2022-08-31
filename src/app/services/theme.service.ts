@@ -79,10 +79,10 @@ export class ThemeService {
       if (themeLink) {
         if (theme === Theme.Dark) {
           // Dark theme
-          themeLink.href = 'lara-dark-blue.css';
+          themeLink.href = 'theme-dark.css';
         } else {
           // Light theme
-          themeLink.href = 'lara-light-blue.css';
+          themeLink.href = 'theme-light.css';
         }
       }
     });

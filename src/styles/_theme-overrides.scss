@@ -1,15 +1,15 @@
 .p-button {
-  padding: calc(0.75rem - 1px) 1.25rem;
+  padding: calc(0.5rem - 1px) 1rem;
 }
 
 .p-button.p-button-icon-only {
-  // Original 0.75rem does not account for 1px border
-  padding: calc(0.75rem - 1px) 0;
+  // Original does not account for 1px border
+  padding: calc(0.5rem - 1px) 0;
 }
 
 .p-inputtext {
-  // Original 0.75rem does not account for 1px border
-  padding: calc(0.75rem - 1px);
+  // Original does not account for 1px border
+  padding: calc(0.5rem - 1px);
 }
 
 // InputGroup fixes

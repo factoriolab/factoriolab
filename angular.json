@@ -39,13 +39,13 @@
               "node_modules/primeng/resources/primeng.min.css",
               "src/styles.scss",
               {
-                "input": "src/styles/themes/lara-dark-blue.scss",
-                "bundleName": "lara-dark-blue",
+                "input": "src/styles/themes/theme-dark.scss",
+                "bundleName": "theme-dark",
                 "inject": false
               },
               {
-                "input": "src/styles/themes/lara-light-blue.scss",
-                "bundleName": "lara-light-blue",
+                "input": "src/styles/themes/theme-light.scss",
+                "bundleName": "theme-light",
                 "inject": false
               }
             ],

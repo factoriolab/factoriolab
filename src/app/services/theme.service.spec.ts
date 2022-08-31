@@ -56,9 +56,9 @@ describe('ThemeService', () => {
     );
     mockStore.overrideSelector(Preferences.getTheme, Theme.Light);
     mockStore.refreshState();
-    expect(themeLink.href).toEqual('lara-light-blue.css');
+    expect(themeLink.href).toEqual('theme-light.css');
     mockStore.overrideSelector(Preferences.getTheme, Theme.Dark);
     mockStore.refreshState();
-    expect(themeLink.href).toEqual('lara-dark-blue.css');
+    expect(themeLink.href).toEqual('theme-dark.css');
   });
 });

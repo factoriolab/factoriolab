@@ -5,16 +5,16 @@
 
   display: inline-block;
 
-  margin: 0.25rem;
-  width: 2.5rem;
-  height: 2.5rem;
+  margin: 1.5px;
+  width: 2rem;
+  height: 2rem;
 
   &::before {
     content: '';
 
     position: absolute;
-    top: 0.25rem;
-    left: 0.25rem;
+    top: 0;
+    left: 0;
 
     transform: scale(0.5);
     transform-origin: 0 0;
@@ -44,11 +44,11 @@
 
 .lab-icon-sm {
   margin: 0;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 21px;
+  height: 21px;
 
   &::before {
-    top: -0.25rem;
-    left: -0.25rem;
+    top: -5.5px;
+    left: -5.5px;
   }
 }

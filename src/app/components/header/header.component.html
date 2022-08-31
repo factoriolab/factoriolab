@@ -1,21 +1,20 @@
-<div class="d-block d-xl-none ms-1 ms-sm-4">
-  <button
-    pButton
-    pRipple
-    type="button"
-    icon="fa-solid fa-bars"
-    (click)="contentSvc.toggleSettings()"
-  ></button>
-</div>
+<button
+  pButton
+  pRipple
+  type="button"
+  class="d-inline-flex d-xl-none p-button-lg p-button-text settings-button m-1"
+  icon="fa-solid fa-bars"
+  (click)="contentSvc.toggleSettings()"
+></button>
 <p-splitButton
   *ngIf="vm$ | async as vm"
-  styleClass="me-1 me-sm-4 me-xl-0"
+  styleClass="p-button-lg me-1 me-sm-4 me-xl-0"
   [icon]="vm.gameInfo.icon | iconSmClass"
   [model]="vm.gameOptions"
   (onClick)="selectGame(vm.gameInfo.route)"
 >
 </p-splitButton>
-<ul class="header-menu px-0 px-sm-4 px-xl-0">
+<ul class="header-menu mb-1 mb-xl-0 px-0 px-sm-4 px-xl-0">
   <li *ngFor="let link of links">
     <a class="w-100" target="_blank" [href]="link.href">
       <button

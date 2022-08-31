@@ -11,11 +11,11 @@
 
 .layout-content {
   margin-left: 320px;
-  padding-top: 5rem;
+  padding-top: 4rem;
 
   @include media-breakpoint-down(xl) {
     margin-left: 0;
-    padding-top: 7rem;
+    padding-top: 6rem;
   }
 }
 
