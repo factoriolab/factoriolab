@@ -523,6 +523,26 @@ describe('RateUtility', () => {
       expect(steps[0].power).toEqual(Rational.from(3840));
     });
 
+    it('should not allow less beacons than beacon count', () => {
+      const steps: Step[] = [
+        {
+          id: 'id',
+          itemId: ItemId.Coal,
+          items: Rational.one,
+          recipeId: RecipeId.Coal,
+          factories: Rational.one,
+          power: Rational.zero,
+        },
+      ];
+      RateUtility.calculateBeacons(
+        steps,
+        Rational.hundred,
+        Mocks.RationalRecipeSettingsInitial,
+        Mocks.AdjustedData
+      );
+      expect(steps[0].beacons).toEqual(Rational.from(8));
+    });
+
     it('should handle undefined step power', () => {
       const steps: Step[] = [
         {

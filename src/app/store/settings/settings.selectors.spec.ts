@@ -497,28 +497,28 @@ describe('Settings Selectors', () => {
       expect(result.pipeIds).toEqual([ItemId.CopperCable, ItemId.Pipe]);
     });
 
-    // it('should calculate missing recipe icons', () => {
-    //   const icons = Mocks.Mod.icons.filter(
-    //     (i) => i.id !== RecipeId.AdvancedOilProcessing
-    //   );
-    //   const mod = {
-    //     ...Mocks.Mod,
-    //     ...{
-    //       icons,
-    //     },
-    //   };
-    //   const result = Selectors.getDataset.projector(
-    //     Mocks.Raw.app,
-    //     mod,
-    //     null,
-    //     null,
-    //     Mocks.Defaults,
-    //     Game.Factorio
-    //   );
-    //   expect(result.iconEntities[RecipeId.AdvancedOilProcessing]).toEqual(
-    //     result.iconEntities[ItemId.HeavyOil]
-    //   );
-    // });
+    it('should calculate missing recipe icons', () => {
+      const icons = Mocks.Mod.icons.filter(
+        (i) => i.id !== RecipeId.AdvancedOilProcessing
+      );
+      const mod = {
+        ...Mocks.Mod,
+        ...{
+          icons,
+        },
+      };
+      const result = Selectors.getDataset.projector(
+        Mocks.Raw.app,
+        mod,
+        null,
+        null,
+        Mocks.Defaults,
+        Game.Factorio
+      );
+      expect(
+        result.recipeEntities[RecipeId.AdvancedOilProcessing].icon
+      ).toEqual(ItemId.HeavyOil);
+    });
 
     it('should handle specified icon files', () => {
       const result = Selectors.getDataset.projector(
@@ -551,6 +551,15 @@ describe('Settings Selectors', () => {
         Game.Factorio
       );
       expect(result.categoryIds.length).toEqual(0);
+    });
+  });
+
+  describe('getOptions', () => {
+    it('should handle no chemical fuels', () => {
+      const data = Mocks.getDataset();
+      data.fuelIds = {};
+      const result = Selectors.getOptions.projector(data);
+      expect(result.chemicalFuels.length).toEqual(0);
     });
   });
 

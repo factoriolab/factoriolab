@@ -21,6 +21,7 @@ import {
   RateType,
   Rational,
   RationalProduct,
+  RationalRecipeSettings as _RationalRecipeSettings,
   RecipeSettings,
   SimplexType,
   Step,
@@ -180,15 +181,22 @@ export const FactorySettingsInitial = Factories.getFactories.projector(
   Defaults,
   Dataset
 );
-export const RecipeSettingsInitial = Recipes.getRecipeSettings.projector(
-  {},
-  FactorySettingsInitial,
-  Dataset
-);
+export function getRecipeSettings(): Entities<RecipeSettings> {
+  Recipes.getRecipeSettings.release();
+  return Recipes.getRecipeSettings.projector(
+    {},
+    FactorySettingsInitial,
+    Dataset
+  );
+}
+export const RecipeSettingsInitial = getRecipeSettings();
 export const RationalRecipeSettings =
   Recipes.getRationalRecipeSettings.projector(RecipeSettingsEntities);
-export const RationalRecipeSettingsInitial =
-  Recipes.getRationalRecipeSettings.projector(RecipeSettingsInitial);
+export function getRationalRecipeSettings(): Entities<_RationalRecipeSettings> {
+  Recipes.getRationalRecipeSettings.release();
+  return Recipes.getRationalRecipeSettings.projector(RecipeSettingsInitial);
+}
+export const RationalRecipeSettingsInitial = getRationalRecipeSettings();
 export const AdjustedData = Recipes.getAdjustedDataset.projector(
   RationalRecipeSettingsInitial,
   ItemSettingsInitial,
