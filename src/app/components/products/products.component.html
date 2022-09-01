@@ -6,7 +6,7 @@
       trackBy: trackSvc.trackById
     "
     class="d-flex align-items-center"
-    [class.mb-4]="!last"
+    [class.mb-3]="!last"
   >
     <div class="p-inputgroup">
       <button
@@ -22,7 +22,7 @@
         pButton
         pRipple
         type="button"
-        class="d-inline-flex d-sm-none"
+        class="d-inline-flex d-sm-none text-truncate"
         [icon]="product.itemId | iconSmClass"
         [pTooltip]="'products.changeItem' | translate"
         (click)="editPicker.clickOpen(vm.data, product.itemId)"
@@ -31,7 +31,7 @@
         pButton
         pRipple
         type="button"
-        class="d-none d-sm-inline-flex"
+        class="d-none d-sm-inline-flex text-truncate"
         [icon]="product.itemId | iconSmClass"
         [label]="vm.data.itemEntities[product.itemId].name"
         [pTooltip]="'products.changeItem' | translate"

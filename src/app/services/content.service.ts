@@ -68,19 +68,6 @@ export class ContentService {
     this.settingsActive$.next(!this.settingsActive$.value);
   }
 
-  // Router loading
-  routerLoading$ = this.router.events.pipe(
-    filter(
-      (e) =>
-        e instanceof NavigationStart ||
-        e instanceof NavigationEnd ||
-        e instanceof NavigationCancel ||
-        e instanceof NavigationError
-    ),
-    map((e) => e instanceof NavigationStart),
-    startWith(false)
-  );
-
   // Watch all language changes
   lang$ = this.translateSvc.onLangChange.pipe(startWith(''));
 

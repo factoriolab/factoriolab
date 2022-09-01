@@ -5,13 +5,16 @@
   [dismissableMask]="true"
   [draggable]="false"
   [resizable]="false"
-  [contentStyle]="{ height: '500px' }"
-  [style]="{ width: '576px' }"
-  [breakpoints]="{ '576px': '100vw' }"
+  [style]="{ width: '400px' }"
+  [breakpoints]="{ '400px': '100vw' }"
   [header]="'columns.header' | translate"
   (onHide)="save()"
 >
-  <p-table responsiveLayout="scroll" [value]="vm.columnOptions">
+  <p-table
+    responsiveLayout="scroll"
+    styleClass="p-datatable-sm"
+    [value]="vm.columnOptions"
+  >
     <ng-template pTemplate="header">
       <tr>
         <th>{{ 'columns.visibility' | translate }}</th>
@@ -38,14 +41,16 @@
         >
           <td>
             <p-inputNumber
-              [(ngModel)]="editValue[column.value].precision"
               [min]="0"
               [size]="1"
               [showButtons]="true"
+              class="w-100"
+              styleClass="w-100"
               [disabled]="!editValue[column.value].show"
+              [(ngModel)]="editValue[column.value].precision"
             ></p-inputNumber>
           </td>
-          <td class="justify-content-center">
+          <td class="text-center">
             <p-checkbox
               [ngModel]="editValue[column.value].precision == null"
               [binary]="true"
@@ -59,7 +64,7 @@
         </ng-container>
         <ng-template #noPrecision>
           <td colspan="3" class="text-center colspan-3">
-            {{ 'columns.notApplicable' | translate }}
+            <div class="p-2">{{ 'columns.notApplicable' | translate }}</div>
           </td>
         </ng-template>
       </tr>

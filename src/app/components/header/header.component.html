@@ -2,13 +2,13 @@
   pButton
   pRipple
   type="button"
-  class="d-inline-flex d-xl-none p-button-lg p-button-text settings-button m-1"
+  class="d-inline-flex d-xl-none p-button-lg settings-button"
   icon="fa-solid fa-bars"
   (click)="contentSvc.toggleSettings()"
 ></button>
 <p-splitButton
   *ngIf="vm$ | async as vm"
-  styleClass="p-button-lg me-1 me-sm-4 me-xl-0"
+  styleClass="p-button-lg"
   [icon]="vm.gameInfo.icon | iconSmClass"
   [model]="vm.gameOptions"
   (onClick)="selectGame(vm.gameInfo.route)"

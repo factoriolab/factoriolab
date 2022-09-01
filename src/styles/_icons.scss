@@ -5,9 +5,9 @@
 
   display: inline-block;
 
-  margin: 1.5px;
-  width: 2rem;
-  height: 2rem;
+  margin: 0.5px;
+  width: 32px;
+  height: 32px;
 
   &::before {
     content: '';
@@ -19,8 +19,8 @@
     transform: scale(0.5);
     transform-origin: 0 0;
 
-    width: 4rem;
-    height: 4rem;
+    width: 64px;
+    height: 64px;
   }
 
   > span {
@@ -44,11 +44,11 @@
 
 .lab-icon-sm {
   margin: 0;
-  width: 21px;
-  height: 21px;
+  width: 19px;
+  height: 19px;
 
   &::before {
-    top: -5.5px;
-    left: -5.5px;
+    top: -6.5px;
+    left: -6.5px;
   }
 }

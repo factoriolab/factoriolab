@@ -6,7 +6,7 @@
   [draggable]="false"
   [resizable]="false"
   appendTo="body"
-  [style]="{ height: '80vh', maxHeight: '600px', width: '458px' }"
+  [style]="{ height: '500px', width: '400px' }"
   [breakpoints]="{ '458px': '100vw' }"
 >
   <ng-template pTemplate="header">
@@ -30,25 +30,24 @@
         [selected]="i === activeIndex"
       >
         <ng-template pTemplate="header">
-          <i [class]="id | iconSmClass"></i>
+          <i [class]="id | iconSmClass: 'category'"></i>
         </ng-template>
         <ng-template pTemplate="content">
-          <div class="test">
-            <div
-              *ngFor="let itemIds of categoryItemRows[id]"
-              class="d-flex flex-wrap"
-            >
-              <ng-container *ngFor="let itemId of itemIds">
-                <button
-                  pButton
-                  pRipple
-                  type="button"
-                  [class.p-button-text]="itemId !== selectedId"
-                  [icon]="itemId | iconSmClass"
-                  (click)="clickItem(itemId)"
-                ></button>
-              </ng-container>
-            </div>
+          <div
+            *ngFor="let itemIds of categoryItemRows[id]"
+            class="d-flex flex-wrap"
+          >
+            <ng-container *ngFor="let itemId of itemIds">
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="me-1 mb-1"
+                [class.p-button-text]="itemId !== selectedId"
+                [icon]="itemId | iconSmClass"
+                (click)="clickItem(itemId)"
+              ></button>
+            </ng-container>
           </div>
         </ng-template>
       </p-tabPanel>

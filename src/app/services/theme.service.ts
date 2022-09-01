@@ -68,6 +68,12 @@ export class ThemeService {
           const icon = data.iconEntities[data.recipeEntities[i].icon!];
           css += `.${i}.recipe::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
         });
+      data.categoryIds
+        .filter((i) => data.categoryEntities[i].icon)
+        .forEach((i) => {
+          const icon = data.iconEntities[data.categoryEntities[i].icon!];
+          css += `.${i}.category::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+        });
       style.innerText = css;
       head.appendChild(style);
     });

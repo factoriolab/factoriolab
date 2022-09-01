@@ -1,17 +1,3 @@
-.p-button {
-  padding: calc(0.5rem - 1px) 1rem;
-}
-
-.p-button.p-button-icon-only {
-  // Original does not account for 1px border
-  padding: calc(0.5rem - 1px) 0;
-}
-
-.p-inputtext {
-  // Original does not account for 1px border
-  padding: calc(0.5rem - 1px);
-}
-
 // InputGroup fixes
 .p-inputgroup {
   > .p-inputwrapper {
@@ -58,14 +44,14 @@
 
 // Imitate .p-float-label without using input field
 .p-static-label {
-  font-size: 0.75rem;
-  margin-left: 0.75rem;
-  padding-bottom: 0.5rem;
+  font-size: 12px;
+  margin-left: 0.5rem;
+  padding-bottom: 0.25rem;
   color: var(--text-color-secondary);
 }
 
 table p-dropdown {
-  max-height: 3rem; // Prevents icon dropdown from expanding table cell size
+  max-height: 35px; // Prevents icon dropdown from expanding table cell size
 }
 
 // Remove table footer style overrides
@@ -73,4 +59,16 @@ table p-dropdown {
   text-align: inherit;
   font-weight: inherit;
   color: inherit;
+}
+
+// Fix width of large icon buttons
+.p-button-lg > .p-button.p-button-icon-only,
+.p-button.p-button-lg.p-button-icon-only {
+  width: 42.5px;
+}
+
+// Button label text should ellipsis
+.p-button > .p-button-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

@@ -1,6 +1,6 @@
 <div class="p-3">
   <div class="d-flex align-items-center justify-content-between">
-    <h2 class="m-0">{{ 'settings.header' | translate }}</h2>
+    <h2>{{ 'settings.header' | translate }}</h2>
     <div>
       <button
         pButton
@@ -27,9 +27,11 @@
   <p-scrollPanel [style]="{ height: '100%' }">
     <div class="p-fluid px-3 overflow-hidden settings-container">
       <div class="mb-2">
-        <h3 [pTooltip]="'settings.savedStatesTooltip' | translate">
-          {{ 'settings.savedStates' | translate }}
-          <i class="fa-solid fa-info-circle"></i>
+        <h3>
+          <span [pTooltip]="'settings.savedStatesTooltip' | translate">
+            {{ 'settings.savedStates' | translate }}
+            <i class="fa-solid fa-info-circle"></i>
+          </span>
         </h3>
         <div class="p-inputgroup">
           <ng-container *ngIf="editState; else selectState">
@@ -222,8 +224,9 @@
                 <div class="p-inputgroup flex-wrap factory-preference">
                   <!-- Remove factory button -->
                   <p-dropdown
-                    *ngIf="index === 0; else factoryGear"
+                    *ngIf="index === 0; else removeButton"
                     appendTo="body"
+                    [filter]="true"
                     scrollHeight="40vh"
                     styleClass="icon"
                     [pTooltip]="'settings.addFactoryTooltip' | translate"
@@ -248,20 +251,22 @@
                       </div>
                     </ng-template>
                   </p-dropdown>
-                  <ng-template #factoryGear>
+                  <ng-template #removeButton>
                     <button
                       pButton
                       pRipple
                       type="button"
-                      icon="fa-solid fa-ellipsis-vertical"
-                      (click)="factoryMenu.toggle($event)"
+                      icon="fa-solid fa-minus"
+                      [pTooltip]="
+                        'settings.removeFactoryPreference' | translate
+                      "
+                      (click)="
+                        removeFactory(
+                          factoryId,
+                          vm.data.defaults?.factoryRankIds
+                        )
+                      "
                     ></button>
-                    <p-menu
-                      #factoryMenu
-                      appendTo="body"
-                      [popup]="true"
-                      [model]="vm.factoryMenuItems[index]"
-                    ></p-menu>
                   </ng-template>
                   <!-- Factory dropdown -->
                   <p-dropdown
@@ -359,7 +364,6 @@
                       <lab-input-number
                         [pTooltip]="'settings.beaconCountTooltip' | translate"
                         tooltipPosition="top"
-                        [hideButtons]="true"
                         [value]="settings.beaconCount"
                         (setValue)="
                           setBeaconCount(
@@ -401,6 +405,24 @@
                       </p-dropdown>
                     </ng-container>
                   </ng-container>
+                  <!-- Move options -->
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    class="ms-auto"
+                    [class.invisible]="vm.factoryMenuItems[index].length === 0"
+                    icon="fa-solid fa-ellipsis-vertical"
+                    [pTooltip]="'settings.moveFactoryPreference' | translate"
+                    (click)="factoryMenu.toggle($event)"
+                  >
+                    <p-menu
+                      #factoryMenu
+                      appendTo="body"
+                      [popup]="true"
+                      [model]="vm.factoryMenuItems[index]"
+                    ></p-menu>
+                  </button>
                 </div>
               </ng-container>
             </ng-container>
@@ -417,11 +439,11 @@
           ></p-checkbox>
         </div>
         <div *ngIf="vm.settings.beaconReceivers" class="py-2">
-          <label class="p-static-label" for="display-rate">{{
+          <label class="p-static-label" for="beacon-receivers">{{
             'settings.averageBeaconReceivers' | translate
           }}</label>
           <lab-input-number
-            inputId="display-rate"
+            inputId="beacon-receivers"
             [pTooltip]="'settings.averageBeaconReceiversTooltip' | translate"
             [value]="vm.settings.beaconReceivers"
             (setValue)="setBeaconReceivers($event)"

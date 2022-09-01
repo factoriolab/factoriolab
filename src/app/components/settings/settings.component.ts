@@ -138,14 +138,7 @@ export class SettingsComponent implements OnInit {
   buildFactoryMenus(factoryRows: string[], data: Dataset): MenuItem[][] {
     return factoryRows.map((factoryId, index): MenuItem[] => {
       if (!factoryId) return [];
-      const items: MenuItem[] = [
-        {
-          label: this.translateSvc.instant('settings.remove'),
-          icon: 'fa-solid fa-minus',
-          command: () =>
-            this.removeFactory(factoryId, data.defaults?.factoryRankIds),
-        },
-      ];
+      const items: MenuItem[] = [];
       if (index > 1)
         items.push({
           label: this.translateSvc.instant('settings.moveUp'),

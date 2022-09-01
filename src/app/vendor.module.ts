@@ -13,6 +13,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { RippleModule } from 'primeng/ripple';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { TableModule } from 'primeng/table';
@@ -34,6 +35,7 @@ const modules = [
   MenuModule,
   MultiSelectModule,
   ProgressSpinnerModule,
+  RippleModule,
   ScrollPanelModule,
   SplitButtonModule,
   TableModule,
