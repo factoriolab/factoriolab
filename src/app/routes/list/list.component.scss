@@ -1,13 +1,13 @@
 .links {
   // Tree container
-  height: 4rem;
+  height: 50px;
 
   // One width segment of the tree
   .connect {
     position: relative;
 
     height: 100%;
-    margin-left: 1rem;
+    margin-left: 16px;
 
     // Segment contains trail
     &.last,
@@ -17,20 +17,20 @@
 
     // Segment ends at this row
     &.last:not(.trail) {
-      margin-bottom: 2rem;
-      height: 2rem;
+      margin-bottom: 25px;
+      height: 25px;
     }
 
     // Segments should pad between
     & + .connect {
-      margin-left: 2rem;
+      margin-left: 32px;
     }
   }
 
   .indent {
     margin-left: 0;
     border-top: 2px dotted var(--text-color-secondary);
-    width: 1rem;
+    width: 16px;
   }
 
   .icon {
@@ -38,8 +38,8 @@
     align-items: center;
     justify-content: center;
 
-    width: 2rem;
-    height: 2rem;
+    width: 32px;
+    height: 32px;
   }
 }
 
@@ -56,7 +56,7 @@
 
   // Highlight modules to right of the hovered module
   .module-dropdown:not(.last) {
-    margin-right: -1rem;
+    margin-right: -0.5rem;
 
     .p-dropdown {
       border-right-color: transparent;

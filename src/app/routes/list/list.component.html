@@ -10,7 +10,7 @@
     <ng-template pTemplate="header">
       <tr>
         <!-- Row actions -->
-        <th>
+        <th class="w-0">
           <button
             pButton
             pRipple
@@ -36,7 +36,7 @@
               pButton
               pRipple
               type="button"
-              class="ms-3 p-button-outlined p-button-rounded"
+              class="ms-2 p-button-outlined p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.itemsUndoTooltip' | translate"
               (click)="resetIgnores()"
@@ -52,7 +52,7 @@
               pButton
               pRipple
               type="button"
-              class="ms-3 p-button-outlined p-button-rounded"
+              class="ms-2 p-button-outlined p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.beltsUndoTooltip' | translate"
               (click)="resetBelts()"
@@ -70,7 +70,7 @@
               pButton
               pRipple
               type="button"
-              class="ms-3 p-button-outlined p-button-rounded"
+              class="ms-2 p-button-outlined p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.wagonsUndoTooltip' | translate"
               (click)="resetWagons()"
@@ -86,7 +86,7 @@
               pButton
               pRipple
               type="button"
-              class="ms-3 p-button-outlined p-button-rounded"
+              class="ms-2 p-button-outlined p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.factoriesUndoTooltip' | translate"
               (click)="resetFactories()"
@@ -103,7 +103,7 @@
               pButton
               pRipple
               type="button"
-              class="ms-3 p-button-outlined p-button-rounded"
+              class="ms-2 p-button-outlined p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.beaconsUndoTooltip' | translate"
               (click)="resetBeacons()"
@@ -147,7 +147,7 @@
     <ng-template pTemplate="body" let-step let-expanded="expanded">
       <tr>
         <!-- Expand row -->
-        <td [id]="step.id">
+        <td [id]="step.id" class="w-0">
           <div class="d-flex">
             <button
               pButton
@@ -210,7 +210,7 @@
               pButton
               pRipple
               type="button"
-              class="hover-action p-button-rounded p-button-text"
+              class="hover-action p-button-text"
               [class.hover-active]="vm.itemSettings[step.itemId].ignore"
               [icon]="step.itemId | iconSmClass"
               [pTooltip]="vm.data.itemEntities[step.itemId].name"

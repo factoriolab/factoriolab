@@ -1,7 +1,10 @@
 table.result-info {
+  border-collapse: collapse;
+
   td,
   th {
     padding: 0.5rem;
+    border-bottom: 1px solid var(--surface-border);
   }
 }
 

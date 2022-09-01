@@ -1,5 +1,5 @@
 <ng-container *ngIf="vm$ | async as vm">
-  <table class="result-info my-3">
+  <table class="result-info my-2">
     <tr>
       <th colspan="2">{{ 'matrix.statistics' | translate }}</th>
     </tr>
@@ -27,7 +27,7 @@
       </td>
     </tr>
   </table>
-  <table class="result-info my-3" *ngIf="vm.result.A">
+  <table class="result-info my-2" *ngIf="vm.result.A">
     <tr>
       <th colspan="2">
         <div class="d-flex align-items-center justify-content-between">

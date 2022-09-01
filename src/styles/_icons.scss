@@ -5,7 +5,7 @@
 
   display: inline-block;
 
-  margin: 0.5px;
+  margin: 1px;
   width: 32px;
   height: 32px;
 
@@ -44,11 +44,11 @@
 
 .lab-icon-sm {
   margin: 0;
-  width: 19px;
-  height: 19px;
+  width: 20px;
+  height: 20px;
 
   &::before {
-    top: -6.5px;
-    left: -6.5px;
+    top: -6px;
+    left: -6px;
   }
 }
