@@ -16,9 +16,17 @@
         pButton
         pRipple
         type="button"
+        class="p-button-rounded p-button-text d-inline-flex d-none d-xl-inline-flex"
+        icon="fa-solid fa-xmark"
+        (click)="contentSvc.toggleSettingsXl()"
+      ></button>
+      <button
+        pButton
+        pRipple
+        type="button"
         class="p-button-rounded p-button-text d-inline-flex d-sm-none"
         icon="fa-solid fa-xmark"
-        (click)="contentSvc.toggleSettings()"
+        (click)="contentSvc.toggleSettingsSm()"
       ></button>
     </div>
   </div>
@@ -115,66 +123,113 @@
             >
             </p-dropdown>
             <label for="game">{{ 'settings.game' | translate }}</label>
+            <ng-container *ngIf="vm.data.game !== Game.Factorio">
+              <small
+                *ngFor="let mod of vm.data.version | keyvalue"
+                class="position-absolute end-0 bottom-100 me-1 mb-1"
+              >
+                {{ mod.value }}
+              </small>
+            </ng-container>
           </span>
         </div>
-        <div *ngIf="vm.data.game === Game.Factorio" class="mt-3 py-2">
-          <span
-            class="p-float-label"
-            [pTooltip]="'settings.modSetTooltip' | translate"
-          >
+        <div *ngIf="vm.data.game === Game.Factorio" class="pb-2">
+          <label class="p-static-label">{{
+            'settings.modSet' | translate
+          }}</label>
+          <span class="p-inputgroup">
             <p-dropdown
               inputId="mod"
+              styleClass="w-100"
               [filter]="true"
+              [pTooltip]="'settings.modSetTooltip' | translate"
               [ngModel]="vm.settings.modId"
               [options]="vm.modOptions"
               (onChange)="setMod($event.value)"
             >
             </p-dropdown>
-            <label for="mod">{{ 'settings.modSet' | translate }}</label>
-          </span>
-        </div>
-        <div>
-          <label class="p-static-label">{{
-            'settings.modVersions' | translate
-          }}</label>
-          <p-scrollPanel
-            *ngIf="vm.data.version"
-            [style]="{ maxHeight: '200px' }"
-            [pTooltip]="'settings.modVersionsTooltip' | translate"
-          >
-            <ul class="ps-2 mb-0">
-              <li
-                class="d-flex justify-content-between"
-                *ngFor="let mod of vm.data.version | keyvalue"
+            <button
+              pButton
+              pRipple
+              icon="fa-solid fa-info"
+              [pTooltip]="'settings.modVersions' | translate"
+              (click)="versionsVisible = true"
+            >
+              <p-dialog
+                [(visible)]="versionsVisible"
+                appendTo="body"
+                [modal]="true"
+                [dismissableMask]="true"
+                [draggable]="false"
+                [resizable]="false"
+                [style]="{ width: '400px', maxHeight: '500px' }"
+                [breakpoints]="{ '400px': '100vw' }"
+                [header]="'settings.modVersions' | translate"
               >
-                <span>{{ mod.key }}</span
-                ><span>{{ mod.value }}</span>
-              </li>
-            </ul>
-          </p-scrollPanel>
+                <p-table
+                  responsiveLayout="scroll"
+                  styleClass="p-datatable-sm"
+                  [value]="vm.data.version | keyvalue"
+                >
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>{{ 'settings.mod' | translate }}</th>
+                      <th>{{ 'settings.version' | translate }}</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-mod>
+                    <tr>
+                      <td>{{ mod.key }}</td>
+                      <td>{{ mod.value }}</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+                <ng-template pTemplate="footer">
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    class="p-button-text"
+                    icon="fa-solid fa-check"
+                    [label]="'ok' | translate"
+                    (click)="versionsVisible = false"
+                  ></button>
+                </ng-template>
+              </p-dialog>
+            </button>
+          </span>
         </div>
         <div class="mt-3 py-2">
           <span
             class="p-float-label"
-            [pTooltip]="'settings.disabledRecipesTooltip' | translate"
+            [pTooltip]="'settings.optionalRecipesTooltip' | translate"
           >
             <p-multiSelect
-              inputId="disabled-recipes"
+              inputId="optional-recipes"
+              appendTo="body"
               scrollHeight="40vh"
               [virtualScroll]="true"
               [virtualScrollItemSize]="48"
-              [ngModel]="vm.settings.disabledRecipeIds"
+              [panelStyle]="{ width: '1rem' }"
+              panelStyleClass="mw-100"
+              [ngModel]="
+                vm.settings.disabledRecipeIds
+                  | invertArray: vm.data.complexRecipeIds
+              "
               [options]="vm.options.complexRecipes"
               (onChange)="
                 setDisabledRecipes(
-                  $event.value,
+                  displaySvc.invertArray(
+                    $event.value,
+                    vm.data.complexRecipeIds
+                  ),
                   vm.data.defaults?.disabledRecipeIds
                 )
               "
             >
               <ng-template pTemplate="selectedItems" let-items>
                 {{ items?.length ?? 0 }}
-                {{ 'settings.recipesDisabled' | translate }}
+                {{ 'settings.recipesEnabled' | translate }}
               </ng-template>
               <ng-template pTemplate="item" let-item>
                 <div class="d-flex align-items-center">
@@ -185,15 +240,15 @@
                 </div>
               </ng-template>
             </p-multiSelect>
-            <label for="disabled-recipes">{{
-              'settings.disabledRecipes' | translate
+            <label for="optional-recipes">{{
+              'settings.optionalRecipes' | translate
             }}</label>
           </span>
         </div>
       </div>
       <div class="mb-2">
         <h3>{{ 'settings.factory' | translate }}</h3>
-        <div class="mt-3 py-2">
+        <div class="mt-3 py-2 mb-1">
           <span
             class="p-float-label"
             [pTooltip]="'settings.presetTooltip' | translate"
@@ -427,7 +482,6 @@
               </ng-container>
             </ng-container>
           </ng-container>
-          <div class="py-2"></div>
         </ng-container>
         <div *ngIf="vm.data.game === Game.Factorio" class="mt-2 py-2">
           <p-checkbox
@@ -438,12 +492,13 @@
             (onChange)="toggleBeaconReceivers($event.checked)"
           ></p-checkbox>
         </div>
-        <div *ngIf="vm.settings.beaconReceivers" class="py-2">
+        <div *ngIf="vm.settings.beaconReceivers" class="pb-2">
           <label class="p-static-label" for="beacon-receivers">{{
             'settings.averageBeaconReceivers' | translate
           }}</label>
           <lab-input-number
             inputId="beacon-receivers"
+            class="w-100"
             [pTooltip]="'settings.averageBeaconReceiversTooltip' | translate"
             [value]="vm.settings.beaconReceivers"
             (setValue)="setBeaconReceivers($event)"

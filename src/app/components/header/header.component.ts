@@ -32,11 +32,16 @@ interface MenuLink {
 })
 export class HeaderComponent implements OnInit {
   @HostBinding('class.sticky') @Input() sticky = false;
+  @HostBinding('class.settings-xl-hidden') @Input() settingsXlHidden = false;
 
-  vm$ = this.store.select(Settings.getGame).pipe(
-    map((game) => ({
+  vm$ = combineLatest([
+    this.store.select(Settings.getGame),
+    this.contentSvc.settingsXlHidden$,
+  ]).pipe(
+    map(([game, settingsXlHidden]) => ({
       gameInfo: gameInfo[game],
       gameOptions: this.buildGameOptions(game),
+      settingsXlHidden,
     }))
   );
 

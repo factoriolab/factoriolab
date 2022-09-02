@@ -38,8 +38,10 @@
   }
 }
 
-.p-dropdown-panel .p-dropdown-items {
-  max-width: 100%; // Prevent horizontal scroll in virtual scroll dropdown
+// Prevent horizontal scroll in virtual scroll dropdown
+.p-dropdown-panel .p-dropdown-items,
+.p-multiselect-panel .p-multiselect-items {
+  max-width: 100%;
 }
 
 // Imitate .p-float-label without using input field

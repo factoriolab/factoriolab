@@ -31,18 +31,30 @@ export class AppComponent implements AfterViewInit {
     this.store.select(Settings.getGame),
     this.store.select(Settings.getMod),
     this.store.select(Products.getMatrixResult),
-    this.contentSvc.settingsActive$,
+    this.contentSvc.settingsSmActive$,
+    this.contentSvc.settingsXlHidden$,
     this.contentSvc.scrollTop$,
     this.errorSvc.message$,
   ]).pipe(
-    map(([game, mod, result, settingsActive, scrollTop, errorMsg]) => ({
-      game,
-      mod,
-      result,
-      settingsActive,
-      scrollTop,
-      errorMsg,
-    }))
+    map(
+      ([
+        game,
+        mod,
+        result,
+        settingsSmActive,
+        settingsXlHidden,
+        scrollTop,
+        errorMsg,
+      ]) => ({
+        game,
+        mod,
+        result,
+        settingsSmActive,
+        settingsXlHidden,
+        scrollTop,
+        errorMsg,
+      })
+    )
   );
 
   version = `${APP} ${environment.version}`;

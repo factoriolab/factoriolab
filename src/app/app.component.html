@@ -1,14 +1,23 @@
 <ng-container *ngIf="vm$ | async as vm">
-  <lab-header [sticky]="vm.scrollTop > 16"></lab-header>
+  <lab-header
+    [sticky]="vm.scrollTop > 16"
+    [settingsXlHidden]="vm.settingsXlHidden"
+  ></lab-header>
 
   <ng-container *ngIf="vm.errorMsg == null; else errorDialog">
-    <lab-settings [active]="vm.settingsActive"></lab-settings>
+    <lab-settings
+      [active]="vm.settingsSmActive"
+      [hidden]="vm.settingsXlHidden"
+    ></lab-settings>
     <div
       class="layout-mask"
-      [class.active]="vm.settingsActive"
-      (click)="contentSvc.toggleSettings()"
+      [class.active]="vm.settingsSmActive"
+      (click)="contentSvc.toggleSettingsSm()"
     ></div>
-    <div class="layout-content">
+    <div
+      class="layout-content"
+      [class.settings-xl-hidden]="vm.settingsXlHidden"
+    >
       <main class="px-1 px-sm-4 py-4">
         <ng-container *ngIf="vm.mod != null; else loading">
           <lab-products></lab-products>

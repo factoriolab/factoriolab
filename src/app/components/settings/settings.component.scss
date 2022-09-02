@@ -26,6 +26,12 @@ $width: 320px;
       transform: translate(0);
     }
   }
+
+  @include media-breakpoint-up(xl) {
+    &.hidden {
+      transform: translate(-100%);
+    }
+  }
 }
 
 /** Avoid changing width to accomodate scrollbar */

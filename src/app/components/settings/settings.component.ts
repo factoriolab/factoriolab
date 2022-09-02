@@ -38,7 +38,7 @@ import {
   Theme,
   themeOptions,
 } from '~/models';
-import { ContentService, RouterService } from '~/services';
+import { ContentService, DisplayService, RouterService } from '~/services';
 import { App, Factories, LabState, Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
@@ -50,6 +50,7 @@ import { BrowserUtility } from '~/utilities';
 })
 export class SettingsComponent implements OnInit {
   @HostBinding('class.active') @Input() active = false;
+  @HostBinding('class.hidden') @Input() hidden = false;
 
   vm$ = combineLatest([
     this.store.select(Factories.getFactories),
@@ -98,6 +99,7 @@ export class SettingsComponent implements OnInit {
   state = '';
   stateCtrl = new FormControl('', Validators.required);
   editState = false;
+  versionsVisible = false;
 
   displayRateOptions = displayRateOptions;
   gameOptions = gameOptions;
@@ -117,6 +119,7 @@ export class SettingsComponent implements OnInit {
 
   constructor(
     public contentSvc: ContentService,
+    public displaySvc: DisplayService,
     private router: Router,
     private store: Store<LabState>,
     private translateSvc: TranslateService,

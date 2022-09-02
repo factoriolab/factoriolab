@@ -10,6 +10,9 @@
   left: 320px;
   z-index: 2;
 
+  transition: all 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99);
+  transition-property: width, left;
+
   width: calc(100% - 320px);
   height: 4rem;
   padding: 0 1.5rem;
@@ -30,6 +33,14 @@
 
   @include media-breakpoint-down(sm) {
     padding: 0 0.25rem;
+  }
+
+  @include media-breakpoint-up(xl) {
+    &.settings-xl-hidden {
+      left: 0;
+
+      width: 100%;
+    }
   }
 }
 

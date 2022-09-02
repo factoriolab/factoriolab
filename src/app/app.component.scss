@@ -10,12 +10,20 @@
 }
 
 .layout-content {
+  transition: margin 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99);
+
   margin-left: 320px;
   padding-top: 4rem;
 
   @include media-breakpoint-down(xl) {
     margin-left: 0;
     padding-top: 6rem;
+  }
+
+  @include media-breakpoint-up(xl) {
+    &.settings-xl-hidden {
+      margin-left: 0;
+    }
   }
 }
 
