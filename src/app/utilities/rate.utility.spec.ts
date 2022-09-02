@@ -18,6 +18,7 @@ describe('RateUtility', () => {
         itemId: 'iron-chest',
         recipeId: 'iron-chest',
         items: Rational.from(30),
+        output: Rational.from(30),
         factories: Rational.from(12, 7),
         power: Rational.from(42475, 7),
         pollution: Rational.from(94, 175),
@@ -127,7 +128,8 @@ describe('RateUtility', () => {
         {
           id: '0',
           itemId: ItemId.Uranium235,
-          items: new Rational(BigInt(30)),
+          items: Rational.from(30),
+          output: Rational.from(30),
         },
       ]);
     });
@@ -150,6 +152,7 @@ describe('RateUtility', () => {
           id: '0',
           itemId: ItemId.Coal,
           items: Rational.one,
+          output: Rational.one,
         },
       ]);
     });
@@ -177,6 +180,7 @@ describe('RateUtility', () => {
           id: '0',
           itemId: Mocks.Item2.id,
           items: Rational.from(30),
+          output: Rational.from(30),
         },
       ]);
     });
@@ -209,6 +213,7 @@ describe('RateUtility', () => {
           id: '0',
           itemId: ItemId.Coal,
           items: Rational.one,
+          output: Rational.one,
           recipeId: RecipeId.Coal,
           factories: Rational.from(10, 9),
           parents: { [RecipeId.Coal]: Rational.from(1, 9) },
@@ -230,6 +235,7 @@ describe('RateUtility', () => {
           id: '0',
           itemId: ItemId.IronOre,
           items: Rational.one,
+          output: Rational.one,
           factories: Rational.from(400, 1183),
           power: Rational.from(324000, 1183),
           pollution: Rational.from(60, 91),

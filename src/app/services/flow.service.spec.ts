@@ -39,11 +39,13 @@ describe('FlowService', () => {
             id: '1',
             itemId: ItemId.PetroleumGas,
             items: Rational.one,
+            output: Rational.one,
             recipeId: RecipeId.AdvancedOilProcessing,
             factories: Rational.one,
             outputs: {
               [ItemId.HeavyOil]: Rational.one,
               [ItemId.LightOil]: Rational.one,
+              [ItemId.PetroleumGas]: Rational.one,
             },
           },
           {
@@ -66,8 +68,8 @@ describe('FlowService', () => {
         themeMap[Theme.Light]
       );
 
-      expect(result.nodes.length).toEqual(7);
-      expect(result.links.length).toEqual(5);
+      expect(result.nodes.length).toEqual(5);
+      expect(result.links.length).toEqual(4);
     });
   });
 });

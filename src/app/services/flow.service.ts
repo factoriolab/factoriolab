@@ -201,14 +201,12 @@ export class FlowService {
             }
           }
 
-          if (itemAmount.gt(step.surplus || Rational.zero)) {
+          if (step.output) {
             // CREATE NODE: Output
             flow.nodes.push({
               id: `o|${step.itemId}`,
               name: item.name,
-              text: `${itemAmount
-                .sub(step.surplus || Rational.zero)
-                .toString(itemPrec)}${rateLbl}`,
+              text: `${step.output.toString(itemPrec)}${rateLbl}`,
               color: theme.node.output.color,
               background: theme.node.output.background,
             });
@@ -220,8 +218,7 @@ export class FlowService {
                     source: `r|${sourceStep.recipeId}`,
                     target: `o|${step.itemId}`,
                     name: item.name,
-                    text: `${itemAmount
-                      .sub(step.surplus || Rational.zero)
+                    text: `${step.output
                       .mul(sourceStep.outputs[step.itemId])
                       .toString(itemPrec)}${rateLbl}`,
                   });

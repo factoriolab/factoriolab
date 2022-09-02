@@ -67,6 +67,8 @@ export class RateUtility {
 
     if (parentId != null) {
       this.addParentValue(step, parentId, rate);
+    } else {
+      step.output = step.items;
     }
 
     if (recipe) {

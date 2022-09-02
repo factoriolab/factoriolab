@@ -5,6 +5,7 @@ export interface Step {
   id: string;
   itemId?: string;
   items?: Rational;
+  output?: Rational;
   surplus?: Rational;
   belts?: Rational;
   wagons?: Rational;
