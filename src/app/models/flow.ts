@@ -2,9 +2,9 @@ import { Recipe } from './data';
 import { Theme } from './enum/theme';
 
 export enum NodeType {
-  Input = 'input', // Use secondary button styles
+  Input = 'input', // Use info/secondary button styles
   Recipe = 'recipe', // Use primary button styles
-  Surplus = 'surplus', // Use warning button styles
+  Surplus = 'surplus', // Use warning/danger button styles
   Output = 'output', // Use success button styles
 }
 
@@ -20,20 +20,20 @@ export interface FlowStyle {
 
 const darkTheme: FlowStyle = {
   node: {
-    [NodeType.Input]: { color: '#1C2127', background: '#CBD5E1' },
-    [NodeType.Recipe]: { color: '#1C2127', background: '#93C5FD' },
-    [NodeType.Surplus]: { color: '#1C2127', background: '#FCD34D' },
-    [NodeType.Output]: { color: '#1C2127', background: '#86EFAC' },
+    [NodeType.Input]: { color: '#121212', background: '#81D4FA' },
+    [NodeType.Recipe]: { color: '#212529', background: '#FFD54F' },
+    [NodeType.Surplus]: { color: '#121212', background: '#F48FB1' },
+    [NodeType.Output]: { color: '#121212', background: '#C5E1A5' },
   },
   edge: 'rgba(255, 255, 255, 0.87)',
 };
 
 const lightTheme: FlowStyle = {
   node: {
-    [NodeType.Input]: { color: '#FFFFFF', background: '#64748B' },
-    [NodeType.Recipe]: { color: '#FFFFFF', background: '#3B82F6' },
-    [NodeType.Surplus]: { color: '#FFFFFF', background: '#F59E0B' },
-    [NodeType.Output]: { color: '#FFFFFF', background: '#22C55E' },
+    [NodeType.Input]: { color: '#FFFFFF', background: '#78909C' },
+    [NodeType.Recipe]: { color: '#FFFFFF', background: '#2196F3' },
+    [NodeType.Surplus]: { color: '#FFFFFF', background: '#D32F2F' },
+    [NodeType.Output]: { color: '#FFFFFF', background: '#689F38' },
   },
   edge: '#495057',
 };
@@ -56,8 +56,7 @@ export interface FlowBase {
 
 export interface Node extends FlowBase {
   id: string;
-  color: string;
-  background: string;
+  type: NodeType;
   recipe?: Recipe;
   factories?: string;
   factoryId?: string;

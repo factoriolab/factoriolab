@@ -57,13 +57,14 @@ export class FlowComponent implements AfterViewInit {
             )}</div>`;
           }
         }
+        const nodeTheme = flowData.theme.node[n.type];
         return {
           id: n.id,
           label: `<b>${n.name}</b>\n${n.text}`,
           title: el,
-          color: n.background,
+          color: nodeTheme.background,
           font: {
-            color: n.color,
+            color: nodeTheme.color,
           },
         };
       })

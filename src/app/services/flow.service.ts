@@ -10,6 +10,7 @@ import {
   FlowData,
   FlowStyle,
   ItemSettings,
+  NodeType,
   Rational,
   RecipeSettings,
   Step,
@@ -90,17 +91,15 @@ export class FlowService {
 
         if (settings.factoryId != null) {
           const factory = data.itemEntities[settings.factoryId];
-          const nodeTheme =
-            Object.keys(recipe.in).length === 0
-              ? theme.node.input
-              : theme.node.recipe;
           // CREATE NODE: Standard recipe
           flow.nodes.push({
             id: `r|${step.recipeId}`,
+            type:
+              Object.keys(recipe.in).length === 0
+                ? NodeType.Input
+                : NodeType.Recipe,
             name: recipe.name,
             text: `${step.factories.toString(itemPrec)} ${factory.name}`,
-            color: nodeTheme.color,
-            background: nodeTheme.background,
             recipe,
             factoryId: settings.factoryId,
             factories: step.factories.toString(
@@ -116,10 +115,9 @@ export class FlowService {
           // CREATE NODE: Surplus
           flow.nodes.push({
             id: `s|${step.itemId}`,
+            type: NodeType.Surplus,
             name: item.name,
             text: `${step.surplus.toString(itemPrec)}${rateLbl}`,
-            color: theme.node.surplus.color,
-            background: theme.node.surplus.background,
           });
           // Links to surplus node
           for (const sourceStep of steps) {
@@ -193,10 +191,9 @@ export class FlowService {
               // CREATE NODE: Input
               flow.nodes.push({
                 id: `i|${step.itemId}`,
+                type: NodeType.Input,
                 name: item.name,
                 text: `${inputAmount.toString(itemPrec)}${rateLbl}`,
-                color: theme.node.output.color,
-                background: theme.node.input.background,
               });
             }
           }
@@ -205,10 +202,9 @@ export class FlowService {
             // CREATE NODE: Output
             flow.nodes.push({
               id: `o|${step.itemId}`,
+              type: NodeType.Output,
               name: item.name,
               text: `${step.output.toString(itemPrec)}${rateLbl}`,
-              color: theme.node.output.color,
-              background: theme.node.output.background,
             });
             for (const sourceStep of steps) {
               if (sourceStep.recipeId && sourceStep.outputs) {
