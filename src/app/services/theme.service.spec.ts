@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 import { first } from 'rxjs';
 
-import { ItemId, Mocks, TestModule } from 'src/tests';
+import { CategoryId, ItemId, Mocks, TestModule } from 'src/tests';
 import { Theme } from '~/models';
 import { Preferences, Settings } from '~/store';
 import { ThemeService } from './theme.service';
@@ -18,6 +18,7 @@ describe('ThemeService', () => {
     // Set up an item icon override to be included
     const data = Mocks.getDataset();
     data.itemEntities[ItemId.Coal].icon = 'coal';
+    data.categoryEntities[CategoryId.Combat].icon = 'pistol';
     mockStore.overrideSelector(Settings.getDataset, data);
     mockStore.refreshState();
     service.initialize();

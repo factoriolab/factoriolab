@@ -37,12 +37,11 @@ describe('ContentService', () => {
     });
   });
 
-  describe('routerLoading$', () => {
-    it('should track router loading states', async () => {
-      const values: boolean[] = [];
-      service.routerLoading$.subscribe((v) => values.push(v));
-      await router.navigateByUrl('/');
-      expect(values).toEqual([false, true, false]);
+  describe('toggleSettingsXl', () => {
+    it('should switch the settings (xl) hidden state', () => {
+      const value = service.settingsXlHidden$.value;
+      service.toggleSettingsXl();
+      expect(service.settingsXlHidden$.value).toEqual(!value);
     });
   });
 });

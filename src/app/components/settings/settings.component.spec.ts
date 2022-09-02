@@ -74,14 +74,11 @@ describe('SettingsComponent', () => {
       );
       expect(result.length).toEqual(4);
       const middle = result[2];
-      spyOn(component, 'removeFactory');
-      middle[0].command!();
-      expect(component.removeFactory).toHaveBeenCalled();
       spyOn(component, 'raiseFactory');
-      middle[1].command!();
+      middle[0].command!();
       expect(component.raiseFactory).toHaveBeenCalled();
       spyOn(component, 'lowerFactory');
-      middle[2].command!();
+      middle[1].command!();
       expect(component.lowerFactory).toHaveBeenCalled();
     });
   });

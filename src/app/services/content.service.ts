@@ -62,11 +62,11 @@ export class ContentService {
   translateItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(undefined);
 
   // Header
-  settingsSmActive$ = new BehaviorSubject(false);
+  settingsActive$ = new BehaviorSubject(false);
   settingsXlHidden$ = new BehaviorSubject(false);
 
-  toggleSettingsSm(): void {
-    this.settingsSmActive$.next(!this.settingsSmActive$.value);
+  toggleSettings(): void {
+    this.settingsActive$.next(!this.settingsActive$.value);
   }
 
   toggleSettingsXl(): void {

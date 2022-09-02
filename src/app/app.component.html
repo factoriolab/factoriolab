@@ -6,13 +6,13 @@
 
   <ng-container *ngIf="vm.errorMsg == null; else errorDialog">
     <lab-settings
-      [active]="vm.settingsSmActive"
+      [active]="vm.settingsActive"
       [hidden]="vm.settingsXlHidden"
     ></lab-settings>
     <div
       class="layout-mask"
-      [class.active]="vm.settingsSmActive"
-      (click)="contentSvc.toggleSettingsSm()"
+      [class.active]="vm.settingsActive"
+      (click)="contentSvc.toggleSettings()"
     ></div>
     <div
       class="layout-content"
