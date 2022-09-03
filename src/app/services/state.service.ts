@@ -22,6 +22,8 @@ export class StateService {
   ) {}
 
   initialize(): void {
+    this.gaSvc.event('version', environment.version);
+
     this.store.select(Settings.getGame).subscribe((game) => {
       this.gaSvc.event('set_game', game);
       this.meta.updateTag({
