@@ -67,9 +67,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   title = 'Factory Calculator';
   homeHref: string | undefined;
   showSettings = false;
-  poll = 'https://www.survey-maker.com/Q62LJFYVL';
-  pollKey = 'poll1';
-  showPoll = false;
+  poll = 'https://factoriolab.github.io/next';
+  pollKey = 'poll2';
+  showPoll = true;
   version = `${APP} ${environment.version}`;
 
   ItemId = ItemId;
