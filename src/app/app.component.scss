@@ -96,6 +96,9 @@ main {
 
 .poll {
   width: fit-content;
+  a {
+    text-decoration: none;
+  }
 }
 
 .buttons {
@@ -105,4 +108,3 @@ main {
     margin-left: 0.5rem;
   }
 }
-
