@@ -98,9 +98,8 @@ describe('SimplexUtility', () => {
     inputIds: [],
   });
 
-  beforeEach(async () => {
+  beforeEach(() => {
     SimplexUtility.cache = {};
-    await loadModule('node_modules/glpk-wasm/dist/glpk.all.wasm');
   });
 
   describe('solve', () => {
@@ -137,38 +136,6 @@ describe('SimplexUtility', () => {
         steps: Mocks.Steps,
         resultType: MatrixResultType.Skipped,
       });
-    });
-
-    it('should handle failure of simplex method', () => {
-      spyOn(SimplexUtility, 'getState').and.returnValue(true as any);
-      spyOn(SimplexUtility, 'getSolution').and.returnValue(
-        getResult(MatrixResultType.Failed)
-      );
-      spyOn(console, 'error');
-      spyOn(window, 'alert');
-      expect(
-        SimplexUtility.solve(
-          Mocks.Steps,
-          {},
-          [],
-          Rational.zero,
-          Rational.zero,
-          SimplexType.JsBigIntRational,
-          Mocks.AdjustedData
-        )
-      ).toEqual({
-        steps: Mocks.Steps,
-        resultType: MatrixResultType.Failed,
-        pivots: 1,
-        time: 2,
-        A: [],
-        O: [],
-        itemIds: [],
-        recipeIds: [],
-        inputIds: [],
-      });
-      expect(console.error).toHaveBeenCalled();
-      expect(window.alert).toHaveBeenCalled();
     });
 
     it('should handle timeout and quit in simplex method', () => {
@@ -589,6 +556,13 @@ describe('SimplexUtility', () => {
       );
       expect(result.resultType).toEqual(MatrixResultType.Cached);
     });
+
+    it('should handle glpk failure', () => {
+      spyOn(SimplexUtility, 'glpk').and.returnValue({ error: true } as any);
+      const state = getState();
+      const result = SimplexUtility.getSolution(state);
+      expect(result.resultType).toEqual(MatrixResultType.Failed);
+    });
   });
 
   describe('glpk', () => {
@@ -612,7 +586,10 @@ describe('SimplexUtility', () => {
     });
 
     it('should handle glpk failure', () => {
-      spyOn(SimplexUtility, 'glpkSimplex').and.returnValue('failure');
+      spyOn(SimplexUtility, 'glpkSimplex').and.returnValue([
+        'failure',
+        'infeasible',
+      ]);
       const state = getState();
       const result = SimplexUtility.glpk(state);
       expect(result.returnCode).toEqual('failure');
@@ -750,6 +727,8 @@ describe('SimplexUtility', () => {
     it('should return presolve result', () => {
       const result = SimplexUtility.simplexType([[]], SimplexType.WasmFloat64, {
         returnCode: 'ok',
+        status: 'optimal',
+        error: false,
         time: 0,
         O: [],
       });

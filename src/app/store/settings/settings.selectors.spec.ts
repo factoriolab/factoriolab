@@ -64,18 +64,16 @@ describe('Settings Selectors', () => {
         Preferences.initialColumnsState
       );
       expect(result[Column.Wagons].show).toBeTrue();
-      expect(result[Column.Overclock].show).toBeFalse();
       expect(result[Column.Beacons].show).toBeTrue();
       expect(result[Column.Pollution].show).toBeTrue();
     });
 
-    it('should override columns for Dyson Sphere Program', () => {
+    it('should override columns for Captain of Industry', () => {
       const result = Selectors.getColumnsState.projector(
         Game.CaptainOfIndustry,
         Preferences.initialColumnsState
       );
       expect(result[Column.Wagons].show).toBeFalse();
-      expect(result[Column.Overclock].show).toBeFalse();
       expect(result[Column.Beacons].show).toBeFalse();
       expect(result[Column.Power].show).toBeFalse();
       expect(result[Column.Pollution].show).toBeFalse();
@@ -87,7 +85,6 @@ describe('Settings Selectors', () => {
         Preferences.initialColumnsState
       );
       expect(result[Column.Wagons].show).toBeFalse();
-      expect(result[Column.Overclock].show).toBeFalse();
       expect(result[Column.Beacons].show).toBeFalse();
       expect(result[Column.Pollution].show).toBeFalse();
     });
@@ -98,7 +95,6 @@ describe('Settings Selectors', () => {
         Preferences.initialColumnsState
       );
       expect(result[Column.Wagons].show).toBeTrue();
-      expect(result[Column.Overclock].show).toBeTrue();
       expect(result[Column.Beacons].show).toBeFalse();
       expect(result[Column.Pollution].show).toBeFalse();
     });
@@ -501,55 +497,6 @@ describe('Settings Selectors', () => {
       expect(result.pipeIds).toEqual([ItemId.CopperCable, ItemId.Pipe]);
     });
 
-    it('should copy icons', () => {
-      const categories = Mocks.Mod.categories.map((c) => {
-        if (c.id === CategoryId.Research) {
-          return { ...c, ...{ icon: ItemId.ArtilleryShellRange } };
-        } else {
-          return { ...c };
-        }
-      });
-      const items = Mocks.Mod.items.map((i) => {
-        if (i.id === ItemId.Pipe) {
-          return { ...i, ...{ icon: ItemId.Beacon } };
-        } else {
-          return { ...i };
-        }
-      });
-      const recipes = Mocks.Mod.recipes.map((r) => {
-        if (r.id === RecipeId.Coal) {
-          return { ...r, ...{ icon: RecipeId.PlasticBar } };
-        } else {
-          return { ...r };
-        }
-      });
-      const mod = {
-        ...Mocks.Mod,
-        ...{
-          categories,
-          items,
-          recipes,
-        },
-      };
-      const result = Selectors.getDataset.projector(
-        Mocks.Raw.app,
-        mod,
-        null,
-        null,
-        Mocks.Defaults,
-        Game.Factorio
-      );
-      expect(result.iconEntities[CategoryId.Research]).toEqual(
-        result.iconEntities[RecipeId.ArtilleryShellRange]
-      );
-      expect(result.iconEntities[ItemId.Pipe]).toEqual(
-        result.iconEntities[ItemId.Beacon]
-      );
-      expect(result.iconEntities[RecipeId.Coal]).toEqual(
-        result.iconEntities[RecipeId.PlasticBar]
-      );
-    });
-
     it('should calculate missing recipe icons', () => {
       const icons = Mocks.Mod.icons.filter(
         (i) => i.id !== RecipeId.AdvancedOilProcessing
@@ -568,9 +515,9 @@ describe('Settings Selectors', () => {
         Mocks.Defaults,
         Game.Factorio
       );
-      expect(result.iconEntities[RecipeId.AdvancedOilProcessing]).toEqual(
-        result.iconEntities[ItemId.HeavyOil]
-      );
+      expect(
+        result.recipeEntities[RecipeId.AdvancedOilProcessing].icon
+      ).toEqual(ItemId.HeavyOil);
     });
 
     it('should handle specified icon files', () => {
@@ -607,10 +554,12 @@ describe('Settings Selectors', () => {
     });
   });
 
-  describe('getChemicalFuels', () => {
-    it('should handle no matching fuels', () => {
-      const result = Selectors.getChemicalFuelIds.projector({ fuelIds: {} });
-      expect(result).toEqual([]);
+  describe('getOptions', () => {
+    it('should handle no chemical fuels', () => {
+      const data = Mocks.getDataset();
+      data.fuelIds = {};
+      const result = Selectors.getOptions.projector(data);
+      expect(result.chemicalFuels.length).toEqual(0);
     });
   });
 

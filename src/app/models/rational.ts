@@ -275,8 +275,17 @@ export class Rational {
     return `${this.p}/${this.q}`;
   }
 
-  toString(): string {
-    if (this.toDecimals() > 2) {
+  /**
+   * Converts rational to string
+   * * Default: Use decimals if 2 or less, use num/den otherwise
+   * * Custom:
+   *   * Specify null to use num/den
+   *   * Specify number to specify number of decimals
+   */
+  toString(precision?: number | null): string {
+    if (precision) return this.toPrecision(precision).toString();
+
+    if (precision === null || this.toDecimals() > 2) {
       return `${this.p.toString()}/${this.q.toString()}`;
     } else {
       return this.toNumber().toString();

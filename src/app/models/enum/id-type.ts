@@ -1,4 +1,1 @@
-export enum IdType {
-  Item,
-  Recipe,
-}
+export type IdType = 'category' | 'item' | 'recipe';

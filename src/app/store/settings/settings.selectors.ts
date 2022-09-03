@@ -1,4 +1,5 @@
 import { createSelector } from '@ngrx/store';
+import { SelectItem } from 'primeng/api';
 
 import { environment } from 'src/environments';
 import {
@@ -6,6 +7,7 @@ import {
   columnOptions,
   Dataset,
   Defaults,
+  displayRateInfo,
   Entities,
   FuelType,
   Game,
@@ -24,10 +26,11 @@ import {
   RationalItem,
   RationalModule,
   RationalRecipe,
-  ResearchSpeedFactor,
+  researchSpeedFactor,
   toBoolEntities,
   toEntities,
 } from '~/models';
+import { Options } from '~/models/options';
 import { LabState } from '../';
 import * as Datasets from '../datasets';
 import * as Preferences from '../preferences';
@@ -111,10 +114,15 @@ export const getColumnOptions = createSelector(getGame, (game) =>
   columnOptions(game)
 );
 
+export const getDisplayRateInfo = createSelector(
+  getDisplayRate,
+  (displayRate) => displayRateInfo[displayRate]
+);
+
 export const getRateTypeOptions = createSelector(
   getGame,
-  getDisplayRate,
-  (game, displayRate) => rateTypeOptions(displayRate, game)
+  getDisplayRateInfo,
+  (game, dispRateInfo) => rateTypeOptions(dispRateInfo, game)
 );
 
 export const getPresetOptions = createSelector(getGame, (game) =>
@@ -124,7 +132,15 @@ export const getPresetOptions = createSelector(getGame, (game) =>
 export const getModOptions = createSelector(
   getGame,
   Datasets.getModSets,
-  (game, modSets) => modSets.filter((b) => b.game === game)
+  (game, modSets) =>
+    modSets
+      .filter((b) => b.game === game)
+      .map(
+        (m): SelectItem => ({
+          label: m.name,
+          value: m.id,
+        })
+      )
 );
 
 export const getColumnsState = createSelector(
@@ -138,10 +154,6 @@ export const getColumnsState = createSelector(
           ...col,
           ...{
             [Column.Wagons]: { ...col[Column.Wagons], ...{ show: false } },
-            [Column.Overclock]: {
-              ...col[Column.Overclock],
-              ...{ show: false },
-            },
             [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
             [Column.Power]: { ...col[Column.Power], ...{ show: false } },
             [Column.Pollution]: {
@@ -156,10 +168,6 @@ export const getColumnsState = createSelector(
           ...col,
           ...{
             [Column.Wagons]: { ...col[Column.Wagons], ...{ show: false } },
-            [Column.Overclock]: {
-              ...col[Column.Overclock],
-              ...{ show: false },
-            },
             [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
             [Column.Pollution]: {
               ...col[Column.Pollution],
@@ -183,12 +191,6 @@ export const getColumnsState = createSelector(
         return {
           ...Preferences.initialColumnsState,
           ...col,
-          ...{
-            [Column.Overclock]: {
-              ...col[Column.Overclock],
-              ...{ show: false },
-            },
-          },
         };
     }
   }
@@ -263,7 +265,7 @@ export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
 
 export const getResearchFactor = createSelector(
   getResearchSpeed,
-  (speed) => ResearchSpeedFactor[speed]
+  (speed) => researchSpeedFactor[speed]
 );
 
 export const getRationalBeaconReceivers = createSelector(
@@ -378,7 +380,6 @@ export const getDataset = createSelector(
     const recipeIds = Object.keys(recipeEntities);
 
     // Generate temporary object arrays
-    const categories = categoryIds.map((i) => categoryEntities[i]);
     const items = itemIds.map((i) => itemData[i]);
     const recipes = recipeIds.map((r) => recipeEntities[r]);
 
@@ -420,6 +421,9 @@ export const getDataset = createSelector(
     const beaconModuleIds = modules
       .filter((i) => i.module!.productivity == null)
       .map((i) => i.id);
+    const prodModuleIds = modules
+      .filter((i) => i.module!.productivity != null)
+      .map((i) => i.id);
     const fuelIds = items
       .filter((i) => i.fuel)
       .sort((a, b) => a.fuel!.value - b.fuel!.value)
@@ -432,24 +436,17 @@ export const getDataset = createSelector(
         return e;
       }, {});
 
-    // Apply icon references
-    categories
-      .filter((c) => c.icon)
-      .forEach((c) => (iconEntities[c.id] = iconEntities[c.icon!]));
-    items
-      .filter((i) => i.icon)
-      .forEach((i) => (iconEntities[i.id] = iconEntities[i.icon!]));
-    recipes
-      .filter((r) => r.icon)
-      .forEach((r) => (iconEntities[r.id] = iconEntities[r.icon!]));
-
     // Calculate missing implicit recipe icons
     // For recipes with no icon, use icon of first output product
     recipes
-      .filter((r) => !iconEntities[r.id] && r.out)
-      .forEach(
-        (r) => (iconEntities[r.id] = iconEntities[Object.keys(r.out!)[0]])
-      );
+      .filter((r) => !iconEntities[r.id] && !recipeEntities[r.id].icon)
+      .forEach((r) => {
+        recipeEntities[r.id] = {
+          ...recipeEntities[r.id],
+          ...{ icon: Object.keys(r.out)[0] },
+        };
+      });
+
     // Calculate category item rows
     const categoryItemRows: Entities<string[][]> = {};
     for (const id of categoryIds) {
@@ -549,10 +546,6 @@ export const getDataset = createSelector(
       return e;
     }, {});
 
-    const prodModuleIds = moduleIds.filter(
-      (i) => itemEntities[i].module!.productivity != null
-    );
-
     // Calculate complex recipes
     const simpleRecipeIds = Object.keys(itemRecipeId).map(
       (i) => itemRecipeId[i]
@@ -589,6 +582,7 @@ export const getDataset = createSelector(
       factoryEntities,
       moduleIds,
       beaconModuleIds,
+      prodModuleIds,
       moduleEntities,
       fuelIds,
       fuelEntities,
@@ -597,7 +591,6 @@ export const getDataset = createSelector(
       recipeEntities,
       recipeR,
       recipeModuleIds,
-      prodModuleIds,
       hash,
       defaults,
     };
@@ -605,9 +598,24 @@ export const getDataset = createSelector(
   }
 );
 
-export const getChemicalFuelIds = createSelector(
+export const getOptions = createSelector(
   getDataset,
-  (data) => data.fuelIds[FuelType.Chemical] ?? []
+  (data): Options => ({
+    items: getIdOptions(data.itemIds, data.itemEntities),
+    beacons: getIdOptions(data.beaconIds, data.itemEntities),
+    belts: getIdOptions(data.beltIds, data.itemEntities),
+    pipes: getIdOptions(data.pipeIds, data.itemEntities),
+    cargoWagons: getIdOptions(data.cargoWagonIds, data.itemEntities),
+    fluidWagons: getIdOptions(data.fluidWagonIds, data.itemEntities),
+    modules: getIdOptions(data.moduleIds, data.itemEntities, true),
+    beaconModules: getIdOptions(data.beaconModuleIds, data.itemEntities, true),
+    prodModules: getIdOptions(data.prodModuleIds, data.itemEntities, true),
+    chemicalFuels: getIdOptions(
+      data.fuelIds[FuelType.Chemical] ?? [],
+      data.itemEntities
+    ),
+    complexRecipes: getIdOptions(data.complexRecipeIds, data.recipeEntities),
+  })
 );
 
 export const getBeltSpeed = createSelector(
@@ -627,6 +635,19 @@ export const getBeltSpeed = createSelector(
     }
     return value;
   }
+);
+
+export const getBeltSpeedTxt = createSelector(
+  getBeltSpeed,
+  getDisplayRateInfo,
+  (beltSpeed, dispRateInfo) =>
+    Object.keys(beltSpeed).reduce((e: Entities<string>, beltId) => {
+      const speed = beltSpeed[beltId].mul(dispRateInfo.value);
+      const speedTxt = Number(speed.toNumber().toFixed(2));
+      const rateTxt = dispRateInfo.label;
+      e[beltId] = speedTxt + rateTxt;
+      return e;
+    }, {})
 );
 
 export const getAdjustmentData = createSelector(
@@ -703,4 +724,19 @@ export function reduceEntities(
     e[x] = toBoolEntities(value[x], init[x]);
     return e;
   }, init);
+}
+
+export function getIdOptions(
+  ids: string[],
+  entities: Record<string, { name: string }>,
+  emptyModule = false
+): SelectItem[] {
+  const list = ids.map(
+    (i): SelectItem => ({ label: entities[i].name, value: i })
+  );
+  if (emptyModule) {
+    list.unshift({ label: 'None', value: ItemId.Module });
+  }
+
+  return list;
 }

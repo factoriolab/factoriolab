@@ -1,0 +1,29 @@
+name: next
+on:
+  push:
+    branches: [next]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Install dependencies
+        run: npm ci
+      - name: Run build
+        run: npm run build -- -c=production
+      - name: Copy index to list
+        run: cp dist/index.html dist/list.html
+      - name: Copy index to flow
+        run: cp dist/index.html dist/flow.html
+      - name: Copy index to 404
+        run: cp dist/index.html dist/404.html
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@3.4.8
+        with:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          REPOSITORY_NAME: factoriolab/next
+          BRANCH: main
+          FOLDER: dist
+          CLEAN: true

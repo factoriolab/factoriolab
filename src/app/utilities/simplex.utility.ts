@@ -1,10 +1,9 @@
-import { Constraint, Model, Simplex, Variable } from 'glpk-ts';
+import { Constraint, Model, Simplex, Status, Variable } from 'glpk-ts';
 
 import { environment } from 'src/environments';
 import {
   Dataset,
   Entities,
-  ERROR_SIMPLEX,
   MatrixResult,
   MatrixResultType,
   Rational,
@@ -13,7 +12,7 @@ import {
   Step,
   WARNING_HANG,
 } from '~/models';
-import * as Items from '~/store/items';
+import { Items } from '~/store';
 import { RateUtility } from './rate.utility';
 
 const FLOAT_TOLERANCE = 1e-10;
@@ -77,6 +76,8 @@ export interface SimplexResult {
 export interface GlpkResult {
   O: Rational[];
   returnCode: Simplex.ReturnCode;
+  status: Status;
+  error: boolean;
   time: number;
 }
 
@@ -130,9 +131,6 @@ export class SimplexUtility {
     ) {
       // Update steps with solution
       this.updateSteps(steps, solution, state);
-    } else if (solution.resultType === MatrixResultType.Failed && error) {
-      alert(ERROR_SIMPLEX);
-      console.error('Failed to solve matrix using simplex method');
     }
 
     return {
@@ -338,6 +336,23 @@ export class SimplexUtility {
     // Get glpk-wasm presolve solution
     const glpkResult = this.glpk(state);
 
+    if (glpkResult.error) {
+      // No solution found
+      return {
+        resultType: MatrixResultType.Failed,
+        surplus: {},
+        recipes: {},
+        inputs: {},
+        pivots: 0,
+        time: 0,
+        A: [[]],
+        O: [],
+        itemIds: [],
+        recipeIds: [],
+        inputIds: [],
+      };
+    }
+
     // Convert state to canonical tableau
     const A = this.canonical(state);
 
@@ -471,11 +486,11 @@ export class SimplexUtility {
 
     // Run GLPK simplex
     const start = Date.now();
-    const result = this.glpkSimplex(m);
+    const [returnCode, status] = this.glpkSimplex(m);
     const time = Date.now() - start;
 
-    if (result !== 'ok') {
-      return { returnCode: result, time, O: [] };
+    if (returnCode !== 'ok' || status !== 'optimal') {
+      return { returnCode, status, time, O: [], error: true };
     }
 
     // Set up IBFS
@@ -523,7 +538,7 @@ export class SimplexUtility {
 
     O.push(Rational.fromNumber(m.value));
 
-    return { returnCode: result, time, O };
+    return { returnCode, status, time, O, error: false };
   }
 
   static isFloatZero(val: number): boolean {
@@ -531,8 +546,9 @@ export class SimplexUtility {
   }
 
   /** Simplex method wrapper mainly for test mocking */
-  static glpkSimplex(model: Model): Simplex.ReturnCode {
-    return model.simplex(simplexConfig);
+  static glpkSimplex(model: Model): [Simplex.ReturnCode, Status] {
+    const returnCode = model.simplex(simplexConfig);
+    return [returnCode, model.status];
   }
 
   /** Convert state into canonical tableau */

@@ -3,38 +3,42 @@ import mod from 'src/data/1.1/data.json';
 import hash from 'src/data/1.1/hash.json';
 import i18n from 'src/data/1.1/i18n/zh.json';
 import {
+  Dataset as _Dataset,
   Entities,
+  FlowData,
   Game,
   ItemSettings,
-  Link,
-  LinkValue,
+  Language,
   MatrixResult,
   MatrixResultType,
   Mod as _Mod,
   ModData,
   ModHash,
   ModI18n,
-  Node,
+  NodeType,
   PowerUnit,
   Preset,
   Product,
   RateType,
   Rational,
   RationalProduct,
+  RationalRecipeSettings as _RationalRecipeSettings,
   RecipeSettings,
-  SankeyAlign,
-  SankeyData,
   SimplexType,
   Step,
+  Theme,
+  themeMap,
   toEntities,
 } from '~/models';
-import * as Datasets from '~/store/datasets';
-import * as Factories from '~/store/factories';
-import * as Items from '~/store/items';
-import * as Preferences from '~/store/preferences';
-import * as Products from '~/store/products';
-import * as Recipes from '~/store/recipes';
-import * as Settings from '~/store/settings';
+import {
+  Datasets,
+  Factories,
+  Items,
+  Preferences,
+  Products,
+  Recipes,
+  Settings,
+} from '~/store';
 import { ItemId } from './item-id';
 import { RecipeId } from './recipe-id';
 
@@ -47,14 +51,18 @@ export const Hash: ModHash = hash;
 export const I18n: ModI18n = i18n;
 export const Mod = { ...ModInfo, ...Data } as _Mod;
 export const Defaults = Settings.getDefaults.projector(Preset.Beacon8, Mod)!;
-export const Dataset = Settings.getDataset.projector(
-  data.app,
-  Mod,
-  null,
-  null,
-  Defaults,
-  Game.Factorio
-);
+export function getDataset(): _Dataset {
+  Settings.getDataset.release();
+  return Settings.getDataset.projector(
+    data.app,
+    Mod,
+    null,
+    null,
+    Defaults,
+    Game.Factorio
+  );
+}
+export const Dataset = getDataset();
 export const CategoryId = Dataset.categoryIds[0];
 export const Item1 = Dataset.itemEntities[Dataset.itemIds[0]];
 export const Item2 = Dataset.itemEntities[Dataset.itemIds[1]];
@@ -100,7 +108,7 @@ export const ProductEntities =
 export const ProductSteps = {
   [Product1.id]: [],
   [Product2.id]: [],
-  [Product3.id]: [],
+  [Product3.id]: [[ItemId.PetroleumGas, Rational.one]],
   [Product4.id]: [[RecipeId.TransportBelt, Rational.one]],
 };
 export const ItemSettings1: ItemSettings = {
@@ -174,15 +182,22 @@ export const FactorySettingsInitial = Factories.getFactories.projector(
   Defaults,
   Dataset
 );
-export const RecipeSettingsInitial = Recipes.getRecipeSettings.projector(
-  {},
-  FactorySettingsInitial,
-  Dataset
-);
+export function getRecipeSettings(): Entities<RecipeSettings> {
+  Recipes.getRecipeSettings.release();
+  return Recipes.getRecipeSettings.projector(
+    {},
+    FactorySettingsInitial,
+    Dataset
+  );
+}
+export const RecipeSettingsInitial = getRecipeSettings();
 export const RationalRecipeSettings =
   Recipes.getRationalRecipeSettings.projector(RecipeSettingsEntities);
-export const RationalRecipeSettingsInitial =
-  Recipes.getRationalRecipeSettings.projector(RecipeSettingsInitial);
+export function getRationalRecipeSettings(): Entities<_RationalRecipeSettings> {
+  Recipes.getRationalRecipeSettings.release();
+  return Recipes.getRationalRecipeSettings.projector(RecipeSettingsInitial);
+}
+export const RationalRecipeSettingsInitial = getRationalRecipeSettings();
 export const AdjustedData = Recipes.getAdjustedDataset.projector(
   RationalRecipeSettingsInitial,
   ItemSettingsInitial,
@@ -199,65 +214,10 @@ export const AdjustedData = Recipes.getAdjustedDataset.projector(
 export const PreferencesState: Preferences.PreferencesState = {
   states: { ['name']: 'z=zip' },
   columns: Preferences.initialColumnsState,
-  linkSize: LinkValue.Items,
-  linkText: LinkValue.Items,
-  sankeyAlign: SankeyAlign.Justify,
   simplexType: SimplexType.JsBigIntRational,
   powerUnit: PowerUnit.Auto,
-  language: 'en',
-};
-
-function node(i: number, noHref = false): Node {
-  return {
-    id: i.toString(),
-    stepId: i.toString(),
-    href: noHref ? undefined : 'data/1.0/icons.png',
-    viewBox: '0 0 64 64',
-    name: i.toString(),
-    color: 'black',
-  };
-}
-
-function link(i: number, j: number): Link {
-  return {
-    source: i.toString(),
-    target: j.toString(),
-    value: Math.max(1, i),
-    text: '1 items',
-    name: `${i}->${j}`,
-    color: 'white',
-  };
-}
-
-export const Sankey: SankeyData = {
-  nodes: [
-    node(0, true),
-    node(1),
-    node(2),
-    node(3),
-    node(4),
-    node(5),
-    node(6),
-    node(7),
-    node(8),
-    node(9),
-  ],
-  links: [
-    link(1, 0),
-    link(2, 0),
-    link(3, 0),
-    link(4, 0),
-    link(5, 0),
-    link(6, 0),
-    link(7, 0),
-    link(8, 0),
-    link(0, 9),
-  ],
-};
-
-export const SankeyCircular: SankeyData = {
-  nodes: [node(0), node(1), node(2)],
-  links: [link(0, 1), link(1, 2), link(2, 0)],
+  language: Language.English,
+  theme: Theme.System,
 };
 
 export const MatrixResultSolved: MatrixResult = {
@@ -273,4 +233,39 @@ export const MatrixResultSolved: MatrixResult = {
   itemIds: [ItemId.Wood],
   recipeIds: [RecipeId.WoodenChest],
   inputIds: [],
+};
+
+export const Flow: FlowData = {
+  theme: themeMap[Theme.Light],
+  nodes: [
+    {
+      name: 'a-name',
+      text: 'a-text',
+      id: 'a',
+      type: NodeType.Recipe,
+    },
+    {
+      name: 'b-name',
+      text: 'b-text',
+      id: 'b',
+      type: NodeType.Recipe,
+      recipe: Data.recipes[0],
+      factories: '1',
+      factoryId: 'factoryId',
+    },
+  ],
+  links: [
+    {
+      name: 'a-b',
+      text: 'a-b-text',
+      source: 'a',
+      target: 'b',
+    },
+    {
+      name: 'b-b',
+      text: 'b-b-text',
+      source: 'b',
+      target: 'b',
+    },
+  ],
 };

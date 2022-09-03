@@ -1,5 +1,5 @@
 import { STATE_KEY } from '~/models';
-import * as Settings from '~/store/settings';
+import { Settings } from '~/store';
 import { BrowserUtility } from './browser.utility';
 
 describe('BrowserUtility', () => {

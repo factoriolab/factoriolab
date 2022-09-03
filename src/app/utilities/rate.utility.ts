@@ -1,7 +1,6 @@
 import {
   Dataset,
-  DisplayRate,
-  DisplayRateVal,
+  DisplayRateInfo,
   Entities,
   ItemSettings,
   Rational,
@@ -68,6 +67,8 @@ export class RateUtility {
 
     if (parentId != null) {
       this.addParentValue(step, parentId, rate);
+    } else {
+      step.output = step.items;
     }
 
     if (recipe) {
@@ -223,6 +224,10 @@ export class RateUtility {
                 .ceil()
                 .mul(settings.beaconCount)
                 .div(beaconReceivers);
+              if (step.beacons.lt(settings.beaconCount)) {
+                // Can't be less than beacon count
+                step.beacons = settings.beaconCount;
+              }
             }
 
             const beacon = data.beaconEntities[settings.beaconId];
@@ -238,8 +243,7 @@ export class RateUtility {
     return steps;
   }
 
-  static displayRate(steps: Step[], displayRate: DisplayRate): Step[] {
-    const displayRateVal = DisplayRateVal[displayRate];
+  static displayRate(steps: Step[], dispRateInfo: DisplayRateInfo): Step[] {
     for (const step of steps) {
       if (step.items) {
         if (step.parents) {
@@ -247,16 +251,16 @@ export class RateUtility {
             step.parents[key] = step.parents[key].div(step.items);
           }
         }
-        step.items = step.items.mul(displayRateVal);
+        step.items = step.items.mul(dispRateInfo.value);
       }
       if (step.surplus) {
-        step.surplus = step.surplus.mul(displayRateVal);
+        step.surplus = step.surplus.mul(dispRateInfo.value);
       }
       if (step.wagons) {
-        step.wagons = step.wagons.mul(displayRateVal);
+        step.wagons = step.wagons.mul(dispRateInfo.value);
       }
       if (step.pollution) {
-        step.pollution = step.pollution.mul(displayRateVal);
+        step.pollution = step.pollution.mul(dispRateInfo.value);
       }
     }
     return steps;

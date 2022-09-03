@@ -1,0 +1,83 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins/_breakpoints';
+
+:host {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 320px;
+  z-index: 2;
+
+  transition: all 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99);
+  transition-property: width, left;
+
+  width: calc(100% - 320px);
+  height: 4rem;
+  padding: 0 1.5rem;
+
+  &.sticky {
+    background-color: var(--header-sticky-color);
+    backdrop-filter: blur(12px);
+  }
+
+  @include media-breakpoint-down(xl) {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    left: 0;
+
+    width: 100%;
+    height: 6rem;
+  }
+
+  @include media-breakpoint-down(sm) {
+    padding: 0 0.25rem;
+  }
+
+  @include media-breakpoint-up(xl) {
+    &.settings-xl-hidden {
+      left: 0;
+
+      width: 100%;
+    }
+  }
+}
+
+.header-menu {
+  display: flex;
+
+  margin: 0 0 0 auto;
+
+  > li {
+    position: relative;
+
+    + li {
+      margin-left: 0.5rem;
+    }
+  }
+
+  @include media-breakpoint-down(xl) {
+    width: 100%;
+
+    > li {
+      width: 25%;
+
+      + li {
+        margin: 0;
+      }
+    }
+  }
+}
+
+:host ::ng-deep {
+  @include media-breakpoint-down(sm) {
+    .header-menu .p-button-icon {
+      display: none;
+    }
+  }
+}
+
+a {
+  text-decoration: none;
+}

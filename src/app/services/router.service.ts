@@ -19,14 +19,16 @@ import {
   RecipeSettings,
   Step,
 } from '~/models';
-import { LabState } from '~/store';
-import * as App from '~/store/app.actions';
-import * as Datasets from '~/store/datasets';
-import * as Factories from '~/store/factories';
-import * as Items from '~/store/items';
-import * as Products from '~/store/products';
-import * as Recipes from '~/store/recipes';
-import * as Settings from '~/store/settings';
+import {
+  App,
+  Datasets,
+  Factories,
+  Items,
+  LabState,
+  Products,
+  Recipes,
+  Settings,
+} from '~/store';
 import { DataService } from './data.service';
 
 export const NULL = '?'; // Encoded, previously 'n'
@@ -107,7 +109,9 @@ export class RouterService {
       this.base64codes[BASE64ABC.charCodeAt(i)] = i;
     }
     this.base64codes['_'.charCodeAt(0)] = 0;
+  }
 
+  initialize(): void {
     this.router.events.subscribe((e) => this.updateState(e));
 
     this.store
@@ -502,12 +506,6 @@ export class RouterService {
             r,
             t,
             this.zipTruthyString(obj.viaId),
-            this.zipTruthyString(obj.viaSetting),
-            this.zipTruthyArray(obj.viaFactoryModuleIds),
-            this.zipTruthyString(obj.viaBeaconCount),
-            this.zipTruthyArray(obj.viaBeaconModuleIds),
-            this.zipTruthyString(obj.viaBeaconId),
-            this.zipTruthyNumber(obj.viaOverclock),
           ]),
           hash: this.zipFields([
             this.zipTruthyNString(obj.itemId, hash.items),
@@ -517,21 +515,6 @@ export class RouterService {
               obj.viaId,
               obj.rateType === RateType.Factories ? hash.recipes : hash.items
             ),
-            this.zipTruthyNString(
-              obj.viaSetting,
-              obj.rateType === RateType.Belts
-                ? hash.belts
-                : obj.rateType === RateType.Wagons
-                ? hash.wagons
-                : obj.rateType === RateType.Factories
-                ? hash.factories
-                : hash.items
-            ),
-            this.zipTruthyNArray(obj.viaFactoryModuleIds, hash.modules),
-            this.zipTruthyString(obj.viaBeaconCount),
-            this.zipTruthyNArray(obj.viaBeaconModuleIds, hash.modules),
-            this.zipTruthyNString(obj.viaBeaconId, hash.beacons),
-            this.zipTruthyNumber(obj.viaOverclock),
           ]),
         };
       })
@@ -565,21 +548,6 @@ export class RouterService {
           s[i++],
           obj.rateType === RateType.Factories ? hash.recipes : hash.items
         );
-        obj.viaSetting = this.parseNString(
-          s[i++],
-          obj.rateType === RateType.Belts
-            ? hash.belts
-            : obj.rateType === RateType.Wagons
-            ? hash.wagons
-            : obj.rateType === RateType.Factories
-            ? hash.factories
-            : hash.items
-        );
-        obj.viaFactoryModuleIds = this.parseNArray(s[i++], hash.modules);
-        obj.viaBeaconCount = this.parseString(s[i++]);
-        obj.viaBeaconModuleIds = this.parseNArray(s[i++], hash.modules);
-        obj.viaBeaconId = this.parseNString(s[i++], hash.beacons);
-        obj.viaOverclock = this.parseNumber(s[i++]);
       } else {
         obj = {
           id,
@@ -587,12 +555,6 @@ export class RouterService {
           rate: s[i++],
           rateType: Number(s[i++]) | RateType.Items,
           viaId: this.parseString(s[i++]),
-          viaSetting: this.parseString(s[i++]),
-          viaFactoryModuleIds: this.parseArray(s[i++]),
-          viaBeaconCount: this.parseString(s[i++]),
-          viaBeaconModuleIds: this.parseArray(s[i++]),
-          viaBeaconId: this.parseString(s[i++]),
-          viaOverclock: this.parseNumber(s[i++]),
         };
       }
 

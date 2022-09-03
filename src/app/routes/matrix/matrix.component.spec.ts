@@ -2,12 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
-import { DispatchTest, initialState } from 'src/tests';
-import { SharedModule } from '~/shared/shared.module';
-import { LabState } from '~/store';
-import * as Recipes from '~/store/recipes';
-import * as Settings from '~/store/settings';
+import { DispatchTest, initialState, TestModule } from 'src/tests';
+import { AppSharedModule } from '~/app-shared.module';
+import { LabState, Recipes, Settings } from '~/store';
 import { MatrixComponent } from './matrix.component';
+import { MatrixModule } from './matrix.module';
 
 describe('MatrixComponent', () => {
   let component: MatrixComponent;
@@ -16,9 +15,7 @@ describe('MatrixComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MatrixComponent],
-      imports: [FormsModule, SharedModule],
-      providers: [provideMockStore({ initialState })],
+      imports: [TestModule, MatrixModule],
     }).compileComponents();
   });
 

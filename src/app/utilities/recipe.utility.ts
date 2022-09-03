@@ -15,8 +15,6 @@ import {
   RationalRecipeSettings,
   Recipe,
 } from '~/models';
-import * as Factories from '~/store/factories';
-import * as Recipes from '~/store/recipes';
 
 export class RecipeUtility {
   static MIN_FACTOR = new Rational(BigInt(1), BigInt(5));
@@ -517,8 +515,6 @@ export class RecipeUtility {
   static adjustProduct(
     product: Product,
     productSteps: Entities<[string, Rational][]>,
-    recipeSettings: Recipes.RecipesState,
-    factories: Factories.FactoriesState,
     data: Dataset
   ): Product {
     if (product.rateType === RateType.Factories) {
@@ -532,67 +528,6 @@ export class RecipeUtility {
           const via = this.getProductStepData(productSteps, product);
           if (via) {
             product.viaId = via[0];
-          }
-        }
-      }
-
-      if (product.viaId) {
-        if (!product.viaSetting) {
-          product.viaSetting = recipeSettings[product.viaId].factoryId;
-        }
-
-        if (product.viaSetting) {
-          const recipe = data.recipeEntities[product.viaId];
-          const factory = data.factoryEntities[product.viaSetting];
-          const def = recipeSettings[recipe.id];
-          const fDef = factories.entities[product.viaSetting];
-          if (this.allowsModules(recipe, factory)) {
-            if (product.viaSetting === def.factoryId) {
-              product.viaFactoryModuleIds =
-                product.viaFactoryModuleIds || def.factoryModuleIds;
-              product.viaBeaconCount =
-                product.viaBeaconCount || def.beaconCount;
-              product.viaBeaconId = product.viaBeaconId || def.beaconId;
-              if (product.viaBeaconId) {
-                const beacon = data.beaconEntities[product.viaBeaconId];
-                if (product.viaBeaconModuleIds == null) {
-                  if (product.viaBeaconId === def.beaconId) {
-                    product.viaBeaconModuleIds = def.beaconModuleIds;
-                  } else {
-                    product.viaBeaconModuleIds = new Array(beacon.modules).fill(
-                      fDef.beaconModuleId
-                    );
-                  }
-                }
-              }
-            } else {
-              if (product.viaFactoryModuleIds == null) {
-                product.viaFactoryModuleIds = this.defaultModules(
-                  data.recipeModuleIds[recipe.id],
-                  fDef.moduleRankIds ?? [],
-                  factory.modules ?? 0
-                );
-              }
-
-              product.viaBeaconCount =
-                product.viaBeaconCount ?? fDef.beaconCount;
-              product.viaBeaconId = product.viaBeaconId ?? fDef.beaconId;
-
-              if (product.viaBeaconId != null) {
-                const beacon = data.beaconEntities[product.viaBeaconId];
-                if (product.viaBeaconModuleIds == null) {
-                  product.viaBeaconModuleIds = new Array(beacon.modules).fill(
-                    fDef.beaconModuleId
-                  );
-                }
-              }
-            }
-          }
-
-          if (product.viaSetting === def.factoryId) {
-            product.viaOverclock = product.viaOverclock || def.overclock;
-          } else {
-            product.viaOverclock = product.viaOverclock || fDef.overclock;
           }
         }
       }

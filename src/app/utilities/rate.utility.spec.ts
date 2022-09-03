@@ -1,6 +1,7 @@
 import { CategoryId, ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   DisplayRate,
+  displayRateInfo,
   Entities,
   Rational,
   RationalRecipe,
@@ -17,6 +18,7 @@ describe('RateUtility', () => {
         itemId: 'iron-chest',
         recipeId: 'iron-chest',
         items: Rational.from(30),
+        output: Rational.from(30),
         factories: Rational.from(12, 7),
         power: Rational.from(42475, 7),
         pollution: Rational.from(94, 175),
@@ -126,7 +128,8 @@ describe('RateUtility', () => {
         {
           id: '0',
           itemId: ItemId.Uranium235,
-          items: new Rational(BigInt(30)),
+          items: Rational.from(30),
+          output: Rational.from(30),
         },
       ]);
     });
@@ -149,6 +152,7 @@ describe('RateUtility', () => {
           id: '0',
           itemId: ItemId.Coal,
           items: Rational.one,
+          output: Rational.one,
         },
       ]);
     });
@@ -176,6 +180,7 @@ describe('RateUtility', () => {
           id: '0',
           itemId: Mocks.Item2.id,
           items: Rational.from(30),
+          output: Rational.from(30),
         },
       ]);
     });
@@ -208,6 +213,7 @@ describe('RateUtility', () => {
           id: '0',
           itemId: ItemId.Coal,
           items: Rational.one,
+          output: Rational.one,
           recipeId: RecipeId.Coal,
           factories: Rational.from(10, 9),
           parents: { [RecipeId.Coal]: Rational.from(1, 9) },
@@ -229,6 +235,7 @@ describe('RateUtility', () => {
           id: '0',
           itemId: ItemId.IronOre,
           items: Rational.one,
+          output: Rational.one,
           factories: Rational.from(400, 1183),
           power: Rational.from(324000, 1183),
           pollution: Rational.from(60, 91),
@@ -522,6 +529,26 @@ describe('RateUtility', () => {
       expect(steps[0].power).toEqual(Rational.from(3840));
     });
 
+    it('should not allow less beacons than beacon count', () => {
+      const steps: Step[] = [
+        {
+          id: 'id',
+          itemId: ItemId.Coal,
+          items: Rational.one,
+          recipeId: RecipeId.Coal,
+          factories: Rational.one,
+          power: Rational.zero,
+        },
+      ];
+      RateUtility.calculateBeacons(
+        steps,
+        Rational.hundred,
+        Mocks.RationalRecipeSettingsInitial,
+        Mocks.AdjustedData
+      );
+      expect(steps[0].beacons).toEqual(Rational.from(8));
+    });
+
     it('should handle undefined step power', () => {
       const steps: Step[] = [
         {
@@ -628,7 +655,7 @@ describe('RateUtility', () => {
             pollution: Rational.from(4),
           },
         ] as any,
-        DisplayRate.PerMinute
+        displayRateInfo[DisplayRate.PerMinute]
       );
       expect(result[0].items).toEqual(Rational.from(60));
       expect(result[0].surplus).toEqual(Rational.from(120));
@@ -639,7 +666,7 @@ describe('RateUtility', () => {
     it('should apply the display rate to partial steps', () => {
       const result = RateUtility.displayRate(
         [{ items: Rational.two }] as any,
-        DisplayRate.PerMinute
+        displayRateInfo[DisplayRate.PerMinute]
       );
       expect(result[0].items).toEqual(Rational.from(120));
       expect(result[0].surplus).toBeUndefined();
@@ -650,7 +677,7 @@ describe('RateUtility', () => {
     it('should calculate parent percentages', () => {
       const result = RateUtility.displayRate(
         [{ items: Rational.two, parents: { id: Rational.one } }] as any,
-        DisplayRate.PerMinute
+        displayRateInfo[DisplayRate.PerMinute]
       );
       expect(result[0].parents?.['id']).toEqual(Rational.from(1, 2));
     });

@@ -1,4 +1,5 @@
 import { createSelector } from '@ngrx/store';
+import { SelectItem } from 'primeng/api';
 
 import { Entities, FactorySettings, Game } from '~/models';
 import { LabState } from '../';
@@ -55,7 +56,13 @@ export const getFactoryOptions = createSelector(
   getFactories,
   Settings.getDataset,
   (factories, data) =>
-    data.factoryIds.filter((f) => (factories.ids ?? []).indexOf(f) === -1)
+    data.factoryIds.map(
+      (f): SelectItem => ({
+        label: data.itemEntities[f].name,
+        value: f,
+        disabled: (factories.ids ?? []).indexOf(f) !== -1,
+      })
+    )
 );
 
 export const getFactoryRows = createSelector(getFactories, (factories) => [

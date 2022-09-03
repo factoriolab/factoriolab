@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { MemoizedSelector } from '@ngrx/store';
@@ -14,42 +14,31 @@ import {
 } from 'src/tests';
 import {
   Entities,
-  ListMode,
   RecipeField,
   Step,
   StepDetail,
   StepDetailTab,
 } from '~/models';
 import { RouterService } from '~/services';
-import { SharedModule } from '~/shared/shared.module';
-import { LabState } from '~/store';
-import * as Factories from '~/store/factories';
-import * as Items from '~/store/items';
-import * as Products from '~/store/products';
-import * as Recipes from '~/store/recipes';
-import * as Settings from '~/store/settings';
+import {
+  Factories,
+  Items,
+  LabState,
+  Products,
+  Recipes,
+  Settings,
+} from '~/store';
 import { ExportUtility, RecipeUtility } from '~/utilities';
 import { ListComponent } from './list.component';
+import { ListModule } from './list.module';
 
 enum DataTest {
   Export = 'lab-list-export',
-  Beacons = 'lab-list-beacons',
-  ResetStep = 'lab-list-reset-step',
-}
-
-@Component({
-  selector: 'lab-test-list',
-  template: `<lab-list [mode]="mode" [selectedId]="selectedId"></lab-list>`,
-})
-class TestListComponent {
-  @ViewChild(ListComponent) child!: ListComponent;
-  mode = ListMode.All;
-  selectedId: string | undefined;
 }
 
 describe('ListComponent', () => {
-  let component: TestListComponent;
-  let fixture: ComponentFixture<TestListComponent>;
+  let component: ListComponent;
+  let fixture: ComponentFixture<ListComponent>;
   let route: ActivatedRoute;
   let router: RouterService;
   let mockStore: MockStore<LabState>;
@@ -59,13 +48,10 @@ describe('ListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ListComponent, TestListComponent],
-      imports: [TestModule, SharedModule],
+      imports: [TestModule, ListModule],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TestListComponent);
+    fixture = TestBed.createComponent(ListComponent);
     route = TestBed.inject(ActivatedRoute);
     router = TestBed.inject(RouterService);
     mockStore = TestBed.inject(MockStore);
@@ -75,9 +61,9 @@ describe('ListComponent', () => {
       Mocks.Steps.reduce((e: Entities<StepDetail>, s) => {
         e[s.id] = {
           tabs: [
-            StepDetailTab.Item,
-            StepDetailTab.Recipe,
-            StepDetailTab.Factory,
+            { label: StepDetailTab.Item },
+            { label: StepDetailTab.Recipe },
+            { label: StepDetailTab.Factory },
           ],
           outputs: [],
           recipeIds: [],
@@ -96,91 +82,32 @@ describe('ListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngOnChanges', () => {
-    it('should expand the selected step', () => {
-      component.selectedId = Mocks.Step1.id;
-      fixture.detectChanges();
-      expect(component.child.expanded).toEqual({
-        [Mocks.Step1.id]: StepDetailTab.Item,
-      });
-    });
-
-    it('should handle no matching step', () => {
-      component.selectedId = 'id';
-      fixture.detectChanges();
-      expect(component.child.expanded).toEqual({});
-    });
-  });
-
   describe('ngAfterViewInit', () => {
     it('should scroll to and expand the fragment id', () => {
       const domEl = { scrollIntoView: (): void => {} };
       spyOn(domEl, 'scrollIntoView');
       spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
-      component.child.fragmentId = Mocks.Step1.id;
-      component.child.ngAfterViewInit();
+      TestUtility.assert(component.stepsTable != null);
+      spyOn(component.stepsTable, 'toggleRow');
+      component.fragmentId = Mocks.Step1.id;
+      component.ngAfterViewInit();
       expect(domEl.scrollIntoView).toHaveBeenCalled();
-      expect(component.child.expanded).toEqual({
-        [Mocks.Step1.id]: StepDetailTab.Item,
-      });
+      expect(component.stepsTable.toggleRow).toHaveBeenCalled();
     });
 
     it('should handle element not found', () => {
-      component.child.fragmentId = Mocks.Step1.id;
-      expect(() => component.child.ngAfterViewInit()).not.toThrow();
-    });
-  });
-
-  describe('syncDetailTabs', () => {
-    it('should collapse a tab that no longer has details', () => {
-      component.child.expanded['id'] = StepDetailTab.Item;
-      mockGetSteps.setResult([]);
-      mockGetStepDetails.setResult({});
-      mockStore.refreshState();
-      fixture.detectChanges();
-      expect(component.child.expanded).toEqual({});
-      expect(detectChanges).toHaveBeenCalled();
-    });
-
-    it('should collapse a tab that no longer exists', () => {
-      component.child.expanded['id'] = StepDetailTab.Item;
-      mockGetSteps.setResult([]);
-      mockGetStepDetails.setResult({});
-      mockStore.refreshState();
-      fixture.detectChanges();
-      expect(component.child.expanded).toEqual({});
-      expect(detectChanges).toHaveBeenCalled();
-    });
-
-    it('should pick a different detail tab', () => {
-      component.child.expanded[Mocks.Step1.id] = StepDetailTab.Recipes;
-      mockGetStepDetails.setResult(
-        Mocks.Steps.reduce((e: Entities<StepDetail>, s) => {
-          e[s.id] = {
-            tabs: [StepDetailTab.Item],
-            outputs: [],
-            recipeIds: [],
-            defaultableRecipeIds: [],
-          };
-          return e;
-        }, {})
-      );
-      mockStore.refreshState();
-      fixture.detectChanges();
-      expect(component.child.expanded).toEqual({
-        [Mocks.Step1.id]: StepDetailTab.Item,
-      });
-      expect(detectChanges).toHaveBeenCalled();
+      component.fragmentId = Mocks.Step1.id;
+      expect(() => component.ngAfterViewInit()).not.toThrow();
     });
   });
 
   describe('resetStep', () => {
     it('should reset a step', () => {
-      spyOn(component.child, 'resetItem');
-      spyOn(component.child, 'resetRecipe');
-      component.child.resetStep(Mocks.Step1);
-      expect(component.child.resetItem).toHaveBeenCalled();
-      expect(component.child.resetRecipe).toHaveBeenCalled();
+      spyOn(component, 'resetItem');
+      spyOn(component, 'resetRecipe');
+      component.resetStep(Mocks.Step1);
+      expect(component.resetItem).toHaveBeenCalled();
+      expect(component.resetRecipe).toHaveBeenCalled();
     });
   });
 
@@ -195,7 +122,7 @@ describe('ListComponent', () => {
 
   describe('toggleDefaultRecipe', () => {
     it('should reset a default recipe to null', () => {
-      spyOn(component.child, 'setDefaultRecipe');
+      spyOn(component, 'setDefaultRecipe');
       const itemSettings = {
         ...Mocks.ItemSettingsInitial,
         ...{
@@ -207,28 +134,26 @@ describe('ListComponent', () => {
           },
         },
       };
-      component.child.toggleDefaultRecipe(
+      component.toggleDefaultRecipe(
         ItemId.Coal,
         RecipeId.Coal,
         itemSettings,
         Settings.initialSettingsState,
         Mocks.AdjustedData
       );
-      expect(component.child.setDefaultRecipe).toHaveBeenCalledWith(
-        ItemId.Coal
-      );
+      expect(component.setDefaultRecipe).toHaveBeenCalledWith(ItemId.Coal);
     });
 
     it('should set a default recipe', () => {
-      spyOn(component.child, 'setDefaultRecipe');
-      component.child.toggleDefaultRecipe(
+      spyOn(component, 'setDefaultRecipe');
+      component.toggleDefaultRecipe(
         ItemId.Coal,
         RecipeId.Coal,
         Mocks.ItemSettingsInitial,
         Mocks.SettingsState1,
         Mocks.AdjustedData
       );
-      expect(component.child.setDefaultRecipe).toHaveBeenCalledWith(
+      expect(component.setDefaultRecipe).toHaveBeenCalledWith(
         ItemId.Coal,
         RecipeId.Coal,
         RecipeId.Coal
@@ -236,15 +161,15 @@ describe('ListComponent', () => {
     });
 
     it('should handle null disabled recipes', () => {
-      spyOn(component.child, 'setDefaultRecipe');
-      component.child.toggleDefaultRecipe(
+      spyOn(component, 'setDefaultRecipe');
+      component.toggleDefaultRecipe(
         ItemId.Coal,
         RecipeId.Coal,
         Mocks.ItemSettingsInitial,
         Settings.initialSettingsState,
         Mocks.AdjustedData
       );
-      expect(component.child.setDefaultRecipe).toHaveBeenCalledWith(
+      expect(component.setDefaultRecipe).toHaveBeenCalledWith(
         ItemId.Coal,
         RecipeId.Coal,
         RecipeId.Coal
@@ -254,31 +179,24 @@ describe('ListComponent', () => {
 
   describe('toggleRecipe', () => {
     it('should enable a recipe', () => {
-      spyOn(component.child, 'setDisabledRecipes');
+      spyOn(component, 'setDisabledRecipes');
       const settings = {
         ...Settings.initialSettingsState,
         ...{ disabledRecipeIds: [RecipeId.AdvancedOilProcessing] },
       };
       const data = { ...Mocks.AdjustedData, ...{ defaults: undefined } };
-      component.child.toggleRecipe(
-        RecipeId.AdvancedOilProcessing,
-        settings,
-        data
-      );
-      expect(component.child.setDisabledRecipes).toHaveBeenCalledWith(
-        [],
-        undefined
-      );
+      component.toggleRecipe(RecipeId.AdvancedOilProcessing, settings, data);
+      expect(component.setDisabledRecipes).toHaveBeenCalledWith([], undefined);
     });
 
     it('should disable a recipe', () => {
-      spyOn(component.child, 'setDisabledRecipes');
-      component.child.toggleRecipe(
+      spyOn(component, 'setDisabledRecipes');
+      component.toggleRecipe(
         RecipeId.AdvancedOilProcessing,
         Settings.initialSettingsState,
         Mocks.AdjustedData
       );
-      expect(component.child.setDisabledRecipes).toHaveBeenCalledWith(
+      expect(component.setDisabledRecipes).toHaveBeenCalledWith(
         [RecipeId.AdvancedOilProcessing],
         Mocks.AdjustedData.defaults?.disabledRecipeIds
       );
@@ -288,14 +206,14 @@ describe('ListComponent', () => {
   describe('changeFactory', () => {
     it('should set up default for factory', () => {
       spyOn(RecipeUtility, 'bestMatch').and.returnValue('default');
-      spyOn(component.child, 'setFactory');
-      component.child.changeFactory(
+      spyOn(component, 'setFactory');
+      component.changeFactory(
         RecipeId.AdvancedCircuit,
         'value',
         Mocks.FactorySettingsInitial,
         Mocks.AdjustedData
       );
-      expect(component.child.setFactory).toHaveBeenCalledWith(
+      expect(component.setFactory).toHaveBeenCalledWith(
         RecipeId.AdvancedCircuit,
         'value',
         'default'
@@ -304,14 +222,14 @@ describe('ListComponent', () => {
 
     it('should handle null factory ids', () => {
       spyOn(RecipeUtility, 'bestMatch').and.returnValue('default');
-      spyOn(component.child, 'setFactory');
-      component.child.changeFactory(
+      spyOn(component, 'setFactory');
+      component.changeFactory(
         RecipeId.AdvancedCircuit,
         'value',
         Factories.initialFactoriesState,
         Mocks.AdjustedData
       );
-      expect(component.child.setFactory).toHaveBeenCalledWith(
+      expect(component.setFactory).toHaveBeenCalledWith(
         RecipeId.AdvancedCircuit,
         'value',
         'default'
@@ -321,8 +239,8 @@ describe('ListComponent', () => {
 
   describe('changeRecipeField', () => {
     it('should set up default for factory modules', () => {
-      spyOn(component.child, 'setFactoryModules');
-      component.child.changeRecipeField(
+      spyOn(component, 'setFactoryModules');
+      component.changeRecipeField(
         RecipeId.WoodenChest,
         ItemId.SpeedModule3,
         Mocks.RecipeSettingsInitial,
@@ -331,7 +249,7 @@ describe('ListComponent', () => {
         0,
         Mocks.AdjustedData
       );
-      expect(component.child.setFactoryModules).toHaveBeenCalledWith(
+      expect(component.setFactoryModules).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         new Array(4).fill(ItemId.SpeedModule3),
         new Array(4).fill(ItemId.SpeedModule3)
@@ -339,15 +257,15 @@ describe('ListComponent', () => {
     });
 
     it('should set up default for beacon count', () => {
-      spyOn(component.child, 'setBeaconCount');
-      component.child.changeRecipeField(
+      spyOn(component, 'setBeaconCount');
+      component.changeRecipeField(
         RecipeId.WoodenChest,
         '4',
         Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
         RecipeField.BeaconCount
       );
-      expect(component.child.setBeaconCount).toHaveBeenCalledWith(
+      expect(component.setBeaconCount).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         '4',
         '8'
@@ -355,15 +273,15 @@ describe('ListComponent', () => {
     });
 
     it('should set up default for beacon', () => {
-      spyOn(component.child, 'setBeacon');
-      component.child.changeRecipeField(
+      spyOn(component, 'setBeacon');
+      component.changeRecipeField(
         RecipeId.WoodenChest,
         ItemId.Beacon,
         Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
         RecipeField.Beacon
       );
-      expect(component.child.setBeacon).toHaveBeenCalledWith(
+      expect(component.setBeacon).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         ItemId.Beacon,
         ItemId.Beacon
@@ -371,8 +289,8 @@ describe('ListComponent', () => {
     });
 
     it('should set up default for beacon modules', () => {
-      spyOn(component.child, 'setBeaconModules');
-      component.child.changeRecipeField(
+      spyOn(component, 'setBeaconModules');
+      component.changeRecipeField(
         RecipeId.WoodenChest,
         ItemId.SpeedModule3,
         Mocks.RecipeSettingsInitial,
@@ -380,7 +298,7 @@ describe('ListComponent', () => {
         RecipeField.BeaconModules,
         0
       );
-      expect(component.child.setBeaconModules).toHaveBeenCalledWith(
+      expect(component.setBeaconModules).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         new Array(2).fill(ItemId.SpeedModule3),
         new Array(2).fill(ItemId.SpeedModule3)
@@ -388,15 +306,15 @@ describe('ListComponent', () => {
     });
 
     it('should set up default for overclock', () => {
-      spyOn(component.child, 'setOverclock');
-      component.child.changeRecipeField(
+      spyOn(component, 'setOverclock');
+      component.changeRecipeField(
         RecipeId.WoodenChest,
-        { target: { valueAsNumber: 100 } } as any,
+        100,
         Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
         RecipeField.Overclock
       );
-      expect(component.child.setOverclock).toHaveBeenCalledWith(
+      expect(component.setOverclock).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         100,
         undefined
@@ -405,7 +323,7 @@ describe('ListComponent', () => {
   });
 
   it('should dispatch actions', () => {
-    const dispatch = new DispatchTest(mockStore, component.child);
+    const dispatch = new DispatchTest(mockStore, component);
     dispatch.val('ignoreItem', Items.IgnoreItemAction);
     dispatch.idValDef('setBelt', Items.SetBeltAction);
     dispatch.idValDef('setWagon', Items.SetWagonAction);
@@ -418,11 +336,10 @@ describe('ListComponent', () => {
     dispatch.idValDef('setOverclock', Recipes.SetOverclockAction);
     dispatch.val('resetItem', Items.ResetItemAction);
     dispatch.val('resetRecipe', Recipes.ResetRecipeAction);
-    dispatch.void('resetIgnore', Items.ResetIgnoreAction);
-    dispatch.void('resetBelt', Items.ResetBeltAction);
-    dispatch.void('resetWagon', Items.ResetWagonAction);
-    dispatch.void('resetFactory', Recipes.ResetFactoryAction);
-    dispatch.void('resetOverclock', Recipes.ResetOverclockAction);
+    dispatch.void('resetIgnores', Items.ResetIgnoresAction);
+    dispatch.void('resetBelts', Items.ResetBeltsAction);
+    dispatch.void('resetWagons', Items.ResetWagonsAction);
+    dispatch.void('resetFactories', Recipes.ResetFactoriesAction);
     dispatch.void('resetBeacons', Recipes.ResetBeaconsAction);
     dispatch.valDef('setDisabledRecipes', Settings.SetDisabledRecipesAction);
     dispatch.idValDef('setDefaultRecipe', Items.SetRecipeAction);

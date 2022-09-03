@@ -1,50 +1,44 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  Input,
-  OnChanges,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { Table } from 'primeng/table';
 import { combineLatest, filter, first, map } from 'rxjs';
 
 import {
   Column,
   Dataset,
-  DisplayRate,
-  DisplayRateVal,
-  Entities,
   Game,
   ItemId,
-  ListMode,
-  PIPE,
   Rational,
   RecipeField,
   Step,
   StepDetailTab,
 } from '~/models';
-import { TrackService } from '~/services';
-import { LabState } from '~/store';
-import * as Factories from '~/store/factories';
-import * as Items from '~/store/items';
-import * as Preferences from '~/store/preferences';
-import * as Products from '~/store/products';
-import * as Recipes from '~/store/recipes';
-import * as Settings from '~/store/settings';
+import { ContentService, TrackService } from '~/services';
+import {
+  Factories,
+  Items,
+  LabState,
+  Preferences,
+  Products,
+  Recipes,
+  Settings,
+} from '~/store';
 import { ExportUtility, RecipeUtility } from '~/utilities';
 
-@UntilDestroy()
 @Component({
   selector: 'lab-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ListComponent implements OnInit, OnChanges, AfterViewInit {
+export class ListComponent implements OnInit, AfterViewInit {
   vm$ = combineLatest([
     this.store.select(Factories.getFactories),
     this.store.select(Items.getItemSettings),
@@ -60,9 +54,12 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     this.store.select(Recipes.getRecipeSettings),
     this.store.select(Recipes.getRecipesModified),
     this.store.select(Recipes.getAdjustedDataset),
-    this.store.select(Settings.getSettings),
-    this.store.select(Settings.getBeltSpeed),
     this.store.select(Settings.getColumnsState),
+    this.store.select(Settings.getSettings),
+    this.store.select(Settings.getDisplayRateInfo),
+    this.store.select(Settings.getOptions),
+    this.store.select(Settings.getBeltSpeed),
+    this.store.select(Settings.getBeltSpeedTxt),
   ]).pipe(
     map(
       ([
@@ -80,9 +77,12 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
         recipeSettings,
         recipesModified,
         data,
-        settings,
-        beltSpeed,
         columns,
+        settings,
+        dispRateInfo,
+        options,
+        beltSpeed,
+        beltSpeedTxt,
       ]) => ({
         factories,
         itemSettings,
@@ -98,36 +98,32 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
         recipeSettings,
         recipesModified,
         data,
-        settings,
-        beltSpeed,
         columns,
+        settings,
+        dispRateInfo,
+        options,
+        beltSpeed,
+        beltSpeedTxt,
       })
     )
   );
 
-  @Input() mode = ListMode.All;
-  @Input() selectedId: string | undefined;
+  @ViewChild('stepsTable') stepsTable: Table | undefined;
 
-  expanded: Entities<StepDetailTab> = {};
   fragmentId: string | null | undefined;
 
-  ColumnsLeftOfPower = [Column.Belts, Column.Factories, Column.Beacons];
-  DisplayRateVal = DisplayRateVal;
-  PIPE = PIPE;
   Column = Column;
-  DisplayRate = DisplayRate;
   ItemId = ItemId;
-  ListMode = ListMode;
   StepDetailTab = StepDetailTab;
   Game = Game;
   RecipeField = RecipeField;
   Rational = Rational;
 
   constructor(
-    private ref: ChangeDetectorRef,
-    private route: ActivatedRoute,
+    public contentSvc: ContentService,
     public trackSvc: TrackService,
-    public store: Store<LabState>
+    private route: ActivatedRoute,
+    private store: Store<LabState>
   ) {}
 
   ngOnInit(): void {
@@ -140,29 +136,13 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
         // Store the fragment to navigate to it after the component loads
         this.fragmentId = id;
       });
-    this.syncDetailTabs();
-  }
-
-  ngOnChanges(): void {
-    this.expanded = {};
-    if (this.selectedId != null) {
-      const selected = this.selectedId;
-      this.store
-        .select(Products.getStepDetails)
-        .pipe(first())
-        .subscribe((stepDetails) => {
-          if (stepDetails[selected]?.tabs.length) {
-            this.expanded[selected] = stepDetails[selected].tabs[0];
-          }
-        });
-    }
   }
 
   ngAfterViewInit(): void {
     // Now that component is loaded, try navigating to the fragment
     try {
       if (this.fragmentId) {
-        document.querySelector('#' + this.fragmentId)?.scrollIntoView();
+        document.querySelector('#\\' + this.fragmentId)?.scrollIntoView();
         combineLatest([
           this.store.select(Products.getSteps),
           this.store.select(Products.getStepDetails),
@@ -173,34 +153,14 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
             if (step) {
               const tabs = stepDetails[step.id].tabs;
               if (tabs.length) {
-                this.expanded[step.id] = tabs[0];
+                if (this.stepsTable) {
+                  this.stepsTable.toggleRow(step);
+                }
               }
             }
           });
       }
     } catch (e) {}
-  }
-
-  syncDetailTabs(): void {
-    this.store
-      .select(Products.getStepDetails)
-      .pipe(untilDestroyed(this))
-      .subscribe((stepDetails) => {
-        // Hide any step details that are no longer valid
-        for (const id of Object.keys(this.expanded).filter(
-          (i) => this.expanded[i]
-        )) {
-          const tabs = stepDetails[id]?.tabs;
-          if (!tabs?.length) {
-            // Collapse this step
-            delete this.expanded[id];
-          } else if (tabs.indexOf(this.expanded[id]) === -1) {
-            // Pick a different tab
-            this.expanded[id] = tabs[0];
-          }
-        }
-        this.ref.detectChanges();
-      });
   }
 
   resetStep(step: Step): void {
@@ -287,7 +247,7 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
 
   changeRecipeField(
     recipeId: string,
-    event: string | Event,
+    event: string | number,
     recipeSettings: Recipes.RecipesState,
     factories: Factories.FactoriesState,
     field: RecipeField,
@@ -354,13 +314,10 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
           break;
         }
         case RecipeField.Overclock: {
-          if (typeof event !== 'string') {
-            const target = event.target as HTMLInputElement;
-            const value = target.valueAsNumber;
-            if (value >= 1 && value <= 250) {
-              const def = factory.overclock;
-              this.setOverclock(recipeId, value, def);
-            }
+          if (typeof event === 'number') {
+            const def = factory.overclock;
+            const value = Math.max(1, Math.min(250, event));
+            this.setOverclock(recipeId, value, def);
           }
           break;
         }
@@ -436,24 +393,20 @@ export class ListComponent implements OnInit, OnChanges, AfterViewInit {
     this.store.dispatch(new Recipes.ResetRecipeAction(value));
   }
 
-  resetIgnore(): void {
-    this.store.dispatch(new Items.ResetIgnoreAction());
+  resetIgnores(): void {
+    this.store.dispatch(new Items.ResetIgnoresAction());
   }
 
-  resetBelt(): void {
-    this.store.dispatch(new Items.ResetBeltAction());
+  resetBelts(): void {
+    this.store.dispatch(new Items.ResetBeltsAction());
   }
 
-  resetWagon(): void {
-    this.store.dispatch(new Items.ResetWagonAction());
+  resetWagons(): void {
+    this.store.dispatch(new Items.ResetWagonsAction());
   }
 
-  resetFactory(): void {
-    this.store.dispatch(new Recipes.ResetFactoryAction());
-  }
-
-  resetOverclock(): void {
-    this.store.dispatch(new Recipes.ResetOverclockAction());
+  resetFactories(): void {
+    this.store.dispatch(new Recipes.ResetFactoriesAction());
   }
 
   resetBeacons(): void {

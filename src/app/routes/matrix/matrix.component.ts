@@ -2,10 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
-import { LabState } from '~/store';
-import * as Products from '~/store/products';
-import * as Recipes from '~/store/recipes';
-import * as Settings from '~/store/settings';
+import { Column } from '~/models';
+import { LabState, Preferences, Products, Recipes, Settings } from '~/store';
 
 @Component({
   selector: 'lab-matrix',
@@ -21,6 +19,7 @@ export class MatrixComponent {
     this.store.select(Recipes.recipesState),
     this.store.select(Settings.getSettingsModified),
     this.store.select(Settings.settingsState),
+    this.store.select(Preferences.getColumns),
   ]).pipe(
     map(
       ([
@@ -30,6 +29,7 @@ export class MatrixComponent {
         recipeRaw,
         settingsModified,
         settings,
+        columns,
       ]) => ({
         result,
         recipesModified,
@@ -37,6 +37,7 @@ export class MatrixComponent {
         recipeRaw,
         settingsModified,
         settings,
+        precision: columns[Column.Items].precision,
       })
     )
   );

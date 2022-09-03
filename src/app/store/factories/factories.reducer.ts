@@ -58,6 +58,16 @@ export function factoriesReducer(
       }
       return state;
     }
+    case FactoriesActionType.LOWER: {
+      const value = [...(state.ids ?? action.payload.def ?? [])];
+      const i = value.indexOf(action.payload.value);
+      if (i !== -1 && i < value.length - 1) {
+        value.splice(i + 1, 0, value.splice(i, 1)[0]);
+        const ids = StoreUtility.compareRank(value, action.payload.def);
+        return { ...state, ...{ ids } };
+      }
+      return state;
+    }
     case FactoriesActionType.SET_FACTORY: {
       const value = [...(state.ids ?? action.payload.def ?? [])];
       const i = value.indexOf(action.payload.id);
@@ -68,9 +78,11 @@ export function factoriesReducer(
           ...state,
           ...{ ids, entities: { ...state.entities } },
         };
-        newState.entities[action.payload.value] =
-          newState.entities[action.payload.id];
-        delete newState.entities[action.payload.id];
+        if (newState.entities[action.payload.id]) {
+          newState.entities[action.payload.value] =
+            newState.entities[action.payload.id];
+          delete newState.entities[action.payload.id];
+        }
         return newState;
       }
       return state;

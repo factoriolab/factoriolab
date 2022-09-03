@@ -1,5 +1,6 @@
-import { IdName } from '../id-name';
-import { DisplayRate, DisplayRateLabel } from './display-rate';
+import { SelectItem } from 'primeng/api';
+
+import { DisplayRateInfo } from './display-rate';
 import { Game } from './game';
 
 export enum RateType {
@@ -10,18 +11,18 @@ export enum RateType {
 }
 
 export function rateTypeOptions(
-  displayRate: DisplayRate,
+  dispRateInfo: DisplayRateInfo,
   game: Game
-): IdName<RateType>[] {
+): SelectItem<RateType>[] {
   const result = [
-    { id: RateType.Items, name: `Items${DisplayRateLabel[displayRate]}` },
-    { id: RateType.Belts, name: 'Belts' },
-    { id: RateType.Wagons, name: `Wagons${DisplayRateLabel[displayRate]}` },
-    { id: RateType.Factories, name: 'Factories' },
+    { value: RateType.Items, label: `Items${dispRateInfo.label}` },
+    { value: RateType.Belts, label: 'Belts' },
+    { value: RateType.Wagons, label: `Wagons${dispRateInfo.label}` },
+    { value: RateType.Factories, label: 'Factories' },
   ];
 
   if (game === Game.DysonSphereProgram || game === Game.CaptainOfIndustry) {
-    return result.filter((i) => i.id !== RateType.Wagons);
+    return result.filter((i) => i.value !== RateType.Wagons);
   }
 
   return result;

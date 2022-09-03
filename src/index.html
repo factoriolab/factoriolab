@@ -5,18 +5,35 @@
     <title>FactorioLab</title>
     <meta
       name="description"
-      content="Factorio calculator, Dyson Sphere Program calculator, and Satisfactory calculator.
-Determines resource and factory requirements for desired output products."
+      content="A feature-rich factory production calculator for Factorio and other factory games.
+Determine resource and factory requirements for your desired output products."
     />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Titillium+Web:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap"
       rel="stylesheet"
+    />
+    <link
+      id="lab-theme-css"
+      rel="stylesheet"
+      type="text/css"
+      href="theme-light.css"
     />
   </head>
   <body>
-    <lab-root></lab-root>
+    <lab-root>
+      <!-- Pure CSS spinner -->
+      <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="lds-ring">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+    </lab-root>
   </body>
 </html>

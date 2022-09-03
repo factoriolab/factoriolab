@@ -1,142 +1,162 @@
 <ng-container *ngIf="vm$ | async as vm">
-  <div class="top-bar">
-    <div>
-      <div class="links">
-        <div class="header">
-          <a [href]="homeHref"
-            ><h1>{{ title | translate }}</h1></a
-          >
-        </div>
-        <ng-container *ngIf="vm.game !== Game.Factorio">
-          <span class="separator">|</span>
-          <a href="factorio">{{ 'game.Factorio' | translate }}</a>
+  <lab-header
+    [sticky]="vm.scrollTop > 16"
+    [settingsXlHidden]="vm.settingsXlHidden"
+  ></lab-header>
+
+  <ng-container *ngIf="vm.errorMsg == null; else errorDialog">
+    <lab-settings
+      [active]="vm.settingsActive"
+      [hidden]="vm.settingsXlHidden"
+    ></lab-settings>
+    <div
+      class="layout-mask"
+      [class.active]="vm.settingsActive"
+      (click)="contentSvc.toggleSettings()"
+    ></div>
+    <div
+      class="layout-content"
+      [class.settings-xl-hidden]="vm.settingsXlHidden"
+    >
+      <main class="px-1 px-sm-4 py-4">
+        <ng-container *ngIf="vm.mod != null; else loading">
+          <lab-products></lab-products>
+
+          <p-card styleClass="mt-4" [header]="'app.factory' | translate">
+            <p-tabMenu [model]="tabItems">
+              <ng-template pTemplate="item" let-item>
+                <span class="p-menuitem-icon" [class]="item.icon"></span>
+                <span class="p-menuitem-text">{{
+                  item.label | translate
+                }}</span>
+              </ng-template>
+            </p-tabMenu>
+            <router-outlet></router-outlet>
+            <ng-template pTemplate="footer">
+              <div class="d-flex align-items-center justify-content-between">
+                <ng-container
+                  *ngIf="
+                    vm.result.resultType === MatrixResultType.Solved ||
+                      vm.result.resultType === MatrixResultType.Cached;
+                    else notSolved
+                  "
+                >
+                  <div *ngIf="vm.result.A && vm.result.O">
+                    <div>
+                      {{
+                        'app.simplexSolved'
+                          | translate
+                            : {
+                                resultType: vm.result.resultType.toLowerCase(),
+                                time: vm.result.time,
+                                pivots: vm.result.pivots,
+                                rows: vm.result.A.length,
+                                cols: vm.result.A[0].length,
+                                cost: vm.result.O[
+                                  vm.result.O.length - 1
+                                ].toPrecision(2)
+                              }
+                      }}
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-template #notSolved>
+                  <span>{{
+                    'app.simplexUnsolved'
+                      | translate
+                        : { resultType: vm.result.resultType.toLowerCase() }
+                  }}</span>
+                </ng-template>
+                <span>{{ version }}</span>
+              </div>
+            </ng-template>
+          </p-card>
         </ng-container>
-        <ng-container *ngIf="vm.game !== Game.CaptainOfIndustry">
-          <span class="separator">|</span>
-          <a href="coi">{{ 'game.CaptainOfIndustry' | translate }}</a>
-        </ng-container>
-        <ng-container *ngIf="vm.game !== Game.DysonSphereProgram">
-          <span class="separator">|</span>
-          <a href="dsp">{{ 'game.DysonSphereProgram' | translate }}</a>
-        </ng-container>
-        <ng-container *ngIf="vm.game !== Game.Satisfactory">
-          <span class="separator">|</span>
-          <a href="satisfactory">{{ 'game.Satisfactory' | translate }}</a>
-        </ng-container>
-      </div>
-      <div class="links">
-        <a
-          target="_blank"
-          href="https://github.com/factoriolab/factoriolab/wiki"
-          >Wiki</a
+        <ng-template #loading>
+          <div class="d-flex flex-column align-items-center mt-5">
+            <p-progressSpinner></p-progressSpinner>
+          </div>
+        </ng-template>
+        <p-dialog
+          [(visible)]="showSimplexErr"
+          [modal]="true"
+          [draggable]="false"
+          [resizable]="false"
+          [style]="{ width: '576px' }"
+          [breakpoints]="{ '576px': '100%' }"
         >
-        <span class="separator">|</span>
-        <a target="_blank" href="https://github.com/factoriolab/factoriolab"
-          >Source</a
-        >
-        <span class="separator">|</span>
-        <a target="_blank" href="https://discord.gg/N4FKV687x2">Discord</a>
-        <span class="separator">|</span>
-        <a target="_blank" href="https://ko-fi.com/dcbroad3">Support</a>
-      </div>
-    </div>
-  </div>
-  <ng-container *ngIf="(errorSvc.message$ | async) == null; else errorTile">
-    <main *ngIf="vm.mod != null; else loading">
-      <div *ngIf="showSettings" @slideLeftRight class="settings">
-        <lab-settings (closeSettings)="showSettings = !showSettings">
-        </lab-settings>
-      </div>
-      <div class="view">
-        <div *ngIf="showPoll" class="poll">
-          <h2>Poll</h2>
-          <div class="panel">
-            <a target="_blank" [href]="poll">Have a minute to answer a poll?</a>
-            <div class="flex buttons">
-              <button (click)="hidePoll(true)">
-                <span class="text">Don't show again</span>
-              </button>
-              <button (click)="hidePoll()">
-                <span class="text">Close</span>
-              </button>
+          <ng-template pTemplate="header">
+            <div class="p-dialog-title">
+              <i class="fa-solid fa-triangle-exclamation me-2"></i>
+              <span>{{ 'app.simplexError' | translate }}</span>
+            </div>
+          </ng-template>
+          <div>
+            <div [innerText]="'app.simplexErrorDetail' | translate"></div>
+            <div class="text-end mt-2">
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="mt-2 p-button-outlined"
+                [label]="'app.dontShowAgain' | translate"
+                (click)="showSimplexErr = false; simplexErrSub.unsubscribe()"
+              ></button>
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="mt-2 ms-2 p-button-outlined"
+                [label]="'app.trySuggestedFix' | translate"
+                [loading]="isFixingSimplex"
+                (click)="tryFixSimplex()"
+              ></button>
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="mt-2 ms-2"
+                [label]="'ok' | translate"
+                (click)="showSimplexErr = false"
+              ></button>
             </div>
           </div>
-        </div>
-        <lab-products></lab-products>
-        <div *ngIf="vm.products.length">
-          <ul role="navigation" class="tabs">
-            <li
-              routerLink="/list"
-              routerLinkActive="active"
-              queryParamsHandling="preserve"
-            >
-              <span>{{ 'app.list' | translate }}</span>
-            </li>
-            <li
-              routerLink="/flow"
-              routerLinkActive="active"
-              queryParamsHandling="preserve"
-            >
-              <span>{{ 'app.flow' | translate }}</span>
-            </li>
-            <li
-              routerLink="/matrix"
-              routerLinkActive="active"
-              queryParamsHandling="preserve"
-            >
-              <span>{{ 'app.matrix' | translate }}</span>
-            </li>
-            <li *ngIf="!showSettings" (click)="showSettings = true">
-              <span>{{ 'app.settings' | translate }}</span>
-            </li>
-          </ul>
-          <div class="panel">
-            <router-outlet></router-outlet>
-          </div>
-        </div>
-        <div>
-          <div class="panel dark flex tween">
-            <ng-container
-              *ngIf="
-                vm.result.resultType === MatrixResultType.Solved ||
-                  vm.result.resultType === MatrixResultType.Cached;
-                else notSolved
-              "
-            >
-              <span *ngIf="vm.result.A && vm.result.O"
-                >Simplex {{ vm.result.resultType }}: {{ vm.result.time }}ms,
-                {{ vm.result.pivots }} pivots<br />
-                Size: {{ vm.result.A.length }} x {{ vm.result.A[0].length }},
-                Cost:
-                {{ vm.result.O[vm.result.O.length - 1].toPrecision(2) }}
-              </span>
-            </ng-container>
-            <ng-template #notSolved>
-              <span>Simplex {{ vm.result.resultType }}</span>
-            </ng-template>
-            <span>{{ version }}</span>
-          </div>
-        </div>
-      </div>
-    </main>
+        </p-dialog>
+      </main>
+    </div>
   </ng-container>
-  <ng-template #loading>
-    <div class="view msg load">
-      <div><div class="panel">Loading data, please wait...</div></div>
-    </div>
-  </ng-template>
-  <ng-template #errorTile>
-    <div class="view msg err">
-      <div>
-        <h2>Error</h2>
-        <div class="panel invalid">
-          <div>The application has encountered an error:</div>
-          <br />
-          <div>{{ errorSvc.message$ | async }}</div>
-          <br />
-          <a [href]="homeHref">Click here to reset</a>
+
+  <ng-template #errorDialog>
+    <p-dialog
+      [visible]="true"
+      [modal]="true"
+      [draggable]="false"
+      [resizable]="false"
+      [closable]="false"
+      [closeOnEscape]="false"
+    >
+      <ng-template pTemplate="header">
+        <div class="p-dialog-title p-error">
+          <i class="fa-solid fa-circle-exclamation me-2"></i>
+          <span>{{ 'app.error' | translate }}</span>
+        </div>
+      </ng-template>
+      <div class="p-error">
+        <div>{{ 'app.errorDetail' | translate }}</div>
+        <div class="mt-4">{{ vm.errorMsg }}</div>
+        <div class="text-end mt-4">
+          <button
+            pButton
+            pRipple
+            type="button"
+            [label]="'app.reset' | translate"
+            [loading]="isResetting"
+            (click)="reset(vm.game)"
+          ></button>
         </div>
       </div>
-    </div>
+    </p-dialog>
   </ng-template>
 </ng-container>
+
+<lab-content></lab-content>

@@ -1,20 +1,21 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-
-import { FlowComponent, ListComponent, MatrixComponent } from './routes';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
     path: 'list',
-    component: ListComponent,
+    loadChildren: () =>
+      import('./routes/list/list.module').then((m) => m.ListModule),
   },
   {
     path: 'flow',
-    component: FlowComponent,
+    loadChildren: () =>
+      import('./routes/flow/flow.module').then((m) => m.FlowModule),
   },
   {
     path: 'matrix',
-    component: MatrixComponent,
+    loadChildren: () =>
+      import('./routes/matrix/matrix.module').then((m) => m.MatrixModule),
   },
   {
     path: 'factorio',
@@ -39,7 +40,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

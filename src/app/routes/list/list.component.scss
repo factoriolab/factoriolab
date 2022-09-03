@@ -1,291 +1,83 @@
-:host {
-  display: block;
-}
+.links {
+  // Tree container
+  height: 50px;
 
-table {
-  th,
-  td {
-    padding: 0.25rem 0.5rem;
+  // One width segment of the tree
+  .connect {
+    position: relative;
 
-    &.num {
-      width: 5.25rem;
+    height: 100%;
+    margin-left: 16px;
+
+    // Segment contains trail
+    &.last,
+    &.trail {
+      border-left: 2px dotted var(--text-color-secondary);
     }
 
-    &.num-unit {
-      width: 7rem;
+    // Segment ends at this row
+    &.last:not(.trail) {
+      margin-bottom: 25px;
+      height: 25px;
     }
 
-    &.num-icon {
-      width: 8rem;
-    }
-
-    &.split-column {
-      padding-left: 0;
-
-      > .flex {
-        justify-content: flex-start;
-      }
-    }
-
-    &.tree {
-      padding: 0 0.25rem;
+    // Segments should pad between
+    & + .connect {
+      margin-left: 32px;
     }
   }
 
-  tr.border {
-    &.row {
-      border-top: 1px solid var(--color-back);
-    }
+  .indent {
+    margin-left: 0;
+    border-top: 2px dotted var(--text-color-secondary);
+    width: 16px;
+  }
 
-    &.col {
-      > *:not(:first-child):not(.split-column) {
-        border-left: 1px solid var(--color-back);
-      }
-    }
+  .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 32px;
+    height: 32px;
   }
 }
 
-tr.detail-header {
-  > * {
-    &:not(:first-child) {
-      background-color: var(--color-back);
-    }
+:host ::ng-deep {
+  // Mask input fields
+  .p-dropdown,
+  .p-inputtext {
+    &:not(:hover):not(:focus):not(.ng-invalid) {
+      border-color: transparent;
 
-    &:nth-child(2) {
-      border-top-left-radius: 0.375rem;
-    }
-
-    &:last-child {
-      border-top-right-radius: 0.375rem;
-    }
-  }
-}
-
-tr.details {
-  > :first-child {
-    background-color: var(--color-light);
-  }
-
-  > :not(:first-child) {
-    background-color: var(--color-dark);
-  }
-
-  > *:not(:first-child):not(:nth-child(2)):not(.split-column) {
-    border-left: 1px solid var(--color-back);
-  }
-
-  &:not(.first) > td:not(:first-child) {
-    border-top: 1px solid var(--color-back);
-  }
-
-  &.last {
-    > :nth-child(2) {
-      border-bottom-left-radius: 0.375rem;
-    }
-
-    > :last-child {
-      border-bottom-right-radius: 0.375rem;
+      background-color: transparent;
     }
   }
 
-  .factory {
-    padding: 0;
+  // Highlight modules to right of the hovered module
+  .module-dropdown:not(.last) {
+    margin-right: -0.5rem;
 
-    > div {
-      padding: 0 0.5rem;
-
-      > * {
-        margin-left: 0;
-      }
-    }
-
-    .monospace {
-      white-space: normal;
-    }
-
-    > div {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
+    .p-dropdown {
+      border-right-color: transparent;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
     }
   }
 
-  .recipes {
-    padding: 0.5rem;
-
-    > .list {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      flex-wrap: wrap;
-      max-width: 38rem;
-
-      > * {
-        margin-left: 1px;
-      }
-    }
-  }
-
-  .header {
-    margin-left: 0.5rem;
-  }
-
-  > :not(:first-child) {
-    background-color: var(--color-dark);
-  }
-}
-
-th > div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 2rem;
-  padding: 0 0.25rem;
-  margin: 0 -0.25rem;
-
-  &.header button {
-    margin-left: 0.5rem;
-  }
-
-  &.end {
-    justify-content: flex-end;
-  }
-
-  .sub {
-    align-self: end;
-    font-size: medium;
-    flex-grow: 1;
-
-    &.left {
-      text-align: left;
+  .module-dropdown:hover ~ .module-dropdown {
+    &:not(.last) .p-dropdown {
+      border-top-color: var(--primary-color);
+      border-bottom-color: var(--primary-color);
     }
 
-    &.right {
-      text-align: right;
+    &.last .p-dropdown {
+      border-color: var(--primary-color);
+      border-left-color: transparent;
     }
   }
 }
 
-td > div {
-  justify-content: flex-end;
-
-  &.links {
-    justify-content: flex-start;
-
-    > * + * {
-      margin-left: 0;
-    }
-
-    .connect {
-      margin-left: 1rem;
-      height: 2.75rem;
-      border-left: 2px dotted transparent;
-
-      &.trail {
-        border-color: var(--color-dark);
-      }
-
-      &.last:not(.trail) {
-        height: 1.5rem;
-        margin-bottom: 1.25rem;
-        border-color: var(--color-dark);
-      }
-
-      & + .connect {
-        margin-left: 1.5rem;
-      }
-    }
-
-    .indent {
-      margin-left: 0;
-      width: 0.625rem;
-      border-top: 2px dotted var(--color-dark);
-    }
-
-    lab-icon {
-      padding: 0;
-    }
-  }
-
-  &.mod,
-  > .mod {
-    justify-content: flex-start;
-
-    > :first-child > lab-icon {
-      border-radius: 0.25rem;
-
-      &:not(:hover) {
-        background-color: var(--color-gray-1);
-      }
-    }
-
-    > * + * {
-      margin-left: 0;
-    }
-  }
-
-  > * + * {
-    margin-left: 0.5rem;
-
-    &.percent {
-      margin-left: 0;
-    }
-  }
-}
-
-.summary-label {
-  text-align: right;
-}
-
-td.nowrap {
-  white-space: nowrap;
-}
-
-.recipe {
-  margin-left: -0.5rem;
-  padding: 0;
-}
-
-.message {
-  color: var(--color-header);
-  font-size: large;
-  text-align: center;
-  padding: 1rem;
-}
-
-tr {
-  &.spacer {
-    height: 0.25rem;
-  }
-
-  td.detail-tabs {
-    padding: 0;
-
-    ul.tabs li {
-      &.active {
-        background-color: var(--color-dark);
-        box-shadow: var(--shadow-button-dk);
-      }
-    }
-  }
-}
-
-.info {
-  font-size: small;
-  margin-bottom: 0.25rem;
-
-  &.warn {
-    color: var(--color-red);
-  }
-}
-
-lab-icon:not(.button) {
-  padding: 0.125rem;
-}
-
-// Highlight modules to the right of the hovered module
-lab-select:hover ~ lab-select .button.module {
-  background-color: var(--color-brand);
-  box-shadow: var(--shadow-hover);
-  filter: drop-shadow(0 0 2px var(--color-brand-sha));
+tr.detail {
+  background-color: var(--surface-ground);
 }

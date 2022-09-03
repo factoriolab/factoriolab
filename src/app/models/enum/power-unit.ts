@@ -1,4 +1,4 @@
-import { IdName } from '../';
+import { SelectItem } from 'primeng/api';
 
 export enum PowerUnit {
   Auto,
@@ -7,9 +7,9 @@ export enum PowerUnit {
   GW,
 }
 
-export const PowerUnitOptions: IdName<PowerUnit>[] = [
-  { id: PowerUnit.Auto, name: 'Auto' },
-  { id: PowerUnit.kW, name: 'kW' },
-  { id: PowerUnit.MW, name: 'MW' },
-  { id: PowerUnit.GW, name: 'GW' },
+export const powerUnitOptions: SelectItem<PowerUnit>[] = [
+  { label: 'Auto', value: PowerUnit.Auto },
+  { label: 'kW', value: PowerUnit.kW },
+  { label: 'MW', value: PowerUnit.MW },
+  { label: 'GW', value: PowerUnit.GW },
 ];

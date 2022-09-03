@@ -1,50 +1,47 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  ElementRef,
-  EventEmitter,
-  HostListener,
+  HostBinding,
+  Input,
   OnInit,
-  Output,
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
+import { MenuItem } from 'primeng/api';
 import { combineLatest, first, map } from 'rxjs';
 
 import {
   Column,
   Dataset,
   DisplayRate,
-  DisplayRateOptions,
+  displayRateOptions,
+  FuelType,
   Game,
-  GameOptions,
-  IdName,
+  gameInfo,
+  gameOptions,
   InserterCapacity,
-  InserterCapacityOptions,
+  inserterCapacityOptions,
   InserterTarget,
-  InserterTargetOptions,
+  inserterTargetOptions,
   ItemId,
+  Language,
+  languageOptions,
   PowerUnit,
-  PowerUnitOptions,
+  powerUnitOptions,
   Preset,
   ResearchSpeed,
-  ResearchSpeedOptions,
+  researchSpeedOptions,
   SimplexType,
-  WARNING_RESET,
+  simplexTypeOptions,
+  Theme,
+  themeOptions,
 } from '~/models';
-import { RouterService } from '~/services';
-import { LabState } from '~/store';
-import * as App from '~/store/app.actions';
-import * as Factories from '~/store/factories';
-import * as Preferences from '~/store/preferences';
-import * as Settings from '~/store/settings';
+import { ContentService, DisplayService, RouterService } from '~/services';
+import { App, Factories, LabState, Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
-@UntilDestroy()
 @Component({
   selector: 'lab-settings',
   templateUrl: './settings.component.html',
@@ -52,122 +49,81 @@ import { BrowserUtility } from '~/utilities';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent implements OnInit {
-  @Output() closeSettings = new EventEmitter();
+  @HostBinding('class.active') @Input() active = false;
+  @HostBinding('class.hidden') @Input() hidden = false;
 
   vm$ = combineLatest([
     this.store.select(Factories.getFactories),
-    this.store.select(Factories.getFactoryOptions),
     this.store.select(Factories.getFactoryRows),
+    this.store.select(Factories.getFactoryOptions),
     this.store.select(Settings.getSettings),
-    this.store.select(Settings.getDataset),
-    this.store.select(Settings.getChemicalFuelIds),
-    this.store.select(Settings.getPresetOptions),
-    this.store.select(Settings.getModOptions),
     this.store.select(Settings.getColumnsState),
+    this.store.select(Settings.getDataset),
+    this.store.select(Settings.getOptions),
+    this.store.select(Settings.getModOptions),
+    this.store.select(Settings.getPresetOptions),
     this.store.select(Preferences.preferencesState),
     this.store.select(Preferences.getSavedStates),
-    this.store.select(Preferences.getColumnsVisible),
+    this.contentSvc.lang$,
   ]).pipe(
     map(
       ([
         factories,
-        factoryOptionIds,
         factoryRows,
+        factoryOptions,
         settings,
-        data,
-        chemicalFuelIds,
-        presetOptions,
-        modOptions,
         columns,
+        data,
+        options,
+        modOptions,
+        presetOptions,
         preferences,
         savedStates,
-        columnsVisible,
       ]) => ({
         factories,
-        factoryOptionIds,
         factoryRows,
+        factoryOptions,
         settings,
-        data,
-        chemicalFuelIds,
-        presetOptions,
         columns,
-        preferences,
+        data,
+        options,
         modOptions,
+        presetOptions,
+        preferences,
         savedStates,
-        columnsVisible,
+        factoryMenuItems: this.buildFactoryMenus(factoryRows, data),
       })
     )
   );
 
-  ctrlFlowRate = new FormControl(
-    Settings.initialSettingsState.flowRate,
-    Validators.min(1)
-  );
-  ctrlMiningProductivity = new FormControl(
-    Settings.initialSettingsState.miningBonus,
-    Validators.min(0)
-  );
-  ctrlMiningSpeed = new FormControl(
-    Settings.initialSettingsState.miningBonus + 100,
-    Validators.min(100)
-  );
   state = '';
-  tempState = '';
+  stateCtrl = new FormControl('', Validators.required);
   editState = false;
-  opening = true;
+  versionsVisible = false;
 
-  initial = Settings.initialSettingsState;
-  simplexTypeOptions: IdName<SimplexType>[] = [
-    {
-      id: SimplexType.JsBigIntRational,
-      name: 'options.simplexTypeJsBigIntRational',
-    },
-    {
-      id: SimplexType.WasmFloat64,
-      name: 'options.simplexTypeWasmFloat64',
-    },
-    {
-      id: SimplexType.Disabled,
-      name: 'options.simplexTypeDisabled',
-    },
-  ];
-  languageOptions: IdName[] = [
-    {
-      id: 'en',
-      name: 'English',
-    },
-    {
-      id: 'zh',
-      name: '简体中文',
-    },
-  ];
+  displayRateOptions = displayRateOptions;
+  gameOptions = gameOptions;
+  inserterCapacityOptions = inserterCapacityOptions;
+  inserterTargetOptions = inserterTargetOptions;
+  languageOptions = languageOptions;
+  powerUnitOptions = powerUnitOptions;
+  researchSpeedOptions = researchSpeedOptions;
+  simplexTypeOptions = simplexTypeOptions;
+  themeOptions = themeOptions;
 
-  GameOptions = GameOptions;
-  ResearchSpeedOptions = ResearchSpeedOptions;
-  InserterCapacityOptions = InserterCapacityOptions;
-  InserterTargetOptions = InserterTargetOptions;
-  DisplayRateOptions = DisplayRateOptions;
-  PowerUnitOptions = PowerUnitOptions;
-  SimplexType = SimplexType;
-  BrowserUtility = BrowserUtility;
-
-  ItemId = ItemId;
-  Game = Game;
   Column = Column;
-
-  get isInOverlayMode(): boolean {
-    return window
-      .getComputedStyle(this.el.nativeElement)
-      .marginRight.startsWith('-');
-  }
+  FuelType = FuelType;
+  Game = Game;
+  ItemId = ItemId;
+  SimplexType = SimplexType;
 
   constructor(
-    private el: ElementRef<HTMLElement>,
-    private ref: ChangeDetectorRef,
+    public contentSvc: ContentService,
+    public displaySvc: DisplayService,
     private router: Router,
+    private store: Store<LabState>,
     private translateSvc: TranslateService,
-    private routerSvc: RouterService,
-    private store: Store<LabState>
+    private routerSvc: RouterService
   ) {}
 
   ngOnInit(): void {
@@ -178,98 +134,44 @@ export class SettingsComponent implements OnInit {
         this.state =
           Object.keys(states).find(
             (s) => states[s] === BrowserUtility.search
-          ) || '';
+          ) ?? '';
       });
-
-    this.store
-      .select(Settings.getSettings)
-      .pipe(untilDestroyed(this))
-      .subscribe((settings) => {
-        this.ctrlFlowRate.setValue(settings.flowRate);
-        this.ctrlMiningProductivity.setValue(settings.miningBonus);
-        this.ctrlMiningSpeed.setValue(settings.miningBonus + 100);
-      });
-
-    this.router.events.subscribe(() => this.ref.detectChanges());
   }
 
-  /** Forces change detector to update on scroll */
-  @HostListener('scroll', ['$event']) scroll(): void {
-    this.ref.detectChanges();
+  buildFactoryMenus(factoryRows: string[], data: Dataset): MenuItem[][] {
+    return factoryRows.map((factoryId, index): MenuItem[] => {
+      if (!factoryId) return [];
+      const items: MenuItem[] = [];
+      if (index > 1)
+        items.push({
+          label: this.translateSvc.instant('settings.moveUp'),
+          icon: 'fa-solid fa-arrow-up',
+          command: () =>
+            this.raiseFactory(factoryId, data.defaults?.factoryRankIds),
+        });
+      if (index < factoryRows.length - 1)
+        items.push({
+          label: this.translateSvc.instant('settings.moveDown'),
+          icon: 'fa-solid fa-arrow-down',
+          command: () =>
+            this.lowerFactory(factoryId, data.defaults?.factoryRankIds),
+        });
+      return items;
+    });
   }
 
-  @HostListener('document:click', ['$event'])
-  click(event: MouseEvent): void {
-    if (this.opening) {
-      this.opening = false;
-    } else if (
-      !this.el.nativeElement.contains(event.target as Node) &&
-      document.contains(event.target as Node) &&
-      this.isInOverlayMode
-    ) {
-      this.closeSettings.emit();
-    }
-  }
-
-  setGame(game: Game): void {
-    switch (game) {
-      case Game.Factorio:
-        this.setMod(Settings.initialSettingsState.modId);
-        break;
-      case Game.CaptainOfIndustry:
-        this.setMod('coi');
-        break;
-      case Game.DysonSphereProgram:
-        this.setMod('dsp');
-        break;
-      case Game.Satisfactory:
-        this.setMod('sfy');
-        break;
-    }
-  }
-
-  changeBeaconCount(
-    id: string,
-    value: string,
-    factories: Factories.FactoriesState,
-    data: Dataset
-  ): void {
-    if (data.defaults != null) {
-      const def =
-        id === ''
-          ? data.defaults.beaconCount
-          : factories.entities[''].beaconCount;
-      this.setBeaconCount(id, value, def);
-    }
-  }
-
-  changeOverclock(
-    id: string,
-    input: Event,
-    factories: Factories.FactoriesState
-  ): void {
-    const target = input.target as HTMLInputElement;
-    const value = target.valueAsNumber;
-    if (value >= 1 && value <= 250) {
-      const def = id === '' ? 100 : factories.entities[''].overclock;
-      this.setOverclock(id, value, def);
-    }
-  }
-
-  emitNumber(
-    field: 'miningBonus' | 'flowRate',
-    event: Event,
-    min: number,
-    offset = 0
-  ): void {
-    const target = event.target as HTMLInputElement;
-    let value = Number(target.value) + offset;
-    value = Math.max(value, min);
-    if (field === 'miningBonus') {
-      this.setMiningBonus(value);
-    } else {
-      this.setFlowRate(value);
-    }
+  clickResetSettings(): void {
+    this.contentSvc.confirm({
+      icon: 'fa-solid fa-exclamation-triangle',
+      header: this.translateSvc.instant('settings.reset'),
+      message: this.translateSvc.instant('settings.resetWarning'),
+      acceptLabel: this.translateSvc.instant('yes'),
+      rejectLabel: this.translateSvc.instant('cancel'),
+      accept: () => {
+        localStorage.clear();
+        this.resetSettings();
+      },
+    });
   }
 
   setState(id: string, preferences: Preferences.PreferencesState): void {
@@ -282,39 +184,30 @@ export class SettingsComponent implements OnInit {
   }
 
   clickSaveState(): void {
-    this.saveState(this.tempState, BrowserUtility.search);
-    this.editState = false;
-    this.state = this.tempState;
+    if (this.stateCtrl.value) {
+      this.saveState(this.stateCtrl.value, BrowserUtility.search);
+      this.editState = false;
+      this.state = this.stateCtrl.value;
+    }
   }
 
-  clickRemoveState(): void {
+  clickDeleteState(): void {
     this.removeState(this.state);
     this.state = '';
   }
 
-  toggleEditState(): void {
-    this.editState = !this.editState;
-    this.tempState = this.state;
+  openEditState(): void {
+    this.stateCtrl.setValue(this.state);
+    this.stateCtrl.markAsPristine();
+    this.editState = true;
   }
 
-  clickResetSettings(): void {
-    if (confirm(WARNING_RESET)) {
-      localStorage.clear();
-      this.resetSettings();
-    }
+  setGame(game: Game): void {
+    this.setMod(gameInfo[game].modId);
   }
 
-  toggleBeaconPower(settings: Settings.SettingsState): void {
-    if (settings.beaconReceivers) {
-      this.setBeaconReceivers(null);
-    } else {
-      this.setBeaconReceivers('1');
-    }
-  }
-
-  changeLanguage(value: string): void {
-    this.translateSvc.use(value);
-    this.setLanguage(value);
+  toggleBeaconReceivers(value: boolean): void {
+    this.setBeaconReceivers(value ? '1' : null);
   }
 
   /** Action Dispatch Methods */
@@ -330,16 +223,16 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Preferences.RemoveStateAction(value));
   }
 
-  setPreset(value: Preset): void {
-    this.store.dispatch(new Settings.SetPresetAction(value));
-  }
-
   setMod(value: string): void {
     this.store.dispatch(new Settings.SetModAction(value));
   }
 
   setDisabledRecipes(value: string[], def: string[] | undefined): void {
     this.store.dispatch(new Settings.SetDisabledRecipesAction({ value, def }));
+  }
+
+  setPreset(value: Preset): void {
+    this.store.dispatch(new Settings.SetPresetAction(value));
   }
 
   addFactory(value: string, def: string[] | undefined): void {
@@ -354,12 +247,20 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Factories.RaiseAction({ value, def }));
   }
 
+  lowerFactory(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Factories.LowerAction({ value, def }));
+  }
+
   setFactory(id: string, value: string, def: string[] | undefined): void {
     this.store.dispatch(new Factories.SetFactoryAction({ id, value, def }));
   }
 
   setModuleRank(id: string, value: string[], def: string[] | undefined): void {
     this.store.dispatch(new Factories.SetModuleRankAction({ id, value, def }));
+  }
+
+  setOverclock(id: string, value: number, def: number | undefined): void {
+    this.store.dispatch(new Factories.SetOverclockAction({ id, value, def }));
   }
 
   setBeaconCount(id: string, value: string, def: string | undefined): void {
@@ -376,12 +277,12 @@ export class SettingsComponent implements OnInit {
     );
   }
 
-  setOverclock(id: string, value: number, def: number | undefined): void {
-    this.store.dispatch(new Factories.SetOverclockAction({ id, value, def }));
-  }
-
   setBeaconReceivers(value: string | null): void {
     this.store.dispatch(new Settings.SetBeaconReceiversAction(value));
+  }
+
+  setProliferatorSpray(value: string): void {
+    this.store.dispatch(new Settings.SetProliferatorSprayAction(value));
   }
 
   setBelt(value: string, def: string | undefined): void {
@@ -392,20 +293,20 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetPipeAction({ value, def }));
   }
 
-  setFuel(value: string, def: string | undefined): void {
-    this.store.dispatch(new Settings.SetFuelAction({ value, def }));
-  }
-
-  setFlowRate(value: number): void {
-    this.store.dispatch(new Settings.SetFlowRateAction(value));
-  }
-
   setCargoWagon(value: string, def: string | undefined): void {
     this.store.dispatch(new Settings.SetCargoWagonAction({ value, def }));
   }
 
   setFluidWagon(value: string, def: string | undefined): void {
     this.store.dispatch(new Settings.SetFluidWagonAction({ value, def }));
+  }
+
+  setFuel(value: string, def: string | undefined): void {
+    this.store.dispatch(new Settings.SetFuelAction({ value, def }));
+  }
+
+  setFlowRate(value: number): void {
+    this.store.dispatch(new Settings.SetFlowRateAction(value));
   }
 
   setInserterTarget(value: InserterTarget): void {
@@ -428,19 +329,20 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
   }
 
-  setSimplexType(value: SimplexType): void {
-    this.store.dispatch(new Preferences.SetSimplexTypeAction(value));
-  }
-
-  setLanguage(value: string): void {
-    this.store.dispatch(new Preferences.SetLanguageAction(value));
-  }
-
   setPowerUnit(value: PowerUnit): void {
     this.store.dispatch(new Preferences.SetPowerUnitAction(value));
   }
 
-  setProliferatorSpray(value: string): void {
-    this.store.dispatch(new Settings.SetProliferatorSprayAction(value));
+  setLanguage(value: Language): void {
+    this.translateSvc.use(value);
+    this.store.dispatch(new Preferences.SetLanguageAction(value));
+  }
+
+  setTheme(value: Theme): void {
+    this.store.dispatch(new Preferences.SetThemeAction(value));
+  }
+
+  setSimplexType(value: SimplexType): void {
+    this.store.dispatch(new Preferences.SetSimplexTypeAction(value));
   }
 }

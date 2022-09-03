@@ -1,8 +1,9 @@
-import { StepDetailTab } from './enum';
+import { MenuItem } from 'primeng/api';
+
 import { Step } from './step';
 
 export interface StepDetail {
-  tabs: StepDetailTab[];
+  tabs: MenuItem[];
   outputs: Step[];
   recipeIds: string[];
   defaultableRecipeIds: string[];

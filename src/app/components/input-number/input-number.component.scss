@@ -1,0 +1,37 @@
+:host {
+  display: inline-flex;
+}
+
+// Use InputNumber styles
+:host ::ng-deep {
+  .p-inputtext:not(.hidden-buttons) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .p-inputnumber {
+    display: inline-flex;
+  }
+
+  .p-inputnumber-buttons-stacked .p-inputnumber-button-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .p-inputnumber-buttons-stacked
+    .p-inputnumber-button-group
+    .p-button.p-inputnumber-button {
+    flex: 1 1 auto;
+  }
+
+  .p-inputnumber-buttons-stacked .p-button {
+    &.p-inputnumber-button-up,
+    &.p-inputnumber-button-down {
+      padding: 0;
+    }
+  }
+
+  .p-inputtext {
+    text-align: inherit;
+  }
+}

@@ -6,10 +6,7 @@ import { EMPTY, of } from 'rxjs';
 
 import { Mocks, TestModule } from 'src/tests';
 import { ModData, ModHash, ModI18n } from '~/models';
-import { LabState } from '~/store';
-import * as Datasets from '~/store/datasets';
-import * as Products from '~/store/products';
-import * as Settings from '~/store/settings';
+import { Datasets, LabState, Products, Settings } from '~/store';
 import { DataService } from './data.service';
 
 describe('DataService', () => {
