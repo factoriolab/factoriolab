@@ -232,7 +232,11 @@
                 {{ 'settings.recipesEnabled' | translate }}
               </ng-template>
               <ng-template pTemplate="item" let-item>
-                <div class="d-flex align-items-center">
+                <div
+                  class="d-flex align-items-center w-100 h-100"
+                  [pTooltip]="item.value | recipeTooltip: vm.data"
+                  [escape]="false"
+                >
                   <i [class]="item.value | iconSmClass: 'recipe'"></i>
                   <div class="ms-3 text-truncate">
                     {{ item.label }}
