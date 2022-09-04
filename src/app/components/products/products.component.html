@@ -13,7 +13,7 @@
         pButton
         pRipple
         type="button"
-        class="p-button-outlined"
+        class="p-button-outlined icon"
         icon="fa-solid fa-minus"
         [pTooltip]="'products.removeProduct' | translate"
         (click)="removeProduct(product.id)"
@@ -22,7 +22,7 @@
         pButton
         pRipple
         type="button"
-        class="d-inline-flex d-sm-none text-truncate"
+        class="d-inline-flex d-sm-none text-truncate icon"
         [icon]="product.itemId | iconSmClass"
         [pTooltip]="'products.changeItem' | translate"
         (click)="editPicker.clickOpen(vm.data, product.itemId)"
@@ -46,6 +46,15 @@
         'products.limitTo' | translate
       }}</span>
       <lab-input-number
+        class="d-inline-flex d-sm-none"
+        [pTooltip]="'products.changeRate' | translate"
+        tooltipPosition="top"
+        [hideButtons]="true"
+        [value]="product.rate"
+        (setValue)="setRate(product.id, $event)"
+      ></lab-input-number>
+      <lab-input-number
+        class="d-none d-sm-inline-flex"
         [pTooltip]="'products.changeRate' | translate"
         tooltipPosition="top"
         [value]="product.rate"
@@ -63,10 +72,13 @@
       >
         <ng-container *ngIf="product.viaId as id">
           <p-dropdown
-            class="d-inline-flex d-sm-none icon"
-            [labDropdownIcon]="
-              product.rateType === RateType.Factories ? 'recipe' : 'item'
+            *ngIf="
+              product.rateType === RateType.Factories
+                ? 'recipe'
+                : 'item' as dropdownType
             "
+            labDropdownBase
+            class="via-dropdown"
             [virtualScroll]="true"
             [virtualScrollItemSize]="48"
             [tooltip]="'products.changeVia' | translate"
@@ -75,12 +87,43 @@
             [ngModel]="product.viaId"
             (onChange)="setVia(product.id, $event.value)"
           >
+            <ng-template pTemplate="selectedItem" let-item>
+              <span
+                class="d-none"
+                [class.d-sm-block]="item.value === product.itemId"
+              >
+                {{ 'products.changeVia' | translate }}
+              </span>
+              <div
+                class="d-flex align-items-center h-100"
+                [class.d-sm-none]="item.value === product.itemId"
+              >
+                <i [class]="item.value | iconSmClass: $any(dropdownType)"></i>
+                <div class="ms-3 text-truncate">
+                  {{ item.label }}
+                </div>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="item" let-item>
+              <div
+                class="d-flex align-items-center w-100 h-100"
+                [pTooltip]="
+                  dropdownType === 'recipe'
+                    ? (item.value | recipeTooltip: vm.data)
+                    : vm.data.itemEntities[item.value].name
+                "
+                [escape]="false"
+              >
+                <i [class]="item.value | iconSmClass: $any(dropdownType)"></i>
+                <div class="ms-3 text-truncate">
+                  {{ item.label }}
+                </div>
+              </div>
+            </ng-template>
           </p-dropdown>
-          <p-dropdown
+          <!-- <p-dropdown
             class="d-none d-sm-inline-flex"
-            [labDropdownIconText]="
-              product.rateType === RateType.Factories ? 'recipe' : 'item'
-            "
+            labDropdownIconText
             [virtualScroll]="true"
             [virtualScrollItemSize]="48"
             [tooltip]="'products.changeVia' | translate"
@@ -104,7 +147,7 @@
                 </div>
               </ng-template>
             </ng-template>
-          </p-dropdown>
+          </p-dropdown> -->
         </ng-container>
       </ng-container>
       <ng-template #recipeNone>
