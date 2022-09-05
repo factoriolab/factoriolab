@@ -39,7 +39,7 @@
               "node_modules/primeng/resources/primeng.min.css",
               "src/styles.scss",
               {
-                "input": "src/styles/themes/dark.scss"
+                "input": "src/styles/themes/dark.scss",
                 "bundleName": "theme-dark",
                 "inject": false
               },
