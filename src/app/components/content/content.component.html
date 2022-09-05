@@ -3,48 +3,6 @@
 <!-- Force InputNumber styles to load for lab-input-number -->
 <p-inputNumber styleClass="d-none"></p-inputNumber>
 
-<ng-template #iconTextSelectedItem pTemplate="selectedItem" let-item>
-  <div class="d-flex align-items-center h-100">
-    <i [class]="item.value | iconSmClass"></i>
-    <div class="ms-3 text-truncate">
-      {{ item.label }}
-    </div>
-  </div>
-</ng-template>
-<ng-template #iconTextItem pTemplate="item" let-item>
-  <div class="d-flex align-items-center h-100">
-    <i [class]="item.value | iconSmClass"></i>
-    <div class="ms-3 text-truncate">
-      {{ item.label }}
-    </div>
-  </div>
-</ng-template>
-<ng-template #iconSelectedItem pTemplate="selectedItem" let-item>
-  <div class="d-flex">
-    <i [class]="item.value | iconSmClass"></i>
-  </div>
-</ng-template>
-<ng-template #iconTextSelectedRecipe pTemplate="selectedItem" let-item>
-  <div class="d-flex align-items-center h-100">
-    <i [class]="item.value | iconSmClass: 'recipe'"></i>
-    <div class="ms-3 text-truncate">
-      {{ item.label }}
-    </div>
-  </div>
-</ng-template>
-<ng-template #iconTextRecipe pTemplate="item" let-item>
-  <div class="d-flex align-items-center h-100">
-    <i [class]="item.value | iconSmClass: 'recipe'"></i>
-    <div class="ms-3 text-truncate">
-      {{ item.label }}
-    </div>
-  </div>
-</ng-template>
-<ng-template #iconSelectedRecipe pTemplate="selectedItem" let-item>
-  <div class="d-flex">
-    <i [class]="item.value | iconSmClass: 'recipe'"></i>
-  </div>
-</ng-template>
 <ng-template #translateSelectedItem pTemplate="selectedItem" let-item>
   {{ item.label | translate }}
 </ng-template>

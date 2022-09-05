@@ -18,7 +18,6 @@ describe('RecipeTooltipPipe', () => {
   describe('transform', () => {
     it('should generate a recipe tooltip', () => {
       const data = Mocks.getDataset();
-      // data.recipeEntities[RecipeId.ElectronicCircuit].beacon!.category = 'chemical';
       const result = pipe.transform(RecipeId.ElectronicCircuit, data);
       expect(result).toBeTruthy();
     });
