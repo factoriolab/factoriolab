@@ -1,8 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-import { Dataset, Game } from '~/models';
-import { DisplayService } from '~/services/display.service';
+import { Dataset } from '~/models';
+import { DisplayService } from '~/services';
 
 @Pipe({ name: 'moduleTooltip' })
 export class ModuleTooltipPipe implements PipeTransform {

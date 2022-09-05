@@ -1,4 +1,5 @@
 <p-dialog
+  *ngIf="vm$ | async as vm"
   styleClass="picker-dialog"
   [(visible)]="visible"
   [modal]="true"
@@ -45,6 +46,8 @@
                 class="me-1 mb-1"
                 [class.p-button-text]="itemId !== selectedId"
                 [icon]="itemId | iconSmClass"
+                [pTooltip]="itemId | itemTooltip: vm.data"
+                [escape]="false"
                 (click)="clickItem(itemId)"
               ></button>
             </ng-container>

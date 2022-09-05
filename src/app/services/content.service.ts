@@ -40,22 +40,6 @@ export class ContentService {
   }
 
   // Templates
-  iconTextSelectedItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(
-    undefined
-  );
-  iconTextItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(undefined);
-  iconSelectedItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(
-    undefined
-  );
-  iconTextSelectedRecipe$ = new BehaviorSubject<TemplateRef<any> | undefined>(
-    undefined
-  );
-  iconTextRecipe$ = new BehaviorSubject<TemplateRef<any> | undefined>(
-    undefined
-  );
-  iconSelectedRecipe$ = new BehaviorSubject<TemplateRef<any> | undefined>(
-    undefined
-  );
   translateSelectedItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(
     undefined
   );

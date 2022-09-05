@@ -20,18 +20,6 @@ import { ContentService } from '~/services';
   providers: [ConfirmationService],
 })
 export class ContentComponent implements OnInit, AfterViewInit {
-  @ViewChild('iconTextSelectedItem') iconTextSelectedItem:
-    | TemplateRef<any>
-    | undefined;
-  @ViewChild('iconTextItem') iconTextItem: TemplateRef<any> | undefined;
-  @ViewChild('iconSelectedItem') iconSelectedItem: TemplateRef<any> | undefined;
-  @ViewChild('iconTextSelectedRecipe') iconTextSelectedRecipe:
-    | TemplateRef<any>
-    | undefined;
-  @ViewChild('iconTextRecipe') iconTextRecipe: TemplateRef<any> | undefined;
-  @ViewChild('iconSelectedRecipe') iconSelectedRecipe:
-    | TemplateRef<any>
-    | undefined;
   @ViewChild('translateSelectedItem') translateSelectedItem:
     | TemplateRef<any>
     | undefined;
@@ -49,9 +37,6 @@ export class ContentComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.contentSvc.iconTextSelectedItem$.next(this.iconTextSelectedItem);
-    this.contentSvc.iconTextItem$.next(this.iconTextItem);
-    this.contentSvc.iconSelectedItem$.next(this.iconSelectedItem);
     this.contentSvc.translateSelectedItem$.next(this.translateSelectedItem);
     this.contentSvc.translateItem$.next(this.translateItem);
   }

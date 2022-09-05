@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { Dataset } from '~/models';
-import { DisplayService } from '~/services/display.service';
+import { DisplayService } from '~/services';
 
 @Pipe({ name: 'beaconTooltip' })
 export class BeaconTooltipPipe implements PipeTransform {

@@ -74,3 +74,13 @@ table p-dropdown {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.p-dropdown-panel.tooltip,
+.p-multiselect-panel.tooltip {
+  .p-dropdown-item,
+  .p-multiselect-item {
+    // Want full-size tooltip select item, items must manage their own padding
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}

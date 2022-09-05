@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { Dataset, Game } from '~/models';
-import { DisplayService } from '~/services/display.service';
+import { DisplayService } from '~/services';
 
 @Pipe({ name: 'factoryTooltip' })
 export class FactoryTooltipPipe implements PipeTransform {

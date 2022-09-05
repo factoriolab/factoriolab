@@ -8,19 +8,21 @@ import { LeftPadPipe } from './left-pad.pipe';
 import { OptionsPipe } from './options.pipe';
 import { PowerPipe } from './power.pipe';
 import { PrecisionExamplePipe } from './precision-example.pipe';
+import { RateTypeViaDropdownPipe } from './rate-type-via-dropdown.pipe';
 import { RatePipe } from './rate.pipe';
 import { StepHrefPipe } from './step-href.pipe';
 import {
   BeaconTooltipPipe,
   FactoryTooltipPipe,
+  ItemTooltipPipe,
   ModuleTooltipPipe,
   RecipeTooltipPipe,
 } from './tooltips';
-import { UrlPipe } from './url.pipe';
 
 export const pipes = [
   BeaconTooltipPipe,
   FactoryTooltipPipe,
+  ItemTooltipPipe,
   ModuleTooltipPipe,
   RecipeTooltipPipe,
   FactoryRatePipe,
@@ -35,6 +37,6 @@ export const pipes = [
   PowerPipe,
   PrecisionExamplePipe,
   RatePipe,
+  RateTypeViaDropdownPipe,
   StepHrefPipe,
-  UrlPipe,
 ];
