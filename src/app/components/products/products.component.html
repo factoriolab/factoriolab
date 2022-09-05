@@ -18,15 +18,17 @@
         [pTooltip]="'products.removeProduct' | translate"
         (click)="removeProduct(product.id)"
       ></button>
+      <!-- Mobile icon item picker -->
       <button
         pButton
         pRipple
         type="button"
-        class="d-inline-flex d-sm-none text-truncate icon"
+        class="d-inline-flex d-sm-none text-truncate"
         [icon]="product.itemId | iconSmClass"
         [pTooltip]="'products.changeItem' | translate"
         (click)="editPicker.clickOpen(vm.data, product.itemId)"
       ></button>
+      <!-- Desktop icon-text item picker -->
       <button
         pButton
         pRipple
@@ -45,6 +47,7 @@
       <span class="d-none d-md-block p-inputgroup-addon">{{
         'products.limitTo' | translate
       }}</span>
+      <!-- Mobile number rate picker -->
       <lab-input-number
         class="d-inline-flex d-sm-none"
         [pTooltip]="'products.changeRate' | translate"
@@ -53,6 +56,7 @@
         [value]="product.rate"
         (setValue)="setRate(product.id, $event)"
       ></lab-input-number>
+      <!-- Desktop number/buttons rate picker -->
       <lab-input-number
         class="d-none d-sm-inline-flex"
         [pTooltip]="'products.changeRate' | translate"
@@ -71,83 +75,87 @@
         *ngIf="vm.viaOptions[product.id].length > 0; else recipeNone"
       >
         <ng-container *ngIf="product.viaId as id">
-          <p-dropdown
-            *ngIf="
-              product.rateType === RateType.Factories
-                ? 'recipe'
-                : 'item' as dropdownType
-            "
-            labDropdownBase
-            class="via-dropdown"
-            [virtualScroll]="true"
-            [virtualScrollItemSize]="48"
-            [tooltip]="'products.changeVia' | translate"
-            tooltipPosition="top"
-            [options]="vm.viaOptions[product.id]"
-            [ngModel]="product.viaId"
-            (onChange)="setVia(product.id, $event.value)"
+          <ng-container
+            *ngIf="product.rateType | rateTypeViaDropdown as dropdownType"
           >
-            <ng-template pTemplate="selectedItem" let-item>
-              <span
-                class="d-none"
-                [class.d-sm-block]="item.value === product.itemId"
-              >
-                {{ 'products.changeVia' | translate }}
-              </span>
-              <div
-                class="d-flex align-items-center h-100"
-                [class.d-sm-none]="item.value === product.itemId"
-              >
-                <i [class]="item.value | iconSmClass: $any(dropdownType)"></i>
-                <div class="ms-3 text-truncate">
-                  {{ item.label }}
+            <!-- Mobile icon via dropdown -->
+            <p-dropdown
+              labDropdownBase="icon"
+              class="d-inline-flex d-sm-none icon"
+              [virtualScroll]="true"
+              [virtualScrollItemSize]="34"
+              [tooltip]="'products.changeVia' | translate"
+              tooltipPosition="top"
+              [options]="vm.viaOptions[product.id]"
+              [ngModel]="product.viaId"
+              (onChange)="setVia(product.id, $event.value)"
+            >
+              <ng-template pTemplate="selectedItem" let-item>
+                <div class="d-flex">
+                  <i [class]="item.value | iconSmClass: dropdownType"></i>
                 </div>
-              </div>
-            </ng-template>
-            <ng-template pTemplate="item" let-item>
-              <div
-                class="d-flex align-items-center w-100 h-100"
-                [pTooltip]="
-                  dropdownType === 'recipe'
-                    ? (item.value | recipeTooltip: vm.data)
-                    : vm.data.itemEntities[item.value].name
-                "
-                [escape]="false"
-              >
-                <i [class]="item.value | iconSmClass: $any(dropdownType)"></i>
-                <div class="ms-3 text-truncate">
-                  {{ item.label }}
-                </div>
-              </div>
-            </ng-template>
-          </p-dropdown>
-          <!-- <p-dropdown
-            class="d-none d-sm-inline-flex"
-            labDropdownIconText
-            [virtualScroll]="true"
-            [virtualScrollItemSize]="48"
-            [tooltip]="'products.changeVia' | translate"
-            tooltipPosition="top"
-            [options]="vm.viaOptions[product.id]"
-            [ngModel]="product.viaId"
-            (onChange)="setVia(product.id, $event.value)"
-          >
-            <ng-template pTemplate="selectedItem" let-item>
-              <ng-container
-                *ngIf="item.value === product.itemId; else showIcon"
-              >
-                {{ 'products.changeVia' | translate }}
-              </ng-container>
-              <ng-template #showIcon>
-                <div class="d-flex align-items-center h-100">
-                  <i [class]="item.value | iconSmClass"></i>
+              </ng-template>
+              <ng-template pTemplate="item" let-item>
+                <div
+                  class="d-flex align-items-center py-2 w-100 h-100"
+                  [pTooltip]="
+                    dropdownType === 'recipe'
+                      ? (item.value | recipeTooltip: vm.data)
+                      : (item.value | itemTooltip: vm.data)
+                  "
+                  [escape]="false"
+                >
+                  <i [class]="item.value | iconSmClass: dropdownType"></i>
                   <div class="ms-3 text-truncate">
                     {{ item.label }}
                   </div>
                 </div>
               </ng-template>
-            </ng-template>
-          </p-dropdown> -->
+            </p-dropdown>
+            <!-- Desktop icon-text via dropdown -->
+            <p-dropdown
+              labDropdownBase
+              class="d-none d-sm-inline-flex"
+              [virtualScroll]="true"
+              [virtualScrollItemSize]="34"
+              [tooltip]="'products.changeVia' | translate"
+              tooltipPosition="top"
+              [options]="vm.viaOptions[product.id]"
+              [ngModel]="product.viaId"
+              (onChange)="setVia(product.id, $event.value)"
+            >
+              <ng-template pTemplate="selectedItem" let-item>
+                <span *ngIf="item.value === product.itemId; else viaSelected">
+                  {{ 'products.changeVia' | translate }}
+                </span>
+                <ng-template #viaSelected>
+                  <div class="d-flex align-items-center h-100">
+                    <i [class]="item.value | iconSmClass: dropdownType"></i>
+                    <div class="ms-3 text-truncate">
+                      {{ item.label }}
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-template>
+              <ng-template pTemplate="item" let-item>
+                <div
+                  class="d-flex align-items-center py-2 w-100 h-100"
+                  [pTooltip]="
+                    dropdownType === 'recipe'
+                      ? (item.value | recipeTooltip: vm.data)
+                      : (item.value | itemTooltip: vm.data)
+                  "
+                  tooltipPosition="left"
+                  [escape]="false"
+                >
+                  <i [class]="item.value | iconSmClass: dropdownType"></i>
+                  <div class="ms-3 text-truncate">
+                    {{ item.label }}
+                  </div>
+                </div>
+              </ng-template>
+            </p-dropdown>
+          </ng-container>
         </ng-container>
       </ng-container>
       <ng-template #recipeNone>

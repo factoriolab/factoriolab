@@ -12,7 +12,7 @@ import { FormControl } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { FilterService, SelectItem } from 'primeng/api';
-import { combineLatest } from 'rxjs';
+import { combineLatest, map } from 'rxjs';
 
 import { Category, Dataset, Entities } from '~/models';
 import { LabState } from '~/store';
@@ -31,6 +31,10 @@ export class PickerComponent implements OnInit {
     | undefined;
 
   @Output() selectId = new EventEmitter<string>();
+
+  vm$ = this.store
+    .select(Recipes.getAdjustedDataset)
+    .pipe(map((data) => ({ data })));
 
   searchCtrl = new FormControl('');
 

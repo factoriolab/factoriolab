@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 import { Dataset } from '~/models';
-import { DisplayService } from '~/services/display.service';
+import { DisplayService } from '~/services';
 
 @Pipe({ name: 'recipeTooltip' })
 export class RecipeTooltipPipe implements PipeTransform {

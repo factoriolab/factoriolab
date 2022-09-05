@@ -62,6 +62,7 @@ export class SettingsComponent implements OnInit {
     this.store.select(Settings.getOptions),
     this.store.select(Settings.getModOptions),
     this.store.select(Settings.getPresetOptions),
+    this.store.select(Settings.getBeltSpeedTxt),
     this.store.select(Preferences.preferencesState),
     this.store.select(Preferences.getSavedStates),
     this.contentSvc.lang$,
@@ -77,6 +78,7 @@ export class SettingsComponent implements OnInit {
         options,
         modOptions,
         presetOptions,
+        beltSpeedTxt,
         preferences,
         savedStates,
       ]) => ({
@@ -89,6 +91,7 @@ export class SettingsComponent implements OnInit {
         options,
         modOptions,
         presetOptions,
+        beltSpeedTxt,
         preferences,
         savedStates,
         factoryMenuItems: this.buildFactoryMenus(factoryRows, data),

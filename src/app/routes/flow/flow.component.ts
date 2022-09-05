@@ -10,8 +10,7 @@ import { DataSet } from 'vis-data/esnext';
 import { Data, Edge, Network, Node, Options } from 'vis-network/esnext';
 
 import { FlowData } from '~/models';
-import { DisplayService } from '~/services/display.service';
-import { FlowService } from '~/services/flow.service';
+import { DisplayService, FlowService } from '~/services';
 
 @UntilDestroy()
 @Component({

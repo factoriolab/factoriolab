@@ -1,19 +1,5 @@
 .p-inputgroup {
-  //flex-wrap: wrap;
-
-  > button:not(.p-button-icon-only) {
-    flex: 1 1 auto;
-    width: 1%;
-  }
-
-  > lab-input-number,
-  > p-dropdown:not(.icon) {
-    min-width: 5rem;
-  }
-
-  p-dropdown.icon, button.icon {
-    flex-basis: 36px;
-    flex-grow: 0;
-    flex-shrink: 0;
+  p-dropdown.icon {
+    flex: 0 0 36px;
   }
 }
