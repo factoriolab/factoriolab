@@ -237,7 +237,7 @@
                         vm.settings.beltId;
                       else pipesDropdown
                     "
-                    labDropdownIcon
+                    labDropdownBase="icon"
                     [pTooltip]="
                       'tooltip.belt'
                         | translate
@@ -253,6 +253,30 @@
                       setBelt(step.itemId, $event.value, vm.settings.beltId)
                     "
                   >
+                    <ng-template pTemplate="selectedItem" let-item>
+                      <div class="d-flex">
+                        <i [class]="item.value | iconSmClass"></i>
+                      </div>
+                    </ng-template>
+                    <ng-template pTemplate="item" let-item>
+                      <div
+                        class="d-flex align-items-center py-2 w-100 h-100"
+                        [pTooltip]="
+                          'tooltip.belt'
+                            | translate
+                              : {
+                                  name: vm.data.itemEntities[item.value].name,
+                                  speed: vm.beltSpeedTxt[item.value]
+                                }
+                        "
+                        [escape]="false"
+                      >
+                        <i [class]="item.value | iconSmClass"></i>
+                        <div class="ms-3 text-truncate">
+                          {{ item.label }}
+                        </div>
+                      </div>
+                    </ng-template>
                   </p-dropdown>
                   <!-- Pipes dropdown -->
                   <ng-template #pipesDropdown>
@@ -262,7 +286,7 @@
                           vm.settings.pipeId;
                         else pipeIcon
                       "
-                      labDropdownIcon
+                      labDropdownBase="icon"
                       [pTooltip]="
                         'tooltip.pipe'
                           | translate
@@ -278,6 +302,30 @@
                         setBelt(step.itemId, $event.value, vm.settings.pipeId)
                       "
                     >
+                      <ng-template pTemplate="selectedItem" let-item>
+                        <div class="d-flex">
+                          <i [class]="item.value | iconSmClass"></i>
+                        </div>
+                      </ng-template>
+                      <ng-template pTemplate="item" let-item>
+                        <div
+                          class="d-flex align-items-center py-2 w-100 h-100"
+                          [pTooltip]="
+                            'tooltip.pipe'
+                              | translate
+                                : {
+                                    name: vm.data.itemEntities[item.value].name,
+                                    speed: vm.beltSpeedTxt[item.value]
+                                  }
+                          "
+                          [escape]="false"
+                        >
+                          <i [class]="item.value | iconSmClass"></i>
+                          <div class="ms-3 text-truncate">
+                            {{ item.label }}
+                          </div>
+                        </div>
+                      </ng-template>
                     </p-dropdown>
                   </ng-template>
                   <!-- Pipe icon only -->
