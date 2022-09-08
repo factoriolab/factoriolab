@@ -31,7 +31,8 @@
                 "glob": "glpk.all.wasm",
                 "input": "node_modules/glpk-wasm/dist/",
                 "output": "/assets/glpk-wasm/"
-              }
+              },
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
@@ -64,7 +65,9 @@
             "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "serviceWorker": true,
+            "ngswConfigPath": "ngsw-config.json"
           },
           "configurations": {
             "production": {
@@ -183,7 +186,12 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": ["src/favicon.ico", "src/assets", "src/data"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              "src/data",
+              "src/manifest.webmanifest"
+            ],
             "styles": [
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "node_modules/primeicons/primeicons.css",
