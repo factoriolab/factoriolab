@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, fromEvent, map, startWith } from 'rxjs';
+import { combineLatest, fromEvent, map, Observable, startWith } from 'rxjs';
 
 import { Theme } from '~/models';
 import { LabState, Preferences, Settings } from '~/store';
@@ -9,37 +9,39 @@ import { BrowserUtility } from '~/utilities';
 
 const LAB_ICON_STYLE_ID = 'lab-icon-css';
 const LAB_THEME_STYLE_ID = 'lab-theme-css';
-const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
 @Injectable({
   providedIn: 'root',
 })
 export class ThemeService {
-  head: HTMLHeadElement = this.document.getElementsByTagName('head')[0];
-  prefersDark = prefersDark;
-  prefersDark$ = fromEvent<MediaQueryList>(this.prefersDark, 'change').pipe(
-    startWith(this.prefersDark),
-    map((list) => list.matches)
-  );
-  theme$ = combineLatest([
-    this.store.select(Preferences.getTheme),
-    this.prefersDark$,
-  ]).pipe(
-    map(([theme, prefersDark]): Theme.Dark | Theme.Light => {
-      if (theme === Theme.System) {
-        // Don't need to test media query specifically
-        // istanbul ignore next
-        return prefersDark ? Theme.Dark : Theme.Light;
-      }
-
-      return theme;
-    })
-  );
+  head = this.document.getElementsByTagName('head')[0];
+  theme$: Observable<Theme.Light | Theme.Dark>;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private store: Store<LabState>
-  ) {}
+  ) {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    const prefersDark$ = fromEvent<MediaQueryList>(prefersDark, 'change').pipe(
+      startWith(prefersDark),
+      map((list) => list.matches)
+    );
+
+    this.theme$ = combineLatest([
+      this.store.select(Preferences.getTheme),
+      prefersDark$,
+    ]).pipe(
+      map(([theme, prefersDark]) => {
+        if (theme === Theme.System) {
+          // Don't need to test media query specifically
+          // istanbul ignore next
+          return prefersDark ? Theme.Dark : Theme.Light;
+        }
+
+        return theme;
+      })
+    );
+  }
 
   initialize(): void {
     this.store.select(Settings.getDataset).subscribe((data) => {
@@ -115,7 +117,10 @@ export class ThemeService {
 
     if (theme === Theme.Light) return; // No action required
 
-    if (theme === Theme.Dark || prefersDark.matches) {
+    if (
+      theme === Theme.Dark ||
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+    ) {
       // Need to switch to dark theme before app starts
       const themeLink = window.document.getElementById(
         LAB_THEME_STYLE_ID
