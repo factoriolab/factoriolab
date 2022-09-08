@@ -20,20 +20,20 @@ export interface FlowStyle {
 
 const darkTheme: FlowStyle = {
   node: {
-    [NodeType.Input]: { color: '#121212', background: '#81D4FA' },
-    [NodeType.Recipe]: { color: '#212529', background: '#FFD54F' },
-    [NodeType.Surplus]: { color: '#121212', background: '#F48FB1' },
-    [NodeType.Output]: { color: '#121212', background: '#C5E1A5' },
+    [NodeType.Input]: { color: '#044868', background: '#B3E5FC' },
+    [NodeType.Recipe]: { color: '#212529', background: '#FF9A4D' },
+    [NodeType.Surplus]: { color: '#73000c', background: '#FFCDD2' },
+    [NodeType.Output]: { color: '#224a23', background: '#C8E6C9' },
   },
   edge: 'rgba(255, 255, 255, 0.87)',
 };
 
 const lightTheme: FlowStyle = {
   node: {
-    [NodeType.Input]: { color: '#FFFFFF', background: '#78909C' },
-    [NodeType.Recipe]: { color: '#FFFFFF', background: '#2196F3' },
-    [NodeType.Surplus]: { color: '#FFFFFF', background: '#D32F2F' },
-    [NodeType.Output]: { color: '#FFFFFF', background: '#689F38' },
+    [NodeType.Input]: { color: '#044868', background: '#B3E5FC' },
+    [NodeType.Recipe]: { color: '#FFFFFF', background: '#E66300' },
+    [NodeType.Surplus]: { color: '#73000c', background: '#FFCDD2' },
+    [NodeType.Output]: { color: '#224a23', background: '#C8E6C9' },
   },
   edge: '#495057',
 };
