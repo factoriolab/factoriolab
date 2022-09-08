@@ -2,7 +2,7 @@
 
 ![build](https://github.com/factoriolab/factoriolab/workflows/build/badge.svg) ![tests](https://github.com/factoriolab/factoriolab/workflows/tests/badge.svg) [![codecov](https://codecov.io/gh/factoriolab/factoriolab/branch/master/graph/badge.svg)](https://codecov.io/gh/factoriolab/factoriolab) [![Known Vulnerabilities](https://snyk.io/test/github/factoriolab/factoriolab/badge.svg?targetFile=package.json)](https://snyk.io/test/github/factoriolab/factoriolab?targetFile=package.json)
 
-This is the repository for the [FactorioLab](https://factoriolab.github.io) project, a tool for calculating resource and factory requirements for the games [Factorio](https://factorio.com), [Dyson Sphere Program](https://store.steampowered.com/app/1366540/Dyson_Sphere_Program/), and [Satisfactory](https://www.satisfactorygame.com/).  
+This is the repository for the [FactorioLab](https://factoriolab.github.io) project, a tool for calculating resource and factory requirements for the games [Factorio](https://factorio.com), [Dyson Sphere Program](https://store.steampowered.com/app/1366540/Dyson_Sphere_Program/), [Satisfactory](https://www.satisfactorygame.com/), and [Captain of Industry](https://www.captain-of-industry.com/).  
 This project is intended to build on the features of the Kirk McDonald [Factorio Calculator](https://kirkmcdonald.github.io) ([GitHub](https://github.com/KirkMcDonald/kirkmcdonald.github.io)). It is built from the ground up using Angular, Redux, and Typescript.
 
 **For instructions on how to use this tool,** check out the [wiki](https://github.com/factoriolab/factoriolab/wiki).
@@ -19,6 +19,7 @@ The calculator can be found at [https://factoriolab.github.io](https://factoriol
 The Factorio calculator can opened directly using the url [https://factoriolab.github.io/factorio](https://factoriolab.github.io/factorio).  
 The Dyson Sphere Program calculator can opened directly using the url [https://factoriolab.github.io/dsp](https://factoriolab.github.io/dsp).  
 The Satisfactory calculator can opened directly using the url [https://factoriolab.github.io/satisfactory](https://factoriolab.github.io/satisfactory).  
+The Captain of Industry calculator can opened directly using the url [https://factoriolab.github.io/coi](https://factoriolab.github.io/coi).  
 The staging environment, for testing pull requests, can be found at [https://factoriolab.github.io/staging](https://factoriolab.github.io/staging).
 
 ## Running locally

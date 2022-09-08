@@ -3,6 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ServiceWorkerModule } from '@angular/service-worker';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -18,44 +19,35 @@ import {
   NgxGoogleAnalyticsRouterModule,
 } from 'ngx-google-analytics';
 import { PrimeNGConfig } from 'primeng/api';
-import { from, Observable, tap } from 'rxjs';
 
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppSharedModule } from './app-shared.module';
 import { AppComponent } from './app.component';
-import { LabErrorHandler, RouterService, StateService } from './services';
+import { LabErrorHandler } from './services';
 import { ThemeService } from './services/theme.service';
 import { metaReducers, reducers } from './store';
 import { AnalyticsEffects } from './store/analytics.effects';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
 import { FactoriesEffects } from './store/factories/factories.effects';
 import { ProductsEffects } from './store/products/products.effects';
-import { ServiceWorkerModule } from '@angular/service-worker';
 
 function initializeApp(
   primengConfig: PrimeNGConfig,
-  translateSvc: TranslateService,
-  routerSvc: RouterService,
-  stateSvc: StateService,
-  themeSvc: ThemeService
-): () => Observable<any> {
+  translateSvc: TranslateService
+): () => Promise<any> {
   return () => {
     // Enable ripple
     primengConfig.ripple = true;
 
-    // Initialize services
+    // Set up initial theme
+    ThemeService.appInitTheme();
+
+    // Initialize translate service with default to English
     translateSvc.setDefaultLang('en');
-    stateSvc.initialize();
-    themeSvc.initialize();
 
     // Load glpk-wasm
-    return from(loadModule('assets/glpk-wasm/glpk.all.wasm')).pipe(
-      tap(() => {
-        // Wait to initialize router
-        routerSvc.initialize();
-      })
-    );
+    return loadModule('assets/glpk-wasm/glpk.all.wasm');
   };
 }
 
@@ -96,7 +88,7 @@ function initializeApp(
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
+      registrationStrategy: 'registerWhenStable:30000',
     }),
   ],
   providers: [
@@ -104,13 +96,7 @@ function initializeApp(
     { provide: ErrorHandler, useClass: LabErrorHandler },
     {
       provide: APP_INITIALIZER,
-      deps: [
-        PrimeNGConfig,
-        TranslateService,
-        RouterService,
-        StateService,
-        ThemeService,
-      ],
+      deps: [PrimeNGConfig, TranslateService],
       useFactory: initializeApp,
       multi: true,
     },
