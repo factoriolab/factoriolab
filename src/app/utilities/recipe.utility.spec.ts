@@ -366,7 +366,7 @@ describe('RecipeUtility', () => {
       expected.out = { [ItemId.SteelChest]: Rational.one };
       expected.time = Rational.from(1, 3);
       expected.drain = Rational.from(5);
-      expected.consumption = Rational.from(231450, 509);
+      expected.consumption = Rational.from(22502025, 49486);
       expected.pollution = Rational.from(1, 20);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
@@ -403,9 +403,9 @@ describe('RecipeUtility', () => {
         Mocks.Dataset.recipeEntities[RecipeId.SteelChest]
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
-      expected.time = Rational.from(191, 484);
+      expected.time = Rational.from(87424, 221535);
       expected.drain = Rational.from(5);
-      expected.consumption = Rational.from(346050, 997);
+      expected.consumption = Rational.from(1779885, 5128);
       expected.pollution = Rational.from(1, 20);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);

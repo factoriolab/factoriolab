@@ -262,6 +262,9 @@ export class RateUtility {
       if (step.pollution) {
         step.pollution = step.pollution.mul(dispRateInfo.value);
       }
+      if (step.output) {
+        step.output = step.output.mul(dispRateInfo.value);
+      }
     }
     return steps;
   }

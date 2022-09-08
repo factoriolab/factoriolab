@@ -653,6 +653,7 @@ describe('RateUtility', () => {
             surplus: Rational.two,
             wagons: Rational.from(3),
             pollution: Rational.from(4),
+            output: Rational.from(5),
           },
         ] as any,
         displayRateInfo[DisplayRate.PerMinute]
@@ -661,6 +662,7 @@ describe('RateUtility', () => {
       expect(result[0].surplus).toEqual(Rational.from(120));
       expect(result[0].wagons).toEqual(Rational.from(180));
       expect(result[0].pollution).toEqual(Rational.from(240));
+      expect(result[0].output).toEqual(Rational.from(300));
     });
 
     it('should apply the display rate to partial steps', () => {

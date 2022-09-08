@@ -30,6 +30,9 @@ async function processMod(): Promise<void> {
         width: 64,
         height: 64,
       });
+      // Experiment: saturate to get a more interesting color
+      // (requires npm package 'color')
+      // icon.color = Color(color.hex).saturate(1).hex();
       icon.color = color.hex;
     }
     const now = Date.now();

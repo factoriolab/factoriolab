@@ -1,4 +1,4 @@
-const FLOAT_PRECISION = 100000000;
+const MAX_DENOM = 100000;
 const DIVIDE_BY_ZERO = 'Cannot divide by zero';
 
 const bigZero = BigInt(0);
@@ -43,10 +43,13 @@ export class Rational {
     return new Rational(BigInt(p), BigInt(q));
   }
 
+  private static parseFloatCache: Record<number, Rational> = {};
   /**
    * Source: https://www.ics.uci.edu/%7Eeppstein/numth/frap.c
    */
-  private static parseFloat(startx: number, maxden = 1000): Rational {
+  private static parseFloat(startx: number): Rational {
+    if (this.parseFloatCache[startx]) return this.parseFloatCache[startx];
+
     let ai = startx,
       x = startx;
 
@@ -57,7 +60,7 @@ export class Rational {
     ];
 
     /** loop finding terms until denom gets too big */
-    while (m[1][0] * (ai = Math.floor(x)) + m[1][1] <= maxden) {
+    while (m[1][0] * (ai = Math.floor(x)) + m[1][1] <= MAX_DENOM) {
       let t = m[0][0] * ai + m[0][1];
       m[0][1] = m[0][0];
       m[0][0] = t;
@@ -71,18 +74,16 @@ export class Rational {
     const optA = Rational.from(m[0][0], m[1][0]);
     const errA = Math.abs(startx - optA.toNumber());
 
-    ai = Math.floor((maxden - m[1][1]) / m[1][0]);
+    ai = Math.floor((MAX_DENOM - m[1][1]) / m[1][0]);
     m[0][0] = m[0][0] * ai + m[0][1];
     m[1][0] = m[1][0] * ai + m[1][1];
 
     const optB = Rational.from(m[0][0], m[1][0]);
     const errB = Math.abs(startx - optB.toNumber());
 
-    if (errA < errB) {
-      return optA;
-    } else {
-      return optB;
-    }
+    const result = errA < errB ? optA : optB;
+    this.parseFloatCache[startx] = result;
+    return result;
   }
 
   static fromJson(x: number | string): Rational {
