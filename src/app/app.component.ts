@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   NgZone,
+  OnInit,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -18,7 +19,13 @@ import {
   MatrixResultType,
   SimplexType,
 } from './models';
-import { ContentService, ErrorService } from './services';
+import {
+  ContentService,
+  ErrorService,
+  RouterService,
+  StateService,
+  ThemeService,
+} from './services';
 import { App, LabState, Preferences, Products, Settings } from './store';
 
 @Component({
@@ -26,7 +33,7 @@ import { App, LabState, Preferences, Products, Settings } from './store';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit {
   vm$ = combineLatest([
     this.store.select(Settings.getGame),
     this.store.select(Settings.getMod),
@@ -98,8 +105,17 @@ export class AppComponent implements AfterViewInit {
     private ref: ChangeDetectorRef,
     private router: Router,
     private store: Store<LabState>,
-    private errorSvc: ErrorService
+    private errorSvc: ErrorService,
+    private routerSvc: RouterService,
+    private stateSvc: StateService,
+    private themeSvc: ThemeService
   ) {}
+
+  ngOnInit(): void {
+    this.stateSvc.initialize();
+    this.themeSvc.initialize();
+    this.routerSvc.initialize();
+  }
 
   /**
    * This doesn't seem like it should be necessary,
