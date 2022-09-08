@@ -31,7 +31,7 @@ const darkTheme: FlowStyle = {
 const lightTheme: FlowStyle = {
   node: {
     [NodeType.Input]: { color: '#044868', background: '#B3E5FC' },
-    [NodeType.Recipe]: { color: '#FFFFFF', background: '#E66300' },
+    [NodeType.Recipe]: { color: '#FFFFFF', background: '#BD7800' },
     [NodeType.Surplus]: { color: '#73000c', background: '#FFCDD2' },
     [NodeType.Output]: { color: '#224a23', background: '#C8E6C9' },
   },
