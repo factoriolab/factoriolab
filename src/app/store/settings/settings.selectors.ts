@@ -321,8 +321,8 @@ export const getDataset = createSelector(
   (app, mod, i18n, hash, defaults, game) => {
     // Map out entities with mods
     const categoryEntities = getEntities(app.categories, mod?.categories ?? []);
-    const appIconPath = `data/${app.id}/icons.png`;
-    const modIconPath = `data/${mod?.id}/icons.png`;
+    const appIconPath = app.iconPath ?? `data/${app.id}/icons.png`;
+    const modIconPath = mod?.iconPath ?? `data/${mod?.id}/icons.png`;
     const iconEntities = getEntities(
       app.icons.map((i) => ({
         ...i,
@@ -374,7 +374,7 @@ export const getDataset = createSelector(
     }
 
     // Convert to id arrays
-    let categoryIds = Object.keys(categoryEntities);
+    const categoryIds = Object.keys(categoryEntities);
     const iconIds = Object.keys(iconEntities);
     const itemIds = Object.keys(itemData);
     const recipeIds = Object.keys(recipeEntities);
@@ -466,7 +466,27 @@ export const getDataset = createSelector(
         categoryItemRows[id] = rows;
       }
     }
-    categoryIds = categoryIds.filter((c) => categoryItemRows[c]);
+    console.log(categoryItemRows);
+
+    // Calculate recipe item rows
+    const categoryRecipeRows: Entities<string[][]> = {};
+    for (const id of categoryIds) {
+      const rows: string[][] = [[]];
+      const rowRecipes = recipes
+        .filter((r) => r.category === id)
+        .sort((a, b) => a.row - b.row);
+      if (rowRecipes.length) {
+        let index = rowRecipes[0].row;
+        for (const recipe of rowRecipes) {
+          if (recipe.row > index) {
+            rows.push([]);
+            index = recipe.row;
+          }
+          rows[rows.length - 1].push(recipe.id);
+        }
+        categoryRecipeRows[id] = rows;
+      }
+    }
 
     // Convert to rationals
     const beaconEntities: Entities<RationalBeacon> = {};
@@ -564,6 +584,7 @@ export const getDataset = createSelector(
       categoryIds,
       categoryEntities,
       categoryItemRows,
+      categoryRecipeRows,
       iconIds,
       iconEntities,
       itemIds,

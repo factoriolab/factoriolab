@@ -20,6 +20,7 @@ import { LabState } from '../';
 import * as Factories from '../factories';
 import * as Items from '../items';
 import * as Preferences from '../preferences';
+import * as Producers from '../producers';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
 import { ProductsState } from './products.reducer';
@@ -358,12 +359,14 @@ export const checkViaState = createSelector(
 
 export const getZipState = createSelector(
   productsState,
+  Producers.producersState,
   Items.itemsState,
   Recipes.recipesState,
   Factories.factoriesState,
   Settings.settingsState,
-  (products, items, recipes, factories, settings) => ({
+  (products, producers, items, recipes, factories, settings) => ({
     products,
+    producers,
     items,
     recipes,
     factories,

@@ -1,21 +1,8 @@
 import { Injectable, TemplateRef } from '@angular/core';
-import {
-  NavigationCancel,
-  NavigationEnd,
-  NavigationError,
-  NavigationStart,
-  Router,
-} from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Confirmation } from 'primeng/api';
-import {
-  BehaviorSubject,
-  filter,
-  fromEvent,
-  map,
-  startWith,
-  Subject,
-} from 'rxjs';
+import { BehaviorSubject, fromEvent, map, startWith, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +16,10 @@ export class ContentService {
       () => window.scrollY
     ),
     startWith(window.scrollY)
+  );
+  width$ = fromEvent(window, 'resize').pipe(
+    map(() => window.innerWidth),
+    startWith(window.innerWidth)
   );
 
   // Dialogs

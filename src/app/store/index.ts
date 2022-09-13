@@ -7,6 +7,7 @@ import * as Datasets from './datasets';
 import * as Factories from './factories';
 import * as Items from './items';
 import * as Preferences from './preferences';
+import * as Producers from './producers';
 import * as Products from './products';
 import * as Recipes from './recipes';
 import * as Settings from './settings';
@@ -15,6 +16,7 @@ import { storageMetaReducer } from './storage.reducer';
 export interface LabState {
   datasetsState: Datasets.DatasetsState;
   productsState: Products.ProductsState;
+  producersState: Producers.ProducersState;
   itemsState: Items.ItemsState;
   recipesState: Recipes.RecipesState;
   factoriesState: Factories.FactoriesState;
@@ -25,6 +27,7 @@ export interface LabState {
 export const reducers: ActionReducerMap<LabState, any> = {
   datasetsState: Datasets.datasetsReducer,
   productsState: Products.productsReducer,
+  producersState: Producers.producersReducer,
   itemsState: Items.itemsReducer,
   recipesState: Recipes.recipesReducer,
   factoriesState: Factories.factoriesReducer,
@@ -46,6 +49,7 @@ export {
   Factories,
   Items,
   Preferences,
+  Producers,
   Products,
   Recipes,
   Settings,

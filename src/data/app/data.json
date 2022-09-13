@@ -1,1 +1,24 @@
-{"game":"None","id":"app","name":"factoriolab","version":{},"categories":[],"items":[],"recipes":[],"icons":[{"id":"captain-of-industry","color":"#ab5a30","position":"-1px -1px"},{"id":"dyson-sphere-program","color":"#867e74","position":"-66px -1px"},{"id":"factorio","color":"#945a2e","position":"-131px -1px"},{"id":"fast-inserter","color":"#608ea1","position":"-196px -1px"},{"id":"inserter","color":"#a5885c","position":"-1px -66px"},{"id":"long-handed-inserter","color":"#a2635f","position":"-66px -66px"},{"id":"module","color":"#e2e3e2","position":"-131px -66px"},{"id":"pipe","color":"#6d634e","position":"-196px -66px"},{"id":"satisfactory","color":"#8b9096","position":"-1px -131px"},{"id":"stack-inserter","color":"#839d5f","position":"-66px -131px"},{"id":"time","color":"#acabac","position":"-131px -131px"}],"limitations":{}}
+{
+  "game": "None",
+  "id": "app",
+  "name": "factoriolab",
+  "version": {},
+  "categories": [],
+  "items": [],
+  "recipes": [],
+  "icons": [
+    { "id": "captain-of-industry", "position": "-0px -0px" },
+    { "id": "dyson-sphere-program", "position": "-32px -0px" },
+    { "id": "factorio", "position": "-64px -0px" },
+    { "id": "factoriolab", "position": "-96px -0px" },
+    { "id": "fast-inserter", "position": "-0px -32px" },
+    { "id": "inserter", "position": "-32px -32px" },
+    { "id": "long-handed-inserter", "position": "-64px -32px" },
+    { "id": "module", "position": "-96px -32px" },
+    { "id": "pipe", "position": "-0px -64px" },
+    { "id": "satisfactory", "position": "-32px -64px" },
+    { "id": "stack-inserter", "position": "-64px -64px" },
+    { "id": "time", "position": "-96px -64px" }
+  ],
+  "limitations": {}
+}

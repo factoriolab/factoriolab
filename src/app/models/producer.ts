@@ -1,0 +1,49 @@
+import { Rational } from './rational';
+
+export interface Producer {
+  id: string;
+  recipeId: string;
+  count: string;
+  factoryId?: string;
+  factoryModuleIds?: string[];
+  beaconCount?: string;
+  beaconId?: string;
+  beaconModuleIds?: string[];
+  overclock?: number;
+}
+
+export class RationalProducer {
+  id: string;
+  recipeId: string;
+  count: Rational;
+  factoryId?: string;
+  factoryModuleIds?: string[];
+  beaconCount?: Rational;
+  beaconId?: string;
+  beaconModuleIds?: string[];
+  overclock?: Rational;
+
+  constructor(data: Producer) {
+    this.id = data.id;
+    this.recipeId = data.recipeId;
+    this.count = Rational.fromString(data.count);
+    if (data.factoryId != null) {
+      this.factoryId = data.factoryId;
+    }
+    if (data.factoryModuleIds != null) {
+      this.factoryModuleIds = data.factoryModuleIds;
+    }
+    if (data.beaconCount != null) {
+      this.beaconCount = Rational.fromString(data.beaconCount);
+    }
+    if (data.beaconId != null) {
+      this.beaconId = data.beaconId;
+    }
+    if (data.beaconModuleIds != null) {
+      this.beaconModuleIds = data.beaconModuleIds;
+    }
+    if (data.overclock != null) {
+      this.overclock = Rational.fromNumber(data.overclock);
+    }
+  }
+}

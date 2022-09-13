@@ -23,6 +23,7 @@ export interface Dataset {
   categoryIds: string[];
   categoryEntities: Entities<Category>;
   categoryItemRows: Entities<string[][]>;
+  categoryRecipeRows: Entities<string[][]>;
   iconIds: string[];
   iconEntities: Entities<Icon>;
   itemIds: string[];

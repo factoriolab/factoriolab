@@ -84,13 +84,12 @@ export class HeaderComponent implements OnInit {
     ])
       .pipe(untilDestroyed(this))
       .subscribe(([products, data]) => {
-        const title = this.translateSvc.instant(gameInfo[data.game].title);
         if (products.length && data.itemEntities[products[0].itemId]) {
           this.title.setTitle(
-            `${data.itemEntities[products[0].itemId].name} | ${title}`
+            `${data.itemEntities[products[0].itemId].name} | ${APP}`
           );
         } else {
-          this.title.setTitle(`${APP} | ${title}`);
+          this.title.setTitle(APP);
         }
       });
   }

@@ -52,7 +52,7 @@ export class DataService {
     if (!zip) {
       const id = stored?.settingsState?.modId || initial.modId;
       this.requestData(id).subscribe(([data]) => {
-        if (!stored?.productsState) {
+        if (!stored?.productsState && !stored?.producersState) {
           this.store.dispatch(new Products.ResetAction(data.items[0].id));
         }
       });

@@ -5,6 +5,7 @@ import {
   FuelType,
   ItemId,
   ItemSettings,
+  Producer,
   Product,
   RateType,
   Rational,
@@ -14,7 +15,9 @@ import {
   RationalRecipe,
   RationalRecipeSettings,
   Recipe,
+  RecipeSettings,
 } from '~/models';
+import { Factories } from '~/store';
 
 export class RecipeUtility {
   static MIN_FACTOR = new Rational(BigInt(1), BigInt(5));
@@ -536,6 +539,73 @@ export class RecipeUtility {
     }
 
     return product;
+  }
+
+  static adjustProducer(
+    producer: Producer,
+    recipeSettings: RecipeSettings,
+    factories: Factories.FactoriesState,
+    data: Dataset
+  ): Producer {
+    producer = { ...producer };
+
+    if (producer.factoryId == null) {
+      producer.factoryId = recipeSettings.factoryId;
+    }
+
+    if (producer.factoryId) {
+      const recipe = data.recipeEntities[producer.recipeId];
+      const factory = data.factoryEntities[producer.factoryId];
+      const def = factories.entities[producer.factoryId];
+      if (this.allowsModules(recipe, factory)) {
+        if (producer.factoryId === recipeSettings.factoryId) {
+          producer.factoryModuleIds =
+            producer.factoryModuleIds ?? recipeSettings.factoryModuleIds;
+          producer.beaconCount =
+            producer.beaconCount ?? recipeSettings.beaconCount;
+          producer.beaconId = producer.beaconId ?? recipeSettings.beaconId;
+
+          if (producer.beaconId != null) {
+            const beacon = data.beaconEntities[producer.beaconId];
+            if (producer.beaconModuleIds == null) {
+              producer.beaconModuleIds = recipeSettings.beaconModuleIds;
+            } else {
+              producer.beaconModuleIds = new Array(beacon.modules).fill(
+                def.beaconModuleId
+              );
+            }
+          }
+        } else {
+          if (producer.factoryModuleIds == null) {
+            producer.factoryModuleIds = this.defaultModules(
+              data.recipeModuleIds[recipe.id],
+              def.moduleRankIds ?? [],
+              factory.modules ?? 0
+            );
+          }
+
+          producer.beaconCount = producer.beaconCount ?? def.beaconCount;
+          producer.beaconId = producer.beaconId ?? def.beaconId;
+
+          if (producer.beaconId != null) {
+            const beacon = data.beaconEntities[producer.beaconId];
+            if (producer.beaconModuleIds == null) {
+              producer.beaconModuleIds = new Array(beacon.modules).fill(
+                def.beaconModuleId
+              );
+            }
+          }
+        }
+      }
+
+      if (producer.factoryId === recipeSettings.factoryId) {
+        producer.overclock = producer.overclock ?? recipeSettings.overclock;
+      } else {
+        producer.overclock = producer.overclock ?? def.overclock;
+      }
+    }
+
+    return producer;
   }
 
   static cleanCircularRecipes(

@@ -1,5 +1,34 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins/_breakpoints';
+
 .p-inputgroup {
-  p-dropdown.icon {
+  p-dropdown.icon,
+  p-dropdown.module-dropdown {
     flex: 0 0 36px;
+  }
+
+  lab-input-number.text-end {
+    min-width: 4rem;
+    max-width: 8rem;
+  }
+}
+
+@include media-breakpoint-up(sm) {
+  button.text-truncate {
+    flex-basis: 25%;
+  }
+}
+
+:host ::ng-deep {
+  .factory.module-dropdown:hover ~ .factory.module-dropdown,
+  .beacon.module-dropdown:hover ~ .beacon.module-dropdown {
+    .lab-icon-sm {
+      opacity: 0.3;
+    }
+
+    .p-dropdown {
+      border: 1px solid var(--primary-color);
+    }
   }
 }

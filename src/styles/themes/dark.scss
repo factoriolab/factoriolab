@@ -93,7 +93,7 @@ $danger-a16: rgba($danger-color, 0.16);
   --surface-f: #1e1e1e;
   --text-color: rgba(255, 255, 255, 0.87);
   --text-color-secondary: rgba(255, 255, 255, 0.6);
-  --primary-color: $primary-color;
+  --primary-color: #{$primary-color};
   --primary-color-text: #212529;
   --font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica,
     Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
@@ -107,7 +107,7 @@ $danger-a16: rgba($danger-color, 0.16);
   --surface-border: #383838;
   --surface-hover: rgba(255, 255, 255, 0.03);
   --maskbg: rgba(0, 0, 0, 0.4);
-  --focus-ring: 0 0 0 1px $shadow-color;
+  --focus-ring: 0 0 0 1px #{$shadow-color};
   color-scheme: dark;
 }
 

@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable } from '@angular/core';
 import { Meta } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -10,11 +11,14 @@ import { environment } from 'src/environments';
 import { FuelType, gameInfo, ModHash } from '~/models';
 import { LabState, Preferences, Products, Settings } from '~/store';
 
+const LAB_FAVICON_ID = 'lab-favicon';
+
 @Injectable({
   providedIn: 'root',
 })
 export class StateService {
   constructor(
+    @Inject(DOCUMENT) private document: Document,
     private meta: Meta,
     private gaSvc: GoogleAnalyticsService,
     private store: Store<LabState>,
@@ -31,6 +35,9 @@ export class StateService {
         content: `A feature-rich production calculator for ${gameInfo[game].meta} and similar games.
 Determine resource and factory requirements for your desired output products.`,
       });
+      this.document
+        .getElementById(LAB_FAVICON_ID)
+        ?.setAttribute('href', gameInfo[game].favicon);
     });
 
     this.store.select(Preferences.getLanguage).subscribe((lang) => {

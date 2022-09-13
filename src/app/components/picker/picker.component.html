@@ -24,31 +24,35 @@
     </span>
   </ng-template>
   <p-tabView [scrollable]="true" [(activeIndex)]="activeIndex">
-    <ng-container *ngFor="let id of categoryIds; let i = index">
+    <ng-container *ngFor="let categoryId of categoryIds; let i = index">
       <p-tabPanel
-        *ngIf="categoryEntities[id] as category"
+        *ngIf="categoryEntities[categoryId] as category"
         [tooltip]="category.name"
         [selected]="i === activeIndex"
       >
         <ng-template pTemplate="header">
-          <i [class]="id | iconSmClass: 'category'"></i>
+          <i [class]="categoryId | iconSmClass: 'category'"></i>
         </ng-template>
         <ng-template pTemplate="content">
           <div
-            *ngFor="let itemIds of categoryItemRows[id]"
+            *ngFor="let ids of categoryRows[categoryId]"
             class="d-flex flex-wrap"
           >
-            <ng-container *ngFor="let itemId of itemIds">
+            <ng-container *ngFor="let id of ids">
               <button
                 pButton
                 pRipple
                 type="button"
                 class="me-1 mb-1"
-                [class.p-button-text]="itemId !== selectedId"
-                [icon]="itemId | iconSmClass"
-                [pTooltip]="itemId | itemTooltip: vm.data"
+                [class.p-button-text]="id !== selectedId"
+                [icon]="id | iconSmClass: type"
+                [pTooltip]="
+                  type === 'item'
+                    ? (id | itemTooltip: vm.data)
+                    : (id | recipeTooltip: vm.data)
+                "
                 [escape]="false"
-                (click)="clickItem(itemId)"
+                (click)="clickId(id)"
               ></button>
             </ng-container>
           </div>
