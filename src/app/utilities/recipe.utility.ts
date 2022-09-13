@@ -543,67 +543,50 @@ export class RecipeUtility {
 
   static adjustProducer(
     producer: Producer,
-    recipeSettings: RecipeSettings,
     factories: Factories.FactoriesState,
     data: Dataset
   ): Producer {
     producer = { ...producer };
+    const recipe = data.recipeEntities[producer.recipeId];
 
     if (producer.factoryId == null) {
-      producer.factoryId = recipeSettings.factoryId;
+      producer.factoryId = this.bestMatch(
+        recipe.producers,
+        factories.ids ?? []
+      );
     }
 
-    if (producer.factoryId) {
-      const recipe = data.recipeEntities[producer.recipeId];
-      const factory = data.factoryEntities[producer.factoryId];
-      const def = factories.entities[producer.factoryId];
-      if (this.allowsModules(recipe, factory)) {
-        if (producer.factoryId === recipeSettings.factoryId) {
-          producer.factoryModuleIds =
-            producer.factoryModuleIds ?? recipeSettings.factoryModuleIds;
-          producer.beaconCount =
-            producer.beaconCount ?? recipeSettings.beaconCount;
-          producer.beaconId = producer.beaconId ?? recipeSettings.beaconId;
+    const factory = data.factoryEntities[producer.factoryId];
+    const def = factories.entities[producer.factoryId];
+    if (factory != null && this.allowsModules(recipe, factory)) {
+      if (producer.factoryModuleIds == null) {
+        producer.factoryModuleIds = this.defaultModules(
+          data.recipeModuleIds[recipe.id],
+          def.moduleRankIds ?? [],
+          factory.modules ?? 0
+        );
+      }
 
-          if (producer.beaconId != null) {
-            const beacon = data.beaconEntities[producer.beaconId];
-            if (producer.beaconModuleIds == null) {
-              producer.beaconModuleIds = recipeSettings.beaconModuleIds;
-            } else {
-              producer.beaconModuleIds = new Array(beacon.modules).fill(
-                def.beaconModuleId
-              );
-            }
-          }
-        } else {
-          if (producer.factoryModuleIds == null) {
-            producer.factoryModuleIds = this.defaultModules(
-              data.recipeModuleIds[recipe.id],
-              def.moduleRankIds ?? [],
-              factory.modules ?? 0
-            );
-          }
+      producer.beaconCount = producer.beaconCount ?? def.beaconCount;
+      producer.beaconId = producer.beaconId ?? def.beaconId;
 
-          producer.beaconCount = producer.beaconCount ?? def.beaconCount;
-          producer.beaconId = producer.beaconId ?? def.beaconId;
-
-          if (producer.beaconId != null) {
-            const beacon = data.beaconEntities[producer.beaconId];
-            if (producer.beaconModuleIds == null) {
-              producer.beaconModuleIds = new Array(beacon.modules).fill(
-                def.beaconModuleId
-              );
-            }
-          }
+      if (producer.beaconId != null) {
+        const beacon = data.beaconEntities[producer.beaconId];
+        if (producer.beaconModuleIds == null) {
+          producer.beaconModuleIds = new Array(beacon.modules).fill(
+            def.beaconModuleId
+          );
         }
       }
-
-      if (producer.factoryId === recipeSettings.factoryId) {
-        producer.overclock = producer.overclock ?? recipeSettings.overclock;
-      } else {
-        producer.overclock = producer.overclock ?? def.overclock;
-      }
+    } else {
+      // Factory doesn't support modules, remove any
+      delete producer.factoryModuleIds;
+      delete producer.beaconCount;
+      delete producer.beaconId;
+      delete producer.beaconModuleIds;
     }
+
+    producer.overclock = producer.overclock ?? def.overclock;
 
     return producer;
   }

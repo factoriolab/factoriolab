@@ -30,18 +30,10 @@ export const getBaseProducers = createSelector(
 
 export const getProducers = createSelector(
   getBaseProducers,
-  Recipes.getRecipeSettings,
   Factories.getFactories,
   Settings.getDataset,
-  (producers, recipeSettings, factories, data) =>
-    producers.map((p) =>
-      RecipeUtility.adjustProducer(
-        p,
-        recipeSettings[p.recipeId],
-        factories,
-        data
-      )
-    )
+  (producers, factories, data) =>
+    producers.map((p) => RecipeUtility.adjustProducer(p, factories, data))
 );
 
 export const getRationalProducers = createSelector(

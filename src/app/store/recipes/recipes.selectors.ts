@@ -28,7 +28,7 @@ export const getRecipeSettings = createSelector(
       for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
         const s: RecipeSettings = { ...state[recipe.id] };
 
-        if (!s.factoryId) {
+        if (s.factoryId == null) {
           s.factoryId = RecipeUtility.bestMatch(
             recipe.producers,
             factories.ids ?? []
@@ -38,7 +38,7 @@ export const getRecipeSettings = createSelector(
         const factory = data.factoryEntities[s.factoryId];
         const def = factories.entities[s.factoryId];
         if (factory != null && RecipeUtility.allowsModules(recipe, factory)) {
-          if (!s.factoryModuleIds) {
+          if (s.factoryModuleIds == null) {
             s.factoryModuleIds = RecipeUtility.defaultModules(
               data.recipeModuleIds[recipe.id],
               def.moduleRankIds ?? [],
@@ -46,14 +46,12 @@ export const getRecipeSettings = createSelector(
             );
           }
 
-          if (s.beaconCount == null) {
-            s.beaconCount = def.beaconCount;
-          }
+          s.beaconCount = s.beaconCount ?? def.beaconCount;
+          s.beaconId = s.beaconId ?? def.beaconId;
 
-          s.beaconId = s.beaconId || def.beaconId;
-          if (s.beaconId) {
+          if (s.beaconId != null) {
             const beacon = data.beaconEntities[s.beaconId];
-            if (beacon && !s.beaconModuleIds) {
+            if (beacon && s.beaconModuleIds == null) {
               s.beaconModuleIds = new Array(beacon.modules).fill(
                 def.beaconModuleId
               );
@@ -75,7 +73,7 @@ export const getRecipeSettings = createSelector(
           delete s.beaconTotal;
         }
 
-        s.overclock = s.overclock || def?.overclock;
+        s.overclock = s.overclock ?? def?.overclock;
 
         value[recipe.id] = s;
       }
