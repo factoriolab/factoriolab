@@ -236,7 +236,9 @@ export class RouterService {
     const bare = zProducts.bare + this.zipPartial.bare + this.zipTail.bare;
     const hash = zProducts.hash + this.zipPartial.hash + this.zipTail.hash;
     const zip = `z=${this.bytesToBase64(deflate(hash))}`;
-    return bare.length < Math.max(zip.length, MIN_ZIP) ? bare : zip;
+    return bare.length < Math.max(zip.length, MIN_ZIP)
+      ? bare.replace(/^&/, '')
+      : zip;
   }
 
   getParams(zip: string): Entities {
