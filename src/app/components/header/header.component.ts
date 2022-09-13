@@ -15,7 +15,7 @@ import { combineLatest, map } from 'rxjs';
 
 import { APP, Game, gameInfo, games } from '~/models';
 import { ContentService } from '~/services';
-import { LabState, Products, Settings } from '~/store';
+import { LabState, Producers, Products, Settings } from '~/store';
 
 interface MenuLink {
   label: string;
@@ -79,14 +79,22 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     combineLatest([
       this.store.select(Products.getBaseProducts),
+      this.store.select(Producers.getBaseProducers),
       this.store.select(Settings.getDataset),
       this.contentSvc.lang$,
     ])
       .pipe(untilDestroyed(this))
-      .subscribe(([products, data]) => {
+      .subscribe(([products, producers, data]) => {
         if (products.length && data.itemEntities[products[0].itemId]) {
           this.title.setTitle(
             `${data.itemEntities[products[0].itemId].name} | ${APP}`
+          );
+        } else if (
+          producers.length &&
+          data.recipeEntities[producers[0].recipeId]
+        ) {
+          this.title.setTitle(
+            `${data.recipeEntities[producers[0].recipeId].name} | ${APP}`
           );
         } else {
           this.title.setTitle(APP);
