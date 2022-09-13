@@ -466,7 +466,6 @@ export const getDataset = createSelector(
         categoryItemRows[id] = rows;
       }
     }
-    console.log(categoryItemRows);
 
     // Calculate recipe item rows
     const categoryRecipeRows: Entities<string[][]> = {};

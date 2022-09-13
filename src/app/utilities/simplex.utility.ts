@@ -7,6 +7,7 @@ import {
   MatrixResult,
   MatrixResultType,
   Rational,
+  RationalProducer,
   RationalRecipe,
   SimplexType,
   Step,
@@ -94,6 +95,8 @@ export class SimplexUtility {
   /** Solve all remaining steps using simplex method, if necessary */
   static solve(
     steps: Step[],
+    producers: RationalProducer[],
+    producerRecipes: Entities<RationalRecipe>,
     itemSettings: Items.ItemsState,
     disabledRecipeIds: string[],
     costInput: Rational,
@@ -162,6 +165,8 @@ export class SimplexUtility {
 
     steps = this.solve(
       steps,
+      [],
+      {},
       itemSettings,
       disabledRecipeIds,
       costInput,

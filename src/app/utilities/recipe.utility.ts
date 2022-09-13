@@ -54,7 +54,7 @@ export class RecipeUtility {
     fuelId: string | undefined,
     proliferatorSprayId: string,
     miningBonus: Rational,
-    researchFactor: Rational,
+    researchSpeed: Rational,
     settings: RationalRecipeSettings,
     itemSettings: Entities<ItemSettings>,
     data: Dataset
@@ -88,7 +88,7 @@ export class RecipeUtility {
 
       if (factory.research) {
         // Adjust for research factor
-        recipe.time = recipe.time.div(researchFactor);
+        recipe.time = recipe.time.div(researchSpeed);
       }
 
       // Calculate factors

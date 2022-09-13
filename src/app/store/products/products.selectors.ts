@@ -290,13 +290,25 @@ export const getNormalizedSteps = createSelector(
 
 export const getMatrixResult = createSelector(
   getNormalizedSteps,
+  Producers.getRationalProducers,
+  Producers.getProducerRecipes,
   Items.getItemSettings,
   Settings.getDisabledRecipeIds,
   Settings.getSimplexModifiers,
   Recipes.getAdjustedDataset,
-  (steps, itemSettings, disabledRecipeIds, adj, data) =>
+  (
+    steps,
+    producers,
+    producerRecipes,
+    itemSettings,
+    disabledRecipeIds,
+    adj,
+    data
+  ) =>
     SimplexUtility.solve(
       RateUtility.copy(steps),
+      producers,
+      producerRecipes,
       itemSettings,
       disabledRecipeIds,
       adj.costInput,
