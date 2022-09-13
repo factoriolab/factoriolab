@@ -14,6 +14,7 @@ import {
   Step,
   StepDetail,
   StepDetailTab,
+  StepOutput,
 } from '~/models';
 import { RateUtility, RecipeUtility, SimplexUtility } from '~/utilities';
 import { LabState } from '../';
@@ -498,22 +499,49 @@ export const getTotals = createSelector(
 
 export const getStepDetails = createSelector(
   getSteps,
+  Producers.getRationalProducers,
+  Producers.getProducerRecipes,
   Recipes.getAdjustedDataset,
   Settings.getDisabledRecipeIds,
-  (steps, data, disabledRecipeIds) =>
+  Settings.getDisplayRateInfo,
+  (steps, producers, producerRecipes, data, disabledRecipeIds, dispRateInfo) =>
     steps.reduce((e: Entities<StepDetail>, s) => {
       const tabs: StepDetailTab[] = [];
-      let outputs: Step[] = [];
+      const outputs: StepOutput[] = [];
       const recipeIds: string[] = [];
       const defaultableRecipeIds: string[] = [];
-      if (s.itemId != null) {
+      if (s.itemId != null && s.items != null) {
         const itemId = s.itemId; // Store null-checked id
         tabs.push(StepDetailTab.Item);
-        outputs = steps
-          .filter((a) => a.outputs?.[itemId] != null)
-          .sort((a, b) =>
-            b.outputs![itemId].sub(a.outputs![itemId]).toNumber()
-          );
+        outputs.push(
+          ...steps
+            .filter(
+              (s) =>
+                s.outputs?.[itemId] != null &&
+                s.recipeId != null &&
+                s.factories != null
+            )
+            .map((s) => ({
+              recipeId: s.recipeId!,
+              value: s.outputs![itemId],
+              factories: s.factories!,
+            }))
+        );
+        for (const producer of producers) {
+          const recipe = producerRecipes[producer.id];
+          if (recipe.out[itemId]?.nonzero()) {
+            const val = recipe.out[itemId]
+              .mul(producer.count)
+              .div(recipe.time)
+              .mul(dispRateInfo.value);
+            outputs.push({
+              recipeId: producer.recipeId,
+              value: val.div(s.items),
+              factories: producer.count,
+            });
+          }
+        }
+        outputs.sort((a, b) => b.value.sub(a.value).toNumber());
       }
       if (s.recipeId != null) {
         tabs.push(StepDetailTab.Recipe);

@@ -831,30 +831,26 @@
             </td>
           </tr>
           <ng-container *ngFor="let output of vm.stepDetails[step.id].outputs">
-            <ng-container
-              *ngIf="output.outputs && output.recipeId && step.itemId"
-            >
-              <ng-container *ngIf="output.outputs[step.itemId] as value">
-                <ng-container
-                  *ngTemplateOutlet="
-                    detailRow;
-                    context: {
-                      items: step.items.mul(value),
-                      itemId: step.itemId,
-                      belts: step.belts?.mul(value),
-                      beltId: vm.itemSettings[step.itemId].beltId,
-                      wagons: step.wagons?.mul(value),
-                      wagonId: vm.itemSettings[step.itemId].wagonId,
-                      factories: output.factories,
-                      factoryId: vm.recipeSettings[output.recipeId].factoryId,
-                      recipeId: output.recipeId,
-                      percent: value,
-                      percentOnDest: true,
-                      destId: step.itemId
-                    }
-                  "
-                >
-                </ng-container>
+            <ng-container *ngIf="output.recipeId && step.itemId">
+              <ng-container
+                *ngTemplateOutlet="
+                  detailRow;
+                  context: {
+                    items: step.items.mul(output.value),
+                    itemId: step.itemId,
+                    belts: step.belts?.mul(output.value),
+                    beltId: vm.itemSettings[step.itemId].beltId,
+                    wagons: step.wagons?.mul(output.value),
+                    wagonId: vm.itemSettings[step.itemId].wagonId,
+                    factories: output.factories,
+                    factoryId: vm.recipeSettings[output.recipeId].factoryId,
+                    recipeId: output.recipeId,
+                    percent: output.value,
+                    percentOnDest: true,
+                    destId: step.itemId
+                  }
+                "
+              >
               </ng-container>
             </ng-container>
           </ng-container>
@@ -1587,7 +1583,7 @@
           <td class="w-0 text-end inherit">
             <div
               *ngFor="let tot of totals | keyvalue: trackSvc.sortByValue"
-              class="py-2 icon-height"
+              class="m-1 py-2"
             >
               <span class="monospace">{{
                 tot.value | rate: vm.effectivePrecision[column]
