@@ -641,12 +641,12 @@ describe('RateUtility', () => {
           itemId: Mocks.Item1.id,
         },
       ];
-      RateUtility.displayRate(steps, 3 as any);
+      RateUtility.calculateDisplayRate(steps, 3 as any);
       expect(steps[0].items).toBeUndefined();
     });
 
     it('should apply the display rate to the given steps', () => {
-      const result = RateUtility.displayRate(
+      const result = RateUtility.calculateDisplayRate(
         [
           {
             items: Rational.one,
@@ -666,7 +666,7 @@ describe('RateUtility', () => {
     });
 
     it('should apply the display rate to partial steps', () => {
-      const result = RateUtility.displayRate(
+      const result = RateUtility.calculateDisplayRate(
         [{ items: Rational.two }] as any,
         displayRateInfo[DisplayRate.PerMinute]
       );
@@ -677,7 +677,7 @@ describe('RateUtility', () => {
     });
 
     it('should calculate parent percentages', () => {
-      const result = RateUtility.displayRate(
+      const result = RateUtility.calculateDisplayRate(
         [{ items: Rational.two, parents: { id: Rational.one } }] as any,
         displayRateInfo[DisplayRate.PerMinute]
       );
@@ -713,7 +713,7 @@ describe('RateUtility', () => {
           items: Rational.one,
         },
       ];
-      RateUtility.sortHierarchy(steps);
+      RateUtility.calculateHierarchy(steps);
       expect(RateUtility.sortRecursive).toHaveBeenCalledWith(
         {
           ['2']: [steps[0]],
@@ -735,7 +735,7 @@ describe('RateUtility', () => {
           parents: { [RecipeId.Coal]: Rational.one },
         },
       ];
-      RateUtility.sortHierarchy(steps);
+      RateUtility.calculateHierarchy(steps);
       expect(RateUtility.sortRecursive).toHaveBeenCalledWith(
         { ['']: [steps[0]] },
         '',
@@ -760,7 +760,7 @@ describe('RateUtility', () => {
           parents: { [RecipeId.Coal]: Rational.one },
         },
       ];
-      const sorted = RateUtility.sortHierarchy(steps);
+      const sorted = RateUtility.calculateHierarchy(steps);
       expect(sorted.length).toEqual(steps.length);
     });
   });

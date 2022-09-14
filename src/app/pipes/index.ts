@@ -1,3 +1,4 @@
+import { AsStepPipe } from './as-step.pipe';
 import { FactoryRatePipe } from './factory-rate.pipe';
 import { FactoryShowRatePipe } from './factory-show-rate.pipe';
 import { FactoryShowPipe } from './factory-show.pipe';
@@ -20,6 +21,7 @@ import {
 } from './tooltips';
 
 export const pipes = [
+  AsStepPipe,
   BeaconTooltipPipe,
   FactoryTooltipPipe,
   ItemTooltipPipe,

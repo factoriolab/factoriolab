@@ -93,7 +93,7 @@ export class FlowService {
           const factory = data.itemEntities[settings.factoryId];
           // CREATE NODE: Standard recipe
           flow.nodes.push({
-            id: `r|${step.recipeId}`,
+            id: `r|${step.id}`,
             type:
               Object.keys(recipe.in).length === 0
                 ? NodeType.Input
@@ -128,7 +128,7 @@ export class FlowService {
                 );
                 // CREATE LINK: Recipe -> Surplus
                 flow.links.push({
-                  source: `r|${sourceStep.recipeId}`,
+                  source: `r|${sourceStep.id}`,
                   target: `s|${step.itemId}`,
                   name: item.name,
                   text: `${sourceAmount.toString(itemPrec)}${rateLbl}`,
@@ -145,7 +145,7 @@ export class FlowService {
 
             // Links to recipe node
             for (const targetId of Object.keys(step.parents)) {
-              // This is how much is requested by that recipe, but need recipe source
+              // This is how much is requested by that step, but need recipe source
               const targetAmount = step.items.mul(step.parents[targetId]);
               // Keep track of remaining amounts
               let amount = targetAmount;
@@ -160,7 +160,7 @@ export class FlowService {
                     amount = amount.sub(sourceAmount);
                     // CREATE LINK: Recipe -> Recipe
                     flow.links.push({
-                      source: `r|${sourceStep.recipeId}`,
+                      source: `r|${sourceStep.id}`,
                       target: `r|${targetId}`,
                       name: item.name,
                       text: `${sourceAmount.toString(itemPrec)}${rateLbl}`,
@@ -211,7 +211,7 @@ export class FlowService {
                 if (sourceStep.outputs[step.itemId]) {
                   // CREATE LINK: Recipe -> Output
                   flow.links.push({
-                    source: `r|${sourceStep.recipeId}`,
+                    source: `r|${sourceStep.id}`,
                     target: `o|${step.itemId}`,
                     name: item.name,
                     text: `${step.output

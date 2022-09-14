@@ -109,14 +109,13 @@ export class ExportUtility {
       }
     }
     if (step.recipeId != null) {
-      const recipeId = step.recipeId; // Store non-null
       exp.Recipe = step.recipeId;
       const recipe = data.recipeR[step.recipeId];
       const settings = recipeSettings[step.recipeId];
       const inputs = Object.keys(recipe.in)
         .map((i) => {
           const inStep = steps.find((s) => s.itemId === i);
-          return [i, inStep?.parents?.[recipeId]?.toString()];
+          return [i, inStep?.parents?.[step.id]?.toString()];
         })
         .filter((v) => v[1])
         .map((v) => `${v[0]}:${v[1]}`)
@@ -165,7 +164,8 @@ export class ExportUtility {
     if (step.parents != null) {
       const parents = step.parents; // Store as non-null
       const parentsStr = Object.keys(parents)
-        .map((p) => `${p}:${parents[p].toString()}`)
+        .map((p) => steps.find((s) => s.id === p))
+        .map((s) => (s ? `${s.recipeId}:${parents[s.id].toString()}` : ''))
         .join(',');
       exp.Targets = `"${parentsStr}"`;
     }

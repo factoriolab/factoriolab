@@ -1,11 +1,10 @@
 import { createSelector } from '@ngrx/store';
 
-import { Entities, RationalProducer, RationalRecipe } from '~/models';
+import { RationalProducer, RationalRecipeSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Factories from '../factories';
 import * as Items from '../items';
-import * as Recipes from '../recipes';
 import * as Settings from '../settings';
 import { ProducersState } from './producers.reducer';
 
@@ -40,25 +39,21 @@ export const getRationalProducers = createSelector(
   getProducers,
   Settings.getAdjustmentData,
   Items.getItemSettings,
-  (producers) => producers.map((p) => new RationalProducer(p))
-);
-
-export const getProducerRecipes = createSelector(
-  getRationalProducers,
-  Settings.getAdjustmentData,
-  Items.getItemSettings,
   (producers, adj, itemSettings) =>
-    producers.reduce((e: Entities<RationalRecipe>, producer) => {
-      e[producer.id] = RecipeUtility.adjustRecipe(
-        producer.recipeId,
-        adj.fuelId,
-        adj.proliferatorSprayId,
-        adj.miningBonus,
-        adj.researchSpeed,
-        producer,
-        itemSettings,
-        adj.data
-      );
-      return e;
-    }, {})
+    producers.map(
+      (p) =>
+        new RationalProducer(
+          p,
+          RecipeUtility.adjustRecipe(
+            p.recipeId,
+            adj.fuelId,
+            adj.proliferatorSprayId,
+            adj.miningBonus,
+            adj.researchSpeed,
+            new RationalRecipeSettings(p),
+            itemSettings,
+            adj.data
+          )
+        )
+    )
 );

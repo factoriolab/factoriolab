@@ -1088,9 +1088,6 @@
             }}</label>
           </div>
           <div class="p-error">
-            <small *ngIf="vm.preferences.simplexType === SimplexType.Disabled">
-              {{ 'settings.simplexSolverDisabledInfo' | translate }}
-            </small>
             <small
               *ngIf="vm.preferences.simplexType === SimplexType.WasmFloat64"
             >

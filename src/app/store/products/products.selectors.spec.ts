@@ -649,8 +649,8 @@ describe('Products Selectors', () => {
       spyOn(RateUtility, 'sortHierarchy');
       spyOn(RateUtility, 'displayRate').and.returnValue([]);
       Selectors.getSteps.projector([], null);
-      expect(RateUtility.displayRate).toHaveBeenCalled();
-      expect(RateUtility.sortHierarchy).toHaveBeenCalled();
+      expect(RateUtility.calculateDisplayRate).toHaveBeenCalled();
+      expect(RateUtility.calculateHierarchy).toHaveBeenCalled();
     });
   });
 

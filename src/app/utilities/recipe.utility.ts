@@ -15,7 +15,6 @@ import {
   RationalRecipe,
   RationalRecipeSettings,
   Recipe,
-  RecipeSettings,
 } from '~/models';
 import { Factories } from '~/store';
 

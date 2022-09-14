@@ -58,7 +58,6 @@
       "speed6": "Research speed 6"
     },
     "simplexType": {
-      "disabled": "Disabled",
       "jsBigIntRational": "JS BigInt Rational",
       "wasmFloat64": "WASM Float64"
     },
@@ -186,7 +185,6 @@
     "advanced": "Advanced",
     "simplexSolver": "Simplex solver",
     "simplexSolverTooltip": "Select the simplex solver algorithm, or disable simplex to more easily modify settings when simplex is slow and causes lag",
-    "simplexSolverDisabledInfo": "Disabling simplex improves performance but usually results in a partial solution",
     "simplexSolverWasmFloat64Info": "WebAssembly Float64 is less precise than Rationals, but runs significantly faster"
   },
   "objectives": {

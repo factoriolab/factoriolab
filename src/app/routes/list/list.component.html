@@ -143,8 +143,8 @@
         </th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-step let-expanded="expanded">
-      <tr>
+    <ng-template pTemplate="body" let-_step let-expanded="expanded">
+      <tr *ngIf="_step | asStep as step">
         <!-- Expand row -->
         <td [id]="step.id" class="w-0">
           <div class="d-flex">
@@ -186,7 +186,11 @@
                   [class]="step.recipeId | iconSmClass: 'recipe'"
                   [pTooltip]="step.recipeId | recipeTooltip: vm.data"
                   [escape]="false"
-                ></i>
+                >
+                  <span *ngIf="step.producerId != null"
+                    >#{{ step.producerId }}</span
+                  >
+                </i>
               </ng-template>
             </div>
           </div>
@@ -481,11 +485,7 @@
         </ng-container>
         <!-- Factories -->
         <ng-container
-          *ngIf="
-            step.recipeId &&
-              vm.recipeSettings[step.recipeId].factoryId as factoryId;
-            else emptyCol2
-          "
+          *ngIf="step.recipeSettings?.factoryId as factoryId; else emptyCol2"
         >
           <td class="w-0 text-end">
             <span
@@ -506,7 +506,7 @@
           <td class="ps-0">
             <ng-container *ngIf="factoryId | factoryShow: vm.data.game">
               <div
-                *ngIf="vm.data.recipeEntities[step.recipeId] as recipe"
+                *ngIf="step.recipeId && step.recipe && step.recipeSettings"
                 class="d-flex align-items-center"
               >
                 <i
@@ -519,7 +519,9 @@
                   labDropdownBase="icon"
                   [pTooltip]="factoryId | factoryTooltip: vm.data"
                   [escape]="false"
-                  [options]="recipe.producers | options: vm.data.itemEntities"
+                  [options]="
+                    step.recipe.producers | options: vm.data.itemEntities
+                  "
                   [ngModel]="factoryId"
                   (onChange)="
                     changeFactory(
@@ -557,7 +559,7 @@
                   [step]="10"
                   [size]="2"
                   [pTooltip]="'list.overclockTooltip' | translate"
-                  [ngModel]="vm.recipeSettings[step.recipeId].overclock"
+                  [ngModel]="step.recipeSettings.overclock"
                   (onBlur)="
                     changeRecipeField(
                       step.recipeId,
@@ -570,10 +572,7 @@
                 >
                 </p-inputNumber>
                 <ng-container
-                  *ngIf="
-                    vm.recipeSettings[step.recipeId]
-                      .factoryModuleIds as moduleIds
-                  "
+                  *ngIf="step.recipeSettings?.factoryModuleIds as moduleIds"
                 >
                   <p-dropdown
                     *ngFor="let moduleId of moduleIds; index as i; last as last"
@@ -625,121 +624,126 @@
         </ng-container>
         <!-- Beacons -->
         <ng-container *ngIf="vm.columns[Column.Beacons].show">
-          <ng-container *ngIf="step.recipeId; else emptyCol2">
-            <ng-container *ngIf="vm.recipeSettings[step.recipeId] as settings">
-              <td class="w-0">
-                <lab-input-number
-                  *ngIf="settings.beaconId && settings.beaconCount"
-                  [pTooltip]="'list.beaconEachTooltip' | translate"
-                  tooltipPosition="left"
-                  class="text-end"
-                  width="3rem"
-                  [value]="settings.beaconCount"
-                  [hideButtons]="true"
-                  (setValue)="
+          <ng-container
+            *ngIf="step.recipeId && step.recipeSettings; else emptyCol2"
+          >
+            <td class="w-0">
+              <lab-input-number
+                *ngIf="
+                  step.recipeSettings.beaconId &&
+                  step.recipeSettings.beaconCount
+                "
+                [pTooltip]="'list.beaconEachTooltip' | translate"
+                tooltipPosition="left"
+                class="text-end"
+                width="3rem"
+                [value]="step.recipeSettings.beaconCount.toString()"
+                [hideButtons]="true"
+                (setValue)="
+                  changeRecipeField(
+                    step.recipeId,
+                    $event,
+                    vm.recipeSettings,
+                    vm.factories,
+                    RecipeField.BeaconCount
+                  )
+                "
+              ></lab-input-number>
+            </td>
+            <td class="ps-0">
+              <div class="d-flex">
+                <p-dropdown
+                  *ngIf="step.recipeSettings.beaconId"
+                  labDropdownBase="icon"
+                  [pTooltip]="
+                    step.recipeSettings.beaconId | beaconTooltip: vm.data
+                  "
+                  [escape]="false"
+                  [options]="vm.options.beacons"
+                  [ngModel]="step.recipeSettings.beaconId"
+                  (onChange)="
                     changeRecipeField(
                       step.recipeId,
-                      $event,
+                      $event.value,
                       vm.recipeSettings,
                       vm.factories,
-                      RecipeField.BeaconCount
+                      RecipeField.Beacon
                     )
                   "
+                >
+                  <ng-template pTemplate="selectedItem" let-item>
+                    <div class="d-flex">
+                      <i [class]="item.value | iconSmClass"></i>
+                    </div>
+                  </ng-template>
+                  <ng-template pTemplate="item" let-item>
+                    <div
+                      class="d-flex align-items-center py-2 w-100 h-100"
+                      [pTooltip]="item.value | beaconTooltip: vm.data"
+                      [escape]="false"
+                    >
+                      <i [class]="item.value | iconSmClass"></i>
+                      <div class="ms-3 text-truncate">
+                        {{ item.label }}
+                      </div>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <p-dropdown
+                  *ngFor="
+                    let moduleId of step.recipeSettings.beaconModuleIds;
+                    index as i;
+                    last as last
+                  "
+                  labDropdownBase="icon"
+                  class="module-dropdown"
+                  [class.last]="last"
+                  [pTooltip]="moduleId | moduleTooltip: vm.data"
+                  tooltipPosition="top"
+                  [escape]="false"
+                  [options]="vm.options.beaconModules"
+                  [ngModel]="moduleId"
+                  (onChange)="
+                    changeRecipeField(
+                      step.recipeId,
+                      $event.value,
+                      vm.recipeSettings,
+                      vm.factories,
+                      RecipeField.BeaconModules,
+                      i,
+                      vm.data
+                    )
+                  "
+                >
+                  <ng-template pTemplate="selectedItem" let-item>
+                    <div class="d-flex">
+                      <i [class]="item.value | iconSmClass"></i>
+                    </div>
+                  </ng-template>
+                  <ng-template pTemplate="item" let-item>
+                    <div
+                      class="d-flex align-items-center py-2 w-100 h-100"
+                      [pTooltip]="item.value | moduleTooltip: vm.data"
+                      [escape]="false"
+                    >
+                      <i [class]="item.value | iconSmClass"></i>
+                      <div class="ms-3 text-truncate">
+                        {{ item.label }}
+                      </div>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <lab-input-number
+                  *ngIf="step.beacons"
+                  [pTooltip]="'list.beaconTotalTooltip' | translate"
+                  class="text-end"
+                  width="4rem"
+                  [value]="step.beacons.toString()"
+                  [hideButtons]="true"
+                  (setValue)="setBeaconTotal(step.recipeId, $event)"
                 ></lab-input-number>
-              </td>
-              <td class="ps-0">
-                <div class="d-flex">
-                  <p-dropdown
-                    *ngIf="settings.beaconId"
-                    labDropdownBase="icon"
-                    [pTooltip]="settings.beaconId | beaconTooltip: vm.data"
-                    [escape]="false"
-                    [options]="vm.options.beacons"
-                    [ngModel]="settings.beaconId"
-                    (onChange)="
-                      changeRecipeField(
-                        step.recipeId,
-                        $event.value,
-                        vm.recipeSettings,
-                        vm.factories,
-                        RecipeField.Beacon
-                      )
-                    "
-                  >
-                    <ng-template pTemplate="selectedItem" let-item>
-                      <div class="d-flex">
-                        <i [class]="item.value | iconSmClass"></i>
-                      </div>
-                    </ng-template>
-                    <ng-template pTemplate="item" let-item>
-                      <div
-                        class="d-flex align-items-center py-2 w-100 h-100"
-                        [pTooltip]="item.value | beaconTooltip: vm.data"
-                        [escape]="false"
-                      >
-                        <i [class]="item.value | iconSmClass"></i>
-                        <div class="ms-3 text-truncate">
-                          {{ item.label }}
-                        </div>
-                      </div>
-                    </ng-template>
-                  </p-dropdown>
-                  <p-dropdown
-                    *ngFor="
-                      let moduleId of settings.beaconModuleIds;
-                      index as i;
-                      last as last
-                    "
-                    labDropdownBase="icon"
-                    class="module-dropdown"
-                    [class.last]="last"
-                    [pTooltip]="moduleId | moduleTooltip: vm.data"
-                    tooltipPosition="top"
-                    [escape]="false"
-                    [options]="vm.options.beaconModules"
-                    [ngModel]="moduleId"
-                    (onChange)="
-                      changeRecipeField(
-                        step.recipeId,
-                        $event.value,
-                        vm.recipeSettings,
-                        vm.factories,
-                        RecipeField.BeaconModules,
-                        i,
-                        vm.data
-                      )
-                    "
-                  >
-                    <ng-template pTemplate="selectedItem" let-item>
-                      <div class="d-flex">
-                        <i [class]="item.value | iconSmClass"></i>
-                      </div>
-                    </ng-template>
-                    <ng-template pTemplate="item" let-item>
-                      <div
-                        class="d-flex align-items-center py-2 w-100 h-100"
-                        [pTooltip]="item.value | moduleTooltip: vm.data"
-                        [escape]="false"
-                      >
-                        <i [class]="item.value | iconSmClass"></i>
-                        <div class="ms-3 text-truncate">
-                          {{ item.label }}
-                        </div>
-                      </div>
-                    </ng-template>
-                  </p-dropdown>
-                  <lab-input-number
-                    *ngIf="step.beacons"
-                    [pTooltip]="'list.beaconTotalTooltip' | translate"
-                    class="text-end"
-                    width="4rem"
-                    [value]="step.beacons.toString()"
-                    [hideButtons]="true"
-                    (setValue)="setBeaconTotal(step.recipeId, $event)"
-                  ></lab-input-number>
-                </div>
-              </td>
-            </ng-container>
+              </div>
+            </td>
           </ng-container>
         </ng-container>
         <!-- Power -->
@@ -843,7 +847,7 @@
                     wagons: step.wagons?.mul(output.value),
                     wagonId: vm.itemSettings[step.itemId].wagonId,
                     factories: output.factories,
-                    factoryId: vm.recipeSettings[output.recipeId].factoryId,
+                    factoryId: step.recipeSettings?.factoryId,
                     recipeId: output.recipeId,
                     percent: output.value,
                     percentOnDest: true,
@@ -880,12 +884,10 @@
                         : null,
                     factoryId:
                       vm.stepDetails[step.id].outputs.length === 1 &&
-                      step.recipeId
-                        ? vm.recipeSettings[step.recipeId].factoryId
-                        : null,
+                      step.recipeSettings?.factoryId,
                     recipeId: step.recipeId,
                     percent: parent.value,
-                    destId: parent.key,
+                    destId: vm.stepById[parent.key].recipeId,
                     destIsRecipe: true
                   }
                 "
@@ -896,12 +898,13 @@
         </ng-container>
         <!-- Recipe row details -->
         <ng-container *ngSwitchCase="StepDetailTab.Recipe">
-          <ng-container *ngIf="vm.recipeSettings[step.recipeId] as settings">
+          <ng-container *ngIf="step.recipeSettings">
             <ng-container
               *ngIf="
                 vm.data.game === Game.Factorio &&
-                settings.factoryId &&
-                vm.data.itemEntities[settings.factoryId].factory?.mining
+                step.recipeSettings.factoryId &&
+                vm.data.itemEntities[step.recipeSettings.factoryId].factory
+                  ?.mining
               "
             >
               <tr class="detail">
@@ -941,7 +944,7 @@
               </ng-container>
             </ng-container>
             <ng-container
-              *ngIf="(vm.data.recipeR[step.recipeId].in | keyvalue).length"
+              *ngIf="step.recipe && (step.recipe.in | keyvalue).length"
             >
               <tr class="detail">
                 <ng-template *ngTemplateOutlet="leftPad"></ng-template>
@@ -951,14 +954,13 @@
               </tr>
               <ng-container
                 *ngFor="
-                  let input of vm.data.recipeR[step.recipeId].in
-                    | keyvalue: trackSvc.sortByValue
+                  let input of step.recipe.in | keyvalue: trackSvc.sortByValue
                 "
               >
                 <ng-container
                   *ngIf="{
                     step: vm.stepByItemEntities[input.key], 
-                    percent: vm.stepByItemEntities[input.key].parents?.[step.recipeId]
+                    percent: vm.stepByItemEntities[input.key].parents?.[step.id]
                   } as row"
                 >
                   <ng-container *ngIf="row.step.itemId && row.percent">
@@ -973,9 +975,7 @@
                           wagons: row.step.wagons?.mul(row.percent),
                           wagonId: vm.itemSettings[row.step.itemId].wagonId,
                           factories: row.step.factories?.mul(row.percent),
-                          factoryId:
-                            row.step.recipeId &&
-                            vm.recipeSettings[row.step.recipeId].factoryId,
+                          factoryId: row.step.recipeSettings?.factoryId,
                           recipeId: row.step.recipeId,
                           percent: row.percent,
                           destId: step.recipeId,
@@ -1018,9 +1018,7 @@
                         wagons: row.step.wagons?.mul(row.percent),
                         wagonId: vm.itemSettings[row.step.itemId].wagonId,
                         factories: row.step.factories?.mul(row.percent),
-                        factoryId:
-                          row.step.recipeId &&
-                          vm.recipeSettings[row.step.recipeId].factoryId,
+                        factoryId: row.step.recipeSettings?.factoryId,
                         recipeId: row.step.recipeId,
                         percent: row.percent,
                         percentOnDest: true,
@@ -1053,7 +1051,7 @@
                   <ng-container
                     *ngIf="{
                       step: vm.stepByItemEntities[input.key],
-                      percent: vm.stepByItemEntities[input.key].parents?.[step.recipeId]
+                      percent: vm.stepByItemEntities[input.key].parents?.[step.id]
                     } as row"
                   >
                     <tr *ngIf="row.percent">
@@ -1138,9 +1136,7 @@
                   <td class="monospace">1</td>
                   <td>
                     <div
-                      *ngIf="
-                        vm.recipeSettings[step.recipeId]?.factoryId as factoryId
-                      "
+                      *ngIf="step.recipeSettings?.factoryId as factoryId"
                       class="d-flex align-items-center"
                     >
                       <i

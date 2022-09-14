@@ -269,47 +269,23 @@ export const getNormalizedRates = createSelector(
   })
 );
 
-export const getNormalizedSteps = createSelector(
-  getProducts,
+export const getNormalizedProducts = createSelector(
+  getRationalProducts,
   getNormalizedRates,
-  Items.getItemSettings,
-  Recipes.getAdjustedDataset,
-  (products, rates, itemSettings, data) => {
-    const steps: Step[] = [];
-    for (const product of products) {
-      RateUtility.addStepsFor(
-        product.itemId,
-        rates[product.id],
-        steps,
-        itemSettings,
-        data
-      );
-    }
-    return steps;
-  }
+  (products, rates) => products.map((p) => ({ ...p, ...{ rate: rates[p.id] } }))
 );
 
 export const getMatrixResult = createSelector(
-  getNormalizedSteps,
+  getNormalizedProducts,
   Producers.getRationalProducers,
-  Producers.getProducerRecipes,
   Items.getItemSettings,
   Settings.getDisabledRecipeIds,
   Settings.getSimplexModifiers,
   Recipes.getAdjustedDataset,
-  (
-    steps,
-    producers,
-    producerRecipes,
-    itemSettings,
-    disabledRecipeIds,
-    adj,
-    data
-  ) =>
+  (products, producers, itemSettings, disabledRecipeIds, adj, data) =>
     SimplexUtility.solve(
-      RateUtility.copy(steps),
+      products,
       producers,
-      producerRecipes,
       itemSettings,
       disabledRecipeIds,
       adj.costInput,
@@ -319,48 +295,34 @@ export const getMatrixResult = createSelector(
     )
 );
 
-export const getNormalizedStepsWithBelts = createSelector(
+export const getSteps = createSelector(
   getMatrixResult,
+  Producers.getRationalProducers,
   Items.getItemSettings,
-  Recipes.getRecipeSettings,
+  Recipes.getRationalRecipeSettings,
+  Settings.getRationalBeaconReceivers,
   Settings.getBeltSpeed,
+  Settings.getDisplayRateInfo,
   Recipes.getAdjustedDataset,
-  (result, itemSettings, recipeSettings, beltSpeed, data) =>
-    RateUtility.calculateBelts(
-      RateUtility.copy(result.steps),
+  (
+    result,
+    producers,
+    itemSettings,
+    recipeSettings,
+    beaconReceivers,
+    beltSpeed,
+    dispRateInfo,
+    data
+  ) =>
+    RateUtility.normalizeSteps(
+      result.steps,
+      producers,
       itemSettings,
       recipeSettings,
-      beltSpeed,
-      data
-    )
-);
-
-export const getNormalizedStepsWithOutputs = createSelector(
-  getNormalizedStepsWithBelts,
-  Recipes.getAdjustedDataset,
-  (steps, data) => RateUtility.calculateOutputs(RateUtility.copy(steps), data)
-);
-
-export const getNormalizedStepsWithBeacons = createSelector(
-  getNormalizedStepsWithOutputs,
-  Settings.getRationalBeaconReceivers,
-  Recipes.getRationalRecipeSettings,
-  Recipes.getAdjustedDataset,
-  (steps, beaconReceivers, recipeSettings, data) =>
-    RateUtility.calculateBeacons(
-      RateUtility.copy(steps),
       beaconReceivers,
-      recipeSettings,
+      beltSpeed,
+      dispRateInfo,
       data
-    )
-);
-
-export const getSteps = createSelector(
-  getNormalizedStepsWithBeacons,
-  Settings.getDisplayRateInfo,
-  (steps, dispRateInfo) =>
-    RateUtility.sortHierarchy(
-      RateUtility.displayRate(RateUtility.copy(steps), dispRateInfo)
     )
 );
 
@@ -499,12 +461,9 @@ export const getTotals = createSelector(
 
 export const getStepDetails = createSelector(
   getSteps,
-  Producers.getRationalProducers,
-  Producers.getProducerRecipes,
   Recipes.getAdjustedDataset,
   Settings.getDisabledRecipeIds,
-  Settings.getDisplayRateInfo,
-  (steps, producers, producerRecipes, data, disabledRecipeIds, dispRateInfo) =>
+  (steps, data, disabledRecipeIds) =>
     steps.reduce((e: Entities<StepDetail>, s) => {
       const tabs: StepDetailTab[] = [];
       const outputs: StepOutput[] = [];
@@ -527,20 +486,6 @@ export const getStepDetails = createSelector(
               factories: s.factories!,
             }))
         );
-        for (const producer of producers) {
-          const recipe = producerRecipes[producer.id];
-          if (recipe.out[itemId]?.nonzero()) {
-            const val = recipe.out[itemId]
-              .mul(producer.count)
-              .div(recipe.time)
-              .mul(dispRateInfo.value);
-            outputs.push({
-              recipeId: producer.recipeId,
-              value: val.div(s.items),
-              factories: producer.count,
-            });
-          }
-        }
         outputs.sort((a, b) => b.value.sub(a.value).toNumber());
       }
       if (s.recipeId != null) {
@@ -579,6 +524,13 @@ export const getStepDetails = createSelector(
     }, {})
 );
 
+export const getStepById = createSelector(getSteps, (steps) =>
+  steps.reduce((e: Entities<Step>, s) => {
+    e[s.id] = s;
+    return e;
+  }, {})
+);
+
 export const getStepByItemEntities = createSelector(getSteps, (steps) =>
   steps.reduce((e: Entities<Step>, s) => {
     if (s.itemId != null) {
@@ -599,9 +551,7 @@ export const getStepTree = createSelector(getSteps, (steps) => {
         indent = new Array(indents[keys[0]] + 1).fill(false);
       }
     }
-    if (step.recipeId) {
-      indents[step.recipeId] = indent.length;
-    }
+    indents[step.id] = indent.length;
     tree[step.id] = indent;
   }
 

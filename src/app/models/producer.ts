@@ -1,3 +1,4 @@
+import { RationalRecipe } from './data';
 import { Rational } from './rational';
 
 export interface Producer {
@@ -22,8 +23,9 @@ export class RationalProducer {
   beaconId?: string;
   beaconModuleIds?: string[];
   overclock?: Rational;
+  recipe: RationalRecipe;
 
-  constructor(data: Producer) {
+  constructor(data: Producer, recipe: RationalRecipe) {
     this.id = data.id;
     this.recipeId = data.recipeId;
     this.count = Rational.fromString(data.count);
@@ -45,5 +47,6 @@ export class RationalProducer {
     if (data.overclock != null) {
       this.overclock = Rational.fromNumber(data.overclock);
     }
+    this.recipe = recipe;
   }
 }
