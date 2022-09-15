@@ -559,7 +559,7 @@ export class RouterService {
     const list = params[Section.Products].split(LISTSEP);
     const ids: string[] = [];
     const entities: Entities<Product> = {};
-    let index = 0;
+    let index = 1;
     for (const product of list) {
       const s = product.split(FIELDSEP);
       let i = 0;
@@ -640,7 +640,7 @@ export class RouterService {
     const list = params[Section.Producers].split(LISTSEP);
     const ids: string[] = [];
     const entities: Entities<Producer> = {};
-    let index = 0;
+    let index = 1;
     for (const producer of list) {
       const s = producer.split(FIELDSEP);
       let i = 0;

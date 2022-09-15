@@ -4,7 +4,7 @@
   </h3>
   <div
     *ngFor="let product of vm.products; trackBy: trackSvc.trackById"
-    class="mb-3"
+    class="mb-2"
   >
     <div class="p-inputgroup">
       <button
@@ -31,9 +31,6 @@
         #editPicker
         (selectId)="setItem(product.id, $event)"
       ></lab-picker>
-      <span class="d-none d-md-block p-inputgroup-addon">{{
-        'objectives.limitTo' | translate
-      }}</span>
       <lab-input-number
         [pTooltip]="'objectives.rateTooltip' | translate"
         tooltipPosition="top"
@@ -72,7 +69,7 @@
                 </div>
                 <ng-template #desktopSelectedItem>
                   <span *ngIf="item.value === product.itemId; else viaSelected">
-                    {{ 'objectives.viaTooltip' | translate }}
+                    {{ 'objectives.viaPlaceholder' | translate }}
                   </span>
                   <ng-template #viaSelected>
                     <div class="d-flex align-items-center h-100">
@@ -116,7 +113,7 @@
   </h3>
   <div
     *ngFor="let producer of vm.producers; trackBy: trackSvc.trackById"
-    class="mb-3"
+    class="mb-2 producer"
   >
     <div class="p-inputgroup">
       <button
@@ -132,7 +129,7 @@
         pButton
         pRipple
         type="button"
-        class="text-truncate"
+        class="lab-button-icon-only text-truncate"
         [label]="
           vm.mobile ? '' : vm.data.recipeEntities[producer.recipeId].name
         "
@@ -140,9 +137,11 @@
         tooltipPosition="top"
         (click)="editPicker.clickOpen(vm.data, 'recipe', producer.recipeId)"
       >
-        <span [class]="producer.recipeId | iconSmClass: 'recipe'">
-          <span>#{{ producer.id }}</span>
-        </span>
+        <span
+          class="p-button-icon"
+          [class]="producer.recipeId | iconSmClass: 'recipe'"
+          ><span>#{{ producer.id }}</span></span
+        >
       </button>
       <lab-picker
         #editPicker
@@ -151,213 +150,9 @@
       <lab-input-number
         [pTooltip]="'objectives.countTooltip' | translate"
         tooltipPosition="top"
-        [hideButtons]="vm.mobile"
         [value]="producer.count"
         (setValue)="setCount(producer.id, $event)"
       ></lab-input-number>
-      <ng-container *ngIf="producer.factoryId | factoryShow: vm.data.game">
-        <p-dropdown
-          *ngIf="vm.data.recipeEntities[producer.recipeId] as recipe"
-          [labDropdownBase]="vm.mobile ? 'icon' : ''"
-          [class.icon]="vm.mobile"
-          [virtualScroll]="true"
-          [virtualScrollItemSize]="34"
-          [tooltip]="'objectives.factoryTooltip' | translate"
-          tooltipPosition="top"
-          [options]="recipe.producers | options: vm.data.itemEntities"
-          [ngModel]="producer.factoryId"
-          (onChange)="
-            changeFactory(producer, $event.value, vm.factories, vm.data)
-          "
-        >
-          <ng-template pTemplate="selectedItem" let-item>
-            <div class="d-flex align-items-center h-100">
-              <i [class]="item.value | iconSmClass"></i>
-              <div class="d-none d-sm-block ms-3 text-truncate">
-                {{ item.label }}
-              </div>
-            </div>
-          </ng-template>
-          <ng-template pTemplate="item" let-item>
-            <div
-              class="d-flex align-items-center py-2 w-100 h-100"
-              [pTooltip]="item.value | factoryTooltip: vm.data"
-              [escape]="false"
-            >
-              <i [class]="item.value | iconSmClass"></i>
-              <div class="ms-3 text-truncate">
-                {{ item.label }}
-              </div>
-            </div>
-          </ng-template>
-        </p-dropdown>
-      </ng-container>
-    </div>
-
-    <div
-      *ngIf="producer.factoryId | factoryShow: vm.data.game"
-      class="p-inputgroup flex-wrap justify-content-end"
-    >
-      <p-inputNumber
-        *ngIf="producer.overclock"
-        #overclockInput
-        suffix="%"
-        [min]="1"
-        [max]="250"
-        [step]="10"
-        [size]="2"
-        [pTooltip]="'objectives.overclockTooltip' | translate"
-        tooltipPosition="top"
-        [ngModel]="producer.overclock"
-        (onBlur)="
-          changeRecipeField(
-            producer,
-            overclockInput.value,
-            vm.recipeSettings,
-            vm.factories,
-            RecipeField.Overclock
-          )
-        "
-      >
-      </p-inputNumber>
-      <p-dropdown
-        *ngFor="
-          let moduleId of producer.factoryModuleIds;
-          index as i;
-          last as last
-        "
-        labDropdownBase="icon"
-        class="factory module-dropdown"
-        [pTooltip]="'objectives.factoryModuleTooltip' | translate"
-        tooltipPosition="top"
-        [options]="
-          vm.data.recipeModuleIds[producer.recipeId]
-            | options: vm.data.itemEntities:true
-        "
-        [ngModel]="moduleId"
-        (onChange)="
-          changeRecipeField(
-            producer,
-            $event.value,
-            vm.recipeSettings,
-            vm.factories,
-            RecipeField.FactoryModules,
-            i,
-            vm.data
-          )
-        "
-      >
-        <ng-template pTemplate="selectedItem" let-item>
-          <div class="d-flex">
-            <i [class]="item.value | iconSmClass"></i>
-          </div>
-        </ng-template>
-        <ng-template pTemplate="item" let-item>
-          <div
-            class="d-flex align-items-center py-2 w-100 h-100"
-            [pTooltip]="item.value | moduleTooltip: vm.data"
-            [escape]="false"
-          >
-            <i [class]="item.value | iconSmClass"></i>
-            <div class="ms-3 text-truncate">
-              {{ item.label }}
-            </div>
-          </div>
-        </ng-template>
-      </p-dropdown>
-      <ng-container *ngIf="producer.beaconId && producer.beaconCount">
-        <lab-input-number
-          class="text-end"
-          [pTooltip]="'objectives.beaconCountTooltip' | translate"
-          tooltipPosition="top"
-          width="3rem"
-          [value]="producer.beaconCount"
-          [hideButtons]="vm.mobile"
-          (setValue)="
-            changeRecipeField(
-              producer,
-              $event,
-              vm.recipeSettings,
-              vm.factories,
-              RecipeField.BeaconCount
-            )
-          "
-        >
-        </lab-input-number>
-        <p-dropdown
-          class="icon"
-          labDropdownBase="icon"
-          [pTooltip]="'objectives.beaconTooltip' | translate"
-          tooltipPosition="top"
-          [options]="vm.options.beacons"
-          [ngModel]="producer.beaconId"
-          (onChange)="
-            changeRecipeField(
-              producer,
-              $event.value,
-              vm.recipeSettings,
-              vm.factories,
-              RecipeField.Beacon
-            )
-          "
-        >
-          <ng-template pTemplate="selectedItem" let-item>
-            <div class="d-flex">
-              <i [class]="item.value | iconSmClass"></i>
-            </div>
-          </ng-template>
-          <ng-template pTemplate="item" let-item>
-            <div
-              class="d-flex align-items-center py-2 w-100 h-100"
-              [pTooltip]="item.value | beaconTooltip: vm.data"
-              [escape]="false"
-            >
-              <i [class]="item.value | iconSmClass"></i>
-              <div class="ms-3 text-truncate">
-                {{ item.label }}
-              </div>
-            </div>
-          </ng-template>
-        </p-dropdown>
-        <p-dropdown
-          *ngFor="let moduleId of producer.beaconModuleIds; index as i"
-          labDropdownBase="icon"
-          class="beacon module-dropdown"
-          [pTooltip]="'objectives.beaconModuleTooltip' | translate"
-          tooltipPosition="top"
-          [options]="vm.options.beaconModules"
-          [ngModel]="moduleId"
-          (onChange)="
-            changeRecipeField(
-              producer,
-              $event.value,
-              vm.recipeSettings,
-              vm.factories,
-              RecipeField.BeaconModules,
-              i,
-              vm.data
-            )
-          "
-        >
-          <ng-template pTemplate="selectedItem" let-item>
-            <div class="d-flex">
-              <i [class]="item.value | iconSmClass"></i>
-            </div>
-          </ng-template>
-          <ng-template pTemplate="item" let-item>
-            <div
-              class="d-flex align-items-center py-2 w-100 h-100"
-              [pTooltip]="item.value | moduleTooltip: vm.data"
-              [escape]="false"
-            >
-              <i [class]="item.value | iconSmClass"></i>
-              <div class="ms-3 text-truncate">
-                {{ item.label }}
-              </div>
-            </div>
-          </ng-template>
-        </p-dropdown>
-      </ng-container>
     </div>
   </div>
   <!-- Mobile buttons -->

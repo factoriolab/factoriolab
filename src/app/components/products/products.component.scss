@@ -3,32 +3,30 @@
 @import '~bootstrap/scss/mixins/_breakpoints';
 
 .p-inputgroup {
-  p-dropdown.icon,
-  p-dropdown.module-dropdown {
+  p-dropdown.icon {
     flex: 0 0 36px;
-  }
-
-  lab-input-number.text-end {
-    min-width: 4rem;
-    max-width: 8rem;
   }
 }
 
 @include media-breakpoint-up(sm) {
-  button.text-truncate {
-    flex-basis: 25%;
+  button.text-truncate,
+  .p-inputgroup lab-input-number.p-inputwrapper {
+    flex: 0 0 25%;
   }
 }
 
 :host ::ng-deep {
-  .factory.module-dropdown:hover ~ .factory.module-dropdown,
-  .beacon.module-dropdown:hover ~ .beacon.module-dropdown {
-    .lab-icon-sm {
-      opacity: 0.3;
-    }
+  @include media-breakpoint-down(sm) {
+    button.lab-button-icon-only {
+      width: 2.357rem;
+      padding: 0.5rem 0;
+      justify-content: center;
 
-    .p-dropdown {
-      border: 1px solid var(--primary-color);
+      .p-button-label {
+        visibility: hidden;
+        width: 0;
+        flex: 0 0 auto;
+      }
     }
   }
 }

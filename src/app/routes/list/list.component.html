@@ -524,12 +524,7 @@
                   "
                   [ngModel]="factoryId"
                   (onChange)="
-                    changeFactory(
-                      step.recipeId,
-                      $event.value,
-                      vm.factories,
-                      vm.data
-                    )
+                    changeFactory(step, $event.value, vm.factories, vm.data)
                   "
                 >
                   <ng-template pTemplate="selectedItem" let-item>
@@ -562,7 +557,7 @@
                   [ngModel]="step.recipeSettings.overclock"
                   (onBlur)="
                     changeRecipeField(
-                      step.recipeId,
+                      step,
                       overclockInput.value,
                       vm.recipeSettings,
                       vm.factories,
@@ -589,7 +584,7 @@
                     [ngModel]="moduleId"
                     (onChange)="
                       changeRecipeField(
-                        step.recipeId,
+                        step,
                         $event.value,
                         vm.recipeSettings,
                         vm.factories,
@@ -641,7 +636,7 @@
                 [hideButtons]="true"
                 (setValue)="
                   changeRecipeField(
-                    step.recipeId,
+                    step,
                     $event,
                     vm.recipeSettings,
                     vm.factories,
@@ -663,7 +658,7 @@
                   [ngModel]="step.recipeSettings.beaconId"
                   (onChange)="
                     changeRecipeField(
-                      step.recipeId,
+                      step,
                       $event.value,
                       vm.recipeSettings,
                       vm.factories,
@@ -705,7 +700,7 @@
                   [ngModel]="moduleId"
                   (onChange)="
                     changeRecipeField(
-                      step.recipeId,
+                      step,
                       $event.value,
                       vm.recipeSettings,
                       vm.factories,
@@ -784,7 +779,8 @@
             <button
               *ngIf="
                 (step.recipeId && vm.stepsModified.recipes[step.recipeId]) ||
-                (step.itemId && vm.stepsModified.items[step.itemId])
+                (step.itemId && vm.stepsModified.items[step.itemId]) ||
+                (step.producerId && vm.stepsModified.producers[step.producerId])
               "
               pButton
               pRipple

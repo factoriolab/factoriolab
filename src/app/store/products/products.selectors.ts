@@ -351,9 +351,20 @@ export const getZipState = createSelector(
 
 export const getStepsModified = createSelector(
   getSteps,
+  Producers.getBaseProducers,
   Items.itemsState,
   Recipes.recipesState,
-  (steps, itemSettings, recipeSettings) => ({
+  (steps, producers, itemSettings, recipeSettings) => ({
+    producers: producers.reduce((e: Entities<boolean>, p) => {
+      e[p.id] =
+        p.factoryId != null ||
+        p.factoryModuleIds != null ||
+        p.beaconCount != null ||
+        p.beaconId != null ||
+        p.beaconModuleIds != null ||
+        p.overclock != null;
+      return e;
+    }, {}),
     items: steps.reduce((e: Entities<boolean>, s) => {
       if (s.itemId) {
         e[s.itemId] = itemSettings[s.itemId] != null;

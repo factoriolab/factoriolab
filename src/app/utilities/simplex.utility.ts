@@ -920,6 +920,9 @@ export class SimplexUtility {
         itemId,
         items: output,
       };
+      if (state.items[itemId].nonzero()) {
+        step.output = state.items[itemId];
+      }
       if (index !== -1 && index < steps.length - 1) {
         steps.splice(index + 1, 0, step);
       } else {

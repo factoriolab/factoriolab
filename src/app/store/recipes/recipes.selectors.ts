@@ -10,6 +10,7 @@ import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Factories from '../factories';
 import * as Items from '../items';
+import * as Producers from '../producers';
 import * as Settings from '../settings';
 import { RecipesState } from './recipes.reducer';
 
@@ -128,17 +129,37 @@ export const getAdjustedDataset = createSelector(
     )
 );
 
-export const getRecipesModified = createSelector(recipesState, (state) => ({
-  factories: Object.keys(state).some(
-    (id) => state[id].factoryId || state[id].factoryModuleIds
-  ),
-  overclock: Object.keys(state).some((id) => state[id].overclock),
-  beacons: Object.keys(state).some(
-    (id) =>
-      state[id].beaconId ||
-      state[id].beaconModuleIds ||
-      state[id].beaconCount ||
-      state[id].beaconTotal
-  ),
-  cost: Object.keys(state).some((id) => state[id].cost),
-}));
+export const getRecipesModified = createSelector(
+  recipesState,
+  Producers.getBaseProducers,
+  (state, producers) => ({
+    factories:
+      Object.keys(state).some(
+        (id) =>
+          state[id].factoryId != null ||
+          state[id].factoryModuleIds != null ||
+          state[id].overclock != null
+      ) ||
+      producers.some(
+        (p) =>
+          p.factoryId != null ||
+          p.factoryModuleIds != null ||
+          p.overclock != null
+      ),
+    beacons:
+      Object.keys(state).some(
+        (id) =>
+          state[id].beaconCount != null ||
+          state[id].beaconId != null ||
+          state[id].beaconModuleIds != null ||
+          state[id].beaconTotal != null
+      ) ||
+      producers.some(
+        (p) =>
+          p.beaconCount != null ||
+          p.beaconId != null ||
+          p.beaconModuleIds != null
+      ),
+    cost: Object.keys(state).some((id) => state[id].cost),
+  })
+);

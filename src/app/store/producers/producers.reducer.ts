@@ -1,6 +1,7 @@
 import { Entities, Producer } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
+import * as Recipes from '../recipes';
 import * as Settings from '../settings';
 import { ProducersAction, ProducersActionType } from './producers.actions';
 
@@ -13,12 +14,17 @@ export interface ProducersState {
 export const initialProducersState: ProducersState = {
   ids: [],
   entities: {},
-  index: 0,
+  index: 1,
 };
 
 export function producersReducer(
   state: ProducersState = initialProducersState,
-  action: ProducersAction | App.AppAction | Settings.SetModAction
+  action:
+    | ProducersAction
+    | App.AppAction
+    | Settings.SetModAction
+    | Recipes.ResetFactoriesAction
+    | Recipes.ResetBeaconsAction
 ): ProducersState {
   switch (action.type) {
     case App.AppActionType.LOAD:
@@ -174,6 +180,50 @@ export function producersReducer(
           ),
         },
       };
+    case ProducersActionType.RESET_PRODUCER:
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.resetFields(
+            state.entities,
+            [
+              'factoryId',
+              'overclock',
+              'factoryModuleIds',
+              'beaconCount',
+              'beaconId',
+              'beaconModuleIds',
+            ],
+            action.payload
+          ),
+        },
+      };
+    case Recipes.RecipesActionType.RESET_FACTORIES:
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.resetFields(state.entities, [
+            'factoryId',
+            'overclock',
+            'factoryModuleIds',
+            'beaconCount',
+            'beaconId',
+            'beaconModuleIds',
+          ]),
+        },
+      };
+    case Recipes.RecipesActionType.RESET_BEACONS:
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.resetFields(state.entities, [
+            'beaconCount',
+            'beaconId',
+            'beaconModuleIds',
+          ]),
+        },
+      };
+
     default:
       return state;
   }
