@@ -109,12 +109,13 @@ export class HeaderComponent implements OnInit {
         (g): MenuItem => ({
           icon: 'lab-icon-sm ' + gameInfo[g].icon,
           label: this.translateSvc.instant(gameInfo[g].label),
-          command: () => this.selectGame(gameInfo[g].route),
+          routerLink: gameInfo[g].route,
         })
       );
   }
 
-  selectGame(route: string): void {
-    this.router.navigateByUrl(route);
+  cancelRouterLink(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
   }
 }

@@ -137,10 +137,10 @@
         tooltipPosition="top"
         (click)="editPicker.clickOpen(vm.data, 'recipe', producer.recipeId)"
       >
-        <span
+        <i
           class="p-button-icon"
           [class]="producer.recipeId | iconSmClass: 'recipe'"
-          ><span>#{{ producer.id }}</span></span
+          ><span>#{{ producer.id }}</span></i
         >
       </button>
       <lab-picker
