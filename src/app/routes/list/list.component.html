@@ -510,10 +510,14 @@
                 class="d-flex align-items-center"
               >
                 <i
-                  [class]="step.recipeId | iconClass: 'recipe'"
+                  class="padded"
+                  [class]="step.recipeId | iconSmClass: 'recipe'"
                   [pTooltip]="step.recipeId | recipeTooltip: vm.data"
                   [escape]="false"
-                ></i>
+                  ><span *ngIf="step.producerId"
+                    >#{{ step.producerId }}</span
+                  ></i
+                >
                 <p-dropdown
                   *ngIf="vm.data.factoryEntities[factoryId] as factory"
                   labDropdownBase="icon"
