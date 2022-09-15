@@ -950,6 +950,7 @@ export class SimplexUtility {
   static assignRecipes(solution: MatrixSolution, state: MatrixState): void {
     const steps = state.steps;
     const recipes = Object.keys(solution.recipes).map((r) => state.recipes[r]);
+    recipes.push(...state.producers.map((p) => p.recipe));
 
     // Check for exact id matches
     for (const step of steps.filter((s) => s.recipeId == null)) {
@@ -1004,7 +1005,7 @@ export class SimplexUtility {
           s.recipeId == null && s.itemId != null && recipe.produces(s.itemId)
       );
     }
-    if (producer != null || !step) {
+    if (!step) {
       const index = steps.findIndex(
         (s) => s.itemId && recipe.produces(s.itemId)
       );
