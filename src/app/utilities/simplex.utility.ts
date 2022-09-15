@@ -58,11 +58,12 @@ export interface MatrixSolution {
   O: Rational[];
   /** Items in tableau */
   itemIds: string[];
+  /** Producers in tableau */
+  producers: RationalProducer[];
   /** Recipes in tableau */
   recipeIds: string[];
   /** Items identified as inputs in tableau */
   inputIds: string[];
-
   /** Surplus items, may be empty */
   surplus: Entities<Rational>;
   /** Input items (no recipe), may be empty */
@@ -142,6 +143,7 @@ export class SimplexUtility {
       A: solution.A,
       O: solution.O,
       itemIds: solution.itemIds,
+      producers: solution.producers,
       recipeIds: solution.recipeIds,
       inputIds: solution.inputIds,
     };
@@ -227,6 +229,7 @@ export class SimplexUtility {
       for (const itemId of Object.keys(producer.recipe.out)) {
         state.items[itemId] = state.items[itemId] ?? Rational.zero;
       }
+
       this.parseRecipeRecursively(producer.recipe, state);
     }
 
@@ -248,6 +251,7 @@ export class SimplexUtility {
     for (const recipe of recipes) {
       state.recipes[recipe.id] = recipe;
     }
+
     return recipes;
   }
 
@@ -332,6 +336,7 @@ export class SimplexUtility {
         A: [[]],
         O: [],
         itemIds: [],
+        producers: [],
         recipeIds: [],
         inputIds: [],
       };
@@ -361,6 +366,7 @@ export class SimplexUtility {
         A,
         O: cache.R,
         itemIds,
+        producers: state.producers,
         recipeIds,
         inputIds,
       };
@@ -384,6 +390,7 @@ export class SimplexUtility {
           A: A0,
           O: result.O,
           itemIds,
+          producers: state.producers,
           recipeIds,
           inputIds,
         };
@@ -399,6 +406,7 @@ export class SimplexUtility {
           A: A0,
           O: result.O,
           itemIds,
+          producers: state.producers,
           recipeIds,
           inputIds,
         };
@@ -459,9 +467,11 @@ export class SimplexUtility {
         if (recipe.in[itemId]) {
           val = val.sub(recipe.in[itemId]);
         }
+
         if (recipe.out[itemId]) {
           val = val.add(recipe.out[itemId]);
         }
+
         if (val.nonzero()) {
           coeffs.push([
             recipeVarEntities[recipeId],
@@ -476,9 +486,11 @@ export class SimplexUtility {
         if (recipe.in[itemId]) {
           val = val.sub(recipe.in[itemId]);
         }
+
         if (recipe.out[itemId]) {
           val = val.add(recipe.out[itemId]);
         }
+
         if (val.nonzero()) {
           coeffs.push([
             producerVarEntities[producer.id],
@@ -584,10 +596,12 @@ export class SimplexUtility {
       // Add item columns
       O.push(state.items[itemId].inverse());
     }
+
     for (const producer of state.producers) {
       // Add producer columns
       O.push(producer.count.inverse());
     }
+
     // Add recipe columns, input columns, and cost
     O.push(
       ...new Array(recipes.length + state.inputIds.length + 1).fill(
@@ -607,9 +621,11 @@ export class SimplexUtility {
         if (recipe.in[itemId]) {
           val = val.sub(recipe.in[itemId]);
         }
+
         if (recipe.out[itemId]) {
           val = val.add(recipe.out[itemId]);
         }
+
         R.push(val.div(recipe.time));
       }
 
@@ -640,9 +656,11 @@ export class SimplexUtility {
         if (recipe.in[itemId]) {
           val = val.sub(recipe.in[itemId]);
         }
+
         if (recipe.out[itemId]) {
           val = val.add(recipe.out[itemId]);
         }
+
         R.push(val.div(recipe.time));
       }
 
@@ -691,6 +709,7 @@ export class SimplexUtility {
         // Avoid using items that cannot currently be produced
         R.push(state.costInput);
       }
+
       A.push(R);
     }
 
@@ -869,16 +888,17 @@ export class SimplexUtility {
     for (const itemId of Object.keys(state.items)) {
       this.addItemStep(itemId, solution, state);
     }
+
     this.assignRecipes(solution, state);
     for (const recipe of Object.keys(solution.recipes).map(
       (r) => state.recipes[r]
     )) {
       this.addRecipeStep(recipe, solution, state);
     }
+
     for (const producer of state.producers) {
       this.addRecipeStep(producer.recipe, solution, state, producer);
     }
-    // this.updateParents(solution, state);
   }
 
   /** Update steps with item from matrix solution */
@@ -896,6 +916,7 @@ export class SimplexUtility {
         recipe.out[itemId].mul(solution.recipes[recipe.id]).div(recipe.time)
       );
     }
+
     for (const producer of state.producers) {
       const recipe = producer.recipe;
       if (!recipe.out[itemId]) continue;
@@ -903,9 +924,11 @@ export class SimplexUtility {
         recipe.out[itemId].mul(producer.count).div(recipe.time)
       );
     }
+
     if (solution.inputs[itemId]) {
       output = output.add(solution.inputs[itemId]);
     }
+
     if (output.nonzero()) {
       const recipes = state.data.recipeIds
         .map((r) => state.recipes[r])
@@ -923,6 +946,7 @@ export class SimplexUtility {
       if (state.items[itemId].nonzero()) {
         step.output = state.items[itemId];
       }
+
       if (index !== -1 && index < steps.length - 1) {
         steps.splice(index + 1, 0, step);
       } else {
@@ -1005,6 +1029,7 @@ export class SimplexUtility {
           s.recipeId == null && s.itemId != null && recipe.produces(s.itemId)
       );
     }
+
     if (!step) {
       const index = steps.findIndex(
         (s) => s.itemId && recipe.produces(s.itemId)
@@ -1028,6 +1053,7 @@ export class SimplexUtility {
         step.factories || Rational.zero
       );
     }
+
     RateUtility.adjustPowerPollution(step, recipe);
   }
   //#endregion
@@ -1044,6 +1070,7 @@ export class SimplexUtility {
     if (!this.cache[H]) {
       this.cache[H] = [];
     }
+
     this.cache[H].push({
       O,
       R: result.O,

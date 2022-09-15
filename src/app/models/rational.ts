@@ -237,7 +237,14 @@ export class Rational {
     if (this.isInteger()) {
       return this;
     } else {
-      return new Rational(this.p / this.q + bigOne);
+      // Calculate ceiling using absolute value
+      const num = new Rational(Rational.abs(this.p) / this.q + bigOne);
+      if (this.p < bigZero) {
+        // Inverse back to negative if necessary
+        return num.inverse();
+      } else {
+        return num;
+      }
     }
   }
 
