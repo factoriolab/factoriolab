@@ -5,19 +5,24 @@ import {
   HostBinding,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { debounceTime, Subject } from 'rxjs';
 
 import { Rational } from '~/models';
+import { notnullish } from '~/utilities';
 
+@UntilDestroy(this)
 @Component({
   selector: 'lab-input-number',
   templateUrl: './input-number.component.html',
   styleUrls: ['./input-number.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputNumberComponent implements OnChanges {
+export class InputNumberComponent implements OnInit, OnChanges {
   @Input() value = '';
   @Input() minimum = '0';
   @Input() width = '';
@@ -28,8 +33,18 @@ export class InputNumberComponent implements OnChanges {
 
   @HostBinding('class') classAttr = 'p-element p-inputwrapper';
 
+  setValue$ = new Subject<string | null>();
   isMinimum = false;
   min = Rational.zero;
+
+  ngOnInit(): void {
+    // Watch for all value changes to input field
+    // Debounce by 300ms to avoid rapid updates
+    // If last value is nullish (invalid), do not emit
+    this.setValue$
+      .pipe(untilDestroyed(this), debounceTime(300), notnullish())
+      .subscribe((v) => this.setValue.emit(v));
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['minimum']) {
@@ -48,9 +63,12 @@ export class InputNumberComponent implements OnChanges {
     try {
       const rational = Rational.fromString(value);
       if (rational.gte(this.min)) {
-        this.setValue.emit(value);
+        this.setValue$.next(value);
+        return;
+      } else {
       }
     } catch {}
+    this.setValue$.next(null);
   }
 
   increase(): void {
