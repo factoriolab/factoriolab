@@ -16,16 +16,27 @@
 }
 
 :host ::ng-deep {
+  button.lab-button-icon-only .p-button-icon {
+    margin-right: 0.5rem;
+  }
+
   @include media-breakpoint-down(sm) {
     button.lab-button-icon-only {
-      width: 2.357rem;
-      padding: 0.5rem 0;
       justify-content: center;
 
+      width: 2.357rem;
+      padding: 0.5rem 0;
+
+      .p-button-icon {
+        margin: 0;
+      }
+
       .p-button-label {
-        visibility: hidden;
-        width: 0;
         flex: 0 0 auto;
+
+        visibility: hidden;
+
+        width: 0;
       }
     }
   }
