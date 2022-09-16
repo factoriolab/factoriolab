@@ -10,4 +10,10 @@
   .p-tabview-panels {
     padding: 0.5rem 0 0 0;
   }
+
+  .p-tabview-nav-content {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+  }
 }

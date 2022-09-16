@@ -23,7 +23,7 @@
       />
     </span>
   </ng-template>
-  <p-tabView [scrollable]="true" [(activeIndex)]="activeIndex">
+  <p-tabView [(activeIndex)]="activeIndex">
     <ng-container *ngFor="let categoryId of categoryIds; let i = index">
       <p-tabPanel
         *ngIf="categoryEntities[categoryId] as category"
@@ -34,28 +34,30 @@
           <i [class]="categoryId | iconSmClass: 'category'"></i>
         </ng-template>
         <ng-template pTemplate="content">
-          <div
-            *ngFor="let ids of categoryRows[categoryId]"
-            class="d-flex flex-wrap"
-          >
-            <ng-container *ngFor="let id of ids">
-              <button
-                pButton
-                pRipple
-                type="button"
-                class="me-1 mb-1"
-                [class.p-button-text]="id !== selectedId"
-                [icon]="id | iconSmClass: type"
-                [pTooltip]="
-                  type === 'item'
-                    ? (id | itemTooltip: vm.data)
-                    : (id | recipeTooltip: vm.data)
-                "
-                [escape]="false"
-                (click)="clickId(id)"
-              ></button>
-            </ng-container>
-          </div>
+          <p-scrollPanel [style]="{ height: '363px' }">
+            <div
+              *ngFor="let ids of categoryRows[categoryId]"
+              class="d-flex flex-wrap"
+            >
+              <ng-container *ngFor="let id of ids">
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="me-1 mb-1"
+                  [class.p-button-text]="id !== selectedId"
+                  [icon]="id | iconSmClass: type"
+                  [pTooltip]="
+                    type === 'item'
+                      ? (id | itemTooltip: vm.data)
+                      : (id | recipeTooltip: vm.data)
+                  "
+                  [escape]="false"
+                  (click)="clickId(id)"
+                ></button>
+              </ng-container>
+            </div>
+          </p-scrollPanel>
         </ng-template>
       </p-tabPanel>
     </ng-container>

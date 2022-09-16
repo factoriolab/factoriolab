@@ -18,6 +18,17 @@ const rawData = fs.readFileSync(dataPath).toString();
 const data: ModData = JSON.parse(rawData);
 
 async function processMod(): Promise<void> {
+  // Use this code to shrink prebuilt sprite data from 64px to 32px sizing
+  // for (const icon of data.icons) {
+  //   const match = icon.position.match(/(-?\d+)px (-?\d+)px/);
+  //   if (match != null) {
+  //     console.log(icon.id, match[0], match[1], match[2]);
+  //     const newa = Number(match[1]) / 2;
+  //     const newb = Number(match[2]) / 2;
+  //     icon.position = `${newa}px ${newb}px`;
+  //   }
+  // }
+
   let no_in = 0;
   let no_out = 0;
 
