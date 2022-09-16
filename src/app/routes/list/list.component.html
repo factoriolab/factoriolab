@@ -180,7 +180,11 @@
                 [class]="step.itemId | iconSmClass"
                 [pTooltip]="step.itemId | itemTooltip: vm.data"
                 [escape]="false"
-              ></i>
+              >
+                <span *ngIf="step.producerId != null"
+                  >#{{ step.producerId }}</span
+                >
+              </i>
               <ng-template #recipeIcon>
                 <i
                   [class]="step.recipeId | iconSmClass: 'recipe'"
