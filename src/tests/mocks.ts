@@ -44,17 +44,15 @@ import { RecipeId } from './recipe-id';
 
 export const Raw = data;
 export const DataState = Datasets.initialDatasetsState;
-export const App = data.app;
 export const ModInfo = data.mods[0];
 export const Data = mod as unknown as ModData;
 export const Hash: ModHash = hash;
 export const I18n: ModI18n = i18n;
 export const Mod = { ...ModInfo, ...Data } as _Mod;
-export const Defaults = Settings.getDefaults.projector(Preset.Beacon8, Mod)!;
+export const Defaults = Settings.getDefaults.projector(Preset.Beacon8, Mod);
 export function getDataset(): _Dataset {
   Settings.getDataset.release();
   return Settings.getDataset.projector(
-    data.app,
     Mod,
     null,
     null,
@@ -133,7 +131,7 @@ export const RecipeSettings2: RecipeSettings = {
 export const Step1: Step = {
   id: `${Item1.id}.${Item1.id}`,
   itemId: Item1.id,
-  recipeId: Item1.id as any,
+  recipeId: Item1.id,
   items: Rational.fromString(Product1.rate),
   belts: Rational.fromNumber(0.5),
   wagons: Rational.two,
@@ -145,7 +143,7 @@ export const Step1: Step = {
 export const Step2: Step = {
   id: `${Item2.id}.${Item2.id}`,
   itemId: Item2.id,
-  recipeId: Item2.id as any,
+  recipeId: Item2.id,
   items: Rational.fromString(Product2.rate),
   belts: Rational.one,
   wagons: Rational.one,

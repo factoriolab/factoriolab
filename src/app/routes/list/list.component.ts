@@ -164,7 +164,9 @@ export class ListComponent implements OnInit, AfterViewInit {
             }
           });
       }
-    } catch (e) {}
+    } catch {
+      // ignore error
+    }
   }
 
   resetStep(step: Step): void {

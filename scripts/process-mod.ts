@@ -12,7 +12,7 @@ if (!mod) {
 
 console.warn('WARNING: This script is deprecated');
 
-const iconsPath = `./src/data/${mod}/icons.png`;
+// const iconsPath = `./src/data/${mod}/icons.png`;
 const dataPath = `./src/data/${mod}/data.json`;
 const rawData = fs.readFileSync(dataPath).toString();
 const data: ModData = JSON.parse(rawData);

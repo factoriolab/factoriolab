@@ -8,6 +8,8 @@
         "createDefaultProgram": true
       },
       "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
         "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
@@ -37,7 +39,17 @@
           { "allowTemplateLiterals": true, "avoidEscape": true }
         ],
         "semi": "error"
-      }
+      },
+      "overrides": [
+        {
+          "files": ["src/tests/**/*.ts", "*.spec.ts"],
+          "rules": {
+            "@typescript-eslint/no-empty-function": 0,
+            "@typescript-eslint/no-explicit-any": 0,
+            "@typescript-eslint/no-non-null-assertion": 0
+          }
+        }
+      ]
     },
     {
       "files": ["*.html"],

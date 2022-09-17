@@ -63,7 +63,7 @@ export class RateUtility {
       this.calculateParents(step, _steps);
       this.calculateSettings(step, producers, recipeSettings);
       this.calculateBelts(step, itemSettings, recipeSettings, beltSpeed, data);
-      this.calculateOutputs(step, _steps, data);
+      this.calculateOutputs(step, _steps);
       this.calculateBeacons(step, beaconReceivers, recipeSettings, data);
       this.calculateDisplayRate(step, dispRateInfo);
     }
@@ -136,7 +136,7 @@ export class RateUtility {
     }
   }
 
-  static calculateOutputs(step: Step, steps: Step[], data: Dataset): void {
+  static calculateOutputs(step: Step, steps: Step[]): void {
     if (step.recipe && step.factories?.nonzero()) {
       const recipe = step.recipe;
       const outputs: Entities<Rational> = {};

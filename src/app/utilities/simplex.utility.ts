@@ -174,18 +174,22 @@ export class SimplexUtility {
 
     if (recipes) {
       return steps
-        .filter((s) => s.recipeId != null)
-        .sort((a, b) =>
-          data.recipeR[b.recipeId!]
-            .output(itemId)
-            .sub(data.recipeR[a.recipeId!].output(itemId))
-            .toNumber()
+        .map((s) =>
+          s.recipeId && s.factories ? [s.recipeId, s.factories] : null
         )
-        .map((s) => [s.recipeId!, s.factories!]);
+        .filter((s): s is [string, Rational] => s != null)
+        .sort((a, b) =>
+          data.recipeR[b[0]]
+            .output(itemId)
+            .sub(data.recipeR[a[0]].output(itemId))
+            .toNumber()
+        );
     } else {
       return steps
-        .filter((s) => s.itemId != null && s.items != null)
-        .map((s) => [s.itemId!, s.items!]);
+        .map((s) =>
+          s.recipeId && s.factories ? [s.recipeId, s.factories] : null
+        )
+        .filter((s): s is [string, Rational] => s != null);
     }
   }
 
@@ -746,7 +750,7 @@ export class SimplexUtility {
 
     let p = 0;
 
-    while (true) {
+    for (;;) {
       p++;
       let c = 0;
       const O = A[0];

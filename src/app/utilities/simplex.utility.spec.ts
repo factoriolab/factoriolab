@@ -1,5 +1,3 @@
-import { loadModule } from 'glpk-ts';
-
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   MatrixResultType,

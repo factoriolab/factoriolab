@@ -56,5 +56,5 @@ import bigInt from 'big-integer';
 /* No test run where BigInt is undefined */
 /* istanbul ignore if */
 if (typeof BigInt === 'undefined') {
-  window.BigInt = bigInt as any;
+  window.BigInt = bigInt as unknown as BigIntConstructor;
 }

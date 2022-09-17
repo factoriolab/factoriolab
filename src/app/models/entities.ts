@@ -1,5 +1,3 @@
-import { environment } from 'src/environments';
-
 export type Entities<T = string> = Record<string, T>;
 
 export function toEntities<T extends { id: string }>(
@@ -9,7 +7,7 @@ export function toEntities<T extends { id: string }>(
 ): Entities<T> {
   if (warn) {
     return value.reduce((e: Entities<T>, v) => {
-      if (e.hasOwnProperty(v.id)) {
+      if (Object.prototype.hasOwnProperty.call(e, v.id)) {
         console.warn(`Duplicate id: ${v.id}`);
       }
       e[v.id] = v;

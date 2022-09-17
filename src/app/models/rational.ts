@@ -35,7 +35,7 @@ export class Rational {
     return x < bigZero ? x * bigMinusOne : x;
   }
 
-  static from(p: number, q: number = 1): Rational {
+  static from(p: number, q = 1): Rational {
     if (q === 0) {
       throw Error(DIVIDE_BY_ZERO);
     }

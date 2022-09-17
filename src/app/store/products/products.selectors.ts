@@ -399,7 +399,7 @@ export const getTotals = createSelector(
         if (step.belts?.nonzero()) {
           const belt = itemSettings[step.itemId].beltId;
           if (belt != null) {
-            if (!belts.hasOwnProperty(belt)) {
+            if (!Object.prototype.hasOwnProperty.call(belts, belt)) {
               belts[belt] = Rational.zero;
             }
             belts[belt] = belts[belt].add(step.belts.ceil());
@@ -410,7 +410,7 @@ export const getTotals = createSelector(
         if (step.wagons?.nonzero()) {
           const wagon = itemSettings[step.itemId].wagonId;
           if (wagon != null) {
-            if (!wagons.hasOwnProperty(wagon)) {
+            if (!Object.prototype.hasOwnProperty.call(wagons, wagon)) {
               wagons[wagon] = Rational.zero;
             }
             wagons[wagon] = wagons[wagon].add(step.wagons.ceil());
@@ -433,7 +433,7 @@ export const getTotals = createSelector(
               factory = step.recipeId;
             }
             if (factory != null) {
-              if (!factories.hasOwnProperty(factory)) {
+              if (!Object.prototype.hasOwnProperty.call(factories, factory)) {
                 factories[factory] = Rational.zero;
               }
               factories[factory] = factories[factory].add(
@@ -447,7 +447,7 @@ export const getTotals = createSelector(
         if (step.beacons?.nonzero()) {
           const beacon = recipeSettings[step.recipeId].beaconId;
           if (beacon != null) {
-            if (!beacons.hasOwnProperty(beacon)) {
+            if (!Object.prototype.hasOwnProperty.call(beacons, beacon)) {
               beacons[beacon] = Rational.zero;
             }
             beacons[beacon] = beacons[beacon].add(step.beacons.ceil());

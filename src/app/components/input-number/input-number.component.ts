@@ -13,7 +13,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { debounceTime, Subject } from 'rxjs';
 
 import { Rational } from '~/models';
-import { notnullish } from '~/utilities';
+import { filterNullish } from '~/utilities';
 
 @UntilDestroy(this)
 @Component({
@@ -42,7 +42,7 @@ export class InputNumberComponent implements OnInit, OnChanges {
     // Debounce by 300ms to avoid rapid updates
     // If last value is nullish (invalid), do not emit
     this.setValue$
-      .pipe(untilDestroyed(this), debounceTime(300), notnullish())
+      .pipe(untilDestroyed(this), debounceTime(300), filterNullish())
       .subscribe((v) => this.setValue.emit(v));
   }
 
@@ -65,9 +65,10 @@ export class InputNumberComponent implements OnInit, OnChanges {
       if (rational.gte(this.min)) {
         this.setValue$.next(value);
         return;
-      } else {
       }
-    } catch {}
+    } catch {
+      // ignore error
+    }
     this.setValue$.next(null);
   }
 
@@ -78,7 +79,9 @@ export class InputNumberComponent implements OnInit, OnChanges {
         ? rational.add(Rational.one)
         : rational.ceil();
       this.setValue.emit(newValue.toString());
-    } catch {}
+    } catch {
+      // ignore error
+    }
   }
 
   decrease(): void {
@@ -90,6 +93,8 @@ export class InputNumberComponent implements OnInit, OnChanges {
       if (newValue.gte(this.min)) {
         this.setValue.emit(newValue.toString());
       }
-    } catch {}
+    } catch {
+      // ignore error
+    }
   }
 }

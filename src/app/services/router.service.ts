@@ -1365,10 +1365,14 @@ export class RouterService {
     }
     try {
       return this.inflateMend(str, '-');
-    } catch {}
+    } catch {
+      // ignore error
+    }
     try {
       return this.inflateMend(str, '.');
-    } catch {}
+    } catch {
+      // ignore error
+    }
     return this.inflateMend(str, '_');
   }
 
