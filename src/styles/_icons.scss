@@ -16,8 +16,11 @@
     top: 0;
     left: 0;
 
-    width: 32px;
-    height: 32px;
+    transform: scale(0.5);
+    transform-origin: 0 0;
+
+    width: 64px;
+    height: 64px;
   }
 
   > span {
@@ -67,41 +70,41 @@
 }
 
 .dyson-sphere-program::before {
-  background-position: -32px 0px;
-}
-
-.factorio::before {
   background-position: -64px 0px;
 }
 
+.factorio::before {
+  background-position: -128px 0px;
+}
+
 .fast-inserter::before {
-  background-position: 0 -32px;
+  background-position: -192px 0px;
 }
 
 .inserter::before {
-  background-position: -32px -32px;
-}
-
-.long-handed-inserter::before {
-  background-position: -64px -32px;
-}
-
-.module::before {
-  background-position: -96px -32px;
-}
-
-.pipe::before {
   background-position: 0px -64px;
 }
 
-.satisfactory::before {
-  background-position: -32px -64px;
-}
-
-.stack-inserter::before {
+.long-handed-inserter::before {
   background-position: -64px -64px;
 }
 
+.module::before {
+  background-position: -128px -64px;
+}
+
+.pipe::before {
+  background-position: -192px -64px;
+}
+
+.satisfactory::before {
+  background-position: 0px -128px;
+}
+
+.stack-inserter::before {
+  background-position: -64px -128px;
+}
+
 .time::before {
-  background-position: -96px -64px;
+  background-position: -128px -128px;
 }
