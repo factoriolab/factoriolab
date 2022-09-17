@@ -5,7 +5,7 @@ import { Rational, Recipe } from '~/models';
 @Injectable({ providedIn: 'root' })
 export class DisplayService {
   icon(id: string, num?: string | number): string {
-    return `<i class="m-1 me-2 lab-icon-sm ${id}"><span>${
+    return `<i class="me-2 lab-icon-sm padded ${id}"><span>${
       num ?? ''
     }</span></i>`;
   }
