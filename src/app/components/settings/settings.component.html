@@ -544,7 +544,8 @@
             </ng-container>
           </ng-container>
         </ng-container>
-        <div *ngIf="vm.data.game === Game.Factorio" class="mt-2 py-2">
+        <div class="pt-2"><!--spacer--></div>
+        <div *ngIf="vm.data.game === Game.Factorio" class="py-2">
           <p-checkbox
             [ngModel]="vm.settings.beaconReceivers != null"
             [binary]="true"

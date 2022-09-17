@@ -53,3 +53,55 @@
     margin: 7px;
   }
 }
+
+/** Set up base app related icons sprite sheet */
+.lab-icon,
+.lab-icon-sm {
+  &::before {
+    background-image: url('/assets/icons/icons.png');
+  }
+}
+
+.captain-of-industry::before {
+  background-position: 0px 0px;
+}
+
+.dyson-sphere-program::before {
+  background-position: -32px 0px;
+}
+
+.factorio::before {
+  background-position: -64px 0px;
+}
+
+.fast-inserter::before {
+  background-position: 0 -32px;
+}
+
+.inserter::before {
+  background-position: -32px -32px;
+}
+
+.long-handed-inserter::before {
+  background-position: -64px -32px;
+}
+
+.module::before {
+  background-position: -96px -32px;
+}
+
+.pipe::before {
+  background-position: 0px -64px;
+}
+
+.satisfactory::before {
+  background-position: -32px -64px;
+}
+
+.stack-inserter::before {
+  background-position: -64px -64px;
+}
+
+.time::before {
+  background-position: -96px -64px;
+}

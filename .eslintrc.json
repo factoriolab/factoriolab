@@ -31,7 +31,11 @@
         "@typescript-eslint/explicit-function-return-type": ["error"],
         "no-var": "error",
         "prefer-const": "error",
-        "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+        "quotes": [
+          "error",
+          "single",
+          { "allowTemplateLiterals": true, "avoidEscape": true }
+        ],
         "semi": "error"
       }
     },

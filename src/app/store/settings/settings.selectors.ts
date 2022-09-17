@@ -312,34 +312,34 @@ export const getI18n = createSelector(
 );
 
 export const getDataset = createSelector(
-  Datasets.getAppData,
   getMod,
   getI18n,
   getHash,
   getDefaults,
   getGame,
-  (app, mod, i18n, hash, defaults, game) => {
+  (mod, i18n, hash, defaults, game) => {
     // Map out entities with mods
-    const categoryEntities = getEntities(app.categories, mod?.categories ?? []);
-    const appIconPath = app.iconPath ?? `data/${app.id}/icons.png`;
+    const categoryEntities = toEntities(
+      mod?.categories ?? [],
+      {},
+      environment.debug
+    );
     const modIconPath = mod?.iconPath ?? `data/${mod?.id}/icons.png`;
-    const iconEntities = getEntities(
-      app.icons.map((i) => ({
-        ...i,
-        ...{ file: i.file ?? appIconPath },
-      })),
-
+    const iconEntities = toEntities(
       (mod?.icons ?? []).map((i) => ({
         ...i,
         ...{ file: i.file ?? modIconPath },
-      }))
+      })),
+      {},
+      environment.debug
     );
-    const itemData = getEntities(app.items, mod?.items ?? []);
-    const recipeEntities = getEntities(app.recipes, mod?.recipes ?? []);
-    const limitations = getArrayEntities(
-      app.limitations,
-      mod?.limitations ?? []
+    const itemData = toEntities(mod?.items ?? [], {}, environment.debug);
+    const recipeEntities = toEntities(
+      mod?.recipes ?? [],
+      {},
+      environment.debug
     );
+    const limitations = reduceEntities(mod?.limitations ?? []);
 
     // Apply localization
     if (i18n) {
@@ -710,31 +710,6 @@ export const getInserterData = createSelector(
   getInserterCapacity,
   (target, capacity) => InserterData[target][capacity]
 );
-
-export function getEntities<T extends { id: string }>(
-  app: T[],
-  mod: T[]
-): Entities<T> {
-  const entities = toEntities(app);
-  for (const i of mod) {
-    // Used only in development to validate data files
-    // istanbul ignore next
-    if (environment.debug && mod.filter((m) => m.id === i.id).length > 1) {
-      console.warn(`Duplicate id: ${i.id}`);
-    }
-    entities[i.id] = i;
-  }
-  return entities;
-}
-
-export function getArrayEntities(
-  app: Entities<string[]>,
-  mod: Entities<string[]>
-): Entities<Entities<boolean>> {
-  let entities = reduceEntities(app);
-  entities = reduceEntities(mod, entities);
-  return entities;
-}
 
 export function reduceEntities(
   value: Entities<string[]>,

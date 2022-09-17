@@ -22,7 +22,6 @@ async function processMod(): Promise<void> {
   // for (const icon of data.icons) {
   //   const match = icon.position.match(/(-?\d+)px (-?\d+)px/);
   //   if (match != null) {
-  //     console.log(icon.id, match[0], match[1], match[2]);
   //     const newa = Number(match[1]) / 2;
   //     const newb = Number(match[2]) / 2;
   //     icon.position = `${newa}px ${newb}px`;

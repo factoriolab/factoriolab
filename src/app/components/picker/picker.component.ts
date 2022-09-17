@@ -59,7 +59,7 @@ export class PickerComponent implements OnInit {
   ngOnInit(): void {
     this.searchCtrl.valueChanges
       .pipe(untilDestroyed(this))
-      .subscribe(this.inputSearch);
+      .subscribe((s) => this.inputSearch(s));
   }
 
   clickOpen(data: Dataset, type: 'item' | 'recipe', selectedId?: string): void {
