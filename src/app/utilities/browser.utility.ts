@@ -1,5 +1,7 @@
+import { routes } from '~/app-routing.module';
 import { STATE_KEY } from '~/models';
 import { LabState } from '~/store';
+import { fnPropNotNullish } from './';
 
 export class BrowserUtility {
   private static _storedState = BrowserUtility.loadState();
@@ -8,20 +10,30 @@ export class BrowserUtility {
   }
 
   static get search(): string {
-    return location.search.substring(1);
+    return window.location.search.substring(1);
   }
 
   static get hash(): string {
-    return location.hash.substring(1);
+    return window.location.hash.substring(1);
   }
 
   static get href(): string {
-    return location.href;
+    return window.location.href;
   }
 
   static get zip(): string {
     const hash = this.hash;
     return this.search || (hash.length > 1 && hash[1] === '=' && hash) || '';
+  }
+
+  static redirectRoutes = routes
+    .filter(fnPropNotNullish('path'))
+    .filter(fnPropNotNullish('redirectTo'))
+    .map((r) => r.path.toLowerCase());
+
+  static get isRedirect(): boolean {
+    const path = window.location.pathname.toLowerCase();
+    return this.redirectRoutes.some((r) => path.endsWith(r));
   }
 
   static loadState(): Partial<LabState> | null {

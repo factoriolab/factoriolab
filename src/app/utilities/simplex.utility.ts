@@ -16,6 +16,7 @@ import {
   WARNING_HANG,
 } from '~/models';
 import { Items } from '~/store';
+import { notNullish } from './';
 import { RateUtility } from './rate.utility';
 
 const FLOAT_TOLERANCE = 1e-10;
@@ -174,10 +175,10 @@ export class SimplexUtility {
 
     if (recipes) {
       return steps
-        .map((s) =>
+        .map((s): [string, Rational] | null =>
           s.recipeId && s.factories ? [s.recipeId, s.factories] : null
         )
-        .filter((s): s is [string, Rational] => s != null)
+        .filter(notNullish)
         .sort((a, b) =>
           data.recipeR[b[0]]
             .output(itemId)
@@ -186,10 +187,10 @@ export class SimplexUtility {
         );
     } else {
       return steps
-        .map((s) =>
-          s.recipeId && s.factories ? [s.recipeId, s.factories] : null
+        .map((s): [string, Rational] | null =>
+          s.itemId && s.items ? [s.itemId, s.items] : null
         )
-        .filter((s): s is [string, Rational] => s != null);
+        .filter(notNullish);
     }
   }
 

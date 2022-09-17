@@ -262,6 +262,7 @@ export class RouterService {
           // Try to recognize and handle old hash style navigation
           query = hash;
         }
+
         if (query) {
           let zip = query;
           if (this.zip !== zip) {
