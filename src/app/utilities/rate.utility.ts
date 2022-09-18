@@ -61,12 +61,16 @@ export class RateUtility {
 
     for (const step of _steps) {
       this.calculateParents(step, _steps);
+      this.calculateOutputs(step, _steps);
+    }
+
+    for (const step of _steps) {
       this.calculateSettings(step, producers, recipeSettings);
       this.calculateBelts(step, itemSettings, recipeSettings, beltSpeed, data);
-      this.calculateOutputs(step, _steps);
       this.calculateBeacons(step, beaconReceivers, recipeSettings, data);
       this.calculateDisplayRate(step, dispRateInfo);
     }
+
     return this.calculateHierarchy(_steps);
   }
 

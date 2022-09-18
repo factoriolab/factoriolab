@@ -851,7 +851,7 @@
                     wagons: step.wagons?.mul(output.value),
                     wagonId: vm.itemSettings[step.itemId].wagonId,
                     factories: output.factories,
-                    factoryId: step.recipeSettings?.factoryId,
+                    factoryId: vm.recipeSettings[output.recipeId].factoryId,
                     recipeId: output.recipeId,
                     percent: output.value,
                     percentOnDest: true,
@@ -887,8 +887,9 @@
                         ? step.factories?.mul(parent.value)
                         : null,
                     factoryId:
-                      vm.stepDetails[step.id].outputs.length === 1 &&
-                      step.recipeSettings?.factoryId,
+                      vm.stepDetails[step.id].outputs.length === 1
+                        ? step.recipeSettings?.factoryId
+                        : null,
                     recipeId: step.recipeId,
                     percent: parent.value,
                     destId: vm.stepById[parent.key].recipeId,
@@ -1291,7 +1292,7 @@
                       pButton
                       pRipple
                       type="button"
-                      class="p-button-rounded me-2"
+                      class="me-2"
                       [class.p-button-text]="
                         vm.data.itemRecipeId[step.itemId] !== recipeId
                       "
@@ -1334,7 +1335,7 @@
                     pButton
                     pRipple
                     type="button"
-                    class="hover-action p-button-rounded p-button-text me-2"
+                    class="hover-action p-button-text me-2"
                     [class.hover-active]="
                       vm.settings.disabledRecipeIds.indexOf(recipeId) !== -1
                     "
@@ -1583,7 +1584,7 @@
           <td class="w-0 text-end inherit">
             <div
               *ngFor="let tot of totals | keyvalue: trackSvc.sortByValue"
-              class="my-1 py-2"
+              class="py-2 icon-height"
             >
               <span class="monospace">{{
                 tot.value | rate: vm.effectivePrecision[column]
