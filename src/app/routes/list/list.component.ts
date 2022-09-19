@@ -260,7 +260,6 @@ export class ListComponent implements OnInit, AfterViewInit {
   changeRecipeField(
     step: Step,
     event: string | number,
-    recipeSettings: Recipes.RecipesState,
     factories: Factories.FactoriesState,
     field: RecipeField,
     index?: number,
@@ -270,9 +269,9 @@ export class ListComponent implements OnInit, AfterViewInit {
 
     const id = step.producerId ?? step.recipeId;
     const isProducer = step.producerId != null;
-    const recipe = recipeSettings[step.recipeId];
-    if (recipe.factoryId) {
-      const factory = factories.entities[recipe.factoryId];
+    const settings = step.recipeSettings;
+    if (settings?.factoryId) {
+      const factory = factories.entities[settings.factoryId];
       switch (field) {
         case RecipeField.FactoryModules: {
           if (
@@ -280,9 +279,9 @@ export class ListComponent implements OnInit, AfterViewInit {
             data != null &&
             typeof event === 'string' &&
             index != null &&
-            recipe.factoryModuleIds != null
+            settings.factoryModuleIds != null
           ) {
-            const count = recipe.factoryModuleIds.length;
+            const count = settings.factoryModuleIds.length;
             const options = [
               ...data.recipeModuleIds[step.recipeId],
               ItemId.Module,
@@ -295,7 +294,7 @@ export class ListComponent implements OnInit, AfterViewInit {
             const modules = this.generateModules(
               index,
               event,
-              recipe.factoryModuleIds
+              settings.factoryModuleIds
             );
             this.setFactoryModules(id, modules, def, isProducer);
           }
@@ -319,14 +318,14 @@ export class ListComponent implements OnInit, AfterViewInit {
           if (
             typeof event === 'string' &&
             index != null &&
-            recipe.beaconModuleIds != null
+            settings.beaconModuleIds != null
           ) {
-            const count = recipe.beaconModuleIds.length;
+            const count = settings.beaconModuleIds.length;
             const def = new Array(count).fill(factory.beaconModuleId);
             const value = this.generateModules(
               index,
               event,
-              recipe.beaconModuleIds
+              settings.beaconModuleIds
             );
             this.setBeaconModules(id, value, def, isProducer);
           }

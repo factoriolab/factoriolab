@@ -1,6 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import { SelectItem } from 'primeng/api';
 
+import { fnPropsNotNullish } from '~/helpers';
 import {
   Column,
   Entities,
@@ -485,16 +486,12 @@ export const getStepDetails = createSelector(
         tabs.push(StepDetailTab.Item);
         outputs.push(
           ...steps
-            .filter(
-              (s) =>
-                s.outputs?.[itemId] != null &&
-                s.recipeId != null &&
-                s.factories != null
-            )
+            .filter(fnPropsNotNullish('outputs', 'recipeId', 'factories'))
+            .filter((s) => s.outputs[itemId] != null)
             .map((s) => ({
-              recipeId: s.recipeId!,
-              value: s.outputs![itemId],
-              factories: s.factories!,
+              recipeId: s.recipeId,
+              value: s.outputs[itemId],
+              factories: s.factories,
             }))
         );
         outputs.sort((a, b) => b.value.sub(a.value).toNumber());
@@ -606,7 +603,15 @@ export const getEffectivePrecision = createSelector(
       effPrecision[i] = effPrecFrom(steps, columns[i].precision, (s) =>
         i === Column.Items
           ? (s.items || Rational.zero).sub(s.surplus || Rational.zero)
-          : (s as Record<string, any>)[i.toLowerCase()]
+          : s[
+              i.toLowerCase() as
+                | 'items'
+                | 'belts'
+                | 'wagons'
+                | 'factories'
+                | 'power'
+                | 'pollution'
+            ]
       );
     }
 

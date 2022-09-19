@@ -1,7 +1,7 @@
 import { routes } from '~/app-routing.module';
+import { fnPropsNotNullish } from '~/helpers';
 import { STATE_KEY } from '~/models';
 import { LabState } from '~/store';
-import { fnPropNotNullish } from './';
 
 export class BrowserUtility {
   private static _storedState = BrowserUtility.loadState();
@@ -27,8 +27,7 @@ export class BrowserUtility {
   }
 
   static redirectRoutes = routes
-    .filter(fnPropNotNullish('path'))
-    .filter(fnPropNotNullish('redirectTo'))
+    .filter(fnPropsNotNullish('path', 'redirectTo'))
     .map((r) => r.path.toLowerCase());
 
   static get isRedirect(): boolean {
@@ -66,14 +65,14 @@ export class BrowserUtility {
           },
         };
       } else {
-        const merge = { ...initial };
-        for (const key of Object.keys(merge) as (keyof LabState)[]) {
-          merge[key] = {
-            ...merge[key],
-            ...(state[key] as any),
-          };
+        const applyState = { ...state };
+        // Remove any unrecognized keys from the stored state before spreading
+        for (const key of Object.keys(applyState) as (keyof LabState)[]) {
+          if (initial[key] == null) {
+            delete applyState[key];
+          }
         }
-        return merge;
+        return { ...initial, ...applyState };
       }
     } else {
       return initial;

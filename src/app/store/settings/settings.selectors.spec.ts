@@ -1,4 +1,4 @@
-import { CategoryId, ItemId, Mocks, RecipeId, TestUtility } from 'src/tests';
+import { ItemId, Mocks, RecipeId, TestUtility } from 'src/tests';
 import {
   Column,
   FuelType,

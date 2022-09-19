@@ -1,6 +1,7 @@
 import { Constraint, Model, Simplex, Status, Variable } from 'glpk-ts';
 
 import { environment } from 'src/environments';
+import { notNullish } from '~/helpers';
 import {
   Dataset,
   Entities,
@@ -16,7 +17,6 @@ import {
   WARNING_HANG,
 } from '~/models';
 import { Items } from '~/store';
-import { notNullish } from './';
 import { RateUtility } from './rate.utility';
 
 const FLOAT_TOLERANCE = 1e-10;
@@ -1027,15 +1027,21 @@ export class SimplexUtility {
     producer?: RationalProducer
   ): void {
     const steps = state.steps;
-    let step = steps.find((s) => s.recipeId === recipe.id);
+    // Don't assign to any step that already has a recipe or producer assigned
+    // (Those steps should have non-nullish factories)
+    const options = steps.filter((s) => s.factories == null);
+    // Look for a step that was selected to be associated with this recipe
+    let step = options.find((s) => s.recipeId === recipe.id);
     if (!step) {
-      step = steps.find(
+      // Look for any existing step that could be a match
+      step = options.find(
         (s) =>
           s.recipeId == null && s.itemId != null && recipe.produces(s.itemId)
       );
     }
 
     if (!step) {
+      // No step was found, need to create a new one for this recipe/producer
       const index = steps.findIndex(
         (s) => s.itemId && recipe.produces(s.itemId)
       );
@@ -1048,6 +1054,7 @@ export class SimplexUtility {
         steps.push(step);
       }
     }
+
     step.recipeId = recipe.id;
     step.recipe = recipe;
     if (producer) {

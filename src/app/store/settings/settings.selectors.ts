@@ -2,6 +2,7 @@ import { createSelector } from '@ngrx/store';
 import { SelectItem } from 'primeng/api';
 
 import { environment } from 'src/environments';
+import { fnPropsNotNullish } from '~/helpers';
 import {
   Column,
   columnOptions,
@@ -31,7 +32,6 @@ import {
   toEntities,
 } from '~/models';
 import { Options } from '~/models/options';
-import { fnPropNotNullish } from '~/utilities';
 import { LabState } from '../';
 import * as Datasets from '../datasets';
 import * as Preferences from '../preferences';
@@ -386,11 +386,11 @@ export const getDataset = createSelector(
 
     // Filter for item types
     const beaconIds = items
-      .filter(fnPropNotNullish('beacon'))
+      .filter(fnPropsNotNullish('beacon'))
       .sort((a, b) => a.beacon.modules - b.beacon.modules)
       .map((i) => i.id);
     const beltIds = items
-      .filter(fnPropNotNullish('belt'))
+      .filter(fnPropsNotNullish('belt'))
       .sort((a, b) =>
         /** Don't sort belts in DSP, leave based on stacks */
         game === Game.DysonSphereProgram
@@ -401,7 +401,7 @@ export const getDataset = createSelector(
       )
       .map((i) => i.id);
     const pipeIds = items
-      .filter(fnPropNotNullish('pipe'))
+      .filter(fnPropsNotNullish('pipe'))
       .sort((a, b) =>
         Rational.fromJson(a.pipe.speed)
           .sub(Rational.fromJson(b.pipe.speed))
@@ -409,26 +409,26 @@ export const getDataset = createSelector(
       )
       .map((i) => i.id);
     const cargoWagonIds = items
-      .filter(fnPropNotNullish('cargoWagon'))
+      .filter(fnPropsNotNullish('cargoWagon'))
       .sort((a, b) => a.cargoWagon.size - b.cargoWagon.size)
       .map((i) => i.id);
     const fluidWagonIds = items
-      .filter(fnPropNotNullish('fluidWagon'))
+      .filter(fnPropsNotNullish('fluidWagon'))
       .sort((a, b) => a.fluidWagon.capacity - b.fluidWagon.capacity)
       .map((i) => i.id);
     const factoryIds = items.filter((i) => i.factory).map((i) => i.id);
     const modules = items.filter((i) => i.module);
     const moduleIds = modules.map((i) => i.id);
     const beaconModuleIds = modules
-      .filter(fnPropNotNullish('module'))
+      .filter(fnPropsNotNullish('module'))
       .filter((i) => i.module.productivity == null)
       .map((i) => i.id);
     const prodModuleIds = modules
-      .filter(fnPropNotNullish('module'))
+      .filter(fnPropsNotNullish('module'))
       .filter((i) => i.module.productivity != null)
       .map((i) => i.id);
     const fuelIds = items
-      .filter(fnPropNotNullish('fuel'))
+      .filter(fnPropsNotNullish('fuel'))
       .sort((a, b) => a.fuel.value - b.fuel.value)
       .reduce((e: Entities<string[]>, f) => {
         const cat = f.fuel.category;
@@ -561,7 +561,7 @@ export const getDataset = createSelector(
     // Calculate allowed modules for recipes
     const recipeModuleIds = recipes.reduce((e: Entities<string[]>, r) => {
       e[r.id] = modules
-        .filter(fnPropNotNullish('module'))
+        .filter(fnPropsNotNullish('module'))
         .filter(
           (m) =>
             m.module.limitation == null ||

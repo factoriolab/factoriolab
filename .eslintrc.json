@@ -30,6 +30,10 @@
             "style": "kebab-case"
           }
         ],
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          { "argsIgnorePattern": "^_" }
+        ],
         "@typescript-eslint/explicit-function-return-type": ["error"],
         "no-var": "error",
         "prefer-const": "error",

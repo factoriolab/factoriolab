@@ -64,7 +64,7 @@ describe('Products Selectors', () => {
 
     it('should use the utility method to determine steps', () => {
       spyOn(SimplexUtility, 'getSteps');
-      const result = Selectors.getProductSteps.projector(
+      Selectors.getProductSteps.projector(
         [Mocks.Product4],
         null,
         null,
@@ -89,13 +89,7 @@ describe('Products Selectors', () => {
 
     it('should use the utility method to adjust products', () => {
       spyOn(RecipeUtility, 'adjustProduct');
-      const result = Selectors.getProducts.projector(
-        ['a', 'b'],
-        null,
-        null,
-        null,
-        null
-      );
+      Selectors.getProducts.projector(['a', 'b'], null, null, null, null);
       expect(RecipeUtility.adjustProduct).toHaveBeenCalledTimes(2);
     });
   });

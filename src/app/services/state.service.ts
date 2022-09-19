@@ -80,9 +80,7 @@ Determine resource and factory requirements for your desired output products.`,
       this.store.select(Settings.getDataset),
     ])
       .pipe(
-        filter(
-          ([modId, data]) => data.categoryIds.length > 0 && data.hash != null
-        ),
+        filter(([_, data]) => data.categoryIds.length > 0 && data.hash != null),
         first()
       )
       .subscribe(([modId, data]) => {

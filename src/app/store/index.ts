@@ -24,7 +24,7 @@ export interface LabState {
   preferencesState: Preferences.PreferencesState;
 }
 
-export const reducers: ActionReducerMap<LabState, any> = {
+export const reducers: ActionReducerMap<LabState, never> = {
   datasetsState: Datasets.datasetsReducer,
   productsState: Products.productsReducer,
   producersState: Producers.producersReducer,
