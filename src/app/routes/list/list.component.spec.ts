@@ -1,7 +1,4 @@
-import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
-import { MemoizedSelector } from '@ngrx/store';
 import { MockStore } from '@ngrx/store/testing';
 
 import {
@@ -12,14 +9,7 @@ import {
   TestModule,
   TestUtility,
 } from 'src/tests';
-import {
-  Entities,
-  RecipeField,
-  Step,
-  StepDetail,
-  StepDetailTab,
-} from '~/models';
-import { RouterService } from '~/services';
+import { Entities, RecipeField, StepDetail, StepDetailTab } from '~/models';
 import {
   Factories,
   Items,
@@ -39,12 +29,7 @@ enum DataTest {
 describe('ListComponent', () => {
   let component: ListComponent;
   let fixture: ComponentFixture<ListComponent>;
-  let route: ActivatedRoute;
-  let router: RouterService;
   let mockStore: MockStore<LabState>;
-  let mockGetSteps: MemoizedSelector<LabState, Step[]>;
-  let mockGetStepDetails: MemoizedSelector<LabState, Entities<StepDetail>>;
-  let detectChanges: jasmine.Spy;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -52,11 +37,9 @@ describe('ListComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(ListComponent);
-    route = TestBed.inject(ActivatedRoute);
-    router = TestBed.inject(RouterService);
     mockStore = TestBed.inject(MockStore);
-    mockGetSteps = mockStore.overrideSelector(Products.getSteps, Mocks.Steps);
-    mockGetStepDetails = mockStore.overrideSelector(
+    mockStore.overrideSelector(Products.getSteps, Mocks.Steps);
+    mockStore.overrideSelector(
       Products.getStepDetails,
       Mocks.Steps.reduce((e: Entities<StepDetail>, s) => {
         e[s.id] = {
@@ -72,8 +55,6 @@ describe('ListComponent', () => {
         return e;
       }, {})
     );
-    const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
-    detectChanges = spyOn(ref.constructor.prototype, 'detectChanges');
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

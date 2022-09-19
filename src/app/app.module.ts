@@ -35,7 +35,7 @@ import { ProductsEffects } from './store/products/products.effects';
 function initializeApp(
   primengConfig: PrimeNGConfig,
   translateSvc: TranslateService
-): () => Promise<any> {
+): () => Promise<unknown> {
   return () => {
     // Enable ripple
     primengConfig.ripple = true;

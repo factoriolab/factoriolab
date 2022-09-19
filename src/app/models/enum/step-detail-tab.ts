@@ -1,5 +1,3 @@
-import { MenuItem } from 'primeng/api';
-
 export enum StepDetailTab {
   None = 'none',
   Item = 'item',

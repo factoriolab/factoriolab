@@ -31,8 +31,8 @@
           }
         ],
         "@typescript-eslint/no-unused-vars": [
-          "error",
-          { "argsIgnorePattern": "^_" }
+          "warn",
+          { "argsIgnorePattern": "^_", "destructuredArrayIgnorePattern": "^_" }
         ],
         "@typescript-eslint/explicit-function-return-type": ["error"],
         "no-var": "error",

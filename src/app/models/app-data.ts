@@ -1,4 +1,4 @@
-import { Mod, ModInfo } from './mod';
+import { ModInfo } from './mod';
 
 export interface AppData {
   mods: ModInfo[];

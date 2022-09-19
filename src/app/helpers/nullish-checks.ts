@@ -30,7 +30,7 @@ export function fnPropsNotNullish<T, S extends keyof T>(...keys: S[]) {
  * Returns a boolean indicating whether a specific property of an object is not
  * nullish
  */
-export function propNotNullish<T, S extends keyof T>(
+export function propsNotNullish<T, S extends keyof T>(
   value: T,
   ...keys: S[]
 ): value is T & Required<Pick<T, S>> {
@@ -41,7 +41,7 @@ export function propNotNullish<T, S extends keyof T>(
  * Filters an Observable for only values where a specific property of the object
  * is not nullish
  */
-export function filterPropNullish<T, S extends keyof T>(
+export function filterPropsNullish<T, S extends keyof T>(
   ...keys: S[]
 ): OperatorFunction<T, T & Required<Pick<T, S>>> {
   return filter(fnPropsNotNullish(...keys));

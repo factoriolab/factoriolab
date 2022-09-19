@@ -12,7 +12,7 @@ import { FormControl } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { FilterService, SelectItem } from 'primeng/api';
-import { combineLatest, map } from 'rxjs';
+import { map } from 'rxjs';
 
 import { Category, Dataset, Entities } from '~/models';
 import { LabState } from '~/store';

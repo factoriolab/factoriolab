@@ -4,11 +4,11 @@ import { Step } from '~/models';
 
 /**
  * Does not do any actual checking, mainly used to restore typing inside
- * PrimeNG templates
+ * PrimeNG templates which cast to `any`
  */
 @Pipe({ name: 'asStep' })
 export class AsStepPipe implements PipeTransform {
-  transform(value: any): Step {
+  transform(value: Step): Step {
     return value as Step;
   }
 }

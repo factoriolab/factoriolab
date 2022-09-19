@@ -8,10 +8,8 @@ import { of } from 'rxjs';
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import {
   DisplayRate,
-  Entities,
   InserterCapacity,
   InserterTarget,
-  ModHash,
   Preset,
   Product,
   RateType,
@@ -127,7 +125,6 @@ const mockState: LabState = {
 describe('RouterService', () => {
   let service: RouterService;
   let mockStore: MockStore<LabState>;
-  let mockGetHashEntities: MemoizedSelector<LabState, Entities<ModHash>>;
   let mockGetZipState: MemoizedSelector<
     LabState,
     {
@@ -148,7 +145,7 @@ describe('RouterService', () => {
     service = TestBed.inject(RouterService);
     service.initialize();
     mockStore = TestBed.inject(MockStore);
-    mockGetHashEntities = mockStore.overrideSelector(Datasets.getHashEntities, {
+    mockStore.overrideSelector(Datasets.getHashEntities, {
       [Settings.initialSettingsState.modId]: Mocks.Hash,
       [mockSettingsState.modId]: Mocks.Hash,
     });
@@ -475,29 +472,26 @@ describe('RouterService', () => {
   describe('migrate', () => {
     it('should return latest version without alteration', () => {
       const originalParams = { [Section.Version]: ZipVersion.Version4 };
-      const [params, warnings] = service.migrate({ ...originalParams });
+      const [params, _] = service.migrate({ ...originalParams });
       expect(params).toEqual(originalParams);
     });
   });
 
   describe('migrateV0', () => {
     it('should handle unrecognized/null baseid', () => {
-      const [params, warnings] = service.migrateV0(
-        { [Section.Settings]: '---' },
-        []
-      );
+      const [params, _] = service.migrateV0({ [Section.Settings]: '---' }, []);
       expect(params[Section.Settings]).toEqual(NULL);
     });
 
     it('should handle preset without other settings', () => {
-      const [params, warnings] = service.migrateV0({ [Section.Mod]: '0' }, []);
+      const [params, _] = service.migrateV0({ [Section.Mod]: '0' }, []);
       expect(params[Section.Settings]).toEqual('?*?*0');
     });
   });
 
   describe('migrateV2', () => {
     it('should handle undefined beaconCount', () => {
-      const [params, warnings] = service.migrateV2(
+      const [params, _] = service.migrateV2(
         {
           [Section.Recipes]: '***?',
           [Section.Factories]: '**?',

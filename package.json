@@ -21,7 +21,8 @@
     "test-build": "ng test --no-watch --browsers=ChromeHeadless",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
     "process-mod": "ts-node scripts/process-mod.ts",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "lint-build": "ng lint --max-warnings 0"
   },
   "dependencies": {
     "@angular/animations": "^14.2.1",

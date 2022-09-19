@@ -17,10 +17,10 @@ export class DropdownTranslateDirective implements OnInit {
     this.pDropdown.appendTo = 'body';
     combineLatest([
       this.contentSvc.translateSelectedItem$.pipe(
-        filter((t): t is TemplateRef<any> => t != null)
+        filter((t): t is TemplateRef<unknown> => t != null)
       ),
       this.contentSvc.translateItem$.pipe(
-        filter((t): t is TemplateRef<any> => t != null)
+        filter((t): t is TemplateRef<unknown> => t != null)
       ),
     ])
       .pipe(first())

@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SelectItem } from 'primeng/api';
 
 import { TestModule } from 'src/tests';
-import { IdType } from '~/models';
 
 @Component({
   template: `<p-dropdown
@@ -16,7 +15,7 @@ import { IdType } from '~/models';
 class TestDropdownTranslateDirectiveComponent {
   options: SelectItem[] = [];
   value = null;
-  onChange(data: any): void {}
+  onChange(_: unknown): void {}
 }
 
 describe('DropdownTranslateDirective', () => {

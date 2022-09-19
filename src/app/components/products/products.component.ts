@@ -4,16 +4,11 @@ import { combineLatest, map } from 'rxjs';
 
 import {
   Breakpoint,
-  Dataset,
   DisplayRate,
   displayRateOptions,
-  FactorySettings,
   Game,
-  ItemId,
-  Producer,
   RateType,
   RecipeField,
-  RecipeSettings,
 } from '~/models';
 import { ContentService, TrackService } from '~/services';
 import {
@@ -25,13 +20,6 @@ import {
   Recipes,
   Settings,
 } from '~/store';
-import { RecipeUtility } from '~/utilities';
-
-interface AllSettingsState {
-  recipe: RecipeSettings;
-  factory: FactorySettings;
-  fMatch: boolean;
-}
 
 @Component({
   selector: 'lab-products',

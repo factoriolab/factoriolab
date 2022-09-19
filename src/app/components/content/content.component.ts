@@ -21,9 +21,9 @@ import { ContentService } from '~/services';
 })
 export class ContentComponent implements OnInit, AfterViewInit {
   @ViewChild('translateSelectedItem') translateSelectedItem:
-    | TemplateRef<any>
+    | TemplateRef<unknown>
     | undefined;
-  @ViewChild('translateItem') translateItem: TemplateRef<any> | undefined;
+  @ViewChild('translateItem') translateItem: TemplateRef<unknown> | undefined;
 
   constructor(
     private confirmationSvc: ConfirmationService,

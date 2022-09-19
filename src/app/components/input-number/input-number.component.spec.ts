@@ -20,7 +20,7 @@ class TestInputNumberComponent {
   minimum = '1';
   width = '';
   inputId = '';
-  setValue(data: string): void {}
+  setValue(_: string): void {}
 }
 
 describe('InputNumberComponent', () => {

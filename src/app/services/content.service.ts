@@ -1,5 +1,4 @@
 import { Injectable, TemplateRef } from '@angular/core';
-import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Confirmation } from 'primeng/api';
 import { BehaviorSubject, fromEvent, map, startWith, Subject } from 'rxjs';
@@ -31,10 +30,12 @@ export class ContentService {
   }
 
   // Templates
-  translateSelectedItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(
+  translateSelectedItem$ = new BehaviorSubject<
+    TemplateRef<unknown> | undefined
+  >(undefined);
+  translateItem$ = new BehaviorSubject<TemplateRef<unknown> | undefined>(
     undefined
   );
-  translateItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(undefined);
 
   // Header
   settingsActive$ = new BehaviorSubject(false);
@@ -51,5 +52,5 @@ export class ContentService {
   // Watch all language changes
   lang$ = this.translateSvc.onLangChange.pipe(startWith(''));
 
-  constructor(private router: Router, private translateSvc: TranslateService) {}
+  constructor(private translateSvc: TranslateService) {}
 }

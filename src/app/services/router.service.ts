@@ -256,7 +256,7 @@ export class RouterService {
       if (e instanceof NavigationEnd) {
         const [prehash, ...posthash] = e.urlAfterRedirects.split('#');
         const hash = posthash.join('#'); // Preserve # after first instance
-        const [prequery, ...postquery] = prehash.split('?');
+        const [_, ...postquery] = prehash.split('?');
         let query = postquery.join('?'); // Preserve ? after first instance
         if (!query.length && hash.length > 1 && hash[1] === '=') {
           // Try to recognize and handle old hash style navigation
@@ -588,10 +588,10 @@ export class RouterService {
         };
       }
 
-      Object.keys(obj)
-        .filter((k) => (obj as Record<string, any>)[k] === undefined)
+      (Object.keys(obj) as (keyof Product)[])
+        .filter((k) => obj[k] === undefined)
         .forEach((k) => {
-          delete (obj as Record<string, any>)[k];
+          delete obj[k];
         });
 
       ids.push(id);
@@ -674,10 +674,10 @@ export class RouterService {
         };
       }
 
-      Object.keys(obj)
-        .filter((k) => (obj as Record<string, any>)[k] === undefined)
+      (Object.keys(obj) as (keyof Producer)[])
+        .filter((k) => obj[k] === undefined)
         .forEach((k) => {
-          delete (obj as Record<string, any>)[k];
+          delete obj[k];
         });
 
       ids.push(id);
@@ -745,10 +745,10 @@ export class RouterService {
         };
       }
 
-      Object.keys(obj)
-        .filter((k) => (obj as Record<string, any>)[k] === undefined)
+      (Object.keys(obj) as (keyof ItemSettings)[])
+        .filter((k) => obj[k] === undefined)
         .forEach((k) => {
-          delete (obj as Record<string, any>)[k];
+          delete obj[k];
         });
 
       entities[id] = obj;
@@ -829,10 +829,10 @@ export class RouterService {
         };
       }
 
-      Object.keys(obj)
-        .filter((k) => (obj as Record<string, any>)[k] === undefined)
+      (Object.keys(obj) as (keyof RecipeSettings)[])
+        .filter((k) => obj[k] === undefined)
         .forEach((k) => {
-          delete (obj as Record<string, any>)[k];
+          delete obj[k];
         });
 
       entities[id] = obj;
@@ -932,10 +932,10 @@ export class RouterService {
         }
       }
 
-      Object.keys(obj)
-        .filter((k) => (obj as Record<string, any>)[k] === undefined)
+      (Object.keys(obj) as (keyof FactorySettings)[])
+        .filter((k) => obj[k] === undefined)
         .forEach((k) => {
-          delete (obj as Record<string, any>)[k];
+          delete obj[k];
         });
 
       if (Object.keys(obj).length) {
@@ -1067,10 +1067,10 @@ export class RouterService {
       };
     }
 
-    Object.keys(obj)
-      .filter((k) => (obj as Record<string, any>)[k] === undefined)
+    (Object.keys(obj) as (keyof Settings.SettingsState)[])
+      .filter((k) => obj[k] === undefined)
       .forEach((k) => {
-        delete (obj as Record<string, any>)[k];
+        delete obj[k];
       });
 
     return obj;
