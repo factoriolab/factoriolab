@@ -859,7 +859,7 @@ export class RouterService {
             i,
             this.zipTruthyArray(obj.moduleRankIds),
             this.zipTruthyString(obj.beaconCount),
-            this.zipTruthyString(obj.beaconModuleId),
+            this.zipTruthyArray(obj.beaconModuleRankIds),
             this.zipTruthyString(obj.beaconId),
             this.zipTruthyNumber(obj.overclock),
           ]),
@@ -867,7 +867,7 @@ export class RouterService {
             h ? this.zipTruthyNString(i, hash.factories) : i,
             this.zipTruthyNArray(obj.moduleRankIds, hash.modules),
             this.zipTruthyString(obj.beaconCount),
-            this.zipTruthyNString(obj.beaconModuleId, hash.modules),
+            this.zipTruthyNArray(obj.beaconModuleRankIds, hash.modules),
             this.zipTruthyNString(obj.beaconId, hash.beacons),
             this.zipTruthyNumber(obj.overclock),
           ]),
@@ -898,7 +898,7 @@ export class RouterService {
         obj = {
           moduleRankIds: this.parseNArray(s[i++], hash.modules),
           beaconCount: this.parseString(s[i++]),
-          beaconModuleId: this.parseNString(s[i++], hash.modules),
+          beaconModuleRankIds: this.parseNArray(s[i++], hash.modules),
           beaconId: this.parseNString(s[i++], hash.beacons),
           overclock: this.parseNumber(s[i++]),
         };
@@ -919,7 +919,7 @@ export class RouterService {
         obj = {
           moduleRankIds: this.parseArray(s[i++]),
           beaconCount: this.parseString(s[i++]),
-          beaconModuleId: this.parseString(s[i++]),
+          beaconModuleRankIds: this.parseArray(s[i++]),
           beaconId: this.parseString(s[i++]),
           overclock: this.parseNumber(s[i++]),
         };

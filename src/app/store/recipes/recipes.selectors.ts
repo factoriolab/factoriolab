@@ -39,9 +39,15 @@ export const getRecipeSettings = createSelector(
         const factory = data.factoryEntities[s.factoryId];
         const def = factories.entities[s.factoryId];
         if (factory != null && RecipeUtility.allowsModules(recipe, factory)) {
+          s.factoryModuleOptions = RecipeUtility.moduleOptions(
+            factory,
+            recipe.id,
+            data
+          );
+
           if (s.factoryModuleIds == null) {
             s.factoryModuleIds = RecipeUtility.defaultModules(
-              data.recipeModuleIds[recipe.id],
+              s.factoryModuleOptions,
               def.moduleRankIds ?? [],
               factory.modules ?? 0
             );
@@ -52,9 +58,17 @@ export const getRecipeSettings = createSelector(
 
           if (s.beaconId != null) {
             const beacon = data.beaconEntities[s.beaconId];
-            if (beacon && s.beaconModuleIds == null) {
-              s.beaconModuleIds = new Array(beacon.modules).fill(
-                def.beaconModuleId
+            s.beaconModuleOptions = RecipeUtility.moduleOptions(
+              beacon,
+              recipe.id,
+              data
+            );
+
+            if (s.beaconModuleIds == null) {
+              s.beaconModuleIds = RecipeUtility.defaultModules(
+                s.beaconModuleOptions,
+                def.beaconModuleRankIds ?? [],
+                beacon.modules
               );
             }
           }

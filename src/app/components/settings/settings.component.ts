@@ -15,8 +15,10 @@ import { combineLatest, first, map } from 'rxjs';
 import {
   Column,
   Dataset,
+  Defaults,
   DisplayRate,
   displayRateOptions,
+  FactorySettings,
   FuelType,
   Game,
   gameInfo,
@@ -209,6 +211,22 @@ export class SettingsComponent implements OnInit {
     this.setMod(gameInfo[game].modId);
   }
 
+  changeBeaconModuleRank(
+    id: string,
+    value: string[],
+    def: FactorySettings | Defaults
+  ): void {
+    if (id === '') {
+      this.setBeaconModuleRank(id, value, [(def as Defaults).beaconModuleId]);
+    } else {
+      this.setBeaconModuleRank(
+        id,
+        value,
+        (def as FactorySettings).beaconModuleRankIds
+      );
+    }
+  }
+
   toggleBeaconReceivers(value: boolean): void {
     this.setBeaconReceivers(value ? '1' : null);
   }
@@ -274,9 +292,13 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Factories.SetBeaconAction({ id, value, def }));
   }
 
-  setBeaconModule(id: string, value: string, def: string | undefined): void {
+  setBeaconModuleRank(
+    id: string,
+    value: string[],
+    def: string[] | undefined
+  ): void {
     this.store.dispatch(
-      new Factories.SetBeaconModuleAction({ id, value, def })
+      new Factories.SetBeaconModuleRankAction({ id, value, def })
     );
   }
 

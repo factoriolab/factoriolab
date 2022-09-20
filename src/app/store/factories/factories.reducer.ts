@@ -105,17 +105,17 @@ export function factoriesReducer(
       return { ...state, ...{ entities } };
     }
     case FactoriesActionType.SET_BEACON: {
-      const entities = StoreUtility.compareReset(
-        state.entities,
-        'beaconId',
-        action.payload
+      const entities = StoreUtility.resetFields(
+        StoreUtility.compareReset(state.entities, 'beaconId', action.payload),
+        ['beaconModuleRankIds'],
+        action.payload.id
       );
       return { ...state, ...{ entities } };
     }
-    case FactoriesActionType.SET_BEACON_MODULE: {
+    case FactoriesActionType.SET_BEACON_MODULE_RANK: {
       const entities = StoreUtility.compareReset(
         state.entities,
-        'beaconModuleId',
+        'beaconModuleRankIds',
         action.payload
       );
       return { ...state, ...{ entities } };

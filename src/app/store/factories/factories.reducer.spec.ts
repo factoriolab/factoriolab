@@ -222,7 +222,7 @@ describe('Factories Reducer', () => {
     it('should set the beacon module for a factory', () => {
       const result = factoriesReducer(
         undefined,
-        new Actions.SetBeaconModuleAction({
+        new Actions.SetBeaconModuleRankAction({
           id,
           value,
           def: ItemId.SpeedModule,

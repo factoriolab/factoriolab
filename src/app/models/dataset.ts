@@ -40,7 +40,6 @@ export interface Dataset {
   factoryIds: string[];
   factoryEntities: Entities<RationalFactory>;
   moduleIds: string[];
-  beaconModuleIds: string[];
   moduleEntities: Entities<RationalModule>;
   fuelIds: Entities<string[]>;
   fuelEntities: Entities<RationalFuel>;
@@ -49,8 +48,8 @@ export interface Dataset {
   complexRecipeIds: string[];
   recipeEntities: Entities<Recipe>;
   recipeR: Entities<RationalRecipe>;
-  recipeModuleIds: Entities<string[]>;
-  prodModuleIds: string[];
+  proliferatorModuleIds: string[];
+  limitations: Entities<Entities<boolean>>;
   hash?: ModHash;
   defaults?: Defaults | null;
 }

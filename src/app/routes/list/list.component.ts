@@ -238,32 +238,13 @@ export class ListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  changeFactory(
-    step: Step,
-    value: string,
-    factories: Factories.FactoriesState,
-    data: Dataset
-  ): void {
-    if (step.recipeId == null) return;
-
-    this.setFactory(
-      step.producerId ?? step.recipeId,
-      value,
-      RecipeUtility.bestMatch(
-        data.recipeEntities[step.recipeId].producers,
-        factories.ids ?? []
-      ),
-      step.producerId != null
-    );
-  }
-
   changeRecipeField(
     step: Step,
     event: string | number,
     factories: Factories.FactoriesState,
+    data: Dataset,
     field: RecipeField,
-    index?: number,
-    data?: Dataset
+    index?: number
   ): void {
     if (step.recipeId == null) return;
 
@@ -271,24 +252,41 @@ export class ListComponent implements OnInit, AfterViewInit {
     const isProducer = step.producerId != null;
     const settings = step.recipeSettings;
     if (settings?.factoryId) {
-      const factory = factories.entities[settings.factoryId];
+      const factorySettings = factories.entities[settings.factoryId];
       switch (field) {
+        case RecipeField.Factory: {
+          if (typeof event === 'string') {
+            this.setFactory(
+              step.producerId ?? step.recipeId,
+              event,
+              RecipeUtility.bestMatch(
+                data.recipeEntities[step.recipeId].producers,
+                factories.ids ?? []
+              ),
+              step.producerId != null
+            );
+          }
+
+          break;
+        }
         case RecipeField.FactoryModules: {
           if (
-            factory.moduleRankIds != null &&
+            factorySettings.moduleRankIds != null &&
             data != null &&
             typeof event === 'string' &&
             index != null &&
             settings.factoryModuleIds != null
           ) {
+            const factory = data.factoryEntities[settings.factoryId];
             const count = settings.factoryModuleIds.length;
-            const options = [
-              ...data.recipeModuleIds[step.recipeId],
-              ItemId.Module,
-            ];
+            const options = RecipeUtility.moduleOptions(
+              factory,
+              step.recipeId,
+              data
+            );
             const def = RecipeUtility.defaultModules(
               options,
-              factory.moduleRankIds,
+              factorySettings.moduleRankIds,
               count
             );
             const modules = this.generateModules(
@@ -302,26 +300,38 @@ export class ListComponent implements OnInit, AfterViewInit {
         }
         case RecipeField.BeaconCount: {
           if (typeof event === 'string') {
-            const def = factory.beaconCount;
+            const def = factorySettings.beaconCount;
             this.setBeaconCount(id, event, def, isProducer);
           }
           break;
         }
         case RecipeField.Beacon: {
           if (typeof event === 'string') {
-            const def = factory.beaconId;
+            const def = factorySettings.beaconId;
             this.setBeacon(id, event, def, isProducer);
           }
           break;
         }
         case RecipeField.BeaconModules: {
           if (
+            factorySettings.beaconModuleRankIds != null &&
             typeof event === 'string' &&
             index != null &&
+            settings.beaconId != null &&
             settings.beaconModuleIds != null
           ) {
+            const beacon = data.beaconEntities[settings.beaconId];
             const count = settings.beaconModuleIds.length;
-            const def = new Array(count).fill(factory.beaconModuleId);
+            const options = RecipeUtility.moduleOptions(
+              beacon,
+              step.recipeId,
+              data
+            );
+            const def = RecipeUtility.defaultModules(
+              options,
+              factorySettings.beaconModuleRankIds,
+              count
+            );
             const value = this.generateModules(
               index,
               event,
@@ -333,7 +343,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         }
         case RecipeField.Overclock: {
           if (typeof event === 'number') {
-            const def = factory.overclock;
+            const def = factorySettings.overclock;
             const value = Math.max(1, Math.min(250, event));
             this.setOverclock(id, value, def, isProducer);
           }

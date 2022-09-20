@@ -1,3 +1,5 @@
+import { SelectItem } from 'primeng/api';
+
 import { RationalRecipe } from './data';
 import { Rational } from './rational';
 
@@ -7,9 +9,13 @@ export interface Producer {
   count: string;
   factoryId?: string;
   factoryModuleIds?: string[];
+  /** Calculated, not configurable */
+  factoryModuleOptions?: SelectItem[];
   beaconCount?: string;
   beaconId?: string;
   beaconModuleIds?: string[];
+  /** Calculated, not configurable */
+  beaconModuleOptions?: SelectItem[];
   overclock?: number;
 }
 
@@ -19,9 +25,13 @@ export class RationalProducer {
   count: Rational;
   factoryId?: string;
   factoryModuleIds?: string[];
+  /** Calculated, not configurable */
+  factoryModuleOptions?: SelectItem[];
   beaconCount?: Rational;
   beaconId?: string;
   beaconModuleIds?: string[];
+  /** Calculated, not configurable */
+  beaconModuleOptions?: SelectItem[];
   overclock?: Rational;
   recipe: RationalRecipe;
 
@@ -35,6 +45,9 @@ export class RationalProducer {
     if (data.factoryModuleIds != null) {
       this.factoryModuleIds = data.factoryModuleIds;
     }
+    if (data.factoryModuleOptions) {
+      this.factoryModuleOptions = data.factoryModuleOptions;
+    }
     if (data.beaconCount != null) {
       this.beaconCount = Rational.fromString(data.beaconCount);
     }
@@ -43,6 +56,9 @@ export class RationalProducer {
     }
     if (data.beaconModuleIds != null) {
       this.beaconModuleIds = data.beaconModuleIds;
+    }
+    if (data.beaconModuleOptions) {
+      this.beaconModuleOptions = data.beaconModuleOptions;
     }
     if (data.overclock != null) {
       this.overclock = Rational.fromNumber(data.overclock);

@@ -2,7 +2,7 @@ import { createSelector } from '@ngrx/store';
 import { SelectItem } from 'primeng/api';
 
 import { environment } from 'src/environments';
-import { fnPropsNotNullish } from '~/helpers';
+import { fnPropsNotNullish, getIdOptions } from '~/helpers';
 import {
   Column,
   columnOptions,
@@ -419,13 +419,9 @@ export const getDataset = createSelector(
     const factoryIds = items.filter((i) => i.factory).map((i) => i.id);
     const modules = items.filter((i) => i.module);
     const moduleIds = modules.map((i) => i.id);
-    const beaconModuleIds = modules
+    const proliferatorModuleIds = modules
       .filter(fnPropsNotNullish('module'))
-      .filter((i) => i.module.productivity == null)
-      .map((i) => i.id);
-    const prodModuleIds = modules
-      .filter(fnPropsNotNullish('module'))
-      .filter((i) => i.module.productivity != null)
+      .filter((i) => i.module.sprays != null)
       .map((i) => i.id);
     const fuelIds = items
       .filter(fnPropsNotNullish('fuel'))
@@ -558,19 +554,6 @@ export const getDataset = createSelector(
       return e;
     }, {});
 
-    // Calculate allowed modules for recipes
-    const recipeModuleIds = recipes.reduce((e: Entities<string[]>, r) => {
-      e[r.id] = modules
-        .filter(fnPropsNotNullish('module'))
-        .filter(
-          (m) =>
-            m.module.limitation == null ||
-            limitations[m.module.limitation][r.id]
-        )
-        .map((m) => m.id);
-      return e;
-    }, {});
-
     // Calculate complex recipes
     const simpleRecipeIds = Object.keys(itemRecipeId).map(
       (i) => itemRecipeId[i]
@@ -607,8 +590,7 @@ export const getDataset = createSelector(
       factoryIds,
       factoryEntities,
       moduleIds,
-      beaconModuleIds,
-      prodModuleIds,
+      proliferatorModuleIds,
       moduleEntities,
       fuelIds,
       fuelEntities,
@@ -616,7 +598,7 @@ export const getDataset = createSelector(
       complexRecipeIds,
       recipeEntities,
       recipeR,
-      recipeModuleIds,
+      limitations,
       hash,
       defaults,
     };
@@ -633,9 +615,11 @@ export const getOptions = createSelector(
     pipes: getIdOptions(data.pipeIds, data.itemEntities),
     cargoWagons: getIdOptions(data.cargoWagonIds, data.itemEntities),
     fluidWagons: getIdOptions(data.fluidWagonIds, data.itemEntities),
-    modules: getIdOptions(data.moduleIds, data.itemEntities, true),
-    beaconModules: getIdOptions(data.beaconModuleIds, data.itemEntities, true),
-    prodModules: getIdOptions(data.prodModuleIds, data.itemEntities, true),
+    proliferatorModules: getIdOptions(
+      data.proliferatorModuleIds,
+      data.itemEntities,
+      true
+    ),
     chemicalFuels: getIdOptions(
       data.fuelIds[FuelType.Chemical] ?? [],
       data.itemEntities
@@ -725,19 +709,4 @@ export function reduceEntities(
     e[x] = toBoolEntities(value[x], init[x]);
     return e;
   }, init);
-}
-
-export function getIdOptions(
-  ids: string[],
-  entities: Record<string, { name: string }>,
-  emptyModule = false
-): SelectItem[] {
-  const list = ids.map(
-    (i): SelectItem => ({ label: entities[i].name, value: i })
-  );
-  if (emptyModule) {
-    list.unshift({ label: 'None', value: ItemId.Module });
-  }
-
-  return list;
 }

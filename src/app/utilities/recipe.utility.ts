@@ -1,7 +1,12 @@
+import { SelectItem } from 'primeng/api';
+
+import { fnPropsNotNullish } from '~/helpers';
 import {
+  Beacon,
   Dataset,
   EnergyType,
   Entities,
+  Factory,
   FuelType,
   ItemId,
   ItemSettings,
@@ -9,6 +14,7 @@ import {
   Product,
   RateType,
   Rational,
+  RationalBeacon,
   RationalBelt,
   RationalFactory,
   RationalProduct,
@@ -35,14 +41,45 @@ export class RecipeUtility {
     return options[0];
   }
 
+  static moduleOptions(
+    entity: Factory | RationalFactory | Beacon | RationalBeacon,
+    recipeId: string | null,
+    data: Dataset
+  ): SelectItem[] {
+    // Get all modules
+    let allowed = data.moduleIds
+      .map((i) => data.itemEntities[i])
+      .filter(fnPropsNotNullish('module'));
+
+    if (recipeId != null) {
+      // Filter for modules allowed on this recipe
+      allowed = allowed.filter(
+        (m) =>
+          m.module.limitation == null ||
+          data.limitations[m.module.limitation][recipeId]
+      );
+    }
+
+    // Filter for modules allowed on this entity
+    if (entity.disallowEffects) {
+      for (const disallowEffect of entity.disallowEffects) {
+        allowed = allowed.filter((m) => m.module[disallowEffect] == null);
+      }
+    }
+
+    const options = allowed.map((m) => ({ value: m.id, label: m.name }));
+    options.unshift({ label: 'None', value: ItemId.Module });
+    return options;
+  }
+
   /** Determines default array of modules for a given recipe */
   static defaultModules(
-    allowedModuleIds: string[],
+    options: SelectItem[],
     moduleRankIds: string[],
     count: number
   ): string[] {
     const module = this.bestMatch(
-      [ItemId.Module, ...allowedModuleIds],
+      options.map((o) => o.value),
       moduleRankIds
     );
     return new Array(count).fill(module);
@@ -558,9 +595,15 @@ export class RecipeUtility {
     const factory = data.factoryEntities[producer.factoryId];
     const def = factories.entities[producer.factoryId];
     if (factory != null && this.allowsModules(recipe, factory)) {
+      producer.factoryModuleOptions = this.moduleOptions(
+        factory,
+        producer.recipeId,
+        data
+      );
+
       if (producer.factoryModuleIds == null) {
         producer.factoryModuleIds = this.defaultModules(
-          data.recipeModuleIds[recipe.id],
+          producer.factoryModuleOptions,
           def.moduleRankIds ?? [],
           factory.modules ?? 0
         );
@@ -571,9 +614,17 @@ export class RecipeUtility {
 
       if (producer.beaconId != null) {
         const beacon = data.beaconEntities[producer.beaconId];
+        producer.beaconModuleOptions = this.moduleOptions(
+          beacon,
+          producer.recipeId,
+          data
+        );
+
         if (producer.beaconModuleIds == null) {
-          producer.beaconModuleIds = new Array(beacon.modules).fill(
-            def.beaconModuleId
+          producer.beaconModuleIds = RecipeUtility.defaultModules(
+            producer.beaconModuleOptions,
+            def.beaconModuleRankIds ?? [],
+            beacon.modules
           );
         }
       }

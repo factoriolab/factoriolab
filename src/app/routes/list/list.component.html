@@ -532,7 +532,13 @@
                   "
                   [ngModel]="factoryId"
                   (onChange)="
-                    changeFactory(step, $event.value, vm.factories, vm.data)
+                    changeRecipeField(
+                      step,
+                      $event.value,
+                      vm.factories,
+                      vm.data,
+                      RecipeField.Factory
+                    )
                   "
                 >
                   <ng-template pTemplate="selectedItem" let-item>
@@ -568,6 +574,7 @@
                       step,
                       overclockInput.value,
                       vm.factories,
+                      vm.data,
                       RecipeField.Overclock
                     )
                   "
@@ -584,19 +591,16 @@
                     [pTooltip]="moduleId | moduleTooltip: vm.data"
                     tooltipPosition="top"
                     [escape]="false"
-                    [options]="
-                      vm.data.recipeModuleIds[step.recipeId]
-                        | options: vm.data.itemEntities:true
-                    "
+                    [options]="step.recipeSettings.factoryModuleOptions ?? []"
                     [ngModel]="moduleId"
                     (onChange)="
                       changeRecipeField(
                         step,
                         $event.value,
                         vm.factories,
+                        vm.data,
                         RecipeField.FactoryModules,
-                        i,
-                        vm.data
+                        i
                       )
                     "
                   >
@@ -645,6 +649,7 @@
                     step,
                     $event,
                     vm.factories,
+                    vm.data,
                     RecipeField.BeaconCount
                   )
                 "
@@ -666,6 +671,7 @@
                       step,
                       $event.value,
                       vm.factories,
+                      vm.data,
                       RecipeField.Beacon
                     )
                   "
@@ -700,16 +706,16 @@
                   [pTooltip]="moduleId | moduleTooltip: vm.data"
                   tooltipPosition="top"
                   [escape]="false"
-                  [options]="vm.options.beaconModules"
+                  [options]="step.recipeSettings.beaconModuleOptions ?? []"
                   [ngModel]="moduleId"
                   (onChange)="
                     changeRecipeField(
                       step,
                       $event.value,
                       vm.factories,
+                      vm.data,
                       RecipeField.BeaconModules,
-                      i,
-                      vm.data
+                      i
                     )
                   "
                 >

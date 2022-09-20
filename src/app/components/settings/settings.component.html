@@ -381,8 +381,9 @@
                       vm.data.game === Game.Satisfactory ? 1 : 2
                     "
                     [pTooltip]="'settings.modifierTooltip' | translate"
+                    tooltipPosition="top"
                     [ngModel]="settings.moduleRankIds"
-                    [options]="vm.options.modules"
+                    [options]="settings.moduleOptions ?? []"
                     (onChange)="
                       setModuleRank(
                         factoryId,
@@ -485,25 +486,39 @@
                         </ng-template>
                       </p-dropdown>
                       <!-- Beacon module dropdown -->
-                      <p-dropdown
-                        labDropdownBase="icon"
-                        [autoDisplayFirst]="false"
+                      <p-multiSelect
+                        *ngIf="settings.beaconModuleRankIds"
+                        appendTo="body"
+                        scrollHeight="40vh"
+                        styleClass="icon"
+                        panelStyleClass="tooltip"
                         placeholder="unused"
+                        [selectionLimit]="2"
                         [pTooltip]="'settings.beaconModuleTooltip' | translate"
                         tooltipPosition="top"
-                        [ngModel]="settings.beaconModuleId"
-                        [options]="vm.options.beaconModules"
+                        [ngModel]="settings.beaconModuleRankIds"
+                        [options]="settings.beaconModuleOptions ?? []"
                         (onChange)="
-                          setBeaconModule(
+                          changeBeaconModuleRank(
                             factoryId,
                             $event.value,
-                            defaults?.beaconModuleId
+                            defaults
                           )
                         "
                       >
-                        <ng-template pTemplate="selectedItem" let-item>
+                        <ng-template pTemplate="selectedItems" let-items>
                           <div class="d-flex">
-                            <i [class]="item.value | iconSmClass"></i>
+                            <i
+                              *ngIf="items && items.length; else noModifiers"
+                              [class]="items[0] | iconSmClass"
+                            >
+                              <span *ngIf="items.length > 1"
+                                >+{{ items.length - 1 }}</span
+                              >
+                            </i>
+                            <ng-template #noModifiers>
+                              <i [class]="ItemId.Module | iconSmClass"></i>
+                            </ng-template>
                           </div>
                         </ng-template>
                         <ng-template pTemplate="item" let-item>
@@ -518,7 +533,7 @@
                             </div>
                           </div>
                         </ng-template>
-                      </p-dropdown>
+                      </p-multiSelect>
                     </ng-container>
                   </ng-container>
                   <!-- Move options -->
@@ -576,7 +591,7 @@
               inputId="proliferator-self-spray"
               [autoDisplayFirst]="false"
               [ngModel]="vm.settings.proliferatorSprayId"
-              [options]="vm.options.prodModules"
+              [options]="vm.options.proliferatorModules"
               (onChange)="setProliferatorSpray($event.value)"
             >
               <ng-template pTemplate="selectedItem" let-item>
