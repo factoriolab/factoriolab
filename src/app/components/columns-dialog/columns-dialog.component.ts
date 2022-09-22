@@ -6,9 +6,9 @@ import {
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
 
-import { Column, precisionColumns } from '~/models';
+import { Column, precisionColumns, SimplexType } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Preferences, Settings } from '~/store';
 
@@ -20,16 +20,28 @@ import { LabState, Preferences, Settings } from '~/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnsDialogComponent implements OnInit {
+  usesFractions$ = new BehaviorSubject(false);
   vm$ = combineLatest([
     this.store
       .select(Settings.getColumnsState)
       .pipe(tap((columns) => this.initEdit(columns))),
     this.store.select(Settings.getColumnOptions),
-  ]).pipe(map(([columns, columnOptions]) => ({ columns, columnOptions })));
+    this.store.select(Preferences.getSimplexType),
+    this.usesFractions$,
+  ]).pipe(
+    map(([columns, columnOptions, simplexType, usesFractions]) => ({
+      columns,
+      columnOptions,
+      simplexType,
+      usesFractions,
+    }))
+  );
 
   visible = false;
   editValue: Preferences.ColumnsState = {};
   precisionColumns = precisionColumns;
+
+  SimplexType = SimplexType;
 
   constructor(
     private ref: ChangeDetectorRef,
@@ -52,10 +64,18 @@ export class ColumnsDialogComponent implements OnInit {
       },
       {}
     );
+    this.updateUsesFractions();
   }
 
   changeFraction(value: boolean, column: Column): void {
     this.editValue[column].precision = value ? null : 1;
+    this.updateUsesFractions();
+  }
+
+  updateUsesFractions(): void {
+    this.usesFractions$.next(
+      precisionColumns.some((c) => this.editValue[c].precision == null)
+    );
   }
 
   save(): void {
