@@ -12,7 +12,10 @@ export class DisplayService {
 
   table(rows: [string, string][]): string {
     let html = `<table class="w-100">`;
-    rows.forEach((r) => (html += `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`));
+    rows.forEach(
+      (r) =>
+        (html += `<tr><td class="text-nowrap">${r[0]}</td><td class="text-nowrap">${r[1]}</td></tr>`)
+    );
     html += `</table>`;
     return html;
   }
