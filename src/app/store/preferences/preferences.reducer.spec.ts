@@ -60,9 +60,9 @@ describe('Preferences Reducer', () => {
     it('should set the simplex type', () => {
       const result = preferencesReducer(
         undefined,
-        new Actions.SetSimplexTypeAction(SimplexType.Disabled)
+        new Actions.SetSimplexTypeAction(SimplexType.JsBigIntRational)
       );
-      expect(result.simplexType).toEqual(SimplexType.Disabled);
+      expect(result.simplexType).toEqual(SimplexType.JsBigIntRational);
     });
   });
 

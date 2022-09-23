@@ -36,17 +36,17 @@ describe('PickerComponent', () => {
 
   describe('clickOpen', () => {
     it('should open the dialog', () => {
-      component.clickOpen(Mocks.Dataset, ItemId.IronPlate);
+      component.clickOpen(Mocks.Dataset, 'item', ItemId.IronPlate);
       expect(component.visible).toBeTrue();
       expect(markForCheck).toHaveBeenCalled();
     });
   });
 
-  describe('clickItem', () => {
-    it('should emit the item and close the dialog', () => {
+  describe('clickId', () => {
+    it('should emit the id and close the dialog', () => {
       spyOn(component.selectId, 'emit');
       component.visible = true;
-      component.clickItem(ItemId.IronPlate);
+      component.clickId(ItemId.IronPlate);
       expect(component.selectId.emit).toHaveBeenCalledWith(ItemId.IronPlate);
       expect(component.visible).toBeFalse();
     });
@@ -54,17 +54,15 @@ describe('PickerComponent', () => {
 
   describe('inputSearch', () => {
     it('should skip if no search is specified', () => {
-      component.inputSearch(Mocks.Dataset, null);
+      component.inputSearch(null);
       expect(component.categoryIds).toEqual(Mocks.Dataset.categoryIds);
-      expect(component.categoryItemRows).toEqual(
-        Mocks.Dataset.categoryItemRows
-      );
+      expect(component.categoryRows).toEqual(Mocks.Dataset.categoryItemRows);
     });
 
     it('should search items', () => {
-      component.inputSearch(Mocks.Dataset, 'petrol');
+      component.inputSearch('petrol');
       expect(component.categoryIds.length).toEqual(2);
-      expect(component.categoryItemRows[CategoryId.Fluids]).toEqual([
+      expect(component.categoryRows[CategoryId.Fluids]).toEqual([
         [ItemId.PetroleumGas],
       ]);
     });

@@ -224,11 +224,11 @@ describe('Factories Reducer', () => {
         undefined,
         new Actions.SetBeaconModuleRankAction({
           id,
-          value,
-          def: ItemId.SpeedModule,
+          value: [value],
+          def: [],
         })
       );
-      expect(result.entities[id].beaconModuleId).toEqual(value);
+      expect(result.entities[id].beaconModuleRankIds).toEqual([value]);
     });
   });
 

@@ -540,35 +540,6 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getNormalizedSteps', () => {
-    it('should handle empty/null values', () => {
-      const result = Selectors.getNormalizedSteps.projector(
-        [],
-        {},
-        {},
-        {},
-        null,
-        null,
-        {}
-      );
-      expect(Object.keys(result).length).toEqual(0);
-    });
-
-    it('should calculate rates using utility method', () => {
-      spyOn(RateUtility, 'addStepsFor');
-      Selectors.getNormalizedSteps.projector(
-        [Mocks.Product1],
-        { [Mocks.Product1.id]: Rational.one },
-        {},
-        {},
-        null,
-        null,
-        {}
-      );
-      expect(RateUtility.addStepsFor).toHaveBeenCalled();
-    });
-  });
-
   describe('getMatrixResult', () => {
     it('should calculate rates using utility method', () => {
       spyOn(SimplexUtility, 'solve').and.returnValue({
@@ -586,65 +557,10 @@ describe('Products Selectors', () => {
     });
   });
 
-  describe('getNormalizedStepsWithBelts', () => {
-    it('should handle empty/null values', () => {
-      const result = Selectors.getNormalizedStepsWithBelts.projector(
-        { steps: [], result: MatrixResultType.Skipped },
-        {},
-        {},
-        {}
-      );
-      expect(Object.keys(result).length).toEqual(0);
-    });
-
-    it('should calculate rates using utility method', () => {
-      spyOn(RateUtility, 'calculateBelts');
-      Selectors.getNormalizedStepsWithBelts.projector(
-        { steps: [], result: MatrixResultType.Skipped },
-        {},
-        {},
-        {}
-      );
-      expect(RateUtility.calculateBelts).toHaveBeenCalled();
-    });
-  });
-
-  describe('getNormalizedStepsWithOutputs', () => {
-    it('should call utility to calculate outputs', () => {
-      spyOn(RateUtility, 'calculateOutputs');
-      Selectors.getNormalizedStepsWithOutputs.projector(
-        Mocks.Steps,
-        Mocks.AdjustedData
-      );
-      expect(RateUtility.calculateOutputs).toHaveBeenCalled();
-    });
-  });
-
-  describe('getNormalizedStepsWithBeacons', () => {
-    it('should call utility to calculate beacons', () => {
-      spyOn(RateUtility, 'calculateBeacons');
-      Selectors.getNormalizedStepsWithBeacons.projector(
-        Mocks.Steps,
-        Rational.one,
-        {},
-        Mocks.AdjustedData
-      );
-      expect(RateUtility.calculateBeacons).toHaveBeenCalled();
-    });
-  });
-
   describe('getSteps', () => {
     it('should handle empty/null values', () => {
       const result = Selectors.getSteps.projector([], null);
       expect(Object.keys(result).length).toEqual(0);
-    });
-
-    it('should calculate rates using utility method', () => {
-      spyOn(RateUtility, 'sortHierarchy');
-      spyOn(RateUtility, 'displayRate').and.returnValue([]);
-      Selectors.getSteps.projector([], null);
-      expect(RateUtility.calculateDisplayRate).toHaveBeenCalled();
-      expect(RateUtility.calculateHierarchy).toHaveBeenCalled();
     });
   });
 
@@ -781,7 +697,7 @@ describe('Products Selectors', () => {
             { label: StepDetailTab.Factory },
             { label: StepDetailTab.Recipes },
           ],
-          outputs: [steps[0], steps[1]],
+          outputs: [],
           recipeIds: [
             RecipeId.AdvancedOilProcessing,
             RecipeId.BasicOilProcessing,

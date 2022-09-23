@@ -30,7 +30,7 @@ describe('RecipeUtility', () => {
   describe('defaultModules', () => {
     it('should fill in modules list for factory', () => {
       const result = RecipeUtility.defaultModules(
-        [ItemId.SpeedModule],
+        [{ value: ItemId.SpeedModule }],
         [ItemId.ProductivityModule, ItemId.SpeedModule],
         1
       );

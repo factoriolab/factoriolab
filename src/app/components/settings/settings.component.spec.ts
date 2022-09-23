@@ -178,7 +178,10 @@ describe('SettingsComponent', () => {
     dispatch.valDef('lowerFactory', Factories.LowerAction);
     dispatch.idValDef('setBeaconCount', Factories.SetBeaconCountAction);
     dispatch.idValDef('setBeacon', Factories.SetBeaconAction);
-    dispatch.idValDef('setBeaconModule', Factories.SetBeaconModuleRankAction);
+    dispatch.idValDef(
+      'setBeaconModuleRank',
+      Factories.SetBeaconModuleRankAction
+    );
     dispatch.valDef('addFactory', Factories.AddAction);
     dispatch.val('setBeaconReceivers', Settings.SetBeaconReceiversAction);
     dispatch.val('setProliferatorSpray', Settings.SetProliferatorSprayAction);

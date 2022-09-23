@@ -184,51 +184,16 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('changeFactory', () => {
-    it('should set up default for factory', () => {
-      spyOn(RecipeUtility, 'bestMatch').and.returnValue('default');
-      spyOn(component, 'setFactory');
-      component.changeFactory(
-        RecipeId.AdvancedCircuit,
-        'value',
-        Mocks.FactorySettingsInitial,
-        Mocks.AdjustedData
-      );
-      expect(component.setFactory).toHaveBeenCalledWith(
-        RecipeId.AdvancedCircuit,
-        'value',
-        'default'
-      );
-    });
-
-    it('should handle null factory ids', () => {
-      spyOn(RecipeUtility, 'bestMatch').and.returnValue('default');
-      spyOn(component, 'setFactory');
-      component.changeFactory(
-        RecipeId.AdvancedCircuit,
-        'value',
-        Factories.initialFactoriesState,
-        Mocks.AdjustedData
-      );
-      expect(component.setFactory).toHaveBeenCalledWith(
-        RecipeId.AdvancedCircuit,
-        'value',
-        'default'
-      );
-    });
-  });
-
   describe('changeRecipeField', () => {
     it('should set up default for factory modules', () => {
       spyOn(component, 'setFactoryModules');
       component.changeRecipeField(
-        RecipeId.WoodenChest,
+        Mocks.Step1,
         ItemId.SpeedModule3,
-        Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
         RecipeField.FactoryModules,
-        0,
-        Mocks.AdjustedData
+        0
       );
       expect(component.setFactoryModules).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
@@ -240,10 +205,10 @@ describe('ListComponent', () => {
     it('should set up default for beacon count', () => {
       spyOn(component, 'setBeaconCount');
       component.changeRecipeField(
-        RecipeId.WoodenChest,
+        Mocks.Step1,
         '4',
-        Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
         RecipeField.BeaconCount
       );
       expect(component.setBeaconCount).toHaveBeenCalledWith(
@@ -256,10 +221,10 @@ describe('ListComponent', () => {
     it('should set up default for beacon', () => {
       spyOn(component, 'setBeacon');
       component.changeRecipeField(
-        RecipeId.WoodenChest,
+        Mocks.Step1,
         ItemId.Beacon,
-        Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
         RecipeField.Beacon
       );
       expect(component.setBeacon).toHaveBeenCalledWith(
@@ -272,10 +237,10 @@ describe('ListComponent', () => {
     it('should set up default for beacon modules', () => {
       spyOn(component, 'setBeaconModules');
       component.changeRecipeField(
-        RecipeId.WoodenChest,
+        Mocks.Step1,
         ItemId.SpeedModule3,
-        Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
         RecipeField.BeaconModules,
         0
       );
@@ -289,10 +254,10 @@ describe('ListComponent', () => {
     it('should set up default for overclock', () => {
       spyOn(component, 'setOverclock');
       component.changeRecipeField(
-        RecipeId.WoodenChest,
+        Mocks.Step1,
         100,
-        Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
         RecipeField.Overclock
       );
       expect(component.setOverclock).toHaveBeenCalledWith(

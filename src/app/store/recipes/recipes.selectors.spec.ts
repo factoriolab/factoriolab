@@ -189,7 +189,6 @@ describe('Recipes Selectors', () => {
         },
       });
       expect(result.factories).toBeTrue();
-      expect(result.overclock).toBeFalse();
       expect(result.beacons).toBeTrue();
       expect(result.cost).toBeFalse();
     });

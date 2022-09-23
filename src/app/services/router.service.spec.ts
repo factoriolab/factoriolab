@@ -11,6 +11,7 @@ import {
   InserterCapacity,
   InserterTarget,
   Preset,
+  Producer,
   Product,
   RateType,
   Rational,
@@ -22,6 +23,7 @@ import {
   Factories,
   Items,
   LabState,
+  Producers,
   Products,
   Recipes,
   Settings,
@@ -52,6 +54,18 @@ const mockProductsState: Products.ProductsState = {
   },
   index: 1,
 };
+const mockProducer: Producer = {
+  id: '0',
+  recipeId: ItemId.SteelChest,
+  count: '1',
+};
+const mockProducersState: Producers.ProducersState = {
+  ids: ['0'],
+  entities: {
+    ['0']: mockProducer,
+  },
+  index: 1,
+};
 const mockItemsState: Items.ItemsState = {
   [ItemId.SteelChest]: {
     ignore: true,
@@ -78,7 +92,7 @@ const mockFactoriesState: Factories.FactoriesState = {
       moduleRankIds: [ItemId.ProductivityModule, ItemId.SpeedModule],
       beaconCount: '1',
       beaconId: ItemId.Beacon,
-      beaconModuleId: ItemId.SpeedModule,
+      beaconModuleRankIds: [ItemId.SpeedModule],
     },
   },
 };
@@ -129,6 +143,7 @@ describe('RouterService', () => {
     LabState,
     {
       products: Products.ProductsState;
+      producers: Producers.ProducersState;
       items: Items.ItemsState;
       recipes: Recipes.RecipesState;
       factories: Factories.FactoriesState;
@@ -151,6 +166,7 @@ describe('RouterService', () => {
     });
     mockGetZipState = mockStore.overrideSelector(Products.getZipState, {
       products: Products.initialProductsState,
+      producers: Producers.initialProducersState,
       items: Items.initialItemsState,
       recipes: Recipes.initialRecipesState,
       factories: Factories.initialFactoriesState,
@@ -177,6 +193,7 @@ describe('RouterService', () => {
     });
     mockGetZipState.setResult({
       products: Products.initialProductsState,
+      producers: Producers.initialProducersState,
       items: { [ItemId.Wood]: { ignore: true } },
       recipes: Recipes.initialRecipesState,
       factories: Factories.initialFactoriesState,
@@ -193,6 +210,7 @@ describe('RouterService', () => {
       spyOn(router, 'navigateByUrl');
       service.updateUrl(
         Products.initialProductsState,
+        Producers.initialProducersState,
         Items.initialItemsState,
         Recipes.initialRecipesState,
         Factories.initialFactoriesState,
@@ -208,6 +226,7 @@ describe('RouterService', () => {
       spyOnProperty(router, 'url').and.returnValue('path#hash');
       service.updateUrl(
         Products.initialProductsState,
+        Producers.initialProducersState,
         Items.initialItemsState,
         Recipes.initialRecipesState,
         Factories.initialFactoriesState,
@@ -223,6 +242,7 @@ describe('RouterService', () => {
       service
         .zipState(
           Products.initialProductsState,
+          Producers.initialProducersState,
           Items.initialItemsState,
           Recipes.initialRecipesState,
           Factories.initialFactoriesState,
@@ -238,6 +258,7 @@ describe('RouterService', () => {
       service
         .zipState(
           mockProductsState,
+          mockProducersState,
           mockItemsState,
           mockRecipesState,
           mockFactoriesState,
