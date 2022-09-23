@@ -452,62 +452,62 @@ describe('RateUtility', () => {
   // });
 
   describe('sortHierarchy', () => {
-    it('should set up groups by parents', () => {
-      spyOn(RateUtility, 'sortRecursive').and.returnValue([]);
-      const steps: Step[] = [
-        {
-          id: '0',
-          itemId: ItemId.Coal,
-          recipeId: RecipeId.Coal,
-          items: Rational.one,
-          parents: { [RecipeId.PlasticBar]: Rational.one },
-        },
-        {
-          id: '1',
-          itemId: ItemId.IronOre,
-          recipeId: RecipeId.IronOre,
-          items: Rational.one,
-          parents: {
-            [RecipeId.CopperCable]: Rational.one,
-            [RecipeId.WoodenChest]: Rational.one,
-          },
-        },
-        {
-          id: '2',
-          itemId: ItemId.PlasticBar,
-          recipeId: RecipeId.PlasticBar,
-          items: Rational.one,
-        },
-      ];
-      RateUtility.calculateHierarchy(steps);
-      expect(RateUtility.sortRecursive).toHaveBeenCalledWith(
-        {
-          ['2']: [steps[0]],
-          ['']: [steps[1], steps[2]],
-        },
-        '',
-        []
-      );
-    });
+    // it('should set up groups by parents', () => {
+    //   spyOn(RateUtility, 'sortRecursive').and.returnValue([]);
+    //   const steps: Step[] = [
+    //     {
+    //       id: '0',
+    //       itemId: ItemId.Coal,
+    //       recipeId: RecipeId.Coal,
+    //       items: Rational.one,
+    //       parents: { [RecipeId.PlasticBar]: Rational.one },
+    //     },
+    //     {
+    //       id: '1',
+    //       itemId: ItemId.IronOre,
+    //       recipeId: RecipeId.IronOre,
+    //       items: Rational.one,
+    //       parents: {
+    //         [RecipeId.CopperCable]: Rational.one,
+    //         [RecipeId.WoodenChest]: Rational.one,
+    //       },
+    //     },
+    //     {
+    //       id: '2',
+    //       itemId: ItemId.PlasticBar,
+    //       recipeId: RecipeId.PlasticBar,
+    //       items: Rational.one,
+    //     },
+    //   ];
+    //   RateUtility.calculateHierarchy(steps);
+    //   expect(RateUtility.sortRecursive).toHaveBeenCalledWith(
+    //     {
+    //       ['2']: [steps[0]],
+    //       ['']: [steps[1], steps[2]],
+    //     },
+    //     '',
+    //     []
+    //   );
+    // });
 
-    it('should put self-parented steps at root', () => {
-      spyOn(RateUtility, 'sortRecursive').and.returnValue([]);
-      const steps: Step[] = [
-        {
-          id: 'id',
-          itemId: ItemId.Coal,
-          recipeId: RecipeId.Coal,
-          items: Rational.one,
-          parents: { [RecipeId.Coal]: Rational.one },
-        },
-      ];
-      RateUtility.calculateHierarchy(steps);
-      expect(RateUtility.sortRecursive).toHaveBeenCalledWith(
-        { ['']: [steps[0]] },
-        '',
-        []
-      );
-    });
+    // it('should put self-parented steps at root', () => {
+    //   spyOn(RateUtility, 'sortRecursive').and.returnValue([]);
+    //   const steps: Step[] = [
+    //     {
+    //       id: 'id',
+    //       itemId: ItemId.Coal,
+    //       recipeId: RecipeId.Coal,
+    //       items: Rational.one,
+    //       parents: { [RecipeId.Coal]: Rational.one },
+    //     },
+    //   ];
+    //   RateUtility.calculateHierarchy(steps);
+    //   expect(RateUtility.sortRecursive).toHaveBeenCalledWith(
+    //     { ['']: [steps[0]] },
+    //     '',
+    //     []
+    //   );
+    // });
 
     it('should handle steps not connected to root', () => {
       const steps: Step[] = [

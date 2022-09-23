@@ -52,19 +52,19 @@ describe('PickerComponent', () => {
     });
   });
 
-  describe('inputSearch', () => {
-    it('should skip if no search is specified', () => {
-      component.inputSearch(null);
-      expect(component.categoryIds).toEqual(Mocks.Dataset.categoryIds);
-      expect(component.categoryRows).toEqual(Mocks.Dataset.categoryItemRows);
-    });
+  // describe('inputSearch', () => {
+  //   it('should skip if no search is specified', () => {
+  //     component.inputSearch(null);
+  //     expect(component.categoryIds).toEqual(Mocks.Dataset.categoryIds);
+  //     expect(component.categoryRows).toEqual(Mocks.Dataset.categoryItemRows);
+  //   });
 
-    it('should search items', () => {
-      component.inputSearch('petrol');
-      expect(component.categoryIds.length).toEqual(2);
-      expect(component.categoryRows[CategoryId.Fluids]).toEqual([
-        [ItemId.PetroleumGas],
-      ]);
-    });
-  });
+  //   it('should search items', () => {
+  //     component.inputSearch('petrol');
+  //     expect(component.categoryIds.length).toEqual(2);
+  //     expect(component.categoryRows[CategoryId.Fluids]).toEqual([
+  //       [ItemId.PetroleumGas],
+  //     ]);
+  //   });
+  // });
 });

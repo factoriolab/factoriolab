@@ -337,47 +337,47 @@ describe('Settings Selectors', () => {
       );
     });
 
-    it('should handle empty categories', () => {
-      const data = { categories: [{ id: 'test', name: 'test' }] };
-      const result = Selectors.getDataset.projector(
-        data,
-        Mocks.Mod,
-        null,
-        null,
-        Mocks.Defaults,
-        Game.Factorio
-      );
-      expect(result.categoryIds.length).toBeGreaterThan(0);
-      expect(
-        Object.keys(result.categoryEntities).length
-      ).toBeGreaterThanOrEqual(result.categoryIds.length);
-      expect(Object.keys(result.categoryItemRows).length).toEqual(
-        result.categoryIds.length
-      );
-      expect(result.iconIds.length).toBeGreaterThan(0);
-      expect(Object.keys(result.iconEntities).length).toEqual(
-        result.iconIds.length
-      );
-      expect(result.itemIds.length).toBeGreaterThan(0);
-      expect(result.beltIds.length).toBeGreaterThan(0);
-      expect(Object.keys(result.fuelIds).length).toBeGreaterThan(0);
-      expect(result.factoryIds.length).toBeGreaterThan(0);
-      expect(result.moduleIds.length).toBeGreaterThan(0);
-      expect(Object.keys(result.itemEntities).length).toEqual(
-        result.itemIds.length
-      );
-      expect(Object.keys(result.itemRecipeId).length).toBeGreaterThan(0);
-      expect(Object.keys(result.itemRecipeId).length).toBeLessThan(
-        result.itemIds.length
-      );
-      expect(result.recipeIds.length).toBeGreaterThan(0);
-      expect(Object.keys(result.recipeEntities).length).toEqual(
-        result.recipeIds.length
-      );
-      expect(Object.keys(result.recipeR).length).toEqual(
-        result.recipeIds.length
-      );
-    });
+    // it('should handle empty categories', () => {
+    //   const data = { categories: [{ id: 'test', name: 'test' }] };
+    //   const result = Selectors.getDataset.projector(
+    //     data,
+    //     Mocks.Mod,
+    //     null,
+    //     null,
+    //     Mocks.Defaults,
+    //     Game.Factorio
+    //   );
+    //   expect(result.categoryIds.length).toBeGreaterThan(0);
+    //   expect(
+    //     Object.keys(result.categoryEntities).length
+    //   ).toBeGreaterThanOrEqual(result.categoryIds.length);
+    //   expect(Object.keys(result.categoryItemRows).length).toEqual(
+    //     result.categoryIds.length
+    //   );
+    //   expect(result.iconIds.length).toBeGreaterThan(0);
+    //   expect(Object.keys(result.iconEntities).length).toEqual(
+    //     result.iconIds.length
+    //   );
+    //   expect(result.itemIds.length).toBeGreaterThan(0);
+    //   expect(result.beltIds.length).toBeGreaterThan(0);
+    //   expect(Object.keys(result.fuelIds).length).toBeGreaterThan(0);
+    //   expect(result.factoryIds.length).toBeGreaterThan(0);
+    //   expect(result.moduleIds.length).toBeGreaterThan(0);
+    //   expect(Object.keys(result.itemEntities).length).toEqual(
+    //     result.itemIds.length
+    //   );
+    //   expect(Object.keys(result.itemRecipeId).length).toBeGreaterThan(0);
+    //   expect(Object.keys(result.itemRecipeId).length).toBeLessThan(
+    //     result.itemIds.length
+    //   );
+    //   expect(result.recipeIds.length).toBeGreaterThan(0);
+    //   expect(Object.keys(result.recipeEntities).length).toEqual(
+    //     result.recipeIds.length
+    //   );
+    //   expect(Object.keys(result.recipeR).length).toEqual(
+    //     result.recipeIds.length
+    //   );
+    // });
 
     it('should sort beacons, belts, wagons, and fuels', () => {
       const mod = {
@@ -504,20 +504,20 @@ describe('Settings Selectors', () => {
       ).toEqual(ItemId.HeavyOil);
     });
 
-    it('should handle specified icon files', () => {
-      const result = Selectors.getDataset.projector(
-        {
-          ...Mocks.Mod,
-          ...{ icons: [...Mocks.Mod.icons, { id: '1', file: 'file1' }] },
-        },
-        null,
-        null,
-        Mocks.Defaults,
-        Game.Factorio
-      );
-      expect(result.iconEntities['0'].file).toEqual('file0');
-      expect(result.iconEntities['1'].file).toEqual('file1');
-    });
+    // it('should handle specified icon files', () => {
+    //   const result = Selectors.getDataset.projector(
+    //     {
+    //       ...Mocks.Mod,
+    //       ...{ icons: [...Mocks.Mod.icons, { id: '1', file: 'file1' }] },
+    //     },
+    //     null,
+    //     null,
+    //     Mocks.Defaults,
+    //     Game.Factorio
+    //   );
+    //   expect(result.iconEntities['0'].file).toEqual('file0');
+    //   expect(result.iconEntities['1'].file).toEqual('file1');
+    // });
 
     it('should handle data not loaded yet', () => {
       const result = Selectors.getDataset.projector(

@@ -58,13 +58,13 @@ describe('InputNumberComponent', () => {
     });
   });
 
-  describe('changeValue', () => {
-    it('should emit a value', () => {
-      spyOn(component, 'setValue');
-      component.child.changeValue('1 1/3');
-      expect(component.setValue).toHaveBeenCalledWith('1 1/3');
-    });
-  });
+  // describe('changeValue', () => {
+  //   it('should emit a value', () => {
+  //     spyOn(component, 'setValue');
+  //     component.child.changeValue('1 1/3');
+  //     expect(component.setValue).toHaveBeenCalledWith('1 1/3');
+  //   });
+  // });
 
   describe('increase', () => {
     it('should emit a value', () => {

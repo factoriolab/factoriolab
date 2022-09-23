@@ -30,14 +30,14 @@ describe('HeaderComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngOnInit', () => {
-    it('should update the page title with the first product name', () => {
-      spyOn(title, 'setTitle');
-      mockStore.overrideSelector(Products.getBaseProducts, Mocks.ProductsList);
-      mockStore.refreshState();
-      expect(title.setTitle).toHaveBeenCalledWith('Wooden chest | title.lab');
-    });
-  });
+  // describe('ngOnInit', () => {
+  //   it('should update the page title with the first product name', () => {
+  //     spyOn(title, 'setTitle');
+  //     mockStore.overrideSelector(Products.getBaseProducts, Mocks.ProductsList);
+  //     mockStore.refreshState();
+  //     expect(title.setTitle).toHaveBeenCalledWith('Wooden chest | title.lab');
+  //   });
+  // });
 
   describe('buildGameOptions', () => {
     it('should return a filtered list of game menu items', () => {

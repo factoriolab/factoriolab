@@ -119,18 +119,18 @@ describe('Recipes Selectors', () => {
       expect(result[Mocks.Item1.id].beaconCount).toEqual(stringValue);
     });
 
-    it('should use beacon override', () => {
-      const state = {
-        ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { beaconId: stringValue } },
-      };
-      const result = Selectors.getRecipeSettings.projector(
-        state,
-        Mocks.FactorySettingsInitial,
-        Mocks.Dataset
-      );
-      expect(result[Mocks.Item1.id].beaconId).toEqual(stringValue);
-    });
+    // it('should use beacon override', () => {
+    //   const state = {
+    //     ...initialRecipesState,
+    //     ...{ [Mocks.Item1.id]: { beaconId: stringValue } },
+    //   };
+    //   const result = Selectors.getRecipeSettings.projector(
+    //     state,
+    //     Mocks.FactorySettingsInitial,
+    //     Mocks.Dataset
+    //   );
+    //   expect(result[Mocks.Item1.id].beaconId).toEqual(stringValue);
+    // });
 
     it('should use beacon module override', () => {
       const state = {
