@@ -85,21 +85,6 @@ Determine resource and factory requirements for your desired output products.`,
       )
       .subscribe(([modId, data]) => {
         console.log(modId);
-        const oldDisabled = data.defaults?.disabledRecipeIds ?? [];
-        const neededRecipes = Object.keys(data.itemRecipeId).map(
-          (i) => data.itemRecipeId[i]
-        );
-        const suggestedDisabled = data.complexRecipeIds.filter(
-          (i) => neededRecipes.indexOf(i) === -1 && !data.itemEntities[i]
-        );
-        if (JSON.stringify(oldDisabled) !== JSON.stringify(suggestedDisabled)) {
-          console.log(
-            `Suggested disabled recipes (${suggestedDisabled.length}):`
-          );
-          console.log(JSON.stringify(suggestedDisabled));
-        } else {
-          console.log('No suggested changes to default disabled recipes');
-        }
         if (data.hash) {
           const hash: ModHash = {
             items: [...data.hash.items],
