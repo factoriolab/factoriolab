@@ -9,16 +9,15 @@ import {
   TestModule,
   TestUtility,
 } from 'src/tests';
-import { Entities, RecipeField, StepDetail, StepDetailTab } from '~/models';
 import {
-  Factories,
-  Items,
-  LabState,
-  Products,
-  Recipes,
-  Settings,
-} from '~/store';
-import { ExportUtility, RecipeUtility } from '~/utilities';
+  Entities,
+  RecipeField,
+  Step,
+  StepDetail,
+  StepDetailTab,
+} from '~/models';
+import { Items, LabState, Products, Recipes, Settings } from '~/store';
+import { ExportUtility } from '~/utilities';
 import { ListComponent } from './list.component';
 import { ListModule } from './list.module';
 
@@ -184,89 +183,117 @@ describe('ListComponent', () => {
     });
   });
 
-  // describe('changeRecipeField', () => {
-  // it('should set up default for factory modules', () => {
-  //   spyOn(component, 'setFactoryModules');
-  //   component.changeRecipeField(
-  //     Mocks.Step1,
-  //     ItemId.SpeedModule3,
-  //     Mocks.FactorySettingsInitial,
-  //     Mocks.Dataset,
-  //     RecipeField.FactoryModules,
-  //     0
-  //   );
-  //   expect(component.setFactoryModules).toHaveBeenCalledWith(
-  //     RecipeId.WoodenChest,
-  //     new Array(4).fill(ItemId.SpeedModule3),
-  //     new Array(4).fill(ItemId.SpeedModule3)
-  //   );
-  // });
+  describe('changeRecipeField', () => {
+    const step: Step = {
+      id: '0',
+      recipeId: RecipeId.WoodenChest,
+      recipeSettings: Mocks.RationalRecipeSettingsInitial[RecipeId.WoodenChest],
+    };
 
-  // it('should set up default for beacon count', () => {
-  //   spyOn(component, 'setBeaconCount');
-  //   component.changeRecipeField(
-  //     Mocks.Step1,
-  //     '4',
-  //     Mocks.FactorySettingsInitial,
-  //     Mocks.Dataset,
-  //     RecipeField.BeaconCount
-  //   );
-  //   expect(component.setBeaconCount).toHaveBeenCalledWith(
-  //     RecipeId.WoodenChest,
-  //     '4',
-  //     '8'
-  //   );
-  // });
+    it('should set up default for factory', () => {
+      spyOn(component, 'setFactory');
+      component.changeRecipeField(
+        step,
+        ItemId.AssemblingMachine2,
+        Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
+        RecipeField.Factory
+      );
+      expect(component.setFactory).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        ItemId.AssemblingMachine2,
+        ItemId.AssemblingMachine3,
+        false
+      );
+    });
 
-  // it('should set up default for beacon', () => {
-  //   spyOn(component, 'setBeacon');
-  //   component.changeRecipeField(
-  //     Mocks.Step1,
-  //     ItemId.Beacon,
-  //     Mocks.FactorySettingsInitial,
-  //     Mocks.Dataset,
-  //     RecipeField.Beacon
-  //   );
-  //   expect(component.setBeacon).toHaveBeenCalledWith(
-  //     RecipeId.WoodenChest,
-  //     ItemId.Beacon,
-  //     ItemId.Beacon
-  //   );
-  // });
+    it('should set up default for factory modules', () => {
+      spyOn(component, 'setFactoryModules');
+      component.changeRecipeField(
+        step,
+        ItemId.SpeedModule3,
+        Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
+        RecipeField.FactoryModules,
+        0
+      );
+      expect(component.setFactoryModules).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        new Array(4).fill(ItemId.SpeedModule3),
+        new Array(4).fill(ItemId.SpeedModule3),
+        false
+      );
+    });
 
-  // it('should set up default for beacon modules', () => {
-  //   spyOn(component, 'setBeaconModules');
-  //   component.changeRecipeField(
-  //     Mocks.Step1,
-  //     ItemId.SpeedModule3,
-  //     Mocks.FactorySettingsInitial,
-  //     Mocks.Dataset,
-  //     RecipeField.BeaconModules,
-  //     0
-  //   );
-  //   expect(component.setBeaconModules).toHaveBeenCalledWith(
-  //     RecipeId.WoodenChest,
-  //     new Array(2).fill(ItemId.SpeedModule3),
-  //     new Array(2).fill(ItemId.SpeedModule3)
-  //   );
-  // });
+    it('should set up default for beacon count', () => {
+      spyOn(component, 'setBeaconCount');
+      component.changeRecipeField(
+        step,
+        '4',
+        Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
+        RecipeField.BeaconCount
+      );
+      expect(component.setBeaconCount).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        '4',
+        '8',
+        false
+      );
+    });
 
-  // it('should set up default for overclock', () => {
-  //   spyOn(component, 'setOverclock');
-  //   component.changeRecipeField(
-  //     Mocks.Step1,
-  //     100,
-  //     Mocks.FactorySettingsInitial,
-  //     Mocks.Dataset,
-  //     RecipeField.Overclock
-  //   );
-  //   expect(component.setOverclock).toHaveBeenCalledWith(
-  //     RecipeId.WoodenChest,
-  //     100,
-  //     undefined
-  //   );
-  // });
-  // });
+    it('should set up default for beacon', () => {
+      spyOn(component, 'setBeacon');
+      component.changeRecipeField(
+        step,
+        ItemId.Beacon,
+        Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
+        RecipeField.Beacon
+      );
+      expect(component.setBeacon).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        ItemId.Beacon,
+        ItemId.Beacon,
+        false
+      );
+    });
+
+    it('should set up default for beacon modules', () => {
+      spyOn(component, 'setBeaconModules');
+      component.changeRecipeField(
+        step,
+        ItemId.SpeedModule3,
+        Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
+        RecipeField.BeaconModules,
+        0
+      );
+      expect(component.setBeaconModules).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        new Array(2).fill(ItemId.SpeedModule3),
+        new Array(2).fill(ItemId.SpeedModule3),
+        false
+      );
+    });
+
+    it('should set up default for overclock', () => {
+      spyOn(component, 'setOverclock');
+      component.changeRecipeField(
+        step,
+        100,
+        Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
+        RecipeField.Overclock
+      );
+      expect(component.setOverclock).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        100,
+        undefined,
+        false
+      );
+    });
+  });
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);

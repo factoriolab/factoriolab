@@ -33,14 +33,13 @@ export function producersReducer(
         : initialProducersState;
     case App.AppActionType.RESET:
     case Settings.SettingsActionType.SET_MOD:
-    case ProducersActionType.RESET:
       return initialProducersState;
     case ProducersActionType.ADD: {
-      let rate = '1';
+      let count = '1';
       if (state.ids.length > 0) {
-        // Use rate from last producer in list
+        // Use count from last producer in list
         const id = state.ids[state.ids.length - 1];
-        rate = state.entities[id].count;
+        count = state.entities[id].count;
       }
       return {
         ...state,
@@ -52,7 +51,7 @@ export function producersReducer(
               [state.index]: {
                 id: state.index.toString(),
                 recipeId: action.payload,
-                count: rate,
+                count,
               },
             },
           },

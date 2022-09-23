@@ -3,7 +3,6 @@ import { Action } from '@ngrx/store';
 import { DefaultIdPayload, IdPayload } from '~/models';
 
 export const enum ProducersActionType {
-  RESET = '[Producers] Reset',
   ADD = '[Producers] Add',
   REMOVE = '[Producers] Remove',
   SET_RECIPE = '[Producers] Set Recipe',
@@ -15,11 +14,6 @@ export const enum ProducersActionType {
   SET_BEACON_MODULES = '[Producers] Set Beacon Modules',
   SET_OVERCLOCK = '[Producers] Set Overclock',
   RESET_PRODUCER = '[Producers] Reset Producer',
-}
-
-export class ResetAction implements Action {
-  readonly type = ProducersActionType.RESET;
-  constructor(public payload: string) {}
 }
 
 export class AddAction implements Action {
@@ -78,7 +72,6 @@ export class ResetProducerAction implements Action {
 }
 
 export type ProducersAction =
-  | ResetAction
   | AddAction
   | RemoveAction
   | SetRecipeAction

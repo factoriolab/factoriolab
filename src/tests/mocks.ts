@@ -8,6 +8,7 @@ import {
   Factories,
   Items,
   Preferences,
+  Producers,
   Products,
   Recipes,
   Settings,
@@ -76,6 +77,16 @@ export const RationalProducts = ProductsList.map((p) => {
   rp.viaId = rp.itemId;
   return rp;
 });
+export const Producer: M.Producer = {
+  id: '1',
+  recipeId: RecipeId.WoodenChest,
+  count: '1',
+};
+export const ProducersState: Producers.ProducersState = {
+  ids: ['1'],
+  entities: { ['1']: Producer },
+  index: 2,
+};
 export const ProductIds = ProductsList.map((p) => p.id);
 export const ProductEntities =
   Products.getProductsBy.projector(RationalProducts);
