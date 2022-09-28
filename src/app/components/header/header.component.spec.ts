@@ -4,7 +4,7 @@ import { MockStore } from '@ngrx/store/testing';
 
 import { Mocks, TestModule } from 'src/tests';
 import { Game } from '~/models';
-import { Products } from '~/store';
+import { Producers, Products } from '~/store';
 import { HeaderComponent } from './header.component';
 
 describe('HeaderComponent', () => {
@@ -30,19 +30,41 @@ describe('HeaderComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // describe('ngOnInit', () => {
-  //   it('should update the page title with the first product name', () => {
-  //     spyOn(title, 'setTitle');
-  //     mockStore.overrideSelector(Products.getBaseProducts, Mocks.ProductsList);
-  //     mockStore.refreshState();
-  //     expect(title.setTitle).toHaveBeenCalledWith('Wooden chest | title.lab');
-  //   });
-  // });
+  describe('ngOnInit', () => {
+    it('should update the page title with the first product name', () => {
+      spyOn(title, 'setTitle');
+      mockStore.overrideSelector(Products.getBaseProducts, Mocks.ProductsList);
+      mockStore.refreshState();
+      expect(title.setTitle).toHaveBeenCalledWith('Wooden chest | FactorioLab');
+    });
+
+    it('should update the page title with the first producer name', () => {
+      spyOn(title, 'setTitle');
+      mockStore.overrideSelector(Products.getBaseProducts, []);
+      mockStore.overrideSelector(Producers.getBaseProducers, [Mocks.Producer]);
+      mockStore.refreshState();
+      expect(title.setTitle).toHaveBeenCalledWith('Wooden chest | FactorioLab');
+    });
+  });
 
   describe('buildGameOptions', () => {
     it('should return a filtered list of game menu items', () => {
       const result = component.buildGameOptions(Game.Factorio);
       expect(result.length).toEqual(3);
+    });
+  });
+
+  describe('cancelRouterLink', () => {
+    it('should prevent the dropdown from being treated as an anchor', () => {
+      const event = {
+        preventDefault: (): void => {},
+        stopPropagation: (): void => {},
+      };
+      spyOn(event, 'preventDefault');
+      spyOn(event, 'stopPropagation');
+      component.cancelRouterLink(event as any);
+      expect(event.preventDefault).toHaveBeenCalled();
+      expect(event.stopPropagation).toHaveBeenCalled();
     });
   });
 });

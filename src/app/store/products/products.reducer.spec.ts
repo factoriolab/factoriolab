@@ -41,26 +41,26 @@ describe('Products Reducer', () => {
     });
   });
 
-  // describe('RESET', () => {
-  //   it('should reset the reducer', () => {
-  //     const result = productsReducer(
-  //       undefined,
-  //       new Actions.ResetAction(ItemId.Coal)
-  //     );
-  //     expect(result).toEqual({
-  //       ids: ['0'],
-  //       entities: {
-  //         ['0']: {
-  //           id: '0',
-  //           itemId: ItemId.Coal,
-  //           rate: '60',
-  //           rateType: RateType.Items,
-  //         },
-  //       },
-  //       index: 1,
-  //     });
-  //   });
-  // });
+  describe('RESET', () => {
+    it('should reset the reducer', () => {
+      const result = productsReducer(
+        undefined,
+        new Actions.ResetAction(ItemId.Coal)
+      );
+      expect(result).toEqual({
+        ids: ['1'],
+        entities: {
+          ['1']: {
+            id: '1',
+            itemId: ItemId.Coal,
+            rate: '60',
+            rateType: RateType.Items,
+          },
+        },
+        index: 2,
+      });
+    });
+  });
 
   describe('ADD', () => {
     it('should add a new product', () => {
@@ -90,12 +90,12 @@ describe('Products Reducer', () => {
     });
   });
 
-  // describe('REMOVE', () => {
-  //   it('should remove a product', () => {
-  //     const result = productsReducer(state, new Actions.RemoveAction('0'));
-  //     expect(result.ids.length).toEqual(0);
-  //   });
-  // });
+  describe('REMOVE', () => {
+    it('should remove a product', () => {
+      const result = productsReducer(state, new Actions.RemoveAction('1'));
+      expect(result.ids.length).toEqual(0);
+    });
+  });
 
   describe('SET_ITEM', () => {
     it('should set item on a product', () => {
@@ -165,44 +165,44 @@ describe('Products Reducer', () => {
     });
   });
 
-  // describe('RESET_VIA', () => {
-  //   it('should reset the via of a product', () => {
-  //     let result = productsReducer(
-  //       state,
-  //       new Actions.SetViaAction({
-  //         id: Mocks.Product1.id,
-  //         value: RecipeId.AdvancedOilProcessing,
-  //       })
-  //     );
-  //     result = productsReducer(
-  //       result,
-  //       new Actions.ResetViaAction(Mocks.Product1.id)
-  //     );
-  //     expect(result.entities[Mocks.Product1.id].viaId).toBeUndefined();
-  //   });
-  // });
+  describe('RESET_VIA', () => {
+    it('should reset the via of a product', () => {
+      let result = productsReducer(
+        state,
+        new Actions.SetViaAction({
+          id: Mocks.Product1.id,
+          value: RecipeId.AdvancedOilProcessing,
+        })
+      );
+      result = productsReducer(
+        result,
+        new Actions.ResetViaAction(Mocks.Product1.id)
+      );
+      expect(result.entities[Mocks.Product1.id].viaId).toBeUndefined();
+    });
+  });
 
-  // describe('ADJUST_DISPLAY_RATE', () => {
-  // it('should adjust rates for products when display rate changes', () => {
-  //   const result = productsReducer(
-  //     state,
-  //     new Actions.AdjustDisplayRateAction('1/60')
-  //   );
-  //   expect(result.entities[Mocks.Product1.id].rate).toEqual('1');
-  // });
+  describe('ADJUST_DISPLAY_RATE', () => {
+    it('should adjust rates for products when display rate changes', () => {
+      const result = productsReducer(
+        state,
+        new Actions.AdjustDisplayRateAction('1/60')
+      );
+      expect(result.entities[Mocks.Product1.id].rate).toEqual('1');
+    });
 
-  //   it('should not adjust rates when rate type unaffected by display rate', () => {
-  //     let result = productsReducer(
-  //       state,
-  //       new Actions.SetRateTypeAction({ id: '0', value: RateType.Belts })
-  //     );
-  //     result = productsReducer(
-  //       result,
-  //       new Actions.AdjustDisplayRateAction('1/60')
-  //     );
-  //     expect(result.entities[Mocks.Product1.id].rate).toEqual('60');
-  //   });
-  // });
+    it('should not adjust rates when rate type unaffected by display rate', () => {
+      let result = productsReducer(
+        state,
+        new Actions.SetRateTypeAction({ id: '1', value: RateType.Belts })
+      );
+      result = productsReducer(
+        result,
+        new Actions.AdjustDisplayRateAction('1/60')
+      );
+      expect(result.entities[Mocks.Product1.id].rate).toEqual('60');
+    });
+  });
 
   it('should return default state', () => {
     expect(productsReducer(state, { type: 'Test' } as any)).toBe(state);

@@ -255,13 +255,13 @@ export class ListComponent implements OnInit, AfterViewInit {
       const factorySettings = factories.entities[settings.factoryId];
       switch (field) {
         case RecipeField.Factory: {
-          if (typeof event === 'string') {
+          if (typeof event === 'string' && factories.ids != null) {
             this.setFactory(
               step.producerId ?? step.recipeId,
               event,
               RecipeUtility.bestMatch(
                 data.recipeEntities[step.recipeId].producers,
-                factories.ids ?? []
+                factories.ids
               ),
               step.producerId != null
             );

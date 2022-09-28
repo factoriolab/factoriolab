@@ -4,6 +4,7 @@ import {
   displayRateInfo,
   Entities,
   Rational,
+  RationalProducer,
   RationalRecipeSettings,
   Step,
 } from '~/models';
@@ -92,422 +93,344 @@ describe('RateUtility', () => {
     });
   });
 
-  // describe('calculateBelts', () => {
-  //   it('should skip steps with no items', () => {
-  //     const steps: Step[] = [
-  //       {
-  //         id: 'id',
-  //         itemId: Mocks.Item1.id,
-  //       },
-  //     ];
-  //     const result = RateUtility.calculateBelts(
-  //       steps,
-  //       Mocks.ItemSettingsInitial,
-  //       Mocks.RecipeSettingsInitial,
-  //       Mocks.BeltSpeed,
-  //       Mocks.AdjustedData
-  //     );
-  //     expect(result[0].belts).toBeUndefined();
-  //   });
+  describe('normalizeSteps', () => {
+    it('should update update various step fields after solution is found', () => {
+      spyOn(RateUtility, 'calculateParents');
+      spyOn(RateUtility, 'calculateOutputs');
+      spyOn(RateUtility, 'calculateSettings');
+      spyOn(RateUtility, 'calculateBelts');
+      spyOn(RateUtility, 'calculateBeacons');
+      spyOn(RateUtility, 'calculateDisplayRate');
+      spyOn(RateUtility, 'calculateHierarchy');
+      RateUtility.normalizeSteps(
+        [{ id: '0' }, { id: '1' }],
+        [],
+        {},
+        {},
+        null,
+        {},
+        displayRateInfo[DisplayRate.PerMinute],
+        Mocks.Dataset
+      );
+      expect(RateUtility.calculateParents).toHaveBeenCalledTimes(2);
+      expect(RateUtility.calculateOutputs).toHaveBeenCalledTimes(2);
+      expect(RateUtility.calculateSettings).toHaveBeenCalledTimes(2);
+      expect(RateUtility.calculateBelts).toHaveBeenCalledTimes(2);
+      expect(RateUtility.calculateBeacons).toHaveBeenCalledTimes(2);
+      expect(RateUtility.calculateDisplayRate).toHaveBeenCalledTimes(2);
+      expect(RateUtility.calculateHierarchy).toHaveBeenCalledTimes(1);
+    });
+  });
 
-  //   it('should calculate required belts & wagons for steps', () => {
-  //     const steps: Step[] = [
-  //       {
-  //         id: 'id',
-  //         itemId: Mocks.Item1.id,
-  //         items: Mocks.BeltSpeed[ItemId.TransportBelt],
-  //         belts: Rational.zero,
-  //       },
-  //     ];
-  //     const result = RateUtility.calculateBelts(
-  //       steps,
-  //       Mocks.ItemSettingsInitial,
-  //       Mocks.RecipeSettingsInitial,
-  //       Mocks.BeltSpeed,
-  //       Mocks.AdjustedData
-  //     );
-  //     expect(result[0].belts).toEqual(Rational.one);
-  //     expect(result[0].wagons).toEqual(new Rational(BigInt(3), BigInt(400)));
-  //   });
+  describe('calculateParents', () => {
+    it('should add parent values for relevant steps', () => {
+      spyOn(RateUtility, 'addParentValue');
+      const stepA: Step = {
+        id: '0',
+        recipe: Mocks.Dataset.recipeR[RecipeId.IronPlate],
+        factories: Rational.one,
+      };
+      const stepB: Step = { id: '1', itemId: ItemId.IronOre };
+      RateUtility.calculateParents(stepA, [stepA, stepB]);
+      expect(RateUtility.addParentValue).toHaveBeenCalledWith(
+        stepB,
+        '0',
+        Rational.from(5, 16)
+      );
+    });
+  });
 
-  //   it('should calculate required wagons for fluids', () => {
-  //     const steps: Step[] = [
-  //       {
-  //         id: 'id',
-  //         itemId: ItemId.CrudeOil,
-  //         items: Rational.from(25000),
-  //         belts: Rational.zero,
-  //       },
-  //     ];
-  //     const result = RateUtility.calculateBelts(
-  //       steps,
-  //       Mocks.ItemSettingsInitial,
-  //       Mocks.RecipeSettingsInitial,
-  //       Mocks.BeltSpeed,
-  //       Mocks.AdjustedData
-  //     );
-  //     expect(result[0].wagons).toEqual(Rational.one);
-  //   });
+  describe('calculateSettings', () => {
+    it('should add recipe settings to a recipe step', () => {
+      const step: Step = {
+        id: '1',
+        recipeId: RecipeId.Coal,
+      };
+      RateUtility.calculateSettings(
+        step,
+        [],
+        Mocks.RationalRecipeSettingsInitial
+      );
+      expect(step.recipeSettings).toEqual(
+        Mocks.RationalRecipeSettingsInitial[RecipeId.Coal]
+      );
+    });
 
-  //   it('should set to null for research recipes', () => {
-  //     const steps: Step[] = [
-  //       {
-  //         id: 'id',
-  //         itemId: ItemId.ArtilleryShellRange,
-  //         recipeId: RecipeId.ArtilleryShellRange,
-  //         items: Rational.one,
-  //         belts: Rational.one,
-  //         wagons: Rational.one,
-  //       },
-  //     ];
-  //     const result = RateUtility.calculateBelts(
-  //       steps,
-  //       Mocks.ItemSettingsInitial,
-  //       Mocks.RecipeSettingsInitial,
-  //       Mocks.BeltSpeed,
-  //       Mocks.AdjustedData
-  //     );
-  //     expect(result[0].belts).toBeUndefined();
-  //     expect(result[0].wagons).toBeUndefined();
-  //   });
+    it('should add recipe settings to a producer step', () => {
+      const step: Step = {
+        id: '0',
+        recipeId: RecipeId.Coal,
+        producerId: '0',
+      };
+      const producers: RationalProducer[] = [
+        {
+          id: '0',
+          recipeId: RecipeId.Coal,
+          count: Rational.one,
+          recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
+        },
+      ];
+      RateUtility.calculateSettings(
+        step,
+        producers,
+        Mocks.RationalRecipeSettingsInitial
+      );
+      expect(step.recipeSettings).toEqual(producers[0]);
+    });
+  });
 
-  //   it('should set to null for rocket part recipes', () => {
-  //     const steps: Step[] = [
-  //       {
-  //         id: 'id',
-  //         itemId: ItemId.RocketPart,
-  //         recipeId: RecipeId.RocketPart,
-  //         items: Rational.one,
-  //         belts: Rational.one,
-  //         wagons: Rational.one,
-  //       },
-  //     ];
-  //     const result = RateUtility.calculateBelts(
-  //       steps,
-  //       Mocks.ItemSettingsInitial,
-  //       Mocks.RecipeSettingsInitial,
-  //       Mocks.BeltSpeed,
-  //       Mocks.AdjustedData
-  //     );
-  //     expect(result[0].belts).toBeUndefined();
-  //     expect(result[0].wagons).toBeUndefined();
-  //   });
-  // });
+  describe('calculateBelts', () => {
+    it('should skip steps with no items', () => {
+      const step: Step = {
+        id: 'id',
+        itemId: Mocks.Item1.id,
+      };
+      RateUtility.calculateBelts(
+        step,
+        Mocks.ItemSettingsInitial,
+        Mocks.RationalRecipeSettingsInitial,
+        Mocks.BeltSpeed,
+        Mocks.AdjustedData
+      );
+      expect(step.belts).toBeUndefined();
+    });
 
-  // describe('calculateOutputs', () => {
-  //   it('should ignore steps with no recipe', () => {
-  //     const result = RateUtility.calculateOutputs(
-  //       [
-  //         {
-  //           id: '0',
-  //           itemId: ItemId.Coal,
-  //           items: Rational.one,
-  //         },
-  //       ],
-  //       Mocks.AdjustedData
-  //     );
-  //     expect(result[0].outputs).toBeUndefined();
-  //   });
+    it('should calculate required belts & wagons for steps', () => {
+      const step: Step = {
+        id: 'id',
+        itemId: Mocks.Item1.id,
+        items: Mocks.BeltSpeed[ItemId.TransportBelt],
+        belts: Rational.zero,
+      };
+      RateUtility.calculateBelts(
+        step,
+        Mocks.ItemSettingsInitial,
+        Mocks.RationalRecipeSettingsInitial,
+        Mocks.BeltSpeed,
+        Mocks.AdjustedData
+      );
+      expect(step.belts).toEqual(Rational.one);
+      expect(step.wagons).toEqual(new Rational(BigInt(3), BigInt(400)));
+    });
 
-  //   it('should calculate step output percentages', () => {
-  //     const result = RateUtility.calculateOutputs(
-  //       [
-  //         {
-  //           id: '0',
-  //           itemId: ItemId.Coal,
-  //           items: Rational.one,
-  //           factories: Rational.two,
-  //           recipeId: RecipeId.Coal,
-  //         },
-  //       ],
-  //       Mocks.AdjustedData
-  //     );
-  //     expect(result[0].outputs).toEqual({
-  //       [ItemId.Coal]: Rational.from(1183, 200),
-  //     });
-  //   });
+    it('should calculate required wagons for fluids', () => {
+      const step: Step = {
+        id: 'id',
+        itemId: ItemId.CrudeOil,
+        items: Rational.from(25000),
+        belts: Rational.zero,
+      };
+      RateUtility.calculateBelts(
+        step,
+        Mocks.ItemSettingsInitial,
+        Mocks.RationalRecipeSettingsInitial,
+        Mocks.BeltSpeed,
+        Mocks.AdjustedData
+      );
+      expect(step.wagons).toEqual(Rational.one);
+    });
 
-  //   it('should ignore steps with no factories or matching output step', () => {
-  //     const result = RateUtility.calculateOutputs(
-  //       [
-  //         {
-  //           id: '0',
-  //           recipeId: RecipeId.ElectronicCircuit,
-  //         },
-  //         {
-  //           id: '1',
-  //           itemId: ItemId.Coal,
-  //           recipeId: RecipeId.Coal,
-  //           factories: Rational.one,
-  //         },
-  //         {
-  //           id: '2',
-  //           recipeId: RecipeId.IronOre,
-  //           factories: Rational.one,
-  //         },
-  //       ],
-  //       Mocks.AdjustedData
-  //     );
-  //     expect(result[0].outputs).toBeUndefined();
-  //   });
-  // });
+    it('should set to null for research recipes', () => {
+      const step: Step = {
+        id: 'id',
+        itemId: ItemId.ArtilleryShellRange,
+        recipeId: RecipeId.ArtilleryShellRange,
+        items: Rational.one,
+        belts: Rational.one,
+        wagons: Rational.one,
+      };
+      RateUtility.calculateBelts(
+        step,
+        Mocks.ItemSettingsInitial,
+        Mocks.RationalRecipeSettingsInitial,
+        Mocks.BeltSpeed,
+        Mocks.AdjustedData
+      );
+      expect(step.belts).toBeUndefined();
+      expect(step.wagons).toBeUndefined();
+    });
 
-  // describe('calculateBeacons', () => {
-  //   it('should ignore steps with no factories or beacons', () => {
-  //     const settings: Entities<RationalRecipeSettings> = {
-  //       [RecipeId.Coal]: { beaconCount: Rational.zero },
-  //       [RecipeId.IronOre]: {},
-  //     };
-  //     const steps: Step[] = [
-  //       { id: '0', recipeId: RecipeId.ElectronicCircuit },
-  //       { id: '1', factories: Rational.zero },
-  //       { id: '2', factories: Rational.one, recipeId: RecipeId.Coal },
-  //       { id: '3', factories: Rational.one, recipeId: RecipeId.IronOre },
-  //     ];
-  //     expect(
-  //       RateUtility.calculateBeacons(
-  //         steps,
-  //         Rational.one,
-  //         settings,
-  //         Mocks.AdjustedData
-  //       )
-  //     ).toEqual(steps);
-  //   });
+    it('should set to null for rocket part recipes', () => {
+      const step: Step = {
+        id: 'id',
+        itemId: ItemId.RocketPart,
+        recipeId: RecipeId.RocketPart,
+        items: Rational.one,
+        belts: Rational.one,
+        wagons: Rational.one,
+      };
+      RateUtility.calculateBelts(
+        step,
+        Mocks.ItemSettingsInitial,
+        Mocks.RationalRecipeSettingsInitial,
+        Mocks.BeltSpeed,
+        Mocks.AdjustedData
+      );
+      expect(step.belts).toBeUndefined();
+      expect(step.wagons).toBeUndefined();
+    });
+  });
 
-  //   it('should calculate the number of beacons', () => {
-  //     const steps: Step[] = [
-  //       {
-  //         id: 'id',
-  //         itemId: ItemId.Coal,
-  //         items: Rational.one,
-  //         recipeId: RecipeId.Coal,
-  //         factories: Rational.one,
-  //         power: Rational.zero,
-  //       },
-  //     ];
-  //     RateUtility.calculateBeacons(
-  //       steps,
-  //       Rational.one,
-  //       Mocks.RationalRecipeSettingsInitial,
-  //       Mocks.AdjustedData
-  //     );
-  //     expect(steps[0].beacons).toEqual(Rational.from(8));
-  //     expect(steps[0].power).toEqual(Rational.from(3840));
-  //   });
+  describe('calculateOutputs', () => {
+    it('should calculate step output percentages', () => {
+      const step: Step = {
+        id: '0',
+        itemId: ItemId.Coal,
+        items: Rational.one,
+        factories: Rational.one,
+        recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
+      };
+      RateUtility.calculateOutputs(step, [step]);
+      expect(step.outputs).toEqual({
+        [ItemId.Coal]: Rational.one,
+      });
+    });
+  });
 
-  //   it('should not allow less beacons than beacon count', () => {
-  //     const steps: Step[] = [
-  //       {
-  //         id: 'id',
-  //         itemId: ItemId.Coal,
-  //         items: Rational.one,
-  //         recipeId: RecipeId.Coal,
-  //         factories: Rational.one,
-  //         power: Rational.zero,
-  //       },
-  //     ];
-  //     RateUtility.calculateBeacons(
-  //       steps,
-  //       Rational.hundred,
-  //       Mocks.RationalRecipeSettingsInitial,
-  //       Mocks.AdjustedData
-  //     );
-  //     expect(steps[0].beacons).toEqual(Rational.from(8));
-  //   });
+  describe('calculateBeacons', () => {
+    it('should calculate the number of beacons', () => {
+      const step: Step = {
+        id: 'id',
+        itemId: ItemId.Coal,
+        items: Rational.one,
+        recipeId: RecipeId.Coal,
+        factories: Rational.one,
+        power: Rational.zero,
+      };
+      RateUtility.calculateBeacons(
+        step,
+        Rational.one,
+        Mocks.RationalRecipeSettingsInitial,
+        Mocks.AdjustedData
+      );
+      expect(step.beacons).toEqual(Rational.from(8));
+      expect(step.power).toEqual(Rational.from(3840));
+    });
 
-  //   it('should handle undefined step power', () => {
-  //     const steps: Step[] = [
-  //       {
-  //         id: 'id',
-  //         itemId: ItemId.Coal,
-  //         items: Rational.one,
-  //         recipeId: RecipeId.Coal,
-  //         factories: Rational.one,
-  //       },
-  //     ];
-  //     RateUtility.calculateBeacons(
-  //       steps,
-  //       Rational.one,
-  //       Mocks.RationalRecipeSettingsInitial,
-  //       Mocks.AdjustedData
-  //     );
-  //     expect(steps[0].beacons).toEqual(Rational.from(8));
-  //     expect(steps[0].power).toEqual(Rational.from(3840));
-  //   });
+    it('should not allow less beacons than beacon count', () => {
+      const step: Step = {
+        id: 'id',
+        itemId: ItemId.Coal,
+        items: Rational.one,
+        recipeId: RecipeId.Coal,
+        factories: Rational.one,
+        power: Rational.zero,
+      };
+      RateUtility.calculateBeacons(
+        step,
+        Rational.hundred,
+        Mocks.RationalRecipeSettingsInitial,
+        Mocks.AdjustedData
+      );
+      expect(step.beacons).toEqual(Rational.from(8));
+    });
 
-  //   it('should skip beacon power with no usage', () => {
-  //     const steps: Step[] = [
-  //       {
-  //         id: 'id',
-  //         itemId: ItemId.Coal,
-  //         items: Rational.one,
-  //         recipeId: RecipeId.Coal,
-  //         factories: Rational.one,
-  //         power: Rational.zero,
-  //       },
-  //     ];
-  //     const data = {
-  //       ...Mocks.AdjustedData,
-  //       ...{
-  //         beaconEntities: {
-  //           ...Mocks.AdjustedData.beaconEntities,
-  //           ...{
-  //             [ItemId.Beacon]: {
-  //               ...Mocks.AdjustedData.beaconEntities[ItemId.Beacon],
-  //               ...{ usage: undefined },
-  //             },
-  //           },
-  //         },
-  //       },
-  //     };
-  //     RateUtility.calculateBeacons(
-  //       steps,
-  //       Rational.one,
-  //       Mocks.RationalRecipeSettingsInitial,
-  //       data
-  //     );
-  //     expect(steps[0].beacons).toEqual(Rational.from(8));
-  //     expect(steps[0].power).toEqual(Rational.zero);
-  //   });
+    it('should handle undefined step power', () => {
+      const step: Step = {
+        id: 'id',
+        itemId: ItemId.Coal,
+        items: Rational.one,
+        recipeId: RecipeId.Coal,
+        factories: Rational.one,
+      };
+      RateUtility.calculateBeacons(
+        step,
+        Rational.one,
+        Mocks.RationalRecipeSettingsInitial,
+        Mocks.AdjustedData
+      );
+      expect(step.beacons).toEqual(Rational.from(8));
+      expect(step.power).toEqual(Rational.from(3840));
+    });
 
-  //   it('should override from recipe settings', () => {
-  //     const settings: Entities<RationalRecipeSettings> = {
-  //       [RecipeId.Coal]: {
-  //         beaconCount: Rational.from(8),
-  //         beaconId: ItemId.Beacon,
-  //         beaconTotal: Rational.one,
-  //       },
-  //     };
-  //     const steps: Step[] = [
-  //       {
-  //         id: 'id',
-  //         itemId: ItemId.Coal,
-  //         items: Rational.one,
-  //         recipeId: RecipeId.Coal,
-  //         factories: Rational.one,
-  //         power: Rational.zero,
-  //       },
-  //     ];
-  //     RateUtility.calculateBeacons(
-  //       steps,
-  //       Rational.one,
-  //       settings,
-  //       Mocks.AdjustedData
-  //     );
-  //     expect(steps[0].beacons).toEqual(Rational.one);
-  //     expect(steps[0].power).toEqual(Rational.from(480));
-  //   });
-  // });
+    it('should override from recipe settings', () => {
+      const settings: Entities<RationalRecipeSettings> = {
+        [RecipeId.Coal]: {
+          beaconCount: Rational.from(8),
+          beaconId: ItemId.Beacon,
+          beaconTotal: Rational.one,
+        },
+      };
+      const step: Step = {
+        id: 'id',
+        itemId: ItemId.Coal,
+        items: Rational.one,
+        recipeId: RecipeId.Coal,
+        factories: Rational.one,
+        power: Rational.zero,
+      };
+      RateUtility.calculateBeacons(
+        step,
+        Rational.one,
+        settings,
+        Mocks.AdjustedData
+      );
+      expect(step.beacons).toEqual(Rational.one);
+      expect(step.power).toEqual(Rational.from(480));
+    });
+  });
 
-  // describe('displayRate', () => {
-  //   it('should skip steps with no items', () => {
-  //     const steps: Step[] = [
-  //       {
-  //         id: 'id',
-  //         itemId: Mocks.Item1.id,
-  //       },
-  //     ];
-  //     RateUtility.calculateDisplayRate(steps, 3 as any);
-  //     expect(steps[0].items).toBeUndefined();
-  //   });
+  describe('calculateDisplayRate', () => {
+    it('should apply the display rate', () => {
+      const step: Step = {
+        id: '0',
+        items: Rational.one,
+        surplus: Rational.two,
+        wagons: Rational.from(3),
+        pollution: Rational.from(4),
+        output: Rational.from(5),
+        parents: { ['id']: Rational.from(6) },
+      };
+      RateUtility.calculateDisplayRate(
+        step,
+        displayRateInfo[DisplayRate.PerMinute]
+      );
+      expect(step.items).toEqual(Rational.from(60));
+      expect(step.surplus).toEqual(Rational.from(120));
+      expect(step.wagons).toEqual(Rational.from(180));
+      expect(step.pollution).toEqual(Rational.from(240));
+      expect(step.output).toEqual(Rational.from(300));
+      expect(step.parents?.['id']).toEqual(Rational.from(6));
+    });
+  });
 
-  //   it('should apply the display rate to the given steps', () => {
-  //     const result = RateUtility.calculateDisplayRate(
-  //       [
-  //         {
-  //           items: Rational.one,
-  //           surplus: Rational.two,
-  //           wagons: Rational.from(3),
-  //           pollution: Rational.from(4),
-  //           output: Rational.from(5),
-  //         },
-  //       ] as any,
-  //       displayRateInfo[DisplayRate.PerMinute]
-  //     );
-  //     expect(result[0].items).toEqual(Rational.from(60));
-  //     expect(result[0].surplus).toEqual(Rational.from(120));
-  //     expect(result[0].wagons).toEqual(Rational.from(180));
-  //     expect(result[0].pollution).toEqual(Rational.from(240));
-  //     expect(result[0].output).toEqual(Rational.from(300));
-  //   });
-
-  //   it('should apply the display rate to partial steps', () => {
-  //     const result = RateUtility.calculateDisplayRate(
-  //       [{ items: Rational.two }] as any,
-  //       displayRateInfo[DisplayRate.PerMinute]
-  //     );
-  //     expect(result[0].items).toEqual(Rational.from(120));
-  //     expect(result[0].surplus).toBeUndefined();
-  //     expect(result[0].wagons).toBeUndefined();
-  //     expect(result[0].pollution).toBeUndefined();
-  //   });
-
-  //   it('should calculate parent percentages', () => {
-  //     const result = RateUtility.calculateDisplayRate(
-  //       [{ items: Rational.two, parents: { id: Rational.one } }] as any,
-  //       displayRateInfo[DisplayRate.PerMinute]
-  //     );
-  //     expect(result[0].parents?.['id']).toEqual(Rational.from(1, 2));
-  //   });
-  // });
-
-  describe('sortHierarchy', () => {
-    // it('should set up groups by parents', () => {
-    //   spyOn(RateUtility, 'sortRecursive').and.returnValue([]);
-    //   const steps: Step[] = [
-    //     {
-    //       id: '0',
-    //       itemId: ItemId.Coal,
-    //       recipeId: RecipeId.Coal,
-    //       items: Rational.one,
-    //       parents: { [RecipeId.PlasticBar]: Rational.one },
-    //     },
-    //     {
-    //       id: '1',
-    //       itemId: ItemId.IronOre,
-    //       recipeId: RecipeId.IronOre,
-    //       items: Rational.one,
-    //       parents: {
-    //         [RecipeId.CopperCable]: Rational.one,
-    //         [RecipeId.WoodenChest]: Rational.one,
-    //       },
-    //     },
-    //     {
-    //       id: '2',
-    //       itemId: ItemId.PlasticBar,
-    //       recipeId: RecipeId.PlasticBar,
-    //       items: Rational.one,
-    //     },
-    //   ];
-    //   RateUtility.calculateHierarchy(steps);
-    //   expect(RateUtility.sortRecursive).toHaveBeenCalledWith(
-    //     {
-    //       ['2']: [steps[0]],
-    //       ['']: [steps[1], steps[2]],
-    //     },
-    //     '',
-    //     []
-    //   );
-    // });
-
-    // it('should put self-parented steps at root', () => {
-    //   spyOn(RateUtility, 'sortRecursive').and.returnValue([]);
-    //   const steps: Step[] = [
-    //     {
-    //       id: 'id',
-    //       itemId: ItemId.Coal,
-    //       recipeId: RecipeId.Coal,
-    //       items: Rational.one,
-    //       parents: { [RecipeId.Coal]: Rational.one },
-    //     },
-    //   ];
-    //   RateUtility.calculateHierarchy(steps);
-    //   expect(RateUtility.sortRecursive).toHaveBeenCalledWith(
-    //     { ['']: [steps[0]] },
-    //     '',
-    //     []
-    //   );
-    // });
+  describe('calculateHierarchy', () => {
+    it('should set up groups by parents', () => {
+      spyOn(RateUtility, 'sortRecursive').and.returnValue([]);
+      const steps: Step[] = [
+        {
+          id: '0',
+          itemId: ItemId.Coal,
+          recipeId: RecipeId.Coal,
+          items: Rational.one,
+          parents: { ['2']: Rational.one },
+        },
+        {
+          id: '1',
+          itemId: ItemId.IronOre,
+          recipeId: RecipeId.IronOre,
+          items: Rational.one,
+          parents: {
+            ['1']: Rational.one,
+          },
+        },
+        {
+          id: '2',
+          itemId: ItemId.PlasticBar,
+          recipeId: RecipeId.PlasticBar,
+          items: Rational.one,
+        },
+      ];
+      RateUtility.calculateHierarchy(steps);
+      expect(RateUtility.sortRecursive).toHaveBeenCalledWith(
+        {
+          ['2']: [steps[0]],
+          ['']: [steps[1], steps[2]],
+        },
+        '',
+        []
+      );
+    });
 
     it('should handle steps not connected to root', () => {
       const steps: Step[] = [

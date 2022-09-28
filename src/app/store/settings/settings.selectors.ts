@@ -14,7 +14,6 @@ import {
   Game,
   InserterData,
   ItemId,
-  precisionColumns,
   Preset,
   presetOptions,
   rateTypeOptions,

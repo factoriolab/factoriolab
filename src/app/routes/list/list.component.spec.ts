@@ -16,7 +16,14 @@ import {
   StepDetail,
   StepDetailTab,
 } from '~/models';
-import { Items, LabState, Products, Recipes, Settings } from '~/store';
+import {
+  Items,
+  LabState,
+  Producers,
+  Products,
+  Recipes,
+  Settings,
+} from '~/store';
 import { ExportUtility } from '~/utilities';
 import { ListComponent } from './list.component';
 import { ListModule } from './list.module';
@@ -85,9 +92,17 @@ describe('ListComponent', () => {
     it('should reset a step', () => {
       spyOn(component, 'resetItem');
       spyOn(component, 'resetRecipe');
-      component.resetStep(Mocks.Step1);
+      spyOn(component, 'resetProducer');
+      const step: Step = {
+        id: '0',
+        itemId: ItemId.Coal,
+        recipeId: RecipeId.Coal,
+        producerId: '1',
+      };
+      component.resetStep(step);
       expect(component.resetItem).toHaveBeenCalled();
       expect(component.resetRecipe).toHaveBeenCalled();
+      expect(component.resetProducer).toHaveBeenCalled();
     });
   });
 
@@ -189,6 +204,18 @@ describe('ListComponent', () => {
       recipeId: RecipeId.WoodenChest,
       recipeSettings: Mocks.RationalRecipeSettingsInitial[RecipeId.WoodenChest],
     };
+
+    it('should skip a step with no recipe', () => {
+      spyOn(component, 'setFactory');
+      component.changeRecipeField(
+        { id: '0' },
+        '1',
+        Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
+        RecipeField.Factory
+      );
+      expect(component.setFactory).not.toHaveBeenCalled();
+    });
 
     it('should set up default for factory', () => {
       spyOn(component, 'setFactory');
@@ -301,14 +328,24 @@ describe('ListComponent', () => {
     dispatch.idValDef('setBelt', Items.SetBeltAction);
     dispatch.idValDef('setWagon', Items.SetWagonAction);
     dispatch.idValDef('setFactory', Recipes.SetFactoryAction);
+    dispatch.idValDefAlt('setFactory', Producers.SetFactoryAction);
     dispatch.idValDef('setFactoryModules', Recipes.SetFactoryModulesAction);
+    dispatch.idValDefAlt(
+      'setFactoryModules',
+      Producers.SetFactoryModulesAction
+    );
     dispatch.idValDef('setBeaconCount', Recipes.SetBeaconCountAction);
+    dispatch.idValDefAlt('setBeaconCount', Producers.SetBeaconCountAction);
     dispatch.idValDef('setBeacon', Recipes.SetBeaconAction);
+    dispatch.idValDefAlt('setBeacon', Producers.SetBeaconAction);
     dispatch.idValDef('setBeaconModules', Recipes.SetBeaconModulesAction);
+    dispatch.idValDefAlt('setBeaconModules', Producers.SetBeaconModulesAction);
     dispatch.idVal('setBeaconTotal', Recipes.SetBeaconTotalAction);
     dispatch.idValDef('setOverclock', Recipes.SetOverclockAction);
+    dispatch.idValDefAlt('setOverclock', Producers.SetOverclockAction);
     dispatch.val('resetItem', Items.ResetItemAction);
     dispatch.val('resetRecipe', Recipes.ResetRecipeAction);
+    dispatch.val('resetProducer', Producers.ResetProducerAction);
     dispatch.void('resetIgnores', Items.ResetIgnoresAction);
     dispatch.void('resetBelts', Items.ResetBeltsAction);
     dispatch.void('resetWagons', Items.ResetWagonsAction);

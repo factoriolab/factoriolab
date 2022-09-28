@@ -1,5 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 
 import { TestModule } from 'src/tests';
 import { InputNumberComponent } from './input-number.component';
@@ -58,13 +63,21 @@ describe('InputNumberComponent', () => {
     });
   });
 
-  // describe('changeValue', () => {
-  //   it('should emit a value', () => {
-  //     spyOn(component, 'setValue');
-  //     component.child.changeValue('1 1/3');
-  //     expect(component.setValue).toHaveBeenCalledWith('1 1/3');
-  //   });
-  // });
+  describe('changeValue', () => {
+    it('should emit a value', fakeAsync(() => {
+      spyOn(component, 'setValue');
+      component.child.changeValue('1 1/3');
+      tick(500);
+      expect(component.setValue).toHaveBeenCalledWith('1 1/3');
+    }));
+
+    it('should not emit invalid values', fakeAsync(() => {
+      spyOn(component, 'setValue');
+      component.child.changeValue('abc');
+      tick(500);
+      expect(component.setValue).not.toHaveBeenCalled();
+    }));
+  });
 
   describe('increase', () => {
     it('should emit a value', () => {

@@ -6,9 +6,7 @@ import {
   Breakpoint,
   DisplayRate,
   displayRateOptions,
-  Game,
   RateType,
-  RecipeField,
 } from '~/models';
 import { ContentService, TrackService } from '~/services';
 import {
@@ -72,24 +70,11 @@ export class ProductsComponent {
 
   displayRateOptions = displayRateOptions;
 
-  Game = Game;
-  RateType = RateType;
-  RecipeField = RecipeField;
-
   constructor(
     public trackSvc: TrackService,
     private store: Store<LabState>,
     private contentService: ContentService
   ) {}
-
-  generateModules(index: number, value: string, original: string[]): string[] {
-    const modules = [...original]; // Copy
-    // Fill in index to the right
-    for (let i = index; i < modules.length; i++) {
-      modules[i] = value;
-    }
-    return modules;
-  }
 
   /** Action Dispatch Methods */
   removeProduct(id: string): void {
