@@ -16,6 +16,12 @@ describe('ContentService', () => {
     expect(service).toBeTruthy();
   });
 
+  describe('windowInnerWidth', () => {
+    it('should return the value from the window', () => {
+      expect(service.windowInnerWidth()).toEqual(window.innerWidth);
+    });
+  });
+
   describe('confirm', () => {
     it('should add a confirmation to the subject', () => {
       let confirm: Confirmation | undefined;

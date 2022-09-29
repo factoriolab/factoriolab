@@ -16,8 +16,9 @@ export class ContentService {
     ),
     startWith(window.scrollY)
   );
+  windowInnerWidth = (): number => window.innerWidth;
   width$ = fromEvent(window, 'resize').pipe(
-    map(() => window.innerWidth),
+    map(this.windowInnerWidth),
     startWith(window.innerWidth)
   );
 

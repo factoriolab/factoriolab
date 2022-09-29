@@ -42,29 +42,29 @@ import {
 } from './router.service';
 
 const mockProduct: Product = {
-  id: '0',
+  id: '1',
   itemId: ItemId.SteelChest,
   rate: '1',
   rateType: RateType.Belts,
 };
 const mockProductsState: Products.ProductsState = {
-  ids: ['0'],
+  ids: ['1'],
   entities: {
-    ['0']: mockProduct,
+    ['1']: mockProduct,
   },
-  index: 1,
+  index: 2,
 };
 const mockProducer: Producer = {
-  id: '0',
+  id: '1',
   recipeId: ItemId.SteelChest,
   count: '1',
 };
 const mockProducersState: Producers.ProducersState = {
-  ids: ['0'],
+  ids: ['1'],
   entities: {
-    ['0']: mockProducer,
+    ['1']: mockProducer,
   },
-  index: 1,
+  index: 2,
 };
 const mockItemsState: Items.ItemsState = {
   [ItemId.SteelChest]: {
@@ -118,8 +118,8 @@ const mockSettingsState: Settings.SettingsState = {
   proliferatorSprayId: ItemId.ProductivityModule,
 };
 const mockZip: Zip = {
-  bare: 'p=steel-chest*1*1',
-  hash: 'pC6*1*1',
+  bare: 'p=steel-chest*1*1&q=steel-chest*1',
+  hash: 'pC6*1*1&qDB*1',
 };
 const mockZipPartial: Zip = {
   bare:
@@ -130,6 +130,7 @@ const mockZipPartial: Zip = {
 };
 const mockState: LabState = {
   productsState: mockProductsState,
+  producersState: mockProducersState,
   itemsState: mockItemsState,
   recipesState: mockRecipesState,
   factoriesState: mockFactoriesState,
@@ -236,39 +237,39 @@ describe('RouterService', () => {
     });
   });
 
-  // describe('zipState', () => {
-  //   it('should zip state', () => {
-  //     let zip: Zip | undefined;
-  //     service
-  //       .zipState(
-  //         Products.initialProductsState,
-  //         Producers.initialProducersState,
-  //         Items.initialItemsState,
-  //         Recipes.initialRecipesState,
-  //         Factories.initialFactoriesState,
-  //         Settings.initialSettingsState
-  //       )
-  //       .subscribe((z) => (zip = z));
-  //     expect(zip).toEqual({ bare: 'p=', hash: 'p' });
-  //     expect(service.zipPartial).toEqual({ bare: '', hash: '' });
-  //   });
+  describe('zipState', () => {
+    it('should zip state', () => {
+      let zip: Zip | undefined;
+      service
+        .zipState(
+          Products.initialProductsState,
+          Producers.initialProducersState,
+          Items.initialItemsState,
+          Recipes.initialRecipesState,
+          Factories.initialFactoriesState,
+          Settings.initialSettingsState
+        )
+        .subscribe((z) => (zip = z));
+      expect(zip).toEqual({ bare: '', hash: '' });
+      expect(service.zipPartial).toEqual({ bare: '', hash: '' });
+    });
 
-  // it('should zip full state', () => {
-  //   let zip: Zip | undefined;
-  //   service
-  //     .zipState(
-  //       mockProductsState,
-  //       mockProducersState,
-  //       mockItemsState,
-  //       mockRecipesState,
-  //       mockFactoriesState,
-  //       mockSettingsState
-  //     )
-  //     .subscribe((z) => (zip = z));
-  //   expect(zip).toEqual(mockZip);
-  //   expect(service.zipPartial).toEqual(mockZipPartial);
-  // });
-  // });
+    it('should zip full state', () => {
+      let zip: Zip | undefined;
+      service
+        .zipState(
+          mockProductsState,
+          mockProducersState,
+          mockItemsState,
+          mockRecipesState,
+          mockFactoriesState,
+          mockSettingsState
+        )
+        .subscribe((z) => (zip = z));
+      expect(zip).toEqual(mockZip);
+      expect(service.zipPartial).toEqual(mockZipPartial);
+    });
+  });
 
   describe('stepHref', () => {
     it('should return null for no items', () => {
@@ -358,41 +359,41 @@ describe('RouterService', () => {
       expect(service.dispatch).toHaveBeenCalledWith('p=', {} as any);
     });
 
-    // it('should unzip v0', () => {
-    //   spyOn(window, 'alert');
-    //   const url =
-    //     '/#z=eJxtUMEKgzAM.Zr1EOiwCmOXssv-Q9KaaqG20taNXfbtc-hAnYRA8pK8vGSQKRM5rjtKGQQIpqRgdofmiD4NIWauyGXQGNvAn9gGz-KmFVOiXjnrW96j7qwnXgIZQzrbh80v3odmdPT-h6YtaSBqfh3rBBShDh7KogAx-ZUZKWCIU3HHu5naMi4k9ZHEer7BjNGjJpakOBdwqu4Hpwd0IL5CqsuiZrbVT8C40TZLfPsAu.98yQ__';
-    //   (router.events as any).next(new NavigationEnd(2, url, url));
+    it('should unzip v0', () => {
+      spyOn(window, 'alert');
+      const url =
+        '/#z=eJxtUNsKwyAM.Zr5EHDUFsZeZC.7j6E2toJVp3ZjL.v2dbSD2pUQyOXk5CSBp4xoqeoxZWDAyL2sEMkZMRtUjsKl4GOmEm0GJWLn6VN03pFYQEVKOEhrXEcHoXrjkNaAWqPK5mHyiw6-HS2-.0vTlhQQ2x9inYBEobyDuqqATX4mmjMIcWpueIupknEhue1JvM036DE6oZAkzo4VHJrrzuleWGBfIc1pUTPb6ieg7WjaJb58AJs7glk_';
+      (router.events as any).next(new NavigationEnd(2, url, url));
 
-    //   // const newZip = service.bytesToBase64(
-    //   //   deflate(
-    //   //     mockZip.bare +
-    //   //       '&b=1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectiv' +
-    //   //       'ity-module*1*speed-module~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2' +
-    //   //       '_steel-furnace&s=1.0*%3D*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon*?'
-    //   //   )
-    //   // );
-    //   // console.log(newZip);
+      // const newZip = service.bytesToBase64(
+      //   deflate(
+      //     mockZip.bare +
+      //       '&b=1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectiv' +
+      //       'ity-module*1*speed-module~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2' +
+      //       '_steel-furnace&s=1.0*%3D*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon*?'
+      //   )
+      // );
+      // console.log(newZip);
 
-    //   const mockStateV0: App.PartialState = {
-    //     ...mockState,
-    //     ...{ settingsState: { ...mockState.settingsState } },
-    //   };
-    //   delete mockStateV0.settingsState?.beaconReceivers;
-    //   delete mockStateV0.settingsState?.costFactor;
-    //   delete mockStateV0.settingsState?.costFactory;
-    //   delete mockStateV0.settingsState?.costInput;
-    //   delete mockStateV0.settingsState?.costIgnored;
-    //   delete mockStateV0.settingsState?.proliferatorSprayId;
-    //   expect(service.dispatch).toHaveBeenCalledWith(
-    //     mockZip.bare +
-    //       '&b=1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectiv' +
-    //       'ity-module*1*speed-module~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2' +
-    //       '_steel-furnace&s=1.0*%3D*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon*?',
-    //     mockStateV0
-    //   );
-    //   expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
-    // });
+      const mockStateV0: App.PartialState = {
+        ...mockState,
+        ...{ settingsState: { ...mockState.settingsState } },
+      };
+      delete mockStateV0.settingsState?.beaconReceivers;
+      delete mockStateV0.settingsState?.costFactor;
+      delete mockStateV0.settingsState?.costFactory;
+      delete mockStateV0.settingsState?.costInput;
+      delete mockStateV0.settingsState?.costIgnored;
+      delete mockStateV0.settingsState?.proliferatorSprayId;
+      expect(service.dispatch).toHaveBeenCalledWith(
+        mockZip.bare +
+          '&b=1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectiv' +
+          'ity-module*1*speed-module~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2' +
+          '_steel-furnace&s=1.0*%3D*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon*?',
+        mockStateV0
+      );
+      expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
+    });
 
     it('should unzip empty v1', () => {
       const v1Empty = 'p=&v=1';
@@ -788,8 +789,8 @@ describe('RouterService', () => {
   describe('zipList', () => {
     it('should zip a list of strings', () => {
       expect(service.zipList([mockZip, mockZip])).toEqual({
-        bare: 'p%3Dsteel-chest*1*1_p%3Dsteel-chest*1*1',
-        hash: 'pC6*1*1_pC6*1*1',
+        bare: encodeURIComponent(mockZip.bare + '_' + mockZip.bare),
+        hash: mockZip.hash + '_' + mockZip.hash,
       });
     });
   });

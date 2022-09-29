@@ -148,6 +148,32 @@ describe('SettingsComponent', () => {
     });
   });
 
+  describe('changeBeaconModuleRank', () => {
+    it('should set the defaults for the default factory', () => {
+      spyOn(component, 'setBeaconModuleRank');
+      component.changeBeaconModuleRank('', [], {
+        beaconModuleId: 'beaconModuleId',
+      } as any);
+      expect(component.setBeaconModuleRank).toHaveBeenCalledWith(
+        '',
+        [],
+        ['beaconModuleId']
+      );
+    });
+
+    it('should set the defaults for a specific factory', () => {
+      spyOn(component, 'setBeaconModuleRank');
+      component.changeBeaconModuleRank(ItemId.AssemblingMachine1, [], {
+        beaconModuleRankIds: ['beaconModuleId'],
+      } as any);
+      expect(component.setBeaconModuleRank).toHaveBeenCalledWith(
+        ItemId.AssemblingMachine1,
+        [],
+        ['beaconModuleId']
+      );
+    });
+  });
+
   describe('toggleBeaconReceivers', () => {
     it('should turn off beacon power estimation', () => {
       spyOn(component, 'setBeaconReceivers');

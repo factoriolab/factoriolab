@@ -77,9 +77,10 @@ export const RationalProducts = ProductsList.map((p) => {
   rp.viaId = rp.itemId;
   return rp;
 });
+export const RationalProduct = RationalProducts[0];
 export const Producer: M.Producer = {
   id: '1',
-  recipeId: RecipeId.WoodenChest,
+  recipeId: RecipeId.IronPlate,
   count: '1',
 };
 export const ProducersState: Producers.ProducersState = {
@@ -87,6 +88,10 @@ export const ProducersState: Producers.ProducersState = {
   entities: { ['1']: Producer },
   index: 2,
 };
+export const RationalProducer = new M.RationalProducer(
+  Producer,
+  Dataset.recipeR[RecipeId.IronPlate]
+);
 export const ProductIds = ProductsList.map((p) => p.id);
 export const ProductEntities =
   Products.getProductsBy.projector(RationalProducts);

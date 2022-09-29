@@ -1,7 +1,7 @@
 import { Constraint, Model, Simplex, Status, Variable } from 'glpk-ts';
 
 import { environment } from 'src/environments';
-import { notNullish } from '~/helpers';
+import { fnPropsNotNullish } from '~/helpers';
 import {
   Dataset,
   Entities,
@@ -175,22 +175,18 @@ export class SimplexUtility {
 
     if (recipes) {
       return steps
-        .map((s): [string, Rational] | null =>
-          s.recipeId && s.factories ? [s.recipeId, s.factories] : null
-        )
-        .filter(notNullish)
+        .filter(fnPropsNotNullish('recipeId', 'factories'))
         .sort((a, b) =>
-          data.recipeR[b[0]]
+          data.recipeR[b.recipeId]
             .output(itemId)
-            .sub(data.recipeR[a[0]].output(itemId))
+            .sub(data.recipeR[a.recipeId].output(itemId))
             .toNumber()
-        );
+        )
+        .map((s) => [s.recipeId, s.factories]);
     } else {
       return steps
-        .map((s): [string, Rational] | null =>
-          s.itemId && s.items ? [s.itemId, s.items] : null
-        )
-        .filter(notNullish);
+        .filter(fnPropsNotNullish('itemId', 'items'))
+        .map((s) => [s.itemId, s.items]);
     }
   }
 

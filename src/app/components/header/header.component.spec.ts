@@ -43,7 +43,7 @@ describe('HeaderComponent', () => {
       mockStore.overrideSelector(Products.getBaseProducts, []);
       mockStore.overrideSelector(Producers.getBaseProducers, [Mocks.Producer]);
       mockStore.refreshState();
-      expect(title.setTitle).toHaveBeenCalledWith('Wooden chest | FactorioLab');
+      expect(title.setTitle).toHaveBeenCalledWith('Iron plate | FactorioLab');
     });
   });
 
