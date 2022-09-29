@@ -3,7 +3,7 @@ import { MockStore } from '@ngrx/store/testing';
 
 import { DispatchTest, TestModule } from 'src/tests';
 import { AppSharedModule } from '~/app-shared.module';
-import { LabState, Products, Settings } from '~/store';
+import { LabState, Producers, Products, Settings } from '~/store';
 import { ProductsComponent } from './products.component';
 
 describe('ProductsComponent', () => {
@@ -36,7 +36,11 @@ describe('ProductsComponent', () => {
     dispatch.idVal('setRate', Products.SetRateAction);
     dispatch.idVal('setRateType', Products.SetRateTypeAction);
     dispatch.idVal('setVia', Products.SetViaAction);
+    dispatch.val('removeProducer', Producers.RemoveAction);
+    dispatch.idVal('setRecipe', Producers.SetRecipeAction);
+    dispatch.idVal('setCount', Producers.SetCountAction);
     dispatch.val('addProduct', Products.AddAction);
+    dispatch.val('addProducer', Producers.AddAction);
     dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
   });
 });

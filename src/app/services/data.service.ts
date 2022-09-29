@@ -29,11 +29,13 @@ export class DataService {
     private store: Store<LabState>,
     private translateSvc: TranslateService
   ) {
-    this.initialize(
-      BrowserUtility.zip,
-      BrowserUtility.storedState,
-      Settings.initialSettingsState
-    );
+    if (!BrowserUtility.isRedirect && !BrowserUtility.zip) {
+      this.initialize(
+        BrowserUtility.storedState,
+        Settings.initialSettingsState
+      );
+    }
+
     combineLatest([
       this.store.select(Settings.getModId),
       this.translateSvc.onLangChange,
@@ -45,18 +47,15 @@ export class DataService {
   }
 
   initialize(
-    zip: string,
     stored: Partial<LabState> | null,
     initial: Settings.SettingsState
   ): void {
-    if (!zip) {
-      const id = stored?.settingsState?.modId || initial.modId;
-      this.requestData(id).subscribe(([data]) => {
-        if (!stored?.productsState) {
-          this.store.dispatch(new Products.ResetAction(data.items[0].id));
-        }
-      });
-    }
+    const id = stored?.settingsState?.modId || initial.modId;
+    this.requestData(id).subscribe(([data]) => {
+      if (!stored?.productsState && !stored?.producersState) {
+        this.store.dispatch(new Products.ResetAction(data.items[0].id));
+      }
+    });
   }
 
   requestData(id: string): Observable<[ModData, ModHash, ModI18n | null]> {
@@ -75,6 +74,7 @@ export class DataService {
         shareReplay()
       );
     }
+
     const data$ = this.cacheData[id];
 
     /** Setup observable for hash */
@@ -86,6 +86,7 @@ export class DataService {
         shareReplay()
       );
     }
+
     const hash$ = this.cacheHash[id];
 
     /** Setup observable for i18n */

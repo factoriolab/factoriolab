@@ -7,8 +7,8 @@
   [draggable]="false"
   [resizable]="false"
   appendTo="body"
-  [style]="{ height: '500px', width: '400px' }"
-  [breakpoints]="{ '458px': '100vw' }"
+  [style]="{ height: '500px', width: '415px' }"
+  [breakpoints]="{ '415px': '100vw' }"
 >
   <ng-template pTemplate="header">
     <span class="w-100 me-3 p-input-icon-right">
@@ -23,35 +23,41 @@
       />
     </span>
   </ng-template>
-  <p-tabView [scrollable]="true" [(activeIndex)]="activeIndex">
-    <ng-container *ngFor="let id of categoryIds; let i = index">
+  <p-tabView [(activeIndex)]="activeIndex">
+    <ng-container *ngFor="let categoryId of categoryIds; let i = index">
       <p-tabPanel
-        *ngIf="categoryEntities[id] as category"
+        *ngIf="categoryEntities[categoryId] as category"
         [tooltip]="category.name"
         [selected]="i === activeIndex"
       >
         <ng-template pTemplate="header">
-          <i [class]="id | iconSmClass: 'category'"></i>
+          <i [class]="categoryId | iconSmClass: 'category'"></i>
         </ng-template>
         <ng-template pTemplate="content">
-          <div
-            *ngFor="let itemIds of categoryItemRows[id]"
-            class="d-flex flex-wrap"
-          >
-            <ng-container *ngFor="let itemId of itemIds">
-              <button
-                pButton
-                pRipple
-                type="button"
-                class="me-1 mb-1"
-                [class.p-button-text]="itemId !== selectedId"
-                [icon]="itemId | iconSmClass"
-                [pTooltip]="itemId | itemTooltip: vm.data"
-                [escape]="false"
-                (click)="clickItem(itemId)"
-              ></button>
-            </ng-container>
-          </div>
+          <p-scrollPanel [style]="{ height: '363px' }">
+            <div
+              *ngFor="let ids of categoryRows[categoryId]"
+              class="d-flex flex-wrap"
+            >
+              <ng-container *ngFor="let id of ids">
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="me-1 mb-1"
+                  [class.p-button-text]="id !== selectedId"
+                  [icon]="id | iconSmClass: type"
+                  [pTooltip]="
+                    type === 'item'
+                      ? (id | itemTooltip: vm.data)
+                      : (id | recipeTooltip: vm.data)
+                  "
+                  [escape]="false"
+                  (click)="clickId(id)"
+                ></button>
+              </ng-container>
+            </div>
+          </p-scrollPanel>
         </ng-template>
       </p-tabPanel>
     </ng-container>

@@ -66,6 +66,10 @@
   }
 
   .module-dropdown:hover ~ .module-dropdown {
+    .lab-icon-sm {
+      opacity: 0.3;
+    }
+
     &:not(.last) .p-dropdown {
       border-top-color: var(--primary-color);
       border-bottom-color: var(--primary-color);

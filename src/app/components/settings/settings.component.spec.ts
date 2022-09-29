@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { MemoizedSelector } from '@ngrx/store';
 import { MockStore } from '@ngrx/store/testing';
 import { Confirmation } from 'primeng/api';
 
@@ -11,7 +10,7 @@ import {
   TestModule,
   TestUtility,
 } from 'src/tests';
-import { Entities, Game } from '~/models';
+import { Game } from '~/models';
 import { ContentService } from '~/services';
 import { App, Factories, LabState, Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
@@ -22,7 +21,6 @@ describe('SettingsComponent', () => {
   let fixture: ComponentFixture<SettingsComponent>;
   let router: Router;
   let mockStore: MockStore<LabState>;
-  let mockGetStates: MemoizedSelector<LabState, Entities<string>>;
   let contentSvc: ContentService;
   const id = 'id';
   const value = 'value';
@@ -36,7 +34,7 @@ describe('SettingsComponent', () => {
     fixture = TestBed.createComponent(SettingsComponent);
     router = TestBed.inject(Router);
     mockStore = TestBed.inject(MockStore);
-    mockGetStates = mockStore.overrideSelector(
+    mockStore.overrideSelector(
       Preferences.getStates,
       Mocks.PreferencesState.states
     );
@@ -150,6 +148,32 @@ describe('SettingsComponent', () => {
     });
   });
 
+  describe('changeBeaconModuleRank', () => {
+    it('should set the defaults for the default factory', () => {
+      spyOn(component, 'setBeaconModuleRank');
+      component.changeBeaconModuleRank('', [], {
+        beaconModuleId: 'beaconModuleId',
+      } as any);
+      expect(component.setBeaconModuleRank).toHaveBeenCalledWith(
+        '',
+        [],
+        ['beaconModuleId']
+      );
+    });
+
+    it('should set the defaults for a specific factory', () => {
+      spyOn(component, 'setBeaconModuleRank');
+      component.changeBeaconModuleRank(ItemId.AssemblingMachine1, [], {
+        beaconModuleRankIds: ['beaconModuleId'],
+      } as any);
+      expect(component.setBeaconModuleRank).toHaveBeenCalledWith(
+        ItemId.AssemblingMachine1,
+        [],
+        ['beaconModuleId']
+      );
+    });
+  });
+
   describe('toggleBeaconReceivers', () => {
     it('should turn off beacon power estimation', () => {
       spyOn(component, 'setBeaconReceivers');
@@ -180,7 +204,10 @@ describe('SettingsComponent', () => {
     dispatch.valDef('lowerFactory', Factories.LowerAction);
     dispatch.idValDef('setBeaconCount', Factories.SetBeaconCountAction);
     dispatch.idValDef('setBeacon', Factories.SetBeaconAction);
-    dispatch.idValDef('setBeaconModule', Factories.SetBeaconModuleAction);
+    dispatch.idValDef(
+      'setBeaconModuleRank',
+      Factories.SetBeaconModuleRankAction
+    );
     dispatch.valDef('addFactory', Factories.AddAction);
     dispatch.val('setBeaconReceivers', Settings.SetBeaconReceiversAction);
     dispatch.val('setProliferatorSpray', Settings.SetProliferatorSprayAction);

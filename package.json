@@ -1,7 +1,7 @@
 {
   "name": "factoriolab",
   "description": "Angular-based calculator for the game Factorio",
-  "version": "2.0.45",
+  "version": "2.0.46",
   "private": true,
   "contributors": [
     "Doug Broad (https://github.com/dcbroad3)"
@@ -21,7 +21,8 @@
     "test-build": "ng test --no-watch --browsers=ChromeHeadless",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
     "process-mod": "ts-node scripts/process-mod.ts",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "lint-build": "ng lint --max-warnings 0"
   },
   "dependencies": {
     "@angular/animations": "^14.2.1",
@@ -47,7 +48,7 @@
     "glpk-ts": "^0.0.9",
     "ngx-google-analytics": "^14.0.0",
     "pako": "^2.0.4",
-    "primeicons": "^5.0.0",
+    "primeicons": "^6.0.1",
     "primeng": "^14.0.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.4.0",
@@ -73,7 +74,6 @@
     "@typescript-eslint/eslint-plugin": "~5.36.2",
     "@typescript-eslint/parser": "~5.36.2",
     "eslint": "^8.23.0",
-    "fast-average-color-node": "^2.4.0",
     "jasmine-core": "~4.4.0",
     "jasmine-spec-reporter": "~7.0.0",
     "karma": "~6.4.0",

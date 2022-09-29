@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, fromEvent, map, Observable, startWith } from 'rxjs';
 
+import { fnPropsNotNullish } from '~/helpers';
 import { Theme } from '~/models';
 import { LabState, Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
@@ -58,22 +59,25 @@ export class ThemeService {
         css += `.${i}::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
       });
       data.itemIds
-        .filter((i) => data.itemEntities[i].icon)
-        .forEach((i) => {
-          const icon = data.iconEntities[data.itemEntities[i].icon!];
-          css += `.${i}.item::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+        .map((i) => data.itemEntities[i])
+        .filter(fnPropsNotNullish('icon'))
+        .forEach((item) => {
+          const icon = data.iconEntities[item.icon];
+          css += `.${item.id}.item::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
         });
       data.recipeIds
-        .filter((i) => data.recipeEntities[i].icon)
-        .forEach((i) => {
-          const icon = data.iconEntities[data.recipeEntities[i].icon!];
-          css += `.${i}.recipe::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+        .map((r) => data.recipeEntities[r])
+        .filter(fnPropsNotNullish('icon'))
+        .forEach((recipe) => {
+          const icon = data.iconEntities[recipe.icon];
+          css += `.${recipe.id}.recipe::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
         });
       data.categoryIds
-        .filter((i) => data.categoryEntities[i].icon)
-        .forEach((i) => {
-          const icon = data.iconEntities[data.categoryEntities[i].icon!];
-          css += `.${i}.category::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+        .map((c) => data.categoryEntities[c])
+        .filter(fnPropsNotNullish('icon'))
+        .forEach((category) => {
+          const icon = data.iconEntities[category.icon];
+          css += `.${category.id}.category::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
         });
       style.innerText = css;
       this.head.appendChild(style);

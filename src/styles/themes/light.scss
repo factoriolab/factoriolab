@@ -11,7 +11,7 @@ $surface-c: #e9ecef;
 $surface-d: #dee2e6;
 $text-color: #495057;
 $text-color-secondary: #6c757d;
-$primary-color: #bd7800; // hsl(38, 100, 37)
+$primary-color: #e67300; // hsl(30, 100, 45)
 $primary-color-text: #ffffff;
 $maskbg: rgba(0, 0, 0, 0.4);
 
@@ -97,7 +97,7 @@ $danger-a16: rgba($danger-color, 0.16);
   --surface-f: #ffffff;
   --text-color: #495057;
   --text-color-secondary: #6c757d;
-  --primary-color: #ffa200; // hsl(38, 100, 50)
+  --primary-color: #{$primary-color};
   --primary-color-text: #212529;
   --font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica,
     Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
@@ -111,7 +111,7 @@ $danger-a16: rgba($danger-color, 0.16);
   --surface-border: #dee2e6;
   --surface-hover: #e9ecef;
   --maskbg: rgba(0, 0, 0, 0.4);
-  --focus-ring: 0 0 0 0.2rem $shadow-color;
+  --focus-ring: 0 0 0 0.2rem #{$shadow-color};
   color-scheme: light;
 }
 
@@ -4040,7 +4040,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-scrollpanel .p-scrollpanel-bar {
-  background: $surface-b;
+  background: $surface-d;
   border: 0 none;
 }
 

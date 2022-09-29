@@ -1,3 +1,5 @@
+import { routes } from '~/app-routing.module';
+import { fnPropsNotNullish } from '~/helpers';
 import { STATE_KEY } from '~/models';
 import { LabState } from '~/store';
 
@@ -8,20 +10,29 @@ export class BrowserUtility {
   }
 
   static get search(): string {
-    return location.search.substring(1);
+    return window.location.search.substring(1);
   }
 
   static get hash(): string {
-    return location.hash.substring(1);
+    return window.location.hash.substring(1);
   }
 
   static get href(): string {
-    return location.href;
+    return window.location.href;
   }
 
   static get zip(): string {
     const hash = this.hash;
     return this.search || (hash.length > 1 && hash[1] === '=' && hash) || '';
+  }
+
+  static redirectRoutes = routes
+    .filter(fnPropsNotNullish('path', 'redirectTo'))
+    .map((r) => r.path.toLowerCase());
+
+  static get isRedirect(): boolean {
+    const path = window.location.pathname.toLowerCase();
+    return this.redirectRoutes.some((r) => path.endsWith(r));
   }
 
   static loadState(): Partial<LabState> | null {
@@ -54,14 +65,14 @@ export class BrowserUtility {
           },
         };
       } else {
-        const merge = { ...initial };
-        for (const key of Object.keys(merge) as (keyof LabState)[]) {
-          merge[key] = {
-            ...merge[key],
-            ...(state[key] as any),
-          };
+        const applyState = { ...state };
+        // Remove any unrecognized keys from the stored state before spreading
+        for (const key of Object.keys(applyState) as (keyof LabState)[]) {
+          if (initial[key] == null) {
+            delete applyState[key];
+          }
         }
-        return merge;
+        return { ...initial, ...applyState };
       }
     } else {
       return initial;

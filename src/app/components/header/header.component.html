@@ -16,13 +16,17 @@
     icon="fa-solid fa-bars"
     (click)="contentSvc.toggleSettings()"
   ></button>
-  <p-splitButton
-    styleClass="p-button-lg"
-    [icon]="vm.gameInfo.icon | iconSmClass"
-    [model]="vm.gameOptions"
-    (onClick)="selectGame(vm.gameInfo.route)"
-  >
-  </p-splitButton>
+  <a [routerLink]="vm.gameInfo.route">
+    <p-splitButton
+      styleClass="p-button-lg"
+      [icon]="vm.gameInfo.icon | iconSmClass"
+      [model]="vm.gameOptions"
+      [routerLink]="vm.gameInfo.route"
+      (onDropdownClick)="cancelRouterLink($event)"
+    >
+    </p-splitButton
+  ></a>
+
   <ul class="header-menu mb-1 mb-xl-0 px-0 px-sm-4 px-xl-0">
     <li *ngFor="let link of links">
       <a class="w-100" target="_blank" [href]="link.href">

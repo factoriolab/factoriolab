@@ -1,7 +1,4 @@
-import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
-import { MemoizedSelector } from '@ngrx/store';
 import { MockStore } from '@ngrx/store/testing';
 
 import {
@@ -19,16 +16,15 @@ import {
   StepDetail,
   StepDetailTab,
 } from '~/models';
-import { RouterService } from '~/services';
 import {
-  Factories,
   Items,
   LabState,
+  Producers,
   Products,
   Recipes,
   Settings,
 } from '~/store';
-import { ExportUtility, RecipeUtility } from '~/utilities';
+import { ExportUtility } from '~/utilities';
 import { ListComponent } from './list.component';
 import { ListModule } from './list.module';
 
@@ -39,12 +35,7 @@ enum DataTest {
 describe('ListComponent', () => {
   let component: ListComponent;
   let fixture: ComponentFixture<ListComponent>;
-  let route: ActivatedRoute;
-  let router: RouterService;
   let mockStore: MockStore<LabState>;
-  let mockGetSteps: MemoizedSelector<LabState, Step[]>;
-  let mockGetStepDetails: MemoizedSelector<LabState, Entities<StepDetail>>;
-  let detectChanges: jasmine.Spy;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -52,11 +43,9 @@ describe('ListComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(ListComponent);
-    route = TestBed.inject(ActivatedRoute);
-    router = TestBed.inject(RouterService);
     mockStore = TestBed.inject(MockStore);
-    mockGetSteps = mockStore.overrideSelector(Products.getSteps, Mocks.Steps);
-    mockGetStepDetails = mockStore.overrideSelector(
+    mockStore.overrideSelector(Products.getSteps, Mocks.Steps);
+    mockStore.overrideSelector(
       Products.getStepDetails,
       Mocks.Steps.reduce((e: Entities<StepDetail>, s) => {
         e[s.id] = {
@@ -72,8 +61,6 @@ describe('ListComponent', () => {
         return e;
       }, {})
     );
-    const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
-    detectChanges = spyOn(ref.constructor.prototype, 'detectChanges');
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -105,9 +92,17 @@ describe('ListComponent', () => {
     it('should reset a step', () => {
       spyOn(component, 'resetItem');
       spyOn(component, 'resetRecipe');
-      component.resetStep(Mocks.Step1);
+      spyOn(component, 'resetProducer');
+      const step: Step = {
+        id: '0',
+        itemId: ItemId.Coal,
+        recipeId: RecipeId.Coal,
+        producerId: '1',
+      };
+      component.resetStep(step);
       expect(component.resetItem).toHaveBeenCalled();
       expect(component.resetRecipe).toHaveBeenCalled();
+      expect(component.resetProducer).toHaveBeenCalled();
     });
   });
 
@@ -203,121 +198,126 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('changeFactory', () => {
-    it('should set up default for factory', () => {
-      spyOn(RecipeUtility, 'bestMatch').and.returnValue('default');
-      spyOn(component, 'setFactory');
-      component.changeFactory(
-        RecipeId.AdvancedCircuit,
-        'value',
-        Mocks.FactorySettingsInitial,
-        Mocks.AdjustedData
-      );
-      expect(component.setFactory).toHaveBeenCalledWith(
-        RecipeId.AdvancedCircuit,
-        'value',
-        'default'
-      );
-    });
-
-    it('should handle null factory ids', () => {
-      spyOn(RecipeUtility, 'bestMatch').and.returnValue('default');
-      spyOn(component, 'setFactory');
-      component.changeFactory(
-        RecipeId.AdvancedCircuit,
-        'value',
-        Factories.initialFactoriesState,
-        Mocks.AdjustedData
-      );
-      expect(component.setFactory).toHaveBeenCalledWith(
-        RecipeId.AdvancedCircuit,
-        'value',
-        'default'
-      );
-    });
-  });
-
   describe('changeRecipeField', () => {
+    const step: Step = {
+      id: '0',
+      recipeId: RecipeId.WoodenChest,
+      recipeSettings: Mocks.RationalRecipeSettingsInitial[RecipeId.WoodenChest],
+    };
+
+    it('should skip a step with no recipe', () => {
+      spyOn(component, 'setFactory');
+      component.changeRecipeField(
+        { id: '0' },
+        '1',
+        Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
+        RecipeField.Factory
+      );
+      expect(component.setFactory).not.toHaveBeenCalled();
+    });
+
+    it('should set up default for factory', () => {
+      spyOn(component, 'setFactory');
+      component.changeRecipeField(
+        step,
+        ItemId.AssemblingMachine2,
+        Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
+        RecipeField.Factory
+      );
+      expect(component.setFactory).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        ItemId.AssemblingMachine2,
+        ItemId.AssemblingMachine3,
+        false
+      );
+    });
+
     it('should set up default for factory modules', () => {
       spyOn(component, 'setFactoryModules');
       component.changeRecipeField(
-        RecipeId.WoodenChest,
+        step,
         ItemId.SpeedModule3,
-        Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
         RecipeField.FactoryModules,
-        0,
-        Mocks.AdjustedData
+        0
       );
       expect(component.setFactoryModules).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         new Array(4).fill(ItemId.SpeedModule3),
-        new Array(4).fill(ItemId.SpeedModule3)
+        new Array(4).fill(ItemId.SpeedModule3),
+        false
       );
     });
 
     it('should set up default for beacon count', () => {
       spyOn(component, 'setBeaconCount');
       component.changeRecipeField(
-        RecipeId.WoodenChest,
+        step,
         '4',
-        Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
         RecipeField.BeaconCount
       );
       expect(component.setBeaconCount).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         '4',
-        '8'
+        '8',
+        false
       );
     });
 
     it('should set up default for beacon', () => {
       spyOn(component, 'setBeacon');
       component.changeRecipeField(
-        RecipeId.WoodenChest,
+        step,
         ItemId.Beacon,
-        Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
         RecipeField.Beacon
       );
       expect(component.setBeacon).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         ItemId.Beacon,
-        ItemId.Beacon
+        ItemId.Beacon,
+        false
       );
     });
 
     it('should set up default for beacon modules', () => {
       spyOn(component, 'setBeaconModules');
       component.changeRecipeField(
-        RecipeId.WoodenChest,
+        step,
         ItemId.SpeedModule3,
-        Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
         RecipeField.BeaconModules,
         0
       );
       expect(component.setBeaconModules).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         new Array(2).fill(ItemId.SpeedModule3),
-        new Array(2).fill(ItemId.SpeedModule3)
+        new Array(2).fill(ItemId.SpeedModule3),
+        false
       );
     });
 
     it('should set up default for overclock', () => {
       spyOn(component, 'setOverclock');
       component.changeRecipeField(
-        RecipeId.WoodenChest,
+        step,
         100,
-        Mocks.RecipeSettingsInitial,
         Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
         RecipeField.Overclock
       );
       expect(component.setOverclock).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         100,
-        undefined
+        undefined,
+        false
       );
     });
   });
@@ -328,14 +328,24 @@ describe('ListComponent', () => {
     dispatch.idValDef('setBelt', Items.SetBeltAction);
     dispatch.idValDef('setWagon', Items.SetWagonAction);
     dispatch.idValDef('setFactory', Recipes.SetFactoryAction);
+    dispatch.idValDefAlt('setFactory', Producers.SetFactoryAction);
     dispatch.idValDef('setFactoryModules', Recipes.SetFactoryModulesAction);
+    dispatch.idValDefAlt(
+      'setFactoryModules',
+      Producers.SetFactoryModulesAction
+    );
     dispatch.idValDef('setBeaconCount', Recipes.SetBeaconCountAction);
+    dispatch.idValDefAlt('setBeaconCount', Producers.SetBeaconCountAction);
     dispatch.idValDef('setBeacon', Recipes.SetBeaconAction);
+    dispatch.idValDefAlt('setBeacon', Producers.SetBeaconAction);
     dispatch.idValDef('setBeaconModules', Recipes.SetBeaconModulesAction);
+    dispatch.idValDefAlt('setBeaconModules', Producers.SetBeaconModulesAction);
     dispatch.idVal('setBeaconTotal', Recipes.SetBeaconTotalAction);
     dispatch.idValDef('setOverclock', Recipes.SetOverclockAction);
+    dispatch.idValDefAlt('setOverclock', Producers.SetOverclockAction);
     dispatch.val('resetItem', Items.ResetItemAction);
     dispatch.val('resetRecipe', Recipes.ResetRecipeAction);
+    dispatch.val('resetProducer', Producers.ResetProducerAction);
     dispatch.void('resetIgnores', Items.ResetIgnoresAction);
     dispatch.void('resetBelts', Items.ResetBeltsAction);
     dispatch.void('resetWagons', Items.ResetWagonsAction);

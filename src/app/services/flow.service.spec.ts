@@ -31,6 +31,8 @@ describe('FlowService', () => {
             itemId: ItemId.CrudeOil,
             items: Rational.ten,
             recipeId: RecipeId.CrudeOil,
+            recipeSettings:
+              Mocks.RationalRecipeSettingsInitial[RecipeId.CrudeOil],
             factories: Rational.one,
             parents: { [RecipeId.AdvancedOilProcessing]: Rational.one },
             outputs: { [ItemId.CrudeOil]: Rational.from(1, 2) },
@@ -41,6 +43,10 @@ describe('FlowService', () => {
             items: Rational.one,
             output: Rational.one,
             recipeId: RecipeId.AdvancedOilProcessing,
+            recipeSettings:
+              Mocks.RationalRecipeSettingsInitial[
+                RecipeId.AdvancedOilProcessing
+              ],
             factories: Rational.one,
             outputs: {
               [ItemId.HeavyOil]: Rational.one,
@@ -59,16 +65,23 @@ describe('FlowService', () => {
             itemId: ItemId.LightOil,
             items: Rational.one,
           },
+          {
+            id: '4',
+            recipeId: RecipeId.IronPlate,
+            factories: Rational.one,
+            producerId: '0',
+            recipeSettings:
+              Mocks.RationalRecipeSettingsInitial[RecipeId.IronPlate],
+          },
         ],
         Mocks.ItemSettingsInitial,
-        Mocks.RecipeSettingsInitial,
         Mocks.Dataset,
         displayRateInfo[DisplayRate.PerMinute],
         Mocks.PreferencesState.columns,
         themeMap[Theme.Light]
       );
 
-      expect(result.nodes.length).toEqual(5);
+      expect(result.nodes.length).toEqual(6);
       expect(result.links.length).toEqual(4);
     });
   });

@@ -35,7 +35,7 @@ export class Rational {
     return x < bigZero ? x * bigMinusOne : x;
   }
 
-  static from(p: number, q: number = 1): Rational {
+  static from(p: number, q = 1): Rational {
     if (q === 0) {
       throw Error(DIVIDE_BY_ZERO);
     }
@@ -237,7 +237,14 @@ export class Rational {
     if (this.isInteger()) {
       return this;
     } else {
-      return new Rational(this.p / this.q + bigOne);
+      // Calculate ceiling using absolute value
+      const num = new Rational(Rational.abs(this.p) / this.q + bigOne);
+      if (this.p < bigZero) {
+        // Inverse back to negative if necessary
+        return num.inverse();
+      } else {
+        return num;
+      }
     }
   }
 

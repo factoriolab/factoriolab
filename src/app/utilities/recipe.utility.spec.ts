@@ -30,7 +30,7 @@ describe('RecipeUtility', () => {
   describe('defaultModules', () => {
     it('should fill in modules list for factory', () => {
       const result = RecipeUtility.defaultModules(
-        [ItemId.SpeedModule],
+        [{ value: ItemId.SpeedModule }],
         [ItemId.ProductivityModule, ItemId.SpeedModule],
         1
       );
@@ -1017,6 +1017,86 @@ describe('RecipeUtility', () => {
         Mocks.Dataset
       );
       expect(result.viaId).toBeUndefined();
+    });
+  });
+
+  describe('adjustProducer', () => {
+    it('should adjust a producer based on settings', () => {
+      const result = RecipeUtility.adjustProducer(
+        { id: '1', recipeId: RecipeId.IronPlate, count: '1' },
+        Mocks.FactorySettingsInitial,
+        Mocks.Dataset
+      );
+      expect(result.factoryId).toEqual(ItemId.ElectricFurnace);
+      expect(result.factoryModuleOptions?.length).toEqual(10);
+      expect(result.factoryModuleIds).toEqual([
+        ItemId.ProductivityModule3,
+        ItemId.ProductivityModule3,
+      ]);
+      expect(result.beaconCount).toEqual('8');
+      expect(result.beaconId).toEqual(ItemId.Beacon);
+      expect(result.beaconModuleOptions?.length).toEqual(7);
+      expect(result.beaconModuleIds).toEqual([
+        ItemId.SpeedModule3,
+        ItemId.SpeedModule3,
+      ]);
+      expect(result.overclock).toBeUndefined();
+    });
+
+    it('should handle a factory with no modules', () => {
+      const factories = {
+        ...Mocks.FactorySettingsInitial,
+        ...{ ids: undefined },
+      };
+      const result = RecipeUtility.adjustProducer(
+        {
+          id: '1',
+          recipeId: RecipeId.IronPlate,
+          count: '1',
+        },
+        factories,
+        Mocks.Dataset
+      );
+      expect(result.factoryId).toEqual(ItemId.StoneFurnace);
+    });
+
+    it('should handle nullish values', () => {
+      spyOn(RecipeUtility, 'allowsModules').and.returnValue(true);
+      const data = Mocks.getDataset();
+      data.factoryEntities[ItemId.StoneFurnace].modules = undefined;
+      const factories = {
+        ...Mocks.FactorySettingsInitial,
+        ...{
+          ids: undefined,
+          entities: {
+            ...Mocks.FactorySettingsInitial.entities,
+            ...{
+              [ItemId.ElectricFurnace]: {
+                ...Mocks.FactorySettingsInitial.entities[
+                  ItemId.ElectricFurnace
+                ],
+                ...{
+                  moduleRankIds: undefined,
+                  beaconModuleRankIds: undefined,
+                },
+              },
+            },
+          },
+        },
+      };
+      const result = RecipeUtility.adjustProducer(
+        {
+          id: '1',
+          recipeId: RecipeId.IronPlate,
+          count: '1',
+          beaconId: ItemId.Beacon,
+        },
+        factories,
+        data
+      );
+      expect(result.factoryId).toEqual(ItemId.StoneFurnace);
+      expect(result.factoryModuleIds).toEqual([]);
+      expect(result.beaconModuleIds).toEqual([ItemId.Module, ItemId.Module]);
     });
   });
 

@@ -35,6 +35,13 @@ export class FactoryTooltipPipe implements PipeTransform {
       ]);
     }
 
+    if (factory.disallowEffects) {
+      tableRows.push([
+        this.translateSvc.instant('tooltip.disallowEffects'),
+        factory.disallowEffects.join(', '),
+      ]);
+    }
+
     if (factory.type) {
       tableRows.push([
         this.translateSvc.instant('tooltip.energyType'),

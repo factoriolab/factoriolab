@@ -1,9 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { MockStore } from '@ngrx/store/testing';
 
-import { DispatchTest, initialState, TestModule } from 'src/tests';
-import { AppSharedModule } from '~/app-shared.module';
+import { DispatchTest, TestModule } from 'src/tests';
 import { LabState, Recipes, Settings } from '~/store';
 import { MatrixComponent } from './matrix.component';
 import { MatrixModule } from './matrix.module';

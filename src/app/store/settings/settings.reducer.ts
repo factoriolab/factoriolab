@@ -63,7 +63,7 @@ export function settingsReducer(
       return initialSettingsState;
     case SettingsActionType.SET_PRESET:
       return { ...state, ...{ preset: action.payload } };
-    case SettingsActionType.SET_MOD:
+    case SettingsActionType.SET_MOD: {
       const newState = {
         ...state,
         ...{
@@ -81,6 +81,7 @@ export function settingsReducer(
       delete newState.cargoWagonId;
       delete newState.fluidWagonId;
       return newState;
+    }
     case SettingsActionType.SET_DISABLED_RECIPES:
       return {
         ...state,

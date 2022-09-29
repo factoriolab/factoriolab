@@ -20,6 +20,7 @@ describe('RationalFactory', () => {
         consumption: {
           [ItemId.Coal]: 1,
         },
+        disallowEffects: ['productivity'],
       });
       expect(result.speed).toEqual(Rational.one);
       expect(result.modules).toEqual(2);
@@ -32,6 +33,7 @@ describe('RationalFactory', () => {
       expect(result.research).toBeTrue();
       expect(result.overclockFactor).toEqual(1);
       expect(result.consumption).toEqual({ [ItemId.Coal]: Rational.one });
+      expect(result.disallowEffects).toEqual(['productivity']);
     });
 
     it('should handle string for drain', () => {

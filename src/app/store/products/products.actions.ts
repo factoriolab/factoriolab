@@ -36,7 +36,7 @@ export class SetItemAction implements Action {
 
 export class SetRateAction implements Action {
   readonly type = ProductsActionType.SET_RATE;
-  constructor(public payload: IdPayload<string>) {}
+  constructor(public payload: IdPayload) {}
 }
 
 export class SetRateTypeAction implements Action {

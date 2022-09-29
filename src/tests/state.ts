@@ -4,6 +4,7 @@ import {
   Items,
   LabState,
   Preferences,
+  Producers,
   Products,
   Recipes,
   Settings,
@@ -28,6 +29,7 @@ const datasetsState = Datasets.datasetsReducer(
 export const initialState: LabState = {
   datasetsState,
   productsState: Products.initialProductsState,
+  producersState: Producers.initialProducersState,
   itemsState: Items.initialItemsState,
   recipesState: Recipes.initialRecipesState,
   factoriesState: Factories.initialFactoriesState,

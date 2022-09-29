@@ -16,7 +16,7 @@ export class DatasetsEffects {
         const id =
           a.payload.settingsState?.modId || Settings.initialSettingsState.modId;
         return this.dataSvc.requestData(id).pipe(
-          filter(() => !a.payload.productsState),
+          filter(() => !a.payload.productsState && !a.payload.producersState),
           map(([data]) => new Products.ResetAction(data.items[0].id))
         );
       })

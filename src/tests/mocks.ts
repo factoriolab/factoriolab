@@ -2,39 +2,13 @@ import { data } from 'src/data';
 import mod from 'src/data/1.1/data.json';
 import hash from 'src/data/1.1/hash.json';
 import i18n from 'src/data/1.1/i18n/zh.json';
-import {
-  Dataset as _Dataset,
-  Entities,
-  FlowData,
-  Game,
-  ItemSettings,
-  Language,
-  MatrixResult,
-  MatrixResultType,
-  Mod as _Mod,
-  ModData,
-  ModHash,
-  ModI18n,
-  NodeType,
-  PowerUnit,
-  Preset,
-  Product,
-  RateType,
-  Rational,
-  RationalProduct,
-  RationalRecipeSettings as _RationalRecipeSettings,
-  RecipeSettings,
-  SimplexType,
-  Step,
-  Theme,
-  themeMap,
-  toEntities,
-} from '~/models';
+import * as M from '~/models';
 import {
   Datasets,
   Factories,
   Items,
   Preferences,
+  Producers,
   Products,
   Recipes,
   Settings,
@@ -44,22 +18,23 @@ import { RecipeId } from './recipe-id';
 
 export const Raw = data;
 export const DataState = Datasets.initialDatasetsState;
-export const App = data.app;
 export const ModInfo = data.mods[0];
-export const Data = mod as unknown as ModData;
-export const Hash: ModHash = hash;
-export const I18n: ModI18n = i18n;
-export const Mod = { ...ModInfo, ...Data } as _Mod;
-export const Defaults = Settings.getDefaults.projector(Preset.Beacon8, Mod)!;
-export function getDataset(): _Dataset {
+export const Data = mod as unknown as M.ModData;
+export const Hash: M.ModHash = hash;
+export const I18n: M.ModI18n = i18n;
+export const Mod = { ...ModInfo, ...Data } as M.Mod;
+export const Defaults = Settings.getDefaults.projector(
+  M.Preset.Beacon8,
+  Mod
+) as M.Defaults;
+export function getDataset(): M.Dataset {
   Settings.getDataset.release();
   return Settings.getDataset.projector(
-    data.app,
     Mod,
     null,
     null,
     Defaults,
-    Game.Factorio
+    M.Game.Factorio
   );
 }
 export const Dataset = getDataset();
@@ -67,103 +42,118 @@ export const CategoryId = Dataset.categoryIds[0];
 export const Item1 = Dataset.itemEntities[Dataset.itemIds[0]];
 export const Item2 = Dataset.itemEntities[Dataset.itemIds[1]];
 export const Recipe1 = Dataset.recipeEntities[Dataset.recipeIds[0]];
-export const Product1: Product = {
-  id: '0',
+export const Product1: M.Product = {
+  id: '1',
   itemId: Item1.id,
   rate: '1',
-  rateType: RateType.Items,
+  rateType: M.RateType.Items,
 };
-export const Product2: Product = {
-  id: '1',
+export const Product2: M.Product = {
+  id: '2',
   itemId: Item2.id,
   rate: '2',
-  rateType: RateType.Belts,
+  rateType: M.RateType.Belts,
 };
-export const Product3: Product = {
-  id: '2',
+export const Product3: M.Product = {
+  id: '3',
   itemId: ItemId.PetroleumGas,
   rate: '3',
-  rateType: RateType.Wagons,
+  rateType: M.RateType.Wagons,
 };
-export const Product4: Product = {
-  id: '3',
+export const Product4: M.Product = {
+  id: '4',
   itemId: ItemId.TransportBelt,
   rate: '4',
-  rateType: RateType.Factories,
+  rateType: M.RateType.Factories,
 };
 export const ProductsList = [Product1, Product2, Product3, Product4];
 export const ProductsState: Products.ProductsState = {
   ids: ProductsList.map((p) => p.id),
-  entities: toEntities(ProductsList),
+  entities: M.toEntities(ProductsList),
   index: ProductsList.length + 1,
 };
 export const RationalProducts = ProductsList.map((p) => {
-  const rp = new RationalProduct(p);
+  const rp = new M.RationalProduct(p);
   rp.viaId = rp.itemId;
   return rp;
 });
+export const RationalProduct = RationalProducts[0];
+export const Producer: M.Producer = {
+  id: '1',
+  recipeId: RecipeId.IronPlate,
+  count: '1',
+};
+export const ProducersState: Producers.ProducersState = {
+  ids: ['1'],
+  entities: { ['1']: Producer },
+  index: 2,
+};
+export const RationalProducer = new M.RationalProducer(
+  Producer,
+  Dataset.recipeR[RecipeId.IronPlate]
+);
 export const ProductIds = ProductsList.map((p) => p.id);
 export const ProductEntities =
   Products.getProductsBy.projector(RationalProducts);
 export const ProductSteps = {
   [Product1.id]: [],
   [Product2.id]: [],
-  [Product3.id]: [[ItemId.PetroleumGas, Rational.one]],
-  [Product4.id]: [[RecipeId.TransportBelt, Rational.one]],
+  [Product3.id]: [[ItemId.PetroleumGas, M.Rational.one]],
+  [Product4.id]: [[RecipeId.TransportBelt, M.Rational.one]],
 };
-export const ItemSettings1: ItemSettings = {
+export const ItemSettings1: M.ItemSettings = {
   ignore: false,
   beltId: ItemId.TransportBelt,
   wagonId: ItemId.CargoWagon,
 };
-export const RecipeSettings1: RecipeSettings = {
+export const RecipeSettings1: M.RecipeSettings = {
   factoryId: ItemId.AssemblingMachine2,
   factoryModuleIds: [ItemId.Module, ItemId.Module],
   beaconId: ItemId.Beacon,
   beaconModuleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
   beaconCount: '0',
 };
-export const RecipeSettings2: RecipeSettings = {
+export const RecipeSettings2: M.RecipeSettings = {
   factoryId: ItemId.AssemblingMachine2,
   factoryModuleIds: [ItemId.Module, ItemId.Module],
   beaconId: ItemId.Beacon,
   beaconModuleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
   beaconCount: '0',
 };
-export const Step1: Step = {
+export const Step1: M.Step = {
   id: `${Item1.id}.${Item1.id}`,
   itemId: Item1.id,
-  recipeId: Item1.id as any,
-  items: Rational.fromString(Product1.rate),
-  belts: Rational.fromNumber(0.5),
-  wagons: Rational.two,
-  factories: Rational.one,
-  power: Rational.one,
-  pollution: Rational.one,
-  beacons: Rational.from(4),
+  recipeId: Item1.id,
+  items: M.Rational.fromString(Product1.rate),
+  belts: M.Rational.fromNumber(0.5),
+  wagons: M.Rational.two,
+  factories: M.Rational.one,
+  power: M.Rational.one,
+  pollution: M.Rational.one,
+  beacons: M.Rational.from(4),
 };
-export const Step2: Step = {
+export const Step2: M.Step = {
   id: `${Item2.id}.${Item2.id}`,
   itemId: Item2.id,
-  recipeId: Item2.id as any,
-  items: Rational.fromString(Product2.rate),
-  belts: Rational.one,
-  wagons: Rational.one,
-  factories: Rational.two,
-  power: Rational.zero,
-  pollution: Rational.zero,
-  beacons: Rational.from(4),
+  recipeId: Item2.id,
+  items: M.Rational.fromString(Product2.rate),
+  belts: M.Rational.one,
+  wagons: M.Rational.one,
+  factories: M.Rational.two,
+  power: M.Rational.zero,
+  pollution: M.Rational.zero,
+  beacons: M.Rational.from(4),
 };
 export const Steps = [Step1, Step2];
-export const BeltSpeed: Entities<Rational> = {
-  [ItemId.TransportBelt]: new Rational(BigInt(15)),
-  [ItemId.Pipe]: new Rational(BigInt(1500)),
+export const BeltSpeed: M.Entities<M.Rational> = {
+  [ItemId.TransportBelt]: new M.Rational(BigInt(15)),
+  [ItemId.Pipe]: new M.Rational(BigInt(1500)),
 };
-export const ItemSettingsEntities: Entities<ItemSettings> = {};
+export const ItemSettingsEntities: M.Entities<M.ItemSettings> = {};
 for (const item of Dataset.itemIds.map((i) => Dataset.itemEntities[i])) {
   ItemSettingsEntities[item.id] = { ...ItemSettings1 };
 }
-export const RecipeSettingsEntities: Entities<RecipeSettings> = {};
+export const RecipeSettingsEntities: M.Entities<M.RecipeSettings> = {};
 for (const recipe of Dataset.recipeIds.map((i) => Dataset.recipeEntities[i])) {
   RecipeSettingsEntities[recipe.id] = { ...RecipeSettings1 };
 }
@@ -182,7 +172,7 @@ export const FactorySettingsInitial = Factories.getFactories.projector(
   Defaults,
   Dataset
 );
-export function getRecipeSettings(): Entities<RecipeSettings> {
+export function getRecipeSettings(): M.Entities<M.RecipeSettings> {
   Recipes.getRecipeSettings.release();
   return Recipes.getRecipeSettings.projector(
     {},
@@ -193,7 +183,7 @@ export function getRecipeSettings(): Entities<RecipeSettings> {
 export const RecipeSettingsInitial = getRecipeSettings();
 export const RationalRecipeSettings =
   Recipes.getRationalRecipeSettings.projector(RecipeSettingsEntities);
-export function getRationalRecipeSettings(): Entities<_RationalRecipeSettings> {
+export function getRationalRecipeSettings(): M.Entities<M.RationalRecipeSettings> {
   Recipes.getRationalRecipeSettings.release();
   return Recipes.getRationalRecipeSettings.projector(RecipeSettingsInitial);
 }
@@ -204,51 +194,51 @@ export const AdjustedData = Recipes.getAdjustedDataset.projector(
   Defaults!.disabledRecipeIds,
   {
     fuelId: ItemId.Coal,
-    miningBonus: Rational.zero,
-    researchSpeed: Rational.one,
-    costFactor: Rational.one,
-    costFactory: Rational.one,
+    miningBonus: M.Rational.zero,
+    researchSpeed: M.Rational.one,
+    costFactor: M.Rational.one,
+    costFactory: M.Rational.one,
     data: Dataset,
   }
 );
 export const PreferencesState: Preferences.PreferencesState = {
   states: { ['name']: 'z=zip' },
   columns: Preferences.initialColumnsState,
-  simplexType: SimplexType.JsBigIntRational,
-  powerUnit: PowerUnit.Auto,
-  language: Language.English,
-  theme: Theme.System,
+  simplexType: M.SimplexType.JsBigIntRational,
+  powerUnit: M.PowerUnit.Auto,
+  language: M.Language.English,
+  theme: M.Theme.System,
 };
 
-export const MatrixResultSolved: MatrixResult = {
+export const MatrixResultSolved: M.MatrixResult = {
   steps: Steps,
-  resultType: MatrixResultType.Solved,
+  resultType: M.MatrixResultType.Solved,
   pivots: 9,
   time: 20,
   A: [
-    [Rational.one, Rational.one, Rational.zero, Rational.zero],
-    [Rational.zero, Rational.one, Rational.one, Rational.one],
+    [M.Rational.one, M.Rational.one, M.Rational.zero, M.Rational.zero],
+    [M.Rational.zero, M.Rational.one, M.Rational.one, M.Rational.one],
   ],
-  O: [Rational.one, Rational.one, Rational.one, Rational.one],
+  O: [M.Rational.one, M.Rational.one, M.Rational.one, M.Rational.one],
   itemIds: [ItemId.Wood],
   recipeIds: [RecipeId.WoodenChest],
   inputIds: [],
 };
 
-export const Flow: FlowData = {
-  theme: themeMap[Theme.Light],
+export const Flow: M.FlowData = {
+  theme: M.themeMap[M.Theme.Light],
   nodes: [
     {
       name: 'a-name',
       text: 'a-text',
       id: 'a',
-      type: NodeType.Recipe,
+      type: M.NodeType.Recipe,
     },
     {
       name: 'b-name',
       text: 'b-text',
       id: 'b',
-      type: NodeType.Recipe,
+      type: M.NodeType.Recipe,
       recipe: Data.recipes[0],
       factories: '1',
       factoryId: 'factoryId',

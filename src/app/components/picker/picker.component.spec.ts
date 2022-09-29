@@ -1,7 +1,7 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CategoryId, ItemId, Mocks, TestModule } from 'src/tests';
+import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import { PickerComponent } from './picker.component';
 
 describe('PickerComponent', () => {
@@ -35,36 +35,44 @@ describe('PickerComponent', () => {
   });
 
   describe('clickOpen', () => {
-    it('should open the dialog', () => {
-      component.clickOpen(Mocks.Dataset, ItemId.IronPlate);
+    it('should open the products dialog', () => {
+      component.clickOpen(Mocks.Dataset, 'item', ItemId.IronPlate);
+      expect(component.visible).toBeTrue();
+      expect(markForCheck).toHaveBeenCalled();
+    });
+
+    it('should open the producers dialog', () => {
+      component.clickOpen(Mocks.Dataset, 'recipe', RecipeId.IronPlate);
       expect(component.visible).toBeTrue();
       expect(markForCheck).toHaveBeenCalled();
     });
   });
 
-  describe('clickItem', () => {
-    it('should emit the item and close the dialog', () => {
+  describe('clickId', () => {
+    it('should emit the id and close the dialog', () => {
       spyOn(component.selectId, 'emit');
       component.visible = true;
-      component.clickItem(ItemId.IronPlate);
+      component.clickId(ItemId.IronPlate);
       expect(component.selectId.emit).toHaveBeenCalledWith(ItemId.IronPlate);
       expect(component.visible).toBeFalse();
     });
   });
 
   describe('inputSearch', () => {
+    beforeEach(() => {
+      component.clickOpen(Mocks.Dataset, 'item');
+    });
+
     it('should skip if no search is specified', () => {
-      component.inputSearch(Mocks.Dataset, null);
+      component.inputSearch(null);
       expect(component.categoryIds).toEqual(Mocks.Dataset.categoryIds);
-      expect(component.categoryItemRows).toEqual(
-        Mocks.Dataset.categoryItemRows
-      );
+      expect(component.categoryRows).toEqual(Mocks.Dataset.categoryItemRows);
     });
 
     it('should search items', () => {
-      component.inputSearch(Mocks.Dataset, 'petrol');
+      component.inputSearch('petrol');
       expect(component.categoryIds.length).toEqual(2);
-      expect(component.categoryItemRows[CategoryId.Fluids]).toEqual([
+      expect(component.categoryRows[CategoryId.Fluids]).toEqual([
         [ItemId.PetroleumGas],
       ]);
     });

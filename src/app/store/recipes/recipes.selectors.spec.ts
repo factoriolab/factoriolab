@@ -1,5 +1,5 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { Rational } from '~/models';
+import { Producer, Rational } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { initialRecipesState } from './recipes.reducer';
 import * as Selectors from './recipes.selectors';
@@ -119,27 +119,32 @@ describe('Recipes Selectors', () => {
       expect(result[Mocks.Item1.id].beaconCount).toEqual(stringValue);
     });
 
-    it('should use beacon override', () => {
-      const state = {
-        ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { beaconId: stringValue } },
-      };
-      const result = Selectors.getRecipeSettings.projector(
-        state,
-        Mocks.FactorySettingsInitial,
-        Mocks.Dataset
-      );
-      expect(result[Mocks.Item1.id].beaconId).toEqual(stringValue);
-    });
-
     it('should use beacon module override', () => {
       const state = {
         ...initialRecipesState,
         ...{ [Mocks.Item1.id]: { beaconModuleIds: [stringValue] } },
       };
+      const factories = {
+        ...Mocks.FactorySettingsInitial,
+        ...{
+          entities: {
+            ...Mocks.FactorySettingsInitial.entities,
+            ...{
+              [ItemId.AssemblingMachine3]: {
+                ...Mocks.FactorySettingsInitial.entities[
+                  ItemId.AssemblingMachine3
+                ],
+                ...{
+                  beaconModuleRankIds: null,
+                },
+              },
+            },
+          },
+        },
+      };
       const result = Selectors.getRecipeSettings.projector(
         state,
-        Mocks.FactorySettingsInitial,
+        factories,
         Mocks.Dataset
       );
       expect(result[Mocks.Item1.id].beaconModuleIds).toEqual([stringValue]);
@@ -178,18 +183,40 @@ describe('Recipes Selectors', () => {
 
   describe('getRecipesModified', () => {
     it('should determine whether columns are modified', () => {
-      const result = Selectors.getRecipesModified.projector({
-        [RecipeId.Coal]: {
-          factoryId: undefined,
-          factoryModuleIds: [],
-          beaconId: undefined,
-          beaconModuleIds: undefined,
-          beaconCount: undefined,
-          beaconTotal: true,
+      const result = Selectors.getRecipesModified.projector(
+        {
+          [RecipeId.Coal]: {
+            factoryId: undefined,
+            factoryModuleIds: undefined,
+            overclock: 100,
+            beaconId: undefined,
+            beaconModuleIds: undefined,
+            beaconCount: undefined,
+            beaconTotal: true,
+          },
         },
-      });
+        []
+      );
       expect(result.factories).toBeTrue();
-      expect(result.overclock).toBeFalse();
+      expect(result.beacons).toBeTrue();
+      expect(result.cost).toBeFalse();
+    });
+
+    it('should account for producer settings', () => {
+      const producer: Producer = {
+        id: '1',
+        recipeId: RecipeId.Coal,
+        count: '1',
+        overclock: 100,
+        beaconModuleIds: [],
+      };
+      const result = Selectors.getRecipesModified.projector(
+        {
+          [RecipeId.Coal]: {},
+        },
+        [producer]
+      );
+      expect(result.factories).toBeTrue();
       expect(result.beacons).toBeTrue();
       expect(result.cost).toBeFalse();
     });

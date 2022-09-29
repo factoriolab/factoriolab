@@ -2,12 +2,18 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
-import { DisplayRate, displayRateOptions, RateType } from '~/models';
-import { TrackService } from '~/services';
+import {
+  Breakpoint,
+  DisplayRate,
+  displayRateOptions,
+  RateType,
+} from '~/models';
+import { ContentService, TrackService } from '~/services';
 import {
   Factories,
   Items,
   LabState,
+  Producers,
   Products,
   Recipes,
   Settings,
@@ -23,6 +29,7 @@ export class ProductsComponent {
   vm$ = combineLatest([
     this.store.select(Products.getProducts),
     this.store.select(Products.getViaOptions),
+    this.store.select(Producers.getProducers),
     this.store.select(Items.getItemSettings),
     this.store.select(Factories.getFactories),
     this.store.select(Recipes.getRecipeSettings),
@@ -30,11 +37,13 @@ export class ProductsComponent {
     this.store.select(Settings.getRateTypeOptions),
     this.store.select(Settings.getOptions),
     this.store.select(Settings.getDataset),
+    this.contentService.width$,
   ]).pipe(
     map(
       ([
         products,
         viaOptions,
+        producers,
         itemSettings,
         factories,
         recipeSettings,
@@ -42,9 +51,11 @@ export class ProductsComponent {
         rateTypeOptions,
         options,
         data,
+        width,
       ]) => ({
         products,
         viaOptions,
+        producers,
         itemSettings,
         factories,
         recipeSettings,
@@ -52,15 +63,18 @@ export class ProductsComponent {
         rateTypeOptions,
         options,
         data,
+        mobile: width < Breakpoint.Small,
       })
     )
   );
 
   displayRateOptions = displayRateOptions;
 
-  RateType = RateType;
-
-  constructor(public trackSvc: TrackService, private store: Store<LabState>) {}
+  constructor(
+    public trackSvc: TrackService,
+    private store: Store<LabState>,
+    private contentService: ContentService
+  ) {}
 
   /** Action Dispatch Methods */
   removeProduct(id: string): void {
@@ -83,8 +97,24 @@ export class ProductsComponent {
     this.store.dispatch(new Products.SetViaAction({ id, value }));
   }
 
+  removeProducer(id: string): void {
+    this.store.dispatch(new Producers.RemoveAction(id));
+  }
+
+  setRecipe(id: string, value: string): void {
+    this.store.dispatch(new Producers.SetRecipeAction({ id, value }));
+  }
+
+  setCount(id: string, value: string): void {
+    this.store.dispatch(new Producers.SetCountAction({ id, value }));
+  }
+
   addProduct(value: string): void {
     this.store.dispatch(new Products.AddAction(value));
+  }
+
+  addProducer(value: string): void {
+    this.store.dispatch(new Producers.AddAction(value));
   }
 
   setDisplayRate(value: DisplayRate, prev: DisplayRate): void {

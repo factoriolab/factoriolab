@@ -1,4 +1,3 @@
-import { getAverageColor } from 'fast-average-color-node';
 import fs from 'fs';
 
 import { ModData } from '~/models';
@@ -11,39 +10,14 @@ if (!mod) {
   );
 }
 
-// Load mod data at specified path, and update icons with new calculated average color
-const iconsPath = `./src/data/${mod}/icons.png`;
+console.warn('WARNING: This script is deprecated');
+
+// const iconsPath = `./src/data/${mod}/icons.png`;
 const dataPath = `./src/data/${mod}/data.json`;
 const rawData = fs.readFileSync(dataPath).toString();
 const data: ModData = JSON.parse(rawData);
 
 async function processMod(): Promise<void> {
-  let start = Date.now();
-  let i = 0;
-  for (const icon of data.icons) {
-    const match = /^-?(\d+)px -?(\d+)px$/.exec(icon.position);
-    if (match?.length == 3) {
-      const color = await getAverageColor(iconsPath, {
-        mode: 'precision',
-        top: Number(match[2]),
-        left: Number(match[1]),
-        width: 64,
-        height: 64,
-      });
-      // Experiment: saturate to get a more interesting color
-      // (requires npm package 'color')
-      // icon.color = Color(color.hex).saturate(1).hex();
-      icon.color = color.hex;
-    }
-    const now = Date.now();
-    const time = now - start;
-    if (time > 1000) {
-      start = now;
-      console.log(`Processing ${i} of ${data.icons.length}...`);
-    }
-    i++;
-  }
-
   let no_in = 0;
   let no_out = 0;
 
@@ -61,7 +35,6 @@ async function processMod(): Promise<void> {
 
   fs.writeFileSync(dataPath, JSON.stringify(data));
 
-  console.log(`Updated color for ${data.icons.length} icons.`);
   if (no_in > 0 || no_out > 0) {
     console.log(
       `Fixed recipes: ${no_in} with no inputs and ${no_out} with no outputs.`

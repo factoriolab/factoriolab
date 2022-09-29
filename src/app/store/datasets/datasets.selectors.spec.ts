@@ -6,9 +6,6 @@ import * as Selectors from './datasets.selectors';
 describe('Datasets Selectors', () => {
   describe('Base selector functions', () => {
     it('should get slices of state', () => {
-      expect(Selectors.getAppData.projector(initialDatasetsState)).toEqual(
-        initialDatasetsState.app
-      );
       expect(Selectors.getDataEntities.projector(initialDatasetsState)).toEqual(
         initialDatasetsState.dataEntities
       );

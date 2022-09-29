@@ -7,9 +7,7 @@ export interface Options {
   pipes: SelectItem[];
   cargoWagons: SelectItem[];
   fluidWagons: SelectItem[];
-  modules: SelectItem[];
-  beaconModules: SelectItem[];
   chemicalFuels: SelectItem[];
   complexRecipes: SelectItem[];
-  prodModules: SelectItem[];
+  proliferatorModules: SelectItem[];
 }

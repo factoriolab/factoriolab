@@ -51,7 +51,7 @@
               }
             ],
             "stylePreprocessorOptions": {
-              "includePaths": ["src/styles"]
+              "includePaths": ["node_modules"]
             },
             "scripts": [],
             "allowedCommonJsDependencies": [

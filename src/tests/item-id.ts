@@ -14,6 +14,7 @@ export enum ItemId {
   CrudeOil = 'crude-oil',
   EfficiencyModule = 'effectivity-module',
   EfficiencyModule3 = 'effectivity-module-3',
+  ElectricFurnace = 'electric-furnace',
   ElectricMiningDrill = 'electric-mining-drill',
   ExpressTransportBelt = 'express-transport-belt',
   FastInserter = 'fast-inserter',

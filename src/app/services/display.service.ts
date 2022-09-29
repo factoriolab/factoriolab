@@ -5,14 +5,17 @@ import { Rational, Recipe } from '~/models';
 @Injectable({ providedIn: 'root' })
 export class DisplayService {
   icon(id: string, num?: string | number): string {
-    return `<i class="m-1 me-2 lab-icon-sm ${id}"><span>${
+    return `<i class="me-2 lab-icon-sm padded ${id}"><span>${
       num ?? ''
     }</span></i>`;
   }
 
   table(rows: [string, string][]): string {
     let html = `<table class="w-100">`;
-    rows.forEach((r) => (html += `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`));
+    rows.forEach(
+      (r) =>
+        (html += `<tr><td class="text-nowrap">${r[0]}</td><td class="text-nowrap">${r[1]}</td></tr>`)
+    );
     html += `</table>`;
     return html;
   }

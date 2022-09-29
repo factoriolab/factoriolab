@@ -1,10 +1,6 @@
-import { AppData, Game, Mod } from '~/models';
-import appJson from './app/data.json';
+import { AppData, Game } from '~/models';
 
-const app = appJson as Mod;
-export { app };
 export const data: AppData = {
-  app,
   mods: [
     { id: '1.1', name: '1.1.x', game: Game.Factorio },
     { id: '1.1e', name: '1.1.x Expensive', game: Game.Factorio },
@@ -15,10 +11,10 @@ export const data: AppData = {
     { id: '248o', name: '248k Overhaul', game: Game.Factorio },
     { id: '248kr2sxp', name: '248k + Krastorio 2 + SE', game: Game.Factorio },
     { id: 'aai', name: 'AAI Industry', game: Game.Factorio },
-    { id: 'ang', name: `Angel's Industries`, game: Game.Factorio },
+    { id: 'ang', name: "Angel's Industries", game: Game.Factorio },
     { id: 'bio', name: 'Bio Industries', game: Game.Factorio },
-    { id: 'bob', name: `Bob's Mods`, game: Game.Factorio },
-    { id: 'bobang', name: `Bob's & Angel's`, game: Game.Factorio },
+    { id: 'bob', name: "Bob's Mods", game: Game.Factorio },
+    { id: 'bobang', name: "Bob's & Angel's", game: Game.Factorio },
     { id: 'fpp', name: 'Factorio Plus Plus', game: Game.Factorio },
     { id: 'fep', name: 'FactorioExtended Plus', game: Game.Factorio },
     { id: 'ir2', name: 'Industrial Revolution 2', game: Game.Factorio },
@@ -28,7 +24,7 @@ export const data: AppData = {
     { id: 'nls', name: 'Nullius', game: Game.Factorio },
     { id: 'pys', name: 'Pyanodons', game: Game.Factorio },
     { id: 'pysalf', name: 'Pyanodons + AL', game: Game.Factorio },
-    { id: 'qat', name: `Qatavin's More Stuff`, game: Game.Factorio },
+    { id: 'qat', name: "Qatavin's More Stuff", game: Game.Factorio },
     { id: 'sea', name: 'Sea Block', game: Game.Factorio },
     { id: 'sxp', name: 'Space Exploration', game: Game.Factorio },
     { id: 'xan', name: 'Xander Mod', game: Game.Factorio },

@@ -15,7 +15,7 @@ import { combineLatest, map } from 'rxjs';
 
 import { APP, Game, gameInfo, games } from '~/models';
 import { ContentService } from '~/services';
-import { LabState, Products, Settings } from '~/store';
+import { LabState, Producers, Products, Settings } from '~/store';
 
 interface MenuLink {
   label: string;
@@ -79,18 +79,25 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     combineLatest([
       this.store.select(Products.getBaseProducts),
+      this.store.select(Producers.getBaseProducers),
       this.store.select(Settings.getDataset),
       this.contentSvc.lang$,
     ])
       .pipe(untilDestroyed(this))
-      .subscribe(([products, data]) => {
-        const title = this.translateSvc.instant(gameInfo[data.game].title);
+      .subscribe(([products, producers, data]) => {
         if (products.length && data.itemEntities[products[0].itemId]) {
           this.title.setTitle(
-            `${data.itemEntities[products[0].itemId].name} | ${title}`
+            `${data.itemEntities[products[0].itemId].name} | ${APP}`
+          );
+        } else if (
+          producers.length &&
+          data.recipeEntities[producers[0].recipeId]
+        ) {
+          this.title.setTitle(
+            `${data.recipeEntities[producers[0].recipeId].name} | ${APP}`
           );
         } else {
-          this.title.setTitle(`${APP} | ${title}`);
+          this.title.setTitle(APP);
         }
       });
   }
@@ -102,12 +109,13 @@ export class HeaderComponent implements OnInit {
         (g): MenuItem => ({
           icon: 'lab-icon-sm ' + gameInfo[g].icon,
           label: this.translateSvc.instant(gameInfo[g].label),
-          command: () => this.selectGame(gameInfo[g].route),
+          routerLink: gameInfo[g].route,
         })
       );
   }
 
-  selectGame(route: string): void {
-    this.router.navigateByUrl(route);
+  cancelRouterLink(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
   }
 }

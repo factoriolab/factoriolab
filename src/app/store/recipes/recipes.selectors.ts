@@ -10,6 +10,7 @@ import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Factories from '../factories';
 import * as Items from '../items';
+import * as Producers from '../producers';
 import * as Settings from '../settings';
 import { RecipesState } from './recipes.reducer';
 
@@ -28,7 +29,7 @@ export const getRecipeSettings = createSelector(
       for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
         const s: RecipeSettings = { ...state[recipe.id] };
 
-        if (!s.factoryId) {
+        if (s.factoryId == null) {
           s.factoryId = RecipeUtility.bestMatch(
             recipe.producers,
             factories.ids ?? []
@@ -38,24 +39,36 @@ export const getRecipeSettings = createSelector(
         const factory = data.factoryEntities[s.factoryId];
         const def = factories.entities[s.factoryId];
         if (factory != null && RecipeUtility.allowsModules(recipe, factory)) {
-          if (!s.factoryModuleIds) {
+          s.factoryModuleOptions = RecipeUtility.moduleOptions(
+            factory,
+            recipe.id,
+            data
+          );
+
+          if (s.factoryModuleIds == null) {
             s.factoryModuleIds = RecipeUtility.defaultModules(
-              data.recipeModuleIds[recipe.id],
+              s.factoryModuleOptions,
               def.moduleRankIds ?? [],
               factory.modules ?? 0
             );
           }
 
-          if (s.beaconCount == null) {
-            s.beaconCount = def.beaconCount;
-          }
+          s.beaconCount = s.beaconCount ?? def.beaconCount;
+          s.beaconId = s.beaconId ?? def.beaconId;
 
-          s.beaconId = s.beaconId || def.beaconId;
-          if (s.beaconId) {
+          if (s.beaconId != null) {
             const beacon = data.beaconEntities[s.beaconId];
-            if (beacon && !s.beaconModuleIds) {
-              s.beaconModuleIds = new Array(beacon.modules).fill(
-                def.beaconModuleId
+            s.beaconModuleOptions = RecipeUtility.moduleOptions(
+              beacon,
+              recipe.id,
+              data
+            );
+
+            if (s.beaconModuleIds == null) {
+              s.beaconModuleIds = RecipeUtility.defaultModules(
+                s.beaconModuleOptions,
+                def.beaconModuleRankIds ?? [],
+                beacon.modules
               );
             }
           }
@@ -75,7 +88,7 @@ export const getRecipeSettings = createSelector(
           delete s.beaconTotal;
         }
 
-        s.overclock = s.overclock || def?.overclock;
+        s.overclock = s.overclock ?? def?.overclock;
 
         value[recipe.id] = s;
       }
@@ -130,17 +143,37 @@ export const getAdjustedDataset = createSelector(
     )
 );
 
-export const getRecipesModified = createSelector(recipesState, (state) => ({
-  factories: Object.keys(state).some(
-    (id) => state[id].factoryId || state[id].factoryModuleIds
-  ),
-  overclock: Object.keys(state).some((id) => state[id].overclock),
-  beacons: Object.keys(state).some(
-    (id) =>
-      state[id].beaconId ||
-      state[id].beaconModuleIds ||
-      state[id].beaconCount ||
-      state[id].beaconTotal
-  ),
-  cost: Object.keys(state).some((id) => state[id].cost),
-}));
+export const getRecipesModified = createSelector(
+  recipesState,
+  Producers.getBaseProducers,
+  (state, producers) => ({
+    factories:
+      Object.keys(state).some(
+        (id) =>
+          state[id].factoryId != null ||
+          state[id].factoryModuleIds != null ||
+          state[id].overclock != null
+      ) ||
+      producers.some(
+        (p) =>
+          p.factoryId != null ||
+          p.factoryModuleIds != null ||
+          p.overclock != null
+      ),
+    beacons:
+      Object.keys(state).some(
+        (id) =>
+          state[id].beaconCount != null ||
+          state[id].beaconId != null ||
+          state[id].beaconModuleIds != null ||
+          state[id].beaconTotal != null
+      ) ||
+      producers.some(
+        (p) =>
+          p.beaconCount != null ||
+          p.beaconId != null ||
+          p.beaconModuleIds != null
+      ),
+    cost: Object.keys(state).some((id) => state[id].cost),
+  })
+);

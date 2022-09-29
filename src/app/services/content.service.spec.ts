@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
 import { Confirmation } from 'primeng/api';
 
 import { TestModule } from 'src/tests';
@@ -7,16 +6,20 @@ import { ContentService } from './content.service';
 
 describe('ContentService', () => {
   let service: ContentService;
-  let router: Router;
 
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [TestModule] });
     service = TestBed.inject(ContentService);
-    router = TestBed.inject(Router);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  describe('windowInnerWidth', () => {
+    it('should return the value from the window', () => {
+      expect(service.windowInnerWidth()).toEqual(window.innerWidth);
+    });
   });
 
   describe('confirm', () => {

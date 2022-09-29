@@ -43,7 +43,6 @@ describe('DataService', () => {
       );
       spyOn(mockStore, 'dispatch');
       service.initialize(
-        '',
         { settingsState: { modId: Mocks.Mod.id } as any },
         Settings.initialSettingsState
       );

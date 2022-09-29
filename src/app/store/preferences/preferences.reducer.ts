@@ -36,7 +36,7 @@ export const initialColumnsState: ColumnsState = allColumns.reduce(
 export const initialPreferencesState: PreferencesState = {
   states: {},
   columns: initialColumnsState,
-  simplexType: SimplexType.JsBigIntRational,
+  simplexType: SimplexType.WasmFloat64,
   language: Language.English,
   powerUnit: PowerUnit.Auto,
   theme: Theme.System,

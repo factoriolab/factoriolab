@@ -9,7 +9,7 @@
     [ngModel]="value"
     labValidateNumber
     [labValidateMinimum]="minimum"
-    (blur)="changeValue(input.value)"
+    (input)="changeValue(input.value)"
   />
   <span *ngIf="!hideButtons" class="p-inputnumber-button-group">
     <button

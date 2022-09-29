@@ -1,5 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 
 import { TestModule } from 'src/tests';
 import { InputNumberComponent } from './input-number.component';
@@ -20,7 +25,7 @@ class TestInputNumberComponent {
   minimum = '1';
   width = '';
   inputId = '';
-  setValue(data: string): void {}
+  setValue(_: string): void {}
 }
 
 describe('InputNumberComponent', () => {
@@ -59,11 +64,19 @@ describe('InputNumberComponent', () => {
   });
 
   describe('changeValue', () => {
-    it('should emit a value', () => {
+    it('should emit a value', fakeAsync(() => {
       spyOn(component, 'setValue');
       component.child.changeValue('1 1/3');
+      tick(500);
       expect(component.setValue).toHaveBeenCalledWith('1 1/3');
-    });
+    }));
+
+    it('should not emit invalid values', fakeAsync(() => {
+      spyOn(component, 'setValue');
+      component.child.changeValue('abc');
+      tick(500);
+      expect(component.setValue).not.toHaveBeenCalled();
+    }));
   });
 
   describe('increase', () => {

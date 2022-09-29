@@ -10,6 +10,12 @@
   [header]="'columns.header' | translate"
   (onHide)="save()"
 >
+  <div
+    class="p-error"
+    *ngIf="vm.usesFractions && vm.simplexType === SimplexType.WasmFloat64"
+  >
+    {{ 'columns.fractionSimplexWarning' | translate }}
+  </div>
   <p-table
     responsiveLayout="scroll"
     styleClass="p-datatable-sm"

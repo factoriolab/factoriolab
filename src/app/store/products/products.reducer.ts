@@ -13,7 +13,7 @@ export interface ProductsState {
 export const initialProductsState: ProductsState = {
   ids: [],
   entities: {},
-  index: 0,
+  index: 1,
 };
 
 export function productsReducer(
@@ -29,7 +29,7 @@ export function productsReducer(
     case Settings.SettingsActionType.SET_MOD:
       return initialProductsState;
     case ProductsActionType.RESET: {
-      const id = '0';
+      const id = '1';
       return {
         ids: [id],
         entities: {
@@ -40,7 +40,7 @@ export function productsReducer(
             rateType: RateType.Items,
           },
         },
-        index: 1,
+        index: 2,
       };
     }
     case ProductsActionType.ADD: {

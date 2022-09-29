@@ -24,7 +24,8 @@ describe('ExportUtility', () => {
     const inStep: Step = {
       id: '0',
       itemId: ItemId.IronOre,
-      parents: { [recipeId]: Rational.one },
+      recipeId: RecipeId.IronPlate,
+      parents: { ['1']: Rational.one },
     };
     const fullStep: Step = {
       id: '1',
@@ -37,7 +38,7 @@ describe('ExportUtility', () => {
       power: Rational.from(6),
       pollution: Rational.from(7),
       outputs: { [itemId]: Rational.from(8) },
-      parents: { [RecipeId.ElectronicCircuit]: Rational.from(9) },
+      parents: { ['1']: Rational.from(9) },
       recipeId,
     };
     const minStep: Step = {
@@ -72,7 +73,7 @@ describe('ExportUtility', () => {
         Surplus: '=2',
         Inputs: '"iron-ore:1"',
         Outputs: '"iron-plate:8"',
-        Targets: '"electronic-circuit:9"',
+        Targets: '"iron-plate:9"',
         Belts: '=3',
         Belt: itemS.beltId,
         Wagons: '=4',

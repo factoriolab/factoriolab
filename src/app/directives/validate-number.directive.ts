@@ -34,7 +34,9 @@ export class ValidateNumberDirective implements Validator {
       if (rational.gte(this.minimum)) {
         return null;
       }
-    } catch {}
+    } catch {
+      // ignore error
+    }
     return {
       validateNumber: {
         valid: false,

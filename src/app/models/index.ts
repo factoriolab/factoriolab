@@ -15,6 +15,7 @@ export * from './mod';
 export * from './options';
 export * from './payload';
 export * from './product';
+export * from './producer';
 export * from './rational';
 export * from './flow';
 export * from './step-detail';

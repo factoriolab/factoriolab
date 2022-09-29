@@ -19,7 +19,7 @@ export class ItemTooltipPipe implements PipeTransform {
 
       return item.name;
     } else {
-      const recipe = data.recipeEntities[value];
+      const recipe = data.recipeEntities[recipeId];
 
       if (recipe == null) return '';
 

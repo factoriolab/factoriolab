@@ -12,7 +12,7 @@ import { FormControl } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { FilterService, SelectItem } from 'primeng/api';
-import { combineLatest, map } from 'rxjs';
+import { map } from 'rxjs';
 
 import { Category, Dataset, Entities } from '~/models';
 import { LabState } from '~/store';
@@ -39,10 +39,15 @@ export class PickerComponent implements OnInit {
   searchCtrl = new FormControl('');
 
   visible = false;
+  type: 'item' | 'recipe' = 'item';
   selectedId: string | undefined;
   categoryEntities: Entities<Category> = {};
   categoryIds: string[] = [];
-  categoryItemRows: Entities<string[][]> = {};
+  categoryRows: Entities<string[][]> = {};
+  // Preserve state prior to any filtering
+  allSelectItems: SelectItem[] = [];
+  allCategoryIds: string[] = [];
+  allCategoryRows: Entities<string[][]> = {};
   activeIndex = 0;
 
   constructor(
@@ -52,17 +57,13 @@ export class PickerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    combineLatest([
-      this.store.select(Recipes.getAdjustedDataset),
-      this.searchCtrl.valueChanges,
-    ])
+    this.searchCtrl.valueChanges
       .pipe(untilDestroyed(this))
-      .subscribe(([data, search]) => {
-        this.inputSearch(data, search);
-      });
+      .subscribe((s) => this.inputSearch(s));
   }
 
-  clickOpen(data: Dataset, selectedId?: string): void {
+  clickOpen(data: Dataset, type: 'item' | 'recipe', selectedId?: string): void {
+    this.type = type;
     this.selectedId = selectedId;
     this.searchCtrl.setValue('');
     // Wait for input field to appear before attempting to focus
@@ -70,61 +71,81 @@ export class PickerComponent implements OnInit {
       this.inputFilter?.nativeElement.focus();
     });
     this.categoryEntities = data.categoryEntities;
-    this.categoryIds = data.categoryIds;
-    this.categoryItemRows = data.categoryItemRows;
-    if (this.selectedId) {
-      const index = data.categoryIds.indexOf(
-        data.itemEntities[this.selectedId].category
+    if (type === 'item') {
+      this.categoryRows = data.categoryItemRows;
+      if (this.selectedId) {
+        const index = data.categoryIds.indexOf(
+          data.itemEntities[this.selectedId].category
+        );
+        this.activeIndex = index;
+      }
+      this.allSelectItems = data.itemIds.map(
+        (i): SelectItem => ({
+          label: data.itemEntities[i].name,
+          value: i,
+          title: data.itemEntities[i].category,
+        })
       );
-      this.activeIndex = index;
+    } else {
+      this.categoryRows = data.categoryRecipeRows;
+      if (this.selectedId) {
+        const index = data.categoryIds.indexOf(
+          data.recipeEntities[this.selectedId].category
+        );
+        this.activeIndex = index;
+      }
+      this.allSelectItems = data.recipeIds.map(
+        (i): SelectItem => ({
+          label: data.recipeEntities[i].name,
+          value: i,
+          title: data.recipeEntities[i].category,
+        })
+      );
     }
+    this.categoryIds = data.categoryIds.filter((c) => this.categoryRows[c]);
+    this.allCategoryIds = this.categoryIds;
+    this.allCategoryRows = this.categoryRows;
     this.visible = true;
     this.ref.markForCheck();
   }
 
-  clickItem(itemId: string): void {
-    this.selectId.emit(itemId);
+  clickId(id: string): void {
+    this.selectId.emit(id);
     this.visible = false;
   }
 
-  inputSearch(data: Dataset, search: string | null): void {
+  inputSearch(search: string | null): void {
     if (!search) {
-      this.categoryIds = data.categoryIds;
-      this.categoryItemRows = data.categoryItemRows;
+      this.categoryIds = this.allCategoryIds;
+      this.categoryRows = this.allCategoryRows;
       return;
     }
 
     // Filter for matching item ids
-    const selectItems = data.itemIds.map(
-      (i): SelectItem => ({ label: data.itemEntities[i].name, value: i })
-    );
-    const filteredItems = this.filterService.filter(
-      selectItems,
+    const filteredItems: SelectItem[] = this.filterService.filter(
+      this.allSelectItems,
       ['label'],
       search,
       'contains'
     );
-    const itemIds = filteredItems.map((i) => i.value);
 
     // Filter for matching category ids
-    this.categoryIds = data.categoryIds.filter((c) =>
-      itemIds.some((i) => data.itemEntities[i].category === c)
+    // (Cache category on the SelectItem `title` field)
+    this.categoryIds = this.allCategoryIds.filter((c) =>
+      filteredItems.some((i) => i.title === c)
     );
 
     // Filter category item rows
-    this.categoryItemRows = {};
+    this.categoryRows = {};
+    const ids = filteredItems.map((i) => i.value);
     for (const c of this.categoryIds) {
       // Filter each category item row
-      this.categoryItemRows[c] = [];
-      for (const r of data.categoryItemRows[c]) {
-        this.categoryItemRows[c].push(
-          r.filter((i) => itemIds.indexOf(i) !== -1)
-        );
+      this.categoryRows[c] = [];
+      for (const r of this.allCategoryRows[c]) {
+        this.categoryRows[c].push(r.filter((i) => ids.indexOf(i) !== -1));
       }
-      // Filter out empty category item rows
-      this.categoryItemRows[c] = this.categoryItemRows[c].filter(
-        (r) => r.length > 0
-      );
+      // Filter out empty category rows
+      this.categoryRows[c] = this.categoryRows[c].filter((r) => r.length > 0);
     }
   }
 }

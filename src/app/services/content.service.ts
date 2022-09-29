@@ -1,21 +1,7 @@
 import { Injectable, TemplateRef } from '@angular/core';
-import {
-  NavigationCancel,
-  NavigationEnd,
-  NavigationError,
-  NavigationStart,
-  Router,
-} from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Confirmation } from 'primeng/api';
-import {
-  BehaviorSubject,
-  filter,
-  fromEvent,
-  map,
-  startWith,
-  Subject,
-} from 'rxjs';
+import { BehaviorSubject, fromEvent, map, startWith, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +16,11 @@ export class ContentService {
     ),
     startWith(window.scrollY)
   );
+  windowInnerWidth = (): number => window.innerWidth;
+  width$ = fromEvent(window, 'resize').pipe(
+    map(this.windowInnerWidth),
+    startWith(window.innerWidth)
+  );
 
   // Dialogs
   showColumns$ = new Subject<void>();
@@ -40,10 +31,12 @@ export class ContentService {
   }
 
   // Templates
-  translateSelectedItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(
+  translateSelectedItem$ = new BehaviorSubject<
+    TemplateRef<unknown> | undefined
+  >(undefined);
+  translateItem$ = new BehaviorSubject<TemplateRef<unknown> | undefined>(
     undefined
   );
-  translateItem$ = new BehaviorSubject<TemplateRef<any> | undefined>(undefined);
 
   // Header
   settingsActive$ = new BehaviorSubject(false);
@@ -60,5 +53,5 @@ export class ContentService {
   // Watch all language changes
   lang$ = this.translateSvc.onLangChange.pipe(startWith(''));
 
-  constructor(private router: Router, private translateSvc: TranslateService) {}
+  constructor(private translateSvc: TranslateService) {}
 }

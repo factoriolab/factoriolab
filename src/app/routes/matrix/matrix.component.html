@@ -91,6 +91,7 @@
       vm.result.A &&
       vm.result.O &&
       vm.result.itemIds &&
+      vm.result.producers &&
       vm.result.recipeIds &&
       vm.result.inputIds
     "
@@ -120,20 +121,34 @@
             [colSpan]="vm.result.itemIds.length"
             [style.width.rem]="4 * vm.result.itemIds.length"
           >
-            {{ 'matrix.items' | translate }}
+            <div class="text-truncate">
+              {{ 'matrix.items' | translate }}
+            </div>
+          </th>
+          <th
+            [colSpan]="vm.result.producers.length"
+            [style.width.rem]="4 * vm.result.producers.length"
+          >
+            <div class="text-truncate">
+              {{ 'matrix.producers' | translate }}
+            </div>
           </th>
           <th
             [colSpan]="vm.result.recipeIds.length"
             [style.width.rem]="4 * vm.result.recipeIds.length"
           >
-            {{ 'matrix.recipes' | translate }}
+            <div class="text-truncate">
+              {{ 'matrix.recipes' | translate }}
+            </div>
           </th>
           <th
             *ngIf="vm.result.inputIds.length"
             [colSpan]="vm.result.inputIds.length"
             [style.width.rem]="4 * vm.result.inputIds.length"
           >
-            {{ 'matrix.inputs' | translate }}
+            <div class="text-truncate">
+              {{ 'matrix.inputs' | translate }}
+            </div>
           </th>
           <th style="width: 8rem"></th>
         </tr>
@@ -146,10 +161,18 @@
               [pTooltip]="vm.data.itemEntities[i].name"
             ></i>
           </th>
+          <th *ngFor="let p of vm.result.producers" style="width: 4rem">
+            <i
+              [class]="p.recipeId | iconClass: 'recipe'"
+              [pTooltip]="p.recipeId | recipeTooltip: vm.data"
+              [escape]="false"
+            ></i>
+          </th>
           <th *ngFor="let i of vm.result.recipeIds" style="width: 4rem">
             <i
               [class]="i | iconClass: 'recipe'"
-              [pTooltip]="vm.data.recipeEntities[i].name"
+              [pTooltip]="i | recipeTooltip: vm.data"
+              [escape]="false"
             ></i>
           </th>
           <th *ngFor="let i of vm.result.inputIds" style="width: 4rem">
@@ -183,18 +206,38 @@
             style="width: 4rem"
           >
             <ng-container
-              *ngIf="vm.result.recipeIds[rowIndex - 1] as id; else notRecipe"
+              *ngIf="vm.result.producers[rowIndex - 1] as p; else notProducer"
             >
               <i
-                [class]="id | iconClass: 'recipe'"
-                [pTooltip]="vm.data.recipeEntities[id].name"
+                [class]="p.recipeId | iconClass: 'recipe'"
+                [pTooltip]="p.recipeId | recipeTooltip: vm.data"
+                [escape]="false"
               ></i>
             </ng-container>
+            <ng-template #notProducer>
+              <ng-container
+                *ngIf="
+                  vm.result.recipeIds[
+                    rowIndex - 1 - vm.result.producers.length
+                  ] as id;
+                  else notRecipe
+                "
+              >
+                <i
+                  [class]="id | iconClass: 'recipe'"
+                  [pTooltip]="id | recipeTooltip: vm.data"
+                  [escape]="false"
+                ></i>
+              </ng-container>
+            </ng-template>
             <ng-template #notRecipe>
               <i
                 *ngIf="
                   vm.result.inputIds[
-                    rowIndex - 1 - vm.result.recipeIds.length
+                    rowIndex -
+                      1 -
+                      vm.result.producers.length -
+                      vm.result.recipeIds.length
                   ] as id
                 "
                 [class]="id | iconClass"
@@ -276,6 +319,14 @@
             {{ 'matrix.surplus' | translate }}
           </th>
           <th
+            [colSpan]="vm.result.producers.length"
+            [style.width.rem]="4 * vm.result.producers.length"
+          >
+            <div class="text-truncate">
+              {{ 'matrix.producers' | translate }}
+            </div>
+          </th>
+          <th
             [colSpan]="vm.result.recipeIds.length"
             [style.width.rem]="4 * vm.result.recipeIds.length"
           >
@@ -295,19 +346,26 @@
           <th style="width: 4rem">
             <div class="d-flex align-items-center h-100"><span>I</span></div>
           </th>
-          <th *ngFor="let i of vm.result.itemIds">
+          <th *ngFor="let i of vm.result.itemIds" style="width: 4rem">
             <i
               [class]="i | iconClass"
               [pTooltip]="vm.data.itemEntities[i].name"
             ></i>
           </th>
-          <th *ngFor="let i of vm.result.recipeIds">
+          <th *ngFor="let p of vm.result.producers" style="width: 4rem">
+            <i
+              [class]="p.recipeId | iconClass: 'recipe'"
+              [pTooltip]="p.recipeId | recipeTooltip: vm.data"
+              [escape]="false"
+            ></i>
+          </th>
+          <th *ngFor="let i of vm.result.recipeIds" style="width: 4rem">
             <i
               [class]="i | iconClass: 'recipe'"
               [pTooltip]="vm.data.recipeEntities[i].name"
             ></i>
           </th>
-          <th *ngFor="let i of vm.result.inputIds">
+          <th *ngFor="let i of vm.result.inputIds" style="width: 4rem">
             <i
               [class]="i | iconClass"
               [pTooltip]="vm.data.itemEntities[i].name"

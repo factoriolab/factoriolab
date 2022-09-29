@@ -4,7 +4,8 @@
 
 // Use InputNumber styles
 :host ::ng-deep {
-  .p-inputtext:not(.hidden-buttons) {
+  .p-inputnumber.p-component.p-inputnumber-buttons-stacked
+    > .p-inputtext:not(.hidden-buttons) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }

@@ -1,6 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import { SelectItem } from 'primeng/api';
 
+import { fnPropsNotNullish } from '~/helpers';
 import {
   Column,
   Entities,
@@ -14,12 +15,14 @@ import {
   Step,
   StepDetail,
   StepDetailTab,
+  StepOutput,
 } from '~/models';
 import { RateUtility, RecipeUtility, SimplexUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Factories from '../factories';
 import * as Items from '../items';
 import * as Preferences from '../preferences';
+import * as Producers from '../producers';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
 import { ProductsState } from './products.reducer';
@@ -267,35 +270,23 @@ export const getNormalizedRates = createSelector(
   })
 );
 
-export const getNormalizedSteps = createSelector(
-  getProducts,
+export const getNormalizedProducts = createSelector(
+  getRationalProducts,
   getNormalizedRates,
-  Items.getItemSettings,
-  Recipes.getAdjustedDataset,
-  (products, rates, itemSettings, data) => {
-    const steps: Step[] = [];
-    for (const product of products) {
-      RateUtility.addStepsFor(
-        product.itemId,
-        rates[product.id],
-        steps,
-        itemSettings,
-        data
-      );
-    }
-    return steps;
-  }
+  (products, rates) => products.map((p) => ({ ...p, ...{ rate: rates[p.id] } }))
 );
 
 export const getMatrixResult = createSelector(
-  getNormalizedSteps,
+  getNormalizedProducts,
+  Producers.getRationalProducers,
   Items.getItemSettings,
   Settings.getDisabledRecipeIds,
   Settings.getSimplexModifiers,
   Recipes.getAdjustedDataset,
-  (steps, itemSettings, disabledRecipeIds, adj, data) =>
+  (products, producers, itemSettings, disabledRecipeIds, adj, data) =>
     SimplexUtility.solve(
-      RateUtility.copy(steps),
+      products,
+      producers,
       itemSettings,
       disabledRecipeIds,
       adj.costInput,
@@ -305,48 +296,34 @@ export const getMatrixResult = createSelector(
     )
 );
 
-export const getNormalizedStepsWithBelts = createSelector(
+export const getSteps = createSelector(
   getMatrixResult,
+  Producers.getRationalProducers,
   Items.getItemSettings,
-  Recipes.getRecipeSettings,
+  Recipes.getRationalRecipeSettings,
+  Settings.getRationalBeaconReceivers,
   Settings.getBeltSpeed,
+  Settings.getDisplayRateInfo,
   Recipes.getAdjustedDataset,
-  (result, itemSettings, recipeSettings, beltSpeed, data) =>
-    RateUtility.calculateBelts(
-      RateUtility.copy(result.steps),
+  (
+    result,
+    producers,
+    itemSettings,
+    recipeSettings,
+    beaconReceivers,
+    beltSpeed,
+    dispRateInfo,
+    data
+  ) =>
+    RateUtility.normalizeSteps(
+      result.steps,
+      producers,
       itemSettings,
       recipeSettings,
-      beltSpeed,
-      data
-    )
-);
-
-export const getNormalizedStepsWithOutputs = createSelector(
-  getNormalizedStepsWithBelts,
-  Recipes.getAdjustedDataset,
-  (steps, data) => RateUtility.calculateOutputs(RateUtility.copy(steps), data)
-);
-
-export const getNormalizedStepsWithBeacons = createSelector(
-  getNormalizedStepsWithOutputs,
-  Settings.getRationalBeaconReceivers,
-  Recipes.getRationalRecipeSettings,
-  Recipes.getAdjustedDataset,
-  (steps, beaconReceivers, recipeSettings, data) =>
-    RateUtility.calculateBeacons(
-      RateUtility.copy(steps),
       beaconReceivers,
-      recipeSettings,
+      beltSpeed,
+      dispRateInfo,
       data
-    )
-);
-
-export const getSteps = createSelector(
-  getNormalizedStepsWithBeacons,
-  Settings.getDisplayRateInfo,
-  (steps, dispRateInfo) =>
-    RateUtility.sortHierarchy(
-      RateUtility.displayRate(RateUtility.copy(steps), dispRateInfo)
     )
 );
 
@@ -358,12 +335,14 @@ export const checkViaState = createSelector(
 
 export const getZipState = createSelector(
   productsState,
+  Producers.producersState,
   Items.itemsState,
   Recipes.recipesState,
   Factories.factoriesState,
   Settings.settingsState,
-  (products, items, recipes, factories, settings) => ({
+  (products, producers, items, recipes, factories, settings) => ({
     products,
+    producers,
     items,
     recipes,
     factories,
@@ -373,9 +352,20 @@ export const getZipState = createSelector(
 
 export const getStepsModified = createSelector(
   getSteps,
+  Producers.getBaseProducers,
   Items.itemsState,
   Recipes.recipesState,
-  (steps, itemSettings, recipeSettings) => ({
+  (steps, producers, itemSettings, recipeSettings) => ({
+    producers: producers.reduce((e: Entities<boolean>, p) => {
+      e[p.id] =
+        p.factoryId != null ||
+        p.factoryModuleIds != null ||
+        p.beaconCount != null ||
+        p.beaconId != null ||
+        p.beaconModuleIds != null ||
+        p.overclock != null;
+      return e;
+    }, {}),
     items: steps.reduce((e: Entities<boolean>, s) => {
       if (s.itemId) {
         e[s.itemId] = itemSettings[s.itemId] != null;
@@ -410,7 +400,7 @@ export const getTotals = createSelector(
         if (step.belts?.nonzero()) {
           const belt = itemSettings[step.itemId].beltId;
           if (belt != null) {
-            if (!belts.hasOwnProperty(belt)) {
+            if (!Object.prototype.hasOwnProperty.call(belts, belt)) {
               belts[belt] = Rational.zero;
             }
             belts[belt] = belts[belt].add(step.belts.ceil());
@@ -421,7 +411,7 @@ export const getTotals = createSelector(
         if (step.wagons?.nonzero()) {
           const wagon = itemSettings[step.itemId].wagonId;
           if (wagon != null) {
-            if (!wagons.hasOwnProperty(wagon)) {
+            if (!Object.prototype.hasOwnProperty.call(wagons, wagon)) {
               wagons[wagon] = Rational.zero;
             }
             wagons[wagon] = wagons[wagon].add(step.wagons.ceil());
@@ -444,7 +434,7 @@ export const getTotals = createSelector(
               factory = step.recipeId;
             }
             if (factory != null) {
-              if (!factories.hasOwnProperty(factory)) {
+              if (!Object.prototype.hasOwnProperty.call(factories, factory)) {
                 factories[factory] = Rational.zero;
               }
               factories[factory] = factories[factory].add(
@@ -458,7 +448,7 @@ export const getTotals = createSelector(
         if (step.beacons?.nonzero()) {
           const beacon = recipeSettings[step.recipeId].beaconId;
           if (beacon != null) {
-            if (!beacons.hasOwnProperty(beacon)) {
+            if (!Object.prototype.hasOwnProperty.call(beacons, beacon)) {
               beacons[beacon] = Rational.zero;
             }
             beacons[beacon] = beacons[beacon].add(step.beacons.ceil());
@@ -488,17 +478,23 @@ export const getStepDetails = createSelector(
   (steps, data, disabledRecipeIds) =>
     steps.reduce((e: Entities<StepDetail>, s) => {
       const tabs: StepDetailTab[] = [];
-      let outputs: Step[] = [];
+      const outputs: StepOutput[] = [];
       const recipeIds: string[] = [];
       const defaultableRecipeIds: string[] = [];
-      if (s.itemId != null) {
+      if (s.itemId != null && s.items != null) {
         const itemId = s.itemId; // Store null-checked id
         tabs.push(StepDetailTab.Item);
-        outputs = steps
-          .filter((a) => a.outputs?.[itemId] != null)
-          .sort((a, b) =>
-            b.outputs![itemId].sub(a.outputs![itemId]).toNumber()
-          );
+        outputs.push(
+          ...steps
+            .filter(fnPropsNotNullish('outputs', 'recipeId', 'factories'))
+            .filter((s) => s.outputs[itemId] != null)
+            .map((s) => ({
+              recipeId: s.recipeId,
+              value: s.outputs[itemId],
+              factories: s.factories,
+            }))
+        );
+        outputs.sort((a, b) => b.value.sub(a.value).toNumber());
       }
       if (s.recipeId != null) {
         tabs.push(StepDetailTab.Recipe);
@@ -536,6 +532,13 @@ export const getStepDetails = createSelector(
     }, {})
 );
 
+export const getStepById = createSelector(getSteps, (steps) =>
+  steps.reduce((e: Entities<Step>, s) => {
+    e[s.id] = s;
+    return e;
+  }, {})
+);
+
 export const getStepByItemEntities = createSelector(getSteps, (steps) =>
   steps.reduce((e: Entities<Step>, s) => {
     if (s.itemId != null) {
@@ -556,9 +559,7 @@ export const getStepTree = createSelector(getSteps, (steps) => {
         indent = new Array(indents[keys[0]] + 1).fill(false);
       }
     }
-    if (step.recipeId) {
-      indents[step.recipeId] = indent.length;
-    }
+    indents[step.id] = indent.length;
     tree[step.id] = indent;
   }
 
@@ -602,7 +603,15 @@ export const getEffectivePrecision = createSelector(
       effPrecision[i] = effPrecFrom(steps, columns[i].precision, (s) =>
         i === Column.Items
           ? (s.items || Rational.zero).sub(s.surplus || Rational.zero)
-          : (s as Record<string, any>)[i.toLowerCase()]
+          : s[
+              i.toLowerCase() as
+                | 'items'
+                | 'belts'
+                | 'wagons'
+                | 'factories'
+                | 'power'
+                | 'pollution'
+            ]
       );
     }
 

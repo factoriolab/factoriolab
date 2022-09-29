@@ -1,13 +1,20 @@
+import { SelectItem } from 'primeng/api';
+
+import { fnPropsNotNullish } from '~/helpers';
 import {
+  Beacon,
   Dataset,
   EnergyType,
   Entities,
+  Factory,
   FuelType,
   ItemId,
   ItemSettings,
+  Producer,
   Product,
   RateType,
   Rational,
+  RationalBeacon,
   RationalBelt,
   RationalFactory,
   RationalProduct,
@@ -15,6 +22,7 @@ import {
   RationalRecipeSettings,
   Recipe,
 } from '~/models';
+import { Factories } from '~/store';
 
 export class RecipeUtility {
   static MIN_FACTOR = new Rational(BigInt(1), BigInt(5));
@@ -33,14 +41,45 @@ export class RecipeUtility {
     return options[0];
   }
 
+  static moduleOptions(
+    entity: Factory | RationalFactory | Beacon | RationalBeacon,
+    recipeId: string | null,
+    data: Dataset
+  ): SelectItem[] {
+    // Get all modules
+    let allowed = data.moduleIds
+      .map((i) => data.itemEntities[i])
+      .filter(fnPropsNotNullish('module'));
+
+    if (recipeId != null) {
+      // Filter for modules allowed on this recipe
+      allowed = allowed.filter(
+        (m) =>
+          m.module.limitation == null ||
+          data.limitations[m.module.limitation][recipeId]
+      );
+    }
+
+    // Filter for modules allowed on this entity
+    if (entity.disallowEffects) {
+      for (const disallowEffect of entity.disallowEffects) {
+        allowed = allowed.filter((m) => m.module[disallowEffect] == null);
+      }
+    }
+
+    const options = allowed.map((m) => ({ value: m.id, label: m.name }));
+    options.unshift({ label: 'None', value: ItemId.Module });
+    return options;
+  }
+
   /** Determines default array of modules for a given recipe */
   static defaultModules(
-    allowedModuleIds: string[],
+    options: SelectItem[],
     moduleRankIds: string[],
     count: number
   ): string[] {
     const module = this.bestMatch(
-      [ItemId.Module, ...allowedModuleIds],
+      options.map((o) => o.value),
       moduleRankIds
     );
     return new Array(count).fill(module);
@@ -51,7 +90,7 @@ export class RecipeUtility {
     fuelId: string | undefined,
     proliferatorSprayId: string,
     miningBonus: Rational,
-    researchFactor: Rational,
+    researchSpeed: Rational,
     settings: RationalRecipeSettings,
     itemSettings: Entities<ItemSettings>,
     data: Dataset
@@ -85,7 +124,7 @@ export class RecipeUtility {
 
       if (factory.research) {
         // Adjust for research factor
-        recipe.time = recipe.time.div(researchFactor);
+        recipe.time = recipe.time.div(researchSpeed);
       }
 
       // Calculate factors
@@ -536,6 +575,70 @@ export class RecipeUtility {
     }
 
     return product;
+  }
+
+  static adjustProducer(
+    producer: Producer,
+    factories: Factories.FactoriesState,
+    data: Dataset
+  ): Producer {
+    producer = { ...producer };
+    const recipe = data.recipeEntities[producer.recipeId];
+
+    if (producer.factoryId == null) {
+      producer.factoryId = this.bestMatch(
+        recipe.producers,
+        factories.ids ?? []
+      );
+    }
+
+    const factory = data.factoryEntities[producer.factoryId];
+    const def = factories.entities[producer.factoryId];
+    if (factory != null && this.allowsModules(recipe, factory)) {
+      producer.factoryModuleOptions = this.moduleOptions(
+        factory,
+        producer.recipeId,
+        data
+      );
+
+      if (producer.factoryModuleIds == null) {
+        producer.factoryModuleIds = this.defaultModules(
+          producer.factoryModuleOptions,
+          def.moduleRankIds ?? [],
+          factory.modules ?? 0
+        );
+      }
+
+      producer.beaconCount = producer.beaconCount ?? def.beaconCount;
+      producer.beaconId = producer.beaconId ?? def.beaconId;
+
+      if (producer.beaconId != null) {
+        const beacon = data.beaconEntities[producer.beaconId];
+        producer.beaconModuleOptions = this.moduleOptions(
+          beacon,
+          producer.recipeId,
+          data
+        );
+
+        if (producer.beaconModuleIds == null) {
+          producer.beaconModuleIds = RecipeUtility.defaultModules(
+            producer.beaconModuleOptions,
+            def.beaconModuleRankIds ?? [],
+            beacon.modules
+          );
+        }
+      }
+    } else {
+      // Factory doesn't support modules, remove any
+      delete producer.factoryModuleIds;
+      delete producer.beaconCount;
+      delete producer.beaconId;
+      delete producer.beaconModuleIds;
+    }
+
+    producer.overclock = producer.overclock ?? def.overclock;
+
+    return producer;
   }
 
   static cleanCircularRecipes(
