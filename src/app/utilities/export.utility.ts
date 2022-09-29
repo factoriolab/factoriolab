@@ -1,5 +1,6 @@
 import { saveAs } from 'file-saver';
 
+import { notNullish } from '~/helpers';
 import {
   Column,
   Dataset,
@@ -165,7 +166,8 @@ export class ExportUtility {
       const parents = step.parents; // Store as non-null
       const parentsStr = Object.keys(parents)
         .map((p) => steps.find((s) => s.id === p))
-        .map((s) => (s ? `${s.recipeId}:${parents[s.id].toString()}` : ''))
+        .filter(notNullish)
+        .map((s) => `${s.recipeId}:${parents[s.id].toString()}`)
         .join(',');
       exp.Targets = `"${parentsStr}"`;
     }

@@ -92,6 +92,16 @@ describe('BrowserUtility', () => {
       const state: any = { a: 'a' };
       expect(BrowserUtility.mergeState(state)).toEqual(state);
     });
+
+    it('should remove unrecognized keys', () => {
+      const preferencesState: any = { pref: 'value' };
+      const stored: any = { a: { test: 'stored' }, preferencesState };
+      spyOnProperty(BrowserUtility, 'storedState', 'get').and.returnValue(
+        stored
+      );
+      const result: any = BrowserUtility.mergeState(preferencesState);
+      expect(result['a']).toBeUndefined();
+    });
   });
 
   describe('saveState', () => {

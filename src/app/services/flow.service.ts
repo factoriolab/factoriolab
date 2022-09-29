@@ -12,7 +12,6 @@ import {
   ItemSettings,
   NodeType,
   Rational,
-  RecipeSettings,
   Step,
   themeMap,
 } from '~/models';
@@ -37,31 +36,20 @@ export class FlowService {
     this.flowData$ = combineLatest([
       this.store.select(Products.getSteps),
       this.store.select(Items.getItemSettings),
-      this.store.select(Recipes.getRecipeSettings),
       this.store.select(Recipes.getAdjustedDataset),
       this.store.select(Settings.getDisplayRateInfo),
       this.store.select(Preferences.getColumns),
       this.theme.theme$,
     ]).pipe(
-      map(
-        ([
+      map(([steps, itemSettings, data, dispRateInfo, columns, theme]) =>
+        this.buildGraph(
           steps,
           itemSettings,
-          recipeSettings,
           data,
           dispRateInfo,
           columns,
-          theme,
-        ]) =>
-          this.buildGraph(
-            steps,
-            itemSettings,
-            recipeSettings,
-            data,
-            dispRateInfo,
-            columns,
-            themeMap[theme]
-          )
+          themeMap[theme]
+        )
       )
     );
   }
@@ -69,7 +57,6 @@ export class FlowService {
   buildGraph(
     steps: Step[],
     itemSettings: Entities<ItemSettings>,
-    recipeSettings: Entities<RecipeSettings>,
     data: Dataset,
     dispRateInfo: DisplayRateInfo,
     columns: ColumnsState,
@@ -87,9 +74,9 @@ export class FlowService {
     for (const step of steps) {
       if (step.recipeId && step.factories) {
         const recipe = data.recipeEntities[step.recipeId];
-        const settings = recipeSettings[step.recipeId];
+        const settings = step.recipeSettings;
 
-        if (settings.factoryId != null) {
+        if (settings?.factoryId != null) {
           const factory = data.itemEntities[settings.factoryId];
           // CREATE NODE: Standard recipe
           flow.nodes.push({

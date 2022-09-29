@@ -402,18 +402,20 @@ describe('RouterService', () => {
       expect(service.dispatch).toHaveBeenCalledWith(v1Empty, {} as any);
     });
 
-    // it('should unzip v1', () => {
-    //   spyOn(window, 'alert');
-    //   const v1Full =
-    //     'p=steel-chest*1*1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectivity-module*1*speed-module' +
-    //     '~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2_steel-furnace&s=1.0*2*1*=*tran' +
-    //     'sport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid-wagon*?*2*10*0*100*1*productivity-module&v=1';
-    //   const url = `/?${v1Full}`;
-    //   (router.events as any).next(new NavigationEnd(2, url, url));
+    it('should unzip v1', () => {
+      spyOn(window, 'alert');
+      const v1Full =
+        'p=steel-chest*1*1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectivity-module*1*speed-module' +
+        '~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2_steel-furnace&s=1.0*2*1*=*tran' +
+        'sport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid-wagon*?*2*10*0*100*1*productivity-module&v=1';
+      const url = `/?${v1Full}`;
+      (router.events as any).next(new NavigationEnd(2, url, url));
 
-    //   expect(service.dispatch).toHaveBeenCalledWith(v1Full, mockState);
-    //   expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
-    // });
+      const mockStateV1 = { ...mockState } as Partial<LabState>;
+      delete mockStateV1.producersState;
+      expect(service.dispatch).toHaveBeenCalledWith(v1Full, mockStateV1);
+      expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
+    });
 
     it('should unzip empty v2', () => {
       const url = '/?z=eJwrUCszAgADVAE.';
@@ -424,28 +426,30 @@ describe('RouterService', () => {
       expect(service.dispatch).toHaveBeenCalledWith('p&v2', {} as any);
     });
 
-    // it('should unzip v2', () => {
-    //   spyOn(window, 'alert');
-    //   const url =
-    //     '/?z=eJwdjLEKgDAMRP8mw01NB3ERSVpwFj-g4CCIiyjo1m.3KuGSXI6XM3VQqKwu-78mmFzZ4bBq7FOdYIghQKleNkXmiQGseJnljqSGxmF54QdnYCkaPYLpb9sDZHniBxSMGkU_';
+    it('should unzip v2', () => {
+      spyOn(window, 'alert');
+      const url =
+        '/?z=eJwdjLEKgDAMRP8mw01NB3ERSVpwFj-g4CCIiyjo1m.3KuGSXI6XM3VQqKwu-78mmFzZ4bBq7FOdYIghQKleNkXmiQGseJnljqSGxmF54QdnYCkaPYLpb9sDZHniBxSMGkU_';
 
-    //   // const newZip = service.bytesToBase64(
-    //   //   deflate(
-    //   //     'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A*200*100*8&f1*D~G*B*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v2'
-    //   //   )
-    //   // );
-    //   // console.log(newZip);
+      // const newZip = service.bytesToBase64(
+      //   deflate(
+      //     'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A*200*100*8&f1*D~G*B*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v2'
+      //   )
+      // );
+      // console.log(newZip);
 
-    //   spyOn(dataSvc, 'requestData').and.returnValue(
-    //     of([Mocks.Data, Mocks.Hash, null])
-    //   );
-    //   (router.events as any).next(new NavigationEnd(2, url, url));
-    //   expect(service.dispatch).toHaveBeenCalledWith(
-    //     'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A*200*100*8&f1*D~G*B*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v2',
-    //     mockState
-    //   );
-    //   expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
-    // });
+      spyOn(dataSvc, 'requestData').and.returnValue(
+        of([Mocks.Data, Mocks.Hash, null])
+      );
+      (router.events as any).next(new NavigationEnd(2, url, url));
+      const mockStateV2 = { ...mockState } as Partial<LabState>;
+      delete mockStateV2.producersState;
+      expect(service.dispatch).toHaveBeenCalledWith(
+        'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A*200*100*8&f1*D~G*B*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v2',
+        mockStateV2
+      );
+      expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
+    });
 
     it('should unzip empty v3', () => {
       const url = '/?z=eJwrUCszBgADVQFA';
@@ -456,28 +460,28 @@ describe('RouterService', () => {
       expect(service.dispatch).toHaveBeenCalledWith('p&v3', {} as any);
     });
 
-    // it('should unzip v3', () => {
-    //   spyOn(window, 'alert');
-    //   const url =
-    //     '/?z=eJwdjLEKgDAMRP8mw02NgriIJC04ix8gOAjiIgq69du9lhAu747LFTsoVDaXo54RJndyOCwbecoTDE0IUG4vuyLRYgBbfZ3laQhD6WH54Cc1cJTqGMG0YnmAJG.7AwswGiQ_';
+    it('should unzip v3', () => {
+      spyOn(window, 'alert');
+      const url =
+        '/?z=eJwdjL0KgEAMg9-mQ6brCeIi0t6Bs.gABw6CuPgDuvnsRilt-BLSLdVQqOzZeSeX5TcSTA5aDnuM3D89DDEEKLeRWZFpMYAVL4OckdB-PYw3fKUGjlIdHZj--D1Alqt6AbeMG5w_';
 
-    //   // const newZip = service.bytesToBase64(
-    //   //   deflate(
-    //   //     'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v3'
-    //   //   )
-    //   // );
-    //   // console.log(newZip);
+      // const newZip = service.bytesToBase64(
+      //   deflate(
+      //     'pC6*1*1&qDB*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v3'
+      //   )
+      // );
+      // console.log(newZip);
 
-    //   spyOn(dataSvc, 'requestData').and.returnValue(
-    //     of([Mocks.Data, Mocks.Hash, null])
-    //   );
-    //   (router.events as any).next(new NavigationEnd(2, url, url));
-    //   expect(service.dispatch).toHaveBeenCalledWith(
-    //     'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v3',
-    //     mockState
-    //   );
-    //   expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
-    // });
+      spyOn(dataSvc, 'requestData').and.returnValue(
+        of([Mocks.Data, Mocks.Hash, null])
+      );
+      (router.events as any).next(new NavigationEnd(2, url, url));
+      expect(service.dispatch).toHaveBeenCalledWith(
+        'pC6*1*1&qDB*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v3',
+        mockState
+      );
+      expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
+    });
   });
 
   describe('dispatch', () => {
@@ -603,111 +607,128 @@ describe('RouterService', () => {
     });
   });
 
-  // describe('unzipProducts', () => {
-  // it('bare should unzip', () => {
-  //   const result = service.unzipProducts({
-  //     ['p']: 'steel-chest*1*3*iron-ore',
-  //   });
-  //   expect(result).toEqual({
-  //     ids: ['0'],
-  //     entities: {
-  //       ['0']: {
-  //         id: '0',
-  //         itemId: ItemId.SteelChest,
-  //         rate: '1',
-  //         rateType: RateType.Factories,
-  //         viaId: ItemId.IronOre,
-  //       },
-  //     },
-  //     index: 1,
-  //   });
-  // });
+  describe('unzipProducts', () => {
+    it('bare should unzip', () => {
+      const result = service.unzipProducts({
+        ['p']: 'steel-chest*1*3*iron-ore',
+      });
+      expect(result).toEqual({
+        ids: ['1'],
+        entities: {
+          ['1']: {
+            id: '1',
+            itemId: ItemId.SteelChest,
+            rate: '1',
+            rateType: RateType.Factories,
+            viaId: ItemId.IronOre,
+          },
+        },
+        index: 2,
+      });
+    });
 
-  // it('hash should handle RateType Items', () => {
-  //   const result = service.unzipProducts({ ['p']: 'C6*1**Bd' }, Mocks.Hash);
-  //   expect(result).toEqual({
-  //     ids: ['0'],
-  //     entities: {
-  //       ['0']: {
-  //         id: '0',
-  //         itemId: ItemId.SteelChest,
-  //         rate: '1',
-  //         rateType: RateType.Items,
-  //         viaId: ItemId.IronOre,
-  //       },
-  //     },
-  //     index: 1,
-  //   });
-  // });
+    it('hash should handle RateType Items', () => {
+      const result = service.unzipProducts({ ['p']: 'C6*1**Bd' }, Mocks.Hash);
+      expect(result).toEqual({
+        ids: ['1'],
+        entities: {
+          ['1']: {
+            id: '1',
+            itemId: ItemId.SteelChest,
+            rate: '1',
+            rateType: RateType.Items,
+            viaId: ItemId.IronOre,
+          },
+        },
+        index: 2,
+      });
+    });
 
-  // it('hash should handle RateType Belts', () => {
-  //   const result = service.unzipProducts({ ['p']: 'C6*1*1*Bd' }, Mocks.Hash);
-  //   expect(result).toEqual({
-  //     ids: ['0'],
-  //     entities: {
-  //       ['0']: {
-  //         id: '0',
-  //         itemId: ItemId.SteelChest,
-  //         rate: '1',
-  //         rateType: RateType.Belts,
-  //         viaId: ItemId.IronOre,
-  //       },
-  //     },
-  //     index: 1,
-  //   });
-  // });
+    it('hash should handle RateType Belts', () => {
+      const result = service.unzipProducts({ ['p']: 'C6*1*1*Bd' }, Mocks.Hash);
+      expect(result).toEqual({
+        ids: ['1'],
+        entities: {
+          ['1']: {
+            id: '1',
+            itemId: ItemId.SteelChest,
+            rate: '1',
+            rateType: RateType.Belts,
+            viaId: ItemId.IronOre,
+          },
+        },
+        index: 2,
+      });
+    });
 
-  // it('hash should handle RateType Wagons', () => {
-  //   const result = service.unzipProducts({ ['p']: 'C6*1*2*Bd' }, Mocks.Hash);
-  //   expect(result).toEqual({
-  //     ids: ['0'],
-  //     entities: {
-  //       ['0']: {
-  //         id: '0',
-  //         itemId: ItemId.SteelChest,
-  //         rate: '1',
-  //         rateType: RateType.Wagons,
-  //         viaId: ItemId.IronOre,
-  //       },
-  //     },
-  //     index: 1,
-  //   });
-  // });
+    it('hash should handle RateType Wagons', () => {
+      const result = service.unzipProducts({ ['p']: 'C6*1*2*Bd' }, Mocks.Hash);
+      expect(result).toEqual({
+        ids: ['1'],
+        entities: {
+          ['1']: {
+            id: '1',
+            itemId: ItemId.SteelChest,
+            rate: '1',
+            rateType: RateType.Wagons,
+            viaId: ItemId.IronOre,
+          },
+        },
+        index: 2,
+      });
+    });
 
-  // it('hash should handle RateType Factories', () => {
-  //   const result = service.unzipProducts({ ['p']: 'C6*1*3*Bl' }, Mocks.Hash);
-  //   expect(result).toEqual({
-  //     ids: ['0'],
-  //     entities: {
-  //       ['0']: {
-  //         id: '0',
-  //         itemId: ItemId.SteelChest,
-  //         rate: '1',
-  //         rateType: RateType.Factories,
-  //         viaId: ItemId.IronOre,
-  //       },
-  //     },
-  //     index: 1,
-  //   });
-  // });
+    it('hash should handle RateType Factories', () => {
+      const result = service.unzipProducts({ ['p']: 'C6*1*3*Bl' }, Mocks.Hash);
+      expect(result).toEqual({
+        ids: ['1'],
+        entities: {
+          ['1']: {
+            id: '1',
+            itemId: ItemId.SteelChest,
+            rate: '1',
+            rateType: RateType.Factories,
+            viaId: ItemId.IronOre,
+          },
+        },
+        index: 2,
+      });
+    });
 
-  // it('hash should map values to empty strings if null', () => {
-  //   const result = service.unzipProducts({ ['p']: '*1**Bd' }, Mocks.Hash);
-  //   expect(result).toEqual({
-  //     ids: ['0'],
-  //     entities: {
-  //       ['0']: {
-  //         id: '0',
-  //         itemId: '',
-  //         rate: '1',
-  //         rateType: RateType.Items,
-  //         viaId: ItemId.IronOre,
-  //       },
-  //     },
-  //     index: 1,
-  //   });
-  // });
-  // });
+    it('hash should map values to empty strings if null', () => {
+      const result = service.unzipProducts({ ['p']: '*1**Bd' }, Mocks.Hash);
+      expect(result).toEqual({
+        ids: ['1'],
+        entities: {
+          ['1']: {
+            id: '1',
+            itemId: '',
+            rate: '1',
+            rateType: RateType.Items,
+            viaId: ItemId.IronOre,
+          },
+        },
+        index: 2,
+      });
+    });
+  });
+
+  describe('unzipProducers', () => {
+    it('hash should map values to empty strings if null', () => {
+      const result = service.unzipProducers({ ['q']: '*1' }, Mocks.Hash);
+      expect(result).toEqual({
+        ids: ['1'],
+        entities: {
+          ['1']: {
+            id: '1',
+            recipeId: '',
+            count: '1',
+          },
+        },
+        index: 2,
+      });
+    });
+  });
 
   describe('unzipItems', () => {
     it('should remove unspecified fields', () => {
