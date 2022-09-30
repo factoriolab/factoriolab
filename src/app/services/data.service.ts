@@ -13,8 +13,7 @@ import {
 } from 'rxjs';
 
 import { Entities, ModData, ModHash, ModI18n } from '~/models';
-import { Datasets, LabState, Products, Settings } from '~/store';
-import { BrowserUtility } from '~/utilities';
+import { Datasets, LabState, Settings } from '~/store';
 
 @Injectable({
   providedIn: 'root',
@@ -29,13 +28,6 @@ export class DataService {
     private store: Store<LabState>,
     private translateSvc: TranslateService
   ) {
-    if (!BrowserUtility.isRedirect && !BrowserUtility.zip) {
-      this.initialize(
-        BrowserUtility.storedState,
-        Settings.initialSettingsState
-      );
-    }
-
     combineLatest([
       this.store.select(Settings.getModId),
       this.translateSvc.onLangChange,
@@ -44,18 +36,6 @@ export class DataService {
       .subscribe(([id]) => {
         this.requestData(id).subscribe();
       });
-  }
-
-  initialize(
-    stored: Partial<LabState> | null,
-    initial: Settings.SettingsState
-  ): void {
-    const id = stored?.settingsState?.modId || initial.modId;
-    this.requestData(id).subscribe(([data]) => {
-      if (!stored?.productsState && !stored?.producersState) {
-        this.store.dispatch(new Products.ResetAction(data.items[0].id));
-      }
-    });
   }
 
   requestData(id: string): Observable<[ModData, ModHash, ModI18n | null]> {

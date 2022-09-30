@@ -10,6 +10,7 @@ import { filter, first } from 'rxjs/operators';
 import { environment } from 'src/environments';
 import { FuelType, gameInfo, ModHash } from '~/models';
 import { LabState, Preferences, Products, Settings } from '~/store';
+import { BrowserUtility } from '~/utilities';
 
 const LAB_FAVICON_ID = 'lab-favicon';
 
@@ -47,6 +48,7 @@ Determine resource and factory requirements for your desired output products.`,
 
     this.store.select(Settings.getModId).subscribe((modId) => {
       this.gaSvc.event('set_mod_id', modId);
+      BrowserUtility.modState = modId;
     });
 
     this.store.select(Products.checkViaState).subscribe((s) => {
@@ -63,6 +65,10 @@ Determine resource and factory requirements for your desired output products.`,
           this.store.dispatch(new Products.ResetViaAction(product.id));
         }
       }
+    });
+
+    this.store.select(Preferences.preferencesState).subscribe((s) => {
+      BrowserUtility.preferencesState = s;
     });
 
     // Used only in development to update hash files

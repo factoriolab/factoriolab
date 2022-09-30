@@ -3,35 +3,15 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'list',
+    path: '',
+    pathMatch: 'full',
     loadChildren: () =>
-      import('./routes/list/list.module').then((m) => m.ListModule),
+      import('./routes/landing/landing.module').then((m) => m.LandingModule),
   },
   {
-    path: 'flow',
+    path: '',
     loadChildren: () =>
-      import('./routes/flow/flow.module').then((m) => m.FlowModule),
-  },
-  {
-    path: 'matrix',
-    loadChildren: () =>
-      import('./routes/matrix/matrix.module').then((m) => m.MatrixModule),
-  },
-  {
-    path: 'factorio',
-    redirectTo: '/list?s=&v=4',
-  },
-  {
-    path: 'coi',
-    redirectTo: '/list?s=coi&v=4',
-  },
-  {
-    path: 'dsp',
-    redirectTo: '/list?s=dsp&v=4',
-  },
-  {
-    path: 'satisfactory',
-    redirectTo: '/list?s=sfy&v=4',
+      import('./routes/main/main.module').then((m) => m.MainModule),
   },
   {
     path: '**',

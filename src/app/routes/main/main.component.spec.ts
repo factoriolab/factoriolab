@@ -8,26 +8,26 @@ import { Router } from '@angular/router';
 import { MockStore } from '@ngrx/store/testing';
 
 import { TestModule } from 'src/tests';
-import { AppSharedModule } from './app-shared.module';
-import { AppComponent } from './app.component';
-import { Game } from './models';
-import { ErrorService } from './services';
-import { App, LabState } from './store';
+import { AppSharedModule } from '~/app-shared.module';
+import { Game } from '~/models';
+import { ErrorService } from '~/services';
+import { App, LabState } from '~/store';
+import { MainComponent } from './main.component';
 
-describe('AppComponent', () => {
-  let component: AppComponent;
-  let fixture: ComponentFixture<AppComponent>;
+describe('MainComponent', () => {
+  let component: MainComponent;
+  let fixture: ComponentFixture<MainComponent>;
   let router: Router;
   let mockStore: MockStore<LabState>;
   let errorSvc: ErrorService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AppComponent],
+      declarations: [MainComponent],
       imports: [TestModule, AppSharedModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AppComponent);
+    fixture = TestBed.createComponent(MainComponent);
     router = TestBed.inject(Router);
     mockStore = TestBed.inject(MockStore);
     errorSvc = TestBed.inject(ErrorService);
@@ -35,7 +35,7 @@ describe('AppComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the app', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 

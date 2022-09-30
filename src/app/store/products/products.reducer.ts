@@ -28,21 +28,6 @@ export function productsReducer(
     case App.AppActionType.RESET:
     case Settings.SettingsActionType.SET_MOD:
       return initialProductsState;
-    case ProductsActionType.RESET: {
-      const id = '1';
-      return {
-        ids: [id],
-        entities: {
-          [id]: {
-            id,
-            itemId: action.payload,
-            rate: '60',
-            rateType: RateType.Items,
-          },
-        },
-        index: 2,
-      };
-    }
     case ProductsActionType.ADD: {
       let rate = '60';
       let rateType = RateType.Items;

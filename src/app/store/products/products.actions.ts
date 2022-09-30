@@ -3,7 +3,6 @@ import { Action } from '@ngrx/store';
 import { IdPayload, RateType } from '~/models';
 
 export const enum ProductsActionType {
-  RESET = '[Products] Reset',
   ADD = '[Products] Add',
   REMOVE = '[Products] Remove',
   SET_ITEM = '[Products] Set Item',
@@ -12,11 +11,6 @@ export const enum ProductsActionType {
   SET_VIA = '[Products] Set Via',
   RESET_VIA = '[Products] Reset Via',
   ADJUST_DISPLAY_RATE = '[Products] Adjust Display Rate',
-}
-
-export class ResetAction implements Action {
-  readonly type = ProductsActionType.RESET;
-  constructor(public payload: string) {}
 }
 
 export class AddAction implements Action {
@@ -60,7 +54,6 @@ export class AdjustDisplayRateAction implements Action {
 }
 
 export type ProductsAction =
-  | ResetAction
   | AddAction
   | RemoveAction
   | SetItemAction
