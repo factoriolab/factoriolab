@@ -6,7 +6,6 @@ import {
   OnInit,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -70,7 +69,6 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     public contentSvc: ContentService,
-    private router: Router,
     private title: Title,
     private store: Store<LabState>,
     private translateSvc: TranslateService

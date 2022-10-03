@@ -31,6 +31,7 @@ import {
   Recipes,
   Settings,
 } from '~/store';
+import { BrowserUtility } from '~/utilities';
 import { DataService } from './data.service';
 
 export const NULL = '?'; // Encoded, previously 'n'
@@ -121,33 +122,14 @@ export class RouterService {
       .select(Products.getZipState)
       .pipe(debounceTime(0))
       .subscribe((s) => {
-        let skip = false;
-        if (this.first) {
-          // First update: if there are no modified settings, leave base URL.
-          if (
-            Object.keys(s.items).length === 0 &&
-            Object.keys(s.recipes).length === 0 &&
-            JSON.stringify(s.factories) ===
-              JSON.stringify(Factories.initialFactoriesState) &&
-            JSON.stringify(s.settings) ===
-              JSON.stringify(Settings.initialSettingsState)
-          ) {
-            // No modified settings, skip first update.
-            skip = true;
-          }
-          // Don't check again later, always update.
-          this.first = false;
-        }
-        if (!skip) {
-          this.updateUrl(
-            s.products,
-            s.producers,
-            s.items,
-            s.recipes,
-            s.factories,
-            s.settings
-          );
-        }
+        this.updateUrl(
+          s.products,
+          s.producers,
+          s.items,
+          s.recipes,
+          s.factories,
+          s.settings
+        );
       });
   }
 
@@ -172,7 +154,10 @@ export class RouterService {
       const url = `${hash[0].split('?')[0]}?${this.zip}${
         (hash[1] && `#${hash[1]}`) || ''
       }`;
-      this.router.navigateByUrl(url);
+      if (this.router.url.length > 1) {
+        this.router.navigateByUrl(url);
+        BrowserUtility.routerState = url;
+      }
     });
   }
 

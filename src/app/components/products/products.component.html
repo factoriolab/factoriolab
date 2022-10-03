@@ -1,6 +1,6 @@
-<p-card *ngIf="vm$ | async as vm" [header]="'objectives.title' | translate">
+<p-card *ngIf="vm$ | async as vm" [header]="'products.title' | translate">
   <h3 *ngIf="vm.products.length">
-    {{ 'objectives.products' | translate }}
+    {{ 'products.products' | translate }}
   </h3>
   <div
     *ngFor="let product of vm.products; trackBy: trackSvc.trackById"
@@ -13,7 +13,7 @@
         type="button"
         class="p-button-outlined icon"
         icon="fa-solid fa-minus"
-        [pTooltip]="'objectives.removeProductTooltip' | translate"
+        [pTooltip]="'products.removeProductTooltip' | translate"
         (click)="removeProduct(product.id)"
       ></button>
       <button
@@ -23,7 +23,7 @@
         class="text-truncate"
         [icon]="product.itemId | iconSmClass"
         [label]="vm.mobile ? '' : vm.data.itemEntities[product.itemId].name"
-        [pTooltip]="'objectives.itemTooltip' | translate"
+        [pTooltip]="'products.itemTooltip' | translate"
         tooltipPosition="top"
         (click)="editPicker.clickOpen(vm.data, 'item', product.itemId)"
       ></button>
@@ -32,7 +32,7 @@
         (selectId)="setItem(product.id, $event)"
       ></lab-picker>
       <lab-input-number
-        [pTooltip]="'objectives.rateTooltip' | translate"
+        [pTooltip]="'products.rateTooltip' | translate"
         tooltipPosition="top"
         [hideButtons]="vm.mobile"
         [value]="product.rate"
@@ -57,7 +57,7 @@
               [class.icon]="vm.mobile"
               [virtualScroll]="true"
               [virtualScrollItemSize]="34"
-              [pTooltip]="'objectives.viaTooltip' | translate"
+              [pTooltip]="'products.viaTooltip' | translate"
               tooltipPosition="left"
               [options]="vm.viaOptions[product.id]"
               [ngModel]="product.viaId"
@@ -69,7 +69,7 @@
                 </div>
                 <ng-template #desktopSelectedItem>
                   <span *ngIf="item.value === product.itemId; else viaSelected">
-                    {{ 'objectives.viaPlaceholder' | translate }}
+                    {{ 'products.viaPlaceholder' | translate }}
                   </span>
                   <ng-template #viaSelected>
                     <div class="d-flex align-items-center h-100">
@@ -103,13 +103,13 @@
       </ng-container>
       <ng-template #recipeNone>
         <span class="p-inputgroup-addon p-error">{{
-          'objectives.noEnabledRecipes' | translate
+          'products.noEnabledRecipes' | translate
         }}</span>
       </ng-template>
     </div>
   </div>
   <h3 *ngIf="vm.producers.length">
-    {{ 'objectives.producers' | translate }}
+    {{ 'products.producers' | translate }}
   </h3>
   <div
     *ngFor="let producer of vm.producers; trackBy: trackSvc.trackById"
@@ -122,7 +122,7 @@
         type="button"
         class="p-button-outlined icon"
         icon="fa-solid fa-minus"
-        [pTooltip]="'objectives.removeProducerTooltip' | translate"
+        [pTooltip]="'products.removeProducerTooltip' | translate"
         (click)="removeProducer(producer.id)"
       ></button>
       <button
@@ -133,7 +133,7 @@
         [label]="
           vm.mobile ? '' : vm.data.recipeEntities[producer.recipeId].name
         "
-        [pTooltip]="'objectives.recipeTooltip' | translate"
+        [pTooltip]="'products.recipeTooltip' | translate"
         tooltipPosition="top"
         (click)="editPicker.clickOpen(vm.data, 'recipe', producer.recipeId)"
       >
@@ -148,7 +148,7 @@
         (selectId)="setRecipe(producer.id, $event)"
       ></lab-picker>
       <lab-input-number
-        [pTooltip]="'objectives.countTooltip' | translate"
+        [pTooltip]="'products.countTooltip' | translate"
         tooltipPosition="top"
         [value]="producer.count"
         (setValue)="setCount(producer.id, $event)"
@@ -164,9 +164,9 @@
         type="button"
         class="w-100"
         icon="fa-solid fa-plus"
-        [pTooltip]="'objectives.addAProductTooltip' | translate"
+        [pTooltip]="'products.addAProductTooltip' | translate"
         tooltipPosition="top"
-        [label]="'objectives.product' | translate"
+        [label]="'products.product' | translate"
         (click)="addProductPicker.clickOpen(vm.data, 'item')"
       ></button>
     </div>
@@ -177,9 +177,9 @@
         type="button"
         class="w-100"
         icon="fa-solid fa-plus"
-        [pTooltip]="'objectives.addAProducerTooltip' | translate"
+        [pTooltip]="'products.addAProducerTooltip' | translate"
         tooltipPosition="top"
-        [label]="'objectives.producer' | translate"
+        [label]="'products.producer' | translate"
         (click)="addRecipePicker.clickOpen(vm.data, 'recipe')"
       ></button>
     </div>
@@ -192,10 +192,10 @@
         pRipple
         type="button"
         class="w-100"
-        icon="fa-solid fa-plus"
-        [pTooltip]="'objectives.addAProductTooltip' | translate"
+        icon="fa-solid fa-box"
+        [pTooltip]="'products.addAProductTooltip' | translate"
         tooltipPosition="top"
-        [label]="'objectives.addAProduct' | translate"
+        [label]="'products.addAProduct' | translate"
         (click)="addProductPicker.clickOpen(vm.data, 'item')"
       ></button>
     </div>
@@ -205,10 +205,10 @@
         pRipple
         type="button"
         class="w-100"
-        icon="fa-solid fa-plus"
-        [pTooltip]="'objectives.addAProducerTooltip' | translate"
+        icon="fa-solid fa-industry"
+        [pTooltip]="'products.addAProducerTooltip' | translate"
         tooltipPosition="top"
-        [label]="'objectives.addAProducer' | translate"
+        [label]="'products.addAProducer' | translate"
         (click)="addRecipePicker.clickOpen(vm.data, 'recipe')"
       ></button>
     </div>
@@ -216,7 +216,7 @@
       <p-dropdown
         labDropdownTranslate
         styleClass="h-100"
-        [tooltip]="'objectives.selectDisplayRate' | translate"
+        [tooltip]="'products.selectDisplayRate' | translate"
         [ngModel]="vm.displayRate"
         [options]="displayRateOptions"
         (onChange)="setDisplayRate($event.value, vm.displayRate)"

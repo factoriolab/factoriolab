@@ -4,7 +4,6 @@ import {
   ChangeDetectorRef,
   Component,
   NgZone,
-  OnInit,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -20,13 +19,7 @@ import {
   MatrixResultType,
   SimplexType,
 } from '~/models';
-import {
-  ContentService,
-  ErrorService,
-  RouterService,
-  StateService,
-  ThemeService,
-} from '~/services';
+import { ContentService, ErrorService } from '~/services';
 import { App, LabState, Preferences, Products, Settings } from '~/store';
 
 @Component({
@@ -35,7 +28,7 @@ import { App, LabState, Preferences, Products, Settings } from '~/store';
   styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MainComponent implements OnInit, AfterViewInit {
+export class MainComponent implements AfterViewInit {
   vm$ = combineLatest([
     this.store.select(Settings.getGame),
     this.store.select(Settings.getMod),
@@ -107,17 +100,8 @@ export class MainComponent implements OnInit, AfterViewInit {
     private ref: ChangeDetectorRef,
     private router: Router,
     private store: Store<LabState>,
-    private errorSvc: ErrorService,
-    private routerSvc: RouterService,
-    private stateSvc: StateService,
-    private themeSvc: ThemeService
+    private errorSvc: ErrorService
   ) {}
-
-  ngOnInit(): void {
-    this.stateSvc.initialize();
-    this.themeSvc.initialize();
-    this.routerSvc.initialize();
-  }
 
   /**
    * This doesn't seem like it should be necessary,

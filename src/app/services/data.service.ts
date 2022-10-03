@@ -8,7 +8,7 @@ import {
   Observable,
   of,
   shareReplay,
-  skip,
+  startWith,
   tap,
 } from 'rxjs';
 
@@ -30,12 +30,10 @@ export class DataService {
   ) {
     combineLatest([
       this.store.select(Settings.getModId),
-      this.translateSvc.onLangChange,
-    ])
-      .pipe(skip(1))
-      .subscribe(([id]) => {
-        this.requestData(id).subscribe();
-      });
+      this.translateSvc.onLangChange.pipe(startWith('en')),
+    ]).subscribe(([id]) => {
+      this.requestData(id).subscribe(() => console.log('loaded', id));
+    });
   }
 
   requestData(id: string): Observable<[ModData, ModHash, ModI18n | null]> {

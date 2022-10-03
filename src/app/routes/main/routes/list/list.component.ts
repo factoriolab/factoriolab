@@ -21,6 +21,7 @@ import {
   StepDetailTab,
 } from '~/models';
 import { ContentService, TrackService } from '~/services';
+import { ExportService } from '~/services/export.service';
 import {
   Factories,
   Items,
@@ -31,7 +32,7 @@ import {
   Recipes,
   Settings,
 } from '~/store';
-import { ExportUtility, RecipeUtility } from '~/utilities';
+import { RecipeUtility } from '~/utilities';
 
 @Component({
   selector: 'lab-list',
@@ -127,7 +128,8 @@ export class ListComponent implements OnInit, AfterViewInit {
     public contentSvc: ContentService,
     public trackSvc: TrackService,
     private route: ActivatedRoute,
-    private store: Store<LabState>
+    private store: Store<LabState>,
+    private exportSvc: ExportService
   ) {}
 
   ngOnInit(): void {
@@ -188,7 +190,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     columns: Preferences.ColumnsState,
     data: Dataset
   ): void {
-    ExportUtility.stepsToCsv(
+    this.exportSvc.stepsToCsv(
       steps,
       columns,
       itemSettings,
