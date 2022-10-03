@@ -4,22 +4,22 @@ import { MockStore } from '@ngrx/store/testing';
 import { DispatchTest, TestModule } from 'src/tests';
 import { AppSharedModule } from '~/app-shared.module';
 import { LabState, Producers, Products, Settings } from '~/store';
-import { ProductsComponent } from './products.component';
+import { ObjectivesComponent } from './objectives.component';
 
-describe('ProductsComponent', () => {
-  let component: ProductsComponent;
-  let fixture: ComponentFixture<ProductsComponent>;
+describe('ObjectivesComponent', () => {
+  let component: ObjectivesComponent;
+  let fixture: ComponentFixture<ObjectivesComponent>;
   let mockStore: MockStore<LabState>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProductsComponent],
+      declarations: [ObjectivesComponent],
       imports: [AppSharedModule, TestModule],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProductsComponent);
+    fixture = TestBed.createComponent(ObjectivesComponent);
     mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     fixture.detectChanges();

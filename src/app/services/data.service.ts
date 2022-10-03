@@ -32,7 +32,7 @@ export class DataService {
       this.store.select(Settings.getModId),
       this.translateSvc.onLangChange.pipe(startWith('en')),
     ]).subscribe(([id]) => {
-      this.requestData(id).subscribe(() => console.log('loaded', id));
+      this.requestData(id).subscribe();
     });
   }
 

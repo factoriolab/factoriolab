@@ -197,7 +197,7 @@
     "simplexSolver": "Simplex solver",
     "simplexSolverTooltip": "Select the simplex solver algorithm; JS BigInt Rational is slower but maintains full precision"
   },
-  "products": {
+  "objectives": {
     "title": "Objectives",
     "products": "Products",
     "removeProductTooltip": "Remove product",

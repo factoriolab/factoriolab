@@ -1,16 +1,22 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+
+enum ObjectiveType {
+  None,
+  Product,
+  Producer,
+}
 
 @Component({
   selector: 'lab-wizard',
   templateUrl: './wizard.component.html',
   styleUrls: ['./wizard.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WizardComponent implements OnInit {
+export class WizardComponent {
+  objectiveTypeCtrl = this.fb.control(ObjectiveType.None);
 
-  constructor() { }
+  ObjectiveType = ObjectiveType;
 
-  ngOnInit(): void {
-  }
-
+  constructor(private fb: FormBuilder) {}
 }

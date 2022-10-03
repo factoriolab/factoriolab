@@ -1,1 +1,23 @@
-<p>wizard works!</p>
+<p-card styleClass="w-100">
+  <div>I want to know what I need to:</div>
+  <div class="d-flex mt-2">
+    <p-radioButton
+      inputId="objective-type-product"
+      [value]="ObjectiveType.Product"
+      [formControl]="objectiveTypeCtrl"
+    ></p-radioButton>
+    <label for="objective-type-product" class="ms-2"
+      >Produce items or research</label
+    >
+  </div>
+  <div class="d-flex mt-2">
+    <p-radioButton
+      inputId="objective-type-producer"
+      [value]="ObjectiveType.Producer"
+      [formControl]="objectiveTypeCtrl"
+    ></p-radioButton>
+    <label for="objective-type-producer" class="ms-2"
+      >Supply a number of factories</label
+    >
+  </div>
+</p-card>

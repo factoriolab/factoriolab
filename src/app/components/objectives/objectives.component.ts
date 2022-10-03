@@ -20,12 +20,12 @@ import {
 } from '~/store';
 
 @Component({
-  selector: 'lab-products',
-  templateUrl: './products.component.html',
-  styleUrls: ['./products.component.scss'],
+  selector: 'lab-objectives',
+  templateUrl: './objectives.component.html',
+  styleUrls: ['./objectives.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductsComponent {
+export class ObjectivesComponent {
   vm$ = combineLatest([
     this.store.select(Products.getProducts),
     this.store.select(Products.getViaOptions),

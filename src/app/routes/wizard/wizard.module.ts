@@ -1,13 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { DividerModule } from 'primeng/divider';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 import { AppSharedModule } from '~/app-shared.module';
 import { WizardRoutingModule } from './wizard-routing.module';
 import { WizardComponent } from './wizard.component';
 
 @NgModule({
-  imports: [CommonModule, DividerModule, WizardRoutingModule, AppSharedModule],
+  imports: [
+    CommonModule,
+    RadioButtonModule,
+    WizardRoutingModule,
+    AppSharedModule,
+  ],
   declarations: [WizardComponent],
 })
 export class WizardModule {}

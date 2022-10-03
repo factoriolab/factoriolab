@@ -11,9 +11,10 @@ $surface-c: #e9ecef;
 $surface-d: #dee2e6;
 $text-color: #495057;
 $text-color-secondary: #6c757d;
-$primary-color: #e67300; // hsl(30, 100, 45)
+$primary-color: #cc6600; // hsl(30, 100, 40)
 $primary-color-text: #ffffff;
 $maskbg: rgba(0, 0, 0, 0.4);
+$button-size: 2.571rem;
 
 // Not defined in root, based on primary
 $shadow-color: color.adjust($primary-color, $lightness: +30%);
@@ -322,7 +323,7 @@ p-autocomplete.p-autocomplete-clearable
 .p-cascadeselect .p-cascadeselect-trigger {
   background: transparent;
   color: $text-color-secondary;
-  width: 2.357rem;
+  width: $button-size;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
 }
@@ -398,7 +399,7 @@ p-cascadeselect.p-cascadeselect-clearable .p-cascadeselect-label {
 }
 p-cascadeselect.p-cascadeselect-clearable .p-cascadeselect-clear-icon {
   color: $text-color-secondary;
-  right: 2.357rem;
+  right: $button-size;
 }
 
 .p-checkbox {
@@ -561,13 +562,13 @@ p-chips.p-chips-clearable .p-chips-clear-icon {
 .p-dropdown .p-dropdown-trigger {
   background: transparent;
   color: $text-color-secondary;
-  width: 2.357rem;
+  width: $button-size;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
 }
 .p-dropdown .p-dropdown-clear-icon {
   color: $text-color-secondary;
-  right: 2.357rem;
+  right: $button-size;
 }
 
 .p-dropdown-panel {
@@ -796,7 +797,7 @@ p-dropdown.ng-dirty.ng-invalid > .p-dropdown {
   border-left: 1px solid $surface-alt-1;
   border-bottom: 1px solid $surface-alt-1;
   padding: 0.5rem 0.5rem;
-  min-width: 2.357rem;
+  min-width: $button-size;
 }
 .p-inputgroup-addon:last-child {
   border-right: 1px solid $surface-alt-1;
@@ -864,7 +865,7 @@ p-dropdown.ng-dirty.ng-invalid > .p-dropdown {
   width: auto;
 }
 .p-fluid .p-inputgroup .p-button.p-button-icon-only {
-  width: 2.357rem;
+  width: $button-size;
 }
 
 p-inputmask.ng-dirty.ng-invalid > .p-inputtext {
@@ -1158,7 +1159,7 @@ p-listbox.ng-dirty.ng-invalid > .p-listbox {
 .p-multiselect .p-multiselect-trigger {
   background: transparent;
   color: $text-color-secondary;
-  width: 2.357rem;
+  width: $button-size;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
 }
@@ -1282,7 +1283,7 @@ p-multiselect.p-multiselect-clearable .p-multiselect-label-container {
 }
 p-multiselect.p-multiselect-clearable .p-multiselect-clear-icon {
   color: $text-color-secondary;
-  right: 2.357rem;
+  right: $button-size;
 }
 
 p-password.ng-invalid.ng-dirty > .p-password > .p-inputtext {
@@ -1600,7 +1601,7 @@ p-togglebutton.ng-dirty.ng-invalid > .p-togglebutton.p-button {
 .p-treeselect .p-treeselect-trigger {
   background: transparent;
   color: $text-color-secondary;
-  width: 2.357rem;
+  width: $button-size;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
 }
@@ -1701,7 +1702,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-label-container {
 }
 p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   color: $text-color-secondary;
-  right: 2.357rem;
+  right: $button-size;
 }
 
 .p-button {
@@ -1810,7 +1811,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   border-radius: 2rem;
 }
 .p-button.p-button-icon-only {
-  width: 2.357rem;
+  width: $button-size;
   padding: 0.5rem 0;
 }
 .p-button.p-button-icon-only .p-button-icon-left,
@@ -1819,7 +1820,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 .p-button.p-button-icon-only.p-button-rounded {
   border-radius: 50%;
-  height: 2.357rem;
+  height: $button-size;
 }
 .p-button.p-button-sm {
   font-size: 0.875rem;
@@ -1846,7 +1847,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   width: 100%;
 }
 .p-fluid .p-button-icon-only {
-  width: 2.357rem;
+  width: $button-size;
 }
 .p-fluid .p-buttonset {
   display: flex;
@@ -3203,8 +3204,8 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   background-color: transparent;
   border: 0 none;
   color: $text-color-secondary;
-  min-width: 2.357rem;
-  height: 2.357rem;
+  min-width: $button-size;
+  height: $button-size;
   margin: 0.143rem;
   transition: box-shadow 0.2s;
   border-radius: 3px;
@@ -3228,7 +3229,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-paginator .p-dropdown {
   margin-left: 0.5rem;
   margin-right: 0.5rem;
-  height: 2.357rem;
+  height: $button-size;
 }
 .p-paginator .p-dropdown .p-dropdown-label {
   padding-right: 0;
@@ -3238,14 +3239,14 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   margin-right: 0.5rem;
 }
 .p-paginator .p-paginator-page-input .p-inputtext {
-  max-width: 2.357rem;
+  max-width: $button-size;
 }
 .p-paginator .p-paginator-current {
   background-color: transparent;
   border: 0 none;
   color: $text-color-secondary;
-  min-width: 2.357rem;
-  height: 2.357rem;
+  min-width: $button-size;
+  height: $button-size;
   margin: 0.143rem;
   padding: 0 0.5rem;
 }
@@ -3253,8 +3254,8 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   background-color: transparent;
   border: 0 none;
   color: $text-color-secondary;
-  min-width: 2.357rem;
-  height: 2.357rem;
+  min-width: $button-size;
+  height: $button-size;
   margin: 0.143rem;
   transition: box-shadow 0.2s;
   border-radius: 3px;
@@ -4112,7 +4113,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-tabview .p-tabview-nav-btn.p-link {
   background: $surface-a;
   color: $primary-color;
-  width: 2.357rem;
+  width: $button-size;
   box-shadow: 0 3px 1px -2px $black-a20, 0 2px 2px 0 $black-a14,
     0 1px 5px 0 $black-a12;
   border-radius: 0;
@@ -5580,7 +5581,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-tabmenu .p-tabmenu-nav-btn.p-link {
   background: $surface-a;
   color: $primary-color;
-  width: 2.357rem;
+  width: $button-size;
   box-shadow: 0 3px 1px -2px $black-a20, 0 2px 2px 0 $black-a14,
     0 1px 5px 0 $black-a12;
   border-radius: 0;

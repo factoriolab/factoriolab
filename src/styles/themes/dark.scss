@@ -14,6 +14,7 @@ $text-color-secondary: rgba(255, 255, 255, 0.6);
 $primary-color: #ffa64d; // hsl(30, 100, 65)
 $primary-color-text: #212529;
 $maskbg: rgba(0, 0, 0, 0.4);
+$button-size: 2.571rem;
 
 // Not defined in root, based on primary
 $shadow-color: color.adjust($primary-color, $lightness: +11%);
@@ -318,7 +319,7 @@ p-autocomplete.p-autocomplete-clearable
 .p-cascadeselect .p-cascadeselect-trigger {
   background: transparent;
   color: $text-color-secondary;
-  width: 2.357rem;
+  width: $button-size;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
 }
@@ -394,7 +395,7 @@ p-cascadeselect.p-cascadeselect-clearable .p-cascadeselect-label {
 }
 p-cascadeselect.p-cascadeselect-clearable .p-cascadeselect-clear-icon {
   color: $text-color-secondary;
-  right: 2.357rem;
+  right: $button-size;
 }
 
 .p-checkbox {
@@ -557,13 +558,13 @@ p-chips.p-chips-clearable .p-chips-clear-icon {
 .p-dropdown .p-dropdown-trigger {
   background: transparent;
   color: $text-color-secondary;
-  width: 2.357rem;
+  width: $button-size;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
 }
 .p-dropdown .p-dropdown-clear-icon {
   color: $text-color-secondary;
-  right: 2.357rem;
+  right: $button-size;
 }
 
 .p-dropdown-panel {
@@ -792,7 +793,7 @@ p-dropdown.ng-dirty.ng-invalid > .p-dropdown {
   border-left: 1px solid $surface-d;
   border-bottom: 1px solid $surface-d;
   padding: 0.5rem 0.5rem;
-  min-width: 2.357rem;
+  min-width: $button-size;
 }
 .p-inputgroup-addon:last-child {
   border-right: 1px solid $surface-d;
@@ -860,7 +861,7 @@ p-dropdown.ng-dirty.ng-invalid > .p-dropdown {
   width: auto;
 }
 .p-fluid .p-inputgroup .p-button.p-button-icon-only {
-  width: 2.357rem;
+  width: $button-size;
 }
 
 p-inputmask.ng-dirty.ng-invalid > .p-inputtext {
@@ -1154,7 +1155,7 @@ p-listbox.ng-dirty.ng-invalid > .p-listbox {
 .p-multiselect .p-multiselect-trigger {
   background: transparent;
   color: $text-color-secondary;
-  width: 2.357rem;
+  width: $button-size;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
 }
@@ -1278,7 +1279,7 @@ p-multiselect.p-multiselect-clearable .p-multiselect-label-container {
 }
 p-multiselect.p-multiselect-clearable .p-multiselect-clear-icon {
   color: $text-color-secondary;
-  right: 2.357rem;
+  right: $button-size;
 }
 
 p-password.ng-invalid.ng-dirty > .p-password > .p-inputtext {
@@ -1596,7 +1597,7 @@ p-togglebutton.ng-dirty.ng-invalid > .p-togglebutton.p-button {
 .p-treeselect .p-treeselect-trigger {
   background: transparent;
   color: $text-color-secondary;
-  width: 2.357rem;
+  width: $button-size;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
 }
@@ -1697,7 +1698,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-label-container {
 }
 p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   color: $text-color-secondary;
-  right: 2.357rem;
+  right: $button-size;
 }
 
 .p-button {
@@ -1806,7 +1807,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   border-radius: 2rem;
 }
 .p-button.p-button-icon-only {
-  width: 2.357rem;
+  width: $button-size;
   padding: 0.5rem 0;
 }
 .p-button.p-button-icon-only .p-button-icon-left,
@@ -1815,7 +1816,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 .p-button.p-button-icon-only.p-button-rounded {
   border-radius: 50%;
-  height: 2.357rem;
+  height: $button-size;
 }
 .p-button.p-button-sm {
   font-size: 0.875rem;
@@ -1842,7 +1843,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   width: 100%;
 }
 .p-fluid .p-button-icon-only {
-  width: 2.357rem;
+  width: $button-size;
 }
 .p-fluid .p-buttonset {
   display: flex;
@@ -4108,7 +4109,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-tabview .p-tabview-nav-btn.p-link {
   background: $surface-a;
   color: $primary-color;
-  width: 2.357rem;
+  width: $button-size;
   box-shadow: 0px 3px 1px -2px $black-a20, 0px 2px 2px 0px $black-a14,
     0px 1px 5px 0px $black-a12;
   border-radius: 0;
@@ -5576,7 +5577,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-tabmenu .p-tabmenu-nav-btn.p-link {
   background: $surface-a;
   color: $primary-color;
-  width: 2.357rem;
+  width: $button-size;
   box-shadow: 0px 3px 1px -2px $black-a20, 0px 2px 2px 0px $black-a14,
     0px 1px 5px 0px $black-a12;
   border-radius: 0;
