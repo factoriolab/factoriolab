@@ -91,10 +91,21 @@
       pButton
       pRipple
       type="button"
+      class="mt-2 p-button-help"
+      icon="fa-solid fa-question"
+      [label]="'landing.help' | translate"
+      routerLink="wizard"
+      queryParamsHandling="preserve"
+    ></button>
+    <button
+      pButton
+      pRipple
+      type="button"
       class="mt-2 p-button-outlined"
       icon="fa-solid fa-forward"
       [label]="'landing.skip' | translate"
       routerLink="list"
+      queryParamsHandling="preserve"
     ></button>
   </div>
 </p-card>

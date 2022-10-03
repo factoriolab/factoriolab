@@ -23,22 +23,6 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./routes/matrix/matrix.module').then((m) => m.MatrixModule),
       },
-      {
-        path: 'factorio',
-        redirectTo: '/list?s=&v=4',
-      },
-      {
-        path: 'coi',
-        redirectTo: '/list?s=coi&v=4',
-      },
-      {
-        path: 'dsp',
-        redirectTo: '/list?s=dsp&v=4',
-      },
-      {
-        path: 'satisfactory',
-        redirectTo: '/landing?s=sfy&v=4',
-      },
     ],
   },
 ];

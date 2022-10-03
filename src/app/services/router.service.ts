@@ -156,7 +156,10 @@ export class RouterService {
       }`;
       if (this.router.url.length > 1) {
         this.router.navigateByUrl(url);
-        BrowserUtility.routerState = url;
+        // Don't cache landing page
+        if (!url.startsWith('/?')) {
+          BrowserUtility.routerState = url;
+        }
       }
     });
   }
