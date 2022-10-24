@@ -1,12 +1,16 @@
 import { KeyValue } from '@angular/common';
 import { Injectable } from '@angular/core';
 
-import { Rational } from '~/models';
+import { Rational, Step } from '~/models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TrackService {
+  trackStep(i: number, obj: Step): string {
+    return `${obj.itemId}|${obj.recipeId}`;
+  }
+
   trackById<T extends boolean | number | string = string>(
     i: number,
     obj: { id: T }
