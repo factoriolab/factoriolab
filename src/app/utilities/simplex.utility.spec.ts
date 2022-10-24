@@ -3,6 +3,7 @@ import {
   MatrixResultType,
   RateType,
   Rational,
+  RationalProduct,
   RationalRecipe,
   SimplexType,
 } from '~/models';
@@ -282,6 +283,30 @@ describe('SimplexUtility', () => {
         costIgnored: Rational.zero,
         simplexType: SimplexType.JsBigIntRational,
       });
+    });
+
+    it('should handle adjusted product', () => {
+      const result = SimplexUtility.getState(
+        [
+          new RationalProduct({
+            id: '1',
+            itemId: ItemId.MiningProductivity,
+            rate: '60',
+            rateType: RateType.Items,
+          }),
+        ],
+        [],
+        Mocks.ItemSettingsInitial,
+        [],
+        Rational.from(1000000),
+        Rational.zero,
+        SimplexType.JsBigIntRational,
+        Mocks.AdjustedData
+      );
+
+      expect(result.items[ItemId.MiningProductivity]).toEqual(
+        Rational.from(72)
+      );
     });
   });
 
