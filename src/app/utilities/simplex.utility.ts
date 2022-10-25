@@ -1069,7 +1069,7 @@ export class SimplexUtility {
       );
     }
 
-    RateUtility.adjustPowerPollution(step, recipe);
+    RateUtility.adjustPowerPollution(step, recipe, state.data.game);
   }
   //#endregion
 
