@@ -3,6 +3,7 @@ import {
   DisplayRate,
   displayRateInfo,
   Entities,
+  Game,
   Rational,
   RationalProducer,
   RationalRecipeSettings,
@@ -34,7 +35,8 @@ describe('RateUtility', () => {
       const result = { ...step };
       RateUtility.adjustPowerPollution(
         result,
-        Mocks.AdjustedData.recipeR[RecipeId.WoodenChest]
+        Mocks.AdjustedData.recipeR[RecipeId.WoodenChest],
+        Game.Factorio
       );
       expect(result).toEqual(step);
     });
@@ -43,7 +45,7 @@ describe('RateUtility', () => {
       const step: any = { factories: Rational.one };
       const result = { ...step };
       const recipe: any = { drain: null, consumption: null, pollution: null };
-      RateUtility.adjustPowerPollution(result, recipe);
+      RateUtility.adjustPowerPollution(result, recipe, Game.Factorio);
       expect(result).toEqual(step);
     });
 
@@ -55,10 +57,25 @@ describe('RateUtility', () => {
         consumption: null,
         pollution: null,
       };
-      RateUtility.adjustPowerPollution(result, recipe);
+      RateUtility.adjustPowerPollution(result, recipe, Game.Factorio);
       expect(result).toEqual({
         factories: Rational.one,
         power: Rational.two,
+      });
+    });
+
+    it('should handle account for non-cumulative DSP drain', () => {
+      const step: any = { factories: Rational.from(1, 3) };
+      const result = { ...step };
+      const recipe: any = {
+        drain: Rational.two,
+        consumption: null,
+        pollution: null,
+      };
+      RateUtility.adjustPowerPollution(result, recipe, Game.DysonSphereProgram);
+      expect(result).toEqual({
+        factories: Rational.from(1, 3),
+        power: Rational.from(4, 3),
       });
     });
 
@@ -70,7 +87,7 @@ describe('RateUtility', () => {
         consumption: Rational.two,
         pollution: null,
       };
-      RateUtility.adjustPowerPollution(result, recipe);
+      RateUtility.adjustPowerPollution(result, recipe, Game.Factorio);
       expect(result).toEqual({
         factories: Rational.one,
         power: Rational.two,
@@ -84,7 +101,7 @@ describe('RateUtility', () => {
         consumption: Rational.from(4),
         pollution: Rational.from(5),
       };
-      RateUtility.adjustPowerPollution(step, recipe);
+      RateUtility.adjustPowerPollution(step, recipe, Game.Factorio);
       expect(step).toEqual({
         factories: Rational.from(3, 2),
         power: Rational.from(12),
