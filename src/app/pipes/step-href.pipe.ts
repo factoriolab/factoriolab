@@ -1,13 +1,13 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 import { Dataset, Step } from '~/models';
-import { RouterService } from '~/services';
+import { RouterService, Zip } from '~/services';
 
 @Pipe({ name: 'stepHref' })
 export class StepHrefPipe implements PipeTransform {
   constructor(private routerSvc: RouterService) {}
 
-  transform(value: Step, data: Dataset): string | null {
+  transform(value: Step, zipPartial: Zip, data: Dataset): string | null {
     let step = value;
     if (step.recipeId) {
       const recipe = data.recipeR[step.recipeId];
@@ -19,6 +19,6 @@ export class StepHrefPipe implements PipeTransform {
         };
       }
     }
-    return this.routerSvc.stepHref(step, data.hash);
+    return this.routerSvc.stepHref(step, zipPartial, data.hash);
   }
 }

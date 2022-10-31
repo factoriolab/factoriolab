@@ -78,13 +78,19 @@ describe('BrowserUtility', () => {
     });
 
     it('should return the full stored state if there is no hash', () => {
-      const preferencesState: any = { pref: 'value' };
-      const stored: any = { a: { test: 'stored' }, preferencesState };
+      const preferencesState: any = { pref: 'value', columns: { A: {} } };
+      const stored: any = {
+        a: { test: 'stored' },
+        preferencesState,
+      };
       spyOnProperty(BrowserUtility, 'storedState', 'get').and.returnValue(
         stored
       );
       const initial: any = { a: { test: 'initial' }, preferencesState };
-      expect(BrowserUtility.mergeState(initial)).toEqual(stored);
+      expect(BrowserUtility.mergeState(initial)).toEqual({
+        a: { test: 'stored' },
+        preferencesState: { pref: 'value', columns: { a: {} } },
+      } as any);
     });
 
     it('should return the initial state if nothing is stored', () => {
