@@ -20,7 +20,7 @@ import {
   Step,
   StepDetailTab,
 } from '~/models';
-import { ContentService, TrackService } from '~/services';
+import { ContentService, RouterService, TrackService } from '~/services';
 import {
   Factories,
   Items,
@@ -62,6 +62,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.select(Settings.getOptions),
     this.store.select(Settings.getBeltSpeed),
     this.store.select(Settings.getBeltSpeedTxt),
+    this.routerSvc.zipPartial$,
   ]).pipe(
     map(
       ([
@@ -86,6 +87,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         options,
         beltSpeed,
         beltSpeedTxt,
+        zipPartial,
       ]) => ({
         factories,
         itemSettings,
@@ -108,6 +110,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         options,
         beltSpeed,
         beltSpeedTxt,
+        zipPartial,
       })
     )
   );
@@ -127,7 +130,8 @@ export class ListComponent implements OnInit, AfterViewInit {
     public contentSvc: ContentService,
     public trackSvc: TrackService,
     private route: ActivatedRoute,
-    private store: Store<LabState>
+    private store: Store<LabState>,
+    private routerSvc: RouterService
   ) {}
 
   ngOnInit(): void {

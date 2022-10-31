@@ -53,6 +53,7 @@ export class BrowserUtility {
 
   static mergeState(initial: LabState): LabState {
     const state = BrowserUtility.storedState;
+    initial = { ...initial };
     if (state) {
       if (this.zip) {
         return {
@@ -65,18 +66,40 @@ export class BrowserUtility {
           },
         };
       } else {
-        const applyState = { ...state };
+        const applyState = { ...state } as LabState;
         // Remove any unrecognized keys from the stored state before spreading
         for (const key of Object.keys(applyState) as (keyof LabState)[]) {
-          if (initial[key] == null) {
-            delete applyState[key];
+          if (initial[key] != null) {
+            if (key === 'preferencesState') {
+              // Lowercase columns keys
+              applyState[key] = {
+                ...applyState[key],
+                ...{ columns: this.toLowerKeys(applyState[key].columns) },
+              };
+            }
+
+            initial = {
+              ...initial,
+              ...{
+                [key]: {
+                  ...initial[key],
+                  ...applyState[key],
+                },
+              },
+            };
           }
         }
-        return { ...initial, ...applyState };
       }
-    } else {
-      return initial;
     }
+
+    return initial;
+  }
+
+  static toLowerKeys<T>(obj: Record<string, T>): Record<string, T> {
+    return Object.keys(obj).reduce((lower: Record<string, T>, b) => {
+      lower[b.toLowerCase()] = obj[b];
+      return lower;
+    }, {});
   }
 
   static saveState(state: LabState): void {
