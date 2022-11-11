@@ -222,6 +222,13 @@ export class SimplexUtility {
     // Add products to matrix state
     for (const product of products) {
       state.items[product.itemId] = product.rate;
+      // Adjust based on productivity, e.g. for research products
+      const recipe = data.recipeR[data.itemRecipeId[product.itemId]];
+      if (recipe?.adjustProd) {
+        state.items[product.itemId] = state.items[product.itemId].mul(
+          recipe.productivity
+        );
+      }
       this.parseItemRecursively(product.itemId, state);
     }
 
@@ -1062,7 +1069,7 @@ export class SimplexUtility {
       );
     }
 
-    RateUtility.adjustPowerPollution(step, recipe);
+    RateUtility.adjustPowerPollution(step, recipe, state.data.game);
   }
   //#endregion
 

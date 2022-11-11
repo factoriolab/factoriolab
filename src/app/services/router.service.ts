@@ -3,7 +3,7 @@ import { Event, NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
 import { deflate, inflate } from 'pako';
-import { debounceTime, Observable } from 'rxjs';
+import { BehaviorSubject, debounceTime, Observable } from 'rxjs';
 import { filter, first, map } from 'rxjs/operators';
 
 import { data } from 'src/data';
@@ -87,7 +87,7 @@ export interface Zip {
 })
 export class RouterService {
   zip: string | undefined;
-  zipPartial: Zip = { bare: '', hash: '' };
+  zipPartial$ = new BehaviorSubject<Zip>({ bare: '', hash: '' });
   base64codes: Uint8Array;
   // Intended to denote hashing algorithm version
   bareVersion = ZipVersion.Version4;
@@ -149,7 +149,7 @@ export class RouterService {
       factories,
       settings
     ).subscribe((zState) => {
-      this.zip = this.getHash(zState);
+      this.zip = this.getHash(...zState);
       const hash = this.router.url.split('#');
       const url = `${hash[0].split('?')[0]}?${this.zip}${
         (hash[1] && `#${hash[1]}`) || ''
@@ -171,7 +171,7 @@ export class RouterService {
     recipes: Recipes.RecipesState,
     factories: Factories.FactoriesState,
     settings: Settings.SettingsState
-  ): Observable<Zip> {
+  ): Observable<[Zip, Zip]> {
     return this.store.select(Datasets.getHashEntities).pipe(
       map((hashEntities) => hashEntities[settings.modId]),
       filter((hash): hash is ModHash => hash != null),
@@ -199,13 +199,17 @@ export class RouterService {
         this.zipRecipes(zipPartial, recipes, hash);
         this.zipFactories(zipPartial, factories, hash);
         this.zipSettings(zipPartial, settings, hash);
-        this.zipPartial = zipPartial;
-        return zState;
+        this.zipPartial$.next(zipPartial);
+        return [zState, zipPartial];
       })
     );
   }
 
-  stepHref(step: Step, hash: ModHash | undefined): string | null {
+  stepHref(
+    step: Step,
+    zipPartial: Zip,
+    hash: ModHash | undefined
+  ): string | null {
     if (step.items == null || step.itemId == null || hash == null) {
       return null;
     }
@@ -217,12 +221,12 @@ export class RouterService {
         rateType: RateType.Items,
       },
     ];
-    return '?' + this.getHash(this.zipProducts(products, hash));
+    return '?' + this.getHash(this.zipProducts(products, hash), zipPartial);
   }
 
-  getHash(zProducts: Zip): string {
-    const bare = zProducts.bare + this.zipPartial.bare + this.zipTail.bare;
-    const hash = zProducts.hash + this.zipPartial.hash + this.zipTail.hash;
+  getHash(zProducts: Zip, zipPartial: Zip): string {
+    const bare = zProducts.bare + zipPartial.bare + this.zipTail.bare;
+    const hash = zProducts.hash + zipPartial.hash + this.zipTail.hash;
     const zip = `z=${this.bytesToBase64(deflate(hash))}`;
     return bare.length < Math.max(zip.length, MIN_ZIP)
       ? bare.replace(/^&/, '')

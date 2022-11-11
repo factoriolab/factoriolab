@@ -3,16 +3,16 @@ import { SelectItem } from 'primeng/api';
 import { Game } from './game';
 
 export enum Column {
-  Tree = 'Tree',
-  Surplus = 'Surplus',
-  Items = 'Items',
-  Belts = 'Belts',
-  Wagons = 'Wagons',
-  Factories = 'Factories',
-  Beacons = 'Beacons',
-  Power = 'Power',
-  Pollution = 'Pollution',
-  Link = 'Link',
+  Tree = 'tree',
+  Surplus = 'surplus',
+  Items = 'items',
+  Belts = 'belts',
+  Wagons = 'wagons',
+  Factories = 'factories',
+  Beacons = 'beacons',
+  Power = 'power',
+  Pollution = 'pollution',
+  Link = 'link',
 }
 
 export const allColumns = [
@@ -39,7 +39,7 @@ export const precisionColumns = [
 export function columnOptions(game: Game): SelectItem<Column>[] {
   const result = allColumns.map(
     (id): SelectItem<Column> => ({
-      label: id,
+      label: `options.column.${id}`,
       value: id,
       disabled: id === Column.Items || id === Column.Factories,
     })

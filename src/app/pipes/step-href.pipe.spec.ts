@@ -26,7 +26,7 @@ describe('StepHrefPipe', () => {
     it('should adjust recipes where necessary', () => {
       spyOn(routerService, 'stepHref');
       expect(
-        pipe.transform(Mocks.Step1, {
+        pipe.transform(Mocks.Step1, { bare: '', hash: '' }, {
           recipeR: {
             [Mocks.Step1.recipeId!]: {
               adjustProd: true,
@@ -39,6 +39,7 @@ describe('StepHrefPipe', () => {
       expect(routerService.stepHref).toHaveBeenCalled();
       expect(routerService.stepHref).not.toHaveBeenCalledWith(
         Mocks.Step1,
+        { bare: '', hash: '' },
         '' as any
       );
     });

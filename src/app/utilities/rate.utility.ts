@@ -2,6 +2,7 @@ import {
   Dataset,
   DisplayRateInfo,
   Entities,
+  Game,
   ItemSettings,
   Rational,
   RationalProducer,
@@ -24,7 +25,11 @@ export class RateUtility {
     }
   }
 
-  static adjustPowerPollution(step: Step, recipe: RationalRecipe): void {
+  static adjustPowerPollution(
+    step: Step,
+    recipe: RationalRecipe,
+    game: Game
+  ): void {
     if (step.factories?.nonzero() && !recipe.part) {
       if (recipe.drain?.nonzero() || recipe.consumption?.nonzero()) {
         // Reset power
@@ -32,7 +37,13 @@ export class RateUtility {
 
         // Calculate drain
         if (recipe.drain?.nonzero()) {
-          step.power = step.power.add(step.factories.ceil().mul(recipe.drain));
+          let factories = step.factories.ceil();
+          if (game === Game.DysonSphereProgram) {
+            // In DSP drain is not cumulative; only add for inactive machines
+            factories = factories.sub(step.factories);
+          }
+
+          step.power = step.power.add(factories.mul(recipe.drain));
         }
         // Calculate consumption
         if (recipe.consumption?.nonzero()) {

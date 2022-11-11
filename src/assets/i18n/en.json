@@ -18,6 +18,18 @@
     "trySuggestedFix": "Try suggested fix"
   },
   "options": {
+    "column": {
+      "tree": "Tree",
+      "surplus": "Surplus",
+      "items": "Items",
+      "belts": "Belts",
+      "wagons": "Wagons",
+      "factories": "Factories",
+      "beacons": "Beacons",
+      "power": "Power",
+      "pollution": "Pollution",
+      "link": "Link"
+    },
     "displayRate": {
       "perSecond": "Units per second",
       "perMinute": "Units per minute",

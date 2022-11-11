@@ -2,7 +2,7 @@
   <p-table
     #stepsTable
     dataKey="id"
-    [rowTrackBy]="trackSvc.trackById"
+    [rowTrackBy]="trackSvc.trackStep"
     responsiveLayout="scroll"
     styleClass="p-datatable-sm"
     [value]="vm.steps"
@@ -773,7 +773,7 @@
             <a
               class="text-decoration-none"
               target="_blank"
-              [href]="step | stepHref: vm.data"
+              [href]="step | stepHref: vm.zipPartial:vm.data"
             >
               <button
                 pButton
