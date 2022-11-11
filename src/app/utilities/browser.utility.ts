@@ -57,60 +57,23 @@ export class BrowserUtility {
     return null;
   }
 
-  static mergeState(initial: LabState): LabState {
-    const state = BrowserUtility.storedState;
-    initial = { ...initial };
-    if (state) {
-      if (this.zip) {
-        return {
-          ...initial,
-          ...{
-            preferencesState: {
-              ...initial.preferencesState,
-              ...state.preferencesState,
-            },
-          },
-        };
-      } else {
-        const applyState = { ...state } as LabState;
-        // Remove any unrecognized keys from the stored state before spreading
-        for (const key of Object.keys(applyState) as (keyof LabState)[]) {
-          if (initial[key] != null) {
-            if (key === 'preferencesState') {
-              // Lowercase columns keys
-              applyState[key] = {
-                ...applyState[key],
-                ...{ columns: this.toLowerKeys(applyState[key].columns) },
-              };
-            }
-
-            initial = {
-              ...initial,
-              ...{
-                [key]: {
-                  ...initial[key],
-                  ...applyState[key],
-                },
-              },
-            };
-          }
-        }
-      }
+  static set preferencesState(value: PreferencesState | null) {
+    if (value == null) {
+      localStorage.removeItem(StorageKey.Preferences);
+    } else {
+      localStorage.setItem(StorageKey.Preferences, JSON.stringify(value));
     }
-
-    return initial;
   }
 
-  static toLowerKeys<T>(obj: Record<string, T>): Record<string, T> {
-    return Object.keys(obj).reduce((lower: Record<string, T>, b) => {
-      lower[b.toLowerCase()] = obj[b];
-      return lower;
-    }, {});
+  static get routerState(): string | null {
+    return localStorage.getItem(StorageKey.Router);
   }
 
-  static saveState(state: LabState): void {
-    const newState = { ...state } as Partial<LabState>;
-    delete newState.datasetsState;
-    localStorage.setItem(STATE_KEY, JSON.stringify(newState));
+  static set routerState(value: string | null) {
+    if (value == null) {
+      localStorage.removeItem(StorageKey.Router);
+    } else {
+      localStorage.setItem(StorageKey.Router, value);
+    }
   }
 }
