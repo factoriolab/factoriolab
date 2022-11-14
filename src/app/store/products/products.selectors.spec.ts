@@ -727,11 +727,13 @@ describe('Products Selectors', () => {
           outputs: [
             {
               recipeId: RecipeId.Coal,
+              producerId: undefined,
               value: Rational.two,
               factories: Rational.one,
             },
             {
               recipeId: RecipeId.CrudeOil,
+              producerId: undefined,
               value: Rational.one,
               factories: Rational.two,
             },
