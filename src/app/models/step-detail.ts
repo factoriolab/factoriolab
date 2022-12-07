@@ -4,6 +4,7 @@ import { Rational } from './rational';
 
 export interface StepOutput {
   recipeId: string;
+  producerId?: string;
   value: Rational;
   factories: Rational;
 }

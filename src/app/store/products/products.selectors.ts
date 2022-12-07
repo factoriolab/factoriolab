@@ -490,6 +490,7 @@ export const getStepDetails = createSelector(
             .filter((s) => s.outputs[itemId] != null)
             .map((s) => ({
               recipeId: s.recipeId,
+              producerId: s.producerId,
               value: s.outputs[itemId],
               factories: s.factories,
             }))

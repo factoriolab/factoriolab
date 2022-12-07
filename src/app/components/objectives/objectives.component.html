@@ -39,7 +39,7 @@
         (setValue)="setRate(product.id, $event)"
       ></lab-input-number>
       <p-dropdown
-        [tooltip]="'objectives.changeRateType' | translate"
+        [tooltip]="'objectives.rateTypeTooltip' | translate"
         tooltipPosition="top"
         [options]="vm.rateTypeOptions"
         [ngModel]="product.rateType"

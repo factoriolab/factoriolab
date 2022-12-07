@@ -857,6 +857,7 @@
                       factories: output.factories,
                       factoryId: step.recipeSettings?.factoryId,
                       recipeId: output.recipeId,
+                      producerId: output.producerId,
                       percent: output.value,
                       percentOnDest: true,
                       destId: step.itemId
@@ -897,8 +898,10 @@
                           ? step.recipeSettings?.factoryId
                           : null,
                       recipeId: step.recipeId,
+                      producerId: step.producerId,
                       percent: parent.value,
                       destId: vm.stepById[parent.key].recipeId,
+                      destProducerId: vm.stepById[parent.key].producerId,
                       destIsRecipe: true
                     }
                   "
@@ -988,8 +991,10 @@
                             factories: row.step.factories?.mul(row.percent),
                             factoryId: row.step.recipeSettings?.factoryId,
                             recipeId: row.step.recipeId,
+                            producerId: row.step.producerId,
                             percent: row.percent,
                             destId: step.recipeId,
+                            destProducerId: step.producerId,
                             destIsRecipe: true
                           }
                         "
@@ -1031,9 +1036,11 @@
                           factories: row.step.factories?.mul(row.percent),
                           factoryId: row.step.recipeSettings?.factoryId,
                           recipeId: row.step.recipeId,
+                          producerId: row.step.producerId,
                           percent: row.percent,
                           percentOnDest: true,
                           destId: step.recipeId,
+                          destProducerId: step.producerId,
                           destIsRecipe: true
                         }
                       "
@@ -1389,9 +1396,11 @@
       let-factories="factories"
       let-factoryId="factoryId"
       let-recipeId="recipeId"
+      let-producerId="producerId"
       let-percent="percent"
       let-percentOnDest="percentOnDest"
       let-destId="destId"
+      let-destProducerId="destProducerId"
       let-destIsRecipe="destIsRecipe"
     >
       <tr class="detail">
@@ -1505,7 +1514,8 @@
                   [class]="recipeId | iconClass: 'recipe'"
                   [pTooltip]="recipeId | recipeTooltip: vm.data"
                   [escape]="false"
-                ></i>
+                  ><span *ngIf="producerId">#{{ producerId }}</span></i
+                >
                 <i
                   [class]="factoryId | iconClass"
                   [pTooltip]="factoryId | factoryTooltip: vm.data"
@@ -1542,7 +1552,8 @@
                       : (destId | itemTooltip: vm.data)
                   "
                   [escape]="false"
-                ></i>
+                  ><span *ngIf="destProducerId">#{{ destProducerId }}</span></i
+                >
               </ng-container>
             </div>
           </td>
