@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { MemoizedSelector } from '@ngrx/store';
 import { MockStore } from '@ngrx/store/testing';
@@ -189,6 +189,7 @@ describe('RouterService', () => {
   });
 
   it('should run first update of url if settings modified', (done) => {
+    (router.events as any).next(new NavigationEnd(2, '/', '/'));
     spyOn(service, 'updateUrl').and.callFake(() => {
       expect(service.updateUrl).toHaveBeenCalled();
       done();
@@ -348,18 +349,15 @@ describe('RouterService', () => {
       expect(service.dispatch).not.toHaveBeenCalled();
     });
 
-    it('should log warning on bad zipped url', fakeAsync(() => {
+    it('should log warning on bad zipped url', () => {
       spyOn(console, 'warn');
       spyOn(console, 'error');
       expect(() => {
-        (router.events as any).next(
-          new NavigationEnd(2, '/#z=test', '/#z=test')
-        );
-        tick();
+        service.updateState(new NavigationEnd(2, '/#z=test', '/#z=test'));
       }).toThrow();
       expect(console.warn).toHaveBeenCalledTimes(1);
       expect(console.error).toHaveBeenCalledTimes(1);
-    }));
+    });
 
     it('should unzip empty v0', () => {
       const url = '/#z=eJwrsAUAAR8Arg==';
