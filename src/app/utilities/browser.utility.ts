@@ -1,7 +1,7 @@
 import { LabState } from '~/store';
 import { PreferencesState } from '~/store/preferences';
 
-enum StorageKey {
+export enum StorageKey {
   Mod = 'mod',
   Router = 'router',
   Preferences = 'preferences',

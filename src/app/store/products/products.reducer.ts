@@ -57,7 +57,8 @@ export function productsReducer(
       };
     }
     case ProductsActionType.CREATE: {
-      const product = action.payload;
+      // Use full product, but enforce id: '0'
+      const product = { ...action.payload, ...{ id: '0' } };
       return {
         ...state,
         ...{ ids: [product.id], entities: { [product.id]: product }, index: 1 },

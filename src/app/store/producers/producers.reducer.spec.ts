@@ -1,4 +1,5 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
+import { Producer } from '~/models';
 import * as App from '../app.actions';
 import * as Recipes from '../recipes';
 import * as Actions from './producers.actions';
@@ -67,6 +68,23 @@ describe('Producers Reducer', () => {
         recipeId: RecipeId.Coal,
         count: '30',
       });
+    });
+  });
+
+  describe('CREATE', () => {
+    it('should create a new producer', () => {
+      const product: Producer = {
+        id: '1',
+        recipeId: RecipeId.IronPlate,
+        count: '2',
+      };
+      const result = producersReducer(state, new Actions.CreateAction(product));
+      expect(result.entities['0']).toEqual({
+        id: '0',
+        recipeId: RecipeId.IronPlate,
+        count: '2',
+      });
+      expect(result.index).toEqual(1);
     });
   });
 

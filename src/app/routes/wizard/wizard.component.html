@@ -27,7 +27,7 @@
       class="p-button-outlined"
       icon="fa-solid fa-xmark"
       [label]="'cancel' | translate"
-      routerLink="landing"
+      routerLink="/"
       queryParamsHandling="preserve"
     ></button>
   </div>
@@ -49,7 +49,7 @@
     ></button>
     <lab-picker
       #addProductPicker
-      (selectId)="selectProduct($event)"
+      (selectId)="selectId($event, WizardState.ProductType)"
     ></lab-picker>
     <p-divider></p-divider>
     <span>{{ 'wizard.runFactories' | translate }}</span>
@@ -64,7 +64,7 @@
     ></button>
     <lab-picker
       #addRecipePicker
-      (selectId)="selectProducer($event)"
+      (selectId)="selectId($event, WizardState.Producer)"
     ></lab-picker>
     <p-divider></p-divider>
   </ng-template>
@@ -144,7 +144,8 @@
       class="mt-2"
       icon="fa-solid fa-check"
       [label]="'ok' | translate"
-      (click)="createItemsProduct()"
+      (click)="createProduct(id, rate, RateType.Items)"
+      routerLink="/list"
     ></button>
     <p-divider></p-divider>
     <button
@@ -177,7 +178,8 @@
       class="mt-2"
       icon="fa-solid fa-check"
       [label]="'ok' | translate"
-      (click)="createFactoriesProduct()"
+      (click)="createProduct(id, rate, RateType.Factories)"
+      routerLink="/list"
     ></button>
     <p-divider></p-divider>
     <button
@@ -221,7 +223,7 @@
             </span>
             <ng-template #viaSelected>
               <div class="d-flex align-items-center h-100">
-                <i [class]="item.value | iconSmClass: dropdownType"></i>
+                <i [class]="item.value | iconSmClass : dropdownType"></i>
                 <div class="ms-3 text-truncate">
                   {{ item.label }}
                 </div>
@@ -233,12 +235,12 @@
               class="d-flex align-items-center py-2 w-100 h-100"
               [pTooltip]="
                 dropdownType === 'recipe'
-                  ? (item.value | recipeTooltip: vm.data)
-                  : (item.value | itemTooltip: vm.data)
+                  ? (item.value | recipeTooltip : vm.data)
+                  : (item.value | itemTooltip : vm.data)
               "
               [escape]="false"
             >
-              <i [class]="item.value | iconSmClass: dropdownType"></i>
+              <i [class]="item.value | iconSmClass : dropdownType"></i>
               <div class="ms-3 text-truncate">
                 {{ item.label }}
               </div>
@@ -259,7 +261,8 @@
       class="mt-2"
       icon="fa-solid fa-check"
       [label]="'ok' | translate"
-      (click)="createViaProduct()"
+      (click)="createProduct(id, rate, viaRateType, viaId)"
+      routerLink="/list"
     ></button>
     <p-divider></p-divider>
     <button
@@ -292,7 +295,8 @@
       class="mt-2"
       icon="fa-solid fa-check"
       [label]="'ok' | translate"
-      (click)="createProducer()"
+      (click)="createProducer(id, rate)"
+      routerLink="/list"
     ></button>
     <p-divider></p-divider>
     <button

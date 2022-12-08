@@ -6,11 +6,12 @@ import { TestModule } from 'src/tests';
 
 @Component({
   template: `<p-dropdown
-    labDropdownTranslate
-    [options]="options"
-    [ngModel]="value"
-    (onChange)="onChange($event)"
-  ></p-dropdown>`,
+      labDropdownTranslate
+      [options]="options"
+      [ngModel]="value"
+      (onChange)="onChange($event)"
+    ></p-dropdown
+    ><lab-content></lab-content>`,
 })
 class TestDropdownTranslateDirectiveComponent {
   options: SelectItem[] = [];

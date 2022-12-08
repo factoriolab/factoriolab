@@ -16,6 +16,7 @@ import {
   StepDetail,
   StepDetailTab,
 } from '~/models';
+import { ExportService } from '~/services';
 import {
   Items,
   LabState,
@@ -24,7 +25,6 @@ import {
   Recipes,
   Settings,
 } from '~/store';
-// import { ExportUtility } from '~/utilities';
 import { ListComponent } from './list.component';
 import { ListModule } from './list.module';
 
@@ -36,6 +36,7 @@ describe('ListComponent', () => {
   let component: ListComponent;
   let fixture: ComponentFixture<ListComponent>;
   let mockStore: MockStore<LabState>;
+  let exportSvc: ExportService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -61,6 +62,7 @@ describe('ListComponent', () => {
         return e;
       }, {})
     );
+    exportSvc = TestBed.inject(ExportService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -106,14 +108,14 @@ describe('ListComponent', () => {
     });
   });
 
-  // describe('export', () => {
-  //   it('should call the export utility', () => {
-  //     spyOn(ExportUtility, 'stepsToCsv');
-  //     TestUtility.clickDt(fixture, DataTest.Export);
-  //     fixture.detectChanges();
-  //     expect(ExportUtility.stepsToCsv).toHaveBeenCalled();
-  //   });
-  // });
+  describe('export', () => {
+    it('should call the export service', () => {
+      spyOn(exportSvc, 'stepsToCsv');
+      TestUtility.clickDt(fixture, DataTest.Export);
+      fixture.detectChanges();
+      expect(exportSvc.stepsToCsv).toHaveBeenCalled();
+    });
+  });
 
   describe('toggleDefaultRecipe', () => {
     it('should reset a default recipe to null', () => {

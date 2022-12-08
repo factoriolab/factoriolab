@@ -38,7 +38,7 @@ export class LandingComponent {
   BrowserUtility = BrowserUtility;
 
   constructor(
-    private router: Router,
+    public router: Router,
     private store: Store<LabState>,
     private routerSvc: RouterService
   ) {}
@@ -63,10 +63,6 @@ export class LandingComponent {
 
   setGame(game: Game): void {
     this.setMod(gameInfo[game].modId);
-  }
-
-  navigate(url: string): void {
-    this.router.navigateByUrl(url);
   }
 
   /** Action Dispatch Methods */

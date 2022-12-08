@@ -60,7 +60,8 @@ export function producersReducer(
       };
     }
     case ProducersActionType.CREATE: {
-      const producer = action.payload;
+      // Use full producer, but enforce id: '0'
+      const producer = { ...action.payload, ...{ id: '0' } };
       return {
         ...state,
         ...{

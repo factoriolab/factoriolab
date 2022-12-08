@@ -84,7 +84,7 @@
       class="mt-2"
       icon="fa-solid fa-clock-rotate-left"
       [label]="'landing.loadLastState' | translate"
-      (click)="navigate(BrowserUtility.routerState)"
+      (click)="router.navigateByUrl(BrowserUtility.routerState)"
     ></button>
     <p-divider></p-divider>
     <button

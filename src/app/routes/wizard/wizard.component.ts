@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
 import { DisplayRate, displayRateOptions, RateType } from '~/models';
 import { LabState, Producers, Products, Settings } from '~/store';
 
-enum WizardState {
+export enum WizardState {
   ObjectiveType,
   ProductType,
   ProductItems,
@@ -44,81 +43,40 @@ export class WizardComponent {
 
   displayRateOptions = displayRateOptions;
 
+  RateType = RateType;
   WizardState = WizardState;
 
-  constructor(private router: Router, private store: Store<LabState>) {}
+  constructor(private store: Store<LabState>) {}
 
-  selectProduct(value: string): void {
+  selectId(value: string, state: WizardState): void {
     this.id = value;
-    this.state = WizardState.ProductType;
-  }
-
-  selectProducer(value: string): void {
-    this.id = value;
-    this.state = WizardState.Producer;
+    this.state = state;
   }
 
   openViaState(): void {
-    this.store.dispatch(
-      new Products.CreateAction({
-        id: '0',
-        itemId: this.id,
-        rate: '1',
-        rateType: RateType.Items,
-      })
-    );
+    this.createProduct(this.id, '1', RateType.Items);
     this.state = WizardState.ProductVia;
   }
 
+  /** Action Dispatch Methods */
   setDisplayRate(value: DisplayRate, prev: DisplayRate): void {
     this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
   }
 
-  createItemsProduct(): void {
+  createProduct(
+    itemId: string,
+    rate: string,
+    rateType: RateType,
+    viaId?: string
+  ): void {
     this.store.dispatch(
-      new Products.CreateAction({
-        id: '0',
-        itemId: this.id,
-        rate: this.rate,
-        rateType: RateType.Items,
-      })
+      new Products.CreateAction({ id: '0', itemId, rate, rateType, viaId })
     );
-    this.router.navigate(['list']);
   }
 
-  createFactoriesProduct(): void {
+  createProducer(recipeId: string, count: string): void {
     this.store.dispatch(
-      new Products.CreateAction({
-        id: '0',
-        itemId: this.id,
-        rate: this.rate,
-        rateType: RateType.Factories,
-      })
+      new Producers.CreateAction({ id: '0', recipeId, count })
     );
-    this.router.navigate(['list']);
-  }
-
-  createViaProduct(): void {
-    this.store.dispatch(
-      new Products.CreateAction({
-        id: '0',
-        itemId: this.id,
-        rate: this.rate,
-        rateType: this.viaRateType,
-        viaId: this.viaId,
-      })
-    );
-    this.router.navigate(['list']);
-  }
-
-  createProducer(): void {
-    this.store.dispatch(
-      new Producers.CreateAction({
-        id: '0',
-        recipeId: this.id,
-        count: this.rate,
-      })
-    );
-    this.router.navigate(['list']);
   }
 }
