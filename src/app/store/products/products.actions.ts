@@ -1,9 +1,10 @@
 import { Action } from '@ngrx/store';
 
-import { IdPayload, RateType } from '~/models';
+import { IdPayload, Product, RateType } from '~/models';
 
 export const enum ProductsActionType {
   ADD = '[Products] Add',
+  CREATE = '[Products] Create',
   REMOVE = '[Products] Remove',
   SET_ITEM = '[Products] Set Item',
   SET_RATE = '[Products] Set Rate',
@@ -16,6 +17,11 @@ export const enum ProductsActionType {
 export class AddAction implements Action {
   readonly type = ProductsActionType.ADD;
   constructor(public payload: string) {}
+}
+
+export class CreateAction implements Action {
+  readonly type = ProductsActionType.CREATE;
+  constructor(public payload: Product) {}
 }
 
 export class RemoveAction implements Action {
@@ -55,6 +61,7 @@ export class AdjustDisplayRateAction implements Action {
 
 export type ProductsAction =
   | AddAction
+  | CreateAction
   | RemoveAction
   | SetItemAction
   | SetRateAction

@@ -1,23 +1,308 @@
-<p-card styleClass="w-100">
-  <div>I want to know what I need to:</div>
-  <div class="d-flex mt-2">
-    <p-radioButton
-      inputId="objective-type-product"
-      [value]="ObjectiveType.Product"
-      [formControl]="objectiveTypeCtrl"
-    ></p-radioButton>
-    <label for="objective-type-product" class="ms-2"
-      >Produce items or research</label
-    >
+<p-card *ngIf="vm$ | async as vm">
+  <div class="d-flex flex-column p-fluid">
+    <ng-container [ngSwitch]="state">
+      <ng-container *ngSwitchCase="WizardState.ObjectiveType">
+        <ng-container *ngTemplateOutlet="objectiveType"></ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="WizardState.ProductType">
+        <ng-container *ngTemplateOutlet="productType"></ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="WizardState.ProductItems">
+        <ng-container *ngTemplateOutlet="productItems"></ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="WizardState.ProductFactories">
+        <ng-container *ngTemplateOutlet="productFactories"></ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="WizardState.ProductVia">
+        <ng-container *ngTemplateOutlet="productVia"></ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="WizardState.Producer">
+        <ng-container *ngTemplateOutlet="producer"></ng-container>
+      </ng-container>
+    </ng-container>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-outlined"
+      icon="fa-solid fa-xmark"
+      [label]="'cancel' | translate"
+      routerLink="landing"
+      queryParamsHandling="preserve"
+    ></button>
   </div>
-  <div class="d-flex mt-2">
-    <p-radioButton
-      inputId="objective-type-producer"
-      [value]="ObjectiveType.Producer"
-      [formControl]="objectiveTypeCtrl"
-    ></p-radioButton>
-    <label for="objective-type-producer" class="ms-2"
-      >Supply a number of factories</label
+
+  <ng-template #objectiveType>
+    <div>
+      {{ 'wizard.objectiveType' | translate }}
+    </div>
+    <p-divider></p-divider>
+    <span>{{ 'wizard.produceItems' | translate }}</span>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="mt-2"
+      icon="fa-solid fa-box"
+      [label]="'wizard.produceItemsButton' | translate"
+      (click)="addProductPicker.clickOpen(vm.data, 'item')"
+    ></button>
+    <lab-picker
+      #addProductPicker
+      (selectId)="selectProduct($event)"
+    ></lab-picker>
+    <p-divider></p-divider>
+    <span>{{ 'wizard.runFactories' | translate }}</span>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="mt-2"
+      icon="fa-solid fa-industry"
+      [label]="'wizard.runFactoriesButton' | translate"
+      (click)="addRecipePicker.clickOpen(vm.data, 'recipe')"
+    ></button>
+    <lab-picker
+      #addRecipePicker
+      (selectId)="selectProducer($event)"
+    ></lab-picker>
+    <p-divider></p-divider>
+  </ng-template>
+  <ng-template #productType>
+    <div>
+      {{ 'wizard.productType' | translate }}
+    </div>
+    <p-divider></p-divider>
+    <div class="d-flex align-items-center justify-content-center">
+      <i [class]="id | iconClass"></i>
+      <span class="ms-2">{{ vm.data.itemEntities[id].name }}</span>
+    </div>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="mt-2"
+      icon="fa-solid fa-gauge"
+      [label]="'wizard.productTypeItems' | translate"
+      (click)="state = WizardState.ProductItems"
+    ></button>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="mt-2"
+      icon="fa-solid fa-industry"
+      [label]="'wizard.productTypeFactories' | translate"
+      (click)="state = WizardState.ProductFactories"
+    ></button>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="mt-2"
+      icon="fa-solid fa-vial"
+      [label]="'wizard.productTypeVia' | translate"
+      (click)="openViaState()"
+    ></button>
+    <p-divider></p-divider>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="mb-2 p-button-outlined"
+      icon="fa-solid fa-arrow-left"
+      [label]="'wizard.back' | translate"
+      (click)="state = WizardState.ObjectiveType"
+    ></button>
+  </ng-template>
+  <ng-template #productItems>
+    <div>{{ 'wizard.productItems' | translate }}</div>
+    <p-divider></p-divider>
+    <div class="d-flex align-items-center justify-content-center">
+      <i [class]="id | iconClass"></i>
+      <span class="ms-2">{{ vm.data.itemEntities[id].name }}</span>
+    </div>
+    <lab-input-number
+      class="mt-2 w-100"
+      tooltipPosition="top"
+      [value]="rate"
+      (setValue)="rate = $event"
+    ></lab-input-number>
+    <p-dropdown
+      labDropdownTranslate
+      styleClass="mt-2 h-100"
+      [tooltip]="'objectives.selectDisplayRate' | translate"
+      [ngModel]="vm.displayRate"
+      [options]="displayRateOptions"
+      (onChange)="setDisplayRate($event.value, vm.displayRate)"
     >
-  </div>
+    </p-dropdown>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="mt-2"
+      icon="fa-solid fa-check"
+      [label]="'ok' | translate"
+      (click)="createItemsProduct()"
+    ></button>
+    <p-divider></p-divider>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="mb-2 p-button-outlined"
+      icon="fa-solid fa-arrow-left"
+      [label]="'wizard.back' | translate"
+      (click)="state = WizardState.ProductType"
+    ></button>
+  </ng-template>
+  <ng-template #productFactories>
+    <div>{{ 'wizard.productFactories' | translate }}</div>
+    <p-divider></p-divider>
+    <div class="d-flex align-items-center justify-content-center">
+      <i [class]="id | iconClass"></i>
+      <span class="ms-2">{{ vm.data.itemEntities[id].name }}</span>
+    </div>
+    <lab-input-number
+      class="mt-2 w-100"
+      tooltipPosition="top"
+      [value]="rate"
+      (setValue)="rate = $event"
+    ></lab-input-number>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="mt-2"
+      icon="fa-solid fa-check"
+      [label]="'ok' | translate"
+      (click)="createFactoriesProduct()"
+    ></button>
+    <p-divider></p-divider>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="mb-2 p-button-outlined"
+      icon="fa-solid fa-arrow-left"
+      [label]="'wizard.back' | translate"
+      (click)="state = WizardState.ProductType"
+    ></button>
+  </ng-template>
+  <ng-template #productVia>
+    <div>{{ 'wizard.productVia' | translate }}</div>
+    <p-divider></p-divider>
+    <div class="d-flex align-items-center justify-content-center">
+      <i [class]="id | iconClass"></i>
+      <span class="ms-2">{{ vm.data.itemEntities[id].name }}</span>
+    </div>
+    <lab-input-number
+      class="mt-2 w-100"
+      tooltipPosition="top"
+      [value]="rate"
+      (setValue)="rate = $event"
+    ></lab-input-number>
+    <p-dropdown
+      styleClass="my-2"
+      [options]="vm.rateTypeOptions"
+      [(ngModel)]="viaRateType"
+    ></p-dropdown
+    ><ng-container *ngIf="vm.viaOptions['0'].length > 0; else recipeNone">
+      <ng-container *ngIf="viaRateType | rateTypeViaDropdown as dropdownType">
+        <p-dropdown
+          labDropdownBase
+          [options]="vm.viaOptions['0']"
+          [(ngModel)]="viaId"
+        >
+          <ng-template pTemplate="selectedItem" let-item>
+            <span *ngIf="item.value === id; else viaSelected">
+              {{ 'objectives.viaPlaceholder' | translate }}
+            </span>
+            <ng-template #viaSelected>
+              <div class="d-flex align-items-center h-100">
+                <i [class]="item.value | iconSmClass: dropdownType"></i>
+                <div class="ms-3 text-truncate">
+                  {{ item.label }}
+                </div>
+              </div>
+            </ng-template>
+          </ng-template>
+          <ng-template pTemplate="item" let-item>
+            <div
+              class="d-flex align-items-center py-2 w-100 h-100"
+              [pTooltip]="
+                dropdownType === 'recipe'
+                  ? (item.value | recipeTooltip: vm.data)
+                  : (item.value | itemTooltip: vm.data)
+              "
+              [escape]="false"
+            >
+              <i [class]="item.value | iconSmClass: dropdownType"></i>
+              <div class="ms-3 text-truncate">
+                {{ item.label }}
+              </div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </ng-container>
+    </ng-container>
+    <ng-template #recipeNone>
+      <span class="p-inputgroup-addon p-error">{{
+        'objectives.noEnabledRecipes' | translate
+      }}</span>
+    </ng-template>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="mt-2"
+      icon="fa-solid fa-check"
+      [label]="'ok' | translate"
+      (click)="createViaProduct()"
+    ></button>
+    <p-divider></p-divider>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="mb-2 p-button-outlined"
+      icon="fa-solid fa-arrow-left"
+      [label]="'wizard.back' | translate"
+      (click)="state = WizardState.ProductType"
+    ></button>
+  </ng-template>
+  <ng-template #producer>
+    <div>{{ 'wizard.productFactories' | translate }}</div>
+    <p-divider></p-divider>
+    <div class="d-flex align-items-center justify-content-center">
+      <i [class]="id | iconClass"></i>
+      <span class="ms-2">{{ vm.data.recipeEntities[id].name }}</span>
+    </div>
+    <lab-input-number
+      class="mt-2 w-100"
+      tooltipPosition="top"
+      [value]="rate"
+      (setValue)="rate = $event"
+    ></lab-input-number>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="mt-2"
+      icon="fa-solid fa-check"
+      [label]="'ok' | translate"
+      (click)="createProducer()"
+    ></button>
+    <p-divider></p-divider>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="mb-2 p-button-outlined"
+      icon="fa-solid fa-arrow-left"
+      [label]="'wizard.back' | translate"
+      (click)="state = WizardState.ObjectiveType"
+    ></button>
+  </ng-template>
 </p-card>

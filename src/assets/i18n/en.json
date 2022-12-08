@@ -124,6 +124,21 @@
     "help": "Help me get started",
     "skip": "Skip"
   },
+  "wizard": {
+    "back": "Back",
+    "objectiveType": "What is your objective?",
+    "produceItems": "I want to produce items or research",
+    "produceItemsButton": "Choose which item (product)",
+    "runFactories": "I want to run a number of factories",
+    "runFactoriesButton": "Choose which recipe (producer)",
+    "productType": "How do you want to set your production rate?",
+    "productTypeItems": "I want to specify an amount to produce",
+    "productTypeFactories": "I want to specify a number of factories",
+    "productTypeVia": "I am limited by one of its ingredients",
+    "productItems": "How much do you want to produce?",
+    "productFactories": "How many factories do you want to run?",
+    "productVia": "What ingredient are you limited by?"
+  },
   "settings": {
     "header": "Settings",
     "reset": "Reset all settings",

@@ -4,7 +4,10 @@ import { RouterService, StateService, ThemeService } from './services';
 
 @Component({
   selector: 'lab-root',
-  template: ` <router-outlet></router-outlet> `,
+  template: `
+    <router-outlet></router-outlet>
+    <lab-content></lab-content>
+  `,
 })
 export class AppComponent implements OnInit {
   constructor(

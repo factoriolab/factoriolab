@@ -1,9 +1,11 @@
 import { Action } from '@ngrx/store';
 
 import { DefaultIdPayload, IdPayload } from '~/models';
+import { Producer } from '~/models/producer';
 
 export const enum ProducersActionType {
   ADD = '[Producers] Add',
+  CREATE = '[Producers] Create',
   REMOVE = '[Producers] Remove',
   SET_RECIPE = '[Producers] Set Recipe',
   SET_COUNT = '[Producers] Set Count',
@@ -19,6 +21,11 @@ export const enum ProducersActionType {
 export class AddAction implements Action {
   readonly type = ProducersActionType.ADD;
   constructor(public payload: string) {}
+}
+
+export class CreateAction implements Action {
+  readonly type = ProducersActionType.CREATE;
+  constructor(public payload: Producer) {}
 }
 
 export class RemoveAction implements Action {
@@ -73,6 +80,7 @@ export class ResetProducerAction implements Action {
 
 export type ProducersAction =
   | AddAction
+  | CreateAction
   | RemoveAction
   | SetRecipeAction
   | SetCountAction

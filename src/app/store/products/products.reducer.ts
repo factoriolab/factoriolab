@@ -13,7 +13,7 @@ export interface ProductsState {
 export const initialProductsState: ProductsState = {
   ids: [],
   entities: {},
-  index: 1,
+  index: 0,
 };
 
 export function productsReducer(
@@ -54,6 +54,13 @@ export function productsReducer(
           },
           index: state.index + 1,
         },
+      };
+    }
+    case ProductsActionType.CREATE: {
+      const product = action.payload;
+      return {
+        ...state,
+        ...{ ids: [product.id], entities: { [product.id]: product }, index: 1 },
       };
     }
     case ProductsActionType.REMOVE: {

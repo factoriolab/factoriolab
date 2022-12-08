@@ -14,7 +14,7 @@ export interface ProducersState {
 export const initialProducersState: ProducersState = {
   ids: [],
   entities: {},
-  index: 1,
+  index: 0,
 };
 
 export function producersReducer(
@@ -56,6 +56,17 @@ export function producersReducer(
             },
           },
           index: state.index + 1,
+        },
+      };
+    }
+    case ProducersActionType.CREATE: {
+      const producer = action.payload;
+      return {
+        ...state,
+        ...{
+          ids: [producer.id],
+          entities: { [producer.id]: producer },
+          index: 1,
         },
       };
     }
