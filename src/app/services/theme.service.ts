@@ -114,10 +114,8 @@ export class ThemeService {
    * Unsafe to inject the full store in the app initializer because WASM may not be loaded yet.
    */
   static appInitTheme(): void {
-    const state = BrowserUtility.storedState;
-    const theme =
-      state?.preferencesState?.theme ??
-      Preferences.initialPreferencesState.theme;
+    const state = BrowserUtility.preferencesState;
+    const theme = state?.theme ?? Preferences.initialPreferencesState.theme;
 
     if (theme === Theme.Light) return; // No action required
 

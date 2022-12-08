@@ -1,5 +1,5 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { RateType } from '~/models';
+import { Product, RateType } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './products.actions';
 import {
@@ -41,27 +41,6 @@ describe('Products Reducer', () => {
     });
   });
 
-  describe('RESET', () => {
-    it('should reset the reducer', () => {
-      const result = productsReducer(
-        undefined,
-        new Actions.ResetAction(ItemId.Coal)
-      );
-      expect(result).toEqual({
-        ids: ['1'],
-        entities: {
-          ['1']: {
-            id: '1',
-            itemId: ItemId.Coal,
-            rate: '60',
-            rateType: RateType.Items,
-          },
-        },
-        index: 2,
-      });
-    });
-  });
-
   describe('ADD', () => {
     it('should add a new product', () => {
       expect(state.ids.length).toEqual(1);
@@ -90,9 +69,30 @@ describe('Products Reducer', () => {
     });
   });
 
+  describe('CREATE', () => {
+    it('should create a new product', () => {
+      const product: Product = {
+        id: '1',
+        itemId: ItemId.IronPlate,
+        rate: '2',
+        rateType: RateType.Items,
+        viaId: ItemId.IronOre,
+      };
+      const result = productsReducer(state, new Actions.CreateAction(product));
+      expect(result.entities['0']).toEqual({
+        id: '0',
+        itemId: ItemId.IronPlate,
+        rate: '2',
+        rateType: RateType.Items,
+        viaId: ItemId.IronOre,
+      });
+      expect(result.index).toEqual(1);
+    });
+  });
+
   describe('REMOVE', () => {
     it('should remove a product', () => {
-      const result = productsReducer(state, new Actions.RemoveAction('1'));
+      const result = productsReducer(state, new Actions.RemoveAction('0'));
       expect(result.ids.length).toEqual(0);
     });
   });
@@ -194,7 +194,7 @@ describe('Products Reducer', () => {
     it('should not adjust rates when rate type unaffected by display rate', () => {
       let result = productsReducer(
         state,
-        new Actions.SetRateTypeAction({ id: '1', value: RateType.Belts })
+        new Actions.SetRateTypeAction({ id: '0', value: RateType.Belts })
       );
       result = productsReducer(
         result,

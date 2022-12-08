@@ -13,7 +13,7 @@ export interface ProductsState {
 export const initialProductsState: ProductsState = {
   ids: [],
   entities: {},
-  index: 1,
+  index: 0,
 };
 
 export function productsReducer(
@@ -28,21 +28,6 @@ export function productsReducer(
     case App.AppActionType.RESET:
     case Settings.SettingsActionType.SET_MOD:
       return initialProductsState;
-    case ProductsActionType.RESET: {
-      const id = '1';
-      return {
-        ids: [id],
-        entities: {
-          [id]: {
-            id,
-            itemId: action.payload,
-            rate: '60',
-            rateType: RateType.Items,
-          },
-        },
-        index: 2,
-      };
-    }
     case ProductsActionType.ADD: {
       let rate = '60';
       let rateType = RateType.Items;
@@ -69,6 +54,14 @@ export function productsReducer(
           },
           index: state.index + 1,
         },
+      };
+    }
+    case ProductsActionType.CREATE: {
+      // Use full product, but enforce id: '0'
+      const product = { ...action.payload, ...{ id: '0' } };
+      return {
+        ...state,
+        ...{ ids: [product.id], entities: { [product.id]: product }, index: 1 },
       };
     }
     case ProductsActionType.REMOVE: {

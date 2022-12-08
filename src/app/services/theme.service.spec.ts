@@ -78,6 +78,7 @@ describe('ThemeService', () => {
 
   describe('appInitTheme', () => {
     it('should switch to dark theme if preferred', () => {
+      localStorage.clear();
       const themeLink = { href: '' };
       spyOn(window, 'matchMedia').and.returnValue({ matches: true } as any);
       spyOn(window.document, 'getElementById').and.returnValue(
@@ -89,8 +90,8 @@ describe('ThemeService', () => {
 
     it('should skip if specifying to use light theme', () => {
       const themeLink = { href: '' };
-      spyOnProperty(BrowserUtility, 'storedState').and.returnValue({
-        preferencesState: { theme: Theme.Light },
+      spyOnProperty(BrowserUtility, 'preferencesState').and.returnValue({
+        theme: Theme.Light,
       } as any);
       ThemeService.appInitTheme();
       expect(themeLink.href).toEqual('');

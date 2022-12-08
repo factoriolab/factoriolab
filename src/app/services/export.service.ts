@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { saveAs } from 'file-saver';
 
 import { notNullish } from '~/helpers';
@@ -11,8 +12,7 @@ import {
   Step,
 } from '~/models';
 import { ColumnsState } from '~/store/preferences';
-import { BrowserUtility } from './browser.utility';
-import { RecipeUtility } from './recipe.utility';
+import { BrowserUtility, RecipeUtility } from '~/utilities';
 
 const CSV_TYPE = 'text/csv;charset=UTF-8';
 const CSV_EXTENSION = '.csv';
@@ -41,8 +41,11 @@ export interface StepExport {
   Pollution?: string;
 }
 
-export class ExportUtility {
-  static stepsToCsv(
+@Injectable({
+  providedIn: 'root',
+})
+export class ExportService {
+  stepsToCsv(
     steps: Step[],
     columns: ColumnsState,
     itemSettings: Entities<ItemSettings>,
@@ -61,7 +64,7 @@ export class ExportUtility {
 
   /* Don't test dependencies (file-saver) */
   /* istanbul ignore next */
-  static saveAsCsv(data: string): void {
+  saveAsCsv(data: string): void {
     saveAs(
       new Blob([data], { type: CSV_TYPE }),
       'factoriolab_list' + CSV_EXTENSION
@@ -70,14 +73,14 @@ export class ExportUtility {
 
   /* Don't test dependencies (file-saver) */
   /* istanbul ignore next */
-  static saveAsJson(data: string): void {
+  saveAsJson(data: string): void {
     saveAs(
       new Blob([data], { type: JSON_TYPE }),
       'factoriolab_flow' + JSON_EXTENSION
     );
   }
 
-  static stepToJson(
+  stepToJson(
     step: Step,
     steps: Step[],
     columns: ColumnsState,

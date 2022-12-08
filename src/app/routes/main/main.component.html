@@ -20,7 +20,7 @@
     >
       <main class="px-1 px-sm-4 py-4">
         <ng-container *ngIf="vm.mod != null; else loading">
-          <lab-products></lab-products>
+          <lab-objectives></lab-objectives>
 
           <p-card styleClass="mt-4" [header]="'app.factory' | translate">
             <p-tabMenu [model]="tabItems">
@@ -158,5 +158,3 @@
     </p-dialog>
   </ng-template>
 </ng-container>
-
-<lab-content></lab-content>

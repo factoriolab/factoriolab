@@ -1,12 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Action } from '@ngrx/store';
-import { of, ReplaySubject } from 'rxjs';
+import { EMPTY, ReplaySubject } from 'rxjs';
 
 import { Mocks, TestModule } from 'src/tests';
 import { DataService } from '~/services';
 import * as App from '../app.actions';
-import * as Products from '../products';
 import * as Settings from '../settings';
 import { DatasetsEffects } from './datasets.effects';
 
@@ -27,56 +25,35 @@ describe('DatasetsEffects', () => {
 
   describe('appLoad$', () => {
     it('should load the default base mod', () => {
-      spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.Hash, Mocks.I18n])
-      );
+      spyOn(dataSvc, 'requestData').and.returnValue(EMPTY);
       actions = new ReplaySubject(1);
       actions.next(new App.LoadAction({}));
-      const result: Action[] = [];
-      effects.appLoad$.subscribe((r) => result.push(r));
-      expect(result).toEqual([new Products.ResetAction(Mocks.Mod.items[0].id)]);
-    });
-
-    it('should load from state', () => {
-      spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.Hash, Mocks.I18n])
+      effects.appLoad$.subscribe();
+      expect(dataSvc.requestData).toHaveBeenCalledWith(
+        Settings.initialSettingsState.modId
       );
-      actions = new ReplaySubject(1);
-      actions.next(
-        new App.LoadAction({
-          settingsState: { modId: Mocks.Mod.id },
-          productsState: Products.initialProductsState,
-        })
-      );
-      const result: Action[] = [];
-      effects.appLoad$.subscribe((r) => result.push(r));
-      expect(result).toEqual([]);
     });
   });
 
   describe('appReset$', () => {
     it('should reset and load mod for new mod', () => {
-      spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.Hash, Mocks.I18n])
-      );
+      spyOn(dataSvc, 'requestData').and.returnValue(EMPTY);
       actions = new ReplaySubject(1);
       actions.next(new App.ResetAction());
-      const result: Action[] = [];
-      effects.appReset$.subscribe((r) => result.push(r));
-      expect(result).toEqual([new Products.ResetAction(Mocks.Mod.items[0].id)]);
+      effects.appReset$.subscribe();
+      expect(dataSvc.requestData).toHaveBeenCalledWith(
+        Settings.initialSettingsState.modId
+      );
     });
   });
 
   describe('setModId$', () => {
     it('should reset and load mod for new mod', () => {
-      spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.Hash, Mocks.I18n])
-      );
+      spyOn(dataSvc, 'requestData').and.returnValue(EMPTY);
       actions = new ReplaySubject(1);
       actions.next(new Settings.SetModAction(Mocks.Mod.id));
-      const result: Action[] = [];
-      effects.setModId$.subscribe((r) => result.push(r));
-      expect(result).toEqual([new Products.ResetAction(Mocks.Mod.items[0].id)]);
+      effects.setModId$.subscribe();
+      expect(dataSvc.requestData).toHaveBeenCalledWith(Mocks.Mod.id);
     });
   });
 });

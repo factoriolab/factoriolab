@@ -20,7 +20,12 @@ import {
   Step,
   StepDetailTab,
 } from '~/models';
-import { ContentService, RouterService, TrackService } from '~/services';
+import {
+  ContentService,
+  ExportService,
+  RouterService,
+  TrackService,
+} from '~/services';
 import {
   Factories,
   Items,
@@ -31,7 +36,7 @@ import {
   Recipes,
   Settings,
 } from '~/store';
-import { ExportUtility, RecipeUtility } from '~/utilities';
+import { RecipeUtility } from '~/utilities';
 
 @Component({
   selector: 'lab-list',
@@ -131,6 +136,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     public trackSvc: TrackService,
     private route: ActivatedRoute,
     private store: Store<LabState>,
+    private exportSvc: ExportService,
     private routerSvc: RouterService
   ) {}
 
@@ -192,7 +198,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     columns: Preferences.ColumnsState,
     data: Dataset
   ): void {
-    ExportUtility.stepsToCsv(
+    this.exportSvc.stepsToCsv(
       steps,
       columns,
       itemSettings,

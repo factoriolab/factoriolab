@@ -15,8 +15,6 @@ export function storageMetaReducer(
       return BrowserUtility.mergeState(nextState);
     }
 
-    BrowserUtility.saveState(nextState);
-
     return nextState;
   };
 }

@@ -1,20 +1,32 @@
+import { TestBed } from '@angular/core/testing';
+
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import { ItemSettings, Rational, RecipeSettings, Step } from '~/models';
 import { Preferences } from '~/store';
-import { ExportUtility } from './export.utility';
+import { ExportService } from './export.service';
 
-describe('ExportUtility', () => {
+describe('ExportService', () => {
+  let service: ExportService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(ExportService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
   describe('saveAsCsv', () => {
     it('should save the csv', () => {
-      spyOn(ExportUtility, 'saveAsCsv');
-      ExportUtility.stepsToCsv(
+      spyOn(service, 'saveAsCsv');
+      service.stepsToCsv(
         Mocks.Steps,
         Preferences.initialColumnsState,
         Mocks.ItemSettingsInitial,
         Mocks.RecipeSettingsInitial,
         Mocks.AdjustedData
       );
-      expect(ExportUtility.saveAsCsv).toHaveBeenCalled();
+      expect(service.saveAsCsv).toHaveBeenCalled();
     });
   });
 
@@ -59,7 +71,7 @@ describe('ExportUtility', () => {
     };
 
     it('should fill in all fields', () => {
-      const result = ExportUtility.stepToJson(
+      const result = service.stepToJson(
         fullStep,
         [inStep, fullStep],
         Preferences.initialColumnsState,
@@ -91,7 +103,7 @@ describe('ExportUtility', () => {
     });
 
     it('should handle empty fields', () => {
-      const result = ExportUtility.stepToJson(
+      const result = service.stepToJson(
         minStep,
         [minStep],
         Preferences.initialColumnsState,

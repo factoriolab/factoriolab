@@ -43,25 +43,25 @@ export const Item1 = Dataset.itemEntities[Dataset.itemIds[0]];
 export const Item2 = Dataset.itemEntities[Dataset.itemIds[1]];
 export const Recipe1 = Dataset.recipeEntities[Dataset.recipeIds[0]];
 export const Product1: M.Product = {
-  id: '1',
+  id: '0',
   itemId: Item1.id,
   rate: '1',
   rateType: M.RateType.Items,
 };
 export const Product2: M.Product = {
-  id: '2',
+  id: '1',
   itemId: Item2.id,
   rate: '2',
   rateType: M.RateType.Belts,
 };
 export const Product3: M.Product = {
-  id: '3',
+  id: '2',
   itemId: ItemId.PetroleumGas,
   rate: '3',
   rateType: M.RateType.Wagons,
 };
 export const Product4: M.Product = {
-  id: '4',
+  id: '3',
   itemId: ItemId.TransportBelt,
   rate: '4',
   rateType: M.RateType.Factories,
@@ -79,13 +79,13 @@ export const RationalProducts = ProductsList.map((p) => {
 });
 export const RationalProduct = RationalProducts[0];
 export const Producer: M.Producer = {
-  id: '1',
+  id: '0',
   recipeId: RecipeId.IronPlate,
   count: '1',
 };
 export const ProducersState: Producers.ProducersState = {
-  ids: ['1'],
-  entities: { ['1']: Producer },
+  ids: ['0'],
+  entities: { ['0']: Producer },
   index: 2,
 };
 export const RationalProducer = new M.RationalProducer(
