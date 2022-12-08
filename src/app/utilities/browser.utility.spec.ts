@@ -22,7 +22,6 @@ describe('BrowserUtility', () => {
   describe('mergeState', () => {
     it('should merge the stored preferences into the state', () => {
       const preferencesState: any = { pref: 'value' };
-      // spyOnProperty(BrowserUtility, 'zip').and.returnValue('hash');
       spyOnProperty(BrowserUtility, 'preferencesState', 'get').and.returnValue(
         preferencesState
       );
