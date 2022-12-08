@@ -545,7 +545,7 @@ describe('Products Selectors', () => {
     it('should map products to rates', () => {
       const result = Selectors.getNormalizedProducts.projector(
         Mocks.RationalProducts,
-        { ['1']: Rational.ten }
+        { ['0']: Rational.ten }
       );
       expect(result[0].rate).toEqual(Rational.ten);
     });

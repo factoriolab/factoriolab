@@ -36,21 +36,21 @@ describe('DataService', () => {
     });
   });
 
-  describe('initialize', () => {
-    it('should load stored mod', () => {
-      spyOn(service, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.Hash, Mocks.I18n])
-      );
-      spyOn(mockStore, 'dispatch');
-      service.initialize(
-        { settingsState: { modId: Mocks.Mod.id } as any },
-        Settings.initialSettingsState
-      );
-      expect(mockStore.dispatch).toHaveBeenCalledWith(
-        new Products.ResetAction(Mocks.Mod.items[0].id)
-      );
-    });
-  });
+  // describe('initialize', () => {
+  //   it('should load stored mod', () => {
+  //     spyOn(service, 'requestData').and.returnValue(
+  //       of([Mocks.Data, Mocks.Hash, Mocks.I18n])
+  //     );
+  //     spyOn(mockStore, 'dispatch');
+  //     service.initialize(
+  //       { settingsState: { modId: Mocks.Mod.id } as any },
+  //       Settings.initialSettingsState
+  //     );
+  //     expect(mockStore.dispatch).toHaveBeenCalledWith(
+  //       new Products.ResetAction(Mocks.Mod.items[0].id)
+  //     );
+  //   });
+  // });
 
   describe('requestData', () => {
     it('should set up http requests for data', () => {

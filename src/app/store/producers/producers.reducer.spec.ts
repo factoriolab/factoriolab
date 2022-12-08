@@ -17,9 +17,9 @@ describe('Producers Reducer', () => {
   describe('LOAD', () => {
     it('should load a list of producers', () => {
       const producersState: ProducersState = {
-        ids: ['1'],
+        ids: ['0'],
         entities: { id: Mocks.Producer },
-        index: 2,
+        index: 1,
       };
       const result = producersReducer(
         undefined,
@@ -48,22 +48,22 @@ describe('Producers Reducer', () => {
 
     it('should use count from the last added producer', () => {
       const state: ProducersState = {
-        ids: ['1'],
+        ids: ['0'],
         entities: {
-          ['1']: {
-            id: '1',
+          ['0']: {
+            id: '0',
             recipeId: RecipeId.WoodenChest,
             count: '30',
           },
         },
-        index: 2,
+        index: 1,
       };
       const result = producersReducer(
         state,
         new Actions.AddAction(RecipeId.Coal)
       );
-      expect(result.entities['2']).toEqual({
-        id: '2',
+      expect(result.entities['1']).toEqual({
+        id: '1',
         recipeId: RecipeId.Coal,
         count: '30',
       });
@@ -72,7 +72,7 @@ describe('Producers Reducer', () => {
 
   describe('REMOVE', () => {
     it('should remove a producer', () => {
-      const result = producersReducer(state, new Actions.RemoveAction('1'));
+      const result = producersReducer(state, new Actions.RemoveAction('0'));
       expect(result.ids.length).toEqual(0);
     });
   });
@@ -81,9 +81,9 @@ describe('Producers Reducer', () => {
     it('should set recipe on a producer', () => {
       const result = producersReducer(
         state,
-        new Actions.SetRecipeAction({ id: '1', value: RecipeId.Coal })
+        new Actions.SetRecipeAction({ id: '0', value: RecipeId.Coal })
       );
-      expect(result.entities['1'].recipeId).toEqual(RecipeId.Coal);
+      expect(result.entities['0'].recipeId).toEqual(RecipeId.Coal);
     });
   });
 
@@ -91,9 +91,9 @@ describe('Producers Reducer', () => {
     it('should set count of a producer', () => {
       const result = producersReducer(
         state,
-        new Actions.SetCountAction({ id: '1', value: '30' })
+        new Actions.SetCountAction({ id: '0', value: '30' })
       );
-      expect(result.entities['1'].count).toEqual('30');
+      expect(result.entities['0'].count).toEqual('30');
     });
   });
 
@@ -102,12 +102,12 @@ describe('Producers Reducer', () => {
       const result = producersReducer(
         state,
         new Actions.SetFactoryAction({
-          id: '1',
+          id: '0',
           value: ItemId.AssemblingMachine2,
           def: ItemId.AssemblingMachine1,
         })
       );
-      expect(result.entities['1'].factoryId).toEqual(ItemId.AssemblingMachine2);
+      expect(result.entities['0'].factoryId).toEqual(ItemId.AssemblingMachine2);
     });
   });
 
@@ -116,12 +116,12 @@ describe('Producers Reducer', () => {
       const result = producersReducer(
         state,
         new Actions.SetFactoryModulesAction({
-          id: '1',
+          id: '0',
           value: [ItemId.SpeedModule],
           def: [ItemId.Module],
         })
       );
-      expect(result.entities['1'].factoryModuleIds).toEqual([
+      expect(result.entities['0'].factoryModuleIds).toEqual([
         ItemId.SpeedModule,
       ]);
     });
@@ -132,12 +132,12 @@ describe('Producers Reducer', () => {
       const result = producersReducer(
         state,
         new Actions.SetBeaconCountAction({
-          id: '1',
+          id: '0',
           value: '8',
           def: '0',
         })
       );
-      expect(result.entities['1'].beaconCount).toEqual('8');
+      expect(result.entities['0'].beaconCount).toEqual('8');
     });
   });
 
@@ -146,12 +146,12 @@ describe('Producers Reducer', () => {
       const result = producersReducer(
         state,
         new Actions.SetBeaconAction({
-          id: '1',
+          id: '0',
           value: ItemId.Beacon,
           def: ItemId.AssemblingMachine1,
         })
       );
-      expect(result.entities['1'].beaconId).toEqual(ItemId.Beacon);
+      expect(result.entities['0'].beaconId).toEqual(ItemId.Beacon);
     });
   });
 
@@ -160,12 +160,12 @@ describe('Producers Reducer', () => {
       const result = producersReducer(
         state,
         new Actions.SetBeaconModulesAction({
-          id: '1',
+          id: '0',
           value: [ItemId.SpeedModule],
           def: [ItemId.Module],
         })
       );
-      expect(result.entities['1'].beaconModuleIds).toEqual([
+      expect(result.entities['0'].beaconModuleIds).toEqual([
         ItemId.SpeedModule,
       ]);
     });
@@ -176,22 +176,22 @@ describe('Producers Reducer', () => {
       const result = producersReducer(
         state,
         new Actions.SetOverclockAction({
-          id: '1',
+          id: '0',
           value: 200,
           def: 100,
         })
       );
-      expect(result.entities['1'].overclock).toEqual(200);
+      expect(result.entities['0'].overclock).toEqual(200);
     });
   });
 
   describe('RESET_PRODUCER', () => {
     it('should reset a producer', () => {
       const state: ProducersState = {
-        ids: ['1'],
+        ids: ['0'],
         entities: {
-          ['1']: {
-            id: '1',
+          ['0']: {
+            id: '0',
             recipeId: RecipeId.WoodenChest,
             count: '30',
             factoryId: 'factoryId',
@@ -201,14 +201,14 @@ describe('Producers Reducer', () => {
             beaconModuleIds: ['beaconModuleIds'],
           },
         },
-        index: 2,
+        index: 1,
       };
       const result = producersReducer(
         state,
-        new Actions.ResetProducerAction('1')
+        new Actions.ResetProducerAction('0')
       );
-      expect(result.entities['1']).toEqual({
-        id: '1',
+      expect(result.entities['0']).toEqual({
+        id: '0',
         recipeId: RecipeId.WoodenChest,
         count: '30',
       });
@@ -218,10 +218,10 @@ describe('Producers Reducer', () => {
   describe('Recipes RESET_FACTORIES', () => {
     it('should reset all producers', () => {
       const state: ProducersState = {
-        ids: ['1'],
+        ids: ['0'],
         entities: {
-          ['1']: {
-            id: '1',
+          ['0']: {
+            id: '0',
             recipeId: RecipeId.WoodenChest,
             count: '30',
             factoryId: 'factoryId',
@@ -231,14 +231,14 @@ describe('Producers Reducer', () => {
             beaconModuleIds: ['beaconModuleIds'],
           },
         },
-        index: 2,
+        index: 1,
       };
       const result = producersReducer(
         state,
         new Recipes.ResetFactoriesAction()
       );
-      expect(result.entities['1']).toEqual({
-        id: '1',
+      expect(result.entities['0']).toEqual({
+        id: '0',
         recipeId: RecipeId.WoodenChest,
         count: '30',
       });
@@ -248,10 +248,10 @@ describe('Producers Reducer', () => {
   describe('Recipes RESET_BEACONS', () => {
     it('should reset beacons on all producers', () => {
       const state: ProducersState = {
-        ids: ['1'],
+        ids: ['0'],
         entities: {
-          ['1']: {
-            id: '1',
+          ['0']: {
+            id: '0',
             recipeId: RecipeId.WoodenChest,
             count: '30',
             factoryId: 'factoryId',
@@ -261,11 +261,11 @@ describe('Producers Reducer', () => {
             beaconModuleIds: ['beaconModuleIds'],
           },
         },
-        index: 2,
+        index: 1,
       };
       const result = producersReducer(state, new Recipes.ResetBeaconsAction());
-      expect(result.entities['1']).toEqual({
-        id: '1',
+      expect(result.entities['0']).toEqual({
+        id: '0',
         recipeId: RecipeId.WoodenChest,
         count: '30',
         factoryId: 'factoryId',

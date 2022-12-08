@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { TestModule } from 'src/tests';
 import { LandingComponent } from './landing.component';
+import { LandingModule } from './landing.module';
 
 describe('LandingComponent', () => {
   let component: LandingComponent;
@@ -8,9 +10,8 @@ describe('LandingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LandingComponent ]
-    })
-    .compileComponents();
+      imports: [TestModule, LandingModule],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LandingComponent);
     component = fixture.componentInstance;

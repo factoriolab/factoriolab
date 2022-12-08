@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { TestModule } from 'src/tests';
 import { WizardComponent } from './wizard.component';
+import { WizardModule } from './wizard.module';
 
 describe('WizardComponent', () => {
   let component: WizardComponent;
@@ -8,9 +10,8 @@ describe('WizardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ WizardComponent ]
-    })
-    .compileComponents();
+      imports: [TestModule, WizardModule],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(WizardComponent);
     component = fixture.componentInstance;

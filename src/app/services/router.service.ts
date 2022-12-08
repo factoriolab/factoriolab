@@ -154,12 +154,10 @@ export class RouterService {
       const url = `${hash[0].split('?')[0]}?${this.zip}${
         (hash[1] && `#${hash[1]}`) || ''
       }`;
-      if (this.router.url.length > 1) {
-        this.router.navigateByUrl(url);
-        // Don't cache landing page
-        if (!url.startsWith('/?')) {
-          BrowserUtility.routerState = url;
-        }
+      this.router.navigateByUrl(url);
+      // Don't cache landing page
+      if (!url.startsWith('/?')) {
+        BrowserUtility.routerState = url;
       }
     });
   }

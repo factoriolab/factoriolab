@@ -24,7 +24,7 @@ import {
   Recipes,
   Settings,
 } from '~/store';
-import { ExportUtility } from '~/utilities';
+// import { ExportUtility } from '~/utilities';
 import { ListComponent } from './list.component';
 import { ListModule } from './list.module';
 
@@ -106,14 +106,14 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('export', () => {
-    it('should call the export utility', () => {
-      spyOn(ExportUtility, 'stepsToCsv');
-      TestUtility.clickDt(fixture, DataTest.Export);
-      fixture.detectChanges();
-      expect(ExportUtility.stepsToCsv).toHaveBeenCalled();
-    });
-  });
+  // describe('export', () => {
+  //   it('should call the export utility', () => {
+  //     spyOn(ExportUtility, 'stepsToCsv');
+  //     TestUtility.clickDt(fixture, DataTest.Export);
+  //     fixture.detectChanges();
+  //     expect(ExportUtility.stepsToCsv).toHaveBeenCalled();
+  //   });
+  // });
 
   describe('toggleDefaultRecipe', () => {
     it('should reset a default recipe to null', () => {
