@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
 import { deflate, inflate } from 'pako';
 import { BehaviorSubject, debounceTime, Observable } from 'rxjs';
-import { filter, first, map } from 'rxjs/operators';
+import { filter, first, map, switchMap } from 'rxjs/operators';
 
 import { data } from 'src/data';
 import {
@@ -118,9 +118,13 @@ export class RouterService {
   initialize(): void {
     this.router.events.subscribe((e) => this.updateState(e));
 
-    this.store
-      .select(Products.getZipState)
-      .pipe(debounceTime(0))
+    this.router.events
+      .pipe(
+        filter((e) => e instanceof NavigationEnd),
+        first(),
+        switchMap(() => this.store.select(Products.getZipState)),
+        debounceTime(0)
+      )
       .subscribe((s) => {
         this.updateUrl(
           s.products,
@@ -155,8 +159,8 @@ export class RouterService {
         (hash[1] && `#${hash[1]}`) || ''
       }`;
       this.router.navigateByUrl(url);
-      // Don't cache landing page
-      if (!url.startsWith('/?')) {
+      // Don't cache landing or wizard
+      if (!url.startsWith('/?') && !url.startsWith('/wizard')) {
         BrowserUtility.routerState = url;
       }
     });
