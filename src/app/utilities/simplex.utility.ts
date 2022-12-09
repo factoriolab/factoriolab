@@ -476,7 +476,14 @@ export class SimplexUtility {
           val = val.sub(recipe.in[itemId]);
         }
 
-        if (recipe.out[itemId]) {
+        // If a default recipe is specified for this item. Don't include output
+        // from other recipes in simplex model. If this recipe is included
+        // incidentally, output is added as a surplus in IBFS.
+        if (
+          recipe.out[itemId] &&
+          (state.data.itemRecipeId[itemId] == null ||
+            state.data.itemRecipeId[itemId] === recipe.id)
+        ) {
           val = val.add(recipe.out[itemId]);
         }
 
@@ -546,11 +553,27 @@ export class SimplexUtility {
         )
       ) {
         // Recipes for this item are part of the solution, include result
-        O.push(
-          Rational.fromNumber(itemConstrEntities[itemId].value).sub(
-            state.items[itemId]
-          )
+        let val = Rational.fromNumber(itemConstrEntities[itemId].value).sub(
+          state.items[itemId]
         );
+
+        if (state.data.itemRecipeId[itemId]) {
+          // A default recipe is specified for this item. Need to check whether
+          // any non-default recipes were included that incidentally produce
+          // this item, and add the amount as a surplus.
+          for (const recipeId of recipeIds) {
+            if (
+              recipeId !== state.data.itemRecipeId[itemId] &&
+              !this.isFloatZero(recipeVarEntities[recipeId].value) &&
+              state.recipes[recipeId].out[itemId]
+            ) {
+              const recipe = state.recipes[recipeId];
+              val = val.add(recipe.out[itemId].div(recipe.time));
+            }
+          }
+        }
+
+        O.push(val);
       } else {
         // Item is not part of the solution, remove it
         delete state.items[itemId];
