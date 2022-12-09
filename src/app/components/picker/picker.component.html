@@ -18,7 +18,8 @@
         pInputText
         type="text"
         class="w-100"
-        [pAutoFocus]="true"
+        pAutoFocus
+        [autofocus]="true"
         [formControl]="searchCtrl"
       />
     </span>
@@ -31,7 +32,7 @@
         [selected]="i === activeIndex"
       >
         <ng-template pTemplate="header">
-          <i [class]="categoryId | iconSmClass: 'category'"></i>
+          <i [class]="categoryId | iconSmClass : 'category'"></i>
         </ng-template>
         <ng-template pTemplate="content">
           <p-scrollPanel [style]="{ height: '363px' }">
@@ -46,11 +47,11 @@
                   type="button"
                   class="me-1 mb-1"
                   [class.p-button-text]="id !== selectedId"
-                  [icon]="id | iconSmClass: type"
+                  [icon]="id | iconSmClass : type"
                   [pTooltip]="
                     type === 'item'
-                      ? (id | itemTooltip: vm.data)
-                      : (id | recipeTooltip: vm.data)
+                      ? (id | itemTooltip : vm.data)
+                      : (id | recipeTooltip : vm.data)
                   "
                   [escape]="false"
                   (click)="clickId(id)"
