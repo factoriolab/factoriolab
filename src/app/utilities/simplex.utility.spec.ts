@@ -522,7 +522,7 @@ describe('SimplexUtility', () => {
       // Coal = ignored input, Wood = normal input
       state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
       state.inputIds = [ItemId.Wood, ItemId.Coal, ItemId.IronOre];
-      state.recipes[ItemId.CopperPlate] = new RationalRecipe({
+      state.recipes[RecipeId.CopperPlate] = new RationalRecipe({
         id: 'id',
         name: 'name',
         time: 1,
@@ -559,6 +559,27 @@ describe('SimplexUtility', () => {
       const state = getState();
       const result = SimplexUtility.glpk(state);
       expect(result.returnCode).toEqual('failure');
+    });
+
+    it('should add surplus items from non-default recipes', () => {
+      const state = getState();
+      state.recipes[RecipeId.IronOre] = Mocks.Dataset.recipeR[RecipeId.IronOre];
+      state.recipes[RecipeId.Coal] = new RationalRecipe({
+        id: RecipeId.Coal,
+        name: 'coal with byproduct',
+        time: 1,
+        in: {},
+        out: { [ItemId.Coal]: 1, [ItemId.IronOre]: 0.1 },
+        producers: [],
+        row: 0,
+        category: CategoryId.Intermediate,
+      });
+      state.items[ItemId.IronOre] = Rational.one;
+      state.items[ItemId.Coal] = Rational.one;
+
+      const result = SimplexUtility.glpk(state);
+      // Expect result to include surplus iron ore from coal recipe
+      expect(result.O[1]).toEqual(Rational.from(1, 10));
     });
   });
 
