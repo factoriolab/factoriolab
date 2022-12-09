@@ -257,86 +257,87 @@ export class RouterService {
           query = hash;
         }
 
-        if (query) {
+        if (query && this.zip !== query) {
           let zip = query;
-          if (this.zip !== zip) {
-            if (zip.startsWith('z=')) {
-              // Upgrade V0 query-unsafe zipped characters
-              const z = zip
-                .substring(2)
-                .replace(/\+/g, '-')
-                .replace(/\//g, '.')
-                .replace(/=/g, '_');
-              zip = this.inflateSafe(z);
-            }
-            // Upgrade V0 query-unsafe delimiters
-            zip = zip.replace(/,/g, LISTSEP).replace(/\+/g, ARRAYSEP);
-            // Upgrade V0 null/empty values
-            zip = zip
-              .replace(/\*n\*/g, `*${NULL}*`)
-              .replace(/\*e\*/g, `*${EMPTY}*`);
-            let params = this.getParams(zip);
-            let warnings: string[] = [];
-            [params, warnings] = this.migrate(params);
-            this.displayWarnings(warnings);
-            const v = params[Section.Version] as ZipVersion;
-            const state: App.PartialState = {};
-            if (v == this.bareVersion) {
-              Object.keys(params).forEach((k) => {
-                params[k] = decodeURIComponent(params[k]);
-              });
-              if (params[Section.Products]) {
-                state.productsState = this.unzipProducts(params);
-              }
-              if (params[Section.Producers]) {
-                state.producersState = this.unzipProducers(params);
-              }
-              if (params[Section.Items]) {
-                state.itemsState = this.unzipItems(params);
-              }
-              if (params[Section.Recipes]) {
-                state.recipesState = this.unzipRecipes(params);
-              }
-              if (params[Section.Factories]) {
-                state.factoriesState = this.unzipFactories(params);
-              }
-              if (params[Section.Settings]) {
-                state.settingsState = this.unzipSettings(params);
-              }
-              this.dispatch(zip, state);
-            } else {
-              const modId = this.parseNString(params[Section.Mod], data.hash);
-              this.dataSvc
-                .requestData(modId || Settings.initialSettingsState.modId)
-                .subscribe(([_, hash]) => {
-                  if (params[Section.Products]) {
-                    state.productsState = this.unzipProducts(params, hash);
-                  }
-                  if (params[Section.Producers]) {
-                    state.producersState = this.unzipProducers(params, hash);
-                  }
-                  if (params[Section.Items]) {
-                    state.itemsState = this.unzipItems(params, hash);
-                  }
-                  if (params[Section.Recipes]) {
-                    state.recipesState = this.unzipRecipes(params, hash);
-                  }
-                  if (params[Section.Factories]) {
-                    state.factoriesState = this.unzipFactories(params, hash);
-                  }
-                  if (params[Section.Settings]) {
-                    state.settingsState = this.unzipSettings(params, hash);
-                  }
-                  if (modId != null) {
-                    state.settingsState = {
-                      ...state.settingsState,
-                      ...{ modId },
-                    };
-                  }
-                  this.dispatch(zip, state);
-                });
-            }
+          if (zip.startsWith('z=')) {
+            // Upgrade V0 query-unsafe zipped characters
+            const z = zip
+              .substring(2)
+              .replace(/\+/g, '-')
+              .replace(/\//g, '.')
+              .replace(/=/g, '_');
+            zip = this.inflateSafe(z);
           }
+          // Upgrade V0 query-unsafe delimiters
+          zip = zip.replace(/,/g, LISTSEP).replace(/\+/g, ARRAYSEP);
+          // Upgrade V0 null/empty values
+          zip = zip
+            .replace(/\*n\*/g, `*${NULL}*`)
+            .replace(/\*e\*/g, `*${EMPTY}*`);
+          let params = this.getParams(zip);
+          let warnings: string[] = [];
+          [params, warnings] = this.migrate(params);
+          this.displayWarnings(warnings);
+          const v = params[Section.Version] as ZipVersion;
+          const state: App.PartialState = {};
+          if (v == this.bareVersion) {
+            Object.keys(params).forEach((k) => {
+              params[k] = decodeURIComponent(params[k]);
+            });
+            if (params[Section.Products]) {
+              state.productsState = this.unzipProducts(params);
+            }
+            if (params[Section.Producers]) {
+              state.producersState = this.unzipProducers(params);
+            }
+            if (params[Section.Items]) {
+              state.itemsState = this.unzipItems(params);
+            }
+            if (params[Section.Recipes]) {
+              state.recipesState = this.unzipRecipes(params);
+            }
+            if (params[Section.Factories]) {
+              state.factoriesState = this.unzipFactories(params);
+            }
+            if (params[Section.Settings]) {
+              state.settingsState = this.unzipSettings(params);
+            }
+            this.dispatch(zip, state);
+          } else {
+            const modId = this.parseNString(params[Section.Mod], data.hash);
+            this.dataSvc
+              .requestData(modId || Settings.initialSettingsState.modId)
+              .subscribe(([_, hash]) => {
+                if (params[Section.Products]) {
+                  state.productsState = this.unzipProducts(params, hash);
+                }
+                if (params[Section.Producers]) {
+                  state.producersState = this.unzipProducers(params, hash);
+                }
+                if (params[Section.Items]) {
+                  state.itemsState = this.unzipItems(params, hash);
+                }
+                if (params[Section.Recipes]) {
+                  state.recipesState = this.unzipRecipes(params, hash);
+                }
+                if (params[Section.Factories]) {
+                  state.factoriesState = this.unzipFactories(params, hash);
+                }
+                if (params[Section.Settings]) {
+                  state.settingsState = this.unzipSettings(params, hash);
+                }
+                if (modId != null) {
+                  state.settingsState = {
+                    ...state.settingsState,
+                    ...{ modId },
+                  };
+                }
+                this.dispatch(zip, state);
+              });
+          }
+        } else {
+          // No app state to dispatch, ready to load
+          this.dataSvc.routerReady$.next();
         }
       }
     } catch (err) {
@@ -348,6 +349,7 @@ export class RouterService {
   dispatch(zip: string, state: App.PartialState): void {
     this.zip = zip;
     this.store.dispatch(new App.LoadAction(state));
+    this.dataSvc.routerReady$.next();
   }
 
   /** Migrates older zip params to latest bare/hash formats */
