@@ -53,7 +53,8 @@
             ></button>
             <input
               pInputText
-              [pAutoFocus]="true"
+              pAutoFocus
+              [autofocus]="true"
               type="text"
               [placeholder]="'settings.nameSavedState' | translate"
               [pTooltip]="'settings.savedStateName' | translate"
@@ -214,7 +215,7 @@
               panelStyleClass="mw-100"
               [ngModel]="
                 vm.settings.disabledRecipeIds
-                  | invertArray: vm.data.complexRecipeIds
+                  | invertArray : vm.data.complexRecipeIds
               "
               [options]="vm.options.complexRecipes"
               (onChange)="
@@ -234,10 +235,10 @@
               <ng-template pTemplate="item" let-item>
                 <div
                   class="d-flex align-items-center w-100 h-100"
-                  [pTooltip]="item.value | recipeTooltip: vm.data"
+                  [pTooltip]="item.value | recipeTooltip : vm.data"
                   [escape]="false"
                 >
-                  <i [class]="item.value | iconSmClass: 'recipe'"></i>
+                  <i [class]="item.value | iconSmClass : 'recipe'"></i>
                   <div class="ms-3 text-truncate">
                     {{ item.label }}
                   </div>
@@ -301,7 +302,7 @@
                     <ng-template pTemplate="item" let-item>
                       <div
                         class="d-flex align-items-center py-2 w-100 h-100"
-                        [pTooltip]="item.value | factoryTooltip: vm.data"
+                        [pTooltip]="item.value | factoryTooltip : vm.data"
                         [escape]="false"
                       >
                         <i [class]="item.value | iconSmClass"></i>
@@ -351,7 +352,7 @@
                     <ng-template pTemplate="item" let-item>
                       <div
                         class="d-flex align-items-center py-2 w-100 h-100"
-                        [pTooltip]="item.value | factoryTooltip: vm.data"
+                        [pTooltip]="item.value | factoryTooltip : vm.data"
                         [escape]="false"
                       >
                         <i [class]="item.value | iconSmClass"></i>
@@ -410,7 +411,7 @@
                     <ng-template pTemplate="item" let-item>
                       <div
                         class="d-flex align-items-center py-2 w-100 h-100"
-                        [pTooltip]="item.value | moduleTooltip: vm.data"
+                        [pTooltip]="item.value | moduleTooltip : vm.data"
                         [escape]="false"
                       >
                         <i [class]="item.value | iconSmClass"></i>
@@ -475,7 +476,7 @@
                         <ng-template pTemplate="item" let-item>
                           <div
                             class="d-flex align-items-center py-2 w-100 h-100"
-                            [pTooltip]="item.value | beaconTooltip: vm.data"
+                            [pTooltip]="item.value | beaconTooltip : vm.data"
                             [escape]="false"
                           >
                             <i [class]="item.value | iconSmClass"></i>
@@ -524,7 +525,7 @@
                         <ng-template pTemplate="item" let-item>
                           <div
                             class="d-flex align-items-center py-2 w-100 h-100"
-                            [pTooltip]="item.value | moduleTooltip: vm.data"
+                            [pTooltip]="item.value | moduleTooltip : vm.data"
                             [escape]="false"
                           >
                             <i [class]="item.value | iconSmClass"></i>
@@ -605,7 +606,7 @@
               <ng-template pTemplate="item" let-item>
                 <div
                   class="d-flex align-items-center py-2 w-100 h-100"
-                  [pTooltip]="item.value | moduleTooltip: vm.data"
+                  [pTooltip]="item.value | moduleTooltip : vm.data"
                   [escape]="false"
                 >
                   <i [class]="item.value | iconSmClass"></i>
