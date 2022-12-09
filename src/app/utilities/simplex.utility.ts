@@ -476,7 +476,7 @@ export class SimplexUtility {
           val = val.sub(recipe.in[itemId]);
         }
 
-        // If a default recipe is specified for this item. Don't include output
+        // If a default recipe is specified for this item, don't include output
         // from other recipes in simplex model. If this recipe is included
         // incidentally, output is added as a surplus in IBFS.
         if (
