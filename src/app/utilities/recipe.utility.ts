@@ -221,16 +221,7 @@ export class RecipeUtility {
       // Overclock effects
       let oc: Rational | undefined;
       if (settings.overclock && !settings.overclock.eq(Rational.hundred)) {
-        if (factory.overclockFactor) {
-          const ratio = Rational.hundred.div(settings.overclock);
-          const factor = Math.pow(
-            ratio.toNumber(),
-            1 / factory.overclockFactor
-          );
-          oc = Rational.fromNumber(factor).reciprocal();
-        } else {
-          oc = settings.overclock.div(Rational.hundred);
-        }
+        oc = settings.overclock.div(Rational.hundred);
         speed = speed.mul(oc);
       }
 
@@ -263,8 +254,9 @@ export class RecipeUtility {
       recipe.drain = factory.drain;
       let usage =
         (recipe.usage ? recipe.usage : factory.usage) || Rational.zero;
-      if (oc) {
-        const factor = Math.pow(oc.toNumber(), 1.6);
+      if (oc && factory.usage?.gt(Rational.zero)) {
+        // Polynomial effect only on production buildings, not power generation
+        const factor = Math.pow(oc.toNumber(), 1.321928);
         usage = usage.mul(Rational.fromNumber(factor));
       }
       recipe.consumption =

@@ -366,46 +366,7 @@ describe('RecipeUtility', () => {
       expected.out = { [ItemId.SteelChest]: Rational.one };
       expected.time = Rational.from(1, 3);
       expected.drain = Rational.from(5);
-      expected.consumption = Rational.from(22502025, 49486);
-      expected.pollution = Rational.from(1, 20);
-      expected.productivity = Rational.one;
-      expect(result).toEqual(expected);
-    });
-
-    it('should account for factories with custom overclock factors', () => {
-      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
-      settings.overclock = Rational.from(200);
-      const data = {
-        ...Mocks.Dataset,
-        ...{
-          factoryEntities: {
-            ...Mocks.Dataset.factoryEntities,
-            ...{
-              [settings.factoryId!]: {
-                ...Mocks.Dataset.factoryEntities[settings.factoryId!],
-                ...{ overclockFactor: 1.321928 },
-              },
-            },
-          },
-        },
-      };
-      const result = RecipeUtility.adjustRecipe(
-        RecipeId.SteelChest,
-        ItemId.Coal,
-        ItemId.Module,
-        Rational.zero,
-        Rational.zero,
-        settings,
-        Mocks.ItemSettingsInitial,
-        data
-      );
-      const expected = new RationalRecipe(
-        Mocks.Dataset.recipeEntities[RecipeId.SteelChest]
-      );
-      expected.out = { [ItemId.SteelChest]: Rational.one };
-      expected.time = Rational.from(87424, 221535);
-      expected.drain = Rational.from(5);
-      expected.consumption = Rational.from(1779885, 5128);
+      expected.consumption = Rational.from(375);
       expected.pollution = Rational.from(1, 20);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
