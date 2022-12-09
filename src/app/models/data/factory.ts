@@ -19,7 +19,6 @@ export interface Factory {
   mining?: boolean;
   research?: boolean;
   silo?: Silo;
-  overclockFactor?: number;
   consumption?: Entities<number | string>;
   disallowEffects?: ModuleEffect[];
 }
@@ -38,7 +37,6 @@ export class RationalFactory {
   mining?: boolean;
   research?: boolean;
   silo?: RationalSilo;
-  overclockFactor?: number;
   consumption?: Entities<Rational>;
   disallowEffects?: ModuleEffect[];
 
@@ -76,9 +74,6 @@ export class RationalFactory {
     }
     if (data.silo) {
       this.silo = new RationalSilo(data.silo);
-    }
-    if (data.overclockFactor) {
-      this.overclockFactor = data.overclockFactor;
     }
     if (data.consumption) {
       const consumption = data.consumption;
