@@ -133,7 +133,8 @@ export class FlowService {
 
             // Links to recipe node
             for (const targetId of Object.keys(step.parents)) {
-              // This is how much is requested by that step, but need recipe source
+              // This is how much is requested by that step,
+              // but need recipe source
               const targetAmount = step.items.mul(step.parents[targetId]);
               // Keep track of remaining amounts
               let amount = targetAmount;
@@ -146,6 +147,7 @@ export class FlowService {
                       sourceStep.outputs[step.itemId]
                     );
                     amount = amount.sub(sourceAmount);
+
                     // CREATE LINK: Recipe -> Recipe
                     flow.links.push({
                       source: `r|${sourceStep.id}`,
@@ -157,10 +159,7 @@ export class FlowService {
                 }
               }
 
-              if (
-                !itemSettings[step.itemId].ignore &&
-                amount.gt(Rational.zero)
-              ) {
+              if (amount.gt(Rational.zero)) {
                 inputAmount = inputAmount.add(amount);
                 // CREATE LINK: Input -> Recipe
                 flow.links.push({
@@ -172,10 +171,7 @@ export class FlowService {
               }
             }
 
-            if (
-              !itemSettings[step.itemId].ignore &&
-              inputAmount.gt(Rational.zero)
-            ) {
+            if (inputAmount.gt(Rational.zero)) {
               // CREATE NODE: Input
               flow.nodes.push({
                 id: `i|${step.itemId}`,
