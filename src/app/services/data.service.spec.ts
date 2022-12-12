@@ -21,6 +21,7 @@ describe('DataService', () => {
     http = TestBed.inject(HttpTestingController);
     mockStore = TestBed.inject(MockStore);
     translateSvc = TestBed.inject(TranslateService);
+    service.initialize();
   });
 
   it('should be created', () => {
@@ -29,7 +30,6 @@ describe('DataService', () => {
 
   describe('constructor', () => {
     it('should watch for language changes', () => {
-      service.routerReady$.next();
       spyOn(service, 'requestData').and.returnValue(EMPTY);
       translateSvc.use('test');
       expect(service.requestData).toHaveBeenCalledWith('1.1');
@@ -38,7 +38,6 @@ describe('DataService', () => {
 
   describe('requestData', () => {
     it('should set up http requests for data', () => {
-      service.routerReady$.next();
       spyOn(mockStore, 'dispatch');
       http.expectOne(`data/${Mocks.Mod.id}/data.json`).flush(Mocks.Data);
       http.expectOne(`data/${Mocks.Mod.id}/hash.json`).flush(Mocks.Hash);
